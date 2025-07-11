@@ -89,13 +89,20 @@ beforeEach(async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form correctly on ngOnInit', () => {
-    expect(component.forma).toBeDefined();
-    expect(component.datosDelaSolicitud).toBeDefined();
-    expect(component.forma.contains('datosDelaSolicitud')).toBe(true);
-    expect(component.nuevaNotificacion).toBeDefined();
-  });
+it('should initialize formulariodataStore, cuerpoTabla, create form and notification on ngOnInit', () => {
+  const spyGetAllDatosForma = jest.spyOn(mockCertificadoService, 'getAllDatosForma');
+  const spyCrearFormulario = jest.spyOn(component, 'crearFormulario');
+  const spyInitActionFormBuild = jest.spyOn(component, 'initActionFormBuild');
 
+  component.ngOnInit();
+
+  expect(spyGetAllDatosForma).toHaveBeenCalled();
+  expect(spyCrearFormulario).toHaveBeenCalled();
+  expect(spyInitActionFormBuild).toHaveBeenCalled();
+  expect(component.formulariodataStore).toBeDefined();
+  expect(component.cuerpoTabla).toBeDefined();
+  expect(component.nuevaNotificacion).toBeDefined();
+});
   it('should patch value from ZoosanitarioQuery', () => {
     expect(component.datosDelaSolicitud.get('aduanaIngreso')?.value).toBe('123');
   });
@@ -197,9 +204,16 @@ it('should call updateDatosDeLaSolicitud with form value', () => {
   component.setValoresStore();
   expect(spy).toHaveBeenCalledWith(component.datosDelaSolicitud.value);
 });
-it('should initialize nuevaNotificacion with correct message', () => {
+it('should set moduloEmergente and nuevaNotificacion when claveUCON is invalid', fakeAsync(() => {
+  const claveControl = component.datosDelaSolicitud.get('claveUCON');
+  claveControl?.setValue('UCON!@#');
+  tick(400); // debounceTime(300)
+  fixture.detectChanges();
+  expect(component.moduloEmergente).toBe(true);
+  expect(component.nuevaNotificacion).toBeDefined();
   expect(component.nuevaNotificacion.mensaje).toContain('No existe información para la clave UCON');
-});
+  flush();
+}));
 it('should call actualizarFormaValida when form becomes valid', fakeAsync(() => {
   const spy = jest.spyOn(mockCertificadoService, 'actualizarFormaValida');
   component.datosDelaSolicitud.get('aduanaIngreso')?.setValue('test');
@@ -211,11 +225,6 @@ it('should call actualizarFormaValida when form becomes valid', fakeAsync(() => 
   flush();
 }));
 
-
-it('should set nuevaNotificacion on init', () => {
-  expect(component.nuevaNotificacion).toBeDefined();
-  expect(component.nuevaNotificacion.mensaje).toContain('No existe información para la clave UCON');
-});
 it('should patch form values from seleccionarDatosSolicitud$', () => {
   const mockSubject = new Subject<any>();
 
@@ -225,15 +234,30 @@ it('should patch form values from seleccionarDatosSolicitud$', () => {
   component.initActionFormBuild();
 
   const patchSpy = jest.spyOn(component.datosDelaSolicitud, 'patchValue');
-  const mockValue = {
+
+  const partialValue = {
     tipoMercancia: 'yes',
     aduanaIngreso: '123',
     oficinaInspeccion: '456',
     puntoInspeccion: '789',
     regimen: 'A1',
   };
-  mockSubject.next(mockValue);
-  expect(patchSpy).toHaveBeenCalledWith(mockValue);
+
+  const expectedPatch = {
+    tipoMercancia: 'yes',
+    aduanaIngreso: '123',
+    oficinaInspeccion: '456',
+    puntoInspeccion: '789',
+    claveUCON: '',
+    establecimientoTIF: '',
+    nombreVeterinario: '',
+    numeroGuia: '',
+    certificacion: '',
+    regimen: 'A1',
+  };
+
+  mockSubject.next(partialValue);
+  expect(patchSpy).toHaveBeenCalledWith(expectedPatch);
 });
 
 it('should set form to readonly from consultaQuery', fakeAsync(() => {

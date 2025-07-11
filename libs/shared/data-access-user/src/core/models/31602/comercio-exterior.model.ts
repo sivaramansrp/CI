@@ -109,3 +109,47 @@ export const ANTERIORES_TABLA = [
   }
 
 ];
+
+/**
+ * Interfaz que representa la estructura de un registro de inversión dentro del grupo.
+ *
+ * @property {string} tipoDeInversion - Tipo de inversión realizada (por ejemplo, bienes muebles o inmuebles).
+ * @property {string} descGeneral - Descripción general de la inversión.
+ * @property {string} valorEnPesos - Valor de la inversión expresado en pesos.
+ */
+export interface InversionGrupo {
+  tipoDeInversion: string;
+  descGeneral: string;
+  valorEnPesos: string;
+}
+
+/**
+ * Constante que define la estructura de la tabla para mostrar información de inversiones dentro del grupo.
+ *
+ * Cada objeto en el arreglo representa una columna en la tabla con las siguientes propiedades:
+ * - `encabezado`: El nombre del encabezado de la columna.
+ * - `clave`: Una función que mapea un objeto `InversionGrupo` al valor mostrado en la columna.
+ * - `orden`: El orden en el que aparece la columna en la tabla.
+ *
+ * Esta constante se utiliza para construir dinámicamente la tabla de inversiones en la aplicación.
+ *
+ * @constant
+ * @type {Array<{encabezado: string, clave: (ele: InversionGrupo) => string, orden: number}>}
+ */
+export const INVERSION_TABLA = [
+    {
+      encabezado: 'Tipo de inversión',
+      clave: (ele: InversionGrupo): string => ele.tipoDeInversion,
+      orden: 1,
+    },
+    {
+      encabezado: 'Descripción general',
+      clave: (ele: InversionGrupo): string => ele.descGeneral,
+      orden: 2,
+    },
+    {
+      encabezado: 'Valor en pesos',
+      clave: (ele: InversionGrupo): string => ele.valorEnPesos,
+      orden: 3,
+    },
+];

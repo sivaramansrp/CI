@@ -330,7 +330,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'OISA',
+      label: 'Establecimiento TIF',
       controlName: 'delegacionesControl2',
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -338,7 +338,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Distrito desarrollo rural (DDR)',
+      label: 'Oficina central',
       controlName: 'delegacionesControl3',
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -346,7 +346,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Oficina central:',
+      label: 'Distrito desarrollo rural (DDR)',
       controlName: 'delegacionesControl4',
       required: false,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),

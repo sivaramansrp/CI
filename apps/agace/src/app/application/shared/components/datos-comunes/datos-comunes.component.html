@@ -366,7 +366,10 @@
     }
   </form> 
 </div>
-<app-datos-comunes-dos [datosComunesObj]="datosComunesObj"></app-datos-comunes-dos>
+<app-datos-comunes-dos 
+  [datosComunesObj]="datosComunesObj"
+  (radioChanged)="onRadioChanged($event)">
+</app-datos-comunes-dos>
 
 <div class="container">
   @if(!datosComunesObj.tieneProcedure.activo) {

@@ -40,9 +40,9 @@
                   (change)="setValoresStore(agregarDestinatario,'tipoPersona', 'setTipoPersona');tipoPersonaCambiar()" />
                 <label for="moral">Moral</label>
               </div>
-              @if (destinatarioForm.get('agregarDestinatario.tipoPersona')?.hasError('required') &&
+              @if (destinatarioForm.get('agregarDestinatario.tipoPersona')?.errors?.['required'] &&
               destinatarioForm.get('agregarDestinatario.tipoPersona')?.touched) {
-              <div class="mensaje-error">Este campo es obligatorio.</div>
+              <p class="mensaje-error">Este campo es obligatorio.</p>
               }
             </div>
           </ng-container>
@@ -53,30 +53,54 @@
               <div class="col-md-4 mb-3">
                 <label class="form-label" for="nombre">Nombre(s)<span
                     [ngClass]="isValid(datosPersonales,'nombre') ? 'red-require ' : ''">*</span>:</label>
-                <input class="form-control" id="nombre" type="text" formControlName="nombre"
+                <input class="form-control" id="nombre" type="text" formControlName="nombre" maxlength="50"
                   [ngClass]="isValid(datosPersonales,'nombre') ? 'required' : ''"
                   (change)="setValoresStore(datosPersonales,'nombre', 'setNombre')" />
-                @if (destinatarioForm.get('datosPersonales.nombre')?.hasError('required') &&
+                @if (destinatarioForm.get('datosPersonales.nombre')?.errors?.['required'] &&
                 destinatarioForm.get('datosPersonales.nombre')?.touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
+                <p class="mensaje-error">Este campo es obligatorio.</p>
+                }
+                @else if (destinatarioForm.get('datosPersonales.nombre')?.errors?.['maxlength'] &&
+                destinatarioForm.get('datosPersonales.nombre')?.touched) {
+                <p class="mensaje-error">El nombre no puede tener más de 50 caracteres.</p>
+                }
+                @else if (destinatarioForm.get('datosPersonales.nombre')?.errors?.['pattern'] &&
+                destinatarioForm.get('datosPersonales.nombre')?.touched) {
+                <p class="mensaje-error">Por favor, sólo escribe dígitos.</p>
                 }
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label" for="primerApellido">Primer apellido<span
                     [ngClass]="isValid(datosPersonales,'primerApellido') ? 'red-require ' : ''">*</span>:</label>
                 <input class="form-control" id="primerApellido" type="text" formControlName="primerApellido"
-                  [ngClass]="isValid(datosPersonales,'primerApellido') ? 'required' : ''"
+                  maxlength="50" [ngClass]="isValid(datosPersonales,'primerApellido') ? 'required' : ''"
                   (change)="setValoresStore(datosPersonales,'primerApellido', 'setPrimerApellido')" />
-                @if (destinatarioForm.get('datosPersonales.primerApellido')?.hasError('required') &&
+                @if (destinatarioForm.get('datosPersonales.primerApellido')?.errors?.['required'] &&
                 destinatarioForm.get('datosPersonales.primerApellido')?.touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
+                <p class="mensaje-error">Este campo es obligatorio.</p>
+                }
+                @else if (destinatarioForm.get('datosPersonales.primerApellido')?.errors?.['maxlength'] &&
+                destinatarioForm.get('datosPersonales.primerApellido')?.touched) {
+                <p class="mensaje-error">El primer apellido no puede tener más de 50 caracteres.</p>
+                }
+                @else if (destinatarioForm.get('datosPersonales.primerApellido')?.errors?.['pattern'] &&
+                destinatarioForm.get('datosPersonales.primerApellido')?.touched) {
+                <p class="mensaje-error">El primer apellido solo puede contener letras y espacios.</p>
                 }
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label" for="segundoApellido">Segundo apellido:</label>
                 <input class="form-control" id="segundoApellido" type="text" formControlName="segundoApellido"
-                  [ngClass]="isValid(datosPersonales,'segundoApellido') ? 'required' : ''"
+                  maxlength="50" [ngClass]="isValid(datosPersonales,'segundoApellido') ? 'required' : ''"
                   (change)="setValoresStore(datosPersonales,'segundoApellido', 'setSegundoApellido')" />
+                @if (destinatarioForm.get('datosPersonales.segundoApellido')?.errors?.['maxlength'] &&
+                destinatarioForm.get('datosPersonales.segundoApellido')?.touched) {
+                <p class="mensaje-error">El segundo apellido no puede tener más de 50 caracteres.</p>
+                }
+                @else if (destinatarioForm.get('datosPersonales.segundoApellido')?.errors?.['pattern'] &&
+                destinatarioForm.get('datosPersonales.segundoApellido')?.touched) {
+                <p class="mensaje-error">El segundo apellido solo puede contener letras y espacios.</p>
+                }
               </div>
             </div>
             } @if (selectedTipoPersona === 'moral' || !selectedTipoPersona) {
@@ -84,12 +108,16 @@
               <div class="col-md-8 mb-3">
                 <label class="form-label" for="denominación">Denominación/razón social<span
                     [ngClass]="isValid(datosPersonales,'denominacion') ? 'red-require ' : ''">*</span>:</label>
-                <input class="form-control" id="denominacion" type="text" formControlName="denominacion"
+                <input class="form-control" id="denominacion" type="text" formControlName="denominacion" maxlength="100"
                   [ngClass]="isValid(datosPersonales,'denominacion') ? 'required' : ''"
                   (change)="setValoresStore(datosPersonales,'denominacion', 'setDenominacion')" />
-                @if (destinatarioForm.get('datosPersonales.denominacion')?.hasError('required') &&
+                @if (destinatarioForm.get('datosPersonales.denominacion')?.errors?.['required'] &&
                 destinatarioForm.get('datosPersonales.denominacion')?.touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
+                <p class="mensaje-error">Este campo es obligatorio.</p>
+                }
+                @else if (destinatarioForm.get('datosPersonales.denominacion')?.errors?.['maxlength'] &&
+                destinatarioForm.get('datosPersonales.denominacion')?.touched) {
+                <p class="mensaje-error">La denominación/razón social no puede tener más de 100 caracteres.</p>
                 }
               </div>
             </div>
@@ -99,34 +127,66 @@
                 <app-catalogo-select [catalogo]="Opciones" formControlName="pais" [label]="'País'" [required]="true"
                   (change)="setValoresStore(datosPersonales,'pais', 'setPais')"
                   [isDisabled]="soloLectura"></app-catalogo-select>
+                @if (destinatarioForm.get('datosPersonales.pais')?.errors?.['required'] &&
+                destinatarioForm.get('datosPersonales.pais')?.touched) {
+                <p class="mensaje-error">Este campo es obligatorio.</p>
+                }
               </div>
             </div>
             <div class="row">
               <div class="col-md-8 mb-3">
                 <label class="form-label" for="domicilio">Domicilio<span
                     [ngClass]="isValid(datosPersonales,'domicilio') ? 'red-require ' : ''">*</span>:</label>
-                <textarea class="form-control" id="domicilio" rows="2" height="50"
+                <textarea class="form-control" id="domicilio" rows="2" height="50" maxlength="200"
                   placeholder="Calle, No Ext, No Int, Ciudad, C.P." style="height: 100px" formControlName="domicilio"
                   [ngClass]="isValid(datosPersonales,'domicilio') ? 'required' : ''"
                   (change)="setValoresStore(datosPersonales,'domicilio', 'setDomicilio')"></textarea>
-                @if (destinatarioForm.get('datosPersonales.domicilio')?.hasError('required') &&
+                @if (destinatarioForm.get('datosPersonales.domicilio')?.errors?.['required'] &&
                 destinatarioForm.get('datosPersonales.domicilio')?.touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
+                <p class="mensaje-error">Este campo es obligatorio.</p>
+                }
+                @else if (destinatarioForm.get('datosPersonales.domicilio')?.errors?.['maxlength'] &&
+                destinatarioForm.get('datosPersonales.domicilio')?.touched) {
+                <p class="mensaje-error">El domicilio no puede tener más de 200 caracteres.</p>
                 }
               </div>
             </div>
             <div class="row">
               <div class="col-md-1 mb-3">
                 <label class="form-label" for="lada">Lada:</label>
-                <input class="form-control" id="lada" type="number" formControlName="lada"
+                <input class="form-control" maxlength="2" id="lada" type="number" formControlName="lada"
                   [ngClass]="isValid(datosPersonales,'lada') ? 'required' : ''"
                   (change)="setValoresStore(datosPersonales,'lada', 'setLada')" />
+                @if (destinatarioForm.get('datosPersonales.lada')?.errors?.['minlength'] &&
+                destinatarioForm.get('datosPersonales.lada')?.touched) {
+                <p class="mensaje-error">La lada debe tener al menos 1 dígito.</p>
+                }
+                @else if (destinatarioForm.get('datosPersonales.lada')?.errors?.['maxlength'] &&
+                destinatarioForm.get('datosPersonales.lada')?.touched) {
+                <p class="mensaje-error">La lada no puede tener más de 4 dígitos.</p>
+                }
+                @else if (destinatarioForm.get('datosPersonales.lada')?.errors?.['pattern'] &&
+                destinatarioForm.get('datosPersonales.lada')?.touched) {
+                <p class="mensaje-error">Por favor, sólo escribe dígitos.</p>
+                }
               </div>
               <div class="col-md-3 mb-3">
                 <label class="form-label" for="telefono">Teléfono:</label>
                 <input class="form-control" id="telefono" type="number" formControlName="telefono"
                   [ngClass]="isValid(datosPersonales,'telefono') ? 'required' : ''"
                   (change)="setValoresStore(datosPersonales,'telefono', 'setTelefono')" />
+                @if (destinatarioForm.get('datosPersonales.telefono')?.errors?.['minlength'] &&
+                destinatarioForm.get('datosPersonales.telefono')?.touched) {
+                <p class="mensaje-error">El teléfono debe tener al menos 7 dígitos.</p>
+                }
+                @else if (destinatarioForm.get('datosPersonales.telefono')?.errors?.['maxlength'] &&
+                destinatarioForm.get('datosPersonales.telefono')?.touched) {
+                <p class="mensaje-error">El teléfono no puede tener más de 10 dígitos.</p>
+                }
+                @else if (destinatarioForm.get('datosPersonales.telefono')?.errors?.['pattern'] &&
+                destinatarioForm.get('datosPersonales.telefono')?.touched) {
+                <p class="mensaje-error">El teléfono solo puede contener dígitos.</p>
+                }
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label" for="correoElectronico">Correo electrónico:
@@ -139,6 +199,10 @@
                     [ngClass]="isValid(datosPersonales,'correoElectronico') ? 'required' : ''"
                     (change)="setValoresStore(datosPersonales,'correoElectronico', 'setCorreoElectronico')" />
                 </div>
+                @if (destinatarioForm.get('datosPersonales.correoElectronico')?.errors?.['email'] &&
+                destinatarioForm.get('datosPersonales.correoElectronico')?.touched) {
+                <p class="mensaje-error">El formato del correo electrónico no es válido.</p>
+                }
               </div>
             </div>
           </ng-container>

@@ -50,7 +50,7 @@
     </div>
     <div class="modal-body">
         <form [formGroup]="enlaceOperativoForm">
-          <h6>*Registro Federal de Contribuyentes:</h6>
+          <h6><span class="text-danger">* </span>Registro Federal de Contribuyentes:</h6>
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
@@ -82,6 +82,7 @@
                   formControlName="irfc"
                   (change)="eventoDeCambioDeValor($event, 'irfc')"
                   type="text"
+                  readonly
                 />
               </div>
               @if(enlaceOperativoForm.controls['irfc'].invalid && enlaceOperativoForm.controls['irfc'].touched) {
@@ -99,6 +100,7 @@
                   formControlName="inombre"
                   (change)="eventoDeCambioDeValor($event, 'inombre')"
                   type="text"
+                  readonly
                 />
               </div>
               @if(enlaceOperativoForm.controls['inombre'].invalid && enlaceOperativoForm.controls['inombre'].touched) {
@@ -116,6 +118,7 @@
                   formControlName="apellidoPaterno"
                   (change)="eventoDeCambioDeValor($event, 'apellidoPaterno')"
                   type="text"
+                  readonly
                 />
               </div>
               @if(enlaceOperativoForm.controls['apellidoPaterno'].invalid && enlaceOperativoForm.controls['apellidoPaterno'].touched) {
@@ -133,6 +136,7 @@
                   formControlName="apellidoMaterno"
                   (change)="eventoDeCambioDeValor($event, 'apellidoMaterno')"
                   type="text"
+                  readonly
                 />
               </div>
               @if(enlaceOperativoForm.controls['apellidoMaterno'].invalid && enlaceOperativoForm.controls['apellidoMaterno'].touched) {
@@ -152,6 +156,7 @@
                   formControlName="cuidad"
                   (change)="eventoDeCambioDeValor($event, 'cuidad')"
                   type="text"
+                  readonly
                 />
               </div>
               @if(enlaceOperativoForm.controls['cuidad'].invalid && enlaceOperativoForm.controls['cuidad'].touched) {
