@@ -30,76 +30,10 @@
       </div>
     </div> 
   
-    <div id="dvAgente" *ngIf="mostrarAgente" class="mt-5">
+    <div id="dvAgente" class="mt-5">
+      
       <div class="row">
-        <div class="col-md-6">
-          <div>
-            <label for="patenteModificada" class="form-label">Número patente / autorización</label>
-            <span class="require">*</span>
-            <input type="text" formControlName="numPatenteModal" id="idNumPatenteModal" maxlength="4" class="form-control inputtextoinstalacion" (change)="setValoresStore(datosTramite,'numPatenteModal', 'setNumPatenteModal')"/>
-            <div *ngIf="datosTramite.get('numPatenteModal')?.invalid && (datosTramite.get('numPatenteModal')?.dirty || datosTramite.get('numPatenteModal')?.touched)">
-              <small class="text-danger" *ngIf="datosTramite.get('numPatenteModal')?.errors?.['required']">
-                Número de Patente es requerido.
-              </small>
-              <small class="text-danger" *ngIf="datosTramite.get('numPatenteModal')?.errors?.['maxlength']">
-                Máximo 4 caracteres permitidos.
-              </small>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div>
-            <label for="rfcModal" class="form-label">RFC</label>
-            <span class="require">*</span>
-            <input type="text" formControlName="rfcModal" id="rfcModal" maxlength="13" class="form-control" [readonly]="true" />
-            <div *ngIf="datosTramite.get('rfcModal')?.invalid && (datosTramite.get('rfcModal')?.dirty || datosTramite.get('rfcModal')?.touched)">
-              <small class="text-danger" *ngIf="datosTramite.get('rfcModal')?.errors?.['required']">
-                RFC es requerido.
-              </small>
-              <small class="text-danger" *ngIf="datosTramite.get('rfcModal')?.errors?.['maxlength']">
-                Máximo 13 caracteres permitidos.
-              </small>
-            </div>
-          </div>
-        </div>
-          <div class="col-md-6">          
-            <div class="form-check agente">
-              <input type="checkbox" formControlName="obligFisc" id="checkObligFisc" value="1" class="form-check-input" (change)="setValoresStore(datosTramite,'obligFisc', 'setObligFisc')"/>
-              <label class="form-check-label" for="checkObligFisc">
-                <span class="check-oblig">*</span>
-                Se encuentran al corriente en el cumplimiento de sus obligaciones fiscales
-              </label>
-              <div *ngIf="datosTramite.get('obligFisc')?.invalid && (datosTramite.get('obligFisc')?.dirty || datosTramite.get('obligFisc')?.touched)">
-                <small class="text-danger" *ngIf="datosTramite.get('obligFisc')?.errors?.['required']">
-                  Debe aceptar esta opción.
-                </small>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-check agente">
-              <input type="checkbox" formControlName="autPantente" id="checkAutPantente" value="1" class="form-check-input" (change)="setValoresStore(datosTramite,'autPantente', 'setAutPantente')"/>
-              <label class="form-check-label" for="checkAutPantente">
-                <span class="check-oblig">*</span>
-                La Patente/Autorización se encuentra activa
-              </label>
-              <div *ngIf="datosTramite.get('autPantente')?.invalid && (datosTramite.get('autPantente')?.dirty || datosTramite.get('autPantente')?.touched)">
-                <small class="text-danger" *ngIf="datosTramite.get('autPantente')?.errors?.['required']">
-                  Debe aceptar esta opción.
-                </small>
-              </div>
-            </div>
-          </div>
         <div class="col-md-4">
-          <br>
-          <button type="button" id="btncargarPatente" class="btn btn-primary">
-            Buscar
-          </button>
-        </div>
-      </div>
-      <br />
-      <div class="row">
-        <div class="col-md-6">
           <div>
             <label for="nombre" class="form-label">Nombre(s)</label>
             <span class="require">*:</span>
@@ -109,82 +43,60 @@
             </div>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <div>
-            <label for="apellidoPaterno" class="form-label">Primer Apellido</label>
+            <label for="apellidoPaterno" class="form-label">Apellido paterno</label>
             <span class="require">*</span>
           </div>
           <div>
             <input type="text" formControlName="apellidoPaterno" id="apellidoPaternoAgente" class="form-control" [readonly]="true" />
           </div>
         </div>
-      </div>
-      
-      <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <div>
-            <label for="apellidoMaterno" class="form-label">Segundo Apellido</label>
+            <label for="apellidoMaterno" class="form-label">Apellido materno</label>
             <span class="require">*</span>
           </div>
           <div>
             <input type="text" formControlName="apellidoMaterno" id="apellidoMaternoAgente" class="form-control" [readonly]="true" />
           </div>
         </div>
-        <div class="col-md-6">
-          <div>
-            <label for="patenteModificada" class="form-label">Número patente / autorización</label>
-            <span class="require">*</span>
-          </div>
-          <div>
-            <input type="text" formControlName="patenteModificada" id="patente1" maxlength="4" class="form-control" [readonly]="true" />
-            <div *ngIf="datosTramite.get('patenteModificada')?.invalid && (datosTramite.get('patenteModificada')?.dirty || datosTramite.get('patenteModificada')?.touched)">
-              <small class="text-danger" *ngIf="datosTramite.get('patenteModificada')?.errors?.['required']">
-                Patente Modificada es requerida.
-              </small>
-            </div>
-          </div>
-        </div>
-      </div> 
-    </div> 
-    <br>
-    
-    <div id="dvAgencia" *ngIf="mostrarAgencia">
-      <div class="row">
-        <div class="col-md-6">
-          <div>
-            <label for="patente2" class="form-label">Número patente / autorización</label>
-            <span class="require">*</span>
-            <input type="text" formControlName="patente2" id="patente2" maxlength="15" class="form-control" (change)="setValoresStore(datosTramite,'patente2', 'setPatente2')"/>
-            <div *ngIf="datosTramite.get('patente2')?.invalid && (datosTramite.get('patente2')?.dirty || datosTramite.get('patente2')?.touched)">
-              <small class="text-danger" *ngIf="datosTramite.get('patente2')?.errors?.['required']">
-                Patente es requerida.
-              </small>
-              <small class="text-danger" *ngIf="datosTramite.get('patente2')?.errors?.['maxlength']">
-                Máximo 15 caracteres permitidos.
-              </small>
-            </div>
-          </div>
-        </div>
-      </div>
-      <br />
-      <div class="row">
-        <div class="col-md-6">
-          <div>
-            <label for="razonSocial" class="form-label">Razón Social</label>
-            <span class="require">*</span>
+        <div class="row">
+          <div class="col-md-8">
             <div>
-              <input type="text" formControlName="razonAgencia" id="razonAgencia" class="form-control" (change)="setValoresStore(datosTramite,'razonAgencia', 'setRazonAgencia')"/>
-              <div *ngIf="datosTramite.get('razonAgencia')?.invalid && (datosTramite.get('razonAgencia')?.dirty || datosTramite.get('razonAgencia')?.touched)">
-                <small class="text-danger" *ngIf="datosTramite.get('razonAgencia')?.errors?.['required']">
-                  Razón Social es requerida.
-                </small>
+              <label for="razonSocial" class="form-label"> Denominación o razón Social</label>
+              <div>
+                <input type="text" formControlName="razonSocial" id="razonSocial" class="form-control" [readonly]="true"(change)="setValoresStore(datosTramite,'razonSocial', 'setRazonSocial')"/>
               </div>
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-4">
+          <div>
+            <label for="numPatenteModal" class="form-label">Patente o autorización</label>
+          </div>
+          <div>
+            <input type="text" formControlName="numPatenteModal" id="numPatenteModal" class="form-control" [readonly]="true" />
+          </div>
+        </div>
       </div>
-    </div>   
-    
+      </div>   
+      <div class="row">
+        <div class="col-md-4">
+          <app-catalogo-select 
+          id="tipoMovimientoData"
+          formControlName="tipoMovimiento"
+          [catalogo]="tipoMovimientoData.catalogos" 
+          [label]="'*Tipo Movimiento'" 
+          [placeholder]="tipoMovimientoData.primerOpcion"
+          (change)="setValoresStore(datosTramite,'tipoMovimiento', 'setTipoMovimiento')"
+          >
+        </app-catalogo-select>
+        </div>
+      </div>
+    </div> 
+    <br> 
     <!-- BOTONES  -->
     <div class="row">
       <div class="col-md-12">

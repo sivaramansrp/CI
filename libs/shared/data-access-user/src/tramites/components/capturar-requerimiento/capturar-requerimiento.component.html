@@ -11,14 +11,25 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-12">
-                <label for="justificacionRequerimiento" class="form-label">Justificación requerimiento :</label>
+              <div class="col-md-12 left">
+                <label for="justificacionRequerimiento" class="form-label">Justificación del requerimiento*:</label>
                 <textarea name="justificacionRequerimiento" 
                 id="justificacionRequerimiento" 
                 class="form-control text-height" 
                 formControlName="justificacionRequerimiento"
-                (change)="setValoresStore(formRequerimiento,'justificacionRequerimiento', 'setjustificacionRequerimientoValue')"
-                ></textarea>
+                (input)="setValoresStore(formRequerimiento,'justificacionRequerimiento', 'setjustificacionRequerimientoValue')"
+                (blur)="setValoresStore(formRequerimiento,'justificacionRequerimiento', 'setjustificacionRequerimientoValue')"></textarea>
+                <div class="text-muted small mt-1">
+                  {{ (formRequerimiento.get('justificacionRequerimiento')?.value || '').length }} / 10000 caracteres
+                </div>
+                <div *ngIf="formRequerimiento.get('justificacionRequerimiento')?.invalid && (formRequerimiento.get('justificacionRequerimiento')?.touched || formRequerimiento.get('justificacionRequerimiento')?.dirty)" class="text-danger">
+                  <div *ngIf="formRequerimiento.get('justificacionRequerimiento')?.errors?.['required']">
+                    Este campo es obligatorio.
+                  </div>
+                  <div *ngIf="formRequerimiento.get('justificacionRequerimiento')?.errors?.['maxlength']">
+                    Por favor, no escriba más de 10000 caracteres.
+                  </div>
+                </div>
               </div>
             </div>
             <div class="col-md-12">

@@ -1,12 +1,11 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  CatalogoSelectComponent,
   ConsultaioState,
   InputFecha,
   InputFechaComponent,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FECHA_FINAL, FECHA_INICIAL, FECHA_PAGO } from '../model/registro.model';
 import {
   FormBuilder,
@@ -36,9 +35,8 @@ import { Tramite31802Query } from '../state/Tramite31802.query';
     CommonModule,
     TituloComponent,
     InputFechaComponent,
-    CatalogoSelectComponent,
-    ReactiveFormsModule,
-  ],
+    ReactiveFormsModule
+],
   providers: [RegistroSolicitudService],
   templateUrl: './Solicitud.component.html',
   styleUrl: './Solicitud.component.css',

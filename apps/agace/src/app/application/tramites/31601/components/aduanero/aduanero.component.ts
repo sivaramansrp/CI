@@ -574,6 +574,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
         ],
       ],
       archivoNacionales: [''],
+      bimestreValor:['']
     });
 
     // Configuración del modo de solo lectura
@@ -586,6 +587,21 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
         this.preOperativeForm.get(key)?.enable();
       });
     }
+      this.preOperativeForm.get('nombreDel')?.disable();
+      this.preOperativeForm.get('lugarDeRadicacion')?.disable();
+      this.preOperativeForm.get('indiqueCheck')?.disable();
+   
+    this.preOperativeForm.get('indiqueCuenta')?.valueChanges.subscribe((value) => {
+    if (value === 'Si') {
+      this.preOperativeForm.get('nombreDel')?.enable();
+      this.preOperativeForm.get('lugarDeRadicacion')?.enable(); 
+       this.preOperativeForm.get('indiqueCheck')?.enable();
+    } else {
+     this.preOperativeForm.get('nombreDel')?.disable();
+      this.preOperativeForm.get('lugarDeRadicacion')?.disable();
+       this.preOperativeForm.get('indiqueCheck')?.disable();
+    }
+  });
   }
 
   /**
@@ -731,7 +747,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
 
       if (this.camposObligatoriosRespondidosControlInventarios) {
         const INDEX = this.datosTablaControlInventarios.findIndex(
-          item => item.id === this.filaSeleccionadaControlInventarios!.id
+          item => item.id === this.filaSeleccionadaControlInventarios?.id
         );
 
         if (INDEX !== -1) {
@@ -996,6 +1012,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Si hay elementos seleccionados, abre el popup de confirmación de eliminación.
    */
   confirmEliminarMencioneItem(): void {
+      // Verifica si hay elementos seleccionados
     if (this.listaFilaSeleccionadaMencione.length === 0) {
       return;
     }
@@ -1064,16 +1081,16 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
       Boolean(this.preOperativeForm.get('rfc')?.valid) &&
       Boolean(this.preOperativeForm.get('razonSocial')?.valid) &&
       Boolean(this.preOperativeForm.get('numeroEmpleados')?.valid) &&
-      Boolean(this.preOperativeForm.get('empleadosPropios')?.valid) &&
-      Boolean(this.preOperativeForm.get('numeroAutorizacionCITES')?.valid);
-
-    if (this.mandatoryFieldsAnswered) {
+      Boolean(this.preOperativeForm.get('numeroAutorizacionCITES')?.valid) &&
+      Boolean(this.preOperativeForm.get('bimestreValor')?.valid);
+        if (this.mandatoryFieldsAnswered) {
+      
       const NEWITEM: MencioneConfiguracionItem = {
         id: (this.datosTablaMencione.length + 1).toString(),
         rfc: this.preOperativeForm.get('rfc')?.value,
         social: this.preOperativeForm.get('razonSocial')?.value,
         noumero: this.preOperativeForm.get('numeroEmpleados')?.value,
-        bimestre: this.preOperativeForm.get('empleadosPropios')?.value,
+        bimestre: this.preOperativeForm.get('bimestreValor')?.value,
       };
       this.datosTablaMencione.push(NEWITEM);
       this.tramite31601Store.setMencioneTablaDatos(this.datosTablaMencione);

@@ -17,6 +17,8 @@ import { Injectable } from '@angular/core';
  */
 
 export interface Solicitud220401State {
+  /** Tipo de producto asociado a la solicitud. */
+  tipoProducto: string;
   /** Certificación asociada a la solicitud. */
   certificada: string;
 
@@ -128,7 +130,8 @@ export interface Solicitud220401State {
  */
 export function createInitialState(): Solicitud220401State {
   return {
-  
+    /** Tipo de producto asociado a la solicitud. */
+    tipoProducto: '',
    /** Certificación asociada a la solicitud. */
     certificada: '',
 
@@ -244,6 +247,18 @@ export function createInitialState(): Solicitud220401State {
 export class Agregar220401Store extends Store<Solicitud220401State> {
   constructor() {
     super(createInitialState());
+  }
+
+  /**
+   * @method settipoProducto
+   * @description Establece el valor de 'tipoProducto'.
+   * @param {string} tipoProducto - El valor de 'tipoProducto'.
+   */
+  public settipoProducto(tipoProducto: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoProducto,
+    }));
   }
 
   /**

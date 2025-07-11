@@ -1,3 +1,18 @@
+/**
+ * Store de gestión de estado para el trámite 40102 de registro de vehículos y unidades de arrastre.
+ *
+ * Este archivo contiene la implementación del patrón Store de Akita para gestionar
+ * el estado de los datos de vehículos principales y unidades de arrastre en el
+ * trámite 40102. Proporciona una interfaz centralizada para el manejo de estado
+ * inmutable y métodos específicos para actualizar propiedades individuales
+ * de vehículos y unidades de transporte.
+ *
+ * @file tramite40102.store.ts
+ * @author Sistema de Gestión de Trámites - State Management Team
+ * @version 1.0.0
+ * @since 1.0.0
+ */
+
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -5,21 +20,77 @@ import {
   DatosUnidad,
   DatosVehiculo,
 } from '../models/registro-muestras-mercancias.model';
+
 /**
- * Estado de la store para el trámite 40102.
- * @property datosVehiculo - Datos del vehículo principal.
- * @property datosUnidad - Datos de la unidad de arrastre.
+ * Interfaz que define el estado completo del store para el trámite 40102.
+ *
+ * Esta interfaz establece la estructura del estado global que mantiene
+ * la información de vehículos principales y unidades de arrastre utilizados
+ * en operaciones de transporte de mercancías. Cada propiedad representa
+ * un conjunto completo de datos necesarios para el registro aduanero.
+ *
+ * @interface Tramite40102State
+ * @since 1.0.0
+ *
+ * @example
+ * ```typescript
+ * const estadoInicial: Tramite40102State = {
+ *   datosVehiculo: {
+ *     numero: "VEH001",
+ *     tipoDeVehiculo: "Camión",
+ *     idDeVehiculo: "VIN123456789",
+ *     // ... otros campos del vehículo
+ *   },
+ *   datosUnidad: {
+ *     vinVehiculo: "1HGBH41JXMN109186",
+ *     tipoDeUnidadArrastre: "Remolque",
+ *     // ... otros campos de la unidad
+ *   }
+ * };
+ * ```
  */
 export interface Tramite40102State {
+  /**
+   * @property {DatosVehiculo} datosVehiculo
+   * Datos completos del vehículo principal.
+   * Contiene toda la información técnica, legal y de identificación del vehículo motor.
+   */
   datosVehiculo: DatosVehiculo;
+
+  /**
+   * @property {DatosUnidad} datosUnidad
+   * Datos completos de la unidad de arrastre.
+   * Contiene la información específica de remolques, semirremolques y otros vehículos auxiliares.
+   */
   datosUnidad: DatosUnidad;
 }
 /**
- * Crea el estado inicial para el trámite 40102.
- * @returns Estado inicial con valores vacíos para vehículo y unidad.
+ * Función que crea el estado inicial para el store del trámite 40102.
+ *
+ * Esta función factory genera el estado inicial con valores por defecto
+ * para todos los campos de vehículos y unidades de arrastre. Garantiza
+ * que el store comience con una estructura de datos consistente y completa,
+ * evitando errores de propiedades undefined durante la ejecución.
+ *
+ * @function createInitialState
+ * @returns {Tramite40102State} Estado inicial con valores vacíos para vehículo y unidad de arrastre.
+ *
+ * @example
+ * ```typescript
+ * const estadoInicial = createInitialState();
+ * console.log(estadoInicial.datosVehiculo.numero); // ""
+ * console.log(estadoInicial.datosUnidad.vinVehiculo); // ""
+ * ```
+ *
+ * @since 1.0.0
  */
 export function createInitialState(): Tramite40102State {
   return {
+    /**
+     * Estado inicial de datos del vehículo principal.
+     * Todos los campos se inicializan con cadenas vacías para permitir
+     * la captura progresiva de información sin errores de validación.
+     */
     datosVehiculo: {
       numero: '',
       tipoDeVehiculo: '',
@@ -38,6 +109,11 @@ export function createInitialState(): Tramite40102State {
       paisEmisor2daPlaca: '',
       descripcion: '',
     },
+    /**
+     * Estado inicial de datos de la unidad de arrastre.
+     * Configuración base para remolques y unidades auxiliares
+     * con campos vacíos listos para captura de datos.
+     */
     datosUnidad: {
       vinVehiculo: '',
       tipoDeUnidadArrastre: '',
@@ -55,8 +131,31 @@ export function createInitialState(): Tramite40102State {
   };
 }
 /**
- * Store de Akita para el trámite 40102.
- * Permite actualizar campos individuales de los datos de vehículo y unidad de arrastre.
+ * Store de Akita para la gestión centralizada del estado del trámite 40102.
+ *
+ * Esta clase implementa el patrón Store de Akita para proporcionar una gestión
+ * de estado reactiva y predecible para los datos de vehículos y unidades de
+ * arrastre. Ofrece métodos especializados para actualizar propiedades individuales
+ * manteniendo la inmutabilidad del estado y notificando automáticamente a todos
+ * los suscriptores sobre los cambios realizados.
+ *
+ * @class Tramite40102Store
+ * @extends {Store<Tramite40102State>}
+ * @injectable
+ * @providedIn 'root'
+ *
+ * @example
+ * ```typescript
+ * constructor(private store: Tramite40102Store) {
+ *   // Actualizar el número del vehículo
+ *   this.store.setDatosVehiculoNumero("VEH001");
+ *   
+ *   // Actualizar el VIN de la unidad
+ *   this.store.setDatosUnidadVinVehiculo("1HGBH41JXMN109186");
+ * }
+ * ```
+ *
+ * @since 1.0.0
  */
 @Injectable({
   providedIn: 'root',
@@ -64,15 +163,49 @@ export function createInitialState(): Tramite40102State {
 @StoreConfig({ name: 'tramite40102', resettable: true })
 export class Tramite40102Store extends Store<Tramite40102State> {
   /**
-   * Inicializa la store con el estado inicial.
+   * Constructor del store del trámite 40102.
+   *
+   * Inicializa el store con el estado inicial proporcionado por la función
+   * createInitialState(), estableciendo los valores por defecto para todos
+   * los campos de vehículos y unidades de arrastre.
+   *
+   * @constructor
+   * @example
+   * ```typescript
+   * // El store se inyecta automáticamente
+   * constructor(private tramiteStore: Tramite40102Store) {
+   *   // El store está listo para usar
+   * }
+   * ```
    */
   constructor() {
     super(createInitialState());
   }
 
   /**
-   * Actualiza el número del vehículo.
-   * @param numero Nuevo número.
+   * Actualiza el número identificador del vehículo principal en el estado.
+   *
+   * Este método permite modificar el número único asignado al vehículo
+   * dentro del sistema de gestión de transporte. Utiliza el patrón inmutable
+   * de Akita para garantizar la integridad del estado y notificar automáticamente
+   * a todos los suscriptores sobre el cambio realizado.
+   *
+   * @method setDatosVehiculoNumero
+   * @param {string} numero - Nuevo número identificador del vehículo.
+   * @returns {void}
+   *
+   * @example
+   * ```typescript
+   * // Actualizar el número del vehículo
+   * this.tramiteStore.setDatosVehiculoNumero("VEH001");
+   * 
+   * // El cambio se propaga automáticamente a todos los suscriptores
+   * this.tramiteQuery.select().subscribe(state => {
+   *   console.log('Nuevo número:', state.datosVehiculo.numero); // "VEH001"
+   * });
+   * ```
+   *
+   * @since 1.0.0
    */
   public setDatosVehiculoNumero(numero: string): void {
     this.update((state) => ({
@@ -85,8 +218,26 @@ export class Tramite40102Store extends Store<Tramite40102State> {
   }
 
   /**
-   * Actualiza el tipo de vehículo.
-   * @param tipoDeVehiculo Nuevo tipo de vehículo.
+   * Actualiza la clasificación del tipo de vehículo en el estado.
+   *
+   * Modifica la categoría o tipo específico del vehículo principal según
+   * las clasificaciones oficiales del sistema aduanero. Permite categorizar
+   * vehículos como camión, tractocamión, automóvil, etc.
+   *
+   * @method setDatosVehiculoTipoDeVehiculo
+   * @param {string} tipoDeVehiculo - Nueva clasificación del tipo de vehículo.
+   * @returns {void}
+   *
+   * @example
+   * ```typescript
+   * // Establecer tipo de vehículo
+   * this.tramiteStore.setDatosVehiculoTipoDeVehiculo("Tractocamión");
+   * 
+   * // Verificar el cambio
+   * this.tramiteQuery.getValue().datosVehiculo.tipoDeVehiculo; // "Tractocamión"
+   * ```
+   *
+   * @since 1.0.0
    */
   public setDatosVehiculoTipoDeVehiculo(tipoDeVehiculo: string): void {
     this.update((state) => ({
@@ -99,8 +250,27 @@ export class Tramite40102Store extends Store<Tramite40102State> {
   }
 
   /**
-   * Actualiza el identificador del vehículo.
-   * @param idDeVehiculo Nuevo identificador.
+   * Actualiza el identificador único del vehículo (VIN) en el estado.
+   *
+   * Establece el Número de Identificación Vehicular (VIN) que identifica
+   * únicamente al vehículo a nivel internacional. Este código alfanumérico
+   * de 17 caracteres es fundamental para el registro aduanero.
+   *
+   * @method setDatosVehiculoIdDeVehiculo
+   * @param {string} idDeVehiculo - Nuevo VIN del vehículo (17 caracteres).
+   * @returns {void}
+   *
+   * @example
+   * ```typescript
+   * // Establecer VIN del vehículo
+   * this.tramiteStore.setDatosVehiculoIdDeVehiculo("1HGBH41JXMN109186");
+   * 
+   * // Validar formato del VIN
+   * const vin = this.tramiteQuery.getValue().datosVehiculo.idDeVehiculo;
+   * console.log('VIN válido:', vin.length === 17); // true
+   * ```
+   *
+   * @since 1.0.0
    */
   public setDatosVehiculoIdDeVehiculo(idDeVehiculo: string): void {
     this.update((state) => ({

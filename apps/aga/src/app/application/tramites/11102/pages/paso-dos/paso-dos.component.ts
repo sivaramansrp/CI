@@ -1,15 +1,16 @@
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoResponse } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  CATALOGOS_ID,
+  Catalogo,
+  CatalogoResponse,
+  CatalogosService,
+  TEXTOS,
+  TituloComponent
+} from '@ng-mf/data-access-user';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TEXTOS } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar el paso dos del trámite.

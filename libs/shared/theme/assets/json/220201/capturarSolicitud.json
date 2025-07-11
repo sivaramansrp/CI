@@ -25,25 +25,77 @@
     "claveReferencia": "REF-20250523-ZS",
     "cadenaDependencia": "SAGARPA-MOVIL-2025",
     "banco": "1",
+    "fechaPago": "16/05/2025",
     "llavePago": "LLP-77889900",
     "importePago": "1500.00"
   },
   "tercerosRelacionados":[
-         {
-    "nombre": "Carlos Rodríguez",
-    "correo": "carlos.rodriguez@example.com"
-  },
-  {
-    "nombre": "Ana Martínez",
-    "correo": "ana.martinez@example.com"
-  },
-  {
-    "nombre": "Luis Fernández",
-    "correo": "luis.fernandez@example.com"
-  }
+    {
+      "tipoMercancia": "Ganado",
+      "nombre": "Juan",
+      "primerApellido": "Pérez",
+      "segundoApellido": "García",
+      "razonSocial": "Agropecuaria del Norte S.A. de C.V.",
+      "pais": "México",
+      "codigoPostal": "64000",
+      "estado": "Nuevo León",
+      "municipio": "Monterrey",
+      "colonia": "Centro",
+      "calle": "Av. Revolución",
+      "numeroExterior": "123",
+      "numeroInterior": "4B",
+      "lada": "81",
+      "telefono": "12345678",
+      "correo": "juan.perez@agronorte.com"
+    }
   ],
    "validarEnvio": {
       "dataParaMovilizacion": true,
       "dataDeLaSolicitud": true
     }
+    ,
+    "tablaDatos": [
+      {
+      "noPartida": "001",
+      "tipoRequisito": "Sanitario",
+      "requisito": "Certificado de salud",
+      "numeroCertificadoInternacional": "INT-12345",
+      "fraccionArancelaria": "0101.21.00",
+      "descripcionFraccion": "Caballos reproductores de raza pura"  ,
+      "nico": "01",
+      "descripcionNico": "Caballos",
+      "descripcion": "Caballo pura sangre para reproducción",
+      "umt": "Cabeza",
+      "cantidadUMT": 2,
+      "umc": "Cabeza",
+      "cantidadUMC": 2,
+      "uso": "Reproducción",
+      "tipoDeProducto": "Animal Vivo",
+      "numeroDeLote": "L-2024-001",
+      "paisDeOrigen": "México",
+      "paisDeProcedencia": "México",
+      "certificadoInternacionalElectronico": "E-CERT-001"
+
+      }
+    ],
+    "datosForma": [
+       { 
+      "tipoMercancia": "Ganado",
+      "nombre": "Juan",
+      "primerApellido": "Pérez",
+      "segundoApellido": "García",
+      "razonSocial": "Agropecuaria del Norte S.A. de C.V.",
+      "pais": "México",
+      "codigoPostal": "64000",
+      "estado": "Nuevo León",
+      "municipio": "Monterrey",
+      "colonia": "Centro",
+      "calle": "Av. Revolución",
+      "numeroExterior": "123",
+      "numeroInterior": "4B",
+      "lada": "81",
+      "telefono": "12345678",
+      "correo": "juan.perez@agronorte.com"
+        }
+      ]
 }

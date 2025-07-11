@@ -17,7 +17,7 @@
                 </h4>
                 <button type="button" class="collpase-button collapsed"></button>
               </div>
-              @if(colapsable){
+              @if(colapsable && !esFormularioSoloLectura){
               <div class="panel-collapse collapse in" id="panel-01">
                 <div class="panel-body">
                   <ng-alert [CONTENIDO]="seleccionado"></ng-alert>
@@ -30,6 +30,7 @@
                     [tipoSeleccionTabla]="tipoSeleccionsoli"
                     [configuracionTabla]="configuracionColumnasSolicitud"
                     [datos]="cuerpoTablaSolicitud"
+                    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
                   ></app-tabla-dinamica> 
           </div>
         </div>
@@ -146,6 +147,7 @@
             [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore()"
             [tooltipQuestionCircle]="true"
+            [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
           ></app-catalogo-select>
         </div>
     
@@ -167,7 +169,7 @@
       </div>
         </div>
       <div class="row">
-        @if(notificationCheck){
+        @if(notificationCheck && !esFormularioSoloLectura){
         <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
       }
         <div class="row mt-5">
@@ -179,15 +181,17 @@
                     [tipoSeleccionTabla]="tipoSeleccionsoli"
                     [configuracionTabla]="configuracionColumnasoli"
                     [datos]="cuerpoTabla"
+                     (listaDeFilaSeleccionada)="seleccionTabla($event)"
+                     [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
                   ></app-tabla-dinamica> 
           </div>
         </div>
         @if(!esFormularioSoloLectura){
-        <div class="row my-5">
+        <div class="row">
           <div class="col-md-12 d-flex justify-content-end">
-            <button type="button" class="btn btn-default" [disabled]="!notificationCheck">Modificar</button>
-            <button type="button" class="btn btn-danger ms-3"[disabled]="!notificationCheck">Eliminar</button>
-            <button type="button" class="btn btn-primary ms-3" [disabled]="!notificationCheck">Agregar</button>
+            <button type="button" class="btn btn-default" [disabled]="!notificationCheck"  (click)="modificarMercancia()">Modificar</button>
+            <button type="button" class="btn btn-danger ms-3"[disabled]="!notificationCheck" (click)="eliminarMercancia()">Eliminar</button>
+            <button type="button" class="btn btn-primary ms-3" [disabled]="!notificationCheck" (click)="agregarMercancia()">Agregar</button>
           </div>
         </div>
       }

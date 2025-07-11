@@ -11,6 +11,8 @@ import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import { FormBuilder } from '@angular/forms';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 
 @Injectable()
 class MockAgriculturaApiService {
@@ -21,6 +23,14 @@ class MockAgriculturaApiService {
     });
   };
 }
+
+@Injectable()
+class MockRouter {
+  navigate() {};
+}
+
+@Injectable()
+class MockFitosanitarioStore {}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -48,7 +58,7 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ DatosDeLaSolicitudComponent, FormsModule, ReactiveFormsModule ],
+      imports: [ FormsModule, ReactiveFormsModule, DatosDeLaSolicitudComponent, ],
       declarations: [
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
@@ -57,7 +67,20 @@ describe('DatosDeLaSolicitudComponent', () => {
       providers: [
         FormBuilder,
         { provide: AgriculturaApiService, useClass: MockAgriculturaApiService },
-        ConsultaioQuery
+        ConsultaioQuery,
+        { provide: Router, useClass: MockRouter },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {url: 'url', params: {}, queryParams: {}, data: {}},
+            url: observableOf('url'),
+            params: observableOf({}),
+            queryParams: observableOf({}),
+            fragment: observableOf('fragment'),
+            data: observableOf({})
+          }
+        },
+        { provide: FitosanitarioStore, useClass: MockFitosanitarioStore }
       ]
     }).overrideComponent(DatosDeLaSolicitudComponent, {
 
@@ -66,20 +89,16 @@ describe('DatosDeLaSolicitudComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
   it('should run #ngOnInit()', async () => {
-    component.forma = {
-      valueChanges: observableOf({}),
-      get valid() { return true; }
-    };
+    component.forma = component.forma || {};
+    component.forma.valueChanges = observableOf({});
+    // Mock the 'valid' property using Object.defineProperty
+    Object.defineProperty(component.forma, 'valid', { get: () => 'valid', configurable: true });
     component.agriculturaApiService = component.agriculturaApiService || {};
     component.agriculturaApiService.actualizarFormaValida = jest.fn();
     component.obtenerTodosLosDatosDeLaLista = jest.fn();
@@ -90,12 +109,52 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.createFromFields).toHaveBeenCalled();
   });
 
-  it('should run #inicializarEstadoFormulario()', async () => {
-    component.guardarDatosFormulario = jest.fn();
-    component.createFromFields = jest.fn();
+  it('should run #inicializarEstadoFormulario() when form is read-only', async () => {
+    // Spy on the instance methods instead of prototype
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    const createFromFieldsSpy = jest.spyOn(component, 'createFromFields');
     component.esFormularioSoloLectura = true;
     component.inicializarEstadoFormulario();
-    expect(component.guardarDatosFormulario).toHaveBeenCalled();
+    expect(guardarSpy).toHaveBeenCalled();
+    expect(createFromFieldsSpy).not.toHaveBeenCalled();
+    guardarSpy.mockRestore();
+    createFromFieldsSpy.mockRestore();
+  });
+
+  it('should run #inicializarEstadoFormulario() when form is not read-only', async () => {
+    // Spy on the instance methods instead of prototype
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    const createFromFieldsSpy = jest.spyOn(component, 'createFromFields');
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(guardarSpy).not.toHaveBeenCalled();
+    expect(createFromFieldsSpy).toHaveBeenCalled();
+    guardarSpy.mockRestore();
+    createFromFieldsSpy.mockRestore();
+  });
+
+  it('should run #guardarDatosFormulario() when form is not read-only', async () => {
+    // Use a real FormGroup and spy on its methods
+    const fb = TestBed.inject(FormBuilder);
+    component.forma = fb.group({ test: [''] });
+    component.esFormularioSoloLectura = false;
+    const disableSpy = jest.spyOn(component.forma, 'disable');
+    const enableSpy = jest.spyOn(component.forma, 'enable');
+    component.guardarDatosFormulario();
+    expect(disableSpy).not.toHaveBeenCalled();
+    expect(enableSpy).toHaveBeenCalled();
+  });
+
+  it('should run #guardarDatosFormulario() when form is read-only', async () => {
+    // Use a real FormGroup and spy on its methods
+    const fb = TestBed.inject(FormBuilder);
+    component.forma = fb.group({ test: [''] });
+    component.esFormularioSoloLectura = true;
+    const disableSpy = jest.spyOn(component.forma, 'disable');
+    const enableSpy = jest.spyOn(component.forma, 'enable');
+    component.guardarDatosFormulario();
+    expect(disableSpy).toHaveBeenCalled();
+    expect(enableSpy).not.toHaveBeenCalled();
   });
 
   it('should run #createFromFields()', async () => {
@@ -109,10 +168,8 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   it('should run #inicializarCamposFormulario()', async () => {
     component.crearCamposRequeridos = jest.fn();
-    component.crearCamposOpcionales = jest.fn();
     component.inicializarCamposFormulario();
     expect(component.crearCamposRequeridos).toHaveBeenCalled();
-    expect(component.crearCamposOpcionales).toHaveBeenCalled();
   });
 
   it('should run #crearCamposRequeridos()', async () => {
@@ -124,18 +181,6 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.formulariodataStore.numeroDeGuia = 'numeroDeGuia';
     component.formulariodataStore.numeroDeCarro = 'numeroDeCarro';
     component.crearCamposRequeridos();
-
-  });
-
-  it('should run #crearCamposOpcionales()', async () => {
-    component.formulariodataStore = component.formulariodataStore || {};
-    component.formulariodataStore.numeroDeGuia = 'numeroDeGuia';
-    component.formulariodataStore.requisito = 'requisito';
-    component.formulariodataStore.numeroCertificadoInternacional = 'numeroCertificadoInternacional';
-    component.formulariodataStore.descripcionFraccion = 'descripcionFraccion';
-    component.formulariodataStore.descripcionNico = 'descripcionNico';
-    component.formulariodataStore.descripcion = 'descripcion';
-    component.crearCamposOpcionales();
 
   });
 
@@ -246,6 +291,90 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.forma.patchValue).toHaveBeenCalled();
   });
 
+  it('should run #agregarMercancia()', async () => {
+    component.seleccionTabla = jest.fn();
+    // Use a real FormGroup with the expected structure
+    const fb = TestBed.inject(FormBuilder);
+    component.forma = fb.group({ tipoMercancia: ['yes'] });
+    component.router = component.router || {};
+    component.router.navigate = jest.fn();
+    component.activatedROute = { snapshot: {} }; // Mock activatedRoute
+    component.agregarMercancia();
+    expect(component.seleccionTabla).toHaveBeenCalled();
+    expect(component.router.navigate).toHaveBeenCalled();
+  });
+
+  it('should not navigate in agregarMercancia if tipoMercancia is not yes/no', async () => {
+    const fb = TestBed.inject(FormBuilder);
+    component.forma = fb.group({ tipoMercancia: ['other'] });
+    component.router = { navigate: jest.fn() } as any;
+    component.activatedROute = {} as any;
+    const navigateSpy = jest.spyOn(component.router, 'navigate');
+    component.seleccionTabla = jest.fn();
+    component.agregarMercancia();
+    expect(navigateSpy).not.toHaveBeenCalled();
+  });
+
+  it('should run #seleccionTabla()', async () => {
+    component.fitosanitarioStore = component.fitosanitarioStore || {};
+    component.fitosanitarioStore.update = jest.fn().mockReturnValue([
+      null
+    ]);
+    component.seleccionTabla({});
+    expect(component.fitosanitarioStore.update).toHaveBeenCalled();
+  });
+
+  it('should run #modificarMercancia()', async () => {
+    component.router = component.router || {};
+    component.router.navigate = jest.fn();
+    component.modificarMercancia();
+    expect(component.router.navigate).toHaveBeenCalled();
+  });
+
+  it('should run #radioBotonSeleccionado()', async () => {
+    component.forma = component.forma || {};
+    component.forma.value = {
+      tipoMercancia: {}
+    };
+    component.setValoresStore = jest.fn();
+    component.radioBotonSeleccionado();
+    expect(component.setValoresStore).toHaveBeenCalled();
+  });
+
+  it('should set notificationCheck false in radioBotonSeleccionado for empty tipoMercancia', async () => {
+    component.forma = { value: { tipoMercancia: '' } };
+    component.setValoresStore = jest.fn();
+    component.radioBotonSeleccionado();
+    expect(component.notificationCheck).toBe(false);
+    expect(component.setValoresStore).toHaveBeenCalled();
+  });
+
+  it('should set notificationCheck false in radioBotonSeleccionado for null tipoMercancia', async () => {
+    component.forma = { value: { tipoMercancia: null } };
+    component.setValoresStore = jest.fn();
+    component.radioBotonSeleccionado();
+    expect(component.notificationCheck).toBe(false);
+    expect(component.setValoresStore).toHaveBeenCalled();
+  });
+
+  it('should set notificationCheck false in radioBotonSeleccionado for undefined tipoMercancia', async () => {
+    component.forma = { value: { tipoMercancia: undefined } };
+    component.setValoresStore = jest.fn();
+    component.radioBotonSeleccionado();
+    expect(component.notificationCheck).toBe(false);
+    expect(component.setValoresStore).toHaveBeenCalled();
+  });
+
+
+  it('should return early in eliminarMercancia if tablaDatos is empty', async () => {
+    component.fitosanitarioStore = {
+      getValue: () => ({ tablaDatos: [], selectedDatos: [] }),
+      update: jest.fn()
+    } as any;
+    component.eliminarMercancia();
+    expect(component.fitosanitarioStore.update).not.toHaveBeenCalled();
+  });
+
   it('should run #ngOnDestroy()', async () => {
     component.destroyNotifier$ = component.destroyNotifier$ || {};
     component.destroyNotifier$.next = jest.fn();
@@ -255,228 +384,4 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
-  it('should patch the form with correct values when seleccionFila is called with an event', async () => {
-    component.forma = {
-      patchValue: jest.fn()
-    };
-    const mockEvent = { some: 'data' }; // event is only checked for truthiness
-    component.seleccionFila(mockEvent as any);
-    expect(component.forma.patchValue).toHaveBeenCalledWith({
-      aduanaDeIngreso: "1",
-      oficinaDeInspeccion: "1",
-      puntoDeInspeccion: "1",
-      numeroDeGuia: "GUIA123456",
-      regimen: "1",
-      numeroDeCarro: "CARRO7890",
-      requisito: "Certificado Zoosanitario",
-      numeroCertificadoInternacional: "CERTINTL2024",
-      descripcionFraccion: "Caballos de raza pura",
-      descripcionNico: "Caballos para carreras",
-      descripcion: "Importación de caballos de carreras"
-    });
-  });
-
-  it('should not patch the form if seleccionFila is called with a falsy event', async () => {
-    component.forma = {
-      patchValue: jest.fn()
-    };
-    component.seleccionFila(undefined as any);
-    expect(component.forma.patchValue).not.toHaveBeenCalled();
-  });
-
-  it('should return an object combining required and optional fields from crearCamposRequeridos and crearCamposOpcionales', async () => {
-    // Arrange: mock the required and optional fields
-    const requiredFields = { field1: 'required1', field2: 'required2' };
-    const optionalFields = { field3: 'optional1', field4: 'optional2' };
-    component.crearCamposRequeridos = jest.fn().mockReturnValue(requiredFields);
-    component.crearCamposOpcionales = jest.fn().mockReturnValue(optionalFields);
-
-    // Act
-    const result = component.inicializarCamposFormulario();
-
-    // Assert
-    expect(component.crearCamposRequeridos).toHaveBeenCalled();
-    expect(component.crearCamposOpcionales).toHaveBeenCalled();
-    expect(result).toEqual({
-      field1: 'required1',
-      field2: 'required2',
-      field3: 'optional1',
-      field4: 'optional2'
-    });
-  });
-
-  it('should disable the form when esFormularioSoloLectura is true in guardarDatosFormulario', async () => {
-    component.forma = {
-      disable: jest.fn(),
-      enable: jest.fn()
-    };
-    component.esFormularioSoloLectura = true;
-    component.guardarDatosFormulario();
-    expect(component.forma.disable).toHaveBeenCalled();
-    expect(component.forma.enable).not.toHaveBeenCalled();
-  });
-
-  it('should enable the form when esFormularioSoloLectura is false in guardarDatosFormulario', async () => {
-    component.forma = {
-      disable: jest.fn(),
-      enable: jest.fn()
-    };
-    component.esFormularioSoloLectura = false;
-    component.guardarDatosFormulario();
-    expect(component.forma.enable).toHaveBeenCalled();
-    expect(component.forma.disable).not.toHaveBeenCalled();
-  });
-
-  it('should return correct optional fields with values from formulariodataStore and respect esFormularioSoloLectura', () => {
-    // Arrange
-    component.formulariodataStore = {
-      numeroDeGuia: 'guia123',
-      requisito: 'req456',
-      numeroCertificadoInternacional: 'cert789',
-      descripcionFraccion: 'descFrac',
-      descripcionNico: 'descNico',
-      descripcion: 'desc'
-    };
-    component.esFormularioSoloLectura = true;
-
-    // Act
-    const result = component.crearCamposOpcionales();
-
-    // Assert
-    expect(result).toEqual({
-      numeroDeGuia: [{ value: 'guia123', disabled: true }],
-      requisito: [{ value: 'req456', disabled: true }],
-      numeroCertificadoInternacional: [{ value: 'cert789', disabled: true }],
-      descripcionFraccion: [{ value: 'descFrac', disabled: true }],
-      descripcionNico: [{ value: 'descNico', disabled: true }],
-      descripcion: [{ value: 'desc', disabled: true }]
-    });
-  });
-
-  it('should return optional fields with empty string if formulariodataStore properties are undefined', () => {
-    // Arrange
-    component.formulariodataStore = {};
-    component.esFormularioSoloLectura = false;
-
-    // Act
-    const result = component.crearCamposOpcionales();
-
-    // Assert
-    expect(result).toEqual({
-      numeroDeGuia: [{ value: '', disabled: false }],
-      requisito: [{ value: '', disabled: false }],
-      numeroCertificadoInternacional: [{ value: '', disabled: false }],
-      descripcionFraccion: [{ value: '', disabled: false }],
-      descripcionNico: [{ value: '', disabled: false }],
-      descripcion: [{ value: '', disabled: false }]
-    });
-  });
-
-  it('should call agriculturaApiService.updateDatosForma with the form value in setValoresStore', () => {
-    // Arrange
-    const mockFormValue = { some: 'value' };
-    component.forma = { value: mockFormValue } as any;
-    component.agriculturaApiService = {
-      updateDatosForma: jest.fn()
-    } as any;
-
-    // Act
-    component.setValoresStore();
-
-    // Assert
-    expect(component.agriculturaApiService.updateDatosForma).toHaveBeenCalledWith(mockFormValue);
-  });
-
-  it('should call destroyNotifier$.next and destroyNotifier$.complete when ngOnDestroy is called', () => {
-    component.destroyNotifier$ = {
-      next: jest.fn(),
-      complete: jest.fn()
-    } as any;
-
-    component.ngOnDestroy();
-
-    expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
-  });
-
-  it('should toggle colapsable property when mostrar_colapsable is called', () => {
-    component.colapsable = false;
-    component.mostrar_colapsable();
-    expect(component.colapsable).toBe(true);
-    component.mostrar_colapsable();
-    expect(component.colapsable).toBe(false);
-  });
-
-it('should fetch aduana list and assign it to aduanaList in getaduanaLista', async () => {
-  // Arrange
-  const mockAduanaList = [{ id: 1, nombre: 'Aduana 1' }, { id: 2, nombre: 'Aduana 2' }];
-  const mockObservable = {
-    pipe: jest.fn().mockReturnThis(),
-    subscribe: jest.fn((cb) => cb(mockAduanaList))
-  };
-  component.agriculturaApiService = {
-    obtenerSelectorList: jest.fn().mockReturnValue(mockObservable)
-  } as any;
-  const { Subject } = require('rxjs');
-  component.destroyNotifier$ = new Subject();
-
-  // Act
-  component.getaduanaLista();
-
-  // Assert
-  expect(component.agriculturaApiService.obtenerSelectorList).toHaveBeenCalledWith('aduana_de_ingreso.json');
-  expect(mockObservable.pipe).toHaveBeenCalled();
-  expect(component.aduanaList).toBe(mockAduanaList);
-});
-
-it('should call guardarDatosFormulario when esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
-  component.esFormularioSoloLectura = true;
-  component.guardarDatosFormulario = jest.fn();
-  component.createFromFields = jest.fn();
-
-  component.inicializarEstadoFormulario();
-
-  expect(component.guardarDatosFormulario).toHaveBeenCalled();
-  expect(component.createFromFields).not.toHaveBeenCalled();
-});
-
-it('should call createFromFields when esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
-  component.esFormularioSoloLectura = false;
-  component.guardarDatosFormulario = jest.fn();
-  component.createFromFields = jest.fn();
-
-  component.inicializarEstadoFormulario();
-
-  expect(component.createFromFields).toHaveBeenCalled();
-  expect(component.guardarDatosFormulario).not.toHaveBeenCalled();
-});
-
-it('should subscribe to valueChanges and react to form value changes', async () => {
-  // Arrange
-  const mockSetValue = jest.fn();
-  const mockGet = jest.fn().mockReturnValue({ setValue: mockSetValue });
-  const mockSubscribe = jest.fn();
-  const mockValueChanges = {
-    subscribe: mockSubscribe
-  };
-  component.forma = {
-    valueChanges: mockValueChanges,
-    get: mockGet
-  } as any;
-
-  // Act
-  const callback = jest.fn();
-  component.forma.valueChanges.subscribe(callback);
-
-  // Simulate a value change
-  const newValue = { exampleField: 'newValue' };
-  mockSubscribe.mock.calls[0][0](newValue);
-
-  // Assert
-  expect(callback).toHaveBeenCalledWith(newValue);
-
-  // Simulate setting a value
-  component.forma.get('exampleField').setValue('newValue');
-  expect(mockSetValue).toHaveBeenCalledWith('newValue');
-});
 });

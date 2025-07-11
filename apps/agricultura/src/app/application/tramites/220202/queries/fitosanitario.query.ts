@@ -27,6 +27,14 @@ export class FitosanitarioQuery extends Query<ListaDeDatosFinal> {
         super(store);
     }
 
+  /**
+   * Selector para obtener la lista de terceros relacionados.
+   *
+   * @readonly
+   * @type {Observable<any>}
+   * @memberof FitosanitarioQuery
+   */
+  seleccionarTercerosRelacionados$ = this.select(estado => estado.tercerosRelacionados);
     
   /**
    * Selector para obtener los datos de pago de derechos.
@@ -36,4 +44,22 @@ export class FitosanitarioQuery extends Query<ListaDeDatosFinal> {
    * @memberof FitosanitarioQuery
    */
   seleccionarPagoDerechos$ = this.select(estado => estado.pago);
+
+  /**
+   * Selector para obtener los datos de movilización.
+   *
+   * @readonly
+   * @type {Observable<any>}
+   * @memberof FitosanitarioQuery
+   */
+  seleccionarState$ = this.select(estado => estado);
+
+   /**
+   * Selector para obtener los datos de movilización nacional.
+   *
+   * @readonly
+   * @type {Observable<any>}
+   * @memberof FitosanitarioQuery
+   */
+  seleccionarMovilizacionNacional$ = this.select(estado => estado.movilizacion);
 }

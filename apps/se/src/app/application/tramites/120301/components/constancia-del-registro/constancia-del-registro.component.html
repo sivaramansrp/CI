@@ -14,6 +14,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="flexRadioRegistro"
+          [disabled]="formularioDeshabilitado"
           (change)="
             setValoresStore(
             fitosanitarioForm,
@@ -30,6 +31,11 @@
               formControlName="anoDeLaConstancia"
               [label]="'Año de la Constancia de registro'"
               [required]="true"
+              [isDisabled]="formularioDeshabilitado"
+              [primerOptionValue]="-1"
+              [placeholder]="'Seleccione un año'"
+              (change)="onAnoConstanciaChangeFromSelect($event)"
+              (selectionChange)="onAnoConstanciaChange($event)"
             ></app-catalogo-select>
               @if (fitosanitarioForm.get('anoDeLaConstancia')?.touched && fitosanitarioForm.get('anoDeLaConstancia')?.invalid) {
                 <div class="text-danger">
@@ -40,7 +46,13 @@
 
           <div class="col-md-6">
               <label class="form-label">Número de la constancia de registro</label>
-              <input type="text" required="true" class="form-control" formControlName="numeroDeLaConstancia" />
+              <input 
+                type="text" 
+                required="true" 
+                class="form-control" 
+                formControlName="numeroDeLaConstancia"
+                [disabled]="formularioDeshabilitado"
+                />
               @if (fitosanitarioForm.get('numeroDeLaConstancia')?.touched && fitosanitarioForm.get('numeroDeLaConstancia')?.invalid) {
                 <div class="text-danger">
                   Número de la constancia de registro is mandatory
@@ -51,7 +63,7 @@
       }
 
         <div class="container text-end mt-5">
-          <button class="btn btn-default me-2" (click)="buscarEvaluar()">Buscar</button>
+          <button class="btn btn-default me-2" [disabled]="formularioDeshabilitado" (click)="buscarEvaluar()">Buscar</button>
         </div>
       </div>
 
@@ -72,7 +84,6 @@
               <div class="form-group">
                 <label class="form-label" for="estado">Estado:</label>
                 <input
-                  value=""
                   class="form-control"
                   id="estado"
                   placeholder=""
@@ -80,6 +91,7 @@
                   libUppercase
                   name="estado"
                   formControlName="estado"
+                  [disabled]="formularioDeshabilitado"
                   (change)="
                     setValoresStore(
                     fitosanitarioForm,
@@ -95,7 +107,6 @@
                   >Representación federal:</label
                 >
                 <input
-                  value=""
                   class="form-control"
                   id="representacionFederal"
                   placeholder=""
@@ -103,6 +114,7 @@
                   libUppercase
                   name="representacionFederal"
                   formControlName="representacionFederal"
+                  [disabled]="formularioDeshabilitado"
                   (change)="
                     setValoresStore(
                     fitosanitarioForm,
@@ -121,7 +133,6 @@
                   >Fracción arancelaria:</label
                 >
                 <input
-                  value=""
                   class="form-control"
                   id="fraccionArancelaria"
                   placeholder=""
@@ -129,6 +140,7 @@
                   libUppercase
                   name="fraccionArancelaria"
                   formControlName="fraccionArancelaria"
+                  [disabled]="formularioDeshabilitado"
                   (change)="
                     setValoresStore(
                     fitosanitarioForm,
@@ -152,6 +164,7 @@
                   libUppercase
                   name="producto"
                   formControlName="descripcionProducto"
+                  [disabled]="formularioDeshabilitado"
                   (change)="
                     setValoresStore(
                     fitosanitarioForm,
@@ -173,6 +186,7 @@
                   libUppercase
                   name="tratado"
                   formControlName="tratado"
+                  [disabled]="formularioDeshabilitado"
                   (change)="
                     setValoresStore(
                     fitosanitarioForm,
@@ -196,6 +210,7 @@
                   libUppercase
                   name="subproducto"
                   formControlName="subproducto"
+                  [disabled]="formularioDeshabilitado"
                   (change)="
                     setValoresStore(
                     fitosanitarioForm,
@@ -219,6 +234,7 @@
                   libUppercase
                   name="mecanismo"
                   formControlName="mecanismo"
+                  [disabled]="formularioDeshabilitado"
                   (change)="
                     setValoresStore(
                     fitosanitarioForm,
@@ -240,6 +256,7 @@
                   libUppercase
                   name="typoCategoria"
                   formControlName="typoCategoria"
+                  [disabled]="formularioDeshabilitado"
                   (change)="
                     setValoresStore(
                     fitosanitarioForm,
@@ -261,6 +278,7 @@
                   libUppercase
                   name="typoRegimen"
                   formControlName="typoRegimen"
+                  [disabled]="formularioDeshabilitado"
                   (change)="
                     setValoresStore(
                     fitosanitarioForm,
@@ -284,6 +302,7 @@
                   libUppercase
                   name="descripcionCategoriaTextil"
                   formControlName="descripcionCategoriaTextil"
+                  [disabled]="formularioDeshabilitado"
                   (change)="
                     setValoresStore(
                     fitosanitarioForm,
@@ -297,7 +316,6 @@
               <div class="form-group">
                 <label class="form-label" for="PaisDestino">País destino/origen:</label>
                 <input
-                  value=""
                   class="form-control"
                   id="PaisDestino"
                   placeholder=""
@@ -305,6 +323,7 @@
                   libUppercase
                   name="PaisDestino"
                   formControlName="PaisDestino"
+                  [disabled]="formularioDeshabilitado"
                   (change)="
                     setValoresStore(
                     fitosanitarioForm,
@@ -328,6 +347,7 @@
                   libUppercase
                   name="unidadMedidaCategoriaTextil"
                   formControlName="unidadMedidaCategoriaTextil"
+                  [disabled]="formularioDeshabilitado"
                   (change)="
                     setValoresStore(
                     fitosanitarioForm,
@@ -351,6 +371,7 @@
                   libUppercase
                   name="factorConversionCategoriaTextil"
                   formControlName="factorConversionCategoriaTextil"
+                  [disabled]="formularioDeshabilitado"
                   (change)="
                     setValoresStore(
                     fitosanitarioForm,
@@ -374,6 +395,7 @@
                   libUppercase
                   name="fechaInicioVigencia"
                   formControlName="fechaInicioVigencia"
+                  [disabled]="formularioDeshabilitado"
                   (change)="
                     setValoresStore(
                     fitosanitarioForm,
@@ -397,6 +419,7 @@
                   libUppercase
                   name="fechaFinVigencia"
                   formControlName="fechaFinVigencia"
+                  [disabled]="formularioDeshabilitado"
                   (change)="
                     setValoresStore(
                     fitosanitarioForm,
@@ -415,7 +438,7 @@
           </div>
           <div class="row pb-5">
             <div class="container text-end mt-5">
-              <button (click)="guardarEvaluate()" class="btn btn-default me-2">Guardar</button>
+              <button [disabled]="formularioDeshabilitado" (click)="guardarEvaluate()" class="btn btn-default me-2">Guardar</button>
             </div>
           </div>
         </div>

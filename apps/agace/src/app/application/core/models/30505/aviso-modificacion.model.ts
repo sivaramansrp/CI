@@ -58,18 +58,13 @@ export interface FusionEscision{
  * @property razonAgencia - Razón social de la agencia.
  */
 export interface AvisoAgente{
-  tipoFigura: string,
-      patenteModificada:string,
+      tipoFigura: string,  
       numPatenteModal: string,
-      rfcModal: string,
-      obligFisc: string,
-      autPantente: string,
       nombre: string,
       apellidoPaterno: string,
       apellidoMaterno:string,
       razonSocial: string,
-      patente2: string,
-      razonAgencia: string
+      tipoMovimiento: string,
 }
 
   

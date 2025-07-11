@@ -33,6 +33,7 @@ import {
   WizardComponent
 } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { TercerospageComponent } from './components/tercerospage/tercerospage.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     ToastrModule.forRoot(),
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionNacionalComponent,
-    PagoDeDerechosComponent
+    PagoDeDerechosComponent,
+    TercerospageComponent
   ],
   providers: [
     ToastrService

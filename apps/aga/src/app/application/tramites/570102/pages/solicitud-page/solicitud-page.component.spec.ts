@@ -21,6 +21,13 @@ describe('SolicitudPageComponent', () => {
     fixture.detectChanges();
   });
 
+  beforeEach(() => {
+    // Ensure wizardComponent is always initialized for each test
+    if (!component.wizardComponent) {
+      component.wizardComponent = { siguiente: jest.fn() } as any;
+    }
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -80,15 +87,20 @@ describe('SolicitudPageComponent', () => {
   });
 
   it('should remove pedimento, set ocultarModal, and call getValorIndice on eliminarPedimento', () => {
-    component.pedimentos = [{ id: 1 }, { id: 2 }, { id: 3 }] as any;
-    component.elementoParaEliminar = 1;
-    component.ocultarModal = false;
-    const getValorSpy = jest.spyOn(component, 'getValorIndice');
-    component.eliminarPedimento(true);
-    expect(component.pedimentos.length).toBe(2);
-    expect(component.ocultarModal).toBe(true);
-    expect(getValorSpy).toHaveBeenCalledWith({ accion: 'cont', valor: 2 });
-  });
+  component.pedimentos = [{ id: 1 }, { id: 2 }, { id: 3 }] as any;
+  component.elementoParaEliminar = 1;
+  component.ocultarModal = false;
+  
+  component.wizardComponent = { siguiente: jest.fn() } as any;
+  
+  const getValorSpy = jest.spyOn(component, 'getValorIndice');
+  component.eliminarPedimento(true);
+  
+  expect(component.pedimentos.length).toBe(2);
+  expect(component.ocultarModal).toBe(true);
+  expect(getValorSpy).toHaveBeenCalledWith({ accion: 'cont', valor: 2 });
+});
+
 
   it('should not remove pedimento if borrar is false', () => {
     component.pedimentos = [{ id: 1 }, { id: 2 }] as any;
