@@ -1,1 +1,36 @@
-<p>controles-de-acceso works!</p>
+<div class="conatiner p-3">
+    <div class="row mt-2">
+        <div class="col-md-12 text-container">
+            <p>{{textos.paraca1}}</p>
+            <p>{{textos.paraca2}}</p>
+        </div>
+        <h4 class="para-title">{{textos.encabezamiento1}}</h4>
+        <div class="col-md-12 text-container">
+            <p>{{textos.paraca3}}</p>
+            <p>{{textos.paraca4}}</p>
+            <p>{{textos.paraca5}}</p>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <form [formGroup]="forma">
+            <formas-dinamicas 
+                [forma]="personalFormGroup" 
+                [formularioDatos]="personalDatos"
+                >
+            </formas-dinamicas>
+            <div class="col-md-12 text-container">
+                <p>{{textos.paraca6}}</p>
+                <p>{{textos.paraca7}}</p>
+                <p>{{textos.paraca8}}</p>
+                <p>{{textos.paraca9}}</p>
+            </div>
+            <formas-dinamicas 
+                [forma]="identificacionFormGroup" 
+                [formularioDatos]="identificacionDatos"
+                >
+            </formas-dinamicas>
+        </form>
+        <p>Anexe el procedimiento documentado para el control de las identificaciones.</p>
+    </div>
+
+</div>

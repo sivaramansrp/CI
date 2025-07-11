@@ -29,6 +29,15 @@ export const TEXTOS_ESTATICOS_PLANEACION = {
     encabezamiento2: '1.2 Políticas de seguridad.',
     paraca11: 'El agente aduanal debe contar con políticas orientadas a prevenir, asegurar y reconocer amenazas en la seguridad de la cadena de suministro e instalaciones, como lo son el tráfico de drogas, lavado de dinero, tráfico de armas, contrabando de personas, mercancías prohibidas, actos de terrorismo, así como en el intercambio de información, reflejadas en los procedimientos correspondientes.',
     paraca12: 'Para promover una cultura de seguridad, el Agente Aduanal debe demostrar su compromiso con la seguridad de la cadena de suministro y el Programa Operador Económico Autorizado a través de una declaración que resalte la importancia de proteger el flujo del comercio nacional e internacional de actividades delictivas, establecida por medio de la política de seguridad. El Agente Aduanal, debe respaldar y firmar la política de seguridad.',
+    encabezamiento3: '1.3 Auditorías internas en la cadena de suministros.',
+    paraca13: 'Además del monitoreo de rutina en control y seguridad, es necesario programar y realizar auditorías por lo menos una vez al año que permita evaluar todos los procesos en materia de seguridad en la cadena de suministros de una manera más crítica y profunda, así como garantizar que sus empleados sigan los procedimientos de seguridad del Agente Aduanal.',
+    paraca14: 'Las auditorías deben ser realizadas por el Comité de Seguridad y se debe establecer un procedimiento documentado, así como un programa o calendario para su realización. Si bien es necesario que las auditorías, estén enfocadas en la seguridad de la cadena de suministro y basadas en la evaluación, revisión y ejecución de los estándares mínimos en materia de seguridad su enfoque se debe ajustar al tamaño de la organización, nivel de riesgo, modelo de negocio y variaciones entre instalaciones.',
+    paraca15: 'El objetivo de una auditoría interna enfocada al Programa Operador Económico Autorizado, es verificar y garantizar que los empleados sigan los procedimientos de seguridad del Agente Aduanal. El proceso de revisión no tiene que ser complejo, sin embargo, los formatos y registros que se utilicen para la aplicación de dichas revisiones deben de evidenciar que se validó la aplicación y ejecución de los procesos evaluados, además del seguimiento y cierre de acciones preventivas, correctivas y de mejora identificadas.',
+    paraca16: 'La alta gerencia de la organización debe revisar los resultados de las auditorías, analizar las causas y emprender las acciones correctivas y/o preventivas requeridas. El proceso de auditoría debe garantizar que se recoja la información necesaria para permitir que la gerencia realice está evaluación. La revisión debe estar documentada, además de que el Comité de Seguridad del Agente Aduanal deben proporcionar y registrar las actualizaciones periódicas sobre el progreso o los resultados de cualquier auditoría, ejercicio o validación.',
+    encabezamiento4: '1.4 Planes de contingencia y/o emergencia relacionados con la seguridad de la cadena de suministros.',
+    paraca17: 'Debe existir un plan de contingencias y/o emergencia documentado, dicho plan debe de abordar la gestión de crisis, los planes de recuperación de la seguridad y la reanudación de la organización relacionado con la seguridad de la cadena de suministro y sus instalaciones para asegurar la continuidad del negocio en el caso de una situación que afecte el desarrollo normal de las actividades y las operaciones de comercio exterior. Una crisis o contingencia puede incluir la interrupción del movimiento de datos comerciales debido a un ataque cibernético, un incendio, el secuestro de un conductor de transporte por personas armadas, un cierre de aduanas, una amenaza de bomba, la detección de paquetes sospechosos, el corte de energía eléctrica, el robo y/o daño de mercancías, amenazas o extorsiones, bloqueos o cierre de carreteras, entre otros.',
+    paraca18: 'El plan de contingencia y/o emergencia debe actualizarse según sea necesario, en función de los cambios en las operaciones y el nivel de riesgo de la organización.',
+    paraca19: 'El plan de contingencia y/o emergencia debe incluir los siguientes puntos:',
   };
   
   /**
@@ -57,93 +66,27 @@ export const TEXTOS_ESTATICOS_PLANEACION = {
    * - `etiqueta3` a `etiqueta11`: Preguntas específicas sobre implementación de CCTV.
    */
   export const TEXTOS_ESTATICOS_SEGURIDAD = {
-    paraca1: 'La empresa de mensajería y paquetería debe contar con mecanismos establecidos y procesos documentados para impedir, detectar o disuadir la entrada de personal no autorizado a las instalaciones. Todas las áreas sensibles de la empresa, deben tener barreras físicas, elementos de control y disuasión contra el acceso no autorizado.',
+    paraca1: 'El Agente Aduanal debe contar con mecanismos establecidos y procesos documentados para impedir, detectar o disuadir la entrada de personal no autorizado a sus instalaciones, y en su caso, patios para los medios de transporte de mercancías ubicados en las mismas instalaciones, así como el área donde se resguarda la información sensible. Conforme al análisis de riesgos del Agente Aduanal, las áreas sensibles identificadas en sus instalaciones deberán tener barreras físicas, elementos de control y disuasión contra el acceso no autorizado.',
     encabezamiento1: '2.1 Instalaciones.',
-    paraca2: 'Las instalaciones deben estar construidas con materiales que puedan resistir accesos no autorizados. Se deben realizar inspecciones periódicas documentadas para mantener la integridad de las estructuras y en el caso de haberse detectado una irregularidad, efectuar la reparación correspondiente y lo antes posible por parte del personal designado para estas tareas. Asimismo, se deben tener identificados plenamente los límites territoriales, así como los diversos accesos, rutas internas y la ubicación de los edificios.',
+    paraca2: 'Las instalaciones deben estar construidas con materiales que puedan resistir accesos no autorizados. Se deben realizar inspecciones periódicas documentadas para mantener la integridad de las estructuras, y en el caso de haberse detectado una irregularidad, efectuar la reparación correspondiente y lo antes posible por parte del personal designado para estas tareas. Asimismo, se deben tener identificados plenamente los límites territoriales, así como los diversos accesos, rutas internas y la ubicación de los edificios.',
     etiqueta: 'Indique los materiales predominantes con los que se encuentra construida la instalación (por ejemplo: de estructura de metal y paredes de lámina, paredes de ladrillo, concreto, malla ciclónica, entre otros).',
     encabezamiento2: '2.2 Accesos en puertas y casetas',
     encabezamiento3: '2.3 Bardas perimetrales.',
-    paraca3: 'Las bardas perimetrales y/o barreras periféricas deben instalarse para asegurar los parámetros de las instalaciones de la empresa, con base en un análisis de riesgo. Se deben utilizar cercas, barreras interiores o un mecanismo para identificar y segregar la carga internacional, así como la de alto valor y peligrosa. Estas deben ser inspeccionadas regularmente y llevar un registro de la revisión con la finalidad de asegurar su integridad e identificar daños, mismos que deben repararse lo antes posible por parte del personal designado para estas tareas.',
-    encabezamiento4: '2.4 Estacionamientos.',
-    paraca4: 'El acceso a los estacionamientos de las instalaciones debe ser controlado y monitoreado por el personal de seguridad o designado para esta tarea. Se debe prohibir que los vehículos privados (de empleados, visitantes, proveedores, contratistas, entre otros), se estacionen dentro de las áreas de manejo y almacenaje de la mercancía, así como en áreas adyacentes..',
-    encabezamiento5: '2.5 Control de llaves y dispositivos de cerraduras.',
-    paraca5: 'Las ventanas, puertas y cercas interiores y exteriores, de acuerdo a su análisis de riesgo, deben asegurarse con dispositivos de cierre. La empresa debe contar con un procedimiento documentado para el manejo y control de Ilaves y/o dispositivos de cierre de las áreas interiores que se hayan considerado como críticas. Asimismo, deben llevar un registro y establecer un control a través de cartas responsivas firmadas por las personas que cuentan con Ilaves o accesos autorizados conforme a su nivel de responsabilidad y labores dentro su área de trabajo.',
-    paraca6: `Anexar los procedimientos documentados para el manejo, y control de llaves y/o dispositivos de cierre, asegúrese
-    Asegúrese que incluya los siguientes puntos:`,
-    encabezamiento6: '2.6 Alumbrado.',
-    paraca7: 'El alumbrado dentro y fuera de las instalaciones debe permitir una clara identificación de personas, material y/o equipo que ahí se encuentre, incluyendo las siguientes áreas: entradas y salidas, áreas de manejo, carga, descarga y almacenaje de la mercancía, bardas perimetrales y/o periféricas, cercas interiores y áreas de estacionamiento, debiendo contar con un sistema de emergencia y/o respaldo en las áreas sensibles.',
-    paraca8: 'De qué manera se cerciora que el sistema de iluminación sea el apropiado en cada una de las áreas del recinto fiscalizado, así como que tenga continuidad ante la falta de suministro en cada una de las áreas de la instalación y con especial énfasis de las áreas consideradas como críticas y/o sensibles, de manera que permita una clara identificación del personal, material y/o equipo que abarca.',
-    encabezamiento7: '2.7 Aparatos de comunicación.',
-    paraca9: `La empresa debe contar con aparatos y/o sistemas de comunicación con la finalidad de contactar de
-    forma inmediata al personal de seguridad y/o con las autoridades, en caso de ocurrir una situación
-    de emergencia y seguridad. Adicionalmente, se debe contar con un sistema de respaldo y verificar su
-    buen funcionamiento de manera periódica.`,
-    etiqueta2: `Indique si el personal operativo y administrativo cuenta o dispone de
-    aparatos (teléfonos fijos, móviles, botones de alerta y/o emergencia) para comunicarse con el
-    personal de seguridad y/o con quien corresponda. (Estos deberán estar accesibles a los usuarios,
-    para poder tener una pronta reacción).`,
-    encabezamiento8: '2.8 Sistemas de alarma y circuito cerrado de televisión y video vigilancia (CCTV).',
-    paraca10: `Los sistemas de alarma y de circuito cerrado de televisión y video vigilancia y las tecnologías de
-    seguridad, se deben utilizar para vigilar, notificar o disuadir accesos no autorizados y actividades
-    prohibidas en las instalaciones y demás áreas consideradas sensibles, notificar al área
-    correspondiente, además de utilizarse como herramienta de prueba en investigaciones derivadas de
-    algún incidente de seguridad.`,
-    paraca11: `Estos sistemas y tecnologías de seguridad, deben colocarse de acuerdo a un análisis de riesgo previo
-    de tal forma que se mantengan vigiladas, monitoreadas y supervisadas las áreas que impliquen el
-    manejo, carga, descarga, almacenaje de las mercancías, inspecciones de seguridad a los vehículos de
-    carga, así como del acceso de personal, visitantes, proveedores, vehículos de pasajeros y de carga y
-    demás áreas consideradas sensibles de forma permanente e ininterrumpida de conformidad con lo
-    establecido para dicho efecto por la ANAM y operación simultánea con la aduana o área que se trate.
-    Lo anterior resulta aplicable en los casos en las que las empresas de mensajería y paquetería estén
-    ubicadas dentro de un recinto fiscalizado y/o fuera de él.`,
-    paraca12: `Dichos sistemas deben permitir una clara identificación del área o ambiente que vigila y mantener un respaldo de las grabaciones por lo menos de un mes, considerando que, en el caso de que sus procesos
-    logísticos excedan este periodo, deberá aumentar el periodo del mantenimiento de estos respaldos,
-    con la finalidad de tener los elementos necesarios para deslindar las responsabilidades
-    correspondientes en caso de un incidente de seguridad. La empresa de mensajería y paquetería debe
-    contar con un procedimiento documentado de operación. Para el caso de los sistemas de alarma y de
-    circuito cerrado de televisión y video vigilancia y las tecnologías de seguridad, deben incluir la
-    supervisión del buen estado del equipo, la verificación de la correcta posición de las cámaras,
-    indicar la frecuencia con la que debe realizar el respaldo de las grabaciones al menos por sesenta
-    días de conformidad con la regla 2.3.8., para aquellos que cuenten con autorizaciones de recinto
-    fiscalizado y recinto fiscalizado estratégico, para los demás casos deberá de ser el plazo de
-    grabación al menos de treinta días, así como los responsables de su operación. Dichos sistemas y
-    toda la infraestructura de tecnología de seguridad deberán tener un acceso restringido.`,
-    etiqueta3: `Indique si cuenta con un procedimiento documentado para la operación
-    del CCTV, que incluya la supervisión del buen estado del equipo, la verificación de la correcta
-    posición de las cámaras, el mantenimiento para el respaldo de las grabaciones al menos por sesenta
-    días de conformidad con la regla 2.3.8., para aquellos que cuenten con autorizaciones de recin
-    fiscalizado y recinto fiscalizado estratégico, para los demás casos deberá de ser el plazo de
-    grabación al menos de treinta días.`,
-    etiqueta4: `Describa el procedimiento documentado para la operación de los
-    sistemas de alarma y de circuito cerrado de televisión y video vigilancia y las tecnologías de
-    seguridad, (este debe revisarse y actualizarse anualmente y de acuerdo con el análisis de riesgo o
-    las circunstancias)`,
-    etiqueta5: `Indicar el número de cámaras de seguridad de los sistemas de alarma y
-    de circuito cerrado de televisión y video vigilancia instaladas, y su ubicación por áreas (Detalle
-    si cubre las zonas de embarque y descarga, incluyendo los puntos de entrada y salida de las
-    instalaciones, para cubrir el movimiento de vehículos e individuos)`,
-    etiqueta6: `Señalar la ubicación de los sistemas de alarma y de circuito cerrado de
-    televisión y video vigilancia y las tecnologías de seguridad, dónde se localizan los monitores,
-    quién los revisa`,
-    etiqueta7: `Indique los horarios de operación, y en su caso, si existen estaciones
-    de monitoreo remoto. Toda la infraestructura de tecnología de seguridad debe estar protegida
-    físicamente contra el acceso no autorizado`,
-    etiqueta8: `Indique si los sistemas de alarma y de circuito cerrado de televisión y
-    video vigilancia y las tecnologías de seguridad se encuentran respaldadas por una planta de poder
-    eléctrica.`,
-    etiqueta9: `Indicar si adicionalmente a los sistemas de alarma y de circuito
-    cerrado de televisión y video vigilancia utiliza algún otro tipo de tecnología para robustecer las
-    medidas de seguridad con las que ya cuenta.`,
-    etiqueta10: `Describa el procedimiento que se ha implementado para probar e
-    inspeccionar de manera regular los sistemas de alarma y de circuito cerrado de televisión y video
-    vigilancia y las tecnologías de seguridad y asegurar su buen funcionamiento. Los resultados de las
-    inspecciones y las pruebas de funcionamiento deben estar documentadas, al igual que las acciones
-    correctivas necesarias (estas se deben implementar lo antes posible). Adicionalmente, que los
-    resultados documentados de estas inspecciones se mantengan durante un tiempo suficiente para fines
-    de auditoría.`,
-    etiqueta11: `Indicar si el proveedor de alarmas y sistemas de alarma y de circuito
-    cerrado de televisión y video vigilancia tiene acceso a las cámaras de seguridad, si es el encargado
-    de realizar el monitoreo de las mismas`
+    paraca3: 'Las puertas de entrada o salida de personal y/o vehículos de las instalaciones del Agente Aduanal o en su caso el acceso a los patios para los medios de transporte de mercancías ubicados en el mismo lugar, deben ser atendidas, controladas, vigiladas y/o supervisadas ya sea por medio de personal propio debidamente capacitado o bien por personal de seguridad privada. La cantidad de puertas de acceso debe mantenerse al mínimo necesario. El acceso a las áreas sensibles debe estar restringido según la descripción del trabajo o las tareas asignadas.',
+    paraca4: 'Las bardas perimetrales y/o barreras periféricas deben instalarse para asegurar los perímetros de las instalaciones del Agente Aduanal, con base en un análisis de riesgo. En el caso de contar con patio para los medios de transporte de mercancías ubicados en las mismas instalaciones deberá estar delimitado, así como el lugar donde exista cualquier maniobra y/o manejo de la carga según corresponda. Estas deben ser inspeccionadas regularmente y llevar un registro de la revisión con la finalidad de asegurar su integridad e identificar daños, mismos que deben repararse lo antes posible por parte del personal designado para estas tareas.',
+    encabezamiento4: '2.4 Estacionamientos',
+    paraca5: 'En el caso de contar con estacionamientos en las instalaciones el acceso a los mismos debe ser controlado y monitoreado por el personal de seguridad o designado para esta tarea. Se debe prohibir que los vehículos privados (de empleados, visitantes, proveedores y contratistas, entre otros) se estacionen en su caso dentro del patio para medios de transporte, así como en áreas adyacentes.',
+    encabezamiento5: 'Control de llaves y dispositivos de cerraduras',
+    paraca6: 'Las ventanas, puertas, así como las cercas interiores y exteriores deberán asegurarse con dispositivos de cierre, estos dispositivos se deben implementar con base en el análisis de riesgo del Agente Aduanal. Asimismo, el Agente Aduanal debe contar con procedimientos documentados para el manejo, resguardo, asignación y control de las llaves en las instalaciones, llevando un registro y establecer cartas responsivas firmadas por las personas que cuentan con llaves o accesos autorizados conforme a su nivel de responsabilidad y labores dentro su área de trabajo.',
+    paraca7: 'El Agente Aduanal debe contar con un sistema de iluminación adecuado para las áreas sensibles y los accesos, con el fin de asegurar la visibilidad y el monitoreo constante de estas zonas.',
+    encabezamiento6: '2.6 Alumbrado',
+    paraca8: 'l alumbrado dentro y fuera de las instalaciones debe permitir una clara identificación de personas, material y/o equipo que ahí se encuentre, incluyendo las siguientes áreas: entradas, salidas, bardas perimetrales y/o periféricas, cercas interiores y áreas de estacionamiento en su caso. Se debe contar con un sistema de emergencia y/o respaldo en las áreas sensibles.',
+    encabezamiento7: '2.7 Sistemas de alarma y circuito cerrado de televisión y video vigilancia (CCTV)',
+    paraca9: 'Los sistemas de alarma y de circuito cerrado de televisión y video vigilancia y las tecnologías de la seguridad, se deben utilizar para vigilar, notificar o disuadir accesos no autorizados y actividades prohibidas en las instalaciones y demás áreas consideradas sensibles, notificar al área correspondiente, además de utilizarse como herramienta de prueba en investigaciones derivadas de algún incidente de seguridad.',
+    paraca10: 'Estos sistemas y tecnologías de seguridad, deben colocarse de acuerdo a un análisis de riesgo previo de tal forma que se mantengan vigiladas y monitoreadas las áreas que impliquen el acceso de personal, visitantes y proveedores, y en su caso las áreas de acceso para vehículos de pasajeros y vehículos de carga y demás consideradas sensibles',
+    paraca11: 'Dichos sistemas deben permitir una clara identificación del área o ambiente que vigila, estar permanentemente grabando y mantener un respaldo de las grabaciones por lo menos de un mes, con la finalidad de tener los elementos necesarios para deslindar responsabilidades en caso de un incidente de seguridad.',
+    paraca12: 'Los sistemas de alarma y de circuito cerrado de televisión y video vigilancia y las tecnologías de seguridad, debe contar con un procedimiento documentado de operación que incluya la supervisión del buen estado del equipo y la verificación de la correcta posición de las cámaras, indicando la frecuencia con la que debe realizar el respaldo de las grabaciones, así como los responsables de su operación. Dicho sistema y toda la infraestructura de tecnología de seguridad deberá tener un acceso restringido.',
+
   };
   
   /**
@@ -163,62 +106,17 @@ export const TEXTOS_ESTATICOS_PLANEACION = {
    * - `etiqueta` a `etiqueta6`: Preguntas específicas sobre implementación de seguridad de TI.
    */
   export const TEXTOS_ESTATICOS_SEGURIDAD_INFORMACION = {
-    paraca1: `Deben existir medidas de prevención para mantener la confidencialidad e integridad de la información
-    y documentación generada por los sistemas de la empresa, incluyendo aquellos utilizados para el
-    intercambio de información con otros integrantes de la cadena de suministros.`,
-    paraca2: `Asimismo, deben existir políticas y/o procedimientos integrales documentados para proteger los
-    sistemas de Tecnología de la Información, que incluyan las medidas contra su mal uso, además de
-    identificar y priorizar acciones para reducir el riesgo de la ciberseguridad. También, podrían
-    abordar cómo un miembro comparte información sobre amenazas de seguridad cibernética con el gobierno
-    y otros socios comerciales.`,
-    encabezamiento1: '9.1 Clasificación y manejo de documentos.',
-    paraca3: `Deben existir procedimientos para clasificar documentos de acuerdo a su sensibilidad y/o
-    importancia. La documentación sensible e importante debe ser almacenada en un área segura que
-    solamente permita el acceso a personal autorizado. Se debe identificar el tiempo de vida útil de la
-    documentación y establecer procedimientos para su destrucción. La empresa deberá conducir revisiones
-    de forma regular para verificar los accesos a la información y asegurarse de que no sean utilizados
-    de manera indebida.`,
-    encabezamiento2: '9.2 Seguridad de la tecnología de la información.',
-    paraca4: `Para proteger los sistemas de Tecnología de la Información contra amenazas comunes de
-    ciberseguridad, una empresa debe contar con suficiente protección que impulse la seguridad en la
-    infraestructura de Tecnologías de la Información (software y hardware) contra malware (virus,
-    spyware, gusanos, troyanos, etcétera), baiting, phishing e intrusiones internas/externas (firewalls)
-    en los sistemas informáticos de las compañías. De igual manera, las empresas deben asegurarse de que
-    su software de seguridad esté activo y reciba actualizaciones periódicas.`,
-    paraca5: `En el caso de los sistemas automatizados y equipos de cómputo, se deben utilizar cuentas individuales
-    que exijan un cambio periódico de la contraseña. Con el fin de proteger la confidencialidad,
-    integridad y disposición de la información, la empresa de mensajería y paquetería debe tener
-    políticas, procedimientos y normas de tecnología de informática establecidas que se deben comunicar
-    mediante un programa de capacitación para todos los empleados que manejan equipos de cómputo y
-    sistemas, que incluya temas para prevenir ataques a través de la ingeniería social y todas aquellas
-    amenazas a los que están expuestos (malware, baiting, phishing, etcétera). Las empresas que permiten
-    a sus empleados conectarse de forma remota a una red, deben emplear tecnologías seguras, como redes
-    privadas virtuales (VPN), para permitir que los empleados accedan a la intranet de la empresa de
-    forma segura cuando se encuentran fuera de la oficina, así como procedimientos diseñados para evitar
-    el acceso remoto de usuarios no autorizados.`,
-    paraca6: `Por lo anterior, deben existir procedimientos escritos e infraestructura para proteger a la empresa
-    contra pérdidas de información, esto incluye el procedimiento para la recuperación (o reemplazo) de
-    los sistemas y/o datos de Tecnología de la Información, así como un sistema o software establecido
-    para identificar el abuso de los sistemas de tecnologia de la Información y detectar el acceso
-    inapropiado y/o la manipulación indebida o alteración de los datos comerciales y del negocio, así
-    como un procedimiento escrito para la aplicación de medidas disciplinarias apropiadas a todos, le
-    infractores. El acceso a los sistemas de Tecnología de la Información debe protegerse contra da
-    infiltración mediante el uso de contraseñas seguras, que incluyan trases u otras formas de
-    autenticación. Los usuarios de dichos sistemas de Tecnologias de la Información, deben salvaguardar
-    y no compartir sus claves de accesos o contraseñas. Toda la infraestructura de Tecnologia de la
-    información debe estar protegida fisicamente contra el acceso no autorizado.`,
-    paraca7: `Si se produce una filtración de datos u ofro evento inesperado que derive en la pérdida de datos y/o
-    equipos, los procedimientos deben incluir la recuperación o reemplazo de los sistemas y/o datos de
-    Tecnologias de la Información.`,
-    paraca8: `Anexe el procedimiento para la recuperación o reemplazo de los sistemas y/o datos de Tecnologías
-    de la Información, que incluya cómo respalda y garantiza la seguridad de su información, además
-    de protegerla de posibles pérdidas. Asegúrese de incluir los siguientes puntos`,
-    paraca9: `Debe existir un sistema o software para detectar e identificar el abuso, Intrusión o
-    acceso de personas no autorizadas a sus sistemas y/o datos de Tecnologías de la
-    Información (cualquier sistema que sea utilizado por la empresa), así como el abuso
-    de las políticas y procedimientos establecidos por la empresa, incluido el acceso
-    indebido a sistemas internos, sitios web externos y la manipulación o alteración de
-    datos comerciales por parte de empleados o contratistas.`,
+    paraca1: `Los controles de acceso físico, son mecanismos o procedimientos que previenen e impiden la entrada no autorizada a las instalaciones, mantienen control de ingreso a personal administrativo y/o visitantes, así como a los operadores/choferes de los medios de transporte en su caso y protegen los bienes del Agente Aduanal.`,
+    paraca2: `Los controles de acceso deben incluir la identificación de todos los empleados, visitantes y proveedores en todos los puntos de entrada. Asímismo, se deben mantener registros y evaluar permanentemente los mecanismos o procedimientos documentados de ingreso a las instalaciones, siendo la base para comenzar a integrar la seguridad como una de las funciones primordiales dentro de las mismas.`,
+    encabezamiento1: '3.1 Personal de seguridad',
+    paraca3: `De acuerdo a su análisis de riesgo, el Agente Aduanal debe contar con personal de seguridad y vigilancia o personal designado. Este personal desempeña un rol importante en la protección física de las instalaciones y en su caso del patio donde se resguardan los vehículos de carga, así como para controlar el acceso de todas las personas al inmueble.`,
+    encabezamiento2: '3.2 Identificación de los empleados, visitantes y proveedores.',
+    paraca4: `El personal de seguridad o personal designado para estas tareas, deberá contar con un procedimiento documentado para llevar a cabo sus funciones y tener pleno conocimiento de los mecanismos y procedimientos en situaciones de emergencia, detección de personas no autorizadas o cualquier incidente de seguridad en la instalación. El Agente Aduanal debe verificar periódicamente el cumplimiento de los procedimientos políticas y funciones a través de auditorías internas con el objetivo de verificar su correcta ejecución.`,
+    paraca5: `Asimismo, el Agente Aduanal deberá contar con dispositivos y/o sistemas de comunicación con la finalidad de tener un contacto inmediato con el personal de seguridad y/o con las autoridades correspondientes.`,
+    paraca6: `Debe existir un sistema de identificación de empleados, visitantes y proveedores con fines de acceso a las instalaciones. Los empleados sólo deben tener acceso a aquellas áreas que necesiten para desempeñar sus funciones. El acceso a las áreas sensibles debe estar restringido según la descripción del trabajo o las tareas asignadas.`,
+    paraca7: `Los visitantes y proveedores deberán presentar identificación oficial con fotografía con fines de documentación a su llegada y se deberá llevar un registro. Todos los visitantes y proveedores deben recibir una identificación temporal, estar acompañados por personal que labore con el Agente Aduanal durante su permanencia en las instalaciones y asegurarse que el visitante/proveedor porte siempre en un lugar visible la identificación provisional proporcionada.`,
+    paraca8: `La gerencia o el personal de seguridad del Agente Aduanal, deben controlar adecuadamente la entrega y devolución de insignias de identificación de empleados, visitantes y proveedores y asegurarse que porten siempre en un lugar visible la identificación proporcionada. Este procedimiento debería estar documentado, así como los procedimientos para la entrega, devolución y cambio de dispositivos de acceso (por ejemplo, llaves, gafetes y/o credenciales, tarjetas de proximidad, etcétera).`,
+    paraca9: `Anexe el procedimiento documentado para el control de las identificaciones.`,
     paraca10: `Todos los infractores deben estar sujetos a la aplicación de medidas disciplinarias,
     por lo anterior, indique las políticas correctivas y/o sanciones en caso de la
     detección de alguna violación a los sistemas y políticas de seguridad de Tecnologías
