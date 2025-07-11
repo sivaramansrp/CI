@@ -57,8 +57,15 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   isEnableModificacionTab: boolean = false;
 
-  /**
+   /**
    * Constructor del componente.
+   *
+   * Inyecta los servicios necesarios para manejar la lógica del componente:
+   * - `ConsultaioQuery` para acceder al estado de la consulta.
+   * - `SolicitudService` para obtener y actualizar datos relacionados con la solicitud.
+   *
+   * @param consultaQuery - Query que permite observar el estado de la sección de consulta.
+   * @param solicitudService - Servicio encargado de manejar las operaciones de la solicitud.
    */
   constructor(
     private consultaQuery: ConsultaioQuery,

@@ -129,9 +129,16 @@ export class AvisoComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
-   * Constructor del componente AvisoComponent.
+   * Constructor del componente `AvisoComponent`.
+   *
    * Se encarga de inyectar los servicios y stores necesarios para la gestión del formulario
    * y los datos asociados a la solicitud 32512.
+   *
+   * @param fb - Servicio `FormBuilder` para la creación y manejo de formularios reactivos.
+   * @param solicitudService - Servicio encargado de obtener y guardar datos de la solicitud.
+   * @param solicitud32512Store - Store centralizado que administra el estado de la solicitud 32512.
+   * @param solicitud32512Query - Query que permite observar el estado actual del store de la solicitud 32512.
+   * @param consultaioQuery - Query que proporciona el estado de la sección de consulta relacionada con la solicitud.
    */
   constructor(
     private fb: FormBuilder,
