@@ -99,7 +99,7 @@ export class AutorizacionMasivaComponent implements OnInit, OnDestroy {
     * Actualiza el campo de fecha inicial en el formulario.
     * @param nuevo_valor Nueva fecha seleccionada.
     */
-  public cambioFechaInicio(nuevo_valor: string) {
+  public cambioFechaInicio(nuevo_valor: string): void {
     this.FormBusqueda.get('fechaInicio')?.setValue(nuevo_valor);
     this.FormBusqueda.get('fechaInicio')?.markAsUntouched();
   }
@@ -107,7 +107,7 @@ export class AutorizacionMasivaComponent implements OnInit, OnDestroy {
     * Actualiza el campo de fecha final en el formulario.
     * @param nuevo_valor Nueva fecha seleccionada.
     */
-  public cambioFechaFinal(nuevo_valor: string) {
+  public cambioFechaFinal(nuevo_valor: string): void {
     this.FormBusqueda.get('fechaFinal')?.setValue(nuevo_valor);
     this.FormBusqueda.get('fechaFinal')?.markAsUntouched();
   }

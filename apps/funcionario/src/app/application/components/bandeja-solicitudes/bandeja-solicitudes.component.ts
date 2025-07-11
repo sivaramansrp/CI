@@ -99,7 +99,7 @@ export class BandejaSolicitudesComponent implements OnInit {
  * Actualiza el valor del campo 'fechaInicio' en el formulario reactivo `FormBusqueda`
  * @param nuevoValor_fechaInicio - Nuevo valor a establecer para el campo 'fechaInicio'.
  */
-  public cambioFechaInicioFucion(nuevo_valor: string) {
+  public cambioFechaInicioFucion(nuevo_valor: string): void {
     this.FormBusqueda.get('fechaInicio')?.setValue(nuevo_valor);
     this.FormBusqueda.get('fechaInicio')?.markAsUntouched();
   }
@@ -108,7 +108,7 @@ export class BandejaSolicitudesComponent implements OnInit {
  * Actualiza el valor del campo 'fechaFinal' en el formulario reactivo `FormBusqueda`
  * @param nuevoValor_fechaFinal - Nuevo valor a establecer para el campo 'fechaFinal'.
  */
-  public cambioFechaFinalFuncion(nuevo_valor: string) {
+  public cambioFechaFinalFuncion(nuevo_valor: string): void {
     this.FormBusqueda.get('fechaFinal')?.setValue(nuevo_valor);
     this.FormBusqueda.get('fechaFinal')?.markAsUntouched();
   }
