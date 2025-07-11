@@ -66,9 +66,7 @@ export class ModificacionInfo90305Component implements OnInit, OnDestroy {
       .subscribe()
   }
 
-
-
-  /** Método del ciclo de vida de Angular - inicializa el formulario y carga la información */
+/** Método del ciclo de vida de Angular - inicializa el formulario y carga la información */
   ngOnInit(): void {
     this.inicializarCombinacionFormulario();
   }
