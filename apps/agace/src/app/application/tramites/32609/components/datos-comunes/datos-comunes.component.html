@@ -3,7 +3,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <app-catalogo-select [catalogo]="sectorProductivoList" [label]="'Sector Productivo'"
-                    [placeholder]="'Seleccione un valor'" [required]="true" id="sector-productivo"
+                    [placeholder]="'Seleccione un valor'" [required]="false" id="sector-productivo"
                     formControlName="sectorProductivo" (change)="
             setValoresStore(forma,'sectorProductivo'); manejarCamposMutuamenteExcluyentes('sectorProductivo', 'sectorServicio', $event)"
             [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
@@ -13,7 +13,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <app-catalogo-select [catalogo]="sectorServicio" [label]="'Servicio'"
-                    [placeholder]="'Seleccione un valor'" [required]="true" id="sector-servicio"
+                    [placeholder]="'Seleccione un valor'" [required]="false" id="sector-servicio"
                     formControlName="sectorServicio"
                     (change)="setValoresStore(forma, 'sectorServicio'); manejarCamposMutuamenteExcluyentes('sectorServicio', 'sectorProductivo', $event)"
                     [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
@@ -65,35 +65,38 @@
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                <label class="form-label text-left">Número de empleados</label>
-                <input class="form-control" id="numero-de-empleadas" type="text" name="numeroDeEmpleadas"
-                    formControlName="numeroDeEmpleadas" (change)="
-              setValoresStore(forma, 'numeroDeEmpleadas')
-            " />
+                <label class="form-label text-left">Número de empleados*</label>
+                <input class="form-control" 
+                       id="numero-de-empleadas" 
+                       type="text" 
+                       name="numeroDeEmpleadas"
+                       formControlName="numeroDeEmpleadas" 
+                       (change)="setValoresStore(forma, 'numeroDeEmpleadas')" />
+                
                 <div *ngIf="esInvalido('numeroDeEmpleadas')" class="text-danger">
-                    <small *ngIf="
-                forma.controls['numeroDeEmpleadas'].hasError('required')
-              ">Respuesta Obligatoria</small>
+                    <small *ngIf="forma.controls['numeroDeEmpleadas'].hasError('required')">
+                        El número de empleados es requerido
+                    </small>
                 </div>
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="form-group" *ngIf="bimestreList.length > 0">
-                <app-catalogo-select [catalogo]="bimestreList" [label]="'Bimestre'"
-                    [placeholder]="'Seleccione un valor'" [required]="true" id="bimestre"
-                    formControlName="bimestreUltimo" (change)="
-            setValoresStore(forma, 'bimestreUltimo')
-          " [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
-
-                <div *ngIf="esInvalido('bimestreUltimo')" class="text-danger">
-                    <small *ngIf="
-              forma.controls['bimestreUltimo'].hasError('required')
-            ">Respuesta Obligatoria</small>
-                </div>
+                <app-catalogo-select 
+                    [catalogo]="bimestreList" 
+                    [label]="'Bimestre'"
+                    [placeholder]="'Seleccione un valor'" 
+                    [required]="true" 
+                    id="bimestre"
+                    formControlName="bimestreUltimo" 
+                    [isDisabled]="!this.radioSeleccionado || esFormularioSoloLectura"
+                    (change)="setValoresStore(forma, 'bimestreUltimo')">
+                </app-catalogo-select>
             </div>
         </div>
     </div>
+
 
     <div class="row">
         <div class="col-md-12 pt-5">
@@ -246,6 +249,56 @@
         </div>
     </div>
 
+
+    
+        <div class="row">
+            <div class="col-md-12">
+                <ng-titulo titulo="Clientes y Proveedores en el Extranjero"></ng-titulo>
+                <p>Anexe un archivo que contenga el nombre y dirección de sus clientes y proveedores en el extranjero directa o indirectamente vinculados con el régimen aduanero con el que se solicita el registro, con los que realizó operaciones de comercio exterior durante los últimos doce meses<br/>Para descargar plantilla del archivo de excel de click <strong>aquí</strong></p>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-10">
+                <input
+                    type="file"
+                    id="archivoNacionales"
+                    class="form-control w-auto"
+                    formControlName="archivoNacionales"
+                    (change)="setValoresStore(forma,'archivoNacionales')"
+                />
+            </div>
+            <div class="col-md-2 d-flex justify-content-end">
+                <button class="btn btn-primary me-2">Anexar...</button>
+            </div>
+        </div>
+
+        
+        <div class="row">
+            <div class="col-md-12">
+                <ng-titulo titulo="Proveedores"></ng-titulo>
+            <p>Anexe un archivo que contenga el nombre y clave en el R F C de sus proveedores de insumos adquiridos en territorio nacional, vinculados al proceso bajo el régimen que solicita, de los últimos 6 meses<br/>Para descargar la plantilla del archivo de excel de clic <strong>aquí</strong></p>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-10">
+                <input
+                    type="file"
+                    id="proveedores"
+                    class="form-control w-auto"
+                    formControlName="proveedores"
+                    (change)="setValoresStore(forma,'proveedores')"
+                />
+            </div>
+            <div class="col-md-2 d-flex justify-content-end">
+                <button class="btn btn-primary me-2">Anexar...</button>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <p>Nota: Los proveedores nacionales que se declaren deberán contar con la opinión positiva del cumplimiento de las obligaciones fiscales prevista en el artículo 32-D del código en la RFM.</p>
+        </div>
+
+
+
     <div class="row">
         <div class="col-md-12">
             <ng-titulo [titulo]="'Querella'"></ng-titulo>
@@ -280,7 +333,6 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h2>Table will go here</h2>
             <app-agregar-miembro-empresa></app-agregar-miembro-empresa>
         </div>
     </div>
@@ -296,6 +348,45 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12 pt-5">
+            <div class="form-check bg-light p-0">
+                <div class="alert alert-info content-with-checkbox py-6">
+                <lib-input-check
+                [id]="'manifiesto'"
+                [label]="''"
+                [required]="true"
+                formControlName="manifests"
+                [isDisabled]="esFormularioSoloLectura"
+                (change)="setValoresStore(forma, 'manifests')"
+                ></lib-input-check>
+                    <span class="fw-bold align-middle"> *</span>
+                    <div>Una vez manifestado lo anterior, se solicita al SAT, a través de AGACE, que realice las inspecciones a que hace referencia la fracción IX de la regla 7.1.1, a las instalaciones señaladas en las que se realizan las operaciones de comercio exterior con el propósito de verificar la información plasmada en la presente solicitud del Registro en el Esquema Integral de Certificación.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-check bg-light p-0">
+                <div class="alert alert-info content-with-checkbox py-6">
+                <lib-input-check
+                [id]="'bajo-protesta'"
+                [label]="''"
+                [required]="true"
+                formControlName="bajoProtesta"
+                [isDisabled]="esFormularioSoloLectura"
+                (change)="setValoresStore(forma, 'bajoProtesta')"
+                ></lib-input-check>
+                    <span class="fw-bold align-middle"> *</span>
+                    <div>Bajo protesta de decir verdad, manifiesto que los datos asentados en el presente documento son ciertos y que las facultades que me fueron otorgadas para representar al solicitante no me han sido modificadas y/o revocadas.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 </form>
 

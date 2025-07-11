@@ -19,7 +19,7 @@ import { Subject, forkJoin, map, takeUntil} from 'rxjs';
 import { Tramite32609Store, Tramites32609State } from '../../estados/tramites32609.store';
 import { AgregarEnlaceOperativoComponent } from '../agregar-enlace-operativo/agregar-enlace-operativo.component';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
 import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
 import { Tramite32609Query } from '../../estados/tramites32609.query';
@@ -246,7 +246,7 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
       })
     )
     .subscribe();
-    this.crearFormulario();
+    // Don't call crearFormulario() here - move to ngOnInit after seccionState is available
   }
 
   /**
@@ -264,9 +264,15 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
       .pipe(takeUntil(this.destroyed$))
       .subscribe((datos: Tramites32609State) => {
         this.seccionState = datos;
+        
+        // Create forms after state is available
+        if (!this.forma) {
+          this.crearFormulario();
+        }
+        
+        // Update list data
+        this.DomiciliosRfcSolicitanteList = this.seccionState.DomiciliosRfcSolicitante || [];
       });
-
-    this.DomiciliosRfcSolicitanteList = this.seccionState.DomiciliosRfcSolicitante;
   }
 
   /**
@@ -274,7 +280,7 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
    */
   crearFormulario(): void {
     this.forma = this.fb.group({
-      domiciliosRegistrados: [null]
+      domiciliosRegistrados: [this.seccionState?.domiciliosRegistrados || null]
     });
 
     this.registroDomiciliosRfcSolicitanteForm = this.fb.group({
@@ -321,7 +327,8 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
   modificarDialogoDatos(): void {
     if (this.modificartRegistroDeDomiciliosRfcElemento) {
       const MODAL_INSTANCIA = new Modal(
-        this.modificartRegistroDeDomiciliosRfcElemento?.nativeElement
+        this.modificartRegistroDeDomiciliosRfcElemento?.nativeElement,
+        { backdrop: false }
       );
       MODAL_INSTANCIA.show();
     }
@@ -333,7 +340,8 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
   agregarDialogoDatos(): void {
     if (this.registroDeDomiciliosRfcSolicitanteElemento) {
       const MODAL_INSTANCIA = new Modal(
-        this.registroDeDomiciliosRfcSolicitanteElemento?.nativeElement
+        this.registroDeDomiciliosRfcSolicitanteElemento?.nativeElement,
+        { backdrop: false }
       );
       MODAL_INSTANCIA.show();
       
@@ -352,21 +360,14 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
   enviarDialogData(): void {
     // Verificar si hay datos seleccionados del modal o si el formulario es válido
     const HAS_MODAL_SELECTION = this.datosTablaModalSeleccionados.length > 0;
-
     if (HAS_MODAL_SELECTION) {
       this.abrirMultipleSeleccionPopup('', this.CONFIRMACION_NUMEROEMPLEADOS, 'Aceptar', '');
       this.esHabilitarElDialogo = true;
-      
-      // Ejecutar el método apropiado según el tipo de datos
-      if (HAS_MODAL_SELECTION) {
-        this.DomiciliosRfcSolicitanteInfoDatos();
-      } else {
-        this.agregarDomiciliosRfcSolicitanteFromForm();
-      }
-      
+      this.DomiciliosRfcSolicitanteInfoDatos();
       this.cambiarEstadoModal();
     } else {
       this.abrirMultipleSeleccionPopup('', 'Seleccione un registro.', 'Aceptar', '');
+      this.esHabilitarElDialogo = true;
     }
   }
 
@@ -832,50 +833,6 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
     this.forma.markAsUntouched();
     this.forma.markAsPristine();
   }
-  
-
-  /**
-   * Agrega un nuevo registro usando los datos del formulario registroDomiciliosRfcSolicitanteForm.
-   * Este método permite agregar registros directamente desde el formulario sin usar la selección modal.
-   */
-  agregarDomiciliosRfcSolicitanteFromForm(): void {
-    const OBTENER_DESCRIPCION = (array: Catalogo[], index: number): string =>
-      array[index - 1]?.descripcion || '';
-
-    const FORM_DATA = this.registroDomiciliosRfcSolicitanteForm.value;
-    
-    // Obtener el último ID para generar un ID único
-    const ULTIMO_ID = this.DomiciliosRfcSolicitanteList.length
-      ? (this.DomiciliosRfcSolicitanteList[this.DomiciliosRfcSolicitanteList.length - 1]?.id ?? 0) + 1
-      : 1;
-
-    const SELECTEDTIPO_INSTALACION = OBTENER_DESCRIPCION(
-      this.tipoInstalacionList,
-      Number(FORM_DATA.tipoInstalacion)
-    );
-
-    const NUEVO_OBJETO: DomiciliosRfcSolicitanteTabla = {
-      id: ULTIMO_ID,
-      InstalacionesPrincipales: FORM_DATA.InstalacionesPrincipales,
-      tipoInstalacion: SELECTEDTIPO_INSTALACION || FORM_DATA.tipoInstalacion,
-      coloniaCalleNumero: FORM_DATA.coloniaCalleNumero,
-      procesoProductivo: FORM_DATA.procesoProductivo,
-      realizaActividadComercioExterior: FORM_DATA.realizaActividadComercioExterior ? DomiciliosRfcSolicitanteComponent.convertirValorRadioATexto(FORM_DATA.realizaActividadComercioExterior) : '',
-      entidadFederativa: FORM_DATA.entidadFederativa,
-      municipioAlcaldia: FORM_DATA.municipioAlcaldia,
-      registroSESAT: FORM_DATA.registroSESAT,
-      codigoPostal: FORM_DATA.codigoPostal,
-      acreditaUsoGoceInmueble: FORM_DATA.acreditaUsoGoceInmueble ? DomiciliosRfcSolicitanteComponent.convertirValorRadioATexto(FORM_DATA.acreditaUsoGoceInmueble) : '',
-      perfilEmpresa: FORM_DATA.perfilEmpresa,
-      reconocimientoMutuoCTPAT: FORM_DATA.reconocimientoMutuoCTPAT ? DomiciliosRfcSolicitanteComponent.convertirValorRadioATexto(FORM_DATA.reconocimientoMutuoCTPAT) : ''
-    };
-
-    // Agregar el nuevo objeto a la lista existente
-    this.DomiciliosRfcSolicitanteList = [...this.DomiciliosRfcSolicitanteList, NUEVO_OBJETO];
-    
-    // Actualizar el store con los nuevos datos
-    this.tramite32609Store.establecerDatos({DomiciliosRfcSolicitante: this.DomiciliosRfcSolicitanteList});
-  }
 
   /**
    * Convierte el valor del radio button (0/1) a su representación de texto (No/Sí)
@@ -899,6 +856,26 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
       return '';
     }
     return texto === 'Sí' ? '1' : '0';
+  }
+
+  /**
+   * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
+   * @param form - El formulario reactivo.
+   * @param campo - El nombre del campo en el formulario.
+   */
+  setValoresStore(form: FormGroup | null, campo: string): void {
+    if (!form) {
+      return;
+    }
+    const CONTROL = form.get(campo);
+    if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
+      this.tramite32609Store.establecerDatos({ [campo]: CONTROL.value });
+      
+      // Clear validation errors if the field now has a valid value
+      if (CONTROL.valid && CONTROL.touched) {
+        CONTROL.markAsPristine();
+      }
+    }
   }
 
     /**

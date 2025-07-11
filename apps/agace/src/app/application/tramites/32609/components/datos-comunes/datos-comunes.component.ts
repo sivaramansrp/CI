@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, CategoriaMensaje, ConsultaioQuery, InputRadioComponent, Notificacion, NotificacionesComponent, TipoNotificacionEnum, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CategoriaMensaje, ConsultaioQuery, InputCheckComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TipoNotificacionEnum, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NOTA, OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/oea-textil-registro.enum';
@@ -10,6 +10,7 @@ import { ControlInventariosComponent } from '../control-inventarios/control-inve
 import { DomiciliosRfcSolicitanteComponent } from '../domicilios-rfc-solicitante/domicilios-rfc-solicitante.component';
 import { NumeroEmpleadosBimestreComponent } from '../numero-empleados-bimestre/numero-empleados-bimestre.component';
 import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
+import { Tramite32609Query } from '../../estados/tramites32609.query';
 
 @Component({
   selector: 'app-datos-comunes',
@@ -24,7 +25,8 @@ import { OeaTextilRegistroService } from '../../services/oea-textil-registro.ser
       DomiciliosRfcSolicitanteComponent,
       ControlInventariosComponent,
       TituloComponent,
-      AgregarMiembroEmpresaComponent
+      AgregarMiembroEmpresaComponent,
+      InputCheckComponent
     ],
   templateUrl: './datos-comunes.component.html',
   styleUrl: './datos-comunes.component.css',
@@ -109,6 +111,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   constructor(public fb: FormBuilder, 
     private consultaioQuery: ConsultaioQuery,
     private tramite32609Store: Tramite32609Store,
+    private tramite32609Query: Tramite32609Query,
     private servicio: OeaTextilRegistroService) {
     this.consultaioQuery.selectConsultaioState$
         .pipe(
@@ -126,7 +129,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * Hook de ciclo de vida para inicializar el componente.
    */
   ngOnInit(): void {
-    // this.enPatchStoredFormData();
+    this.enPatchStoredFormData();
     this.obtenerlistadescargable();
      this.inicializarEstadoFormulario();
   }
@@ -143,7 +146,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           autorizaOpinionSAT: [this.seccionState?.autorizaOpinionSAT, Validators.required],
           cuentaConEmpleadosPropios: [this.seccionState?.cuentaConEmpleadosPropios, Validators.required],
           bimestreUltimo: [this.seccionState?.bimestreUltimo, Validators.required],
-          numeroDeEmpleadas: [this.seccionState?.numeroDeEmpleadas, Validators.required],
+          numeroDeEmpleadas: [{value:this.seccionState?.numeroDeEmpleadas, disabled:true}, [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]],
           retencionISRTrabajadores: [this.seccionState?.retencionISRTrabajadores, Validators.required],
           pagoCuotasIMSS: [this.seccionState?.pagoCuotasIMSS, Validators.required],
           cuentaConSubcontratacionEspecializada: [this.seccionState?.cuentaConSubcontratacionEspecializada, Validators.required],
@@ -155,8 +158,12 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           infringioSupuestos17HBis: [this.seccionState?.infringioSupuestos17HBis, Validators.required],
           mediosContactoActualizadosBuzon: [this.seccionState?.mediosContactoActualizadosBuzon, Validators.required],
           suspensionPadronImportadoresExportadores: [this.seccionState?.suspensionPadronImportadoresExportadores, Validators.required],
+          archivoNacionales: [this.seccionState?.archivoNacionales],
+          proveedores: [this.seccionState?.proveedores],
           querellaSATUltimos3Anios: [this.seccionState?.querellaSATUltimos3Anios, Validators.required],
           ingresoInfoContableSAT: [this.seccionState?.ingresoInfoContableSAT, Validators.required],
+          manifests: [true, Validators.required],
+          bajoProtesta: [true, Validators.required],
       });
     }
 
@@ -239,9 +246,38 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
  */
   enCambioDeValor(valor: string | number): void {
     this.radioSeleccionado = valor === '1' ? true : false;
+    
+    // Enable/disable numeroDeEmpleadas and bimestreUltimo based on radio selection
+    const NUMERO_EMPLEADOS_CONTROL = this.forma.get('numeroDeEmpleadas');
+    const BIMESTRE_CONTROL = this.forma.get('bimestreUltimo');
+    
+    if (this.radioSeleccionado) {
+      // Enable fields when "Sí" is selected
+      NUMERO_EMPLEADOS_CONTROL?.enable();
+      BIMESTRE_CONTROL?.enable();
+    } else {
+      // Disable fields when "No" is selected
+      NUMERO_EMPLEADOS_CONTROL?.disable();
+      BIMESTRE_CONTROL?.disable();
+    }
   }
 
+    /**
+   * @method enPatchStoredFormData
+   * Actualiza el formulario con los datos almacenados en el estado.
+   */
+  public enPatchStoredFormData(): void {
+    this.tramite32609Query.selectTramite32609$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((datos: Tramites32609State) => {
+        this.seccionState = datos;
+      });
+  }
 
+  /**
+   * Método para manejar el cambio de visibilidad de la tabla.
+   * @param valor - Valor seleccionado ('1' para mostrar, '0' para ocultar)
+   */
   toggleTablaPorValor(valor: string | number): void {
     this.esTablaVisible = valor === '1' ? true : false;
   } 

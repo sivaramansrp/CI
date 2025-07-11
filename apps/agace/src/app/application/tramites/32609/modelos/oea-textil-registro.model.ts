@@ -71,3 +71,25 @@ export interface DomiciliosRfcSolicitanteTabla {
   reconocimientoMutuoCTPAT: string;
   perfilEmpresa: string;
 }
+
+
+export interface ControlInventariosTabla {
+  id:number;
+  nombreSistema:string;
+  lugarRadicacion:string;
+  cumpleAnexo24: boolean;
+}
+
+export interface AgregarMiembroEmpresaTabla {
+  id:number;
+  tipoPersona: string;
+  nombre: string;
+  apellidoPaterno: string;
+  apellidoMaterno: string;
+  nombreCompleto: string;
+  rfc: string;
+  caracter: string;
+  nacionalidad: string;
+  obligadoTributarMexico: string;
+  nombreEmpresa: string;
+}

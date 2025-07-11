@@ -1,4 +1,4 @@
-import { AgentesTabla, RegistroVehiculos, VehiculosTabla } from '../modelos/oea-textil-registro.model';
+import { AgregarMiembroEmpresaTabla, ControlInventariosTabla, DomiciliosRfcSolicitanteTabla, NumeroEmpleadosTabla } from '../modelos/oea-textil-registro.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -17,7 +17,7 @@ export interface Tramites32609State {
   autorizaOpinionSAT: string;
   cuentaConEmpleadosPropios: string;
   bimestreUltimo: string;
-  capitalSocial: string;
+  numeroDeEmpleadas: string;
   retencionISRTrabajadores: string;
   pagoCuotasIMSS: string;
   cuentaConSubcontratacionEspecializada: string;
@@ -29,7 +29,15 @@ export interface Tramites32609State {
   infringioSupuestos17HBis: string;
   mediosContactoActualizadosBuzon: string;
   suspensionPadronImportadoresExportadores: string;
-  numeroEmpleadosBimestre:any;
+  archivoNacionales?: string;
+  proveedores: string;
+  domiciliosRegistrados: string;
+  numeroEmpleadosBimestre:NumeroEmpleadosTabla[];
+  DomiciliosRfcSolicitante:DomiciliosRfcSolicitanteTabla[],
+  controlInventarios:ControlInventariosTabla[];
+  querellaSATUltimos3Anios: string;
+  ingresoInfoContableSAT:string;
+  agregarMiembroEmpresa:AgregarMiembroEmpresaTabla[];
 }
 
 
@@ -49,7 +57,7 @@ export function createInitialState(): Tramites32609State {
   autorizaOpinionSAT: '',
   cuentaConEmpleadosPropios: '',
   bimestreUltimo: '',
-  capitalSocial: '',
+  numeroDeEmpleadas: '',
   retencionISRTrabajadores: '',
   pagoCuotasIMSS: '',
   cuentaConSubcontratacionEspecializada: '',
@@ -61,7 +69,15 @@ export function createInitialState(): Tramites32609State {
   infringioSupuestos17HBis: '',
   mediosContactoActualizadosBuzon: '',
   suspensionPadronImportadoresExportadores: '',
-  numeroEmpleadosBimestre:[]
+  archivoNacionales: '',
+  proveedores: '',
+  domiciliosRegistrados:'',
+  numeroEmpleadosBimestre:[],
+  DomiciliosRfcSolicitante:[],
+  controlInventarios: [],
+  querellaSATUltimos3Anios: '',
+  ingresoInfoContableSAT: '',
+  agregarMiembroEmpresa: []
   };
 }
 

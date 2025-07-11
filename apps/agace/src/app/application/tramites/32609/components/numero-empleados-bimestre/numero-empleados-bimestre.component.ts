@@ -261,7 +261,8 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   agregarDialogoDatos(): void {
     if (this.registroDeNumeroEmpleadosElemento) {
       const MODAL_INSTANCIA = new Modal(
-        this.registroDeNumeroEmpleadosElemento?.nativeElement
+        this.registroDeNumeroEmpleadosElemento?.nativeElement,
+        { backdrop: false }
       );
       MODAL_INSTANCIA.show();
     }

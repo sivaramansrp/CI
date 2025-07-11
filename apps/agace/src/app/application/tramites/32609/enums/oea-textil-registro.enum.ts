@@ -1,5 +1,7 @@
 
 import {
+  AgregarMiembroEmpresaTabla,
+  ControlInventariosTabla,
   DomiciliosRfcSolicitanteTabla,
   InstalacionesInterface,
   NumeroEmpleadosTabla,
@@ -12,10 +14,11 @@ import {
  */
 export const NOTA = {
   REQUISITO_OBLIGATORIO_PARA_ACCEDER_NOTA: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificación de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
-  CONFIRMACION_NUMEROEMPLEADOS: 'EL vehiculo fue agregado Correctamente.',
+  CONFIRMACION_NUMEROEMPLEADOS: 'Datos guardados correctamente',
   DOMICILIO_REGISTRADOS: 'Nota: Be contar con un programa IMMEX activo y vigente al momento de ingresar la solicitud, se mostrarán lus domicilios registradus ante la Secretaria de Ecoonmia. Así mismo, podrá incluir utres domicilios que se encuentren relacionados con el RFC del solicitante, dando click en el botón "Agregar y seleccionado la Entidad Federativa.',
   EMPLEADO_REQUISITO_RGCE: 'Es un requisito obligatorio el contar con algún tipo de empleado, ya sea propio o subcontratado para acceder al Registro en el Esquema de Certificación de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
   DEBE_CAPTURAR: 'Debe capturar todos los datos marcados como obligatorios.',
+  CUMPLE_ANEXO24: 'Indique, si cuenta con un sistema de control de inventarios de conformidad con las disposiciones previstas por el Anexo 24.'
 
 };
 
@@ -103,6 +106,12 @@ export const INSTALACIONES_TABLA_DATOS = [
   },
 ];
 
+/**
+ * Matriz de datos para la tabla de domicilios RFC del solicitante.
+ *
+ * Cada objeto define un encabezado, una clave para acceder al valor del objeto,
+ * y un orden para la visualización en la tabla.
+ */
 export const DOMICILIOS_RFC_SOLICITANTE_TABLA_DATOS = [
   {
     encabezado: '*Instalaciones principales',
@@ -164,4 +173,65 @@ export const DOMICILIOS_RFC_SOLICITANTE_TABLA_DATOS = [
     clave: (item: DomiciliosRfcSolicitanteTabla): string => item.perfilEmpresa,
     orden: 12,
   },
+];
+
+export const CONTROL_INVESTARIOS_TABLA_DATOS = [
+  {
+    encabezado: 'Nombre del sistema o datos para su identificación',
+    clave: (item: ControlInventariosTabla): string => item.nombreSistema,
+    orden: 1,
+  },
+  {
+    encabezado: 'Lugar de radicación',
+    clave: (item: ControlInventariosTabla): string => item.lugarRadicacion,
+    orden: 2,
+  },
+  {
+    encabezado: 'Indique, si cuenta con un sistema de control de inventarios de conformidad con las disposiciones previstas por el Anexo 24.',
+    clave: (item: ControlInventariosTabla): string => {
+      const CHECKED_TEXT = item.cumpleAnexo24 ? 'Sí' : 'No';
+      return `${CHECKED_TEXT}`;
+    },
+    orden: 3,
+    isHtml: true,
+  },
+];
+
+export const EMPRESA_MIEMBRO_TABLA_DATOS = [
+  {
+    encabezado: 'Tipo de Persona',
+    clave: (item: AgregarMiembroEmpresaTabla): string => item.tipoPersona,
+    orden: 1,
+  },
+  {
+    encabezado: 'Nombre',
+    clave: (item: AgregarMiembroEmpresaTabla): string => item.nombre,
+    orden: 2,
+  },
+  {
+    encabezado: 'RFC',
+    clave: (item: AgregarMiembroEmpresaTabla): string => item.rfc,
+    orden: 3,
+  },
+  {
+    encabezado: 'En su carácter de',
+    clave: (item: AgregarMiembroEmpresaTabla): string => item.caracter,
+    orden: 4,
+  },
+  {
+    encabezado: 'Nacionalidad',
+    clave: (item: AgregarMiembroEmpresaTabla): string => item.nacionalidad,
+    orden: 5,
+  },
+  {
+    encabezado: 'Obligado a tributar en México',
+    clave: (item: AgregarMiembroEmpresaTabla): string => item.obligadoTributarMexico,
+    orden: 6,
+  },
+   {
+    encabezado: 'Nombre de la empresa',
+    clave: (item: AgregarMiembroEmpresaTabla): string => item.nombreEmpresa,
+    orden: 7,
+  },
+  
 ];

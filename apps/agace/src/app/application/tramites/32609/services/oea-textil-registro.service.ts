@@ -130,4 +130,17 @@ sectorListaDeSelects(): Observable<{
     return this.http.get<Tramites32609State>('assets/json/32609/empresas-transportistas-datos.json');
   }
 
+
+  empresaListaDeSelects(): Observable<{
+  enSuCaracterDeList: Catalogo[];
+  nacionalidadList: Catalogo[];
+  tipoDePersonaList: Catalogo[];
+}> {
+  return forkJoin({
+    enSuCaracterDeList: this.http.get<Catalogo[]>('assets/json/32609/en-su-caracter-de-list.json'),
+    nacionalidadList: this.http.get<Catalogo[]>('assets/json/32609/nacionali-dad-list.json'),
+    tipoDePersonaList: this.http.get<Catalogo[]>('assets/json/32609/tipo-de-persona-list.json'),
+  });
+}
+
 }
