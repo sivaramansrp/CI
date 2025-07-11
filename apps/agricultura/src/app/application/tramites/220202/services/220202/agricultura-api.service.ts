@@ -12,10 +12,10 @@ import {
   PagoDeDerechos,  
 } from '../../models/220202/fitosanitario.model';
 import { Observable, map } from 'rxjs';
+import { TercerosrelacionadosTable, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { URL } from '../../constantes/220202/fitosanitario.enums';
 
 @Injectable({
@@ -42,12 +42,12 @@ export class AgriculturaApiService {
 
     /**
    * Actualiza la lista de terceros relacionados con la solicitud.
-   * @method updateTercerosRelacionados
-   * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de terceros.
-   * @memberof CertificadoZoosanitarioServiceService
+   * @method updateTercerosExportador
+   * @param {TercerosrelacionadosTable[]} datosForma Lista de terceros.
+   * @memberof AgriculturaApiService
    */
-  updateTercerosRelacionados(tercerosRelacionados: TercerosrelacionadosdestinoTable): void {
-    this.fitosanitarioStore.actualizarTercerosRelacionados(tercerosRelacionados);
+  updateTercerosExportador(datosForma: TercerosrelacionadosTable[]): void {
+    this.fitosanitarioStore.updateTercerosExportador(datosForma);
   }
 
       /**
@@ -174,6 +174,9 @@ export class AgriculturaApiService {
     this.fitosanitarioStore.actualizarMovilizacion(DATOS.movilizacion);
     this.fitosanitarioStore.actualizarPago(DATOS.pago);
     this.fitosanitarioStore.tablaDatosFinal(DATOS.tablaDatos);
+    this.updateTercerosRelacionado(DATOS.tercerosRelacionados);
+    this.updateTercerosExportador(DATOS.datosForma);
+
   }
 
   /**

@@ -16,7 +16,7 @@ import {
 import { Injectable } from '@angular/core';
 
 import { Store, StoreConfig } from '@datorama/akita';
-import { TercerosrelacionadosdestinoTable } from '../../../shared/models/tercerosrelacionados.model';
+import { TercerosrelacionadosTable, TercerosrelacionadosdestinoTable } from '../../../shared/models/tercerosrelacionados.model';
 
 @Injectable({
     providedIn: 'root',
@@ -144,4 +144,17 @@ public actualizarTercerosRelacionados(nuevoTercero: TercerosrelacionadosdestinoT
       tercerosRelacionados: tercerosRelacionados,
     }));
   }
+
+  /**
+   * Actualiza el store con la lista de terceros relacionados.
+   * @method updateTercerosRelacionados
+   * @param {TercerosrelacionadosTable[]} tercerosRelacionados Lista de personas terceros relacionadas.
+   */
+  public updateTercerosExportador(datosForma: TercerosrelacionadosTable[]): void {
+    this.update(state => ({
+      ...state,
+      datosForma: datosForma,
+    }));
+  }
+
 }
