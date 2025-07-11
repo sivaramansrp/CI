@@ -28,8 +28,13 @@ describe('NumeroDeEmpleadosComponent', () => {
         { provide: BsModalService, useValue: modalServiceMock },
         FormBuilder,
       ],
-    }).compileComponents();
-
+    }).overrideComponent(NumeroDeEmpleadosComponent, {
+  set: {
+    providers: [
+      { provide: BsModalService, useValue: modalServiceMock }
+    ]
+  }
+}).compileComponents();
     fixture = TestBed.createComponent(NumeroDeEmpleadosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
