@@ -72,4 +72,16 @@ export class Tramite32515Store extends Store<InformationGeneralSolicitanteState>
             [campo]: value,
         }));
     }
+   /**
+   * Actualiza el estado del trámite 32515 con los valores proporcionados.
+   * 
+   * @param valores - Valores parciales para actualizar el estado.
+   */
+  setTramite32515State(fieldName: string, valores:unknown): void {
+    this.update((state => ({
+      ...state,
+      [fieldName]: valores,
+    })));
+  }
+  
 }
