@@ -14,10 +14,10 @@ import { Solicitud261601Query } from '../../estados/tramites261601.query';
 import { TEXTOS } from '../../constants/constants.enum';
 
 import {
-  ConsultaioQuery,
-  ConsultaioState,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+
+import{ConsultaioQuery,ConsultaioState} from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar la solicitud del trámite 261601.

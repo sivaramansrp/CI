@@ -1,11 +1,12 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DatosDeFila, DatosForma, FilaSolicitud, RadioOpcion, SolicitudFilaTabla } from '../../models/220202/fitosanitario.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject,map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
 
@@ -274,6 +275,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public notificationCheck: boolean = false;
 
+  /**
+   * @description Indica si se debe mostrar la tabla de solicitudes.
+   * Esta propiedad se utiliza para controlar la visibilidad de la tabla de solicitudes en la interfaz de usuario.
+   * @type {boolean}
+   */
+  public mostrarSolicitudTabla: boolean = true;
 
   /**
    * @constructor
@@ -301,6 +308,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
         this.esFormularioSoloLectura = seccionState.readonly;
+        this.mostrarSolicitudTabla = !seccionState.readonly;
         this.inicializarEstadoFormulario();
       })
     )
@@ -364,6 +372,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   createFromFields():void {
     this.forma = this.fb.group(this.inicializarCamposFormulario());
+    if(this.forma){
+      this.notificationCheck=true;
+    }
   }
 
   /**
@@ -373,7 +384,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   inicializarCamposFormulario(): Record<string, unknown> {
     return {
       ...this.crearCamposRequeridos(),
-      ...this.crearCamposOpcionales(),
+
     };
   }
 
@@ -385,7 +396,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   crearCamposRequeridos(): Record<string, unknown> {
     const FORMULARIO = this.formulariodataStore;
     return {
-      tipoMercancia: [FORMULARIO.tipoMercancia, Validators.required],
+      tipoMercancia: [{value: 'yes', disabled: this.esFormularioSoloLectura }, Validators.required],
       aduanaDeIngreso: [{ value: FORMULARIO.aduanaDeIngreso || '', disabled: this.esFormularioSoloLectura }, Validators.required],
       oficinaDeInspeccion: [{ value: FORMULARIO.oficinaDeInspeccion || '', disabled: this.esFormularioSoloLectura }, Validators.required],
       puntoDeInspeccion: [{ value: FORMULARIO.puntoDeInspeccion || '', disabled: this.esFormularioSoloLectura }, Validators.required],
@@ -395,22 +406,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     };
   }
   
-  /**
-   * Método para crear campos opcionales del formulario.
-   * @param FORMULARIO Datos de formulariodataStore.
-   * @returns Objeto con los campos opcionales.
-   */
-   crearCamposOpcionales(): Record<string, unknown> {
-     const FORMULARIO = this.formulariodataStore;
-     return {
-       numeroDeGuia: [{ value: FORMULARIO.numeroDeGuia || '', disabled: this.esFormularioSoloLectura }],
-       requisito: [{ value: FORMULARIO.requisito || '', disabled: this.esFormularioSoloLectura }],
-       numeroCertificadoInternacional: [{ value: FORMULARIO.numeroCertificadoInternacional || '', disabled: this.esFormularioSoloLectura }],
-       descripcionFraccion: [{ value: FORMULARIO.descripcionFraccion || '', disabled: this.esFormularioSoloLectura }],
-       descripcionNico: [{ value: FORMULARIO.descripcionNico || '', disabled: this.esFormularioSoloLectura }],
-       descripcion: [{ value: FORMULARIO.descripcion || '', disabled: this.esFormularioSoloLectura }],
-     };
-   }
 
   /**
    * @description Obtiene todos los datos para las listas de opciones (selects) del formulario.
@@ -632,7 +627,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   radioBotonSeleccionado(): void {
     const VALOR = this.forma.value.tipoMercancia;
-    if (VALOR) {
+    if (VALOR !== '' && VALOR !== null && VALOR !== undefined) {
       this.notificationCheck = true;
     } else {
       this.notificationCheck = false;
