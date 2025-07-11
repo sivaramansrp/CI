@@ -41,6 +41,7 @@
         <div class="col-md-12">
           <label class="form-label">Aduanas de entradas (M&aacute;ximo 3 aduanas)</label>
           <crosslist [fechas]="selectRangoDias" [label]="aduanaLabel" 
+          [isDisabled]="esFormularioSoloLectura ? true : false"
           >
           </crosslist>
         </div>
@@ -57,7 +58,7 @@
       <div class="row mt-5">
         <div class="col-md-12">
           <label class="form-label">Pa&iacute;s origen</label>
-          <crosslist [fechas]="selectRangoDias" [label]="paisLabel">
+          <crosslist [fechas]="selectRangoDias" [label]="paisLabel" [isDisabled]="esFormularioSoloLectura ? true : false">
           </crosslist>
         </div>
       </div>
@@ -74,7 +75,7 @@
       <div class="row mt-5">
         <div class="col-md-12">
           <label class="form-label">Destino dentro del país (Entidad federativa)</label>
-          <crosslist [fechas]="selectRangoDias" [label]="destinoLabel">
+          <crosslist [fechas]="selectRangoDias" [label]="destinoLabel" [isDisabled]="esFormularioSoloLectura ? true : false">
           </crosslist>
         </div>
       </div>
@@ -85,6 +86,7 @@
           <label>
             <input type="checkbox" [checked]="selectedOptions.value[i]" (change)="cambiar($event, i)"
               [disabled]="option.disabled" 
+              [disabled]="esFormularioSoloLectura"
               />
             {{ option.name }}
           </label>
@@ -186,7 +188,9 @@
         <div class="col-md-12">
           <label class="form-label mb-5" for="">Detalle</label>
           <ng-table [commonTableHeader]="detalleDatos.tableHeader"
-            [commonTableBody]="detalleDatos.tableBody"></ng-table>
+            [commonTableBody]="detalleDatos.tableBody"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+          ></ng-table>
         </div>
       </div>
       <div class="row mt-5">
@@ -211,7 +215,8 @@
       <div class="row mt-5">
         <div class="col-md-12">
           <label class="form-label mb-5" for="">Mercancías</label>
-          <ng-table [commonTableHeader]="mercanicias.tableHeader" [commonTableBody]="mercanicias.tableBody"></ng-table>
+          <ng-table [commonTableHeader]="mercanicias.tableHeader" [commonTableBody]="mercanicias.tableBody"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
         </div>
       </div>
       <div class="row mt-5">
