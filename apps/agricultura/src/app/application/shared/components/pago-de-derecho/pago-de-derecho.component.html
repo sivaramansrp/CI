@@ -91,6 +91,8 @@
                   [ngClass]="esInvalido('llavePago') ? 'required' : ''"
                   (change)="actualizarPago()"
                   [maxlength]="50"
+                  style="text-transform: uppercase;"
+
                   />
                         <div *ngIf="esInvalido('llavePago')" class="text-danger">
                            <small *ngIf="pagoForm.controls['llavePago'].errors?.['required']">
@@ -111,11 +113,14 @@
                   name="fechaPago"
                   (change)="actualizarPago()"
                   (valorCambiado)="onFechaCambiada($event)"
-                  
                   [isDisabled]="esFormularioSoloLectura || pagoForm.get('exentoPago')?.value === 'si'"
                   ></input-fecha>
-                  <div class="mensaje-error" *ngIf="pagoForm.get('fechaPago')?.errors?.['futureDateNotAllowed']">
-                            "La fecha de pago debe ser menor o igual a la fecha actual."</div>
+                 <div class="mensaje-error" *ngIf="
+  pagoForm.get('fechaPago')?.touched &&
+  pagoForm.get('fechaPago')?.errors?.['futureDateNotAllowed']
+">
+  La fecha de pago debe ser menor o igual a la fecha actual.
+</div>
                }
             </div>
          </div>
