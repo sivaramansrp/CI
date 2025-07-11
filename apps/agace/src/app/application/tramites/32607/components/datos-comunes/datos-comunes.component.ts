@@ -973,7 +973,14 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   }
 
   modificarInventario(): void {
-    if (this.seleccionarInventarios.length === 0) {
+    if (this.seleccionarInventarios.length > 0) {
+      if (this.modalElement) {
+        const MODAL_INSTANCE = new Modal(
+          this.modalModificarInventarioElement.nativeElement
+        );
+        MODAL_INSTANCE.show();
+      }
+    } else {
       const PEDIMENTO = {
         patente: 0,
         pedimento: 0,
@@ -988,13 +995,6 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
         'Debe capturar todos los datos marcados como obligatorios.'
       );
       this.pedimentos.push(PEDIMENTO);
-    } else if (this.seleccionarInventarios.length > 0) {
-      if (this.modalElement) {
-        const MODAL_INSTANCE = new Modal(
-          this.modalModificarInventarioElement.nativeElement
-        );
-        MODAL_INSTANCE.show();
-      }
     }
   }
 
