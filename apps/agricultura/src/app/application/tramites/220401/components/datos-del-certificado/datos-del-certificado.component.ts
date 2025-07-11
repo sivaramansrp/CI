@@ -23,6 +23,7 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CombinacionRequeridaComponent } from '../combinacion-requerida/combinacion-requerida.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosGeneralesAnimalesComponent } from '../datos-generales-animales/datos-generales-animales.component';
+import { DetosDelService } from '../../services/pantallas.service';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { Modal } from 'bootstrap';
 import { Pantallas220401Service } from '../pantallas220401.service';
@@ -34,7 +35,7 @@ import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json
 
 import { AlertComponent,Catalogo } from '@ng-mf/data-access-user';
 import { LOCALIDAD_COLONIA } from '../../constantes/certificados-licencias.enum';
-
+import { TipoDeCertificoOption } from '../../models/TipoDeCertificoOption.model';
 
 /**
  * Componente que gestiona los datos del certificado en la solicitud 220401.
@@ -78,7 +79,19 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Opciones de radio para unidad, importadas desde un archivo JSON.
    */
-  radioBoton = unidadRadioFields; // importar datos desde Json
+  public radioBotonProducto = unidadRadioFields; // importar datos desde Json
+  
+  /**
+   * Configuración de catálogos para el formulario.
+   * Contiene los nombres de los controles y las rutas de los catálogos.
+   */
+  public radioBotonAnimal!: TipoDeCertificoOption[];
+  /**
+   * Configuración de catálogos para el formulario.
+   * Contiene los nombres de los controles y las rutas de los catálogos.
+   */
+  public radioBotonQFBA! : TipoDeCertificoOption[];
+
   /**
    * Estado de la solicitud 220401.
    */
@@ -122,6 +135,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
     private agregarQuery: AgregarQuery, 
     private _pantallas220401Service: Pantallas220401Service,
     private consultaioQuery: ConsultaioQuery,  
+    private detosDelService: DetosDelService
    
 ) {
   this.consultaioQuery.selectConsultaioState$
@@ -204,7 +218,9 @@ this.inicializarCertificadoFormulario();
     )
     .subscribe();
     this.formGroup1= this.fb.group({
-      osia:[this.solicitudState?.osia]
+      radioBotonAnimal:[this.solicitudState?.radioBotonAnimal],
+      radioBotonQFBA:[this.solicitudState?.radioBotonQFBA],
+      radioBotonProducto:[this.solicitudState?.radioBotonProducto],
     });
     
     this.catalogConfigs.forEach((config) => {
@@ -224,6 +240,18 @@ this.inicializarCertificadoFormulario();
         }
       });
     });
+
+    this.detosDelService.getCertificadoData() 
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.radioBotonAnimal = data;
+      });
+
+    this.detosDelService.getCertificado() 
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.radioBotonQFBA = data;
+      });
 
       this.datosdelForm= this.fb.group({
         datoscertificado:[this.solicitudState?.datoscertificado],
@@ -353,7 +381,67 @@ this.inicializarCertificadoFormulario();
       primerOpcion: '',
     },
   ];
+  catalogConfigsAnimal = [
+    {
+      catalogo: this.delegacionesJson,
+      label: 'Delegaciones estatales SAGARPA',
+      controlName: 'delegacionesControl',
+      required: true,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+    {
+      catalogo: this.delegacionesJson,
+      label: 'OISA',
+      controlName: 'delegacionesControl2',
+      required: true,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+    {
+      catalogo: this.delegacionesJson,
+      label: 'Oficina central',
+      controlName: 'delegacionesControl3',
+      required: true,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+    {
+      catalogo: this.delegacionesJson,
+      label: 'Distrito desarrollo rural (DDR)',
+      controlName: 'delegacionesControl4',
+      required: false,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+  ];
   
+  catalogConfigsQFBA = [
+    {
+      catalogo: this.delegacionesJson,
+      label: 'Delegaciones estatales SAGARPA',
+      controlName: 'delegacionesControl',
+      required: true,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+    {
+      catalogo: this.delegacionesJson,
+      label: 'Oficina central',
+      controlName: 'delegacionesControl3',
+      required: true,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+    {
+      catalogo: this.delegacionesJson,
+      label: 'Distrito desarrollo rural (DDR)',
+      controlName: 'delegacionesControl4',
+      required: false,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+  ];
   /**
    * Obtiene los valores seleccionados de las delegaciones a partir de la configuración del catálogo
    * y actualiza el estado correspondiente en el servicio _pantallas220401Service.
