@@ -1,5 +1,5 @@
 /**
- * Interfaz que representa la respuesta de una consulta general.
+ * Interfaz que representa la respuesta de una consulta general
  */
 export interface RespuestaConsulta {
   /**
