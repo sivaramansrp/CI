@@ -25,7 +25,6 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './shared-modal.component.html',
-  styleUrl: './shared-modal.component.scss',
     animations: [
     trigger('fadeInOut', [
       transition(':enter', [
