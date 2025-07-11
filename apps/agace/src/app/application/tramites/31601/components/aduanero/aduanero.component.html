@@ -635,83 +635,9 @@
           Este campo es obligatorio.
         </div>
       </div>
-      <div class="mb-3 form-group">
-        <app-input-radio
-          [radioOptions]="radioOptions"
-          [isRequired]="true"
-          [layout]="'horizontal'"
-          [gap]="'493px'"
-          [isBold]="true"
-          [labelMargin]="'0px'"
-          [description]="descriptionData.radio10.description"
-          [showDescription]="true"
-          formControlName="delMismo"
-          (change)="
-            setValoresStore(preOperativeForm, 'delMismo', 'setDelMismo')
-          "
-        ></app-input-radio>
-        <div
-          *ngIf="
-            preOperativeForm.controls['delMismo'].invalid &&
-            preOperativeForm.controls['delMismo'].touched
-          "
-          class="text-danger"
-        >
-          Este campo es obligatorio.
-        </div>
-      </div>
-      <div class="mb-3 form-group">
-        <app-input-radio
-          [radioOptions]="radioOptions"
-          [isRequired]="true"
-          [layout]="'horizontal'"
-          [gap]="'493px'"
-          [isBold]="true"
-          [labelMargin]="'0px'"
-          [description]="descriptionData.radio11.description"
-          [showDescription]="true"
-          formControlName="senaleMomento"
-          (change)="
-            setValoresStore(
-              preOperativeForm,
-              'senaleMomento',
-              'setSenaleMomento'
-            )
-          "
-        ></app-input-radio>
-        <div
-          *ngIf="
-            preOperativeForm.controls['senaleMomento'].invalid &&
-            preOperativeForm.controls['senaleMomento'].touched
-          "
-          class="text-danger"
-        >
-          Este campo es obligatorio.
-        </div>
-      </div>
-      <div class="mb-3 form-group">
-        <app-input-radio
-          [radioOptions]="radioOptions"
-          [isRequired]="true"
-          [layout]="'horizontal'"
-          [gap]="'493px'"
-          [isBold]="true"
-          [labelMargin]="'0px'"
-          [description]="descriptionData.radio12.description"
-          [showDescription]="true"
-          formControlName="enCaso"
-          (change)="setValoresStore(preOperativeForm, 'enCaso', 'setEnCaso')"
-        ></app-input-radio>
-        <div
-          *ngIf="
-            preOperativeForm.controls['enCaso'].invalid &&
-            preOperativeForm.controls['enCaso'].touched
-          "
-          class="text-danger"
-        >
-          Este campo es obligatorio.
-        </div>
-      </div>
+     
+
+     
     </div>
     <div class="w-100 p-3">
       <div class="col-4 mb-3">
@@ -773,13 +699,15 @@
           type="button"
           class="btn btn-primary btn-space"
          [disabled]="esFormularioSoloLectura"
+         (click)="confirmEliminarMencioneItem()"
         >
           Eliminar
         </button>
         <button
           type="button"
           class="btn btn-primary btn-space"
-         [disabled]="esFormularioSoloLectura"
+          (click)="openInstalacionesModal()"
+         [disabled]="esFormularioSoloLectura"         
         >
           Agregar
         </button>
@@ -1062,7 +990,7 @@
           <div class="form-group">
             <span class="require">* </span>
             <label for="nombreDel" class="form-label">Nombre del sistema o datos para su identificación</label>
-            <input type="text" class="form-control" id="nombreDel" formControlName="nombreDel" (change)="
+            <input type="text" class="form-control" id="nombreDel"    formControlName="nombreDel" (change)="
                 setValoresStore(preOperativeForm, 'nombreDel', 'setNombreDel')
               " />
             <div *ngIf="
@@ -1083,7 +1011,7 @@
           <div class="form-group">
             <span class="require">* </span>
             <label for="lugarDeRadicacion" class="form-label">Lugar de radicación</label>
-            <input type="text" class="form-control" id="lugarDeRadicacion" formControlName="lugarDeRadicacion" (change)="
+            <input type="text" class="form-control" id="lugarDeRadicacion"   formControlName="lugarDeRadicacion" (change)="
                 setValoresStore(
                   preOperativeForm,
                   'lugarDeRadicacion',
@@ -1576,7 +1504,7 @@
             <div class="form-group">
               <span class="require">*</span>
               <label for="numeroAutorizacionCITES" class="form-label"
-                >N&uacue de empleados</label
+                >Numero de empleados</label
               >
               <input type="text" class="form-control" formControlName="numeroEmpleados" id="" />
               <div
@@ -1608,6 +1536,7 @@
               [placeholder]="'Seleccione un valor'"
               [catalogo]="comboBimestresIDC"
               [isDisabled]="esFormularioSoloLectura ? true : false"
+               formControlName="bimestreValor"
             >
             </app-catalogo-select>
           </div>
