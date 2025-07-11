@@ -119,7 +119,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.consultaDatos = seccionState;
         })
       )
-      .subscribe();
+    .subscribe();
     if (this.consultaDatos.update) {
       this.fetchGetDatosConsulta();
     } else {
