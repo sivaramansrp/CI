@@ -18,24 +18,65 @@
       </div>
     </div>
   </form>
- <app-combinacion-requerida></app-combinacion-requerida>
+ <app-combinacion-requerida [certificadaValue]="datosdelForm.get('certificada')?.value"></app-combinacion-requerida>
   <form [formGroup]="formGroup1">
     <ng-titulo titulo="Unidad expedidora"></ng-titulo>
+     @if(datosdelForm.get('certificada')?.value === 'Animal')
+ {
+  <app-input-radio class="fw-semibold" [radioOptions]="radioBotonAnimal" [selectedValue]="defaultSelect" [isRequired]="true"
+      formControlName="radioBotonAnimal" (valueChange)="onValueChange($event)" [layout]="'horizontal'"
+      (change)="setValoresStore(formGroup1,'radioBotonAnimal', 'setradioBotonAnimal')"></app-input-radio>
 
-    <app-input-radio class="fw-semibold" [radioOptions]="radioBoton" [selectedValue]="defaultSelect" [isRequired]="true"
-      formControlName="osia" (valueChange)="onValueChange($event)" [layout]="'horizontal'"
-      (change)="setValoresStore(formGroup1,'osia', 'setosia')"></app-input-radio>
-
-    <div *ngIf="defaultSelect === 'oficina central'">
       <div class="row">
+        <div class="col-md-4" *ngFor="let config of catalogConfigsAnimal">
+          <app-catalogo-select [required]="config.required" [catalogo]="config.catalogo" [label]="config.label"
+            [formControlName]="config.controlName" [isDisabled]="esFormularioSoloLectura"
+            (change)="getDelegaciones()"></app-catalogo-select>
+        </div>
+      </div>
+    }
+ @if(datosdelForm.get('certificada')?.value === 'Producto')
+ {
+  <app-input-radio class="fw-semibold" [radioOptions]="radioBotonProducto" [selectedValue]="defaultSelect" [isRequired]="true"
+      formControlName="radioBotonProducto" (valueChange)="onValueChange($event)" [layout]="'horizontal'"
+      (change)="setValoresStore(formGroup1,'radioBotonProducto', 'setradioBotonProducto')"></app-input-radio>
 
+     <div class="row">
         <div class="col-md-4" *ngFor="let config of catalogConfigs">
           <app-catalogo-select [required]="config.required" [catalogo]="config.catalogo" [label]="config.label"
             [formControlName]="config.controlName" [isDisabled]="esFormularioSoloLectura"
             (change)="getDelegaciones()"></app-catalogo-select>
         </div>
       </div>
-    </div>
+
+    }
+  @if(datosdelForm.get('certificada')?.value === 'QFBA')
+ {
+  <app-input-radio class="fw-semibold" [radioOptions]="radioBotonQFBA" [selectedValue]="defaultSelect" [isRequired]="true"
+      formControlName="radioBotonQFBA" (valueChange)="onValueChange($event)" [layout]="'horizontal'"
+      (change)="setValoresStore(formGroup1,'radioBotonQFBA', 'setradioBotonQFBA')"></app-input-radio>
+
+      <div class="row">
+        <div class="col-md-4">
+          <app-catalogo-select [required]="true" [catalogo]="delegacionesJson" [label]="'Delegaciones estatales SAGARPA'"
+            formControlName="delegacionesControl" [isDisabled]="esFormularioSoloLectura" name="estatales"
+            (change)="getDelegaciones()"></app-catalogo-select>
+        </div> 
+         <div class="col-md-4">
+          <app-catalogo-select [required]="true" [catalogo]="delegacionesJson" [label]="'Oficina central'"
+           formControlName="delegacionesControl3" [isDisabled]="esFormularioSoloLectura" name="central"
+            (change)="getDelegaciones()"></app-catalogo-select>
+        </div>
+         <div class="col-md-4">
+           </div>
+         <div class="col-md-4">
+          <app-catalogo-select [required]="true" [catalogo]="delegacionesJson" [label]="'Distrito desarrollo rural (DDR)'"
+           formControlName="delegacionesControl4" [isDisabled]="esFormularioSoloLectura" name="desarrollo"
+            (change)="getDelegaciones()"></app-catalogo-select>
+        </div>
+      </div>
+    }
+
   </form>
 
   <ng-titulo titulo="Datos Generales de la Mercancía Producto o Subproducto de Origen Animal"></ng-titulo>

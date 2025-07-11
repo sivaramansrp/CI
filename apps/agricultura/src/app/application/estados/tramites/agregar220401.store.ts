@@ -121,6 +121,10 @@ export interface Solicitud220401State {
   /** Tipo de transporte utilizado para la mercancía o animales. */
   tipoDeTransporte: string;
   tratamiento: string;
+  uso: string;
+  radioBotonAnimal: string;
+  radioBotonQFBA: string;
+  radioBotonProducto: string;
 }
 
 /**
@@ -230,7 +234,11 @@ export function createInitialState(): Solicitud220401State {
     tipoDeTransporte:'',
     tratamiento:'',
     presentacion:'',
-    marcaEmbarque:''
+    marcaEmbarque:'',
+    uso: '',
+    radioBotonAnimal: '',
+    radioBotonQFBA: '',
+    radioBotonProducto: ''
   };
   
 }
@@ -709,5 +717,32 @@ public setTratamiento(tratamiento:string): void {
       marcaEmbarque
     }))
   }
+  public setUso(uso:string): void{
+    this.update((state)=>({
+      ...state,
+      uso
+    }))
+  }
+
+  public setradioBotonProducto(radioBotonProducto:string): void {
+    this.update((state) => ({
+      ...state,
+      radioBotonProducto,
+    }));
+  }
+
+  public setradioBotonAnimal(radioBotonAnimal:string): void {
+    this.update((state) => ({
+      ...state,
+      radioBotonAnimal,
+    }));
+  }
+  public setradioBotonQFBA(radioBotonQFBA:string): void {
+    this.update((state) => ({
+      ...state,
+      radioBotonQFBA,
+    }));
+  }
+
   
 }
