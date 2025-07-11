@@ -37,7 +37,7 @@
 
     <div class=" text-end mt-5">
 <button class="btn btn-default me-2"
-        [disabled]="esFormularioSoloLectura || !selectedRows.length"
+        [disabled]="esFormularioSoloLectura"
         (click)="modificarTratado()">
   Modificar tratado
 </button>
@@ -48,3 +48,10 @@
   </button>
     </div>
 </div>
+
+  @if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+  </lib-notificaciones>
+</section>
+}
