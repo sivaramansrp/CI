@@ -1,4 +1,35 @@
 <div class="row">
+   <form [formGroup]="inversionGrupo">
+        <div class="row mb-3">
+            <formas-dinamicas 
+                [formularioTitulo]="'Indica el monto aproximado de su inversión en territorio nacional.'"
+                [forma]="inversionFormGroup" 
+                [formularioDatos]="inversionFormDatos"
+                [estado]="solicitudState"
+                [soloLectura]="esFormularioSoloLectura"
+                (emitirCambioDeValor)="establecerCambioDeValor($event)"
+                >
+            </formas-dinamicas>
+            <div class="d-flex justify-content-end mt-2">
+                <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar</button>
+            </div>
+        </div>
+        <div class="table-container mt-4">
+            <div class="table-header pb-2">
+                <h5>Datos de la inversión</h5>
+            </div>
+            <app-tabla-dinamica
+                [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
+                [configuracionTabla]="configuracionTabla"
+                [datos]="inversionGrupoDatos">
+            </app-tabla-dinamica>
+             <div class="d-flex justify-content-end mt-2">
+                <button type="button" class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+                <button type="button" class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+            </div>
+        </div>
+    </form>
+
     <form [formGroup]="delGrupo">
         <div class="row mb-3">
             <formas-dinamicas 
@@ -14,18 +45,18 @@
     <form [formGroup]="porcentajeMontoForm">
         <div class="col-md-6">
             <div class="form-group">
-                <label class="form-label" for="telefono">Porcentaje*:</label>
+                <label class="form-label" for="telefono"><span class="text-danger">* </span>Porcentaje:</label>
                 <input class="form-control" id="telefono" formControlName="porcentaje" placeholder="" type="text"/>
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                <label class="form-label" for="telefono">Monto*:</label>
+                <label class="form-label" for="telefono"><span class="text-danger">* </span>Monto:</label>
                 <input class="form-control" id="telefono" formControlName="monto" placeholder="" type="text"/>
             </div>
         </div>
     </form>
-    <p class="fw-bold mt-5">
+    <p class="mt-5">
         En caso afirmativo, el monto de las resoluciones de improcedencias no deberá representar más del 20% del total de las devoluciones autorizadas en el mismo periodo, siempre que el monto negado resultante de la aplicación de dicho porcentaje no supere cinco millones de pesos en su conjunto.
     </p>
     <form [formGroup]="contadoGrupo">

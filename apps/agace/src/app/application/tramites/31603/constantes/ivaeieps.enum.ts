@@ -77,7 +77,7 @@ export const PERMISO_A_DESISTIR = [
 export const PERMISO_A_DESISTIR_DOS = [
   {
     id: 'manifiesteSi',
-    labelNombre: 'Manifieste si se le ha notificado algún crédito fiscal por parte del SAT en los últimos 12 meses anteriores a la fecha de presentación de la solicitud o acrediten que están al amparo del procedimiento previsto en el segundo parrafo, de la presente regla o, en su caso, hayan efectuado el pago del mismo.',
+    labelNombre: 'Manifieste si los proveedors nacionales señalados anteriormente, se encuentran a la fecha de presentación de la solicitud, en las publicaciones a que hace referencia el artículo 69-B, cuarto párrafo del CFF.',
     campo: 'manifiesteSi',
     clase: 'col-md-12',
     tipoInput: 'radio',
@@ -88,7 +88,32 @@ export const PERMISO_A_DESISTIR_DOS = [
     ],
     layout: 'horizontal',
     marcador_de_posicion: '',
-    margin_top: 2,
+    margin_top: 4,
+    opciones: [
+        {
+        "label": "Si",
+        "value": "Si"
+       },
+        {
+        "label": "No",
+        "value": "No"
+       }
+    ]
+  },
+    {
+    id: 'manifiesteAlgun',
+    labelNombre: 'Manifieste si se le ha determinado algun crédito por parte del SAT en los 24 meses anteriores a la fecha de presentacion de la solicitud',
+    campo: 'manifiesteSi',
+    clase: 'col-md-12',
+    tipoInput: 'radio',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      
+    ],
+    layout: 'horizontal',
+    marcador_de_posicion: '',
+    margin_top: 4,
     opciones: [
         {
         "label": "Si",
@@ -113,7 +138,7 @@ export const PERMISO_A_DESISTIR_DOS = [
     ],
     layout: 'horizontal',
     marcador_de_posicion: '',
-    margin_top: 2,
+    margin_top: 4,
     opciones: [
         {
         "label": "Si",
@@ -127,6 +152,78 @@ export const PERMISO_A_DESISTIR_DOS = [
   }
 ];
 
+/**
+ * Constante que define la configuración de los campos para el formulario de monto de inversión.
+ *
+ * Cada objeto dentro del arreglo representa un campo del formulario con sus propiedades específicas:
+ * - `id`: Identificador único del campo.
+ * - `labelNombre`: Etiqueta descriptiva que se muestra al usuario.
+ * - `campo`: Nombre del campo utilizado para enlazar datos en el formulario.
+ * - `clase`: Clase CSS aplicada al contenedor del campo para diseño responsivo.
+ * - `tipoInput`: Tipo de entrada del campo (por ejemplo, 'select-catalogos', 'number', 'text').
+ * - `desactivado`: Indica si el campo está deshabilitado.
+ * - `soloLectura`: Indica si el campo es de solo lectura.
+ * - `validadores`: Lista de validadores aplicados al campo.
+ *   - `tipo`: Tipo de validador (por ejemplo, 'required').
+ * - `marcadorDePosicion`: Texto de marcador de posición (placeholder) para el campo.
+ * - `valorPredeterminado`: Valor inicial del campo.
+ * - `marginTop`: Margen superior aplicado al campo.
+ *
+ * Esta constante se utiliza para construir dinámicamente el formulario de inversión en la aplicación.
+ */
+export const INVERSION_MONTO = [
+    {
+      id: 'tipoInversion',
+      labelNombre: 'Tipo de inversión',
+      campo: 'tipoInversion',
+      clase: 'col-md-6',
+      tipoInput: 'select-catalogos',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required'
+        }
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0,
+    },
+    {
+      id: 'valorEnPesos',
+      labelNombre: 'Valor en pesos',
+      campo: 'valorEnPesos',
+      clase: 'col-md-6',
+      tipoInput: 'number',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required'
+        }
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0
+    },
+    {
+      id: 'descGeneral',
+      labelNombre: 'Descripción general',
+      campo: 'descGeneral',
+      clase: 'col-md-6',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required'
+        }
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0
+    },
+];
 
 /**
  * Constante que define un conjunto de configuraciones para los permisos relacionados con la certificación
