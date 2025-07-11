@@ -1,5 +1,5 @@
-import { TercerosrelacionadosTable, TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
 import { PersonaTerceros } from "@libs/shared/data-access-user/src";
+import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
 
 /**
  * Representa una lista de pasos en un asistente (wizard).
@@ -164,7 +164,7 @@ export interface ListaDeDatosFinal {
    /**
      * Datos de la forma relacionados con terceros.
      */
-    datosForma: TercerosrelacionadosTable[];
+    datosForma: TercerosrelacionadosdestinoTable[];
 }
 
 

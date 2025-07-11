@@ -12,10 +12,10 @@ import {
   PagoDeDerechos,  
 } from '../../models/220202/fitosanitario.model';
 import { Observable, map } from 'rxjs';
-import { TercerosrelacionadosTable, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { URL } from '../../constantes/220202/fitosanitario.enums';
 
 @Injectable({
@@ -46,7 +46,7 @@ export class AgriculturaApiService {
    * @param {TercerosrelacionadosTable[]} datosForma Lista de terceros.
    * @memberof AgriculturaApiService
    */
-  updateTercerosExportador(datosForma: TercerosrelacionadosTable[]): void {
+  updateTercerosExportador(datosForma: TercerosrelacionadosdestinoTable[]): void {
     this.fitosanitarioStore.updateTercerosExportador(datosForma);
   }
 
