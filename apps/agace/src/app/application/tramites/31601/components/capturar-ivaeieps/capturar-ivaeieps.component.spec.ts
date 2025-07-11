@@ -194,7 +194,7 @@ it('debe buscar datos y actualizar el formulario si RFC está presente', () => {
   };
 
   // Act
-  component.BuscarDatos();
+  component.buscarDatos();
 
   // Assert
   expect(component.ivaForm.get('denominacion')?.value).toBe('Empresa XYZ');
