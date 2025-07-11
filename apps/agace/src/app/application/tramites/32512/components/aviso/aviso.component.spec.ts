@@ -384,6 +384,18 @@ describe('AvisoComponent', () => {
     });
   });
 
+  it('should disable form if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.aviosForm.disabled).toBe(true);
+  });
+
+  it('should enable form if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.aviosForm.enabled).toBe(true);
+  });
+
   it('should call actualizarArchivoDestruccion when file is selected', () => {
     const file = new File(['dummy content'], 'test.pdf', {
       type: 'application/pdf',

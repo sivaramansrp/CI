@@ -1,11 +1,13 @@
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { map, takeUntil } from 'rxjs/operators';
 import { AvisoComponent } from '../../components/aviso/aviso.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { OnDestroy } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { SolicitudModel } from '../../models/solicitud.model';
+import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
-import { ViewChild } from '@angular/core';
 
 /**
  * Componente que representa el primer paso de un trámite.
@@ -23,7 +25,7 @@ import { ViewChild } from '@angular/core';
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss'],
 })
-export class PasoUnoComponent implements OnDestroy {
+export class PasoUnoComponent implements OnDestroy, OnInit {
   /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.
    * Este `Subject` se utiliza para cancelar las suscripciones activas cuando
@@ -34,14 +36,14 @@ export class PasoUnoComponent implements OnDestroy {
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
+  /**
+   * Referencia al componente de aviso mostrado en el formulario.
+   * Se utiliza para mostrar mensajes de alerta o confirmación al usuario.
+   */
   @ViewChild(AvisoComponent) avisoComponent!: AvisoComponent;
 
-  /**
-   * Constructor del componente.
-   */
-  constructor() {
-    //Constructor del componente.
-  }
+  /** Estado de la consulta que se obtiene del store. */
+  public consultaState!: ConsultaioState;
 
   /**
    * Índice utilizado para identificar la pestaña activa dentro del paso.
@@ -54,6 +56,53 @@ export class PasoUnoComponent implements OnDestroy {
    * @type {boolean}
    */
   isEnableModificacionTab: boolean = false;
+
+  /**
+   * Constructor del componente.
+   */
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    public solicitudService: SolicitudService
+  ) {}
+
+  /**
+   * Ciclo de vida `ngOnInit`.
+   *
+   * - Se suscribe al estado de `consultaQuery` para obtener el estado actual de la sección.
+   * - Si el estado indica una actualización (`update`), se ejecuta `guardarDatosFormulario`.
+   * - En caso contrario, se establece `esDatosRespuesta` en `true`.
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.solicitudService
+      .guardarDatosFormulario()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp: SolicitudModel) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.solicitudService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
 
   /**
    * Cambia la pestaña activa según el índice proporcionado.
