@@ -1,5 +1,11 @@
+import {
+  EnvironmentInjector,
+  inject,
+  runInInjectionContext
+} from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { HttpInterceptorFn } from '@angular/common/http';
+import { NotificacionesService } from '../services/shared/notificaciones.service';
 
 /**
  * Interceptor HTTP que añade un token de autorización a todas las solicitudes salientes
@@ -12,21 +18,35 @@ import { HttpInterceptorFn } from '@angular/common/http';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const httpInterceptorFn: HttpInterceptorFn = (req, next) => {
 
-  const REQ = req.clone({
-    setHeaders: {
-      Authorization: 'Bearer dummy-token' // El token se obtiene desde localStorage o sessionStorage.
-    }
+  const INJECTOR = inject(EnvironmentInjector);
+
+  return runInInjectionContext(INJECTOR, () => {
+    const NOTIF = inject(NotificacionesService);
+
+    const REQ = req.clone({
+      setHeaders: {
+        Authorization: 'Bearer dummy-token' // El token se obtiene desde localStorage o sessionStorage.
+      }
+    });
+  
+    return next(REQ).pipe(
+      catchError((error) => {
+       // Note : reemplazar con el objeto necesario para modificar el cuadro de diálogo de mensaje de error
+        NOTIF.showNotification({
+          tipoNotificacion: 'toastr',
+          categoria: 'danger',
+          mensaje: 'An error occurred.',
+          titulo: 'Error',
+          modo: '',
+          cerrar: true,
+          txtBtnAceptar: 'OK',
+          txtBtnCancelar: 'Cancel',
+        });
+  
+        // Re-lanza el error para que otras partes de la aplicación también puedan manejarlo
+        return throwError(() => error);
+      })
+    );
   });
-
-  return next(REQ).pipe(
-    catchError((error) => {
-      // Puedes registrar el error o mostrar un mensaje al usuario
-      console.error('Error HTTP:', error);
-
-      // Opcionalmente, personaliza la lógica de manejo de errores aquí
-
-      // Re-lanza el error para que otras partes de la aplicación también puedan manejarlo
-      return throwError(() => error);
-    })
-  );
+ 
 };
