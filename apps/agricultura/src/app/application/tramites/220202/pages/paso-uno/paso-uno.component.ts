@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, PersonaTerceros, } from '@ng-mf/data-access-user';
 import { map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import { ListaDeDatosFinal } from '../../models/220202/fitosanitario.model';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { Subject } from 'rxjs';
 
@@ -127,9 +128,8 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
         )
         .subscribe((resp) => {
           if(resp){
+          this.agriculturaApiService.actualizarEstadoFormulario(resp as ListaDeDatosFinal);
           this.esDatosRespuesta = true;
-          this.personas = resp.personas;
-          this.agriculturaApiService.actualizarEstadoFormulario(resp);
           }
         });
     }

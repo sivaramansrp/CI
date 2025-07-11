@@ -8,7 +8,7 @@
  */
 
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { DatosDeLaSolicitud, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+import { DatosDeLaSolicitud, TercerosrelacionadosdestinoTable, TercerosrelacionadosTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { Subject, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { CommonModule } from '@angular/common';
@@ -66,6 +66,13 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   catalogosDatos: DatosDeLaSolicitud = {} as DatosDeLaSolicitud;
 
   /**
+   * Datos de la forma relacionados con terceros.
+   * Esta propiedad almacena los datos específicos de la forma que se relacionan con los terceros.
+   * @type {TercerosrelacionadosTable[]}
+   */
+  datosForma: TercerosrelacionadosTable[] = [];
+
+  /**
    * Constructor del componente.
    * @param consultaQuery Servicio para consultar el estado de solo lectura.
    * @param agriculturaApiService Servicio para actualizar terceros relacionados.
@@ -90,11 +97,12 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((seccionState) => {
         this.esFormularioSoloLectura = seccionState?.readonly;
       });
-    this.fitosanitarioQuery.seleccionarTercerosRelacionados$
+    this.agriculturaApiService.getAllDatosForma()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datosDeLaSolicitud) => {
         if (datosDeLaSolicitud) {
-          this.personas = datosDeLaSolicitud;
+          this.personas = datosDeLaSolicitud.tercerosRelacionados;
+          this.datosForma = datosDeLaSolicitud.datosForma;
         }
       });
   }
