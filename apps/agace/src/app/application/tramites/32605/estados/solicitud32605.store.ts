@@ -142,21 +142,6 @@ export interface Solicitud32605State {
   fechaPago: string;
 
   /**
-   * Monto total asociado a la solicitud.
-   */
-  monto: string;
-
-  /**
-   * Detalles de las operaciones bancarias relacionadas con la solicitud.
-   */
-  operacionesBancarias: string;
-
-  /**
-   * Llave única de pago asociada a la solicitud.
-   */
-  llavePago: string;
-
-  /**
    * RFC del transportista relacionado con la solicitud.
    */
   transportistaRFC: string;
@@ -533,6 +518,12 @@ export interface Solicitud32605State {
   domicilio: string; // Domicilio del enlace operativo
   inputfechaDeLaUltimaOperacion: string; // Fecha de la última operación
   fusionEscisionConOperacionExterior: string; // Indica si hay fusión o escisión con operación exterior
+  empresaExtranjeraIMMEX: string; // Indica si es una empresa extranjera IMMEX
+  monto: string; // Monto total asociado a la solicitud
+  operacionesBancarias: string; // Detalles de las operaciones bancarias relacionadas con la solicitud
+  llavePago: string; // Llave de pago asociada a la solicitud
+  registroEsquemaCertificacion: string; // Registro del esquema de certificación
+  tipoInformacionEmpresa: string; // Indica si la información de la empresa es clasificada
   //--------------------------------------------------------------
 }
 
@@ -569,9 +560,6 @@ export function createInitialSolicitudState(): Solicitud32605State {
     '2044': 0,
    
     fechaPago: '',
-    monto: '',
-    operacionesBancarias: '',
-    llavePago: '',
     transportistaRFC: '',
     transportistaRFCModifTrans: '',
     transportistaRazonSocial: '',
@@ -658,6 +646,12 @@ export function createInitialSolicitudState(): Solicitud32605State {
      domicilio: '',
      inputfechaDeLaUltimaOperacion: '', // Fecha de la última operación
      fusionEscisionConOperacionExterior: '', // Indica si hay fusión o escisión con operación exterior
+     empresaExtranjeraIMMEX: '', // Indica si es una empresa extranjera IMMEX
+     monto: '',
+     operacionesBancarias: '',
+     llavePago: '',
+     registroEsquemaCertificacion: '',
+     tipoInformacionEmpresa: '', // Indica si la información de la empresa es clasificada
      //--------------------------------------------------------------
   };
 }

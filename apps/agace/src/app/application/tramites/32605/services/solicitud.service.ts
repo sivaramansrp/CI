@@ -74,15 +74,7 @@ export class SolicitudService {
     );
   }
 
-  /**
-   * Obtiene la lista de transportistas desde un archivo JSON local.
-   * @returns Observable con un arreglo de TransportistasTable.
-   */
-  conseguirTransportistasLista(): Observable<TransportistasTable[]> {
-    return this.http.get<TransportistasTable[]>(
-      'assets/json/32605/transportistas-lista.json'
-    );
-  }
+  
 
   /**
    * Obtiene los catálogos selectivos de la solicitud desde un archivo JSON local.
@@ -306,7 +298,7 @@ export class SolicitudService {
   }
 
 
-  //service para guardar los datos del formulario
+  //service para guardar los datos del formulario---------------
 
    /**
    * Obtiene los datos de una empresa por RFC
@@ -315,5 +307,14 @@ export class SolicitudService {
    */
   conseguirDatosPorRFC(rfc: string): Observable<{ [key: string]: RFCEnlaceOperativo }> {
     return this.http.get<{ [key: string]: RFCEnlaceOperativo }>('assets/json/32605/rfc-datos.json');
+  }
+  /**
+   * Obtiene la lista de transportistas desde un archivo JSON local.
+   * @returns Observable con un arreglo de TransportistasTable.
+   */
+  conseguirTransportistasLista(): Observable<TransportistasTable[]> {
+    return this.http.get<TransportistasTable[]>(
+      'assets/json/32605/transportistas-lista.json'
+    );
   }
 }

@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
-import { EMPRESA_DEL_GRUPO, EMPRESA_DEL_GRUPO_CON_FECHA, EmpresaDelGrupo, FECHA_DE_INICIO, FECHA_DE_PAGO, OPCIONES_DE_BOTON_DE_RADIO } from '../../constants/datos-comunes.enum';
+import { ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { EMPRESA_DEL_GRUPO, EMPRESA_DEL_GRUPO_CON_FECHA, EmpresaDelGrupo, FECHA_DE_INICIO, FECHA_DE_PAGO, INFORMACION_EMPRESA_OPTIONS, OPCIONES_DE_BOTON_DE_RADIO, PANELS, PANELS1, REGISTRO_ESQUEMA_CERTIFICACION_OPTIONS, TRANSPORTISTAS_CONFIGURACION, TransportistasTable } from '../../constants/datos-comunes.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -25,8 +25,8 @@ import { TemplateRef } from '@angular/core';
     ReactiveFormsModule,
     InputRadioComponent,
     InputFechaComponent,
-    TablaDinamicaComponent
-   
+    TablaDinamicaComponent,
+    TituloComponent
   ],
   templateUrl: './importador-exportador.component.html',
   styleUrl: './importador-exportador.component.scss',
@@ -38,6 +38,8 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
   importadorExportadorForm!: FormGroup;
   agregarEnlaceOperativoForm!: FormGroup;
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+  registroEsquemaCertificacionOptions = REGISTRO_ESQUEMA_CERTIFICACION_OPTIONS;
+  informacionEmpresaOptions = INFORMACION_EMPRESA_OPTIONS;
   solicitudState!: Solicitud32605State;
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
   fechaDeFinDeVigencia: InputFecha = FECHA_DE_INICIO;
@@ -46,7 +48,15 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
   noComercioExteriorActivo: boolean = false;
   parteGrupoComercioExterior: boolean = false;
   esFusionOEscisionConComercioExterior: boolean = false;
+  esEmpresaExtranjeraIMMEX: boolean = false;
+  noFusionEscisionConOperacionExterior: boolean = false;
+  mostrarError: boolean = false;
+  registroEsquemaCertificacion: boolean = false;
+  tipoInformacionEmpresa: boolean = false;
   tableHeaderDatos: ConfiguracionColumna<EmpresaDelGrupo>[] = EMPRESA_DEL_GRUPO;
+  transportistasConfiguracionColumnas: ConfiguracionColumna<TransportistasTable>[] =
+    TRANSPORTISTAS_CONFIGURACION;
+  transportistasLista: TransportistasTable[] = [];
   tablaDatos: EmpresaDelGrupo[] = [];
   mostrarColumnaFecha: boolean = false;
   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
@@ -55,6 +65,8 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
   isEditMode: boolean = false;
   selectedEmpresa: EmpresaDelGrupo | null = null;
   mensajeSeleccion: string = '';
+  panels = PANELS;
+  panels1 = PANELS1
   @ViewChild('template') template!: TemplateRef<void>;
   @ViewChild('templateFechaInvalida') templateFechaInvalida!: TemplateRef<void>;
   @ViewChild('templateExito') templateExito!: TemplateRef<void>;
@@ -91,7 +103,13 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
       fechaDePago: [this.solicitudState?.fechaDePago, Validators.required],
       fechaInicioComercio: [this.solicitudState?.fechaInicioComercio, Validators.required],
       esParteGrupoComercioExterior: [this.solicitudState?.esParteGrupoComercioExterior, Validators.required],
-      fusionEscisionConOperacionExterior: [this.solicitudState?.fusionEscisionConOperacionExterior, Validators.required]
+      fusionEscisionConOperacionExterior: [this.solicitudState?.fusionEscisionConOperacionExterior, Validators.required],
+      empresaExtranjeraIMMEX: [this.solicitudState?.empresaExtranjeraIMMEX, Validators.required],
+      monto:[this.solicitudState?.monto, Validators.required],
+      operacionesBancarias:[this.solicitudState?.operacionesBancarias, Validators.required],
+      llavePago: [this.solicitudState?.llavePago, Validators.required],
+      registroEsquemaCertificacion: [this.solicitudState?.registroEsquemaCertificacion, Validators.required],
+      tipoInformacionEmpresa: [this.solicitudState?.tipoInformacionEmpresa, Validators.required],
     })
     this.agregarEnlaceOperativoForm = this.fb.group({
       rfcEnclaveOperativo:[this.solicitudState?.rfcEnclaveOperativo, Validators.required],
@@ -201,6 +219,18 @@ onComercioExteriorChange(): void {
   onFusionEscisionConOperacionExteriorChange(): void{
     const VALOR = this.importadorExportadorForm.get('fusionEscisionConOperacionExterior')?.value;
     this.esFusionOEscisionConComercioExterior = VALOR === '1' || VALOR === true;
+  }
+  onempresaExtranjeraIMMEXChange(): void {
+    const VALOR = this.importadorExportadorForm.get('empresaExtranjeraIMMEX')?.value;
+    this.esEmpresaExtranjeraIMMEX = VALOR === '1' || VALOR === true;
+  }
+  onRegistroEsquemaCertificacion(): void {
+    const VALOR = this.importadorExportadorForm.get('registroEsquemaCertificacion')?.value;
+    this.registroEsquemaCertificacion = VALOR === '1' || VALOR === true;
+  }
+  onTipoInformacionEmpresa(): void{
+    const VALOR = this.importadorExportadorForm.get('tipoInformacionEmpresa')?.value;
+    this.tipoInformacionEmpresa = VALOR === '1' || VALOR === true;
   }
    abrirModal(template: TemplateRef<void>): void {
     this.modalRefabir = this.modalService.show(template, { class: 'modal-lg',});
@@ -491,6 +521,33 @@ cerrarModalSeleccionRequerida(): void {
 cerrarModalConfirmacionEliminacion(): void {
   this.modalRef?.hide();
 }
+
+  mostrar_colapsable(index: number): void {
+    const IS_CURRENTLY_OPEN = this.panels[index].isCollapsed;
+    this.panels.forEach((panel, i) => {
+      panel.isCollapsed = i === index ? !IS_CURRENTLY_OPEN : true;
+    });
+  }
+ 
+  validarLlavePago(): void {
+    this.mostrarError = false
+  }
+  conseguirTransportistasLista(): void {
+    this.solicitudService
+      .conseguirTransportistasLista()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (respuesta: TransportistasTable[]) => {
+          this.transportistasLista = respuesta;
+        },
+      });
+  }
+  mostrar_colapsable1(index: number): void {
+    const IS_CURRENTLY_OPEN = this.panels1[index].isCollapsed;
+    this.panels1.forEach((panel1, i) => {
+      panel1.isCollapsed = i === index ? !IS_CURRENTLY_OPEN : true;
+    });
+  }
    /**
    * Método llamado al destruir el componente, limpia las suscripciones
    */
