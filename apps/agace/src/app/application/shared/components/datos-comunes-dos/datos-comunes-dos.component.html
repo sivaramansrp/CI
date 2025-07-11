@@ -1,6 +1,6 @@
 <form [formGroup]="comunesDosForm">
 <div class="row mb-3">
-    <div class="col-md-6">
+    <!-- <div class="col-md-6">
         <app-catalogo-select
             [placeholder]="'Seleccione un valor'"
             formControlName="comboBimestresIDCSeleccione"
@@ -9,7 +9,7 @@
             (change)="setValoresStore(comunesDosForm,'comboBimestresIDCSeleccione','setComboBimestresIDCSeleccione')"
             >
         </app-catalogo-select>
-    </div>
+    </div> -->
 </div>
 <div class="row mb-3">
     <div class="col-md-12">
@@ -30,9 +30,9 @@
         </app-tabla-dinamica>
     </div>
     <div class="d-flex justify-content-end mt-3 mb-4">
-        <button class="btn btn-primary me-2" (click)="abrirModal(instalacionesPrincipales)" [disabled]="esFormularioSoloLectura">Agregar</button>
-        <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
-        <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+      <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+      <button class="btn btn-primary me-2" (click)="abrirModal(instalacionesPrincipales)" [disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
 </div>
 <div class="row mt-5">

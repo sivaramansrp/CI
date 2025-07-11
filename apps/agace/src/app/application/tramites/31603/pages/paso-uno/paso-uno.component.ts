@@ -37,11 +37,11 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * Indica si el modal emergente (popup) debe mostrarse.
    * Si es true, el popup es visible; si es false, está oculto.
    */
-  mostrarPopup = false;
+  public mostrarPopup = false;
   /**
    * Mensaje que se mostrará en el modal emergente (popup).
    */
-  popupMessage = '';
+  public popupMessage = '';
 
 /**
  * Mapa de valores que disparan la apertura del modal emergente (popup) para controles específicos.
@@ -65,8 +65,36 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
   contabilidad: 'No',
 };
 
+/**
+ * Mapa de mensajes personalizados para el modal emergente (popup) según el control del formulario.
+ *
+ * La clave representa el nombre del control del formulario y el valor asociado es el mensaje
+ * que se mostrará en el popup cuando se active la condición correspondiente.
+ *
+ * Por ejemplo, si el usuario selecciona un valor que dispara el popup en el control "preOperativo",
+ * se mostrará el mensaje definido para "preOperativo".
+ *
+ * @readonly
+ * @type {Record<string, string>}
+ */
 readonly POPUP_MESSAGES: Record<string, string> = {
-  preOperativo: 'dummy',
+  preOperativo: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificación de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+  indiqueSi: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificación de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+  senale:'Es un requisito obligatorio el contar con algún tipo de empleado, ya sea propio o subcontratado para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+  senaleSi:'Es un requisito obligatorio el contar con algún tipo de empleado, ya sea propio o subcontratado para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+  encuentra: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+  delMismo: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+  senaleMomento: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+  enCaso: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+  ingresar: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+  encuentraSus: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+  momentoIngresar: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+  indiqueCuenta: 'Debe agregar por lo menos un control de inventarios.',
+  contabilidad: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+  rmfRadio: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+  vinculacionRegistroCancelado: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+  proveedoresListadoSAT: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+
 }
 
   /**
