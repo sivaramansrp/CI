@@ -4227,5 +4227,12 @@
     "linkDashboard": "/agace/registros/solicitud",
     "linkDepartment": "/pago/registros/solicitud",
     "department": "agace"
+  },
+  {
+    "id": 606,
+    "tramite": 33302,
+    "linkDashboard": "/agace/aviso-certificacion/aviso-certificacion",
+    "linkDepartment": "/pago/aviso-certificacion/aviso-certificacion",
+    "department": "agace"
   }
 ]
