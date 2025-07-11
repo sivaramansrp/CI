@@ -35,12 +35,12 @@ export const httpInterceptorFn: HttpInterceptorFn = (req, next) => {
         NOTIF.showNotification({
           tipoNotificacion: 'toastr',
           categoria: 'danger',
-          mensaje: 'An error occurred.',
+          mensaje: '"Ocurrió un error."',
           titulo: 'Error',
           modo: '',
           cerrar: true,
-          txtBtnAceptar: 'OK',
-          txtBtnCancelar: 'Cancel',
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: 'Cancelar',
         });
   
         // Re-lanza el error para que otras partes de la aplicación también puedan manejarlo
