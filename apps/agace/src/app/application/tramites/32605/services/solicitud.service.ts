@@ -10,7 +10,7 @@ import { SeccionSubcontratados } from '../models/solicitud.model';
 import { Solicitud32605Store } from '../estados/solicitud32605.store';
 import { SolicitudCatologoSelectLista } from '../models/solicitud.model';
 import { SolicitudRadioLista } from '../models/solicitud.model';
-import { TransportistasTable } from '../models/solicitud.model';
+import { TransportistasTable } from '../constants/datos-comunes.enum';
 
 /**
  * Servicio encargado de obtener los datos necesarios para el llenado del formulario

@@ -121,6 +121,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
       ],
       domicilio: [{value:this.solicitudState?.domicilio, disabled: true}],
       inputfechaDeLaUltimaOperacion: [{value:this.solicitudState?.inputfechaDeLaUltimaOperacion, disabled: true}],
+      ccat: [{value:this.solicitudState?.ccat, disabled: true}],
     });
   }
 

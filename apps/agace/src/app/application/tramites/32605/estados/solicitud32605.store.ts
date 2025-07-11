@@ -524,6 +524,7 @@ export interface Solicitud32605State {
   llavePago: string; // Llave de pago asociada a la solicitud
   registroEsquemaCertificacion: string; // Registro del esquema de certificación
   tipoInformacionEmpresa: string; // Indica si la información de la empresa es clasificada
+  ccat: string; // CAAT del enlace operativo
   //--------------------------------------------------------------
 }
 
@@ -652,6 +653,7 @@ export function createInitialSolicitudState(): Solicitud32605State {
      llavePago: '',
      registroEsquemaCertificacion: '',
      tipoInformacionEmpresa: '', // Indica si la información de la empresa es clasificada
+     ccat: '', // CAAT del enlace operativo
      //--------------------------------------------------------------
   };
 }

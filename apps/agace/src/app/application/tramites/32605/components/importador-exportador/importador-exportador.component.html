@@ -311,8 +311,7 @@
             type="button"
             id="agregarTransportista"
             class="btn btn-primary me-2"
-            data-bs-toggle="modal"
-            data-bs-target="#transportistas"
+            (click)="abrirModal(template)"
           >
             Agregar
           </button>
@@ -441,9 +440,7 @@
                   type="text"
                 />
               </div>
-              @if(agregarEnlaceOperativoForm.controls['enlaceOperativorfc'].invalid && agregarEnlaceOperativoForm.controls['enlaceOperativorfc'].touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
-              }
+              
             </div>
           </div>
           <div class="row">
@@ -457,9 +454,7 @@
                   type="text"
                 />
               </div>
-              @if(agregarEnlaceOperativoForm.controls['denominacionRazonsocial'].invalid && agregarEnlaceOperativoForm.controls['denominacionRazonsocial'].touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
-              }
+             
             </div>
           </div>
           <div class="row">
@@ -475,9 +470,7 @@
                   type="text"
                 />
               </div>
-              @if(agregarEnlaceOperativoForm.controls['domicilio'].invalid && agregarEnlaceOperativoForm.controls['domicilio'].touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
-              }
+            
             </div>
           </div>
           <div class="row">
@@ -488,11 +481,8 @@
                   [setFecha]="agregarEnlaceOperativoForm.get('inputfechaDeLaUltimaOperacion')?.value"
                   (valorCambiado)="actualizarFechaDeLaUltimaOperacion($event)"
                 ></input-fecha>
-
               </div>
-             
             </div>
-            
           </div>
         </form>
       </div>
