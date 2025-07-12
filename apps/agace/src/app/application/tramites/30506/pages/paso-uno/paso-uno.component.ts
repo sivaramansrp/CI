@@ -1,18 +1,6 @@
-import {
-  AfterViewInit,
-  Component,
-  OnDestroy,
-} from '@angular/core';
-import {
-  ConsultaioQuery,
-  ConsultaioState,
-  FormularioDinamico,
-} from '@ng-mf/data-access-user';
-import {
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
-  PERSONA_MORAL_NACIONAL,
-} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
+import { Component, OnDestroy, OnInit} from '@angular/core';
+import { ConsultaioQuery, ConsultaioState,FormularioDinamico } from '@ng-mf/data-access-user';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { RegistroService } from '../../services/registro.service';
 
 /**
@@ -24,7 +12,7 @@ import { RegistroService } from '../../services/registro.service';
   styles: ``,
 
 })
-export class PasoUnoComponent implements  OnDestroy {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Indica si se deben mostrar los datos de respuesta.
    * Inicialmente es falso, lo que significa que no se muestran.

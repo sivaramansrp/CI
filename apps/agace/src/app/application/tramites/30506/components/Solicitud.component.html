@@ -31,7 +31,7 @@
         <input type="text" class="form-control" value="2500000AGAR03463" formControlName="cadenaDependecia" readonly required />
       </div>
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="bancoCatalogo.catalogos" [label]="'Banco'" formControlName="banco" (change)="setValoresStore(registroForm, 'banco', 'setBanco')"></app-catalogo-select>
+        <app-catalogo-select [catalogo]="bancoCatalogo.catalogos" [label]="'Banco'" formControlName="banco" [isDisabled]="soloLectura" (change)="setValoresStore(registroForm, 'banco', 'setBanco')"></app-catalogo-select>
       </div>
     </div>
     <div class="row mt-5">
@@ -40,7 +40,7 @@
         <input type="text" class="form-control" formControlName="llave" (change)="setValoresStore(registroForm, 'llave', 'setLlave')" />
       </div>
       <div class="col-md-4">
-        <input-fecha [setFecha]="registroForm.get('fechaPago')?.value" [datos]="fechaPagoInput" (valorCambiado)="cambioFechaPago($event)"></input-fecha>
+        <input-fecha [setFecha]="registroForm.get('fechaPago')?.value" [datos]="fechaPagoInput" [isDisabled]="soloLectura" (valorCambiado)="cambioFechaPago($event)"></input-fecha>
       </div>
       <div class="col-md-4">
         <label>Importe de pago:</label>
