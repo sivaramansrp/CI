@@ -67,6 +67,10 @@ interface Factura {
  * Implementa los hooks de ciclo de vida OnInit y OnDestroy para inicialización y limpieza.
  */
 export class DevolverComponent implements OnInit, OnDestroy {
+  /** Formulario reactivo para gestionar los datos de devolución */
+
+  showDevolverModal: boolean = false;
+
   /**
    * Lista de facturas cargadas desde un archivo JSON, que contiene información relevante
    * sobre las facturas y su estado de devolución.
@@ -287,6 +291,15 @@ export class DevolverComponent implements OnInit, OnDestroy {
    * para cancelar automáticamente las suscripciones a observables y evitar fugas de memoria.
    * 
    */
+  cerrarModal(): void {
+  this.showDevolverModal = false; // this hides the modal
+}
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Limpia el estado relacionado con los datos del permiso en el servicio de mensajes
+   * y completa el Subject `destroyNotifier$` para evitar fugas de memoria.
+   */
+
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

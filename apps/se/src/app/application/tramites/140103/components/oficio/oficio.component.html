@@ -58,10 +58,16 @@
       <div class="row" style="padding-bottom: 20px;text-align: right;">
         <div>
             <button type="button" class="btn btn-danger btn-space" [disabled]="esFormularioSoloLectura">Eliminar seleccionado</button>
-            <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura">Devolver facturas</button>
+            <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura"(click)="abrirDevolverFacturas()">Devolver facturas</button>
             
         </div>
     </div>
+
+    <app-modal [active]="showDevolverModal">
+      
+  <app-devolver></app-devolver>
+</app-modal>
+
    
         <div class="row"  style="padding-bottom: 20px;" >
           <div class="col-md-12">

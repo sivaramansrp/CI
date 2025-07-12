@@ -12,6 +12,10 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramit
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import oficiodata from '@libs/shared/theme/assets/json/140103/oficiotable.json';
 
+import { DevolverComponent } from '../devolver/devolver.component';
+
+import { ModalComponent } from '../model/modal.component';
+
 /** Representa la configuración de un ítem de oficio con datos del certificado y su origen. */
 interface ConfiguracionItem {
   folioOficioCertificado: string;
@@ -48,7 +52,9 @@ interface ConfiguracionItem {
     ReactiveFormsModule,
     TituloComponent,
     BtnContinuarComponent,
-    CommonModule
+    CommonModule,
+    DevolverComponent,
+    ModalComponent,
   ],
   templateUrl: './oficio.component.html',
   styleUrls: ['./oficio.component.scss']
@@ -243,6 +249,13 @@ export class OficioComponent implements OnInit, OnDestroy{
    * para cancelar automáticamente las suscripciones a observables y evitar fugas de memoria.
    * 
    */
+
+  showDevolverModal = false;
+
+abrirDevolverFacturas() {
+  this.showDevolverModal = true;
+}
+
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
