@@ -4,6 +4,8 @@ import { Solicitud30505State, Solicitud30505Store } from '../../../estados/trami
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
+import { Catalogo } from '@libs/shared/data-access-user/src';
+
 /**
  * Servicio para gestionar operaciones relacionadas con terceros en el trámite 30505.
  * 
@@ -94,9 +96,12 @@ export class TercerosRelacionadosService {
    *
    * @param data - Arreglo de objetos de tipo AvisoAgente que representa los agentes a establecer.
    */
+  
   setAgente(data: AvisoAgente[]): void {
     this.agenteSource.next(data);
+
   }
+  
 
   /**
    * Obtiene los datos del aviso de modificación para el trámite 30505.
@@ -110,6 +115,27 @@ export class TercerosRelacionadosService {
     return this.http.get<Solicitud30505State>('assets/json/30505/aviso-modificacion.json');
   }
 
+  /**
+ * Obtiene los datos de los agentes desde un archivo JSON local.
+ *
+ * Este método realiza una solicitud HTTP GET para recuperar un arreglo de objetos de tipo `AvisoAgente`.
+ *
+ * @returns Un observable que emite los datos de los agentes (`AvisoAgente[]`) al obtenerlos del archivo JSON.
+ */
+getAvisoAgenteData(): Observable<AvisoAgente[]> {
+  return this.http.get<AvisoAgente[]>('assets/json/30505/agenteAduanal.json');
+}
+
+/**
+ * Obtiene los datos del catálogo de tipos de movimiento desde un archivo JSON local.
+ *
+ * Este método realiza una solicitud HTTP GET para recuperar un objeto de tipo `Catalogo`.
+ *
+ * @returns Un observable que emite los datos del catálogo (`Catalogo`) al obtenerlos del archivo JSON.
+ */
+getTipoMovimientoData(): Observable<Catalogo> {
+  return this.http.get<Catalogo>('assets/json/30505/tipoMoviemiento.json');
+}
   /**
    * Establece los datos del formulario en el store de trámites.
    *

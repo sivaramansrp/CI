@@ -11,7 +11,7 @@ import {
   ValidarEnvio,
   createDatosState
 } from '../../models/220201/capturar-solicitud.model';
-import { TercerosrelacionadosTable,TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 
 
 /**
@@ -144,7 +144,7 @@ public actualizarTercerosRelacionados(nuevoTercero: TercerosrelacionadosdestinoT
    * @method updateTercerosRelacionados
    * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de personas terceros relacionadas.
    */
-  public updatedatosForma(tercerosRelacionados: TercerosrelacionadosTable[]): void {
+  public updatedatosForma(tercerosRelacionados: TercerosrelacionadosdestinoTable[]): void {
     this.update(state => ({
       ...state,
       datosForma: tercerosRelacionados,

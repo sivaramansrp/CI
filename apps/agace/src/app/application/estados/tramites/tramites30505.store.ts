@@ -77,6 +77,7 @@ export interface Solicitud30505State {
   avisoDenom: boolean,
   selectedCheckbox: string[],
 
+
   descClobGenerica: string;
   fechaInicioVigencia: string;
 
@@ -134,6 +135,7 @@ export interface Solicitud30505State {
   agenteDatos: AvisoAgente[];
   avisoDatos: { [key: string]: string };
   avisoCheckbox: { [key: string]: boolean }; 
+  tipoMovimiento: string,
 }
 
 /**
@@ -218,6 +220,7 @@ export function createInitialSolicitudState(): Solicitud30505State {
       avisoDeCal: false,
       avisoDenom: false,
     },
+    tipoMovimiento: '',
   };
 }
 
@@ -623,8 +626,18 @@ export class Solicitud30505Store extends Store<Solicitud30505State> {
       agenteDatos: [...state.agenteDatos, ...newAgente],
     }));
   }
-
-
+  public setTipoMovimiento(tipoMovimiento: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoMovimiento,
+    }));
+  }
+  public setRazonSocial(razonSocial: string): void {
+    this.update((state) => ({
+      ...state,
+      razonSocial,
+    }));
+  }
   /**
    * Elimina un agente específico de la lista `agenteDatos` en el estado.
    * 

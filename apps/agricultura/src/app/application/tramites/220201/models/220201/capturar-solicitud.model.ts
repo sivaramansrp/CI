@@ -7,8 +7,8 @@
  */
 
 import { Catalogo, PersonaTerceros } from "@ng-mf/data-access-user";
-import { TercerosrelacionadosTable,TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
 import { DatosForma } from "./certificado-zoosanitario.model";
+import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
 
 /**
  * Modelo que representa la solicitud completa con todos sus datos asociados.
@@ -58,7 +58,7 @@ export interface CapturarSolicitud {
   /**
    * Datos de la forma relacionados con terceros.
    */
-  datosForma: TercerosrelacionadosTable[];
+  datosForma: TercerosrelacionadosdestinoTable[];
 }
 
 /**

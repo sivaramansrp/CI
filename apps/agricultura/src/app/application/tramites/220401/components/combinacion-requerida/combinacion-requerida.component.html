@@ -2,47 +2,20 @@
     <ng-titulo titulo="Combinación Requerida" />
     <form [formGroup]="formCombinacion">
         <div class="row mb-3">
-            <div class="col-md-4">
+           <div class="col-md-8">
               
                 <app-catalogo-select
-                [catalogo]="especie"
+                [catalogo]="tipoActividad"
                 [tooltipQuestionCircle]="false"
-                [label]="'Especie*'"
-                [placeholder]="'Seleccione un valor'"
-                formControlName="especie"
-                [isDisabled]="esFormularioSoloLectura"
-                (change)="setValoresStore(formCombinacion,'especie', 'setespecie')">
-                ></app-catalogo-select>
-            </div>
-            <div class="col-md-4">
-              
-                <app-catalogo-select
-                [catalogo]="funcionZootecnica"
-                [tooltipQuestionCircle]="false"
-                [label]="'Función zootécnica*'"
-                [placeholder]="'Seleccione un valor'"
-                formControlName="funcionZootecnica"
-                [isDisabled]="esFormularioSoloLectura"
-                (change)="setValoresStore(formCombinacion,'funcionZootecnica', 'setfuncionZootecnica')"
-                ></app-catalogo-select>
-            </div>
-            <div class="col-md-4">
-               
-                <app-catalogo-select
-                [catalogo]="mercancia"
-                [tooltipQuestionCircle]="false"
-                [label]="'Mercancía'"
+                [label]="'Tipo de producto'"
                 [required]="true"
                 [placeholder]="'Seleccione un valor'"
                 [isDisabled]="esFormularioSoloLectura"
-                formControlName="mercancia"
-                (change)="setValoresStore(formCombinacion,'mercancia', 'setmercancia')"
-              ></app-catalogo-select>
+                formControlName="tipoProducto"
+                (change)="setValoresStore(formCombinacion,'tipoProducto', 'settipoProducto')"
+                ></app-catalogo-select>
             </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-4">
+             <div class="col-md-4">
              
                 <app-catalogo-select
                 [catalogo]="paisDestino"

@@ -194,6 +194,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
     { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
     { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 },
+    { encabezado: 'Presentación', clave: (fila) => fila.paisDeOrigen, orden: 19 },
+    { encabezado: 'Cantidad de presentación', clave: (fila) => fila.descripcionFraccion, orden: 20 },
+    { encabezado: 'Tipo de presentación', clave: (fila) => fila.tipoDeProducto, orden: 21 },
+    { encabezado: 'Tipo planta', clave: (fila) => fila.tipoRequisito, orden: 22 },
+    { encabezado: 'Planta autorizada de origen', clave: (fila) => fila.paisDeOrigen, orden: 23 },
+    { encabezado: 'Especie', clave: (fila) => fila.numeroDeLote, orden: 24 },
+    
   ];
 
   /**
@@ -329,7 +336,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     });
     this.crearFormulario();
     this.initActionFormBuild();
-   
+   this.nuevaNotificacion={} as Notificacion;
   }
 
    ngAfterViewInit(): void {

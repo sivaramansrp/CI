@@ -14,7 +14,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="identificacionDelTransporte">Identificación del transporte:</label>
-          <input class="form-control" id="identificacionDelTransporte" formControlName="identificacionDelTransporte"
+          <input class="form-control" maxlength="50" id="identificacionDelTransporte" formControlName="identificacionDelTransporte"
             placeholder="" type="text"
             (change)="setValoresStore(transporteForm,'identificacionDelTransporte', 'setIdentificacionDelTransporte')" />
         </div>

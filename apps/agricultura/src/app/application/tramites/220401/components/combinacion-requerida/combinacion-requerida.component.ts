@@ -245,7 +245,7 @@ this.inicializarCombinacionFormulario();
  */
   public crearFormCombinacion(): void {
     this.formCombinacion = this.fb.group({
-      // especie:['this.solicitudState?.especie'],
+      tipoProducto: [this.solicitudState?.tipoProducto],
       especie: [this.solicitudState?.especie],
       funcionZootecnica: [this.solicitudState?.funcionZootecnica],
       mercancia: [this.solicitudState?.mercancia],

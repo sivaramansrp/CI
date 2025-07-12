@@ -20,5 +20,7 @@
   "observaciones": "valor ficticio",
   "productos": "Nuevo",
   "descripción": "valor ficticio",
-  "solicitud":"Inicial"
+  "solicitud":"Inicial",
+  "cantidadTotal":"1",
+  "valorTotalUSD":"1"
 }

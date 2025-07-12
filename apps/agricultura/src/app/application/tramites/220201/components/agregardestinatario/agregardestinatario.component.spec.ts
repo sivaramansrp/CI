@@ -11,15 +11,15 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 describe('AgregardestinatarioComponent', () => {
   let component: AgregardestinatarioComponent;
   let fixture: ComponentFixture<AgregardestinatarioComponent>;
-  let routerMock: any;
-  let routeMock: any;
-  let queryMock: any;
-  let serviceMock: any;
+  let ROUTER_MOCK: any;
+  let ROUTE_MOCK: any;
+  let QUERY_MOCK: any;
+  let SERVICE_MOCK: any;
 
   beforeEach(async () => {
-    routerMock = { navigate: jest.fn() };
-    routeMock = { snapshot: { paramMap: new Map([['id', '123']]) } };
-    queryMock = {
+    ROUTER_MOCK = { navigate: jest.fn() };
+    ROUTE_MOCK = { snapshot: { paramMap: new Map([['id', '123']]) } };
+    QUERY_MOCK = {
       seleccionarTercerosRelacionados$: of([
         {
           tipoMercancia: 'yes',
@@ -34,7 +34,7 @@ describe('AgregardestinatarioComponent', () => {
         }
       ])
     };
-    serviceMock = {
+    SERVICE_MOCK = {
       updateTercerosRelacionado: jest.fn()
     };
 
@@ -42,10 +42,10 @@ describe('AgregardestinatarioComponent', () => {
       imports: [ReactiveFormsModule, AgregardestinatarioComponent],
       providers: [
         FormBuilder,
-        { provide: Router, useValue: routerMock },
-        { provide: ActivatedRoute, useValue: routeMock },
-        { provide: CertificadoZoosanitarioServiceService, useValue: serviceMock },
-        { provide: ZoosanitarioQuery, useValue: queryMock },
+        { provide: Router, useValue: ROUTER_MOCK },
+        { provide: ActivatedRoute, useValue: ROUTE_MOCK },
+        { provide: CertificadoZoosanitarioServiceService, useValue: SERVICE_MOCK },
+        { provide: ZoosanitarioQuery, useValue: QUERY_MOCK },
         {
           provide: TercerosrelacionadosService,
           useValue: {
@@ -83,8 +83,8 @@ describe('AgregardestinatarioComponent', () => {
 
     component.onGuardarDestinatario();
 
-    expect(serviceMock.updateTercerosRelacionado).toHaveBeenCalled();
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/pago/certificado-zoosanitario/zoosanitario']);
+    expect(SERVICE_MOCK.updateTercerosRelacionado).toHaveBeenCalled();
+    expect(ROUTER_MOCK.navigate).toHaveBeenCalledWith(['/pago/certificado-zoosanitario/zoosanitario']);
   });
 
   it('should not call service on invalid form submission', () => {
@@ -95,7 +95,7 @@ describe('AgregardestinatarioComponent', () => {
 
     component.onGuardarDestinatario();
 
-    expect(serviceMock.updateTercerosRelacionado).not.toHaveBeenCalled();
+    expect(SERVICE_MOCK.updateTercerosRelacionado).not.toHaveBeenCalled();
   });
 
   it('should reset and patch form when clearing', () => {
@@ -108,15 +108,15 @@ describe('AgregardestinatarioComponent', () => {
     component.destinatarioForm.patchValue({ tipoMercancia: 'no' });
     component.enCambioValorRadio();
 
-    const ctrl = component.destinatarioForm.get('razonSocial');
-    expect(ctrl?.validator).toBeFalsy();
+    const CTRL = component.destinatarioForm.get('razonSocial');
+    expect(CTRL?.validator).toBeFalsy();
   });
 
   it('should add required validator when tipoMercancia is yes', () => {
     component.destinatarioForm.patchValue({ tipoMercancia: 'yes' });
     component.enCambioValorRadio();
 
-    const ctrl = component.destinatarioForm.get('razonSocial');
-    expect(ctrl?.validator).toBeTruthy();
+    const CTRL = component.destinatarioForm.get('razonSocial');
+    expect(CTRL?.validator).toBeTruthy();
   });
 });

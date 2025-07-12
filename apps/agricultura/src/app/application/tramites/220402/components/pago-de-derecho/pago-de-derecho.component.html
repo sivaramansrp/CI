@@ -17,7 +17,7 @@
             <div class="form-group">
               <label class="form-label" for="justificacion">Justificación<span
                   [ngClass]="isValid(datosImportadorExportador,'justificacion') ? 'red-require ' : ''">*</span>:</label>
-              <input class="form-control" id="rfcImportExport" formControlName="justificacion" type="text"
+              <input class="form-control" maxlength="100" id="rfcImportExport" formControlName="justificacion" type="text"
                 [ngClass]="isValid(datosImportadorExportador,'justificacion') ? 'required' : ''"
                 (change)="setValoresStore(datosImportadorExportador,'justificacion', 'setJustificacion')" />
               @if (FormSolicitud.get('datosImportadorExportador.justificacion')?.hasError('required') &&
@@ -40,7 +40,7 @@
             <div class="form-group">
               <label class="form-label" for="cadenaDependencia">Cadena de la dependencia<span
                   [ngClass]="isValid(datosImportadorExportador,'cadenaDependencia') ? 'red-require ' : ''">*</span>:</label>
-              <input class="form-control" id="cadenaDependencia" formControlName="cadenaDependencia" type="text"
+              <input class="form-control" maxlength="50" id="cadenaDependencia" formControlName="cadenaDependencia" type="text"
                 [ngClass]="isValid(datosImportadorExportador,'cadenaDependencia') ? 'required' : ''"
                 (change)="setValoresStore(datosImportadorExportador,'cadenaDependencia', 'setCadenaDependencia')"
                 libUppercase />
@@ -67,9 +67,9 @@
             <div class="form-group">
               <label class="form-label" for="llaveDePago">Llave de pago<span
                   [ngClass]="isValid(datosImportadorExportador,'llaveDePago') ? 'red-require ' : ''">*</span>:</label>
-              <input class="form-control" id="llaveDePago" formControlName="llaveDePago" type="text"
+              <input class="form-control" style="text-transform: uppercase;" maxlength="50" id="llaveDePago" formControlName="llaveDePago" type="text"
                 [ngClass]="isValid(datosImportadorExportador,'llaveDePago') ? 'required' : ''"
-                (change)="setValoresStore(datosImportadorExportador,'llaveDePago', 'setllaveDePago')" />
+                (change)="setValoresStore(datosImportadorExportador,'llaveDePago', 'setllaveDePago')" libUppercase />
               @if (FormSolicitud.get('datosImportadorExportador.llaveDePago')?.hasError('required') &&
               FormSolicitud.get('datosImportadorExportador.llaveDePago')?.touched) {
               <div class="mensaje-error">Este campo es obligatorio.</div>
