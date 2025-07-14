@@ -55,6 +55,10 @@ export interface CapturarSolicitud {
    * Datos adicionales del formulario.
    */
   datos: DatosForma;
+  /**
+   * Datos de la forma relacionados con terceros.
+   */
+  datosForma: TercerosrelacionadosdestinoTable[];
 }
 
 /**
@@ -535,5 +539,6 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
     tercerosRelacionados: params.tercerosRelacionados || [],
     tablaDatos: params.tablaDatos || [],
     selectedDatos: params.selectedDatos || [],
+    datosForma: params.datosForma || [] 
   }
 }

@@ -261,7 +261,32 @@ const ROUTES: Routes = [
       import('./tramites/30505/aviso-de-modificacion.module').then(
         (m) => m.AvisoDeModificacionModule)
   },
+   {
+    path: 'registros',
+    loadChildren: () =>
+      import('./tramites/30506/registro.module').then(
+        (m) => m.RegistroModule
+      ),
+  },
   {
+      path: 'aviso-destruccion-mercancias',
+    loadChildren: () => 
+      import('./tramites/32512/aviso-destruccion-mercancias.module').then(
+        (m) => m.AvisoDestruccionMercanciasModule)
+  },
+  {
+    path: 'avisos-agace',
+    loadChildren: () =>
+      import('./tramites/32511/avisos.module').then((m) => m.AvisosModule),
+  },  
+  {
+    path: 'aviso-tesoreria',
+    loadChildren: () =>
+      import('./tramites/32513/aviso-tesoreria.module').then(
+        (m) => m.AvisoTesoreriaModule
+      ),
+  },
+   {
     path: 'economico',
     loadChildren: () =>
       import('./tramites/32606/economico.module').then((m) => m.EconomicoModule),

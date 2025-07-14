@@ -55,23 +55,27 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h5>Exportador *</h5>
+            <h5>Exportador </h5>
         </div>
         <div class="col-md-12">
             <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoli"
                 [configuracionTabla]="configuracionColumnasExportador"
                 [datos]="cuerpoTablaExportador" 
                 [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+                (listaDeFilaSeleccionada)="onSeleccionDestinatarioFinal($event)"
                 ></app-tabla-dinamica>
         </div>
-        <div class="col-md-12 d-flex justify-content-end">
-                <button class="btn btn-primary me-3" [disabled]="esFormularioSoloLectura">Agregar</button>
+        <div class="col-md-12 d-flex justify-content-end" *ngIf="cuerpoTablaExportador.length === 0">
+                <button class="btn btn-primary me-3" [disabled]="esFormularioSoloLectura" (click)="goToAgregarExportador()">Agregar</button>
                 <button class="btn btn-default" [disabled]="esFormularioSoloLectura">Buscar</button>      
         </div>
+                     <div class="col-md-12 d-flex justify-content-end" *ngIf="cuerpoTablaExportador.length === 1">
+                <button class="btn btn-primary me-3" [disabled]="esFormularioSoloLectura || listaDeFilaSeleccionadaFinal.length === 0" (click)="modificarDestinatarioFinal()">Modificar</button>
+                <button class="btn btn-default" [disabled]="esFormularioSoloLectura || listaDeFilaSeleccionadaFinal.length === 0" (click)="emitEliminarFinal()">Eliminar</button>     
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h5>Destinatario (destino final)*</h5>
+            <h5>Destinatario (destino final)</h5>
         </div>
         <div class="col-md-12">
             <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoli"

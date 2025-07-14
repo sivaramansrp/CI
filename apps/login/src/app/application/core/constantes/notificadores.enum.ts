@@ -1,4 +1,4 @@
-import { ConsultaRegistro } from "../models/consuta-registro.model";
+import { ConsultaRegistro } from "../models/consulta-registro.model";
 
 /**
  * Configuración de los encabezados para la tabla de notificadores.

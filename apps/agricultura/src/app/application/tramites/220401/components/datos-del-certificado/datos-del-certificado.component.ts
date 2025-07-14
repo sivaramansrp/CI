@@ -132,7 +132,6 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
           if(seccionState.readonly || seccionState.update){
              this.inicializarFormulario();
              this.setCatalogosDatos();
-
           }
         })
       )
@@ -143,6 +142,8 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
 this.inicializarCertificadoFormulario();
+
+
 
       }
 
@@ -192,16 +193,6 @@ this.inicializarCertificadoFormulario();
    * - Actualiza el formulario `datosdelForm` con los datos actuales de la solicitud.
    */
   inicializarFormulario():void{
-    this.datosdelForm = this.fb.group({
-      tipoCertificado: ['', Validators.required],
-      message: [{ value: '', disabled: true }],
-      numeroTotal:[''],
-      condiciones:['',Validators.required],
-      cantidadTotal:[''],
-      tipoEmbalaje:['']
-
-    });
-
     this.formGroup1 = this.fb.group({});
     /** Suscripción para obtener el estado de la solicitud. */
     this.agregarQuery.selectSolicitud$
@@ -238,6 +229,12 @@ this.inicializarCertificadoFormulario();
         datoscertificado:[this.solicitudState?.datoscertificado],
         certificada: [this.solicitudState?.certificada],
         tratamiento:[this.solicitudState?.tratamiento],
+        tipoCertificado: ['', Validators.required],
+        message: [{ value: '', disabled: true }],
+        numeroTotal:[''],
+        condiciones:['',Validators.required],
+        cantidadTotal:[''],
+        tipoEmbalaje:['']
       })
       
       this._pantallas220401Service.getPaisOrigen().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
@@ -333,7 +330,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'OISA',
+      label: 'Establecimiento TIF',
       controlName: 'delegacionesControl2',
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -341,7 +338,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Distrito desarrollo rural (DDR)',
+      label: 'Oficina central',
       controlName: 'delegacionesControl3',
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -349,7 +346,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Oficina central:',
+      label: 'Distrito desarrollo rural (DDR)',
       controlName: 'delegacionesControl4',
       required: false,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),

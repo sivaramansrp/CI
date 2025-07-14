@@ -4,7 +4,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, InputRadioComponent, Notificacion, NotificacionesComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { HttpClient } from '@angular/common/http';
 
@@ -15,6 +15,7 @@ import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solic
 import {Subject, debounceTime, map, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
@@ -193,6 +194,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
     { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
     { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 },
+    { encabezado: 'Presentación', clave: (fila) => fila.paisDeOrigen, orden: 19 },
+    { encabezado: 'Cantidad de presentación', clave: (fila) => fila.descripcionFraccion, orden: 20 },
+    { encabezado: 'Tipo de presentación', clave: (fila) => fila.tipoDeProducto, orden: 21 },
+    { encabezado: 'Tipo planta', clave: (fila) => fila.tipoRequisito, orden: 22 },
+    { encabezado: 'Planta autorizada de origen', clave: (fila) => fila.paisDeOrigen, orden: 23 },
+    { encabezado: 'Especie', clave: (fila) => fila.numeroDeLote, orden: 24 },
+    
   ];
 
   /**
@@ -277,6 +285,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       proovedor: 'Print Masters'
     }
   ];
+  /**
+   * Mensaje de error para mostrar en caso de que no se encuentre información.
+   * @property {string} messageDeError
+   */
+  messageDeError: string = '';
 
   /**
    * Constructor del componente.
@@ -323,17 +336,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     });
     this.crearFormulario();
     this.initActionFormBuild();
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'No existe información para la clave UCON: aaaaaaa123##aaa y RFC: LEQI8101314S7 proporcionados. Favor de verificar.',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'OK',
-      txtBtnCancelar: '',
-    };
+   this.nuevaNotificacion={} as Notificacion;
   }
 
    ngAfterViewInit(): void {
@@ -365,6 +368,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         } else {
           const PATTERN = /^UCON[a-zA-Z0-9]{4,10}$/;
           this.moduloEmergente = !PATTERN.test(value);
+          this.messageDeError = `'No existe información para la clave UCON: ${this.datosDelaSolicitud.get('claveUCON')?.value} y RFC: LEQI8101314S7 proporcionados. Favor de verificar.'`;
+           this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: this.messageDeError,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'OK',
+      txtBtnCancelar: '',
+    };
         }
       });
   }
@@ -388,7 +403,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     });
     this.certificadoZoosanitarioQuery.seleccionarDatosSolicitud$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
       if (datosDeLaSolicitud) {
-        this.datosDelaSolicitud.patchValue(datosDeLaSolicitud);
+        this.datosDelaSolicitud.patchValue({
+          tipoMercancia: datosDeLaSolicitud.tipoMercancia || 'yes',
+          aduanaIngreso: datosDeLaSolicitud.aduanaIngreso || '',
+          oficinaInspeccion: datosDeLaSolicitud.oficinaInspeccion || '',
+          puntoInspeccion: datosDeLaSolicitud.puntoInspeccion || '',
+          claveUCON: datosDeLaSolicitud.claveUCON || '',
+          establecimientoTIF: datosDeLaSolicitud.establecimientoTIF || '',
+          nombreVeterinario: datosDeLaSolicitud.nombreVeterinario || '',
+          numeroGuia: datosDeLaSolicitud.numeroGuia || '',
+          certificacion: datosDeLaSolicitud.certificacion || '',
+          regimen: datosDeLaSolicitud.regimen || ''
+        })
+        this.notificationCheck=true;
       }
     });
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);

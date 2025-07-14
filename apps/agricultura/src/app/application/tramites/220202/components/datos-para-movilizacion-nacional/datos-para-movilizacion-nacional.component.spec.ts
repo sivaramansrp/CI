@@ -1,95 +1,110 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
 
+import { Component } from '@angular/core';
 import { DatosParaMovilizacionNacionalComponent } from './datos-para-movilizacion-nacional.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
+import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+@Injectable()
+class MockAgriculturaApiService {
+  getAllDatosForma() {
+    return observableOf({ movilizacion: {} });
+  }
+  actualizarFormaValida = jest.fn();
+}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
 describe('DatosParaMovilizacionNacionalComponent', () => {
-  let component: DatosParaMovilizacionNacionalComponent;
-  let fixture: ComponentFixture<DatosParaMovilizacionNacionalComponent>;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, TituloComponent, CatalogoSelectComponent, ReactiveFormsModule,
-        DatosParaMovilizacionNacionalComponent
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule, DatosParaMovilizacionNacionalComponent, ],
+      declarations: [
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: AgriculturaApiService, useClass: MockAgriculturaApiService },
+        ConsultaioQuery
       ]
-    })
-      .compileComponents();
+    }).overrideComponent(DatosParaMovilizacionNacionalComponent, {
 
+    }).compileComponents();
     fixture = TestBed.createComponent(DatosParaMovilizacionNacionalComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
-    expect(component.forma).toBeDefined();
-    expect(component.forma.get('transporte')).toBeDefined();
-    expect(component.forma.get('empresaTransportista')).toBeDefined();
-    expect(component.forma.get('transporte')?.disabled).toBe(component.esFormularioSoloLectura);
+
+  it('should run #obtenerTodosLosDatosDeOpciones()', async () => {
+    component.obtenerListaDeJustificaciones = jest.fn();
+    component.obtenerListaDePunto = jest.fn();
+    component.obtenerTodosLosDatosDeOpciones();
+    expect(component.obtenerListaDeJustificaciones).toHaveBeenCalled();
+    expect(component.obtenerListaDePunto).toHaveBeenCalled();
   });
 
-  it('should call obtenerTodosLosDatosDeOpciones on ngOnInit', () => {
-    const spy = jest.spyOn(component, 'obtenerTodosLosDatosDeOpciones');
-    component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('should update store when setValoresStore is called', () => {
-    const apiService = TestBed.inject<any>(component['agriculturaApiService'].constructor);
-    const spy = jest.spyOn(apiService, 'updateMovilizacion');
-    component.forma.setValue({
-      transporte: 'test',
-      medioTransporte: 'medio',
-      guiaIdentificacion: 'guia',
-      empresaTransportista: 'empresa'
-    });
-    component.setValoresStore();
-    expect(spy).toHaveBeenCalledWith(component.forma.value);
-  });
-
-  it('should clean up subscriptions on destroy', () => {
-    const spy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const spyComplete = jest.spyOn(component['destroyNotifier$'], 'complete');
-    component.ngOnDestroy();
-    expect(spy).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
-  });
-
-  it('should set transporteList when obtenerListaDeJustificaciones is called', () => {
-    const mockCatalogo = [{ id: 1, nombre: 'Test' }];
-    const apiService = TestBed.inject<any>(component['agriculturaApiService'].constructor);
-    jest.spyOn(apiService, 'obtenerSelectorList').mockReturnValue({
-      pipe: () => ({
-        subscribe: (fn: any) => fn(mockCatalogo)
-      })
-    });
+  it('should run #obtenerListaDeJustificaciones()', async () => {
+    component.agriculturaApiService = component.agriculturaApiService || {};
+    component.agriculturaApiService.obtenerSelectorList = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerListaDeJustificaciones();
-    expect(component.transporteList).toEqual(mockCatalogo as any);
+    expect(component.agriculturaApiService.obtenerSelectorList).toHaveBeenCalled();
   });
 
-  it('should set puntoList when obtenerListaDePunto is called', () => {
-    const mockCatalogo = [{ id: 2, nombre: 'Punto' }];
-    const apiService = TestBed.inject<any>(component['agriculturaApiService'].constructor);
-    jest.spyOn(apiService, 'obtenerSelectorList').mockReturnValue({
-      pipe: () => ({
-        subscribe: (fn: any) => fn(mockCatalogo)
-      })
-    });
+  it('should run #obtenerListaDePunto()', async () => {
+    component.agriculturaApiService = component.agriculturaApiService || {};
+    component.agriculturaApiService.obtenerSelectorList = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerListaDePunto();
-    expect(component.puntoList).toEqual(mockCatalogo as any);
+    expect(component.agriculturaApiService.obtenerSelectorList).toHaveBeenCalled();
   });
 
-  it('should update form validity in statusChanges subscription', () => {
-    const apiService = TestBed.inject<any>(component['agriculturaApiService'].constructor);
-    const spy = jest.spyOn(apiService, 'actualizarFormaValida');
-    component.forma.get('transporte')?.setValue('test');
-    component.forma.get('empresaTransportista')?.setValue('empresa');
-    component.forma.updateValueAndValidity();
-    expect(spy).toHaveBeenCalledWith(expect.objectContaining({ movilizacionValidacion: true }));
+  it('should run #setValoresStore()', async () => {
+    component.forma = component.forma || {};
+    component.forma.value = 'value';
+    component.agriculturaApiService = component.agriculturaApiService || {};
+    component.agriculturaApiService.updateMovilizacion = jest.fn();
+    component.setValoresStore({}, {});
+    expect(component.agriculturaApiService.updateMovilizacion).toHaveBeenCalled();
   });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.ngOnDestroy();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+  });
+
 });

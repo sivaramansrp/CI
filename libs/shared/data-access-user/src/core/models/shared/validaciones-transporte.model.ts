@@ -99,5 +99,16 @@ export interface BodyValidaFerro {
  * @property {string} guiaMaster - Número de guía master a validar.
  */
 export interface BodyValidaAereo {
+    guiaMasterAereo: string;
+}
+
+/**
+ * Representa el cuerpo de la solicitud para validar la guía  del transporte aéreo.
+ * 
+ * @interface BodyValidaAereo
+ * 
+ * @property {string} guiaHouse- Número de guía house a validar.
+ */
+export interface BodyValidaAereoDos {
     guiaHouseAereo: string;
 }

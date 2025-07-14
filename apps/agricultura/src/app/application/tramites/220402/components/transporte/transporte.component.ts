@@ -115,7 +115,7 @@ export class TransporteComponent implements OnDestroy, OnInit {
   crearFormTransporte(): void {
     this.transporteForm = this.fb.group({
       mediodeTransporte: [this.transporteState?.mediodeTransporte, [Validators.required]],
-      identificacionDelTransporte: [this.transporteState?.identificacionDelTransporte]
+      identificacionDelTransporte: [this.transporteState?.identificacionDelTransporte, [Validators.maxLength(50)]]
     });
     this.inicializarEstadoFormulario();
   }

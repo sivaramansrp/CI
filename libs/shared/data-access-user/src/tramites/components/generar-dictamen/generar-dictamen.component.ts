@@ -51,6 +51,12 @@ export class GenerarDictamenComponent implements OnInit {
    */
   @Input() public botonGuardar = '';
   /**
+   * @property {boolean} mostrarTitulo
+   * @description Bandera que controla la visibilidad del título "Generar Dictamen".
+   * Si es true, el título se muestra; si es false, el título se oculta.
+   */
+  @Input() public mostrarTitulo = true;
+  /**
    * @constructor
    * @description Constructor del componente. Inicializa los servicios necesarios para la creación y validación del formulario de dictamen.
    * 

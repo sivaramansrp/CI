@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_LLAVE_DE_PAGO_DE_DERECHO, RespuestaCatalogos, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_LLAVE_DE_PAGO_DE_DERECHO, RespuestaCatalogos, TituloComponent, dateLessThanOrEqualToday } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -35,7 +35,16 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
      */
     justificacionSelector: Catalogo[] = [];
   
-  
+    /**
+     * Indica si se debe establecer la fecha de pago.
+     * @type {boolean}
+     * @default true
+     * @see https://compodoc.app/
+     *
+     * @description
+     * Esta propiedad controla si el campo de fecha de pago debe ser editable o no.
+     */
+  public setFecha = true;
     
   
     /**
@@ -52,10 +61,11 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
       claveReferencia: [""],
       cadenaDependencia: [""],
       banco: [""],
-      llavePago: [""],
+      llavePago: ["", [Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       importePago: [""],
-      fechaPago:[""]
+      fechaPago: [""]
     });
+
   
     /**
      * Opciones disponibles para el campo de radio sobre la exención de pago.
@@ -90,7 +100,7 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
      * deshabilitando la edición de los campos.
      */
     @Input() esFormularioSoloLectura:boolean = false;
-
+    
 
       /**
        * @description
@@ -132,15 +142,18 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
     this.pagoForm.patchValue({
         exentoPago: this.pagoDeDerechos.exentoPago || 'no',
         justificacion: this.pagoDeDerechos.justificacion || '',
-        claveReferencia: this.pagoDeDerechos.claveReferencia || '', 
-        cadenaDependencia: this.pagoDeDerechos.cadenaDependencia || '',
+        claveReferencia: this.pagoDeDerechos.claveReferencia || '450006257', 
+        cadenaDependencia: this.pagoDeDerechos.cadenaDependencia || 'DO3456789012',
         banco: this.pagoDeDerechos.banco || '',
         llavePago: this.pagoDeDerechos.llavePago || '',
-        importePago: this.pagoDeDerechos.importePago || '',
-        fechaPago:this.pagoDeDerechos.fechaPago|| ''
+        importePago: this.pagoDeDerechos.importePago || '2562',
+        fechaPago:this.pagoDeDerechos.fechaPago|| PagoDeDerechoComponent.formatDate()
       });
       if (this.pagoForm.value.exentoPago === 'no') {
         this.pagoForm.get('llavePago')?.enable();
+        this.pagoForm.get('fechaPago')?.enable();
+        this.fechaInicioInput.habilitado = true;
+        this.pagoForm.get('fechaPago')?.setValidators([Validators.required]);
         this.pagoForm.get('llavePago')?.setValidators([Validators.required,
         Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
         Validators.maxLength(30)]);
@@ -168,6 +181,13 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
       }
     }
 
+   static formatDate(): string {
+  const DATE = new Date();
+  const DAY = String(DATE.getDate()).padStart(2, '0');
+  const MONTH = String(DATE.getMonth() + 1).padStart(2, '0');
+  const YEAR = DATE.getFullYear();
+  return `${DAY}/${MONTH}/${YEAR}`;
+}
      obtenerDetallesDeListaDeOpciones(): void {
         this.obtenerBancoSelectorList();
         this.obtenerListaDeJustificaciones();
@@ -205,11 +225,12 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
           this.pagoForm.get('banco')?.disable();
           this.pagoForm.get('llavePago')?.disable();
           this.pagoForm.get('importePago')?.disable();
-               this.pagoForm.get('fechaPago')?.enable();
+          this.pagoForm.get('fechaPago')?.enable();
+               
         }
         else if(!this.esFormularioSoloLectura && this.pagoForm.value.exentoPago === 'no') {
           this.fechaInicioInput.required=true;
-          this.fechaInicioInput.habilitado=false;
+          this.fechaInicioInput.habilitado=true;
           this.pagoForm.get('justificacion')?.disable();
           this.pagoForm.get('claveReferencia')?.disable();
           this.pagoForm.get('cadenaDependencia')?.disable();
@@ -221,7 +242,8 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
            Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
           Validators.maxLength(30)]);  
           this.pagoForm.get('importePago')?.disable();
-          this.pagoForm.get('fechaPago')?.enable();
+          this.pagoForm.get('fechaPago')?.disable();
+          this.pagoForm.get('fechaPago')?.clearValidators();
        }
         }
 
@@ -254,6 +276,24 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
    */
   actualizarPago(): void {
     this.pagoChanged.emit(this.pagoForm?.value);
+  }
+
+  /**
+   * @description Método que se ejecuta al hacer clic en el botón "Borrar".
+   * Resetea el formulario de pago y restablece los valores predeterminados.
+   * @param {void}
+   * @returns {void}
+   */
+  onBorrar(): void{
+    this.setFecha = false;
+    const EXTENDO_PAGO = JSON.parse(JSON.stringify(this.pagoForm.get('exentoPago')?.value));
+    this.pagoForm.reset();
+    this.pagoForm.patchValue({
+      exentoPago: EXTENDO_PAGO ? EXTENDO_PAGO : 'no',
+    });
+    setTimeout(() => {
+      this.setFecha = true;  
+    })
   }
 
    /**

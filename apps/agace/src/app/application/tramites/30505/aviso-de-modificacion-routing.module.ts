@@ -29,7 +29,7 @@ const ROUTES: Routes = [
     path:'modificar-agente',
     component: ModificarAgenteComponent
 
-  }
+  },
 ];
 
 @NgModule({

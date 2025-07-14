@@ -1,38 +1,29 @@
+import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  ConsultaioQuery,
+  ConsultaioState,
+  InputCheckComponent,
+  REGEX_POSTAL,
+  REGEX_TELEFONO_DIGITOS,
+  TableBodyData,
+  TableComponent,
+  TituloComponent,
+  ValidacionesFormularioService
+} from '@ng-mf/data-access-user';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, Subscription, map, merge, takeUntil } from 'rxjs';
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
-import { AlertComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from '../../estados/tramite11102.store';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosDelMercancia } from '../../models/modificacion-donaciones-immex.model';
-import { ElementRef } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputCheckComponent } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { ModificacionDonacionesImmexService } from '../../services/modificacion-donaciones-immex.service';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { REGEX_POSTAL } from '@ng-mf/data-access-user';
-import { REGEX_TELEFONO_DIGITOS } from '@ng-mf/data-access-user';
-import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud11102State } from '../../estados/tramite11102.store';
-import { Subject } from 'rxjs';
-import { Subscription } from 'rxjs';
-import { TableBodyData } from '@ng-mf/data-access-user';
-import { TableComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite11102Query } from '../../estados/tramite11102.query';
 import { Tramite11102Store } from '../../estados/tramite11102.store';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
 import mercanciaTable from '@libs/shared/theme/assets/json/11102/mercancia-table.json';
-import { merge } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente que representa la funcionalidad de datos del trámite.
