@@ -160,6 +160,11 @@ export interface ListaDeDatosFinal {
    * Lista de terceros relacionados con la solicitud.
    */
   tercerosRelacionados: TercerosrelacionadosdestinoTable[];
+
+   /**
+     * Datos de la forma relacionados con terceros.
+     */
+    datosForma: TercerosrelacionadosdestinoTable[];
 }
 
 
@@ -290,7 +295,7 @@ export interface DatosForma {
     /**
      * Aduana de ingreso donde se realizará el trámite.
      */
-    aduanaDeIngreso: string;
+    aduanaDeIngreso?: string;
 
     /**
      * Oficina de inspección asignada para la revisión.
@@ -316,76 +321,6 @@ export interface DatosForma {
      * Número del carro utilizado para el transporte (opcional).
      */
     numeroDeCarro?: string;
-
-    /**
-     * Tipo de requisito necesario para el trámite (opcional).
-     */
-    tipoDeRequisito?: string;
-
-    /**
-     * Requisito específico relacionado con el trámite (opcional).
-     */
-    requisito?: string;
-
-    /**
-     * Número del certificado internacional asociado (opcional).
-     */
-    numeroCertificadoInternacional?: string;
-
-    /**
-     * Fracción arancelaria correspondiente al producto (opcional).
-     */
-    fraccionArancelaria?: string;
-
-    /**
-     * Descripción de la fracción arancelaria (opcional).
-     */
-    descripcionFraccion?: string;
-
-    /**
-     * Número de Identificación Comercial (NICO) del producto (opcional).
-     */
-    nico?: string;
-
-    /**
-     * Descripción del NICO del producto (opcional).
-     */
-    descripcionNico?: string;
-
-    /**
-     * Descripción general del producto (opcional).
-     */
-    descripcion?: string;
-
-    /**
-     * Cantidad en la Unidad de Medida de Transporte (UMT) (opcional).
-     */
-    cantidadUMT?: string | number;
-
-    /**
-     * Unidad de Medida de Transporte (UMT) utilizada (opcional).
-     */
-    umt?: string;
-
-    /**
-     * Cantidad en la Unidad de Medida Comercial (UMC) (opcional).
-     */
-    cantidadUMC?: string | number;
-
-    /**
-     * Unidad de Medida Comercial (UMC) utilizada (opcional).
-     */
-    umc?: string;
-
-    /**
-     * Uso previsto del producto (opcional).
-     */
-    uso?: string;
-
-    /**
-     * Tipo de producto especificado (opcional).
-     */
-    tipoDeProducto?: string;
 
     /**
      * Tipo de mercancía relacionada con el trámite (opcional).
@@ -654,21 +589,7 @@ export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): Lista
             puntoDeInspeccion: getDefaultValue(params.datos?.puntoDeInspeccion, ''),
             numeroDeGuia: getDefaultValue(params.datos?.numeroDeGuia, ''),
             regimen: getDefaultValue(params.datos?.regimen, ''),
-            numeroDeCarro: getDefaultValue(params.datos?.numeroDeCarro, ''),
-            tipoDeRequisito: getDefaultValue(params.datos?.tipoDeRequisito, ''),
-            requisito: getDefaultValue(params.datos?.requisito, ''),
-            numeroCertificadoInternacional: getDefaultValue(params.datos?.numeroCertificadoInternacional, ''),
-            fraccionArancelaria: getDefaultValue(params.datos?.fraccionArancelaria, ''),
-            descripcionFraccion: getDefaultValue(params.datos?.descripcionFraccion, ''),
-            nico: getDefaultValue(params.datos?.nico, ''),
-            descripcionNico: getDefaultValue(params.datos?.descripcion, ''),
-            descripcion: getDefaultValue(params.datos?.descripcion, ''),
-            cantidadUMT: getDefaultValue(params.datos?.cantidadUMT as string, ''),
-            umt: getDefaultValue(params.datos?.umt, ''),
-            cantidadUMC: getDefaultValue(params.datos?.cantidadUMC as string, ''),
-            umc: getDefaultValue(params.datos?.umc, ''),
-            uso: getDefaultValue(params.datos?.uso, ''),
-            tipoDeProducto: getDefaultValue(params.datos?.tipoDeProducto, ''),
+            numeroDeCarro: getDefaultValue(params.datos?.numeroDeCarro, '')
         },
         movilizacion: {
             transporte: getDefaultValue(params.movilizacion?.transporte, ''),
@@ -694,7 +615,8 @@ export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): Lista
         tablaDatos: params.tablaDatos || [],
         selectedDatos: params.selectedDatos || [],
         personas: params.personas || [],
-        tercerosRelacionados: params.tercerosRelacionados || []
+        tercerosRelacionados: params.tercerosRelacionados || [],
+        datosForma: params.datosForma || [] 
     }
 }  
 
