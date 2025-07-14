@@ -21,7 +21,7 @@
           [isRequired]="true"
           [layout]="'horizontal'"
           formControlName="comercioExteriorRealizado"
-          (change)="onComercioExteriorChange()"
+          (change)="setValoresStore(importadorExportadorForm, 'comercioExteriorRealizado')"
         ></app-input-radio>
         <div
           *ngIf="
@@ -37,20 +37,18 @@
       </div>
     </div>
 
-    <div class="row" *ngIf="comercioExteriorActivo">
+    <div class="row" *ngIf="importadorExportadorForm.get('comercioExteriorRealizado')?.value === '1'">
       <div class="col-md-6 mt-4">
         <input-fecha
           [datos]="fechaDeFinDeVigencia"
-          [setFecha]="
-            importadorExportadorForm.get('fechaInicioComercio')?.value
-          "
-          (valorCambiado)="actualizarFechaInicioComercio($event)"
+          [setFecha]="importadorExportadorForm.get('fechaInicioComercio')?.value"
+          (valorCambiado)="actualizarFechaInicioComercio($event);setValoresStore(importadorExportadorForm, 'fechaInicioComercio')"
         >
         </input-fecha>
       </div>
     </div>
 
-    <div class="row" *ngIf="noComercioExteriorActivo">
+    <div class="row" *ngIf="importadorExportadorForm.get('comercioExteriorRealizado')?.value === '0'">
       <div class="w-100 p-4">
         <div class="form-group">
           <label class="form-label text-left">
@@ -63,7 +61,7 @@
             [isRequired]="true"
             [layout]="'horizontal'"
             formControlName="esParteGrupoComercioExterior"
-            (change)="onEsParteGrupoComercioExteriorChange()"
+            (change)="setValoresStore(importadorExportadorForm, 'esParteGrupoComercioExterior')"
           ></app-input-radio>
           <div
             *ngIf="
@@ -80,7 +78,7 @@
       </div>
     </div>
 
-    <div class="row" *ngIf="parteGrupoComercioExterior">
+    <div class="row" *ngIf="importadorExportadorForm.get('esParteGrupoComercioExterior')?.value === '1'">
       <div class="w-100 p-4">
         <div class="form-group">
           <label class="form-label text-left empresaExtranjeraIMMEX">
@@ -159,7 +157,7 @@
     </div>
 
     <!-- on click of NO -->
-    <div class="row" *ngIf="noComercioExteriorActivo">
+    <div class="row" *ngIf="importadorExportadorForm.get('comercioExteriorRealizado')?.value === '0'">
       <div class="w-100 p-4">
         <div class="form-group">
           <label class="form-label text-left">
@@ -173,7 +171,7 @@
             [isRequired]="true"
             [layout]="'horizontal'"
             formControlName="fusionEscisionConOperacionExterior"
-            (change)="onFusionEscisionConOperacionExteriorChange()"
+            (change)="setValoresStore(importadorExportadorForm, 'fusionEscisionConOperacionExterior')"
           ></app-input-radio>
           <div
             *ngIf="
@@ -192,7 +190,7 @@
       </div>
     </div>
 
-    <div class="form-group" *ngIf="esFusionOEscisionConComercioExterior">
+    <div class="form-group" *ngIf="importadorExportadorForm.get('fusionEscisionConOperacionExterior')?.value === '1'">
       <label class="form-label text-left empresaExtranjeraIMMEX">
         <span class="text-danger">*</span> Anexe copia certificada del documento
         en el que conste la fusión o escisión de la sociedad, o bien, que
@@ -201,7 +199,7 @@
       </label>
     </div>
     <!-- -------------- -->
-    <div class="row" *ngIf="noComercioExteriorActivo">
+    <div class="row" *ngIf="importadorExportadorForm.get('comercioExteriorRealizado')?.value === '0'">
       <div class="w-100 p-4">
         <div class="form-group">
           <label class="form-label text-left">
@@ -215,7 +213,7 @@
             [isRequired]="true"
             [layout]="'horizontal'"
             formControlName="empresaExtranjeraIMMEX"
-            (change)="onempresaExtranjeraIMMEXChange()"
+            (change)="setValoresStore(importadorExportadorForm, 'empresaExtranjeraIMMEX')"
           ></app-input-radio>
           <div
             *ngIf="
@@ -232,7 +230,7 @@
       </div>
     </div>
 
-    <div class="form-group" *ngIf="esEmpresaExtranjeraIMMEX">
+    <div class="form-group" *ngIf="importadorExportadorForm.get('empresaExtranjeraIMMEX')?.value === '1'">
       <label class="form-label text-left empresaExtranjeraIMMEX">
         <span class="text-danger">*</span> Declaración bajo protesta de decir la
         verdad, firmada por el representante legal de la empresa, que indique el
@@ -275,10 +273,9 @@
                 <div class="col-md-8">
                   <input-fecha
                     [datos]="fechaInicioInput"
-                    (valorCambiado)="onFechaCambiada($event)"
-                    [setFecha]="
-                      importadorExportadorForm.get('fechaDePago')?.value
-                    "
+                    (valorCambiado)="onFechaCambiada($event);setValoresStore(importadorExportadorForm,'fechaDePago')"
+                    [setFecha]="importadorExportadorForm.get('fechaDePago')?.value"
+                    
                   >
                   </input-fecha>
                 </div>
@@ -306,6 +303,7 @@
                     (blur)="validarCamposPago()"
                     (keypress)="soloNumeros($event)"
                     (paste)="pegarSoloNumeros($event, 'monto')"
+                    (change)="setValoresStore(importadorExportadorForm, 'monto')"
                   />
                 </div>
               </div>
@@ -330,6 +328,7 @@
               (blur)="validarCamposPago()"
               (keypress)="soloAlfanumericosConEspacios($event)"
               (paste)="pegarSoloAlfanumericos($event, 'operacionesBancarias')"
+              (change)="setValoresStore(importadorExportadorForm, 'operacionesBancarias')"
             />
           </div>
 
@@ -350,7 +349,7 @@
                     id="llaveOEA"
                     name="llaveOEA"
                     maxlength="25"
-                    (change)="validarLlavePago()"
+                    (change)="validarLlavePago(); setValoresStore(importadorExportadorForm, 'llavePago')"
                     (blur)="validarCamposPago()"
                     (keypress)="soloAlfanumericosConEspacios($event)"
                     (paste)="pegarSoloAlfanumericos($event, 'llavePago')"
@@ -420,7 +419,8 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="registroEsquemaCertificacion"
-          (valueChange)="onRegistroEsquemaCertificacion()"
+          (change)="setValoresStore(importadorExportadorForm, 'registroEsquemaCertificacion')"
+
         ></app-input-radio>
       </div>
       <div class="col-md-12">
@@ -438,7 +438,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="tipoInformacionEmpresa"
-          (valueChange)="onTipoInformacionEmpresa()"
+          (change)="setValoresStore(importadorExportadorForm, 'tipoInformacionEmpresa')"
         ></app-input-radio>
       </div>
     </div>
@@ -465,6 +465,7 @@
               id="rfc"
               formControlName="rfcEnclaveOperativo"
               type="text"
+              (change)="setValoresStore(agregarEnlaceOperativoForm, 'rfcEnclaveOperativo')"
             />
           </div>
           @if(agregarEnlaceOperativoForm.controls['rfcEnclaveOperativo'].invalid
@@ -527,11 +528,8 @@
           <div class="form-group">
             <input-fecha
               [datos]="fechaDeLaUltimaOperacion"
-              [setFecha]="
-                agregarEnlaceOperativoForm.get('inputfechaDeLaUltimaOperacion')
-                  ?.value
-              "
-              (valorCambiado)="actualizarFechaDeLaUltimaOperacion($event)"
+              [setFecha]="agregarEnlaceOperativoForm.get('inputfechaDeLaUltimaOperacion')?.value"
+              (valorCambiado)="actualizarFechaDeLaUltimaOperacion($event);setValoresStore(agregarEnlaceOperativoForm, 'inputfechaDeLaUltimaOperacion')"
             ></input-fecha>
           </div>
         </div>

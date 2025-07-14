@@ -1,11 +1,12 @@
 import { Domicilios } from '../models/solicitud.model';
+import { EmpresaDelGrupo } from '../constants/datos-comunes.enum';
 import { EnlaceOperativo } from '../models/solicitud.model';
 import { Injectable } from '@angular/core';
 import { NumeroDeEmpleados } from '../models/solicitud.model';
 import { SeccionSociosIC } from '../models/solicitud.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-
+import { TransportistasTable } from '../constants/datos-comunes.enum';
 /**
  * Interfaz que define las propiedades relacionadas con listas de datos
  * de empleados, domicilios, socios, y enlaces operativos.
@@ -525,6 +526,8 @@ export interface Solicitud32605State {
   registroEsquemaCertificacion: string; // Registro del esquema de certificación
   tipoInformacionEmpresa: string; // Indica si la información de la empresa es clasificada
   ccat: string; // CAAT del enlace operativo
+  tablaDatos: EmpresaDelGrupo[]; // Tabla de datos de empresas del grupo
+  transportistasLista: TransportistasTable[]; // Lista de transportistas relacionados con la solicitud
   //--------------------------------------------------------------
 }
 
@@ -637,8 +640,8 @@ export function createInitialSolicitudState(): Solicitud32605State {
 
 
     //-------------------------------------------------------------
-    comercioExteriorRealizado:"",
-    fechaDePago: "",
+    comercioExteriorRealizado:'',
+    fechaDePago: '',
      fechaInicioComercio: '',
      esParteGrupoComercioExterior: '',
      rfcEnclaveOperativo: '',
@@ -654,6 +657,8 @@ export function createInitialSolicitudState(): Solicitud32605State {
      registroEsquemaCertificacion: '',
      tipoInformacionEmpresa: '', // Indica si la información de la empresa es clasificada
      ccat: '', // CAAT del enlace operativo
+     tablaDatos: [],
+     transportistasLista: [], // Lista de transportistas relacionados con la solicitud
      //--------------------------------------------------------------
   };
 }
@@ -1607,5 +1612,6 @@ export class Solicitud32605Store extends Store<Solicitud32605State> {
       ...valores,
     }));
   }
+
   //-------------------------------------------------------------------------------
 }

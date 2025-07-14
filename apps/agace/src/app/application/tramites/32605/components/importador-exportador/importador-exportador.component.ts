@@ -1,7 +1,8 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_ALFANUMERICO_CON_ESPACIOS, REGEX_SOLO_NUMEROS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { EMPRESA_DEL_GRUPO, EMPRESA_DEL_GRUPO_CON_FECHA, EmpresaDelGrupo, FECHA_DE_INICIO, FECHA_DE_PAGO, INFORMACION_EMPRESA_OPTIONS, OPCIONES_DE_BOTON_DE_RADIO, PANELS, PANELS1, REGISTRO_ESQUEMA_CERTIFICACION_OPTIONS, TRANSPORTISTAS_CONFIGURACION, TransportistasTable } from '../../constants/datos-comunes.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Solicitud32605State, Solicitud32605Store } from '../../estados/solicitud32605.store';
 import { Subject, takeUntil } from 'rxjs';
 import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -9,7 +10,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 import { FECHA_DELA_ULTIMA_OPERACION } from'../../constants/datos-comunes.enum';
 import { RFCEnlaceOperativo } from '../../models/solicitud.model';
-import { Solicitud32605State } from '../../estados/solicitud32605.store';
+import { Solicitud32605Query } from '../../estados/solicitud32605.query';
 import { SolicitudService } from '../../services/solicitud.service';
 import { TemplateRef } from '@angular/core';
 /**
@@ -83,6 +84,8 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     @Inject(BsModalService)
     private modalService: BsModalService,
     private solicitudService: SolicitudService,
+    private tramite32605Store: Solicitud32605Store,
+    private tramite32605Query: Solicitud32605Query,
   ) {
   // Inicialización de dependencias
   }
@@ -96,6 +99,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
 
 
   inicializarFormulario(): void {
+    this.obtenerEstadoSolicitud();
     this.importadorExportadorForm = this.fb.group({
       comercioExteriorRealizado : [this.solicitudState?.comercioExteriorRealizado, Validators.required],
       fechaDePago: [this.solicitudState?.fechaDePago, Validators.required],
@@ -120,6 +124,9 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
       domicilio: [{value:this.solicitudState?.domicilio, disabled: true}],
       inputfechaDeLaUltimaOperacion: [{value:this.solicitudState?.inputfechaDeLaUltimaOperacion, disabled: true}],
     });
+     if (this.solicitudState?.tablaDatos) {
+      this.tablaDatos = [...this.solicitudState.tablaDatos];
+    }
   }
 
     /**
@@ -129,6 +136,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    onFechaCambiada(nuevo_valor: string): void {
     this.importadorExportadorForm.get('fechaDePago')?.setValue(nuevo_valor);
     this.importadorExportadorForm.get('fechaDePago')?.markAsUntouched();
+    
     if (ImportadorExportadorComponent.esFechaFutura(nuevo_valor)) {
     this.mostrarModalFechaInvalida();
   }
@@ -209,36 +217,12 @@ cancelarModal():void{
  cerrarModalFechaInvalida(): void {
   this.modalRef?.hide();
 }
-onComercioExteriorChange(): void {
-    const VALOR = this.importadorExportadorForm.get('comercioExteriorRealizado')?.value;
-    this.comercioExteriorActivo = VALOR === '1' || VALOR === true;
-    this.noComercioExteriorActivo = VALOR === '0' || VALOR === false;
-  }
-   onEsParteGrupoComercioExteriorChange(): void {
-    const VALOR = this.importadorExportadorForm.get('esParteGrupoComercioExterior')?.value;
-    this.parteGrupoComercioExterior = VALOR === '1' || VALOR === true;
-  }
-  onFusionEscisionConOperacionExteriorChange(): void{
-    const VALOR = this.importadorExportadorForm.get('fusionEscisionConOperacionExterior')?.value;
-    this.esFusionOEscisionConComercioExterior = VALOR === '1' || VALOR === true;
-  }
-  onempresaExtranjeraIMMEXChange(): void {
-    const VALOR = this.importadorExportadorForm.get('empresaExtranjeraIMMEX')?.value;
-    this.esEmpresaExtranjeraIMMEX = VALOR === '1' || VALOR === true;
-  }
-  onRegistroEsquemaCertificacion(): void {
-    const VALOR = this.importadorExportadorForm.get('registroEsquemaCertificacion')?.value;
-    this.registroEsquemaCertificacion = VALOR === '1' || VALOR === true;
-  }
-  onTipoInformacionEmpresa(): void{
-    const VALOR = this.importadorExportadorForm.get('tipoInformacionEmpresa')?.value;
-    this.tipoInformacionEmpresa = VALOR === '1' || VALOR === true;
-  }
-   abrirModal(template: TemplateRef<void>): void {
+   
+abrirModal(template: TemplateRef<void>): void {
     this.modalRefabir = this.modalService.show(template, { class: 'modal-lg',});
   }
 
-  buscarRFC():void{
+buscarRFC():void{
     const RFC = this.agregarEnlaceOperativoForm.get('rfcEnclaveOperativo')?.value;
     if (RFC) {
       // Verificar si el RFC ya existe en la tabla
@@ -249,12 +233,13 @@ onComercioExteriorChange(): void {
       
       this.buscarDatosPorRFC(RFC);
     }
-  }
-    existeRFCEnTabla(rfc: string): boolean {
+}
+
+existeRFCEnTabla(rfc: string): boolean {
     return this.tablaDatos.some(empresa => 
       empresa.rfcEnclaveOperativo?.toLowerCase() === rfc.toLowerCase()
     );
-  }
+}
    mostrarModalRFCDuplicado(): void {
     const MODAL_CONFIG = {
       animated: true,
@@ -353,6 +338,9 @@ aceptarEnlaceOperativo(): void {
     this.tablaDatos = [...this.tablaDatos, EMPRESA_DATA];
   }
   
+  
+  this.actualizarTablaDatosEnStore();
+
   
   // Mostrar la columna de fecha después de agregar el primer elemento
   if (!this.mostrarColumnaFecha) {
@@ -474,6 +462,7 @@ confirmarEliminacionEmpresa(): void {
     empresa.rfcEnclaveOperativo !== this.selectedEmpresa?.rfcEnclaveOperativo
   );
 
+  this.actualizarTablaDatosEnStore();
   this.limpiarSeleccion();
   
   //  Cerrar modal de confirmación y mostrar éxito
@@ -622,6 +611,28 @@ pegarSoloNumeros(event: ClipboardEvent, fieldName: string): void {
   // Actualizar el control del formulario
   this.importadorExportadorForm.get(fieldName)?.setValue(NUEVO_VALOR);
 }
+
+ setValoresStore(form: FormGroup | null, campo: string): void {
+    if (!form) {
+      return;
+    }
+    const CONTROL = form.get(campo);
+    if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
+      this.tramite32605Store.actualizarEstado({ [campo]: CONTROL.value });
+    }
+  }
+ obtenerEstadoSolicitud(): void {
+    this.tramite32605Query.selectSolicitud$?.pipe(takeUntil(this.destroy$))
+      .subscribe((data: Solicitud32605State) => {
+        this.solicitudState = data;
+         if (data.tablaDatos) {
+        this.tablaDatos = [...data.tablaDatos];
+      }
+      });
+  }
+  actualizarTablaDatosEnStore(): void {
+    this.tramite32605Store.actualizarEstado({ tablaDatos: this.tablaDatos });
+  }
    /**
    * Método llamado al destruir el componente, limpia las suscripciones
    */

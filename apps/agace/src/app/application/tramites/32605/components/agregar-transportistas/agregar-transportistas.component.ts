@@ -50,7 +50,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
 
   transportistasConfiguracionColumnas: ConfiguracionColumna<TransportistasTable>[] = TRANSPORTISTAS_CONFIGURACION;
   modalRefabir?: BsModalRef;
-  modalRefExito?: BsModalRef; // Add separate reference for success modal
+  modalRefExito?: BsModalRef;
   modalRefDatosObligatorios?: BsModalRef;
   modalRefDatos?: BsModalRef;
   isEditMode: boolean = false;
@@ -72,8 +72,8 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
     @Inject(BsModalService)
     private modalService: BsModalService,
     public solicitudService: SolicitudService,
-    public solicitud32605Store: Solicitud32605Store,
-    public solicitud32605Query: Solicitud32605Query,
+    private tramite32605Store: Solicitud32605Store,
+    private tramite32605Query: Solicitud32605Query,
     
   ) {
     /**
@@ -108,6 +108,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   inicializarFormulario(): void {
+     this.obtenerEstadoSolicitud();
     this.transportistaCertificacionForm = this.fb.group({
       rfcEnclaveOperativo:[this.solicitudState?.rfcEnclaveOperativo, Validators.required],
       enlaceOperativorfc: [
@@ -121,7 +122,15 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
   
     })
   }
-
+ obtenerEstadoSolicitud(): void {
+    this.tramite32605Query.selectSolicitud$?.pipe(takeUntil(this.destroy$))
+      .subscribe((data: Solicitud32605State) => {
+        this.solicitudState = data;
+         if (data.transportistasLista) {
+        this.transportistasLista = [...data.transportistasLista];
+      }
+      });
+  }
   mostrar_colapsable1(index: number): void {
     const IS_CURRENTLY_OPEN = this.panels1[index].isCollapsed;
     this.panels1.forEach((panel1, i) => {
@@ -196,38 +205,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
       });
     }
  aceptarTransportista(): void {
-  // if (this.transportistaCertificacionForm.valid) {
-  //   const FORM_DATA = this.transportistaCertificacionForm.getRawValue();
-    
-  //   const NEW_TRANSPORTISTA: TransportistasTable = {
-  //     rfcEnclaveOperativo: FORM_DATA.rfcEnclaveOperativo,
-  //     denominacionRazonsocial: FORM_DATA.denominacionRazonsocial,
-  //     domicilio: FORM_DATA.domicilio,
-  //     ccat: FORM_DATA.ccat
-  //   };
-
-
-  //   if (this.isEditMode) {
-  //     // If editing, find and update the existing item
-  //     // You'll need to implement edit logic with an index or ID
-  //     // For now, just adding to the list
-  //     this.transportistasLista.push(NEW_TRANSPORTISTA);
-  //   } else {
-  //     // Add new transportista to the list
-  //     this.transportistasLista.push(NEW_TRANSPORTISTA);
-  //   }
-
-  //   // Close modal and reset form
-  //   this.modalRefabir?.hide();
-  //   this.limpiarTransportista();
-  //   this.isEditMode = false;
-  // } else {
-  //   // Mark all fields as touched to show validation errors
-  //   Object.keys(this.transportistaCertificacionForm.controls).forEach(key => {
-  //     this.transportistaCertificacionForm.get(key)?.markAsTouched();
-  //   });
-  // }
-  //this.mostrarModalExito();
+ 
     const RFC_VALUE = this.transportistaCertificacionForm.get('rfcEnclaveOperativo')?.value;
     
     // Verificar que el campo RFC requerido esté lleno
@@ -236,7 +214,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
       this.mostrarModalDatos();
       return;
     }
-     // Check if user entered RFC but didn't search (other fields are empty)
+     // Verificar si el usuario ingresó RFC pero no realizó la búsqueda (otros campos están vacíos)
   const DENOMINACION = this.transportistaCertificacionForm.get('denominacionRazonsocial')?.value;
   const DOMICILIO = this.transportistaCertificacionForm.get('domicilio')?.value;
   const ENLACE_RFC = this.transportistaCertificacionForm.get('enlaceOperativorfc')?.value;
@@ -245,12 +223,12 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
     this.mostrarModalDatosObligatorios();
     return;
   }
-    // In edit mode, check if RFC exists in other records (excluding current one)
+    // En modo de edición, verificar si el RFC existe en otros registros (excluyendo el actual)
     if (this.isEditMode && this.existeRFCEnTablaExcluyendo(RFC_VALUE, this.selectedTransportista?.rfcEnclaveOperativo)) {
       this.mostrarModalDatosObligatorios();
       return;
     }
-    // In add mode, check if RFC already exists
+    // En modo de adición, verificar si el RFC ya existe
     if (!this.isEditMode && this.existeRFCEnTabla(RFC_VALUE)) {
       this.mostrarModalDatosObligatorios();
       return;
@@ -267,7 +245,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
     };
 
     if (this.isEditMode && this.selectedTransportista) {
-      // Update existing record
+      // Actualizar registro existente
       const INDEX = this.transportistasLista.findIndex(emp => 
         emp.rfcEnclaveOperativo === this.selectedTransportista?.rfcEnclaveOperativo
       );
@@ -276,10 +254,9 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
         this.transportistasLista = [...this.transportistasLista]; // Trigger change detection
       }
     } else {
-      // Add new record
       this.transportistasLista = [...this.transportistasLista, EMPRESA_DATA];
     }
-    
+    this.actualizarTransportistasListaEnStore();
     this.modalRefabir?.hide();
     this.limpiarFormulario();
     this.resetEditMode();
@@ -368,15 +345,14 @@ mostrarModalDatosObligatorios(): void {
   
   this.isEditMode = true;
   
-  // Clear only the RFC field and patch other fields from selected row
+  // Limpiar solo el campo RFC y rellenar otros campos desde la fila seleccionada
   this.transportistaCertificacionForm.patchValue({
-    rfcEnclaveOperativo: '', // Blank RFC
+    rfcEnclaveOperativo: '',
     enlaceOperativorfc: this.selectedTransportista.rfcEnclaveOperativo,
     denominacionRazonsocial: this.selectedTransportista.denominacionRazonsocial,
     domicilio: this.selectedTransportista.domicilio,
     ccat: this.selectedTransportista.ccat || ''
   });
-  // Open the modal
   this.abrirModal1(this.templateTransposrtistas);
 }
 mostrarModalSeleccionRequerida(): void {
@@ -422,15 +398,13 @@ confirmarEliminacionTransportista(): void {
     return;
   }
   
-  // Remove the selected company from the table
   this.transportistasLista = this.transportistasLista.filter(empresa => 
     empresa.rfcEnclaveOperativo !== this.selectedTransportista?.rfcEnclaveOperativo
   );
   
-  // Clear selection
+  this.actualizarTransportistasListaEnStore();
   this.selectedTransportista = null;
   
-  // Close confirmation modal and show success
   this.modalRefabir?.hide();
   this.mensajeSeleccion = 'Datos eliminados correctamente';
   this.mostrarModalSeleccionRequerida();
@@ -438,6 +412,9 @@ confirmarEliminacionTransportista(): void {
 cerrarModalConfirmacionEliminacion(): void {
   this.modalRefabir?.hide();
 }
+actualizarTransportistasListaEnStore(): void {
+    this.tramite32605Store.actualizarEstado({ transportistasLista: this.transportistasLista });
+  }
   /**
    * Ciclo de vida ngOnDestroy: finaliza el observable para prevenir fugas de memoria.
    */
