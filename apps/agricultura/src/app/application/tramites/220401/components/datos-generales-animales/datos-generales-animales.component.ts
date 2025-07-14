@@ -324,7 +324,11 @@ this.inicializarGeneralesFormulario();
     const VALOR = form.get(campo)?.value;
     (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
   }
-
+  /**
+   * @method onCancelar
+   * @description Método que se ejecuta al cancelar la acción.
+   * Emite un evento de cancelación.
+   */
   onCancelar(): void {
   this.cancelar.emit();
 }

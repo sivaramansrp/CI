@@ -35,7 +35,7 @@ import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json
 
 import { AlertComponent,Catalogo } from '@ng-mf/data-access-user';
 import { LOCALIDAD_COLONIA } from '../../constantes/certificados-licencias.enum';
-import { TipoDeCertificoOption } from '../../models/TipoDeCertificoOption.model';
+import { TipoDeCertificoOption } from '../../models/tipoCertificoOption.model';
 
 /**
  * Componente que gestiona los datos del certificado en la solicitud 220401.
@@ -347,7 +347,7 @@ this.inicializarCertificadoFormulario();
    * - catalogos: opciones disponibles para el selector.
    * - primerOpcion: valor de la primera opción (por defecto vacío).
    */
-  catalogConfigs = [
+  public catalogConfigs = [
     {
       catalogo: this.delegacionesJson,
       label: 'Delegaciones estatales SAGARPA',
@@ -381,7 +381,12 @@ this.inicializarCertificadoFormulario();
       primerOpcion: '',
     },
   ];
-  catalogConfigsAnimal = [
+
+  /**
+   * Configuración de los catálogos para el formulario de animales.
+   * Incluye delegaciones estatales, OISA, oficina central y distrito desarrollo rural.
+   */
+ public catalogConfigsAnimal = [
     {
       catalogo: this.delegacionesJson,
       label: 'Delegaciones estatales SAGARPA',
@@ -416,7 +421,11 @@ this.inicializarCertificadoFormulario();
     },
   ];
   
-  catalogConfigsQFBA = [
+  /**
+   * Configuración de los catálogos para el formulario de QFBA.
+   * Incluye delegaciones estatales, oficina central y distrito desarrollo rural.
+   */
+  public catalogConfigsQFBA = [
     {
       catalogo: this.delegacionesJson,
       label: 'Delegaciones estatales SAGARPA',

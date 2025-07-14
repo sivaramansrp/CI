@@ -605,21 +605,34 @@ export class Agregar220401Store extends Store<Solicitud220401State> {
       fechaPago,
     }));
   }
+  /**
+   * @method setBanco
+   * @description Establece el valor de 'Banco'.
+   * @param {string} Banco - El valor de 'Banco'.
+   */
   public setBanco(Banco: string): void {
     this.update((state) => ({
       ...state,
       Banco,
     }));
   }
-
+  /**
+   * @method setespecie
+   * @description Establece el valor de 'especie'.
+   * @param {string} especie - El valor de 'especie'.
+   */
   
-
   public setespecie(especie: string): void {
     this.update((state) => ({
       ...state,
       especie,
     }));
   }
+  /**
+   * @method setfuncionZootecnica
+   * @description Establece el valor de 'funcionZootecnica'.
+   * @param {string} funcionZootecnica - El valor de 'funcionZootecnica'.
+   */
 public setfuncionZootecnica(funcionZootecnica: string): void {
     this.update((state) => ({
       ...state,
@@ -627,6 +640,11 @@ public setfuncionZootecnica(funcionZootecnica: string): void {
     }));
   }
 
+  /**
+   * @method setmercancia
+   * @description Establece el valor de 'mercancia'.
+   * @param {string} mercancia - El valor de 'mercancia'.
+   */
   public setmercancia(mercancia: string): void {
     this.update((state) => ({
       ...state,
@@ -634,6 +652,11 @@ public setfuncionZootecnica(funcionZootecnica: string): void {
     }));
   }
 
+  /**
+   * @method setpaisDestino
+   * @description Establece el valor de 'paisDestino'.
+   * @param {string} paisDestino - El valor de 'paisDestino'.
+   */
   public setpaisDestino(paisDestino: string): void {
     this.update((state) => ({
       ...state,
@@ -641,12 +664,23 @@ public setfuncionZootecnica(funcionZootecnica: string): void {
     }));
   }
 
+  /**
+   * @method setnombreEstablecimiento
+   * @description Establece el valor de 'nombreEstablecimiento'.
+   * @param {string} nombreEstablecimiento - El valor de 'nombreEstablecimiento'.
+   */
   public setnombreEstablecimiento(nombreEstablecimiento: string): void {
     this.update((state) => ({
       ...state,
       nombreEstablecimiento,
     }));
   }
+
+  /**
+   * @method settipoActividad
+   * @description Establece el valor de 'tipoActividad'.
+   * @param {string} tipoActividad - El valor de 'tipoActividad'.
+   */
 
   public settipoActividad(tipoActividad: string): void {
     this.update((state) => ({
@@ -655,12 +689,22 @@ public setfuncionZootecnica(funcionZootecnica: string): void {
     }));
   }
 
+  /**
+   * @method setaduanaSalida
+   * @description Establece el valor de 'aduanaSalida'.
+   * @param {string} aduanaSalida - El valor de 'aduanaSalida'.
+   */
   public setaduanaSalida(aduanaSalida: string): void {
     this.update((state) => ({
       ...state,
       aduanaSalida,
     }));
   }
+  /**
+   * @method setoisaSalida
+   * @description Establece el valor de 'oisaSalida'.
+   * @param {string} oisaSalida - El valor de 'oisaSalida'.
+   */
   public setoisaSalida(oisaSalida: string): void {
     this.update((state) => ({
       ...state,
