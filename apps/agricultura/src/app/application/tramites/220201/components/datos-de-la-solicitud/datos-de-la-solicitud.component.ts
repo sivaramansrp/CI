@@ -176,6 +176,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * Utiliza la interfaz ConfiguracionColumna para definir las columnas.
    * @type {ConfiguracionColumna<FilaSolicitud>[]}
    */
+  /**
+   * @description
+   * Configuración de las columnas para la tabla de solicitudes.
+   * Utiliza la interfaz ConfiguracionColumna para definir las columnas.
+   * @type {ConfiguracionColumna<FilaSolicitud>[]}
+   */
   configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
     { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
     { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
@@ -190,17 +196,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
     { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
     { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
+    { encabezado: 'Especie', clave: (fila) => fila.especie, orden: 14 },
     { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 15 },
     { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
     { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
-    { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 },
-    { encabezado: 'Presentación', clave: (fila) => fila.paisDeOrigen, orden: 19 },
-    { encabezado: 'Cantidad de presentación', clave: (fila) => fila.descripcionFraccion, orden: 20 },
-    { encabezado: 'Tipo de presentación', clave: (fila) => fila.tipoDeProducto, orden: 21 },
-    { encabezado: 'Tipo planta', clave: (fila) => fila.tipoRequisito, orden: 22 },
-    { encabezado: 'Planta autorizada de origen', clave: (fila) => fila.paisDeOrigen, orden: 23 },
-    { encabezado: 'Especie', clave: (fila) => fila.numeroDeLote, orden: 24 },
-    
+    { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 }    
   ];
 
   /**
