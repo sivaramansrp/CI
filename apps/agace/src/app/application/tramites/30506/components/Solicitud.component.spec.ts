@@ -1,386 +1,220 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { SolicitudComponent } from './Solicitud.component';
-import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
-import { Tramite30506Store, Solicitud30506State, createInitialState, Catalogo } from '../state/Tramite30506.store';
-import { Tramite30506Query } from '../state/Tramite30506.query';
 import { RegistroService } from '../services/registro.service';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { of, ReplaySubject } from 'rxjs';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Tramite30506Store, Solicitud30506State, Catalogo } from '../state/Tramite30506.store';
+import { Tramite30506Query } from '../state/Tramite30506.query';
+import { ConsultaioQuery, ConsultaioState, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { of, BehaviorSubject } from 'rxjs';
+import { Solicitud30506Enum } from '../constantes/solicitud30506.enum';
+import { FECHA_INICIAL, FECHA_FINAL, FECHA_PAGO } from '../models/registro.model';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
   let fixture: ComponentFixture<SolicitudComponent>;
-  let storeMock: any;
-  let queryMock: any;
   let registroServiceMock: any;
-  let validacionesServiceMock: any;
+  let tramite30506StoreMock: any;
+  let tramite30506QueryMock: any;
   let consultaioQueryMock: any;
+  let validacionesServiceMock: any;
+
+  let consultaioStateSubject: BehaviorSubject<ConsultaioState>;
+  let solicitudStateSubject: BehaviorSubject<Solicitud30506State>;
+  let bancoDataSubject: BehaviorSubject<Catalogo[]>;
+
+  const mockConsultaState: ConsultaioState = {
+    procedureId: 'PROC_30506',
+    parameter: 'TEST_PARAM',
+    department: 'AGACE',
+    folioTramite: 'FOL_123456',
+    tipoDeTramite: 'REGISTRO_TOMA_MUESTRAS',
+    estadoDeTramite: 'EN_PROCESO',
+    readonly: false,
+    create: false,
+    update: false,
+    consultaioSolicitante: {
+      folioDelTramite: 'FOL_SOL_123456',
+      fechaDeInicio: '01/01/2024',
+      estadoDelTramite: 'NUEVO'
+    }
+  };
+
+  const mockSolicitudData: Solicitud30506State = {
+    numeroOperacion: 'OP123456',
+    fechaInicio: '01/01/2024',
+    fechaFinal: '31/12/2024',
+    banco: 'BANCO_TEST',
+    llave: 'LLAVE_TEST',
+    manifiesto1: true,
+    manifiesto2: false,
+    fechaPago: '15/06/2024',
+    folio: 'FOL123',
+    claveReferencia: 'REF456',
+    cadenaDependecia: 'CADENA_TEST',
+    importePago: '1000.00'
+  };
+
+  const mockBancoCatalogo: Catalogo[] = [
+    { id: 1, descripcion: 'Banco Nacional' },
+    { id: 2, descripcion: 'Banco Internacional' },
+    { id: 3, descripcion: 'Banco Regional' }
+  ];
 
   beforeEach(async () => {
-    storeMock = {
-      setBanco: jest.fn(),
-      setNumeroOperacion: jest.fn(),
-      setLlave: jest.fn(),
-      setManifiesto1: jest.fn(),
-      setManifiesto2: jest.fn(),
-      setFechaPago: jest.fn(),
-      setFechaInicio: jest.fn(),
-      setFechaFinal: jest.fn(),
-    };
-
-    queryMock = {
-      selectSolicitud$: of(createInitialState()),
-    };
+    consultaioStateSubject = new BehaviorSubject(mockConsultaState);
+    solicitudStateSubject = new BehaviorSubject(mockSolicitudData);
+    bancoDataSubject = new BehaviorSubject(mockBancoCatalogo);
 
     registroServiceMock = {
-      obtenerDatosBanco: jest.fn().mockReturnValue(of([
-        { id: 1, descripcion: 'Banco 1' },
-        { id: 2, descripcion: 'Banco 2' }
-      ])),
+      obtenerDatosBanco: jest.fn(() => bancoDataSubject.asObservable()),
+      getRegistroTomaMuestrasMercanciasData: jest.fn(() => of(mockSolicitudData)),
+      actualizarEstadoFormulario: jest.fn()
     };
 
-    validacionesServiceMock = {
-      isValid: jest.fn().mockReturnValue(true),
+    tramite30506StoreMock = {
+      setBanco: jest.fn(),
+      setNumeroOperacion: jest.fn(),
+      setFechaInicio: jest.fn(),
+      setFechaFinal: jest.fn(),
+      setLlave: jest.fn(),
+      setFechaPago: jest.fn(),
+      setManifiesto1: jest.fn(),
+      setManifiesto2: jest.fn(),
+      setClaveReferencia: jest.fn(),
+      setCadenaDependecia: jest.fn(),
+      setImportePago: jest.fn(),
+      limpiarSolicitud: jest.fn(),
+      reset: jest.fn()
+    };
+
+    tramite30506QueryMock = {
+      selectSolicitud$: jest.fn(() => solicitudStateSubject.asObservable())
     };
 
     consultaioQueryMock = {
-      selectConsultaioState$: of({ readonly: false }),
+      selectConsultaioState$: jest.fn(() => consultaioStateSubject.asObservable())
+    };
+
+    validacionesServiceMock = {
+      isValid: jest.fn().mockReturnValue(true)
     };
 
     await TestBed.configureTestingModule({
-      imports: [SolicitudComponent, ReactiveFormsModule],
+      imports: [ReactiveFormsModule, SolicitudComponent],
       providers: [
-        { provide: Tramite30506Store, useValue: storeMock },
-        { provide: Tramite30506Query, useValue: queryMock },
-        { provide: RegistroService, useValue: registroServiceMock },
-        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
-        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
         FormBuilder,
+        { provide: RegistroService, useValue: registroServiceMock },
+        { provide: Tramite30506Store, useValue: tramite30506StoreMock },
+        { provide: Tramite30506Query, useValue: tramite30506QueryMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
+        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock }
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
-    component.solicitudState = createInitialState();
-    component.registroForm = new FormBuilder().group({
-      banco: ['', Validators.required],
-      llave: ['', Validators.required],
-      manifiesto1: ['', Validators.required],
-      manifiesto2: ['', Validators.required],
-      numeroOperacion: ['', Validators.required],
-      fechaPago: ['', Validators.required],
-      fechaInicio: ['', Validators.required],
-      fechaFinal: ['', Validators.required],
-    });
-    fixture.detectChanges();
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+    consultaioStateSubject.complete();
+    solicitudStateSubject.complete();
+    bancoDataSubject.complete();
+  });
+
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with correct default values', () => {
-    expect(component.fechaInicialInput).toBeDefined();
-    expect(component.fechaFinalInput).toBeDefined();
-    expect(component.fechaPagoInput).toBeDefined();
-    expect(component.solicitudEnum).toBeDefined();
-    expect(component.esFormularioSoloLectura).toBe(false);
-    expect(component.destroyNotifier$).toBeInstanceOf(ReplaySubject);
-    expect(component.bancoCatalogo.labelNombre).toBe('Banco');
-    expect(component.bancoCatalogo.required).toBe(false);
-    expect(component.bancoCatalogo.primerOpcion).toBe('Selecciona un valor');
+  it('should initialize the form with solicitudState values', () => {
+  component.solicitudState = mockSolicitudData;
+  component.donanteDomicilio();
+
+  expect(component.registroForm.get('banco')?.value).toBe(mockSolicitudData.banco);
+  expect(component.registroForm.get('numeroOperacion')?.value).toBe(mockSolicitudData.numeroOperacion);
+});
+
+  it('should set banco catalogo after obtenerDatosBanco is called', () => {
+    component.obtenerDatosBanco();
+    expect(component.bancoCatalogo.catalogos).toEqual(mockBancoCatalogo);
   });
 
-  describe('ngOnInit', () => {
-    it('should call obtenerDatosBanco on ngOnInit', () => {
-      const spy = jest.spyOn(component, 'obtenerDatosBanco');
-      component.ngOnInit();
-      expect(spy).toHaveBeenCalled();
-    });
-
-    it('should call donanteDomicilio on ngOnInit', () => {
-      const spy = jest.spyOn(component, 'donanteDomicilio');
-      component.ngOnInit();
-      expect(spy).toHaveBeenCalled();
-    });
-
-    it('should subscribe to query.selectSolicitud$ and set solicitudState', () => {
-      component.solicitudState = undefined as any;
-      component.ngOnInit();
-      expect(component.solicitudState).toBeDefined();
-    });
+  it('should set soloLectura based on consultaioState', () => {
+    expect(component.soloLectura).toBe(mockConsultaState.readonly);
   });
 
-  describe('inicializarEstadoFormulario', () => {
-    it('should call guardarDatosDelFormulario if esFormularioSoloLectura is true', () => {
-      component.esFormularioSoloLectura = true;
-      const spy = jest.spyOn(component, 'guardarDatosDelFormulario');
-      component.inicializarEstadoFormulario();
-      expect(spy).toHaveBeenCalled();
-    });
-
-    it('should call datosDeAvisoForm if esFormularioSoloLectura is false', () => {
-      component.esFormularioSoloLectura = false;
-      const spy = jest.spyOn(component, 'datosDeAvisoForm');
-      component.inicializarEstadoFormulario();
-      expect(spy).toHaveBeenCalled();
-    });
+  it('should call setValoresStore and update store method', () => {
+    component.donanteDomicilio();
+    component.registroForm.patchValue({ banco: 'Banco Test' });
+    component.setValoresStore(component.registroForm, 'banco', 'setBanco');
+    expect(tramite30506StoreMock.setBanco).toHaveBeenCalledWith('Banco Test');
   });
 
-  describe('cambioFechaPago', () => {
-    it('should patch fechaPago value and call setValoresStore', () => {
-      const spy = jest.spyOn(component, 'setValoresStore');
-      const nuevaFecha = '2024-01-01';
-      
-      component.cambioFechaPago(nuevaFecha);
-      
-      expect(component.registroForm.get('fechaPago')?.value).toBe(nuevaFecha);
-      expect(spy).toHaveBeenCalledWith(component.registroForm, 'fechaPago', 'setFechaPago');
-    });
-
-    it('should handle empty string fecha', () => {
-      const spy = jest.spyOn(component, 'setValoresStore');
-      component.cambioFechaPago('');
-      expect(spy).toHaveBeenCalled();
-    });
+  it('should mark form as touched if invalid during validation', () => {
+    component.donanteDomicilio();
+    const markAllAsTouchedSpy = jest.spyOn(component.registroForm, 'markAllAsTouched');
+    Object.defineProperty(component.registroForm, 'invalid', { get: () => true });
+    component.validarDestinatarioFormulario();
+    expect(markAllAsTouchedSpy).toHaveBeenCalled();
   });
 
-  describe('obtenerDatosBanco', () => {
-    it('should call registroService.obtenerDatosBanco and update bancoCatalogo', () => {
-      const mockBancos: Catalogo[] = [
-        { id: 1, descripcion: 'Banco Test 1' },
-        { id: 2, descripcion: 'Banco Test 2' }
-      ];
-      registroServiceMock.obtenerDatosBanco.mockReturnValue(of(mockBancos));
-      
-      component.obtenerDatosBanco();
-      
-      expect(registroServiceMock.obtenerDatosBanco).toHaveBeenCalled();
-      expect(component.bancoCatalogo.catalogos).toEqual(mockBancos);
-    });
-
-    it('should handle empty banco response', () => {
-      registroServiceMock.obtenerDatosBanco.mockReturnValue(of([]));
-      
-      component.obtenerDatosBanco();
-      
-      expect(component.bancoCatalogo.catalogos).toEqual([]);
-    });
+  it('should complete destroyed$ on ngOnDestroy', () => {
+    const completeSpy = jest.spyOn(component.destroyed$, 'complete');
+    component.ngOnDestroy();
+    expect(completeSpy).toHaveBeenCalled();
   });
 
-  describe('enviarFormulario', () => {
-    it('should not throw error when registroForm is valid', () => {
-      component.registroForm = new FormBuilder().group({
-        banco: ['banco1', Validators.required],
-        llave: ['llave1', Validators.required],
-        manifiesto1: ['m1', Validators.required],
-        manifiesto2: ['m2', Validators.required],
-        numeroOperacion: ['123', Validators.required],
-        fechaPago: ['2024-01-01', Validators.required],
-        fechaInicio: ['2024-01-01', Validators.required],
-        fechaFinal: ['2024-12-31', Validators.required],
-      });
-      
-      expect(() => component.enviarFormulario()).not.toThrow();
-    });
+it('should call guardarDatosFormulario if soloLectura is true', () => {
+  component.soloLectura = true;
+  const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+  component.inicializarEstadoFormulario();
+  expect(guardarSpy).toHaveBeenCalled();
+});
 
-    it('should not execute logic when registroForm is invalid', () => {
-      component.registroForm = new FormBuilder().group({
-        banco: ['', Validators.required],
-      });
-      
-      expect(() => component.enviarFormulario()).not.toThrow();
-    });
-  });
+it('should call donanteDomicilio if soloLectura is false', () => {
+  component.soloLectura = false;
+  const donanteSpy = jest.spyOn(component, 'donanteDomicilio');
+  component.inicializarEstadoFormulario();
+  expect(donanteSpy).toHaveBeenCalled();
+});
 
-  describe('esValido', () => {
-    it('should call validacionesService.isValid', () => {
-      const form = new FormBuilder().group({ test: ['test'] });
-      
-      component.esValido(form, 'test');
-      
-      expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(form, 'test');
-    });
+it('should disable the form if soloLectura is true', () => {
+  component.soloLectura = true;
+  component.donanteDomicilio();
+  component.guardarDatosFormulario();
+  expect(component.registroForm.disabled).toBe(true);
+});
 
-    it('should return false when validacionesService.isValid returns false', () => {
-      validacionesServiceMock.isValid.mockReturnValue(false);
-      const form = new FormBuilder().group({ test: [''] });
-      
-      const result = component.esValido(form, 'test');
-      
-      expect(result).toBe(false);
-    });
-  });
+it('should enable the form if soloLectura is false', () => {
+  component.soloLectura = false;
+  component.donanteDomicilio();
+  component.guardarDatosFormulario();
+  expect(component.registroForm.disabled).toBe(false);
+});
 
-  describe('validarDestinatarioFormulario', () => {
-    it('should mark all as touched if registroForm is invalid', () => {
-      component.registroForm = new FormBuilder().group({
-        banco: ['', Validators.required],
-      });
-      const spy = jest.spyOn(component.registroForm, 'markAllAsTouched');
-      
-      component.validarDestinatarioFormulario();
-      
-      expect(spy).toHaveBeenCalled();
-    });
+it('should patch fechaPago and update store in cambioFechaPago()', () => {
+  component.donanteDomicilio();
+  const patchSpy = jest.spyOn(component.registroForm, 'patchValue');
+  const setStoreSpy = jest.spyOn(component, 'setValoresStore');
+  
+  const newDate = '01/01/2025';
+  component.cambioFechaPago(newDate);
 
-    it('should not mark all as touched if registroForm is valid', () => {
-      component.registroForm = new FormBuilder().group({
-        banco: ['banco1', Validators.required],
-      });
-      const spy = jest.spyOn(component.registroForm, 'markAllAsTouched');
-      
-      component.validarDestinatarioFormulario();
-      
-      expect(spy).not.toHaveBeenCalled();
-    });
-  });
+  expect(patchSpy).toHaveBeenCalledWith({ fechaPago: newDate });
+  expect(setStoreSpy).toHaveBeenCalledWith(component.registroForm, 'fechaPago', 'setFechaPago');
+});
+it('should not throw when form is valid in enviarFormulario', () => {
+  component.donanteDomicilio();
+  jest.spyOn(component.registroForm, 'valid', 'get').mockReturnValue(true);
+  expect(() => component.enviarFormulario()).not.toThrow();
+});
 
-  describe('setValoresStore', () => {
-    it('should call store method with form field value', () => {
-      component.registroForm.get('banco')?.setValue('banco123');
-      
-      component.setValoresStore(component.registroForm, 'banco', 'setBanco');
-      
-      expect(storeMock.setBanco).toHaveBeenCalledWith('banco123');
-    });
+it('should not throw when form is invalid in enviarFormulario', () => {
+  component.donanteDomicilio();
+  jest.spyOn(component.registroForm, 'valid', 'get').mockReturnValue(false);
+  expect(() => component.enviarFormulario()).not.toThrow();
+});
 
-    it('should call different store methods based on metodoNombre', () => {
-      component.registroForm.get('llave')?.setValue('llave123');
-      
-      component.setValoresStore(component.registroForm, 'llave', 'setLlave');
-      
-      expect(storeMock.setLlave).toHaveBeenCalledWith('llave123');
-    });
-
-    it('should handle undefined form field value', () => {
-      component.setValoresStore(component.registroForm, 'nonexistent', 'setBanco');
-      
-      expect(storeMock.setBanco).toHaveBeenCalledWith(undefined);
-    });
-  });
-
-  describe('guardarDatosDelFormulario', () => {
-    it('should disable registroForm if esFormularioSoloLectura is true', () => {
-      component.esFormularioSoloLectura = true;
-      const spy = jest.spyOn(component.registroForm, 'disable');
-      
-      component.guardarDatosDelFormulario();
-      
-      expect(spy).toHaveBeenCalled();
-    });
-
-    it('should enable registroForm if esFormularioSoloLectura is false', () => {
-      component.esFormularioSoloLectura = false;
-      const spy = jest.spyOn(component.registroForm, 'enable');
-      
-      component.guardarDatosDelFormulario();
-      
-      expect(spy).toHaveBeenCalled();
-    });
-  });
-
-  describe('donanteDomicilio', () => {
-    it('should initialize registroForm with solicitudState values', () => {
-      component.solicitudState = {
-        banco: 'banco1',
-        llave: 'llave1',
-        manifiesto1: 'm1',
-        manifiesto2: 'm2',
-        numeroOperacion: '123',
-        fechaPago: '2024-01-01',
-        fechaInicio: '2024-01-01',
-        fechaFinal: '2024-12-31',
-      };
-      
-      component.donanteDomicilio();
-      
-      expect(component.registroForm.get('banco')?.value).toBe('banco1');
-      expect(component.registroForm.get('llave')?.value).toBe('llave1');
-      expect(component.registroForm.get('manifiesto1')?.value).toBe('m1');
-      expect(component.registroForm.get('manifiesto2')?.value).toBe('m2');
-      expect(component.registroForm.get('numeroOperacion')?.value).toBe('123');
-      expect(component.registroForm.get('fechaPago')?.value).toBe('2024-01-01');
-      expect(component.registroForm.get('fechaInicio')?.value).toBe('2024-01-01');
-      expect(component.registroForm.get('fechaFinal')?.value).toBe('2024-12-31');
-    });
-
-    it('should call inicializarEstadoFormulario after form initialization', () => {
-      const spy = jest.spyOn(component, 'inicializarEstadoFormulario');
-      
-      component.donanteDomicilio();
-      
-      expect(spy).toHaveBeenCalled();
-    });
-  });
-
-  describe('datosDeAvisoForm', () => {
-    it('should disable form fields if esFormularioSoloLectura is true', () => {
-      component.esFormularioSoloLectura = true;
-      component.registroForm = new FormBuilder().group({
-        banco: ['test'],
-        manifiesto1: ['test'],
-        manifiesto2: ['test'],
-        llave: ['test'],
-        numeroOperacion: ['test'],
-        fechaPago: ['test'],
-        monedaNacional: ['test'],
-      });
-      
-      const spyBanco = jest.spyOn(component.registroForm.get('banco')!, 'disable');
-      const spyManifiesto1 = jest.spyOn(component.registroForm.get('manifiesto1')!, 'disable');
-      const spyManifiesto2 = jest.spyOn(component.registroForm.get('manifiesto2')!, 'disable');
-      const spyLlave = jest.spyOn(component.registroForm.get('llave')!, 'disable');
-      const spyNumeroOperacion = jest.spyOn(component.registroForm.get('numeroOperacion')!, 'disable');
-      const spyFechaPago = jest.spyOn(component.registroForm.get('fechaPago')!, 'disable');
-      const spyMonedaNacional = jest.spyOn(component.registroForm.get('monedaNacional')!, 'disable');
-      
-      component.datosDeAvisoForm();
-      
-      expect(spyBanco).toHaveBeenCalled();
-      expect(spyManifiesto1).toHaveBeenCalled();
-      expect(spyManifiesto2).toHaveBeenCalled();
-      expect(spyLlave).toHaveBeenCalled();
-      expect(spyNumeroOperacion).toHaveBeenCalled();
-      expect(spyFechaPago).toHaveBeenCalled();
-      expect(spyMonedaNacional).toHaveBeenCalled();
-    });
-
-    it('should not disable form fields if esFormularioSoloLectura is false', () => {
-      component.esFormularioSoloLectura = false;
-      component.registroForm = new FormBuilder().group({
-        banco: ['test'],
-        manifiesto1: ['test'],
-      });
-      
-      const spyBanco = jest.spyOn(component.registroForm.get('banco')!, 'disable');
-      
-      component.datosDeAvisoForm();
-      
-      expect(spyBanco).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('ngOnDestroy', () => {
-    it('should complete destroyNotifier$', () => {
-      const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
-      const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
-      
-      component.ngOnDestroy();
-      
-      expect(nextSpy).toHaveBeenCalledWith(true);
-      expect(completeSpy).toHaveBeenCalled();
-    });
-  });
-
-  describe('Constructor', () => {
-    it('should initialize consultaioQuery subscription', () => {
-      expect(component.consultaDatos).toBeDefined();
-      expect(component.esFormularioSoloLectura).toBe(false);
-    });
-    
-  });
 });

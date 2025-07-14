@@ -141,4 +141,5 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
             componentName: 'PasoUnoComponent',  
         }]
 	}
+    
 ];

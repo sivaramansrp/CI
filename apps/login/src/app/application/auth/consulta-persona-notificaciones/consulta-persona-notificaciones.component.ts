@@ -4,7 +4,7 @@ import { RegistroStates, RegistroStore } from '../../../estados/registro.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { BusquedaRFCQuery } from '../../../queries/registro.query';
 import { CommonModule } from '@angular/common';
-import { ConsultaRegistro } from '../../core/models/consuta-registro.model';
+import { ConsultaRegistro } from '../../core/models/consulta-registro.model';
 import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { Router } from '@angular/router';
 
@@ -113,6 +113,9 @@ export class ConsultaPersonaNotificacionesComponent implements OnInit, OnDestroy
    * Cancela la operación y navega a la pantalla de registro de notificaciones.
    */
   cancelarDatos() {
+    if (this.registroState.personasNotificaciones.length > 0) {
+      this.registroStore.setBotonEliminar(true);
+    }
     this.registroStore.setValorRegistro(this.registrarDatos = false);
     this.router.navigate(['login/registro-notificadores']);
   }

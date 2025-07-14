@@ -3096,8 +3096,8 @@
   {
     "id": 445,
     "tramite": 32513,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso-tesoreria/solicitud",
+    "linkDepartment": "/pago/aviso-tesoreria/solicitud",
     "department": "agace"
   },
   {
@@ -4222,7 +4222,7 @@
     "department": "se"
   },
   {
-    "id": 191,
+    "id": 606,
     "tramite": 30506,
     "linkDashboard": "/agace/registros/solicitud",
     "linkDepartment": "/pago/registros/solicitud",
