@@ -78,6 +78,48 @@ export interface Avisos32511State {
      * @type { string }
      */
     destruccionHora?: string;
+
+    /**
+     * Calle de destrucción de mercancías
+     * @type { string }
+     */
+    dmCalle?: string;
+
+    /**
+     * Número exterior de la calle de destrucción de mercancías
+     * @type { string }
+     */
+    dmNumeroExterior?: string;
+
+    /**
+     * Número interior de la calle de destrucción de mercancías
+     * @type { string }
+     */
+    dmNumeroInterior?: string;
+
+    /**
+     * Código postal de la ubicación de destrucción de mercancías
+     * @type { string }
+     */
+    dmCodigoPostal?: string;
+
+    /**
+     * Estado de la entidad federativa de destrucción de mercancías
+     * @type { string }
+     */
+    dmEntidadFederativa?: string;
+
+    /**
+     * Estado de la alcaldía o municipio de destrucción de mercancías
+     * @type { string }
+     */
+    dmAlcaldiaMunicipio?: string;
+
+    /**
+     * Estado de la colonia de destrucción de mercancías
+     * @type { string }
+     */
+    dmColonia?: string;
 }
 
 /**
@@ -97,7 +139,14 @@ export function createInitialState(): Avisos32511State {
         colonia: '',
         fechaConclusionEvento: '',
         fechaDestruccion: '',
-        destruccionHora: ''
+        destruccionHora: '',
+        dmCalle: '',
+        dmNumeroExterior: '',
+        dmNumeroInterior: '',
+        dmCodigoPostal: '',
+        dmEntidadFederativa: '',
+        dmAlcaldiaMunicipio: '',
+        dmColonia: ''
     };
 }
 
@@ -252,4 +301,91 @@ export class Tramite32511Store extends Store<Avisos32511State> {
             destruccionHora
         }));
     }
+
+    /**
+     * Método para establecer la calle de destrucción de mercancías en el estado.
+     * @param {string} dmCalle - Calle de destrucción de mercancías.
+     */
+    public setDmCalle(dmCalle: string): void {
+        this.update((state) => ({
+            ...state,
+            dmCalle
+        }));
+    }
+
+    /**
+     * Método para establecer el número exterior de la calle de destrucción de mercancías en el estado.
+     * @param {string} dmNumeroExterior - Número exterior de la calle de destrucción de mercancías.
+     */
+    public setDmNumeroExterior(dmNumeroExterior: string): void {
+        this.update((state) => ({
+            ...state,
+            dmNumeroExterior
+        }));
+    }
+
+    /**
+     * Método para establecer el número interior de la calle de destrucción de mercancías en el estado.
+     * @param {string} dmNumeroInterior - Número interior de la calle de destrucción de mercancías.
+     */
+    public setDmNumeroInterior(dmNumeroInterior: string): void {
+        this.update((state) => ({
+            ...state,
+            dmNumeroInterior
+        }));
+    }
+
+    /**
+     * Método para establecer el código postal de la ubicación de destrucción de mercancías en el estado.
+     * @param {string} dmCodigoPostal - Código postal de la ubicación de destrucción de mercancías.
+     */
+    public setDmCodigoPostal(dmCodigoPostal: string): void {
+        this.update((state) => ({
+            ...state,
+            dmCodigoPostal
+        }));
+    }
+
+    /**
+     * Método para establecer el estado de la entidad federativa de destrucción de mercancías en el estado.
+     * @param {string} dmEntidadFederativa - Estado de la entidad federativa de destrucción de mercancías.
+     */
+    public setDmEntidadFederativa(dmEntidadFederativa: string): void {
+        this.update((state) => ({
+            ...state,
+            dmEntidadFederativa
+        }));
+    }
+
+    /**
+     * Método para establecer el estado de la alcaldía o municipio de destrucción de mercancías en el estado.
+     * @param {string} dmAlcaldiaMunicipio - Estado de la alcaldía o municipio de destrucción de mercancías.
+     */
+    public setDmAlcaldiaMunicipio(dmAlcaldiaMunicipio: string): void {
+        this.update((state) => ({
+            ...state,
+            dmAlcaldiaMunicipio
+        }));
+    }
+
+    /**
+     * Método para establecer el estado de la colonia de destrucción de mercancías en el estado.
+     * @param {string} dmColonia - Estado de la colonia de destrucción de mercancías.
+     */
+    public setDmColonia(dmColonia: string): void {
+        this.update((state) => ({
+            ...state,
+            dmColonia
+        }));
+    }
+
+    /**
+     * Actualiza el estado de los avisos de destrucción de mercancías.     
+     * @param nuevoDatos - Nuevo estado de los avisos de destrucción de mercancías.
+     * @type {Avisos32511State}
+     * @return {void}
+     */
+    public setAvisosState(nuevoDatos: Avisos32511State): void {
+    this.update(nuevoDatos);
+  }
 }
