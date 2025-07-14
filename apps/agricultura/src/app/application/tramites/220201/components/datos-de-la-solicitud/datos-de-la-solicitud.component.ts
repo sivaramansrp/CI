@@ -597,9 +597,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @returns {void}
    */
   modificarMercancia(): void {
-    this.seleccionTabla([]);
-    if (this.forma.get('tipoMercancia')?.value === 'yes') {
+    const VALOR = this.datosDelaSolicitud.value.tipoMercancia;
+    if (VALOR === 'yes') {
       this.router.navigate(['../animales-vivo'], {
+        relativeTo: this.activatedRoute,
+      });
+    }
+    else if (VALOR === 'no') {
+      this.router.navigate(['../sub-productos'], {
         relativeTo: this.activatedRoute,
       });
     }

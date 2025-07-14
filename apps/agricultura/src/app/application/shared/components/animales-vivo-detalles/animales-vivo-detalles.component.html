@@ -6,30 +6,31 @@
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="catalogosDatos.tipoRequisitoList" formControlName="tipoRequisito"
                     [label]="'Tipo requisito'" [required]="true" name="tipoRequisito"
-                    [isDisabled]="mercanciaForm.disabled" ></app-catalogo-select>
+                    [isDisabled]="mercanciaForm.disabled"></app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="catalogosDatos.requisitoList" formControlName="requisito" [label]="'Requisito'"
-                    [required]="true" name="requisito" [isDisabled]="mercanciaForm.disabled"
-                    ></app-catalogo-select>
+                <app-catalogo-select [catalogo]="catalogosDatos.requisitoList" formControlName="requisito"
+                    [label]="'Requisito'" [required]="true" name="requisito"
+                    [isDisabled]="mercanciaForm.disabled"></app-catalogo-select>
             </div>
             <div class="col-md-4 form-group">
                 <label class="form-label">Número de certificado internacional*</label>
-                <input type="text" class="form-control" formControlName="numeroCertificado"
-                     />
+                <input type="text" class="form-control" formControlName="numeroCertificadoInternacional"
+                    name="numeroCertificadoInternacional" />
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="catalogosDatos.fraccionArancelariaList" formControlName="fraccionArancelaria"
-                    [label]="'Fracción arancelaria'" [required]="true" name="fraccionArancelaria"
-                    [isDisabled]="mercanciaForm.disabled" ></app-catalogo-select>
+                <app-catalogo-select [catalogo]="catalogosDatos.fraccionArancelariaList"
+                    formControlName="fraccionArancelaria" [label]="'Fracción arancelaria'" [required]="true"
+                    name="fraccionArancelaria" [isDisabled]="mercanciaForm.disabled"></app-catalogo-select>
             </div>
             <div class="col-md-8 form-group">
                 <label class="form-label">Descripción de la fracción arancelaria*</label>
                 <input type="text" class="form-control" formControlName="descripcionFraccion" maxlength="1000" />
-                <div *ngIf="mercanciaForm.get('descripcionFraccion')?.hasError('maxlength') && mercanciaForm.get('descripcionFraccion')?.touched" class="text-danger">
+                <div *ngIf="mercanciaForm.get('descripcionFraccion')?.hasError('maxlength') && mercanciaForm.get('descripcionFraccion')?.touched"
+                    class="text-danger">
                     Por favor, no escribas más de 1000 caracteres
                 </div>
             </div>
@@ -37,12 +38,12 @@
 
         <div class="row">
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="catalogosDatos.nicoList" formControlName="nico" [label]="'Nico'" [required]="true"
-                    name="nico" [isDisabled]="mercanciaForm.disabled" ></app-catalogo-select>
+                <app-catalogo-select [catalogo]="catalogosDatos.nicoList" formControlName="nico" [label]="'Nico'"
+                    [required]="true" name="nico" [isDisabled]="mercanciaForm.disabled"></app-catalogo-select>
             </div>
             <div class="col-md-8 form-group">
                 <label class="form-label">Descripción Nico*</label>
-                <input type="text" class="form-control" formControlName="descripcionNico"  />
+                <input type="text" class="form-control" formControlName="descripcionNico" />
             </div>
         </div>
 
@@ -50,7 +51,7 @@
             <div class="col-md-12 form-group">
                 <label class="form-label">Descripción*</label>
                 <textarea id="descripcion" class="form-control" style="height: 60%; resize: none;"
-                     formControlName="descripcion"></textarea>
+                    formControlName="descripcion"></textarea>
             </div>
         </div>
 
@@ -58,57 +59,61 @@
             <div class="col-md-4 form-group">
                 <label class="form-label">Cantidad UMT*</label>
                 <input type="text" class="form-control" formControlName="cantidadUMT" />
-                <div *ngIf="mercanciaForm.get('cantidadUMT')?.hasError('pattern') && mercanciaForm.get('cantidadUMT')?.touched" class="text-danger">
+                <div *ngIf="mercanciaForm.get('cantidadUMT')?.hasError('pattern') && mercanciaForm.get('cantidadUMT')?.touched"
+                    class="text-danger">
                     Este campo permite doce números enteros y hasta tres decimales
                 </div>
-                <div *ngIf="mercanciaForm.get('cantidadUMT')?.hasError('max') && mercanciaForm.get('cantidadUMT')?.touched" class="text-danger">
+                <div *ngIf="mercanciaForm.get('cantidadUMT')?.hasError('max') && mercanciaForm.get('cantidadUMT')?.touched"
+                    class="text-danger">
                     Por favor, escribe un valor menor o igual a 999999999999.999
                 </div>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="catalogosDatos.umtList" formControlName="umt" [label]="'UMT'" [required]="true"
-                    name="umt" [isDisabled]="mercanciaForm.disabled" ></app-catalogo-select>
+                <app-catalogo-select [catalogo]="catalogosDatos.umtList" formControlName="umt" [label]="'UMT'"
+                    [required]="true" name="umt" [isDisabled]="mercanciaForm.disabled"></app-catalogo-select>
             </div>
         </div>
         <div class="row">
             <div class="col-md-4 form-group">
                 <label class="form-label">Cantidad UMC*</label>
                 <input type="text" class="form-control" formControlName="cantidadUMC" />
-                <div *ngIf="mercanciaForm.get('cantidadUMC')?.hasError('pattern') && mercanciaForm.get('cantidadUMC')?.touched" class="text-danger">
+                <div *ngIf="mercanciaForm.get('cantidadUMC')?.hasError('pattern') && mercanciaForm.get('cantidadUMC')?.touched"
+                    class="text-danger">
                     Este campo permite doce números enteros y hasta tres decimales
                 </div>
-                <div *ngIf="mercanciaForm.get('cantidadUMC')?.hasError('max') && mercanciaForm.get('cantidadUMC')?.touched" class="text-danger">
+                <div *ngIf="mercanciaForm.get('cantidadUMC')?.hasError('max') && mercanciaForm.get('cantidadUMC')?.touched"
+                    class="text-danger">
                     Por favor, escribe un valor menor o igual a 999999999999.999
                 </div>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="catalogosDatos.umcList" formControlName="umc" [label]="'UMC'" [required]="true"
-                    name="umc" [isDisabled]="mercanciaForm.disabled" ></app-catalogo-select>
+                <app-catalogo-select [catalogo]="catalogosDatos.umcList" formControlName="umc" [label]="'UMC'"
+                    [required]="true" name="umc" [isDisabled]="mercanciaForm.disabled"></app-catalogo-select>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="catalogosDatos.especieList" formControlName="especie" [label]="'Especie'"
-                    [required]="true" name="especie" [isDisabled]="mercanciaForm.disabled"
-                    ></app-catalogo-select>
+                <app-catalogo-select [catalogo]="catalogosDatos.especieList" formControlName="especie"
+                    [label]="'Especie'" [required]="true" name="especie"
+                    [isDisabled]="mercanciaForm.disabled"></app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="catalogosDatos.usoList" formControlName="uso" [label]="'Uso'" [required]="true"
-                    name="uso" [isDisabled]="mercanciaForm.disabled" ></app-catalogo-select>
+                <app-catalogo-select [catalogo]="catalogosDatos.usoList" formControlName="uso" [label]="'Uso'"
+                    [required]="true" name="uso" [isDisabled]="mercanciaForm.disabled"></app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="catalogosDatos.paisOrigenList" formControlName="paisOrigen"
-                    [label]="'País de origen'" [required]="true" name="paisOrigen"
-                    [isDisabled]="mercanciaForm.disabled" ></app-catalogo-select>
+                <app-catalogo-select [catalogo]="catalogosDatos.paisOrigenList" formControlName="paisDeOrigen"
+                    [label]="'País de origen'" [required]="true" name="paisDeOrigen"
+                    [isDisabled]="mercanciaForm.disabled"></app-catalogo-select>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="catalogosDatos.paisDeProcedenciaList" formControlName="paisDeProcedencia"
-                    [label]="'País De Procedencia'" [required]="true" name="paisDeProcedencia"
-                    [isDisabled]="mercanciaForm.disabled" ></app-catalogo-select>
+                <app-catalogo-select [catalogo]="catalogosDatos.paisDeProcedenciaList"
+                    formControlName="paisDeProcedencia" [label]="'País De Procedencia'" [required]="true"
+                    name="paisDeProcedencia" [isDisabled]="mercanciaForm.disabled"></app-catalogo-select>
             </div>
         </div>
     </form>
@@ -116,59 +121,56 @@
     <form [formGroup]="detalleForm">
         <div class="mt-4">
             <ng-titulo titulo="Detalle" />
-    
+
             <div class="row">
                 <div class="col-md-4 form-group">
                     <label>Número de lote:</label>
-                    <input type="text" class="form-control" formControlName="numeroLote"  />
+                    <input type="text" class="form-control" formControlName="numeroLote" />
                 </div>
                 <div class="col-md-4 form-group">
                     <label>Color/Pelaje:</label>
-                    <input type="text" class="form-control" formControlName="colorPelaje"  />
+                    <input type="text" class="form-control" formControlName="colorPelaje" />
                 </div>
                 <div class="col-md-4 form-group">
                     <label>Edad del animal:</label>
-                    <input type="text" class="form-control" formControlName="edadAnimal"  />
+                    <input type="text" class="form-control" formControlName="edadAnimal" />
                 </div>
             </div>
-    
+
             <div class="row">
                 <div class="col-md-4 form-group">
                     <label>Fase de desarrollo:</label>
-                    <input type="text" class="form-control" formControlName="faseDesarrollo"  />
+                    <input type="text" class="form-control" formControlName="faseDesarrollo" />
                 </div>
                 <div class="col-md-4 form-group">
                     <label>Función zootécnica:</label>
-                    <input type="text" class="form-control" formControlName="funcionZootecnica"
-                         />
+                    <input type="text" class="form-control" formControlName="funcionZootecnica" />
                 </div>
                 <div class="col-md-4 form-group">
                     <label>Nombre de la mercancía:</label>
-                    <input type="text" class="form-control" formControlName="nombreMercancia"  />
+                    <input type="text" class="form-control" formControlName="nombreMercancia" />
                 </div>
             </div>
-    
+
             <div class="row">
                 <div class="col-md-4 form-group">
                     <label>Número de identificación:</label>
-                    <input type="text" class="form-control" formControlName="numeroIdentificacion"
-                         />
+                    <input type="text" class="form-control" formControlName="numeroIdentificacion" />
                 </div>
                 <div class="col-md-4 form-group">
                     <label>Raza:</label>
-                    <input type="text" class="form-control" formControlName="raza"  />
+                    <input type="text" class="form-control" formControlName="raza" />
                 </div>
                 <div class="col-md-4 form-group">
                     <label>Nombre científico:</label>
-                    <input type="text" class="form-control" formControlName="nombreCientifico"
-                         />
+                    <input type="text" class="form-control" formControlName="nombreCientifico" />
                 </div>
             </div>
-    
+
             <div class="row">
                 <div class="col-md-4">
                     <app-catalogo-select [catalogo]="catalogosDatos.sexoList" formControlName="sexo" [label]="'Sexo'"
-                        name="sexo" [isDisabled]="mercanciaForm.disabled" ></app-catalogo-select>
+                        name="sexo" [isDisabled]="mercanciaForm.disabled"></app-catalogo-select>
                 </div>
             </div>
         </div>
@@ -186,11 +188,11 @@
             [datos]="sensiblesTablaDatos"
             (listaDeFilaSeleccionada)="sensiblesTablaSeleccionada = $event"></app-tabla-dinamica>
     </div>
-            <div class="row mt-2">
-          <div class="col-md-12 d-flex justify-content-end">
-              <button type="button" class="btn btn-default ms-3" (click)="limpiarAnimalesVivo()">Limpiar</button>
-              <button type="button" class="btn btn-default ms-3" (click)="cancelar()">Cancelar</button>
-              <button type="button" class="btn btn-primary ms-3" (click)="agregarAnimales()">Agregar</button>
-          </div>
+    <div class="row mt-2">
+        <div class="col-md-12 d-flex justify-content-end">
+            <button type="button" class="btn btn-default ms-3" (click)="limpiarAnimalesVivo()">Limpiar</button>
+            <button type="button" class="btn btn-default ms-3" (click)="cancelar()">Cancelar</button>
+            <button type="button" class="btn btn-primary ms-3" (click)="agregarAnimales()">Agregar</button>
         </div>
+    </div>
 </div>

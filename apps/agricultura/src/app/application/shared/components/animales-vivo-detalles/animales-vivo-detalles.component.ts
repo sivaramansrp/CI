@@ -1,10 +1,11 @@
-import { AnimalesEventos, AnimalesFormularioSolicitud, AnimalesFormularioSolicitudForm, DatosDeLaSolicitud, Sensible } from '../../models/datos-de-la-solicitue.model';
-import { CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CONFIGURACION_SENSIBLES } from '../../constantes/datos-de-la-solicitue.enum';
+import { CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
+import { FilaSolicitud } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
+import { CONFIGURACION_SENSIBLES } from '../../constantes/datos-de-la-solicitue.enum';
+import { AnimalesEventos, AnimalesFormularioSolicitud, DatosDeLaSolicitud, Sensible } from '../../models/datos-de-la-solicitue.model';
 
 @Component({
   selector: 'app-animales-vivo-detalles',
@@ -51,7 +52,7 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * 
    * @type {AnimalesFormularioSolicitud}
    */
-  @Input() formularioSolicitud!: AnimalesFormularioSolicitud;
+  @Input() formularioSolicitud!: FilaSolicitud;
 
   /**
    * Evento que se emite cuando se agregan datos al formulario de solicitud de animales vivos.
@@ -106,7 +107,7 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * @param fb FormBuilder para crear formularios reactivos.
    */
   constructor(private fb: FormBuilder,
-        private ubicaccion: Location,
+    private ubicaccion: Location,
   ) {
   }
 
@@ -137,7 +138,7 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
     this.mercanciaForm = this.fb.group({
       tipoRequisito: ['', Validators.required],
       requisito: ['', Validators.required],
-      numeroCertificado: ['', [Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
+      numeroCertificadoInternacional: ['', [Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       fraccionArancelaria: ['', Validators.required],
       descripcionFraccion: [''],
       nico: ['', Validators.required],
@@ -149,7 +150,7 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       umc: ['', Validators.required],
       especie: ['', Validators.required],
       uso: ['', Validators.required],
-      paisOrigen: ['', Validators.required],
+      paisDeOrigen: ['', Validators.required],
       paisDeProcedencia: ['', Validators.required],
     });
 
@@ -167,7 +168,7 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       sexo: ['', Validators.required]
     });
 
-    if(this.formularioSolicitud){
+    if (this.formularioSolicitud) {
       this.mercanciaForm.patchValue({
         ...this.formularioSolicitud
       });

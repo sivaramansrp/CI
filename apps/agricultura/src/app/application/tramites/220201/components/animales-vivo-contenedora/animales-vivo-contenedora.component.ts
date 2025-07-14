@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AnimalesVivoDetallesComponent } from '../../../../shared/components/animales-vivo-detalles/animales-vivo-detalles.component';
-import { AnimalesEventos, AnimalesFormularioSolicitud, DatosDeLaSolicitud } from '../../../../shared/models/datos-de-la-solicitue.model';
+import { AnimalesEventos, DatosDeLaSolicitud } from '../../../../shared/models/datos-de-la-solicitue.model';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
@@ -45,7 +45,7 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
    * Indica si el formulario está en modo solo lectura.
    * Cuando es true, los campos del formulario no serán editables por el usuario.
    */
-  public formularioSolicitud!: AnimalesFormularioSolicitud;
+  public formularioSolicitud!: FilaSolicitud;
 
   /**
    * @description Datos de la tabla principal.
@@ -72,7 +72,7 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
             this.formularioSolicitud = {
               tipoRequisito: VALOR.tipoRequisito || '',
               requisito: VALOR.requisito || '',
-              numeroCertificado: '',
+              numeroCertificadoInternacional: VALOR.numeroCertificadoInternacional || '',
               fraccionArancelaria: VALOR.fraccionArancelaria || '',
               descripcionFraccion: VALOR.descripcionFraccion || '',
               nico: VALOR.nico || '',
@@ -84,8 +84,12 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
               umc: VALOR.umc || '',
               especie: '',
               uso: VALOR.uso || '',
-              paisOrigen: '',
-              paisDeProcedencia: VALOR.paisDeProcedencia || ''
+              paisDeOrigen: VALOR.paisDeOrigen || '',
+              paisDeProcedencia: VALOR.paisDeProcedencia || '',
+              noPartida: VALOR.noPartida || '',
+              tipoDeProducto: VALOR.tipoDeProducto || '',
+              numeroDeLote: VALOR.numeroDeLote || '',
+              certificadoInternacionalElectronico: VALOR.certificadoInternacionalElectronico || ''
             };
           }
         })
