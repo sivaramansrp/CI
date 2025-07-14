@@ -69,9 +69,9 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Valor seleccionado en el componente de radio.
    */
-  selectedValue: string = 'Producto..';
+  public certificadaValue: string = 'Producto';
  /** Valor seleccionado en el componente de radio. */
-  defaultSelect: string | number = 'oficina central';
+  public defaultSelect: string | number = 'oficina central';
   /** Notificador para destruir las suscripciones al salir del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
   /** Formulario de datos del certificado. */
@@ -255,7 +255,7 @@ this.inicializarCertificadoFormulario();
 
       this.datosdelForm= this.fb.group({
         datoscertificado:[this.solicitudState?.datoscertificado],
-        certificada: [this.solicitudState?.certificada],
+        certificada: [this.solicitudState?.certificada ?? 'Producto'],
         tratamiento:[this.solicitudState?.tratamiento],
         tipoCertificado: ['', Validators.required],
         message: [{ value: '', disabled: true }],
@@ -302,7 +302,7 @@ this.inicializarCertificadoFormulario();
    */
   
    onValueChange(value: string | number):void {
-        this.selectedValue = value.toString();
+        this.defaultSelect = value.toString();
       }
   
     /**
