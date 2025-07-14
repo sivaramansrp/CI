@@ -16108,20 +16108,20 @@
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Registro de solicitud de servicio",
     "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2025-10-07",
+    "fechaDeAsignacion": "2023-10-01",
     "estadoDeTramite": "En Proceso",
     "departamento": "agace",
-    "numeroDeProcedimiento": "32511",
+    "numeroDeProcedimiento": "30506",
     "origin": "READ_PROCEDURE"
   },
   {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Registro de solicitud de servicio",
     "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2023-10-01",
+    "fechaDeAsignacion": "2025-10-07",
     "estadoDeTramite": "En Proceso",
     "departamento": "agace",
-    "numeroDeProcedimiento": "30506",
+    "numeroDeProcedimiento": "32511",
     "origin": "READ_PROCEDURE"
-  }
+  }  
 ]
