@@ -8,6 +8,12 @@ import { RespuestaConsulta } from '../models/aviso.model';
 })
 export class AvisoService {
 
+  /**
+   * @constructor
+   * @description Constructor del servicio AvisoService.
+   * Inyecta el cliente HTTP para realizar solicitudes a recursos externos o archivos locales.
+   * @param http Instancia de HttpClient utilizada para las peticiones HTTP.
+   */
   constructor(private http: HttpClient) { }
 
   /**
