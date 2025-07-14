@@ -18,6 +18,8 @@ describe('IvaeiepsComponent', () => {
   comercioExteriorServiceMock = {
   getEmpresasTablaDatos: jest.fn().mockReturnValue(of([])),
   getBancoDatos: jest.fn().mockReturnValue(of({ data: [] })),
+  getInversionTablaDatos: jest.fn().mockReturnValue(of([])),
+  getTipoInversionDatos: jest.fn().mockReturnValue(of({ data: [] })),
 };
 
     tramiteStoreMock = {

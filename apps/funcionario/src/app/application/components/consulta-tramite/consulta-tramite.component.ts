@@ -32,7 +32,7 @@ export class ConsultaTramiteComponent implements OnInit {
     // Constructor vacío, se puede agregar lógica adicional si es necesario.  
   }
   /** Método para inicializar el formulario */
-  ngOnInit() {
+  ngOnInit():void {
     this.solicitudtramiteQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -45,17 +45,17 @@ export class ConsultaTramiteComponent implements OnInit {
     this.inicializaFormConsulta();
   }
   /** Método para inicializar el formulario de búsqueda */
-  inicializaFormConsulta() {
+  inicializaFormConsulta():void {
     this.FormBuscaTramite = this.fb.group({
       idTramite: [''],
     });
   }
   /** Método para buscar el trámite */
-  buscarTramite() {
+  buscarTramite():void {
     this.router.navigate(['funcionario/datos-generales-tramite']);
   }
 
-  tramiteSeleccionado(form: FormGroup, campo: string, metodoNombre: keyof TramitesStates) {
+  tramiteSeleccionado(form: FormGroup, campo: string, metodoNombre: keyof TramitesStates): void {
     this.setValoresStore(form, campo, metodoNombre);
   }
   /**

@@ -31,6 +31,7 @@ import {
 } from '../../estados/solicitud32512.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Solicitud32512Query } from '../../estados/solicitud32512.query';
 import { SolicitudService } from '../../services/solicitud.service';
 
@@ -120,17 +121,54 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * Se utiliza para almacenar los pedimentos ingresados por el usuario.
    */
   pedimentos: Array<Pedimento> = [];
+
   /**
-   * Constructor del componente AvisoComponent.
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Constructor del componente `AvisoComponent`.
+   *
    * Se encarga de inyectar los servicios y stores necesarios para la gestión del formulario
    * y los datos asociados a la solicitud 32512.
+   *
+   * @param fb - Servicio `FormBuilder` para la creación y manejo de formularios reactivos.
+   * @param solicitudService - Servicio encargado de obtener y guardar datos de la solicitud.
+   * @param solicitud32512Store - Store centralizado que administra el estado de la solicitud 32512.
+   * @param solicitud32512Query - Query que permite observar el estado actual del store de la solicitud 32512.
+   * @param consultaioQuery - Query que proporciona el estado de la sección de consulta relacionada con la solicitud.
    */
   constructor(
     private fb: FormBuilder,
     public solicitudService: SolicitudService,
     public solicitud32512Store: Solicitud32512Store,
-    public solicitud32512Query: Solicitud32512Query
+    public solicitud32512Query: Solicitud32512Query,
+    public consultaioQuery: ConsultaioQuery
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          if (this.esFormularioSoloLectura === true) {
+            this.conseguirMunicipioAlcaldia();
+            this.conseguirColonia();
+            this.conseguirLugarMunicipioAlcaldia();
+            this.conseguirLugarColonia();
+          }
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     // Llamada para inicializar datos de catálogo al cargar el componente
     this.conseguirEntidadFederativa();
   }
@@ -143,6 +181,48 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * - Se suscribe al observable `selectSolicitud$` para mantener sincronizado el formulario con el estado compartido
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.aviosForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.aviosForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Inicializa el formulario reactivo `aviosForm` con los valores del estado actual (`solicitud32512State`)
+   * y establece sus validaciones correspondientes.
+   *
+   * Además, se suscribe a los cambios en el estado de la solicitud mediante `solicitud32512Query.selectSolicitud$`
+   * para mantener actualizado el formulario si el estado cambia.
+   *
+   * Validaciones aplicadas:
+   * - Campos obligatorios (Validators.required)
+   * - Longitud máxima (Validators.maxLength)
+   * - Validaciones por patrón (Validators.pattern)
+   */
+  inicializarFormulario(): void {
     this.aviosForm = this.fb.group({
       nombreComercial: [
         { value: this.solicitud32512State.nombreComercial, disbled: false },

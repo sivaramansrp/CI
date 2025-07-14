@@ -102,24 +102,24 @@ export class ZoosanitarioPageComponent {
   enTabChange(selectedTab: number): void {
     switch (selectedTab) {
       case 1:
-        this.tituloMensaje = 'Zoosanitario para importación';
+        this.tituloMensaje = 'Captura del certificado zoosanitario para importación';
         break;
       case 2:
         this.tituloMensaje =
           'Captura del certificado zoosanitario para importación';
         break;
       case 3:
-        this.tituloMensaje = 'Zoosanitario para importación';
+        this.tituloMensaje = 'Captura del certificado zoosanitario para importación';
         break;
       case 4:
-        this.tituloMensaje = 'Zoosanitario para importación';
+        this.tituloMensaje = 'Captura del certificado zoosanitario para importación';
         break;
       case 5:
         this.tituloMensaje =
           'Captura del certificado zoosanitario para importación';
         break;
       default:
-        this.tituloMensaje = 'Zoosanitario para importación';
+        this.tituloMensaje = ' Captura del certificado zoosanitario para importación';
         break;
     }
   }
