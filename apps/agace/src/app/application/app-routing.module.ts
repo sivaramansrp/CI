@@ -279,6 +279,12 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/32511/avisos.module').then((m) => m.AvisosModule),
   },  
+ {
+  path: 'empresas-comercializadoras',
+  loadChildren: () => 
+    import('./tramites/32604/empresas-comercializadoras.module').then(
+      (m) => m.EmpresasComercializadorasModule)
+}
 ];
 
 @NgModule({

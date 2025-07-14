@@ -4227,5 +4227,12 @@
     "linkDashboard": "/agace/registros/solicitud",
     "linkDepartment": "/pago/registros/solicitud",
     "department": "agace"
+  },
+  {
+    "id": 607,
+    "tramite": 32604,
+    "linkDashboard": "/agace/empresas-comercializadoras/solicitud",
+    "linkDepartment": "/pago/empresas-comercializadoras/solicitud",
+    "department": "agace"
   }
 ]
