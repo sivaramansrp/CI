@@ -4,6 +4,7 @@ import { TEXTOS_ESTATICOS_PLANEACION } from '../../constants/texto-estatico.enum
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CONFIGURACION, CONFIGURACION_AUDITORIAS, CONFIGURACION_CONTINGENCIA, CONFIGURACION_POLITICAS } from '../../constants/analisis-riesgo-forma.enum';
+import { CONFIGURACION_REVISIONES } from '../../constants/socios-comerciales.enum';
 
 @Component({
   selector: 'app-planeacion',
@@ -24,11 +25,13 @@ export class PlaneacionComponent implements OnInit {
     politicasFormGroup: new FormGroup({}),
     auditoriasFormGroup: new FormGroup({}),
     contingenciaFormGroup: new FormGroup({}),
+    revisionesFormGroup: new FormGroup({}),
   });
   public analisisDeRiesgoDatos = CONFIGURACION;
   public politicasDatos = CONFIGURACION_POLITICAS;
   public auditoriasDatos = CONFIGURACION_AUDITORIAS;
   public contingenciaDatos = CONFIGURACION_CONTINGENCIA;
+  public revisionesDatos = CONFIGURACION_REVISIONES;
 
 
   constructor() {
@@ -50,5 +53,8 @@ export class PlaneacionComponent implements OnInit {
   }
   get contingenciaFormGroup(): FormGroup {
     return this.forma.get('contingenciaFormGroup') as FormGroup;
+  }
+  get revisionesFormGroup(): FormGroup {
+    return this.forma.get('revisionesFormGroup') as FormGroup;
   }
 }

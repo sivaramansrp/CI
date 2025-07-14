@@ -110,10 +110,10 @@ export const CONFIGURACION = [
 
 export const CONFIGURACION_IDENTIFICACION = [
     {
-      id: 'procedimientoIdentificacion',
+      id: 'identificacion',
       row: 1,
       labelNombre: 'Describir el procedimiento para la identificación de los empleados',
-      campo: 'procedimientoIdentificacion',
+      campo: 'identificacion',
       clase: 'col-md-12',
       tipoInput: 'textarea',
       desactivado: false,
@@ -125,10 +125,10 @@ export const CONFIGURACION_IDENTIFICACION = [
       marginTop: 4
     },
     {
-      id: 'empleados',
+      id: 'indiqueAreasAcceso',
       row: 2,
       labelNombre: 'Indique las áreas a las que tienen acceso los empleados.',
-      campo: 'empleados',
+      campo: 'indiqueAreasAcceso',
       clase: 'col-md-12',
       tipoInput: 'textarea',
       desactivado: false,
@@ -271,4 +271,96 @@ export const CONFIGURACION_IDENTIFICACION = [
       marginTop: 4
     }
 
+]
+
+export const CONFIGURACION_ENTREGAS = [
+    {
+      id: 'procedimientoRecepcion',
+      row: 1,
+      labelNombre: 'Describa el procedimiento para la recepción y revisión de mensajería y paquetería.',
+      campo: 'procedimientoRecepcion',
+      clase: 'col-md-12',
+      tipoInput: 'textarea',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        
+      ],
+      marcadorDePosicion: '',
+      marginTop: 4
+    },
+    {
+      id: 'encargadoRecepcion',
+      row: 2,
+      labelNombre: 'Señale al personal encargado de llevar a cabo el procedimiento.',
+      campo: 'encargadoRecepcion',
+      clase: 'col-md-12',
+      tipoInput: 'textarea',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        
+      ],
+      marcadorDePosicion: '',
+      marginTop: 4
+    },
+    {
+      id: 'identificaPersonal',
+      row: 3,
+      labelNombre: 'Indique cómo se identifica al personal o proveedor del servicio de mensajería y paquetería (señale si requiere de procedimiento adicional al de acceso a proveedores).',
+      campo: 'identificaPersonal',
+      clase: 'col-md-12',
+      tipoInput: 'textarea',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        
+      ],
+      marcadorDePosicion: '',
+      marginTop: 4
+    },
+    {
+      id: 'revisionMensajeria',
+      row: 4,
+      labelNombre: 'Señale cómo se lleva a cabo la revisión de la mensajería y/o paquetes, qué mecanismo utiliza, los registros que se llevan a cabo y en su caso, los incidentes detectados.',
+      campo: 'revisionMensajeria',
+      clase: 'col-md-12',
+      tipoInput: 'textarea',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        
+      ],
+      marcadorDePosicion: '',
+      marginTop: 4
+    },
+    {
+      id: 'characteristicas',
+      row: 5,
+      labelNombre: 'Describa las características o elementos para determinar qué mensajería y/o paquetería es sospechosa.',
+      campo: 'characteristicas',
+      clase: 'col-md-12',
+      tipoInput: 'textarea',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        
+      ],
+      marcadorDePosicion: '',
+    },
+    {
+      id: 'accionRealiza',
+      row: 6,
+      labelNombre: 'Señale qué acción realiza en el caso de detectar mensajería y/o paquetes sospechosos.',
+      campo: 'accionRealiza',
+      clase: 'col-md-12',
+      tipoInput: 'textarea',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        
+      ],
+      marcadorDePosicion: '',
+      marginTop: 4
+    }
 ]

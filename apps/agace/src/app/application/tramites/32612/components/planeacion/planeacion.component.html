@@ -88,12 +88,12 @@
                 <p>{{textos.paraca15}}</p>
                 <p>{{textos.paraca16}}</p>
             </div>
-        </div>
         <formas-dinamicas 
             [forma]="auditoriasFormGroup" 
             [formularioDatos]="auditoriasDatos"
             >
         </formas-dinamicas>
+        </div>
         <div class="row mt-2">
             <div class="col-md-12 text-container">
                 <h4 class="para-title">{{textos.encabezamiento4}}</h4>
@@ -101,11 +101,38 @@
                 <p>{{textos.paraca18}}</p>
                 <p>{{textos.paraca19}}</p>
             </div>
+            <formas-dinamicas 
+                [forma]="contingenciaFormGroup" 
+                [formularioDatos]="contingenciaDatos"
+                >
+            </formas-dinamicas>
         </div>
-        <formas-dinamicas 
-            [forma]="contingenciaFormGroup" 
-            [formularioDatos]="contingenciaDatos"
-            >
-        </formas-dinamicas>
+        <div class="row mt-2">
+            <div class="col-md-12 text-container">
+                <div class="mt-2 alert-text">
+                    <ul>
+                        <div class="centered-list-wrapper">
+                            <ol type="a">
+                                <li>Periodicidad de las visitas;</li>
+                                <li>Puntos de revisión en materia de seguridad;</li>
+                                <li>Elaboración de reportes;
+                                </li>
+                                <li>Retroalimentación y acuerdos con el socio comercial;
+                                </li>
+                                <li>Seguimiento a los acuerdos;</li>
+                                <li>Medidas en caso de la detección del incumplimiento de los requisitos;</li>
+                                <li>Registro de evaluaciones;</li>
+                                <li>Área o responsable de llevar a cabo este procedimiento.</li>
+                            </ol>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+            <formas-dinamicas 
+                [forma]="revisionesFormGroup" 
+                [formularioDatos]="revisionesDatos"
+                >
+            </formas-dinamicas>
+        </div>
     </form>
 </div>

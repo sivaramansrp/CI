@@ -117,51 +117,92 @@ export const TEXTOS_ESTATICOS_PLANEACION = {
     paraca7: `Los visitantes y proveedores deberán presentar identificación oficial con fotografía con fines de documentación a su llegada y se deberá llevar un registro. Todos los visitantes y proveedores deben recibir una identificación temporal, estar acompañados por personal que labore con el Agente Aduanal durante su permanencia en las instalaciones y asegurarse que el visitante/proveedor porte siempre en un lugar visible la identificación provisional proporcionada.`,
     paraca8: `La gerencia o el personal de seguridad del Agente Aduanal, deben controlar adecuadamente la entrega y devolución de insignias de identificación de empleados, visitantes y proveedores y asegurarse que porten siempre en un lugar visible la identificación proporcionada. Este procedimiento debería estar documentado, así como los procedimientos para la entrega, devolución y cambio de dispositivos de acceso (por ejemplo, llaves, gafetes y/o credenciales, tarjetas de proximidad, etcétera).`,
     paraca9: `Anexe el procedimiento documentado para el control de las identificaciones.`,
-    paraca10: `Todos los infractores deben estar sujetos a la aplicación de medidas disciplinarias,
-    por lo anterior, indique las políticas correctivas y/o sanciones en caso de la
-    detección de alguna violación a los sistemas y políticas de seguridad de Tecnologías
-    de la Información.`,
-    paraca11: `Una política actualizada y documentada de protección de los sistemas informáticos de
-    la
-    empresa de accesos no autorizados y destrucción deliberada o pérdida de la
-    información.
-    Todos los datos sensibles y confidenciales deben almacenarse en un formato cifrado o
-    encriptado.`,
-    paraca12: `El acceso de cada usuario debe asignarse a través de cuentas individuales y estar
-    restringido según la descripción del trabajo o las tareas asignadas. Por lo
-    anterior,
-    describa cómo se conceden autorizaciones de acceso y nivel de acceso a los sistemas
-    informáticos (el acceso a la información sensible debe estar limitado al personal
-    autorizado a realizar modificaciones y uso de la información). El acceso autorizado
-    debe
-    monitorearse por parte del área responsable de concederlo, para verificar o en su
-    caso
-    reportar que el acceso a los sistemas confidenciales se basa en los requisitos del
-    trabajo.`,
-    etiqueta: `El acceso de cada usuario debe asignarse a través de cuentas
-    individuales y estar restringido según la descripción del trabajo o las tareas asignadas. Por lo
-    anterior, describa cómo se conceden autorizaciones de acceso y nivel de acceso a los sistemas
-    informáticos (el acceso a la información sensible debe estar limitado al personal autorizado a
-    realizar modificaciones y uso de la información). El acceso autorizado debe monitorearse por parte
-    del área responsable de concederlo, para verificar o en su caso reportar que el acceso a los
-    sistemas confidenciales se basa en los requisitos del trabajo`,
-    etiqueta2: `Indicar los elementos o formato que deben tener las contraseñas para el
-    acceso a sistemas de Tecnología de la Información y equipos de cómputo, frecuencia de cambios, si
-    existen otros métodos de autenticación y quién o qué área proporciona esas contraseñas.`,
-    etiqueta3: `Indicar el nombre del cortafuego firewall y anti-virus utilizados
-    (incluir lo relacionado al licenciamiento),
-    debiendo evidenciar que este software de seguridad está activo y recibe actualizaciones periódicas.`,
-    etiqueta4: `Todos los equipos de cómputo, medios electrónicos (discos duros,
-    teléfonos celulares, etcétera) y hardware de tecnologías de la información que contengan información
-    confidencial relacionada con el proceso de importación y exportación, deben contabilizarse mediante
-    inventarios periódicos y contar con dicha evidencia. Cuando estos equipos tecnológicos se tengan que
-    desechar, debe existir un procedimiento documentado que incluya como deben formatearse,
-    desinfectarse o destruirse adecuadamente para evitar fuga de información. Describa el procedimiento
-    en el cual indique cómo deben formatearse, desinfectarse o destruirse adecuadamente todos los
-    equipos de cómputo que contengan información confidencial relacionada con el proceso de importación
-    y exportación.`,
-    etiqueta5: `Indique si permite que los empleados usen dispositivos personales para realizar el trabajo de la empresa, dichos dispositivos deben cumplir con las políticas y procedimientos de seguridad cibernética de la empresa, las actualizaciones de seguridad deben ser periódicas y contar con método para acceder de forma segura a la red de la empresa`,
-    etiqueta6: `Describir las medidas de seguridad que utiliza para permitir a sus
-    empleados conectarse de forma remota a una red (VPN), para permitir que los empleados accedan a la
-    intranet de la empresa de forma remota cuando se encuentran fuera de la oficina`
+    encabezamiento3: '3.3 Procedimiento de identificación y retiro de personas o vehículos no autorizados.',
+    paraca10: `El Agente Aduanal debe contar con procedimientos documentados que especifiquen cómo identificar, enfrentar o reportar a personas y/o vehículos no autorizados o identificados, dicho procedimiento debe ser comunicado al personal responsable mediante capacitación. La capacitación debe estar documentada.`,
+    paraca11: `Anexe el procedimiento documentado para identificar, enfrentar o reportar personas y/o vehículos no autorizados o identificados, debe de incluir lo siguiente:`,
+    encabezamiento4: '3.4 Entregas de mensajería y paquetería.',
+    paraca12: `La mensajería y paquetería destinada al Agente Aduanal o a su personal debe ser examinada a su llegada y antes de ser distribuida a las áreas y destinos correspondientes. Asimismo, el Agente Aduanal deberá de tener un procedimiento documentado para la recepción y revisión de mensajería y paquetería, el cual debe ser comunicado al personal responsable mediante capacitación. La capacitación debe estar documentada.`
   };
+
+  export const TEXTOS_ESTATICOS_SOCIOS_COMERCIALES = {
+    paraca1: 'El Agente Aduanal debe contar con procedimientos escritos y verificables para la selección y contratación de nuevos socios comerciales y monitoreo de los socios con los que ya se encuentra trabajando, como sociedades con otros agentes aduanales, corresponsalías, empresas manufactureras, almacenes, empresas transportistas, clientes, proveedores de sistemas y Tecnologías de la Información, colocación y mantenimiento de los sistemas de alarma y de circuito cerrado de televisión y video vigilancia, proveedores de sellos de alta seguridad, recolección y reciclaje, empresas que brinden el servicio de digitalización de documentos, entre otros y de acuerdo a su análisis de riesgo, exigir que cumplan con las medidas de seguridad para fortalecer la cadena de suministros internacional.',
+    paraca2: 'El análisis de riesgo que realice el Agente Aduanal respecto a sus socios comerciales (clientes y proveedores), deberá incluir riesgos relacionados con la identificación de actividades relacionadas con el lavado de dinero y la financiación del terrorismo. Adicionalmente, el Agente Aduanal debe fomentar una política y un programa de cumplimiento social documentado que, como mínimo, aborde cómo entre sus empleados y socios comerciales podrían garantizar que los bienes, insumos o mercancías nacionales e importadas a México para la elaboración de productos o mercancías no provienen de la extracción, producción o fabricación, total o parcialmente, con formas prohibidas de trabajo, es decir, forzoso u obligado incluido el trabajo infantil forzoso u obligado, al amparo del artículo 23.6 del T-MEC y el Acuerdo del Trabajo y Previsión Social que establece las mercancías cuya importación está sujeta a regulación a cargo de la Secretaría del Trabajo y Previsión Social, publicado en el DOF el 17 de febrero de 2023.',
+    encabezamiento1: '4.1 Criterios de selección.',
+    paraca3: `Deben existir procedimientos documentados 
+    para la selección, seguimiento y renovación de 
+    relaciones comerciales con los asociados de negocio o 
+    proveedores, que incluyan entrevistas, verificación de referencias, 
+    métodos de evaluación y uso de la información proporcionada. 
+    La información derivada de la investigación y/o evaluación de los 
+    asociados de negocio y/o proveedores deberá documentarse y estar 
+    integrada por un expediente (físico o electrónico). El procedimiento para la selección de socios comerciales deberá incluir, indicadores para detectar clientes o proveedores que podrían no ser legítimos o con domicilios no localizados, además de investigaciones, revisiones o evaluaciones de dichos socios para la identificación y control de las actividades relacionadas con el lavado de dinero y la financiación del terrorismo. Si la investigación y/o evaluación de algún socio comercial conduce a dudas sustanciales sobre la veracidad de sus operaciones o servicios, el Agente Aduanal deberá evitar su contratación y, en su caso, notificar a su especialista de seguridad o contacto del Programa Operador Económico Autorizado y a la autoridad correspondiente sobre sus sospechas.`,
+    paraca4: 'El Agente Aduanal debe contar con el procedimiento escrito para la identificación de actividades vulnerables establecidas en el artículo 17, fracción XIV, así como para dar cumplimiento a las obligaciones establecidas en el artículo 18 de la Ley Federal de Prevención e Identificación de Operaciones con Recursos de Procedencia Ilícita (LFPIORPI).',
+    paraca5: 'Anexar el procedimiento documentado para la selección y contratación de nuevos socios comerciales, y monitoreo de los socios con los que ya se encuentra trabajando, esto comprende cualquier tipo de cliente y proveedor, que tenga una relación comercial con el Agente Aduanal y asegúrese de incluir los siguientes puntos',
+    paraca6: 'Anexar el procedimiento documentado para dar cumplimiento a la LFPIORPI, el cual debe contener como mínimo:',
+    paraca7: 'El expediente debe incluir como mínimo lo siguiente',
+    encabezamiento2: '4.2 Requerimientos en seguridad.',
+    paraca8: 'El agente aduanal debe contar con un procedimiento documentado en el que, de acuerdo a su análisis de riesgo, solicite requisitos adicionales en materia de seguridad a aquellos socios comerciales que intervengan en su cadena de suministro tales como transportistas, empresas de seguridad privada, prestadoras de servicio para carga y descarga de mercancía, corresponsalías, además de los que arroje el análisis efectuado. Así como de los proveedores de servicios de limpieza, cafetería, seguridad privada, contratación de personal, proveedores de sellos de alta seguridad, recolección y reciclaje, entre otros.',
+    paraca9: 'Los requisitos deberán estar basados en los requisitos mínimos de seguridad establecidos por la AGACE, o en caso de existir, el Perfil específico para cada actor de la cadena de suministros que le corresponda.',
+    paraca10: 'El Agente Aduanal debe solicitar a sus socios comerciales la documentación que acredite y compruebe que cumple con los estándares mínimos de seguridad establecidos en el "Perfil del Agente Aduanal", ya sea a través de una declaración escrita emitida por el representante legal del socio, convenios o cláusulas contractuales, respaldado con documentación que avale el cumplimiento de los requisitos establecidos en el Programa Operador Económico Autorizado. De igual manera, el Agente Aduanal debe tener en cuenta y conocer los requisitos específicos del Programa Operador Económico Autorizado que serán aplicables a cada uno de sus socios comerciales, en función de su actividad dentro de la cadena de suministro.',
+    paraca11: 'En el caso de los socios comerciales que proveen un servicio dentro de las instalaciones del Agente Aduanal, deben estar obligados al cumplimiento de estos requerimientos de seguridad en la cadena de suministro',
+    encabezamiento3: '4.3 Revisiones del socio comercial.',
+    paraca12: 'El Agente Aduanal a través del Comité de Seguridad debe realizar evaluaciones periódicas de seguridad (así como derivadas situaciones de riesgo), de los procesos e instalaciones de los asociados de negocios con base a un análisis de riesgo, para garantizar que cuentan con estándares mínimos en materia de seguridad requerido por el Agente Aduanal basados en el Programa Operador Económico Autorizado, mantener registros de las mismas, que permitan constatar que los procesos y medidas de seguridad se están ejecutando, así como del seguimiento correspondiente.',
+    paraca13: 'Cuando se encuentren inconsistencias el Agente Aduanal deberá comunicarlo a su socio y/o proveedor y proporcionar un período justificado establecido en un procedimiento para atender las observaciones o áreas de oportunidad identificadas, o en caso contrario, tener las medidas necesarias para sancionarla.',
+    paraca14: 'Realizar evaluaciones de seguridad de los socios comerciales es importante para garantizar que exista un programa de seguridad sólido y que funcione correctamente, es por eso que, además de un procedimiento documentado, debe existir un programa o calendario para la ejecución de dichas revisiones o evaluaciones de seguridad priorizando a los socios que son más críticos conforme a su análisis de riesgo. Si un miembro no es evaluado y el Agente Aduanal desconoce si los procesos e instalaciones de sus socios comerciales funcionan correctamente, ponen en riesgo su cadena de suministro.',
+    paraca15: 'Describa el procedimiento para realizar evaluaciones para la verificación de los requisitos en materia de seguridad (procesos e instalaciones) de sus socios comerciales. El procedimiento deberú incluir',
+  }
+
+  export const TEXTOS_ESTATICOS_SEGURIDAD_DE_PROCESOS = {
+    paraca1: 'Deben establecerse medidas de control para garantizar la integridad y seguridad de los procesos relacionados con el flujo de la información (en cualquiera de sus modalidades) proporcionada por el importador/exportador, embarcador, recinto fiscalizado, etcétera, que se utiliza para el movimiento de las mercancías y sus operaciones de comercio exterior, cuidando en todo momento que esta información sea legible y se encuentre protegida contra el intercambio, robo, pérdida o introducción de datos erróneos.',
+    paraca2: 'Asimismo, deben existir procedimientos establecidos para impedir y detectar mercancías o materiales no declarados, e impedir que el personal no autorizado tenga acceso a la mercancía y a los medios de transporte y contenedores. Estos procedimientos deben documentarse y asegurarse de mantener la integridad de los embarques de importación y exportación desde el punto de origen hasta su destino final.',
+    encabezamiento1: '5.1 Mapeo de procesos.',
+    paraca3: 'Se debe contar con un mapeo de procesos que describa paso a paso el flujo de información y operativo para el traslado de mercancías de comercio exterior a lo largo de la cadena de suministros permitiendo tener una visión amplia sobre sus operaciones en materia de comercio exterior.',
+    paraca4: 'El Agente Aduanal debe tener en cuenta e incluir dentro de su mapeo todas las partes involucradas en su cadena de suministro, conteniendo aquellas que manejan la documentación de importación y exportación, otros que pueden no manejar directamente la carga, pero pueden tener un control operativo como transportistas (largo recorrido, de cruce o transfer, subcontratados, etcétera), almacenamiento, sub-maquila, proveedores nacionales y extranjeros, directos e indirectos, etcétera. Si dentro de su cadena de suministro se subcontrata alguna parte del transporte, es indispensable que se considere dentro de su análisis de riesgo y su mapeo de proceso, toda vez que, mientras más proveedores directos e indirectos, mayor es el riesgo involucrado.',
+    paraca5: 'Anexar el documento donde se ilustre y describa el mapeo de procesos por los que atraviesa el flujo de la información y las mercancías de importación y exportación, desde el punto en que las recibe hasta su entrega, con la finalidad de tener bien identificados cada uno de los pasos que involucran la recepción, el despacho de la mercancía hasta su entrega en destino final.',
+    paraca6: 'Este mapeo de procesos debe contener por lo menos los siguientes aspectos:',
+    encabezamiento2: '5.2 Entrega, recepción y discrepancias en la carga.',
+    paraca7: 'El Agente Aduanal debe supervisar, de acuerdo al tipo de operaciones que realiza y con base a su análisis de riesgo, la carga o descarga del embarque verificando la descripción detallada de las mercancías, peso, etiquetas, marcas, cantidades y demás datos que ayuden a cuantificar e identificar plenamente la mercancía cotejando dicha información con las facturas, conocimiento de embarque, guía aérea o lista de empaque correspondientes. Considerando y derivado de estas revisiones el o los procedimientos documentados para detectar y reportar mercancía faltante, sobrante, prohibida o cualquier otra discrepancia en la entrega o recepción de las mercancías, las cuales deben ser investigadas y resueltas.',
+    paraca8: 'De igual forma, debe entregarse al conductor que transporta las mercancías, la información documental requerida para su correcto traslado (por ejemplo: pedimento, lista de empaque, factura, datos de contacto y/o procedimiento en caso de ocurrir algún incidente de seguridad o de la inspección por parte de alguna autoridad, entre otros).',
+    paraca9: 'Anexe el procedimiento documentado en el que indique paso a paso cómo se lleva a cabo la entrega y recepción de la carga, indicando cómo controla o qué medidas de seguridad tiene implementadas para mitigar el riesgo de colusión o complicidad entre los empleados, como el conductor y el personal de las áreas despacho (en su caso) almacén, guardias de seguridad, etcétera.',
+    paraca10: 'Anexe el procedimiento documentado para detectar y reportar discrepancias en la entrega o recepción de las mercancías y asegúrese que incluya los siguientes puntos:',
+    paraca11: 'Este procedimiento, deberá aplicarse a la mercancía que se recibe de importación, exportación; y en caso de aplicar, en la revisión en puntos intermedios.',
+    encabezamiento3: '5.3 Procesamiento de la información y documentación de la carga.',
+    paraca12: 'El Agente Aduanal debe contar con procedimientos documentados para asegurar que la información electrónica y/o documental que es enviada por sus clientes a partir de su solicitud de servicio, durante el movimiento y el despacho de mercancía, así como la información recibida por los asociados de negocio sea legible, completa, exacta, reportada en tiempo y protegida contra cambios, pérdidas o introducción de información errónea.',
+    paraca13: 'El Agente Aduanal deberá contar con la información de cada despacho de mercancías que realice, de una manera accesible y segura, en forma escrita o electrónica..',
+    paraca14: 'De igual manera, los formularios y la documentación relacionada con el despacho deberían asegurarse para evitar el uso no autorizado.',
+    paraca15: 'Anexe el procedimiento documentado para el procesamiento de la información y documentación de la carga.',
+    encabezamiento4: '5.4 Gestión de Inventarios, control de material de empaque, envase y embalaje.',
+    paraca16: `Se deben tener en su caso, 
+    procedimientos documentados para el control de inventarios y 
+    almacenaje de la carga y llevarse a cabo de forma periódica revisiones para 
+    comprobar su correcta gestión (por ejemplo, para el caso de subdivisión 
+    de facturas o documentos de embarque, etcétera). Asimismo, debe tener en su caso un 
+    procedimiento documentado para el control y supervisión del material de empaque y 
+    embalaje de las mercancías (por ejemplo en los procesos de etiquetado de las mercancías), 
+    en el que también se incluya el procedimiento de control, diseminación y prevención de la 
+    contaminación visible de plagas, en el caso de uso de materiales 
+    de embalaje de madera (como tarimas o pallets, cajas, cajones, jaulas, carretes, estiba, 
+    calzas, soportes o plataformas) para apilar la carga, 
+    moverla y protegerla a lo largo de toda su cadena de suministros.`,
+    paraca17: `Los procedimientos del solicitante podrán incluir:`,
+    paraca18: `Anexar el procedimiento documentado para la gestión de inventarios. Este debe incluir entre otros aspectos de acuerdo a su operación:`,
+    paraca19: `Respecto a los desperdicios o material sobrante de empaque y embalaje, señale el procedimiento que se realiza para su manejo y/o destrucción.`,
+    encabezamiento5: '5.5 Comunicación interna.',
+    paraca20: `El Agente Aduanal debe contar con dispositivos y/o sistemas de comunicación con la finalidad de tener un contacto inmediato con el personal de las diferentes áreas encargadas de realizar el despacho aduanero de las mercancías. Adicionalmente, se debe contar con un sistema de respaldo y verificar su buen funcionamiento de manera periódica.`,
+    paraca21: `Recomendación:`,
+  }
+
+  export const TEXTOS_ESTATICOS_GESTION = {
+    paraca1: 'El Agente Aduanal debe contar con procedimientos documentados, en el que se establezcan políticas internas y de operación, así como de los controles necesarios para el debido cumplimiento de las obligaciones aduaneras, con el objeto de garantizar el cumplimiento de la encomienda otorgada.',
+    paraca2: 'Asimismo, deberá contar con personal especializado y procedimientos documentados, que establezcan la verificación de la información y documentación generada en su nombre',
+    paraca3: 'El Agente Aduanal debe contar con procedimientos documentados que detallen cada uno de los pasos que se muestran en su mapeo de procesos establecido en el sub-estándar 5.1',
+    encabezamiento1: '6.1 Gestión del despacho aduanero.',
+    paraca4: `Anexe los procedimientos de cada uno de los puntos o pasos que contempla en su mapeo de procesos (5.1). Estos procedimientos deberán de incluir los siguientes puntos:`,
+    paraca5: `Indique de qué manera se asegura que la revisión de estos procedimientos que detallan la operación del despacho aduanero de la mercancía en todo momento coincidir con la información y/o documentación proporcionada por el cliente. Principalmente en los temas siguientes:`,
+    paraca6: `Anexar el procedimiento documentado para la gestión de inventarios. Este debe incluir entre otros aspectos de acuerdo a su operación:`,
+    paraca7: `El Agente Aduanal deberá contar con procedimientos documentados en los que se contemple el control de los gafetes oficiales que se soliciten para el personal que ingresa a los recintos fiscales, cómo: mandatario aduanal, dependiente, etcétera,`,
+    encabezamiento2: '6.2 Control en recintos.',
+    paraca8: `Asimismo, una de las obligaciones aduaneras, es la evaluación y certificación de la figura del mandatario aduanal, por lo que deberá contar con un procedimiento documentado para dar cumplimiento establecido en la Ley.`,
+    paraca9: `Anexe el procedimiento documentado que describa el control de los gafetes oficiales para el personal que ingresa a los recintos fiscales, asegúrese de no excluir los siguientes puntos:`,
+    paraca10: `Describa el proceso que debe seguir el mandatario aduanal para aplicar las evaluaciones y tener vigente sus certificaciones de actividades como:`,
+  }
