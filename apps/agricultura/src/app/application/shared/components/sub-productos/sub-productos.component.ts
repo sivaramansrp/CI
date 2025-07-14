@@ -257,6 +257,7 @@ export class SubProductosComponent implements OnInit, OnDestroy {
  * Actualmente no implementa ninguna funcionalidad, pero se puede extender en el futuro.
  */
   agregarAnimales(): void {
+
     this.agregarDatosFormulario.emit(
       {
         formulario: this.productosForm.value,
