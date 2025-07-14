@@ -306,6 +306,18 @@ export interface FilaSolicitud {
    * Especie del producto.
    */
   especie?: string;
+  /**
+   * Tipo de presentación del producto.
+   */
+  tipoPresentacion?: string;
+  /**
+   * Tipo de planta.
+   */
+  tipoPlanta?: string;
+  /**
+   * Planta autorizada de origen.
+   */
+  plantaAutorizadaOrigen?: string;
 }
 
 /**

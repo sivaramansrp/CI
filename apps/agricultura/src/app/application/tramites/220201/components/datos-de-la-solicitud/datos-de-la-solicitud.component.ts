@@ -570,9 +570,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 15 },
         { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
         { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
-        { encabezado: 'Tipo de presentación', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 },
-        { encabezado: 'Tipo planta', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 },
-        { encabezado: 'Planta autorizada de origen', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 },
+        { encabezado: 'Tipo de presentación', clave: (fila) => fila.tipoDeProducto, orden: 18 },
+        { encabezado: 'Tipo planta', clave: (fila) => fila.tipoPlanta, orden: 18 },
+        { encabezado: 'Planta autorizada de origen', clave: (fila) => fila.plantaAutorizadaOrigen, orden: 18 },
         { encabezado: 'Certificado Internacional Electrónico', clave: (fila: FilaSolicitud): string => fila.certificadoInternacionalElectronico, orden: 19 }
       ];
     }
