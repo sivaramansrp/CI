@@ -72,7 +72,12 @@ export const URL = '../../../../../assets/json/420102/';
  * @property {boolean} habilitado - Indica si el campo está habilitado.
  */
 export const FECHA_INGRESO = {
-  labelNombre: 'Fecha de ingreso',
-  required: true,
+  labelNombre: 'Fecha inicial',
+  required: false,
+  habilitado: true,
+};
+export const FECHA_FINAL = {
+  labelNombre: 'Fecha final',
+  required: false,
   habilitado: true,
 };
