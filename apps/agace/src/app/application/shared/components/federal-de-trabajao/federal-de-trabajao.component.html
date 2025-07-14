@@ -87,11 +87,18 @@
                       class="form-control"
                       id="numeroEmpleados"
                       formControlName="numeroEmpleados"
-                      placeholder="Ingrese numero de empleados"/>
+                      placeholder="Ingrese numero de empleados"
+                      maxlength="5"
+                      />
               </div>
-              @if(numeroDeEmpleadosForm.controls['numeroEmpleados'].invalid && numeroDeEmpleadosForm.controls['numeroEmpleados'].touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
-              }
+                @if(numeroDeEmpleadosForm.controls['numeroEmpleados'].invalid && numeroDeEmpleadosForm.controls['numeroEmpleados'].touched) {
+                  @if(numeroDeEmpleadosForm.controls['numeroEmpleados'].errors?.['required']) {
+                    <div class="mensaje-error">Este campo es obligatorio.</div>
+                  }
+                  @if(numeroDeEmpleadosForm.controls['numeroEmpleados'].errors?.['notInteger']) {
+                    <div class="mensaje-error">Por favor, escriba un número entero válido.</div>
+                  }
+                }
           </div>
         </div>
         <div class="row mb-3">

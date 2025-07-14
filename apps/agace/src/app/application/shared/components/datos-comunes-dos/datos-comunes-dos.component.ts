@@ -293,6 +293,7 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
             Validators.required,
             Validators.minLength(3),
             Validators.maxLength(250),
+            Validators.pattern(/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ.,-]*$/)
           ],
         ],
         lugarDeRadicacion: [
@@ -301,6 +302,7 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
             Validators.required,
             Validators.minLength(3),
             Validators.maxLength(250),
+            Validators.pattern(/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ.,-]*$/)
           ],
         ],
         contabilidad: [this.solicitudState?.contabilidad, Validators.required],

@@ -1,7 +1,7 @@
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Component, Inject, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MENCIONE_TABLA,Mencione } from '../../models/datos-comunes.model';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -63,6 +63,15 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
    */
   public esFormularioSoloLectura: boolean = false;
 
+// Custom validator function
+static integerValidator(control: AbstractControl): ValidationErrors | null {
+  const VALUE = control.value;
+  if (VALUE === null || VALUE === '') {
+    return null;
+  }
+  return Number.isInteger(Number(VALUE)) ? null : { notInteger: true };
+}
+
   /**
    * Constructor del componente.
    * 
@@ -108,7 +117,7 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
     this.numeroDeEmpleadosForm = this.fb.group({
       rfc: ['', [Validators.required, Validators.pattern(REGEX_RFC)]],
       razonSocial: ['', [Validators.required, Validators.minLength(3)]],
-      numeroEmpleados: ['', [Validators.required]],
+      numeroEmpleados: ['', [Validators.required, FederalDeTrabajaoComponent.integerValidator]],
       empleadosPropios: ['', [Validators.required, Validators.maxLength(8)]],
       archivoNacionales: ['', [Validators.required]],
       comboBimestresTres: [''],
