@@ -1,7 +1,7 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
 import { RadioOpcion } from '../../../tramites/220202/models/220202/fitosanitario.model';
 import { CONFIGURACION_DETALLAS_DATOS, FECHA_DE_DATA } from '../../constantes/datos-de-la-solicitue.enum';
@@ -37,7 +37,6 @@ import { DetallasDatos, ProductoDetallaEventos, ProductosCatalogosDatos } from '
     CommonModule,
     ReactiveFormsModule,
     TituloComponent,
-    TablaDinamicaComponent,
     InputRadioComponent,
     InputFechaComponent,
     CatalogoSelectComponent
@@ -248,6 +247,8 @@ export class SubProductosComponent implements OnInit, OnDestroy {
 * Utiliza el servicio de ubicación para retroceder una página.
 */
   cancelar(): void {
+    this.productosForm.reset();
+    this.detalleForm.reset();
     this.ubicaccion.back();
   }
 
@@ -274,6 +275,7 @@ export class SubProductosComponent implements OnInit, OnDestroy {
  */
   limpiarAnimalesVivo(): void {
     this.productosForm.reset();
+    this.detalleForm.reset();
     this.detallasDatosTablaDatos = [];
   }
 
