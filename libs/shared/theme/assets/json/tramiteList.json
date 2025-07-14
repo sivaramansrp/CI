@@ -4220,5 +4220,12 @@
     "linkDashboard": "/se/cancelaciones-certificado/solicitud",
     "linkDepartment": "/pago/cancelaciones-certificado/solicitud",
     "department": "se"
+  },
+  {
+    "id": 606,
+    "tramite": 32604,
+    "linkDashboard": "/agace/empresas-comercializadoras/solicitud",
+    "linkDepartment": "/pago/empresas-comercializadoras/solicitud",
+    "department": "agace"
   }
 ]
