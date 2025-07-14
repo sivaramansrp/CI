@@ -32,18 +32,14 @@
     <li class="page-item"><a class="page-link" href="#">1</a></li>    
   </ul>
 </nav>
-
-
-
-      <div class="row" style="padding-bottom: 20px;text-align: right;">
+<div class="row" style="padding-bottom: 20px;text-align: right;">
         <div>
-            <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura">Seleccionar</button>
-            
-        </div>
+            <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura"  data-bs-toggle="modal" data-bs-target="#modalAgregar"
+        (click)="abrirModal()">Seleccionar</button>
+</div>
     </div>
     <h6>Certificados a cancelar</h6>
     <app-tabla-dinamica 
-
   [configuracionTabla]="configuracionTabla"
   [datos]="Certificados"
   [tipoSeleccionTabla]="TablaSeleccion"
@@ -61,24 +57,18 @@
             
         </div>
     </div>
-
-    <app-modal [active]="showDevolverModal">
+<app-modal [active]="showDevolverModal">
   <app-devolver [(showDevolverModal)]="showDevolverModal"></app-devolver>
 </app-modal>
-
-   
-        <div class="row"  style="padding-bottom: 20px;" >
+<div class="row"  style="padding-bottom: 20px;" >
           <div class="col-md-12">
               <div class="form-group">
                 <label class="form-label" for="observaciones"> Motivo de la cancelación*:</label>
                 <textarea class="form-control" id="observaciones"  style="height: 120px;" disabled>Cancelación a solicitud de la empresa</textarea>
-              
               </div>
             </div>
             </div> 
-
-           
-            <ng-titulo titulo=" Captura monto a favor del certificado" />
+<ng-titulo titulo=" Captura monto a favor del certificado" />
             <div class="row"  style="padding-bottom: 20px;" >
               <div class="col-md-4">
                 <div class="form-group">
@@ -96,10 +86,12 @@
       </div>
       </form>
     </div>
-  
-
-    <div>
-      <btn-continuar [datos]="datosPasos" ></btn-continuar>
-  
-  
+  <div>
+   <btn-continuar [datos]="datosPasos" ></btn-continuar>
   </div>
+  @if (nuevaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+    </lib-notificaciones>
+  </section>
+  }

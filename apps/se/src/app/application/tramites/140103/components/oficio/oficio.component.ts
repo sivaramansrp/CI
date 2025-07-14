@@ -1,4 +1,4 @@
-import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, TituloComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, Notificacion, NotificacionesComponent, Pedimento, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -55,6 +55,7 @@ interface ConfiguracionItem {
     CommonModule,
     DevolverComponent,
     ModalComponent,
+    NotificacionesComponent,
   ],
   templateUrl: './oficio.component.html',
   styleUrls: ['./oficio.component.scss']
@@ -89,6 +90,27 @@ interface ConfiguracionItem {
  * @method updateformfied() - Actualiza los valores del formulario y deshabilita los campos de entrada para evitar modificaciones del usuario.
  */
 export class OficioComponent implements OnInit, OnDestroy{
+
+   /**
+   * @description
+   * Variable que almacena el índice del elemento que se desea eliminar de la lista de pedimentos.
+   * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
+   */
+  elementoParaEliminar!: number;
+
+  /**
+   * @description
+   * Objeto que representa una nueva notificación.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+   /**
+   * @description
+   * Arreglo que almacena los pedimentos asociados al establecimiento.
+   * Cada pedimento contiene información relevante para el trámite.
+   */
+  pedimentos: Array<Pedimento> = [];
 
   /**
    * Lista de certificados cargados desde un archivo JSON.
@@ -255,6 +277,41 @@ export class OficioComponent implements OnInit, OnDestroy{
 abrirDevolverFacturas() {
   this.showDevolverModal = true;
 }
+
+ /**
+   * @description
+   * Método que se invoca para abrir un modal de confirmación antes de eliminar un pedimento.
+   * Muestra una notificación al usuario y establece el índice del pedimento a eliminar.
+   * @param i Índice del pedimento a eliminar. Por defecto es 0.
+   */
+
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'seleccione un registro',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
+
+    this.elementoParaEliminar = i;
+  }
+
+   /**
+   * @description
+   * Método que se invoca para eliminar un pedimento del arreglo `pedimentos`.
+   * Si el parámetro `borrar` es verdadero, elimina el pedimento en el índice almacenado en `elementoParaEliminar`.
+   * @param borrar Indica si se debe proceder con la eliminación del pedimento.
+   */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta justo antes de destruir el componente.
