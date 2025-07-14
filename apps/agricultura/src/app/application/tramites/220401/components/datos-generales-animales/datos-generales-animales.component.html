@@ -329,6 +329,7 @@
           <button
             type="button"
             class="btn btn-danger btn-space"
+            (click)="onCancelar()"
             [disabled]="esFormularioSoloLectura? true : false"
           >
             Cancelar
@@ -336,6 +337,7 @@
           <button
             type="button"
             class="btn btn-primary btn-space"
+            (click)="onCancelar()"
            [disabled]="esFormularioSoloLectura? true : false"
           >
             Agregar

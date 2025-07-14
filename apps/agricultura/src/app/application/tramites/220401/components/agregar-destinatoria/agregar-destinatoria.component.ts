@@ -1,9 +1,9 @@
 import { Component,EventEmitter,OnInit,Output } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { TituloComponent } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-agregar-destinatoria',
   templateUrl: './agregar-destinatoria.component.html',

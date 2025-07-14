@@ -96,7 +96,7 @@
                   />
                         <div *ngIf="esInvalido('llavePago')" class="text-danger">
                            <small *ngIf="pagoForm.controls['llavePago'].errors?.['required']">
-                              Todos los campos de pago son requeridos
+                             Este campo es obligatorio
                            </small>
                            <small *ngIf="pagoForm.controls['llavePago'].errors?.['pattern']">
                               Existen datos incorrectos que no cumplen con el formato esperado
