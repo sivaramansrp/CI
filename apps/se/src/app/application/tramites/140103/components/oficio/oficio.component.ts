@@ -325,4 +325,37 @@ abrirDevolverFacturas() {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  selectedCertificado: CertificadosCancelar | null = null;
+  showCapturaMontoModal = false;
+
+  // Called when a row is selected in the table
+  onSeleccionRow(certificado: CertificadosCancelar) {
+    this.selectedCertificado = certificado;
+  }
+
+  // Handler for Seleccionar button
+  onSeleccionarClick() {
+    if (!this.selectedCertificado) {
+      // Show notification or modal: "Seleccione un registro"
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Seleccione un registro.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    } else {
+      this.showCapturaMontoModal = true;
+    }
+  }
+
+  closeCapturaMontoModal() {
+    this.showCapturaMontoModal = false;
+    this.selectedCertificado = null;
+  }
 }
