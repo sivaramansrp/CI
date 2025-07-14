@@ -10,7 +10,7 @@ describe('AnimalesVivoContenedoraComponent', () => {
   let component: AnimalesVivoContenedoraComponent;
   let fixture: ComponentFixture<AnimalesVivoContenedoraComponent>;
 
-  const mockApiService = {
+  const MOCK_API_SERVICE = {
     obtenerRespuestaPorUrl: jest.fn().mockReturnValue(of({
       tipoRequisitoList: [], requisitoList: [], fraccionArancelariaList: [],
       nicoList: [], umtList: [], umcList: [], especieList: [],
@@ -18,7 +18,7 @@ describe('AnimalesVivoContenedoraComponent', () => {
     }))
   };
 
-  const mockQuery = {
+  const MOCK_QUERY = {
     seleccionarState$: of({
       tablaDatos: [],
       selectedDatos: [{
@@ -39,7 +39,7 @@ describe('AnimalesVivoContenedoraComponent', () => {
     })
   };
 
-  const mockStore = {
+  const MOCK_STORE = {
     update: jest.fn()
   };
 
@@ -47,9 +47,9 @@ describe('AnimalesVivoContenedoraComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AnimalesVivoContenedoraComponent],
       providers: [
-        { provide: CertificadoZoosanitarioServiceService, useValue: mockApiService },
-        { provide: ZoosanitarioQuery, useValue: mockQuery },
-        { provide: ZoosanitarioStore, useValue: mockStore }
+        { provide: CertificadoZoosanitarioServiceService, useValue: MOCK_API_SERVICE },
+        { provide: ZoosanitarioQuery, useValue: MOCK_QUERY },
+        { provide: ZoosanitarioStore, useValue: MOCK_STORE }
       ]
     }).compileComponents();
 
@@ -66,7 +66,7 @@ describe('AnimalesVivoContenedoraComponent', () => {
   });
 
   it('should call store.update on agregarDatosFormulario()', () => {
-    const evento: AnimalesEventos = {
+    const EVENTO: AnimalesEventos = {
       formulario: {
         tipoRequisito: 'REQ2',
         requisito: 'DEF',
@@ -88,8 +88,8 @@ describe('AnimalesVivoContenedoraComponent', () => {
       tablaDatos: []
     };
 
-    component.agregarDatosFormulario(evento);
-    expect(mockStore.update).toHaveBeenCalledWith(expect.any(Function));
+    component.agregarDatosFormulario(EVENTO);
+    expect(MOCK_STORE.update).toHaveBeenCalledWith(expect.any(Function));
   });
 
   it('should destroy subscriptions on ngOnDestroy', () => {

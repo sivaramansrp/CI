@@ -14,7 +14,7 @@ describe('ZoosanitarioPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        ZoosanitarioPageComponent, // ✅ standalone component must go here
+        ZoosanitarioPageComponent,
         WizardComponent,
         BtnContinuarComponent,
         PasoUnoComponent,
@@ -41,26 +41,26 @@ describe('ZoosanitarioPageComponent', () => {
   });
 
   it('should update index and call siguiente when accion is "cont"', () => {
-    const wizardSpy = jest.spyOn(component.wizardComponent, 'siguiente');
+    const WIZARD_SPY = jest.spyOn(component.wizardComponent, 'siguiente');
     component.getValorIndice({ accion: 'cont', valor: 2 });
     expect(component.indice).toBe(2);
-    expect(wizardSpy).toHaveBeenCalled();
+    expect(WIZARD_SPY).toHaveBeenCalled();
   });
 
   it('should update index and call atras when accion is "atras"', () => {
-    const wizardSpy = jest.spyOn(component.wizardComponent, 'atras');
+    const WIZARD_SPY = jest.spyOn(component.wizardComponent, 'atras');
     component.getValorIndice({ accion: 'atras', valor: 2 });
     expect(component.indice).toBe(2);
-    expect(wizardSpy).toHaveBeenCalled();
+    expect(WIZARD_SPY).toHaveBeenCalled();
   });
 
   it('should not update index or call wizardComponent if value out of bounds', () => {
-    const siguienteSpy = jest.spyOn(component.wizardComponent, 'siguiente');
-    const atrasSpy = jest.spyOn(component.wizardComponent, 'atras');
+    const SIGUIENTE_SPY = jest.spyOn(component.wizardComponent, 'siguiente');
+    const ATRAS_SPY = jest.spyOn(component.wizardComponent, 'atras');
     component.getValorIndice({ accion: 'cont', valor: 10 });
     expect(component.indice).not.toBe(10);
-    expect(siguienteSpy).not.toHaveBeenCalled();
-    expect(atrasSpy).not.toHaveBeenCalled();
+    expect(SIGUIENTE_SPY).not.toHaveBeenCalled();
+    expect(ATRAS_SPY).not.toHaveBeenCalled();
   });
 
   it('should set correct title for each tab', () => {

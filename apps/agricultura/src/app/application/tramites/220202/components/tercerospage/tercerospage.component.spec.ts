@@ -9,14 +9,19 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { TercerospageComponent } from './tercerospage.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
-import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
+import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable()
-class MockCertificadoZoosanitarioServiceService {}
+class MockAgriculturaApiService {}
 
 @Injectable()
-class MockZoosanitarioQuery {}
+class MockFitosanitarioQuery {}
+
+@Injectable()
+class MockTercerosrelacionadosService {}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -52,17 +57,16 @@ describe('TercerospageComponent', () => {
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         ConsultaioQuery,
-        { provide: CertificadoZoosanitarioServiceService, useClass: MockCertificadoZoosanitarioServiceService },
-        { provide: ZoosanitarioQuery, useClass: MockZoosanitarioQuery }
+        { provide: AgriculturaApiService, useClass: MockAgriculturaApiService },
+        { provide: FitosanitarioQuery, useClass: MockFitosanitarioQuery },
+        { provide: TercerosrelacionadosService, useClass: MockTercerosrelacionadosService },
+        { provide: ActivatedRoute, useValue: { snapshot: {}, params: observableOf({}), queryParams: observableOf({}) } }
       ]
+    }).overrideComponent(TercerospageComponent, {
+
     }).compileComponents();
     fixture = TestBed.createComponent(TercerospageComponent);
     component = fixture.debugElement.componentInstance;
-  });
-
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
   });
 
   it('should run #constructor()', async () => {
@@ -74,14 +78,46 @@ describe('TercerospageComponent', () => {
     component.consultaQuery.selectConsultaioState$ = observableOf({
       readonly: {}
     });
+    component.agriculturaApiService = component.agriculturaApiService || {};
+    component.agriculturaApiService.getAllDatosForma = jest.fn().mockReturnValue(observableOf({
+      tercerosRelacionados: {},
+      datosForma: {}
+    }));
     component.ngOnInit();
-
+    expect(component.agriculturaApiService.getAllDatosForma).toHaveBeenCalled();
   });
 
-  it('should run #onPersonasChanged()', async () => {
-    component.certificadoZoosanitarioServices = component.certificadoZoosanitarioServices || {};
-    component.certificadoZoosanitarioServices.updateTercerosRelacionados = jest.fn();
-    component.onPersonasChanged({});
+  it('should run #ngAfterViewInit()', async () => {
+    component.pairsCatalogChange = jest.fn();
+    component.estadoCatalogChange = jest.fn();
+    component.ngAfterViewInit();
+    expect(component.pairsCatalogChange).toHaveBeenCalled();
+    expect(component.estadoCatalogChange).toHaveBeenCalled();
+  });
+
+  it('should run #pairsCatalogChange()', async () => {
+    component.tercerosrelacionadosService = component.tercerosrelacionadosService || {};
+    component.tercerosrelacionadosService.obtenerSelectorList = jest.fn().mockReturnValue(observableOf({}));
+    component.catalogosDatos = component.catalogosDatos || {};
+    component.catalogosDatos.paises = 'paises';
+    component.pairsCatalogChange();
+    expect(component.tercerosrelacionadosService.obtenerSelectorList).toHaveBeenCalled();
+  });
+
+  it('should run #estadoCatalogChange()', async () => {
+    component.tercerosrelacionadosService = component.tercerosrelacionadosService || {};
+    component.tercerosrelacionadosService.obtenerSelectorList = jest.fn().mockReturnValue(observableOf({}));
+    component.catalogosDatos = component.catalogosDatos || {};
+    component.catalogosDatos.estados = 'estados';
+    component.estadoCatalogChange();
+    expect(component.tercerosrelacionadosService.obtenerSelectorList).toHaveBeenCalled();
+  });
+
+  it('should run #handleEliminar()', async () => {
+    component.agriculturaApiService = component.agriculturaApiService || {};
+    component.agriculturaApiService.updateTercerosRelacionado = jest.fn();
+    component.handleEliminar();
+    expect(component.agriculturaApiService.updateTercerosRelacionado).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -89,6 +125,8 @@ describe('TercerospageComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });

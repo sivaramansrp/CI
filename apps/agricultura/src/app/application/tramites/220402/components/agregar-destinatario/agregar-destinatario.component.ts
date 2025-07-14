@@ -1,5 +1,5 @@
 import { CONFIGURATION_TABLA_DESTINATARIO, MENSAJEDEALERTA } from '../../constantes/certificado-zoosanitario.enum';
-import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, TablaSeleccion } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, TablaSeleccion, REGEX_SOLO_DIGITOS, REGEX_ALFANUMERICO_CON_ESPACIOS } from '@ng-mf/data-access-user';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Destinatario, DestinatarioRespuesta } from '../../models/pantallas-captura.model';
 import { CapturaSolicitudeService } from '../../services/captura-solicitud.service';
@@ -196,15 +196,15 @@ export class AgregarDestinatarioComponent implements OnDestroy, OnInit {
         tipoPersona: [this.destinatarioState?.tipoPersona, [Validators.required]]
       }),
       datosPersonales: this.fb.group({
-        nombre: [this.destinatarioState?.nombre, [Validators.required]],
-        primerApellido: [this.destinatarioState?.primerApellido, [Validators.required]],
-        segundoApellido: [this.destinatarioState?.segundoApellido, []],
-        denominacion: [this.destinatarioState?.denominacion, [Validators.required]],
+        nombre: [this.destinatarioState?.nombre, [Validators.required, Validators.maxLength(50), Validators.pattern(REGEX_ALFANUMERICO_CON_ESPACIOS)]],
+        primerApellido: [this.destinatarioState?.primerApellido, [Validators.required, Validators.maxLength(50), Validators.pattern(REGEX_ALFANUMERICO_CON_ESPACIOS)]],
+        segundoApellido: [this.destinatarioState?.segundoApellido, [Validators.maxLength(50), Validators.pattern(REGEX_ALFANUMERICO_CON_ESPACIOS)]],
+        denominacion: [this.destinatarioState?.denominacion, [Validators.required, Validators.maxLength(100)]],
         pais: [this.destinatarioState?.pais, [Validators.required]],
-        domicilio: [this.destinatarioState?.domicilio, [Validators.required]],
-        lada: [this.destinatarioState?.lada],
-        telefono: [this.destinatarioState?.telefono],
-        correoElectronico: [this.destinatarioState?.correoElectronico]
+        domicilio: [this.destinatarioState?.domicilio, [Validators.required, Validators.maxLength(200)]],
+        lada: [this.destinatarioState?.lada, [Validators.minLength(1), Validators.maxLength(4), Validators.pattern(REGEX_SOLO_DIGITOS)]],
+        telefono: [this.destinatarioState?.telefono, [Validators.minLength(7), Validators.maxLength(10), Validators.pattern(REGEX_SOLO_DIGITOS)]],
+        correoElectronico: [this.destinatarioState?.correoElectronico, [Validators.email]]
       })
     });
     this.inicializarEstadoFormulario();

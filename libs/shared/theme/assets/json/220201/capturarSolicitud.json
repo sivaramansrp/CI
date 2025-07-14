@@ -79,12 +79,23 @@
       }
     ],
     "datosForma": [
-       {
-                "exportadorNombre": "Juan Pérez",
-                "exportadorTelefono": "555-1234",
-                "exportadorCorreo": "juan.perez@email.com",
-                "exportadorDomicilio": "Calle Falsa 123, Ciudad de México",
-                "exportadorPais": "México"
+       { 
+      "tipoMercancia": "Ganado",
+      "nombre": "Juan",
+      "primerApellido": "Pérez",
+      "segundoApellido": "García",
+      "razonSocial": "Agropecuaria del Norte S.A. de C.V.",
+      "pais": "México",
+      "codigoPostal": "64000",
+      "estado": "Nuevo León",
+      "municipio": "Monterrey",
+      "colonia": "Centro",
+      "calle": "Av. Revolución",
+      "numeroExterior": "123",
+      "numeroInterior": "4B",
+      "lada": "81",
+      "telefono": "12345678",
+      "correo": "juan.perez@agronorte.com"
         }
       ]
 }

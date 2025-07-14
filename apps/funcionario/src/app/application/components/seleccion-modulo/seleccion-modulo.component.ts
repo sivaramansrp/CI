@@ -1,6 +1,6 @@
 import { catchError, map, Subject, takeUntil } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { 
+import {
     ConfiguracionColumna,
     InputFecha,
     InputFechaComponent,
@@ -93,7 +93,7 @@ export class BandejaPendientesComponent implements OnInit, OnDestroy {
    * Actualiza el valor del campo 'fechaInicio' en el formulario reactivo `FormBusqueda`
    * @param nuevoValor_fechaInicio - Nuevo valor a establecer para el campo 'fechaInicio'.
    */
-    public cambioFechaInicio(nuevoValor_fechaInicio: string) {
+    public cambioFechaInicio(nuevoValor_fechaInicio: string): void {
         this.FormBusqueda.get('fechaInicio')?.setValue(nuevoValor_fechaInicio);
         this.FormBusqueda.get('fechaInicio')?.markAsUntouched();
     }
@@ -102,7 +102,7 @@ export class BandejaPendientesComponent implements OnInit, OnDestroy {
    * Actualiza el valor del campo 'fechaFinal' en el formulario reactivo `FormBusqueda`
    * @param nuevoValor_fechaFinal - Nuevo valor a establecer para el campo 'fechaFinal'.
    */
-    public cambioFechaFinal(nuevoValor_fechaFinal: string) {
+    public cambioFechaFinal(nuevoValor_fechaFinal: string): void {
         this.FormBusqueda.get('fechaFinal')?.setValue(nuevoValor_fechaFinal);
         this.FormBusqueda.get('fechaFinal')?.markAsUntouched();
     }
@@ -139,7 +139,7 @@ export class BandejaPendientesComponent implements OnInit, OnDestroy {
     }
 
     /** Ejecuta la búsqueda de pendientes con los filtros del formulario */
-    buscarPendiente() {
+    buscarPendiente(): void {
         //Se salta la regla de UPPER_CASE, ya que los valores que se recuperan en la constante 
         //son valores predefinidos como el formulario fueron declarados
         //eslint-disable-next-line @typescript-eslint/naming-convention

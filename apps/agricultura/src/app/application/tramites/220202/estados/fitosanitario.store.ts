@@ -144,4 +144,17 @@ public actualizarTercerosRelacionados(nuevoTercero: TercerosrelacionadosdestinoT
       tercerosRelacionados: tercerosRelacionados,
     }));
   }
+
+  /**
+   * Actualiza el store con la lista de terceros relacionados.
+   * @method updateTercerosRelacionados
+   * @param {TercerosrelacionadosTable[]} tercerosRelacionados Lista de personas terceros relacionadas.
+   */
+  public updateTercerosExportador(datosForma: TercerosrelacionadosdestinoTable[]): void {
+    this.update(state => ({
+      ...state,
+      datosForma: datosForma,
+    }));
+  }
+
 }

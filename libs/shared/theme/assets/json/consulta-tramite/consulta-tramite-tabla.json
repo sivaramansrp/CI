@@ -2736,6 +2736,15 @@
         "numeroDeProcedimiento": "32514"
     },
     {
+       "id": "30506",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "30506" 
+    },
+    {
         "id":"32511",
         "folioTramite": "0100001000320251005000002",
         "tipoDeTramite": "Datos generales del trámite",
