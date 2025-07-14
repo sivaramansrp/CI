@@ -39,4 +39,13 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
+/**
+ * @description
+ * Módulo de enrutamiento para la funcionalidad de aviso único de renovación.
+ * Este módulo gestiona las rutas relacionadas con la modificación y certificación de avisos.
+ *
+ * @class
+ * @see Angular Routing](https://angular.io/guide/router)
+ *
+ */
 export class AvisoUnicoRenovacionRoutingModule {}

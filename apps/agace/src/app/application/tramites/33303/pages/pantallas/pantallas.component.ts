@@ -14,7 +14,6 @@ import { AccionBoton } from '../../models/aviso.model';
 @Component({
   selector: 'app-pantallas',
   templateUrl: './pantallas.component.html',
-  styleUrl: './pantallas.component.scss',
 })
 export class PantallasComponent {
   /**
