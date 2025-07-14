@@ -119,7 +119,7 @@ export class ZoosanitarioPageComponent {
           'Captura del certificado zoosanitario para importación';
         break;
       default:
-        this.tituloMensaje = ' Captura del certificado zoosanitario para importación';
+        this.tituloMensaje = 'Captura del certificado zoosanitario para importación';
         break;
     }
   }

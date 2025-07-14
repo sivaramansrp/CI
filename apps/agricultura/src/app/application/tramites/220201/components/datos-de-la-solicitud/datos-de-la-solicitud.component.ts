@@ -368,7 +368,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         } else {
           const PATTERN = /^UCON[a-zA-Z0-9]{4,10}$/;
           this.moduloEmergente = !PATTERN.test(value);
-          this.messageDeError = `'No existe información para la clave UCON: ${this.datosDelaSolicitud.get('claveUCON')?.value} y RFC: LEQI8101314S7 proporcionados. Favor de verificar.'`;
+          this.messageDeError = `No existe información para la clave UCON: ${this.datosDelaSolicitud.get('claveUCON')?.value} y RFC: LEQI8101314S7 proporcionados. Favor de verificar.`;
            this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
