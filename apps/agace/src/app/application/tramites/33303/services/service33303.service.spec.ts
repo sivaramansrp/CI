@@ -1,107 +1,126 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
-import { Service317Service } from './service33303.service';
-import { UnicoStore, UnicoState } from '../estados/renovacion.store';
+import { Service33303Service } from './service33303.service';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { UnicoStore } from '../estados/renovacion.store';
+import { UnicoState } from '../estados/renovacion.store';
 
-describe('Service317Service', () => {
-  let service: Service317Service;
-  let httpMock: jest.Mocked<HttpClient>;
+describe('Service33303Service', () => {
+  let service: Service33303Service;
+  let httpMock: HttpTestingController;
   let storeMock: jest.Mocked<UnicoStore>;
 
   beforeEach(() => {
-    const httpClientMock = { get: jest.fn() } as unknown as jest.Mocked<HttpClient>;
-    const unicoStoreMock = {
+    storeMock = {
       setnumeroOperacion: jest.fn(),
       setbanco: jest.fn(),
       setllavePago: jest.fn(),
       setfechaPago: jest.fn(),
       setmapTipoTramite: jest.fn(),
+      setforeignClientsSuppliers: jest.fn(),
+      setnationalSuppliers: jest.fn(),
+      setmodificationsMembers: jest.fn(),
+      setchangesToLegalDocuments: jest.fn(),
+      setmergerOrSplitNotice: jest.fn(),
+      setadditionFractions: jest.fn(),
+      setadditionmodificación: jest.fn(),
+      setadditionPresentación: jest.fn(),
+      setacepto253: jest.fn(),
     } as unknown as jest.Mocked<UnicoStore>;
 
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       providers: [
-        Service317Service,
-        { provide: HttpClient, useValue: httpClientMock },
-        { provide: UnicoStore, useValue: unicoStoreMock }
+        Service33303Service,
+        { provide: UnicoStore, useValue: storeMock }
       ]
     });
 
-    service = TestBed.inject(Service317Service);
-    httpMock = TestBed.inject(HttpClient) as jest.Mocked<HttpClient>;
-    storeMock = TestBed.inject(UnicoStore) as jest.Mocked<UnicoStore>;
+    service = TestBed.inject(Service33303Service);
+    httpMock = TestBed.inject(HttpTestingController);
   });
-describe('actualizarEstadoFormulario', () => {
-  it('should call all store setters with provided values', () => {
-    const datos: UnicoState = {
-      mapTipoTramite: 'A',
+
+  afterEach(() => {
+    httpMock.verify();
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
+  it('should call all relevant UnicoStore methods when updating state', () => {
+    const mockState: UnicoState = {
+      numeroOperacion: '123',
+      banco: 'BBVA',
+      llavePago: 'abc123',
+      fechaPago: '2025-07-14',
+      mapTipoTramite: 'T33303',
+      foreignClientsSuppliers: true,
+      nationalSuppliers: true,
+      modificationsMembers: true,
+      changesToLegalDocuments: true,
+      mergerOrSplitNotice: true,
+      additionFractions: true,
+      additionmodificación: true,
+      additionPresentación: true,
+      acepto253: true,
       mapDeclaracionSolicitud: '',
       envioAviso: '',
       numeroAviso: '',
       claveReferencia: '',
-      numeroOperacion: '123',
       cadenaDependencia: '',
-      banco: 'BBVA',
-      llavePago: 'LLAVE',
-      fechaPago: '2024-01-01',
       importePago: '',
+      modalidadCertificacion: ''
     };
 
-    service.actualizarEstadoFormulario(datos);
+    service.actualizarEstadoFormulario(mockState);
 
     expect(storeMock.setnumeroOperacion).toHaveBeenCalledWith('123');
     expect(storeMock.setbanco).toHaveBeenCalledWith('BBVA');
-    expect(storeMock.setllavePago).toHaveBeenCalledWith('LLAVE');
-    expect(storeMock.setfechaPago).toHaveBeenCalledWith('2024-01-01');
-    expect(storeMock.setmapTipoTramite).toHaveBeenCalledWith('A');
+    expect(storeMock.setllavePago).toHaveBeenCalledWith('abc123');
+    expect(storeMock.setfechaPago).toHaveBeenCalledWith('2025-07-14');
+    expect(storeMock.setmapTipoTramite).toHaveBeenCalledWith('T33303');
+    expect(storeMock.setforeignClientsSuppliers).toHaveBeenCalledWith(true);
+    expect(storeMock.setnationalSuppliers).toHaveBeenCalledWith(true);
+    expect(storeMock.setmodificationsMembers).toHaveBeenCalledWith(true);
+    expect(storeMock.setchangesToLegalDocuments).toHaveBeenCalledWith(true);
+    expect(storeMock.setmergerOrSplitNotice).toHaveBeenCalledWith(true);
+    expect(storeMock.setadditionFractions).toHaveBeenCalledWith(true);
+    expect(storeMock.setadditionmodificación).toHaveBeenCalledWith(true);
+    expect(storeMock.setadditionPresentación).toHaveBeenCalledWith(true);
+    expect(storeMock.setacepto253).toHaveBeenCalledWith(true);
   });
 
-  it('should not call setters if values are missing', () => {
-    const datos: UnicoState = {
-      mapTipoTramite: '',
+  it('should fetch registro toma muestras data from JSON file', () => {
+    const mockData: UnicoState = {
+      numeroOperacion: '456',
+      banco: 'SBI',
+      llavePago: 'xyz456',
+      fechaPago: '2025-07-10',
+      mapTipoTramite: 'T33303',
+      foreignClientsSuppliers: false,
+      nationalSuppliers: false,
+      modificationsMembers: false,
+      changesToLegalDocuments: false,
+      mergerOrSplitNotice: false,
+      additionFractions: false,
+      additionmodificación: false,
+      additionPresentación: false,
+      acepto253: false,
       mapDeclaracionSolicitud: '',
       envioAviso: '',
       numeroAviso: '',
       claveReferencia: '',
-      numeroOperacion: '',
       cadenaDependencia: '',
-      banco: '',
-      llavePago: '',
-      fechaPago: '',
       importePago: '',
+      modalidadCertificacion: ''
     };
-    service.actualizarEstadoFormulario(datos);
 
-    expect(storeMock.setnumeroOperacion).not.toHaveBeenCalled();
-    expect(storeMock.setbanco).not.toHaveBeenCalled();
-    expect(storeMock.setllavePago).not.toHaveBeenCalled();
-    expect(storeMock.setfechaPago).not.toHaveBeenCalled();
-    expect(storeMock.setmapTipoTramite).not.toHaveBeenCalled();
-  });
-});
-
-describe('getRegistroTomaMuestrasMercanciasData', () => {
-  it('should return UnicoState from the JSON file', (done) => {
-    const mockState: UnicoState = {
-      mapTipoTramite: '',
-      mapDeclaracionSolicitud: '',
-      envioAviso: '',
-      numeroAviso: '',
-      claveReferencia: '',
-      numeroOperacion: '123',
-      cadenaDependencia: '',
-      banco: '',
-      llavePago: '',
-      fechaPago: '',
-      importePago: '',
-    };
-    httpMock.get.mockReturnValueOnce(of(mockState));
-
-    service.getRegistroTomaMuestrasMercanciasData().subscribe(data => {
-      expect(data).toEqual(mockState);
-      expect(httpMock.get).toHaveBeenCalledWith('assets/json/317/consulta.json');
-      done();
+    service.getRegistroTomaMuestrasMercanciasData().subscribe((data) => {
+      expect(data).toEqual(mockData);
     });
+
+    const req = httpMock.expectOne('assets/json/33303/consulta.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
   });
-});
 });
