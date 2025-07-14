@@ -15,7 +15,8 @@
                     Descripción de la mercancía importada temporalmente de donde procede el desperdicio a destruir*:
                 </label>
                 <input type="text" id="descripcionMercancia" formControlName="descripcionMercancia" class="form-control"
-                    (change)="setValoresStore(avisoForm, 'descripcionMercancia', 'setDescripcionMercancia')"/>
+                    (change)="setValoresStore(avisoForm, 'descripcionMercancia', 'setDescripcionMercancia')"
+                    [disabled]="esFormularioSoloLectura" />
                 <div *ngIf="isInvalid('descripcionMercancia')" class="mensaje-error">
                     Este campo es obligatorio.
                 </div>
@@ -26,8 +27,9 @@
                 <label for="porcentajeDesperdicio">
                     Porcentaje que representa el desperdicio de destruir, de la mercancía importada temporalmente de la que procede*:
                 </label>
-                <input type="text" id="porcentajeDesperdicio" formControlName="porcentajeDesperdicio" class="form-control porWidth" 
-                    (change)="setValoresStore(avisoForm, 'porcentajeDesperdicio', 'setPorcentajeDesperdicio')"/>
+                <input type="number" id="porcentajeDesperdicio" formControlName="porcentajeDesperdicio" class="form-control porWidth" 
+                    (change)="setValoresStore(avisoForm, 'porcentajeDesperdicio', 'setPorcentajeDesperdicio')"
+                    [disabled]="esFormularioSoloLectura" />
                 <div *ngIf="isInvalid('porcentajeDesperdicio')" class="mensaje-error">
                     Este campo es obligatorio.
                 </div>
@@ -47,7 +49,7 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <button type="button" for="archivoMedicamentos" class="file-upload" (click)="activarSeleccionArchivo()">
+                <button type="button" for="archivoMedicamentos" class="file-upload" (click)="activarSeleccionArchivo()" [disabled]="esFormularioSoloLectura">
                     seleccionar archivo
                 </button>
                 <span class="ml-2">{{ elgirDeArchivo }}</span>
@@ -57,7 +59,7 @@
         </div>
         <div class="row">
             <div class="col-md-6 d-flex justify-content-end">
-                <button type="button" class="btn btn-default" (click)="cargarProveedores()">
+                <button type="button" class="btn btn-default" (click)="cargarProveedores()" [disabled]="esFormularioSoloLectura">
                     Cargar
                 </button>
             </div>
