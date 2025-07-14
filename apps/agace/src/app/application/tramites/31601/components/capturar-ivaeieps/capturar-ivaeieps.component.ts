@@ -307,14 +307,17 @@ if (this.esFormularioSoloLectura) {
   cambioDeValor(value: string | number): void {
     this.valorSeleccionado = value.toString();
   }
-
+/**
+ * Elimina las filas seleccionadas de la tabla.
+ * 
+ * Esta función verifica si la referencia de la tabla (`tableRef`) está disponible.
+ * Luego filtra las filas, excluyendo aquellas que están marcadas como seleccionadas,
+ * y actualiza el cuerpo de la tabla (`datosDeInversion.tableBody`) con las filas restantes.
+ */
   eliminar(): void {
   if (!this.tableRef) {return;}
-
-  
   const FILTRADO = this.tableRef.tableData.tableBody.filter(row => !row.selected);
- 
-  this.datosDeInversion.tableBody = FILTRADO;
+   this.datosDeInversion.tableBody = FILTRADO;
 }
   /**
    * Actualiza el valor de `predeterminadoSeleccionar` con el valor proporcionado.
