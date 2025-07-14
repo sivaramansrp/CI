@@ -255,7 +255,7 @@ this.inicializarCertificadoFormulario();
 
       this.datosdelForm= this.fb.group({
         datoscertificado:[this.solicitudState?.datoscertificado],
-        certificada: [this.solicitudState?.certificada ?? 'Producto'],
+        certificada: ['Producto', Validators.required],
         tratamiento:[this.solicitudState?.tratamiento],
         tipoCertificado: ['', Validators.required],
         message: [{ value: '', disabled: true }],
