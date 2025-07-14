@@ -51,9 +51,7 @@ describe('TipoDeAvisoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize catalogs on init', () => {
-    jest.spyOn<any, any>(component, 'inicializaCatalogos');
-    component.ngOnInit();
+  it('should initialize catalogs on component creation', () => {    
     expect(mockService.getEntidadFederativaCatalogo).toHaveBeenCalled();
     expect(mockService.getAlcaldiaMunicipioCatalogo).toHaveBeenCalled();
     expect(mockService.getColoniaCatalogo).toHaveBeenCalled();
