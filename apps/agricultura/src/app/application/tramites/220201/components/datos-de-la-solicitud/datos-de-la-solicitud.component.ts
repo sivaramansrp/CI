@@ -565,7 +565,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
  * @param {FilaSolicitud} event - Datos de la fila seleccionada.
  */
   seleccionTabla(event: FilaSolicitud[]): void {
-    console.log('Fila seleccionada:', event);
     this.listSelectedView = event;
     this.fitosanitarioStore.update(
       (state) => ({

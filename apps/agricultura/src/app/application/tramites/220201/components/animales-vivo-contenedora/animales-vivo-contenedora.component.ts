@@ -1,12 +1,12 @@
-import { AnimalesEventos, AnimalesFormularioSolicitud, DatosDeLaSolicitud } from '../../../../shared/models/datos-de-la-solicitue.model';
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AnimalesVivoDetallesComponent } from '../../../../shared/components/animales-vivo-detalles/animales-vivo-detalles.component';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
-import { CommonModule } from '@angular/common';
+import { AnimalesEventos, AnimalesFormularioSolicitud, DatosDeLaSolicitud } from '../../../../shared/models/datos-de-la-solicitue.model';
+import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
-import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 
 @Component({
   selector: 'app-animales-vivo-contenedora',
@@ -15,12 +15,12 @@ import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
   templateUrl: './animales-vivo-contenedora.component.html',
   styleUrl: './animales-vivo-contenedora.component.scss',
 })
-export class AnimalesVivoContenedoraComponent implements OnDestroy{
+export class AnimalesVivoContenedoraComponent implements OnDestroy {
   /**
    * Datos de la solicitud que se recibirán como entrada en el componente.
    * @type {DatosDeLaSolicitud}
    */
-  public catalogosDatos: DatosDeLaSolicitud ={
+  public catalogosDatos: DatosDeLaSolicitud = {
     tipoRequisitoList: [],
     requisitoList: [],
     fraccionArancelariaList: [],
@@ -99,6 +99,7 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy{
    */
   agregarDatosFormulario(valor: AnimalesEventos): void {
     const DATOS: FilaSolicitud = {
+      id: Math.floor(Math.random() * 1000000),
       noPartida: '',
       tipoRequisito: valor.formulario.tipoRequisito || '',
       requisito: valor.formulario.requisito || '',
