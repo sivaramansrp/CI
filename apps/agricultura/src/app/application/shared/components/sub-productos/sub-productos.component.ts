@@ -1,12 +1,11 @@
-import { CONFIGURACION_DETALLAS_DATOS, FECHA_DE_DATA } from '../../constantes/datos-de-la-solicitue.enum';
-import { CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { DetallasDatos, ProductoDetallaEventos, ProductosCatalogosDatos } from '../../models/datos-de-la-solicitue.model';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { EventEmitter } from '@angular/core';
-import { RadioOpcion } from '../../../tramites/220202/models/220202/fitosanitario.model';
+import { CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
+import { RadioOpcion } from '../../../tramites/220202/models/220202/fitosanitario.model';
+import { CONFIGURACION_DETALLAS_DATOS, FECHA_DE_DATA } from '../../constantes/datos-de-la-solicitue.enum';
+import { DetallasDatos, ProductoDetallaEventos, ProductosCatalogosDatos } from '../../models/datos-de-la-solicitue.model';
 
 
 /**
@@ -45,8 +44,8 @@ import { Subject } from 'rxjs';
   ],
   templateUrl: './sub-productos.component.html',
 })
-export class SubProductosComponent implements OnInit, OnDestroy{
-      fechaInicioInput: InputFecha = FECHA_DE_DATA;
+export class SubProductosComponent implements OnInit, OnDestroy {
+  fechaInicioInput: InputFecha = FECHA_DE_DATA;
   /**
    * Representa el formulario reactivo utilizado para gestionar los datos de la mercancía
    * en el componente de detalles de animales vivos.
@@ -62,25 +61,25 @@ export class SubProductosComponent implements OnInit, OnDestroy{
    * 
    * @type {ConfiguracionColumna<DetallasDatos>[]}
    */
-public configuracionDetallasDatosTabla: ConfiguracionColumna<DetallasDatos>[] = CONFIGURACION_DETALLAS_DATOS;
+  public configuracionDetallasDatosTabla: ConfiguracionColumna<DetallasDatos>[] = CONFIGURACION_DETALLAS_DATOS;
 
-/**
-   * Arreglo que almacena los detalles de los datos sensibles ingresados en el formulario.
-   * Cada elemento es un objeto de tipo `DetallasDatos` que contiene información específica
-   * sobre los animales vivos, como número de lote, fechas de producción, etc.
-   * 
-   * @type {DetallasDatos[]}
-   */
-public detallasDatosTablaDatos: DetallasDatos[] = [];
+  /**
+     * Arreglo que almacena los detalles de los datos sensibles ingresados en el formulario.
+     * Cada elemento es un objeto de tipo `DetallasDatos` que contiene información específica
+     * sobre los animales vivos, como número de lote, fechas de producción, etc.
+     * 
+     * @type {DetallasDatos[]}
+     */
+  public detallasDatosTablaDatos: DetallasDatos[] = [];
 
-/**
-   * Arreglo que almacena los detalles de los datos sensibles ingresados en el formulario.
-   * Cada elemento es un objeto de tipo `DetallasDatos` que contiene información específica
-   * sobre los animales vivos, como número de lote, fechas de producción, etc.
-   * 
-   * @type {DetallasDatos[]}
-   */
-public detallasDatosTablaSeleccionada: DetallasDatos[] = [];
+  /**
+     * Arreglo que almacena los detalles de los datos sensibles ingresados en el formulario.
+     * Cada elemento es un objeto de tipo `DetallasDatos` que contiene información específica
+     * sobre los animales vivos, como número de lote, fechas de producción, etc.
+     * 
+     * @type {DetallasDatos[]}
+     */
+  public detallasDatosTablaSeleccionada: DetallasDatos[] = [];
   /**
    * Representa el formulario reactivo utilizado para gestionar los detalles específicos
    * de los animales vivos, como número de lote, color de pelaje, edad, etc.
@@ -127,12 +126,12 @@ public detallasDatosTablaSeleccionada: DetallasDatos[] = [];
    */
   public tablaSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
-/**
-   * Evento que se emite cuando se agregan datos al formulario de solicitud de animales vivos.
-   * Este evento permite al componente padre recibir los datos del formulario para su procesamiento.
-   * 
-   * @type {EventEmitter<ProductoDetallaEventos>}
-   */
+  /**
+     * Evento que se emite cuando se agregan datos al formulario de solicitud de animales vivos.
+     * Este evento permite al componente padre recibir los datos del formulario para su procesamiento.
+     * 
+     * @type {EventEmitter<ProductoDetallaEventos>}
+     */
   @Output() agregarDatosFormulario = new EventEmitter<ProductoDetallaEventos>();
 
   /**
@@ -155,83 +154,83 @@ public detallasDatosTablaSeleccionada: DetallasDatos[] = [];
   }
 
 
-    /**
-     * Crea y configura los formularios reactivos `productosForm` y `detalleForm` 
-     * utilizados en el componente para gestionar los datos relacionados con 
-     * productos y detalles específicos.
-     * 
-     * El formulario `productosForm` incluye los siguientes campos:
-     * - `tipoRequisito`: Campo obligatorio para especificar el tipo de requisito.
-     * - `requisito`: Campo obligatorio para definir el requisito.
-     * - `numeroCertificado`: Campo opcional con un máximo de 50 caracteres y que 
-     *   solo permite caracteres alfanuméricos.
-     * - `fraccionArancelaria`: Campo obligatorio para la fracción arancelaria.
-     * - `descripcionFraccion`: Campo opcional para la descripción de la fracción.
-     * - `nico`: Campo obligatorio para el NICO (Número de Identificación Comercial).
-     * - `descripcionNico`: Campo opcional para la descripción del NICO.
-     * - `descripcion`: Campo opcional con un máximo de 1000 caracteres y que solo 
-     *   permite caracteres alfanuméricos.
-     * - `cantidadUMT`: Campo opcional que acepta un número con hasta 12 dígitos 
-     *   enteros y 3 decimales.
-     * - `umt`: Campo obligatorio que está deshabilitado inicialmente.
-     * - `cantidadUMC`: Campo opcional que acepta un número con hasta 12 dígitos 
-     *   enteros y 3 decimales.
-     * - `umc`: Campo obligatorio para la unidad de medida comercial.
-     * - `especie`: Campo obligatorio para especificar la especie.
-     * - `uso`: Campo obligatorio para definir el uso.
-     * - `paisOrigen`: Campo obligatorio para el país de origen.
-     * - `paisDeProcedencia`: Campo obligatorio para el país de procedencia.
-     * - `presentacion`: Campo opcional para la presentación del producto.
-     * - `cantidadPresentacion`: Campo opcional para la cantidad en la presentación.
-     * - `tipoPresentacion`: Campo opcional para el tipo de presentación.
-     * - `tipoPlanta`: Campo opcional para el tipo de planta.
-     * - `plantaAutorizadaOrigen`: Campo opcional para la planta autorizada de origen.
-     * 
-     * El formulario `detalleForm` incluye los siguientes campos:
-     * - `numeroLote`: Campo opcional con un máximo de 16 caracteres y que solo 
-     *   permite caracteres alfanuméricos.
-     * - `rangoDeFecha`: Campo opcional para especificar un rango de fechas.
-     * 
-     * Este método inicializa ambos formularios con sus respectivos validadores 
-     * para garantizar la integridad de los datos ingresados.
-     */
-    crearFormulario(): void {
-      this.productosForm = this.fb.group({
-        tipoRequisito: ['', Validators.required],
-        requisito: ['', Validators.required],
-        numeroCertificado: ['', [Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
-        fraccionArancelaria: ['', Validators.required],
-        descripcionFraccion: [''],
-        nico: ['', Validators.required],
-        descripcionNico: [''],
-        descripcion: ['', [Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
-        cantidadUMT: ['', [Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
-        umt: [{ value: '', disabled: true }, Validators.required],
-        cantidadUMC: ['', [Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
-        umc: ['', Validators.required],
-        especie: ['', Validators.required],
-        uso: ['', Validators.required],
-        paisOrigen: ['', Validators.required],
-        paisDeProcedencia: ['', Validators.required],
-        presentacion: [''],
-        cantidadPresentacion: [''],
-        tipoPresentacion: [''],
-        tipoPlanta: [''],
-        plantaAutorizadaOrigen: ['']
-      });
+  /**
+   * Crea y configura los formularios reactivos `productosForm` y `detalleForm` 
+   * utilizados en el componente para gestionar los datos relacionados con 
+   * productos y detalles específicos.
+   * 
+   * El formulario `productosForm` incluye los siguientes campos:
+   * - `tipoRequisito`: Campo obligatorio para especificar el tipo de requisito.
+   * - `requisito`: Campo obligatorio para definir el requisito.
+   * - `numeroCertificado`: Campo opcional con un máximo de 50 caracteres y que 
+   *   solo permite caracteres alfanuméricos.
+   * - `fraccionArancelaria`: Campo obligatorio para la fracción arancelaria.
+   * - `descripcionFraccion`: Campo opcional para la descripción de la fracción.
+   * - `nico`: Campo obligatorio para el NICO (Número de Identificación Comercial).
+   * - `descripcionNico`: Campo opcional para la descripción del NICO.
+   * - `descripcion`: Campo opcional con un máximo de 1000 caracteres y que solo 
+   *   permite caracteres alfanuméricos.
+   * - `cantidadUMT`: Campo opcional que acepta un número con hasta 12 dígitos 
+   *   enteros y 3 decimales.
+   * - `umt`: Campo obligatorio que está deshabilitado inicialmente.
+   * - `cantidadUMC`: Campo opcional que acepta un número con hasta 12 dígitos 
+   *   enteros y 3 decimales.
+   * - `umc`: Campo obligatorio para la unidad de medida comercial.
+   * - `especie`: Campo obligatorio para especificar la especie.
+   * - `uso`: Campo obligatorio para definir el uso.
+   * - `paisOrigen`: Campo obligatorio para el país de origen.
+   * - `paisDeProcedencia`: Campo obligatorio para el país de procedencia.
+   * - `presentacion`: Campo opcional para la presentación del producto.
+   * - `cantidadPresentacion`: Campo opcional para la cantidad en la presentación.
+   * - `tipoPresentacion`: Campo opcional para el tipo de presentación.
+   * - `tipoPlanta`: Campo opcional para el tipo de planta.
+   * - `plantaAutorizadaOrigen`: Campo opcional para la planta autorizada de origen.
+   * 
+   * El formulario `detalleForm` incluye los siguientes campos:
+   * - `numeroLote`: Campo opcional con un máximo de 16 caracteres y que solo 
+   *   permite caracteres alfanuméricos.
+   * - `rangoDeFecha`: Campo opcional para especificar un rango de fechas.
+   * 
+   * Este método inicializa ambos formularios con sus respectivos validadores 
+   * para garantizar la integridad de los datos ingresados.
+   */
+  crearFormulario(): void {
+    this.productosForm = this.fb.group({
+      tipoRequisito: ['', Validators.required],
+      requisito: ['', Validators.required],
+      numeroCertificado: ['', [Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
+      fraccionArancelaria: ['', Validators.required],
+      descripcionFraccion: [{ value: '', disabled: true }, Validators.required],
+      nico: ['', Validators.required],
+      descripcionNico: [{ value: '', disabled: true }, Validators.required],
+      descripcion: ['', [Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
+      cantidadUMT: ['', [Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
+      umt: [{ value: '', disabled: true }, Validators.required],
+      cantidadUMC: ['', [Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
+      umc: ['', Validators.required],
+      especie: ['', Validators.required],
+      uso: ['', Validators.required],
+      paisOrigen: ['', Validators.required],
+      paisDeProcedencia: ['', Validators.required],
+      presentacion: [''],
+      cantidadPresentacion: [''],
+      tipoPresentacion: [''],
+      tipoPlanta: [''],
+      plantaAutorizadaOrigen: ['']
+    });
 
-      this.detalleForm = this.fb.group({
-        numeroLote: [''],
-        rangoDeFecha: ['no'],
-        procesoStart:[''],
-        procesoEnd:[''],
-        sacrificio:[''],
-        sacrificioEnd:[''],
-        caducidad:[''],
-        caducidadEnd:['']
+    this.detalleForm = this.fb.group({
+      numeroLote: [''],
+      rangoDeFecha: ['no'],
+      procesoStart: [''],
+      procesoEnd: [''],
+      sacrificio: [''],
+      sacrificioEnd: [''],
+      caducidad: [''],
+      caducidadEnd: ['']
 
-      });
-    }
+    });
+  }
 
   /**
 * Maneja la selección del botón de radio y actualiza el store.
@@ -252,10 +251,10 @@ public detallasDatosTablaSeleccionada: DetallasDatos[] = [];
     this.ubicaccion.back();
   }
 
-    /**
-   * Método para agregar animales a la lista de datos sensibles.
-   * Actualmente no implementa ninguna funcionalidad, pero se puede extender en el futuro.
-   */
+  /**
+ * Método para agregar animales a la lista de datos sensibles.
+ * Actualmente no implementa ninguna funcionalidad, pero se puede extender en el futuro.
+ */
   agregarAnimales(): void {
     this.agregarDatosFormulario.emit(
       {
@@ -265,14 +264,14 @@ public detallasDatosTablaSeleccionada: DetallasDatos[] = [];
     );
     this.ubicaccion.back();
   }
-  
-    /**
-   * Limpia los datos relacionados con los animales vivos.
-   * 
-   * Este método vacía el arreglo `sensiblesTablaDatos` y reinicia el formulario `mercanciaForm`,
-   * dejando ambos en su estado inicial. Útil para restablecer el formulario y los datos de la tabla
-   * cuando se requiere comenzar una nueva operación o descartar los cambios actuales.
-   */
+
+  /**
+ * Limpia los datos relacionados con los animales vivos.
+ * 
+ * Este método vacía el arreglo `sensiblesTablaDatos` y reinicia el formulario `mercanciaForm`,
+ * dejando ambos en su estado inicial. Útil para restablecer el formulario y los datos de la tabla
+ * cuando se requiere comenzar una nueva operación o descartar los cambios actuales.
+ */
   limpiarAnimalesVivo(): void {
     this.productosForm.reset();
     this.detallasDatosTablaDatos = [];
