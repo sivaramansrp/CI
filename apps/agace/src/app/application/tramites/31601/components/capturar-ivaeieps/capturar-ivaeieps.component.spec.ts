@@ -35,7 +35,7 @@ jest.mock('@libs/shared/theme/assets/json/31601/table.json', () => ({
     tableHeader: [
       "RFC",
       "Denominction o razon social",
-      "CDomicilaa"
+      "Domicilaa"
     ],
     tableBody: [
       { tbodyData: [] }
@@ -194,7 +194,7 @@ it('debe buscar datos y actualizar el formulario si RFC está presente', () => {
   };
 
   // Act
-  component.BuscarDatos();
+  component.buscarDatos();
 
   // Assert
   expect(component.ivaForm.get('denominacion')?.value).toBe('Empresa XYZ');

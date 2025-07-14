@@ -1,11 +1,12 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Avisos32511State, Tramite32511Store } from '../../../../estados/tramites/tramite32511.store';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FECHA_CONCLUSION_EVENTO, FECHA_DESTRUCION, FECHA_INICIO_EVENTO, OPCIONES_DE_BOTON_DE_RADIO, TEXTOS } from '../../constantes/avisos.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { AvisoService } from '../../services/aviso.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite32511Query } from '../../../../estados/queries/tramite32511.query';
 
 
@@ -27,7 +28,7 @@ import { Tramite32511Query } from '../../../../estados/queries/tramite32511.quer
   templateUrl: './tipo-de-aviso.component.html',
   styleUrl: './tipo-de-aviso.component.scss',
 })
-export class TipoDeAvisoComponent implements OnInit, OnDestroy {
+export class TipoDeAvisoComponent implements OnDestroy {
   /**
    * Formulario reactivo para manejar el tipo de aviso.
    */
@@ -85,6 +86,21 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   colonia!: Catalogo[];
 
   /**
+   * Lista de catálogos de entidades federativas de destrucción de mercancías.
+   */
+  dmEntidadFederativa!: Catalogo[];
+
+  /**
+   * Lista de catálogos de alcaldías o municipios de destrucción de mercancías.
+   */
+  dmAlcaldiaMunicipio!: Catalogo[];
+
+  /**
+   * Lista de catálogos de colonias de destrucción de mercancías.
+   */
+  dmColonia!: Catalogo[];
+
+  /**
    * Textos utilizados en el componente.
    */
   TEXTOS = TEXTOS;
@@ -110,6 +126,12 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   public avisoState!: Avisos32511State;
 
   /**
+   * @property {boolean} formularioDeshabilitado
+   * @description Indica si el formulario está deshabilitado (solo lectura).
+   */
+  formularioDeshabilitado: boolean = false;
+
+  /**
    * Subject para destruir notificador.
    */
   private destruirNotificador$: Subject<void> = new Subject();
@@ -125,20 +147,19 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite32511Store: Tramite32511Store,
     private tramite32511Query: Tramite32511Query,
-    private avisoService: AvisoService
-  ) { }
+    private avisoService: AvisoService,
+    private consultaioQuery: ConsultaioQuery
+  ) { 
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
 
-  /**
-   * Obtiene el grupo de formulario 'datosEvento' del formulario principal 'avisoForm'.
-   */
-  get datosEvento(): FormGroup {
-    return this.avisoForm.get('datosEvento') as FormGroup;
-  }
-
-  /**
-   * Inicializa el formulario y suscriptores.
-   */
-  ngOnInit(): void {
     this.inicializaCatalogos();
 
     this.tramite32511Query.selectSeccionState$
@@ -155,6 +176,35 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     this.entidadFederativaSeleccion();
     this.alcaldiaMunicipioSeleccion();
     this.coloniaSeleccion();
+  }
+
+  /**
+   * Obtiene el grupo de formulario 'datosEvento' del formulario principal 'avisoForm'.
+   */
+  get datosEvento(): FormGroup {
+    return this.avisoForm.get('datosEvento') as FormGroup;
+  }
+
+  /**
+   * Obtiene el grupo de formulario 'destruccionMercancia' del formulario principal 'avisoForm'.
+   */
+  get destruccionMercancia(): FormGroup {
+    return this.avisoForm.get('destruccionMercancia') as FormGroup;
+  }
+
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario `avisoForm` basado en si el formulario está deshabilitado o no.
+   * Si el formulario está deshabilitado, se deshabilita el campo `avisoForm`.
+   * Si no está deshabilitado, se habilita el campo `avisoForm`.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.avisoForm.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.avisoForm.enable();
+    }
   }
 
   /**
@@ -203,6 +253,35 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
           Validators.required
         ]
       }),
+      destruccionMercancia: this.fb.group({
+        dmCalle: [
+          this.avisoState?.dmCalle,
+          Validators.required
+        ],
+        dmNumeroExterior: [
+          this.avisoState?.dmNumeroExterior,
+          Validators.required
+        ],
+        dmNumeroInterior: [
+          this.avisoState?.dmNumeroInterior
+        ],
+        dmCodigoPostal: [
+          this.avisoState?.dmCodigoPostal,
+          Validators.required
+        ],
+        dmEntidadFederativa: [
+          this.avisoState?.dmEntidadFederativa,
+          Validators.required
+        ],
+        dmAlcaldiaMunicipio: [
+          this.avisoState?.dmAlcaldiaMunicipio,
+          Validators.required
+        ],
+        dmColonia: [
+          this.avisoState?.dmColonia,
+          Validators.required
+        ]
+      }),
       fechaDestruccion: [
         this.avisoState?.fechaDestruccion,
         Validators.required
@@ -212,6 +291,8 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
         Validators.required
       ]
     });
+
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -242,10 +323,37 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
         })
       );
 
+    const DM_ENTIDAD_FEDERATIVA$ = this.avisoService
+      .getEntidadFederativaCatalogo()
+      .pipe(
+        map((resp) => {
+          this.dmEntidadFederativa = resp.data;
+        })
+      );
+
+    const DM_ALCALDIA_MUNICIPIO$ = this.avisoService
+      .getAlcaldiaMunicipioCatalogo()
+      .pipe(
+        map((resp) => {
+          this.dmAlcaldiaMunicipio = resp.data;
+        })
+      );
+
+    const DM_COLONIA$ = this.avisoService
+      .getColoniaCatalogo()
+      .pipe(
+        map((resp) => {
+          this.dmColonia = resp.data;
+        })
+      );
+
     merge(
       ENTIDAD_FEDERATIVA$,
       ALCALDIA_MUNICIPIO$,
-      COLONIA$
+      COLONIA$,
+      DM_ENTIDAD_FEDERATIVA$,
+      DM_ALCALDIA_MUNICIPIO$,
+      DM_COLONIA$
     )
       .pipe(takeUntil(this.destruirNotificador$))
       .subscribe();
@@ -273,6 +381,30 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   coloniaSeleccion(): void {
     const COLONIA = this.avisoForm.get('datosEvento.colonia')?.value;
     this.tramite32511Store.setColonia(COLONIA);
+  }
+
+  /**
+   * Selecciona el entidad federativa de destrucción de mercancías y actualiza el store.
+   */
+  dmEntidadFederativaSeleccion(): void {
+    const ENTIDAD_FEDERATIVA = this.avisoForm.get('destruccionMercancia.dmEntidadFederativa')?.value;
+    this.tramite32511Store.setDmEntidadFederativa(ENTIDAD_FEDERATIVA);
+  }
+
+  /**
+   * Selecciona la alcaldía o municipio de destrucción de mercancías y actualiza el store.
+   */
+  dmAlcaldiaMunicipioSeleccion(): void {
+    const ALCALDIA_MUNICIPIO = this.avisoForm.get('destruccionMercancia.dmAlcaldiaMunicipio')?.value;
+    this.tramite32511Store.setDmAlcaldiaMunicipio(ALCALDIA_MUNICIPIO);
+  }
+
+  /**
+   * Selecciona la colonia de destrucción de mercancías y actualiza el store.
+   */
+  dmColoniaSeleccion(): void {
+    const COLONIA = this.avisoForm.get('destruccionMercancia.dmColonia')?.value;
+    this.tramite32511Store.setDmColonia(COLONIA);
   }
 
   /**

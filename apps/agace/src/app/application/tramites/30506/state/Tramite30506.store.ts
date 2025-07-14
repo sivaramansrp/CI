@@ -18,19 +18,27 @@ export interface Solicitud30506State {
   /** Número de operación asociado a la solicitud. */
   numeroOperacion: string;
   /** Fecha de inicio del trámite. */
-  fechaInicio : string;
+  fechaInicio: string;
   /** Fecha final del trámite. */
-  fechaFinal : string;
+  fechaFinal: string;
   /** Lista de bancos asociados a la solicitud. */
   banco: string;
   /** Llave única asociada a la solicitud. */
   llave: string;
   /** Primer manifiesto asociado a la solicitud. */
-  manifiesto1: string;
+  manifiesto1: boolean;
   /** Segundo manifiesto asociado a la solicitud. */
-  manifiesto2: string;
+  manifiesto2: boolean;
   /** Fecha de pago asociada a la solicitud. */
   fechaPago: string;
+  /** Folio de la solicitud. */
+  folio: string;
+  /** Clave de referencia asociada a la solicitud. */
+  claveReferencia: string;
+  /** Cadena de la dependencia asociada a la solicitud. */
+  cadenaDependecia: string;
+  /** Importe del pago asociado a la solicitud. */
+  importePago: string;
 }
 
 /**
@@ -40,13 +48,17 @@ export interface Solicitud30506State {
 export function createInitialState(): Solicitud30506State {
   return {
     numeroOperacion: '',
-    fechaInicio:'29/05/2025',
+    fechaInicio: '29/05/2025',
     fechaFinal: '29/06/2025',
-    banco:'',
+    banco: '',
     llave: '',
-    manifiesto1: '',
-    manifiesto2: '',
+    manifiesto1: false,
+    manifiesto2: false,
     fechaPago: '',
+    folio: '',
+    claveReferencia: '',
+    cadenaDependecia :'',
+    importePago: '',
   };
 }
 
@@ -71,7 +83,7 @@ export class Tramite30506Store extends Store<Solicitud30506State> {
    * Actualiza la lista de bancos en el estado.
    * @param banco Lista de bancos de tipo `Catalogo[]`.
    */
-  public setBanco(banco:string): void {
+  public setBanco(banco: string): void {
     this.update((state) => ({ ...state, banco }));
   }
 
@@ -108,7 +120,7 @@ export class Tramite30506Store extends Store<Solicitud30506State> {
    * Actualiza el primer manifiesto en el estado.
    * @param manifiesto1 Primer manifiesto de tipo `string`.
    */
-  public setManifiesto1(manifiesto1: string): void {
+  public setManifiesto1(manifiesto1: boolean): void {
     this.update((state) => ({ ...state, manifiesto1 }));
   }
 
@@ -116,7 +128,7 @@ export class Tramite30506Store extends Store<Solicitud30506State> {
    * Actualiza el segundo manifiesto en el estado.
    * @param manifiesto2 Segundo manifiesto de tipo `string`.
    */
-  public setManifiesto2(manifiesto2: string): void {
+  public setManifiesto2(manifiesto2: boolean): void {
     this.update((state) => ({ ...state, manifiesto2 }));
   }
 
@@ -126,6 +138,34 @@ export class Tramite30506Store extends Store<Solicitud30506State> {
    */
   public setFechaPago(fechaPago: string): void {
     this.update((state) => ({ ...state, fechaPago }));
+  }
+  /**
+   * Actualiza el folio en el estado.
+   * @param folio Folio de tipo `string`.
+   */
+  public setFolio(folio: string): void {
+    this.update((state) => ({ ...state, folio }));
+  }
+  /**
+   * Actualiza la clave de referencia en el estado.
+   * @param claveReferencia Clave de referencia de tipo `string`.
+   */
+  public setClaveReferencia(claveReferencia: string): void {
+    this.update((state) => ({ ...state, claveReferencia }));
+  }
+  /**
+   * Actualiza la cadena de la dependencia en el estado.
+   * @param cadenaDependecia Cadena de la dependencia de tipo `string`.
+   */
+  public setCadenaDependecia(cadenaDependecia: string): void {
+    this.update((state) => ({ ...state, cadenaDependecia }));
+  }
+  /**
+   * Actualiza el importe de pago en el estado.
+   * @param importePago Importe de pago de tipo `string`.
+   */
+  public setImportePago(importePago: string): void {
+    this.update((state) => ({ ...state, importePago }));
   }
 
   /**

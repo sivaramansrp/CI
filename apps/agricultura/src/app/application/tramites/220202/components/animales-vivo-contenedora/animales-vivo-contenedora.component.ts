@@ -1,4 +1,4 @@
-import { AnimalesEventos, AnimalesFormularioSolicitud, AnimalesFormularioSolicitudForm, DatosDeLaSolicitud } from '../../../../shared/models/datos-de-la-solicitue.model';
+import { AnimalesEventos, AnimalesFormularioSolicitud, DatosDeLaSolicitud } from '../../../../shared/models/datos-de-la-solicitue.model';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
