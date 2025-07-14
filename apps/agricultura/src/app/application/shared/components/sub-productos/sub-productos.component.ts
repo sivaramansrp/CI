@@ -1,9 +1,9 @@
-import { CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CONFIGURACION_DETALLAS_DATOS, FECHA_DE_DATA } from '../../constantes/datos-de-la-solicitue.enum';
+import { CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { DetallasDatos, ProductoDetallaEventos, ProductosCatalogosDatos } from '../../models/datos-de-la-solicitue.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CONFIGURACION_DETALLAS_DATOS } from '../../constantes/datos-de-la-solicitue.enum';
 import { EventEmitter } from '@angular/core';
 import { RadioOpcion } from '../../../tramites/220202/models/220202/fitosanitario.model';
 import { Subject } from 'rxjs';
@@ -34,10 +34,19 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-sub-productos',
   standalone: true,
-  imports: [CommonModule, CatalogoSelectComponent, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent, InputRadioComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    TablaDinamicaComponent,
+    InputRadioComponent,
+    InputFechaComponent,
+    CatalogoSelectComponent
+  ],
   templateUrl: './sub-productos.component.html',
 })
 export class SubProductosComponent implements OnInit, OnDestroy{
+      fechaInicioInput: InputFecha = FECHA_DE_DATA;
   /**
    * Representa el formulario reactivo utilizado para gestionar los datos de la mercancía
    * en el componente de detalles de animales vivos.
@@ -212,8 +221,14 @@ public detallasDatosTablaSeleccionada: DetallasDatos[] = [];
       });
 
       this.detalleForm = this.fb.group({
-        numeroLote: ['', [Validators.maxLength(16), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
-        rangoDeFecha: [''],
+        numeroLote: [''],
+        rangoDeFecha: ['no'],
+        procesoStart:[''],
+        procesoEnd:[''],
+        sacrificio:[''],
+        sacrificioEnd:[''],
+        caducidad:[''],
+        caducidadEnd:['']
 
       });
     }
