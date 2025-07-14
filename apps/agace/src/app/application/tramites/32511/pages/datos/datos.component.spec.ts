@@ -2,30 +2,42 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosComponent } from './datos.component';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { SolicitanteComponent, SolicitanteService } from '@libs/shared/data-access-user/src';
+import { SolicitanteComponent, SolicitanteService, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TipoDeAvisoComponent } from '../../components/tipo-de-aviso/tipo-de-aviso.component';
+import { of } from 'rxjs';
 
 describe('DatosComponent', () => {
   let component: DatosComponent;
   let fixture: ComponentFixture<DatosComponent>;
 
   beforeEach(async () => {
+    const mockSolicitante = {
+      obtenerTipoPersona: jest.fn(),
+      getDatosGenerales: jest.fn().mockReturnValue(of({ data: JSON.stringify({ datosGenerales: {}, domicilioFiscal: {} }) }))
+    } as unknown as SolicitanteComponent;
+
     await TestBed.configureTestingModule({
       declarations: [DatosComponent],
       imports: [CommonModule, SolicitanteComponent, HttpClientModule, TipoDeAvisoComponent],
       providers: [
-        SolicitanteService, 
-        HttpClientTestingModule, 
-        HttpClient
+        HttpClientTestingModule,
+        HttpClient,
+        { provide: SolicitanteService, useValue: mockSolicitante }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
+    jest.useFakeTimers();
     fixture = TestBed.createComponent(DatosComponent);
     component = fixture.componentInstance;
+    component['solicitante'] = mockSolicitante;
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it('should create', () => {
@@ -76,4 +88,15 @@ describe('DatosComponent', () => {
     component.seleccionaTab(1);
     expect(component.indice).toBe(1);
   });
+
+  it('should call obtenerTipoPersona with MORAL_NACIONAL in ngAfterViewInit', () => {
+    const mockObtenerTipoPersona = jest.fn();
+    component.solicitante = { obtenerTipoPersona: mockObtenerTipoPersona } as any;
+
+    component.ngAfterViewInit();         // manually call lifecycle hook
+    jest.runAllTimers();                 // simulate setTimeout execution
+
+    expect(mockObtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
+  });
+
 });
