@@ -1,4 +1,3 @@
-
 <ng-titulo titulo="Oficio" />
 <div>
 <form [formGroup]="oficioForm" >
@@ -64,8 +63,7 @@
     </div>
 
     <app-modal [active]="showDevolverModal">
-      
-  <app-devolver></app-devolver>
+  <app-devolver [(showDevolverModal)]="showDevolverModal"></app-devolver>
 </app-modal>
 
    
