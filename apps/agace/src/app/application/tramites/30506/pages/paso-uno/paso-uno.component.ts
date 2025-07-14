@@ -1,18 +1,7 @@
-import {
-  AfterViewInit,
-  Component,
-  OnDestroy,
-} from '@angular/core';
-import {
-  ConsultaioQuery,
-  ConsultaioState,
-  FormularioDinamico,
-} from '@ng-mf/data-access-user';
-import {
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
-  PERSONA_MORAL_NACIONAL,
-} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { Subject } from 'rxjs';
+import { Component, OnDestroy, OnInit} from '@angular/core';
+import { ConsultaioQuery, ConsultaioState,FormularioDinamico } from '@ng-mf/data-access-user';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { RegistroService } from '../../services/registro.service';
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -23,7 +12,7 @@ import { Subject } from 'rxjs';
   styles: ``,
 
 })
-export class PasoUnoComponent implements AfterViewInit, OnDestroy {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Indica si se deben mostrar los datos de respuesta.
    * Inicialmente es falso, lo que significa que no se muestran.
@@ -33,7 +22,7 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
    * Subject para manejar la destrucción del componente y evitar fugas de memoria.
    * Se utiliza para notificar a las suscripciones que deben finalizarse.
    */
-  private destroyNotifier$: Subject<void> = new Subject(); 
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
    * Estado de la consulta, que se obtiene a través del ConsultaioQuery.
    * Este estado contiene información sobre la consulta actual.
@@ -44,15 +33,7 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
    * Inicialmente es de tipo desconocido, lo que significa que no se ha definido aún.
    */
   public datosRespuesta: unknown; 
-  /**
-   * Constructor del componente PasoUnoComponent.
-   * @param router Inyecta el servicio Router para la navegación.
-   */
-  constructor(
-    private consultaQuery: ConsultaioQuery,
-  ) { }
-
-
+ 
   /**
    * Tipo de persona seleccionada.
    */
@@ -73,15 +54,51 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
    */
   indice: number = 1;
 
-  /**
-   * Método que se ejecuta después de que las vistas del componente han sido inicializadas.
-   * Configura los formularios dinámicos y obtiene el tipo de persona.
+   /**
+   * Constructor del componente PasoUnoComponent.
+   * @param router Inyecta el servicio Router para la navegación.
    */
-  ngAfterViewInit(): void {
-    this.persona = PERSONA_MORAL_NACIONAL;
-    this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
+  constructor(
+    private consultaioQuery: ConsultaioQuery,
+    private registroService: RegistroService
+  ) { }
+
+
+    /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al estado de consulta y carga datos si es necesario.
+   */
+  ngOnInit(): void {
+     this.consultaioQuery.selectConsultaioState$.pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+      })
+    ).subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormularios();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
 
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormularios(): void {
+    this.registroService
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.registroService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
   /**
    * Selecciona una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.
@@ -96,7 +113,7 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
    * que deben finalizarse, evitando así fugas de memoria.
    */
   ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }
