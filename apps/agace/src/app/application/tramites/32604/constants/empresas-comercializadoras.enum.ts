@@ -282,7 +282,7 @@ export const FECHA_DE_PAGO: InputFecha = {
   /**
    * Etiqueta del campo de fecha de fin de vigencia.
    */
-  labelNombre: 'Fecha de pago',
+  labelNombre: '',
   /**
    * Indica si el campo es obligatorio.
    */
