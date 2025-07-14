@@ -378,7 +378,7 @@ export interface AnimalesEventos {
   /**
    * El formulario asociado a la solicitud de animales.
    */
-  formulario: AnimalesFormularioSolicitudForm;
+  formulario: FilaSolicitud;
 
   /**
    * Una lista de datos sensibles relacionados con los animales.

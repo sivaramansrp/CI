@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
+import { FilaSolicitud } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
 import { RadioOpcion } from '../../../tramites/220202/models/220202/fitosanitario.model';
 import { CONFIGURACION_DETALLAS_DATOS, FECHA_DE_DATA } from '../../constantes/datos-de-la-solicitue.enum';
 import { DetallasDatos, ProductoDetallaEventos, ProductosCatalogosDatos } from '../../models/datos-de-la-solicitue.model';
@@ -132,6 +133,14 @@ export class SubProductosComponent implements OnInit, OnDestroy {
      * @type {EventEmitter<ProductoDetallaEventos>}
      */
   @Output() agregarDatosFormulario = new EventEmitter<ProductoDetallaEventos>();
+  /**
+   * Datos del formulario de solicitud de animales vivos.
+   * Este objeto contiene la información relacionada con la solicitud de animales vivos,
+   * como los detalles de la mercancía y los datos específicos de los animales.
+   * 
+   * @type {AnimalesFormularioSolicitud}
+   */
+  @Input() formularioSolicitud!: FilaSolicitud;
 
   /**
    * Constructor del componente.
@@ -195,27 +204,32 @@ export class SubProductosComponent implements OnInit, OnDestroy {
    */
   crearFormulario(): void {
     this.productosForm = this.fb.group({
+      id: [0, Validators.required],
+      noPartida: [''],
       tipoRequisito: ['', Validators.required],
       requisito: ['', Validators.required],
-      numeroCertificado: ['', [Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
+      numeroCertificadoInternacional: ['', [Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       fraccionArancelaria: ['', Validators.required],
       descripcionFraccion: [{ value: '', disabled: true }, Validators.required],
       nico: ['', Validators.required],
       descripcionNico: [{ value: '', disabled: true }, Validators.required],
       descripcion: ['', [Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
-      cantidadUMT: ['', [Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       umt: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMC: ['', [Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
+      cantidadUMT: ['', [Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       umc: ['', Validators.required],
-      especie: ['', Validators.required],
+      cantidadUMC: ['', [Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       uso: ['', Validators.required],
-      paisOrigen: ['', Validators.required],
+      tipoDeProducto: [''],
+      numeroDeLote: [''],
+      paisDeOrigen: ['', Validators.required],
       paisDeProcedencia: ['', Validators.required],
-      presentacion: [''],
-      cantidadPresentacion: [''],
+      certificadoInternacionalElectronico: [''],
+      especie: ['', Validators.required],
       tipoPresentacion: [''],
       tipoPlanta: [''],
-      plantaAutorizadaOrigen: ['']
+      plantaAutorizadaOrigen: [''],
+      presentacion: [''],
+      cantidadPresentacion: []
     });
 
     this.detalleForm = this.fb.group({
@@ -229,6 +243,11 @@ export class SubProductosComponent implements OnInit, OnDestroy {
       caducidadEnd: ['']
 
     });
+    if (this.formularioSolicitud) {
+      this.productosForm.patchValue({
+        ...this.formularioSolicitud
+      });
+    }
   }
 
   /**

@@ -136,6 +136,7 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    */
   crearFormulario(): void {
     this.mercanciaForm = this.fb.group({
+      id: [0, Validators.required],
       tipoRequisito: ['', Validators.required],
       requisito: ['', Validators.required],
       numeroCertificadoInternacional: ['', [Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Subject } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { SubProductosComponent } from '../../../../shared/components/sub-productos/sub-productos.component';
 import { ProductoDetallaEventos, ProductosCatalogosDatos } from '../../../../shared/models/datos-de-la-solicitue.model';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
@@ -45,7 +45,7 @@ export class SubProductosContenedoraComponent {
    * @type {Subject<void>}
    */
   public destroyNotifier$ = new Subject<void>();
-
+  public formularioSolicitud!: FilaSolicitud;
 
   /**
    * Constructor de la clase `SubProductosContenedoraComponent`.
@@ -67,6 +67,43 @@ export class SubProductosContenedoraComponent {
     this.agriculturaApiService.obtenerProductoRespuestaPorUrl('productos.json').subscribe((resp) => {
       this.catalogosDatos = resp;
     });
+    this.fitosanitarioQuery.seleccionarState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((estado) => {
+          const VALOR = estado?.selectedDatos[0];
+          if (VALOR) {
+            this.formularioSolicitud = {
+              id: VALOR.id || Math.floor(Math.random() * 1000000),
+              tipoRequisito: VALOR.tipoRequisito || '',
+              requisito: VALOR.requisito || '',
+              numeroCertificadoInternacional: VALOR.numeroCertificadoInternacional || '',
+              fraccionArancelaria: VALOR.fraccionArancelaria || '',
+              descripcionFraccion: VALOR.descripcionFraccion || '',
+              nico: VALOR.nico || '',
+              descripcionNico: VALOR.descripcionNico || '',
+              descripcion: VALOR.descripcion || '',
+              cantidadUMT: String(VALOR.cantidadUMT || ''),
+              umt: VALOR.umt || '',
+              cantidadUMC: String(VALOR.cantidadUMC || ''),
+              umc: VALOR.umc || '',
+              especie: VALOR.especie || '',
+              uso: VALOR.uso || '',
+              paisDeOrigen: VALOR.paisDeOrigen || '',
+              paisDeProcedencia: VALOR.paisDeProcedencia || '',
+              noPartida: VALOR.noPartida || '',
+              tipoDeProducto: VALOR.tipoDeProducto || '',
+              numeroDeLote: VALOR.numeroDeLote || '',
+              certificadoInternacionalElectronico: VALOR.certificadoInternacionalElectronico || '',
+              tipoPresentacion: VALOR.tipoPresentacion || '',
+              tipoPlanta: VALOR.tipoPlanta || '',
+              plantaAutorizadaOrigen: VALOR.plantaAutorizadaOrigen || '',
+              presentacion: VALOR.presentacion || ''
+            };
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -75,11 +112,11 @@ export class SubProductosContenedoraComponent {
    */
   agregarDatosFormulario(valor: ProductoDetallaEventos): void {
     const DATOS: FilaSolicitud = {
-      id: Math.floor(Math.random() * 1000000),
+      id: valor.formulario.id || Math.floor(Math.random() * 1000000),
       noPartida: '',
       tipoRequisito: valor.formulario.tipoRequisito || '',
       requisito: valor.formulario.requisito || '',
-      numeroCertificadoInternacional: '',
+      numeroCertificadoInternacional: valor.formulario.numeroCertificadoInternacional || '',
       fraccionArancelaria: valor.formulario.fraccionArancelaria || '',
       descripcionFraccion: valor.formulario.descripcionFraccion || '',
       nico: valor.formulario.nico || '',
@@ -99,12 +136,23 @@ export class SubProductosContenedoraComponent {
       tipoPresentacion: valor.formulario.tipoPresentacion || '',
       tipoPlanta: valor.formulario.tipoPlanta || '',
       plantaAutorizadaOrigen: valor.formulario.plantaAutorizadaOrigen || '',
+      presentacion: valor.formulario.presentacion || ''
     }
-    this.fitosanitarioStore.update(state => ({
-      ...state,
-      tablaDatos: [...state.tablaDatos, DATOS],
-      selectedDatos: []
-    }));
+
+    this.fitosanitarioStore.update(state => {
+      const index = state.tablaDatos.findIndex(item => item.id === DATOS.id);
+      console.log('Datos a agregar:', DATOS, state.tablaDatos, index);
+      const updatedTablaDatos =
+        index !== -1
+          ? state.tablaDatos.map((item, i) => (i === index ? DATOS : item))
+          : [...state.tablaDatos, DATOS];
+      return {
+        ...state,
+        tablaDatos: updatedTablaDatos,
+        selectedDatos: []
+      };
+    });
+
   }
 
 }

@@ -70,6 +70,7 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
           const VALOR = estado?.selectedDatos[0];
           if (VALOR) {
             this.formularioSolicitud = {
+              id: VALOR.id || Math.floor(Math.random() * 1000000),
               tipoRequisito: VALOR.tipoRequisito || '',
               requisito: VALOR.requisito || '',
               numeroCertificadoInternacional: VALOR.numeroCertificadoInternacional || '',
@@ -103,32 +104,41 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
    */
   agregarDatosFormulario(valor: AnimalesEventos): void {
     const DATOS: FilaSolicitud = {
-      id: Math.floor(Math.random() * 1000000),
+      id: valor.formulario.id || Math.floor(Math.random() * 1000000),
       noPartida: '',
       tipoRequisito: valor.formulario.tipoRequisito || '',
       requisito: valor.formulario.requisito || '',
-      numeroCertificadoInternacional: '',
+      numeroCertificadoInternacional: valor.formulario.numeroCertificadoInternacional || '',
       fraccionArancelaria: valor.formulario.fraccionArancelaria || '',
       descripcionFraccion: valor.formulario.descripcionFraccion || '',
       nico: valor.formulario.nico || '',
       descripcionNico: valor.formulario.descripcionNico || '',
       descripcion: valor.formulario.descripcion || '',
-      umt: '',
+      umt: valor.formulario.umt || '',
       cantidadUMT: valor.formulario.cantidadUMT || '',
       umc: valor.formulario.umc || '',
       cantidadUMC: valor.formulario.cantidadUMC || '',
       uso: valor.formulario.uso || '',
-      tipoDeProducto: '',
-      numeroDeLote: '',
-      paisDeOrigen: '',
+      tipoDeProducto: valor.formulario.tipoDeProducto || '',
+      numeroDeLote: valor.formulario.numeroDeLote || '',
+      paisDeOrigen: valor.formulario.paisDeOrigen || '',
       paisDeProcedencia: valor.formulario.paisDeProcedencia || '',
       certificadoInternacionalElectronico: ''
     }
-    this.fitosanitarioStore.update(state => ({
-      ...state,
-      tablaDatos: [...state.tablaDatos, DATOS],
-      selectedDatos: []
-    }));
+    this.fitosanitarioStore.update(state => {
+      const index = state.tablaDatos.findIndex(item => item.id === DATOS.id);
+
+      const updatedTablaDatos =
+        index !== -1
+          ? state.tablaDatos.map((item, i) => (i === index ? DATOS : item))
+          : [...state.tablaDatos, DATOS];
+      return {
+        ...state,
+        tablaDatos: updatedTablaDatos,
+        selectedDatos: []
+      };
+    });
+
   }
 
 

@@ -337,6 +337,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       });
     this.crearFormulario();
     this.initActionFormBuild();
+    this.radioBotonSeleccionado();
     this.nuevaNotificacion = {} as Notificacion;
   }
 

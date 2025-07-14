@@ -15,7 +15,8 @@
             </div>
             <div class="col-md-4 form-group">
                 <label class="form-label">Número de certificado internacional*</label>
-                <input type="text" class="form-control" formControlName="numeroCertificado" />
+                <input type="text" class="form-control" formControlName="numeroCertificadoInternacional"
+                    name="numeroCertificadoInternacional" />
             </div>
         </div>
 
@@ -108,8 +109,8 @@
                     [required]="true" name="uso" [isDisabled]="productosForm.disabled"></app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="catalogosDatos.paisOrigenList" formControlName="paisOrigen"
-                    [label]="'País de origen'" [required]="true" name="paisOrigen"
+                <app-catalogo-select [catalogo]="catalogosDatos.paisOrigenList" formControlName="paisDeOrigen"
+                    [label]="'País de origen'" [required]="true" name="paisDeOrigen"
                     [isDisabled]="productosForm.disabled"></app-catalogo-select>
             </div>
         </div>

@@ -318,6 +318,7 @@ export interface FilaSolicitud {
    * Planta autorizada de origen.
    */
   plantaAutorizadaOrigen?: string;
+  presentacion?: string;
 }
 
 /**
