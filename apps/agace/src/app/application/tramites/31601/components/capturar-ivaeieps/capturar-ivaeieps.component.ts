@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, REGEX_LLAVE_DE_PAGO, REGEX_RFC, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder,FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
 import { PagoData ,TableData} from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
@@ -53,8 +53,11 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
   /**
    * Grupo de formularios para formulario de pago
    */
-  formularioDePago!: FormGroup;
-
+    formularioDePago!: FormGroup;
+ /**
+   * Referencia al componente de tabla para manipulación de tablas.
+   */
+@ViewChild(TableComponent) tableRef!: TableComponent;
   /**
    *Marcar para mostrar u ocultar contenido
    */
@@ -305,6 +308,14 @@ if (this.esFormularioSoloLectura) {
     this.valorSeleccionado = value.toString();
   }
 
+  eliminar(): void {
+  if (!this.tableRef) {return;}
+
+  
+  const FILTRADO = this.tableRef.tableData.tableBody.filter(row => !row.selected);
+ 
+  this.datosDeInversion.tableBody = FILTRADO;
+}
   /**
    * Actualiza el valor de `predeterminadoSeleccionar` con el valor proporcionado.
    *
@@ -359,31 +370,34 @@ if (this.esFormularioSoloLectura) {
    *
    * @returns {nulo}
    */
- agregarData(): void {
-
-   const TIPO_DE = this.ivaForm.get('tipoDe')?.value;
+agregarData(): void {
+  const TIPO_DE = this.ivaForm.get('tipoDe')?.value;
   const VALOR_PESOS = this.ivaForm.get('valorPesos')?.value;
   const DESCRIPCION = this.ivaForm.get('descripcion')?.value;
-if (TIPO_DE && VALOR_PESOS && DESCRIPCION) {
-   
-   this.datosDeInversion.tableBody[0].tbodyData.push(
-  this.ivaForm.value.tipoDe,
-  this.ivaForm.value.descripcion,
-  this.ivaForm.value.valorPesos);
-   this.cerrarModal()
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Datos guardados correctamente.',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
 
+if (TIPO_DE && VALOR_PESOS && DESCRIPCION) {
+
+this.datosDeInversion.tableBody = [
+  ...this.datosDeInversion.tableBody,
+  {
+    tbodyData: [TIPO_DE, DESCRIPCION, VALOR_PESOS]
   }
+];
+  this.cerrarModal();
+
+  this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Datos guardados correctamente.',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
+ 
+}
 }
   /**
    * Agrega datos a la tabla destinatarioHeaderData si el ivaForm es válido.
