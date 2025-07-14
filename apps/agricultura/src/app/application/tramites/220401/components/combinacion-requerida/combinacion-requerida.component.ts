@@ -1,5 +1,5 @@
 import { Agregar220401Store, Solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
@@ -113,6 +113,11 @@ export class CombinacionRequeridaComponent implements OnInit, OnDestroy {
    * y se utiliza para gestionar y mostrar los datos en el componente.
    */
   public solicitudState!: Solicitud220401State;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Si es verdadero, el formulario no permite edición.
+   */
+  @Input() certificadaValue: unknown;
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -262,8 +267,8 @@ this.inicializarCombinacionFormulario();
       numeroAutorizacionCheck: [this.solicitudState?.numeroAutorizacionCheck],
       tipoActividadCheck: [this.solicitudState?.tipoActividadCheck],
       otroCheck: [this.solicitudState?.otroCheck],
-      fechaArribo: [this.solicitudState?.fechaArribo]
-
+      fechaArribo: [this.solicitudState?.fechaArribo],
+      uso: [this.solicitudState?.uso],
     });
   }
   /**
