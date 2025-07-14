@@ -16115,6 +16115,16 @@
     "origin": "READ_PROCEDURE"
   },
   {
+    "folioTramite": "099226136147361192499352",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32513",
+    "origin": "READ_PROCEDURE"
+  },
+  {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Registro de solicitud de servicio",
     "nombreDeLaTarea": "Revisión de presupuesto",
@@ -16123,5 +16133,5 @@
     "departamento": "agace",
     "numeroDeProcedimiento": "32511",
     "origin": "READ_PROCEDURE"
-  }  
+  }
 ]
