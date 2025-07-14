@@ -337,11 +337,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       });
     this.crearFormulario();
     this.initActionFormBuild();
-    this.radioBotonSeleccionado();
+
     this.nuevaNotificacion = {} as Notificacion;
   }
 
   ngAfterViewInit(): void {
+    this.radioBotonSeleccionado();
     this.datosDelaSolicitud.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
       const FORMA_VALIDA_ACTUALIZADA = {
         dataDeLaSolicitud: false,
