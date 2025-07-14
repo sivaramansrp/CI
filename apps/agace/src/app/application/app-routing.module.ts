@@ -279,6 +279,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/32511/avisos.module').then((m) => m.AvisosModule),
   },  
+  {
+    path: 'aviso-tesoreria',
+    loadChildren: () =>
+      import('./tramites/32513/aviso-tesoreria.module').then(
+        (m) => m.AvisoTesoreriaModule
+      ),
+  },
 ];
 
 @NgModule({
