@@ -600,9 +600,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @returns {void}
    */
   agregarMercancia(): void {
-    this.router.navigate(['../animales-vivo'], {
+   
+    if(this.datosDelaSolicitud.value.tipoMercancia === 'no'){
+        this.router.navigate(['../sub-productos'], {
       relativeTo: this.activatedRoute,
     });
+    }
+    else if(this.datosDelaSolicitud.value.tipoMercancia === 'yes') {
+        this.router.navigate(['../animales-vivo'], {
+      relativeTo: this.activatedRoute,
+    });
+    }
+  
   }
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
