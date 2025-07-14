@@ -1,28 +1,98 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
-import { HttpClientModule } from '@angular/common/http';
-import { AlertComponent, CatalogoSelectComponent, InputFechaComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
+import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+@Injectable()
+class MockAgriculturaApiService {}
+
+@Injectable()
+class MockFitosanitarioQuery {}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
 describe('PagoDeDerechosComponent', () => {
-  let component: PagoDeDerechosComponent;
-  let fixture: ComponentFixture<PagoDeDerechosComponent>;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [HttpClientModule, TituloComponent, AlertComponent, InputRadioComponent, CatalogoSelectComponent, InputFechaComponent, ReactiveFormsModule,
-        PagoDeDerechosComponent
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule, PagoDeDerechosComponent, HttpClientTestingModule ],
+      declarations: [
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: AgriculturaApiService, useClass: MockAgriculturaApiService },
+        { provide: FitosanitarioQuery, useClass: MockFitosanitarioQuery },
+        ConsultaioQuery,
+        ChangeDetectorRef
       ]
-    })
-      .compileComponents();
+    }).overrideComponent(PagoDeDerechosComponent, {
 
+    }).compileComponents();
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
+
+  it('should run #ngOnInit()', async () => {
+    component.fitosanitarioQuery = component.fitosanitarioQuery || {};
+    component.fitosanitarioQuery.seleccionarPagoDerechos$ = observableOf({});
+    component.consultaioQuery = component.consultaioQuery || {};
+    component.consultaioQuery.selectConsultaioState$ = observableOf({});
+    component.cdr = component.cdr || {};
+    component.cdr.detectChanges = jest.fn();
+    component.ngOnInit();
+    expect(component.cdr.detectChanges).toHaveBeenCalled();
+  });
+
+  it('should run #onPagoChanged()', async () => {
+    component.agriculturaApiService = component.agriculturaApiService || {};
+    component.agriculturaApiService.updatePago = jest.fn();
+    component.onPagoChanged({});
+    expect(component.agriculturaApiService.updatePago).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.ngOnDestroy();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+  });
+
 });

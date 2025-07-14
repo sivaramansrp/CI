@@ -1,18 +1,23 @@
 /**
  * Interfaz que representa la respuesta de una operación relacionada con mercancías.
+ * Contiene información sobre el resultado de la operación, un mensaje descriptivo
+ * y los datos relacionados con la mercancía si la operación fue exitosa.
  */
 export interface RespuestaMercancia {
   /**
    * Indica si la operación fue exitosa.
-   * @type {boolean}
+   * `true` si se completó correctamente; de lo contrario, `false`.
    */
   success: boolean;
 
+  /**
+   * Objeto que contiene los datos detallados de la mercancía relacionados con la operación.
+   */
   datos: DatosDelMercancia;
 
   /**
-   * Mensaje de la respuesta.
-   * @type {string}
+   * Mensaje que describe el resultado de la operación.
+   * Puede incluir información de éxito, error o advertencia.
    */
   message: string;
 }

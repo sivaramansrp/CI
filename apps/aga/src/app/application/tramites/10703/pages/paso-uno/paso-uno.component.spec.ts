@@ -1,37 +1,59 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-import { CommonModule } from '@angular/common';
-import { ExencionDeImpuestosComponent } from '../../components/exencionDeImpuestos/exencionDeImpuestos.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { of, Subject } from 'rxjs';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
-  let fixture: ComponentFixture<PasoUnoComponent>;
+  let mockConsultaQuery: any;
+  let mockSolocitud10703Service: any;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [],
-      declarations: [PasoUnoComponent, CommonModule, SolicitanteComponent, ExencionDeImpuestosComponent],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(() => {
+    mockConsultaQuery = {
+      selectConsultaioState$: of({ update: false })
+    };
+    mockSolocitud10703Service = {
+      getExencionDeMercanciasData: jest.fn().mockReturnValue(of({ data: 'mock' })),
+      exencionDeMercancias: jest.fn()
+    };
+    component = new PasoUnoComponent(mockConsultaQuery, mockSolocitud10703Service);
   });
 
-  test('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  test('should have the default indice value as 1', () => {
-    expect(component.indice).toBe(1);
+  it('should set esDatosRespuesta to true if consultaState.update is false on ngOnInit', () => {
+    mockConsultaQuery.selectConsultaioState$ = of({ update: false });
+    component.ngOnInit();
+    expect(component.esDatosRespuesta).toBe(true);
   });
 
-  test('should update indice when seleccionaTab is called', () => {
-    component.seleccionaTab(2);
-    expect(component.indice).toBe(2);
+  it('should call guardarDatosFormulario if consultaState.update is true on ngOnInit', () => {
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    mockConsultaQuery.selectConsultaioState$ = of({ update: true });
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
+  });
 
+  it('should set indice when seleccionaTab is called', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
+  });
+
+  it('guardarDatosFormulario should set esDatosRespuesta to true and call exencionDeMercancias if response exists', () => {
+    component.guardarDatosFormulario();
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(mockSolocitud10703Service.exencionDeMercancias).toHaveBeenCalledWith({ data: 'mock' });
+  });
+
+  it('guardarDatosFormulario should not call exencionDeMercancias if response is falsy', () => {
+    mockSolocitud10703Service.getExencionDeMercanciasData.mockReturnValue(of(null));
+    component.guardarDatosFormulario();
+    expect(mockSolocitud10703Service.exencionDeMercancias).not.toHaveBeenCalled();
+  });
+
+  it('ngOnDestroy should complete destroyNotifier$', () => {
+    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

@@ -132,6 +132,8 @@ describe('AgriculturaApiService', () => {
     service.fitosanitarioStore.actualizarMovilizacion = jest.fn();
     service.fitosanitarioStore.actualizarPago = jest.fn();
     service.fitosanitarioStore.tablaDatosFinal = jest.fn();
+    service.fitosanitarioStore.updateTercerosExportador = jest.fn(); // <-- Add this mock
+    service.fitosanitarioStore.updateTercerosRelacionados = jest.fn(); // <-- Add this mock
     service.actualizarEstadoFormulario({
       datos: {},
       movilizacion: {},
@@ -142,6 +144,8 @@ describe('AgriculturaApiService', () => {
     expect(service.fitosanitarioStore.actualizarMovilizacion).toHaveBeenCalled();
     expect(service.fitosanitarioStore.actualizarPago).toHaveBeenCalled();
     expect(service.fitosanitarioStore.tablaDatosFinal).toHaveBeenCalled();
+    expect(service.fitosanitarioStore.updateTercerosExportador).toHaveBeenCalled(); // <-- Add this assertion
+    expect(service.fitosanitarioStore.updateTercerosRelacionados).toHaveBeenCalled(); // <-- Add this assertion
   });
 
   it('should run #getDatosDeLaSolicitudData()', async () => {
@@ -259,11 +263,15 @@ describe('AgriculturaApiService', () => {
     service.fitosanitarioStore.actualizarMovilizacion = jest.fn();
     service.fitosanitarioStore.actualizarPago = jest.fn();
     service.fitosanitarioStore.tablaDatosFinal = jest.fn();
+    service.fitosanitarioStore.updateTercerosExportador = jest.fn(); // <-- Add this mock
+    service.fitosanitarioStore.updateTercerosRelacionados = jest.fn(); // <-- Add this mock
     service.actualizarEstadoFormulario(datosFinal);
     expect(service.fitosanitarioStore.actualizarDatosForma).toHaveBeenCalledWith(datosFinal.datos);
     expect(service.fitosanitarioStore.actualizarMovilizacion).toHaveBeenCalledWith(datosFinal.movilizacion);
     expect(service.fitosanitarioStore.actualizarPago).toHaveBeenCalledWith(datosFinal.pago);
     expect(service.fitosanitarioStore.tablaDatosFinal).toHaveBeenCalledWith(datosFinal.tablaDatos);
+    expect(service.fitosanitarioStore.updateTercerosExportador).toHaveBeenCalled(); // <-- Add this assertion
+    expect(service.fitosanitarioStore.updateTercerosRelacionados).toHaveBeenCalled(); // <-- Add this assertion
   });
 
   it('should call http.get with correct path in getDatosDeLaSolicitudData()', async () => {

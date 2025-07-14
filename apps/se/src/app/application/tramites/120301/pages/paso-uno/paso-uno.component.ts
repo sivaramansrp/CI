@@ -18,6 +18,8 @@ import {
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 
+import { PersonaTerceros } from '@ng-mf/data-access-user';
+
 import { Subject, map, takeUntil } from 'rxjs';
 
 /**
@@ -164,6 +166,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+   
+  /**
+   * Indica si existen datos de respuesta para mostrar en el formulario.
+   * @type {boolean}
+   */
+  public esDatosRespuesta: boolean = false;
+
   /**
    * @property {ConsultaioState} consultaState
    * @description
@@ -187,8 +196,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * }
    * ```
    */
-  public consultaState!: ConsultaioState;
+ public consultaState!: ConsultaioState;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
 
+    /**
+   * Lista de personas relacionadas con el trámite.
+   * @type {PersonaTerceros[]}
+   */
+  public personas: PersonaTerceros[] = [];
   /**
    * @method seleccionaTab
    * @description
@@ -279,23 +298,42 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * ```
    */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$
+        this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
-
+          this.esFormularioSoloLectura = seccionState.readonly;
+          // Normal logic: readonly true = disable fields, readonly false = enable fields
+          this.formularioDeshabilitado = seccionState.readonly;
           if (this.consultaState.update) {
-            this.formularioDeshabilitado = false;
-            this.cargarDatosPrevios();
-          } else if (this.consultaState.readonly) {
-            this.formularioDeshabilitado = true;
+            this.guardarDatosFormulario();
+          } else {
+            this.esDatosRespuesta = true;
           }
         })
       )
       .subscribe();
   }
-
+    /**
+     * Guarda los datos del formulario obtenidos del servicio.
+     * Este método se suscribe al servicio para obtener los datos de la solicitud
+     * y actualiza el estado del formulario con la información recibida.
+     * @method guardarDatosFormulario
+     */
+    guardarDatosFormulario(): void {
+      this.elegibilidadTextilesService
+        .getPrefillDatos()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((resp) => {
+          if (resp) {
+            this.esDatosRespuesta = true;
+            this.personas =
+              (resp as { personas?: PersonaTerceros[] }).personas || [];
+            this.elegibilidadTextilesService.actualizarEstadoFormulario(resp);
+          }
+        });
+    }
   /**
    * @method onMostrarTabs
    * @description

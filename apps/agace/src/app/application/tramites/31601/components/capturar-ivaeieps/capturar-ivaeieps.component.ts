@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, REGEX_LLAVE_DE_PAGO, REGEX_RFC, TituloComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, REGEX_LLAVE_DE_PAGO, REGEX_RFC, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder,FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
 import { PagoData ,TableData} from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
 import { Solicitud31601State,Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
@@ -12,10 +12,13 @@ import { TableComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query'
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import dropDown from '@libs/shared/theme/assets/json/31601/catalog-select-tipo.json';
+import empressDatos from '@libs/shared/theme/assets/json/31601/empress.json';
 import mockData from '@libs/shared/theme/assets/json/31601/mockdata-capturar.json';
 import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 import table from '@libs/shared/theme/assets/json/31601/table.json';
 import tableDetos from '@libs/shared/theme/assets/json/31601/table-datos.json';
+
+import { FECHA_FINAL } from '../../modelos/radio-buttons.model';
 /**
  * @Component - CapturarIvaeiepsComponent
  *
@@ -32,7 +35,7 @@ import tableDetos from '@libs/shared/theme/assets/json/31601/table-datos.json';
     ReactiveFormsModule,
     CatalogoSelectComponent,
     CommonModule,
-    InputRadioComponent,
+    InputRadioComponent,NotificacionesComponent,InputFechaComponent
   ],
   templateUrl: './capturar-ivaeieps.component.html',
   styleUrl: './capturar-ivaeieps.component.scss',
@@ -43,6 +46,10 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
    */
   ivaForm!: FormGroup;
 
+  /**
+   * Datos predefinidos del representante.
+   */
+  datosRepresentativos = empressDatos;
   /**
    * Grupo de formularios para formulario de pago
    */
@@ -83,7 +90,7 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
    * Representa los datos de LE (presumiblemente una entidad o proceso específico).
    * Esta variable contiene los datos de la tabla para LE.
    */
-  datosDeInversion = tableDetos;
+  datosDeInversion: TableData = tableDetos;
 
   /**
    * Representa el catálogo de tipos.
@@ -106,6 +113,18 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
   esFormularioSoloLectura: boolean = false; 
+
+    /**
+     * Configuración para el campo de fecha final.
+     */
+    fechaFinalInput: InputFecha = FECHA_FINAL;
+
+    /**
+     * Controla la visibilidad de la sección de certificación.
+     * Se establece en true si el usuario selecciona "Sí" en el campo correspondiente.
+     */
+    mostrarSeccionCertificacion: boolean = false;
+
 
   /**
    * Construye una instancia de CapturarIvaeiepsComponent.
@@ -144,6 +163,13 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
   ngOnInit(): void {
     this.inicializarForms();
     this.poblarPagoForm(mockData);
+
+     this.ivaForm.get('indiqueIva')?.valueChanges.subscribe(value => {
+    this.mostrarSeccionCertificacion = value === 'Si';
+  });
+
+  // Optionally initialize value on load
+  this.mostrarSeccionCertificacion = this.ivaForm.get('indiqueIva')?.value === 'Si';
   }
 
   /**
@@ -289,7 +315,11 @@ if (this.esFormularioSoloLectura) {
   cambioDeValorIndique(value: string | number): void {
     this.predeterminadoSeleccionar = value.toString();
   }
-
+ /**
+   * @description
+   * Notificación actual que se muestra en el componente.
+   */
+  public nuevaNotificacion!: Notificacion;
   /**
    * Agrega datos a la tabla destinatarioHeaderData si el ivaForm es válido.
    * Extrae los valores `rfc`, `denominacion` y `domicilio` del formulario,
@@ -299,18 +329,84 @@ if (this.esFormularioSoloLectura) {
    *
    * @returns {nulo}
    */
-  agregarDatos(): void {
-    if (this.ivaForm.valid) {
-      const {RFC, DENOMINACION, DOMICILIO } = this.ivaForm.value;
-      this.destinatarioHeaderData.tableBody[0].tbodyData.push(...[
-        RFC,
-        DENOMINACION,
-        DOMICILIO,
-      ]);
-      this.ivaForm.reset();
-    }
-  }
+ agregarDatos(): void {
+  if (this.ivaForm.valid) {
+   this.destinatarioHeaderData.tableBody[0].tbodyData.push(
+  this.ivaForm.value.rfc,
+  this.ivaForm.value.denominacion,
+  this.ivaForm.value.domicilio);
+   this.cerrarModal()
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Datos guardados correctamente.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
 
+  }
+}
+  /**
+   * Agrega datos a la tabla destinatarioHeaderData si el ivaForm es válido.
+   * Extrae los valores `rfc`, `denominacion` y `domicilio` del formulario,
+   * y los agrega como una nueva fila a la matriz `tbodyData` del primer elemento
+   * en el array `tableBody` de `destinatarioHeaderData`.
+   * Restablece el ivaForm después de agregar los datos.
+   *
+   * @returns {nulo}
+   */
+ agregarData(): void {
+
+   const TIPO_DE = this.ivaForm.get('tipoDe')?.value;
+  const VALOR_PESOS = this.ivaForm.get('valorPesos')?.value;
+  const DESCRIPCION = this.ivaForm.get('descripcion')?.value;
+if (TIPO_DE && VALOR_PESOS && DESCRIPCION) {
+   
+   this.datosDeInversion.tableBody[0].tbodyData.push(
+  this.ivaForm.value.tipoDe,
+  this.ivaForm.value.descripcion,
+  this.ivaForm.value.valorPesos);
+   this.cerrarModal()
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Datos guardados correctamente.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
+  }
+}
+  /**
+   * Agrega datos a la tabla destinatarioHeaderData si el ivaForm es válido.
+   * Extrae los valores `rfc`, `denominacion` y `domicilio` del formulario,
+   * y los agrega como una nueva fila a la matriz `tbodyData` del primer elemento
+   * en el array `tableBody` de `destinatarioHeaderData`.
+   * Restablece el ivaForm después de agregar los datos.
+   *
+   * @returns {nulo}
+   */
+    buscarDatos(): void {
+      const RESGISTRO_VALUE = this.ivaForm.get('rfc')?.value;
+          
+    if (RESGISTRO_VALUE) {
+      
+        this.ivaForm.patchValue({
+     denominacion:this.datosRepresentativos.denominacion,
+       domicilio:this.datosRepresentativos.domicilio
+    });
+      
+           
+    }
+    }
   /**
    * Alterna la visibilidad del contenido invirtiendo el valor de `mostrarContenido`.
    * Cuando se llama, si `mostrarContenido` es verdadero, se establecerá en falso y viceversa.
@@ -359,6 +455,21 @@ if (this.esFormularioSoloLectura) {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite31601Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+    /**
+   * @method onFechaCambiada
+   * @description Actualiza la fecha de pago en el formulario.
+   *
+   * @param {string} fecha - Fecha seleccionada en el componente `InputFecha`.
+   */
+  onFechaCambiada(fecha: string): void {
+    this.formularioDePago.patchValue({ fechaPago: fecha });
+    this.setValoresStore(
+      this.formularioDePago,
+      'fechaPago',
+      'setFechaPago'
+    );
   }
 
   /**

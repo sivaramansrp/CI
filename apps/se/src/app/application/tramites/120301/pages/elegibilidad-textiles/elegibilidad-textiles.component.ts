@@ -14,12 +14,11 @@
  * @requires ./constantes/elegibilidad-de-textiles.enums - Constantes y enumeraciones
  */
 
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { DatosPasos } from '@ng-mf/data-access-user';
+import { DatosPasos, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '../../models/elegibilidad-de-textiles.model';
 import { PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
-import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
  * @interface AccionBoton
@@ -78,7 +77,7 @@ interface AccionBoton {
   selector: 'app-elegibilidad-textiles',
   templateUrl: './elegibilidad-textiles.component.html',
 })
-export class ElegibilidadTextilesComponent {
+export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
   /**
    * @property {FormGroup} formGroup
    * @description Grupo de formularios reactivos de Angular que maneja todos los datos 
@@ -140,11 +139,6 @@ export class ElegibilidadTextilesComponent {
    * // Cambiar el título dinámicamente
    * this.tituloMensaje = 'Nuevo título del proceso';
    * 
-   * // Verificar si hay título
-   * if (this.tituloMensaje) {
-   *   console.log('Título actual:', this.tituloMensaje);
-   * }
-   * ```
    */
   tituloMensaje: string | null = 'Zoosanitario para importación';
 
@@ -230,6 +224,7 @@ export class ElegibilidadTextilesComponent {
    * Inicializa el grupo de formularios reactivos con los controles necesarios
    * para capturar la información del usuario durante el proceso de elegibilidad.
    * 
+   * @param {SeccionLibStore} seccionStore - Store para manejar el estado de las secciones
    * @memberof ElegibilidadTextilesComponent
    * @since 1.0.0
    * 
@@ -242,7 +237,7 @@ export class ElegibilidadTextilesComponent {
    * @see {@link FormGroup} - Documentación de FormGroup de Angular
    * @see {@link FormControl} - Documentación de FormControl de Angular
    */
-  constructor() {
+  constructor(private seccionStore: SeccionLibStore) {
     this.formGroup = new FormGroup({
       campo1: new FormControl(''),
       campo2: new FormControl(''),
@@ -286,6 +281,27 @@ export class ElegibilidadTextilesComponent {
   }
 
   /**
+   * @method asignarSecciones
+   * @description Inicializa el estado de las secciones del formulario.
+   * Establece las secciones como activas y las marca como válidas para permitir
+   * la navegación entre pasos del wizard.
+   * 
+   * @private
+   * @returns {void} No retorna ningún valor.
+   * @memberof ElegibilidadTextilesComponent
+   * @since 1.0.0
+   */
+  private asignarSecciones(): void {
+    // Inicializar con tres secciones (una por cada paso)
+    // Para debugging: establecer la primera sección como válida
+    const SECCIONES: boolean[] = [true, false, false];
+    const FORMA_VALIDA: boolean[] = [true, false, false];
+
+    this.seccionStore.establecerSeccion(SECCIONES);
+    this.seccionStore.establecerFormaValida(FORMA_VALIDA);
+  }
+
+  /**
    * @method obtenerNombreDelTítulo
    * @description Método estático que debería retornar el título correspondiente
    * a cada paso del wizard basándose en el índice proporcionado. Actualmente
@@ -303,7 +319,6 @@ export class ElegibilidadTextilesComponent {
    * ```typescript
    * // Uso previsto del método (una vez implementado)
    * const titulo = ElegibilidadTextilesComponent.obtenerNombreDelTítulo(1);
-   * console.log(titulo); // "Datos generales"
    * ```
    * 
    * @deprecated Este método necesita implementación completa
@@ -311,5 +326,46 @@ export class ElegibilidadTextilesComponent {
    */
   static obtenerNombreDelTítulo(_valor: number): string {
     return new Error('Método no implementado.').toString();
+  }
+
+  /**
+   * @method ngOnInit
+   * @description Método del ciclo de vida de Angular que se ejecuta una vez
+   * que se ha inicializado el componente. Se utiliza para realizar la
+   * configuración inicial, como la suscripción a servicios o la inicialización
+   * de datos que dependen de la vista.
+   * 
+   * @memberof ElegibilidadTextilesComponent
+   * @since 1.0.0
+   * 
+   * @example
+   * ```typescript
+   * // Inicializar datos al cargar el componente
+   * ngOnInit() {
+   *   this.datosPasos.indice = 1;
+   *   this.indice = 1;
+   * }
+   * ```
+   */
+  ngOnInit() {
+    this.datosPasos.indice = 1;
+    this.indice = 1;
+    this.asignarSecciones();
+  }
+
+  /**
+   * @method ngAfterViewInit
+   * @description Método del ciclo de vida de Angular que se ejecuta después de que
+   * Angular haya inicializado completamente la vista del componente y las vistas de los hijos.
+   * Este es el lugar adecuado para establecer el estado de validación después de que
+   * todos los componentes hijos se hayan inicializado.
+   * 
+   * @memberof ElegibilidadTextilesComponent
+   * @since 1.0.0
+   */
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.asignarSecciones();
+    }, 200);
   }
 }
