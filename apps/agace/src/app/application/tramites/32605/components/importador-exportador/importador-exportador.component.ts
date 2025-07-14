@@ -1,8 +1,9 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_ALFANUMERICO_CON_ESPACIOS, REGEX_SOLO_NUMEROS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { EMPRESA_DEL_GRUPO, EMPRESA_DEL_GRUPO_CON_FECHA, EmpresaDelGrupo, FECHA_DE_INICIO, FECHA_DE_PAGO, INFORMACION_EMPRESA_OPTIONS, OPCIONES_DE_BOTON_DE_RADIO, PANELS, PANELS1, REGISTRO_ESQUEMA_CERTIFICACION_OPTIONS, TRANSPORTISTAS_CONFIGURACION, TransportistasTable } from '../../constants/datos-comunes.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
@@ -26,7 +27,8 @@ import { TemplateRef } from '@angular/core';
     InputRadioComponent,
     InputFechaComponent,
     TablaDinamicaComponent,
-    TituloComponent
+    TituloComponent,
+    AgregarTransportistasComponent
   ],
   templateUrl: './importador-exportador.component.html',
   styleUrl: './importador-exportador.component.scss',
@@ -76,10 +78,6 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
   @ViewChild('templateSeleccionRequerida') templateSeleccionRequerida!: TemplateRef<void>;
   /**
    * Constructor del componente
-   * @param fb FormBuilder para crear formularios reactivos
-   * @param solicitudService Servicio para manejar la lógica de solicitudes
-   * @param solicitud32605Store Store para manejar el estado de la solicitud
-   * @param solicitud32605Query Consulta para obtener el estado de la solicitud
    */
   constructor( public fb: FormBuilder,
     @Inject(BsModalService)
@@ -105,7 +103,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
       esParteGrupoComercioExterior: [this.solicitudState?.esParteGrupoComercioExterior, Validators.required],
       fusionEscisionConOperacionExterior: [this.solicitudState?.fusionEscisionConOperacionExterior, Validators.required],
       empresaExtranjeraIMMEX: [this.solicitudState?.empresaExtranjeraIMMEX, Validators.required],
-      monto:[this.solicitudState?.monto, Validators.required],
+      monto:[ this.solicitudState?.monto, Validators.required],
       operacionesBancarias:[this.solicitudState?.operacionesBancarias, Validators.required],
       llavePago: [this.solicitudState?.llavePago, Validators.required],
       registroEsquemaCertificacion: [this.solicitudState?.registroEsquemaCertificacion, Validators.required],
@@ -121,17 +119,20 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
       ],
       domicilio: [{value:this.solicitudState?.domicilio, disabled: true}],
       inputfechaDeLaUltimaOperacion: [{value:this.solicitudState?.inputfechaDeLaUltimaOperacion, disabled: true}],
-      ccat: [{value:this.solicitudState?.ccat, disabled: true}],
     });
   }
 
     /**
    * Maneja el cambio de valor en el campo de fecha.
-   * @param nuevo_valor Nuevo valor de la fecha.
+   *  Nuevo valor de la fecha.
    */
    onFechaCambiada(nuevo_valor: string): void {
     this.importadorExportadorForm.get('fechaDePago')?.setValue(nuevo_valor);
     this.importadorExportadorForm.get('fechaDePago')?.markAsUntouched();
+    if (ImportadorExportadorComponent.esFechaFutura(nuevo_valor)) {
+    this.mostrarModalFechaInvalida();
+  }
+   this.validarCamposPago();
   }
 
    actualizarFechaInicioComercio(nuevo_valor: string): void {
@@ -152,8 +153,8 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
   }
    /**
    * Verifica si la fecha seleccionada es mayor que la fecha actual
-   * @param fechaSeleccionada Fecha en formato DD/MM/YYYY o similar
-   * @returns true si la fecha es futura, false en caso contrario
+   * Fecha en formato DD/MM/YYYY o similar
+   * true si la fecha es futura, false en caso contrario
    */
 static esFechaFutura(fechaSeleccionada: string): boolean {
   if (!fechaSeleccionada)
@@ -314,12 +315,12 @@ aceptarEnlaceOperativo(): void {
     return;
   }
   
-  // In edit mode, check if RFC exists in other records (excluding current one)
+  // En modo edición, verificar si el RFC existe en otros registros (excluyendo el actual)
   if (this.isEditMode && this.existeRFCEnTablaExcluyendo(RFC_VALUE, this.selectedEmpresa?.rfcEnclaveOperativo)) {
     this.mostrarModalDatosObligatorios();
     return;
   }
-  // In add mode, check if RFC already exists
+  // En modo agregar, verificar si el RFC ya existe
   if (!this.isEditMode && this.existeRFCEnTabla(RFC_VALUE)) {
     this.mostrarModalDatosObligatorios();
     return;
@@ -340,19 +341,18 @@ aceptarEnlaceOperativo(): void {
     inputfechaDeLaUltimaOperacion: FORMDATOS.inputfechaDeLaUltimaOperacion
   };
 
-  if (this.isEditMode && this.selectedEmpresa) {
-    // Update existing record
+    if (this.isEditMode && this.selectedEmpresa) {
     const INDEX = this.tablaDatos.findIndex(emp => 
       emp.rfcEnclaveOperativo === this.selectedEmpresa?.rfcEnclaveOperativo
     );
     if (INDEX !== -1) {
       this.tablaDatos[INDEX] = EMPRESA_DATA;
-      this.tablaDatos = [...this.tablaDatos]; // Trigger change detection
+      this.tablaDatos = [...this.tablaDatos]; 
     }
   } else {
-    // Add new record
     this.tablaDatos = [...this.tablaDatos, EMPRESA_DATA];
   }
+  
   
   // Mostrar la columna de fecha después de agregar el primer elemento
   if (!this.mostrarColumnaFecha) {
@@ -361,7 +361,8 @@ aceptarEnlaceOperativo(): void {
   }
   
   this.limpiarFormulario();
-  this.resetEditMode();
+  this.isEditMode = false;
+  this.limpiarSeleccion();
   this.modalRefabir?.hide();
   this.mostrarModalExito();
 }
@@ -373,13 +374,9 @@ existeRFCEnTablaExcluyendo(rfc: string, rfcExcluir?: string): boolean {
 }
 resetEditMode(): void {
   this.isEditMode = false;
+}
+limpiarSeleccion(): void {
   this.selectedEmpresa = null;
-  
-  // Disable fields again
-  // this.agregarEnlaceOperativoForm.get('enlaceOperativorfc')?.disable();
-  // this.agregarEnlaceOperativoForm.get('denominacionRazonsocial')?.disable();
-  // this.agregarEnlaceOperativoForm.get('domicilio')?.disable();
-  // this.agregarEnlaceOperativoForm.get('inputfechaDeLaUltimaOperacion')?.disable();
 }
 mostrarModalDatosObligatorios(): void {
   const MODAL_CONFIG = {
@@ -405,7 +402,7 @@ cerrarModalDatosObligatorios(): void {
       domicilio: '',
       inputfechaDeLaUltimaOperacion:''
     });
-    this.resetEditMode();
+    this.isEditMode = false;
   }
     /**
    * Marca todos los campos del formulario como tocados para mostrar errores de validación
@@ -443,21 +440,15 @@ cerrarModalDatosObligatorios(): void {
   
   this.isEditMode = true;
   
-  // Clear only the RFC field and patch other fields from selected row
   this.agregarEnlaceOperativoForm.patchValue({
-    rfcEnclaveOperativo: '', // Blank RFC
+    rfcEnclaveOperativo: '',
     enlaceOperativorfc: this.selectedEmpresa.rfcEnclaveOperativo,
     denominacionRazonsocial: this.selectedEmpresa.denominacionRazonsocial,
     domicilio: this.selectedEmpresa.domicilio,
     inputfechaDeLaUltimaOperacion: this.selectedEmpresa.inputfechaDeLaUltimaOperacion || ''
   });
   
-  // // Enable the fields for editing
-  // this.agregarEnlaceOperativoForm.get('enlaceOperativorfc')?.enable();
-  // this.agregarEnlaceOperativoForm.get('denominacionRazonsocial')?.enable();
-  // this.agregarEnlaceOperativoForm.get('domicilio')?.enable();
-  // this.agregarEnlaceOperativoForm.get('inputfechaDeLaUltimaOperacion')?.enable();
-  
+ 
   // Open the modal
   this.abrirModal(this.template);
 }
@@ -469,29 +460,28 @@ eliminarEmpresa(): void {
     return;
   }
   
-  // Show confirmation modal before deleting
+  // Mostrar modal de confirmación antes de eliminar
   this.mostrarModalConfirmacionEliminacion();
 }
-// Add method to confirm and execute deletion
+// Agregar método para confirmar y ejecutar eliminación
 confirmarEliminacionEmpresa(): void {
   if (!this.selectedEmpresa) {
     return;
   }
   
-  // Remove the selected company from the table
+  // Eliminar la empresa seleccionada de la tabla
   this.tablaDatos = this.tablaDatos.filter(empresa => 
     empresa.rfcEnclaveOperativo !== this.selectedEmpresa?.rfcEnclaveOperativo
   );
+
+  this.limpiarSeleccion();
   
-  // Clear selection
-  this.selectedEmpresa = null;
-  
-  // Close confirmation modal and show success
+  //  Cerrar modal de confirmación y mostrar éxito
   this.modalRef?.hide();
    this.mensajeSeleccion = 'Datos eliminados correctamente';
    this.mostrarModalSeleccionRequerida();
 }
-// Add modal for selection required message
+// Agregar modal para mensaje de selección requerida
 mostrarModalSeleccionRequerida(): void {
   const MODAL_CONFIG = {
     animated: true,
@@ -514,7 +504,7 @@ mostrarModalConfirmacionEliminacion(): void {
 
   this.modalRef = this.modalService.show(this.templateConfirmacionEliminacion, MODAL_CONFIG);
 }
-// Add close methods for new modals
+
 cerrarModalSeleccionRequerida(): void {
   this.modalRef?.hide();
 }
@@ -531,24 +521,107 @@ cerrarModalConfirmacionEliminacion(): void {
   }
  
   validarLlavePago(): void {
-    this.mostrarError = false
+     this.validarCamposPago();
   }
-  conseguirTransportistasLista(): void {
-    this.solicitudService
-      .conseguirTransportistasLista()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (respuesta: TransportistasTable[]) => {
-          this.transportistasLista = respuesta;
-        },
-      });
-  }
+  validarCamposPago(): void {
+  const FECHADEPAGE = this.importadorExportadorForm.get('fechaDePago')?.value;
+  const MONTO = this.importadorExportadorForm.get('monto')?.value;
+  const OPERACIONESBANCARIAS = this.importadorExportadorForm.get('operacionesBancarias')?.value;
+  const LLAVEPAGO = this.importadorExportadorForm.get('llavePago')?.value;
+
+  this.mostrarError = !FECHADEPAGE || !MONTO || !OPERACIONESBANCARIAS || !LLAVEPAGO;
+}
   mostrar_colapsable1(index: number): void {
     const IS_CURRENTLY_OPEN = this.panels1[index].isCollapsed;
     this.panels1.forEach((panel1, i) => {
       panel1.isCollapsed = i === index ? !IS_CURRENTLY_OPEN : true;
     });
   }
+
+   soloNumeros(event: KeyboardEvent): boolean {
+    // Verificar que el formulario existe
+    if (!this.importadorExportadorForm) {
+      return false;
+    }
+
+    const CHARCODE = event.which ? event.which : event.keyCode;
+    
+    // Permitir: backspace (8), delete (46), tab (9), escape (27), enter (13)
+    if ([8, 9, 27, 13, 46].indexOf(CHARCODE) !== -1 ||
+        // Permitir: Ctrl+A (65), Ctrl+C (67), Ctrl+V (86), Ctrl+X (88)
+        (CHARCODE === 65 && event.ctrlKey === true) ||
+        (CHARCODE === 67 && event.ctrlKey === true) ||
+        (CHARCODE === 86 && event.ctrlKey === true) ||
+        (CHARCODE === 88 && event.ctrlKey === true) ||
+        // Permitir: Home (36), End (35), flecha izquierda (37), flecha derecha (39)
+        (CHARCODE >= 35 && CHARCODE <= 39)) {
+      return true;
+    }
+    
+    // Bloquear si no es un número (0-9)
+    if (CHARCODE < 48 || CHARCODE > 57) {
+      event.preventDefault();
+      return false;
+    }
+    
+    return true;
+  }
+pegarSoloNumeros(event: ClipboardEvent, fieldName: string): void {
+  event.preventDefault();
+  const TEXTO_PEGADO = event.clipboardData?.getData('text') || '';
+  const SOLO_NUMEROS = TEXTO_PEGADO.replace(/[^0-9]/g, '');
+  
+  const ELEMENTO_DESTINO = event.target as HTMLInputElement;
+  const LONGITUD_MAXIMA = parseInt(ELEMENTO_DESTINO.getAttribute('maxlength') || '10', 10);
+  const NUEVO_VALOR = SOLO_NUMEROS.substring(0, LONGITUD_MAXIMA);
+  
+  // Actualizar el control del formulario
+  this.importadorExportadorForm.get(fieldName)?.setValue(NUEVO_VALOR);
+}
+  soloAlfanumericosConEspacios(event: KeyboardEvent): boolean {
+  // Verificar que el formulario existe (usa this)
+  if (!this.importadorExportadorForm) {
+    return false;
+  }
+
+  const CHARCODE = event.which ? event.which : event.keyCode;
+  
+  // Permitir: backspace (8), delete (46), tab (9), escape (27), enter (13), espacio (32)
+  if ([8, 9, 27, 13, 46, 32].indexOf(CHARCODE) !== -1 ||
+      // Permitir: Ctrl+A (65), Ctrl+C (67), Ctrl+V (86), Ctrl+X (88)
+      (CHARCODE === 65 && event.ctrlKey === true) ||
+      (CHARCODE === 67 && event.ctrlKey === true) ||
+      (CHARCODE === 86 && event.ctrlKey === true) ||
+      (CHARCODE === 88 && event.ctrlKey === true) ||
+      // Permitir: Home (36), End (35), flecha izquierda (37), flecha derecha (39)
+      (CHARCODE >= 35 && CHARCODE <= 39)) {
+    return true;
+  }
+  
+  // Permitir: números (48-57), letras mayúsculas (65-90), letras minúsculas (97-122)
+  if ((CHARCODE >= 48 && CHARCODE <= 57) ||// 0-9
+      (CHARCODE >= 65 && CHARCODE <= 90) ||// A-Z
+      (CHARCODE >= 97 && CHARCODE <= 122)) { // a-z
+    return true;
+  }
+  
+  // Bloquear cualquier otro caracter
+  event.preventDefault();
+  return false;
+}
+
+  pegarSoloAlfanumericos(event: ClipboardEvent, fieldName: string): void {
+  event.preventDefault();
+  const TEXTO_PEGADO = event.clipboardData?.getData('text') || '';
+  const SOLO_ALFANUMERICOS = TEXTO_PEGADO.replace(/[^a-zA-Z0-9\s]/g, '');
+  
+  const ELEMENTO_DESTINO = event.target as HTMLInputElement;
+  const LONGITUD_MAXIMA = parseInt(ELEMENTO_DESTINO.getAttribute('maxlength') || '25', 10);
+  const NUEVO_VALOR = SOLO_ALFANUMERICOS.substring(0, LONGITUD_MAXIMA);
+  
+  // Actualizar el control del formulario
+  this.importadorExportadorForm.get(fieldName)?.setValue(NUEVO_VALOR);
+}
    /**
    * Método llamado al destruir el componente, limpia las suscripciones
    */

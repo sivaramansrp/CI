@@ -1,4 +1,4 @@
-import { EnlaceOperativo, RFCEnlaceOperativo } from '../models/solicitud.model';
+import { EnlaceOperativo, RFCEnlaceOperativo, TransportistasListaInterface } from '../models/solicitud.model';
 import { GuardarDatosFormulario } from '../models/solicitud.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -312,9 +312,7 @@ export class SolicitudService {
    * Obtiene la lista de transportistas desde un archivo JSON local.
    * @returns Observable con un arreglo de TransportistasTable.
    */
-  conseguirTransportistasLista(): Observable<TransportistasTable[]> {
-    return this.http.get<TransportistasTable[]>(
-      'assets/json/32605/transportistas-lista.json'
-    );
+  conseguirTransportistasLista(rfc: string): Observable<{ [key: string]: TransportistasListaInterface }> {
+    return this.http.get<{ [key: string]: TransportistasListaInterface }>('assets/json/32605/transportistas-lista.json');
   }
 }

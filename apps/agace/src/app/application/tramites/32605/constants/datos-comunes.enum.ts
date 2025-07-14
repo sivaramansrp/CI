@@ -116,7 +116,7 @@ export interface TransportistasTable {
   rfcEnclaveOperativo: string;
   denominacionRazonsocial: string;
   domicilio: string;
-  caat: string;
+  ccat: string;
 }
 export const TRANSPORTISTAS_CONFIGURACION: ConfiguracionColumna<TransportistasTable>[] =
   [
@@ -142,7 +142,7 @@ export const TRANSPORTISTAS_CONFIGURACION: ConfiguracionColumna<TransportistasTa
 
     {
       encabezado: 'Registro CAAT vigente',
-      clave: (item: TransportistasTable) => item.caat,
+      clave: (item: TransportistasTable) => item.ccat,
       orden: 4,
     },
   ];
