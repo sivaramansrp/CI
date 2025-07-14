@@ -959,5 +959,13 @@
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "AGA",
     "numeroDeProcedimiento": "30401"
+  },
+  {
+    "folioTramite": "0100001000320251005000003",
+    "tipoDeTramite": "Autorización de importación y exportación de contenedores",
+    "dependencia": "AGA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "33303"
   }
 ]
