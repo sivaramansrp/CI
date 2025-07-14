@@ -47,4 +47,10 @@ describe('AvisoService', () => {
     service.getColoniaCatalogo();
     expect(spy).toHaveBeenCalledWith('assets/json/32511/colonia.json');
   });
+
+  it('getAvisosDatos should call http.get with correct URL', () => {
+    const spy = jest.spyOn(http, 'get').mockReturnValue({} as any);
+    service.getAvisosDatos();
+    expect(spy).toHaveBeenCalledWith('assets/json/10303/avisos-datos.json');
+  });
 });
