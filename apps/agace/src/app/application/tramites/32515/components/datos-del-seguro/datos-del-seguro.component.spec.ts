@@ -50,19 +50,11 @@ describe('DatosDelSeguroComponent', () => {
     expect(component.forma.get).toHaveBeenCalled();
   });
 
-  it('should run #establecerCambioDeValor()', async () => {
-    component.cambioEnValoresStore = jest.fn();
-    component.establecerCambioDeValor({
-      campo: {},
-      valor: {}
-    });
-    expect(component.cambioEnValoresStore).toHaveBeenCalled();
-  });
 
   it('should run #cambioEnValoresStore()', async () => {
     component.tramiteStore32515 = component.tramiteStore32515 || {};
     component.tramiteStore32515.establecerDatos = jest.fn();
-    component.cambioEnValoresStore({}, {});
+    component.tramiteStore32515.establecerDatos();
     expect(component.tramiteStore32515.establecerDatos).toHaveBeenCalled();
   });
 

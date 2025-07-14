@@ -266,7 +266,32 @@ const ROUTES: Routes = [
     loadChildren: () => 
       import('./tramites/33303/aviso-modification-certificacion.module').then(
         (m) => m.AvisoModificacionCertificacionModule)
-  }
+  },
+  {
+    path: 'registros',
+    loadChildren: () =>
+      import('./tramites/30506/registro.module').then(
+        (m) => m.RegistroModule
+      ),
+  },
+  {
+      path: 'aviso-destruccion-mercancias',
+    loadChildren: () => 
+      import('./tramites/32512/aviso-destruccion-mercancias.module').then(
+        (m) => m.AvisoDestruccionMercanciasModule)
+  },
+  {
+    path: 'avisos-agace',
+    loadChildren: () =>
+      import('./tramites/32511/avisos.module').then((m) => m.AvisosModule),
+  },  
+  {
+    path: 'aviso-tesoreria',
+    loadChildren: () =>
+      import('./tramites/32513/aviso-tesoreria.module').then(
+        (m) => m.AvisoTesoreriaModule
+      ),
+  },
 ];
 
 @NgModule({

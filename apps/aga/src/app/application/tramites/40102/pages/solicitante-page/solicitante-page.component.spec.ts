@@ -17,8 +17,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Injectable()
 class MockChofer40102Store {
-  establecerSeccion = jest.fn(); // Mock function for establecerSeccion
-  establecerFormaValida = jest.fn(); // Mock function for establecerFormaValida
+  establecerSeccion = jest.fn();
+  establecerFormaValida = jest.fn();
 }
 
 @Directive({ selector: '[myCustom]' })

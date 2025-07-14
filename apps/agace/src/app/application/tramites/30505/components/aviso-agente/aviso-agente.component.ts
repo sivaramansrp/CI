@@ -2,7 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { Subject, map, takeUntil } from 'rxjs';
-import { TablaAcciones, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { TablaAcciones, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { Solicitud30505State, Solicitud30505Store } from '../../../../estados/tramites/tramites30505.store';
 import { AVISO_AGENTE_DE_TABLA } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
@@ -94,6 +94,16 @@ export class AvisoAgenteComponent implements OnInit, OnDestroy {
   */
   selectedAgente: AvisoAgente[] = [];
 
+  
+/**
+ * Define el tipo de selección utilizado en la tabla de mercancías.
+ * 
+ * En este caso, se utiliza la selección de tipo CHECKBOX, lo que permite
+ * seleccionar múltiples elementos en la tabla de manera simultánea.
+ * 
+ * @type {TablaSeleccion}
+ */
+tipoSeleccionsoliMercancias: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
    * Indica si el componente debe estar en modo solo lectura.
@@ -101,6 +111,7 @@ export class AvisoAgenteComponent implements OnInit, OnDestroy {
    * Valor predeterminado: `false`.
    */
   @Input() soloLectura: boolean = false;
+
   /**
    * Constructor de la clase AvisoAgenteComponent.
    * 
@@ -137,9 +148,11 @@ export class AvisoAgenteComponent implements OnInit, OnDestroy {
    * y pasa esta información al servicio compartido `tercerosService` mediante el método `setAgente`.
    */
   getAgenteDatos(evento: AvisoAgente[]): void {
-    if (this.avisoAgenteDatos?.length > 0) {
+    if (evento && evento.length > 0) {
       this.selectedAgente = evento;
-      this.tercerosService.setAgente(this.selectedAgente);
+      this.tercerosService.setAgente(this.selectedAgente); 
+    } else {
+      console.error('No agent data selected or event is empty.');
     }
   }
 
@@ -156,24 +169,18 @@ export class AvisoAgenteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
-   * Emite una notificación y completa el observable `destroyNotifier$` para limpiar suscripciones y evitar fugas de memoria.
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
-
-  /**
    * Navega a la ruta relativa para modificar un agente.
    *
    * Utiliza el enrutador de Angular para redirigir al usuario a la pantalla de modificación de agente,
    * manteniendo el contexto de la ruta actual.
    */
   modificarAgente(): void {
-    this.router.navigate(['../modificar-agente'], {
-      relativeTo: this.route,
-    });
+    if (Array.isArray(this.selectedAgente) && this.selectedAgente.length > 0) {
+      this.tercerosService.setAgente(this.selectedAgente); 
+      this.router.navigate(['../modificar-agente'], { relativeTo: this.route });
+    } else {
+      console.error('No agent selected for modification.');
+    }
   }
 
   /**
@@ -182,6 +189,7 @@ export class AvisoAgenteComponent implements OnInit, OnDestroy {
   */
   ngOnInit(): void {
     this.inicializarFormulario();
+    this.getAvisoAgenteData();
   }
 
   /**
@@ -203,4 +211,34 @@ export class AvisoAgenteComponent implements OnInit, OnDestroy {
     this.avisoAgenteDatos = this.avisoState?.agenteDatos || [];
   }
 
+
+  /**
+ * Obtiene los datos de los agentes desde el servicio `TercerosRelacionadosService`.
+ *
+ * Este método realiza una suscripción al observable `getAvisoAgenteData` del servicio,
+ * recuperando los datos de los agentes y asignándolos a la propiedad `avisoAgenteDatos`.
+ * 
+ * @remarks
+ * La suscripción se gestiona con `takeUntil(this.destroyNotifier$)` para evitar fugas de memoria.
+ * 
+ * @example
+ * this.getAvisoAgenteData();
+ */
+getAvisoAgenteData(): void {
+  this.tercerosService
+    .getAvisoAgenteData()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((data) => {
+      this.avisoAgenteDatos = data as unknown as AvisoAgente[];
+    });
+}
+ 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+   * Emite una notificación y completa el observable `destroyNotifier$` para limpiar suscripciones y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
