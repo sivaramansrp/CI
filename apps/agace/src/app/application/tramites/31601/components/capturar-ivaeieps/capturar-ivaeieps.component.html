@@ -217,7 +217,7 @@
 
     <div class="button-container">
       <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Modificar</button>
-      <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+      <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="eliminar()">Eliminar</button>
     </div>
 
     <p class="fw-bold">
@@ -349,7 +349,7 @@
           </div>
         </div>
         <div class="col-md-3">
-            <input-fecha [datos]="fechaFinalInput" name="fechaPago" [setFecha]="formularioDePago.get('fechaPago')?.value" (valorCambiado)="onFechaCambiada($event)" [isDisabled]="esFormularioSoloLectura"></input-fecha>
+            <input-fecha [datos]="fechaFinalInput" name="fechaPago" [isDisabled]="true" [setFecha]="formularioDePago.get('fechaPago')?.value" (valorCambiado)="onFechaCambiada($event)" ></input-fecha>
 
         </div>
         <div class="col-md-3">

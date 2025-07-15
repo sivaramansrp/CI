@@ -11,7 +11,7 @@
     "nico": 1,
     "umt": 1,
     "factura_número": "123456",
-    "factura_fecha": "2024-06-01",
+    "factura_fecha": "01/06/2024",
     "umc": 2,
     "otro_umc": "Unidad especial",
     "cantidad_umc": "100",
@@ -28,7 +28,7 @@
   },
   "datosExporta": {
     "número_documento": "DOC-EXP-2024-001",
-    "fecha_documento": "2024-06-01",
+    "fecha_documento": "01/06/2024",
     "descripción": "Exportación de laptops",
     "código_arancelario": "847130",
     "cantidad_umt": "100",
@@ -40,14 +40,14 @@
     "personales_nombre": "Juan Carlos",
     "primer_apellido": "Pérez",
     "segundo_apellido": "García",
-    "denominación_razón_social": "",
+    "denominación_razón_social": "Exportaciones Internacionales S.A. de C.V.",
     "domicilio": "Av. Reforma 123, CDMX"
   },
   "datosExportador": {
     "persona_tipo": "Moral",
-    "personales_nombre": "",
-    "primer_apellido": "",
-    "segundo_apellido": "",
+    "personales_nombre": "Juan Carlos",
+    "primer_apellido": "Pérez",
+    "segundo_apellido": "García",
     "denominación_razón_social": "Exportaciones Internacionales S.A. de C.V.",
     "domicilio": "Calle Comercio 456, Monterrey",
     "observaciones": "Exportación regular, sin incidencias."

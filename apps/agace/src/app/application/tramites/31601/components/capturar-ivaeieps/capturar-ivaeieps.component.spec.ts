@@ -150,7 +150,7 @@ fdescribe('CapturarIvaeiepsComponent', () => {
   component.datosDeInversion = {
     tableHeader: ['Tipo de', 'Descripción', 'Valor en pesos'],
     tableBody: [
-      { tbodyData: [] }
+    
     ]
   };
 
