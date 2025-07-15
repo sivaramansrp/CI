@@ -104,3 +104,11 @@
             </div>
         </div>
     </div>
+    @if(eliminarDatosTabla){
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+        (confirmacionModal)="eliminarPedimentoDatos($event)"></lib-notificaciones>
+    }
+    @if(eliminarDatoExportador){
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+        (confirmacionModal)="eliminarExportador($event)"></lib-notificaciones>
+    }

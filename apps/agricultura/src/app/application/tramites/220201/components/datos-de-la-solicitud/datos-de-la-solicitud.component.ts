@@ -594,7 +594,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
    */
   eliminarPedimento(borrar: boolean): void {
-    console.log('borrar', borrar);
     if (borrar) {
       this.moduloEmergente = false;
     }
