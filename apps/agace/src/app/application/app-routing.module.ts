@@ -260,7 +260,14 @@ const ROUTES: Routes = [
     loadChildren: () => 
       import('./tramites/30505/aviso-de-modificacion.module').then(
         (m) => m.AvisoDeModificacionModule)
-  }
+  },
+  {
+    path: 'auto-transportista',
+    loadChildren: () =>
+      import('./tramites/32611/auto-transportista.module').then(
+        (m) => m.AutoTransportistaModule
+      ),
+  },
 ];
 
 @NgModule({
