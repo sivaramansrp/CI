@@ -1,4 +1,5 @@
 import { EnlaceOperativo, RFCEnlaceOperativo, TransportistasListaInterface } from '../models/solicitud.model';
+import { Solicitud32605State, Solicitud32605Store } from '../estados/solicitud32605.store';
 import { GuardarDatosFormulario } from '../models/solicitud.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -7,10 +8,8 @@ import { Observable } from 'rxjs';
 import { RecibirNotificaciones } from '../models/solicitud.model';
 import { RepresentanteLegal } from '../models/solicitud.model';
 import { SeccionSubcontratados } from '../models/solicitud.model';
-import { Solicitud32605Store } from '../estados/solicitud32605.store';
 import { SolicitudCatologoSelectLista } from '../models/solicitud.model';
 import { SolicitudRadioLista } from '../models/solicitud.model';
-import { TransportistasTable } from '../constants/datos-comunes.enum';
 
 /**
  * Servicio encargado de obtener los datos necesarios para el llenado del formulario
@@ -302,17 +301,24 @@ export class SolicitudService {
 
    /**
    * Obtiene los datos de una empresa por RFC
-   * @param rfc RFC de la empresa a buscar
+   * @param _rfc RFC de la empresa a buscar
    * @returns Observable con los datos de la empresa
    */
-  conseguirDatosPorRFC(rfc: string): Observable<{ [key: string]: RFCEnlaceOperativo }> {
+  conseguirDatosPorRFC(_rfc: string): Observable<{ [key: string]: RFCEnlaceOperativo }> {
     return this.http.get<{ [key: string]: RFCEnlaceOperativo }>('assets/json/32605/rfc-datos.json');
   }
   /**
    * Obtiene la lista de transportistas desde un archivo JSON local.
    * @returns Observable con un arreglo de TransportistasTable.
    */
-  conseguirTransportistasLista(rfc: string): Observable<{ [key: string]: TransportistasListaInterface }> {
+  conseguirTransportistasLista(_rfc: string): Observable<{ [key: string]: TransportistasListaInterface }> {
     return this.http.get<{ [key: string]: TransportistasListaInterface }>('assets/json/32605/transportistas-lista.json');
+  }
+
+  actualizarEstado(DATOS: Solicitud32605State): void {
+    this.solicitud32605Store.actualizarEstado(DATOS);
+  }
+   getDatos(): Observable<Solicitud32605State> {
+    return this.http.get<Solicitud32605State>('assets/json/32605/datos.json');
   }
 }

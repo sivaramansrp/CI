@@ -1,0 +1,10 @@
+{
+    "comercioExteriorRealizado":"1",
+    "fechaInicioComercio":"01/01/2025",
+    "fechaDePago":"12/11/2025",
+    "monto":"100",
+    "operacionesBancarias":"Abc123",
+    "llavePago":"Llave123",
+    "registroEsquemaCertificacion":"1",
+    "tipoInformacionEmpresa":"1"
+}

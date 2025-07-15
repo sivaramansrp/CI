@@ -43,7 +43,8 @@
           [datos]="fechaDeFinDeVigencia"
           [setFecha]="importadorExportadorForm.get('fechaInicioComercio')?.value"
           (valorCambiado)="actualizarFechaInicioComercio($event);setValoresStore(importadorExportadorForm, 'fechaInicioComercio')"
-        >
+          [isDisabled]="esFormularioSoloLectura"
+          >
         </input-fecha>
       </div>
     </div>
@@ -275,7 +276,7 @@
                     [datos]="fechaInicioInput"
                     (valorCambiado)="onFechaCambiada($event);setValoresStore(importadorExportadorForm,'fechaDePago')"
                     [setFecha]="importadorExportadorForm.get('fechaDePago')?.value"
-                    
+                    [isDisabled]="esFormularioSoloLectura"
                   >
                   </input-fecha>
                 </div>
@@ -420,7 +421,6 @@
           [gap]="'50px'"
           formControlName="registroEsquemaCertificacion"
           (change)="setValoresStore(importadorExportadorForm, 'registroEsquemaCertificacion')"
-
         ></app-input-radio>
       </div>
       <div class="col-md-12">

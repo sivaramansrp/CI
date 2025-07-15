@@ -1,17 +1,19 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, ConsultaioQuery, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { EMPRESA_DEL_GRUPO, EMPRESA_DEL_GRUPO_CON_FECHA, EmpresaDelGrupo, FECHA_DE_INICIO, FECHA_DE_PAGO, INFORMACION_EMPRESA_OPTIONS, OPCIONES_DE_BOTON_DE_RADIO, PANELS, PANELS1, REGISTRO_ESQUEMA_CERTIFICACION_OPTIONS, TRANSPORTISTAS_CONFIGURACION, TransportistasTable } from '../../constants/datos-comunes.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud32605State, Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { Subject, takeUntil } from 'rxjs';
+import { map, takeUntil } from 'rxjs';
 import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 import { FECHA_DELA_ULTIMA_OPERACION } from'../../constants/datos-comunes.enum';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { RFCEnlaceOperativo } from '../../models/solicitud.model';
 import { Solicitud32605Query } from '../../estados/solicitud32605.query';
 import { SolicitudService } from '../../services/solicitud.service';
+import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 /**
  * Componente principal para gestionar los datos de importador y exportador
@@ -69,7 +71,8 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
   selectedEmpresa: EmpresaDelGrupo | null = null;
   mensajeSeleccion: string = '';
   panels = PANELS;
-  panels1 = PANELS1
+  panels1 = PANELS1;
+  esFormularioSoloLectura: boolean = false;
   @ViewChild('template') template!: TemplateRef<void>;
   @ViewChild('templateFechaInvalida') templateFechaInvalida!: TemplateRef<void>;
   @ViewChild('templateExito') templateExito!: TemplateRef<void>;
@@ -86,15 +89,40 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     private solicitudService: SolicitudService,
     private tramite32605Store: Solicitud32605Store,
     private tramite32605Query: Solicitud32605Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-  // Inicialización de dependencias
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); 
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.importadorExportadorForm.disable();
+     
+    } else {
+      this.importadorExportadorForm.enable();
+    }
+}
   /**
    * Método llamado al inicializar el componente, configura el formulario con los valores del estado de solicitud
    */
   ngOnInit(): void {
-    this.inicializarFormulario();
+    this.inicializarEstadoFormulario();
   }
 
 

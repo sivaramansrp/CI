@@ -31,6 +31,7 @@
                   [configuracionTabla]="transportistasConfiguracionColumnas"
                   [datos]="transportistasLista"
                   (filaSeleccionada)="onFilaSeleccionada($event)"
+                  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
                 >
                 </app-tabla-dinamica>
               </div>
@@ -47,6 +48,7 @@
           id="agregarTransportista"
           class="btn btn-primary me-2"
           (click)="abrirModal1(templateTransposrtistas)"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -55,6 +57,7 @@
           id="modificarTransportista"
           class="btn btn-default me-2"
           (click)="modificarTransportista()"
+          [disabled]="esFormularioSoloLectura"
         >
           Modificar
         </button>
@@ -63,6 +66,7 @@
           id="eliminarTransportista"
           class="btn btn-danger"
           (click)="eliminarTransportista()"
+          [disabled]="esFormularioSoloLectura"
         >
           Eliminar
         </button>

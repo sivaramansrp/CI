@@ -1,7 +1,8 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, Inject, TemplateRef, ViewChild } from '@angular/core';
-import { ConfiguracionColumna,TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna,ConsultaioQuery,ConsultaioState,TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { PANELS1, TRANSPORTISTAS_CONFIGURACION, TransportistasTable } from '../../constants/datos-comunes.enum';
+import { Subject, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -12,7 +13,6 @@ import { Solicitud32605Query } from '../../estados/solicitud32605.query';
 import { Solicitud32605State } from '../../estados/solicitud32605.store';
 import { Solicitud32605Store } from '../../estados/solicitud32605.store';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
 import { TransportistasListaInterface } from '../../models/solicitud.model';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
@@ -56,7 +56,8 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
   isEditMode: boolean = false;
   mensajeSeleccion: string = '';
   selectedTransportista: TransportistasTable | null = null;
-  
+  consultaState!: ConsultaioState;
+  esFormularioSoloLectura: boolean = false;
   @ViewChild('templateTransposrtistas') templateTransposrtistas!: TemplateRef<void>;
   @ViewChild('templateRFCDuplicado') templateRFCDuplicado!: TemplateRef<void>;
   @ViewChild('templateExito') templateExito!: TemplateRef<void>;
@@ -74,23 +75,40 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
     public solicitudService: SolicitudService,
     private tramite32605Store: Solicitud32605Store,
     private tramite32605Query: Solicitud32605Query,
-    
+    private consultaioQuery: ConsultaioQuery
   ) {
-    /**
-     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-     *
-     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-     */
+    this.consultaioQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroy$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+              this.inicializarEstadoFormulario();
+            })
+          )
+          .subscribe();
    
   }
-
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); 
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.transportistaCertificacionForm.disable();
+     
+    } else {
+      this.transportistaCertificacionForm.enable();
+    }
+}
   /**
    * Ciclo de vida ngOnInit: inicializa el formulario y se suscribe al estado de la solicitud.
    */
   ngOnInit(): void {
-    this.inicializarFormulario();
+    this.inicializarEstadoFormulario();
   }
 
 

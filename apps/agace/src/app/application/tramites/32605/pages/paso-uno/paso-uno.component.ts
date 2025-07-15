@@ -1,10 +1,8 @@
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { CTPATComponent } from '../../components/c-tpat/c-tpat.component';
 import { CommonModule } from '@angular/common';
 import { Component} from '@angular/core';
-import { ConsultaioQuery} from '@libs/shared/data-access-user/src';
-import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { DatosComunesComponent } from '../../components/datos-comunes/datos-comunes.component';
-import { GuardarDatosFormulario } from '../../models/solicitud.model';
 import { ImportadorExportadorComponent } from '../../components/importador-exportador/importador-exportador.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -84,12 +82,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.solicitudService
-      .guardarDatosFormulario()
+      .getDatos()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((resp: GuardarDatosFormulario) => {
+      .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          this.solicitudService.actualizarEstadoFormulario(resp);
+          this.solicitudService.actualizarEstado(resp);
         }
       });
   }
