@@ -1,5 +1,5 @@
 import { CatalogosSelect, ConfiguracionColumna } from "@libs/shared/data-access-user/src";
-import { Domicillio, Empresa, EnlaceOperativo, Querella, RecibirNotificaciones } from "../models/adace.model";
+import { ControladasTable, Domicillio, Empresa, EnlaceOperativo, Querella, RecibirNotificaciones, TransportistasTable } from "../models/adace.model";
 /**
  * Opciones para el radio relacionado con la disminución total.
  */
@@ -18,6 +18,15 @@ export const RADIO_08 = [
   { label: 'No', value: 'no' },
 ];
 
+export const RADIO_AUTORIZO = [
+  { label: 'Si Autorizo', value: 'si_autorizo' },
+  { label: 'No Autorizo', value: 'no_autorizo' },
+];
+
+export const RADIO_CLASIFICACION = [
+  { label: 'Pública', value: 'publica' },
+  { label: 'Privada', value: 'privada' },
+];
 /**
  * Configuración para la fecha inicial del dictamen.
  */
@@ -470,5 +479,82 @@ export const  PERSONAS_TABLA: ConfiguracionColumna<RecibirNotificaciones>[] =
       clave: (item: RecibirNotificaciones) => item.apellidoMaterno,
       orden: 5,
     },
-  ];
+];
+
+export const TRANSPORTISTAS_TABLA: ConfiguracionColumna<TransportistasTable>[] =
+  [
+    /**
+     * Configuración para la columna "RFC".
+     * Muestra el RFC de cada transportista.
+     */
+    {
+      encabezado: 'RFC',
+      clave: (item: TransportistasTable) => item.rfc,
+      orden: 1,
+    },
+
+    /**
+     * Configuración para la columna "Denominación o Razón Social".
+     * Muestra la razón social o denominación del transportista.
+     */
+    {
+      encabezado: 'Denominación o Razón social',
+      clave: (item: TransportistasTable) => item.razonSocial,
+      orden: 2,
+    },
+
+    /**
+     * Configuración para la columna "Domicilio".
+     * Muestra la dirección del transportista.
+     */
+    {
+      encabezado: 'Domicilio',
+      clave: (item: TransportistasTable) => item.domicilio,
+      orden: 3,
+    },
+
+    /**
+     * Configuración para la columna "Registro CAAT vigente".
+     * Muestra si el transportista tiene el registro CAAT vigente.
+     */
+    {
+      encabezado: 'Registro CAAT vigente',
+      clave: (item: TransportistasTable) => item.caat,
+      orden: 4,
+    },
+];
+
+export const CONTROLADAS_TABLA: ConfiguracionColumna<ControladasTable>[] = [
+  {
+      encabezado: 'RFC',
+      clave: (item: ControladasTable) => item.rfc,
+      orden: 1,
+    },
+    {
+      encabezado: 'Denominación o Razón social',
+      clave: (item: ControladasTable) => item.razonSocial,
+      orden: 2,
+    },
+    {
+      encabezado: 'Domicilio',
+      clave: (item: ControladasTable) => item.domicilio,
+      orden: 3,
+    },
+
+    {
+      encabezado: 'Participación Accionaria',
+      clave: (item: ControladasTable) => item.accinaria,
+      orden: 4,
+    },
+    {
+      encabezado: 'Importaciones',
+      clave: (item: ControladasTable) => item.importaciones,
+      orden: 5,
+    },
+    {
+      encabezado: 'Exportaciones',
+      clave: (item: ControladasTable) => item.exportaciones,
+      orden: 6,
+    },
+   ];
 

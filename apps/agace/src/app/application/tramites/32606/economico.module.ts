@@ -11,6 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DatosComunesComponent } from './components/datos comunes/datos-comunes.component';
 import { TercerosRelacinadosComponent } from './components/terceros relacionados/terceros-relacinados.component';
 import { ControladoraComponent } from './components/controladora/controladora.component';
+import { CtpatComponent } from './components/ctpat/ctpat.component';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { ControladoraComponent } from './components/controladora/controladora.co
     TituloComponent,
     AnexarDocumentosComponent,
     AlertComponent,
+    CtpatComponent
   ]
 })
 export class EconomicoModule { }
