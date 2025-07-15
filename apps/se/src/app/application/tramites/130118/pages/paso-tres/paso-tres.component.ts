@@ -1,18 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
-import { CadenaOriginal130118Service } from '../../../../core/services/130118/CadenaOriginal130118.service';
+import { Router } from '@angular/router';
+
+import { CadenaOriginal130118Service } from '../../../../core/services/130118/cadenaOriginal130118.service';
 import { CadenaOriginalRequest } from '../../../../core/models/request/cadena-original-request.model';
 import { CadenaOriginalService } from '@libs/shared/data-access-user/src/core/services/shared/cadena-original/cadena-original.service';
-import { Router } from '@angular/router';
 
 import { Subject, catchError, map, switchMap, takeUntil, tap, throwError } from 'rxjs';
 import { Firma130118Service } from '../../../../core/services/130118/firma130118.service';
 
-import { DocumentoService, base64ToHex, encodeToISO88591Hex } from '@libs/shared/data-access-user/src';
+import { CategoriaMensaje, DocumentoService, Notificacion, base64ToHex, encodeToISO88591Hex } from '@libs/shared/data-access-user/src';
 import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
 import { Solicitud130118State } from '../../estados/tramites/tramite130118.store';
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
-import { format } from 'date-fns';
 
 /**
  * Componente para gestionar el paso tres del trámite.
@@ -61,6 +61,12 @@ export class PasoTresComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud130118State;
 
   /**
+   * Notificación que se muestra al usuario en caso de error o éxito en el proceso de firma.
+   * Incluye información sobre el tipo de notificación, categoría, título y mensaje.
+   */
+  nuevaNotificacion!: Notificacion;
+
+  /**
  * Objeto que contiene los datos reales de la firma electrónica generada después del proceso de firma.
  * Incluye:
  * - firma: Cadena de la firma generada (en base64).
@@ -101,15 +107,45 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     this.obtenerCadenaOriginal();
   }
 
+  /**
+   * Método para obtener la cadena original del trámite.
+   * Este método se encarga de llamar al servicio correspondiente para generar la cadena original.
+   */
   obtenerCadenaOriginal(): void {
     this.cadenaOriginalService.generarCadena130118().subscribe({
       next: (response) => {
         this.datosCadena = response.datos as CadenaOriginalRequest;
         this.cadena.obtenerCadenaOriginal(String(this.solicitudState.idSolicitud), this.datosCadena).subscribe({
           next: (resp) => {
+            if (resp.codigo !== '00') {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'toastr',
+                categoria: CategoriaMensaje.ERROR,
+                modo: 'action',
+                titulo: '',
+                mensaje: resp.error || 'Error al generar la cadena original.',
+                cerrar: false,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
+              return;
+            }
             this.cadenaOriginal = typeof resp.datos === 'string' ? resp.datos : undefined;
           },
-          error: (err) => console.error('Error al generar cadena:', err),
+          error: (error) => {
+            console.error('Error al iniciar trámite:', error);
+            const MENSAJE = error?.error?.error || 'Error inesperado al iniciar trámite.';
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: 'error',
+              modo: 'action',
+              titulo: '',
+              mensaje: MENSAJE,
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            }
+          }
         });
       },
       error: (err) => console.error('Error al cargar datos del trámite:', err),
@@ -153,10 +189,10 @@ export class PasoTresComponent implements OnInit, OnDestroy {
             cadena_original: CADENAHEX,
             cert_serial_number: this.datosFirmaReales.certSerialNumber,
             clave_usuario: this.datosFirmaReales.rfc,
-             fecha_firma: this.formatFecha(new Date()),
+            fecha_firma: this.formatFecha(new Date()),
             clave_rol: 'Solicitante',
             sello: FIRMAHEX,
-             fecha_fin_vigencia: this.formatFecha(this.datosFirmaReales.fechaFin),
+            fecha_fin_vigencia: this.formatFecha(this.datosFirmaReales.fechaFin),
             documentos_requeridos: response.datos?.documentos_requeridos || [],
           };
 

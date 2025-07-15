@@ -21,4 +21,5 @@ export interface BaseResponse<T> {
     mensaje: string;
     datos?: T;
     detalle_errores?: string[];
+    errores_modelo?: string[]
 }

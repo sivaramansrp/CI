@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { AVISO, DatosPasos, ListaPasosWizard, Notificacion, PASOS, WizardComponent } from '@ng-mf/data-access-user';
+import { AVISO, CategoriaMensaje, DatosPasos, ListaPasosWizard, Notificacion, PASOS, WizardComponent } from '@ng-mf/data-access-user';
 import { GuadarSolicitudRequest } from '../../../../core/models/request/guardar-solicitud-request.model';
 import { GuardarService } from '../../../../core/services/130118/guardar.service';
 import { IniciarService } from '../../../../core/services/130118/iniciar.service';
@@ -16,6 +16,7 @@ import { IniciarRequest } from '../../../../core/models/request/iniciar-requst.m
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
+import { ToastrService } from 'ngx-toastr';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -78,7 +79,8 @@ export class SolicitudPageComponent implements OnInit {
    */
   TEXTOS = AVISO.Aviso;
 
-   public nuevaNotificacion!: Notificacion;
+
+ public nuevaNotificacion: Notificacion | null = null;
 
   /**
    * Mensaje de alerta a mostrar en caso de error.
@@ -104,6 +106,7 @@ export class SolicitudPageComponent implements OnInit {
     private guardarService: GuardarService,
     private tramite130118Store: Tramite130118Store,
     private tramite130118Query: Tramite130118Query,
+    private toastrService: ToastrService,
   ) { }
 
   /**
@@ -115,7 +118,7 @@ export class SolicitudPageComponent implements OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-  
+
 
   ngOnInit(): void {
 
@@ -136,11 +139,33 @@ export class SolicitudPageComponent implements OnInit {
     this.iniciarService.postIniciar(PAYLOAD).subscribe({
       next: (response) => {
         if (response.codigo !== '00') {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response.error || 'Error al iniciar el trámite.',
+            mensaje:
+              response.causa ||
+              response.mensaje ||
+              'Ocurrió un error al guardar la solicitud.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
           this.location.back();
         }
       },
       error: (error) => {
-        console.error('Error al iniciar trámite:', error);
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'action',
+          titulo: '',
+          mensaje: error?.error?.error || 'Error inesperado al iniciar el trámite.',
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
         this.location.back();
       }
     });
@@ -156,13 +181,13 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   actualizarDatosPasos(): void {
-  this.datosPasos = {
-    nroPasos: this.pasos.length,
-    indice: this.indice,
-    txtBtnAnt: 'Anterior',
-    txtBtnSig: 'Continuar',
-  };
-}
+    this.datosPasos = {
+      nroPasos: this.pasos.length,
+      indice: this.indice,
+      txtBtnAnt: 'Anterior',
+      txtBtnSig: 'Continuar',
+    };
+  }
 
   /**
    * Obtiene el valor del índice de la acción del botón y controla la navegación del asistente.
@@ -176,7 +201,18 @@ export class SolicitudPageComponent implements OnInit {
           takeUntil(this.destroyNotifier$),
           tap((respuesta) => {
             if (!respuesta) {
-
+              console.error('entra aqui');
+               this.nuevaNotificacion = null;
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'toastr',
+                categoria: CategoriaMensaje.ERROR,
+                modo: 'action',
+                titulo: '',
+                mensaje: 'Error inesperado al enviar la solicitud.',
+                cerrar: false,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
               this.indice = 1;
               this.wizardComponent.indiceActual = 1;
               this.actualizarDatosPasos();
@@ -184,6 +220,8 @@ export class SolicitudPageComponent implements OnInit {
             }
 
             if (e.valor > 0 && e.valor < 5) {
+             
+              
               this.indice = e.valor;
               this.actualizarDatosPasos();
               if (e.accion === 'cont') {
@@ -194,7 +232,16 @@ export class SolicitudPageComponent implements OnInit {
             }
           }),
           catchError(() => {
-
+           this.nuevaNotificacion = {
+                tipoNotificacion: 'toastr',
+                categoria: CategoriaMensaje.ERROR,
+                modo: 'action',
+                titulo: '',
+                mensaje: 'Error inesperado al enviar la solicitud.',
+                cerrar: false,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
             return of(false);
           })
         )
@@ -212,8 +259,10 @@ export class SolicitudPageComponent implements OnInit {
     }
   }
 
-
-
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Se suscribe a los cambios en el estado de la sección y obtiene la URL actual.
+   */
   private enviaSolicitudRequest(): Observable<boolean> {
     const FORM = this.pasoUnoComponent?.solicitudComponent?.form;
     const FORMVALUE = FORM.getRawValue();
@@ -258,7 +307,7 @@ export class SolicitudPageComponent implements OnInit {
       },
 
       solicitante: {
-        rfc: 'AAL0409235E6',
+        rfc: '',
         nombre: DATOS_PRODUCTO.nombre,
         es_persona_moral: DATOS_PRODUCTO.tipoPersona === 'pmoral',
         certificado_serial_number: '3082054030820428a00302010'
@@ -272,6 +321,8 @@ export class SolicitudPageComponent implements OnInit {
 
     return this.guardarService.postSolicitud(PAYLOAD).pipe(
       map((response) => {
+
+
         if (response?.datos?.id_solicitud) {
           this.tramite130118Store.setIdSolicitud(response.datos.id_solicitud);
           return true;
@@ -283,27 +334,11 @@ export class SolicitudPageComponent implements OnInit {
     );
   }
 
-
-
   // eslint-disable-next-line class-methods-use-this
   convertirFechaISO(fecha: string): string {
     const [DIA, MES, ANIO] = fecha.split('/');
     return `${ANIO}-${MES}-${DIA}`;
   }
 
-  mostrarErrorPersonalizado(error: any): void {
-  const MENSAJE = error?.mensaje || 'Error inesperado al guardar la solicitud.';
-  const DETALLE = error?.causa || error?.error || '';
-  this.nuevaNotificacion = {
-    tipoNotificacion: 'toastr',
-    categoria: 'error',
-    modo: 'action',
-    titulo: '',
-    mensaje: `${MENSAJE}${DETALLE ? ' - ' + DETALLE : ''}`,
-    cerrar: false,
-    txtBtnAceptar: '',
-    txtBtnCancelar: '',
-  };
-}
 
 }

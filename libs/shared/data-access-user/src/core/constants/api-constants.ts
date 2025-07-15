@@ -188,3 +188,21 @@ export const API_GET_FRACCION_ARANCELARIA_CVE = `sat-t130118/catalogo/fraccion-a
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-subdivisiones-fracciones-arancelarias
  */
 export const API_GET_NICO = `sat-t130118/catalogo/fraccion-arancelaria/${CVEFRACCION}/subdiviciones`;
+
+
+/**
+ * ID de la solicitud que se utilizará en las rutas de la API.
+ */
+export const IDSOLICITUD = '{idSolicitud}';
+
+/**
+ * API para guardar el acuse de una solicitud.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/guardar-documento
+ */
+export const API_POST_GUARDAR_ACUSE = `sat-t130118/solicitud/${IDSOLICITUD}/acuse/guardar`;
+
+/**
+ * API para generar la vista previa del acuse de una solicitud.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/genera-documento
+ */
+export const API_POST_VISTA_PREVIA = `sat-t130118/solicitud/${IDSOLICITUD}/acuse/vista-previa`;
