@@ -18,7 +18,7 @@
       </div>
       <h6>Certificados disponibles</h6>
       <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="oficio"
-        [tipoSeleccionTabla]="TablaSeleccion" (filaSeleccionada)="onSeleccionRow($event)">
+        [tipoSeleccionTabla]="TablaSeleccion" (filaSeleccionada)="onSeleccionRow($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
       </app-tabla-dinamica>
       <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
@@ -33,7 +33,7 @@
       </div>
       <h6>Certificados a cancelar</h6>
       <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="Certificados"
-        [tipoSeleccionTabla]="TablaSeleccion">
+        [tipoSeleccionTabla]="TablaSeleccion" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
       </app-tabla-dinamica>
       <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">

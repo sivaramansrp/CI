@@ -53,8 +53,14 @@ export class CancelacionDeComponent {
       }
     }
   }
+  /**
+   * Method to handle the search attempt event.
+   * It sets the `showBuscarError` property based on the submitted and invalid state of the form.
+   *
+   * @param {Object} event - The event object containing `submitted` and `invalid` properties.
+   */
   public showBuscarError = false;
-  onBuscarIntento(event: {submitted: boolean, invalid: boolean}) {
+  onBuscarIntento(event: {submitted: boolean, invalid: boolean}):void {
     this.showBuscarError = event.submitted && event.invalid;
   }
 }

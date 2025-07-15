@@ -8,6 +8,19 @@ import { Solicitud140103Service } from '../../services/service140103.service';
   templateUrl: './datos.component.html',
 })
 export class DatosComponent implements OnInit, OnDestroy {
+
+  /**
+   * @description
+   * Este componente maneja los datos del trámite 140103, permitiendo la visualización y edición de los datos del establecimiento.
+   * Utiliza un servicio para obtener y actualizar los datos del formulario.
+   */
+  @Input() showBuscarError: boolean = false;
+  /**
+   * @description
+   * Evento que se emite al intentar buscar datos.
+   * Contiene el estado del formulario (si fue enviado y si es inválido).
+   */
+  @Output() buscarIntento = new EventEmitter<{ submitted: boolean; invalid: boolean }>();
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
@@ -69,10 +82,15 @@ export class DatosComponent implements OnInit, OnDestroy {
       });
   }
 
-  @Input() showBuscarError: boolean = false;
-  @Output() buscarIntento = new EventEmitter<{ submitted: boolean; invalid: boolean }>();
+  
 
-  onBuscarIntento(event: { submitted: boolean; invalid: boolean }) {
+/**
+   * Método que se invoca al intentar buscar datos.
+   * Emite un evento con el estado del formulario (si fue enviado y si es inválido).
+   *
+   * @param event - Objeto que contiene el estado del formulario.
+   */
+  onBuscarIntento(event: { submitted: boolean; invalid: boolean }): void {
     this.buscarIntento.emit(event);
   }
 

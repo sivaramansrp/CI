@@ -3,7 +3,7 @@ import {
   ConsultaioQuery,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter,OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -146,6 +146,15 @@ interface Cupos {
  * Implementa los hooks de ciclo de vida OnInit y OnDestroy para inicialización y limpieza.
  */
 export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
+/**
+   * @desc Evento de salida que emite el estado de la búsqueda de intento de cancelación de certificado.
+   * @param {Object} value - Objeto que contiene el estado del formulario.
+   * @param {boolean} value.submitted - Indica si el formulario fue enviado.
+   * @param {boolean} value.invalid - Indica si el formulario es inválido.
+   * @event
+   * @memberof CancelacionDeCertificadoComponent
+   */
+   @Output() buscarIntento = new EventEmitter<{submitted: boolean, invalid: boolean}>();
   /**
    * Lista de cupos que contiene los datos necesarios para realizar la cancelación de certificados. Esta propiedad se carga
    * a partir de un archivo JSON, lo que permite a la aplicación manejar múltiples cupos con facilidad.
@@ -386,14 +395,16 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
-  // Add this method to handle the Buscar button click
-  @Output() buscarIntento = new EventEmitter<{submitted: boolean, invalid: boolean}>();
-  buscarCupos() {
+  /**
+   * Método que se ejecuta al hacer clic en el botón "Buscar" del formulario de cancelación.
+   * Este método emite un evento con el estado del formulario, indicando si fue enviado y si es inválido.
+   * Si el formulario es inválido, se puede implementar lógica adicional para manejar los errores.
+   */
+  buscarCupos(): void {
     this.submitted = true;
     this.buscarIntento.emit({submitted: this.submitted, invalid: this.cancelacionForm.invalid});
     if (this.cancelacionForm.invalid) {
-      // Optionally, scroll to the first error or focus it
+      // Opcionalmente, desplazar hasta el primer error o enfocarlo
      }
   }
 }

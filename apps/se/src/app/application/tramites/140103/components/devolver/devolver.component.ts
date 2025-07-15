@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component,EventEmitter,Input,OnDestroy, OnInit , Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -292,7 +292,7 @@ export class DevolverComponent implements OnInit, OnDestroy {
    * para cancelar automáticamente las suscripciones a observables y evitar fugas de memoria.
    * 
    */
-  cerrarModal() {
+  cerrarModal():void {
     this.showDevolverModal = false;
     this.showDevolverModalChange.emit(false);
   }

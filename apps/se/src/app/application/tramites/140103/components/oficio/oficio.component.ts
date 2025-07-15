@@ -274,7 +274,14 @@ export class OficioComponent implements OnInit, OnDestroy{
 
   showDevolverModal = false;
 
-abrirDevolverFacturas() {
+/**
+ * @method abrirDevolverFacturas
+ * @description
+ * Abre el modal para devolver facturas, estableciendo la variable `showDevolverModal` en `true`.
+ * 
+ * @memberof OficioComponent
+ */
+abrirDevolverFacturas() : void {
   this.showDevolverModal = true;
 }
 
@@ -325,19 +332,31 @@ abrirDevolverFacturas() {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Limpia el Subject `destroyNotifier$` para evitar fugas de memoria.
+   */
 
   selectedCertificado: CertificadosCancelar | null = null;
   showCapturaMontoModal = false;
 
-  // Called when a row is selected in the table
-  onSeleccionRow(certificado: CertificadosCancelar) {
+  /**
+   * Método que se invoca al seleccionar una fila en la tabla de certificados.
+   * Actualiza la variable `selectedCertificado` con el certificado seleccionado.
+   * 
+   * @param certificado - El certificado seleccionado de la tabla.
+   */
+  onSeleccionRow(certificado: CertificadosCancelar): void {
     this.selectedCertificado = certificado;
   }
 
-  // Handler for Seleccionar button
-  onSeleccionarClick() {
+  /**
+   * Método que se invoca al hacer clic en el botón "Seleccionar" de la tabla.
+   * Si no hay un certificado seleccionado, muestra una notificación de error.
+   * Si hay un certificado seleccionado, muestra el modal para capturar el monto.
+   */
+  onSeleccionarClick(): void {
     if (!this.selectedCertificado) {
-      // Show notification or modal: "Seleccione un registro"
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -354,7 +373,11 @@ abrirDevolverFacturas() {
     }
   }
 
-  closeCapturaMontoModal() {
+  /**
+   * Método que se invoca para cerrar el modal de captura de monto.
+   * Resetea la variable `selectedCertificado` a null y oculta el modal.
+   */
+  closeCapturaMontoModal():void {
     this.showCapturaMontoModal = false;
     this.selectedCertificado = null;
   }
