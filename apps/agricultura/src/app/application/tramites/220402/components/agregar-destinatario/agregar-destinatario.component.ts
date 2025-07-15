@@ -1,6 +1,6 @@
 import { CONFIGURATION_TABLA_DESTINATARIO, MENSAJEDEALERTA } from '../../constantes/certificado-zoosanitario.enum';
 import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, TablaSeleccion, REGEX_SOLO_DIGITOS, REGEX_ALFANUMERICO_CON_ESPACIOS } from '@ng-mf/data-access-user';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Destinatario, DestinatarioRespuesta } from '../../models/pantallas-captura.model';
 import { CapturaSolicitudeService } from '../../services/captura-solicitud.service';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
@@ -125,6 +125,7 @@ export class AgregarDestinatarioComponent implements OnDestroy, OnInit {
    * @param {ValidacionesFormularioService} validacionesService - Servicio para realizar validaciones en los formularios.
    * @param {ConsultaioQuery} consultaioQuery - Query para consultar el estado de la consulta inicial.
    * @param {CapturaSolicitudeService} capturaSolicitudeService - Servicio para gestionar la captura de solicitudes.
+   * @param {ChangeDetectorRef} cdr - Servicio para la detección de cambios en el componente.
    */
   constructor(private mediodetransporteService: MediodetransporteService,
     private solicitud220402Store: Solicitud220402Store,
@@ -133,6 +134,7 @@ export class AgregarDestinatarioComponent implements OnDestroy, OnInit {
     private validacionesService: ValidacionesFormularioService,
     private consultaioQuery: ConsultaioQuery,
     private capturaSolicitudeService: CapturaSolicitudeService,
+    private cdr: ChangeDetectorRef
   ) {
     this.fetchTiposDocumentos()
   }
@@ -368,5 +370,17 @@ export class AgregarDestinatarioComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
+  }
+
+  /**
+   * Este método se utiliza para mostrar los errores en el formulario.
+   * 
+   * Marca todos los controles del formulario como tocados y dispara la detección de cambios.
+   * 
+   * @returns {void}
+   */
+  public mostrarErrores() {
+    this.destinatarioForm?.markAllAsTouched?.();
+    this.cdr.detectChanges();
   }
 }

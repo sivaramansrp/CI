@@ -1,5 +1,5 @@
 import { CatalogosSelect, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { MediodetransporteService } from '../../services/medio-de-transporte.service';
@@ -73,6 +73,7 @@ export class TransporteComponent implements OnDestroy, OnInit {
     private solicitud220402Store: Solicitud220402Store,
     private solicitud220402Query: Solicitud220402Query,
     private consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
   ) {
     this.fetchTiposDocumentos();
   }
@@ -185,5 +186,16 @@ export class TransporteComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Este método se utiliza para mostrar los errores del formulario.
+   * Marca todos los controles del formulario como tocados para que se muestren los errores de validación.
+   * 
+   * @returns {void}
+   */
+  public mostrarErrores() {
+    this.transporteForm?.markAllAsTouched?.();
+    this.cdr.detectChanges();
   }
 }

@@ -30,19 +30,19 @@
       <solicitante></solicitante>
       } @case (2) {
       @if(esDatosRespuesta){
-      <solicitud></solicitud>
+      <solicitud #solicitudComp></solicitud>
       }
       } @case (3) {
       @if(esDatosRespuesta){
-      <app-transporte></app-transporte>
+      <app-transporte #transporteComp></app-transporte>
       }
       } @case (4) {
       @if(esDatosRespuesta){
-      <app-pago-de-derecho></app-pago-de-derecho>
+      <app-pago-de-derecho #pagoDerechoComp></app-pago-de-derecho>
       }
       } @case (5) {
       @if(esDatosRespuesta){
-      <app-agregar-destinatario></app-agregar-destinatario>
+      <app-agregar-destinatario #destinatarioComp></app-agregar-destinatario>
       }
       }}
     </ng-container>
