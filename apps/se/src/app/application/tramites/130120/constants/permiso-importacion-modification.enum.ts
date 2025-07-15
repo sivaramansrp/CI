@@ -747,3 +747,10 @@ export const TEXTOS = {
     <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista.</p>`,
     ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`,
   };
+
+
+export const FECHA_FACTURA = {
+    labelNombre: 'Fecha de factura',
+    required: true,
+    habilitado: false,
+};

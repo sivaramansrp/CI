@@ -59,7 +59,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
      */
 
 
-    public setrégimen(régimen: string): void {
+    public setregimen(régimen: string): void {
         this.update((state) => ({
         ...state,
         régimen,
@@ -68,14 +68,14 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
 
     /**
      * Actualiza el valor de la clasificación del régimen.
-     * @method setclassifición_régimen
+     * @method setclassificion_regimen
      * @description Actualiza el valor de la clasificación del régimen.
-     * @param {string} classifición_régimen - Clasificación del régimen.
+     * @param {string} classificion_regimen - Clasificación del régimen.
      */
-    public setclassifición_régimen(classifición_régimen: string): void {
+    public setclassificion_regimen(classificion_regimen: string): void {
         this.update((state) => ({
         ...state,
-        classifición_régimen,
+        classificion_regimen,
         }));
     }
 

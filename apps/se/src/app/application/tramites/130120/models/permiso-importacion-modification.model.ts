@@ -61,15 +61,15 @@ export interface DatosGrupos {
  */
 export interface DatosRealizer {
   /**
-   * @property {string} régimen
+   * @property {string} regimen
    * @description Régimen del trámite.
    */
-  régimen: string;
+  regimen: string;
   /**
-   * @property {string} classifición_régimen
-   * @description Clasificación del régimen.
+   * @property {string} classificion_regimen
+   * @description Clasificacion del regimen.
    */
-  classifición_régimen: string;
+  classificion_regimen: string;
 }
 
 /**
@@ -77,34 +77,34 @@ export interface DatosRealizer {
  * @interface DatosMercanica
  * @description
  * 
- * @property {string} descripción - Descripción de la mercancía.
+ * @property {string} descripcion - descripcion de la mercancía.
  * @property {string} marca - Marca de la mercancía.
  * @property {string} tipo_entrada - Tipo de entrada.
- * @property {string} fracción - Fracción arancelaria.
+ * @property {string} fraccion - fraccion arancelaria.
  * @property {string} nico - NICO de la mercancía.
  * @property {string} umt - Unidad de medida de tráfico.
- * @property {string} factura_número - Número de factura.
+ * @property {string} factura_numero - Número de factura.
  * @property {string} factura_fecha - Fecha de la factura.
  * @property {string} umc - Unidad de medida comercial.
  * @property {string} otro_umc - Otra unidad de medida comercial.
  * @property {string} cantidad_umc - Cantidad en unidad de medida comercial.
- * @property {string} factor_conversión - Factor de conversión.
+ * @property {string} factor_conversion - Factor de conversión.
  * @property {string} cantidad_umt - Cantidad en unidad de medida de tráfico.
  * @property {string} valor_factura - Valor de la factura.
- * @property {string} moneda_comercialización - Moneda de comercialización.
+ * @property {string} moneda_comercializacion - Moneda de comercialización.
  * @property {string} valor_factura_usd - Valor de la factura en USD.
  * @property {string} precio_unitario_usd - Precio unitario en USD.
- * @property {string} país_exportador - País exportador.
- * @property {string} país_origen - País de origen.
+ * @property {string} pais_exportador - País exportador.
+ * @property {string} pais_origen - País de origen.
  * @property {string} valor_total_factura - Valor total de la factura.
  * @property {string} valor_total_factura_usd - Valor total de la factura en USD.
  */
 export interface DatosMercanica {
   /**
-   * @property {string} descripción
-   * @description Descripción de la mercancía.
+   * @property {string} descripcion
+   * @description descripcion de la mercancía.
    */
-  descripción: string;
+  descripcion: string;
   /**
    * @property {string} marca
    * @description Marca de la mercancía.
@@ -116,10 +116,10 @@ export interface DatosMercanica {
    */
   tipo_entrada: string;
   /**
-   * @property {string} fracción
-   * @description Fracción arancelaria de la mercancía.
+   * @property {string} fraccion
+   * @description fraccion arancelaria de la mercancía.
    */
-  fracción: string;
+  fraccion: string;
   /**
    * @property {string} nico
    * @description NICO de la mercancía.
@@ -131,10 +131,10 @@ export interface DatosMercanica {
    */
   umt: string;
   /**
-   * @property {string} factura_número
+   * @property {string} factura_numero
    * @description Número de la factura de la mercancía.
    */
-  factura_número: string;
+  factura_numero: string;
   /**
    * @property {string} factura_fecha
    * @description Fecha de la factura de la mercancía.
@@ -156,10 +156,10 @@ export interface DatosMercanica {
    */
   cantidad_umc: string;
   /**
-   * @property {string} factor_conversión
+   * @property {string} factor_conversion
    * @description Factor de conversión de la mercancía.
    */
-  factor_conversión: string;
+  factor_conversion: string;
   /**
    * @property {string} cantidad_umt
    * @description Cantidad en unidad de medida de tráfico.
@@ -171,10 +171,10 @@ export interface DatosMercanica {
    */
   valor_factura: string;
   /**
-   * @property {string} moneda_comercialización
+   * @property {string} moneda_comercializacion
    * @description Moneda de comercialización de la mercancía.
    */
-  moneda_comercialización: string;
+  moneda_comercializacion: string;
   /**
    * @property {string} valor_factura_usd
    * @description Valor de la factura de la mercancía en USD.
@@ -186,15 +186,15 @@ export interface DatosMercanica {
    */
   precio_unitario_usd: string;
   /**
-   * @property {string} país_exportador
+   * @property {string} pais_exportador
    * @description País exportador de la mercancía.
    */
-  país_exportador: string;
+  pais_exportador: string;
   /**
-   * @property {string} país_origen
+   * @property {string} pais_origen
    * @description País de origen de la mercancía.
    */
-  país_origen: string;
+  pais_origen: string;
   /**
    * @property {string} valor_total_factura
    * @description Valor total de la factura de la mercancía.
@@ -214,7 +214,7 @@ export interface DatosMercanica {
  * 
  * @property {string} número_documento - Número del documento de exportación.
  * @property {string} fecha_documento - Fecha del documento.
- * @property {string} descripción - Descripción del documento.
+ * @property {string} descripcion - descripcion del documento.
  * @property {string} código_arancelario - Código arancelario.
  * @property {string} cantidad_umt - Cantidad en unidad de medida de tráfico.
  * @property {string} valor_usd - Valor en USD.
@@ -232,10 +232,10 @@ export interface DatosExporta {
    */
   fecha_documento: string;
   /**
-   * @property {string} descripción
-   * @description Descripción del documento.
+   * @property {string} descripcion
+   * @description descripcion del documento.
    */
-  descripción: string;
+  descripcion: string;
   /**
    * @property {string} código_arancelario
    * @description Código arancelario del documento.
@@ -392,36 +392,36 @@ export interface DatosFederal {
 export function createDatosGruposState(params: Partial<DatosGrupos> = {}): DatosGrupos {
   return {
     datosRealizer: params.datosRealizer || {
-      régimen: '',
-      classifición_régimen: ''
+      regimen: '',
+      classificion_regimen: ''
     },
     datosMercanica: params.datosMercanica || {
-      descripción: '',
+      descripcion: '',
       marca: '',
       tipo_entrada: '',
-      fracción: '',
+      fraccion: '',
       nico: '',
       umt: '',
-      factura_número: '',
+      factura_numero: '',
       factura_fecha: '',
       umc: '',
       otro_umc: '',
       cantidad_umc: '',
-      factor_conversión: '1',
+      factor_conversion: '1',
       cantidad_umt: '0.00',
       valor_factura: '',
-      moneda_comercialización: '',
+      moneda_comercializacion: '',
       valor_factura_usd: '',
       precio_unitario_usd: '',
-      país_exportador: '',
-      país_origen: '',
+      pais_exportador: '',
+      pais_origen: '',
       valor_total_factura: '',
       valor_total_factura_usd: '',
     },
     datosExporta: params.datosExporta || {
       número_documento: '',
       fecha_documento: '',
-      descripción: '',
+      descripcion: '',
       código_arancelario: '',
       cantidad_umt: '',
       valor_usd: '',
