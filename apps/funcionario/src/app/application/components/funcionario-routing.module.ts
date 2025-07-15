@@ -1,10 +1,8 @@
 import { RouterModule, Routes } from '@angular/router';
-import { AtenderRequerimientoComponent } from './atender-requerimiento/atender-requerimiento.component';
 import { AutorizacionMasivaComponent } from './autorizacion-masiva/autorizacion-masiva.component';
 import { AutorizarDictamenComponent } from './autorizar/autorizar-dictamen/autorizar-dictamen.component';
 import { BandejaPendientesComponent } from './seleccion-modulo/seleccion-modulo.component';
 import { BandejaSolicitudesComponent } from './bandeja-solicitudes/bandeja-solicitudes.component';
-import { ConfirmarNotificacionComponent } from './confirmar-notificacion/confirmar-notificacion.component';
 import { ConsultaComponent } from './consulta/consulta.component';
 import { ConsultaTramiteComponent } from './consulta-tramite/consulta-tramite.component';
 import { DatosGeneralesTramiteComponent } from './datos-generales-tramite/datos-generales-tramite.component';
@@ -17,14 +15,6 @@ const ROUTES: Routes = [
   {
     path: 'bandeja-pendientes',
     component: BandejaPendientesComponent,
-  },
-  {
-    path: 'atender-requerimiento',
-    component: AtenderRequerimientoComponent,
-  },
-  {
-    path: 'confirmar-notificacion',
-    component: ConfirmarNotificacionComponent,
   },
   {
     path: 'evaluar-solicitud',

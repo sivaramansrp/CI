@@ -38,13 +38,13 @@ export const ENLACE_TABLA_CONFIGURACION = [
         orden: 4,
     },
     {
-        encabezado: 'Cargo',
-        clave: (item: EnlaceConfiguracionItem): string => item.cargo,
+        encabezado: 'Ciudad o Estado de Residencia',
+        clave: (item: EnlaceConfiguracionItem): string => item.estadoResidencia,
         orden: 5,
     },
     {
-        encabezado: 'Estado de Residencia',
-        clave: (item: EnlaceConfiguracionItem): string => item.estadoResidencia,
+        encabezado: 'Cargo o Puesto',
+        clave: (item: EnlaceConfiguracionItem): string => item.cargo,
         orden: 6,
     },
     {
@@ -53,7 +53,7 @@ export const ENLACE_TABLA_CONFIGURACION = [
         orden: 7,
     },
     {
-        encabezado: 'Correo',
+        encabezado: 'Correo Electrónico',
         clave: (item: EnlaceConfiguracionItem): string => item.correo,
         orden: 8,
     },

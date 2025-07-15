@@ -23,6 +23,7 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CombinacionRequeridaComponent } from '../combinacion-requerida/combinacion-requerida.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosGeneralesAnimalesComponent } from '../datos-generales-animales/datos-generales-animales.component';
+import { DetosDelService } from '../../services/pantallas.service';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { Modal } from 'bootstrap';
 import { Pantallas220401Service } from '../pantallas220401.service';
@@ -34,7 +35,7 @@ import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json
 
 import { AlertComponent,Catalogo } from '@ng-mf/data-access-user';
 import { LOCALIDAD_COLONIA } from '../../constantes/certificados-licencias.enum';
-
+import { TipoDeCertificoOption } from '../../models/tipoCertificoOption.model';
 
 /**
  * Componente que gestiona los datos del certificado en la solicitud 220401.
@@ -68,9 +69,9 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Valor seleccionado en el componente de radio.
    */
-  selectedValue: string = 'Producto..';
+  public certificadaValue: string = 'Producto';
  /** Valor seleccionado en el componente de radio. */
-  defaultSelect: string | number = 'oficina central';
+  public defaultSelect: string | number = 'oficina central';
   /** Notificador para destruir las suscripciones al salir del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
   /** Formulario de datos del certificado. */
@@ -78,7 +79,19 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Opciones de radio para unidad, importadas desde un archivo JSON.
    */
-  radioBoton = unidadRadioFields; // importar datos desde Json
+  public radioBotonProducto = unidadRadioFields; // importar datos desde Json
+  
+  /**
+   * Configuración de catálogos para el formulario.
+   * Contiene los nombres de los controles y las rutas de los catálogos.
+   */
+  public radioBotonAnimal!: TipoDeCertificoOption[];
+  /**
+   * Configuración de catálogos para el formulario.
+   * Contiene los nombres de los controles y las rutas de los catálogos.
+   */
+  public radioBotonQFBA! : TipoDeCertificoOption[];
+
   /**
    * Estado de la solicitud 220401.
    */
@@ -122,6 +135,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
     private agregarQuery: AgregarQuery, 
     private _pantallas220401Service: Pantallas220401Service,
     private consultaioQuery: ConsultaioQuery,  
+    private detosDelService: DetosDelService
    
 ) {
   this.consultaioQuery.selectConsultaioState$
@@ -204,7 +218,9 @@ this.inicializarCertificadoFormulario();
     )
     .subscribe();
     this.formGroup1= this.fb.group({
-      osia:[this.solicitudState?.osia]
+      radioBotonAnimal:[this.solicitudState?.radioBotonAnimal],
+      radioBotonQFBA:[this.solicitudState?.radioBotonQFBA],
+      radioBotonProducto:[this.solicitudState?.radioBotonProducto],
     });
     
     this.catalogConfigs.forEach((config) => {
@@ -225,9 +241,21 @@ this.inicializarCertificadoFormulario();
       });
     });
 
+    this.detosDelService.getCertificadoData() 
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.radioBotonAnimal = data;
+      });
+
+    this.detosDelService.getCertificado() 
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.radioBotonQFBA = data;
+      });
+
       this.datosdelForm= this.fb.group({
         datoscertificado:[this.solicitudState?.datoscertificado],
-        certificada: [this.solicitudState?.certificada],
+        certificada: ['Producto', Validators.required],
         tratamiento:[this.solicitudState?.tratamiento],
         tipoCertificado: ['', Validators.required],
         message: [{ value: '', disabled: true }],
@@ -274,7 +302,7 @@ this.inicializarCertificadoFormulario();
    */
   
    onValueChange(value: string | number):void {
-        this.selectedValue = value.toString();
+        this.defaultSelect = value.toString();
       }
   
     /**
@@ -319,7 +347,7 @@ this.inicializarCertificadoFormulario();
    * - catalogos: opciones disponibles para el selector.
    * - primerOpcion: valor de la primera opción (por defecto vacío).
    */
-  catalogConfigs = [
+  public catalogConfigs = [
     {
       catalogo: this.delegacionesJson,
       label: 'Delegaciones estatales SAGARPA',
@@ -353,7 +381,76 @@ this.inicializarCertificadoFormulario();
       primerOpcion: '',
     },
   ];
+
+  /**
+   * Configuración de los catálogos para el formulario de animales.
+   * Incluye delegaciones estatales, OISA, oficina central y distrito desarrollo rural.
+   */
+ public catalogConfigsAnimal = [
+    {
+      catalogo: this.delegacionesJson,
+      label: 'Delegaciones estatales SAGARPA',
+      controlName: 'delegacionesControl',
+      required: true,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+    {
+      catalogo: this.delegacionesJson,
+      label: 'OISA',
+      controlName: 'delegacionesControl2',
+      required: true,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+    {
+      catalogo: this.delegacionesJson,
+      label: 'Oficina central',
+      controlName: 'delegacionesControl3',
+      required: true,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+    {
+      catalogo: this.delegacionesJson,
+      label: 'Distrito desarrollo rural (DDR)',
+      controlName: 'delegacionesControl4',
+      required: false,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+  ];
   
+  /**
+   * Configuración de los catálogos para el formulario de QFBA.
+   * Incluye delegaciones estatales, oficina central y distrito desarrollo rural.
+   */
+  public catalogConfigsQFBA = [
+    {
+      catalogo: this.delegacionesJson,
+      label: 'Delegaciones estatales SAGARPA',
+      controlName: 'delegacionesControl',
+      required: true,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+    {
+      catalogo: this.delegacionesJson,
+      label: 'Oficina central',
+      controlName: 'delegacionesControl3',
+      required: true,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+    {
+      catalogo: this.delegacionesJson,
+      label: 'Distrito desarrollo rural (DDR)',
+      controlName: 'delegacionesControl4',
+      required: false,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+  ];
   /**
    * Obtiene los valores seleccionados de las delegaciones a partir de la configuración del catálogo
    * y actualiza el estado correspondiente en el servicio _pantallas220401Service.
@@ -391,13 +488,20 @@ this.inicializarCertificadoFormulario();
      * Columnas de la tabla de mercancías.
      */
     tableColumns = [
+      'No. partida',
+      'Fracción arancelaria',
+      'Descripción de la fracción',
+      'Unidad de medida fracción de tarifa (UMT)',
+      'Cantidad UMT',
+      'Unidad de medida de comercialización (UMC)',
+      'Cantidad UMC',
       'Tratamiento',
       'Presentación',
       'Marcas embarque',
       'Fecha de caducidad',
       'Fecha sacrificio inicio',
       'Número de autorización CITES',
-      'Número de lote',
+      'Número de lote'
     ];
   
     /**
@@ -406,15 +510,10 @@ this.inicializarCertificadoFormulario();
      */
     mercanciasData = [
       {
-      tbodyData: [
-        'Establecimiento 1',
-        '123-456-7890',
-        'correo',
-        'Actividad 1',
-        'Otro detalle',
-        'Certificado 001',
-        'Domicilio 1',
-      ],
+     tbodyData: [
+          '1', '0201.30.00', 'Carne de bovino fresca', 'Kilogramo', '500', 'Caja', '25',
+          'Refrigerado', 'Caja sellada', 'MarcaX', '2025-12-31', '2024-06-01', 'CITES-123456', 'Lote-7890'
+        ],
       },
     ];
     /**
@@ -429,6 +528,12 @@ this.inicializarCertificadoFormulario();
       (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
     }
     
+ cerrarModal(): void {
+ if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.hide();
+    }
+}
  
   /**
    * @comdoc

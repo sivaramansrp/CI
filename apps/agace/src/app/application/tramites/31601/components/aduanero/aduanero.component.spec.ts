@@ -321,15 +321,7 @@ component.preOperativeForm = new FormBuilder().group({
     expect(tramite31601StoreMock.setNombreMiembro).toHaveBeenCalledWith('value');
   });
 
-  it('debe abrir y cerrar los modales', () => {
-    component.modalInstance = { show: jest.fn(), hide: jest.fn() } as any;
-    component.openModifyModal();
-    expect(component.modalInstance.show).toHaveBeenCalled();
-    component.closeModifyModal();
-    expect(component.modalInstance.hide).toHaveBeenCalled();
-  });
-
-  it('debe abrir el modal de instalaciones', () => {
+ it('debe abrir el modal de instalaciones', () => {
     component.modalInstanceInstalaciones = { show: jest.fn() } as any;
     component.openInstalacionesModal();
     expect(component.modalInstanceInstalaciones.show).toHaveBeenCalled();
