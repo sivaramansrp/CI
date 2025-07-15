@@ -184,7 +184,8 @@ describe('Solocitud31601Service', () => {
       bimestredos: '',
       numeroDatos: '',
       bimestres: '',
-      fechaPago: ''
+      fechaPago: '',
+      acredite: ''
     };
 
     service.actualizarEstadoFormulario(datos);
