@@ -1,243 +1,93 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AeronavesComponent } from './aeronaves.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Solicitud32607Store } from '../../estados/solicitud32607.store';
 import { Solicitud32607Query } from '../../estados/solicitud32607.query';
-import { of } from 'rxjs';
-import {
-  Domicilios,
-  EnlaceOperativo,
-  InputRadio,
-  NumeroDeEmpleados,
-  SeccionSociosIC,
-  SolicitudRadioLista,
-  TransportistasTable,
-} from '../../models/solicitud.model';
-import { CommonModule } from '@angular/common';
-import {
-  InputFechaComponent,
-  InputRadioComponent,
-  TablaDinamicaComponent,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ElementRef } from '@angular/core';
 
 describe('AeronavesComponent', () => {
   let component: AeronavesComponent;
   let fixture: ComponentFixture<AeronavesComponent>;
-  let solicitudServiceMock: jest.Mocked<SolicitudService>;
-  let solicitud32607StoreMock: jest.Mocked<Solicitud32607Store>;
-  let solicitud32607QueryMock: jest.Mocked<Solicitud32607Query>;
+  let solicitudServiceMock: any;
+  let solicitud32607StoreMock: any;
+  let solicitud32607QueryMock: any;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
     solicitudServiceMock = {
-      conseguirOpcionDeRadio: jest.fn(() =>
-        of({
-          requisitos: {
-            radioOptions: [
-              {
-                label: 'Sí',
-                value: 1,
-              },
-              {
-                label: 'No',
-                value: 2,
-              },
-            ],
-            isRequired: true,
-          },
-          reconocimientoMutuo: {
-            radioOptions: [
-              {
-                label: 'Sí Autorizo',
-                value: 1,
-              },
-              {
-                label: 'No Autorizo',
-                value: 2,
-              },
-            ],
-            isRequired: true,
-          },
-          clasificacionInformacion: {
-            radioOptions: [
-              {
-                label: 'Pública',
-                value: 1,
-              },
-              {
-                label: 'Privada',
-                value: 2,
-              },
-            ],
-            isRequired: true,
-          },
-        })
-      ),
-      conseguirTransportistasLista: jest.fn(() =>
-        of([
-          {
-            rfc: 'AAL0409235E6',
-            razonSocial: 'INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV',
-            domicilio:
-              'CAMINO VIEJO 1353 81210 LOS MOCHIS MIGUEL HIDALGO AHOME SINALOA ESTADOS UNIDOS MEXICANOS',
-            caat: '3CJD',
-          },
-        ])
-      ),
-    } as unknown as jest.Mocked<SolicitudService>;
+      conseguirOpcionDeRadio: jest.fn().mockReturnValue(of({
+        requisitos: { label: 'Sí/No' },
+        reconocimientoMutuo: { label: 'Mutuo' },
+        clasificacionInformacion: { label: 'Clasificación' }
+      })),
+      conseguirTransportistasLista: jest.fn().mockReturnValue(of([
+        { id: 1, nombre: 'Transportista 1' }
+      ]))
+    };
 
     solicitud32607StoreMock = {
-      actualizar2042: jest.fn(() => of('testValue')),
-      actualizar2043: jest.fn(() => of('testValue')),
-      actualizar2044: jest.fn(() => of('testValue')),
-      actualizarFechaInicioComercio: jest.fn(() => of('2023/01/01')),
-      actualizarFechaPago: jest.fn(() => of('2023/01/01')),
-      actualizarMonto: jest.fn(() => of('1000')),
-      actualizarOperacionesBancarias: jest.fn(() => of('operation123')),
-      actualizarLlavePago: jest.fn(() => of('key123')),
-    } as unknown as jest.Mocked<Solicitud32607Store>;
+      actualizar2042: jest.fn(),
+      actualizar2043: jest.fn(),
+      actualizar2044: jest.fn(),
+      actualizarFechaInicioComercio: jest.fn(),
+      actualizarFechaPago: jest.fn(),
+      actualizarMonto: jest.fn(),
+      actualizarOperacionesBancarias: jest.fn(),
+      actualizarLlavePago: jest.fn(),
+      actualizar301: jest.fn(),
+      actualizarNumeroIMMEX: jest.fn(),
+      actualizarModalidadIMMEX: jest.fn(),
+      actualizar302: jest.fn(),
+      actualizarRubroCertificacion: jest.fn(),
+      actualizarFechaFinVigenciaRubro: jest.fn(),
+      actualizarNumeroOficio: jest.fn(),
+      actualizar306: jest.fn(),
+      actualizar307: jest.fn(),
+      actualizar308: jest.fn(),
+    };
 
     solicitud32607QueryMock = {
       selectSolicitud$: of({
-        idPersonaSolicitud: '',
-        rfcTercero: '',
-        rfc: '',
-        nombre: '',
-        apellidoPaterno: '',
-        apellidoMaterno: '',
-        telefono: '',
-        correoElectronico: '',
+        2042: 'A',
+        2043: 'B',
+        2044: 'C',
+        301: 'D',
+        302: 'E',
+        306: 'F',
+        307: 'G',
+        308: 'H',
+        numeroIMMEX: 'IMMEX',
+        modalidadIMMEX: 'MOD',
+        rubroCertificacion: 'RC',
+        fechaFinVigenciaRubro: '2024-01-01',
+        numeroOficio: 'OF123',
+        fechaInicioComercio: '2024-01-02',
+        fechaPago: '2024-01-03',
+        monto: '1000',
+        operacionesBancarias: 'OPB',
+        llavePago: 'LLAVE'
+      })
+    };
 
-        agregarEnlaceRfcTercero: '',
-        agregarEnlaceRfc: '',
-        agregarEnlaceNombre: '',
-        agregarEnlaceApellidoPaterno: '',
-        agregarEnlaceApellidoMaterno: '',
-        agregarEnlaceCiudadEstado: '',
-        agregarEnlaceCargo: '',
-        agregarEnlaceTelefono: '',
-        agregarEnlaceCorreoElectronico: '',
-        agregarEnlaceSuplente: false,
-
-        '2089': 0,
-        '2090': 0,
-        '2091': 0,
-
-        '2042': 0,
-        '2043': 0,
-        '2044': 0,
-        fechaInicioComercio: '',
-        fechaPago: '',
-        monto: '',
-        operacionesBancarias: '',
-        llavePago: '',
-
-        transportistaRFC: '',
-        transportistaRFCModifTrans: '',
-        transportistaRazonSocial: '',
-        transportistaDomicilio: '',
-        transportistaCaat: '',
-        transportistaIdDomicilio: '',
-        transportistaIdRFC: '',
-        transportistaIdRazonSocial: '',
-        transportistaIdCaat: '',
-
-        miembroCaracterDe: '',
-        miembroTributarMexico: 0,
-        miembroNacionalidad: '',
-        miembroRfc: '',
-        miembroRegistroFederal: '',
-        miembroNombreCompleto: '',
-        miembroTipoPersonaMuestra: '',
-        miembroNombre: '',
-        miembroApellidoPaterno: '',
-        miembroApellidoMaterno: '',
-        miembroNombreEmpresa: '',
-
-        subcontrataRFCBusqueda: '',
-        subcontrataRFC: '',
-        subcontrataRazonSocial: '',
-        subcontrataEmpleados: '',
-        subcontrataBimestre: 0,
-
-        principales: 0,
-        municipio: '',
-        tipoDeInstalacion: 0,
-        entidadFederativa: '',
-        registroSESAT: '',
-        descripcion: '',
-        codigoPostal: '',
-        procesoProductivo: 0,
-        goceDelInmueble: 0,
-        empresa: 0,
-        comercioExterior: 0,
-        mutuo: 0,
-
-        catseleccionados: 0,
-        servicio: 0,
-        '190': 0,
-        '191': 0,
-        '199': 0,
-        empleados: '',
-        bimestre: 0,
-        '2034': 0,
-        '236': 0,
-        '237': 0,
-        '238': 0,
-        '239': 0,
-        '240': 0,
-        '243': 0,
-        '244': 0,
-        '245': 0,
-        indiqueTodos: 0,
-        '246': 0,
-        file1: '',
-        file2: '',
-        '247': 0,
-        '248': 0,
-        identificacion: '',
-        lugarDeRadicacion: '',
-        '249': 0,
-        '250': 0,
-        '251': 0,
-        checkbox1: false,
-        checkbox2: false,
-        checkbox3: false,
-        actualmente2: '',
-        actualmente1: '',
-        numeroDeEmpleadosLista: [] as NumeroDeEmpleados[],
-        domiciliosDatos: [] as Domicilios[],
-        listaSeccionSociosIC: [] as SeccionSociosIC[],
-        enlaceOperativosLista: [] as EnlaceOperativo[],
-      }),
-    } as jest.Mocked<Solicitud32607Query>;
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false })
+    };
 
     await TestBed.configureTestingModule({
-      imports: [
-        AeronavesComponent,
-        CommonModule,
-        ReactiveFormsModule,
-        InputRadioComponent,
-        InputFechaComponent,
-        TituloComponent,
-        TablaDinamicaComponent,
-        AgregarTransportistasComponent,
-        HttpClientTestingModule,
-      ],
-      declarations: [],
+      imports: [ReactiveFormsModule],
+      declarations: [AeronavesComponent],
       providers: [
         FormBuilder,
         { provide: SolicitudService, useValue: solicitudServiceMock },
         { provide: Solicitud32607Store, useValue: solicitud32607StoreMock },
         { provide: Solicitud32607Query, useValue: solicitud32607QueryMock },
-      ],
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock }
+      ]
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(AeronavesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -247,146 +97,149 @@ describe('AeronavesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.aeronavesForm).toBeDefined();
+  it('should initialize radio options from service', () => {
+    expect(component.sinoOpcion.label).toBe('Sí/No');
+    expect(component.mutuo.label).toBe('Mutuo');
+    expect(component.clasificacionInformacion.label).toBe('Clasificación');
   });
 
-  it('should call conseguirTransportistasLista on initialization', () => {
-    const mockResponse: TransportistasTable[] = [
-      {
-        rfc: 'AAL0409235E6',
-        razonSocial: 'INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV',
-        domicilio:
-          'CAMINO VIEJO 1353 81210 LOS MOCHIS MIGUEL HIDALGO AHOME SINALOA ESTADOS UNIDOS MEXICANOS',
-        caat: '3CJD',
-      },
-    ];
-    solicitudServiceMock.conseguirTransportistasLista.mockReturnValue(
-      of(mockResponse)
-    );
-
-    solicitudServiceMock.conseguirTransportistasLista();
-
-    expect(
-      solicitudServiceMock.conseguirTransportistasLista
-    ).toHaveBeenCalled();
+  it('should initialize transportistasLista from service', () => {
+    expect(component.transportistasLista.length).toBe(1);
+    expect(component.transportistasLista[0].nombre).toBe('Transportista 1');
   });
 
-  it('should update 2042 value in the store', () => {
-    const evento = 'testValue';
-    component.actualizar2042(evento);
-    expect(solicitud32607StoreMock.actualizar2042).toHaveBeenCalledWith(evento);
+  it('should call actualizar2042 and set validaComercioExterior', () => {
+    component.actualizar2042('nuevo');
+    expect(solicitud32607StoreMock.actualizar2042).toHaveBeenCalledWith('nuevo');
+    expect(component.validaComercioExterior).toBe('nuevo');
   });
 
-  it('should update 2043 value in the store', () => {
-    const evento = 'testValue';
-    component.actualizar2043(evento);
-    expect(solicitud32607StoreMock.actualizar2043).toHaveBeenCalledWith(evento);
+  it('should call actualizar2043', () => {
+    component.actualizar2043('valor');
+    expect(solicitud32607StoreMock.actualizar2043).toHaveBeenCalledWith('valor');
   });
 
-  it('should update 2044 value in the store', () => {
-    const evento = 'testValue';
-    component.actualizar2044(evento);
-    expect(solicitud32607StoreMock.actualizar2044).toHaveBeenCalledWith(evento);
+  it('should call actualizar2044', () => {
+    component.actualizar2044('valor');
+    expect(solicitud32607StoreMock.actualizar2044).toHaveBeenCalledWith('valor');
   });
 
-  it('should update fechaInicioComercio in the store', () => {
-    const evento = '2023/01/01';
-    component.actualizarFechaInicioComercio(evento);
-    expect(
-      solicitud32607StoreMock.actualizarFechaInicioComercio
-    ).toHaveBeenCalledWith(evento);
+  it('should call actualizarFechaInicioComercio', () => {
+    component.actualizarFechaInicioComercio('2024-01-01');
+    expect(solicitud32607StoreMock.actualizarFechaInicioComercio).toHaveBeenCalledWith('2024-01-01');
   });
 
-  it('should update fechaPago in the store', () => {
-    const evento = '2023/01/01';
-    component.actualizarFechaPago(evento);
-    expect(solicitud32607StoreMock.actualizarFechaPago).toHaveBeenCalledWith(
-      evento
-    );
+  it('should call actualizarFechaPago', () => {
+    component.actualizarFechaPago('2024-01-01');
+    expect(solicitud32607StoreMock.actualizarFechaPago).toHaveBeenCalledWith('2024-01-01');
   });
 
-  it('should update monto in the store', () => {
-    const evento = '1000';
-    component.actualizarMonto(evento);
-    expect(solicitud32607StoreMock.actualizarMonto).toHaveBeenCalledWith(
-      evento
-    );
+  it('should call actualizarMonto', () => {
+    component.actualizarMonto('500');
+    expect(solicitud32607StoreMock.actualizarMonto).toHaveBeenCalledWith('500');
   });
 
-  it('should update operacionesBancarias in the store', () => {
-    const evento = 'operation123';
-    component.actualizarOperacionesBancarias(evento);
-    expect(
-      solicitud32607StoreMock.actualizarOperacionesBancarias
-    ).toHaveBeenCalledWith(evento);
+  it('should call actualizarOperacionesBancarias', () => {
+    component.actualizarOperacionesBancarias('opb');
+    expect(solicitud32607StoreMock.actualizarOperacionesBancarias).toHaveBeenCalledWith('opb');
   });
 
-  it('should update llavePago in the store', () => {
-    const evento = 'key123';
-    component.actualizarLlavePago(evento);
-    expect(solicitud32607StoreMock.actualizarLlavePago).toHaveBeenCalledWith(
-      evento
-    );
+  it('should call actualizarLlavePago', () => {
+    component.actualizarLlavePago('llave');
+    expect(solicitud32607StoreMock.actualizarLlavePago).toHaveBeenCalledWith('llave');
   });
 
-  it('should add a transportista to the list', () => {
-    const transportista: TransportistasTable = {
-      rfc: '1',
-      razonSocial: 'Transportista 1',
-      domicilio: '',
-      caat: '',
-    };
-    component.transportistasDatos(transportista);
-    expect(component.transportistasLista).toContain(transportista);
+  it('should add transportista to transportistasLista', () => {
+    const transportista = { id: 2, nombre: 'Transportista 2' };
+    component.transportistasDatos(transportista as any);
+    expect(component.transportistasLista.some(t => t.id === 2)).toBe(true);
   });
 
-  it('should call guardarDatosFormulario if esFormularioSoloLectura is true', () => {
-    const guardarDatosFormularioSpy = jest.spyOn(
-      component as any,
-      'guardarDatosFormulario'
-    );
+  it('should call actualizar301', () => {
+    component.actualizar301('301');
+    expect(solicitud32607StoreMock.actualizar301).toHaveBeenCalledWith('301');
+  });
+
+  it('should call actualizarNumeroIMMEX', () => {
+    const event = { target: { value: 'IMMEX123' } } as any;
+    component.actualizarNumeroIMMEX(event);
+    expect(solicitud32607StoreMock.actualizarNumeroIMMEX).toHaveBeenCalledWith('IMMEX123');
+  });
+
+  it('should call actualizarModalidadIMMEX', () => {
+    const event = { target: { value: 'MOD123' } } as any;
+    component.actualizarModalidadIMMEX(event);
+    expect(solicitud32607StoreMock.actualizarModalidadIMMEX).toHaveBeenCalledWith('MOD123');
+  });
+
+  it('should call actualizar302', () => {
+    component.actualizar302('302');
+    expect(solicitud32607StoreMock.actualizar302).toHaveBeenCalledWith('302');
+  });
+
+  it('should call actualizarRubroCertificacion', () => {
+    const event = { target: { value: 'RC' } } as any;
+    component.actualizarRubroCertificacion(event);
+    expect(solicitud32607StoreMock.actualizarRubroCertificacion).toHaveBeenCalledWith('RC');
+  });
+
+  it('should call actualizarFechaFinVigenciaRubro', () => {
+    const event = { target: { value: '2024-01-01' } } as any;
+    component.actualizarFechaFinVigenciaRubro(event);
+    expect(solicitud32607StoreMock.actualizarFechaFinVigenciaRubro).toHaveBeenCalledWith('2024-01-01');
+  });
+
+  it('should call actualizarNumeroOficio', () => {
+    const event = { target: { value: 'OF123' } } as any;
+    component.actualizarNumeroOficio(event);
+    expect(solicitud32607StoreMock.actualizarNumeroOficio).toHaveBeenCalledWith('OF123');
+  });
+
+  it('should call actualizar306', () => {
+    component.actualizar306('306');
+    expect(solicitud32607StoreMock.actualizar306).toHaveBeenCalledWith('306');
+  });
+
+  it('should call actualizar307', () => {
+    component.actualizar307('307');
+    expect(solicitud32607StoreMock.actualizar307).toHaveBeenCalledWith('307');
+  });
+
+  it('should call actualizar308', () => {
+    component.actualizar308('308');
+    expect(solicitud32607StoreMock.actualizar308).toHaveBeenCalledWith('308');
+  });
+
+  it('should disable form if esFormularioSoloLectura is true', () => {
     component.esFormularioSoloLectura = true;
-
-    component['inicializarEstadoFormulario']();
-
-    expect(guardarDatosFormularioSpy).toHaveBeenCalled();
+    component.guardarDatosFormulario();
+    expect(component.aeronavesForm.disabled).toBe(true);
   });
 
-  it('should call inicializarFormulario if esFormularioSoloLectura is false', () => {
-    const inicializarFormularioSpy = jest.spyOn(
-      component as any,
-      'inicializarFormulario'
-    );
+  it('should enable form if esFormularioSoloLectura is false', () => {
     component.esFormularioSoloLectura = false;
-
-    component['inicializarEstadoFormulario']();
-
-    expect(inicializarFormularioSpy).toHaveBeenCalled();
+    component.guardarDatosFormulario();
+    expect(component.aeronavesForm.enabled).toBe(true);
   });
 
-  it('should disable the form if esFormularioSoloLectura is true', () => {
-    // component.esFormularioSoloLectura = true;
-    // component.modificarInventarioForm = new FormBuilder().group({});
-    // component['guardarDatosFormulario']();
-    // expect(component.modificarInventarioForm.disabled).toBe(true);
-  });
-
-  it('should enable the form if esFormularioSoloLectura is false', () => {
-    // component.esFormularioSoloLectura = false;
-    // component.modificarInventarioForm = new FormBuilder().group({});
-    // component.guardarDatosFormulario();
-    // expect(component.modificarInventarioForm.enabled).toBe(true);
-  });
-
-  it('should complete destroy$ on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
-
+  it('should clean up destroy$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroy$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroy$, 'complete');
     component.ngOnDestroy();
-
-    expect(destroySpy).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should show modal when agregarTransportistaModel is called', () => {
+    const showMock = jest.fn();
+    const modalMock = jest.fn().mockImplementation(() => ({
+      show: showMock
+    }));
+    (window as any).Modal = modalMock;
+    component.transportistaElement = { nativeElement: {} } as ElementRef;
+    // Patch Modal global
+    (global as any).Modal = modalMock;
+    component.agregarTransportistaModel();
+    expect(showMock).toHaveBeenCalled();
   });
 });
