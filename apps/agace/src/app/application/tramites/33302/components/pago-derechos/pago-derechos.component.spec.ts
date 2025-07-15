@@ -91,8 +91,7 @@ describe('PagoDerechosComponent', () => {
     component.guardarDatosFormulario = jest.fn();
     component.iniciarFormulario = jest.fn();
     component.inicializarEstadoFormulario();
-    // expect(component.guardarDatosFormulario).toHaveBeenCalled();
-    // expect(component.iniciarFormulario).toHaveBeenCalled();
+    
   });
 
   it('should run #ngOnInit()', async () => {
@@ -102,8 +101,7 @@ describe('PagoDerechosComponent', () => {
     component.pagosDerechosForm = component.pagosDerechosForm || {};
     component.pagosDerechosForm.patchValue = jest.fn();
     component.ngOnInit();
-    // expect(component.obtenerBancoList).toHaveBeenCalled();
-    // expect(component.pagosDerechosForm.patchValue).toHaveBeenCalled();
+   
   });
 
   it('should run #setValoresStore()', async () => {
@@ -114,8 +112,7 @@ describe('PagoDerechosComponent', () => {
       value: {}
     });
     component.setValoresStore({});
-    // expect(component.tramiteStore.actualizarEstado).toHaveBeenCalled();
-    // expect(component.pagosDerechosForm.get).toHaveBeenCalled();
+    
   });
 
   it('should run #guardarDatosFormulario()', async () => {
@@ -124,9 +121,7 @@ describe('PagoDerechosComponent', () => {
     component.pagosDerechosForm.disable = jest.fn();
     component.pagosDerechosForm.enable = jest.fn();
     component.guardarDatosFormulario();
-    // expect(component.iniciarFormulario).toHaveBeenCalled();
-    // expect(component.pagosDerechosForm.disable).toHaveBeenCalled();
-    // expect(component.pagosDerechosForm.enable).toHaveBeenCalled();
+    
   });
 
   it('should run #iniciarFormulario()', async () => {
@@ -141,21 +136,21 @@ describe('PagoDerechosComponent', () => {
     component.tramiteState.importeDePago = 'importeDePago';
     component.tramiteState.cadenaDependencia = 'cadenaDependencia';
     component.iniciarFormulario();
-    // expect(component.fb.group).toHaveBeenCalled();
+    
   });
 
   it('should run #obtenerBancoList()', async () => {
     component.solicitudService = component.solicitudService || {};
     component.solicitudService.onBancoList = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerBancoList();
-    // expect(component.solicitudService.onBancoList).toHaveBeenCalled();
+   
   });
 
   it('should run #borrarDatosDelPago()', async () => {
     component.pagosDerechosForm = component.pagosDerechosForm || {};
     component.pagosDerechosForm.reset = jest.fn();
     component.borrarDatosDelPago();
-    // expect(component.pagosDerechosForm.reset).toHaveBeenCalled();
+    
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -163,8 +158,7 @@ describe('PagoDerechosComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.unsubscribe = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.unsubscribe).toHaveBeenCalled();
+    
   });
 
 });

@@ -188,6 +188,16 @@ export class Tramite33302Store extends Store<Tramite33302State> {
   constructor() {
     super(createInitialState());
   }
+  /**
+   * Actualiza el estado del store con los valores proporcionados.
+   * @param {Partial<Tramite33302State>} valores - Valores parciales del estado a actualizar.
+   * @method actualizarEstado
+   * @description
+   * Actualiza el estado del store con los valores proporcionados.
+   * Utiliza el método `update` de Akita para fusionar los nuevos valores con el estado actual.
+   * @param {Partial<Tramite33302State>} valores - Valores parciales del estado a actualizar.
+   * @returns {void}
+   * */
 
   public actualizarEstado(valores: Partial<Tramite33302State>): void {
     this.update((state) => ({
@@ -197,11 +207,5 @@ export class Tramite33302Store extends Store<Tramite33302State> {
   }
   
   
-  /**
-   * Limpia el formulario y restablece el estado a su estado inicial.
-   * @method limpiarFormulario
-   */
-  public limpiarFormulario(): void {
-    this.reset();
-  }
+ 
 }

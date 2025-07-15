@@ -85,10 +85,7 @@ describe('TipoDeAvisoComponent', () => {
     component.miFormulario = component.miFormulario || {};
     component.miFormulario.disable = jest.fn();
     component.ngOnInit();
-    // expect(component.inicializamiFormulario).toHaveBeenCalled();
-    // expect(component.Tramite32301Query.select).toHaveBeenCalled();
-    // expect(component.crearFormMiFormulario).toHaveBeenCalled();
-    // expect(component.miFormulario.disable).toHaveBeenCalled();
+    
   });
 
   it('should run #inicializamiFormulario()', async () => {
@@ -97,8 +94,7 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.setModalidadCertificacion = jest.fn();
     component.inicializamiFormulario();
-    // expect(component.AvisoModifyService.getAvisoModify).toHaveBeenCalled();
-    // expect(component.store.setModalidadCertificacion).toHaveBeenCalled();
+   
   });
 
   it('should run #crearFormMiFormulario()', async () => {
@@ -118,7 +114,7 @@ describe('TipoDeAvisoComponent', () => {
     component.tipoDevAviso.expirado = 'expirado';
     component.tipoDevAviso.derechos = 'derechos';
     component.crearFormMiFormulario();
-    // expect(component.fb.group).toHaveBeenCalled();
+   
   });
 
   it('should run #aiEnviar()', async () => {
@@ -127,7 +123,7 @@ describe('TipoDeAvisoComponent', () => {
     component.miFormulario = component.miFormulario || {};
     component.miFormulario.value = 'value';
     component.aiEnviar();
-    // expect(component.tabEnabledData.emit).toHaveBeenCalled();
+
   });
 
   it('should run #setClientesProveedoresExtranjeros()', async () => {
@@ -138,8 +134,7 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setClientesProveedoresExtranjeros();
-    // expect(component.miFormulario.get).toHaveBeenCalled();
-    // expect(component.store.actualizarEstado).toHaveBeenCalled();
+   
   });
 
   it('should run #setProveedoresNacionales()', async () => {
@@ -150,8 +145,7 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setProveedoresNacionales();
-    // expect(component.miFormulario.get).toHaveBeenCalled();
-    // expect(component.store.actualizarEstado).toHaveBeenCalled();
+    
   });
 
   it('should run #setModificacionesMiembros()', async () => {
@@ -162,8 +156,7 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setModificacionesMiembros();
-    // expect(component.miFormulario.get).toHaveBeenCalled();
-    // expect(component.store.actualizarEstado).toHaveBeenCalled();
+   
   });
 
   it('should run #setCambiosDocumentosLegales()', async () => {
@@ -174,8 +167,7 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setCambiosDocumentosLegales();
-    // expect(component.miFormulario.get).toHaveBeenCalled();
-    // expect(component.store.actualizarEstado).toHaveBeenCalled();
+
   });
 
   it('should run #setNotifiFusionOescision()', async () => {
@@ -186,8 +178,7 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setNotifiFusionOescision();
-    // expect(component.miFormulario.get).toHaveBeenCalled();
-    // expect(component.store.actualizarEstado).toHaveBeenCalled();
+    
   });
 
   it('should run #setAdicionalesFractions()', async () => {
@@ -198,8 +189,7 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setAdicionalesFractions();
-    // expect(component.miFormulario.get).toHaveBeenCalled();
-    // expect(component.store.actualizarEstado).toHaveBeenCalled();
+    
   });
 
   it('should run #setPresenten()', async () => {
@@ -210,8 +200,7 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setPresenten();
-    // expect(component.miFormulario.get).toHaveBeenCalled();
-    // expect(component.store.actualizarEstado).toHaveBeenCalled();
+
   });
 
   it('should run #setContratados()', async () => {
@@ -222,8 +211,7 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setContratados();
-    // expect(component.miFormulario.get).toHaveBeenCalled();
-    // expect(component.store.actualizarEstado).toHaveBeenCalled();
+   
   });
 
   it('should run #setExpirado()', async () => {
@@ -234,8 +222,7 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setExpirado();
-    // expect(component.miFormulario.get).toHaveBeenCalled();
-    // expect(component.store.actualizarEstado).toHaveBeenCalled();
+   
   });
 
   it('should run #setDerechos()', async () => {
@@ -246,8 +233,7 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setDerechos();
-    // expect(component.miFormulario.get).toHaveBeenCalled();
-    // expect(component.store.actualizarEstado).toHaveBeenCalled();
+    
   });
 
   it('should run #setAceptacion253()', async () => {
@@ -258,15 +244,14 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setAceptacion253();
-    // expect(component.miFormulario.get).toHaveBeenCalled();
-    // expect(component.store.actualizarEstado).toHaveBeenCalled();
+    
   });
 
   it('should run #handleValores()', async () => {
     component.tabEnabledData = component.tabEnabledData || {};
     component.tabEnabledData.emit = jest.fn();
     component.handleValores();
-    // expect(component.tabEnabledData.emit).toHaveBeenCalled();
+   
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -274,8 +259,7 @@ describe('TipoDeAvisoComponent', () => {
     component.destroy$.next = jest.fn();
     component.destroy$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroy$.next).toHaveBeenCalled();
-    // expect(component.destroy$.complete).toHaveBeenCalled();
+    
   });
 
 });
