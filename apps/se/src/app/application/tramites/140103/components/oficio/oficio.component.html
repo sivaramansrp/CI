@@ -1,100 +1,93 @@
 <ng-titulo titulo="Oficio" />
 <div>
-<form [formGroup]="oficioForm" >
+  <form [formGroup]="oficioForm">
     <div formGroupName="oficioData">
-
-<div class="row"  style="padding-bottom: 20px;" >
-            <div class="col-md-4">
-                <div class="form-group">
-                  <label class="form-label" for="asignado">  Monto asignado:</label>
-                  <input class="form-control" id="asignado" formControlName="asignado"  type="text">
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="form-label" for="monto">Monto expedido:</label>
-                  <input class="form-control" id="monto" formControlName="monto"  type="text">
-                </div>
-              </div>
+      <div class="row" style="padding-bottom: 20px;">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="asignado"> Monto asignado:</label>
+            <input class="form-control" id="asignado" formControlName="asignado" type="text">
+          </div>
         </div>
-
-
-<h6>Certificados disponibles</h6>
-<app-tabla-dinamica 
-  [configuracionTabla]="configuracionTabla"
-  [datos]="oficio"
-  [tipoSeleccionTabla]="TablaSeleccion"
-  (filaSeleccionada)="onSeleccionRow($event)"
->
-</app-tabla-dinamica>
-<nav aria-label="Page navigation example">
-  <ul class="pagination justify-content-center">     
-    <li class="page-item"><a class="page-link" href="#">1</a></li>    
-  </ul>
-</nav>
-<div class="row" style="padding-bottom: 20px;text-align: right;">
-        <div>
-            <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura" (click)="onSeleccionarClick()">Seleccionar</button>
-</div>
-    </div>
-    <h6>Certificados a cancelar</h6>
-    <app-tabla-dinamica 
-  [configuracionTabla]="configuracionTabla"
-  [datos]="Certificados"
-  [tipoSeleccionTabla]="TablaSeleccion"
-  >
-</app-tabla-dinamica>
-<nav aria-label="Page navigation example">
-  <ul class="pagination justify-content-center">     
-    <li class="page-item"><a class="page-link" href="#">1</a></li>    
-  </ul>
-</nav>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="monto">Monto expedido:</label>
+            <input class="form-control" id="monto" formControlName="monto" type="text">
+          </div>
+        </div>
+      </div>
+      <h6>Certificados disponibles</h6>
+      <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="oficio"
+        [tipoSeleccionTabla]="TablaSeleccion" (filaSeleccionada)="onSeleccionRow($event)">
+      </app-tabla-dinamica>
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+        </ul>
+      </nav>
       <div class="row" style="padding-bottom: 20px;text-align: right;">
         <div>
-            <button type="button" class="btn btn-danger btn-space" [disabled]="esFormularioSoloLectura">Eliminar seleccionado</button>
-            <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura"(click)="abrirDevolverFacturas()">Devolver facturas</button>
-            
+          <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura"
+            (click)="onSeleccionarClick()">Seleccionar</button>
         </div>
-    </div>
-<app-modal [active]="showDevolverModal">
-  <app-devolver [(showDevolverModal)]="showDevolverModal"></app-devolver>
-</app-modal>
-<!-- <div class="row"  style="padding-bottom: 20px;" >
-          <div class="col-md-12">
+      </div>
+      <h6>Certificados a cancelar</h6>
+      <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="Certificados"
+        [tipoSeleccionTabla]="TablaSeleccion">
+      </app-tabla-dinamica>
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+        </ul>
+      </nav>
+      <div class="row" style="padding-bottom: 20px;text-align: right;">
+        <div>
+          <button type="button" class="btn btn-danger btn-space" [disabled]="esFormularioSoloLectura">Eliminar
+            seleccionado</button>
+          <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura"
+            (click)="abrirDevolverFacturas()">Devolver facturas</button>
+
+        </div>
+      </div>
+      <app-modal [active]="showDevolverModal">
+        <app-devolver [(showDevolverModal)]="showDevolverModal"></app-devolver>
+      </app-modal>
+      <div class="row" style="padding-bottom: 20px;">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label" for="observaciones"> Motivo de la cancelación*:</label>
+            <textarea class="form-control" id="observaciones" style="height: 120px;"
+              disabled>Cancelación a solicitud de la empresa</textarea>
+          </div>
+        </div>
+      </div>
+      <app-modal [active]="showCapturaMontoModal">
+        <div style="padding: 2rem;">
+          <ng-titulo titulo=" Captura monto a favor del certificado" />
+          <div class="row" style="padding-bottom: 20px;">
+            <div class="col-md-4">
               <div class="form-group">
-                <label class="form-label" for="observaciones"> Motivo de la cancelación*:</label>
-                <textarea class="form-control" id="observaciones"  style="height: 120px;" disabled>Cancelación a solicitud de la empresa</textarea>
+                <label class="form-label" for="cancelar"> *Monto a cancelar (en unidades primarias)</label>
+                <input class="form-control" id="cancelar" formControlName="cancelar" type="text">
               </div>
             </div>
-            </div>  -->
-<app-modal [active]="showCapturaMontoModal">
-  <div style="padding: 2rem;">
-    <ng-titulo titulo=" Captura monto a favor del certificado" />
-    <div class="row" style="padding-bottom: 20px;">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="cancelar"> *Monto a cancelar (en unidades primarias)</label>
-          <input class="form-control" id="cancelar" formControlName="cancelar" type="text">
+          </div>
+          <div class="row" style="padding-bottom: 20px;text-align: right;">
+            <div>
+              <button type="button" class="btn btn-default me-2 btn-space"
+                [disabled]="esFormularioSoloLectura">Agregar</button>
+              <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura"
+                (click)="closeCapturaMontoModal()">Cancelar</button>
+            </div>
+          </div>
         </div>
-      </div>
+      </app-modal>
     </div>
-    <div class="row" style="padding-bottom: 20px;text-align: right;">
-      <div>
-        <button type="button" class="btn btn-default me-2 btn-space" [disabled]="esFormularioSoloLectura">Agregar</button>
-        <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="closeCapturaMontoModal()">Cancelar</button>
-      </div>
-    </div>
-  </div>
-</app-modal>
-      </div>
-      </form>
-    </div>
-  <div>
-   <btn-continuar [datos]="datosPasos" ></btn-continuar>
-  </div>
-  @if (nuevaNotificacion) {
-  <section>
-    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
-    </lib-notificaciones>
-  </section>
-  }
+  </form>
+</div>
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+  </lib-notificaciones>
+</section>
+}

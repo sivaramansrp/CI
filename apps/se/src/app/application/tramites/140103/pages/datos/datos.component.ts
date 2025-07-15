@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Solicitud140103Service } from '../../services/service140103.service';
@@ -69,16 +69,24 @@ export class DatosComponent implements OnInit, OnDestroy {
       });
   }
 
-   /**
+  @Input() showBuscarError: boolean = false;
+  @Output() buscarIntento = new EventEmitter<{ submitted: boolean; invalid: boolean }>();
+
+  onBuscarIntento(event: { submitted: boolean; invalid: boolean }) {
+    this.buscarIntento.emit(event);
+  }
+
+  /**
    * Método del ciclo de vida de Angular que se ejecuta justo antes de destruir el componente.
-   * 
+   *
    * Este método se utiliza para limpiar recursos, específicamente para completar
    * el `Subject` `destroyNotifier$`, el cual es usado en combinación con el operador `takeUntil`
    * para cancelar automáticamente las suscripciones a observables y evitar fugas de memoria.
-   * 
+   *
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
 }
+

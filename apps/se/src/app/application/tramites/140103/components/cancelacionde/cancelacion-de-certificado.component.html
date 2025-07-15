@@ -2,12 +2,6 @@
   <ng-titulo titulo="Buscar cupos" />
 </div>
 
-<!-- Add this block at the top of the form to show a global error message -->
-<div *ngIf="submitted && cancelacionForm.invalid" class="alert alert-danger" role="alert">
-  Corrija los siguientes errores:<br>
-  Para ejecutar la búsqueda se requiere ingresar al menos el parámetro de búsqueda requerido.
-</div>
-
 <form [formGroup]="cancelacionForm">
   <div class="row">
     <div class="col-md-4">
@@ -59,7 +53,7 @@
   <H6> Cupos disponibles</H6>
   <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="Cancelacion">
   </app-tabla-dinamica>
-  <div align="center" id="paginGridContenedoresITC">
+  <div text-align ="center" id="paginGridContenedoresITC">
     <nav aria-label="Page navigation example">
       <ul class="pagination d-flex justify-content-center">
         <li class="page-item"><a class="page-link" href="Javascript:;">1</a></li>

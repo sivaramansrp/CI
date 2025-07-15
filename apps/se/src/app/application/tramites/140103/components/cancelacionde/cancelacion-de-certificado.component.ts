@@ -3,7 +3,7 @@ import {
   ConsultaioQuery,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -388,13 +388,12 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
   }
 
   // Add this method to handle the Buscar button click
+  @Output() buscarIntento = new EventEmitter<{submitted: boolean, invalid: boolean}>();
   buscarCupos() {
     this.submitted = true;
+    this.buscarIntento.emit({submitted: this.submitted, invalid: this.cancelacionForm.invalid});
     if (this.cancelacionForm.invalid) {
       // Optionally, scroll to the first error or focus it
-      // You can also emit an event or show a global error message here
-      return;
-    }
-    // ...logic to actually search cupos...
+     }
   }
 }

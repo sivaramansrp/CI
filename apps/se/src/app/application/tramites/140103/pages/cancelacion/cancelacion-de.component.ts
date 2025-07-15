@@ -53,4 +53,8 @@ export class CancelacionDeComponent {
       }
     }
   }
+  public showBuscarError = false;
+  onBuscarIntento(event: {submitted: boolean, invalid: boolean}) {
+    this.showBuscarError = event.submitted && event.invalid;
+  }
 }
