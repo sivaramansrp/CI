@@ -103,24 +103,28 @@ export interface Solicitud220401State {
   /** Fecha en la que se realizó el pago. */
   fechaPago: string;
 
-  Banco:string;
-  especie:string;
-  funcionZootecnica:string;
-  mercancia:string;
-  paisDestino:string;
-  nombreEstablecimiento:string;
-  tipoActividad:string;
-  aduanaSalida:string;
-  oisaSalida:string;
-  regimenMercancia:string;
-  paisOrigen:string;
-  exentoPago:string;
-  presentacion:string;
-  marcaEmbarque:string;
-  
+  Banco: string;
+  especie: string;
+  funcionZootecnica: string;
+  mercancia: string;
+  paisDestino: string;
+  nombreEstablecimiento: string;
+  tipoActividad: string;
+  aduanaSalida: string;
+  oisaSalida: string;
+  regimenMercancia: string;
+  paisOrigen: string;
+  exentoPago: string;
+  presentacion: string;
+  marcaEmbarque: string;
+
   /** Tipo de transporte utilizado para la mercancía o animales. */
   tipoDeTransporte: string;
   tratamiento: string;
+  uso: string;
+  radioBotonAnimal: string;
+  radioBotonQFBA: string;
+  radioBotonProducto: string;
 }
 
 /**
@@ -132,107 +136,111 @@ export function createInitialState(): Solicitud220401State {
   return {
     /** Tipo de producto asociado a la solicitud. */
     tipoProducto: '',
-   /** Certificación asociada a la solicitud. */
+    /** Certificación asociada a la solicitud. */
     certificada: '',
 
     /** Identificación del medio de transporte. */
     identificationDelTransporte: '',
-  
+
     /** Estado seleccionado, obtenido de un catálogo de respuestas. */
     selectedEstado: null,
-  
+
     /** Número de contenedor para el transporte de la mercancía. */
     numerodeContenedor: '',
-  
+
     /** Fecha de embarque de la mercancía. */
     fechdeEmbarque: '',
-  
+
     /** Número de flejes de seguridad. */
     numerodeFlejes: '',
-  
+
     /** Datos del certificado asociado a la solicitud. */
     datoscertificado: '',
-  
+
     /** Fracción arancelaria correspondiente a la mercancía. */
     fraccionArancelaria: '',
-  
+
     /** Fecha de caducidad de la mercancía o certificado. */
     fechaCaducidad: '',
-  
+
     /** Nombre o identificación del animal o producto. */
     nombreIdentificacion: '',
-  
+
     /** Raza del animal, en caso de aplicar. */
     raza: '',
-  
+
     /** Edad del animal, si corresponde. */
     edadAnimal: '',
-  
+
     /** Color del animal o producto, si aplica. */
     color: '',
-  
+
     /** Número de autorización CITES, si es necesario. */
     numeroAutorizacionCITES: '',
-  
+
     /** Aduana de ingreso o salida de la mercancía. */
     aduana: '',
-  
+
     /** Código OSIA asociado a la solicitud. */
     osia: '',
-  
+
     /** Sexo del animal, si aplica. */
     sexo: '',
-  
+
     /** Otro dato relevante, si no existe un campo específico. */
     otro: '',
-  
+
     /** Punto de ingreso al país o región. */
     puntoIngreso: '',
-  
+
     /** Nombre del establecimiento donde se realiza la verificación. */
     nombreEstablecimientoCheck: '',
-  
+
     /** Número de autorización del establecimiento. */
     numeroAutorizacionCheck: '',
-  
+
     /** Tipo de actividad realizada en el establecimiento. */
     tipoActividadCheck: '',
-  
+
     /** Otro dato relevante para la verificación. */
     otroCheck: '',
-  
+
     /** Fecha estimada de arribo de la mercancía o animales. */
     fechaArribo: '',
-  
+
     /** Justificación de la solicitud, si es necesaria. */
     Justificacion: '',
-  
+
     /** Indica si la solicitud está exenta de pago. */
     exentoDePago: '',
-  
+
     /** Llave o referencia del pago realizado. */
     llaveDePago: '',
-  
+
     /** Fecha en la que se realizó el pago. */
     fechaPago: '',
-    Banco:'',
-    especie:'',
-    funcionZootecnica:'',
-    mercancia:'',
-    paisDestino:'',
-    nombreEstablecimiento:'',
-    tipoActividad:'',
-    aduanaSalida:'',
-    oisaSalida:'',
-    regimenMercancia:'',
-    paisOrigen:'',
-    exentoPago:'',
-    tipoDeTransporte:'',
-    tratamiento:'',
-    presentacion:'',
-    marcaEmbarque:''
+    Banco: '',
+    especie: '',
+    funcionZootecnica: '',
+    mercancia: '',
+    paisDestino: '',
+    nombreEstablecimiento: '',
+    tipoActividad: '',
+    aduanaSalida: '',
+    oisaSalida: '',
+    regimenMercancia: '',
+    paisOrigen: '',
+    exentoPago: '',
+    tipoDeTransporte: '',
+    tratamiento: '',
+    presentacion: '',
+    marcaEmbarque: '',
+    uso: '',
+    radioBotonAnimal: '',
+    radioBotonQFBA: '',
+    radioBotonProducto: ''
   };
-  
+
 }
 
 /**
@@ -305,7 +313,7 @@ export class Agregar220401Store extends Store<Solicitud220401State> {
   public setnumerodeContenedor(numerodeContenedor: string): void {
     this.update((state) => ({
       ...state,
-      
+
       numerodeContenedor,
     }));
   }
@@ -597,14 +605,22 @@ export class Agregar220401Store extends Store<Solicitud220401State> {
       fechaPago,
     }));
   }
+  /**
+   * @method setBanco
+   * @description Establece el valor de 'Banco'.
+   * @param {string} Banco - El valor de 'Banco'.
+   */
   public setBanco(Banco: string): void {
     this.update((state) => ({
       ...state,
       Banco,
     }));
   }
-
-  
+  /**
+   * @method setespecie
+   * @description Establece el valor de 'especie'.
+   * @param {string} especie - El valor de 'especie'.
+   */
 
   public setespecie(especie: string): void {
     this.update((state) => ({
@@ -612,13 +628,23 @@ export class Agregar220401Store extends Store<Solicitud220401State> {
       especie,
     }));
   }
-public setfuncionZootecnica(funcionZootecnica: string): void {
+  /**
+   * @method setfuncionZootecnica
+   * @description Establece el valor de 'funcionZootecnica'.
+   * @param {string} funcionZootecnica - El valor de 'funcionZootecnica'.
+   */
+  public setfuncionZootecnica(funcionZootecnica: string): void {
     this.update((state) => ({
       ...state,
       funcionZootecnica,
     }));
   }
 
+  /**
+   * @method setmercancia
+   * @description Establece el valor de 'mercancia'.
+   * @param {string} mercancia - El valor de 'mercancia'.
+   */
   public setmercancia(mercancia: string): void {
     this.update((state) => ({
       ...state,
@@ -626,6 +652,11 @@ public setfuncionZootecnica(funcionZootecnica: string): void {
     }));
   }
 
+  /**
+   * @method setpaisDestino
+   * @description Establece el valor de 'paisDestino'.
+   * @param {string} paisDestino - El valor de 'paisDestino'.
+   */
   public setpaisDestino(paisDestino: string): void {
     this.update((state) => ({
       ...state,
@@ -633,12 +664,23 @@ public setfuncionZootecnica(funcionZootecnica: string): void {
     }));
   }
 
+  /**
+   * @method setnombreEstablecimiento
+   * @description Establece el valor de 'nombreEstablecimiento'.
+   * @param {string} nombreEstablecimiento - El valor de 'nombreEstablecimiento'.
+   */
   public setnombreEstablecimiento(nombreEstablecimiento: string): void {
     this.update((state) => ({
       ...state,
       nombreEstablecimiento,
     }));
   }
+
+  /**
+   * @method settipoActividad
+   * @description Establece el valor de 'tipoActividad'.
+   * @param {string} tipoActividad - El valor de 'tipoActividad'.
+   */
 
   public settipoActividad(tipoActividad: string): void {
     this.update((state) => ({
@@ -647,12 +689,22 @@ public setfuncionZootecnica(funcionZootecnica: string): void {
     }));
   }
 
+  /**
+   * @method setaduanaSalida
+   * @description Establece el valor de 'aduanaSalida'.
+   * @param {string} aduanaSalida - El valor de 'aduanaSalida'.
+   */
   public setaduanaSalida(aduanaSalida: string): void {
     this.update((state) => ({
       ...state,
       aduanaSalida,
     }));
   }
+  /**
+   * @method setoisaSalida
+   * @description Establece el valor de 'oisaSalida'.
+   * @param {string} oisaSalida - El valor de 'oisaSalida'.
+   */
   public setoisaSalida(oisaSalida: string): void {
     this.update((state) => ({
       ...state,
@@ -660,54 +712,124 @@ public setfuncionZootecnica(funcionZootecnica: string): void {
     }));
   }
 
+  /**
+   * @method setregimenMercancia
+   * @description Establece el valor de 'regimenMercancia'.
+   * @param {string} regimenMercancia - El valor de 'regimenMercancia'.
+   */
   public setregimenMercancia(regimenMercancia: string): void {
     this.update((state) => ({
       ...state,
       regimenMercancia,
     }));
   }
+  /**
+   * @method setpaisOrigen
+   * @description Establece el valor de 'paisOrigen'.
+   * @param {string} paisOrigen - El valor de 'paisOrigen'.
+   */
   public setpaisOrigen(paisOrigen: string): void {
     this.update((state) => ({
       ...state,
       paisOrigen,
     }));
   }
+  /**
+   * @method setexentoPago
+   * @description Establece el valor de 'exentoPago'.
+   * @param {string} exentoPago - El valor de 'exentoPago'.
+   */
   public setexentoPago(exentoPago: string): void {
     this.update((state) => ({
       ...state,
       exentoPago,
     }));
   }
-  public settipoDeTransporte(tipoDeTransporte:string): void {
+  /**
+   * Actualiza el estado con el valor proporcionado para el tipo de transporte.
+   *
+   * @param tipoDeTransporte - El nuevo valor de tipo de transporte a establecer en el estado.
+   */
+  public settipoDeTransporte(tipoDeTransporte: string): void {
     this.update((state) => ({
       ...state,
       tipoDeTransporte,
     }));
   }
-/**
- * Actualiza el estado con el valor proporcionado para el tratamiento.
- *
- * @param tratamiento - El nuevo valor de tratamiento a establecer en el estado.
- */
-public setTratamiento(tratamiento:string): void {
+  /**
+   * Actualiza el estado con el valor proporcionado para el tratamiento.
+   *
+   * @param tratamiento - El nuevo valor de tratamiento a establecer en el estado.
+   */
+  public setTratamiento(tratamiento: string): void {
     this.update((state) => ({
       ...state,
       tratamiento,
     }));
   }
- 
-  public setPresentacion(presentacion:string): void{
-    this.update((state)=>({
+  /**
+   * Actualiza el estado con el valor proporcionado para la presentación.
+   * @param presentacion - El nuevo valor de presentación a establecer en el estado.
+   * */
+  public setPresentacion(presentacion: string): void {
+    this.update((state) => ({
       ...state,
       presentacion,
     }))
   }
- 
-  public setMarcaEmbarque(marcaEmbarque:string): void{
-    this.update((state)=>({
+  /**
+   * Actualiza el estado con el valor proporcionado para la marca de embarque.
+   * @param marcaEmbarque - El nuevo valor de marca de embarque a establecer en el estado.
+   * */
+
+  public setMarcaEmbarque(marcaEmbarque: string): void {
+    this.update((state) => ({
       ...state,
       marcaEmbarque
     }))
   }
-  
+
+  /** * Actualiza el estado con el valor proporcionado para el uso.
+   * @param uso - El nuevo valor de uso a establecer en el estado.  
+   * */
+  public setUso(uso: string): void {
+    this.update((state) => ({
+      ...state,
+      uso
+    }))
+  }
+
+  /**
+   * Actualiza el estado con el valor proporcionado para el radio botón de producto.
+   * @param radioBotonProducto - El nuevo valor del radio botón de producto a establecer en el estado.
+   */
+
+  public setradioBotonProducto(radioBotonProducto: string): void {
+    this.update((state) => ({
+      ...state,
+      radioBotonProducto,
+    }));
+  }
+
+  /**
+   * Actualiza el estado con el valor proporcionado para el radio botón de animal.
+   * @param radioBotonAnimal - El nuevo valor del radio botón de animal a establecer en el estado.
+   */
+  public setradioBotonAnimal(radioBotonAnimal: string): void {
+    this.update((state) => ({
+      ...state,
+      radioBotonAnimal,
+    }));
+  }
+  /**
+   * Actualiza el estado con el valor proporcionado para el radio botón QFBA.
+   * @param radioBotonQFBA - El nuevo valor del radio botón QFBA a establecer en el estado.
+   */
+  public setradioBotonQFBA(radioBotonQFBA: string): void {
+    this.update((state) => ({
+      ...state,
+      radioBotonQFBA,
+    }));
+  }
+
 }

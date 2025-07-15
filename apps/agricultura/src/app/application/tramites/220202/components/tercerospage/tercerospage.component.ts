@@ -8,7 +8,7 @@
  */
 
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { DatosDeLaSolicitud, TercerosrelacionadosTable, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+import { DatosDeLaSolicitud, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { Subject, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { CommonModule } from '@angular/common';
@@ -68,9 +68,9 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Datos de la forma relacionados con terceros.
    * Esta propiedad almacena los datos específicos de la forma que se relacionan con los terceros.
-   * @type {TercerosrelacionadosTable[]}
+   * @type {TercerosrelacionadosdestinoTable[]}
    */
-  datosForma: TercerosrelacionadosTable[] = [];
+  datosForma: TercerosrelacionadosdestinoTable[] = [];
 
   /**
    * Constructor del componente.

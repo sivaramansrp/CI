@@ -81,7 +81,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
-          if (this.consultaState.readonly) {
+          if (this.consultaState.update) {
             this.mostrarRevisionDocumental = false;
           } else {
             this.mostrarRevisionDocumental = true;

@@ -301,6 +301,10 @@ export interface FilaSolicitud {
    * Certificado internacional electrónico asociado.
    */
   certificadoInternacionalElectronico: string;
+  /**
+   * Especie del producto.
+   */
+  especie?: string;
 }
 
 /**
