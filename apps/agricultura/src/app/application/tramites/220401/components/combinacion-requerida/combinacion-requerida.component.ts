@@ -153,6 +153,7 @@ export class CombinacionRequeridaComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
           this.crearFormCombinacion();
+          this.guardarDatosFormulario();
         })
       )
       .subscribe()
@@ -218,7 +219,7 @@ export class CombinacionRequeridaComponent implements OnInit, OnDestroy {
    * - Si el formulario es de solo lectura, lo deshabilita.
    * - Si no es de solo lectura, lo habilita.
    */
-  guardarDatosFormulario(): void {
+  guardarDatosFormulario(): void { 
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.formCombinacion.disable();
