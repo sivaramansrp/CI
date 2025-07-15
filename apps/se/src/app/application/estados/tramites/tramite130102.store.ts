@@ -7,7 +7,8 @@ import { Injectable } from '@angular/core';
  * Contiene todas las propiedades necesarias para gestionar la información de la solicitud.
  */
 export interface Solicitud130102State {
-  
+  valorTotalUSD : string; // Valor total de la solicitud en dólares estadounidenses (USD).
+  cantidadTotal: number; // Cantidad total de productos en la solicitud, se calcula a partir de las partidas.
   criterioDictamen : string; // Criterio de dictamen para la solicitud, puede ser un código o descripción.
   /** Código que identifica la fracción arancelaria específica del producto. */
   fraccion: string;
@@ -80,6 +81,8 @@ export interface Solicitud130102State {
  */
 export function createInitialState(): Solicitud130102State {
   return {
+    valorTotalUSD:'', // Valor total de la solicitud en USD, vacío por defecto.
+    cantidadTotal: 0, // Cantidad total de productos en cero por defecto.
     criterioDictamen: '', // Criterio de dictamen vacío por defecto.
     fraccion: '', // Valor inicial vacío.
     descripcion: '', // Descripción vacía por defecto.
@@ -119,6 +122,42 @@ export class Tramite130102Store extends Store<Solicitud130102State> {
   constructor() {
     super(createInitialState()); // Inicializa el estado con los valores por defecto.
   }
+  /**
+   * Actualiza el valor total en dólares de la solicitud.
+   * @param {string} valorTotalUSD - Nuevo valor total en dólares.
+   */
+public setvalorTotalUSD(valorTotalUSD: string):void {
+    this.update((state) => ({
+      ...state,
+      valorTotalUSD,
+    }));
+  }
+ /**
+ * Actualiza la cantidad total de productos en la solicitud.
+ * 
+ * @param cantidadTotal - Nueva cantidad total de productos a establecer en el estado.
+ * 
+ * Este método actualiza el campo `cantidadTotal` dentro del estado de la solicitud 130102.
+ * Se utiliza para reflejar el total de productos calculado a partir de las partidas ingresadas
+ * por el usuario en el formulario. Es útil para mostrar el resumen de cantidades en la interfaz
+ * y para validaciones posteriores en el flujo del trámite.
+ */
+  public setcantidadTotal(cantidadTotal : number):void{
+    this.update((state) => ({
+      ...state,
+      cantidadTotal,
+    }));
+  }
+ /**
+ * Actualiza el criterio de dictamen de la solicitud.
+ * 
+ * @param criterioDictamen - Nuevo criterio de dictamen a establecer en el estado.
+ * 
+ * Este método actualiza el campo `criterioDictamen` dentro del estado de la solicitud 130102.
+ * El criterio de dictamen puede ser un código o una descripción que determina el resultado
+ * o la evaluación de la solicitud según las reglas del trámite. Es importante para el seguimiento
+ * y la toma de decisiones administrativas.
+ */
 public setCriterioDictamen(criterioDictamen: string):void {
     this.update((state) => ({
       ...state,

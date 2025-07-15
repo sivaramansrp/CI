@@ -6,7 +6,7 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
-import { CHOFERES_NACIONALES_ALTA } from '../../../enum/choferes-enum';
+import { CHOFERES_NACIONALES_ALTA } from '../../../enum/choferes.enum';
 import { Chofer40101Query } from '../../../estado/chofer40101.query';
 import { Chofer40101Service } from '../../../estado/chofer40101.service';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';

@@ -77,8 +77,9 @@ import {
   URL_GENERAR_LINEA_CAPTURA,
   VEHICULO,
 } from '../../../../core/enums/5701/tramite5701.enum';
+// eslint-disable-next-line sort-imports
 import {
-  AfterViewInit,
+  
   ChangeDetectorRef,
   Component,
   Input,
@@ -103,7 +104,6 @@ import {
   map,
   merge,
   switchMap,
-  take,
   takeUntil,
   tap,
   throwError,
@@ -183,7 +183,7 @@ import { ValidaHorarioService } from '../../../../core/services/5701/valida-hora
   styleUrl: './solicitud.component.scss',
 })
 export class SolicitudComponent
-  implements OnInit, OnChanges, OnDestroy, AfterViewInit
+  implements OnInit, OnChanges, OnDestroy
 {
   /**
    * Índice de tabulación para el control de enfoque en la interfaz.
@@ -472,11 +472,10 @@ export class SolicitudComponent
 
   //Estas variables se van a eliminar
   /**
-   * Arrelgo de patentes de la empresa
+   * Arreglo de patentes de la empresa, con label y value.
    */
-  radioPatentes = patentes.patentes;
-  rfcs = rfcs.rfcs;
-
+  radioPatentes: { label: string; value: string | number; hint?: string }[] = [];
+  rfcs: Catalogo[] = [];
   /**
    * @description Bandera para indicar si la hora de inicio del servicio no ha sido marcada.
    */
@@ -574,6 +573,12 @@ export class SolicitudComponent
   ) {}
 
   ngOnInit(): void {
+    this.radioPatentes = patentes?.patentes?.map((p: { label: string; value: string | number; hint?: string }) => ({
+      label: p.label,
+      value: p.value,
+      hint: p.hint
+    })) ?? [];
+    this.rfcs = rfcs?.rfcs;
     this.validaTipoPersona();
     this.inicializaCatalogos();
 
@@ -619,7 +624,7 @@ export class SolicitudComponent
       this.domSanitizer.bypassSecurityTrustUrl(URL_GENERAR_LINEA_CAPTURA);
   }
 
-  ngAfterViewInit(): void {}
+  
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['folioSolicitud'] && changes['folioSolicitud'].currentValue) {
@@ -2130,6 +2135,7 @@ export class SolicitudComponent
       const DATOS_PROGRAMA: DatosCheckInputText = {
         checkbox: this.solicitudState.programa,
         texto: this.solicitudState.descripcionProgramaFomento,
+        disabled: false,
       };
       this.checkPrograma(DATOS_PROGRAMA);
     }
@@ -2139,6 +2145,7 @@ export class SolicitudComponent
       const DATOS_IMMEX: DatosCheckInputText = {
         checkbox: this.solicitudState.checkIMMEX,
         texto: this.solicitudState.descripcionImmex,
+        disabled:true
       };
       this.checkImmex(DATOS_IMMEX);
     }
@@ -2148,6 +2155,7 @@ export class SolicitudComponent
       const DATOS_AUTOMOTRIZ: DatosCheckInputText = {
         checkbox: this.solicitudState.industriaAutomotriz,
         texto: this.solicitudState.descripcionIndustrialAutomotriz,
+        disabled: false,
       };
       this.checkAutomotriz(DATOS_AUTOMOTRIZ);
     }
@@ -2335,6 +2343,7 @@ export class SolicitudComponent
             const VALORES_IMMEX: DatosCheckInputText = {
               checkbox: response.datos.immex,
               texto: response.datos.des_immex,
+              disabled: true,
             };
             this.checkImmex(VALORES_IMMEX);
           }
@@ -2354,6 +2363,7 @@ export class SolicitudComponent
             const VALORES_PROGRAMA_FOMENTO: DatosCheckInputText = {
               checkbox: response.datos.programa_fomento,
               texto: response.datos.des_programa_fomento,
+              disabled: false,
             };
 
             this.checkPrograma(VALORES_PROGRAMA_FOMENTO);

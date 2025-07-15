@@ -100,6 +100,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.certificadoZoosanitarioServices.storeDatosFormulario(data as CapturarSolicitud);
+        this.seccionStore.establecerFormaValida([true]);
+        this.seccionStore.establecerSeccion([true]);
       }, (error) => {
         console.error(error);
       });

@@ -34,7 +34,6 @@ import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-
     CatalogoSelectComponent
   ],
   templateUrl: './tercerosrelacionados.component.html',
-  styleUrl: './tercerosrelacionados.component.scss',
 })
 export class TercerosrelacionadosComponent {
   /**
@@ -87,6 +86,12 @@ export class TercerosrelacionadosComponent {
    * @type {TercerosrelacionadosdestinoTable[]}
    */
   @Input() cuerpoTablaDestino: TercerosrelacionadosdestinoTable[] = [];
+    /**
+   * Cuerpo de la tabla de exportadores.
+   * @type {TercerosrelacionadosTable[]}
+   */
+  @Input() cuerpoTablaExportador: TercerosrelacionadosdestinoTable[] = [];
+
 
   /**
    * Evento emitido al eliminar una selección de destinatarios.
@@ -106,24 +111,24 @@ export class TercerosrelacionadosComponent {
    * @type {TercerosrelacionadosdestinoTable[]}
    */
   listaDeFilaSeleccionada: TercerosrelacionadosdestinoTable[] = [];
+  /**
+   * Lista de filas seleccionadas de destinatarios finales.
+   * @type {TercerosrelacionadosdestinoTable[]}
+   */
+  listaDeFilaSeleccionadaFinal: TercerosrelacionadosdestinoTable[] = [];
 
   /**
    * Configuración de las columnas para la tabla de exportadores.
    * @type {ConfiguracionColumna<TercerosrelacionadosTable>[]}
    */
-  configuracionColumnasExportador: ConfiguracionColumna<TercerosrelacionadosTable>[] = [
-    { encabezado: 'Nombre/denominación o razón social', clave: (fila) => fila.exportadorNombre, orden: 1 },
-    { encabezado: 'Teléfono', clave: (fila) => fila.exportadorTelefono, orden: 2 },
-    { encabezado: 'Correo', clave: (fila) => fila.exportadorCorreo, orden: 3 },
-    { encabezado: 'Domicilio', clave: (fila) => fila.exportadorDomicilio, orden: 4 },
-    { encabezado: 'País', clave: (fila) => fila.exportadorPais, orden: 5 },
+  configuracionColumnasExportador: ConfiguracionColumna<TercerosrelacionadosdestinoTable>[] = [
+    { encabezado: 'Nombre/denominación o razón social', clave: (fila) => fila.nombre, orden: 1 },
+    { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 2 },
+    { encabezado: 'Correo', clave: (fila) => fila.correo, orden: 3 },
+    { encabezado: 'Domicilio', clave: (fila) => fila.razonSocial, orden: 4 },
+    { encabezado: 'País', clave: (fila) => fila.pais, orden: 5 },
   ];
 
-  /**
-   * Cuerpo de la tabla de exportadores.
-   * @type {TercerosrelacionadosTable[]}
-   */
-  cuerpoTablaExportador: TercerosrelacionadosTable[] = [];
 
   /**
    * Configuración de las columnas para la tabla de destinatarios.
@@ -132,7 +137,7 @@ export class TercerosrelacionadosComponent {
   configuracionColumnasDestino: ConfiguracionColumna<TercerosrelacionadosdestinoTable>[] = [
     { encabezado: 'Nombre/denominación o razón social', clave: (fila) => fila.nombre, orden: 1 },
     { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 2 },
-    { encabezado: 'Correo', clave: (fila) => fila.correo, orden: 3 },
+    { encabezado: 'Correo electrónico', clave: (fila) => fila.correo, orden: 3 },
     { encabezado: 'Calle', clave: (fila) => fila.calle, orden: 4 },
     { encabezado: 'Número exterior', clave: (fila) => fila.numeroExterior, orden: 5 },
     { encabezado: 'Número interior', clave: (fila) => fila.numeroInterior, orden: 6 },
@@ -176,7 +181,9 @@ export class TercerosrelacionadosComponent {
   goToAgregarDestinatario(): void {
     this.router.navigate(['../agregar-destinatario'], { relativeTo: this.route });
   }
-
+goToAgregarExportador(): void {
+    this.router.navigate(['../agregar-destinatariofinal'], { relativeTo: this.route });  
+}
   /**
    * Navega a la pantalla para modificar un destinatario existente.
    * @method modificarDestinatario
@@ -185,6 +192,15 @@ export class TercerosrelacionadosComponent {
     const ID = 1;
     this.router.navigate(['../agregar-destinatario', ID], { relativeTo: this.route });
   }
+    /**
+   * Navega a la pantalla para modificar un destinatario existente.
+   * @method modificarDestinatario
+   */
+  modificarDestinatarioFinal(): void {
+    const ID = 1;
+    this.router.navigate(['../agregar-destinatariofinal', ID], { relativeTo: this.route });
+  }
+
 
   /**
    * Actualiza la lista de filas seleccionadas de destinatarios.
@@ -194,13 +210,28 @@ export class TercerosrelacionadosComponent {
   onSeleccionDestinatario(filas: TercerosrelacionadosdestinoTable[]): void {
     this.listaDeFilaSeleccionada = filas;
   }
-
+  
+  /**
+   * Actualiza la lista de filas seleccionadas de destinatarios.
+   * @param filas Filas seleccionadas.
+   * @method onSeleccionDestinatario
+   */
+onSeleccionDestinatarioFinal(filas: TercerosrelacionadosdestinoTable[]): void {
+    this.listaDeFilaSeleccionadaFinal = filas; 
+  }
   /**
    * Emite el evento para eliminar la selección de destinatarios.
    * @method emitEliminar
    */
   emitEliminar(): void {
     this.eliminarSeleccion.emit(this.listaDeFilaSeleccionada);
+  }
+   /**
+   * Emite el evento para eliminar la selección de destinatarios.
+   * @method emitEliminar
+   */
+  emitEliminarFinal(): void {
+    this.eliminarSeleccion.emit(this.listaDeFilaSeleccionadaFinal);
   }
 
   /**

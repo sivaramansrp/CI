@@ -151,7 +151,7 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
 
     this.Informaciondela = this.fb.group({
       datosImportadorExportador: this.fb.group({
-        folio: [this.solicitudState?.folio, [Validators.required, Validators.maxLength(25)]],
+        folio: [{value: this.solicitudState?.folio, disabled: true}, [Validators.required, Validators.maxLength(25)]],
         mercancia: [this.solicitudState?.mercancia, Validators.required],
       }),
     });

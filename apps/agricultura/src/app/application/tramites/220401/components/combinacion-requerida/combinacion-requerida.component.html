@@ -2,34 +2,38 @@
     <ng-titulo titulo="Combinación Requerida" />
     <form [formGroup]="formCombinacion">
         <div class="row mb-3">
-            <div class="col-md-4">
-              
+            @if(certificadaValue === 'Animal')
+            {
+                <div class="col-md-4">
                 <app-catalogo-select
-                [catalogo]="especie"
+                [catalogo]="paisDestino"
                 [tooltipQuestionCircle]="false"
-                [label]="'Especie*'"
+                [label]="'Especie'"
+                [required]="true"
                 [placeholder]="'Seleccione un valor'"
-                formControlName="especie"
                 [isDisabled]="esFormularioSoloLectura"
-                (change)="setValoresStore(formCombinacion,'especie', 'setespecie')">
+                formControlName="especie"
+                (change)="setValoresStore(formCombinacion,'especie', 'setespecie')"
                 ></app-catalogo-select>
             </div>
-            <div class="col-md-4">
-              
+
+             <div class="col-md-4">
+             
                 <app-catalogo-select
-                [catalogo]="funcionZootecnica"
+                [catalogo]="paisDestino"
                 [tooltipQuestionCircle]="false"
-                [label]="'Función zootécnica*'"
+                [label]="'Función zootécnica'"
+                [required]="true"
                 [placeholder]="'Seleccione un valor'"
-                formControlName="funcionZootecnica"
                 [isDisabled]="esFormularioSoloLectura"
+                formControlName="funcionZootecnica"
                 (change)="setValoresStore(formCombinacion,'funcionZootecnica', 'setfuncionZootecnica')"
                 ></app-catalogo-select>
             </div>
-            <div class="col-md-4">
-               
+
+             <div class="col-md-4">
                 <app-catalogo-select
-                [catalogo]="mercancia"
+                [catalogo]="paisDestino"
                 [tooltipQuestionCircle]="false"
                 [label]="'Mercancía'"
                 [required]="true"
@@ -37,14 +41,66 @@
                 [isDisabled]="esFormularioSoloLectura"
                 formControlName="mercancia"
                 (change)="setValoresStore(formCombinacion,'mercancia', 'setmercancia')"
-              ></app-catalogo-select>
+                ></app-catalogo-select>
             </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-4">
-             
+            }
+             @if(certificadaValue === 'Producto')
+            {
+               <div class="col-md-4">
                 <app-catalogo-select
+                [catalogo]="paisDestino"
+                [tooltipQuestionCircle]="false"
+                [label]="'Especie'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
+                formControlName="especie"
+                (change)="setValoresStore(formCombinacion,'especie', 'setespecie')"
+                ></app-catalogo-select>
+            </div>
+
+             <div class="col-md-4">
+                <app-catalogo-select
+                [catalogo]="paisDestino"
+                [tooltipQuestionCircle]="false"
+                [label]="'Uso'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
+                formControlName="uso"
+                (change)="setValoresStore(formCombinacion,'uso', 'setUso')"
+                ></app-catalogo-select>
+            </div>
+
+             <div class="col-md-4">
+                 <app-catalogo-select
+                [catalogo]="tipoActividad"
+                [tooltipQuestionCircle]="false"
+                [label]="'Tipo de producto'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
+                formControlName="tipoProducto"
+                (change)="setValoresStore(formCombinacion,'tipoProducto', 'settipoProducto')"
+                ></app-catalogo-select>
+            </div>
+
+            
+            <div class="col-md-8">
+                <app-catalogo-select
+                [catalogo]="paisDestino"
+                [tooltipQuestionCircle]="false"
+                [label]="'Mercancía'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
+                formControlName="mercancia"
+                (change)="setValoresStore(formCombinacion,'mercancia', 'setmercancia')"
+                ></app-catalogo-select>
+            </div>
+
+              <div class="col-md-4">
+                 <app-catalogo-select
                 [catalogo]="paisDestino"
                 [tooltipQuestionCircle]="false"
                 [label]="'País destino'"
@@ -55,11 +111,39 @@
                 (change)="setValoresStore(formCombinacion,'paisDestino', 'setpaisDestino')"
                 ></app-catalogo-select>
             </div>
+            }
+            @if(certificadaValue === 'QFBA')
+            {
+                <div class="col-md-8">
+                <app-catalogo-select
+                [catalogo]="tipoActividad"
+                [tooltipQuestionCircle]="false"
+                [label]="'Tipo de producto'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
+                formControlName="tipoProducto"
+                (change)="setValoresStore(formCombinacion,'tipoProducto', 'settipoProducto')"
+                ></app-catalogo-select>
+            </div>
+                 <div class="col-md-4">
+              <app-catalogo-select
+                [catalogo]="paisDestino"
+                [tooltipQuestionCircle]="false"
+                [label]="'País destino'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
+                formControlName="paisDestino"
+                (change)="setValoresStore(formCombinacion,'paisDestino', 'setpaisDestino')"
+                ></app-catalogo-select>
+            </div>
+            }
+          
         </div>
 
         <div class="row mb-3">
             <div class="col-md-8">
-              
                 <app-catalogo-select
                 [catalogo]="nombreEstablecimiento"
                 [tooltipQuestionCircle]="false"
@@ -75,7 +159,6 @@
 
         <div class="row mb-3">
             <div class="col-md-8">
-              
                 <app-catalogo-select
                 [catalogo]="tipoActividad"
                 [tooltipQuestionCircle]="false"
@@ -120,7 +203,6 @@
 
         <div class="row mb-3">
             <div class="col-md-8">
-            
                 <app-catalogo-select
                 [catalogo]="aduanaSalida"
                 [tooltipQuestionCircle]="false"
@@ -136,7 +218,6 @@
 
         <div class="row mb-3">
             <div class="col-md-8">
-              
                 <app-catalogo-select
                 [catalogo]="oisaSalida"
                 [tooltipQuestionCircle]="false"
@@ -152,7 +233,6 @@
 
         <div class="row mb-3">
             <div class="col-md-8">
-           
                 <app-catalogo-select
                 [catalogo]="regimenMercancia"
                 [tooltipQuestionCircle]="false"
@@ -168,7 +248,6 @@
 
         <div class="row mb-3">
             <div class="col-md-8">
-              
                 <app-catalogo-select
                 [catalogo]="paisOrigen"
                 [tooltipQuestionCircle]="false"
