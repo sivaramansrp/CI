@@ -236,25 +236,25 @@ export interface TransportistasTable {
    * RFC del transportista.
    * Representa el Registro Federal de Contribuyentes del transportista, utilizado para su identificación fiscal.
    */
-  rfc: string;
+  transportistaRFCModifTrans: string;
 
   /**
    * Razón social del transportista.
    * Es el nombre legal de la empresa o entidad que presta el servicio de transporte.
    */
-  razonSocial: string;
+  transportistaRazonSocial: string;
 
   /**
    * Domicilio del transportista.
    * Dirección física donde se encuentra ubicado el transportista o su empresa.
    */
-  domicilio: string;
+  transportistaDomicilio: string;
 
   /**
    * CAAT del transportista.
    * Representa el Certificado de Autorización de Autotransporte, necesario para la operación legal del transportista.
    */
-  caat: string;
+  transportistaCaat: string;
 }
 
 /**

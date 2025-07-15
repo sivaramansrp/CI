@@ -520,6 +520,16 @@ export interface Solicitud32604State {
    * Lista de objetos que contienen los datos relacionados con los enlaces operativos.
    */
   enlaceOperativosLista: EnlaceOperativo[];
+
+  /**
+   * Valor asociado con el código programaImmex (puede ser un número o una cadena).
+   */
+  programaImmex: string | number;
+
+  /**
+   * Valor asociado con el código importsRadio (puede ser un número o una cadena).
+   */
+  importsRadio: string | number;
 }
 
 /**
@@ -631,6 +641,8 @@ export function createInitialSolicitudState(): Solicitud32604State {
     domiciliosDatos: [] as Domicilios[],
     listaSeccionSociosIC: [] as SeccionSociosIC[],
     enlaceOperativosLista: [] as EnlaceOperativo[],
+    programaImmex: 0,
+    importsRadio: 0,
   };
 }
 @Injectable({
@@ -1560,6 +1572,24 @@ export class Solicitud32604Store extends Store<Solicitud32604State> {
    */
   actualizarEnlaceOperativosLista(valor: EnlaceOperativo[]): void {
     this.update((state) => ({ ...state, enlaceOperativosLista: valor }));
+  }
+
+  /**
+   * Actualiza el valor del campo `programaImmex` en el estado.
+   *
+   * @param valor - El nuevo valor para `programaImmex`.
+   */
+  actualizarProgramaImmex(valor: string | number): void {
+    this.update((state) => ({ ...state, programaImmex: valor }));
+  }
+
+  /**
+   * Actualiza el valor del campo `importsRadio` en el estado.
+   *
+   * @param valor - El nuevo valor para `importsRadio`.
+   */
+  actualizarImportsRadio(valor: string | number): void {
+    this.update((state) => ({ ...state, importsRadio: valor }));
   }
 
   /**

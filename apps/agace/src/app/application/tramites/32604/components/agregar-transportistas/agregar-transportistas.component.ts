@@ -130,31 +130,22 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
     this.transportistaCertificacionForm = this.fb.group({
       transportistaRFC: [
         this.solicitud32604State.transportistaRFC,
-        [Validators.required, Validators.maxLength(13)],
+        [Validators.required, Validators.maxLength(13)]
       ],
-      transportistaRFCModifTrans: [
-        {
-          value: this.solicitud32604State.transportistaRFCModifTrans,
-          disabled: true,
-        },
-        [Validators.maxLength(13)],
+      transportistaRFCModifTrans: [ 
+        this.solicitud32604State.transportistaRFCModifTrans, 
+        [Validators.maxLength(13)]
       ],
       transportistaRazonSocial: [
-        {
-          value: this.solicitud32604State.transportistaRazonSocial,
-          disabled: true,
-        },
-        [Validators.maxLength(254)],
+        this.solicitud32604State.transportistaRazonSocial,
+        [Validators.maxLength(254)]
       ],
       transportistaDomicilio: [
-        {
-          value: this.solicitud32604State.transportistaDomicilio,
-          disabled: true,
-        },
+        this.solicitud32604State.transportistaDomicilio,
         [Validators.maxLength(300)],
       ],
       transportistaCaat: [
-        { value: this.solicitud32604State.transportistaCaat, disabled: true },
+        this.solicitud32604State.transportistaCaat,
         [Validators.maxLength(254)],
       ],
       transportistaIdDomicilio: [
@@ -174,9 +165,9 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
         map((respuesta: Solicitud32604State) => {
           this.solicitud32604State = respuesta;
           this.transportistaCertificacionForm.patchValue({
-            transportistaRFC: respuesta.transportistaIdRFC,
+            transportistaRFC: respuesta.transportistaRFC,
             transportistaRFCModifTrans: respuesta.transportistaRFCModifTrans,
-            transportistaRazonSocial: respuesta.transportistaIdRazonSocial,
+            transportistaRazonSocial: respuesta.transportistaRazonSocial,
             transportistaDomicilio: respuesta.transportistaDomicilio,
             transportistaCaat: respuesta.transportistaCaat,
           });
@@ -253,14 +244,17 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (respuesta: TransportistasTable[]) => {
+          this.solicitud32604Store.actualizarTransportistaRFCModifTrans(
+            respuesta[0].transportistaRFCModifTrans
+          );
           this.solicitud32604Store.actualizarTransportistaRazonSocial(
-            respuesta[0].razonSocial
+            respuesta[0].transportistaRazonSocial
           );
           this.solicitud32604Store.actualizarTransportistaDomicilio(
-            respuesta[0].domicilio
+            respuesta[0].transportistaDomicilio
           );
           this.solicitud32604Store.actualizarTransportistaCaat(
-            respuesta[0].caat
+            respuesta[0].transportistaCaat
           );
         },
       });
@@ -271,15 +265,15 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    */
   aceptarTransportista(): void {
     const OBJETO_JSON: TransportistasTable = {
-      rfc: this.transportistaCertificacionForm.get('transportistaRFCModifTrans')
+      transportistaRFCModifTrans: this.transportistaCertificacionForm.get('transportistaRFCModifTrans')
         ?.value,
-      razonSocial: this.transportistaCertificacionForm.get(
+      transportistaRazonSocial: this.transportistaCertificacionForm.get(
         'transportistaRazonSocial'
       )?.value,
-      domicilio: this.transportistaCertificacionForm.get(
+      transportistaDomicilio: this.transportistaCertificacionForm.get(
         'transportistaDomicilio'
       )?.value,
-      caat: this.transportistaCertificacionForm.get('transportistaCaat')?.value,
+      transportistaCaat: this.transportistaCertificacionForm.get('transportistaCaat')?.value,
     };
     this.transportistasDatos.emit(OBJETO_JSON);
   }

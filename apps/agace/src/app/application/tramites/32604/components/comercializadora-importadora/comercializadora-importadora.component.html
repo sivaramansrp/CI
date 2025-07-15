@@ -76,14 +76,42 @@
                         Agregar
                     </button>
                     <button type="button" [disabled]="esFormularioSoloLectura" id="modificarTransportista"
-                        class="btn btn-default me-2">
+                        class="btn btn-default me-2" (click)="agregarTransportistaModel()">
                         Modificar
                     </button>
                     <button type="button" [disabled]="esFormularioSoloLectura" id="eliminarTransportista"
-                        class="btn btn-danger">
+                        class="btn btn-danger" (click)="eliminarDato()">
                         Eliminar
                     </button>
                 </div>
+            </div>
+
+            <div class="col-md-12 mt-4">
+                <label class="form-label text-start">
+                    Indique si cuenta con un programa IMMEX *</label>
+                <app-input-radio
+                    formControlName="programaImmex"
+                    [radioOptions]="sinoOpcion.radioOptions"
+                    [isRequired]="sinoOpcion.isRequired"
+                    [layout]="'horizontal'"
+                    [gap]="'50px'"
+                    (valueChange)="actualizarProgramaImmex($event)"
+                ></app-input-radio>
+            </div>
+
+            <div class="col-md-12 mt-4">
+                <label class="form-label text-start">
+                    Indique si efectuo en el semestre inmediato a la fecha en que ingresa su solicitud,
+                    importaciones por un valor en aduana menor a $300,000,000.00. *
+                </label>
+                <app-input-radio
+                formControlName="importsRadio"
+                [radioOptions]="sinoOpcion.radioOptions"
+                [isRequired]="sinoOpcion.isRequired"
+                [layout]="'horizontal'"
+                [gap]="'50px'"
+                (valueChange)="actualizarImportsRadio($event)"
+                ></app-input-radio>
             </div>
 
         </div>

@@ -4,11 +4,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FECHA_DE_PAGO, TRANSPORTISTAS_CONFIGURACION } from '../../constants/empresas-comercializadoras.enum';
 import { InputFecha } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
 import { Solicitud32604Query } from '../../estados/solicitud32604.query';
 import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
 import { map, Subject, takeUntil } from 'rxjs';
-import { TransportistasTable } from '../../models/empresas-comercializadoras.model';
+import { InputRadio, SolicitudRadioLista, TransportistasTable } from '../../models/empresas-comercializadoras.model';
 import { Modal } from 'bootstrap';
 import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
 
@@ -20,7 +21,8 @@ import { AgregarTransportistasComponent } from '../agregar-transportistas/agrega
     InputFechaComponent,
     TituloComponent,
     TablaDinamicaComponent,
-    AgregarTransportistasComponent
+    AgregarTransportistasComponent,
+    InputRadioComponent
   ],
   templateUrl: './comercializadora-importadora.component.html',
   styleUrl: './comercializadora-importadora.component.scss',
@@ -51,7 +53,7 @@ export class ComercializadoraImportadoraComponent {
   /**
    * Notificador para destruir observables.
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  private destroy$: Subject<void> = new Subject();
 
   /**
    * Estado de la solicitud.
@@ -77,6 +79,16 @@ export class ComercializadoraImportadoraComponent {
   @ViewChild('transportistas', { static: false })
   transportistaElement!: ElementRef;
 
+  /** Datos seleccionados para el enlace operativo */
+  seleccionDatos: TransportistasTable[] = [] as TransportistasTable[];
+
+   /** Lista de enlaces operativos */
+  OperativosLista: TransportistasTable[] = [] as TransportistasTable[];
+
+  /** Modelo para la opción de tipo sí/no representado como radio button */
+  sinoOpcion: InputRadio = {} as InputRadio;
+
+
   /**
    * Constructor del componente donde se inicializan servicios y se cargan catálogos necesarios.
    */
@@ -95,7 +107,7 @@ export class ComercializadoraImportadoraComponent {
   ngOnInit(): void {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroy$),
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.esFormularioSoloLectura = this.consultaDatos.readonly;
@@ -105,12 +117,13 @@ export class ComercializadoraImportadoraComponent {
       .subscribe();
     this.solicitud32604Query.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroy$),
         map((seccionState) => {
           this.solicitudState = seccionState;
         })
       )
       .subscribe();
+    this.conseguirOpcionDeRadio();
     this.inicializarFormulario();
     this.inicializarEstadoFormulario();
   }
@@ -127,6 +140,8 @@ export class ComercializadoraImportadoraComponent {
         this.solicitudState.llavePago,
         [Validators.maxLength(25)],
       ],
+      programaImmex: [this.solicitudState.programaImmex],
+      importsRadio: [this.solicitudState.importsRadio],
     });
   }
 
@@ -158,6 +173,29 @@ export class ComercializadoraImportadoraComponent {
     }
   }
 
+  eliminarDato(): void {
+    if (this.seleccionDatos.length > 0) {
+      this.OperativosLista = this.OperativosLista.filter(
+        (element) => element.transportistaRFCModifTrans !== this.seleccionDatos[0].transportistaRFCModifTrans
+      );
+    }
+  }
+
+  /**
+   * Método para obtener la opción de radio (sí/no) desde el servicio.
+   * Se suscribe al observable y asigna el resultado a `sinoOpcion`.
+   */
+  conseguirOpcionDeRadio(): void {
+    this.empresasComercializadorasService
+      .conseguirOpcionDeRadio()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (respuesta: SolicitudRadioLista) => {
+          this.sinoOpcion = respuesta.requisitos;
+        },
+      });
+  }
+
   /**
    * Actualiza la fecha de pago en el store
    * @param evento Fecha de pago
@@ -166,6 +204,30 @@ export class ComercializadoraImportadoraComponent {
     this.solicitud32604Store.actualizarFechaPago(evento);
   }
 
+  /**
+   * Actualiza el campo 'ProgramaImmex' en el estado global.
+   *
+   * @param {string | number} valor - Valor para el campo immex.
+   */
+  actualizarProgramaImmex(valor: string | number): void {
+    this.solicitud32604Store.actualizarProgramaImmex(valor);
+  }
 
+  /**
+   * Actualiza el campo 'ImportsRadio' en el estado global.
+   *
+   * @param {string | number} valor - Valor para el campo immex.
+   */
+  actualizarImportsRadio(valor: string | number): void {
+    this.solicitud32604Store.actualizarImportsRadio(valor);
+  }
+
+  /**
+   * Limpia y completa la señal de destrucción para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
 }
