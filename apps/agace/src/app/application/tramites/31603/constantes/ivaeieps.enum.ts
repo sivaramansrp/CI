@@ -316,7 +316,7 @@ export const PERMISO_A_DESISTIR_TRES = [
  */
 export const CONFIGURACION_IVAEIEPS_DOS = [
   {
-    labelNombre: 'Que durante los últimos cuatro años o más han llevado a cabo operaciones al amparo del régimen para el cual solicitan la certificación en la modalidad de IVA e IEPS.',
+    labelNombre: 'Que durante los últimos siete años o más han llevado a cabo operaciones al amparo del régimen para el cual solicitan la certificación del IVA e IEPS',
     campo: 'durante',
     clase: 'col-md-12',
     tipoInput: 'checkbox',
@@ -324,7 +324,7 @@ export const CONFIGURACION_IVAEIEPS_DOS = [
     marcador_de_posicion: '',
   },
   {
-    labelNombre: 'Que durante los últimos 12 meses anteriores en promedio contaron con más de 1,000 empleados registrados ante el IMSS Número de empleados ante el IMSS.',
+    labelNombre: 'Que durante los últimos 12 meses anteriores en promedio contaron con más de 2,500 empleados registrados ante el IMSS',
     campo: 'anteElImss',
     clase: 'col-md-12',
     tipoInput: 'checkbox',
@@ -332,7 +332,7 @@ export const CONFIGURACION_IVAEIEPS_DOS = [
     marcador_de_posicion: '',
   },
   {
-    labelNombre: 'Que el valor de su maquinaria y equipo es superior a los 50,000,000 de pesos.',
+    labelNombre: 'Que el valor de su maquinaria y equipo es superior a los 100,000,000 de pesos',
     campo: 'dePesos',
     clase: 'col-md-12',
     tipoInput: 'checkbox',
@@ -366,7 +366,7 @@ export const PAGO_DE_DERECHOS = [
     campo: 'claveDeReferencia',
     clase: 'col-md-6',
     tipoInput: 'text',
-    desactivado: false,
+    desactivado: true,
     soloLectura: false,
     validadores: [
       {
@@ -377,24 +377,6 @@ export const PAGO_DE_DERECHOS = [
     valorPredeterminado: '',
     marginTop: 0
   },
-  {
-    id: 'folioDePago',
-    labelNombre: 'Folio de pago',
-    campo: 'folioDePago',
-    clase: 'col-md-6',
-    tipoInput: 'text',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [
-      {
-      tipo: 'required'
-      }
-    ],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0
-    },
-    
   {
     id: 'numeroDeOperacion',
     labelNombre: 'Numero de operación',
@@ -418,7 +400,7 @@ export const PAGO_DE_DERECHOS = [
     campo: 'cadenaDependencia',
     clase: 'col-md-6',
     tipoInput: 'text',
-    desactivado: false,
+    desactivado: true,
     soloLectura: false,
     validadores: [
       {
@@ -486,7 +468,7 @@ export const PAGO_DE_DERECHOS = [
     campo: 'importePago',
     clase: 'col-md-4',
     tipoInput: 'text',
-    desactivado: false,
+    desactivado: true,
     soloLectura: false,
     validadores: [
       {

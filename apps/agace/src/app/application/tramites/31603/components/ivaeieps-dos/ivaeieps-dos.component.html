@@ -47,17 +47,39 @@
             <div class="form-group">
                 <label class="form-label" for="telefono"><span class="text-danger">* </span>Porcentaje:</label>
                 <input class="form-control" id="telefono" formControlName="porcentaje" placeholder="" type="text"/>
+                <div *ngIf="porcentajeMontoForm.controls['porcentaje'].invalid && porcentajeMontoForm.controls['porcentaje'].touched">
+                    <div class="mensaje-error" *ngIf="porcentajeMontoForm.controls['porcentaje'].errors?.['required']">
+                      Campo Requerido
+                    </div>
+                    <div class="mensaje-error" *ngIf="porcentajeMontoForm.controls['porcentaje'].errors?.['pattern']">
+                      Existen datos incorrectos que no cumplen con el formato esperado.
+                    </div>
+                    <div class="mensaje-error" *ngIf="porcentajeMontoForm.controls['porcentaje'].errors?.['maxTwenty']">
+                      El porcentaje debe ser igual o menor al 20%
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
                 <label class="form-label" for="telefono"><span class="text-danger">* </span>Monto:</label>
                 <input class="form-control" id="telefono" formControlName="monto" placeholder="" type="text"/>
+                <div *ngIf="porcentajeMontoForm.controls['monto'].invalid && porcentajeMontoForm.controls['monto'].touched">
+                    <div class="mensaje-error" *ngIf="porcentajeMontoForm.controls['monto'].errors?.['required']">
+                      Campo Requerido
+                    </div>
+                    <div class="mensaje-error" *ngIf="porcentajeMontoForm.controls['monto'].errors?.['pattern']">
+                      Existen datos incorrectos que no cumplen con el formato esperado.
+                    </div>
+                    <div class="mensaje-error" *ngIf="porcentajeMontoForm.controls['monto'].errors?.['maxFiveMillion']">
+                      El monto debe ser igual o menor a 5,000,000.
+                    </div>
+                </div>
             </div>
         </div>
     </form>
     <p class="mt-5">
-        En caso afirmativo, el monto de las resoluciones de improcedencias no deberá representar más del 20% del total de las devoluciones autorizadas en el mismo periodo, siempre que el monto negado resultante de la aplicación de dicho porcentaje no supere cinco millones de pesos en su conjunto.
+        En caso afirmativo, el monto de las resoluciones de improcedencias no deberá representar más del 20% del total de las devoluciones autorizadas en el periodo de seis meses, siempre que el monto negado resultante de la aplicación de dicho porcentaje sea menor o igual a cinco millones de pesos en su conjunto.
     </p>
     <form [formGroup]="contadoGrupo">
         <div class="row mb-3">

@@ -1,9 +1,9 @@
+import { AbstractControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ConfiguracionColumna, INVERSION_TABLA, InversionGrupo, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import {CONFIGURACION_IVAEIEPS_DOS} from '../../constantes/ivaeieps.enum';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { INVERSION_MONTO } from '../../constantes/ivaeieps.enum';
 import { Input } from '@angular/core';
@@ -163,6 +163,20 @@ export class IvaeiepsDosComponent implements OnInit,OnDestroy {
      * donde el modo de selección está configurado como `CHECKBOX`.
      */
     public tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+
+    static maxTwentyPercentValidator(control: AbstractControl): ValidationErrors | null {
+      const VALUE = Number(control.value);
+      if (isNaN(VALUE)) { return null; } // Let pattern validator handle non-numeric
+      return VALUE <= 20 ? null : { maxTwenty: true };
+    }
+
+    static maxFiveMillionValidator(control: AbstractControl): ValidationErrors | null {
+      const VALUE = Number(control.value);
+      if (isNaN(VALUE)) { return null; } // Let pattern validator handle non-numeric
+      return VALUE <= 5000000 ? null : { maxFiveMillion: true };
+    }
+
+
     /**
      * Constructor del componente IvaEiepsDosComponent.
      * 
@@ -210,8 +224,22 @@ export class IvaeiepsDosComponent implements OnInit,OnDestroy {
      */
     public crearPorcentajeMontoForm(): void {
       this.porcentajeMontoForm = this.fb.group({
-        porcentaje: ['hgcgfcgh gcg'],
-        monto: ['vhgvchghch']
+        porcentaje: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern(/^\d+(\.\d{1,2})?$/), // Accepts integers or decimals with up to 2 decimals
+            IvaeiepsDosComponent.maxTwentyPercentValidator
+          ]
+        ],
+        monto: [
+          '',
+          [
+          Validators.required,
+          Validators.pattern(/^\d+(\.\d{1,2})?$/), // Accepts integers or decimals with up to 2 decimals
+          IvaeiepsDosComponent.maxFiveMillionValidator
+          ]
+        ]
       });
     }
 

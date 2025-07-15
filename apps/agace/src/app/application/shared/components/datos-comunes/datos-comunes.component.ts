@@ -452,7 +452,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * Este método utiliza el `modalService` para crear y gestionar la instancia del modal.
    */
   public abrirModal(template: TemplateRef<void>): void {
-    this.modalRef = this.modalService.show(template, { class: 'modal-lg',});
+    this.modalRef = this.modalService.show(template, { class: 'modal-lg modal-dialog-centered',});
   }
 
   /**
