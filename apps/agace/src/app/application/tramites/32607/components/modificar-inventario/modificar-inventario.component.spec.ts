@@ -43,7 +43,7 @@ describe('ModificarInventarioComponent', () => {
         ReactiveFormsModule,
         TituloComponent,
         ModificarInventarioComponent,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [],
       providers: [
@@ -91,6 +91,34 @@ describe('ModificarInventarioComponent', () => {
     expect(storeMock.actualizarInventarioLugar).toHaveBeenCalledWith(
       'Nuevo Lugar'
     );
+  });
+
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario if esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
+    const spy = jest.spyOn(component, 'inicializarFormulario');
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should disable form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    component.modificarInventarioForm = new FormBuilder().group({ test: ['value'] });
+    component.guardarDatosFormulario();
+    expect(component.modificarInventarioForm.disabled).toBe(true);
+  });
+
+  it('should enable form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    component.modificarInventarioForm = new FormBuilder().group({ test: ['value'] });
+    component.guardarDatosFormulario();
+    expect(component.modificarInventarioForm.enabled).toBe(true);
   });
 
   it('should destroy subscriptions on ngOnDestroy', () => {

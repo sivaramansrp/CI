@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EnlaceOperativoComponent } from './enlace-operativo.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Solicitud32607Store } from '../../estados/solicitud32607.store';
@@ -72,6 +72,34 @@ describe('EnlaceOperativoComponent', () => {
     expect(mockStore.actualizarEntidad).toHaveBeenCalledWith(123);
     expect(mockSolicitudService.guardarInstalacions).toHaveBeenCalled();
   });
+
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+});
+ 
+it('should call inicializarFormulario if esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
+    const spy = jest.spyOn(component, 'inicializarFormulario');
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+});
+ 
+it('should disable form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    component.enlaceOperativoForm = new FormBuilder().group({ test: ['value'] });
+    component.guardarDatosFormulario();
+    expect(component.enlaceOperativoForm.disabled).toBe(true);
+});
+ 
+it('should enable form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    component.enlaceOperativoForm = new FormBuilder().group({ test: ['value'] });
+    component.guardarDatosFormulario();
+    expect(component.enlaceOperativoForm.enabled).toBe(true);
+});
 
   it('should set instalacions when seleccionarInstalacionsDato is called', () => {
     const data = [

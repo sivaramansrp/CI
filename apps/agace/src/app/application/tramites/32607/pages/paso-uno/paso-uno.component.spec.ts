@@ -48,4 +48,19 @@ describe('PasoUnoComponent', () => {
     expect(component.indice).toBe(4);
   });
 
+
+  it('should set esDatosRespuesta to true if consultaState.update is false on ngOnInit', () => {
+    component.consultaState = { update: false } as any;
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.ngOnInit();
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(guardarSpy).not.toHaveBeenCalled();
+  });
+
+  it('should call guardarDatosFormulario if consultaState.update is true on ngOnInit', () => {
+    component.consultaState = { update: true } as any;
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.ngOnInit();
+    expect(guardarSpy).toHaveBeenCalled();
+  });
 });

@@ -5,7 +5,15 @@ import { of, Subject } from 'rxjs';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Solicitud32607Store } from '../../estados/solicitud32607.store';
 import { Solicitud32607Query } from '../../estados/solicitud32607.query';
-import { CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, NotificacionesComponent, TablaConEntradaComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import {
+  CatalogoSelectComponent,
+  ConsultaioQuery,
+  InputRadioComponent,
+  NotificacionesComponent,
+  TablaConEntradaComponent,
+  TablaDinamicaComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 import { ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MiembroDeLaEmpresaComponent } from '../miembro-de-la-empresa/miembro-de-la-empresa.component';
@@ -138,7 +146,7 @@ describe('DatosComunesComponent', () => {
         ToastrModule,
         EnlaceOperativoComponent,
         ModificarInventarioComponent,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [],
       providers: [
@@ -296,6 +304,34 @@ describe('DatosComunesComponent', () => {
     expect(component.pedimentos.length).toBe(1);
   });
 
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario if esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
+    const spy = jest.spyOn(component, 'inicializarFormulario');
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should disable form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    component.datosComunesForm = new FormBuilder().group({ test: ['value'] });
+    component.guardarDatosFormulario();
+    expect(component.datosComunesForm.disabled).toBe(true);
+  });
+
+  it('should enable form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    component.datosComunesForm = new FormBuilder().group({ test: ['value'] });
+    component.guardarDatosFormulario();
+    expect(component.datosComunesForm.enabled).toBe(true);
+  });
+  
   it('should show modal and add pedimento if modificarInventario has no selection', () => {
     component.seleccionarInventarios = [];
     const spy = jest.spyOn(component, 'abrirModal');

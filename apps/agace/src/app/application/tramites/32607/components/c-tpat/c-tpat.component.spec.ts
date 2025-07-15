@@ -125,6 +125,35 @@ describe('CTPATComponent', () => {
     );
   });
 
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+});
+
+it('should call inicializarFormulario if esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
+    const spy = jest.spyOn(component, 'inicializarFormulario');
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+});
+
+it('should disable form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    component.ctpatForm = new FormBuilder().group({ test: ['value'] });
+    component.guardarDatosFormulario();
+    expect(component.ctpatForm.disabled).toBe(true);
+});
+
+it('should enable form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    component.ctpatForm = new FormBuilder().group({ test: ['value'] });
+    component.guardarDatosFormulario();
+    expect(component.ctpatForm.enabled).toBe(true);
+});
+
+
   it('should complete destroy$ on ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
