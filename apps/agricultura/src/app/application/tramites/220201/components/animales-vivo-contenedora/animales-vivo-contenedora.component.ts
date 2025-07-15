@@ -83,7 +83,7 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
               umt: VALOR.umt || '',
               cantidadUMC: String(VALOR.cantidadUMC || ''),
               umc: VALOR.umc || '',
-              especie: '',
+              especie: VALOR.especie || '',
               uso: VALOR.uso || '',
               paisDeOrigen: VALOR.paisDeOrigen || '',
               paisDeProcedencia: VALOR.paisDeProcedencia || '',
