@@ -24,6 +24,7 @@ import { SharedModule } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
@@ -60,6 +61,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     SolicitudPageComponent,
     PasoDosComponent,
     PasoTresComponent,
+    TercerosRelacionadosComponent
   ],
   exports: [],
   providers: [

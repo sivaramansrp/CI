@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Inventarios } from '../models/solicitud.model';
 import { Observable } from 'rxjs';
+import { PersonaRespuestaTabla } from '../models/personas-notificaciones-tabla.model';
 import { RecibirNotificaciones } from '../models/solicitud.model';
 import { RepresentanteLegal } from '../models/solicitud.model';
 import { SeccionSubcontratados } from '../models/solicitud.model';
@@ -301,24 +302,46 @@ export class SolicitudService {
 
    /**
    * Obtiene los datos de una empresa por RFC
-   * @param _rfc RFC de la empresa a buscar
-   * @returns Observable con los datos de la empresa
+   * RFC de la empresa a buscar
+   * Observable con los datos de la empresa
    */
   conseguirDatosPorRFC(_rfc: string): Observable<{ [key: string]: RFCEnlaceOperativo }> {
     return this.http.get<{ [key: string]: RFCEnlaceOperativo }>('assets/json/32605/rfc-datos.json');
   }
   /**
    * Obtiene la lista de transportistas desde un archivo JSON local.
-   * @returns Observable con un arreglo de TransportistasTable.
+   * Observable con un arreglo de TransportistasTable.
    */
   conseguirTransportistasLista(_rfc: string): Observable<{ [key: string]: TransportistasListaInterface }> {
     return this.http.get<{ [key: string]: TransportistasListaInterface }>('assets/json/32605/transportistas-lista.json');
   }
 
+  /**
+ * Actualiza el estado completo de la solicitud 32605 en el store.
+ * Recibe un objeto con todos los datos del formulario y los persiste en el estado global.
+ * 
+ * param DATOS - Objeto completo del estado de la solicitud con todos los campos actualizados
+ */
   actualizarEstado(DATOS: Solicitud32605State): void {
     this.solicitud32605Store.actualizarEstado(DATOS);
   }
-   getDatos(): Observable<Solicitud32605State> {
+  /**
+ * Obtiene los datos completos de la solicitud desde un archivo JSON local.
+ * Utilizado para cargar información predeterminada o datos guardados previamente.
+ * 
+ * returns Observable que emite el estado completo de la solicitud 32605
+ */
+   obtenerDatos(): Observable<Solicitud32605State> {
     return this.http.get<Solicitud32605State>('assets/json/32605/datos.json');
+  }
+   /**
+   * Obtiene los datos de la tabla de personas.
+   * Realiza una petición a un recurso local en formato JSON que contiene datos relacionados con personas.
+   *
+   * @returns {Observable<PersonaRespuestaTabla>} Un observable con los datos de la tabla de personas.
+   * @memberof SolicitudDeRegistroInvocarService
+   */
+  obtenerPersonaTablaDatos(): Observable<PersonaRespuestaTabla> {
+    return this.http.get<PersonaRespuestaTabla>('assets/json/32605/personas-notificacione.json');
   }
 }

@@ -6,528 +6,150 @@ import { NumeroDeEmpleados } from '../models/solicitud.model';
 import { SeccionSociosIC } from '../models/solicitud.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
+import { TablaEnlaceOperativo } from '../models/enlace-operativo-tabla.model';
 import { TransportistasTable } from '../constants/datos-comunes.enum';
 /**
  * Interfaz que define las propiedades relacionadas con listas de datos
  * de empleados, domicilios, socios, y enlaces operativos.
  */
 export interface Solicitud32605State {
-  /**
-   * Identificador único de la persona que realiza la solicitud.
-   */
-  idPersonaSolicitud: string;
-
-  /**
-   * RFC del tercero relacionado con la solicitud.
-   */
-  rfcTercero: string;
-
-  /**
-   * RFC del solicitante.
-   */
+  representanteRegistro: string;
+  representanteRfc: string;
+  representanteNombre: string;
+  representanteApellidoPaterno: string;
+  representanteApellidoMaterno: string;
+  representanteTelefono: string;
+  representanteCorreo: string;
+  registro: string;
   rfc: string;
-
-  /**
-   * Nombre del solicitante.
-   */
   nombre: string;
-
-  /**
-   * Apellido paterno del solicitante.
-   */
   apellidoPaterno: string;
-
-  /**
-   * Apellido materno del solicitante.
-   */
   apellidoMaterno: string;
-
-  /**
-   * Teléfono de contacto del solicitante.
-   */
+  ciudad: string;
+  cargo: string;
   telefono: string;
-
-  /**
-   * Correo electrónico del solicitante.
-   */
-  correoElectronico: string;
-
-  /**
-   * RFC del tercero a agregar en el enlace.
-   */
-  agregarEnlaceRfcTercero: string;
-
-  /**
-   * RFC del solicitante a agregar en el enlace.
-   */
-  agregarEnlaceRfc: string;
-
-  /**
-   * Nombre del solicitante a agregar en el enlace.
-   */
-  agregarEnlaceNombre: string;
-
-  /**
-   * Apellido paterno del solicitante a agregar en el enlace.
-   */
-  agregarEnlaceApellidoPaterno: string;
-
-  /**
-   * Apellido materno del solicitante a agregar en el enlace.
-   */
-  agregarEnlaceApellidoMaterno: string;
-
-  /**
-   * Ciudad o estado del solicitante a agregar en el enlace.
-   */
-  agregarEnlaceCiudadEstado: string;
-
-  /**
-   * Cargo del solicitante a agregar en el enlace.
-   */
-  agregarEnlaceCargo: string;
-
-  /**
-   * Teléfono de contacto del solicitante a agregar en el enlace.
-   */
-  agregarEnlaceTelefono: string;
-
-  /**
-   * Correo electrónico del solicitante a agregar en el enlace.
-   */
-  agregarEnlaceCorreoElectronico: string;
-
-  /**
-   * Indica si el solicitante es suplente.
-   */
-  agregarEnlaceSuplente: boolean;
-
-  /**
-   * Valor asociado al código 2089.
-   */
-  '2089': number | string;
-
-  /**
-   * Valor asociado al código 2090.
-   */
-  '2090': number | string;
-
-  /**
-   * Valor asociado al código 2091.
-   */
-  '2091': number | string;
-
-  /**
-   * Valor asociado al código 2042.
-   */
-  '2042': number | string;
-
-  /**
-   * Valor asociado al código 2043.
-   */
-  '2043': number | string;
-
-  /**
-   * Valor asociado al código 2044.
-   */
-  '2044': number | string;
-
-  /**
-   * Fecha de inicio de operaciones de comercio exterior.
-   */
-  
-
-  /**
-   * Fecha de pago asociada a la solicitud.
-   */
-  fechaPago: string;
-
-  /**
-   * RFC del transportista relacionado con la solicitud.
-   */
-  transportistaRFC: string;
-
-  /**
-   * RFC del transportista modificado relacionado con la solicitud.
-   */
-  transportistaRFCModifTrans: string;
-
-  /**
-   * Razón social del transportista relacionado con la solicitud.
-   */
-  transportistaRazonSocial: string;
-
-  /**
-   * Domicilio del transportista relacionado con la solicitud.
-   */
-  transportistaDomicilio: string;
-
-  /**
-   * CAAT del transportista relacionado con la solicitud.
-   */
-  transportistaCaat: string;
-
-  /**
-   * Identificador del domicilio del transportista relacionado con la solicitud.
-   */
-  transportistaIdDomicilio: string;
-
-  /**
-   * Identificador del RFC del transportista relacionado con la solicitud.
-   */
-  transportistaIdRFC: string;
-
-  /**
-   * Identificador de la razón social del transportista relacionado con la solicitud.
-   */
-  transportistaIdRazonSocial: string;
-
-  /**
-   * Identificador del CAAT del transportista relacionado con la solicitud.
-   */
-  transportistaIdCaat: string;
-
-  /**
-   * Carácter del miembro en la solicitud.
-   */
-  miembroCaracterDe: string | number;
-
-  /**
-   * Indica si el miembro tiene obligación de tributar en México.
-   */
-  miembroTributarMexico: number | string;
-
-  /**
-   * Nacionalidad del miembro.
-   */
-  miembroNacionalidad: string | number;
-
-  /**
-   * Registro Federal de Contribuyentes (RFC) del miembro.
-   */
-  miembroRfc: string;
-
-  /**
-   * Registro federal del miembro ante autoridades pertinentes.
-   */
-  miembroRegistroFederal: string;
-
-  /**
-   * Nombre completo del miembro.
-   */
-  miembroNombreCompleto: string;
-
-  /**
-   * Tipo de persona muestra en la solicitud.
-   */
-  miembroTipoPersonaMuestra: string | number;
-
-  /**
-   * Nombre del miembro.
-   */
-  miembroNombre: string;
-
-  /**
-   * Apellido paterno del miembro.
-   */
-  miembroApellidoPaterno: string;
-
-  /**
-   * Apellido materno del miembro.
-   */
-  miembroApellidoMaterno: string;
-
-  /**
-   * Nombre de la empresa del miembro.
-   */
-  miembroNombreEmpresa: string;
-
-  /**
-   * RFC de la subcontrata para la búsqueda.
-   */
-  subcontrataRFCBusqueda: string;
-
-  /**
-   * RFC de la subcontrata.
-   */
-  subcontrataRFC: string;
-
-  /**
-   * Razón social de la subcontrata.
-   */
-  subcontrataRazonSocial: string;
-
-  /**
-   * Número de empleados de la subcontrata.
-   */
-  subcontrataEmpleados: string;
-
-  /**
-   * Bimestre en el que se está realizando la subcontratación.
-   */
-  subcontrataBimestre: number;
-
-  /**
-   * Nombre o identificación de las instalaciones principales.
-   */
-  principales: string | number;
-
-  /**
-   * Nombre del municipio donde se encuentra la instalación.
-   */
-  municipio: string;
-
-  /**
-   * Tipo de instalación en la que se encuentra la empresa.
-   */
-  tipoDeInstalacion: string | number;
-
-  /**
-   * Entidad federativa (estado) donde se encuentra ubicada la instalación.
-   */
-  entidadFederativa: string;
-
-  /**
-   * Registro ante la SE/SAT relacionado con la instalación.
-   */
-  registroSESAT: string;
-
-  /**
-   * Descripción de la instalación o domicilio.
-   */
-  descripcion: string;
-
-  /**
-   * Código postal de la ubicación de la instalación.
-   */
-  codigoPostal: string;
-
-  /**
-   * Proceso productivo realizado en la instalación.
-   */
-  procesoProductivo: string | number;
-
-  /**
-   * Indica si la empresa tiene el derecho de uso y goce del inmueble.
-   */
-  goceDelInmueble: string | number;
-
-  /**
-   * Empresa propietaria de la instalación.
-   */
-  empresa: string | number;
-
-  /**
-   * Indica si la instalación realiza operaciones de comercio exterior.
-   */
-  comercioExterior: string | number;
-
-  /**
-   * Indica si existe un reconocimiento mutuo (como C-TPAT) de la instalación.
-   */
-  mutuo: string | number;
-
-  /**
-   * Número de catálogos seleccionados.
-   */
-  catseleccionados: number;
-
-  /**
-   * Número de servicio asociado a la solicitud.
-   */
-  servicio: number;
-
-  /**
-   * Valor asociado con el código 190 (puede ser un número o una cadena).
-   */
-  '190': string | number;
-
-  /**
-   * Valor asociado con el código 191 (puede ser un número o una cadena).
-   */
-  '191': string | number;
-
-  /**
-   * Valor asociado con el código 199 (puede ser un número o una cadena).
-   */
-  '199': string | number;
-
-  /**
-   * Número de empleados relacionados con la solicitud.
-   */
-  empleados: string;
-
-  /**
-   * El bimestre relacionado con la solicitud.
-   */
-  bimestre: number;
-
-  /**
-   * Valor asociado con el código 2034 (puede ser un número o una cadena).
-   */
-  '2034': string | number;
-
-  /**
-   * Valor asociado con el código 236 (puede ser un número o una cadena).
-   */
-  '236': string | number;
-
-  /**
-   * Valor asociado con el código 237 (puede ser un número o una cadena).
-   */
-  '237': string | number;
-
-  /**
-   * Valor asociado con el código 238 (puede ser un número o una cadena).
-   */
-  '238': string | number;
-
-  /**
-   * Valor asociado con el código 239 (puede ser un número o una cadena).
-   */
-  '239': string | number;
-
-  /**
-   * Valor asociado con el código 240 (puede ser un número o una cadena).
-   */
-  '240': string | number;
-
-  /**
-   * Valor asociado con el código 243 (puede ser un número o una cadena).
-   */
-  '243': string | number;
-
-  /**
-   * Valor asociado con el código 244 (puede ser un número o una cadena).
-   */
-  '244': string | number;
-
-  /**
-   * Valor asociado con el código 245 (puede ser un número o una cadena).
-   */
-  '245': string | number;
-
-  /**
-   * Indica si se seleccionaron todos los elementos (1 o 0).
-   */
-  indiqueTodos: number;
-
-  /**
-   * Valor asociado con el código 246 (puede ser un número o una cadena).
-   */
-  '246': string | number;
-
-  /**
-   * Primer archivo relacionado con la solicitud.
-   */
-  file1: string;
-
-  /**
-   * Segundo archivo relacionado con la solicitud.
-   */
-  file2: string;
-
-  /**
-   * Valor asociado con el código 247 (puede ser un número o una cadena).
-   */
-  '247': string | number;
-
-  /**
-   * Valor asociado con el código 248 (puede ser un número o una cadena).
-   */
-  '248': string | number;
-
-  /**
-   * Identificación relacionada con la solicitud.
-   */
-  identificacion: string;
-
-  /**
-   * Lugar de radicación donde se procesa la solicitud.
-   */
-  lugarDeRadicacion: string;
-
-  /**
-   * Valor asociado con el código 249 (puede ser un número o una cadena).
-   */
-  '249': string | number;
-
-  /**
-   * Valor asociado con el código 250 (puede ser un número o una cadena).
-   */
-  '250': string | number;
-
-  /**
-   * Valor asociado con el código 251 (puede ser un número o una cadena).
-   */
-  '251': string | number;
-
-  /**
-   * Primer valor de tipo booleano, relacionado con algún tipo de validación o configuración.
-   */
-  checkbox1: boolean;
-
-  /**
-   * Segundo valor de tipo booleano, relacionado con algún tipo de validación o configuración.
-   */
-  checkbox2: boolean;
-
-  /**
-   * Tercer valor de tipo booleano, relacionado con algún tipo de validación o configuración.
-   */
-  checkbox3: boolean;
-
-  /**
-   * Estado actual 2, relacionado con la solicitud.
-   */
-  actualmente2: string;
-
-  /**
-   * Estado actual 1, relacionado con la solicitud.
-   */
-  actualmente1: string;
-
-  /**
-   * Lista de objetos que representan los empleados con su número de empleados.
-   */
-  numeroDeEmpleadosLista: NumeroDeEmpleados[];
-
-  /**
-   * Lista de objetos que contienen información sobre los domicilios de la empresa o entidad.
-   */
-  domiciliosDatos: Domicilios[];
-
-  /**
-   * Lista de objetos que representan las secciones de socios del IC (Índice de Contribuyentes).
-   */
-  listaSeccionSociosIC: SeccionSociosIC[];
-
-  /**
-   * Lista de objetos que contienen los datos relacionados con los enlaces operativos.
-   */
-  enlaceOperativosLista: EnlaceOperativo[];
+  correo: string;
+  suplente: boolean;
+  enlaceOperativoData: TablaEnlaceOperativo[];
 
 
   // -------------------------------------------------------------
-  comercioExteriorRealizado: string; // Indica si se realiza comercio exterior
-  fechaDePago:string; // Fecha de pago asociada a la solicitud
-  fechaInicioComercio: string;
-  esParteGrupoComercioExterior: string; // Indica si es parte de un grupo de comercio exterior
-  rfcEnclaveOperativo: string; // RFC del enclave operativo
-  enlaceOperativorfc: string; // RFC del enlace operativo
-  denominacionRazonsocial: string; // Razón social del enlace operativo
-  domicilio: string; // Domicilio del enlace operativo
-  inputfechaDeLaUltimaOperacion: string; // Fecha de la última operación
-  fusionEscisionConOperacionExterior: string; // Indica si hay fusión o escisión con operación exterior
-  empresaExtranjeraIMMEX: string; // Indica si es una empresa extranjera IMMEX
-  monto: string; // Monto total asociado a la solicitud
-  operacionesBancarias: string; // Detalles de las operaciones bancarias relacionadas con la solicitud
-  llavePago: string; // Llave de pago asociada a la solicitud
-  registroEsquemaCertificacion: string; // Registro del esquema de certificación
-  tipoInformacionEmpresa: string; // Indica si la información de la empresa es clasificada
-  ccat: string; // CAAT del enlace operativo
-  tablaDatos: EmpresaDelGrupo[]; // Tabla de datos de empresas del grupo
-  transportistasLista: TransportistasTable[]; // Lista de transportistas relacionados con la solicitud
+    /**
+     * Indica si la empresa realiza operaciones de comercio exterior.
+     * Valor booleano representado como string ('1' para Sí, '0' para No).
+     */
+    comercioExteriorRealizado: string;
+
+    /**
+     * Fecha en que se realizó el pago asociado a la solicitud.
+     * Formato esperado: DD/MM/YYYY.
+     */
+    fechaDePago: string;
+
+    /**
+     * Fecha de inicio de las operaciones de comercio exterior de la empresa.
+     * Formato esperado: DD/MM/YYYY.
+     */
+    fechaInicioComercio: string;
+
+    /**
+     * Indica si la empresa es parte de un grupo empresarial que realiza comercio exterior.
+     * Valor booleano representado como string ('1' para Sí, '0' para No).
+     */
+    esParteGrupoComercioExterior: string;
+
+    /**
+     * RFC o clave operativa de la empresa del enlace operativo.
+     * Identificador fiscal único de 12 o 13 caracteres.
+     */
+    rfcEnclaveOperativo: string;
+
+    /**
+     * RFC del enlace operativo obtenido automáticamente del servicio.
+     * Campo de solo lectura que se llena al buscar por RFC.
+     */
+    enlaceOperativorfc: string;
+
+    /**
+     * Denominación social o razón social de la empresa del enlace operativo.
+     * Nombre legal completo de la empresa registrada.
+     */
+    denominacionRazonsocial: string;
+
+    /**
+     * Domicilio fiscal completo de la empresa del enlace operativo.
+     * Dirección registrada ante las autoridades fiscales.
+     */
+    domicilio: string;
+
+    /**
+     * Fecha de la última operación comercial registrada por la empresa.
+     * Formato esperado: DD/MM/YYYY. Campo opcional.
+     */
+    inputfechaDeLaUltimaOperacion: string;
+
+    /**
+     * Indica si existe fusión o escisión con operaciones de comercio exterior.
+     * Valor booleano representado como string ('1' para Sí, '0' para No).
+     */
+    fusionEscisionConOperacionExterior: string;
+
+    /**
+     * Indica si la empresa es extranjera con programa IMMEX.
+     * Valor booleano representado como string ('1' para Sí, '0' para No).
+     */
+    empresaExtranjeraIMMEX: string;
+
+    /**
+     * Monto total en pesos mexicanos asociado a las operaciones.
+     * Valor numérico representado como string.
+     */
+    monto: string;
+
+    /**
+     * Detalles de las operaciones bancarias relacionadas con la solicitud.
+     * Información alfanumérica sobre transacciones financieras.
+     */
+    operacionesBancarias: string;
+
+    /**
+     * Llave de pago única para identificar la transacción.
+     * Código alfanumérico generado por el sistema bancario.
+     */
+    llavePago: string;
+
+    /**
+     * Registro del esquema de certificación empresarial.
+     * Indica si se autoriza o no el esquema ('1' para Sí Autorizo, '0' para No Autorizo).
+     */
+    registroEsquemaCertificacion: string;
+
+    /**
+     * Tipo de información de la empresa según su clasificación.
+     * Indica si es información pública o privada ('1' para Pública, '0' para Privada).
+     */
+    tipoInformacionEmpresa: string;
+
+    /**
+     * Número de registro CAAT vigente del transportista.
+     * Código de autorización para transportistas de carga.
+     */
+    ccat: string;
+
+    /**
+     * Lista de empresas del grupo comercial relacionadas con la solicitud.
+     * Array que contiene objetos de tipo EmpresaDelGrupo con RFC, denominación, domicilio y fecha.
+     */
+    tablaDatos: EmpresaDelGrupo[];
+
+    /**
+     * Lista de transportistas autorizados para la operación.
+     * Array que contiene objetos de tipo TransportistasTable con RFC, denominación, domicilio y CAAT.
+     */
+    transportistasLista: TransportistasTable[];
+    autorizacionCBP: string;
+    instalacionesCertificadasCBP: string;
+    suspensionCancelacionCBP: string;
   //--------------------------------------------------------------
 }
 
@@ -538,128 +160,145 @@ export interface Solicitud32605State {
  */
 export function createInitialSolicitudState(): Solicitud32605State {
   return {
-    idPersonaSolicitud: '',
-    rfcTercero: '',
-    rfc: '',
-    nombre: '',
-    apellidoPaterno: '',
-    apellidoMaterno: '',
-    telefono: '',
-    correoElectronico: '',
-    agregarEnlaceRfcTercero: '',
-    agregarEnlaceRfc: '',
-    agregarEnlaceNombre: '',
-    agregarEnlaceApellidoPaterno: '',
-    agregarEnlaceApellidoMaterno: '',
-    agregarEnlaceCiudadEstado: '',
-    agregarEnlaceCargo: '',
-    agregarEnlaceTelefono: '',
-    agregarEnlaceCorreoElectronico: '',
-    agregarEnlaceSuplente: false,
-    '2089': 0,
-    '2090': 0,
-    '2091': 0,
-    '2042': 0,
-    '2043': 0,
-    '2044': 0,
-   
-    fechaPago: '',
-    transportistaRFC: '',
-    transportistaRFCModifTrans: '',
-    transportistaRazonSocial: '',
-    transportistaDomicilio: '',
-    transportistaCaat: '',
-    transportistaIdDomicilio: '',
-    transportistaIdRFC: '',
-    transportistaIdRazonSocial: '',
-    transportistaIdCaat: '',
-    miembroCaracterDe: '',
-    miembroTributarMexico: 0,
-    miembroNacionalidad: '',
-    miembroRfc: '',
-    miembroRegistroFederal: '',
-    miembroNombreCompleto: '',
-    miembroTipoPersonaMuestra: '',
-    miembroNombre: '',
-    miembroApellidoPaterno: '',
-    miembroApellidoMaterno: '',
-    miembroNombreEmpresa: '',
-    subcontrataRFCBusqueda: '',
-    subcontrataRFC: '',
-    subcontrataRazonSocial: '',
-    subcontrataEmpleados: '',
-    subcontrataBimestre: 0,
-    principales: 0,
-    municipio: '',
-    tipoDeInstalacion: 0,
-    entidadFederativa: '',
-    registroSESAT: '',
-    descripcion: '',
-    codigoPostal: '',
-    procesoProductivo: 0,
-    goceDelInmueble: 0,
-    empresa: 0,
-    comercioExterior: 0,
-    mutuo: 0,
-    catseleccionados: 0,
-    servicio: 0,
-    '190': 0,
-    '191': 0,
-    '199': 0,
-    empleados: '',
-    bimestre: 0,
-    '2034': 0,
-    '236': 0,
-    '237': 0,
-    '238': 0,
-    '239': 0,
-    '240': 0,
-    '243': 0,
-    '244': 0,
-    '245': 0,
-    indiqueTodos: 0,
-    '246': 0,
-    file1: '',
-    file2: '',
-    '247': 0,
-    '248': 0,
-    identificacion: '',
-    lugarDeRadicacion: '',
-    '249': 0,
-    '250': 0,
-    '251': 0,
-    checkbox1: false,
-    checkbox2: false,
-    checkbox3: false,
-    actualmente2: '',
-    actualmente1: '',
-    numeroDeEmpleadosLista: [] as NumeroDeEmpleados[],
-    domiciliosDatos: [] as Domicilios[],
-    listaSeccionSociosIC: [] as SeccionSociosIC[],
-    enlaceOperativosLista: [] as EnlaceOperativo[],
 
+        representanteRegistro: '',
+        representanteRfc: '',
+        representanteNombre: '',
+        representanteApellidoPaterno: '',
+        representanteApellidoMaterno: '',
+        representanteTelefono: '',
+        representanteCorreo: '',
+        registro: '',
+        rfc: '',
+        nombre: '',
+        apellidoPaterno: '',
+        apellidoMaterno: '',
+        ciudad: '',
+        cargo: '',
+        telefono: '',
+        correo: '',
+        suplente: false,
+        enlaceOperativoData: [],
+  //---------------------------------------
 
-    //-------------------------------------------------------------
-    comercioExteriorRealizado:'',
+    /**
+     * Indica si la empresa realiza operaciones de comercio exterior.
+     * Valor booleano representado como string ('1' para Sí, '0' para No).
+     */
+    comercioExteriorRealizado: '',
+
+    /**
+    * Fecha en que se realizó el pago asociado a la solicitud.
+    * Formato esperado: DD/MM/YYYY.
+    */
     fechaDePago: '',
-     fechaInicioComercio: '',
-     esParteGrupoComercioExterior: '',
-     rfcEnclaveOperativo: '',
-     enlaceOperativorfc:'',
-     denominacionRazonsocial: '',
-     domicilio: '',
-     inputfechaDeLaUltimaOperacion: '', // Fecha de la última operación
-     fusionEscisionConOperacionExterior: '', // Indica si hay fusión o escisión con operación exterior
-     empresaExtranjeraIMMEX: '', // Indica si es una empresa extranjera IMMEX
-     monto: '',
-     operacionesBancarias: '',
-     llavePago: '',
-     registroEsquemaCertificacion: '',
-     tipoInformacionEmpresa: '', // Indica si la información de la empresa es clasificada
-     ccat: '', // CAAT del enlace operativo
-     tablaDatos: [],
-     transportistasLista: [], // Lista de transportistas relacionados con la solicitud
-     //--------------------------------------------------------------
+
+    /**
+    * Fecha de inicio de las operaciones de comercio exterior de la empresa.
+    * Formato esperado: DD/MM/YYYY.
+    */
+    fechaInicioComercio: '',
+
+    /**
+    * Indica si la empresa es parte de un grupo empresarial que realiza comercio exterior.
+    * Valor booleano representado como string ('1' para Sí, '0' para No).
+    */
+    esParteGrupoComercioExterior: '',
+
+    /**
+    * RFC o clave operativa de la empresa del enlace operativo.
+    * Identificador fiscal único de 12 o 13 caracteres.
+    */
+    rfcEnclaveOperativo: '',
+
+    /**
+    * RFC del enlace operativo obtenido automáticamente del servicio.
+    * Campo de solo lectura que se llena al buscar por RFC.
+    */
+    enlaceOperativorfc: '',
+
+    /**
+    * Denominación social o razón social de la empresa del enlace operativo.
+    * Nombre legal completo de la empresa registrada.
+    */
+    denominacionRazonsocial: '',
+
+    /**
+    * Domicilio fiscal completo de la empresa del enlace operativo.
+    * Dirección registrada ante las autoridades fiscales.
+    */
+    domicilio: '',
+
+    /**
+    * Fecha de la última operación comercial registrada por la empresa.
+    * Formato esperado: DD/MM/YYYY. Campo opcional.
+    */
+    inputfechaDeLaUltimaOperacion: '',
+
+    /**
+    * Indica si existe fusión o escisión con operaciones de comercio exterior.
+    * Valor booleano representado como string ('1' para Sí, '0' para No).
+    */
+    fusionEscisionConOperacionExterior: '',
+
+    /**
+    * Indica si la empresa es extranjera con programa IMMEX.
+    * Valor booleano representado como string ('1' para Sí, '0' para No).
+    */
+    empresaExtranjeraIMMEX: '',
+
+    /**
+    * Monto total en pesos mexicanos asociado a las operaciones.
+    * Valor numérico representado como string.
+    */
+    monto: '',
+
+    /**
+    * Detalles de las operaciones bancarias relacionadas con la solicitud.
+    * Información alfanumérica sobre transacciones financieras.
+    */
+    operacionesBancarias: '',
+
+    /**
+    * Llave de pago única para identificar la transacción.
+    * Código alfanumérico generado por el sistema bancario.
+    */
+    llavePago: '',
+
+    /**
+    * Registro del esquema de certificación empresarial.
+    * Indica si se autoriza o no el esquema ('1' para Sí Autorizo, '0' para No Autorizo).
+    */
+    registroEsquemaCertificacion: '',
+
+    /**
+    * Tipo de información de la empresa según su clasificación.
+    * Indica si es información pública o privada ('1' para Pública, '0' para Privada).
+    */
+    tipoInformacionEmpresa: '',
+
+    /**
+    * Número de registro CAAT vigente del transportista.
+    * Código de autorización para transportistas de carga.
+    */
+    ccat: '',
+
+    /**
+    * Lista de empresas del grupo comercial relacionadas con la solicitud.
+    * Array que contiene objetos de tipo EmpresaDelGrupo con RFC, denominación, domicilio y fecha.
+    */
+    tablaDatos: [],
+
+    /**
+    * Lista de transportistas autorizados para la operación.
+    * Array que contiene objetos de tipo TransportistasTable con RFC, denominación, domicilio y CAAT.
+    */
+    transportistasLista: [],
+
+    autorizacionCBP: '',
+    instalacionesCertificadasCBP: '',
+    suspensionCancelacionCBP: ''
+//--------------------------------------------------------------
   };
 }
 @Injectable({

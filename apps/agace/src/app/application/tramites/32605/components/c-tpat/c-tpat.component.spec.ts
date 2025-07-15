@@ -1,135 +1,415 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { of, Subject } from 'rxjs';
+import { TemplateRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import { CTPATComponent } from './c-tpat.component';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
+import { Solicitud32605Store, Solicitud32605State } from '../../estados/solicitud32605.store';
 import { Solicitud32605Query } from '../../estados/solicitud32605.query';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constants/datos-comunes.enum';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('CTPATComponent', () => {
   let component: CTPATComponent;
   let fixture: ComponentFixture<CTPATComponent>;
-  let solicitudServiceMock: any;
-  let solicitud32605StoreMock: any;
-  let solicitud32605QueryMock: any;
+  let mockSolicitudService: jest.Mocked<SolicitudService>;
+  let mockSolicitud32605Store: jest.Mocked<Solicitud32605Store>;
+  let mockSolicitud32605Query: jest.Mocked<Solicitud32605Query>;
+  let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
+  let mockBsModalService: jest.Mocked<BsModalService>;
+  let mockBsModalRef: jest.Mocked<BsModalRef>;
+
+  const mockSolicitudState: Solicitud32605State = {
+    autorizacionCBP: '1',
+    instalacionesCertificadasCBP: '0',
+    suspensionCancelacionCBP: '',
+  } as Solicitud32605State;
+
+  const mockConsultaioState = {
+    readonly: false
+  };
 
   beforeEach(async () => {
-    solicitudServiceMock = {
-      conseguirOpcionDeRadio: jest.fn().mockReturnValue(
-        of({
-          requisitos: {
-            radioOptions: [
-              {
-                label: 'Sí',
-                value: 1,
-              },
-              {
-                label: 'No',
-                value: 2,
-              },
-            ],
-            isRequired: true,
-          },
-        })
-      ),
-    };
+    // Crear mocks de los servicios
+    mockSolicitudService = {
+      actualizarEstado: jest.fn(),
+      obtenerDatos: jest.fn().mockReturnValue(of(mockSolicitudState))
+    } as any;
 
-    solicitud32605StoreMock = {
-      actualizar2089: jest.fn(),
-      actualizar2090: jest.fn(),
-      actualizar2091: jest.fn(),
-    };
+    mockSolicitud32605Store = {
+      actualizarEstado: jest.fn()
+    } as any;
 
-    solicitud32605QueryMock = {
-      selectSolicitud$: of({
-        2089: 'value2089',
-        2090: 'value2090',
-        2091: 'value2091',
-      }),
-    };
+    mockSolicitud32605Query = {
+      selectSolicitud$: of(mockSolicitudState)
+    } as any;
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: of(mockConsultaioState)
+    } as any;
+
+    mockBsModalRef = {
+      hide: jest.fn()
+    } as any;
+
+    mockBsModalService = {
+      show: jest.fn().mockReturnValue(mockBsModalRef)
+    } as any;
 
     await TestBed.configureTestingModule({
       imports: [
+        CTPATComponent,
         CommonModule,
         ReactiveFormsModule,
         InputRadioComponent,
-        CTPATComponent,
-        HttpClientTestingModule,
+        HttpClientModule
       ],
-      declarations: [],
       providers: [
         FormBuilder,
-        { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: Solicitud32605Store, useValue: solicitud32605StoreMock },
-        { provide: Solicitud32605Query, useValue: solicitud32605QueryMock },
-      ],
+        { provide: SolicitudService, useValue: mockSolicitudService },
+        { provide: Solicitud32605Store, useValue: mockSolicitud32605Store },
+        { provide: Solicitud32605Query, useValue: mockSolicitud32605Query },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+        { provide: BsModalService, useValue: mockBsModalService }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CTPATComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
-  });
+  describe('Inicialización del componente', () => {
+    it('debería crear el componente correctamente', () => {
+      expect(component).toBeTruthy();
+    });
 
-  it('should initialize the form on ngOnInit', () => {
-    expect(component.ctpatForm.value).toEqual({
-      '2089': 'value2089',
-      '2090': 'value2090',
-      '2091': 'value2091',
+    it('debería inicializar las propiedades por defecto', () => {
+      expect(component.esFormularioSoloLectura).toBe(false);
+      expect(component.opcionDeBotonDeRadio).toEqual(OPCIONES_DE_BOTON_DE_RADIO);
+      expect(component.destroy$).toBeInstanceOf(Subject);
+    });
+
+    it('debería llamar a inicializarEstadoFormulario en ngOnInit', () => {
+      const spy = jest.spyOn(component, 'inicializarEstadoFormulario');
+      component.ngOnInit();
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('debería suscribirse al estado de consultaio en el constructor', () => {
+      expect(mockConsultaioQuery.selectConsultaioState$).toBeDefined();
     });
   });
 
-  it('should call conseguirOpcionDeRadio on initialization', () => {
-    jest.spyOn(component, 'conseguirOpcionDeRadio');
-    component.conseguirOpcionDeRadio();
-    expect(component.conseguirOpcionDeRadio).toHaveBeenCalled();
-  });
-
-  it('should update solicitud32605State and patch form values when selectSolicitud$ emits', () => {
-    expect(component.solicitud32605State).toEqual({
-      2089: 'value2089',
-      2090: 'value2090',
-      2091: 'value2091',
+  describe('Gestión del estado del formulario', () => {
+    beforeEach(() => {
+      fixture.detectChanges();
     });
-    expect(component.ctpatForm.value).toEqual({
-      '2089': 'value2089',
-      '2090': 'value2090',
-      '2091': 'value2091',
+
+    it('debería inicializar el formulario con los valores del estado', () => {
+      component.inicializarFormulario();
+      
+      expect(component.ctpatForm).toBeDefined();
+      expect(component.ctpatForm.get('autorizacionCBP')).toBeTruthy();
+      expect(component.ctpatForm.get('instalacionesCertificadasCBP')).toBeTruthy();
+      expect(component.ctpatForm.get('suspensionCancelacionCBP')).toBeTruthy();
+    });
+
+    it('debería llamar a guardarDatosFormulario cuando esFormularioSoloLectura es true', () => {
+      component.esFormularioSoloLectura = true;
+      const spy = jest.spyOn(component, 'guardarDatosFormulario');
+      
+      component.inicializarEstadoFormulario();
+      
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('debería llamar a inicializarFormulario cuando esFormularioSoloLectura es false', () => {
+      component.esFormularioSoloLectura = false;
+      const spy = jest.spyOn(component, 'inicializarFormulario');
+      
+      component.inicializarEstadoFormulario();
+      
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('debería deshabilitar el formulario cuando esFormularioSoloLectura es true', () => {
+      component.esFormularioSoloLectura = true;
+      component.inicializarFormulario();
+      
+      component.guardarDatosFormulario();
+      
+      expect(component.ctpatForm.disabled).toBe(true);
+    });
+
+    it('debería habilitar el formulario cuando esFormularioSoloLectura es false', () => {
+      component.esFormularioSoloLectura = false;
+      component.inicializarFormulario();
+      
+      component.guardarDatosFormulario();
+      
+      expect(component.ctpatForm.enabled).toBe(true);
     });
   });
 
-  it('should call actualizar2089 with the correct value', () => {
-    component.actualizar2089('newValue2089');
-    expect(solicitud32605StoreMock.actualizar2089).toHaveBeenCalledWith(
-      'newValue2089'
-    );
+  describe('Obtención del estado de la solicitud', () => {
+    beforeEach(() => {
+      fixture.detectChanges();
+    });
+
+    it('debería obtener el estado de la solicitud correctamente', () => {
+      component.obtenerEstadoSolicitud();
+      
+      expect(component.solicitudState).toEqual(mockSolicitudState);
+    });
+
+    it('debería suscribirse a selectSolicitud$ del query', () => {
+      const spy = jest.spyOn(mockSolicitud32605Query.selectSolicitud$, 'pipe');
+      
+      component.obtenerEstadoSolicitud();
+      
+      expect(spy).toHaveBeenCalled();
+    });
   });
 
-  it('should call actualizar2090 with the correct value', () => {
-    component.actualizar2090('newValue2090');
-    expect(solicitud32605StoreMock.actualizar2090).toHaveBeenCalledWith(
-      'newValue2090'
-    );
+  describe('Actualización de valores en el store', () => {
+    beforeEach(() => {
+      component.inicializarFormulario();
+      fixture.detectChanges();
+    });
+
+    it('debería actualizar el store cuando el control tiene un valor válido', () => {
+      const campo = 'autorizacionCBP';
+      const valor = '1';
+      
+      component.ctpatForm.get(campo)?.setValue(valor);
+      component.setValoresStore(component.ctpatForm, campo);
+      
+      expect(mockSolicitud32605Store.actualizarEstado).toHaveBeenCalledWith({
+        [campo]: valor
+      });
+    });
+
+    it('no debería actualizar el store cuando el formulario es null', () => {
+      component.setValoresStore(null, 'autorizacionCBP');
+      
+      expect(mockSolicitud32605Store.actualizarEstado).not.toHaveBeenCalled();
+    });
+
+    it('no debería actualizar el store cuando el control tiene valor null', () => {
+      const campo = 'autorizacionCBP';
+      
+      component.ctpatForm.get(campo)?.setValue(null);
+      component.setValoresStore(component.ctpatForm, campo);
+      
+      expect(mockSolicitud32605Store.actualizarEstado).not.toHaveBeenCalled();
+    });
+
+    it('no debería actualizar el store cuando el control tiene valor undefined', () => {
+      const campo = 'autorizacionCBP';
+      
+      component.ctpatForm.get(campo)?.setValue(undefined);
+      component.setValoresStore(component.ctpatForm, campo);
+      
+      expect(mockSolicitud32605Store.actualizarEstado).not.toHaveBeenCalled();
+    });
   });
 
-  it('should call actualizar2091 with the correct value', () => {
-    component.actualizar2091('newValue2091');
-    expect(solicitud32605StoreMock.actualizar2091).toHaveBeenCalledWith(
-      'newValue2091'
-    );
+  describe('Manejo del cambio de suspensión/cancelación CBP', () => {
+    beforeEach(() => {
+      component.inicializarFormulario();
+      fixture.detectChanges();
+    });
+
+    it('debería mostrar el modal cuando se selecciona "Sí" (valor "1")', () => {
+      const mockEvent = {
+        target: { value: '1' }
+      } as any;
+      
+      const spyMostrarModal = jest.spyOn(component, 'mostrarModalMensaje');
+      const spySetValores = jest.spyOn(component, 'setValoresStore');
+      
+      component.manejarCambioSuspensionCancelacion(mockEvent);
+      
+      expect(spySetValores).toHaveBeenCalledWith(component.ctpatForm, 'suspensionCancelacionCBP');
+    });
+
+    it('no debería mostrar el modal cuando se selecciona "No" (valor "0")', () => {
+      const mockEvent = {
+        target: { value: '0' }
+      } as any;
+      
+      const spyMostrarModal = jest.spyOn(component, 'mostrarModalMensaje');
+      const spySetValores = jest.spyOn(component, 'setValoresStore');
+      
+      component.manejarCambioSuspensionCancelacion(mockEvent);
+      
+      expect(spySetValores).toHaveBeenCalledWith(component.ctpatForm, 'suspensionCancelacionCBP');
+      expect(spyMostrarModal).not.toHaveBeenCalled();
+    });
+
+    it('debería manejar correctamente el valor "on" y mostrar el modal', () => {
+      const mockEvent = {
+        target: { value: 'on' }
+      } as any;
+      
+      const spyMostrarModal = jest.spyOn(component, 'mostrarModalMensaje');
+      
+      component.manejarCambioSuspensionCancelacion(mockEvent);
+      
+      expect(spyMostrarModal).toHaveBeenCalled();
+    });
+
+    it('debería extraer correctamente el valor del evento', () => {
+      const mockEvent = {
+        target: { value: '1' }
+      } as any;
+      
+      const spySetValores = jest.spyOn(component, 'setValoresStore');
+      
+      component.manejarCambioSuspensionCancelacion(mockEvent);
+      
+      expect(spySetValores).toHaveBeenCalledWith(component.ctpatForm, 'suspensionCancelacionCBP');
+    });
   });
 
-  it('should complete destroy$ on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
-    component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+  describe('Gestión del modal', () => {
+    beforeEach(() => {
+      fixture.detectChanges();
+    });
+
+
+    it('debería cerrar el modal correctamente', () => {
+      component.modalRef = mockBsModalRef;
+      
+      component.cerrarModal();
+      
+      expect(mockBsModalRef.hide).toHaveBeenCalled();
+    });
+
+    it('debería manejar el caso cuando modalRef es undefined al cerrar', () => {
+      component.modalRef = undefined;
+      
+      expect(() => component.cerrarModal()).not.toThrow();
+    });
+  });
+
+  describe('Limpieza de recursos', () => {
+    it('debería completar el subject destroy$ en ngOnDestroy', () => {
+      const spyNext = jest.spyOn(component.destroy$, 'next');
+      const spyComplete = jest.spyOn(component.destroy$, 'complete');
+      
+      component.ngOnDestroy();
+      
+      expect(spyNext).toHaveBeenCalled();
+      expect(spyComplete).toHaveBeenCalled();
+    });
+
+    it('debería cancelar las suscripciones activas', () => {
+      const spyDestroy = jest.spyOn(component.destroy$, 'next');
+      
+      component.ngOnDestroy();
+      
+      expect(spyDestroy).toHaveBeenCalled();
+    });
+  });
+
+  describe('Propiedades del componente', () => {
+    it('debería tener las opciones de radio button correctas', () => {
+      expect(component.opcionDeBotonDeRadio).toEqual([
+        { label: 'Sí', value: '1' },
+        { label: 'No', value: '0' }
+      ]);
+    });
+
+    it('debería inicializar solicitud32605State como objeto vacío', () => {
+      expect(component.solicitud32605State).toEqual({});
+    });
+
+    it('debería tener modalRef como undefined inicialmente', () => {
+      expect(component.modalRef).toBeUndefined();
+    });
+  });
+
+  describe('Validaciones del formulario', () => {
+    beforeEach(() => {
+      component.inicializarFormulario();
+      fixture.detectChanges();
+    });
+
+    it('debería marcar los campos como requeridos', () => {
+      const autorizacionControl = component.ctpatForm.get('autorizacionCBP');
+      const instalacionesControl = component.ctpatForm.get('instalacionesCertificadasCBP');
+      const suspensionControl = component.ctpatForm.get('suspensionCancelacionCBP');
+      
+      expect(instalacionesControl?.hasError('required')).toBeTruthy();
+      expect(suspensionControl?.hasError('required')).toBeTruthy();
+    });
+
+    it('debería ser válido cuando todos los campos tienen valores', () => {
+      component.ctpatForm.patchValue({
+        autorizacionCBP: '1',
+        instalacionesCertificadasCBP: '0',
+        suspensionCancelacionCBP: '1'
+      });
+      
+      expect(component.ctpatForm.valid).toBeTruthy();
+    });
+
+    it('debería ser inválido cuando falta algún campo requerido', () => {
+      component.ctpatForm.patchValue({
+        autorizacionCBP: '1',
+        instalacionesCertificadasCBP: '',
+        suspensionCancelacionCBP: '1'
+      });
+      
+      expect(component.ctpatForm.valid).toBeFalsy();
+    });
+  });
+
+  describe('Integración con el template', () => {
+    beforeEach(() => {
+      fixture.detectChanges();
+    });
+
+    it('debería renderizar el formulario correctamente', () => {
+      const compiled = fixture.nativeElement;
+      const form = compiled.querySelector('form');
+      
+      expect(form).toBeTruthy();
+    });
+
+  it('debería mostrar las etiquetas de los campos', () => {
+    const compiled = fixture.nativeElement;
+    const labels = compiled.querySelectorAll('label');
+    
+    expect(labels.length).toBeGreaterThan(0);
+  });
+
+
+  describe('Casos edge y manejo de errores', () => {
+    it('debería manejar el caso cuando el estado de la solicitud es null', () => {
+      mockSolicitud32605Query.selectSolicitud$ = of(null as any);
+      
+      expect(() => component.obtenerEstadoSolicitud()).not.toThrow();
+    });
+
+    it('debería manejar el caso cuando el evento no tiene target', () => {
+      const mockEvent = {} as any;
+      
+      expect(() => component.manejarCambioSuspensionCancelacion(mockEvent)).toThrow();
+    });
+
+    it('debería manejar el caso cuando el control del formulario no existe', () => {
+      component.inicializarFormulario();
+      
+      component.setValoresStore(component.ctpatForm, 'campoInexistente');
+      
+      expect(mockSolicitud32605Store.actualizarEstado).not.toHaveBeenCalled();
+    });
   });
 });

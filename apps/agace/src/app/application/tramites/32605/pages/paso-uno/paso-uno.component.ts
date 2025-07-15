@@ -2,7 +2,6 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { CTPATComponent } from '../../components/c-tpat/c-tpat.component';
 import { CommonModule } from '@angular/common';
 import { Component} from '@angular/core';
-import { DatosComunesComponent } from '../../components/datos-comunes/datos-comunes.component';
 import { ImportadorExportadorComponent } from '../../components/importador-exportador/importador-exportador.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -29,7 +28,6 @@ import { takeUntil } from 'rxjs';
     ImportadorExportadorComponent,
     CTPATComponent,
     TercerosRelacionadosComponent,
-    DatosComunesComponent,
   ],
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss'],
@@ -42,7 +40,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /**
    * Índice utilizado para identificar la pestaña activa dentro del paso.
-   * @type {number}
    */
   indice: number = 1;
 
@@ -82,7 +79,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.solicitudService
-      .getDatos()
+      .obtenerDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp) {
@@ -94,7 +91,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /**
    * Cambia la pestaña activa según el índice proporcionado.
-   * @param i - El índice de la pestaña que se desea activar.
+   * El índice de la pestaña que se desea activar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
