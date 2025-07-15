@@ -81,6 +81,13 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
     */
   public destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Referencia al componente hijo WizardComponent para controlar la navegación del asistente.
+   * Permite acceder a los métodos públicos del wizard desde este componente.
+   *
+   * @type {WizardComponent}
+   * @memberof SolicitudPageComponent
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**

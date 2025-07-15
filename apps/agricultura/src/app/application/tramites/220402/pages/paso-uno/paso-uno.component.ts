@@ -51,6 +51,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     // Ejemplo de control, reemplaza con los controles reales
     campo1: new FormControl('', Validators.required)
   });
+  /**
+   * FormGroup para el segundo tab del formulario.
+   * Contiene los controles y validaciones específicas del tab 2.
+   *
+   * @type {FormGroup}
+   * @memberof PasoUnoComponent
+   */
   public formGroupTab2: FormGroup = new FormGroup({
     // Ejemplo de control, reemplaza con los controles reales
     campo2: new FormControl('', Validators.required)
@@ -68,16 +75,24 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   consultaDatos!: ConsultaioState;
 
   /**
-   * @method seleccionaTab
-   * @description Selecciona una pestaña específica estableciendo el índice correspondiente.
+   * Selecciona una pestaña específica estableciendo el índice correspondiente.
+   *
    * @param {number} i - El índice de la pestaña a seleccionar.
-   * @returns {void}
-   * @param cdr ChangeDetectorRef para detección de cambios manual.
+   * @memberof PasoUnoComponent
    */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
 
+  /**
+   * Constructor de la clase PasoUnoComponent.
+   *
+   * @param {CapturaSolicitudeService} solocitud220402Service - Servicio para la gestión de la solicitud 220402.
+   * @param {ConsultaioQuery} consultaQuery - Query para consultar el estado de la consulta actual.
+   * @param {ChangeDetectorRef} cdr - Servicio para la detección de cambios manual en la vista.
+   *
+   * @memberof PasoUnoComponent
+   */
   constructor(
     private solocitud220402Service: CapturaSolicitudeService,
     private consultaQuery: ConsultaioQuery,
@@ -143,7 +158,14 @@ public validarFormularios(): boolean {
   }
   return isValid;
 }
-public validarTodosLosFormularios(): boolean {
+  /**
+   * Valida todos los formularios de los tabs y componentes hijos del paso uno.
+   * Marca todos los controles como tocados para mostrar errores de validación.
+   *
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   * @memberof PasoUnoComponent
+   */
+  public validarTodosLosFormularios(): boolean {
   let isValid = true;
 
   if (this.formGroupTab1) {

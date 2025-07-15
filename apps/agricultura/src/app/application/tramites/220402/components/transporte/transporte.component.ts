@@ -60,11 +60,17 @@ export class TransporteComponent implements OnDestroy, OnInit {
   soloLectura: boolean = false;
 
   /**
-   * constructor de la clase
-   * Fetch the fetchTiposDocumentos datos
-   * Crea el formulario
-   * @param fb: constructor de formularios
-   * @param validacionesService: Validaciones comunes del formulario.
+   * Constructor de la clase TransporteComponent.
+   *
+   * @param {FormBuilder} fb - Constructor de formularios para crear y gestionar el FormGroup principal.
+   * @param {ValidacionesFormularioService} validacionesService - Servicio para validaciones comunes del formulario.
+   * @param {MediodetransporteService} mediodetransporteService - Servicio para obtener los medios de transporte.
+   * @param {Solicitud220402Store} solicitud220402Store - Store para gestionar el estado del trámite 220402.
+   * @param {Solicitud220402Query} solicitud220402Query - Query para consultar el estado del trámite 220402.
+   * @param {ConsultaioQuery} consultaioQuery - Query para consultar el estado de la consulta actual.
+   * @param {ChangeDetectorRef} cdr - Servicio para detectar y aplicar cambios manualmente en la vista.
+   *
+   * @memberof TransporteComponent
    */
   constructor(
     private fb: FormBuilder,
