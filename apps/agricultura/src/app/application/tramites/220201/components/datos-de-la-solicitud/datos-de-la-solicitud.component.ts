@@ -118,6 +118,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @default false
    */
   public moduloEmergente: boolean = false;
+  /**
+ * @property moduloEmergente
+ * @description Indica si el módulo emergente está activo.
+ * @type {boolean}
+ * @default false
+ */
+  public eliminarDatosTabla: boolean = false;
 
   /**
    * Opciones para el botón de radio.
@@ -587,8 +594,35 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
    */
   eliminarPedimento(borrar: boolean): void {
+    console.log('borrar', borrar);
     if (borrar) {
       this.moduloEmergente = false;
+    }
+  }
+  /**
+  * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
+  * @method eliminarPedimento
+  * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
+  */
+  eliminarPedimentoDatos(borrar: boolean): void {
+    if (borrar) {
+      this.eliminarDatosTabla = false;
+      const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
+      if (VALOR.length === 0) {
+        return;
+      }
+      const FILTERED_VALOR = VALOR.filter(
+        (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
+      );
+      this.fitosanitarioStore.update(
+        (state) => ({
+          ...state,
+          tablaDatos: FILTERED_VALOR
+        })
+      );
+    }
+    else {
+      this.eliminarDatosTabla = false;
     }
   }
 
@@ -634,20 +668,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   * @returns {void}
   */
   eliminarMercancia(): void {
-    const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
-    if (VALOR.length === 0) {
-      return;
-    }
-    const FILTERED_VALOR = VALOR.filter(
-      (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
-    );
-    this.fitosanitarioStore.update(
-      (state) => ({
-        ...state,
-        tablaDatos: FILTERED_VALOR
-      })
-    );
-
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Está seguro que desea eliminar estos datos?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+    this.eliminarDatosTabla = true;
   }
   /**
   * @description Navega a la página de modificar mercancía.

@@ -130,5 +130,9 @@
     <lib-notificaciones [notificacionInput]="nuevaNotificacion"
       (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
     }
+    @if(eliminarDatosTabla){
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="eliminarPedimentoDatos($event)"></lib-notificaciones>
+    }
   </div>
 </div>
