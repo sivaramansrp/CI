@@ -18,11 +18,27 @@ import { NotificacionesService } from '../services/shared/notificaciones.service
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const httpInterceptorFn: HttpInterceptorFn = (req, next) => {
 
+  /**
+   * Injector de entorno utilizado para crear un nuevo contexto de inyección
+   * fuera del ciclo de vida típico de un componente o servicio.
+   */
   const INJECTOR = inject(EnvironmentInjector);
 
+  /**
+   * Ejecuta una función dentro del contexto de inyección proporcionado por `INJECTOR`.
+   * Esto permite inyectar dependencias como servicios, incluso fuera del contexto típico de Angular.
+   */
   return runInInjectionContext(INJECTOR, () => {
+    /**
+     * Servicio responsable de mostrar notificaciones en la aplicación.
+     * Puede utilizarse para mostrar mensajes tras interceptar una solicitud.
+     */
     const NOTIF = inject(NotificacionesService);
 
+    /**
+     * Clona la solicitud HTTP original y le agrega un encabezado `Authorization`
+     * con un token de autenticación. El token puede obtenerse desde localStorage o sessionStorage.
+     */
     const REQ = req.clone({
       setHeaders: {
         Authorization: 'Bearer dummy-token' // El token se obtiene desde localStorage o sessionStorage.

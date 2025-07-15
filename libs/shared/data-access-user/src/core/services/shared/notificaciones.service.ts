@@ -67,7 +67,17 @@ import {
       this.appRef.attachView(this.componentRef.hostView);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const ELE = (this.componentRef.hostView as any).rootNodes[0] as HTMLElement;
-      document.body.appendChild(ELE);
+      
+      // Buscar el elemento <c-header>
+      const NAVELEMENT = document.querySelector('c-header');
+
+      if (NAVELEMENT && NAVELEMENT.parentNode) {
+        // Insertar el nuevo elemento después de <c-header>
+        NAVELEMENT.parentNode.insertBefore(ELE, NAVELEMENT.nextSibling);
+      } else {
+        // <c-header> o <nav> no encontrados. Se agrega al body como alternativa.
+        document.body.appendChild(ELE);
+      }
   
       // Elimina automáticamente el componente si se especifica un tiempo de espera
       if (notificacion.tiempoDeEspera) {
