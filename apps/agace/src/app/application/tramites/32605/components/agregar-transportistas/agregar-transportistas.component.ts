@@ -41,7 +41,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    * Subject utilizado para gestionar la cancelación de suscripciones Observable.
    * Previene fugas de memoria al destruir el componente.
    */
-  private destroy$: Subject<void> = new Subject<void>();
+   destroy$: Subject<void> = new Subject<void>();
 
   /**
    * Estado actual de la solicitud del trámite 32605.
