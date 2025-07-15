@@ -30,6 +30,13 @@
               [disabled]="esFormularioSoloLectura ? true : false">            
               Buscar
             </button>
+            
+@if (nuevaNotificacion) {
+  <section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+  </lib-notificaciones>
+  </section>
+  }
           </div>
         </div>
         <div class="col-md-4">

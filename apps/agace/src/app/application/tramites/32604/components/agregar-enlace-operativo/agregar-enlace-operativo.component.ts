@@ -1,6 +1,6 @@
+import { ConsultaioQuery, Notificacion, NotificacionesComponent, Pedimento } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
 import { EnlaceOperativo } from '../../models/empresas-comercializadoras.model';
 import { EventEmitter } from '@angular/core';
@@ -27,7 +27,7 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-agregar-enlace-operativo',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent,NotificacionesComponent],
   templateUrl: './agregar-enlace-operativo.component.html',
   styleUrl: './agregar-enlace-operativo.component.scss',
 })
@@ -53,6 +53,20 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+/**
+ * Propiedad que almacena la notificación actual que se mostrará al usuario.
+ */
+public nuevaNotificacion!: Notificacion;
+
+/**
+ * Índice del elemento que se desea eliminar de la lista de pedimentos.
+ */
+elementoParaEliminar!: number;
+
+/**
+ * Lista de pedimentos asociados al componente.
+ */
+pedimentos: Array<Pedimento> = [];
 
   /**
    * Constructor de la clase que inicializa las dependencias necesarias.
@@ -91,6 +105,44 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
   }
+
+ /**
+ * Método que elimina un pedimento de la lista de pedimentos.
+ *
+ * @param borrar Indica si se debe proceder con la eliminación del pedimento.
+ *               Si es `true`, se elimina el pedimento en el índice especificado
+ *               por la propiedad `elementoParaEliminar`.
+ */
+eliminarPedimento(borrar: boolean): void {
+  if (borrar) {
+    this.pedimentos.splice(this.elementoParaEliminar, 1);
+  }
+}
+ 
+ /**
+ * Método que abre un modal para mostrar una notificación al usuario.
+ *
+ * @param i Índice del elemento que se desea eliminar. Por defecto, es 0.
+ *          Este índice se asigna a la propiedad `elementoParaEliminar`.
+ *
+ * La notificación muestra un mensaje de alerta indicando que el contribuyente
+ * no fue encontrado y solicita verificar el RFC.
+ */
+abrirModal(i: number = 0): void {
+  this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'EI contribuyente no fue encontrado.Favor de verificar el RFC.',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: 'Cancelar',
+  };
+
+  this.elementoParaEliminar = i;
+}
 
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
@@ -218,6 +270,7 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
           );
         });
     }
+    this.abrirModal();
   }
 
   /** Actualiza el RFC del tercero en el store */

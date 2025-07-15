@@ -110,6 +110,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+
   /**
    * Constructor del componente, inyecta el servicio `empresasComercializadorasService` y
    * realiza las cargas iniciales de datos.
@@ -178,6 +179,19 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       // No se requiere ninguna acción en el formulario
     }
   }
+
+  /**
+ * Método que elimina un pedimento de la lista de pedimentos.
+ *
+ * @param borrar Indica si se debe proceder con la eliminación del pedimento.
+ *               Si es `true`, se elimina el pedimento en el índice especificado
+ *               por la propiedad `elementoParaEliminar`.
+ */
+eliminarPedimento(borrar: boolean): void {
+  if (borrar) {
+    this.pedimentos.splice(this.elementoParaEliminar, 1);
+  }
+}
 
   /**
    * Inicializa el formulario `miembroEmpresaForm` con los datos del estado actual `solicitud32604State`.
@@ -273,6 +287,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
           );
         });
     }
+    this.abrirModal(
+      'Datos guardados correctamente.'
+    );
   }
 
   /** Métodos para actualizar los valores en el store */
@@ -353,7 +370,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       pedimentoValidado: false,
     };
     this.abrirModal(
-      'Se debe registrar por lo menos un enlace operativo que no sea suplente.'
+      'EI contribuyente no fue encontrado.Favor de verificar el RFC.'
     );
     this.pedimentos.push(PEDIMENTO);
     this.enlaceOperativosLista = [...this.enlaceOperativosLista, evento];
