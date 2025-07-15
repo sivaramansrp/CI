@@ -1,10 +1,11 @@
-import { AnimalesEventos, AnimalesFormularioSolicitud, AnimalesFormularioSolicitudForm, DatosDeLaSolicitud, Sensible } from '../../models/datos-de-la-solicitue.model';
-import { CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CONFIGURACION_SENSIBLES } from '../../constantes/datos-de-la-solicitue.enum';
+import { CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
+import { FilaSolicitud } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
+import { CONFIGURACION_SENSIBLES } from '../../constantes/datos-de-la-solicitue.enum';
+import { AnimalesEventos, AnimalesFormularioSolicitud, DatosDeLaSolicitud, Sensible } from '../../models/datos-de-la-solicitue.model';
 
 @Component({
   selector: 'app-animales-vivo-detalles',
@@ -51,7 +52,7 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * 
    * @type {AnimalesFormularioSolicitud}
    */
-  @Input() formularioSolicitud!: AnimalesFormularioSolicitud;
+  @Input() formularioSolicitud!: FilaSolicitud;
 
   /**
    * Evento que se emite cuando se agregan datos al formulario de solicitud de animales vivos.
@@ -106,7 +107,7 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * @param fb FormBuilder para crear formularios reactivos.
    */
   constructor(private fb: FormBuilder,
-        private ubicaccion: Location,
+    private ubicaccion: Location,
   ) {
   }
 
@@ -135,26 +136,26 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    */
   crearFormulario(): void {
     this.mercanciaForm = this.fb.group({
+      id: [0, Validators.required],
       tipoRequisito: ['', Validators.required],
       requisito: ['', Validators.required],
-      numeroCertificado: ['', [Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
+      numeroCertificadoInternacional: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       fraccionArancelaria: ['', Validators.required],
-      descripcionFraccion: [''],
+      descripcionFraccion: [{ value: 'test', disabled: true }, [Validators.required]],
       nico: ['', Validators.required],
-      descripcionNico: [''],
-      descripcion: ['', [Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
-      cantidadUMT: ['', [Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
-      umt: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMC: ['', [Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
+      descripcionNico: [{ value: 'test', disabled: true }, [Validators.required]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
+      cantidadUMT: ['', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
+      umt: [{ value: '1', disabled: true }, Validators.required],
+      cantidadUMC: ['', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       umc: ['', Validators.required],
       especie: ['', Validators.required],
       uso: ['', Validators.required],
-      paisOrigen: ['', Validators.required],
+      paisDeOrigen: ['', Validators.required],
       paisDeProcedencia: ['', Validators.required],
     });
 
     this.detalleForm = this.fb.group({
-      // Detalle fields
       numeroLote: ['', [Validators.required, Validators.maxLength(16), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       colorPelaje: [''],
       edadAnimal: [''],
@@ -164,10 +165,10 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       numeroIdentificacion: [''],
       raza: [''],
       nombreCientifico: [''],
-      sexo: ['', Validators.required]
+      sexo: ['']
     });
 
-    if(this.formularioSolicitud){
+    if (this.formularioSolicitud) {
       this.mercanciaForm.patchValue({
         ...this.formularioSolicitud
       });
@@ -236,13 +237,19 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * Actualmente no implementa ninguna funcionalidad, pero se puede extender en el futuro.
    */
   agregarAnimales(): void {
-    this.agregarDatosFormulario.emit(
-      {
-        formulario: this.mercanciaForm.value,
-        tablaDatos: this.sensiblesTablaDatos
-      }
-    );
-    this.ubicaccion.back();
+    if (this.mercanciaForm.invalid) {
+      this.mercanciaForm.markAllAsTouched();
+    }
+    else {
+      this.agregarDatosFormulario.emit(
+        {
+          formulario: this.mercanciaForm.getRawValue(),
+          tablaDatos: this.sensiblesTablaDatos
+        }
+      );
+      this.ubicaccion.back();
+    }
+
   }
 
   /**
