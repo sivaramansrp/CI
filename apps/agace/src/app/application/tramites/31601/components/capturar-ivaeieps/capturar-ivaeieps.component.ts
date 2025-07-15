@@ -410,7 +410,7 @@ eliminarValor(): void {
  * Carga los datos de la fila seleccionada en el formulario.
  */
 modificarOpenModal(): void {
-  if (this.filaSeleccionadaDestinatarioIndex === null) {
+  if (!this.filaSeleccionadaDestinatarioIndex) {
     return;
   }
 
