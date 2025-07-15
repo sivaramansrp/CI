@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, ConsultaioQuery, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, REGEX_LLAVE_DE_PAGO, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, REGEX_LLAVE_DE_PAGO, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder,FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
 import { PagoData ,TableData} from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
 import { Solicitud31601State,Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
@@ -18,6 +18,7 @@ import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 import tableDetos from '@libs/shared/theme/assets/json/31601/table-datos.json';
 
 import { CONFIGURATION_TABLA_DESTINATARIO_BASICO, DestinatarioItems } from '../../enum/mencione-tabla.enum';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FECHA_FINAL } from '../../modelos/radio-buttons.model';
 /**
  * @Component - CapturarIvaeiepsComponent
@@ -41,7 +42,13 @@ import { FECHA_FINAL } from '../../modelos/radio-buttons.model';
   styleUrl: './capturar-ivaeieps.component.scss',
 })
 export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
-
+/**
+ * @description
+ * Arreglo que almacena las filas seleccionadas por el usuario en la tabla.
+ * Estas filas pueden ser utilizadas para realizar operaciones como modificar o eliminar.
+ *
+ * @type {DestinatarioItems[]}
+ */
 filasSeleccionadas: DestinatarioItems[] = [];
  /** Índice de la fila seleccionada o null si no hay selección */  
 filaSeleccionadaDestinatarioIndex: number | null = null;
