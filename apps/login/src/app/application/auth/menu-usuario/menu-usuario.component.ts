@@ -47,6 +47,7 @@ export class MenuUsuarioComponent {
                 [
                   { label: 'Registro de capturista privado', path: 'login/registro-capturista-privado' },
                   { label: 'Registro de notificadores', path: 'login/registro-notificadores' },
+                  { label: 'Registrar Socios / Accionistas', path: 'login/registro-socio-accionista' },
                 ]
             }
           ]

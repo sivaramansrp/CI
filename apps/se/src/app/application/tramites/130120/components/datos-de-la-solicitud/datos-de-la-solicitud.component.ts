@@ -1,10 +1,12 @@
-import { CatalogoSelectComponent, ConsultaioQuery, MenuConfig, Props, SeccionLibQuery, SeccionLibState, SeccionLibStore } from "@ng-mf/data-access-user";
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, MenuConfig, Props, SeccionLibQuery, SeccionLibState, SeccionLibStore } from "@ng-mf/data-access-user";
 import { DATOS_EXPORTACION, DATOS_EXPORTADOR, DATOS_FEDERAL, DATOS_MERCANCIA, DATOS_PRODUCTOR, DATOS_REALIZAR } from '../../constants/permiso-importacion-modification.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { DatosGrupos } from "../../models/permiso-importacion-modification.model";
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { InputConfig } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from "@ng-mf/data-access-user";
@@ -13,6 +15,7 @@ import { InputTypes } from '@ng-mf/data-access-user';
 import { PermisoImportacionStore } from '../../estados/permiso-importacion.store';
 import { TituloComponent } from "@ng-mf/data-access-user";
 import { Tramite130120Query } from '../../estados/permiso-importacion.query';
+
 
 
 @Component({
@@ -394,6 +397,9 @@ tipoPersonaExportador: string = 'Física';
 
   enableConversion: boolean = false;
 
+  solicitudState!: DatosGrupos;
+  isVisible= false;
+
   /**
    * Constructor del componente DatosDeLaSolicitudComponent.
    * Inicializa el formulario y configura los grupos de formularios basados en la configuración proporcionada.
@@ -417,6 +423,25 @@ tipoPersonaExportador: string = 'Física';
     public store: PermisoImportacionStore,
     public consultaQuery: ConsultaioQuery
   ) {
+    this.tramiteQuery.select().pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((storeValue) => {
+      if (storeValue) {
+        this.solicitudState = storeValue;
+        if (
+          storeValue.datosProductor &&
+          storeValue.datosProductor.persona_tipo
+        ) {
+          this.tipoPersonaProductor = storeValue.datosProductor.persona_tipo;
+        }
+         if (
+          storeValue.datosExportador &&
+          storeValue.datosExportador.persona_tipo
+        ) {
+          this.tipoPersonaExportador = storeValue.datosExportador.persona_tipo;
+        }
+      }
+    });
     this.crearFormulario();
   }
 
@@ -452,9 +477,6 @@ tipoPersonaExportador: string = 'Física';
     this.configuracion[3].menu[0].props.radioSelectedValue = PERSONA_PRODUCTOR[0].value;
     this.configuracion[4].menu[0].props.radioOptions = PERSONA_EXPORTADOR;
     this.configuracion[4].menu[0].props.radioSelectedValue = PERSONA_EXPORTADOR[0].value;
-    this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
-      this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
-    });
     this.seccionQuery.selectSeccionState$
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -475,27 +497,6 @@ tipoPersonaExportador: string = 'Física';
       this.seccionStore.establecerSeccion([true]);
       this.seccionStore.establecerFormaValida([true])
     }
-
-    // Patch form with store values if present
-    this.tramiteQuery.select().pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe((storeValue) => {
-      if (storeValue) {
-        this.formulario.patchValue(storeValue, { emitEvent: false });
-        if (
-          storeValue.datosProductor &&
-          storeValue.datosProductor.persona_tipo
-        ) {
-          this.tipoPersonaProductor = storeValue.datosProductor.persona_tipo;
-        }
-         if (
-          storeValue.datosExportador &&
-          storeValue.datosExportador.persona_tipo
-        ) {
-          this.tipoPersonaExportador = storeValue.datosExportador.persona_tipo;
-        }
-      }
-    });
 
     this.formulario.valueChanges.pipe(
       takeUntil(this.destroyNotifier$)
@@ -519,12 +520,63 @@ tipoPersonaExportador: string = 'Física';
    */
   crearFormulario(): void {
     this.formulario = this.fb.group({
-      datosRealizer: this.fb.group({}),
-      datosMercanica: this.fb.group({}),
-      datosExporta: this.fb.group({}),
-      datosProductor: this.fb.group({}),
-      datosExportador: this.fb.group({}),
-      datosFederal: this.fb.group({}),
+      datosRealizer: this.fb.group({
+        régimen: [this.solicitudState.datosRealizer.régimen, Validators.required],
+        classifición_régimen: [this.solicitudState.datosRealizer.classifición_régimen, Validators.required]
+      }),
+      datosMercanica: this.fb.group({
+        cantidad_umc: [this.solicitudState.datosMercanica.cantidad_umc],
+        cantidad_umt: [this.solicitudState.datosMercanica.cantidad_umt],
+        descripción: [this.solicitudState.datosMercanica.descripción],
+        factor_conversión: [this.solicitudState.datosMercanica.factor_conversión],
+        factura_fecha: [this.solicitudState.datosMercanica.factura_fecha],
+        factura_número: [this.solicitudState.datosMercanica.factura_número],
+        fracción: [this.solicitudState.datosMercanica.fracción],
+        marca: [this.solicitudState.datosMercanica.marca],
+        moneda_comercialización: [this.solicitudState.datosMercanica.moneda_comercialización],
+        nico: [this.solicitudState.datosMercanica.nico],
+        otro_umc: [this.solicitudState.datosMercanica.otro_umc],
+        país_exportador: [this.solicitudState.datosMercanica.país_exportador],
+        país_origen: [this.solicitudState.datosMercanica.país_origen],
+        precio_unitario_usd: [this.solicitudState.datosMercanica.precio_unitario_usd],
+        tipo_entrada: [this.solicitudState.datosMercanica.tipo_entrada],
+        umc: [this.solicitudState.datosMercanica.umc],
+        umt: [this.solicitudState.datosMercanica.umt],
+        valor_factura: [this.solicitudState.datosMercanica.valor_factura],
+        valor_factura_usd: [this.solicitudState.datosMercanica.valor_factura_usd],
+        valor_total_factura: [this.solicitudState.datosMercanica.valor_total_factura],
+        valor_total_factura_usd: [this.solicitudState.datosMercanica.valor_total_factura_usd],
+      }),
+      datosExporta: this.fb.group({
+        cantidad_umt: [this.solicitudState.datosExporta.cantidad_umt],
+        código_arancelario: [this.solicitudState.datosExporta.código_arancelario],
+        descripción: [this.solicitudState.datosExporta.descripción],
+        fecha_documento: [this.solicitudState.datosExporta.fecha_documento],
+        número_documento: [this.solicitudState.datosExporta.número_documento],
+        precio_unitario_usd: [this.solicitudState.datosExporta.precio_unitario_usd],
+        valor_usd: [this.solicitudState.datosExporta.valor_usd],
+      }),
+      datosProductor: this.fb.group({
+        denominación_razón_social: [this.solicitudState.datosProductor.denominación_razón_social],
+        domicilio: [this.solicitudState.datosProductor.domicilio],
+        persona_tipo: [this.solicitudState.datosProductor.persona_tipo],
+        personales_nombre: [this.solicitudState.datosProductor.personales_nombre],
+        primer_apellido: [this.solicitudState.datosProductor.primer_apellido],
+        segundo_apellido: [this.solicitudState.datosProductor.segundo_apellido],
+      }),
+      datosExportador: this.fb.group({
+        denominación_razón_social: [this.solicitudState.datosExportador.razón_social],
+        domicilio: [this.solicitudState.datosExportador.domicilio],
+        observaciones: [this.solicitudState.datosExportador.observaciones],
+        persona_tipo: [this.solicitudState.datosExportador.persona_tipo],
+        personales_nombre: [this.solicitudState.datosExportador.personales_nombre],
+        primer_apellido: [this.solicitudState.datosExportador.primer_apellido],
+        segundo_apellido: [this.solicitudState.datosExportador.segundo_apellido],
+      }),
+      datosFederal: this.fb.group({
+        entidad_federativa: [this.solicitudState.datosFederal.entidad_federativa],
+        representacion_federal: [this.solicitudState.datosFederal.representacion_federal],
+      }),
     });
   }
   

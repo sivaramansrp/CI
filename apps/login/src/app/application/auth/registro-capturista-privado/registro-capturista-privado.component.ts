@@ -1,4 +1,4 @@
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { CapturistaStore, CapturistaStoreService } from '../../../estados/capturista.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Notificacion, NotificacionesComponent, REGEX_CURP, REGEX_RFC_FISICA, REGEX_RFC_MORAL, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
@@ -79,10 +79,14 @@ export class RegistroCapturistaPrivadoComponent implements OnInit, OnDestroy {
   crearFormulario(): void {
     this.FormRegistroCapturistaPrivado = this.fb.group({
       rfc: ['', [RegistroCapturistaPrivadoComponent.validadorRFC]],
-      curp: ['', [Validators.required, Validators.pattern(REGEX_CURP)]],
+      curp: ['', [RegistroCapturistaPrivadoComponent.validadorCURP]],
     });
   }
-
+/**
+ * 
+ * @param control Método para validación de RFC del usuario
+ * @returns 
+ */
   static validadorRFC(control: AbstractControl): ValidationErrors | null {
     const VALUE = control.value;
     if (!VALUE) {
@@ -90,6 +94,19 @@ export class RegistroCapturistaPrivadoComponent implements OnInit, OnDestroy {
     }
     const ES_VALIDO = REGEX_RFC_FISICA.test(VALUE) || REGEX_RFC_MORAL.test(VALUE);
     return ES_VALIDO ? null : { rfcInvalido: true };
+  }
+
+  /**
+   * 
+   * @param control Método para la validación de la CURP del usuario a consultar
+   * @returns 
+   */
+  static validadorCURP(control: AbstractControl): ValidationErrors | null {
+    const CURP = control.value;
+    if (!CURP) { return null; }
+
+    const ES_VALIDO = REGEX_CURP.test(CURP);
+    return ES_VALIDO ? null : { curpInvalida: true };
   }
 
   /**
