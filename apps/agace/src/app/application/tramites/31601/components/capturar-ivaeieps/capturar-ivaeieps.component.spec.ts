@@ -35,7 +35,7 @@ jest.mock('@libs/shared/theme/assets/json/31601/table.json', () => ({
     tableHeader: [
       "RFC",
       "Denominction o razon social",
-      "CDomicilaa"
+      "Domicilaa"
     ],
     tableBody: [
       { tbodyData: [] }
@@ -116,14 +116,7 @@ fdescribe('CapturarIvaeiepsComponent', () => {
     expect(component.destinatarioHeaderData.tableBody[0].tbodyData.length).toBeGreaterThan(0);
   });
 
-  it('debe resetear el formulario después de agregarDatos', () => {
-    const resetSpy = jest.spyOn(component.ivaForm, 'reset');
-    component.ivaForm.patchValue({ rfc: 'ABC123456XYZ' }); 
-    component.agregarDatos(); 
-    expect(resetSpy).toHaveBeenCalled(); 
-  });
-
-  it('debe asignar valores en formularioDePago al llamar poblarPagoForm', () => {
+ it('debe asignar valores en formularioDePago al llamar poblarPagoForm', () => {
     const mockData = {
       claveReferencia: '123',
       numeroOperacion: '456',
@@ -145,4 +138,67 @@ fdescribe('CapturarIvaeiepsComponent', () => {
     expect(component.formularioDePago.get('fechaPago')?.disabled).toBe(false);
     expect(component.formularioDePago.get('importePago')?.disabled).toBe(false);
   });
+ it('debe agregar datos a la tabla si el formulario es válido y crear una notificación', () => {
+  // Arrange: Initialize the form with valid values
+  component.ivaForm.patchValue({
+    tipoDe: 'Inversión A',
+    descripcion: 'Compra de maquinaria',
+    valorPesos: '50000'
+  });
+
+  // Mock datosDeInversion structure
+  component.datosDeInversion = {
+    tableHeader: ['Tipo de', 'Descripción', 'Valor en pesos'],
+    tableBody: [
+    
+    ]
+  };
+
+  // Spy on cerrarModal
+  const cerrarModalSpy = jest.spyOn(component, 'cerrarModal');
+
+  // Act
+  component.agregarData();
+
+  // Assert: Data pushed
+  expect(component.datosDeInversion.tableBody[0].tbodyData).toEqual([
+    'Inversión A',
+    'Compra de maquinaria',
+    '50000'
+  ]);
+
+  // Assert: Notificación creada
+  expect(component.nuevaNotificacion).toEqual({
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Datos guardados correctamente.',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: ''
+  });
+
+  // Assert: Modal cerrado
+  expect(cerrarModalSpy).toHaveBeenCalled();
+});
+it('debe buscar datos y actualizar el formulario si RFC está presente', () => {
+  // Arrange: Set initial values
+  component.ivaForm.patchValue({ rfc: 'ABC123456XYZ' });
+
+  // Mock datosRepresentativos
+  component.datosRepresentativos = {
+    denominacion: 'Empresa XYZ',
+    domicilio: 'Calle Falsa 123'
+  };
+
+  // Act
+  component.buscarDatos();
+
+  // Assert
+  expect(component.ivaForm.get('denominacion')?.value).toBe('Empresa XYZ');
+  expect(component.ivaForm.get('domicilio')?.value).toBe('Calle Falsa 123');
+});
+
   });

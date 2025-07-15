@@ -5,7 +5,6 @@ import { Observable, Subject, catchError, map, of, takeUntil } from 'rxjs';
 import { CambioContrasena } from '../../core/models/cambio-contrasena.model';
 import { CommonModule } from '@angular/common';
 import { PasswordService } from '../../core/service/password.service';
-import { Router } from '@angular/router';
 
 /**
  * Componente para el cambio de contraseña de usuario.

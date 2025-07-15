@@ -235,7 +235,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
    * Método que se llama cuando se envía el formulario.
    * Se utiliza para establecer los valores en el store de DatosDomicilioLegal.
    */
-  abrirModal(i: number = 0): void {
+  abrirModal(): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',

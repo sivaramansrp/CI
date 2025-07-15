@@ -282,6 +282,12 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   accionModificar: boolean = false;
 
+  /**
+   * bandera que controla el mostrar y ocultar los botones de guias 
+   */
+  limpiarGuiasBandera: boolean = false;
+  
+
   constructor(
     private fb: FormBuilder,
     private tipoEquipoServicio: TipoEquipoService,
@@ -677,7 +683,7 @@ export class TransporteComponent implements OnInit, OnChanges {
   abrirModal(accion: string = ''): void {
     const MODAL_AGREGA = new Modal(this.agregarTransporte.nativeElement);
     MODAL_AGREGA.show();
-
+    this.limpiarGuias();
     if (accion === MODIFICAR_ITEM_TRANSPORTE) {
       this.accionModificar = true;
       const TIPO_TRANSPORTE = parseInt(
@@ -743,6 +749,8 @@ export class TransporteComponent implements OnInit, OnChanges {
     });
 
     this.observaciones.setValue('');
+
+    this.limpiarGuias();
   }
 
   /**
@@ -1010,13 +1018,20 @@ export class TransporteComponent implements OnInit, OnChanges {
       return;
     }
 
-    const GUIA = GUIA_MASTER ? GUIA_MASTER : GUIA_HOUSE;
+    const GUIA = GUIA_MASTER ? { guiaMasterAereo: GUIA_MASTER } : { guiaHouseAereo: GUIA_HOUSE };
     this.validaTransporteService
-      .getValidaTransporte(TIPO_TRANSPORTE.AEREO, { guiaHouseAereo: GUIA })
+      .getValidaTransporte(TIPO_TRANSPORTE.AEREO, GUIA)
       .pipe(
         tap((response) => {
           if (response.codigo === '00') {
             this.aereoForma.get('guia_valida')?.setValue(true);
+            if(GUIA_MASTER){
+              this.aereoForma.get('guia_master_aereo')?.disable();
+            }
+            if(GUIA_HOUSE) {
+              this.aereoForma.get('guia_house_aereo')?.disable();
+            }
+            this.limpiarGuiasBandera = true;
           } else {
             this.aereoForma.get('guia_master_aereo')?.setValue('');
             this.aereoForma.get('guia_house_aereo')?.setValue('');
@@ -1243,4 +1258,18 @@ export class TransporteComponent implements OnInit, OnChanges {
     this.cerrarModal();
     this.enviarTransporteTabla();
   }
+
+  /**
+   * Limpia y habilita las cajas para guia house y guia master
+   */
+  limpiarGuias(): void {
+    this.aereoForma.get('guia_master_aereo')?.setValue('');
+    this.aereoForma.get('guia_master_aereo')?.enable();
+    this.aereoForma.get('guia_house_aereo')?.setValue('');
+    this.aereoForma.get('guia_house_aereo')?.enable();
+    this.limpiarGuiasBandera = false;
+  }
+  
 }
+
+

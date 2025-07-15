@@ -2,10 +2,10 @@
     <div class="col-12">
         <div class="menu-usuario">
             <div class="list-group">
-                <ng-container *ngFor="let item of menu">
+                <div *ngFor="let item of menu">
                     <ng-template [ngTemplateOutlet]="renderItem"
                         [ngTemplateOutletContext]="{ item: item, level: 0 }"></ng-template>
-                </ng-container>
+                </div>
             </div>
         </div>
         <ng-template #renderItem let-item="item" let-level="level">

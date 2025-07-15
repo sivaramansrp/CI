@@ -34,7 +34,7 @@
       formControlName="indiqueIva"
       (change)="setValoresStore(ivaForm,'indiqueIva', 'setIndiqueIva')"
     ></app-input-radio>
-
+<div  *ngIf="ivaForm.get('indiqueIva')?.value === 'Si'">
     <p class="mt-4 fw-bold">
       Para acreditar que forma parte de un grupo, posteriormente deberán anexar
       un diagrama de la estructura accionaria y corporativa, así como copia de
@@ -50,7 +50,7 @@
       fracción VIII del artículo 26 del Código Fiscal de la Federación, de los
       créditos fiscales que llegaran a originarse.
     </p>
-
+<div *ngIf="mostrarSeccionCertificacion">
     <ng-titulo
       titulo="Empresas del grupo certificadas en materia de IVA e IEPS"
     />
@@ -88,13 +88,13 @@
     </div>
 
     <div class="button-container">
-      <button class="btn btn-primary" (click)="agregarOpenModal()" disabled="esFormularioSoloLectura ? true : false">
+      <button class="btn btn-primary" (click)="agregarOpenModal()" [disabled]="esFormularioSoloLectura">
         Agregar
       </button>
-      <button class="btn btn-default ms-2" disabled="esFormularioSoloLectura ? true : false">Modificar</button>
-      <button class="btn btn-default ms-2" disabled="esFormularioSoloLectura ? true : false">Eliminar</button>
+      <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+      <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
     </div>
-
+</div>
     <section class="fw-medium mt-3">
       <span class="text-danger">*</span> Señale, en su caso, el tipo de
       información que la solicitante acredita, a través de alguna de las
@@ -147,6 +147,7 @@
         >
       </div>
     </div>
+  </div>
 
     <h6>Indica el monto aproximado de su inversión en territorio nacional.</h6>
 
@@ -186,7 +187,7 @@
         />
       </div>
       <div class="col-8 d-flex align-items-end justify-content-end">
-        <button class="btn btn-primary" disabled="esFormularioSoloLectura ? true : false">Agregar</button>
+        <button class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="agregarData()">Agregar</button>
       </div>
     </div>
 
@@ -195,7 +196,7 @@
         class="table-header pb-2 d-flex align-items-center justify-content-between"
       >
         <h3>Datos de la inversión</h3>
-        <button (click)="alternarContenido()" class="toggle-btn">
+        <button (click)="alternarContenido()"[disabled]="esFormularioSoloLectura"  class="toggle-btn">
           <i
             class="bi fs-5 m-1"
             [ngClass]="{
@@ -215,8 +216,8 @@
     </div>
 
     <div class="button-container">
-      <button class="btn btn-default ms-2" disabled="esFormularioSoloLectura ? true : false">Modificar</button>
-      <button class="btn btn-default ms-2" disabled="esFormularioSoloLectura ? true : false">Eliminar</button>
+      <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+      <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="eliminar()">Eliminar</button>
     </div>
 
     <p class="fw-bold">
@@ -348,18 +349,8 @@
           </div>
         </div>
         <div class="col-md-3">
-          <span class="require">*</span
-          ><label class="form-label width-unset" for="fechaPago"
-            >Fecha de pago</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            id="fechaPago"
-            readonly
-            [disabled]="true"
-            formControlName="fechaPago"
-          />
+            <input-fecha [datos]="fechaFinalInput" name="fechaPago" [isDisabled]="true" [setFecha]="formularioDePago.get('fechaPago')?.value" (valorCambiado)="onFechaCambiada($event)" ></input-fecha>
+
         </div>
         <div class="col-md-3">
           <span class="require">*</span
@@ -377,7 +368,7 @@
         </div>
 
         <div class="col-md-12 text-end mt-3">
-          <button class="btn btn-danger" disabled="esFormularioSoloLectura ? true : false">Borrar datos del pago</button>
+          <button class="btn btn-danger" [disabled]="esFormularioSoloLectura">Borrar datos del pago</button>
         </div>
       </form>
     </div>
@@ -388,11 +379,12 @@
   class="modal fade"
   tabindex="-1"
   role="dialog"
-  *ngIf="mostrarModal"
   id="myModal"
-  [ngClass]="{ show: mostrarModal }"
+  [class.show]="mostrarModal"
+  [style.display]="mostrarModal ? 'block' : 'none'"
   aria-hidden="true"
 >
+
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -402,7 +394,7 @@
           class="close position-absolute top-0 end-0 m-3"
           (click)="cerrarModal()"
           aria-label="Close"
-          disabled="esFormularioSoloLectura ? true : false"
+          [disabled]="esFormularioSoloLectura"
         >
           <span class="color-white" aria-hidden="true">&times;</span>
         </button>
@@ -418,7 +410,7 @@
                 class="form-control me-2 w-50"
                 formControlName="rfc"
               />
-              <button class="btn btn-info" disabled="esFormularioSoloLectura ? true : false">Buscar</button>
+              <button class="btn btn-info" [disabled]="esFormularioSoloLectura" (click)="buscarDatos()">Buscar</button>
             </div>
             @if (ivaForm.get('rfc')?.invalid && ivaForm.get('rfc')?.touched) {
             <div class="text-danger">
@@ -454,19 +446,19 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" disabled="esFormularioSoloLectura ? true : false">Limpiar</button>
-        <button
+          <button
           type="button"
           class="btn btn-primary p-2"
           (click)="agregarDatos()"
         >
           Aceptar
         </button>
+         <button type="button" class="btn btn-secondary" [disabled]="esFormularioSoloLectura">Limpiar</button>
         <button
           type="button"
           class="btn btn-danger p-2"
           (click)="cerrarModal()"
-          disabled="esFormularioSoloLectura ? true : false"
+         [disabled]="esFormularioSoloLectura"
         >
           Cancelar
         </button>
@@ -474,3 +466,9 @@
     </div>
   </div>
 </div>
+ @if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" >
+  </lib-notificaciones>
+</section>
+}
