@@ -30,6 +30,7 @@ export interface Catalogo {
      * Descripción del elemento dentro del catálogo.
      */
     descripcion: string;
+   
 }
 /**
  * @interface Tramite33302State
@@ -79,6 +80,26 @@ export interface Tramite33302State {
    * @type {string}
    */
   numeroDe: string;
+  modalidadCertificacion: string;
+  /** Indica si es un cliente o proveedor extranjero */
+  foreignClientsSuppliers: boolean,
+  /** Indica si es un proveedor nacional */
+  nationalSuppliers: boolean,
+  /** Indica si hay modificaciones de socios */
+  modificationsMembers: boolean,
+  /** Indica si hay cambios en los documentos legales */
+  changesToLegalDocuments: boolean,
+  /** Indica si es un aviso de fusión o escisión */
+  mergerOrSplitNotice: boolean,
+  /** Indica si hay fracciones adicionales */
+  additionFractions: boolean,
+  presenten: boolean, 
+  contratados: boolean, 
+  expirado: boolean, 
+  derechos: boolean, 
+  /** Aceptación de la sección 253 */
+  acepto253: boolean,
+  
 }
 
 /**
@@ -124,6 +145,28 @@ export function createInitialState(): Tramite33302State {
      * Número asociado al trámite inicial vacío.
      */
     numeroDe: '',
+    /**
+     * Modalidad de certificación inicial vacía.
+     */
+    modalidadCertificacion: '',
+    /** Indica si es un cliente o proveedor extranjero */
+    foreignClientsSuppliers: false,
+    /** Indica si es un proveedor nacional */
+    nationalSuppliers: false,
+    /** Indica si hay modificaciones de socios */
+    modificationsMembers: false,
+    /** Indica si hay cambios en los documentos legales */
+    changesToLegalDocuments: false,
+    /** Indica si es un aviso de fusión o escisión */
+    mergerOrSplitNotice: false,
+    /** Indica si hay fracciones adicionales */
+    additionFractions: false,
+    presenten: false, 
+    contratados: false, 
+    expirado: false, 
+    derechos: false, 
+    /** Aceptación de la sección 253 */
+    acepto253: false,
   };
 }
 
@@ -145,215 +188,15 @@ export class Tramite33302Store extends Store<Tramite33302State> {
   constructor() {
     super(createInitialState());
   }
-  /**
-   * Establece la clave de referencia en el estado.
-   * @param {string} claveDeReferencia - La clave de referencia a establecer.
-   */
-  public setClaveDeReferencia(claveDeReferencia: string): void {
+
+  public actualizarEstado(valores: Partial<Tramite33302State>): void {
     this.update((state) => ({
       ...state,
-      claveDeReferencia: claveDeReferencia,
+      ...valores,
     }));
   }
-
-  /**
-   * Establece la cadena de dependencia en el estado.
-   * @param {string} cadenaDependencia - La cadena de dependencia a establecer.
-   */
-  public setCadenaDependencia(cadenaDependencia: string): void {
-    this.update((state) => ({
-      ...state,
-      cadenaDependencia: cadenaDependencia,
-    }));
-  }
-
-  /**
-   * Establece el nombre del banco en el estado.
-   * @param {string} banco - El nombre del banco a establecer.
-   */
-  public setBanco(banco: string): void {
-    this.update((state) => ({
-      ...state,
-      banco: banco,
-    }));
-  }
-
-  /**
-   * Establece la llave de pago en el estado.
-   * @param {string} llaveDePago - La llave de pago a establecer.
-   */
-  public setLlaveDePago(llaveDePago: string): void {
-    this.update((state) => ({
-      ...state,
-      llaveDePago: llaveDePago,
-    }));
-  }
-
-  /**
-   * Establece la fecha de pago en el estado.
-   * @param {string} fechaDePago - La fecha de pago a establecer.
-   */
-  public setFechaDePago(fechaDePago: string): void {
-    this.update((state) => ({
-      ...state,
-      fechaDePago: fechaDePago,
-    }));
-  }
-
-  /**
-   * Establece el importe de pago en el estado.
-   * @param {string} importeDePago - El importe de pago a establecer.
-   */
-  public setImporteDePago(importeDePago: string): void {
-    this.update((state) => ({
-      ...state,
-      importeDePago: importeDePago,
-    }));
-  }
-
-  /**
-   * Establece el número asociado al trámite en el estado.
-   * @param {string} numeroDe - El número a establecer.
-   */
-  public setNumeroDe(numeroDe: string): void {
-    this.update((state) => ({
-      ...state,
-      numeroDe: numeroDe,
-    }));
-  }
-
-  /**
-   * Establece la modalidad de certificación en el estado.
-   * @param {string} EV - La modalidad de certificación a establecer.
-   */
-  public setModalidadCertificacion(EV: string): void {
-    this.update((state) => ({
-      ...state,
-      modalidadCertificacion: EV,
-    }));
-  }
-
-  /**
-   * Establece si es un proveedor extranjero en el estado.
-   * @param {TipoDevAviso} tipoDevAviso - El tipo de proveedor extranjero a establecer.
-   */
-  public setClientesProveedoresExtranjeros(tipoDevAviso: TipoDevAviso): void {
-    this.update((state) => ({
-      ...state,
-      foreignClientsSuppliers: tipoDevAviso,
-    }));
-  }
-
-  /**
-   * Establece si es un proveedor nacional en el estado.
-   * @param {TipoDevAviso} tipoDevAviso - El tipo de proveedor nacional a establecer.
-   */
-  public setProveedoresNacionales(tipoDevAviso: TipoDevAviso): void {
-    this.update((state) => ({
-      ...state,
-      nationalSuppliers: tipoDevAviso,
-    }));
-  }
-
-  /**
-   * Establece si hubo modificaciones en los miembros en el estado.
-   * @param {TipoDevAviso} tipoDevAviso - El tipo de modificación a establecer.
-   */
-  public setModificacionesMiembros(tipoDevAviso: TipoDevAviso): void {
-    this.update((state) => ({
-      ...state,
-      modificationsMembers: tipoDevAviso,
-    }));
-  }
-
-  /**
-   * Establece si hubo cambios en los documentos legales en el estado.
-   * @param {TipoDevAviso} tipoDevAviso - El tipo de cambio en los documentos legales.
-   */
-  public setCambiosDocumentosLegales(tipoDevAviso: TipoDevAviso): void {
-    this.update((state) => ({
-      ...state,
-      changesToLegalDocuments: tipoDevAviso,
-    }));
-  }
-
-  /**
-   * Establece si hay una notificación de fusión o escisión en el estado.
-   * @param {TipoDevAviso} tipoDevAviso - El tipo de notificación a establecer.
-   */
-  public setNotifiFusionOescision(tipoDevAviso: TipoDevAviso): void {
-    this.update((state) => ({
-      ...state,
-      mergerOrSplitNotice: tipoDevAviso,
-    }));
-  }
-
-  /**
-   * Establece si hay adiciones de fracciones en el estado.
-   * @param {TipoDevAviso} tipoDevAviso - El tipo de adición a establecer.
-   */
-  public setAdicionalesFractions(tipoDevAviso: TipoDevAviso): void {
-    this.update((state) => ({
-      ...state,
-      additionFractions: tipoDevAviso,
-    }));
-  }
-
-  /**
-   * Establece si se selecciona 'Presenten' en el estado.
-   * @param {TipoDevAviso} tipoDevAviso - El valor de 'Presenten' a establecer.
-   */
-  public setPresenten(tipoDevAviso: TipoDevAviso): void {
-    this.update((state) => ({
-      ...state,
-      presenten: tipoDevAviso,
-    }));
-  }
-
-  /**
-   * Establece si se selecciona 'Contratados' en el estado.
-   * @param {TipoDevAviso} tipoDevAviso - El valor de 'Contratados' a establecer.
-   */
-  public setContratados(tipoDevAviso: TipoDevAviso): void {
-    this.update((state) => ({
-      ...state,
-      contratados: tipoDevAviso,
-    }));
-  }
-
-  /**
-   * Establece si se selecciona 'Expirado' en el estado.
-   * @param {TipoDevAviso} tipoDevAviso - El valor de 'Expirado' a establecer.
-   */
-  public setExpirado(tipoDevAviso: TipoDevAviso): void {
-    this.update((state) => ({
-      ...state,
-      expirado: tipoDevAviso,
-    }));
-  }
-
-  /**
-   * Establece si se selecciona 'Derechos' en el estado.
-   * @param {TipoDevAviso} tipoDevAviso - El valor de 'Derechos' a establecer.
-   */
-  public setDerechos(tipoDevAviso: TipoDevAviso): void {
-    this.update((state) => ({
-      ...state,
-      derechos: tipoDevAviso,
-    }));
-  }
-
-  /**
-   * Establece si se aceptó el artículo 253 en el estado.
-   * @param {TipoDevAviso} tipoDevAviso - El tipo de aceptación a establecer.
-   */
-  public setAceptacion253(tipoDevAviso: TipoDevAviso): void {
-    this.update((state) => ({
-      ...state,
-      acepto253: tipoDevAviso,
-    }));
-  }
-
+  
+  
   /**
    * Limpia el formulario y restablece el estado a su estado inicial.
    * @method limpiarFormulario

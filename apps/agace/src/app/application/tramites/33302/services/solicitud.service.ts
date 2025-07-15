@@ -87,13 +87,13 @@ export class Solicitud32301Service {
    * @param {DatosPrevios} DATOS - Objeto que contiene toda la información del formulario.
    */
   actualizarEstadoFormulario(DATOS: DatosPrevios): void {
-    this.tramite33302Store.setCadenaDependencia(DATOS.cadenaDependencia);
-    this.tramite33302Store.setClaveDeReferencia(DATOS.claveDeReferencia);
-    this.tramite33302Store.setBanco(DATOS.banco);
-    this.tramite33302Store.setLlaveDePago(DATOS.llaveDePago);
-    this.tramite33302Store.setFechaDePago(DATOS.fechaDePago);
-    this.tramite33302Store.setImporteDePago(DATOS.importeDePago);
-    this.tramite33302Store.setNumeroDe(DATOS.numeroDe);
+    this.tramite33302Store.actualizarEstado({cadenaDependencia:DATOS.cadenaDependencia});
+    this.tramite33302Store.actualizarEstado({claveDeReferencia:DATOS.claveDeReferencia});
+    this.tramite33302Store.actualizarEstado({banco:DATOS.banco});
+    this.tramite33302Store.actualizarEstado({llaveDePago:DATOS.llaveDePago});
+    this.tramite33302Store.actualizarEstado({fechaDePago:DATOS.fechaDePago});
+    this.tramite33302Store.actualizarEstado({importeDePago:DATOS.importeDePago});
+    this.tramite33302Store.actualizarEstado({numeroDe:DATOS.numeroDe});
   }
 
   /**

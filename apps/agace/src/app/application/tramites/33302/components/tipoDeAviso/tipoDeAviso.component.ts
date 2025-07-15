@@ -108,7 +108,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         map((resp) => {
-          this.store.setModalidadCertificacion(resp.descripcion);
+          this.store.actualizarEstado({modalidadCertificacion:resp.descripcion});
         })
       )
       .subscribe();
@@ -151,7 +151,8 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     const FRACCION_ARANCELATIA = this.miFormulario.get(
       'foreignClientsSuppliers'
     )?.value;
-    this.store.setClientesProveedoresExtranjeros(FRACCION_ARANCELATIA);
+    this.store.actualizarEstado({
+      foreignClientsSuppliers: FRACCION_ARANCELATIA,});
   }
 
   /**
@@ -161,7 +162,8 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   setProveedoresNacionales(): void {
     const FRACCION_ARANCELATIA =
       this.miFormulario.get('nationalSuppliers')?.value;
-    this.store.setProveedoresNacionales(FRACCION_ARANCELATIA);
+    this.store.actualizarEstado({
+      nationalSuppliers: FRACCION_ARANCELATIA,});
   }
 
   /**
@@ -171,7 +173,8 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     const FRACCION_ARANCELATIA = this.miFormulario.get(
       'modificationsMembers'
     )?.value;
-    this.store.setModificacionesMiembros(FRACCION_ARANCELATIA);
+    this.store.actualizarEstado({
+      modificationsMembers: FRACCION_ARANCELATIA});
   }
 
   /**
@@ -182,7 +185,8 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     const FRACCION_ARANCELATIA = this.miFormulario.get(
       'changesToLegalDocuments'
     )?.value;
-    this.store.setCambiosDocumentosLegales(FRACCION_ARANCELATIA);
+    this.store.actualizarEstado({
+      changesToLegalDocuments: FRACCION_ARANCELATIA,});
   }
 
   /**
@@ -193,7 +197,8 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     const FRACCION_ARANCELATIA = this.miFormulario.get(
       'mergerOrSplitNotice'
     )?.value;
-    this.store.setNotifiFusionOescision(FRACCION_ARANCELATIA);
+    this.store.actualizarEstado({
+      mergerOrSplitNotice: FRACCION_ARANCELATIA});
   }
 
   /**
@@ -202,25 +207,31 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   setAdicionalesFractions(): void {
     const FRACCION_ARANCELATIA =
       this.miFormulario.get('additionFractions')?.value;
-    this.store.setAdicionalesFractions(FRACCION_ARANCELATIA);
+    this.store.actualizarEstado({
+      additionFractions: FRACCION_ARANCELATIA});
   }
 
   setPresenten(): void {
     const FRACCION_ARANCELATIA = this.miFormulario.get('presenten')?.value;
-    this.store.setPresenten(FRACCION_ARANCELATIA);
+    this.store.actualizarEstado({
+      presenten: FRACCION_ARANCELATIA,
+    });
   }
 
   setContratados(): void {
     const FRACCION_ARANCELATIA = this.miFormulario.get('contratados')?.value;
-    this.store.setContratados(FRACCION_ARANCELATIA);
+    this.store.actualizarEstado({
+      contratados: FRACCION_ARANCELATIA});
   }
   setExpirado(): void {
     const FRACCION_ARANCELATIA = this.miFormulario.get('expirado')?.value;
-    this.store.setExpirado(FRACCION_ARANCELATIA);
+    this.store.actualizarEstado({
+      expirado: FRACCION_ARANCELATIA});
   }
   setDerechos(): void {
     const FRACCION_ARANCELATIA = this.miFormulario.get('derechos')?.value;
-    this.store.setDerechos(FRACCION_ARANCELATIA);
+    this.store.actualizarEstado({
+      derechos: FRACCION_ARANCELATIA});
   }
 
   /**
@@ -228,7 +239,8 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    */
   setAceptacion253(): void {
     const FRACCION_ARANCELATIA = this.miFormulario.get('acepto253')?.value;
-    this.store.setAceptacion253(FRACCION_ARANCELATIA);
+    this.store.actualizarEstado({
+      acepto253: FRACCION_ARANCELATIA})
   }
 
   /**

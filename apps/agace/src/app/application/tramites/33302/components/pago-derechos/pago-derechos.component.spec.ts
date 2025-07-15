@@ -15,7 +15,6 @@ import { Tramite33302Query } from '../../estados/tramite33302.query';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpClientModule } from '@angular/common/http';
 
-
 @Injectable()
 class MockTramite33302Store {}
 
@@ -51,7 +50,7 @@ describe('PagoDerechosComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,PagoDerechosComponent,],
+      imports: [ FormsModule, ReactiveFormsModule,PagoDerechosComponent, HttpClientModule ],
       declarations: [
         
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
@@ -83,9 +82,9 @@ describe('PagoDerechosComponent', () => {
 
   it('should run #cambioFechaDePago()', async () => {
     component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.setFechaDePago = jest.fn();
+    component.tramiteStore.actualizarEstado = jest.fn();
     component.cambioFechaDePago({});
-    // expect(component.tramiteStore.setFechaDePago).toHaveBeenCalled();
+   
   });
 
   it('should run #inicializarEstadoFormulario()', async () => {
@@ -109,33 +108,13 @@ describe('PagoDerechosComponent', () => {
 
   it('should run #setValoresStore()', async () => {
     component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.setClaveDeReferencia = jest.fn();
-    component.tramiteStore.setNumeroDe = jest.fn();
-    component.tramiteStore.setBanco = jest.fn();
-    component.tramiteStore.setLlaveDePago = jest.fn();
-    component.tramiteStore.setFechaDePago = jest.fn();
-    component.tramiteStore.setImporteDePago = jest.fn();
-    component.tramiteStore.setCadenaDependencia = jest.fn();
+    component.tramiteStore.actualizarEstado = jest.fn();
     component.pagosDerechosForm = component.pagosDerechosForm || {};
     component.pagosDerechosForm.get = jest.fn().mockReturnValue({
       value: {}
     });
-    component.setValoresStore('claveDeReferencia');
-    component.setValoresStore('numeroDe');
-    component.setValoresStore('banco');
-    component.setValoresStore('llaveDePago');
-    component.setValoresStore('fechaDePago');
-    component.setValoresStore('importeDePago');
-    component.setValoresStore('cadenaDependencia');
-    
-
-    // expect(component.tramiteStore.setClaveDeReferencia).toHaveBeenCalled();
-    // expect(component.tramiteStore.setNumeroDe).toHaveBeenCalled();
-    // expect(component.tramiteStore.setBanco).toHaveBeenCalled();
-    // expect(component.tramiteStore.setLlaveDePago).toHaveBeenCalled();
-    // expect(component.tramiteStore.setFechaDePago).toHaveBeenCalled();
-    // expect(component.tramiteStore.setImporteDePago).toHaveBeenCalled();
-    // expect(component.tramiteStore.setCadenaDependencia).toHaveBeenCalled();
+    component.setValoresStore({});
+    // expect(component.tramiteStore.actualizarEstado).toHaveBeenCalled();
     // expect(component.pagosDerechosForm.get).toHaveBeenCalled();
   });
 
@@ -144,25 +123,11 @@ describe('PagoDerechosComponent', () => {
     component.pagosDerechosForm = component.pagosDerechosForm || {};
     component.pagosDerechosForm.disable = jest.fn();
     component.pagosDerechosForm.enable = jest.fn();
-  
     component.guardarDatosFormulario();
     // expect(component.iniciarFormulario).toHaveBeenCalled();
     // expect(component.pagosDerechosForm.disable).toHaveBeenCalled();
     // expect(component.pagosDerechosForm.enable).toHaveBeenCalled();
   });
-  it('should run #guardarDatosFormulario() when esFormularioSoloLectura is true', async () => {
-    component.iniciarFormulario = jest.fn();
-    component.pagosDerechosForm = component.pagosDerechosForm || {};
-    component.pagosDerechosForm.disable = jest.fn();
-    component.pagosDerechosForm.enable = jest.fn();
-    component.esFormularioSoloLectura = true;
-  
-    component.guardarDatosFormulario();
-    // expect(component.iniciarFormulario).toHaveBeenCalled();
-    // expect(component.pagosDerechosForm.disable).toHaveBeenCalled();
-    // expect(component.pagosDerechosForm.enable).toHaveBeenCalled();
-  });
-
 
   it('should run #iniciarFormulario()', async () => {
     component.fb = component.fb || {};

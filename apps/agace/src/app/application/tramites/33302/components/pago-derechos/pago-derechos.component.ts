@@ -62,7 +62,7 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
  * @returns {void}
  */
 cambioFechaDePago(nuevo_valor: string): void {
-  this.tramiteStore.setFechaDePago(nuevo_valor);
+  this.tramiteStore.actualizarEstado({fechaDePago:nuevo_valor});
 }
 
 
@@ -145,31 +145,31 @@ cambioFechaDePago(nuevo_valor: string): void {
     setValoresStore(campo: string): void {
       switch (campo) {
         case 'claveDeReferencia':
-          this.tramiteStore.setClaveDeReferencia(this.pagosDerechosForm.get('claveDeReferencia')?.value);
+          this.tramiteStore.actualizarEstado({claveDeReferencia:this.pagosDerechosForm.get('claveDeReferencia')?.value});
           break;
     
         case 'numeroDe':
-          this.tramiteStore.setNumeroDe(this.pagosDerechosForm.get('numeroDe')?.value);
+          this.tramiteStore.actualizarEstado({numeroDe:this.pagosDerechosForm.get('numeroDe')?.value});
           break;
     
         case 'banco':
-          this.tramiteStore.setBanco(this.pagosDerechosForm.get('banco')?.value);
+          this.tramiteStore.actualizarEstado({banco:this.pagosDerechosForm.get('banco')?.value});
           break;
     
         case 'llaveDePago':
-          this.tramiteStore.setLlaveDePago(this.pagosDerechosForm.get('llaveDePago')?.value);
+          this.tramiteStore.actualizarEstado({llaveDePago:this.pagosDerechosForm.get('llaveDePago')?.value});
           break;
     
         case 'fechaDePago':
-          this.tramiteStore.setFechaDePago(this.pagosDerechosForm.get('fechaDePago')?.value);
+          this.tramiteStore.actualizarEstado({fechaDePago:this.pagosDerechosForm.get('fechaDePago')?.value});
           break;
     
         case 'importeDePago':
-          this.tramiteStore.setImporteDePago(this.pagosDerechosForm.get('importeDePago')?.value);
+          this.tramiteStore.actualizarEstado({importeDePago:this.pagosDerechosForm.get('importeDePago')?.value});
           break;
     
         case 'cadenaDependencia':
-          this.tramiteStore.setCadenaDependencia(this.pagosDerechosForm.get('cadenaDependencia')?.value);
+          this.tramiteStore.actualizarEstado({cadenaDependencia:this.pagosDerechosForm.get('cadenaDependencia')?.value});
           break;
         default:
         

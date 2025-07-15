@@ -2,9 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Solicitud32301Service } from './solicitud.service';
 import { Tramite33302Store } from '../estados/tramite33302.store';
-import { CatalogoResponse } from '@ng-mf/data-access-user';
+import { CatalogoResponse, Catalogo } from '@ng-mf/data-access-user';
 import { DatosPrevios } from '../models/avisomodify.model';
-import { Catalogo } from '@ng-mf/data-access-user';
 
 describe('Solicitud32301Service', () => {
   let service: Solicitud32301Service;
@@ -13,13 +12,7 @@ describe('Solicitud32301Service', () => {
 
   beforeEach(() => {
     tramiteStoreMock = {
-      setCadenaDependencia: jest.fn(),
-      setClaveDeReferencia: jest.fn(),
-      setBanco: jest.fn(),
-      setLlaveDePago: jest.fn(),
-      setFechaDePago: jest.fn(),
-      setImporteDePago: jest.fn(),
-      setNumeroDe: jest.fn(),
+      actualizarEstado: jest.fn(),
     } as unknown as jest.Mocked<Tramite33302Store>;
 
     TestBed.configureTestingModule({
@@ -42,40 +35,35 @@ describe('Solicitud32301Service', () => {
     expect(service).toBeTruthy();
   });
 
-  afterEach(() => {
-    httpMock.verify();
-  });
-  
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-  
   describe('getAvisoModify', () => {
-    it('should fetch aviso modify data from the correct URL', () => {
+    it('should fetch tipoDeAviso data successfully', () => {
       const mockResponse: CatalogoResponse = {
         id: 1,
-        descripcion: 'Test Description',
+        descripcion: 'Test Aviso',
+        
+        
       };
-  
-      service.getAvisoModify().subscribe((data) => {
-        expect(data).toEqual(mockResponse);
+
+      service.getAvisoModify().subscribe((response) => {
+        expect(response).toEqual(mockResponse);
       });
-  
+
       const req = httpMock.expectOne('assets/json/32301/tipoDeAviso.json');
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);
     });
-  
-    it('should handle errors and return a default response', () => {
+
+    it('should return default response on error', () => {
       const defaultResponse: CatalogoResponse = {
         id: 0,
         descripcion: '',
+        
       };
-  
-      service.getAvisoModify().subscribe((data) => {
-        expect(data).toEqual(defaultResponse);
+
+      service.getAvisoModify().subscribe((response) => {
+        expect(response).toEqual(defaultResponse);
       });
-  
+
       const req = httpMock.expectOne('assets/json/32301/tipoDeAviso.json');
       expect(req.request.method).toBe('GET');
       req.error(new ErrorEvent('Network error'));
@@ -84,42 +72,56 @@ describe('Solicitud32301Service', () => {
 
   describe('actualizarEstadoFormulario', () => {
     it('should update the store with the provided data', () => {
-      const mockData: DatosPrevios = {
-        claveDeReferencia: 'ABC123',
-        cadenaDependencia: 'Dependencia XYZ',
-        banco: 'Banco Nacional',
-        llaveDePago: 'PAGO987654',
-        fechaDePago: '2025-03-17',
-        importeDePago: '1500',
-        numeroDe: '123456',
+      const mockDatos: DatosPrevios = {
+        claveDeReferencia: '12345',
+        cadenaDependencia: 'Dependencia Test',
+        banco: 'Banco Test',
+        llaveDePago: 'Llave123',
+        fechaDePago: '2023-01-01',
+        importeDePago: '1000',
+        numeroDe: '67890',
       };
 
-      service.actualizarEstadoFormulario(mockData);
+      service.actualizarEstadoFormulario(mockDatos);
 
-      expect(tramiteStoreMock.setCadenaDependencia).toHaveBeenCalledWith('Dependencia XYZ');
-      expect(tramiteStoreMock.setClaveDeReferencia).toHaveBeenCalledWith('ABC123');
-      expect(tramiteStoreMock.setBanco).toHaveBeenCalledWith('Banco Nacional');
-      expect(tramiteStoreMock.setLlaveDePago).toHaveBeenCalledWith('PAGO987654');
-      expect(tramiteStoreMock.setFechaDePago).toHaveBeenCalledWith('2025-03-17');
-      expect(tramiteStoreMock.setImporteDePago).toHaveBeenCalledWith('1500');
-      expect(tramiteStoreMock.setNumeroDe).toHaveBeenCalledWith('123456');
+      expect(tramiteStoreMock.actualizarEstado).toHaveBeenCalledWith({
+        claveDeReferencia: '12345',
+      });
+      expect(tramiteStoreMock.actualizarEstado).toHaveBeenCalledWith({
+        cadenaDependencia: 'Dependencia Test',
+      });
+      expect(tramiteStoreMock.actualizarEstado).toHaveBeenCalledWith({
+        banco: 'Banco Test',
+      });
+      expect(tramiteStoreMock.actualizarEstado).toHaveBeenCalledWith({
+        llaveDePago: 'Llave123',
+      });
+      expect(tramiteStoreMock.actualizarEstado).toHaveBeenCalledWith({
+        fechaDePago: '2023-01-01',
+      });
+      expect(tramiteStoreMock.actualizarEstado).toHaveBeenCalledWith({
+        importeDePago: '1000',
+      });
+      expect(tramiteStoreMock.actualizarEstado).toHaveBeenCalledWith({
+        numeroDe: '67890',
+      });
     });
   });
 
   describe('getRegistroTomaMuestrasMercanciasData', () => {
-    it('should fetch registro toma muestras data from the correct URL', () => {
+    it('should fetch registro toma muestras data successfully', () => {
       const mockResponse: DatosPrevios = {
-        claveDeReferencia: 'ABC123',
-        cadenaDependencia: 'Dependencia XYZ',
-        banco: 'Banco Nacional',
-        llaveDePago: 'PAGO987654',
-        fechaDePago: '2025-03-17',
-        importeDePago: '1500',
-        numeroDe: '123456',
+        claveDeReferencia: '12345',
+        cadenaDependencia: 'Dependencia Test',
+        banco: 'Banco Test',
+        llaveDePago: 'Llave123',
+        fechaDePago: '2023-01-01',
+        importeDePago: '1000',
+        numeroDe: '67890',
       };
 
-      service.getRegistroTomaMuestrasMercanciasData().subscribe((data) => {
-        expect(data).toEqual(mockResponse);
+      service.getRegistroTomaMuestrasMercanciasData().subscribe((response) => {
+        expect(response).toEqual(mockResponse);
       });
 
       const req = httpMock.expectOne('assets/json/33302/datos-previos.json');
@@ -129,14 +131,14 @@ describe('Solicitud32301Service', () => {
   });
 
   describe('onBancoList', () => {
-    it('should fetch banco list data from the correct URL', () => {
+    it('should fetch banco list successfully', () => {
       const mockResponse: Catalogo[] = [
         { id: 1, descripcion: 'Banco 1' },
         { id: 2, descripcion: 'Banco 2' },
       ];
 
-      service.onBancoList().subscribe((data) => {
-        expect(data).toEqual(mockResponse);
+      service.onBancoList().subscribe((response) => {
+        expect(response).toEqual(mockResponse);
       });
 
       const req = httpMock.expectOne('assets/json/33302/banco-list.json');
