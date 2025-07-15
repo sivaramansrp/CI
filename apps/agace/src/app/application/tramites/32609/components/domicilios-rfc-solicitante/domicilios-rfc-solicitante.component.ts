@@ -26,18 +26,25 @@ import { Tramite32609Query } from '../../estados/tramites32609.query';
 
 
 /**
- * Componente DomiciliosRfcSolicitanteBimestreComponent para la gestión de vehículos dentro del sistema.
+ * Componente para la gestión de domicilios del RFC solicitante en el trámite OEA textil.
  * 
- * Este componente independiente (`standalone`) se encarga de la interacción con la tabla dinámica,
- * el manejo de formularios reactivos, y la visualización de notificaciones. Proporciona una interfaz
- * intuitiva para la gestión de vehículos registrados.
+ * Este componente independiente (`standalone`) permite registrar, editar y administrar
+ * los domicilios asociados al RFC del solicitante del trámite OEA textil. Incluye
+ * funcionalidad para agregar enlaces operativos, validar domicilios y gestionar
+ * instalaciones con tabla dinámica interactiva.
  * 
  * @component
- * @selector app-vehiculos
+ * @selector app-domicilios-rfc-solicitante
  * @standalone true
- * @imports CommonModule, TablaDinamicaComponent, TituloComponent, ReactiveFormsModule, NotificacionesComponent
- * @templateUrl ./Empleado.component.html
- * @styleUrl ./Empleado.component.scss
+ * @implements {OnInit, OnDestroy, AfterViewInit}
+ * @author Equipo de desarrollo VUCEM
+ * @version 1.0.0
+ * @since 2024
+ * 
+ * @example
+ * ```html
+ * <app-domicilios-rfc-solicitante></app-domicilios-rfc-solicitante>
+ * ```
  */
 @Component({
   selector: 'app-domicilios-rfc-solicitante',
@@ -276,7 +283,13 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
   }
 
   /**
-   * Crea el formulario reactivo para el registro de vehículos.
+   * @method crearFormulario
+   * Crea el formulario reactivo para el registro de domicilios RFC solicitante.
+   * 
+   * Inicializa el FormGroup con los controles necesarios para gestionar
+   * la información de domicilios registrados del solicitante.
+   * 
+   * @returns {void}
    */
   crearFormulario(): void {
     this.forma = this.fb.group({
@@ -300,9 +313,14 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
     });
   }
 
-/**
+  /**
+   * @method getDomiciliosRegistradosList
    * Método para obtener los catálogos necesarios del formulario.
-   * Utiliza forkJoin para ejecutar ambas llamadas API en paralelo.
+   * 
+   * Utiliza forkJoin para ejecutar ambas llamadas API en paralelo
+   * y cargar los datos necesarios para el componente.
+   * 
+   * @returns {void}
    */
   getDomiciliosRegistradosList(): void {
     forkJoin({

@@ -24,18 +24,25 @@ import { Tramite32609Query } from '../../estados/tramites32609.query';
 
 
 /**
- * Componente NumeroEmpleadosBimestreComponent para la gestión de vehículos dentro del sistema.
+ * Componente para la gestión del número de empleados por bimestre en el trámite OEA textil.
  * 
- * Este componente independiente (`standalone`) se encarga de la interacción con la tabla dinámica,
- * el manejo de formularios reactivos, y la visualización de notificaciones. Proporciona una interfaz
- * intuitiva para la gestión de vehículos registrados.
+ * Este componente independiente (`standalone`) permite registrar, editar y eliminar
+ * información sobre el número de empleados por bimestre de empresas relacionadas
+ * con el solicitante del trámite OEA textil. Incluye validación de RFC,
+ * gestión de modales y tabla dinámica interactiva.
  * 
  * @component
- * @selector app-vehiculos
+ * @selector app-numero-empleados-bimestre
  * @standalone true
- * @imports CommonModule, TablaDinamicaComponent, TituloComponent, ReactiveFormsModule, NotificacionesComponent
- * @templateUrl ./Empleado.component.html
- * @styleUrl ./Empleado.component.scss
+ * @implements {OnInit, OnDestroy}
+ * @author Equipo de desarrollo VUCEM
+ * @version 1.0.0
+ * @since 2024
+ * 
+ * @example
+ * ```html
+ * <app-numero-empleados-bimestre></app-numero-empleados-bimestre>
+ * ```
  */
 @Component({
   selector: 'app-numero-empleados-bimestre',
@@ -110,70 +117,112 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   @ViewChild('modalDeConfirmacion') confirmacionElemento!: ElementRef;
 
   /**
-   * Constante para la nota de confirmación del vehículo.
+   * Constante para la nota de confirmación del registro de empleados.
+   * 
+   * @type {string}
+   * @readonly
    */
   CONFIRMACION_NUMEROEMPLEADOS = NOTA.CONFIRMACION_NUMEROEMPLEADOS;
 
+  /**
+   * Mensajes de validación para mostrar al usuario.
+   * 
+   * @type {object}
+   * @readonly
+   */
   MENSAJE_DE_VALIDACION = MENSAJE_DE_VALIDACION;
 
  /**
-   * Configuración para las columnas de la tabla de vehículos.
+   * Configuración para las columnas de la tabla de empleados por bimestre.
+   * 
+   * @type {object}
+   * @readonly
    */
   ParqueVehicular = NUMERO_EMPLEADOS_TABLA_DATOS;
 
   /**
    * Subject utilizado para rastrear la destrucción del componente.
    * Ayuda a cancelar la suscripción de observables para evitar fugas de memoria.
+   * 
+   * @type {Subject<void>}
    */
   destroyed$: Subject<void> = new Subject();
 
   /**
-   * Indica si el popup está abierto.
+   * Indica si el popup de selección múltiple está abierto.
+   * 
+   * @type {boolean}
+   * @default false
    */
   multipleSeleccionPopupAbierto: boolean = false;
 
   /**
-   * Indica si el popup está abierto.
+   * Indica si el popup de confirmación de eliminación está abierto.
+   * 
+   * @type {boolean}
+   * @default false
    */
   confirmEliminarPopupAbierto: boolean = false;
 
   /**
    * Notificación que se muestra al usuario.
+   * 
+   * @type {Notificacion}
    */
   public nuevaNotificacion!: Notificacion;
 
   /**
-   * Fila seleccionada en la tabla de mercancías.
+   * Fila seleccionada en la tabla de empleados por bimestre.
+   * 
+   * @type {NumeroEmpleadosTabla}
    */
   filaSeleccionadaNumeroEmpleados!: NumeroEmpleadosTabla;
 
   /**
-   * Lista de filas seleccionadas en la tabla de mercancías.
+   * Lista de filas seleccionadas en la tabla de empleados por bimestre.
+   * 
+   * @type {NumeroEmpleadosTabla[]}
+   * @default []
    */
   listaFilaSeleccionadaEmpleado: NumeroEmpleadosTabla[] = [] as NumeroEmpleadosTabla[];
 
   /**
    * Indica si el botón de eliminar está habilitado.
+   * 
+   * @type {boolean}
+   * @default false
    */
   enableEliminarBoton: boolean = false;
 
   /**
-   * Indica si un archivo está seleccionado.
+   * Indica si el botón de modificar está habilitado.
+   * 
+   * @type {boolean}
+   * @default false
    */
   enableModficarBoton: boolean = false;
 
   /**
-   * Indica si el popup está cerrado.
+   * Indica si el popup de confirmación de eliminación está cerrado.
+   * 
+   * @type {boolean}
+   * @default true
    */
   confirmEliminarPopupCerrado: boolean = true;
 
   /**
-   * Indica si se debe mostrar el modal de datos de mercancía.
+   * Indica si se debe mostrar el modal de datos de empleado.
+   * 
+   * @type {boolean}
+   * @default false
    */
   mostrarModalDatosEmpleado: boolean = false;
 
   /**
-   * Indica si el popup está cerrado.
+   * Indica si el popup de selección múltiple está cerrado.
+   * 
+   * @type {boolean}
+   * @default true
    */
   multipleSeleccionPopupCerrado: boolean = true;
 
@@ -194,10 +243,17 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   colapsable: boolean = true;
 
   /**
-   * Constructor para NumeroEmpleadosBimestreComponent.
-   * Inicializa el formulario e inyecta los servicios necesarios.
-   * @param fb - FormBuilder para crear formularios reactivos.
-   * @param tramite32609Store - Store para gestionar el estado relacionado con el Trámite 32609.
+   * Constructor del componente NumeroEmpleadosBimestreComponent.
+   * 
+   * Inicializa las dependencias necesarias y configura las suscripciones
+   * para el manejo del estado del componente y formularios reactivos.
+   * También configura la suscripción para el estado de solo lectura.
+   * 
+   * @param {FormBuilder} fb - Servicio para crear formularios reactivos
+   * @param {Tramite32609Store} tramite32609Store - Store para gestionar el estado del trámite
+   * @param {Tramite32609Query} tramite32609Query - Query para obtener datos del trámite
+   * @param {ConsultaioQuery} consultaioQuery - Query para obtener el estado de consulta
+   * @param {OeaTextilRegistroService} servicio - Servicio para operaciones del trámite OEA textil
    */
   constructor(
     public fb: FormBuilder,
@@ -237,7 +293,14 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Crea el formulario reactivo para el registro de vehículos.
+   * @method crearFormulario
+   * Crea y configura los formularios reactivos necesarios para el componente.
+   * 
+   * Inicializa dos formularios:
+   * - rfcForm: Para capturar y validar el RFC
+   * - registroNumeroEmpleadosForm: Para registrar datos completos de empleados
+   * 
+   * @returns {void}
    */
   crearFormulario(): void {
 
@@ -256,7 +319,13 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
 
 
   /**
-   * Abre el cuadro de diálogo modal para el registro de vehículos.
+   * @method agregarDialogoDatos
+   * Abre el modal para el registro de empleados por bimestre.
+   * 
+   * Utiliza Bootstrap Modal para mostrar el formulario de registro.
+   * Verifica que el elemento del modal exista antes de intentar mostrarlo.
+   * 
+   * @returns {void}
    */
   agregarDialogoDatos(): void {
     if (this.registroDeNumeroEmpleadosElemento) {
@@ -269,8 +338,14 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Envía los datos del formulario y muestra el modal de confirmación.
-   * Si el formulario es inválido, marca todos los campos como tocados.
+   * @method enviarDialogData
+   * Procesa y envía los datos del formulario de empleados.
+   * 
+   * Valida el formulario y procede según el resultado:
+   * - Si es válido: muestra confirmación, procesa datos y resetea formulario
+   * - Si es inválido: muestra mensaje de validación y marca campos como tocados
+   * 
+   * @returns {void}
    */
   enviarDialogData(): void {
     if (this.registroNumeroEmpleadosForm.valid) {
@@ -287,7 +362,14 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Envía los datos del formulario y muestra el modal de confirmación.
+   * @method enNuevaNotificacion
+   * Crea y configura una nueva notificación para mostrar al usuario.
+   * 
+   * Configura los parámetros de la notificación incluyendo tipo, categoría,
+   * modo de visualización y mensaje a mostrar.
+   * 
+   * @param {string} datos - El mensaje que se mostrará en la notificación
+   * @returns {void}
    */
   enNuevaNotificacion(datos:string):void {
      this.nuevaNotificacion = {
@@ -303,16 +385,26 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method modalCancelar
    * Cancela el cuadro de diálogo modal para el registro de vehículos.
-   * Este método oculta el modal y restablece el formulario.
+   * 
+   * Este método oculta el modal y restablece el formulario a su estado inicial.
+   * Utiliza el método cambiarEstadoModal para gestionar la visibilidad.
+   * 
+   * @returns {void}
    */
   modalCancelar(): void {
     this.cambiarEstadoModal();
   }
 
   /**
+   * @method cambiarEstadoModal
    * Alterna la visibilidad del cuadro de diálogo modal para el registro de vehículos.
-   * Si el modal está visible actualmente, se ocultará.
+   * 
+   * Si el modal está visible actualmente, se ocultará utilizando la instancia de Bootstrap Modal.
+   * Gestiona el estado del modal de forma segura verificando la existencia de la instancia.
+   * 
+   * @returns {void}
    */
   cambiarEstadoModal(): void {
     const MODAL_INSTANCIA = Modal.getInstance(
@@ -324,8 +416,13 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method NumeroEmpleadosInfoDatos
    * Agrega los datos actuales del formulario a la lista de vehículos registrados.
-   * Los datos del formulario se añaden al array `numeroEmpleadosBimestreList`.
+   * 
+   * Los datos del formulario se añaden al array `numeroEmpleadosBimestreList` después
+   * de procesar y validar la información de empleados por bimestre.
+   * 
+   * @returns {void}
    */
   NumeroEmpleadosInfoDatos(): void {
     const OBTENER_DESCRIPCION = (array: Catalogo[], index: number): string =>
@@ -369,7 +466,12 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
     }
   }
   /**
+   * @method cerrarModal
    * Método para cerrar el modal de confirmación.
+   * 
+   * Desactiva el estado del diálogo para ocultar la ventana modal
+   * de confirmación actualmente visible.
+   * 
    * @returns {void}
    */
   cerrarModal(): void {
@@ -377,8 +479,14 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method manejarFilaSeleccionada
    * Maneja la fila seleccionada en la tabla de mercancías.
-   * fila Fila seleccionada.
+   * 
+   * Actualiza el estado de los botones de modificar y eliminar según
+   * la selección de filas en la tabla de empleados.
+   * 
+   * @param {NumeroEmpleadosTabla[]} fila - Fila seleccionada en la tabla
+   * @returns {void}
    */
   manejarFilaSeleccionada(fila: NumeroEmpleadosTabla[]): void {
     this.listaFilaSeleccionadaEmpleado = fila;
@@ -393,7 +501,13 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   
 
   /**
+   * @method actualizarFilaSeleccionada
    * Actualiza la fila seleccionada con los datos más recientes de la tabla.
+   * 
+   * Busca en la lista de empleados el elemento que coincida con el ID de la fila
+   * seleccionada y actualiza la referencia con los datos más recientes.
+   * 
+   * @returns {void}
    */
   actualizarFilaSeleccionada(): void {
     const DATOS_ACTUALIZADOS = this.numeroEmpleadosBimestreList.find(
@@ -406,8 +520,14 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method eliminarEmpleadoItem
    * Filtra y elimina los elementos seleccionados de la tabla de mercancías.
+   * 
    * Actualiza el estado del almacén y cierra el popup de confirmación de eliminación.
+   * Los elementos se eliminan basándose en los IDs de la lista de filas seleccionadas.
+   * 
+   * @param {boolean} evento - Confirmación de eliminación del usuario
+   * @returns {void}
    */
   eliminarEmpleadoItem(evento:boolean): void {
     if(evento === true) {
@@ -427,7 +547,13 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method cerrarEliminarConfirmationPopup
    * Cierra el popup de confirmación de eliminación.
+   * 
+   * Restablece los estados de apertura y cierre del popup de confirmación
+   * para eliminar elementos de la tabla.
+   * 
+   * @returns {void}
    */
   cerrarEliminarConfirmationPopup(): void {
     this.confirmEliminarPopupAbierto = false;
@@ -435,9 +561,13 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method modificarItemEmpleado
    * Modifica los datos de una fila seleccionada en la tabla de mercancías.
+   * 
    * Actualiza el formulario de mercancía con los datos de la fila seleccionada
-   * y abre el modal para editar los datos.
+   * y abre el modal para editar los datos del empleado.
+   * 
+   * @returns {void}
    */
   modificarItemEmpleado(): void {
     const SELECCIONADAS = this.listaFilaSeleccionadaEmpleado;
@@ -479,7 +609,12 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   /**
    * @method patchModifyiedData
    * Rellena el formulario con los datos de la fila seleccionada para su modificación.
-   * Este método utiliza `patchValue` para actualizar los valores del formulario.
+   * 
+   * Este método utiliza `patchValue` para actualizar los valores del formulario
+   * con los datos de la fila seleccionada, incluyendo la búsqueda del índice correcto
+   * para el campo de bimestre.
+   * 
+   * @returns {void}
    */
   patchModifyiedData(): void {
      const OBTENER_INDICE = (array: Catalogo[], value: string): number =>
@@ -497,7 +632,12 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   /**
    * @method abrirMultipleSeleccionPopup
    * Muestra un popup de error si se seleccionan múltiples filas para modificar.
-   * Este método se activa cuando el botón de modificar está habilitado.
+   * 
+   * Este método se activa cuando el botón de modificar está habilitado pero
+   * se han seleccionado múltiples elementos, lo cual no está permitido
+   * para la operación de modificación.
+   * 
+   * @returns {void}
    */
   abrirMultipleSeleccionPopup(): void {
     this.nuevaNotificacion = {
@@ -514,9 +654,13 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method confirmEliminarEmpleadoItem
    * Confirma la eliminación de los elementos seleccionados en la tabla de mercancías.
+   * 
    * Si no hay elementos seleccionados, no realiza ninguna acción.
    * Si hay elementos seleccionados, abre el popup de confirmación de eliminación.
+   * 
+   * @returns {void}
    */
   confirmEliminarEmpleadoItem(): void {
     if (this.listaFilaSeleccionadaEmpleado.length === 0) {
@@ -538,7 +682,11 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   /**
    * @method abrirElimninarConfirmationopup
    * Abre un popup de confirmación para eliminar los registros seleccionados.
-   * Si no hay registros seleccionados, no realiza ninguna acción.
+   * 
+   * Establece el estado del popup de confirmación como abierto para mostrar
+   * la ventana de confirmación de eliminación al usuario.
+   * 
+   * @returns {void}
    */
   abrirElimninarConfirmationopup(): void {
     this.nuevaNotificacion = {
@@ -555,7 +703,13 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method cerrarMultipleSeleccionPopup
    * Cierra el popup de selección múltiple.
+   * 
+   * Restablece los estados de apertura y cierre del popup de selección múltiple
+   * para ocultar la ventana modal.
+   * 
+   * @returns {void}
    */
   cerrarMultipleSeleccionPopup(): void {
     this.multipleSeleccionPopupAbierto = false;
@@ -563,9 +717,14 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method esInvalido
    * Verifica si un control de formulario es inválido, está tocado o ha sido modificado.
-   * @param nombreControl - El nombre del control de formulario a verificar.
-   * @returns Verdadero si el control es inválido, de lo contrario, falso.
+   * 
+   * Utiliza el estado del control del formulario para determinar si debe mostrarse
+   * un mensaje de error de validación al usuario.
+   * 
+   * @param {string} nombreControl - El nombre del control de formulario a verificar
+   * @returns {boolean} Verdadero si el control es inválido, de lo contrario, falso
    */
   public esInvalido(nombreControl: string): boolean {
     const CONTROL = this.registroNumeroEmpleadosForm.get(nombreControl);
@@ -575,10 +734,13 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method onBuscarRfc
    * Busca los detalles del RFC para una persona física nacional (PFN).
+   * 
    * Si el RFC tiene longitud mayor a 0, realiza una llamada al servicio para obtener los detalles.
    * Actualiza el formulario con la denominación social y el número de empleados obtenidos.
-   * @param rfc - El RFC de la persona física nacional.
+   * 
+   * @returns {void}
    */
   onBuscarRfc(): void {
     if (this.rfcForm.valid) {
@@ -598,15 +760,26 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method limpiarFormulario
    * Restablece el formulario de registro de vehículos a su estado inicial.
+   * 
+   * Limpia todos los campos del formulario reactivo, estableciendo sus valores
+   * a su estado original sin validaciones activas.
+   * 
+   * @returns {void}
    */
   limpiarFormulario(): void {
     this.registroNumeroEmpleadosForm.reset();
   }
   
-   /**
+  /**
+   * @method mostrar_colapsable
    * Método para mostrar u ocultar el formulario colapsable.
-   * Cambia el estado de la variable `colapsable`.
+   * 
+   * Cambia el estado de la variable `colapsable` para controlar la visibilidad
+   * de elementos plegables en la interfaz de usuario.
+   * 
+   * @returns {void}
    */
   mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;

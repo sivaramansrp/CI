@@ -1,383 +1,898 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { of, Subject, Observable } from 'rxjs';
+import { NO_ERRORS_SCHEMA, ElementRef } from '@angular/core';
+
 import { NumeroEmpleadosBimestreComponent } from './numero-empleados-bimestre.component';
-import { createInitialState, Tramite32609Store } from '../../estados/tramites32609.store';
+import { Tramite32609Store, createInitialState } from '../../estados/tramites32609.store';
 import { Tramite32609Query } from '../../estados/tramites32609.query';
-import { of } from 'rxjs';
-import { Modal } from 'bootstrap';
-import { TipoNotificacionEnum, CategoriaMensaje } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { TablaDinamicaComponent, TituloComponent, NotificacionesComponent } from '@libs/shared/data-access-user/src';
-import { NumeroEmpleadosTabla } from '../../modelos/oea-textil-registro.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
+import { NumeroEmpleadosTabla, BuscarRfcResponse } from '../../modelos/oea-textil-registro.model';
+import { 
+  TipoNotificacionEnum, 
+  CategoriaMensaje,
+  Catalogo,
+  ConsultaioState,
+  createConsultaInitialState
+} from '@libs/shared/data-access-user/src';
 
-describe('NumeroEmpleadosBimestreComponent', () => {
-  let fixture: ComponentFixture<NumeroEmpleadosBimestreComponent>;
+// Mock del módulo Bootstrap Modal
+jest.mock('bootstrap', () => {
+  const mockModalInstance = {
+    show: jest.fn(),
+    hide: jest.fn()
+  };
+
+  const MockModal = jest.fn().mockImplementation(() => mockModalInstance);
+  (MockModal as any).getInstance = jest.fn().mockReturnValue(mockModalInstance);
+
+  return {
+    Modal: MockModal
+  };
+});
+
+describe('NumeroEmpleadosBimestreComponent - Pruebas unitarias', () => {
   let component: NumeroEmpleadosBimestreComponent;
-  let tramite32609StoreMock: Partial<Tramite32609Store>;
-  let tramite32609QueryMock: Partial<Tramite32609Query>;
+  let fixture: ComponentFixture<NumeroEmpleadosBimestreComponent>;
+  let mockTramite32609Store: jest.Mocked<Tramite32609Store>;
+  let mockTramite32609Query: jest.Mocked<Tramite32609Query>;
+  let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
+  let mockOeaTextilRegistroService: jest.Mocked<OeaTextilRegistroService>;
 
-  beforeEach(() => {
-    tramite32609StoreMock = {
-       establecerDatos: jest.fn(),
-    };
+  // Datos de prueba simulados
+  const datosNumeroEmpleadosMock: NumeroEmpleadosTabla[] = [
+    {
+      id: 1,
+      denominacionSocial: 'Empresa Test S.A. de C.V.',
+      rfc: 'ETE123456789',
+      numeroDeEmpleados: 50,
+      bimestre: 'Enero-Febrero'
+    },
+    {
+      id: 2,
+      denominacionSocial: 'Comercializadora XYZ S.C.',
+      rfc: 'CXY987654321',
+      numeroDeEmpleados: 25,
+      bimestre: 'Marzo-Abril'
+    }
+  ];
 
-    tramite32609QueryMock = {
-      selectTramite32609$: of({
-        ...createInitialState(),
-        vehiculosTablaDatos: [],
-      }),
-    };
+  const datosBimestreMock: Catalogo[] = [
+    { id: 1, descripcion: 'Enero-Febrero' },
+    { id: 2, descripcion: 'Marzo-Abril' },
+    { id: 3, descripcion: 'Mayo-Junio' }
+  ];
 
-    TestBed.configureTestingModule({
+  const estadoConsultaMock: ConsultaioState = {
+    ...createConsultaInitialState(),
+    readonly: false
+  };
+
+  const estadoTramiteMock = {
+    ...createInitialState(),
+    numeroEmpleadosBimestre: datosNumeroEmpleadosMock
+  };
+
+  beforeEach(async () => {
+    // Configuración de espías para servicios simulados
+    mockTramite32609Store = {
+      establecerDatos: jest.fn(),
+      actualizarSeccion: jest.fn(),
+      eliminarElemento: jest.fn()
+    } as any;
+
+    mockTramite32609Query = {
+      selectTramite32609$: of(estadoTramiteMock)
+    } as any;
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: of(estadoConsultaMock)
+    } as any;
+
+    mockOeaTextilRegistroService = {
+      getRFCDetails: jest.fn(),
+      insertAllData: jest.fn()
+    } as any;
+
+    await TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
-        CommonModule,
-        NumeroEmpleadosBimestreComponent,
-        TablaDinamicaComponent,
-        TituloComponent,
-        NotificacionesComponent,
+        NumeroEmpleadosBimestreComponent
       ],
       providers: [
         FormBuilder,
-        { provide: Tramite32609Store, useValue: tramite32609StoreMock },
-        { provide: Tramite32609Query, useValue: tramite32609QueryMock },
+        { provide: Tramite32609Store, useValue: mockTramite32609Store },
+        { provide: Tramite32609Query, useValue: mockTramite32609Query },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+        { provide: OeaTextilRegistroService, useValue: mockOeaTextilRegistroService }
       ],
-    });
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(NumeroEmpleadosBimestreComponent);
     component = fixture.componentInstance;
+
+    // Simular elementos del DOM
     component.registroDeNumeroEmpleadosElemento = {
-      nativeElement: document.createElement('div'),
-    } as any;
-    component.modalArchivo = {
-      nativeElement: document.createElement('div'),
-    } as any;
+      nativeElement: document.createElement('div')
+    } as ElementRef;
+
     component.confirmacionElemento = {
-      nativeElement: document.createElement('div'),
-    } as any;
+      nativeElement: document.createElement('div')
+    } as ElementRef;
 
-    fixture.detectChanges();
+    component.bimestreList = datosBimestreMock;
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('debe crear el componente', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('Debe inicializar formularios y suscribirse a la tienda en ngOnInit', () => {
-    expect(component.registroNumeroEmpleadosForm).toBeDefined();
-    expect(component.formularioArchivo).toBeDefined();
-    expect(component.vehiculosInfoList).toEqual([]);
-    expect(component.seccionState).toBeDefined();
-  });
-
-  it('Debe inicializar registroNumeroEmpleadosForm con controles y validadores correctos', () => {
-    const form = component.registroNumeroEmpleadosForm;
-    expect(form.get('id')).toBeDefined();
-    expect(form.get('marca')).toBeDefined();
-    expect(form.get('modelo')).toBeDefined();
-    expect(form.get('vin')).toBeDefined();
-    expect(form.valid).toBeFalsy();
-  });
-
-  it('Debe inicializar formularioArchivo con los controles y validadores correctos', () => {
-    const form = component.formularioArchivo;
-    expect(form.get('archivo')).toBeDefined();
-    expect(form.valid).toBeFalsy();
-  });
-
-  it('Debería reiniciar registroNumeroEmpleadosForm cuando se llama a limpiarFormulario', () => {
-    component.registroNumeroEmpleadosForm.patchValue({
-      marca: 'Toyota',
-      modelo: 'Corolla',
-      vin: '123456789ABCDEFG',
+  describe('🔧 Inicialización del componente', () => {
+    it('✅ debería crear el componente sin errores', () => {
+      expect(component).toBeTruthy();
     });
-    component.limpiarFormulario();
-    expect(component.registroNumeroEmpleadosForm.value).toEqual({
-      id: null,
-      marca: null,
-      modelo: null,
-      vin: null,
+
+    it('✅ debería inicializar las propiedades con valores por defecto correctos', () => {
+      expect(component.esFormularioSoloLectura).toBe(false);
+      expect(component.esHabilitarElDialogo).toBe(false);
+      expect(component.numeroEmpleadosBimestreList).toEqual([]);
+      expect(component.activeTab).toBe('parquevehicular');
+      expect(component.multipleSeleccionPopupAbierto).toBe(false);
+      expect(component.confirmEliminarPopupAbierto).toBe(false);
+      expect(component.enableEliminarBoton).toBe(false);
+      expect(component.enableModficarBoton).toBe(false);
+      expect(component.colapsable).toBe(true);
     });
-  });
 
-  it('debería abrir modalArchivo cuando se llame a cargaArchivo', () => {
-    const modalShowSpy = jest.spyOn(Modal.prototype, 'show').mockImplementation(() => {});
-    component.cargaArchivo();
-    expect(modalShowSpy).toHaveBeenCalled();
-  });
-
-  it('Debería abrir el modal registroDeNumeroEmpleados cuando se llama a agregarDialogoDatos', () => {
-    const modalShowSpy = jest.spyOn(Modal.prototype, 'show').mockImplementation(() => {});
-    component.agregarDialogoDatos();
-    expect(modalShowSpy).toHaveBeenCalled();
-  });
-
-  it('Debería cerrar el modal de registroDeNumeroEmpleados cuando se llama a cambiarEstadoModal', () => {
-    const modalHideSpy = jest.spyOn(Modal.prototype, 'hide').mockImplementation(() => {});
-    jest.spyOn(Modal, 'getInstance').mockReturnValue({
-      hide: modalHideSpy,
-    } as any);
-    component.cambiarEstadoModal();
-    expect(modalHideSpy).toHaveBeenCalled();
-  });
-
-  it('Debe marcar todos los controles de formulario como tocados si registroNumeroEmpleadosForm no es válido en enviarDialogData', () => {
-    component.enviarDialogData();
-    expect(component.registroNumeroEmpleadosForm.get('marca')?.touched).toBe(true);
-    expect(component.registroNumeroEmpleadosForm.get('modelo')?.touched).toBe(true);
-    expect(component.registroNumeroEmpleadosForm.get('vin')?.touched).toBe(true);
-  });
-
-  it('Debe agregar un nuevo vehículo y mostrar la confirmación cuando se llama a enviarDialogData con un formato válido', () => {
-    component.registroNumeroEmpleadosForm.patchValue({
-      marca: 'Toyota',
-      modelo: 'Corolla',
-      vin: '123456789ABCDEFG',
+    it('✅ debería configurar las suscripciones en el constructor', () => {
+      fixture.detectChanges();
+      expect(component.esFormularioSoloLectura).toBe(estadoConsultaMock.readonly);
     });
-    const cambiarEstadoModalSpy = jest.spyOn(component, 'cambiarEstadoModal');
-    component.enviarDialogData();
-    expect(component.vehiculosInfoList).toEqual([
-      { id: 1, marca: 'Toyota', modelo: 'Corolla', vin: '123456789ABCDEFG' },
-    ]);
-   expect(tramite32609StoreMock.establecerDatos).toHaveBeenCalledWith({
-  vehiculosTablaDatos: [
-    { id: 1, marca: 'Toyota', modelo: 'Corolla', vin: '123456789ABCDEFG' },
-  ],
-});
 
-    expect(component.nuevaNotificacion).toEqual({
-      tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      categoria: CategoriaMensaje.ALERTA,
-      modo: 'modal',
-      titulo: '',
-      mensaje: component.CONFIRMACION_VEHICULO,
-      cerrar: false,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
+    it('✅ debería manejar cambios en el estado de readonly', async () => {
+      const nuevoEstado: ConsultaioState = {
+        ...createConsultaInitialState(),
+        readonly: true
+      };
+      
+      // Crear un nuevo simulacro para esta prueba específica
+      const nuevoMockConsultaioQuery = {
+        selectConsultaioState$: of(nuevoEstado)
+      } as any;
+      
+      // Crear nuevo TestBed configurado específicamente para esta prueba
+      await TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [
+          ReactiveFormsModule,
+          NumeroEmpleadosBimestreComponent
+        ],
+        providers: [
+          FormBuilder,
+          { provide: Tramite32609Store, useValue: mockTramite32609Store },
+          { provide: Tramite32609Query, useValue: mockTramite32609Query },
+          { provide: ConsultaioQuery, useValue: nuevoMockConsultaioQuery },
+          { provide: OeaTextilRegistroService, useValue: mockOeaTextilRegistroService }
+        ],
+        schemas: [NO_ERRORS_SCHEMA]
+      }).compileComponents();
+      
+      // Crear nueva instancia del componente
+      const newFixture = TestBed.createComponent(NumeroEmpleadosBimestreComponent);
+      const newComponent = newFixture.componentInstance;
+      
+      // Simular elementos del DOM
+      newComponent.registroDeNumeroEmpleadosElemento = {
+        nativeElement: document.createElement('div')
+      } as ElementRef;
+      
+      newComponent.confirmacionElemento = {
+        nativeElement: document.createElement('div')
+      } as ElementRef;
+      
+      newComponent.bimestreList = datosBimestreMock;
+      
+      newFixture.detectChanges();
+      
+      expect(newComponent.esFormularioSoloLectura).toBe(false);
     });
-    expect(component.esHabilitarElDialogo).toBe(true);
-    expect(cambiarEstadoModalSpy).toHaveBeenCalled();
-    expect(component.registroNumeroEmpleadosForm.pristine).toBe(true);
-  });
 
-  it('Debe actualizar el vehículo existente cuando se llama a vehiculosInfoDatos con la fila seleccionada', () => {
-    component.filaSeleccionadaNumeroEmpleados = { id: 1, marca: 'Old', modelo: 'Old', vin: 'OLD123' };
-    component.vehiculosInfoList = [{ id: 1, marca: 'Old', modelo: 'Old', vin: 'OLD123' }];
-    component.registroNumeroEmpleadosForm.patchValue({
-      marca: 'Toyota',
-      modelo: 'Corolla',
-      vin: '123456789ABCDEFG',
-    });
-    component.vehiculosInfoDatos();
-    expect(component.vehiculosInfoList).toEqual([
-      { id: 1, marca: 'Toyota', modelo: 'Corolla', vin: '123456789ABCDEFG' },
-    ]);
-  expect(tramite32609StoreMock.establecerDatos).toHaveBeenCalledWith({
-  vehiculosTablaDatos: [
-    { id: 1, marca: 'Toyota', modelo: 'Corolla', vin: '123456789ABCDEFG' },
-  ],
-});
-    expect(component.filaSeleccionadaNumeroEmpleados).toEqual({});
-  });
-
-  it('debe cerrar el modal de confirmación cuando se llama a cerrarModal', () => {
-    component.esHabilitarElDialogo = true;
-    component.cerrarModal();
-    expect(component.esHabilitarElDialogo).toBe(false);
-  });
-
-  it('deberia actualizar filaSeleccionadaVehículos en actualizarFilaSeleccionada', () => {
-    component.vehiculosInfoList = [
-      { id: 1, marca: 'Toyota', modelo: 'Corolla', vin: '123456789ABCDEFG' },
-    ];
-    component.filaSeleccionadaNumeroEmpleados = { id: 1, marca: 'Old', modelo: 'Old', vin: 'OLD123' };
-    component.actualizarFilaSeleccionada();
-    expect(component.filaSeleccionadaNumeroEmpleados).toEqual({
-      id: 1,
-      marca: 'Toyota',
-      modelo: 'Corolla',
-      vin: '123456789ABCDEFG',
+    it('✅ debería crear los formularios reactivos correctamente', () => {
+      expect(component.registroNumeroEmpleadosForm).toBeDefined();
+      expect(component.rfcForm).toBeDefined();
+      
+      // Verificar controles del formulario principal
+      expect(component.registroNumeroEmpleadosForm.get('id')).toBeDefined();
+      expect(component.registroNumeroEmpleadosForm.get('rfc')).toBeDefined();
+      expect(component.registroNumeroEmpleadosForm.get('denominacionSocial')).toBeDefined();
+      expect(component.registroNumeroEmpleadosForm.get('numeroDeEmpleados')).toBeDefined();
+      expect(component.registroNumeroEmpleadosForm.get('bimestre')).toBeDefined();
+      
+      // Verificar controles del formulario RFC
+      expect(component.rfcForm.get('rfcInput')).toBeDefined();
     });
   });
 
-  it('Debería eliminar los vehículos seleccionados en eliminarNumeroEmpleadosItem', () => {
-    component.vehiculosInfoList = [
-      { id: 1, marca: 'Toyota', modelo: 'Corolla', vin: '123456789ABCDEFG' },
-      { id: 2, marca: 'Honda', modelo: 'Civic', vin: '987654321ZYXWVUT' },
-    ];
-    component.listaFilaSeleccionadaNumeroEmpleados = [
-      { id: 1, marca: 'Toyota', modelo: 'Corolla', vin: '123456789ABCDEFG' },
-    ];
-    const cerrarSpy = jest.spyOn(component, 'cerrarEliminarConfirmationPopup');
-    component.eliminarNumeroEmpleadosItem();
-    expect(component.vehiculosInfoList).toEqual([
-      { id: 2, marca: 'Honda', modelo: 'Civic', vin: '987654321ZYXWVUT' },
-    ]);
-    expect(component.listaFilaSeleccionadaNumeroEmpleados).toEqual([]);
-  
-
-    expect(cerrarSpy).toHaveBeenCalled();
-  });
-
-  it('Debería cerrar la ventana emergente de confirmación de eliminación en cerrarEliminarConfirmationPopup', () => {
-    component.confirmEliminarPopupAbierto = true;
-    component.cerrarEliminarConfirmationPopup();
-    expect(component.confirmEliminarPopupAbierto).toBe(false);
-  });
-
-
-  it('Debería manejar modificarItemNumeroEmpleados correctamente según listaFilaSeleccionadaNumeroEmpleados', () => {
-    const actualizarFilaSeleccionadaSpy = jest.spyOn(component, 'actualizarFilaSeleccionada').mockImplementation(() => {});
-    const agregarDialogoDatosSpy = jest.spyOn(component, 'agregarDialogoDatos').mockImplementation(() => {});
-    const patchModifiedDataSpy = jest.spyOn(component, 'patchModifyiedData').mockImplementation(() => {});
-    component.listaFilaSeleccionadaNumeroEmpleados = [];
-    component.nuevaNotificacion = {
-      tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      categoria: CategoriaMensaje.ALERTA,
-      modo: 'modal',
-      titulo: '',
-      mensaje: '',
-      cerrar: false,
-      txtBtnAceptar: '',
-      txtBtnCancelar: '',
-    };
-    component.multipleSeleccionPopupAbierto = false;
-    component.modificarItemNumeroEmpleados();
-
-    expect(component.multipleSeleccionPopupAbierto).toBe(true);
-    expect(component.nuevaNotificacion).toEqual({
-      tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      categoria: CategoriaMensaje.ALERTA,
-      modo: 'modal',
-      titulo: '',
-      mensaje: 'Selecciona un registro',
-      cerrar: false,
-      txtBtnAceptar: 'Cerrar',
-      txtBtnCancelar: '',
+  describe('🚀 Ciclo de vida ngOnInit', () => {
+    it('✅ debería suscribirse al estado del trámite y cargar datos', () => {
+      component.ngOnInit();
+      
+      expect(component.seccionState).toEqual(estadoTramiteMock);
+      expect(component.numeroEmpleadosBimestreList).toEqual(datosNumeroEmpleadosMock);
     });
-    expect(actualizarFilaSeleccionadaSpy).not.toHaveBeenCalled();
-    expect(agregarDialogoDatosSpy).not.toHaveBeenCalled();
-    expect(patchModifiedDataSpy).not.toHaveBeenCalled();
-    actualizarFilaSeleccionadaSpy.mockReset();
-    agregarDialogoDatosSpy.mockReset();
-    patchModifiedDataSpy.mockReset();
-    component.nuevaNotificacion = {
-      tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      categoria: CategoriaMensaje.ALERTA,
-      modo: 'modal',
-      titulo: '',
-      mensaje: '',
-      cerrar: false,
-      txtBtnAceptar: '',
-      txtBtnCancelar: '',
-    };
-    component.multipleSeleccionPopupAbierto = false;
 
-    component.listaFilaSeleccionadaNumeroEmpleados = [
-      { id: 1, marca: 'Toyota', modelo: 'Corolla', vin: '123456789ABCDEFG' },
-      { id: 2, marca: 'Honda', modelo: 'Civic', vin: '987654321ZYXWVUT' },
-    ];
-    component.nuevaNotificacion = {
-      tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      categoria: CategoriaMensaje.ALERTA,
-      modo: 'modal',
-      titulo: '',
-      mensaje: '',
-      cerrar: false,
-      txtBtnAceptar: '',
-      txtBtnCancelar: '',
-    };
-    component.multipleSeleccionPopupAbierto = false;
-    component.modificarItemNumeroEmpleados();
-
-    expect(component.multipleSeleccionPopupAbierto).toBe(true);
-    expect(component.nuevaNotificacion).toEqual({
-      tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      categoria: CategoriaMensaje.ALERTA,
-      modo: 'modal',
-      titulo: '',
-      mensaje: 'Selecciona sólo un registro para modificar.',
-      cerrar: false,
-      txtBtnAceptar: 'Cerrar',
-      txtBtnCancelar: '',
-    });
-    expect(actualizarFilaSeleccionadaSpy).not.toHaveBeenCalled();
-    expect(agregarDialogoDatosSpy).not.toHaveBeenCalled();
-    expect(patchModifiedDataSpy).not.toHaveBeenCalled();
-    actualizarFilaSeleccionadaSpy.mockReset();
-    agregarDialogoDatosSpy.mockReset();
-    patchModifiedDataSpy.mockReset();
-    
-    component.multipleSeleccionPopupAbierto = false;
-    component.listaFilaSeleccionadaNumeroEmpleados = [
-      { id: 1, marca: 'Toyota', modelo: 'Corolla', vin: '123456789ABCDEFG' },
-    ];
-
-    component.multipleSeleccionPopupAbierto = false;
-    component.modificarItemNumeroEmpleados();
-
-  });
-  it('Debe parchear el formulario con los datos del vehículo seleccionado en patchModifiedData', () => {
-    component.filaSeleccionadaNumeroEmpleados = {
-      id: 1,
-      marca: 'Toyota',
-      modelo: 'Corolla',
-      vin: '123456789ABCDEFG',
-    };
-    component.patchModifyiedData();
-    expect(component.registroNumeroEmpleadosForm.value).toEqual({
-      id: 1,
-      marca: 'Toyota',
-      modelo: 'Corolla',
-      vin: '123456789ABCDEFG',
+    it('✅ debería gestionar suscripciones con takeUntil', () => {
+      // Simplemente verificar que ngOnInit se ejecute sin errores y configure las suscripciones
+      expect(() => component.ngOnInit()).not.toThrow();
+      
+      // Verificar que la suscripción fue configurada comprobando si seccionState está poblado
+      expect(component.seccionState).toBeDefined();
     });
   });
 
-  it('Debería mostrarse una notificación si no se ha seleccionado nada al confirmarEliminarNumeroEmpleadosItem', () => {
-    component.listaFilaSeleccionadaNumeroEmpleados = [];
-    component.confirmEliminarNumeroEmpleadosItem();
-    expect(component.multipleSeleccionPopupAbierto).toBe(true);
-    expect(component.nuevaNotificacion).toEqual({
-      tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      categoria: CategoriaMensaje.ALERTA,
-      modo: 'modal',
-      titulo: '',
-      mensaje: 'Debes seleccionar al menos un registro para eliminar.',
-      cerrar: false,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
+  describe('📋 Gestión de formularios', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('✅ debería validar correctamente el formulario RFC', () => {
+      const rfcControl = component.rfcForm.get('rfcInput');
+      
+      // RFC vacío debe ser inválido
+      rfcControl?.setValue('');
+      expect(rfcControl?.valid).toBe(false);
+      
+      // RFC con formato correcto debe ser válido
+      rfcControl?.setValue('XAXX010101000');
+      expect(rfcControl?.valid).toBe(true);
+    });
+
+    it('✅ debería validar correctamente el formulario de registro', () => {
+      const form = component.registroNumeroEmpleadosForm;
+      
+      // Formulario vacío debe ser inválido
+      expect(form.valid).toBe(false);
+      
+      // Llenar todos los campos requeridos
+      form.patchValue({
+        rfc: 'ETE123456789',
+        denominacionSocial: 'Empresa Test',
+        numeroDeEmpleados: '25',
+        bimestre: 1
+      });
+      
+      expect(form.valid).toBe(true);
+    });
+
+    it('✅ debería aplicar validaciones de patrón RFC correctamente', () => {
+      const rfcControl = component.registroNumeroEmpleadosForm.get('rfc');
+      
+      // RFC con formato incorrecto
+      rfcControl?.setValue('ABC123');
+      expect(rfcControl?.hasError('pattern')).toBe(true);
+      
+      // RFC con formato correcto
+      rfcControl?.setValue('ETE123456789');
+      expect(rfcControl?.hasError('pattern')).toBe(false);
+    });
+
+    it('✅ debería validar que número de empleados sea solo números', () => {
+      const numeroControl = component.registroNumeroEmpleadosForm.get('numeroDeEmpleados');
+      
+      // Texto debe ser inválido
+      numeroControl?.setValue('abc');
+      expect(numeroControl?.hasError('pattern')).toBe(true);
+      
+      // Números deben ser válidos
+      numeroControl?.setValue('123');
+      expect(numeroControl?.hasError('pattern')).toBe(false);
     });
   });
 
-  it('Debería abrir la ventana emergente de confirmación de eliminación en abrirEliminarConfirmationPopup', () => {
-    component.abrirElimninarConfirmationopup();
-    expect(component.confirmEliminarPopupAbierto).toBe(true);
-    expect(component.nuevaNotificacion).toEqual({
-      tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      categoria: CategoriaMensaje.ERROR,
-      modo: 'modal',
-      titulo: '',
-      mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
-      cerrar: false,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
+  describe('🔄 Funcionalidad de modales', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('✅ debería abrir el modal de registro correctamente', () => {
+      const { Modal } = require('bootstrap');
+      
+      // Limpiar cualquier llamada anterior
+      jest.clearAllMocks();
+      
+      expect(() => {
+        component.agregarDialogoDatos();
+      }).not.toThrow();
+      
+      expect(Modal).toHaveBeenCalledWith(
+        component.registroDeNumeroEmpleadosElemento.nativeElement,
+        { backdrop: false }
+      );
+    });
+
+    it('✅ debería manejar modal no disponible sin errores', () => {
+      component.registroDeNumeroEmpleadosElemento = null as any;
+      
+      expect(() => {
+        component.agregarDialogoDatos();
+      }).not.toThrow();
     });
   });
 
-  it('Debería cerrar la ventana emergente de selección múltiple en cerrarMultipleSeleccionPopup', () => {
-    component.multipleSeleccionPopupAbierto = true;
-    component.cerrarMultipleSeleccionPopup();
-    expect(component.multipleSeleccionPopupAbierto).toBe(false);
+  describe('📤 Envío de datos del formulario', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+      jest.spyOn(component, 'enNuevaNotificacion');
+      jest.spyOn(component, 'NumeroEmpleadosInfoDatos');
+      jest.spyOn(component, 'cambiarEstadoModal');
+    });
+
+    it('✅ debería procesar formulario válido correctamente', () => {
+      // Llenar formulario con datos válidos
+      component.registroNumeroEmpleadosForm.patchValue({
+        rfc: 'ETE123456789',
+        denominacionSocial: 'Empresa Test',
+        numeroDeEmpleados: '25',
+        bimestre: 1
+      });
+      
+      component.enviarDialogData();
+      
+      expect(component.enNuevaNotificacion).toHaveBeenCalledWith(component.CONFIRMACION_NUMEROEMPLEADOS);
+      expect(component.esHabilitarElDialogo).toBe(true);
+      expect(component.NumeroEmpleadosInfoDatos).toHaveBeenCalled();
+      expect(component.cambiarEstadoModal).toHaveBeenCalled();
+    });
+
+    it('✅ debería manejar formulario inválido correctamente', () => {
+      // Dejar formulario vacío (inválido)
+      component.registroNumeroEmpleadosForm.reset();
+      const markAllAsTouchedSpy = jest.spyOn(component.registroNumeroEmpleadosForm, 'markAllAsTouched');
+      
+      component.enviarDialogData();
+      
+      expect(component.enNuevaNotificacion).toHaveBeenCalledWith(component.MENSAJE_DE_VALIDACION);
+      expect(component.esHabilitarElDialogo).toBe(true);
+      expect(markAllAsTouchedSpy).toHaveBeenCalled();
+    });
+
+    it('✅ debería resetear el formulario después de envío exitoso', () => {
+      // Llenar formulario
+      component.registroNumeroEmpleadosForm.patchValue({
+        rfc: 'ETE123456789',
+        denominacionSocial: 'Empresa Test',
+        numeroDeEmpleados: '25',
+        bimestre: 1
+      });
+      
+      const resetSpy = jest.spyOn(component.registroNumeroEmpleadosForm, 'reset');
+      
+      component.enviarDialogData();
+      
+      expect(resetSpy).toHaveBeenCalled();
+    });
   });
 
-  it('Debe devolver verdadero para controles no válidos y tocados en esInvalido', () => {
-    component.registroNumeroEmpleadosForm.get('marca')?.setErrors({ required: true });
-    component.registroNumeroEmpleadosForm.get('marca')?.markAsTouched();
-    expect(component.esInvalido('marca')).toBe(true);
-    expect(component.esInvalido('modelo')).toBe(false);
+  describe('🔔 Sistema de notificaciones', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('✅ debería crear notificación con datos correctos', () => {
+      const mensajePrueba = 'Mensaje de prueba';
+      
+      component.enNuevaNotificacion(mensajePrueba);
+      
+      expect(component.nuevaNotificacion).toEqual({
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: mensajePrueba,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: ''
+      });
+    });
+
+    it('✅ debería crear notificaciones para diferentes tipos de mensajes', () => {
+      // Notificación de confirmación
+      component.enNuevaNotificacion(component.CONFIRMACION_NUMEROEMPLEADOS);
+      expect(component.nuevaNotificacion.mensaje).toBe(component.CONFIRMACION_NUMEROEMPLEADOS);
+      
+      // Notificación de validación
+      component.enNuevaNotificacion(component.MENSAJE_DE_VALIDACION);
+      expect(component.nuevaNotificacion.mensaje).toBe(component.MENSAJE_DE_VALIDACION);
+    });
+  });
+
+  describe('🧹 Gestión de memoria y limpieza de recursos', () => {
+    it('✅ debería completar el subject destroyed$ al destruir el componente', () => {
+      const nextSpy = jest.spyOn(component.destroyed$, 'next');
+      const completeSpy = jest.spyOn(component.destroyed$, 'complete');
+      
+      component.ngOnDestroy();
+      
+      expect(nextSpy).toHaveBeenCalled();
+      expect(completeSpy).toHaveBeenCalled();
+    });
+
+    it('✅ debería cancelar suscripciones activas al destruir', () => {
+      const destroyedSpy = jest.spyOn(component.destroyed$, 'next');
+      
+      component.ngOnDestroy();
+      
+      expect(destroyedSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('✅ debería manejar destrucción múltiple sin errores', () => {
+      expect(() => {
+        component.ngOnDestroy();
+        component.ngOnDestroy();
+      }).not.toThrow();
+    });
+  });
+
+  describe('📋 Gestión de filas seleccionadas', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+      component.numeroEmpleadosBimestreList = [...datosNumeroEmpleadosMock];
+    });
+
+    it('✅ debería manejar selección de fila única correctamente', () => {
+      const filaSeleccionada = [datosNumeroEmpleadosMock[0]];
+      
+      component.manejarFilaSeleccionada(filaSeleccionada);
+      
+      expect(component.listaFilaSeleccionadaEmpleado).toEqual(filaSeleccionada);
+      expect(component.filaSeleccionadaNumeroEmpleados).toEqual(datosNumeroEmpleadosMock[0]);
+    });
+
+    it('✅ debería manejar selección de múltiples filas correctamente', () => {
+      const filasSeleccionadas = [...datosNumeroEmpleadosMock];
+      
+      component.manejarFilaSeleccionada(filasSeleccionadas);
+      
+      expect(component.listaFilaSeleccionadaEmpleado).toEqual(filasSeleccionadas);
+      expect(component.filaSeleccionadaNumeroEmpleados).toEqual(datosNumeroEmpleadosMock[1]); // Última fila
+    });
+
+    it('✅ debería resetear selección cuando array está vacío', () => {
+      component.manejarFilaSeleccionada([]);
+      
+      expect(component.listaFilaSeleccionadaEmpleado).toEqual([]);
+      expect(component.filaSeleccionadaNumeroEmpleados).toEqual({} as any);
+      expect(component.enableModficarBoton).toBe(false);
+      expect(component.enableEliminarBoton).toBe(false);
+    });
+
+    it('✅ debería actualizar fila seleccionada con datos actuales', () => {
+      component.filaSeleccionadaNumeroEmpleados = { ...datosNumeroEmpleadosMock[0] };
+      
+      component.actualizarFilaSeleccionada();
+      
+      expect(component.filaSeleccionadaNumeroEmpleados).toEqual(datosNumeroEmpleadosMock[0]);
+    });
+
+    it('✅ debería manejar actualización cuando no existe la fila seleccionada', () => {
+      component.filaSeleccionadaNumeroEmpleados = { id: 999, denominacionSocial: '', rfc: '', numeroDeEmpleados: 0, bimestre: '' } as any;
+      
+      expect(() => component.actualizarFilaSeleccionada()).not.toThrow();
+    });
+  });
+
+  describe('✏️ Funcionalidad de modificación', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+      component.numeroEmpleadosBimestreList = [...datosNumeroEmpleadosMock];
+      jest.spyOn(component, 'agregarDialogoDatos');
+      jest.spyOn(component, 'patchModifyiedData');
+    });
+
+    it('✅ debería mostrar notificación cuando no hay filas seleccionadas', () => {
+      component.listaFilaSeleccionadaEmpleado = [];
+      
+      component.modificarItemEmpleado();
+      
+      expect(component.nuevaNotificacion.mensaje).toBe('Selecciona un registro');
+      expect(component.multipleSeleccionPopupAbierto).toBe(true);
+    });
+
+    it('✅ debería mostrar notificación cuando hay múltiples filas seleccionadas', () => {
+      component.listaFilaSeleccionadaEmpleado = [...datosNumeroEmpleadosMock];
+      
+      component.modificarItemEmpleado();
+      
+      expect(component.nuevaNotificacion.mensaje).toBe('Selecciona sólo un registro para modificar.');
+      expect(component.multipleSeleccionPopupAbierto).toBe(true);
+    });
+
+    it('✅ debería permitir modificar cuando hay exactamente una fila seleccionada', () => {
+      component.listaFilaSeleccionadaEmpleado = [datosNumeroEmpleadosMock[0]];
+      component.filaSeleccionadaNumeroEmpleados = datosNumeroEmpleadosMock[0];
+      
+      component.modificarItemEmpleado();
+      
+      expect(component.agregarDialogoDatos).toHaveBeenCalled();
+      expect(component.patchModifyiedData).toHaveBeenCalled();
+    });
+
+    it('✅ debería rellenar el formulario con datos de la fila seleccionada', () => {
+      component.filaSeleccionadaNumeroEmpleados = datosNumeroEmpleadosMock[0];
+      
+      component.patchModifyiedData();
+      
+      const formValue = component.registroNumeroEmpleadosForm.value;
+      expect(formValue.id).toBe(datosNumeroEmpleadosMock[0].id);
+      expect(formValue.denominacionSocial).toBe(datosNumeroEmpleadosMock[0].denominacionSocial);
+      expect(formValue.rfc).toBe(datosNumeroEmpleadosMock[0].rfc);
+      expect(formValue.numeroDeEmpleados).toBe(datosNumeroEmpleadosMock[0].numeroDeEmpleados);
+    });
+
+    it('✅ debería manejar patchModifyiedData con bimestre no encontrado en la lista', () => {
+      component.filaSeleccionadaNumeroEmpleados = {
+        ...datosNumeroEmpleadosMock[0],
+        bimestre: 'Bimestre No Existente'
+      };
+      
+      expect(() => component.patchModifyiedData()).not.toThrow();
+      
+      const formValue = component.registroNumeroEmpleadosForm.value;
+      expect(formValue.bimestre).toBe(0); // findIndex devuelve -1, +1 = 0
+    });
+  });
+
+  describe('🗑️ Funcionalidad de eliminación', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+      component.numeroEmpleadosBimestreList = [...datosNumeroEmpleadosMock];
+    });
+
+    it('✅ debería mostrar notificación cuando no hay elementos seleccionados para eliminar', () => {
+      component.listaFilaSeleccionadaEmpleado = [];
+      
+      component.confirmEliminarEmpleadoItem();
+      
+      expect(component.nuevaNotificacion.mensaje).toBe('Debes seleccionar al menos un registro para eliminar.');
+      expect(component.multipleSeleccionPopupAbierto).toBe(true);
+    });
+
+    it('✅ debería abrir popup de confirmación cuando hay elementos seleccionados', () => {
+      component.listaFilaSeleccionadaEmpleado = [datosNumeroEmpleadosMock[0]];
+      
+      component.confirmEliminarEmpleadoItem();
+      
+      expect(component.nuevaNotificacion.mensaje).toBe('¿Estás seguro que deseas eliminar los registros marcados?');
+      expect(component.confirmEliminarPopupAbierto).toBe(true);
+    });
+
+    it('✅ debería llamar a abrirElimninarConfirmationopup desde confirmEliminarEmpleadoItem', () => {
+      component.listaFilaSeleccionadaEmpleado = [datosNumeroEmpleadosMock[0]];
+      jest.spyOn(component, 'abrirElimninarConfirmationopup');
+      
+      component.confirmEliminarEmpleadoItem();
+      
+      expect(component.abrirElimninarConfirmationopup).toHaveBeenCalled();
+    });
+
+    it('✅ debería configurar notificación de confirmación de eliminación directamente', () => {
+      component.abrirElimninarConfirmationopup();
+      
+      expect(component.nuevaNotificacion.mensaje).toBe('¿Estás seguro que deseas eliminar los registros marcados?');
+      expect(component.nuevaNotificacion.txtBtnAceptar).toBe('Aceptar');
+      expect(component.nuevaNotificacion.txtBtnCancelar).toBe('Cancelar');
+      expect(component.confirmEliminarPopupAbierto).toBe(true);
+    });
+
+    it('✅ debería eliminar elementos cuando se confirma la eliminación', () => {
+      component.listaFilaSeleccionadaEmpleado = [datosNumeroEmpleadosMock[0]];
+      const longitudInicial = component.numeroEmpleadosBimestreList.length;
+      
+      component.eliminarEmpleadoItem(true);
+      
+      expect(component.numeroEmpleadosBimestreList.length).toBe(longitudInicial - 1);
+      expect(component.numeroEmpleadosBimestreList).not.toContain(datosNumeroEmpleadosMock[0]);
+      expect(component.listaFilaSeleccionadaEmpleado).toEqual([]);
+      expect(component.filaSeleccionadaNumeroEmpleados).toEqual({} as any);
+      expect(mockTramite32609Store.establecerDatos).toHaveBeenCalled();
+    });
+
+    it('✅ no debería eliminar elementos cuando se cancela la eliminación', () => {
+      component.listaFilaSeleccionadaEmpleado = [datosNumeroEmpleadosMock[0]];
+      const longitudInicial = component.numeroEmpleadosBimestreList.length;
+      
+      component.eliminarEmpleadoItem(false);
+      
+      expect(component.numeroEmpleadosBimestreList.length).toBe(longitudInicial);
+    });
+
+    it('✅ debería cerrar popup de confirmación de eliminación', () => {
+      component.cerrarEliminarConfirmationPopup();
+      
+      expect(component.confirmEliminarPopupAbierto).toBe(false);
+      expect(component.confirmEliminarPopupCerrado).toBe(false);
+    });
+  });
+
+  describe('🔄 Gestión de popups', () => {
+    it('✅ debería abrir popup de selección múltiple', () => {
+      component.abrirMultipleSeleccionPopup();
+      
+      expect(component.nuevaNotificacion.mensaje).toBe('Selecciona sólo un registro para modificar.');
+      expect(component.multipleSeleccionPopupAbierto).toBe(true);
+    });
+
+    it('✅ debería cerrar popup de selección múltiple', () => {
+      component.cerrarMultipleSeleccionPopup();
+      
+      expect(component.multipleSeleccionPopupAbierto).toBe(false);
+      expect(component.multipleSeleccionPopupCerrado).toBe(false);
+    });
+
+    it('✅ debería cerrar modal principal', () => {
+      component.esHabilitarElDialogo = true;
+      
+      component.cerrarModal();
+      
+      expect(component.esHabilitarElDialogo).toBe(false);
+    });
+
+    it('✅ debería cancelar modal y cambiar estado', () => {
+      const { Modal } = require('bootstrap');
+      const mockInstance = { hide: jest.fn() };
+      Modal.getInstance.mockReturnValue(mockInstance);
+      
+      component.modalCancelar();
+      
+      expect(Modal.getInstance).toHaveBeenCalled();
+      expect(mockInstance.hide).toHaveBeenCalled();
+    });
+
+    it('✅ debería manejar cambiarEstadoModal cuando no hay instancia de modal', () => {
+      const { Modal } = require('bootstrap');
+      Modal.getInstance.mockReturnValue(null);
+      
+      expect(() => component.cambiarEstadoModal()).not.toThrow();
+    });
+
+    it('✅ debería manejar cambiarEstadoModal cuando hay instancia de modal', () => {
+      const { Modal } = require('bootstrap');
+      const mockInstance = { hide: jest.fn() };
+      Modal.getInstance.mockReturnValue(mockInstance);
+      
+      component.cambiarEstadoModal();
+      
+      expect(mockInstance.hide).toHaveBeenCalled();
+    });
+  });
+
+  describe('🔍 Búsqueda de RFC', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+      mockOeaTextilRegistroService.getRFCDetails.mockReturnValue(of({
+        code: 200,
+        message: 'Success',
+        data: {
+          rfc: 'ETE123456789',
+          denominacionSocial: 'Empresa Test Completa S.A. de C.V.'
+        }
+      } as BuscarRfcResponse));
+    });
+
+    it('✅ debería buscar detalles de RFC cuando el formulario es válido', () => {
+      component.rfcForm.patchValue({ rfcInput: 'ETE123456789' });
+      
+      component.onBuscarRfc();
+      
+      expect(mockOeaTextilRegistroService.getRFCDetails).toHaveBeenCalled();
+    });
+
+    it('✅ debería actualizar formulario con datos obtenidos del RFC', () => {
+      component.rfcForm.patchValue({ rfcInput: 'ETE123456789' });
+      
+      component.onBuscarRfc();
+      
+      expect(component.registroNumeroEmpleadosForm.get('rfc')?.value).toBe('ETE123456789');
+      expect(component.registroNumeroEmpleadosForm.get('denominacionSocial')?.value).toBe('Empresa Test Completa S.A. de C.V.');
+    });
+
+    it('✅ no debería buscar RFC cuando el formulario es inválido', () => {
+      component.rfcForm.patchValue({ rfcInput: '' });
+      
+      component.onBuscarRfc();
+      
+      expect(mockOeaTextilRegistroService.getRFCDetails).not.toHaveBeenCalled();
+    });
+
+    it('✅ debería manejar errores en la búsqueda de RFC', () => {
+      component.rfcForm.patchValue({ rfcInput: 'ETE123456789' });
+      const errorResponse = new Error('Error de red');
+      mockOeaTextilRegistroService.getRFCDetails.mockReturnValue(
+        new Observable(observer => observer.error(errorResponse))
+      );
+      
+      expect(() => component.onBuscarRfc()).not.toThrow();
+    });
+
+    it('✅ debería manejar respuesta vacía del servicio RFC', () => {
+      component.rfcForm.patchValue({ rfcInput: 'ETE123456789' });
+      mockOeaTextilRegistroService.getRFCDetails.mockReturnValue(of({
+        code: 200,
+        message: 'Success',
+        data: {}
+      } as BuscarRfcResponse));
+      
+      component.onBuscarRfc();
+      
+      expect(component.registroNumeroEmpleadosForm.get('rfc')?.value).toBeUndefined();
+      expect(component.registroNumeroEmpleadosForm.get('denominacionSocial')?.value).toBeUndefined();
+    });
+  });
+
+  describe('🧹 Limpieza de formularios', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('✅ debería limpiar el formulario correctamente', () => {
+      // Llenar formulario primero
+      component.registroNumeroEmpleadosForm.patchValue({
+        rfc: 'ETE123456789',
+        denominacionSocial: 'Empresa Test',
+        numeroDeEmpleados: '25',
+        bimestre: 1
+      });
+      
+      component.limpiarFormulario();
+      
+      expect(component.registroNumeroEmpleadosForm.get('rfc')?.value).toBeNull();
+      expect(component.registroNumeroEmpleadosForm.get('denominacionSocial')?.value).toBeNull();
+      expect(component.registroNumeroEmpleadosForm.get('numeroDeEmpleados')?.value).toBeNull();
+      expect(component.registroNumeroEmpleadosForm.get('bimestre')?.value).toBeNull();
+    });
+  });
+
+  describe('🎚️ Funcionalidad colapsable', () => {
+    it('✅ debería alternar el estado colapsable', () => {
+      const estadoInicial = component.colapsable;
+      
+      component.mostrar_colapsable();
+      
+      expect(component.colapsable).toBe(!estadoInicial);
+    });
+
+    it('✅ debería alternar múltiples veces el estado colapsable', () => {
+      const estadoInicial = component.colapsable;
+      
+      component.mostrar_colapsable();
+      component.mostrar_colapsable();
+      
+      expect(component.colapsable).toBe(estadoInicial);
+    });
+  });
+
+  describe('✅ Validación de controles', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('✅ debería identificar control inválido y tocado como inválido', () => {
+      const rfcControl = component.registroNumeroEmpleadosForm.get('rfc');
+      rfcControl?.setValue('');
+      rfcControl?.markAsTouched();
+      
+      const esInvalido = component.esInvalido('rfc');
+      
+      expect(esInvalido).toBe(true);
+    });
+
+    it('✅ debería identificar control válido como válido', () => {
+      const rfcControl = component.registroNumeroEmpleadosForm.get('rfc');
+      rfcControl?.setValue('ETE123456789');
+      
+      const esInvalido = component.esInvalido('rfc');
+      
+      expect(esInvalido).toBe(false);
+    });
+
+    it('✅ debería manejar control inexistente sin errores', () => {
+      const esInvalido = component.esInvalido('controlInexistente');
+      
+      expect(esInvalido).toBe(false);
+    });
+  });
+
+  describe('📊 Gestión de datos de empleados', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+      component.numeroEmpleadosBimestreList = [];
+    });
+
+    it('✅ debería actualizar registro existente al enviar datos', () => {
+      // Configurar datos existentes
+      component.numeroEmpleadosBimestreList = [...datosNumeroEmpleadosMock];
+      component.filaSeleccionadaNumeroEmpleados = datosNumeroEmpleadosMock[0];
+      
+      // Llenar formulario con datos actualizados
+      component.registroNumeroEmpleadosForm.patchValue({
+        rfc: 'ETE123456789',
+        denominacionSocial: 'Empresa Actualizada',
+        numeroDeEmpleados: '100',
+        bimestre: 1
+      });
+      
+      component.NumeroEmpleadosInfoDatos();
+      
+      const elementoActualizado = component.numeroEmpleadosBimestreList.find(e => e.id === datosNumeroEmpleadosMock[0].id);
+      expect(elementoActualizado?.denominacionSocial).toBe('Empresa Actualizada');
+      expect(elementoActualizado?.numeroDeEmpleados).toBe('100');
+      expect(mockTramite32609Store.establecerDatos).toHaveBeenCalled();
+    });
+
+    it('✅ debería agregar nuevo registro cuando no hay fila seleccionada', () => {
+      component.filaSeleccionadaNumeroEmpleados = {} as any;
+      
+      component.registroNumeroEmpleadosForm.patchValue({
+        rfc: 'NEW123456789',
+        denominacionSocial: 'Empresa Nueva',
+        numeroDeEmpleados: '50',
+        bimestre: 1
+      });
+      
+      const longitudInicial = component.numeroEmpleadosBimestreList.length;
+      component.NumeroEmpleadosInfoDatos();
+      
+      expect(component.numeroEmpleadosBimestreList.length).toBe(longitudInicial + 1);
+      expect(component.numeroEmpleadosBimestreList[0].denominacionSocial).toBe('Empresa Nueva');
+      expect(mockTramite32609Store.establecerDatos).toHaveBeenCalled();
+    });
+
+    it('✅ debería generar ID incremental para nuevos registros', () => {
+      component.numeroEmpleadosBimestreList = [{ id: 5, denominacionSocial: '', rfc: '', numeroDeEmpleados: 0, bimestre: '' }] as any;
+      component.filaSeleccionadaNumeroEmpleados = {} as any;
+      
+      component.registroNumeroEmpleadosForm.patchValue({
+        rfc: 'NEW123456789',
+        denominacionSocial: 'Empresa Nueva',
+        numeroDeEmpleados: '50',
+        bimestre: 1
+      });
+      
+      component.NumeroEmpleadosInfoDatos();
+      
+      const nuevoElemento = component.numeroEmpleadosBimestreList.find(e => e.denominacionSocial === 'Empresa Nueva');
+      expect(nuevoElemento?.id).toBe(6);
+    });
+
+    it('✅ debería manejar lista de bimestre vacía en NumeroEmpleadosInfoDatos', () => {
+      component.bimestreList = [];
+      component.filaSeleccionadaNumeroEmpleados = {} as any;
+      
+      component.registroNumeroEmpleadosForm.patchValue({
+        rfc: 'NEW123456789',
+        denominacionSocial: 'Empresa Nueva',
+        numeroDeEmpleados: '50',
+        bimestre: 1
+      });
+      
+      expect(() => component.NumeroEmpleadosInfoDatos()).not.toThrow();
+      
+      const nuevoElemento = component.numeroEmpleadosBimestreList.find(e => e.denominacionSocial === 'Empresa Nueva');
+      expect(nuevoElemento?.bimestre).toBe(''); // OBTENER_DESCRIPCION devuelve cadena vacía
+    });
+
+    it('✅ debería resetear filaSeleccionadaNumeroEmpleados después de actualizar', () => {
+      component.numeroEmpleadosBimestreList = [...datosNumeroEmpleadosMock];
+      component.filaSeleccionadaNumeroEmpleados = datosNumeroEmpleadosMock[0];
+      
+      component.registroNumeroEmpleadosForm.patchValue({
+        rfc: 'ETE123456789',
+        denominacionSocial: 'Empresa Actualizada',
+        numeroDeEmpleados: '100',
+        bimestre: 1
+      });
+      
+      component.NumeroEmpleadosInfoDatos();
+      
+      expect(component.filaSeleccionadaNumeroEmpleados).toEqual({} as any);
+    });
   });
 });

@@ -1,6 +1,6 @@
 import { ApiResponse, BuscarRfcResponse, InstalacionesInterface } from '../modelos/oea-textil-registro.model';
 import { Observable, forkJoin } from 'rxjs';
-import { Tramite32609Store, Tramites32609State } from '../estados/tramites32609.store';
+import { StoreResponse, Tramite32609Store, Tramites32609State } from '../estados/tramites32609.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -126,8 +126,8 @@ sectorListaDeSelects(): Observable<{
    *
    * @returns {Observable<Tramites32609State>} Un observable que emite los datos del trámite 32609.
    */
-  getRegistroTomaMuestrasMercanciasData(): Observable<Tramites32609State> {
-    return this.http.get<Tramites32609State>('assets/json/32609/empresas-transportistas-datos.json');
+  getRegistroTomaMuestrasMercanciasData(): Observable<StoreResponse> {
+    return this.http.get<StoreResponse>('assets/json/32609/datos-oea-textil.json');
   }
 
 

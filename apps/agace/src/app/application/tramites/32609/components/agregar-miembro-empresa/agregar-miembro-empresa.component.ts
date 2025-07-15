@@ -23,18 +23,25 @@ import { OeaTextilRegistroService } from '../../services/oea-textil-registro.ser
 import { Tramite32609Query } from '../../estados/tramites32609.query';
 
 /**
- * Componente AgregarMiembroEmpresaComponent para la gestión de vehículos dentro del sistema.
+ * Componente para agregar miembros de empresa en el trámite OEA textil.
  * 
- * Este componente independiente (`standalone`) se encarga de la interacción con la tabla dinámica,
- * el manejo de formularios reactivos, y la visualización de notificaciones. Proporciona una interfaz
- * intuitiva para la gestión de vehículos registrados.
+ * Este componente independiente (`standalone`) permite registrar, editar y administrar
+ * información de los miembros de la empresa solicitante del trámite OEA textil.
+ * Incluye validación de RFC, manejo de personas físicas y morales, búsqueda de datos
+ * y gestión a través de tabla dinámica interactiva.
  * 
  * @component
- * @selector app-vehiculos
+ * @selector app-agregar-miembro-empresa
  * @standalone true
- * @imports CommonModule, TablaDinamicaComponent, TituloComponent, ReactiveFormsModule, NotificacionesComponent
- * @templateUrl ./Empleado.component.html
- * @styleUrl ./Empleado.component.scss
+ * @implements {OnInit, OnDestroy}
+ * @author Equipo de desarrollo VUCEM
+ * @version 1.0.0
+ * @since 2024
+ * 
+ * @example
+ * ```html
+ * <app-agregar-miembro-empresa></app-agregar-miembro-empresa>
+ * ```
  */
 @Component({
   selector: 'app-agregar-miembro-empresa',

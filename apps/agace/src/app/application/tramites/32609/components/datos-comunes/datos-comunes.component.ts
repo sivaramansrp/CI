@@ -1,16 +1,38 @@
-import { Catalogo, CatalogoSelectComponent, CategoriaMensaje, ConsultaioQuery, InputCheckComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TipoNotificacionEnum, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Catalogo, CatalogoSelectComponent, CategoriaMensaje, InputCheckComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TipoNotificacionEnum, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NOTA, OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/oea-textil-registro.enum';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite32609Store, Tramites32609State } from '../../estados/tramites32609.store';
 import { AgregarMiembroEmpresaComponent } from '../agregar-miembro-empresa/agregar-miembro-empresa.component';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ControlInventariosComponent } from '../control-inventarios/control-inventarios.component';
 import { DomiciliosRfcSolicitanteComponent } from '../domicilios-rfc-solicitante/domicilios-rfc-solicitante.component';
 import { NumeroEmpleadosBimestreComponent } from '../numero-empleados-bimestre/numero-empleados-bimestre.component';
 import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
 import { Tramite32609Query } from '../../estados/tramites32609.query';
+
+/**
+ * Componente para la gestión de datos comunes del trámite OEA textil.
+ * 
+ * Este componente independiente (`standalone`) se encarga de capturar y validar
+ * los datos comunes requeridos para el registro OEA textil, incluyendo información
+ * del sector productivo, cumplimiento fiscal, empleados y otros datos básicos.
+ * 
+ * @component
+ * @selector app-datos-comunes
+ * @standalone true
+ * @implements {OnInit, OnDestroy}
+ * @author Equipo de desarrollo VUCEM
+ * @version 1.0.0
+ * @since 2024
+ * 
+ * @example
+ * ```html
+ * <app-datos-comunes></app-datos-comunes>
+ * ```
+ */
 
 @Component({
   selector: 'app-datos-comunes',
@@ -32,6 +54,12 @@ import { Tramite32609Query } from '../../estados/tramites32609.query';
   styleUrl: './datos-comunes.component.css',
 })
 export class DatosComunesComponent implements OnInit, OnDestroy {
+
+  /**
+   * @property {ControlInventariosComponent} controlInventariosComponent
+   * Referencia al componente hijo de control de inventarios para poder acceder a sus métodos.
+   */
+  @ViewChild(ControlInventariosComponent) controlInventariosComponent!: ControlInventariosComponent;
 
    /**
    * Indicates whether the entity is consolidated in ET.
@@ -56,6 +84,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+  
   /**
    * @property {FormGroup} forma
    * Formulario reactivo que contiene los controles y validaciones para los datos de las empresas transportistas.
@@ -108,17 +137,39 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   public destroyed$ = new Subject<void>();
 
+  /**
+   * Indica si el formulario ha sido inicializado.
+   * Se utiliza para evitar la recreación del formulario si ya está inicializado.
+   */
+  public esFormularioInicializado: boolean = false;
+
+  /**
+   * Constructor del componente DatosComunesComponent.
+   * 
+   * Inicializa las dependencias necesarias y configura las suscripciones
+   * para el estado de solo lectura del formulario.
+   * 
+   * @param {FormBuilder} fb - Servicio para construir formularios reactivos
+   * @param {ConsultaioQuery} consultaioQuery - Query para obtener el estado de consulta
+   * @param {Tramite32609Store} tramite32609Store - Store para gestionar el estado del trámite
+   * @param {Tramite32609Query} tramite32609Query - Query para obtener datos del trámite
+   * @param {OeaTextilRegistroService} servicio - Servicio para operaciones del trámite OEA textil
+   */
+
   constructor(public fb: FormBuilder, 
     private consultaioQuery: ConsultaioQuery,
     private tramite32609Store: Tramite32609Store,
     private tramite32609Query: Tramite32609Query,
     private servicio: OeaTextilRegistroService) {
+    this.crearForm();
     this.consultaioQuery.selectConsultaioState$
         .pipe(
           takeUntil(this.destroyed$),
           map((seccionState) => {
            this.esFormularioSoloLectura = seccionState.readonly;
-            this.inicializarEstadoFormulario();
+           if (this.forma && this.esFormularioInicializado) {
+           this.actualizarEstadoCampos();
+         }
           })
         )
         .subscribe();
@@ -129,16 +180,19 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * Hook de ciclo de vida para inicializar el componente.
    */
   ngOnInit(): void {
-    this.enPatchStoredFormData();
     this.obtenerlistadescargable();
-     this.inicializarEstadoFormulario();
+    this.enPatchStoredFormData();
+    this.validarFormulario();
   }
 
    /**
-     * @method crearFormsetValoresStore
+     * @method crearForm
      * Crea el formulario reactivo con sus controles y validaciones.
      */
     crearForm(): void {
+      if (this.esFormularioInicializado && this.forma) {
+    return;
+  }
       this.forma = this.fb.group({
           sectorProductivo: [this.seccionState?.sectorProductivo],
           sectorServicio: [this.seccionState?.sectorServicio],
@@ -158,61 +212,64 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           infringioSupuestos17HBis: [this.seccionState?.infringioSupuestos17HBis, Validators.required],
           mediosContactoActualizadosBuzon: [this.seccionState?.mediosContactoActualizadosBuzon, Validators.required],
           suspensionPadronImportadoresExportadores: [this.seccionState?.suspensionPadronImportadoresExportadores, Validators.required],
-          archivoNacionales: [this.seccionState?.archivoNacionales],
-          proveedores: [this.seccionState?.proveedores],
+          archivoNacionales: [this.seccionState?.archivoNacionales || null],
+          proveedores: [this.seccionState?.proveedores || null],
           querellaSATUltimos3Anios: [this.seccionState?.querellaSATUltimos3Anios, Validators.required],
           ingresoInfoContableSAT: [this.seccionState?.ingresoInfoContableSAT, Validators.required],
           manifests: [true, Validators.required],
           bajoProtesta: [true, Validators.required],
       });
+
+      this.esFormularioInicializado = true;
+
     }
 
-    onValidateForm(): void {
-      this.forma.markAllAsTouched();
-      
-      // Update validation status for all controls
-      Object.keys(this.forma.controls).forEach(key => {
-        const CONTROL = this.forma.get(key);
-        if (CONTROL) {
-          CONTROL.updateValueAndValidity();
-        }
-      });
-    }
-  
-    /**
-     * @method inicializarEstadoFormulario
-     * Inicializa el estado del formulario dependiendo del modo de solo lectura.
-     * Si el formulario está en modo solo lectura, se guardan los datos del formulario.
-     * Si no, se crea el formulario reactivo.
-     */
-  inicializarEstadoFormulario(): void {
-      if (this.esFormularioSoloLectura) {
-        this.guardarDatosFormulario();
-      } else {
-        this.crearForm();
-      }
-    }
-      /**
-     * @method
-     * @name guardarDatosFormulario
-     * @description
-     * Inicializa los formularios y obtiene los datos de la tabla.
-     * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`),
-     * deshabilita o habilita todos los formularios del componente.
-     * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
-     * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
-     *
-     * @returns {void}
-     */
-    guardarDatosFormulario(): void {
-      this.crearForm();
-      if (this.esFormularioSoloLectura) {
-        this.forma.disable();
-      } else {
-        this.forma.enable();
-      }
-    }
+/**
+ * @method actualizarFormularioConDatosDelEstado
+ * @description Actualiza los valores del formulario con los datos del estado del trámite sin recrear controles.
+ * 
+ * @private
+ * @memberof DatosComunesComponent
+ * @returns {void}
+ * 
+ * @remarks
+ * - Solo actualiza si el formulario y estado están inicializados
+ * - Excluye controles locales (manifests, bajoProtesta) y archivos
+ * - Utiliza patchValue() para preservar validadores
+ * 
+ * @see {@link enPatchStoredFormData}
+ */
+private actualizarFormularioConDatosDelEstado(): void {
+  if (this.forma && this.seccionState && this.esFormularioInicializado) {
+    this.enCambioDeValor(this.seccionState.cuentaConEmpleadosPropios);
+    this.toggleTablaPorValor(this.seccionState.cuentaConSubcontratacionEspecializada);
+    const STATEVALOR = {
+      sectorProductivo: this.seccionState.sectorProductivo,
+      sectorServicio: this.seccionState.sectorServicio,
+      cumplimientoFiscalAduanero: this.seccionState.cumplimientoFiscalAduanero,
+      autorizaOpinionSAT: this.seccionState.autorizaOpinionSAT,
+      cuentaConEmpleadosPropios: this.seccionState.cuentaConEmpleadosPropios,
+      bimestreUltimo: this.seccionState.bimestreUltimo,
+      numeroDeEmpleadas: this.seccionState.numeroDeEmpleadas,
+      retencionISRTrabajadores: this.seccionState.retencionISRTrabajadores,
+      pagoCuotasIMSS: this.seccionState.pagoCuotasIMSS,
+      cuentaConSubcontratacionEspecializada: this.seccionState.cuentaConSubcontratacionEspecializada,
+      registroPadronLFT: this.seccionState.registroPadronLFT,
+      listadoSATArt69: this.seccionState.listadoSATArt69,
+      listadoSATArt69B: this.seccionState.listadoSATArt69B,
+      listadoSATArt69BBis: this.seccionState.listadoSATArt69BBis,
+      certificadosSellosVigentes: this.seccionState.certificadosSellosVigentes,
+      infringioSupuestos17HBis: this.seccionState.infringioSupuestos17HBis,
+      mediosContactoActualizadosBuzon: this.seccionState.mediosContactoActualizadosBuzon,
+      suspensionPadronImportadoresExportadores: this.seccionState.suspensionPadronImportadoresExportadores,
+      querellaSATUltimos3Anios: this.seccionState.querellaSATUltimos3Anios,
+      ingresoInfoContableSAT: this.seccionState.ingresoInfoContableSAT
+    };
 
+     
+    this.forma.patchValue(STATEVALOR);
+  }
+}
 
       /**
      * Método genérico para manejar campos mutuamente excluyentes.
@@ -251,7 +308,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     const NUMERO_EMPLEADOS_CONTROL = this.forma.get('numeroDeEmpleadas');
     const BIMESTRE_CONTROL = this.forma.get('bimestreUltimo');
     
-    if (this.radioSeleccionado) {
+    if (this.radioSeleccionado && this.esFormularioSoloLectura === false) {
       // Enable fields when "Sí" is selected
       NUMERO_EMPLEADOS_CONTROL?.enable();
       BIMESTRE_CONTROL?.enable();
@@ -271,6 +328,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe((datos: Tramites32609State) => {
         this.seccionState = datos;
+        this.actualizarFormularioConDatosDelEstado();
       });
   }
 
@@ -396,6 +454,71 @@ onSeleccionVerdadera(evento:string | number, nota?:string): void {
    */
   cerrarModal(): void {
     this.esHabilitarElDialogo = false;
+  }
+
+  /**
+   * Habilita o deshabilita dinámicamente los campos 'motivoRenunciaDeDerechos' y 'mercacniaSolicitudControlar'
+   * según el estado de solo lectura del formulario.
+   *
+   * @returns void
+   * @description Si el formulario está en modo solo lectura, deshabilita ambos campos; de lo contrario, los habilita.
+   */
+  actualizarEstadoCampos(): void {
+    if (!this.forma) {
+      return;
+    }
+
+    const CAMPOS = [
+  "cumplimientoFiscalAduanero",
+  "autorizaOpinionSAT",
+  "cuentaConEmpleadosPropios",
+  "retencionISRTrabajadores",
+  "numeroDeEmpleadas",
+  "pagoCuotasIMSS",
+  "cuentaConSubcontratacionEspecializada",
+  "registroPadronLFT",
+  "listadoSATArt69",
+  "listadoSATArt69B",
+  "listadoSATArt69BBis",
+  "certificadosSellosVigentes",
+  "infringioSupuestos17HBis",
+  "mediosContactoActualizadosBuzon",
+  "suspensionPadronImportadoresExportadores",
+  "archivoNacionales",
+  "proveedores",
+  "querellaSATUltimos3Anios",
+  "ingresoInfoContableSAT",
+  "manifests",
+  "bajoProtesta"
+];
+    CAMPOS.forEach(campo => {
+      const CONTROL = this.forma.get(campo);
+      if (CONTROL) {
+        if (this.esFormularioSoloLectura) {
+          CONTROL.disable();
+        } else {
+          CONTROL.enable();
+        }
+      }
+    });
+  }
+
+  /**
+  * @method validarFormulario
+  * Valida todos los controles del formulario.
+  * 
+  * Marca todos los controles como tocados y actualiza su estado de validación
+  * para mostrar los errores correspondientes en la interfaz de usuario.
+  * También valida los formularios de los componentes hijo.
+  * 
+  * @returns {void}
+  */
+  validarFormulario(): void {
+    this.forma.markAllAsTouched();
+    // Validar formularios del componente hijo control-inventarios
+    if (this.controlInventariosComponent) {
+      this.controlInventariosComponent.validarFormularios();
+    }
   }
 
   /**

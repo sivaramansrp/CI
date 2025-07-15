@@ -15,18 +15,28 @@ import { OeaTextilRegistroService } from '../../services/oea-textil-registro.ser
 
 
 /**
- * Componente NumeroEmpleadosBimestreComponent para la gestión de vehículos dentro del sistema.
+ * Componente para agregar enlaces operativos en el trámite OEA textil.
  * 
- * Este componente independiente (`standalone`) se encarga de la interacción con la tabla dinámica,
- * el manejo de formularios reactivos, y la visualización de notificaciones. Proporciona una interfaz
- * intuitiva para la gestión de vehículos registrados.
+ * Este componente independiente (`standalone`) permite seleccionar y gestionar
+ * instalaciones por entidad federativa para establecer enlaces operativos
+ * en el proceso del trámite OEA textil. Incluye filtrado por entidad federativa,
+ * tabla dinámica interactiva y gestión de selecciones múltiples.
  * 
  * @component
- * @selector app-vehiculos
+ * @selector app-agregar-enlace-operativo
  * @standalone true
- * @imports CommonModule, TablaDinamicaComponent, TituloComponent, ReactiveFormsModule, NotificacionesComponent
- * @templateUrl ./Empleado.component.html
- * @styleUrl ./Empleado.component.scss
+ * @implements {OnInit, OnDestroy, OnChanges}
+ * @author Equipo de desarrollo VUCEM
+ * @version 1.0.0
+ * @since 2024
+ * 
+ * @example
+ * ```html
+ * <app-agregar-enlace-operativo 
+ *   [instalacionesSeleccionadas]="instalaciones"
+ *   (instalacionesSeleccionadasChange)="onInstlacionesChange($event)">
+ * </app-agregar-enlace-operativo>
+ * ```
  */
 @Component({
   selector: 'app-agregar-enlace-operativo',
@@ -100,16 +110,20 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy, OnCha
   @Output() instalacionesSeleccionadas = new EventEmitter<InstalacionesInterface[]>();
 
   /**
-   * Subject utilizado para rastrear la destrucción del componente.
-   * Ayuda a cancelar la suscripción de observables para evitar fugas de memoria.
+   * Subject utilizado para manejar la destrucción del componente.
+   * Ayuda a cancelar suscripciones de observables para evitar fugas de memoria.
    */
   destroyed$: Subject<void> = new Subject();
 
   /**
-   * Constructor para NumeroEmpleadosBimestreComponent.
-   * Inicializa el formulario e inyecta los servicios necesarios.
-   * @param fb - FormBuilder para crear formularios reactivos.
-   * @param tramite32609Store - Store para gestionar el estado relacionado con el Trámite 32609.
+   * Constructor del componente AgregarEnlaceOperativoComponent.
+   * 
+   * Inicializa las dependencias necesarias y configura la suscripción
+   * para el estado de solo lectura del formulario.
+   * 
+   * @param {FormBuilder} fb - Servicio para construir formularios reactivos
+   * @param {ConsultaioQuery} consultaioQuery - Query para obtener el estado de consulta
+   * @param {OeaTextilRegistroService} servicio - Servicio para operaciones del trámite OEA textil
    */
   constructor(
     public fb: FormBuilder,
@@ -154,16 +168,28 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy, OnCha
    * Actualiza el estado del formulario en el store.
    */
   getEntidadesFederativas(): void {
-      this.servicio.getEntidadesFederativas().pipe(takeUntil(this.destroyed$)).subscribe((resp: ApiResponse<EntidadFederativa>) => {
-      this.entidadFederalivaList = resp.data;
+      this.servicio.getEntidadesFederativas().pipe(takeUntil(this.destroyed$)).subscribe({
+        next: (resp: ApiResponse<EntidadFederativa>) => {
+          this.entidadFederalivaList = resp.data;
+        },
+        error: (error) => {
+          console.error('Error al obtener entidades federativas:', error);
+          this.entidadFederalivaList = [];
+        }
       });
   }
 
   alCambiarEntidadFederaliva(_event: Event): void {
    this.servicio.getInstalacionesDatos().pipe(
       takeUntil(this.destroyed$)
-    ).subscribe((resp: ApiResponse<InstalacionesInterface>) => {
-      this.instalacionesList = resp.data;
+    ).subscribe({
+      next: (resp: ApiResponse<InstalacionesInterface>) => {
+        this.instalacionesList = resp.data;
+      },
+      error: (error) => {
+        console.error('Error al obtener instalaciones:', error);
+        this.instalacionesList = [];
+      }
     });
   }
 
@@ -172,13 +198,15 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy, OnCha
    * fila Fila seleccionada.
    */
   manejarFilaSeleccionada(fila: InstalacionesInterface[]): void {
-    this.listaFilaSeleccionadaEmpleado = fila;
-    if (fila.length > 0) {
-      this.filaSeleccionadaNumeroEmpleados = fila[fila.length - 1];
+    const FILAS_SEGURAS = fila || [];
+    
+    this.listaFilaSeleccionadaEmpleado = FILAS_SEGURAS;
+    if (FILAS_SEGURAS.length > 0) {
+      this.filaSeleccionadaNumeroEmpleados = FILAS_SEGURAS[FILAS_SEGURAS.length - 1];
     } else {
       this.filaSeleccionadaNumeroEmpleados = {} as InstalacionesInterface;
     }
-    this.instalacionesSeleccionadas.emit(fila);
+    this.instalacionesSeleccionadas.emit(FILAS_SEGURAS);
   }
 
   /**
@@ -189,11 +217,13 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy, OnCha
     this.listaFilaSeleccionadaEmpleado = [];
     this.filaSeleccionadaNumeroEmpleados = {} as InstalacionesInterface;
     
-    // Resetear el formulario para limpiar el dropdown
-    this.forma.reset();
-    this.forma.patchValue({
-      entidadFederaliva: null
-    });
+    // Resetear el formulario para limpiar el dropdown (si existe)
+    if (this.forma) {
+      this.forma.reset();
+      this.forma.patchValue({
+        entidadFederaliva: null
+      });
+    }
     
     // Limpiar la lista de instalaciones
     this.instalacionesList = [];

@@ -10,6 +10,16 @@ import { Injectable } from '@angular/core';
  * Define la estructura del estado para el trámite 32609.
  * Contiene propiedades relacionadas con los datos del trámite, como información de pago, datos de vehículos, agentes y más.
  */
+
+/**
+ * Interface para la respuesta de la API
+ * @template T - Tipo de datos que se espera en la respuesta.
+ */
+export interface StoreResponse {
+  code: number;
+  data: Tramites32609State;
+  message: string;
+}
 export interface Tramites32609State {
   sectorProductivo: string;
   sectorServicio: string;
@@ -38,6 +48,9 @@ export interface Tramites32609State {
   querellaSATUltimos3Anios: string;
   ingresoInfoContableSAT:string;
   agregarMiembroEmpresa:AgregarMiembroEmpresaTabla[];
+  manifests:boolean;
+  bajoProtesta:boolean;
+  sistemaControlInventariosArt59:string;
 }
 
 
@@ -77,7 +90,10 @@ export function createInitialState(): Tramites32609State {
   controlInventarios: [],
   querellaSATUltimos3Anios: '',
   ingresoInfoContableSAT: '',
-  agregarMiembroEmpresa: []
+  agregarMiembroEmpresa: [],
+  manifests:true,
+  bajoProtesta:true,
+  sistemaControlInventariosArt59: '',
   };
 }
 

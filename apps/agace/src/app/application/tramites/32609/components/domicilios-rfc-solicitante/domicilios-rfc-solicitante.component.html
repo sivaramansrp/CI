@@ -9,6 +9,7 @@
           [label]="''"
           (change)="setValoresStore(forma,'domiciliosRegistrados')"
           [placeholder]="'Domicilios registrades'"
+          [isDisabled]="esFormularioSoloLectura"
           [required]="false"
         >
         </app-catalogo-select>
