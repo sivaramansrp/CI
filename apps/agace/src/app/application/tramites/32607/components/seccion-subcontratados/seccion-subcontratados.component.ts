@@ -1,27 +1,13 @@
-import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { NumeroDeEmpleados } from '../../models/solicitud.model';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SeccionSubcontratados } from '../../models/solicitud.model';
-import { Solicitud32607Query } from '../../estados/solicitud32607.query';
-import { Solicitud32607State } from '../../estados/solicitud32607.store';
-import { Solicitud32607Store } from '../../estados/solicitud32607.store';
-import { SolicitudCatologoSelectLista } from '../../models/solicitud.model';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConsultaioQuery, TituloComponent } from '@libs/shared/data-access-user/src'; 
+import { Component,EventEmitter, OnDestroy, OnInit, Output } from '@angular/core'; 
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; 
+import { NumeroDeEmpleados, SeccionSubcontratados, SolicitudCatologoSelectLista } from '../../models/solicitud.model'; 
+import { Solicitud32607State, Solicitud32607Store } from '../../estados/solicitud32607.store'; 
+import { Subject, map, takeUntil } from 'rxjs'; 
+import { CommonModule } from '@angular/common'; 
+import { Solicitud32607Query } from '../../estados/solicitud32607.query'; 
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 
 /** Selector del componente, utilizado para integrarlo en el HTML
  *  Indica que este componente es independiente (standalone) y no depende de un módulo Angular específico
@@ -68,17 +54,22 @@ export class SeccionSubcontratadosComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * Constructor del componente.
+   * 
+   * Inyecta los servicios necesarios para manejar formularios, acceder y modificar el estado 
+   * de la solicitud, así como realizar consultas auxiliares.
+   * 
+   * @param fb - Servicio para crear y gestionar formularios reactivos.
+   * @param solicitudService - Servicio encargado de las operaciones relacionadas con la solicitud.
+   * @param solicitud32607Store - Store para actualizar el estado de la solicitud 32607.
+   * @param solicitud32607Query - Consulta del estado de la solicitud 32607.
+   * @param consultaioQuery - Consulta de catálogos u otros datos auxiliares.
+   */
   constructor(
-    /** Servicio para crear formularios reactivos */
     public fb: FormBuilder,
-
-    /** Servicio para gestionar las solicitudes */
     public solicitudService: SolicitudService,
-
-    /** Store para gestionar el estado de la solicitud 32607 */
     public solicitud32607Store: Solicitud32607Store,
-
-    /** Query para obtener datos del store de solicitud 32607 */
     public solicitud32607Query: Solicitud32607Query,
     public consultaioQuery: ConsultaioQuery
   ) {

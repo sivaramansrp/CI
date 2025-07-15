@@ -1,36 +1,16 @@
-import { AgregarEnlaceOperativoComponent } from '../agregar-enlace-operativo/agregar-enlace-operativo.component';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { ENLACE_OPERATIVO_CONFIGURACION } from '../../constants/solicitud.enum';
-import { ElementRef } from '@angular/core';
-import { EnlaceOperativo } from '../../models/solicitud.model';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { Modal } from 'bootstrap';
-import { Notificacion } from '@libs/shared/data-access-user/src';
-import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Pedimento } from '@libs/shared/data-access-user/src';
-import { RECIBIR_NOTIFICACIONES_CONFIGURACION } from '../../constants/solicitud.enum';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RecibirNotificaciones } from '../../models/solicitud.model';
-import { RepresentanteLegal } from '../../models/solicitud.model';
-import { Solicitud32607Query } from '../../estados/solicitud32607.query';
-import { Solicitud32607State } from '../../estados/solicitud32607.store';
-import { Solicitud32607Store } from '../../estados/solicitud32607.store';
+import { Component,ElementRef,OnDestroy, OnInit, ViewChild } from '@angular/core'; 
+import { ConfiguracionColumna, ConsultaioQuery, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src'; 
+import { ENLACE_OPERATIVO_CONFIGURACION, RECIBIR_NOTIFICACIONES_CONFIGURACION } from '../../constants/solicitud.enum'; 
+import { EnlaceOperativo, RecibirNotificaciones, RepresentanteLegal } from '../../models/solicitud.model'; 
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; 
+import { Solicitud32607State, Solicitud32607Store } from '../../estados/solicitud32607.store'; 
+import { Subject, map, takeUntil } from 'rxjs'; 
+import { AgregarEnlaceOperativoComponent } from '../agregar-enlace-operativo/agregar-enlace-operativo.component'; 
+import { CommonModule } from '@angular/common'; 
+import { Modal } from 'bootstrap'; 
+import { Solicitud32607Query } from '../../estados/solicitud32607.query'; 
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 /**
  * Componente encargado de mostrar la lista de terceros relacionados
  * que pueden recibir notificaciones. Utiliza una tabla dinámica para
@@ -44,7 +24,6 @@ import { takeUntil } from 'rxjs';
     ReactiveFormsModule,
     TituloComponent,
     TablaDinamicaComponent,
-    HttpClientModule,
     AgregarEnlaceOperativoComponent,
     NotificacionesComponent,
   ],
@@ -111,12 +90,16 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
-   * Constructor del componente, inyecta el servicio `SolicitudService` y
-   * realiza las cargas iniciales de datos.
-   *
-   * @param solicitudService Servicio que maneja las solicitudes
-   * @param solicitud32607Store Almacena el estado de la solicitud
-   * @param solicitud32607Query Consulta el estado de la solicitud
+   * Constructor del componente.
+   * 
+   * Inyecta los servicios necesarios para manejar formularios, acceder y modificar el estado 
+   * de la solicitud, así como realizar consultas auxiliares.
+   * 
+   * @param fb - Servicio para crear y gestionar formularios reactivos.
+   * @param solicitudService - Servicio encargado de las operaciones relacionadas con la solicitud.
+   * @param solicitud32607Store - Store para actualizar el estado de la solicitud 32607.
+   * @param solicitud32607Query - Consulta del estado de la solicitud 32607.
+   * @param consultaioQuery - Consulta de catálogos u otros datos auxiliares.
    */
   constructor(
     private fb: FormBuilder,

@@ -8,7 +8,7 @@
         <app-catalogo-select
           formControlName="entidad"
           [catalogo]="entidadFederative.catalogos"
-          [isDisabled]="false"
+          [isDisabled]="esFormularioSoloLectura"
           [label]="entidadFederative.labelNombre"
           [required]="entidadFederative.required"
           (selectionChange)="actualizarEntidadFederative($event)"

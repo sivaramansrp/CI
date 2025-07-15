@@ -1,14 +1,12 @@
-import { Component, ViewChild } from '@angular/core';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/paso-tres-steps.enum';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user'; 
+import { Component, ViewChild } from '@angular/core'; 
+import { CommonModule } from '@angular/common'; 
+import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/paso-tres-steps.enum'; 
+import { PasoDosComponent } from '../paso-dos/paso-dos.component'; 
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component'; 
+import { ReactiveFormsModule } from '@angular/forms'; 
+
 
 /**
  * Interfaz que define la estructura de una acción de botón.

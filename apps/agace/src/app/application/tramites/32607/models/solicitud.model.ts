@@ -1075,10 +1075,33 @@ export interface GuardarDatosFormulario {
   enlaceOperativosLista: EnlaceOperativo[];
 }
 
+/**
+ * Representa una instalación declarada en la solicitud.
+ */
 export interface Instalacions {
+  /**
+   * Nombre de la entidad federativa donde se encuentra la instalación.
+   */
   entidadFederativa: string;
+
+  /**
+   * Nombre del municipio o delegación.
+   */
   municipioDelegacion: string;
+
+  /**
+   * Dirección completa de la instalación.
+   */
   direccion: string;
+
+  /**
+   * Código postal correspondiente a la instalación.
+   */
   codigoPostal: string;
+
+  /**
+   * Número de registro ante el SESAT.
+   */
   registroSESAT: string;
 }
+

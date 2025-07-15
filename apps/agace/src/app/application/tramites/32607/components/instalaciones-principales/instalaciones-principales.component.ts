@@ -1,29 +1,13 @@
-import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Domicilios } from '../../models/solicitud.model';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputRadio } from '../../models/solicitud.model';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Solicitud32607Query } from '../../estados/solicitud32607.query';
-import { Solicitud32607State } from '../../estados/solicitud32607.store';
-import { Solicitud32607Store } from '../../estados/solicitud32607.store';
-import { SolicitudCatologoSelectLista } from '../../models/solicitud.model';
-import { SolicitudRadioLista } from '../../models/solicitud.model';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConsultaioQuery, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src'; 
+import { Component,EventEmitter, OnDestroy, OnInit, Output} from '@angular/core'; 
+import { Domicilios, InputRadio, SolicitudCatologoSelectLista, SolicitudRadioLista } from '../../models/solicitud.model'; 
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; 
+import { Solicitud32607State, Solicitud32607Store } from '../../estados/solicitud32607.store';
+import { Subject, map, takeUntil } from 'rxjs'; 
+import { CommonModule } from '@angular/common'; 
+import { Solicitud32607Query } from '../../estados/solicitud32607.query'; 
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 
 /**
  * Componente para manejar las instalaciones principales.

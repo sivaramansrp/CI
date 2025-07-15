@@ -526,30 +526,74 @@ export interface Solicitud32607State {
    */
   enlaceOperativosLista: EnlaceOperativo[];
 
+  /**
+   * ID de la entidad federativa seleccionada.
+   */
   entidad: number;
 
+  /**
+   * Indicador del campo 301, puede ser numérico o texto.
+   */
   '301': number | string;
 
+  /**
+   * Número IMMEX ingresado por el usuario.
+   */
   numeroIMMEX: string;
 
+  /**
+   * Modalidad IMMEX seleccionada o escrita.
+   */
   modalidadIMMEX: string;
 
+  /**
+   * Indicador del campo 302, puede ser numérico o texto.
+   */
   '302': number | string;
 
+  /**
+   * Nombre o tipo de rubro de certificación.
+   */
   rubroCertificacion: string;
 
+  /**
+   * Fecha de fin de vigencia del rubro de certificación (formato texto o ISO).
+   */
   fechaFinVigenciaRubro: string;
 
+  /**
+   * Número de oficio relacionado con la certificación.
+   */
   numeroOficio: string;
 
+  /**
+   * Indicador del campo 306, puede ser numérico o texto.
+   */
   '306': number | string;
 
+  /**
+   * Indicador del campo 307, puede ser numérico o texto.
+   */
   '307': number | string;
 
+  /**
+   * Indicador del campo 308, puede ser numérico o texto.
+   */
   '308': number | string;
 
+  /**
+   * Nombre del inventario registrado.
+   */
   inventarioNombre: string;
+
+  /**
+   * Indica si se incluye el anexo 24 en el inventario.
+   */
   inventarioAnexo: boolean;
+
+  /**
+   * Lugar de radicación del inventario.
+   */
   inventarioLugar: string;
 }
 
@@ -1617,58 +1661,114 @@ export class Solicitud32607Store extends Store<Solicitud32607State> {
     this.update((state) => ({ ...state, enlaceOperativosLista: valor }));
   }
 
+  /**
+   * Actualiza el valor de la entidad federativa seleccionada.
+   * @param valor - ID de la entidad.
+   */
   actualizarEntidad(valor: number): void {
     this.update((state) => ({ ...state, entidad: valor }));
   }
 
+  /**
+   * Actualiza el campo 301 con un valor numérico o de texto.
+   * @param valor - Valor del campo 301.
+   */
   actualizar301(valor: number | string): void {
     this.update((state) => ({ ...state, '301': valor }));
   }
 
+  /**
+   * Actualiza el número IMMEX proporcionado.
+   * @param valor - Número IMMEX como string.
+   */
   actualizarNumeroIMMEX(valor: string): void {
     this.update((state) => ({ ...state, numeroIMMEX: valor }));
   }
 
+  /**
+   * Actualiza la modalidad IMMEX seleccionada.
+   * @param valor - Modalidad IMMEX.
+   */
   actualizarModalidadIMMEX(valor: string): void {
     this.update((state) => ({ ...state, modalidadIMMEX: valor }));
   }
 
+  /**
+   * Actualiza el campo 302 con un valor numérico o de texto.
+   * @param valor - Valor del campo 302.
+   */
   actualizar302(valor: number | string): void {
     this.update((state) => ({ ...state, '302': valor }));
   }
 
+  /**
+   * Actualiza el rubro de certificación.
+   * @param valor - Texto que describe el rubro de certificación.
+   */
   actualizarRubroCertificacion(valor: string): void {
     this.update((state) => ({ ...state, rubroCertificacion: valor }));
   }
 
+  /**
+   * Actualiza la fecha de fin de vigencia del rubro de certificación.
+   * @param valor - Fecha en formato string.
+   */
   actualizarFechaFinVigenciaRubro(valor: string): void {
     this.update((state) => ({ ...state, fechaFinVigenciaRubro: valor }));
   }
 
+  /**
+   * Actualiza el número de oficio relacionado con la certificación.
+   * @param valor - Número de oficio como texto.
+   */
   actualizarNumeroOficio(valor: string): void {
     this.update((state) => ({ ...state, numeroOficio: valor }));
   }
 
+  /**
+   * Actualiza el campo 306 con un valor numérico o de texto.
+   * @param valor - Valor del campo 306.
+   */
   actualizar306(valor: number | string): void {
     this.update((state) => ({ ...state, '306': valor }));
   }
 
+  /**
+   * Actualiza el campo 307 con un valor numérico o de texto.
+   * @param valor - Valor del campo 307.
+   */
   actualizar307(valor: number | string): void {
     this.update((state) => ({ ...state, '307': valor }));
   }
 
+  /**
+   * Actualiza el campo 308 con un valor numérico o de texto.
+   * @param valor - Valor del campo 308.
+   */
   actualizar308(valor: number | string): void {
     this.update((state) => ({ ...state, '308': valor }));
   }
 
+  /**
+   * Actualiza el nombre del inventario.
+   * @param valor - Nombre del inventario como texto.
+   */
   actualizarInventarioNombre(valor: string): void {
     this.update((state) => ({ ...state, inventarioNombre: valor }));
   }
 
+  /**
+   * Actualiza el valor del campo "anexo 24" del inventario.
+   * @param valor - Valor booleano que indica si aplica el anexo.
+   */
   actualizarInventarioAnexo(valor: boolean): void {
     this.update((state) => ({ ...state, inventarioAnexo: valor }));
   }
 
+  /**
+   * Actualiza el lugar de radicación del inventario.
+   * @param valor - Lugar como texto.
+   */
   actualizarInventarioLugar(valor: string): void {
     this.update((state) => ({ ...state, inventarioLugar: valor }));
   }

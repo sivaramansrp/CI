@@ -1,52 +1,57 @@
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  ConfiguracionAporteColumna,
+  ConfiguracionColumna,
+  ConsultaioQuery,
+  InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
+  Pedimento,
+  TablaConEntradaComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  DOMICILIOS_CONFIGURACION_COLUMNAS,
+  INVENTARIOS_CONFIGURACION,
+  NUMERO_DE_EMPLEADOS_CONFIGURACION,
+  SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS,
+} from '../../constants/solicitud.enum';
+import {
+  Domicilios,
+  InputRadio,
+  Inventarios,
+  NumeroDeEmpleados,
+  SeccionSociosIC,
+  SolicitudCatologoSelectLista,
+  SolicitudRadioLista,
+} from '../../models/solicitud.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  Solicitud32607State,
+  Solicitud32607Store,
+} from '../../estados/solicitud32607.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionAporteColumna } from '@libs/shared/data-access-user/src';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { DOMICILIOS_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
-import { Domicilios } from '../../models/solicitud.model';
-import { ElementRef } from '@angular/core';
 import { EnlaceOperativoComponent } from '../enlace-operativo/enlace-operativo.component';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { INVENTARIOS_CONFIGURACION } from '../../constants/solicitud.enum';
-import { InputRadio } from '../../models/solicitud.model';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { InstalacionesPrincipalesComponent } from '../instalaciones-principales/instalaciones-principales.component';
-import { Inventarios } from '../../models/solicitud.model';
 import { MiembroDeLaEmpresaComponent } from '../miembro-de-la-empresa/miembro-de-la-empresa.component';
 import { Modal } from 'bootstrap';
 import { ModificarInventarioComponent } from '../modificar-inventario/modificar-inventario.component';
-import { NUMERO_DE_EMPLEADOS_CONFIGURACION } from '../../constants/solicitud.enum';
-import { Notificacion } from '@libs/shared/data-access-user/src';
-import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
-import { NumeroDeEmpleados } from '../../models/solicitud.model';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Pedimento } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
-import { SeccionSociosIC } from '../../models/solicitud.model';
 import { SeccionSubcontratadosComponent } from '../seccion-subcontratados/seccion-subcontratados.component';
 import { Solicitud32607Query } from '../../estados/solicitud32607.query';
-import { Solicitud32607State } from '../../estados/solicitud32607.store';
-import { Solicitud32607Store } from '../../estados/solicitud32607.store';
-import { SolicitudCatologoSelectLista } from '../../models/solicitud.model';
-import { SolicitudRadioLista } from '../../models/solicitud.model';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TablaConEntradaComponent } from '@libs/shared/data-access-user/src';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { ToastrModule } from 'ngx-toastr';
-import { ToastrService } from 'ngx-toastr';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente principal para la gestión de datos comunes de la solicitud.
@@ -102,9 +107,6 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   /** Catálogo para seleccionar el bimestre */
   bimestre: CatalogosSelect = {} as CatalogosSelect;
 
-  /** Catálogo con opción para indicar "todos" */
-  // indiqueTodos: CatalogosSelect = {} as CatalogosSelect;
-
   /** Estado actual del formulario 32607 */
   solicitud32607State: Solicitud32607State = {} as Solicitud32607State;
 
@@ -158,6 +160,13 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   @ViewChild('modalAgregarMiembrosEmpresa', { static: false })
   modalElement!: ElementRef;
 
+  /**
+   * Referencia al elemento del DOM del modal de modificación de inventario.
+   * Se utiliza para controlar la apertura y cierre del modal desde el componente.
+   *
+   * @type {ElementRef}
+   * @memberof NombreDelComponente
+   */
   @ViewChild('modalModificarInventario', { static: false })
   modalModificarInventarioElement!: ElementRef;
 
@@ -200,12 +209,27 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * Indica si el establecimiento está registrado en el IMSS.
+   *
+   * @type {boolean}
+   */
   elimss: boolean = false;
 
+  /**
+   * Indica si el establecimiento cuenta con áreas especializadas.
+   *
+   * @type {boolean}
+   */
   especializadas: boolean = false;
 
   /**
-   * Constructor del componente donde se inicializan servicios y se cargan catálogos necesarios.
+   * Constructor del componente. Inyecta dependencias necesarias y carga las opciones del radio button.
+   * @param fb - FormBuilder para crear el formulario reactivo.
+   * @param solicitudService - Servicio que realiza operaciones sobre la solicitud.
+   * @param solicitud32607Store - Store para actualizar el estado de la solicitud.
+   * @param solicitud32607Query - Query para observar cambios en el estado de la solicitud.
+   * @param consultaioQuery - Query para consultar datos auxiliares necesarios.
    */
   constructor(
     public fb: FormBuilder,
@@ -298,7 +322,6 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       '243': [this.solicitud32607State['243']],
       '244': [this.solicitud32607State['244']],
       '245': [this.solicitud32607State['245']],
-      // indiqueTodos: [this.solicitud32607State.indiqueTodos],
       '246': [this.solicitud32607State['246']],
       file1: [this.solicitud32607State.file1],
       file2: [this.solicitud32607State.file2],
@@ -343,7 +366,6 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
             '243': this.solicitud32607State['243'],
             '244': this.solicitud32607State['244'],
             '245': this.solicitud32607State['245'],
-            // indiqueTodos: this.solicitud32607State.indiqueTodos,
             '246': this.solicitud32607State['246'],
             file1: this.solicitud32607State.file1,
             file2: this.solicitud32607State.file2,
@@ -398,7 +420,6 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           this.sectorProductivo = respuesta.sectorProductivo;
           this.servicio = respuesta.servicio;
           this.bimestre = respuesta.bimestre;
-          // this.indiqueTodos = respuesta.indiqueTodos;
         },
       });
   }
@@ -576,6 +597,9 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   actualizar190(valor: string | number): void {
     this.solicitud32607Store.actualizar190(valor);
+    if (valor === 2) {
+      this.notificacionDeAlerta();
+    }
   }
 
   /**
@@ -721,15 +745,6 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   actualizar245(valor: string | number): void {
     this.solicitud32607Store.actualizar245(valor);
   }
-
-  /**
-   * Actualiza el valor seleccionado en el campo "indique todos" en el estado global.
-   *
-   * @param {Catalogo} valor - Elemento del catálogo correspondiente.
-   */
-  // actualizarIndiqueTodos(valor: Catalogo): void {
-  //   this.solicitud32607Store.actualizarIndiqueTodos(valor.id);
-  // }
 
   /**
    * Actualiza el campo '246' en el estado global.
@@ -943,6 +958,14 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
+/**
+ * Agrega un nuevo control de inventario a la lista `inventariosDatos` si los campos obligatorios están completos.
+ * 
+ * Si no se capturan `nombre` o `lugarRadicacion`, se muestra un mensaje de advertencia 
+ * mediante el método `abrirModal` y se agrega un objeto `PEDIMENTO` por evaluar.
+ *
+ * @returns {void}
+ */
   agregarControlInventarios(): void {
     const NOMBRE = this.datosComunesForm.get('nombre')?.value;
     const LUGARRADICACION = this.datosComunesForm.get('lugarRadicacion')?.value;
@@ -972,6 +995,17 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
+/**
+ * Abre el modal para modificar el inventario seleccionado.
+ * 
+ * Si hay elementos seleccionados en `seleccionarInventarios`, se muestra el modal correspondiente
+ * utilizando la instancia de Bootstrap Modal.
+ * 
+ * Si no hay elementos seleccionados, se muestra un mensaje de advertencia mediante el método `abrirModal`
+ * y se agrega un objeto `PEDIMENTO` por evaluar a la lista `pedimentos`.
+ *
+ * @returns {void}
+ */
   modificarInventario(): void {
     if (this.seleccionarInventarios.length > 0) {
       if (this.modalElement) {
@@ -998,6 +1032,38 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
+/**
+ * Muestra una notificación de alerta indicando un requisito obligatorio para el registro en el Esquema de Certificación de Empresas.
+ * 
+ * También agrega un objeto `PEDIMENTO` con valores predeterminados a la lista `pedimentos`, indicando que está pendiente de evaluación.
+ * 
+ * @returns {void}
+ */
+  notificacionDeAlerta(): void {
+    const PEDIMENTO = {
+      patente: 0,
+      pedimento: 0,
+      aduana: 0,
+      idTipoPedimento: 0,
+      descTipoPedimento: 'Por evaluar',
+      numero: '',
+      comprobanteValor: '',
+      pedimentoValidado: false,
+    };
+    this.abrirModal(
+      'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificación de Empresas, de conformidad con la regla 7.1.1. de las RGCE.'
+    );
+    this.pedimentos.push(PEDIMENTO);
+  }
+
+  /**
+ * Elimina un pedimento de la lista `pedimentos` si el parámetro `borrar` es verdadero.
+ * 
+ * Utiliza el índice almacenado en `elementoParaEliminar` para eliminar el pedimento correspondiente.
+ *
+ * @param borrar - Indica si se debe proceder con la eliminación del pedimento.
+ * @returns {void}
+ */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);

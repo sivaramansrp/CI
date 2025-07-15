@@ -1,21 +1,15 @@
-import { AeronavesComponent } from '../../components/aeronaves/aeronaves.component';
-import { CTPATComponent } from '../../components/c-tpat/c-tpat.component';
-import { CommonModule } from '@angular/common';
-import { Component} from '@angular/core';
-import { ConsultaioQuery} from '@libs/shared/data-access-user/src';
-import { ConsultaioState } from '@libs/shared/data-access-user/src';
-import { DatosComunesComponent } from '../../components/datos-comunes/datos-comunes.component';
-import { GuardarDatosFormulario } from '../../models/solicitud.model';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core'; 
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs'; 
+import { AeronavesComponent } from '../../components/aeronaves/aeronaves.component'; 
+import { CTPATComponent } from '../../components/c-tpat/c-tpat.component'; 
+import { CommonModule } from '@angular/common'; 
+import { DatosComunesComponent } from '../../components/datos-comunes/datos-comunes.component'; 
+import { GuardarDatosFormulario } from '../../models/solicitud.model'; 
+import { ReactiveFormsModule } from '@angular/forms'; 
+import { SolicitudService } from '../../services/solicitud.service'; 
+import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component'; 
+
 
 /**
  * Componente que representa el primer paso de un trámite.
@@ -50,12 +44,23 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
+
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
+  
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
 
-  constructor(private consultaQuery: ConsultaioQuery, public solicitudService: SolicitudService) {
+  /**
+ * Constructor del componente.
+ * Se inyectan los servicios necesarios para consultar datos y gestionar la solicitud.
+ *
+ * @param consultaQuery - Servicio para consultar información relacionada con la solicitud.
+ * @param solicitudService - Servicio para gestionar operaciones sobre la solicitud.
+ */
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    public solicitudService: SolicitudService) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 

@@ -1,25 +1,14 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { EnlaceOperativo } from '../../models/solicitud.model';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { REGEX_TELEFONO_DIGITOS } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RepresentanteLegal } from '../../models/solicitud.model';
-import { Solicitud32607Query } from '../../estados/solicitud32607.query';
-import { Solicitud32607State } from '../../estados/solicitud32607.store';
-import { Solicitud32607Store } from '../../estados/solicitud32607.store';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core'; 
+import { ConsultaioQuery, REGEX_TELEFONO_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src'; 
+import { EnlaceOperativo, RepresentanteLegal } from '../../models/solicitud.model'; 
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; 
+import { Solicitud32607State, Solicitud32607Store } from '../../estados/solicitud32607.store'; 
+import { Subject, map, takeUntil } from 'rxjs'; 
+import { CommonModule } from '@angular/common'; 
+import { Solicitud32607Query } from '../../estados/solicitud32607.query'; 
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
+
 /**
  * Componente para agregar un enlace operativo.
  * Utiliza un formulario reactivo para capturar y emitir la información del enlace operativo.
@@ -61,6 +50,7 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
    * @param solicitudService - Servicio para obtener y gestionar los datos de la solicitud.
    * @param solicitud32607Store - Store de Akita para el estado de la solicitud 32607.
    * @param solicitud32607Query - Consulta (query) de Akita para acceder al estado de la solicitud 32607.
+   * @param consultaioQuery - Query para consultar datos auxiliares relacionados.
    */
   constructor(
     public fb: FormBuilder,

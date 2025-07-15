@@ -1,36 +1,46 @@
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  ConfiguracionColumna,
+  ConsultaioQuery,
+  InputFecha,
+  InputFechaComponent,
+  InputRadioComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import {
+  FECHA_DE_INICIO,
+  FECHA_DE_PAGO,
+  TRANSPORTISTAS_CONFIGURACION,
+} from '../../constants/solicitud.enum';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  InputRadio,
+  SolicitudRadioLista,
+  TransportistasTable,
+} from '../../models/solicitud.model';
+import {
+  Solicitud32607State,
+  Solicitud32607Store,
+} from '../../estados/solicitud32607.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { ElementRef } from '@angular/core';
-import { FECHA_DE_INICIO } from '../../constants/solicitud.enum';
-import { FECHA_DE_PAGO } from '../../constants/solicitud.enum';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputFecha } from '@libs/shared/data-access-user/src';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src';
-import { InputRadio } from '../../models/solicitud.model';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud32607Query } from '../../estados/solicitud32607.query';
-import { Solicitud32607State } from '../../estados/solicitud32607.store';
-import { Solicitud32607Store } from '../../estados/solicitud32607.store';
-import { SolicitudRadioLista } from '../../models/solicitud.model';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TRANSPORTISTAS_CONFIGURACION } from '../../constants/solicitud.enum';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { TransportistasTable } from '../../models/solicitud.model';
-import { Validators } from '@angular/forms';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente principal para gestionar los datos de importador y exportador
@@ -110,14 +120,23 @@ export class AeronavesComponent implements OnInit, OnDestroy {
   @ViewChild('transportistas', { static: false })
   transportistaElement!: ElementRef;
 
+  /**
+   * Variable que indica si la opción de comercio exterior ha sido validada.
+   * Puede ser un número o una cadena, dependiendo del valor recibido del formulario o del backend.
+   * Por defecto, se inicializa en 0.
+   */
   validaComercioExterior: number | string = 0;
 
   /**
-   * Constructor del componente
-   * @param fb FormBuilder para crear formularios reactivos
-   * @param solicitudService Servicio para manejar la lógica de solicitudes
-   * @param solicitud32607Store Store para manejar el estado de la solicitud
-   * @param solicitud32607Query Consulta para obtener el estado de la solicitud
+   * Constructor del componente.
+   * Se encarga de inyectar los servicios y stores necesarios para la gestión del formulario
+   * y los datos asociados a la solicitud 32607.
+   *
+   * @param fb - Servicio de FormBuilder para la creación y gestión de formularios reactivos.
+   * @param solicitudService - Servicio encargado de la lógica relacionada con la solicitud.
+   * @param solicitud32607Store - Store para el manejo del estado de la solicitud 32607.
+   * @param solicitud32607Query - Query para consultar el estado de la solicitud 32607.
+   * @param consultaioQuery - Query para consultar datos auxiliares relacionados.
    */
   constructor(
     private fb: FormBuilder,
@@ -375,47 +394,97 @@ export class AeronavesComponent implements OnInit, OnDestroy {
     this.transportistasLista.push(evento);
   }
 
+  /**
+   * Actualiza el valor del campo 301 en el store.
+   *
+   * @param evento - Valor numérico o alfanumérico recibido del formulario.
+   */
   actualizar301(evento: number | string): void {
     this.solicitud32607Store.actualizar301(evento);
   }
 
+  /**
+   * Actualiza el número IMMEX en el store.
+   *
+   * @param evento - Evento del input que contiene el valor ingresado.
+   */
   actualizarNumeroIMMEX(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32607Store.actualizarNumeroIMMEX(VALOR);
   }
 
+  /**
+   * Actualiza la modalidad IMMEX en el store.
+   *
+   * @param evento - Evento del input que contiene el valor ingresado.
+   */
   actualizarModalidadIMMEX(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32607Store.actualizarModalidadIMMEX(VALOR);
   }
 
+  /**
+   * Actualiza el valor del campo 302 en el store.
+   *
+   * @param evento - Valor numérico o alfanumérico recibido del formulario.
+   */
   actualizar302(evento: number | string): void {
     this.solicitud32607Store.actualizar302(evento);
   }
 
+  /**
+   * Actualiza el rubro de certificación en el store.
+   *
+   * @param evento - Evento del input que contiene el valor ingresado.
+   */
   actualizarRubroCertificacion(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32607Store.actualizarRubroCertificacion(VALOR);
   }
 
+  /**
+   * Actualiza la fecha de fin de vigencia del rubro en el store.
+   *
+   * @param evento - Evento del input que contiene la fecha seleccionada.
+   */
   actualizarFechaFinVigenciaRubro(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32607Store.actualizarFechaFinVigenciaRubro(VALOR);
   }
 
+  /**
+   * Actualiza el número de oficio en el store.
+   *
+   * @param evento - Evento del input que contiene el valor ingresado.
+   */
   actualizarNumeroOficio(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32607Store.actualizarNumeroOficio(VALOR);
   }
 
+  /**
+   * Actualiza el valor del campo 306 en el store.
+   *
+   * @param evento - Valor numérico o alfanumérico recibido del formulario.
+   */
   actualizar306(evento: number | string): void {
     this.solicitud32607Store.actualizar306(evento);
   }
 
+  /**
+   * Actualiza el valor del campo 307 en el store.
+   *
+   * @param evento - Valor numérico o alfanumérico recibido del formulario.
+   */
   actualizar307(evento: number | string): void {
     this.solicitud32607Store.actualizar307(evento);
   }
 
+  /**
+   * Actualiza el valor del campo 308 en el store.
+   *
+   * @param evento - Valor numérico o alfanumérico recibido del formulario.
+   */
   actualizar308(evento: number | string): void {
     this.solicitud32607Store.actualizar308(evento);
   }

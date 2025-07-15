@@ -1,34 +1,16 @@
-import { AeronavesRoutingModule } from './aeronaves-routing.module';
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { CrosslistComponent } from '@ng-mf/data-access-user';
-import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { InputCheckComponent } from '@ng-mf/data-access-user';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { InputHoraComponent } from '@ng-mf/data-access-user';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { NgModule } from '@angular/core';
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { SelectPaisesComponent } from '@ng-mf/data-access-user';
-import { SharedModule } from '@ng-mf/data-access-user';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { ToastrModule } from 'ngx-toastr';
-import { ToastrService } from 'ngx-toastr';
-import { TramiteFolioService } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CatalogosService, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, InputRadioComponent, SelectPaisesComponent, SharedModule, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, TramiteFolioService, WizardComponent } from '@ng-mf/data-access-user';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
+import { ToastrModule, ToastrService } from 'ngx-toastr'; 
+import { AeronavesRoutingModule } from './aeronaves-routing.module'; 
+import { CommonModule } from '@angular/common'; 
+import { HttpClientModule } from '@angular/common/http'; 
+import { NgModule } from '@angular/core'; 
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component'; 
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component'; 
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component'; 
+import { RouterModule } from '@angular/router'; 
+import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component'; 
+
 
 @NgModule({
   declarations: [],

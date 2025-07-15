@@ -1,23 +1,13 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Solicitud32607Query } from '../../estados/solicitud32607.query';
-import { Solicitud32607State } from '../../estados/solicitud32607.store';
-import { Solicitud32607Store } from '../../estados/solicitud32607.store';
-import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component,EventEmitter, OnDestroy,OnInit, Output} from '@angular/core'; 
+import { ConsultaioQuery, TituloComponent } from '@libs/shared/data-access-user/src'; 
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; 
+import { Solicitud32607State, Solicitud32607Store } from '../../estados/solicitud32607.store';
+import { Subject, map, takeUntil } from 'rxjs'; 
+import { CommonModule } from '@angular/common'; 
+import { Solicitud32607Query } from '../../estados/solicitud32607.query'; 
+import { SolicitudService } from '../../services/solicitud.service'; 
 import { TransportistasTable } from '../../models/solicitud.model';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 
 /**
  * Decorador que define el componente 'AgregarTransportistasComponent'.
@@ -53,9 +43,17 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
   /** Evento que emite los datos del transportista seleccionado al componente padre */
   @Output() transportistasDatos = new EventEmitter<TransportistasTable>();
 
-  /**
-   * Constructor del componente. Se inyectan los servicios necesarios para formularios y gestión de estado.
-   */
+/**
+ * Constructor del componente.
+ * Se inyectan los servicios necesarios para la gestión de formularios reactivos, 
+ * el manejo del estado de la solicitud 32607 y la consulta de datos relacionados.
+ *
+ * @param fb - Servicio FormBuilder para construir formularios reactivos.
+ * @param solicitudService - Servicio encargado de operaciones relacionadas con la solicitud.
+ * @param solicitud32607Store - Store para la gestión del estado de la solicitud 32607.
+ * @param solicitud32607Query - Query para consultar datos del store de la solicitud 32607.
+ * @param consultaioQuery - Query para consultar datos auxiliares necesarios.
+ */
   constructor(
     private fb: FormBuilder,
     public solicitudService: SolicitudService,

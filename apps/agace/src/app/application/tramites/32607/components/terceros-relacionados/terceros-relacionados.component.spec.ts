@@ -313,6 +313,7 @@ describe('TercerosRelacionadosComponent', () => {
       '238': 1,
       '239': 1,
       '240': 1,
+      '241': 1,
       '243': 1,
       '244': 1,
       '245': 1,
@@ -336,6 +337,20 @@ describe('TercerosRelacionadosComponent', () => {
       domiciliosDatos: [] as Domicilios[],
       listaSeccionSociosIC: [] as SeccionSociosIC[],
       enlaceOperativosLista: [] as EnlaceOperativo[],
+      entidad: 0,
+      '301': 0,
+      numeroIMMEX: '',
+      modalidadIMMEX: '',
+      '302': 0,
+      rubroCertificacion: '',
+      fechaFinVigenciaRubro: '',
+      numeroOficio: '',
+      '306': 0,
+      '307': 0,
+      '308': 0,
+      inventarioNombre: '',
+      inventarioAnexo: false,
+      inventarioLugar: '',
     });
 
     fixture.detectChanges();
@@ -436,14 +451,20 @@ describe('TercerosRelacionadosComponent', () => {
   });
 
   it('should call guardarDatosFormulario if esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
-    const guardarDatosFormularioSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    const guardarDatosFormularioSpy = jest.spyOn(
+      component,
+      'guardarDatosFormulario'
+    );
     component.esFormularioSoloLectura = true;
     component.inicializarEstadoFormulario();
     expect(guardarDatosFormularioSpy).toHaveBeenCalled();
   });
 
   it('should call inicializarFormulario if esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
-    const inicializarFormularioSpy = jest.spyOn(component, 'inicializarFormulario');
+    const inicializarFormularioSpy = jest.spyOn(
+      component,
+      'inicializarFormulario'
+    );
     component.esFormularioSoloLectura = false;
     component.inicializarEstadoFormulario();
     expect(inicializarFormularioSpy).toHaveBeenCalled();
@@ -478,12 +499,12 @@ describe('TercerosRelacionadosComponent', () => {
   it('should not call enable or disable if esFormularioSoloLectura is neither true nor false in guardarDatosFormulario', () => {
     component.inicializarFormulario = jest.fn();
     component.tercerosRelacionadosForm = {
-      disable: jest.fn(()=> of()),
-      enable: jest.fn(()=> of()),
+      disable: jest.fn(() => of()),
+      enable: jest.fn(() => of()),
     } as any;
     component.guardarDatosFormulario();
     expect(component.inicializarFormulario).toHaveBeenCalled();
- });
+  });
 
   it('should set seleccionEnlaceOperativoDatos when seleccionEnlaceOperativo is called', () => {
     const mockEnlaces: any[] = [{ rfc: 'RFC1' }, { rfc: 'RFC2' }];
@@ -493,27 +514,20 @@ describe('TercerosRelacionadosComponent', () => {
 
   it('should remove the selected enlace operativo when cerrarDialogoEnlaceOperativo is called and seleccionEnlaceOperativoDatos has elements', () => {
     component.seleccionEnlaceOperativoDatos = [{ rfc: 'RFC1' }] as any;
-    component.enlaceOperativosLista = [
-      { rfc: 'RFC1' },
-      { rfc: 'RFC2' },
-    ] as any;
+    component.enlaceOperativosLista = [{ rfc: 'RFC1' }, { rfc: 'RFC2' }] as any;
     component.cerrarDialogoEnlaceOperativo();
     expect(component.enlaceOperativosLista).toEqual([{ rfc: 'RFC2' }]);
   });
 
   it('should not modify enlaceOperativosLista if seleccionEnlaceOperativoDatos is empty when cerrarDialogoEnlaceOperativo is called', () => {
     component.seleccionEnlaceOperativoDatos = [] as any;
-    component.enlaceOperativosLista = [
-      { rfc: 'RFC1' },
-      { rfc: 'RFC2' },
-    ] as any;
+    component.enlaceOperativosLista = [{ rfc: 'RFC1' }, { rfc: 'RFC2' }] as any;
     component.cerrarDialogoEnlaceOperativo();
     expect(component.enlaceOperativosLista).toEqual([
       { rfc: 'RFC1' },
       { rfc: 'RFC2' },
     ]);
   });
-
 
   it('should update store on actualizarCorreoElectronico', () => {
     const event = { target: { value: 'new@example.com' } } as any;
@@ -525,7 +539,10 @@ describe('TercerosRelacionadosComponent', () => {
 
   it('should add a new enlace operativo and pedimento, open modal, and update store when agregarEnlaceOperativo is called', () => {
     const abrirModalSpy = jest.spyOn(component, 'abrirModal');
-    const actualizarEnlaceOperativosListaSpy = jest.spyOn(solicitud32607StoreMock, 'actualizarEnlaceOperativosLista');
+    const actualizarEnlaceOperativosListaSpy = jest.spyOn(
+      solicitud32607StoreMock,
+      'actualizarEnlaceOperativosLista'
+    );
     component.pedimentos = [];
     component.enlaceOperativosLista = [{ rfc: 'RFC_EXISTENTE' }] as any;
     const nuevoEnlace: any = { rfc: 'RFC_NUEVO', nombre: 'Nuevo' };
@@ -551,7 +568,9 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.enlaceOperativosLista).toContainEqual(nuevoEnlace);
     expect(component.enlaceOperativosLista.length).toBe(2);
 
-    expect(actualizarEnlaceOperativosListaSpy).toHaveBeenCalledWith(component.enlaceOperativosLista);
+    expect(actualizarEnlaceOperativosListaSpy).toHaveBeenCalledWith(
+      component.enlaceOperativosLista
+    );
   });
 
   it('should set nuevaNotificacion and elementoParaEliminar when abrirModal is called', () => {
@@ -589,15 +608,22 @@ describe('TercerosRelacionadosComponent', () => {
 
     component.buscarTerceroNacionalIDC();
 
-    expect(solicitudServiceMock.conseguirRepresentanteLegalDatos).not.toHaveBeenCalled();
+    expect(
+      solicitudServiceMock.conseguirRepresentanteLegalDatos
+    ).not.toHaveBeenCalled();
     expect(solicitud32607StoreMock.actualizarRfc).not.toHaveBeenCalled();
     expect(solicitud32607StoreMock.actualizarNombre).not.toHaveBeenCalled();
-    expect(solicitud32607StoreMock.actualizarApellidoPaterno).not.toHaveBeenCalled();
-    expect(solicitud32607StoreMock.actualizarApellidoMaterno).not.toHaveBeenCalled();
+    expect(
+      solicitud32607StoreMock.actualizarApellidoPaterno
+    ).not.toHaveBeenCalled();
+    expect(
+      solicitud32607StoreMock.actualizarApellidoMaterno
+    ).not.toHaveBeenCalled();
     expect(solicitud32607StoreMock.actualizarTelefono).not.toHaveBeenCalled();
-    expect(solicitud32607StoreMock.actualizarCorreoElectronico).not.toHaveBeenCalled();
+    expect(
+      solicitud32607StoreMock.actualizarCorreoElectronico
+    ).not.toHaveBeenCalled();
   });
-
 
   it('should clean up subscriptions on ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');

@@ -1,21 +1,13 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputRadio } from '../../models/solicitud.model';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Solicitud32607Query } from '../../estados/solicitud32607.query';
-import { Solicitud32607State } from '../../estados/solicitud32607.store';
-import { Solicitud32607Store } from '../../estados/solicitud32607.store';
-import { SolicitudRadioLista } from '../../models/solicitud.model';
+import { Component, OnDestroy, OnInit } from '@angular/core'; 
+import { ConsultaioQuery, InputRadioComponent } from '@libs/shared/data-access-user/src'; 
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'; 
+import { InputRadio, SolicitudRadioLista } from '../../models/solicitud.model'; 
+import { Solicitud32607State, Solicitud32607Store } from '../../estados/solicitud32607.store'; 
+import { Subject, map, takeUntil } from 'rxjs'; 
+import { CommonModule } from '@angular/common'; 
+import { Solicitud32607Query } from '../../estados/solicitud32607.query'; 
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 /**
  * Componente que gestiona el formulario relacionado con la certificación CTPAT.
  * Utiliza radio buttons para capturar respuestas de sí/no relacionadas con la solicitud.
@@ -57,6 +49,7 @@ export class CTPATComponent implements OnInit, OnDestroy {
    * @param solicitudService - Servicio que realiza operaciones sobre la solicitud.
    * @param solicitud32607Store - Store para actualizar el estado de la solicitud.
    * @param solicitud32607Query - Query para observar cambios en el estado de la solicitud.
+   * @param consultaioQuery - Query para consultar datos auxiliares necesarios.
    */
   constructor(
     public fb: FormBuilder,

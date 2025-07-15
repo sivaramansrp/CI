@@ -445,36 +445,6 @@ export const DOMICILIOS_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Domicilios>
       clave: (item: Domicilios) => item.instalacionPerfil,
       orden: 1,
     },
-    // {
-    //   /** Perfil del Recinto Fiscalizado Estratégico. */
-    //   encabezado: 'Perfil del Recinto Fiscalizado Estratégico',
-    //   clave: (item: Domicilios) => item.instalacionPerfilRFE,
-    //   orden: 1,
-    // },
-    // {
-    //   /** Perfil del Auto Transportista Terrestre. */
-    //   encabezado: 'Perfil del Auto Transportista Terrestre',
-    //   clave: (item: Domicilios) => item.instalacionPerfilAuto,
-    //   orden: 1,
-    // },
-    // {
-    //   /** Perfil del Transportista Ferroviario. */
-    //   encabezado: 'Perfil del Transportista Ferroviario',
-    //   clave: (item: Domicilios) => item.instalacionPerfilFerro,
-    //   orden: 1,
-    // },
-    // {
-    //   /** Perfil del Recinto Fiscalizado. */
-    //   encabezado: 'Perfil del Recinto Fiscalizado',
-    //   clave: (item: Domicilios) => item.instalacionPerfilRf,
-    //   orden: 1,
-    // },
-    // {
-    //   /** Perfil de Mensajería y Paquetería. */
-    //   encabezado: 'Perfil de Mensajería y Paquetería',
-    //   clave: (item: Domicilios) => item.instalacionPerfilMensajeria,
-    //   orden: 1,
-    // },
   ];
 
 /**
@@ -569,13 +539,38 @@ export const SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Secci
     },
   ];
 
+/**
+ * Catálogo de selección para la entidad federativa.
+ *
+ * Se utiliza para representar el campo de selección de una entidad federativa
+ * en formularios del sistema.
+ */
 export const ENTIDAD_FEDERATIVE: CatalogosSelect = {
+  /**
+   * Etiqueta que se muestra como nombre del campo en el formulario.
+   */
   labelNombre: 'Entidad federativa',
+
+  /**
+   * Indica si el campo es obligatorio o no.
+   */
   required: false,
+
+  /**
+   * Texto que se muestra como primera opción del campo select.
+   */
   primerOpcion: 'Seleccion un valor',
+
+  /**
+   * Lista de opciones del catálogo. Inicialmente vacía, se carga dinámicamente.
+   */
   catalogos: [],
 };
 
+/**
+ * Configuración de las columnas para mostrar la información de las instalaciones.
+ * Cada columna contiene su encabezado, una clave de acceso al dato y el orden en el que aparece.
+ */
 export const INSTALACIONS_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Instalacions>[] =
   [
     {

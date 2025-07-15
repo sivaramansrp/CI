@@ -1,31 +1,12 @@
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputRadio } from '../../models/solicitud.model';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { RadioOptions } from '../../models/solicitud.model';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SeccionSociosIC } from '../../models/solicitud.model';
-import { Solicitud32607Query } from '../../estados/solicitud32607.query';
-import { Solicitud32607State } from '../../estados/solicitud32607.store';
-import { Solicitud32607Store } from '../../estados/solicitud32607.store';
-import { SolicitudCatologoSelectLista } from '../../models/solicitud.model';
-import { SolicitudRadioLista } from '../../models/solicitud.model';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConsultaioQuery, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src'; 
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core'; 
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; 
+import { InputRadio, RadioOptions, SeccionSociosIC, SolicitudCatologoSelectLista, SolicitudRadioLista } from '../../models/solicitud.model'; 
+import { Solicitud32607State, Solicitud32607Store } from '../../estados/solicitud32607.store'; 
+import { Subject, map, takeUntil } from 'rxjs'; 
+import { CommonModule } from '@angular/common'; 
+import { Solicitud32607Query } from '../../estados/solicitud32607.query'; 
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /** Componente que representa un miembro de la empresa */
 @Component({
@@ -82,12 +63,22 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
-  /** Constructor del componente */
+  /**
+   * Constructor del componente.
+   *
+   * Inyecta los servicios necesarios para formularios, gestión de estado, y consultas relacionadas con la solicitud.
+   *
+   * @param fb - Servicio para manejar formularios reactivos.
+   * @param solicitudService - Servicio para operaciones relacionadas con la solicitud.
+   * @param solicitud32607Store - Store que mantiene el estado de la solicitud 32607.
+   * @param solicitud32607Query - Permite leer el estado actual de la solicitud.
+   * @param consultaioQuery - Servicio para obtener catálogos y datos auxiliares.
+   */
   constructor(
-    public fb: FormBuilder, // /** Servicio para manejar formularios reactivos */
-    public solicitudService: SolicitudService, // /** Servicio para manejar solicitudes */
-    public solicitud32607Store: Solicitud32607Store, // /** Estado de la solicitud */
-    public solicitud32607Query: Solicitud32607Query, // /** Consultas sobre la solicitud */
+    public fb: FormBuilder,
+    public solicitudService: SolicitudService,
+    public solicitud32607Store: Solicitud32607Store,
+    public solicitud32607Query: Solicitud32607Query,
     public consultaioQuery: ConsultaioQuery
   ) {
     /**

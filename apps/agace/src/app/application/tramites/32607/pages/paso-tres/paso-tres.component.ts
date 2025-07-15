@@ -1,8 +1,9 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common'; 
+import { Component } from '@angular/core'; 
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms'; 
+import { Router } from '@angular/router'; 
+
 
 /**
  * Componente para el paso tres del trámite 32607.
