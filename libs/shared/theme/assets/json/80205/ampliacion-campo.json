@@ -5,13 +5,23 @@
       "ano": "2023"
     },
     "aduanaDeIngresoSelecion": {
-    "id": -1,
+    "id": 160,
     "descripcion": ""
   },
     "rfcEmpresa": "rfcEmpresa",
     "numeroPrograma": "123456789",
     "tiempoPrograma": "tiempoPrograma",
-    "tablaDatos":[],
-    "tablaDatosIMMEX": []
+    "tablaDatos":[{
+      "Servicio": "Nombre del servicio",
+      "RegistroContribuyentes": "Registro relacionado",
+      "DenominaciónSocial": "AAL970927390",
+      "NumeroIMMEX": "Número del programa IMMEX",
+      "AñoIMMEX": "Año de inicio del programa IMMEX"
+    }],
+    "tablaDatosIMMEX": [{
+      "descripiónDelServicio": "Descripción del servicio",
+      "descripcion": "Descripción adicional del servicio",
+      "tipode": "Tipo de servicio"
+    }]
   }
   

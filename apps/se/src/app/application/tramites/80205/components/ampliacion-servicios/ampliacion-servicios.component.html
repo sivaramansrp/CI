@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-                <label class="form-label clase-sin-ajuste">Selecciona la modalidad</label>
+                <label class="form-label clase-sin-ajuste">Selecciona la modalidad:</label>
                 <input
                     type="text"
                     id="seleccionaLaModalidad"
@@ -20,7 +20,7 @@
     
         <div class="col-md-4">
             <div class="form-group">
-                <label class="form-label">Folio</label>
+                <label class="form-label">Folio:</label>
                 <input
                     type="text"
                     id="folio"
@@ -35,7 +35,7 @@
     
         <div class="col-md-4">
             <div class="form-group">
-                <label  class="form-label">Año</label>
+                <label  class="form-label">Año:</label>
                 <input
                     type="text"
                     id="Ano"
@@ -79,10 +79,10 @@
   <div class="row">
     <div class="col-md-12">
         <div class="pull-right"> 
-            <button name="eliminarServicio" (click)="eliminarServiciosGrid()" class="btn btn-danger">
+            <button name="eliminarServicio" (click)="eliminarServiciosGrid()" class="btn btn-danger"  [disabled]="campoDeshabilitar">
                 Eliminar
             </button>
-            <button name="agregarServicio" (click)="agregarServiciosAmpliacion()" class="btn btn-primary mx-2">
+            <button name="agregarServicio" (click)="agregarServiciosAmpliacion()" class="btn btn-primary mx-2" [disabled]="campoDeshabilitar">
                 Agregar
             </button> 
         </div>
@@ -97,7 +97,7 @@
 </div>
 <div class="my-4">
 
-<app-tabla-dinamica  [tipoSeleccionTabla]="tablaSeleccion" (filaSeleccionada)="seleccionarDomicilios($event)"  [configuracionTabla]="configuracionTablaServicio"
+<app-tabla-dinamica  [tipoSeleccionTabla]="tablaSeleccion" (filaSeleccionada)="seleccionarDomicilios($event)"  [configuracionTabla]="configuracionTablaServicio" [disableSeleccionTablaRadio]="campoDeshabilitar"
 [datos]="datosImmex"></app-tabla-dinamica>
 <div class="row">
     <div class="col-md-8">
@@ -143,10 +143,10 @@
   <div class="row my-4">
     <div class="col-md-12">    
         <div class="pull-right">
-            <button name="eliminar" (click)="eliminarEmpresasNacionales()" class="btn btn-danger">
+            <button name="eliminar" (click)="eliminarEmpresasNacionales()" class="btn btn-danger" [disabled]="campoDeshabilitar">
                 Eliminar
             </button>
-            <button name="agregar" (click)="actualizaGridEmpresasNacionales()" class="btn btn-primary mx-2">
+            <button name="agregar" (click)="actualizaGridEmpresasNacionales()" class="btn btn-primary mx-2" [disabled]="campoDeshabilitar">
                 Agregar
             </button> 
         </div>
@@ -162,7 +162,7 @@
     </div>  
 </div>
 
-<app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" (filaSeleccionada)="seleccionarEmpresas($event)"  [configuracionTabla]="configuracionTabla"
+<app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" (filaSeleccionada)="seleccionarEmpresas($event)"  [configuracionTabla]="configuracionTabla" [disableSeleccionTablaRadio]="campoDeshabilitar"
 [datos]="datos"></app-tabla-dinamica>
 
 </div>
