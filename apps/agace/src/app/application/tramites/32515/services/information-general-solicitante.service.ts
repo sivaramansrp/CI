@@ -1,5 +1,6 @@
 import { InformationGeneralSolicitanteState, Tramite32515Store } from '../estados/tramite32515.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -7,11 +8,27 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
+
+
 export class InformationGeneralSolicitanteService {
 
   // Constructor del servicio que inyecta HttpClient para realizar peticiones HTTP
   constructor(private http: HttpClient,public tramite32515Store:Tramite32515Store) { }
 
+   /**
+ * @property forms
+ * @description
+ * Mapa privado que almacena los formularios dinámicos registrados en el servicio. 
+ * La clave es un `string` que representa el nombre del formulario, y el valor es una instancia de `FormGroup`.
+ * @type {Map<string, FormGroup>}
+ */
+  private forms = new Map<string, FormGroup>();
+  
+   registerForm(name: string, form: FormGroup): void {
+    if (!this.forms.has(name)) {
+      this.forms.set(name, form);
+    }
+  }
   /**
    * @method getEntidadFederativa
    * @description
@@ -58,14 +75,12 @@ export class InformationGeneralSolicitanteService {
   /**
    * Actualiza el estado del formulario con los datos proporcionados.
    * 
-   * @param DATOS - Estado de la solicitud `TramiteState` con la información 
+   * Estado de la solicitud `TramiteState` con la información 
    *                del tipo de solicitud a actualizar en el store.
    */
   actualizarEstadoFormulario(DATOS: InformationGeneralSolicitanteState): void {
-    this.tramite32515Store.update((state) => ({
-      ...state,
-      ...DATOS
-    }))
-
+     Object.entries(DATOS).forEach(([key, value]) => {
+     this.tramite32515Store.setTramite32515State(key, value);
+    });
   }
 }

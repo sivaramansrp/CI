@@ -25,145 +25,195 @@ describe('AvisoModifyService', () => {
     expect(service).toBeTruthy();
   });
 
-
-  
-  it('should fetch rango de días', () => {
-    const mockResponse: string[] = ['1', '2', '3'];
-
-    service.getSelectRangoDias().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+  it('getAvisoModify should return CatalogoResponse on success', () => {
+    const mockResponse: CatalogoResponse = {
+      id: 1,
+      descripcion: 'desc'
+    };
+    service.getAvisoModify().subscribe(res => {
+      expect(res).toEqual(mockResponse);
     });
+    const req = httpMock.expectOne('assets/json/32301/tipoDeAviso.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
 
+  it('getAvisoModify should return default CatalogoResponse on error', () => {
+    service.getAvisoModify().subscribe(res => {
+      expect(res.id).toBe(0);
+      expect(res.descripcion).toContain('Respuesta por defecto');
+    });
+    const req = httpMock.expectOne('assets/json/32301/tipoDeAviso.json');
+    req.error(new ErrorEvent('Network error'));
+  });
+
+  it('cargarDatosPersonaFusion should return PersonaFusionEscisionDTO on success', () => {
+    const mockResponse: PersonaFusionEscisionDTO = {
+     rfc: "string",
+  razonSocial: "string",
+  numFolioTramite: "string",
+  fechaInicioVigencia: "string",
+  fechaFinVigencia: "string"
+    };
+    service.cargarDatosPersonaFusion().subscribe(res => {
+      expect(res).toEqual(mockResponse);
+    });
+    const req = httpMock.expectOne('assets/json/32301/personaFusionEscision.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
+
+  it('cargarDatosPersonaFusion should return default PersonaFusionEscisionDTO on error', () => {
+    service.cargarDatosPersonaFusion().subscribe(res => {
+      expect(res.rfc).toBe('');
+      expect(res.razonSocial).toContain('Respuesta por defecto');
+    });
+    const req = httpMock.expectOne('assets/json/32301/personaFusionEscision.json');
+    req.error(new ErrorEvent('Network error'));
+  });
+
+  it('gridsubFusionOescision should return TableDataNgTable', () => {
+    const mockTable: TableDataNgTable = { tableHeader: [], tableBody: [] };
+    service.gridsubFusionOescision().subscribe(res => {
+      expect(res).toEqual(mockTable);
+    });
+    const req = httpMock.expectOne('assets/json/32301/subFusionOescision.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockTable);
+  });
+
+  it('getSelectRangoDias should return string[]', () => {
+    const mockData = ['1', '2', '3'];
+    service.getSelectRangoDias().subscribe(res => {
+      expect(res).toEqual(mockData);
+    });
     const req = httpMock.expectOne('assets/json/32301/selectRangoDias.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    req.flush(mockData);
   });
 
-  it('should fetch opciones de fracción adicional', () => {
-    const mockResponse: string[] = ['Option1', 'Option2'];
-
-    service.getAdicianFraccionOption().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+  it('getAdicianFraccionOption should return string[]', () => {
+    const mockData = ['a', 'b'];
+    service.getAdicianFraccionOption().subscribe(res => {
+      expect(res).toEqual(mockData);
     });
-
     const req = httpMock.expectOne('assets/json/32301/adicianFraccionOption.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    req.flush(mockData);
   });
 
-  it('should fetch capacidad de almacenamiento', () => {
-    const mockResponse: string[] = ['Cap1', 'Cap2'];
-
-    service.getCapacidadAlmacenamiento().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+  it('getAdicianFraccionNicoModOptions should return string[]', () => {
+    const mockData = ['x', 'y'];
+    service.getAdicianFraccionNicoModOptions().subscribe(res => {
+      expect(res).toEqual(mockData);
     });
+    const req = httpMock.expectOne('assets/json/32301/adicianFraccionNicoModOptions.json');
+    req.flush(mockData);
+  });
 
+  it('getAdicianFraccionUnidadMedidaModOption should return string[]', () => {
+    const mockData = ['kg', 'g'];
+    service.getAdicianFraccionUnidadMedidaModOption().subscribe(res => {
+      expect(res).toEqual(mockData);
+    });
+    const req = httpMock.expectOne('assets/json/32301/adicianFraccionUnidadMedidaModOption.json');
+    req.flush(mockData);
+  });
+
+  it('getAdicianFraccionActivRelProcModOption should return string[]', () => {
+    const mockData = ['proc1', 'proc2'];
+    service.getAdicianFraccionActivRelProcModOption().subscribe(res => {
+      expect(res).toEqual(mockData);
+    });
+    const req = httpMock.expectOne('assets/json/32301/adicianFraccionActivRelProcModOption.json');
+    req.flush(mockData);
+  });
+
+  it('getAdicianFraccioncveFraccionCorrelacionModOption should return string[]', () => {
+    const mockData = ['corr1', 'corr2'];
+    service.getAdicianFraccioncveFraccionCorrelacionModOption().subscribe(res => {
+      expect(res).toEqual(mockData);
+    });
+    const req = httpMock.expectOne('assets/json/32301/adicianFraccioncveFraccionCorrelacionModOption.json');
+    req.flush(mockData);
+  });
+
+  it('getCapacidadAlmacenamiento should return string[]', () => {
+    const mockData = ['cap1', 'cap2'];
+    service.getCapacidadAlmacenamiento().subscribe(res => {
+      expect(res).toEqual(mockData);
+    });
     const req = httpMock.expectOne('assets/json/32301/fusionOEscision.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    req.flush(mockData);
   });
 
-  it('should fetch entidades federativas', () => {
-    const mockResponse: string[] = ['Entidad1', 'Entidad2'];
-
-    service.getEntidadFederativa().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+  it('getEntidadFederativa should return string[]', () => {
+    const mockData = ['CDMX', 'JAL'];
+    service.getEntidadFederativa().subscribe(res => {
+      expect(res).toEqual(mockData);
     });
-
     const req = httpMock.expectOne('assets/json/31601/entidadFederative.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    req.flush(mockData);
   });
 
-  it('should fetch grid domicilios modificados', () => {
-    const mockResponse: TableDataNgTable = { tableHeader: [],
-      /** Cuerpo de la tabla */
-      tableBody: [], };
-
-    service.getGridDomiciliosModificados().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+  it('getGridDomiciliosModificados should return TableDataNgTable', () => {
+    const mockTable: TableDataNgTable = { tableHeader: [], tableBody: [] };
+    service.getGridDomiciliosModificados().subscribe(res => {
+      expect(res).toEqual(mockTable);
     });
-
     const req = httpMock.expectOne('assets/json/32301/gridDomiciliosModificados.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    req.flush(mockTable);
   });
 
-  it('should fetch grid mostrar grid modificado', () => {
-    const mockResponse: TableDataNgTable = { tableHeader:[],
-      /** Cuerpo de la tabla */
-      tableBody:[], };
-
-    service.getGridMostrarGridModificado().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+  it('getGridMostrarGridModificado should return TableDataNgTable', () => {
+    const mockTable: TableDataNgTable = { tableHeader: [], tableBody: [] };
+    service.getGridMostrarGridModificado().subscribe(res => {
+      expect(res).toEqual(mockTable);
     });
-
     const req = httpMock.expectOne('assets/json/32301/gridMostrarGridModificado.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    req.flush(mockTable);
   });
 
-  it('should fetch opciones de carácter de', () => {
-    const mockResponse: string[] = ['Option1', 'Option2'];
-
-    service.getEnSuCaracterDe().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+  it('getEnSuCaracterDe should return string[]', () => {
+    const mockData = ['caracter1', 'caracter2'];
+    service.getEnSuCaracterDe().subscribe(res => {
+      expect(res).toEqual(mockData);
     });
-
     const req = httpMock.expectOne('assets/json/31601/enSuCaracterDe.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    req.flush(mockData);
   });
 
-  it('should fetch nacionalidad', () => {
-    const mockResponse: string[] = ['Nacionalidad1', 'Nacionalidad2'];
-
-    service.getNacionalidad().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+  it('getNacionalidad should return string[]', () => {
+    const mockData = ['MX', 'US'];
+    service.getNacionalidad().subscribe(res => {
+      expect(res).toEqual(mockData);
     });
-
     const req = httpMock.expectOne('assets/json/31601/nacionalidad.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    req.flush(mockData);
   });
 
-  it('should fetch opciones pre-operativas', () => {
-    const mockResponse: string[] = ['Option1', 'Option2'];
-
-    service.getPreOperativo().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+  it('getPreOperativo should return string[]', () => {
+    const mockData = ['pre1', 'pre2'];
+    service.getPreOperativo().subscribe(res => {
+      expect(res).toEqual(mockData);
     });
-
     const req = httpMock.expectOne('assets/json/31601/preOperativo.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    req.flush(mockData);
   });
 
-  it('should fetch grid miembros empresas', () => {
-    const mockResponse: TableDataNgTable = { tableHeader:[],
-      /** Cuerpo de la tabla */
-      tableBody:[],};
-
-    service.getGridMiembrosEmpresas().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+  it('getGridMiembrosEmpresas should return TableDataNgTable', () => {
+    const mockTable: TableDataNgTable = { tableHeader: [], tableBody: [] };
+    service.getGridMiembrosEmpresas().subscribe(res => {
+      expect(res).toEqual(mockTable);
     });
-
     const req = httpMock.expectOne('assets/json/32301/gridMiembrosEmpresas.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    req.flush(mockTable);
   });
 
-  it('should fetch sección miembros revocados', () => {
-    const mockResponse: TableDataNgTable = { tableHeader:[],
-      /** Cuerpo de la tabla */
-      tableBody:[], };
-
-    service.getSeccionMiembrosRevocados().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+  it('getSeccionMiembrosRevocados should return TableDataNgTable', () => {
+    const mockTable: TableDataNgTable = { tableHeader: [], tableBody: [] };
+    service.getSeccionMiembrosRevocados().subscribe(res => {
+      expect(res).toEqual(mockTable);
     });
-
     const req = httpMock.expectOne('assets/json/32301/seccionMiembrosRevocados.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    req.flush(mockTable);
   });
 });

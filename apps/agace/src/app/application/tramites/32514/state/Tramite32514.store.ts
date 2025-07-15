@@ -227,4 +227,18 @@ export class Tramite32514Store extends Store<Solicitud32514State> {
   public setEstado(key: string, value: string): void {
     this.update((state) => ({ ...state, [key]: value }));
   }
+
+  /**
+   * Actualiza el estado del formulario con los datos proporcionados.
+   * 
+   * @param DATOS - Estado de la solicitud `Tramite110222State` con la información 
+   *                del tipo de solicitud a actualizar en el store.
+   */
+  actualizarEstadoFormulario(DATOS: Solicitud32514State): void {
+    this.update((state) => ({
+      ...state,
+      ...DATOS
+    }))
+
+  }
 }

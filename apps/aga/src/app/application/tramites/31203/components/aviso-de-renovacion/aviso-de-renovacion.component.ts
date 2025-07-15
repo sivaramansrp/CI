@@ -1,16 +1,12 @@
-import { AvisoValor, FECHA_DE_PAGO } from '../../models/aviso.model';
+import { AvisoValor, FECHA_DE_PAGO,PreOperativo } from '../../models/aviso.model';
 import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConsultaioQuery, ConsultaioState, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { map, takeUntil } from 'rxjs';
+import { FormBuilder, FormGroup,ReactiveFormsModule } from '@angular/forms';
+import { Subject, map,takeUntil } from 'rxjs';
+import { UnicoState,UnicoStore } from '../../estados/renovacion.store';
 import { AvisoUnicoService } from '../../services/aviso-unico.service';
 import { CommonModule } from '@angular/common';
-import { PreOperativo } from '../../models/aviso.model';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
 import { UnicoQuery } from '../../estados/queries/unico.query';
-import { UnicoState } from '../../estados/renovacion.store';
-import { UnicoStore } from '../../estados/renovacion.store';
 
 /**
  * Componente que representa el aviso de renovación.

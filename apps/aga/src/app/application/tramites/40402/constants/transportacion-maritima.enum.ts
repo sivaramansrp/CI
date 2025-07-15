@@ -105,7 +105,8 @@ export const CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Pe
     { encabezado: 'Domicilio', clave: (fila) => fila.domicilioPFE, orden: 3 },
     { encabezado: 'País', clave: (fila) => fila.paisPFE, orden: 4 },
     { encabezado: 'Estado', clave: (fila) => fila.estadoPFE, orden: 5 },
-    { encabezado: 'Correo electrónico', clave: (fila) => fila.correoPFE, orden: 6 }
+    { encabezado: 'Correo electrónico', clave: (fila) => fila.correoPFE, orden: 6 },
+    { encabezado: 'Acciones', clave: (fila) => fila.acciones, orden: 7 }
 ]
 
 /**
