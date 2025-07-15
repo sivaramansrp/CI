@@ -97,6 +97,12 @@ export class SolicitudComponent implements OnDestroy {
   formularioDeshabilitado: boolean = false;
 
   /**
+   * Bandera que indica si la solicitud está en modo solo lectura.
+   * @type {boolean}
+   */
+  esSolicitud: boolean = false;
+
+  /**
    * Subject para desuscribirse de los observables.
    * @type {Subject<void>}
    */
@@ -118,6 +124,7 @@ export class SolicitudComponent implements OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.formularioDeshabilitado = seccionState.readonly;
+          this.esSolicitud = seccionState.create;
           if(seccionState.readonly || seccionState.update){
              this.inicializarEstadoFormulario();
           }
