@@ -1,26 +1,27 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
-import { Subject, map, takeUntil } from 'rxjs';
-import { AnimalesVivoDetallesComponent } from '../../../../shared/components/animales-vivo-detalles/animales-vivo-detalles.component';
-import { AnimalesEventos, DatosDeLaSolicitud } from '../../../../shared/models/datos-de-la-solicitue.model';
+import { Component } from '@angular/core';
+import { map, Subject, takeUntil } from 'rxjs';
+import { SubProductosComponent } from '../../../../shared/components/sub-productos/sub-productos.component';
+import { ProductoDetallaEventos, ProductosCatalogosDatos } from '../../../../shared/models/datos-de-la-solicitue.model';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { AgriculturaApiService } from '../../services/220201/agricultura-api.service';
 
 @Component({
-  selector: 'app-animales-vivo-contenedora',
+  selector: 'app-sub-productos-contenedora',
   standalone: true,
-  imports: [CommonModule, AnimalesVivoDetallesComponent],
-  templateUrl: './animales-vivo-contenedora.component.html',
-  styleUrl: './animales-vivo-contenedora.component.scss',
+  imports: [CommonModule, SubProductosComponent],
+  templateUrl: './sub-productos-contenedora.component.html',
+  styleUrl: './sub-productos-contenedora.component.css',
 })
-export class AnimalesVivoContenedoraComponent implements OnDestroy {
+export class SubProductosContenedoraComponent {
+
   /**
-   * Datos de la solicitud que se recibirán como entrada en el componente.
-   * @type {DatosDeLaSolicitud}
-   */
-  public catalogosDatos: DatosDeLaSolicitud = {
+   * @description Datos de la solicitud que se recibirán como entrada en el componente.
+   * @type {ProductosCatalogosDatos}
+   * */
+  public catalogosDatos: ProductosCatalogosDatos = {
     tipoRequisitoList: [],
     requisitoList: [],
     fraccionArancelariaList: [],
@@ -31,42 +32,45 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
     usoList: [],
     paisOrigenList: [],
     paisDeProcedenciaList: [],
-    sexoList: []
+    sexoList: [],
+    presentacionList: [],
+    cantidadPresentacionList: [],
+    tipoPresentacionList: [],
+    tipoPlantaList: [],
+    plantaAutorizadaOrigenList: []
   }
-
 
   /**
    * @description Subject utilizado para destruir las suscripciones y evitar fugas de memoria cuando el componente se destruye.
    * @type {Subject<void>}
    */
   public destroyNotifier$ = new Subject<void>();
-
-  /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es true, los campos del formulario no serán editables por el usuario.
-   */
   public formularioSolicitud!: FilaSolicitud;
 
   /**
-   * @description Datos de la tabla principal.
-   * @type {FilaSolicitud[]}
+   * Constructor de la clase `SubProductosContenedoraComponent`.
+   * 
+   * Este constructor inicializa los servicios necesarios para la funcionalidad del componente.
+   * 
+   * @param agriculturaApiService - Servicio para interactuar con la API de Agricultura.
+   * @param fitosanitarioQuery - Servicio para realizar consultas relacionadas con fitosanitarios.
+   * @param fitosanitarioStore - Servicio para gestionar el estado de fitosanitarios.
+   * 
+   * Dentro del constructor, se realiza una solicitud a la API para obtener los datos de productos
+   * desde el archivo `productos.json`. La respuesta de esta solicitud se asigna a la propiedad 
+   * `catalogosDatos` del componente.
    */
-  cuerpoTabla: FilaSolicitud[] = [];
-
-
-
-  constructor(public agriculturaApiService: CertificadoZoosanitarioServiceService,
+  constructor(public agriculturaApiService: AgriculturaApiService,
     public fitosanitarioQuery: ZoosanitarioQuery,
     public fitosanitarioStore: ZoosanitarioStore
   ) {
-    this.agriculturaApiService.obtenerRespuestaPorUrl('animales-vivo.json').subscribe((resp) => {
+    this.agriculturaApiService.obtenerProductoRespuestaPorUrl('productos.json').subscribe((resp) => {
       this.catalogosDatos = resp;
     });
     this.fitosanitarioQuery.seleccionarState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((estado) => {
-          this.cuerpoTabla = estado?.tablaDatos;
           const VALOR = estado?.selectedDatos[0];
           if (VALOR) {
             this.formularioSolicitud = {
@@ -90,7 +94,11 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
               noPartida: VALOR.noPartida || '',
               tipoDeProducto: VALOR.tipoDeProducto || '',
               numeroDeLote: VALOR.numeroDeLote || '',
-              certificadoInternacionalElectronico: VALOR.certificadoInternacionalElectronico || ''
+              certificadoInternacionalElectronico: VALOR.certificadoInternacionalElectronico || '',
+              tipoPresentacion: VALOR.tipoPresentacion || '',
+              tipoPlanta: VALOR.tipoPlanta || '',
+              plantaAutorizadaOrigen: VALOR.plantaAutorizadaOrigen || '',
+              presentacion: VALOR.presentacion || ''
             };
           }
         })
@@ -102,7 +110,7 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
    * @description Método que se ejecuta al enviar el formulario de solicitud de animales vivos.
    * @param valor Datos del formulario de solicitud de animales vivos.
    */
-  agregarDatosFormulario(valor: AnimalesEventos): void {
+  agregarDatosFormulario(valor: ProductoDetallaEventos): void {
     const DATOS: FilaSolicitud = {
       id: valor.formulario.id || Math.floor(Math.random() * 1000000),
       noPartida: '',
@@ -123,12 +131,17 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
       numeroDeLote: valor.formulario.numeroDeLote || '',
       paisDeOrigen: valor.formulario.paisDeOrigen || '',
       paisDeProcedencia: valor.formulario.paisDeProcedencia || '',
-      certificadoInternacionalElectronico: valor.formulario.tipoRequisito || '',
-      especie: valor.formulario.especie || ''
+      certificadoInternacionalElectronico: valor.formulario.certificadoInternacionalElectronico || '',
+      especie: valor.formulario.especie || '',
+      tipoPresentacion: valor.formulario.tipoPresentacion || '',
+      tipoPlanta: valor.formulario.tipoPlanta || '',
+      plantaAutorizadaOrigen: valor.formulario.plantaAutorizadaOrigen || '',
+      presentacion: valor.formulario.presentacion || ''
     }
+
     this.fitosanitarioStore.update(state => {
       const index = state.tablaDatos.findIndex(item => item.id === DATOS.id);
-
+      console.log('Datos a agregar:', DATOS, state.tablaDatos, index);
       const updatedTablaDatos =
         index !== -1
           ? state.tablaDatos.map((item, i) => (i === index ? DATOS : item))
@@ -142,10 +155,4 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
 
   }
 
-
-
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
 }
