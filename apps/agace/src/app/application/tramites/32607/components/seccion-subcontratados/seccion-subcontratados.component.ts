@@ -1,10 +1,11 @@
-import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConsultaioQuery, TituloComponent } from '@libs/shared/data-access-user/src'; 
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, TituloComponent } from '@libs/shared/data-access-user/src'; 
 import { Component,EventEmitter, OnDestroy, OnInit, Output } from '@angular/core'; 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; 
 import { NumeroDeEmpleados, SeccionSubcontratados, SolicitudCatologoSelectLista } from '../../models/solicitud.model'; 
 import { Solicitud32607State, Solicitud32607Store } from '../../estados/solicitud32607.store'; 
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { CommonModule } from '@angular/common'; 
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Solicitud32607Query } from '../../estados/solicitud32607.query'; 
 import { SolicitudService } from '../../services/solicitud.service';
 

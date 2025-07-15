@@ -1,14 +1,27 @@
-import { Component, OnDestroy, OnInit } from '@angular/core'; 
-import { ConsultaioQuery, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; 
-import { Solicitud32607State, Solicitud32607Store } from '../../estados/solicitud32607.store'; 
-import { Subject, map, takeUntil } from 'rxjs'; 
-import { CommonModule } from '@angular/common'; 
-import { Solicitud32607Query } from '../../estados/solicitud32607.query'; 
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud32607State,
+  Solicitud32607Store,
+} from '../../estados/solicitud32607.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import {
+  ConsultaioQuery,
+} from '@ng-mf/data-access-user';
+import { Solicitud32607Query } from '../../estados/solicitud32607.query';
+import {
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 
 /**
  * Componente responsable de mostrar y gestionar la edición de inventarios existentes.
- * 
+ *
  * Permite modificar los datos de un inventario previamente registrado en el formulario principal,
  * utilizando un formulario reactivo y componentes reutilizables como `TituloComponent`.
  *
@@ -28,7 +41,7 @@ import { Solicitud32607Query } from '../../estados/solicitud32607.query';
 export class ModificarInventarioComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo utilizado para modificar los datos del inventario.
-   * 
+   *
    * Se inicializa en tiempo de ejecución y contiene los controles necesarios
    * para editar la información de un inventario existente.
    *
@@ -38,7 +51,7 @@ export class ModificarInventarioComponent implements OnInit, OnDestroy {
 
   /**
    * Observable utilizado para limpiar suscripciones activas al destruir el componente.
-   * 
+   *
    * Se emplea junto con `takeUntil` para evitar fugas de memoria en las suscripciones.
    *
    * @type {Subject<void>}
@@ -48,14 +61,13 @@ export class ModificarInventarioComponent implements OnInit, OnDestroy {
 
   /**
    * Estado actual de la solicitud 32607.
-   * 
+   *
    * Se utiliza para cargar, mostrar y actualizar los datos asociados al inventario
    * desde el store de la solicitud.
    *
    * @type {Solicitud32607State}
    */
   solicitud32607State: Solicitud32607State = {} as Solicitud32607State;
-
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -65,10 +77,10 @@ export class ModificarInventarioComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor del componente.
-   * 
+   *
    * Inyecta los servicios necesarios para la creación del formulario, el acceso y modificación
    * del estado de la solicitud 32607, así como para consultar catálogos u otros datos auxiliares.
-   * 
+   *
    * @param fb - Servicio para construir y gestionar formularios reactivos.
    * @param solicitud32607Store - Store que maneja el estado de la solicitud 32607.
    * @param solicitud32607Query - Permite leer y observar cambios en el estado de la solicitud.
@@ -79,7 +91,7 @@ export class ModificarInventarioComponent implements OnInit, OnDestroy {
     public solicitud32607Store: Solicitud32607Store,
     public solicitud32607Query: Solicitud32607Query,
     public consultaioQuery: ConsultaioQuery
-  ) { 
+  ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
      *
@@ -100,8 +112,8 @@ export class ModificarInventarioComponent implements OnInit, OnDestroy {
 
   /**
    * Método del ciclo de vida `OnInit`.
-   * 
-   * Se ejecuta al inicializar el componente. Llama al método `inicializarEstadoFormulario()` 
+   *
+   * Se ejecuta al inicializar el componente. Llama al método `inicializarEstadoFormulario()`
    * para configurar el estado y valores iniciales del formulario de modificación de inventario.
    *
    * @returns {void}
@@ -137,27 +149,29 @@ export class ModificarInventarioComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Inicializa el formulario reactivo para modificar los datos del inventario.
- * 
- * Define los controles `inventarioNombre`, `inventarioAnexo` e `inventarioLugar`, 
- * con sus respectivos valores iniciales y validaciones.
- * 
- * Además, se suscribe al observable `selectSolicitud$` del store para mantener 
- * actualizado el formulario con los últimos valores del estado de la solicitud.
- * 
- * La suscripción se gestiona mediante `takeUntil` para evitar fugas de memoria.
- *
- * @returns {void}
- */
+   * Inicializa el formulario reactivo para modificar los datos del inventario.
+   *
+   * Define los controles `inventarioNombre`, `inventarioAnexo` e `inventarioLugar`,
+   * con sus respectivos valores iniciales y validaciones.
+   *
+   * Además, se suscribe al observable `selectSolicitud$` del store para mantener
+   * actualizado el formulario con los últimos valores del estado de la solicitud.
+   *
+   * La suscripción se gestiona mediante `takeUntil` para evitar fugas de memoria.
+   *
+   * @returns {void}
+   */
   inicializarFormulario(): void {
     this.modificarInventarioForm = this.fb.group({
       inventarioNombre: [
-        this.solicitud32607State.inventarioNombre,
+        { value: this.solicitud32607State.inventarioNombre, disabled: this.esFormularioSoloLectura },
         [Validators.required],
       ],
-      inventarioAnexo: [this.solicitud32607State.inventarioAnexo],
+      inventarioAnexo: [
+        { value: this.solicitud32607State.inventarioAnexo, disabled: this.esFormularioSoloLectura },
+      ],
       inventarioLugar: [
-        this.solicitud32607State.inventarioLugar,
+        { value: this.solicitud32607State.inventarioLugar, disabled: this.esFormularioSoloLectura },
         [Validators.required],
       ],
     });
@@ -214,7 +228,7 @@ export class ModificarInventarioComponent implements OnInit, OnDestroy {
 
   /**
    * Método del ciclo de vida `OnDestroy`.
-   * 
+   *
    * Finaliza el observable `destroy$` para evitar fugas de memoria
    * en las suscripciones activas cuando el componente se destruye.
    *

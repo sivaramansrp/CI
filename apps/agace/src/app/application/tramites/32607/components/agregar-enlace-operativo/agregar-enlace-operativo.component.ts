@@ -1,10 +1,11 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core'; 
-import { ConsultaioQuery, REGEX_TELEFONO_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src'; 
 import { EnlaceOperativo, RepresentanteLegal } from '../../models/solicitud.model'; 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; 
+import { REGEX_TELEFONO_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src'; 
 import { Solicitud32607State, Solicitud32607Store } from '../../estados/solicitud32607.store'; 
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { CommonModule } from '@angular/common'; 
+import { ConsultaioQuery } from '@ng-mf/data-access-user'; 
 import { Solicitud32607Query } from '../../estados/solicitud32607.query'; 
 import { SolicitudService } from '../../services/solicitud.service';
 

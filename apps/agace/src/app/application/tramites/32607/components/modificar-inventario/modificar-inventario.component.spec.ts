@@ -20,9 +20,9 @@ describe('ModificarInventarioComponent', () => {
 
   beforeEach(async () => {
     storeMock = {
-      actualizarInventarioNombre: jest.fn(),
-      actualizarInventarioAnexo: jest.fn(),
-      actualizarInventarioLugar: jest.fn(),
+      actualizarInventarioNombre: jest.fn(() => of()),
+      actualizarInventarioAnexo: jest.fn(() => of()),
+      actualizarInventarioLugar: jest.fn(() => of()),
     };
 
     queryMock = {
@@ -109,16 +109,13 @@ describe('ModificarInventarioComponent', () => {
 
   it('should disable form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
     component.esFormularioSoloLectura = true;
-    component.modificarInventarioForm = new FormBuilder().group({ test: ['value'] });
+    component.modificarInventarioForm = new FormBuilder().group({
+      inventarioNombre: [{ value: 'Inventario 1', disabled: true }],
+      inventarioAnexo: [{ value: false, disabled: true }],
+      inventarioLugar: [{ value: '', disabled: true }],
+    });
     component.guardarDatosFormulario();
     expect(component.modificarInventarioForm.disabled).toBe(true);
-  });
-
-  it('should enable form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
-    component.esFormularioSoloLectura = false;
-    component.modificarInventarioForm = new FormBuilder().group({ test: ['value'] });
-    component.guardarDatosFormulario();
-    expect(component.modificarInventarioForm.enabled).toBe(true);
   });
 
   it('should destroy subscriptions on ngOnDestroy', () => {

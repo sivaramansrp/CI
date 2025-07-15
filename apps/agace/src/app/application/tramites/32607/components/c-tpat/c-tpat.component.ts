@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'; 
-import { ConsultaioQuery, InputRadioComponent } from '@libs/shared/data-access-user/src'; 
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'; 
 import { InputRadio, SolicitudRadioLista } from '../../models/solicitud.model'; 
 import { Solicitud32607State, Solicitud32607Store } from '../../estados/solicitud32607.store'; 
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { CommonModule } from '@angular/common'; 
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src'; 
 import { Solicitud32607Query } from '../../estados/solicitud32607.query'; 
 import { SolicitudService } from '../../services/solicitud.service';
 

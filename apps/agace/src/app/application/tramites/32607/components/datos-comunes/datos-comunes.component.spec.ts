@@ -281,9 +281,9 @@ describe('DatosComunesComponent', () => {
 
   it('should add inventario if nombre and lugarRadicacion are present', () => {
     component.datosComunesForm = new FormBuilder().group({
-      nombre: ['TestInv'],
-      lugarRadicacion: ['Lugar'],
-      anexo24: [true],
+      identificacion: ['TestInv'],
+      lugarDeRadicacion: ['Lugar'],
+      checkbox3: [true],
     });
     component.inventariosDatos = [];
     component.agregarControlInventarios();
@@ -293,9 +293,9 @@ describe('DatosComunesComponent', () => {
 
   it('should show modal and add pedimento if agregarControlInventarios missing fields', () => {
     component.datosComunesForm = new FormBuilder().group({
-      nombre: [''],
-      lugarRadicacion: [''],
-      anexo24: [false],
+      identificacion: [''],
+      lugarDeRadicacion: [''],
+      checkbox3: [false],
     });
     const spy = jest.spyOn(component, 'abrirModal');
     component.pedimentos = [];
@@ -331,7 +331,7 @@ describe('DatosComunesComponent', () => {
     component.guardarDatosFormulario();
     expect(component.datosComunesForm.enabled).toBe(true);
   });
-  
+
   it('should show modal and add pedimento if modificarInventario has no selection', () => {
     component.seleccionarInventarios = [];
     const spy = jest.spyOn(component, 'abrirModal');

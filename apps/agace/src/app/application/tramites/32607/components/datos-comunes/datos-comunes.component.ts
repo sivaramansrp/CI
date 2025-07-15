@@ -4,7 +4,6 @@ import {
   CatalogosSelect,
   ConfiguracionAporteColumna,
   ConfiguracionColumna,
-  ConsultaioQuery,
   InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
@@ -44,6 +43,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { EnlaceOperativoComponent } from '../enlace-operativo/enlace-operativo.component';
 import { InstalacionesPrincipalesComponent } from '../instalaciones-principales/instalaciones-principales.component';
 import { MiembroDeLaEmpresaComponent } from '../miembro-de-la-empresa/miembro-de-la-empresa.component';
@@ -305,38 +305,56 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   inicializarFormulario(): void {
     this.datosComunesForm = this.fb.group({
-      catseleccionados: [this.solicitud32607State.catseleccionados],
-      servicio: [this.solicitud32607State.servicio],
-      '190': [this.solicitud32607State['190']],
-      '191': [this.solicitud32607State['191']],
-      '199': [this.solicitud32607State['199']],
-      empleados: [this.solicitud32607State.empleados],
-      bimestre: [this.solicitud32607State.bimestre],
-      '2034': [this.solicitud32607State['2034']],
-      '236': [this.solicitud32607State['236']],
-      '237': [this.solicitud32607State['237']],
-      '238': [this.solicitud32607State['238']],
-      '239': [this.solicitud32607State['239']],
-      '240': [this.solicitud32607State['240']],
-      '241': [this.solicitud32607State['241']],
-      '243': [this.solicitud32607State['243']],
-      '244': [this.solicitud32607State['244']],
-      '245': [this.solicitud32607State['245']],
-      '246': [this.solicitud32607State['246']],
-      file1: [this.solicitud32607State.file1],
-      file2: [this.solicitud32607State.file2],
-      '247': [this.solicitud32607State['247']],
-      '248': [this.solicitud32607State['248']],
-      identificacion: [this.solicitud32607State.identificacion],
-      lugarDeRadicacion: [this.solicitud32607State.lugarDeRadicacion],
-      '249': [this.solicitud32607State['249']],
-      '250': [this.solicitud32607State['250']],
-      '251': [this.solicitud32607State['251']],
-      checkbox1: [this.solicitud32607State.checkbox1],
-      checkbox2: [this.solicitud32607State.checkbox2],
-      checkbox3: [this.solicitud32607State.checkbox3],
-      actualmente2: [this.solicitud32607State.actualmente2],
-      actualmente1: [this.solicitud32607State.actualmente1],
+      catseleccionados: [
+        { value: this.solicitud32607State.catseleccionados, disabled: false },
+      ],
+      servicio: [{ value: this.solicitud32607State.servicio, disabled: false }],
+      '190': [{ value: this.solicitud32607State['190'], disabled: false }],
+      '191': [{ value: this.solicitud32607State['191'], disabled: false }],
+      '199': [{ value: this.solicitud32607State['199'], disabled: false }],
+      empleados: [
+        { value: this.solicitud32607State.empleados, disabled: false },
+      ],
+      bimestre: [{ value: this.solicitud32607State.bimestre, disabled: false }],
+      '2034': [{ value: this.solicitud32607State['2034'], disabled: false }],
+      '236': [{ value: this.solicitud32607State['236'], disabled: false }],
+      '237': [{ value: this.solicitud32607State['237'], disabled: false }],
+      '238': [{ value: this.solicitud32607State['238'], disabled: false }],
+      '239': [{ value: this.solicitud32607State['239'], disabled: false }],
+      '240': [{ value: this.solicitud32607State['240'], disabled: false }],
+      '241': [{ value: this.solicitud32607State['241'], disabled: false }],
+      '243': [{ value: this.solicitud32607State['243'], disabled: false }],
+      '244': [{ value: this.solicitud32607State['244'], disabled: false }],
+      '245': [{ value: this.solicitud32607State['245'], disabled: false }],
+      '246': [{ value: this.solicitud32607State['246'], disabled: false }],
+      file1: [{ value: this.solicitud32607State.file1, disabled: false }],
+      file2: [{ value: this.solicitud32607State.file2, disabled: false }],
+      '247': [{ value: this.solicitud32607State['247'], disabled: false }],
+      '248': [{ value: this.solicitud32607State['248'], disabled: false }],
+      identificacion: [
+        { value: this.solicitud32607State.identificacion, disabled: false },
+      ],
+      lugarDeRadicacion: [
+        { value: this.solicitud32607State.lugarDeRadicacion, disabled: false },
+      ],
+      '249': [{ value: this.solicitud32607State['249'], disabled: false }],
+      '250': [{ value: this.solicitud32607State['250'], disabled: false }],
+      '251': [{ value: this.solicitud32607State['251'], disabled: false }],
+      checkbox1: [
+        { value: this.solicitud32607State.checkbox1, disabled: false },
+      ],
+      checkbox2: [
+        { value: this.solicitud32607State.checkbox2, disabled: false },
+      ],
+      checkbox3: [
+        { value: this.solicitud32607State.checkbox3, disabled: false },
+      ],
+      actualmente2: [
+        { value: this.solicitud32607State.actualmente2, disabled: false },
+      ],
+      actualmente1: [
+        { value: this.solicitud32607State.actualmente1, disabled: false },
+      ],
     });
 
     /**
@@ -958,18 +976,19 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
-/**
- * Agrega un nuevo control de inventario a la lista `inventariosDatos` si los campos obligatorios están completos.
- * 
- * Si no se capturan `nombre` o `lugarRadicacion`, se muestra un mensaje de advertencia 
- * mediante el método `abrirModal` y se agrega un objeto `PEDIMENTO` por evaluar.
- *
- * @returns {void}
- */
+  /**
+   * Agrega un nuevo control de inventario a la lista `inventariosDatos` si los campos obligatorios están completos.
+   *
+   * Si no se capturan `nombre` o `lugarRadicacion`, se muestra un mensaje de advertencia
+   * mediante el método `abrirModal` y se agrega un objeto `PEDIMENTO` por evaluar.
+   *
+   * @returns {void}
+   */
   agregarControlInventarios(): void {
-    const NOMBRE = this.datosComunesForm.get('nombre')?.value;
-    const LUGARRADICACION = this.datosComunesForm.get('lugarRadicacion')?.value;
-    const ANEXO24 = this.datosComunesForm.get('anexo24')?.value;
+    const NOMBRE = this.datosComunesForm.get('identificacion')?.value;
+    const LUGARRADICACION =
+      this.datosComunesForm.get('lugarDeRadicacion')?.value;
+    const ANEXO24 = this.datosComunesForm.get('checkbox3')?.value;
 
     if (NOMBRE && LUGARRADICACION) {
       this.inventariosDatos.push({
@@ -995,17 +1014,17 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
-/**
- * Abre el modal para modificar el inventario seleccionado.
- * 
- * Si hay elementos seleccionados en `seleccionarInventarios`, se muestra el modal correspondiente
- * utilizando la instancia de Bootstrap Modal.
- * 
- * Si no hay elementos seleccionados, se muestra un mensaje de advertencia mediante el método `abrirModal`
- * y se agrega un objeto `PEDIMENTO` por evaluar a la lista `pedimentos`.
- *
- * @returns {void}
- */
+  /**
+   * Abre el modal para modificar el inventario seleccionado.
+   *
+   * Si hay elementos seleccionados en `seleccionarInventarios`, se muestra el modal correspondiente
+   * utilizando la instancia de Bootstrap Modal.
+   *
+   * Si no hay elementos seleccionados, se muestra un mensaje de advertencia mediante el método `abrirModal`
+   * y se agrega un objeto `PEDIMENTO` por evaluar a la lista `pedimentos`.
+   *
+   * @returns {void}
+   */
   modificarInventario(): void {
     if (this.seleccionarInventarios.length > 0) {
       if (this.modalElement) {
@@ -1032,13 +1051,13 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
-/**
- * Muestra una notificación de alerta indicando un requisito obligatorio para el registro en el Esquema de Certificación de Empresas.
- * 
- * También agrega un objeto `PEDIMENTO` con valores predeterminados a la lista `pedimentos`, indicando que está pendiente de evaluación.
- * 
- * @returns {void}
- */
+  /**
+   * Muestra una notificación de alerta indicando un requisito obligatorio para el registro en el Esquema de Certificación de Empresas.
+   *
+   * También agrega un objeto `PEDIMENTO` con valores predeterminados a la lista `pedimentos`, indicando que está pendiente de evaluación.
+   *
+   * @returns {void}
+   */
   notificacionDeAlerta(): void {
     const PEDIMENTO = {
       patente: 0,
@@ -1057,13 +1076,13 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Elimina un pedimento de la lista `pedimentos` si el parámetro `borrar` es verdadero.
- * 
- * Utiliza el índice almacenado en `elementoParaEliminar` para eliminar el pedimento correspondiente.
- *
- * @param borrar - Indica si se debe proceder con la eliminación del pedimento.
- * @returns {void}
- */
+   * Elimina un pedimento de la lista `pedimentos` si el parámetro `borrar` es verdadero.
+   *
+   * Utiliza el índice almacenado en `elementoParaEliminar` para eliminar el pedimento correspondiente.
+   *
+   * @param borrar - Indica si se debe proceder con la eliminación del pedimento.
+   * @returns {void}
+   */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);

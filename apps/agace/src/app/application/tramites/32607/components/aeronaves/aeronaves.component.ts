@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import {
   ConfiguracionColumna,
-  ConsultaioQuery,
   InputFecha,
   InputFechaComponent,
   InputRadioComponent,
@@ -38,6 +37,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user'; 
 import { Modal } from 'bootstrap';
 import { Solicitud32607Query } from '../../estados/solicitud32607.query';
 import { SolicitudService } from '../../services/solicitud.service';

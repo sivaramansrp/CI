@@ -14,7 +14,6 @@
           class="form-control"
           maxlength="250"
           size="55"
-          [disabled]="esFormularioSoloLectura"
           formControlName="inventarioNombre"
           name="inventario.nombre"
           id="inventario"
@@ -27,7 +26,6 @@
           <input
             type="checkbox"
             class="form-check-input"
-            [disabled]="esFormularioSoloLectura"
             formControlName="inventarioAnexo"
             (click)="actualizarInventarioAnexo($event)"
           />
@@ -43,7 +41,6 @@
           class="form-control"
           name="lugarDeRadicacion"
           maxlength="250"
-          [disabled]="esFormularioSoloLectura"
           formControlName="inventarioLugar"
           id="lugar"
           (change)="actualizarLugarDeRadicacion($event)"
@@ -56,7 +53,6 @@
             type="button"
             id="aceptar"
             class="btn btn-primary me-3"
-            [disabled]="esFormularioSoloLectura"
             data-bs-dismiss="modal"
             #closeModal
           >
@@ -65,7 +61,6 @@
           <button
             type="button"
             id="cancelar"
-            [disabled]="esFormularioSoloLectura"
             data-bs-dismiss="modal"
             #closeModal
             class="btn btn-danger"

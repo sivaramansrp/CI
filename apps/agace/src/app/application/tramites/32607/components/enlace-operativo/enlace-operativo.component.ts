@@ -1,10 +1,11 @@
-import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src'; 
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src'; 
 import { Component,OnDestroy, OnInit } from '@angular/core'; 
 import { ENTIDAD_FEDERATIVE, INSTALACIONS_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum'; 
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'; 
 import { Solicitud32607State, Solicitud32607Store } from '../../estados/solicitud32607.store'; 
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { CommonModule } from '@angular/common'; 
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Instalacions } from '../../models/solicitud.model'; 
 import { Solicitud32607Query } from '../../estados/solicitud32607.query'; 
 import { SolicitudService } from '../../services/solicitud.service';

@@ -1,11 +1,12 @@
 import { Component,EventEmitter, OnDestroy,OnInit, Output} from '@angular/core'; 
-import { ConsultaioQuery, TituloComponent } from '@libs/shared/data-access-user/src'; 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; 
 import { Solicitud32607State, Solicitud32607Store } from '../../estados/solicitud32607.store';
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { CommonModule } from '@angular/common'; 
+import { ConsultaioQuery } from '@ng-mf/data-access-user'; 
 import { Solicitud32607Query } from '../../estados/solicitud32607.query'; 
 import { SolicitudService } from '../../services/solicitud.service'; 
+import { TituloComponent } from '@libs/shared/data-access-user/src'; 
 import { TransportistasTable } from '../../models/solicitud.model';
 
 

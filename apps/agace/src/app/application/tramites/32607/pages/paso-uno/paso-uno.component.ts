@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core'; 
-import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { AeronavesComponent } from '../../components/aeronaves/aeronaves.component'; 
 import { CTPATComponent } from '../../components/c-tpat/c-tpat.component'; 
@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { DatosComunesComponent } from '../../components/datos-comunes/datos-comunes.component'; 
 import { GuardarDatosFormulario } from '../../models/solicitud.model'; 
 import { ReactiveFormsModule } from '@angular/forms'; 
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { SolicitudService } from '../../services/solicitud.service'; 
 import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component'; 
 
