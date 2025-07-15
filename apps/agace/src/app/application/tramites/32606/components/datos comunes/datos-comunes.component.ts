@@ -9,12 +9,13 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DomicillioComponent } from '../domicillio/domicillio.component';
 import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
 import { QuerellaComponent } from '../querella/querella.component';
+import { MiembroComponent } from '../miembro/miembro.component';
 
 @Component({
   selector: 'app-datos-comunes',
   standalone: true,
   imports: [CommonModule, CatalogoSelectComponent, InputRadioComponent, ReactiveFormsModule, 
-    DomicillioComponent,QuerellaComponent],
+    DomicillioComponent,QuerellaComponent,MiembroComponent],
   templateUrl: './datos-comunes.component.html',
   styleUrl: './datos-comunes.component.css',
 })

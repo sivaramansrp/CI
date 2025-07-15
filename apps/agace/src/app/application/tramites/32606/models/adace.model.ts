@@ -270,3 +270,65 @@ export interface Domicillio {
    */
   idRecinto?: string;
 }
+
+export interface Querella {
+  sistemaIdentificacion: string;
+
+  /** Clave del tipo de instalación */
+  lugarRadicacion: string;
+
+  /** Tipo de instalación */
+  indiqueSiCuenta: string;
+
+}
+
+export interface Empresa {
+  /** Identificador del miembro en la empresa */
+  idMiembroEmpresa?: string;
+
+  /** Identificador de la solicitud relacionada */
+  idSolicitud?: string;
+
+  /** Tipo de persona (Física o Moral) */
+  tipoPersona?: string;
+
+  /** Tipo de persona mostrado al usuario */
+  tipoPersonaMuestra: string;
+
+  /** Nombre completo del miembro */
+  nombreCompleto: string;
+
+  /** RFC del miembro */
+  rfc: string;
+
+  /** Carácter o rol dentro de la empresa */
+  caracterDe: string;
+
+  /** Nombre del país de origen */
+  nacionalidad: string;
+
+  /** Tipo de carácter (adicional) */
+  tipoCaracter?: string;
+
+  /** Clave del país */
+  paisClave?: string;
+
+  /** Indica si tributa en México */
+  tributarMexico: string;
+
+  /** Nombre de la empresa */
+  nombreEmpresa: string;
+
+  /** Nombre de la persona (si aplica) */
+  nombre?: string;
+
+  /** Apellido paterno (si aplica) */
+  apellidoPaterno?: string;
+
+  /** Apellido materno (si aplica) */
+  apellidoMaterno?: string;
+
+  /** Razón social (si aplica) */
+  razonSocial?: string;
+
+}
