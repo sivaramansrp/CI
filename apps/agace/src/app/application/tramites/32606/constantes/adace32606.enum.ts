@@ -1,5 +1,5 @@
 import { CatalogosSelect, ConfiguracionColumna } from "@libs/shared/data-access-user/src";
-import { Domicillio, Empresa, Querella } from "../models/adace.model";
+import { Domicillio, Empresa, EnlaceOperativo, Querella, RecibirNotificaciones } from "../models/adace.model";
 /**
  * Opciones para el radio relacionado con la disminución total.
  */
@@ -263,4 +263,212 @@ export const EMPRESA_TABLA: ConfiguracionColumna<Empresa>[] =
       clave: (item: Empresa) => item.nombreEmpresa,
       orden: 1,
     },
+];
+
+export const ENLACE_OPERATIVO_TABLA: ConfiguracionColumna<EnlaceOperativo>[] =
+  [
+    /**
+     * Configuración para la columna "RFC".
+     * Muestra el RFC de cada enlace operativo.
+     */
+    {
+      encabezado: 'RFC',
+      clave: (item: EnlaceOperativo) => item.rfc,
+      orden: 1,
+    },
+
+    /**
+     * Configuración para la columna "Nombre".
+     * Muestra el nombre de cada enlace operativo.
+     */
+    {
+      encabezado: 'Nombre',
+      clave: (item: EnlaceOperativo) => item.nombre,
+      orden: 1,
+    },
+
+    /**
+     * Configuración para la columna "Apellido Paterno".
+     * Muestra el apellido paterno de cada enlace operativo.
+     */
+    {
+      encabezado: 'Apellido Paterno',
+      clave: (item: EnlaceOperativo) => item.apellidoPaterno,
+      orden: 1,
+    },
+
+    /**
+     * Configuración para la columna "Apellido Materno".
+     * Muestra el apellido materno de cada enlace operativo.
+     */
+    {
+      encabezado: 'Apellido Materno',
+      clave: (item: EnlaceOperativo) => item.apellidoMaterno,
+      orden: 1,
+    },
+
+    /**
+     * Configuración para la columna "Ciudad o Estado de Residencia".
+     * Muestra la clave de la ciudad o estado de residencia de cada enlace operativo.
+     */
+    {
+      encabezado: 'Ciudad o Estado de Residencia',
+      clave: (item: EnlaceOperativo) => item.claveCiudad,
+      orden: 1,
+    },
+
+    /**
+     * Configuración para la columna "Ciudad".
+     * Muestra la ciudad de cada enlace operativo.
+     */
+    {
+      encabezado: 'Ciudad',
+      clave: (item: EnlaceOperativo) => item.ciudad,
+      orden: 1,
+    },
+
+    /**
+     * Configuración para la columna "Cargo".
+     * Muestra el cargo de cada enlace operativo.
+     */
+    {
+      encabezado: 'Cargo',
+      clave: (item: EnlaceOperativo) => item.cargo,
+      orden: 1,
+    },
+
+    /**
+     * Configuración para la columna "Teléfono".
+     * Muestra el número de teléfono de cada enlace operativo.
+     */
+    {
+      encabezado: 'teléfono',
+      clave: (item: EnlaceOperativo) => item.telefono,
+      orden: 1,
+    },
+
+    /**
+     * Configuración para la columna "Correo".
+     * Muestra el correo electrónico de cada enlace operativo.
+     */
+    {
+      encabezado: 'Correo',
+      clave: (item: EnlaceOperativo) => item.correo,
+      orden: 1,
+    },
+
+    /**
+     * Configuración para la columna "Suplente".
+     * Muestra si el enlace operativo es suplente.
+     */
+    {
+      encabezado: 'Suplente',
+      clave: (item: EnlaceOperativo) => item.suplente,
+      orden: 1,
+    },
+
+    /**
+     * Configuración para la columna "Calle".
+     * Muestra la calle de la dirección de cada enlace operativo.
+     */
+    {
+      encabezado: 'Calle',
+      clave: (item: EnlaceOperativo) => item.calle,
+      orden: 1,
+    },
+
+    /**
+     * Configuración para la columna "Número Exterior".
+     * Muestra el número exterior de la dirección de cada enlace operativo.
+     */
+    {
+      encabezado: 'Numero Exterior',
+      clave: (item: EnlaceOperativo) => item.numeroExterior,
+      orden: 1,
+    },
+
+    /**
+     * Configuración para la columna "Número Interior".
+     * Muestra el número interior de la dirección de cada enlace operativo.
+     */
+    {
+      encabezado: 'Numero Interior',
+      clave: (item: EnlaceOperativo) => item.numeroInterior,
+      orden: 1,
+    },
+
+    /**
+     * Configuración para la columna "Colonia".
+     * Muestra la colonia de la dirección de cada enlace operativo.
+     */
+    {
+      encabezado: 'Colonia',
+      clave: (item: EnlaceOperativo) => item.colonia,
+      orden: 1,
+    },
+
+    /**
+     * Configuración para la columna "Código Postal".
+     * Muestra el código postal de la dirección de cada enlace operativo.
+     */
+    {
+      encabezado: 'Codigo Postal',
+      clave: (item: EnlaceOperativo) => item.codigoPostal,
+      orden: 1,
+    },
+
+    /**
+     * Configuración para la columna "Localidad".
+     * Muestra la localidad de la dirección de cada enlace operativo.
+     */
+    {
+      encabezado: 'Localidad',
+      clave: (item: EnlaceOperativo) => item.localidad,
+      orden: 1,
+    },
+
+    /**
+     * Configuración para la columna "Delegación o Municipio".
+     * Muestra la delegación o municipio de la dirección de cada enlace operativo.
+     */
+    {
+      encabezado: 'Delegacion Municipio',
+      clave: (item: EnlaceOperativo) => item.delegacionMunicipio,
+      orden: 1,
+    },
+];
+
+export const  PERSONAS_TABLA: ConfiguracionColumna<RecibirNotificaciones>[] =
+  [
+    {
+      /** RFC del destinatario de la notificación */
+      encabezado: 'RFC',
+      clave: (item: RecibirNotificaciones) => item.rfc,
+      orden: 1,
+    },
+    {
+      /** CURP del destinatario de la notificación */
+      encabezado: 'CURP',
+      clave: (item: RecibirNotificaciones) => item.curp,
+      orden: 2,
+    },
+    {
+      /** Nombre del destinatario de la notificación */
+      encabezado: 'Nombre',
+      clave: (item: RecibirNotificaciones) => item.nombre,
+      orden: 3,
+    },
+    {
+      /** Primer apellido del destinatario */
+      encabezado: 'Primer apellido',
+      clave: (item: RecibirNotificaciones) => item.apellidoPaterno,
+      orden: 4,
+    },
+    {
+      /** Segundo apellido del destinatario */
+      encabezado: 'Segundo apellido',
+      clave: (item: RecibirNotificaciones) => item.apellidoMaterno,
+      orden: 5,
+    },
   ];
+

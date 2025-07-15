@@ -332,3 +332,124 @@ export interface Empresa {
   razonSocial?: string;
 
 }
+
+export interface EnlaceOperativo {
+  /**
+   * RFC del enlace operativo.
+   * Es un identificador único asignado a la persona a nivel fiscal.
+   */
+  rfc: string;
+
+  /**
+   * Nombre del enlace operativo.
+   * Representa el primer nombre de la persona.
+   */
+  nombre: string;
+
+  /**
+   * Apellido paterno del enlace operativo.
+   * Es el apellido que corresponde al padre del individuo.
+   */
+  apellidoPaterno: string;
+
+  /**
+   * Apellido materno del enlace operativo.
+   * Es el apellido que corresponde a la madre del individuo.
+   */
+  apellidoMaterno: string;
+
+  /**
+   * Clave de la ciudad del enlace operativo.
+   * Es una clave numérica o alfanumérica que identifica de manera única una ciudad.
+   */
+  claveCiudad: string;
+
+  /**
+   * Ciudad en la que se encuentra el enlace operativo.
+   * Es el nombre de la ciudad donde reside la persona.
+   */
+  ciudad: string;
+
+  /**
+   * Cargo que desempeña el enlace operativo.
+   * Es la posición o función que ocupa la persona dentro de una organización.
+   */
+  cargo: string;
+
+  /**
+   * Teléfono del enlace operativo.
+   * Es el número telefónico donde se puede contactar a la persona.
+   */
+  telefono: string;
+
+  /**
+   * Correo electrónico del enlace operativo.
+   * Es la dirección de correo electrónico para comunicarse con la persona.
+   */
+  correo: string;
+
+  /**
+   * Indica si la persona es suplente de otro enlace operativo.
+   * Es un valor que determina si el enlace operativo puede reemplazar a otro en su ausencia.
+   */
+  suplente: string;
+
+  /**
+   * Calle donde reside el enlace operativo.
+   * Es el nombre de la vía pública en la que se ubica la dirección de la persona.
+   */
+  calle: string;
+
+  /**
+   * Número exterior de la vivienda del enlace operativo.
+   * Es el número que identifica el exterior de la casa o edificio en la dirección.
+   */
+  numeroExterior: string;
+
+  /**
+   * Número interior de la vivienda del enlace operativo.
+   * Es el número que identifica un departamento o unidad dentro de un edificio, si aplica.
+   */
+  numeroInterior: string;
+
+  /**
+   * Colonia donde reside el enlace operativo.
+   * Es el nombre de la zona o barrio dentro de una ciudad o municipio.
+   */
+  colonia: string;
+
+  /**
+   * Código postal de la residencia del enlace operativo.
+   * Es el código numérico que facilita la localización de la dirección.
+   */
+  codigoPostal: string;
+
+  /**
+   * Localidad donde reside el enlace operativo.
+   * Es el nombre de la localidad dentro de un municipio o delegación.
+   */
+  localidad: string;
+
+  /**
+   * Delegación o municipio donde reside el enlace operativo.
+   * Es la demarcación territorial dentro de una ciudad o estado donde reside la persona.
+   */
+  delegacionMunicipio: string;
+}
+
+export interface RecibirNotificaciones {
+  /** Registro Federal de Contribuyentes */
+  rfc: string;
+
+  /** Clave Única de Registro de Población */
+  curp: string;
+
+  /** Nombre del solicitante */
+  nombre: string;
+
+  /** Apellido paterno del solicitante */
+  apellidoPaterno: string;
+
+  /** Apellido materno del solicitante */
+  apellidoMaterno: string;
+}

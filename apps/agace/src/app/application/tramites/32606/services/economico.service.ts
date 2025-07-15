@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Observable } from 'rxjs';
+import { RecibirNotificaciones } from '../models/adace.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,5 +25,9 @@ export class EconomicoService {
 
   obtenerDomicillio(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/32606/domicillio.json');
+  }
+
+  personasNotificaciones(): Observable<RecibirNotificaciones[]> {
+    return this.http.get<RecibirNotificaciones[]>('assets/json/32606/personas.json');
   }
 }

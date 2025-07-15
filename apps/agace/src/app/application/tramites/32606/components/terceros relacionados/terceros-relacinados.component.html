@@ -1,5 +1,84 @@
 <form [formGroup]="tercerosRelacionadosForm">
+    <div class="col-md-12">
+        <ng-titulo titulo="Representante Legal" />
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <label class="form-label text-start" for="rfcTercero"><span style="color: red;">*</span> Registro Federal de
+                Contribuyentes</label>
+            <input class="form-control" type="text" size="25" id="rfcTercero" name="rfcTercero"
+                formControlName="rfcTercero" />
+        </div>
 
-    
-
+        <div class="col-md-8">
+            <div class="form-group mt-5 pull-left">
+                <button type="button" name="Buscar" id="Buscar" class="btn btn-primary me-5">Buscar</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label class="form-label text-start" for="rfc">RFC:</label>
+                <input class="form-control" type="text" size="25" id="rfc" name="rfc" formControlName="rfc" />
+            </div>
+            <div class="col-md-8"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label class="form-label text-start" for="nombre">Nombre:</label>
+                <input class="form-control" type="text" size="25" id="nombre" name="nombre" formControlName="nombre" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label text-start" for="apellidoPaterno">Apellido Paterno:</label>
+                <input class="form-control" type="text" size="25" id="apellidoPaterno" name="apellidoPaterno"
+                    formControlName="apellidoPaterno" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label text-start" for="apellidoMaterno">Apellido Materno:</label>
+                <input class="form-control" type="text" size="25" id="apellidoMaterno" name="apellidoMaterno"
+                    formControlName="apellidoMaterno" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label class="form-label text-start" for="telefono">Teléfono:</label>
+                <input class="form-control" type="text" size="25" id="telefono" name="telefono"
+                    formControlName="telefono" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label text-start" for="correoElectronico">Correo Electrónico:</label>
+                <input class="form-control" type="text" size="25" id="correoElectronico" name="correoElectronico"
+                    formControlName="correoElectronico" />
+            </div>
+        </div>
+    </div>
+    <!-- Enlace Operativo -->
+    <div class="col-md-12">
+        <ng-titulo titulo="Enlace Operativo" />
+    </div>
+    <div class="col-md-12">
+        <label>Enlace Operativo</label>
+    </div>
+    <div class="col-md-12">
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+            [configuracionTabla]="enlaceTabla"></app-tabla-dinamica>
+    </div>
+    <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary"> Agregar </button>
+            <button type="button" class="btn btn-default ms-3"> Modificar </button>
+            <button type="button" class="btn btn-danger 3 ms-3"> Eliminar </button>
+        </div>
+    </div>
+    <!-- Personas para oír y recibir notificaciones -->
+    <div class="col-md-12">
+        <ng-titulo titulo="Personas para oír y recibir notificaciones" />
+    </div>
+    <div class="col-md-12">
+        <label>Personas para oír y recibir notificaciones</label>
+    </div>
+    <div class="col-md-12">
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED" [configuracionTabla]="personasTabla"
+            [datos]="personasLista">
+        </app-tabla-dinamica>
+    </div>
 </form>
