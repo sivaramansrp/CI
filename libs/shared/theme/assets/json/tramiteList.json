@@ -4229,6 +4229,13 @@
     "department": "agace"
   },
   {
+    "id": 608,
+    "tramite": 33302,
+    "linkDashboard": "/agace/aviso-certificacion/aviso-certificacion",
+    "linkDepartment": "/pago/aviso-certificacion/aviso-certificacion",
+    "department": "agace"
+  },
+  {
     "id": 607,
     "tramite": 33303,
     "linkDashboard": "/agace/aviso-modification-certificacion/pantallas",

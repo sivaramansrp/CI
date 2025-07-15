@@ -2907,6 +2907,15 @@
     "departamento": "AGA",
     "numeroDeProcedimiento": "30401"
   },
+  {
+    "id": 33302,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "33302"
+  },
    {
     "id": 33303,
     "tipoDeTramite": "Solicitud de Permiso",

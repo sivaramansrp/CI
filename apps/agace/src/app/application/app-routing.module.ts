@@ -292,6 +292,14 @@ const ROUTES: Routes = [
         (m) => m.AvisoTesoreriaModule
       ),
   },
+
+  {
+    path: 'aviso-certificacion',
+    loadChildren: () =>
+      import('./tramites/33302/aviso-certificacion.module').then(
+        (m) => m.AvisoCertificacionModule
+      ),
+  },
 ];
 
 @NgModule({
