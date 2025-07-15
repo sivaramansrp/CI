@@ -123,7 +123,8 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
       numeroDeLote: valor.formulario.numeroDeLote || '',
       paisDeOrigen: valor.formulario.paisDeOrigen || '',
       paisDeProcedencia: valor.formulario.paisDeProcedencia || '',
-      certificadoInternacionalElectronico: ''
+      certificadoInternacionalElectronico: valor.formulario.tipoRequisito || '',
+      especie: valor.formulario.especie || ''
     }
     this.fitosanitarioStore.update(state => {
       const index = state.tablaDatos.findIndex(item => item.id === DATOS.id);

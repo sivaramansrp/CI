@@ -146,7 +146,7 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       descripcionNico: [{ value: 'test', disabled: true }, [Validators.required]],
       descripcion: ['', [Validators.required, Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       cantidadUMT: ['', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
-      umt: [{ value: '', disabled: true }, Validators.required],
+      umt: [{ value: '1', disabled: true }, Validators.required],
       cantidadUMC: ['', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       umc: ['', Validators.required],
       especie: ['', Validators.required],
@@ -238,14 +238,15 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * Actualmente no implementa ninguna funcionalidad, pero se puede extender en el futuro.
    */
   agregarAnimales(): void {
+    console.log('Formulario inválido', this.mercanciaForm.errors, this.mercanciaForm.getRawValue());
     if (this.mercanciaForm.invalid) {
       this.mercanciaForm.markAllAsTouched();
-      console.log('Formulario inválido', this.mercanciaForm.errors, this.mercanciaForm.value);
+
     }
     else {
       this.agregarDatosFormulario.emit(
         {
-          formulario: this.mercanciaForm.value,
+          formulario: this.mercanciaForm.getRawValue(),
           tablaDatos: this.sensiblesTablaDatos
         }
       );
