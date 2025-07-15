@@ -180,7 +180,6 @@ describe('AeronavesComponent', () => {
   it('should add transportista to transportistasLista', () => {
     const transportista = { id: 2, nombre: 'Transportista 2' };
     component.transportistasDatos(transportista as any);
-    // expect(component.transportistasLista.some((t) => t.id === 2)).toBe(true);
   });
 
   it('should call actualizar301', () => {
