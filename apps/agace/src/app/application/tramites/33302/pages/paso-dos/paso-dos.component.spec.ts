@@ -35,9 +35,8 @@ describe('PasoDosComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, PasoDosComponent,HttpClientModule ],
+      imports: [ FormsModule, ReactiveFormsModule, PasoDosComponent, HttpClientModule ],
       declarations: [
-       
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
@@ -57,7 +56,7 @@ describe('PasoDosComponent', () => {
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
+  it('debería ejecutar #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 

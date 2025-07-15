@@ -11,7 +11,29 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite33302Query } from '../../estados/tramite33302.query';
 import { Tramite33302State } from '../../estados/tramite33302.store';
 import { Tramite33302Store } from '../../estados/tramite33302.store';
-
+/**
+ * @component PagoDerechosComponent
+ * @description
+ * Componente Angular que gestiona el formulario de pago de derechos en el trámite 33302.
+ * Este componente permite capturar, validar y guardar datos relacionados con el pago,
+ * como la clave de referencia, banco, fecha de pago, y otros detalles.
+ * 
+ * @selector app-pago-derechos
+ * Selector utilizado para incluir este componente en una plantilla HTML.
+ * 
+ * @standalone true
+ * Este componente es independiente y no requiere ser declarado en un módulo.
+ * 
+ * @imports
+ * - `TituloComponent`: Componente para mostrar el título de la sección.
+ * - `ReactiveFormsModule`: Módulo para trabajar con formularios reactivos en Angular.
+ * - `InputRadioComponent`: Componente para manejar entradas de tipo radio.
+ * - `InputFechaComponent`: Componente para manejar entradas de tipo fecha.
+ * - `CatalogoSelectComponent`: Componente para manejar la selección de catálogos.
+ * 
+ * @templateUrl ./pago-derechos.component.html
+ * Ruta al archivo HTML que define la plantilla del componente.
+ */
 
 @Component({
   selector: 'app-pago-derechos',
@@ -33,7 +55,11 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
     */
   pagosDerechosForm!: FormGroup;
 
-
+  /**
+   * @property {Tramite33302State} tramiteState
+   * @description
+   * Estado del trámite 33302 que contiene los datos relacionados con el pago de derechos.
+   */
 
   tramiteState: Tramite33302State={} as Tramite33302State;
 
@@ -94,7 +120,7 @@ cambioFechaDePago(nuevo_valor: string): void {
      private tramiteStore: Tramite33302Store,
     private solicitudService: Solicitud32301Service,
     private tramiteStoreQuery: Tramite33302Query,
-    
+
     
     private readonly consultaioQuery: ConsultaioQuery
      ) {
@@ -120,8 +146,19 @@ cambioFechaDePago(nuevo_valor: string): void {
     }  
 
   }
-
   
+  /**
+ * @method ngOnInit
+ * @description
+ * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+ * Este método realiza las siguientes acciones:
+ * - Llama al método `obtenerBancoList` para obtener la lista de bancos desde el servicio.
+ * - Se suscribe al estado global del trámite (`selectTramite33302$`) para actualizar el formulario
+ *   reactivo `pagosDerechosForm` con los valores almacenados en el estado.
+ * - Utiliza `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * 
+ * @returns {void} Este método no retorna ningún valor.
+ */
   ngOnInit(): void {
     this.obtenerBancoList();
     this.tramiteStoreQuery.selectTramite33302$.pipe(
@@ -140,7 +177,18 @@ cambioFechaDePago(nuevo_valor: string): void {
     )
       .subscribe();
   }
- 
+ /**
+  * Actualiza el estado del store con los valores del formulario según el campo modificado.
+  * @param {string} campo - El nombre del campo que ha cambiado.
+  * @return {void} Este método no retorna ningún valor.
+  * @method setValoresStore
+  * @description
+  * Este método se encarga de actualizar el estado del store `tramiteStore` con los valores del formulario `pagosDerechosForm`.
+  * Dependiendo del campo que se modifique, se actualiza el estado correspondiente en el store.
+  * Se utiliza un `switch` para determinar qué campo ha cambiado y actualizar el estado del store con el nuevo valor.
+  * @param {string} campo - El nombre del campo que ha cambiado.
+  * @return {void} Este método no retorna ningún valor.
+  */
     
     setValoresStore(campo: string): void {
       switch (campo) {
@@ -194,6 +242,16 @@ cambioFechaDePago(nuevo_valor: string): void {
     }
 
   }
+  /**
+   * @method iniciarFormulario
+   * @description
+   *  
+   * Inicializa el formulario reactivo `pagosDerechosForm` con los campos necesarios
+   * para gestionar los datos del pago de derechos.
+   * Este método utiliza el servicio `FormBuilder` para crear un grupo de controles
+   * con validaciones requeridas para cada campo.
+   * @returns {void} Este método no retorna ningún valor.
+   */
 
   
   iniciarFormulario(): void {
@@ -208,13 +266,27 @@ cambioFechaDePago(nuevo_valor: string): void {
       
     });
   }
-  obtenerBancoList(): void {
-    this.solicitudService.onBancoList()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data: Catalogo[]) => {
-        this.bancoList = data;
-      });
-  }
+ /**
+ * @method obtenerBancoList
+ * @description
+ * Obtiene la lista de bancos desde el servicio y la almacena en la propiedad `bancoList`.
+ * Este método realiza una suscripción al servicio `onBancoList` y actualiza la lista de bancos
+ * en el componente. Además, utiliza `takeUntil` para gestionar la destrucción de la suscripción
+ * y evitar fugas de memoria.
+ * 
+ * @returns {void} Este método no retorna ningún valor.
+ */
+obtenerBancoList(): void {
+  this.solicitudService.onBancoList()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((data: Catalogo[]) => {
+      this.bancoList = data;
+    });
+}
+  /**
+   * Método que se encarga de borrar los datos del pago en el formulario.
+   * Resetea el formulario a su estado inicial.
+   */
   public borrarDatosDelPago(): void {
     this.pagosDerechosForm.reset();
   }

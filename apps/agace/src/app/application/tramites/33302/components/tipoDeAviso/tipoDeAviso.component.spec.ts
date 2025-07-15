@@ -48,9 +48,8 @@ describe('TipoDeAvisoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,TipoDeAvisoComponent ],
+      imports: [ FormsModule, ReactiveFormsModule, TipoDeAvisoComponent ],
       declarations: [
-        
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
@@ -73,11 +72,11 @@ describe('TipoDeAvisoComponent', () => {
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
+  it('debería ejecutar #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
+  it('debería ejecutar #ngOnInit()', async () => {
     component.inicializamiFormulario = jest.fn();
     component.Tramite32301Query = component.Tramite32301Query || {};
     component.Tramite32301Query.select = jest.fn().mockReturnValue(observableOf({}));
@@ -85,19 +84,17 @@ describe('TipoDeAvisoComponent', () => {
     component.miFormulario = component.miFormulario || {};
     component.miFormulario.disable = jest.fn();
     component.ngOnInit();
-    
   });
 
-  it('should run #inicializamiFormulario()', async () => {
+  it('debería ejecutar #inicializamiFormulario()', async () => {
     component.AvisoModifyService = component.AvisoModifyService || {};
     component.AvisoModifyService.getAvisoModify = jest.fn().mockReturnValue(observableOf({}));
     component.store = component.store || {};
     component.store.setModalidadCertificacion = jest.fn();
     component.inicializamiFormulario();
-   
   });
 
-  it('should run #crearFormMiFormulario()', async () => {
+  it('debería ejecutar #crearFormMiFormulario()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.tipoDevAviso = component.tipoDevAviso || {};
@@ -114,19 +111,17 @@ describe('TipoDeAvisoComponent', () => {
     component.tipoDevAviso.expirado = 'expirado';
     component.tipoDevAviso.derechos = 'derechos';
     component.crearFormMiFormulario();
-   
   });
 
-  it('should run #aiEnviar()', async () => {
+  it('debería ejecutar #aiEnviar()', async () => {
     component.tabEnabledData = component.tabEnabledData || {};
     component.tabEnabledData.emit = jest.fn();
     component.miFormulario = component.miFormulario || {};
     component.miFormulario.value = 'value';
     component.aiEnviar();
-
   });
 
-  it('should run #setClientesProveedoresExtranjeros()', async () => {
+  it('debería ejecutar #setClientesProveedoresExtranjeros()', async () => {
     component.miFormulario = component.miFormulario || {};
     component.miFormulario.get = jest.fn().mockReturnValue({
       value: {}
@@ -134,10 +129,9 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setClientesProveedoresExtranjeros();
-   
   });
 
-  it('should run #setProveedoresNacionales()', async () => {
+  it('debería ejecutar #setProveedoresNacionales()', async () => {
     component.miFormulario = component.miFormulario || {};
     component.miFormulario.get = jest.fn().mockReturnValue({
       value: {}
@@ -145,10 +139,9 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setProveedoresNacionales();
-    
   });
 
-  it('should run #setModificacionesMiembros()', async () => {
+  it('debería ejecutar #setModificacionesMiembros()', async () => {
     component.miFormulario = component.miFormulario || {};
     component.miFormulario.get = jest.fn().mockReturnValue({
       value: {}
@@ -156,10 +149,9 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setModificacionesMiembros();
-   
   });
 
-  it('should run #setCambiosDocumentosLegales()', async () => {
+  it('debería ejecutar #setCambiosDocumentosLegales()', async () => {
     component.miFormulario = component.miFormulario || {};
     component.miFormulario.get = jest.fn().mockReturnValue({
       value: {}
@@ -167,10 +159,9 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setCambiosDocumentosLegales();
-
   });
 
-  it('should run #setNotifiFusionOescision()', async () => {
+  it('debería ejecutar #setNotifiFusionOescision()', async () => {
     component.miFormulario = component.miFormulario || {};
     component.miFormulario.get = jest.fn().mockReturnValue({
       value: {}
@@ -178,10 +169,9 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setNotifiFusionOescision();
-    
   });
 
-  it('should run #setAdicionalesFractions()', async () => {
+  it('debería ejecutar #setAdicionalesFractions()', async () => {
     component.miFormulario = component.miFormulario || {};
     component.miFormulario.get = jest.fn().mockReturnValue({
       value: {}
@@ -189,10 +179,9 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setAdicionalesFractions();
-    
   });
 
-  it('should run #setPresenten()', async () => {
+  it('debería ejecutar #setPresenten()', async () => {
     component.miFormulario = component.miFormulario || {};
     component.miFormulario.get = jest.fn().mockReturnValue({
       value: {}
@@ -200,10 +189,9 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setPresenten();
-
   });
 
-  it('should run #setContratados()', async () => {
+  it('debería ejecutar #setContratados()', async () => {
     component.miFormulario = component.miFormulario || {};
     component.miFormulario.get = jest.fn().mockReturnValue({
       value: {}
@@ -211,10 +199,9 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setContratados();
-   
   });
 
-  it('should run #setExpirado()', async () => {
+  it('debería ejecutar #setExpirado()', async () => {
     component.miFormulario = component.miFormulario || {};
     component.miFormulario.get = jest.fn().mockReturnValue({
       value: {}
@@ -222,10 +209,9 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setExpirado();
-   
   });
 
-  it('should run #setDerechos()', async () => {
+  it('debería ejecutar #setDerechos()', async () => {
     component.miFormulario = component.miFormulario || {};
     component.miFormulario.get = jest.fn().mockReturnValue({
       value: {}
@@ -233,10 +219,9 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setDerechos();
-    
   });
 
-  it('should run #setAceptacion253()', async () => {
+  it('debería ejecutar #setAceptacion253()', async () => {
     component.miFormulario = component.miFormulario || {};
     component.miFormulario.get = jest.fn().mockReturnValue({
       value: {}
@@ -244,22 +229,18 @@ describe('TipoDeAvisoComponent', () => {
     component.store = component.store || {};
     component.store.actualizarEstado = jest.fn();
     component.setAceptacion253();
-    
   });
 
-  it('should run #handleValores()', async () => {
+  it('debería ejecutar #handleValores()', async () => {
     component.tabEnabledData = component.tabEnabledData || {};
     component.tabEnabledData.emit = jest.fn();
     component.handleValores();
-   
   });
 
-  it('should run #ngOnDestroy()', async () => {
+  it('debería ejecutar #ngOnDestroy()', async () => {
     component.destroy$ = component.destroy$ || {};
     component.destroy$.next = jest.fn();
     component.destroy$.complete = jest.fn();
     component.ngOnDestroy();
-    
   });
-
 });

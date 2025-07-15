@@ -29,7 +29,6 @@ class PhoneNumberPipe implements PipeTransform {
 class SafeHtmlPipe implements PipeTransform {
   transform(value) { return value; }
 }
-
 describe('AvisoModifyIvaEIepsComponent', () => {
   let fixture;
   let component;
@@ -38,7 +37,6 @@ describe('AvisoModifyIvaEIepsComponent', () => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule, AvisoModifyIvaEIepsComponent, ],
       declarations: [
-      
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
@@ -58,11 +56,11 @@ describe('AvisoModifyIvaEIepsComponent', () => {
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
+  it('debería ejecutar #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #getValorIndice()', async () => {
+  it('debería ejecutar #getValorIndice()', async () => {
     component.wizardComponent = component.wizardComponent || {};
     component.wizardComponent.siguiente = jest.fn();
     component.wizardComponent.atras = jest.fn();

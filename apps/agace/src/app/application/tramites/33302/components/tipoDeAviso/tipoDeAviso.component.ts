@@ -211,39 +211,71 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       additionFractions: FRACCION_ARANCELATIA});
   }
 
-  setPresenten(): void {
-    const FRACCION_ARANCELATIA = this.miFormulario.get('presenten')?.value;
-    this.store.actualizarEstado({
-      presenten: FRACCION_ARANCELATIA,
-    });
-  }
-
-  setContratados(): void {
-    const FRACCION_ARANCELATIA = this.miFormulario.get('contratados')?.value;
-    this.store.actualizarEstado({
-      contratados: FRACCION_ARANCELATIA});
-  }
-  setExpirado(): void {
-    const FRACCION_ARANCELATIA = this.miFormulario.get('expirado')?.value;
-    this.store.actualizarEstado({
-      expirado: FRACCION_ARANCELATIA});
-  }
-  setDerechos(): void {
-    const FRACCION_ARANCELATIA = this.miFormulario.get('derechos')?.value;
-    this.store.actualizarEstado({
-      derechos: FRACCION_ARANCELATIA});
-  }
-
   /**
-   * Actualiza el store con el valor del checkbox de aceptación del 253.
-   */
-  setAceptacion253(): void {
-    const FRACCION_ARANCELATIA = this.miFormulario.get('acepto253')?.value;
-    this.store.actualizarEstado({
-      acepto253: FRACCION_ARANCELATIA})
-  }
+ * @method setPresenten
+ * @description
+ * Actualiza el store con el valor seleccionado del campo 'Presenten'.
+ * Este método obtiene el valor del formulario reactivo y lo sincroniza con el estado global.
+ */
+setPresenten(): void {
+  const FRACCION_ARANCELATIA = this.miFormulario.get('presenten')?.value;
+  this.store.actualizarEstado({
+    presenten: FRACCION_ARANCELATIA,
+  });
+}
 
-  /**
+/**
+ * @method setContratados
+ * @description
+ * Actualiza el store con el valor seleccionado del campo 'Contratados'.
+ * Este método obtiene el valor del formulario reactivo y lo sincroniza con el estado global.
+ */
+setContratados(): void {
+  const FRACCION_ARANCELATIA = this.miFormulario.get('contratados')?.value;
+  this.store.actualizarEstado({
+    contratados: FRACCION_ARANCELATIA
+  });
+}
+
+/**
+ * @method setExpirado
+ * @description
+ * Actualiza el store con el valor seleccionado del campo 'Expirado'.
+ * Este método obtiene el valor del formulario reactivo y lo sincroniza con el estado global.
+ */
+setExpirado(): void {
+  const FRACCION_ARANCELATIA = this.miFormulario.get('expirado')?.value;
+  this.store.actualizarEstado({
+    expirado: FRACCION_ARANCELATIA
+  });
+}
+
+/**
+ * @method setDerechos
+ * @description
+ * Actualiza el store con el valor seleccionado del campo 'Derechos'.
+ * Este método obtiene el valor del formulario reactivo y lo sincroniza con el estado global.
+ */
+setDerechos(): void {
+  const FRACCION_ARANCELATIA = this.miFormulario.get('derechos')?.value;
+  this.store.actualizarEstado({
+    derechos: FRACCION_ARANCELATIA
+  });
+}
+
+/**
+ * @method setAceptacion253
+ * @description
+ * Actualiza el store con el valor del checkbox de aceptación del artículo 253.
+ * Este método obtiene el valor del formulario reactivo y lo sincroniza con el estado global.
+ */
+setAceptacion253(): void {
+  const FRACCION_ARANCELATIA = this.miFormulario.get('acepto253')?.value;
+  this.store.actualizarEstado({
+    acepto253: FRACCION_ARANCELATIA
+  });
+} 
+ /**
    * Maneja la emisión de valores del formulario cuando se realiza alguna acción.
    */
   handleValores(): void {

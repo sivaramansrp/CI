@@ -50,9 +50,8 @@ describe('PagoDerechosComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,PagoDerechosComponent, HttpClientModule ],
+      imports: [ FormsModule, ReactiveFormsModule, PagoDerechosComponent, HttpClientModule ],
       declarations: [
-        
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
@@ -76,35 +75,32 @@ describe('PagoDerechosComponent', () => {
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
+  it('debería ejecutar #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #cambioFechaDePago()', async () => {
+  it('debería ejecutar #cambioFechaDePago()', async () => {
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.actualizarEstado = jest.fn();
     component.cambioFechaDePago({});
-   
   });
 
-  it('should run #inicializarEstadoFormulario()', async () => {
+  it('debería ejecutar #inicializarEstadoFormulario()', async () => {
     component.guardarDatosFormulario = jest.fn();
     component.iniciarFormulario = jest.fn();
     component.inicializarEstadoFormulario();
-    
   });
 
-  it('should run #ngOnInit()', async () => {
+  it('debería ejecutar #ngOnInit()', async () => {
     component.obtenerBancoList = jest.fn();
     component.tramiteStoreQuery = component.tramiteStoreQuery || {};
     component.tramiteStoreQuery.selectTramite33302$ = observableOf({});
     component.pagosDerechosForm = component.pagosDerechosForm || {};
     component.pagosDerechosForm.patchValue = jest.fn();
     component.ngOnInit();
-   
   });
 
-  it('should run #setValoresStore()', async () => {
+  it('debería ejecutar #setValoresStore()', async () => {
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.actualizarEstado = jest.fn();
     component.pagosDerechosForm = component.pagosDerechosForm || {};
@@ -112,19 +108,17 @@ describe('PagoDerechosComponent', () => {
       value: {}
     });
     component.setValoresStore({});
-    
   });
 
-  it('should run #guardarDatosFormulario()', async () => {
+  it('debería ejecutar #guardarDatosFormulario()', async () => {
     component.iniciarFormulario = jest.fn();
     component.pagosDerechosForm = component.pagosDerechosForm || {};
     component.pagosDerechosForm.disable = jest.fn();
     component.pagosDerechosForm.enable = jest.fn();
     component.guardarDatosFormulario();
-    
   });
 
-  it('should run #iniciarFormulario()', async () => {
+  it('debería ejecutar #iniciarFormulario()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.tramiteState = component.tramiteState || {};
@@ -136,29 +130,24 @@ describe('PagoDerechosComponent', () => {
     component.tramiteState.importeDePago = 'importeDePago';
     component.tramiteState.cadenaDependencia = 'cadenaDependencia';
     component.iniciarFormulario();
-    
   });
 
-  it('should run #obtenerBancoList()', async () => {
+  it('debería ejecutar #obtenerBancoList()', async () => {
     component.solicitudService = component.solicitudService || {};
     component.solicitudService.onBancoList = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerBancoList();
-   
   });
 
-  it('should run #borrarDatosDelPago()', async () => {
+  it('debería ejecutar #borrarDatosDelPago()', async () => {
     component.pagosDerechosForm = component.pagosDerechosForm || {};
     component.pagosDerechosForm.reset = jest.fn();
     component.borrarDatosDelPago();
-    
   });
 
-  it('should run #ngOnDestroy()', async () => {
+  it('debería ejecutar #ngOnDestroy()', async () => {
     component.destroyNotifier$ = component.destroyNotifier$ || {};
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.unsubscribe = jest.fn();
     component.ngOnDestroy();
-    
   });
-
 });

@@ -37,7 +37,6 @@ class PhoneNumberPipe implements PipeTransform {
 class SafeHtmlPipe implements PipeTransform {
   transform(value) { return value; }
 }
-
 describe('PasoUnoComponent', () => {
   let fixture;
   let component;
@@ -46,7 +45,6 @@ describe('PasoUnoComponent', () => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule, PasoUnoComponent, ],
       declarations: [
-    
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
@@ -68,11 +66,11 @@ describe('PasoUnoComponent', () => {
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
+  it('debería ejecutar #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
+  it('debería ejecutar #ngOnInit()', async () => {
     component.consultaQuery = component.consultaQuery || {};
     component.consultaQuery.selectConsultaioState$ = observableOf({});
     component.guardarDatosFormulario = jest.fn();
@@ -81,26 +79,22 @@ describe('PasoUnoComponent', () => {
     component.ngOnInit();
    });
 
-  it('should run #guardarDatosFormulario()', async () => {
+  it('debería ejecutar #guardarDatosFormulario()', async () => {
     component.solicitudService = component.solicitudService || {};
     component.solicitudService.getRegistroTomaMuestrasMercanciasData = jest.fn().mockReturnValue(observableOf({}));
     component.solicitudService.actualizarEstadoFormulario = jest.fn();
     component.guardarDatosFormulario();
      });
 
-  it('should run #seleccionaTab()', async () => {
-
+  it('debería ejecutar #seleccionaTab()', async () => {
     component.seleccionaTab({});
-
   });
 
-  it('should run #getValoreEnable()', async () => {
-
+  it('debería ejecutar #getValoreEnable()', async () => {
     component.getValoreEnable({});
-
   });
 
-  it('should run #ngOnDestroy()', async () => {
+  it('debería ejecutar #ngOnDestroy()', async () => {
     component.destroyNotifier$ = component.destroyNotifier$ || {};
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();

@@ -47,7 +47,6 @@ describe('PasoTresComponent', () => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule, PasoTresComponent, HttpClientModule, ToastrModule.forRoot(), ],
       declarations: [
-       
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
@@ -67,15 +66,14 @@ describe('PasoTresComponent', () => {
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
+  it('debería ejecutar #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #obtieneFirma()', async () => {
+  it('debería ejecutar #obtieneFirma()', async () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
     component.obtieneFirma({});
-    
   });
 
 });

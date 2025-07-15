@@ -1,10 +1,4 @@
 /**
- * Importación de modelos relacionados con el aviso de modificación.
- * Estos modelos se utilizan para estructurar los datos dentro del sistema.
- */
-import {TipoDevAviso } from '../models/avisomodify.model';
-
-/**
  * Importación de la librería Akita para gestionar el estado global de la aplicación.
  * Se incluyen `Store` y `StoreConfig` para definir y estructurar la tienda de datos.
  */
@@ -40,66 +34,118 @@ export interface Catalogo {
  */
 export interface Tramite33302State {
   /**
+   * @property {string} claveDeReferencia
    * Clave de referencia del trámite.
-   * @type {string}
    */
   claveDeReferencia: string;
 
   /**
+   * @property {string} cadenaDependencia
    * Cadena de dependencia asociada al trámite.
-   * @type {string}
    */
   cadenaDependencia: string;
 
   /**
+   * @property {string} banco
    * Nombre del banco donde se realizó el pago.
-   * @type {string}
    */
   banco: string;
 
   /**
+   * @property {string} llaveDePago
    * Llave única del pago.
-   * @type {string}
    */
   llaveDePago: string;
 
   /**
+   * @property {string} fechaDePago
    * Fecha de pago.
-   * @type {string}
    */
   fechaDePago: string;
 
   /**
+   * @property {string} importeDePago
    * Importe total del pago.
-   * @type {string}
    */
   importeDePago: string;
 
   /**
+   * @property {string} numeroDe
    * Número asociado al trámite.
-   * @type {string}
    */
   numeroDe: string;
+
+  /**
+   * @property {string} modalidadCertificacion
+   * Modalidad de certificación.
+   */
   modalidadCertificacion: string;
-  /** Indica si es un cliente o proveedor extranjero */
-  foreignClientsSuppliers: boolean,
-  /** Indica si es un proveedor nacional */
-  nationalSuppliers: boolean,
-  /** Indica si hay modificaciones de socios */
-  modificationsMembers: boolean,
-  /** Indica si hay cambios en los documentos legales */
-  changesToLegalDocuments: boolean,
-  /** Indica si es un aviso de fusión o escisión */
-  mergerOrSplitNotice: boolean,
-  /** Indica si hay fracciones adicionales */
-  additionFractions: boolean,
-  presenten: boolean, 
-  contratados: boolean, 
-  expirado: boolean, 
-  derechos: boolean, 
-  /** Aceptación de la sección 253 */
-  acepto253: boolean,
-  
+
+  /**
+   * @property {boolean} foreignClientsSuppliers
+   * Indica si es un cliente o proveedor extranjero.
+   */
+  foreignClientsSuppliers: boolean;
+
+  /**
+   * @property {boolean} nationalSuppliers
+   * Indica si es un proveedor nacional.
+   */
+  nationalSuppliers: boolean;
+
+  /**
+   * @property {boolean} modificationsMembers
+   * Indica si hay modificaciones de socios.
+   */
+  modificationsMembers: boolean;
+
+  /**
+   * @property {boolean} changesToLegalDocuments
+   * Indica si hay cambios en los documentos legales.
+   */
+  changesToLegalDocuments: boolean;
+
+  /**
+   * @property {boolean} mergerOrSplitNotice
+   * Indica si es un aviso de fusión o escisión.
+   */
+  mergerOrSplitNotice: boolean;
+
+  /**
+   * @property {boolean} additionFractions
+   * Indica si hay fracciones adicionales.
+   */
+  additionFractions: boolean;
+
+  /**
+   * @property {boolean} presenten
+   * Indica si se selecciona 'Presenten'.
+   */
+  presenten: boolean;
+
+  /**
+   * @property {boolean} contratados
+   * Indica si se selecciona 'Contratados'.
+   */
+  contratados: boolean;
+
+  /**
+   * @property {boolean} expirado
+   * Indica si se selecciona 'Expirado'.
+   */
+  expirado: boolean;
+
+  /**
+   * @property {boolean} derechos
+   * Indica si se selecciona 'Derechos'.
+   */
+  derechos: boolean;
+
+  /**
+   * @property {boolean} acepto253
+   * Indica si se aceptó la sección 253.
+   */
+  acepto253: boolean;
 }
 
 /**
@@ -113,73 +159,127 @@ export function createInitialState(): Tramite33302State {
   return {
     /**
      * Clave de referencia inicial vacía.
+     * @property {string} claveDeReferencia
      */
     claveDeReferencia: '',
 
     /**
      * Cadena de dependencia inicial vacía.
+     * @property {string} cadenaDependencia
      */
     cadenaDependencia: '',
 
     /**
      * Nombre del banco inicial vacío.
+     * @property {string} banco
      */
     banco: '',
 
     /**
      * Llave de pago inicial vacía.
+     * @property {string} llaveDePago
      */
     llaveDePago: '',
 
     /**
      * Fecha de pago inicial vacía.
+     * @property {string} fechaDePago
      */
     fechaDePago: '',
 
     /**
      * Importe de pago inicial vacío.
+     * @property {string} importeDePago
      */
     importeDePago: '',
 
     /**
      * Número asociado al trámite inicial vacío.
+     * @property {string} numeroDe
      */
     numeroDe: '',
+
     /**
      * Modalidad de certificación inicial vacía.
+     * @property {string} modalidadCertificacion
      */
     modalidadCertificacion: '',
-    /** Indica si es un cliente o proveedor extranjero */
+
+    /**
+     * Indica si es un cliente o proveedor extranjero.
+     * @property {boolean} foreignClientsSuppliers
+     */
     foreignClientsSuppliers: false,
-    /** Indica si es un proveedor nacional */
+
+    /**
+     * Indica si es un proveedor nacional.
+     * @property {boolean} nationalSuppliers
+     */
     nationalSuppliers: false,
-    /** Indica si hay modificaciones de socios */
+
+    /**
+     * Indica si hay modificaciones de socios.
+     * @property {boolean} modificationsMembers
+     */
     modificationsMembers: false,
-    /** Indica si hay cambios en los documentos legales */
+
+    /**
+     * Indica si hay cambios en los documentos legales.
+     * @property {boolean} changesToLegalDocuments
+     */
     changesToLegalDocuments: false,
-    /** Indica si es un aviso de fusión o escisión */
+
+    /**
+     * Indica si es un aviso de fusión o escisión.
+     * @property {boolean} mergerOrSplitNotice
+     */
     mergerOrSplitNotice: false,
-    /** Indica si hay fracciones adicionales */
+
+    /**
+     * Indica si hay fracciones adicionales.
+     * @property {boolean} additionFractions
+     */
     additionFractions: false,
-    presenten: false, 
-    contratados: false, 
-    expirado: false, 
-    derechos: false, 
-    /** Aceptación de la sección 253 */
+
+    /**
+     * Indica si se selecciona 'Presenten'.
+     * @property {boolean} presenten
+     */
+    presenten: false,
+
+    /**
+     * Indica si se selecciona 'Contratados'.
+     * @property {boolean} contratados
+     */
+    contratados: false,
+
+    /**
+     * Indica si se selecciona 'Expirado'.
+     * @property {boolean} expirado
+     */
+    expirado: false,
+
+    /**
+     * Indica si se selecciona 'Derechos'.
+     * @property {boolean} derechos
+     */
+    derechos: false,
+
+    /**
+     * Indica si se aceptó la sección 253.
+     * @property {boolean} acepto253
+     */
     acepto253: false,
   };
 }
 
-
-
-
 /**
- * Store del trámite 32301.
- * Este store gestiona el estado del formulario relacionado con el trámite 32301.
+ * Store del trámite 33302.
+ * Este store gestiona el estado del formulario relacionado con el trámite 33302..
  * Utiliza Akita para manejar el estado de manera reactiva.
  * 
  * @export
- * @class Tramite32301Store
+ * @class Tramite33302Store
  * @extends {Store<FormularioGrupo>}
  */
 @Injectable({ providedIn: 'root' })
@@ -188,6 +288,7 @@ export class Tramite33302Store extends Store<Tramite33302State> {
   constructor() {
     super(createInitialState());
   }
+
   /**
    * Actualiza el estado del store con los valores proporcionados.
    * @param {Partial<Tramite33302State>} valores - Valores parciales del estado a actualizar.
@@ -204,8 +305,5 @@ export class Tramite33302Store extends Store<Tramite33302State> {
       ...state,
       ...valores,
     }));
-  }
-  
-  
- 
+  }  
 }
