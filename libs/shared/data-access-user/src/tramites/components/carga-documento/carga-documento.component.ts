@@ -176,7 +176,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
     private documentosStore: DocumentosStore,
     private cdr: ChangeDetectorRef,
     private catalogoDocumentosService: CatalogoDocumentosService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.documentosQuery.selectDocumentoState$
@@ -210,9 +210,14 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['idTipoTRamite'] && this.idTipoTRamite) {
+    if (this.idTipoTRamite === '130118') {
+      this.getDocumentosDesdeSolicitud130118();
+      this.getDocumentosDesdeSolicitud130118Obligatorios();
+    } else {
       this.getListaDocumentoObligatorios();
       this.getListaDocumentoOpcionales();
     }
+  }
   }
 
   /**
@@ -266,6 +271,44 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
       .subscribe();
   }
 
+  getDocumentosDesdeSolicitud130118(): void {
+    const ESPECIFICO = false;
+    this.catalogoDocumentosService
+      .getDocumentosSolicitud130118(ESPECIFICO)
+      .pipe(takeUntilDestroyed(this.destroyRef$))
+      .subscribe({
+        next: (response) => {
+          this.catalogoDocumentosObligatorios = response.datos.documento_tramite.map((doc) => ({
+            ...doc.tipo_documento,
+            adicionales: [],
+            cargado: false,
+          }));
+        },
+        error: (err) => {
+          console.error('Error obteniendo documentos desde 130118', err);
+        }
+      });
+  }
+
+  getDocumentosDesdeSolicitud130118Obligatorios(): void {
+    const ESPECIFICO = true;
+    this.catalogoDocumentosService
+      .getDocumentosSolicitud130118(ESPECIFICO)
+      .pipe(takeUntilDestroyed(this.destroyRef$))
+      .subscribe({
+        next: (response) => {
+          this.catalogoDocumentosOpcionales = response.datos.documento_tramite.map((doc) => ({
+            ...doc.tipo_documento,
+            adicionales: [],
+            cargado: false,
+          }));
+        },
+        error: (err) => {
+          console.error('Error obteniendo documentos desde 130118', err);
+        }
+      });
+  }
+
   /**
    * Maneja la carga de un documento.
    * @param {Event} event - El evento de carga del archivo.
@@ -305,11 +348,11 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
       this.documentoSeleccionado =
         tipo === OPCIONAL
           ? (this.catalogoDocumentosOpcionales.find(
-              (doc) => doc.id_tipo_documento === id
-            ) as TipoDocumentos)
+            (doc) => doc.id_tipo_documento === id
+          ) as TipoDocumentos)
           : (this.catalogoDocumentosObligatorios.find(
-              (doc) => doc.id_tipo_documento === id
-            ) as TipoDocumentos);
+            (doc) => doc.id_tipo_documento === id
+          ) as TipoDocumentos);
 
       const TAMANIO_REQUERIDO: number =
         CargaDocumentoComponent.convertirMbaBytes(

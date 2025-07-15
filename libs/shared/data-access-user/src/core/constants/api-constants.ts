@@ -206,3 +206,9 @@ export const API_POST_GUARDAR_ACUSE = `sat-t130118/solicitud/${IDSOLICITUD}/acus
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/genera-documento
  */
 export const API_POST_VISTA_PREVIA = `sat-t130118/solicitud/${IDSOLICITUD}/acuse/vista-previa`;
+
+/**
+ * API para subir un documento.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/consulta-documentos
+ */
+export const API_GET_DOCUMENTOS130118 = 'sat-t130118/solicitud/documentos';
