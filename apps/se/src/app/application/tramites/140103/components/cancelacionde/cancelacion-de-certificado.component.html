@@ -2,6 +2,12 @@
   <ng-titulo titulo="Buscar cupos" />
 </div>
 
+<!-- Add this block at the top of the form to show a global error message -->
+<div *ngIf="submitted && cancelacionForm.invalid" class="alert alert-danger" role="alert">
+  Corrija los siguientes errores:<br>
+  Para ejecutar la búsqueda se requiere ingresar al menos el parámetro de búsqueda requerido.
+</div>
+
 <form [formGroup]="cancelacionForm">
   <div class="row">
     <div class="col-md-4">
@@ -46,7 +52,8 @@
 
   <div class="row" style="padding-top: 20px;text-align: right;">
     <div>
-      <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura">Buscar</button>
+      <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura"
+        (click)="buscarCupos()">Buscar</button>
     </div>
   </div>
   <H6> Cupos disponibles</H6>

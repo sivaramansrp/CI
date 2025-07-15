@@ -238,6 +238,7 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     },
   ];
 
+  submitted = false; // Add this flag
 
   /**
  * @constructor
@@ -384,5 +385,16 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  // Add this method to handle the Buscar button click
+  buscarCupos() {
+    this.submitted = true;
+    if (this.cancelacionForm.invalid) {
+      // Optionally, scroll to the first error or focus it
+      // You can also emit an event or show a global error message here
+      return;
+    }
+    // ...logic to actually search cupos...
   }
 }
