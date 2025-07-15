@@ -18,7 +18,7 @@ describe('SagarpaService', () => {
       setCertificadosAutorizados: jest.fn(),
       setHoraDeInspeccion: jest.fn(),
       setAduanaDeIngreso: jest.fn(),
-      setFechaDeInspeccion: jest.fn(),
+      setFechaInspeccion: jest.fn(),
       setSanidadAgropecuaria: jest.fn(),
       setPuntoDeInspeccion: jest.fn(),
     };
@@ -74,7 +74,7 @@ describe('SagarpaService', () => {
       certificadosAutorizados: 1,
       horaDeInspeccion: 1,
       aduanaDeIngreso: 1,
-      fechaDeInspeccion: '2025-01-01',
+      fechaInspeccion: '2025-01-01',
       sanidadAgropecuaria: 1,
       puntoDeInspeccion: 1
     } as unknown as Solicitud220502State;
@@ -89,7 +89,7 @@ describe('SagarpaService', () => {
     expect(storeSpy.setCertificadosAutorizados).toHaveBeenCalledWith(state.certificadosAutorizados);
     expect(storeSpy.setHoraDeInspeccion).toHaveBeenCalledWith(state.horaDeInspeccion);
     expect(storeSpy.setAduanaDeIngreso).toHaveBeenCalledWith(state.aduanaDeIngreso);
-    expect(storeSpy.setFechaDeInspeccion).toHaveBeenCalledWith(state.fechaDeInspeccion);
+    expect(storeSpy.setFechaInspeccion).toHaveBeenCalledWith(state.fechaInspeccion);
     expect(storeSpy.setSanidadAgropecuaria).toHaveBeenCalledWith(state.sanidadAgropecuaria);
     expect(storeSpy.setPuntoDeInspeccion).toHaveBeenCalledWith(state.puntoDeInspeccion);
   });
