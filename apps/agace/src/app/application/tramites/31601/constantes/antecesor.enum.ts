@@ -61,7 +61,7 @@ export const CONTROL_INVENTARIOS_TABLA_CONFIGURACION: ConfiguracionColumna<Contr
       orden: 2,
     },
     {
-      encabezado: 'Anexo 24',
+      encabezado: 'Indique si se trata de un sistema de control de inventarios conforme el anexo 24',
       clave: (item: ControlInventariosItem) => item.anexo24 ? '☑' : '☐',
       orden: 3,
     }

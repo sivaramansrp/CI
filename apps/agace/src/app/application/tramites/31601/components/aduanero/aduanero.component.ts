@@ -516,6 +516,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
       ],
       bimestre: [this.solicitudState?.bimestre],
       senaleSi: [this.solicitudState?.senaleSi, Validators.required],
+      acredite: [this.solicitudState?.acredite, Validators.required],
       seMomento: [this.solicitudState?.seMomento, Validators.required],
       cumplir: [this.solicitudState?.cumplir, Validators.required],
       indique: [this.solicitudState?.indique, Validators.required],
