@@ -266,6 +266,14 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
         }]
     },
     {
+        tramite: 33303,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/33303/pages/datos/datos.component').then(m => m.DatosComponent),
+            componentName: 'DatosComponent',
+        }]
+    },
+    {
       tramite: 30506,
         listaComponentes: [{
             id: 'solicitud',
