@@ -136,6 +136,8 @@ getFraccionesUsoEspecifico(): Observable<FraccionArancelariaProsec[]> {
     this.tramite130102store.setObservaciones(DATOS.observaciones);
     this.tramite130102store.setProducto(DATOS.productos);
     this.tramite130102store.setSolicitude(DATOS.solicitud);
+    this.tramite130102store.setcantidadTotal(DATOS.cantidadTotal);
+    this.tramite130102store.setvalorTotalUSD(DATOS.valorTotalUSD);
 
    
   }

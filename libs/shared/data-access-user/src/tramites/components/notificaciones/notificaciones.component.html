@@ -47,22 +47,22 @@
             : 'center'
         "
       >
+        <button
+          type="button"
+          class="btn btn-primary text-left"
+          (click)="confirmarAccion()"
+        >
+          {{ notificacionInput.txtBtnAceptar }}
+        </button>
         @if (notificacionInput.txtBtnCancelar !== '') {
         <button
           type="button"
-          class="btn btn-default"
+          class="btn btn-default text-right"
           (click)="declinarAccion()"
         >
           {{ notificacionInput.txtBtnCancelar }}
         </button>
         }
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="confirmarAccion()"
-        >
-          {{ notificacionInput.txtBtnAceptar }}
-        </button>
       </div>
     </div>
   </div>

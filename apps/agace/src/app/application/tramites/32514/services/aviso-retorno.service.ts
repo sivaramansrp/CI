@@ -48,17 +48,4 @@ export class AdaceService {
     return this.http.get<Solicitud32514State>('assets/json/32514/datos.json');
   }
 
-  /**
-   * Actualiza el estado del formulario con los datos proporcionados.
-   * 
-   * @param DATOS - Estado de la solicitud `Tramite110222State` con la información 
-   *                del tipo de solicitud a actualizar en el store.
-   */
-  actualizarEstadoFormulario(DATOS: Solicitud32514State): void {
-    this.store.update((state) => ({
-      ...state,
-      ...DATOS
-    }))
-
-  }
 }

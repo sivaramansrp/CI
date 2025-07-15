@@ -160,7 +160,11 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Datos de control de inventarios obtenidos desde JSON
    */
   controlInventarios: Tabla = controlInventarios;
-
+  /**
+ * Índice de la fila seleccionada para edición. 
+ * Es null cuando no hay ninguna fila seleccionada.
+ */
+  filaSeleccionadaIndex: number | null = null;
   /**
    * Lista de opciones IMMEX cargadas desde JSON
    */
@@ -246,6 +250,11 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   public domiciliosBodyData: TableBody[] = [];
 
+/**
+ * Indica si se está en modo edición. 
+ * true para modificar una fila existente, false para agregar una nueva.
+ */
+  modoEdicion: boolean = false;
   /**
    * Encabezados de la tabla de instalaciones
    */
@@ -447,7 +456,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
       )
       .subscribe((seccionState) => {
           this.datosTablaMencione = seccionState.mencioneDatos || [];
-      });
+               });
 
     this.showMencioneTabla = this.preOperativeForm.get('senaleSi')?.value === 'Si';
     this.preOperativeForm.get('senaleSi')?.valueChanges
@@ -574,6 +583,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
         ],
       ],
       archivoNacionales: [''],
+      bimestreValor:['']
     });
 
     // Configuración del modo de solo lectura
@@ -586,6 +596,21 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
         this.preOperativeForm.get(key)?.enable();
       });
     }
+      this.preOperativeForm.get('nombreDel')?.disable();
+      this.preOperativeForm.get('lugarDeRadicacion')?.disable();
+      this.preOperativeForm.get('indiqueCheck')?.disable();
+   
+    this.preOperativeForm.get('indiqueCuenta')?.valueChanges.subscribe((value) => {
+    if (value === 'Si') {
+      this.preOperativeForm.get('nombreDel')?.enable();
+      this.preOperativeForm.get('lugarDeRadicacion')?.enable(); 
+       this.preOperativeForm.get('indiqueCheck')?.enable();
+    } else {
+     this.preOperativeForm.get('nombreDel')?.disable();
+      this.preOperativeForm.get('lugarDeRadicacion')?.disable();
+       this.preOperativeForm.get('indiqueCheck')?.disable();
+    }
+  });
   }
 
   /**
@@ -731,7 +756,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
 
       if (this.camposObligatoriosRespondidosControlInventarios) {
         const INDEX = this.datosTablaControlInventarios.findIndex(
-          item => item.id === this.filaSeleccionadaControlInventarios!.id
+          item => item.id === this.filaSeleccionadaControlInventarios?.id
         );
 
         if (INDEX !== -1) {
@@ -835,17 +860,47 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   get showsenale(): boolean {
     return this.preOperativeForm?.get('senale')?.value === 'Si';
   }
-
   /**
-   * Abre el modal de modificación
-   */
-  openModifyModal(): void {
+ * Abre el modal para modificar una fila existente de la tabla.
+ * Establece el modo edición y carga los datos seleccionados en el formulario.
+ */
+openModifyModal(): void {
+  if (this.filaSeleccionadaMencione) {
+    this.modoEdicion = true;
+
+      const INDEX = this.datosTablaMencione.findIndex(
+      item => item.id === this.filaSeleccionadaMencione?.id
+    );
+
+    if (INDEX !== -1) {
+      this.filaSeleccionadaIndex = INDEX; 
+    }
+
+    this.preOperativeForm.patchValue({
+      rfc: this.filaSeleccionadaMencione.rfc,
+      razonSocial: this.filaSeleccionadaMencione.social,
+      numeroEmpleados: this.filaSeleccionadaMencione.noumero,
+      empleadosPropios: this.filaSeleccionadaMencione.bimestre,
+    });
+
+    this.modalInstance?.show();
+  }
+}
+/**
+ * Abre el modal para agregar un nuevo elemento.
+ * Limpia el formulario y desactiva el modo edición.
+ */
+  openAgregarModal(): void {
     if (this.modalInstance) {
+       this.modoEdicion = false;
+    this.filaSeleccionadaIndex = null;
       this.preOperativeForm.patchValue({
-        rfc: this.filaSeleccionadaMencione?.rfc,
-        razonSocial: this.filaSeleccionadaMencione?.social,
-        numeroEmpleados: this.filaSeleccionadaMencione?.noumero,
-        empleadosPropios: this.filaSeleccionadaMencione?.bimestre,
+        rfc: '',
+        razonSocial: '',
+        numeroEmpleados:'',
+        empleadosPropios:'',
+        bimestreValor:'',
+        numeroAutorizacionCITES: '',
       })
       this.modalInstance.show();
     }
@@ -996,6 +1051,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Si hay elementos seleccionados, abre el popup de confirmación de eliminación.
    */
   confirmEliminarMencioneItem(): void {
+      // Verifica si hay elementos seleccionados
     if (this.listaFilaSeleccionadaMencione.length === 0) {
       return;
     }
@@ -1059,29 +1115,42 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Si la validación es exitosa, crea un nuevo objeto MencioneConfiguracionItem y lo agrega a la tabla,
    * actualizando el estado correspondiente en el store.
    */
-  addNewMencioneItem(): void {
-    this.mandatoryFieldsAnswered =
-      Boolean(this.preOperativeForm.get('rfc')?.valid) &&
-      Boolean(this.preOperativeForm.get('razonSocial')?.valid) &&
-      Boolean(this.preOperativeForm.get('numeroEmpleados')?.valid) &&
-      Boolean(this.preOperativeForm.get('empleadosPropios')?.valid) &&
-      Boolean(this.preOperativeForm.get('numeroAutorizacionCITES')?.valid);
+addNewMencioneItem(): void {
+  this.mandatoryFieldsAnswered =
+    Boolean(this.preOperativeForm.get('rfc')?.valid) &&
+    Boolean(this.preOperativeForm.get('razonSocial')?.valid) &&
+    Boolean(this.preOperativeForm.get('numeroEmpleados')?.valid) &&
+    Boolean(this.preOperativeForm.get('numeroAutorizacionCITES')?.valid) &&
+    Boolean(this.preOperativeForm.get('bimestreValor')?.valid);
 
-    if (this.mandatoryFieldsAnswered) {
-      const NEWITEM: MencioneConfiguracionItem = {
-        id: (this.datosTablaMencione.length + 1).toString(),
-        rfc: this.preOperativeForm.get('rfc')?.value,
-        social: this.preOperativeForm.get('razonSocial')?.value,
-        noumero: this.preOperativeForm.get('numeroEmpleados')?.value,
-        bimestre: this.preOperativeForm.get('empleadosPropios')?.value,
-      };
-      this.datosTablaMencione.push(NEWITEM);
-      this.tramite31601Store.setMencioneTablaDatos(this.datosTablaMencione);
-      this.mandatoryFieldsAnswered = false;
-    }
+  if (this.mandatoryFieldsAnswered) {
+    const ESDICION = this.modoEdicion && this.filaSeleccionadaIndex !== null; 
+
+    const NEWITEMS: MencioneConfiguracionItem = {
+      id: ESDICION
+        ? this.datosTablaMencione[this.filaSeleccionadaIndex as number].id
+        : (this.datosTablaMencione.length + 1).toString(),
+      rfc: this.preOperativeForm.get('rfc')?.value,
+      social: this.preOperativeForm.get('razonSocial')?.value,
+      noumero: this.preOperativeForm.get('numeroEmpleados')?.value,
+      bimestre: this.preOperativeForm.get('bimestreValor')?.value,
+    };
+
+    if (ESDICION && this.filaSeleccionadaIndex !== null) {
+      const INDEX = this.filaSeleccionadaIndex;
+      this.datosTablaMencione[INDEX] = NEWITEMS;
+    } else {
+      this.datosTablaMencione.push(NEWITEMS);
+    }   
+    this.tramite31601Store.setMencioneTablaDatos(this.datosTablaMencione);
+    this.mandatoryFieldsAnswered = false;
+    this.modoEdicion = false;
+    this.filaSeleccionadaIndex = null;
+    this.filaSeleccionadaMencione = null;
+
+    this.modalInstance?.hide();
   }
-
-
+}
   /**
    * Método ejecutado al destruir el componente:
    * - Cancela suscripciones activas

@@ -1,4 +1,4 @@
-import { AnimalesEventos, AnimalesFormularioSolicitud, DatosDeLaSolicitud, Sensible } from '../../models/datos-de-la-solicitue.model';
+import { AnimalesEventos, AnimalesFormularioSolicitud, AnimalesFormularioSolicitudForm, DatosDeLaSolicitud, Sensible } from '../../models/datos-de-la-solicitue.model';
 import { CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
@@ -11,7 +11,6 @@ import { Subject } from 'rxjs';
   standalone: true,
   imports: [CommonModule, CatalogoSelectComponent, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent],
   templateUrl: './animales-vivo-detalles.component.html',
-  styleUrl: './animales-vivo-detalles.component.scss',
 })
 export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
 

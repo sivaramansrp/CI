@@ -52,7 +52,7 @@
       <div class="row mt-5">
         <div class="col-md-12">
           <div>
-            <label for="observaciones"> Justificacion*:</label>
+            <label for="observaciones"> Justificación*:</label>
           </div>
           <div>
             <textarea cols="70" rows="5" id="observacionesId" class="form-control" formControlName="observaciones"
@@ -139,7 +139,7 @@
           <div class="form-group">
             <label class="form-label" for="establecimientoRFCResponsableSanitario">RFC del responsable
               sanitario*:</label>
-            <input class="form-control" id="establecimientoRFCResponsableSanitarioId" placeholder="" type="text"
+            <input class="form-control" id="establecimientoRFCResponsableSanitarioId" placeholder="" type="text" maxlength="13"
               formControlName="establecimientoRFCResponsableSanitario" (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
@@ -304,7 +304,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="establishomentoColonias"
-              >Colonia:</label
+              >Colonias:</label
             >
             <input
               class="form-control"
@@ -345,7 +345,7 @@
         <div class="col-md-1">
           <div class="form-group">
             <label class="form-label" for="lada">Lada:</label>
-            <input class="form-control" type="text" id="lada" appUppercase formControlName="lada"
+            <input class="form-control" type="text" id="lada" appUppercase formControlName="lada" maxlength="5" 
               (change)="enCambioDeControl('domicilioEstablecimiento', 'lada')" />
           </div>
           <div *ngIf="domicilioEstablecimiento.get('lada')?.touched">
@@ -431,7 +431,7 @@
           <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria:
             <span class="bi bi-question-circle-fill" title="No. de licencia sanitaria"
               data-bs-toggle="tooltip"></span></label>
-          <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
+          <input class="form-control" id="licenciaSanitaria" placeholder="" type="text" maxlength="20"
             formControlName="noLicenciaSanitaria" (change)="
               enCambioDeControl(
                 'solicitudEstablecimientoForm',
@@ -501,10 +501,11 @@
     </div>
     <div class="row mt-5">
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-        [datos]="mercanciasTablaDatos"></app-tabla-dinamica>
-      <div class="container text-end mt-5">
-        <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
-        <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
+        [datos]="mercanciasTablaDatos" (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
+      
+        <div class="container text-end mt-5">
+        <button class="btn btn-danger me-2" (click)="eliminarSeleccionados()" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
+        <button class="btn btn-default me-2" data-bs-toggle="modal" (click)="abrirModalMercancia()" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
         <button class="btn btn-primary me-2" data-bs-toggle="modal" (click)="abrirModalMercancia()" [disabled]="esFormularioSoloLectura ? true : false">
           Agregar
         </button>
@@ -603,14 +604,6 @@
               class="form-control" />
             <div class="text-danger" *ngIf="getErrorMessage('denominacionEspecifica')">
               {{ getErrorMessage('denominacionEspecifica') }}
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="denominacionDistintiva">Denominación distintiva*:</label>
-            <input type="text" id="denominacionDistintiva" formControlName="denominacionDistintiva"
-              class="form-control" />
-            <div class="text-danger" *ngIf="getErrorMessage('denominacionDistintiva')">
-              {{ getErrorMessage('denominacionDistintiva') }}
             </div>
           </div>
           <div class="form-group">
@@ -739,7 +732,8 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="cantidadUMC">Cantidad UMC*:</label>
+                <label for="cantidadUMC">Cantidad UMC*:<span class="bi bi-question-circle-fill"
+                data-bs-toggle="tooltip"></span></label>
                 <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control" />
                 <div class="text-danger" *ngIf="getErrorMessage('cantidadUMC')">
                   {{ getErrorMessage('cantidadUMC') }}
@@ -800,7 +794,7 @@
                 @if(colapsable){
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPais" [label]="paisDeProcedenciaLabel"
+                    <crosslist [fechas]="seleccionarOrigenDelPais" [label]="paisDeOrigenLabel"
                       [botones]="paisDeProcedenciaBotons"></crosslist>
                   </div>
                 </div>
@@ -838,7 +832,7 @@
                 @if(colapsableTres){
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="paisDeProcedenciaLabel"
+                    <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="usoEspecificoLabel"
                       [botones]="paisDeProcedenciaBotonsTres"></crosslist>
                   </div>
                 </div>
@@ -849,7 +843,7 @@
         </form>
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-default" (click)="limpiarMercancia()">
           Limpiar
         </button>
         <button type="button" class="btn btn-default" data-bs-dismiss="modal">

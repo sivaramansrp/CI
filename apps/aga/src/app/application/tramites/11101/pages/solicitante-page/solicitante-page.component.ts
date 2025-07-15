@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
-import { Subject } from 'rxjs';
+import {
+  DatosPasos,
+  ListaPasosWizard,
+  PASOS,
+  WizardComponent
+} from '@ng-mf/data-access-user';
+import { Subject, map,takeUntil} from 'rxjs';
 import { Tramite11101Query } from '../../estados/tramite11101.query';
 import { Tramite11101Store } from '../../estados/tramite11101.store';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { map } from 'rxjs/operators';
-import { takeUntil } from 'rxjs/operators';
 
 /**
  * Interfaz que define la estructura de un botón de acción en el asistente.

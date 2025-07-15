@@ -1,10 +1,9 @@
 {
-    "tableHeader": [
-      "Tipo de inversión",
-      "Descripción general",
-      "Valor en pesos"
-    ],
-    "tableBody": [{
-      "tbodyData": []
-    }]
-  }
+  "tableHeader": [
+    "Tipo de inversión",
+    "Descripción general",
+    "Valor en pesos"
+  ],
+  "tableBody": []
+}
+

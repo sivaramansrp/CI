@@ -4,6 +4,7 @@ import { WizardComponent, BtnContinuarComponent, SolicitanteComponent } from '@l
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { TITULO_PASO_UNO, TITULO_PASO_DOS, TITULO_PASO_TRES } from '../../services/comercio-exterior.enum';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { SharedModalComponent } from '../../components/shared-modal/shared-modal.component';
 
 describe('TodospasosComponent', () => {
   let component: TodospasosComponent;
@@ -11,7 +12,7 @@ describe('TodospasosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WizardComponent, BtnContinuarComponent, HttpClientTestingModule, SolicitanteComponent],
+      imports: [WizardComponent, BtnContinuarComponent, HttpClientTestingModule, SolicitanteComponent,SharedModalComponent],
       declarations: [TodospasosComponent, PasoUnoComponent],
     }).compileComponents();
 

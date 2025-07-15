@@ -4,7 +4,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, InputRadioComponent, Notificacion, NotificacionesComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { HttpClient } from '@angular/common/http';
 
@@ -15,6 +15,7 @@ import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solic
 import {Subject, debounceTime, map, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
@@ -175,6 +176,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * Utiliza la interfaz ConfiguracionColumna para definir las columnas.
    * @type {ConfiguracionColumna<FilaSolicitud>[]}
    */
+  /**
+   * @description
+   * Configuración de las columnas para la tabla de solicitudes.
+   * Utiliza la interfaz ConfiguracionColumna para definir las columnas.
+   * @type {ConfiguracionColumna<FilaSolicitud>[]}
+   */
   configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
     { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
     { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
@@ -189,10 +196,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
     { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
     { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
+    { encabezado: 'Especie', clave: (fila) => fila.especie, orden: 14 },
     { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 15 },
     { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
     { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
-    { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 },
+    { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 }    
   ];
 
   /**
@@ -277,6 +285,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       proovedor: 'Print Masters'
     }
   ];
+  /**
+   * Mensaje de error para mostrar en caso de que no se encuentre información.
+   * @property {string} messageDeError
+   */
+  messageDeError: string = '';
 
   /**
    * Constructor del componente.
@@ -323,17 +336,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     });
     this.crearFormulario();
     this.initActionFormBuild();
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'No existe información para la clave UCON: aaaaaaa123##aaa y RFC: LEQI8101314S7 proporcionados. Favor de verificar.',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'OK',
-      txtBtnCancelar: '',
-    };
+   this.nuevaNotificacion={} as Notificacion;
   }
 
    ngAfterViewInit(): void {
@@ -365,6 +368,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         } else {
           const PATTERN = /^UCON[a-zA-Z0-9]{4,10}$/;
           this.moduloEmergente = !PATTERN.test(value);
+          this.messageDeError = `No existe información para la clave UCON: ${this.datosDelaSolicitud.get('claveUCON')?.value} y RFC: LEQI8101314S7 proporcionados. Favor de verificar.`;
+           this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: this.messageDeError,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'OK',
+      txtBtnCancelar: '',
+    };
         }
       });
   }
@@ -388,7 +403,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     });
     this.certificadoZoosanitarioQuery.seleccionarDatosSolicitud$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
       if (datosDeLaSolicitud) {
-        this.datosDelaSolicitud.patchValue(datosDeLaSolicitud);
+        this.datosDelaSolicitud.patchValue({
+          tipoMercancia: datosDeLaSolicitud.tipoMercancia || 'yes',
+          aduanaIngreso: datosDeLaSolicitud.aduanaIngreso || '',
+          oficinaInspeccion: datosDeLaSolicitud.oficinaInspeccion || '',
+          puntoInspeccion: datosDeLaSolicitud.puntoInspeccion || '',
+          claveUCON: datosDeLaSolicitud.claveUCON || '',
+          establecimientoTIF: datosDeLaSolicitud.establecimientoTIF || '',
+          nombreVeterinario: datosDeLaSolicitud.nombreVeterinario || '',
+          numeroGuia: datosDeLaSolicitud.numeroGuia || '',
+          certificacion: datosDeLaSolicitud.certificacion || '',
+          regimen: datosDeLaSolicitud.regimen || ''
+        })
+        this.notificationCheck=true;
       }
     });
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
@@ -500,6 +527,53 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       this.notificationCheck = true;
     } else {
       this.notificationCheck = false;
+    }
+    if( VALOR === 'yes') {
+        this.configuracionColumnasoli= [
+    { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
+    { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
+    { encabezado: 'Requisito', clave: (fila) => fila.requisito, orden: 3 },
+    { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional, orden: 4 },
+    { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
+    { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
+    { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
+    { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8 },
+    { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
+    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 10 },
+    { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
+    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
+    { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
+    { encabezado: 'Especie', clave: (fila) => fila.especie, orden: 14 },
+    { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 15 },
+    { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
+    { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
+    { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 }    
+  ];
+    }
+    else{
+        this.configuracionColumnasoli = [
+    { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
+    { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
+    { encabezado: 'Requisito', clave: (fila) => fila.requisito, orden: 3 },
+    { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional, orden: 4 },
+    { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
+    { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
+    { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
+    { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8 },
+    { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
+    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 10 },
+    { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
+    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
+    { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
+    { encabezado: 'Especie', clave: (fila) => fila.especie, orden: 14 },
+    { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 15 },
+    { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
+    { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
+    {encabezado: 'Tipo de presentación', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 },
+    {encabezado: 'Tipo planta', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 },
+    {encabezado: 'Planta autorizada de origen', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 },
+    { encabezado: 'Certificado Internacional Electrónico', clave: (fila: FilaSolicitud): string => fila.certificadoInternacionalElectronico, orden: 19 }    
+  ];
     }
     this.setValoresStore();
   }

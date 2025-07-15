@@ -1,6 +1,6 @@
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud31602IvaeiepsState, Tramite31602IvaeiepsStore } from '../../estados/stores/tramite31602ivaeieps.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import { ComercioExteriorService } from '../../services/comercio-exterior.service';
@@ -9,7 +9,6 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { NumeroDeEmpleadosComponent } from '../numero-de-empleados/numero-de-empleados.component';
 import { Tramite31602IvaeiepsQuery } from '../../estados/queries/tramite31602ivaeieps.query';
 import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
-
 
 /**
  * Componente que representa la sección de "Conceptos" de la aplicación.
@@ -121,6 +120,26 @@ export class ConceptosComponent implements OnInit,OnDestroy {
     this.crearConceptosForm();
     this.getBancoCatalogDatos();
     this.inicializarEstadoFormulario();
+
+    this.conceptosForm.valueChanges
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(values => {
+      const TRANSFERENCIAS = Number(values.transferencias) || 0;
+      const RETORNOS = Number(values.retornos) || 0;
+      const CONSTANCIAS = Number(values.constancias) || 0;
+      const TOTAL = TRANSFERENCIAS + RETORNOS + CONSTANCIAS;
+      if (this.conceptosForm.get('total')?.value !== TOTAL) {
+        this.conceptosForm.get('total')?.setValue(TOTAL, { emitEvent: false });
+      }
+
+      const TRANSFERENCIAS_VIR = Number(values.transferenciasVir) || 0;
+      const RETORNOS_SE = Number(values.retornosSe) || 0;
+      const CONSTANCIAS_DE = Number(values.constanciasDe) || 0;
+      const TOTAL_DOS = TRANSFERENCIAS_VIR + RETORNOS_SE + CONSTANCIAS_DE;
+      if (this.conceptosForm.get('totalDos')?.value !== TOTAL_DOS) {
+        this.conceptosForm.get('totalDos')?.setValue(TOTAL_DOS, { emitEvent: false });
+      }
+    });
   }
   
 
@@ -153,23 +172,23 @@ export class ConceptosComponent implements OnInit,OnDestroy {
    */
   public crearConceptosForm(): void {
     this.conceptosForm = this.fb.group({
-      transferencias: [this.solicitudState?.transferencias],
-      transferenciasVir:[this.solicitudState?.transferenciasVir],
-      retornos:[this.solicitudState?.retornos],
-      retornosSe:[this.solicitudState?.retornosSe],
-      constancias: [this.solicitudState?.constancias],
-      constanciasDe: [this.solicitudState?.constanciasDe],
+      transferencias: [this.solicitudState?.transferencias,Validators.required],
+      transferenciasVir:[this.solicitudState?.transferenciasVir,Validators.required],
+      retornos:[this.solicitudState?.retornos,Validators.required],
+      retornosSe:[this.solicitudState?.retornosSe,Validators.required],
+      constancias: [this.solicitudState?.constancias,Validators.required],
+      constanciasDe: [this.solicitudState?.constanciasDe,Validators.required],
       total: [this.solicitudState?.total],
       totalDos: [this.solicitudState?.totalDos],
       empleadosPropios: [this.solicitudState?.empleadosPropios],
       conEmpleados: [this.solicitudState?.conEmpleados],
       indiqueSiLosSocios: [this.solicitudState?.indiqueSiLosSocios],
-      numeroEmpleados: [this.solicitudState?.numeroEmpleados],
-      numeroEmpleadosDos: [this.solicitudState?.numeroEmpleadosDos],
-      numeroEmpleadosTres: [this.solicitudState?.numeroEmpleadosTres],
-      comboBimestresUno: [this.solicitudState?.comboBimestresUno],
-      comboBimestresDos: [this.solicitudState?.comboBimestresDos],
-      comboBimestresTres: [this.solicitudState?.comboBimestresTres],
+      numeroEmpleados: [this.solicitudState?.numeroEmpleados,Validators.required],
+      numeroEmpleadosDos: [this.solicitudState?.numeroEmpleadosDos,Validators.required],
+      numeroEmpleadosTres: [this.solicitudState?.numeroEmpleadosTres,Validators.required],
+      comboBimestresUno: [this.solicitudState?.comboBimestresUno,Validators.required],
+      comboBimestresDos: [this.solicitudState?.comboBimestresDos,Validators.required],
+      comboBimestresTres: [this.solicitudState?.comboBimestresTres,Validators.required],
     });
   }
 
