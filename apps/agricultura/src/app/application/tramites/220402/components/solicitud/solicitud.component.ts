@@ -1,7 +1,7 @@
 // ...existing code...
 import { CONFIGURATION_TABLA_GENERALES, CONFIGURATION_TABLA_MERCANCIA, MUNICIPIODE_OPCIONS, RADIO_OPCIONS } from '../../constantes/certificado-zoosanitario.enum';
 import { CatalogoSelectComponent, ConfiguracionColumna, FECHA_FINAL, FECHA_INICIO, InputRadioComponent, Notificacion, NotificacionesComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, ChangeDetectorRef, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ChangeDetectorRef, ElementRef, OnDestroy, OnInit, ViewChild, Input } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, } from '@ng-mf/data-access-user';
 import { DatosGenerales, TablaMercancia } from '../../models/pantallas-captura.model';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -43,8 +43,11 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
  */
 
 export class SolicitudComponent implements OnInit, OnDestroy {
-
-// ...existing code...
+  /**
+ * Indica el origen del flujo. Si es 'READ_PROCEDURE', se muestran tabs y vistas específicas para solo lectura.
+ * Este valor se recibe como input desde el componente padre.
+ */
+  @Input() origin?: string;
   /**
    * Marca todos los campos del formulario principal y del modal como tocados para mostrar errores.
    */
@@ -170,9 +173,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   seleccionarDatosGeneralesArr: DatosGenerales[] = [];
   /**
    * Constructor del componente.
-   * @param fb FormBuilder para crear formularios.
+   * @param fb FormBuilder para crear formularios reactivos.
    * @param validacionesService Servicio para validaciones de formularios.
-   * @param tramite220402Store Almacén de estado para el trámite 220402.
+   * @param mediodetransporteService Servicio para obtener medios de transporte.
+   * @param solicitud220402Store Almacén de estado para el trámite 220402.
+   * @param solicitud220402Query Consulta de estado para el trámite 220402.
+   * @param consultaioQuery Consulta de estado general del trámite.
+   * @param cdr ChangeDetectorRef para detección de cambios manual.
    */
   constructor(
     public fb: FormBuilder,

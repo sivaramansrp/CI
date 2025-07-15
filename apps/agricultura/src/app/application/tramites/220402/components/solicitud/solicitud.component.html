@@ -1,7 +1,10 @@
 <div class="container">
   <form [formGroup]="FormSolicitud">
-
-    <ng-titulo titulo="Datos del trámite a realizar" />
+    @if(consultaDatos.parameter === "READ_PROCEDURE"){
+    <ng-titulo titulo="Datos generales" />
+    } @else {
+      <ng-titulo titulo="Datos del trámite a realizar" />
+    }
     <ng-container formGroupName="datosDelTramiteRealizar">
       <div class="row">
         <div class="col-md-4">

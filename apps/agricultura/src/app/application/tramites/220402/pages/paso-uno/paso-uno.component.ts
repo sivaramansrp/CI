@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { CapturaSolicitudeService } from '../../services/captura-solicitud.service';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
@@ -17,10 +17,29 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
   styles: ``
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
+  /**
+   * Índice de la pestaña activa. Se recibe como input y controla la navegación entre tabs.
+   */
   @Input() indice: number = 1;
+
+  /**
+   * Referencia al componente hijo de solicitud, utilizada para acceder a sus métodos y propiedades.
+   */
   @ViewChild('solicitudComp', { static: false }) solicitudComp: any;
+
+  /**
+   * Referencia al componente hijo de transporte, utilizada para acceder a sus métodos y propiedades.
+   */
   @ViewChild('transporteComp', { static: false }) transporteComp: any;
+
+  /**
+   * Referencia al componente hijo de pago de derechos, utilizada para acceder a sus métodos y propiedades.
+   */
   @ViewChild('pagoDerechoComp', { static: false }) pagoDerechoComp: any;
+
+  /**
+   * Referencia al componente hijo de destinatario, utilizada para acceder a sus métodos y propiedades.
+   */
   @ViewChild('destinatarioComp', { static: false }) destinatarioComp: any;
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
@@ -53,6 +72,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @description Selecciona una pestaña específica estableciendo el índice correspondiente.
    * @param {number} i - El índice de la pestaña a seleccionar.
    * @returns {void}
+   * @param cdr ChangeDetectorRef para detección de cambios manual.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
@@ -60,7 +80,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   constructor(
     private solocitud220402Service: CapturaSolicitudeService,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
   ) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
@@ -102,6 +123,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         if (resp) {
           this.esDatosRespuesta = true;
           this.solocitud220402Service.actualizarEstadoFormulario(resp);
+          this.cdr.detectChanges();
         }
       });
   }
