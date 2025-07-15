@@ -139,15 +139,15 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       id: [0, Validators.required],
       tipoRequisito: ['', Validators.required],
       requisito: ['', Validators.required],
-      numeroCertificadoInternacional: ['', [Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
+      numeroCertificadoInternacional: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       fraccionArancelaria: ['', Validators.required],
-      descripcionFraccion: [''],
+      descripcionFraccion: [{ value: 'test', disabled: true }, [Validators.required]],
       nico: ['', Validators.required],
-      descripcionNico: [''],
-      descripcion: ['', [Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
-      cantidadUMT: ['', [Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
+      descripcionNico: [{ value: 'test', disabled: true }, [Validators.required]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
+      cantidadUMT: ['', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       umt: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMC: ['', [Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
+      cantidadUMC: ['', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       umc: ['', Validators.required],
       especie: ['', Validators.required],
       uso: ['', Validators.required],
@@ -156,7 +156,6 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
     });
 
     this.detalleForm = this.fb.group({
-      // Detalle fields
       numeroLote: ['', [Validators.required, Validators.maxLength(16), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       colorPelaje: [''],
       edadAnimal: [''],
@@ -166,10 +165,11 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       numeroIdentificacion: [''],
       raza: [''],
       nombreCientifico: [''],
-      sexo: ['', Validators.required]
+      sexo: ['']
     });
 
     if (this.formularioSolicitud) {
+      console.log('Formulario de solicitud recibido:', this.formularioSolicitud);
       this.mercanciaForm.patchValue({
         ...this.formularioSolicitud
       });
@@ -238,13 +238,20 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * Actualmente no implementa ninguna funcionalidad, pero se puede extender en el futuro.
    */
   agregarAnimales(): void {
-    this.agregarDatosFormulario.emit(
-      {
-        formulario: this.mercanciaForm.value,
-        tablaDatos: this.sensiblesTablaDatos
-      }
-    );
-    this.ubicaccion.back();
+    if (this.mercanciaForm.invalid) {
+      this.mercanciaForm.markAllAsTouched();
+      console.log('Formulario inválido', this.mercanciaForm.errors, this.mercanciaForm.value);
+    }
+    else {
+      this.agregarDatosFormulario.emit(
+        {
+          formulario: this.mercanciaForm.value,
+          tablaDatos: this.sensiblesTablaDatos
+        }
+      );
+      this.ubicaccion.back();
+    }
+
   }
 
   /**
