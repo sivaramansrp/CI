@@ -169,7 +169,6 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
     });
 
     if (this.formularioSolicitud) {
-      console.log('Formulario de solicitud recibido:', this.formularioSolicitud);
       this.mercanciaForm.patchValue({
         ...this.formularioSolicitud
       });
@@ -238,10 +237,8 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * Actualmente no implementa ninguna funcionalidad, pero se puede extender en el futuro.
    */
   agregarAnimales(): void {
-    console.log('Formulario inválido', this.mercanciaForm.errors, this.mercanciaForm.getRawValue());
     if (this.mercanciaForm.invalid) {
       this.mercanciaForm.markAllAsTouched();
-
     }
     else {
       this.agregarDatosFormulario.emit(
