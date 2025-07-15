@@ -206,3 +206,150 @@ export const TEXTOS_ESTATICOS_PLANEACION = {
     paraca9: `Anexe el procedimiento documentado que describa el control de los gafetes oficiales para el personal que ingresa a los recintos fiscales, asegúrese de no excluir los siguientes puntos:`,
     paraca10: `Describa el proceso que debe seguir el mandatario aduanal para aplicar las evaluaciones y tener vigente sus certificaciones de actividades como:`,
   }
+
+  export const TEXTOS_ESTATICOS_VEHICULOS = {
+    paraca1: 'Dependiendo el caso se debe mantener la seguridad en los medios de transporte, tractores, contenedores, remolques y semirremolques (incluyendo vehículos de carga tipo, camioneta, pick up, furgoneta o van, entre otros), para protegerlos de la introducción de personas y/o materiales no autorizados. Por lo anterior, es necesario tener procedimientos documentados para identificar revisar, sellar y mantener la integridad de los mismos.',
+    paraca2: `De igual manera, el proceso de inspección de dichos medios de transporte, 
+    contenedores, remolques y semirremolques utilizados como Instrumentos de Tráfico 
+    Internacional, debe de incluir un procedimiento de inspecciones agrícolas para buscar 
+    plagas visibles y deficiencias estructurales graves. La contaminación por plagas se 
+    define como formas visibles de animales, insectos u otros 
+    invertebrados (vivos o muertos, en cualquier etapa del ciclo de vida, incluidos huevos, etcétera), 
+    o cualquier material orgánico de origen animal (incluidos sangre, huesos, cabello, carne, secreciones, excreciones, etcétera); 
+    plantas o productos vegetales (incluidas frutas, semillas, hojas, ramitas, raíces, corteza, etcétera); u otro material orgánico, incluidos los hongos, tierra o agua; cuando dichos productos no sean la carga declarada dentro de los Instrumentos de Tráfico Internacional.`,
+    encabezamiento1: '7.1 Uso de sellos y/o candados en contenedores y remolques.',
+    paraca3: 'En caso de utilizar sellos de alta seguridad es necesario contar con procedimientos para sellar correctamente y mantener la integridad desde el momento que salga de sus instalaciones. Se debe aplicar un sello de alta seguridad a todos los contenedores y remolques a los embarques de comercio exterior, los cuales deben cumplir o exceder la Norma ISO 17712 para sellos de alta seguridad. Por lo anterior, con el objetivo de mantener la seguridad de la cadena de suministros, el Agente Aduanal debe inspeccionar todos los vehículos de carga de forma sistemática a la entrada y salida de sus instalaciones (domésticos y de tráfico internacional), además de llevar un registro.',
+    paraca4: 'El Agente Aduanal debe contar en su caso, con un procedimiento documentado, donde se identifiquen los medios de transporte, los contenedores, remolques y/o semirremolques y sellos de alta seguridad utilizados en la cadena logística internacional, indicando de qué forma se mantiene la integridad de los mismos.',
+    paraca5: 'Por lo anterior, como uno de los mecanismos de seguridad, el Agente Aduanal, en su caso, debe utilizar los candados o sellos de alta seguridad que cumplan o excedan la Norma ISO 17712 en todos los contenedores y remolques cargados que sean objeto de comercio exterior y mantener su integridad hasta su despacho. Para ello, el Agente Aduanal debe tener procedimientos documentados para colocar correctamente los sellos de alta seguridad y verificar su integridad.',
+    paraca6: 'Los procedimientos deben incluir los pasos a seguir si se descubre que un sello está alterado, manipulado o hay un número de sello incorrecto en la documentación, los protocolos de comunicación a los socios comerciales involucrados en la cadena de suministros y la investigación del incidente de seguridad, éstas deben notificarse al personal de seguridad, socios comerciales que pueden ser parte de la cadena de suministro afectada, especialista de seguridad o contacto del Programa Operador Económico Autorizado.',
+    paraca7: 'Asimismo, en dicho procedimiento es necesario que el Agente Aduanal incluya lo relacionado a la administración de sellos de alta seguridad donde se incluya, el control, asignación, resguardo, manejo de discrepancias y destrucción de sellos y candados (este último es obligatorio siempre y cuando rompan sellos en sus instalaciones). Respecto al proveedor de los sellos y/o candados, se deberá demostrar de qué forma estos cumplen con la Norma ISO 17712 El Agente Aduanal o un supervisor de seguridad debe realizar auditorías periódicas y documentadas de los sellos y/o candados de alta seguridad, estas revisiones deben incluir la verificación del inventario de sellos y/o candados almacenados y la compulsa con los registros de inventario y los documentos de envío. También, el Agente Aduanal debe verificar periódicamente los números de sello utilizados en los medios de transporte e Instrumentos de Tráfico Internacional para corroborar que la información sea correcta.',
+    paraca8: 'En caso de contar con patio para almacenaje de vehículos de carga en las instalaciones del Agente Aduanal, los contenedores vacíos deberán ser asegurados con un candado y/o sello indicativo, o en un área segura que se encuentre resguardada y monitoreada por los sistemas de alarma y de circuito cerrado de televisión y video vigilancia.',
+    paraca9: 'Cuando se tenga que almacenar (pernocta) algún contenedor, remolque y/o semirremolque cargado, este debe encontrase en un área segura y monitoreada por los sistemas de alarma y de circuito cerrado de televisión y video vigilancia para impedir el acceso y manipulación, debiendo estar cerrado con un candado de alta seguridad.',
+    paraca10: 'Todos los procedimientos escritos deben difundirse y mantenerse a nivel operativo para que sean de fácil acceso para los empleados encargados de ejecutar las tareas arriba descritas, revisarse al menos una vez al año y actualizarse según sea necesario.',
+    paraca11: 'Anexe el procedimiento documentado para la colocación y revisión de los sellos y/o candados en los vehículos, medios de transporte, contenedores, carros de tren, remolques y/o semirremolques. Este debe incluir, entre otros aspectos de acuerdo a su operación:',
+    paraca12: 'a) Verificar que el sello o candado esté intacto y determinar si existe evidencia de manipulación indebida.Utilizar el método de inspección de VVTT:',
+    paraca13: 'b) Revisar y cotejar la documentación que contenga el número del sello o candado original y, en su caso, de los adicionales que se lleven en el traslado de la mercancía. En caso, de utilizar el sello y/o candado de reemplazo, deberá de registrarse dicho número dentro del control del Agente Aduanal. Si se identifican sellos y/o candados alterados se deben guardar para ayudar a realizar la investigación de dicho incidente o discrepancia y según corresponda reportar los sellos y/o candados comprometidos a la autoridad extranjera.',
+    paraca14: 'c) Revisar que los dispositivos de cierre, bisagras y pasadores, estén unidos al remolque o contenedor y soldados o con remache. También, pueden colocar placas protectoras en las bisagras de las puertas y/o colocar un sello/cinta adhesiva sobre al menos de cada lado. Asimismo, se debe verificar el correcto funcionamiento de las manijas, cerrojos y todos los demás mecanismos de bloqueo o cierre de los vehículos de carga para detectar manipulaciones y cualquier inconsistencia antes de colocar cualquier dispositivo de sellado.',
+    paraca15: 'd) Indicar cómo asignan y remplazan los candados de alta seguridad, en el caso de que, durante el recorrido, sea inspeccionado por alguna otra autoridad. Si se rompe un sello y/o candado en tránsito, se debe examinar la carga, registrar el número de sello y/o candado de reemplazo y el conductor debe de notificar de inmediato a los asociados de negocios cuando esto suceda, indicar quién lo rompió y proporcionar el nuevo número de sello.',
+    paraca16: '* Anexe el procedimiento documentado para el control y manejo de los sellos y/o candados. Este debe incluir, entre otros aspectos de acuerdo a su operación:',
+    encabezamiento2: '7.2 Inspección de los medios de transporte, contenedores, carros de tren, remolques y semirremolques.',
+    paraca17: 'Debe haber procedimientos establecidos para verificar la integridad física de la estructura del medio de transporte, contenedor, carros de tren, remolques y/o semirremolque utilizados como Instrumentos de Tráfico Internacional, incluso la confiabilidad de los mecanismos de cerradura de las puertas, con la finalidad de identificar compartimientos naturales u ocultos.',
+    paraca18: 'Las inspecciones de los medios de transporte o vehículos de carga, contenedores y remolques (de carga terrestre) deben ser sistemáticas y efectuarse a la entrada y salida de la empresa y en su caso, en el punto de carga de las mercancías; y si la infraestructura lo permite, antes de llegar a la aduana de despacho utilizando el método de inspección de VVTT. Deberá llevarse un registro de estas inspecciones, en un área de acceso controlado y realizarse en un lugar monitoreado por los sistemas de alarma y de circuito cerrado de televisión y video vigilancia dicho sistema debe cubrir el proceso de inspecciín en su totalidad.',
+    paraca19: 'El procedimiento documentado para su inspección debe incluir de manera enunciativa, más no limitativa, los siguientes puntos de revisión:',
+    paraca20: 'Para los medios de transporte con remolque o compartimiento de carga integrado, deberá adicionarse a los puntos de medios de transporte, lo indicado en el apartado de Remolques.',
+    paraca21: 'De igual manera, antes de cargar los medios de transporte, contenedores, carros de tren, remolques y semirremolques utilizados como Instrumentos de Tráfico Internacional, deben pasar por inspecciones agrícolas y de seguridad para garantizar que sus estructuras no hayan sido modificadas para ocultar contrabando o que hayan sido contaminadas con plagas agrícolas visibles, mantener un registro y estar respaldadas por un procedimiento documentado. Si se encuentra contaminación visible de plagas durante la inspección o transporte de mercancías objeto de comercio exterior, se debe limpiar (lavar, aspirar, etcétera) para eliminar dicha contaminación. El conductor debe asegurar antes del cruce, que la cabina se encuentre limpia y libre de basura.',
+    paraca22: ' Anexar el procedimiento documentado para llevar a cabo la inspección de seguridad y agrícola de los medios de transporte, contenedores, remolques y semirremolques. Este debe incluir, entre otros aspectos de acuerdo a su operación:',
+    paraca23: ` Anexar el formato establecido para la inspección de medios de transporte o vehículos de carga, contenedores, carros de tren, remolques y/o semirremolques.`,
+    paraca24: 'Los formatos de inspección de seguridad y agrícola podrán estar firmados por el supervisor para corroborar su información y ser parte de la documentación de importación y exportación.',
+    paraca25: 'La documentación debe conservarse durante un año para una investigación en caso de ocurrir algún incidente de seguridad, así como para demostrar el cumplimiento continuo de estos requisitos de inspección.',
+  }
+
+  export const TEXTOS_ESTATICOS_SEGURIDAD_DEL_PERSONAL = {
+    encabezamiento1: '8.1 Verificación de antecedentes laborales.',
+    paraca1: `Se debe contar con procedimientos documentados para el registro y evaluación de personas que desean obtener un empleo con el Agente Aduanal y establecer métodos para realizar verificaciones periódicas de los empleados actuales.`,
+    paraca2: `También, deben existir programas de capacitación continuos para el personal administrativo y operativo difusión de las políticas de seguridad del Agente Aduanal, así como las consecuencias y acciones a tomar en caso de cualquier falta o incidente de seguridad.`,
+    paraca3: `El Agente Aduanal debe tener procedimientos documentados para investigar y verificar la información asentada en el currículo, antecedentes criminales (si la legislación y las políticas de la empresa lo permiten) y solicitud de los candidatos con posibilidad de empleo, de conformidad con la legislación local, ya sea por cuenta propia o por medio de una empresa externa.`,
+    paraca4: `De igual forma, para los cargos que por su sensibilidad así lo requieran y afecten la seguridad de los embarques que sean objeto de comercio exterior, de conformidad con su análisis de riesgo efectuado previamente, deberán considerar el solicitar requisitos más estrictos para su contratación y durante su permanencia en el trabajo cuando sean contratados, los cuales se deberán realizar de manera periódica por lo menos una vez al año. Respecto al personal que ya labora en la compañía, se deben realizar investigaciones periódicas en función de las actividades y/o la sensibilidad del puesto del empleado.`,
+    paraca5: `Toda la información referente al personal deberá mantenerse en expedientes personales, mismos que deberán tener un acceso restringido.`,
+    paraca6: `El Agente Aduanal puede considerar los resultados de las verificaciones de antecedentes de los candidatos, según lo permita la legislación vigente para tomar decisiones de contratación. Las verificaciones de antecedentes no se limitan a la verificación de identidad y antecedentes penales. En áreas de mayor riesgo, puede justificar investigaciones más profundas.`,
+    paraca7: `Anexe el procedimiento documentado para la verificación de antecedentes laborales, el cual debe incluir los siguientes puntos:`,
+    encabezamiento2: '8.2 Procedimiento para baja del personal.',
+    paraca8: `Deben existir procedimientos documentados para la baja del personal, en los que se incluya la entrega de identificaciones, y cualquier otro artículo que se le haya proporcionado para realizar sus funciones (llaves, uniformes, gafetes y/o credenciales, equipos informáticos, contraseñas, herramientas, etcétera). Asimismo, este procedimiento debe incluir la baja en aquellos sistemas tanto informáticos como de accesos, entre otros que pudieran existir.`,
+    encabezamiento3: '8.3 Administración de personal.',
+    paraca9: `El Agente Aduanal debe mantener un sistema, control o base de datos de empleados activos actualizada. Así mismo, debe realizar y mantener actualizados los registros de afiliación a instituciones de seguridad social y demás registros legales de orden laboral.`,
+    paraca10: `En el caso de que el Agente Aduanal cuente con personal contratado por sus socios comerciales y labore dentro de las instalaciones, deberá asegurarse de que cumplan con los requerimientos establecidos para el resto de sus empleados.`,
+    paraca11: `Este personal, deberá estar contratado de acuerdo las leyes y reglamentos de orden laboral vigentes.`,
+    paraca12: `Indique si el Agente Aduanal cuenta con un sistema, control o base de datos actualizada, tanto del personal contratado directamente, como aquel contratado a través de una empresa proveedora de servicios y asegúrese que incluya de forma enunciativa mas no limitativa los siguientes puntos:`,
+  }
+
+  export const TEXTOS_ESTATICOS_SEGURIDAD_DE_LA = {
+    paraca1: `Deben existir medidas de prevención para mantener la confidencialidad
+     e integridad de la información y documentación generada por los sistemas de la empresa, 
+     incluyendo aquellos utilizados para el intercambio de información con otros integrantes 
+     de la cadena de suministros. Asimismo, deben existir políticas y/o procedimientos 
+     integrales documentados para proteger los sistemas de Tecnología de la Información, 
+     que incluyan las medidas contra su mal uso, además de identificar y priorizar acciones 
+     para reducir el riesgo de la ciberseguridad. También, podrían abordar cómo un miembro 
+     comparte información sobre amenazas de seguridad cibernética con el gobierno y otros 
+     socios comerciales.`,
+    encabezamiento1: '9.1 Clasificación y manejo de documentos.',
+    paraca2: `Deben existir procedimientos para clasificar documentos de acuerdo a su sensibilidad y/o importancia. La documentación sensible e importante debe ser almacenada en un área segura que solamente permita su acceso a personal autorizado. Se debe identificar el tiempo de vida útil de la documentación y establecer procedimientos para su destrucción de conformidad a la legislación correspondiente.`,
+    paraca4: `Alguna de la información sensible a la que hace referencia el párrafo anterior y dependiendo el caso puede ser:`,
+    paraca3: `El Agente Aduanal deberá conducir revisiones de forma regular para verificar los accesos a la información y asegurarse de que no sean utilizados de manera indebida.`,
+    encabezamiento2: '9.2 Seguridad de la tecnología de la información.',
+    paraca5: `Para proteger los sistemas de Tecnologías de la Información contra 
+    amenazas comunes de ciberseguridad, el Agente Aduanal debe contar con suficiente 
+    protección para preservar la confidencialidad, integridad, disponibilidad, 
+    auditabilidad de la información que se genere derivado de las operaciones 
+    de comercio exterior que realice entre las autoridades, sus clientes y demás actores. 
+    Asimismo, debe impulsar la seguridad en la infraestructura de 
+    Tecnologías de la Información (software y hardware) 
+    contra "malware" (virus, spyware, gusanos, troyanos, etcétera), "baiting", "phishing" e 
+    intrusiones internas/externas (firewalls) en los sistemas informáticos de las compañías. 
+    De igual manera, las empresas deben asegurarse de que su software de seguridad esté activo y reciba actualizaciones periódicas.`,
+    paraca6: `En el caso de los sistemas automatizados y equipos de cómputo, 
+    se deben utilizar cuentas individuales que exijan un cambio periódico de la contraseña. 
+    Con el fin de proteger la confidencialidad, integridad y disposición de la información, 
+    el Agente Aduanal debe tener políticas, procedimientos y normas de tecnología de informática 
+    establecidas que se deben comunicar mediante un programa de capacitación para todos los 
+    empleados que manejan equipos de cómputo y sistemas, que incluya temas para prevenir 
+    ataques a través de la ingeniería social y todas aquellas amenazas a 
+    los que están expuestos (malware, baiting, phishing, etcétera). 
+    Los agentes aduanales que permitan a sus empleados conectarse de forma remota a una red, 
+    deben emplear tecnologías seguras, como redes privadas virtuales (VPN), para permitir que los empleados accedan a la intranet de la empresa de forma segura cuando se encuentran fuera de la oficina, así como procedimientos diseñados para evitar el acceso remoto de usuarios no autorizados.`,
+    paraca7: `Por lo anterior, deben existir procedimientos escritos e infraestructura para 
+    proteger al Agente Aduanal contra pérdidas, robo, fuga, hackeo y/o secuestro de información, 
+    esto incluye el procedimiento para la recuperación (o reemplazo) de los sistemas y/o datos de 
+    Tecnología de la Información, así como un sistema o software establecido para identificar el 
+    abuso de los Sistemas de Tecnologías de la Información y detectar el acceso 
+    inapropiado y/o la manipulación indebida o alteración de los datos comerciales y del negocio,
+     así como un procedimiento escrito para la aplicación de medidas disciplinarias apropiadas a 
+     todos los infractores.`,
+    paraca8: `La información sensible debe estar protegida a través de estas políticas de seguridad informática, además de disponer de copias de respaldo. El acceso a los Sistemas de Tecnología de la Información debe protegerse contra la infiltración mediante el uso de contraseñas seguras, que incluyan frases u otras formas de autenticación. Los usuarios de dichos sistemas de Tecnologías de la Información, deben salvaguardar y no compartir sus claves de accesos o contraseñas. Toda la infraestructura de Tecnología de la Información debe estar protegida físicamente contra el acceso no autorizado.`,
+    paraca9: `Si se produce una filtración de datos u otro evento inesperado que derive en la pérdida de datos y/o equipos, los procedimientos deben incluir la recuperación o reemplazo de los sistemas y/o datos de Tecnologías de la Información.`,
+    paraca10: `Anexe el procedimiento para la recuperación o reemplazo de los sistemas y/o datos de Tecnologías de la Información, que incluya cómo respalda y garantiza la seguridad de su información, además de protegerla de posibles pérdidas. Asegúrese de incluir los siguientes puntos:`,
+  }
+
+  export const TEXTOS_ESTATICOS_CONCIENTIZACION = {
+    paraca1: 'Debe contar con un programa documentado de concientización sobre amenazas establecido, diseñado y actualizado por el Comité de Seguridad para reconocer y crear conciencia sobre amenazas de terroristas y contrabandistas, en cada punto de la cadena de suministros. El programa de capacitación debe ser integral y cubrir todos los requisitos de seguridad del Programa Operador Económico Autorizado.',
+    paraca2: 'Los empleados administrativos y operativos deben conocer los procedimientos establecidos por el Agente Aduanal para considerar una situación de riesgo y saber cómo denunciarla. Se debe brindar capacitación específica a los empleados que por sus funciones se encuentran en contacto directo con las mercancías y/o los medios de transporte, así como a los empleados que se encuentren en áreas críticas y/o sensibles determinadas bajo su análisis de riesgo (áreas de seguridad, embarques y recibos, en su caso., así como también, aquellos que reciben y abren mensajería y paquetería, entre otros).',
+    encabezamiento1: '10.1 Capacitación y concientización sobre amenazas.',
+    paraca3: 'El Agente Aduanal debe contar con un programa de capacitación y concientización de las políticas de seguridad en la cadena de suministro, dirigido a todos sus empleados (operativos y administrativos) y, adicionalmente poner a su disposición material informativo respecto a los procedimientos establecidos por el Agente Aduanal para considerar una situación que amenace su seguridad y saber cómo denunciarla.',
+    paraca4: 'El Agente Aduanal debe contar con un programa de capacitación y concientización de las políticas de seguridad en la cadena de suministro, dirigido a todos sus empleados (operativos y administrativos) y, adicionalmente poner a su disposición material informativo respecto a los procedimientos establecidos por el Agente Aduanal para considerar una situación que amenace su seguridad y saber cómo denunciarla.',
+    paraca5: 'Estos programas de capacitación deben fomentar la participación activa de los empleados en los controles y mecanismos de seguridad, el Agente Aduanal debe asegurarse que todos sus empleados conocen, comprenden y aplican las políticas de seguridad en la cadena de suministro, así como mantener registros de todos los esfuerzos de capacitación que haya brindado, y la relación de quienes participaron en ellas.',
+    paraca6: `Asimismo, y con el propósito de mantener la integridad de las operaciones y 
+    procesos relacionados con el despacho aduanero de mercancías el personal deberá recibir 
+    capacitación específica conforme a sus funciones. Los temas que deben incluir son los 
+    siguientes: mantener la integridad de la carga, realizar la revisión de contenedores, 
+    remolques y/o semirremolques con fines agrícolas y de seguridad (en su caso), 
+    recepción y revisión de mensajería y paquetería, prevención de operaciones con 
+    recursos de procedencia ilícita (lavado dinero, financiamiento al terrorismo, etcétera), 
+    cómo, reconocer y cómo reportar conspiraciones internas, protección de los controles de 
+    acceso, así como capacitación referente a contrabando, robo de mercancía, colocación de 
+    sellos,control de sellos de alta seguridad (método de inspección VVTT), prevención sobre 
+    contaminación visible de plagas, uso de gafetes oficiales, etcétera. Estos temas deben 
+    establecerse como parte de la inducción de nuevos empleados y mantener periódicamente 
+    programas de actualización. La capacitación de actualización debe realizarse periódicamente, 
+    después de un incidente de seguridad y cuando haya cambios en los procedimientos del Agente 
+    Aduanal.`,
+    paraca7: `Aunado a los programas de capacitación en seguridad, se debe incluir un programa
+     de concientización sobre consumo de alcohol y drogas. También, difundir y capacitar al 
+     personal sobre las políticas, procedimientos y normas de ciberseguridad del 
+     Agente Aduanal (robo, fuga, hackeo y/o secuestro de información), incluyendo el acceso al 
+     equipo de cómputo y sistemas mediante contraseñas o frases. El personal que opera y 
+     administra los sistemas de tecnología de seguridad debe recibir capacitación 
+     relacionada a su operación y mantenimiento, incluyendo autoformación a través de manuales 
+     operativos y otros métodos. Estos temas deben establecerse como parte de la inducción de 
+     nuevos empleados y mantener periódicamente programas de actualización.`,
+    paraca8: `Los programas de capacitación deben fomentar la participación activa de los 
+    empleados en los controles y mecanismos de seguridad, así como mantener registros de 
+    todos los esfuerzos de capacitación que haya brindado el Agente Aduanal y la relación de 
+    quienes participaron en ellos (videos, fotografías, minutas, listas de asistencia, 
+    intranet u otro sistema, material didáctico, presentaciones en PowerPoint, folletos, etcétera).
+     Los registros de capacitación deben incluir la fecha de la capacitación, los nombres de los
+      asistentes, los temas impartidos, además de tener medidas para verificar que la capacitación
+       brindada cumplió con todos los objetivos de capacitación.`,
+    paraca9: `Explique brevemente en qué consiste el programa de capacitación.`,
+    paraca10: 'En caso de prestar el servicio de transporte, indique las capacitaciones que imparte para realizar la revisión a los vehículos de carga, contenedores, remolques y/o semirremolques con fines agrícolas y de seguridad debe incluir los siguientes temas:'
+
+  }
