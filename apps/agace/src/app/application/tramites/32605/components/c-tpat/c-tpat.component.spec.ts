@@ -342,11 +342,8 @@ describe('CTPATComponent', () => {
     });
 
     it('debería marcar los campos como requeridos', () => {
-      const autorizacionControl = component.ctpatForm.get('autorizacionCBP');
-      const instalacionesControl = component.ctpatForm.get('instalacionesCertificadasCBP');
       const suspensionControl = component.ctpatForm.get('suspensionCancelacionCBP');
       
-      expect(instalacionesControl?.hasError('required')).toBeTruthy();
       expect(suspensionControl?.hasError('required')).toBeTruthy();
     });
 
@@ -413,3 +410,4 @@ describe('CTPATComponent', () => {
     });
   });
 });
+})

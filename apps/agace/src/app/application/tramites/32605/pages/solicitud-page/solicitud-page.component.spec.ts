@@ -7,6 +7,7 @@ import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('SolicitudPageComponent', () => {
   let component: SolicitudPageComponent;
@@ -27,7 +28,8 @@ describe('SolicitudPageComponent', () => {
         PasoTresComponent,
         BtnContinuarComponent,
         SolicitudPageComponent,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        HttpClientModule
       ],
       declarations: [],
       providers: [{ provide: WizardComponent, useValue: wizardMock }],
