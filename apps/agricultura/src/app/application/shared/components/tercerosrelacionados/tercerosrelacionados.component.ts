@@ -107,6 +107,11 @@ export class TercerosrelacionadosComponent {
  * @type {TercerosrelacionadosTable[]}
  */
   @Input() cuerpoTablaExportador: TercerosrelacionadosdestinoTable[] = [];
+  /**
+   * Referencia al modal utilizado en el componente.
+   * Permite abrir y cerrar el modal según sea necesario.
+   * @type {ModalComponent}
+   */
   @ViewChild('modalRef', { static: false }) modalRef!: ModalComponent;
 
 
@@ -150,8 +155,15 @@ export class TercerosrelacionadosComponent {
     { encabezado: 'Domicilio', clave: (fila) => fila.razonSocial, orden: 4 },
     { encabezado: 'País', clave: (fila) => fila.pais, orden: 5 },
   ];
-
+  /**
+    * Evento emitido para abrir el modal de exportador.
+    * @type {abrirModalDestinatario}
+    */
   @Output() abrirModalDestinatario = new EventEmitter<void>();
+  /**
+   * Evento emitido para abrir el modal de exportador.
+   * @type {EventEmitter<void>}
+   */
   @Output() abrirModalExportador = new EventEmitter<void>();
 
   /**

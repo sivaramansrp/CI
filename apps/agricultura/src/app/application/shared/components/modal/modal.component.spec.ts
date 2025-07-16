@@ -7,14 +7,10 @@ import { ModalComponent } from './modal.component';
 describe('ModalComponent', () => {
   let component: ModalComponent;
   let fixture: ComponentFixture<ModalComponent>;
-
-  // Spy object for the ngx-bootstrap modal
   const MOCK_MODAL = {
     show: jest.fn(),
     hide: jest.fn(),
   } as unknown as ModalDirective;
-
-  // Spy container for ViewContainerRef
   const MOCK_CONTAINER = {
     clear: jest.fn(),
     createComponent: jest.fn(),
@@ -25,14 +21,12 @@ describe('ModalComponent', () => {
       imports: [
         CommonModule,
         ModalModule.forRoot(),
-        ModalComponent, // standalone component
+        ModalComponent,
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ModalComponent);
     component = fixture.componentInstance;
-
-    // Override the @ViewChild properties
     (component as any).modal = MOCK_MODAL;
     (component as any).container = MOCK_CONTAINER;
 
@@ -44,7 +38,6 @@ describe('ModalComponent', () => {
   });
 
   it('loadComponent clears container and creates a component without inputs', () => {
-    // Declare the dummy class here
     class TestComp { }
 
     const MOCK_REF = { instance: {}, destroy: jest.fn() };
@@ -56,12 +49,10 @@ describe('ModalComponent', () => {
     expect(MOCK_CONTAINER.createComponent).toHaveBeenCalledWith(
       TestComp as Type<any>
     );
-    // internal componentRef should be set
     expect((component as any).componentRef).toBe(MOCK_REF);
   });
 
   it('loadComponent assigns inputs to the new instance', () => {
-    // Dummy with a foo property
     class TestCompWithInput {
       public foo?: string;
     }
@@ -79,7 +70,6 @@ describe('ModalComponent', () => {
   });
 
   it('abrir() clears, creates, assigns inputs, subscribes and shows modal', () => {
-    // Dummy that exposes a cerrar EventEmitter-like API
     class TestCompWithCerrar {
       public foo?: string;
       public cerrar = { subscribe: (cb: () => void) => cb() };

@@ -102,7 +102,23 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * @type {Sensible[]}
    */
   public sensiblesTablaSeleccionada: Sensible[] = [];
+  /**
+   * Evento que se emite para cerrar el componente de detalles de animales vivos.
+   * Permite al componente padre manejar la acción de cierre del modal o sección.
+   * 
+   * @type {EventEmitter<void>}
+   */
   @Output() cerrar = new EventEmitter<void>();
+  /**
+   * @ignore
+   * @description
+   * Evento emitido por el componente AnimalesVivoDetallesComponent.
+   * 
+   * Este EventEmitter se utiliza para notificar a los componentes padres cuando ocurre una acción relevante
+   * dentro del componente de detalles de animales vivos.
+   * 
+   * @event
+   */
   @Output() animalesVivoDetallesComponent = new EventEmitter<void>();
   /**
    * Constructor del componente.

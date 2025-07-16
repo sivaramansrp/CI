@@ -18,7 +18,7 @@ import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
   standalone: true,
   imports: [CommonModule, ModalModule],
   templateUrl: './modal.component.html',
-  styleUrl: './modal.component.css',
+  styleUrl: './modal.component.scss',
 })
 export class ModalComponent implements OnDestroy {
   /**
@@ -35,6 +35,11 @@ export class ModalComponent implements OnDestroy {
     read: ViewContainerRef,
     static: true,
   })
+
+  /**
+   * Bandera para indicar si el modal debe mostrarse.
+   * @property {boolean} container
+   */
   container!: ViewContainerRef;
 
   /**
