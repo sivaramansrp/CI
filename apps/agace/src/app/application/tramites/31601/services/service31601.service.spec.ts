@@ -185,7 +185,17 @@ describe('Solocitud31601Service', () => {
       numeroDatos: '',
       bimestres: '',
       fechaPago: '',
-      acredite: ''
+      acredite: '',
+      principales: '',
+      municipio: '',
+      instalacion: '',
+      federativa: '',
+      registro: '',
+      colonia: '',
+      postal: '',
+      proceso: '',
+      inmueble: '',
+      federativaSeleccionada: ''
     };
 
     service.actualizarEstadoFormulario(datos);
