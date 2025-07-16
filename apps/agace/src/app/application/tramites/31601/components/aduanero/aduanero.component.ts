@@ -516,6 +516,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
       ],
       bimestre: [this.solicitudState?.bimestre],
       senaleSi: [this.solicitudState?.senaleSi, Validators.required],
+      acredite: [this.solicitudState?.acredite, Validators.required],
       seMomento: [this.solicitudState?.seMomento, Validators.required],
       cumplir: [this.solicitudState?.cumplir, Validators.required],
       indique: [this.solicitudState?.indique, Validators.required],
@@ -876,11 +877,11 @@ openModifyModal(): void {
       this.filaSeleccionadaIndex = INDEX; 
     }
 
-    this.preOperativeForm.patchValue({
+    this.preOperativeForm.patchValue({      
       rfc: this.filaSeleccionadaMencione.rfc,
       razonSocial: this.filaSeleccionadaMencione.social,
       numeroEmpleados: this.filaSeleccionadaMencione.noumero,
-      empleadosPropios: this.filaSeleccionadaMencione.bimestre,
+      empleadosPropios: this.filaSeleccionadaMencione.bimestre,     
     });
 
     this.modalInstance?.show();
@@ -1132,8 +1133,8 @@ addNewMencioneItem(): void {
         : (this.datosTablaMencione.length + 1).toString(),
       rfc: this.preOperativeForm.get('rfc')?.value,
       social: this.preOperativeForm.get('razonSocial')?.value,
-      noumero: this.preOperativeForm.get('numeroEmpleados')?.value,
-      bimestre: this.preOperativeForm.get('bimestreValor')?.value,
+      noumero: this.preOperativeForm.get('numeroEmpleados')?.value,     
+      bimestre: this.comboBimestresIDC.find(item => item.id === Number(this.preOperativeForm.value.bimestreValor))?.descripcion ?? '',
     };
 
     if (ESDICION && this.filaSeleccionadaIndex !== null) {
