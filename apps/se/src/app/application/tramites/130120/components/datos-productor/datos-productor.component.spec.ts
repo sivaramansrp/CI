@@ -57,7 +57,7 @@ describe('DatosProductorComponent', () => {
     component.consultaQuery = component.consultaQuery || {};
     component.consultaQuery.selectConsultaioState$ = observableOf({});
     await component.ngOnInit();
-    // expect(component.initActionFormBuild).toHaveBeenCalled();
+    expect(component.initActionFormBuild).toHaveBeenCalled();
   });
 
   it('should run #initActionFormBuild()', async () => {
@@ -73,7 +73,7 @@ describe('DatosProductorComponent', () => {
       domicilio: {}
     };
     component.initActionFormBuild();
-    // expect(component.fb.group).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #onTipoPersonaProductorChange()', async () => {
@@ -92,12 +92,6 @@ describe('DatosProductorComponent', () => {
     component.store.setPrimer_apellido = jest.fn();
     component.store.setSegundo_apellido = jest.fn();
     component.onTipoPersonaProductorChange({});
-    // expect(component.datosProductor.get).toHaveBeenCalled();
-    // expect(component.store.setPersona_tipo).toHaveBeenCalled();
-    // expect(component.store.setDenominación_razón_social).toHaveBeenCalled();
-    // expect(component.store.setPersonales_nombre).toHaveBeenCalled();
-    // expect(component.store.setPrimer_apellido).toHaveBeenCalled();
-    // expect(component.store.setSegundo_apellido).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -105,8 +99,8 @@ describe('DatosProductorComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });

@@ -129,7 +129,7 @@ export class DatosExportadorComponent implements OnInit, OnDestroy {
       persona_tipo: [this.datosState.datosExportador.persona_tipo],
       personales_nombre: [this.datosState.datosExportador.personales_nombre, Validators.required],
       primer_apellido: [this.datosState.datosExportador.primer_apellido, Validators.required],
-      segundo_apellido: [this.datosState.datosExportador.seguna_apellido, Validators.required],
+      segundo_apellido: [this.datosState.datosExportador.segundo_apellido, Validators.required],
       denominación_razón_social: [this.datosState.datosExportador.denominación_razón_social_exportador, [Validators.required, Validators.maxLength(250)]],
       domicilio: [this.datosState.datosExportador.domicilio, [Validators.required, Validators.maxLength(200)]],
       observaciones: [this.datosState.datosExportador.observaciones, [Validators.required, Validators.maxLength(4000)]],

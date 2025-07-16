@@ -96,10 +96,9 @@
                 Domicilio:
               </label>
               <textarea
-                class="form-control"
+                class="form-control text_area"
                 formControlName="domicilio"
                 rows="3"
-                style="height: 100%; resize: none;"
                 [required]="true"
                 maxlength="200"
                 [disabled]="esFormularioSoloLectura"
@@ -115,12 +114,11 @@
                 Observaciones:
               </label>
               <textarea
-                class="form-control text-area-size"
+                class="form-control text_area"
                 [disabled]="esFormularioSoloLectura"
                 id="observaciones"
                 formControlName="observaciones"
                 rows="3"
-                style="height: 100%; resize: none;"
                 [required]="true"
                 maxlength="4000"
                 (change)="setValoresStore(datosExportador, 'observaciones', 'setExportadorObservaciones')"
@@ -159,11 +157,10 @@
                 Domicilio:
               </label>
               <textarea
-                class="form-control text-area-size"
+                class="form-control text_area"
                 id="domicilio"
                 formControlName="domicilio"
                 rows="3"
-                style="height: 100%; resize: none;"
                 [required]="true"
                 maxlength="200"
                 [disabled]="esFormularioSoloLectura"
@@ -179,12 +176,11 @@
                 Observaciones:
               </label>
               <textarea
-                class="form-control text-area-size"
+                class="form-control text_area"
                 id="observaciones"
                 formControlName="observaciones"
                 [disabled]="esFormularioSoloLectura"
                 rows="3"
-                style="height: 100%; resize: none;"
                 [required]="true"
                 maxlength="4000"
                 (change)="setValoresStore(datosExportador, 'observaciones', 'setExportadorObservaciones')"

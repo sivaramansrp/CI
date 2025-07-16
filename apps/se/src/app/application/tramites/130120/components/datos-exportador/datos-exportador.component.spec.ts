@@ -93,7 +93,7 @@ describe('DatosExportadorComponent', () => {
       persona_tipo: 'Física',
       personales_nombre: '',
       primer_apellido: '',
-      seguna_apellido: '',
+      segundo_apellido: '',
       denominación_razón_social: '',
       domicilio: '',
     },
@@ -101,7 +101,7 @@ describe('DatosExportadorComponent', () => {
       persona_tipo: 'Física',
       personales_nombre: '',
       primer_apellido: '',
-      seguna_apellido: '',
+      segundo_apellido: '',
       razón_social: '',
       denominación_razón_social_exportador: '',
       domicilio: '',
@@ -130,16 +130,14 @@ describe('DatosExportadorComponent', () => {
       estadoDeTramite: '',
       readonly: false,
       create: false,
-      update: false, // Add missing property with mock value
+      update: false, 
       consultaioSolicitante: {
         folioDelTramite: '',
         fechaDeInicio: '',
         estadoDelTramite: ''
-      }, // Add required properties for type compatibility
-      // Add any other required properties with mock values
+      }, 
     });
     await component.ngOnInit();
-    // expect(component.initActionFormBuild).toHaveBeenCalled();
   });
 
   it('should run #initActionFormBuild()', async () => {
@@ -150,14 +148,13 @@ describe('DatosExportadorComponent', () => {
       persona_tipo: '',
       personales_nombre: '',
       primer_apellido: '',
-      seguna_apellido: '',
+      segundo_apellido: '',
       razón_social: '',
       denominación_razón_social_exportador: '',
       domicilio: '',
       observaciones: ''
     };
     component.initActionFormBuild();
-    // expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #onTipoPersonaExportadorChange()', async () => {

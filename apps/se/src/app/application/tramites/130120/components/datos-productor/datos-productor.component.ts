@@ -131,7 +131,7 @@ export class DatosProductorComponent implements OnInit, OnDestroy{
       persona_tipo: [this.datosState.datosProductor.persona_tipo],
       personales_nombre: [this.datosState.datosProductor.personales_nombre,Validators.required],
       primer_apellido: [this.datosState.datosProductor.primer_apellido,Validators.required],
-      segundo_apellido: [this.datosState.datosProductor.seguna_apellido,Validators.required],
+      segundo_apellido: [this.datosState.datosProductor.segundo_apellido,Validators.required],
       denominación_razón_social: [this.datosState.datosProductor.denominación_razón_social,Validators.required],
       domicilio: [this.datosState.datosProductor.domicilio, [Validators.required, Validators.maxLength(200)]],
     });

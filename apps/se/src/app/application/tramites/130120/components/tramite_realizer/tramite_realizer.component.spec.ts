@@ -101,7 +101,7 @@ describe('TramiteRealizerComponent', () => {
       persona_tipo: 'Física',
       personales_nombre: '',
       primer_apellido: '',
-      seguna_apellido: '',
+      segundo_apellido: '',
       denominación_razón_social: '',
       domicilio: '',
     },
@@ -109,7 +109,7 @@ describe('TramiteRealizerComponent', () => {
       persona_tipo: 'Física',
       personales_nombre: '',
       primer_apellido: '',
-      seguna_apellido: '',
+      segundo_apellido: '',
       razón_social: '',
       denominación_razón_social_exportador: '',
       domicilio: '',
@@ -140,18 +140,15 @@ describe('TramiteRealizerComponent', () => {
       estadoDeTramite: '',
       readonly: false,
       create: false,
-      update: false, // Add missing property with mock value
+      update: false,
       consultaioSolicitante: {
         folioDelTramite: '',
         fechaDeInicio: '',
         estadoDelTramite: ''
-      }, // Add required properties for type compatibility
-      // Add any other required properties with mock values
+      },
     });
     component.ngOnInit();
-    // expect(component.initActionFormBuild).toHaveBeenCalled();
-    // expect(component.obtenerRegimenSelectList).toHaveBeenCalled();
-    // expect(component.obtenerClassificionRegimenSelectList).toHaveBeenCalled();
+    expect(component.initActionFormBuild).toHaveBeenCalled();
   });
 
   it('should run #initActionFormBuild()', async () => {
@@ -162,7 +159,7 @@ describe('TramiteRealizerComponent', () => {
       classificion_regimen: ''
     };
     component.initActionFormBuild();
-    // expect(component.fb.group).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
   });
   
 
@@ -171,14 +168,14 @@ describe('TramiteRealizerComponent', () => {
     component.permisoImportacionService = component.permisoImportacionService || {};
     component.permisoImportacionService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerRegimenSelectList();
-    // expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
+    expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
   it('should run #obtenerClassificionRegimenSelectList()', async () => {
     component.permisoImportacionService = component.permisoImportacionService || {};
     component.permisoImportacionService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerClassificionRegimenSelectList();
-    // expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
+    expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -186,8 +183,8 @@ describe('TramiteRealizerComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });

@@ -57,7 +57,7 @@ describe('DocumentoExportacionComponent', () => {
     component.consultaQuery = component.consultaQuery || {};
     component.consultaQuery.selectConsultaioState$ = observableOf({});
     await component.ngOnInit();
-    // expect(component.initActionFormBuild).toHaveBeenCalled();
+    expect(component.initActionFormBuild).toHaveBeenCalled();
   });
 
   it('should run #initActionFormBuild()', async () => {
@@ -74,7 +74,7 @@ describe('DocumentoExportacionComponent', () => {
       precio_unitario_usd: {}
     };
     component.initActionFormBuild();
-    // expect(component.fb.group).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #fechaDocumento()', async () => {
@@ -83,8 +83,6 @@ describe('DocumentoExportacionComponent', () => {
     component.store = component.store || {};
     component.store.setFecha_documento = jest.fn();
     component.fechaDocumento({});
-    // expect(component.datosExporta.patchValue).toHaveBeenCalled();
-    // expect(component.store.setFecha_documento).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -92,8 +90,8 @@ describe('DocumentoExportacionComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });

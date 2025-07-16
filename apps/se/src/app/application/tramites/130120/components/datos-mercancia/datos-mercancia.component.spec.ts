@@ -70,15 +70,6 @@ describe('DatosMercanciaComponent', () => {
     component.consultaQuery = component.consultaQuery || {};
     component.consultaQuery.selectConsultaioState$ = observableOf({});
     await component.ngOnInit();
-    // expect(component.initActionFormBuild).toHaveBeenCalled();
-    // expect(component.ObtenerTipoEntradaOpcion).toHaveBeenCalled();
-    // expect(component.ObtenerFraccionOpcion).toHaveBeenCalled();
-    // expect(component.obtenerNicoOpcion).toHaveBeenCalled();
-    // expect(component.obtenerUmtOpcion).toHaveBeenCalled();
-    // expect(component.obtenerUmcOpcion).toHaveBeenCalled();
-    // expect(component.obtenerMonedaComercializacionOpcion).toHaveBeenCalled();
-    // expect(component.obternerPaisExportadorOpcion).toHaveBeenCalled();
-    // expect(component.obtenerPaisOrigenOpcion).toHaveBeenCalled();
   });
 
   it('should run #initActionFormBuild()', async () => {
@@ -109,63 +100,63 @@ describe('DatosMercanciaComponent', () => {
       valor_total_factura_usd: {}
     };
     component.initActionFormBuild();
-    // expect(component.fb.group).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #ObtenerTipoEntradaOpcion()', async () => {
     component.permisoImportacionService = component.permisoImportacionService || {};
     component.permisoImportacionService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.ObtenerTipoEntradaOpcion();
-    // expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
+    expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
   it('should run #ObtenerFraccionOpcion()', async () => {
     component.permisoImportacionService = component.permisoImportacionService || {};
     component.permisoImportacionService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.ObtenerFraccionOpcion();
-    // expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
+    expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
   it('should run #obtenerNicoOpcion()', async () => {
     component.permisoImportacionService = component.permisoImportacionService || {};
     component.permisoImportacionService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerNicoOpcion();
-    // expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
+    expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
   it('should run #obtenerUmtOpcion()', async () => {
     component.permisoImportacionService = component.permisoImportacionService || {};
     component.permisoImportacionService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerUmtOpcion();
-    // expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
+    expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
   it('should run #obtenerUmcOpcion()', async () => {
     component.permisoImportacionService = component.permisoImportacionService || {};
     component.permisoImportacionService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerUmcOpcion();
-    // expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
+    expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
   it('should run #obtenerMonedaComercializacionOpcion()', async () => {
     component.permisoImportacionService = component.permisoImportacionService || {};
     component.permisoImportacionService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerMonedaComercializacionOpcion();
-    // expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
+    expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
   it('should run #obternerPaisExportadorOpcion()', async () => {
     component.permisoImportacionService = component.permisoImportacionService || {};
     component.permisoImportacionService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.obternerPaisExportadorOpcion();
-    // expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
+    expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
   it('should run #obtenerPaisOrigenOpcion()', async () => {
     component.permisoImportacionService = component.permisoImportacionService || {};
     component.permisoImportacionService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerPaisOrigenOpcion();
-    // expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
+    expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
   it('should run #fechaCambiado()', async () => {
@@ -174,8 +165,6 @@ describe('DatosMercanciaComponent', () => {
     component.store = component.store || {};
     component.store.setFacturaFecha = jest.fn();
     component.fechaCambiado({});
-    // expect(component.datosMercanica.patchValue).toHaveBeenCalled();
-    // expect(component.store.setFacturaFecha).toHaveBeenCalled();
   });
 
   it('should run #setTotalMercanciaImportar()', async () => {
@@ -186,7 +175,7 @@ describe('DatosMercanciaComponent', () => {
       setValue: function() {}
     });
     component.setTotalMercanciaImportar();
-    // expect(component.datosMercanica.get).toHaveBeenCalled();
+    expect(component.datosMercanica.get).toHaveBeenCalled();
   });
 
   it('should run #setMercanciaImportar()', async () => {
@@ -197,7 +186,7 @@ describe('DatosMercanciaComponent', () => {
       setValue: function() {}
     });
     component.setMercanciaImportar();
-    // expect(component.datosMercanica.get).toHaveBeenCalled();
+    expect(component.datosMercanica.get).toHaveBeenCalled();
   });
 
   it('should run #onUmcChange()', async () => {
@@ -217,9 +206,6 @@ describe('DatosMercanciaComponent', () => {
         };
       }
     }, {}, {});
-    // expect(component.setValoresStore).toHaveBeenCalled();
-    // expect(component.umcOpcion.find).toHaveBeenCalled();
-    // expect(component.datosMercanica.get).toHaveBeenCalled();
   });
 
   it('should run #onCantidadUmcOrFactorChange()', async () => {
@@ -230,7 +216,7 @@ describe('DatosMercanciaComponent', () => {
       setValue: function() {}
     });
     component.onCantidadUmcOrFactorChange();
-    // expect(component.datosMercanica.get).toHaveBeenCalled();
+    expect(component.datosMercanica.get).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -238,8 +224,8 @@ describe('DatosMercanciaComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });

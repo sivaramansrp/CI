@@ -64,9 +64,7 @@ describe('RepresentacionFederalComponent', () => {
     component.consultaQuery = component.consultaQuery || {};
     component.consultaQuery.selectConsultaioState$ = observableOf({});
     await component.ngOnInit();
-    // expect(component.initActionFormBuild).toHaveBeenCalled();
-    // expect(component.obtenerEntidadSelectList).toHaveBeenCalled();
-    // expect(component.obtenerRepresentacionSelectList).toHaveBeenCalled();
+    expect(component.initActionFormBuild).toHaveBeenCalled();
   });
 
   it('should run #initActionFormBuild()', async () => {
@@ -78,21 +76,21 @@ describe('RepresentacionFederalComponent', () => {
       representacion_federal: {}
     };
     component.initActionFormBuild();
-    // expect(component.fb.group).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #obtenerEntidadSelectList()', async () => {
     component.permisoImportacionService = component.permisoImportacionService || {};
     component.permisoImportacionService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerEntidadSelectList();
-    // expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
+    expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
   it('should run #obtenerRepresentacionSelectList()', async () => {
     component.permisoImportacionService = component.permisoImportacionService || {};
     component.permisoImportacionService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerRepresentacionSelectList();
-    // expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
+    expect(component.permisoImportacionService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
 });
