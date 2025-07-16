@@ -1,12 +1,12 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import {
     TablaDinamicaComponent,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
-import { CHOFERES_NACIONALES_ALTA } from '../../../../enum/choferes-enum';
+import { CHOFERES_NACIONALES_ALTA } from '../../../../enum/choferes.enum';
 import { Chofer40103Query } from '../../../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../../../estados/chofer40103.service';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
@@ -24,7 +24,7 @@ import { DatosDelChoferNacional } from '../../../../models/registro-muestras-mer
   ],
   providers: [BsModalService],
 })
-export class ChofereNacionalModificacionComponent implements OnInit {
+export class ChofereNacionalModificacionComponent implements OnInit, OnDestroy {
   // Add your component logic here
   /**
    * Tipo de selección utilizada en la tabla dinámica (por ejemplo, selección por checkbox).
@@ -111,6 +111,17 @@ export class ChofereNacionalModificacionComponent implements OnInit {
     private chofer40103Query: Chofer40103Query,
     private consultaioQuery: ConsultaioQuery
   ) {}
+  
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones para evitar fugas de memoria.
+   * 
+   * - Utiliza `next` y `complete` en el observable `destroy$` para notificar a las suscripciones que deben limpiarse.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.

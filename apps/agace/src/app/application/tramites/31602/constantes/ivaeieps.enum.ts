@@ -127,6 +127,79 @@ export const PERMISO_A_DESISTIR_DOS = [
   }
 ];
 
+/**
+ * Constante que define la configuración de los campos para el formulario de monto de inversión.
+ *
+ * Cada objeto dentro del arreglo representa un campo del formulario con sus propiedades específicas:
+ * - `id`: Identificador único del campo.
+ * - `labelNombre`: Etiqueta descriptiva que se muestra al usuario.
+ * - `campo`: Nombre del campo utilizado para enlazar datos en el formulario.
+ * - `clase`: Clase CSS aplicada al contenedor del campo para diseño responsivo.
+ * - `tipoInput`: Tipo de entrada del campo (por ejemplo, 'select-catalogos', 'number', 'text').
+ * - `desactivado`: Indica si el campo está deshabilitado.
+ * - `soloLectura`: Indica si el campo es de solo lectura.
+ * - `validadores`: Lista de validadores aplicados al campo.
+ *   - `tipo`: Tipo de validador (por ejemplo, 'required').
+ * - `marcadorDePosicion`: Texto de marcador de posición (placeholder) para el campo.
+ * - `valorPredeterminado`: Valor inicial del campo.
+ * - `marginTop`: Margen superior aplicado al campo.
+ *
+ * Esta constante se utiliza para construir dinámicamente el formulario de inversión en la aplicación.
+ */
+export const INVERSION_MONTO = [
+    {
+      id: 'tipoInversion',
+      labelNombre: 'Tipo de inversión',
+      campo: 'tipoInversion',
+      clase: 'col-md-6',
+      tipoInput: 'select-catalogos',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required'
+        }
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0,
+    },
+    {
+      id: 'valorEnPesos',
+      labelNombre: 'Valor en pesos',
+      campo: 'valorEnPesos',
+      clase: 'col-md-6',
+      tipoInput: 'number',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required'
+        }
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0
+    },
+    {
+      id: 'descGeneral',
+      labelNombre: 'Descripción general',
+      campo: 'descGeneral',
+      clase: 'col-md-6',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required'
+        }
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0
+    },
+];
+
 
 /**
  * Constante que define un conjunto de configuraciones para los permisos relacionados con la certificación
@@ -227,12 +300,30 @@ export const CONFIGURACION_IVAEIEPS_DOS = [
     marcador_de_posicion: '',
   },
   {
-    labelNombre: 'Que durante los últimos 12 meses anteriores en promedio contaron con más de 1,000 empleados registrados ante el IMSS Número de empleados ante el IMSS.',
+    labelNombre: 'Fecha inicio de operaciones bajo el régimen',
+    campo: 'fechaInicio',
+    clase: 'col-md-6',
+    tipoInput: 'date',
+    desactivado: false,
+    soloLectura: false,
+    marcador_de_posicion: '',
+  },
+  {
+    labelNombre: 'Que durante los últimos 12 meses anteriores en promedio contaron con más de 1,000 empleados registrados ante el IMSS.',
     campo: 'anteElImss',
     clase: 'col-md-12',
     tipoInput: 'checkbox',
     desactivado: false,
     marcador_de_posicion: '',
+  },
+  {
+    labelNombre: 'Número de empleados ante el IMSS',
+    campo: 'numeroDeEmpleados',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    marcadorDePosicion: '',
   },
   {
     labelNombre: 'Que el valor de su maquinaria y equipo es superior a los 50,000,000 de pesos.',
@@ -241,7 +332,16 @@ export const CONFIGURACION_IVAEIEPS_DOS = [
     tipoInput: 'checkbox',
     desactivado: false,
     marcador_de_posicion: '',
-  }
+  },
+  {
+    labelNombre: 'Valor total de la maquinaria y equipo',
+    campo: 'valorMaquinaria',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    marcadorDePosicion: '',
+  },
 ];
 
 /**

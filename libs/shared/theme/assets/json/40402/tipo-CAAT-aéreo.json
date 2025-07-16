@@ -1,6 +1,5 @@
 [
-  {   "id": 1, "clave": "CAAT01", "descripcion": "Carga Aérea Nacional" },
-  {   "id": 2, "clave": "CAAT02", "descripcion": "Carga Aérea Internacional" },
-  {   "id": 3, "clave": "CAAT03", "descripcion": "Carga Aérea Express" },
-  {   "id": 4, "clave": "CAAT04", "descripcion": "Carga Aérea de Mercancías Peligrosas" }
+  {   "id": 1, "clave": "CAAT01", "descripcion": "Empresa de Transportación Aérea" },
+  {   "id": 2, "clave": "CAAT02", "descripcion": "Empresa de Mensajería Aérea" },
+  {   "id": 3, "clave": "CAAT03", "descripcion": "Agente Internacional de Carga" }
 ]

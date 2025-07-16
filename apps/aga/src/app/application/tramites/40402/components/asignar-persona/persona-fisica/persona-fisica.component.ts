@@ -1,11 +1,11 @@
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA } from '../../../constants/transportacion-maritima.enum';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
@@ -289,6 +289,10 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarPFE(personaFisicaExtranjeraFormDatos: PersonaFisicaExtranjeraForm): void {
+    this.personaFisicaExtranjeraForm.markAllAsTouched();
+    if (this.personaFisicaExtranjeraForm.invalid) {
+      return;
+    }
     const PAIS = this.pais?.find((pais) => pais.id === Number(personaFisicaExtranjeraFormDatos.paisPFE))?.descripcion;
 
     const NUEVO_CUERPO_TABLA = [...this.personaFisicaExtranjeraTabla];
@@ -298,6 +302,7 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
       seguroNumero: personaFisicaExtranjeraFormDatos.seguroNumero,
       estadoPFE: personaFisicaExtranjeraFormDatos.estadoPFE,
       correoPFE: personaFisicaExtranjeraFormDatos.correoPFE,
+      acciones: personaFisicaExtranjeraFormDatos.acciones,
       paisPFE: PAIS || '',
       domicilioPFE: `${personaFisicaExtranjeraFormDatos.callePFE} ${personaFisicaExtranjeraFormDatos.numeroExteriorPFE} ${personaFisicaExtranjeraFormDatos.ciudadPFE} ${personaFisicaExtranjeraFormDatos.estadoPFE} ${PAIS} ${personaFisicaExtranjeraFormDatos.codigoPostalPFE}`.trim(),
     });
@@ -379,4 +384,20 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
       this.personaFisicaExtranjeraForm?.enable();
     }
   }
+
+  /**
+   * Verifica si el control 'idSocioComercial' tiene el validador 'Validators.required'.
+   *
+   * @returns {boolean} `true` si el control es obligatorio, de lo contrario `false`.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  isRequired(form: FormGroup, field: string): boolean | null {
+    const CONTROL = form.get(field) as FormControl;
+    if (CONTROL) {
+      const ERROR_PATTERN = CONTROL.hasError('required');
+      return ERROR_PATTERN && CONTROL.touched;
+    }
+    return false;
+  }
+
 }

@@ -3,17 +3,7 @@ import {
   RespuestaCatalogos,
   SeccionLibStore
 } from '@ng-mf/data-access-user';
-
-import { Injectable } from '@angular/core';
-
-import { HttpClient } from '@angular/common/http';
-
-import { Observable, map } from 'rxjs';
-
-import { URL } from '../../constantes/220202/fitosanitario.enums';
-
-import { FitosanitarioStore } from '../../estados/fitosanitario.store';
-
+import { DatosDeLaSolicitud, ProductosCatalogosDatos } from '../../../../shared/models/datos-de-la-solicitue.model';
 import {
   DatosForma,
   FinalEnviar,
@@ -21,6 +11,12 @@ import {
   Movilizacion,
   PagoDeDerechos,  
 } from '../../models/220202/fitosanitario.model';
+import { Observable, map } from 'rxjs';
+import { FitosanitarioStore } from '../../estados/fitosanitario.store';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+import { URL } from '../../constantes/220202/fitosanitario.enums';
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +38,26 @@ export class AgriculturaApiService {
     private readonly fitosanitarioStore: FitosanitarioStore
   ) {
     // Constructor logic can be added here if needed
+  }
+
+    /**
+   * Actualiza la lista de terceros relacionados con la solicitud.
+   * @method updateTercerosExportador
+   * @param {TercerosrelacionadosTable[]} datosForma Lista de terceros.
+   * @memberof AgriculturaApiService
+   */
+  updateTercerosExportador(datosForma: TercerosrelacionadosdestinoTable[]): void {
+    this.fitosanitarioStore.updateTercerosExportador(datosForma);
+  }
+
+      /**
+   * Actualiza la lista de terceros relacionados con la solicitud.
+   * @method updateTercerosRelacionados
+   * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de terceros.
+   * @memberof CertificadoZoosanitarioServiceService
+   */
+  updateTercerosRelacionado(tercerosRelacionados: TercerosrelacionadosdestinoTable[]): void {
+    this.fitosanitarioStore.updateTercerosRelacionados(tercerosRelacionados);
   }
 
   /**
@@ -158,6 +174,9 @@ export class AgriculturaApiService {
     this.fitosanitarioStore.actualizarMovilizacion(DATOS.movilizacion);
     this.fitosanitarioStore.actualizarPago(DATOS.pago);
     this.fitosanitarioStore.tablaDatosFinal(DATOS.tablaDatos);
+    this.updateTercerosRelacionado(DATOS.tercerosRelacionados);
+    this.updateTercerosExportador(DATOS.datosForma);
+
   }
 
   /**
@@ -166,6 +185,24 @@ export class AgriculturaApiService {
    */
   getDatosDeLaSolicitudData(): Observable<ListaDeDatosFinal> {
     return this.http.get<ListaDeDatosFinal>('assets/json/220202/datos-de-la-solicitud.json');
+  }
+
+  /**
+   * @description Obtiene los datos de la solicitud a partir de una URL específica.
+   * @param {string} url - URL del archivo JSON que contiene los datos de la solicitud.
+   * @returns {Observable<DatosDeLaSolicitud>} Observable con los datos de la solicitud.
+   */
+  obtenerRespuestaPorUrl(url: string): Observable<DatosDeLaSolicitud> {
+      return this.http.get<DatosDeLaSolicitud>(`../../../../../assets/json/220202/${url}`);
+  }
+
+    /**
+   * @description Obtiene los datos de la solicitud a partir de una URL específica.
+   * @param {string} url - URL del archivo JSON que contiene los datos de la solicitud.
+   * @returns {Observable<ProductosCatalogosDatos>} Observable con los datos de la solicitud.
+   */
+  obtenerProductoRespuestaPorUrl(url: string): Observable<ProductosCatalogosDatos> {
+      return this.http.get<ProductosCatalogosDatos>(`../../../../../assets/json/220202/${url}`);
   }
 
 }

@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { PASOS, SECCIONES_TRAMITE_40402 } from '../../constants/solicitud.enums';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
-import { SECCIONES_TRAMITE_40402 } from '../../constants/solicitud.enums';
 import { Subject } from 'rxjs';
 import { Tramite40402Query } from '../../estados/tramite40402.query';
 import { Tramite40402Store } from '../../estados/tramite40402.store';
@@ -34,7 +33,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   /**
    * Lista de pasos del asistente (wizard) que se mostrarán en la página.
    */
-  pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
+  pasos: Array<ListaPasosWizard> = PASOS;
 
   /**
    * Índice actual del paso seleccionado en el asistente.

@@ -6,7 +6,7 @@ import { Subject, catchError, map, of, takeUntil } from 'rxjs';
 import { BusquedaRFCQuery } from '../../../queries/registro.query';
 import { CONFIGURACION_ENCABEZADO_NOTIFICADORES } from '../../core/constantes/notificadores.enum';
 import { CommonModule } from '@angular/common';
-import { ConsultaRegistro } from '../../core/models/consuta-registro.model';
+import { ConsultaRegistro } from '../../core/models/consulta-registro.model';
 import { Router } from '@angular/router';
 import { UsuariosService } from '../../core/service/usuarios.service';
 
@@ -67,6 +67,8 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
   public modelNotificador?: ConsultaRegistro;
   /** Notificación para mostrar mensajes al usuario.*/
   public nuevaNotificacion!: Notificacion;
+  /** variable para visualizar el botón eliminar notificadores */
+  public botonEliminar: boolean = false;
 
   /**
    * Constructor del componente.
@@ -99,6 +101,7 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
       .subscribe();
     this.confirmarDatos();
     this.personasNotificaciones = this.registroState.personasNotificaciones;
+    this.botonEliminar = this.registroState.eliminar;
   }
 
   /**

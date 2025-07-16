@@ -208,7 +208,6 @@ describe('ServiciosPermisoSanitarioService', () => {
       licenciaSanitaria: 'lic',
       regimen: 'reg',
       aduanasEntradas: 'aduana',
-      numeroPermiso: 'permiso',
       clasificacion: 'clas',
       especificar: 'esp',
       denominacionEspecifica: 'espec',

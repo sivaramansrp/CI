@@ -28,6 +28,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
 import enlace from '@libs/shared/theme/assets/json/31601/enlace.json';
 import enlaceData from '@libs/shared/theme/assets/json/31601/enlace-data.json';
+import representanteDatos from '@libs/shared/theme/assets/json/31601/represtantante-data.json';
 
 /**
  * @component EnlaceComponent
@@ -71,6 +72,10 @@ export class EnlaceComponent implements OnInit, OnDestroy {
    * @private
    */
   private destroyNotifier$: Subject<void> = new Subject();
+ /**
+   * Datos predefinidos del representante.
+   */
+  datosRepresentativos = representanteDatos;
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -185,6 +190,11 @@ export class EnlaceComponent implements OnInit, OnDestroy {
    * Se usa para almacenar el último item seleccionado para operaciones posteriores.
    */
   filaSeleccionadaEnlace!: EnlaceConfiguracionItem;
+/** Indica si se está editando una fila existente en la tabla de enlace */
+modoEdicionEnlace: boolean = false;
+
+/** Índice de la fila seleccionada para edición en la tabla de enlace */
+filaSeleccionadaEnlaceIndex: number | null = null;
 
   /**
    * Constructor del componente.
@@ -238,6 +248,8 @@ export class EnlaceComponent implements OnInit, OnDestroy {
   public abrirModal(): void {
     this.modal = 'show';
     this.getRegistroForm();
+  this.represtantante.reset();
+  this.represtantante.get('suplente')?.setValue(false);
   }
 
   /**
@@ -351,35 +363,47 @@ export class EnlaceComponent implements OnInit, OnDestroy {
     this.abrirElimninarConfirmationopup();
   }
 
-  /**
-   * Actualiza la fila seleccionada con los datos más recientes de la tabla.
-   * Si la fila seleccionada no se encuentra en los datos, no hace nada.
-   */
-  actualizarFilaSeleccionada(): void {
-    const UPDATED_DATA = this.datosTablaEnlace.find(
-      (item) => item.id === this.filaSeleccionadaEnlace.id
-    );
-
-    if (UPDATED_DATA) {
-      this.filaSeleccionadaEnlace = { ...UPDATED_DATA };
-    }
-  }
+ 
 
   /**
    * Abre el modal para modificar un enlace item.
    * Si hay una sola fila seleccionada, abre el modal para editar.
    * Si hay más de una fila seleccionada, abre un popup de selección múltiple.
    */ 
-  modificarItemEnlace(): void {
-    if (this.listaFilaSeleccionadaEnlace.length < 2) {
-      this.actualizarFilaSeleccionada();
-      this.esOperacionDeActualizacion = true;
-      this.abrirModal();
-      this.alternarModalMercancia();
-    } else {
-      this.abrirMultipleSeleccionPopup();
+modificarItemEnlace(): void {
+ 
+  if (this.listaFilaSeleccionadaEnlace.length === 1) {
+    const SELECCIONDA = this.listaFilaSeleccionadaEnlace[0];
+
+    this.filaSeleccionadaEnlaceIndex = this.datosTablaEnlace.findIndex(
+      item => item.id === SELECCIONDA.id
+    );
+
+    if (this.filaSeleccionadaEnlaceIndex !== -1) {
+      this.modoEdicionEnlace = true;
+
+      const FILA = this.datosTablaEnlace[this.filaSeleccionadaEnlaceIndex];
+
+      this.represtantante.patchValue({
+        resigtroReprestantante: FILA.registroFederal,
+        rfcReprestantante: FILA.rfc,
+        nombreReprestante: FILA.nombre,
+        apellidoPaterno: FILA.apellidoPaterno,
+        apellidoMaterno: FILA.apellidoMaterno,
+        cargo: FILA.cargo,
+        cuidad: FILA.estadoResidencia,
+        telefonoReprestantante: FILA.telefono,
+        correoReprestantante: FILA.correo,
+        suplente: FILA.suplente,
+      });
+
+       this.modal = 'show';
     }
+  } else {
+   
+    this.abrirMultipleSeleccionPopup();
   }
+}
 
   /**
    * Elimina un enlace item seleccionado.
@@ -433,46 +457,42 @@ export class EnlaceComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Alterna la visibilidad del modal de datos de mercancía.
-   */
-  alternarModalMercancia(): void {
-    this.mostrarModalDatosMercancia = !this.mostrarModalDatosMercancia;
-  }
-
-  /**
    * Guarda los datos del formulario en la tabla de enlace.
    * Crea un nuevo objeto con los valores del formulario y lo agrega a la lista de datos de enlace.
    * Limpia los campos del formulario después de guardar.
    */
-  saveDatos(): void {
-    const VALOR: EnlaceConfiguracionItem = {
-      id: new Date().getTime().toString(),
-      registroFederal: this.represtantante.get('resigtroReprestantante')?.value,
-      rfc: this.represtantante.get('rfcReprestantante')?.value,
-      nombre: this.represtantante.get('nombreReprestante')?.value,
-      apellidoPaterno: this.represtantante.get('apellidoPaterno')?.value,
-      apellidoMaterno: this.represtantante.get('apellidoMaterno')?.value,
-      cargo: this.represtantante.get('cargo')?.value,
-      estadoResidencia: this.represtantante.get('cuidad')?.value,
-      telefono: this.represtantante.get('telefonoReprestantante')?.value,
-      correo: this.represtantante.get('correoReprestantante')?.value,
-      suplente: this.represtantante.get('suplente')?.value,
-    };
+ saveDatos(): void {
+  const VALOR: EnlaceConfiguracionItem = {
+    id: this.modoEdicionEnlace && this.filaSeleccionadaEnlaceIndex !== null
+      ? this.datosTablaEnlace[this.filaSeleccionadaEnlaceIndex].id // keep same ID
+      : new Date().getTime().toString(),
+    registroFederal: this.represtantante.get('resigtroReprestantante')?.value,
+    rfc: this.represtantante.get('rfcReprestantante')?.value,
+    nombre: this.represtantante.get('nombreReprestante')?.value,
+    apellidoPaterno: this.represtantante.get('apellidoPaterno')?.value,
+    apellidoMaterno: this.represtantante.get('apellidoMaterno')?.value,
+    cargo: this.represtantante.get('cargo')?.value,
+    estadoResidencia: this.represtantante.get('cuidad')?.value,
+    telefono: this.represtantante.get('telefonoReprestantante')?.value,
+    correo: this.represtantante.get('correoReprestantante')?.value,
+    suplente: this.represtantante.get('suplente')?.value,
+  };
 
-    this.datosTablaEnlace = [...this.datosTablaEnlace, VALOR];
-    this.tramite31601Store.setEnlaceTablaDatos(this.datosTablaEnlace);
-    this.represtantante.get('resigtroReprestantante')?.setValue('');
-    this.represtantante.get('rfcReprestantante')?.setValue('');
-    this.represtantante.get('nombreReprestante')?.setValue('');
-    this.represtantante.get('apellidoPaterno')?.setValue('');
-    this.represtantante.get('apellidoMaterno')?.setValue('');
-    this.represtantante.get('cargo')?.setValue('');
-    this.represtantante.get('cuidad')?.setValue('');
-    this.represtantante.get('telefonoReprestantante')?.setValue('');
-    this.represtantante.get('correoReprestantante')?.setValue('');
-    this.represtantante.get('suplente')?.setValue(false);
-    this.closeModal.nativeElement.click();
+  if (this.modoEdicionEnlace && this.filaSeleccionadaEnlaceIndex !== null) {
+      this.datosTablaEnlace[this.filaSeleccionadaEnlaceIndex] = VALOR;
+  } else {
+       this.datosTablaEnlace = [...this.datosTablaEnlace, VALOR];
   }
+  this.tramite31601Store.setEnlaceTablaDatos(this.datosTablaEnlace);
+
+  this.represtantante.reset();
+  this.represtantante.get('suplente')?.setValue(false);
+
+  this.modoEdicionEnlace = false;
+  this.filaSeleccionadaEnlaceIndex = null;
+  this.listaFilaSeleccionadaEnlace = [];
+  this.closeModal.nativeElement.click();
+}
 
   /**
    * Establece un valor en el store de Tramite31601 desde el formulario.
@@ -489,7 +509,31 @@ export class EnlaceComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.tramite31601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+/**
+ * @description
+ * Método que busca el valor del campo `resigtroReprestantante` y, si existe,
+ * actualiza (patch) los campos del formulario `represtantante` con los datos del
+ * objeto `datosRepresentativos`. Esto incluye RFC, nombre, apellidos, teléfono,
+ * correo y ciudad del representante.
+ */
+    openBuscar(): void {
+    
+  const RESGISTRO_VALUE = this.represtantante.get('resigtroReprestantante')?.value;
 
+  if (RESGISTRO_VALUE) {
+    this.represtantante.patchValue({
+      rfcReprestantante: RESGISTRO_VALUE,
+      nombreReprestante: this.datosRepresentativos.nombre,
+      apellidoPaterno: this.datosRepresentativos.apellidoPaterno,
+      apellidoMaterno: this.datosRepresentativos.apellidoMaterno,
+      telefono:this.datosRepresentativos.telefono,
+      correo:this.datosRepresentativos.correo,
+      cuidad:this.datosRepresentativos.cuidad,
+      telefonoReprestantante:this.datosRepresentativos.telefono,
+      correoReprestantante:this.datosRepresentativos.correo,    
+    });
+  }
+}
   /**
    * Método de limpieza que se ejecuta al destruir el componente. Cancela suscripciones.
    */

@@ -158,4 +158,38 @@ export class DonacionesExtranjerasService {
   getRegistroDeDonacionDatos(): Observable<RegistroDeDonacion10303State> {
     return this.http.get<RegistroDeDonacion10303State>('assets/json/10303/registro-de-donacion-datos.json');
   }
+
+  /**
+   * Obtiene la lista de países de procedencia desde un archivo JSON.
+   * @returns Observable con la respuesta de los países de procedencia.
+   */
+  getPaisProcedencia(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/10303/pais-procedencia-medicamento.json');
+  }
+
+  /**
+   * Obtiene la lista de países de origen del medicamento desde un archivo JSON.
+   * @returns Observable con la respuesta de los países de origen del medicamento.
+   */
+  getPaisMedicoOrigen(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/10303/pais-origen-medicamento.json');
+  }
+
+  /**
+   * Obtiene la lista de años desde un archivo JSON.
+   * 
+   * @returns Observable con la respuesta de los años.
+   */
+  getAno(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/10303/ano.json');
+  }
+
+  /**
+   * Obtiene la lista de tipos de vehículo desde un archivo JSON.
+   * 
+   * @returns Observable con la respuesta de los tipos de vehículo.
+   */
+  getVehiculoTipo(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/10303/vehiculo-tipo.json');
+  }
 }

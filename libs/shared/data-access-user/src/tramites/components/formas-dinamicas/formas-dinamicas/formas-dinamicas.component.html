@@ -16,7 +16,7 @@
                     @if (item.labelNombre) {
                           <label for="{{ item.id }}">{{ item.labelNombre }} {{seRequiere(item.campo) ? '*:' : ':'}}
                             @if(item.tooltipQuestionCircle) {
-                              <span class="bi bi-question-circle-fill" title="{{item.labelNombre}}" data-bs-toggle="tooltip"></span>
+                              <span class="bi bi-question-circle-fill" title="{{item.tooltipTxt ? item.tooltipTxt : item.labelNombre}}" data-bs-toggle="tooltip"></span>
                             }
                           </label>
                           }
@@ -48,7 +48,7 @@
                         @if (item.labelNombre) {
                           <label for="{{ item.id }}">{{ item.labelNombre }} {{seRequiere(item.campo) ? '*:' : ':'}}
                             @if(item.tooltipQuestionCircle) {
-                              <span class="bi bi-question-circle-fill" title="{{item.labelNombre}}" data-bs-toggle="tooltip"></span>
+                              <span class="bi bi-question-circle-fill" title="{{item.tooltipTxt ? item.tooltipTxt : item.labelNombre}}" data-bs-toggle="tooltip"></span>
                             }
                           </label>
                           }
@@ -78,7 +78,7 @@
                       @if (item.labelNombre) {
                       <label for="{{ item.id }}">{{ item.labelNombre }} {{seRequiere(item.campo) ? '*:' : ':'}}
                         @if(item.tooltipQuestionCircle) {
-                          <span class="bi bi-question-circle-fill" title="{{item.labelNombre}}" data-bs-toggle="tooltip"></span>
+                          <span class="bi bi-question-circle-fill" title="{{item.tooltipTxt ? item.tooltipTxt : item.labelNombre}}" data-bs-toggle="tooltip"></span>
                         }
                       </label>
                       }
@@ -115,6 +115,7 @@
                           [placeholder]="item.marcadorDePosicion || ''" 
                           [isDisabled]="item.desactivado || soloLectura"
                           [tooltipQuestionCircle]="item.tooltipQuestionCircle ?? false"
+                          [tooltipQuestionCircleText]="item.tooltipTxt ?? '' "
                           name=""
                           (change)="eventoDeCambioDeValor($event, item.campo)"
                         ></app-catalogo-select>
@@ -169,7 +170,7 @@
                           @if (item.labelNombre) {
                             <label class="form-label" [for]="item.id">{{item.labelNombre }} {{seRequiere(item.campo) ? '*:' : ':'}}
                               @if(item.tooltipQuestionCircle) {
-                                <span class="bi bi-question-circle-fill" title="{{item.labelNombre}}" data-bs-toggle="tooltip"></span>
+                                <span class="bi bi-question-circle-fill" title="{{item.tooltipTxt ? item.tooltipTxt : item.labelNombre}}" data-bs-toggle="tooltip"></span>
                               }
                             </label>
                           }

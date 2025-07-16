@@ -181,7 +181,7 @@ export class TercerosRelacionadosProcedenciaComponent implements OnInit {
       "Código postal": data.codigoPostal || '-',
       "Colonia o equivalente": data.coloniaEquivalente || '-',
     };
-    this.fabricanteRowData.push({ tbodyData: Object.values(TABLE_ROW) });
+    this.fabricanteRowData = [...this.fabricanteRowData,{ tbodyData: Object.values(TABLE_ROW) }];
     this.cerrarProcedencia();
   }
 }

@@ -1,5 +1,5 @@
 <div class="container">
-  <form [formGroup]="formulario">
+  <form *ngIf="formulario" [formGroup]="formulario">
     <div class="form" formGroupName="datosRealizer">
       <ng-titulo [titulo]="'Datos del trámite a realizar'"></ng-titulo>
       <div class="row align-items-end">
@@ -8,7 +8,7 @@
             <app-catalogo-select
               [catalogo]="configuracion[0].menu[0].props.catalogos"
               [label]="configuracion[0].menu[0].props.labelNombre"
-              [formControlName]="configuracion[0].menu[0].props.campo"
+              formControlName="régimen"
               [required]="true"
               [isDisabled]="esFormularioSoloLectura"
               (change)="setValoresStore(formulario, 'datosRealizer', 'régimen', 'setrégimen')">
@@ -25,7 +25,7 @@
               [label]="configuracion[0].menu[1].props.labelNombre"
               [required]="true"
               [isDisabled]="esFormularioSoloLectura"
-              [formControlName]="configuracion[0].menu[1].props.campo"
+              formControlName="classifición_régimen"
               (change)="setValoresStore(formulario, 'datosRealizer', 'classifición_régimen', 'setclassifición_régimen')">
               >
             </app-catalogo-select>
@@ -79,7 +79,7 @@
               [type]="configuracion[1].menu[1].props.tipo_input"
               [id]="configuracion[1].menu[1].props.campo"
               [placeholder]="configuracion[1].menu[1].props.placeholder"
-              [formControlName]="configuracion[1].menu[1].props.campo"
+              formControlName="marca"
               [required]="configuracion[1].menu[1].props.required"
               [disabled]="esFormularioSoloLectura"
               maxlength="256"
@@ -104,7 +104,7 @@
               [catalogo]="configuracion[1].menu[2].props.catalogos"
               [label]="configuracion[1].menu[2].props.labelNombre"
               [required]="true"
-              [formControlName]="configuracion[1].menu[2].props.campo"
+              formControlName="tipo_entrada"
               name="tipo_entrada"
               [isDisabled]="esFormularioSoloLectura"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[2].props.campo, 'setTipoEntrada')">
@@ -124,7 +124,7 @@
               [catalogo]="configuracion[1].menu[3].props.catalogos"
               [label]="configuracion[1].menu[3].props.labelNombre"
               [required]="true"
-              [formControlName]="configuracion[1].menu[3].props.campo"
+              formControlName="fracción"
               name="fracción"
               [isDisabled]="esFormularioSoloLectura"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[3].props.campo, 'setFraccion')">
@@ -144,7 +144,7 @@
               [catalogo]="configuracion[1].menu[4].props.catalogos"
               [label]="configuracion[1].menu[4].props.labelNombre"
               [required]="true"
-              [formControlName]="configuracion[1].menu[4].props.campo"
+              formControlName="nico"
               name="nico"
               [isDisabled]="esFormularioSoloLectura"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[4].props.campo, 'setNico')">
@@ -164,7 +164,7 @@
               [catalogo]="configuracion[1].menu[5].props.catalogos"
               [label]="configuracion[1].menu[5].props.labelNombre"
               [required]="true"
-              [formControlName]="configuracion[1].menu[5].props.campo"
+              formControlName="umt"
               [isDisabled]="esFormularioSoloLectura"
               name="umt"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[5].props.campo, 'setUmt')">
@@ -185,7 +185,7 @@
               [type]="configuracion[1].menu[6].props.tipo_input"
               [id]="configuracion[1].menu[6].props.campo"
               [placeholder]="configuracion[1].menu[6].props.placeholder"
-              [formControlName]="configuracion[1].menu[6].props.campo"
+              formControlName="factura_número"
               [required]="configuracion[1].menu[6].props.required"
               maxlength="50"
               pattern="^[0-9]*$"
@@ -212,7 +212,7 @@
               [datos]="configuracion[1].menu[7].props"
               [required]="configuracion[1].menu[7].props.required"
               [setFecha]="formulario.get('datosMercanica')?.get('factura_fecha')?.value"
-              [formControlName]="configuracion[1].menu[7].props.campo"
+              formControlName="factura_fecha"
               [disabled]="esFormularioSoloLectura"
               (valorCambiado)="fechaCambiado($event)">
             </input-fecha>
@@ -225,7 +225,7 @@
             <app-catalogo-select
               [catalogo]="configuracion[1].menu[8].props.catalogos"
               [label]="configuracion[1].menu[8].props.labelNombre"
-              [formControlName]="configuracion[1].menu[8].props.campo"
+              formControlName="umc"
               [required]="configuracion[1].menu[8].props.required"
               name="umc"
               [isDisabled]="esFormularioSoloLectura"
@@ -252,10 +252,10 @@
               [type]="configuracion[1].menu[9].props.tipo_input"
               [id]="configuracion[1].menu[9].props.campo"
               [placeholder]="configuracion[1].menu[9].props.placeholder"
-              [formControlName]="configuracion[1].menu[9].props.campo"
+              formControlName="otro_umc"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[9].props.campo, 'setOtroUmc')"
               readonly
-              [disabled]="esFormularioSoloLectura"
+              [disabled]="true"
             />
           </div>
         </div>
@@ -271,7 +271,7 @@
               [type]="configuracion[1].menu[10].props.tipo_input"
               [id]="configuracion[1].menu[10].props.campo"
               [placeholder]="configuracion[1].menu[10].props.placeholder"
-              [formControlName]="configuracion[1].menu[10].props.campo"
+              formControlName="cantidad_umc"
               [required]="configuracion[1].menu[10].props.required"
               maxlength="17"
               pattern="^\d{1,14}(\.\d{1,2})?$"
@@ -300,12 +300,12 @@
               [type]="configuracion[1].menu[11].props.tipo_input"
               [id]="configuracion[1].menu[11].props.campo"
               [placeholder]="configuracion[1].menu[11].props.placeholder"
-              [formControlName]="configuracion[1].menu[11].props.campo"
+              formControlName="factor_conversión"
               [required]="configuracion[1].menu[11].props.required"
               maxlength="19"
               pattern="^\d{1,14}(\.\d{1,4})?$"
               readonly
-              [disabled]="esFormularioSoloLectura"
+              [disabled]="enableConversion"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[11].props.campo, 'setFactorConversion')"
             />
             <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[11].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[11].props.campo)?.invalid">
@@ -327,7 +327,7 @@
               [type]="configuracion[1].menu[12].props.tipo_input"
               [id]="configuracion[1].menu[12].props.campo"
               [placeholder]="configuracion[1].menu[12].props.placeholder"
-              [formControlName]="configuracion[1].menu[12].props.campo"
+              formControlName="cantidad_umt"
               [required]="configuracion[1].menu[12].props.required"
               maxlength="17"
               pattern="^\d{1,14}(\.\d{1,2})?$"
@@ -356,7 +356,7 @@
               [type]="configuracion[1].menu[13].props.tipo_input"
               [id]="configuracion[1].menu[13].props.campo"
               [placeholder]="configuracion[1].menu[13].props.placeholder"
-              [formControlName]="configuracion[1].menu[13].props.campo"
+              formControlName="valor_factura"
               [required]="configuracion[1].menu[13].props.required"
               maxlength="17"
               pattern="^\d{1,14}(\.\d{1,2})?$"
@@ -379,7 +379,7 @@
               [required]="true"
               name="moneda_comercialización"
               [isDisabled]="esFormularioSoloLectura"
-              [formControlName]="configuracion[1].menu[14].props.campo"
+              formControlName="moneda_comercialización"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[14].props.campo, 'setMonedaComercializacion'); setMercanciaImportar()"
               >
             </app-catalogo-select>
@@ -405,7 +405,7 @@
               [type]="configuracion[1].menu[15].props.tipo_input"
               [id]="configuracion[1].menu[15].props.campo"
               [placeholder]="configuracion[1].menu[15].props.placeholder"
-              [formControlName]="configuracion[1].menu[15].props.campo"
+              formControlName="valor_factura_usd"
               [required]="configuracion[1].menu[15].props.required"
               [disabled]="true"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[15].props.campo, 'setValorFacturaUsd')"
@@ -428,7 +428,7 @@
               [type]="configuracion[1].menu[16].props.tipo_input"
               [id]="configuracion[1].menu[16].props.campo"
               [placeholder]="configuracion[1].menu[16].props.placeholder"
-              [formControlName]="configuracion[1].menu[16].props.campo"
+              formControlName="precio_unitario_usd"
               [required]="configuracion[1].menu[16].props.required"
               [disabled]="true"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[16].props.campo, 'setPrecioUnitarioUsd')"
@@ -452,7 +452,7 @@
               [required]="true"
               name="país_exportador"
               [isDisabled]="esFormularioSoloLectura"
-              [formControlName]="configuracion[1].menu[17].props.campo"
+              formControlName="país_exportador"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[17].props.campo, 'setPaisExportador')"
               >
             </app-catalogo-select>
@@ -470,7 +470,7 @@
               [label]="configuracion[1].menu[18].props.labelNombre"
               [required]="true"
               name="país_origen"
-              [formControlName]="configuracion[1].menu[18].props.campo"
+              formControlName="país_origen"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[18].props.campo, 'setPaisOrigen')"
               [isDisabled]="esFormularioSoloLectura"
             >
@@ -496,7 +496,7 @@
               [type]="configuracion[1].menu[19].props.tipo_input"
               [id]="configuracion[1].menu[19].props.campo"
               [placeholder]="configuracion[1].menu[19].props.placeholder"
-              [formControlName]="configuracion[1].menu[19].props.campo"
+              formControlName="valor_total_factura"
               [required]="configuracion[1].menu[19].props.required"
               maxlength="17"
               pattern="^\d{1,14}(\.\d{1,2})?$"
@@ -522,7 +522,7 @@
               [type]="configuracion[1].menu[20].props.tipo_input"
               [id]="configuracion[1].menu[20].props.campo"
               [placeholder]="configuracion[1].menu[20].props.placeholder"
-              [formControlName]="configuracion[1].menu[20].props.campo"
+              formControlName="valor_total_factura_usd"
               [required]="configuracion[1].menu[20].props.required"
               [disabled]="true"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[20].props.campo, 'setValorTotalFacturaUsd')"
@@ -550,7 +550,7 @@
           [type]="configuracion[2].menu[0].props.tipo_input"
           [id]="configuracion[2].menu[0].props.campo"
           [placeholder]="configuracion[2].menu[0].props.placeholder"
-          [formControlName]="configuracion[2].menu[0].props.campo"
+          formControlName="número_documento"
           [required]="configuracion[2].menu[0].props.required"
           maxlength="100"
           [disabled]="esFormularioSoloLectura"
@@ -571,7 +571,7 @@
           [required]="configuracion[2].menu[1].props.required"
           [setFecha]="formulario.get('datosExporta')?.get(configuracion[2].menu[1].props.campo)?.value"
           [disabled]="esFormularioSoloLectura"
-          [formControlName]="configuracion[2].menu[1].props.campo"
+          formControlName="fecha_documento"
           (valorCambiado)="fechaDocumento($event)">
         </input-fecha>
         <div *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[1].props.campo)?.touched && formulario.get('datosExporta')?.get(configuracion[2].menu[1].props.campo)?.invalid">
@@ -589,7 +589,7 @@
         </label>
         <textarea
           class="form-control text-area-size"
-          [formControlName]="configuracion[2].menu[2].props.campo"
+          formControlName="descripción"
           rows="3"
           maxlength="4000"
           [required]="configuracion[2].menu[2].props.required"
@@ -615,7 +615,7 @@
           [type]="configuracion[2].menu[3].props.tipo_input"
           [id]="configuracion[2].menu[3].props.campo"
           [placeholder]="configuracion[2].menu[3].props.placeholder"
-          [formControlName]="configuracion[2].menu[3].props.campo"
+          formControlName="código_arancelario"
           [required]="configuracion[2].menu[3].props.required"
           [disabled]="esFormularioSoloLectura"
           maxlength="100"
@@ -640,7 +640,7 @@
           [type]="configuracion[2].menu[4].props.tipo_input"
           [id]="configuracion[2].menu[4].props.campo+'_Exporta'"
           [placeholder]="configuracion[2].menu[4].props.placeholder"
-          [formControlName]="configuracion[2].menu[4].props.campo"
+          formControlName="cantidad_umt"
           [required]="configuracion[2].menu[4].props.required"
           [disabled]="esFormularioSoloLectura"
           maxlength="14"
@@ -666,7 +666,7 @@
           [type]="configuracion[2].menu[5].props.tipo_input"
           [id]="configuracion[2].menu[5].props.campo"
           [placeholder]="configuracion[2].menu[5].props.placeholder"
-          [formControlName]="configuracion[2].menu[5].props.campo"
+          formControlName="valor_usd"
           [disabled]="esFormularioSoloLectura"
           [required]="true"
           maxlength="14"
@@ -690,7 +690,7 @@
           [type]="configuracion[2].menu[6].props.tipo_input"
           [id]="configuracion[2].menu[6].props.campo+'_Exporta'"
           [placeholder]="configuracion[2].menu[6].props.placeholder"
-          [formControlName]="configuracion[2].menu[6].props.campo"
+          formControlName="precio_unitario_usd"
           [disabled]="esFormularioSoloLectura"
           [required]="true"
           maxlength="14"
@@ -749,7 +749,7 @@
                 [type]="configuracion[3].menu[1].props.tipo_input"
                 [id]="configuracion[3].menu[1].props.campo"
                 [placeholder]="configuracion[3].menu[1].props.placeholder"
-                [formControlName]="configuracion[3].menu[1].props.campo"
+                formControlName="personales_nombre"
                 [required]="true"
                 [disabled]="esFormularioSoloLectura"
                 maxlength="200"
@@ -772,7 +772,7 @@
                 [type]="configuracion[3].menu[2].props.tipo_input"
                 [id]="configuracion[3].menu[2].props.campo"
                 [placeholder]="configuracion[3].menu[2].props.placeholder"
-                [formControlName]="configuracion[3].menu[2].props.campo"
+                formControlName="primer_apellido"
                 [disabled]="esFormularioSoloLectura"
                 [required]="true"
                 maxlength="200"
@@ -796,7 +796,7 @@
                 [id]="configuracion[3].menu[3].props.campo"
                 [disabled]="esFormularioSoloLectura"
                 [placeholder]="configuracion[3].menu[3].props.placeholder"
-                [formControlName]="configuracion[3].menu[3].props.campo"
+                formControlName="segundo_apellido"
                 [required]="true"
                 maxlength="200"
                 (change)="setValoresStore(formulario, 'datosProductor', configuracion[3].menu[3].props.campo, 'setSegundo_apellido')"
@@ -816,7 +816,7 @@
               <textarea
                 class="form-control text-area-size"
                 [id]="configuracion[3].menu[5].props.campo"
-                [formControlName]="configuracion[3].menu[5].props.campo"
+                formControlName="domicilio"
                 rows="3"
                 [required]="true"
                 maxlength="200"
@@ -845,7 +845,7 @@
                 [id]="configuracion[3].menu[4].props.campo"
                 [disabled]="esFormularioSoloLectura"
                 [placeholder]="configuracion[3].menu[4].props.placeholder"
-                [formControlName]="configuracion[3].menu[4].props.campo"
+                formControlName="denominación_razón_social"
                 [required]="true"
                 maxlength="250"
                 (change)="setValoresStore(formulario, 'datosProductor', configuracion[3].menu[4].props.campo, 'setDenominación_razón_social')"
@@ -865,7 +865,7 @@
               <textarea
                 class="form-control text-area-size"
                 [id]="configuracion[3].menu[5].props.campo"
-                [formControlName]="configuracion[3].menu[5].props.campo"
+                formControlName="domicilio"
                 rows="3"
                 [required]="true"
                 maxlength="200"
@@ -891,7 +891,7 @@
               <textarea
                 class="form-control text-area-size"
                 [id]="configuracion[3].menu[5].props.campo"
-                [formControlName]="configuracion[3].menu[5].props.campo"
+                formControlName="domicilio"
                 rows="3"
                 [required]="true"
                 maxlength="200"
@@ -947,7 +947,7 @@
                 [id]="configuracion[4].menu[1].props.campo+'_Exporta'"
                 [disabled]="esFormularioSoloLectura"
                 [placeholder]="configuracion[4].menu[1].props.placeholder"
-                [formControlName]="configuracion[4].menu[1].props.campo"
+                formControlName="personales_nombre"
                 [required]="true"
                 maxlength="200"
                 (change)="setValoresStore(formulario, 'datosExportador', configuracion[4].menu[1].props.campo, 'setExportadorPersonales_nombre')"
@@ -967,7 +967,7 @@
                 [disabled]="esFormularioSoloLectura"
                 [id]="configuracion[4].menu[2].props.campo+'_Exporta'"
                 [placeholder]="configuracion[4].menu[2].props.placeholder"
-                [formControlName]="configuracion[4].menu[2].props.campo"
+                formControlName="primer_apellido"
                 [required]="true"
                 maxlength="200"
                 (change)="setValoresStore(formulario, 'datosExportador', configuracion[4].menu[2].props.campo, 'setExportadorPrimer_apellido')"
@@ -987,7 +987,7 @@
                 [disabled]="esFormularioSoloLectura"
                 [id]="configuracion[4].menu[3].props.campo"
                 [placeholder]="configuracion[4].menu[3].props.placeholder"
-                [formControlName]="configuracion[4].menu[3].props.campo"
+                formControlName="segundo_apellido"
                 [required]="true"
                 maxlength="200"
                 (change)="setValoresStore(formulario, 'datosExportador', configuracion[4].menu[3].props.campo, 'setExportadorSegundo_apellido')"
@@ -1004,7 +1004,7 @@
               <textarea
                 class="form-control text-area-size"
                 [id]="configuracion[4].menu[5].props.campo"
-                [formControlName]="configuracion[4].menu[5].props.campo"
+                formControlName="domicilio"
                 rows="3"
                 [required]="true"
                 maxlength="200"
@@ -1024,7 +1024,7 @@
                 class="form-control text-area-size"
                 [disabled]="esFormularioSoloLectura"
                 [id]="configuracion[4].menu[6].props.campo"
-                [formControlName]="configuracion[4].menu[6].props.campo"
+                formControlName="observaciones"
                 rows="3"
                 [required]="true"
                 maxlength="4000"
@@ -1049,7 +1049,7 @@
                 [disabled]="esFormularioSoloLectura"
                 [id]="configuracion[4].menu[4].props.campo+'_Exportador'"
                 [placeholder]="configuracion[4].menu[4].props.placeholder"
-                [formControlName]="configuracion[4].menu[4].props.campo"
+                formControlName="denominación_razón_social"
                 [required]="true"
                 maxlength="250"
                 (change)="setValoresStore(formulario, 'datosExportador', configuracion[4].menu[4].props.campo, 'setExportadorDenominación_razón_social')"
@@ -1066,7 +1066,7 @@
               <textarea
                 class="form-control text-area-size"
                 [id]="configuracion[4].menu[5].props.campo+'_Exportador'"
-                [formControlName]="configuracion[4].menu[5].props.campo"
+                formControlName="domicilio"
                 rows="3"
                 [required]="true"
                 maxlength="200"
@@ -1085,7 +1085,7 @@
               <textarea
                 class="form-control text-area-size"
                 [id]="configuracion[4].menu[6].props.campo"
-                [formControlName]="configuracion[4].menu[6].props.campo"
+                formControlName="observaciones"
                 [disabled]="esFormularioSoloLectura"
                 rows="3"
                 [required]="true"
@@ -1108,7 +1108,7 @@
               [catalogo]="configuracion[5].menu[0].props.catalogos"
               [label]="configuracion[5].menu[0].props.labelNombre"
               [isDisabled]="esFormularioSoloLectura"
-              [formControlName]="configuracion[5].menu[0].props.campo"
+              formControlName="entidad_federativa"
               [required]="true"
               (change)="setValoresStore(formulario, 'datosFederal', configuracion[5].menu[0].props.campo, 'setEntidad_federativa')">
             </app-catalogo-select>
@@ -1124,7 +1124,7 @@
               [catalogo]="configuracion[5].menu[1].props.catalogos"
               [isDisabled]="esFormularioSoloLectura"
               [label]="configuracion[5].menu[1].props.labelNombre"
-              [formControlName]="configuracion[5].menu[1].props.campo"
+              formControlName="representacion_federal"
               [required]="true"
               (change)="setValoresStore(formulario, 'datosFederal', configuracion[5].menu[1].props.campo, 'setRepresentacion_federal')">
             </app-catalogo-select>

@@ -13,6 +13,7 @@ import { TransporteDespacho } from '@libs/shared/data-access-user/src';
 export interface SolicitudPayload {
   id_solicitud: number | null;
   id_tipo_tramite: number;
+  cve_unidad_administrativa: string;
   costo_total: string;
   rfc: string;
   representante_legal: RepresentanteLegal;

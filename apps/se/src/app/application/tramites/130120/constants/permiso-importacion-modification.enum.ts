@@ -237,10 +237,10 @@ export const DATOS_MERCANCIA = [
         validators: ['required'],
         catalogos: [
             { "id": 1, "descripcion": "Aeroportuaria" },
-            { "id": 1, "descripcion": "Fronteriza" },
-            { "id": 1, "descripcion": "Interior" },
-            { "id": 1, "descripcion": "Maritima" },
-            { "id": 1, "descripcion": "Terrestre" },
+            { "id": 2, "descripcion": "Fronteriza" },
+            { "id": 3, "descripcion": "Interior" },
+            { "id": 4, "descripcion": "Maritima" },
+            { "id": 5, "descripcion": "Terrestre" },
         ],
         storeFunction: 'setTipoEntrada',
     },
@@ -537,7 +537,7 @@ export const DATOS_EXPORTACION = [
         placeholder: '',
     },
     {
-        labelNombre: 'Cantidad en la unidad de medida senalada en el documento de exportacion*:',
+        labelNombre: 'Cantidad en la unidad de medida señalada en el documento de exportación*:',
         campo: 'cantidad_umt',
         class: 'col-md-4',
         tipo_input: 'number',

@@ -16,6 +16,8 @@ describe('IvaeiepsDosComponent', () => {
   beforeEach(async () => {
     comercioExteriorSvcMock = {
       getBancoDatos: jest.fn().mockReturnValue(of({ data: [{ id: 1, descripcion: 'Banco 1' }] })),
+      getInversionTablaDatos: jest.fn().mockReturnValue(of([])),
+      getTipoInversionDatos: jest.fn().mockReturnValue(of({ data: [] })),
     };
     tramite31602StoreMock = {
       setDynamicFieldValue: jest.fn(),

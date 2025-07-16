@@ -683,4 +683,67 @@ export const REGEX_LINEA_CAPTURA = /^([A-Z0-9]{10}M1[A-Z0-9]{8}$)/;
 export const REGEX_CONRASENIA = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%|°!&/()=?¿+*"'`])[^\s]{8,64}$/;
 
 
- 
+/**
+ * Patrón de expresión regular que valida cadenas que solo contienen letras mayúsculas, números y los símbolos @, #, _, . y -.
+ * [ES] Expresión regular utilizada para asegurar que una cadena solo contenga letras mayúsculas, números y ciertos símbolos permitidos.
+ * PATRON_MAYUSCULAS_NUMEROS_SIMBOLOS.test('ABC123@#_.-'); // true
+ * PATRON_MAYUSCULAS_NUMEROS_SIMBOLOS.test('abc123'); // false
+ */
+export const PATRON_MAYUSCULAS_NUMEROS_SIMBOLOS = /^[A-Z0-9@#_.-]+$/;
+
+
+/**
+ * Expresión regular que valida cadenas que solo contienen letras (mayúsculas y minúsculas), números y espacios.
+ * PATRON_LETRAS_NUMEROS_ESPACIOS.test('Ejemplo 123')
+ */
+export const PATRON_LETRAS_NUMEROS_ESPACIOS = /^[A-Za-z0-9 ]+$/;
+
+
+/**
+ * Expresión regular para validar números decimales con hasta 10 dígitos enteros y exactamente 2 decimales.
+ *
+ * Ejemplos válidos:
+ * - "1234567890.12"
+ * - "1.23"
+ *
+ * Ejemplos no válidos:
+ * - "12345678901.12" (más de 10 dígitos enteros)
+ * - "123.1" (menos de 2 decimales)
+ * - "123" (sin decimales)
+ */
+export const PATRON_NUMERO_DECIMAL_10_2 = /^\d{1,10}\.\d{2}$/;
+
+/**
+ * Expresión regular para validar números decimales con hasta 3 dígitos enteros y hasta 18 decimales.
+ *
+ * Ejemplos válidos:
+ * - "123"
+ * - "1.123456789012345678"
+ * - "12.1"
+ *
+ * Ejemplos no válidos:
+ * - "1234" (más de 3 dígitos enteros)
+ * - "1.1234567890123456789" (más de 18 decimales)
+ * - "abc" (no es un número)
+ */
+export const PATRON_NUMERO_DECIMAL_3_18 = /^\d{1,3}(\.\d{1,18})?$/;
+
+/**
+ * Expresión regular para validar cadenas que contengan letras, números, comas, paréntesis y espacios.
+ * 
+ * Permite:
+ * - Letras mayúsculas y minúsculas (A-Z, a-z)
+ * - Números (0-9)
+ * - Comas (,)
+ * - Paréntesis ()
+ * - Espacios
+ *
+ * Ejemplos válidos:
+ * - "Empresa ABC, S.A. (México)"
+ * - "Test 123, (Ejemplo)"
+ *
+ * Ejemplos no válidos:
+ * - "Email@domain.com" (contiene @ y .)
+ * - "Test-Case" (contiene -)
+ */
+export const REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO = /^[A-Za-z0-9,() ]*$/;

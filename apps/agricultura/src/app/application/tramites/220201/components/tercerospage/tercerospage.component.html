@@ -1,1 +1,3 @@
-  <lib-terceros [tabindex]="4" [esFormularioSoloLectura]="esFormularioSoloLectura" [personas]="personas" (personasChange)="onPersonasChanged($event)"   ></lib-terceros>
+<app-tercerosrelacionados [esFormularioSoloLectura]="esFormularioSoloLectura" [cuerpoTablaDestino]="personas"
+    [cuerpoTablaExportador]="datosForma" [catalogosDatos]="catalogosDatos" (eliminarSeleccion)="handleEliminar()"
+    (eliminarSeleccionEstinoTable)="handleEliminarExportador()"></app-tercerosrelacionados>

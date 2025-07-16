@@ -6,8 +6,17 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <input type="text" class="form-control" id="rfcIngresado" placeholder="AAL0409235E6" formControlName="rfcIngresado"  maxlength="13"
-            size="30" (input)="updateRfcIngresado()" />
+            <input type="text" class="form-control" id="rfcIngresado" formControlName="rfcIngresado" maxlength="13"
+              size="30" (input)="updateRfcIngresado()" />
+          </div>
+          <div *ngIf="cancelacionForm.get('rfcIngresado')?.touched && cancelacionForm.get('rfcIngresado')?.invalid"
+            class="text-danger mt-1">
+            <div *ngIf="cancelacionForm.get('rfcIngresado')?.errors?.['required']">
+              Este campo es obligatorio.
+            </div>
+            <div *ngIf="cancelacionForm.get('rfcIngresado')?.errors?.['maxlength']">
+              Máximo 13 caracteres permitidos.
+            </div>
           </div>
         </div>
       </div>
@@ -30,13 +39,21 @@
           [tipoSeleccionTabla]="TablaSeleccion.RADIO" [disableSeleccionTablaRadio]="esFormularioSoloLectura">
         </app-tabla-dinamica>
       </div>
-
-    <div class="mt-5">
-      <label for="message" class="required-label">Motivos</label>
-      <textarea class="form-control" formControlName="motivoCancelacion" rows="5" placeholder="PRUEBAS QA" id="motivoCancelacion" (input)="updateMotivoCancelacion()"></textarea>
-  </div>
-    
+      <div class="mt-5">
+        <label for="motivoCancelacion" class="required-label">Motivos</label>
+        <textarea class="form-control" formControlName="motivoCancelacion" rows="5" id="motivoCancelacion"
+          style="height: 120px;" (input)="updateMotivoCancelacion()" maxlength="255" required></textarea>
+        <div
+          *ngIf="cancelacionForm.get('motivoCancelacion')?.touched && cancelacionForm.get('motivoCancelacion')?.invalid"
+          class="text-danger mt-1">
+          <div *ngIf="cancelacionForm.get('motivoCancelacion')?.errors?.['required']">
+            Este campo es obligatorio.
+          </div>
+          <div *ngIf="cancelacionForm.get('motivoCancelacion')?.errors?.['maxlength']">
+            Máximo 255 caracteres permitidos.
+          </div>
+        </div>
+      </div>
     </form>
   </div>
 </div>
-

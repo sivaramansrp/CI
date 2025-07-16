@@ -1,82 +1,97 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ExencionDeImpuestosComponent } from './exencionDeImpuestos.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { ExencionDeImpuestosService } from '../../services/exencion-de-impuestos.service';
 import { Tramite10703Store } from '../../estados/tramite10703.store';
 import { Tramite10703Query } from '../../estados/tramite10703.query';
-import { of } from 'rxjs';
-import { MECANCIA_OPTIONS } from '../../enums/exencionDeImpuestos.enum';
+import { CatalogoSelectComponent, ConsultaioQuery, InputCheckComponent, InputRadioComponent, NotificacionesComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Modal } from 'bootstrap';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  InputCheckComponent,
-  InputRadioComponent,
-  TableComponent,
-  TituloComponent,
-  FirmaElectronicaComponent, SharedModule, WizardComponent
-} from '@libs/shared/data-access-user/src';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-const MOCK_PAISES: Catalogo[] = [
-  { id: 1, descripcion: 'País 1' },
-  { id: 2, descripcion: 'País 2' }
-];
+
 describe('ExencionDeImpuestosComponent', () => {
   let component: ExencionDeImpuestosComponent;
   let fixture: ComponentFixture<ExencionDeImpuestosComponent>;
   let exencionDeImpuestosServiceMock: any;
-  let tramite10703StoreMock: any;
-  let tramite10703QueryMock: any;
+  let storeMock: any;
+  let queryMock: any;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
     exencionDeImpuestosServiceMock = {
-      getAduanaIngresara: jest.fn().mockReturnValue(of({ data: [] })),
-      getusoEspecifico: jest.fn().mockReturnValue(of({ data: [] })),
-      getPais: jest.fn().mockReturnValue(of({ data: [] })),
-      getAno: jest.fn().mockReturnValue(of({ data: [] })),
-      getUnidadMedida: jest.fn().mockReturnValue(of({ data: [] })),
-      getCondicionMercancia: jest.fn().mockReturnValue(of({ data: [] })),
-      getMercanciaTbl: jest.fn().mockReturnValue(of({ tableHeader: [], tableBody: [] })),
-      getInicializarMercancias: jest.fn().mockReturnValue(of({ code: 200, data: [{}] })),
-      getInicializarDatos: jest.fn().mockReturnValue(of({})),
+      getAduanaIngresara: jest.fn().mockReturnValue(of({ data: [{ id: 1 }] })),
+      getusoEspecifico: jest.fn().mockReturnValue(of({ data: [{ id: 2 }] })),
+      getPais: jest.fn().mockReturnValue(of({ data: [{ id: 3 }] })),
+      getAno: jest.fn().mockReturnValue(of({ data: [{ id: 4 }] })),
+      getUnidadMedida: jest.fn().mockReturnValue(of({ data: [{ id: 5 }] })),
+      getCondicionMercancia: jest.fn().mockReturnValue(of({ data: [{ id: 6 }] })),
+      getInicializarMercancias: jest.fn().mockReturnValue(of({ code: 200, data: [{ test: 'mercancia' }] })),
+      getInicializarDatos: jest.fn().mockReturnValue(of({ test: 'datos' })),
+      getMercanciaTbl: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Mercancia' }])),
     };
 
-    tramite10703StoreMock = {
+    storeMock = {
       updateFormState: jest.fn(),
       setAduana: jest.fn(),
     };
 
-    tramite10703QueryMock = {
-      selectSolicitud$: of({}),
+    queryMock = {
+      selectSolicitud$: of({
+        aduana: 1,
+        manifesto: 'manifesto',
+        personaFisica: true,
+        organismoPublico: false,
+        usoEspecifico: 'uso',
+        opcion: 'opcion',
+        correoElectronico: 'test@mail.com',
+        telefono: '1234567890',
+        numeroInterior: '1',
+        numeroExterior: '2',
+        calle: 'calle',
+        nombre: 'nombre',
+        estado: 'estado',
+        pais: 'pais',
+        codigoPostal: '12345',
+        colonia: 'colonia',
+        tipoDeMercancia: 'tipo',
+        condicionMercancia: 'condicion',
+        especificoMercancia: 'especifico',
+        unidadMedida: 'unidad',
+        ano: '2024',
+        cantidad: 10,
+        marca: 'marca',
+        modelo: 'modelo',
+        serie: 'serie',
+        vehiculo: 'vehiculo',
+      }),
+    };
+
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false }),
     };
 
     await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule,
+        ExencionDeImpuestosComponent,
+        CommonModule,
+            TituloComponent,
+            CatalogoSelectComponent,
+            InputCheckComponent,
+            InputRadioComponent,
+            TablaDinamicaComponent,
+            NotificacionesComponent,
+
+      ],
       declarations: [],
-      imports: [ExencionDeImpuestosComponent, ReactiveFormsModule, CommonModule,
-          TituloComponent,
-          CatalogoSelectComponent,
-          InputCheckComponent,
-          TableComponent,
-          InputRadioComponent,
-          FirmaElectronicaComponent,
-          RouterModule,
-          FormsModule,
-          HttpClientModule,
-          WizardComponent,
-          SharedModule,
-          HttpClientTestingModule,
-  
-        ],
       providers: [
         FormBuilder,
         { provide: ExencionDeImpuestosService, useValue: exencionDeImpuestosServiceMock },
-        { provide: Tramite10703Store, useValue: tramite10703StoreMock },
-        { provide: Tramite10703Query, useValue: tramite10703QueryMock },
+        { provide: Tramite10703Store, useValue: storeMock },
+        { provide: Tramite10703Query, useValue: queryMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ExencionDeImpuestosComponent);
@@ -88,67 +103,107 @@ describe('ExencionDeImpuestosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize catalogs on ngOnInit', () => {
-    const inicializaCatalogosSpy = jest.spyOn(component as any, 'inicializaCatalogos');
-    component.ngOnInit();
-    expect(inicializaCatalogosSpy).toHaveBeenCalled();
+  it('should initialize catalogos on inicializaCatalogos', () => {
+    component['inicializaCatalogos']();
+    expect(exencionDeImpuestosServiceMock.getAduanaIngresara).toHaveBeenCalled();
+    expect(exencionDeImpuestosServiceMock.getusoEspecifico).toHaveBeenCalled();
+    expect(exencionDeImpuestosServiceMock.getPais).toHaveBeenCalled();
+    expect(exencionDeImpuestosServiceMock.getAno).toHaveBeenCalled();
+    expect(exencionDeImpuestosServiceMock.getUnidadMedida).toHaveBeenCalled();
+    expect(exencionDeImpuestosServiceMock.getCondicionMercancia).toHaveBeenCalled();
   });
 
-  it('should initialize exencion de impuestos data on ngOnInit', () => {
-    const inicializaExencionDelmpustosSpy = jest.spyOn(component as any, 'inicializaExencionDelmpustos');
-    component.ngOnInit();
-    expect(inicializaExencionDelmpustosSpy).toHaveBeenCalled();
-  });
-
-  it('should initialize mercancias on ngOnInit', () => {
-    const inicializaMercanciasSpy = jest.spyOn(component as any, 'inicializaMercancias');
-    component.ngOnInit();
-    expect(inicializaMercanciasSpy).toHaveBeenCalled();
-  });
-
-  it('should call getMercanciaTbl on ngOnInit', () => {
-    const getMercanciaTblSpy = jest.spyOn(component, 'getMercanciaTbl');
-    component.ngOnInit();
-    expect(getMercanciaTblSpy).toHaveBeenCalled();
-  });
-
-  it('should set radioOptions to MECANCIA_OPTIONS on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.radioOptions).toEqual(MECANCIA_OPTIONS);
-  });
-
-  it('should initialize tramiteForm in getExencionDelmpuestor', () => {
-    component.solicitudState = { aduana: 'test' } as any;
-    component.getExencionDelmpuestor();
-    expect(component.tramiteForm.get('importadorExportador.aduana')?.value).toEqual('test');
-  });
-
-  it('should initialize agregarMercanciasForm in initagregarMercanciasForm', () => {
-    component.solicitudState = { tipoDeMercancia: 'test' } as any;
-    component.initagregarMercanciasForm();
-    expect(component.agregarMercanciasForm.get('datosMercancia.tipoDeMercancia')?.value).toEqual('test');
-  });
-
-  it('should open modal in abrirDialogoMercancias', () => {
-    const modalElementMock = { nativeElement: document.createElement('div') };
-    component.modalElement = modalElementMock as any;
-    const modalInstanceSpy = jest.spyOn(Modal.prototype, 'show');
-    component.abrirDialogoMercancias();
-    expect(modalInstanceSpy).toHaveBeenCalled();
-  });
-
-  it('should fetch and set mercancia table data in getMercanciaTbl', () => {
-    component.getMercanciaTbl();
-    expect(exencionDeImpuestosServiceMock.getMercanciaTbl).toHaveBeenCalled();
-  });
-
-  it('should update aduana in aduanaSeleccion', () => {
+  it('should call store.setAduana on aduanaSeleccion', () => {
     component.tramiteForm = new FormBuilder().group({
       importadorExportador: new FormBuilder().group({
-        aduana: ['123'],
+        aduana: 123,
       }),
     });
     component.aduanaSeleccion();
-    expect(tramite10703StoreMock.setAduana).toHaveBeenCalledWith(123);
+    expect(storeMock.setAduana).toHaveBeenCalledWith(123);
+  });
+
+  it('should set enableModficarBoton on manejarFilaSeleccionada', () => {
+    const fila = [{ id: 1 }];
+    component.manejarFilaSeleccionada(fila as any);
+    expect(component.enableModficarBoton).toBe(fila);
+  });
+
+  it('should disable forms if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.tramiteForm = new FormBuilder().group({});
+    component.agregarMercanciasForm = new FormBuilder().group({});
+    component.esFormularioSoloLectura = true;
+    jest.spyOn(component.tramiteForm, 'disable');
+    jest.spyOn(component.agregarMercanciasForm, 'disable');
+    component.guardarDatosFormulario();
+    expect(component.tramiteForm.disable).toHaveBeenCalled();
+    expect(component.agregarMercanciasForm.disable).toHaveBeenCalled();
+  });
+
+  it('should enable forms if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.tramiteForm = new FormBuilder().group({});
+    component.agregarMercanciasForm = new FormBuilder().group({});
+    component.esFormularioSoloLectura = false;
+    jest.spyOn(component.tramiteForm, 'enable');
+    jest.spyOn(component.agregarMercanciasForm, 'enable');
+    component.guardarDatosFormulario();
+    expect(component.tramiteForm.enable).toHaveBeenCalled();
+    expect(component.agregarMercanciasForm.enable).toHaveBeenCalled();
+  });
+
+  it('should set nuevaNotificacion if enableModficarBoton is empty in abrirDialogoMercancias', () => {
+    component.enableModficarBoton = [];
+    component.abrirDialogoMercancias();
+    expect(component.nuevaNotificacion).toBeDefined();
+    expect(component.nuevaNotificacion.mensaje).toBe('Seleccione un registro');
+  });
+
+  it('should call Modal.show if enableModficarBoton is not empty and modal exists', () => {
+    component.enableModficarBoton = [{ id: 1 }] as any;
+    const showMock = jest.fn();
+    (window as any).bootstrap = { Modal: jest.fn().mockImplementation(() => ({ show: showMock })) };
+    const modalElement = document.createElement('div');
+    modalElement.id = 'modalAgregarMercancias';
+    document.body.appendChild(modalElement);
+    component.abrirDialogoMercancias();
+    expect(showMock).toHaveBeenCalled();
+    document.body.removeChild(modalElement);
+  });
+
+  it('should set mercanciaDatos in getMercanciaTbl', () => {
+    component.getMercanciaTbl();
+    expect(component.mercanciaDatos).toEqual([{ id: 1, nombre: 'Mercancia' }]);
+  });
+
+  it('should call store.updateFormState in inicializaMercancias if code is 200', () => {
+    component['inicializaMercancias']();
+    expect(storeMock.updateFormState).toHaveBeenCalledWith({ test: 'mercancia' });
+  });
+
+  it('should call store.updateFormState in inicializaExencionDelmpustos', () => {
+    component['inicializaExencionDelmpustos']();
+    expect(storeMock.updateFormState).toHaveBeenCalledWith({ test: 'datos' });
+  });
+
+  it('should complete destroy$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroy$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroy$, 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario if esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    const spy = jest.spyOn(component, 'inicializarFormulario');
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
   });
 });

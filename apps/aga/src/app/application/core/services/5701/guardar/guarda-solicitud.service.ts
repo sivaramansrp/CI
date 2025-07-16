@@ -1,19 +1,33 @@
 import {
+  API_ELIMINAR_TRAMITE,
   API_POST_SOLICITUD,
   ENVIRONMENT,
 } from '@libs/shared/data-access-user/src';
+import {
+  EliminaSolicitudResponse,
+  SolicitudResult,
+} from '../../../models/5701/solicitud-result.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { SolicitudPayload } from '../../../models/5701/solicitud-payload.model';
-import { SolicitudResult } from '../../../models/5701/solicitud-result.model';
 
 @Injectable({
   providedIn: 'root',
 })
+
+/**
+ * Servicio para manejar las solicitudes del trámite 5701.
+ */
 export class GuardaSolicitudService {
+  /**
+   * URL base del API para las solicitudes.
+   */
   private readonly host: string;
 
+  /**
+   * Constructor del servicio GuardaSolicitudService.
+   */
   constructor(private http: HttpClient) {
     this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
@@ -37,6 +51,34 @@ export class GuardaSolicitudService {
         }
         const ERROR = new Error(
           `Ocurrió un error al guardar la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );
+  }
+
+  /**
+   * Método para eliminar la solicitud a la base de datos.
+   */
+  deleteSolicitud(id: number): Observable<EliminaSolicitudResponse> {
+    const ENDPOINT = `${this.host}${API_ELIMINAR_TRAMITE.replace(
+      '{idTramite}',
+      id.toString()
+    )}`;
+
+    return this.http.delete<EliminaSolicitudResponse>(ENDPOINT).pipe(
+      map((response) => {
+        return response;
+      }),
+      catchError((httpError) => {
+        if (httpError instanceof HttpErrorResponse) {
+          return throwError(() => ({
+            success: false,
+            error: httpError.error,
+          }));
+        }
+        const ERROR = new Error(
+          `Ocurrió un error al eliminar la solicitud ${ENDPOINT} `
         );
         return throwError(() => ERROR);
       })
