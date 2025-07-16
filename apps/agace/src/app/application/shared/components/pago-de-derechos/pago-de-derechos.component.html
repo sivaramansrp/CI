@@ -1,0 +1,12 @@
+<form [formGroup]="pagoDerechosForm">
+  <formas-dinamicas
+    formularioTitulo="Pago de derechos"
+    [forma]="ninoFormGroup"
+    [formularioDatos]="pagoDerechosFormData"
+    (emitirCambioDeValor)="establecerCambioDeValor($event)"
+  ></formas-dinamicas>
+</form>
+
+<div class="col-md-12 text-end mt-5">
+  <button class="btn btn-danger" (click)="borrar()">Borrar datos del pago</button>
+</div>

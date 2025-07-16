@@ -6,6 +6,7 @@ import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PasoDuosComponent } from './pages/paso-duos/paso-duos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { PerfilesFerrovarioComponent } from './components/perfiles-ferrovario/perfiles-ferrovario.component';
 import { RubroTransporteFerroviarioRoutingModule } from './rubro-transporte-ferroviario-routing.module';
 import { TercerosRelacionadosComponent } from '../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { TransporteFerroviarioComponent } from './components/transporte-ferroviario/transporte-ferroviario.component';
@@ -26,7 +27,8 @@ import { TransporteFerroviarioComponent } from './components/transporte-ferrovia
     SolicitanteComponent,
     DatosComunesTresComponent,
     TercerosRelacionadosComponent,
-    TransporteFerroviarioComponent
+    TransporteFerroviarioComponent,
+    PerfilesFerrovarioComponent
   ]
 })
 export class RubroTransporteFerroviarioModule { }

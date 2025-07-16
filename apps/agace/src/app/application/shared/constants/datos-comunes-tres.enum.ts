@@ -1,5 +1,5 @@
-import { Domicilios, Inventarios, NumeroDeEmpleados } from "../models/datos-comunes-tres.model";
 import { ConfiguracionAporteColumna, ConfiguracionColumna, TablaCampoSeleccion } from "@libs/shared/data-access-user/src";
+import { Domicilios, Inventarios, NumeroDeEmpleados, PrincipalesInstalaciones, SeccionSociosIC } from "../models/datos-comunes-tres.model";
 
 export const DATOS_COMUNES = [
   {
@@ -697,3 +697,617 @@ export const INVENTARIOS_CONFIGURACION: ConfiguracionAporteColumna<Inventarios>[
       opcionDeEntrada: TablaCampoSeleccion.CHECKBOX,
     },
   ];
+
+/** Configuración de columnas para Sección de Socios IC */
+export const SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS: ConfiguracionColumna<SeccionSociosIC>[] = [
+  {
+    encabezado: 'Tipo de Persona',
+    clave: (item: SeccionSociosIC) => item.tipoPersonaMuestra,
+    orden: 1,
+  },
+  {
+    encabezado: 'Nombre',
+    clave: (item: SeccionSociosIC) => item.nombreCompleto,
+    orden: 1,
+  },
+  {
+    encabezado: 'RFC',
+    clave: (item: SeccionSociosIC) => item.rfc,
+    orden: 1,
+  },
+  {
+    encabezado: 'En su carácter de',
+    clave: (item: SeccionSociosIC) => item.caracterDe,
+    orden: 1,
+  },
+  {
+    encabezado: 'Nacionalidad',
+    clave: (item: SeccionSociosIC) => item.nacionalidad,
+    orden: 1,
+  },
+
+  {
+    encabezado: 'Obligado a tributar en México',
+    clave: (item: SeccionSociosIC) => item.tributarMexico,
+    orden: 1,
+  },
+  {
+    encabezado: 'Nombre de la empresa',
+    clave: (item: SeccionSociosIC) => item.nombreEmpresa,
+    orden: 1,
+  },
+];
+
+export const MIEMBRO_DE_LA_EMPRESA = [
+  {
+    id: 'manifiesteSiSusSocios',
+    labelNombre: 'Manifieste si sus socios o accionistas, según corresponda, representantes legales con facultad para actos de dominio e integrantes de la administración, no se encuentren vinculados con alguna empresa a la que se le hubiere cancelado su Registro en el Esquema de Certificación de Empresas, de conformidad con la regla 7.2.4., apartado A, fracciones V, VI y VII y apartado B, fracciones II, y III y V y/o de la regla 7.2.5., fracciones VI, VII y XI.',
+    campo: 'manifiesteSiSusSocios',
+    clase: 'col-md-12',
+    tipoInput: 'radio',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 3,
+    opciones: [
+      {
+        label: 'Si',
+        value: 'Si',
+      },
+      {
+        label: 'No',
+        value: 'No',
+      },
+    ],
+    gridLayout: true
+  },
+  {
+    id: 'unaVezManifestado',
+    labelNombre: 'Una vez manifestado lo anterior, se solicita al SAT, a través de AGACE, que realice las inspecciones a que hace referencia la fracción IX de la regla 7.1.1, a las instalaciones señaladas en las que se realizan las operaciones de comercio exterior con el  de verificar la información plasmada en la presente solicitud del Registro en el Esquema Integral de Certificación.',
+    campo: 'unaVezManifestado',
+    clase: 'col-md-12',
+    tipoInput: 'checkbox',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{tipo: 'required'}],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 3
+  },
+  {
+    id: 'bajoProtestaDeDecir',
+    labelNombre: 'Bajo protesta de decir verdad, manifiesto que los datos asentados en el presente documento son ciertos y que las facultades  me fueron otorgadas para representar al solicitante no me han sido modificadas y/ o revocadas.',
+    campo: 'bajoProtestaDeDecir',
+    clase: 'col-md-12',
+    tipoInput: 'checkbox',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{tipo: 'required'}],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 3
+  },
+] 
+
+export const NUMERO_DE_EMPLEADOS = [
+  {
+    id: 'subcontrataRFCBusqueda',
+    labelNombre: 'RFC',
+    campo: 'subcontrataRFCBusqueda',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{tipo: 'required'}],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    row: 1,
+  },
+  {
+    id: 'Buscar',
+    labelNombre: 'Buscar',
+    campo: 'buscar',
+    clase: 'col-md-8',
+    tipoInput: 'button',
+    desactivado: false,
+    marginTop: 5,
+    row: 1
+  },
+  {
+    id: 'subcontrataRFC',
+    labelNombre: 'Registro Federal de Contribuyentes',
+    campo: 'subcontrataRFC',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{tipo: 'required'}],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 3,
+    row: 2,
+  },
+  {
+    id: 'subcontrataRazonSocial',
+    labelNombre: 'Razon Social',
+    campo: 'subcontrataRazonSocial',
+    clase: 'col-md-8',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{tipo: 'required'}],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    row: 3,
+  },
+  {
+    id: 'subcontrataEmpleados',
+    labelNombre: 'Número de empleados',
+    campo: 'subcontrataEmpleados',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{tipo: 'required'}],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    row: 4,
+  },
+  {
+    id: 'subcontrataBimestre',
+    labelNombre: 'Bimestre',
+    campo: 'subcontrataBimestre',
+    clase: 'col-md-6',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{tipo: 'required'}],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    opciones: [],
+    row: 5,
+  },
+]
+
+export const PRINCIPALES_INSTALACIONES = [
+  {
+    id: 'entidadFederativa',
+    labelNombre: 'Entidad Federativa',
+    campo: 'entidadFederativa',
+    clase: 'col-md-6',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    opciones: []
+  },
+  {
+    id: '',
+    labelNombre: '',
+    campo: '',
+    clase: 'col-md-12',
+    tipoInput: 'custom-html',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 5,
+    templateKey: 'customSection4',
+  },
+]
+
+/** Configuración de columnas para Sección de Socios IC */
+export const PRINCIPALES_INSTALACIONES_COLUMNA: ConfiguracionColumna<PrincipalesInstalaciones>[] = [
+  {
+    encabezado: 'Entidad federativa',
+    clave: (item: PrincipalesInstalaciones) => item.entidadFederativa,
+    orden: 1,
+  },
+  {
+    encabezado: 'Municipio o delegación',
+    clave: (item: PrincipalesInstalaciones) => item.municipioDelegacion,
+    orden: 2,
+  },
+  {
+    encabezado: 'Colonia, calle y número',
+    clave: (item: PrincipalesInstalaciones) => item.colonio,
+    orden: 3,
+  },
+  {
+    encabezado: 'Código postal',
+    clave: (item: PrincipalesInstalaciones) => item.codigoPostal,
+    orden: 4,
+  },
+  {
+    encabezado: 'Registro ante SE/SAT',
+    clave: (item: PrincipalesInstalaciones) => item.registro,
+    orden: 5,
+  }
+]; 
+
+export const MODIFICAR_INSTALACIONES = [
+  {
+    id: 'principales',
+    labelNombre: 'Instalaciones principales',
+    campo: 'principales',
+    clase: 'col-md-8',
+    tipoInput: 'radio',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    opciones: [
+      {
+        label: 'Si',
+        value: 'Si',
+      },
+      {
+        label: 'No',
+        value: 'No',
+      },
+    ],
+    layout: 'horizontal'
+  },
+  {
+    id: 'municipio',
+    labelNombre: 'Municipio o alcaldía',
+    campo: 'municipio',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0
+  },
+  {
+    id: 'tipoDeInstalacion',
+    labelNombre: 'Tipo de instalación',
+    campo: 'tipoDeInstalacion',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    opciones: []
+  },
+  {
+    id: 'modificar_entidadFederativa',
+    labelNombre: 'Entidad federativa',
+    campo: 'entidadFederativa',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0
+  },
+  {
+    id: 'registroSESAT',
+    labelNombre: 'Registro ante SE/SAT',
+    campo: 'registroSESAT',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0
+  },
+  {
+    id: 'coloniaDescripcion',
+    labelNombre: 'Colonia, calle y número',
+    campo: 'coloniaDescripcion',
+    clase: 'col-md-8',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0
+  },
+  {
+    id: 'modificarCodigoPostal',
+    labelNombre: 'Código postal',
+    campo: 'modificarCodigoPostal',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0
+  },
+  {
+    id: 'procesoProductivo',
+    labelNombre: 'Proceso productivo',
+    campo: 'procesoProductivo',
+    clase: 'col-md-4',
+    tipoInput: 'radio',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    opciones: [
+      {
+        label: 'Si',
+        value: 'Si',
+      },
+      {
+        label: 'No',
+        value: 'No',
+      },
+    ],
+    layout: 'horizontal'
+  },
+  {
+    id: 'goceDelInmueble',
+    labelNombre: 'Acreditación del uso y goce del inmueble',
+    campo: 'goceDelInmueble',
+    clase: 'col-md-8',
+    tipoInput: 'radio',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    opciones: [
+      {
+        label: 'Si',
+        value: 'Si',
+      },
+      {
+        label: 'No',
+        value: 'No',
+      },
+    ],
+    layout: 'horizontal'
+  },
+  {
+    id: 'empresa',
+    labelNombre: 'Perfil de la empresa',
+    campo: 'empresa',
+    clase: 'col-md-4',
+    tipoInput: 'radio',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    opciones: [
+      {
+        label: 'Si',
+        value: 'Si',
+      },
+      {
+        label: 'No',
+        value: 'No',
+      },
+    ],
+    layout: 'horizontal'
+  },
+]
+
+export const MODAL_MIEMBRO_DE_LA_EMPRESA = [
+  {
+    id: 'miembroCaracterDe',
+    labelNombre: 'En su caracter de',
+    campo: 'miembroCaracterDe',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    opciones: [],
+    row: 1
+  },
+  {
+    id: 'miembroRfc',
+    labelNombre: 'RFC',
+    campo: 'miembroRfc',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    row: 1,
+    mostrar: false
+  },
+  {
+    id: 'Buscar',
+    labelNombre: 'Buscar',
+    campo: 'buscar',
+    clase: 'col-md-4',
+    tipoInput: 'button',
+    desactivado: false,
+    marginTop: 5,
+    row: 1,
+    mostrar: false
+  },
+  {
+    id: 'miembroTributarMexico',
+    labelNombre: 'Obligado a tributar en México',
+    campo: 'miembroTributarMexico',
+    clase: 'col-md-4',
+    tipoInput: 'radio',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    opciones: [
+      {
+        label: 'Si',
+        value: 'Si',
+      },
+      {
+        label: 'No',
+        value: 'No',
+      },
+    ],
+    layout: 'horizontal',
+    row: 2
+  },
+   {
+    id: 'miembroRegistroFederal',
+    labelNombre: 'Registro Federal de Contribuyentes',
+    campo: 'miembroRegistroFederal',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    row: 2,
+    mostrar: false
+  },
+  {
+    id: 'miembroTipoPersonaMuestra',
+    labelNombre: 'Tipo de persona',
+    campo: 'miembroTipoPersonaMuestra',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    opciones: [
+      {
+        id: 1,
+        descripcion: "Física"
+      },
+      {
+        id: 2,
+        descripcion: "Moral"
+      }
+    ],
+    row: 1,
+    mostrar: false
+  },
+  {
+    id: 'miembroNombre',
+    labelNombre: 'Nombre (s)',
+    campo: 'miembroNombre',
+    clase: 'col-md-8',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    row: 2,
+    mostrar: false
+  },
+  {
+    id: 'miembroNombreEmpresa',
+    labelNombre: 'Nombre de la empresa',
+    campo: 'miembroNombreEmpresa',
+    clase: 'col-md-8',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    row: 2,
+    mostrar: false
+  },
+  {
+    id: 'miembroNacionalidad',
+    labelNombre: 'Nacionalidad',
+    campo: 'miembroNacionalidad',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    opciones: [],
+    row: 3
+  },
+  {
+    id: 'miembroApellidoPaterno',
+    labelNombre: 'Apellido paterno',
+    campo: 'miembroApellidoPaterno',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    row: 3,
+    mostrar: false
+  },
+  {
+    id: 'miembroApellidoMaterno',
+    labelNombre: 'Apellido materno',
+    campo: 'miembroApellidoMaterno',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    row: 3,
+    mostrar: false
+  },
+  {
+    id: 'miembroNombreCompleto',
+    labelNombre: 'Nombre completo',
+    campo: 'miembroNombreCompleto',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 0,
+    row: 3,
+    mostrar: false
+  },
+]

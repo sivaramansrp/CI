@@ -34,6 +34,6 @@ export class SeccionDinamicaComponent {
       return;
     }
     VIEW_CONTAINER.clear();
-    VIEW_CONTAINER.createComponent(SECCION.componentClase as Type<unknown>);
+    VIEW_CONTAINER?.createComponent(SECCION?.componentClase as Type<unknown>);
   }
 }

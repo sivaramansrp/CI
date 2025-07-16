@@ -143,7 +143,7 @@
                           (change)="eventoDeCambioDeValor($event, item.campo)"
                         />
                         <label class="form-label" [for]="item.id" style="margin-left: 10px;" *ngIf="item.labelNombre">
-                          {{ item.labelNombre }}{{ seRequiere(item.campo) ? '*:' : '' }}
+                          {{ item.labelNombre }}{{ seRequiere(item.campo) ? '*' : '' }}
                         </label>
 
                       </div>
@@ -169,7 +169,7 @@
                       <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
                         <div class="form-group">
                           @if (item.labelNombre) {
-                            <label class="form-label" [for]="item.id">{{item.labelNombre }} {{seRequiere(item.campo) ? '*:' : ':'}}
+                            <label class="form-label" [for]="item.id">{{item.labelNombre }} {{seRequiere(item.campo) ? '*' : ''}}
                               @if(item.tooltipQuestionCircle) {
                                 <span class="bi bi-question-circle-fill" title="{{item.tooltipTxt ? item.tooltipTxt : item.labelNombre}}" data-bs-toggle="tooltip"></span>
                               }
@@ -218,7 +218,7 @@
                     </div>
                   } @case ('label-only') {
                     @if (item.mostrar !== false) {
-                      <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]" class="min-height">
+                      <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
                         <div class="form-group">
                           <label class="form-label" [for]="item.id">{{item.labelNombre }}</label>
                         </div>
