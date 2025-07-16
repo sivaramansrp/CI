@@ -24,26 +24,51 @@
             <div class="row">
               <div class="col-md-4">
                 <label class="form-label" for="nombrePFE">Nombre(s)*:</label>
-                <input type="text" class="form-control" size="40" id="nombrePFE" maxlength="200" formControlName="nombrePFE" (change)="setValoresStore(personaFisicaExtranjeraForm,'nombrePFE', 'setNombrePFE')">
+                <input type="text" class="form-control" size="40" id="nombrePFE" maxlength="200" formControlName="nombrePFE" 
+                       [ngClass]="{'is-invalid': personaFisicaExtranjeraForm.get('nombrePFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('nombrePFE')?.touched}"
+                       (change)="setValoresStore(personaFisicaExtranjeraForm,'nombrePFE', 'setNombrePFE')">
+                <div *ngIf="personaFisicaExtranjeraForm.get('nombrePFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('nombrePFE')?.touched" class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
               </div>
               <div class="col-md-4">
                 <label class="form-label" for="apellidoPaterno">Primer apellido*:</label>
-                <input type="text" class="form-control" size="40" id="apellidoPaternoPFE" maxlength="200" formControlName="apellidoPaternoPFE" (change)="setValoresStore(personaFisicaExtranjeraForm,'apellidoPaternoPFE', 'setApellidoPaternoPFE')">
+                <input type="text" class="form-control" size="40" id="apellidoPaternoPFE" maxlength="200" formControlName="apellidoPaternoPFE" 
+                       [ngClass]="{'is-invalid': personaFisicaExtranjeraForm.get('apellidoPaternoPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('apellidoPaternoPFE')?.touched}"
+                       (change)="setValoresStore(personaFisicaExtranjeraForm,'apellidoPaternoPFE', 'setApellidoPaternoPFE')">
+                <div *ngIf="personaFisicaExtranjeraForm.get('apellidoPaternoPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('apellidoPaternoPFE')?.touched" class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
               </div>
               <div class="col-md-4">
                 <label class="form-label" for="apellidoMaterno">Segundo apellido:</label>
-                <input type="text" class="form-control" name="apellidoMaternoPFE" formControlName="apellidoMaternoPFE" id="apellidoMaternoPFE" maxlength="200" (change)="setValoresStore(personaFisicaExtranjeraForm,'apellidoMaternoPFE', 'setApellidoMaternoPFE')">
+                <input type="text" class="form-control" name="apellidoMaternoPFE" formControlName="apellidoMaternoPFE" id="apellidoMaternoPFE" maxlength="200" 
+                       [ngClass]="{'is-invalid': personaFisicaExtranjeraForm.get('apellidoMaternoPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('apellidoMaternoPFE')?.touched}"
+                       (change)="setValoresStore(personaFisicaExtranjeraForm,'apellidoMaternoPFE', 'setApellidoMaternoPFE')">
+                <div *ngIf="personaFisicaExtranjeraForm.get('apellidoMaternoPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('apellidoMaternoPFE')?.touched" class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-8">
                 <label class="form-label" for="seguroNumero">Número del seguro social*: <span class="bi bi-question-circle-fill" title="{{ TEXTOS.CORREO_TITULO_TOOLTIP }}" data-bs-toggle="tooltip"></span>
                 </label>
-                <input type="text" class="form-control" size="40" id="nssPFE" maxlength="11" formControlName="seguroNumero" (change)="setValoresStore(personaFisicaExtranjeraForm,'seguroNumero', 'setSeguroNumero')">
+                <input type="text" class="form-control" size="40" id="nssPFE" maxlength="11" formControlName="seguroNumero" 
+                       [ngClass]="{'is-invalid': personaFisicaExtranjeraForm.get('seguroNumero')?.errors?.['required'] && personaFisicaExtranjeraForm.get('seguroNumero')?.touched}"
+                       (change)="setValoresStore(personaFisicaExtranjeraForm,'seguroNumero', 'setSeguroNumero')">
+                <div *ngIf="personaFisicaExtranjeraForm.get('seguroNumero')?.errors?.['required'] && personaFisicaExtranjeraForm.get('seguroNumero')?.touched" class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
               </div>
               <div class="col-md-4">
                 <label class="form-label" for="correoPFE">Correo electrónico*: </label>
-                <input type="text" class="form-control" name="correoPFE" formControlName="correoPFE" maxlength="320" id="correoPFE" (change)="setValoresStore(personaFisicaExtranjeraForm,'correoPFE', 'setCorreoPFE')">
+                <input type="text" class="form-control" name="correoPFE" formControlName="correoPFE" maxlength="320" id="correoPFE" 
+                       [ngClass]="{'is-invalid': personaFisicaExtranjeraForm.get('correoPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('correoPFE')?.touched}"
+                       (change)="setValoresStore(personaFisicaExtranjeraForm,'correoPFE', 'setCorreoPFE')">
+                <div *ngIf="personaFisicaExtranjeraForm.get('correoPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('correoPFE')?.touched" class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
               </div>
             </div>
             <!-- Domicilios -->
@@ -54,31 +79,57 @@
               </div>
               <div class="col-md-4 pt-7">
                 <label for="codigoPostal">Código postal*:</label>
-                <input type="text" class="form-control" name="codigoPostalPFE" id="codigoPostalPFE" formControlName="codigoPostalPFE" maxlength="12" (change)="setValoresStore(personaFisicaExtranjeraForm,'codigoPostalPFE', 'setCodigoPostalPFE')">
+                <input type="text" class="form-control" name="codigoPostalPFE" id="codigoPostalPFE" formControlName="codigoPostalPFE" maxlength="12" 
+                       [ngClass]="{'is-invalid': personaFisicaExtranjeraForm.get('codigoPostalPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('codigoPostalPFE')?.touched}"
+                       (change)="setValoresStore(personaFisicaExtranjeraForm,'codigoPostalPFE', 'setCodigoPostalPFE')">
+                <div *ngIf="personaFisicaExtranjeraForm.get('codigoPostalPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('codigoPostalPFE')?.touched" class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
               </div>
               <div class="col-md-4 pt-7">
                 <label for="estado">Estado*:</label>
-                <input type="text" class="form-control" name="estadoPFE" id="entidadFederativaPFE" formControlName="estadoPFE" maxlength="200" (change)="setValoresStore(personaFisicaExtranjeraForm,'estadoPFE', 'setEstadoPFE')">
+                <input type="text" class="form-control" name="estadoPFE" id="entidadFederativaPFE" formControlName="estadoPFE" maxlength="200" 
+                       [ngClass]="{'is-invalid': personaFisicaExtranjeraForm.get('estadoPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('estadoPFE')?.touched}"
+                       (change)="setValoresStore(personaFisicaExtranjeraForm,'estadoPFE', 'setEstadoPFE')">
+                <div *ngIf="personaFisicaExtranjeraForm.get('estadoPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('estadoPFE')?.touched" class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
               </div>
             </div>
             <div class="row pt-7">
               <div class="col-md-4">
                 <label for="ciudad">Ciudad*:</label>
-                <input type="text" class="form-control" name="ciudadPFE" id="ciudadPFE" formControlName="ciudadPFE" maxlength="120" (change)="setValoresStore(personaFisicaExtranjeraForm,'ciudadPFE', 'setCiudadPFE')">
+                <input type="text" class="form-control" name="ciudadPFE" id="ciudadPFE" formControlName="ciudadPFE" maxlength="120" 
+                       [ngClass]="{'is-invalid': personaFisicaExtranjeraForm.get('ciudadPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('ciudadPFE')?.touched}"
+                       (change)="setValoresStore(personaFisicaExtranjeraForm,'ciudadPFE', 'setCiudadPFE')">
+                <div *ngIf="personaFisicaExtranjeraForm.get('ciudadPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('ciudadPFE')?.touched" class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
               </div>
               <div class="col-md-8">
                 <label for="calle">Calle*:</label>
-                <input type="text" class="form-control" name="callePFE" id="callePFE" formControlName="callePFE" maxlength="100" (change)="setValoresStore(personaFisicaExtranjeraForm,'callePFE', 'setCallePFE')">
+                <input type="text" class="form-control" name="callePFE" id="callePFE" formControlName="callePFE" maxlength="100" 
+                       [ngClass]="{'is-invalid': personaFisicaExtranjeraForm.get('callePFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('callePFE')?.touched}"
+                       (change)="setValoresStore(personaFisicaExtranjeraForm,'callePFE', 'setCallePFE')">
+                <div *ngIf="personaFisicaExtranjeraForm.get('callePFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('callePFE')?.touched" class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
               </div>
             </div>
             <div class="row pt-7">
               <div class="col-md-4">
                 <label for="numeroExterior">Número exterior*:</label>
-                <input type="text" class="form-control" name="numeroExteriorPFE" id="numeroExteriorPFE" formControlName="numeroExteriorPFE" maxlength="55" (change)="setValoresStore(personaFisicaExtranjeraForm,'numeroExteriorPFE', 'setNumeroExteriorPFE')">
+                <input type="text" class="form-control" name="numeroExteriorPFE" id="numeroExteriorPFE" formControlName="numeroExteriorPFE" maxlength="55" 
+                       [ngClass]="{'is-invalid': personaFisicaExtranjeraForm.get('numeroExteriorPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('numeroExteriorPFE')?.touched}"
+                       (change)="setValoresStore(personaFisicaExtranjeraForm,'numeroExteriorPFE', 'setNumeroExteriorPFE')">
+                <div *ngIf="personaFisicaExtranjeraForm.get('numeroExteriorPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('numeroExteriorPFE')?.touched" class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
               </div>
               <div class="col-md-4">
                 <label for="numeroInterior">Número interior:</label>
-                <input type="text" class="form-control" name="numeroInteriorPFE" id="numeroInteriorPFE" formControlName="numeroInteriorPFE" maxlength="55" (change)="setValoresStore(personaFisicaExtranjeraForm,'numeroInteriorPFE', 'setNumeroInteriorPFE')">
+                <input type="text" class="form-control" name="numeroInteriorPFE" id="numeroInteriorPFE" formControlName="numeroInteriorPFE" maxlength="55" 
+                       (change)="setValoresStore(personaFisicaExtranjeraForm,'numeroInteriorPFE', 'setNumeroInteriorPFE')">
               </div>
             </div>
           </form>

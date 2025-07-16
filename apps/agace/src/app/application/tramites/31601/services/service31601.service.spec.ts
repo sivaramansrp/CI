@@ -27,7 +27,11 @@ describe('Solocitud31601Service', () => {
       'setComboBimestresDos', 'setComboBimestresTres', 'setProveedorCumplimiento', 'setDeclaracionISR',
       'setCancelacion', 'setCumplimientoReglas', 'setRecintoFiscalizado', 'setRecintoEstrategico',
       'setCumplimientoLineamientos', 'setManifieste', 'setIndiqueIva', 'setEmpleados', 'setInfraestructura',
-      'setMonto', 'setAntiguedad', 'setTipoDe', 'setValorPesos', 'setDescripcion', 'setHaContado', 'setEnCasoIva','setEnlaceTablaDatos'
+      'setMonto', 'setAntiguedad', 'setTipoDe', 'setValorPesos', 'setDescripcion', 'setHaContado', 'setEnCasoIva','setEnlaceTablaDatos','setEstadoResidencia','setCancelacionProcedimiento','setCumpleLineamientos','setNombre','setRfcDatos','setRfcDatos', 'setIndiques', 'setCuenta', 'setMismo', 'setEmpresa',
+      'setPropios', 'setEmpleadoss', 'setSocios', 'setEncuentras', 'setCumplido', 'setProcedimiento',
+      'setDeterminan', 'setTransferenciasDatos', 'setTransferenciasdos', 'setRetornosDatos', 'setRetornosdos',
+      'setConstanciasDatos', 'setConstanciasdos', 'setMonedaTotal', 'setPorcentajeTotal', 'setCapture',
+      'setDeEmpleados', 'setBimestreDatos', 'setNumeroDeEmpleados', 'setBimestredos', 'setNumeroDatos', 'setBimestres'
     ].forEach(method => {
       mockStore[method] = jest.fn();
     });
@@ -179,7 +183,9 @@ describe('Solocitud31601Service', () => {
       numeroDeEmpleados: '',
       bimestredos: '',
       numeroDatos: '',
-      bimestres: ''
+      bimestres: '',
+      fechaPago: '',
+      acredite: ''
     };
 
     service.actualizarEstadoFormulario(datos);

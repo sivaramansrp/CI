@@ -42,12 +42,12 @@ export class AgriculturaApiService {
 
     /**
    * Actualiza la lista de terceros relacionados con la solicitud.
-   * @method updateTercerosRelacionados
-   * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de terceros.
-   * @memberof CertificadoZoosanitarioServiceService
+   * @method updateTercerosExportador
+   * @param {TercerosrelacionadosTable[]} datosForma Lista de terceros.
+   * @memberof AgriculturaApiService
    */
-  updateTercerosRelacionados(tercerosRelacionados: TercerosrelacionadosdestinoTable): void {
-    this.fitosanitarioStore.actualizarTercerosRelacionados(tercerosRelacionados);
+  updateTercerosExportador(datosForma: TercerosrelacionadosdestinoTable[]): void {
+    this.fitosanitarioStore.updateTercerosExportador(datosForma);
   }
 
       /**
@@ -174,6 +174,9 @@ export class AgriculturaApiService {
     this.fitosanitarioStore.actualizarMovilizacion(DATOS.movilizacion);
     this.fitosanitarioStore.actualizarPago(DATOS.pago);
     this.fitosanitarioStore.tablaDatosFinal(DATOS.tablaDatos);
+    this.updateTercerosRelacionado(DATOS.tercerosRelacionados);
+    this.updateTercerosExportador(DATOS.datosForma);
+
   }
 
   /**

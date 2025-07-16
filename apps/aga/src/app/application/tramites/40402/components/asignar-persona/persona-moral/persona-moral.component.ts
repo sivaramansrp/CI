@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
@@ -267,6 +267,11 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarPME(personaMoralExtranjeraFormDatos: PersonaMoralExtranjeraForm): void {
+    this.personaMoralExtranjeraForm.markAllAsTouched();
+    if (this.personaMoralExtranjeraForm.invalid) {
+      return;
+    }
+
     const PAIS = this.pais?.find((pais) => pais.id === Number(personaMoralExtranjeraFormDatos.paisPME))?.descripcion;
 
     const NUEVO_CUERPO_TABLA = [...this.personaMoralExtranjeraTabla];
@@ -358,5 +363,22 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
     } else {
       this.personaMoralExtranjeraForm?.enable();
     }
+  }
+
+  /**
+   * Verifica si el control 'idSocioComercial' tiene el validador 'Validators.required'.
+   *
+   * @returns {boolean} `true` si el control es obligatorio, de lo contrario `false`.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  isRequired(form: FormGroup, field: string): boolean | null {
+    const CONTROL = form.get(field) as FormControl;
+
+    if (CONTROL) {
+      const ERROR_PATTERN = CONTROL.hasError('required');
+      return ERROR_PATTERN && CONTROL.touched;
+    }
+
+    return false;
   }
 }

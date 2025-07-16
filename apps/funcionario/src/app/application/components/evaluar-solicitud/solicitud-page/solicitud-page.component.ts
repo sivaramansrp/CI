@@ -26,9 +26,8 @@ export class SolicitudPageComponent {
   public firmarFuncionario: boolean = true;
   constructor(
     private router: Router
-  ) {
-      // do nothing.
-  }
+  ) { }
+  
   /**
    * Método para seleccionar la pestaña
    * @param i indica el número de la pestaña seleccionada

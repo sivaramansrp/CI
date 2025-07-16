@@ -56,5 +56,8 @@
   },
   "radio20": {
     "description": "Indique si sus proveedores están en el listado de empresas publicadas por el SAT, conforme al artículo 69-B, cuarto párrafo del CFF."
+  },
+   "radio21": {
+    "description": "En su caso acredite cumplir con lo establecido en el artículo 27, fracción V, tercer párrafo de la Ley del ISR"
   }
 }

@@ -298,7 +298,7 @@ export class Solicitud32512Store extends Store<Solicitud32512State> {
    *
    * @param archivoDestruccion - Archivo tipo `File` cargado en el formulario.
    */
-  actualizarArchivoDestruccion(archivoDestruccion: File): void {
+  actualizarArchivoDestruccion(archivoDestruccion: File | null): void {
     this.update((state) => ({ ...state, archivoDestruccion }));
   }
 

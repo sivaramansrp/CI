@@ -2,22 +2,63 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-import { BtnContinuarComponent, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import {
+  BtnContinuarComponent,
+  ConsultaioQuery,
+  SolicitanteComponent,
+} from '@libs/shared/data-access-user/src';
+import { SolicitudService } from '../../services/solicitud.service';
+import { of, Subject } from 'rxjs';
+import { SolicitudModel } from '../../models/solicitud.model';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
+  let consultaQueryMock: any;
+  let solicitudServiceMock: any;
+
+  const mockSolicitud: SolicitudModel = {
+    nombreComercial: 'Empresa ABC',
+    entidadFederativa: 1,
+    municipio: 2,
+    colonia: 3,
+    calle: 'Av. Reforma',
+    numeroExterior: '123',
+    numeroInterior: '456',
+    codigoPostal: '12345',
+    lugarEntidadFederativa: 4,
+    lugarMunicipioAlcaldia: 5,
+    lugarColonia: 6,
+    lugarCalle: 'Calle destrucción',
+    lugarNumeroExterior: '789',
+    lugarNumeroInterior: '101',
+    lugarCodigoPostal: '67890',
+    generico1: 'GEN1',
+    generico2: 'GEN2',
+    archivoDestruccion: new File(['contenido'], 'archivo.pdf'),
+  };
 
   beforeEach(async () => {
+    consultaQueryMock = {
+      selectConsultaioState$: of({ update: true }),
+    };
+
+    solicitudServiceMock = {
+      guardarDatosFormulario: jest.fn(() => of(mockSolicitud)),
+      actualizarEstadoFormulario: jest.fn(()=> of()),
+    };
     await TestBed.configureTestingModule({
-      declarations: [
-      ],
+      declarations: [],
       imports: [
         CommonModule,
         SolicitanteComponent,
         BtnContinuarComponent,
         HttpClientTestingModule,
-        PasoUnoComponent
+        PasoUnoComponent,
+      ],
+      providers: [
+        { provide: ConsultaioQuery, useValue: consultaQueryMock },
+        { provide: SolicitudService, useValue: solicitudServiceMock },
       ],
     }).compileComponents();
 
@@ -62,5 +103,19 @@ describe('PasoUnoComponent', () => {
 
     component.tipoDeEndosoChanges('test');
     expect(component.isEnableModificacionTab).toBe(false);
+  });
+
+  it('should call guardarDatosFormulario when consultaState.update is true', () => {
+    jest.spyOn(solicitudServiceMock, 'guardarDatosFormulario');
+    solicitudServiceMock.guardarDatosFormulario();
+    expect(solicitudServiceMock.guardarDatosFormulario).toHaveBeenCalled();
+  });
+
+  it('should set esDatosRespuesta to true and update store when guardarDatosFormulario is called', () => {
+    component.guardarDatosFormulario();
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(
+      solicitudServiceMock.actualizarEstadoFormulario
+    ).toHaveBeenCalledWith(mockSolicitud);
   });
 });

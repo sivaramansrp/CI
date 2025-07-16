@@ -1,3 +1,4 @@
+import { Avisos32511State } from '../../../estados/tramites/tramite32511.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -56,5 +57,13 @@ export class AvisoService {
    */
   getColoniaCatalogo(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/32511/colonia.json');
+  }
+
+  /**
+   * Obtiene los datos del aviso de destrucción de mercancías.
+   * @returns Observable con los datos del avisos.
+   */
+  getAvisosDatos(): Observable<Avisos32511State> {
+    return this.http.get<Avisos32511State>('assets/json/10303/avisos-datos.json');
   }
 }

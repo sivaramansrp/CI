@@ -147,7 +147,7 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
         banco: this.pagoDeDerechos.banco || '',
         llavePago: this.pagoDeDerechos.llavePago || '',
         importePago: this.pagoDeDerechos.importePago || '2562',
-        fechaPago:this.pagoDeDerechos.fechaPago|| ''
+        fechaPago:this.pagoDeDerechos.fechaPago|| PagoDeDerechoComponent.formatDate()
       });
       if (this.pagoForm.value.exentoPago === 'no') {
         this.pagoForm.get('llavePago')?.enable();
@@ -181,6 +181,13 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
       }
     }
 
+   static formatDate(): string {
+  const DATE = new Date();
+  const DAY = String(DATE.getDate()).padStart(2, '0');
+  const MONTH = String(DATE.getMonth() + 1).padStart(2, '0');
+  const YEAR = DATE.getFullYear();
+  return `${DAY}/${MONTH}/${YEAR}`;
+}
      obtenerDetallesDeListaDeOpciones(): void {
         this.obtenerBancoSelectorList();
         this.obtenerListaDeJustificaciones();

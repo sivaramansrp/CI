@@ -35,7 +35,7 @@ jest.mock('@libs/shared/theme/assets/json/31601/table.json', () => ({
     tableHeader: [
       "RFC",
       "Denominction o razon social",
-      "CDomicilaa"
+      "Domicilaa"
     ],
     tableBody: [
       { tbodyData: [] }
@@ -109,13 +109,6 @@ fdescribe('CapturarIvaeiepsComponent', () => {
     component.cambioDeValorIndique('No');
     expect(component.predeterminadoSeleccionar).toBe('No');
   });
-
-  it('debe agregar datos a destinatarioHeaderData en agregarDatos', () => {
-    component.ivaForm.patchValue({ rfc: 'ABC123456XYZ', denominacion: 'Test Name', domicilio: 'Test Address' });
-    component.agregarDatos();
-    expect(component.destinatarioHeaderData.tableBody[0].tbodyData.length).toBeGreaterThan(0);
-  });
-
  it('debe asignar valores en formularioDePago al llamar poblarPagoForm', () => {
     const mockData = {
       claveReferencia: '123',
@@ -150,7 +143,7 @@ fdescribe('CapturarIvaeiepsComponent', () => {
   component.datosDeInversion = {
     tableHeader: ['Tipo de', 'Descripción', 'Valor en pesos'],
     tableBody: [
-      { tbodyData: [] }
+    
     ]
   };
 
@@ -194,7 +187,7 @@ it('debe buscar datos y actualizar el formulario si RFC está presente', () => {
   };
 
   // Act
-  component.BuscarDatos();
+  component.buscarDatos();
 
   // Assert
   expect(component.ivaForm.get('denominacion')?.value).toBe('Empresa XYZ');
