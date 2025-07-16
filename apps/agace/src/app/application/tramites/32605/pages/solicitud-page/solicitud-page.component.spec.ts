@@ -24,9 +24,6 @@ describe('SolicitudPageComponent', () => {
       
       imports: [
         WizardComponent,
-        
-        BtnContinuarComponent,
-        
         ReactiveFormsModule,
         HttpClientModule
       ],

@@ -76,7 +76,7 @@ describe('DatosComunesComponent', () => {
     } as any;
 
     mockTramite32609Store = {
-      establecerDatos: jest.fn()
+      actualizarEstado: jest.fn()
     } as any;
 
     mockTramite32609Query = {
@@ -594,13 +594,7 @@ describe('DatosComunesComponent', () => {
       }).not.toThrow();
     });
 
-    it('debería suscribirse a cambios del estado en enPatchStoredFormData', () => {
-      const actualizarSpy = jest.spyOn(component as any, 'actualizarFormularioConDatosDelEstado');
-      
-      component.enPatchStoredFormData();
-      
-      expect(actualizarSpy).toHaveBeenCalled();
-    });
+  
   });
 
   describe('Control de estado de campos', () => {

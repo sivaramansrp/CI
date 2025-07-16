@@ -68,7 +68,8 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
     } as any;
 
     mockTramite32609Query = {
-      selectTramite32609$: of(estadoTramiteMock)
+      selectTramite32609$: of(estadoTramiteMock),
+      selectSolicitud$: of(estadoTramiteMock) // Add this line to mock the expected observable
     } as any;
 
     mockConsultaioQuery = {

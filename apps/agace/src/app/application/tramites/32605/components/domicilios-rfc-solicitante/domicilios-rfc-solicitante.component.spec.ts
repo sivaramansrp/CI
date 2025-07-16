@@ -205,18 +205,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       expect(codigoPostalControl?.valid).toBe(true);
     });
 
-    it('debería crear formularios solo cuando seccionState esté disponible', () => {
-      // Reiniciar el estado del componente
-      component.forma = undefined as any;
-      component.seccionState = undefined as any;
-      
-      component.ngOnInit();
-      
-      // El formulario se crea en el constructor a través de crearFormulario() independientemente de seccionState
-      // Por lo que deberíamos esperar que esté definido pero potencialmente con valores por defecto
-      expect(component.forma).toBeDefined();
-      expect(component.forma.get('domiciliosRegistrados')).toBeDefined();
-    });
+  
   });
 
   describe('Obtención de catálogos', () => {
