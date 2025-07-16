@@ -1,76 +1,63 @@
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { AutoTransportistaComponent } from '../../components/auto-transportista/auto-transportista.component';
-import { CTPATComponent } from '../../components/c-tpat/c-tpat.component';
-import { CommonModule } from '@angular/common';
-import { Component} from '@angular/core';
-import { DatosComunesComponent } from '../../components/datos-comunes/datos-comunes.component';
-import { GuardarDatosFormulario } from '../../models/solicitud.model';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Solocitud32611Service } from '../../services/service32611.service';
+
 
 /**
  * Componente que representa el primer paso de un trámite.
  * Maneja la visualización y activación de diferentes secciones (tabs) según el tipo de endoso.
  */
 @Component({
-  selector: 'app-paso-uno',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    SolicitanteComponent,
-    AutoTransportistaComponent,
-    CTPATComponent,
-    TercerosRelacionadosComponent,
-    DatosComunesComponent,
-  ],
+  selector: 'app-paso-uno', 
   templateUrl: './paso-uno.component.html',
-  styleUrls: ['./paso-uno.component.scss'],
 })
-export class PasoUnoComponent implements OnInit, OnDestroy {
+export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
+
+   /**
+   * Índice para manejar la pestaña seleccionada.
+   * Este valor determina cuál pestaña está activa en la interfaz de usuario.
+   *
+   * @type {number}
+   * @memberof PasoUnoComponent
+   */
+  indice: number = 1;
+  
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
-  /**
-   * Índice utilizado para identificar la pestaña activa dentro del paso.
-   * @type {number}
-   */
-  indice: number = 1;
-
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
+
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
+
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
 
-  /**
-   * @description Método que actualiza el índice de la pestaña seleccionada cuando el usuario
-   * cambia entre las diferentes pestañas disponibles en el componente.
-   * 
-   * @param i - Número entero que representa el índice de la pestaña seleccionada.
-   * 
-   * @example
-   * // Para seleccionar la segunda pestaña:
-   * seleccionaTab(2);
+   /**
+   * Constructor que inyecta los servicios necesarios para manejar el estado y la consulta.
+   * La lógica de inicialización se delega a métodos específicos.
    */
-  seleccionaTab(i: number): void {
-    this.indice = i;
+  constructor(
+    public solicitudService: Solocitud32611Service,
+    private consultaQuery: ConsultaioQuery
+) {
+    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
-
-  constructor(private consultaQuery: ConsultaioQuery, public solicitudService: SolicitudService) {
-    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
+    /**
+   * Método del ciclo de vida de Angular que se ejecuta después de que la vista ha sido inicializada.
+   * En este método se llama al componente `SolicitanteComponent` para establecer el tipo de persona.
+   *
+   * @memberof PasoUnoComponent
+   */
+  ngAfterViewInit(): void {
+    // Llama al método para obtener el tipo de persona (en este caso, una persona moral nacional)
+    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
   }
 
   /**
@@ -98,19 +85,31 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.solicitudService
-      .guardarDatosFormulario()
+      .getRegistroTomaMuestrasMercanciasData()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((resp: GuardarDatosFormulario) => {
+      .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
           this.solicitudService.actualizarEstadoFormulario(resp);
         }
+        else{
+          this.esDatosRespuesta = false;
+        }
       });
   }
 
- 
+   /**
+   * Permite que el usuario seleccione una pestaña cambiando el valor de `indice`.
+   * 
+   * @param {number} indice - El índice de la pestaña seleccionada.
+   * @memberof PasoUnoComponent
+   */
+  seleccionaTab(indice: number): void {
+    // Establece el índice de la pestaña seleccionada
+    this.indice = indice;
+  }
 
-    /**
+  /**
    * Método que se ejecuta cuando el componente se destruye.
    */
   ngOnDestroy(): void {

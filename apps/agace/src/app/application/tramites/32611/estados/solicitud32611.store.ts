@@ -5,12 +5,38 @@ import { NumeroDeEmpleados } from '../models/solicitud.model';
 import { SeccionSociosIC } from '../models/solicitud.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
+import { TablaEnlaceOperativo } from '../models/enlace-operativo-tabla.model';
 
 /**
  * Interfaz que define las propiedades relacionadas con listas de datos
  * de empleados, domicilios, socios, y enlaces operativos.
  */
 export interface Solicitud32611State {
+representanteRegistro: string;
+  representanteRfc: string;
+  representanteNombre: string;
+  representanteApellidoPaterno: string;
+  representanteApellidoMaterno: string;
+  representanteTelefono: string;
+  representanteCorreo: string;
+  registro: string;
+  rfc: string;
+  nombre: string;
+  apellidoPaterno: string;
+  apellidoMaterno: string;
+  ciudad: string;
+  cargo: string;
+  telefono: string;
+  correo: string;
+  suplente: boolean;
+  enlaceOperativoData: TablaEnlaceOperativo[];
+
+
+
+
+
+
+
   /**
    * Identificador único de la persona que realiza la solicitud.
    */
@@ -24,27 +50,27 @@ export interface Solicitud32611State {
   /**
    * RFC del solicitante.
    */
-  rfc: string;
+  // rfc: string;
 
   /**
    * Nombre del solicitante.
    */
-  nombre: string;
+  // nombre: string;
 
   /**
    * Apellido paterno del solicitante.
    */
-  apellidoPaterno: string;
+  // apellidoPaterno: string;
 
   /**
    * Apellido materno del solicitante.
    */
-  apellidoMaterno: string;
+  // apellidoMaterno: string;
 
   /**
    * Teléfono de contacto del solicitante.
    */
-  telefono: string;
+  // telefono: string;
 
   /**
    * Correo electrónico del solicitante.
@@ -715,13 +741,33 @@ mediosContactoBuzonTributario: string | number;
  */
 export function createInitialSolicitudState(): Solicitud32611State {
   return {
+     representanteRegistro: '',
+        representanteRfc: '',
+        representanteNombre: '',
+        representanteApellidoPaterno: '',
+        representanteApellidoMaterno: '',
+        representanteTelefono: '',
+        representanteCorreo: '',
+        registro: '',
+        rfc: '',
+        nombre: '',
+        apellidoPaterno: '',
+        apellidoMaterno: '',
+        ciudad: '',
+        cargo: '',
+        telefono: '',
+        correo: '',
+        suplente: false,
+        enlaceOperativoData: [],
+
+
+
+
+
+
+
     idPersonaSolicitud: '',
     rfcTercero: '',
-    rfc: '',
-    nombre: '',
-    apellidoPaterno: '',
-    apellidoMaterno: '',
-    telefono: '',
     correoElectronico: '',
     agregarEnlaceRfcTercero: '',
     agregarEnlaceRfc: '',

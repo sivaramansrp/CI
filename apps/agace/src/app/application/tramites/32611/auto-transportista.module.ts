@@ -1,71 +1,56 @@
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  BtnContinuarComponent,
+  CatalogosService,
+  FirmaElectronicaComponent,
+  InicioSesionService,
+  SolicitanteComponent,
+  SubirDocumentoService,
+  TituloComponent,
+  WizardComponent,
+} from '@libs/shared/data-access-user/src';
+import { AutoTransportistaComponent } from './components/auto-transportista/auto-transportista.component';
 import { AutoTransportistaRoutingModule } from './auto-transportista-routing.module';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { CrosslistComponent } from '@ng-mf/data-access-user';
-import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { InputCheckComponent } from '@ng-mf/data-access-user';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { InputHoraComponent } from '@ng-mf/data-access-user';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { DatosComunesComponent } from './components/datos-comunes/datos-comunes.component';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { SelectPaisesComponent } from '@ng-mf/data-access-user';
-import { SharedModule } from '@ng-mf/data-access-user';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { ToastrModule } from 'ngx-toastr';
+import { Solocitud32611Service } from './services/service32611.service';
+import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { ToastrService } from 'ngx-toastr';
-import { TramiteFolioService } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
-
+import { provideHttpClient } from '@angular/common/http';
 @NgModule({
-  declarations: [],
-  imports: [
-    FirmaElectronicaComponent,
-    CommonModule,
-    RouterModule,
-    FormsModule,
-    HttpClientModule,
-    WizardComponent,
-    AutoTransportistaRoutingModule,
-    SharedModule,
-    SolicitanteComponent,
-    BtnContinuarComponent,
-    InputCheckComponent,
-    InputFechaComponent,
-    InputHoraComponent,
-    CrosslistComponent,
-    ReactiveFormsModule,
-    TituloComponent,
-    SelectPaisesComponent,
-    AnexarDocumentosComponent,
-    AlertComponent,
-    CatalogoSelectComponent,
-    InputRadioComponent,
-    TablaDinamicaComponent,
-    ToastrModule.forRoot(),
-    PasoUnoComponent,
+ declarations: [
     SolicitudPageComponent,
+    PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
+   ],
+    imports: [
+   AlertComponent,
+    CommonModule,
+    AutoTransportistaRoutingModule,
+    AutoTransportistaComponent,
+    DatosComunesComponent,
+    WizardComponent,
+    BtnContinuarComponent,
+    SolicitanteComponent,
+    FirmaElectronicaComponent,
+    AnexarDocumentosComponent,
+    TituloComponent,
+    TercerosRelacionadosComponent
   ],
-  exports: [],
   providers: [
     ToastrService,
+    provideHttpClient(),
     CatalogosService,
-    TramiteFolioService,
+    InicioSesionService,
+    SubirDocumentoService,
+    Solocitud32611Service
   ],
 })
 export class AutoTransportistaModule {}

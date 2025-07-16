@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Inventarios } from '../models/solicitud.model';
 import { Observable } from 'rxjs';
+import { PersonaRespuestaTabla } from '../models/personas-notificaciones-tabla.model';
 import { RecibirNotificaciones } from '../models/solicitud.model';
 import { RepresentanteLegal } from '../models/solicitud.model';
 import { SeccionSubcontratados } from '../models/solicitud.model';
@@ -43,16 +44,6 @@ export class SolicitudService {
   conseguirRecibirNotificaciones(): Observable<RecibirNotificaciones[]> {
     return this.http.get<RecibirNotificaciones[]>(
       'assets/json/32611/recibir-notificaciones.json'
-    );
-  }
-
-  /**
-   * Obtiene la lista de enlaces operativos desde un archivo JSON local.
-   * @returns Observable con un arreglo de EnlaceOperativo.
-   */
-  conseguirEnlaceOperativoDatos(): Observable<EnlaceOperativo[]> {
-    return this.http.get<EnlaceOperativo[]>(
-      'assets/json/32611/enlace-operativo-datos.json'
     );
   }
 
@@ -125,6 +116,17 @@ export class SolicitudService {
     obtenerDatosBanco(): Observable<Catalogo[]> {
       return this.http.get<Catalogo[]>('assets/json/32611/banco.json');
     }
+
+     /**
+   * Obtiene los datos de la tabla de personas.
+   * Realiza una petición a un recurso local en formato JSON que contiene datos relacionados con personas.
+   *
+   * @returns {Observable<PersonaRespuestaTabla>} Un observable con los datos de la tabla de personas.
+   * @memberof SolicitudDeRegistroInvocarService
+   */
+  obtenerPersonaTablaDatos(): Observable<PersonaRespuestaTabla> {
+    return this.http.get<PersonaRespuestaTabla>('assets/json/32611/personas-notificacione.json');
+  }
 
   /**
    * Realiza una solicitud HTTP GET para obtener los datos guardados del formulario

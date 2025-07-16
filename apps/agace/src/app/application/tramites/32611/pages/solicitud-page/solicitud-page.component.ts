@@ -1,85 +1,84 @@
+import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/paso-tres-steps.enum';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { PASOS } from "@libs/shared/data-access-user/src/core/enums/31616/modificacion.enum";
+
+
+
+
+// import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/paso-tres-steps.enum';
+
 
 /**
- * Interfaz que define la estructura de una acción de botón.
+ * Componente que representa el contenedor principal del asistente (wizard)
+ * para la solicitud del trámite 31616. Controla el flujo entre los pasos,
+ * actualiza el índice del paso actual y coordina las acciones de navegación.
+ *
+ * @export
+ * @class SolicitudPasoComponent
  */
-interface AccionBoton {
-  /**
-   * La acción que se realizará.
-   */
-  accion: string;
-
-  /**
-   * El valor asociado a la acción.
-   */
-  valor: number;
-}
-
 @Component({
-  templateUrl: './solicitud-page.component.html',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    PasoUnoComponent,
-    PasoDosComponent,
-    PasoTresComponent,
-    WizardComponent,
-    BtnContinuarComponent,
-  ],
-  styles: ``,
+  selector: 'app-solicitud-page',
+  templateUrl: './solicitud-page.component.html', 
 })
-/**
- * Componente que representa la página de solicitud.
- */
+
 export class SolicitudPageComponent {
-  /**
-   * Lista de pasos del asistente.
-   */
-  pasos: ListaPasosWizard[] = PASOS;
 
   /**
-   * Índice del paso actual.
+   * Índice actual del paso en el asistente.
+   *
+   * @type {number}
+   * @memberof SolicitudPasoComponent
    */
   indice: number = 1;
-
+  
   /**
-   * Referencia al componente del asistente.
+   * Referencia al componente del asistente (wizard).
+   * Se utiliza para interactuar con el wizard y controlar su flujo (pasar al siguiente paso, ir al anterior, etc.).
+   *
+   * @type {WizardComponent}
+   * @memberof SolicitudPasoComponent
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
-  /**
+   /**
+   * Lista de pasos del asistente.
+   * Contiene un arreglo con los pasos definidos en `PASOS` que será utilizado en el wizard.
+   *
+   * @type {ListaPasosWizard[]}
+   * @memberof SolicitudPasoComponent
+   */
+  pasos: ListaPasosWizard[] = PASOS;
+
+    /**
    * Datos de los pasos del asistente.
+   * Incluye el número total de pasos, el índice del paso actual y los textos de los botones de navegación.
+   *
+   * @type {DatosPasos}
+   * @memberof SolicitudPasoComponent
    */
   datosPasos: DatosPasos = {
+    /** Número total de pasos en el asistente. */
     nroPasos: this.pasos.length,
+    /** Índice del paso actual. */
     indice: this.indice,
+    /** Texto del botón "Anterior". */
     txtBtnAnt: 'Anterior',
+    /** Texto del botón "Continuar". */
     txtBtnSig: 'Continuar',
   };
 
-  /**
-   * Selecciona una pestaña del asistente.
-   * @param i Índice de la pestaña a seleccionar.
-   */
-  seleccionaTab(i: number): void {
-    this.indice = i;
-  }
-
-  /**
+ /**
    * Obtiene el valor del índice de la acción del botón.
-   * @param e Acción del botón.
+   * Este método controla el cambio de paso en el wizard dependiendo de la acción del botón presionado.
+   *
+   * Si la acción es `'cont'`, pasa al siguiente paso.
+   * Si la acción es `'atras'`, regresa al paso anterior.
+   *
+   * @param {AccionBoton} e - Acción del botón (cont o atras) y el valor asociado a la acción.
+   * @returns {void}
+   * @memberof SolicitudPasoComponent
    */
+  
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;

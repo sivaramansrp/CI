@@ -22,7 +22,7 @@ import { Solicitud32611Query } from '../../estados/solicitud32611.query';
 import { Solicitud32611State } from '../../estados/solicitud32611.store';
 import { Solicitud32611Store } from '../../estados/solicitud32611.store';
 import { SolicitudRadioLista } from '../../models/solicitud.model';
-import { SolicitudService } from '../../services/solicitud.service';
+import { Solocitud32611Service } from '../../services/service32611.service';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
@@ -49,7 +49,7 @@ import { takeUntil } from 'rxjs';
     TablaDinamicaComponent,
     AgregarTransportistasComponent,
   ],
-  providers: [SolicitudService],
+  providers: [Solocitud32611Service],
   templateUrl: './auto-transportista.component.html',
   styleUrl: './auto-transportista.component.scss',
 })
@@ -131,7 +131,7 @@ export class AutoTransportistaComponent implements OnInit, OnDestroy, AfterViewI
    */
   constructor(
     private fb: FormBuilder,
-    public solicitudService: SolicitudService,
+    public solicitudService: Solocitud32611Service,
     public solicitud32611Store: Solicitud32611Store,
     public solicitud32611Query: Solicitud32611Query,
     public consultaioQuery: ConsultaioQuery

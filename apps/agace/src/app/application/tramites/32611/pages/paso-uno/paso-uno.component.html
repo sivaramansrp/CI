@@ -51,11 +51,16 @@
     <ng-container>
       @switch (indice) { @case (1) {
       <solicitante #Solicitante></solicitante>
-      } @case (2) { @if(esDatosRespuesta){
+      } @case (2) { 
       <app-datos-comunes></app-datos-comunes>
-      } } @case (3) { @if(esDatosRespuesta){
+      
+     }
+       @case (3) { 
+        @if(esDatosRespuesta){
       <app-terceros-relacionados></app-terceros-relacionados>
-      } } @case (4) { @if(esDatosRespuesta){
+      }
+     } 
+     @case (4) { @if(esDatosRespuesta){
       <app-auto-transportista></app-auto-transportista>
       } } 
     } 
