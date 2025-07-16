@@ -1,5 +1,11 @@
+/**
+ * @file SubProductosContenedoraComponent
+ * @description Componente contenedor para la gestión de sub-productos en el trámite 220201.
+ * Proporciona la lógica para cargar catálogos, manejar el formulario y actualizar el estado.
+ */
+
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { map, Subject, takeUntil } from 'rxjs';
 import { SubProductosComponent } from '../../../../shared/components/sub-productos/sub-productos.component';
 import { ProductoDetallaEventos, ProductosCatalogosDatos } from '../../../../shared/models/datos-de-la-solicitue.model';
@@ -8,6 +14,9 @@ import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { AgriculturaApiService } from '../../services/220201/agricultura-api.service';
 
+/**
+ * Componente contenedor para sub-productos.
+ */
 @Component({
   selector: 'app-sub-productos-contenedora',
   standalone: true,
@@ -18,9 +27,9 @@ import { AgriculturaApiService } from '../../services/220201/agricultura-api.ser
 export class SubProductosContenedoraComponent {
 
   /**
-   * @description Datos de la solicitud que se recibirán como entrada en el componente.
+   * Datos de los catálogos de productos.
    * @type {ProductosCatalogosDatos}
-   * */
+   */
   public catalogosDatos: ProductosCatalogosDatos = {
     tipoRequisitoList: [],
     requisitoList: [],
@@ -41,26 +50,32 @@ export class SubProductosContenedoraComponent {
   }
 
   /**
-   * @description Subject utilizado para destruir las suscripciones y evitar fugas de memoria cuando el componente se destruye.
+   * Subject utilizado para destruir las suscripciones y evitar fugas de memoria cuando el componente se destruye.
    * @type {Subject<void>}
    */
   public destroyNotifier$ = new Subject<void>();
+
+  /**
+   * Datos del formulario de solicitud.
+   * @type {FilaSolicitud}
+   */
   public formularioSolicitud!: FilaSolicitud;
+
+  /**
+   * Evento para notificar el cierre del componente.
+   * @type {EventEmitter<void>}
+   */
+  @Output() cerrar = new EventEmitter<void>();
 
   /**
    * Constructor de la clase `SubProductosContenedoraComponent`.
    * 
-   * Este constructor inicializa los servicios necesarios para la funcionalidad del componente.
-   * 
-   * @param agriculturaApiService - Servicio para interactuar con la API de Agricultura.
-   * @param fitosanitarioQuery - Servicio para realizar consultas relacionadas con fitosanitarios.
-   * @param fitosanitarioStore - Servicio para gestionar el estado de fitosanitarios.
-   * 
-   * Dentro del constructor, se realiza una solicitud a la API para obtener los datos de productos
-   * desde el archivo `productos.json`. La respuesta de esta solicitud se asigna a la propiedad 
-   * `catalogosDatos` del componente.
+   * @param agriculturaApiService Servicio para interactuar con la API de Agricultura.
+   * @param fitosanitarioQuery Servicio para realizar consultas relacionadas con fitosanitarios.
+   * @param fitosanitarioStore Servicio para gestionar el estado de fitosanitarios.
    */
-  constructor(public agriculturaApiService: AgriculturaApiService,
+  constructor(
+    public agriculturaApiService: AgriculturaApiService,
     public fitosanitarioQuery: ZoosanitarioQuery,
     public fitosanitarioStore: ZoosanitarioStore
   ) {
@@ -107,7 +122,8 @@ export class SubProductosContenedoraComponent {
   }
 
   /**
-   * @description Método que se ejecuta al enviar el formulario de solicitud de animales vivos.
+   * Método que se ejecuta al enviar el formulario de solicitud de animales vivos.
+   * Actualiza el estado con los datos del formulario.
    * @param valor Datos del formulario de solicitud de animales vivos.
    */
   agregarDatosFormulario(valor: ProductoDetallaEventos): void {
