@@ -245,24 +245,6 @@
         ></app-input-radio>
       </div>
 
-      <!--- Need to add a radio field -->
-      @if (deRubroTransporteFerroviario) {
-        <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Del mismo modo, indique si al momento de ingresar su solicitud se encuentra en el listado 
-          de empresas publicadas por el SAT en términos del artículo 69-B, cuarto párrafo del CFF. *</label
-        >
-        <app-input-radio
-          formControlName="242"
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gridLayout]="true"
-          (valueChange)="actualizar243($event)"
-        ></app-input-radio>
-      </div>
-      }
-
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
           >Señale si se encuentra en el listado de empresas publicadas por el
@@ -461,8 +443,7 @@
             </div>
           </div>
         </div>
-<!--Registros field not required -->
-        @if (!deRubroTransporteFerroviario) {
+
           <div class="col-md-4 mt-4">
           <label class="form-label text-start" for="actualmente1"
             >Registros que existen actualmente.</label
@@ -476,7 +457,6 @@
             (change)="actualizarActualmente1($event)"
           />
         </div>
-        }
         
 
         <div class="col-md-8"></div>
@@ -525,7 +505,6 @@
             </div>
           </div>
         </div>
-        @if (!deRubroTransporteFerroviario) {
           <div class="col-md-4 mt-4">
           <label class="form-label text-start"
             >Registros que existen actualmente.</label
@@ -539,7 +518,6 @@
             (change)="actualizarActualmente2($event)"
           />
         </div>
-        }
         
 
         <div class="col-md-8"></div>
