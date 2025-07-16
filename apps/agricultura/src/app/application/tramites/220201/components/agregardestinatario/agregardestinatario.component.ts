@@ -6,19 +6,18 @@
  * @module AgregardestinatarioComponent
  */
 
-import { ActivatedRoute, Router } from '@angular/router';
-import { AfterViewInit, Component, Input, OnInit, Output } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
-import { EventEmitter } from '@angular/core';
-import { OPCION_DE_BOTON_DE_RADIO } from '../../../../shared/constantes/tercerosrelacionados.enum';
-import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Subject, takeUntil } from 'rxjs';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
+import { OPCION_DE_BOTON_DE_RADIO } from '../../../../shared/constantes/tercerosrelacionados.enum';
 import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 
 /**
  * @component
@@ -91,6 +90,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @private
    */
   private destroyNotifier$ = new Subject<void>();
+  @Output() cerrar = new EventEmitter<void>();
 
   /**
    * Formulario reactivo para capturar los datos del destinatario.
@@ -114,7 +114,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   /**
    * Inicializa el formulario y carga datos si existe un destinatario seleccionado.
@@ -238,7 +238,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       const LISTA_DINAMICA: TercerosrelacionadosdestinoTable[] = [];
       LISTA_DINAMICA.push(this.destinatarioForm.value as TercerosrelacionadosdestinoTable);
       this.certificadoZoosanitarioServices.updateTercerosRelacionado(LISTA_DINAMICA as TercerosrelacionadosdestinoTable[]);
-      this.router.navigate(['/pago/certificado-zoosanitario/zoosanitario']);
+      this.cerrar.emit();
     } else {
       this.destinatarioForm.markAllAsTouched();
     }
@@ -263,7 +263,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method onCancelarDestinatario
    */
   onCancelarDestinatario(): void {
-    this.router.navigate(['/pago/certificado-zoosanitario/zoosanitario']);
+    this.cerrar.emit();
   }
 
   /**

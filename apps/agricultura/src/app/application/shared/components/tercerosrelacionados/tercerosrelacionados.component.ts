@@ -14,6 +14,7 @@ import { AlertComponent, CatalogoSelectComponent, ConfiguracionColumna, InputRad
 import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
 import { OPCION_DE_BOTON_DE_RADIO, SELECCIONADO } from '../../constantes/tercerosrelacionados.enum';
 import { DatosDeLaSolicitud, TercerosrelacionadosTable, TercerosrelacionadosdestinoTable } from '../../models/tercerosrelacionados.model';
+import { ModalComponent } from '../modal/modal.component';
 
 /**
  * Componente para la gestión de terceros relacionados.
@@ -106,6 +107,7 @@ export class TercerosrelacionadosComponent {
  * @type {TercerosrelacionadosTable[]}
  */
   @Input() cuerpoTablaExportador: TercerosrelacionadosdestinoTable[] = [];
+  @ViewChild('modalRef', { static: false }) modalRef!: ModalComponent;
 
 
   /**
@@ -149,6 +151,8 @@ export class TercerosrelacionadosComponent {
     { encabezado: 'País', clave: (fila) => fila.pais, orden: 5 },
   ];
 
+  @Output() abrirModalDestinatario = new EventEmitter<void>();
+  @Output() abrirModalExportador = new EventEmitter<void>();
 
   /**
    * Configuración de las columnas para la tabla de destinatarios.
@@ -199,10 +203,10 @@ export class TercerosrelacionadosComponent {
    * @method goToAgregarDestinatario
    */
   goToAgregarDestinatario(): void {
-    this.router.navigate(['../agregar-destinatario'], { relativeTo: this.route });
+    this.abrirModalDestinatario.emit();
   }
   goToAgregarExportador(): void {
-    this.router.navigate(['../agregar-destinatariofinal'], { relativeTo: this.route });
+    this.abrirModalExportador.emit();
   }
   /**
    * Navega a la pantalla para modificar un destinatario existente.
