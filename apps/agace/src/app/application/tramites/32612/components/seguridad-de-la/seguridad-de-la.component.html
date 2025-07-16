@@ -89,6 +89,8 @@
             <formas-dinamicas 
                 [forma]="tecnologiaFormGroup" 
                 [formularioDatos]="tecnologiaDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
@@ -114,6 +116,8 @@
             <formas-dinamicas 
                 [forma]="tecnologiaDosFormGroup" 
                 [formularioDatos]="tecnologiaDosDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>

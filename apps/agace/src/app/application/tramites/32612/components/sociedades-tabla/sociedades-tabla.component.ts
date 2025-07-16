@@ -3,16 +3,24 @@ import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CONFIGURACION_INSTALACIONES, CONFIGURACION_INSTALACIONES_TABLA, DatosDeLasInstalaciones, ENLACE_TABLA, Instalaciones, MANDATARIOS_DE_AGENTE_ADUANAL, MandatariosDeAgenteAduanal, Sociedades } from '../../models/sociedades.model';
 import { EsquemaDeCertificacionService } from '../../services/esquema-de-certificacion.service';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { FormGroup } from '@angular/forms';
-import { CONFIGURACION_AGREGAR, CONFIGURACION_IDIQUESI, CONFIGURACION_SOCIEDADES, MANDATARIOS_DEL_AGENT } from '../../constants/sociedades-tabla.enum';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CONFIGURACION_AGREGAR, CONFIGURACION_IDIQUESI, CONFIGURACION_MODIFICAR, CONFIGURACION_SOCIEDADES, MANDATARIOS_DEL_AGENT } from '../../constants/sociedades-tabla.enum';
+import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
+import { Tramite32612Query } from '../../estados/solicitud32612.query';
 
 @Component({
   selector: 'app-sociedades-tabla',
   standalone: true,
-  imports: [CommonModule,TablaDinamicaComponent,TituloComponent,FormasDinamicasComponent],
+  imports: [
+    CommonModule,
+    TablaDinamicaComponent,
+    TituloComponent,
+    FormasDinamicasComponent,
+    ReactiveFormsModule
+  ],
   templateUrl: './sociedades-tabla.component.html',
   styleUrl: './sociedades-tabla.component.scss',
 })
@@ -45,16 +53,30 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
     mandatariosDelAgenteFormGroup: new FormGroup({})
   });
   public mandatariosDelAgenteDatos = MANDATARIOS_DEL_AGENT;
+  public solicitudeState!: Solicitude32612State;
+  public forma: FormGroup = new FormGroup({
+    modificarFormGroup: new FormGroup({}),
+  });
+  public modificarDatos = CONFIGURACION_MODIFICAR;
 
 
   constructor(
     private modalService: BsModalService,
-    private esquemaDeCertificacionSvc: EsquemaDeCertificacionService 
+    private esquemaDeCertificacionSvc: EsquemaDeCertificacionService,
+    private tramite32612Store: Tramite32612Store,
+    private tramite32612Query: Tramite32612Query
   ) {
 
   }
 
   ngOnInit(): void {
+    this.tramite32612Query.selectSolicitude$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudeState = seccionState;
+        })
+      ).subscribe();
     this.getSociedadesTabla();
     this.getDatosDeLasInstalacionesDatos();
   }
@@ -69,6 +91,9 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
 
   get indiqueSiDatos(): FormGroup {
     return this.indiqueSiFormGroup.get('indiqueSiFormGroup') as FormGroup;
+  }
+  get modificarFormGroup(): FormGroup {
+    return this.forma.get('modificarFormGroup') as FormGroup;
   }
 
   public getSociedadesTabla(): void {
@@ -97,6 +122,10 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
 
   public abrirModal(template: TemplateRef<void>) {
     this.modalRef = this.modalService.show(template,{ class: 'modal-lg',});
+  }
+
+  public emitirCambioDeValor(event: {campo: string, valor: string}): void {
+    this.tramite32612Store.setDynamicFieldValue(event.campo, event.valor);
   }
 
   ngOnDestroy(): void {

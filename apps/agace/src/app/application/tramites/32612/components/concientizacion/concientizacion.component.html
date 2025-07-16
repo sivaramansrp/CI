@@ -15,7 +15,10 @@
     </div>
     <form [formGroup]="forma">
         <div class="row mt-2">
-            <formas-dinamicas [forma]="capacitacionFormGroup" [formularioDatos]="capacitacionDatos">
+            <formas-dinamicas [forma]="capacitacionFormGroup"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
+             [formularioDatos]="capacitacionDatos">
             </formas-dinamicas>
         </div>
         <div class="row mt-2">
@@ -36,7 +39,8 @@
                     </ul>
                 </div>
             </div>
-            <formas-dinamicas [forma]="capacitacionDosFormGroup" [formularioDatos]="capacitacionDatosDos">
+            <formas-dinamicas         [estado]="solicitudeState"
+        (emitirCambioDeValor)="emitirCambioDeValor($event)" [forma]="capacitacionDosFormGroup" [formularioDatos]="capacitacionDatosDos">
             </formas-dinamicas>
         </div>
     </form>

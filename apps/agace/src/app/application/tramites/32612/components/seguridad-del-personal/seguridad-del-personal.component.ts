@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { TEXTOS_ESTATICOS_SEGURIDAD_DEL_PERSONAL } from '../../constants/texto-estatico.enum';
 import { CONFIGURACION_ADMINISTRACION, CONFIGURACION_PROCEDIMIENTO, CONFIGURACION_VERIFICACION } from '../../constants/seguridad-del-personal.enum';
+import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
+import { map, Subject, takeUntil } from 'rxjs';
+import { Tramite32612Query } from '../../estados/solicitud32612.query';
 
 @Component({
   selector: 'app-seguridad-del-personal',
@@ -16,7 +19,7 @@ import { CONFIGURACION_ADMINISTRACION, CONFIGURACION_PROCEDIMIENTO, CONFIGURACIO
   templateUrl: './seguridad-del-personal.component.html',
   styleUrl: './seguridad-del-personal.component.scss',
 })
-export class SeguridadDelPersonalComponent implements OnInit {
+export class SeguridadDelPersonalComponent implements OnInit, OnDestroy {
 
   public textos = TEXTOS_ESTATICOS_SEGURIDAD_DEL_PERSONAL;
   public forma: FormGroup = new FormGroup({
@@ -27,11 +30,24 @@ export class SeguridadDelPersonalComponent implements OnInit {
   public antecedentesLaboralesDatos = CONFIGURACION_VERIFICACION;
   public procedimientoDatos = CONFIGURACION_PROCEDIMIENTO;
   public administracionDatos = CONFIGURACION_ADMINISTRACION;
+  public solicitudeState!: Solicitude32612State;
+  private destroyNotifier$: Subject<void> = new Subject();
 
 
-  constructor() {}
+  constructor(
+    private tramite32612Store: Tramite32612Store,
+    private tramite32612Query: Tramite32612Query
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.tramite32612Query.selectSolicitude$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudeState = seccionState;
+        })
+      ).subscribe();
+  }
 
 
   get antecedentesLaboralesFormGroup(): FormGroup {
@@ -42,5 +58,14 @@ export class SeguridadDelPersonalComponent implements OnInit {
   }
   get administracionFormGroup(): FormGroup {
     return this.forma.get('administracionFormGroup') as FormGroup;
+  }
+
+  public emitirCambioDeValor(event: {campo: string, valor: string}): void {
+    this.tramite32612Store.setDynamicFieldValue(event.campo, event.valor);
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

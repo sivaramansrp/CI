@@ -39,6 +39,8 @@
             <formas-dinamicas 
                 [forma]="antecedentesLaboralesFormGroup" 
                 [formularioDatos]="antecedentesLaboralesDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
@@ -52,6 +54,8 @@
             <formas-dinamicas 
                 [forma]="procedimientoFormGroup" 
                 [formularioDatos]="procedimientoDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
@@ -86,6 +90,8 @@
             <formas-dinamicas 
                 [forma]="administracionFormGroup" 
                 [formularioDatos]="administracionDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>

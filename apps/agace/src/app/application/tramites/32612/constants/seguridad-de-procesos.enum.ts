@@ -152,7 +152,6 @@ export const CONFIGURACION_COMMUNICACION = [
       validadores: [
         
       ],
-      layout: 'horizontal',
       marcadorDePosicion: '',
       marginTop: 4,
     },
@@ -168,7 +167,6 @@ export const CONFIGURACION_COMMUNICACION = [
       validadores: [
         
       ],
-      layout: 'horizontal',
       marcadorDePosicion: '',
       marginTop: 4,
     }

@@ -46,6 +46,8 @@
             <formas-dinamicas 
                 [forma]="gestionFormGroup" 
                 [formularioDatos]="gestionDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
@@ -58,6 +60,8 @@
             <formas-dinamicas 
                 [forma]="controlFormGroup" 
                 [formularioDatos]="controlDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
             <div class="col-md-12 text-container">
@@ -93,6 +97,8 @@
             <formas-dinamicas 
                 [forma]="actualizadaFormGroup" 
                 [formularioDatos]="actualizadaDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>

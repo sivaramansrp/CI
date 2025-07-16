@@ -2960,6 +2960,15 @@
     "diasTranscurridos": "4",
     "departamento": "AGACE",
     "numeroDeProcedimiento": "33303"
+  },
+  {
+    "id": 32612,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2024-10-01",
+    "fechaActualizacion": "2024-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32612"
   }
 
 ]

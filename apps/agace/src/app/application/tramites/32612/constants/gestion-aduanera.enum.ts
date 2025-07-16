@@ -84,7 +84,6 @@ export const CONFIGURACION_ACTUALIZADA = [
       validadores: [
         
       ],
-      layout: 'horizontal',
       marcadorDePosicion: '',
       marginTop: 4,
     },

@@ -2,12 +2,16 @@ import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/
 import { CommonModule } from '@angular/common';
 import { Catalogo, CatalogoSelectComponent, CrosslistComponent, InputRadioComponent, ModeloDeFormaDinamica, TituloComponent } from '@libs/shared/data-access-user/src';
 import { EsquemaDeCertificacionService } from '../../services/esquema-de-certificacion.service';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { CROSLISTA_ENTRADA } from '../../constants/croslista.enums';
 import { SociedadesTablaComponent } from '../sociedades-tabla/sociedades-tabla.component';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CLASIFICACION, CONFIGURACION, CONFIGURACION_COMERCIAL_CERTIFICADO, PAGO_DE_DERECHOS, RADIO_OPCIONS } from '../../constants/agente-aduanal.enum';
+import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
+import { Tramite32612Query } from '../../estados/solicitud32612.query';
+import { Solicitude32612DosState, Tramite32612DosStore } from '../../estados/solicitud32612Dos.store';
+import { Tramite32612DosQuery } from '../../estados/solicitud32612Dos.query';
 
 @Component({
   selector: 'app-agente-aduanal',
@@ -56,6 +60,7 @@ export class AgenteAduanalComponent implements OnInit,OnDestroy {
     },
   ];
 
+  public formaAgente!: FormGroup;
   public forma: FormGroup = new FormGroup({
     agenteFormGroup: new FormGroup({}),
     comercialCertificadoFormGroup: new FormGroup({}),
@@ -67,15 +72,37 @@ export class AgenteAduanalComponent implements OnInit,OnDestroy {
   public comercialCertificadoDatos: ModeloDeFormaDinamica[] = CONFIGURACION_COMERCIAL_CERTIFICADO;
   public clasificacionDatos = CLASIFICACION;
   public pagoDeDerechosDatos = PAGO_DE_DERECHOS;
+  public solicitudeState!: Solicitude32612State;
+  public solicitudeDosState!: Solicitude32612DosState;
 
   constructor(
-    private esquemaDeCertificacionSvc: EsquemaDeCertificacionService
+    private esquemaDeCertificacionSvc: EsquemaDeCertificacionService,
+    private tramite32612Store: Tramite32612Store,
+    private tramite32612Query: Tramite32612Query,
+    private fb: FormBuilder,
+    private tramiteStore: Tramite32612DosStore,
+    private tramiteQuery: Tramite32612DosQuery,
   ) {
 
   }
 
   ngOnInit(): void {
+    this.tramite32612Query.selectSolicitude$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudeState = seccionState;
+        })
+      ).subscribe();
+    this.tramiteQuery.selectSolicitudeDos$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudeDosState = seccionState;
+        })
+      ).subscribe();
     this.getIndiqueCatalogoDatos();
+    this.crearAgenteForm();
   }
 
   get agenteFormGroup(): FormGroup {
@@ -92,6 +119,18 @@ export class AgenteAduanalComponent implements OnInit,OnDestroy {
 
   get pagoDeDerechosFormGroup(): FormGroup {
     return this.forma.get('pagoDeDerechosFormGroup') as FormGroup;
+  }
+
+  public crearAgenteForm(): void {
+    this.formaAgente = this.fb.group({
+      numeroPatente: [this.solicitudeDosState?.numeroPatente],
+      numeroRegistro: [this.solicitudeDosState?.numeroRegistro],
+      nombreAgenteAduanal: [this.solicitudeDosState?.nombreAgenteAduanal],
+      numeroTrabajadoresIMSS: [this.solicitudeDosState?.numeroTrabajadoresIMSS],
+      numeroTrabajadoresContratistas: [this.solicitudeDosState?.numeroTrabajadoresContratistas],
+      serviciosAdicionales: [this.solicitudeDosState?.serviciosAdicionales],
+      indique: [this.solicitudeDosState?.indique]
+    });
   }
 
   public getIndiqueCatalogoDatos(): void {
@@ -133,6 +172,15 @@ export class AgenteAduanalComponent implements OnInit,OnDestroy {
     if (REST.length) {
       this.seleccionarDatos(REST);
     }
+  }
+
+  public emitirCambioDeValor(event: {campo: string, valor: string}): void {
+    this.tramite32612Store.setDynamicFieldValue(event.campo, event.valor);
+  }
+
+  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite32612DosStore): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramiteStore[metodoNombre] as (value: unknown) => void)(VALOR);
   }
   
 

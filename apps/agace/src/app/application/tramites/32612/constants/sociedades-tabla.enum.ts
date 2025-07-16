@@ -253,3 +253,166 @@ export const MANDATARIOS_DEL_AGENT = [
       ]
     }
 ];
+
+export const CONFIGURACION_MODIFICAR = [
+    {
+      id: 'instalacionesPrincipales',
+      row: 1,
+      labelNombre: 'Instalaciones principales',
+      campo: 'instalacionesPrincipales',
+      clase: 'col-md-6',
+      tipoInput: 'radio',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        
+      ],
+      layout: 'horizontal',
+      marcadorDePosicion: '',
+      marginTop: 3,
+      opciones: [
+          {
+          "label": "Si",
+          "value": "Si"
+         },
+          {
+          "label": "No",
+          "value": "No"
+         }
+      ]
+    },
+    {
+      id: 'municipio',
+      row: 1,
+      labelNombre: 'Municipio o alcaldía',
+      campo: 'municipio',
+      clase: 'col-md-6',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores:[
+      ],
+      marcadorDePosicion: '',
+      marginTop: 3
+    },
+    {
+      id: 'tipoInstalacion',
+      row: 2,
+      labelNombre: 'Tipo de instalación',
+      campo: 'tipoInstalacion',
+      clase: 'col-md-4',
+      tipoInput: 'select-catalogos',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+      ],
+      marcadorDePosicion: '',
+      marginTop: 3
+    },
+    {
+      id: 'entidadFederativa',
+      row: 2,
+      labelNombre: 'Entidad federativa',
+      campo: 'entidadFederativa',
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+      ],
+      marcadorDePosicion: '',
+      marginTop: 3
+    },
+    {
+      id: 'registroAnteSAT',
+      row: 2,
+      labelNombre: 'Registro ante el SAT',
+      campo: 'registroAnteSAT',
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+      ],
+      marcadorDePosicion: '',
+      marginTop: 3
+    },
+    {
+      id: 'colonia',
+      row: 3,
+      labelNombre: 'Colonia, calle y número',
+      campo: 'colonia',
+      clase: 'col-md-8',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+      ],
+      marcadorDePosicion: '',
+      marginTop: 3
+    },
+    {
+      id: 'codigoPostal',
+      row: 3,
+      labelNombre: 'Código postal',
+      campo: 'codigoPostal',
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+      ],
+      marcadorDePosicion: '',
+      marginTop: 3
+    },
+    {
+      id: 'correoInstalacion',
+      row: 4,
+      labelNombre: 'Corresponde a una instalación asociada a la aduana de adscripción, o alguna de las aduanas adicionales de la patente.',
+      campo: 'correoInstalacion',
+      clase: 'col-md-4',
+      tipoInput: 'radio',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+      ],
+      marcadorDePosicion: '',
+      marginTop: 3,
+      layout: 'horizontal',
+      opciones: [
+          {
+          "label": "Si",
+          "value": "Si"
+         },
+          {
+          "label": "No",
+          "value": "No"
+         }
+      ]
+    },
+    {
+      id: 'actualizarPerfil',
+      row: 4,
+      labelNombre: 'Actualizar perfil',
+      campo: 'actualizarPerfil',
+      clase: 'col-md-4',
+      tipoInput: 'radio',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+      ],
+      marcadorDePosicion: '',
+      marginTop: 3,
+      layout: 'horizontal',
+      opciones: [
+          {
+          "label": "Si",
+          "value": "Si"
+         },
+          {
+          "label": "No",
+          "value": "No"
+         }
+      ]
+    }
+]

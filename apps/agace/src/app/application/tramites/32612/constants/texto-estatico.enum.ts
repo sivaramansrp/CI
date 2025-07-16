@@ -351,5 +351,35 @@ export const TEXTOS_ESTATICOS_PLANEACION = {
        brindada cumplió con todos los objetivos de capacitación.`,
     paraca9: `Explique brevemente en qué consiste el programa de capacitación.`,
     paraca10: 'En caso de prestar el servicio de transporte, indique las capacitaciones que imparte para realizar la revisión a los vehículos de carga, contenedores, remolques y/o semirremolques con fines agrícolas y de seguridad debe incluir los siguientes temas:'
-
   }
+
+export const TEXTOS_ESTATICOS_MANEJO = {
+  paraca1: `Deben existir procedimientos documentados para reportar e investigar incidentes
+   de seguridad en la cadena de suministros y las acciones a tomar para evitar su recurrencia, 
+   así como notificarse al personal de seguridad, socios comerciales que pueden ser parte de la 
+   cadena de suministro afectada, especialista de seguridad o contacto del Programa Operador 
+   Económico Autorizado y demás autoridades competentes. Los procedimientos de reporte e 
+   investigación deben incluir la información de contacto o directorio actualizado que 
+   enumere los nombres y números de teléfono del personal que requiere notificación. 
+   La investigación y análisis de incidentes deberá estar documentada 
+   (expediente físico y/o electrónico), así como acciones correctivas para evitar que vuelvan a 
+   ocurrir, mismas que deben implementarse lo más pronto posible.`,
+  paraca2: `En el caso de que el Agente Aduanal identifique que alguno de los embarques de 
+  comercio exterior, se encuentra involucrado en alguna situación que ponga en riesgo la 
+  seguridad de la cadena de suministro, debido a la sospecha de algún socio comercial o persona, 
+  deberá de informar a la autoridad competente, socios comerciales que pueden ser parte de la 
+  cadena de suministro afectada, especialista de seguridad o contacto del Programa Operador 
+  Económico Autorizado, así como a la autoridad competente y, de ser posible, antes del 
+  cruce fronterizo, salida o despacho aduanero (importación y exportación). 
+  Los procedimientos deben incluir los pasos a seguir si se descubre que un sello está alterado, 
+  manipulado o hay un número de sello incorrecto en la documentación, 
+  los protocolos de comunicación a los socios comerciales involucrados en la cadena de suministros
+   y la investigación del incidente. Todos los procedimientos anteriormente señalados deben 
+   revisarse periódicamente o mínimo una vez al año para garantizar que la información del contacto y los protocolos de actuación sean correctos.`,
+  encabezamiento1: '11.1 Reporte de anomalías y/o actividades sospechosas',
+  paraca3: `En caso de detección de anomalías y/o actividades sospechosas, relacionadas con la seguridad de la cadena de suministros y de conformidad con sus procesos logísticos, (relacionadas al control de accesos, entrega, recepción y almacenamiento de mercancía, inspecciones de seguridad de los vehículos de carga y operadores de transporte, etcétera), estas deben notificarse al personal de seguridad, socios comerciales que pueden ser parte de la cadena de suministro afectada, especialista de seguridad o contacto del Programa Operador Económico Autorizado y las demás autoridades competentes, llevando un registro de dichas anomalías y/o actividades inusuales.`,
+  paraca4: `Deben existir procedimientos escritos para denunciar o reportar anomalías y/o actividades sospechosas, el análisis e investigación de incidentes de seguridad en la cadena de suministros para determinar su causa, además de las acciones correctivas para evitar que vuelvan a ocurrir, mismas que deben implementarse lo más pronto posible. La información derivada de esta investigación deberá documentarse y estar disponible en todo momento para las autoridades que así lo requieran.`,
+  encabezamiento2: '11.2 Investigación y análisis.',
+  paraca5: `Esta información y documentación generada para llevar a cabo la operación de comercio exterior de las mercancías afectadas, deberá incluirse en un expediente con la finalidad de identificar cada uno de los procesos por los que atravesó dicha operación hasta el punto en que se detectó la incidencia y que permita reconocer la vulnerabilidad de la cadena.`,
+  paraca6: `Los documentos a incluir en el expediente derivado de la investigación, de manera enunciativa más no limitativa, podrán ser:`,
+}

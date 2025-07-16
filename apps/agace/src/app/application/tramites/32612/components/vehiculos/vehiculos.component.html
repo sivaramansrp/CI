@@ -23,6 +23,8 @@
             <formas-dinamicas 
                 [forma]="sellosFormGroup" 
                 [formularioDatos]="sellosDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
@@ -53,6 +55,8 @@
             <formas-dinamicas 
                 [forma]="procedimientoFormGroup" 
                 [formularioDatos]="procedimientoDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
@@ -76,6 +80,8 @@
             <formas-dinamicas 
                 [forma]="anexeElProcedimientoFormGroup" 
                 [formularioDatos]="anexeProcedimientoDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
@@ -126,6 +132,8 @@
             <formas-dinamicas 
                 [forma]="aduanalCuentaFormGroup" 
                 [formularioDatos]="aduanalCuentaDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
@@ -170,6 +178,8 @@
             <formas-dinamicas 
                 [forma]="conservarseFormGroup" 
                 [formularioDatos]="conservarseDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>

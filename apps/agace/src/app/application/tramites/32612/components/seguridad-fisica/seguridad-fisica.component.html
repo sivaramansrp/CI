@@ -11,6 +11,8 @@
             <formas-dinamicas 
                 [forma]="instalacionesFormGroup" 
                 [formularioDatos]="instalacionesDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
@@ -22,6 +24,8 @@
             <formas-dinamicas 
                 [forma]="accesosFormGroup" 
                 [formularioDatos]="accesosDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
@@ -49,6 +53,8 @@
         <formas-dinamicas 
             [forma]="perimetralesFormGroup" 
             [formularioDatos]="perimetralesDatos"
+            [estado]="solicitudeState"
+            (emitirCambioDeValor)="emitirCambioDeValor($event)"
             >
         </formas-dinamicas>
     </div>
@@ -60,6 +66,8 @@
         <formas-dinamicas 
             [forma]="estacionamientosFormGroup" 
             [formularioDatos]="estacionamientosDatos"
+            [estado]="solicitudeState"
+            (emitirCambioDeValor)="emitirCambioDeValor($event)"
             >
         </formas-dinamicas>
     </div>
@@ -71,6 +79,8 @@
         <formas-dinamicas 
             [forma]="dispositivosFormGroup" 
             [formularioDatos]="dispositivosDatos"
+            [estado]="solicitudeState"
+            (emitirCambioDeValor)="emitirCambioDeValor($event)"
             >
         </formas-dinamicas>
         <p class="mt-2">Anexe el o los procedimientos documentados para el control, resguardo, asignación y manejo de las llaves en las instalaciones.</p>
@@ -109,6 +119,8 @@
         <formas-dinamicas 
             [forma]="sistemasFormGroup" 
             [formularioDatos]="sistemasDatos"
+            [estado]="solicitudeState"
+            (emitirCambioDeValor)="emitirCambioDeValor($event)"
             >
         </formas-dinamicas>
     </div>

@@ -86,6 +86,8 @@
             <formas-dinamicas 
                 [forma]="procesamientoFormGroup" 
                 [formularioDatos]="procesamientoDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
@@ -149,6 +151,8 @@
             <formas-dinamicas 
                 [forma]="comunicacionFormGroup" 
                 [formularioDatos]="comunicacionDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>

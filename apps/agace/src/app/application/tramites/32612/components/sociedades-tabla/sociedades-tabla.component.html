@@ -28,7 +28,7 @@
             <button type="button" class="btn btn-primary me-2" (click)="abrirModal(agregar)">
                 Agregar
             </button>
-            <button class="btn btn-danger me-2" type="button">
+            <button class="btn btn-danger me-2" type="button" (click)="abrirModal(modificar)">
                 Modificar
             </button>
             <button class="btn btn-default" type="button">
@@ -40,6 +40,8 @@
 <formas-dinamicas 
     [forma]="indiqueSiFormGroup" 
     [formularioDatos]="indiqueDatos"
+    [estado]="solicitudeState"
+    (emitirCambioDeValor)="emitirCambioDeValor($event)"
     >
 </formas-dinamicas>
 <div class="row mt-2">
@@ -146,3 +148,25 @@
     </button>
  </div>
 </ng-template>
+
+<ng-template #modificar>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Modificar</h4>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="forma">
+        <formas-dinamicas 
+            [forma]="modificarFormGroup" 
+            [formularioDatos]="modificarDatos"
+            >
+        </formas-dinamicas>
+    </form>
+  </div>
+  <div class="modal-footer d-flex justify-content-end">
+    <button type="button" class="btn btn-primary">
+        Aceptar
+    </button>
+    <button type="button" class="btn btn-danger" (click)="modalRef?.hide()">
+        Cancelar
+    </button>
+ </div>

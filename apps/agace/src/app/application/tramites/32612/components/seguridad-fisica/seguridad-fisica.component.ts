@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { TEXTOS_ESTATICOS_SEGURIDAD } from '../../constants/texto-estatico.enum';
 import { CONFIGURACION, CONFIGURACION_ACCESOS, CONFIGURACION_ALUMBRADO, CONFIGURACION_DISPOSITIVOS, CONFIGURACION_ESTACIONAMIENTOS, CONFIGURACION_PERIMETRALES, CONFIGURACION_SISTEMAS } from '../../constants/seguridad-fisica.enum';
+import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
+import { map, Subject, takeUntil } from 'rxjs';
+import { Tramite32612Query } from '../../estados/solicitud32612.query';
 
 @Component({
   selector: 'app-seguridad-fisica',
@@ -16,7 +19,7 @@ import { CONFIGURACION, CONFIGURACION_ACCESOS, CONFIGURACION_ALUMBRADO, CONFIGUR
   templateUrl: './seguridad-fisica.component.html',
   styleUrl: './seguridad-fisica.component.scss',
 })
-export class SeguridadFisicaComponent implements OnInit {
+export class SeguridadFisicaComponent implements OnInit,OnDestroy {
 
   public textos = TEXTOS_ESTATICOS_SEGURIDAD;
   public forma: FormGroup = new FormGroup({
@@ -35,11 +38,22 @@ export class SeguridadFisicaComponent implements OnInit {
   public dispositivosDatos = CONFIGURACION_DISPOSITIVOS;
   public alumbradoDatos = CONFIGURACION_ALUMBRADO;
   public sistemasDatos = CONFIGURACION_SISTEMAS;
+  public solicitudeState!: Solicitude32612State;
+  private destroyNotifier$: Subject<void> = new Subject();
 
-  constructor() {}
+  constructor(
+    private tramite32612Store: Tramite32612Store,
+    private tramite32612Query: Tramite32612Query
+  ) {}
 
   ngOnInit(): void {
-
+    this.tramite32612Query.selectSolicitude$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudeState = seccionState;
+        })
+      ).subscribe();
   }
 
   get instalacionesFormGroup(): FormGroup {
@@ -64,5 +78,13 @@ export class SeguridadFisicaComponent implements OnInit {
     return this.forma.get('sistemasFormGroup') as FormGroup;
   }
 
+  public emitirCambioDeValor(event: {campo: string, valor: string}): void {
+    this.tramite32612Store.setDynamicFieldValue(event.campo, event.valor);
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 
 }

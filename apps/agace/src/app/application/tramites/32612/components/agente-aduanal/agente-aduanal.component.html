@@ -4,7 +4,7 @@
         <strong>Conforme a la regla 7.1.5, fracción II, acredite lo siguiente:</strong>
     </div>
   </div>
-  <form action="">
+  <form [formGroup]="formaAgente">
     <div class="row mb-2 mt-2">
         <div class="col-md-6">
           <div class="form-group">
@@ -13,7 +13,7 @@
         </div>
         <div class="col-md-6">
           <div class="form-group">
-             <input type="text" class="form-control" />
+             <input type="text" class="form-control" formControlName="numeroPatente" (change)="setValoresStore(formaAgente, 'numeroPatente', 'setNumeroPatente')" />
             </div>
         </div>
     </div>
@@ -27,6 +27,8 @@
         <div class="col-md-6">
             <app-catalogo-select
               [catalogo]="indiqueCatalogo"
+              formControlName="indique"
+              (change)="setValoresStore(formaAgente, 'indique', 'setIndique')"
               [required]="true">
             </app-catalogo-select>
         </div>
@@ -47,7 +49,7 @@
       </div>
     </div>
     <ng-titulo titulo="Permite seleccionar aduanas y agregarlas a la lista de aduanas autorizadas para el agente hasta un máximo de 3."></ng-titulo>
-    <form action="">
+    <form [formGroup]="formaAgente">
         <div class="row mt-2">
             <div class="col-md-6">
                 <div class="form-group">
@@ -56,7 +58,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <input type="text" class="form-control" />
+                    <input type="text" class="form-control" formControlName="numeroTrabajadoresIMSS" (change)="setValoresStore(formaAgente, 'numeroTrabajadoresIMSS', 'setNumeroTrabajadoresIMSS')" />
                 </div>
             </div>
         </div>
@@ -70,7 +72,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group mt-5">
-                    <input type="text" class="form-control" />
+                    <input type="text" class="form-control" formControlName="numeroTrabajadoresContratistas" (change)="setValoresStore(formaAgente, 'numeroTrabajadoresContratistas', 'setNumeroTrabajadoresContratistas')" />
                 </div>
             </div>
         </div>
@@ -78,7 +80,7 @@
             <div class="col-md-9">
                 <div class="form-group">
                     <label class="form-label">Describa los servicios adicionales a la gestión aduanera que presta el Agente Aduanal.*</label>
-                    <input type="text" class="form-control" />
+                    <input type="text" class="form-control" formControlName="serviciosAdicionales" (change)="setValoresStore(formaAgente, 'serviciosAdicionales', 'setServiciosAdicionales')" />
                 </div>
             </div>
         </div>
@@ -94,6 +96,8 @@
       <formas-dinamicas 
         [forma]="agenteFormGroup" 
         [formularioDatos]="agenteDatos"
+        [estado]="solicitudeState"
+        (emitirCambioDeValor)="emitirCambioDeValor($event)"
         >
     </formas-dinamicas>
     <ng-titulo titulo="Reconocimiento Mutuo"></ng-titulo>
@@ -115,18 +119,24 @@
       [forma]="comercialCertificadoFormGroup" 
       [formularioDatos]="comercialCertificadoDatos"
       (change)="seleccionarDatos()"
+      [estado]="solicitudeState"
+      (emitirCambioDeValor)="emitirCambioDeValor($event)"
       >
     </formas-dinamicas>
     <formas-dinamicas 
       formularioTitulo="Clasificación de la Información "
       [forma]="clasificacionFormGroup" 
       [formularioDatos]="clasificacionDatos"
+      [estado]="solicitudeState"
+      (emitirCambioDeValor)="emitirCambioDeValor($event)"
       >
     </formas-dinamicas>
       <formas-dinamicas 
           formularioTitulo="Pago de derechos"
           [forma]="pagoDeDerechosFormGroup" 
           [formularioDatos]="pagoDeDerechosDatos"
+          [estado]="solicitudeState"
+          (emitirCambioDeValor)="emitirCambioDeValor($event)"
           >
       </formas-dinamicas>
     </form>

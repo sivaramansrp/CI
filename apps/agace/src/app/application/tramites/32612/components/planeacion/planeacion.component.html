@@ -65,6 +65,8 @@
             <formas-dinamicas 
                 [forma]="analisisDeRiesgoFormGroup" 
                 [formularioDatos]="analisisDeRiesgoDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
@@ -78,6 +80,8 @@
         <formas-dinamicas 
             [forma]="politicasFormGroup" 
             [formularioDatos]="politicasDatos"
+            [estado]="solicitudeState"
+            (emitirCambioDeValor)="emitirCambioDeValor($event)"
             >
         </formas-dinamicas>
         <div class="row mt-2">
@@ -91,6 +95,8 @@
         <formas-dinamicas 
             [forma]="auditoriasFormGroup" 
             [formularioDatos]="auditoriasDatos"
+            [estado]="solicitudeState"
+            (emitirCambioDeValor)="emitirCambioDeValor($event)"
             >
         </formas-dinamicas>
         </div>
@@ -104,6 +110,8 @@
             <formas-dinamicas 
                 [forma]="contingenciaFormGroup" 
                 [formularioDatos]="contingenciaDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
@@ -131,6 +139,8 @@
             <formas-dinamicas 
                 [forma]="revisionesFormGroup" 
                 [formularioDatos]="revisionesDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>

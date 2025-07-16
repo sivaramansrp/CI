@@ -9,7 +9,7 @@
             <p class="fw-bold">Conforme a la regla 7.1.5. fracción II, inciso b) y al formato "Perfil del Agente Aduanal" establecido en el Anexo 1 de las RGCE declare los siguiente:</p>
         </div>
     </div>
-    <form action="">
+    <form [formGroup]="formaPerfil">
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="row align-items-center mb-2">
@@ -17,8 +17,7 @@
                         Nombre y/o Denominación de la Agencia Aduanal
                     </div>
                     <div class="col-md-6">
-                        <!-- formControlName="nombreAgenciaAduanal" -->
-                        <input type="text" class="form-control"  />
+                        <input type="text" class="form-control" formControlName="nombreAgenciaAduanal" (change)="setValoresStore(formaPerfil,'nombreAgenciaAduanal', 'setNombreAgenciaAduanal')" />
                     </div>
     
                     <div class="col-md-6 text-end fw-bold mt-2">
@@ -26,32 +25,28 @@
                         mercancía o transporte, etc.
                     </div>
                     <div class="col-md-6 mt-2">
-                        <!-- formControlName="tipoInstalacion" -->
-                        <input type="text" class="form-control"  />
+                        <input type="text" class="form-control" formControlName="tipoInstalacion" (change)="setValoresStore(formaPerfil,'tipoInstalacion', 'setTipoInstalacion')" />
                     </div>
     
                     <div class="col-md-6 text-end fw-bold mt-2">
                         Antigüedad de la instalación (años de operación)
                     </div>
                     <div class="col-md-6 mt-2">
-                        <!-- formControlName="antiguedadInstalacion" -->
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" formControlName="antiguedadInstalacion" (change)="setValoresStore(formaPerfil,'antiguedadInstalacion', 'setAntiguedadInstalacion')" />
                     </div>
     
                     <div class="col-md-6 text-end fw-bold mt-2">
                         Actividad Preponderante
                     </div>
                     <div class="col-md-6 mt-2">
-                        <!-- formControlName="actividadPreponderante" -->
-                        <input type="text" class="form-control"  />
+                        <input type="text" class="form-control" formControlName="actividadPreponderante" (change)="setValoresStore(formaPerfil,'actividadPreponderante', 'setActividadPreponderante')" />
                     </div>
     
                     <div class="col-md-6 text-end fw-bold mt-2">
                         Tipos de Servicios
                     </div>
                     <div class="col-md-6 mt-2">
-                        <!-- formControlName="tiposServicios" -->
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" formControlName="tiposServicios" (change)="setValoresStore(formaPerfil,'tiposServicios', 'setTiposServicios')" />
                     </div>
     
                     <div class="col-md-6 text-end fw-bold mt-2">
@@ -59,8 +54,7 @@
                         ferroviario, etc.)
                     </div>
                     <div class="col-md-6 mt-2">
-                        <!-- formControlName="operacionesMensualesExp" -->
-                        <input type="text" class="form-control"  />
+                        <input type="text" class="form-control" formControlName="operacionesMensualesExp" (change)="setValoresStore(formaPerfil,'operacionesMensualesExp', 'setOperacionesMensualesExp')" />
                     </div>
     
                     <div class="col-md-6 text-end fw-bold mt-2">
@@ -68,24 +62,21 @@
                         ferroviario, etc.)
                     </div>
                     <div class="col-md-6 mt-2">
-                        <!-- formControlName="operacionesMensualesImp" -->
-                        <input type="text" class="form-control"  />
+                        <input type="text" class="form-control" formControlName="operacionesMensualesImp" (change)="setValoresStore(formaPerfil,'operacionesMensualesImp', 'setOperacionesMensualesImp')" />
                     </div>
     
                     <div class="col-md-6 text-end fw-bold mt-2">
                         Número de empleados total de esta instalación
                     </div>
                     <div class="col-md-6 mt-2">
-                        <!-- formControlName="numeroEmpleados" -->
-                        <input type="text" class="form-control"  />
+                        <input type="text" class="form-control" formControlName="numeroEmpleados" (change)="setValoresStore(formaPerfil,'numeroEmpleados', 'setNumeroEmpleados')" />
                     </div>
     
                     <div class="col-md-6 text-end fw-bold mt-2">
                         Superficie de la instalación (m2)
                     </div>
                     <div class="col-md-6 mt-2">
-                        <!-- formControlName="superficieInstalacion" -->
-                        <input type="text" class="form-control"  />
+                        <input type="text" class="form-control" formControlName="superficieInstalacion" (change)="setValoresStore(formaPerfil,'superficieInstalacion', 'setSuperficieInstalacion')" />
                     </div>
                 </div>
             </div>
@@ -97,6 +88,8 @@
               [isRequired]="true"
               [layout]="'horizontal'"
               [gap]="'493px'"
+              formControlName="opcion"
+                (change)="setValoresStore(formaPerfil,'opcion', 'setOpcion')"
               [isBold]="true"
               [labelMargin]="'0px'"
               [showDescription]="true">
@@ -108,19 +101,19 @@
                         Nombre del programa	
                     </div>
                     <div class="col-md-6 mb-3">
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" formControlName="nombrePrograma" (change)="setValoresStore(formaPerfil,'nombrePrograma', 'setNombrePrograma')" />
                     </div>
                     <div class="col-md-6 text-end fw-bold mb-3">
                         Número de registro	
                     </div>
                     <div class="col-md-6 mb-3">
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" formControlName="numeroDeRegistro" (change)="setValoresStore(formaPerfil,'numeroDeRegistro', 'setNumeroDeRegistro')" />
                     </div>
                     <div class="col-md-6 text-end fw-bold mb-3">
                         Organismo certificador		
                     </div>
                     <div class="col-md-6 mb-3">
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" formControlName="organismoCertificador" (change)="setValoresStore(formaPerfil,'organismoCertificador', 'setOrganismoCertificador')" />
                     </div>
                 </div>
             </div>
@@ -133,6 +126,8 @@
                 formularioSubtitulo="Nota permite anotar información hasta de 3 certificaciones incluyendo la siguiente Información"
                 [forma]="certificacionesFormGroup" 
                 [formularioDatos]="certificacionesDatos"
+                [estado]="solicitudeStateForm"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </form>

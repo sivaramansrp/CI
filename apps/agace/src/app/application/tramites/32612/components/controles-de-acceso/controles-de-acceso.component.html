@@ -16,6 +16,8 @@
             <formas-dinamicas 
                 [forma]="personalFormGroup" 
                 [formularioDatos]="personalDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
             <div class="col-md-12 text-container">
@@ -27,6 +29,8 @@
             <formas-dinamicas 
                 [forma]="identificacionFormGroup" 
                 [formularioDatos]="identificacionDatos"
+                [estado]="solicitudeState"
+                (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </form>
@@ -60,6 +64,8 @@
         <formas-dinamicas 
             [forma]="entregasFormGroup" 
             [formularioDatos]="entregasDatos"
+            [estado]="solicitudeState"
+            (emitirCambioDeValor)="emitirCambioDeValor($event)"
             >
         </formas-dinamicas>
     </div>
