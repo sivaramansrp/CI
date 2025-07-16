@@ -71,7 +71,7 @@ export const PANELS = [
     /**
      * Indica si el panel está colapsado por defecto.
      */
-    isCollapsed: true,
+    isCollapsed: false,
   },
 ];
 

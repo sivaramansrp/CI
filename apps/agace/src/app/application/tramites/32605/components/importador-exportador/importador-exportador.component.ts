@@ -285,10 +285,6 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    * 
    * param fb - FormBuilder para crear formularios reactivos
    * param modalService - Servicio para gestionar modales de Bootstrap
-   * param solicitudService - Servicio para operaciones de solicitud y consultas
-   * param tramite32605Store - Store para gestionar el estado del trámite
-   * param tramite32605Query - Query para consultar el estado del trámite
-   * param consultaioQuery - Query para consultar el estado de solo lectura
    */
   constructor( 
     public fb: FormBuilder,

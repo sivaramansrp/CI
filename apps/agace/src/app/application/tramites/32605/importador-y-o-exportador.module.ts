@@ -5,6 +5,7 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
+import { DatosComunesComponent } from './components/datos-comunes/datos-comunes.component';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -32,7 +33,12 @@ import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    PasoUnoComponent,
+    PasoDosComponent,
+    PasoTresComponent,
+    SolicitudPageComponent
+  ],
   imports: [
     FirmaElectronicaComponent,
     CommonModule,
@@ -58,10 +64,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     TablaDinamicaComponent,
     ToastrModule.forRoot(),
     PasoUnoComponent,
-    SolicitudPageComponent,
-    PasoDosComponent,
-    PasoTresComponent,
-    TercerosRelacionadosComponent
+    TercerosRelacionadosComponent,
+    DatosComunesComponent
   ],
   exports: [],
   providers: [

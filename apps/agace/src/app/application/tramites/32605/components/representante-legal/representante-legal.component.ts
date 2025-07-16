@@ -122,10 +122,9 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   /**
    * Crea el formulario reactivo con los valores iniciales del estado de la solicitud.
    * Algunos campos se crean en modo solo lectura (deshabilitados).
-   *
-   * @returns {void}
+ 
    */
-  crearFormulario(): void {
+   crearFormulario(): void {
      this.subscription.add(
       this.tramite32605Query.selectSolicitud$
         .pipe(

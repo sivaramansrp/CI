@@ -1,15 +1,10 @@
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { CTPATComponent } from '../../components/c-tpat/c-tpat.component';
-import { CommonModule } from '@angular/common';
 import { Component} from '@angular/core';
-import { ImportadorExportadorComponent } from '../../components/importador-exportador/importador-exportador.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
-import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
 import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -20,15 +15,6 @@ import { takeUntil } from 'rxjs';
  */
 @Component({
   selector: 'app-paso-uno',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    SolicitanteComponent,
-    ImportadorExportadorComponent,
-    CTPATComponent,
-    TercerosRelacionadosComponent,
-  ],
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss'],
 })

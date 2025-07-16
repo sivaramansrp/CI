@@ -11,13 +11,14 @@ describe('PasoUnoComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [
+        PasoUnoComponent
       ],
       imports: [
         CommonModule,
         SolicitanteComponent,
         BtnContinuarComponent,
-        HttpClientTestingModule,
-        PasoUnoComponent
+        HttpClientTestingModule
+        
       ],
     }).compileComponents();
 

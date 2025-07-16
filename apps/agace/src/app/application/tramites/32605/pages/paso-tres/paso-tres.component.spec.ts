@@ -17,11 +17,11 @@ describe('PasoTresComponent', () => {
       imports: [
         FirmaElectronicaComponent,
         CommonModule,
-        PasoTresComponent,
+        
         HttpClientTestingModule,
         ReactiveFormsModule,
       ],
-      declarations: [],
+      declarations: [PasoTresComponent],
       providers: [
         ToastrService,
         provideToastr({

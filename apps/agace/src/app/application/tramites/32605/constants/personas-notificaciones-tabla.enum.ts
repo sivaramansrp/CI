@@ -85,6 +85,6 @@ export const PANELS = [
     { 
         /** Panel principal para la gestión de personas notificaciones */
         label: 'Personas para oír y recibir notificaciones', 
-        isCollapsed: true 
+        isCollapsed: false 
     }
 ];

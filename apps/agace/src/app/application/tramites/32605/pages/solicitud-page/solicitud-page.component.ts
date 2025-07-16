@@ -27,7 +27,6 @@ interface AccionBoton {
 
 @Component({
   templateUrl: './solicitud-page.component.html',
-  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,

@@ -21,17 +21,18 @@ describe('SolicitudPageComponent', () => {
     } as unknown as jest.Mocked<WizardComponent>;
 
     await TestBed.configureTestingModule({
+      
       imports: [
         WizardComponent,
-        PasoUnoComponent,
-        PasoDosComponent,
-        PasoTresComponent,
+        
         BtnContinuarComponent,
-        SolicitudPageComponent,
+        
         ReactiveFormsModule,
         HttpClientModule
       ],
-      declarations: [],
+      declarations: [SolicitudPageComponent,PasoUnoComponent,
+        PasoDosComponent,
+        PasoTresComponent],
       providers: [{ provide: WizardComponent, useValue: wizardMock }],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();

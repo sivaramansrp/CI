@@ -24,8 +24,9 @@ describe('PasoDosComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
+      declarations: [PasoDosComponent],
       imports: [
-        PasoDosComponent,
+        
         HttpClientTestingModule,
         CommonModule,
         ReactiveFormsModule,
