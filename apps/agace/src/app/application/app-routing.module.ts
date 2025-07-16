@@ -243,21 +243,27 @@ const ROUTES: Routes = [
   {
     path: 'verificar-dictamen',
     loadComponent: () =>
-      import('./verificar-dictamen/verificar-dictamen.component').then((m) => m.VerificarDictamenComponent),
+      import('./verificar-dictamen/verificar-dictamen.component').then(
+        (m) => m.VerificarDictamenComponent
+      ),
   },
   {
     path: 'detalle-v-dictamen',
     loadComponent: () =>
-      import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
+      import('./detalle-v-dictamen/detalle-v-dictamen.component').then(
+        (m) => m.DetalleVDictamenComponent
+      ),
   },
   {
     path: 'datos-generales-tramite',
     loadComponent: () =>
-      import('./datos-generales-tramite/datos-generales-tramite.component').then((m) => m.DatosGeneralesTramiteComponent),
+      import(
+        './datos-generales-tramite/datos-generales-tramite.component'
+      ).then((m) => m.DatosGeneralesTramiteComponent),
   },
   {
-      path: 'aviso-de-modificacion',
-    loadChildren: () => 
+    path: 'aviso-de-modificacion',
+    loadChildren: () =>
       import('./tramites/30505/aviso-de-modificacion.module').then(
         (m) => m.AvisoDeModificacionModule)
   },
@@ -301,12 +307,19 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'aeronaves',
+    loadChildren: () =>
+      import('./tramites/32607/aeronaves.module').then(
+        (m) => m.AeronavesModule
+      ),
+  },
+   {
     path: 'auto-transportista',
     loadChildren: () =>
       import('./tramites/32611/auto-transportista.module').then(
         (m) => m.AutoTransportistaModule
       ),
-  },
+  }
 ];
 
 @NgModule({
