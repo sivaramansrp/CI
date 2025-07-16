@@ -298,7 +298,7 @@
           <input type="text" formControlName="cadenaDependencia" class="form-control gris-color" readonly required />
         </div>
         <div class="col-md-6">
-          <app-catalogo-select [catalogo]="bancoCatalogo.catalogos" [label]="'Banco'" formControlName="banco"
+          <app-catalogo-select [catalogo]="bancoCatalogo.catalogos" [label]="'Banco'" formControlName="banco"  [isDisabled]="esFormularioSoloLectura"
             (change)="setValorsStore('banco')"></app-catalogo-select>
         </div>
       </div>
@@ -309,7 +309,7 @@
             (change)="setValorsStore('llave')" />
         </div>
         <div class="col-md-4">
-          <input-fecha [setFecha]="autoTransportistaForm.get('fechaPago')?.value" [datos]="fechaDePago"
+          <input-fecha [setFecha]="autoTransportistaForm.get('fechaPago')?.value" [datos]="fechaDePago" [isDisabled]="esFormularioSoloLectura"
             (valorCambiado)="actualizar($event,'fechaPago')"></input-fecha>
         </div>
         <div class="col-md-4">

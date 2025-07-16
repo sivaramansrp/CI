@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AutoTransportistaComponent } from './auto-transportista.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Solicitud32611Store } from '../../estados/solicitud32611.store';
 import { Solicitud32611Query } from '../../estados/solicitud32611.query';
@@ -37,7 +38,7 @@ describe('AutoTransportistaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, AutoTransportistaComponent],
+      imports: [ReactiveFormsModule, AutoTransportistaComponent, HttpClientTestingModule],
       providers: [
         { provide: SolicitudService, useValue: mockSolicitudService },
         { provide: Solicitud32611Store, useValue: mockSolicitudStore },
