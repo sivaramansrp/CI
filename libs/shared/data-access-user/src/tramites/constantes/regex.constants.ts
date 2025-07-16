@@ -4,7 +4,8 @@ export const REG_X = {
   REGEX_FRACCION_ARANCELARIA: /^\d{4}\.\d{2}\.\d{2}$/, //Expresión regular para validar una fracción arancelaria con el formato ####.##.##.
   ENTERO_12_DECIMAL_2: /^\d{1,12}(\.\d{0,2})?$/, // Hasta 12 enteros y 2 decimales
   SOLO_NUMEROS_Y_PUNTO: /^[0-9.]+$/, // Permite solo números y puntos
-  NUMERO_DECIMAL_OPCIONAL: /^[0-9]+(\.[0-9]*)?$/ // Permite números enteros o decimales (decimales opcionales, sin límite de decimales)
+  NUMERO_DECIMAL_OPCIONAL: /^[0-9]+(\.[0-9]*)?$/, // Permite números enteros o decimales (decimales opcionales, sin límite de decimales)
+  RFC_13_ALFANUM: /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/ // de 13 caracteres alfanuméricos
 };
 
 /**
