@@ -81,36 +81,6 @@ sectorListaDeSelects(): Observable<{
     return this.http.get<ApiResponse<Catalogo>>(`assets/json/32609/tipo-Instalacion-list.json`);
   }
 
- /**
-   * Obtiene la lista de Municipios/Alcaldías.
-   * 
-   * @returns {Observable<any>} Un observable que contiene los datos de los municipios o alcaldías.
-   */
-  // getMunicipiosAlcaldias(): Observable<Catalogo[]> {
-  //   return this.http.get<Catalogo[]>(`assets/json/32609/municipio-delegacion-list.json`);
-  // }
-
-  /**
-   * Obtiene la lista de colonias.
-   * 
-   * @returns {Observable<any>} Un observable que contiene los datos de las colonias.
-   */
-  // getColonias(): Observable<Catalogo[]> {
-  //   return this.http.get<Catalogo[]>(`assets/json/32609/colonia-list.json`);
-  // }
-
-  /**
- * Obtiene la lista de aduanas desde un archivo JSON local.
- * 
- * @returns {Observable<Catalogo[]>} Un observable que contiene un array con los datos de las aduanas.
- * 
- * El archivo JSON está ubicado en `assets/json/32609/aduanas`.
- */
-  // getAduanas(): Observable<Catalogo[]> {
-  //   return this.http.get<Catalogo[]>(`assets/json/32609/tipode-transito-list.json`);
-  // }
-  
-
   /**
    * Actualiza el estado del formulario en el store global.
    *
