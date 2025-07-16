@@ -179,13 +179,14 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
  * Este evento permite a los componentes padres reaccionar ante cambios en los botones de radio del formulario.
  */
   @Output() radioChanged = new EventEmitter<{ controlName: string, value: unknown }>();
-/**
- * Evento emitido cuando cambia la visibilidad del componente "Datos por Régimen".
- *
- * El evento emite un valor booleano que indica si el componente debe mostrarse (`true`) u ocultarse (`false`).
- * Es útil para que el componente padre controle la visualización condicional de "Datos por Régimen".
- */
-  @Output() mostrarDatosPorRegimenChange = new EventEmitter<boolean>();
+
+  @Output() mostrarImportacionesChange = new EventEmitter<boolean>();
+
+  @Output() mostrarDepositoFiscalChange = new EventEmitter<boolean>();
+
+  @Output() mostrarElaboracionChange = new EventEmitter<boolean>();
+
+  @Output() mostrarRecintoChange = new EventEmitter<boolean>();
 
   /**
    * Constructor de la clase DatosComunesComponent.
@@ -283,6 +284,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       regimenUno:[this.solicitudState?.regimenUno],
       regimenDos:[this.solicitudState?.regimenDos],
       regimenTres:[this.solicitudState?.regimenTres],
+      regimenCuatro:[this.solicitudState?.regimenCuatro],
       sectorProductivo:[this.solicitudState?.sectorProductivo],
       servicio:[this.solicitudState?.servicio],
       preOperativo: [this.solicitudState?.preOperativo, Validators.required],
@@ -476,7 +478,19 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
  * del campo es truthy o falsy.
  */
    if (campo === 'regimenUno') {
-    this.mostrarDatosPorRegimenChange.emit(Boolean(VALOR));
+    this.mostrarImportacionesChange.emit(Boolean(form.get('regimenUno')?.value));
+  }
+
+    if (campo === 'regimenDos') {
+    this.mostrarDepositoFiscalChange.emit(Boolean(form.get('regimenDos')?.value));
+  }
+
+   if (campo === 'regimenTres') {
+    this.mostrarElaboracionChange.emit(Boolean(form.get('regimenTres')?.value));
+  }
+
+    if (campo === 'regimenCuatro') {
+    this.mostrarRecintoChange.emit(Boolean(form.get('regimenCuatro')?.value));
   }
 
 /** Lista de nombres de controles tipo radio que deben emitir el evento radioChanged. 

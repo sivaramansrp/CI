@@ -64,9 +64,11 @@
 
           <lib-input-check 
               [id]="'regimen_3'" 
+              formControlName="regimenCuatro"
               [label]="'Recinto Fiscalizado Estratégico'" 
               [isDisabled]="esFormularioSoloLectura"
-              [required]="false">
+              [required]="false"
+              (change)="setValoresStore(comunesForm,'regimenCuatro', 'setRegimenCuatro')">
           </lib-input-check>
           </fieldset>
         </div>

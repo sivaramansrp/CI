@@ -137,6 +137,14 @@ export class DatosPorRegimenComponent implements OnInit, OnDestroy {
    */
   public solicitudState!: Solicitud31602State;
 
+  @Input() mostrarSoloImportaciones: boolean = false;
+
+  @Input() mostrarSoloDepositoFiscal: boolean = false;
+
+  @Input() mostrarSoloElaboracion: boolean = false;
+
+  @Input() mostrarSoloRecinto: boolean = false;
+
   /**
    * Constructor del componente DatosPorRegimenComponent.
    *

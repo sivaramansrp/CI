@@ -26,19 +26,22 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    */
   public consultaState!: ConsultaioState;
   /**
-   * Controla la visibilidad del componente "Datos por Régimen".
-   * Si es true, el componente se muestra; si es false, se oculta.
-   */
-  public mostrarDatosPorRegimen = false;
-  /**
    * Indica si el modal emergente (popup) debe mostrarse.
    * Si es true, el popup es visible; si es false, está oculto.
    */
-  mostrarPopup = false;
+  public mostrarPopup = false;
   /**
    * Mensaje que se mostrará en el modal emergente (popup).
    */
-  popupMessage = '';
+  public popupMessage = '';
+
+  public mostrarImportaciones = false;
+
+  public mostrarDepositoFiscal = false;
+
+  public mostrarElaboracion = false;
+
+  public mostrarRecinto = false;
 
   /**
  * Mapa de valores que disparan la apertura del modal emergente (popup) para controles específicos.
@@ -213,6 +216,22 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
  */
 cerrarPopup():void {
   this.mostrarPopup = false;
+}
+
+onMostrarImportacionesChange(valor: boolean):void {
+  this.mostrarImportaciones = valor;
+}
+
+onMostrarDepositoFiscalChange(valor: boolean):void {
+  this.mostrarDepositoFiscal = valor;
+}
+
+onMostrarElaboracionChange(valor: boolean):void {
+  this.mostrarElaboracion = valor;
+}
+
+onMostrarRecintoChange(valor: boolean):void {
+  this.mostrarRecinto = valor;
 }
 
   /**
