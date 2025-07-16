@@ -1,4 +1,4 @@
-import { Domicilios } from '../models/empresas-comercializadoras.model';
+import { Domicilios, TransportistasTable } from '../models/empresas-comercializadoras.model';
 import { EnlaceOperativo } from '../models/empresas-comercializadoras.model';
 import { Injectable } from '@angular/core';
 import { NumeroDeEmpleados } from '../models/empresas-comercializadoras.model';
@@ -530,6 +530,11 @@ export interface Solicitud32604State {
    * Valor asociado con el código importsRadio (puede ser un número o una cadena).
    */
   importsRadio: string | number;
+
+  /**
+   * Lista de objetos que representan los empleados con su número de empleados.
+   */
+  transportistasLista: TransportistasTable[];
 }
 
 /**
@@ -643,6 +648,7 @@ export function createInitialSolicitudState(): Solicitud32604State {
     enlaceOperativosLista: [] as EnlaceOperativo[],
     programaImmex: 0,
     importsRadio: 0,
+    transportistasLista: [] as TransportistasTable[],
   };
 }
 @Injectable({
@@ -1590,6 +1596,15 @@ export class Solicitud32604Store extends Store<Solicitud32604State> {
    */
   actualizarImportsRadio(valor: string | number): void {
     this.update((state) => ({ ...state, importsRadio: valor }));
+  }
+
+  /**
+   * Actualiza el valor del campo `transportistasLista` en el estado.
+   *
+   * @param valor - El nuevo valor para `transportistasLista`.
+   */
+  actualizarTransportistasLista(valor: TransportistasTable[]): void {
+    this.update((state) => ({ ...state, transportistasLista: valor }));
   }
 
   /**

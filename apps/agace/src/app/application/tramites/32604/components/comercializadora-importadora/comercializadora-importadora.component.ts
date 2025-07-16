@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState, Notificacion, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FECHA_DE_PAGO, TRANSPORTISTAS_CONFIGURACION } from '../../constants/empresas-comercializadoras.enum';
 import { InputFecha } from '@libs/shared/data-access-user/src';
@@ -62,6 +62,7 @@ export class ComercializadoraImportadoraComponent {
 
   /** Configuración y lista de transportistas */
   transportistasTabla = TablaSeleccion.CHECKBOX;
+
   /**
    * Configuración de las columnas para la tabla de transportistas.
    * Se inicializa con la configuración predeterminada definida en `TRANSPORTISTAS_CONFIGURACION`.
@@ -79,15 +80,10 @@ export class ComercializadoraImportadoraComponent {
   @ViewChild('transportistas', { static: false })
   transportistaElement!: ElementRef;
 
-  /** Datos seleccionados para el enlace operativo */
   seleccionDatos: TransportistasTable[] = [] as TransportistasTable[];
-
-   /** Lista de enlaces operativos */
-  OperativosLista: TransportistasTable[] = [] as TransportistasTable[];
 
   /** Modelo para la opción de tipo sí/no representado como radio button */
   sinoOpcion: InputRadio = {} as InputRadio;
-
 
   /**
    * Constructor del componente donde se inicializan servicios y se cargan catálogos necesarios.
@@ -143,6 +139,7 @@ export class ComercializadoraImportadoraComponent {
       programaImmex: [this.solicitudState.programaImmex],
       importsRadio: [this.solicitudState.importsRadio],
     });
+    this.transportistasLista = this.solicitudState.transportistasLista;
   }
 
 
@@ -173,11 +170,19 @@ export class ComercializadoraImportadoraComponent {
     }
   }
 
+  /**
+   * Elimina los registros de número de empleados seleccionados.
+   */
   eliminarDato(): void {
     if (this.seleccionDatos.length > 0) {
-      this.OperativosLista = this.OperativosLista.filter(
-        (element) => element.transportistaRFCModifTrans !== this.seleccionDatos[0].transportistaRFCModifTrans
-      );
+      this.seleccionDatos.forEach((elemento) => {
+        const INDICE = this.transportistasLista.findIndex(
+          (inv) => inv.transportistaRFCModifTrans === elemento.transportistaRFCModifTrans
+        );
+        if (INDICE !== -1) {
+          this.transportistasLista.splice(INDICE, 1);
+        }
+      });
     }
   }
 
@@ -220,6 +225,20 @@ export class ComercializadoraImportadoraComponent {
    */
   actualizarImportsRadio(valor: string | number): void {
     this.solicitud32604Store.actualizarImportsRadio(valor);
+  }
+  
+  seccionTransportistasLista(evento: TransportistasTable): void {
+    this.transportistasLista = [...this.transportistasLista, evento];
+    this.solicitud32604Store.actualizarTransportistasLista(
+      this.transportistasLista
+    );
+  }
+
+  /**
+   * Guarda la selección de número de empleados hecha por el usuario.
+   */
+  seleccionarDato(evento: TransportistasTable[]): void {
+    this.seleccionDatos = evento;
   }
 
   /**

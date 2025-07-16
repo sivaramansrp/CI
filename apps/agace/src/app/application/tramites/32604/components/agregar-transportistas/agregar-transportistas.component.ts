@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -26,7 +26,7 @@ import { EmpresasComercializadorasService } from '../../services/empresas-comerc
 @Component({
   selector: 'app-agregar-transportistas',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, NotificacionesComponent],
   templateUrl: './agregar-transportistas.component.html',
   styleUrl: './agregar-transportistas.component.scss',
 })
@@ -51,7 +51,13 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /** Evento que emite los datos del transportista seleccionado al componente padre */
-  @Output() transportistasDatos = new EventEmitter<TransportistasTable>();
+  @Output() seccionTransportistasLista = new EventEmitter<TransportistasTable>();
+
+  /**
+   * Representa una confirmar instancia de notificación asociada con el componente.
+   * Esta propiedad se utiliza para gestionar y almacenar datos de notificaciones.
+   */
+  public confirmarNotificacion!: Notificacion;
 
   /**
    * Constructor del componente. Se inyectan los servicios necesarios para formularios y gestión de estado.
@@ -275,7 +281,14 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
       )?.value,
       transportistaCaat: this.transportistaCertificacionForm.get('transportistaCaat')?.value,
     };
-    this.transportistasDatos.emit(OBJETO_JSON);
+    this.seccionTransportistasLista.emit(OBJETO_JSON);
+  }
+
+  /**
+   * Limpia los datos de la transportistaCertificacionForm.
+   */
+  public limpiar(): void {
+    this.transportistaCertificacionForm.reset();
   }
 
   /**
