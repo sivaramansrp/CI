@@ -43,6 +43,7 @@ import { DetallasDatos, ProductoDetallaEventos, ProductosCatalogosDatos } from '
     CatalogoSelectComponent
   ],
   templateUrl: './sub-productos.component.html',
+  styleUrl: './sub-productos.component.scss',
 })
 export class SubProductosComponent implements OnInit, OnDestroy {
   fechaInicioInput: InputFecha = FECHA_DE_DATA;
