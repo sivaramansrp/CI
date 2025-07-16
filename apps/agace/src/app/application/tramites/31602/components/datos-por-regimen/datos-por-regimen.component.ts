@@ -136,13 +136,25 @@ export class DatosPorRegimenComponent implements OnInit, OnDestroy {
    * de la solicitud dentro del componente DatosPorRegimen.
    */
   public solicitudState!: Solicitud31602State;
-
+  /**
+  * Indica si deben mostrarse solo las importaciones.
+  * Valor por defecto: false.
+  */
   @Input() mostrarSoloImportaciones: boolean = false;
-
+  /**
+  * Indica si deben mostrarse solo los depósitos fiscales.
+  * Valor por defecto: false.
+  */
   @Input() mostrarSoloDepositoFiscal: boolean = false;
-
+  /**
+  * Indica si deben mostrarse solo los registros en elaboración.
+  * Valor por defecto: false.
+  */
   @Input() mostrarSoloElaboracion: boolean = false;
-
+  /**
+  * Indica si deben mostrarse solo los registros del recinto.
+  * Valor por defecto: false.
+  */
   @Input() mostrarSoloRecinto: boolean = false;
 
   /**

@@ -29,19 +29,31 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * Indica si el modal emergente (popup) debe mostrarse.
    * Si es true, el popup es visible; si es false, está oculto.
    */
-  public mostrarPopup = false;
+  public mostrarPopup:boolean = false;
   /**
    * Mensaje que se mostrará en el modal emergente (popup).
    */
   public popupMessage = '';
-
-  public mostrarImportaciones = false;
-
-  public mostrarDepositoFiscal = false;
-
-  public mostrarElaboracion = false;
-
-  public mostrarRecinto = false;
+   /**
+    * Controla la visualización de las importaciones en la vista.
+    * Valor por defecto: false.
+    */
+  public mostrarImportaciones:boolean = false;
+  /**
+   * Controla la visualización de los depósitos fiscales en la vista.
+   * Valor por defecto: false.
+   */
+  public mostrarDepositoFiscal:boolean = false;
+  /**
+  * Controla la visualización de los registros en elaboración en la vista.
+  * Valor por defecto: false.
+  */
+  public mostrarElaboracion:boolean = false;
+  /**
+  * Controla la visualización de los registros del recinto en la vista.
+  * Valor por defecto: false.
+  */
+  public mostrarRecinto:boolean = false;
 
   /**
  * Mapa de valores que disparan la apertura del modal emergente (popup) para controles específicos.
@@ -217,19 +229,31 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
 cerrarPopup():void {
   this.mostrarPopup = false;
 }
-
+/**
+ * Actualiza el estado de visualización de las importaciones.
+ * @param valor Valor booleano para mostrar u ocultar las importaciones.
+ */
 onMostrarImportacionesChange(valor: boolean):void {
   this.mostrarImportaciones = valor;
 }
-
+/**
+ * Actualiza el estado de visualización de los depósitos fiscales.
+ * @param valor Valor booleano para mostrar u ocultar los depósitos fiscales.
+ */
 onMostrarDepositoFiscalChange(valor: boolean):void {
   this.mostrarDepositoFiscal = valor;
 }
-
+/**
+ * Actualiza el estado de visualización de los registros en elaboración.
+ * @param valor Valor booleano para mostrar u ocultar los registros en elaboración.
+ */
 onMostrarElaboracionChange(valor: boolean):void {
   this.mostrarElaboracion = valor;
 }
-
+/**
+ * Actualiza el estado de visualización de los registros del recinto.
+ * @param valor Valor booleano para mostrar u ocultar los registros del recinto.
+ */
 onMostrarRecintoChange(valor: boolean):void {
   this.mostrarRecinto = valor;
 }
