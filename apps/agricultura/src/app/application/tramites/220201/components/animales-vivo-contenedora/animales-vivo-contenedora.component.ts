@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AnimalesVivoDetallesComponent } from '../../../../shared/components/animales-vivo-detalles/animales-vivo-detalles.component';
 import { AnimalesEventos, DatosDeLaSolicitud } from '../../../../shared/models/datos-de-la-solicitue.model';
@@ -53,11 +53,13 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
    */
   cuerpoTabla: FilaSolicitud[] = [];
 
+  @Output() cerrar = new EventEmitter<void>();
 
 
   constructor(public agriculturaApiService: CertificadoZoosanitarioServiceService,
     public fitosanitarioQuery: ZoosanitarioQuery,
-    public fitosanitarioStore: ZoosanitarioStore
+    public fitosanitarioStore: ZoosanitarioStore,
+
   ) {
     this.agriculturaApiService.obtenerRespuestaPorUrl('animales-vivo.json').subscribe((resp) => {
       this.catalogosDatos = resp;
@@ -141,8 +143,6 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
     });
 
   }
-
-
 
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

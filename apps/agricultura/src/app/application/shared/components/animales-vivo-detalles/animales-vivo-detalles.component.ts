@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
@@ -100,14 +100,14 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * @type {Sensible[]}
    */
   public sensiblesTablaSeleccionada: Sensible[] = [];
-
+  @Output() cerrar = new EventEmitter<void>();
+  @Output() animalesVivoDetallesComponent = new EventEmitter<void>();
   /**
    * Constructor del componente.
    * 
    * @param fb FormBuilder para crear formularios reactivos.
    */
   constructor(private fb: FormBuilder,
-    private ubicaccion: Location,
   ) {
   }
 
@@ -229,7 +229,7 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
  * Utiliza el servicio de ubicación para retroceder una página.
  */
   cancelar(): void {
-    this.ubicaccion.back();
+    this.cerrar.emit();
   }
 
   /**
@@ -247,7 +247,7 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
           tablaDatos: this.sensiblesTablaDatos
         }
       );
-      this.ubicaccion.back();
+      this.cerrar.emit();
     }
 
   }

@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
@@ -141,6 +141,7 @@ export class SubProductosComponent implements OnInit, OnDestroy {
    * @type {AnimalesFormularioSolicitud}
    */
   @Input() formularioSolicitud!: FilaSolicitud;
+  @Output() cerrar = new EventEmitter<void>();
 
   /**
    * Constructor del componente.
@@ -149,7 +150,6 @@ export class SubProductosComponent implements OnInit, OnDestroy {
    * @param ubicaccion - Servicio de ubicación para navegar entre páginas.
    */
   constructor(private fb: FormBuilder,
-    private ubicaccion: Location,
   ) {
   }
 
@@ -268,7 +268,7 @@ export class SubProductosComponent implements OnInit, OnDestroy {
   cancelar(): void {
     this.productosForm.reset();
     this.detalleForm.reset();
-    this.ubicaccion.back();
+    this.cerrar.emit();
   }
 
   /**
@@ -283,7 +283,7 @@ export class SubProductosComponent implements OnInit, OnDestroy {
         detallasDatosTablaDatos: this.detallasDatosTablaDatos
       }
     );
-    this.ubicaccion.back();
+    this.cerrar.emit();
   }
 
   /**

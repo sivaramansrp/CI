@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { map, Subject, takeUntil } from 'rxjs';
 import { SubProductosComponent } from '../../../../shared/components/sub-productos/sub-productos.component';
 import { ProductoDetallaEventos, ProductosCatalogosDatos } from '../../../../shared/models/datos-de-la-solicitue.model';
@@ -46,6 +46,7 @@ export class SubProductosContenedoraComponent {
    */
   public destroyNotifier$ = new Subject<void>();
   public formularioSolicitud!: FilaSolicitud;
+  @Output() cerrar = new EventEmitter<void>();
 
   /**
    * Constructor de la clase `SubProductosContenedoraComponent`.
