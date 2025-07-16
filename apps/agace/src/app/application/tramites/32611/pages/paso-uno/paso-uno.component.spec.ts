@@ -7,11 +7,11 @@ import { Solocitud32611Service } from '../../services/service32611.service';
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
-  let solicitudDeRegistroInvocarService: any;
+  let solocitud32611Service: any;
   let mockConsultaQuery: any;
 
   beforeEach(async () => {
-    solicitudDeRegistroInvocarService = {
+    solocitud32611Service = {
       getDatosDeLaSolicitud: jest.fn(),
       actualizarEstadoFormulario: jest.fn()
     };
@@ -23,7 +23,7 @@ describe('PasoUnoComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [PasoUnoComponent],
       providers: [
-        { provide: SolicitudDeRegistroInvocarService, useValue: solicitudDeRegistroInvocarService },
+        { provide: Solocitud32611Service, useValue: Solocitud32611Service },
         { provide: ConsultaioQuery, useValue: mockConsultaQuery }
       ]
     }).compileComponents();
@@ -36,17 +36,17 @@ describe('PasoUnoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe marcar esFormularioSoloLectura en true si update es false', () => {
+  it('debe marcar esDatosRespuesta en true si update es false', () => {
     component.ngOnInit();
-    expect(component.esFormularioSoloLectura).toBe(true);
+    expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('guardarDatosFormulario debe actualizar esFormularioSoloLectura y llamar actualizarEstadoFormulario', () => {
+  it('guardarDatosFormulario debe actualizar esDatosRespuesta y llamar actualizarEstadoFormulario', () => {
     const resp = { campo: 'valor' };
-    solicitudDeRegistroInvocarService.getDatosDeLaSolicitud.mockReturnValue(of(resp));
+    solocitud32611Service.getDatosDeLaSolicitud.mockReturnValue(of(resp));
     component.guardarDatosFormulario();
-    expect(component.esFormularioSoloLectura).toBe(true);
-    expect(solicitudDeRegistroInvocarService.actualizarEstadoFormulario).toHaveBeenCalledWith(resp);
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(solocitud32611Service.actualizarEstadoFormulario).toHaveBeenCalledWith(resp);
   });
 
   it('seleccionaTab debe actualizar el índice', () => {
