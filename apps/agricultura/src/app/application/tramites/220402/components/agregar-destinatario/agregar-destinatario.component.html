@@ -1,5 +1,9 @@
 <div class="row">
+  @if(consultaDatos.parameter === "READ_PROCEDURE"){
   <ng-titulo titulo="Terceros relacionados" />
+  } @else {
+  <ng-titulo titulo="Destinatario" />
+  }
   <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR"></ng-alert>
   <h6>Destinatario (destino final)*</h6>
   <app-tabla-dinamica [configuracionTabla]="configuracionTablaDatos" [datos]="destinatario"

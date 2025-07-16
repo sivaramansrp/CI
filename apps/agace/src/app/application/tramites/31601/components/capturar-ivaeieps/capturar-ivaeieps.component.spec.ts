@@ -109,13 +109,6 @@ fdescribe('CapturarIvaeiepsComponent', () => {
     component.cambioDeValorIndique('No');
     expect(component.predeterminadoSeleccionar).toBe('No');
   });
-
-  it('debe agregar datos a destinatarioHeaderData en agregarDatos', () => {
-    component.ivaForm.patchValue({ rfc: 'ABC123456XYZ', denominacion: 'Test Name', domicilio: 'Test Address' });
-    component.agregarDatos();
-    expect(component.destinatarioHeaderData.tableBody[0].tbodyData.length).toBeGreaterThan(0);
-  });
-
  it('debe asignar valores en formularioDePago al llamar poblarPagoForm', () => {
     const mockData = {
       claveReferencia: '123',
@@ -150,7 +143,7 @@ fdescribe('CapturarIvaeiepsComponent', () => {
   component.datosDeInversion = {
     tableHeader: ['Tipo de', 'Descripción', 'Valor en pesos'],
     tableBody: [
-      { tbodyData: [] }
+    
     ]
   };
 

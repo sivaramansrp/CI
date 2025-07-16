@@ -1,8 +1,8 @@
-import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
-import { BtnContinuarComponent, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
-import { MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/certificado-zoosanitario.enum';
 import { CommonModule } from '@angular/common';
+import { Component, ViewChild } from '@angular/core';
+import { BtnContinuarComponent, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
+import { MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/certificado-zoosanitario.enum';
+import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -25,8 +25,8 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 @Component({
   selector: 'app-zoosanitario-page',
   templateUrl: './zoosanitario-page.component.html',
-  standalone:true,
-  imports: [WizardComponent,CommonModule,PasoDosComponent,PasoUnoComponent,PasoTresComponent,BtnContinuarComponent],
+  standalone: true,
+  imports: [WizardComponent, CommonModule, PasoDosComponent, PasoUnoComponent, PasoTresComponent, BtnContinuarComponent],
 })
 export class ZoosanitarioPageComponent {
   /**
@@ -39,7 +39,7 @@ export class ZoosanitarioPageComponent {
    * Título del mensaje principal.
    * @property {string | null} tituloMensaje - Título que se muestra en la parte superior del formulario.
    */
-  tituloMensaje: string | null = 'Zoosanitario para importación';
+  tituloMensaje: string | null = 'Captura del certificado zoosanitario para importación';
 
   /**
    * Componente Wizard.
@@ -83,7 +83,7 @@ export class ZoosanitarioPageComponent {
    * @method getValorIndice
    * @param {AccionBoton} e - Objeto con la acción (cont/atras) y el valor (índice) del botón.
    */
-  getValorIndice(e: AccionBoton):void {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -119,7 +119,7 @@ export class ZoosanitarioPageComponent {
           'Captura del certificado zoosanitario para importación';
         break;
       default:
-        this.tituloMensaje = ' Captura del certificado zoosanitario para importación';
+        this.tituloMensaje = 'Captura del certificado zoosanitario para importación';
         break;
     }
   }

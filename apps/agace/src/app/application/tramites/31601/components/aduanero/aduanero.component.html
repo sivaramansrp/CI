@@ -168,7 +168,7 @@
 
     <div class="w-100 p-3 mt-4">
       <label class="form-label fw-bold mb-3" for="">
-        Se&ntilde;ale el sector productivo o servicio al que pertenece
+        Sector productivo o servicio al que pertenece
       </label>
       <div class="row mb-5">
         <div class="col-md-6">
@@ -319,7 +319,7 @@
                 <div class="form-group">
                   <label for="empPropios" class="form-label">Número de empleados</label>
                   <input
-                    type="text"
+                    type="number"
                     class="form-control"
                     id="empPropios"
                     name="empPropios"
@@ -433,13 +433,41 @@
         <button
           type="button"
           class="btn btn-default btn-primary"
-          (click)="openModifyModal()"
+          (click)="openAgregarModal()"
           [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
       </div>
 
+      <div class="mt-4 form-group">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> En su caso acredite cumplir con lo establecido en el artículo 27, fracción V, tercer párrafo de la Ley del ISR
+        </section>
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+          [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio21.description"
+          [showDescription]="true"
+          formControlName="acredite"
+          (change)="
+            setValoresStore(preOperativeForm, 'acredite', 'setAcredite')
+          "
+        ></app-input-radio>
+        <div
+          *ngIf="
+            preOperativeForm.controls['acredite'].invalid &&
+            preOperativeForm.controls['acredite'].touched
+          "
+          class="text-danger"
+        >
+          Este campo es obligatorio.
+        </div>
+      </div>
       <div
         class="modal"
         tabindex="-1"
@@ -657,7 +685,7 @@
         </app-catalogo-select>
       </div>
       <label class="fw-bold" for="">
-        Indique todos los domicilios registrados ante el FC del solicitante e
+        Indique todos los domicilios registrados ante el RFC del solicitante e
         indique aquellos en que se desarrollen actividades relacionadas con su
         proceso productivo y/o la prestación de servicios.
       </label>
@@ -830,7 +858,7 @@
       </div>
       <div class="form-group d-flex align-items-center gap-2">
         <label for="registrosQue2" class="form-label mb-0"
-          >Registros que existen actualmente</label
+          >Registros que existen actualmente.</label
         >
         <input
           type="text"
@@ -1506,7 +1534,7 @@
               <label for="numeroAutorizacionCITES" class="form-label"
                 >Numero de empleados</label
               >
-              <input type="text" class="form-control" formControlName="numeroEmpleados" id="" />
+              <input type="number" class="form-control" formControlName="numeroEmpleados" id="" />
               <div
                 *ngIf="
                   preOperativeForm.controls['numeroEmpleados'].invalid &&

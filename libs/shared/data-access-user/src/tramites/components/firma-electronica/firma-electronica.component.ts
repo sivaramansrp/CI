@@ -171,6 +171,17 @@ export class FirmaElectronicaComponent {
 
     try {
       const ESLOGIN = this.tipo === OperationType.LOGIN;
+
+      // Verifica si se está en un escenario de prueba (dummy) o si es un login
+      const ESCENARIO_DUMMY = !ESLOGIN && !this.cadenaOriginal;
+
+      // Si es un escenario de prueba (dummy), emite una firma ficticia
+      if (ESCENARIO_DUMMY) {
+      this.firma.emit('firma-dummy-30901');
+      this.isLoading = false;
+      return;
+    }
+
       const RESULTADO = await this.firmaService.firmarCadena(
         this.cerInputElement,
         this.keyInputElement,

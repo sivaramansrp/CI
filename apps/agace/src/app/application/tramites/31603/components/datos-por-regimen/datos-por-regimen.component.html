@@ -1,7 +1,8 @@
 <div class="container mt-4">
+    @if (mostrarSoloImportaciones){
     <form [formGroup]="importacionesForm">
         <div class="row mb-3">
-            <p class="fw-bold">
+            <p class="fw-bold"><span class="text-danger">* </span>
                 Indique si realiza o realizará
                 importaciones temporales de mercancías de las fracciones arancelarias
                 listadas en el Anexo II del Decreto IMMEX y/o de las fracciones
@@ -20,11 +21,12 @@
               </div>
         </div>
     </form>
+    }
     @if(valorSeleccionado === 'Si') {
         <form [formGroup]="indiqueSiForma">
             <div class="row mb-3">  
                 <formas-dinamicas 
-                    [formularioTitulo]="'Importación temporal bajo la modalidad del programa IMMEX (sensibles)'"
+                    [formularioTitulo]="'Importación temporal bajo la modalidad del programa IMMEX'"
                     [forma]="importacionTemporalFormGroup" 
                     [formularioDatos]="importacionTemporalDatos"
                     [estado]="solicitudState"
@@ -36,11 +38,12 @@
         </form>
         <app-conceptos></app-conceptos>
     }
+    @if (mostrarSoloDepositoFiscal) {
     <form [formGroup]="depositoFiscalForma">
         <div class="row mb-3">  
             <formas-dinamicas 
                 [formularioTitulo]="'Depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos'"
-                [formularioSubtitulo]="'Deberá anexar una copia simple de la autorización para el establecimiento del depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos a empresas de la industria terminal vigente.'"
+                [formularioSubtitulo]="'Deberá anexar una copia simple de autorización para el establecimiento del depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos a empresas de la industria terminal vigente.'"
                 [forma]="depositoFiscalFormGroup" 
                 [formularioDatos]="depositoFiscalDatos"
                 [estado]="solicitudState"
@@ -50,6 +53,8 @@
             </formas-dinamicas>
         </div>
     </form>
+}
+@if (mostrarSoloElaboracion) {
     <form [formGroup]="elaboracionForma">
         <div class="row mb-3">  
             <formas-dinamicas 
@@ -64,6 +69,8 @@
             </formas-dinamicas>
         </div>
     </form>
+}
+@if (mostrarSoloRecinto) {
     <form [formGroup]="recintoForma">
         <div class="row mb-3">  
             <formas-dinamicas 
@@ -78,4 +85,5 @@
             </formas-dinamicas>
         </div>
     </form>
+}
 </div>

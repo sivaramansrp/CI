@@ -79,20 +79,26 @@
         </button>
       </div>
 
-      <ng-table
-        *ngIf="mostrarContenido"
-        [commonTableHeader]="destinatarioHeaderData.tableHeader"
-        [commonTableBody]="destinatarioHeaderData.tableBody"
-      >
-      </ng-table>
+      
+        <app-tabla-dinamica
+    [configuracionTabla]="configuracionTablaDatos"
+    [datos]="destinatario"
+    [tipoSeleccionTabla]="checkbox"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
+     (filaSeleccionada)="onFilaSeleccionadaDestinatario($event)"
+     (listaDeFilaSeleccionada)="filasSeleccionadas = $event"
+       
+  ></app-tabla-dinamica>
     </div>
 
     <div class="button-container">
-      <button class="btn btn-primary" (click)="agregarOpenModal()" [disabled]="esFormularioSoloLectura">
+      <button class="btn btn-primary" (click)="agregarOpenModal()"   [disabled]="esFormularioSoloLectura || filasSeleccionadas.length > 0">
         Agregar
       </button>
-      <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Modificar</button>
-      <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+      <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura || filasSeleccionadas.length !== 1"
+  (click)="modificarOpenModal()">Modificar</button>
+      <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura || filasSeleccionadas.length === 0"
+  (click)="eliminarValor()">Eliminar</button>
     </div>
 </div>
     <section class="fw-medium mt-3">
@@ -190,7 +196,7 @@
         <button class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="agregarData()">Agregar</button>
       </div>
     </div>
-
+    <h5>Monto aproximado de su inversión en territorio nacional</h5>
     <div class="table-container m-3">
       <div
         class="table-header pb-2 d-flex align-items-center justify-content-between"
@@ -217,7 +223,7 @@
 
     <div class="button-container">
       <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Modificar</button>
-      <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+      <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="eliminar()">Eliminar</button>
     </div>
 
     <p class="fw-bold">
@@ -349,7 +355,7 @@
           </div>
         </div>
         <div class="col-md-3">
-            <input-fecha [datos]="fechaFinalInput" name="fechaPago" [setFecha]="formularioDePago.get('fechaPago')?.value" (valorCambiado)="onFechaCambiada($event)" [isDisabled]="esFormularioSoloLectura"></input-fecha>
+            <input-fecha [datos]="fechaFinalInput" name="fechaPago" [isDisabled]="true" [setFecha]="formularioDePago.get('fechaPago')?.value" (valorCambiado)="onFechaCambiada($event)" ></input-fecha>
 
         </div>
         <div class="col-md-3">

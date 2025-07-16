@@ -1,5 +1,5 @@
 import { Agregar220401Store, Solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
@@ -15,7 +15,10 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 /**
  * @component CombinacionRequeridaComponent
- * @description Este componente gestiona la combinación requerida en el formulario.
+ * @description
+ * Componente encargado de gestionar la combinación de diferentes datos en el flujo 220401.
+ * Implementa los ciclos de vida de Angular OnInit y OnDestroy para la inicialización y limpieza
+ * de recursos durante la vida útil del componente.
  */
 @Component({
   selector: 'app-combinacion-requerida',
@@ -30,16 +33,11 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
   ],
   styleUrl: './combinacion-requerida.component.scss',
 })
-/**
- * Componente encargado de gestionar la combinación de diferentes datos en el flujo 220401.
- * Implementa los ciclos de vida de Angular OnInit y OnDestroy para la inicialización y limpieza
- * de recursos durante la vida útil del componente.
- */
 export class CombinacionRequeridaComponent implements OnInit, OnDestroy {
   /**
- * Arreglo que contiene los elementos del catálogo relacionados con las especies disponibles.
- * Se utiliza para cargar y gestionar las especies seleccionadas en el formulario.
- */
+   * Arreglo que contiene los elementos del catálogo relacionados con las especies disponibles.
+   * Se utiliza para cargar y gestionar las especies seleccionadas en el formulario.
+   */
   public especie!: Catalogo[];
 
   /**
@@ -101,12 +99,15 @@ export class CombinacionRequeridaComponent implements OnInit, OnDestroy {
    * Se utiliza para gestionar y validar los datos relacionados con las diferentes secciones del formulario.
    */
   public formCombinacion!: FormGroup;
+
   /**
    * Subject utilizado para emitir una notificación cuando el componente se destruye.
    * Se utiliza para gestionar la cancelación de suscripciones y evitar fugas de memoria
    * mediante el operador 'takeUntil' en observables.
+   * @private
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Representa el estado de la solicitud en el flujo 220401.
    * Contiene la información relevante relacionada con el estado actual de la solicitud
@@ -115,22 +116,31 @@ export class CombinacionRequeridaComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud220401State;
 
   /**
+   * Valor recibido desde el componente padre para determinar la opción seleccionada en el radio principal.
+   * Se utiliza para condicionar la visualización y lógica del formulario.
+   */
+  @Input() certificadaValue: unknown;
+
+  /**
    * Indica si el formulario está en modo solo lectura.
    * Si es verdadero, el formulario no permite edición.
    */
   esFormularioSoloLectura: boolean = false;
+
   /**
- * El constructor se encarga de inyectar los servicios necesarios para el componente.
- * Cada servicio tiene una función específica que facilita la interacción con el formulario,
- * la validación, el manejo de estado de la aplicación y la carga de datos.
- *
- * @param fb - Servicio para la creación y manejo de formularios reactivos en Angular.
- * @param validacionesService - Servicio para manejar las validaciones de los formularios.
- * @param agregar220401Store - Servicio encargado del manejo del estado relacionado con el flujo 220401.
- * @param agregarQuery - Servicio que proporciona información o estados adicionales para el componente.
- * @param _pantallas220401Service - Servicio encargado de la lógica específica relacionada con las pantallas del flujo 220401.
- */
-  constructor(private fb: FormBuilder,
+   * El constructor se encarga de inyectar los servicios necesarios para el componente.
+   * Cada servicio tiene una función específica que facilita la interacción con el formulario,
+   * la validación, el manejo de estado de la aplicación y la carga de datos.
+   *
+   * @param fb Servicio para la creación y manejo de formularios reactivos en Angular.
+   * @param validacionesService Servicio para manejar las validaciones de los formularios.
+   * @param agregar220401Store Servicio encargado del manejo del estado relacionado con el flujo 220401.
+   * @param agregarQuery Servicio que proporciona información o estados adicionales para el componente.
+   * @param _pantallas220401Service Servicio encargado de la lógica específica relacionada con las pantallas del flujo 220401.
+   * @param consultaioQuery Servicio para consultar el estado de solo lectura.
+   */
+  constructor(
+    private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
     private agregar220401Store: Agregar220401Store,
     private agregarQuery: AgregarQuery,
@@ -143,19 +153,18 @@ export class CombinacionRequeridaComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
           this.crearFormCombinacion();
+          this.guardarDatosFormulario();
         })
       )
       .subscribe()
   }
 
   /**
-   * @inheritdoc
-   * 
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Aquí se llama a la función para inicializar el formulario de combinación.
    */
   ngOnInit(): void {
-this.inicializarCombinacionFormulario();
+    this.inicializarCombinacionFormulario();
   }
 
   /**
@@ -169,7 +178,7 @@ this.inicializarCombinacionFormulario();
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-     this.inicializarFormulario()
+      this.inicializarFormulario();
     }  
   }
 
@@ -180,8 +189,6 @@ this.inicializarCombinacionFormulario();
    * - Se suscribe al observable `selectSolicitud$` para obtener el estado de la solicitud y lo asigna a `solicitudState`.
    * - Llama a `crearFormCombinacion` para crear la estructura del formulario.
    * - Carga los datos requeridos para los campos del formulario, incluyendo especie, función zootécnica, mercancía, país de destino, nombre del establecimiento, tipo de actividad, aduana de salida, OISA de salida, régimen de mercancía y país de origen.
-   *
-   * @returns {void} No retorna ningún valor.
    */
   inicializarFormulario(): void {
     this.agregarQuery.selectSolicitud$
@@ -203,46 +210,39 @@ this.inicializarCombinacionFormulario();
     this.loadOisaSalida();
     this.loadRegimenMercancia();
     this.loadPaisOrigen();
-    
   }
 
-
   /**
-   * @comdoc
    * Guarda los datos del formulario de combinación requerida.
    * 
    * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
    * - Si el formulario es de solo lectura, lo deshabilita.
    * - Si no es de solo lectura, lo habilita.
-   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
    */
-  guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-        this.formCombinacion.disable();
-      } else {
-        this.formCombinacion.enable();
-      }
+  guardarDatosFormulario(): void { 
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.formCombinacion.disable();
+    } else {
+      this.formCombinacion.enable();
+    }
   }
 
   /**
-* Verifica si un campo específico del formulario `formCombinacion` no es válido
-* y ha sido tocado (modificado por el usuario).
-*
-* @param field - El nombre del campo dentro del formulario que se desea validar.
-* @returns Retorna `true` si el campo tiene errores y ha sido tocado, de lo contrario `false`.
-*/
+   * Verifica si un campo específico del formulario `formCombinacion` no es válido
+   * y ha sido tocado (modificado por el usuario).
+   *
+   * @param field El nombre del campo dentro del formulario que se desea validar.
+   * @returns Retorna `true` si el campo tiene errores y ha sido tocado, de lo contrario `false`.
+   */
   public isValid(field: string): boolean | null {
     return this.validacionesService.isValid(this.formCombinacion, field);
   }
+
   /**
-   * @description createFormMerge se utiliza para crear el formulario denominado formCombinacion
-   * 
+   * Crea el formulario `formCombinacion` con los valores del estado `solicitudState`
+   * y aplica validación de longitud máxima (200) a `puntoIngreso`.
    */
-  /**
- * Inicializa el formulario `formCombinacion` con los valores del estado `solicitudState`
- * y aplica validación de longitud máxima (200) a `puntoIngreso`.
- */
   public crearFormCombinacion(): void {
     this.formCombinacion = this.fb.group({
       tipoProducto: [this.solicitudState?.tipoProducto],
@@ -262,26 +262,26 @@ this.inicializarCombinacionFormulario();
       numeroAutorizacionCheck: [this.solicitudState?.numeroAutorizacionCheck],
       tipoActividadCheck: [this.solicitudState?.tipoActividadCheck],
       otroCheck: [this.solicitudState?.otroCheck],
-      fechaArribo: [this.solicitudState?.fechaArribo]
-
+      fechaArribo: [this.solicitudState?.fechaArribo],
+      uso: [this.solicitudState?.uso],
     });
   }
+
   /**
    * Establece un valor en el store llamando dinámicamente un método según su nombre.
    *
-   * @param form - El formulario reactivo que contiene el valor.
-   * @param campo - El nombre del campo dentro del formulario.
-   * @param metodoNombre - El nombre del método del store que se va a invocar (debe existir en `Agregar220401Store`).
+   * @param form El formulario reactivo que contiene el valor.
+   * @param campo El nombre del campo dentro del formulario.
+   * @param metodoNombre El nombre del método del store que se va a invocar (debe existir en `Agregar220401Store`).
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
     const VALOR = form.get(campo)?.value;
     (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
   }
 
-
   /**
-  * Carga los datos de especie desde el servicio y los asigna a la propiedad `especie`.
-  */
+   * Carga los datos de especie desde el servicio y los asigna a la propiedad `especie`.
+   */
   loaddatEspecieData(): void {
     this._pantallas220401Service.getEspecieData().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
       this.especie = data;
@@ -368,11 +368,11 @@ this.inicializarCombinacionFormulario();
       this.paisOrigen = data;
     });
   }
-  /**
-   * @method crearFormCombinacion
-   * @description Método para crear el formulario formCombinacion.
-   */
 
+  /**
+   * Hook de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Emite una señal para cancelar todas las suscripciones activas y evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

@@ -85,13 +85,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Indica si el formulario se encuentra en modo solo lectura.
    * Si es `true`, los controles del formulario estarán deshabilitados para evitar modificaciones.
    */
-  esFormularioSoloLectura: boolean = false;
+  soloLectura: boolean = false;
 
   /**
    * Subject utilizado para notificar y limpiar suscripciones activas al destruir el componente.
    * Se emite un valor y se completa en el método `ngOnDestroy` para evitar fugas de memoria.
    */
-  public destroyNotifier$: ReplaySubject<boolean> = new ReplaySubject(1);
+  public destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
   * Configuración para el catálogo de bancos.
@@ -123,10 +123,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
           this.consultaDatos = seccionState;
-          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe()
@@ -140,30 +141,39 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.obtenerDatosBanco();
     this.query.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
           this.solicitudState = seccionState;
         })
       )
       .subscribe();
-    this.donanteDomicilio()
+    this.donanteDomicilio();
+    this.inicializarEstadoFormulario();
   }
 
   /**
-   * Determina el estado inicial del formulario según el modo de solo lectura.
-   * 
-   * Si el formulario está en modo solo lectura, llama a `guardarDatosDelFormulario()` para deshabilitar los campos.
-   * Si no está en modo solo lectura, llama a `datosDeAvisoForm()` para aplicar la configuración correspondiente.
-   */
+    * Evalúa si se debe inicializar o cargar datos en el formulario.
+    * Además, obtiene la información del catálogo de mercancía.
+    */
   inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosDelFormulario();
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
     } else {
-      this.datosDeAvisoForm();
+      this.donanteDomicilio();
     }
   }
-
-
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.registroForm.disable();
+    } else {
+      this.registroForm.enable();
+    }
+  }
   /**
    * Actualiza el campo de fecha de pago en el formulario y en el estado global.
    *
@@ -182,7 +192,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   obtenerDatosBanco(): void {
     this.registroService
       .obtenerDatosBanco()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((resp): void => {
         this.bancoCatalogo.catalogos = resp as Catalogo[];
       });
@@ -234,20 +244,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-  /**
- * Habilita o deshabilita el formulario de acuerdo al modo de solo lectura.
- * 
- * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), 
- * deshabilita todos los campos del formulario para evitar modificaciones.
- * En caso contrario, habilita los campos para permitir la edición.
- */
-  guardarDatosDelFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.registroForm.disable();
-    } else {
-      this.registroForm.enable();
-    }
-  }
 
   /**
    * Inicializa el formulario reactivo `registroForm` con los valores actuales del estado de la solicitud.
@@ -257,42 +253,26 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
-      banco: [this.solicitudState?.banco, [Validators.required]],
-      llave: [this.solicitudState?.llave, [Validators.required]],
-      manifiesto1: [this.solicitudState?.manifiesto1, [Validators.required]],
-      manifiesto2: [this.solicitudState?.manifiesto2, [Validators.required]],
-      numeroOperacion: [this.solicitudState?.numeroOperacion, [Validators.required],],
-      fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
-      fechaInicio: [this.solicitudState?.fechaInicio, [Validators.required]],
-      fechaFinal: [this.solicitudState?.fechaFinal, [Validators.required]],
+      banco: [{ value: this.solicitudState?.banco, disabled: this.soloLectura }, [Validators.required]],
+      llave: [{ value: this.solicitudState?.llave, disabled: this.soloLectura }, [Validators.required]],
+      manifiesto1: [{ value: this.solicitudState?.manifiesto1, disabled: this.soloLectura }, [Validators.required]],
+      manifiesto2: [{ value: this.solicitudState?.manifiesto2, disabled: this.soloLectura }, [Validators.required]],
+      numeroOperacion: [{ value: this.solicitudState?.numeroOperacion, disabled: this.soloLectura }, [Validators.required]],
+      fechaPago: [{ value: this.solicitudState?.fechaPago, disabled: this.soloLectura }, [Validators.required]],
+      fechaInicio: [{ value: this.solicitudState?.fechaInicio, disabled: this.soloLectura }, [Validators.required]],
+      fechaFinal: [{ value: this.solicitudState?.fechaFinal, disabled: this.soloLectura }, [Validators.required]],
+      claveReferencia: [{ value: this.solicitudState?.claveReferencia, disabled: this.soloLectura }, [Validators.required]],
+      cadenaDependecia: [{ value: this.solicitudState?.cadenaDependecia, disabled: this.soloLectura }, [Validators.required]],
+      importePago: [{ value: this.solicitudState?.importePago, disabled: this.soloLectura }, [Validators.required]],
     });
-    this.inicializarEstadoFormulario();
   }
-
-  /**
-   * datosDeltrimiteForm los campos del formulario si es de solo lectura.
-   * Si el formulario es de solo lectura, deshabilita los campos del formulario de importador/exportador.
-   */
-
-  datosDeAvisoForm(): void {
-    if (this.esFormularioSoloLectura) {
-      this.registroForm.get('banco')?.disable();
-      this.registroForm.get('manifiesto1')?.disable();
-      this.registroForm.get('manifiesto2')?.disable();
-      this.registroForm.get('llave')?.disable();
-      this.registroForm.get('numeroOperacion')?.disable();
-      this.registroForm.get('fechaPago')?.disable();
-      this.registroForm.get('monedaNacional')?.disable();
-    }
-  }
-
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Cancela todas las suscripciones activas.
    */
   ngOnDestroy(): void {
-    this.destroyNotifier$.next(true);
-    this.destroyNotifier$.complete();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

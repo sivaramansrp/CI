@@ -159,6 +159,7 @@ export class DatosComunesService {
       this.datosComunes.setRegimenUno(DATOS.regimenUno);
       this.datosComunes.setRegimenDos(DATOS.regimenDos);
       this.datosComunes.setRegimenTres(DATOS.regimenTres);
+      this.datosComunes.setRegimenCuatro(DATOS.regimenCuatro);
       this.datosComunes.setSectorProductivo(DATOS.sectorProductivo);
       this.datosComunes.setServicio(DATOS.servicio);
       this.datosComunes.setPreOperativo(DATOS.preOperativo);

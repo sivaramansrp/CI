@@ -1,5 +1,5 @@
 import { CatalogosSelect, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { MediodetransporteService } from '../../services/medio-de-transporte.service';
@@ -60,11 +60,17 @@ export class TransporteComponent implements OnDestroy, OnInit {
   soloLectura: boolean = false;
 
   /**
-   * constructor de la clase
-   * Fetch the fetchTiposDocumentos datos
-   * Crea el formulario
-   * @param fb: constructor de formularios
-   * @param validacionesService: Validaciones comunes del formulario.
+   * Constructor de la clase TransporteComponent.
+   *
+   * @param {FormBuilder} fb - Constructor de formularios para crear y gestionar el FormGroup principal.
+   * @param {ValidacionesFormularioService} validacionesService - Servicio para validaciones comunes del formulario.
+   * @param {MediodetransporteService} mediodetransporteService - Servicio para obtener los medios de transporte.
+   * @param {Solicitud220402Store} solicitud220402Store - Store para gestionar el estado del trámite 220402.
+   * @param {Solicitud220402Query} solicitud220402Query - Query para consultar el estado del trámite 220402.
+   * @param {ConsultaioQuery} consultaioQuery - Query para consultar el estado de la consulta actual.
+   * @param {ChangeDetectorRef} cdr - Servicio para detectar y aplicar cambios manualmente en la vista.
+   *
+   * @memberof TransporteComponent
    */
   constructor(
     private fb: FormBuilder,
@@ -73,6 +79,7 @@ export class TransporteComponent implements OnDestroy, OnInit {
     private solicitud220402Store: Solicitud220402Store,
     private solicitud220402Query: Solicitud220402Query,
     private consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
   ) {
     this.fetchTiposDocumentos();
   }
@@ -185,5 +192,16 @@ export class TransporteComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Este método se utiliza para mostrar los errores del formulario.
+   * Marca todos los controles del formulario como tocados para que se muestren los errores de validación.
+   * 
+   * @returns {void}
+   */
+  public mostrarErrores() {
+    this.transporteForm?.markAllAsTouched?.();
+    this.cdr.detectChanges();
   }
 }
