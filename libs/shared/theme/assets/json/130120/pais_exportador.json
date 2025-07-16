@@ -1,4 +1,5 @@
-[
+{
+    "data":[
             {"id": 1, "descripcion": "Selecciona el país"},
             {"id": 2, "descripcion": "AFGANISTAN (EMIRATO ISLAMICO DE)"},
             {"id": 3, "descripcion": "ALBANIA (REPUBLICA DE)"},
@@ -20,3 +21,4 @@
             {"id": 19, "descripcion": "BAHAMAS (COMUNIDAD DE LAS)"},
             {"id": 20, "descripcion": "Kuwaiti Dinar"}
         ]
+}

@@ -232,15 +232,15 @@ export interface DatosExporta {
    */
   fecha_documento: string;
   /**
-   * @property {string} descripcion
-   * @description descripcion del documento.
+   * @property {string} descripcionExportacion
+   * @description descripcionExportacion del documento.
    */
-  descripcion: string;
+  descripcionExportacion: string;
   /**
-   * @property {string} código_arancelario
-   * @description Código arancelario del documento.
+   * @property {string} codigo_arancelario
+   * @description Codigo arancelario del documento.
    */
-  código_arancelario: string;
+  codigo_arancelario: string;
   /**
    * @property {string} cantidad_umt
    * @description Cantidad en unidad de medida de tráfico.
@@ -353,6 +353,8 @@ export interface DatosExportador {
    */
   observaciones: string;
 
+  denominación_razón_social_exportador: string;
+
 }
 
 /**
@@ -421,14 +423,14 @@ export function createDatosGruposState(params: Partial<DatosGrupos> = {}): Datos
     datosExporta: params.datosExporta || {
       número_documento: '',
       fecha_documento: '',
-      descripcion: '',
-      código_arancelario: '',
+      descripcionExportacion: '',
+      codigo_arancelario: '',
       cantidad_umt: '',
       valor_usd: '',
       precio_unitario_usd: '',
     },
     datosProductor: params.datosProductor || {
-      persona_tipo: '',
+      persona_tipo: 'Física',
       personales_nombre: '',
       primer_apellido: '',
       seguna_apellido: '',
@@ -436,12 +438,14 @@ export function createDatosGruposState(params: Partial<DatosGrupos> = {}): Datos
       domicilio: '',
     },
     datosExportador: params.datosExportador || {
-      persona_tipo: '',
+      persona_tipo: 'Física',
       personales_nombre: '',
       primer_apellido: '',
       seguna_apellido: '',
       razón_social: '',
+      denominación_razón_social_exportador: '',
       domicilio: '',
+
       observaciones: '',
     },
     datosFederal: params.datosFederal || {

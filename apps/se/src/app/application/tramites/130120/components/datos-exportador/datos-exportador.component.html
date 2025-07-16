@@ -1,0 +1,194 @@
+<div class="container">
+    <form [formGroup]="datosExportador">
+      <ng-titulo [titulo]="'Datos del exportador'"></ng-titulo>
+      <div class="row align-items-end">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label" for="persona_tipo">
+              Tipo de persona
+            </label>
+            <b>
+              <app-input-radio
+              [radioOptions]="tipo_opcion"
+              [selectedValue]="datosExportador.get('persona_tipo')?.value"
+              [isRequired]="true"
+              (valueChange)="onTipoPersonaExportadorChange($event)"
+              [layout]="'horizontal'">
+              </app-input-radio>
+            </b>
+          </div>
+        </div>
+      </div>
+
+      <div class="row align-items-end ">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label"><b>Datos personales</b></label>
+          </div>
+        </div>
+      </div>
+      <!-- FÍSICA -->
+      <div *ngIf="tipoPersonaExportador === 'Física'">
+        <div class="row align-items-end">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label">
+                Nombre(s)*:
+              </label>
+              <input
+                class="form-control"
+                type="text"
+                id="personales_nombre"
+                [disabled]="esFormularioSoloLectura"
+                placeholder=""
+                formControlName="personales_nombre"
+                [required]="true"
+                maxlength="200"
+                (change)="setValoresStore(datosExportador, 'personales_nombre', 'setExportadorPersonales_nombre')"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-end espaciador-campo">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label">
+                Primer apellido*:
+              </label>
+              <input
+                class="form-control"
+                type="text"
+                [disabled]="esFormularioSoloLectura"
+                id="primer_apellido"
+                placeholder=""
+                formControlName="primer_apellido"
+                [required]="true"
+                maxlength="200"
+                (change)="setValoresStore(datosExportador, 'primer_apellido', 'setExportadorPrimer_apellido')"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-end espaciador-campo">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label">
+                Segundo apellido*:
+              </label>
+              <input
+                class="form-control"
+                type="text"
+                [disabled]="esFormularioSoloLectura"
+                id="segundo_apellido"
+                placeholder=""
+                formControlName="segundo_apellido"
+                [required]="true"
+                maxlength="200"
+                (change)="setValoresStore(datosExportador, 'segundo_apellido', 'setExportadorSegundo_apellido')"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-end espaciador-campo">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label">
+                Domicilio:
+              </label>
+              <textarea
+                class="form-control text-area-size"
+                id="domicilio"
+                formControlName="domicilio"
+                rows="3"
+                [required]="true"
+                maxlength="200"
+                [disabled]="esFormularioSoloLectura"
+                (change)="setValoresStore(datosExportador, 'domicilio', 'setExportadorDomicilio')"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-end espaciador-campo">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label" for="observaciones">
+                Observaciones:
+              </label>
+              <textarea
+                class="form-control text-area-size"
+                [disabled]="esFormularioSoloLectura"
+                id="observaciones"
+                formControlName="observaciones"
+                rows="3"
+                [required]="true"
+                maxlength="4000"
+                (change)="setValoresStore(datosExportador, 'observaciones', 'setExportadorObservaciones')"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MORAL -->
+      <div *ngIf="tipoPersonaExportador === 'Moral'">
+        <div class="row align-items-end espaciador-campo">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label">
+                Denominación o razón social*:
+              </label>
+              <input
+                class="form-control"
+                type="text"
+                [disabled]="esFormularioSoloLectura"
+                id="denominación_razón_social"
+                placeholder=""
+                formControlName="denominación_razón_social"
+                [required]="true"
+                maxlength="250"
+                (change)="setValoresStore(datosExportador, 'denominación_razón_social', 'setExportadorDenominación_razón_social')"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-end espaciador-campo">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label">
+                Domicilio:
+              </label>
+              <textarea
+                class="form-control text-area-size"
+                id="domicilio"
+                formControlName="domicilio"
+                rows="3"
+                [required]="true"
+                maxlength="200"
+                [disabled]="esFormularioSoloLectura"
+                (change)="setValoresStore(datosExportador, 'domicilio', 'setExportadorDomicilio')"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-end espaciador-campo">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label" for="observaciones">
+                Observaciones:
+              </label>
+              <textarea
+                class="form-control text-area-size"
+                id="observaciones"
+                formControlName="observaciones"
+                [disabled]="esFormularioSoloLectura"
+                rows="3"
+                [required]="true"
+                maxlength="4000"
+                (change)="setValoresStore(datosExportador, 'observaciones', 'setExportadorObservaciones')"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+</div>

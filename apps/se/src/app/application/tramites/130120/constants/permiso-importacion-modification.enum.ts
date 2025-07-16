@@ -754,3 +754,67 @@ export const FECHA_FACTURA = {
     required: true,
     habilitado: false,
 };
+
+export const FECHA_DOCUMENTO = {
+    labelNombre: 'Fecha del documento',
+    required: true,
+    habilitado: false,
+};
+
+export const OPCION_DE_RADIO = [
+  {
+    /**
+     * Etiqueta para persona física.
+     * @type {string}
+     */
+    "label": "Física",
+    /**
+     * Valor para persona física.
+     * @type {string}
+     */
+    "value": "Física"
+  },
+  {
+    /**
+     * Etiqueta para persona moral.
+     * @type {string}
+     */
+    "label": "Moral",
+    /**
+     * Valor para persona moral.
+     * @type {string}
+     */
+    "value": "Moral"
+  },
+  {
+    "label": "Ninguno",
+    "value": "Ninguno"
+  }
+];
+
+export const OPCION_DE_RADIO_EXPORTADOR = [
+  {
+    /**
+     * Etiqueta para persona física.
+     * @type {string}
+     */
+    "label": "Física",
+    /**
+     * Valor para persona física.
+     * @type {string}
+     */
+    "value": "Física"
+  },
+  {
+    /**
+     * Etiqueta para persona moral.
+     * @type {string}
+     */
+    "label": "Moral",
+    /**
+     * Valor para persona moral.
+     * @type {string}
+     */
+    "value": "Moral"
+  }
+];

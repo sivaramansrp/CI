@@ -1,9 +1,9 @@
 import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DatosMercanica } from '../../models/permiso-importacion-modification.model';
+import { DatosGrupos } from '../../models/permiso-importacion-modification.model';
 import { FECHA_FACTURA } from '../../constants/permiso-importacion-modification.enum';
 import { PermisoImportacionService } from '../../services/permiso-importacion.service';
 import { PermisoImportacionStore } from '../../estados/permiso-importacion.store';
@@ -17,7 +17,7 @@ import { Tramite130120Query } from '../../estados/permiso-importacion.query';
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.css',
 })
-export class DatosMercanciaComponent implements OnInit {
+export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
   datosMercanica!: FormGroup;
 
@@ -43,9 +43,11 @@ export class DatosMercanciaComponent implements OnInit {
 
   public destroyNotifier$: Subject<void> = new Subject();
 
-  MercanciaState!: DatosMercanica
-
   enableConversion: boolean = false;
+
+  private otroUmcIncrement = 0;
+
+  private DatosState!: DatosGrupos
 
   constructor(
     public fb: FormBuilder,
@@ -54,17 +56,17 @@ export class DatosMercanciaComponent implements OnInit {
     public consultaQuery: ConsultaioQuery,
     public permisoImportacionService: PermisoImportacionService,
   ) {
-    this.query.setCargaTipo$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((state) => {
-        this.MercanciaState = state as DatosMercanica;
-      })
-    )
-        .subscribe();
   }
 
   async ngOnInit(): Promise<void> {
+    this.query.selectDatos$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((state) => {
+        this.DatosState = state as DatosGrupos;
+      })
+    )
+    .subscribe();
     await this.initActionFormBuild();
     this.ObtenerTipoEntradaOpcion();
     this.ObtenerFraccionOpcion();
@@ -72,8 +74,6 @@ export class DatosMercanciaComponent implements OnInit {
     this.obtenerUmtOpcion();
     this.obtenerMonedaComercializacionOpcion();
     this.obternerPaisExportadorOpcion();
-
-    
 
     this.consultaQuery.selectConsultaioState$
     .pipe(
@@ -87,27 +87,27 @@ export class DatosMercanciaComponent implements OnInit {
 
   initActionFormBuild(): void {
     this.datosMercanica = this.fb.group({
-      descripcion: [this.MercanciaState.descripcion, [Validators.required, Validators.maxLength(4000)]],
-      marca: [this.MercanciaState.marca, [Validators.required, Validators.maxLength(256), Validators.pattern('^[a-zA-Z0-9 ]*$')]],
-      tipo_entrada: [this.MercanciaState.tipo_entrada, Validators.required],
-      fraccion: [this.MercanciaState.fraccion, Validators.required],
-      nico: [this.MercanciaState.nico, Validators.required],
-      umt: [this.MercanciaState.umt, Validators.required],
-      factura_numero: [this.MercanciaState.factura_numero, Validators.required],
-      factura_fecha: [this.MercanciaState.factura_fecha, Validators.required],
-      umc: [this.MercanciaState.umc, Validators.required],
-      otro_umc: [this.MercanciaState.otro_umc, Validators.required],
-      cantidad_umc: [this.MercanciaState.cantidad_umc,Validators.required],
-      factor_conversion: [this.MercanciaState.factor_conversion, Validators.required],
-      cantidad_umt: [this.MercanciaState.cantidad_umt, Validators.required],
-      valor_factura: [this.MercanciaState.valor_factura,Validators.required],
-      moneda_comercializacion: [this.MercanciaState.moneda_comercializacion, Validators.required],
-      valor_factura_usd: [this.MercanciaState.valor_factura_usd, Validators.required],
-      precio_unitario_usd: [this.MercanciaState.precio_unitario_usd, Validators.required],
-      pais_exportador: [this.MercanciaState.pais_exportador, Validators.required],
-      pais_origen: [this.MercanciaState.pais_origen, Validators.required],
-      valor_total_factura: [this.MercanciaState.valor_total_factura, Validators.required],
-      valor_total_factura_usd: [this.MercanciaState.valor_total_factura_usd, Validators.required],
+      descripcion: [this.DatosState.datosMercanica.descripcion, [Validators.required, Validators.maxLength(4000)]],
+      marca: [this.DatosState.datosMercanica.marca, [Validators.required, Validators.maxLength(256), Validators.pattern('^[a-zA-Z0-9 ]*$')]],
+      tipo_entrada: [this.DatosState.datosMercanica.tipo_entrada, Validators.required],
+      fraccion: [this.DatosState.datosMercanica.fraccion, Validators.required],
+      nico: [this.DatosState.datosMercanica.nico, Validators.required],
+      umt: [this.DatosState.datosMercanica.umt, Validators.required],
+      factura_numero: [this.DatosState.datosMercanica.factura_numero, Validators.required],
+      factura_fecha: [this.DatosState.datosMercanica.factura_fecha, Validators.required],
+      umc: [this.DatosState.datosMercanica.umc, Validators.required],
+      otro_umc: [this.DatosState.datosMercanica.otro_umc, Validators.required],
+      cantidad_umc: [this.DatosState.datosMercanica.cantidad_umc,Validators.required],
+      factor_conversion: [this.DatosState.datosMercanica.factor_conversion, Validators.required],
+      cantidad_umt: [this.DatosState.datosMercanica.cantidad_umt, Validators.required],
+      valor_factura: [this.DatosState.datosMercanica.valor_factura,Validators.required],
+      moneda_comercializacion: [this.DatosState.datosMercanica.moneda_comercializacion, Validators.required],
+      valor_factura_usd: [this.DatosState.datosMercanica.valor_factura_usd, Validators.required],
+      precio_unitario_usd: [this.DatosState.datosMercanica.precio_unitario_usd, Validators.required],
+      pais_exportador: [this.DatosState.datosMercanica.pais_exportador, Validators.required],
+      pais_origen: [this.DatosState.datosMercanica.pais_origen, Validators.required],
+      valor_total_factura: [this.DatosState.datosMercanica.valor_total_factura, Validators.required],
+      valor_total_factura_usd: [this.DatosState.datosMercanica.valor_total_factura_usd, Validators.required],
     })
   }
 
@@ -209,7 +209,7 @@ export class DatosMercanciaComponent implements OnInit {
 
   fechaCambiado(evento: string): void {
     this.datosMercanica.patchValue({
-        factura_fecha: evento ,
+        factura_fecha: evento,
       });
     this.store.setFacturaFecha(evento);
   }
@@ -256,14 +256,33 @@ export class DatosMercanciaComponent implements OnInit {
     }
   }
 
-  onUmcChange(
+onUmcChange(
     subformName: FormGroup,
     campo: string,
     metodoNombre: keyof PermisoImportacionStore,
     ): void {
   this.setValoresStore(subformName, campo, metodoNombre);
 
-  
+  const CONTROL = subformName.get(`${campo}`);
+  const VALOR = CONTROL?.value;
+  const UMCCATALOG = this.umcOpcion;
+  if (UMCCATALOG && UMCCATALOG.length > 0) {
+    const SELECTED = UMCCATALOG.find((item: {id: number, descripcion: string} ) => item.id === Number(VALOR));
+    this.enableConversion = true
+    if (SELECTED) {
+      this.otroUmcIncrement = 10 * Number(SELECTED.id);
+      const OTROUMCCONTROL = this.datosMercanica?.get('otro_umc');
+      if (OTROUMCCONTROL) {
+        OTROUMCCONTROL.setValue(this.otroUmcIncrement);
+        OTROUMCCONTROL.markAsDirty();
+        OTROUMCCONTROL.markAsTouched();
+      }
+    }
+    const FACTORINPUT = document.getElementById('factor_conversión') as HTMLInputElement | null;
+    if (FACTORINPUT) {
+      FACTORINPUT.readOnly = false;
+    }
+  }
 }
 
 onCantidadUmcOrFactorChange(): void {
@@ -297,4 +316,9 @@ onCantidadUmcOrFactorChange(): void {
         VALOR
       );
     }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

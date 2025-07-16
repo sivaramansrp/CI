@@ -44,7 +44,6 @@
               required="true"
               [disabled]="esFormularioSoloLectura"
               maxlength="256"
-              pattern="^[a-zA-Z0-9 ]*$"
               libUppercase
               (change)="setValoresStore(datosMercanica, 'marca', 'setMarca')"
             />
@@ -173,8 +172,6 @@
               [datos]="fechaFactura"
               required="true"
               [setFecha]="datosMercanica.get('factura_fecha')?.value"
-              formControlName="factura_fecha"
-              [disabled]="esFormularioSoloLectura"
               (valorCambiado)="fechaCambiado($event)">
             </input-fecha>
           </div>

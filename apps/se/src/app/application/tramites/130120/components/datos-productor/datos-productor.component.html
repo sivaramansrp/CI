@@ -1,0 +1,201 @@
+<div class="container">
+    <form [formGroup]="datosProductor">
+      <ng-titulo [titulo]="'Datos del productor'"></ng-titulo>
+      <div class="row align-items-end">
+        <!-- Tipo de persona radio -->
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label" for="persona_tipo">
+              Tipo de persona*:
+            </label>
+            <b> 
+              <app-input-radio
+                [radioOptions]="TipoOpcion"
+                [selectedValue]="datosProductor.get('persona_tipo')?.value"
+                [isRequired]="true"
+                (valueChange)="onTipoPersonaProductorChange($event)"
+                [layout]="'horizontal'">
+              </app-input-radio> 
+            </b>
+          </div>
+        </div>
+      </div>
+
+      <!-- FÍSICA -->
+      <div *ngIf="tipoPersonaProductor === 'Física'">
+        <div class="row align-items-end ">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label"><b>Datos personales</b></label>
+          </div>
+        </div>
+      </div>
+        <div class="row align-items-end ">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label" for="personales_nombre">
+                Nombre(s)*:
+              </label>
+              <input
+                class="form-control"
+                type="text"
+                id="personales_nombre"
+                placeholder=""
+                formControlName="personales_nombre"
+                [required]="true"
+                [disabled]="esFormularioSoloLectura"
+                maxlength="200"
+                (change)="setValoresStore(datosProductor, 'personales_nombre', 'setPersonales_nombre')"
+              />
+              <div *ngIf="datosProductor.get('personales_nombre')?.touched && datosProductor.get('personales_nombre')?.invalid">
+                <small *ngIf="datosProductor.get('personales_nombre')?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 200 caracteres.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-end espaciador-campo">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label" for="primer_apellido">
+                Primer apellido*:
+              </label>
+              <input
+                class="form-control"
+                type="text"
+                id="primer_apellido"
+                placeholder=""
+                formControlName="primer_apellido"
+                [disabled]="esFormularioSoloLectura"
+                [required]="true"
+                maxlength="200"
+                (change)="setValoresStore(datosProductor, 'primer_apellido', 'setPrimer_apellido')"
+              />
+              <div *ngIf="datosProductor.get('primer_apellido')?.touched && datosProductor.get('primer_apellido')?.invalid">
+                <small *ngIf="datosProductor.get('primer_apellido')?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 200 caracteres.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-end espaciador-campo">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label" for="segundo_apellido">
+                Segundo apellido*:
+              </label>
+              <input
+                class="form-control"
+                type="text"
+                id="segundo_apellido"
+                [disabled]="esFormularioSoloLectura"
+                [placeholder]=""
+                formControlName="segundo_apellido"
+                [required]="true"
+                maxlength="200"
+                (change)="setValoresStore(datosProductor, 'segundo_apellido', 'setSegundo_apellido')"
+              />
+              <div *ngIf="datosProductor.get('segundo_apellido')?.touched && datosProductor.get('segundo_apellido')?.invalid">
+                <small *ngIf="datosProductor.get('segundo_apellido')?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 200 caracteres.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-end espaciador-campo">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label">
+                Domicilio*:
+              </label>
+              <textarea
+                class="form-control text-area-size"
+                id="domicilio"
+                formControlName="domicilio"
+                rows="3"
+                [required]="true"
+                maxlength="200"
+                [disabled]="esFormularioSoloLectura"
+                (change)="setValoresStore(datosProductor, 'domicilio', 'setDomicilio')"
+              ></textarea>
+              <div *ngIf="datosProductor.get('domicilio')?.touched && datosProductor.get('domicilio')?.invalid">
+                <small *ngIf="datosProductor.get('domicilio')?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 200 caracteres.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MORAL -->
+      <div *ngIf="tipoPersonaProductor === 'Moral'">
+        <div class="row align-items-end espaciador-campo">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label" for="denominación_razón_social">
+                Denominación o razón social*:
+              </label>
+              <input
+                class="form-control"
+                type="text"
+                id="denominación_razón_social"
+                [disabled]="esFormularioSoloLectura"
+                [placeholder]=""
+                formControlName="denominación_razón_social"
+                [required]="true"
+                maxlength="250"
+                (change)="setValoresStore(datosProductor, 'denominación_razón_social', 'setDenominación_razón_social')"
+              />
+              <div *ngIf="datosProductor.get('denominación_razón_social')?.touched && datosProductor.get('denominación_razón_social')?.invalid">
+                <small *ngIf="datosProductor.get('denominación_razón_social')?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 250 caracteres.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-end espaciador-campo">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label" for="domicilio">
+                Domicilio*:
+              </label>
+              <textarea
+                class="form-control text-area-size"
+                id="domicilio"
+                formControlName="domicilio"
+                rows="3"
+                [required]="true"
+                maxlength="200"
+                [disabled]="esFormularioSoloLectura"
+                (change)="setValoresStore(datosProductor, 'domicilio', 'setDomicilio')"
+              ></textarea>
+              <div *ngIf="datosProductor.get('domicilio')?.touched && datosProductor.get('domicilio')?.invalid">
+                <small *ngIf="datosProductor.get('domicilio')?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 200 caracteres.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NINGUNO -->
+      <div *ngIf="tipoPersonaProductor === 'Ninguno'">
+        <div class="row align-items-end espaciador-campo">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label">
+                Domicilio*:
+              </label>
+              <textarea
+                class="form-control text-area-size"
+                id="domicilio"
+                formControlName="domicilio"
+                rows="3"
+                [required]="true"
+                maxlength="200"
+                [disabled]="esFormularioSoloLectura"
+                (change)="setValoresStore(datosProductor, 'domicilio', 'setDomicilio')"
+              ></textarea>
+              <div *ngIf="datosProductor.get('domicilio')?.touched && datosProductor.get('domicilio')?.invalid">
+                <small *ngIf="datosProductor.get('domicilio')?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 200 caracteres.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+</div>
