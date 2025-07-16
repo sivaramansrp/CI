@@ -9,6 +9,33 @@ import { PermisoImportacionStore } from '../../estados/permiso-importacion.store
 import { Tramite130120Query } from '../../estados/permiso-importacion.query';
 
 
+/**
+ * @component
+ * @name DocumentoExportacionComponent
+ * @description
+ * Componente encargado de gestionar el formulario de datos del documento de exportación
+ * para el trámite de permiso de importación 130120. Permite inicializar el formulario, obtener los datos
+ * necesarios y actualizar el estado global mediante el store.
+ * 
+ * @method ngOnInit
+ * @description Inicializa el componente, suscribe al estado y configura los formularios y datos.
+ *
+ * @method initActionFormBuild
+ * @description Inicializa el formulario reactivo con los valores actuales del estado.
+ *
+ * @method fechaDocumento
+ * @description Actualiza la fecha del documento en el formulario y en el store.
+ * @param {string} evento - Nuevo valor de la fecha.
+ *
+ * @method setValoresStore
+ * @description Actualiza el store con el valor de un campo del formulario usando el método correspondiente.
+ * @param {FormGroup} form - Formulario reactivo.
+ * @param {string} campo - Nombre del campo en el formulario.
+ * @param {keyof PermisoImportacionStore} metodoNombre - Método del store a invocar.
+ *
+ * @method ngOnDestroy
+ * @description Limpia las suscripciones activas cuando el componente es destruido.
+ */
 @Component({
   selector: 'app-documento-exportacion',
   standalone: true,
@@ -18,23 +45,56 @@ import { Tramite130120Query } from '../../estados/permiso-importacion.query';
 })
 export class DocumentoExportacionComponent implements OnInit, OnDestroy {
 
+  /**
+   * @property {FormGroup} datosExporta 
+   * @description Formulario reactivo que captura los datos del documento de exportación.
+   */
   datosExporta!: FormGroup;
 
+  /**
+   * @property {boolean} esFormularioSoloLectura
+   * @description Indica si el formulario está en modo solo lectura.
+   */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * @property {InputFecha} fechaDocumentoDatos
+   * @description Configuración para el campo de fecha del documento.
+   */
   fechaDocumentoDatos: InputFecha = FECHA_DOCUMENTO
 
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * @description Subject para manejar la destrucción de suscripciones.
+   */
   public destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * @property {DatosGrupos} datosState
+   * @description Estado actual de los datos del trámite.
+   */
   private datosState!: DatosGrupos
 
-  constructor(public fb: FormBuilder,
+
+  /**
+   * @constructor
+   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
+   * @param {PermisoImportacionStore} store - Store para manejar el estado global del permiso de importación.
+   * @param {Tramite130120Query} query - Query para obtener el estado de los datos del trámite.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de consulta y modo de solo lectura.
+   */
+  constructor(
+    public fb: FormBuilder,
     public store: PermisoImportacionStore,
     public query: Tramite130120Query,
     public consultaQuery: ConsultaioQuery
   ) {
   }
 
+  /**
+   * @method ngOnInit
+   * @description Inicializa el componente, suscribe al estado y configura los formularios y datos.
+   */
   async ngOnInit(): Promise<void> {
     this.query.selectDatos$
     .pipe(
@@ -56,6 +116,10 @@ export class DocumentoExportacionComponent implements OnInit, OnDestroy {
     .subscribe();
   }
 
+  /**
+   * @method initActionFormBuild
+   * @description Inicializa el formulario reactivo con los valores actuales del estado.
+   */
   initActionFormBuild(): void {
     this.datosExporta = this.fb.group({
       numero_documento: [this.datosState.datosExporta.número_documento, Validators.required],
@@ -68,6 +132,11 @@ export class DocumentoExportacionComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @method fechaDocumento
+   * @description Actualiza la fecha del documento en el formulario y en el store.
+   * @param {string} evento - Nuevo valor de la fecha.
+   */
   fechaDocumento(evento: string): void {
     this.datosExporta.patchValue({
         fecha_documento: evento 
@@ -75,6 +144,13 @@ export class DocumentoExportacionComponent implements OnInit, OnDestroy {
     this.store.setFecha_documento(evento);
   }
 
+  /**
+   * @method setValoresStore
+   * @description Actualiza el store con el valor de un campo del formulario usando el método correspondiente.
+   * @param {FormGroup} form - Formulario reactivo.
+   * @param {string} campo - Nombre del campo en el formulario.
+   * @param {keyof PermisoImportacionStore} metodoNombre - Método del store a invocar.
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,
@@ -86,6 +162,10 @@ export class DocumentoExportacionComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * @method ngOnDestroy
+   * @description Limpia las suscripciones activas cuando el componente es destruido.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

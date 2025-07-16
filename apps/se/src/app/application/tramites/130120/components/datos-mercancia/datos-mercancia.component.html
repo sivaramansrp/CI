@@ -170,8 +170,8 @@
           <div class="form-group">
             <input-fecha
               [datos]="fechaFactura"
-              required="true"
-              [setFecha]="datosMercanica.get('factura_fecha')?.value"
+              [setFecha]="fechaPagoDate"
+              name="factura_fecha"
               (valorCambiado)="fechaCambiado($event)">
             </input-fecha>
           </div>

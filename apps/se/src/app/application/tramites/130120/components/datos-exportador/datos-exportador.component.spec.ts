@@ -4,10 +4,10 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
-
 import { Component } from '@angular/core';
 import { DatosExportadorComponent } from './datos-exportador.component';
 import { FormBuilder } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { PermisoImportacionStore } from '../../estados/permiso-importacion.store';
 import { Tramite130120Query } from '../../estados/permiso-importacion.query';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
@@ -24,9 +24,8 @@ describe('DatosExportadorComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ FormsModule, ReactiveFormsModule, DatosExportadorComponent ],
       declarations: [
-        DatosExportadorComponent,
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
@@ -40,10 +39,10 @@ describe('DatosExportadorComponent', () => {
     }).compileComponents();
     fixture = TestBed.createComponent(DatosExportadorComponent);
     component = fixture.debugElement.componentInstance;
+    component.ngOnDestroy = function() {};
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
     fixture.destroy();
   });
 
@@ -53,10 +52,92 @@ describe('DatosExportadorComponent', () => {
 
   it('should run #ngOnInit()', async () => {
     component.query = component.query || {};
-    component.query.selectDatos$ = observableOf({});
+    component.query.selectDatos$ = observableOf({
+    datosRealizer: {
+      regimen: '',
+      classificion_regimen: ''
+    },
+    datosMercanica: {
+      descripcion: '',
+      marca: '',
+      tipo_entrada: '',
+      fraccion: '',
+      nico: '',
+      umt: '',
+      factura_numero: '',
+      factura_fecha: '',
+      umc: '',
+      otro_umc: '',
+      cantidad_umc: '',
+      factor_conversion: '1',
+      cantidad_umt: '0.00',
+      valor_factura: '',
+      moneda_comercializacion: '',
+      valor_factura_usd: '',
+      precio_unitario_usd: '',
+      pais_exportador: '',
+      pais_origen: '',
+      valor_total_factura: '',
+      valor_total_factura_usd: '',
+    },
+    datosExporta: {
+      número_documento: '',
+      fecha_documento: '',
+      descripcionExportacion: '',
+      codigo_arancelario: '',
+      cantidad_umt: '',
+      valor_usd: '',
+      precio_unitario_usd: '',
+    },
+    datosProductor: {
+      persona_tipo: 'Física',
+      personales_nombre: '',
+      primer_apellido: '',
+      seguna_apellido: '',
+      denominación_razón_social: '',
+      domicilio: '',
+    },
+    datosExportador: {
+      persona_tipo: 'Física',
+      personales_nombre: '',
+      primer_apellido: '',
+      seguna_apellido: '',
+      razón_social: '',
+      denominación_razón_social_exportador: '',
+      domicilio: '',
+
+      observaciones: '',
+    },
+    datosFederal: {
+      entidad_federativa: '',
+      representacion_federal: '',
+    }
+  });
     component.initActionFormBuild = jest.fn();
     component.consultaquery = component.consultaquery || {};
-    component.consultaquery.selectConsultaioState$ = observableOf({});
+    component.consultaquery.selectConsultaioState$ = observableOf({
+      procedureId: '',
+      parameter: '',
+      department: '',
+      folioTramite: '',
+      someField1: '',
+      someField2: '',
+      someField3: '',
+      someField4: '',
+      someField5: '',
+      someField6: '',
+      tipoDeTramite: '',
+      estadoDeTramite: '',
+      readonly: false,
+      create: false,
+      update: false, // Add missing property with mock value
+      consultaioSolicitante: {
+        folioDelTramite: '',
+        fechaDeInicio: '',
+        estadoDelTramite: ''
+      }, // Add required properties for type compatibility
+      // Add any other required properties with mock values
+    });
     await component.ngOnInit();
     // expect(component.initActionFormBuild).toHaveBeenCalled();
   });
@@ -66,52 +147,38 @@ describe('DatosExportadorComponent', () => {
     component.fb.group = jest.fn();
     component.datosState = component.datosState || {};
     component.datosState.datosExportador = {
-      persona_tipo: {},
-      personales_nombre: {},
-      primer_apellido: {},
-      seguna_apellido: {},
-      denominación_razón_social_exportador: {},
-      domicilio: {},
-      observaciones: {}
+      persona_tipo: '',
+      personales_nombre: '',
+      primer_apellido: '',
+      seguna_apellido: '',
+      razón_social: '',
+      denominación_razón_social_exportador: '',
+      domicilio: '',
+      observaciones: ''
     };
     component.initActionFormBuild();
     // expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #onTipoPersonaExportadorChange()', async () => {
-    component.datosExportador = component.datosExportador || {};
-    component.datosExportador.get = jest.fn().mockReturnValue({
-      clearValidators: function() {},
-      setValue: function() {},
-      setValidators: function() {},
-      updateValueAndValidity: function() {}
-    });
-    component.store = component.store || {};
-    component.store.setExportadorPersona_tipo = jest.fn();
-    component.store.setExportadorDenominación_razón_social = jest.fn();
-    component.store.setExportadorPersonales_nombre = jest.fn();
-    component.store.setExportadorPrimer_apellido = jest.fn();
-    component.store.setExportadorSegundo_apellido = jest.fn();
-    component.onTipoPersonaExportadorChange({});
-    // expect(component.datosExportador.get).toHaveBeenCalled();
-    // expect(component.store.setExportadorPersona_tipo).toHaveBeenCalled();
-    // expect(component.store.setExportadorDenominación_razón_social).toHaveBeenCalled();
-    // expect(component.store.setExportadorPersonales_nombre).toHaveBeenCalled();
-    // expect(component.store.setExportadorPrimer_apellido).toHaveBeenCalled();
-    // expect(component.store.setExportadorSegundo_apellido).toHaveBeenCalled();
+  component.datosExportador = component.fb.group({
+    persona_tipo: [''],
+    personales_nombre: [''],
+    primer_apellido: [''],
+    segundo_apellido: [''],
+    denominación_razón_social: [''],
+    domicilio: [''],
+    observaciones: ['']
   });
 
-  it('should run #setValoresStore()', async () => {
-    component.store = component.store || {};
-    component.store.metodoNombre = jest.fn();
-    component.setValoresStore({
-      get: function() {
-        return {
-          value: {}
-        };
-      }
-    }, {}, {});
-    // expect(component.store.metodoNombre).toHaveBeenCalled();
-  });
+  component.store = component.store || {};
+  component.store.setExportadorPersona_tipo = jest.fn();
+  component.store.setExportadorDenominación_razón_social = jest.fn();
+  component.store.setExportadorPersonales_nombre = jest.fn();
+  component.store.setExportadorPrimer_apellido = jest.fn();
+  component.store.setExportadorSegundo_apellido = jest.fn();
+
+ component.onTipoPersonaExportadorChange('Física');
+});
 
 });

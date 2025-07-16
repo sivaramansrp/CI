@@ -43,11 +43,13 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
   public destroyNotifier$: Subject<void> = new Subject();
 
-  enableConversion: boolean = false;
+  enableConversion: boolean = true;
 
   private otroUmcIncrement = 0;
 
   private DatosState!: DatosGrupos
+
+  fechaPagoDate: string = '15/03/2025';
 
   constructor(
     public fb: FormBuilder,
@@ -72,8 +74,10 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     this.ObtenerFraccionOpcion();
     this.obtenerNicoOpcion();
     this.obtenerUmtOpcion();
+    this.obtenerUmcOpcion();
     this.obtenerMonedaComercializacionOpcion();
     this.obternerPaisExportadorOpcion();
+    this.obtenerPaisOrigenOpcion();
 
     this.consultaQuery.selectConsultaioState$
     .pipe(
@@ -211,6 +215,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     this.datosMercanica.patchValue({
         factura_fecha: evento,
       });
+    this.fechaPagoDate = evento;
     this.store.setFacturaFecha(evento);
   }
 
@@ -268,7 +273,6 @@ onUmcChange(
   const UMCCATALOG = this.umcOpcion;
   if (UMCCATALOG && UMCCATALOG.length > 0) {
     const SELECTED = UMCCATALOG.find((item: {id: number, descripcion: string} ) => item.id === Number(VALOR));
-    this.enableConversion = true
     if (SELECTED) {
       this.otroUmcIncrement = 10 * Number(SELECTED.id);
       const OTROUMCCONTROL = this.datosMercanica?.get('otro_umc');
@@ -287,11 +291,12 @@ onUmcChange(
 
 onCantidadUmcOrFactorChange(): void {
     const CANTIDAD_UMC = parseFloat(this.datosMercanica.get('cantidad_umc')?.value);
+    this.enableConversion = false;
     let FACTORCONVERSION = parseFloat(this.datosMercanica.get('factor_conversion')?.value);
     if (isNaN(FACTORCONVERSION)) {
       FACTORCONVERSION = 1;
     }
-    const FACTORCONVERSIONCONTROL = this.datosMercanica.get('factor_conversión');
+    const FACTORCONVERSIONCONTROL = this.datosMercanica.get('factor_conversion');
     FACTORCONVERSIONCONTROL?.setValue(FACTORCONVERSION);
     FACTORCONVERSIONCONTROL?.markAsDirty();
     FACTORCONVERSIONCONTROL?.markAsTouched();

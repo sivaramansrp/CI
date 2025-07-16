@@ -8,7 +8,39 @@ import { PermisoImportacionService } from '../../services/permiso-importacion.se
 import { PermisoImportacionStore } from '../../estados/permiso-importacion.store';
 import { Tramite130120Query } from '../../estados/permiso-importacion.query';
 
-
+/**
+ * @component
+ * @name RepresentacionFederalComponent
+ * @description
+ * Componente encargado de gestionar el formulario de selección de entidad federativa y representación federal
+ * para el trámite de permiso de importación 130120. Permite inicializar el formulario, obtener los catálogos
+ * necesarios y actualizar el estado global mediante el store.
+ *
+ * @property {FormGroup} datosFederal - Formulario reactivo para capturar los datos de entidad federativa y representación federal.
+ * @property {Catalogo[]} entidadOpcion - Opciones disponibles para el campo de entidad federativa.
+ * @property {Catalogo[]} representacionOpcion - Opciones disponibles para el campo de representación federal.
+ * @property {boolean} esFormularioSoloLectura - Indica si el formulario está en modo solo lectura.
+ * @property {Subject<void>} destroyNotifier$ - Subject para manejar la destrucción de suscripciones.
+ * @property {DatosGrupos} datosState - Estado actual de los datos del trámite.
+ *
+ * @method ngOnInit
+ * @description Inicializa el componente, suscribe al estado y configura los formularios y catálogos.
+ *
+ * @method initActionFormBuild
+ * @description Inicializa el formulario reactivo con los valores actuales del estado.
+ *
+ * @method obtenerEntidadSelectList
+ * @description Obtiene las opciones del catálogo de entidad federativa desde el servicio y las asigna al arreglo local.
+ *
+ * @method obtenerRepresentacionSelectList
+ * @description Obtiene las opciones del catálogo de representación federal desde el servicio y las asigna al arreglo local.
+ *
+ * @method setValoresStore
+ * @description Actualiza el store con el valor de un campo del formulario usando el método correspondiente.
+ * @param {FormGroup} form - Formulario reactivo.
+ * @param {string} campo - Nombre del campo en el formulario.
+ * @param {keyof PermisoImportacionStore} metodoNombre - Método del store a invocar.
+ */
 @Component({
   selector: 'app-representacion-federal',
   standalone: true,
@@ -18,20 +50,56 @@ import { Tramite130120Query } from '../../estados/permiso-importacion.query';
 })
 export class RepresentacionFederalComponent implements OnInit {
 
+  /**
+   * @property {FormGroup} datosFederal
+   * @description Formulario reactivo que captura los datos de entidad federativa y representación federal
+   */
   datosFederal!: FormGroup;
 
+  /**
+   * @property {Catalogo[]} entidadOpcion
+   * @description Opciones disponibles para el campo de entidad federativa
+   */
   entidadOpcion: Catalogo[] = []
 
+  /**
+   * @property {Catalogo[]} representacionOpcion
+   * @description Opciones disponibles para el campo de representación federal
+   */
   representacionOpcion: Catalogo[] = []
 
+  /**
+   * @property {seccionState} seccionState
+   * @description Estado actual de la sección del trámite
+   */
   private seccionState!: SeccionLibState;
 
+  /**
+   * @property {boolean} esFormularioSoloLectura
+   * @description Indica si el formulario está en modo solo lectura.
+   */
   esFormularioSoloLectura: boolean = false;
   
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * @description Subject para manejar la destrucción de suscripciones.
+   */
   public destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * @property {DatosGrupos} datosState
+   * @description Estado actual de los datos del trámite.
+   */
   private datosState!: DatosGrupos
 
+  /**
+   * @constructor
+   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
+   * @param {PermisoImportacionStore} store - Store para manejar el estado global del trámite.
+   * @param {Tramite130120Query} query - Query para seleccionar el estado de los datos del trámite.
+   * @param {ConsultaioQuery} consultaQuery - Query para seleccionar el estado de consulta y modo de solo lectura.
+   * @param {PermisoImportacionService} permisoImportacionService - Servicio para obtener los catálogos necesarios.
+   */
   constructor(
     public fb: FormBuilder,
     public store: PermisoImportacionStore,
@@ -41,6 +109,10 @@ export class RepresentacionFederalComponent implements OnInit {
   ) {
   }
 
+  /**
+   * @method ngOnInit
+   * @description Inicializa el componente, suscribe al estado y configura los formularios y catálogos.
+   */
   async ngOnInit(): Promise<void> {
     this.query.selectDatos$
     .pipe(
@@ -63,14 +135,21 @@ export class RepresentacionFederalComponent implements OnInit {
       .subscribe();
     }
     
+  /**
+   * @method initActionFormBuild
+   * @description Inicializa el formulario reactivo con los valores actuales del estado.
+   */
   initActionFormBuild(): void {
     this.datosFederal = this.fb.group({
       entidad_federativa: [this.datosState.datosFederal.entidad_federativa, Validators.required],
       representacion_federal: [this.datosState.datosFederal.representacion_federal, Validators.required]
     });
-    
   }
 
+  /**
+   * @method obtenerEntidadSelectList
+   * @description Obtiene las opciones del catálogo de entidad federativa desde el servicio y las asigna al arreglo local.
+   */
   obtenerEntidadSelectList(): void {
     this.permisoImportacionService.obtenerMenuDesplegable(
         'entidad_federativa.json'
@@ -83,6 +162,10 @@ export class RepresentacionFederalComponent implements OnInit {
       });
     }
 
+  /**
+   * @method obtenerRepresentacionSelectList
+   * @description Obtiene las opciones del catálogo de representación federal desde el servicio y las asigna al arreglo local.
+   */
   obtenerRepresentacionSelectList(): void {
       this.permisoImportacionService.obtenerMenuDesplegable(
         'representacion_federal.json'
@@ -95,6 +178,13 @@ export class RepresentacionFederalComponent implements OnInit {
         });
   }
 
+  /**
+   * @method setValoresStore
+   * @description Actualiza el store con el valor de un campo del formulario usando el método correspondiente.
+   * @param {FormGroup} form - Formulario reactivo.
+   * @param {string} campo - Nombre del campo en el formulario.
+   * @param {keyof PermisoImportacionStore} metodoNombre - Método del store a invocar.
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,
@@ -105,6 +195,4 @@ export class RepresentacionFederalComponent implements OnInit {
       VALOR
     );
   }
-  
-
 }
