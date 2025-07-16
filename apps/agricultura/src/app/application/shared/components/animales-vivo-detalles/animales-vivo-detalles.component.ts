@@ -5,13 +5,15 @@ import { CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, 
 import { Subject } from 'rxjs';
 import { FilaSolicitud } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
 import { CONFIGURACION_SENSIBLES } from '../../constantes/datos-de-la-solicitue.enum';
-import { AnimalesEventos, AnimalesFormularioSolicitud, DatosDeLaSolicitud, Sensible } from '../../models/datos-de-la-solicitue.model';
+import { AnimalesEventos, DatosDeLaSolicitud, Sensible } from '../../models/datos-de-la-solicitue.model';
 
 @Component({
   selector: 'app-animales-vivo-detalles',
   standalone: true,
   imports: [CommonModule, CatalogoSelectComponent, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent],
   templateUrl: './animales-vivo-detalles.component.html',
+  styleUrl: './animales-vivo-detalles.component.scss',
+
 })
 export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
 
