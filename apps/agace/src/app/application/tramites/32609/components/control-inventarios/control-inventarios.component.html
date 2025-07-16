@@ -13,6 +13,9 @@
       <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
         formControlName="sistemaControlInventariosArt59" (valueChange)="onSeleccionfalsa($event)"
         (change)="setValoresStore(registroControlInventariosForm,'sistemaControlInventariosArt59')"></app-input-radio>
+        <div *ngIf="esInvalido('sistemaControlInventariosArt59')" class="text-danger">
+                <small *ngIf="registroControlInventariosForm.controls['sistemaControlInventariosArt59'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
     </div>
   </div>
         <div class="row mb-3">
@@ -68,7 +71,7 @@
         </div>
         </form>
         <footer class="d-flex py-5 justify-content-end">
-            <button type="button" class="btn btn-primary" (click)="enviarDialogData()">Agregar</button>
+            <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="enviarDialogData()">Agregar</button>
           </footer>
 
 

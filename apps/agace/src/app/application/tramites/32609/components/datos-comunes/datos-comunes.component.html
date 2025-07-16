@@ -1,11 +1,11 @@
-<form [formGroup]="forma">
+<form [formGroup]="forma" *ngIf="esFormularioInicializado">
     <div class="row mt-5">
         <div class="col-md-6">
             <div class="form-group">
                 <app-catalogo-select [catalogo]="sectorProductivoList" [label]="'Sector Productivo'"
                     [placeholder]="'Seleccione un valor'" [required]="false" id="sector-productivo"
                     formControlName="sectorProductivo" (change)="
-            setValoresStore(forma,'sectorProductivo'); manejarCamposMutuamenteExcluyentes('sectorProductivo', 'sectorServicio', $event)"
+            setValoresStore(forma,'sectorProductivo'); manejarCamposMutuamenteExcluyentes('sectorProductivo', 'sectorServicio', $event); actualizarValidacionSector()"
             [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
             </div>
         </div>
@@ -15,22 +15,31 @@
                 <app-catalogo-select [catalogo]="sectorServicio" [label]="'Servicio'"
                     [placeholder]="'Seleccione un valor'" [required]="false" id="sector-servicio"
                     formControlName="sectorServicio"
-                    (change)="setValoresStore(forma, 'sectorServicio'); manejarCamposMutuamenteExcluyentes('sectorServicio', 'sectorProductivo', $event)"
+                    (change)="setValoresStore(forma, 'sectorServicio'); manejarCamposMutuamenteExcluyentes('sectorServicio', 'sectorProductivo', $event); actualizarValidacionSector()"
                     [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
             </div>
         </div>
+        <div class="col-md-12">
+            <div class="text-danger" *ngIf="tieneSectorValidationError()">
+                <small>Debe seleccionar un sector productivo o un servicio</small>
+        </div>
+        </div>
+        <div class="col-md-12 pt-5">
+            <ng-alert [CONTENIDO]="SECTOR_PRODUCTIVO"></ng-alert>
+        </div>
+
     </div>
 
 
 
     <div class="row">
-        <div class="col-md-12 pt-5">
+        <div class="col-md-12">
             <label class="form-label text-left">Señale si al momento de ingresar su solicitud si se encuentra al corriente en el cumplimiento de sus obligaciones fiscales y aduaneras*:</label>
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="cumplimientoFiscalAduanero" (valueChange)="onSeleccionfalsa($event)"
                 (change)="setValoresStore(forma,'cumplimientoFiscalAduanero')"></app-input-radio>
             <div *ngIf="esInvalido('cumplimientoFiscalAduanero')" class="text-danger">
-                <small *ngIf="forma.controls['cumplimientoFiscalAduanero'].hasError('required')">Respuesta Obligatoria</small>
+                <small *ngIf="forma.controls['cumplimientoFiscalAduanero'].hasError('required')">Debe agregar empleados propios ó subcontratados.</small>
             </div>
         </div>
     </div>
@@ -65,17 +74,17 @@
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                <label class="form-label text-left">Número de empleados*</label>
+                <label class="form-label text-left">Número de empleados*:</label>
                 <input class="form-control" 
                        id="numero-de-empleadas" 
                        type="text" 
                        name="numeroDeEmpleadas"
-                       formControlName="numeroDeEmpleadas" 
+                       formControlName="numeroDeEmpleadas"
                        (change)="setValoresStore(forma, 'numeroDeEmpleadas')" />
                 
                 <div *ngIf="esInvalido('numeroDeEmpleadas')" class="text-danger">
                     <small *ngIf="forma.controls['numeroDeEmpleadas'].hasError('required')">
-                        El número de empleados es requerido
+                        Se debe agregar los datos del número de empleados propios del último bimestre
                     </small>
                 </div>
             </div>
@@ -263,12 +272,11 @@
                     type="file"
                     id="archivoNacionales"
                     class="form-control w-auto"
-                    formControlName="archivoNacionales"
-                    (change)="setValoresStore(forma,'archivoNacionales')"
+                    [disabled]="esFormularioSoloLectura"
                 />
             </div>
             <div class="col-md-2 d-flex justify-content-end">
-                <button class="btn btn-primary me-2">Anexar...</button>
+                <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura">Anexar...</button>
             </div>
         </div>
 
@@ -285,12 +293,11 @@
                     type="file"
                     id="proveedores"
                     class="form-control w-auto"
-                    formControlName="proveedores"
-                    (change)="setValoresStore(forma,'proveedores')"
+                    [disabled]="esFormularioSoloLectura"
                 />
             </div>
             <div class="col-md-2 d-flex justify-content-end">
-                <button class="btn btn-primary me-2">Anexar...</button>
+                <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura">Anexar...</button>
             </div>
         </div>
         <div class="row mt-5">
@@ -386,8 +393,6 @@
             </div>
         </div>
     </div>
-
-
 </form>
 
 <lib-notificaciones 

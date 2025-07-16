@@ -2,6 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
+import { StoreResponse } from '../../estados/tramites32609.store';
 
 /**
  * Componente que representa el primer paso de un trámite.
@@ -69,13 +70,14 @@ ngOnInit(): void {
   guardarDatosFormulario(): void {
     this.registroService
       .getRegistroTomaMuestrasMercanciasData().pipe(
+        map((resp: StoreResponse) => resp),
         takeUntil(this.destroyNotifier$)
       )
       .subscribe((resp) => {
-        if(resp){
-        this.esDatosRespuesta = true;
-        this.registroService.actualizarEstadoFormulario(resp);
-        }else {
+        if (resp && resp.data) {
+          this.esDatosRespuesta = true;
+          this.registroService.actualizarEstadoFormulario(resp.data);
+        } else {
           this.esDatosRespuesta = false;
         }
       });

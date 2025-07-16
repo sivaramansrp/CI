@@ -21,18 +21,25 @@ import { Modal } from 'bootstrap';
 import { Tramite32609Query } from '../../estados/tramites32609.query';
 
 /**
- * Componente ControlInventariosBimestreComponent para la gestión de inventarios dentro del sistema.
+ * Componente para la gestión de control de inventarios en el trámite OEA textil.
  * 
- * Este componente independiente (`standalone`) se encarga de la interacción con la tabla dinámica,
- * el manejo de formularios reactivos, y la visualización de notificaciones. Proporciona una interfaz
- * intuitiva para la gestión de inventarios registrados.
+ * Este componente independiente (`standalone`) permite registrar, editar y administrar
+ * la información sobre los sistemas de control de inventarios utilizados por la empresa
+ * solicitante del trámite OEA textil. Incluye validación de datos, gestión de modales
+ * y tabla dinámica para mostrar los sistemas registrados.
  * 
  * @component
  * @selector app-control-inventarios
  * @standalone true
- * @imports CommonModule, TablaDinamicaComponent, TituloComponent, ReactiveFormsModule, NotificacionesComponent
- * @templateUrl ./Empleado.component.html
- * @styleUrl ./Empleado.component.scss
+ * @implements {OnInit, OnDestroy}
+ * @author Equipo de desarrollo VUCEM
+ * @version 1.0.0
+ * @since 2024
+ * 
+ * @example
+ * ```html
+ * <app-control-inventarios></app-control-inventarios>
+ * ```
  */
 @Component({
   selector: 'app-control-inventarios',
@@ -206,6 +213,12 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
    */
   radioSeleccionado: boolean = false;
 
+    /**
+   * Indica si el formulario ha sido inicializado.
+   * Se utiliza para evitar la recreación del formulario si ya está inicializado.
+   */
+  public esFormularioInicializado: boolean = false;
+
   /**
    * Constructor para ControlInventariosBimestreComponent.
    * Inicializa el formulario e inyecta los servicios necesarios.
@@ -218,15 +231,19 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     private tramite32609Query: Tramite32609Query,
     private consultaioQuery: ConsultaioQuery,
   ) {
-      this.consultaioQuery.selectConsultaioState$
+    this.crearFormulario();
+    this.consultaioQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroyed$),
       map((seccionState) => {
        this.esFormularioSoloLectura = seccionState.readonly;
+       if (this.registroControlInventariosForm && this.esFormularioInicializado) {
+           this.actualizarEstadoCampos();
+           this.actualizarEstadoFormulario();
+         }
       })
     )
     .subscribe();
-    this.crearFormulario();
   }
 
   /**
@@ -254,7 +271,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     }
     
     // Actualizar el estado del formulario al inicializar
-    this.actualizarEstadoFormulario();
+    this.actualizarFormularioConDatosDelEstado();
   }
 
   /**
@@ -275,7 +292,19 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
       modificarLugarRadicacion: ['', Validators.required],
       modificarCumpleAnexo24: [false],
     });
+    this.esFormularioInicializado = true;
   }
+
+  private actualizarFormularioConDatosDelEstado(): void {
+  if (this.registroControlInventariosForm && this.seccionState && this.esFormularioInicializado) {
+    this.actualizarEstadoFormulario();
+    const STATEVALOR = {
+      sistemaControlInventariosArt59: this.seccionState.sistemaControlInventariosArt59,
+    };
+
+    this.registroControlInventariosForm.patchValue(STATEVALOR);
+  }
+}
 
   /**
    * Envía los datos del formulario y muestra el modal de confirmación.
@@ -324,16 +353,16 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
 
     if (useModalForm) {
       // Usar datos del formulario del modal
-      const MODAL_FORM_VALUE = this.modificarRegistroControlInventariosForm.value;
-      nombreSistema = MODAL_FORM_VALUE.modificarNombreSistema;
-      lugarRadicacion = MODAL_FORM_VALUE.modificarLugarRadicacion;
-      cumpleAnexo24 = MODAL_FORM_VALUE.modificarCumpleAnexo24;
+      const VALOR_FORMULARIO_MODAL = this.modificarRegistroControlInventariosForm.value;
+      nombreSistema = VALOR_FORMULARIO_MODAL.modificarNombreSistema;
+      lugarRadicacion = VALOR_FORMULARIO_MODAL.modificarLugarRadicacion;
+      cumpleAnexo24 = VALOR_FORMULARIO_MODAL.modificarCumpleAnexo24;
     } else {
       // Usar datos del formulario principal
-      const MAIN_FORM_VALUE = this.registroControlInventariosForm.value;
-      nombreSistema = MAIN_FORM_VALUE.nombreSistema;
-      lugarRadicacion = MAIN_FORM_VALUE.lugarRadicacion;
-      cumpleAnexo24 = MAIN_FORM_VALUE.cumpleAnexo24;
+      const VALOR_PRINCIPAL_FORMULARIO = this.registroControlInventariosForm.value;
+      nombreSistema = VALOR_PRINCIPAL_FORMULARIO.nombreSistema;
+      lugarRadicacion = VALOR_PRINCIPAL_FORMULARIO.lugarRadicacion;
+      cumpleAnexo24 = VALOR_PRINCIPAL_FORMULARIO.cumpleAnexo24;
     }
 
     if (
@@ -609,7 +638,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     this.multipleSeleccionPopupAbierto = false;
     this.multipleSeleccionPopupCerrado = false;
   }
-
+  
   /**
    * Actualiza el estado de los campos del formulario según la selección del radio button.
    * Habilita o deshabilita los campos según la opción seleccionada.
@@ -621,7 +650,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     const NOMBRE_SISTEMA = this.registroControlInventariosForm.get('nombreSistema');
     const LUGAR_RADICACION = this.registroControlInventariosForm.get('lugarRadicacion');
     
-    if (SISTEMA_CONTROL === '1' || SISTEMA_CONTROL === 1) {
+    if ((SISTEMA_CONTROL === '1' || SISTEMA_CONTROL === 1) && this.esFormularioSoloLectura === false) {
       // Habilitar campos cuando se selecciona "Sí"
       this.radioSeleccionado = true;
       
@@ -638,6 +667,34 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
       LUGAR_RADICACION?.disable();
     }
   }
+
+
+  
+  /**
+   * Habilita o deshabilita dinámicamente los campos 'motivoRenunciaDeDerechos' y 'mercacniaSolicitudControlar'
+   * según el estado de solo lectura del formulario.
+   *
+   * @returns void
+   * @description Si el formulario está en modo solo lectura, deshabilita ambos campos; de lo contrario, los habilita.
+   */
+  actualizarEstadoCampos(): void {
+    if (!this.registroControlInventariosForm) {
+      return;
+    }
+
+    const CAMPOS = ["sistemaControlInventariosArt59"];
+    CAMPOS.forEach(campo => {
+      const CONTROL = this.registroControlInventariosForm.get(campo);
+      if (CONTROL) {
+        if (this.esFormularioSoloLectura) {
+          CONTROL.disable();
+        } else {
+          CONTROL.enable();
+        }
+      }
+    });
+  }
+
 
   /**
    * Verifica si un control de formulario es inválido, está tocado o ha sido modificado.
@@ -709,17 +766,11 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
       // Habilitar campos del formulario principal
       this.registroControlInventariosForm.get('nombreSistema')?.enable();
       this.registroControlInventariosForm.get('lugarRadicacion')?.enable();
-      // Habilitar campos del formulario del modal
-      this.modificarRegistroControlInventariosForm.get('modificarNombreSistema')?.enable();
-      this.modificarRegistroControlInventariosForm.get('modificarLugarRadicacion')?.enable();
     } else {
       this.radioSeleccionado = false;
       // Deshabilitar campos del formulario principal
       this.registroControlInventariosForm.get('nombreSistema')?.disable();
       this.registroControlInventariosForm.get('lugarRadicacion')?.disable();
-      // Deshabilitar campos del formulario del modal
-      this.modificarRegistroControlInventariosForm.get('modificarNombreSistema')?.disable();
-      this.modificarRegistroControlInventariosForm.get('modificarLugarRadicacion')?.disable();
     }
   }
 
@@ -774,5 +825,19 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
+  }
+
+  /**
+   * @method validarFormularios
+   * Método público que valida todos los formularios del componente.
+   * Este método puede ser llamado desde el componente padre para triggear validación.
+   * 
+   * @returns {void}
+   */
+  public validarFormularios(): void {
+    // Validar formulario principal de registro
+    if (this.registroControlInventariosForm) {
+      this.registroControlInventariosForm.markAllAsTouched();
+    }
   }
 }

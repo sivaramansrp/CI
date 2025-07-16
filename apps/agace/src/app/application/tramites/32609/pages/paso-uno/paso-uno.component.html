@@ -44,6 +44,17 @@
         >Textil</a
       >
     </li>
+    <li [ngClass]="indice === 5 ? 'active' : ''">
+      <a
+        data-toggle="tab"
+        (click)="seleccionaTab(5)"
+        (keydown.enter)="seleccionaTab(5)"
+        (keydown.space)="seleccionaTab(5)"
+        tabindex="5"
+        role="button"
+        >CTPAT</a
+      >
+    </li>
 
   </ul>
 
@@ -58,6 +69,10 @@
       @if(esDatosRespuesta){
       }
     } @case (4) {
+      @if(esDatosRespuesta){
+      }
+    }
+    @case (5) {
       @if(esDatosRespuesta){
       }
     }

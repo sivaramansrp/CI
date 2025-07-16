@@ -1,6 +1,6 @@
-import { Catalogo, CatalogoSelectComponent, CategoriaMensaje, InputCheckComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TipoNotificacionEnum, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CategoriaMensaje, InputCheckComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TipoNotificacionEnum, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NOTA, OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/oea-textil-registro.enum';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite32609Store, Tramites32609State } from '../../estados/tramites32609.store';
@@ -48,7 +48,8 @@ import { Tramite32609Query } from '../../estados/tramites32609.query';
       ControlInventariosComponent,
       TituloComponent,
       AgregarMiembroEmpresaComponent,
-      InputCheckComponent
+      InputCheckComponent,
+      AlertComponent
     ],
   templateUrl: './datos-comunes.component.html',
   styleUrl: './datos-comunes.component.css',
@@ -143,6 +144,13 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   public esFormularioInicializado: boolean = false;
 
+  
+  /**
+   * Mensaje que indica el sector productivo para mostrar en la nota.
+   * @type {string}
+   */
+  SECTOR_PRODUCTIVO = NOTA.SECTOR_PRODUCTIVO;
+
   /**
    * Constructor del componente DatosComunesComponent.
    * 
@@ -160,7 +168,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery,
     private tramite32609Store: Tramite32609Store,
     private tramite32609Query: Tramite32609Query,
-    private servicio: OeaTextilRegistroService) {
+    private servicio: OeaTextilRegistroService,
+  ) {
     this.crearForm();
     this.consultaioQuery.selectConsultaioState$
         .pipe(
@@ -182,7 +191,6 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.obtenerlistadescargable();
     this.enPatchStoredFormData();
-    this.validarFormulario();
   }
 
    /**
@@ -218,7 +226,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           ingresoInfoContableSAT: [this.seccionState?.ingresoInfoContableSAT, Validators.required],
           manifests: [true, Validators.required],
           bajoProtesta: [true, Validators.required],
-      });
+      }, { validators: alMenosUnSectorValidator });
 
       this.esFormularioInicializado = true;
 
@@ -349,6 +357,31 @@ private actualizarFormularioConDatosDelEstado(): void {
     this.mostrarRespuestaObligatoria = valor === '0' || valor === 0; 
   }
   
+  /**
+   * @method actualizarValidacionSector
+   * Actualiza la validación del sector marcando el formulario como tocado para que se muestren los errores.
+   * 
+   * @returns {void}
+   */
+  public actualizarValidacionSector(): void {
+    if (this.forma) {
+      // Marcar el formulario como tocado para que se muestren los errores de validación
+      this.forma.markAsTouched();
+      // Actualizar la validación
+      this.forma.updateValueAndValidity();
+    }
+  }
+
+  /**
+   * @method tieneSectorValidationError
+   * Verifica si el formulario tiene el error de validación de sector.
+   * 
+   * @returns {boolean} - `true` si hay error de validación de sector, de lo contrario `false`.
+   */
+  public tieneSectorValidationError(): boolean {
+    return this.forma?.hasError('alMenosUnSector') && this.forma?.touched || false;
+  }
+
   /**
    * @method esInvalido
    * Verifica si un control del formulario es inválido.
@@ -514,7 +547,9 @@ onSeleccionVerdadera(evento:string | number, nota?:string): void {
   * @returns {void}
   */
   validarFormulario(): void {
+    if(this.forma) {
     this.forma.markAllAsTouched();
+    }
     // Validar formularios del componente hijo control-inventarios
     if (this.controlInventariosComponent) {
       this.controlInventariosComponent.validarFormularios();
@@ -531,4 +566,25 @@ onSeleccionVerdadera(evento:string | number, nota?:string): void {
     this.destroyed$.complete();
   }
 
+}
+
+/**
+ * Validador personalizado que verifica que al menos uno de los campos sectorProductivo o sectorServicio tenga un valor seleccionado.
+ * 
+ * @param {AbstractControl} control - El control del formulario que contiene los campos a validar
+ * @returns {ValidationErrors | null} - Retorna un objeto de error si la validación falla, null si es válida
+ */
+function alMenosUnSectorValidator(control: AbstractControl): ValidationErrors | null {
+  const SECTOR_PRODUCTIVO = control.get('sectorProductivo')?.value;
+  const SECTOR_SERVICIO = control.get('sectorServicio')?.value;
+  
+  // Si al menos uno de los dos campos tiene un valor válido (no null, undefined, o string vacío)
+  const TIENE_SECTOR_PRODUCTIVO = SECTOR_PRODUCTIVO && SECTOR_PRODUCTIVO !== '' && SECTOR_PRODUCTIVO !== -1;
+  const TIENE_SECTOR_SERVICIO = SECTOR_SERVICIO && SECTOR_SERVICIO !== '' && SECTOR_SERVICIO !== -1;
+  
+  if (!TIENE_SECTOR_PRODUCTIVO && !TIENE_SECTOR_SERVICIO) {
+    return { alMenosUnSector: true };
+  }
+  
+  return null;
 }
