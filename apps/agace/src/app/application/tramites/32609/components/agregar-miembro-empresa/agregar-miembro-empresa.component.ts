@@ -122,6 +122,9 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
    */
   CONFIRMACION_NUMEROEMPLEADOS = NOTA.CONFIRMACION_NUMEROEMPLEADOS;
 
+  /**
+   * Mensaje de validación para el formulario.
+   */
   MENSAJE_DE_VALIDACION = MENSAJE_DE_VALIDACION;
 
  /**
@@ -292,7 +295,6 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
       nombreEmpresa: ['', Validators.required]
     });
     
-    // Set initial disabled state
     this.actualizarEstadoFormulario();
   }
 
@@ -595,6 +597,7 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
       }
     }
     
+    
     this.registroAgregarMiembroEmpresaForm.patchValue({
       id: this.filaSeleccionadaAgregarMiembroEmpresa?.id,
       tipoPersona: TIPO_PERSONA,
@@ -837,18 +840,6 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
       return '';
     }
     return value === '1' ? 'Sí' : 'No';
-  }
-
-  /**
-   * Convierte el texto (No/Sí) a valor del radio button (0/1)
-   * @param texto - El texto a convertir ('No' o 'Sí')
-   * @returns El valor del radio button correspondiente
-   */
-  private static convertirTextoAValorRadio(texto: string): string {
-    if (!texto || texto === '') {
-      return '';
-    }
-    return texto === 'Sí' ? '1' : '0';
   }
   /**
    * @method ngOnDestroy

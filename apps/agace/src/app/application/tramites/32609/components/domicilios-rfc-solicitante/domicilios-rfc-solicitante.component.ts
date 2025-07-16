@@ -131,6 +131,11 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
    */
   CONFIRMACION_NUMEROEMPLEADOS = NOTA.CONFIRMACION_NUMEROEMPLEADOS;
 
+
+  /**
+   * Indicates whether the user is required to capture information.
+   * The value is assigned from the `NOTA.DEBE_CAPTURAR` property.
+   */
   DEBE_CAPTURAR = NOTA.DEBE_CAPTURAR;
 
  /**
@@ -253,7 +258,6 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
       })
     )
     .subscribe();
-    // Don't call crearFormulario() here - move to ngOnInit after seccionState is available
   }
 
   /**
@@ -272,12 +276,11 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
       .subscribe((datos: Tramites32609State) => {
         this.seccionState = datos;
         
-        // Create forms after state is available
+
         if (!this.forma) {
           this.crearFormulario();
         }
         
-        // Update list data
         this.DomiciliosRfcSolicitanteList = this.seccionState.DomiciliosRfcSolicitante || [];
       });
   }
@@ -389,6 +392,10 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
     }
   }
 
+  /**
+   * Envía los datos del formulario y muestra el modal de confirmación.
+   * Si el formulario es inválido, marca todos los campos como tocados.
+   */
   enviarActualizarDialogData(): void {
     if(this.registroDomiciliosRfcSolicitanteForm.valid) {
       this.abrirMultipleSeleccionPopup('', this.CONFIRMACION_NUMEROEMPLEADOS, 'Aceptar', '');
@@ -402,6 +409,9 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
   }
 
 
+  /**
+   * Limpia el formulario y restablece los valores a los predeterminados.
+   */
   instalacionesSeleccionadas(event:InstalacionesInterface[]): void {
     this.datosTablaModalSeleccionados = event.map((elemento) => {
       return {

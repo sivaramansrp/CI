@@ -295,16 +295,20 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     this.esFormularioInicializado = true;
   }
 
+  /**
+   * Método del ciclo de vida que se ejecuta cuando el componente se destruye.
+   * Limpia las suscripciones y libera recursos.
+   */
   private actualizarFormularioConDatosDelEstado(): void {
-  if (this.registroControlInventariosForm && this.seccionState && this.esFormularioInicializado) {
-    this.actualizarEstadoFormulario();
-    const STATEVALOR = {
-      sistemaControlInventariosArt59: this.seccionState.sistemaControlInventariosArt59,
-    };
+    if (this.registroControlInventariosForm && this.seccionState && this.esFormularioInicializado) {
+      this.actualizarEstadoFormulario();
+      const STATEVALOR = {
+        sistemaControlInventariosArt59: this.seccionState.sistemaControlInventariosArt59,
+      };
 
-    this.registroControlInventariosForm.patchValue(STATEVALOR);
+      this.registroControlInventariosForm.patchValue(STATEVALOR);
+    }
   }
-}
 
   /**
    * Envía los datos del formulario y muestra el modal de confirmación.
@@ -774,7 +778,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     }
   }
 
-/**
+  /**
    * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
    * @param form - El formulario reactivo.
    * @param campo - El nombre del campo en el formulario.
