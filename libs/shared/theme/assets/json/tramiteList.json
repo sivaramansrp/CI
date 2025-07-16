@@ -4241,5 +4241,12 @@
     "linkDashboard": "/agace/aviso-modification-certificacion/pantallas",
     "linkDepartment": "/pago/aviso-modification-certificacion/pantallas",
     "department": "agace"
+  },
+    {
+    "id": 606,
+    "tramite": 32607,
+    "linkDashboard": "/agace/aeronaves/solicitud",
+    "linkDepartment": "/pago/aeronaves/solicitud",
+    "department": "agace"
   }
 ]
