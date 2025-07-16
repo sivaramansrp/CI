@@ -25,6 +25,74 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * todos los datos relevantes e información de estado para la consulta en curso.
    */
   public consultaState!: ConsultaioState;
+  /**
+   * Controla la visibilidad del componente "Datos por Régimen".
+   * Si es true, el componente se muestra; si es false, se oculta.
+   */
+  public mostrarDatosPorRegimen = false;
+  /**
+   * Indica si el modal emergente (popup) debe mostrarse.
+   * Si es true, el popup es visible; si es false, está oculto.
+   */
+  mostrarPopup = false;
+  /**
+   * Mensaje que se mostrará en el modal emergente (popup).
+   */
+  popupMessage = '';
+
+  /**
+ * Mapa de valores que disparan la apertura del modal emergente (popup) para controles específicos.
+ *
+ * La clave representa el nombre del control del formulario y el valor asociado indica el valor
+ * que, al ser seleccionado en el control correspondiente, debe activar la visualización del popup.
+ *
+ * Por ejemplo, si el usuario selecciona "No" en el control "preOperativo", se mostrará el popup.
+ *
+ * @readonly
+ * @type {Record<string, string>}
+ */
+  readonly POPUP_TRIGGER_VALUES: Record<string, string> = {
+  preOperativo: 'No',
+  indiqueSi: 'No',
+  senale: 'No',
+  senaleSi: 'No',
+  senaleMomento: 'No',
+  ingresar: 'No',
+  indiqueCuenta: 'No',
+  contabilidad: 'No',
+};
+
+/**
+ * Mapa de mensajes personalizados para el modal emergente (popup) según el control del formulario.
+ *
+ * La clave representa el nombre del control del formulario y el valor asociado es el mensaje
+ * que se mostrará en el popup cuando se active la condición correspondiente.
+ *
+ * Por ejemplo, si el usuario selecciona un valor que dispara el popup en el control "preOperativo",
+ * se mostrará el mensaje definido para "preOperativo".
+ *
+ * @readonly
+ * @type {Record<string, string>}
+ */
+  readonly POPUP_MESSAGES: Record<string, string> = {
+    autorizacionIVAIEPS: 'la empresa ya cuenta con una solicitud previa bajo el esquema pre-operativo, por lo que no podrá solicitario nuevamente.',
+    preOperativo: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    indiqueSi: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    senale:'Es un requisito obligatorio el contar con algún tipo de empleado, ya sea propio o subcontratado para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    senaleSi:'Es un requisito obligatorio el contar con algún tipo de empleado, ya sea propio o subcontratado para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    encuentra: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    senaleMomento: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    delMismo: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    enCaso: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    ingresar: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    momentoIngresar: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    encuentraSus: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    rmfRadio: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    vinculacionRegistroCancelado: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    proveedoresListadoSAT: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    indiqueCuenta: 'Debe agregar por lo menos un control de inventarios.',
+    contabilidad: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+  };
 
   /**
    * Construye una instancia de PasoUnoComponent.
@@ -120,6 +188,32 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
       });
     })
   }
+
+  /**
+ * Maneja el evento de cambio en los controles tipo radio del formulario.
+ *
+ * Este método verifica si el valor seleccionado en el control coincide con el valor
+ * configurado en `POPUP_TRIGGER_VALUES` para ese control. Si es así y existe un mensaje
+ * personalizado en `POPUP_MESSAGES` para ese control, se asigna el mensaje al popup y
+ * se muestra el modal emergente.
+ *
+ * @param event Objeto que contiene el nombre del control (`controlName`) y el valor seleccionado (`value`).
+ */
+  onRadioChanged(event: { controlName: string, value: unknown }): void {
+  const TRIGGER_VALUE = this.POPUP_TRIGGER_VALUES[event.controlName] || 'Si';
+  if (event.value === TRIGGER_VALUE && this.POPUP_MESSAGES[event.controlName]) {
+    this.popupMessage = this.POPUP_MESSAGES[event.controlName];
+    this.mostrarPopup = true;
+  }
+  }
+/**
+ * Cierra el modal emergente (popup).
+ *
+ * Este método establece la variable `mostrarPopup` en `false`, ocultando así el modal en la interfaz.
+ */
+cerrarPopup():void {
+  this.mostrarPopup = false;
+}
 
   /**
    * Método del ciclo de vida que se llama cuando el componente es destruido.

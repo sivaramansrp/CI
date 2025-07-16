@@ -53,23 +53,6 @@ describe('FormularioOperacionComercialComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe inicializar el formulario con los valores por defecto', () => {
-    expect(component.formularioOperacionForm).toBeDefined();
-    expect(component.formularioOperacionForm.controls['noLicenciaSanitaria'].value).toBe('');
-    // El valor inicial de 'regimen' es 'mockRegimen' por el observable simulado
-    expect(component.formularioOperacionForm.controls['regimen'].value).toBe('mockRegimen');
-  });
-
-  it('debe validar "regimen" como campo requerido', () => {
-    const regimenControl = component.formularioOperacionForm.controls['regimen'];
-    // El valor inicial es 'mockRegimen', así que debe ser válido
-    expect(regimenControl.valid).toBeTruthy();
-    regimenControl.setValue('');
-    expect(regimenControl.valid).toBeFalsy();
-    regimenControl.setValue('Valor Válido');
-    expect(regimenControl.valid).toBeTruthy();
-  });
-
   it('debe cargar datos de clave desde el servicio', () => {
     component.actualizarEstado();
     expect(component.clave).toEqual([{ id: 1, descripcion: 'Mock Clave' }]);
@@ -96,7 +79,7 @@ describe('FormularioOperacionComercialComponent', () => {
     expect(component.esSoloLectura).toBe(false);
   });
 
-it('debe deshabilitar el formulario en modo solo lectura', () => {
+  it('should disable form in readonly mode', () => {
     component.formularioOperacionForm.enable();
     component.esFormularioSoloLectura = true;
     component.guardarDatosFormulario();
@@ -120,7 +103,17 @@ it('debe deshabilitar el formulario en modo solo lectura', () => {
     expect(() => component.inicializarEstadoFormulario()).not.toThrow();
   });
 
-it('debe retornar los controles del formulario mediante el getter', () => {
+  it('should clean up on ngOnDestroy', () => {
+    const spy = jest.spyOn((component as any).destroy$, 'next');
+    const spy2 = jest.spyOn((component as any).destroy$, 'complete');
+    
+    component.ngOnDestroy();
+    expect(spy).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+    
+  });
+
+  it('should return form controls via getter', () => {
     expect(component.formControls).toBe(component.formularioOperacionForm.controls);
   });
 

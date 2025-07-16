@@ -1,12 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PantallasComponent } from './pantallas.component';
-import { AlertComponent, BtnContinuarComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { AVISO_PRIVACIDAD } from '../../constantes/aviso-enum';
-import { PASOS } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  BtnContinuarComponent,
+  ListaPasosWizard,
+  WizardComponent,
+} from '@libs/shared/data-access-user/src';
+import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { FirmarSolicitudComponent } from '../firmar-solicitud/firmar-solicitud.component';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { DatosComponent } from '../datos/datos.component';
 import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FirmarSolicitudComponent } from '../firmar-solicitud/firmar-solicitud.component';
+import { AvisoSanitarioRoutingModule } from '../../aviso-sanitario-routing.module';
+import { PASOS } from './pantallas.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('PantallasComponent', () => {
   let component: PantallasComponent;
@@ -14,67 +22,78 @@ describe('PantallasComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PantallasComponent],
+      declarations: [],
       imports: [
         CommonModule,
+        ReactiveFormsModule,
         WizardComponent,
-        PasoDosComponent,
-        FirmarSolicitudComponent,
         BtnContinuarComponent,
-        AlertComponent
+        DatosComponent,
+        PasoDosComponent,
+        AlertComponent,
+        FirmarSolicitudComponent,
+        AvisoSanitarioRoutingModule,
+        HttpClientTestingModule,
       ],
-      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PantallasComponent);
     component = fixture.componentInstance;
-    
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
-    } as unknown as WizardComponent;
-
+    } as any;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize pasos property correctly', () => {
-    expect(component.pasos).toEqual(PASOS);
-  });
-
-  it('should initialize TEXTOS property correctly', () => {
-    expect(component.TEXTOS).toBe(AVISO_PRIVACIDAD);
-  });
-
-  it('should set indice correctly in seleccionaTab', () => {
-    component.seleccionaTab(3);
-    expect(component.indice).toBe(3);
-  });
-
-  it('should set indice and call siguiente method in getValorIndice with action "cont"', () => {
-    const mockAccionBoton = { accion: 'cont', valor: 2 };
-    component.getValorIndice(mockAccionBoton);
-
-    expect(component.indice).toBe(2);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-  });
-
-  it('should set indice and call atras method in getValorIndice with action other than "cont"', () => {
-    const mockAccionBoton = { accion: 'ant', valor: 1 };
-    component.getValorIndice(mockAccionBoton);
-
+  it('should have default indice as 1', () => {
     expect(component.indice).toBe(1);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should not update indice or call any method if valor is out of range in getValorIndice', () => {
-    const mockAccionBoton = { accion: 'cont', valor: 6 };
-    component.getValorIndice(mockAccionBoton);
+  it('should set infoAlert to alert-info', () => {
+    expect(component.infoAlert).toBe('alert-info');
+  });
 
-    expect(component.indice).not.toBe(6);
+  it('should set TEXTOS to AVISO.Aviso', () => {
+    expect(component.TEXTOS).toBe(AVISO.Aviso);
+  });
+
+  it('should initialize datosPasos correctly', () => {
+    expect(component.datosPasos.indice).toBe(1);
+    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
+    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
+  });
+
+  it('should update indice and call siguiente on getValorIndice with accion "cont"', () => {
+    const paso = 2;
+    component.getValorIndice({ valor: paso, accion: 'cont' });
+    expect(component.indice).toBe(paso);
+    expect(component.datosPasos.indice).toBe(paso);
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  });
+
+  it('should update indice and call atras on getValorIndice with accion not "cont"', () => {
+    const paso = 2;
+    component.getValorIndice({ valor: paso, accion: 'back' });
+    expect(component.indice).toBe(paso);
+    expect(component.datosPasos.indice).toBe(paso);
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  });
+
+  it('should not update indice or call wizard methods if valor is out of range', () => {
+    const initialIndice = component.indice;
+    component.getValorIndice({ valor: 0, accion: 'cont' });
+    expect(component.indice).toBe(initialIndice);
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+
+    expect(component.indice).toBe(initialIndice);
     expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
     expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });

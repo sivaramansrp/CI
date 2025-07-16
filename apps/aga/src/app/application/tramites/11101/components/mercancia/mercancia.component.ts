@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { TablaDinamicaComponent, TablaSeleccion, TituloComponent, } from '@libs/shared/data-access-user/src';
-import { map, takeUntil } from 'rxjs/operators';
 import { CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA } from '../../constants/mercancia.enum';
 import { CommonModule } from '@angular/common';
 import { DiscripccionDeLaMercanciaForm } from '../../models/transportacion-maritima.model';
-import { Subject } from 'rxjs';
 import { Tramite11101Query } from '../../estados/tramite11101.query';
 
 @Component({

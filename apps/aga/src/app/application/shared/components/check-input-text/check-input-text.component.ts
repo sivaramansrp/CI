@@ -89,6 +89,7 @@ export class CheckInputTextComponent implements OnChanges {
     this.forma = this.fb.group({
       checkbox: [false],
       texto: [{ value: '', disabled: true }],
+      disabled:true
     });
   }
 
@@ -119,6 +120,8 @@ export class CheckInputTextComponent implements OnChanges {
       this.textoValor = changes['textoValor'].currentValue;
       this.forma.get('texto')?.enable();
       this.forma.get('texto')?.setValue(this.textoValor);
+      this.forma.get('texto')?.disable();
+      this.forma.get('checkbox')?.disable();
     }
   }
 
@@ -178,9 +181,11 @@ export class CheckInputTextComponent implements OnChanges {
   enviarValoresCheckboxInput(): void {
     const CHECKBOX = this.forma.get('checkbox')?.value;
     const TEXTO = this.forma.get('texto')?.value;
+    const DISABLED = this.forma.get('disabled')?.disabled
     const DATOS: DatosCheckInputText = {
       checkbox: CHECKBOX,   
       texto: TEXTO,
+      disabled: DISABLED,
     };
 
     this.checkboxChange.emit(DATOS)

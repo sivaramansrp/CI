@@ -204,3 +204,6 @@ export * from './core/enums/mensajes-modal-comunes.enum';
 export * from './tramites/directives/alfanumerico/alfanumerico-formato.directive';
 export * from './tramites/components/pie-pagina-informacion/pie-pagina-informacion.component';
 export * from './core/services/shared/cadena-original/cadena-original.service';
+
+export * from './tramites/components/paginador-tabla/paginador-tabla.component';
+export * from './core/interceptor/http.interceptor';

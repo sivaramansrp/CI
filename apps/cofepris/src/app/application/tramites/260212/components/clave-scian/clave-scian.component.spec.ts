@@ -85,5 +85,65 @@ describe('ClaveScianComponent', () => {
     component.ngOnDestroy();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('should disable the form when esFormularioSoloLectura is true', () => {
+  component.esFormularioSoloLectura = true;
+  component.guardarDatosFormulario();
+  expect(component.claveForm.disabled).toBe(true);
+});
+
+it('should enable the form when esFormularioSoloLectura is false', () => {
+  component.esFormularioSoloLectura = false;
+  component.guardarDatosFormulario();
+  expect(component.claveForm.enabled).toBe(true);
+});
+
+it('should reset form when limpiar is called', () => {
+  const resetSpy = jest.spyOn(component.claveForm, 'reset');
+  component.limpiar();
+  expect(resetSpy).toHaveBeenCalled();
+});
+
+it('should emit agregarDatos and call cancelar if form is valid', () => {
+  const spyAgregar = jest.spyOn(component.agregarDatos, 'emit');
+  const spyCancelar = jest.spyOn(component, 'cancelar');
+
+  component.clave = [
+    { id: 1, descripcion: 'clave1' },
+    { id: 2, descripcion: 'desc1' }
+  ];
+
+  component.claveForm.setValue({ clave: '1', descripcion: '2' });
+
+  component.agregar();
+
+  expect(spyAgregar).toHaveBeenCalledWith({
+    clave: 'clave1',
+    descripcion: 'desc1'
+  });
+  expect(spyCancelar).toHaveBeenCalled();
+});
+
+it('should not emit agregarDatos if form is invalid', () => {
+  const spyAgregar = jest.spyOn(component.agregarDatos, 'emit');
+
+  component.claveForm.reset(); // Invalidate the form
+  component.agregar();
+
+  expect(spyAgregar).not.toHaveBeenCalled();
+});
+
+it('obtenerDescripcion should return matching descripcion', () => {
+  const array = [{ id: 1, descripcion: 'desc uno' }];
+  const result = ClaveScianComponent.obtenerDescripcion(array, '1');
+  expect(result).toBe('desc uno');
+});
+
+it('obtenerDescripcion should return empty string if id not found', () => {
+  const array = [{ id: 1, descripcion: 'desc uno' }];
+  const result = ClaveScianComponent.obtenerDescripcion(array, '99');
+  expect(result).toBe('');
+});
+
 });
 

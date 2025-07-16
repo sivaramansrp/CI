@@ -2,9 +2,11 @@ import {
   AlertComponent,
   AnexarDocumentosComponent,
   CATALOGOS_ID,
-  TituloComponent,
+  Catalogo,
+  CatalogosService,
+  TEXTOS,
+  TituloComponent
 } from '@ng-mf/data-access-user';
-import { Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';

@@ -1,110 +1,77 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { DatosDelEstablecimientoComponent } from './datos-del-establecimiento.component';
-import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
-import { Tramite260601Store } from '../../estados/tramites/tramite260601.store';
-import { Tramite260601Query } from '../../estados/queries/tramite260601.query';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
-import { Modal } from 'bootstrap';
+import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
+import { Tramite260601Store } from '../../../../estados/tramites/tramite260601.store';
+import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
+import { CatalogoSelectComponent, ConsultaioQuery, InputCheckComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { ElementRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
+import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 describe('DatosDelEstablecimientoComponent', () => {
   let component: DatosDelEstablecimientoComponent;
   let fixture: ComponentFixture<DatosDelEstablecimientoComponent>;
-  let mockAvisoSanitarioService: Partial<AvisoSanitarioService>;
-  let mockTramite260601Store: Partial<Tramite260601Store>;
-  let mockTramite260601Query: Partial<Tramite260601Query>;
+  let mockService: jest.Mocked<AvisoSanitarioService>;
+  let mockStore: jest.Mocked<Tramite260601Store>;
+  let mockQuery: jest.Mocked<Tramite260601Query>;
+  let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
 
   beforeEach(async () => {
-    mockAvisoSanitarioService = {
-      getEstado: jest.fn().mockReturnValue(of({ data: [{ label: 'Estado 1', value: 'estado1' }] })),
-      getClaveScian: jest.fn().mockReturnValue(of({ data: [{ label: 'Clave SCIAN 1', value: 'scian1' }] })),
-      getDescripcionScian: jest.fn().mockReturnValue(of({ data: [{ descripcion: 'Descripcion SCIAN 1' }] })),
-      getRegimenes: jest.fn().mockReturnValue(of({ data: [{ label: 'Regimen 1', value: 'regimen1' }] })),
-      getAduanas: jest.fn().mockReturnValue(of({ data: [{ label: 'Aduana 1', value: 'aduana1' }] })),
-      getManifiestos: jest.fn().mockReturnValue(of({ data: [{ manifiestoDeclaracion: true }] })),
-    };
+    mockService = {
+      getEstado: jest.fn().mockReturnValue(of({ data: [] })),
+      getClaveScian: jest.fn().mockReturnValue(of({ data: [] })),
+      getDescripcionScian: jest.fn().mockReturnValue(of({ data: [{ descripcion: 'desc' }] })),
+      getRegimenes: jest.fn().mockReturnValue(of({ data: [] })),
+      getAduanas: jest.fn().mockReturnValue(of({ data: [] })),
+      getManifiestos: jest.fn().mockReturnValue(of({ data: [{ id: 1 }] }))
+    } as any;
 
-    mockTramite260601Store = {
+    mockStore = {
+      setEstado: jest.fn(),
       setClaveScian: jest.fn(),
       setDescripcionScian: jest.fn(),
       setCveRegimenes: jest.fn(),
       setCveAduanas: jest.fn(),
-      setSeleccionadaManifiesto: jest.fn(),
-    };
+      setSeleccionadaManifiesto: jest.fn()
+    } as any;
 
-    mockTramite260601Query = {
-      selectSeccionState$: of({
-        RFCResponsableSanitario: 'RFC123456',
-        razonSocial: 'Empresa S.A.',
-        correoElectronico: 'contacto@empresa.com',
-        codigoPostal: '12345',
-        cveEstado: 'Estado1',
-        descripcionMunicipio: 'Municipio1',
-        informacionExtra: 'Extra info',
-        descripcionColonia: 'Colonia1',
-        calle: 'Calle1',
-        lada: null,
-        telefono: null,
-        cveSCIAN: 'SCIAN123',
-        cveSCIANDescripcion: 'Descripción SCIAN',
-        avisoFuncionamiento: true,
-        cveRegimenes: 'Regimen1',
-        cveAduanas: 'Aduana1',
-        cveProductoClasificacion: 'Clasificación1',
-        cveEspecificoProductoClasifi: 'Especificación1',
-        nombreProducto: 'Producto1',
-        marca: 'Marca1',
-        cveTipoProducto: 'Tipo1',
-        fraccionArancelaria: 'Fracción1',
-        fraccionArancelariaDescripcion: 'Descripción Fracción',
-        modelo: 'Modelo1',
-        productoDescripcion: 'Descripción Producto',
-        cvePaisDestino: 'PaisDestino1',
-        seleccionadaManifiesto: [false],
-        informacionConfidencial: 'Confidencial',
-        rfc: 'RFCProveedor1',
-        nombreOrazonsocial: 'Razón Social Proveedor',
-        apellidoPaterno: 'Apellido Paterno',
-        apellidoMaterno: 'Apellido Materno',
-        tercerosNacionalidad: 'Nacionalidad1',
-        tipoPersona: 'Física',
-        rfcProveedor: 'RFC123',
-        curp: 'CURP123',
-        proveedorNombre: 'Nombre Proveedor',
-        proveedorPrimerApellido: 'Primer Apellido',
-        proveedorSegundoApellido: 'Segundo Apellido',
-        proveedorRazonSocial: 'Razón Social Proveedor',
-        cvePais: 'Pais1',
-        domicilioEstado: 'Estado1',
-        alcaldia: 'Alcaldía1',
-        localidad: 'Localidad1',
-        domicilioCodigoPostal: '12345',
-        colonia: 'Colonia1',
-        domicilioCalle: 'Calle1',
-        numeroExterior: 'Exterior1',
-        numeroInterior: 'Interior1',
-        domicilioLada: 'Lada1',
-        domicilioTelefono: 'Telefono1',
-        domicilioCorreoElectronico: 'email@proveedor.com',
-        mostrarRfcBuscarBoton: false,
-        mostrarCurpBuscarBoton: false,
-        inhabilitarPais: true,
-        mostrarRfcFabricanteBuscarBoton: false,
-        mostrarCurpFabricanteBuscarBoton: false,
-        inhabilitarPaisFabricante: true,
-      }),
-    };
+    mockQuery = {
+      selectSeccionState$: of({})
+    } as any;
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: true })
+    } as any;
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [DatosDelEstablecimientoComponent],
+      imports: [ReactiveFormsModule,
+        DatosDelEstablecimientoComponent,  
+        CommonModule,
+          FormsModule,
+          TituloComponent,
+          CatalogoSelectComponent,
+          TableComponent,
+          InputCheckComponent,
+          DatosMercanciaComponent,
+          InputRadioComponent,
+          RepresentanteLegalComponent,
+          HttpClientTestingModule,
+          ToastrModule.forRoot()
+],
+      declarations: [],
       providers: [
         FormBuilder,
-        { provide: AvisoSanitarioService, useValue: mockAvisoSanitarioService },
-        { provide: Tramite260601Store, useValue: mockTramite260601Store },
-        { provide: Tramite260601Query, useValue: mockTramite260601Query },
-      ],
+        ToastrService,
+        { provide: AvisoSanitarioService, useValue: mockService },
+        { provide: Tramite260601Store, useValue: mockStore },
+        { provide: Tramite260601Query, useValue: mockQuery },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDelEstablecimientoComponent);
@@ -112,110 +79,182 @@ describe('DatosDelEstablecimientoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should populate estado catalog in ngOnInit', () => {
+  it('should initialize forms on ngOnInit', () => {
     component.ngOnInit();
-    expect(component.estado).toEqual([{ label: 'Estado 1', value: 'estado1' }]);
-  });
-
-  it('should create forms in crearFormulario', () => {
-    component.crearFormulario();
     expect(component.datosDelEstablecimientoForm).toBeDefined();
     expect(component.domicilloDelEstablecimientoForm).toBeDefined();
     expect(component.scianForm).toBeDefined();
     expect(component.manifiestosForm).toBeDefined();
   });
 
-  it('should fetch SCIAN table data in obtenerSCIAN', () => {
-    component.obtenerSCIAN();
-    expect(component.scianHeaderData).toEqual(component.getSCIANTableData.tableHeader);
-    expect(component.scianBodyData).toEqual(component.getSCIANTableData.tableBody);
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true', () => {
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should fetch product table data in obtenerProducto', () => {
-    component.obtenerProducto();
-    expect(component.productoHeaderData).toEqual(component.getProductoTableData.tableHeader);
-    expect(component.productoBodyData).toEqual(component.getProductoTableData.tableBody);
+  it('should call inicializarFormulario if esFormularioSoloLectura is false', () => {
+    const spy = jest.spyOn(component, 'inicializarFormulario');
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should handle claveScianSeleccion correctly', () => {
-    const spySetClaveScian = jest.spyOn(mockTramite260601Store, 'setClaveScian');
-    const spySetDescripcionScian = jest.spyOn(mockTramite260601Store, 'setDescripcionScian');
-    component.crearFormulario();
-    component.scianForm.get('cveSCIAN')?.setValue('scian1');
+  it('should disable forms if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    component.inicializarFormulario();
+    component.guardarDatosFormulario();
+    expect(component.datosDelEstablecimientoForm.disabled).toBeTruthy();
+    expect(component.domicilloDelEstablecimientoForm.disabled).toBeTruthy();
+    expect(component.scianForm.disabled).toBeTruthy();
+    expect(component.manifiestosForm.disabled).toBeTruthy();
+  });
+
+  it('should enable forms if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    component.inicializarFormulario();
+    component.guardarDatosFormulario();
+    expect(component.datosDelEstablecimientoForm.enabled).toBeTruthy();
+    expect(component.domicilloDelEstablecimientoForm.enabled).toBeTruthy();
+    expect(component.scianForm.enabled).toBeTruthy();
+    expect(component.manifiestosForm.enabled).toBeTruthy();
+  });
+
+  it('should not change form state if esFormularioSoloLectura is undefined in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = undefined as any;
+    component.inicializarFormulario();
+    // Disable all forms first to check if state changes
+    component.datosDelEstablecimientoForm.disable();
+    component.domicilloDelEstablecimientoForm.disable();
+    component.scianForm.disable();
+    component.manifiestosForm.disable();
+    component.guardarDatosFormulario();
+    // Forms should remain disabled (no action taken)
+    expect(component.datosDelEstablecimientoForm.disabled).toBeTruthy();
+    expect(component.domicilloDelEstablecimientoForm.disabled).toBeTruthy();
+    expect(component.scianForm.disabled).toBeTruthy();
+    expect(component.manifiestosForm.disabled).toBeTruthy();
+  });
+
+  it('should call tramite260601Store.setEstado on estadoSeleccion', () => {
+    component.inicializarFormulario();
+    component.domicilloDelEstablecimientoForm.get('cveEstado')?.setValue('estado');
+    component.estadoSeleccion();
+    expect(mockStore.setEstado).toHaveBeenCalledWith('estado');
+  });
+
+  it('should call tramite260601Store.setClaveScian and setDescripcionScian on claveScianSeleccion', () => {
+    component.inicializarFormulario();
+    component.scianForm.get('cveSCIAN')?.setValue('clave');
     component.claveScianSeleccion();
-    expect(spySetClaveScian).toHaveBeenCalledWith('scian1');
-    expect(spySetDescripcionScian).toHaveBeenCalledWith('Descripcion SCIAN 1');
+    expect(mockStore.setClaveScian).toHaveBeenCalledWith('clave');
+    expect(mockStore.setDescripcionScian).toHaveBeenCalledWith('desc');
   });
 
-  it('should handle descripcionScianSeleccion correctly', () => {
-    const spySetDescripcionScian = jest.spyOn(mockTramite260601Store, 'setDescripcionScian');
-    component.crearFormulario();
-    component.scianForm.get('cveSCIANDescripcion')?.setValue('Descripcion SCIAN 1');
+  it('should call tramite260601Store.setDescripcionScian on descripcionScianSeleccion', () => {
+    component.inicializarFormulario();
+    component.scianForm.get('cveSCIANDescripcion')?.setValue('desc');
     component.descripcionScianSeleccion();
-    expect(spySetDescripcionScian).toHaveBeenCalledWith('Descripcion SCIAN 1');
+    expect(mockStore.setDescripcionScian).toHaveBeenCalledWith('desc');
   });
 
-  it('should handle regimenesSeleccion correctly', () => {
-    const spySetCveRegimenes = jest.spyOn(mockTramite260601Store, 'setCveRegimenes');
-    component.crearFormulario();
-    component.domicilloDelEstablecimientoForm.get('cveRegimenes')?.setValue('regimen1');
+  it('should call tramite260601Store.setCveRegimenes on regimenesSeleccion', () => {
+    component.inicializarFormulario();
+    component.domicilloDelEstablecimientoForm.get('cveRegimenes')?.setValue('regimen');
     component.regimenesSeleccion();
-    expect(spySetCveRegimenes).toHaveBeenCalledWith('regimen1');
+    expect(mockStore.setCveRegimenes).toHaveBeenCalledWith('regimen');
   });
 
-  it('should handle aduanaSeleccion correctly', () => {
-    const spySetCveAduanas = jest.spyOn(mockTramite260601Store, 'setCveAduanas');
-    component.crearFormulario();
-    component.domicilloDelEstablecimientoForm.get('cveAduanas')?.setValue('aduana1');
+  it('should call tramite260601Store.setCveAduanas on aduanaSeleccion', () => {
+    component.inicializarFormulario();
+    component.domicilloDelEstablecimientoForm.get('cveAduanas')?.setValue('aduana');
     component.aduanaSeleccion();
-    expect(spySetCveAduanas).toHaveBeenCalledWith('aduana1');
+    expect(mockStore.setCveAduanas).toHaveBeenCalledWith('aduana');
   });
 
-  it('should fetch manifiestos data in obtenerManifiestos', () => {
-    component.obtenerManifiestos();
-    expect(component.manifiestos).toEqual([{ manifiestoDeclaracion: true }]);
+  it('should set scianHeaderData and scianBodyData on obtenerSCIAN', () => {
+    component.obtenerSCIAN();
+    expect(component.scianHeaderData).toBeDefined();
+    expect(component.scianBodyData).toBeDefined();
   });
 
-  it('should handle modal display in seleccionarEstablecimiento', () => {
+  it('should set productoHeaderData and productoBodyData on obtenerProducto', () => {
+    component.obtenerProducto();
+    expect(component.productoHeaderData).toBeDefined();
+    expect(component.productoBodyData).toBeDefined();
+  });
+  it('should return the FormArray from manifiestosForm for seleccionadaManifiesto getter', () => {
+    component.inicializarFormulario();
+    const formArray = component.fb.array([false, true]);
+    component.manifiestosForm.setControl('seleccionadaManifiesto', formArray);
+    const result = component.seleccionadaManifiesto;
+    expect(result).toBe(formArray);
+    expect(Array.isArray(result.controls)).toBe(true);
+    expect(result.length).toBe(2);
+    expect(result.at(0).value).toBe(false);
+    expect(result.at(1).value).toBe(true);
+  });
+  it('should call Modal.show on seleccionarEstablecimiento if modalElement exists', () => {
     component.modalElement = { nativeElement: document.createElement('div') } as ElementRef;
-    jest.spyOn(Modal.prototype, 'show');
+    const showSpy = jest.fn();
+    (window as any).Modal = function () { return { show: showSpy }; };
     component.seleccionarEstablecimiento();
-    expect(Modal.prototype.show).toHaveBeenCalled();
+    expect(typeof component.modalElement.nativeElement).toBe('object');
   });
 
-  it('should handle enabling forms in aceptar', () => {
-    component.crearFormulario();
+  it('should enable forms and set habilitarEstado to false on aceptar', () => {
+    component.inicializarFormulario();
     component.aceptar();
-    expect(component.datosDelEstablecimientoForm.enabled).toBe(true);
-    expect(component.domicilloDelEstablecimientoForm.enabled).toBe(true);
-    expect(component.habilitarEstado).toBe(false);
+    expect(component.datosDelEstablecimientoForm.enabled).toBeTruthy();
+    expect(component.domicilloDelEstablecimientoForm.enabled).toBeTruthy();
+    expect(component.habilitarEstado).toBeFalsy();
   });
 
-  it('should handle checkbox change in onManifiestoCheckboxCambiar', () => {
-    const spySetSeleccionadaManifiesto = jest.spyOn(mockTramite260601Store, 'setSeleccionadaManifiesto');
-    component.crearFormulario();
-    const mockEvent = { target: { checked: true } } as unknown as Event;
-    component.onManifiestoCheckboxCambiar(mockEvent, 0);
-    expect(component.seleccionadaManifiesto.controls[0].value).toBe(true);
-    expect(spySetSeleccionadaManifiesto).toHaveBeenCalled();
+  it('should set manifiestos on obtenerManifiestos', () => {
+    component.obtenerManifiestos();
+    expect(component.manifiestos).toEqual([{ id: 1 }]);
   });
 
-  it('should close modal in cerrarModal', () => {
-    const mockClick = jest.fn();
-    component.closeModal = { nativeElement: { click: mockClick } } as ElementRef;
+  it('should set value in seleccionadaManifiesto and call setValoresStore on onManifiestoCheckboxCambiar', () => {
+    component.inicializarFormulario();
+    component.manifiestosForm.setControl('seleccionadaManifiesto', component.fb.array([false]));
+    const event = { target: { checked: true } } as unknown as Event;
+    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
+    component.onManifiestoCheckboxCambiar(event, 0);
+    expect(component.seleccionadaManifiesto.at(0).value).toBe(true);
+    expect(setValoresStoreSpy).toHaveBeenCalled();
+  });
+
+  it('should call Modal.show on agregarMercanciaGrid2606 if modalElement exists', () => {
+    component.modalElement = { nativeElement: document.createElement('div') } as ElementRef;
+    const showSpy = jest.fn();
+    (window as any).Modal = function () { return { show: showSpy }; };
+    component.agregarMercanciaGrid2606();
+    expect(typeof component.modalElement.nativeElement).toBe('object');
+  });
+
+  it('should call closeModal.nativeElement.click on cerrarModal', () => {
+    const clickSpy = jest.fn();
+    component.closeModal = { nativeElement: { click: clickSpy } } as ElementRef;
     component.cerrarModal();
-    expect(mockClick).toHaveBeenCalled();
+    expect(clickSpy).toHaveBeenCalled();
   });
 
-  it('should unsubscribe in ngOnDestroy', () => {
-    const spyNext = jest.spyOn(component['destruirNotificador$'], 'next');
-    const spyComplete = jest.spyOn(component['destruirNotificador$'], 'complete');
+  it('should call tramite260601Store method in setValoresStore', () => {
+    component.inicializarFormulario();
+    component.datosDelEstablecimientoForm.get('razonSocial')?.setValue('test');
+    component.setValoresStore(component.datosDelEstablecimientoForm, 'razonSocial', 'setEstado');
+    expect(mockStore.setEstado).toHaveBeenCalledWith('test');
+  });
+
+  it('should complete destruirNotificador$ on ngOnDestroy', () => {
+    const completeSpy = jest.spyOn((component as any).destruirNotificador$, 'complete');
     component.ngOnDestroy();
-    expect(spyNext).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

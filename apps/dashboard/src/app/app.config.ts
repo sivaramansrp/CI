@@ -1,10 +1,11 @@
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { APPINJECT } from './app.inject';
 import { ApplicationConfig } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal'; // Agrega esto
 import { ENVIRONMENT } from './environments/environment';
 import { appRoutes } from './app.routes';
+import { httpInterceptorFn } from '@ng-mf/data-access-user';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { provideToastr } from 'ngx-toastr';
 
@@ -16,7 +17,7 @@ import { provideToastr } from 'ngx-toastr';
  */
 export const APPCONFIG: ApplicationConfig = {
   providers: [provideRouter(appRoutes),
-  provideHttpClient(),
+  provideHttpClient(withInterceptors([httpInterceptorFn])),
   provideAnimations(),
   provideToastr(),
   { provide: APPINJECT, useValue: ENVIRONMENT },

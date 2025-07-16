@@ -1,7 +1,7 @@
+import { FirmaElectronicaComponent, TramiteFolioService } from '@ng-mf/data-access-user';
 import { catchError, map } from 'rxjs';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { TramiteFolioService } from '@ng-mf/data-access-user';
 
 /**
  * Componente PasoTresComponent.
@@ -10,7 +10,11 @@ import { TramiteFolioService } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
-  styleUrl: './paso-tres.component.scss'
+  styleUrl: './paso-tres.component.scss',
+  standalone:true,
+  imports:[
+      FirmaElectronicaComponent
+    ]
 })
 export class PasoTresComponent {
 

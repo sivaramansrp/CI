@@ -8,59 +8,123 @@
         <span class="require">*:</span>
       </div>
     </div>
-    <app-input-radio [radioOptions]="radioOptions" [isRequired]="true" [selectedValue]="selectedValue"
+    <app-input-radio [radioOptions]="radioOptions" [isRequired]="true" 
       (change)="setValoresStore(datosdelForm,'certificada', 'setCertificada')" [layout]="'vertical'"
       formControlName="certificada"></app-input-radio>
+      
     <div class="row mt-4">
       <div class="col-md-12">
         <label for="message" class="form-label">Tratamiento :</label>
-        <textarea id="message" formControlName="tratamiento" class="form-control mb-5" placeholder=""></textarea>
+        <textarea id="message" formControlName="tratamiento" class="form-control mb-5" placeholder="" [disabled]="esFormularioSoloLectura"></textarea>
       </div>
     </div>
   </form>
- <app-combinacion-requerida></app-combinacion-requerida>
+ <app-combinacion-requerida [certificadaValue]="datosdelForm.get('certificada')?.value"></app-combinacion-requerida>
   <form [formGroup]="formGroup1">
     <ng-titulo titulo="Unidad expedidora"></ng-titulo>
+     @if(datosdelForm.get('certificada')?.value === 'Animal')
+ {
+  <app-input-radio class="fw-semibold" [radioOptions]="radioBotonAnimal" [selectedValue]="defaultSelect" [isRequired]="true"
+      formControlName="radioBotonAnimal" (valueChange)="onValueChange($event)" [layout]="'horizontal'"
+      (change)="setValoresStore(formGroup1,'radioBotonAnimal', 'setradioBotonAnimal')"></app-input-radio>
 
-    <app-input-radio class="fw-semibold" [radioOptions]="radioBoton" [selectedValue]="defaultSelect" [isRequired]="true"
-      formControlName="osia" (valueChange)="onValueChange($event)" [layout]="'horizontal'"
-      (change)="setValoresStore(formGroup1,'osia', 'setosia')"></app-input-radio>
-
-    <div *ngIf="defaultSelect === 'oficina central'">
       <div class="row">
+        <div class="col-md-4" *ngFor="let config of catalogConfigsAnimal">
+          <app-catalogo-select [required]="config.required" [catalogo]="config.catalogo" [label]="config.label"
+            [formControlName]="config.controlName" [isDisabled]="esFormularioSoloLectura"
+            (change)="getDelegaciones()"></app-catalogo-select>
+        </div>
+      </div>
+    }
+ @if(datosdelForm.get('certificada')?.value === 'Producto')
+ {
+  <app-input-radio class="fw-semibold" [radioOptions]="radioBotonProducto" [selectedValue]="defaultSelect" [isRequired]="true"
+      formControlName="radioBotonProducto" (valueChange)="onValueChange($event)" [layout]="'horizontal'"
+      (change)="setValoresStore(formGroup1,'radioBotonProducto', 'setradioBotonProducto')"></app-input-radio>
 
+     <div class="row">
         <div class="col-md-4" *ngFor="let config of catalogConfigs">
           <app-catalogo-select [required]="config.required" [catalogo]="config.catalogo" [label]="config.label"
             [formControlName]="config.controlName" [isDisabled]="esFormularioSoloLectura"
             (change)="getDelegaciones()"></app-catalogo-select>
         </div>
       </div>
-    </div>
+
+    }
+  @if(datosdelForm.get('certificada')?.value === 'QFBA')
+ {
+  <app-input-radio class="fw-semibold" [radioOptions]="radioBotonQFBA" [selectedValue]="defaultSelect" [isRequired]="true"
+      formControlName="radioBotonQFBA" (valueChange)="onValueChange($event)" [layout]="'horizontal'"
+      (change)="setValoresStore(formGroup1,'radioBotonQFBA', 'setradioBotonQFBA')"></app-input-radio>
+
+      <div class="row">
+        <div class="col-md-4">
+          <app-catalogo-select [required]="true" [catalogo]="delegacionesJson" [label]="'Delegaciones estatales SAGARPA'"
+            formControlName="delegacionesControl" [isDisabled]="esFormularioSoloLectura" name="estatales"
+            (change)="getDelegaciones()"></app-catalogo-select>
+        </div> 
+         <div class="col-md-4">
+          <app-catalogo-select [required]="true" [catalogo]="delegacionesJson" [label]="'Oficina central'"
+           formControlName="delegacionesControl3" [isDisabled]="esFormularioSoloLectura" name="central"
+            (change)="getDelegaciones()"></app-catalogo-select>
+        </div>
+         <div class="col-md-4">
+           </div>
+         <div class="col-md-4">
+          <app-catalogo-select [required]="true" [catalogo]="delegacionesJson" [label]="'Distrito desarrollo rural (DDR)'"
+           formControlName="delegacionesControl4" [isDisabled]="esFormularioSoloLectura" name="desarrollo"
+            (change)="getDelegaciones()"></app-catalogo-select>
+        </div>
+      </div>
+    }
+
   </form>
-
-
-
+@if(datosdelForm.get('certificada')?.value === 'Animal')
+{
+  <ng-titulo titulo="Datos Generales de la Mercancía Animal"></ng-titulo>
+}
+@if(datosdelForm.get('certificada')?.value === 'Producto')
+{
   <ng-titulo titulo="Datos Generales de la Mercancía Producto o Subproducto de Origen Animal"></ng-titulo>
+
+}
+@if(datosdelForm.get('certificada')?.value === 'QFBA')
+{
+  <ng-titulo titulo="Datos Generales de la Mercancía QFBA"></ng-titulo>
+
+}
 
   <ng-table [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false" [commonTableHeader]="tableColumns"
     [commonTableBody]="mercanciasData"></ng-table>
   <div class="text-end">
-    <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura? true : false" data-bs-toggle="modal"
-        data-bs-target="#modalAgregarMercancias" (click)="openModificarMercancias()">
+    <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura? true : false"  >
       Carga por archivo
     </button>
-    <button class="btn btn-primary" type="button" [disabled]="esFormularioSoloLectura? true : false">
+    <button class="btn btn-primary" type="button" [disabled]="esFormularioSoloLectura? true : false" (click)="openModificarMercancias()" data-bs-toggle="modal"
+        data-bs-target="#modalAgregarMercancias">
       Agregar
     </button>
   </div>
   <form [formGroup]="datosdelForm">
-    <div class="col-md-12" style="padding: 0px; padding-top: 10px;">
+    <div class="col-md-12" style="padding: 0px; padding-top: 10px;" *ngIf="datosdelForm.get('certificada')?.value === 'Producto' || datosdelForm.get('certificada')?.value === 'QFBA'">
    <ng-alert [CONTENIDO]="TEXTO.mensaje" [CUSTOMECLASS]="infoAlert"></ng-alert>
     </div>
-   <div class="row">
+   <div class="row" *ngIf="datosdelForm.get('certificada')?.value === 'Producto' || datosdelForm.get('certificada')?.value === 'QFBA'">
     <div class="col-md-4">
       <label class="form-label" for="numeroTotal">Número total de bultos:</label>
-      <input type="text" class="form-control" id="numeroTotal" formControlName="numeroTotal">
+      <input type="text" class="form-control" id="numeroTotal" formControlName="numeroTotal" [disabled]="esFormularioSoloLectura">
+   </div>
+    <div class="col-md-4" *ngIf="datosdelForm.get('certificada')?.value === 'QFBA'">
+      <app-catalogo-select
+                [catalogo]="paisOrigen"
+                [tooltipQuestionCircle]="false"
+                [label]="'Uso'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
+                formControlName="uso"
+                (change)="setValoresStore(datosdelForm,'paisOrigen', 'setpaisOrigen')"
+              ></app-catalogo-select>
    </div>
    <div class="col-md-4">
       <app-catalogo-select
@@ -76,11 +140,11 @@
    </div>
   </div>
 
-  <div class="row">
+  <div class="row" *ngIf="datosdelForm.get('certificada')?.value === 'Producto' || datosdelForm.get('certificada')?.value === 'QFBA'">
     <div class="col-md-4">
       <label class="form-label" for="CantidadTotal">Cantidad total:<i
               class="bi bi-question-circle-fill"></i></label>
-      <input type="text" class="form-control" id="CantidadTotal"  formControlName="cantidadTotal">
+      <input type="text" class="form-control" id="CantidadTotal"  formControlName="cantidadTotal" [disabled]="esFormularioSoloLectura">
    </div>
    <div class="col-md-4">
       <app-catalogo-select
@@ -95,9 +159,9 @@
               ></app-catalogo-select>
    </div>
   </div>
-    <div class="mb-5">
+    <div class="mb-5" *ngIf="datosdelForm.get('certificada')?.value === 'Animal' || datosdelForm.get('certificada')?.value === 'Producto' || datosdelForm.get('certificada')?.value === 'QFBA'">
       <label for="message" class="form-label">Tratamiento:</label>
-      <textarea class="form-control" rows="5" formControlName="datoscertificado"
+      <textarea class="form-control" rows="5" formControlName="datoscertificado" [disabled]="esFormularioSoloLectura"
         (change)="setValoresStore(datosdelForm,'datoscertificado','setdatoscertificado')"></textarea>
     </div>
     <div class="container text-end mt-5">
@@ -116,7 +180,8 @@
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <app-datos-generales-animales></app-datos-generales-animales>
+      <app-datos-generales-animales (cancelar)="cerrarModal()" data-bs-toggle="modal"
+        data-bs-target="#modalAgregarMercancias"></app-datos-generales-animales>
     </div>
   </div>
 </div>

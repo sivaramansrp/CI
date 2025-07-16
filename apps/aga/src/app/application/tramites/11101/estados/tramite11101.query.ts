@@ -1,7 +1,6 @@
+import { Tramite11101Store,Tramitenacionales11101State } from './tramite11101.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Tramite11101Store } from './tramite11101.store';
-import { Tramitenacionales11101State } from './tramite11101.store';
 
 /**
  * Servicio de consulta para gestionar el estado del trámite 11101.

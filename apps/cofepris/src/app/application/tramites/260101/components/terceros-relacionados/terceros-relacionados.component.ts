@@ -1,9 +1,10 @@
+import { AlertComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { Destinatario } from '../../models/destinatario.model';
 import { ElementRef } from '@angular/core';
 import { Fabricante } from '../../models/fabricante.model';
 import { Modal } from 'bootstrap';
+import { ModificarDestinatarioComponent } from '../modificar-destinatario/modificar-destinatario.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Solicitud260101Query } from '../../estados/tramites260101.query';
@@ -25,6 +26,13 @@ import { takeUntil } from 'rxjs';
   selector: 'app-terceros-relacionados',
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
+  standalone:true,
+  imports:[
+      TablaDinamicaComponent,
+      AlertComponent,
+      TituloComponent,
+      ModificarDestinatarioComponent
+    ]
 })
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   /**

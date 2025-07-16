@@ -5,7 +5,7 @@
       <div class="col-md-4 form-group">
         <app-catalogo-select
           [catalogo]="entidadFederativaLista"
-          [label]="'Entidad federativa'"
+          [label]="'Estado'"
           [required]="true"
           (selectionChange)="fetchEntidadFederativa($event);setValoresStore(frmRepresentacion,'entidad', 'setEntidad')"
           [placeholder]="'Seleccione un valor'"

@@ -16,7 +16,6 @@ export interface Solicitante {
   /** Correo electrónico del solicitante */
   correo: string;
 }
-
 /**
  * @interface ListaPasosWizard
  * @description Modelo para controlar los pasos del wizard en el proceso de solicitud de elegibilidad de textiles.

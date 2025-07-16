@@ -1,283 +1,212 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ModificarDestinatarioComponent } from './modificar-destinatario.component';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
+// Add missing imports for providers used in the test
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
-import { Solicitud260101Store } from '../../estados/tramites260101.store';
 import { Solicitud260101Query } from '../../estados/tramites260101.query';
+import { Solicitud260101Store } from '../../estados/tramites260101.store';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
+// Mocks
+const mockSolicitudDatosService = {
+  obtenerDestinatarioCatalogos: jest.fn().mockReturnValue(of({
+    paisCatalogo: { id: 1 },
+    estadoCatalogo: { id: 2 },
+    municipioCatalogo: { id: 3 },
+    localidadCatalogo: { id: 4 },
+    codigoCatalogo: { id: 5 },
+    coloniaCatalogo: { id: 6 }
+  })),
+  obtenerDestinatarioRadio: jest.fn().mockReturnValue(of([
+    { label: 'Moral', value: 'moral' },
+    { label: 'Física', value: 'fisica' }
+  ])),
+  obtenerDestinatarioImitar: jest.fn().mockReturnValue(of({ domicilioPais: 1 }))
+};
+
+const mockSolicitud260101Store = {
+  setDomicilioPais: jest.fn(),
+  setTipoPersona: jest.fn(),
+  setModificarRFC: jest.fn(),
+  setDenominacion: jest.fn(),
+  setDomicilioEstado: jest.fn(),
+  setDomicilioMunicipio: jest.fn(),
+  setDomicilioLocalidad: jest.fn(),
+  setDomicilioCodigo: jest.fn(),
+  setDomicilioColonia: jest.fn(),
+  setDomicilioCalle: jest.fn(),
+  setDomicilioNumeroExterior: jest.fn(),
+  setDomicilioNumeroInterior: jest.fn(),
+  setDomicilioLada: jest.fn(),
+  setDomicilioTelefono: jest.fn(),
+  setDomicilioCorreoElectronico: jest.fn(),
+  addDestinatarioDato: jest.fn()
+};
+
+const mockSolicitud260101Query = {
+  seleccionarSolicitud$: of({
+    tipoPersona: 'moral',
+    modificarRFC: 'RFC123456789',
+    denominacion: 'Empresa S.A.',
+    domicilioPais: 1,
+    domicilioEstado: 2,
+    domicilioMunicipio: 3,
+    domicilioLocalidad: 4,
+    domicilioCodigo: '12345',
+    domicilioColonia: 'Centro',
+    domiciliCalle: 'Calle 1',
+    domiciliNumeroExterior: '10',
+    domiciliNumeroInterior: '2',
+    domiciliLada: '55',
+    domiciliTelefono: '1234567890',
+    domiciliCorreoElectronioco: 'test@email.com'
+  })
+};
+
+const mockConsultaioQuery = {
+  selectConsultaioState$: of({ readonly: false })
+};
 
 describe('ModificarDestinatarioComponent', () => {
   let component: ModificarDestinatarioComponent;
   let fixture: ComponentFixture<ModificarDestinatarioComponent>;
-  let solicitudDatosService: jest.Mocked<SolicitudDatosService>;
-  let solicitud260101Store: jest.Mocked<Solicitud260101Store>;
-  let solicitud260101Query: jest.Mocked<Solicitud260101Query>;
 
   beforeEach(async () => {
-    const solicitudDatosServiceMock = {
-      obtenerDestinatarioCatalogos: jest.fn(),
-      obtenerDestinatarioRadio: jest.fn(),
-      obtenerDestinatarioImitar: jest.fn(),
-    };
-
-    const solicitud260101StoreMock = {
-      setDomicilioPais: jest.fn(),
-      setTipoPersona: jest.fn(),
-      setModificarRFC: jest.fn(),
-      setDenominacion: jest.fn(),
-      setDomicilioEstado: jest.fn(),
-      setDomicilioMunicipio: jest.fn(),
-      setDomicilioLocalidad: jest.fn(),
-      setDomicilioCodigo: jest.fn(),
-      setDomicilioColonia: jest.fn(),
-      setDomicilioCalle: jest.fn(),
-      setDomicilioNumeroExterior: jest.fn(),
-      setDomicilioNumeroInterior: jest.fn(),
-      setDomicilioLada: jest.fn(),
-      setDomicilioTelefono: jest.fn(),
-      setDomicilioCorreoElectronico: jest.fn(),
-      addDestinatarioDato: jest.fn(),
-    };
-
-    const solicitud260101QueryMock = {
-      seleccionarSolicitud$: jest.fn().mockReturnValue(of({})),
-    };
-
     await TestBed.configureTestingModule({
-      declarations: [ModificarDestinatarioComponent],
-      imports: [ReactiveFormsModule],
-      providers: [
-        { provide: SolicitudDatosService, useValue: solicitudDatosServiceMock },
-        { provide: Solicitud260101Store, useValue: solicitud260101StoreMock },
-        { provide: Solicitud260101Query, useValue: solicitud260101QueryMock },
+      imports: [ReactiveFormsModule,
+          ModificarDestinatarioComponent,
+              CommonModule,
+              ReactiveFormsModule,
+              CatalogoSelectComponent,
+              FormsModule,
+              InputRadioComponent,
+              TituloComponent,
+              HttpClientTestingModule
       ],
-    }).compileComponents();
+      declarations: [],
+      providers: [
+        FormBuilder,
+        { provide: SolicitudDatosService, useValue: mockSolicitudDatosService },
+        { provide: Solicitud260101Store, useValue: mockSolicitud260101Store },
+        { provide: Solicitud260101Query, useValue: mockSolicitud260101Query },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
+      ]
+    })
+      .overrideComponent(ModificarDestinatarioComponent, {
+        set: {
+          providers: [
+            { provide: FormBuilder, useValue: new FormBuilder() },
+            { provide: SolicitudDatosService, useValue: mockSolicitudDatosService },
+            { provide: Solicitud260101Store, useValue: mockSolicitud260101Store },
+            { provide: Solicitud260101Query, useValue: mockSolicitud260101Query },
+            { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
+          ]
+        }
+      })
+      .compileComponents();
 
-    solicitudDatosService = TestBed.inject(
-      SolicitudDatosService
-    ) as jest.Mocked<SolicitudDatosService>;
-    solicitud260101Store = TestBed.inject(
-      Solicitud260101Store
-    ) as jest.Mocked<Solicitud260101Store>;
-    solicitud260101Query = TestBed.inject(
-      Solicitud260101Query
-    ) as jest.Mocked<Solicitud260101Query>;
-  });
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(ModificarDestinatarioComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.modificarDestinatarioForm).toBeDefined();
+  it('should initialize form with values from state', () => {
+    component.inicializarFormulario();
+    expect(component.modificarDestinatarioForm.value.denominacion).toBe('Empresa S.A.');
+    expect(component.modificarDestinatarioForm.value.modificarRFC).toBe('RFC123456789');
   });
 
-  it('should call obtenerDestinatarioCatalogos on init', () => {
-    solicitudDatosService.obtenerDestinatarioCatalogos.mockReturnValue(
-      of({
-        paisCatalogo: {
-          labelNombre: 'País',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: [
-            {
-              id: 1,
-              descripcion: 'Test 1',
-            },
-            {
-              id: 1,
-              descripcion: 'Test 2',
-            },
-          ],
-        },
-        estadoCatalogo: {
-          labelNombre: 'Estado/localidad',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: [
-            {
-              id: 1,
-              descripcion: 'Test 1',
-            },
-            {
-              id: 1,
-              descripcion: 'Test 2',
-            },
-          ],
-        },
-        municipioCatalogo: {
-          labelNombre: 'Municipio/alcaldía',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: [
-            {
-              id: 1,
-              descripcion: 'Test 1',
-            },
-            {
-              id: 1,
-              descripcion: 'Test 2',
-            },
-          ],
-        },
-        localidadCatalogo: {
-          labelNombre: 'Localidad',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: [
-            {
-              id: 1,
-              descripcion: 'Test 1',
-            },
-            {
-              id: 1,
-              descripcion: 'Test 2',
-            },
-          ],
-        },
-        codigoCatalogo: {
-          labelNombre: 'Código postal o equivalente',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: [
-            {
-              id: 1,
-              descripcion: 'Test 1',
-            },
-            {
-              id: 1,
-              descripcion: 'Test 2',
-            },
-          ],
-        },
-        coloniaCatalogo: {
-          labelNombre: 'Colonia',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: [
-            {
-              id: 1,
-              descripcion: 'Test 1',
-            },
-            {
-              id: 1,
-              descripcion: 'Test 2',
-            },
-          ],
-        },
-      })
-    );
-    component.obtenerDestinatarioCatalogos();
-    expect(
-      solicitudDatosService.obtenerDestinatarioCatalogos
-    ).toHaveBeenCalled();
-  });
-
-  it('should call obtenerDestinatarioRadio on init', () => {
-    solicitudDatosService.obtenerDestinatarioRadio.mockReturnValue(of([]));
-    component.obtenerDestinatarioRadio();
-    expect(solicitudDatosService.obtenerDestinatarioRadio).toHaveBeenCalled();
-  });
-
-  it('should call obtenerDestinatarioImitar on init', () => {
-    solicitudDatosService.obtenerDestinatarioImitar.mockReturnValue(
-      of({
-        tipoPersona: 'Física',
-        modificarRFC: '',
-        denominacion: 'John Doe Enterprises',
-        domicilioPais: 1,
-        domicilioEstado: 'Jalisco',
-        domicilioMunicipio: 'Guadalajara',
-        domicilioLocalidad: 'Zapopan',
-        domicilioCodigo: '44100',
-        domicilioColonia: 'Centro',
-        domiciliCalle: 'Avenida Juárez',
-        domiciliNumeroExterior: '123',
-        domiciliNumeroInterior: '4B',
-        domiciliLada: '+52',
-        domiciliTelefono: '3312345678',
-        domiciliCorreoElectronioco: 'johndoe@example.com',
-      })
-    );
-    component.obtenerDestinatarioImitar();
-    expect(solicitudDatosService.obtenerDestinatarioImitar).toHaveBeenCalled();
-  });
-
-  it('should update store on setTipoPersona', () => {
+  it('should call setTipoPersona on setTipoPersona', () => {
     component.setTipoPersona('fisica');
-    expect(solicitud260101Store.setTipoPersona).toHaveBeenCalledWith('fisica');
+    expect(mockSolicitud260101Store.setTipoPersona).toHaveBeenCalledWith('fisica');
   });
 
-  it('should update store on setModificarRFC', () => {
-    const evento = { target: { VALOR: 'RFC123456' } } as unknown as Event;
-    component.setModificarRFC(evento);
-    expect(solicitud260101Store.setModificarRFC).toHaveBeenCalledWith('RFC123456');
+  it('should call setModificarRFC on setModificarRFC', () => {
+    const event = { target: { value: 'RFC987654321' } } as any;
+    component.setModificarRFC(event);
+    expect(mockSolicitud260101Store.setModificarRFC).toHaveBeenCalledWith('RFC987654321');
   });
-  
 
-  it('should update store on setDenominacion', () => {
-    const evento = { target: { VALOR: 'Denominacion' } } as unknown as Event;
-    component.setDenominacion(evento);
-    expect(solicitud260101Store.setDenominacion).toHaveBeenCalledWith('Denominacion');
+  it('should call setDenominacion on setDenominacion', () => {
+    const event = { target: { value: 'Nueva Empresa' } } as any;
+    component.setDenominacion(event);
+    expect(mockSolicitud260101Store.setDenominacion).toHaveBeenCalledWith('Nueva Empresa');
   });
-  
 
-  it('should reset form on limpiarDestinatario', () => {
+  it('should call setDomicilioPais on seleccionaPais', () => {
+    component.seleccionaPais({ id: 99 } as any);
+    expect(mockSolicitud260101Store.setDomicilioPais).toHaveBeenCalledWith(99);
+  });
+
+  it('should call setDomicilioEstado on seleccionaEstado', () => {
+    component.seleccionaEstado({ id: 88 } as any);
+    expect(mockSolicitud260101Store.setDomicilioEstado).toHaveBeenCalledWith(88);
+  });
+
+  it('should call setDomicilioMunicipio on seleccionaMunicipio', () => {
+    component.seleccionaMunicipio({ id: 77 } as any);
+    expect(mockSolicitud260101Store.setDomicilioMunicipio).toHaveBeenCalledWith(77);
+  });
+
+  it('should call setDomicilioLocalidad on seleccionaLocalidad', () => {
+    component.seleccionaLocalidad({ id: 66 } as any);
+    expect(mockSolicitud260101Store.setDomicilioLocalidad).toHaveBeenCalledWith(66);
+  });
+
+  it('should call setDomicilioCodigo on seleccionaCodigo', () => {
+    component.seleccionaCodigo({ id: 55 } as any);
+    expect(mockSolicitud260101Store.setDomicilioCodigo).toHaveBeenCalledWith(55);
+  });
+
+  it('should call setDomicilioColonia on seleccionaColonia', () => {
+    component.seleccionaColonia({ id: 44 } as any);
+    expect(mockSolicitud260101Store.setDomicilioColonia).toHaveBeenCalledWith(44);
+  });
+
+  it('should reset the form on limpiarDestinatario', () => {
+    component.inicializarFormulario();
+    component.modificarDestinatarioForm.patchValue({ denominacion: 'Test' });
     component.limpiarDestinatario();
-    expect(component.modificarDestinatarioForm.pristine).toBe(true);
+    expect(component.modificarDestinatarioForm.value.denominacion).toBeNull();
   });
 
-  it('should not save if form is invalid', () => {
-    component.modificarDestinatarioForm.setErrors({ invalid: true });
+  it('should not call addDestinatarioDato if form is invalid', () => {
+    component.inicializarFormulario();
+    component.modificarDestinatarioForm.get('denominacion')?.setValue('');
     component.guardarDestinatario();
-    expect(solicitud260101Store.addDestinatarioDato).not.toHaveBeenCalled();
+    expect(mockSolicitud260101Store.addDestinatarioDato).not.toHaveBeenCalled();
   });
 
-  it('should save if form is valid', () => {
-    component.modificarDestinatarioForm.setValue({
-      tipoPersona: 'fisica',
-      modificarRFC: 'RFC123456',
-      denominacion: 'Denominacion',
-      domicilioPais: 'MX',
-      domicilioEstado: 'Estado',
-      domicilioMunicipio: 'Municipio',
-      domicilioLocalidad: 'Localidad',
-      domicilioCodigo: '12345',
-      domicilioColonia: 'Colonia',
-      domiciliCalle: 'Calle',
-      domiciliNumeroExterior: '123',
-      domiciliNumeroInterior: '456',
-      domiciliLada: '55',
-      domiciliTelefono: '1234567890',
-      domiciliCorreoElectronioco: 'test@example.com',
-    });
+  it('should call addDestinatarioDato if form is valid', () => {
+    component.inicializarFormulario();
+    component.modificarDestinatarioForm.get('denominacion')?.setValue('Empresa S.A.');
+    component.modificarDestinatarioForm.get('modificarRFC')?.setValue('RFC123456789');
     component.guardarDestinatario();
-    expect(solicitud260101Store.addDestinatarioDato).toHaveBeenCalled();
+    expect(mockSolicitud260101Store.addDestinatarioDato).toHaveBeenCalled();
   });
 
-  it('should call obtenerDestinatarioRadio and update tipoPersonaRadioOptions', () => {
-    const mockResponse = [
-      { label: 'Persona Física', value: 'fisica' },
-      { label: 'Persona Moral', value: 'moral' },
-    ];
-    solicitudDatosService.obtenerDestinatarioRadio.mockReturnValue(of(mockResponse));
-    component.obtenerDestinatarioRadio();
-    expect(solicitudDatosService.obtenerDestinatarioRadio).toHaveBeenCalled();
-    expect(component.tipoPersonaRadioOptions).toEqual(mockResponse);
+  it('should disable form if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.modificarDestinatarioForm.disabled).toBe(true);
+  });
+
+  it('should enable form if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.modificarDestinatarioForm.enabled).toBe(true);
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    const spy = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 });

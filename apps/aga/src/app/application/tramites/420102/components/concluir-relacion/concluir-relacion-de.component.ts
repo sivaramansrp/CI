@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { DOMICILIO_TABLA_COLUMNAS, FECHA_INGRESO } from '../../constantes/concluir-relacion.enum';
+import { DOMICILIO_TABLA_COLUMNAS, FECHA_FINAL, FECHA_INGRESO } from '../../constantes/concluir-relacion.enum';
 import { FormBuilder, FormGroup, } from '@angular/forms';
 import { InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -58,6 +58,18 @@ export class ConcluirRelacionComponent implements OnInit, OnDestroy {
    * @default FECHA_INGRESO
    */
   public fechaInicioInput: InputFecha = FECHA_INGRESO;
+
+
+  /**
+   * @property {InputFecha} fechaFinalInput
+   * @description Configuración específica para el componente de entrada de fecha final.
+   * Utiliza la constante FECHA_FINAL para establecer las propiedades del campo de fecha,
+   * incluyendo formato, validaciones y etiquetas de interfaz de usuario.
+   * @public
+   * @type {InputFecha}
+   * @default FECHA_FINAL
+   */
+  public fechaFinalInput: InputFecha = FECHA_FINAL;
 
   /**
    * @property {any[]} encabezadoDeTabla

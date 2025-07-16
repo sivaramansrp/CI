@@ -1,18 +1,24 @@
+import { ActivatedRoute, Router } from '@angular/router';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-
+import { DatosDeFila, DatosForma, FilaSolicitud, RadioOpcion, SolicitudFilaTabla } from '../../models/220202/fitosanitario.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
+import { Subject,map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
-
-import { DatosDeFila, DatosForma, FilaSolicitud, SolicitudFilaTabla } from '../../models/220202/fitosanitario.model';
-
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
 
-import { Subject,map, takeUntil } from 'rxjs';
-
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-
+  /**
+   * @description Constructor del componente.
+   * @param fb - FormBuilder para crear formularios reactivos.
+   * @param agriculturaApiService - Servicio para realizar peticiones HTTP relacionadas con la agricultura.
+   * @param consultaioQuery - Query para obtener el estado de la consulta.
+   * @param router - Router para navegar entre rutas.
+   * @param activatedROute - Ruta activada para obtener parámetros de la ruta actual.
+   * @param fitosanitarioStore - Store para manejar el estado del fitosanitario.
+   */
 @Component({
   selector: 'app-datos-de-la-solicitud',
   templateUrl: './datos-de-la-solicitud.component.html',
@@ -24,7 +30,8 @@ import { CommonModule } from '@angular/common';
     AlertComponent,
     TablaDinamicaComponent,
     CatalogoSelectComponent,
-    CommonModule
+    CommonModule,
+    InputRadioComponent
   ],
 })
 /**
@@ -189,7 +196,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
     { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
     { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
-    { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
     { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8 },
     { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
     { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 10 },
@@ -241,6 +247,42 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public esFormularioSoloLectura: boolean = false;
 
   /**
+   * @description Fila seleccionada en la tabla.
+   * @type {FilaSolicitud[]}
+   */
+  selectedRow: FilaSolicitud[] = [];
+
+  /**
+   * Opciones para el botón de radio.
+   * @property {RadioOpcion[]} opcionDeBotonDeRadio
+   */
+  opcionDeBotonDeRadio: RadioOpcion[] = [
+    {
+      "label": "Animales Vivos",
+      "value": "yes"
+    },
+    {
+      "label": "Productos Subproductos",
+      "value": "no"
+    },
+  ];
+
+  /**
+   * @description Indica si se debe mostrar la notificación de verificación.
+   * Esta propiedad se utiliza para controlar la visibilidad de una notificación en la interfaz de usuario.
+   * 
+   * @type {boolean}
+   */
+  public notificationCheck: boolean = false;
+
+  /**
+   * @description Indica si se debe mostrar la tabla de solicitudes.
+   * Esta propiedad se utiliza para controlar la visibilidad de la tabla de solicitudes en la interfaz de usuario.
+   * @type {boolean}
+   */
+  public mostrarSolicitudTabla: boolean = true;
+
+  /**
    * @constructor
    * @param {FormBuilder} fb - Servicio FormBuilder para crear y gestionar formularios reactivos.
    * @param {AgriculturaApiService} agriculturaApiService - Servicio HttpClient para realizar peticiones HTTP.
@@ -249,6 +291,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     public agriculturaApiService: AgriculturaApiService,
     public consultaioQuery: ConsultaioQuery,
+    public router: Router,
+    public activatedROute: ActivatedRoute,
+    public fitosanitarioStore: FitosanitarioStore
   ) {
     this.agriculturaApiService.getAllDatosForma()
     .pipe(takeUntil(this.destroyNotifier$))
@@ -263,6 +308,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
         this.esFormularioSoloLectura = seccionState.readonly;
+        this.mostrarSolicitudTabla = !seccionState.readonly;
         this.inicializarEstadoFormulario();
       })
     )
@@ -326,6 +372,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   createFromFields():void {
     this.forma = this.fb.group(this.inicializarCamposFormulario());
+    if(this.forma){
+      this.notificationCheck=true;
+    }
   }
 
   /**
@@ -335,7 +384,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   inicializarCamposFormulario(): Record<string, unknown> {
     return {
       ...this.crearCamposRequeridos(),
-      ...this.crearCamposOpcionales(),
+
     };
   }
 
@@ -347,31 +396,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   crearCamposRequeridos(): Record<string, unknown> {
     const FORMULARIO = this.formulariodataStore;
     return {
+      tipoMercancia: [{value: 'yes', disabled: this.esFormularioSoloLectura }, Validators.required],
       aduanaDeIngreso: [{ value: FORMULARIO.aduanaDeIngreso || '', disabled: this.esFormularioSoloLectura }, Validators.required],
       oficinaDeInspeccion: [{ value: FORMULARIO.oficinaDeInspeccion || '', disabled: this.esFormularioSoloLectura }, Validators.required],
       puntoDeInspeccion: [{ value: FORMULARIO.puntoDeInspeccion || '', disabled: this.esFormularioSoloLectura }, Validators.required],
       regimen: [{ value: FORMULARIO.regimen || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-      numeroDeGuia: [{ value: FORMULARIO.numeroDeGuia || '', disabled: this.esFormularioSoloLectura }],
-      numeroDeCarro: [{ value: FORMULARIO.numeroDeCarro || '', disabled: this.esFormularioSoloLectura }],
+      numeroDeGuia: [{ value: FORMULARIO.numeroDeGuia || '', disabled: this.esFormularioSoloLectura }, [Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
+      numeroDeCarro: [{ value: FORMULARIO.numeroDeCarro || '', disabled: this.esFormularioSoloLectura }, [Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
     };
   }
   
-  /**
-   * Método para crear campos opcionales del formulario.
-   * @param FORMULARIO Datos de formulariodataStore.
-   * @returns Objeto con los campos opcionales.
-   */
-   crearCamposOpcionales(): Record<string, unknown> {
-     const FORMULARIO = this.formulariodataStore;
-     return {
-       numeroDeGuia: [{ value: FORMULARIO.numeroDeGuia || '', disabled: this.esFormularioSoloLectura }],
-       requisito: [{ value: FORMULARIO.requisito || '', disabled: this.esFormularioSoloLectura }],
-       numeroCertificadoInternacional: [{ value: FORMULARIO.numeroCertificadoInternacional || '', disabled: this.esFormularioSoloLectura }],
-       descripcionFraccion: [{ value: FORMULARIO.descripcionFraccion || '', disabled: this.esFormularioSoloLectura }],
-       descripcionNico: [{ value: FORMULARIO.descripcionNico || '', disabled: this.esFormularioSoloLectura }],
-       descripcion: [{ value: FORMULARIO.descripcion || '', disabled: this.esFormularioSoloLectura }],
-     };
-   }
 
   /**
    * @description Obtiene todos los datos para las listas de opciones (selects) del formulario.
@@ -538,6 +572,92 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @description Navega a la página de agregar mercancía.
+   * Este método redirige al usuario a la ruta relativa '../animales-vivo' para agregar una nueva mercancía.
+   * @method agregarMercancia
+   * @returns {void}
+   */
+  agregarMercancia(): void {
+    this.seleccionTabla([]);
+    let URL = '';
+    if (this.forma.get('tipoMercancia')?.value === 'yes') {
+      URL = '../animales-vivo';
+    } else if (this.forma.get('tipoMercancia')?.value === 'no') {
+      URL = '../sub-productos'
+    }
+    if (URL === '') {
+      return;
+    }
+    this.router.navigate([URL], {
+      relativeTo: this.activatedROute,
+    });
+  }
+
+  /**
+   * @description Selecciona una fila de la tabla de solicitudes y actualiza el estado del store.
+   * Este método se llama cuando se selecciona una fila en la tabla de solicitudes.
+   * Actualiza el estado del store con los datos de la fila seleccionada.
+   * @method seleccionTabla
+   * @param {FilaSolicitud} event - Datos de la fila seleccionada.
+   */
+  seleccionTabla(event: FilaSolicitud[]): void {
+    this.fitosanitarioStore.update(
+      (state) => ({
+        ...state,
+        selectedDatos: event
+      })
+    )
+  }
+
+  /**
+   * @description Navega a la página de modificar mercancía.
+   * Este método redirige al usuario a la ruta relativa '../animales-vivo' para modificar una mercancía existente.
+   * @method modificarMercancia
+   * @returns {void}
+   */
+  modificarMercancia(): void {
+    this.router.navigate(['../animales-vivo'], {
+      relativeTo: this.activatedROute,
+    });
+  }
+  /**
+   * Maneja la selección del botón de radio y actualiza el store.
+   * @method radioBotonSeleccionado
+   */
+  radioBotonSeleccionado(): void {
+    const VALOR = this.forma.value.tipoMercancia;
+    if (VALOR !== '' && VALOR !== null && VALOR !== undefined) {
+      this.notificationCheck = true;
+    } else {
+      this.notificationCheck = false;
+    }
+    this.setValoresStore();
+  }
+
+  /**
+   * @description Método que se ejecuta cuando el componente es destruido.
+   * Utiliza un Subject para notificar a las suscripciones que deben ser destruidas, evitando fugas de memoria.
+   * @method ngOnDestroy
+   * @returns {void}
+   */
+  eliminarMercancia(): void {
+    const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
+    if (VALOR && VALOR.length === 0) {
+      return;
+    }
+    const FILTERED_VALOR = VALOR.filter(
+      (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
+    );
+    this.fitosanitarioStore.update(
+      (state) => ({
+      ...state,
+      tablaDatos: FILTERED_VALOR
+      })
+    );
+
+  }
+  
   /**
    * @description Destruye la suscripción cuando el componente es destruido.
    * @method ngOnDestroy

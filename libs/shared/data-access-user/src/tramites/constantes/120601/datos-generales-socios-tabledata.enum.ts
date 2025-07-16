@@ -4,6 +4,7 @@ interface Socios {
   nombre: string;
   apellidoPaterno: string;
   apellidoM: string;
+  correo: string;
 }
 
 interface Extranjeros {
@@ -12,8 +13,9 @@ interface Extranjeros {
   nombre: string;
   apellidoPaterno: string;
   pais: string;
-  cp: string;
+  codigoPostal: string;
   estado: string;
+  correo: string;
 }
 
 interface Representacion {
@@ -51,9 +53,14 @@ export const DATOS_GENERALES_SOCIOS = [
     orden: 4,
   },
   {
-    encabezado: 'Apellido m',
+    encabezado: 'Apellido materno',
     clave: (ele: Socios): string => ele.apellidoM,
     orden: 5,
+  },
+  {
+    encabezado: 'Correo',
+    clave: (ele: Socios): string => ele.correo,
+    orden: 6,
   },
 ];
 
@@ -85,13 +92,18 @@ export const DATOS_GENERALES_EXTRANJEROS = [
   },
   {
     encabezado: 'CP',
-    clave: (ele: Extranjeros): string => ele.cp,
+    clave: (ele: Extranjeros): string => ele.codigoPostal,
     orden: 6,
   },
   {
     encabezado: 'Estado',
     clave: (ele: Extranjeros): string => ele.estado,
     orden: 7,
+  },
+  {
+    encabezado: 'Correo',
+    clave: (ele: Extranjeros): string => ele.correo,
+    orden: 8,
   },
 ];
 

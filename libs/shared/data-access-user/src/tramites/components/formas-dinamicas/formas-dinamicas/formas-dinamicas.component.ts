@@ -1,6 +1,6 @@
 import { AbstractControl, ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { Component, HostListener, Input, OnInit, Output, forwardRef } from '@angular/core';
+import { CommonModule, NgTemplateOutlet } from '@angular/common';
+import { Component, HostListener, Input, OnInit, Output, TemplateRef, forwardRef } from '@angular/core';
 import { ModeloDeFormaDinamica, Validadores } from '../../../../core/models/shared/forms-model';
 import { CatalogoSelectComponent } from '../../catalogo-select/catalogo-select.component';
 import { EventEmitter } from '@angular/core';
@@ -43,7 +43,8 @@ import { ValidadoresDeFormulariosComponent } from '../../validadores-de-formular
     CatalogoSelectComponent,
     InputRadioComponent,
     TituloComponent,
-    InputFechaComponent
+    InputFechaComponent,
+    NgTemplateOutlet
   ],
   templateUrl: './formas-dinamicas.component.html',
   styleUrl: './formas-dinamicas.component.scss',
@@ -119,6 +120,17 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * Por defecto es `false`.
   */
   @Input() soloLectura: boolean = false;
+  /**
+  * @input templateMap
+  * @type {Record<string, TemplateRef<unknown>>}
+  * @memberof FormasDinamicasComponent
+  * @description
+  * Mapa que asocia identificadores de plantilla (`string`) con sus respectivas referencias (`TemplateRef`).
+  * Permite renderizar dinámicamente diferentes bloques de contenido en función del contexto del formulario.
+  * Es un objeto vacío por defecto, pero puede ser poblado con referencias a plantillas personalizadas.
+  */
+  @Input() templateMap: Record<string, TemplateRef<unknown>> = {};
+
   /**
   * compo doc
   * @output emitirEventoDeClic

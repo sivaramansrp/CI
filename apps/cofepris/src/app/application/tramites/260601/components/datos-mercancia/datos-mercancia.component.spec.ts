@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { DatosMercanciaComponent } from './datos-mercancia.component';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
-import { Tramite260601Store } from '../../estados/tramites/tramite260601.store';
-import { Tramite260601Query } from '../../estados/queries/tramite260601.query';
+import { Tramite260601Store } from '../../../../estados/tramites/tramite260601.store';
+import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
 import { of } from 'rxjs';
 
 fdescribe('DatosMercanciaComponent', () => {
