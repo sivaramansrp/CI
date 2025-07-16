@@ -1,51 +1,66 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
-import { PasoTresComponent } from './paso-tres.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { PasoTresComponent } from './paso-tres.component';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
-import { provideToastr } from 'ngx-toastr';
-
-
-@Injectable()
-class MockRouter {
-  navigate = function() {};
-  navigate() {};
-}
-
+import { ToastrService } from 'ngx-toastr';
 
 describe('PasoTresComponent', () => {
-  let fixture;
-  let component;
+  let component: PasoTresComponent;
+  let fixture: ComponentFixture<PasoTresComponent>;
+  let router: Router;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, PasoTresComponent, HttpClientModule ],
-      declarations: [],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+
+  const toastrServiceMock = {
+    success: jest.fn(),
+    error: jest.fn(),
+    warning: jest.fn(),
+    info: jest.fn(),
+  };
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        CommonModule,
+        RouterTestingModule.withRoutes([]),
+        FirmaElectronicaComponent,
+        PasoTresComponent,
+        HttpClientModule,
+      ],
       providers: [
-        { provide: Router, useClass: MockRouter,
-         },
-        provideToastr({
-                 positionClass: 'toast-top-right',
-               })
-      ]
-    }).overrideComponent(PasoTresComponent, {
-
+        { provide: ToastrService, useValue: toastrServiceMock }, 
+      ],
     }).compileComponents();
+
     fixture = TestBed.createComponent(PasoTresComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    fixture.detectChanges();
   });
 
-
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('obtieneFirma', () => {
+    it('should navigate to the acuse page when a valid FIRMA is provided', () => {
+      const navigateSpy = jest.spyOn(router, 'navigate');
+      const mockFirma = 'firma-electronica';
+
+      component.obtieneFirma(mockFirma);
+
+      expect(navigateSpy).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
+    });
+
+    it('should not navigate when FIRMA is empty', () => {
+      const navigateSpy = jest.spyOn(router, 'navigate');
+      const mockFirma = '';
+
+      component.obtieneFirma(mockFirma);
+
+      expect(navigateSpy).not.toHaveBeenCalled();
+    });
+  });
 });

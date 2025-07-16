@@ -70,7 +70,7 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
   crearFormRequerimiento(): void {
     this.formRequerimiento = this.fb.group({
       tipoRequerimiento: [this.solicitudRequerimientosState?.idTipoRequerimiento, [Validators.required]],
-      justificacionRequerimiento: [this.solicitudRequerimientosState?.justificacionRequerimiento, [Validators.required]]
+      justificacionRequerimiento: [this.solicitudRequerimientosState?.justificacionRequerimiento, [Validators.required, Validators.maxLength(10000)]]
     });
   }
   /**

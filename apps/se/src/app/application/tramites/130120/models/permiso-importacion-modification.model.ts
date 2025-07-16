@@ -266,7 +266,7 @@ export interface DatosExporta {
  * @property {string} persona_tipo - Tipo de persona.
  * @property {string} personales_nombre - Nombre del productor.
  * @property {string} primer_apellido - Primer apellido del productor.
- * @property {string} seguna_apellido - Segundo apellido del productor.
+ * @property {string} segundo_apellido - Segundo apellido del productor.
  * @property {string} denominación_razón_social - Denominación o razón social.
  * @property {string} domicilio - Domicilio del productor.
  */
@@ -287,10 +287,10 @@ export interface DatosProductor {
    */
   primer_apellido: string;
   /**
-   * @property {string} seguna_apellido
+   * @property {string} segundo_apellido
    * @description Segundo apellido del productor.
    */
-  seguna_apellido: string;
+  segundo_apellido: string;
   /**
    * @property {string} denominación_razón_social
    * @description Denominación o razón social del productor.
@@ -311,7 +311,7 @@ export interface DatosProductor {
  * @property {string} persona_tipo - Tipo de persona.
  * @property {string} personales_nombre - Nombre del exportador.
  * @property {string} primer_apellido - Primer apellido del exportador.
- * @property {string} seguna_apellido - Segundo apellido del exportador.
+ * @property {string} segundo_apellido - Segundo apellido del exportador.
  * @property {string} razón_social - Razón social del exportador.
  * @property {string} domicilio - Domicilio del exportador.
  * @property {string} observaciones - Observaciones adicionales.
@@ -333,10 +333,10 @@ export interface DatosExportador {
    */
   primer_apellido: string;
   /**
-   * @property {string} seguna_apellido
+   * @property {string} segundo_apellido
    * @description Segundo apellido del exportador.
    */
-  seguna_apellido: string;
+  segundo_apellido: string;
   /**
    * @property {string} razón_social
    * @description Razón social del exportador.
@@ -407,8 +407,8 @@ export function createDatosGruposState(params: Partial<DatosGrupos> = {}): Datos
       umc: '',
       otro_umc: '',
       cantidad_umc: '',
-      factor_conversión: '',
-      cantidad_umt: '',
+      factor_conversión: '1',
+      cantidad_umt: '0.00',
       valor_factura: '',
       moneda_comercialización: '',
       valor_factura_usd: '',
@@ -431,7 +431,7 @@ export function createDatosGruposState(params: Partial<DatosGrupos> = {}): Datos
       persona_tipo: '',
       personales_nombre: '',
       primer_apellido: '',
-      seguna_apellido: '',
+      segundo_apellido: '',
       denominación_razón_social: '',
       domicilio: '',
     },
@@ -439,7 +439,7 @@ export function createDatosGruposState(params: Partial<DatosGrupos> = {}): Datos
       persona_tipo: '',
       personales_nombre: '',
       primer_apellido: '',
-      seguna_apellido: '',
+      segundo_apellido: '',
       razón_social: '',
       domicilio: '',
       observaciones: '',

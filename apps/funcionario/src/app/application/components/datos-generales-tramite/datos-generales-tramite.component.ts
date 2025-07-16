@@ -83,7 +83,7 @@ export class DatosGeneralesTramiteComponent implements OnInit, OnDestroy {
    * Consulta los datos generales del tramite
    * @returns {void}
    */
-  consultarDatosGeneralesTramite() {
+  consultarDatosGeneralesTramite(): void {
     this.tramiteService.obtenerDatosTramite(this.idTramite)
       .pipe(
         map((data) => {

@@ -1,11 +1,16 @@
 import { AVISO_OPCIONES, CASO_FORTUITO, DESTRUCCION_FECHA, ETIQUETA_DE_ARCHIVO, MENSAJE, TEXTO } from '../../constantes/destruccion-o-donacion';
-import { AlertComponent, InputFechaComponent, InputRadioComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, ConsultaioQuery, ConsultaioState, InputFechaComponent, InputRadioComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AvisoDeMercanciaService } from '../service/aviso-de-mercancia';
+
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { DestruccionState, DestruccionStore } from '../../estados/Tramite32509.store';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DestruccionQuery } from '../../estados/Tramite32509.query';
+
+import { DOCUMENT } from '@angular/common';
+
 
 /**
  * @component
@@ -23,7 +28,7 @@ import { DestruccionQuery } from '../../estados/Tramite32509.query';
   templateUrl: './tipo-de-aviso.component.html',
   styleUrl: './tipo-de-aviso.component.scss',
   standalone: true,
-  imports: [ReactiveFormsModule, AlertComponent, InputFechaComponent, TituloComponent, InputRadioComponent, CommonModule]
+  imports: [ReactiveFormsModule, AlertComponent, InputFechaComponent, TituloComponent, InputRadioComponent, CommonModule,CatalogoSelectComponent]
 })
 export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   /**
@@ -66,8 +71,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * @descripcion
    * Valor seleccionado para el tipo de aviso.
    */
-  avisoValor: string = 'deposito_fiscal';
-
+  avisoValor: string = ''; // Default value to ensure no section is displayed initially
   /**
    * @property {string} TEXTO 
    * @descripcion
@@ -132,12 +136,106 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    */
    @Input() formularioDeshabilitado: boolean = false;
 
-   /**
-   * @descripcion
-   * Indica si el formulario se encuentra en modo solo lectura.
-   * Cuando es verdadero, los controles del formulario estarán deshabilitados.
-   */
+  /** Estado de la consulta que se obtiene del store. */
+  public consultaState!: ConsultaioState;
+
+  /** Consulta de estado para la solicitud */
+  consultaDatos!: ConsultaioState;
+  
+  /** Indica si el formulario es de solo lectura */
   esFormularioSoloLectura: boolean = false;
+
+
+  /**
+ * @propiedad {CatalogosSelect} entidadFederativaData
+ * @descripción
+ * Datos del catálogo para la selección de la entidad federativa.
+ * Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+ */
+public entidadFederativaData: CatalogosSelect = {
+    labelNombre: 'Entidad federativa',
+    required: true,
+    primerOpcion: 'Seleccione una opción',
+    catalogos: [],
+};
+
+/**
+ * @propiedad {CatalogosSelect} alcaldiaMunicipoData
+ * @descripción
+ * Datos del catálogo para la selección de la alcaldía o municipio.
+ * Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+ */
+public alcaldiaMunicipoData: CatalogosSelect = {
+    labelNombre: 'Alcaldía o Municipio',
+    required: true,
+    primerOpcion: 'Seleccione una opción',
+    catalogos: [],
+};
+
+/**
+ * @propiedad {CatalogosSelect} coloniaData
+ * @descripción
+ * Datos del catálogo para la selección de la colonia.
+ * Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+ */
+public coloniaData: CatalogosSelect = {
+    labelNombre: 'Colonia',
+    required: true,
+    primerOpcion: 'Seleccione una opción',
+    catalogos: [],
+};
+
+/**
+ * @propiedad {CatalogosSelect} merccanciaEntidadFederativaData
+ * @descripción
+ * Datos del catálogo para la selección de la entidad federativa relacionada con la mercancía.
+ * Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+ */
+public merccanciaEntidadFederativaData: CatalogosSelect = {
+    labelNombre: 'Entidad federativa',
+    required: true,
+    primerOpcion: 'Seleccione una opción',
+    catalogos: [],
+};
+
+/**
+ * @propiedad {CatalogosSelect} merccanciaAlcaldiaMunicipoData
+ * @descripción
+ * Datos del catálogo para la selección de la alcaldía o municipio relacionado con la mercancía.
+ * Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+ */
+public merccanciaAlcaldiaMunicipoData: CatalogosSelect = {
+    labelNombre: 'Alcaldía o Municipio',
+    required: true,
+    primerOpcion: 'Seleccione una opción',
+    catalogos: [],
+};
+
+/**
+ * @propiedad {CatalogosSelect} merccanciaColoniaData
+ * @descripción
+ * Datos del catálogo para la selección de la colonia relacionada con la mercancía.
+ * Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+ */
+public merccanciaColoniaData: CatalogosSelect = {
+    labelNombre: 'Colonia',
+    required: true,
+    primerOpcion: 'Seleccione una opción',
+    catalogos: [],
+};
+
+/**
+ * @propiedad {CatalogosSelect} tarifaData
+ * @descripción
+ * Datos del catálogo para la selección de la unidad de medida (tarifa).
+ * Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+ */
+public tarifaData: CatalogosSelect = {
+    labelNombre: 'Unidad de medida (Tarifa)',
+    required: true,
+    primerOpcion: 'Seleccione una opción',
+    catalogos: [],
+};
 
   /**
    * @constructor
@@ -152,7 +250,11 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     private store: DestruccionStore,
     private query: DestruccionQuery,
     private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    private avisodemercancia: AvisoDeMercanciaService,
+    private consultaioQuery: ConsultaioQuery,
+    @Inject(DOCUMENT) private document: Document
+
   ) {}
 
   /**
@@ -179,6 +281,13 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     this.initActionBuilder();
 
     this.campoObligatorioChange();
+    this.getEntidadFederativaData();
+    this.getAlcaldiaMunicipo();
+    this.getColonia();
+    this.getMerccanciaEntidadFederativa();
+    this.getMerccanciaAlcaldiaMunicipo();
+    this.getMerccanciaColonia();
+    this.getTarifa();
 
     this.seccionStore.establecerSeccion([false]);
 
@@ -192,6 +301,19 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
         }
       }
       );
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario(); 
+        })
+      )   
+      .subscribe();   
+    
+       this.inicializarEstadoFormulario();
+  
 
     if(this.formularioDeshabilitado){
       this.esFormularioSoloLectura = true;
@@ -260,6 +382,125 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+ * @method getEntidadFederativaData
+ * @descripcion
+ * Este método obtiene los datos del catálogo de entidades federativas desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `entidadFederativaData`.
+ * @returns {void}
+ */
+  getEntidadFederativaData(): void {
+    this.avisodemercancia
+      .getEntidadFederativaData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.entidadFederativaData.catalogos = data as Catalogo[];
+      });
+  }
+
+  /**
+ * @method getAlcaldiaMunicipo
+ * @descripcion
+ * Este método obtiene los datos del catálogo de alcaldías o municipios desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `alcaldiaMunicipoData`.
+ * @returns {void}
+ */
+  getAlcaldiaMunicipo(): void {
+    this.avisodemercancia
+      .getAlcaldiaMunicipo()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.alcaldiaMunicipoData.catalogos = data as Catalogo[];
+      });
+  }
+
+  /**
+ * @method getColonia
+ * @descripcion
+ * Este método obtiene los datos del catálogo de colonias desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `coloniaData`.
+ * @returns {void}
+ */
+  getColonia(): void {
+    this.avisodemercancia
+      .getColonia()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.coloniaData.catalogos = data as Catalogo[];
+      });
+  }
+
+  /**
+ * @method getMerccanciaEntidadFederativa
+ * @descripcion
+ * Este método obtiene los datos del catálogo de entidades federativas relacionadas con la mercancía 
+ * desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `merccanciaEntidadFederativaData`.
+ * @returns {void}
+ */
+  getMerccanciaEntidadFederativa(): void {
+    this.avisodemercancia
+      .getMerccanciaEntidadFederativa()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.merccanciaEntidadFederativaData.catalogos = data as Catalogo[];
+      });
+  }
+  /**
+ * @method getMerccanciaAlcaldiaMunicipo
+ * @descripcion
+ * Este método obtiene los datos del catálogo de alcaldías o municipios relacionados con la mercancía 
+ * desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `merccanciaAlcaldiaMunicipoData`.
+ * @returns {void}
+ */
+  getMerccanciaAlcaldiaMunicipo(): void {
+    this.avisodemercancia
+      .getMerccanciaAlcaldiaMunicipo()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.merccanciaAlcaldiaMunicipoData.catalogos = data as Catalogo[];
+      });
+  }
+
+  /**
+ * @method getMerccanciaColonia
+ * @descripcion
+ * Este método obtiene los datos del catálogo de colonias relacionadas con la mercancía 
+ * desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `merccanciaColoniaData`.
+ * @returns {void}
+ */
+  getMerccanciaColonia(): void {
+    this.avisodemercancia
+      .getMerccanciaColonia()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.merccanciaColoniaData.catalogos = data as Catalogo[];
+      });
+  }
+/**
+ * @method getTarifa
+ * @descripcion
+ * Este método obtiene los datos del catálogo de tarifas desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `tarifaData`.
+ * @returns {void}
+ */
+  getTarifa(): void {
+    this.avisodemercancia
+      .getTarifa()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.tarifaData.catalogos = data as Catalogo[];
+      });
+  }
   /**
    * @method campoObligatorioChange
    * @descripcion

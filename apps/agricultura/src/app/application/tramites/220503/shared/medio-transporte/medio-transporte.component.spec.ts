@@ -1,163 +1,229 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  ReactiveFormsModule,
-  FormGroup,
-  FormControl,
-  Validators,
-} from '@angular/forms';
+import { TestBed } from '@angular/core/testing';
 import { MedioTransporteComponent } from './medio-transporte.component';
+import { ControlContainer, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud220503Query } from '../../estados/tramites220503.query';
 import { Solicitud220503Store } from '../../estados/tramites220503.store';
+import { AlertComponent, CatalogoSelectComponent, CatalogosSelect, ConsultaioQuery, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
-import { SimpleChanges } from '@angular/core';
-import {
-  TituloComponent,
-  CatalogoSelectComponent,
-  TableComponent,
-  InputRadioComponent,
-} from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Component } from '@angular/core';
+
+
+@Component({
+  selector: 'app-test-host',
+  standalone: true,
+  imports: [MedioTransporteComponent, ReactiveFormsModule, CommonModule],
+  template: `<form [formGroup]="form">
+    <app-medio-transporte
+      [claveDeControl]="'testControl'"
+      [hMercanciaTabla]="hMercanciaTabla"
+      [dMercanciaBody]="dMercanciaBody"
+      [mediodetransporte]="mediodetransporte"
+    ></app-medio-transporte>
+  </form>`,
+})
+class TestHostComponent {
+  form: FormGroup;
+  hMercanciaTabla: string[] = [
+    'Fracción arancelaria',
+    'Descripción de la fracción',
+    'Nico',
+    'Descripción Nico',
+    'Cantidad solicitada en UMT',
+    'Unidad de medida de tarifa (UMT)',
+    'Cantidad total UMT',
+    'Saldo pendiente',
+  ];
+
+  dMercanciaBody = [
+    {
+      tbodyData: [
+        '1001.10.10',
+        'Trigo duro',
+        'Sí',
+        'Trigo para molienda',
+        50,
+        'kg',
+        500,
+        100,
+      ],
+    },
+  ];
+
+  mediodetransporte: CatalogosSelect = {
+    labelNombre: 'Medio de transporte',
+    required: true,
+    primerOpcion: 'Selecciona un valor',
+    catalogos: [
+      { id: 1, descripcion: 'transporte 1' },
+      { id: 2, descripcion: 'transporte 2' },
+      { id: 3, descripcion: 'transporte 3' },
+    ],
+  };
+
+  constructor() {
+    this.form = new FormGroup({});
+  }
+}
+
 describe('MedioTransporteComponent', () => {
   let component: MedioTransporteComponent;
-  let fixture: ComponentFixture<MedioTransporteComponent>;
-  let mockQuery: jest.Mocked<Solicitud220503Query>;
-  let mockStore: jest.Mocked<Solicitud220503Store>;
+  let fixture: any;
+  let mockSolicitud220503Query: any;
+  let mockSolicitud220503Store: any;
+  let mockConsultaioQuery: any;
+  let parentFormGroup: FormGroup;
 
   beforeEach(async () => {
-    mockQuery = {
-      selectSolicitud$: jest.fn(),
-    } as unknown as jest.Mocked<Solicitud220503Query>;
-
-    mockStore = {
+    mockSolicitud220503Query = {
+      selectSolicitud$: of({
+        transporteIdMedio: '1',
+        identificacionTransporte: 'ABC123',
+        esSolicitudFerros: 'NO',
+        totalDeGuiasAmparadas: '5',
+      }),
+    };
+    mockSolicitud220503Store = {
       setEsSolicitudFerros: jest.fn(),
       setTransporteIdMedio: jest.fn(),
       setIdentificacionTransporte: jest.fn(),
       setTotalDeGuiasAmparadas: jest.fn(),
-    } as unknown as jest.Mocked<Solicitud220503Store>;
+    };
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
 
     await TestBed.configureTestingModule({
-      imports: [
-        ReactiveFormsModule,
-        MedioTransporteComponent,
-        CommonModule,
-        TituloComponent,
-        CatalogoSelectComponent,
-        TableComponent,
-        InputRadioComponent,
+      imports: [ReactiveFormsModule, MedioTransporteComponent,
+         CommonModule,
+            TituloComponent,
+            CatalogoSelectComponent,
+            TableComponent,
+            InputRadioComponent,
+            AlertComponent,
+            HttpClientTestingModule
       ],
-      declarations: [],
       providers: [
-        { provide: Solicitud220503Query, useValue: mockQuery },
-        { provide: Solicitud220503Store, useValue: mockStore },
+        { provide: Solicitud220503Query, useValue: mockSolicitud220503Query },
+        { provide: Solicitud220503Store, useValue: mockSolicitud220503Store },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+        {
+          provide: ControlContainer,
+          useValue: {
+            control: new FormGroup({}),
+          },
+        },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MedioTransporteComponent);
     component = fixture.componentInstance;
-
-    // Mock parent form group
-    component.parentContainer = {
-      control: new FormGroup({}),
-    } as any;
+    parentFormGroup = (component as any).parentContainer.control as FormGroup;
+    component.claveDeControl = 'testControl';
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    fixture.destroy();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should add a dynamic form group on ngOnInit', () => {
-    component.claveDeControl = 'testControl';
-    component.ngOnInit();
-
-    const formGroup = component.grupoFormularioPadre.get(
-      'testControl'
-    ) as FormGroup;
-    expect(formGroup).toBeTruthy();
-    expect(formGroup.controls['transporteIdMedio']).toBeTruthy();
-    expect(formGroup.controls['identificacionTransporte']).toBeTruthy();
-    expect(formGroup.controls['esSolicitudFerros']).toBeTruthy();
-    expect(formGroup.controls['totalDeGuiasAmparadas']).toBeTruthy();
-  });
-
-  it('should update form group values when selectSolicitud$ emits', () => {
-    component.claveDeControl = 'testControl';
-    component.ngOnInit();
-
-    const formGroup = component.grupoFormularioPadre.get(
-      'testControl'
-    ) as FormGroup;
-    expect(formGroup.value).toEqual({
-      transporteIdMedio: '1',
-      identificacionTransporte: 'ABC123',
-      esSolicitudFerros: 'Yes',
+  it('should add a dynamic FormGroup to parent form on inicializarFormulario', () => {
+    component.solicitud220502State = {
+      transporteIdMedio: '2',
+      identificacionTransporte: 'DEF456',
+      esSolicitudFerros: 'SI',
       totalDeGuiasAmparadas: '10',
-    });
+    } as any;
+    component.inicializarFormulario();
+    expect(parentFormGroup.contains('testControl')).toBe(true);
+    const fg = parentFormGroup.get('testControl') as FormGroup;
+    expect(fg.value.transporteIdMedio).toBe('2');
+    expect(fg.value.identificacionTransporte).toBe('DEF456');
+    expect(fg.value.esSolicitudFerros).toBe('SI');
+    expect(fg.value.totalDeGuiasAmparadas).toBe('10');
   });
 
-  it('should call setEsSolicitudFerros on enCambioDeValor', () => {
-    component.enCambioDeValor('Yes');
-    expect(mockStore.setEsSolicitudFerros).toHaveBeenCalledWith('Yes');
+  it('should patch form values when selectSolicitud$ emits', () => {
+    component.inicializarFormulario();
+    const fg = parentFormGroup.get('testControl') as FormGroup;
+    expect(fg.value.transporteIdMedio).toBe('1');
+    expect(fg.value.identificacionTransporte).toBe('ABC123');
+    expect(fg.value.esSolicitudFerros).toBe('NO');
+    expect(fg.value.totalDeGuiasAmparadas).toBe('5');
   });
 
   it('should update tableData on ngOnChanges', () => {
-    const changes: SimpleChanges = {
-      hMercanciaTabla: {
-        currentValue: ['Header1', 'Header2'],
-        previousValue: null,
-        firstChange: true,
-        isFirstChange: () => true,
-      },
-      dMercanciaBody: {
-        currentValue: [{ id: 1, name: 'Item1' }],
-        previousValue: null,
-        firstChange: true,
-        isFirstChange: () => true,
-      },
+    const changes: any = {
+      hMercanciaTabla: { currentValue: ['col1', 'col2'] },
+      dMercanciaBody: { currentValue: [{ a: 1 }, { a: 2 }] },
     };
-
     component.ngOnChanges(changes);
-
-    expect(component.tableData.tableHeader).toEqual(['Header1', 'Header2']);
-    expect(component.tableData.tableBody).toEqual([{ id: 1, name: 'Item1' }]);
+    expect(component.tableData.tableHeader).toEqual(['col1', 'col2']);
+    expect(component.tableData.tableBody).toEqual([{ a: 1 }, { a: 2 }]);
   });
 
-  it('should patch form group value on seleccionMedioDeTransporte', () => {
-    component.claveDeControl = 'testControl';
-    component.ngOnInit();
-
-    component.seleccionMedioDeTransporte({
-      descripcion: 'NewTransport',
-    } as any);
-
-    const formGroup = component.grupoFormularioPadre.get(
-      'testControl'
-    ) as FormGroup;
-    expect(formGroup.value.transporteIdMedio).toBe('NewTransport');
+  it('should call setEsSolicitudFerros on enCambioDeValor', () => {
+    component.enCambioDeValor('SI');
+    expect(component.enCambioValor).toBe('SI');
+    expect(mockSolicitud220503Store.setEsSolicitudFerros).toHaveBeenCalledWith('SI');
   });
 
-  it('should call setTransporteIdMedio on setTransporteIdMedio', () => {
-    component.setTransporteIdMedio({ id: '123' } as any);
-    expect(mockStore.setTransporteIdMedio).toHaveBeenCalledWith('123');
+  it('should patch transporteIdMedio on seleccionMedioDeTransporte', () => {
+    component.inicializarFormulario();
+    const catalogo: Catalogo = { id: 1, descripcion: 'CAMION' } as any;
+    component.seleccionMedioDeTransporte(catalogo);
+    const fg = parentFormGroup.get('testControl') as FormGroup;
+    expect(fg.value.transporteIdMedio).toBe('CAMION');
   });
 
-  it('should call setIdentificacionTransporte on setIdentificacionTransporte', () => {
-    const event = { target: { value: 'NewID' } } as any;
+  it('should call setTransporteIdMedio', () => {
+    const catalogo: Catalogo = { id: 99, descripcion: 'BARCO' } as any;
+    component.setTransporteIdMedio(catalogo);
+    expect(mockSolicitud220503Store.setTransporteIdMedio).toHaveBeenCalledWith(99);
+  });
+
+  it('should call setIdentificacionTransporte', () => {
+    const event = { target: { value: 'XYZ789' } } as any;
     component.setIdentificacionTransporte(event);
-    expect(mockStore.setIdentificacionTransporte).toHaveBeenCalledWith('NewID');
+    expect(mockSolicitud220503Store.setIdentificacionTransporte).toHaveBeenCalledWith('XYZ789');
   });
 
-  it('should call setTotalDeGuiasAmparadas on setTotalDeGuiasAmparadas', () => {
+  it('should call setTotalDeGuiasAmparadas', () => {
     const event = { target: { value: '20' } } as any;
     component.setTotalDeGuiasAmparadas(event);
-    expect(mockStore.setTotalDeGuiasAmparadas).toHaveBeenCalledWith('20');
+    expect(mockSolicitud220503Store.setTotalDeGuiasAmparadas).toHaveBeenCalledWith('20');
   });
 
-  it('should remove dynamic form group on ngOnDestroy', () => {
-    component.claveDeControl = 'testControl';
-    component.ngOnInit();
+  it('should remove control and complete destroyed$ on ngOnDestroy', () => {
+    component.inicializarFormulario();
+    const destroyed$ = component['destroyed$'];
+    jest.spyOn(destroyed$, 'next');
+    jest.spyOn(destroyed$, 'complete');
     component.ngOnDestroy();
+    expect(parentFormGroup.contains('testControl')).toBe(false);
+    expect(destroyed$.next).toHaveBeenCalled();
+    expect(destroyed$.complete).toHaveBeenCalled();
+  });
 
-    expect(component.grupoFormularioPadre.get('testControl')).toBeNull();
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true', () => {
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.guardarDatosFormulario).toBeDefined();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario if esFormularioSoloLectura is false', () => {
+    const spy = jest.spyOn(component, 'inicializarFormulario');
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.inicializarFormulario).toBeDefined();
+    expect(spy).toHaveBeenCalled();
   });
 });

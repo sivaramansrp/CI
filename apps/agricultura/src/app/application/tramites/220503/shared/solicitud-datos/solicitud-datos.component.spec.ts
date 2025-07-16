@@ -1,69 +1,70 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudDatosTabComponent } from './solicitud-datos.component';
-import { TituloComponent, AlertComponent } from '@ng-mf/data-access-user';
 import { TEXTOS } from '../../enums/texto-enum';
 import { Solicitud } from '../../models/solicitud-pantallas.model';
+import { Subject } from 'rxjs';
 
 describe('SolicitudDatosTabComponent', () => {
   let component: SolicitudDatosTabComponent;
-  let fixture: ComponentFixture<SolicitudDatosTabComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [TituloComponent, AlertComponent, SolicitudDatosTabComponent],
-      declarations: [],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(SolicitudDatosTabComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(() => {
+    component = new SolicitudDatosTabComponent();
   });
 
-  test('should create the component', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  test('should have TEXTOS defined', () => {
-    expect(component.TEXTOS).toEqual(TEXTOS);
+  it('should have TEXTOS set to enum TEXTOS', () => {
+    expect(component.TEXTOS).toBe(TEXTOS);
   });
 
-  test('should have colapsable set to true by default', () => {
+  it('should have colapsable set to true by default', () => {
     expect(component.colapsable).toBe(true);
   });
 
-  test('should toggle colapsable when mostrarColapsable is called', () => {
-    component.colapsable = true;
+  it('should toggle colapsable when mostrarColapsable is called', () => {
+    expect(component.colapsable).toBe(true);
     component.mostrarColapsable();
     expect(component.colapsable).toBe(false);
-
     component.mostrarColapsable();
     expect(component.colapsable).toBe(true);
   });
 
-  test('should have tablaHeadData as an empty array by default', () => {
+  it('should have tablaHeadData as an empty array by default', () => {
     expect(component.tablaHeadData).toEqual([]);
   });
 
-  test('should have tablaFilaDatos as an empty array by default', () => {
+  it('should have tablaFilaDatos as an empty array by default', () => {
     expect(component.tablaFilaDatos).toEqual([]);
   });
 
-  test('should accept tablaHeadData as input', () => {
-    const mockHeadData = ['Column1', 'Column2'];
-    component.tablaHeadData = mockHeadData;
-    expect(component.tablaHeadData).toEqual(mockHeadData);
+  it('should accept tablaHeadData as input', () => {
+    const headData = ['Col1', 'Col2'];
+    component.tablaHeadData = headData;
+    expect(component.tablaHeadData).toBe(headData);
   });
 
-  test('should accept tablaFilaDatos as input', () => {
-    const mockFilaDatos: Solicitud[] = [
-      {
-        fechaCreacion: 'string',
-        mercancia: 'string',
-        cantidad: 'string',
-        proovedor: 'string',
-      },
-    ];
-    component.tablaFilaDatos = mockFilaDatos;
-    expect(component.tablaFilaDatos).toEqual(mockFilaDatos);
+  it('should accept tablaFilaDatos as input', () => {
+    const filaDatos: Solicitud[] = [{
+      fechaCreacion: new Date().toISOString(),
+      mercancia: 'Mercancia de prueba',
+      cantidad: '10',
+      proovedor: 'Proveedor de prueba'
+    }];
+    component.tablaFilaDatos = filaDatos;
+    expect(component.tablaFilaDatos).toBe(filaDatos);
+  });
+
+  
+
+  it('should have destroyed$ as a Subject', () => {
+    expect(component['destroyed$']).toBeDefined();
+  });
+  it('should have destroyed$ initialized as a Subject', () => {
+    expect(component['destroyed$']).toBeInstanceOf(Subject);
+  });
+
+  it('should have destroyed$ as a Subject', () => {
+    expect(component['destroyed$']).toBeInstanceOf(Subject);
   });
 });

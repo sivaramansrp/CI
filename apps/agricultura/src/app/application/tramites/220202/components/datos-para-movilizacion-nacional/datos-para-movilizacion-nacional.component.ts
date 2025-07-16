@@ -1,10 +1,10 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
-  ConsultaioQuery,
   TituloComponent,
-} from '@ng-mf/data-access-user';
+} from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import {
   FormControl,

@@ -18,7 +18,7 @@ import {
 } from "@libs/shared/data-access-user/src";
 import { AvisoTabla, AvisoTablaDatos, Catalogo, CatalogoLista, MercanciaTabla, MercanciaTablaDatos } from "../../models/aviso-traslado.model";
 import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
-import { FECHA_INGRESO, TEXTOS, TIPACA, TIPAVI } from "../../constants/aviso-traslado.enum";
+import { ENCABEZADAS_TABLA, FECHA_INGRESO, TABLA_DE_MERCANCIA, TEXTOS, TIPACA, TIPAVI } from "../../constants/aviso-traslado.enum";
 import { AvisoTrasladoService } from "../../services/aviso-traslado.service";
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
@@ -111,29 +111,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }[],
     datos: AvisoTabla[],
   } = {
-      encabezadas: [
-        { encabezado: 'RFC', clave: (ele: AvisoTabla) => ele.rfc, orden: 1 },
-        {
-          encabezado: 'Nombre comercial',
-          clave: (ele: AvisoTabla) => ele.nombreComercial,
-          orden: 2,
-        },
-        {
-          encabezado: 'Entidad federativa',
-          clave: (ele: AvisoTabla) => ele.entidadFederativa,
-          orden: 3,
-        },
-        {
-          encabezado: 'Alcaldía o Municipio',
-          clave: (ele: AvisoTabla) => ele.alcaldioOMuncipio,
-          orden: 4,
-        },
-        {
-          encabezado: 'Colonia',
-          clave: (ele: AvisoTabla) => ele.colonia,
-          orden: 5,
-        },
-      ],
+      encabezadas: ENCABEZADAS_TABLA,
       datos: []
     };
   /**
@@ -185,48 +163,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }[],
     datos: MercanciaTabla[],
   } = {
-      encabezadas: [
-        { encabezado: 'Fracción arancelaria', clave: (ele: MercanciaTabla) => ele.claveFraccionArancelaria, orden: 1 },
-        {
-          encabezado: 'NICO',
-          clave: (ele: MercanciaTabla) => ele.nico,
-          orden: 2,
-        },
-        {
-          encabezado: 'Unidad de medida',
-          clave: (ele: MercanciaTabla) => ele.claveUnidadMedida,
-          orden: 3,
-        },
-        {
-          encabezado: 'Cantidad',
-          clave: (ele: MercanciaTabla) => ele.cantidad,
-          orden: 4,
-        },
-        {
-          encabezado: 'Valor USD',
-          clave: (ele: MercanciaTabla) => ele.valorUSD,
-          orden: 5,
-        },
-        {
-          encabezado: 'Descripción de la Mercancía',
-          clave: (ele: MercanciaTabla) => ele.descripcionMercancia,
-          orden: 6,
-        },
-        {
-          encabezado: 'Proceso llevará',
-          clave: (ele: MercanciaTabla) => ele.descripcionProceso,
-          orden: 6,
-        }, {
-          encabezado: 'Número de exportación',
-          clave: (ele: MercanciaTabla) => ele.numPedimentoExportacion,
-          orden: 6,
-        },
-        {
-          encabezado: 'Número de importación',
-          clave: (ele: MercanciaTabla) => ele.numPedimentoImportacion,
-          orden: 6,
-        }
-      ],
+      encabezadas: TABLA_DE_MERCANCIA,
       datos: []
     };
   /**

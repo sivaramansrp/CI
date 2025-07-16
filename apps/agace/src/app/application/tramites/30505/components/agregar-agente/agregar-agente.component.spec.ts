@@ -5,6 +5,7 @@ import { CommonModule, Location } from '@angular/common';
 import { Solicitud30505Store } from '../../../../estados/tramites/tramites30505.store';
 import { Solicitud30505Query } from '../../../../estados/queries/tramites30505.query';
 import { of, Subject } from 'rxjs';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('AgregarAgenteComponent', () => {
   let component: AgregarAgenteComponent;
@@ -56,6 +57,7 @@ describe('AgregarAgenteComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CommonModule, ReactiveFormsModule, AgregarAgenteComponent],
       providers: [
+        provideHttpClient(),
         FormBuilder,
         { provide: Solicitud30505Store, useValue: storeMock },
         { provide: Solicitud30505Query, useValue: queryMock },

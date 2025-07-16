@@ -1,10 +1,10 @@
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, InputRadioComponent} from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -30,7 +30,7 @@ import { Solicitud220501Store } from '../../estados/tramites220501.store';
 /**
  * Componente que permite gestionar el pago de derechos en una solicitud.
  */
-export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+export class PagoDeDerechosComponent implements OnDestroy {
   /**
    * Indica si el formulario está deshabilitado.
    * @type {boolean}
@@ -99,7 +99,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Indica si el formulario está deshabilitado.
    */
-  formularioDeshabilitado!: boolean;
+  formularioDeshabilitado: boolean = false;
 
   /**
    * Constructor del componente.
@@ -119,18 +119,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.formularioDeshabilitado = seccionState.readonly;
-          this.inicializarEstadoFormulario();
+          if(seccionState.readonly || seccionState.update){
+             this.inicializarEstadoFormulario();
+
+          }          
         })
       )
       .subscribe();
-  }
 
-  /**
-   * Método del ciclo de vida que se ejecuta al iniciar el componente.
-   * Llama a la función que determina cómo inicializar el formulario.
-   */
-  ngOnInit(): void {
-    this.inicializarEstadoFormulario();
+    this.inicializarFormulario();
   }
 
   /**
@@ -139,22 +136,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   inicializarEstadoFormulario(): void {
     if (this.formularioDeshabilitado) {
-      this.guardarDatosFormulario();
-    } else {
-      this.inicializarFormulario();
-    }
-  }
-
-  /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  guardarDatosFormulario(): void {
-    this.inicializarFormulario();
-    if (this.formularioDeshabilitado) {
-      this.pagoForm.disable();
+      this.pagoForm?.disable();
     } else if (!this.formularioDeshabilitado) {
-      this.pagoForm.enable();
+      this.pagoForm?.enable();
     }
   }
 
@@ -195,6 +179,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.getJustificacion();
     this.getBanco();
     this.getPagoDeDerechos();
+
+    this.inicializarEstadoFormulario();
   }
 
   /** 

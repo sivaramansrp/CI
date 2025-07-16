@@ -1,13 +1,14 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ERROR_FORMA_ALERT, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/certificado-zoosanitario.enum';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '../../models/pantallas-captura.model';
-import { PASOS } from '@ng-mf/data-access-user';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { SECCIONES_TRAMITE_220402 } from '@ng-mf/data-access-user';
 import { SeccionQuery } from '../../../../estados/queries/seccion.query';
 import { SeccionState } from '../../../../estados/seccion.store';
 import { SeccionStore } from '../../../../estados/seccion.store';
 import { Subject } from 'rxjs';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -39,6 +40,16 @@ interface AccionBoton {
  * Componente que representa la página de solicitud.
  */
 export class SolicitudPageComponent implements OnInit, OnDestroy {
+  /**
+ * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+ */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
+  /**
+ * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+ * }
+ */
+  esFormaValido: boolean = false;
 
   /**
    * @property {ListaPasosWizard[]} pasos - Lista de pasos del wizard.
@@ -49,6 +60,12 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
    * @property {number} indice - Índice actual del paso.
    */
   indice: number = 1;
+
+  /**
+   * Objeto con los textos de los requisitos.
+   * @property {object} TEXTOS_REQUISITOS - Textos para los requisitos del certificado zoosanitario. --220201
+   */
+  TEXTOS = MENSAJE_DE_EXITO_ETAPA_UNO;
 
   /**
    * @property {SeccionState} seccion - Estado de la sección actual.
@@ -64,8 +81,21 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
     */
   public destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Referencia al componente hijo WizardComponent para controlar la navegación del asistente.
+   * Permite acceder a los métodos públicos del wizard desde este componente.
+   *
+   * @type {WizardComponent}
+   * @memberof SolicitudPageComponent
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  /**
+ * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+ * const isValid = this.pasoUnoComponent.validateForms();
+ * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
+ */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
   /**
    * @property {number} nroPasos - Número total de pasos.
    * @property {number} indice - Índice actual del paso.
@@ -125,15 +155,25 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      this.datosPasos.indice = this.indice;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
+    if (e.accion === 'cont') {
+      let isValid = true;
+     if (this.indice === 1 && this.pasoUnoComponent) {
+        isValid = this.pasoUnoComponent.validarTodosLosFormularios();
+      }
+      if (!isValid) {
+        this.esFormaValido = true;
+        this.datosPasos.indice = this.indice;
+        return;
       } else {
-        this.wizardComponent.atras();
+        this.esFormaValido = false;
+        this.indice = e.valor;
+        this.datosPasos.indice = this.indice;
+        return;
       }
     }
+
+    this.indice = e.valor;
+    this.datosPasos.indice = this.indice;
   }
 
   /**
@@ -161,6 +201,11 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
   guardar(_ev: void): void {
     this.getValorIndice({ accion: 'ant', valor: 2 });
   }
+
+  /**
+   * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
+   */
+  // El método de validación de formularios paso uno ya no es necesario con el nuevo flujo
   /**
    * @method ngOnDestroy
    * @description Método del ciclo de vida que se ejecuta al destruir el componente.

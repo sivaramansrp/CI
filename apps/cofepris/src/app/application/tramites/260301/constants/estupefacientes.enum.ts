@@ -2,11 +2,46 @@ import { ConfiguracionColumna, Fabricante, TipoPersona } from "@ng-mf/data-acces
 import { Facturador } from "../../../shared/models/terceros-relacionados.model";
 import { TablaMercanciasDatos } from "../../../shared/models/datos-solicitud.model";
 
+/**
+ * Constantes utilizadas en el trámite 260301 para la configuración de pasos, mensajes y datos relacionados con el procedimiento.
+ *
+ * Este archivo contiene configuraciones que definen los pasos del trámite, el título del mensaje, los textos de requisitos,
+ * configuraciones de tablas para fabricantes y facturadores, y el identificador único del procedimiento para la solicitud
+ * de importación de materias primas que sean o contengan estupefacientes o psicotrópicos.
+ */
+
+/**
+ * Configuración de los pasos del trámite.
+ *
+ * Cada paso está representado por un objeto que contiene las siguientes propiedades:
+ * - `indice`: Número del paso.
+ * - `titulo`: Título descriptivo del paso.
+ * - `activo`: Indica si el paso está activo.
+ * - `completado`: Indica si el paso ha sido completado.
+ *
+ * @constant {Array<Object>}
+ */
 export const PASOS = [
     {
+      /**
+       * @property {number} indice
+       * Índice del paso en el flujo.
+       */
       indice: 1,
+      /**
+       * @property {string} titulo
+       * Título descriptivo del paso.
+       */
       titulo: 'Capturar solicitud',
+      /**
+       * @property {boolean} activo
+       * Indica si el paso está activo.
+       */
       activo: true,
+      /**
+       * @property {boolean} completado
+       * Indica si el paso está completado.
+       */
       completado: true,
     },
     {
@@ -22,16 +57,39 @@ export const PASOS = [
       completado: false,
     },
   ];
+  
+/**
+ * Título del mensaje relacionado con el trámite 260301.
+ *
+ * @constant {string}
+ */
   export const TITULOMENSAJE =
   'Solicitud importación de materias primas que sean o contengan estupefacientes o psicotrópicos';
+
+/**
+ * Texto de requisitos para el trámite 260301.
+ *
+ * Contiene información sobre el número temporal de la solicitud y su validez.
+ *
+ * @constant {string}
+ */
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
 
+/**
+ * Identificador único del procedimiento 260301.
+ *
+ * @constant {number}
+ */
 export const ID_PROCEDIMIENTO = 260301;
 
 /**
  * @const FABRICANTE_ENCABEZADO_DE_TABLA
  * @description Columnas configuradas para mostrar los datos del fabricante en una tabla.
+ * Define la estructura de las columnas para la visualización de información de fabricantes,
+ * incluyendo datos de contacto, dirección y información fiscal.
+ * 
+ * @type {ConfiguracionColumna<Fabricante>[]}
  */
 export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] =
   [
@@ -87,6 +145,10 @@ export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] 
 /**
  * @const FACTURADOR_ENCABEZADO_DE_TABLA
  * @description Columnas configuradas para mostrar los datos del facturador en una tabla.
+ * Define la estructura de las columnas para la visualización de información de facturadores,
+ * incluyendo datos de contacto, dirección y información fiscal.
+ * 
+ * @type {ConfiguracionColumna<Facturador>[]}
  */
 export const FACTURADOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Facturador>[] =
   [
@@ -139,13 +201,33 @@ export const FACTURADOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Facturador>[] 
     }
   ];
 
+/**
+ * Enumeración que define los tipos de tabla de datos disponibles.
+ * 
+ * @enum {string}
+ */
 export enum TIPO_TABLA_DATOS {
+  /** Tipo de tabla para fabricantes */
   FABRICANTE = 'fabricante',
+  /** Tipo de tabla para facturadores */
   FACTURADOR = 'facturador',
+  /** Tipo de tabla para proveedores/distribuidores */
   PROVEEDOR = 'Proveedor / Distribudor',
+  /** Tipo de tabla para certificados analíticos */
   CERTIFICADO = 'Certificado analítico',
+  /** Tipo de tabla para otros datos */
   OTROS = 'Otros'
 }
+
+/**
+ * Configuración de columnas para la tabla de productos estupefacientes.
+ * 
+ * Define la estructura de las columnas para mostrar información detallada de mercancías
+ * relacionadas con estupefacientes o psicotrópicos, incluyendo clasificación, datos técnicos,
+ * información arancelaria y detalles específicos del producto.
+ * 
+ * @constant {Array<ConfiguracionColumna<TablaMercanciasDatos>>}
+ */
 export const PRODUCTO_TABLA_ESTUPEFACIENTES = [
   {
     encabezado: 'Clasificación del producto',
@@ -282,12 +364,21 @@ export const PRODUCTO_TABLA_ESTUPEFACIENTES = [
  
 ];
 
-
+/**
+ * Opciones de radio button para seleccionar la nacionalidad de terceros relacionados.
+ * 
+ * @constant {Array<{label: string, value: string}>}
+ */
 export const TERCEROS_NACIONALIDAD_RADIO_OPCIONS = [
   { label: 'Nacional', value: 'true' },
   { label: 'Extranjero', value: 'false' },
 ];
 
+/**
+ * Opciones de radio button para seleccionar el tipo de persona de terceros relacionados.
+ * 
+ * @constant {Array<{label: string, value: TipoPersona}>}
+ */
 export const TERCEROS_PERSONA_RADIO_OPCIONS = [
   { label: 'Física', value: TipoPersona.FISICA },
   { label: 'Moral', value: TipoPersona.MORAL },
@@ -297,6 +388,9 @@ export const TERCEROS_PERSONA_RADIO_OPCIONS = [
 /**
  * @const ELEMENTOS_REQUERIDOS
  * @description Lista de elementos requeridos para completar el formulario o proceso.
+ * Contiene los campos obligatorios que deben ser llenados para procesar la solicitud.
+ * 
+ * @type {string[]}
  */
 export const ELEMENTOS_REQUERIDOS = [
   'colonia',
@@ -309,6 +403,9 @@ export const ELEMENTOS_REQUERIDOS = [
 /**
  * @const ELEMENTOS_ANADIDOS
  * @description Lista de elementos adicionales que pueden ser incluidos en el formulario o proceso.
+ * Contiene campos opcionales que pueden proporcionar información complementaria.
+ * 
+ * @type {string[]}
  */
 export const ELEMENTOS_ANADIDOS = [
   'calleYNumero',

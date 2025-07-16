@@ -1,5 +1,6 @@
 import { Observable, catchError, map, of } from 'rxjs';
 import { CambioContrasena } from '../models/cambio-contrasena.model';
+import { ConsultaRegistro } from '../models/consulta-registro.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 

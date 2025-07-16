@@ -14,3 +14,14 @@ export interface Antecesor {
     apellidoMaternoMiembro?: string; // Apellido materno del miembro
     nombreDeLaEmpresaMiembro?: string; // Nombre de la empresa del miembro
 }
+// Interfaz para representar los datos de empleados por bimestre
+export interface EmpleadoBimestre {
+  denominacionSocial: string;
+  rfc: string;
+  numeroEmpleadoBimestre1: number;
+  primerBimestre: string;
+  numeroEmpleadoBimestre2: number;
+  segundoBimestre: string;
+  numeroEmpleadoBimestre3: number;
+  tercerBimestre: string;
+}

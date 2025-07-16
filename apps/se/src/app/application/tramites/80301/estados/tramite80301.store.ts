@@ -1,23 +1,34 @@
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { DatosSolicitante } from '../../80301/models/datos-tramite.model';
 import { Injectable } from '@angular/core';
 import { Store, } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
 /**
- * Creacion del estado inicial para la interfaz de tramite 80302
- * @returns Solicitud80302
+ * Interface que representa los datos generales de una modificación del programa IMMEX.
  */
-
 export interface DatosModificacion {
+  /** Registro Federal de Contribuyentes del solicitante */
   rfc: string;
+
+  /** Representación federal del solicitante (por ejemplo, nombre de la delegación o dependencia) */
   federal: string;
+
+  /** Tipo de trámite o modificación (por ejemplo: alta, baja, cambio) */
   tipo: string;
+
+  /** Programa IMMEX relacionado con la solicitud */
   programa: string;
 }
 
+/**
+ * Interface que encapsula el estado completo de la solicitud 80301.
+ */
 export interface Solicitud80301StateObj {
-  datosModificacion:Solicitud80301State
+  /** Objeto que contiene los datos generales de la modificación */
+  datosModificacion: Solicitud80301State;
 }
+
   
 /**
  * Representa el estado de la solicitud 80301.
@@ -118,7 +129,14 @@ export interface Solicitud80301State {
   monto: string;
 }
 
-
+/**
+ * Crea y retorna el objeto de estado inicial para la funcionalidad Solicitud80301.
+ *
+ * @returns {Solicitud80301State} El estado inicial por defecto, incluyendo valores predeterminados para
+ *   selecciones de menú, datos del solicitante, datos de modificación, datos del contenedor, tipos de búsqueda,
+ *   información de aduana, detalles del contenedor, casillas de verificación, número de manifiesto,
+ *   fechas de ingreso, archivos seleccionados, información de línea y monto.
+ */
 export function createInitialState(): Solicitud80301State {
   return {
     menuDesplegable: '',
@@ -162,7 +180,57 @@ export class Tramite80301Store extends Store<Solicitud80301State> {
   constructor() {
     super(createInitialState());
   }
+    /**
+   * Actualiza el tipo de documento seleccionado.
+   * 
+   * @param {string} tipoDocumento - El tipo de documento seleccionado.
+   */
+  public setTipoDocumento(tipoDocumento: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      tipoDocumento,
+    }));
+  }
+  
+  /**
+   * Guarda el rango de fechas en el estado.
+   *
+   * @param rangoFechas - El valor booleano que indica si es un rango de fechas o no.
+   */
+  public setFechasSeleccionadas(fechasSeleccionadas: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      fechasSeleccionadas,
+    }));
+  }
+  /**
+   * Actualiza el país en el estado.
+   * @param {string} pais - País del domicilio.
+   */
+  public setPais(pais: Catalogo[]): void {
+    this.update((state) => ({ ...state, pais }));
+  }
 
+    /**
+     * Actualiza el estado de la tienda con el arreglo proporcionado de `Catalogo` como la nueva `condicion`.
+     *
+     * @param condicion - Un arreglo de objetos `Catalogo` para establecer como la condición actual en el estado.
+     */
+    public setCondicion(condicion: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      condicion,
+    }));
+  }
+
+  
+  /**
+   * Actualiza el año en el estado.
+   * @param {string} ano - Año relacionado.
+   */
+  public setAno(ano: string): void {
+    this.update((state) => ({ ...state, ano }));
+  }
   /**
    * Establece el RFC en el estado de la tienda.
    *
@@ -314,6 +382,17 @@ export class Tramite80301Store extends Store<Solicitud80301State> {
     }));
   }
 
+    /**
+     * Actualiza el estado de la tienda con una nueva lista de documentos.
+     *
+     * @param documentos - Un arreglo de objetos `Catalogo` para establecer como los documentos actuales en el estado.
+     */
+    public setDocumentos(documentos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      documentos,
+    }));
+  }
   
   public setFechaIngreso(fechaIngreso: string): void {
     this.update((state) => ({

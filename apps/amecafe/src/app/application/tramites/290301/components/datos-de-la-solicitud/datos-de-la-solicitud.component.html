@@ -9,6 +9,20 @@
               (change)="setValoresStore(datosSolicitudForma,'justificacion', 'setJustificacion')"
               [disabled]="esFormularioSoloLectura"
               ></textarea>
+              <div *ngIf="datosSolicitudForma.get('justificacion')?.touched">
+                <small
+                  *ngIf="datosSolicitudForma.get('justificacion')?.hasError('required')"
+                  class="text-danger"
+                >
+                  Este campo es obligatorio.
+                </small>
+                <small
+                  *ngIf="datosSolicitudForma.get('justificacion')?.hasError('maxlength')"
+                  class="text-danger"
+                >
+                  Solo se permiten 4000 caracteres.
+                </small>
+              </div>
             </div>
           </div>
        </div>
@@ -22,11 +36,13 @@
                         [radioOptions]="radioOpcion" 
                         formControlName="productorDeCafe"
                         [layout]="'horizontal'"
-                        (change)="handleProductorDeCafeChange($event)"
+                        (change)="handleProductorDeCafeChange()"
                         (change)="setValoresStore(datosSolicitudForma,'productorDeCafe', 'setProductorDeCafe')"
-                        [disabled]="esFormularioSoloLectura">
+                        [disabled]="esFormularioSoloLectura ? true : false">
                     </app-input-radio>
                     </div>
+                    <p><strong>Valor de Productor de Cafe:</strong> {{ datosSolicitudForma.get('productorDeCafe')?.value }}</p>
+
             </div>
             
         <ng-titulo titulo="Productores de café"></ng-titulo>
@@ -37,8 +53,7 @@
                         <input formControlName="claveDelPadron" class="form-control" id="claveDelPadron" placeholder=""
                             type="text"
                             (change)="setValoresStore(datosSolicitudForma,'claveDelPadron', 'setClaveDelPadron')"
-                            [disabled]="esFormularioSoloLectura"
-                          />
+                            [disabled]="esFormularioSoloLectura" />
                     </div>
                 </div>
         </div>
@@ -50,16 +65,17 @@
                         [tipoSeleccionTabla]="tipoSeleccion" 
                         [configuracionTabla]="regionesTabla"
                         [datos]="regionesTableDatos"
+                        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
                         ></app-tabla-dinamica>
                 </div>
             </div>
             <div class="col-md-12 mt-5">
                 <div class="d-flex justify-content-end">
                   <div class="btn-group">
-                    <button  class="btn btn-danger me-2" type="button">
+                    <button  class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura ? true : false">
                         Borrar
                       </button>
-                    <button  class="btn btn-primary me-2" type="submit">
+                    <button  class="btn btn-primary me-2" type="submit" [disabled]="esFormularioSoloLectura ? true : false">
                       Agregar
                     </button>
                   </div>
@@ -73,16 +89,17 @@
                 <div class="table-container">
                     <app-tabla-dinamica 
                         [tipoSeleccionTabla]="tipoSeleccion" [configuracionTabla]="beneficiosTabla"
-                        [datos]="beneficiosTableDatos"></app-tabla-dinamica>
+                        [datos]="beneficiosTableDatos"
+                        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
                 </div>
             </div>
             <div class="col-md-12 mt-5">
                 <div class="d-flex justify-content-end">
                   <div class="btn-group">
-                    <button  class="btn btn-danger me-2" type="button">
+                    <button  class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura ? true : false" >
                         Borrar
                       </button>
-                    <button  class="btn btn-primary me-2" type="submit">
+                    <button  class="btn btn-primary me-2" type="submit" [disabled]="esFormularioSoloLectura ? true : false" >
                       Agregar
                     </button>
                   </div>
@@ -96,16 +113,17 @@
                 <div class="table-container">
                     <app-tabla-dinamica 
                         [tipoSeleccionTabla]="tipoSeleccion" [configuracionTabla]="bodegasTabla"
-                        [datos]="bodegasTableDatos"></app-tabla-dinamica>
+                        [datos]="bodegasTableDatos"
+                        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
                 </div>
             </div>
             <div class="col-md-12 mt-5">
                 <div class="d-flex justify-content-end">
                   <div class="btn-group">
-                    <button class="btn btn-danger me-2" type="button">
+                    <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura ? true : false" >
                         Borrar
                       </button>
-                    <button  class="btn btn-primary me-2" type="submit">
+                    <button  class="btn btn-primary me-2" type="submit" [disabled]="esFormularioSoloLectura ? true : false">
                       Agregar
                     </button>
                   </div>
@@ -118,16 +136,17 @@
                 <div class="table-container">
                     <app-tabla-dinamica
                         [tipoSeleccionTabla]="tipoSeleccion" [configuracionTabla]="cafeExportadoresTabla"
-                        [datos]="cafeExportadoresTableDatos"></app-tabla-dinamica>
+                        [datos]="cafeExportadoresTableDatos"
+                        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
                 </div>
             </div>
             <div class="col-md-12 mt-5">
                 <div class="d-flex justify-content-end">
                   <div class="btn-group">
-                    <button class="btn btn-danger me-2" type="button">
+                    <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura ? true : false" >
                         Borrar
                       </button>
-                    <button  class="btn btn-primary me-2" type="submit">
+                    <button  class="btn btn-primary me-2" type="submit" [disabled]="esFormularioSoloLectura ? true : false" >
                       Agregar
                     </button>
                   </div>
@@ -135,8 +154,8 @@
               </div>
         </div>
           <!-- Nota Informativa -->
-   <div class="row" style="margin-top: 30px;">
-    <div class="col-md-12">
+       <div class="row" style="margin-top: 30px;">
+       <div class="col-md-12">
       <div class="alert alert-info">
         <label style="font-weight: normal; text-align: justify;">
           Nota: Para este trámite es indispensable enviar a la AMECAFE el catálogo de productos de exportación. Para mayor referencia consulta la guía disponible en: <a href="http://www.amecafe.org.mx" target="_blank">www.amecafe.org.mx</a>
