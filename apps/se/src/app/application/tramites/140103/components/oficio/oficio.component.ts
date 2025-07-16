@@ -24,6 +24,9 @@ interface ConfiguracionItem {
   fabricante: string;
   importador: string;
   unidadPrimaria: number;
+  montoExpediente: number;
+  montocancelar: number;
+  montoutilizado: number;
 }
 /**
  * Componente para gestionar la visualización y actualización de los datos de los oficios de certificados.
@@ -134,6 +137,9 @@ export class OficioComponent implements OnInit, OnDestroy{
     { encabezado: 'Fabricante', clave: (item: ConfiguracionItem) => item.fabricante, orden: 4 },
     { encabezado: 'Importador', clave: (item: ConfiguracionItem) => item.importador, orden: 5 },
     { encabezado: 'Unidad Primaria', clave: (item: ConfiguracionItem) => item.unidadPrimaria, orden: 6 },
+    { encabezado: 'Monto Expediente', clave: (item: ConfiguracionItem) => item.montoExpediente, orden: 7 },
+    { encabezado: 'Monto a Cancelar', clave: (item: ConfiguracionItem) => item.montocancelar, orden: 8 },
+    { encabezado: 'Monto Utilizado', clave: (item: ConfiguracionItem) => item.montoutilizado, orden: 9 },
   ];
 
   /**
