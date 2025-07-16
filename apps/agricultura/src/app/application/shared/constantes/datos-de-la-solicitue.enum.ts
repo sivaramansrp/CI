@@ -110,3 +110,8 @@ export const CONFIGURACION_DETALLAS_DATOS: ConfiguracionColumna<DetallasDatos>[]
     orden: 7,
   }
 ];
+export const FECHA_DE_DATA = {
+  labelNombre: '',
+  required: false,
+  habilitado: true,
+};

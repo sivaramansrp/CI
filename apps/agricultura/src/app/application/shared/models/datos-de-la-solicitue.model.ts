@@ -1,4 +1,5 @@
 import { Catalogo } from "@libs/shared/data-access-user/src";
+import { FilaSolicitud } from "../../tramites/220201/models/220201/capturar-solicitud.model";
 
 /**
  * Representa los datos de la solicitud con listas de catálogos relacionadas.
@@ -377,7 +378,7 @@ export interface AnimalesEventos {
   /**
    * El formulario asociado a la solicitud de animales.
    */
-  formulario: AnimalesFormularioSolicitudForm;
+  formulario: FilaSolicitud;
 
   /**
    * Una lista de datos sensibles relacionados con los animales.
@@ -502,7 +503,7 @@ export interface ProductoDetallaEventos {
   /**
    * El formulario asociado con los detalles del producto.
    */
-  formulario: ProductoDetallasForm;
+  formulario: FilaSolicitud;
 
   /**
    * Los datos detallados que se mostrarán en la tabla.

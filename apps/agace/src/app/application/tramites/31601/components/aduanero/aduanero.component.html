@@ -440,6 +440,34 @@
         </button>
       </div>
 
+      <div class="mt-4 form-group">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> En su caso acredite cumplir con lo establecido en el artículo 27, fracción V, tercer párrafo de la Ley del ISR
+        </section>
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+          [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio21.description"
+          [showDescription]="true"
+          formControlName="acredite"
+          (change)="
+            setValoresStore(preOperativeForm, 'acredite', 'setAcredite')
+          "
+        ></app-input-radio>
+        <div
+          *ngIf="
+            preOperativeForm.controls['acredite'].invalid &&
+            preOperativeForm.controls['acredite'].touched
+          "
+          class="text-danger"
+        >
+          Este campo es obligatorio.
+        </div>
+      </div>
       <div
         class="modal"
         tabindex="-1"
