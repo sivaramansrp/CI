@@ -752,13 +752,13 @@ export const TEXTOS = {
 export const FECHA_FACTURA = {
     labelNombre: 'Fecha de factura',
     required: true,
-    habilitado: false,
+    habilitado: true,
 };
 
 export const FECHA_DOCUMENTO = {
     labelNombre: 'Fecha del documento',
     required: true,
-    habilitado: false,
+    habilitado: true,
 };
 
 export const OPCION_DE_RADIO = [

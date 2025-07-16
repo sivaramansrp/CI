@@ -49,8 +49,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
   private DatosState!: DatosGrupos
 
-  fechaPagoDate: string = '15/03/2025';
-
   constructor(
     public fb: FormBuilder,
     public store: PermisoImportacionStore,
@@ -100,7 +98,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       factura_numero: [this.DatosState.datosMercanica.factura_numero, Validators.required],
       factura_fecha: [this.DatosState.datosMercanica.factura_fecha, Validators.required],
       umc: [this.DatosState.datosMercanica.umc, Validators.required],
-      otro_umc: [this.DatosState.datosMercanica.otro_umc, Validators.required],
+      otro_umc: [{value:this.DatosState.datosMercanica.otro_umc, disabled:true}, [Validators.required]],
       cantidad_umc: [this.DatosState.datosMercanica.cantidad_umc,Validators.required],
       factor_conversion: [this.DatosState.datosMercanica.factor_conversion, Validators.required],
       cantidad_umt: [this.DatosState.datosMercanica.cantidad_umt, Validators.required],
@@ -215,7 +213,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     this.datosMercanica.patchValue({
         factura_fecha: evento,
       });
-    this.fechaPagoDate = evento;
     this.store.setFacturaFecha(evento);
   }
 
@@ -280,6 +277,7 @@ onUmcChange(
         OTROUMCCONTROL.setValue(this.otroUmcIncrement);
         OTROUMCCONTROL.markAsDirty();
         OTROUMCCONTROL.markAsTouched();
+        this.store.setOtroUmc((this.otroUmcIncrement).toString());
       }
     }
     const FACTORINPUT = document.getElementById('factor_conversión') as HTMLInputElement | null;

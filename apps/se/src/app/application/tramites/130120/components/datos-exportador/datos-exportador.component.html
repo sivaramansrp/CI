@@ -96,10 +96,10 @@
                 Domicilio:
               </label>
               <textarea
-                class="form-control text-area-size"
-                id="domicilio"
+                class="form-control"
                 formControlName="domicilio"
                 rows="3"
+                style="height: 100%; resize: none;"
                 [required]="true"
                 maxlength="200"
                 [disabled]="esFormularioSoloLectura"
@@ -120,6 +120,7 @@
                 id="observaciones"
                 formControlName="observaciones"
                 rows="3"
+                style="height: 100%; resize: none;"
                 [required]="true"
                 maxlength="4000"
                 (change)="setValoresStore(datosExportador, 'observaciones', 'setExportadorObservaciones')"
@@ -162,6 +163,7 @@
                 id="domicilio"
                 formControlName="domicilio"
                 rows="3"
+                style="height: 100%; resize: none;"
                 [required]="true"
                 maxlength="200"
                 [disabled]="esFormularioSoloLectura"
@@ -182,6 +184,7 @@
                 formControlName="observaciones"
                 [disabled]="esFormularioSoloLectura"
                 rows="3"
+                style="height: 100%; resize: none;"
                 [required]="true"
                 maxlength="4000"
                 (change)="setValoresStore(datosExportador, 'observaciones', 'setExportadorObservaciones')"

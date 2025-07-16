@@ -10,10 +10,11 @@
               Descripción de la mercancía*:
             </label>
             <textarea
-              class="form-control text-area-size"
+              class="form-control"
               id="descripcion"
               formControlName="descripcion"
               rows="3"
+              style="height: 100%; resize: none;"
               maxlength="4000"
               required="true"
               [disabled]="esFormularioSoloLectura"
@@ -170,12 +171,11 @@
           <div class="form-group">
             <input-fecha
               [datos]="fechaFactura"
-              [setFecha]="fechaPagoDate"
+              [setFecha]="datosMercanica.get('factura_fecha')?.value"
               name="factura_fecha"
               (valorCambiado)="fechaCambiado($event)">
             </input-fecha>
           </div>
-          <div></div>
         </div>
 
         <div class="col-md-4">
@@ -206,14 +206,12 @@
               Otro UMC
             </label>
             <input
-              class="form-control disabled-bg"
+              class="form-control"
               type="text"
               id="otro_umc"
               placeholder=""
               formControlName="otro_umc"
               (change)="setValoresStore(datosMercanica, 'otro_umc', 'setOtroUmc')"
-              readonly
-              [disabled]="true"
             />
           </div>
         </div>
