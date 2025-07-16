@@ -63,7 +63,13 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
    */
   public esFormularioSoloLectura: boolean = false;
 
-// Custom validator function
+/**
+ * Validador personalizado que verifica si el valor del control es un número entero.
+ *
+ * @param control - El control de formulario que se está validando.
+ * @returns Un objeto de error con la propiedad `notInteger` si el valor no es un número entero,
+ *          o `null` si el valor es válido o está vacío.
+ */
 static integerValidator(control: AbstractControl): ValidationErrors | null {
   const VALUE = control.value;
   if (VALUE === null || VALUE === '') {

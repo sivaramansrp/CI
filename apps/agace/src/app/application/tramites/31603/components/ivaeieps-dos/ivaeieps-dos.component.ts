@@ -163,16 +163,28 @@ export class IvaeiepsDosComponent implements OnInit,OnDestroy {
      * donde el modo de selección está configurado como `CHECKBOX`.
      */
     public tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
-
+    /**
+    * Validador personalizado que verifica si el valor numérico del control no supera el 20%.
+    *
+    * @param control - El control de formulario que se está validando.
+    * @returns Un objeto de error con la propiedad `maxTwenty` si el valor es mayor a 20,
+    *          o `null` si el valor es válido o no es un número.
+    */
     static maxTwentyPercentValidator(control: AbstractControl): ValidationErrors | null {
       const VALUE = Number(control.value);
-      if (isNaN(VALUE)) { return null; } // Let pattern validator handle non-numeric
+      if (isNaN(VALUE)) { return null; } 
       return VALUE <= 20 ? null : { maxTwenty: true };
     }
-
+    /**
+    * Validador personalizado que verifica si el valor numérico del control no supera cinco millones.
+    *
+    * @param control - El control de formulario que se está validando.
+    * @returns Un objeto de error con la propiedad `maxFiveMillion` si el valor es mayor a 5,000,000,
+    *          o `null` si el valor es válido o no es un número.
+    */
     static maxFiveMillionValidator(control: AbstractControl): ValidationErrors | null {
       const VALUE = Number(control.value);
-      if (isNaN(VALUE)) { return null; } // Let pattern validator handle non-numeric
+      if (isNaN(VALUE)) { return null; } 
       return VALUE <= 5000000 ? null : { maxFiveMillion: true };
     }
 
