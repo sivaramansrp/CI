@@ -56,6 +56,12 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    * @type {TercerosrelacionadosdestinoTable[]}
    */
   personas: TercerosrelacionadosdestinoTable[] = [];
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es verdadero, el formulario se presenta únicamente para visualización,
+   * deshabilitando la edición de los campos.
+   * @type {modalRef}
+   */
   @ViewChild('modalRef') modalRef!: ModalComponent;
 
   /**

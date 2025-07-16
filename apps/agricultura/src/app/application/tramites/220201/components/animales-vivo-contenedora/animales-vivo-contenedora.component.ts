@@ -52,7 +52,10 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
    * @type {FilaSolicitud[]}
    */
   cuerpoTabla: FilaSolicitud[] = [];
-
+  /**
+   * Evento emitido al cerrar el componente.
+   * @type {EventEmitter<void>}
+   */
   @Output() cerrar = new EventEmitter<void>();
 
 

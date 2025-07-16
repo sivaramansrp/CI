@@ -90,6 +90,10 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @private
    */
   private destroyNotifier$ = new Subject<void>();
+  /**
+   * Evento emitido al cerrar el formulario de destinatario.
+   * @type {EventEmitter<void>}
+   */
   @Output() cerrar = new EventEmitter<void>();
 
   /**

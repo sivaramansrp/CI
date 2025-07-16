@@ -39,7 +39,15 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
      * @default false
      */
   @Input() esFormularioSoloLectura: boolean = false;
+  /**
+   * Evento emitido al guardar un destinatario.
+   * @type {EventEmitter<TercerosrelacionadosdestinoTable>}
+   */
   @Output() guardarDestinatario = new EventEmitter<TercerosrelacionadosdestinoTable>();
+  /**
+   * Opciones para el botón de radio.
+   * @type {EventEmitter[]}
+   */
   @Output() cerrar = new EventEmitter<void>();
 
   /**
