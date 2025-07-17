@@ -261,13 +261,6 @@ const ROUTES: Routes = [
       import('./tramites/30505/aviso-de-modificacion.module').then(
         (m) => m.AvisoDeModificacionModule)
   },
-  
-  {
-    path: 'empresas-comercializadoras',
-    loadChildren: () => 
-      import('./tramites/32604/empresas-comercializadoras.module').then(
-        (m) => m.EmpresasComercializadorasModule)
-  },
    {
       path: 'aviso-modification-certificacion',
     loadChildren: () => 
@@ -299,6 +292,12 @@ const ROUTES: Routes = [
         (m) => m.AvisoTesoreriaModule
       ),
   },
+  {
+    path: 'empresas-comercializadoras',
+    loadChildren: () => 
+      import('./tramites/32604/empresas-comercializadoras.module').then(
+        (m) => m.EmpresasComercializadorasModule)
+  }
 ];
 
 @NgModule({
