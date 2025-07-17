@@ -13,6 +13,7 @@
                 [forma]="reporteDeAnomaliasFormGroup" 
                 [formularioDatos]="reporteDeAnomaliasDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -53,6 +54,7 @@
                 [forma]="investigacionFormGroup" 
                 [formularioDatos]="investigacionDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>

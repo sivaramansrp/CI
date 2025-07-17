@@ -24,6 +24,7 @@
                 [forma]="sellosFormGroup" 
                 [formularioDatos]="sellosDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -56,6 +57,7 @@
                 [forma]="procedimientoFormGroup" 
                 [formularioDatos]="procedimientoDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -81,6 +83,7 @@
                 [forma]="anexeElProcedimientoFormGroup" 
                 [formularioDatos]="anexeProcedimientoDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -133,6 +136,7 @@
                 [forma]="aduanalCuentaFormGroup" 
                 [formularioDatos]="aduanalCuentaDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -179,6 +183,7 @@
                 [forma]="conservarseFormGroup" 
                 [formularioDatos]="conservarseDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>

@@ -12,6 +12,7 @@
                 [forma]="instalacionesFormGroup" 
                 [formularioDatos]="instalacionesDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -25,6 +26,7 @@
                 [forma]="accesosFormGroup" 
                 [formularioDatos]="accesosDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -54,6 +56,7 @@
             [forma]="perimetralesFormGroup" 
             [formularioDatos]="perimetralesDatos"
             [estado]="solicitudeState"
+            [soloLectura]="consultaState.readonly"
             (emitirCambioDeValor)="emitirCambioDeValor($event)"
             >
         </formas-dinamicas>
@@ -67,6 +70,7 @@
             [forma]="estacionamientosFormGroup" 
             [formularioDatos]="estacionamientosDatos"
             [estado]="solicitudeState"
+            [soloLectura]="consultaState.readonly"
             (emitirCambioDeValor)="emitirCambioDeValor($event)"
             >
         </formas-dinamicas>
@@ -80,6 +84,7 @@
             [forma]="dispositivosFormGroup" 
             [formularioDatos]="dispositivosDatos"
             [estado]="solicitudeState"
+            [soloLectura]="consultaState.readonly"
             (emitirCambioDeValor)="emitirCambioDeValor($event)"
             >
         </formas-dinamicas>
@@ -120,6 +125,7 @@
             [forma]="sistemasFormGroup" 
             [formularioDatos]="sistemasDatos"
             [estado]="solicitudeState"
+            [soloLectura]="consultaState.readonly"
             (emitirCambioDeValor)="emitirCambioDeValor($event)"
             >
         </formas-dinamicas>

@@ -7,13 +7,13 @@
             [tipoSeleccionTabla]="checkbox">
         </app-tabla-dinamica>
          <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary me-2" (click)="abrirModal(sociedades)">
+            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModal(sociedades)">
                 Agregar
             </button>
-            <button class="btn btn-danger me-2" type="button">
+            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">
                 Modificar
             </button>
-            <button class="btn btn-default" type="button">
+            <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura">
                 Eliminar
             </button>
         </div>
@@ -25,13 +25,13 @@
             [tipoSeleccionTabla]="checkbox">
         </app-tabla-dinamica>
         <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary me-2" (click)="abrirModal(agregar)">
+            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModal(agregar)">
                 Agregar
             </button>
-            <button class="btn btn-danger me-2" type="button" (click)="abrirModal(modificar)">
+            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura" (click)="abrirModal(modificar)">
                 Modificar
             </button>
-            <button class="btn btn-default" type="button">
+            <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura">
                 Eliminar
             </button>
         </div>
@@ -41,6 +41,7 @@
     [forma]="indiqueSiFormGroup" 
     [formularioDatos]="indiqueDatos"
     [estado]="solicitudeState"
+    [soloLectura]="esFormularioSoloLectura"
     (emitirCambioDeValor)="emitirCambioDeValor($event)"
     >
 </formas-dinamicas>
@@ -56,13 +57,13 @@
             [tipoSeleccionTabla]="checkbox">
         </app-tabla-dinamica>
         <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary me-2" (click)="abrirModal(mandatarios)">
+            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModal(mandatarios)">
                 Agregar
             </button>
-            <button class="btn btn-danger me-2" type="button">
+            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">
                 Modificar
             </button>
-            <button class="btn btn-default" type="button">
+            <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura">
                 Eliminar
             </button>
         </div>
@@ -75,7 +76,6 @@
     <h4 class="modal-title pull-left">Agregar Sociedades del Agente Aduanal</h4>
   </div>
   <div class="modal-body">
-    <!-- [estado]="importacionstate" -->
     <formas-dinamicas 
         [forma]="agregarSociedadesFormGroup" 
         [formularioDatos]="agregarSociedadesDatos"

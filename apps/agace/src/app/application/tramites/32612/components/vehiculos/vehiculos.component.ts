@@ -7,6 +7,7 @@ import { CONFIGURACION_ADUANAL_CUENTA, CONFIGURACION_ANEXE_PROCEDIMIENTO, CONFIG
 import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
 import { map, Subject, takeUntil } from 'rxjs';
 import { Tramite32612Query } from '../../estados/solicitud32612.query';
+import { ConsultaioState,ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-vehiculos',
@@ -37,11 +38,17 @@ export class VehiculosComponent implements OnInit, OnDestroy {
   public conservarseDatos = CONFIGURACION_CONSERVARSE;
   public solicitudeState!: Solicitude32612State;
   private destroyNotifier$: Subject<void> = new Subject();
+  public consultaState!: ConsultaioState;
 
   constructor(
     private tramite32612Store: Tramite32612Store,
-    private tramite32612Query: Tramite32612Query
-  ) {}
+    private tramite32612Query: Tramite32612Query,
+    private consultaQuery: ConsultaioQuery
+  ) {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+      this.consultaState = seccionState;
+    })).subscribe();
+  }
 
   ngOnInit(): void {
     this.tramite32612Query.selectSolicitude$

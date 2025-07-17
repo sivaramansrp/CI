@@ -27,13 +27,13 @@
                     <shared-datos-comunes [procedureNumero]="procedureNumero" [procedureActivo]="procedureActivo"></shared-datos-comunes>
                 }
                 @case(3) {
-                    <shared-terceros-relacionados></shared-terceros-relacionados>
+                    <shared-terceros-relacionados [consultaState]="consultaState"></shared-terceros-relacionados>
                 }
                 @case(4) {
-                   <app-agente-aduanal></app-agente-aduanal>
+                   <app-agente-aduanal [consultaState]="consultaState"></app-agente-aduanal>
                 }
                 @case (5) {
-                   <app-perfiles></app-perfiles>
+                   <app-perfiles [consultaState]="consultaState"></app-perfiles>
                 }
 
             }

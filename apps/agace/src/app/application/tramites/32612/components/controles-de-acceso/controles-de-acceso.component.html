@@ -17,6 +17,7 @@
                 [forma]="personalFormGroup" 
                 [formularioDatos]="personalDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -30,6 +31,7 @@
                 [forma]="identificacionFormGroup" 
                 [formularioDatos]="identificacionDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -65,6 +67,7 @@
             [forma]="entregasFormGroup" 
             [formularioDatos]="entregasDatos"
             [estado]="solicitudeState"
+            [soloLectura]="consultaState.readonly"
             (emitirCambioDeValor)="emitirCambioDeValor($event)"
             >
         </formas-dinamicas>

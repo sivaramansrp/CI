@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CONFIGURACION_INSTALACIONES, CONFIGURACION_INSTALACIONES_TABLA, DatosDeLasInstalaciones, ENLACE_TABLA, Instalaciones, MANDATARIOS_DE_AGENTE_ADUANAL, MandatariosDeAgenteAduanal, Sociedades } from '../../models/sociedades.model';
@@ -10,10 +10,12 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CONFIGURACION_AGREGAR, CONFIGURACION_IDIQUESI, CONFIGURACION_MODIFICAR, CONFIGURACION_SOCIEDADES, MANDATARIOS_DEL_AGENT } from '../../constants/sociedades-tabla.enum';
 import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
 import { Tramite32612Query } from '../../estados/solicitud32612.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-sociedades-tabla',
   standalone: true,
+  providers: [BsModalService],
   imports: [
     CommonModule,
     TablaDinamicaComponent,
@@ -58,15 +60,24 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
     modificarFormGroup: new FormGroup({}),
   });
   public modificarDatos = CONFIGURACION_MODIFICAR;
-
+  public esFormularioSoloLectura: boolean = false;
 
   constructor(
+    @Inject(BsModalService)
     private modalService: BsModalService,
     private esquemaDeCertificacionSvc: EsquemaDeCertificacionService,
     private tramite32612Store: Tramite32612Store,
-    private tramite32612Query: Tramite32612Query
+    private tramite32612Query: Tramite32612Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   ngOnInit(): void {

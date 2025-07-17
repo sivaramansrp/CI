@@ -66,6 +66,7 @@
                 [forma]="analisisDeRiesgoFormGroup" 
                 [formularioDatos]="analisisDeRiesgoDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -81,6 +82,7 @@
             [forma]="politicasFormGroup" 
             [formularioDatos]="politicasDatos"
             [estado]="solicitudeState"
+            [soloLectura]="consultaState.readonly"
             (emitirCambioDeValor)="emitirCambioDeValor($event)"
             >
         </formas-dinamicas>
@@ -96,6 +98,7 @@
             [forma]="auditoriasFormGroup" 
             [formularioDatos]="auditoriasDatos"
             [estado]="solicitudeState"
+            [soloLectura]="consultaState.readonly"
             (emitirCambioDeValor)="emitirCambioDeValor($event)"
             >
         </formas-dinamicas>
@@ -111,6 +114,7 @@
                 [forma]="contingenciaFormGroup" 
                 [formularioDatos]="contingenciaDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -140,6 +144,7 @@
                 [forma]="revisionesFormGroup" 
                 [formularioDatos]="revisionesDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>

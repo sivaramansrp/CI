@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InputRadioComponent, TituloComponent } from "@libs/shared/data-access-user/src";
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
@@ -22,6 +22,8 @@ import { Tramite32612DosQuery } from '../../estados/solicitud32612Dos.query';
 import { map, Subject, takeUntil } from 'rxjs';
 import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
 import { Tramite32612Query } from '../../estados/solicitud32612.query';
+import { ConsultaioState } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-perfiles',
@@ -39,6 +41,7 @@ import { Tramite32612Query } from '../../estados/solicitud32612.query';
 })
 export class PerfilesComponent implements OnInit, OnDestroy {
 
+  @Input() consultaState!: ConsultaioState;
   public formaPerfil!: FormGroup;
   public opcionDeBotonDeRadio = [
     {
@@ -104,6 +107,7 @@ export class PerfilesComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
   public solicitudeState!: Solicitude32612DosState;
   public solicitudeStateForm!: Solicitude32612State;
+  public esFormularioSoloLectura: boolean = false;
 
 
   constructor(
@@ -111,9 +115,18 @@ export class PerfilesComponent implements OnInit, OnDestroy {
     private tramite32612Store: Tramite32612DosStore,
     private tramite32612Query: Tramite32612DosQuery,
     private tramiteStore: Tramite32612Store,
-    private tramiteQuery: Tramite32612Query
+    private tramiteQuery: Tramite32612Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.crearFormulario();
+        })
+      )
+      .subscribe();
   }
 
   ngOnInit() {
@@ -132,7 +145,7 @@ export class PerfilesComponent implements OnInit, OnDestroy {
           this.solicitudeStateForm = seccionState;
         })
       ).subscribe();
-    this.crearPerfilForm();
+    this.crearFormulario();
   }
 
   get certificacionesFormGroup(): FormGroup {
@@ -164,6 +177,23 @@ export class PerfilesComponent implements OnInit, OnDestroy {
 
   public emitirCambioDeValor(event: {campo: string, valor: string}): void {
     this.tramiteStore.setDynamicFieldValue(event.campo, event.valor);
+  }
+
+  public crearFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearPerfilForm();
+    }
+  }
+
+  public guardarDatosFormulario(): void {
+    this.crearPerfilForm();
+    if (this.esFormularioSoloLectura) {
+      this.formaPerfil.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formaPerfil.enable();
+    }
   }
 
 

@@ -90,6 +90,7 @@
                 [forma]="tecnologiaFormGroup" 
                 [formularioDatos]="tecnologiaDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -117,6 +118,7 @@
                 [forma]="tecnologiaDosFormGroup" 
                 [formularioDatos]="tecnologiaDosDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>

@@ -17,6 +17,7 @@
         <div class="row mt-2">
             <formas-dinamicas [forma]="capacitacionFormGroup"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
              [formularioDatos]="capacitacionDatos">
             </formas-dinamicas>
@@ -40,6 +41,7 @@
                 </div>
             </div>
             <formas-dinamicas         [estado]="solicitudeState"
+            [soloLectura]="consultaState.readonly"
         (emitirCambioDeValor)="emitirCambioDeValor($event)" [forma]="capacitacionDosFormGroup" [formularioDatos]="capacitacionDatosDos">
             </formas-dinamicas>
         </div>

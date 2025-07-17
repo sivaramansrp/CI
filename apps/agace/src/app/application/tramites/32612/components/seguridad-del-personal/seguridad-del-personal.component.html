@@ -40,6 +40,7 @@
                 [forma]="antecedentesLaboralesFormGroup" 
                 [formularioDatos]="antecedentesLaboralesDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -55,6 +56,7 @@
                 [forma]="procedimientoFormGroup" 
                 [formularioDatos]="procedimientoDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -91,6 +93,7 @@
                 [forma]="administracionFormGroup" 
                 [formularioDatos]="administracionDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>

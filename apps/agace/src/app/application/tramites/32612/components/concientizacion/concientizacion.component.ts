@@ -6,7 +6,8 @@ import { TEXTOS_ESTATICOS_CONCIENTIZACION } from '../../constants/texto-estatico
 import { CONFIGURACION_CAPACITACION, CONFIGURACION_CAPACITACIONDOS } from '../../constants/concientizacion.enum';
 import { Tramite32612Query } from '../../estados/solicitud32612.query';
 import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
+import { ConsultaioState,ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-concientizacion',
@@ -31,11 +32,17 @@ export class ConcientizacionComponent implements OnInit,OnDestroy {
   public capacitacionDatos = CONFIGURACION_CAPACITACION;
   public capacitacionDatosDos = CONFIGURACION_CAPACITACIONDOS;
   public solicitudeState!: Solicitude32612State;
+  public consultaState!: ConsultaioState;
 
   constructor(
-      private tramite32612Store: Tramite32612Store,
-      private tramite32612Query: Tramite32612Query
-  ) {}
+    private tramite32612Store: Tramite32612Store,
+    private tramite32612Query: Tramite32612Query,
+    private consultaQuery: ConsultaioQuery,
+  ) {
+      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+        this.consultaState = seccionState;
+    })).subscribe();
+  }
 
   ngOnInit(): void {
     this.tramite32612Query.selectSolicitude$

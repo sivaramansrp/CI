@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Catalogo, CatalogoSelectComponent, CrosslistComponent, InputRadioComponent, ModeloDeFormaDinamica, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { EsquemaDeCertificacionService } from '../../services/esquema-de-certificacion.service';
 import { map, Subject, takeUntil } from 'rxjs';
 import { CROSLISTA_ENTRADA } from '../../constants/croslista.enums';
@@ -12,6 +13,7 @@ import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud
 import { Tramite32612Query } from '../../estados/solicitud32612.query';
 import { Solicitude32612DosState, Tramite32612DosStore } from '../../estados/solicitud32612Dos.store';
 import { Tramite32612DosQuery } from '../../estados/solicitud32612Dos.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-agente-aduanal',
@@ -32,6 +34,7 @@ import { Tramite32612DosQuery } from '../../estados/solicitud32612Dos.query';
 })
 export class AgenteAduanalComponent implements OnInit,OnDestroy {
 
+  @Input() consultaState!: ConsultaioState;
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
   private destroyNotifier$: Subject<void> = new Subject();
   public indiqueCatalogo: Catalogo[] = [];
@@ -74,6 +77,7 @@ export class AgenteAduanalComponent implements OnInit,OnDestroy {
   public pagoDeDerechosDatos = PAGO_DE_DERECHOS;
   public solicitudeState!: Solicitude32612State;
   public solicitudeDosState!: Solicitude32612DosState;
+  public esFormularioSoloLectura: boolean = false;
 
   constructor(
     private esquemaDeCertificacionSvc: EsquemaDeCertificacionService,
@@ -82,8 +86,17 @@ export class AgenteAduanalComponent implements OnInit,OnDestroy {
     private fb: FormBuilder,
     private tramiteStore: Tramite32612DosStore,
     private tramiteQuery: Tramite32612DosQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
-
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.crearFormulario();
+        })
+      )
+      .subscribe();
   }
 
   ngOnInit(): void {
@@ -102,7 +115,7 @@ export class AgenteAduanalComponent implements OnInit,OnDestroy {
         })
       ).subscribe();
     this.getIndiqueCatalogoDatos();
-    this.crearAgenteForm();
+    this.crearFormulario();
   }
 
   get agenteFormGroup(): FormGroup {
@@ -182,7 +195,23 @@ export class AgenteAduanalComponent implements OnInit,OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.tramiteStore[metodoNombre] as (value: unknown) => void)(VALOR);
   }
-  
+
+  public crearFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearAgenteForm();
+    }
+  }
+
+  public guardarDatosFormulario(): void {
+    this.crearAgenteForm();
+    if (this.esFormularioSoloLectura) {
+      this.formaAgente.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formaAgente.enable();
+    }
+  }
 
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

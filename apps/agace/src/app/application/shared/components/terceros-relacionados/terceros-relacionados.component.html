@@ -1,12 +1,12 @@
 <div class="conatiner">
     <form [formGroup]="represtantanteLegalForma">
         <div class="row mb-3"> 
-           <!--[soloLectura]="consultaState.readonly"  -->
             <formas-dinamicas 
                 [formularioTitulo]="'Representante Legal'"
                 [forma]="represtantanteLegalFormGroup" 
                 [formularioDatos]="represtantanteLegalDatos"
                 [estado]="importacionstate"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"
                 >
             </formas-dinamicas>

@@ -7,6 +7,7 @@ import { CONFIGURACION_COMMUNICACION, CONFIGURACION_PROCESOS } from '../../const
 import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
 import { map, Subject, takeUntil } from 'rxjs';
 import { Tramite32612Query } from '../../estados/solicitud32612.query';
+import { ConsultaioState,ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-seguridad-de-procesos',
@@ -30,11 +31,17 @@ export class SeguridadDeProcesosComponent implements OnInit,OnDestroy {
   public comunicacionDatos = CONFIGURACION_COMMUNICACION;
   public solicitudeState!: Solicitude32612State;
   private destroyNotifier$: Subject<void> = new Subject();
+  public consultaState!: ConsultaioState;
 
   constructor(
     private tramite32612Query: Tramite32612Query,
-    private tramite32612Store: Tramite32612Store
-  ) { }
+    private tramite32612Store: Tramite32612Store,
+    private consultaQuery: ConsultaioQuery
+  ) { 
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+      this.consultaState = seccionState;
+    })).subscribe();
+  }
 
   ngOnInit(): void {
     this.tramite32612Query.selectSolicitude$

@@ -7,6 +7,7 @@ import { CONFIGURACION_TECNOLOGIA, CONFIGURACION_TECNOLOGIA_DOS } from '../../co
 import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
 import { Tramite32612Query } from '../../estados/solicitud32612.query';
 import { map, Subject, takeUntil } from 'rxjs';
+import { ConsultaioState,ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-seguridad-de-la',
@@ -31,12 +32,16 @@ export class SeguridadDeLaComponent implements OnInit, OnDestroy {
   public tecnologiaDosDatos = CONFIGURACION_TECNOLOGIA_DOS;
   public solicitudeState!: Solicitude32612State;
   private destroyNotifier$: Subject<void> = new Subject();
+  public consultaState!: ConsultaioState;
 
   constructor(
     private tramite32612Store: Tramite32612Store,
-    private tramite32612Query: Tramite32612Query
+    private tramite32612Query: Tramite32612Query,
+    private consultaQuery: ConsultaioQuery
   ) {
-
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+      this.consultaState = seccionState;
+    })).subscribe();
   }
 
   ngOnInit() {

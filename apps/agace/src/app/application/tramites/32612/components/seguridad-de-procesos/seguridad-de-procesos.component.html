@@ -88,6 +88,7 @@
                 [formularioDatos]="procesamientoDatos"
                 [estado]="solicitudeState"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
+                [soloLectura]="consultaState.readonly"
                 >
             </formas-dinamicas>
         </div>
@@ -152,6 +153,7 @@
                 [forma]="comunicacionFormGroup" 
                 [formularioDatos]="comunicacionDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>

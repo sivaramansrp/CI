@@ -87,6 +87,7 @@
                 [forma]="criteriosFormGroup" 
                 [formularioDatos]="criteriosDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -101,6 +102,7 @@
                 [forma]="requerimientosFormGroup" 
                 [formularioDatos]="requerimientosDatos"
                 [estado]="solicitudeState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="emitirCambioDeValor($event)"
                 >
             </formas-dinamicas>
