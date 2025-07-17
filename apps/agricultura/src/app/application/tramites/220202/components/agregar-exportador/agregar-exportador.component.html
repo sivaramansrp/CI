@@ -64,28 +64,18 @@
                 formControlName="primerApellido"
                 maxlength="200"
               />
-              <div
-                *ngIf="
-                  destinatarioForm
-                    .get('primerApellido')
-                    ?.hasError('required') &&
-                  destinatarioForm.get('primerApellido')?.touched
-                "
-                class="text-danger"
-              >
+              @if (destinatarioForm.get('primerApellido')?.hasError('required')
+              && destinatarioForm.get('primerApellido')?.touched) {
+              <div class="text-danger">
                 <small>Este campo es obligatorio.</small>
               </div>
-              <div
-                *ngIf="
-                  destinatarioForm
-                    .get('primerApellido')
-                    ?.hasError('maxLength') &&
-                  destinatarioForm.get('primerApellido')?.touched
-                "
-                class="text-danger"
-              >
+              } @if
+              (destinatarioForm.get('primerApellido')?.hasError('maxLength') &&
+              destinatarioForm.get('primerApellido')?.touched) {
+              <div class="text-danger">
                 <small>No escribas más de 200 caracteres.</small>
               </div>
+              }
             </div>
           </div>
           <div class="col-md-4">
@@ -102,17 +92,13 @@
                 formControlName="segundoApellido"
                 maxlength="200"
               />
-              <div
-                *ngIf="
-                  destinatarioForm
-                    .get('segundoApellido')
-                    ?.hasError('maxLength') &&
-                  destinatarioForm.get('segundoApellido')?.touched
-                "
-                class="text-danger"
-              >
+              @if
+              (destinatarioForm.get('segundoApellido')?.hasError('maxLength') &&
+              destinatarioForm.get('segundoApellido')?.touched) {
+              <div class="text-danger">
                 <small>No escribas más de 200 caracteres.</small>
               </div>
+              }
             </div>
           </div>
         </div>
@@ -131,24 +117,17 @@
                 formControlName="razonSocial"
                 maxlength="250"
               />
-              <div
-                *ngIf="
-                  destinatarioForm.get('razonSocial')?.hasError('required') &&
-                  destinatarioForm.get('razonSocial')?.touched
-                "
-                class="text-danger"
-              >
+              @if (destinatarioForm.get('razonSocial')?.hasError('required') &&
+              destinatarioForm.get('razonSocial')?.touched) {
+              <div class="text-danger">
                 <small>Este campo es obligatorio.</small>
               </div>
-              <div
-                *ngIf="
-                  destinatarioForm.get('razonSocial')?.hasError('maxLength') &&
-                  destinatarioForm.get('razonSocial')?.touched
-                "
-                class="text-danger"
-              >
+              } @if (destinatarioForm.get('razonSocial')?.hasError('maxLength')
+              && destinatarioForm.get('razonSocial')?.touched) {
+              <div class="text-danger">
                 <small>No escribas más de 250 caracteres.</small>
               </div>
+              }
             </div>
           </div>
         </div>
@@ -178,15 +157,12 @@
                 style="height: 150px"
               >
               </textarea>
-              <div
-                *ngIf="
-                  destinatarioForm.get('razonSocial')?.hasError('required') &&
-                  destinatarioForm.get('razonSocial')?.touched
-                "
-                class="text-danger"
-              >
+              @if (destinatarioForm.get('razonSocial')?.hasError('required') &&
+              destinatarioForm.get('razonSocial')?.touched) {
+              <div class="text-danger">
                 <small>Este campo es obligatorio.</small>
               </div>
+              }
             </div>
           </div>
         </div>
@@ -217,15 +193,12 @@
                 formControlName="telefono"
                 maxlength="30"
               />
-              <div
-                *ngIf="
-                  destinatarioForm.get('telefono')?.hasError('maxLength') &&
-                  destinatarioForm.get('telefono')?.touched
-                "
-                class="text-danger"
-              >
+              @if (destinatarioForm.get('telefono')?.hasError('maxLength') &&
+              destinatarioForm.get('telefono')?.touched) {
+              <div class="text-danger">
                 <small>No escribas más de 30 caracteres.</small>
               </div>
+              }
             </div>
           </div>
           <div class="col-md-4">
@@ -247,24 +220,15 @@
                 formControlName="correo"
                 maxlength="320"
               />
-              <div
-                *ngIf="
-                  destinatarioForm.get('correo')?.hasError('pattern') &&
-                  destinatarioForm.get('correo')?.touched
-                "
-                class="text-danger"
-              >
+              @if (destinatarioForm.get('correo')?.hasError('pattern') &&
+              destinatarioForm.get('correo')?.touched) {
+              <div class="text-danger">
                 Por favor, escribe una dirección de correo válida
               </div>
-              <div
-                *ngIf="
-                  destinatarioForm.get('correo')?.hasError('maxlength') &&
-                  destinatarioForm.get('correo')?.touched
-                "
-                class="text-danger"
-              >
-                No escribas más de 320 caracteres
-              </div>
+              } @if (destinatarioForm.get('correo')?.hasError('maxlength') &&
+              destinatarioForm.get('correo')?.touched) {
+              <div class="text-danger">No escribas más de 320 caracteres</div>
+              }
             </div>
           </div>
         </div>

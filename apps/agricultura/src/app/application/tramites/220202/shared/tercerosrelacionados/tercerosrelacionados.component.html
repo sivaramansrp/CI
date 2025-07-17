@@ -117,7 +117,7 @@
         Buscar
       </button>
     </div>
-    
+
     } @else if (cuerpoTablaExportador.length === 1) {
     <div class="col-md-12 d-flex justify-content-end">
       <button
@@ -154,10 +154,8 @@
           (listaDeFilaSeleccionada)="onSeleccionDestinatario($event)"
         ></app-tabla-dinamica>
       </div>
-      <div
-        class="col-md-12 d-flex justify-content-end"
-        *ngIf="cuerpoTablaDestino.length === 0"
-      >
+      @if (cuerpoTablaDestino.length === 0) {
+      <div class="col-md-12 d-flex justify-content-end">
         <button
           class="btn btn-primary me-3"
           [disabled]="esFormularioSoloLectura"
@@ -173,10 +171,8 @@
           Buscar
         </button>
       </div>
-      <div
-        class="col-md-12 d-flex justify-content-end"
-        *ngIf="cuerpoTablaDestino.length === 1"
-      >
+      } @else if (cuerpoTablaDestino.length === 1) {
+      <div class="col-md-12 d-flex justify-content-end">
         <button
           class="btn btn-primary me-3"
           [disabled]="
@@ -196,6 +192,7 @@
           Eliminar
         </button>
       </div>
+      }
     </div>
   </div>
 </div>
