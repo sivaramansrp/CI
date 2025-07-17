@@ -18,6 +18,12 @@
           data-toggle="tab">Revisión Documental</a>
       </li>
       }
+      @if(consultaState.parameter.toUpperCase() === parametero.READ_PROCEDEMENTO) {
+      <li [ngClass]="indice === 4 ? 'active' : ''">
+        <a (click)="seleccionaTab(4)" (keyup.enter)="seleccionaTab(4)" (keydown.space)="seleccionaTab(4)" tabindex="0"
+          data-toggle="tab">Frecuencia de inspección</a>
+      </li>
+      }
     </ul>
 
     <ng-container>
@@ -33,6 +39,11 @@
       @case (3) {
       @if(esDatosRespuesta) {
       <app-revision-documental></app-revision-documental>
+      }
+      }
+      @case (4) {
+      @if(esDatosRespuesta) {
+      <app-frecuencia-inspeccion></app-frecuencia-inspeccion>
       }
       }
       }
