@@ -26,7 +26,6 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { REGEX_RFC } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SharedModalComponent } from '../../../tramites/31602/components/shared-modal/shared-modal.component';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
@@ -37,8 +36,6 @@ import dinamicaradio from '@libs/shared/theme/assets/json/31602/dinamica-radio-d
 import { map } from 'rxjs';
 import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 import { takeUntil } from 'rxjs';
-
-
 
 /**
  * Componente que representa la sección "Datos Comunes Dos".
@@ -58,7 +55,6 @@ import { takeUntil } from 'rxjs';
     InputRadioComponent,
     TituloComponent,
     InputCheckComponent,
-    SharedModalComponent
   ],
   templateUrl: './datos-comunes-dos.component.html',
   styleUrl: './datos-comunes-dos.component.scss',
@@ -296,6 +292,7 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
             Validators.required,
             Validators.minLength(3),
             Validators.maxLength(250),
+            Validators.pattern(/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ.,-]*$/)
           ],
         ],
         lugarDeRadicacion: [
@@ -304,6 +301,7 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
             Validators.required,
             Validators.minLength(3),
             Validators.maxLength(250),
+            Validators.pattern(/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ.,-]*$/)
           ],
         ],
         contabilidad: [this.solicitudState?.contabilidad, Validators.required],

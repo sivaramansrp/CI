@@ -4248,5 +4248,12 @@
     "linkDashboard": "/agace/esquema-de-certificacion/registro-solicitud32612",
     "linkDepartment": "/pago/esquema-de-certificacion/registro-solicitud32612",
     "department": "agace"
+  },
+    {
+    "id": 606,
+    "tramite": 32607,
+    "linkDashboard": "/agace/aeronaves/solicitud",
+    "linkDepartment": "/pago/aeronaves/solicitud",
+    "department": "agace"
   }
 ]
