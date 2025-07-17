@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, ValidatorFn } from '@angular/forms';
 import { Catalogo, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { EXENTO_DE_PAGO } from '../../constantes/certificado-zoosanitario.enum';
 import { FormGroup } from '@angular/forms';
@@ -111,6 +111,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private mediodetransporteService: MediodetransporteService,
     private consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
 
   ) {
     this.fetchBancoData();
@@ -372,7 +373,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
           return { fechaLim: true }; // Retorna error si la fecha está en el futuro
         }
       }
-      return null; // Fecha válida
+      return null;
     };
   }
 
@@ -384,5 +385,15 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Método para mostrar errores en el formulario.
+   * 
+   * Este método activa la visualización de errores en el formulario marcando todos los campos como tocados.
+   */
+  public mostrarErrores() {
+    this.FormSolicitud?.markAllAsTouched?.();
+    this.cdr.detectChanges();
   }
 }

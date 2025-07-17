@@ -147,6 +147,17 @@ numeroDatos: string;
 bimestres: string;
 
   fechaPago: string;
+  acredite: string;
+   principales: string;
+  municipio: string;
+  instalacion: string;
+  federativa: string;
+  registro: string;
+  colonia: string;
+  postal: string;
+  proceso: string;
+  inmueble: string;
+  federativaSeleccionada: string;
 }
 /**
  * Función para crear el estado inicial de Solicitud31601.
@@ -289,7 +300,18 @@ export function createInitialState(): Solicitud31601State {
     numeroDatos: '',
     bimestres: '',
     deEmpleados:'',
-    fechaPago:''
+    fechaPago:'',
+    acredite: '',
+      principales: '',
+  municipio: '',
+  instalacion: '',
+  federativa: '',
+  registro: '',
+  colonia: '',
+  postal: '',
+  proceso: '',
+  inmueble: '',
+  federativaSeleccionada: ''
   };
 }
 /**
@@ -1405,7 +1427,6 @@ setDeEmpleados(deEmpleados: string): void {
   }));
 }
 
- 
   /**
    * Establece el valor de la fecha de pago en el estado.
    * @param fechaPago La fecha de pago a establecer.
@@ -1416,4 +1437,114 @@ setDeEmpleados(deEmpleados: string): void {
       fechaPago,
     }));
   }
+
+  /* Establece el valor de "de empleados" en el estado */
+setAcredite(acredite: string): void {
+  this.update((state) => ({
+    ...state,
+    acredite,
+  }));
 }
+/**
+ * Actualiza el estado con el valor proporcionado para `principales`.
+ */
+setPrincipales(principales: string): void {
+  this.update((state) => ({
+    ...state,
+    principales,
+  }));
+}
+
+/**
+ * Actualiza el estado con el valor proporcionado para `municipio`.
+ */
+setMunicipio(municipio: string): void {
+  this.update((state) => ({
+    ...state,
+    municipio,
+  }));
+}
+
+/**
+ * Actualiza el estado con el valor proporcionado para `instalacion`.
+ */
+setInstalacion(instalacion: string): void {
+  this.update((state) => ({
+    ...state,
+    instalacion,
+  }));
+}
+
+/**
+ * Actualiza el estado con el valor proporcionado para `federativa`.
+ */
+setFederativa(federativa: string): void {
+  this.update((state) => ({
+    ...state,
+    federativa,
+  }));
+}
+
+/**
+ * Actualiza el estado con el valor proporcionado para `registro`.
+ */
+setRegistro(registro: string): void {
+  this.update((state) => ({
+    ...state,
+    registro,
+  }));
+}
+
+/**
+ * Actualiza el estado con el valor proporcionado para `colonia`.
+ */
+setColonia(colonia: string): void {
+  this.update((state) => ({
+    ...state,
+    colonia,
+  }));
+}
+
+/**
+ * Actualiza el estado con el valor proporcionado para `postal`.
+ */
+setPostal(postal: string): void {
+  this.update((state) => ({
+    ...state,
+    postal,
+  }));
+}
+
+/**
+ * Actualiza el estado con el valor proporcionado para `proceso`.
+ */
+setProceso(proceso: string): void {
+  this.update((state) => ({
+    ...state,
+    proceso,
+  }));
+}
+
+/**
+ * Actualiza el estado con el valor proporcionado para `inmueble`.
+ */
+setInmueble(inmueble: string): void {
+  this.update((state) => ({
+    ...state,
+    inmueble,
+  }));
+}
+
+/**
+ * Actualiza el estado con la entidad federativa seleccionada.
+ */
+setFederativaSeleccionada(federativaSeleccionada: string): void {
+  this.update((state) => ({
+    ...state,
+    federativaSeleccionada,
+  }));
+}
+
+
+}
+

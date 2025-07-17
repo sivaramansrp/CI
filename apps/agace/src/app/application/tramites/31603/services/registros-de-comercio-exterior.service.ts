@@ -125,6 +125,37 @@ export class RegistrosDeComercioExteriorService {
       );
     }
 
+      /**
+     * Obtiene los datos para la tabla "Inversion Grupo" desde un archivo JSON local.
+     *
+     * @returns {Observable<JSONResponse>} Un observable que emite la respuesta JSON con los datos de la tabla.
+     * @throws Propagará cualquier error HTTP encontrado durante la solicitud.
+     */
+    getInversionTablaDatos(): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>('./assets/json/31603/inversion-grupo-tabla.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+    }
+
+/**
+ * Obtiene los datos del catálogo de tipos de inversión desde un archivo JSON local.
+ *
+ * Realiza una solicitud HTTP GET a la ruta 'assets/json/31602/tipo-inversion-datos.json' para recuperar
+ * el catálogo de tipos de inversión. Si ocurre un error durante la solicitud, este es capturado y propagado.
+ *
+ * @returns {Observable<JSONResponse>} Un observable que emite la respuesta JSON con los datos del catálogo.
+ * @throws Propagará cualquier error HTTP encontrado durante la solicitud.
+ */
+    getTipoInversionDatos(): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>('assets/json/31603/tipo-inversion-datos.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+    }
+
   /**
    * Actualiza el estado del formulario en el `tramaite31602IvaeiepsStore` utilizando los datos proporcionados en `Solicitud31602IvaeiepsState`.
    *

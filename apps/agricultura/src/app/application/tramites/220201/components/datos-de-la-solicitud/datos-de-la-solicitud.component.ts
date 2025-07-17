@@ -1,23 +1,26 @@
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { HttpClient } from '@angular/common/http';
 
 import { DatosForma, RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
-import { ActivatedRoute, Router } from '@angular/router';
-import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solicitud.model';
-import {Subject, debounceTime, map, takeUntil } from 'rxjs';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+import { Subject, debounceTime, map, takeUntil } from 'rxjs';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
+import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solicitud.model';
+import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { AnimalesVivoContenedoraComponent } from '../animales-vivo-contenedora/animales-vivo-contenedora.component';
+import { SubProductosContenedoraComponent } from '../sub-productos-contenedora/sub-productos-contenedora.component';
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos de la solicitud.
@@ -36,17 +39,19 @@ import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.scss'],
   standalone: true,
-  imports:[SharedModule,
-           CommonModule,
-           TituloComponent,
-           ReactiveFormsModule,
-           CatalogoSelectComponent,
-           InputRadioComponent,
-           AlertComponent,
-           TablaDinamicaComponent,
-           NotificacionesComponent]
+  imports: [SharedModule,
+    CommonModule,
+    TituloComponent,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    InputRadioComponent,
+    AlertComponent,
+    TablaDinamicaComponent,
+    NotificacionesComponent,
+    ModalComponent]
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('modalRef') modalRef!: ModalComponent;
   /**
    * Constantes de texto.
    * @property {string} TEXTOS
@@ -118,6 +123,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @default false
    */
   public moduloEmergente: boolean = false;
+  /**
+ * @property moduloEmergente
+ * @description Indica si el módulo emergente está activo.
+ * @type {boolean}
+ * @default false
+ */
+  public eliminarDatosTabla: boolean = false;
 
   /**
    * Opciones para el botón de radio.
@@ -200,7 +212,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 15 },
     { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
     { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
-    { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 }    
+    { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 }
   ];
 
   /**
@@ -233,6 +245,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @memberof DatosDeLaSolicitudComponent
    */
   notificationCheck: boolean = false;
+  listSelectedView: FilaSolicitud[] = [];
 
   /**
    * @description
@@ -306,9 +319,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
     private consultaQuery: ConsultaioQuery,
-     public fitosanitarioStore: ZoosanitarioStore,
-       public router: Router,
-          public activatedRoute: ActivatedRoute
+    public fitosanitarioStore: ZoosanitarioStore,
+    public router: Router,
+    public activatedRoute: ActivatedRoute
   ) {
     this.obtenerListasDesplegables();
   }
@@ -328,19 +341,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @method ngOnInit
    */
   ngOnInit(): void {
-     this.certificadoZoosanitarioServices.getAllDatosForma()
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe((datos) => {
-      this.formulariodataStore = datos.datos;
-      this.cuerpoTabla = datos.tablaDatos;      
-    });
+    this.certificadoZoosanitarioServices.getAllDatosForma()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        this.formulariodataStore = datos.datos;
+        this.cuerpoTabla = datos.tablaDatos;
+      });
     this.crearFormulario();
     this.initActionFormBuild();
-   this.nuevaNotificacion={} as Notificacion;
+
+    this.nuevaNotificacion = {} as Notificacion;
   }
 
-   ngAfterViewInit(): void {
-       this.datosDelaSolicitud.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
+  ngAfterViewInit(): void {
+    this.radioBotonSeleccionado();
+    this.datosDelaSolicitud.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
       const FORMA_VALIDA_ACTUALIZADA = {
         dataDeLaSolicitud: false,
       };
@@ -369,17 +384,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
           const PATTERN = /^UCON[a-zA-Z0-9]{4,10}$/;
           this.moduloEmergente = !PATTERN.test(value);
           this.messageDeError = `No existe información para la clave UCON: ${this.datosDelaSolicitud.get('claveUCON')?.value} y RFC: LEQI8101314S7 proporcionados. Favor de verificar.`;
-           this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: this.messageDeError,
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'OK',
-      txtBtnCancelar: '',
-    };
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: '',
+            mensaje: this.messageDeError,
+            cerrar: false,
+            tiempoDeEspera: 2000,
+            txtBtnAceptar: 'OK',
+            txtBtnCancelar: '',
+          };
         }
       });
   }
@@ -388,7 +403,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * Inicializa el grupo de formularios anidado para los datos de la solicitud.
    * @method initActionFormBuild
    */
-  initActionFormBuild(): void { 
+  initActionFormBuild(): void {
     this.datosDelaSolicitud = this.fb.group({
       tipoMercancia: ['yes', Validators.required],
       aduanaIngreso: ['', Validators.required],
@@ -415,7 +430,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
           certificacion: datosDeLaSolicitud.certificacion || '',
           regimen: datosDeLaSolicitud.regimen || ''
         })
-        this.notificationCheck=true;
+        this.notificationCheck = true;
       }
     });
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
@@ -528,52 +543,52 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     } else {
       this.notificationCheck = false;
     }
-    if( VALOR === 'yes') {
-        this.configuracionColumnasoli= [
-    { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
-    { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
-    { encabezado: 'Requisito', clave: (fila) => fila.requisito, orden: 3 },
-    { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional, orden: 4 },
-    { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
-    { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
-    { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
-    { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8 },
-    { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
-    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 10 },
-    { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
-    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
-    { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
-    { encabezado: 'Especie', clave: (fila) => fila.especie, orden: 14 },
-    { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 15 },
-    { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
-    { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
-    { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 }    
-  ];
+    if (VALOR === 'yes') {
+      this.configuracionColumnasoli = [
+        { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
+        { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
+        { encabezado: 'Requisito', clave: (fila) => fila.requisito, orden: 3 },
+        { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional, orden: 4 },
+        { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
+        { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
+        { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
+        { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8 },
+        { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
+        { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 10 },
+        { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
+        { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
+        { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
+        { encabezado: 'Especie', clave: (fila) => fila.especie, orden: 14 },
+        { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 15 },
+        { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
+        { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
+        { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 }
+      ];
     }
-    else{
-        this.configuracionColumnasoli = [
-    { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
-    { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
-    { encabezado: 'Requisito', clave: (fila) => fila.requisito, orden: 3 },
-    { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional, orden: 4 },
-    { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
-    { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
-    { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
-    { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8 },
-    { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
-    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 10 },
-    { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
-    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
-    { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
-    { encabezado: 'Especie', clave: (fila) => fila.especie, orden: 14 },
-    { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 15 },
-    { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
-    { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
-    {encabezado: 'Tipo de presentación', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 },
-    {encabezado: 'Tipo planta', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 },
-    {encabezado: 'Planta autorizada de origen', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 },
-    { encabezado: 'Certificado Internacional Electrónico', clave: (fila: FilaSolicitud): string => fila.certificadoInternacionalElectronico, orden: 19 }    
-  ];
+    else {
+      this.configuracionColumnasoli = [
+        { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
+        { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
+        { encabezado: 'Requisito', clave: (fila) => fila.requisito, orden: 3 },
+        { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional, orden: 4 },
+        { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
+        { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
+        { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
+        { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8 },
+        { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
+        { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 10 },
+        { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
+        { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
+        { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
+        { encabezado: 'Especie', clave: (fila) => fila.especie, orden: 14 },
+        { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 15 },
+        { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
+        { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
+        { encabezado: 'Tipo de presentación', clave: (fila) => fila.tipoDeProducto, orden: 18 },
+        { encabezado: 'Tipo planta', clave: (fila) => fila.tipoPlanta, orden: 18 },
+        { encabezado: 'Planta autorizada de origen', clave: (fila) => fila.plantaAutorizadaOrigen, orden: 18 },
+        { encabezado: 'Certificado Internacional Electrónico', clave: (fila: FilaSolicitud): string => fila.certificadoInternacionalElectronico, orden: 19 }
+      ];
     }
     this.setValoresStore();
   }
@@ -588,6 +603,32 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       this.moduloEmergente = false;
     }
   }
+  /**
+  * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
+  * @method eliminarPedimento
+  * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
+  */
+  eliminarPedimentoDatos(borrar: boolean): void {
+    if (borrar) {
+      this.eliminarDatosTabla = false;
+      const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
+      if (VALOR.length === 0) {
+        return;
+      }
+      const FILTERED_VALOR = VALOR.filter(
+        (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
+      );
+      this.fitosanitarioStore.update(
+        (state) => ({
+          ...state,
+          tablaDatos: FILTERED_VALOR
+        })
+      );
+    }
+    else {
+      this.eliminarDatosTabla = false;
+    }
+  }
 
   /**
    * @description Navega a la página de agregar mercancía.
@@ -596,21 +637,23 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @returns {void}
    */
   modificarMercancia(): void {
-    this.seleccionTabla([]);
-    if(this.forma.get('tipoMercancia')?.value === 'yes') {
-      this.router.navigate(['../animales-vivo'], {
-        relativeTo: this.activatedRoute,
-      });
+    const VALOR = this.datosDelaSolicitud.value.tipoMercancia;
+    if (VALOR === 'yes') {
+      this.modalRef.abrir(AnimalesVivoContenedoraComponent);
+    }
+    else if (VALOR === 'no') {
+      this.modalRef.abrir(SubProductosContenedoraComponent);
     }
   }
-    /**
-   * @description Selecciona una fila de la tabla de solicitudes y actualiza el estado del store.
-   * Este método se llama cuando se selecciona una fila en la tabla de solicitudes.
-   * Actualiza el estado del store con los datos de la fila seleccionada.
-   * @method seleccionTabla
-   * @param {FilaSolicitud} event - Datos de la fila seleccionada.
-   */
+  /**
+ * @description Selecciona una fila de la tabla de solicitudes y actualiza el estado del store.
+ * Este método se llama cuando se selecciona una fila en la tabla de solicitudes.
+ * Actualiza el estado del store con los datos de la fila seleccionada.
+ * @method seleccionTabla
+ * @param {FilaSolicitud} event - Datos de la fila seleccionada.
+ */
   seleccionTabla(event: FilaSolicitud[]): void {
+    this.listSelectedView = event;
     this.fitosanitarioStore.update(
       (state) => ({
         ...state,
@@ -618,38 +661,40 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       })
     )
   }
-   /**
-   * @description Método que se ejecuta cuando el componente es destruido.
-   * Utiliza un Subject para notificar a las suscripciones que deben ser destruidas, evitando fugas de memoria.
-   * @method ngOnDestroy
-   * @returns {void}
-   */
+  /**
+  * @description Método que se ejecuta cuando el componente es destruido.
+  * Utiliza un Subject para notificar a las suscripciones que deben ser destruidas, evitando fugas de memoria.
+  * @method ngOnDestroy
+  * @returns {void}
+  */
   eliminarMercancia(): void {
-    const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
-    if (VALOR.length === 0) {
-      return;
-    }
-    const FILTERED_VALOR = VALOR.filter(
-      (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
-    );
-    this.fitosanitarioStore.update(
-      (state) => ({
-      ...state,
-      tablaDatos: FILTERED_VALOR
-      })
-    );
-
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Está seguro que desea eliminar estos datos?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+    this.eliminarDatosTabla = true;
   }
-   /**
-   * @description Navega a la página de modificar mercancía.
-   * Este método redirige al usuario a la ruta relativa '../animales-vivo' para modificar una mercancía existente.
-   * @method agregarMercancia
-   * @returns {void}
-   */
+  /**
+  * @description Navega a la página de modificar mercancía.
+  * Este método redirige al usuario a la ruta relativa '../animales-vivo' para modificar una mercancía existente.
+  * @method agregarMercancia
+  * @returns {void}
+  */
   agregarMercancia(): void {
-    this.router.navigate(['../animales-vivo'], {
-      relativeTo: this.activatedRoute,
-    });
+    if (this.datosDelaSolicitud.value.tipoMercancia === 'no') {
+      this.modalRef.abrir(SubProductosContenedoraComponent);
+    }
+    else if (this.datosDelaSolicitud.value.tipoMercancia === 'yes') {
+      this.modalRef.abrir(AnimalesVivoContenedoraComponent);
+    }
+
   }
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
