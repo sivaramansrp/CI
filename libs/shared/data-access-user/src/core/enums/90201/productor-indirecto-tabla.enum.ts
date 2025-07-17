@@ -40,7 +40,7 @@ export const DOMICILIOS_PLANTAS: ConfiguracionColumna<DomiciliosDePlantasTabla>[
       clave: (item: ProductorIndirectoTabla) => item.denominacion,
       orden: 2,
     },
-    { encabezado: 'Correo', clave: (item: ProductorIndirectoTabla) => item.correo, orden: 3 },
+    { encabezado: 'Correo electrónico', clave: (item: ProductorIndirectoTabla) => item.correo, orden: 3 },
   ];
 
 
@@ -58,6 +58,19 @@ export const DOMICILIOS_PLANTAS: ConfiguracionColumna<DomiciliosDePlantasTabla>[
    export const SECTORES_TABLA: ConfiguracionColumna<SectoresTabla>[] = [
     {
       encabezado: 'Lista de sectores',
+      clave: (item: SectoresTabla) => item.sectores,
+      orden: 1,
+    },
+    {
+      encabezado: 'Clave del sector',
+      clave: (item: SectoresTabla) => item.claveDel,
+      orden: 2,
+    },
+  ];
+
+    export const FRACCION_TABLA: ConfiguracionColumna<SectoresTabla>[] = [
+    {
+      encabezado: 'Fracción arancelaria',
       clave: (item: SectoresTabla) => item.sectores,
       orden: 1,
     },

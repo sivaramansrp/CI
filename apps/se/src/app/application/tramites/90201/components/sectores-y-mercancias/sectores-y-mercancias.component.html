@@ -60,6 +60,16 @@
         <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura" (click)="eliminarMercancia()">Eliminar</button>
         <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar</button>
       </div>
+      <div class="row">
+      <app-tabla-dinamica
+        [configuracionTabla]="configuracionFraccion"
+        [datos]="sectores"
+        [tipoSeleccionTabla]="radio"
+        [disableSeleccionTablaRadio]="esFormularioSoloLectura"
+        (filaSeleccionada)="seleccionDeFilaDeTabla($event)"
+      >
+      </app-tabla-dinamica>
+    </div>
     </div>
   </form>
 </div>

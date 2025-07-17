@@ -19,8 +19,8 @@ import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/c
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { ExpansionDeProductoresService } from '@libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
 
+import { FRACCION_TABLA, SECTORES_TABLA } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
 import { SECTORESY } from '@libs/shared/data-access-user/src';
-import { SECTORES_TABLA } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
 import { SectoresTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import sectoresTabla from '@libs/shared/theme/assets/json/90201/sectores-tabla.json';
 
@@ -120,6 +120,14 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * `SECTORES_TABLA`.
    */
   public configuracionTabla = SECTORES_TABLA;
+  /**
+   * Configuración de la tabla utilizada para mostrar las fracciones.
+   * 
+   * Esta propiedad almacena la configuración de columnas, estilos y opciones
+   * específicas para la tabla de fracciones, utilizando la constante `FRACCION_TABLA`.
+   */
+ public configuracionFraccion = FRACCION_TABLA;
+  
 
   /**
    * Un array de objetos `SectoresTabla` que representa los sectores.
