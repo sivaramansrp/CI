@@ -54,7 +54,7 @@
     <div class="row pb-20">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="aduana">Aduana de ingreso:</label>
+          <label class="form-label" for="aduana">Aduana de ingreso*:</label>
           <input class="form-control" id="aduana" formControlName="aduana" type="text"
             (change)="setValoresStore(datosSolicitudForm, 'aduana', 'setAduana')" />
         </div>
@@ -65,7 +65,7 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="oficina">Oficina de inspección de Sanidad Agropecuaria:</label>
+          <label class="form-label" for="oficina">Oficina de inspección de Sanidad Agropecuaria*:</label>
           <input class="form-control" id="oficina" formControlName="oficina" type="text"
             (change)="setValoresStore(datosSolicitudForm, 'oficina', 'setOficina')" />
         </div>
@@ -76,7 +76,7 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="punto">Punto de inspección:</label>
+          <label class="form-label" for="punto">Punto de inspección*:</label>
           <input class="form-control" id="punto" formControlName="punto" type="text"
             (change)="setValoresStore(datosSolicitudForm, 'punto', 'setPunto')" />
         </div>
@@ -86,33 +86,28 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="clave">Clave UCON*:</label>
-          <input class="form-control" id="clave" formControlName="clave" type="number"
+          <label class="form-label" for="clave">Clave UCON:</label>
+          <input class="form-control" id="clave" formControlName="clave" type="text"
             (change)="setValoresStore(datosSolicitudForm, 'clave', 'setClave')" />
         </div>
-        @if(datosSolicitudForm.controls['clave'].invalid && datosSolicitudForm.controls['clave'].touched) {
-          <div class="d-grid">
-            @if(datosSolicitudForm.controls['clave'].errors?.['required']) {
-              <span class="mensaje-error">Este campo es obligatorio</span>
-            }
-          </div>
-        }
+       
       </div>
 
       <div class="col-md-4">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="establecimiento" [label]="'Establecimiento TIF'" [required]="false"
+          <app-catalogo-select [catalogo]="establecimiento" [label]="'Establecimiento TIF'" [placeholder]="'Seleccione un valor'" [required]="false" 
             name="establecimiento" formControlName="establecimiento" [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(datosSolicitudForm, 'establecimiento', 'setEstablecimiento')"
             data-bs-toggle="modal"
                     data-bs-target="#modalAgregarMercancias">
           </app-catalogo-select>
+          
         </div>
       </div>
 
       <div class="col-md-8">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="veterinario" [label]="'Nombre del médico veterinario'" [required]="true"
+          <app-catalogo-select [catalogo]="veterinario" [label]="'Nombre del médico veterinario'" [placeholder]="'Seleccione un valor'" [isDisabled]="esFormularioSoloLectura"
             name="veterinario" formControlName="veterinario" [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(datosSolicitudForm, 'veterinario', 'setVeterinario')">
           </app-catalogo-select>
@@ -124,23 +119,35 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="guia">Número de guía:</label>
-          <input class="form-control" id="guia" formControlName="guia" type="number"
+          <input class="form-control" id="guia" formControlName="guia" type="text" maxlength="80" size="29"
             (change)="setValoresStore(datosSolicitudForm, 'guia', 'setGuia')" />
-        </div>
+            <div class="d-grid">
+            <div *ngIf="datosSolicitudForm.get('guia')?.touched">
+              <small class="mensaje-error" *ngIf="datosSolicitudForm.get('guia')?.hasError('maxlength')">
+                El número de guía no puede exceder los 80 caracteres.
+              </small>
+       </div>
+      </div>
+      </div>
       </div>
 
       <div class="col-md-4">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="regimen" [label]="'Régimen'" [required]="true" name="regimen" [isDisabled]="esFormularioSoloLectura"
-            formControlName="regimen" (change)="setValoresStore(datosSolicitudForm, 'regimen', 'setRegimen')">
+          <app-catalogo-select [catalogo]="regimen" [label]="'Régimen'" [required]="true" name="regimen" [isDisabled]="esFormularioSoloLectura" [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'" [tooltipQuestionCircle]="true"
+            formControlName="regimen" (change)="setValoresStore(datosSolicitudForm, 'regimen', 'setRegimen')" [placeholder]="'Seleccione un valor'">
           </app-catalogo-select>
+           <div class="d-grid">
+            @if(datosSolicitudForm.controls['regimen'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+            }
+          </div>
         </div>
       </div>
     </div>
-    
+   
     <div class="row m-0">
-      <ng-titulo titulo="Tipo de mercancía*:" />
-      <p class="fw-medium">Captura de datos de mercancía*:</p>
+      <ng-titulo titulo="Tipo de mercancía" />
+      <p class="fw-bold">Captura de datos de mercancía*:</p>
       <app-input-radio
       id="capturaMercancia"
       formControlName="capturaMercancia"
@@ -150,12 +157,12 @@
       (valueChange)="cambioValorRadio('exentoPago', $event.toString())"
     >
     </app-input-radio>
-
-    <ng-alert [CONTENIDO]="MERCANCIA"></ng-alert>
-    </div>
-
-    <div class="row m-0">
-      <h6>Mercancías</h6>
+    <div style="text-align: center;">
+  <ng-alert [CONTENIDO]="MERCANCIA"></ng-alert>
+</div>
+</div>
+<div class="row m-0">
+      <h6 class="fw-bold">Mercancías</h6>
       <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="mercancias" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
         [tipoSeleccionTabla]="checkbox"></app-tabla-dinamica>
 
@@ -194,7 +201,7 @@
                 type="button" [disabled]="esFormularioSoloLectura"
                 class="btn btn-primary" data-bs-dismiss="modal" #closeModal
               >
-                Agregar
+                Aceptar
               </button>
             </div>
         </div>

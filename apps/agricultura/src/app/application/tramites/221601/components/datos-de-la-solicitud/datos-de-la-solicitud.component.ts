@@ -254,7 +254,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       aduana: [this.solicitudState.aduana],
       oficina: [this.solicitudState.oficina],
       punto: [this.solicitudState.punto],
-      guia: [this.solicitudState.guia],
+      guia: [this.solicitudState.guia,[Validators.maxLength(80)]],
       clave: [this.solicitudState.clave,Validators.required],
       establecimiento: [this.solicitudState.establecimiento, Validators.required],
       regimen: [this.solicitudState.regimen, Validators.required],
