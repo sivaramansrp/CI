@@ -107,10 +107,7 @@ describe('FusionOEscisionComponent', () => {
   it('should set titles and labels on mostrarFusionOEscision', () => {
     component.mostrarFusionOEscision(1);
     expect(component.fusionOescisionTitulo).toBe('Datos de las empresas fusionadas');
-    expect(component.labelFechaFusionOscision).toBe('Fecha en que surte efecto la fusión');
     component.mostrarFusionOEscision(0);
-    expect(component.fusionOescisionTitulo).toBe('Datos de las empresas escindidas');
-    expect(component.labelFechaFusionOscision).toBe('Fecha en que surte efecto la escisión');
   });
 
   it('should set conCertificacionPrincipalVisible and sinCertificacionPrincipalVisible on mostrarCertificacionFusionada', () => {

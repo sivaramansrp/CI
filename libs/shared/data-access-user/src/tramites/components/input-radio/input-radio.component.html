@@ -21,7 +21,7 @@
               *ngSwitchCase="'label'"
               class="etiqueta-de-radio"
               [ngClass]="{
-                'fw-bold': gridLayout,
+                'fw-bold': gridLayout || isBold,
                 'radio-label-margin-left': labelName === 'last',
                 'radio-label-margin-right': labelName !== 'last'
               }"

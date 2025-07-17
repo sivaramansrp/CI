@@ -1,7 +1,5 @@
 import {
-  AlertComponent,
-  InputCheckComponent,
-  TituloComponent,
+  AlertComponent, ConsultaioQuery, ConsultaioState, TituloComponent
 } from '@ng-mf/data-access-user';
 import {
   Component,
@@ -16,10 +14,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { FormularioGrupo, TipoDevAviso } from '../../models/avisomodify.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
-import { TipoDevAviso } from '../../models/avisomodify.model';
+import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
 
@@ -34,8 +33,8 @@ import { Tramite32301Store } from '../../estados/tramite32301.store';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    TituloComponent,
     AlertComponent,
+    TituloComponent,
     InputCheckComponent,
   ],
   templateUrl: './tipoDeAviso.component.html',
@@ -45,7 +44,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   miFormulario!: FormGroup;
 
   /** Objeto que contiene los datos del tipo de aviso */
-  tipoDevAviso!: TipoDevAviso;
+  tipoDevAviso!: FormularioGrupo;
 
   /** EventEmitter para emitir los datos del formulario cuando se envíen */
   @Output() tabEnabledData = new EventEmitter<TipoDevAviso>();
@@ -59,6 +58,16 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   /** Sujeto para manejar el ciclo de vida de los observables */
   private destroy$: Subject<void> = new Subject<void>();
   /**
+* Estado actual de la consulta obtenido desde el servicio.
+*/
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * Indica si el formulario es de solo lectura.
+   * Se utiliza para determinar si los campos del formulario deben ser editables o no.
+   */
+  soloLectura: boolean = false;
+  /**
    * Constructor del componente, inyecta las dependencias necesarias
    * @param fb - FormBuilder para crear formularios reactivos
    * @param AvisoModifyService - Servicio para obtener información sobre el aviso
@@ -69,9 +78,9 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private AvisoModifyService: AvisoModifyService,
     private store: Tramite32301Store,
-    private Tramite32301Query: Tramite32301Query
+    private Tramite32301Query: Tramite32301Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    this.crearFormMiFormulario();
   }
 
   /**
@@ -79,15 +88,46 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * y actualiza el formulario con los datos recibidos.
    */
   ngOnInit(): void {
+    this.crearFormMiFormulario();
     this.inicializamiFormulario();
     this.Tramite32301Query.select()
       .pipe(takeUntil(this.destroy$))
       .subscribe((state) => {
-        this.tipoDevAviso = state as unknown as TipoDevAviso;
-        this.crearFormMiFormulario();
+        this.tipoDevAviso = state;
+        
+        this.miFormulario.patchValue({
+          modalidadCertificacion: this.tipoDevAviso?.tipoDevAviso?.modalidadCertificacion,
+          foreignClientsSuppliers: this.tipoDevAviso?.tipoDevAviso?.foreignClientsSuppliers,
+          nationalSuppliers: this.tipoDevAviso?.tipoDevAviso?.nationalSuppliers,
+          modificationsMembers: this.tipoDevAviso?.tipoDevAviso?.modificationsMembers,
+          changesToLegalDocuments: this.tipoDevAviso?.tipoDevAviso?.changesToLegalDocuments,
+          mergerOrSplitNotice: this.tipoDevAviso?.tipoDevAviso?.mergerOrSplitNotice,
+          additionFractions: this.tipoDevAviso?.tipoDevAviso?.additionFractions,
+          acepto253: this.tipoDevAviso?.tipoDevAviso?.acepto253,
+        });
       });
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
-
+  /**
+* Inicializa el estado del formulario según el modo de solo lectura.
+* @private
+*/
+  private inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.miFormulario?.disable();
+    } else {
+      this.miFormulario?.enable();
+    }
+  }
   /**
    * Inicializa los datos del formulario con la información del servicio de aviso.
    * Establece la modalidad de certificación en el store.
@@ -108,16 +148,14 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    */
   crearFormMiFormulario(): void {
     this.miFormulario = this.fb.group({
-      modalidadCertificacion: [
-        { value: this.tipoDevAviso?.modalidadCertificacion, disabled: true },
-      ],
-      foreignClientsSuppliers: [this.tipoDevAviso?.foreignClientsSuppliers],
-      nationalSuppliers: [this.tipoDevAviso?.nationalSuppliers],
-      modificationsMembers: [this.tipoDevAviso?.modificationsMembers],
-      changesToLegalDocuments: [this.tipoDevAviso?.changesToLegalDocuments],
-      mergerOrSplitNotice: [this.tipoDevAviso?.mergerOrSplitNotice],
-      additionFractions: [this.tipoDevAviso?.additionFractions],
-      acepto253: [this.tipoDevAviso?.acepto253, Validators.required],
+      modalidadCertificacion: [{ value: '', disabled: true }],
+      foreignClientsSuppliers: [false],
+      nationalSuppliers: [false],
+      modificationsMembers: [false],
+      changesToLegalDocuments: [false],
+      mergerOrSplitNotice: [false],
+      additionFractions: [false],
+      acepto253: [false, Validators.required],
     });
   }
 
