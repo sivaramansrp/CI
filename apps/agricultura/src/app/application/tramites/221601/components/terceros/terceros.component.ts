@@ -1,5 +1,5 @@
 import { AlertComponent,Catalogo,CatalogoSelectComponent,ConfiguracionColumna,TablaDinamicaComponent,TablaSeleccion,TituloComponent, ValidacionesFormularioService} from '@libs/shared/data-access-user/src';
-import { Component,OnDestroy,OnInit, } from '@angular/core';
+import { ChangeDetectorRef, Component,OnDestroy,OnInit, } from '@angular/core';
 import { Exportador,MENSAJE_TABLA_OBLIGATORIA } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Solicitud221601State,Tramite221601Store } from '../../../../estados/tramites/tramite221601.store';
@@ -179,6 +179,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     private tramite221601Store: Tramite221601Store,
     private tramite221601Query: Tramite221601Query,
      private consultaioQuery: ConsultaioQuery,
+      private readonly cdr: ChangeDetectorRef,
          private validacionesService: ValidacionesFormularioService, 
   ) { // Constructor que inyecta las dependencias necesarias
        this.consultaioQuery.selectConsultaioState$
@@ -228,7 +229,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
             tipoPersona: [this.solicitudState.tipoPersona, Validators.required],
           });
             this.datosPersonales = this.fb.group({
-            nombre: [this.solicitudState.nombre, Validators.required],
+            nombre: [this.solicitudState.nombre, Validators.required ],
             primerApellido: [this.solicitudState.primerApellido, Validators.required],
             segundoApellido: [this.solicitudState.segundoApellido],
             social: [this.solicitudState.social, Validators.required],
@@ -368,6 +369,17 @@ export class TercerosComponent implements OnInit, OnDestroy {
         // Se cierra el modal de terceros
       this.showtercerosModal = !this.showtercerosModal;    
     }
+    /**
+   * Método para resetear los valores del formulario de la mercancía.
+   * @method limpiarDatosFormulario
+   * @returns {void}
+   * @step Paso 1: Detecta cambios en la vista.
+   * @step Paso 2: Resetea el formulario a su estado inicial.
+   */
+  limpiarDatosFormulario(): void {
+    this.cdr.detectChanges();
+    this.datosPersonales.reset();
+  }
     /**
    * Cancela la operación de agregar un nuevo destinatario y cierra el modal de terceros.
    * 

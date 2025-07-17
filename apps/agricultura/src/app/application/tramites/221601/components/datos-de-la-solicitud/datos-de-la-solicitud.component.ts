@@ -255,7 +255,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       oficina: [this.solicitudState.oficina],
       punto: [this.solicitudState.punto],
       guia: [this.solicitudState.guia,[Validators.maxLength(80)]],
-      clave: [this.solicitudState.clave,Validators.required],
+      clave: [this.solicitudState.clave,[Validators.required, Validators.maxLength(15)]],
       establecimiento: [this.solicitudState.establecimiento, Validators.required],
       regimen: [this.solicitudState.regimen, Validators.required],
       veterinario: [this.solicitudState.veterinario, Validators.required],

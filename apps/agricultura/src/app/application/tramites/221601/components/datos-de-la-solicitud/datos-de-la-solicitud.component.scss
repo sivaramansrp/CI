@@ -5,6 +5,8 @@
   
   .custom-textarea {
     height: 120px;
+     resize: none; 
+    overflow-y: auto;
   }
   
   ::ng-deep table th {
