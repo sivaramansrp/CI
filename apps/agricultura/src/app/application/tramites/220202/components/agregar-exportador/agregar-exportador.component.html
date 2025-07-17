@@ -37,24 +37,17 @@
                 formControlName="nombre"
                 maxlength="200"
               />
-              <div
-                *ngIf="
-                  destinatarioForm.get('nombre')?.hasError('required') &&
-                  destinatarioForm.get('nombre')?.touched
-                "
-                class="text-danger"
-              >
+              @if( destinatarioForm.get('nombre')?.hasError('required') &&
+              destinatarioForm.get('nombre')?.touched){
+              <div class="text-danger">
                 <small>Este campo es obligatorio.</small>
               </div>
-              <div
-                *ngIf="
-                  destinatarioForm.get('nombre')?.hasError('maxLength') &&
-                  destinatarioForm.get('nombre')?.touched
-                "
-                class="text-danger"
-              >
+              }@else if (destinatarioForm.get('nombre')?.hasError('maxLength')
+              && destinatarioForm.get('nombre')?.touched) {
+              <div class="text-danger">
                 <small>No escribas más de 200 caracteres.</small>
               </div>
+              }
             </div>
           </div>
           <div class="col-md-4">
@@ -210,7 +203,6 @@
                 formControlName="lada"
                 maxlength="5"
               />
-    
             </div>
           </div>
           <div class="col-md-3">

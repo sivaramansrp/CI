@@ -14,9 +14,7 @@
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 form-group">
-        <label class="form-label"
-          >Requisito*:
-        </label>
+        <label class="form-label">Requisito*: </label>
         <input
           type="text"
           class="form-control"
@@ -68,15 +66,12 @@
           formControlName="descripcionFraccion"
           maxlength="1000"
         />
-        <div
-          *ngIf="
-            mercanciaForm.get('descripcionFraccion')?.hasError('maxlength') &&
-            mercanciaForm.get('descripcionFraccion')?.touched
-          "
-          class="text-danger"
-        >
+        @if ( mercanciaForm.get('descripcionFraccion')?.hasError('maxlength') &&
+        mercanciaForm.get('descripcionFraccion')?.touched){
+        <div class="text-danger">
           Por favor, no escribas más de 1000 caracteres
         </div>
+        }
       </div>
     </div>
 
@@ -117,15 +112,12 @@
           style="height: 60%; resize: none"
           formControlName="descripcion"
         ></textarea>
-        <div
-          *ngIf="
-            mercanciaForm.get('descripcion')?.hasError('maxlength') &&
-            mercanciaForm.get('descripcion')?.touched
-          "
-          class="text-danger"
-        >
+        @if ( mercanciaForm.get('descripcion')?.hasError('maxlength') &&
+        mercanciaForm.get('descripcion')?.touched){
+        <div class="text-danger">
           Por favor, no escribas más de 1000 caracteres
         </div>
+        }
       </div>
     </div>
 
@@ -133,24 +125,21 @@
       <div class="col-md-4 form-group">
         <label class="form-label">Cantidad UMT*:</label>
         <input type="text" class="form-control" formControlName="cantidadUMT" />
-        <div
-          *ngIf="
-            mercanciaForm.get('cantidadUMT')?.hasError('minlength') &&
-            mercanciaForm.get('cantidadUMT')?.touched
-          "
-          class="text-danger"
-        >
+        @if ( mercanciaForm.get('cantidadUMT')?.hasError('minLength') &&
+        mercanciaForm.get('cantidadUMT')?.touched){
+        <div class="text-danger">
           Este campo permite doce números enteros y hasta tres decimales
         </div>
-        <div
-          *ngIf="
-            mercanciaForm.get('cantidadUMT')?.hasError('maxlength') &&
-            mercanciaForm.get('cantidadUMT')?.touched
-          "
-          class="text-danger"
-        >
+        } @else if (
+        mercanciaForm.get('cantidadUMT')?.hasError('maxLength') &&
+        mercanciaForm.get('cantidadUMT')?.touched) {
+        <div class="text-danger">
           Por favor, escribe un valor menor o igual a 999999999999.999
         </div>
+        } @else if ( mercanciaForm.get('cantidadUMT')?.hasError('required') &&
+        mercanciaForm.get('cantidadUMT')?.touched) {
+        <div class="text-danger">Este campo es obligatorio</div>
+        }
       </div>
 
       <div class="col-md-4">
@@ -171,7 +160,7 @@
         <input type="text" class="form-control" formControlName="cantidadUMC" />
         <div
           *ngIf="
-            mercanciaForm.get('cantidadUMC')?.hasError('minlength') &&
+            mercanciaForm.get('cantidadUMC')?.hasError('maxDecimals') &&
             mercanciaForm.get('cantidadUMC')?.touched
           "
           class="text-danger"
@@ -180,12 +169,21 @@
         </div>
         <div
           *ngIf="
-            mercanciaForm.get('cantidadUMC')?.hasError('maxlength') &&
+            mercanciaForm.get('cantidadUMC')?.hasError('maxWholeNumbers') &&
             mercanciaForm.get('cantidadUMC')?.touched
           "
           class="text-danger"
         >
           Por favor, escribe un valor menor o igual a 999999999999.999
+        </div>
+        <div
+          *ngIf="
+            mercanciaForm.get('cantidadUMC')?.hasError('required') &&
+            mercanciaForm.get('cantidadUMC')?.touched
+          "
+          class="text-danger"
+        >
+          Este campo es obligatorio
         </div>
       </div>
     </div>
@@ -226,9 +224,7 @@
 
     <div class="row">
       <div class="col-md-4 form-group">
-        <label class="form-label"
-          >Número de lote:
-        </label>
+        <label class="form-label">Número de lote: </label>
         <input
           type="text"
           class="form-control"
@@ -262,7 +258,9 @@
     <div class="row">
       <ng-titulo titulo="Detalle" />
       <div class="col-12 col-md-12">
-        <label class="form-label" style="font-size: 24px;">Nombre científico</label>
+        <label class="form-label" style="font-size: 24px"
+          >Nombre científico</label
+        >
         <crosslist
           [fechas]="usoCrossListDatos"
           [label]="usoNormaSeleccionadaLabel"

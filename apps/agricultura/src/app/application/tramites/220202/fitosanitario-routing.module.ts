@@ -1,11 +1,10 @@
+import { RouterModule, Routes} from '@angular/router';
 import { AgregarExportadorComponent } from './components/agregar-exportador/agregar-exportador.component';
 import { AgregarMercanciaComponent } from './components/agregar-mercancia/agregar-mercancia.component';
 import { AgregardestinatarioComponent } from './components/agregardestinatario/agregardestinatario.component';
 import { AgriculturaComponent } from './pages/agricultura/agricultura.component';
 import { MercanciaFormComponent } from './shared/mercancia-form/mercancia-form.component';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { Routes } from '@angular/router';
 import { SubProductosContenedoraComponent } from './components/sub-productos-contenedora/sub-productos-contenedora.component';
 
 

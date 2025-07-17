@@ -555,14 +555,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           value: FORMULARIO.numeroDeGuia || '',
           disabled: this.esFormularioSoloLectura,
         },
-        [Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)],
       ],
       numeroDeCarro: [
         {
           value: FORMULARIO.numeroDeCarro || '',
           disabled: this.esFormularioSoloLectura,
         },
-        [Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)],
       ],
     };
   }

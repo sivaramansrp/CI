@@ -36,24 +36,17 @@
                 libUppercase
                 formControlName="nombre"
               />
-              <div
-                *ngIf="
-                  destinatarioForm.get('nombre')?.hasError('required') &&
-                  destinatarioForm.get('nombre')?.touched
-                "
-                class="text-danger"
-              >
+              @if( destinatarioForm.get('nombre')?.hasError('required') &&
+              destinatarioForm.get('nombre')?.touched){
+              <div class="text-danger">
                 <small>Este campo es obligatorio.</small>
               </div>
-              <div
-                *ngIf="
-                  destinatarioForm.get('nombre')?.hasError('maxLength') &&
-                  destinatarioForm.get('nombre')?.touched
-                "
-                class="text-danger"
-              >
+              }@else if ( destinatarioForm.get('nombre')?.hasError('maxLength')
+              && destinatarioForm.get('nombre')?.touched) {
+              <div class="text-danger">
                 <small>No escribas más de 200 caracteres.</small>
               </div>
+              }
             </div>
           </div>
           <div class="col-md-4">
@@ -185,14 +178,13 @@
                   destinatarioForm.get('codigoPostal')?.hasError('minlength') &&
                   destinatarioForm.get('codigoPostal')?.touched
                 "
-                
                 class="text-danger"
               >
                 <small>Por favor, no escribas menos de 5 caracteres</small>
               </div>
               <div
                 *ngIf="
-                   destinatarioForm.get('codigoPostal')?.hasError('maxlength') &&
+                  destinatarioForm.get('codigoPostal')?.hasError('maxlength') &&
                   destinatarioForm.get('codigoPostal')?.touched
                 "
                 class="text-danger"

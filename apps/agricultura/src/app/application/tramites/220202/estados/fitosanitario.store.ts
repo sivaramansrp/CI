@@ -43,6 +43,13 @@ import { TercerosrelacionadosdestinoTable } from '../../../shared/models/tercero
  *   Restablece el estado a su valor inicial, limpiando todos los datos almacenados.
  */
 export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
+  
+  /**
+   * Constructor de la clase.
+   *
+   * Llama al constructor de la clase base (`super`) con el estado inicial generado por `createDatosState()`.
+   * Este estado se utiliza para inicializar el store o el estado interno de la clase.
+   */
   constructor() {
     super(createDatosState());
   }

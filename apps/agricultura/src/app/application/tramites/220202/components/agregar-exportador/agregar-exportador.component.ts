@@ -8,7 +8,7 @@
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { AfterViewInit, Component, Input, OnInit, Output } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, REGEX_CORREO_ELECTRONICO_EXPORTADOR, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ListaDeDatosFinal, RadioOpcion } from '../../models/220202/fitosanitario.model';
 import { Subject, takeUntil } from 'rxjs';
@@ -133,7 +133,7 @@ export class AgregarExportadorComponent implements OnInit, AfterViewInit {
       numeroInterior: [''],
       lada: [''],
       telefono: [''], 
-      correo: ['', [Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/), Validators.maxLength(320)]]
+      correo: ['', [Validators.pattern(REGEX_CORREO_ELECTRONICO_EXPORTADOR), Validators.maxLength(320)]]
     });
     const ID = this.route.snapshot.paramMap.get('id');
       if (ID) {
