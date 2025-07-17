@@ -13,7 +13,7 @@
             </div>
          </div>
          <div class="col-md-4">
-            <app-catalogo-select placeholder=" Selecciona un valor" [catalogo]="justificacionSelector"
+            <app-catalogo-select placeholder=" Selecciona un valor" [catalogo]="pagoSelect.justificacionSelector"
                formControlName="justificacion" [label]="'Justificación'" [required]="true"
                [isDisabled]="pagoForm.get('exentoPago')?.value === 'no' || esFormularioSoloLectura" name="justificacion"
                (change)="actualizarPago()"></app-catalogo-select>
@@ -40,8 +40,8 @@
             </div>
          </div>
          <div class="col-md-4">
-            <app-catalogo-select placeholder=" Selecciona un valor" [catalogo]="bancoSelector" formControlName="banco"
-               [label]="'Banco'" [required]="true"
+            <app-catalogo-select placeholder=" Selecciona un valor" [catalogo]="pagoSelect.bancoSelector"
+               formControlName="banco" [label]="'Banco'" [required]="true"
                [isDisabled]="pagoForm.get('exentoPago')?.value === 'si' || esFormularioSoloLectura" name="banco"
                (change)="actualizarPago()"></app-catalogo-select>
             <div *ngIf="pagoForm.get('banco')?.invalid && pagoForm.get('banco')?.touched">

@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { PagoDeDerechoComponent } from '../../../../shared/components/pago-de-derecho/pago-de-derecho.component';
+import { PagoDeDerecho } from '../../../../shared/models/tercerosrelacionados.model';
 import { PagoDeDerechos } from '../../models/220201/capturar-solicitud.model';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
-
 /**
  * @fileoverview Componente para la gestión del formulario de pago de derechos.
  * Este componente maneja la lógica y la presentación del formulario de pago de derechos,
@@ -45,6 +46,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @property {Subject<void>} destroyNotifier$
    */
   private destroyNotifier$ = new Subject<void>();
+  /**
+   * Sujeto para manejar la destrucción de observables y evitar fugas de memoria.
+   * @property {Subject<void>} pagoSelect
+   */
+  pagoSelect: PagoDeDerecho = {
+    bancoSelector: [],
+    justificacionSelector: [],
+  };
 
   /**
    * Indica si el formulario debe mostrarse en modo solo lectura.
@@ -77,7 +86,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
     private readonly consultaioQuery: ConsultaioQuery,
-  ) { }
+    private readonly httpServicios: HttpClient,
+  ) {
+    this.obtenerBancoSelectorList();
+    this.obtenerListaDeJustificaciones();
+  }
 
   /**
    * Ciclo de vida de Angular que se ejecuta al iniciar el componente.
@@ -100,8 +113,32 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
   }
 
+  /**
+   * Realiza una petición para obtener el catálogo de bancos.
+   */
+  obtenerBancoSelectorList(): void {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/banco.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        const DATOS = data?.data;
+        this.pagoSelect.bancoSelector = DATOS;
+      });
+  }
+
+  /**
+   * Realiza una petición para obtener el catálogo de justificaciones.
+   */
+  obtenerListaDeJustificaciones(): void {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/Justificación.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        const DATOS = data?.data;
+        this.pagoSelect.justificacionSelector = DATOS as Catalogo[];
+      });
+  }
   /**
    * Envía los valores actuales del formulario al store compartido.
    * @method onPagoChanged

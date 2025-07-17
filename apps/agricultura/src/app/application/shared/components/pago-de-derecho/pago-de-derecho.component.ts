@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_LLAVE_DE_PAGO_DE_DERECHO, RespuestaCatalogos, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Subject, takeUntil } from 'rxjs';
+import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_LLAVE_DE_PAGO_DE_DERECHO, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Subject } from 'rxjs';
 import { PagoDeDerechos } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
 import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
 import { FECHA_DE_PAGO } from '../../constantes/pago-de-derechos.enum';
+import { PagoDeDerecho } from '../../models/tercerosrelacionados.model';
 
 @Component({
   selector: 'app-pago-de-derecho',
@@ -45,11 +45,6 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit 
    */
   public setFecha = true;
 
-
-  /**
-   * Lista de opciones para el selector de banco.
-   */
-  bancoSelector: Catalogo[] = [];
 
   /**
    * Formulario reactivo que gestiona los campos del pago de derechos.
@@ -110,6 +105,12 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit 
    * @event
    */
   @Output() pagoChanged = new EventEmitter<PagoDeDerechos>();
+
+  @Input() pagoSelect: PagoDeDerecho = {
+    justificacionSelector: [],
+    bancoSelector: []
+
+  };
   /**
    * Constructor del componente. Inyecta los servicios y realiza una carga inicial de catálogos.
    * @param fb Constructor de formularios reactivos.
@@ -120,9 +121,8 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit 
    */
   constructor(
     private readonly fb: FormBuilder,
-    private readonly httpServicios: HttpClient,
+
   ) {
-    this.obtenerDetallesDeListaDeOpciones();
   }
   /**
    * @inheritdoc
@@ -157,6 +157,7 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit 
       Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
       Validators.maxLength(30)]);
     }
+    console.log(this.pagoSelect)
   }
   /**
    * @inheritdoc
@@ -187,34 +188,9 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit 
     const YEAR = DATE.getFullYear();
     return `${DAY}/${MONTH}/${YEAR}`;
   }
-  obtenerDetallesDeListaDeOpciones(): void {
-    this.obtenerBancoSelectorList();
-    this.obtenerListaDeJustificaciones();
-  }
 
-  /**
-   * Realiza una petición para obtener el catálogo de bancos.
-   */
-  obtenerBancoSelectorList(): void {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/banco.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        const DATOS = data?.data;
-        this.bancoSelector = DATOS as Catalogo[];
-      });
-  }
 
-  /**
-   * Realiza una petición para obtener el catálogo de justificaciones.
-   */
-  obtenerListaDeJustificaciones(): void {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/Justificación.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        const DATOS = data?.data;
-        this.justificacionSelector = DATOS as Catalogo[];
-      });
-  }
+
 
   radioChange(): void {
     if (!this.esFormularioSoloLectura && this.pagoForm.value.exentoPago === 'si') {
