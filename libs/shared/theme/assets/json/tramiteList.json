@@ -4220,5 +4220,12 @@
     "linkDashboard": "/se/cancelaciones-certificado/solicitud",
     "linkDepartment": "/pago/cancelaciones-certificado/solicitud",
     "department": "se"
+  },
+   {
+    "id": 606,
+    "tramite": 32608,
+    "linkDashboard": "/agace/seciit-oea-registration/solicitud",
+    "linkDepartment": "/pago/seciit-oea-registration/solicitud",
+    "department": "agace"
   }
 ]
