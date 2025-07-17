@@ -115,12 +115,46 @@ export interface Rows {
  * Interfaz para definir la estructura de las filas.
  */
 export interface Tabla {
+  /**
+   * Partida arancelaria de la mercancía.
+   * @type {string}
+   */
   Partida: string;
+
+  /**
+   * Tipo de requisito asociado a la mercancía.
+   * @type {string}
+   */
   Tiporequisito: string;
+
+  /**
+   * Requisito específico para la mercancía.
+   * @type {string}
+   */
   Requisito: string;
+
+  /**
+   * Certificado asociado a la mercancía.
+   * @type {number}
+   */
   Certificado: number;
+
+  /**
+   * Fracción arancelaria de la mercancía.
+   * @type {string}
+   */
   Fraccion: string;
+
+  /**
+   * Descripción de la mercancía.
+   * @type {string}
+   */
   Descripcion: string;
+
+  /**
+   * Nico del responsable de la mercancía.
+   * @type {string}
+   */
   Nico: string;
 }
 /**

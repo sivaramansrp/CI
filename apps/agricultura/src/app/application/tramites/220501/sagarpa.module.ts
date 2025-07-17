@@ -13,6 +13,7 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { DatosDelTramiteARealizarComponent } from '../220502/shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 import { DatosGeneralesComponent } from './components/datos-generales/datos-generales.component';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { FrecuenciaInspeccionComponent } from './components/frecuencia-inspeccion/frecuencia-inspeccion.component';
 import { HistorialInspeccionFisicaComponent } from '../220502/shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { MedioTransporteComponent } from './components/medio-transporte/medio-transporte.component';
@@ -73,7 +74,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     DatosGeneralesComponent,
     TercerosRelacionadosComponent,
     PagoDeDerechosComponent,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    FrecuenciaInspeccionComponent
   ],
   exports: [SolicitudPageComponent],
   providers:[

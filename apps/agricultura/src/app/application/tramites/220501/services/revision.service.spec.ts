@@ -238,7 +238,9 @@ describe('RevisionService', () => {
       saldoPendiente: '',
       saldoACapturar: '',
       mostrarSeccion: true,
-      mercanciaTablaDatos: []
+      mercanciaTablaDatos: [],
+      certificadoNumero: '',
+      calculoResultado: ''
     };
 
     service.getDatosDelaSolicitud().subscribe((response) => {
