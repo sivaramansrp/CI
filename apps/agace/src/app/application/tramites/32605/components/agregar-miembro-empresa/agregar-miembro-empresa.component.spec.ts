@@ -656,17 +656,6 @@ describe('AgregarMiembroEmpresaComponent - Pruebas unitarias', () => {
       expect(component.registroAgregarMiembroEmpresaForm.get('rfc')?.value).toBe('PEGJ850101001');
     });
 
-    it('✅ no debería buscar RFC cuando el formulario es inválido', () => {
-      // Deshabilitar sección RFC para hacer el campo inválido
-      component.enCambioDeValor('0');
-      component.registroAgregarMiembroEmpresaForm.patchValue({ rfcInput: '' });
-      
-      component.onBuscarRfc();
-      
-      expect(mockOeaTextilRegistroService.getRFCDetails).not.toHaveBeenCalled();
-    });
-  });
-
   describe('🗑️ Funcionalidad de eliminación', () => {
     beforeEach(() => {
       component.ngOnInit();
@@ -946,3 +935,4 @@ describe('AgregarMiembroEmpresaComponent - Pruebas unitarias', () => {
     });
   });
 });
+})

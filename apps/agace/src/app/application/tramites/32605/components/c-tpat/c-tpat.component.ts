@@ -166,64 +166,6 @@ export class CTPATComponent implements OnInit, OnDestroy {
   }
   
   /**
-   * Establece valores en el store desde un control de formulario específico.
-   * Actualiza el estado global con el valor del campo si no es nulo o indefinido.
-   * 
-   * param form - Formulario que contiene el control
-   * param campo - Nombre del campo a actualizar en el store
-   */
-  setValoresStore(form: FormGroup | null, campo: string): void {
-    if (!form) {
-      return;
-    }
-    const CONTROL = form.get(campo);
-    if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
-      this.solicitud32605Store.actualizarEstado({ [campo]: CONTROL.value });
-    }
-  }
-    /**
-   * Maneja el cambio en el campo de suspensión/cancelación CBP.
-   * Si se selecciona "Sí", muestra el modal con el mensaje informativo.
-   * Actualiza el store con el nuevo valor seleccionado.
-   * 
-   * param valor - Valor seleccionado en el radio button ('1' para Sí, '0' para No)
-   */
- manejarCambioSuspensionCancelacion(event: Event): void {
-  const TARGET = event.target as HTMLInputElement;
-  const VALOR = TARGET.value;
-  
-  this.setValoresStore(this.ctpatForm, 'suspensionCancelacionCBP');
-  
-  // Si se selecciona "Sí" (valor '1'), mostrar el modal
-  if (VALOR === 'on') {
-    this.mostrarModalMensaje();
-  }
-}
-
-    /**
-   * Muestra el modal con el mensaje informativo sobre el requisito CBP.
-   * Configura el modal como no dismissible para asegurar que el usuario lea el mensaje.
-   */
-  mostrarModalMensaje(): void {
-    const CONFIGURACION_MODAL = {
-      animated: true,
-      keyboard: false,
-      backdrop: true,
-      ignoreBackdropClick: true,
-      class: 'modal-md'
-    };
-
-    this.modalRef = this.modalService.show(this.template, CONFIGURACION_MODAL);
-  }
-
-    /**
-   * Cierra el modal de mensaje informativo.
-   * Se ejecuta cuando el usuario hace clic en el botón "Aceptar".
-   */
-  cerrarModal(): void {
-    this.modalRef?.hide();
-  }
-  /**
    * Cancela todas las suscripciones activas al destruir el componente.
    */
   ngOnDestroy(): void {

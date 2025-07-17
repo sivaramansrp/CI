@@ -38,7 +38,6 @@
           [isRequired]="true"
           [layout]="'horizontal'"
           formControlName="autorizacionCBP"
-          (change)="setValoresStore(ctpatForm, 'autorizacionCBP')"
         ></app-input-radio>
       </div>
       <div class="col-md-12 mt-4">
@@ -55,45 +54,11 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="instalacionesCertificadasCBP"
-          (change)="setValoresStore(ctpatForm, 'instalacionesCertificadasCBP')"
         ></app-input-radio>
       </div>
-      <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Señale si a la fecha de la presentación de su solicitud se encuentra
-          sujeta a un proceso de suspensión o cancelación por parte de CBP
-          (C-TPAT)</label
-        >
-        <app-input-radio
-          [radioOptions]="opcionDeBotonDeRadio"
-          [isRequired]="true"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="suspensionCancelacionCBP"
-          (change)="setValoresStore(ctpatForm, 'suspensionCancelacionCBP');manejarCambioSuspensionCancelacion($event)"
-        ></app-input-radio>
-      </div>
+     
     </div>
   </form>
 </div>
 
 
-<ng-template #template>
-  <div class="modal-header">
-    <h6 class="modal-title text-danger">Mensaje</h6>
-  </div>
-  <div class="modal-body">
-    <p class="mb-0">
-      Este requisito es necesario para hacer válido el reconocimiento mutuo como socio del programa CBP (CTPAT), de conformidad con las RGCE.
-    </p>
-  </div>
-  <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-primary"
-      (click)="cerrarModal()"
-    >
-      Aceptar
-    </button>
-  </div>
-</ng-template>
