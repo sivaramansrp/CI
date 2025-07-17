@@ -1,5 +1,5 @@
 import { Aduanas, RespuestaAduanas } from '../constants/agregar.model';
-import { EnlaceOperativo } from '../models/empresas-comercializadoras.model';
+import { EnlaceOperativo, RespuestaConsulta } from '../models/empresas-comercializadoras.model';
 import { GuardarDatosFormulario } from '../models/empresas-comercializadoras.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -122,8 +122,8 @@ export class EmpresasComercializadorasService {
    *
    * @returns {Observable<GuardarDatosFormulario>} Un observable que emite los datos del formulario.
    */
-  guardarDatosFormulario(): Observable<GuardarDatosFormulario> {
-    return this.http.get<GuardarDatosFormulario>(
+  guardarDatosFormulario(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>(
       'assets/json/32604/guardar-datos-formulario.json'
     );
   }

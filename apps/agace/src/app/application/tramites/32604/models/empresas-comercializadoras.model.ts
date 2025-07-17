@@ -1074,3 +1074,132 @@ export interface GuardarDatosFormulario {
    */
   enlaceOperativosLista: EnlaceOperativo[];
 }
+
+export interface RespuestaConsulta {
+  /**
+   * Indica si la consulta fue exitosa.
+   * @type {boolean}
+   */
+  success: boolean;
+
+  /**
+   * Datos resultantes de la consulta.
+   * @type {ConsultaDatos}
+   */
+  datos: ConsultaDatos;
+
+  /**
+   * Mensaje de la respuesta.
+   * @type {string}
+   */
+  message: string;
+}
+
+export interface ConsultaDatos {
+  /**
+   * Información sobre exención de impuestos.
+   * @type {TecnicaForm}
+   */
+  solicitudFormulario: SolicitudState;
+}
+
+export interface SolicitudState {
+  idPersonaSolicitud?: string;
+  rfcTercero?: string;
+  rfc?: string;
+  nombre?: string;
+  apellidoPaterno?: string;
+  apellidoMaterno?: string;
+  telefono?: string;
+  correoElectronico?: string;
+  agregarEnlaceRfcTercero?: string;
+  agregarEnlaceRfc?: string;
+  agregarEnlaceNombre?: string;
+  agregarEnlaceApellidoPaterno?: string;
+  agregarEnlaceApellidoMaterno?: string;
+  agregarEnlaceCiudadEstado?: string;
+  agregarEnlaceCargo?: string;
+  agregarEnlaceTelefono?: string;
+  agregarEnlaceCorreoElectronico?: string;
+  agregarEnlaceSuplente?: boolean;
+  "2089"?: number;
+  "2090"?: number;
+  "2091"?: number;
+  "2042"?: number;
+  "2043"?: number;
+  "2044"?: number;
+  fechaInicioComercio?: string;
+  fechaPago?: string;
+  monto?: string;
+  operacionesBancarias?: string;
+  llavePago?: string;
+  transportistaRFC?: string;
+  transportistaRFCModifTrans?: string;
+  transportistaRazonSocial?: string;
+  transportistaDomicilio?: string;
+  transportistaCaat?: string;
+  transportistaIdDomicilio?: string;
+  transportistaIdRFC?: string;
+  transportistaIdRazonSocial?: string;
+  transportistaIdCaat?: string;
+  miembroCaracterDe?: number;
+  miembroTributarMexico?: number;
+  miembroNacionalidad?: number;
+  miembroRfc?: string;
+  miembroRegistroFederal?: string;
+  miembroNombreCompleto?: string;
+  miembroTipoPersonaMuestra?: string;
+  miembroNombre?: string;
+  miembroApellidoPaterno?: string;
+  miembroApellidoMaterno?: string;
+  miembroNombreEmpresa?: string;
+  subcontrataRFCBusqueda?: string;
+  subcontrataRFC?: string;
+  subcontrataRazonSocial?: string;
+  subcontrataEmpleados?: string;
+  subcontrataBimestre?: number;
+  principales?: number;
+  municipio?: string;
+  tipoDeInstalacion?: number;
+  entidadFederativa?: string;
+  registroSESAT?: string;
+  descripcion?: string;
+  codigoPostal?: string;
+  procesoProductivo?: number;
+  goceDelInmueble?: number;
+  empresa?: number;
+  comercioExterior?: number;
+  mutuo?: number;
+  catseleccionados?: number;
+  servicio?: number;
+  "190"?: number;
+  "191"?: number;
+  "199"?: number;
+  empleados?: string;
+  bimestre?: number;
+  "2034"?: number;
+  "236"?: number;
+  "237"?: number;
+  "238"?: number;
+  "239"?: number;
+  "240"?: number;
+  "243"?: number;
+  "244"?: number;
+  "245"?: number;
+  indiqueTodos?: number;
+  "246"?: number;
+  file1?: string;
+  file2?: string;
+  "247"?: number;
+  "248"?: number;
+  identificacion?: string;
+  lugarDeRadicacion?: string;
+  "249"?: number;
+  "250"?: number;
+  "251"?: number;
+  checkbox1?: boolean;
+  checkbox2?: boolean;
+  checkbox3?: boolean;
+  actualmente2?: string;
+  actualmente1?: string;
+}
