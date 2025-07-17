@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
-import { BtnContinuarComponent, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
-import { MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/certificado-zoosanitario.enum';
+import { AlertComponent, BtnContinuarComponent, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
+import { ERROR_FORMA_ALERT, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/certificado-zoosanitario.enum';
 import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
@@ -26,7 +26,7 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
   selector: 'app-zoosanitario-page',
   templateUrl: './zoosanitario-page.component.html',
   standalone: true,
-  imports: [WizardComponent, CommonModule, PasoDosComponent, PasoUnoComponent, PasoTresComponent, BtnContinuarComponent],
+  imports: [WizardComponent, CommonModule, PasoDosComponent, PasoUnoComponent, PasoTresComponent, BtnContinuarComponent, AlertComponent],
 })
 export class ZoosanitarioPageComponent {
   /**
@@ -59,6 +59,12 @@ export class ZoosanitarioPageComponent {
    * @property {number} indice - Índice del paso actual en el que se encuentra el usuario.
    */
   indice: number = 1;
+  /**
+ * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+ */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
 
   /**
    * Datos para la configuración de los botones del asistente.

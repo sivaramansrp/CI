@@ -3,7 +3,13 @@
     <div class="row">
       <div class="col-md-12">
         <h1>{{ tituloMensaje || null }}</h1>
+
       </div>
+      @if(esFormaValido){
+      <div class="col-md-12">
+        <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+      </div>
+      }
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
 
