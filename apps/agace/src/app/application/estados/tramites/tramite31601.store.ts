@@ -1445,7 +1445,9 @@ setAcredite(acredite: string): void {
     acredite,
   }));
 }
-
+/**
+ * Actualiza el estado con el valor proporcionado para `principales`.
+ */
 setPrincipales(principales: string): void {
   this.update((state) => ({
     ...state,
@@ -1453,6 +1455,9 @@ setPrincipales(principales: string): void {
   }));
 }
 
+/**
+ * Actualiza el estado con el valor proporcionado para `municipio`.
+ */
 setMunicipio(municipio: string): void {
   this.update((state) => ({
     ...state,
@@ -1460,6 +1465,9 @@ setMunicipio(municipio: string): void {
   }));
 }
 
+/**
+ * Actualiza el estado con el valor proporcionado para `instalacion`.
+ */
 setInstalacion(instalacion: string): void {
   this.update((state) => ({
     ...state,
@@ -1467,6 +1475,9 @@ setInstalacion(instalacion: string): void {
   }));
 }
 
+/**
+ * Actualiza el estado con el valor proporcionado para `federativa`.
+ */
 setFederativa(federativa: string): void {
   this.update((state) => ({
     ...state,
@@ -1474,6 +1485,9 @@ setFederativa(federativa: string): void {
   }));
 }
 
+/**
+ * Actualiza el estado con el valor proporcionado para `registro`.
+ */
 setRegistro(registro: string): void {
   this.update((state) => ({
     ...state,
@@ -1481,6 +1495,9 @@ setRegistro(registro: string): void {
   }));
 }
 
+/**
+ * Actualiza el estado con el valor proporcionado para `colonia`.
+ */
 setColonia(colonia: string): void {
   this.update((state) => ({
     ...state,
@@ -1488,6 +1505,9 @@ setColonia(colonia: string): void {
   }));
 }
 
+/**
+ * Actualiza el estado con el valor proporcionado para `postal`.
+ */
 setPostal(postal: string): void {
   this.update((state) => ({
     ...state,
@@ -1495,6 +1515,9 @@ setPostal(postal: string): void {
   }));
 }
 
+/**
+ * Actualiza el estado con el valor proporcionado para `proceso`.
+ */
 setProceso(proceso: string): void {
   this.update((state) => ({
     ...state,
@@ -1502,18 +1525,26 @@ setProceso(proceso: string): void {
   }));
 }
 
+/**
+ * Actualiza el estado con el valor proporcionado para `inmueble`.
+ */
 setInmueble(inmueble: string): void {
   this.update((state) => ({
     ...state,
     inmueble,
   }));
 }
+
+/**
+ * Actualiza el estado con la entidad federativa seleccionada.
+ */
 setFederativaSeleccionada(federativaSeleccionada: string): void {
   this.update((state) => ({
     ...state,
     federativaSeleccionada,
   }));
 }
+
 
 }
 
