@@ -84,6 +84,7 @@ export interface AgregarMiembroEmpresaTabla {
   id:number;
   tipoPersona: string;
   nombre: string;
+  nombreColleccion?: string;
   apellidoPaterno: string;
   apellidoMaterno: string;
   nombreCompleto: string;
