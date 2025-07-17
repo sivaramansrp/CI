@@ -24,6 +24,11 @@
     "llaveDePago": "LLAVE456",
     "fechaPago": "100000",
     "importePago": "50000",
-    "comboBimestresIDCSeleccione": "3"
-
+    "comboBimestresIDCSeleccione": "3",
+    "tipoInversion": 1,
+    "valorEnPesos": "1000",
+    "descGeneral": "Descripción general del trámite",
+    "fechaInicio": "01/01/2023",
+    "numeroDeEmpleados": 50,
+    "valorMaquinaria": "200000"
 }

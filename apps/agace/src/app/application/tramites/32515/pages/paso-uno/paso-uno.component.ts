@@ -1,6 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent,TIPO_PERSONA } from '@ng-mf/data-access-user';
-import { Subject,map,takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
+import { InformationGeneralSolicitanteComponent } from '../../components/information-general-solicitante/information-general-solicitante.component';
 import { InformationGeneralSolicitanteService } from '../../services/information-general-solicitante.service';
 
 @Component({
@@ -17,8 +18,14 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
+/**
+ * Referencia al componente hijo `InformationGeneralSolicitanteComponent` que permite acceder a sus métodos y propiedades desde el componente padre.
+ */
+ @ViewChild('informationGeneralRef')
+informationGeneralSolicitanteComponent!: InformationGeneralSolicitanteComponent;
+  
   /**
-   * @property indice - Representa el índice actual utilizado en el componente.
+   * @property indice - Representa el  índice actual utilizado en el componente.
    * @type {number}
    * @default 1
    * @remarks Este valor se utiliza para rastrear el estado o posición en el flujo del componente.
@@ -107,4 +114,46 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+
+/**
+ * Valida los formularios del paso actual y marca los campos inválidos como tocados para mostrar errores de validación.
+ */
+public validarFormularios(): boolean {
+  let isValid = true;
+
+  // Validar formulario de solicitante (pestaña 1)
+  if (this.indice === 1 && this.solicitante?.form) {
+    if (this.solicitante.form.invalid) {
+      this.solicitante.form.markAllAsTouched();
+      isValid = false;
+    }
+  }
+
+  // Validar formularios de información general (pestaña 2)
+  if (this.indice === 2 && this.informationGeneralSolicitanteComponent && this.esDatosRespuesta) {
+    const FORMS_VALID = this.informationGeneralSolicitanteComponent.validateAllForms();
+    if (!FORMS_VALID) {
+      isValid = false;
+    }
+  }
+
+  return isValid;
+}
+
+/**
+ * Obtiene el estado de validación de todos los formularios en ambas pestañas del paso uno.
+ */
+public obtenerValidacionTotalFormularios(): { tab1Valid: boolean, tab2Valid: boolean } {
+  // Validación de pestaña 1 (Solicitante)
+  const TAB1_VALID = this.solicitante?.form?.valid || false;
+  
+  // Validación de pestaña 2 (Componentes de información general)
+  let tab2Valid = false;
+  if (this.informationGeneralSolicitanteComponent && this.esDatosRespuesta) {
+    tab2Valid = this.informationGeneralSolicitanteComponent.areAllFormsValid();
+  }
+
+  return { tab1Valid: TAB1_VALID, tab2Valid };
+}
 }

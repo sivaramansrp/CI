@@ -3,7 +3,7 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InformationGeneralSolicitanteState, Tramite32515Store } from '../../estados/tramite32515.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DATOS_DEL_SEGURO } from '../../constantes/modificacion-aviso-seguro-global.enum';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { Tramite32515Query } from '../../estados/tramite32515.query';
@@ -84,19 +84,13 @@ export class DatosDelSeguroComponent implements OnInit, OnDestroy {
    * Método que se ejecuta cuando hay un cambio de valor en un campo del formulario
    * @param event Objeto con el nombre del campo y el nuevo valor
    */
-  establecerCambioDeValor(event: { campo: string; valor: string }): void {
-    if (event) {
-      this.cambioEnValoresStore(event.campo, event.valor);
+     establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
+    if (typeof $event.valor === 'object' && $event.valor !== null && 'id' in $event.valor) {
+      this.tramiteStore32515.setTramite32515State($event.campo, String(($event.valor as { id: unknown }).id));
+    } else {
+      this.tramiteStore32515.setTramite32515State($event.campo, $event.valor);
     }
-  }
-
-  /**
-   * Actualiza el store con los nuevos valores del formulario
-   * @param campo Nombre del campo que ha cambiado
-   * @param value Nuevo valor del campo
-   */
-  public cambioEnValoresStore(campo: string, value: unknown): void {
-    this.tramiteStore32515.establecerDatos(campo, value);
+   
   }
 
   /**

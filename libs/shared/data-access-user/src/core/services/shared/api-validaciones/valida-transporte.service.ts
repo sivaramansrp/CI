@@ -1,4 +1,4 @@
-import { BodyValidaAereo, BodyValidaFerro, ValidacionesTransporteResponse } from "../../../models/shared/validaciones-transporte.model";
+import { BodyValidaAereo, BodyValidaAereoDos, BodyValidaFerro, ValidacionesTransporteResponse } from "../../../models/shared/validaciones-transporte.model";
 import { Observable, catchError, map, throwError } from "rxjs";
 import { API_CONSULTAR_VALIDACION } from "../../../constants/api-constants";
 import { ENVIRONMENT } from "../../../../enviroments/enviroment";
@@ -23,7 +23,7 @@ export class ValidaTransporteService {
      * @param numeroBL: BodyValidarFerro - Número BL a validar
      * @returns Observable con la respuesta de la API
      */
-    getValidaTransporte(tipo: string, body: BodyValidaAereo | BodyValidaFerro): Observable<ValidacionesTransporteResponse> {
+    getValidaTransporte(tipo: string, body: BodyValidaAereo | BodyValidaFerro | BodyValidaAereoDos): Observable<ValidacionesTransporteResponse> {
         const ENDPOINT = `${this.host}/${API_CONSULTAR_VALIDACION.replace('{tipoTransporte}', tipo)}`;
 
         return this.http.post<ValidacionesTransporteResponse>(ENDPOINT, body).pipe(

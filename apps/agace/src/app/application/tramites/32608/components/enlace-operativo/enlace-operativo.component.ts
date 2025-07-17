@@ -323,10 +323,12 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    * de acordeón donde solo un panel puede estar abierto a la vez.
    */
   mostrar_colapsable(index: number): void {
+    if(!this.esFormularioSoloLectura){
     const IS_CURRENTLY_OPEN = this.panels[index].isCollapsed;
     this.panels.forEach((panel: { isCollapsed: boolean }, i: number) => {
       panel.isCollapsed = i === index ? !IS_CURRENTLY_OPEN : true;
     });
+  }
   }
 
   /**

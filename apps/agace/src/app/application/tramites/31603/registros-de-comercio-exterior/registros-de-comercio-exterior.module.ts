@@ -11,6 +11,7 @@ import { PasoTresComponent } from '../pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../pages/paso-uno/paso-uno.component';
 import { RegistrosDeComercioExteriorRoutingModule } from './registros-de-comercio-exterior-routing.module';
 import { RegistrosDeComercioExteriorService } from '../services/registros-de-comercio-exterior.service';
+import { SharedModalComponent } from '../components/shared-modal/shared-modal.component';
 import { TercerosRelacionadosComponent } from '../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { TercerosRelacionadosService } from '../../../shared/services/terceros-relacionados.service';
 import { TodosPasosComponent } from '../pages/todos-pasos/todos-pasos.component';
@@ -33,7 +34,8 @@ import { provideHttpClient } from '@angular/common/http';
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
     DatosPorRegimenComponent,
-    IvaeiepsComponent
+    IvaeiepsComponent,
+    SharedModalComponent
   ],
     providers: [
     provideHttpClient(),
