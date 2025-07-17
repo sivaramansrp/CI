@@ -1,12 +1,12 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { PagoDeDerechoComponent } from '../../../../shared/components/pago-de-derecho/pago-de-derecho.component';
 import { PagoDeDerechos } from '../../models/220201/capturar-solicitud.model';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 
 /**
  * @fileoverview Componente para la gestión del formulario de pago de derechos.
@@ -58,6 +58,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @property {boolean} esFormularioSoloLectura
    */
   esFormularioSoloLectura: boolean = false;
+  /**
+* @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
+*                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
+* @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+*/
+  @ViewChild('PagoDeDerecho') PagoDeDerechoComponent!: PagoDeDerechoComponent;
 
   /**
    * Constructor del componente. Inyecta los servicios y realiza una carga inicial de catálogos.
@@ -71,8 +77,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
     private readonly consultaioQuery: ConsultaioQuery,
-    private readonly cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   /**
    * Ciclo de vida de Angular que se ejecuta al iniciar el componente.
@@ -92,7 +97,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.cdr.detectChanges();
         })
       )
       .subscribe();
@@ -106,7 +110,23 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   onPagoChanged(event: PagoDeDerechos): void {
     this.certificadoZoosanitarioServices.updatePagoDeDerechos(event as PagoDeDerechos);
   }
-
+  /**
+     * @method validarFormulario
+     * @description
+     * Verifies if the payment form (`pagoForm`) is valid. If the form is valid, returns `true`.
+     * If the form is invalid, marks all form controls as touched to trigger validation messages and returns `false`.
+     *
+     * @returns {boolean} `true` if the form is valid, otherwise `false`.
+     *
+     * @memberof PagoDeDerechoComponent
+     */
+  validarFormulario(): boolean {
+    if (this.PagoDeDerechoComponent) {
+      return this.PagoDeDerechoComponent.validarFormulario();
+    } else {
+      return false;
+    }
+  }
   /**
    * Limpia las suscripciones para evitar fugas de memoria al destruir el componente.
    * @method ngOnDestroy
@@ -115,4 +135,5 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
 }

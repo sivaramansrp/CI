@@ -165,6 +165,8 @@ export class ZoosanitarioPageComponent {
     if (!ISFORM_VALID_TOUCHED) {
       return false;
     }
-    return true;
+    else {
+      return true;
+    }
   }
 }

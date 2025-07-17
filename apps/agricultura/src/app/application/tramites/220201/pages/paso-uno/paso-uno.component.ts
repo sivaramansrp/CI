@@ -63,7 +63,27 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  *                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
  * @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
  */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+  @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
+
+  /**
+* @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
+*                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
+* @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+*/
+  @ViewChild('datosDeLaSolicitudRef') datosDelaSolicitu!: DatosDeLaSolicitudComponent;
+  /**
+* @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
+*                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
+* @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+*/
+  @ViewChild('datosParaMovilizacionNacionalRef') datosParaMovilizacionNacional!: DatosParaMovilizacionNacionalComponent;
+  /**
+* @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
+*                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
+* @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+*/
+  @ViewChild('padoDeRef') pagoDeDerechosComponent!: PagoDeDerechosComponent;
+
 
   /**
    * Constructor del componente.
@@ -127,20 +147,61 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
-    this.tabChanged.emit(i);
   }
+  /**
+   * @description
+   * Valida los formularios de los diferentes componentes hijos del paso uno del trámite.
+   * 
+   * Este método verifica si los formularios de los componentes `solicitante`, `datosDelaSolicitu`,
+   * `datosParaMovilizacionNacional` y `pagoDeDerechosComponent` son válidos. Si alguno de ellos es inválido
+   * o no está presente, el método retorna `false`. Además, marca todos los campos del formulario de solicitante
+   * como tocados si es inválido para mostrar los errores de validación.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos y existen, `false` en caso contrario.
+   */
   public validarFormularios(): boolean {
     let isValid = true;
 
-    // Validar formulario de solicitante (pestaña 1)
-    if (this.indice === 1 && this.solicitante?.form) {
+    if (this.solicitante?.form) {
       if (this.solicitante.form.invalid) {
         this.solicitante.form.markAllAsTouched();
         isValid = false;
       }
+    } else {
+      isValid = false;
     }
+
+    if (this.datosDelaSolicitu) {
+      if (!this.datosDelaSolicitu.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.datosParaMovilizacionNacional) {
+      if (!this.datosParaMovilizacionNacional.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.pagoDeDerechosComponent) {
+      if (!this.pagoDeDerechosComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
     return isValid;
   }
+
+
+
+
+
   /**
    * Ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Libera recursos y cancela las suscripciones.
