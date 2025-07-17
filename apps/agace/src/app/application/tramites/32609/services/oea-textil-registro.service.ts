@@ -1,4 +1,4 @@
-import { ApiResponse, BuscarRfcResponse, InstalacionesInterface } from '../modelos/oea-textil-registro.model';
+import { ApiResponse, BuscarRfcResponse, InstalacionesInterface, PersonaRespuestaTabla, RFCEnlaceOperativo, TransportistasListaInterface } from '../modelos/oea-textil-registro.model';
 import { Observable, forkJoin } from 'rxjs';
 import { StoreResponse, Tramite32609Store, Tramites32609State } from '../estados/tramites32609.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -113,4 +113,53 @@ sectorListaDeSelects(): Observable<{
   });
 }
 
+
+
+ /**
+   * Obtiene los datos de una empresa por RFC
+   * @param rfc RFC de la empresa a buscar
+   * @returns Observable con los datos de la empresa
+   */
+  conseguirDatosPorRFC(_rfc: string): Observable<{ [key: string]: RFCEnlaceOperativo }> {
+    return this.http.get<{ [key: string]: RFCEnlaceOperativo }>('assets/json/32605/rfc-datos.json');
+  }
+  /**
+   * Obtiene la lista de transportistas desde un archivo JSON local.
+   * @returns Observable con un arreglo de TransportistasTable.
+   */
+  conseguirTransportistasLista(_rfc: string): Observable<{ [key: string]: TransportistasListaInterface }> {
+    return this.http.get<{ [key: string]: TransportistasListaInterface }>('assets/json/32605/transportistas-lista.json');
+  }
+
+   getDatos(): Observable<Tramites32609State> {
+    return this.http.get<Tramites32609State>('assets/json/32605/datos.json');
+  }
+
+
+  /**
+   * Obtiene los datos de la tabla de personas.
+   * Realiza una petición a un recurso local en formato JSON que contiene datos relacionados con personas.
+   *
+   * @returns {Observable<PersonaRespuestaTabla>} Un observable con los datos de la tabla de personas.
+   * @memberof SolicitudDeRegistroInvocarService
+   */
+  obtenerPersonaTablaDatos(): Observable<PersonaRespuestaTabla> {
+    return this.http.get<PersonaRespuestaTabla>('assets/json/32609/personas-notificacione.json');
+  }
+
+  /**
+  * Obtiene los datos de la solicitud.
+  * @returns Observable con los datos de la solicitud.
+  */
+  getDatosDeLaSolicitud(): Observable<Tramites32609State> {
+    return this.http.get<Tramites32609State>('assets/json/32609/datos-de-la-solicitud-terceros.json');
+  }
+
+  /**
+   * Obtiene los datos de la solicitud de OEA Textil.
+   * @returns Observable con los datos de la solicitud.
+   */
+  getDatosrubroTextil(): Observable<Tramites32609State> {
+    return this.http.get<Tramites32609State>('assets/json/32609/rubro-IVA-textil-datos.json');
+  }
 }

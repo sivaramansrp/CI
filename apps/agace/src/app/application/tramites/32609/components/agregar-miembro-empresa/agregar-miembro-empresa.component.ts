@@ -5,6 +5,7 @@ import {
   InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
+  REGEX_RFC,
   TablaDinamicaComponent,
   TablaSeleccion,
   TipoNotificacionEnum,
@@ -282,7 +283,7 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
   crearFormulario(): void {
     this.registroAgregarMiembroEmpresaForm = this.fb.group({
       id: [null],
-      rfcInput: ['', Validators.required],
+      rfcInput: ['', [Validators.required, Validators.pattern(REGEX_RFC)]],
       nombreCompleto: ['', Validators.required],
       rfc: ['', Validators.required],
       caracter: [null, Validators.required],
@@ -424,6 +425,7 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
         id: ID, 
         tipoPersona: SELECTED_TIPO_PERSONA,
         nombre: NOMBRE,
+        nombreColleccion: NOMBRE_COMPLETO,
         apellidoPaterno: APELLIDO_PATERNO,
         apellidoMaterno: APELLIDO_MATERNO,
         nombreCompleto: NOMBRE_COMPLETO,
@@ -716,6 +718,10 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
           });
         }
       });
+    } else {
+      this.enNuevaNotificacion(this.MENSAJE_DE_VALIDACION);
+      this.esHabilitarElDialogo = true;
+      this.registroAgregarMiembroEmpresaForm.markAllAsTouched();
     }
   }
 

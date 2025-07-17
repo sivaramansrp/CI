@@ -124,6 +124,9 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * Mensaje que indica un requisito obligatorio para acceder a la nota.
    */
   REQUISITO_OBLIGATORIO = NOTA.REQUISITO_OBLIGATORIO_PARA_ACCEDER_NOTA;
+  /**
+   * Mensaje que indica un requisito para el empleado.
+   */
   EMPLEADO_REQUISITO = NOTA.EMPLEADO_REQUISITO_RGCE;
 
 
@@ -207,7 +210,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           cumplimientoFiscalAduanero: [this.seccionState?.cumplimientoFiscalAduanero, Validators.required],
           autorizaOpinionSAT: [this.seccionState?.autorizaOpinionSAT, Validators.required],
           cuentaConEmpleadosPropios: [this.seccionState?.cuentaConEmpleadosPropios, Validators.required],
-          bimestreUltimo: [this.seccionState?.bimestreUltimo, Validators.required],
+          bimestreUltimo: [this.seccionState?.bimestreUltimo,[]],
           numeroDeEmpleadas: [{value:this.seccionState?.numeroDeEmpleadas, disabled:true}, [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]],
           retencionISRTrabajadores: [this.seccionState?.retencionISRTrabajadores, Validators.required],
           pagoCuotasIMSS: [this.seccionState?.pagoCuotasIMSS, Validators.required],
@@ -550,11 +553,120 @@ onSeleccionVerdadera(evento:string | number, nota?:string): void {
     if(this.forma) {
     this.forma.markAllAsTouched();
     }
+    // Marcar específicamente los campos de empleados si la sección está visible
+    this.marcarCamposEmpleadosComoTocados();
     // Validar formularios del componente hijo control-inventarios
     if (this.controlInventariosComponent) {
       this.controlInventariosComponent.validarFormularios();
     }
   }
+
+  /**
+ * @method validarDatosEmpleadosCompletos
+ * @description Valida que tanto el número de empleados como el bimestre estén completos cuando uno de ellos tiene valor o es tocado.
+ * 
+ * @returns {boolean} true si debe mostrar el mensaje de error, false si no
+ * 
+ * @remarks
+ * - Solo valida cuando radioSeleccionado es true
+ * - Muestra error si uno de los campos tiene valor pero el otro no
+ * - Muestra error si uno de los campos fue tocado pero no ambos tienen valor
+ * - Se ejecuta después de validarFormulario() o cuando se cambia algún campo
+ */
+public validarDatosEmpleadosCompletos(): boolean {
+  // Solo validar si la sección de empleados está visible
+  if (!this.radioSeleccionado) {
+    return false;
+  }
+
+  const NUMERO_CONTROL = this.forma?.get('numeroDeEmpleadas');
+  const BIMESTRE_CONTROL = this.forma?.get('bimestreUltimo');
+
+  if (!NUMERO_CONTROL || !BIMESTRE_CONTROL) {
+    return false;
+  }
+
+  // Verificar si los campos tienen valor válido
+  const NUMERO_TIENE_VALOR = NUMERO_CONTROL.value && 
+    NUMERO_CONTROL.value.toString().trim() !== '';
+  const BIMESTRE_TIENE_VALOR = BIMESTRE_CONTROL.value && 
+    BIMESTRE_CONTROL.value !== '' && 
+    BIMESTRE_CONTROL.value !== -1 && 
+    BIMESTRE_CONTROL.value !== null;
+
+  // Verificar si al menos uno de los campos fue tocado
+  const AL_MENOS_UNO_TOCADO = NUMERO_CONTROL.touched || BIMESTRE_CONTROL.touched;
+  
+  // Verificar si al menos uno de los campos tiene valor (dropdown seleccionado o texto ingresado)
+  const AL_MENOS_UNO_TIENE_VALOR = NUMERO_TIENE_VALOR || BIMESTRE_TIENE_VALOR;
+
+  // Mostrar error si:
+  // 1. Al menos uno fue tocado pero no ambos tienen valor, O
+  // 2. Al menos uno tiene valor pero no ambos tienen valor
+  return (AL_MENOS_UNO_TOCADO || AL_MENOS_UNO_TIENE_VALOR) && 
+         !(NUMERO_TIENE_VALOR && BIMESTRE_TIENE_VALOR);
+}
+
+/**
+ * @method onEmpleadosValueChange
+ * @description Maneja el cambio de valor en el campo número de empleados.
+ * 
+ * @param {Event} event - Evento del input
+ * @returns {void}
+ * 
+ * @remarks
+ * - Se ejecuta cada vez que el usuario escribe en el campo
+ * - Actualiza la validación para mostrar/ocultar el mensaje de error
+ */
+public onEmpleadosValueChange(event: Event): void {
+  const TARGET = event.target as HTMLInputElement;
+  if (TARGET && this.forma) {
+    // Force change detection to update validation message
+    setTimeout(() => {
+      // This will trigger the validarDatosEmpleadosCompletos() method
+      // in the template due to change detection
+    }, 0);
+  }
+}
+
+/**
+ * @method onBimestreValueChange
+ * @description Maneja el cambio de valor en el campo bimestre.
+ * 
+ * @param {Event} event - Evento del select
+ * @returns {void}
+ * 
+ * @remarks
+ * - Se ejecuta cada vez que el usuario selecciona un valor del dropdown
+ * - Actualiza la validación para mostrar/ocultar el mensaje de error
+ */
+public onBimestreValueChange(event: Event): void {
+  const TARGET = event.target as HTMLSelectElement;
+  if (TARGET && this.forma) {
+    // Force change detection to update validation message
+    setTimeout(() => {
+      // This will trigger the validarDatosEmpleadosCompletos() method
+      // in the template due to change detection
+    }, 0);
+  }
+}
+
+/**
+ * @method marcarCamposEmpleadosComoTocados
+ * @description Marca los campos de empleados como tocados para activar la validación.
+ * 
+ * Se ejecuta cuando se llama validarFormulario() para asegurar que se muestren
+ * los errores de validación de empleados si están incompletos.
+ */
+public marcarCamposEmpleadosComoTocados(): void {
+  if (this.radioSeleccionado && this.forma) {
+    const NUMERO_CONTROL = this.forma.get('numeroDeEmpleadas');
+    const BIMESTRE_CONTROL = this.forma.get('bimestreUltimo');
+    
+    NUMERO_CONTROL?.markAsTouched();
+    BIMESTRE_CONTROL?.markAsTouched();
+  }
+}
 
   /**
    * @method ngOnDestroy

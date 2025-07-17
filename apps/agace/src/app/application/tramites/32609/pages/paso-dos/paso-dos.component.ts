@@ -1,57 +1,81 @@
-import { CATALOGOS_ID, Catalogo, CatalogosService } from '@libs/shared/data-access-user/src';
-import { Component, Inject, OnInit } from '@angular/core';
+import { CATALOGOS_ID } from '@libs/shared/data-access-user/src';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogosService } from '@libs/shared/data-access-user/src';
+import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
+import { TEXTOS } from '@ng-mf/data-access-user';
+import { takeUntil } from 'rxjs';
 
+/**
+ * Componente PasoDosComponent que representa el segundo paso del trámite 32605.
+ */
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })
-export class PasoDosComponent implements OnInit {
-  
-    /** Catálogo completo de documentos disponibles. */
-    catalogoDocumentos: Catalogo[] = [];
-
-
-    /**
-   * Constructor del componente.
-   *
-   * @param catalogosServices Servicio para obtener los catálogos necesarios.
-   */
-    constructor(
-      @Inject(CatalogosService) private catalogosServices: CatalogosService
-    ) {
-      // Dependencia inyectada para uso posterior
-    }
-    
+/**
+ * Clase PasoDosComponent encargada de manejar la lógica y vista del segundo paso del trámite 32605.
+ */
+export class PasoDosComponent implements OnInit, OnDestroy {
   /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   *
-   * Inicializa la lista de tipos de documentos disponibles y define algunos
-   * documentos seleccionados por defecto.
+   * @description Constante que contiene los textos utilizados en el componente.
+   */
+  TEXTOS = TEXTOS;
+
+  /**
+   * @description Arreglo que contiene los documentos del catálogo.
+   * Cada elemento es de tipo `Catalogo`, representando un ítem del catálogo disponible.
+   */
+  catalogoDocumentos: Catalogo[] = [];
+
+  /** Sujeto para manejar la destrucción del componente y cancelar suscripciones */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @description Constructor del componente.
+   * Se inyecta el servicio `CatalogosService` para obtener información desde el backend.
+   * @param catalogosServices Servicio encargado de obtener los catálogos del sistema.
+   */
+  constructor(private catalogosServices: CatalogosService) {
+    // Si es necesario, se puede agregar aquí la lógica de inicialización
+  }
+
+  /**
+   * @description Método del ciclo de vida de Angular que se ejecuta una vez que el componente ha sido inicializado.
+   * Ideal para cargar datos necesarios al inicio del componente.
+   * @returns {void}
    */
   ngOnInit(): void {
     this.getTiposDocumentos();
   }
-  
+
   /**
-   * Obtiene el catálogo de tipos de documentos disponibles para el trámite.
-   *
-   * Este método realiza una solicitud al servicio de catálogos para cargar la lista
-   * de documentos disponibles que el usuario podrá seleccionar.
+   * @description Método encargado de obtener los tipos de documentos disponibles para el trámite desde el servicio de catálogos.
+   * Realiza una suscripción al observable y asigna los datos a la variable `catalogoDocumentos` si la respuesta contiene elementos.
+   * @returns {void}
    */
   getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (resp): void => {
-          // Si la respuesta tiene documentos, los almacena en catalogoDocumentos
           if (resp.length > 0) {
             this.catalogoDocumentos = resp;
           }
         },
-        error: (_error): void => {
-          // Manejo de errores, actualmente vacío pero puede ser implementado
-        },
       });
+  }
+
+  /**
+   * Método de ciclo de vida que se ejecuta al destruir el componente
+   * Se encarga de completar el subject y cancelar las suscripciones activas
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

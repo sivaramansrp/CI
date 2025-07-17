@@ -1,64 +1,55 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoTresComponent } from './paso-tres.component';
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
+import { provideToastr, ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('PasoTresComponent', () => {
-  let fixture;
-  let component;
+  let component: PasoTresComponent;
+  let fixture: ComponentFixture<PasoTresComponent>;
+  let router: Router;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [
-        PasoTresComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        FirmaElectronicaComponent,
+        CommonModule,
+        
+        HttpClientTestingModule,
+        ReactiveFormsModule,
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      declarations: [PasoTresComponent],
       providers: [
-
-      ]
-    }).overrideComponent(PasoTresComponent, {
-
+        ToastrService,
+        provideToastr({
+          positionClass: 'toast-top-right',
+        }),
+      ],
     }).compileComponents();
+
     fixture = TestBed.createComponent(PasoTresComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function () { };
-    fixture.destroy();
-  });
-
-  it('debe ejecutar #constructor()', async () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
+  it('should navigate to acuse page on valid firma', () => {
+    const navigateSpy = jest.spyOn(router, 'navigate');
+    const firma = 'valid-firma';
+    component.obtieneFirma(firma);
+    expect(navigateSpy).toHaveBeenCalledWith(['temporal-contenedores/acuse']);
+  });
 
+  it('should not navigate to acuse page on invalid firma', () => {
+    const navigateSpy = jest.spyOn(router, 'navigate');
+    const firma = '';
+    component.obtieneFirma(firma);
+    expect(navigateSpy).not.toHaveBeenCalled();
+  });
 });

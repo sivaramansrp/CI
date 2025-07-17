@@ -80,13 +80,9 @@
                        type="text" 
                        name="numeroDeEmpleadas"
                        formControlName="numeroDeEmpleadas"
+                       (blur)="marcarCamposEmpleadosComoTocados()"
+                       (input)="onEmpleadosValueChange($event)"
                        (change)="setValoresStore(forma, 'numeroDeEmpleadas')" />
-                
-                <div *ngIf="esInvalido('numeroDeEmpleadas')" class="text-danger">
-                    <small *ngIf="forma.controls['numeroDeEmpleadas'].hasError('required')">
-                        Se debe agregar los datos del número de empleados propios del último bimestre
-                    </small>
-                </div>
             </div>
         </div>
 
@@ -98,11 +94,16 @@
                     [placeholder]="'Seleccione un valor'" 
                     [required]="true" 
                     id="bimestre"
-                    formControlName="bimestreUltimo" 
+                    formControlName="bimestreUltimo"
+                    (blur)="marcarCamposEmpleadosComoTocados()"
                     [isDisabled]="!this.radioSeleccionado || esFormularioSoloLectura"
                     (change)="setValoresStore(forma, 'bimestreUltimo')">
                 </app-catalogo-select>
             </div>
+        </div>
+
+        <div class="col-md-12 pt-4" *ngIf="validarDatosEmpleadosCompletos()">
+            <div class="text-danger">Se debe agregar los datos del número de empleados propios del último bimestre</div>
         </div>
     </div>
 

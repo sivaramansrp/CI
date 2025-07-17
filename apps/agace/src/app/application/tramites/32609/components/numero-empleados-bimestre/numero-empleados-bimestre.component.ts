@@ -305,12 +305,12 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   crearFormulario(): void {
 
     this.rfcForm = this.fb.group({
-      rfcInput: ['', Validators.required]
+      rfcInput: ['', [Validators.required, Validators.pattern(REGEX_RFC)]]
     });
 
     this.registroNumeroEmpleadosForm = this.fb.group({
       id: [null],
-      rfc: ['', [Validators.required, Validators.pattern(REGEX_RFC)]],
+      rfc: ['', [Validators.required]],
       denominacionSocial: ['', Validators.required],
       numeroDeEmpleados: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]],
       bimestre: [null, Validators.required]
@@ -755,6 +755,10 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
           });
         }
       });
+    } else {
+      this.enNuevaNotificacion(this.MENSAJE_DE_VALIDACION);
+      this.esHabilitarElDialogo = true;
+      this.rfcForm.markAllAsTouched();
     }
 
   }
