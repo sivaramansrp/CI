@@ -60,6 +60,7 @@
               ></app-catalogo-select>
             </div>
          </div>
+       <div *ngIf="isUtilizoCafeComoSi">
          <div class="col-md-6 mb-3">
             <div class="form-group">
                <label class="form-label" for="cantidadutilizada">Cantidad utilizada para elaborar este lote de importación:</label>
@@ -68,14 +69,14 @@
                [disabled]="esFormularioSoloLectura"
                >
                <div
-      *ngIf="
-        dataCafeForm.get('datosDelTramiteRealizar')?.errors?.['cantidadUtilizadaExceeds'] &&
-        dataCafeForm.get('datosDelTramiteRealizar.cantidadutilizada')?.touched
-      "
-      class="text-danger"
-    >
-      <small>La Cantidad Utilizada debe ser menor a la cantidad Facturada</small>
-    </div>
+         *ngIf="
+         dataCafeForm.get('datosDelTramiteRealizar')?.errors?.['cantidadUtilizadaExceeds'] &&
+           dataCafeForm.get('datosDelTramiteRealizar.cantidadutilizada')?.touched
+          "
+          class="text-danger"
+         >
+          <small>La Cantidad Utilizada debe ser menor a la cantidad Facturada</small>
+         </div>
             </div>
          </div>
          <div class="col-md-6 mb-3">
@@ -115,6 +116,7 @@
               ></app-catalogo-select>
             </div>
          </div>
+        </div>
          <ng-titulo titulo="Factura y Cantidad" />
          <div class="row">
             <div class="col-md-4 mb-3">
@@ -167,20 +169,20 @@
                    [disabled]="esFormularioSoloLectura">
                 </div>
                 <div
-    *ngIf="
-      dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.invalid &&
-      dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.touched
-    "
-    class="text-danger"
-  >
-    <small
+        *ngIf="
+         dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.invalid &&
+        dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.touched
+       "
+      class="text-danger"
+      >
+     <small
       *ngIf="
         dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.errors?.['pattern']
       "
-    >
+     >
       Solo 7 enteros y hasta 3 Decimales
-    </small>
-  </div>
+     </small>
+     </div>
              </div>
              <div class="col-md-4 mb-3">
                 <div class="form-group">
@@ -239,6 +241,152 @@
                     </div>
                  </div>
                  </div>
+                 <div class="row" *ngIf="isElCafeSi">
+                  <div class="col-md-12">
+                    <label class="form-label">Detalles Marca:</label>
+                
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="calidadEspecial"
+                        formControlName="calidadEspecial"
+                      />
+                      <label class="form-check-label" for="calidadEspecial">
+                        CAFÉ DE CALIDAD ESPECIAL/GOURMET
+                      </label>
+                    </div>
+                
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="cafePractices"
+                        formControlName="cafePractices"
+                      />
+                      <label class="form-check-label" for="cafePractices">
+                        CAFÉ PRACTICES
+                      </label>
+                    </div>
+                
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="avesMigratorias"
+                        formControlName="avesMigratorias"
+                      />
+                      <label class="form-check-label" for="avesMigratorias">
+                        CENTRO SMITHSONIANO DE AVES MIGRATORIAS
+                      </label>
+                    </div>
+                
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="codigoComunidad"
+                        formControlName="codigoComunidad"
+                      />
+                      <label class="form-check-label" for="codigoComunidad">
+                        CODIGO COMUN DE LA COMUNIDAD CAFETALERA
+                      </label>
+                    </div>
+                
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="comercioJusto"
+                        formControlName="comercioJusto"
+                      />
+                      <label class="form-check-label" for="comercioJusto">
+                        COMERCIO JUSTO (Fair Trade)
+                      </label>
+                    </div>
+                
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="euregap"
+                        formControlName="euregap"
+                      />
+                      <label class="form-check-label" for="euregap">
+                        EUREGAP
+                      </label>
+                    </div>
+                
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="otros"
+                        formControlName="otros"
+                      />
+                      <label class="form-check-label" for="otros">
+                        OTROS
+                      </label>
+                    </div>
+                
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="rainforestAlliance"
+                        formControlName="rainforestAlliance"
+                      />
+                      <label class="form-check-label" for="rainforestAlliance">
+                        RAINFOREST ALLIANCE
+                      </label>
+                    </div>
+                
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="sistemaQ"
+                        formControlName="sistemaQ"
+                      />
+                      <label class="form-check-label" for="sistemaQ">
+                        SISTEMA Q COFFEE
+                      </label>
+                    </div>
+                
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="tasqNespresso"
+                        formControlName="tasqNespresso"
+                      />
+                      <label class="form-check-label" for="tasqNespresso">
+                        TASQ NESPRESSO
+                      </label>
+                    </div>
+                
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="utzCertified"
+                        formControlName="utzCertified"
+                      />
+                      <label class="form-check-label" for="utzCertified">
+                        UTZ CERTIFIED
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" *ngIf="dataCafeForm.get('datosDelTramiteRealizar.otros')?.value">
+                  <div class="col-md-6 mb-3">
+                  <label class="form-label" for="otrasCaracteristicas">Otras características*:</label>
+               <input class="form-control"  placeholder="" type="text" formControlName="otrasCaracteristicas" id="otrasCaracteristicas"
+               (change)="setValoresStore(datosDelTramiteRealizar,'otrasCaracteristicas','setOtrasCaracteristicas')"
+               [disabled]="esFormularioSoloLectura"
+               >
+              </div>
+                </div>
                  <div class="row">
                      <div class="col-md-6 mb-3">
                             <div class="form-group">

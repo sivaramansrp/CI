@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { ReplaySubject, takeUntil } from 'rxjs';
 
@@ -49,6 +49,25 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   @Input() tablaFilaDatos: Solicitud[] = [];
 
   /**
+ * Evento que emite la fila seleccionada de la tabla.
+ */
+@Output() rowSelected: EventEmitter<Solicitud> = new EventEmitter<Solicitud>();
+
+/**
+ * Datos de ejemplo para una solicitud (MOCK).
+ */
+MOCK_SOLICITUD: Solicitud = {
+  formasdelcafe: '1',
+  tipos: '2',
+  calidad: '3',
+  procesos: '2',
+  certifications: '1',
+  adunadesalida: '2',
+  paisdestino: '1',
+  entidaddeprocedencia: '1',
+  ciclocafetalero: '1',
+};
+  /**
    * Constructor del componente.
    * @param registrarsolicitud Servicio para gestionar las solicitudes.
    */
@@ -62,6 +81,13 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     this.getSolicitudData();
   }
 
+ /**
+ * Método que se ejecuta al hacer clic en una fila de la tabla.
+ * Emite el evento `rowSelected` con los datos de la solicitud seleccionada.
+ */
+onRowClick(): void {
+    this.rowSelected.emit(this.MOCK_SOLICITUD);
+}
   /**
    * Alterna el estado del panel plegable (expandir/contraer).
    */

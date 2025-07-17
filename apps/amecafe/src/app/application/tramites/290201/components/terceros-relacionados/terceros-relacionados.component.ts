@@ -12,6 +12,7 @@ import {
   CatalogosSelect,
   ConsultaioQuery,
   ConsultaioState,
+  InputRadioComponent,
   REGEX_CODIGO_POSTAL,
   REGEX_CORREO_ELECTRONICO,
   REGEX_TELEFONO,
@@ -33,6 +34,7 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
 
 import { CONFIGURACION_COLUMNAS_SOLI_2 } from '../../constants/tabla-enum';
+import { TIPO_PERSONA_RADIO_OPTIONS } from '../../constants/octova-tempora.enum';
 /**
  * Componente: TercerosRelacionadosComponent
  * Descripción: Componente para gestionar los datos de terceros relacionados en el trámite 290201.
@@ -47,6 +49,7 @@ import { CONFIGURACION_COLUMNAS_SOLI_2 } from '../../constants/tabla-enum';
     ReactiveFormsModule,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
+    InputRadioComponent
   ],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.css',
@@ -127,6 +130,67 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
       esFormularioSoloLectura: boolean = false;
 
   /**
+   * Opciones de radio para seleccionar el tipo de persona.
+   */
+  tipoPersonaRadioOptions = TIPO_PERSONA_RADIO_OPTIONS;
+
+  /**
+ * @property {string} tipoPersonaSeleccionada
+ * @description Almacena el tipo de persona seleccionado en el formulario.
+ * Este valor se utiliza para determinar la lógica de visualización y validación.
+ * @default ''
+ */
+tipoPersonaSeleccionada: string = '';
+  /**
+   * Variable para almacenar el tipo de público.
+   */
+  tipoDePublicos: string = '';
+      
+  /**
+ * @propiedad {CatalogosSelect} entidadFederativaData
+ * @descripción
+ * Datos del catálogo para la selección de la entidad federativa.
+ * Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+ */
+public entidadFederativaData: CatalogosSelect = {
+  labelNombre: 'Entidad federativa',
+  required: true,
+  primerOpcion: 'Seleccione una opción',
+  catalogos: [],
+};
+
+/**
+* @propiedad {CatalogosSelect} alcaldiaMunicipoData
+* @descripción
+* Datos del catálogo para la selección de la alcaldía o municipio.
+* Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+*/
+public alcaldiaMunicipoData: CatalogosSelect = {
+  labelNombre: 'Alcaldía o Municipio',
+  required: true,
+  primerOpcion: 'Seleccione una opción',
+  catalogos: [],
+};
+
+/**
+* @propiedad {CatalogosSelect} coloniaData
+* @descripción
+* Datos del catálogo para la selección de la colonia.
+* Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+*/
+public coloniaData: CatalogosSelect = {
+  labelNombre: 'Colonia',
+  required: true,
+  primerOpcion: 'Seleccione una opción',
+  catalogos: [],
+};
+
+ /**
+   * Bandera para verificar si los datos del catálogo de países están cargados.
+   */
+ isPaisdatoscargados = false;
+
+  /**
    * Constructor del componente.
    * @param registrarsolicitud Servicio para registrar solicitudes.
    * @param fb FormBuilder para crear formularios reactivos.
@@ -168,6 +232,9 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
      
       this.getDestinatarioData();
     this.createForm();
+    this.getEntidadFederativaData();
+    this.getAlcaldiaMunicipo();
+    this.getColonia();
 
     this.consultaioQuery.selectConsultaioState$
     .pipe(
@@ -188,16 +255,21 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   createForm(): void {
     this.destinatarioForm = this.fb.group({
       datosDelTramiteRealizar: this.fb.group({
-        tipoPersona: [
-          this.destinatarioState?.tipoPersona,
-          [Validators.required],
-        ],
-        denominacion: [
-          this.destinatarioState?.denominacion,
-          [Validators.required],
-        ],
+        tipoPersona: [ this.destinatarioState?.tipoPersona,[Validators.required]],
+        denominacion: [ this.destinatarioState?.denominacion, [Validators.required]],
+        nombre: [ this.destinatarioState?.denominacion, [Validators.required]],
+        primerApellido: [this.destinatarioState?.denominacion,[Validators.required]],
+           
+       segundoApellido: [ this.destinatarioState?.denominacion,[Validators.required] ],
+
+       calle: [ this.destinatarioState?.denominacion,[Validators.required]],
+       numeroExterior: [this.destinatarioState?.denominacion,[Validators.required]],
+      numeroInterior: [this.destinatarioState?.denominacion, [Validators.required]],
         domicilio: [this.destinatarioState?.domicilio, [Validators.required]],
         pais: [this.destinatarioState?.pais, [Validators.required]],
+        entidadFederativa: [this.destinatarioState?.entidadFederativa, Validators.required],
+        alcaldiaMunicipo: [this.destinatarioState?.alcaldiaMunicipo, Validators.required],
+        colonia: [this.destinatarioState?.colonia, Validators.required],
         codigopostal: [
           this.destinatarioState?.codigopostal,
           [Validators.required, Validators.maxLength(5), Validators.pattern(REGEX_CODIGO_POSTAL)]],
@@ -211,18 +283,72 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    
 
   }
-
-  /**
+/**
    * Getter para obtener el tipo de persona seleccionado.
    */
-  get selectedTipoPersona(): void {
-    return this.destinatarioForm.get('tipoPersona')?.value;
+get selectedTipoPersona(): string | undefined {
+  return this.destinatarioForm.get('tipoPersona')?.value;
+}
+
+  /**
+   * Establece el tipo de persona seleccionado.
+   * @param value Valor seleccionado (cadena o número).
+   */
+  setTipoPersona(value: string | number): void {
+    this.tipoPersonaSeleccionada = value.toString();
+  }
+  /**
+ * @method getEntidadFederativaData
+ * @descripcion
+ * Este método obtiene los datos del catálogo de entidades federativas desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `entidadFederativaData`.
+ * @returns {void}
+ */
+  getEntidadFederativaData(): void {
+    this.registrarsolicitud
+      .getEntidadFederativaData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.entidadFederativaData.catalogos = data as Catalogo[];
+      });
   }
 
   /**
-   * Bandera para verificar si los datos del catálogo de países están cargados.
-   */
-  isPaisdatoscargados = false;
+ * @method getAlcaldiaMunicipo
+ * @descripcion
+ * Este método obtiene los datos del catálogo de alcaldías o municipios desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `alcaldiaMunicipoData`.
+ * @returns {void}
+ */
+  getAlcaldiaMunicipo(): void {
+    this.registrarsolicitud
+      .getAlcaldiaMunicipo()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.alcaldiaMunicipoData.catalogos = data as Catalogo[];
+      });
+  }
+
+  /**
+ * @method getColonia
+ * @descripcion
+ * Este método obtiene los datos del catálogo de colonias desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `coloniaData`.
+ * @returns {void}
+ */
+  getColonia(): void {
+    this.registrarsolicitud
+      .getColonia()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.coloniaData.catalogos = data as Catalogo[];
+      });
+  }
+  
+ 
 
   /**
    * Método para obtener los datos del catálogo de países.
