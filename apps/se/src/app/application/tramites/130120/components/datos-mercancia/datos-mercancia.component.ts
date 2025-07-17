@@ -1,8 +1,9 @@
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user'
 import { DatosGrupos } from '../../models/permiso-importacion-modification.model';
 import { FECHA_FACTURA } from '../../constants/permiso-importacion-modification.enum';
 import { PermisoImportacionService } from '../../services/permiso-importacion.service';

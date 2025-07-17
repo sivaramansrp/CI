@@ -1,9 +1,9 @@
 {
     "data":[
             { "id": 1, "descripcion": "Aeroportuaria" },
-            { "id": 1, "descripcion": "Fronteriza" },
-            { "id": 1, "descripcion": "Interior" },
-            { "id": 1, "descripcion": "Maritima" },
-            { "id": 1, "descripcion": "Terrestre" }
+            { "id": 2, "descripcion": "Fronteriza" },
+            { "id": 3, "descripcion": "Interior" },
+            { "id": 4, "descripcion": "Maritima" },
+            { "id": 5, "descripcion": "Terrestre" }
         ]
 }

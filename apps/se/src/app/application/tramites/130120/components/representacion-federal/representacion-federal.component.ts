@@ -1,8 +1,9 @@
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, SeccionLibState, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, SeccionLibState, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user'
 import { DatosGrupos } from '../../models/permiso-importacion-modification.model';
 import { PermisoImportacionService } from '../../services/permiso-importacion.service';
 import { PermisoImportacionStore } from '../../estados/permiso-importacion.store';
