@@ -1,4 +1,4 @@
-import { Domicilios } from '../models/empresas-comercializadoras.model';
+import { Domicilios, TransportistasTable } from '../models/empresas-comercializadoras.model';
 import { EnlaceOperativo } from '../models/empresas-comercializadoras.model';
 import { Injectable } from '@angular/core';
 import { NumeroDeEmpleados } from '../models/empresas-comercializadoras.model';
@@ -540,6 +540,21 @@ export interface Solicitud32604State {
    * Lista de objetos que contienen los datos relacionados con los enlaces operativos.
    */
   enlaceOperativosLista: EnlaceOperativo[];
+
+  /**
+   * Valor asociado con el código programaImmex (puede ser un número o una cadena).
+   */
+  programaImmex: string | number;
+
+  /**
+   * Valor asociado con el código importsRadio (puede ser un número o una cadena).
+   */
+  importsRadio: string | number;
+
+  /**
+   * Lista de objetos que representan los empleados con su número de empleados.
+   */
+  transportistasLista: TransportistasTable[];
 }
 
 /**
@@ -655,6 +670,9 @@ export function createInitialSolicitudState(): Solicitud32604State {
     domiciliosDatos: [] as Domicilios[],
     listaSeccionSociosIC: [] as SeccionSociosIC[],
     enlaceOperativosLista: [] as EnlaceOperativo[],
+    programaImmex: 0,
+    importsRadio: 0,
+    transportistasLista: [] as TransportistasTable[],
   };
 }
 @Injectable({
@@ -1623,6 +1641,33 @@ export class Solicitud32604Store extends Store<Solicitud32604State> {
    */
   actualizarEnlaceOperativosLista(valor: EnlaceOperativo[]): void {
     this.update((state) => ({ ...state, enlaceOperativosLista: valor }));
+  }
+
+  /**
+   * Actualiza el valor del campo `programaImmex` en el estado.
+   *
+   * @param valor - El nuevo valor para `programaImmex`.
+   */
+  actualizarProgramaImmex(valor: string | number): void {
+    this.update((state) => ({ ...state, programaImmex: valor }));
+  }
+
+  /**
+   * Actualiza el valor del campo `importsRadio` en el estado.
+   *
+   * @param valor - El nuevo valor para `importsRadio`.
+   */
+  actualizarImportsRadio(valor: string | number): void {
+    this.update((state) => ({ ...state, importsRadio: valor }));
+  }
+
+  /**
+   * Actualiza el valor del campo `transportistasLista` en el estado.
+   *
+   * @param valor - El nuevo valor para `transportistasLista`.
+   */
+  actualizarTransportistasLista(valor: TransportistasTable[]): void {
+    this.update((state) => ({ ...state, transportistasLista: valor }));
   }
 
   /**

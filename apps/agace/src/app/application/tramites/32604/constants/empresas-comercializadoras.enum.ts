@@ -283,7 +283,7 @@ export const FECHA_DE_PAGO: InputFecha = {
   /**
    * Etiqueta del campo de fecha de fin de vigencia.
    */
-  labelNombre: 'Fecha de pago',
+  labelNombre: '',
   /**
    * Indica si el campo es obligatorio.
    */
@@ -307,7 +307,7 @@ export const TRANSPORTISTAS_CONFIGURACION: ConfiguracionColumna<TransportistasTa
      */
     {
       encabezado: 'RFC',
-      clave: (item: TransportistasTable) => item.rfc,
+      clave: (item: TransportistasTable) => item.transportistaRFCModifTrans,
       orden: 1,
     },
 
@@ -317,7 +317,7 @@ export const TRANSPORTISTAS_CONFIGURACION: ConfiguracionColumna<TransportistasTa
      */
     {
       encabezado: 'Denominación o Razón social',
-      clave: (item: TransportistasTable) => item.razonSocial,
+      clave: (item: TransportistasTable) => item.transportistaRazonSocial,
       orden: 2,
     },
 
@@ -327,7 +327,7 @@ export const TRANSPORTISTAS_CONFIGURACION: ConfiguracionColumna<TransportistasTa
      */
     {
       encabezado: 'Domicilio',
-      clave: (item: TransportistasTable) => item.domicilio,
+      clave: (item: TransportistasTable) => item.transportistaDomicilio,
       orden: 3,
     },
 
@@ -337,7 +337,7 @@ export const TRANSPORTISTAS_CONFIGURACION: ConfiguracionColumna<TransportistasTa
      */
     {
       encabezado: 'Registro CAAT vigente',
-      clave: (item: TransportistasTable) => item.caat,
+      clave: (item: TransportistasTable) => item.transportistaCaat,
       orden: 4,
     },
   ];
