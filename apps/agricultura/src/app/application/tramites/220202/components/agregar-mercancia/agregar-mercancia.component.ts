@@ -9,8 +9,6 @@ import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { MercanciaFormComponent } from '../../shared/mercancia-form/mercancia-form.component';
 
-
-
 /**
  * @description Decorador que define un componente de Angular llamado `AnimalesVivoContenedoraComponent`.
  * Este componente es independiente (standalone) y utiliza el módulo común de Angular (`CommonModule`) 
@@ -47,7 +45,6 @@ export class AgregarMercanciaComponent implements OnDestroy{
     sexoList: [],
   }
 
-
   /**
    * @description Subject utilizado para destruir las suscripciones y evitar fugas de memoria cuando el componente se destruye.
    * @type {Subject<void>}
@@ -65,8 +62,6 @@ export class AgregarMercanciaComponent implements OnDestroy{
    * @type {FilaSolicitud[]}
    */
   cuerpoTabla: FilaSolicitud[] = [];
-
-
 
   /**
    * Constructor de la clase `AnimalesVivoContenedoraComponent`.
@@ -88,10 +83,6 @@ export class AgregarMercanciaComponent implements OnDestroy{
    *   seleccionados del estado reactivo.
    * - Maneja la destrucción de las suscripciones utilizando `takeUntil` con un observable de notificación.
    */
-
-
-
-
   constructor(public agriculturaApiService: AgriculturaApiService,
     public fitosanitarioQuery: FitosanitarioQuery,
     public fitosanitarioStore: FitosanitarioStore
@@ -164,17 +155,9 @@ export class AgregarMercanciaComponent implements OnDestroy{
     }));
   }
 
-
-
   /**
-   * Método que se ejecuta automáticamente cuando el componente se destruye.
-   * 
-   * Este método emite un valor a través del observable `destroyNotifier$` para notificar
-   * a los suscriptores que el ciclo de vida del componente ha finalizado. Luego, completa
-   * el observable para liberar recursos y evitar posibles fugas de memoria.
-   * 
-   * Es una práctica común en Angular para manejar la limpieza de suscripciones a observables
-   * y otros recursos que deben ser liberados cuando el componente deja de existir.
+   * Método que se ejecuta al destruir el componente.
+   * Se utiliza para limpiar recursos y suscripciones activas.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

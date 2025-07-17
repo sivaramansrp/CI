@@ -16,7 +16,6 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { TercerosrelacionadosComponent } from '../../shared/tercerosrelacionados/tercerosrelacionados.component';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
-import { TercerosrelacionadosTable } from '../../models/220202/fitosanitario.model';
 
 /**
  * Componente para la gestión de terceros relacionados en el trámite.

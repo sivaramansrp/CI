@@ -35,9 +35,9 @@ export const ROUTES_FITOSANITARIO: Routes = [
     path: 'mercancia-form',
     component: AgregarMercanciaComponent
   },
-  { 
-    path: 'mercancia-form/:id', 
-    component: MercanciaFormComponent 
+  {
+    path: 'mercancia-form/:id',
+    component: MercanciaFormComponent
   },
   {
     path: 'sub-productos',

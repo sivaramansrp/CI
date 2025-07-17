@@ -78,7 +78,6 @@ import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.en
  * @see {@link ConsultaioQuery}
  */
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
-
   /** @description Indica si el panel de detalle está colapsado o no. */
   colapsable: boolean = false;
 
@@ -362,39 +361,42 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public mostrarSolicitudTabla: boolean = false;
 
+  /**
+   * Arreglo que contiene las filas de la tabla de solicitudes.
+   * @type {SolicitudFilaTabla[]}
+   */
   cuerpoTablaSolicitud: SolicitudFilaTabla[] = [
-      {
-        fechaCreacion: '2025-06-17 10:30:00',
-        mercancia: 'Laptop HP',
-        cantidad: 5,
-        proveedor: 'Tech Solutions Inc.'
-      },
-      {
-        fechaCreacion: '2025-06-16 14:15:30',
-        mercancia: 'Monitor Dell 27"',
-        cantidad: 10,
-        proveedor: 'Global Electronics'
-      },
-      {
-        fechaCreacion: '2025-06-15 09:00:00',
-        mercancia: 'Teclado Mecánico RGB',
-        cantidad: 8,
-        proveedor: 'Peripherals World'
-      },
-      {
-        fechaCreacion: '2025-06-14 17:45:10',
-        mercancia: 'Mouse Inalámbrico Logitech',
-        cantidad: 12,
-        proveedor: 'Tech Accessories Co.'
-      },
-      {
-        fechaCreacion: '2025-06-13 11:20:05',
-        mercancia: 'Impresora Epson EcoTank',
-        cantidad: 3,
-        proveedor: 'Print Masters'
-      }
-    ];
-    /**
+    {
+      fechaCreacion: '2025-06-17 10:30:00',
+      mercancia: 'Laptop HP',
+      cantidad: 5,
+      proveedor: 'Tech Solutions Inc.',
+    },
+    {
+      fechaCreacion: '2025-06-16 14:15:30',
+      mercancia: 'Monitor Dell 27"',
+      cantidad: 10,
+      proveedor: 'Global Electronics',
+    },
+    {
+      fechaCreacion: '2025-06-15 09:00:00',
+      mercancia: 'Teclado Mecánico RGB',
+      cantidad: 8,
+      proveedor: 'Peripherals World',
+    },
+    {
+      fechaCreacion: '2025-06-14 17:45:10',
+      mercancia: 'Mouse Inalámbrico Logitech',
+      cantidad: 12,
+      proveedor: 'Tech Accessories Co.',
+    },
+    {
+      fechaCreacion: '2025-06-13 11:20:05',
+      mercancia: 'Impresora Epson EcoTank',
+      cantidad: 3,
+      proveedor: 'Print Masters',
+    },
+  ];
 
   /**
    * @constructor
@@ -733,7 +735,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Maneja la selección de una fila en la tabla de solicitudes.
    *
    * Cuando se selecciona una fila, este método actualiza los valores del formulario (`forma`)
-   * con datos predefinidos relacionados con la solicitud seleccionada.
+   * con datos predefinidos relacionados con la solicitud seleccionada, usando los IDs correctos de los catálogos.
    *
    * @param event - Objeto de tipo `SolicitudFilaTabla` que representa la fila seleccionada en la tabla.
    */
@@ -756,8 +758,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @description Getter que indica si hay registros seleccionados en la tabla.
+   * @returns {boolean} true si hay al menos un registro seleccionado, false en caso contrario.
+   */
+  get tieneRegistrosSeleccionados(): boolean {
+    const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
+    return SELECTED_DATA && SELECTED_DATA.length > 0;
+  }
+
+  /**
    * @description Navega a la página de agregar mercancía.
-   * Este método redirige al usuario a la ruta relativa '../animales-vivo' para agregar una nueva mercancía.
+   * Este método redirige al usuario a la ruta relativa 'mercancia-form' para agregar una nueva mercancía.
    * @method agregarMercancia
    * @returns {void}
    */
@@ -785,29 +796,23 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * @description Navega a la página de modificar mercancía.
    * Este método redirige al usuario a la ruta relativa '../mercancia-form' para modificar una mercancía existente.
+   * Solo permite la navegación si hay al menos un registro seleccionado.
    * Mantiene los datos seleccionados en el store para pre-llenar el formulario.
    * @method modificarMercancia
    * @returns {void}
    */
   modificarMercancia(): void {
-    const ID = 1;
+    const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
+    // Verificar si hay al menos un registro seleccionado
+    if (!SELECTED_DATA || SELECTED_DATA.length === 0) {
+      // Si no hay registros seleccionados, no realizar ninguna acción
+      return;
+    }
+    // Si hay datos seleccionados, navegar a la página de modificación
+    const ID = SELECTED_DATA[0].noPartida || 1; // Usar ID del primer registro seleccionado
     this.router.navigate(['../mercancia-form', ID], {
       relativeTo: this.activatedRoute,
     });
-  }
-
-  /**
-   * Maneja la selección del botón de radio y actualiza el store.
-   * @method radioBotonSeleccionado
-   */
-  radioBotonSeleccionado(): void {
-    const VALOR = this.forma.value.tipoMercancia;
-    if (VALOR !== '' && VALOR !== null && VALOR !== undefined) {
-      this.notificationCheck = true;
-    } else {
-      this.notificationCheck = false;
-    }
-    this.setValoresStore();
   }
 
   /**

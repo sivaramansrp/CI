@@ -1,21 +1,11 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
-import {
-  Subject,
-  takeUntil
-} from 'rxjs';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { PagoDeDerechoComponent } from '../../../../shared/components/pago-de-derecho/pago-de-derecho.component';
 import { PagoDeDerechos } from '../../models/220202/fitosanitario.model';
-import {
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { map } from 'rxjs';
 
 /**
@@ -30,20 +20,15 @@ import { map } from 'rxjs';
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss'],
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    PagoDeDerechoComponent
-  ]
+  imports: [ReactiveFormsModule, PagoDeDerechoComponent],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
-
-
   /**
    * Datos del pago de derechos.
    * @type {PagoDeDerechos}
    */
   pagoData: PagoDeDerechos = {} as PagoDeDerechos;
-  
+
   /**
    * Sujeto para manejar la destrucción de observables y evitar fugas de memoria.
    */
@@ -74,8 +59,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private readonly fitosanitarioQuery: FitosanitarioQuery,
     private readonly consultaioQuery: ConsultaioQuery,
     private readonly cdr: ChangeDetectorRef
-  ) {
-  }
+  ) {}
 
   /**
    * Ciclo de vida de Angular que se ejecuta al iniciar el componente.
@@ -86,24 +70,23 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datosDeLaSolicitud) => {
         if (datosDeLaSolicitud) {
-         this.pagoData = datosDeLaSolicitud;
+          this.pagoData = datosDeLaSolicitud;
         }
       });
     this.consultaioQuery.selectConsultaioState$
-          .pipe(
-            takeUntil(this.destroyNotifier$),
-            map((seccionState) => {
-              this.esFormularioSoloLectura = seccionState.readonly;
-               this.cdr.detectChanges();
-            })
-          )
-          .subscribe();
-
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe();
   }
 
   /**
- * Envía los valores actuales del formulario al store compartido.
- */
+   * Envía los valores actuales del formulario al store compartido.
+   */
   onPagoChanged(event: PagoDeDerechos): void {
     this.agriculturaApiService.updatePago(event as PagoDeDerechos);
   }

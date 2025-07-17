@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="catalogosDatos.tipoRequisitoList"
+          [catalogo]="tipoRequisitoList"
           formControlName="tipoRequisito"
           [label]="'Tipo requisito'"
           [required]="true"
@@ -20,7 +20,7 @@
         <input
           type="text"
           class="form-control"
-          formControlName="numeroCertificado"
+          formControlName="requisito"
           maxlength="50"
         />
       </div>
@@ -45,7 +45,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="catalogosDatos.fraccionArancelariaList"
+          [catalogo]="fraccionArancelariaList"
           formControlName="fraccionArancelaria"
           [label]="'Fracción arancelaria'"
           [required]="true"
@@ -83,7 +83,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="catalogosDatos.nicoList"
+          [catalogo]="nicoList"
           formControlName="nico"
           [label]="'Nico'"
           [required]="true"
@@ -135,7 +135,7 @@
         <input type="text" class="form-control" formControlName="cantidadUMT" />
         <div
           *ngIf="
-            mercanciaForm.get('cantidadUMT')?.hasError('pattern') &&
+            mercanciaForm.get('cantidadUMT')?.hasError('minlength') &&
             mercanciaForm.get('cantidadUMT')?.touched
           "
           class="text-danger"
@@ -144,7 +144,7 @@
         </div>
         <div
           *ngIf="
-            mercanciaForm.get('cantidadUMT')?.hasError('max') &&
+            mercanciaForm.get('cantidadUMT')?.hasError('maxlength') &&
             mercanciaForm.get('cantidadUMT')?.touched
           "
           class="text-danger"
@@ -155,7 +155,7 @@
 
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="catalogosDatos.umtList"
+          [catalogo]="umtList"
           formControlName="umt"
           [label]="'UMT'"
           [required]="true"
@@ -171,7 +171,7 @@
         <input type="text" class="form-control" formControlName="cantidadUMC" />
         <div
           *ngIf="
-            mercanciaForm.get('cantidadUMC')?.hasError('pattern') &&
+            mercanciaForm.get('cantidadUMC')?.hasError('minlength') &&
             mercanciaForm.get('cantidadUMC')?.touched
           "
           class="text-danger"
@@ -180,7 +180,7 @@
         </div>
         <div
           *ngIf="
-            mercanciaForm.get('cantidadUMC')?.hasError('max') &&
+            mercanciaForm.get('cantidadUMC')?.hasError('maxlength') &&
             mercanciaForm.get('cantidadUMC')?.touched
           "
           class="text-danger"
@@ -193,7 +193,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="catalogosDatos.umcList"
+          [catalogo]="umcList"
           formControlName="umc"
           [label]="'UMC'"
           [required]="true"
@@ -204,7 +204,7 @@
 
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="catalogosDatos.usoList"
+          [catalogo]="usoList"
           formControlName="uso"
           [label]="'Uso'"
           [required]="true"
@@ -214,8 +214,8 @@
       </div>
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="catalogosDatos.usoList"
-          formControlName="uso"
+          [catalogo]="usoList"
+          formControlName="tipoProducto"
           [label]="'Tipo de producto'"
           [required]="true"
           name="tipoProducto"
@@ -232,14 +232,14 @@
         <input
           type="text"
           class="form-control"
-          formControlName="descripcionFraccion"
+          formControlName="numeroDeLote"
           maxlength="16"
         />
       </div>
 
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="catalogosDatos.paisOrigenList"
+          [catalogo]="paisOrigenList"
           formControlName="paisOrigen"
           [label]="'País de origen'"
           [required]="true"
@@ -249,7 +249,7 @@
       </div>
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="catalogosDatos.paisDeProcedenciaList"
+          [catalogo]="paisDeProcedenciaList"
           formControlName="paisDeProcedencia"
           [label]="'País De Procedencia'"
           [required]="true"
