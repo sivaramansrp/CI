@@ -107,7 +107,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
     descripcion: '',
   },
   formaValida: {
-    entidadFederativa: false,
+    entidadFederativa: true,
   },
   rfcEmpresa: '',
   numeroPrograma: '',
