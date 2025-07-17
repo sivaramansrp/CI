@@ -121,7 +121,7 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
         )
         .subscribe();
     this.form = this.fb.group({
-      cantidadSolicitada: [this.solicitudState?.cantidadSolicitada, [Validators.required]],
+      cantidadSolicitada: [this.solicitudState?.cantidadSolicitada, [Validators.required, Validators.pattern('^[0-9]*.?[0-9]+$')]],
     });
   }
 
