@@ -32,6 +32,11 @@ export interface Solicitud32604State {
   nombre: string;
 
   /**
+   * Aduana seleccionada en la solicitud.
+   */
+  aduana: string;
+
+  /**
    * Apellido paterno del solicitante.
    */
   apellidoPaterno: string;
@@ -357,6 +362,11 @@ export interface Solicitud32604State {
   '190': string | number;
 
   /**
+   * Valor asociado con el código 290 (puede ser un número o una cadena).
+   */
+  '290': string | number;
+
+  /**
    * Valor asociado con el código 191 (puede ser un número o una cadena).
    */
   '191': string | number;
@@ -365,6 +375,16 @@ export interface Solicitud32604State {
    * Valor asociado con el código 199 (puede ser un número o una cadena).
    */
   '199': string | number;
+
+    /**
+   * Valor asociado con el código 199 (puede ser un número o una cadena).
+   */
+  '200': string | number;
+
+    /**
+   * Valor asociado con el código 199 (puede ser un número o una cadena).
+   */
+  '201': string | number;
 
   /**
    * Número de empleados relacionados con la solicitud.
@@ -533,6 +553,7 @@ export function createInitialSolicitudState(): Solicitud32604State {
     rfcTercero: '',
     rfc: '',
     nombre: '',
+    aduana: '',
     apellidoPaterno: '',
     apellidoMaterno: '',
     telefono: '',
@@ -598,8 +619,11 @@ export function createInitialSolicitudState(): Solicitud32604State {
     catseleccionados: 0,
     servicio: 0,
     '190': 0,
+    '290': 0,
     '191': 0,
     '199': 0,
+    '200': 0,
+    '201': 0,
     empleados: '',
     bimestre: 0,
     '2034': 0,
@@ -695,6 +719,18 @@ export class Solicitud32604Store extends Store<Solicitud32604State> {
    */
   actualizarApellidoPaterno(valor: string): void {
     this.update((state) => ({ ...state, apellidoPaterno: valor }));
+  }
+
+    /**
+   * Actualiza el valor del campo `apellidoPaterno` en el estado.
+   *
+   * @param valor - El nuevo valor para `apellidoPaterno`.
+   */
+   public setAduana(aduana: string):void {
+    this.update((state) => ({
+      ...state,
+      aduana,
+    }));
   }
 
   /**
@@ -1266,6 +1302,15 @@ export class Solicitud32604Store extends Store<Solicitud32604State> {
   }
 
   /**
+   * Actualiza el valor del campo `290` en el estado.
+   *
+   * @param valor - El nuevo valor para el campo `290`.
+   */
+  actualizar290(valor: string | number): void {
+    this.update((state) => ({ ...state, '290': valor }));
+  }
+
+  /**
    * Actualiza el valor del campo `191` en el estado.
    *
    * @param valor - El nuevo valor para el campo `191`.
@@ -1281,6 +1326,24 @@ export class Solicitud32604Store extends Store<Solicitud32604State> {
    */
   actualizar199(valor: string | number): void {
     this.update((state) => ({ ...state, '199': valor }));
+  }
+
+    /**
+   * Actualiza el valor del campo `199` en el estado.
+   *
+   * @param valor - El nuevo valor para el campo `199`.
+   */
+  actualizar200(valor: string | number): void {
+    this.update((state) => ({ ...state, '200': valor }));
+  }
+
+    /**
+   * Actualiza el valor del campo `199` en el estado.
+   *
+   * @param valor - El nuevo valor para el campo `199`.
+   */
+  actualizar201(valor: string | number): void {
+    this.update((state) => ({ ...state, '201': valor }));
   }
 
   /**

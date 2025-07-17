@@ -1,13 +1,10 @@
 import { Component } from '@angular/core';
-// import { ConsultaioQuery} from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
-// import { GuardarDatosFormulario } from '../../models/solicitud.model';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { map, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ViewChild } from '@angular/core';
-// import { map } from 'rxjs';
 import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
 import { takeUntil } from 'rxjs';
 

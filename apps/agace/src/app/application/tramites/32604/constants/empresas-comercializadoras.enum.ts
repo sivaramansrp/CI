@@ -13,6 +13,7 @@ import {
   SeccionSociosIC,
   TransportistasTable,
 } from '../models/empresas-comercializadoras.model';
+import { Instalaciones } from './agregar.model';
 
 export const PASOS = [
   {
@@ -590,3 +591,13 @@ export const SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Secci
       orden: 1,
     },
   ];
+
+  export const ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO: ConfiguracionColumna<Instalaciones>[] = [
+  { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
+  { encabezado: 'Entidad federativa', clave: (articulo) => articulo.entidadFederativa, orden: 1 },
+  { encabezado: 'Municipio o delegación', clave: (articulo) => articulo.municipio, orden: 2 },
+  { encabezado: 'Colonia, calle y número', clave: (articulo) => articulo.coloniaCalleNumero, orden: 3 },
+  { encabezado: 'Código postal', clave: (articulo) => articulo.codigoPostal, orden: 4 },
+  { encabezado: 'Registro Aduana', clave: (articulo) => articulo.registroAduana, orden: 5 }
+];
+  

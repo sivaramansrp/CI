@@ -1,7 +1,5 @@
-import {
-  Catalogo,
-  InputRadioComponent,
-} from '@libs/shared/data-access-user/src';
+import {AlertComponent,Catalogo,InputRadioComponent} from '@libs/shared/data-access-user/src';
+import { AgregarComponent } from '../agregar/agregar.component';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -47,6 +45,8 @@ import { ToastrService } from 'ngx-toastr';
 import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+import { ModificarComponent } from '../modificar/modificar.component';
+import { EmpresaComponent } from '../empresa/empresa.component';
 
 /**
  * Componente principal para la gestión de datos comunes de la solicitud.
@@ -58,6 +58,7 @@ import { takeUntil } from 'rxjs';
   selector: 'app-datos-comunes',
   standalone: true,
   imports: [
+    AgregarComponent,
     CommonModule,
     ReactiveFormsModule,
     CatalogoSelectComponent,
@@ -66,6 +67,8 @@ import { takeUntil } from 'rxjs';
     TablaDinamicaComponent,
     TablaConEntradaComponent,
     ToastrModule,
+    ModificarComponent,
+    EmpresaComponent
   ],
   providers: [EmpresasComercializadorasService, ToastrService],
   templateUrl: './datos-comunes.component.html',
@@ -161,8 +164,26 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   /**
    * Referencia al modal de instalaciones principales.
    */
-  @ViewChild('modalInstalacionesPrincipales', { static: false })
+  @ViewChild('modalInstalacionesPrincipalesElement', { static: false })
   modalInstalacionesPrincipalesElement!: ElementRef;
+
+    /**
+   * Referencia al modal de instalaciones principales.
+   */
+  @ViewChild('modalModificarElement', { static: false })
+  modalModificarElement!: ElementRef;
+
+  /**
+   * Referencia al modal de la sección de empresa.
+   */
+  @ViewChild('modalEmpresaElement', { static: false })
+  modalEmpresaElement!: ElementRef;
+
+  /**
+   * Referencia al componente agregar dentro del modal.
+   */
+  @ViewChild(AgregarComponent, { static: false })
+  agregarComponent!: AgregarComponent;
 
   /**
    * Notificación utilizada para mostrar mensajes al usuario.
@@ -202,19 +223,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
      * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
      * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
      */
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
-    this.conseguirOpcionDeRadio();
-    this.conseguirOpcionDeRadio();
-    this.conseguirSolicitudCatologoSelectLista();
-    this.conseguirInventarios();
+   
   }
 
   /**
@@ -223,7 +232,31 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * y suscribe a los cambios del store para mantener los datos sincronizados.
    */
   ngOnInit(): void {
+    this.solicitud32604Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.solicitud32604State = {
+            ...this.solicitud32604State,
+            ...seccionState,
+          };
+        })
+      )
+      .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+    takeUntil(this.destroy$),
+    map((seccionState) => {
+      this.esFormularioSoloLectura = seccionState.readonly;
+      this.inicializarEstadoFormulario();
+    })
+  )
+  .subscribe();
     this.inicializarEstadoFormulario();
+    this.conseguirOpcionDeRadio();
+    this.conseguirOpcionDeRadio();
+    this.conseguirSolicitudCatologoSelectLista();
+    this.conseguirInventarios();
   }
 
   /**
@@ -267,6 +300,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       '190': [this.solicitud32604State['190']],
       '191': [this.solicitud32604State['191']],
       '199': [this.solicitud32604State['199']],
+      '200': [this.solicitud32604State['200']],
+      '201': [this.solicitud32604State['201']],
       empleados: [this.solicitud32604State.empleados],
       bimestre: [this.solicitud32604State.bimestre],
       '2034': [this.solicitud32604State['2034']],
@@ -399,7 +434,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
 
   /**
    * Muestra el modal para agregar miembros de la empresa.
-   * Se utiliza el elemento del DOM referenciado como modalElement.
+   * Se utiliza el elemento del DOM referenciado como modalAgregarMiembrosEmpresaElement.
    */
   agregarMiembrosEmpresa(): void {
     if (this.modalElement) {
@@ -426,7 +461,12 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * Utiliza el elemento referenciado como modalInstalacionesPrincipalesElement.
    */
   agregarInstalacionesPrincipales(): void {
-    if (this.modalElement) {
+    if (this.modalInstalacionesPrincipalesElement) {
+      // Reset the agregar component state when opening modal
+      if (this.agregarComponent) {
+        this.agregarComponent.resetModalState();
+      }
+      
       const MODAL_INSTANCE = new Modal(
         this.modalInstalacionesPrincipalesElement.nativeElement
       );
@@ -434,8 +474,44 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
+    /**
+   * Muestra el modal para agregar instalaciones principales de la empresa.
+   * Utiliza el elemento referenciado como modalModificarElement.
+   */
+  agregarModificarPrincipales(): void {
+    if (this.modalModificarElement) {
+      // Reset the agregar component state when opening modal
+      if (this.agregarComponent) {
+        this.agregarComponent.resetModalState();
+      }
+      
+      const MODAL_INSTANCE = new Modal(
+        this.modalModificarElement.nativeElement
+      );
+      MODAL_INSTANCE.show();
+    }
+  }
+
+      /**
+   * Muestra el modal para agregar instalaciones principales de la empresa.
+   * Utiliza el elemento referenciado como modalEmpresaElement.
+   */
+  agregarEmpresaPrincipales(): void {
+    if (this.modalEmpresaElement) {
+      // Reset the agregar component state when opening modal
+      if (this.agregarComponent) {
+        this.agregarComponent.resetModalState();
+      }
+      
+      const MODAL_INSTANCE = new Modal(
+        this.modalEmpresaElement.nativeElement
+      );
+      MODAL_INSTANCE.show();
+    }
+  }
+
   /**
-   * Actualiza la lista de miembros de la empresa con un nuevo registro recibido como evento.
+   * Actualiza la lista de miembros de la empresa with un nuevo registro recibido como evento.
    * También actualiza el store y agrega un objeto pedimento por defecto.
    * Muestra un modal con mensaje de éxito al usuario.
    *
@@ -560,6 +636,24 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   actualizar199(valor: string | number): void {
     this.solicitud32604Store.actualizar199(valor);
+  }
+
+    /**
+   * Actualiza el campo '199' en el estado global.
+   *
+   * @param {string | number} valor - Valor numérico o de texto para el campo 199.
+   */
+  actualizar200(valor: string | number): void {
+    this.solicitud32604Store.actualizar200(valor);
+  }
+
+    /**
+   * Actualiza el campo '199' en el estado global.
+   *
+   * @param {string | number} valor - Valor numérico o de texto para el campo 199.
+   */
+  actualizar201(valor: string | number): void {
+    this.solicitud32604Store.actualizar201(valor);
   }
 
   /**
@@ -887,6 +981,29 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           this.numeroDeEmpleadosLista.splice(INDICE, 1);
         }
       });
+    }
+  }
+
+  /**
+   * Handles selected data from the agregar component
+   * Updates the listaSeccionSociosIC with the received data
+   * @param datosSeleccionados - Array of selected data from agregar component
+   */
+  onDatosSeleccionados(datosSeleccionados: any[]): void {
+    console.log('onDatosSeleccionados called with:', datosSeleccionados);
+    
+    if (datosSeleccionados && datosSeleccionados.length > 0) {
+      this.listaSeccionSociosIC = [...this.listaSeccionSociosIC, ...datosSeleccionados];
+      
+      console.log('Updated listaSeccionSociosIC:', this.listaSeccionSociosIC);
+      
+      // Update the store with the new data
+      this.solicitud32604Store.actualizarListaSeccionSociosIC(
+        this.listaSeccionSociosIC
+      );
+      
+      // Show success message
+      this.abrirModal('Datos agregados exitosamente');
     }
   }
 

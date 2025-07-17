@@ -1,3 +1,4 @@
+import { Aduanas, RespuestaAduanas } from '../constants/agregar.model';
 import { EnlaceOperativo } from '../models/empresas-comercializadoras.model';
 import { GuardarDatosFormulario } from '../models/empresas-comercializadoras.model';
 import { HttpClient } from '@angular/common/http';
@@ -11,6 +12,7 @@ import { Solicitud32604Store } from '../estados/solicitud32604.store';
 import { SolicitudCatologoSelectLista } from '../models/empresas-comercializadoras.model';
 import { SolicitudRadioLista } from '../models/empresas-comercializadoras.model';
 import { TransportistasTable } from '../models/empresas-comercializadoras.model';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 /**
  * Servicio encargado de obtener los datos necesarios para el llenado del formulario
@@ -70,7 +72,7 @@ export class EmpresasComercializadorasService {
    */
   conseguirOpcionDeRadio(): Observable<SolicitudRadioLista> {
     return this.http.get<SolicitudRadioLista>(
-      'assets/json/32605/solicitud-radio-lista.json'
+      'assets/json/32604/solicitud-radio-lista.json'
     );
   }
 
@@ -124,6 +126,39 @@ export class EmpresasComercializadorasService {
     return this.http.get<GuardarDatosFormulario>(
       'assets/json/32604/guardar-datos-formulario.json'
     );
+  }
+
+  getEntidadList(): Observable<RespuestaAduanas> {
+    return this.http.get<RespuestaAduanas>(
+      'assets/json/32604/entidad-list.json'
+    );
+  }
+
+    /**
+   * Obtener datos de la tabla
+   * 
+   * @returns {Observable<RespuestaCatalogos[]>} Un observable con la respuesta de los datos de la tabla.
+   */
+  getDatosTableData(): Observable<RespuestaCatalogos[]> {
+    return this.http.get<RespuestaCatalogos[]>(`assets/json/32604/datosTabla.json`);
+  }
+
+    /**
+   * Obtener una lista de Contenedores
+   * 
+   * @returns {Observable<RespuestaContenedores>} Un observable con la respuesta de contenedores.
+   */
+  getContenedores(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/32604/tipoLista.json`);
+  }
+
+      /**
+   * Obtener una lista de Contenedores
+   * 
+   * @returns {Observable<RespuestaContenedores>} Un observable con la respuesta de contenedores.
+   */
+  getNationalidad(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/32604/nacionalidad.json`);
   }
 
   /**

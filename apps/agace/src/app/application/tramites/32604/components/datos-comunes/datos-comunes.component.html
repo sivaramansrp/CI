@@ -26,18 +26,10 @@
           (selectionChange)="actualizarServicio($event)"
         ></app-catalogo-select>
       </div>
-      <div class="col-md-12 mt-5">
-        <div class="alert alert-info">
-          <div class="form-check">
-            <b> Nota:</b> Si no encuadra en los sectores o los servicios de los
-            catálogos, deberá seleccionar el más cercano a sus actividades.
-          </div>
-        </div>
-      </div>
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
-          >Señale si se encuentra al corriente en el cumplimiento de sus
-          obligaciones fiscales y aduaneras *</label
+          >* Señale si se encuentra al corriente en el cumplimiento de sus
+          obligaciones fiscales y aduaneras</label
         >
         <app-input-radio
           formControlName="190"
@@ -51,8 +43,7 @@
 
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
-          >Indique si autorizó al S A T hacer pública su opinión positiva sobre
-          el cumplimiento de obligaciones fiscales *</label
+          >* Indique si autorizó al S A T hacer pública su opinión positiva sobre el cumplimiento de obligaciones fiscales</label
         >
         <app-input-radio
           formControlName="191"
@@ -65,10 +56,7 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start">
-          Señale si se encuentra en el listado de empresas publicadas por el SAT
-          en términos del artículo 69 del CFF, con excepción de la fracción VI.
-          *</label
+        <label class="form-label text-start">* Señale si se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69 del CFF, con excepción de la fracción VI.</label
         >
         <app-input-radio
           formControlName="199"
@@ -81,10 +69,7 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start">
-          Del mismo modo indique si se encuentra en el listado de empresas
-          publicadas por el SAT en términos del artículo 69-B, cuarto párrafo y
-          69-B Bis, noveno párrafo, del CFF. *</label
+        <label class="form-label text-start">* Del mismo modo indique si se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69-B, cuarto párrafo y 69-B Bis, noveno párrafo, del CFF.</label
         >
         <app-input-radio
           formControlName="199"
@@ -92,15 +77,12 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
-          (valueChange)="actualizar199($event)"
+          (valueChange)="actualizar200($event)"
         ></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Señale si sus certificados de sellos digitales están vigentes.
-          *</label
-        >
+        <label class="form-label text-start">* Señale si sus certificados de sellos digitales están vigentes.</label>
         <app-input-radio
           formControlName="244"
           [radioOptions]="sinoOpcion.radioOptions"
@@ -112,18 +94,26 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start">
-          Señale si infringió alguno de los supuestos previstos en el artículo
-          17-H Bis del CFF, durante los últimos 12 meses *</label
-        >
+        <label class="form-label text-start">* Señale si infringió alguno de los supuestos previstos en el artículo 17-H Bis del CFF, durante los últimos 12 meses</label>
         <app-input-radio
           formControlName="199"
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
-          (valueChange)="actualizar199($event)"
+          (valueChange)="actualizar201($event)"
         ></app-input-radio>
+      </div>
+
+      <div class="col-md-6">
+        <app-catalogo-select
+          formControlName="servicio"
+          [catalogo]="servicio.catalogos"
+          [label]="servicio.labelNombre"
+          [isDisabled]="esFormularioSoloLectura"
+          [required]="servicio.required"
+          (selectionChange)="actualizarServicio($event)"
+        ></app-catalogo-select>
       </div>
 
       <div class="col-md-12 mt-4">
@@ -163,7 +153,7 @@
               class="btn btn-default"
               data-bs-toggle="modal"
               data-bs-target="#modalInstalacionesPrincipales"
-              (click)="agregarInstalacionesPrincipales()"
+              (click)="agregarModificarPrincipales()"
             >
               Modificar
             </button>
@@ -181,8 +171,6 @@
               id="agregar"
               [disabled]="esFormularioSoloLectura"
               class="btn btn-primary ms-3"
-              data-bs-toggle="modal"
-              data-bs-target="#modalInstalacionesPrincipales"
               (click)="agregarInstalacionesPrincipales()"
             >
               Agregar
@@ -537,9 +525,7 @@
               id="agregar"
               [disabled]="esFormularioSoloLectura"
               class="btn btn-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#modalAgregarMiembrosEmpresa"
-              (click)="agregarMiembrosEmpresa()"
+              (click)="agregarEmpresaPrincipales()"
             >
               Agregar
             </button>
@@ -550,7 +536,7 @@
               class="btn btn-secondary ms-3"
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarMiembrosEmpresa"
-              (click)="agregarMiembrosEmpresa()"
+              (click)="agregarEmpresaPrincipales()"
             >
               Modificar
             </button>
@@ -610,48 +596,42 @@
 
 <div
   class="modal fade"
-  id="modalAgregarMiembrosEmpresa"
+  id="modalInstalacionesPrincipalesElement"
+  #modalInstalacionesPrincipalesElement
   tabindex="-1"
-  aria-labelledby="modalAgregarMiembrosEmpresaLabel"
-  aria-hidden="true"
->
+  aria-labelledby="modalInstalacionesPrincipalesElementLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <!-- <div class="modal-content">
-      <app-miembro-de-la-empresa
-        (eventoActualizarMiembro)="eventoActualizarMiembro($event)"
-      ></app-miembro-de-la-empresa>
-    </div> -->
+    <div class="modal-content">
+      <app-agregar (datosSeleccionados)="onDatosSeleccionados($event)"></app-agregar>
+    </div>
   </div>
 </div>
 
 <div
   class="modal fade"
-  id="modalSeccionSubcontratados"
+  id="modalModificarElement"
+  #modalModificarElement
   tabindex="-1"
-  aria-labelledby="modalSeccionSubcontratadosLabel"
-  aria-hidden="true"
->
+  aria-labelledby="modalModificarElementLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <!-- <div class="modal-content">
-      <app-seccion-subcontratados
-        (seccionSubcontratados)="seccionSubcontratados($event)"
-      ></app-seccion-subcontratados>
-    </div> -->
+    <div class="modal-content">
+      <app-modificar></app-modificar>
+    </div>
   </div>
 </div>
 
 <div
   class="modal fade"
-  id="modalInstalacionesPrincipales"
+  id="modalEmpresaElementLabel"
+  #modalEmpresaElement
   tabindex="-1"
-  aria-labelledby="modalInstalacionesPrincipalesLabel"
-  aria-hidden="true"
->
+  aria-labelledby="modalEmpresaElementLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <!-- <div class="modal-content">
-      <app-instalaciones-principales
-        (instalacionesPrincipales)="instalacionesPrincipales($event)"
-      ></app-instalaciones-principales>
-    </div> -->
+    <div class="modal-content">
+      <app-empresa></app-empresa>
+    </div>
   </div>
 </div>
