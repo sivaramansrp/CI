@@ -280,6 +280,10 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
   @ViewChild('templateSeleccionRequerida') templateSeleccionRequerida!: TemplateRef<void>;
 
   /**
+   * Referencia al componente de transportistas para validación
+   */
+  @ViewChild('agregarTransportistasRef') componenteAgregarTransportistas!: AgregarTransportistasComponent;
+  /**
    * Constructor del componente.
    * Inicializa los servicios necesarios y configura las suscripciones iniciales.
    * 
@@ -1115,4 +1119,76 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  validarFormulariosCompletos(): boolean{
+      let esValido = true;
+      if (this.importadorExportadorForm) {
+          if (this.importadorExportadorForm.invalid) {
+            this.importadorExportadorForm.markAllAsTouched();
+            this.marcarTodosLosCamposComoTocados(this.importadorExportadorForm);
+            esValido = false;
+          }
+          this.validarCamposPago();
+        
+          if (this.mostrarError) {
+            esValido = false;
+          }
+          if (this.debeValidarTabla() && this.tablaDatos.length === 0) {
+          esValido = false;
+        }
+      } 
+
+      if (this.componenteAgregarTransportistas) {
+      const TRANSPORTISTAS_VALIDOS = this.componenteAgregarTransportistas.validarFormulariosCompletos();
+      if (!TRANSPORTISTAS_VALIDOS) {
+        esValido = false;
+      }
+    }
+
+     return esValido;   
+  }
+
+  /**
+ * Marks all form controls as touched to trigger validation error display
+ */
+private marcarTodosLosCamposComoTocados(form: FormGroup): void {
+   if (!this.destroy$) {
+    return;
+  }
+  Object.keys(form.controls).forEach(key => {
+    const CONTROL = form.get(key);
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+      CONTROL.markAsDirty();
+    }
+  });
+}
+
+  validezTodosFormularios(): boolean {
+    const IMPORTADOR_EXPORTADOR_VALID = this.importadorExportadorForm?.valid ?? true;
+    const TABLA_VALID = this.validarTablaDatos();
+
+     const TRANSPORTISTAS_VALIDOS = this.componenteAgregarTransportistas ? 
+      this.componenteAgregarTransportistas.obtenerValidezTodosFormularios() : true;
+
+    return IMPORTADOR_EXPORTADOR_VALID && TABLA_VALID && TRANSPORTISTAS_VALIDOS;
+  }
+  
+  /**
+ * Determines if the table should be validated based on form values
+ */
+ debeValidarTabla(): boolean {
+  const ES_PARTE_GRUPO = this.importadorExportadorForm.get('esParteGrupoComercioExterior')?.value;
+  return ES_PARTE_GRUPO === '1';
+}
+/**
+ * Checks if the table has data when required
+ */
+public validarTablaDatos(): boolean {
+  if (this.debeValidarTabla()) {
+    return this.tablaDatos.length > 0;
+  }
+  return true; // Table validation not required
+}
+
 }

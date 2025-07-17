@@ -1,5 +1,6 @@
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Component} from '@angular/core';
+import { ImportadorExportadorComponent } from '../../components/importador-exportador/importador-exportador.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
@@ -35,6 +36,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
+
+  @ViewChild('importadorExportadorRef')importadorExportadorComponent!: ImportadorExportadorComponent;
 
   constructor(private consultaQuery: ConsultaioQuery, public solicitudService: SolicitudService) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
@@ -90,4 +93,38 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+/**
+ * Valida los formularios del componente según la pestaña activa.
+ * Si la pestaña activa es la 4, verifica que todos los formularios del componente
+ * ImportadorExportadorComponent estén completos y válidos.
+ */
+public validarFormularios(): boolean {
+  let esValido = true;
+
+  if (this.indice === 4) {
+    if (this.importadorExportadorComponent && this.esDatosRespuesta) {
+      const FORMULARIOS_VALIDOS = this.importadorExportadorComponent.validarFormulariosCompletos();
+      if (!FORMULARIOS_VALIDOS) {
+        esValido = false;
+      }
+    }
+  }
+
+  return esValido;
+}
+
+/**
+ * Obtiene la validación total de los formularios según la pestaña activa.
+ * Si la pestaña activa es la 4, verifica si todos los formularios del componente
+ * ImportadorExportadorComponent son válidos.
+ */
+public obtenerValidacionTotalFormularios(): { tab4Valid: boolean } {
+  const PESTANA4_VALIDA = this.importadorExportadorComponent && this.esDatosRespuesta ? 
+    this.importadorExportadorComponent.validezTodosFormularios() : true;
+
+  return { 
+    tab4Valid: PESTANA4_VALIDA
+  };
+}
 }

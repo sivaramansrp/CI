@@ -54,7 +54,7 @@
           (keydown.space)="seleccionaTab(5)"
           tabindex="5"
           role="button"
-          >C-TPAT</a
+          >CTPAT</a
         >
       </li>
     </ul>
@@ -67,7 +67,7 @@
       } } @case (3) { @if(esDatosRespuesta){
       <app-terceros-relacionados> </app-terceros-relacionados>
       } } @case (4) { @if(esDatosRespuesta){
-      <app-importador-exportador></app-importador-exportador>
+      <app-importador-exportador #importadorExportadorRef></app-importador-exportador>
       } } @case (5) { @if(esDatosRespuesta){
       <app-c-tpat></app-c-tpat>
       } } }

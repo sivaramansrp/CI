@@ -1,4 +1,4 @@
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CTPATComponent } from './components/c-tpat/c-tpat.component';
@@ -52,7 +52,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     ToastrModule.forRoot(),
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
-    CTPATComponent
+    CTPATComponent,
+    NotificacionesComponent
   ],
   exports: [],
   

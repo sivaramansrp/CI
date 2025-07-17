@@ -715,7 +715,7 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
     }else {
       this.enNuevaNotificacion(this.MENSAJE_DE_VALIDACION);
       this.esHabilitarElDialogo = true;
-      this.rfcForm.markAllAsTouched();
+      this.registroAgregarMiembroEmpresaForm.markAllAsTouched();
     }
 
   }
