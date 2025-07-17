@@ -1,0 +1,37 @@
+<div class="container">
+    <form [formGroup]="datosRealizer" >
+        <ng-titulo [titulo]="'Datos del trámite a realizar'"></ng-titulo>
+        <div class="row align-items-end">
+            <div class="col-md-8">
+            <div class="form-group">
+                <app-catalogo-select
+                [catalogo]="regimenOpciones"
+                [label]="'Régimen al que destinará la mercancía'"
+                formControlName="regimen"
+                [required]="true"
+                [isDisabled]="esFormularioSoloLectura"
+                (change)="setValoresStore(datosRealizer, 'regimen', 'setregimen')">
+                </app-catalogo-select>
+                <div *ngIf="datosRealizer.get('regimen')?.touched && datosRealizer.get('regimen')?.invalid">
+                <small *ngIf="datosRealizer.get('regimen')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+                </div>
+            </div>
+            </div>
+            <div class="col-md-8">
+            <div class="form-group espaciador-campo">
+                <app-catalogo-select
+                [catalogo]="classificationRegimenOpciones"
+                [label]="'Clasificación de régimen'"
+                [required]="true"
+                [isDisabled]="esFormularioSoloLectura"
+                formControlName="classificion_regimen"
+                (change)="setValoresStore(datosRealizer, 'classificion_regimen', 'setclassificion_regimen')">
+                </app-catalogo-select>
+                <div *ngIf="datosRealizer.get('classificion_regimen')?.touched && datosRealizer.get('classificion_regimen')?.invalid">
+                <small *ngIf="datosRealizer.get('classificion_regimen')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+                </div>
+            </div>
+            </div>
+        </div>
+    </form>
+</div>
