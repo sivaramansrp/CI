@@ -12,15 +12,15 @@
  * @import { SECTORCOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, SoloNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
+import { FilaProducir, FilaSectors } from '../../models/prosec.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { FilaSectors } from '../../models/prosec.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PARATEXTO } from '../../constantes/prosec.module';
 import { ProsecService } from '../../services/prosec.service';
@@ -48,7 +48,7 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
   templateUrl: './sectores-y-mercancias.component.html',
   styleUrl: './sectores-y-mercancias.component.scss',
   standalone: true,
-  imports: [ ReactiveFormsModule,AlertComponent, TablaDinamicaComponent, CatalogoSelectComponent, TituloComponent, CommonModule ]
+  imports: [ ReactiveFormsModule,AlertComponent, TablaDinamicaComponent, CatalogoSelectComponent, TituloComponent, CommonModule, forwardRef(() => SoloNumerosDirective), ]
 })
 export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
 
@@ -98,6 +98,8 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    */
   sectors: FilaSectors[] = [];
 
+  producir: FilaProducir[] = [];
+
   /**
    * @property {ConfiguracionColumna<FilaSectors>[]} sectorColumnsConfiguracion
    * @description
@@ -109,6 +111,11 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   sectorColumnsConfiguracion: ConfiguracionColumna<FilaSectors>[] = [
     { encabezado: 'Lista de sectores', clave: (fila) => fila.sectorLista, orden: 1 },
     { encabezado: 'Clave del sector', clave: (fila) => fila.sectorClave, orden: 2 },
+  ];
+
+  producirColumnConfiguracion: ConfiguracionColumna<FilaProducir>[] = [
+    { encabezado: 'Fracción arancelaria', clave: (fila) => fila.arancelaria, orden: 1 },
+    { encabezado: 'Clave del sector', clave: (fila) => fila.sector, orden: 2 },
   ];
 
   /**
@@ -202,7 +209,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       .subscribe();
     this.initActionFormBuild();
     this.obtenserListaEstado();
-    this.recuperarDatos();
+    
 
     this.seccionStore.establecerFormaValida([false]);
 
@@ -322,6 +329,24 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         }
       }
     );
+  }
+
+  recuperarProducirDatos(): void {
+    this.ProsecService.obtenerTablaDatos('producirDatos.json').subscribe(
+      (response) => {
+        if (response && Array.isArray(response)) {
+          this.producir = response as FilaProducir[];
+        }
+      }
+    );
+  }
+
+  agregarSector(): void {
+    this.recuperarDatos();
+  }
+
+  agregarProducir(): void {
+    this.recuperarProducirDatos();
   }
 
   /**

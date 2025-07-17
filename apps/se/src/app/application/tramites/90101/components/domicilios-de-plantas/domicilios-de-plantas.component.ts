@@ -84,6 +84,8 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    */
   plantasDatos: FilaPlantas[] = [];
 
+  prosecDatos: FilaPlantas[] = [];
+
   /**
    * @descripcion
    * Referencia a la enumeración o clase utilizada para la selección en la tabla dinámica.
@@ -281,7 +283,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   initActionFormBuild(): void {
     this.forma = this.fb.group({
       modalidad: [
-        this.domiciliosState.modalidad,
+        { value: this.domiciliosState.modalidad, disabled: true },
       ],
       Estado: [
         this.domiciliosState.Estado,
@@ -374,7 +376,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     this.obtenerListaEstado();
     this.obtenerListaFederal();
     this.obtenerListaActividad();
-    this.recuperarDatos();
+    
   }
 
   /**
@@ -433,6 +435,25 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
         if (response && Array.isArray(response)) {
           this.plantasDatos = response as FilaPlantas[];
         } 
+      }
+    );
+  }
+
+  mostrarDomicilios(): void {
+    this.recuperarDatos();
+  }
+
+  agregarPlantas(): void {
+    this.plantasDatos = [];
+    this.recuperarProsecDatos();
+  }
+
+  recuperarProsecDatos(): void {
+    this.ProsecService.obtenerTablaDatos('plantasDatos.json').subscribe(
+      (response) => {
+        if (response && Array.isArray(response)) {
+          this.prosecDatos = response as FilaPlantas[];
+        }
       }
     );
   }

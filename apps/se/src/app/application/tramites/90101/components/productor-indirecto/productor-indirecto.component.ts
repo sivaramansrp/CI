@@ -10,8 +10,8 @@
  */
 
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
+import { ConfiguracionColumna, ConsultaioQuery, SoloLetrasNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
@@ -36,7 +36,9 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
   imports: [
     TablaDinamicaComponent,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    TituloComponent,
+    forwardRef(() => SoloLetrasNumerosDirective)
   ]
 })
 export class ProductorIndirectoComponent implements OnInit, OnDestroy {
@@ -143,7 +145,6 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.initActionFormBuild();
-    this.recuperarDatos();
 
     this.productorIndirecto.statusChanges
       .pipe(
@@ -230,6 +231,10 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
           this.productorDato = response as FilaProductos[];
         }
       });
+  }
+
+  agregarProductor(): void {
+    this.recuperarDatos();
   }
 
   /**

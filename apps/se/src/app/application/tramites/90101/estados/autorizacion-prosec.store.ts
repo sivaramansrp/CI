@@ -102,7 +102,7 @@ export interface ProsecState {
  */
 export function createInitialState(): ProsecState {
   return {
-    modalidad: '',
+    modalidad: 'Productor directo',
     Estado: [],
     RepresentacionFederal: [],
     ActividadProductiva: [],
