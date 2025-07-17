@@ -68,15 +68,13 @@
                (change)="setValoresStore(datosDelTramiteRealizar,'cantidadutilizada','setCantidadutilizada')"
                [disabled]="esFormularioSoloLectura"
                >
-               <div
-         *ngIf="
-         dataCafeForm.get('datosDelTramiteRealizar')?.errors?.['cantidadUtilizadaExceeds'] &&
-           dataCafeForm.get('datosDelTramiteRealizar.cantidadutilizada')?.touched
-          "
-          class="text-danger"
-         >
-          <small>La Cantidad Utilizada debe ser menor a la cantidad Facturada</small>
-         </div>
+              
+         @if(isCantidadUtilizadaExceeds) {
+           <small class="text-danger">
+             La Cantidad Utilizada debe ser menor a la cantidad Facturada
+           </small>
+          
+        }
             </div>
          </div>
          <div class="col-md-6 mb-3">

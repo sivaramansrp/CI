@@ -51,7 +51,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   /**
  * Evento que emite la fila seleccionada de la tabla.
  */
-@Output() rowSelected: EventEmitter<Solicitud> = new EventEmitter<Solicitud>();
+@Output() filaSeleccionada: EventEmitter<Solicitud> = new EventEmitter<Solicitud>();
 
 /**
  * Datos de ejemplo para una solicitud (MOCK).
@@ -83,10 +83,10 @@ MOCK_SOLICITUD: Solicitud = {
 
  /**
  * Método que se ejecuta al hacer clic en una fila de la tabla.
- * Emite el evento `rowSelected` con los datos de la solicitud seleccionada.
+ * Emite el evento `filaSeleccionada` con los datos de la solicitud seleccionada.
  */
 onRowClick(): void {
-    this.rowSelected.emit(this.MOCK_SOLICITUD);
+    this.filaSeleccionada.emit(this.MOCK_SOLICITUD);
 }
   /**
    * Alterna el estado del panel plegable (expandir/contraer).

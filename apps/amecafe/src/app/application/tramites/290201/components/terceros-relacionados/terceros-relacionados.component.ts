@@ -379,6 +379,11 @@ get selectedTipoPersona(): string | undefined {
    * Método para manejar el envío del formulario.
    */
   enEnviar(): void {
+    if (this.destinatarioForm.invalid) {
+      // Mark all fields as touched to show validation errors
+      this.destinatarioForm.markAllAsTouched();
+      return;
+    }
     const FORM_DATA = this.destinatarioForm.value;
   
     if (!FORM_DATA || Object.keys(FORM_DATA).length === 0) {
@@ -400,17 +405,17 @@ get selectedTipoPersona(): string | undefined {
       }
     } else {
       this.tableData.push({ ...FORM_DATA }); 
+
     }
-  
+
     this.tableData = [...this.tableData]; 
+
     this.changeDetectorRef.markForCheck(); 
     this.destinatarioForm.reset(); 
     this.esFormularioVisible = false; 
     this.selectedRow = null; 
   }
-  /**
-   * Método para limpiar el formulario.
-   */
+ 
  /**
  * Método para limpiar el formulario.
  */

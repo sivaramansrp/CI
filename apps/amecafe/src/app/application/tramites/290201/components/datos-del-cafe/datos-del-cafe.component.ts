@@ -606,6 +606,12 @@ static cantidadUtilizadaValidator(group: AbstractControl): { [key: string]: bool
   }
   return null;
 }
+get isCantidadUtilizadaExceeds(): boolean {
+  return (
+    this.dataCafeForm.get('datosDelTramiteRealizar')?.errors?.['cantidadUtilizadaExceeds'] &&
+    this.dataCafeForm.get('datosDelTramiteRealizar.cantidadutilizada')?.touched
+  );
+}
   /**
    * Este método se utiliza para actualizar un valor específico en el store de la solicitud.
    * @param form 
