@@ -193,3 +193,14 @@ export const MUNICIPIODE_OPCIONS = [
   { label: 'Municipio 2', value: 'Municipio 2' },
   { label: 'Municipio 3', value: 'Municipio 3' }
 ];
+
+export const ERROR_FORMA_ALERT =
+`
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`

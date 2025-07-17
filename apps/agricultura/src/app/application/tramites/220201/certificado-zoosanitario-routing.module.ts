@@ -3,6 +3,7 @@ import { AgregardestinatarioComponent } from './components/agregardestinatario/a
 import { AgregardestinatariofinalComponent } from './components/agregardestinatariofinal/agregardestinatariofinal.component';
 import { AnimalesVivoContenedoraComponent } from './components/animales-vivo-contenedora/animales-vivo-contenedora.component';
 import { NgModule } from '@angular/core';
+import { SubProductosContenedoraComponent } from './components/sub-productos-contenedora/sub-productos-contenedora.component';
 import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitario-page.component';
 
 export const ROUTES_ZOOSANITARIO: Routes = [
@@ -29,7 +30,15 @@ export const ROUTES_ZOOSANITARIO: Routes = [
     {
     path: 'animales-vivo',
     component: AnimalesVivoContenedoraComponent
-  },
+  },  
+  {
+      path: 'sub-productos',
+      component: SubProductosContenedoraComponent
+    },
+  {
+      path: 'sub-productos/:id',
+      component: SubProductosContenedoraComponent
+    },
   {
     path: '',
     pathMatch: 'full',

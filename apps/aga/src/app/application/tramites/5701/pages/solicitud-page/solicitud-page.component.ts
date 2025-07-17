@@ -733,6 +733,7 @@ export class SolicitudPageComponent implements OnInit {
    */
   anteriorSeccionCargarDocumento(): void {
     this.regresarSeccionCargarDocumentoEvento.emit();
+    this.seccionCargarDocumentos = true;
   }
 
   /**

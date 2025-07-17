@@ -146,6 +146,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
           if(seccionState.readonly || seccionState.update){
              this.inicializarFormulario();
              this.setCatalogosDatos();
+             this.guardarDatosFormulario();
           }
         })
       )
@@ -184,7 +185,7 @@ this.inicializarCertificadoFormulario();
      * - Si no está en modo solo lectura, habilita ambos formularios.
      * - Si ninguna de las condiciones anteriores se cumple, no realiza ninguna acción adicional.
      */
-    guardarDatosFormulario(): void {
+    guardarDatosFormulario(): void { 
       this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
         this.datosdelForm.disable();

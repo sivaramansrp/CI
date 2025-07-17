@@ -3,6 +3,7 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { PARAMETERO } from '../../constantes/constantes';
 import { SagarpaService } from '../../services/sagarpa/sagarpa.service';
 import { Solicitud220501Store } from '../../estados/tramites220501.store';
 
@@ -56,6 +57,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
    * Indica si se debe mostrar la sección de revisión documental.
    */
   mostrarRevisionDocumental: boolean = true;
+
+  /**
+   * Parámetro utilizado para determinar el tipo de datos a mostrar.
+   * Se utiliza para decidir si se muestran los datos generales o los datos de la solicitud.
+   */
+  parametero = PARAMETERO;
 
   /**
    * Constructor del componente.
