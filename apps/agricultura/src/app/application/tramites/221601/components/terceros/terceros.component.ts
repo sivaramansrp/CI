@@ -12,6 +12,8 @@ import { ModalComponent } from '../modal/modal.component';
 import { Tramite221601Query } from '../../../../estados/queries/tramite221601.query';
 import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
 
+import { CommonModule } from '@angular/common';
+
 /**
  * Componente encargado de gestionar la visualización y exportación de datos relacionados con los exportadores y destinatarios.
  * Este componente muestra dos tablas dinámicas: una para los exportadores y otra para los destinatarios. 
@@ -37,7 +39,7 @@ import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
     TablaDinamicaComponent,
     AlertComponent, FormsModule,
         ReactiveFormsModule,
-        CatalogoSelectComponent,ModalComponent
+        CatalogoSelectComponent,ModalComponent,CommonModule
   ],
   templateUrl: './terceros.component.html',
   styleUrls: ['./terceros.component.scss']
@@ -229,19 +231,19 @@ export class TercerosComponent implements OnInit, OnDestroy {
             tipoPersona: [this.solicitudState.tipoPersona, Validators.required],
           });
             this.datosPersonales = this.fb.group({
-            nombre: [this.solicitudState.nombre, Validators.required ],
-            primerApellido: [this.solicitudState.primerApellido, Validators.required],
-            segundoApellido: [this.solicitudState.segundoApellido],
-            social: [this.solicitudState.social, Validators.required],
+            nombre: [this.solicitudState.nombre,[ Validators.required ,Validators.maxLength(200)]],
+            primerApellido: [this.solicitudState.primerApellido, [Validators.required, Validators.maxLength(200)]],
+            segundoApellido: [this.solicitudState.segundoApellido, Validators.maxLength(200)],
+            social: [this.solicitudState.social,[Validators.required, Validators.maxLength(250)]],
             pais: [this.solicitudState.pais, Validators.required],
-            codigo: [this.solicitudState.codigo],
+            codigo: [this.solicitudState.codigo , Validators.maxLength(5)],
             estado: [this.solicitudState.estado, Validators.required],
             municipio: [this.solicitudState.municipio, Validators.required],
             colonia: [this.solicitudState.colonia],
-            calle: [this.solicitudState.calle, Validators.required],
-            exterior: [this.solicitudState.exterior, Validators.required],
+            calle: [this.solicitudState.calle, [Validators.required ,Validators.maxLength(100)]],
+            exterior: [this.solicitudState.exterior, [Validators.required ,Validators.maxLength(55)]],
             interior: [this.solicitudState.interior],
-            lada: [this.solicitudState.lada],
+            lada: [this.solicitudState.lada, Validators.maxLength(5)],
             telefono: [this.solicitudState.telefono],
             correoElectronico: [this.solicitudState.correoElectronico,Validators.required],
             tif: [this.solicitudState.tif],
