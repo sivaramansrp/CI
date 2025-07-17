@@ -79,7 +79,7 @@ export class DatosComponent implements OnInit, OnDestroy {
    * La suscripción se cancela automáticamente cuando `destroyNotifier$` emite, evitando fugas de memoria.
    */
    public guardarDatosFormulario(): void {
-    this.pantallasSvc.getConsultaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
+    this.pantallasSvc.getConsultaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => { debugger;
       this.pantallasSvc.actualizarEstadoFormulario(response);
     })
    }
