@@ -211,7 +211,7 @@ export const EMPRESA_MIEMBRO_TABLA_DATOS = [
   },
   {
     encabezado: 'Nombre',
-    clave: (item: AgregarMiembroEmpresaTabla): string => item.nombre,
+    clave: (item: AgregarMiembroEmpresaTabla): string => item.nombreColleccion ?? '',
     orden: 2,
   },
   {

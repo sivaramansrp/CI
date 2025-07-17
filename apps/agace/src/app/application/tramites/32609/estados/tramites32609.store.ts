@@ -95,6 +95,10 @@ export interface Tramites32609State {
   correo: string;
   suplente: boolean;
   enlaceOperativoData: TablaEnlaceOperativo[];
+
+  autorizacionCBP: string,
+  instalacionesCertificadasCBP: string,
+  suspensionCancelacionCBP: string
 }
 
 
@@ -182,6 +186,10 @@ export function createInitialState(): Tramites32609State {
   correo: '',
   suplente: false,
   enlaceOperativoData: [],
+
+  autorizacionCBP: '',
+  instalacionesCertificadasCBP: '',
+  suspensionCancelacionCBP: ''
 };
 }
 
