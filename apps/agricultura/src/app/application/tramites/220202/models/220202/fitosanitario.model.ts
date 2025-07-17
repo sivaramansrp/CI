@@ -1,3 +1,5 @@
+import { CROSLISTA_DE_DATOS } from "../../constantes/220202/fitosanitario.enums";
+import { Catalogo } from "@libs/shared/data-access-user/src";
 import { PersonaTerceros } from "@libs/shared/data-access-user/src";
 import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
 
@@ -164,7 +166,10 @@ export interface ListaDeDatosFinal {
    /**
      * Datos de la forma relacionados con terceros.
      */
-    datosForma: TercerosrelacionadosdestinoTable[];
+     datosForma: TercerosrelacionadosdestinoTable[];
+
+    usoCrossListDatos: string[];
+
 }
 
 
@@ -333,6 +338,7 @@ export interface DatosForma {
  * Representa una fila de solicitud en el modelo fitosanitario.
  */
 export interface FilaSolicitud {
+    id: number | boolean; // ID de la fila, puede ser un número o un booleano para indicar si es nuevo
     /**
      * Número de partida asociado a la solicitud.
      */
@@ -341,7 +347,7 @@ export interface FilaSolicitud {
     /**
      * Tipo de requisito relacionado con la solicitud.
      */
-    tipoRequisito: string;
+    tipoRequisito?: string;
 
     /**
      * Descripción del requisito solicitado.
@@ -616,7 +622,8 @@ export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): Lista
         selectedDatos: params.selectedDatos || [],
         personas: params.personas || [],
         tercerosRelacionados: params.tercerosRelacionados || [],
-        datosForma: params.datosForma || [] 
+        datosForma: params.datosForma || [],
+        usoCrossListDatos: CROSLISTA_DE_DATOS, 
     }
 }  
 
@@ -635,4 +642,53 @@ export interface RadioOpcion {
      * Valor interno asignado a la opción seleccionada.
      */
     value: string;
+}
+
+/**
+ * Modelo de datos para un exportador relacionado.
+ * @interface
+ */
+export interface TercerosrelacionadosTable {
+  /**
+   * Nombre, denominación o razón social del exportador.
+   */
+  exportadorNombre: string;
+  /**
+   * Teléfono del exportador.
+   */
+  exportadorTelefono: string;
+  /**
+   * Correo electrónico del exportador.
+   */
+  exportadorCorreo: string;
+  /**
+   * Domicilio del exportador.
+   */
+  exportadorDomicilio: string;
+  /**
+   * País del exportador.
+   */
+  exportadorPais: string;
+}
+
+export interface DatosDeLaSolicitud {
+  /**
+   * Catálogo de países.
+   */
+  paises: Catalogo[];
+  /**
+   * Catálogo de estados.
+   */
+  estados: Catalogo[];
+}
+
+/**
+ * Interfaz que define la estructura de etiquetas cruzadas para elementos de interfaz.
+ * @interface CrossListEtiqueta
+ */
+export interface CrossListEtiqueta {
+  /** Título que se muestra en la parte izquierda */
+  tituluDeLaIzquierda: string;
+  /** Contenido que se muestra en la parte derecha */
+  derecha: string;
 }

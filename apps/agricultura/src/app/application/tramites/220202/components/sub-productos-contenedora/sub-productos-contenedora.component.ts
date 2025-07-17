@@ -88,6 +88,7 @@ export class SubProductosContenedoraComponent {
    */
   agregarDatosFormulario(valor: ProductoDetallaEventos): void {
     const DATOS: FilaSolicitud = {
+      id: 0, // Asigna aquí el valor adecuado para 'id'
       noPartida: '',
       tipoRequisito: valor.formulario.tipoRequisito || '',
       requisito: valor.formulario.requisito || '',

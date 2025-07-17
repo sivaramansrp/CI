@@ -9,6 +9,8 @@ import {
 
     PagoDeDerechos,
 
+    TercerosrelacionadosTable,
+
     createDatosState,
 } from '../models/220202/fitosanitario.model';
 
@@ -150,11 +152,18 @@ public actualizarTercerosRelacionados(nuevoTercero: TercerosrelacionadosdestinoT
    * @method updateTercerosRelacionados
    * @param {TercerosrelacionadosTable[]} tercerosRelacionados Lista de personas terceros relacionadas.
    */
-  public updateTercerosExportador(datosForma: TercerosrelacionadosdestinoTable[]): void {
+  public updateTercerosExportador(tercerosRelacionados: TercerosrelacionadosdestinoTable[]): void {
     this.update(state => ({
       ...state,
-      datosForma: datosForma,
+      datosForma: tercerosRelacionados,
     }));
   }
+
+  // public updatedatosForma(tercerosRelacionados: TercerosrelacionadosdestinoTable[]): void {
+  //   this.update(state => ({
+  //     ...state,
+  //     datosForma: tercerosRelacionados,
+  //   }));
+  // }
 
 }

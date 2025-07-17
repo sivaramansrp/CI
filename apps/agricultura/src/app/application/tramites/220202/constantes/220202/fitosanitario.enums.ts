@@ -244,3 +244,53 @@ export const ALERT_TEXTO = `<div>
   </p>
 </div>
 `;
+
+/**
+ * Mensaje mostrado cuando es obligatorio agregar al menos un registro en tablas con asterisco.
+ * @type {string}
+ */
+export const SELECCIONADO = "Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro";
+
+/**
+ * Opciones para el botón de radio de tipo de persona (Física o Moral).
+ * @type {{label: string, value: string}[]}
+ */
+export const OPCION_DE_BOTON_DE_RADIO = [
+  {
+    /**
+     * Etiqueta para persona física.
+     * @type {string}
+     */
+    "label": "Fisica",
+    /**
+     * Valor para persona física.
+     * @type {string}
+     */
+    "value": "yes"
+  },
+  {
+    /**
+     * Etiqueta para persona moral.
+     * @type {string}
+     */
+    "label": "Moral",
+    /**
+     * Valor para persona moral.
+     * @type {string}
+     */
+    "value": "no"
+  }
+];
+
+/**
+ * @const CROSLISTA_DE_DATOS
+ * @description Lista de datos de ejemplo que incluye nombres de países y autorizaciones de programas.
+ * @type {string[]}
+ */
+export const CROSLISTA_DE_DATOS: string[] = [
+  'AFGANISTÁN (EMIRATO ISLÁMICO)',
+  'ALBANIA (REPÚBLICA DE)',
+  'ALEMANIA (REPÚBLICA FEDERAL DE)',
+  'ANDORRA (PRINCIPADO DE)',
+  '8-2024-AUTORIZACIÓN PROGRAMA NUEVO',
+];

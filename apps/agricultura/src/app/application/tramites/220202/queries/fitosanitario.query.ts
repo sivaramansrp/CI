@@ -62,4 +62,18 @@ export class FitosanitarioQuery extends Query<ListaDeDatosFinal> {
    * @memberof FitosanitarioQuery
    */
   seleccionarMovilizacionNacional$ = this.select(estado => estado.movilizacion);
+
+  seleccionarMarcancia$ = this.select(estado => estado.tablaDatos);
+
+  /**
+   * Selector para obtener los datos seleccionados.
+   *
+   * @readonly
+   * @type {Observable<FilaSolicitud[]>}
+   * @memberof FitosanitarioQuery
+   */
+  seleccionarDatosSeleccionados$ = this.select(estado => estado.selectedDatos);
+
+  public getNormaDatos$ = this.select((state) => state.usoCrossListDatos);
+
 }

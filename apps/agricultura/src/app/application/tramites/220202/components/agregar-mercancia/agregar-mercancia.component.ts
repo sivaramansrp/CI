@@ -2,11 +2,14 @@ import { AnimalesEventos, AnimalesFormularioSolicitud, DatosDeLaSolicitud } from
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
-import { AnimalesVivoDetallesComponent } from '../../../../shared/components/animales-vivo-detalles/animales-vivo-detalles.component';
+
 import { CommonModule } from '@angular/common';
 import { FilaSolicitud } from '../../models/220202/fitosanitario.model';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
+import { MercanciaFormComponent } from '../../shared/mercancia-form/mercancia-form.component';
+
+
 
 /**
  * @description Decorador que define un componente de Angular llamado `AnimalesVivoContenedoraComponent`.
@@ -20,12 +23,12 @@ import { FitosanitarioStore } from '../../estados/fitosanitario.store';
  * @styleUrl `./animales-vivo-contenedora.component.scss` - Ruta del archivo SCSS que contiene los estilos específicos del componente.
  */
 @Component({
-  selector: 'app-animales-vivo-contenedora',
+  selector: 'app-agregar-mercancia',
   standalone: true,
-  imports: [CommonModule, AnimalesVivoDetallesComponent],
-  templateUrl: './animales-vivo-contenedora.component.html',
+  imports: [CommonModule, MercanciaFormComponent],
+  templateUrl: './agregar-mercancia.component.html',
 })
-export class AnimalesVivoContenedoraComponent implements OnDestroy{
+export class AgregarMercanciaComponent implements OnDestroy{
   /**
    * Datos de la solicitud que se recibirán como entrada en el componente.
    * @type {DatosDeLaSolicitud}
@@ -38,10 +41,10 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy{
     umtList: [],
     umcList: [],
     especieList: [],
-    usoList: [],
+    usoList: [],  
     paisOrigenList: [],
     paisDeProcedenciaList: [],
-    sexoList: []
+    sexoList: [],
   }
 
 
@@ -85,6 +88,10 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy{
    *   seleccionados del estado reactivo.
    * - Maneja la destrucción de las suscripciones utilizando `takeUntil` con un observable de notificación.
    */
+
+
+
+
   constructor(public agriculturaApiService: AgriculturaApiService,
     public fitosanitarioQuery: FitosanitarioQuery,
     public fitosanitarioStore: FitosanitarioStore
@@ -129,6 +136,7 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy{
    */
   agregarDatosFormulario(valor: AnimalesEventos): void {
     const DATOS: FilaSolicitud = {
+      id: Date.now(), // O usa un generador de ID adecuado según tu lógica
       noPartida: '',
       tipoRequisito: valor.formulario.tipoRequisito || '',
       requisito: valor.formulario.requisito || '',

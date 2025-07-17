@@ -1,6 +1,8 @@
+import { AgregarExportadorComponent } from './components/agregar-exportador/agregar-exportador.component';
+import { AgregarMercanciaComponent } from './components/agregar-mercancia/agregar-mercancia.component';
 import { AgregardestinatarioComponent } from './components/agregardestinatario/agregardestinatario.component';
 import { AgriculturaComponent } from './pages/agricultura/agricultura.component';
-import { AnimalesVivoContenedoraComponent } from './components/animales-vivo-contenedora/animales-vivo-contenedora.component';
+import { MercanciaFormComponent } from './shared/mercancia-form/mercancia-form.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
@@ -14,25 +16,37 @@ export const ROUTES_FITOSANITARIO: Routes = [
     component: AgriculturaComponent,
   },
   {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: 'agricultura',
+    path: 'agregar-exportador',
+    component: AgregarExportadorComponent
   },
   {
-    path: 'animales-vivo',
-    component: AnimalesVivoContenedoraComponent
+    path: 'agregar-exportador/:id',
+    component: AgregarExportadorComponent
+  },
+  {
+    path: 'agregar-destinatario-final',
+    component: AgregardestinatarioComponent
+  },
+  {
+    path: 'agregar-destinatario-final/:id',
+    component: AgregardestinatarioComponent
+  },
+  {
+    path: 'mercancia-form',
+    component: AgregarMercanciaComponent
+  },
+  { 
+    path: 'mercancia-form/:id', 
+    component: MercanciaFormComponent 
   },
   {
     path: 'sub-productos',
     component: SubProductosContenedoraComponent
   },
   {
-    path: 'agregar-destinatario',
-    component: AgregardestinatarioComponent
-  },
-  {
-    path: 'agregar-destinatario/:id',
-    component: AgregardestinatarioComponent
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'agricultura',
   },
 
 ];

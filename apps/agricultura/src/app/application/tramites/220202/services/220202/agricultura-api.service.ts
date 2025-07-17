@@ -9,7 +9,8 @@ import {
   FinalEnviar,
   ListaDeDatosFinal,
   Movilizacion,
-  PagoDeDerechos,  
+  PagoDeDerechos,
+  TercerosrelacionadosTable,  
 } from '../../models/220202/fitosanitario.model';
 import { Observable, map } from 'rxjs';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
@@ -175,7 +176,8 @@ export class AgriculturaApiService {
     this.fitosanitarioStore.actualizarPago(DATOS.pago);
     this.fitosanitarioStore.tablaDatosFinal(DATOS.tablaDatos);
     this.updateTercerosRelacionado(DATOS.tercerosRelacionados);
-    this.updateTercerosExportador(DATOS.datosForma);
+    // this.updateTercerosExportador(DATOS.datosForma);
+    this.fitosanitarioStore.updateTercerosExportador(DATOS?.datosForma || [] as TercerosrelacionadosTable[]);
 
   }
 
