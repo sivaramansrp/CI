@@ -336,6 +336,14 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     );
   }
 
+    /**
+   * @method recuperarProducirDatos
+   * @description
+   * Recupera los datos de producción desde el archivo 'producirDatos.json' utilizando el servicio ProsecService.
+   * Si la respuesta es un arreglo, asigna los datos a la propiedad `producir` como un arreglo de `FilaProducir`.
+   * 
+   * @returns {void}
+   */
   recuperarProducirDatos(): void {
     this.ProsecService.obtenerTablaDatos('producirDatos.json').subscribe(
       (response) => {
@@ -346,10 +354,24 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * @method agregarSector
+   * @description
+   * Llama al método `recuperarDatos()` para obtener la información más reciente de los sectores y actualizar la tabla.
+   * 
+   * @returns {void}
+   */
   agregarSector(): void {
     this.recuperarDatos();
   }
 
+  /**
+   * @method agregarProducir
+   * @description
+   * Llama al método `recuperarProducirDatos()` para obtener la información más reciente de los datos de producción y actualizar la tabla.
+   * 
+   * @returns {void}
+   */
   agregarProducir(): void {
     this.recuperarProducirDatos();
   }

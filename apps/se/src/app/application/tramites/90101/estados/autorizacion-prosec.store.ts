@@ -259,15 +259,46 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
     this.update((state) => ({ ...state, sectoresFromValida }));
   }
 
+    /**
+   * @method setSectorDatos
+   * @description
+   * Actualiza el arreglo de datos de sectores en el estado.
+   * @param {FilaSectors[]} sectorDatos - Nuevo arreglo de sectores a almacenar.
+   * @returns {void}
+   */
   public setSectorDatos(sectorDatos: FilaSectors[]): void {
     this.update((state) => ({ ...state, sectorDatos }));
   }
+
+  /**
+   * @method setProducirDatos
+   * @description
+   * Actualiza el arreglo de datos de producción en el estado.
+   * @param {FilaProducir[]} producirDatos - Nuevo arreglo de datos de producción a almacenar.
+   * @returns {void}
+   */
   public setProducirDatos(producirDatos: FilaProducir[]): void {
     this.update((state) => ({ ...state, producirDatos }));
   }
+
+  /**
+   * @method setPlantasDatos
+   * @description
+   * Actualiza el arreglo de datos de plantas en el estado.
+   * @param {FilaPlantas[]} plantasDatos - Nuevo arreglo de datos de plantas a almacenar.
+   * @returns {void}
+   */
   public setPlantasDatos(plantasDatos: FilaPlantas[]): void {
     this.update((state) => ({ ...state, plantasDatos }));
   }
+
+  /**
+   * @method setProductorDatos
+   * @description
+   * Actualiza el arreglo de datos de productores en el estado.
+   * @param {FilaProductos[]} productorDatos - Nuevo arreglo de datos de productores a almacenar.
+   * @returns {void}
+   */
   public setProductorDatos(productorDatos: FilaProductos[]): void {
     this.update((state) => ({ ...state, productorDatos }));
   }

@@ -174,7 +174,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     public seccionStore: SeccionLibStore,
     public seccionQuery: SeccionLibQuery,
   ) {
-    // Constructor logic can be added here if needed
+    // Se puede agregar aquí la lógica del constructor si es necesario
   }
 
   /**
@@ -439,15 +439,41 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * @method mostrarDomicilios
+   * @description
+   * Método que recupera los datos de las plantas y los asigna a la propiedad correspondiente.
+   * Utiliza el servicio ProsecService para obtener los datos desde el archivo 'plantasDatos.json'.
+   * 
+   * @returns {void}
+   * 
+   * @memberof DomiciliosDePlantasComponent
+   */
   mostrarDomicilios(): void {
     this.recuperarDatos();
   }
 
+    /**
+   * @method agregarPlantas
+   * @description
+   * Limpia el arreglo de plantas y recupera los datos actualizados de plantas desde el servicio.
+   * Llama a `recuperarProsecDatos()` para obtener la información más reciente de las plantas.
+   * 
+   * @returns {void}
+   */
   agregarPlantas(): void {
     this.plantasDatos = [];
     this.recuperarProsecDatos();
   }
 
+  /**
+   * @method recuperarProsecDatos
+   * @description
+   * Recupera los datos de plantas desde el archivo 'plantasDatos.json' utilizando el servicio ProsecService.
+   * Si la respuesta es un arreglo, asigna los datos a la propiedad `prosecDatos`.
+   * 
+   * @returns {void}
+   */
   recuperarProsecDatos(): void {
     this.ProsecService.obtenerTablaDatos('plantasDatos.json').subscribe(
       (response) => {

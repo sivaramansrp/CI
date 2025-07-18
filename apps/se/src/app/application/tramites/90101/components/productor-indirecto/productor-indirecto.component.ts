@@ -235,6 +235,14 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
       });
   }
 
+   /**
+   * @method agregarProductor
+   * @description
+   * Agrega un productor indirecto recuperando los datos actualizados desde el servicio.
+   * Llama al método `recuperarDatos()` para obtener la información más reciente de los productores indirectos y actualizar la tabla.
+   * 
+   * @returns {void}
+   */
   agregarProductor(): void {
     this.recuperarDatos();
   }
