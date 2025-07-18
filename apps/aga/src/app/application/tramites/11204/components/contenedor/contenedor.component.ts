@@ -110,7 +110,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Datos que se mostrarán en la tabla dinámica.
    */
-  datosTabla: any[] = [];
+  datosTabla: Record<string, string>[] = [];
 
   /**
    * Textos.
@@ -352,12 +352,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   parseDDMMYYYY(dateStr: string): Date | null {
-    if (!dateStr) return null;
+    if (!dateStr) { return null; }
 
-    const [day, month, year] = dateStr.split('/');
-    if (!day || !month || !year) return null;
+    const [DAY, MONTH, YEAR] = dateStr.split('/');
+    if (!DAY || !MONTH || !YEAR) { return null; }
 
-    return new Date(Number(year), Number(month) - 1, Number(day));
+    return new Date(Number(YEAR), Number(MONTH) - 1, Number(DAY));
   }
 
   onChange(controlName: string, event: Event): void {

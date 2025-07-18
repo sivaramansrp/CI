@@ -1,8 +1,8 @@
+import { RespuestaCatalog, RespuestaConsulta } from "../models/datos-tramite.model";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { RespuestaCatalogos } from "@libs/shared/data-access-user/src";
-import { RespuestaCatalog, RespuestaConsulta } from "../models/datos-tramite.model";
 import { RespuestaContenedor } from "../models/datos-tramite.model";
 
 /**
