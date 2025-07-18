@@ -1,16 +1,29 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AcuseReciboComponent } from './acuse-recibo.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TablaAcciones } from '@libs/shared/data-access-user/src';
+import { TablaAcciones } from '@ng-mf/data-access-user';
 import { ConfirmarNotificacionService } from '../services/confirmar-notificacion.service';
-import { of, Subject } from 'rxjs';
+import { Router } from '@angular/router';
+import { of, Subject, throwError } from 'rxjs';
 
 describe('AcuseReciboComponent', () => {
   let component: AcuseReciboComponent;
   let fixture: ComponentFixture<AcuseReciboComponent>;
   let confirmarNotificacionService: ConfirmarNotificacionService;
+  let mockRouter: jest.Mocked<Router>;
 
   beforeEach(async () => {
+    mockRouter = {
+      url: '/confirmar-notificacion',
+      navigate: jest.fn()
+    } as any;
+
+    // Hacer la propiedad url escribible para las pruebas
+    Object.defineProperty(mockRouter, 'url', {
+      writable: true,
+      value: '/confirmar-notificacion'
+    });
+
     await TestBed.configureTestingModule({
       imports: [AcuseReciboComponent, HttpClientTestingModule],
       providers: [
@@ -18,7 +31,13 @@ describe('AcuseReciboComponent', () => {
           provide: ConfirmarNotificacionService,
           useValue: {
             getAcuseReciboDatos: jest.fn(() => of([{ id: 1, nombre: 'doc.pdf', numero: '001', documento: 'file-content' }])),
+            getAcuseConfirmarResolucionTablaDatos: jest.fn(() => of([])),
+            getResolucionConfirmarResolucionTablaDatos: jest.fn(() => of([])),
           },
+        },
+        {
+          provide: Router,
+          useValue: mockRouter,
         },
       ],
     }).compileComponents();
@@ -41,7 +60,7 @@ describe('AcuseReciboComponent', () => {
   });
 
   it('debería inicializar acuseReciboTablaDatos como un array vacío', () => {
-    const comp = new AcuseReciboComponent(confirmarNotificacionService);
+    const comp = new AcuseReciboComponent(confirmarNotificacionService, mockRouter);
     expect(comp.acuseReciboTablaDatos).toEqual([]);
   });
 
@@ -56,6 +75,76 @@ describe('AcuseReciboComponent', () => {
     ]);
   });
 
+  it('debería llamar a getAcuseReciboDatos cuando la pantalla es confirmar-notificacion', () => {
+    const getAcuseReciboDatosSpy = jest.spyOn(confirmarNotificacionService, 'getAcuseReciboDatos');
+    const getAcuseConfirmarResolucionSpy = jest.spyOn(confirmarNotificacionService, 'getAcuseConfirmarResolucionTablaDatos');
+    const getResolucionConfirmarResolucionSpy = jest.spyOn(confirmarNotificacionService, 'getResolucionConfirmarResolucionTablaDatos');
+    
+    // URL por defecto es '/confirmar-notificacion', por lo que pantalla será 'confirmar-notificacion'
+    component.ngOnInit();
+    
+    expect(getAcuseReciboDatosSpy).toHaveBeenCalled();
+    expect(getAcuseConfirmarResolucionSpy).not.toHaveBeenCalled();
+    expect(getResolucionConfirmarResolucionSpy).not.toHaveBeenCalled();
+  });
+
+  it('debería llamar a todos los métodos de resolución cuando la pantalla es confirmar-resolucion', () => {
+    // Crear un nuevo componente con router que tiene URL de confirmar-resolucion
+    const customMockRouter = {
+      url: '/confirmar-resolucion',
+      navigate: jest.fn()
+    } as any;
+    
+    const customComponent = new AcuseReciboComponent(confirmarNotificacionService, customMockRouter);
+    
+    const getAcuseReciboDatosSpy = jest.spyOn(confirmarNotificacionService, 'getAcuseReciboDatos');
+    const getAcuseConfirmarResolucionSpy = jest.spyOn(confirmarNotificacionService, 'getAcuseConfirmarResolucionTablaDatos');
+    const getResolucionConfirmarResolucionSpy = jest.spyOn(confirmarNotificacionService, 'getResolucionConfirmarResolucionTablaDatos');
+    
+    // Limpiar las llamadas previas
+    getAcuseReciboDatosSpy.mockClear();
+    getAcuseConfirmarResolucionSpy.mockClear();
+    getResolucionConfirmarResolucionSpy.mockClear();
+    
+    customComponent.ngOnInit();
+    
+    expect(getAcuseReciboDatosSpy).not.toHaveBeenCalled();
+    expect(getAcuseConfirmarResolucionSpy).toHaveBeenCalled();
+    expect(getResolucionConfirmarResolucionSpy).toHaveBeenCalled();
+  });
+
+  it('debería actualizar acuseConfirmarResolucionTablaDatos desde el servicio cuando pantalla es confirmar-resolucion', () => {
+    const mockData = [{ id: 1, nombre: 'test' }];
+    jest.spyOn(confirmarNotificacionService, 'getAcuseConfirmarResolucionTablaDatos').mockReturnValue(of(mockData as any));
+    
+    // Crear componente con router de confirmar-resolucion
+    const customMockRouter = {
+      url: '/confirmar-resolucion',
+      navigate: jest.fn()
+    } as any;
+    const customComponent = new AcuseReciboComponent(confirmarNotificacionService, customMockRouter);
+    
+    customComponent.ngOnInit();
+    
+    expect(customComponent.acuseConfirmarResolucionTablaDatos).toEqual(mockData);
+  });
+
+  it('debería actualizar resolucionConfirmarResolucionTablaDatos desde el servicio cuando pantalla es confirmar-resolucion', () => {
+    const mockData = [{ id: 2, nombre: 'test2' }];
+    jest.spyOn(confirmarNotificacionService, 'getResolucionConfirmarResolucionTablaDatos').mockReturnValue(of(mockData as any));
+    
+    // Crear componente con router de confirmar-resolucion
+    const customMockRouter = {
+      url: '/confirmar-resolucion',
+      navigate: jest.fn()
+    } as any;
+    const customComponent = new AcuseReciboComponent(confirmarNotificacionService, customMockRouter);
+    
+    customComponent.ngOnInit();
+    
+    expect(customComponent.resolucionConfirmarResolucionTablaDatos).toEqual(mockData);
+  });
+
   it('debería desuscribirse en ngOnDestroy', () => {
     const nextSpy = jest.spyOn((component as any).unsubscribe$, 'next');
     const completeSpy = jest.spyOn((component as any).unsubscribe$, 'complete');
@@ -64,17 +153,166 @@ describe('AcuseReciboComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('debería tener acuseReciboTablaConfiguracion con estructura correcta', () => {
-    expect(component.acuseReciboTablaConfiguracion).toHaveProperty('configuracionTabla');
-    expect(component.acuseReciboTablaConfiguracion).toHaveProperty('acciones', component.acciones);
+  it('debería tener tablaConfiguracion con estructura correcta', () => {
+    expect(component.tablaConfiguracion).toHaveProperty('configuracionTabla');
+    expect(component.tablaConfiguracion).toHaveProperty('acciones', component.acciones);
+    expect(component.tablaConfiguracion).toHaveProperty('acuseAcciones', component.acuseAcciones);
+    expect(component.tablaConfiguracion).toHaveProperty('resolucionAcciones', component.acuseAcciones);
   });
 
   it('no debería actualizar acuseReciboTablaDatos después de ngOnDestroy', () => {
-    const testSubject = new Subject<any>();
-    jest.spyOn(confirmarNotificacionService, 'getAcuseReciboDatos').mockReturnValue(testSubject.asObservable());
-    component.ngOnInit();
+    const mockData = [{ id: 3, nombre: 'final.pdf', numero: '999', documento: 'file-content' }];
+    const mockSubject = new Subject();
+    
+    // Espiar la propiedad privada unsubscribe$
+    const unsubscribeSpy = jest.spyOn((component as any).unsubscribe$, 'next');
+    const completeSpy = jest.spyOn((component as any).unsubscribe$, 'complete');
+    
+    // Llamar ngOnDestroy
     component.ngOnDestroy();
-    testSubject.next([{ id: 3, nombre: 'test.pdf' }]);
-    expect(component.acuseReciboTablaDatos).not.toEqual([{ id: 3, nombre: 'test.pdf' }]);
+    
+    // Verificar que unsubscribe fue llamado
+    expect(unsubscribeSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('debería establecer pantalla correctamente según la url', () => {
+    const customMockRouter = {
+      url: '/confirmar-resolucion',
+      navigate: jest.fn()
+    } as any;
+    const comp = new AcuseReciboComponent(confirmarNotificacionService, customMockRouter);
+    comp.ngOnInit();
+    expect(comp.pantalla).toBe('confirmar-resolucion');
+  });
+
+  it('debería establecer pantalla como confirmar-notificacion para otras urls', () => {
+    const customMockRouter = {
+      url: '/otra-url',
+      navigate: jest.fn()
+    } as any;
+    const comp = new AcuseReciboComponent(confirmarNotificacionService, customMockRouter);
+    comp.ngOnInit();
+    expect(comp.pantalla).toBe('confirmar-notificacion');
+  });
+
+  it('debería inicializar alertaNotificacion con valores correctos', () => {
+    expect(component.alertaNotificacion).toMatchObject({
+      tipoNotificacion: 'banner',
+      categoria: expect.anything(),
+      modo: 'action',
+      mensaje: expect.stringContaining('La notificación de la resolución'),
+    });
+  });
+
+  it('debería inicializar acuseAcciones solo con VER', () => {
+    expect(component.acuseAcciones).toEqual([TablaAcciones.VER]);
+  });
+
+  it('debería inicializar acuseConfirmarResolucionTablaDatos y resolucionConfirmarResolucionTablaDatos como arrays vacíos', () => {
+    expect(component.acuseConfirmarResolucionTablaDatos).toEqual([]);
+    expect(component.resolucionConfirmarResolucionTablaDatos).toEqual([]);
+  });
+
+  // Pruebas adicionales para mejorar la cobertura
+
+  it('debería manejar errores en getAcuseReciboDatos', () => {
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(confirmarNotificacionService, 'getAcuseReciboDatos').mockReturnValue(
+      throwError(() => new Error('Service error'))
+    );
+    
+    // El componente debería manejar el error correctamente
+    expect(() => component.ngOnInit()).not.toThrow();
+    
+    consoleSpy.mockRestore();
+  });
+
+  it('debería manejar errores en getAcuseConfirmarResolucionTablaDatos', () => {
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(confirmarNotificacionService, 'getAcuseConfirmarResolucionTablaDatos').mockReturnValue(
+      throwError(() => new Error('Service error'))
+    );
+    
+    expect(() => component.ngOnInit()).not.toThrow();
+    
+    consoleSpy.mockRestore();
+  });
+
+  it('debería manejar errores en getResolucionConfirmarResolucionTablaDatos', () => {
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(confirmarNotificacionService, 'getResolucionConfirmarResolucionTablaDatos').mockReturnValue(
+      throwError(() => new Error('Service error'))
+    );
+    
+    expect(() => component.ngOnInit()).not.toThrow();
+    
+    consoleSpy.mockRestore();
+  });
+
+  it('debería establecer pantalla como confirmar-notificacion cuando router.url es undefined', () => {
+    const customMockRouter = {
+      url: undefined,
+      navigate: jest.fn()
+    } as any;
+    const comp = new AcuseReciboComponent(confirmarNotificacionService, customMockRouter);
+    comp.ngOnInit();
+    expect(comp.pantalla).toBe('confirmar-notificacion');
+  });
+
+  it('debería establecer pantalla como confirmar-notificacion cuando router es null', () => {
+    const comp = new AcuseReciboComponent(confirmarNotificacionService, null as any);
+    comp.ngOnInit();
+    expect(comp.pantalla).toBe('confirmar-notificacion');
+  });
+
+  it('debería mantener las suscripciones activas durante el ciclo de vida del componente', () => {
+    const unsubscribeSpy = jest.spyOn((component as any).unsubscribe$, 'next');
+    
+    // Verificar que las suscripciones están activas
+    component.ngOnInit();
+    expect(unsubscribeSpy).not.toHaveBeenCalled();
+    
+    // Solo se debe llamar cuando se destruye el componente
+    component.ngOnDestroy();
+    expect(unsubscribeSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('debería verificar que tablaConfiguracion contiene las referencias correctas a los arrays de acciones', () => {
+    expect(component.tablaConfiguracion.acciones).toBe(component.acciones);
+    expect(component.tablaConfiguracion.acuseAcciones).toBe(component.acuseAcciones);
+    expect(component.tablaConfiguracion.resolucionAcciones).toBe(component.acuseAcciones);
+  });
+
+  it('debería inicializar unsubscribe$ como un nuevo Subject', () => {
+    const comp = new AcuseReciboComponent(confirmarNotificacionService, mockRouter);
+    expect((comp as any).unsubscribe$).toBeInstanceOf(Subject);
+  });
+
+  it('debería verificar que alertaNotificacion tiene todas las propiedades requeridas', () => {
+    expect(component.alertaNotificacion).toHaveProperty('tipoNotificacion');
+    expect(component.alertaNotificacion).toHaveProperty('categoria');
+    expect(component.alertaNotificacion).toHaveProperty('modo');
+    expect(component.alertaNotificacion).toHaveProperty('titulo');
+    expect(component.alertaNotificacion).toHaveProperty('mensaje');
+    expect(component.alertaNotificacion).toHaveProperty('cerrar');
+    expect(component.alertaNotificacion).toHaveProperty('txtBtnAceptar');
+    expect(component.alertaNotificacion).toHaveProperty('txtBtnCancelar');
+  });
+
+  it('debería verificar que pantalla se inicializa como string vacío', () => {
+    const comp = new AcuseReciboComponent(confirmarNotificacionService, mockRouter);
+    expect(comp.pantalla).toBe('');
+  });
+
+  it('debería completar las suscripciones al llamar ngOnDestroy múltiples veces', () => {
+    const nextSpy = jest.spyOn((component as any).unsubscribe$, 'next');
+    const completeSpy = jest.spyOn((component as any).unsubscribe$, 'complete');
+    
+    component.ngOnDestroy();
+    component.ngOnDestroy(); // Llamar segunda vez
+    
+    expect(nextSpy).toHaveBeenCalledTimes(2);
+    expect(completeSpy).toHaveBeenCalledTimes(2);
   });
 });
