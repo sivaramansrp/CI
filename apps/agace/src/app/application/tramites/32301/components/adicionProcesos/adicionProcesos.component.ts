@@ -28,6 +28,7 @@ import { Tramite32301Store } from '../../estados/tramite32301.store';
     NotificacionesComponent,
   ],
   templateUrl: './adicionProcesos.component.html',
+  styleUrls: ['./adicionProcesos.component.scss']
 })
 export class AdicionProcesosComponent implements OnInit, OnDestroy {
   /** Sujeto para destruir observables y evitar fugas de memoria */
@@ -55,6 +56,21 @@ export class AdicionProcesosComponent implements OnInit, OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
   esFormularioSoloLectura: boolean = false; 
+               /**
+  * Elemento de entrada de archivo HTML.
+  *
+  * @type {HTMLInputElement}
+  */
+  entradaArchivo!: HTMLInputElement;
+  /**
+  * Etiqueta del archivo seleccionado.
+  */
+  etiquetaDeArchivo: string = 'Sin archivo seleccionados';
+
+  /**
+ * Archivo de medicamentos seleccionado.
+ */
+  archivoMedicamentos: File | null = null;
 
   /**
    * Constructor que inyecta dependencias necesarias como FormBuilder, Store y Query.
@@ -215,7 +231,7 @@ export class AdicionProcesosComponent implements OnInit, OnDestroy {
       /**
        * Mensaje de la notificación, indicando que el archivo debe contener al menos un registro.
        */
-      mensaje: 'El archivo debe contener al menos un registro.',
+      mensaje: '1 - El archivo debe contener al menos un registro.',
 
       /**
        * Indica si la notificación debe cerrarse automáticamente (false = no se cerrará).
@@ -246,4 +262,64 @@ export class AdicionProcesosComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+     /**
+ * Maneja el cambio de archivo en el input de archivo.
+ *
+ * @param event Evento de cambio de archivo.
+ *
+ * @returns {void}
+ */
+  onCambioDeArchivo(event: Event): void {
+    const TARGET = event.target as HTMLInputElement;
+    const FILE_INPUT = document.getElementById(
+      'archivoExtranjero'
+    ) as HTMLInputElement;
+    const FILE = FILE_INPUT.files?.[0];
+    if (FILE) {
+      if (FILE.type !== 'text/csv' && !FILE.name.endsWith('.csv')) {
+        this.abrirModal();
+        return;
+      }
+
+      if (TARGET.files && TARGET.files.length > 0) {
+        this.archivoMedicamentos = TARGET.files[0];
+        this.etiquetaDeArchivo
+          = this.archivoMedicamentos.name;
+      } else {
+        this.etiquetaDeArchivo = 'Sin archivo seleccionados';
+      }
+    }
+  }
+  /**
+  * Abre un modal de notificación para alertar al usuario que debe seleccionar un archivo CSV.
+  * 
+  * Este método inicializa la notificación con un mensaje de alerta y configura el elemento a eliminar.
+  */
+  abrirModal(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Por favor seleccione un archivo CSV.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'OK',
+      txtBtnCancelar: '',
+    };
+
+  }
+  /**
+* Activa la selección del archivo de medicamentos.
+* @returns {void}
+*/
+  activarSeleccionArchivo(): void {
+    this.entradaArchivo = document.getElementById(
+      'archivoExtranjero'
+    ) as HTMLInputElement;
+    if (this.entradaArchivo) {
+      this.entradaArchivo.click();
+    }
+  }
+
 }

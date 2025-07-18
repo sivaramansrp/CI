@@ -2,99 +2,57 @@
   <div class="row">
     <ul class="nav nav-tabs">
       <li [ngClass]="indice === 1 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(1)"
-          (keydown.enter)="seleccionaTab(1)"
-          tabindex="0"
-          >Solicitante</a
-        >
+        <a class="font-weight-bold" data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)" tabindex="0">Solicitante</a>
       </li>
 
       <li [ngClass]="indice === 2 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(2)"
-          (keydown.enter)="seleccionaTab(2)"
-          tabindex="1"
-          >Tipo de aviso</a
-        >
+        <a class="font-weight-bold" data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
+          tabindex="1">Tipo de aviso</a>
       </li>
       @if (datosInputCheck.foreignClientsSuppliers) {
 
       <li [ngClass]="indice === 3 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(3)"
-          (keydown.enter)="seleccionaTab(3)"
-          tabindex="2"
-          >Aviso de modificaciones de clientes y proveedores extranjeros</a
-        >
+        <a class="font-weight-bold" data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
+          tabindex="2">Aviso de modificaciones de clientes y proveedores extranjeros</a>
       </li>
       } @if (datosInputCheck.nationalSuppliers) {
 
       <li [ngClass]="indice === 4 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(4)"
-          (keydown.enter)="seleccionaTab(4)"
-          tabindex="3"
-          >Aviso de modificaciones de proveedores nacionales
+        <a class="font-weight-bold" data-toggle="tab" (click)="seleccionaTab(4)" (keydown.enter)="seleccionaTab(4)"
+          tabindex="3">Aviso de modificaciones de proveedores nacionales
         </a>
       </li>
-      } @if (datosInputCheck.modificationsMembers) {
-
-      <li [ngClass]="indice === 5 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(5)"
-          (keydown.enter)="seleccionaTab(5)"
-          tabindex="4"
-          >Aviso por modificación de uso y goce del inmueble</a
-        >
-      </li>
-      } @if (datosInputCheck.changesToLegalDocuments) {
+      }  @if (datosInputCheck.changesToLegalDocuments) {
 
       <li [ngClass]="indice === 6 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(6)"
-          (keydown.enter)="seleccionaTab(6)"
-          tabindex="5"
-          >Aviso por modificación de socios
+        <a class="font-weight-bold" data-toggle="tab" (click)="seleccionaTab(6)" (keydown.enter)="seleccionaTab(6)"
+          tabindex="5">Aviso por modificación de socios
         </a>
+      </li>
+      }
+      @if (datosInputCheck.modificationsMembers) {
+
+      <li [ngClass]="indice === 5 ? 'active' : ''">
+        <a class="font-weight-bold" data-toggle="tab" (click)="seleccionaTab(5)" (keydown.enter)="seleccionaTab(5)"
+          tabindex="4">Aviso por modificación de uso y goce del inmueble</a>
       </li>
       } @if (datosInputCheck.mergerOrSplitNotice) {
 
       <li [ngClass]="indice === 7 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(7)"
-          (keydown.enter)="seleccionaTab(7)"
-          tabindex="6"
-          >Aviso por fusión o escisión</a
-        >
+        <a class="font-weight-bold" data-toggle="tab" (click)="seleccionaTab(7)" (keydown.enter)="seleccionaTab(7)"
+          tabindex="6">Aviso por fusión o escisión</a>
       </li>
       } @if (datosInputCheck.additionFractions) {
 
       <li [ngClass]="indice === 8 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(8)"
-          (keydown.enter)="seleccionaTab(8)"
-          tabindex="7"
-          >Fracciones</a
-        >
+        <a class="font-weight-bold" data-toggle="tab" (click)="seleccionaTab(8)" (keydown.enter)="seleccionaTab(8)"
+          tabindex="7">Fracciones</a>
       </li>
       } @if (datosInputCheck.additionFractions) {
 
       <li [ngClass]="indice === 9 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(9)"
-          (keydown.enter)="seleccionaTab(9)"
-          tabindex="8"
-          >Procesos
+        <a class="font-weight-bold" data-toggle="tab" (click)="seleccionaTab(9)" (keydown.enter)="seleccionaTab(9)"
+          tabindex="8">Procesos
         </a>
       </li>
       }
@@ -104,35 +62,29 @@
       @switch (indice) { @case (1) {
       <solicitante></solicitante>
       } @case (2) { @if(esDatosRespuesta){
-      <app-tipo-de-aviso
-        (tabEnabledData)="getValoreEnable($event)"
-      ></app-tipo-de-aviso>
+      <app-tipo-de-aviso  (tabEnabledData)="getValoreEnable($event)"></app-tipo-de-aviso>
       } } @case (3) { @if(esDatosRespuesta){
-      <app-proveedor-extranjero
-        [proveedortype]="'extranjero'"
-      ></app-proveedor-extranjero>
+      <app-proveedor-extranjero [proveedortype]="'extranjero'"></app-proveedor-extranjero>
       } } @case (4) { @if(esDatosRespuesta){
-      <app-proveedor-extranjero
-        [proveedortype]="'nacionales'"
-      ></app-proveedor-extranjero>
+      <app-proveedor-extranjero [proveedortype]="'nacionales'"></app-proveedor-extranjero>
       } } @case (5) { @if(esDatosRespuesta){
       <app-modificacion-socios></app-modificacion-socios>
       } } @case (6) {
-        @if(esDatosRespuesta){
+      @if(esDatosRespuesta){
       <app-modificacion-goce-inmueble></app-modificacion-goce-inmueble>
-        }
+      }
       } @case (7) {
-        @if(esDatosRespuesta){
+      @if(esDatosRespuesta){
       <app-fusion-oescision></app-fusion-oescision>
-        }
+      }
       } @case (8) {
-        @if(esDatosRespuesta){
+      @if(esDatosRespuesta){
       <app-adicion-fraccion></app-adicion-fraccion>
-        }
+      }
       } @case (9) {
-        @if(esDatosRespuesta){
+      @if(esDatosRespuesta){
       <app-adicion-procesos></app-adicion-procesos>
-        }
+      }
       } }
     </ng-container>
   </div>

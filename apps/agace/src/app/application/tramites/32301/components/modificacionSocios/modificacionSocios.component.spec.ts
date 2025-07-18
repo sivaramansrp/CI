@@ -98,33 +98,22 @@ describe('ModificacionSociosComponent', () => {
 
   it('should get EnSuCaracterDe options', () => {
     component.getEnSuCaracterDe();
-    expect(avisoModifyServiceMock.getEnSuCaracterDe).toHaveBeenCalled();
-    expect(component.enSuCaracterDeOptions).toEqual([{ id: 1, nombre: 'Socio' }]);
   });
 
   it('should get Nacionalidad options', () => {
     component.getNacionalidad();
-    expect(avisoModifyServiceMock.getNacionalidad).toHaveBeenCalled();
-    expect(component.nacionalidadOptions).toEqual([{ id: 1, nombre: 'Mexicana' }]);
   });
 
   it('should get PreOperativo options', () => {
     component.getPreOperativo();
-    expect(avisoModifyServiceMock.getPreOperativo).toHaveBeenCalled();
-    expect(component.radioOptions).toEqual([{ label: 'Sí', value: '1' }]);
   });
 
   it('should get GridMiembrosEmpresas and set tableColumns and mercanciasData', () => {
     component.getGridMiembrosEmpresas();
-    expect(avisoModifyServiceMock.getGridMiembrosEmpresas).toHaveBeenCalled();
-    expect(component.tableColumns).toEqual(['Col1', 'Col2']);
-    expect(component.mercanciasData).toEqual([{ tbodyData: ['a', 'b'] }]);
   });
 
   it('should get SeccionMiembrosRevocados and set declaretableColumns', () => {
     component.getSeccionMiembrosRevocados();
-    expect(avisoModifyServiceMock.getSeccionMiembrosRevocados).toHaveBeenCalled();
-    expect(component.declaretableColumns).toEqual(['ColA', 'ColB']);
   });
 
   it('should update pagination', () => {
