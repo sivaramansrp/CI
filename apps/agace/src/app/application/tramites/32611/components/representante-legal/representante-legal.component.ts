@@ -124,7 +124,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    *
    * @returns {void}
    */
-  crearFormulario(): void {
+ crearFormulario(): void {
      this.subscription.add(
       this.solicitud32611Query.selectSolicitud$
         .pipe(
