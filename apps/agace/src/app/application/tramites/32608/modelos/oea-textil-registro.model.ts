@@ -84,6 +84,7 @@ export interface AgregarMiembroEmpresaTabla {
   id:number;
   tipoPersona: string;
   nombre: string;
+  nombreColleccion?: string;
   apellidoPaterno: string;
   apellidoMaterno: string;
   nombreCompleto: string;
@@ -92,4 +93,62 @@ export interface AgregarMiembroEmpresaTabla {
   nacionalidad: string;
   obligadoTributarMexico: string;
   nombreEmpresa: string;
+}
+
+/**
+ * Representa los detalles de una empresa del grupo.
+ *
+ * @property rfcEnclaveOperativo - RFC del enclave operativo.
+ * @property denominacionRazonsocial - Denominación o razón social de la empresa.
+ * @property domicilio - Domicilio de la empresa.
+ * @property inputfechaDeLaUltimaOperacion - Fecha de la última operación de la empresa.
+ */
+export interface EmpresaDelGrupo{
+  rfcEnclaveOperativo: string;
+  denominacionRazonsocial: string;
+  domicilio: string;
+  inputfechaDeLaUltimaOperacion: string;
+}
+
+/**
+ * Representa los detalles de un transportista en la tabla.
+ *
+ * @property rfcEnclaveOperativo - RFC del enlace operativo del transportista.
+ * @property denominacionRazonsocial - Denominación o razón social del transportista.
+ * @property domicilio - Domicilio del transportista.
+ * @property ccat - Código o identificador único del transportista.
+ */
+export interface TransportistasTable {
+  rfcEnclaveOperativo: string;
+  denominacionRazonsocial: string;
+  domicilio: string;
+  ccat: string;
+}
+
+/**
+ * Represents the operational link's RFC information.
+ *
+ * @property enlaceOperativorfc - The RFC (Registro Federal de Contribuyentes) of the operational link.
+ * @property denominacionRazonsocial - The business name or legal denomination of the operational link.
+ * @property domicilio - The address of the operational link.
+ */
+export interface RFCEnlaceOperativo {
+  enlaceOperativorfc: string;
+  denominacionRazonsocial: string;
+  domicilio: string;
+  
+}
+/**
+ * Representa los detalles de un transportista en la lista.
+ *
+ * @property enlaceOperativorfc - RFC (Registro Federal de Contribuyentes) del enlace operativo.
+ * @property denominacionRazonsocial - Denominación o razón social del transportista.
+ * @property domicilio - Domicilio del transportista.
+ * @property ccat - Identificador único o código del transportista.
+ */
+export interface TransportistasListaInterface {
+  enlaceOperativorfc: string;
+  denominacionRazonsocial: string;
+  domicilio: string;
+  ccat: string;
 }

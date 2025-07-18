@@ -1,4 +1,4 @@
-import { ApiResponse, BuscarRfcResponse, InstalacionesInterface } from '../modelos/oea-textil-registro.model';
+import { ApiResponse, BuscarRfcResponse, InstalacionesInterface, RFCEnlaceOperativo, TransportistasListaInterface } from '../modelos/oea-textil-registro.model';
 import { Observable, forkJoin } from 'rxjs';
 import { StoreResponse, Tramite32608Store, Tramites32608State } from '../estados/tramites32608.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -132,5 +132,30 @@ sectorListaDeSelects(): Observable<{
   */
   getDatosDeLaSolicitud(): Observable<Tramites32608State> {
     return this.http.get<Tramites32608State>('assets/json/32608/datos-de-la-solicitud-terceros.json');
+  }
+
+   /**
+   * Obtiene los datos de una empresa por RFC
+   * @param rfc RFC de la empresa a buscar
+   * @returns Observable con los datos de la empresa
+   */
+  conseguirDatosPorRFC(_rfc: string): Observable<{ [key: string]: RFCEnlaceOperativo }> {
+    return this.http.get<{ [key: string]: RFCEnlaceOperativo }>('assets/json/32605/rfc-datos.json');
+  }
+
+  /**
+   * Obtiene los datos de la solicitud de OEA Textil.
+   * @returns Observable con los datos de la solicitud.
+   */
+  getDatosrubroTextil(): Observable<Tramites32608State> {
+    return this.http.get<Tramites32608State>('assets/json/32608/rubro-IVA-textil-datos.json');
+  }
+
+   /**
+   * Obtiene la lista de transportistas desde un archivo JSON local.
+   * @returns Observable con un arreglo de TransportistasTable.
+   */
+  conseguirTransportistasLista(_rfc: string): Observable<{ [key: string]: TransportistasListaInterface }> {
+    return this.http.get<{ [key: string]: TransportistasListaInterface }>('assets/json/32608/transportistas-lista.json');
   }
 }

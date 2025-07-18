@@ -1,4 +1,4 @@
-import { AgregarMiembroEmpresaTabla, ControlInventariosTabla, DomiciliosRfcSolicitanteTabla, NumeroEmpleadosTabla } from '../modelos/oea-textil-registro.model';
+import { AgregarMiembroEmpresaTabla, ControlInventariosTabla, DomiciliosRfcSolicitanteTabla, EmpresaDelGrupo, NumeroEmpleadosTabla, TransportistasTable } from '../modelos/oea-textil-registro.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { TablaEnlaceOperativo } from '../modelos/enlace-operativo-tabla.model';
@@ -43,15 +43,18 @@ export interface Tramites32608State {
   archivoNacionales?: string;
   proveedores: string;
   domiciliosRegistrados: string;
-  numeroEmpleadosBimestre:NumeroEmpleadosTabla[];
-  DomiciliosRfcSolicitante:DomiciliosRfcSolicitanteTabla[],
-  controlInventarios:ControlInventariosTabla[];
+  numeroEmpleadosBimestre: NumeroEmpleadosTabla[];
+  DomiciliosRfcSolicitante: DomiciliosRfcSolicitanteTabla[],
+  controlInventarios: ControlInventariosTabla[];
   querellaSATUltimos3Anios: string;
-  ingresoInfoContableSAT:string;
-  agregarMiembroEmpresa:AgregarMiembroEmpresaTabla[];
-  manifests:boolean;
-  bajoProtesta:boolean;
-  sistemaControlInventariosArt59:string;
+  ingresoInfoContableSAT: string;
+  agregarMiembroEmpresa: AgregarMiembroEmpresaTabla[];
+  manifests: boolean;
+  bajoProtesta: boolean;
+  sistemaControlInventariosArt59: string;
+  autorizacionCBP: string,
+  instalacionesCertificadasCBP: string,
+  suspensionCancelacionCBP: string
 
   //terceros-relacionados
   representanteRegistro: string;
@@ -72,6 +75,35 @@ export interface Tramites32608State {
   correo: string;
   suplente: boolean;
   enlaceOperativoData: TablaEnlaceOperativo[];
+
+  // SECIIT OEA Registration
+
+  comercioExteriorRealizado: string; // Indica si se realiza comercio exterior
+  fechaDePago: string; // Fecha de pago asociada a la solicitud
+  fechaInicioComercio: string;
+  esParteGrupoComercioExterior: string; // Indica si es parte de un grupo de comercio exterior
+  rfcEnclaveOperativo: string; // RFC del enclave operativo
+  enlaceOperativorfc: string; // RFC del enlace operativo
+  denominacionRazonsocial: string; // Razón social del enlace operativo
+  domicilio: string; // Domicilio del enlace operativo
+  inputfechaDeLaUltimaOperacion: string; // Fecha de la última operación
+  fusionEscisionConOperacionExterior: string; // Indica si hay fusión o escisión con operación exterior
+  empresaExtranjeraIMMEX: string; // Indica si es una empresa extranjera IMMEX
+  monto: string; // Monto total asociado a la solicitud
+  operacionesBancarias: string; // Detalles de las operaciones bancarias relacionadas con la solicitud
+  llavePago: string; // Llave de pago asociada a la solicitud
+  cuentaConProgramaIMMEX: string; // Indica si cuenta con un programa IMMEX
+  rubroCertificacion: string; // Rubro de certificación asociado a la solicitud
+  fechaFinVigenciaRubro: string; // Fecha de fin de vigencia del rubro de certificación
+  numeroOficio: string; // Número de oficio asociado a la solicitud
+  declaracionAnualISRRepresentantes: string; // Indica si los representantes han presentado la declaración anual del ISR
+  registroEsquemaCertificacionIVAIEPS: string; // Registro del esquema de certificación IVA e IEPS
+  registroEsquemaCertificacion: string; // Registro del esquema de certificación
+  tipoInformacionEmpresa: string; // Indica si la información de la empresa es clasificada
+  ccat: string; // CAAT del enlace operativo
+  tablaDatos: EmpresaDelGrupo[]; // Tabla de datos de empresas del grupo
+  transportistasLista: TransportistasTable[]; // Lista de transportistas relacionados con la solicitud
+
 }
 
 
@@ -115,6 +147,10 @@ export function createInitialState(): Tramites32608State {
     manifests: true,
     bajoProtesta: true,
     sistemaControlInventariosArt59: '',
+    autorizacionCBP: '',
+    instalacionesCertificadasCBP: '',
+    suspensionCancelacionCBP: '',
+
 
     // Add missing properties with initial values
     representanteRegistro: '',
@@ -135,6 +171,32 @@ export function createInitialState(): Tramites32608State {
     correo: '',
     suplente: false,
     enlaceOperativoData: [],
+    comercioExteriorRealizado: '',
+    fechaDePago: '',
+    fechaInicioComercio: '',
+    esParteGrupoComercioExterior: '',
+    rfcEnclaveOperativo: '',
+    enlaceOperativorfc: '',
+    denominacionRazonsocial: '',
+    domicilio: '',
+    inputfechaDeLaUltimaOperacion: '',
+    fusionEscisionConOperacionExterior: '',
+    empresaExtranjeraIMMEX: '',
+    monto: '',
+    operacionesBancarias: '',
+    llavePago: '',
+    cuentaConProgramaIMMEX: '',
+    rubroCertificacion: '',
+    fechaFinVigenciaRubro: '',
+    numeroOficio: '',
+    declaracionAnualISRRepresentantes: '',
+    registroEsquemaCertificacionIVAIEPS: '',
+    registroEsquemaCertificacion: '',
+    tipoInformacionEmpresa: '',
+    ccat: '',
+    tablaDatos: [],
+    transportistasLista: [],
+
   };
 }
 
@@ -153,7 +215,7 @@ export function createInitialState(): Tramites32608State {
 })
 @StoreConfig({ name: 'tramites32608', resettable: true })
 export class Tramite32608Store extends Store<Tramites32608State> {
-   
+
   /**
    * @constructor
    * @descripción
@@ -171,7 +233,7 @@ export class Tramite32608Store extends Store<Tramites32608State> {
    * 
    * @param {Partial<Tramites32608State>} values - Valores parciales para actualizar el estado.
    */
-  public establecerDatos(values: Partial<Tramites32608State>): void {    
+  public establecerDatos(values: Partial<Tramites32608State>): void {
     this.update((state) => ({
       ...state,
       ...values,

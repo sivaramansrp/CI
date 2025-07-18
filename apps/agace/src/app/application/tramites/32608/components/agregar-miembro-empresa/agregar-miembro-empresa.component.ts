@@ -408,6 +408,16 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
       nombreEmpresa: NOMBRE_EMPRESA,
     } = this.registroAgregarMiembroEmpresaForm.value;
 
+    const PARTESNOMBRE = [
+          NOMBRE,
+          APELLIDO_PATERNO,
+          APELLIDO_MATERNO
+        ];
+
+    const NOMBRE_COLLECCION = PARTESNOMBRE
+      .filter(valor => valor !== undefined && valor !== null && valor !== '')
+      .join(' ');
+
     const SELECTED_CARACTER = OBTENER_DESCRIPCION(this.enSuCaracterDeList || [], CARACTER);
     const SELECTED_NACIONALIDAD = OBTENER_DESCRIPCION(this.nacionalidadList || [], NACIONALIDAD);
     const SELECTED_TIPO_PERSONA = OBTENER_DESCRIPCION(this.tipoDePersonaList || [], TIPO_PERSONA);
@@ -424,14 +434,15 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
         id: ID, 
         tipoPersona: SELECTED_TIPO_PERSONA,
         nombre: NOMBRE,
-        apellidoPaterno: APELLIDO_PATERNO,
-        apellidoMaterno: APELLIDO_MATERNO,
-        nombreCompleto: NOMBRE_COMPLETO,
-        rfc: RFC,
+        nombreColleccion: (this.radioSeleccionado === 'tipdeSeccion' && this.elementoSeleccionado === '1') ? NOMBRE_COLLECCION : '',
+        apellidoPaterno: (this.radioSeleccionado === 'tipdeSeccion' && this.elementoSeleccionado === '1') ? APELLIDO_PATERNO : '',
+        apellidoMaterno: (this.radioSeleccionado === 'tipdeSeccion' && this.elementoSeleccionado === '1') ? APELLIDO_MATERNO : '',
+        nombreCompleto: this.radioSeleccionado === 'rfcSeccion' ? NOMBRE_COMPLETO : '',
+        rfc: this.radioSeleccionado === 'rfcSeccion' ? RFC : '',
         caracter: SELECTED_CARACTER,
         nacionalidad: SELECTED_NACIONALIDAD,
         obligadoTributarMexico: OBLIGADO_TRIBUTAR_MEXICO ? AgregarMiembroEmpresaComponent.convertirValorRadioATexto(OBLIGADO_TRIBUTAR_MEXICO) : '',
-        nombreEmpresa: NOMBRE_EMPRESA,
+         nombreEmpresa: (this.radioSeleccionado === 'tipdeSeccion' && this.elementoSeleccionado === '2') ? NOMBRE_EMPRESA : '',
       } as AgregarMiembroEmpresaTabla;
 
       this.agregarMiembroEmpresaList = [...this.agregarMiembroEmpresaList, OBJETO];
@@ -442,14 +453,16 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
           ? { ...elemento, 
             tipoPersona: SELECTED_TIPO_PERSONA,
             nombre: NOMBRE,
-            apellidoPaterno: APELLIDO_PATERNO,
-            apellidoMaterno: APELLIDO_MATERNO,
-            nombreCompleto: NOMBRE_COMPLETO,
+            nombreColleccion: (this.radioSeleccionado === 'tipdeSeccion' && this.elementoSeleccionado === '1') ? NOMBRE_COLLECCION : '',
+            apellidoPaterno: (this.radioSeleccionado === 'tipdeSeccion' && this.elementoSeleccionado === '1') ? APELLIDO_PATERNO : '',
+            apellidoMaterno: (this.radioSeleccionado === 'tipdeSeccion' && this.elementoSeleccionado === '1') ? APELLIDO_MATERNO : '',
+            nombreCompleto: this.radioSeleccionado === 'rfcSeccion' ? NOMBRE_COMPLETO : '',
             rfc: RFC,
             caracter: SELECTED_CARACTER,
             nacionalidad: SELECTED_NACIONALIDAD,
             obligadoTributarMexico: OBLIGADO_TRIBUTAR_MEXICO ? AgregarMiembroEmpresaComponent.convertirValorRadioATexto(OBLIGADO_TRIBUTAR_MEXICO) : '',
-            nombreEmpresa: NOMBRE_EMPRESA }
+            nombreEmpresa: (this.radioSeleccionado === 'tipdeSeccion' && this.elementoSeleccionado === '2') ? NOMBRE_EMPRESA : '',
+          }
           : elemento
       );
 

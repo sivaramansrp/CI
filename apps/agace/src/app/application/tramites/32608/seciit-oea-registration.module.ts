@@ -21,6 +21,7 @@ import { TercerosRelacionadosComponent } from './components/terceros-relacionado
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { ImportadorExportadorComponent } from './components/importador-exportador/importador-exportador.component';
 
 @NgModule({
   declarations: [
@@ -45,8 +46,9 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     CatalogoSelectComponent,
     InputFechaComponent,
     TablaDinamicaComponent,
-    DatosComunesComponent,        // Standalone component
-    TercerosRelacionadosComponent, // Standalone component
+    DatosComunesComponent,        
+    TercerosRelacionadosComponent,
+    ImportadorExportadorComponent,
     ToastrModule.forRoot()
   ],
   exports: [
