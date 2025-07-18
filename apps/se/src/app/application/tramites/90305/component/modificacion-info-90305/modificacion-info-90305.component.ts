@@ -53,7 +53,7 @@ export class ModificacionInfo90305Component implements OnInit, OnDestroy {
     private modificaaionInfo: ProsecModificacionServiceTsService,
     private tramite90305Store: Tramite90305Store,
     private tramite90305Query: Tramite90305Query,
-    private consultaioQuery: ConsultaioQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
