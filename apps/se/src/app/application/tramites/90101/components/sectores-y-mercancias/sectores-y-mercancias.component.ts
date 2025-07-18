@@ -12,13 +12,14 @@
  * @import { SECTORCOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, SoloNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, SoloNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
 import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
 import { FilaProducir, FilaSectors } from '../../models/prosec.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -161,7 +162,6 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @param AUtorizacionProsecQuery - Query para consultar el estado de autorización Prosec.
    * @param seccionStore - Store para manejar el estado de la sección.
    * @param seccionQuery - Query para consultar el estado de la sección.
-   * @param consultaQuery - Query para realizar consultas adicionales.
    * @compodoc
    */
   constructor(
@@ -171,7 +171,6 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
-    private consultaQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -225,8 +224,8 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
     if (this.formularioDeshabilitado) {
+      this.esFormularioSoloLectura = true;
       this.inicializarEstadoFormulario();
     }
   }
@@ -243,6 +242,12 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.sectoresYMercancias.disable();
+      this.sectors = Array.isArray(this.sectoresState.sectorDatos)
+        ? this.sectoresState.sectorDatos as FilaSectors[]
+        : [this.sectoresState.sectorDatos as FilaSectors];
+      this.producir = Array.isArray(this.sectoresState.producirDatos)
+        ? this.sectoresState.producirDatos as FilaProducir[]
+        : [this.sectoresState.producirDatos as FilaProducir];
     }
     else {
       this.sectoresYMercancias.enable();

@@ -11,7 +11,7 @@
 
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
 import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
-import { ConfiguracionColumna, ConsultaioQuery, SoloLetrasNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, SoloLetrasNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
@@ -110,7 +110,6 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    * @param ProsecService - Servicio para operaciones relacionadas con PROSEC.
    * @param AutorizacionProsecStore - Store para manejar el estado de autorizaciones PROSEC.
    * @param AUtorizacionProsecQuery - Query para consultar el estado de autorizaciones PROSEC.
-   * @param consultaQuery - Query para consultar información adicional relacionada.
    * 
    * @description
    * Constructor del componente ProductorIndirecto. Inicializa el formulario reactivo y
@@ -122,7 +121,6 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
     private ProsecService: ProsecService,
     private AutorizacionProsecStore: AutorizacionProsecStore,
     private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
-     private consultaQuery: ConsultaioQuery
   ) {
     this.productorIndirecto = this.fb.group({
       contribuyentes: [''],
@@ -160,6 +158,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
       .subscribe();
 
     if(this.formularioDeshabilitado) {
+      this.esFormularioSoloLectura = true;
       this.inicializarEstadoFormulario();
     }
   }
@@ -174,6 +173,9 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.productorIndirecto.disable();
+      this.productorDato = Array.isArray(this.productorState.productorDatos) 
+        ? this.productorState.productorDatos 
+        : [this.productorState.productorDatos] as FilaProductos[];
     }
     else {
       this.productorIndirecto.enable();

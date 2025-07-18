@@ -11,12 +11,13 @@
  * @import { PLANTACOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { FilaPlantas } from '../../models/prosec.module'
@@ -164,7 +165,6 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @param {AUtorizacionProsecQuery} AUtorizacionProsecQuery - Query para consultar el estado de autorización Prosec.
    * @param {SeccionLibStore} seccionStore - Store para manejar el estado de la sección.
    * @param {SeccionLibQuery} seccionQuery - Query para consultar el estado de la sección.
-   * @param {ConsultaioQuery} consultaQuery - Query para operaciones de consulta adicionales.
    */
   constructor(
     public fb: FormBuilder, 
@@ -173,7 +173,6 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     public AUtorizacionProsecQuery: AUtorizacionProsecQuery,
     public seccionStore: SeccionLibStore,
     public seccionQuery: SeccionLibQuery,
-    public consultaQuery: ConsultaioQuery
   ) {
     // Constructor logic can be added here if needed
   }
@@ -225,8 +224,8 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
             })
           )
           .subscribe();
-
     if(this.formularioDeshabilitado){
+      this.esFormularioSoloLectura = true;
       this.inicializarEstadoFormulario();
     }
   }
@@ -266,6 +265,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.forma.disable();
+      this.prosecDatos = Array.isArray(this.domiciliosState.plantasDatos) ? this.domiciliosState.plantasDatos : [this.domiciliosState.plantasDatos] as FilaPlantas[];
     }
     else {
       this.forma.enable();

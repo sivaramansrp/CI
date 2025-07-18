@@ -1,3 +1,4 @@
+import { FilaPlantas, FilaProducir, FilaProductos, FilaSectors } from '../models/prosec.module';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
@@ -89,6 +90,10 @@ export interface ProsecState {
    * Indica si el formulario de sectores es válido.
    */
   sectoresFromValida: boolean;
+  sectorDatos: FilaSectors[];
+  producirDatos: FilaProducir[];
+  plantasDatos: FilaPlantas[];
+  productorDatos: FilaProductos[];
 }
 
 /**
@@ -112,6 +117,13 @@ export function createInitialState(): ProsecState {
     domiciliosFormaValida: false,
     productorFromValida: false,
     sectoresFromValida: false,
+    sectorDatos: [
+    ],
+    producirDatos: [],
+    plantasDatos: [
+    ],
+    productorDatos: [
+    ]
   };
 }
 
@@ -245,5 +257,18 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
    */
   public setSectoresFromValida(sectoresFromValida: boolean): void {
     this.update((state) => ({ ...state, sectoresFromValida }));
+  }
+
+  public setSectorDatos(sectorDatos: FilaSectors[]): void {
+    this.update((state) => ({ ...state, sectorDatos }));
+  }
+  public setProducirDatos(producirDatos: FilaProducir[]): void {
+    this.update((state) => ({ ...state, producirDatos }));
+  }
+  public setPlantasDatos(plantasDatos: FilaPlantas[]): void {
+    this.update((state) => ({ ...state, plantasDatos }));
+  }
+  public setProductorDatos(productorDatos: FilaProductos[]): void {
+    this.update((state) => ({ ...state, productorDatos }));
   }
 }

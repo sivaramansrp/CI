@@ -30,8 +30,8 @@
     </form>
     <div class="row mb-5">
         <div class=" text-end mt-5">
-            <button class="btn btn-default me-2">Eliminar Productor</button>
-            <button class="btn btn-primary" (click)="agregarProductor()">Agregar Productor</button>
+            <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar Productor</button>
+            <button class="btn btn-primary" (click)="agregarProductor()" [disabled]="esFormularioSoloLectura">Agregar Productor</button>
         </div>
     </div>
     <div class="row">

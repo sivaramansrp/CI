@@ -38,7 +38,7 @@
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4 text-end">
-                <button type="button" class="btn btn-primary" (click)="mostrarDomicilios()">Mostrar domicilios</button>
+                <button type="button" class="btn btn-primary" (click)="mostrarDomicilios()" [disabled]="esFormularioSoloLectura">Mostrar domicilios</button>
             </div>
         </div>
         <div class="row">
@@ -49,8 +49,8 @@
         </div>
         <div class="row mb-5">
             <div class="col-md-12 text-end mt-5">
-                <button class="btn btn-default me-2">Eliminar plantas</button>
-                <button class="btn btn-primary" (click)="agregarPlantas()">Agregar plantas</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar plantas</button>
+                <button class="btn btn-primary" (click)="agregarPlantas()" [disabled]="esFormularioSoloLectura">Agregar plantas</button>
             </div>
         </div>
         <div class="row">

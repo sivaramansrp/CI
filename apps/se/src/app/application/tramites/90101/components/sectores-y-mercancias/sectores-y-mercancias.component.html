@@ -21,8 +21,8 @@
         </div>
         <div class="row">
             <div class=" text-end mt-5">
-                <button class="btn btn-default me-2">Eliminar sector</button>
-                <button class="btn btn-primary" (click)="agregarSector()">Agregar sector</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar sector</button>
+                <button class="btn btn-primary" (click)="agregarSector()" [disabled]="esFormularioSoloLectura">Agregar sector</button>
             </div>
         </div>
         <div class="row">
@@ -59,8 +59,8 @@
         </div>
         <div class="row mb-5">
             <div class=" text-end mt-5">
-                <button class="btn btn-default me-2">Eliminar</button>
-                <button class="btn btn-primary" (click)="agregarProducir()">Agregar</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+                <button class="btn btn-primary" (click)="agregarProducir()" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
         </div>
         <div class="row">
