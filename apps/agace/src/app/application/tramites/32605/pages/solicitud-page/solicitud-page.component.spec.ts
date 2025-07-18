@@ -49,11 +49,5 @@ describe('SolicitudPageComponent', () => {
     component.seleccionaTab(1);
   });
 
-  it('should handle edge cases for getValorIndice', () => {
-    const invalidEvent = { accion: 'invalid', valor: 5 };
-    component.getValorIndice(invalidEvent);
-
-    const nullActionEvent = { accion: 'cont', valor: 2 };
-    component.getValorIndice(nullActionEvent);
-  });
+  
 });

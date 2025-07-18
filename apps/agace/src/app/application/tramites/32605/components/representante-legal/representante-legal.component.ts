@@ -79,6 +79,11 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * Suscripción a los cambios en el formulario reactivo.
    */
   private subscription: Subscription = new Subscription();
+   /**
+   * Bandera que controla la visualización de errores en el formulario.
+   * Se activa cuando hay errores de validación que deben mostrarse.
+   */
+  mostrarError: boolean = false;
 
   /**
    * Constructor del componente
@@ -299,4 +304,21 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
+
+  /**
+ * Validates the representante form and sets the mostrarError flag if validation fails
+ * @returns boolean indicating if the form is valid
+ */
+public validarFormularioRepresentante(): boolean {
+  if (this.representante) {
+    if (this.representante.invalid) {
+      //this.representante.markAllAsTouched();
+      this.mostrarError = true;
+      return false;
+    }
+    this.mostrarError = false;
+    return true;
+  }
+  return true;
+}
 }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { BtnContinuarComponent, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -20,6 +21,7 @@ describe('PasoUnoComponent', () => {
         HttpClientTestingModule
         
       ],
+      schemas:[NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);

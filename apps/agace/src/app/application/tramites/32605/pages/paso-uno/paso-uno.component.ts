@@ -6,6 +6,7 @@ import { OnInit } from '@angular/core';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
+import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
 import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -37,7 +38,30 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
 
+   /**
+   * Referencia al componente ImportadorExportadorComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de datos de importador/exportador antes de continuar al siguiente paso.
+   */
   @ViewChild('importadorExportadorRef')importadorExportadorComponent!: ImportadorExportadorComponent;
+
+  /**
+   * Referencia al componente TercerosRelacionadosComponent para acceder a sus métodos de validación.
+   * Permite validar los formularios de terceros relacionados incluyendo representante legal,
+   * enlace operativo y personas de notificaciones.
+   */
+  @ViewChild('tercerosRelacionadosRef') tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+
+    /**
+   * Lista de secciones del formulario.
+   * Lista de pasos dentro del formulario con sus respectivos componentes.
+   */
+  seccionesDeLaSolicitud = [
+    { index: 1, title: 'Solicitante', component: 'solicitante' },
+    { index: 2, title: 'Datos Comunes', component: 'datos-comunes' },
+    { index: 3, title: 'Terceros relacionados', component: 'terceros-relacionados' },
+    { index: 4, title: 'Importador/Exportador', component: 'importador-exportador' },
+    { index: 5, title: 'CTPAT', component: 'c-tpat' }
+  ];
 
   constructor(private consultaQuery: ConsultaioQuery, public solicitudService: SolicitudService) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
@@ -93,38 +117,42 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+  /**
+   * Valida todos los formularios del paso uno.
+   * Retorna true si todos los formularios son válidos, false en caso contrario.
+   */
+ public validarFormularios(): boolean {
+    let isValid = true;
 
-/**
- * Valida los formularios del componente según la pestaña activa.
- * Si la pestaña activa es la 4, verifica que todos los formularios del componente
- * ImportadorExportadorComponent estén completos y válidos.
- */
-public validarFormularios(): boolean {
-  let esValido = true;
-
-  if (this.indice === 4) {
-    if (this.importadorExportadorComponent && this.esDatosRespuesta) {
-      const FORMULARIOS_VALIDOS = this.importadorExportadorComponent.validarFormulariosCompletos();
-      if (!FORMULARIOS_VALIDOS) {
-        esValido = false;
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
       }
+    } else {
+      isValid = false;
     }
+
+    if (this.tercerosRelacionadosComponent) {
+      if (!this.tercerosRelacionadosComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.importadorExportadorComponent) {
+      if (!this.importadorExportadorComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    
+
+    return isValid;
   }
 
-  return esValido;
-}
 
-/**
- * Obtiene la validación total de los formularios según la pestaña activa.
- * Si la pestaña activa es la 4, verifica si todos los formularios del componente
- * ImportadorExportadorComponent son válidos.
- */
-public obtenerValidacionTotalFormularios(): { tab4Valid: boolean } {
-  const PESTANA4_VALIDA = this.importadorExportadorComponent && this.esDatosRespuesta ? 
-    this.importadorExportadorComponent.validezTodosFormularios() : true;
-
-  return { 
-    tab4Valid: PESTANA4_VALIDA
-  };
-}
 }

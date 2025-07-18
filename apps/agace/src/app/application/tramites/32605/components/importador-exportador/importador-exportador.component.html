@@ -25,10 +25,8 @@
         ></app-input-radio>
         <div
           *ngIf="
-            importadorExportadorForm.controls['comercioExteriorRealizado']
-              .invalid &&
-            importadorExportadorForm.controls['comercioExteriorRealizado']
-              .touched
+            importadorExportadorForm.get('comercioExteriorRealizado')?.invalid &&
+            importadorExportadorForm.get('comercioExteriorRealizado')?.touched
           "
           class="text-danger mt-3"
         >
@@ -48,10 +46,8 @@
         </input-fecha>
         <div
           *ngIf="
-            importadorExportadorForm.controls['fechaInicioComercio']
-              .invalid &&
-            importadorExportadorForm.controls['fechaInicioComercio']
-              .touched
+            importadorExportadorForm.get('fechaInicioComercio')?.invalid &&
+            importadorExportadorForm.get('fechaInicioComercio')?.touched
           "
           class="text-danger mt-3"
         >
@@ -77,10 +73,8 @@
           ></app-input-radio>
           <div
             *ngIf="
-              importadorExportadorForm.controls['esParteGrupoComercioExterior']
-                .invalid &&
-              importadorExportadorForm.controls['esParteGrupoComercioExterior']
-                .touched
+              importadorExportadorForm.get('esParteGrupoComercioExterior')?.invalid &&
+              importadorExportadorForm.get('esParteGrupoComercioExterior')?.touched
             "
             class="text-danger mt-3"
           >
@@ -195,12 +189,8 @@
           ></app-input-radio>
           <div
             *ngIf="
-              importadorExportadorForm.controls[
-                'fusionEscisionConOperacionExterior'
-              ].invalid &&
-              importadorExportadorForm.controls[
-                'fusionEscisionConOperacionExterior'
-              ].touched
+              importadorExportadorForm.get('fusionEscisionConOperacionExterior')?.invalid &&
+              importadorExportadorForm.get('fusionEscisionConOperacionExterior')?.touched
             "
             class="text-danger mt-3"
           >
@@ -237,10 +227,8 @@
           ></app-input-radio>
           <div
             *ngIf="
-              importadorExportadorForm.controls['empresaExtranjeraIMMEX']
-                .invalid &&
-              importadorExportadorForm.controls['empresaExtranjeraIMMEX']
-                .touched
+              importadorExportadorForm.get('empresaExtranjeraIMMEX')?.invalid &&
+              importadorExportadorForm.get('empresaExtranjeraIMMEX')?.touched
             "
             class="text-danger mt-3"
           >
@@ -442,10 +430,8 @@
         ></app-input-radio>
         <div
           *ngIf="
-            importadorExportadorForm.controls['registroEsquemaCertificacion']
-              .invalid &&
-            importadorExportadorForm.controls['registroEsquemaCertificacion']
-              .touched
+            importadorExportadorForm.get('registroEsquemaCertificacion')?.invalid &&
+            importadorExportadorForm.get('registroEsquemaCertificacion')?.touched
           "
           class="text-danger mt-3"
         >
@@ -471,10 +457,8 @@
         ></app-input-radio>
         <div
           *ngIf="
-            importadorExportadorForm.controls['tipoInformacionEmpresa']
-              .invalid &&
-            importadorExportadorForm.controls['tipoInformacionEmpresa']
-              .touched
+            importadorExportadorForm.get('tipoInformacionEmpresa')?.invalid &&
+            importadorExportadorForm.get('tipoInformacionEmpresa')?.touched
           "
           class="text-danger mt-3"
         >
@@ -508,8 +492,8 @@
               (change)="setValoresStore(agregarEnlaceOperativoForm, 'rfcEnclaveOperativo')"
             />
           </div>
-          @if(agregarEnlaceOperativoForm.controls['rfcEnclaveOperativo'].invalid
-          && agregarEnlaceOperativoForm.controls['rfcEnclaveOperativo'].touched)
+          @if(agregarEnlaceOperativoForm.get('rfcEnclaveOperativo')?.invalid
+          && agregarEnlaceOperativoForm.get('rfcEnclaveOperativo')?.touched)
           {
           <div class="mensaje-error">Este campo es obligatorio.</div>
           }

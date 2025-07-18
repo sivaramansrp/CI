@@ -68,6 +68,11 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
   enlaceOperativoForm!: FormGroup;
 
   /**
+   * Formulario reactivo que contiene los datos operativos del enlace en el componente.
+   */
+  enlaceOperativoDataForm!: FormGroup;
+
+  /**
    * Referencia de solo lectura al enumerado de tipos de selección de tabla.
    *
    * @description
@@ -298,6 +303,7 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    * Crea el formulario reactivo para el registro de vehículos.
    */
   crearFormulario(): void {
+    this.enlaceOperativoDataForm = this.fb.group({});
     this.enlaceOperativoForm = this.fb.group({
       registro: ['', [Validators.required,Validators.pattern(REG_X.RFC_13_ALFANUM)]],
       rfc: [{ value: '', disabled: true }],

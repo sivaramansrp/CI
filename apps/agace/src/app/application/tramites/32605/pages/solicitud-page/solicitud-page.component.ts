@@ -154,27 +154,12 @@ export class SolicitudPageComponent {
 /**
  * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
  */
- validarTodosFormulariosPasoUno(): boolean {
-  if (!this.pasoUnoComponent) {
-    return true;
+  validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUnoComponent) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+    return ISFORM_VALID_TOUCHED;
+    
   }
-
-  // Obtener índice de pestaña actual
-  const INDICE_PESTANA_ACTUAL = this.pasoUnoComponent.indice;
-  
-  // Primero llamar validarFormularios para marcar campos inválidos como tocados
-  const ES_FORMULARIO_VALIDO_TOCADO = this.pasoUnoComponent.validarFormularios();
-  
-  if (!ES_FORMULARIO_VALIDO_TOCADO) {
-    return false;
-  }
-
-  // Luego verificar validez general
-  const VALIDEZ_FORMULARIOS = this.pasoUnoComponent.obtenerValidacionTotalFormularios();
-  
-  if (INDICE_PESTANA_ACTUAL === 4) {
-    return VALIDEZ_FORMULARIOS.tab4Valid;
-  }
-  return true;
-}
 }
