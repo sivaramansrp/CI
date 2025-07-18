@@ -1,12 +1,13 @@
-import { ACUSE_NOTIFICACION_REQUERIMIENTO_ENCABEZADO_DE_TABLA } from '../constants/confirmar-notificacion.enum';
+import { ACUSE_CONFIRMAR_NOTIFICACION_REQUERIMIENTO_ENCABEZADO_DE_TABLA, AcuseNotificacionRequerimiento } from '../constants/confirmar-notificacion.enum';
+import { CategoriaMensaje, Notificacion, NotificacionesComponent, TablaAcciones } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfirmarNotificacionService } from '../services/confirmar-notificacion.service';
 import { Documento } from '../models/confirmar-notificacion.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { TablaAcciones } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { takeUntil } from 'rxjs';
@@ -23,7 +24,7 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-acuse-recibo',
   standalone: true,
-  imports: [CommonModule, TituloComponent, TablaDinamicaComponent],
+  imports: [CommonModule, TituloComponent, TablaDinamicaComponent, NotificacionesComponent],
   templateUrl: './acuse-recibo.component.html',
   styleUrl: './acuse-recibo.component.scss',
 })
@@ -52,6 +53,18 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
   ];
 
   /**
+   * Lista de acciones disponibles para el acuse de recibo.
+   * 
+   * Esta propiedad contiene las acciones que pueden realizarse en la tabla de acuse de recibo.
+   * Inicialmente, solo se permite la acción de "VER".
+   *
+   * @type {TablaAcciones[]}
+   */
+  public acuseAcciones: TablaAcciones[] = [
+    TablaAcciones.VER
+  ];
+
+  /**
    * @property acuseReciboTablaDatos
    * @description
    * Arreglo que almacena los datos del Acuse de Recibo obtenidos desde el servicio.
@@ -59,24 +72,68 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
    * @type {Documento[]}
    */
   public acuseReciboTablaDatos: Documento[] = [];
+  
+  /**
+   * Almacena los datos de la tabla de confirmación de resolución de acuses de requerimiento.
+   * Cada elemento representa un requerimiento con su respectiva resolución.
+   * 
+   * @type {AcuseNotificacionRequerimiento[]}
+   */
+  public acuseConfirmarResolucionTablaDatos: AcuseNotificacionRequerimiento[] = [];
 
   /**
-   * @property acuseReciboTablaConfiguracion
+   * Arreglo que almacena los datos de las resoluciones confirmadas para la tabla de requerimientos.
+   * Cada elemento representa una instancia de `AcuseNotificacionRequerimiento`.
+   */
+  public resolucionConfirmarResolucionTablaDatos: AcuseNotificacionRequerimiento[] = [];
+  
+  /**
+   * Representa el nombre de la pantalla actual que se está mostrando en el componente.
+   * Puede ser utilizado para controlar la lógica de navegación o visualización de la interfaz.
+   */
+  public pantalla: string = '';
+
+  /**
+   * Inicializa la variable de alertaNotificación con un objeto de tipo Notificacion.
+   * @type {Notificacion}
+   */
+  public alertaNotificacion: Notificacion = {
+    tipoNotificacion: 'banner',
+    categoria: CategoriaMensaje.INFORMACION,
+    modo: 'action',
+    titulo: '',
+    mensaje: 'La notificación de la resolución para el trámite con número 2500301600120259910000129 ha sido confirmada.',
+    cerrar: false,
+    txtBtnAceptar: '',
+    txtBtnCancelar: '',
+  };
+
+  /**
+   * @property tablaConfiguracion
    * @description
    * Configuración de la tabla dinámica que muestra los documentos de Acuse de Recibo.
    * Define encabezados y acciones disponibles.
    */
-  public acuseReciboTablaConfiguracion = {
-    configuracionTabla: ACUSE_NOTIFICACION_REQUERIMIENTO_ENCABEZADO_DE_TABLA,
+  public tablaConfiguracion = {
+    configuracionTabla: ACUSE_CONFIRMAR_NOTIFICACION_REQUERIMIENTO_ENCABEZADO_DE_TABLA,
     acciones: this.acciones,
+    acuseAcciones: this.acuseAcciones,
+    resolucionAcciones: this.acuseAcciones,
   };
 
   /**
    * @constructor
    * @param {ConfirmarNotificacionService} confirmarNotificacionService - Servicio para obtener datos de Acuse de Recibo.
    */
+  /**
+   * Crea una instancia del componente AcuseRecibo.
+   * 
+   * @param confirmarNotificacionService Servicio para confirmar notificaciones.
+   * @param router Servicio de enrutamiento para navegar entre vistas.
+   */
   constructor(
-    private confirmarNotificacionService: ConfirmarNotificacionService
+    private confirmarNotificacionService: ConfirmarNotificacionService,
+    private router: Router
   ) {}
 
   /**
@@ -88,12 +145,31 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.confirmarNotificacionService
+    this.pantalla = this.router?.url === '/confirmar-resolucion' ? 'confirmar-resolucion' : 'confirmar-notificacion';
+    
+    if(this.pantalla === 'confirmar-notificacion'){
+      this.confirmarNotificacionService
       .getAcuseReciboDatos()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.acuseReciboTablaDatos = data;
       });
+    }
+    if(this.pantalla === 'confirmar-resolucion'){
+      this.confirmarNotificacionService
+        .getAcuseConfirmarResolucionTablaDatos()
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((data: AcuseNotificacionRequerimiento[]) => {
+          this.acuseConfirmarResolucionTablaDatos = data;
+      });
+
+      this.confirmarNotificacionService
+        .getResolucionConfirmarResolucionTablaDatos()
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((data: AcuseNotificacionRequerimiento[]) => {
+          this.resolucionConfirmarResolucionTablaDatos = data;
+      });
+    } 
   }
 
   /**

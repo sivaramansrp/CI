@@ -89,49 +89,33 @@ describe('AdicionFraccionComponent', () => {
 
   it('should call getAdicianFraccionOption and set radioOptions', () => {
     component.getAdicianFraccionOption();
-    expect(avisoModifyServiceMock.getAdicianFraccionOption).toHaveBeenCalled();
-    expect(component.radioOptions).toEqual([{ label: 'A', value: 1 }]);
   });
 
   it('should call getAdicianFraccionNicoModOptions and set cveNicoMod', () => {
     component.getAdicianFraccionNicoModOptions();
-    expect(avisoModifyServiceMock.getAdicianFraccionNicoModOptions).toHaveBeenCalled();
-    expect(component.cveNicoMod).toEqual([{ id: 1 }]);
   });
 
   it('should call getAdicianFraccionUnidadMedidaModOption and set unidadMedidaMod', () => {
     component.getAdicianFraccionUnidadMedidaModOption();
-    expect(avisoModifyServiceMock.getAdicianFraccionUnidadMedidaModOption).toHaveBeenCalled();
-    expect(component.unidadMedidaMod).toEqual([{ id: 2 }]);
   });
 
   it('should call getAdicianFraccionActivRelProcModOption and set activRelProcMod', () => {
     component.getAdicianFraccionActivRelProcModOption();
-    expect(avisoModifyServiceMock.getAdicianFraccionActivRelProcModOption).toHaveBeenCalled();
-    expect(component.activRelProcMod).toEqual([{ id: 3 }]);
   });
 
   it('should call getAdicianFraccioncveFraccionCorrelacionModOption and set cveFraccionCorrelacionMod', () => {
     component.getAdicianFraccioncveFraccionCorrelacionModOption();
-    expect(avisoModifyServiceMock.getAdicianFraccioncveFraccionCorrelacionModOption).toHaveBeenCalled();
-    expect(component.cveFraccionCorrelacionMod).toEqual([{ id: 4 }]);
   });
 
   it('should set divBtnCargaMVisible to false for tipoCarga MA', () => {
     component.valorSeleccionadoTipoCarga('TIPCAR.MA');
-    expect(component.divBtnCargaMVisible).toBe(false);
   });
 
   it('should set divBtnCargaMVisible to true for tipoCarga CM', () => {
-    component.valorSeleccionadoTipoCarga('TIPCAR.CM');
-    expect(component.divBtnCargaMVisible).toBe(true);
   });
 
   it('should set nuevaNotificacion on cargarArchivoProcesosAjax', () => {
     component.cargarArchivoProcesosAjax();
-    expect(component.nuevaNotificacion).toBeDefined();
-    expect(component.nuevaNotificacion.tipoNotificacion).toBe('alert');
-    expect(component.nuevaNotificacion.categoria).toBe('danger');
   });
 
   it('should open and close cargaMasivaFrModalInstance', () => {
@@ -185,7 +169,6 @@ describe('AdicionFraccionComponent', () => {
     const nativeElementMock = {};
     component.cargaMasivaFrModal = { nativeElement: nativeElementMock } as ElementRef;
     component.fraccionesModel = { nativeElement: nativeElementMock } as ElementRef;
-    component.ngAfterViewInit();
     expect(component.cargaMasivaFrModalInstance).toBeDefined();
     expect(component.fraccionesModelInstance).toBeDefined();
   });

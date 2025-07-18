@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AdicionFraccionComponent } from '../../components/adicionFraccion/adicionFraccion.component';
@@ -12,6 +12,7 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Solicitud32301Service } from '../../services/solicitud32301.service';
 import { TipoDeAvisoComponent } from '../../components/tipoDeAviso/tipoDeAviso.component';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
+import { Tramite32301Store } from '../../estados/tramite32301.store';
 /**
  * Interfaz que define las propiedades relacionadas con los tipos de aviso que se seleccionan en el formulario
  * */
@@ -27,6 +28,7 @@ export interface TipoDevAviso {
 @Component({
   selector: 'app-paso-uno', // Selector del componente para el paso 1
   standalone: true, // El componente es autónomo y no depende de otros módulos
+  styleUrls: ['./PasoUno.component.scss'], // Ruta al archivo de estilos
   imports: [
     CommonModule,
     SolicitanteComponent,
@@ -42,6 +44,7 @@ export interface TipoDevAviso {
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   indice: number = 1; // Índice que determina qué sección está activa en el paso
+    isActive: boolean = false; // Indica si el componente está activo
 
   // Objeto que almacena los valores seleccionados para los tipos de aviso
   datosInputCheck: TipoDevAviso = {
@@ -78,11 +81,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * y evitar fugas de memoria cuando el componente se destruye.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
+  @Output() tabSelected = new EventEmitter<number>();
   constructor(
     private consultaQuery: ConsultaioQuery,
     private solicitudService: Solicitud32301Service,
     private Tramite32301Query: Tramite32301Query,
+     private Tramite32301Store: Tramite32301Store,
   ) {
     // Inicializa el estado de la consulta
   }
@@ -115,7 +119,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         this.Tramite32301Query.select()
           .pipe(takeUntil(this.destroyNotifier$))
           .subscribe((state) => {
-           this.datosInputCheck = state as unknown as TipoDevAviso;
+           this.datosInputCheck = state.tipoDevAviso;
           });
   }
 
@@ -151,6 +155,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i; // Actualiza el índice para cambiar la pestaña activa
+    this.tabSelected.emit(this.indice); 
+    if (this.indice === 3 || this.indice === 4 || this.indice === 5 || this.indice === 6 || this.indice === 7) {
+      this.isActive = true; 
+      this.Tramite32301Store.setIsActive(true);
+    }
+    else{
+        this.Tramite32301Store.setIsActive(false);
+    }
   }
 
   /**

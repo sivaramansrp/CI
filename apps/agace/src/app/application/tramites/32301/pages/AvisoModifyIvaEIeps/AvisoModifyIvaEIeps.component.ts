@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { AccionBoton } from '@ng-mf/data-access-user';
-import { BtnContinuarComponent } from "@ng-mf/data-access-user";
+import { BtnContinuarCustomComponent } from "../../components/btn-continuar-custom/btn-continuar-custom.component";
 import { CommonModule } from '@angular/common';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
@@ -15,7 +15,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-aviso-modify-iva-eieps', // Selector del componente
   standalone: true, // El componente es independiente, sin necesidad de un módulo externo
-  imports: [CommonModule, WizardComponent, PasoUnoComponent, PasoDosComponent, PasoTresComponent, BtnContinuarComponent], // Componentes importados para el wizard y botones
+  imports: [CommonModule, WizardComponent, PasoUnoComponent, PasoDosComponent, PasoTresComponent, BtnContinuarCustomComponent], // Componentes importados para el wizard y botones
   templateUrl: './AvisoModifyIvaEIeps.component.html', // Ruta al archivo HTML
 })
 export class AvisoModifyIvaEIepsComponent {
@@ -24,7 +24,7 @@ export class AvisoModifyIvaEIepsComponent {
 
   /** Índice actual del paso que se está visualizando */
   indice: number = 1;
-
+currentPasoUnoTab: number = 0;
   /** Datos para la navegación entre pasos, como el número total de pasos y los textos de los botones */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length, // Número total de pasos
@@ -49,6 +49,9 @@ export class AvisoModifyIvaEIepsComponent {
         this.wizardComponent.atras(); // Volver al paso anterior
       }
     }
+  }
+  handleTabSelected(index: number):void {
+  this.currentPasoUnoTab = index;
   }
 }
 
