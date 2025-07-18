@@ -9,6 +9,7 @@ import {
 import {
   AlertComponent,
   ConsultaioQuery,
+  InputFecha,
   InputRadioComponent,
   NotificacionesComponent,
   TableComponent,
@@ -17,6 +18,7 @@ import {
 } from '@ng-mf/data-access-user';
 import {
   CANTIDAD_BIENES_OPTION,
+  FECHA_INGRESO,
   FUSIONRADIO_OPTIONS,
   FUSIONRADIO_OPTIONS_ONLY,
 } from '../../enums/fusionOEscision.enum';
@@ -26,11 +28,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { InputFechaComponent, Notificacion } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
-import { Notificacion } from '@libs/shared/data-access-user/src';
 import { PersonaFusionEscisionDTO } from '../../models/avisomodify.model';
 import { TableDataNgTable } from '../../models/avisomodify.model';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
@@ -55,12 +57,12 @@ interface RatioOption {
     TableComponent,
     TablePaginationComponent,
     NotificacionesComponent,
+    InputFechaComponent
   ],
   templateUrl: './fusionOEscision.component.html',
 })
 export class FusionOEscisionComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+  implements OnInit, OnDestroy, AfterViewInit {
   /** Formulario principal del componente */
   formulario!: FormGroup;
 
@@ -142,6 +144,13 @@ export class FusionOEscisionComponent
   /** Observable para gestionar el ciclo de vida del componente */
   public destroy$: Subject<void> = new Subject<void>();
   /**
+ * Representa la fecha de inicio ingresada por el usuario.
+ *
+ * @type {InputFecha}
+ * @default FECHA_INGRESO
+ */
+  public fechaInicioInput: InputFecha = FECHA_INGRESO;
+  /**
    * Constructor del componente, inyecta formularios, servicios y manejo de estado.
    */
   /**
@@ -194,6 +203,16 @@ export class FusionOEscisionComponent
       this.inicializarFormulario();
     }
   }
+  /**
+ * Cambia la fecha de ingreso en el formulario de formulario.
+ *
+ * @param nuevo_valor - El nuevo valor de la fecha de ingreso en formato de cadena.
+ */
+  public cambioFechaInicio(nuevo_valor: string): void {
+    this.formulario.get('fechaInspeccion')?.setValue(nuevo_valor);
+    this.formulario.get('fechaInspeccion')?.markAsUntouched();
+  }
+
 
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
@@ -219,8 +238,6 @@ export class FusionOEscisionComponent
       this.modelFormulario.enable();
       this.personaFusionEscisionDTO.enable();
       this.mpersonaFusionEscisionDTO.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
     }
   }
 
@@ -262,13 +279,13 @@ export class FusionOEscisionComponent
       numeroTotalCarros: [null, Validators.required],
       cantidadBienes: [null, Validators.required],
       fechaInspeccion: [{ value: '' }],
-      descripcionClobGenerica2: ['', Validators.required],
       personaFusionEscisionDTO: this.fb.group({
         rfc: [''],
         razonSocial: [{ value: '', disabled: true }],
         numFolioTramite: [{ value: '', disabled: true }],
         fechaInicioVigencia: [{ value: '', disabled: true }],
         fechaFinVigencia: [{ value: '', disabled: true }],
+        descripcionClobGenerica2: ['', Validators.required]
       }),
     });
 
@@ -296,17 +313,16 @@ export class FusionOEscisionComponent
 
   /** Cambia dinámicamente los títulos y etiquetas según la opción seleccionada */
   mostrarFusionOEscision(ev: string | number): void {
-   
     this.divCompletoVisible = ev === '1' || ev === '0';
     this.fusionOescisionTitulo =
       ev === 1
         ? 'Datos de las empresas fusionadas'
         : 'Datos de las empresas escindidas';
     this.subFusionOescisionTitulo = this.fusionOescisionTitulo;
-    this.labelFechaFusionOscision =
-      ev === 1
-        ? 'Fecha en que surte efecto la fusión'
-        : 'Fecha en que surte efecto la escisión';
+    const ES_FUSION = ev === 1;
+    this.fechaInicioInput.labelNombre = ES_FUSION
+      ? 'Fecha en que surte efecto la fusión'
+      : 'Fecha en que surte efecto la escisión';
   }
 
   /** Muestra u oculta los bloques de certificación según la opción elegida */

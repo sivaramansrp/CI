@@ -21,7 +21,7 @@
     <div class="row mt-5">
         <div class="col-md-12">
             <label for="justificacionDictamen" class="form-label">Sentido dictamen / justificación del
-                dictamen<span class="text-danger">*</span> :</label>
+                dictamen<span class="text-danger">*</span>:</label>
             <textarea id="justificacionDictamen" class="form-control text-height" formControlName="mensajeDictamen"
                 placeholder="" [ngClass]="isValid('mensajeDictamen') ? 'required' : ''"></textarea>
             @if (dictamenForm.get('mensajeDictamen')?.invalid && dictamenForm.get('mensajeDictamen')?.touched) {
