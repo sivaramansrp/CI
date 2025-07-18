@@ -31,6 +31,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
 
+  /**
+   * Constructor de la clase PasoUnoComponent.
+   *
+   * @param store Instancia del store específico para la solicitud 32604, utilizada para gestionar el estado de la aplicación.
+   * @param consultaQuery Servicio para realizar consultas relacionadas con la aplicación.
+   * @param empresasComercializadorasService Servicio para gestionar operaciones relacionadas con empresas comercializadoras.
+   *
+   * La inicialización de propiedades y lógica adicional se realiza en métodos específicos según sea necesario.
+   */
   constructor(
     public store: Solicitud32604Store,
     private consultaQuery: ConsultaioQuery,

@@ -36,6 +36,17 @@ export class ModificarComponent implements OnInit {
     primerOpcion: string;
   };
 
+  /**
+   * Constructor de la clase ModificarComponent.
+   * 
+   * @param fb Instancia de FormBuilder para la creación y gestión de formularios reactivos.
+   * @param empresasComercializadorasService Servicio para operaciones relacionadas con empresas comercializadoras.
+   * @param solicitud32604Store Almacén para el manejo del estado de la solicitud 32604.
+   * @param solicitud32604Query Consulta para obtener información del estado de la solicitud 32604.
+   * @param consultaioQuery Consulta para obtener información adicional relacionada.
+   * 
+   * Inicializa la propiedad `contenedores` con valores predeterminados para los catálogos y etiquetas de la interfaz.
+   */
   constructor(
     public fb: FormBuilder,
     public empresasComercializadorasService: EmpresasComercializadorasService,

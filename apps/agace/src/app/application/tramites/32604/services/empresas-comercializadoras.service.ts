@@ -120,6 +120,11 @@ export class EmpresasComercializadorasService {
     );
   }
 
+  /**
+   * Obtiene la lista de entidades desde un archivo JSON local.
+   *
+   * @returns Un Observable que emite la respuesta con la lista de aduanas (RespuestaAduanas).
+   */
   getEntidadList(): Observable<RespuestaAduanas> {
     return this.http.get<RespuestaAduanas>(
       'assets/json/32604/entidad-list.json'

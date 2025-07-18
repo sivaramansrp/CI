@@ -1075,6 +1075,13 @@ export interface GuardarDatosFormulario {
   enlaceOperativosLista: EnlaceOperativo[];
 }
 
+/**
+ * Representa la respuesta de una consulta realizada.
+ *
+ * @property {boolean} success Indica si la consulta fue exitosa.
+ * @property {ConsultaDatos} datos Datos resultantes de la consulta.
+ * @property {string} message Mensaje de la respuesta.
+ */
 export interface RespuestaConsulta {
   /**
    * Indica si la consulta fue exitosa.
@@ -1095,6 +1102,11 @@ export interface RespuestaConsulta {
   message: string;
 }
 
+/**
+ * Representa la estructura de los datos consultados.
+ *
+ * @property {SolicitudState} solicitudFormulario - Información sobre exención de impuestos.
+ */
 export interface ConsultaDatos {
   /**
    * Información sobre exención de impuestos.
@@ -1103,6 +1115,108 @@ export interface ConsultaDatos {
   solicitudFormulario: SolicitudState;
 }
 
+/**
+ * Representa el estado de una solicitud para empresas comercializadoras.
+ *
+ * @property idPersonaSolicitud Identificador de la persona asociada a la solicitud.
+ * @property rfcTercero RFC del tercero relacionado.
+ * @property rfc RFC de la persona o empresa.
+ * @property nombre Nombre de la persona.
+ * @property apellidoPaterno Apellido paterno de la persona.
+ * @property apellidoMaterno Apellido materno de la persona.
+ * @property telefono Número de teléfono de contacto.
+ * @property correoElectronico Correo electrónico de contacto.
+ * @property agregarEnlaceRfcTercero RFC del tercero para agregar enlace.
+ * @property agregarEnlaceRfc RFC para agregar enlace.
+ * @property agregarEnlaceNombre Nombre para agregar enlace.
+ * @property agregarEnlaceApellidoPaterno Apellido paterno para agregar enlace.
+ * @property agregarEnlaceApellidoMaterno Apellido materno para agregar enlace.
+ * @property agregarEnlaceCiudadEstado Ciudad y estado para agregar enlace.
+ * @property agregarEnlaceCargo Cargo para agregar enlace.
+ * @property agregarEnlaceTelefono Teléfono para agregar enlace.
+ * @property agregarEnlaceCorreoElectronico Correo electrónico para agregar enlace.
+ * @property agregarEnlaceSuplente Indica si se agrega un suplente.
+ * @property "2089" Valor numérico relacionado con la solicitud.
+ * @property "2090" Valor numérico relacionado con la solicitud.
+ * @property "2091" Valor numérico relacionado con la solicitud.
+ * @property "2042" Valor numérico relacionado con la solicitud.
+ * @property "2043" Valor numérico relacionado con la solicitud.
+ * @property "2044" Valor numérico relacionado con la solicitud.
+ * @property fechaInicioComercio Fecha de inicio de operaciones comerciales.
+ * @property fechaPago Fecha de pago.
+ * @property monto Monto de la operación.
+ * @property operacionesBancarias Información sobre operaciones bancarias.
+ * @property llavePago Llave de pago.
+ * @property transportistaRFC RFC del transportista.
+ * @property transportistaRFCModifTrans RFC modificado del transportista.
+ * @property transportistaRazonSocial Razón social del transportista.
+ * @property transportistaDomicilio Domicilio del transportista.
+ * @property transportistaCaat CAAT del transportista.
+ * @property transportistaIdDomicilio Identificador de domicilio del transportista.
+ * @property transportistaIdRFC Identificador de RFC del transportista.
+ * @property transportistaIdRazonSocial Identificador de razón social del transportista.
+ * @property transportistaIdCaat Identificador de CAAT del transportista.
+ * @property miembroCaracterDe Caracter de miembro.
+ * @property miembroTributarMexico Indica si tributa en México.
+ * @property miembroNacionalidad Nacionalidad del miembro.
+ * @property miembroRfc RFC del miembro.
+ * @property miembroRegistroFederal Registro federal del miembro.
+ * @property miembroNombreCompleto Nombre completo del miembro.
+ * @property miembroTipoPersonaMuestra Tipo de persona del miembro.
+ * @property miembroNombre Nombre del miembro.
+ * @property miembroApellidoPaterno Apellido paterno del miembro.
+ * @property miembroApellidoMaterno Apellido materno del miembro.
+ * @property miembroNombreEmpresa Nombre de la empresa del miembro.
+ * @property subcontrataRFCBusqueda RFC de subcontratista para búsqueda.
+ * @property subcontrataRFC RFC del subcontratista.
+ * @property subcontrataRazonSocial Razón social del subcontratista.
+ * @property subcontrataEmpleados Número de empleados subcontratados.
+ * @property subcontrataBimestre Bimestre de subcontratación.
+ * @property principales Número de principales.
+ * @property municipio Municipio relacionado.
+ * @property tipoDeInstalacion Tipo de instalación.
+ * @property entidadFederativa Entidad federativa.
+ * @property registroSESAT Registro en SESAT.
+ * @property descripcion Descripción adicional.
+ * @property codigoPostal Código postal.
+ * @property procesoProductivo Proceso productivo.
+ * @property goceDelInmueble Goce del inmueble.
+ * @property empresa Identificador de la empresa.
+ * @property comercioExterior Comercio exterior.
+ * @property mutuo Mutuo.
+ * @property catseleccionados Categorías seleccionadas.
+ * @property servicio Servicio relacionado.
+ * @property "190" Valor numérico relacionado.
+ * @property "191" Valor numérico relacionado.
+ * @property "199" Valor numérico relacionado.
+ * @property empleados Número de empleados.
+ * @property bimestre Bimestre correspondiente.
+ * @property "2034" Valor numérico relacionado.
+ * @property "236" Valor numérico relacionado.
+ * @property "237" Valor numérico relacionado.
+ * @property "238" Valor numérico relacionado.
+ * @property "239" Valor numérico relacionado.
+ * @property "240" Valor numérico relacionado.
+ * @property "243" Valor numérico relacionado.
+ * @property "244" Valor numérico relacionado.
+ * @property "245" Valor numérico relacionado.
+ * @property indiqueTodos Indica si se seleccionan todos.
+ * @property "246" Valor numérico relacionado.
+ * @property file1 Archivo adjunto 1.
+ * @property file2 Archivo adjunto 2.
+ * @property "247" Valor numérico relacionado.
+ * @property "248" Valor numérico relacionado.
+ * @property identificacion Identificación.
+ * @property lugarDeRadicacion Lugar de radicación.
+ * @property "249" Valor numérico relacionado.
+ * @property "250" Valor numérico relacionado.
+ * @property "251" Valor numérico relacionado.
+ * @property checkbox1 Estado del primer checkbox.
+ * @property checkbox2 Estado del segundo checkbox.
+ * @property checkbox3 Estado del tercer checkbox.
+ * @property actualmente2 Información actual 2.
+ * @property actualmente1 Información actual 1.
+ */
 export interface SolicitudState {
   idPersonaSolicitud?: string;
   rfcTercero?: string;

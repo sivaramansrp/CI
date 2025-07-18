@@ -15,6 +15,17 @@ import {
 } from '../models/empresas-comercializadoras.model';
 import { Instalaciones } from './agregar.model';
 
+/**
+ * Arreglo de objetos que representa los pasos de un proceso o trámite.
+ * 
+ * Cada objeto contiene:
+ * - `indice`: Número que indica el orden del paso.
+ * - `titulo`: Descripción del paso.
+ * - `activo`: Indica si el paso está activo actualmente.
+ * - `completado`: Indica si el paso ya ha sido completado.
+ * 
+ * Este arreglo se utiliza para controlar y mostrar el avance en la captura y gestión de solicitudes.
+ */
 export const PASOS = [
   {
     indice: 1,
@@ -36,6 +47,11 @@ export const PASOS = [
   },
 ];
 
+/**
+ * Texto informativo que se muestra al usuario cuando una solicitud ha sido registrada.
+ * Indica que el número proporcionado es temporal y no tiene validez legal, 
+ * sirviendo únicamente para identificar la solicitud hasta que se firme y se le asigne un folio oficial.
+ */
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
 
@@ -529,19 +545,6 @@ export const INVENTARIOS_CONFIGURACION: ConfiguracionAporteColumna<Inventarios>[
       orden: 2,
       opcionDeEntrada: TablaCampoSeleccion.NONE,
     },
-    // {
-    //   /**
-    //    * Encabezado que pregunta si se cuenta con un sistema de control de inventarios
-    //    * conforme a las disposiciones del Anexo 24.
-    //    * Esta columna contiene un campo de tipo checkbox.
-    //    */
-    //   encabezado:
-    //     'Indique, si cuenta con un sistema de control de inventarios de conformidad con las disposiciones previstas por el Anexo 24.',
-    //   llave: '',
-    //   clave: (item: Inventarios) => item.anexo24,
-    //   orden: 3,
-    //   opcionDeEntrada: TablaCampoSeleccion.CHECKBOX,
-    // },
   ];
 
 /** Configuración de columnas para Sección de Socios IC */
@@ -592,6 +595,16 @@ export const SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Secci
     },
   ];
 
+  /**
+   * Configuración de las columnas para la tabla de contenedores en el manifiesto.
+   *
+   * Cada objeto en el arreglo representa una columna de la tabla, especificando:
+   * - `encabezado`: El nombre que se mostrará en la cabecera de la columna.
+   * - `clave`: Función que extrae el valor correspondiente de un objeto `Instalaciones` para mostrar en la columna.
+   * - `orden`: El orden en el que se mostrarán las columnas en la tabla.
+   *
+   * @type {ConfiguracionColumna<Instalaciones>[]}
+   */
   export const ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO: ConfiguracionColumna<Instalaciones>[] = [
   { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
   { encabezado: 'Entidad federativa', clave: (articulo) => articulo.entidadFederativa, orden: 1 },

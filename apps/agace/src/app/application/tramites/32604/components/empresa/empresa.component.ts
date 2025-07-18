@@ -46,6 +46,17 @@ export class EmpresaComponent implements OnInit {
       primerOpcion: string;
     };
   
+    /**
+     * Constructor de la clase EmpresaComponent.
+     * 
+     * @param fb Instancia de FormBuilder para la creación y gestión de formularios reactivos.
+     * @param empresasComercializadorasService Servicio para operaciones relacionadas con empresas comercializadoras.
+     * @param solicitud32604Store Store para el manejo del estado de la solicitud 32604.
+     * @param solicitud32604Query Query para consultar el estado de la solicitud 32604.
+     * @param consultaioQuery Query para consultar información adicional relacionada.
+     * 
+     * Inicializa los objetos `contenedores` y `nacionalidad` con valores predeterminados para los catálogos y etiquetas.
+     */
     constructor(
       public fb: FormBuilder,
       public empresasComercializadorasService: EmpresasComercializadorasService,
