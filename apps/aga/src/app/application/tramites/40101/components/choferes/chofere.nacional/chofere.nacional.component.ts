@@ -100,7 +100,9 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
     private chofer40101Service: Chofer40101Service,
     private chofer40101Query: Chofer40101Query,
     private consultaioQuery: ConsultaioQuery
-  ) {}
+  ) {
+     // Lógica para el constructor si es necesario.
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.

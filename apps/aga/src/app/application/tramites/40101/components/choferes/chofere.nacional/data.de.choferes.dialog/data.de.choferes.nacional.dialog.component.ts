@@ -4,7 +4,7 @@ import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModu
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { Subject, firstValueFrom, takeUntil } from "rxjs";
 
-import { REGEX_CURP, REGEX_SOLO_DIGITOS } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
+import { REGEX_CURP, REGEX_RFC, REGEX_SOLO_DIGITOS } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
 import {
   Catalogo,
   CategoriaMensaje,
@@ -137,6 +137,7 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
     private modalService: BsModalService,
     private chofer40101Service: Chofer40101Service,
   ) {
+     // Lógica para el constructor si es necesario.
   }
 
   /**
@@ -154,7 +155,7 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
         Validators.maxLength(18),
         Validators.pattern(REGEX_CURP),
       ]],
-      rfc: [{ value: this.datosDeChofere?.rfc, disabled: false }, Validators.required],
+      rfc: [{ value: this.datosDeChofere?.rfc, disabled: false }, [Validators.required, Validators.pattern(REGEX_RFC)]],
       nombre: [{ value: this.datosDeChofere?.nombre, disabled: true }, Validators.required],
       primerApellido: [{ value: this.datosDeChofere?.primerApellido, disabled: true }, Validators.required],
       segundoApellido: [{ value: this.datosDeChofere?.segundoApellido, disabled: true }],

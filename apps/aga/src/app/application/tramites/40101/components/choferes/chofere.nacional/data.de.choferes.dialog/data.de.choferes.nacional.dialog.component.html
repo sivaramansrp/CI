@@ -18,30 +18,35 @@
           <div class="row">
             <div class="col-md-4">
               <div>
-                <label>CURP*: <span class="bi bi-question-circle-fill fs-4 m-1" title="Clave Única de Registro de Población"
-                    ata-bs-toggle="tooltip">
+                <label>CURP*: <span class="bi bi-question-circle-fill fs-4 m-1"
+                    title="Clave Única de Registro de Población" ata-bs-toggle="tooltip">
                   </span></label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="curp" />
+                <input type="text" maxlength="18" class="form-control" formControlName="curp" />
               </div>
               <div *ngIf="formChoferes.get('curp')?.invalid && (formChoferes.get('curp')?.touched || submitted)"
                 class="text-danger">
-                <small *ngIf="formChoferes.get('curp')?.errors?.['required']">Existen datos incorrectos que no cumplen con el formato esperado.</small>
+                <small *ngIf="formChoferes.get('curp')?.errors?.['pattern']">Existen datos incorrectos que no cumplen
+                  con el formato esperado.</small>
+                <small *ngIf="formChoferes.get('curp')?.errors?.['required']">Este campo es obligatorio.</small>
               </div>
             </div>
             <div class="col-md-4">
               <div>
-                <label for="rfc">RFC*: <span class="bi bi-question-circle-fill fs-4 m-1" title="Registro Federal de Contribuyente"
-                    ata-bs-toggle="tooltip">
+                <label for="rfc">RFC*: <span class="bi bi-question-circle-fill fs-4 m-1"
+                    title="Registro Federal de Contribuyente" ata-bs-toggle="tooltip">
                   </span></label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="rfc" />
+                <input type="text" class="form-control" formControlName="rfc" maxlength="13"/>
               </div>
               <div *ngIf="formChoferes.get('rfc')?.invalid && (formChoferes.get('rfc')?.touched || submitted)"
                 class="text-danger">
                 <small *ngIf="formChoferes.get('rfc')?.errors?.['required']">Este campo es obligatorio.</small>
+                <small *ngIf="formChoferes.get('rfc')?.errors?.['pattern']">Existen datos incorrectos que no cumplen
+                  con el formato esperado.</small>
+
               </div>
             </div>
           </div>
@@ -144,7 +149,7 @@
                 <label for="calle">Calle*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="calle" />
+                <input type="text" class="form-control" formControlName="calle" maxlength="100"/>
               </div>
               <div *ngIf="formChoferes.get('calle')?.invalid && (formChoferes.get('calle')?.touched || submitted)"
                 class="text-danger">
@@ -156,7 +161,7 @@
                 <label for="numeroExterior">Número exterior*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="numeroExterior" />
+                <input type="text" class="form-control" formControlName="numeroExterior" maxlength="55"/>
               </div>
               <div
                 *ngIf="formChoferes.get('numeroExterior')?.invalid && (formChoferes.get('numeroExterior')?.touched || submitted)"
@@ -244,7 +249,7 @@
                 <label for="ciudad">Ciudad*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="ciudad" />
+                <input type="text" class="form-control" formControlName="ciudad" maxlength="20"/>
               </div>
               <div *ngIf="formChoferes.get('ciudad')?.invalid && (formChoferes.get('ciudad')?.touched || submitted)"
                 class="text-danger">
@@ -259,7 +264,7 @@
                 <label for="localidad">Localidad*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="localidad" />
+                <input type="text" class="form-control" formControlName="localidad" maxlength="120"/>
               </div>
               <div
                 *ngIf="formChoferes.get('localidad')?.invalid && (formChoferes.get('localidad')?.touched || submitted)"
@@ -272,7 +277,7 @@
                 <label for="codigoPostal">Código postal*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="codigoPostal" />
+                <input type="text" class="form-control" formControlName="codigoPostal" maxlength="12"/>
               </div>
               <div
                 *ngIf="formChoferes.get('codigoPostal')?.invalid && (formChoferes.get('codigoPostal')?.touched || submitted)"
@@ -288,7 +293,7 @@
                 <label for="solicitud.correo">Correo electrónico:</label>
               </div>
               <div>
-                <input type="email" class="form-control" formControlName="correoElectronico" />
+                <input type="email" class="form-control" formControlName="correoElectronico" maxlength="55"/>
               </div>
               <div
                 *ngIf="formChoferes.get('correoElectronico')?.invalid && (formChoferes.get('correoElectronico')?.touched || submitted)"
@@ -302,7 +307,7 @@
                 <label for="solicitud.telefono">Teléfono</label>
               </div>
               <div>
-                <input type="tel" class="form-control" formControlName="telefono" />
+                <input type="tel" class="form-control" formControlName="telefono" maxlength="12"/>
               </div>
               <div *ngIf="formChoferes.get('telefono')?.invalid && (formChoferes.get('telefono')?.touched || submitted)"
                 class="text-danger">

@@ -137,7 +137,9 @@ export class VehiculosComponent implements OnInit {
     public tramiteQuery: Tramite40101Query,
     public modificarTerrestreService: modificarTerrestreService,
     private validacionesService: ValidacionesFormularioService
-  ) { }
+  ) { 
+     // Lógica para el constructor si es necesario.
+  }
 
   /**
    * Método de ciclo de vida de Angular que se llama cuando el componente se inicializa.

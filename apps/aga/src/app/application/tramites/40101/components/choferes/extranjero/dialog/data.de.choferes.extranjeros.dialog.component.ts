@@ -124,6 +124,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
     private modalService: BsModalService,
     private chofer40101Service: Chofer40101Service,
   ) {
+     // Lógica para el constructor si es necesario.
   }
 
   /**
@@ -307,8 +308,8 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    */
   resetForm(): void {
     this.formChoferes.reset({
-      // curp: '',
-      // rfc: '',
+       curp: '',
+       rfc: '',
       nombre: '',
       primerApellido: '',
       segundoApellido: '',

@@ -22,12 +22,12 @@
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="numero" size="30" id="numeroCHN"
-                  maxlength="120" />
+                  maxlength="200" />
               </div>
               <div *ngIf="getFormValues['numero'].invalid && (getFormValues['numero'].touched || submitted)"
                 class="text-danger">
                 <small *ngIf="getFormValues['numero'].errors?.['required']">Este campo es obligatorio.</small>
-                <small *ngIf="getFormValues['numero'].errors?.['maxLength']">El número no puede tener más de 20
+                <small *ngIf="getFormValues['numero'].errors?.['maxLength']">El número no puede tener más de 200
                   caracteres.</small>
               </div>
             </div>
@@ -37,13 +37,13 @@
                 <label for="primerApellido">Primer apellido*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="primerApellido" />
+                <input type="text" class="form-control" formControlName="primerApellido" maxlength="200" />
               </div>
               <div
                 *ngIf="getFormValues['primerApellido'].invalid && (getFormValues['primerApellido'].touched || submitted)"
                 class="text-danger">
                 <small *ngIf="getFormValues['primerApellido'].errors?.['required']">Este campo es obligatorio.</small>
-                <small *ngIf="getFormValues['primerApellido'].errors?.['maxLength']">El nombre no puede tener más de 20
+                <small *ngIf="getFormValues['primerApellido'].errors?.['maxLength']">El nombre no puede tener más de 200
                   caracteres.</small>
               </div>
             </div>
@@ -52,13 +52,13 @@
                 <label for="apellidoMaterno">Segundo Apellido:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="segundoApellido" readonly />
+                <input type="text" class="form-control" formControlName="segundoApellido" readonly maxlength="200" />
               </div>
               <div
                 *ngIf="getFormValues['segundoApellido'].invalid && (getFormValues['segundoApellido'].touched || submitted)"
                 class="text-danger">
                 <small *ngIf="getFormValues['segundoApellido'].errors?.['required']">Este campo es obligatorio.</small>
-                <small *ngIf="getFormValues['segundoApellido'].errors?.['maxLength']">El nombre no puede tener más de 20
+                <small *ngIf="getFormValues['segundoApellido'].errors?.['maxLength']">El nombre no puede tener más de 200
                   caracteres.</small>
               </div>
             </div>
@@ -84,13 +84,13 @@
                 <label for="numeroDeGafete">Número de gafete del chofer:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="numeroDeGafete" />
+                <input type="text" class="form-control" formControlName="numeroDeGafete" maxlength="24" />
               </div>
               <div
                 *ngIf="getFormValues['numeroDeGafete'].invalid && (getFormValues['numeroDeGafete'].touched || submitted)"
                 class="text-danger">
                 <small *ngIf="getFormValues['numeroDeGafete'].errors?.['required']">Este campo es obligatorio.</small>
-                <small *ngIf="getFormValues['numeroDeGafete'].errors?.['maxLength']">El gafete no puede tener más de 10
+                <small *ngIf="getFormValues['numeroDeGafete'].errors?.['maxLength']">El gafete no puede tener más de 24
                   caracteres.</small>
               </div>
             </div>
@@ -99,14 +99,14 @@
                 <label for="vigenciaGafete">Vigencia del gafete:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="vigenciaGafete" />
+                <input type="text" class="form-control" formControlName="vigenciaGafete" maxlength="15" />
               </div>
               <div
                 *ngIf="getFormValues['vigenciaGafete'].invalid && (getFormValues['vigenciaGafete'].touched || submitted)"
                 class="text-danger">
                 <small *ngIf="getFormValues['vigenciaGafete'].errors?.['required']">Este campo es obligatorio.</small>
                 <small *ngIf="getFormValues['vigenciaGafete'].errors?.['maxLength']">La vigencia del gafete no puede
-                  tener más de 10 caracteres.</small>
+                  tener más de 15 caracteres.</small>
               </div>
             </div>
           </div>
@@ -114,10 +114,10 @@
           <div class="row mt-3">
             <div class="col-md-4">
               <div>
-                <label for="numberDelSocial">Número de Segur Social (NSS)*:</label>
+                <label for="numberDelSocial">Número de Segur Social*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="numeroDelSeguroSocial" />
+                <input type="text" class="form-control" formControlName="numeroDelSeguroSocial" maxlength="18" />
               </div>
               <div
                 *ngIf="getFormValues['numeroDelSeguroSocial'].invalid && (getFormValues['numeroDelSeguroSocial'].touched || submitted)"
@@ -127,7 +127,7 @@
                 <small *ngIf="getFormValues['numeroDelSeguroSocial'].errors?.['maxLength']">El número de seguridad
                   social no puede tener más de 11 caracteres.</small>
                 <small *ngIf="getFormValues['numeroDelSeguroSocial'].errors?.['pattern']">El número de seguridad social
-                  debe tener 11 dígitos.</small>
+                  debe tener 18 dígitos.</small>
               </div>
             </div>
             <div class="col-md-4">
@@ -137,7 +137,7 @@
                 </span>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="numberDeIdeFiscal" />
+                <input type="text" class="form-control" formControlName="numberDeIdeFiscal" maxlength="18" />
               </div>
               <div
                 *ngIf="getFormValues['numberDeIdeFiscal'].invalid && (getFormValues['numberDeIdeFiscal'].touched || submitted)"
@@ -145,7 +145,7 @@
                 <small *ngIf="getFormValues['numberDeIdeFiscal'].errors?.['required']">Este campo es
                   obligatorio.</small>
                 <small *ngIf="getFormValues['numberDeIdeFiscal'].errors?.['maxLength']">El nombre no puede tener más de
-                  20 caracteres.</small>
+                  18 caracteres.</small>
               </div>
             </div>
             <div class="col-md-4 mt-3">
