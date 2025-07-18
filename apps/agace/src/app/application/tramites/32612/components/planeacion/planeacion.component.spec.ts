@@ -75,4 +75,6 @@ describe('PlaneacionComponent', () => {
     component.ngOnInit();
     expect(component.solicitudeState).toBeDefined();
   });
+
+
 });

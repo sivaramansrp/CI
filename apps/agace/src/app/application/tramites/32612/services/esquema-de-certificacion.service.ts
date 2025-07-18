@@ -5,6 +5,24 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Tramite32612Store } from '../estados/solicitud32612.store';
 
+/**
+ * Servicio para gestionar operaciones relacionadas con el esquema de certificación
+ * del trámite 32612. Proporciona métodos para obtener datos auxiliares desde archivos
+ * JSON, interactuar con el backend, y actualizar el estado de los formularios en los stores.
+ *
+ * @remarks
+ * Este servicio utiliza `HttpClient` para realizar peticiones HTTP y depende de los stores
+ * `Tramite32612Store` y `Tramite32612DosStore` para la gestión del estado de los formularios.
+ *
+ * @example
+ * ```typescript
+ * constructor(private esquemaService: EsquemaDeCertificacionService) {}
+ *
+ * this.esquemaService.obtenerTramite(123).subscribe(response => {
+ *   // Manejar respuesta
+ * });
+ * ```
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -16,6 +34,13 @@ export class EsquemaDeCertificacionService {
  */
   urlServer = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
+  /**
+   * Inicializa una instancia de EsquemaDeCertificacionService.
+   * 
+   * @param http - HttpClient de Angular para realizar solicitudes HTTP.
+   * @param tramiteStore - Servicio store para gestionar el estado relacionado con Tramite32612.
+   * @param tramiteDosStore - Servicio store para gestionar el estado relacionado con Tramite32612Dos.
+   */
   constructor(
     private http: HttpClient,
     private tramiteStore: Tramite32612Store,
@@ -38,6 +63,12 @@ export class EsquemaDeCertificacionService {
       );
     }
 
+    /**
+     * Recupera los datos del catálogo "Indique" desde un archivo JSON local.
+     *
+     * @returns Un Observable que emite un JSONResponse con los datos del catálogo.
+     * @throws Emite un error si la solicitud HTTP falla.
+     */
     getIndiqueCatalogo(): Observable<JSONResponse> {
       return this.http.get<JSONResponse>('assets/json/32612/catalog-indique.json').pipe(
         catchError((error) => {
@@ -46,6 +77,12 @@ export class EsquemaDeCertificacionService {
       );
     }
 
+    /**
+     * Recupera los datos de la tabla de sociedades desde un archivo JSON local.
+     *
+     * @returns Un Observable que emite un JSONResponse con los datos de la tabla de sociedades.
+     * @throws Emite un error si la solicitud HTTP falla.
+     */
     getSociedadesTablaDatos(): Observable<JSONResponse> {
       return this.http.get<JSONResponse>('assets/json/32612/socidad-tabla.json').pipe(
         catchError((error) => {
@@ -54,6 +91,12 @@ export class EsquemaDeCertificacionService {
       );
     }
 
+    /**
+     * Recupera los datos de las instalaciones desde un archivo JSON local.
+     *
+     * @returns Un Observable que emite un `JSONResponse` con los datos de las instalaciones.
+     * @throws Emite un error si la solicitud HTTP falla.
+     */
     getDatosDeLasInstalaciones(): Observable<JSONResponse> {
       return this.http.get<JSONResponse>('assets/json/32612/datos-instalaciones.json').pipe(
         catchError((error) => {
@@ -62,6 +105,12 @@ export class EsquemaDeCertificacionService {
       );
     }
 
+    /**
+     * Recupera los datos del agente aduanal desde un archivo JSON local.
+     *
+     * @returns Un Observable que emite un JSONResponse con los datos del agente aduanal.
+     * @throws Emite un error si la solicitud HTTP falla.
+     */
     getConsultaDatosAgenteAduanal(): Observable<JSONResponse> {
       return this.http.get<JSONResponse>('assets/json/32612/consulta-agente-aduanal.json').pipe(
         catchError((error) => {
@@ -70,10 +119,22 @@ export class EsquemaDeCertificacionService {
       );
     }
 
+    /**
+     * Actualiza el estado de un campo del formulario estableciendo su valor dinámicamente en el store de trámite.
+     *
+     * @param campo - El nombre del campo del formulario a actualizar.
+     * @param valor - El nuevo valor que se asignará al campo del formulario. Puede ser un string, número o booleano.
+     */
     actualizarEstadoFormulario(campo: string, valor: string | number | boolean): void {
       this.tramiteStore.setDynamicFieldValue(campo, valor);
     }
 
+    /**
+     * Recupera los datos de consulta del agente aduanal desde un archivo JSON local.
+     *
+     * @returns Un Observable que emite un JSONResponse con los datos de la consulta.
+     * @throws Emite un error si la solicitud HTTP falla.
+     */
     getConsultaAgente(): Observable<JSONResponse> {
       return this.http.get<JSONResponse>('assets/json/32612/consulta-aduanal.json').pipe(
         catchError((error) => {
@@ -82,6 +143,20 @@ export class EsquemaDeCertificacionService {
       );
     }
 
+    /**
+     * Actualiza el estado del formulario en el tramiteDosStore usando los datos proporcionados en `Solicitude32612DosState`.
+     *
+     * Establece las siguientes propiedades en el store:
+     * - Número de patente
+     * - Número de registro
+     * - Nombre del agente aduanal
+     * - Número de trabajadores IMSS
+     * - Número de trabajadores contratistas
+     * - Servicios adicionales
+     * - Indique (información adicional)
+     *
+     * @param DATOS - El objeto de estado que contiene los datos del formulario a establecer en el store.
+     */
     estadoFormulario(DATOS: Solicitude32612DosState): void {
       this.tramiteDosStore.setNumeroPatente(DATOS.numeroPatente);
       this.tramiteDosStore.setNumeroRegistro(DATOS.numeroRegistro);
@@ -92,6 +167,12 @@ export class EsquemaDeCertificacionService {
       this.tramiteDosStore.setIndique(DATOS.indique);
     }
 
+    /**
+     * Recupera la lista de perfiles realizando una solicitud HTTP GET a un archivo JSON local.
+     *
+     * @returns Un Observable que emite un `JSONResponse` con los datos de los perfiles.
+     * @throws Emite un error si la solicitud HTTP falla.
+     */
     getConsultaPerfiles(): Observable<JSONResponse> {
       return this.http.get<JSONResponse>('assets/json/32612/consulta-perfiles.json').pipe(
         catchError((error) => {
@@ -100,6 +181,16 @@ export class EsquemaDeCertificacionService {
       );
     }
 
+    /**
+     * Actualiza el tramiteDosStore con los datos del formulario proporcionados en un objeto Solicitude32612DosState.
+     *
+     * Este método establece varias propiedades en el tramiteDosStore, como número de registro,
+     * organismo certificador, nombre del programa, opción, superficie de la instalación, número de empleados,
+     * operaciones mensuales de exportación/importación, tipos de servicios, actividad preponderante,
+     * antigüedad de la instalación, tipo de instalación y nombre de la agencia aduanal.
+     *
+     * @param DATOS - El objeto de estado que contiene los datos del formulario a aplicar en el tramiteDosStore.
+     */
     estadoFormularioPerfiles(DATOS: Solicitude32612DosState): void {
       this.tramiteDosStore.setNumeroDeRegistro(DATOS.numeroDeRegistro);
       this.tramiteDosStore.setOrganismoCertificador(DATOS.organismoCertificador);
@@ -116,6 +207,15 @@ export class EsquemaDeCertificacionService {
       this.tramiteDosStore.setNombreAgenciaAduanal(DATOS.nombreAgenciaAduanal);
     }
 
+    /**
+     * Recupera los datos de perfiles Accodiane para consulta.
+     *
+     * Este método realiza una solicitud HTTP GET para obtener los datos JSON desde el recurso local
+     * `consulta-perfiles-accodiane.json`. La respuesta se envuelve en un `Observable` de tipo `JSONResponse`.
+     * En caso de error durante la solicitud HTTP, el error se propaga utilizando `throwError`.
+     *
+     * @returns {Observable<JSONResponse>} Un observable que contiene los datos de perfiles Accodiane.
+     */
     getPrefilesConsultaAccodiane(): Observable<JSONResponse> {
       return this.http.get<JSONResponse>('assets/json/32612/consulta-perfiles-accodiane.json').pipe(
         catchError((error) => {

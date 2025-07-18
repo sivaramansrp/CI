@@ -1,3 +1,10 @@
+/**
+ * @constant CONFIGURACION
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION = [
     {
       id: 'senaleQuienes',
@@ -77,6 +84,13 @@ export const CONFIGURACION = [
     }
 ]
 
+/**
+ * @constant CONFIGURACION_ACCESOS
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_ACCESOS = [
     {
       id: 'cuantasPuertas',
@@ -128,6 +142,13 @@ export const CONFIGURACION_ACCESOS = [
     }
 ]
 
+/**
+ * @constant CONFIGURACION_PERIMETRALES
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_PERIMETRALES = [
     {
       id: 'describaTipo',
@@ -254,6 +275,13 @@ export const CONFIGURACION_PERIMETRALES = [
 
 ]
 
+/**
+ * @constant CONFIGURACION_ESTACIONAMIENTOS
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_ESTACIONAMIENTOS = [
     {
       id: 'describaProcedimiento',
@@ -337,6 +365,13 @@ export const CONFIGURACION_ESTACIONAMIENTOS = [
     }
 ]
 
+/**
+ * @constant CONFIGURACION_DISPOSITIVOS
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_DISPOSITIVOS = [
     {
       id: 'responsablesSeguridad',
@@ -440,6 +475,13 @@ export const CONFIGURACION_DISPOSITIVOS = [
     }
 ]
 
+/**
+ * @constant CONFIGURACION_ALUMBRADO
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_ALUMBRADO = [
     {
       id: 'cuentaConSistema',
@@ -591,6 +633,13 @@ export const CONFIGURACION_ALUMBRADO = [
     }
 ]
 
+/**
+ * @constant CONFIGURACION_SISTEMAS
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_SISTEMAS = [
     {
       id: 'describaSistema',

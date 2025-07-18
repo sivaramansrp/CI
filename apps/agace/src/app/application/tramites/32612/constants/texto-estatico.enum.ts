@@ -124,6 +124,38 @@ export const TEXTOS_ESTATICOS_PLANEACION = {
     paraca12: `La mensajería y paquetería destinada al Agente Aduanal o a su personal debe ser examinada a su llegada y antes de ser distribuida a las áreas y destinos correspondientes. Asimismo, el Agente Aduanal deberá de tener un procedimiento documentado para la recepción y revisión de mensajería y paquetería, el cual debe ser comunicado al personal responsable mediante capacitación. La capacitación debe estar documentada.`
   };
 
+  /**
+   * @constant
+   * @name TEXTOS_ESTATICOS_SOCIOS_COMERCIALES
+   * @description
+   * Contiene los textos estáticos relacionados con los procedimientos, criterios, requerimientos y revisiones
+   * para la selección, contratación y monitoreo de socios comerciales por parte del Agente Aduanal.
+   * Incluye información sobre análisis de riesgo, cumplimiento de la Ley Federal de Prevención e Identificación
+   * de Operaciones con Recursos de Procedencia Ilícita (LFPIORPI), requerimientos mínimos de seguridad,
+   * documentación requerida, y procedimientos para evaluaciones periódicas de seguridad.
+   *
+   * Las claves del objeto representan diferentes secciones y párrafos del proceso, tales como criterios de selección,
+   * requerimientos en seguridad, revisiones del socio comercial, y anexos de procedimientos documentados.
+   *
+   * @property {string} paraca1 - Procedimientos escritos y verificables para selección y monitoreo de socios comerciales.
+   * @property {string} paraca2 - Análisis de riesgo y cumplimiento social respecto a socios comerciales.
+   * @property {string} encabezamiento1 - Encabezado para criterios de selección.
+   * @property {string} paraca3 - Procedimientos documentados para selección y evaluación de socios comerciales.
+   * @property {string} paraca4 - Procedimiento escrito para identificación de actividades vulnerables según LFPIORPI.
+   * @property {string} paraca5 - Anexo de procedimiento documentado para selección y contratación de socios comerciales.
+   * @property {string} paraca6 - Anexo de procedimiento documentado para cumplimiento de la LFPIORPI.
+   * @property {string} paraca7 - Requisitos mínimos para el expediente de socios comerciales.
+   * @property {string} encabezamiento2 - Encabezado para requerimientos en seguridad.
+   * @property {string} paraca8 - Procedimiento documentado para solicitar requisitos adicionales de seguridad.
+   * @property {string} paraca9 - Requisitos mínimos de seguridad establecidos por AGACE.
+   * @property {string} paraca10 - Documentación que acredite el cumplimiento de estándares mínimos de seguridad.
+   * @property {string} paraca11 - Requerimientos de seguridad para socios comerciales dentro de instalaciones.
+   * @property {string} encabezamiento3 - Encabezado para revisiones del socio comercial.
+   * @property {string} paraca12 - Evaluaciones periódicas de seguridad de procesos e instalaciones de socios comerciales.
+   * @property {string} paraca13 - Procedimiento para comunicar inconsistencias y atender observaciones.
+   * @property {string} paraca14 - Importancia de las evaluaciones de seguridad y programa de revisiones.
+   * @property {string} paraca15 - Descripción del procedimiento para evaluaciones de requisitos de seguridad.
+   */
   export const TEXTOS_ESTATICOS_SOCIOS_COMERCIALES = {
     paraca1: 'El Agente Aduanal debe contar con procedimientos escritos y verificables para la selección y contratación de nuevos socios comerciales y monitoreo de los socios con los que ya se encuentra trabajando, como sociedades con otros agentes aduanales, corresponsalías, empresas manufactureras, almacenes, empresas transportistas, clientes, proveedores de sistemas y Tecnologías de la Información, colocación y mantenimiento de los sistemas de alarma y de circuito cerrado de televisión y video vigilancia, proveedores de sellos de alta seguridad, recolección y reciclaje, empresas que brinden el servicio de digitalización de documentos, entre otros y de acuerdo a su análisis de riesgo, exigir que cumplan con las medidas de seguridad para fortalecer la cadena de suministros internacional.',
     paraca2: 'El análisis de riesgo que realice el Agente Aduanal respecto a sus socios comerciales (clientes y proveedores), deberá incluir riesgos relacionados con la identificación de actividades relacionadas con el lavado de dinero y la financiación del terrorismo. Adicionalmente, el Agente Aduanal debe fomentar una política y un programa de cumplimiento social documentado que, como mínimo, aborde cómo entre sus empleados y socios comerciales podrían garantizar que los bienes, insumos o mercancías nacionales e importadas a México para la elaboración de productos o mercancías no provienen de la extracción, producción o fabricación, total o parcialmente, con formas prohibidas de trabajo, es decir, forzoso u obligado incluido el trabajo infantil forzoso u obligado, al amparo del artículo 23.6 del T-MEC y el Acuerdo del Trabajo y Previsión Social que establece las mercancías cuya importación está sujeta a regulación a cargo de la Secretaría del Trabajo y Previsión Social, publicado en el DOF el 17 de febrero de 2023.',
@@ -152,6 +184,41 @@ export const TEXTOS_ESTATICOS_PLANEACION = {
     paraca15: 'Describa el procedimiento para realizar evaluaciones para la verificación de los requisitos en materia de seguridad (procesos e instalaciones) de sus socios comerciales. El procedimiento deberú incluir',
   }
 
+  /**
+   * Textos estáticos relacionados con la seguridad de procesos para agentes aduanales.
+   *
+   * Esta constante contiene diversos párrafos y encabezados utilizados para describir
+   * requisitos, procedimientos y recomendaciones para garantizar la integridad,
+   * seguridad y adecuada documentación de los procesos involucrados en el movimiento
+   * de mercancías e información en operaciones de comercio exterior.
+   *
+   * @property paraca1 Medidas para el control y seguridad del flujo de información en operaciones de comercio exterior.
+   * @property paraca2 Procedimientos para impedir y detectar mercancías no declaradas y restringir el acceso no autorizado.
+   * @property encabezamiento1 Encabezado para la sección de mapeo de procesos.
+   * @property paraca3 Requisito de mapeo de procesos que describa el flujo de información y operativo.
+   * @property paraca4 Inclusión de todas las partes de la cadena de suministro dentro del mapeo de procesos.
+   * @property paraca5 Requisito para anexar documentación que ilustre el mapeo de procesos.
+   * @property paraca6 Aspectos mínimos que debe contener el mapeo de procesos.
+   * @property encabezamiento2 Encabezado para la sección de entrega, recepción y discrepancias en la carga.
+   * @property paraca7 Procedimientos de supervisión y verificación para la entrega y recepción de la carga.
+   * @property paraca8 Documentación requerida para el traslado de mercancías.
+   * @property paraca9 Requisito para anexar procedimientos documentados de entrega y recepción de la carga.
+   * @property paraca10 Requisito para anexar procedimientos documentados para detectar y reportar discrepancias.
+   * @property paraca11 Aplicación de procedimientos a mercancías importadas, exportadas y en puntos intermedios.
+   * @property encabezamiento3 Encabezado para la sección de procesamiento de información y documentación de la carga.
+   * @property paraca12 Procedimientos para asegurar legibilidad, integridad y seguridad de la información electrónica y documental.
+   * @property paraca13 Requisito para almacenamiento accesible y seguro de la información de cada despacho.
+   * @property paraca14 Seguridad de formularios y documentación para evitar el uso no autorizado.
+   * @property paraca15 Requisito para anexar procedimientos documentados para el procesamiento de información y documentación.
+   * @property encabezamiento4 Encabezado para la sección de gestión de inventarios y control de material de empaque.
+   * @property paraca16 Procedimientos para el control de inventarios, almacenaje y gestión de material de empaque, incluyendo prevención de plagas.
+   * @property paraca17 Posibles procedimientos que puede incluir el solicitante.
+   * @property paraca18 Requisito para anexar procedimientos documentados para la gestión de inventarios.
+   * @property paraca19 Procedimientos para el manejo y destrucción de desperdicios o material sobrante de empaque.
+   * @property encabezamiento5 Encabezado para la sección de comunicación interna.
+   * @property paraca20 Requisitos para sistemas de comunicación y verificación de respaldo.
+   * @property paraca21 Recomendaciones relacionadas con la comunicación interna.
+   */
   export const TEXTOS_ESTATICOS_SEGURIDAD_DE_PROCESOS = {
     paraca1: 'Deben establecerse medidas de control para garantizar la integridad y seguridad de los procesos relacionados con el flujo de la información (en cualquiera de sus modalidades) proporcionada por el importador/exportador, embarcador, recinto fiscalizado, etcétera, que se utiliza para el movimiento de las mercancías y sus operaciones de comercio exterior, cuidando en todo momento que esta información sea legible y se encuentre protegida contra el intercambio, robo, pérdida o introducción de datos erróneos.',
     paraca2: 'Asimismo, deben existir procedimientos establecidos para impedir y detectar mercancías o materiales no declarados, e impedir que el personal no autorizado tenga acceso a la mercancía y a los medios de transporte y contenedores. Estos procedimientos deben documentarse y asegurarse de mantener la integridad de los embarques de importación y exportación desde el punto de origen hasta su destino final.',
@@ -192,6 +259,27 @@ export const TEXTOS_ESTATICOS_PLANEACION = {
     paraca21: `Recomendación:`,
   }
 
+  /**
+   * Texto estático utilizado en la gestión del despacho aduanero y control en recintos.
+   *
+   * @remarks
+   * Este objeto contiene textos descriptivos y encabezados relacionados con los procedimientos documentados,
+   * políticas internas, controles, gestión de inventarios, control de gafetes oficiales y certificaciones
+   * requeridas para el cumplimiento de las obligaciones aduaneras por parte del Agente Aduanal.
+   *
+   * @property paraca1 - Procedimientos documentados y políticas internas para el cumplimiento de obligaciones aduaneras.
+   * @property paraca2 - Requisitos de personal especializado y verificación de información y documentación.
+   * @property paraca3 - Detalle de los pasos en el mapeo de procesos del sub-estándar 5.1.
+   * @property encabezamiento1 - Encabezado para la gestión del despacho aduanero.
+   * @property paraca4 - Solicitud de anexar procedimientos de los puntos del mapeo de procesos.
+   * @property paraca5 - Indicaciones sobre la revisión de procedimientos y coincidencia con información del cliente.
+   * @property paraca6 - Solicitud de anexar procedimiento documentado para la gestión de inventarios.
+   * @property paraca7 - Procedimientos documentados para el control de gafetes oficiales en recintos fiscales.
+   * @property encabezamiento2 - Encabezado para el control en recintos.
+   * @property paraca8 - Obligación de evaluación y certificación del mandatario aduanal.
+   * @property paraca9 - Solicitud de procedimiento documentado para el control de gafetes oficiales.
+   * @property paraca10 - Descripción del proceso de evaluación y certificación del mandatario aduanal.
+   */
   export const TEXTOS_ESTATICOS_GESTION = {
     paraca1: 'El Agente Aduanal debe contar con procedimientos documentados, en el que se establezcan políticas internas y de operación, así como de los controles necesarios para el debido cumplimiento de las obligaciones aduaneras, con el objeto de garantizar el cumplimiento de la encomienda otorgada.',
     paraca2: 'Asimismo, deberá contar con personal especializado y procedimientos documentados, que establezcan la verificación de la información y documentación generada en su nombre',
@@ -207,6 +295,24 @@ export const TEXTOS_ESTATICOS_PLANEACION = {
     paraca10: `Describa el proceso que debe seguir el mandatario aduanal para aplicar las evaluaciones y tener vigente sus certificaciones de actividades como:`,
   }
 
+  /**
+   * Constantes de texto estático relacionadas con procedimientos y requisitos de seguridad para vehículos de agentes aduanales.
+   *
+   * Este objeto contiene descripciones detalladas, directrices y procedimientos para el manejo seguro,
+   * inspección y documentación de vehículos, contenedores, remolques y semirremolques utilizados en el comercio internacional.
+   * Los textos cubren temas como:
+   * - Medidas de seguridad para medios de transporte y vehículos de carga.
+   * - Procedimientos para inspecciones agrícolas e identificación de contaminación.
+   * - Requisitos para el uso y gestión de sellos y candados de alta seguridad, incluyendo cumplimiento con la norma ISO 17712.
+   * - Documentación y registro de inspecciones y gestión de sellos.
+   * - Protocolos para el manejo de incidentes relacionados con sellos o candados.
+   * - Directrices para el almacenamiento seguro y monitoreo de vehículos y contenedores.
+   * - Pasos para inspecciones sistemáticas y verificación de la integridad física.
+   * - Procedimientos para reporte, auditoría y mantenimiento del cumplimiento con estándares aduaneros y de seguridad.
+   *
+   * Cada propiedad proporciona un párrafo o encabezado específico para ser utilizado en formularios, instrucciones o documentación
+   * dentro de los procesos operativos del agente aduanal.
+   */
   export const TEXTOS_ESTATICOS_VEHICULOS = {
     paraca1: 'Dependiendo el caso se debe mantener la seguridad en los medios de transporte, tractores, contenedores, remolques y semirremolques (incluyendo vehículos de carga tipo, camioneta, pick up, furgoneta o van, entre otros), para protegerlos de la introducción de personas y/o materiales no autorizados. Por lo anterior, es necesario tener procedimientos documentados para identificar revisar, sellar y mantener la integridad de los mismos.',
     paraca2: `De igual manera, el proceso de inspección de dichos medios de transporte, 
@@ -262,6 +368,27 @@ export const TEXTOS_ESTATICOS_PLANEACION = {
     paraca12: `Indique si el Agente Aduanal cuenta con un sistema, control o base de datos actualizada, tanto del personal contratado directamente, como aquel contratado a través de una empresa proveedora de servicios y asegúrese que incluya de forma enunciativa mas no limitativa los siguientes puntos:`,
   }
 
+  /**
+   * Textos estáticos relacionados con los requisitos de seguridad de la información para agentes aduanales.
+   *
+   * Esta constante contiene diversos párrafos y encabezados que describen las políticas,
+   * procedimientos y medidas necesarias para mantener la confidencialidad, integridad y
+   * disponibilidad de la información y documentación generada por los sistemas de la empresa,
+   * incluyendo aquellos utilizados para el intercambio de información con socios de la cadena de suministros.
+   *
+   * Los textos cubren temas como:
+   * - Clasificación y manejo de documentos sensibles
+   * - Revisiones periódicas de accesos a la información
+   * - Seguridad de los sistemas de tecnología de la información
+   * - Protección contra amenazas de ciberseguridad (malware, phishing, etc.)
+   * - Uso de tecnologías seguras para acceso remoto (VPN)
+   * - Procedimientos para recuperación o reemplazo de sistemas y datos de TI
+   * - Medidas disciplinarias por mal uso o acceso no autorizado
+   * - Respaldo y protección física de la infraestructura de TI
+   *
+   * Estos textos estáticos están destinados a guiar a los agentes aduanales en el establecimiento y documentación
+   * de políticas y procedimientos integrales de seguridad en cumplimiento con la legislación aplicable.
+   */
   export const TEXTOS_ESTATICOS_SEGURIDAD_DE_LA = {
     paraca1: `Deben existir medidas de prevención para mantener la confidencialidad
      e integridad de la información y documentación generada por los sistemas de la empresa, 
@@ -353,6 +480,18 @@ export const TEXTOS_ESTATICOS_PLANEACION = {
     paraca10: 'En caso de prestar el servicio de transporte, indique las capacitaciones que imparte para realizar la revisión a los vehículos de carga, contenedores, remolques y/o semirremolques con fines agrícolas y de seguridad debe incluir los siguientes temas:'
   }
 
+/**
+ * Texto estático utilizado para el manejo de procedimientos y reportes relacionados con la seguridad en la cadena de suministros.
+ *
+ * @property paraca1 - Procedimientos documentados para reportar e investigar incidentes de seguridad, acciones correctivas y notificación a las partes involucradas.
+ * @property paraca2 - Procedimientos en caso de identificar situaciones de riesgo en embarques de comercio exterior, pasos a seguir y revisión periódica de protocolos.
+ * @property encabezamiento1 - Encabezado para la sección de reporte de anomalías y/o actividades sospechosas.
+ * @property paraca3 - Procedimientos de notificación y registro de anomalías y actividades sospechosas relacionadas con la seguridad de la cadena de suministros.
+ * @property paraca4 - Procedimientos escritos para denunciar, analizar e investigar anomalías y actividades sospechosas, así como la documentación de acciones correctivas.
+ * @property encabezamiento2 - Encabezado para la sección de investigación y análisis.
+ * @property paraca5 - Requisitos de documentación para operaciones de comercio exterior afectadas, con el fin de identificar procesos y vulnerabilidades.
+ * @property paraca6 - Documentos sugeridos para incluir en el expediente derivado de la investigación.
+ */
 export const TEXTOS_ESTATICOS_MANEJO = {
   paraca1: `Deben existir procedimientos documentados para reportar e investigar incidentes
    de seguridad en la cadena de suministros y las acciones a tomar para evitar su recurrencia, 

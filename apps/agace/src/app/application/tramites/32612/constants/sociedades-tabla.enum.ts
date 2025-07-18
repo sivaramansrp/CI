@@ -1,3 +1,10 @@
+/**
+ * @constant CONFIGURACION_SOCIEDADES
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_SOCIEDADES = [
     {
       id: 'resigtro',
@@ -102,7 +109,13 @@ export const CONFIGURACION_SOCIEDADES = [
     }
 ];
 
-
+/**
+ * @constant CONFIGURACION_AGREGAR
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_AGREGAR = [
     {
       id: 'rfcDelAgente',
@@ -136,6 +149,13 @@ export const CONFIGURACION_AGREGAR = [
     }
 ]
 
+/**
+ * @constant CONFIGURACION_IDIQUESI
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_IDIQUESI = [
     {
       id: 'indiqueSi',
@@ -165,6 +185,13 @@ export const CONFIGURACION_IDIQUESI = [
     }
 ]
 
+/**
+ * @constant MANDATARIOS_DEL_AGENT
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const MANDATARIOS_DEL_AGENT = [
     {
       id: 'rfc',
@@ -254,6 +281,13 @@ export const MANDATARIOS_DEL_AGENT = [
     }
 ];
 
+/**
+ * @constant CONFIGURACION_MODIFICAR
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_MODIFICAR = [
     {
       id: 'instalacionesPrincipales',

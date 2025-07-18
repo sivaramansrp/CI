@@ -1,3 +1,10 @@
+/**
+ * @constant CONFIGURACION_PROCESOS
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_PROCESOS = [
     {
       id: 'transmisionInformacion',
@@ -49,6 +56,13 @@ export const CONFIGURACION_PROCESOS = [
     }
 ]
 
+/**
+ * @constant CONFIGURACION_COMMUNICACION
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_COMMUNICACION = [
     {
       id: 'detalladamente',

@@ -1,3 +1,10 @@
+/**
+ * @constant CONFIGURACION
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION = [
     {
       id: 'indiqueSi',
@@ -87,6 +94,13 @@ export const CONFIGURACION = [
     }
 ]
 
+/**
+ * @constant CONFIGURACION_POLITICAS
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_POLITICAS = [
     {
       id: 'enunciarPoliticas',
@@ -180,6 +194,13 @@ export const CONFIGURACION_POLITICAS = [
     }
 ]
 
+/**
+ * @constant CONFIGURACION_AUDITORIAS
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_AUDITORIAS = [
 
   {
@@ -369,6 +390,13 @@ export const CONFIGURACION_AUDITORIAS = [
 
 ]
 
+/**
+ * @constant CONFIGURACION_CONTINGENCIA
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_CONTINGENCIA = [
 
   {

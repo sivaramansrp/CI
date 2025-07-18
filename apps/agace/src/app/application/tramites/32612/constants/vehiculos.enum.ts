@@ -1,3 +1,10 @@
+/**
+ * @constant CONFIGURACION_SELLOS
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_SELLOS = [
     {
       id: 'aduanalCuenta',
@@ -53,6 +60,13 @@ export const CONFIGURACION_SELLOS = [
     }
 ]
 
+/**
+ * @constant CONFIGURACION_PROCEDIMIENTO
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_PROCEDIMIENTO = [
   {
     id: 'documentado',
@@ -80,6 +94,13 @@ export const CONFIGURACION_PROCEDIMIENTO = [
   }
 ];
 
+/**
+ * @constant CONFIGURACION_ANEXE_PROCEDIMIENTO
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_ANEXE_PROCEDIMIENTO = [
     {
         id: 'paraElCaso',
@@ -136,6 +157,13 @@ export const CONFIGURACION_ANEXE_PROCEDIMIENTO = [
     }
 ]
 
+/**
+ * @constant CONFIGURACION_ADUANAL_CUENTA
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_ADUANAL_CUENTA = [
 {
     id: 'agenciaAduanal',
@@ -187,6 +215,13 @@ export const CONFIGURACION_ADUANAL_CUENTA = [
   }
 ]
 
+/**
+ * @constant CONFIGURACION_CONSERVARSE
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_CONSERVARSE = [
     {
     id: 'formatoEstablecido',

@@ -1,3 +1,10 @@
+/**
+ * @constant CONFIGURACION_TECNOLOGIA
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_TECNOLOGIA = [
     {
         id: 'politicasSeguridad',
@@ -136,6 +143,13 @@ export const CONFIGURACION_TECNOLOGIA = [
 
 ]
 
+/**
+ * @constant CONFIGURACION_TECNOLOGIA_DOS
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_TECNOLOGIA_DOS = [
     {
         id: 'procedimientos',

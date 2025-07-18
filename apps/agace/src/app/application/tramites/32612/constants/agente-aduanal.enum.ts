@@ -1,7 +1,37 @@
+/**
+ * Representa las opciones disponibles de radio para la autorización del agente.
+ * Cada opción contiene un `label` para mostrar y un `value` para seleccionar.
+ *
+ * @example
+ * // Ejemplo de uso:
+ * RADIO_OPCIONES[0] // { label: 'Si Autorizo', value: 'Si' }
+ */
 export const RADIO_OPCIONS = [
   { label: 'Si Autorizo', value: 'Si' },
   { label: 'No Autorizo', value: 'No' },
 ];
+/**
+ * @constant
+ * @name CONFIGURACION
+ * @description
+ * Arreglo de objetos de configuración para los campos del formulario relacionados con el agente aduanal.
+ * Cada objeto representa una pregunta específica que debe ser respondida por el usuario, incluyendo información
+ * sobre el estado de la patente aduanal, procesos legales y cumplimiento de estándares de seguridad.
+ *
+ * @property {string} id - Identificador único del campo.
+ * @property {number} row - Número de fila en el formulario.
+ * @property {string} labelNombre - Texto de la pregunta que se muestra al usuario.
+ * @property {string} campo - Nombre del campo en el formulario.
+ * @property {string} clase - Clases CSS aplicadas al campo.
+ * @property {string} tipoInput - Tipo de entrada del campo (por ejemplo, 'radio').
+ * @property {boolean} desactivado - Indica si el campo está desactivado.
+ * @property {boolean} soloLectura - Indica si el campo es solo de lectura.
+ * @property {Array} validadores - Lista de validadores aplicados al campo.
+ * @property {string} layout - Disposición del campo en el formulario.
+ * @property {string} marcadorDePosicion - Texto del marcador de posición.
+ * @property {number} marginBottom - Espacio inferior del campo.
+ * @property {Array<{label: string, value: string}>} opciones - Opciones disponibles para el campo tipo radio.
+ */
 export const CONFIGURACION = [
     {
       id: 'senaleSi',
@@ -83,271 +113,315 @@ export const CONFIGURACION = [
     }
 ]
 
+/**
+ * Arreglo de configuración para los campos del formulario "Certificado Comercial".
+ *
+ * Cada objeto en el arreglo representa un campo del formulario con sus propiedades, tales como:
+ * - `id`: Identificador único del campo.
+ * - `row`: Número de fila para la posición en el layout.
+ * - `labelNombre`: Etiqueta que se muestra para el campo.
+ * - `campo`: Nombre del campo utilizado para el enlace de datos.
+ * - `clase`: Clase CSS para el diseño.
+ * - `tipoInput`: Tipo de control de entrada (por ejemplo, 'radio', 'text').
+ * - `desactivado`: Indica si el campo está deshabilitado.
+ * - `soloLectura`: Indica si el campo es solo de lectura.
+ * - `validadores`: Arreglo de reglas de validación para el campo.
+ * - `layout`: Orientación del layout (por ejemplo, 'horizontal').
+ * - `marcadorDePosicion`: Texto de marcador de posición para el input.
+ * - `marginBottom` / `marginTop`: Valores de margen para el espaciado.
+ * - `opciones`: Arreglo de opciones para los inputs tipo radio.
+ * - `valorPredeterminado`: Valor predeterminado para el campo.
+ * - `mostrar`: Controla la visibilidad del campo.
+ *
+ * Esta configuración se utiliza para renderizar y validar dinámicamente el formulario de certificado comercial.
+ */
 export const CONFIGURACION_COMERCIAL_CERTIFICADO = [
 
-    {
-        id: 'rfc',
-        row: 1,
-        labelNombre: 'RFC',
-        campo: 'rfc',
-        clase: 'col-md-12',
-        tipoInput: 'radio',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [],
-        layout: 'horizontal',
-        marcadorDePosicion: '',
-        marginBottom: 5,
-        opciones: [
-        { label: 'Si', value: 'Si' },
-        { label: 'No', value: 'No' }
-        ]
-    },
-    {
-        id: 'nombreORazonSocial',
-        row: 2,
-        labelNombre: 'Nombre o Razón Social',
-        campo: 'nombreORazonSocial',
-        clase: 'col-md-12',
-        tipoInput: 'radio',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [],
-        layout: 'horizontal',
-        marcadorDePosicion: '',
-        marginBottom: 5,
-        opciones: [
-        { label: 'Si', value: 'Si' },
-        { label: 'No', value: 'No' }
-        ]
-    },
-    {
-        id: 'direccionFiscal',
-        row: 3,
-        labelNombre: 'Dirección Fiscal',
-        campo: 'direccionFiscal',
-        clase: 'col-md-12',
-        tipoInput: 'radio',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [],
-        layout: 'horizontal',
-        marcadorDePosicion: '',
-        marginBottom: 5,
-        opciones: [
-        { label: 'Si', value: 'Si' },
-        { label: 'No', value: 'No' }
-        ]
-    },
-    {
-        id: 'paginaElectronica',
-        row: 4,
-        labelNombre: 'Página Electrónica',
-        campo: 'paginaElectronica',
-        clase: 'col-md-12',
-        tipoInput: 'radio',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [],
-        layout: 'horizontal',
-        marcadorDePosicion: '',
-        marginBottom: 5,
-        opciones: [
-        { label: 'Si', value: 'Si' },
-        { label: 'No', value: 'No' }
-        ]
-    },
-    {
-        id: 'correoElectronico',
-        row: 5,
-        labelNombre: 'Correo Electrónico de contacto',
-        campo: 'correoElectronico',
-        clase: 'col-md-12',
-        tipoInput: 'radio',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [],
-        layout: 'horizontal',
-        marcadorDePosicion: '',
-        marginBottom: 5,
-        opciones: [
-        { label: 'Si', value: 'Si' },
-        { label: 'No', value: 'No' }
-        ]
-    },
-    {
-        id: 'telefonoContacto',
-        row: 6,
-        labelNombre: 'Teléfono de contacto',
-        campo: 'telefonoContacto',
-        clase: 'col-md-12',
-        tipoInput: 'radio',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [],
-        layout: 'horizontal',
-        marcadorDePosicion: '',
-        marginBottom: 5,
-        opciones: [
-        { label: 'Si', value: 'Si' },
-        { label: 'No', value: 'No' }
-        ]
-    },
-    {
-        id: 'pagina',
-        row: 4,
-        labelNombre: '',
-        campo: 'pagina',
-        clase: 'col-md-12',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-          {
-          tipo: 'required'
-          }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0,
-        mostrar: false
-    },
-    {
-        id: 'correo',
-        row: 5,
-        labelNombre: '',
-        campo: 'correo',
-        clase: 'col-md-12',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-          {
-          tipo: 'required'
-          }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0,
-        mostrar: false
-    },
-    {
-        id: 'lada',
-        row: 6,
-        labelNombre: 'Lada',
-        campo: 'lada',
-        clase: 'col-md-2',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-          {
-          tipo: 'required'
-          }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0,
-        mostrar: false
-    },
-    {
-        id: 'telefonoUno',
-        row: 6,
-        labelNombre: 'Teléfono',
-        campo: 'telefonoUno',
-        clase: 'col-md-7',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-          {
-          tipo: 'required'
-          }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0,
-        mostrar: false
-    },
+  {
+    id: 'rfc',
+    row: 1,
+    labelNombre: 'RFC',
+    campo: 'rfc',
+    clase: 'col-md-12',
+    tipoInput: 'radio',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    layout: 'horizontal',
+    marcadorDePosicion: '',
+    marginBottom: 5,
+    opciones: [
+    { label: 'Sí', value: 'Si' },
+    { label: 'No', value: 'No' }
+    ]
+  },
+  {
+    id: 'nombreORazonSocial',
+    row: 2,
+    labelNombre: 'Nombre o Razón Social',
+    campo: 'nombreORazonSocial',
+    clase: 'col-md-12',
+    tipoInput: 'radio',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    layout: 'horizontal',
+    marcadorDePosicion: '',
+    marginBottom: 5,
+    opciones: [
+    { label: 'Sí', value: 'Si' },
+    { label: 'No', value: 'No' }
+    ]
+  },
+  {
+    id: 'direccionFiscal',
+    row: 3,
+    labelNombre: 'Dirección Fiscal',
+    campo: 'direccionFiscal',
+    clase: 'col-md-12',
+    tipoInput: 'radio',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    layout: 'horizontal',
+    marcadorDePosicion: '',
+    marginBottom: 5,
+    opciones: [
+    { label: 'Sí', value: 'Si' },
+    { label: 'No', value: 'No' }
+    ]
+  },
+  {
+    id: 'paginaElectronica',
+    row: 4,
+    labelNombre: 'Página Electrónica',
+    campo: 'paginaElectronica',
+    clase: 'col-md-12',
+    tipoInput: 'radio',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    layout: 'horizontal',
+    marcadorDePosicion: '',
+    marginBottom: 5,
+    opciones: [
+    { label: 'Sí', value: 'Si' },
+    { label: 'No', value: 'No' }
+    ]
+  },
+  {
+    id: 'correoElectronico',
+    row: 5,
+    labelNombre: 'Correo Electrónico de contacto',
+    campo: 'correoElectronico',
+    clase: 'col-md-12',
+    tipoInput: 'radio',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    layout: 'horizontal',
+    marcadorDePosicion: '',
+    marginBottom: 5,
+    opciones: [
+    { label: 'Sí', value: 'Si' },
+    { label: 'No', value: 'No' }
+    ]
+  },
+  {
+    id: 'telefonoContacto',
+    row: 6,
+    labelNombre: 'Teléfono de contacto',
+    campo: 'telefonoContacto',
+    clase: 'col-md-12',
+    tipoInput: 'radio',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    layout: 'horizontal',
+    marcadorDePosicion: '',
+    marginBottom: 5,
+    opciones: [
+    { label: 'Sí', value: 'Si' },
+    { label: 'No', value: 'No' }
+    ]
+  },
+  {
+    id: 'pagina',
+    row: 4,
+    labelNombre: '',
+    campo: 'pagina',
+    clase: 'col-md-12',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
       {
-        id: 'ladaDos',
-        row: 7,
-        labelNombre: 'Lada',
-        campo: 'ladaDos',
-        clase: 'col-md-2',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-          {
-          tipo: 'required'
-          }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 2,
-        mostrar: false
-    },
+      tipo: 'required'
+      }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    mostrar: false
+  },
+  {
+    id: 'correo',
+    row: 5,
+    labelNombre: '',
+    campo: 'correo',
+    clase: 'col-md-12',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      {
+      tipo: 'required'
+      }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    mostrar: false
+  },
+  {
+    id: 'lada',
+    row: 6,
+    labelNombre: 'Lada',
+    campo: 'lada',
+    clase: 'col-md-2',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      {
+      tipo: 'required'
+      }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    mostrar: false
+  },
+  {
+    id: 'telefonoUno',
+    row: 6,
+    labelNombre: 'Teléfono',
+    campo: 'telefonoUno',
+    clase: 'col-md-7',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      {
+      tipo: 'required'
+      }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    mostrar: false
+  },
     {
-        id: 'telefonoDos',
-        row: 7,
-        labelNombre: 'Teléfono',
-        campo: 'telefonoDos',
-        clase: 'col-md-7',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-          {
-          tipo: 'required'
-          }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 2,
-        mostrar: false
-    },
-    {
-        id: 'ladatres',
-        row: 8,
-        labelNombre: 'Lada',
-        campo: 'ladaTres',
-        clase: 'col-md-2',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-          {
-          tipo: 'required'
-          }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 2,
-        mostrar: false
-    },
-    {
-        id: 'telefonoTres',
-        row: 8,
-        labelNombre: 'Teléfono',
-        campo: 'telefonoTres',
-        clase: 'col-md-7',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-          {
-          tipo: 'required'
-          }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 2,
-        mostrar: false
-    }
+    id: 'ladaDos',
+    row: 7,
+    labelNombre: 'Lada',
+    campo: 'ladaDos',
+    clase: 'col-md-2',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      {
+      tipo: 'required'
+      }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 2,
+    mostrar: false
+  },
+  {
+    id: 'telefonoDos',
+    row: 7,
+    labelNombre: 'Teléfono',
+    campo: 'telefonoDos',
+    clase: 'col-md-7',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      {
+      tipo: 'required'
+      }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 2,
+    mostrar: false
+  },
+  {
+    id: 'ladatres',
+    row: 8,
+    labelNombre: 'Lada',
+    campo: 'ladaTres',
+    clase: 'col-md-2',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      {
+      tipo: 'required'
+      }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 2,
+    mostrar: false
+  },
+  {
+    id: 'telefonoTres',
+    row: 8,
+    labelNombre: 'Teléfono',
+    campo: 'telefonoTres',
+    clase: 'col-md-7',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      {
+      tipo: 'required'
+      }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 2,
+    mostrar: false
+  }
 
 ]
 
+/**
+ * @constant CLASIFICACION
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ *
+ * @property {string} id - Identificador único del campo.
+ * @property {number} row - Número de fila en el layout del formulario.
+ * @property {string} labelNombre - Etiqueta descriptiva mostrada al usuario.
+ * @property {string} campo - Nombre del campo en el modelo de datos.
+ * @property {string} clase - Clase CSS para el diseño del campo.
+ * @property {string} tipoInput - Tipo de input utilizado (radio).
+ * @property {boolean} desactivado - Indica si el campo está desactivado.
+ * @property {boolean} soloLectura - Indica si el campo es solo de lectura.
+ * @property {Array} validadores - Lista de validadores aplicados al campo.
+ * @property {string} layout - Tipo de layout para el input.
+ * @property {string} marcadorDePosicion - Texto de marcador de posición.
+ * @property {number} marginBottom - Margen inferior en píxeles.
+ * @property {Array<{label: string, value: string}>} opciones - Opciones disponibles para el input radio.
+ * @property {boolean} mostrar - Indica si el campo debe mostrarse.
+ */
 export const CLASIFICACION = [
     {
         id: 'proporcionada',
@@ -369,6 +443,14 @@ export const CLASIFICACION = [
         mostrar: false
     } 
 ]
+
+/**
+ * @constant PAGO_DE_DERECHOS
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 
 export const PAGO_DE_DERECHOS = [
   {

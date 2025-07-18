@@ -1,3 +1,10 @@
+/**
+ * @constant CONFIGURACION_GESTION
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_GESTION = [
     {
       id: 'manera',
@@ -16,6 +23,13 @@ export const CONFIGURACION_GESTION = [
     }
 ]
 
+/**
+ * @constant CONFIGURACION_CONTROL
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_CONTROL = [
     {
         id: 'manera',
@@ -45,6 +59,13 @@ export const CONFIGURACION_CONTROL = [
     }
 ]
 
+/**
+ * @constant CONFIGURACION_ACTUALIZADA
+ * @description
+ * Arreglo que contiene la configuración para el campo de clasificación de la información proporcionada
+ * durante el trámite de Registro de Certificación de Empresas. Define las propiedades visuales, de validación
+ * y opciones disponibles para el input tipo radio, permitiendo seleccionar si la información es pública o privada.
+ */
 export const CONFIGURACION_ACTUALIZADA = [
     {
         id: 'cuenta',
