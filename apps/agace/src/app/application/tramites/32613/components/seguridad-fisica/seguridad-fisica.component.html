@@ -2,7 +2,7 @@
   <div class="page">
     <div class="container">
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           La empresa concesionaria de transporte ferroviario debe contar con
           mecanismos establecidos para impedir, detectar o disuadir la entrada
           de personal no autorizado a sus instalaciones, terminales, patios,
@@ -20,7 +20,7 @@
         <ng-titulo titulo="2.1 Instalaciones" />
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           Las instalaciones deben estar construidas con materiales que puedan
           resistir accesos no autorizados. Se deben realizar inspecciones
           periódicas documentadas para mantener la integridad de las
@@ -36,6 +36,8 @@
           [forma]="instalacionesFormGroup"
           [formularioDatos]="instalacionesFormData"
           [templateMap]="templateMap"
+          [estado]="rubroTransporteFerrovariostate"
+          [soloLectura]="consultaState.readonly"
           (emitirCambioDeValor)="establecerCambioDeValor($event)"
         ></formas-dinamicas>
       </div>
@@ -44,7 +46,7 @@
         <ng-titulo titulo="2.2 Accesos en puertas y casetas" />
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           Las puertas de entrada o salida de vehículos y/o personal de accesos a
           los patios de operación ferroviaria y/o a las oficinas
           administrativas, deben ser atendidas y/o supervisadas ya sea por medio
@@ -53,7 +55,7 @@
         </label>
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           El acceso a las áreas sensibles debe estar restringido según la
           descripción del trabajo o las tareas asignadas.
         </label>
@@ -62,6 +64,8 @@
         <formas-dinamicas
           [forma]="accesosEnPuertasFormGroup"
           [formularioDatos]="accesosEnPuertasFormData"
+          [estado]="rubroTransporteFerrovariostate"
+          [soloLectura]="consultaState.readonly"
           (emitirCambioDeValor)="establecerCambioDeValor($event)"
         ></formas-dinamicas>
       </div>
@@ -70,7 +74,7 @@
         <ng-titulo titulo="2.3 Bardas perimetrales" />
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           Las bardas perimetrales y/o barreras periféricas deben instalarse para
           asegurar los parámetros de la empresa, con base en un análisis de
           riesgo. Estas deben ser inspeccionadas regularmente y llevar un
@@ -84,13 +88,13 @@
         </label>
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           El procedimiento para la inspección de las bardas perimétricas podría
           incluir:
         </label>
       </div>
       <div class="col-md-12">
-        <ol type="a" class="fs-4 fw-medium">
+        <ol type="a">
           <li>Personal responsable para llevar a cabo el proceso.</li>
           <li>
             Cómo y con qué frecuencia se llevan a cabo las inspecciones de las
@@ -108,6 +112,8 @@
         <formas-dinamicas
           [forma]="bardasPerimetralesFormGroup"
           [formularioDatos]="bardasPerimetralesFormData"
+          [estado]="rubroTransporteFerrovariostate"
+          [soloLectura]="consultaState.readonly"
           (emitirCambioDeValor)="establecerCambioDeValor($event)"
         ></formas-dinamicas>
       </div>
@@ -116,7 +122,7 @@
         <ng-titulo titulo="2.4 Estacionamientos" />
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           El acceso a los estacionamientos de las instalaciones debe ser
           controlado y monitoreado por el personal de seguridad o designado para
           esta tarea. Se debe prohibir que los vehículos privados (de empleados,
@@ -132,6 +138,8 @@
         <formas-dinamicas
           [forma]="estacionamientosFormGroup"
           [formularioDatos]="estacionamientosFormData"
+          [estado]="rubroTransporteFerrovariostate"
+          [soloLectura]="consultaState.readonly"
           (emitirCambioDeValor)="establecerCambioDeValor($event)"
         ></formas-dinamicas>
       </div>
@@ -142,7 +150,7 @@
         />
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           De acuerdo al análisis de riesgo las ventanas, puertas y cercas
           interiores y exteriores deberán asegurarse con dispositivos de cierre.
           El transportista ferroviario deberá contar con procedimientos
@@ -155,7 +163,7 @@
         </label>
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           La dirección de la empresa concesionaria de transporte ferroviario
           será la responsable de controlar las llaves de las áreas sensibles o
           restringidas de sus instalaciones*
@@ -166,6 +174,8 @@
           [forma]="controlDeLlavesFormGroup"
           [formularioDatos]="controlDeLlavesFormData"
           [templateMap]="templateMap"
+          [estado]="rubroTransporteFerrovariostate"
+          [soloLectura]="consultaState.readonly"
           (emitirCambioDeValor)="establecerCambioDeValor($event)"
         ></formas-dinamicas>
       </div>
@@ -174,7 +184,7 @@
         <ng-titulo titulo="2.6 Alumbrado" />
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           El alumbrado dentro y fuera de las instalaciones debe permitir una
           clara identificación de personas, material y/o equipo que ahí se
           encuentre, incluyendo las siguientes áreas: entradas, salidas, áreas
@@ -185,10 +195,10 @@
         </label>
       </div>
       <div class="col-md-12">
-        <ul class="fs-4 fw-medium">
+        <ul>
           <li>
             El procedimiento podrá incluir:
-            <ol type="a" class="fs-4 fw-medium">
+            <ol type="a">
               <li>Cómo se controla el sistema de iluminación.</li>
               <li>Horarios de funcionamiento.</li>
               <li>Identificación de áreas con iluminación permanente.</li>
@@ -200,6 +210,8 @@
         <formas-dinamicas
           [forma]="alumbradoFormGroup"
           [formularioDatos]="alumbradoFormData"
+          [estado]="rubroTransporteFerrovariostate"
+          [soloLectura]="consultaState.readonly"
           (emitirCambioDeValor)="establecerCambioDeValor($event)"
         ></formas-dinamicas>
       </div>
@@ -208,7 +220,7 @@
         <ng-titulo titulo="2.7 Aparatos de comunicación" />
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           La empresa concesionaria de transporte ferroviario deberá contar con
           dispositivos y/o sistemas de comunicación con la finalidad de tener un
           contacto inmediato con el personal de seguridad y/o con las
@@ -218,10 +230,10 @@
         </label>
       </div>
       <div class="col-md-12">
-        <ul class="fs-4 fw-medium">
+        <ul class=" fw-medium">
           <li>
             El procedimiento podrá incluir:
-            <ol type="a" class="fs-4 fw-medium">
+            <ol type="a">
               <li>
                 Responsable del buen funcionamiento y mantenimiento de los
                 aparatos de comunicación.
@@ -236,6 +248,8 @@
         <formas-dinamicas
           [forma]="aparatosFormGroup"
           [formularioDatos]="aparatosFormData"
+          [estado]="rubroTransporteFerrovariostate"
+          [soloLectura]="consultaState.readonly"
           (emitirCambioDeValor)="establecerCambioDeValor($event)"
         ></formas-dinamicas>
       </div>
@@ -246,7 +260,7 @@
         />
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           Los sistemas de alarma y de circuito cerrado de televisión y video
           vigilancia y las tecnologías de seguridad, se deben utilizar para
           vigilar, notificar o disuadir accesos no autorizados y actividades
@@ -257,7 +271,7 @@
         </label>
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           Estos sistemas y tecnologías de seguridad deben colocarse, vigilarse y
           monitorearse de acuerdo a un análisis de riesgo previo de tal forma
           que se mantengan vigiladas y monitoreadas las áreas que impliquen el
@@ -271,7 +285,7 @@
         </label>
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           Dichos sistemas deben permitir una clara identificación del área o
           ambiente que vigila, estar permanentemente grabando y mantener un
           respaldo de las grabaciones por lo menos de un mes, considerando que,
@@ -283,7 +297,7 @@
         </label>
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           Los sistemas de alarma y de circuito cerrado de televisión y video
           vigilancia y las tecnologías de seguridad, deben contar con un
           procedimiento documentado de operación que incluya la supervisión del
@@ -298,6 +312,8 @@
         <formas-dinamicas
           [forma]="sistemasDeAlarmaFormGroup"
           [formularioDatos]="sistemasDeAlarmaFormData"
+          [estado]="rubroTransporteFerrovariostate"
+          [soloLectura]="consultaState.readonly"
           (emitirCambioDeValor)="establecerCambioDeValor($event)"
         ></formas-dinamicas>
       </div>
@@ -330,7 +346,7 @@
     </div>
   </div>
   <div class="col-md-12">
-    <ol type="a" class="fs-4 fw-medium">
+    <ol type="a">
       <li>
         Responsables de administrar y controlar la seguridad de las llaves.
       </li>

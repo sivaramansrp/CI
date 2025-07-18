@@ -9,6 +9,8 @@
                 [forma]="ninoFormGroupUno"
                 [formularioDatos]="formDataUno"
                 [templateMap]="templateMap"
+                [estado]="datosComunesTresState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="establecerCambioDeValorUno($event)"
                 ></formas-dinamicas>
             </div>
@@ -35,7 +37,7 @@
                   </div>
                   <div class="col-md-4"></div>
                   <div class="col-md-4 d-flex justify-content-end">
-                    <button type="button" name="cargaArchivoProcesos" id="cargaArchivoProcesos" class="btn btn-primary me-md-3" (click)="anexar()">Anexar</button>
+                    <button type="button" name="cargaArchivoProcesos" id="cargaArchivoProcesos" class="btn btn-primary me-md-3" (click)="anexar()" [disabled]="consultaState.readonly">Anexar</button>
                   </div>
                 </div>
               </div>
@@ -66,7 +68,7 @@
                   </div>
                   <div class="col-md-4"></div>
                   <div class="col-md-4 d-flex justify-content-end">
-                    <button type="button" name="cargaArchivoProcesos" id="cargaArchivoProcesos" class="btn btn-primary me-md-3" (click)="anexar()">Anexar</button>
+                    <button type="button" name="cargaArchivoProcesos" id="cargaArchivoProcesos" class="btn btn-primary me-md-3" (click)="anexar()" [disabled]="consultaState.readonly">Anexar</button>
                   </div>
                 </div>
               </div>
@@ -107,7 +109,7 @@
                   [isRequired]="true"
                   [layout]="'horizontal'"
                   [gridLayout]="true"
-                  (change)="cambioEvento($event, 'senaleSiElSAT')"
+                  (valueChange)="cambioEvento($event, 'senaleSiElSAT')"
                 ></app-input-radio>
               </div>
             </div>
@@ -118,11 +120,13 @@
                 formularioTitulo="Control Inventarios"
                 [forma]="ninoFormGroupDos"
                 [formularioDatos]="formDataDos"
+                [estado]="datosComunesTresState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="establecerCambioDeValorDos($event)"
                 ></formas-dinamicas>
               </div>
               <div class="col-md-12 d-flex justify-content-end">
-                <button type="button" name="" id="" class="btn btn-primary me-md-3" (click)="agregarControlInventarios()">Agregar</button>
+                <button type="button" name="" id="" class="btn btn-primary me-md-3" (click)="agregarControlInventarios()" [disabled]="consultaState.readonly">Agregar</button>
               </div>
 
               <div class="col-md-12 mt-4">
@@ -133,14 +137,15 @@
                   [tipoSeleccionTabla]="tablaSeleccionCheckbox"
                   [configuracionTabla]="inventariosConfiguracionColumnas"
                   [datos]="inventariosDatos"
+                  [disableSeleccionTablaCheckBox]="consultaState.readonly"
                   (listaDeFilaSeleccionada)="seleccionarInventariosDatos($event)"
                 >
                 </app-tabla-con-entrada>
               </div>
               <div class="col-md-12 mt-5">
                   <div class="d-flex justify-content-end mt-4">
-                    <button type="button" id="modificar" class="btn btn-default ms-3" (click)="modificarControlInventarios()">Modificar</button>
-                    <button type="button" id="eliminar" class="btn btn-danger ms-3" (click)="eliminarInventariosDatos()">Eliminar</button>
+                    <button type="button" id="modificar" class="btn btn-default ms-3" (click)="modificarControlInventarios()" [disabled]="consultaState.readonly">Modificar</button>
+                    <button type="button" id="eliminar" class="btn btn-danger ms-3" (click)="eliminarInventariosDatos()" [disabled]="consultaState.readonly">Eliminar</button>
                   </div>
               </div>
               <div class="col-md-12 mt-4">
@@ -161,12 +166,12 @@
                   CFF y las reglas 2.8.1.5. y la 2.8.1.6. de la RMF. *</label
                 >
                 <app-input-radio
-                  formContolName="senaleSiIngresaMensualmente"
+                  formControlName="senaleSiIngresaMensualmente"
                   [radioOptions]="sinoOpciones"
                   [isRequired]="true"
                   [layout]="'horizontal'"
                   [gridLayout]="true"
-                  (change)="cambioEvento($event, 'senaleSiIngresaMensualmente')"
+                  (valueChange)="cambioEvento($event, 'senaleSiIngresaMensualmente')"
                 ></app-input-radio>
               </div>
             </div>
@@ -195,6 +200,7 @@
                   [tipoSeleccionTabla]="tablaSeleccionCheckbox"
                   [configuracionTabla]="seccionSociosICConfiguracionColumnas"
                   [datos]="listaSeccionSociosIC"
+                  [disableSeleccionTablaCheckBox]="consultaState.readonly"
                   (listaDeFilaSeleccionada)="seleccionarlistaSeccionSociosIC($event)"
                 >
                 </app-tabla-dinamica>
@@ -202,9 +208,9 @@
 
               <div class="col-md-12 mt-5">
                 <div class="d-flex justify-content-end mt-4">
-                  <button type="button" id="agregar" class="btn btn-primary" (click)="agregarMiembrosEmpresa()">Agregar</button>
-                  <button type="button" id="modificar" class="btn btn-default ms-3" (click)="agregarMiembrosEmpresa()">Modificar</button>
-                  <button type="button" id="eliminar" class="btn btn-danger ms-3" (click)="eliminarlistaSeccionSociosIC()">Eliminar</button>
+                  <button type="button" id="agregar" class="btn btn-primary" (click)="agregarMiembrosEmpresa()" [disabled]="consultaState.readonly">Agregar</button>
+                  <button type="button" id="modificar" class="btn btn-default ms-3" (click)="agregarMiembrosEmpresa()" [disabled]="consultaState.readonly">Modificar</button>
+                  <button type="button" id="eliminar" class="btn btn-danger ms-3" (click)="eliminarlistaSeccionSociosIC()" [disabled]="consultaState.readonly">Eliminar</button>
                 </div>
               </div>
 
@@ -213,6 +219,8 @@
                   <formas-dinamicas
                   [forma]="ninoFormGroupTres"
                   [formularioDatos]="formDataTres"
+                  [estado]="datosComunesTresState"
+                  [soloLectura]="consultaState.readonly"
                   (emitirCambioDeValor)="establecerCambioDeValorTres($event)"
                   ></formas-dinamicas>
                 </div>
@@ -245,6 +253,7 @@
           [tipoSeleccionTabla]="tablaSeleccionCheckbox"
           [configuracionTabla]="numeroDeEmpleadosConfiguracionColumnas"
           [datos]="numeroDeEmpleadosLista"
+          [disableSeleccionTablaCheckBox]="consultaState.readonly"
           (listaDeFilaSeleccionada)="seleccionarNumeroDeEmpleadosDato($event)"
         >
         </app-tabla-dinamica>
@@ -252,10 +261,9 @@
 
       <div class="col-md-12 mt-3">
         <div class="d-flex justify-content-end mt-4">
-          <button type="button" id="agregar" class="btn btn-primary" (click)="agregarSubcontratados()">Agregar</button>
-          <button type="button" id="modificar" class="btn btn-default ms-3" (click)="modificarSubcontratados()">Modificar</button>
-          <button type="button" id="eliminar" class="btn btn-danger ms-3" (click)="eliminarNumeroDeEmpleadosDato()">Eliminar</button>
-          <!-- [disabled]="esFormularioSoloLectura" -->
+          <button type="button" id="agregar" class="btn btn-primary" (click)="agregarSubcontratados()" [disabled]="consultaState.readonly">Agregar</button>
+          <button type="button" id="modificar" class="btn btn-default ms-3" (click)="modificarSubcontratados()" [disabled]="consultaState.readonly">Modificar</button>
+          <button type="button" id="eliminar" class="btn btn-danger ms-3" (click)="eliminarNumeroDeEmpleadosDato()" [disabled]="consultaState.readonly">Eliminar</button>
         </div>
       </div>
     }
@@ -278,15 +286,16 @@
         [tipoSeleccionTabla]="tablaSeleccionCheckbox"
         [configuracionTabla]="domiciliosConfiguracionColumnas"
         [datos]="domiciliosDatos"
+        [disableSeleccionTablaCheckBox]="consultaState.readonly"
         (listaDeFilaSeleccionada)="seleccionarDomiciliosDato($event)"
       >
       </app-tabla-dinamica>
     </div>
     <div class="col-md-12 mt-5">
       <div class="d-flex justify-content-end mt-4">
-        <button type="button" id="modificar" class="btn btn-default" (click)="modificarInstalacionesPrincipales()">Modificar</button>
-        <button type="button" id="eliminar" class="btn btn-danger ms-3"(click)="eliminarDomiciliosDatos()">Eliminar</button>
-        <button type="button" id="agregar" class="btn btn-primary ms-3" (click)="agregarInstalacionesPrincipales()">Agregar</button>
+        <button type="button" id="modificar" class="btn btn-default" (click)="modificarInstalacionesPrincipales()" [disabled]="consultaState.readonly">Modificar</button>
+        <button type="button" id="eliminar" class="btn btn-danger ms-3" (click)="eliminarDomiciliosDatos()" [disabled]="consultaState.readonly">Eliminar</button>
+        <button type="button" id="agregar" class="btn btn-primary ms-3" (click)="agregarInstalacionesPrincipales()" [disabled]="consultaState.readonly">Agregar</button>
       </div>
     </div>
 </ng-template>
@@ -300,14 +309,16 @@
             formularioTitulo="Agregar"
             [forma]="ninoFormGroupmodal1"
             [formularioDatos]="formDataModalUno"
+            [estado]="datosComunesTresState"
+            [soloLectura]="consultaState.readonly"
             (emitirEventoDeClic)="buscarEvento()"
             (emitirCambioDeValor)="establecerCambioDeValorDos($event)"
             ></formas-dinamicas>
         </div>
         <div class="row mt-3 mb-4">
           <div class="d-flex justify-content-end mt-4">
-            <button type="button" id="aceptar" class="btn btn-primary" (click)="aceptarModalUno()">Aceptar</button>
-            <button type="button" id="cancelar" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal>Cancelar</button>
+            <button type="button" id="aceptar" class="btn btn-primary" (click)="aceptarModalUno()" [disabled]="consultaState.readonly">Aceptar</button>
+            <button type="button" id="cancelar" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal [disabled]="consultaState.readonly">Cancelar</button>
           </div>
         </div>
       </div>
@@ -327,6 +338,8 @@
               [formularioDatos]="formDataModalDuo"
               (emitirEventoDeClic)="buscarEvento()"
               [templateMap]="templateMap"
+              [soloLectura]="consultaState.readonly"
+              [estado]="datosComunesTresState"
               (emitirCambioDeValor)="establecerCambioDeValorModalDuo($event)"
               ></formas-dinamicas>
           </div>
@@ -340,6 +353,7 @@
                   [tipoSeleccionTabla]="tablaSeleccionCheckbox"
                   [configuracionTabla]="instalacionesConfiguracionColumnas"
                   [datos]="instalacionesTablaDatos"
+                  [disableSeleccionTablaCheckBox]="consultaState.readonly"
                   (listaDeFilaSeleccionada)="seleccionarlistaInstalaciones($event)"
                 >
                 </app-tabla-dinamica>
@@ -347,8 +361,8 @@
 
               <div class="row mt-3 mb-4">
                 <div class="d-flex justify-content-end mt-4">
-                  <button type="button" id="aceptar" class="btn btn-primary" (click)="aceptarModalDuo()">Aceptar</button>
-                  <button type="button" id="cancelar" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal>Cancelar</button>
+                  <button type="button" id="aceptar" class="btn btn-primary" (click)="aceptarModalDuo()" [disabled]="consultaState.readonly">Aceptar</button>
+                  <button type="button" id="cancelar" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal [disabled]="consultaState.readonly">Cancelar</button>
                 </div>
               </div>
           </ng-template>
@@ -369,7 +383,7 @@
             Certificacion de Empresas, de conformidad con la regla 7.1.1 de las RGCE.</p>
         </div>
         <div class="modal-footer custom-footer">
-            <button type="button" class="btn btn-default" data-bs-dismiss="modal">Aceptar</button>
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="consultaState.readonly">Aceptar</button>
         </div>
     </div>
   </div>
@@ -384,13 +398,15 @@
               formularioTitulo="Modificar"
               [forma]="ninoFormGroupmodal3"
               [formularioDatos]="formDataModalTres"
+              [estado]="datosComunesTresState"
+              [soloLectura]="consultaState.readonly"
               (emitirCambioDeValor)="establecerCambioDeValorModalDuo($event)"
               ></formas-dinamicas>
           </div>  
           <div class="row mt-3 mb-4">
             <div class="d-flex justify-content-end mt-4">
-              <button type="button" id="aceptar" class="btn btn-primary" (click)="aceptarModalTres()">Aceptar</button>
-              <button type="button" id="cancelar" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal>Cancelar</button>
+              <button type="button" id="aceptar" class="btn btn-primary" (click)="aceptarModalTres()" [disabled]="consultaState.readonly">Aceptar</button>
+              <button type="button" id="cancelar" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal [disabled]="consultaState.readonly">Cancelar</button>
             </div>
           </div>
       </div>
@@ -408,7 +424,7 @@
             <p>Datos guardados correctamente</p>
         </div>
         <div class="modal-footer custom-footer">
-            <button type="button" class="btn btn-default" data-bs-dismiss="modal">Aceptar</button>
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="consultaState.readonly">Aceptar</button>
         </div>
     </div>
   </div>
@@ -436,7 +452,7 @@
             </div>
         </div>
         <div class="modal-footer custom-footer">
-            <button type="button" class="btn btn-default" data-bs-dismiss="modal">Ok</button>
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="consultaState.readonly">Ok</button>
         </div>
     </div>
   </div>
@@ -451,13 +467,15 @@
             formularioTitulo="Agregar miembro de la empresa"
             [forma]="ninoFormGroupmodal4"
             [formularioDatos]="formDataModalCuatro"
+            [estado]="datosComunesTresState"
+            [soloLectura]="consultaState.readonly"
             (emitirCambioDeValor)="establecerCambioDeValorModalCuatro($event)"
             ></formas-dinamicas>
         </div>
         <div class="row mt-3 mb-4">
           <div class="d-flex justify-content-end mt-4">
-            <button type="button" id="aceptar" class="btn btn-primary" (click)="aceptarModalCuatro()">Aceptar</button>
-            <button type="button" id="cancelar" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal>Cancelar</button>
+            <button type="button" id="aceptar" class="btn btn-primary" (click)="aceptarModalCuatro()" [disabled]="consultaState.readonly">Aceptar</button>
+            <button type="button" id="cancelar" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal [disabled]="consultaState.readonly">Cancelar</button>
           </div>
         </div>
       </div>

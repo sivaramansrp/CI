@@ -2,7 +2,7 @@
   <div class="page">
     <div class="container">
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           La empresa concesionaria de transporte ferroviario debe contar con
           procedimientos escritos y verificables para la selección y
           contratación de nuevos socios comerciales y monitoreo de los socios
@@ -20,7 +20,7 @@
         </label>
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           El análisis de riesgo que realice la empresa respecto a sus socios
           comerciales (clientes y proveedores), deberá incluir riesgos
           relacionados con la identificación de actividades relacionadas con el
@@ -43,7 +43,7 @@
         <ng-titulo titulo="4.1 Criterios de selección." />
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           Deben existir procedimientos documentados para la selección,
           seguimiento o renovación de relaciones comerciales con los asociados
           de negocio o proveedores, que incluyan entrevistas, verificación de
@@ -124,6 +124,8 @@
         <formas-dinamicas
           [forma]="criteriosDeSeleccionFormGroup"
           [formularioDatos]="criteriosDeSeleccionFormData"
+          [estado]="rubroTransporteFerrovariostate"
+          [soloLectura]="consultaState.readonly"
           (emitirCambioDeValor)="establecerCambioDeValor($event)"
         ></formas-dinamicas>
       </div>
@@ -132,7 +134,7 @@
         <ng-titulo titulo="4.2 Requerimientos en seguridad." />
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           La empresa concesionaria de transporte ferroviario debe contar con un
           procedimiento documentado en el que, de acuerdo a su análisis de
           riesgo, solicite requisitos adicionales en materia de seguridad a
@@ -147,14 +149,14 @@
         </label>
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           Los requisitos deberán estar basados en los criterios y objetivos de
           este Perfil, o en caso de existir el Perfil específico para cada actor
           de la cadena de suministros que le corresponda.
         </label>
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           La empresa concesionaria de transporte ferroviario debe solicitar a
           sus socios comerciales la documentación que acredite y compruebe que
           cumple con los estándares mínimos de seguridad establecidos en este
@@ -170,7 +172,7 @@
         </label>
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           En el caso de los socios comerciales de la empresa que presten sus
           servicios en el interior de las instalaciones, deben estar obligados
           al cumplimiento de estos requerimientos de seguridad en la cadena de
@@ -181,6 +183,8 @@
         <formas-dinamicas
           [forma]="requerimientosEnSeguridadFormGroup"
           [formularioDatos]="requerimientosEnSeguridadFormData"
+          [estado]="rubroTransporteFerrovariostate"
+          [soloLectura]="consultaState.readonly"
           (emitirCambioDeValor)="establecerCambioDeValor($event)"
         ></formas-dinamicas>
       </div>
@@ -189,7 +193,7 @@
         <ng-titulo titulo="4.3 Revisiones del socio comercial." />
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           La empresa concesionaria del transporte ferroviario a través del
           Comité de Seguridad debe realizar evaluaciones periódicas de seguridad
           (así como derivadas situaciones de riesgo),de los procesos e
@@ -202,7 +206,7 @@
         </label>
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           Cuando se encuentren inconsistencias, el transportista ferroviario
           deberá comunicarlo a su socio y/o proveedor y proporcionar un período
           justificado para atender las observaciones o áreas de oportunidad
@@ -219,17 +223,17 @@
         </label>
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start fs-4">
+        <label class="form-label text-start ">
           Describa el procedimiento para realizar evaluaciones para la
           verificación de los requisitos en materia de seguridad (procesos e
           instalaciones) de sus socios comerciales.
         </label>
       </div>
       <div class="col-md-12">
-        <ul class="fs-4 fw-medium">
+        <ul>
           <li>
             El procedimiento deberá incluir:
-            <ol type="1" class="fs-4 fw-medium">
+            <ol type="1">
               <li>Periodicidad de las visitas;</li>
               <li>Puntos de revisión en materia de seguridad;</li>
               <li>Identificación de áreas con iluminación permanente.</li>
@@ -246,6 +250,8 @@
         <formas-dinamicas
           [forma]="revisionesDelSocioComercialFormGroup"
           [formularioDatos]="revisionesDelSocioComercialFormData"
+          [estado]="rubroTransporteFerrovariostate"
+          [soloLectura]="consultaState.readonly"
           (emitirCambioDeValor)="establecerCambioDeValor($event)"
         ></formas-dinamicas>
       </div>

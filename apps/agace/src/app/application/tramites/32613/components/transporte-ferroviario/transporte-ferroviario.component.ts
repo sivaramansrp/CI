@@ -1,12 +1,17 @@
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { InputRadioComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { LISTADO_DE_SOCIO_COMERCIAL_CERTIFICADO, TEMPLATE_3_ARRAY, TRANSPORTE_FERROVARIO } from '../../constantes/constantes32613.enum';
+import { RubroTransporteFerrovario32613State, Tramite32613Store } from '../../../../estados/tramites/tramite32613.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosComunesTresComponent } from '../../../../shared/components/datos-comunes-tres/datos-comunes-tres.component';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { RowTypeFormInputComponent } from '../../../../shared/components/row-type-form-input/row-type-form-input.component';
+import { Tramite32613Query } from '../../../../estados/queries/tramite32613.query';
 
 @Component({
   selector: 'app-transporte-ferroviario',
@@ -24,7 +29,7 @@ import { RowTypeFormInputComponent } from '../../../../shared/components/row-typ
   templateUrl: './transporte-ferroviario.component.html',
   styleUrl: './transporte-ferroviario.component.scss',
 })
-export class TransporteFerroviarioComponent implements OnInit, AfterViewInit{
+export class TransporteFerroviarioComponent implements OnInit, AfterViewInit, OnDestroy{
 
   @ViewChild('customTemplate1') customTemplate1!: TemplateRef<unknown>;
 
@@ -95,17 +100,128 @@ export class TransporteFerroviarioComponent implements OnInit, AfterViewInit{
   
   public customTemplate3Form: FormGroup = new FormGroup({});
 
+  /** Estado de la solicitud de la tramite 32613.*/
+  public rubroTransporteFerrovariostate!: RubroTransporteFerrovario32613State;
+
+  /** Subject para notificar la destrucción del componente.*/
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /** Estado de la consulta que se obtiene del store. */
+  public consultaState!: ConsultaioState;
+
   constructor(
     private formBuilder: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
+    private tramite32613Store: Tramite32613Store,
+    private tramite32613Query: Tramite32613Query,
+    private consultaQuery: ConsultaioQuery,
   ) {
     // Constructor de la clase TransporteFerroviarioComponent
   }
 
   ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          // this.consultaState = seccionState;
+          this.consultaState = {...seccionState, update: true, readonly: true }
+        })
+      )
+      .subscribe();
+
+    this.tramite32613Query.selectRubroTransporteFerrovario$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.rubroTransporteFerrovariostate = seccionState;
+        })
+      )
+      .subscribe();
+
     this.initializeForm(); 
     Array.from({ length: 3 }).forEach(() => this.addCorreoTelefonoGroup());
     this.initializeCustomTemplate3Form();
+    this.asignarValorCondicional();
+  }
+
+  asignarValorCondicional(): void {
+    const SENALE_SI_SOLICITUD = this.rubroTransporteFerrovariostate?.['senaleSiSuSolicitud'];
+    const INDIQUE_SI_CUENTA_CARGA = this.rubroTransporteFerrovariostate?.['indiqueSiCuentaCarga'];
+    const SENALE_SI_LA_FECHA_SERVICIO = this.rubroTransporteFerrovariostate?.['senaleSiLaFechaServicio'];
+    const UNIDADES_ARRENDADAS = this.rubroTransporteFerrovariostate?.['unidadesArrendadas'];
+    const PAGINA_ELECTRONICA = this.rubroTransporteFerrovariostate?.['paginaElectronica'];
+    const CORREO_ELECTRONICO = this.rubroTransporteFerrovariostate?.['correoElectronico'];
+    const TELEFONO = this.rubroTransporteFerrovariostate?.['telefono'];
+
+    if (SENALE_SI_SOLICITUD === 1 || SENALE_SI_SOLICITUD === undefined || SENALE_SI_SOLICITUD === null) {
+      this.transporteFerroviarioForm.get('senaleRadioInput')?.disable();
+    } else if (SENALE_SI_SOLICITUD === 2) {
+      this.transporteFerroviarioForm.get('senaleRadioInput')?.enable();
+    }
+
+    if (INDIQUE_SI_CUENTA_CARGA) {
+      this.mostrarAlertaUno = true;
+    } else {
+      this.mostrarAlertaUno = false;
+    }
+
+    if (SENALE_SI_LA_FECHA_SERVICIO) {
+      this.mostrarTemplate3 = true;
+    } else {
+      this.mostrarTemplate3 = false;
+    }
+
+    if (PAGINA_ELECTRONICA === 'Si') {
+      this.mostrarTemplate4 = true;
+    } else {
+      this.mostrarTemplate4 = false;
+    }
+
+    if (CORREO_ELECTRONICO === 'Si') {
+      this.mostrarTemplate5 = true;
+    } else {
+      this.mostrarTemplate5 = false;
+    }
+    
+    if (TELEFONO === 'Si') {
+      this.mostrarTemplate6 = true;
+    } else {
+      this.mostrarTemplate6 = false;
+    }
+    
+    this.transporteFerroviarioForm.patchValue({
+      senaleRadioInput: this.rubroTransporteFerrovariostate['senaleRadioInput'],
+      reconocimientoMutuo: this.rubroTransporteFerrovariostate['reconocimientoMutuo'],
+      paginaTextInput: this.rubroTransporteFerrovariostate['paginaTextInput'],
+      correoTextInput: this.rubroTransporteFerrovariostate['correoTextInput'],
+      clasificacionInformacion: this.rubroTransporteFerrovariostate['clasificacionInformacion']
+    });
+
+    this.customTemplate3Form.patchValue({
+      unidadesPropias: this.rubroTransporteFerrovariostate['unidadesPropias'],
+      unidadesArrendadas: this.rubroTransporteFerrovariostate['unidadesArrendadas'],
+    })
+
+    if (UNIDADES_ARRENDADAS) {
+      this.mostrarTemplate3Alerta = true;
+    }
+
+    if(this.rubroTransporteFerrovariostate?.['correosTelefonicos']) {
+      const VALORES = this.rubroTransporteFerrovariostate['correosTelefonicos'];
+      if (Array.isArray(VALORES)) {
+        VALORES.forEach((item, index) => {
+          const GRUPO = this.correosTelefonicos.at(index);
+          if (GRUPO) {
+            GRUPO.patchValue({
+              correoLada: item.correoLada || '',
+              correoTelefono: item.correoTelefono || ''
+            });
+          }
+        });
+      }
+    }
+
   }
 
   initializeCustomTemplate3Form(): void {
@@ -117,6 +233,11 @@ export class TransporteFerroviarioComponent implements OnInit, AfterViewInit{
           );
         }
       });
+
+      if (this.consultaState.readonly) {
+        this.customTemplate3Form.get('unidadesPropias')?.disable();
+        this.customTemplate3Form.get('unidadesArrendadas')?.disable();
+      }
     }
 
   /**
@@ -128,14 +249,29 @@ export class TransporteFerroviarioComponent implements OnInit, AfterViewInit{
       ninoFormGroupUno: this.formBuilder.group({}),
       ninoFormGroupDos:this.formBuilder.group({}),
       senaleRadioInput: this.formBuilder.control({value: '', disabled: true}),
-      unidadesPropias: this.formBuilder.control(''),
-      unidadesArrendadas: this.formBuilder.control(''),
       reconocimientoMutuo: this.formBuilder.control(''),
       paginaTextInput: this.formBuilder.control('', [Validators.required]),
       correoTextInput: this.formBuilder.control('', [Validators.required]),
       correosTelefonicos: this.formBuilder.array([], this.atLeastOneTelefonoFilled()),
       clasificacionInformacion: this.formBuilder.control(''),
     });
+
+    if (this.consultaState.readonly) {
+      this.transporteFerroviarioForm.get('reconocimientoMutuo')?.disable();
+      this.transporteFerroviarioForm.get('clasificacionInformacion')?.disable();
+      this.transporteFerroviarioForm.get('paginaTextInput')?.disable();
+      this.transporteFerroviarioForm.get('correoTextInput')?.disable();
+    }
+
+    if (this.consultaState.update) {
+      this.transporteFerroviarioForm.patchValue({
+        senaleRadioInput: this.rubroTransporteFerrovariostate['senaleRadioInput'],
+        reconocimientoMutuo: this.rubroTransporteFerrovariostate['reconocimientoMutuo'],
+        paginaTextInput: this.rubroTransporteFerrovariostate['paginaTextInput'],
+        correoTextInput: this.rubroTransporteFerrovariostate['correoTextInput'],
+        clasificacionInformacion: this.rubroTransporteFerrovariostate['clasificacionInformacion']
+      })
+    }
   }
 
   createCorreoTelefonoGroup(): FormGroup {
@@ -146,8 +282,13 @@ export class TransporteFerroviarioComponent implements OnInit, AfterViewInit{
   }
 
   addCorreoTelefonoGroup(): void {
-    (this.transporteFerroviarioForm.get('correosTelefonicos') as FormArray).push(this.createCorreoTelefonoGroup());
+    const GRUPO = this.createCorreoTelefonoGroup();
+    if (this.consultaState?.readonly) {
+      GRUPO.disable();
+    }
+    this.correosTelefonicos.push(GRUPO);
   }
+
 
   get correosTelefonicos(): FormArray {
     return this.transporteFerroviarioForm.get('correosTelefonicos') as FormArray;
@@ -206,14 +347,30 @@ export class TransporteFerroviarioComponent implements OnInit, AfterViewInit{
         this.mostrarTemplate3 = false;
       }
     }
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  cambioReconocimientoMutuo(event: string | number): void {
     if (event) {
-      // console.log(event);
+      this.tramite32613Store.setDynamicFieldValue(event.campo, event.valor);
     }
   }
+
+  radioValorCambio(event: string | number, campo: string): void {
+    if (event) {
+      this.tramite32613Store.setDynamicFieldValue(campo, event);
+    }
+  }
+
+  textValorCambio(event: Event, campo: string, index?: number): void {
+    const CORREOS_ARRAY = this.transporteFerroviarioForm.get('correosTelefonicos') as FormArray;
+    if (typeof index === 'number') {
+      const INPUT_ELEMENT = event.target as HTMLInputElement;
+      CORREOS_ARRAY.at(index).get(campo)?.setValue(INPUT_ELEMENT.value);
+      const ARRAY_VALOR = CORREOS_ARRAY.getRawValue();
+      this.tramite32613Store.setDynamicFieldValue('correosTelefonicos', ARRAY_VALOR);
+    } else {
+      const INPUT_ELEMENT = event.target as HTMLInputElement;
+      this.tramite32613Store.setDynamicFieldValue(campo, INPUT_ELEMENT.value);
+    }
+  }
+
 
   establecerCambioDeValorDos(event: {campo: string, valor: object | string| number }): void {
     if (event.campo === 'paginaElectronica') {
@@ -240,6 +397,9 @@ export class TransporteFerroviarioComponent implements OnInit, AfterViewInit{
       }
     }
 
+    if (event) {
+      this.tramite32613Store.setDynamicFieldValue(event.campo, event.valor);
+    }
   }
 
   /**
@@ -254,10 +414,9 @@ export class TransporteFerroviarioComponent implements OnInit, AfterViewInit{
     return this.validacionesService.isValid(this.transporteFerroviarioForm, campo);
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  emitirCambioValor(event: any): void {
+  emitirCambioValor(event: {campo: string, valor: string | number | object}): void {
     if (event) {
-    // console.log(event)
+      this.tramite32613Store.setDynamicFieldValue(event.campo, event.valor);
     }
   }
 
@@ -265,5 +424,14 @@ export class TransporteFerroviarioComponent implements OnInit, AfterViewInit{
     if (event.campo === 'unidadesArrendadas' && event.valor) {
       this.mostrarTemplate3Alerta = true;
     }
+    if (event) {
+      this.tramite32613Store.setDynamicFieldValue(event.campo, event.valor);
+    }
+  }
+
+  /** Este método es parte del ciclo de vida del componente y se ejecuta automáticamente cuando el componente está a punto de ser destruido. Se utiliza para limpiar las suscripciones activas y evitar fugas de memoria en la aplicación.*/
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -10,6 +10,8 @@
                 [forma]="ninoFormGroup"
                 [formularioDatos]="formDataInformacionGeneral"
                 [templateMap]="templateMap"
+                [estado]="rubroTransporteFerrovariostate"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"
                 ></formas-dinamicas>
             </div>
@@ -17,30 +19,30 @@
     </div>
 
     <ng-template #customTemplate1>
-        <row-type-form-input [form]="customTemplate1Form" [fields]="template1Array"></row-type-form-input>
+        <row-type-form-input [form]="customTemplate1Form" [fields]="template1Array" (emitirValorDeCampo)="customTemplateEvents($event)"></row-type-form-input>
     </ng-template>
 
     <ng-template #customTemplate2>
         @if (mostarCustomtemplate2) {
-            <row-type-form-input [form]="customTemplate2Form" [fields]="template2Array"></row-type-form-input>
+            <row-type-form-input [form]="customTemplate2Form" [fields]="template2Array" (emitirValorDeCampo)="customTemplateEvents($event)"></row-type-form-input>
         }
     </ng-template>
 
     <ng-template #customTemplate3>
         @if (mostarCustomtemplate3) {
-            <row-type-form-input [form]="customTemplate3Form" [fields]="template3Array"></row-type-form-input>
+            <row-type-form-input [form]="customTemplate3Form" [fields]="template3Array" (emitirValorDeCampo)="customTemplateEvents($event)"></row-type-form-input>
         }
     </ng-template>
 
     <ng-template #customTemplate4>
         @if (mostarCustomtemplate4) {
-            <row-type-form-input [form]="customTemplate4Form" [fields]="template4Array"></row-type-form-input>
+            <row-type-form-input [form]="customTemplate4Form" [fields]="template4Array" (emitirValorDeCampo)="customTemplateEvents($event)"></row-type-form-input>
         }
     </ng-template>
 
     <ng-template #customTemplate5>
         @if (mostarCustomtemplate5) {
-            <row-type-form-input [form]="customTemplate5Form" [fields]="template5Array"></row-type-form-input>
+            <row-type-form-input [form]="customTemplate5Form" [fields]="template5Array" (emitirValorDeCampo)="customTemplateEvents($event)"></row-type-form-input>
         }
     </ng-template>
 
@@ -52,19 +54,19 @@
                     <div class="row">
                         <div class="col-md-8">
                             <label for="nombre-{{ $index }}">Nombre</label>
-                            <input type="text" class="form-control" id="nombre-{{ $index }}" formControlName="nombre"/>
+                            <input type="text" class="form-control" id="nombre-{{ $index }}" formControlName="nombre" (change)="textValorCambio($event, 'nombre', $index)"/>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-8">
                             <label for="categoria-{{ $index }}">Categoria</label>
-                            <input type="text" class="form-control" id="categoria-{{ $index }}" formControlName="categoria"/>
+                            <input type="text" class="form-control" id="categoria-{{ $index }}" formControlName="categoria" (change)="textValorCambio($event, 'categoria', $index)"/>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <label for="vigencia-{{ $index }}">Vigencia</label>
-                            <input type="date" class="form-control" id="vigencia-{{ $index }}" formControlName="vigencia"/>
+                            <input type="date" class="form-control" id="vigencia-{{ $index }}" formControlName="vigencia" (change)="textValorCambio($event, 'vigencia', $index)"/>
                         </div>
                     </div>
                 </div>

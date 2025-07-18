@@ -990,7 +990,7 @@ export const MODIFICAR_INSTALACIONES = [
   {
     id: 'modificar_entidadFederativa',
     labelNombre: 'Entidad federativa',
-    campo: 'entidadFederativa',
+    campo: 'entidadFederativaModificar',
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,

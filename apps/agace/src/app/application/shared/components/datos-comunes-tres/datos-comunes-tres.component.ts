@@ -1,10 +1,13 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { CONTROL_INVENTARIOS, DATOS_COMUNES, DOMICILIOS_CONFIGURACION_COLUMNAS, INVENTARIOS_CONFIGURACION, MIEMBRO_DE_LA_EMPRESA, MODAL_MIEMBRO_DE_LA_EMPRESA, MODIFICAR_INSTALACIONES, NUMERO_DE_EMPLEADOS, NUMERO_DE_EMPLEADOS_CONFIGURACION, PRINCIPALES_INSTALACIONES, PRINCIPALES_INSTALACIONES_COLUMNA, SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS } from '../../constants/datos-comunes-tres.enum';
 import { Catalogo, ConfiguracionAporteColumna, ConfiguracionColumna, InputRadioComponent, ModeloDeFormaDinamica, TablaConEntradaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { DatosComunesTresState, DatosComunesTresStore } from '../../estados/stores/datos-comunes-tres.store';
 import { Domicilios, Inventarios, NumeroDeEmpleados, PrincipalesInstalaciones, SeccionSociosIC } from '../../models/datos-comunes-tres.model';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
+import { DatosComunesTresQuery } from '../../estados/queries/datos-comunes-tres.query';
 import { DatosComunesTresService } from '../../services/datos-comunes-tres.service';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { Modal } from 'bootstrap';
@@ -25,6 +28,9 @@ import { Modal } from 'bootstrap';
   styleUrl: './datos-comunes-tres.component.scss',
 })
 export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  /** Estado de la consulta que se obtiene del store. */
+  @Input() public consultaState!: ConsultaioState;
 
   @ViewChild('customTemplate1') customTemplate1!: TemplateRef<unknown>;
 
@@ -57,21 +63,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
 
   public templateMap: Record<string, TemplateRef<unknown>> = {};
 
-  public datosComunesForm: FormGroup = new FormGroup({
-    ninoFormGroupUno: new FormGroup({}),
-    ninoFormGroupDos: new FormGroup({}),
-    ninoFormGroupTres: new FormGroup({}),
-    ninoFormGroupmodal1: new FormGroup({}),
-    ninoFormGroupmodal2: new FormGroup({}),
-    ninoFormGroupmodal3: new FormGroup({}),
-    ninoFormGroupmodal4: new FormGroup({}),
-    archivoExtranjero: new FormControl(''),
-    proveedoresExtranjero: new FormControl(''),
-    clientesActualmente: new FormControl(''),
-    proveedoresActualmente: new FormControl(''),
-    senaleSiElSAT: new FormControl(''),
-    senaleSiIngresaMensualmente: new FormControl(''),
-  });
+  public datosComunesForm!: FormGroup;
 
   public formDataUno = DATOS_COMUNES;
 
@@ -149,6 +141,166 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     }
   ];
 
+  /** Subject para destruir el componente */
+  public destroy$ = new Subject<void>();
+
+  private bimestreOpciones: Catalogo[] = [];
+
+  private modalInstance!: Modal;
+
+  public progresoPercent: number = 0;
+
+  public enSuCaracterOpciones: Catalogo[] = [];
+
+  public nacionalidadOpciones: Catalogo[] = [];
+  
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private intervalId: any;
+
+  /** Estado de la solicitud de la datos comunes tres.*/
+  public datosComunesTresState!: DatosComunesTresState;
+
+  constructor(
+    private datosComunesTresService: DatosComunesTresService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private datosComunesTresStore: DatosComunesTresStore,
+    private datosComunesTresQuery: DatosComunesTresQuery,
+  ) {
+    //
+  }
+
+  ngOnInit(): void {
+    this.datosComunesTresQuery.selectDatosComunesTres$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.datosComunesTresState = seccionState;
+          if (
+            this.datosComunesTresState &&
+            typeof this.datosComunesTresState === 'object' &&
+            this.datosComunesTresState !== null &&
+            'numeroDeEmpleadosLista' in this.datosComunesTresState
+          ) {
+            const DATOS = this.datosComunesTresState['numeroDeEmpleadosLista'] as NumeroDeEmpleados[];
+            DATOS.forEach((dato: NumeroDeEmpleados) => {
+              const IS_ALREADY_ADDED = this.numeroDeEmpleadosLista.some(
+                (item: NumeroDeEmpleados) => item.RFC === dato.RFC
+              );
+
+            if (!IS_ALREADY_ADDED) {
+              this.numeroDeEmpleadosLista.push(dato);
+            }
+            });
+          }
+
+          if (
+            this.datosComunesTresState &&
+            typeof this.datosComunesTresState === 'object' &&
+            this.datosComunesTresState !== null &&
+            'domiciliosDatos' in this.datosComunesTresState
+          ) {
+            const DATOS = this.datosComunesTresState['domiciliosDatos'] as Domicilios[];
+            DATOS.forEach((dato: Domicilios) => {
+              const IS_ALREADY_ADDED = this.domiciliosDatos.some(
+                (item: Domicilios) => item.instalacionPrincipal === dato.instalacionPrincipal
+              );
+
+            if (!IS_ALREADY_ADDED) {
+              this.domiciliosDatos.push(dato);
+            }
+            });
+          }
+
+          if (
+            this.datosComunesTresState &&
+            typeof this.datosComunesTresState === 'object' &&
+            this.datosComunesTresState !== null &&
+            'inventarios' in this.datosComunesTresState
+          ) {
+            const DATOS = this.datosComunesTresState['inventarios'] as Inventarios[];
+            DATOS.forEach((dato: Inventarios) => {
+              const IS_ALREADY_ADDED = this.inventariosDatos.some(
+                (item: Inventarios) => item.nombre === dato.nombre
+              );
+
+            if (!IS_ALREADY_ADDED) {
+              this.inventariosDatos.push(dato);
+            }
+            });
+          }
+
+          if (
+            this.datosComunesTresState &&
+            typeof this.datosComunesTresState === 'object' &&
+            this.datosComunesTresState !== null &&
+            'seccionSociosIC' in this.datosComunesTresState
+          ) {
+            const DATOS = this.datosComunesTresState['seccionSociosIC'] as SeccionSociosIC[];
+            DATOS.forEach((dato: SeccionSociosIC) => {
+              const IS_ALREADY_ADDED = this.listaSeccionSociosIC.some(
+                (item: SeccionSociosIC) => item.tipoPersonaMuestra === dato.tipoPersonaMuestra
+              );
+
+            if (!IS_ALREADY_ADDED) {
+              this.listaSeccionSociosIC.push(dato);
+            }
+            });
+          }
+        })
+      )
+      .subscribe();
+
+    this.initializeForm();
+    this.asignarValorCondicional();
+    this.obtenerSectorProductivoOpciones();
+    this.obtenerServicioOpciones();
+    this.obtenerBimestreOpciones();
+    this.obtenerIndiqueTodosOpciones();
+    this.conseguirInventarios();
+    this.obtenerEntidadFederativaOpciones();
+    this.obtenertipoDeInstalacionOpciones();
+    this.obtenerEnSuCaracterDeOpciones();
+    this.obtenerNacionalidadOpciones();
+  }
+
+  initializeForm(): void {
+    this.datosComunesForm = new FormGroup({
+      ninoFormGroupUno: new FormGroup({}),
+      ninoFormGroupDos: new FormGroup({}),
+      ninoFormGroupTres: new FormGroup({}),
+      ninoFormGroupmodal1: new FormGroup({}),
+      ninoFormGroupmodal2: new FormGroup({}),
+      ninoFormGroupmodal3: new FormGroup({}),
+      ninoFormGroupmodal4: new FormGroup({}),
+      archivoExtranjero: new FormControl(''),
+      proveedoresExtranjero: new FormControl(''),
+      clientesActualmente: new FormControl(''),
+      proveedoresActualmente: new FormControl(''),
+      senaleSiElSAT: new FormControl(''),
+      senaleSiIngresaMensualmente: new FormControl(''),
+    });
+
+    if (this.consultaState.readonly) {
+      this.datosComunesForm.get('archivoExtranjero')?.disable();
+      this.datosComunesForm.get('proveedoresExtranjero')?.disable();
+      this.datosComunesForm.get('clientesActualmente')?.disable();
+      this.datosComunesForm.get('proveedoresActualmente')?.disable();
+      this.datosComunesForm.get('senaleSiElSAT')?.disable();
+      this.datosComunesForm.get('senaleSiIngresaMensualmente')?.disable();
+    }
+
+    if (this.consultaState.update) {
+      this.datosComunesForm.patchValue({
+        archivoExtranjero: this.datosComunesTresState['archivoExtranjero'],
+        proveedoresExtranjero: this.datosComunesTresState['proveedoresExtranjero'],
+        clientesActualmente: this.datosComunesTresState['clientesActualmente'],
+        proveedoresActualmente: this.datosComunesTresState['proveedoresActualmente'],
+        senaleSiElSAT: this.datosComunesTresState['senaleSiElSAT'],
+        senaleSiIngresaMensualmente: this.datosComunesTresState['senaleSiIngresaMensualmente'],
+      });
+    }
+  }
+
   /** Este getter devuelve el grupo de formularios anidado llamado `ninoFormGroupUno`*/
   get ninoFormGroupUno(): FormGroup {
     return this.datosComunesForm.get('ninoFormGroupUno') as FormGroup;
@@ -184,38 +336,18 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     return this.datosComunesForm.get('ninoFormGroupmodal4') as FormGroup;
   }
 
-  /** Subject para destruir el componente */
-  public destroy$ = new Subject<void>();
+  asignarValorCondicional(): void {
+    if (this.datosComunesTresState['senaleEspecializadas']) {
+      this.mostrarNumeroSolicitudSeccion = true;
+      this.mostrarCampos(this.formDataUno, 'enSuCasoLFT', true);
+    }
 
-  private bimestreOpciones: Catalogo[] = [];
-
-  private modalInstance!: Modal;
-
-  public progresoPercent: number = 0;
-
-  public enSuCaracterOpciones: Catalogo[] = [];
-
-  public nacionalidadOpciones: Catalogo[] = [];
-  
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private intervalId: any;
-
-  constructor(
-    private datosComunesTresService: DatosComunesTresService,
-    private changeDetectorRef: ChangeDetectorRef) {
-    // 
-  }
-
-  ngOnInit(): void {
-    this.obtenerSectorProductivoOpciones();
-    this.obtenerServicioOpciones();
-    this.obtenerBimestreOpciones();
-    this.obtenerIndiqueTodosOpciones();
-    this.conseguirInventarios();
-    this.obtenerEntidadFederativaOpciones();
-    this.obtenertipoDeInstalacionOpciones();
-    this.obtenerEnSuCaracterDeOpciones();
-    this.obtenerNacionalidadOpciones();
+    this.datosComunesForm.patchValue({
+      clientesActualmente: this.datosComunesTresState?.['clientesActualmente'],
+      proveedoresActualmente: this.datosComunesTresState?.['proveedoresActualmente'],
+      senaleSiElSAT: this.datosComunesTresState?.['senaleSiElSAT'],
+      senaleSiIngresaMensualmente: this.datosComunesTresState?.['senaleSiIngresaMensualmente'],
+    })
   }
 
   /** Método para obtener los datos de inventarios desde el servicio. Los resultados se asignan a la propiedad `inventariosDatos`.*/
@@ -433,8 +565,6 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
    */
   establecerCambioDeValorUno(event: { campo: string; valor: object | string }): void {
     if (event) {
-      // Actualiza el valor dinámico en el store.
-      // this.tramite5601Store.setDynamicFieldValue(event.campo, event.valor);
       if (event.campo === 'senaleSiCuenta') {
         this.mostrarCampos(this.formDataUno, 'cualEsElNumero', true);
         this.mostrarCampos(this.formDataUno, 'empleados', true);
@@ -464,6 +594,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
       if (event.campo === 'senaleSiAlMomentoFraccionVI' || event.campo === 'senaleSiSusCertificados' || event.campo === 'senalesiSeSectorial') {
         this.mostrarModalConfirmacion();
       }
+      this.datosComunesTresStore.setDynamicFieldValue(event.campo, event.valor);
     }
   }
 
@@ -482,8 +613,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   // eslint-disable-next-line class-methods-use-this
   establecerCambioDeValorDos(event: { campo: string; valor: object | string }): void {
     if (event) {
-      // Actualiza el valor dinámico en el store.
-      // this.tramite5601Store.setDynamicFieldValue(event.campo, event.valor);
+      this.datosComunesTresStore.setDynamicFieldValue(event.campo, event.valor);
     }
   }
 
@@ -601,6 +731,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
           this.numeroDeEmpleadosLista.splice(INDICE, 1);
         }
       });
+      this.datosComunesTresStore.setDynamicFieldValue('numeroDeEmpleadosLista', this.numeroDeEmpleadosLista);
     }
   }
 
@@ -615,6 +746,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
           this.domiciliosDatos.splice(INDICE, 1);
         }
       });
+      this.datosComunesTresStore.setDynamicFieldValue('domiciliosDatos', this.domiciliosDatos);
     }
   }
 
@@ -629,6 +761,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
           this.inventariosDatos.splice(INDICE, 1);
         }
       });
+      this.datosComunesTresStore.setDynamicFieldValue('inventariosDatos', this.inventariosDatos);
     }
   }
 
@@ -643,21 +776,25 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
           this.listaSeccionSociosIC.splice(INDICE, 1);
         }
       });
+      this.datosComunesTresStore.setDynamicFieldValue('listaSeccionSociosIC', this.listaSeccionSociosIC);
     }
   }
 
   /** Actualiza el valor del archivo 2 desde un input file.
    * @param {Event} valor - Evento de cambio del input.
    */
-  // eslint-disable-next-line class-methods-use-this
-  cambioEvento(event: Event, campo: string): void {
+  cambioEvento(event: Event | string | number, campo: string): void {
     let VALOR;
-    if (event.target) {
+    if (event instanceof Event && event.target instanceof HTMLInputElement && event.target.files?.length) {
+      const FILE = event.target.files[0];
+      this.datosComunesTresStore.setDynamicFieldValue(campo, FILE);
+    } else if (event instanceof Event && event.target) {
       VALOR = (event.target as HTMLInputElement).value;
+      this.datosComunesTresStore.setDynamicFieldValue(campo, VALOR);
     } else {
       VALOR = event;
+      this.datosComunesTresStore.setDynamicFieldValue(campo, VALOR);
     }
-    // this.solicitud32605Store.actualizarFile2(VALOR);
   }
 
   buscarEvento(): void {
@@ -677,6 +814,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
         numeroDeEmpleados: this.ninoFormGroupmodal1.get('subcontrataEmpleados')?.value,
         bimestre: DatosComunesTresComponent.obtenerDescripcion(this.bimestreOpciones, this.ninoFormGroupmodal1.get('subcontrataBimestre')?.value)
       });
+      this.datosComunesTresStore.setDynamicFieldValue('numeroDeEmpleadosLista', this.numeroDeEmpleadosLista);
       this.modalInstance.hide();
       this.mostrarGuardadosCorrectamenteModal();
     } else {
@@ -686,6 +824,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
       this.numeroDeEmpleadosLista[INDICE].denominacion = this.ninoFormGroupmodal1.get('subcontrataRazonSocial')?.value;
       this.numeroDeEmpleadosLista[INDICE].numeroDeEmpleados = this.ninoFormGroupmodal1.get('subcontrataEmpleados')?.value;
       this.modalInstance.hide();
+      this.datosComunesTresStore.setDynamicFieldValue('numeroDeEmpleadosLista', this.numeroDeEmpleadosLista);
       this.mostrarGuardadosCorrectamenteModal();
     }
   }
@@ -708,6 +847,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
       })
     }
     this.modalInstance.hide();
+    this.datosComunesTresStore.setDynamicFieldValue('domiciliosDatos', this.domiciliosDatos);
   }
 
   aceptarModalTres(): void {
@@ -773,12 +913,13 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   agregarControlInventarios(): void {
-    if (this.ninoFormGroupDos.get('identificacion')?.value && this.ninoFormGroupDos.get('lugarDeRadicacion')?.value && this.ninoFormGroupDos.get('checkbox')?.value) {
+    if (this.ninoFormGroupDos.get('identificacion')?.value && this.ninoFormGroupDos.get('lugarDeRadicacion')?.value && this.ninoFormGroupDos.get('indiqueAnexo24')?.value) {
       this.inventariosDatos.push({
         nombre: this.ninoFormGroupDos.get('identificacion')?.value,
         lugarRadicacion: this.ninoFormGroupDos.get('lugarDeRadicacion')?.value,
         anexo24: this.ninoFormGroupDos.get('checkbox')?.value,
       });
+      this.datosComunesTresStore.setDynamicFieldValue('inventarios', this.inventariosDatos);
       this.ninoFormGroupDos.reset();
     }
   }
@@ -840,6 +981,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
         nombreEmpresa: this.ninoFormGroupmodal4.get('miembroNombreEmpresa')?.value,
       });
       this.modalInstance.hide();
+      this.datosComunesTresStore.setDynamicFieldValue('seccionSociosIC', this.listaSeccionSociosIC);
     } else {
       const INDICE = this.listaSeccionSociosIC.findIndex((el: SeccionSociosIC) => el.rfc === this.seleccionarListaSeccionSociosIC[0]?.rfc);
       this.listaSeccionSociosIC[INDICE].tipoPersonaMuestra = this.ninoFormGroupmodal4.get('miembroTipoPersonaMuestra')?.value;
@@ -849,6 +991,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
       this.listaSeccionSociosIC[INDICE].tributarMexico = this.ninoFormGroupmodal4.get('miembroTributarMexico')?.value;
       this.listaSeccionSociosIC[INDICE].nombreEmpresa = this.ninoFormGroupmodal4.get('miembroNombreEmpresa')?.value;
       this.listaSeccionSociosIC[INDICE].nacionalidad = DatosComunesTresComponent.obtenerDescripcion(this.nacionalidadOpciones, this.ninoFormGroupmodal4.get('miembroNacionalidad')?.value);
+      this.datosComunesTresStore.setDynamicFieldValue('seccionSociosIC', this.listaSeccionSociosIC);
       this.modalInstance.hide();
     }
   }
@@ -856,6 +999,9 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   establecerCambioDeValorTres(event: { campo: string; valor: object | string | number }): void {
     if (event.campo === 'manifiesteSiSusSocios') {
       this.mostrarModalConfirmacion();
+    }
+    if (event) {
+      this.datosComunesTresStore.setDynamicFieldValue(event.campo, event.valor);
     }
   }
 

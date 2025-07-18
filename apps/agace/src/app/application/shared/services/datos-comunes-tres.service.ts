@@ -1,3 +1,4 @@
+import { DatosComunesTresState, DatosComunesTresStore } from '../estados/stores/datos-comunes-tres.store';
 import { Inventarios, PrincipalesInstalaciones } from '../models/datos-comunes-tres.model';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -15,7 +16,8 @@ export class DatosComunesTresService {
   * @param http - La instancia de `HttpClient` utilizada para realizar solicitudes HTTP.
   */
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private datosComunesTresStore: DatosComunesTresStore
   ) {
     // Constructor de la clase DatosComunesService
   }
@@ -111,5 +113,26 @@ export class DatosComunesTresService {
   getNacionalidadDatos(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/32613/nacionalidad.json');
   }
+
+  /**
+   * @method getDatosComunesTresData
+   * @description
+   * Obtiene los datos de la empresa para el trámite 120602 desde un archivo JSON local. 
+   * @returns {Observable<DatosComunesTresState>} Observable con los datos de la empresa para el trámite.
+   */
+    getDatosComunesTresData(): Observable<DatosComunesTresState> {
+      return this.http.get<DatosComunesTresState>('assets/json/shared/datos-comunes-tres.json');
+    }
+  
+    /**
+   * @method actualizarEstadoFormulario
+   * @description
+   * Actualiza el valor de un campo específico en el store `Tramite32613Store` de manera dinámica.
+   * @param {string} campo - Nombre del campo que se desea actualizar en el store.
+   * @param {unknown} valor - Valor que se asignará al campo especificado.
+   */
+    actualizarEstadoFormulario(campo: string, valor: unknown): void {
+      this.datosComunesTresStore.setDynamicFieldValue(campo, valor);
+    }
 
 }

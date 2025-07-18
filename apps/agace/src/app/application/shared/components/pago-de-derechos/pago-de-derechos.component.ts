@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { PAGO_DE_DERECHOS } from '../../constants/pago-de-derechos.enum';
 
@@ -17,6 +18,10 @@ import { PAGO_DE_DERECHOS } from '../../constants/pago-de-derechos.enum';
 })
 export class PagoDeDerechosComponent {
 
+  @Input() estado!: {[key: string]: unknown};
+
+  @Input() consultaState!: ConsultaioState;
+
   @Output() emitirCambioValor = new EventEmitter<{ campo: string; valor: string | number | object }>();
   
   public pagoDerechosForm: FormGroup = new FormGroup({
@@ -29,10 +34,6 @@ export class PagoDeDerechosComponent {
   }
 
   public pagoDerechosFormData = PAGO_DE_DERECHOS;
-
-  constructor(private changeDetectorRef: ChangeDetectorRef) {
-    //
-  }
 
   establecerCambioDeValor(event: {campo: string, valor: string | number | object}): void {
     this.emitirCambioValor.emit({

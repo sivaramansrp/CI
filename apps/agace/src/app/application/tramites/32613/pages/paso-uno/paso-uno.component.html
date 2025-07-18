@@ -64,22 +64,21 @@
         @case (1) {
             <solicitante></solicitante>
         } @case (2) {
-            <!-- @if(esDatosRespuesta) { -->
-                <!-- <app-datos-comunes [deRubroTransporteFerroviario]="true"></app-datos-comunes> -->
-                 <app-datos-comunes-tres></app-datos-comunes-tres>
-            <!-- } -->
+            @if(esDatosRespuesta) {
+              <app-datos-comunes-tres [consultaState]="consultaState"></app-datos-comunes-tres>
+            }
         } @case (3) {
-            <!-- @if(esDatosRespuesta) { -->
-                <shared-terceros-relacionados [consultaState]="consultaState"></shared-terceros-relacionados>
-            <!-- } -->
+            @if(esDatosRespuesta) {
+              <shared-terceros-relacionados [consultaState]="consultaState"></shared-terceros-relacionados>
+            }
         } @case (4) {
-            <!-- @if(esDatosRespuesta) { -->
-                <app-transporte-ferroviario></app-transporte-ferroviario>
-            <!-- } -->
+            @if(esDatosRespuesta) {
+              <app-transporte-ferroviario></app-transporte-ferroviario>
+            }
         } @case (5) {
-            <!-- @if(esDatosRespuesta) { -->
-                <perfiles-ferrovario></perfiles-ferrovario>
-            <!-- } -->
+            @if(esDatosRespuesta) {
+              <perfiles-ferrovario></perfiles-ferrovario>
+            }
         }
     }
     </ng-container>

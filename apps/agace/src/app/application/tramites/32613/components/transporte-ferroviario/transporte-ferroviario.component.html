@@ -10,6 +10,8 @@
         <formas-dinamicas
           [forma]="ninoFormGroupUno"
           [formularioDatos]="formDataUno"
+          [estado]="rubroTransporteFerrovariostate"
+          [soloLectura]="consultaState.readonly"
           [templateMap]="templateMap"
           (emitirCambioDeValor)="establecerCambioDeValorUno($event)"
         ></formas-dinamicas>
@@ -44,11 +46,11 @@
                  en el Esquema de Certificación de Empresas *.
           </label>
           <app-input-radio
-            formContolName="reconocimientoMutuo"
+            formControlName="reconocimientoMutuo"
             [radioOptions]="sinoOpciones"
             [isRequired]="true"
             [gridLayout]="true"
-            (valueChange)="cambioReconocimientoMutuo($event)"
+            (valueChange)="radioValorCambio($event, 'reconocimientoMutuo')"
           ></app-input-radio>
         </div>
       </div>
@@ -59,6 +61,8 @@
             [forma]="ninoFormGroupDos"
             [formularioDatos]="formDataDos"
             [templateMap]="templateMap"
+            [estado]="rubroTransporteFerrovariostate"
+            [soloLectura]="consultaState.readonly"
             (emitirCambioDeValor)="establecerCambioDeValorDos($event)"
         ></formas-dinamicas>
       </div>
@@ -71,23 +75,23 @@
              Certificación de Empresas es clasificada por la empresa como:
           </label>
           <app-input-radio
-            formContolName="clasificacionInformacion"
+            formControlName="clasificacionInformacion"
             [radioOptions]="clasificacionInformacionOpciones"
             [isRequired]="false"
             [gridLayout]="true"
-            (valueChange)="cambioReconocimientoMutuo($event)"
+            (valueChange)="radioValorCambio($event, 'clasificacionInformacion')"
           ></app-input-radio>
         </div>
       </div>
       <!-- Pago de derechos -->
       <div class="row">
-        <pago-de-derechos (emitirCambioValor)="emitirCambioValor($event)"></pago-de-derechos>
+        <pago-de-derechos [estado]="rubroTransporteFerrovariostate" (emitirCambioValor)="emitirCambioValor($event)" [consultaState]="consultaState"></pago-de-derechos>
       </div>
     </div>
   </div>
 
   <ng-template #customTemplate1>
-    <input class="form-control" type="text" name="senaleRadioInput" id="senaleRadioInput" formControlName="senaleRadioInput"/>
+    <input class="form-control" type="text" name="senaleRadioInput" id="senaleRadioInput" formControlName="senaleRadioInput" (change)="textValorCambio($event, 'senaleRadioInput')"/>
   </ng-template>
 
   <ng-template #customTemplate2>
@@ -122,7 +126,7 @@
 
   <ng-template #customTemplate4>
     @if (mostrarTemplate4) {
-        <input class="form-control" type="text" name="paginaTextInput" id="paginaTextInput" formControlName="paginaTextInput" [ngClass]="esValido('paginaTextInput') ? 'required' : ''"/>
+        <input class="form-control" type="text" name="paginaTextInput" id="paginaTextInput" formControlName="paginaTextInput" [ngClass]="esValido('paginaTextInput') ? 'required' : ''" (change)="textValorCambio($event, 'paginaTextInput')"/>
         @if (transporteFerroviarioForm.get('paginaTextInput')?.hasError('required') && transporteFerroviarioForm.get('paginaTextInput')?.touched) {
           <div class="mensaje-error">Respuesta Obligatoria</div>
         }
@@ -131,7 +135,7 @@
 
   <ng-template #customTemplate5>
     @if (mostrarTemplate5) {
-        <input class="form-control" type="text" name="correoTextInput" id="correoTextInput" formControlName="correoTextInput" [ngClass]="esValido('correoTextInput') ? 'required' : ''"/>
+        <input class="form-control" type="text" name="correoTextInput" id="correoTextInput" formControlName="correoTextInput" [ngClass]="esValido('correoTextInput') ? 'required' : ''" (change)="textValorCambio($event, 'correoTextInput')"/>
         @if (transporteFerroviarioForm.get('correoTextInput')?.hasError('required') && transporteFerroviarioForm.get('correoTextInput')?.touched) {
           <div class="mensaje-error">Respuesta Obligatoria</div>
         }
@@ -145,11 +149,11 @@
                 <div class="row mb-3" [formGroupName]="$index">
                     <div class="col-md-1">
                         <label for="correoLada-{{ $index }}">Lada</label>
-                        <input type="text" class="form-control" id="correoLada-{{ $index }}" formControlName="correoLada"/>
+                        <input type="text" class="form-control" id="correoLada-{{ $index }}" formControlName="correoLada" (change)="textValorCambio($event, 'correoLada', $index)"/>
                     </div>
                     <div class="col-md-4">
                         <label for="correoTelefono-{{ $index }}">Teléfono</label>
-                        <input type="text" class="form-control" id="correoTelefono-{{ $index }}" formControlName="correoTelefono"/>
+                        <input type="text" class="form-control" id="correoTelefono-{{ $index }}" formControlName="correoTelefono" (change)="textValorCambio($event, 'correoTelefono', $index)"/>
                     </div>
                 </div>
             } 
