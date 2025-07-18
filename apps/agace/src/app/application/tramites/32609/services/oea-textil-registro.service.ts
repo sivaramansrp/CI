@@ -1,4 +1,4 @@
-import { ApiResponse, BuscarRfcResponse, InstalacionesInterface, PersonaRespuestaTabla, RFCEnlaceOperativo, TransportistasListaInterface } from '../modelos/oea-textil-registro.model';
+import { ApiResponse, BuscarRfcResponse, InstalacionesInterface, PersonaRespuestaTabla, RFCEnlaceOperativo, RubroTextil, TransportistasListaInterface } from '../modelos/oea-textil-registro.model';
 import { Observable, forkJoin } from 'rxjs';
 import { StoreResponse, Tramite32609Store, Tramites32609State } from '../estados/tramites32609.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -159,7 +159,7 @@ sectorListaDeSelects(): Observable<{
    * Obtiene los datos de la solicitud de OEA Textil.
    * @returns Observable con los datos de la solicitud.
    */
-  getDatosrubroTextil(): Observable<Tramites32609State> {
-    return this.http.get<Tramites32609State>('assets/json/32609/rubro-IVA-textil-datos.json');
+  getDatosrubroTextil(): Observable<RubroTextil> {
+    return this.http.get<RubroTextil>('assets/json/32609/rubro-IVA-textil-datos.json');
   }
 }

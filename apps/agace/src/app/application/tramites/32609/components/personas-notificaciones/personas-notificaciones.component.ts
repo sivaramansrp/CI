@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { PANELS, PANELS_PRINCIPALES, PERSONAS_NOTIFICACIONES_TABLA } from '../../enums/oea-textil-registro.enum';
+import { PANELS_PRINCIPALES, PERSONAS_NOTIFICACIONES_TABLA } from '../../enums/oea-textil-registro.enum';
 import { PersonaRespuestaTabla, TablaPersonasNotificaciones } from '../../modelos/oea-textil-registro.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';

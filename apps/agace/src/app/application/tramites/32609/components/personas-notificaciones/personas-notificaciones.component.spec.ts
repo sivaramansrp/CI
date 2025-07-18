@@ -1,12 +1,12 @@
 import { PersonasNotificacionesComponent } from './personas-notificaciones.component';
-import { SolicitudDeRegistroInvocarService } from '../../services/solicitud-de-registro-invocar.service';
+import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { of, Subject } from 'rxjs';
-import { PERSONAS_NOTIFICACIONES_TABLA, PANELS } from '../../constantes/personas-notificaciones-tabla.enum';
+import { PERSONAS_NOTIFICACIONES_TABLA, PANELS_PRINCIPALES } from '../../enums/oea-textil-registro.enum';
 
 describe('PersonasNotificacionesComponent', () => {
   let component: PersonasNotificacionesComponent;
-  let solicitudDeRegistroInvocarServiceMock: jest.Mocked<SolicitudDeRegistroInvocarService>;
+  let solicitudDeRegistroInvocarServiceMock: jest.Mocked<OeaTextilRegistroService>;
   let consultaioQueryMock: Partial<ConsultaioQuery>;
 
   beforeEach(() => {
@@ -43,7 +43,7 @@ describe('PersonasNotificacionesComponent', () => {
 
   it('debería inicializar con valores predeterminados', () => {
     expect(component.configuracionTabla).toEqual(PERSONAS_NOTIFICACIONES_TABLA);
-    expect(component.panels).toEqual(PANELS);
+    expect(component.panels).toEqual(PANELS_PRINCIPALES);
     expect(component.esFormularioSoloLectura).toBe(false);
   });
 

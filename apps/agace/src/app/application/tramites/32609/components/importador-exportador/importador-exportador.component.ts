@@ -1,7 +1,7 @@
 import { CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TipoNotificacionEnum, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EMPRESA_DEL_GRUPO, EMPRESA_DEL_GRUPO_CON_FECHA, FECHA_DE_INICIO, FECHA_DE_PAGO, INFORMACION_EMPRESA_OPTIONS, NOTA, OPCIONES_DE_BOTON_DE_RADIO, PANELS, PANELS1, REGISTRO_ESQUEMA_CERTIFICACION_OPTIONS, TRANSPORTISTAS_CONFIGURACION } from '../../enums/oea-textil-registro.enum';
-import { EmpresaDelGrupo, RFCEnlaceOperativo, TransportistasTable } from '../../modelos/oea-textil-registro.model';
+import { EmpresaDelGrupo, RFCEnlaceOperativo, RubroTextil, TransportistasTable } from '../../modelos/oea-textil-registro.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Tramite32609Store, Tramites32609State } from '../../estados/tramites32609.store';
 import { map, takeUntil } from 'rxjs';
@@ -1184,7 +1184,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
   getDatosrubroTextil(): void {
     this.solicitudService.getDatosrubroTextil()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data: Tramites32609State) => {
+      .subscribe((data: RubroTextil) => {
         this.rubroIVATextilForm.patchValue({
           rubroCertificacion: data.rubroCertificacion,
           fechaFinVigenciaRubro: data.fechaFinVigenciaRubro,

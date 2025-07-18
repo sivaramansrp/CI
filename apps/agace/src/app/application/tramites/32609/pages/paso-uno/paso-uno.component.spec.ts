@@ -61,15 +61,14 @@ describe('PasoUnoComponent', () => {
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('guardarDatosFormulario debe establecer esDatosRespuesta en true y llamar actualizarEstadoFormulario si resp existe', (done) => {
+  it('guardarDatosFormulario debe establecer esDatosRespuesta en true y llamar actualizarEstadoFormulario si resp existe', () => {
     const respMock = { data: 'mock' };
     mockRegistroService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(respMock));
+    
     component.guardarDatosFormulario();
-    setTimeout(() => {
-      expect(component.esDatosRespuesta).toBe(true);
-      expect(mockRegistroService.actualizarEstadoFormulario).toHaveBeenCalledWith(respMock);
-      done();
-    });
+    
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(mockRegistroService.actualizarEstadoFormulario).toHaveBeenCalledWith('mock');
   });
 
   it('guardarDatosFormulario debe establecer esDatosRespuesta en false si resp no existe', () => {

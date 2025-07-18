@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EnlaceOperativoComponent } from './enlace-operativo.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Tramite32610TercerosStore } from '../../../../estados/tramites/tramite32610-terceros.store';
-import { Tramite32610TercerosQuery } from '../../../../estados/queries/tramite32610-terceros.query';
+import { Tramite32609Store } from '../../estados/tramites32609.store';
+import { Tramite32609Query } from '../../estados/tramites32609.query';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 
@@ -14,17 +14,18 @@ describe('EnlaceOperativoComponent', () => {
   beforeEach(async () => {
     tramiteStoreSpy = {
       actualizarEstadoFormulario: jest.fn(),
+      establecerDatos: jest.fn(),
     };
 
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
       declarations: [],
       providers: [
-        { provide: Tramite32610TercerosStore, useValue: tramiteStoreSpy },
+        { provide: Tramite32609Store, useValue: tramiteStoreSpy },
         {
-          provide: Tramite32610TercerosQuery,
+          provide: Tramite32609Query,
           useValue: {
-            selectSolicitud$: of({
+            selectTramite32609$: of({
               enlaceOperativoData: [],
               readonly: false,
             }),
@@ -107,7 +108,7 @@ describe('EnlaceOperativoComponent', () => {
 
     component.enlaceInfoDatos();
 
-    expect(tramiteStoreSpy.actualizarEstadoFormulario).toHaveBeenCalled();
+    expect(tramiteStoreSpy.establecerDatos).toHaveBeenCalled();
     expect(component.enlaceOperativoData.length).toBeGreaterThan(0);
   });
 
@@ -121,7 +122,7 @@ describe('EnlaceOperativoComponent', () => {
     component.eliminarEnlaceItem(true);
 
     expect(component.enlaceOperativoData.find(item => item.id === 1)).toBeUndefined();
-    expect(tramiteStoreSpy.actualizarEstadoFormulario).toHaveBeenCalled();
+    expect(tramiteStoreSpy.establecerDatos).toHaveBeenCalled();
   });
 
   it('debería mostrar notificación si se intenta modificar sin seleccionar fila', () => {
@@ -156,5 +157,70 @@ describe('EnlaceOperativoComponent', () => {
     expect(component.modoEdicion).toBe(true);
     expect(component.registroEditandoId).toBe(1);
     expect(spyAgregarDialogo).toHaveBeenCalled();
+  });
+
+  it('debería manejar selección de filas vacía correctamente', () => {
+    component.manejarFilaSeleccionada([]);
+
+    expect(component.listaFilaSeleccionadaEnlace).toEqual([]);
+    expect(component.filaSeleccionadaEnlaceOperativo).toEqual({} as any);
+    expect(component.enableModficarBoton).toBe(false);
+    expect(component.enableEliminarBoton).toBe(false);
+  });
+
+  it('debería manejar selección de una fila correctamente', () => {
+    const filaTest = {
+      id: 1,
+      registro: 'XAXX010101000',
+      rfc: 'XAXX010101000',
+      nombre: 'Test Nombre',
+      apellidoPaterno: 'Apellido',
+      apellidoMaterno: 'Materno',
+      cuidad: 'Ciudad',
+      cargo: 'Cargo',
+      telefono: '1234567890',
+      correoElectronico: 'test@test.com',
+      suplente: false,
+    };
+
+    component.manejarFilaSeleccionada([filaTest]);
+
+    expect(component.listaFilaSeleccionadaEnlace).toEqual([filaTest]);
+    expect(component.filaSeleccionadaEnlaceOperativo).toEqual(filaTest);
+  });
+
+  it('debería seleccionar la última fila cuando se pasan múltiples filas', () => {
+    const fila1 = {
+      id: 1,
+      registro: 'XAXX010101000',
+      rfc: 'XAXX010101000',
+      nombre: 'Test 1',
+      apellidoPaterno: '',
+      apellidoMaterno: '',
+      cuidad: '',
+      cargo: '',
+      telefono: '',
+      correoElectronico: '',
+      suplente: false,
+    };
+
+    const fila2 = {
+      id: 2,
+      registro: 'XEXX010101000',
+      rfc: 'XEXX010101000',
+      nombre: 'Test 2',
+      apellidoPaterno: '',
+      apellidoMaterno: '',
+      cuidad: '',
+      cargo: '',
+      telefono: '',
+      correoElectronico: '',
+      suplente: false,
+    };
+
+    component.manejarFilaSeleccionada([fila1, fila2]);
+
+    expect(component.listaFilaSeleccionadaEnlace).toEqual([fila1, fila2]);
+    expect(component.filaSeleccionadaEnlaceOperativo).toEqual(fila2);
   });
 });

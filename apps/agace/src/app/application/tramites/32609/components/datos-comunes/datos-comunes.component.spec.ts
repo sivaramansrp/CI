@@ -237,6 +237,24 @@ describe('DatosComunesComponent', () => {
       expect(markAllAsTouchedSpy).toHaveBeenCalled();
     });
 
+    it('debería marcar el formulario como touched y actualizar validación en actualizarValidacionSector', () => {
+      const markAsTouchedSpy = jest.spyOn(component.forma, 'markAsTouched');
+      const updateValueAndValiditySpy = jest.spyOn(component.forma, 'updateValueAndValidity');
+      
+      component.actualizarValidacionSector();
+      
+      expect(markAsTouchedSpy).toHaveBeenCalled();
+      expect(updateValueAndValiditySpy).toHaveBeenCalled();
+    });
+
+    it('debería manejar formulario nulo en actualizarValidacionSector sin errores', () => {
+      component.forma = null as any;
+      
+      expect(() => {
+        component.actualizarValidacionSector();
+      }).not.toThrow();
+    });
+
     // Note: updateValueAndValidity is commented out in the actual implementation
     // So we don't test for it
 
@@ -254,6 +272,65 @@ describe('DatosComunesComponent', () => {
       control?.markAsTouched();
       
       expect(component.esInvalido('cumplimientoFiscalAduanero')).toBe(false);
+    });
+
+    it('debería validar correctamente los sectores en tieneSectorValidationError', () => {
+      // Test when form is not touched - should return false
+      component.forma.markAsUntouched();
+      expect(component.tieneSectorValidationError()).toBe(false);
+      
+      // Test when form is touched but no sectors selected - should return true
+      component.forma.markAsTouched();
+      component.forma.patchValue({
+        sectorProductivo: null,
+        sectorServicio: null
+      });
+      expect(component.tieneSectorValidationError()).toBe(true);
+      
+      // Test when form is touched and sector productivo is selected - should return false
+      component.forma.patchValue({
+        sectorProductivo: '1',
+        sectorServicio: null
+      });
+      expect(component.tieneSectorValidationError()).toBe(false);
+      
+      // Test when form is touched and sector servicio is selected - should return false
+      component.forma.patchValue({
+        sectorProductivo: null,
+        sectorServicio: '2'
+      });
+      expect(component.tieneSectorValidationError()).toBe(false);
+      
+      // Test when form is touched and both sectors are selected - should return false
+      component.forma.patchValue({
+        sectorProductivo: '1',
+        sectorServicio: '2'
+      });
+      expect(component.tieneSectorValidationError()).toBe(false);
+    });
+
+    it('debería manejar valores inválidos en tieneSectorValidationError', () => {
+      component.forma.markAsTouched();
+      
+      // Test with empty strings
+      component.forma.patchValue({
+        sectorProductivo: '',
+        sectorServicio: ''
+      });
+      expect(component.tieneSectorValidationError()).toBe(true);
+      
+      // Test with -1 values (invalid selections)
+      component.forma.patchValue({
+        sectorProductivo: -1,
+        sectorServicio: -1
+      });
+      expect(component.tieneSectorValidationError()).toBe(true);
+    });
+
+    it('debería manejar formulario nulo en tieneSectorValidationError', () => {
+      component.forma = null as any;
+      
+      expect(component.tieneSectorValidationError()).toBe(false);
     });
   });
 

@@ -1,6 +1,7 @@
 import { AlertComponent, AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { CTPATComponent } from './components/c-tpat/c-tpat.component';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosComunesComponent } from './components/datos-comunes/datos-comunes.component';
@@ -49,6 +50,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     TercerosRelacionadosComponent,
     ImportadorExportadorComponent,
     AlertComponent,
+    CTPATComponent,
     ToastrModule.forRoot()
   ],
   exports: [

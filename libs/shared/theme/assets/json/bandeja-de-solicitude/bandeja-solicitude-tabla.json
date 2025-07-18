@@ -2924,6 +2924,15 @@
     "diasTranscurridos": "4",
     "departamento": "AGA",
     "numeroDeProcedimiento": "30401"
+  },
+  {
+    "id": 32609,
+    "tipoDeTramite": "Consulta de Proceso 32609",
+    "fecha": "2021-10-01",
+    "fechaActualizacion": "2021-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32609"
   }
 
 ]
