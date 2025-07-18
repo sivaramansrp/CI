@@ -1,4 +1,5 @@
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { REGEX_SOLO_DIGITOS } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { Catalogo, CategoriaMensaje, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent, SharedModule, TituloComponent } from "@libs/shared/data-access-user/src";
@@ -134,7 +135,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
 
 
     this.formChoferes = this.fb.group({
-      numero: [{ value: this.datosDeChofere?.numero, disabled: this.readonly}, [Validators.required, Validators.maxLength(10)]],
+      numero: [{ value: this.datosDeChofere?.numero, disabled: this.readonly }, [Validators.required, Validators.maxLength(10)]],
       primerApellido: [{ value: this.datosDeChofere?.primerApellido, disabled: this.readonly }, [Validators.required, Validators.maxLength(50)]],
       segundoApellido: [{ value: this.datosDeChofere?.segundoApellido, disabled: this.readonly }],
 
@@ -152,13 +153,13 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
       calle: [{ value: this.datosDeChofere?.calle, disabled: this.readonly }, [Validators.required, Validators.maxLength(100)]],
       numeroExterior: [{ value: this.datosDeChofere?.numeroExterior, disabled: this.readonly }, [Validators.required, Validators.maxLength(10)]],
       numeroInterior: [{ value: this.datosDeChofere?.numeroInterior, disabled: this.readonly }, [Validators.maxLength(10)]],
-      
+
       paisDeResidencia: [{ value: this.datosDeChofere?.paisDeResidencia, disabled: this.readonly }, [Validators.required]],
       ciudad: [{ value: this.datosDeChofere?.ciudad, disabled: this.readonly }, [Validators.required, Validators.maxLength(50)]],
-      
-      correoElectronico: [{ value: this.datosDeChofere?.correoElectronico, disabled: this.readonly }],
-      telefono: [{ value: this.datosDeChofere?.telefono, disabled: this.readonly }],
-    });
+
+      correoElectronico: [{ value: this.datosDeChofere?.correoElectronico, disabled: this.readonly }, [Validators.required, Validators.email]],
+      telefono: [{ value: this.datosDeChofere?.telefono, disabled: this.readonly }, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
+    }, { updateOn: 'change' });
 
     await this.paisListData();
     await this.updateListsData(this.datosDeChofere);
@@ -325,7 +326,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
       correoElectronico: '',
       telefono: ''
     });
-    
+
   }
 
   /**
@@ -352,20 +353,20 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
     await this.chofer40101Service
       .obtenerTablaDatos<ChoferesExtranjeros>('mock-data-choferes-extranjero.json')
       .pipe(takeUntil(this.destroyed$))
-      .subscribe( (response) => {
-            if(response?.length === 0) {
-              this.alertaNotificacion = {
-                tipoNotificacion: TipoNotificacionEnum.ALERTA,
-                categoria: CategoriaMensaje.INFORMACION,
-                modo: 'action',
-                titulo: 'Alert',
-                mensaje: 'No se encontró información para el CURP o RFC proporcionado.',
-                cerrar: true,
-                txtBtnAceptar: 'Aceptar',
-                txtBtnCancelar: '',
-              };
-              return;
-            }
+      .subscribe((response) => {
+        if (response?.length === 0) {
+          this.alertaNotificacion = {
+            tipoNotificacion: TipoNotificacionEnum.ALERTA,
+            categoria: CategoriaMensaje.INFORMACION,
+            modo: 'action',
+            titulo: 'Alert',
+            mensaje: 'No se encontró información para el CURP o RFC proporcionado.',
+            cerrar: true,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+          };
+          return;
+        }
         this.updateListsData(response[0]);
         // Rellenar el formulario
         this.formChoferes.patchValue(response[0]);
@@ -378,7 +379,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * @returns {Promise<void>}
    */
   private updateListsData(data: ChoferesExtranjeros): void {
-    data.pais = (this.paisList.find((p:Catalogo )=> p.descripcion === data.pais)?.id)?.toString();
+    data.pais = (this.paisList.find((p: Catalogo) => p.descripcion === data.pais)?.id)?.toString();
   }
 
   /**
@@ -388,15 +389,20 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
   limpiarFormulario(): void {
     this.formChoferes.reset();
   }
-  
+
   /**
    * Guarda los datos editados del chofer nacional si el formulario es válido, emite el evento y cierra el modal.
    * Si el formulario es inválido, muestra una notificación de alerta.
    * @returns {void}
    */
+  submitted = false;
+
   guardarFilaEditada(): void {
-      this.formChoferes.markAllAsTouched();
-      this.formChoferes.updateValueAndValidity();
+    this.submitted = true;
+    Object.values(this.formChoferes.controls).forEach(control => {
+      control.markAsTouched({ onlySelf: true });
+      control.updateValueAndValidity();
+    });
 
     if (this.formChoferes.valid) {
       const DATA = this.formChoferes.getRawValue() as ChoferesExtranjeros;
@@ -408,16 +414,16 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
       this.addModalEvent.emit(DATA);
       this.closeModal();
     } else {
-        this.alertaNotificacion = {
-          tipoNotificacion: TipoNotificacionEnum.ALERTA,
-          categoria: CategoriaMensaje.INFORMACION,
-          modo: 'action',
-          titulo: 'Alert',
-          mensaje: 'Formulario inválido, por favor verifica los campos.',
-          cerrar: true,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        };
+      this.alertaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.INFORMACION,
+        modo: 'action',
+        titulo: 'Alert',
+        mensaje: 'Formulario inválido, por favor verifica los campos.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     }
   }
 

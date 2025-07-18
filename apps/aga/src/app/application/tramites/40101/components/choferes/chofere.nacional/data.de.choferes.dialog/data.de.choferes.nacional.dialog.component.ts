@@ -1,11 +1,25 @@
+import { CommonModule } from "@angular/common";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { Catalogo, CategoriaMensaje, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent, SharedModule, TituloComponent } from "@libs/shared/data-access-user/src";
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
 import { Subject, firstValueFrom, takeUntil } from "rxjs";
+
+import { REGEX_CURP, REGEX_SOLO_DIGITOS } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
+import {
+  Catalogo,
+  CategoriaMensaje,
+  Notificacion,
+  NotificacionesComponent,
+  TipoNotificacionEnum
+} from "@ng-mf/data-access-user";
+
+import {
+  CatalogoSelectComponent,
+  SharedModule,
+  TituloComponent
+} from "@libs/shared/data-access-user/src";
+
 import { Chofer40101Service } from "../../../../estado/chofer40101.service";
-import { CommonModule } from "@angular/common";
 import { DatosDelChoferNacional } from "../../../../models/registro-muestras-mercancias.model";
 
 
@@ -133,36 +147,33 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
   async ngOnInit(): Promise<void> {
 
 
-    this.formChoferes = this.fb.group({
 
-      curp: [{ value: this.datosDeChofere?.curp, disabled: false },
-      [
+    this.formChoferes = this.fb.group({
+      curp: [{ value: this.datosDeChofere?.curp, disabled: false }, [
         Validators.required,
         Validators.maxLength(18),
-        Validators.pattern(/^[A-Z]{4}\d{6}[HM]{1}[A-Z]{5}[0-9A-Z]{2}$/), // CURP regex
+        Validators.pattern(REGEX_CURP),
       ]],
-
       rfc: [{ value: this.datosDeChofere?.rfc, disabled: false }, Validators.required],
-      nombre: [{ value: this.datosDeChofere?.nombre, disabled: true }],
-      primerApellido: [{ value: this.datosDeChofere?.primerApellido, disabled: true }],
+      nombre: [{ value: this.datosDeChofere?.nombre, disabled: true }, Validators.required],
+      primerApellido: [{ value: this.datosDeChofere?.primerApellido, disabled: true }, Validators.required],
       segundoApellido: [{ value: this.datosDeChofere?.segundoApellido, disabled: true }],
-      numeroDeGafete: [{ value: this.datosDeChofere?.numeroDeGafete, disabled: true }],
-      vigenciaGafete: [{ value: this.datosDeChofere?.vigenciaGafete, disabled: true }],
-
-      calle: [{ value: this.datosDeChofere?.calle, disabled: this.readonly }],
-      numeroExterior: [{ value: this.datosDeChofere?.numeroExterior, disabled: this.readonly }],
+      numeroDeGafete: [{ value: this.datosDeChofere?.numeroDeGafete, disabled: true }, Validators.required],
+      vigenciaGafete: [{ value: this.datosDeChofere?.vigenciaGafete, disabled: true }, Validators.required],
+      calle: [{ value: this.datosDeChofere?.calle, disabled: this.readonly }, Validators.required],
+      numeroExterior: [{ value: this.datosDeChofere?.numeroExterior, disabled: this.readonly }, Validators.required],
       numeroInterior: [{ value: this.datosDeChofere?.numeroInterior, disabled: this.readonly }],
       pais: [{ value: 1, disabled: true }],
-      estado: [{ value: this.datosDeChofere?.estado, disabled: this.readonly }],
-      municipioAlcaldia: [{ value: this.datosDeChofere?.municipioAlcaldia, disabled: this.readonly }],
-      colonia: [{ value: this.datosDeChofere?.colonia, disabled: this.readonly }],
-      paisDeResidencia: [{ value: this.datosDeChofere?.paisDeResidencia, disabled: this.readonly }],
-      ciudad: [{ value: this.datosDeChofere?.ciudad, disabled: this.readonly }],
-      localidad: [{ value: this.datosDeChofere?.localidad, disabled: this.readonly }],
-      codigoPostal: [{ value: this.datosDeChofere?.codigoPostal, disabled: this.readonly }],
-      correoElectronico: [{ value: this.datosDeChofere?.correoElectronico, disabled: this.readonly }],
-      telefono: [{ value: this.datosDeChofere?.telefono, disabled: this.readonly }],
-    });
+      estado: [{ value: this.datosDeChofere?.estado, disabled: this.readonly }, Validators.required],
+      municipioAlcaldia: [{ value: this.datosDeChofere?.municipioAlcaldia, disabled: this.readonly }, Validators.required],
+      colonia: [{ value: this.datosDeChofere?.colonia, disabled: this.readonly }, Validators.required],
+      paisDeResidencia: [{ value: this.datosDeChofere?.paisDeResidencia, disabled: this.readonly }, Validators.required],
+      ciudad: [{ value: this.datosDeChofere?.ciudad, disabled: this.readonly }, Validators.required],
+      localidad: [{ value: this.datosDeChofere?.localidad, disabled: this.readonly }, Validators.required],
+      codigoPostal: [{ value: this.datosDeChofere?.codigoPostal, disabled: this.readonly }, Validators.required],
+      correoElectronico: [{ value: this.datosDeChofere?.correoElectronico, disabled: this.readonly }, [Validators.required, Validators.email]],
+      telefono: [{ value: this.datosDeChofere?.telefono, disabled: this.readonly }, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
+    }, { updateOn: 'change' });
 
     await this.paisListData();
     await this.updateListsData(this.datosDeChofere);
@@ -435,9 +446,14 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    * Si el formulario es inválido, muestra una notificación de alerta.
    * @returns {void}
    */
+  submitted = false;
+
   guardarFilaEditada(): void {
-      this.formChoferes.markAllAsTouched();
-      this.formChoferes.updateValueAndValidity();
+    this.submitted = true;
+    Object.values(this.formChoferes.controls).forEach(control => {
+      control.markAsTouched({ onlySelf: true });
+      control.updateValueAndValidity();
+    });
 
     if (this.formChoferes.valid) {
       const DATA = this.formChoferes.getRawValue() as DatosDelChoferNacional;
@@ -451,16 +467,16 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
       this.addModalEvent.emit(DATA);
       this.closeModal();
     } else {
-        this.alertaNotificacion = {
-          tipoNotificacion: TipoNotificacionEnum.ALERTA,
-          categoria: CategoriaMensaje.INFORMACION,
-          modo: 'action',
-          titulo: 'Alert',
-          mensaje: 'Formulario inválido, por favor verifica los campos.',
-          cerrar: true,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        };
+      this.alertaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.INFORMACION,
+        modo: 'action',
+        titulo: 'Alert',
+        mensaje: 'Formulario inválido, por favor verifica los campos.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     }
   }
 

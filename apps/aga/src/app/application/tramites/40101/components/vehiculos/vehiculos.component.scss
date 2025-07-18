@@ -4,6 +4,21 @@
 
 .modal-body {
     margin: 25px 25px 0px 25px;
+
+    .required {
+        border: 1px solid #cccccc !important;
+    }
+
+    form {
+        ::ng-deep label {
+            font-size: 1.6rem !important;
+        }
+    }
+
+}
+
+.btn {
+    margin: 2px !important;
 }
 
 .modal-footer {
@@ -63,4 +78,10 @@
 
 .mt-8 {
     margin-top: 8px !important;
+}
+
+::ng-deep #paisEmisor2daPlaca {
+    .form-label {
+        padding-top: 0px !important;
+    }
 }
