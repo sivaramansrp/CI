@@ -25,7 +25,7 @@ export interface AcuseNotificacionRequerimiento {
  *
  * @type {ConfiguracionColumna<AcuseNotificacionRequerimiento>[]}
  */
-export const ACUSE_NOTIFICACION_REQUERIMIENTO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<AcuseNotificacionRequerimiento>[] =
+export const ACUSE_CONFIRMAR_NOTIFICACION_REQUERIMIENTO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<AcuseNotificacionRequerimiento>[] =
   [
     {
       encabezado: 'No.',
@@ -36,5 +36,5 @@ export const ACUSE_NOTIFICACION_REQUERIMIENTO_ENCABEZADO_DE_TABLA: Configuracion
       encabezado: 'Documento',
       clave: (fila) => fila.documento,
       orden: 2,
-    },
+    }
   ];

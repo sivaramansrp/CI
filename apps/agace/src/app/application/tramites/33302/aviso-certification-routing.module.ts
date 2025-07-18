@@ -1,4 +1,4 @@
-import { AvisoModifyIvaEIepsComponent } from './pages/AvisoModifyIvaEIeps/aviso-modify-iva-eIeps.component';
+import { AvisoModifyIvaEIepsComponent } from './pages/aviso-modify-iva-eieps/aviso-modify-iva-eieps.component';
 import { NgModule } from '@angular/core';
 
 import { RouterModule, Routes } from '@angular/router';
