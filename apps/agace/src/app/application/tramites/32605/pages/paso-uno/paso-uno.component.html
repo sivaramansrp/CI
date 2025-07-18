@@ -4,12 +4,11 @@
       <li 
         *ngFor="let tab of seccionesDeLaSolicitud" 
         [ngClass]="indice === tab.index ? 'active' : ''"
-        class="nav-item"
+        
       >
-        <!-- Show CTPAT tab only when reconocimientoMutuoValue === '1' -->
         <a 
           *ngIf="tab.index !== 5 || reconocimientoMutuoValue === '1'"
-          class="nav-link"
+         
           [class.active]="indice === tab.index"
           (click)="seleccionaTab(tab.index)"
         >
@@ -42,7 +41,6 @@
         </app-importador-exportador>
       }
 
-      <!-- CTPAT component only shows when reconocimientoMutuoValue === '1' -->
       @if(esDatosRespuesta && reconocimientoMutuoValue === '1'){
         <app-c-tpat [hidden]="indice !== 5"></app-c-tpat>
       }

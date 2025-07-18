@@ -160,7 +160,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Maneja el cambio de valor para el reconocimiento mutuo.
    * Actualiza la propiedad `reconocimientoMutuoValue` con el valor seleccionado.
    *
-   * @param {string} value - El nuevo valor seleccionado para reconocimiento mutuo.
+   * El nuevo valor seleccionado para reconocimiento mutuo.
    */
   onReconocimientoMutuoChange(value: string) :void {
     this.reconocimientoMutuoValue = value;

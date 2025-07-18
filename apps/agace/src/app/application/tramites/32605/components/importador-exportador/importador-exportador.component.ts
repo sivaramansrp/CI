@@ -934,14 +934,26 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    * Valida que todos los campos de pago estén completos.
    * Actualiza la bandera de error según el estado de los campos requeridos.
    */
-  validarCamposPago(): void {
-    const FECHADEPAGE = this.importadorExportadorForm.get('fechaDePago')?.value;
-    const MONTO = this.importadorExportadorForm.get('monto')?.value;
-    const OPERACIONESBANCARIAS = this.importadorExportadorForm.get('operacionesBancarias')?.value;
-    const LLAVEPAGO = this.importadorExportadorForm.get('llavePago')?.value;
-
-    this.mostrarError = !FECHADEPAGE || !MONTO || !OPERACIONESBANCARIAS || !LLAVEPAGO;
+ validarCamposPago(): void {
+  const FECHADEPAGE = this.importadorExportadorForm.get('fechaDePago')?.value;
+  const MONTO = this.importadorExportadorForm.get('monto')?.value;
+  const OPERACIONESBANCARIAS = this.importadorExportadorForm.get('operacionesBancarias')?.value;
+  const LLAVEPAGO = this.importadorExportadorForm.get('llavePago')?.value;
+  
+  // Check if any payment field is empty
+  const CAMPOS_VACIOS = !FECHADEPAGE || !MONTO || !OPERACIONESBANCARIAS || !LLAVEPAGO;
+  
+  // Show error if any required payment field is empty
+  this.mostrarError = CAMPOS_VACIOS;
+  
+  // Mark payment fields as touched to show individual field errors when validation fails
+  if (CAMPOS_VACIOS) {
+    this.importadorExportadorForm.get('fechaDePago')?.markAsTouched();
+    this.importadorExportadorForm.get('monto')?.markAsTouched();
+    this.importadorExportadorForm.get('operacionesBancarias')?.markAsTouched();
+    this.importadorExportadorForm.get('llavePago')?.markAsTouched();
   }
+}
 
   /**
    * Controla la funcionalidad de paneles colapsables secundarios en la interfaz.
@@ -1149,14 +1161,25 @@ public validarTablaDatos(): boolean {
  * Si no es válido, marca todos los campos como tocados para mostrar los errores y retorna `false`.
  */
  validarFormulario(): boolean {
-    if (this.importadorExportadorForm.valid) {
-      return true;
-    }
-    
-      this.importadorExportadorForm.markAllAsTouched();
-      return false;
-    
+  let esValido = true;
+  
+  // Validate main form
+  if (this.importadorExportadorForm.invalid) {
+    this.importadorExportadorForm.markAllAsTouched();
+    esValido = false;
   }
+  
+  // Validate payment fields specifically (same as blur validation)
+  this.validarCamposPago();
+  if (this.mostrarError) {
+    esValido = false;
+  }
+   // Validate transportistas
+  if (this.componenteAgregarTransportistas && !this.componenteAgregarTransportistas.validarTransportistas()) {
+    esValido = false;
+  }
+  return esValido;
+}
 
 /**
  * Configura la validación dinámica basada en el valor de comercioExteriorRealizado

@@ -726,74 +726,16 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
-  /**
- * Valida si los datos de transportistas son requeridos y están disponibles
- * Retorna verdadero si la validación pasa, falso en caso contrario
- */
-  public validarDatosTransportistas(): boolean {
-    // Siempre requiere al menos un transportista
-    return this.transportistasLista.length > 0;
-  }
-  /**
- * Valida todos los formularios y marca los campos como tocados para mostrar errores de validación
- * Este método es llamado desde el componente padre durante la validación de continuar
- */
-  public validarFormulariosCompletos(): boolean {
-    let esValido = true;
 
-    // Validar el formulario principal si existe
-    if (this.transportistaCertificacionForm) {
-      if (this.transportistaCertificacionForm.invalid) {
-        this.transportistaCertificacionForm.markAllAsTouched();
-        this.marcarTodosLosCamposComoTocados(this.transportistaCertificacionForm);
-        esValido = false;
-      }
-    }
-
-    // Validar tabla de transportistas - siempre requerida
-    if (this.transportistasLista.length === 0) {
-      // Marcar un campo dummy como tocado para activar el mensaje de validación
-      this.marcarCampoTransportistaComoTocado();
-      esValido = false;
-    }
-
-    return esValido;
-  }
   /**
- * Marca un campo dummy como tocado para activar el mensaje de validación de transportistas
+ * Valida que exista al menos un transportista en la lista.
+ * Retorna true si hay transportistas, false si la lista está vacía.
  */
-private marcarCampoTransportistaComoTocado(): void {
-  // Crear o actualizar un campo dummy para activar la visualización de validación
-  if (!this.transportistaCertificacionForm.get('validacionTransportistas')) {
-    this.transportistaCertificacionForm.addControl('validacionTransportistas', this.fb.control('',[Validators.required]));
-  }
+public validarTransportistas(): boolean {
+  // Mark the validation field as touched to show error
   this.transportistaCertificacionForm.get('validacionTransportistas')?.markAsTouched();
-  this.transportistaCertificacionForm.get('validacionTransportistas')?.markAsDirty();
+  
+  return this.transportistasLista.length > 0;
 }
 
-  /**
- * Marca todos los controles del formulario como tocados para activar la visualización de errores de validación
- */
- marcarTodosLosCamposComoTocados(formulario: FormGroup): void {
-   if (!this.destroy$) {
-    return;
-  }
-  Object.keys(formulario.controls).forEach(clave => {
-    const CONTROL = formulario.get(clave);
-    if (CONTROL) {
-      CONTROL.markAsTouched();
-      CONTROL.markAsDirty();
-    }
-  });
-}
-
-/**
- * Obtiene la validez de todos los formularios de transportistas
- */
-public obtenerValidezTodosFormularios(): boolean {
-  const FORMULARIO_TRANSPORTISTA_VALIDO = this.transportistaCertificacionForm?.valid ?? true;
-  const DATOS_TRANSPORTISTAS_VALIDOS = this.validarDatosTransportistas();
-
-  return FORMULARIO_TRANSPORTISTA_VALIDO && DATOS_TRANSPORTISTAS_VALIDOS;
-}
 }  
