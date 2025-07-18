@@ -189,9 +189,76 @@
     <div class="col-md-12 mt-5 d-flex justify-content-end">
       <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
       <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
-      <button type="button" class="btn btn-primary ms-3"[disabled]="esFormularioSoloLectura">Agregar</button>
+      <button type="button" class="btn btn-primary ms-3"[disabled]="esFormularioSoloLectura" (click)="tercerosAgregar()">Agregar</button>
     </div>
   </div>
+  <app-modal [active]="showtercerosModal">
+
+    <form [formGroup]="mercanciaForm">
+    <ng-titulo titulo="Datos Generales de la Mercancía Animal" />
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label class="form-label">Tipo especie*</label>
+        <input class="form-control" formControlName="tipoEspecie" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Regulación*</label>
+        <input class="form-control" formControlName="regulacion" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Nombre del Producto*</label>
+        <input class="form-control" formControlName="nombreProducto" />
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label class="form-label">Unidad 1*</label>
+        <input class="form-control" formControlName="unidad1" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Unidad 2*</label>
+        <input class="form-control" formControlName="unidad2" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">País de origen*</label>
+        <app-catalogo-select
+          formControlName="paisOrigen"
+          [catalogo]="veterinario"
+          [label]="'País de origen'">
+        </app-catalogo-select>
+      </div>
+    </div>
+
+    <ng-titulo titulo="Detalle" />
+
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <label class="form-label">Nombre de lote</label>
+        <input class="form-control" formControlName="nombreLote" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Código arancelario</label>
+        <input class="form-control" formControlName="codigoArancelario" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Edad del animal</label>
+        <input class="form-control" formControlName="edadAnimal" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Nombre científico</label>
+        <input class="form-control" formControlName="nombreCientifico" />
+      </div>
+    </div>
+
+    <div class="col-md-12 mt-4 d-flex justify-content-end">
+      <button class="btn btn-secondary" type="button" (click)="cerrarModal()">Cancelar</button>
+      <button class="btn btn-primary ms-3" type="submit" (click)="guardarMercancia()">Agregar</button>
+    </div>
+  </form>
+    
+  </app-modal>
 </div>
 
 <div class="modal fade" id="modalAgregarMercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel"

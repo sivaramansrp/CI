@@ -14,6 +14,8 @@ import { Modal } from 'bootstrap';
 import { Tramite221601Query } from '../../../../estados/queries/tramite221601.query';
 import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
 
+import { ModalComponent } from '../modal/modal.component';
+
 
 /**
  * Componente que gestiona la visualización y el manejo de los datos de la solicitud 221601, incluyendo 
@@ -48,7 +50,8 @@ import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
     CatalogoSelectComponent,
     AlertComponent,
     CommonModule,
-    InputRadioComponent
+    InputRadioComponent,
+    ModalComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.scss']
@@ -82,7 +85,16 @@ import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
  * @method setValoresStore() - Actualiza el store del trámite con el valor de un campo específico del formulario.
  * @method ngOnDestroy() - Se ejecuta cuando el componente es destruido. Limpia los recursos y previene memory leaks.
  */
+// export interface Mercancias {
+//   // existing properties...
+//   tipoEspecie: string; // or whatever type it should be
+// }
+
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+   
+  
+  showtercerosModal = false;
+
 /** Indica si el formulario debe mostrarse en modo solo lectura.  
  *  Controla la habilitación o deshabilitación de los campos. */
  esFormularioSoloLectura: boolean = false;
@@ -224,6 +236,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    this.inicializarCombinacionFormulario();
   }
 
+  showMercanciaModal = false;
+
+mercanciaForm = this.fb.group({
+  tipoEspecie: ['', Validators.required],
+  regulacion: ['', Validators.required],
+  nombreProducto: ['', Validators.required],
+  unidad1: ['', Validators.required],
+  unidad2: ['', Validators.required],
+  paisOrigen: ['', Validators.required],
+  nombreLote: [''],
+  codigoArancelario: [''],
+  edadAnimal: [''],
+  nombreCientifico: ['']
+});
+
+
   /**
    * Método para inicializar el formulario reactivo con los datos de la solicitud.
    * 
@@ -346,7 +374,56 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
     this.valorSeleccionado = valor;
   }
+ cancelarDestinatario(): void {
+    this.showtercerosModal = !this.showtercerosModal;
+  }
 
+  tercerosAgregar(): void {
+    this.showtercerosModal = !this.showtercerosModal;
+  }
+guardarMercancia() {
+  if (this.mercanciaForm.valid) {
+    // const FORM_VALUE = this.mercanciaForm.value;
+
+    // const NUEVA_MERCANCIA: Mercancias = {
+    
+      // tipoEspecie: FORM_VALUE.tipoEspecie,
+      // regulacion: FORM_VALUE.regulacion,
+      // nombreProducto: FORM_VALUE.nombreProducto,
+      // unidad1: FORM_VALUE.unidad1,
+      // unidad2: FORM_VALUE.unidad2,
+      // paisOrigen: formValue.paisOrigen,
+      // nombreLote: FORM_VALUE.nombreLote,
+      // codigoArancelario: FORM_VALUE.codigoArancelario,
+      // edadAnimal: FORM_VALUE.edadAnimal,
+      // nombreCientifico: FORM_VALUE.nombreCientifico,
+
+      // Additional required fields with defaults
+      // noPartida: '',
+      // tipoRequisito: '',
+      // requisito: '',
+      // numeroCertificadoInternacional: '',
+      // Add all other missing required fields
+      // fechaVencimiento: '',
+      // cantidad: 0,
+      // unidadCantidad: '',
+      // unidadPeso: '',
+      // peso: 0,
+      // ... continue for all remaining properties from `Mercancias`
+    };
+
+  //   this.mercancias.push(NUEVA_MERCANCIA);
+  //   this.showtercerosModal = false;
+  //   this.mercanciaForm.reset();
+  // } else {
+  //   this.mercanciaForm.markAllAsTouched();
+  // }
+}
+cerrarModal(): void {
+  this.showtercerosModal = false;
+}
+
+  
   /**
    * Método que se ejecuta cuando el componente es destruido. Limpia los recursos y previene memory leaks.
    */
