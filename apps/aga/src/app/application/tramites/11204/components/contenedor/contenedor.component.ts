@@ -110,7 +110,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Datos que se mostrarán en la tabla dinámica.
    */
-  datosTabla: Record<string, string>[] = [];
+  datosTabla: any[] = [];
 
   /**
    * Textos.
@@ -295,7 +295,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     });
     this.cargarCatalogos();
     this.fetchgetaduanaLista();
-    this.loadDatosTablaData();
   }
 
   /**
@@ -328,6 +327,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.mostrarCampos();
     if (this.soloLectura) {
       this.solicitudForm?.disable();
+      this.loadDatosTablaData();
     } else {
       this.solicitudForm?.enable();
     }
@@ -396,14 +396,23 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Cargar datos de la tabla.
    */
   loadDatosTablaData(): void {
-    this.datosTramiteService.getDatosTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe(
-      (data) => {
-        this.contenedores.catalogos = data.data.map((contenedor: Catalogo) => ({
-          id: contenedor.id,
-          descripcion: contenedor.descripcion || ''
+    this.datosTramiteService
+      .getDatosTableData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.datosDelContenedor = data.map((item: any) => ({
+          id: item.id ?? '',
+          inicialesEquipo: item.inicialesEquipo ?? '',
+          numeroEquipo: item.numeroEquipo ?? '',
+          digitoVerificador: item.digitoVerificador ?? '',
+          tipoEquipo: item.tipoEquipo ?? '',
+          fechaIngreso: item.fechaIngreso ?? '',
+          vigencia: item.vigencia ?? '',
+          aduana: item.aduana ?? '',
+          estado: item.estado ?? '',
+          existe: item.existe ?? ''
         }));
-      },
-    );
+      });
   }
 
   /**

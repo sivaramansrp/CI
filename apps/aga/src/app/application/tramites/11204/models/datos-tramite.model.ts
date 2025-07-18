@@ -242,3 +242,19 @@ export interface ConsultaDatos {
   existe: string;
   datosDelContenedor: DatosDelContenedor[];
 }
+
+export interface RespuestaCatalog {
+  success: boolean;
+  message: string;
+  datos: {
+    tipoBusqueda: string;
+    aduana: string;
+    fechaIngreso: string;
+    vigencia: string;
+    inicialesContenedor: string;
+    numeroContenedor: string;
+    digitoDeControl: string;
+    estadoConstancia: string;
+    existeEnVUCEM: string;
+  };
+}
