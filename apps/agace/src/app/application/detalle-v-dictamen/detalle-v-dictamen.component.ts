@@ -8,7 +8,7 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { LISTA_TRIMITES } from '../core/enums/lista-trimites.enums';
+import { LISTA_TRIMITES } from '../shared/constants/lista-trimites.enums';
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
 import { Router } from '@angular/router';
 

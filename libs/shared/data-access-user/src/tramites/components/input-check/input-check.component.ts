@@ -65,6 +65,8 @@ export class InputCheckComponent implements OnChanges, ControlValueAccessor {
    * Por default la clase es 'form-check', donde el checkbox se encuentra al inicio de la etiqueta label.
    */
   @Input() reverse!: boolean;
+  
+  @Input() fontWeight!: boolean;
 
   /**
    * Control de formulario que contiene el estado del checkbox.

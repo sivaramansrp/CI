@@ -14,6 +14,13 @@ import { Tramite32301Store } from './tramite32301.store';
  */
 @Injectable({ providedIn: 'root' })
 export class Tramite32301Query extends Query<FormularioGrupo> {
+    /**
+   * Selección del tipo de devolución del aviso.
+   * Devuelve el estado actual de `tipoDevAviso` en el store.
+   */
+  selectState$ = this.select((state) => {
+    return state;
+  });
 
   /**
    * Selección del tipo de devolución del aviso.

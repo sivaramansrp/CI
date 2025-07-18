@@ -1,6 +1,6 @@
 [
     {
-        "id": "301",
+        "id":  "301",
         "folioTramite": "0100001000320251005000002",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2023-10-01",
@@ -3088,6 +3088,17 @@
         "diasTranscurridos": "4",
         "departamento": "AGACE",
         "numeroDeProcedimiento": "32607",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "32604",
+        "folioTramite": "0100001000320251005000002",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-10-07",
+        "fechaActualizacion": "2025-10-12",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32604",
         "origin": "READ_PROCEDURE"
     }
 ]

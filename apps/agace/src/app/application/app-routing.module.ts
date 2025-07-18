@@ -313,14 +313,19 @@ const ROUTES: Routes = [
         (m) => m.AeronavesModule
       ),
   },
-   {
+  {
+    path: 'empresas-comercializadoras',
+    loadChildren: () => 
+      import('./tramites/32604/empresas-comercializadoras.module').then(
+        (m) => m.EmpresasComercializadorasModule)
+  },
+    {
     path: 'seciit-oea-registration',
     loadChildren: () =>
       import('./tramites/32608/seciit-oea-registration.module').then(
         (m) => m.SeciitOeaRegistrationModule
       ),
   },
-
 ];
 
 @NgModule({
