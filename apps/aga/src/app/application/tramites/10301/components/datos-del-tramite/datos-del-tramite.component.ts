@@ -267,10 +267,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.datosDeltrimiteForm()
         })
       )
-      .subscribe()
+      .subscribe();
   }
 
   /**
@@ -290,7 +289,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-
+    this.donanteDomicilio();
     this.getAduanaIngresara();
     this.getAno();
     this.getCondicion();
@@ -636,7 +635,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       }),
     });
 
-    this.datosDeltrimiteForm()
+    this.datosDeltrimiteForm();
   }
   /**
    * datosDeltrimiteForm los campos del formulario si es de solo lectura.
