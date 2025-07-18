@@ -49,7 +49,18 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
   public confirmarNotificacion!: Notificacion;
 
   /**
-   * Constructor del componente. Se inyectan los servicios necesarios para formularios y gestión de estado.
+   * Constructor de la clase AgregarTransportistasComponent.
+   *
+   * @param fb Instancia de FormBuilder para la creación y gestión de formularios reactivos.
+   * @param empresasComercializadorasService Servicio para la gestión de empresas comercializadoras.
+   * @param solicitud32604Store Store para el manejo del estado de la solicitud 32604.
+   * @param solicitud32604Query Query para consultar el estado de la solicitud 32604.
+   * @param consultaioQuery Query para consultar el estado de la sección Consultaio.
+   *
+   * Suscribe al estado de `Consultaio` para:
+   * - Actualizar la propiedad `esFormularioSoloLectura` según el estado de solo lectura.
+   * - Inicializar la configuración del formulario llamando a `inicializarEstadoFormulario()`.
+   * - Cancelar la suscripción automáticamente al emitir `destroy$` para evitar fugas de memoria.
    */
   constructor(
     private fb: FormBuilder,
