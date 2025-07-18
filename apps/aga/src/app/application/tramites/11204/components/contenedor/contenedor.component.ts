@@ -1,4 +1,4 @@
-import { Aduanas, DatosDelContenedor, DatosDelCsvArchivo } from '../../models/datos-tramite.model';
+import { Aduanas, DatosDelContenedor, DatosDelCsvArchivo, RespuestaCatalog } from '../../models/datos-tramite.model';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, REGEX_NUMEROS, REGEX_REEMPLAZAR, TEXTOS, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
@@ -333,7 +333,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
-  validateFechas() {
+  validateFechas(): void {
     const FECHA_INGRESO = this.solicitudForm.get('fechaIngreso')?.value;
     const VIGENCIA = this.solicitudForm.get('vigencia')?.value;
 
@@ -399,19 +399,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.datosTramiteService
       .getDatosTableData()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.datosDelContenedor = data.map((item: any) => ({
-          id: item.id ?? '',
-          inicialesEquipo: item.inicialesEquipo ?? '',
-          numeroEquipo: item.numeroEquipo ?? '',
-          digitoVerificador: item.digitoVerificador ?? '',
-          tipoEquipo: item.tipoEquipo ?? '',
-          fechaIngreso: item.fechaIngreso ?? '',
-          vigencia: item.vigencia ?? '',
-          aduana: item.aduana ?? '',
-          estado: item.estado ?? '',
-          existe: item.existe ?? ''
-        }));
+      .subscribe((data: RespuestaCatalog[]) => {
+        this.datosDelContenedor = data as unknown as DatosDelContenedor[];
       });
   }
 

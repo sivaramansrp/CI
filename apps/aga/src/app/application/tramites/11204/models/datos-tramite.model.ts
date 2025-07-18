@@ -336,7 +336,7 @@ export interface RespuestaCatalog {
     /**
      * Aduana relacionada con la consulta.
      */
-    aduana: string;
+    aduana: number;
 
     /**
      * Fecha de ingreso registrada.
@@ -356,12 +356,12 @@ export interface RespuestaCatalog {
     /**
      * Número del contenedor.
      */
-    numeroContenedor: string;
+    numeroContenedor: number;
 
     /**
      * Dígito de control del contenedor.
      */
-    digitoDeControl: string;
+    digitoDeControl: number;
 
     /**
      * Estado de la constancia.
@@ -372,5 +372,10 @@ export interface RespuestaCatalog {
      * Indica si existe en VUCEM.
      */
     existeEnVUCEM: string;
+
+    /**
+     * Detalle de los datos de los contenedores asociados.
+     */
+    datosDelContenedor: DatosDelContenedor[];
   };
 }
