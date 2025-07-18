@@ -341,8 +341,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       this.solicitudForm.get('vigencia')?.setErrors(null);
       return;
     }
-    const PARSEDINGRESO = this.parseDDMMYYYY(FECHA_INGRESO);
-    const PARSEDVIGENCIA = this.parseDDMMYYYY(VIGENCIA);
+    const PARSEDINGRESO = ContenedorComponent.parseDDMMYYYY(FECHA_INGRESO);
+    const PARSEDVIGENCIA = ContenedorComponent.parseDDMMYYYY(VIGENCIA);
 
     if (PARSEDINGRESO && PARSEDVIGENCIA && PARSEDVIGENCIA < PARSEDINGRESO) {
       this.solicitudForm.get('vigencia')?.setErrors({ fechaInvalida: true });
@@ -351,7 +351,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
-  parseDDMMYYYY(dateStr: string): Date | null {
+  static parseDDMMYYYY(dateStr: string): Date | null {
     if (!dateStr) { return null; }
 
     const [DAY, MONTH, YEAR] = dateStr.split('/');
