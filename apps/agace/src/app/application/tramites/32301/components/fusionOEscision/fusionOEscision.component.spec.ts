@@ -81,7 +81,6 @@ describe('FusionOEscisionComponent', () => {
     jest.spyOn(component, 'getCapacidadAlmacenamiento').mockReturnValue(of(mockVal) as any);
     component.getCapacidadAlmacenamiento();
     expect(component.getCapacidadAlmacenamiento).toHaveBeenCalled();
-    // The mock returns [{ label: 'A', value: 1 }]
     expect(component.radioOptions).toEqual(undefined);
   });
 

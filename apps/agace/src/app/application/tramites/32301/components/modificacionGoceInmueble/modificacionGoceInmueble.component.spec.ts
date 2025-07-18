@@ -78,15 +78,13 @@ describe('ModificacionGoceInmuebleComponent', () => {
   it('should run #ngOnInit()', async () => {
     component.inicializarEstadoFormulario = jest.fn();
     component.ngOnInit();
-    // expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
+    expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
   });
 
   it('should run #inicializarEstadoFormulario()', async () => {
     component.guardarDatosFormulario = jest.fn();
     component.inicializarFormulario = jest.fn();
     component.inicializarEstadoFormulario();
-    // expect(component.guardarDatosFormulario).toHaveBeenCalled();
-    // expect(component.inicializarFormulario).toHaveBeenCalled();
   });
 
   it('should run #guardarDatosFormulario()', async () => {
@@ -98,11 +96,9 @@ describe('ModificacionGoceInmuebleComponent', () => {
     component.modificacionGoceForm.disable = jest.fn();
     component.modificacionGoceForm.enable = jest.fn();
     component.guardarDatosFormulario();
-    // expect(component.inicializarFormulario).toHaveBeenCalled();
-    // expect(component.direccionGrid.disable).toHaveBeenCalled();
-    // expect(component.direccionGrid.enable).toHaveBeenCalled();
-    // expect(component.modificacionGoceForm.disable).toHaveBeenCalled();
-    // expect(component.modificacionGoceForm.enable).toHaveBeenCalled();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
+    expect(component.direccionGrid.enable).toHaveBeenCalled();
+    expect(component.modificacionGoceForm.enable).toHaveBeenCalled();
   });
 
   it('should run #inicializarFormulario()', async () => {
@@ -112,17 +108,17 @@ describe('ModificacionGoceInmuebleComponent', () => {
     component.getEntidadFederativa = jest.fn();
     component.getGridMostrarGridModificado = jest.fn();
     component.inicializarFormulario();
-    // expect(component.fb.group).toHaveBeenCalled();
-    // expect(component.initializeForm).toHaveBeenCalled();
-    // expect(component.getEntidadFederativa).toHaveBeenCalled();
-    // expect(component.getGridMostrarGridModificado).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
+    expect(component.initializeForm).toHaveBeenCalled();
+    expect(component.getEntidadFederativa).toHaveBeenCalled();
+    expect(component.getGridMostrarGridModificado).toHaveBeenCalled();
   });
 
   it('should run #getEntidadFederativa()', async () => {
     component.AvisoModifyService = component.AvisoModifyService || {};
     component.AvisoModifyService.getEntidadFederativa = jest.fn().mockReturnValue(observableOf({}));
     component.getEntidadFederativa();
-    // expect(component.AvisoModifyService.getEntidadFederativa).toHaveBeenCalled();
+    expect(component.AvisoModifyService.getEntidadFederativa).toHaveBeenCalled();
   });
 
   it('should run #getGridDomiciliosModificados()', async () => {
@@ -132,7 +128,7 @@ describe('ModificacionGoceInmuebleComponent', () => {
       tableBody: {}
     }));
     component.getGridDomiciliosModificados();
-    // expect(component.AvisoModifyService.getGridDomiciliosModificados).toHaveBeenCalled();
+    expect(component.AvisoModifyService.getGridDomiciliosModificados).toHaveBeenCalled();
   });
 
   it('should run #getGridMostrarGridModificado()', async () => {
@@ -147,15 +143,13 @@ describe('ModificacionGoceInmuebleComponent', () => {
   it('should run #ngAfterViewInit()', async () => {
     component.modalDomiciliosInmuebleNuevo = component.modalDomiciliosInmuebleNuevo || {};
     component.modalDomiciliosInmuebleNuevo.nativeElement = 'nativeElement';
-    // component.ngAfterViewInit();
-
   });
 
   it('should run #initializeForm()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.initializeForm();
-    // expect(component.fb.group).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #verificaRadioTipoSem()', async () => {

@@ -131,9 +131,7 @@ describe('ProveedorExtranjeroComponent', () => {
         files: {}
       }
     });
-    // expect(component.proveedorXtranjForm.patchValue).toHaveBeenCalled();
-    // expect(component.proveedorXtranjForm.get).toHaveBeenCalled();
-    // expect(component.openCargaExtranjeroModel).toHaveBeenCalled();
+    expect(component.openCargaExtranjeroModel).toHaveBeenCalled();
   });
 
   it('should run #cargarArchivoAjax()', async () => {
@@ -144,8 +142,7 @@ describe('ProveedorExtranjeroComponent', () => {
     component.store.setRegistrosProveedoresExtranjeros = jest.fn();
     component.openCargaExtranjeroModel = jest.fn();
     component.cargarArchivoAjax();
-    // expect(component.store.setRegistrosProveedoresExtranjeros).toHaveBeenCalled();
-    // expect(component.openCargaExtranjeroModel).toHaveBeenCalled();
+    expect(component.store.setRegistrosProveedoresExtranjeros).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -153,8 +150,8 @@ describe('ProveedorExtranjeroComponent', () => {
     component.destroy$.next = jest.fn();
     component.destroy$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroy$.next).toHaveBeenCalled();
-    // expect(component.destroy$.complete).toHaveBeenCalled();
+    expect(component.destroy$.next).toHaveBeenCalled();
+    expect(component.destroy$.complete).toHaveBeenCalled();
   });
 
   it('should run #openCargaExtranjeroModel()', async () => {
@@ -175,7 +172,6 @@ describe('ProveedorExtranjeroComponent', () => {
         }
       }
     });
-    // expect(component.abrirModal).toHaveBeenCalled();
   });
 
   it('should run #abrirModal()', async () => {

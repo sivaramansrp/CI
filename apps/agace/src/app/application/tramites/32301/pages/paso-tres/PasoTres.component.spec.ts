@@ -89,9 +89,9 @@ describe('PasoTresComponent', () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
     component.obtieneFirma({});
-    // expect(component.serviciosExtraordinariosServices.obtenerTramite).toHaveBeenCalled();
-    // expect(component.tramiteStore.establecerTramite).toHaveBeenCalled();
-    // expect(component.router.navigate).toHaveBeenCalled();
+    expect(component.serviciosExtraordinariosServices.obtenerTramite).toHaveBeenCalled();
+    expect(component.tramiteStore.establecerTramite).toHaveBeenCalled();
+    expect(component.router.navigate).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {

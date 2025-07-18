@@ -73,15 +73,12 @@ describe('AdicionProcesosComponent', () => {
   it('should run #ngOnInit()', async () => {
     component.inicializarEstadoFormulario = jest.fn();
     component.ngOnInit();
-    // expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
   });
 
   it('should run #inicializarEstadoFormulario()', async () => {
     component.guardarDatosFormulario = jest.fn();
     component.inicializarFormulario = jest.fn();
     component.inicializarEstadoFormulario();
-    // expect(component.guardarDatosFormulario).toHaveBeenCalled();
-    // expect(component.inicializarFormulario).toHaveBeenCalled();
   });
 
   it('should run #guardarDatosFormulario()', async () => {
@@ -90,9 +87,6 @@ describe('AdicionProcesosComponent', () => {
     component.proveedorXtranjForm.disable = jest.fn();
     component.proveedorXtranjForm.enable = jest.fn();
     component.guardarDatosFormulario();
-    // expect(component.inicializarFormulario).toHaveBeenCalled();
-    // expect(component.proveedorXtranjForm.disable).toHaveBeenCalled();
-    // expect(component.proveedorXtranjForm.enable).toHaveBeenCalled();
   });
 
   it('should run #inicializarFormulario()', async () => {
@@ -101,16 +95,12 @@ describe('AdicionProcesosComponent', () => {
     component.Tramite32301Query.select = jest.fn().mockReturnValue(observableOf({}));
     component.crearFormProveedorExtranjer = jest.fn();
     component.inicializarFormulario();
-    // expect(component.inicializaProveedorExtranjer).toHaveBeenCalled();
-    // expect(component.Tramite32301Query.select).toHaveBeenCalled();
-    // expect(component.crearFormProveedorExtranjer).toHaveBeenCalled();
   });
 
   it('should run #inicializaProveedorExtranjer()', async () => {
     component.store = component.store || {};
     component.store.setRegistrosProveedoresExtranjeros = jest.fn();
     component.inicializaProveedorExtranjer();
-    // expect(component.store.setRegistrosProveedoresExtranjeros).toHaveBeenCalled();
   });
 
   it('should run #crearFormProveedorExtranjer()', async () => {
@@ -120,7 +110,6 @@ describe('AdicionProcesosComponent', () => {
     component.proveedorExtranjero.archivoExtranjero = 'archivoExtranjero';
     component.proveedorExtranjero.registrosProveedoresExtranjeros = 'registrosProveedoresExtranjeros';
     component.crearFormProveedorExtranjer();
-    // expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #onFileSelected()', async () => {
@@ -135,9 +124,7 @@ describe('AdicionProcesosComponent', () => {
         files: {}
       }
     });
-    // expect(component.proveedorXtranjForm.patchValue).toHaveBeenCalled();
-    // expect(component.proveedorXtranjForm.get).toHaveBeenCalled();
-    // expect(component.openCargaExtranjeroModel).toHaveBeenCalled();
+    expect(component.openCargaExtranjeroModel).toHaveBeenCalled();
   });
 
   it('should run #openCargaExtranjeroModel()', async () => {
@@ -151,8 +138,8 @@ describe('AdicionProcesosComponent', () => {
     component.destroy$.next = jest.fn();
     component.destroy$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroy$.next).toHaveBeenCalled();
-    // expect(component.destroy$.complete).toHaveBeenCalled();
+    expect(component.destroy$.next).toHaveBeenCalled();
+    expect(component.destroy$.complete).toHaveBeenCalled();
   });
 
   it('should run #onCambioDeArchivo()', async () => {
@@ -167,7 +154,6 @@ describe('AdicionProcesosComponent', () => {
         }
       }
     });
-    // expect(component.abrirModal).toHaveBeenCalled();
   });
 
   it('should run #abrirModal()', async () => {

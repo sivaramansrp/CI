@@ -110,8 +110,6 @@ describe('BtnContinuarCustomComponent', () => {
     component.continuarEvento = component.continuarEvento || {};
     component.continuarEvento.emit = jest.fn();
     component.continuar();
-    // expect(component.wizardService.cambio_indice).toHaveBeenCalled();
-    // expect(component.continuarEvento.emit).toHaveBeenCalled();
   });
 
   it('should run #anterior()', async () => {
@@ -121,7 +119,6 @@ describe('BtnContinuarCustomComponent', () => {
     component.continuarEvento = component.continuarEvento || {};
     component.continuarEvento.emit = jest.fn();
     component.anterior();
-    // expect(component.continuarEvento.emit).toHaveBeenCalled();
   });
 
   it('should run #eliminarPedimento()', async () => {
@@ -133,15 +130,13 @@ describe('BtnContinuarCustomComponent', () => {
     component.continuarEvento = component.continuarEvento || {};
     component.continuarEvento.emit = jest.fn();
     component.eliminarPedimento({});
-    // expect(component.wizardService.cambio_indice).toHaveBeenCalled();
-    // expect(component.continuarEvento.emit).toHaveBeenCalled();
   });
 
   it('should run #guardar()', async () => {
     component.btnGuardarClicked = component.btnGuardarClicked || {};
     component.btnGuardarClicked.emit = jest.fn();
     component.guardar();
-    // expect(component.btnGuardarClicked.emit).toHaveBeenCalled();
+    expect(component.btnGuardarClicked.emit).toHaveBeenCalled();
   });
 
 });

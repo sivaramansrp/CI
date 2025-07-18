@@ -59,7 +59,6 @@ describe('PasoDosComponent', () => {
 
   it('should run #ngOnInit()', async () => {
     component.getTiposDocumentos = jest.fn();
-    // component.ngOnInit();
   });
 
   it('should run #getTiposDocumentos()', async () => {

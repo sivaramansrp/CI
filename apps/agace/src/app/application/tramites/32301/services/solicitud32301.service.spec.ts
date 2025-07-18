@@ -86,7 +86,7 @@ describe('Solicitud32301Service', () => {
     service.http = service.http || {};
     service.http.get = jest.fn();
     service.getRegistroTomaMuestrasMercanciasData();
-    // expect(service.http.get).toHaveBeenCalled();
+    expect(service.http.get).toHaveBeenCalled();
   });
 
 });

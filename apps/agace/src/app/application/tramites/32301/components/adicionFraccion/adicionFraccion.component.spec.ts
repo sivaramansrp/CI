@@ -169,7 +169,6 @@ describe('AdicionFraccionComponent', () => {
     const nativeElementMock = {};
     component.cargaMasivaFrModal = { nativeElement: nativeElementMock } as ElementRef;
     component.fraccionesModel = { nativeElement: nativeElementMock } as ElementRef;
-    // component.ngAfterViewInit();
     expect(component.cargaMasivaFrModalInstance).toBeDefined();
     expect(component.fraccionesModelInstance).toBeDefined();
   });
