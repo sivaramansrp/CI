@@ -55,7 +55,7 @@ import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaScianConfig } from '../../models/datos-solicitud.model';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
@@ -68,6 +68,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
     ReactiveFormsModule,
     FormsModule,
     NotificacionesComponent,
+    TooltipModule,
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',

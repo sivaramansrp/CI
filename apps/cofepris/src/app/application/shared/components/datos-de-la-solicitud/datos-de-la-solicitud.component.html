@@ -293,10 +293,10 @@
         <div class="form-group">
           <label class="form-label" for="calle">Calle *:</label>
           <span
-            class="bi bi-question-circle-fill"
-            title="Domicilio, calle, numero interior, numero exterior, lote"
-            data-bs-toggle="tooltip"
-          ></span>
+            tooltip="Domicilio, calle, numero interior, numero exterior, lote"
+          >
+            <i class="bi bi-question-circle-fill"></i>
+          </span>
           <input
             class="form-control"
             id="calle"
@@ -325,11 +325,9 @@
           <label class="form-label" for="correoElectronico"
             >Correo electrónico * :
           </label>
-          <span
-            class="bi bi-question-circle-fill"
-            title="ejemplo@dominio.com"
-            data-bs-toggle="tooltip"
-          ></span>
+          <span tooltip="ejemplo@dominio.com">
+            <i class="bi bi-question-circle-fill"></i>
+          </span>
           <input
             class="form-control"
             id="correoElectronico"
@@ -511,11 +509,12 @@
           >No. de licencia sanitaria
           <span *ngIf="!datosSolicitudForm.value.aviso">*</span> :</label
         >
+
         <span
-          class="bi bi-question-circle-fill"
-          title="Número de la autorización indicado en el  documento emitido por la autoridad sanitaria competente"
-          data-bs-toggle="tooltip"
-        ></span>
+          tooltip="Número de la autorización indicado en el  documento emitido por la autoridad sanitaria competente"
+        >
+          <i class="bi bi-question-circle-fill"></i>
+        </span>
         <input
           class="form-control"
           id="licenciaSanitaria"
@@ -845,19 +844,17 @@
     <ng-template #campoCorreoElectronico>
       <div class="form-group">
         <label class="form-label" for="correoElectronico"
-          >Correo electrónico</label
-        >
+          >Correo electrónico
+        </label>
         <span
           class="form-label municipio-label"
           *ngIf="esCampoRequerido('correoElectronico')"
           >*</span
         >
         <span class="form-label mx-1"> :</span>
-        <span
-          class="bi bi-question-circle-fill"
-          title="ejemplo@dominio.com"
-          data-bs-toggle="tooltip"
-        ></span>
+        <span tooltip="ejemplo@dominio.com">
+          <i class="bi bi-question-circle-fill"></i>
+        </span>
         <input
           class="form-control"
           id="correoElectronico"
