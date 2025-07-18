@@ -45,7 +45,12 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * utilizado para propósitos de validación.
    * @type {string[]}
    */
-  elementosRequeridos = ['denominacionRazon', 'scian', 'correoElectronico'];
+  elementosRequeridos = [
+    'denominacionRazon',
+    'scian',
+    'correoElectronico',
+    'rfcSanitario',
+  ];
   /**
    * @property destroyNotifier$
    * @description Subject used to gracefully unsubscribe from observables
