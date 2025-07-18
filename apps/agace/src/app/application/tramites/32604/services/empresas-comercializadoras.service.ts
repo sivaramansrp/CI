@@ -1,18 +1,10 @@
-import { Aduanas, RespuestaAduanas } from '../constants/agregar.model';
-import { EnlaceOperativo, RespuestaConsulta } from '../models/empresas-comercializadoras.model';
-import { GuardarDatosFormulario } from '../models/empresas-comercializadoras.model';
+import { EnlaceOperativo, GuardarDatosFormulario, Inventarios, RecibirNotificaciones, RepresentanteLegal, RespuestaConsulta, SeccionSubcontratados, SolicitudCatologoSelectLista, SolicitudRadioLista, TransportistasTable } from '../models/empresas-comercializadoras.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Inventarios } from '../models/empresas-comercializadoras.model';
 import { Observable } from 'rxjs';
-import { RecibirNotificaciones } from '../models/empresas-comercializadoras.model';
-import { RepresentanteLegal } from '../models/empresas-comercializadoras.model';
-import { SeccionSubcontratados } from '../models/empresas-comercializadoras.model';
-import { Solicitud32604Store } from '../estados/solicitud32604.store';
-import { SolicitudCatologoSelectLista } from '../models/empresas-comercializadoras.model';
-import { SolicitudRadioLista } from '../models/empresas-comercializadoras.model';
-import { TransportistasTable } from '../models/empresas-comercializadoras.model';
+import { RespuestaAduanas } from '../constants/agregar.model';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { Solicitud32604Store } from '../estados/solicitud32604.store';
 
 /**
  * Servicio encargado de obtener los datos necesarios para el llenado del formulario

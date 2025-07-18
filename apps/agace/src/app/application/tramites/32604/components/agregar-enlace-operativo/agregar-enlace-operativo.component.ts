@@ -1,25 +1,16 @@
 import { ConsultaioQuery, Notificacion, NotificacionesComponent, Pedimento } from '@ng-mf/data-access-user';
+import { EventEmitter, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { OnInit, Output } from '@angular/core';
+import { REGEX_TELEFONO_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
 import { EnlaceOperativo } from '../../models/empresas-comercializadoras.model';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { REGEX_TELEFONO_DIGITOS } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteLegal } from '../../models/empresas-comercializadoras.model';
 import { Solicitud32604Query } from '../../estados/solicitud32604.query';
-import { Solicitud32604State } from '../../estados/solicitud32604.store';
-import { Solicitud32604Store } from '../../estados/solicitud32604.store';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 /**
  * Componente para agregar un enlace operativo.
  * Utiliza un formulario reactivo para capturar y emitir la información del enlace operativo.

@@ -1,13 +1,12 @@
-import { CommonModule } from '@angular/common';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Catalogo, CatalogoSelectComponent,ConsultaioQuery,InputRadioComponent,TituloComponent } from '@libs/shared/data-access-user/src';
 import { InputRadio, SolicitudRadioLista } from '../../models/empresas-comercializadoras.model';
+import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
 import { Solicitud32604Query } from '../../estados/solicitud32604.query';
 import { Solicitud32604Store } from '../../estados/solicitud32604.store';
-import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
-import { Subject, takeUntil } from 'rxjs';
-
 @Component({
   selector: 'app-modificar',
   standalone: true,
@@ -51,6 +50,10 @@ export class ModificarComponent implements OnInit {
     };
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Llama a los métodos para obtener la opción seleccionada del radio y cargar los catálogos necesarios.
+   */
   ngOnInit(): void {
     this.conseguirOpcionDeRadio();
     this.cargarCatalogos();
@@ -65,26 +68,25 @@ export class ModificarComponent implements OnInit {
     this.solicitud32604Store.actualizar290(valor);
   }
 
-    /**
-     * Método para obtener la opción de radio (sí/no) desde el servicio.
-     * Se suscribe al observable y asigna el resultado a `sinoOpcion`.
-     */
-    conseguirOpcionDeRadio(): void {
-      this.empresasComercializadorasService
-        .conseguirOpcionDeRadio()
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: (respuesta: SolicitudRadioLista) => {
-            this.sinoOpcion = respuesta.requisitos;
-          },
-        });
-    }
-
-      /**
-   * Cargar catálogos de datos.
+  /**
+   * Método para obtener la opción de radio (sí/no) desde el servicio.
+   * Se suscribe al observable y asigna el resultado a `sinoOpcion`.
    */
+  conseguirOpcionDeRadio(): void {
+    this.empresasComercializadorasService
+      .conseguirOpcionDeRadio()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (respuesta: SolicitudRadioLista) => {
+          this.sinoOpcion = respuesta.requisitos;
+        },
+      });
+  }
+
+  /**
+ * Cargar catálogos de datos.
+ */
   cargarCatalogos(): void {
-    // Cargar catálogo de contenedores
     this.empresasComercializadorasService
       .getContenedores()
       .pipe(takeUntil(this.destroy$))

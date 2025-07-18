@@ -1,17 +1,15 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState, Notificacion, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FECHA_DE_PAGO, TRANSPORTISTAS_CONFIGURACION } from '../../constants/empresas-comercializadoras.enum';
-import { InputFecha } from '@libs/shared/data-access-user/src';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
-import { Solicitud32604Query } from '../../estados/solicitud32604.query';
-import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
-import { map, Subject, takeUntil } from 'rxjs';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { InputFecha, InputFechaComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { InputRadio, SolicitudRadioLista, TransportistasTable } from '../../models/empresas-comercializadoras.model';
-import { Modal } from 'bootstrap';
+import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
+import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
+import { Modal } from 'bootstrap';
+import { Solicitud32604Query } from '../../estados/solicitud32604.query';
 
 @Component({
   selector: 'app-comercializadora-importadora',
@@ -27,7 +25,7 @@ import { AgregarTransportistasComponent } from '../agregar-transportistas/agrega
   templateUrl: './comercializadora-importadora.component.html',
   styleUrl: './comercializadora-importadora.component.scss',
 })
-export class ComercializadoraImportadoraComponent {
+export class ComercializadoraImportadoraComponent implements OnInit, OnDestroy {
 
   /** Formulario reactivo para el componente modalidad */
   modalidadForm!: FormGroup;

@@ -1,12 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { map, Subject } from 'rxjs';
-import { ViewChild } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
-import { takeUntil } from 'rxjs';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud32604Store } from '../../estados/solicitud32604.store';
 
 @Component({
@@ -70,12 +66,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.empresasComercializadorasService
       .guardarDatosFormulario()
       .pipe(takeUntil(this.destroyNotifier$))
+      // eslint-disable-next-line complexity
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
           const FORM = resp?.datos?.solicitudFormulario;
-          
-          // Update all store fields with data from the response
           this.store.actualizarIdPersonaSolicitud(FORM.idPersonaSolicitud ?? '');
           this.store.actualizarRfcTercero(FORM.rfcTercero ?? '');
           this.store.actualizarRfc(FORM.rfc ?? '');
@@ -84,8 +79,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.store.actualizarApellidoMaterno(FORM.apellidoMaterno ?? '');
           this.store.actualizarTelefono(FORM.telefono ?? '');
           this.store.actualizarCorreoElectronico(FORM.correoElectronico ?? '');
-          
-          // Enlace operativo fields
           this.store.actualizarEnlaceRfcTercero(FORM.agregarEnlaceRfcTercero ?? '');
           this.store.actualizarEnlaceRfc(FORM.agregarEnlaceRfc ?? '');
           this.store.actualizarEnlaceNombre(FORM.agregarEnlaceNombre ?? '');
@@ -96,23 +89,17 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.store.actualizarEnlaceTelefono(FORM.agregarEnlaceTelefono ?? '');
           this.store.actualizarEnlaceCorreoElectronico(FORM.agregarEnlaceCorreoElectronico ?? '');
           this.store.actualizarEnlaceSuplente(FORM.agregarEnlaceSuplente ?? false);
-          
-          // Numeric code fields
           this.store.actualizar2089(FORM['2089'] ?? 0);
           this.store.actualizar2090(FORM['2090'] ?? 0);
           this.store.actualizar2091(FORM['2091'] ?? 0);
           this.store.actualizar2042(FORM['2042'] ?? 0);
           this.store.actualizar2043(FORM['2043'] ?? 0);
           this.store.actualizar2044(FORM['2044'] ?? 0);
-          
-          // Date and payment fields
           this.store.actualizarFechaInicioComercio(FORM.fechaInicioComercio ?? '');
           this.store.actualizarFechaPago(FORM.fechaPago ?? '');
           this.store.actualizarMonto(FORM.monto ?? '');
           this.store.actualizarOperacionesBancarias(FORM.operacionesBancarias ?? '');
           this.store.actualizarLlavePago(FORM.llavePago ?? '');
-          
-          // Transportista fields
           this.store.actualizarTransportistaRFC(FORM.transportistaRFC ?? '');
           this.store.actualizarTransportistaRFCModifTrans(FORM.transportistaRFCModifTrans ?? '');
           this.store.actualizarTransportistaRazonSocial(FORM.transportistaRazonSocial ?? '');
@@ -122,8 +109,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.store.actualizarTransportistaIdRFC(FORM.transportistaIdRFC ?? '');
           this.store.actualizarTransportistaIdRazonSocial(FORM.transportistaIdRazonSocial ?? '');
           this.store.actualizarTransportistaIdCaat(FORM.transportistaIdCaat ?? '');
-          
-          // Miembro fields
           this.store.actualizarMiembroCaracterDe(FORM.miembroCaracterDe ?? '');
           this.store.actualizarMiembroTributarMexico(FORM.miembroTributarMexico ?? 0);
           this.store.actualizarMiembroNacionalidad(FORM.miembroNacionalidad ?? '');
@@ -135,15 +120,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.store.actualizarMiembroApellidoPaterno(FORM.miembroApellidoPaterno ?? '');
           this.store.actualizarMiembroApellidoMaterno(FORM.miembroApellidoMaterno ?? '');
           this.store.actualizarMiembroNombreEmpresa(FORM.miembroNombreEmpresa ?? '');
-          
-          // Subcontrata fields
           this.store.actualizarSubcontrataRFCBusqueda(FORM.subcontrataRFCBusqueda ?? '');
           this.store.actualizarSubcontrataRFC(FORM.subcontrataRFC ?? '');
           this.store.actualizarSubcontrataRazonSocial(FORM.subcontrataRazonSocial ?? '');
           this.store.actualizarSubcontrataEmpleados(FORM.subcontrataEmpleados ?? '');
           this.store.actualizarSubcontrataBimestre(FORM.subcontrataBimestre ?? 0);
-          
-          // Installation fields
           this.store.actualizarPrincipales(FORM.principales ?? 0);
           this.store.actualizarMunicipio(FORM.municipio ?? '');
           this.store.actualizarTipoDeInstalacion(FORM.tipoDeInstalacion ?? 0);
@@ -158,8 +139,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.store.actualizarMutuo(FORM.mutuo ?? 0);
           this.store.actualizarCatseleccionados(FORM.catseleccionados ?? 0);
           this.store.actualizarServicio(FORM.servicio ?? 0);
-          
-          // Additional numeric code fields
           this.store.actualizar190(FORM['190'] ?? 0);
           this.store.actualizar191(FORM['191'] ?? 0);
           this.store.actualizar199(FORM['199'] ?? 0);
@@ -176,12 +155,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.store.actualizar245(FORM['245'] ?? 0);
           this.store.actualizarIndiqueTodos(FORM.indiqueTodos ?? 0);
           this.store.actualizar246(FORM['246'] ?? 0);
-          
-          // File fields
           this.store.actualizarFile1(FORM.file1 ?? '');
           this.store.actualizarFile2(FORM.file2 ?? '');
-          
-          // Additional fields
           this.store.actualizar247(FORM['247'] ?? 0);
           this.store.actualizar248(FORM['248'] ?? 0);
           this.store.actualizarIdentificacion(FORM.identificacion ?? '');
@@ -189,13 +164,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.store.actualizar249(FORM['249'] ?? 0);
           this.store.actualizar250(FORM['250'] ?? 0);
           this.store.actualizar251(FORM['251'] ?? 0);
-          
-          // Checkbox fields
           this.store.actualizarCheckbox1(FORM.checkbox1 ?? false);
           this.store.actualizarCheckbox2(FORM.checkbox2 ?? false);
           this.store.actualizarCheckbox3(FORM.checkbox3 ?? false);
-          
-          // Final fields
           this.store.actualizarActualmente2(FORM.actualmente2 ?? '');
           this.store.actualizarActualmente1(FORM.actualmente1 ?? '');
         }

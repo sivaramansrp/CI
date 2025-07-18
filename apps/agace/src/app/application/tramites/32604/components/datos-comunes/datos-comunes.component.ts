@@ -1,52 +1,18 @@
-import {AlertComponent,Catalogo,InputRadioComponent} from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionAporteColumna, ConfiguracionColumna, ConsultaioQuery, InputRadioComponent, Notificacion, Pedimento, TablaConEntradaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DOMICILIOS_CONFIGURACION_COLUMNAS, INVENTARIOS_CONFIGURACION, NUMERO_DE_EMPLEADOS_CONFIGURACION, SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS } from '../../constants/empresas-comercializadoras.enum';
+import { Domicilios, InputRadio, Inventarios, NumeroDeEmpleados, SeccionSociosIC, SolicitudCatologoSelectLista, SolicitudRadioLista } from '../../models/empresas-comercializadoras.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AgregarComponent } from '../agregar/agregar.component';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionAporteColumna } from '@libs/shared/data-access-user/src';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { DOMICILIOS_CONFIGURACION_COLUMNAS } from '../../constants/empresas-comercializadoras.enum';
-import { Domicilios } from '../../models/empresas-comercializadoras.model';
-import { ElementRef } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { INVENTARIOS_CONFIGURACION } from '../../constants/empresas-comercializadoras.enum';
-import { InputRadio } from '../../models/empresas-comercializadoras.model';
-
-// import { InstalacionesPrincipalesComponent } from '../instalaciones-principales/instalaciones-principales.component';
-import { Inventarios } from '../../models/empresas-comercializadoras.model'; // import { MiembroDeLaEmpresaComponent } from '../miembro-de-la-empresa/miembro-de-la-empresa.component';
-import { Modal } from 'bootstrap';
-import { NUMERO_DE_EMPLEADOS_CONFIGURACION } from '../../constants/empresas-comercializadoras.enum';
-import { Notificacion } from '@libs/shared/data-access-user/src';
-import { NumeroDeEmpleados } from '../../models/empresas-comercializadoras.model';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Pedimento } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS } from '../../constants/empresas-comercializadoras.enum';
-import { SeccionSociosIC } from '../../models/empresas-comercializadoras.model';
-// import { SeccionSubcontratadosComponent } from '../seccion-subcontratados/seccion-subcontratados.component';
-import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
-
-import { Solicitud32604Query } from '../../estados/solicitud32604.query';
-import { Solicitud32604State } from '../../estados/solicitud32604.store';
-import { Solicitud32604Store } from '../../estados/solicitud32604.store';
-import { SolicitudCatologoSelectLista } from '../../models/empresas-comercializadoras.model';
-import { SolicitudRadioLista } from '../../models/empresas-comercializadoras.model';
-import { Subject } from 'rxjs';
-import { TablaConEntradaComponent } from '@libs/shared/data-access-user/src';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { ToastrModule } from 'ngx-toastr';
-import { ToastrService } from 'ngx-toastr';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-import { ModificarComponent } from '../modificar/modificar.component';
 import { EmpresaComponent } from '../empresa/empresa.component';
+import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
+import { Modal } from 'bootstrap';
+import { ModificarComponent } from '../modificar/modificar.component';
+import { Solicitud32604Query } from '../../estados/solicitud32604.query';
 
 /**
  * Componente principal para la gestión de datos comunes de la solicitud.
@@ -989,20 +955,12 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * Updates the listaSeccionSociosIC with the received data
    * @param datosSeleccionados - Array of selected data from agregar component
    */
-  onDatosSeleccionados(datosSeleccionados: any[]): void {
-    console.log('onDatosSeleccionados called with:', datosSeleccionados);
-    
+  onDatosSeleccionados(datosSeleccionados: SeccionSociosIC[]): void {
     if (datosSeleccionados && datosSeleccionados.length > 0) {
       this.listaSeccionSociosIC = [...this.listaSeccionSociosIC, ...datosSeleccionados];
-      
-      console.log('Updated listaSeccionSociosIC:', this.listaSeccionSociosIC);
-      
-      // Update the store with the new data
       this.solicitud32604Store.actualizarListaSeccionSociosIC(
         this.listaSeccionSociosIC
       );
-      
-      // Show success message
       this.abrirModal('Datos agregados exitosamente');
     }
   }

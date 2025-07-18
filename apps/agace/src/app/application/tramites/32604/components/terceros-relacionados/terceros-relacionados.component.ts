@@ -1,36 +1,18 @@
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConfiguracionColumna, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ENLACE_OPERATIVO_CONFIGURACION, RECIBIR_NOTIFICACIONES_CONFIGURACION } from '../../constants/empresas-comercializadoras.enum';
+import { EnlaceOperativo, RecibirNotificaciones, RepresentanteLegal } from '../../models/empresas-comercializadoras.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarEnlaceOperativoComponent } from '../agregar-enlace-operativo/agregar-enlace-operativo.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ENLACE_OPERATIVO_CONFIGURACION } from '../../constants/empresas-comercializadoras.enum';
-import { ElementRef } from '@angular/core';
 import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
-import { EnlaceOperativo } from '../../models/empresas-comercializadoras.model';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { Modal } from 'bootstrap';
-import { Notificacion } from '@libs/shared/data-access-user/src';
-import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Pedimento } from '@libs/shared/data-access-user/src';
-import { RECIBIR_NOTIFICACIONES_CONFIGURACION } from '../../constants/empresas-comercializadoras.enum';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RecibirNotificaciones } from '../../models/empresas-comercializadoras.model';
-import { RepresentanteLegal } from '../../models/empresas-comercializadoras.model';
 import { Solicitud32604Query } from '../../estados/solicitud32604.query';
-import { Solicitud32604State } from '../../estados/solicitud32604.store';
-import { Solicitud32604Store } from '../../estados/solicitud32604.store';
-import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 /**
  * Componente encargado de mostrar la lista de terceros relacionados
  * que pueden recibir notificaciones. Utiliza una tabla dinámica para

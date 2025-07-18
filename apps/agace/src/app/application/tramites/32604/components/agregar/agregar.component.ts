@@ -1,20 +1,13 @@
-import {
-  CatalogoSelectComponent,
-  ConsultaioQuery,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-  Catalogo,
-} from '@libs/shared/data-access-user/src';
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Aduanas } from '../../constants/agregar.model';
-import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
+import { Catalogo, CatalogoSelectComponent,ConsultaioQuery,TablaDinamicaComponent,TablaSeleccion,TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Solicitud32604Query } from '../../estados/solicitud32604.query';
 import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
-import { ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO } from '../../constants/empresas-comercializadoras.enum';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Aduanas } from '../../constants/agregar.model';
 import { CommonModule } from '@angular/common';
+import { ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO } from '../../constants/empresas-comercializadoras.enum';
+import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
+import { Solicitud32604Query } from '../../estados/solicitud32604.query';
 
 @Component({
   selector: 'app-agregar',
@@ -63,6 +56,14 @@ export class AgregarComponent implements OnInit, OnDestroy {
    */
   aduanaSeleccionada: boolean = false;
 
+  /**
+   * Encabezado de la tabla para el manifiesto de contenedores.
+   * 
+   * Esta propiedad almacena la configuración de los encabezados que se mostrarán
+   * en la tabla del manifiesto dentro del componente. Utiliza la constante
+   * `ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO` para definir las columnas y sus
+   * respectivos títulos.
+   */
   public encabezadoDeTablaManifiesto = ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO;
 
   /**
@@ -94,6 +95,14 @@ export class AgregarComponent implements OnInit, OnDestroy {
     };
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * 
+   * - Suscribe al observable `selectSolicitud$` para actualizar el estado de la sección (`seccionState`)
+   *   con los datos obtenidos, hasta que se emita la notificación de destrucción (`destroyNotifier$`).
+   * - Inicializa el formulario llamando a `inicializeFormulario()`.
+   * - Obtiene la lista de entidades llamando a `fetchEntidadList()`.
+   */
   ngOnInit(): void {
     this.solicitud32604Query.selectSolicitud$
       .pipe(
@@ -119,19 +128,25 @@ export class AgregarComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.complete();
   }
 
-  inicializeFormulario(): void {
+  /**
+   * Inicializa el formulario reactivo para el componente.
+   * 
+   * Crea un nuevo formulario utilizando FormBuilder y asigna el valor inicial del campo 'aduana'
+   * a partir del estado actual de la sección (`seccionState.aduana`).
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+    inicializeFormulario(): void {
     this.form = this.fb.group({
       aduana: [this.seccionState.aduana]
     });
   }
-
+  
   /**
-   * Método para obtener la lista de aduanas.
-   *
-   * Este método realiza una solicitud al servicio `datosTramiteService` para obtener la lista de aduanas.
-   * La respuesta se almacena en la propiedad `aduanaList.catalogos`.
-   *
-   * @returns {void} No retorna ningún valor.
+   * Método para cargar la lista de aduanas desde el servicio.
+   * 
+   * Utiliza el servicio `empresasComercializadorasService` para obtener la lista de aduanas
+   * y asigna el resultado a `aduanaList.catalogos`.
    */
   public fetchEntidadList(): void {
     this.empresasComercializadorasService
@@ -185,7 +200,6 @@ export class AgregarComponent implements OnInit, OnDestroy {
    * @param selectedData - Array of selected rows from the table
    */
   onTableRowSelected(selectedData: any[]): void {
-    console.log('onTableRowSelected called with:', selectedData);
     this.selectedTableData = selectedData;
   }
 
@@ -194,12 +208,7 @@ export class AgregarComponent implements OnInit, OnDestroy {
    * Emits selected data to parent component and closes modal
    */
   cerrarModal(): void {
-    console.log('cerrarModal called, selectedTableData:', this.selectedTableData);
-    
-    // Emit selected data to parent component
     this.datosSeleccionados.emit(this.selectedTableData);
-    
-    // Reset selected data
     this.selectedTableData = [];
   }
 
@@ -208,9 +217,7 @@ export class AgregarComponent implements OnInit, OnDestroy {
    * Resets selected data and closes modal without emitting data
    */
   cancelarModal(): void {
-    // Reset selected data
     this.selectedTableData = [];
-    // Modal will close automatically due to data-bs-dismiss="modal"
   }
 
   /**

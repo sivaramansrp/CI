@@ -1,12 +1,12 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { CatalogoSelectComponent, TituloComponent, InputRadioComponent, Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { InputRadio, SolicitudRadioLista } from '../../models/empresas-comercializadoras.model';
 import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
 import { Solicitud32604Query } from '../../estados/solicitud32604.query';
 import { Solicitud32604Store } from '../../estados/solicitud32604.store';
-import { InputRadio, SolicitudRadioLista } from '../../models/empresas-comercializadoras.model';
-import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
 
 @Component({
   selector: 'app-empresa',
@@ -65,6 +65,14 @@ export class EmpresaComponent implements OnInit {
       };
     }
   
+    /**
+     * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+     * 
+     * Realiza las siguientes acciones al iniciar:
+     * - Obtiene la opción seleccionada del radio button.
+     * - Carga los catálogos necesarios para el componente.
+     * - Carga la nacionalidad correspondiente.
+     */
     ngOnInit(): void {
       this.conseguirOpcionDeRadio();
       this.cargarCatalogos();
