@@ -7,12 +7,20 @@
   <div class="row">
     <h6>Exportador*</h6>
     <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="exportador" [tipoSeleccionTabla]="checkbox"
-      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></app-tabla-dinamica>
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"  (listaDeFilaSeleccionada)="onExportadorSeleccionado($event)"></app-tabla-dinamica>
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
         <li class="page-item"><a class="page-link">1</a></li>
       </ul>
     </nav>
+  </div>
+
+  <div class="col-md-12 mt-5 d-flex justify-content-end" *ngIf="exportadorSeleccionado?.length && exportadorSeleccionado.length > 0"
+>
+    <button type="button" class="btn btn-primary ms-3" 
+      [disabled]="esFormularioSoloLectura" >Modificar</button>
+    <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura"
+      [disabled]="esFormularioSoloLectura">Eliminar</button>
   </div>
   <div class="row">
     <h6>Destinatario (destino final)*</h6>

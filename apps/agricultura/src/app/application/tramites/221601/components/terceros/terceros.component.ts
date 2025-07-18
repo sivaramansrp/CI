@@ -184,6 +184,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
       private readonly cdr: ChangeDetectorRef,
          private validacionesService: ValidacionesFormularioService, 
   ) { // Constructor que inyecta las dependencias necesarias
+     this.exportadorSeleccionado = [];
        this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -402,5 +403,10 @@ export class TercerosComponent implements OnInit, OnDestroy {
     // Se abre el modal de terceros cambiando el estado de la variable
     this.showtercerosModal = !this.showtercerosModal;
   }
+  exportadorSeleccionado: any[]; 
 
+
+onExportadorSeleccionado(filas: any[]) {
+  this.exportadorSeleccionado = filas;
+}
 }
