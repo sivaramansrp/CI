@@ -4248,5 +4248,12 @@
     "linkDashboard": "/agace/aeronaves/solicitud",
     "linkDepartment": "/pago/aeronaves/solicitud",
     "department": "agace"
+  },
+  {
+    "id": 608,
+    "tramite": 32604,
+    "linkDashboard": "/agace/empresas-comercializadoras/solicitud",
+    "linkDepartment": "/pago/empresas-comercializadoras/solicitud",
+    "department": "agace"
   }
 ]
