@@ -8,7 +8,7 @@ export const CHOFERES_NACIONALES_ALTA: ConfiguracionColumna<DatosDelChoferNacion
         orden: 1,
     },
     {
-        encabezado: 'Número',
+        encabezado: 'Nombre',
         clave: (item: DatosDelChoferNacional) => item.nombre,
         orden: 2,
     },
@@ -18,12 +18,12 @@ export const CHOFERES_NACIONALES_ALTA: ConfiguracionColumna<DatosDelChoferNacion
         orden: 3,
     },
     {
-        encabezado: 'Numero exterior',
+        encabezado: 'Número exterior',
         clave: (item: DatosDelChoferNacional) => item.numeroExterior,
         orden: 4,
     },
     {
-        encabezado: 'Numero interior',
+        encabezado: 'Número interior',
         clave: (item: DatosDelChoferNacional) => item.numeroInterior,
         orden: 5,
     },
@@ -53,7 +53,7 @@ export const CHOFERES_NACIONALES_ALTA: ConfiguracionColumna<DatosDelChoferNacion
         orden: 10,
     },
     {
-        encabezado: 'Codigo Postal',
+        encabezado: 'Código Postal',
         clave: (item: DatosDelChoferNacional) => item.codigoPostal,
         orden: 11,
     },
