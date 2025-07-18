@@ -250,6 +250,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
       ],
       domicilio: [{value:this.solicitudState?.domicilio, disabled: true}],
       ccat: [{value:this.solicitudState?.ccat, disabled: true}],
+      validacionTransportistas: ['', Validators.required]
     })
   }
 
@@ -764,9 +765,10 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
 private marcarCampoTransportistaComoTocado(): void {
   // Crear o actualizar un campo dummy para activar la visualización de validación
   if (!this.transportistaCertificacionForm.get('validacionTransportistas')) {
-    this.transportistaCertificacionForm.addControl('validacionTransportistas', this.fb.control(''));
+    this.transportistaCertificacionForm.addControl('validacionTransportistas', this.fb.control('',[Validators.required]));
   }
   this.transportistaCertificacionForm.get('validacionTransportistas')?.markAsTouched();
+  this.transportistaCertificacionForm.get('validacionTransportistas')?.markAsDirty();
 }
 
   /**

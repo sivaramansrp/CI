@@ -1,24 +1,51 @@
-
 <div class="container">
   <div class="row">
     <ul class="nav nav-tabs">
-      <ul class="nav nav-tabs">
-        <li *ngFor="let tab of seccionesDeLaSolicitud" [ngClass]="indice === tab.index ? 'active' : ''">
-          <a data-toggle="tab" (click)="seleccionaTab(tab.index)" (keydown.enter)="seleccionaTab(tab.index)"
-            tabindex="0">{{ tab.title }}</a>
-        </li>
-      </ul>
+      <li 
+        *ngFor="let tab of seccionesDeLaSolicitud" 
+        [ngClass]="indice === tab.index ? 'active' : ''"
+        class="nav-item"
+      >
+        <!-- Show CTPAT tab only when reconocimientoMutuoValue === '1' -->
+        <a 
+          *ngIf="tab.index !== 5 || reconocimientoMutuoValue === '1'"
+          class="nav-link"
+          [class.active]="indice === tab.index"
+          (click)="seleccionaTab(tab.index)"
+        >
+          {{ tab.title }}
+        </a>
+      </li>
     </ul>
 
     <ng-container>
       <solicitante #solicitanteRef [hidden]="indice !== 1"></solicitante>
-       @if(esDatosRespuesta){<app-datos-comunes [hidden]="indice !== 2"></app-datos-comunes>}
+      
+      @if(esDatosRespuesta){
+        <app-datos-comunes 
+          (reconocimientoMutuoCTPATChange)="onReconocimientoMutuoChange($event)"
+          [hidden]="indice !== 2">
+        </app-datos-comunes>
+      }
 
-       @if(esDatosRespuesta){<app-terceros-relacionados #tercerosRelacionadosRef  [hidden]="indice !== 3"> </app-terceros-relacionados>}
+      @if(esDatosRespuesta){
+        <app-terceros-relacionados 
+          #tercerosRelacionadosRef  
+          [hidden]="indice !== 3">
+        </app-terceros-relacionados>
+      }
 
-       @if(esDatosRespuesta){<app-importador-exportador #importadorExportadorRef [hidden]="indice !== 4"></app-importador-exportador>}
+      @if(esDatosRespuesta){
+        <app-importador-exportador 
+          #importadorExportadorRef 
+          [hidden]="indice !== 4">
+        </app-importador-exportador>
+      }
 
-       @if(esDatosRespuesta){<app-c-tpat [hidden]="indice !== 5"></app-c-tpat>}
+      <!-- CTPAT component only shows when reconocimientoMutuoValue === '1' -->
+      @if(esDatosRespuesta && reconocimientoMutuoValue === '1'){
+        <app-c-tpat [hidden]="indice !== 5"></app-c-tpat>
+      }
     </ng-container>
 
   </div>

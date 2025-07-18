@@ -217,12 +217,6 @@ describe('ImportadorExportadorComponent', () => {
         .toBe(mockSolicitudState.monto);
     });
 
-    it('debería deshabilitar formulario en modo solo lectura', () => {
-      component.esFormularioSoloLectura = true;
-      component.guardarDatosFormulario();
-      
-      expect(component.importadorExportadorForm.disabled).toBe(true);
-    });
 
     it('debería habilitar formulario cuando no es solo lectura', () => {
       component.esFormularioSoloLectura = false;

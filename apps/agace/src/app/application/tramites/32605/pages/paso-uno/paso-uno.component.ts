@@ -38,6 +38,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
 
+  reconocimientoMutuoValue: string = '';
+
    /**
    * Referencia al componente ImportadorExportadorComponent para acceder a sus métodos de validación.
    * Permite validar el formulario de datos de importador/exportador antes de continuar al siguiente paso.
@@ -154,5 +156,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     return isValid;
   }
 
+    /**
+   * Maneja el cambio de valor para el reconocimiento mutuo.
+   * Actualiza la propiedad `reconocimientoMutuoValue` con el valor seleccionado.
+   *
+   * @param {string} value - El nuevo valor seleccionado para reconocimiento mutuo.
+   */
+  onReconocimientoMutuoChange(value: string) :void {
+    this.reconocimientoMutuoValue = value;
+  }
+  
 
 }

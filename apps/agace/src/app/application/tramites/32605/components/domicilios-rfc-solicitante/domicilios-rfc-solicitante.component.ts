@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {
   AlertComponent,
   Catalogo,
@@ -231,6 +231,11 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
    * Cuando se establece en true, resetea la selección de la tabla en el componente agregar-enlace-operativo.
    */
   resetChildTableSelection: boolean = false;
+  /**
+   * Evento emitido cuando cambia el valor de reconocimientoMutuoCTPAT.
+   * Permite notificar a componentes padres sobre cambios en este campo.
+   */
+  @Output() reconocimientoMutuoCTPATChange = new EventEmitter<string>();
 
   /**
    * Constructor para DomiciliosRfcSolicitanteBimestreComponent.
@@ -595,7 +600,7 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
       // Limpiar la fila seleccionada después de la modificación
       this.filaSeleccionadaDomiciliosRfcSolicitante = {} as DomiciliosRfcSolicitanteTabla;
       this.listaFilaSeleccionadaEmpleado = [];
-      
+      this.reconocimientoMutuoCTPATChange.emit(FORM_DATA.reconocimientoMutuoCTPAT);      
       // Limpiar formulario después de modificar datos exitosamente
       this.limpiarFormulario();
     } else {
