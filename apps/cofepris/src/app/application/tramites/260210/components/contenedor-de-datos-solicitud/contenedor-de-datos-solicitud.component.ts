@@ -40,6 +40,13 @@ import { Tramite260210Query } from '../../estados/tramite260210Query.query';
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   /**
+   * @property elementosRequeridos
+   * @description Arreglo de campos requeridos para el formulario de datos de la solicitud,
+   * utilizado para propósitos de validación.
+   * @type {string[]}
+   */
+  elementosRequeridos = ['denominacionRazon', 'scian', 'correoElectronico'];
+  /**
    * @property destroyNotifier$
    * @description Subject used to gracefully unsubscribe from observables
    * when the component is destroyed.
@@ -136,10 +143,10 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-  public esFormularioSoloLectura: boolean = false; 
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * @constructor
@@ -152,17 +159,18 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(
     private Tramite260210Query: Tramite260210Query,
-    private tramite260214Store: Tramite260214Store, private consultaQuery: ConsultaioQuery
-      ) {
-        this.consultaQuery.selectConsultaioState$
-          .pipe(
-            takeUntil(this.destroyNotifier$),
-            map((seccionState) => {
-              this.esFormularioSoloLectura = seccionState.readonly;
-            })
-          )
-          .subscribe();
-        }
+    private tramite260214Store: Tramite260214Store,
+    private consultaQuery: ConsultaioQuery
+  ) {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * @method ngOnInit

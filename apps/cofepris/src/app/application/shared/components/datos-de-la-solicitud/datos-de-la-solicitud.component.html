@@ -38,8 +38,12 @@
   <div class="row">
     <div class="col-md-12">
       <div class="pull-right ml-2">
-        <button type="button" class="btn btn-primary" (click)="abrirModal()"
-          [disabled]="formularioDeshabilitado">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="abrirModal()"
+          [disabled]="formularioDeshabilitado"
+        >
           Seleccionar establecimiento
         </button>
       </div>
@@ -84,7 +88,9 @@
           <label class="form-label municipio-label" for="denominacionRazon"
             >Denominación o razón social</label
           >
-          <span class="form-label municipio-label" *ngIf="esCampoRequerido('denominacionRazon')"
+          <span
+            class="form-label municipio-label"
+            *ngIf="esCampoRequerido('denominacionRazon')"
             >*</span
           >
           <span class="form-label municipio-labe"> :</span>
@@ -195,8 +201,8 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="localidad">Localidad</label>
-          <span class="form-label" *ngIf="esCampoRequerido('localidad')"
-            > *</span
+          <span class="form-label" *ngIf="esCampoRequerido('localidad')">
+            *</span
           >
           <span class="form-label"> :</span>
           <input
@@ -311,8 +317,8 @@
       >
         <div class="form-group">
           <label class="form-label" for="correoElectronico"
-            >Correo electrónico * : </label
-          >
+            >Correo electrónico * :
+          </label>
           <span
             class="bi bi-question-circle-fill"
             title="ejemplo@dominio.com"
@@ -424,10 +430,10 @@
     <div class="row mt-5">
       <div class="col-md-3 my-3">
         <div class="form-group">
-          <label class="form-label municipio-label" for="telefono">S. C. I. A. N </label>
-          <span class="form-label" *ngIf="esCampoRequerido('scian')"
-            > *</span
-          >
+          <label class="form-label municipio-label" for="telefono"
+            >S. C. I. A. N
+          </label>
+          <span class="form-label" *ngIf="esCampoRequerido('scian')"> *</span>
           <span class="form-label"> :</span>
         </div>
       </div>
@@ -448,7 +454,7 @@
             name="eliminarScian"
             class="btn btn-danger ms-2"
             (click)="eliminarModal()"
-          [disabled]="formularioDeshabilitado"
+            [disabled]="formularioDeshabilitado"
           >
             Eliminar
           </button>
@@ -459,7 +465,7 @@
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarScain"
             (click)="agregarScian()"
-          [disabled]="formularioDeshabilitado"
+            [disabled]="formularioDeshabilitado"
           >
             Agregar
           </button>
@@ -625,7 +631,7 @@
             name="modificarMercancias"
             class="btn btn-default"
             (click)="modificarDatos()"
-          [disabled]="formularioDeshabilitado"
+            [disabled]="formularioDeshabilitado"
           >
             Modificar
           </button>
@@ -635,7 +641,7 @@
             name="eliminarMercancias"
             class="btn btn-danger ms-2"
             (click)="eliminarMercancias()"
-          [disabled]="formularioDeshabilitado"
+            [disabled]="formularioDeshabilitado"
           >
             Eliminar
           </button>
@@ -647,7 +653,7 @@
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarMercancias"
             (click)="agregarMercancias()"
-          [disabled]="formularioDeshabilitado"
+            [disabled]="formularioDeshabilitado"
           >
             Agregar
           </button>
@@ -825,8 +831,10 @@
         <label class="form-label" for="correoElectronico"
           >Correo electrónico</label
         >
-        <span class="form-label municipio-label" *ngIf="esCampoRequerido('correoElectronico')"
-          > </span
+        <span
+          class="form-label municipio-label"
+          *ngIf="esCampoRequerido('correoElectronico')"
+          >*</span
         >
         <span class="form-label mx-1"> :</span>
         <span
