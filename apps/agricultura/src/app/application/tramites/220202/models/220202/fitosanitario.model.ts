@@ -1,5 +1,7 @@
-import { PersonaTerceros } from "@libs/shared/data-access-user/src";
-import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
+import { CROSLISTA_DE_DATOS } from '../../constantes/220202/fitosanitario.enums';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { PersonaTerceros } from '@libs/shared/data-access-user/src';
+import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 
 /**
  * Representa una lista de pasos en un asistente (wizard).
@@ -30,7 +32,6 @@ export interface ListaPasosWizard {
     completado: boolean;
 }
 
-
 /**
  * Representa una acción asociada a un botón en la interfaz de usuario.
  */
@@ -53,16 +54,15 @@ export interface AccionBoton {
  * Interfaz que define la estructura de los datos para una tabla.
  */
 export interface DatosDeTabla {
-  /** Código de respuesta. */
-  code: number;
+    /** Código de respuesta. */
+    code: number;
 
-  /** Array de datos de las filas de la tabla. */
-  data: DatosDeFila[];
+    /** Array de datos de las filas de la tabla. */
+    data: DatosDeFila[];
 
-  /** Mensaje de respuesta. */
-  message: string;
+    /** Mensaje de respuesta. */
+    message: string;
 }
-
 
 /**
  * Representa los datos de una fila en el modelo fitosanitario.
@@ -91,7 +91,6 @@ export interface DatosDeFila {
     proveedor: string;
 }
 
-
 /**
  * Interfaz que representa los datos finales necesarios para el envío de información.
  */
@@ -114,9 +113,9 @@ export interface FinalEnviar {
 
 /**
  * @interface ListaDeDatosFinal
- * @description 
+ * @description
  * Interfaz que agrupa los datos principales, información de movilización y pago.
- * 
+ *
  * @property {DatosForma} datos - Información de los productos y mercancías.
  * @property {Movilizacion} movilizacion - Datos relacionados con el transporte.
  * @property {PagoForm} pago - Datos de pago asociados a la transacción.
@@ -156,12 +155,23 @@ export interface ListaDeDatosFinal {
      * Arreglo de personas terceros asociadas.
      */
     personas: PersonaTerceros[];
-      /**
-   * Lista de terceros relacionados con la solicitud.
-   */
-  tercerosRelacionados: TercerosrelacionadosdestinoTable[];
-}
 
+    /**
+     * Lista de terceros relacionados con la solicitud.
+     */
+    tercerosRelacionados: TercerosrelacionadosdestinoTable[];
+
+    /**
+     * Datos de la forma relacionados con terceros.
+     */
+    datosForma: TercerosrelacionadosdestinoTable[];
+
+    /**
+     * que deben ser considerados para operaciones de uso compartido o validaciones cruzadas.
+     * @type {string[]}
+     */
+    usoCrossListDatos: string[];
+}
 
 /**
  * Representa la información relacionada con la movilización de bienes o productos.
@@ -196,38 +206,36 @@ export interface Movilizacion {
  * Representa la información relacionada con un pago realizado en el sistema.
  */
 export interface PagoForm {
-  /** Indica si el pago está exento. */
-  exentoPago: string;
+    /** Indica si el pago está exento. */
+    exentoPago: string;
 
-  /** Justificación para la exención o detalles adicionales del pago. */
-  justificacion: string;
+    /** Justificación para la exención o detalles adicionales del pago. */
+    justificacion: string;
 
-  /** Clave de referencia asociada al pago. */
-  claveReferencia: string;
+    /** Clave de referencia asociada al pago. */
+    claveReferencia: string;
 
-  /** Cadena que identifica la dependencia relacionada con el pago. */
-  cadenaDependencia: string;
+    /** Cadena que identifica la dependencia relacionada con el pago. */
+    cadenaDependencia: string;
 
-  /** Nombre del banco donde se realizó el pago. */
-  banco: string;
+    /** Nombre del banco donde se realizó el pago. */
+    banco: string;
 
-  /** Llave única que identifica el pago. */
-  llavePago: string;
+    /** Llave única que identifica el pago. */
+    llavePago: string;
 
-  /** Monto total pagado. */
-  importePago: string;
+    /** Monto total pagado. */
+    importePago: string;
 
-  /** Fecha en la que se realizó el pago. */
-  fechaDePago: string;
+    /** Fecha en la que se realizó el pago. */
+    fechaDePago: string;
 
-  /** Fecha de inicio ingresada para el pago. */
-  fechaInicioInput: string;
+    /** Fecha de inicio ingresada para el pago. */
+    fechaInicioInput: string;
 
-  /** Fecha efectiva del pago. */
-  fechaPago: string;
+    /** Fecha efectiva del pago. */
+    fechaPago: string;
 }
-
-
 
 /**
  * Representa la información de una mercancía en el sistema.
@@ -282,7 +290,6 @@ export interface Mercancia {
     nico: string;
 }
 
-
 /**
  * Representa los datos de un formulario fitosanitario.
  */
@@ -290,7 +297,7 @@ export interface DatosForma {
     /**
      * Aduana de ingreso donde se realizará el trámite.
      */
-    aduanaDeIngreso: string;
+    aduanaDeIngreso?: string;
 
     /**
      * Oficina de inspección asignada para la revisión.
@@ -318,86 +325,21 @@ export interface DatosForma {
     numeroDeCarro?: string;
 
     /**
-     * Tipo de requisito necesario para el trámite (opcional).
-     */
-    tipoDeRequisito?: string;
-
-    /**
-     * Requisito específico relacionado con el trámite (opcional).
-     */
-    requisito?: string;
-
-    /**
-     * Número del certificado internacional asociado (opcional).
-     */
-    numeroCertificadoInternacional?: string;
-
-    /**
-     * Fracción arancelaria correspondiente al producto (opcional).
-     */
-    fraccionArancelaria?: string;
-
-    /**
-     * Descripción de la fracción arancelaria (opcional).
-     */
-    descripcionFraccion?: string;
-
-    /**
-     * Número de Identificación Comercial (NICO) del producto (opcional).
-     */
-    nico?: string;
-
-    /**
-     * Descripción del NICO del producto (opcional).
-     */
-    descripcionNico?: string;
-
-    /**
-     * Descripción general del producto (opcional).
-     */
-    descripcion?: string;
-
-    /**
-     * Cantidad en la Unidad de Medida de Transporte (UMT) (opcional).
-     */
-    cantidadUMT?: string | number;
-
-    /**
-     * Unidad de Medida de Transporte (UMT) utilizada (opcional).
-     */
-    umt?: string;
-
-    /**
-     * Cantidad en la Unidad de Medida Comercial (UMC) (opcional).
-     */
-    cantidadUMC?: string | number;
-
-    /**
-     * Unidad de Medida Comercial (UMC) utilizada (opcional).
-     */
-    umc?: string;
-
-    /**
-     * Uso previsto del producto (opcional).
-     */
-    uso?: string;
-
-    /**
-     * Tipo de producto especificado (opcional).
-     */
-    tipoDeProducto?: string;
-
-    /**
      * Tipo de mercancía relacionada con el trámite (opcional).
      */
     tipoMercancia?: string;
 }
 
-
 /**
  * Representa una fila de solicitud en el modelo fitosanitario.
  */
 export interface FilaSolicitud {
+
+    /**
+     * ID de la fila, puede ser un número o un booleano para indicar si es nuevo
+     */
+    id: number | boolean;
+
     /**
      * Número de partida asociado a la solicitud.
      */
@@ -406,7 +348,7 @@ export interface FilaSolicitud {
     /**
      * Tipo de requisito relacionado con la solicitud.
      */
-    tipoRequisito: string;
+    tipoRequisito?: string;
 
     /**
      * Descripción del requisito solicitado.
@@ -494,7 +436,6 @@ export interface FilaSolicitud {
     certificadoInternacionalElectronico: string;
 }
 
-
 /**
  * Representa la información relacionada con el pago de derechos.
  */
@@ -548,8 +489,6 @@ export interface PagoDeDerechos {
     fechaPago: string;
 }
 
-
-
 /**
  * Representa una fila de la tabla de solicitudes en el sistema.
  */
@@ -577,7 +516,6 @@ export interface SolicitudFilaTabla {
     proveedor: string;
 }
 
-
 /**
  * Representa la información del solicitante para la consulta de un trámite fitosanitario.
  */
@@ -602,9 +540,6 @@ export interface ConsultaioSolicitante {
      */
     estadoDelTramite: string;
 }
- 
-
-
 
 /**
  * Devuelve el valor proporcionado si no es `undefined` ni `null`; de lo contrario, retorna el valor por defecto especificado.
@@ -613,10 +548,12 @@ export interface ConsultaioSolicitante {
  * @param defaultValue - El valor por defecto que se retornará si `value` es `undefined` o `null`.
  * @returns El valor original si está definido, o el valor por defecto en caso contrario.
  */
-export function getDefaultValue(value: string | undefined, defaultValue: string): string {
+export function getDefaultValue(
+    value: string | undefined,
+    defaultValue: string
+): string {
     return value !== undefined && value !== null ? value : defaultValue;
 }
-
 
 /**
  * Devuelve el valor proporcionado si no es `undefined` ni `null`, de lo contrario retorna el valor por defecto.
@@ -629,17 +566,16 @@ export function finalEnviar(value: boolean, defaultValue: boolean): boolean {
     return value !== undefined && value !== null ? value : defaultValue;
 }
 
-
 /**
  * Crea y retorna un objeto de estado `ListaDeDatosFinal` con valores predeterminados,
  * permitiendo la inicialización parcial a través del parámetro `params`.
- * 
+ *
  * @param params - Objeto parcial de tipo `ListaDeDatosFinal` que permite sobreescribir los valores predeterminados.
  *                 Si no se proporciona, se utilizarán los valores por defecto para todas las propiedades.
- * 
+ *
  * @returns Un objeto completamente inicializado de tipo `ListaDeDatosFinal`, donde cada campo se establece
  *          con el valor proporcionado en `params` o, en su defecto, con un valor predeterminado.
- * 
+ *
  * @remarks
  * - Utiliza la función `getDefaultValue` para asignar valores por defecto a los campos de tipo string.
  * - Utiliza la función `finalEnviar` para asignar valores por defecto a los campos booleanos de validación.
@@ -650,53 +586,62 @@ export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): Lista
     return {
         datos: {
             aduanaDeIngreso: getDefaultValue(params.datos?.aduanaDeIngreso, ''),
-            oficinaDeInspeccion: getDefaultValue(params.datos?.oficinaDeInspeccion, ''),
+            oficinaDeInspeccion: getDefaultValue(
+                params.datos?.oficinaDeInspeccion,
+                ''
+            ),
             puntoDeInspeccion: getDefaultValue(params.datos?.puntoDeInspeccion, ''),
             numeroDeGuia: getDefaultValue(params.datos?.numeroDeGuia, ''),
             regimen: getDefaultValue(params.datos?.regimen, ''),
             numeroDeCarro: getDefaultValue(params.datos?.numeroDeCarro, ''),
-            tipoDeRequisito: getDefaultValue(params.datos?.tipoDeRequisito, ''),
-            requisito: getDefaultValue(params.datos?.requisito, ''),
-            numeroCertificadoInternacional: getDefaultValue(params.datos?.numeroCertificadoInternacional, ''),
-            fraccionArancelaria: getDefaultValue(params.datos?.fraccionArancelaria, ''),
-            descripcionFraccion: getDefaultValue(params.datos?.descripcionFraccion, ''),
-            nico: getDefaultValue(params.datos?.nico, ''),
-            descripcionNico: getDefaultValue(params.datos?.descripcion, ''),
-            descripcion: getDefaultValue(params.datos?.descripcion, ''),
-            cantidadUMT: getDefaultValue(params.datos?.cantidadUMT as string, ''),
-            umt: getDefaultValue(params.datos?.umt, ''),
-            cantidadUMC: getDefaultValue(params.datos?.cantidadUMC as string, ''),
-            umc: getDefaultValue(params.datos?.umc, ''),
-            uso: getDefaultValue(params.datos?.uso, ''),
-            tipoDeProducto: getDefaultValue(params.datos?.tipoDeProducto, ''),
         },
         movilizacion: {
             transporte: getDefaultValue(params.movilizacion?.transporte, ''),
-            guiaIdentificacion: getDefaultValue(params.movilizacion?.guiaIdentificacion, ''),
-            empresaTransportista: getDefaultValue(params.movilizacion?.empresaTransportista, ''),
-            medioTransporte: getDefaultValue(params.movilizacion?.medioTransporte, ''),
+            guiaIdentificacion: getDefaultValue(
+                params.movilizacion?.guiaIdentificacion,
+                ''
+            ),
+            empresaTransportista: getDefaultValue(
+                params.movilizacion?.empresaTransportista,
+                ''
+            ),
+            medioTransporte: getDefaultValue(
+                params.movilizacion?.medioTransporte,
+                ''
+            ),
         },
         pago: {
-        exentoPago: getDefaultValue(params.pago?.exentoPago, ''),
-        justificacion: getDefaultValue(params.pago?.justificacion, ''),
-        claveReferencia: getDefaultValue(params.pago?.claveReferencia, ''),
-        cadenaDependencia: getDefaultValue(params.pago?.cadenaDependencia, ''),
-        banco: getDefaultValue(params.pago?.banco, ''),
-        llavePago: getDefaultValue(params.pago?.llavePago, ''),
-        importePago: getDefaultValue(params.pago?.importePago, ''),
-        fechaPago: getDefaultValue(params.pago?.fechaPago, ''),
+            exentoPago: getDefaultValue(params.pago?.exentoPago, ''),
+            justificacion: getDefaultValue(params.pago?.justificacion, ''),
+            claveReferencia: getDefaultValue(params.pago?.claveReferencia, ''),
+            cadenaDependencia: getDefaultValue(params.pago?.cadenaDependencia, ''),
+            banco: getDefaultValue(params.pago?.banco, ''),
+            llavePago: getDefaultValue(params.pago?.llavePago, ''),
+            importePago: getDefaultValue(params.pago?.importePago, ''),
+            fechaPago: getDefaultValue(params.pago?.fechaPago, ''),
         },
         finalEnviar: {
-            datosFormaValidacion: finalEnviar(params.finalEnviar?.datosFormaValidacion as boolean, false),
-            movilizacionValidacion: finalEnviar(params.finalEnviar?.movilizacionValidacion as boolean, false),
-            validaciondeFormulariodePago: finalEnviar(params.finalEnviar?.validaciondeFormulariodePago as boolean, false)
+            datosFormaValidacion: finalEnviar(
+                params.finalEnviar?.datosFormaValidacion as boolean,
+                false
+            ),
+            movilizacionValidacion: finalEnviar(
+                params.finalEnviar?.movilizacionValidacion as boolean,
+                false
+            ),
+            validaciondeFormulariodePago: finalEnviar(
+                params.finalEnviar?.validaciondeFormulariodePago as boolean,
+                false
+            ),
         },
         tablaDatos: params.tablaDatos || [],
         selectedDatos: params.selectedDatos || [],
         personas: params.personas || [],
-        tercerosRelacionados: params.tercerosRelacionados || []
-    }
-}  
+        tercerosRelacionados: params.tercerosRelacionados || [],
+        datosForma: params.datosForma || [],
+        usoCrossListDatos: CROSLISTA_DE_DATOS,
+    };
+}
 
 /**
  * Interfaz que define una opción para un control de selección tipo radio button.
@@ -713,4 +658,53 @@ export interface RadioOpcion {
      * Valor interno asignado a la opción seleccionada.
      */
     value: string;
+}
+
+/**
+ * Modelo de datos para un exportador relacionado.
+ * @interface
+ */
+export interface TercerosrelacionadosTable {
+    /**
+     * Nombre, denominación o razón social del exportador.
+     */
+    exportadorNombre: string;
+    /**
+     * Teléfono del exportador.
+     */
+    exportadorTelefono: string;
+    /**
+     * Correo electrónico del exportador.
+     */
+    exportadorCorreo: string;
+    /**
+     * Domicilio del exportador.
+     */
+    exportadorDomicilio: string;
+    /**
+     * País del exportador.
+     */
+    exportadorPais: string;
+}
+
+export interface DatosDeLaSolicitud {
+    /**
+     * Catálogo de países.
+     */
+    paises: Catalogo[];
+    /**
+     * Catálogo de estados.
+     */
+    estados: Catalogo[];
+}
+
+/**
+ * Interfaz que define la estructura de etiquetas cruzadas para elementos de interfaz.
+ * @interface CrossListEtiqueta
+ */
+export interface CrossListEtiqueta {
+    /** Título que se muestra en la parte izquierda */
+    tituluDeLaIzquierda: string;
+    /** Contenido que se muestra en la parte derecha */
+    derecha: string;
 }

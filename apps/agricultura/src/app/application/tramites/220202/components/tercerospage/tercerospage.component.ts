@@ -14,7 +14,7 @@ import { AgriculturaApiService } from '../../services/220202/agricultura-api.ser
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
-import { TercerosrelacionadosComponent } from '../../../../shared/components/tercerosrelacionados/tercerosrelacionados.component';
+import { TercerosrelacionadosComponent } from '../../shared/tercerosrelacionados/tercerosrelacionados.component';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
 
 /**
@@ -66,6 +66,13 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   catalogosDatos: DatosDeLaSolicitud = {} as DatosDeLaSolicitud;
 
   /**
+   * Datos de la forma relacionados con terceros.
+   * Esta propiedad almacena los datos específicos de la forma que se relacionan con los terceros.
+   * @type {TercerosrelacionadosdestinoTable[]}
+   */
+  datosForma: TercerosrelacionadosdestinoTable[] = [];
+
+  /**
    * Constructor del componente.
    * @param consultaQuery Servicio para consultar el estado de solo lectura.
    * @param agriculturaApiService Servicio para actualizar terceros relacionados.
@@ -90,11 +97,12 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((seccionState) => {
         this.esFormularioSoloLectura = seccionState?.readonly;
       });
-    this.fitosanitarioQuery.seleccionarTercerosRelacionados$
+    this.agriculturaApiService.getAllDatosForma()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datosDeLaSolicitud) => {
         if (datosDeLaSolicitud) {
-          this.personas = datosDeLaSolicitud;
+          this.personas = datosDeLaSolicitud.tercerosRelacionados;
+          this.datosForma = datosDeLaSolicitud.datosForma;
         }
       });
   }
@@ -139,7 +147,9 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   handleEliminar(): void {
     this.personas = [];
+    this.datosForma = [];
     this.agriculturaApiService.updateTercerosRelacionado([] as TercerosrelacionadosdestinoTable[]);
+    this.agriculturaApiService.updateTercerosExportador([] as TercerosrelacionadosdestinoTable[]);
   }
 
   /**

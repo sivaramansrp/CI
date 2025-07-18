@@ -1179,15 +1179,6 @@
     "numeroDeProcedimiento": "270201"
   },
   {
-    "id": 701,
-    "tipoDeTramite": "Cargar archivos",
-    "fecha": "2023-11-03",
-    "fechaActualizacion": "2023-11-10",
-    "diasTranscurridos": "4",
-    "departamento": "AGA",
-    "numeroDeProcedimiento": "701"
-  },
-  {
     "id": 130106,
     "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
     "fecha": "2023-10-01",
@@ -2915,6 +2906,78 @@
     "diasTranscurridos": "4",
     "departamento": "AGA",
     "numeroDeProcedimiento": "30401"
+  },
+  {
+    "id": 33302,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "33302"
+  },
+   {
+    "id": 33303,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32512"
+  },
+  {
+    "id": 30506,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "30506"
+  },
+  {
+    "id": 32513,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32513"
+  },
+  {
+    "id": 32511,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2025-10-07",
+    "fechaActualizacion": "2027-10-12",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32511"
+  },
+  {
+    "id": 33303,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2025-10-07",
+    "fechaActualizacion": "2027-10-12",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "33303"
+  },
+  {
+    "id": 32607,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2025-10-07",
+    "fechaActualizacion": "2027-10-12",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32607"
+  },
+  {
+    "id": 32604,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2025-10-07",
+    "fechaActualizacion": "2027-10-12",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32604"
   }
 
 ]

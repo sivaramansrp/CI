@@ -1,3 +1,4 @@
+import { ConfiguracionColumna, INVERSION_TABLA, InversionGrupo, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { CONFIGURACION_IVAEIEPS_DOS } from '../../constantes/ivaeieps.enum';
 import { ComercioExteriorService } from '../../services/comercio-exterior.service';
 import { CommonModule } from '@angular/common';
@@ -5,8 +6,8 @@ import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import {INVERSION_MONTO} from '../../constantes/ivaeieps.enum';
 import { Input } from '@angular/core';
-import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PAGO_DE_DERECHOS } from '../../constantes/ivaeieps.enum';
@@ -28,7 +29,7 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-ivaeieps-dos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent,TablaDinamicaComponent],
   templateUrl: './ivaeieps-dos.component.html',
   styleUrl: './ivaeieps-dos.component.scss',
 })
@@ -39,6 +40,19 @@ export class IvaeiepsDosComponent implements OnInit, OnDestroy {
    * Por defecto es `false`, permitiendo que los campos del formulario sean editables.
    */
   @Input() esFormularioSoloLectura: boolean = false;
+
+/**
+ * Una instancia de FormGroup que representa la estructura del formulario `inversionGrupo`.
+ *
+ * Este grupo de formularios contiene un FormGroup anidado llamado `inversionFormGroup`,
+ * que puede ser utilizado para definir y gestionar controles de formulario adicionales
+ * relacionados con la inversión dentro del componente.
+ *
+ * @type {FormGroup}
+ */
+  public inversionGrupo: FormGroup = new FormGroup({
+    inversionFormGroup: new FormGroup({}),
+  });
   /**
    * Una instancia de FormGroup que representa la estructura del formulario `delGrupo`.
    *
@@ -81,6 +95,14 @@ export class IvaeiepsDosComponent implements OnInit, OnDestroy {
    * del formulario relacionados con la funcionalidad "porcentajeMonto" en el componente.
    */
   public porcentajeMontoForm!: FormGroup;
+/**
+ * Contiene los datos de configuración para el formulario de inversión.
+ *
+ * Esta propiedad se inicializa con la constante `INVERSION_MONTO`, que define la estructura
+ * y los campos dinámicos que se mostrarán en la sección correspondiente al monto de inversión.
+ * Se utiliza para alimentar el componente de formularios dinámicos con los datos necesarios.
+ */
+  public inversionFormDatos = INVERSION_MONTO;
 
   /**
    * Representa los datos del formulario para el proceso "Permiso a Desistir" en el módulo de IVA e IEPS.
@@ -114,7 +136,23 @@ export class IvaeiepsDosComponent implements OnInit, OnDestroy {
    * solicitud dentro del proceso de IVA/IEPS.
    */
   public solicitudState!: Solicitud31602State;
-
+  /**
+   * Un arreglo que contiene datos relacionados con las inversion grupo.
+   * Cada elemento en el arreglo es de tipo `InversionGrupo`.
+   */
+  public inversionGrupoDatos: InversionGrupo[] = [];
+  /**
+   * Configuración para la tabla que muestra datos del tipo `InversionGrupo`.
+   * Esta propiedad se inicializa con la configuración de columnas predefinida
+   * de `INVERSION_TABLA`.
+   */
+  public configuracionTabla: ConfiguracionColumna<InversionGrupo>[] = INVERSION_TABLA;
+   /**
+     * Representa el modo de selección para una tabla, específicamente utilizando casillas de verificación.
+     * Esta propiedad se asigna con un valor del enumerado `TablaSeleccion`,
+     * donde el modo de selección está configurado como `CHECKBOX`.
+     */
+  public tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
   /**
    * Constructor del componente IvaEiepsDosComponent.
    *
@@ -152,6 +190,8 @@ export class IvaeiepsDosComponent implements OnInit, OnDestroy {
       .subscribe();
     this.crearPorcentajeMontoForm();
     this.getBancoCatalogDatos();
+    this.getInversionGrupoDatos();
+    this.getTipoInversionCatalogDatos();
   }
 
   /**
@@ -168,6 +208,18 @@ export class IvaeiepsDosComponent implements OnInit, OnDestroy {
       porcentaje: [''],
       monto: [''],
     });
+  }
+
+  /**
+ * Getter para obtener el FormGroup anidado `inversionFormGroup` dentro de `inversionGrupo`.
+ *
+ * Este método permite acceder directamente al grupo de controles relacionados con la inversión,
+ * facilitando la manipulación y validación de los campos correspondientes en la plantilla o en la lógica del componente.
+ *
+ * @returns {FormGroup} La instancia de FormGroup asociada a `inversionFormGroup`.
+ */
+  get inversionFormGroup(): FormGroup {
+    return this.inversionGrupo.get('inversionFormGroup') as FormGroup;
   }
 
   /**
@@ -216,6 +268,24 @@ export class IvaeiepsDosComponent implements OnInit, OnDestroy {
     return this.pagoDeDerechosFormGroup.get('pagoDeDerechos') as FormGroup;
   }
 
+/**
+ * Recupera los datos del grupo de inversión desde el servicio y actualiza la propiedad `inversionGrupoDatos`.
+ *
+ * Este método realiza una solicitud al servicio `comercioExteriorSvc.getInversionTablaDatos`, procesa la respuesta
+ * y asigna los datos obtenidos a la propiedad `inversionGrupoDatos` del componente.
+ * Utiliza el operador `takeUntil` para gestionar el ciclo de vida de la suscripción y evitar fugas de memoria.
+ *
+ * @remarks
+ * - Se espera que la respuesta contenga los datos necesarios para poblar la tabla o sección correspondiente al grupo de inversión.
+ * - La suscripción se cancela automáticamente cuando el componente es destruido.
+ */
+  public getInversionGrupoDatos():void {
+    this.comercioExteriorSvc.getInversionTablaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
+      const DATOS = JSON.parse(JSON.stringify(response));
+      this.inversionGrupoDatos = DATOS;
+    })
+  }
+
   /**
    * Recupera el catálogo de datos de bancos desde el servicio y actualiza el campo correspondiente en el modelo del formulario.
    *
@@ -251,6 +321,42 @@ export class IvaeiepsDosComponent implements OnInit, OnDestroy {
         }
       });
   }
+
+/**
+ * Recupera el catálogo de tipos de inversión desde el servicio y actualiza el campo correspondiente en el modelo del formulario.
+ *
+ * Este método obtiene los datos de tipos de inversión utilizando el servicio `comercioExteriorSvc.getTipoInversionDatos`, procesa la respuesta
+ * y mapea los datos para poblar las opciones del campo del formulario con el ID 'tipoInversion'. Si el campo ya tiene opciones,
+ * no las sobrescribe.
+ *
+ * @remarks
+ * - El método utiliza el operador `takeUntil` para gestionar el ciclo de vida de la suscripción y prevenir fugas de memoria.
+ * - Se espera que la respuesta tenga una propiedad `data` que contenga un arreglo de objetos con los campos `id` y `descripcion`.
+ *
+ * @throws {Error} Si el formato de la respuesta es inválido o si el campo requerido no se encuentra en el modelo del formulario.
+ */
+public getTipoInversionCatalogDatos(): void {
+  this.comercioExteriorSvc
+    .getTipoInversionDatos()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((response) => {
+      const API_DATOS = JSON.parse(JSON.stringify(response));
+      const DATOS = API_DATOS.data;
+      const TIPO_INVERSION_FIELD = this.inversionFormDatos.find(
+        (datos: ModeloDeFormaDinamica) => datos.id === 'tipoInversion'
+      ) as ModeloDeFormaDinamica;
+      if (TIPO_INVERSION_FIELD) {
+        if (!TIPO_INVERSION_FIELD.opciones) {
+          TIPO_INVERSION_FIELD.opciones = DATOS.map(
+            (item: { id: number; descripcion: string }) => ({
+              descripcion: item.descripcion,
+              id: item.id,
+            })
+          );
+        }
+      }
+    });
+}
 
   /**
    * Maneja el cambio de valor para un campo específico y actualiza el store en consecuencia.

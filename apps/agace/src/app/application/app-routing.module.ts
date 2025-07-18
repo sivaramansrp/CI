@@ -243,25 +243,37 @@ const ROUTES: Routes = [
   {
     path: 'verificar-dictamen',
     loadComponent: () =>
-      import('./verificar-dictamen/verificar-dictamen.component').then((m) => m.VerificarDictamenComponent),
+      import('./verificar-dictamen/verificar-dictamen.component').then(
+        (m) => m.VerificarDictamenComponent
+      ),
   },
   {
     path: 'detalle-v-dictamen',
     loadComponent: () =>
-      import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
+      import('./detalle-v-dictamen/detalle-v-dictamen.component').then(
+        (m) => m.DetalleVDictamenComponent
+      ),
   },
   {
     path: 'datos-generales-tramite',
     loadComponent: () =>
-      import('./datos-generales-tramite/datos-generales-tramite.component').then((m) => m.DatosGeneralesTramiteComponent),
+      import(
+        './datos-generales-tramite/datos-generales-tramite.component'
+      ).then((m) => m.DatosGeneralesTramiteComponent),
   },
   {
-      path: 'aviso-de-modificacion',
-    loadChildren: () => 
+    path: 'aviso-de-modificacion',
+    loadChildren: () =>
       import('./tramites/30505/aviso-de-modificacion.module').then(
         (m) => m.AvisoDeModificacionModule)
   },
    {
+      path: 'aviso-modification-certificacion',
+    loadChildren: () => 
+      import('./tramites/33303/aviso-modification-certificacion.module').then(
+        (m) => m.AvisoModificacionCertificacionModule)
+  },
+  {
     path: 'registros',
     loadChildren: () =>
       import('./tramites/30506/registro.module').then(
@@ -274,8 +286,39 @@ const ROUTES: Routes = [
       import('./tramites/32512/aviso-destruccion-mercancias.module').then(
         (m) => m.AvisoDestruccionMercanciasModule)
   },
+  {
+    path: 'avisos-agace',
+    loadChildren: () =>
+      import('./tramites/32511/avisos.module').then((m) => m.AvisosModule),
+  },  
+  {
+    path: 'aviso-tesoreria',
+    loadChildren: () =>
+      import('./tramites/32513/aviso-tesoreria.module').then(
+        (m) => m.AvisoTesoreriaModule
+      ),
+  },
 
-  
+  {
+    path: 'aviso-certificacion',
+    loadChildren: () =>
+      import('./tramites/33302/aviso-certificacion.module').then(
+        (m) => m.AvisoCertificacionModule
+      ),
+  },
+  {
+    path: 'aeronaves',
+    loadChildren: () =>
+      import('./tramites/32607/aeronaves.module').then(
+        (m) => m.AeronavesModule
+      ),
+  },
+  {
+    path: 'empresas-comercializadoras',
+    loadChildren: () => 
+      import('./tramites/32604/empresas-comercializadoras.module').then(
+        (m) => m.EmpresasComercializadorasModule)
+  }
 ];
 
 @NgModule({

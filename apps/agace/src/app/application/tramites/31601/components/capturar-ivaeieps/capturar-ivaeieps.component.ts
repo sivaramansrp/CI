@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, InputFecha, InputFechaComponent, REGEX_LLAVE_DE_PAGO, REGEX_RFC, TituloComponent } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConfiguracionColumna, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, REGEX_LLAVE_DE_PAGO, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder,FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
 import { PagoData ,TableData} from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
 import { Solicitud31601State,Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
@@ -12,11 +12,13 @@ import { TableComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query'
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import dropDown from '@libs/shared/theme/assets/json/31601/catalog-select-tipo.json';
+import empressDatos from '@libs/shared/theme/assets/json/31601/empress.json';
 import mockData from '@libs/shared/theme/assets/json/31601/mockdata-capturar.json';
 import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
-import table from '@libs/shared/theme/assets/json/31601/table.json';
 import tableDetos from '@libs/shared/theme/assets/json/31601/table-datos.json';
 
+import { CONFIGURATION_TABLA_DESTINATARIO_BASICO, DestinatarioItems } from '../../enum/mencione-tabla.enum';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FECHA_FINAL } from '../../modelos/radio-buttons.model';
 /**
  * @Component - CapturarIvaeiepsComponent
@@ -34,23 +36,48 @@ import { FECHA_FINAL } from '../../modelos/radio-buttons.model';
     ReactiveFormsModule,
     CatalogoSelectComponent,
     CommonModule,
-    InputRadioComponent,
-    InputFechaComponent
+    InputRadioComponent,NotificacionesComponent,InputFechaComponent,TablaDinamicaComponent
   ],
   templateUrl: './capturar-ivaeieps.component.html',
   styleUrl: './capturar-ivaeieps.component.scss',
 })
 export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
+/**
+ * @description
+ * Arreglo que almacena las filas seleccionadas por el usuario en la tabla.
+ * Estas filas pueden ser utilizadas para realizar operaciones como modificar o eliminar.
+ *
+ * @type {DestinatarioItems[]}
+ */
+filasSeleccionadas: DestinatarioItems[] = [];
+ /** Índice de la fila seleccionada o null si no hay selección */  
+filaSeleccionadaDestinatarioIndex: number | null = null;
+
+/** Bandera para indicar si se está editando una fila existente */  
+modoEdicionDestinatario = false;
+
   /**
    * Grupo de formularios para formulario IVA
    */
   ivaForm!: FormGroup;
 
   /**
+   * Datos predefinidos del representante.
+   */
+  datosRepresentativos = empressDatos;
+  /**
    * Grupo de formularios para formulario de pago
    */
-  formularioDePago!: FormGroup;
-
+    formularioDePago!: FormGroup;
+      /**
+   * Configuración de las columnas de la tabla de exportadores.
+   * Define el encabezado, clave y el orden de las columnas para la tabla de exportadores.
+   */
+  public checkbox = TablaSeleccion.CHECKBOX;
+ /**
+   * Referencia al componente de tabla para manipulación de tablas.
+   */
+@ViewChild(TableComponent) tableRef!: TableComponent;
   /**
    *Marcar para mostrar u ocultar contenido
    */
@@ -76,17 +103,23 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
    */
   radioBtn = radio_si_no;
 
-  /**
-   * Contiene los datos del encabezado de la tabla de destinatarios.
-   * Estos datos se utilizan para completar la tabla de destinatarios en la interfaz de usuario.
+ /**
+   * Lista de destinatarios obtenida desde un archivo JSON.
+   * Cada destinatario contiene información como nombre, teléfono, correo electrónico y dirección.
    */
-  destinatarioHeaderData: TableData = table;
+  destinatario: DestinatarioItems[] = []
+
+  /**
+   * Configuración de las columnas de la tabla de destinatarios.
+   * Define el encabezado, clave y el orden de las columnas para la tabla de destinatarios.
+   */
+  configuracionTablaDatos: ConfiguracionColumna<DestinatarioItems>[] = CONFIGURATION_TABLA_DESTINATARIO_BASICO ;
 
   /**
    * Representa los datos de LE (presumiblemente una entidad o proceso específico).
    * Esta variable contiene los datos de la tabla para LE.
    */
-  datosDeInversion = tableDetos;
+  datosDeInversion: TableData = tableDetos;
 
   /**
    * Representa el catálogo de tipos.
@@ -300,7 +333,18 @@ if (this.esFormularioSoloLectura) {
   cambioDeValor(value: string | number): void {
     this.valorSeleccionado = value.toString();
   }
-
+/**
+ * Elimina las filas seleccionadas de la tabla.
+ * 
+ * Esta función verifica si la referencia de la tabla (`tableRef`) está disponible.
+ * Luego filtra las filas, excluyendo aquellas que están marcadas como seleccionadas,
+ * y actualiza el cuerpo de la tabla (`datosDeInversion.tableBody`) con las filas restantes.
+ */
+  eliminar(): void {
+  if (!this.tableRef) {return;}
+    const FILTRADO = this.tableRef.tableData.tableBody.filter(row => !row.selected);
+   this.datosDeInversion.tableBody = FILTRADO;
+}
   /**
    * Actualiza el valor de `predeterminadoSeleccionar` con el valor proporcionado.
    *
@@ -311,7 +355,11 @@ if (this.esFormularioSoloLectura) {
   cambioDeValorIndique(value: string | number): void {
     this.predeterminadoSeleccionar = value.toString();
   }
-
+ /**
+   * @description
+   * Notificación actual que se muestra en el componente.
+   */
+  public nuevaNotificacion!: Notificacion;
   /**
    * Agrega datos a la tabla destinatarioHeaderData si el ivaForm es válido.
    * Extrae los valores `rfc`, `denominacion` y `domicilio` del formulario,
@@ -321,18 +369,123 @@ if (this.esFormularioSoloLectura) {
    *
    * @returns {nulo}
    */
-  agregarDatos(): void {
-    if (this.ivaForm.valid) {
-      const {RFC, DENOMINACION, DOMICILIO } = this.ivaForm.value;
-      this.destinatarioHeaderData.tableBody[0].tbodyData.push(...[
-        RFC,
-        DENOMINACION,
-        DOMICILIO,
-      ]);
-      this.ivaForm.reset();
+agregarDatos(): void {
+  const FILA_NUEVA : DestinatarioItems = {
+    rfc: this.ivaForm.value.rfc,
+    denominacion: this.ivaForm.value.denominacion,
+    domicilio: this.ivaForm.value.domicilio
+  };
+
+  if (this.modoEdicionDestinatario && this.filaSeleccionadaDestinatarioIndex !== null) {
+    this.destinatario[this.filaSeleccionadaDestinatarioIndex] = FILA_NUEVA ;
+  } else {
+    this.destinatario.push(FILA_NUEVA );
+  }
+  this.mostrarModal = false;
+  this.filasSeleccionadas = [];
+  this.modoEdicionDestinatario = false;
+ }
+/**
+ * Elimina la fila seleccionada del arreglo de destinatarios si existe una selección válida.
+ * Luego restablece el índice seleccionado a null.
+ */
+eliminarValor(): void {
+  if (!this.filasSeleccionadas || this.filasSeleccionadas.length === 0) {return;}
+
+  this.filasSeleccionadas.forEach((filaSeleccionada) => {
+    const INDEX = this.destinatario.findIndex(item => item === filaSeleccionada);
+    if (INDEX !== -1) {
+      this.destinatario.splice(INDEX, 1);
     }
+  });
+
+  // Clear selection after deletion
+  this.filasSeleccionadas = [];
+  this.filaSeleccionadaDestinatarioIndex = null;
+}
+
+
+/**
+ * Abre el modal en modo edición si hay una fila seleccionada.
+ * Carga los datos de la fila seleccionada en el formulario.
+ */
+modificarOpenModal(): void {
+  if (this.filaSeleccionadaDestinatarioIndex === null) {
+    return;
   }
 
+  const FILA = this.destinatario[this.filaSeleccionadaDestinatarioIndex];
+  if (!FILA) {return;}
+
+  this.ivaForm.patchValue({
+    rfc: FILA.rfc,
+    denominacion: FILA.denominacion,
+    domicilio: FILA.domicilio
+  });
+  this.filasSeleccionadas = [];
+  this.modoEdicionDestinatario = true;
+  this.mostrarModal = true;
+}
+  /**
+   * Agrega datos a la tabla destinatarioHeaderData si el ivaForm es válido.
+   * Extrae los valores `rfc`, `denominacion` y `domicilio` del formulario,
+   * y los agrega como una nueva fila a la matriz `tbodyData` del primer elemento
+   * en el array `tableBody` de `destinatarioHeaderData`.
+   * Restablece el ivaForm después de agregar los datos.
+   *
+   * @returns {nulo}
+   */
+agregarData(): void {
+  const TIPO_DE = this.ivaForm.get('tipoDe')?.value;
+  const VALOR_PESOS = this.ivaForm.get('valorPesos')?.value;
+  const DESCRIPCION = this.ivaForm.get('descripcion')?.value;
+
+if (TIPO_DE && VALOR_PESOS && DESCRIPCION) {
+
+this.datosDeInversion.tableBody = [
+  ...this.datosDeInversion.tableBody,
+  {
+    tbodyData: [TIPO_DE, DESCRIPCION, VALOR_PESOS]
+  }
+];
+  this.cerrarModal();
+
+  this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Datos guardados correctamente.',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
+ 
+}
+}
+  /**
+   * Agrega datos a la tabla destinatarioHeaderData si el ivaForm es válido.
+   * Extrae los valores `rfc`, `denominacion` y `domicilio` del formulario,
+   * y los agrega como una nueva fila a la matriz `tbodyData` del primer elemento
+   * en el array `tableBody` de `destinatarioHeaderData`.
+   * Restablece el ivaForm después de agregar los datos.
+   *
+   * @returns {nulo}
+   */
+    buscarDatos(): void {
+      const RESGISTRO_VALUE = this.ivaForm.get('rfc')?.value;
+          
+    if (RESGISTRO_VALUE) {
+      
+        this.ivaForm.patchValue({
+     denominacion:this.datosRepresentativos.denominacion,
+       domicilio:this.datosRepresentativos.domicilio
+    });
+      
+           
+    }
+    }
   /**
    * Alterna la visibilidad del contenido invirtiendo el valor de `mostrarContenido`.
    * Cuando se llama, si `mostrarContenido` es verdadero, se establecerá en falso y viceversa.
@@ -360,8 +513,30 @@ if (this.esFormularioSoloLectura) {
    * @returns {nulo}
    */
   agregarOpenModal(): void {
+    
+      this.ivaForm.patchValue({
+    rfc: '',
+    denominacion: '',
+    domicilio: ''
+  });
     this.mostrarModal = true;
   }
+/**
+ * Maneja la selección de una fila en la tabla de destinatarios.
+ * Busca el índice de la fila seleccionada en el arreglo de destinatarios
+ * comparando RFC, denominación y domicilio. Establece el índice si se encuentra.
+ *
+ * @param fila - Fila seleccionada de tipo DestinatarioItems.
+ */
+onFilaSeleccionadaDestinatario(fila: DestinatarioItems): void {
+  const INDICE = this.destinatario.findIndex(item =>
+    item.rfc === fila.rfc &&
+    item.denominacion === fila.denominacion &&
+    item.domicilio === fila.domicilio
+  );
+
+  this.filaSeleccionadaDestinatarioIndex = INDICE !== -1 ? INDICE : null;
+}
 
   /**
    * Cierra el modal estableciendo la propiedad `mostrarModal` en `false`.

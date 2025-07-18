@@ -159,11 +159,9 @@ export class PasoTresComponent implements OnInit, OnDestroy {
       console.error('Faltan datos para completar la firma');
       return;
     }
-
     const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
     const FIRMAHEX = base64ToHex(firma);
     const ID_SOLICITUD = this.tramite5701Query.getValue().idSolicitud;
-
     this.documentoService
       .obtenerDatosFirma<FirmarRequest>()
       .pipe(
@@ -180,7 +178,6 @@ export class PasoTresComponent implements OnInit, OnDestroy {
             fecha_fin_vigencia: formatearFechaConMoment(this.datosFirmaReales.fechaFin),
             documentos_requeridos: response.datos?.documentos_requeridos || [],
           };
-
           return this.firma.enviarFirma<string>(PAYLOAD).pipe(
             tap((firmaResponse: BaseResponse<string>) => {
               if (firmaResponse.datos) {

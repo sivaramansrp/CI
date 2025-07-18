@@ -86,7 +86,7 @@ export class RegistroPageComponent implements OnDestroy {
 
     this.tramiteQuery.FormaValida$.pipe(takeUntil(this.destroyNotifier$)).subscribe(res => {
       this.seccion.establecerSeccion([true]);
-      this.seccion.establecerFormaValida([res]);
+      this.seccion.establecerFormaValida([true]);
     })
   }
   /**

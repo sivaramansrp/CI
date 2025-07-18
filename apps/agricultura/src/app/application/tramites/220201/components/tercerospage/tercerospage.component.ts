@@ -7,15 +7,19 @@
  * @module TercerospageComponent
  */
 
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { DatosDeLaSolicitud, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
-import { Subject, takeUntil } from 'rxjs';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { TercerosrelacionadosComponent } from '../../../../shared/components/tercerosrelacionados/tercerosrelacionados.component';
+import { Subject, takeUntil } from 'rxjs';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
-import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+import { TercerosrelacionadosComponent } from '../../../../shared/components/tercerosrelacionados/tercerosrelacionados.component';
+import { DatosDeLaSolicitud, TercerosrelacionadosTable, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { AgregardestinatarioComponent } from '../agregardestinatario/agregardestinatario.component';
+import { AgregardestinatariofinalComponent } from '../agregardestinatariofinal/agregardestinatariofinal.component';
 
 /**
  * Componente para la gestión de terceros relacionados en el trámite.
@@ -32,7 +36,8 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
   standalone: true,
   imports: [
     CommonModule,
-    TercerosrelacionadosComponent
+    TercerosrelacionadosComponent,
+    ModalComponent
   ],
   templateUrl: './tercerospage.component.html',
   styleUrl: './tercerospage.component.scss',
@@ -51,6 +56,13 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    * @type {TercerosrelacionadosdestinoTable[]}
    */
   personas: TercerosrelacionadosdestinoTable[] = [];
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es verdadero, el formulario se presenta únicamente para visualización,
+   * deshabilitando la edición de los campos.
+   * @type {modalRef}
+   */
+  @ViewChild('modalRef') modalRef!: ModalComponent;
 
   /**
    * Indica si el formulario se encuentra en modo solo lectura.
@@ -65,6 +77,13 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    * @type {DatosDeLaSolicitud}
    */
   catalogosDatos: DatosDeLaSolicitud = {} as DatosDeLaSolicitud;
+  /**
+   * Datos de la forma relacionados con terceros.
+   * Esta propiedad almacena los datos específicos de la forma que se relacionan con los terceros.
+   * @type {TercerosrelacionadosTable[]}
+   */
+
+  datosForma: TercerosrelacionadosdestinoTable[] = [];
 
   /**
    * Constructor del componente.
@@ -76,9 +95,10 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private consultaQuery: ConsultaioQuery,
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
-    private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
-    public tercerosrelacionadosService: TercerosrelacionadosService
-  ) {}
+    public tercerosrelacionadosService: TercerosrelacionadosService,
+    public certificadoZoosanitarioStore: ZoosanitarioStore
+
+  ) { }
 
   /**
    * Ciclo de vida de Angular que se ejecuta al iniciar el componente.
@@ -91,11 +111,12 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((seccionState) => {
         this.esFormularioSoloLectura = seccionState?.readonly;
       });
-    this.certificadoZoosanitarioQuery.seleccionarTercerosRelacionados$
+    this.certificadoZoosanitarioServices.getAllDatosForma()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datosDeLaSolicitud) => {
         if (datosDeLaSolicitud) {
-          this.personas = datosDeLaSolicitud;
+          this.personas = datosDeLaSolicitud.tercerosRelacionados;
+          this.datosForma = datosDeLaSolicitud.datosForma;
         }
       });
   }
@@ -142,6 +163,15 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.personas = [];
     this.certificadoZoosanitarioServices.updateTercerosRelacionado([] as TercerosrelacionadosdestinoTable[]);
   }
+  /**
+  * Elimina todos los terceros relacionados y actualiza el servicio correspondiente.
+  * @method handleEliminar
+  */
+  handleEliminarExportador(): void {
+    this.personas = [];
+    this.certificadoZoosanitarioStore.updatedatosForma([] as TercerosrelacionadosdestinoTable[]);
+  }
+
 
   /**
    * Ciclo de vida de Angular que se ejecuta al destruir el componente.
@@ -151,5 +181,12 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  abrirModalDestinatario(): void {
+    this.modalRef.abrir(AgregardestinatarioComponent);
+  }
+  abrirModalExportador(): void {
+    this.modalRef.abrir(AgregardestinatariofinalComponent);
   }
 }

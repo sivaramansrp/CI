@@ -1,9 +1,10 @@
-import { Catalogo, ConsultaioQuery, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+import { Catalogo, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InformationGeneralSolicitanteState, Tramite32515Store } from '../../estados/tramite32515.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { INFORMACION_DE_COMPANIA } from '../../constantes/modificacion-aviso-seguro-global.enum';
 import { InformationGeneralSolicitanteService } from '../../services/information-general-solicitante.service';

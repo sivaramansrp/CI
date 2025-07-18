@@ -20,6 +20,7 @@
     <ng-table
       [commonTableHeader]="tableColumns"
       [commonTableBody]="mercanciasData"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></ng-table>
     <div class="d-flex justify-content-center">
       <app-table-pagination
@@ -44,6 +45,7 @@
  <ng-table
       [commonTableHeader]="declaretableColumns"
       [commonTableBody]="declareData"
+       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></ng-table>
     <div class="d-flex justify-content-center">
       <app-table-pagination
@@ -62,6 +64,7 @@
       <button
         type="button"
         class="btn btn-default me-md-3"
+        [disabled]="esFormularioSoloLectura"
         (click)="openRevocarModal()"
       >
         Revocar
@@ -69,6 +72,7 @@
       <button
         type="button"
         class="btn btn-default me-md-3"
+         [disabled]="esFormularioSoloLectura"
         (click)="openRaticarModal()"
       >
         Ratificar
@@ -76,11 +80,12 @@
       <button
         type="button"
         class="btn btn-primary me-md-3"
+         [disabled]="esFormularioSoloLectura"
         (click)="openAgregarModal()"
       >
         Agregar
       </button>
-      <button type="button" class="btn btn-primary me-md-3">Eliminar</button>
+      <button type="button" class="btn btn-primary me-md-3"  [disabled]="esFormularioSoloLectura">Eliminar</button>
     </div>
 
     <div class="col-12 mt-5">
@@ -135,7 +140,7 @@
               </div>
               <div class="col-4 d-flex align-items-end">
                 <div class="form-group">
-                  <button type="button" class="btn btn-primary">Buscar</button>
+                  <button type="button" class="btn btn-primary"  [disabled]="esFormularioSoloLectura">Buscar</button>
                 </div>
               </div>
             </div>
@@ -232,12 +237,14 @@
                 type="submit"
                 class="btn btn-primary me-md-3"
                 (click)="getValorStore()"
+                 [disabled]="esFormularioSoloLectura"
               >
                 Aceptar
               </button>
               <button
                 type="button"
                 class="btn btn-default me-md-3"
+                 [disabled]="esFormularioSoloLectura"
                 (click)="closeAgregarModal()"
               >
                 Cancelar

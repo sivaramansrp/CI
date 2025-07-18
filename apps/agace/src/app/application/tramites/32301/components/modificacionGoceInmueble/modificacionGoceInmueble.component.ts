@@ -226,8 +226,6 @@ ngOnInit(): void {
       } else if (!this.esFormularioSoloLectura) {
         this.direccionGrid.enable();
         this.modificacionGoceForm.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
       }
   }
   /**
@@ -475,7 +473,7 @@ ngOnInit(): void {
       /**
        * Texto del botón de cancelación en la notificación (actualmente vacío).
        */
-      txtBtnCancelar: '',
+      txtBtnCancelar: 'Cancelar',
     };
   }
 

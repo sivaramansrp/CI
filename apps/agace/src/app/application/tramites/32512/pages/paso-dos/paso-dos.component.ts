@@ -1,17 +1,17 @@
-import { AlertComponent } from '@libs/shared/data-access-user/src';
-import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
-import { CATALOGOS_ID } from '@libs/shared/data-access-user/src';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogosService } from '@libs/shared/data-access-user/src';
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  CATALOGOS_ID,
+  Catalogo,
+  CatalogosService,
+  TituloComponent
+} from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
 import { TEXTOS } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { takeUntil } from 'rxjs';
+
 
 /**
  * Componente PasoDosComponent que representa el segundo paso del trámite 31301.

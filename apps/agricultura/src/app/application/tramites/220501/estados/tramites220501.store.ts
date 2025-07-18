@@ -162,6 +162,18 @@ export interface Solicitud220501State {
    * @type {boolean}
    */
   mostrarSeccion: boolean;
+
+  /**
+   * Certificado número.
+   * @type {string}
+   */
+  certificadoNumero: string;
+
+  /**
+   * Resultado del cálculo.
+   * @type {string}
+   */
+  calculoResultado: string;
 }
 
 /**
@@ -210,6 +222,8 @@ export function crearEstadoInicial(): Solicitud220501State {
 
     mercanciaTablaDatos: [],
     mostrarSeccion: true,
+    certificadoNumero: '',
+    calculoResultado: ''
   };
 }
 
@@ -623,6 +637,30 @@ export class Solicitud220501Store extends Store<Solicitud220501State> {
     this.update((state) => ({
       ...state,
       mostrarSeccion,
+    }));
+  }
+
+  /**
+   * Establece el certificado número.
+   * @param certificadoNumero Certificado número.
+   * @returns void
+   */
+  public setCertificadoNumero(certificadoNumero: string): void {
+    this.update((state) => ({
+      ...state,
+      certificadoNumero,
+    }));
+  }
+
+  /**
+   * Establece el resultado del cálculo.
+   * @param calculoResultado Resultado del cálculo.
+   * @returns void
+   */
+  public setCalculoResultado(calculoResultado: string): void {
+    this.update((state) => ({
+      ...state,
+      calculoResultado,
     }));
   }
 }
