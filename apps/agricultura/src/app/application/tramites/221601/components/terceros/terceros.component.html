@@ -4,10 +4,13 @@
     <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
   </div>
 
+  <!-- Exportador table -->
   <div class="row">
     <h6>Exportador*</h6>
-    <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="exportador" [tipoSeleccionTabla]="checkbox"
-      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"  (listaDeFilaSeleccionada)="onExportadorSeleccionado($event)"></app-tabla-dinamica>
+    <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="exportador"
+      [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+      (listaDeFilaSeleccionada)="onExportadorSeleccionado($event)">
+    </app-tabla-dinamica>
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
         <li class="page-item"><a class="page-link">1</a></li>
@@ -15,59 +18,88 @@
     </nav>
   </div>
 
-  <div class="col-md-12 mt-5 d-flex justify-content-end" *ngIf="exportadorSeleccionado?.length && exportadorSeleccionado.length > 0"
->
-    <button type="button" class="btn btn-primary ms-3" 
-      [disabled]="esFormularioSoloLectura" >Modificar</button>
-    <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura"
-      [disabled]="esFormularioSoloLectura">Eliminar</button>
+  <!-- Action buttons for Exportador -->
+  <div class="col-md-12 mt-5 d-flex justify-content-end"
+    *ngIf="exportadorSeleccionado?.length && exportadorSeleccionado.length > 0">
+    <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">Modificar</button>
+    <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
   </div>
+
+  <!-- Destinatario table -->
   <div class="row">
     <h6>Destinatario (destino final)*</h6>
     <app-tabla-dinamica [configuracionTabla]="configuracionTablaDatos" [datos]="destinatario"
-      [tipoSeleccionTabla]="checkbox"
-      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></app-tabla-dinamica>
+      [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+    </app-tabla-dinamica>
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
         <li class="page-item"><a class="page-link">1</a></li>
       </ul>
     </nav>
   </div>
+
+  <!-- Action buttons -->
   <div class="col-md-12 mt-5 d-flex justify-content-end">
     <button type="button" class="btn btn-primary ms-3" (click)="tercerosAgregar()"
       [disabled]="esFormularioSoloLectura">Agregar</button>
-    <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura"
-      [disabled]="esFormularioSoloLectura">Buscar</button>
+    <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura">Buscar</button>
   </div>
+
+  <!-- Modal -->
   <app-modal [active]="showtercerosModal">
     <div>
       <form [formGroup]="tipoPersonaForm" class="form">
         <ng-titulo titulo="Agregar destinatario (destino final)" />
         <div class="row mb-3">
           <div class="col-md-6">
-            <label class="form-label" for="tipoPersona">Tipo persona*:</label>
+            <label class="form-label">Tipo persona*:</label>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-6">
             <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
-              value="fisica" id="fisica" (change)="setValoresStore(tipoPersonaForm,'tipoPersona', 'setTipoPersona')" />
+              value="fisica" id="fisica"
+              (change)="setValoresStore(tipoPersonaForm,'tipoPersona', 'setTipoPersona')" />
             <label for="fisica">Física</label>
           </div>
           <div class="col-md-6">
             <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
-              value="planta" id="planta" (change)="setValoresStore(tipoPersonaForm,'tipoPersona', 'setTipoPersona')" />
+              value="planta" id="planta"
+              (change)="setValoresStore(tipoPersonaForm,'tipoPersona', 'setTipoPersona')" />
             <label for="planta">Planta TIF</label>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-6">
             <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
-              value="moral" id="moral" (change)="setValoresStore(tipoPersonaForm,'tipoPersona', 'setTipoPersona')" />
+              value="moral" id="moral"
+              (change)="setValoresStore(tipoPersonaForm,'tipoPersona', 'setTipoPersona')" />
             <label for="moral">Moral</label>
           </div>
         </div>
       </form>
+
+      <!-- Planta TIF Search Block -->
+      <div *ngIf="tipoPersonaForm.get('tipoPersona')?.value === 'planta'" class="mb-4 border p-3">
+        <h6 class="fw-bold">Planta TIF</h6>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label" for="nombreTif">Nombre establecimiento TIF:</label>
+            <input class="form-control" id="nombreTif" type="text" [(ngModel)]="nombreEstablecimientoTif"
+              name="nombreTif" />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label" for="numeroTif">Número establecimiento TIF:</label>
+            <input class="form-control" id="numeroTif" type="text" [(ngModel)]="numeroEstablecimientoTif"
+              name="numeroTif" />
+          </div>
+        </div>
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-default me-2" (click)="limpiarBusquedaTif()">Limpiar</button>
+          <button type="button" class="btn btn-primary" (click)="buscarTif()">Buscar</button>
+        </div>
+      </div>
+<!-- Datos personales form -->
       <ng-titulo titulo="Datos personales" />
       <form [formGroup]="datosPersonales">
         @if (showFisicaRow) {
@@ -298,6 +330,8 @@
           </div>
         </div>
       </form>
+
+      <!-- Modal Footer -->
       <div class="col-md-12 mt-5 d-flex justify-content-end">
         <button type="button" class="btn btn-default" (click)="limpiarDatosFormulario()">Limpiar</button>
         <button type="button" class="btn btn-danger ms-3" (click)="cancelarDestinatario()"
