@@ -72,10 +72,16 @@
             "
           />
           <div
-            *ngIf="datosSolicitudForm.get('rfcSanitario')?.touched && datosSolicitudForm.get('rfcSanitario')?.errors?.['pattern']"
+            *ngIf="datosSolicitudForm.get('rfcSanitario')?.hasError('pattern')"
             class="mensaje-error"
           >
             El RFC no tiene un formato válido.
+          </div>
+          <div
+            class="mensaje-error"
+            *ngIf="datosSolicitudForm.get('rfcSanitario')?.errors?.['required'] && datosSolicitudForm.get('rfcSanitario')?.touched"
+          >
+            Este campo es obligatorio.
           </div>
         </div>
       </div>
@@ -342,6 +348,16 @@
           >
             Este campo es obligatorio.
           </small>
+
+          <div
+            class="mensaje-error"
+            *ngIf="
+              datosSolicitudForm.get('correoElectronico')?.touched &&
+              datosSolicitudForm.get('correoElectronico')?.hasError('email')
+            "
+          >
+            El valor ingresado no es una dirección válida de correo electrónico.
+          </div>
         </div>
       </div>
       <div
