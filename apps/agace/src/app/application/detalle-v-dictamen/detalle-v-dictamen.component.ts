@@ -3,22 +3,23 @@ import {
   ListaComponentes,
   Tabulaciones,
 } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
-import { Component, OnDestroy, OnInit, Type } from '@angular/core';
+import { Component, OnDestroy, Type } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { LISTA_TRIMITES } from '../shared/constants/lista-trimites.enums';
+import { CommonModule } from '@angular/common';
+import { LISTA_TRIMITES } from '../core/enums/lista-trimites.enums';
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-detalle-v-dictamen',
   standalone: true,
-  imports: [ReviewersTabsComponent],
+  imports: [ReviewersTabsComponent, ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './detalle-v-dictamen.component.html',
   styleUrls: ['./detalle-v-dictamen.component.scss'],
 })
-export class DetalleVDictamenComponent implements OnInit, OnDestroy {
+export class DetalleVDictamenComponent implements OnDestroy {
   /**
    * @property {number} tramite
    * @description Identificador del trámite seleccionado.
@@ -57,6 +58,7 @@ export class DetalleVDictamenComponent implements OnInit, OnDestroy {
    */
   listaTrimites = LISTA_TRIMITES;
 
+  public frmObservacion: FormGroup;
   /**
    * Constructor del componente `DetalleVDictamenComponent`.
    * @param {FormBuilder} fbOb - Servicio para construir formularios reactivos.
@@ -74,28 +76,15 @@ export class DetalleVDictamenComponent implements OnInit, OnDestroy {
         }
       })
     ).subscribe()
-  }
-
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   * Inicializa el formulario de tramite y consulta los datos generales del tramite.
-   */
-  ngOnInit(): void {
-    this.inicializaFormTramite();
-  }
-
-  /**
-   * Inicializa el formulario de tramite
-   * @returns {void}
-   */
-  inicializaFormTramite(): void {
-    this.FormObservacion = this.fbOb.group({
-      observacion: [''],
-      fecha: [{ value: '', disabled: true }],
-      hora: [{ value: '', disabled: true }],
-      usuario: [{ value: '', disabled: true }],
+    /**
+     * @property {FormGroup} frmObservacion
+     * @description Formulario reactivo que contiene un campo para la observación del dictamen
+     */
+    this.frmObservacion = this.fbOb.group({
+      observacion: ['', [Validators.required]]
     });
   }
+
   /**
    * @method viewChildcambioDePestana
    * @description Cambia el componente hijo mostrado según la pestaña seleccionada.

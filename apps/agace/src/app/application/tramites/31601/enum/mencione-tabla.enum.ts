@@ -81,3 +81,59 @@ export const CONFIGURATION_TABLA_DESTINATARIO_BASICO = [
     orden: 3
   }
 ];
+/**
+ * Configuración de la tabla utilizada para mostrar y ordenar
+ * los datos modificables relacionados con instalaciones.
+ *
+ * Cada objeto dentro del arreglo representa una columna de la tabla,
+ * incluyendo su encabezado, la clave que se obtiene del estado del formulario
+ * (`ModificarFormState`), y el orden en que debe aparecer.
+ *
+ * Propiedades:
+ * - encabezado: Título que se muestra en la cabecera de la columna.
+ * - clave: Función que extrae el valor correspondiente del objeto `ModificarFormState`.
+ * - orden: Posición en la que se debe mostrar la columna.
+ */
+export const CONFIGURATION_TABLA_MODIFICAR = [
+  {
+    encabezado: '*Instalaciones principales',
+    clave: (item: ModificarFormState): string => item.principales,
+    orden: 1
+  },
+  {
+    encabezado: '*Tipo de instalación',
+    clave: (item: ModificarFormState): string => item.instalacion,
+    orden: 2
+  },
+  {
+    encabezado: 'Entidad federativa',
+    clave: (item: ModificarFormState): string => item.federativa,
+    orden: 3
+  },
+  {
+    encabezado: 'Municipio o delegación',
+    clave: (item: ModificarFormState): string => item.municipio,
+    orden: 4
+  },
+  {
+    encabezado: 'Colonia, calle y número',
+    clave: (item: ModificarFormState): string => item.colonia,
+    orden: 5
+  }
+];
+/**
+ * Representa el estado del formulario utilizado para modificar datos relacionados con la ubicación y características principales.
+ *
+ * @property {string} principales - Información principal o general del formulario.
+ * @property {string} instalacion - Detalle sobre el tipo o nombre de la instalación.
+ * @property {string} federativa - Entidad federativa a la que pertenece la ubicación.
+ * @property {string} municipio - Municipio correspondiente a la dirección proporcionada.
+ * @property {string} colonia - Colonia o barrio de la ubicación.
+ */
+export interface ModificarFormState {
+  principales: string;
+  instalacion: string;
+  federativa: string;
+  municipio: string;
+  colonia: string;
+}
