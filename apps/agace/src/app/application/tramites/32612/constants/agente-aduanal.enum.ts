@@ -365,7 +365,8 @@ export const CLASIFICACION = [
         opciones: [
         { label: 'Pública', value: 'Si' },
         { label: 'Privada', value: 'No' }
-        ]
+        ],
+        mostrar: false
     } 
 ]
 

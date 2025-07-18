@@ -3,7 +3,7 @@ import { PasoUnoComponent } from './paso-uno.component';
 import { DatosComunesService } from '../../../../shared/services/datos-comunes.service';
 import { TercerosRelacionadosService } from '../../../../shared/services/terceros-relacionados.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -60,20 +60,12 @@ describe('PasoUnoComponent', () => {
     expect(component.esFormularioSoloLectura).toBe(true);
   });
 
-  it('guardarTercerosFormulario should update esFormularioSoloLectura and call actualizarEstadoFormulario', () => {
-    component.guardarTercerosFormulario();
-    expect(component.esFormularioSoloLectura).toBe(true);
-    expect(DatosComunesServiceMock.actualizarEstadoFormulario).toHaveBeenCalledWith({ test: 'data' });
-    expect(TercerosRelacionadosServiceMock.actualizarEstadoFormulario).toHaveBeenCalledWith({ test: 'data' });
-  });
 
   it('ngOnDestroy should complete destroyNotifier$', () => {
     const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();
     expect(completeSpy).toHaveBeenCalled();
   });
-
-  // Additional tests
 
   it('should initialize indice to 1 by default', () => {
     expect(component.indice).toBe(1);
@@ -83,14 +75,6 @@ describe('PasoUnoComponent', () => {
     const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
     component.ngOnDestroy();
     expect(nextSpy).toHaveBeenCalled();
-  });
-
-  it('should not call actualizarEstadoFormulario if service returns falsy', () => {
-    DatosComunesServiceMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(null));
-    TercerosRelacionadosServiceMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(null));
-    component.getAgenteAduanalFormulario();
-    expect(DatosComunesServiceMock.actualizarEstadoFormulario).not.toHaveBeenCalled();
-    expect(TercerosRelacionadosServiceMock.actualizarEstadoFormulario).not.toHaveBeenCalled();
   });
 
   it('should handle multiple seleccionaTab calls', () => {
@@ -107,8 +91,6 @@ describe('PasoUnoComponent', () => {
     }).not.toThrow();
   });
 
-  // New tests
-
   it('should not update esFormularioSoloLectura if consultaState is undefined', () => {
     consultaQueryMock.selectConsultaioState$ = of(undefined);
     component.ngOnInit();
@@ -122,18 +104,44 @@ describe('PasoUnoComponent', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('should call actualizarEstadoFormulario only for truthy responses', () => {
-    DatosComunesServiceMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of({ test: 'data' }));
-    TercerosRelacionadosServiceMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(null));
-    component.guardarDatosComunesFormulario();
-    expect(DatosComunesServiceMock.actualizarEstadoFormulario).toHaveBeenCalledWith({ test: 'data' });
-    expect(TercerosRelacionadosServiceMock.actualizarEstadoFormulario).not.toHaveBeenCalled();
+    it('should update consultaState and not call guardar methods if update is false in ngOnInit', () => {
+    const guardarSpy = jest.spyOn(component, 'getAgenteAduanalFormulario');
+    const guardarDosSpy = jest.spyOn(component, 'getAgenteFormulario');
+    const guardarComunesSpy = jest.spyOn(component, 'guardarDatosComunesFormulario');
+    const guardarTercerosSpy = jest.spyOn(component, 'guardarTercerosFormulario');
+    const guardarPerfilesSpy = jest.spyOn(component, 'getPerfilesFormulario');
+    const guardarPerfilesAccodianeSpy = jest.spyOn(component, 'getPerfilesAccodianeFormulario');
+    const state = { update: false };
+    consultaQueryMock.selectConsultaioState$.next(state);
+    expect(component.consultaState).toBe(state);
+    expect(guardarSpy).not.toHaveBeenCalled();
+    expect(guardarDosSpy).not.toHaveBeenCalled();
+    expect(guardarComunesSpy).not.toHaveBeenCalled();
+    expect(guardarTercerosSpy).not.toHaveBeenCalled();
+    expect(guardarPerfilesSpy).not.toHaveBeenCalled();
+    expect(guardarPerfilesAccodianeSpy).not.toHaveBeenCalled();
   });
 
-  it('should set esDatosRespuesta to true if either service returns truthy', () => {
-    DatosComunesServiceMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(null));
-    TercerosRelacionadosServiceMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of({ test: 'data' }));
+    it('guardarDatosFormulario should call actualizarEstadoFormulario for each entry', () => {
+    const response = { a: 1, b: 2 };
+    DatosComunesServiceMock.getConsultaDatos.mockReturnValue(of(response));
     component.guardarDatosComunesFormulario();
-    expect(component.esFormularioSoloLectura).toBe(true);
+    expect(DatosComunesServiceMock.actualizarEstadoFormulario).toHaveBeenCalledWith('a', 1);
+    expect(DatosComunesServiceMock.actualizarEstadoFormulario).toHaveBeenCalledWith('b', 2);
+  });
+
+  it('guardarDatosFormularioDos should call estadoFormulario with response', () => {
+    const response = { foo: 'bar' };
+    DatosComunesServiceMock.getConsultaDatosDos.mockReturnValue(of(response));
+    component.guardarDatosComunesFormulario();
+    expect(DatosComunesServiceMock.estadoFormulario).toHaveBeenCalledWith(response);
+  });
+
+  it('should clean up destroyNotifier$ on ngOnDestroy', () => {
+    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

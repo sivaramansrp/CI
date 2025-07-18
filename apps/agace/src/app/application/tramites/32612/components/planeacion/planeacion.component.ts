@@ -1,14 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TEXTOS_ESTATICOS_PLANEACION } from '../../constants/texto-estatico.enum';
-import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CONFIGURACION, CONFIGURACION_AUDITORIAS, CONFIGURACION_CONTINGENCIA, CONFIGURACION_POLITICAS } from '../../constants/analisis-riesgo-forma.enum';
-import { CONFIGURACION_REVISIONES } from '../../constants/socios-comerciales.enum';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery,ConsultaioState } from '@ng-mf/data-access-user';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CONFIGURACION_REVISIONES } from '../../constants/socios-comerciales.enum';
+import { CommonModule } from '@angular/common';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { TEXTOS_ESTATICOS_PLANEACION } from '../../constants/texto-estatico.enum';
 import { Tramite32612Query } from '../../estados/solicitud32612.query';
-import { map, Subject, takeUntil } from 'rxjs';
-import { ConsultaioState,ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-planeacion',

@@ -1,9 +1,9 @@
+import { ENVIRONMENT, JSONResponse } from '@libs/shared/data-access-user/src';
+import { Observable,catchError, throwError } from 'rxjs';
+import { Solicitude32612DosState, Tramite32612DosStore } from '../estados/solicitud32612Dos.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENVIRONMENT, JSONResponse } from '@libs/shared/data-access-user/src';
-import { catchError, Observable, throwError } from 'rxjs';
 import { Tramite32612Store } from '../estados/solicitud32612.store';
-import { Solicitude32612DosState, Tramite32612DosStore } from '../estados/solicitud32612Dos.store';
 
 @Injectable({
   providedIn: 'root'

@@ -1,19 +1,18 @@
-import { Component, Input, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Catalogo, CatalogoSelectComponent, CrosslistComponent, InputRadioComponent, ModeloDeFormaDinamica, TituloComponent } from '@libs/shared/data-access-user/src';
-import { ConsultaioState } from '@ng-mf/data-access-user';
-import { EsquemaDeCertificacionService } from '../../services/esquema-de-certificacion.service';
-import { map, Subject, takeUntil } from 'rxjs';
-import { CROSLISTA_ENTRADA } from '../../constants/croslista.enums';
-import { SociedadesTablaComponent } from '../sociedades-tabla/sociedades-tabla.component';
-import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CLASIFICACION, CONFIGURACION, CONFIGURACION_COMERCIAL_CERTIFICADO, PAGO_DE_DERECHOS, RADIO_OPCIONS } from '../../constants/agente-aduanal.enum';
-import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
-import { Tramite32612Query } from '../../estados/solicitud32612.query';
+import { Catalogo, CatalogoSelectComponent, CrosslistComponent, InputRadioComponent, ModeloDeFormaDinamica, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, Input, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { ConsultaioQuery,ConsultaioState } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitude32612DosState, Tramite32612DosStore } from '../../estados/solicitud32612Dos.store';
+import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CROSLISTA_ENTRADA } from '../../constants/croslista.enums';
+import { CommonModule } from '@angular/common';
+import { EsquemaDeCertificacionService } from '../../services/esquema-de-certificacion.service';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { SociedadesTablaComponent } from '../sociedades-tabla/sociedades-tabla.component';
 import { Tramite32612DosQuery } from '../../estados/solicitud32612Dos.query';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Tramite32612Query } from '../../estados/solicitud32612.query';
 
 @Component({
   selector: 'app-agente-aduanal',

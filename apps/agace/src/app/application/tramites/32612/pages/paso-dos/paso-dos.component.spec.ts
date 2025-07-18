@@ -1,87 +1,81 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+/**
+ * Componente que representa la interfaz de una cortina a la italiana.
+ * Permite la navegación entre diferentes pestañas mediante un índice.
+ */
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { of, throwError } from 'rxjs';
 import { PasoDosComponent } from './paso-dos.component';
-import { CatalogosService } from '@ng-mf/data-access-user';
-import { HttpClientModule } from '@angular/common/http';
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
+import { CatalogosService } from '@libs/shared/data-access-user/src/core/services/shared/catalogos/catalogos.service';
+import { CATALOGOS_ID } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 describe('PasoDosComponent', () => {
-  let fixture;
-  let component;
+  let component: PasoDosComponent;
+  let fixture: ComponentFixture<PasoDosComponent>;
+  let mockCatalogosService: Partial<CatalogosService>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ PasoDosComponent, FormsModule, ReactiveFormsModule, HttpClientModule ],
-      declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  beforeEach(async () => {
+    mockCatalogosService = {
+      getCatalogo: jest.fn().mockReturnValue(of([])),
+    };
+
+    await TestBed.configureTestingModule({
+      declarations: [PasoDosComponent],
       providers: [
-        CatalogosService
-      ]
-    }).overrideComponent(PasoDosComponent, {
-
+        { provide: CatalogosService, useValue: mockCatalogosService },
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
+
     fixture = TestBed.createComponent(PasoDosComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.getTiposDocumentos = jest.fn();
-    component.ngOnInit();
-    expect(component.getTiposDocumentos).toHaveBeenCalled();
+  it('should call getTiposDocumentos on ngOnInit', async () => {
+    const getTiposDocumentosSpy = jest.spyOn(component, 'getTiposDocumentos');
+    await component.ngOnInit();
+    expect(getTiposDocumentosSpy).toHaveBeenCalled();
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroy$ = component.destroy$ || {};
-    component.destroy$.next = jest.fn();
-    component.destroy$.complete = jest.fn();
+  it('should populate catalogoDocumentos on successful getCatalogo call', async () => {
+    const mockCatalogo: Catalogo[] = [{ id: 1, descripcion: 'Documento 1' }];
+    (mockCatalogosService.getCatalogo as jest.Mock).mockReturnValue(
+      of(mockCatalogo)
+    );
+
+    await component.getTiposDocumentos();
+
+    expect(mockCatalogosService.getCatalogo).toHaveBeenCalledWith(
+      CATALOGOS_ID.CAT_TIPO_DOCUMENTO
+    );
+    expect(component.catalogoDocumentos).toEqual(mockCatalogo);
+  });
+
+  it('should handle error in getCatalogo call', async () => {
+    (mockCatalogosService.getCatalogo as jest.Mock).mockReturnValue(
+      throwError(() => new Error('Error fetching catalog'))
+    );
+
+    await component.getTiposDocumentos();
+
+    expect(mockCatalogosService.getCatalogo).toHaveBeenCalledWith(
+      CATALOGOS_ID.CAT_TIPO_DOCUMENTO
+    );
+    expect(component.catalogoDocumentos).toEqual([]);
+  });
+
+    it('should complete destroyed$ on ngOnDestroy', () => {
+    const spy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+
     component.ngOnDestroy();
-    expect(component.destroy$.next).toHaveBeenCalled();
-    expect(component.destroy$.complete).toHaveBeenCalled();
-  });
 
-  it('should run #getTiposDocumentos()', async () => {
-    component.catalogosServices = component.catalogosServices || {};
-    component.catalogosServices.getCatalogo = jest.fn().mockReturnValue(observableOf({}));
-    component.getTiposDocumentos();
-    expect(component.catalogosServices.getCatalogo).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
-
 });

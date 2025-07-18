@@ -1,13 +1,13 @@
+import { CONFIGURACION_ADMINISTRACION, CONFIGURACION_PROCEDIMIENTO, CONFIGURACION_VERIFICACION } from '../../constants/seguridad-del-personal.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ConsultaioQuery,ConsultaioState } from '@ng-mf/data-access-user';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { TEXTOS_ESTATICOS_SEGURIDAD_DEL_PERSONAL } from '../../constants/texto-estatico.enum';
-import { CONFIGURACION_ADMINISTRACION, CONFIGURACION_PROCEDIMIENTO, CONFIGURACION_VERIFICACION } from '../../constants/seguridad-del-personal.enum';
-import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
-import { map, Subject, takeUntil } from 'rxjs';
 import { Tramite32612Query } from '../../estados/solicitud32612.query';
-import { ConsultaioState,ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-seguridad-del-personal',

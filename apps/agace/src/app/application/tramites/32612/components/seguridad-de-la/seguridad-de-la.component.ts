@@ -1,13 +1,13 @@
+import { CONFIGURACION_TECNOLOGIA, CONFIGURACION_TECNOLOGIA_DOS } from '../../constants/seguridad-de-la.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ConsultaioQuery,ConsultaioState } from '@ng-mf/data-access-user';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { TEXTOS_ESTATICOS_SEGURIDAD_DE_LA } from '../../constants/texto-estatico.enum';
-import { CONFIGURACION_TECNOLOGIA, CONFIGURACION_TECNOLOGIA_DOS } from '../../constants/seguridad-de-la.enum';
-import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
 import { Tramite32612Query } from '../../estados/solicitud32612.query';
-import { map, Subject, takeUntil } from 'rxjs';
-import { ConsultaioState,ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-seguridad-de-la',

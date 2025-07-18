@@ -1,16 +1,16 @@
-import { Component, Inject, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CONFIGURACION_INSTALACIONES, CONFIGURACION_INSTALACIONES_TABLA, DatosDeLasInstalaciones, ENLACE_TABLA, Instalaciones, MANDATARIOS_DE_AGENTE_ADUANAL, MandatariosDeAgenteAduanal, Sociedades } from '../../models/sociedades.model';
-import { EsquemaDeCertificacionService } from '../../services/esquema-de-certificacion.service';
-import { map, Subject, takeUntil } from 'rxjs';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CONFIGURACION_AGREGAR, CONFIGURACION_IDIQUESI, CONFIGURACION_MODIFICAR, CONFIGURACION_SOCIEDADES, MANDATARIOS_DEL_AGENT } from '../../constants/sociedades-tabla.enum';
+import { CONFIGURACION_INSTALACIONES, CONFIGURACION_INSTALACIONES_TABLA, DatosDeLasInstalaciones, ENLACE_TABLA, Instalaciones, MANDATARIOS_DE_AGENTE_ADUANAL, MandatariosDeAgenteAduanal, Sociedades } from '../../models/sociedades.model';
+import { Component, Inject, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
-import { Tramite32612Query } from '../../estados/solicitud32612.query';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { EsquemaDeCertificacionService } from '../../services/esquema-de-certificacion.service';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { Tramite32612Query } from '../../estados/solicitud32612.query';
 
 @Component({
   selector: 'app-sociedades-tabla',

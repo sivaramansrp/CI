@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject,map, takeUntil } from 'rxjs';
 import { DatosComunesService } from '../../../../shared/services/datos-comunes.service';
-import { TercerosRelacionadosService } from '../../../../shared/services/terceros-relacionados.service';
 import { EsquemaDeCertificacionService } from '../../services/esquema-de-certificacion.service';
+import { TercerosRelacionadosService } from '../../../../shared/services/terceros-relacionados.service';
 
 @Component({
   selector: 'app-paso-uno',
