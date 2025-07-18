@@ -246,8 +246,4 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.numeroEstablecimientoTif = '';
   }
 
-  buscarTif(): void {
-    console.log('Buscando TIF con:', this.nombreEstablecimientoTif, this.numeroEstablecimientoTif);
-    // Aquí puedes implementar la lógica real para buscar
-  }
 }
