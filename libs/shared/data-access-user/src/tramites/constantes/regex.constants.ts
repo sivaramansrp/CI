@@ -747,3 +747,20 @@ export const PATRON_NUMERO_DECIMAL_3_18 = /^\d{1,3}(\.\d{1,18})?$/;
  * - "Test-Case" (contiene -)
  */
 export const REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO = /^[A-Za-z0-9,() ]*$/;
+
+/**
+ * Expresión regular para validar direcciones de correo electrónico.
+ * 
+ * Esta expresión permite:
+ * - Letras mayúsculas y minúsculas (a-z, A-Z)
+ * - Dígitos (0-9)
+ * - Caracteres especiales permitidos: punto (.), guion bajo (_), porcentaje (%), signo más (+), y guion (-)
+ * - Un símbolo arroba (@) seguido de un dominio válido
+ * - El dominio debe tener al menos una extensión de dos o más letras
+ * 
+ * Ejemplos válidos:
+ * - usuario@example.com
+ * - nombre.apellido@dominio.co
+ * - user_123+prueba@sub.dominio.org
+ */
+export const REGEX_CORREO_ELECTRONICO_EXPORTADOR = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
