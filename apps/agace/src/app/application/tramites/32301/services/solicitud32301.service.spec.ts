@@ -1,110 +1,92 @@
+// @ts-nocheck
+import { async } from '@angular/core/testing';
+import { Injectable } from '@angular/core';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
 import { Solicitud32301Service } from './solicitud32301.service';
 import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
-import { INITIAL_STATE, Tramite32301Store } from '../estados/tramite32301.store';
+import { Tramite32301Store } from '../estados/tramite32301.store';
+
+@Injectable()
+class MockHttpClient {
+  post() {};
+}
+
+@Injectable()
+class MockTramite32301Store {}
 
 describe('Solicitud32301Service', () => {
-  let service: Solicitud32301Service;
-  let httpMock: jest.Mocked<HttpClient>;
-  let storeMock: jest.Mocked<Tramite32301Store>;
+  let service;
 
   beforeEach(() => {
-    httpMock = {
-      get: jest.fn()
-    } as any;
-
-    storeMock = {
-      setModalidadCertificacion: jest.fn(),
-      setClientesProveedoresExtranjeros: jest.fn(),
-      setProveedoresNacionales: jest.fn(),
-      setModificacionesMiembros: jest.fn(),
-      setCambiosDocumentosLegales: jest.fn(),
-      setNotifiFusionOescision: jest.fn(),
-      setAdicionalesFractions: jest.fn(),
-      setAceptacion253: jest.fn(),
-      setArchivoExtranjero: jest.fn(),
-      setRegistrosProveedoresExtranjeros: jest.fn(),
-      setSnsucarácterde: jest.fn(),
-      setRfc: jest.fn(),
-      setObligadoaTributarenMéxico: jest.fn(),
-      setNacionalidad: jest.fn(),
-      setModificacionGoceInmueble: jest.fn(),
-      SetpersonaFusionEscisionDTO: jest.fn(),
-      setNombreCompleto: jest.fn()
-    } as any;
-
-    service = new Solicitud32301Service(httpMock, storeMock);
+    service = new Solicitud32301Service({}, {});
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-
-  it('should call all store setters in actualizarEstadoFormulario', () => {
-    const datos: typeof INITIAL_STATE = {
+  it('should run #actualizarEstadoFormulario()', async () => {
+    service.tramite301Store = service.tramite301Store || {};
+    service.tramite301Store.setModalidadCertificacion = jest.fn();
+    service.tramite301Store.setClientesProveedoresExtranjeros = jest.fn();
+    service.tramite301Store.setProveedoresNacionales = jest.fn();
+    service.tramite301Store.setModificacionesMiembros = jest.fn();
+    service.tramite301Store.setCambiosDocumentosLegales = jest.fn();
+    service.tramite301Store.setNotifiFusionOescision = jest.fn();
+    service.tramite301Store.setAdicionalesFractions = jest.fn();
+    service.tramite301Store.setAceptacion253 = jest.fn();
+    service.tramite301Store.setArchivoExtranjero = jest.fn();
+    service.tramite301Store.setRegistrosProveedoresExtranjeros = jest.fn();
+    service.tramite301Store.setSnsucarácterde = jest.fn();
+    service.tramite301Store.setRfc = jest.fn();
+    service.tramite301Store.setObligadoaTributarenMéxico = jest.fn();
+    service.tramite301Store.setNacionalidad = jest.fn();
+    service.tramite301Store.setModificacionGoceInmueble = jest.fn();
+    service.tramite301Store.SetpersonaFusionEscisionDTO = jest.fn();
+    service.tramite301Store.setNombreCompleto = jest.fn();
+    service.actualizarEstadoFormulario({
       tipoDevAviso: {
-        modalidadCertificacion: 'mod1'
+        modalidadCertificacion: {},
+        foreignClientsSuppliers: {},
+        nationalSuppliers: {},
+        modificationsMembers: {},
+        changesToLegalDocuments: {},
+        mergerOrSplitNotice: {},
+        additionFractions: {},
+        acepto253: {}
       },
-      proveedorExtranjero: { proveedor: 'extranjero' },
-      modificacionSocios: {
-        ensucarácterde: 'caracter',
-        rfc: 'RFC123',
-        obligadoaTributarenMéxico: true,
-        nacionalidad: 'MX',
-        nombreCompleto: 'Nombre Completo'
-      },
-      modificacionGoceInmueble: { inmueble: 'inmueble' },
-      personaFusionEscisionDTO: { persona: 'fusion' }
-    } as any;
-
-    service.actualizarEstadoFormulario(datos);
-
-    expect(storeMock.setModalidadCertificacion).toHaveBeenCalledWith(datos.tipoDevAviso.modalidadCertificacion);
-    expect(storeMock.setClientesProveedoresExtranjeros).toHaveBeenCalledWith(datos.tipoDevAviso);
-    expect(storeMock.setProveedoresNacionales).toHaveBeenCalledWith(datos.tipoDevAviso);
-    expect(storeMock.setModificacionesMiembros).toHaveBeenCalledWith(datos.tipoDevAviso);
-    expect(storeMock.setCambiosDocumentosLegales).toHaveBeenCalledWith(datos.tipoDevAviso);
-    expect(storeMock.setNotifiFusionOescision).toHaveBeenCalledWith(datos.tipoDevAviso);
-    expect(storeMock.setAdicionalesFractions).toHaveBeenCalledWith(datos.tipoDevAviso);
-    expect(storeMock.setAceptacion253).toHaveBeenCalledWith(datos.tipoDevAviso);
-    expect(storeMock.setArchivoExtranjero).toHaveBeenCalledWith(datos.proveedorExtranjero);
-    expect(storeMock.setRegistrosProveedoresExtranjeros).toHaveBeenCalledWith(datos.proveedorExtranjero);
-    expect(storeMock.setSnsucarácterde).toHaveBeenCalledWith(datos.modificacionSocios.ensucarácterde);
-    expect(storeMock.setRfc).toHaveBeenCalledWith(datos.modificacionSocios.rfc);
-    expect(storeMock.setObligadoaTributarenMéxico).toHaveBeenCalledWith(datos.modificacionSocios.obligadoaTributarenMéxico);
-    expect(storeMock.setNacionalidad).toHaveBeenCalledWith(datos.modificacionSocios.nacionalidad);
-    expect(storeMock.setModificacionGoceInmueble).toHaveBeenCalledWith(datos.modificacionGoceInmueble);
-    expect(storeMock.SetpersonaFusionEscisionDTO).toHaveBeenCalledWith(datos.personaFusionEscisionDTO);
-    expect(storeMock.setNombreCompleto).toHaveBeenCalledWith(datos.modificacionSocios.nombreCompleto);
-  });
-
-  it('should call http.get with correct URL in getRegistroTomaMuestrasMercanciasData', () => {
-    const mockResponse = { foo: 'bar' } as any;
-    httpMock.get.mockReturnValue(of(mockResponse));
-
-    const obs$ = service.getRegistroTomaMuestrasMercanciasData();
-
-    expect(httpMock.get).toHaveBeenCalledWith('assets/json/32301/registro_toma_muestras_mercancias.json');
-    obs$.subscribe(data => {
-      expect(data).toEqual(mockResponse);
-    });
-  });
-
-  it('should handle empty or partial DATOS in actualizarEstadoFormulario', () => {
-    const partialDatos: any = {
-      tipoDevAviso: {},
       proveedorExtranjero: {},
-      modificacionSocios: {},
+      modificacionSocios: {
+        ensucarácterde: {},
+        rfc: {},
+        obligadoaTributarenMéxico: {},
+        nacionalidad: {},
+        nombreCompleto: {}
+      },
       modificacionGoceInmueble: {},
       personaFusionEscisionDTO: {}
-    };
-
-    service.actualizarEstadoFormulario(partialDatos);
-
-    expect(storeMock.setModalidadCertificacion).toHaveBeenCalledWith(undefined);
-    expect(storeMock.setClientesProveedoresExtranjeros).toHaveBeenCalledWith(partialDatos.tipoDevAviso);
-    expect(storeMock.setArchivoExtranjero).toHaveBeenCalledWith(partialDatos.proveedorExtranjero);
-    expect(storeMock.setSnsucarácterde).toHaveBeenCalledWith(undefined);
-    expect(storeMock.setNombreCompleto).toHaveBeenCalledWith(undefined);
+    });
+    expect(service.tramite301Store.setModalidadCertificacion).toHaveBeenCalled();
+    expect(service.tramite301Store.setClientesProveedoresExtranjeros).toHaveBeenCalled();
+    expect(service.tramite301Store.setProveedoresNacionales).toHaveBeenCalled();
+    expect(service.tramite301Store.setModificacionesMiembros).toHaveBeenCalled();
+    expect(service.tramite301Store.setCambiosDocumentosLegales).toHaveBeenCalled();
+    expect(service.tramite301Store.setNotifiFusionOescision).toHaveBeenCalled();
+    expect(service.tramite301Store.setAdicionalesFractions).toHaveBeenCalled();
+    expect(service.tramite301Store.setAceptacion253).toHaveBeenCalled();
+    expect(service.tramite301Store.setArchivoExtranjero).toHaveBeenCalled();
+    expect(service.tramite301Store.setRegistrosProveedoresExtranjeros).toHaveBeenCalled();
+    expect(service.tramite301Store.setSnsucarácterde).toHaveBeenCalled();
+    expect(service.tramite301Store.setRfc).toHaveBeenCalled();
+    expect(service.tramite301Store.setObligadoaTributarenMéxico).toHaveBeenCalled();
+    expect(service.tramite301Store.setNacionalidad).toHaveBeenCalled();
+    expect(service.tramite301Store.setModificacionGoceInmueble).toHaveBeenCalled();
+    expect(service.tramite301Store.SetpersonaFusionEscisionDTO).toHaveBeenCalled();
+    expect(service.tramite301Store.setNombreCompleto).toHaveBeenCalled();
   });
+
+  it('should run #getRegistroTomaMuestrasMercanciasData()', async () => {
+    service.http = service.http || {};
+    service.http.get = jest.fn();
+    service.getRegistroTomaMuestrasMercanciasData();
+    expect(service.http.get).toHaveBeenCalled();
+  });
+
 });

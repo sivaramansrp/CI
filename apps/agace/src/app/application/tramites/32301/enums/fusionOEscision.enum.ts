@@ -76,3 +76,16 @@ export const CANTIDAD_BIENES_OPTION = [
 */
 export const ALOTO_FRACCIONES: string = 
   "Declaro bajo protesta a decir verdad que este aviso se presenta al menos 30 días previos a aquel en el que se pretende efectuar la primera importación de las mercancías informadas.";
+
+  /**
+   * Representa la configuración para el campo "Fecha de Ingreso".
+   *
+   * @property {string} labelNombre - Etiqueta que se muestra para el campo.
+   * @property {boolean} required - Indica si el campo es obligatorio.
+   * @property {boolean} habilitado - Indica si el campo está habilitado.
+   */
+  export const FECHA_INGRESO = {
+  labelNombre: '',
+  required: true,
+  habilitado: true,
+};
