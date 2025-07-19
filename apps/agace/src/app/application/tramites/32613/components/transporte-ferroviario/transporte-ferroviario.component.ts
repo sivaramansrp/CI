@@ -157,8 +157,7 @@ export class TransporteFerroviarioComponent implements OnInit, AfterViewInit, On
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          // this.consultaState = seccionState;
-          this.consultaState = {...seccionState, update: true, readonly: true }
+          this.consultaState = seccionState;
         })
       )
       .subscribe();

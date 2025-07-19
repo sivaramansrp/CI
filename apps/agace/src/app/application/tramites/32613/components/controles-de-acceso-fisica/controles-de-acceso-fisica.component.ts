@@ -104,8 +104,7 @@ export class ControlesDeAccesoFisicaComponent implements AfterViewInit, OnInit, 
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          // this.consultaState = seccionState;
-          this.consultaState = {...seccionState, update: true, readonly: true }
+          this.consultaState = seccionState;
           if (this.consultaState.readonly) {
             this.controlesDeAccesoFormGroup.get('elRegistroDeVisitantes')?.disable();
           }

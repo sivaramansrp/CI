@@ -94,8 +94,7 @@ export class SeguridadDeProcesosComponent implements AfterViewInit, OnInit, OnDe
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          // this.consultaState = seccionState;
-          this.consultaState = {...seccionState, update: true, readonly: true }
+          this.consultaState = seccionState;
         })
       )
       .subscribe();
