@@ -1,5 +1,6 @@
 import { RowTypeFormInput } from "../../../shared/models/row-type-form-input.model"
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const TRANSPORTE_FERROVARIO = [
     {
     id: 'senaleSiCuenta',
@@ -191,6 +192,7 @@ export const TRANSPORTE_FERROVARIO = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const LISTADO_DE_SOCIO_COMERCIAL_CERTIFICADO = [
     {
     id: 'conLaFinalidad',
@@ -393,6 +395,7 @@ export const LISTADO_DE_SOCIO_COMERCIAL_CERTIFICADO = [
   }
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const INFORMACION_GENERAL = [
   {
     id: 'domicilioInstalacion',
@@ -640,6 +643,7 @@ export const INFORMACION_GENERAL = [
     templateKey: 'customSection6',
   },
 ]
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 
 export const TEMPLATE_3_ARRAY: RowTypeFormInput[] = [
   {
@@ -658,6 +662,7 @@ export const TEMPLATE_3_ARRAY: RowTypeFormInput[] = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const TEMPLATE_1_ARRAY: RowTypeFormInput[] = [
   {
     id: 'antiguedad',
@@ -717,6 +722,7 @@ export const TEMPLATE_1_ARRAY: RowTypeFormInput[] = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const TEMPLATE_2_ARRAY: RowTypeFormInput[] = [
   {
     id: 'nivel',
@@ -760,6 +766,7 @@ export const TEMPLATE_2_ARRAY: RowTypeFormInput[] = [
   }
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const PIP_TEMPLATE_ARRAY: RowTypeFormInput[] = [
   {
     id: 'numeroRegistro',
@@ -771,6 +778,7 @@ export const PIP_TEMPLATE_ARRAY: RowTypeFormInput[] = [
   }
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const OEA_TEMPLATE_ARRAY: RowTypeFormInput[] = [
   {
     id: 'nombreDelProgramaPais',
@@ -790,6 +798,7 @@ export const OEA_TEMPLATE_ARRAY: RowTypeFormInput[] = [
   }
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const OTROS_PROGRAMAS_TEMPLATE_ARRAY: RowTypeFormInput[] = [
   {
     id: 'nombreDelPrograma',
@@ -814,6 +823,7 @@ export const OTROS_PROGRAMAS_TEMPLATE_ARRAY: RowTypeFormInput[] = [
   }
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const ANALISIS_DE_RIESGO = [
   {
     id: 'indiqueSiElProcedimiento',
@@ -882,6 +892,7 @@ export const ANALISIS_DE_RIESGO = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const POLITICAS_DE_SEGURIDAD = [
   {
     id: 'enunciarlaPolitica',
@@ -961,6 +972,7 @@ export const POLITICAS_DE_SEGURIDAD = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const AUDITORIAS_INTERNAS = [
   {
     id: 'siCuentaConUnRealizacion',
@@ -1125,6 +1137,7 @@ export const AUDITORIAS_INTERNAS = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const PLANES_DE_CONTINGENCIA = [
   {
     id: 'indiqueCiCuentaTransportista',
@@ -1240,6 +1253,7 @@ export const PLANES_DE_CONTINGENCIA = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const INSTALACIONES = [
   {
     id: 'losMaterialesPredominantes',
@@ -1296,6 +1310,7 @@ export const INSTALACIONES = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const ACCESO_EN_PUERTAS = [
   {
     id: 'indiqueCuantasPuertasAccesos',
@@ -1338,6 +1353,7 @@ export const ACCESO_EN_PUERTAS = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const BARDAS_PERIMETRALES = [
   {
     id: 'describireltipo',
@@ -1432,6 +1448,7 @@ export const BARDAS_PERIMETRALES = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const ESTACIONAMIENTOS = [
   {
     id: 'describaEstacionamientos',
@@ -1500,6 +1517,7 @@ export const ESTACIONAMIENTOS = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const CONTROL_DE_LLAVES = [
   {
     id: 'indiqueSiTodasLasPuertas',
@@ -1617,6 +1635,7 @@ export const CONTROL_DE_LLAVES = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const ALUMBRADO = [
   {
     id: 'describaIluminacion',
@@ -1853,6 +1872,7 @@ export const APARATOS = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const SISTEMAS_DE_ALARMA = [
   {
     id: 'mencionarElProcedimiento',
@@ -2136,6 +2156,7 @@ export const SISTEMAS_DE_ALARMA = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const PERSONAL_DE_SEGURIDAD = [
   {
     id: 'describirDocumentadoSeguridad',
@@ -2204,6 +2225,7 @@ export const PERSONAL_DE_SEGURIDAD = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const IDENTIFICACION_DE_LOS_EMPLEADOS = [
   {
     id: 'describaIdentificacionEmpleados',
@@ -2446,6 +2468,7 @@ export const ENTREGAS_DE_MENSAJERIA = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const CRITERIO_DE_SELECCION = [
   {
     id: 'indiqueComoLlevaCabo',
@@ -2462,6 +2485,7 @@ export const CRITERIO_DE_SELECCION = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const REQUERIMIENTOS_EN_SEGURIDAD = [
   {
     id: 'describaMateriaDeSeguridad',
@@ -2530,6 +2554,7 @@ export const REQUERIMIENTOS_EN_SEGURIDAD = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const REVISIONS_OF_COMMERCIAL_PARTNERS = [
   {
     id: 'describaVerificacionDeLosRequisitos',
@@ -2624,6 +2649,7 @@ export const REVISIONS_OF_COMMERCIAL_PARTNERS = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const ENTREGA_Y_RECEPCION = [
   {
     id: 'indiqueConocerALaTripulacion',
@@ -2667,6 +2693,7 @@ export const ENTREGA_Y_RECEPCION = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const PROCEDIMIENTO_DE_SEGUIMIENTO = [
   {
     id: 'asimismoElMonitoreo',
@@ -2697,6 +2724,7 @@ export const PROCEDIMIENTO_DE_SEGUIMIENTO = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const PROCESAMIENTO_DE_INFORMACION = [
   {
     id: 'describaExplicarBrevemente',
@@ -2739,6 +2767,7 @@ export const PROCESAMIENTO_DE_INFORMACION = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const GESTION_ADUANERA = [
   {
     id: 'describaDatosConLaAduana',
@@ -2808,6 +2837,7 @@ export const GESTION_ADUANERA = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const USO_DE_SELLADOS_Y_O_CANDADOS = [
   {
     id: 'usoDeSellosYOCandados',
@@ -2983,6 +3013,7 @@ export const USO_DE_SELLADOS_Y_O_CANDADOS = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const INSPECCION_DE_LOS_EQUIPOS = [
   {
     id: 'laEmpresaConcesionaria',
@@ -3186,6 +3217,7 @@ export const INSPECCION_DE_LOS_EQUIPOS = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const ALMACENAJE_DEL_EQUIPO = [
   {
     id: 'almacenajeDelEquipo',
@@ -3294,6 +3326,7 @@ export const ALMACENAJE_DEL_EQUIPO = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const SEGURIDAD_EN_VIAS_FERREAS = [
   {
     id: 'mantenerIntegridadVias',
@@ -3375,6 +3408,7 @@ export const SEGURIDAD_EN_VIAS_FERREAS = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const VERIFICACION_DE_ANTECEDENTES = [
   {
     id: 'verificacionAntecedentes',
@@ -3522,6 +3556,7 @@ export const VERIFICACION_DE_ANTECEDENTES = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const PROCEDIMIENTO_BAJA_PERSONAL = [
   {
     id: 'procedimientoBajaPersonal',
@@ -3603,6 +3638,7 @@ export const PROCEDIMIENTO_BAJA_PERSONAL = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const ADMINISTACION_DE_PERSONAL = [
   {
     id: 'laEmpresaConcesionariaTransporte',
@@ -3683,6 +3719,7 @@ export const ADMINISTACION_DE_PERSONAL = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const CLASIFICACION_Y_MANEJO = [
   {
     id: 'debenExistirProcedimientos',
@@ -3752,6 +3789,7 @@ export const CLASIFICACION_Y_MANEJO = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const SEGURIDAD_DE_LA_TECNOLOGIA = [
   {
     id: 'paraProteger',
@@ -4161,6 +4199,7 @@ export const SEGURIDAD_DE_LA_TECNOLOGIA = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const CAPACITACION_EN_SEGURIDAD = [ 
   {
     id: 'laEmpresaTransporte',
@@ -4307,6 +4346,7 @@ export const CAPACITACION_EN_SEGURIDAD = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const REPORTE_DE_ANOMALIAS = [
    {
     id: 'encasoDeDeteccionAnomalias',
@@ -4375,6 +4415,7 @@ export const REPORTE_DE_ANOMALIAS = [
   },
 ]
 
+/** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const INVESTIGACION_ANALISIS = [
   {
     id: 'debenExistirProcedimientosEscritos',

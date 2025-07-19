@@ -5,6 +5,7 @@ import { ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosComunesTresService } from '../../../../shared/services/datos-comunes-tres.service';
 import { RubroTransporteFerrovarioService } from '../../services/rubro-transporte-ferrovario/rubro-transporte-ferrovario.service';
 
+// Componente que gestiona el paso uno del trámite 32613, incluyendo la carga y actualización de datos, el control de pestañas y la suscripción al estado de consulta.
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
@@ -26,6 +27,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
 
+  // Constructor que inyecta los servicios necesarios para consultar el estado, gestionar datos comunes y manejar el rubro de transporte ferroviario.
   constructor(
     private consultaQuery: ConsultaioQuery,
     private rubroTransporteFerrovarioService: RubroTransporteFerrovarioService,
@@ -34,9 +36,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
     }
 
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   */
+  /** Método que se ejecuta al inicializar el componente. */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(

@@ -12,6 +12,9 @@ import { DatosComunesTresService } from '../../services/datos-comunes-tres.servi
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { Modal } from 'bootstrap';
 
+/**
+ * Componente que gestiona los formularios y tablas dinámicas de datos comunes del trámite 32613, incluyendo inventarios, domicilios, empleados y socios.
+ */
 @Component({
   selector: 'app-datos-comunes-tres',
   standalone: true,
@@ -27,17 +30,22 @@ import { Modal } from 'bootstrap';
   templateUrl: './datos-comunes-tres.component.html',
   styleUrl: './datos-comunes-tres.component.scss',
 })
+
 export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /** Estado de la consulta que se obtiene del store. */
   @Input() public consultaState!: ConsultaioState;
 
+  /** Referencia a la plantilla personalizada customTemplate1 utilizada en el componente. */
   @ViewChild('customTemplate1') customTemplate1!: TemplateRef<unknown>;
 
+  /** Referencia a la plantilla personalizada customTemplate2 utilizada en el componente. */
   @ViewChild('customTemplate2') customTemplate2!: TemplateRef<unknown>;
 
+  /** Referencia a la plantilla personalizada customTemplate3 utilizada en el componente. */
   @ViewChild('customTemplate3') customTemplate3!: TemplateRef<unknown>;
 
+  /** Referencia a la plantilla personalizada customTemplate4 utilizada en el componente. */
   @ViewChild('customTemplate4') customTemplate4!: TemplateRef<unknown>;
 
   /** Referencia al modal para agregar miembros de la empresa.*/
@@ -61,23 +69,32 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   /** Referencia al modal para agregar miembros de la empresa.*/
   @ViewChild('modalprogreso', { static: false }) modalprogreso!: ElementRef;
 
+  /** Mapa que asocia claves de sección con sus respectivas plantillas personalizadas. */
   public templateMap: Record<string, TemplateRef<unknown>> = {};
 
+  /** Formulario principal reactivo que contiene los grupos y controles para los datos comunes del trámite 32613. */
   public datosComunesForm!: FormGroup;
 
+  /** Arreglo con la configuración dinámica de los campos para el formulario de datos comunes. */
   public formDataUno = DATOS_COMUNES;
 
+  /** Arreglo con la configuración dinámica de los campos para el formulario de control de inventarios. */
   public formDataDos = CONTROL_INVENTARIOS;
 
+  /** Arreglo con la configuración dinámica de los campos para el formulario de control de inventarios. */
   public formDataTres = MIEMBRO_DE_LA_EMPRESA;
 
+  /** Arreglo con la configuración dinámica de los campos para el formulario de control de inventarios. */
   public formDataModalUno = NUMERO_DE_EMPLEADOS;
 
+  /** Arreglo con la configuración dinámica de los campos para el formulario de control de inventarios. */
   public formDataModalDuo = PRINCIPALES_INSTALACIONES;
 
+  /** Arreglo con la configuración dinámica de los campos para el formulario de control de inventarios. */
   public formDataModalTres = MODIFICAR_INSTALACIONES; 
 
-  public formDataModalCuatro = MODAL_MIEMBRO_DE_LA_EMPRESA; 
+  /** Arreglo con la configuración dinámica de los campos para el formulario de control de inventarios. */
+  public formDataModalCuatro = MODAL_MIEMBRO_DE_LA_EMPRESA;
 
   /** Tipo de tabla utilizada para mostrar número de empleados (checkbox) */
   public tablaSeleccionCheckbox = TablaSeleccion.CHECKBOX;
@@ -127,6 +144,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   /** Datos de inventarios registrados */
   public inventariosDatos: Inventarios[] = [] as Inventarios[];
 
+  /** Bandera para mostrar u ocultar la sección del número de solicitud en el formulario de datos comunes. */
   public mostrarNumeroSolicitudSeccion: boolean = false;
 
   /** Modelo para la opción de tipo sí/no representado como radio button */
@@ -144,22 +162,29 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   /** Subject para destruir el componente */
   public destroy$ = new Subject<void>();
 
+  /** Opciones de catálogo para el campo de bimestre en el formulario de datos comunes. */
   private bimestreOpciones: Catalogo[] = [];
 
+  /** Instancia del modal utilizada para mostrar y ocultar los diferentes modales del componente. */
   private modalInstance!: Modal;
 
+  /** Porcentaje de avance para la barra de progreso en el formulario de datos comunes. */
   public progresoPercent: number = 0;
 
+  /** Opciones de catálogo para el campo de enSuCaracterOpciones en el formulario de datos comunes. */
   public enSuCaracterOpciones: Catalogo[] = [];
 
+  /** Opciones de catálogo para el campo de nacionalidad en el formulario de datos comunes. */
   public nacionalidadOpciones: Catalogo[] = [];
   
+  /** Cambia el tipo de intervalId a 'any' para evitar el error de asignación con setInterval en TypeScript. */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private intervalId: any;
 
   /** Estado de la solicitud de la datos comunes tres.*/
   public datosComunesTresState!: DatosComunesTresState;
 
+  /** Constructor que inyecta los servicios necesarios para gestionar datos comunes, detectar cambios, manejar el estado y consultar datos en el trámite 32613. */
   constructor(
     private datosComunesTresService: DatosComunesTresService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -169,6 +194,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     //
   }
 
+  /** Inicializa los estados y datos necesarios del componente, suscribiéndose al store y cargando las opciones dinámicas para los formularios de datos comunes. */
   ngOnInit(): void {
     this.datosComunesTresQuery.selectDatosComunesTres$
       .pipe(
@@ -263,6 +289,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     this.obtenerNacionalidadOpciones();
   }
 
+  /** Inicializa el formulario principal reactivo con sus grupos y controles, y aplica valores y estados según el modo de consulta. */
   initializeForm(): void {
     this.datosComunesForm = new FormGroup({
       ninoFormGroupUno: new FormGroup({}),
@@ -336,6 +363,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     return this.datosComunesForm.get('ninoFormGroupmodal4') as FormGroup;
   }
 
+  /** Asigna valores condicionales y muestra/oculta campos en el formulario de datos comunes según el estado actual. */
   asignarValorCondicional(): void {
     if (this.datosComunesTresState['senaleEspecializadas']) {
       this.mostrarNumeroSolicitudSeccion = true;
@@ -362,6 +390,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
       });
   }
 
+  /** Obtiene las opciones de nacionalidad desde el servicio y las asigna al campo correspondiente en el formulario dinámico de miembros de la empresa. */
   obtenerNacionalidadOpciones(): void {
     this.datosComunesTresService
       .getNacionalidadDatos()
@@ -384,6 +413,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
       });
   }
 
+  /** Obtiene las opciones de sector productivo desde el servicio y las asigna al campo correspondiente en el formulario dinámico. */
   obtenerSectorProductivoOpciones(): void {
     this.datosComunesTresService
       .getProductivoDatos()
@@ -405,6 +435,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
       });
   }
 
+  /** Obtiene las opciones de sector productivo desde el servicio y las asigna al campo correspondiente en el formulario dinámico. */
   obtenerServicioOpciones(): void {
     this.datosComunesTresService
       .getServicioDatos()
@@ -426,6 +457,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
       });
   }
 
+  /** Obtiene las opciones de bimestre desde el servicio y las asigna al campo correspondiente en el formulario dinámico. */
   obtenerBimestreOpciones(): void {
     this.datosComunesTresService
       .getBimestreDatos()
@@ -462,6 +494,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
       });
   }
 
+  /** Obtiene las opciones de sector productivo desde el servicio y las asigna al campo correspondiente en el formulario dinámico. */
   obtenerIndiqueTodosOpciones(): void {
     this.datosComunesTresService
       .getIndiqueTodosdatos()
@@ -483,6 +516,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
       });
   }
 
+  /** Obtiene las opciones de sector productivo desde el servicio y las asigna al campo correspondiente en el formulario dinámico. */
   obtenerEntidadFederativaOpciones(): void {
     this.datosComunesTresService
       .getEntidadDatos()
@@ -504,6 +538,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
       });
   }
 
+  /** Obtiene las opciones de sector productivo desde el servicio y las asigna al campo correspondiente en el formulario dinámico. */
   obtenertipoDeInstalacionOpciones(): void {
     this.datosComunesTresService
       .getTipoDeInstalacionDatos()
@@ -525,6 +560,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
       });
   }
 
+  /** Obtiene las opciones de sector productivo desde el servicio y las asigna al campo correspondiente en el formulario dinámico. */
   obtenerEnSuCaracterDeOpciones(): void {
     this.datosComunesTresService
       .getEnSuCaracterDeDatos()
@@ -547,6 +583,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
       });
   }
 
+  /** Asigna las referencias de las plantillas personalizadas al mapa después de la inicialización de la vista. */
   ngAfterViewInit(): void {
     Promise.resolve().then(() => {
       this.templateMap = {
@@ -598,6 +635,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  /** Muestra el modal de confirmación utilizando la referencia al elemento correspondiente. */
   mostrarModalConfirmacion(): void {
     if (this.modalConfirmacion) {
       this.modalInstance = new Modal(this.modalConfirmacion.nativeElement);
@@ -610,13 +648,13 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
    * @param event Objeto que contiene el campo y el valor a actualizar.
    * Si el campo es 'tipoOperacion', se ejecuta el método alCambiarTipoOperacion.
    */
-  // eslint-disable-next-line class-methods-use-this
   establecerCambioDeValorDos(event: { campo: string; valor: object | string }): void {
     if (event) {
       this.datosComunesTresStore.setDynamicFieldValue(event.campo, event.valor);
     }
   }
 
+  /** Actualiza la lista de instalaciones principales desde el servicio al detectar un cambio en el formulario modal de instalaciones. */
   establecerCambioDeValorModalDuo(event: { campo: string; valor: object | string }): void {
     if (event) {
       this.datosComunesTresService
@@ -628,6 +666,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  /** Muestra u oculta un campo específico en la configuración dinámica del formulario según el parámetro recibido. */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
   mostrarCampos(formData: any[], campo: string, mostrar: boolean): void {
     const CAMPO = formData.find(f => f.campo === campo);
@@ -671,6 +710,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  /** Muestra el modal de subcontratados y carga los datos del primer empleado seleccionado en el formulario modal. */
   modificarSubcontratados(): void {
     if (this.seleccionarNumeroDeEmpleadosLista.length!==0) {
       this.agregarSubcontratados();
@@ -695,6 +735,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  /** Muestra el modal de instalaciones principales y carga los datos del primer domicilio seleccionado en el formulario modal. */
   modificarInstalacionesPrincipales(): void {
     if (this.modalModificar && this.seleccionarDomiciliosDatos.length) {
       this.modalInstance = new Modal(this.modalModificar.nativeElement);
@@ -797,6 +838,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  /** Busca el RFC de subcontratado y asigna la razón social en el formulario modal de subcontratados. */
   buscarEvento(): void {
     if (this.ninoFormGroupmodal1.get('subcontrataRFCBusqueda')?.value) {
       this.ninoFormGroupmodal1.patchValue({
@@ -806,6 +848,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  /** Guarda o actualiza el registro de número de empleados en la lista y muestra el modal de confirmación. */
   aceptarModalUno(): void {
     if (!this.seleccionarNumeroDeEmpleadosLista.length) {
         this.numeroDeEmpleadosLista.push({
@@ -829,6 +872,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  /** Muestra el modal de confirmación de guardado exitoso utilizando la referencia al elemento correspondiente. */
   mostrarGuardadosCorrectamenteModal(): void {
     if (this.modalGuardadosCorrectamente) {
       this.modalInstance = new Modal(this.modalGuardadosCorrectamente.nativeElement);
@@ -836,6 +880,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  /** Guarda el domicilio seleccionado en la lista y actualiza el store, luego cierra el modal. */
   aceptarModalDuo(): void {
     if (this.seleccionarListaInstalaciones.length) {
       this.domiciliosDatos.push({
@@ -850,6 +895,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     this.datosComunesTresStore.setDynamicFieldValue('domiciliosDatos', this.domiciliosDatos);
   }
 
+  /** Actualiza los datos del domicilio seleccionado en el formulario modal y cierra el modal. */
   aceptarModalTres(): void {
     if (this.ninoFormGroupmodal3.valid && this.seleccionarDomiciliosDatos.length) {
       const INDICE = this.domiciliosDatos.findIndex((item) => item.cveTipoInstalacion === this.seleccionarDomiciliosDatos[0].cveTipoInstalacion);
@@ -878,6 +924,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     return DESCRIPCION ?? '';
   }
 
+  /** Muestra el modal de progreso y ejecuta la animación si el archivo extranjero está presente en el formulario. */
   anexar(): void {
     if (this.datosComunesForm.get('archivoExtranjero')?.value && this.modalprogreso) {
       this.restablecerProgreso();
@@ -887,13 +934,14 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  /** Inicia la animación de la barra de progreso en dos etapas: primero del 0 al 90% rápidamente y luego del 91 al 100% más lento. */
   inicioProgreso(): void {
     this.ejecutarProgreso(0, 90, 10, () => {
       this.ejecutarProgreso(91, 100, 200);
     });
   }
 
-  /** Runs the progress bar from `start` to `end` with the specified interval delay.*/
+  /** Ejecuta la animación de la barra de progreso desde el valor `start` hasta `end` con el intervalo de tiempo especificado. */
   ejecutarProgreso(start: number, end: number, delay: number, callback?: () => void): void {
     this.intervalId = setInterval(() => {
       if (this.progresoPercent < end) {
@@ -907,11 +955,13 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     }, delay);
   }
 
+  /** Reinicia la barra de progreso y detiene cualquier animación activa. */
   restablecerProgreso(): void {
     clearInterval(this.intervalId);
     this.progresoPercent = 0;
   }
 
+  /** Agrega un nuevo registro de inventario a la lista y actualiza el store si los campos requeridos están completos, luego reinicia el formulario. */
   agregarControlInventarios(): void {
     if (this.ninoFormGroupDos.get('identificacion')?.value && this.ninoFormGroupDos.get('lugarDeRadicacion')?.value && this.ninoFormGroupDos.get('indiqueAnexo24')?.value) {
       this.inventariosDatos.push({
@@ -924,6 +974,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  /** Carga los datos del inventario seleccionado en el formulario modal para su edición. */
   modificarControlInventarios(): void {
     if (this.seleccionarInventarios.length) {
       this.ninoFormGroupDos.patchValue({
@@ -934,6 +985,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  /** Muestra u oculta campos en el formulario dinámico de miembros de la empresa según la nacionalidad y tipo de persona seleccionados. */
   establecerCambioDeValorModalCuatro(event: { campo: string; valor: object | string | number }): void {
     if (event.campo === 'miembroTributarMexico') {
       if (event.valor === 'Si') {
@@ -969,6 +1021,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  /** Guarda o actualiza el registro de socios IC en la lista y actualiza el store, luego cierra el modal. */
   aceptarModalCuatro(): void {
     if (!this.seleccionarListaSeccionSociosIC.length) {
       this.listaSeccionSociosIC.push({
@@ -996,6 +1049,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  /** Establece el valor de un campo en el store y muestra el modal de confirmación si corresponde. */
   establecerCambioDeValorTres(event: { campo: string; valor: object | string | number }): void {
     if (event.campo === 'manifiesteSiSusSocios') {
       this.mostrarModalConfirmacion();

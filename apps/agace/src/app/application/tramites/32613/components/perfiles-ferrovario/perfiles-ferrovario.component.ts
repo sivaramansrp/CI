@@ -24,6 +24,7 @@ import { SeguridadFisicaComponent } from '../seguridad-fisica/seguridad-fisica.c
 import { SociosComercialsComponent } from '../socios-comercials/socios-comercials.component';
 import { Tramite32613Query } from '../../../../estados/queries/tramite32613.query';
 
+/** Componente para gestionar el formulario dinámico de perfiles ferroviarios en el trámite 32613. */
 @Component({
   selector: 'perfiles-ferrovario',
   standalone: true,
@@ -37,54 +38,79 @@ import { Tramite32613Query } from '../../../../estados/queries/tramite32613.quer
   templateUrl: './perfiles-ferrovario.component.html',
   styleUrl: './perfiles-ferrovario.component.scss',
 })
+
 export class PerfilesFerrovarioComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  /** Referencia a la plantilla personalizada customTemplate1 utilizada en el componente. */
   @ViewChild('customTemplate1') customTemplate1!: TemplateRef<unknown>;
 
+  /** Referencia a la plantilla personalizada customTemplate1 utilizada en el componente. */
   @ViewChild('customTemplate2') customTemplate2!: TemplateRef<unknown>;
 
+  /** Referencia a la plantilla personalizada customTemplate1 utilizada en el componente. */
   @ViewChild('customTemplate3') customTemplate3!: TemplateRef<unknown>;
 
+  /** Referencia a la plantilla personalizada customTemplate1 utilizada en el componente. */
   @ViewChild('customTemplate4') customTemplate4!: TemplateRef<unknown>;
 
+  /** Referencia a la plantilla personalizada customTemplate1 utilizada en el componente. */
   @ViewChild('customTemplate5') customTemplate5!: TemplateRef<unknown>;
 
+  /** Referencia a la plantilla personalizada customTemplate1 utilizada en el componente. */
   @ViewChild('customTemplate6') customTemplate6!: TemplateRef<unknown>;
 
+  /** Inicializa el formulario principal y los grupos anidados para los perfiles ferroviarios. */
   public perfilesFerrovarioForm!: FormGroup;
 
+  /** Arreglo con la configuración dinámica de los campos para el formulario de información general. */
   public formDataInformacionGeneral = INFORMACION_GENERAL;
 
+  /** Arreglo con la configuración dinámica de los campos para la plantilla personalizada 1. */
   public template1Array = TEMPLATE_1_ARRAY;
 
+  /** Arreglo con la configuración dinámica de los campos para la plantilla personalizada 1. */
   public template2Array = TEMPLATE_2_ARRAY;
 
+  /** Arreglo con la configuración dinámica de los campos para la plantilla personalizada 1. */
   public template3Array = PIP_TEMPLATE_ARRAY;
 
+  /** Arreglo con la configuración dinámica de los campos para la plantilla personalizada 1. */
   public template4Array = OEA_TEMPLATE_ARRAY;
 
+  /** Arreglo con la configuración dinámica de los campos para la plantilla personalizada 1. */
   public template5Array = OTROS_PROGRAMAS_TEMPLATE_ARRAY;
 
+  /** Inicializa el formulario para la plantilla personalizada 1. */
   public customTemplate1Form: FormGroup = new FormGroup({});
 
+  /** Inicializa el formulario para la plantilla personalizada 1. */
   public customTemplate2Form: FormGroup = new FormGroup({});
 
+  /** Inicializa el formulario para la plantilla personalizada 1. */
   public customTemplate3Form: FormGroup = new FormGroup({});
 
+  /** Inicializa el formulario para la plantilla personalizada 1. */
   public customTemplate4Form: FormGroup = new FormGroup({});
 
+  /** Inicializa el formulario para la plantilla personalizada 1. */
   public customTemplate5Form: FormGroup = new FormGroup({});
 
+  /** Mapa que asocia claves de sección con sus respectivas plantillas personalizadas. */
   public templateMap: Record<string, TemplateRef<unknown>> = {};
 
+  /** Bandera para mostrar u ocultar la plantilla personalizada 2. */
   public mostarCustomtemplate2: boolean = false;
 
+  /** Bandera para mostrar u ocultar la plantilla personalizada 3. */
   public mostarCustomtemplate3: boolean = false;
 
+  /** Bandera para mostrar u ocultar la plantilla personalizada 4. */
   public mostarCustomtemplate4: boolean = false;
 
+  /** Bandera para mostrar u ocultar la plantilla personalizada 5. */
   public mostarCustomtemplate5: boolean = false;
 
+  /** Arreglo con la configuración de las secciones dinámicas y sus componentes para el formulario de perfiles ferroviarios. */
   public perfilesSecciones: SeccionDinamica[] = [
     {
       titulo: '1. Planeación de la seguridad en la cadena de suministros',
@@ -141,6 +167,7 @@ export class PerfilesFerrovarioComponent implements OnInit, AfterViewInit, OnDes
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
 
+  /** Constructor que inyecta los servicios necesarios para gestionar el estado, las consultas y la creación de formularios en el trámite 32613. */
   constructor(
     private fb: FormBuilder,
     private tramite32613Store: Tramite32613Store,
@@ -150,6 +177,7 @@ export class PerfilesFerrovarioComponent implements OnInit, AfterViewInit, OnDes
     //
   }
 
+  /** Inicializa los estados necesarios del componente, configura los formularios dinámicos y asigna valores condicionales según el estado recibido. */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
           .pipe(
@@ -179,6 +207,7 @@ export class PerfilesFerrovarioComponent implements OnInit, AfterViewInit, OnDes
     this.asignarValorCondicional();
   }
 
+  /** Asigna valores condicionales a los formularios y banderas de visualización según el estado recibido del rubro de transporte ferroviario. */
   asignarValorCondicional(): void {
     if (this.rubroTransporteFerrovariostate) {
       const CUSTOMS_TRADE_PARTNERSHIP = this.rubroTransporteFerrovariostate?.['customsTradePartnership'];
@@ -261,7 +290,7 @@ export class PerfilesFerrovarioComponent implements OnInit, AfterViewInit, OnDes
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
+  /** Inicializa el formulario dinámico para una plantilla personalizada, agregando controles según el arreglo recibido y deshabilitándolo si el estado es solo lectura. */
   initializeCustomTemplate1Form(array: RowTypeFormInput[], form: FormGroup): void {
     array.forEach(campo => {
       if (typeof campo.formControlName === 'string') {
@@ -277,6 +306,7 @@ export class PerfilesFerrovarioComponent implements OnInit, AfterViewInit, OnDes
     }
   }
 
+  /** Inicializa el formulario principal de perfiles ferroviarios con el grupo anidado 'ninoFormGroup' y el arreglo 'otrasCertificaciones'. */
   initializeForm(): void {
     this.perfilesFerrovarioForm = this.fb.group({
       ninoFormGroup: this.fb.group({}),
@@ -284,6 +314,7 @@ export class PerfilesFerrovarioComponent implements OnInit, AfterViewInit, OnDes
     })
   }
 
+  /** Crea y retorna un grupo de formulario para una certificación con los campos nombre, categoría y vigencia. */
   createOtrasCertificacionesGroup(): FormGroup {
     return this.fb.group({
       nombre: [''],
@@ -292,6 +323,7 @@ export class PerfilesFerrovarioComponent implements OnInit, AfterViewInit, OnDes
     });
   }
 
+  /** Agrega un nuevo grupo de certificación al arreglo 'otrasCertificaciones', deshabilitándolo si el estado es solo lectura. */
   addOtrasCertificacionesGroup(): void {
     const GRUPO = this.createOtrasCertificacionesGroup();
     if (this.consultaState?.readonly) {
@@ -300,6 +332,7 @@ export class PerfilesFerrovarioComponent implements OnInit, AfterViewInit, OnDes
     this.otrasCertificaciones.push(GRUPO);
   }
 
+  /** Este getter devuelve el arreglo de grupos de certificaciones 'otrasCertificaciones' del formulario principal. */
   get otrasCertificaciones(): FormArray {
     return this.perfilesFerrovarioForm.get('otrasCertificaciones') as FormArray;
   }
@@ -309,6 +342,7 @@ export class PerfilesFerrovarioComponent implements OnInit, AfterViewInit, OnDes
     return this.perfilesFerrovarioForm.get('ninoFormGroup') as FormGroup;
   }
 
+  /** Actualiza el valor dinámico de un campo en el store y gestiona la visualización de plantillas personalizadas según el campo y valor recibido. */
   establecerCambioDeValor(event: {campo: string, valor: string | number | object}): void {
     if (event.campo === 'customsTradePartnership') {
       if (event.valor === 'Si') {
@@ -346,6 +380,7 @@ export class PerfilesFerrovarioComponent implements OnInit, AfterViewInit, OnDes
     }
   }
 
+  /** Asigna las referencias de las plantillas personalizadas al mapa después de la inicialización de la vista. */
   ngAfterViewInit(): void {
     Promise.resolve().then(() => {
       this.templateMap = {
@@ -359,12 +394,14 @@ export class PerfilesFerrovarioComponent implements OnInit, AfterViewInit, OnDes
     });
   }
 
+  /** Actualiza el valor dinámico de un campo en el store cuando ocurre un cambio en una plantilla personalizada. */
   customTemplateEvents(event: {campo: string, valor: string | number}): void {
     if (event) {
       this.tramite32613Store.setDynamicFieldValue(event.campo, event.valor);
     }
   }
 
+  /** Actualiza el valor de un campo específico dentro del arreglo 'otrasCertificaciones' y sincroniza el arreglo completo en el store. */
   textValorCambio(event: Event, campo: string, index?: number): void {
     const OTRAS_ARRAY = this.perfilesFerrovarioForm.get('otrasCertificaciones') as FormArray;
     if (typeof index === 'number') {

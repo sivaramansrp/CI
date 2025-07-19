@@ -1,6 +1,9 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
 
+/**
+ * Componente que gestiona las pantallas del asistente para el trámite 32613.
+ */
 @Component({
   selector: 'app-pantallas',
   templateUrl: './pantallas.component.html',

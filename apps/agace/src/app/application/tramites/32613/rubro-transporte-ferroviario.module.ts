@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosComunesTresComponent } from '../../shared/components/datos-comunes-tres/datos-comunes-tres.component';
 import { NgModule } from '@angular/core';
@@ -28,7 +28,10 @@ import { TransporteFerroviarioComponent } from './components/transporte-ferrovia
     DatosComunesTresComponent,
     TercerosRelacionadosComponent,
     TransporteFerroviarioComponent,
-    PerfilesFerrovarioComponent
+    PerfilesFerrovarioComponent,
+    TituloComponent,
+    AnexarDocumentosComponent,
+    FirmaElectronicaComponent
   ]
 })
 export class RubroTransporteFerroviarioModule { }

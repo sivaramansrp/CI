@@ -10,6 +10,7 @@ import { GESTION_ADUANERA } from '../../constantes/constantes32613.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite32613Query } from '../../../../estados/queries/tramite32613.query';
 
+/** Componente para gestionar el formulario dinámico de gestión aduanera en el trámite 32613. */
 @Component({
   selector: 'gestion-aduanera',
   standalone: true,
@@ -22,10 +23,13 @@ import { Tramite32613Query } from '../../../../estados/queries/tramite32613.quer
   templateUrl: './gestion-aduanera.component.html',
   styleUrl: './gestion-aduanera.component.scss',
 })
+
 export class GestionAduaneraComponent implements AfterViewInit, OnInit, OnDestroy {
 
+  /** Referencia a la plantilla personalizada customTemplate1 utilizada en el componente. */
   @ViewChild('customTemplate1') customTemplate1!: TemplateRef<unknown>;
 
+  /** Inicializa el formulario principal y el grupo anidado para la gestión aduanera. */
   public gestionAduaneraForm = new FormGroup({
     obligacionesAduanerasFormGroup: new FormGroup({}),
   });
@@ -35,8 +39,10 @@ export class GestionAduaneraComponent implements AfterViewInit, OnInit, OnDestro
     return this.gestionAduaneraForm.get('obligacionesAduanerasFormGroup') as FormGroup;
   }
 
+  /** Arreglo con la configuración dinámica de los campos para el formulario de gestión aduanera. */
   public obligacionesAduanerasFormData = GESTION_ADUANERA;
 
+  /** Mapa que asocia claves de sección con sus respectivas plantillas personalizadas. */
   public templateMap: Record<string, TemplateRef<unknown>> = {};
 
   /** Estado de la solicitud de la tramite 32613.*/
@@ -48,6 +54,7 @@ export class GestionAduaneraComponent implements AfterViewInit, OnInit, OnDestro
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
 
+  /** Constructor que inyecta los servicios necesarios para gestionar el estado y las consultas del trámite 32613. */
   constructor(
     private tramite32613Store: Tramite32613Store,
     private tramite32613Query: Tramite32613Query,
@@ -56,6 +63,7 @@ export class GestionAduaneraComponent implements AfterViewInit, OnInit, OnDestro
     //
   }
 
+  /** Inicializa los estados necesarios del componente, suscribiéndose a los observables de consulta y rubro de transporte ferroviario. */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -77,6 +85,7 @@ export class GestionAduaneraComponent implements AfterViewInit, OnInit, OnDestro
       .subscribe();
   }
 
+  /** Asigna las referencias de las plantillas personalizadas al mapa después de la inicialización de la vista. */
   ngAfterViewInit(): void {
     Promise.resolve().then(() => {
       this.templateMap = {
@@ -85,6 +94,7 @@ export class GestionAduaneraComponent implements AfterViewInit, OnInit, OnDestro
     });
   }
 
+  /** Actualiza el valor dinámico de un campo en el store cuando ocurre un cambio en el formulario. */
   establecerCambioDeValor(event: {campo: string, valor: string | number | object}): void {
      if (event) {
       this.tramite32613Store.setDynamicFieldValue(event.campo, event.valor);

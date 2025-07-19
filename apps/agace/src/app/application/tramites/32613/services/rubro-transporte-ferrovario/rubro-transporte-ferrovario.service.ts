@@ -3,9 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+/** Decorador que marca el servicio como disponible en la raíz de la aplicación. */
 @Injectable({
   providedIn: 'root'
 })
+
 export class RubroTransporteFerrovarioService {
 
   /**
