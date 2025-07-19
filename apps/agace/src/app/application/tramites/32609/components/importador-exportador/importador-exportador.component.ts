@@ -1184,12 +1184,13 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
   getDatosrubroTextil(): void {
     this.solicitudService.getDatosrubroTextil()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data: RubroTextil) => {
+      .subscribe((datos: RubroTextil) => {
         this.rubroIVATextilForm.patchValue({
-          rubroCertificacion: data.rubroCertificacion,
-          fechaFinVigenciaRubro: data.fechaFinVigenciaRubro,
-          numeroOficio: data.numeroOficio
+          rubroCertificacion: datos.rubroCertificacion,
+          fechaFinVigenciaRubro: datos.fechaFinVigenciaRubro,
+          numeroOficio: datos.numeroOficio
         });
+        this.tramite32609Store.establecerDatos(datos);
       });
   }
 

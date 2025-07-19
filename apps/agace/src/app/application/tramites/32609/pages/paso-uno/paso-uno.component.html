@@ -44,7 +44,7 @@
         >Textil</a
       >
     </li>
-    <li [ngClass]="indice === 5 ? 'active' : ''">
+    <li *ngIf="reconocimientoMutuoValue === '1'" [ngClass]="indice === 5 ? 'active' : ''">
       <a
         data-toggle="tab"
         (click)="seleccionaTab(5)"
@@ -63,7 +63,7 @@
     <solicitante></solicitante>
     } @case (2) {
       @if(esDatosRespuesta){
-        <app-datos-comunes></app-datos-comunes>
+        <app-datos-comunes (reconocimientoMutuoCTPATChange)="onReconocimientoMutuoChange($event)"></app-datos-comunes>
       }
     } @case (3) {
       @if(esDatosRespuesta){

@@ -34,6 +34,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   public consultaState!:ConsultaioState;
 
+  /**
+   * Valor del reconocimiento mutuo CTPAT.
+   * Este valor se utiliza para determinar si se debe mostrar la sección de reconocimiento mutuo.
+   */
+  reconocimientoMutuoValue: string = '';
 
     constructor(
     @Inject(OeaTextilRegistroService)
@@ -90,6 +95,16 @@ ngOnInit(): void {
   seleccionaTab(i:number): void {
     this.indice = i;
   }
+
+  /**
+* Maneja el cambio de valor para el reconocimiento mutuo.
+* Actualiza la propiedad `reconocimientoMutuoValue` con el valor seleccionado.
+*
+* @param {string} value - El nuevo valor seleccionado para reconocimiento mutuo.
+*/
+onReconocimientoMutuoChange(value: string) :void {
+  this.reconocimientoMutuoValue = value;
+}
 
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.

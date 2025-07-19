@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {
   AlertComponent,
   Catalogo,
@@ -19,7 +19,7 @@ import { Subject, forkJoin, map, takeUntil} from 'rxjs';
 import { Tramite32609Store, Tramites32609State } from '../../estados/tramites32609.store';
 import { AgregarEnlaceOperativoComponent } from '../agregar-enlace-operativo/agregar-enlace-operativo.component';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
 import { Tramite32609Query } from '../../estados/tramites32609.query';
@@ -236,6 +236,12 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
    * Cuando se establece en true, resetea la selección de la tabla en el componente agregar-enlace-operativo.
    */
   resetChildTableSelection: boolean = false;
+
+  /**
+   * Evento emitido cuando cambia el valor de reconocimientoMutuoCTPAT.
+   * Permite notificar a componentes padres sobre cambios en este campo.
+   */
+  @Output() reconocimientoMutuoCTPATChange = new EventEmitter<string>();
 
   /**
    * Constructor para DomiciliosRfcSolicitanteBimestreComponent.
@@ -610,6 +616,8 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
       
       // Limpiar formulario después de modificar datos exitosamente
       this.limpiarFormulario();
+      
+      this.reconocimientoMutuoCTPATChange.emit(FORM_DATA.reconocimientoMutuoCTPAT);
     } else {
       console.error('No se encontró el registro a modificar');
     }

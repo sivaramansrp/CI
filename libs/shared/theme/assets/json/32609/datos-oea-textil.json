@@ -188,7 +188,10 @@
     "correoElectronico": "suplente@import.com",
     "suplente": false
   }
-]
+],
+    "rubroCertificacion": "AAA",
+    "fechaFinVigenciaRubro": "21/06/2020",
+    "numeroOficio": "2500301600020289901080060-000054"
 }
     ,
     "message": "exitosa"

@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, CategoriaMensaje, InputCheckComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TipoNotificacionEnum, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { NOTA, OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/oea-textil-registro.enum';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite32609Store, Tramites32609State } from '../../estados/tramites32609.store';
@@ -153,6 +153,12 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @type {string}
    */
   SECTOR_PRODUCTIVO = NOTA.SECTOR_PRODUCTIVO;
+
+  /**
+   * Evento emitido cuando cambia el valor de reconocimientoMutuoCTPAT.
+   * @type {EventEmitter<string>}
+   */
+  @Output() reconocimientoMutuoCTPATChange = new EventEmitter<string>();
 
   /**
    * Constructor del componente DatosComunesComponent.
@@ -667,6 +673,15 @@ public marcarCamposEmpleadosComoTocados(): void {
     BIMESTRE_CONTROL?.markAsTouched();
   }
 }
+
+/**
+   * Maneja el cambio en el reconocimiento mutuo CTPAT y emite el valor seleccionado.
+   *
+   * @param {string} value - El valor seleccionado para reconocimiento mutuo CTPAT.
+   */
+  onReconocimientoMutuoCTPATChanged(value: string): void {
+    this.reconocimientoMutuoCTPATChange.emit(value);
+  }
 
   /**
    * @method ngOnDestroy
