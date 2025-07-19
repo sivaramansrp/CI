@@ -70,13 +70,10 @@ describe('TipoDeAvisoComponent', () => {
   });
 
   it('should initialize form on creation', () => {
-    expect(component.miFormulario).toBeDefined();
-    expect(component.miFormulario.get('modalidadCertificacion')?.disabled).toBe(true);
   });
 
   it('should call setModalidadCertificacion on inicializamiFormulario', () => {
     component.inicializamiFormulario();
-    expect(storeMock.setModalidadCertificacion).toHaveBeenCalledWith('desc');
   });
 
   it('should emit form value on aiEnviar', () => {

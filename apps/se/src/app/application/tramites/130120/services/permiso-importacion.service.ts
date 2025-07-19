@@ -1,7 +1,8 @@
+import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { Observable, map } from 'rxjs';
 import { DatosGrupos } from '../models/permiso-importacion-modification.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { PermisoImportacionStore } from '../estados/permiso-importacion.store';
 
 /**
@@ -15,6 +16,8 @@ import { PermisoImportacionStore } from '../estados/permiso-importacion.store';
   providedIn: 'root'
 })
 export class PermisoImportacionService {
+
+  url = '../../../../../assets/json/130120/';
 
   /**
    * Constructor del servicio.
@@ -46,4 +49,12 @@ export class PermisoImportacionService {
   obtenerRegistroTomarMuestrasDatos(): Observable<DatosGrupos> {
     return this.http.get<DatosGrupos>('assets/json/130120/respuestaDeActualizacionDe.json');
   }
+
+  obtenerMenuDesplegable(fileName: string): Observable<Catalogo[]> {
+      const BASEURL = this.url + fileName;
+      return this.http
+        .get<RespuestaCatalogos>(BASEURL)
+        .pipe(map((response) => response.data));
+        
+    }
 }

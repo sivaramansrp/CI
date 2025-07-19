@@ -60,7 +60,8 @@ export const INITIAL_STATE: FormularioGrupo = {
     /** Archivo adjunto que contiene información del proveedor extranjero */
     archivoExtranjero: null,
     /** Registro o registros del proveedor extranjero */
-    registrosProveedoresExtranjeros: ''
+    registrosProveedoresExtranjeros: '',
+    isActive: false, // Indica si el componente de modificación de socios está activo
   },
 
   /** Información para modificación de socios o accionistas */
@@ -76,7 +77,8 @@ export const INITIAL_STATE: FormularioGrupo = {
     /** RFC del socio */
     rfc: '',
     /** Nombre completo del socio */
-    nombreCompleto: ''
+    nombreCompleto: '',
+    isActive: false // Indica si el componente de modificación de socios está activo
   },
 
   /** Información sobre el inmueble en uso o goce */
@@ -232,10 +234,10 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
    * 
    * @param {TipoDevAviso} tipoDevAviso - El tipo de proveedor extranjero a establecer.
    */
-  setClientesProveedoresExtranjeros(tipoDevAviso: TipoDevAviso): void {
+  setClientesProveedoresExtranjeros(foreignClientsSuppliers: boolean): void {    
     this.update((state) => ({
       ...state,
-      foreignClientsSuppliers: tipoDevAviso
+         tipoDevAviso: { ...state.tipoDevAviso, foreignClientsSuppliers }
     }));
   }
 
@@ -244,10 +246,10 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
    * 
    * @param {TipoDevAviso} tipoDevAviso - El tipo de proveedor nacional a establecer.
    */
-  setProveedoresNacionales(tipoDevAviso: TipoDevAviso): void {
+  setProveedoresNacionales(nationalSuppliers: boolean): void {
     this.update((state) => ({
       ...state,
-      nationalSuppliers: tipoDevAviso
+        tipoDevAviso: { ...state.tipoDevAviso, nationalSuppliers }
     }));
   }
 
@@ -256,10 +258,10 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
    * 
    * @param {TipoDevAviso} tipoDevAviso - El tipo de modificación a establecer.
    */
-  setModificacionesMiembros(tipoDevAviso: TipoDevAviso): void {
+  setModificacionesMiembros(modificationsMembers: boolean): void {
     this.update((state) => ({
       ...state,
-      modificationsMembers: tipoDevAviso
+       tipoDevAviso: { ...state.tipoDevAviso, modificationsMembers }
     }));
   }
 
@@ -268,46 +270,46 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
    * 
    * @param {TipoDevAviso} tipoDevAviso - El tipo de cambio en los documentos legales.
    */
-  setCambiosDocumentosLegales(tipoDevAviso: TipoDevAviso): void {
+  setCambiosDocumentosLegales(changesToLegalDocuments: boolean): void {
     this.update((state) => ({
       ...state,
-      changesToLegalDocuments: tipoDevAviso
+        tipoDevAviso: { ...state.tipoDevAviso, changesToLegalDocuments }
     }));
   }
 
   /**
    * Establece si hay una notificación de fusión o escisión en el estado.
    * 
-   * @param {TipoDevAviso} tipoDevAviso - El tipo de notificación a establecer.
+    * @param {boolean} mergerOrSplitNotice - El tipo de adición a establecer.
    */
-  setNotifiFusionOescision(tipoDevAviso: TipoDevAviso): void {
+  setNotifiFusionOescision(mergerOrSplitNotice: boolean): void {
     this.update((state) => ({
       ...state,
-      mergerOrSplitNotice: tipoDevAviso
+         tipoDevAviso: { ...state.tipoDevAviso, mergerOrSplitNotice }
     }));
   }
 
   /**
    * Establece si hay adiciones de fracciones en el estado.
    * 
-   * @param {TipoDevAviso} tipoDevAviso - El tipo de adición a establecer.
+   * @param {boolean} additionFractions - El tipo de adición a establecer.
    */
-  setAdicionalesFractions(tipoDevAviso: TipoDevAviso): void {
+  setAdicionalesFractions(additionFractions: boolean): void {
     this.update((state) => ({
       ...state,
-      additionFractions: tipoDevAviso
+        tipoDevAviso: { ...state.tipoDevAviso, additionFractions }
     }));
   }
 
   /**
    * Establece si se aceptó el artículo 253 en el estado.
    * 
-   * @param {TipoDevAviso} tipoDevAviso - El tipo de aceptación a establecer.
+     * @param {boolean} acepto253 - El tipo de adición a establecer.
    */
-  setAceptacion253(tipoDevAviso: TipoDevAviso): void {
+  setAceptacion253(acepto253: boolean): void {    
     this.update((state) => ({
       ...state,
-      acepto253: tipoDevAviso
+          tipoDevAviso: { ...state.tipoDevAviso, acepto253 },
     }));
   }
 
@@ -447,6 +449,20 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
     }));
   }
 
+  /**
+   * Establece la propiedad `isActive` dentro del estado `modificacionSocios`.
+   *
+   * @param isActive - Valor booleano que indica si la modificación de socios está activa.
+   */
+  setIsActive(isActive: boolean): void {
+    this.update((state) => ({ 
+      ...state,
+      modificacionSocios: {
+        ...state.modificacionSocios,
+        isActive
+      }
+    }));
+  }
   /**
    * Limpia el formulario y restablece el estado a su estado inicial.
    */

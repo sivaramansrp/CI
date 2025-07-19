@@ -10,8 +10,8 @@
             </p>
         </div>
     </div>
-    @if (mostrarCampos) {
-        <div class="row">
+
+        <div class="row" *ngIf="formulario.get('exportadorAutorizado')?.value">
         <div class="col-md-12">
             <div class="alert alert-info manifest-box">
             <div class="form-check text-center">
@@ -22,7 +22,7 @@
             </div>
         </div>
     </div>
-    }
+    
 
     <div class="row">
         <div class="col-md-8">
@@ -33,13 +33,12 @@
         </div>
     </div>
     
-    @if (mostrarCampos) {
-        <div class="row p-4">
+        <div class="row p-4" *ngIf="formulario.get('exportadorAutorizado')?.value">
         <div class="col-md-12">
              <app-input-radio formControlName="informacionRadios" [radioOptions]="radioOpcions" [layout]="'radio-label-wrap'" (change)="setValoresStore(formulario, 'informacionRadios', 'setInformacionRadios')"></app-input-radio>
         </div>
     </div>
-    }
+    
     
     <ng-titulo titulo="Representación federal" />
         <div class="row mb-3">

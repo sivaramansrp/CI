@@ -21,22 +21,23 @@
 
         <div class="row" style="margin-top: 20px">
           <div class="col-md-8">
-            <input
-              type="file"
-              accept=".xlsx"
-              (change)="onFileSelected($event)"
-              class="form-control sfile"
-              name="archivoExtranjero"
-              id="archivoExtranjero"
-              title="Examinar"
-              formControlName="archivoExtranjero"
-            />
+            <div class="d-flex align-items-center custom-input-file">
+                <button class="mb-2" type="button" for="archivoExtranjero" class="file-upload"
+                  (click)="activarSeleccionArchivo()">
+                  Seleccionar archivo
+                </button>
+                <div class="ml-2">{{ etiquetaDeArchivo }}</div>
+                <input type="file" id="archivoExtranjero" (change)="onCambioDeArchivo($event)"
+                  formControlName="archivoExtranjero" class="file-upload" style="display: none;" accept=".xlsx">
+              </div>
+
           </div>
           <div class="col-md-4 d-flex justify-content-end">
             <button
               name="cargarExtranjero"
               id="cargarExtranjero"
               class="btn btn-primary"
+              [disabled]="esFormularioSoloLectura"
               (click)="cargarArchivoAjax()"
             >
               Cargar archivo
@@ -44,8 +45,8 @@
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-md-5">
+         <div class="row">
+          <div class="col-md-6">
             <label
               for="agace.seccionProveedores.existentes"
               id="labelProveedor"
@@ -53,7 +54,9 @@
               {{ seccionProveedoresExistentes }}
             </label>
           </div>
-          <div class="col-md-1">
+          </div>
+          <div class="row">
+          <div class="col-md-6">
             <input
               type="text"
               class="form-control"

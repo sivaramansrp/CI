@@ -314,6 +314,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'empresas-comercializadoras',
+    loadChildren: () => 
+      import('./tramites/32604/empresas-comercializadoras.module').then(
+        (m) => m.EmpresasComercializadorasModule)
+  },
+  {
     path: 'rubro-transporte-ferroviario',
     loadChildren: () => 
       import('./tramites/32613/rubro-transporte-ferroviario.module').then((m) => m.RubroTransporteFerroviarioModule)

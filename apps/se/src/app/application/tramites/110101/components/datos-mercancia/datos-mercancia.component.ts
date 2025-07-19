@@ -93,10 +93,27 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   private listaSeleccionadasEnvases: EnvasesTabla[] = [];
 
   /** Un array de objetos `insumosTablaDatos` que representa los datos para la tabla de solicitudes.*/
-  public insumosTablaDatos: InsumosTabla[] = [];
+  public insumosTablaDatos: InsumosTabla[] = [
+    {
+      nombreTecnico: 'Producto X',
+      proveedor: 'Proveedor Y',
+      fabricanteOProductor: 'Fabricante Z',
+      rfc: 'RFC123456',
+      fraccionArancelaria: '87654321',
+      valorDeTransaccion: 5000 
+    } ];
 
   /** Un array de objetos `envasesTablaDatos` que representa los datos para la tabla de solicitudes.*/
-  public envasesTablaDatos: EnvasesTabla[] = [];
+  public envasesTablaDatos: EnvasesTabla[] = [
+    {
+      nombreTecnico: 'Producto A',
+      proveedor: 'Proveedor X',
+      fabricanteOProductor: 'Fabricante Y',
+      fraccionArancelaria: '12345678',
+      valorEnDolares: 1000,
+      paisDeOrigen: 'México'
+    }
+  ];
 
   /** Un array de objetos `tablaDatos` que representa los datos para la tabla de solicitudes.*/
   public tablaDatos: DatosMercanciaModalTabla[] = [
@@ -416,47 +433,23 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   agregar(): void {
     if (this.ninoFormGroup.valid) {
       if (this.modal === 'Insumo') {
-        const INDICE = this.insumosTablaDatos.findIndex((ele: InsumosTabla)=> ele.nombreTecnico===this.listaSeleccionadasInsumos?.[0].nombreTecnico);
-        if (INDICE !== -1) {
-          this.insumosTablaDatos[INDICE] = {
-            nombreTecnico: this.ninoFormGroup.get('nombreTecnico')?.value,
-            proveedor: this.ninoFormGroup.get('proveedor')?.value,
-            fabricanteOProductor: this.ninoFormGroup.get('fabricanteProductor')?.value,
-            fraccionArancelaria: this.ninoFormGroup.get('fraccionArancelaria')?.value,
-            rfc: 'valor ficitio',
-            valorDeTransaccion: this.formMercancia.get('valorTransaccion')?.value,
-          };
-        } else {
-          this.insumosTablaDatos.push({
-            nombreTecnico: this.ninoFormGroup.get('nombreTecnico')?.value,
-            proveedor: this.ninoFormGroup.get('proveedor')?.value,
-            fabricanteOProductor: this.ninoFormGroup.get('fabricanteProductor')?.value,
-            fraccionArancelaria: this.ninoFormGroup.get('fraccionArancelaria')?.value,
-            rfc: 'valor ficitio',
-            valorDeTransaccion: this.formMercancia.get('valorTransaccion')?.value,
-          });
-        }
+        this.insumosTablaDatos.push({
+          nombreTecnico: this.ninoFormGroup.get('nombreTecnico')?.value,
+          proveedor: this.ninoFormGroup.get('proveedor')?.value,
+          fabricanteOProductor: this.ninoFormGroup.get('fabricanteProductor')?.value,
+          fraccionArancelaria: this.ninoFormGroup.get('fraccionArancelaria')?.value,
+          rfc: 'valor ficitio',
+          valorDeTransaccion: this.formMercancia.get('valorTransaccion')?.value,
+        });
       } else {
-          const INDICE = this.envasesTablaDatos.findIndex((ele: EnvasesTabla)=> ele.nombreTecnico===this.listaSeleccionadasEnvases?.[0].nombreTecnico);
-          if (INDICE !== -1) {
-            this.envasesTablaDatos[INDICE] = {
-              nombreTecnico: this.ninoFormGroup.get('nombreTecnico')?.value,
-              proveedor: this.ninoFormGroup.get('proveedor')?.value,
-              fabricanteOProductor: this.ninoFormGroup.get('fabricanteProductor')?.value,
-              fraccionArancelaria: this.ninoFormGroup.get('fraccionArancelaria')?.value,
-              paisDeOrigen: 'valor ficitio',
-              valorEnDolares: this.formMercancia.get('valorTransaccion')?.value,
-            };
-          } else {
-              this.envasesTablaDatos.push({
-              nombreTecnico: this.ninoFormGroup.get('nombreTecnico')?.value,
-              proveedor: this.ninoFormGroup.get('proveedor')?.value,
-              fabricanteOProductor: this.ninoFormGroup.get('fabricanteProductor')?.value,
-              fraccionArancelaria: this.ninoFormGroup.get('fraccionArancelaria')?.value,
-              paisDeOrigen: 'valor ficitio',
-              valorEnDolares: this.ninoFormGroup.get('valorDolares')?.value,
-            });
-          }
+        this.envasesTablaDatos.push({
+          nombreTecnico: this.ninoFormGroup.get('nombreTecnico')?.value,
+          proveedor: this.ninoFormGroup.get('proveedor')?.value,
+          fabricanteOProductor: this.ninoFormGroup.get('fabricanteProductor')?.value,
+          fraccionArancelaria: this.ninoFormGroup.get('fraccionArancelaria')?.value,
+          paisDeOrigen: 'valor ficitio',
+          valorEnDolares: this.ninoFormGroup.get('valorDolares')?.value,
+        });
       }
       this.cerrarDialogo();
     } else {

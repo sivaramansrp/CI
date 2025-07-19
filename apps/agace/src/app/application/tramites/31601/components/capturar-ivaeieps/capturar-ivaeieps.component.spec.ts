@@ -193,5 +193,149 @@ it('debe buscar datos y actualizar el formulario si RFC está presente', () => {
   expect(component.ivaForm.get('denominacion')?.value).toBe('Empresa XYZ');
   expect(component.ivaForm.get('domicilio')?.value).toBe('Calle Falsa 123');
 });
+it('should patch form and open modal if a row is selected', () => {
+  const fila = { rfc: 'RFC999', denominacion: 'Empresa X', domicilio: 'CDMX' };
 
+  component.destinatario = [fila];
+  component.filaSeleccionadaDestinatarioIndex = 0;
+  const patchSpy = jest.spyOn(component.ivaForm, 'patchValue');
+
+  component.modificarOpenModal();
+
+  expect(patchSpy).toHaveBeenCalledWith({
+    rfc: 'RFC999',
+    denominacion: 'Empresa X',
+    domicilio: 'CDMX'
+  });
+  expect(component.filasSeleccionadas).toEqual([]);
+  expect(component.modoEdicionDestinatario).toBe(true);
+  expect(component.mostrarModal).toBe(true);
+});
+
+it('should return early if index is null', () => {
+  component.filaSeleccionadaDestinatarioIndex = null;
+  const patchSpy = jest.spyOn(component.ivaForm, 'patchValue');
+
+  component.modificarOpenModal();
+
+  expect(patchSpy).not.toHaveBeenCalled();
+  expect(component.mostrarModal).not.toBe(true);
+});
+
+it('should return early if no row found at index', () => {
+  component.destinatario = [];
+  component.filaSeleccionadaDestinatarioIndex = 0;
+
+  const patchSpy = jest.spyOn(component.ivaForm, 'patchValue');
+  component.modificarOpenModal();
+
+  expect(patchSpy).not.toHaveBeenCalled();
+});
+it('should delete selected rows from destinatario and clear selection', () => {
+  const mockFila = { rfc: 'RFC123', denominacion: 'Empresa 1', domicilio: 'Dirección 1' };
+
+  component.destinatario = [mockFila];
+  component.filasSeleccionadas = [mockFila];
+
+  component.eliminarValor();
+
+  expect(component.destinatario.length).toBe(0);
+  expect(component.filasSeleccionadas).toEqual([]);
+  expect(component.filaSeleccionadaDestinatarioIndex).toBeNull();
+});
+
+it('should do nothing if no rows are selected', () => {
+  component.destinatario = [{ rfc: 'A', denominacion: 'B', domicilio: 'C' }];
+  component.filasSeleccionadas = [];
+
+  const original = [...component.destinatario];
+  component.eliminarValor();
+
+  expect(component.destinatario).toEqual(original);
+});
+it('should set filaSeleccionadaDestinatarioIndex to correct index if fila matches', () => {
+  const mockFila = {
+    rfc: 'RFC123',
+    denominacion: 'Empresa 1',
+    domicilio: 'Dirección 1'
+  };
+
+  component.destinatario = [
+    mockFila,
+    { rfc: 'RFC456', denominacion: 'Empresa 2', domicilio: 'Dirección 2' }
+  ];
+
+  component.onFilaSeleccionadaDestinatario(mockFila);
+
+  expect(component.filaSeleccionadaDestinatarioIndex).toBe(0);
+});
+
+it('should set filaSeleccionadaDestinatarioIndex to null if fila does not match', () => {
+  const mockFila = {
+    rfc: 'RFC789',
+    denominacion: 'Empresa 3',
+    domicilio: 'Dirección 3'
+  };
+
+  component.destinatario = [
+    { rfc: 'RFC123', denominacion: 'Empresa 1', domicilio: 'Dirección 1' },
+    { rfc: 'RFC456', denominacion: 'Empresa 2', domicilio: 'Dirección 2' }
+  ];
+
+  component.onFilaSeleccionadaDestinatario(mockFila);
+
+  expect(component.filaSeleccionadaDestinatarioIndex).toBeNull();
+});
+it('should patch the date into the form and call setValoresStore', () => {
+  const mockFecha = '2025-07-15';
+  const patchSpy = jest.spyOn(component.formularioDePago, 'patchValue');
+  const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
+
+  component.onFechaCambiada(mockFecha);
+
+  expect(patchSpy).toHaveBeenCalledWith({ fechaPago: mockFecha });
+  expect(setValoresStoreSpy).toHaveBeenCalledWith(
+    component.formularioDePago,
+    'fechaPago',
+    'setFechaPago'
+  );
+});
+it('should set tipoDe value from select event', () => {
+  const mockEvent = {
+    target: { value: 'Inversión A' }
+  } as unknown as Event;
+
+  const setValueSpy = jest.spyOn(component.ivaForm.get('tipoDe')!, 'setValue');
+
+  component.tipoDeInver(mockEvent);
+
+  expect(setValueSpy).toHaveBeenCalledWith('Inversión A');
+});
+
+it('should set tipoDe value to empty string if no event is passed', () => {
+  const setValueSpy = jest.spyOn(component.ivaForm.get('tipoDe')!, 'setValue');
+
+  component.tipoDeInver();
+
+  expect(setValueSpy).toHaveBeenCalledWith('');
+});
+it('should set tipoDe value from select event', () => {
+  const mockEvent = {
+    target: { value: 'Inversión A' }
+  } as unknown as Event;
+
+  const setValueSpy = jest.spyOn(component.ivaForm.get('tipoDe')!, 'setValue');
+
+  component.tipoDeInver(mockEvent);
+
+  expect(setValueSpy).toHaveBeenCalledWith('Inversión A');
+});
+
+it('should set tipoDe value to empty string if no event is passed', () => {
+  const setValueSpy = jest.spyOn(component.ivaForm.get('tipoDe')!, 'setValue');
+
+  component.tipoDeInver();
+
+  expect(setValueSpy).toHaveBeenCalledWith('');
+});
   });

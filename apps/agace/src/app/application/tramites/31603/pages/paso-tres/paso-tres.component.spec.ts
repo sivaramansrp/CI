@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { PasoTresComponent } from './paso-tres.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RegistrosDeComercioExteriorService } from '../../services/registros-de-comercio-exterior.service';
 import { TramiteAgaceState } from '../../../../estados/tramite.store';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
@@ -28,7 +29,7 @@ describe('PasoTresComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [FirmaElectronicaComponent,ToastrModule.forRoot(),],
+      imports: [FirmaElectronicaComponent,ToastrModule.forRoot(),HttpClientTestingModule],
       declarations: [PasoTresComponent],
       providers: [
         { provide: RegistrosDeComercioExteriorService, useValue: certificadosSvcMock },

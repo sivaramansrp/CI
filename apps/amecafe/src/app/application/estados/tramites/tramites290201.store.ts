@@ -176,6 +176,66 @@ export interface Solicitud290201State {
    * Correo electrónico.
    */
   correoelectronico: string;
+
+/**
+ * @property {string} entidadFederativa
+ * @description Entidad federativa seleccionada.
+ */
+entidadFederativa: string;
+
+/**
+ * @property {string} alcaldiaMunicipo
+ * @description Alcaldía o municipio seleccionado.
+ */
+alcaldiaMunicipo: string;
+
+/**
+ * @property {string} colonia
+ * @description Colonia seleccionada.
+ */
+colonia: string;
+
+/**
+ * @property {string} nombre
+ * @description Nombre de la persona.
+ */
+nombre: string;
+
+/**
+ * @property {string} primerApellido
+ * @description Primer apellido de la persona.
+ */
+primerApellido: string;
+
+/**
+ * @property {string} segundoApellido
+ * @description Segundo apellido de la persona.
+ */
+segundoApellido: string;
+
+/**
+ * @property {string} calle
+ * @description Calle del domicilio.
+ */
+calle: string;
+
+/**
+ * @property {string} numeroExterior
+ * @description Número exterior del domicilio.
+ */
+numeroExterior: string;
+
+/**
+ * @property {string} numeroInterior
+ * @description Número interior del domicilio.
+ */
+numeroInterior: string;
+
+/**
+ * @property {string} otrasCaracteristicas
+ * @description Otras características del domicilio.
+ */
+otrasCaracteristicas: string;
 }
 export function createInitialSolicitudState(): Solicitud290201State {
   return {
@@ -348,6 +408,65 @@ export function createInitialSolicitudState(): Solicitud290201State {
      * Correo electrónico.
      */
     correoelectronico: '',
+/**
+ * @property {string} entidadFederativa
+ * @description Entidad federativa seleccionada.
+ */
+entidadFederativa: '',
+
+/**
+ * @property {string} alcaldiaMunicipo
+ * @description Alcaldía o municipio seleccionado.
+ */
+alcaldiaMunicipo: '',
+
+/**
+ * @property {string} colonia
+ * @description Colonia seleccionada.
+ */
+colonia: '',
+
+/**
+ * @property {string} nombre
+ * @description Nombre de la persona.
+ */
+nombre: '',
+
+/**
+ * @property {string} primerApellido
+ * @description Primer apellido de la persona.
+ */
+primerApellido: '',
+
+/**
+ * @property {string} segundoApellido
+ * @description Segundo apellido de la persona.
+ */
+segundoApellido: '',
+
+/**
+ * @property {string} calle
+ * @description Calle del domicilio.
+ */
+calle: '',
+
+/**
+ * @property {string} numeroExterior
+ * @description Número exterior del domicilio.
+ */
+numeroExterior: '',
+
+/**
+ * @property {string} numeroInterior
+ * @description Número interior del domicilio.
+ */
+numeroInterior: '',
+
+/**
+ * @property {string} otrasCaracteristicas
+ * @description Otras características del domicilio.
+ */
+otrasCaracteristicas: ''
   };
 }
 @Injectable({
@@ -732,4 +851,125 @@ export class Solicitud290201Store extends Store<Solicitud290201State> {
       correoelectronico,
     }));
   }
+   /**
+     * @method setEntidadFederativa
+     * @description 
+     * Actualiza la entidad federativa en el estado.
+     * @param {string} entidadFederativa - Entidad federativa.
+     */
+   public setEntidadFederativa(entidadFederativa: string): void {
+    this.update((state) => ({
+        ...state,
+        entidadFederativa,
+    }));
+}
+
+/**
+ * @method setAlcaldiaMunicipo
+ * @description 
+ * Actualiza la alcaldía o municipio en el estado.
+ * @param {string} alcaldiaMunicipo - Alcaldía o municipio.
+ */
+public setAlcaldiaMunicipo(alcaldiaMunicipo: string): void {
+    this.update((state) => ({
+        ...state,
+        alcaldiaMunicipo,
+    }));
+}
+
+/**
+ * @method setColonia
+ * @description 
+ * Actualiza la colonia en el estado.
+ * @param {string} colonia - Colonia.
+ */
+public setColonia(colonia: string): void {
+    this.update((state) => ({
+        ...state,
+        colonia,
+    }));
+}
+/**
+ * @method setNombre
+ * @description Actualiza el estado con el nombre proporcionado.
+ * @param {string} nombre - Nombre de la persona.
+ */
+public setNombre(nombre: string): void {
+  this.update((state) => ({
+      ...state,
+      nombre,
+  }));
+}
+
+/**
+ * @method setPrimerApellido
+ * @description Actualiza el estado con el primer apellido proporcionado.
+ * @param {string} primerApellido - Primer apellido de la persona.
+ */
+public setPrimerApellido(primerApellido: string): void {
+  this.update((state) => ({
+      ...state,
+      primerApellido,
+  }));
+}
+
+/**
+ * @method setSegundoApellido
+ * @description Actualiza el estado con el segundo apellido proporcionado.
+ * @param {string} segundoApellido - Segundo apellido de la persona.
+ */
+public setSegundoApellido(segundoApellido: string): void {
+  this.update((state) => ({
+      ...state,
+      segundoApellido,
+  }));
+}
+
+/**
+ * @method setCalle
+ * @description Actualiza el estado con la calle proporcionada.
+ * @param {string} calle - Calle del domicilio.
+ */
+public setCalle(calle: string): void {
+  this.update((state) => ({
+      ...state,
+      calle,
+  }));
+}
+
+/**
+ * @method setNumeroExterior
+ * @description Actualiza el estado con el número exterior proporcionado.
+ * @param {string} numeroExterior - Número exterior del domicilio.
+ */
+public setNumeroExterior(numeroExterior: string): void {
+  this.update((state) => ({
+      ...state,
+      numeroExterior,
+  }));
+}
+
+/**
+ * @method setNumeroInterior
+ * @description Actualiza el estado con el número interior proporcionado.
+ * @param {string} numeroInterior - Número interior del domicilio.
+ */
+public setNumeroInterior(numeroInterior: string): void {
+  this.update((state) => ({
+      ...state,
+      numeroInterior,
+  }));
+}
+
+/**
+ * @method setOtrasCaracteristicas
+ * @description Actualiza el estado con otras características proporcionadas.
+ * @param {string} otrasCaracteristicas - Otras características del domicilio.
+ */
+public setOtrasCaracteristicas(otrasCaracteristicas: string): void {
+  this.update((state) => ({
+      ...state,
+      otrasCaracteristicas,
+  }));
+}
 }

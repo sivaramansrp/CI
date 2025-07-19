@@ -24,7 +24,7 @@
                     <app-tabla-dinamica
                     [tipoSeleccionTabla]="tipoSeleccionsoli"
                     [configuracionTabla]="solicitudConfigurationColumnasoli"
-                    [datos]="solicitubLista"
+                    [datos]="cuerpoTablaSolicitud"
                     [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
                     (filaClic)="seleccionFila($event)">
                   </app-tabla-dinamica>
@@ -93,6 +93,7 @@
             type="text"
             name = "numeroDeGuia"
             formControlName="numeroDeGuia"
+            maxlength="50"
             (change)="setValoresStore(forma, 'numeroDeGuia')"
           />
         </div>
@@ -120,27 +121,13 @@
               type="text"
               formControlName="numeroDeCarro"
               name="numeroDeCarro"
+              maxlength="50"
               (change)="setValoresStore(forma, 'numeroDeCarro')"
             />
           </div>
       
         </div>
 
-              <div class="row">
-                <ng-titulo titulo="Tipo de Mercancía" />
-                <div class="col-md-12">
-                  <label for="certficacion_a">Captura de datos de mercancía</label>
-                </div>
-                <div class="col-md-12">
-                <app-input-radio
-                  [radioOptions]="opcionDeBotonDeRadio"
-                  [layout]="'vertical'"
-                  name="tipoMercancia"
-                  formControlName="tipoMercancia"
-                  (change)="radioBotonSeleccionado()"
-                ></app-input-radio>
-                </div>
-              </div>
         <div class="row">
           <div class="col-md-12">
             <h5>Mercancías</h5>
@@ -160,10 +147,10 @@
 
     <div class="row mt-3">
       <div class="col-md-12 d-flex justify-content-end">
-        <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura"  (click)="modificarMercancia()">Modificar</button>
-        <button type="button" class="btn btn-danger ms-3"[disabled]="esFormularioSoloLectura" (click)="eliminarMercancia()">Eliminar</button>
+        <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura || !tieneRegistrosSeleccionados"  (click)="modificarMercancia()">Modificar</button>
+        <button type="button" class="btn btn-danger ms-3"[disabled]="esFormularioSoloLectura || !tieneRegistrosSeleccionados" (click)="eliminarMercancia()">Eliminar</button>
         <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura" (click)="agregarMercancia()">Agregar</button>
       </div>
-    </div>
+    </div>`
 
 </div>

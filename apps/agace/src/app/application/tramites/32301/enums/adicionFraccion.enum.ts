@@ -22,7 +22,7 @@ export const CVE_FRACCION_CORRELACION_MOD_OPTION = [
 * Es una declaración bajo protesta conforme a los plazos legales establecidos.
 */
 export const ALOTO_FRACCIONES: string = 
-  "Declaro bajo protesta a decir verdad que este aviso se presenta al menos 30 días previos a aquel en el que se pretende efectuar la primera importación de las mercancías informadas.";
+  "*Declaro bajo protesta a decir verdad que este aviso se presenta al menos 30 días previos a aquel en el que se pretende efectuar la primera importación de las mercancías informadas.";
 
 /**
 * Mensaje con requerimientos específicos de documentación para socios, accionistas y representantes legales.
