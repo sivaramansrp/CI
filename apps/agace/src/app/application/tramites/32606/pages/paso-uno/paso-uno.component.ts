@@ -70,80 +70,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   ngOnInit(): void {
-    this.solicitanteForm = this.fb.group({
-      adace: [{ value: this.solicitudState?.adace || 'ADACE-01', disabled: this.esFormularioSoloLectura }]
-    });
-    // this.consultaioQuery.selectConsultaioState$
-    //   .pipe(
-    //     takeUntil(this.destroyNotifier$),
-    //     map((seccionState) => {
-    //       this.consultaDatos = seccionState;
-    //       this.esFormularioSoloLectura = this.consultaDatos.readonly;
-    //       this.inicializarEstadoFormulario();
-    //     })
-    //   )
-    //   .subscribe();
-    // if (this.consultaDatos.update) {
-    //   this.fetchGetDatosConsulta();
-    // }
+   
   }
 
-  /**
-  * @method inicializarEstadoFormulario
-  * @description Inicializa el estado del formulario según el modo de solo lectura.
-  * 
-  * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
-  * En caso contrario, habilita los controles del formulario
-  * 
-  * @returns {void}
-  */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.solicitanteForm.get('adace')?.disable();
-    } else {
-      this.solicitanteForm.get('adace')?.enable();
-    }
-  }
-  /**
- * @method fetchGetDatosConsulta
- * @description Método para obtener los datos de consulta desde el servicio `DatosTramiteService` y actualizar el estado del store `tramite32606Store`.
- * 
- * Este método realiza una solicitud HTTP para obtener los datos de consulta y, si la respuesta es exitosa, actualiza múltiples propiedades del store con los datos recibidos.
- * Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
- * 
- * @returns {void}
- */
-  // public fetchGetDatosConsulta(): void {
-  //   this.adaceService
-  //     .getDatosConsulta()
-  //     .pipe(takeUntil(this.destroyNotifier$))
-  //     .subscribe((respuesta) => {
-  //       if (respuesta.success) {
-  //         this.tramite32606Store.setClaveFiscalizador(respuesta.datos.claveFiscalizado);
-  //         this.tramite32606Store.setAdace(respuesta.datos.adace);
-  //         this.tramite32606Store.setTipoDictamen(respuesta.datos.tipoDictamen);
-  //         this.tramite32606Store.setRfc(respuesta.datos.rfc);
-  //         this.tramite32606Store.setNombre(respuesta.datos.nombre);
-  //         this.tramite32606Store.setNumeroInscripcion(respuesta.datos.numeroInscripcion);
-  //         this.tramite32606Store.setAno(respuesta.datos.ano);
-  //         this.tramite32606Store.setMes(respuesta.datos.mes);
-  //         this.tramite32606Store.setRadioPartial(respuesta.datos.radioParcial);
-  //         this.tramite32606Store.setRadioTotal(respuesta.datos.radioTotal);
-  //         this.tramite32606Store.setSaldoPendiente(respuesta.datos.saldoPendiente);
-  //         this.tramite32606Store.setAprovechamiento(respuesta.datos.aprovechamiento);
-  //         this.tramite32606Store.setDisminucionAplicada(respuesta.datos.disminucionAplicada);
-  //         this.tramite32606Store.setCompensacionAplicada(respuesta.datos.compensacionAplicada);
-  //         this.tramite32606Store.setSaldoPendienteDisminuir(respuesta.datos.saldoPendienteDisminuir);
-  //         this.tramite32606Store.setCantidad(respuesta.datos.cantidad);
-  //         this.tramite32606Store.setLlaveDePago(respuesta.datos.llaveDePago);
-  //         this.tramite32606Store.setArchivo(respuesta.datos.archivo);
-  //         this.tramite32606Store.setFechaPago(respuesta.datos.fechaPago);
-  //         this.tramite32606Store.setFechaElaboracion(respuesta.datos.fechaElaboracion);
-  //         this.tramite32606Store.setSaldoPendienteCompensar(respuesta.datos.saldoPendienteCompensar);
-  //       }
-  //     });
-  // }
-
+ 
   /**
    * Selecciona una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.

@@ -41,7 +41,9 @@ export class ControladoraComponent {
 
   donanteDomicilio(): void {
     this.controladoraForm = this.fb.group({
-      tipoRadio05: [''],
+      tipoRadio21: [''],
+      tipoRadio22: [''],
+      tipoRadio23: [''],
       monto: [''],
       operacionesBancarias: [''],
       llavePago: [''],

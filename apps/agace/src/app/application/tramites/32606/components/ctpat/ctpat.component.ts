@@ -30,7 +30,9 @@ export class CtpatComponent implements OnDestroy , OnInit {
   
     donanteDomicilio(): void {
       this.ctpatForm = this.fb.group({
-        tipoRadio05: [''],
+        tipoRadio24: [''],
+        tipoRadio25: [''],
+        tipoRadio26: [''],
           
       });
     }

@@ -20,6 +20,9 @@
     </div>
   </div>
   <!-- 2nd section -->
+  <div class="col-md-12">
+    <ng-titulo titulo="" />
+  </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start"><span style="color: red;">*</span> Señale si al momento de ingresar su
       solicitud si se encuentra al
@@ -82,44 +85,60 @@
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'"
       formControlName="tipoRadio06"></app-input-radio>
   </div>
-
   <!-- 3rd section -->
-
+  <div class="col-md-12">
+    <ng-titulo titulo="" />
+  </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start"><span style="color: red;">*</span> Señale si al momento de ingresar su
       solicitud se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69, con excepción
       de lo dispuesto en la fracción VI.</label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'"
-      formControlName="tipoRadio04"></app-input-radio>
+      [selectedValue]="valorSeleccionado" (valueChange)="cambiarRadio($event)"
+      formControlName="tipoRadio07"></app-input-radio>
   </div>
+  @if (nuevaNotificacion) { <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+  </section> }
 
   <div class="col-md-12 mt-4">
     <label class="form-label text-start"><span style="color: red;">*</span> Del mismo modo indique si al momento de
       ingresar su solicitud se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69-B,
       cuarto párrafo del CFF.</label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'"
-      formControlName="tipoRadio05"></app-input-radio>
+      formControlName="tipoRadio08"></app-input-radio>
   </div>
 
   <div class="col-md-12 mt-4">
     <label class="form-label text-start"><span style="color: red;">*</span> Señale si se encuentra en el listado de
       empresas publicadas por el SAT en términos del artículo 69-B Bis noveno párrafo del CFF.</label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'"
-      formControlName="tipoRadio06"></app-input-radio>
+      formControlName="tipoRadio09"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start"><span style="color: red;">*</span> Señale si sus certificados de sellos
       digitales están vigentes.</label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'"
-      formControlName="tipoRadio04"></app-input-radio>
+      [selectedValue]="valorSeleccionado" (valueChange)="cambiarRadio2($event)"
+      formControlName="tipoRadio10"></app-input-radio>
   </div>
+  @if (nuevaNotificacion) { <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion2"
+      (confirmacionModal)="eliminarPedimento2($event)"></lib-notificaciones>
+  </section> }
 
   <div class="col-md-12 mt-4">
     <label class="form-label text-start"><span style="color: red;">*</span> En caso afirmativo señale si se infringió
       alguno de los supuestos previstos en el artículo 17-H Bis del CFF, durante los últimos doce meses.</label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'"
-      formControlName="tipoRadio05"></app-input-radio>
+      [selectedValue]="valorSeleccionado" (valueChange)="cambiarRadio($event)"
+      formControlName="tipoRadio11"></app-input-radio>
   </div>
+  @if (nuevaNotificacion) { <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+  </section> }
 
 </form>
 <app-domicillio></app-domicillio>

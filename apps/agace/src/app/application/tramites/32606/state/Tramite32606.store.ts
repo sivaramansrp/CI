@@ -15,48 +15,60 @@ export interface Catalogo {
  * Estado inicial para la interfaz del trámite 32606.
  */
 export interface Solicitud32606State {
-  /** Clave del fiscalizado. */
-  claveFiscalizado: string;
-  /** adace */
-  adace: string;
-  /** Tipo de dictamen. */
-  tipoDictamen: string;
-  /** RFC del fiscalizado. */
-  rfc: string;
-  /** nombre */
-  nombre: string;
-  /** Número de inscripción. */
-  numeroInscripcion: string;
-  /** Catálogo de años. */
-  ano: Catalogo[] | null;
-  /** Catálogo de meses. */
-  mes: Catalogo[] | null;
-  /** Opción seleccionada en el radio parcial. */
-  radioParcial: string;
-  /** Opción seleccionada en el radio total. */
-  radioTotal: string;
-  /** Saldo pendiente del dictamen anterior. */
-  saldoPendiente: string;
-  /** Aprovechamiento total a cargo. */
-  aprovechamiento: string;
-  /** Disminución aplicada. */
-  disminucionAplicada: string;
-  /** Compensación aplicada. */
-  compensacionAplicada: string;
-  /** Saldo pendiente por disminuir. */
-  saldoPendienteDisminuir: string;
-  /** Cantidad pagada. */
-  cantidad: string;
-  /** Llave de pago. */
-  llaveDePago: string;
-  /** Archivos adjuntos. */
-  archivo: File[];
-  /** Fecha de pago. */
-  fechaPago: string;
-  /** Fecha de elaboración. */
-  fechaElaboracion: string;
-  /** Saldo pendiente por compensar. */
-  saldoPendienteCompensar: string;
+  tipoRadio01: string,
+  tipoRadio02: string,
+  tipoRadio03: string,
+  tipoRadio04: string,
+  tipoRadio05: string,
+  tipoRadio06: string,
+  tipoRadio07: string,
+  tipoRadio08: string,
+  tipoRadio09: string,
+  tipoRadio10: string,
+  tipoRadio11: string,
+  tipoRadio12: string
+  tipoRadio13: string
+  tipoRadio14: string
+  tipoRadio15: string
+  tipoRadio16: string
+  tipoRadio17: string
+  tipoRadio18: string
+  tipoRadio19: string
+  tipoRadio20: string
+  tipoRadio21: string
+  tipoRadio22: string
+  tipoRadio23: string
+  tipoRadio24: string
+  tipoRadio25: string
+  tipoRadio26: string,
+  sectorProductivo: string,
+  servicio: string,
+  domicilio: string,
+  biomestre: string,
+  numeroEmpleados: string,
+  domicillio: string,
+  file1: string,
+  file2: string,
+  actualmente: string,
+  actualmente2: string,
+  sistemaIdentificacion: string,
+  lugarRadicacion: string,
+  sistemaControlInventarios: boolean,
+  rfcTercero: string,
+  rfc: string,
+  nombre: string,
+  apellidoPaterno: string,
+  apellidoMaterno: string,
+  telefono: string,
+  correoElectronico: string,
+  monto: string,
+  operacionesBancarias: string,
+  llavePago: string,
+  modalidad: string,
+  fechaRegistro: string,
+  numeroAutorizacion: string,
+  radioAutorizo: string,
+  radioClasificacion: string,
 }
 
 /**
@@ -65,27 +77,61 @@ export interface Solicitud32606State {
  */
 export function createInitialState(): Solicitud32606State {
   return {
-    claveFiscalizado: '',
-    adace: '',
-    tipoDictamen: '',
-    rfc: '',
-    nombre: '',
-    numeroInscripcion: '',
-    ano: null,
-    mes: null,
-    radioParcial: '',
-    radioTotal: '',
-    saldoPendiente: '',
-    aprovechamiento: '',
-    disminucionAplicada: '',
-    compensacionAplicada: '',
-    saldoPendienteDisminuir: '',
-    cantidad: '',
-    llaveDePago: '',
-    archivo: [],
-    fechaPago: '',
-    fechaElaboracion: '',
-    saldoPendienteCompensar: '',
+    tipoRadio01: '',
+    tipoRadio02: '',
+    tipoRadio03: '',
+    tipoRadio04: '',
+    tipoRadio05: '',
+    tipoRadio06: '',
+    tipoRadio07: '',
+    tipoRadio08: '',
+    tipoRadio09: '',
+    tipoRadio10: '',
+    tipoRadio11: '',
+    tipoRadio12: '',
+    tipoRadio13: '',
+    tipoRadio14: '',
+    tipoRadio15: '',
+    tipoRadio16: '',
+    tipoRadio17: '',
+    tipoRadio18: '',
+    tipoRadio19: '',
+    tipoRadio20: '',
+    tipoRadio21: '',
+    tipoRadio22: '',
+    tipoRadio23: '',
+    tipoRadio24: '',
+    tipoRadio25: '',
+    tipoRadio26: '',
+
+    sectorProductivo: '',
+    servicio: '', 
+    domicilio: '', 
+    biomestre: '',
+    numeroEmpleados: '', 
+    domicillio: '',
+    file1: '', 
+    file2: '', 
+    actualmente: '', 
+    actualmente2: '', 
+    sistemaIdentificacion: '', // Sistema de identificación
+    lugarRadicacion: '', // Lugar de radicación
+    sistemaControlInventarios: false, // Sistema de control de inventarios
+    rfcTercero: '', // RFC del tercero
+    rfc: '', // RFC del solicitante
+    nombre: '', // Nombre del solicitante
+    apellidoPaterno: '', // Apellido paterno del solicitante
+    apellidoMaterno: '', // Apellido materno del solicitante
+    telefono: '', // Teléfono de contacto
+    correoElectronico: '', // Correo electrónico de contacto
+    monto: '', // Monto relacionado con la solicitud
+    operacionesBancarias: '', // Operaciones bancarias realizadas
+    llavePago: '', // Llave de pago para la solicitud
+    modalidad: '', // Modalidad de la solicitud
+    fechaRegistro: new Date().toISOString(), // Fecha de registro, por defecto la fecha actual en formato ISO
+    numeroAutorizacion: '', // Número de autorización si aplica
+    radioAutorizo: 'NO', // Radio que indica si se autorizó
+    radioClasificacion: 'NO', 
   };
 }
 
@@ -114,163 +160,6 @@ export class Tramite32606Store extends Store<Solicitud32606State> {
     this.update((state) => ({ ...state, claveFiscalizado }));
   }
 
-  /**
-   * Actualiza el adace.
-   * @param adace Nuevo adace.
-   */
-  public setAdace(adace: string):void {
-    this.update((state) => ({ ...state, adace }));
-  }
-
-  /**
-   * Actualiza el tipo de dictamen.
-   * @param tipoDictamen Nuevo tipo de dictamen.
-   */
-  public setTipoDictamen(tipoDictamen: string): void {
-    this.update((state) => ({ ...state, tipoDictamen }));
-  }
-
-  /**
-   * Actualiza el RFC del fiscalizado.
-   * @param rfc Nuevo RFC.
-   */
-  public setRfc(rfc: string): void {
-    this.update((state) => ({ ...state, rfc }));
-  }
-
-  /**
-   * Actualiza el nombre del fiscalizado.
-   * @param nombre Nuevo nombre.
-   */
-  public setNombre(nombre: string):void {
-    this.update((state) => ({ ...state, nombre }));
-  }
-
-  /**
-   * Actualiza el número de inscripción.
-   * @param numeroInscripcion Nuevo número de inscripción.
-   */
-  public setNumeroInscripcion(numeroInscripcion: string): void {
-    this.update((state) => ({ ...state, numeroInscripcion }));
-  }
-
-  /**
-   * Actualiza el catálogo de años.
-   * @param ano Nuevo catálogo de años.
-   */
-  public setAno(ano: Catalogo[] | null): void {
-    this.update((state) => ({ ...state, ano }));
-  }
-
-  /**
-   * Actualiza el catálogo de meses.
-   * @param mes Nuevo catálogo de meses.
-   */
-  public setMes(mes: Catalogo[] | null): void {
-    this.update((state) => ({ ...state, mes }));
-  }
-
-  /**
-   * Actualiza la opción seleccionada en el radio parcial.
-   * @param radioPartial Nueva opción seleccionada.
-   */
-  public setRadioPartial(radioParcial: string): void {
-    this.update((state) => ({ ...state, radioParcial }));
-  }
-
-  /**
-   * Actualiza la opción seleccionada en el radio total.
-   * @param radioTotal Nueva opción seleccionada.
-   */
-  public setRadioTotal(radioTotal: string): void {
-    this.update((state) => ({ ...state, radioTotal }));
-  }
-
-  /**
-   * Actualiza el saldo pendiente del dictamen anterior.
-   * @param saldoPendiente Nuevo saldo pendiente.
-   */
-  public setSaldoPendiente(saldoPendiente: string): void {
-    this.update((state) => ({ ...state, saldoPendiente }));
-  }
-
-  /**
-   * Actualiza el aprovechamiento total a cargo.
-   * @param aprovechamiento Nuevo aprovechamiento.
-   */
-  public setAprovechamiento(aprovechamiento: string): void {
-    this.update((state) => ({ ...state, aprovechamiento }));
-  }
-
-  /**
-   * Actualiza la disminución aplicada.
-   * @param disminucionAplicada Nueva disminución aplicada.
-   */
-  public setDisminucionAplicada(disminucionAplicada: string): void {
-    this.update((state) => ({ ...state, disminucionAplicada }));
-  }
-  /**
-   * Actualiza la compensación aplicada.
-   * @param compensacionAplicada Nueva compensación aplicada.
-   */
-  public setCompensacionAplicada(compensacionAplicada: string): void {
-    this.update((state) => ({ ...state, compensacionAplicada }));
-  }
-  /**
-   * Actualiza el saldo pendiente por compensar.
-   * @param saldoPendienteCompensar Nuevo saldo pendiente por compensar.
-   */
-  public setSaldoPendienteCompensar(saldoPendienteCompensar: string): void {
-    this.update((state) => ({ ...state, saldoPendienteCompensar }));
-  }
-
-  /**
-   * Actualiza el saldo pendiente por disminuir.
-   * @param saldoPendienteDisminuir Nuevo saldo pendiente por disminuir.
-   */
-  public setSaldoPendienteDisminuir(saldoPendienteDisminuir: string): void {
-    this.update((state) => ({ ...state, saldoPendienteDisminuir }));
-  }
-
-  /**
-   * Actualiza la cantidad pagada.
-   * @param cantidad Nueva cantidad pagada.
-   */
-  public setCantidad(cantidad: string): void {
-    this.update((state) => ({ ...state, cantidad }));
-  }
-
-  /**
-   * Actualiza la llave de pago.
-   * @param llaveDePago Nueva llave de pago.
-   */
-  public setLlaveDePago(llaveDePago: string): void {
-    this.update((state) => ({ ...state, llaveDePago }));
-  }
-
-  /**
-   * Actualiza los archivos adjuntos.
-   * @param archivo Nuevos archivos adjuntos.
-   */
-  public setArchivo(archivo: File[]): void {
-    this.update((state) => ({ ...state, archivo }));
-  }
-
-  /**
-   * Actualiza la fecha de pago.
-   * @param fechaPago Nueva fecha de pago.
-   */
-  public setFechaPago(fechaPago: string): void {
-    this.update((state) => ({ ...state, fechaPago }));
-  }
-
-  /**
-   * Actualiza la fecha de elaboración.
-   * @param fechaElaboracion Nueva fecha de elaboración.
-   */
-  public setFechaElaboracion(fechaElaboracion: string): void {
-    this.update((state) => ({ ...state, fechaElaboracion }));
-  }
 
   /**
    * Restaura el estado al valor inicial.

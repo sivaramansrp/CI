@@ -35,7 +35,9 @@ export class QuerellaComponent implements OnInit, OnDestroy {
 
   donanteDomicilio(): void {
     this.querellaForm = this.fb.group({
-      tipoRadio08: [''],
+      tipoRadio18: [''],
+      tipoRadio19: [''],
+      tipoRadio20: [''],
       sistemaIdentificacion: [''],
       lugarRadicacion: [''],
       sistemaControlInventarios: [false],

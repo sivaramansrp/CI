@@ -33,7 +33,10 @@ export class MiembroComponent implements OnInit, OnDestroy {
 
   donanteDomicilio(): void {
     this.miembroForm = this.fb.group({
-      tipoRadio08: [''],
+      tipoRadio14: [''],
+      tipoRadio15: [''],
+      tipoRadio16: [''],
+      tipoRadio17: [''],
 
     });
   }
