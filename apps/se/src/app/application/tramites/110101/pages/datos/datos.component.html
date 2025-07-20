@@ -20,13 +20,19 @@
                 <solicitante #Solicitante></solicitante>
             }
             @case (2) {
-                <app-tratados (habilitarPestana)="habilitarPestana()"></app-tratados>
+                <app-protesto-decir-verdad></app-protesto-decir-verdad>
             }
             @case (3) {
-                <app-datos-mercancia></app-datos-mercancia>
+                <app-tratados (habilitarPestana)="habilitarPestana()"></app-tratados>
             }
             @case (4) {
+                <app-datos-mercancia></app-datos-mercancia>
+            }
+            @case (5) {
                 <app-datos-adicionales></app-datos-adicionales>
+            }
+            @case (6) {
+                <app-protesto-decir-verdad></app-protesto-decir-verdad>
             }
         }
         </ng-container>
