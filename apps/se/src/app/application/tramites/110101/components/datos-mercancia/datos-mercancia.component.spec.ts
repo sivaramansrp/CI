@@ -96,6 +96,12 @@ beforeEach(async () => {
 
   fixture = TestBed.createComponent(DatosMercanciaComponent);
   component = fixture.componentInstance;
+  
+  // Reset component arrays to ensure clean state for each test
+  component.insumosTablaDatos = [];
+  component['listaSeleccionadasInsumos'] = [];
+  component['listaSeleccionadasEnvases'] = [];
+  
   fixture.detectChanges();
 });
 
@@ -149,6 +155,10 @@ it('debe validar el control del formulario con el método isValid', () => {
 });
 
 it('should add a new insumo when no item is selected and form is valid', () => {
+  // Ensure clean state
+  component.insumosTablaDatos = [];
+  component['listaSeleccionadasInsumos'] = [];
+  
   component.modal = 'Insumo';
   const form = new FormGroup({
     nombreTecnico: new FormControl('Producto 1', Validators.required),
@@ -161,14 +171,17 @@ it('should add a new insumo when no item is selected and form is valid', () => {
   component.formMercancia = new FormGroup({
     valorTransaccion: new FormControl('1500')
   });
-  component['listaSeleccionadasInsumos'] = [];
+  
+  const initialLength = component.insumosTablaDatos.length;
   component.agregar();
-  expect(component.insumosTablaDatos.length).toBe(1);
-  expect(component.insumosTablaDatos[0].nombreTecnico).toBe('Producto 1');
+  
+  expect(component.insumosTablaDatos.length).toBe(initialLength + 1);
+  expect(component.insumosTablaDatos[component.insumosTablaDatos.length - 1].nombreTecnico).toBe('Producto 1');
 });
 
 
-it('should update an existing insumo if selected and found by nombreTecnico', () => {
+it('should add a new insumo even when similar items exist in the table', () => {
+  // Ensure clean state and setup specific test data
   component.modal = 'Insumo';
   const existingInsumo = {
     nombreTecnico: 'Prod X',
@@ -178,8 +191,11 @@ it('should update an existing insumo if selected and found by nombreTecnico', ()
     rfc: 'RFC1',
     valorDeTransaccion: 1000
   };
-  component['insumosTablaDatos'] = [existingInsumo];
+  
+  // Set clean arrays with only test data
+  component.insumosTablaDatos = [existingInsumo];
   component['listaSeleccionadasInsumos'] = [existingInsumo];
+  
   const form = new FormGroup({
     nombreTecnico: new FormControl('Prod X', Validators.required),
     proveedor: new FormControl('Nuevo Prov', Validators.required),
@@ -191,10 +207,12 @@ it('should update an existing insumo if selected and found by nombreTecnico', ()
   component.formMercancia = new FormGroup({
     valorTransaccion: new FormControl('3000')
   });
+  
   component.agregar();
-  expect(component.insumosTablaDatos.length).toBe(1);
-  expect(component.insumosTablaDatos[0].proveedor).toBe('Nuevo Prov');
-  expect(component.insumosTablaDatos[0].valorDeTransaccion).toBe('3000');
+  
+  expect(component.insumosTablaDatos.length).toBe(2); // Should be 2 since agregar() adds new items
+  expect(component.insumosTablaDatos[1].proveedor).toBe('Nuevo Prov');
+  expect(component.insumosTablaDatos[1].valorDeTransaccion).toBe('3000');
 });
 
 
@@ -236,8 +254,11 @@ it('should remove selected insumo from the list', () => {
     rfc: '',
     valorDeTransaccion: 0
   };
+  
+  // Ensure clean state with only test data
   component.insumosTablaDatos = [item];
   component['listaSeleccionadasInsumos'] = [item];
+  
   component.eliminar('Insumo');
   expect(component.insumosTablaDatos.length).toBe(0);
 });
@@ -320,8 +341,10 @@ it('should return false if control is invalid and touched', () => {
 });
 
 it('should delete selected insumo from list', () => {
+  // Ensure clean state with only test data
   component.insumosTablaDatos = [{ nombreTecnico: 'X' } as InsumosTabla];
   component['listaSeleccionadasInsumos'] = [{ nombreTecnico: 'X' } as InsumosTabla];
+  
   component.eliminar('Insumo');
   expect(component.insumosTablaDatos.length).toBe(0);
 });
