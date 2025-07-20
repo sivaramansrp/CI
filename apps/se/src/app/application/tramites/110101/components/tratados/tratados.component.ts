@@ -130,7 +130,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroy$),
-        map((seccionState) => {
+        map((seccionState) => { debugger;
           this.esFormularioSoloLectura = seccionState.readonly;
           this.inicializarFormularioTratados();
         })
