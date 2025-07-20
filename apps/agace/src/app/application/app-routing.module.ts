@@ -313,7 +313,13 @@ const ROUTES: Routes = [
         (m) => m.AeronavesModule
       ),
   },
-   {
+  {
+    path: 'empresas-comercializadoras',
+    loadChildren: () => 
+      import('./tramites/32604/empresas-comercializadoras.module').then(
+        (m) => m.EmpresasComercializadorasModule)
+  },
+  {
     path: 'auto-transportista',
     loadChildren: () =>
       import('./tramites/32611/auto-transportista.module').then(

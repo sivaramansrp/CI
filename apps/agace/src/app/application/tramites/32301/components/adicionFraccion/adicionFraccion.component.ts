@@ -35,6 +35,7 @@ import { ALOTO_FRACCIONES } from '../../enums/adicionFraccion.enum';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CROSLISTA_DE_PAISES } from '../../enums/pantallas-constante.enum';
 import { CommonModule } from '@angular/common';
+import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
@@ -60,12 +61,13 @@ interface RatioOption {
     CatalogoSelectComponent,
     CrosslistComponent,
     NotificacionesComponent,
+    InputCheckComponent
   ],
   templateUrl: './adicionFraccion.component.html',
+  styleUrls: ['./adicionFraccion.component.scss'],
 })
 export class AdicionFraccionComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+  implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Formulario principal para la declaración.
    */
@@ -131,22 +133,22 @@ export class AdicionFraccionComponent
    */
   botonField = [
     {
-      btnNombre: 'Agregar todos',
+      btnNombre: 'Agregar',
       class: 'btn-primary',
       funcion: (): void => this.agregar(''),
     },
     {
-      btnNombre: 'Agregar selección',
+      btnNombre: 'Agregar todos',
       class: 'btn-default',
       funcion: (): void => this.agregar('t'),
     },
     {
-      btnNombre: 'Restar selección',
+      btnNombre: 'Eliminar',
       class: 'btn-danger',
       funcion: (): void => this.quitar(''),
     },
     {
-      btnNombre: 'Restar todos',
+      btnNombre: 'Eliminar todos',
       class: 'btn-default',
       funcion: (): void => this.quitar('t'),
     },
@@ -179,7 +181,27 @@ export class AdicionFraccionComponent
    * Instancias de modales utilizados en la carga masiva y fracciones.
    */
   cargaMasivaFrModalInstance!: Modal;
+  /**
+   * Instancia de la clase `Modal` utilizada para gestionar el diálogo modal de fracciones.
+   * Esta propiedad se inicializa cuando se crea el modal y proporciona métodos para controlar su comportamiento.
+   */
   fraccionesModelInstance!: Modal;
+
+  /**
+  * Elemento de entrada de archivo HTML.
+  *
+  * @type {HTMLInputElement}
+  */
+  entradaArchivo!: HTMLInputElement;
+  /**
+  * Etiqueta del archivo seleccionado.
+  */
+  etiquetaDeArchivo: string = 'Sin archivo seleccionados';
+
+  /**
+ * Archivo de medicamentos seleccionado.
+ */
+  archivoMedicamentos: File | null = null;
 
   /**
    * Referencias a los elementos del DOM para los modales.
@@ -220,7 +242,8 @@ export class AdicionFraccionComponent
       descripcionGenerica3: [''],
       idSolicitud: [''],
       labelFraccionesAgregadas: [''],
-      idCarga: [''],
+      idCarga: [{ value: '', disabled: this.esFormularioSoloLectura }],
+      manifiestos: [false, Validators.required],
     });
 
     /**
@@ -303,6 +326,9 @@ export class AdicionFraccionComponent
     this.getAdicianFraccionOption();
     this.getAdicianFraccionNicoModOptions();
     this.getAdicianFraccionActivRelProcModOption();
+    this.getAdicianFraccioncveFraccionCorrelacionModOption();
+    this.getAdicianFraccionUnidadMedidaModOption();
+  
   }
   /**
    * Obtiene las opciones para los botones de radio relacionados con fracciones.
@@ -531,5 +557,66 @@ export class AdicionFraccionComponent
      * Completa el flujo de datos, asegurando que no se envíen más valores.
      */
     this.destroy$.complete();
+  }
+  /**
+ * Maneja el cambio de archivo en el input de archivo.
+ *
+ * @param event Evento de cambio de archivo.
+ *
+ * @returns {void}
+ */
+  onCambioDeArchivo(event: Event): void {
+    const TARGET = event.target as HTMLInputElement;
+    const FILE_INPUT = document.getElementById(
+      'archivoProceso'
+    ) as HTMLInputElement;
+    const FILE = FILE_INPUT.files?.[0];
+    if (FILE) {
+      if (FILE.type !== 'text/csv' && !FILE.name.endsWith('.csv')) {
+        this.abrirModal();
+        return;
+      }
+
+      if (TARGET.files && TARGET.files.length > 0) {
+        this.archivoMedicamentos = TARGET.files[0];
+        this.etiquetaDeArchivo
+          = this.archivoMedicamentos.name;
+      } else {
+        this.etiquetaDeArchivo = 'Sin archivo seleccionados';
+      }
+    }
+  }
+  /**
+  * Abre un modal de notificación para alertar al usuario que debe seleccionar un archivo CSV.
+  * 
+  * Este método inicializa la notificación con un mensaje de alerta y configura el elemento a eliminar.
+  */
+  abrirModal(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Por favor seleccione un archivo CSV.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'OK',
+      txtBtnCancelar: '',
+    };
+
+  }
+  /**
+* Activa la selección del archivo de medicamentos.
+* @returns {void}
+*/
+  activarSeleccionArchivo(): void {
+    this.entradaArchivo = document.getElementById(
+      'archivoProceso'
+    ) as HTMLInputElement;
+    if (this.entradaArchivo) {
+      this.entradaArchivo.click();
+    }
+
+
   }
 }

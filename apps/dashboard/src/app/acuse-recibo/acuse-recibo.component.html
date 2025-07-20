@@ -1,13 +1,48 @@
-<div class="container">
-  <div class="row mt-5">
-    <ng-titulo [titulo]="'Acuses y resoluciones'"></ng-titulo>
+@if(pantalla === 'confirmar-notificacion') {
+  <div class="container">
+    <div class="row mt-5">
+      <ng-titulo [titulo]="'Acuses y resoluciones'"></ng-titulo>
+    </div>
+    <div class="row">
+      <app-tabla-dinamica
+        [configuracionTabla]="tablaConfiguracion.configuracionTabla"
+        [datos]="acuseReciboTablaDatos"
+        [acciones]="tablaConfiguracion.acciones"
+      >
+      </app-tabla-dinamica>
+    </div>
   </div>
-  <div class="row">
-    <app-tabla-dinamica
-      [configuracionTabla]="acuseReciboTablaConfiguracion.configuracionTabla"
-      [datos]="acuseReciboTablaDatos"
-      [acciones]="acuseReciboTablaConfiguracion.acciones"
-    >
-    </app-tabla-dinamica>
+}
+@if(pantalla === 'confirmar-resolucion'){
+  <div class="container">
+    <div class="row mt-5">
+      <ng-titulo [titulo]="'Acuses y resoluciones'"></ng-titulo>
+    </div>
+    <lib-notificaciones [notificacionInput]="alertaNotificacion">
+    </lib-notificaciones>
+    <div>
+      <div class="row mt-5">
+        <ng-titulo [titulo]="'Acuse(s)'"></ng-titulo>
+      </div>
+      <app-tabla-dinamica
+        [configuracionTabla]="tablaConfiguracion.configuracionTabla"
+        [datos]="acuseConfirmarResolucionTablaDatos"
+        [acciones]="tablaConfiguracion.acuseAcciones"
+      >
+      </app-tabla-dinamica>
+    </div>
+
+    <div>
+      <div class="row mt-5">
+        <ng-titulo [titulo]="'Resolución(es)'"></ng-titulo>
+      </div>
+      <app-tabla-dinamica
+        [configuracionTabla]="tablaConfiguracion.configuracionTabla"
+        [datos]="resolucionConfirmarResolucionTablaDatos"
+        [acciones]="tablaConfiguracion.resolucionAcciones"
+      >
+      </app-tabla-dinamica>
+    </div>
   </div>
-</div>
+}
+
