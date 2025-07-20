@@ -260,6 +260,12 @@ const ROUTES: Routes = [
     loadChildren: () => 
       import('./tramites/30505/aviso-de-modificacion.module').then(
         (m) => m.AvisoDeModificacionModule)
+  },
+  {
+      path: 'recinto-fiscalizado',
+    loadChildren: () => 
+      import('./tramites/32615/recinto-fiscalizado.module').then(
+        (m) => m.RecintoFiscalizadoModule)
   }
 ];
 
