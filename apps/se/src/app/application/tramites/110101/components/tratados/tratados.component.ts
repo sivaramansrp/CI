@@ -9,9 +9,10 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CommonModule } from '@angular/common';
 import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
-import { RegistroDeSolicitudesTabla } from '../../models/panallas110101.model';
+import { RegistroDeSolicitudesTabla} from '../../models/panallas110101.model';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { TratadosTabla } from '../../models/panallas110101.model';
 import tratadosTable from '@libs/shared/theme/assets/json/110101/tratados-table.json';
 
 /**
@@ -130,7 +131,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroy$),
-        map((seccionState) => { debugger;
+        map((seccionState) => { 
           this.esFormularioSoloLectura = seccionState.readonly;
           this.inicializarFormularioTratados();
         })
@@ -231,6 +232,24 @@ export class TratadosComponent implements OnInit, OnDestroy {
   }
     ];
 
+  /**
+   * Datos de la tabla de tratados.
+   * Este array contiene objetos de tipo `TratadosTabla` que representan los datos de los
+   */
+    public tratadosTablaDatos: TratadosTabla[] = [
+      {
+        pais: 'Mexico',
+        tratado: 'T-MEC',
+        origen: 'Nacional',
+        normaOrigen: 'Norma 1',
+        requisitoEspecifico: 'Requisito 1',
+        calificacionSistema: 'Calificación A',
+        calificacionDictaminad: 'Dictaminado A',
+        otrasInstancias: 'Instancia 1',
+        procesoTransformacion: 'Proceso 1'
+      }
+    ];
+
 /**
    * Tipo de selección utilizado en la tabla, definido como casillas de verificación (checkbox).
    * @type {TablaSeleccion}
@@ -243,6 +262,17 @@ export class TratadosComponent implements OnInit, OnDestroy {
         { encabezado: "Tratado o Acuerdo", clave: (item: RegistroDeSolicitudesTabla) => item.tratado, orden: 2 },
         { encabezado: "Criterio de origen", clave: (item: RegistroDeSolicitudesTabla) => item.origen, orden: 3 }
     ];
+
+    public tablaSeleccionada: ConfiguracionColumna<TratadosTabla>[] = [
+      { encabezado: 'Pais o bloque', clave: (item: TratadosTabla) => item.pais, orden: 1 },
+      { encabezado: "Tratado o Acuerdo", clave: (item: TratadosTabla) => item.tratado, orden: 2 },
+      { encabezado: "Criterio de origen", clave: (item: TratadosTabla) => item.origen, orden: 3 },
+      { encabezado: "Norma de origen", clave: (item: TratadosTabla) => item.normaOrigen, orden: 4 },
+      { encabezado: "Requisito especifico", clave: (item: TratadosTabla) => item.requisitoEspecifico, orden: 5 },
+      { encabezado: "Calificación  Sistema", clave: (item: TratadosTabla) => item.calificacionSistema, orden: 6 },
+      { encabezado: "Calificación  dictaminad", clave: (item: TratadosTabla) => item.calificacionDictaminad, orden: 7 },
+      { encabezado: "Otras instancias", clave: (item: TratadosTabla) => item.otrasInstancias, orden: 8 },
+      { encabezado: "Proceso de transformación", clave: (item: TratadosTabla) => item.procesoTransformacion, orden: 9 } ];
 
 
     /**

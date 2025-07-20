@@ -34,6 +34,11 @@
         </app-tabla-dinamica>
     </div>
 
+  <div class="col-md-12">
+        <app-tabla-dinamica [configuracionTabla]="tablaSeleccionada" [datos]="tratadosTablaDatos"  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false">
+        </app-tabla-dinamica>
+    </div>
+
 
     <div class=" text-end mt-5">
 <button class="btn btn-default me-2"
