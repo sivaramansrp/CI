@@ -260,6 +260,18 @@ const ROUTES: Routes = [
     loadChildren: () => 
       import('./tramites/30505/aviso-de-modificacion.module').then(
         (m) => m.AvisoDeModificacionModule)
+  },
+   {
+      path: 'importador-exportador',
+    loadChildren: () => 
+      import('./tramites/32614/importador-y-o-exportador.module').then(
+        (m) => m.ImportadorYOExportadorModule)
+  },
+  {
+      path: 'solicitud-de-registro',
+    loadChildren: () => 
+      import('./tramites/32616/solicitud-de-registro-invocar.module').then(
+        (m) => m.SolicitudDeRegistroInvocarModule)
   }
 ];
 
