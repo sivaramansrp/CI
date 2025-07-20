@@ -1,14 +1,16 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CommonModule, Location } from '@angular/common';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { CommonModule, DOCUMENT, Location } from '@angular/common';
 import { Solicitud30505State, Solicitud30505Store } from '../../../../estados/tramites/tramites30505.store';
 import { AvisoAgente } from '../../../../core/models/30505/aviso-modificacion.model';
 import { Solicitud30505Query } from '../../../../estados/queries/tramites30505.query';
 import productivo from '@libs/shared/theme/assets/json/30505/productivo.json';
+
+import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
 
 /**
  * Componente para agregar un agente en el trámite 30505.
@@ -85,7 +87,19 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
    */
   agenteDatos: AvisoAgente[] = [];
 
-
+/**
+ * Objeto que representa los datos del catálogo para el tipo de movimiento.
+ * 
+ * Contiene las propiedades necesarias para configurar un componente de selección
+ * de catálogo, incluyendo el nombre de la etiqueta, si es requerido, la primera
+ * opción a mostrar y el arreglo de catálogos disponibles.
+ */
+public tipoMovimientoData: CatalogosSelect = {
+  labelNombre: '*Tipo Movimiento',
+  required: true,
+  primerOpcion: 'Seleccione una estatus',
+  catalogos: [],
+};
   /**
    * Constructor de la clase AgregarAgenteComponent.
    * 
@@ -98,7 +112,9 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
     private fb: FormBuilder,
     private tramite30505Store: Solicitud30505Store,
     private tramite30505Query: Solicitud30505Query,
-    private ubicaccion : Location
+    private tercerosService: TercerosRelacionadosService,
+    private ubicaccion : Location,
+    @Inject(DOCUMENT) private document: Document
   ) {}
 
   /**
@@ -118,7 +134,8 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
         })
       )
       .subscribe();
-    this.crearFormulario()
+    this.crearFormulario();
+    this.getTipoMovimientoData();
   }
 
   /**
@@ -137,17 +154,12 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
   public crearFormulario():void{
     this.datosTramite = this.fb.group({
       tipoFigura: [this.solicitudState?.tipoFigura, Validators.required],
-      patenteModificada: [this.solicitudState?.patenteModificada, Validators.required],
-      numPatenteModal: [this.solicitudState?.numPatenteModal, [Validators.required, Validators.maxLength(4)]],
-      rfcModal: [{ value: this.solicitudState?.rfcModal}, [Validators.required, Validators.maxLength(13)]],
-      obligFisc: [this.solicitudState?.obligFisc, Validators.requiredTrue],
-      autPantente: [this.solicitudState?.autPantente, Validators.requiredTrue],
+      numPatenteModal: [{ value: this.solicitudState?.numPatenteModal, disabled: true }, [Validators.required, Validators.maxLength(4)]],
       nombre: [{ value: this.solicitudState?.nombre, disabled: true }, Validators.required],
       apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, Validators.required],
       apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno, disabled: true }, Validators.required],
-      razonSocial: [this.solicitudState.razonSocialAgente, Validators.required],
-      patente2: [this.solicitudState?.patente2, [Validators.required, Validators.maxLength(15)]],
-      razonAgencia: [this.solicitudState?.razonAgencia, Validators.required]
+      razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: true }, Validators.required],
+      tipoMovimiento:[this.solicitudState?.tipoMovimiento, Validators.required]
     });
   }
 
@@ -184,6 +196,25 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
     this.mostrarAgente = false;
   }
 
+  /**
+ * Obtiene los datos del catálogo para el tipo de movimiento desde el servicio `tercerosService`.
+ * 
+ * Este método realiza una solicitud al servicio `getTipoMovimientoData` y se suscribe al resultado,
+ * asignando los datos obtenidos al arreglo `catalogos` dentro del objeto `tipoMovimientoData`.
+ * 
+ * Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente se destruye,
+ * evitando fugas de memoria.
+ * 
+ * @returns {void} No retorna ningún valor.
+ */
+  getTipoMovimientoData(): void {
+    this.tercerosService
+      .getTipoMovimientoData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.tipoMovimientoData.catalogos = data as unknown as Catalogo[];
+      });
+  }
   /**
    * Cierra el diálogo relacionado con las sociedades SCC.
    * 
@@ -238,17 +269,12 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
 
      const NUEVO_AGENTE = {
       tipoFigura: VALOR_FORMULARIO.tipoFigura,
-      patenteModificada: VALOR_FORMULARIO.patenteModificada,
       numPatenteModal: VALOR_FORMULARIO.numPatenteModal,
-      rfcModal: VALOR_FORMULARIO.rfcModal,
-      obligFisc: VALOR_FORMULARIO.obligFisc,
-      autPantente: VALOR_FORMULARIO.autPantente,
       nombre: VALOR_FORMULARIO.nombre,
       apellidoPaterno: VALOR_FORMULARIO.apellidoPaterno,
       apellidoMaterno:VALOR_FORMULARIO.apellidoMaterno,
       razonSocial: VALOR_FORMULARIO.razonSocial,
-      patente2: VALOR_FORMULARIO.patente2,
-      razonAgencia: VALOR_FORMULARIO.razonAgencia
+      tipoMovimiento: VALOR_FORMULARIO.tipoMovimiento
     };
 
     this.agenteDatos.push(NUEVO_AGENTE);

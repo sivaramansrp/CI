@@ -8,11 +8,13 @@
      (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
      >
 </app-tabla-dinamica>
+<div class="col-md-12 d-flex justify-content-end mt-3">
     <div class="btn-group">
-      <button class="btn btn-danger" type="button" [disabled]="!selectedRow" (click)="enModificar()">Modificar</button>
+      <button class="btn btn-primary me-2" type="button" style="background-color: grey; color: white;" onmouseover="this.style.backgroundColor='grey'" 
+      [disabled]="!selectedRow" (click)="enModificar()">Modificar</button>
       <button class="btn btn-danger" type="button" [disabled]="!selectedRow" (click)=" onDeleteSelectedRows()">Eliminar</button>
-      <button class="btn btn-primary me-2" type="button">Continuar</button>
     </div>
+</div>
 </div>
 
 <div class="container"  *ngIf="esFormularioVisible">
@@ -23,41 +25,162 @@
               <div class="col-md-12">
                 <label class="form-label" for="tipoPersona">Tipo persona*:</label>
               </div>
-              <div class="col-md-12">
-                <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                  id="fisica" value="fisica"
-                  (change)="setValoresStore(datosDelTramiteRealizar,'tipoPersona', 'setTipoPersona')"
-                  [disabled]="esFormularioSoloLectura"/>
-                <label for="fisica">Física</label>
-              </div>
-              <div class="col-md-12">
-                <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona" 
-               id="moral" value="moral"
+            <div class="col-md-6">
+              <app-input-radio 
+                [radioOptions]="tipoPersonaRadioOptions" 
+                [selectedValue]="tipoDePublicos" 
+                [isRequired]="true" 
+                (valueChange)="setTipoPersona($event)" 
+                formControlName="tipoPersona" 
                 (change)="setValoresStore(datosDelTramiteRealizar,'tipoPersona', 'setTipoPersona')"
-                [disabled]="esFormularioSoloLectura"/>
-                <label for="moral">Moral</label>
-              </div>
+                [disabled]="esFormularioSoloLectura">
+              </app-input-radio>
+                 </div>
+                 <div *ngIf="datosDelTramiteRealizar.get('tipoPersona')?.touched && datosDelTramiteRealizar.get('tipoPersona')?.invalid" class="text-danger">
+                  Este campo es obligatorio.
+                </div>
             </div>
-            <div class="row">
-              <div class="col-md-8 mb-3">
+            @if (tipoPersonaSeleccionada === 'moral') {
+              <div class="row">
+                <div class="col-md-8 mb-3">
                 <label class="form-label" for="denominación">Denominación/razón social*:</label>
                 <input class="form-control" id="denominacion" type="text" formControlName="denominacion"
                 (change)="setValoresStore(datosDelTramiteRealizar,'denominacion', 'setDenominacion')"
                 [disabled]="esFormularioSoloLectura"/>
+                
+               <div *ngIf="datosDelTramiteRealizar.get('denominacion')?.touched && datosDelTramiteRealizar.get('denominacion')?.invalid" class="text-danger">
+                Este campo es obligatorio.
+           </div>
+
               </div>
             </div>
+            }
+            @if (tipoPersonaSeleccionada === 'fisica') {
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="nombre">Nombre(s)*:</label>
+                    <input type="text" 
+                    class="form-control" 
+                    id="nombre"
+                    formControlName="nombre"
+                    (change)="
+                    setValoresStore(
+                      datosDelTramiteRealizar,
+                    'nombre',
+                    'setNombre'
+                    )"
+                    >
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="primerApellido">Primer apellido*:</label>
+                  <input type="text" 
+                  class="form-control" 
+                  id="primerApellido"
+                  formControlName="primerApellido"
+                  (change)="
+                  setValoresStore(
+                    datosDelTramiteRealizar,
+                  'primerApellido',
+                  'setPrimerApellido'
+                  )"
+                  >
+              </div>
+              </div>
+              <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
+                <input type="text" 
+                value=""
+                class="form-control" 
+                id="segundoApellido"
+                formControlName="segundoApellido"
+                (change)="
+                setValoresStore(
+                  datosDelTramiteRealizar,
+                'segundoApellido',
+                'setSegundoApellido'
+                )"
+                >
+                </div>
+              </div>
+            </div>
+          }
+    
             <div class="row">
             <div class="col-md-8">
               <div class="form-group">
                 <label class="form-label" for="domicilio">Domicilio</label>
                 <textarea class="form-control" id="domicilio" rows="2" height="50"
-                placeholder="tenayuca 107" style="height: 100px" formControlName="domicilio"
+               style="height: 100px" formControlName="domicilio"
                 (change)="setValoresStore(datosDelTramiteRealizar,'domicilio', 'setDomicilio')" 
                 [disabled]="esFormularioSoloLectura"></textarea>
+                <div *ngIf="datosDelTramiteRealizar.get('domicilio')?.touched && datosDelTramiteRealizar.get('domicilio')?.invalid" class="text-danger">
+                  Este campo es obligatorio.
+                </div>
               </div>
             </div>
             </div>
-           <div class="row">
+          
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="calle">Calle*:</label>
+                    <input type="text" 
+                    value=""
+                    class="form-control" 
+                    id="calle"
+                    formControlName="calle" 
+                    (change)="
+                    setValoresStore(
+                      datosDelTramiteRealizar,
+                    'calle',
+                    'setCalle'
+                    )"
+                    [disabled]="esFormularioSoloLectura"
+                    >
+                </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                  <label class="form-label" for="numeroExterior">Número exterior*:</label>
+                  <input type="text" 
+                  value=""
+                  class="form-control" 
+                  id="numeroExterior"
+                  formControlName="numeroExterior"
+                  (change)="
+                  setValoresStore(
+                    datosDelTramiteRealizar,
+                  'numeroExterior',
+                  'setNumeroExterior'
+                  )"
+                  [disabled]="esFormularioSoloLectura"
+                  >
+              </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+                <label class="form-label" for="numeroInterior">Número interior*:</label>
+                <input type="text" 
+                value=""
+                class="form-control" 
+                id="numeroInterior"
+                formControlName="numeroInterior" 
+                (change)="
+                setValoresStore(
+                  datosDelTramiteRealizar,
+                'numeroInterior',
+                'setNumeroInterior'
+                )"
+                [disabled]="esFormularioSoloLectura"
+                >
+            </div>
+        </div>
+            </div>
+          <div class="row">
             <div class="col-md-4">
               <div class="form-group">
                 <app-catalogo-select
@@ -70,29 +193,102 @@
                 (change)="setValoresStore(datosDelTramiteRealizar,'pais', 'setPais')"
                 [disabled]="esFormularioSoloLectura"
               ></app-catalogo-select>
+              <div *ngIf="destinatarioForm.get('pais')?.errors?.['required']" class="text-danger">
+                Por favor, selecciona una opción.
+              </div>
+              <div *ngIf="datosDelTramiteRealizar.get('pais')?.touched && datosDelTramiteRealizar.get('pais')?.invalid" class="text-danger">
+                Este campo es obligatorio.
+              </div>
              </div>
            </div>
+           
+            <div class="col-md-4">
+             <div class="form-group">
+                <app-catalogo-select
+                   id="entidadFederativaData"
+                   formControlName="entidadFederativa"
+                   [catalogo]="entidadFederativaData.catalogos"
+                   [label]="'Entidad federativa'"
+                   [placeholder]="entidadFederativaData.primerOpcion"
+                   [required]="true"
+                   (change)="setValoresStore(datosDelTramiteRealizar,'entidadFederativa','setEntidadFederativa')"
+                   [isDisabled]="esFormularioSoloLectura" 
+              ></app-catalogo-select>
+                </div>
             </div>
-             <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <app-catalogo-select
+                    id="alcaldiaMunicipoData"
+                    formControlName="alcaldiaMunicipo"
+                    [catalogo]="alcaldiaMunicipoData.catalogos"
+                    [label]="'Alcaldía o Municipio'"
+                    [placeholder]="alcaldiaMunicipoData.primerOpcion"
+                    [required]="true"
+                    (change)="setValoresStore(datosDelTramiteRealizar,'alcaldiaMunicipo','setAlcaldiaMunicipo')"
+                    [isDisabled]="esFormularioSoloLectura" 
+               ></app-catalogo-select>
+                </div>
+            </div>
+          
+            <div class="col-md-8 mb-3">
+                <div class="form-group">
+                    <app-catalogo-select
+                    id="coloniaData"
+                    formControlName="colonia"
+                    [catalogo]="coloniaData.catalogos"
+                    [label]="'Colonia'"
+                    [placeholder]="coloniaData.primerOpcion"
+                    [required]="true"
+                    (change)="setValoresStore(datosDelTramiteRealizar,'colonia','setColonia')"
+                    [isDisabled]="esFormularioSoloLectura" 
+               ></app-catalogo-select>
+                </div>
+            </div>
               <div class="col-md-4 mb-3">
+                <div class="form-group">
                 <label class="form-label" for="codigopostal">Codigo postal:</label>
                 <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"
                 (change)="setValoresStore(datosDelTramiteRealizar,'codigopostal', 'setCodigopostal')"
                 [disabled]="esFormularioSoloLectura"/>
+                <div *ngIf="destinatarioForm.get('codigopostal')?.errors?.['maxlength']" class="text-danger">
+                  Por favor, no escribas más de 5 caracteres.
+                </div>
+                <div *ngIf="destinatarioForm.get('codigopostal')?.errors?.['pattern']" class="text-danger">
+                  Por favor, sólo escribe dígitos.
+                </div>
+                <div *ngIf="datosDelTramiteRealizar.get('codigopostal')?.touched && datosDelTramiteRealizar.get('codigopostal')?.invalid" class="text-danger">
+                  Este campo es obligatorio.
+                </div>      
               </div>
             </div>
+          
+          </div>
             <div class="row">
               <div class="col-md-4 mb-3">
                 <label class="form-label" for="telefono">Telefono:</label>
                 <input class="form-control" id="telefono" type="text" formControlName="telefono"
                 (change)="setValoresStore(datosDelTramiteRealizar,'telefono','setTelefono')"
                 [disabled]="esFormularioSoloLectura"/>
+                <div *ngIf="destinatarioForm.get('telefono')?.errors?.['pattern']" class="text-danger">
+                  Por favor, sólo escribe dígitos.
+                </div>
+                <div *ngIf="datosDelTramiteRealizar.get('telefono')?.touched && datosDelTramiteRealizar.get('telefono')?.invalid" class="text-danger">
+                  Este campo es obligatorio.
+                </div>
+      
               </div>
                 <div class="col-md-4 mb-3">
                   <label class="form-label" for="correoelectronico">Correo electronico:</label>
                   <input class="form-control" id="correoelectronico" type="text" formControlName="correoelectronico"
                   (change)="setValoresStore(datosDelTramiteRealizar,'correoelectronico','setCorreoelectronico')"
                   [disabled]="esFormularioSoloLectura"/>
+                  <div *ngIf="destinatarioForm.get('correoelectronico')?.errors?.['email']" class="text-danger">
+                    Por favor, escribe una dirección de correo válida.
+                  </div>
+                  <div *ngIf="datosDelTramiteRealizar.get('correoelectronico')?.touched && datosDelTramiteRealizar.get('correoelectronico')?.invalid" class="text-danger">
+                    Este campo es obligatorio.
+                  </div>
                 </div>
             </div>
 

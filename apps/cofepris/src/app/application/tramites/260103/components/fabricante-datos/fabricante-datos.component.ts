@@ -51,7 +51,7 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
    * Se completa en el hook `ngOnDestroy`.
    * @private
    */
-  private unsubscribe$ = new Subject<void>();
+  public unsubscribe$ = new Subject<void>();
 
   /**
    * @property {FormGroup} agregarDatosForm

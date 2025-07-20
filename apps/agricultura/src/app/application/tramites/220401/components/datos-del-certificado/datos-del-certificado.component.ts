@@ -1,7 +1,7 @@
 /**
  * Importaciones necesarias para el componente DatosDelCertificado.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 /**
  * Importaciones necesarias para el componente DatosDelCertificado.
@@ -20,14 +20,23 @@ import { AgregarArchivoComponent } from '@ng-mf/data-access-user';
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
 import { CatalogoResponse } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CombinacionRequeridaComponent } from '../combinacion-requerida/combinacion-requerida.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DatosGeneralesAnimalesComponent } from '../datos-generales-animales/datos-generales-animales.component';
+import { DetosDelService } from '../../services/pantallas.service';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+import { Modal } from 'bootstrap';
 import { Pantallas220401Service } from '../pantallas220401.service';
 import { Solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import radioOptionsData from '@libs/shared/theme/assets/json/220401/tipo-de-certifico.json';
 import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json';
+
+import { AlertComponent,Catalogo } from '@ng-mf/data-access-user';
+import { LOCALIDAD_COLONIA } from '../../constantes/certificados-licencias.enum';
+import { TipoDeCertificoOption } from '../../models/tipoCertificoOption.model';
+
 /**
  * Componente que gestiona los datos del certificado en la solicitud 220401.
  */
@@ -45,10 +54,14 @@ import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json
     AgregarArchivoComponent,
     TableComponent,
     CatalogoSelectComponent,
+    AlertComponent,DatosGeneralesAnimalesComponent,CombinacionRequeridaComponent
   ],
 })
 export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
- 
+  /**
+   * Referencia al elemento del modal para agregar mercancías.
+   */
+  @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
   /** Formulario principal para la solicitud. */
   solicitudForm!:FormGroup;
  /** Opciones de radio importadas desde JSON. */
@@ -56,9 +69,9 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Valor seleccionado en el componente de radio.
    */
-  selectedValue: string = 'Producto..';
+  public certificadaValue: string = 'Producto';
  /** Valor seleccionado en el componente de radio. */
-  defaultSelect: string | number = 'oficina central';
+  public defaultSelect: string | number = 'oficina central';
   /** Notificador para destruir las suscripciones al salir del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
   /** Formulario de datos del certificado. */
@@ -66,7 +79,19 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Opciones de radio para unidad, importadas desde un archivo JSON.
    */
-  radioBoton = unidadRadioFields; // importar datos desde Json
+  public radioBotonProducto = unidadRadioFields; // importar datos desde Json
+  
+  /**
+   * Configuración de catálogos para el formulario.
+   * Contiene los nombres de los controles y las rutas de los catálogos.
+   */
+  public radioBotonAnimal!: TipoDeCertificoOption[];
+  /**
+   * Configuración de catálogos para el formulario.
+   * Contiene los nombres de los controles y las rutas de los catálogos.
+   */
+  public radioBotonQFBA! : TipoDeCertificoOption[];
+
   /**
    * Estado de la solicitud 220401.
    */
@@ -86,11 +111,31 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    * Constructor del componente, inyecta los servicios necesarios.
    */
 
+  /**
+   * Arreglo que contiene los elementos del catálogo relacionados con los países de origen disponibles.
+   * Se utiliza para cargar y gestionar los países de origen seleccionados en el formulario.
+   */
+    public paisOrigen!: Catalogo[];
+
+   /**
+   * Representa el tipo de alerta que se mostrará.
+   * El valor es típicamente una cadena que indica el estilo de alerta, como 'alert-warning'.
+   */
+  public infoAlert = 'alert-warning';
+
+  /**
+   * Una constante que contiene el valor de `LOCALIDAD_COLONIA`.
+   * Probablemente se utiliza para representar o almacenar información textual
+   * relacionada con una localidad o colonia específica en la aplicación.
+   */
+  public TEXTO = LOCALIDAD_COLONIA;
+
   constructor(private fb: FormBuilder,
     private agregar220401Store: Agregar220401Store,
     private agregarQuery: AgregarQuery, 
     private _pantallas220401Service: Pantallas220401Service,
     private consultaioQuery: ConsultaioQuery,  
+    private detosDelService: DetosDelService
    
 ) {
   this.consultaioQuery.selectConsultaioState$
@@ -101,7 +146,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
           if(seccionState.readonly || seccionState.update){
              this.inicializarFormulario();
              this.setCatalogosDatos();
-
+             this.guardarDatosFormulario();
           }
         })
       )
@@ -112,6 +157,8 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
 this.inicializarCertificadoFormulario();
+
+
 
       }
 
@@ -138,7 +185,7 @@ this.inicializarCertificadoFormulario();
      * - Si no está en modo solo lectura, habilita ambos formularios.
      * - Si ninguna de las condiciones anteriores se cumple, no realiza ninguna acción adicional.
      */
-    guardarDatosFormulario(): void {
+    guardarDatosFormulario(): void { 
       this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
         this.datosdelForm.disable();
@@ -161,11 +208,6 @@ this.inicializarCertificadoFormulario();
    * - Actualiza el formulario `datosdelForm` con los datos actuales de la solicitud.
    */
   inicializarFormulario():void{
-    this.datosdelForm = this.fb.group({
-      tipoCertificado: ['', Validators.required],
-      message: [{ value: '', disabled: true }],
-    });
-
     this.formGroup1 = this.fb.group({});
     /** Suscripción para obtener el estado de la solicitud. */
     this.agregarQuery.selectSolicitud$
@@ -177,7 +219,9 @@ this.inicializarCertificadoFormulario();
     )
     .subscribe();
     this.formGroup1= this.fb.group({
-      osia:[this.solicitudState?.osia]
+      radioBotonAnimal:[this.solicitudState?.radioBotonAnimal],
+      radioBotonQFBA:[this.solicitudState?.radioBotonQFBA],
+      radioBotonProducto:[this.solicitudState?.radioBotonProducto],
     });
     
     this.catalogConfigs.forEach((config) => {
@@ -198,11 +242,33 @@ this.inicializarCertificadoFormulario();
       });
     });
 
+    this.detosDelService.getCertificadoData() 
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.radioBotonAnimal = data;
+      });
+
+    this.detosDelService.getCertificado() 
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.radioBotonQFBA = data;
+      });
+
       this.datosdelForm= this.fb.group({
         datoscertificado:[this.solicitudState?.datoscertificado],
-        certificada: [this.solicitudState?.certificada],
+        certificada: ['Producto', Validators.required],
         tratamiento:[this.solicitudState?.tratamiento],
+        tipoCertificado: ['', Validators.required],
+        message: [{ value: '', disabled: true }],
+        numeroTotal:[''],
+        condiciones:['',Validators.required],
+        cantidadTotal:[''],
+        tipoEmbalaje:['']
       })
+      
+      this._pantallas220401Service.getPaisOrigen().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
+      this.paisOrigen = data;
+    });
   }
 
   /**
@@ -222,13 +288,22 @@ this.inicializarCertificadoFormulario();
       }
     });
   }
+    /**
+   * Abre el modal para modificar mercancías.
+   */
+  openModificarMercancias(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
 
       /**
    * Maneja los cambios en el valor seleccionado.
    */
   
    onValueChange(value: string | number):void {
-        this.selectedValue = value.toString();
+        this.defaultSelect = value.toString();
       }
   
     /**
@@ -273,7 +348,7 @@ this.inicializarCertificadoFormulario();
    * - catalogos: opciones disponibles para el selector.
    * - primerOpcion: valor de la primera opción (por defecto vacío).
    */
-  catalogConfigs = [
+  public catalogConfigs = [
     {
       catalogo: this.delegacionesJson,
       label: 'Delegaciones estatales SAGARPA',
@@ -284,7 +359,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Delegaciones estatales SAGARPA',
+      label: 'Establecimiento TIF',
       controlName: 'delegacionesControl2',
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -292,7 +367,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Delegaciones estatales SAGARPA',
+      label: 'Oficina central',
       controlName: 'delegacionesControl3',
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -300,7 +375,46 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
+      label: 'Distrito desarrollo rural (DDR)',
+      controlName: 'delegacionesControl4',
+      required: false,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+  ];
+
+  /**
+   * Configuración de los catálogos para el formulario de animales.
+   * Incluye delegaciones estatales, OISA, oficina central y distrito desarrollo rural.
+   */
+ public catalogConfigsAnimal = [
+    {
+      catalogo: this.delegacionesJson,
       label: 'Delegaciones estatales SAGARPA',
+      controlName: 'delegacionesControl',
+      required: true,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+    {
+      catalogo: this.delegacionesJson,
+      label: 'OISA',
+      controlName: 'delegacionesControl2',
+      required: true,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+    {
+      catalogo: this.delegacionesJson,
+      label: 'Oficina central',
+      controlName: 'delegacionesControl3',
+      required: true,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+    {
+      catalogo: this.delegacionesJson,
+      label: 'Distrito desarrollo rural (DDR)',
       controlName: 'delegacionesControl4',
       required: false,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -308,6 +422,36 @@ this.inicializarCertificadoFormulario();
     },
   ];
   
+  /**
+   * Configuración de los catálogos para el formulario de QFBA.
+   * Incluye delegaciones estatales, oficina central y distrito desarrollo rural.
+   */
+  public catalogConfigsQFBA = [
+    {
+      catalogo: this.delegacionesJson,
+      label: 'Delegaciones estatales SAGARPA',
+      controlName: 'delegacionesControl',
+      required: true,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+    {
+      catalogo: this.delegacionesJson,
+      label: 'Oficina central',
+      controlName: 'delegacionesControl3',
+      required: true,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+    {
+      catalogo: this.delegacionesJson,
+      label: 'Distrito desarrollo rural (DDR)',
+      controlName: 'delegacionesControl4',
+      required: false,
+      catalogos: DatosDelCertificadoComponent.getCatalogos(),
+      primerOpcion: '',
+    },
+  ];
   /**
    * Obtiene los valores seleccionados de las delegaciones a partir de la configuración del catálogo
    * y actualiza el estado correspondiente en el servicio _pantallas220401Service.
@@ -348,10 +492,17 @@ this.inicializarCertificadoFormulario();
       'No. partida',
       'Fracción arancelaria',
       'Descripción de la fracción',
-      'Unidad de medida de tarifa (UMT)',
-      'Cantidad (UMT)',
+      'Unidad de medida fracción de tarifa (UMT)',
+      'Cantidad UMT',
       'Unidad de medida de comercialización (UMC)',
-      'Cantidad (UMC)',
+      'Cantidad UMC',
+      'Tratamiento',
+      'Presentación',
+      'Marcas embarque',
+      'Fecha de caducidad',
+      'Fecha sacrificio inicio',
+      'Número de autorización CITES',
+      'Número de lote'
     ];
   
     /**
@@ -360,15 +511,10 @@ this.inicializarCertificadoFormulario();
      */
     mercanciasData = [
       {
-      tbodyData: [
-        'Establecimiento 1',
-        '123-456-7890',
-        'correo',
-        'Actividad 1',
-        'Otro detalle',
-        'Certificado 001',
-        'Domicilio 1',
-      ],
+     tbodyData: [
+          '1', '0201.30.00', 'Carne de bovino fresca', 'Kilogramo', '500', 'Caja', '25',
+          'Refrigerado', 'Caja sellada', 'MarcaX', '2025-12-31', '2024-06-01', 'CITES-123456', 'Lote-7890'
+        ],
       },
     ];
     /**
@@ -383,6 +529,12 @@ this.inicializarCertificadoFormulario();
       (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
     }
     
+ cerrarModal(): void {
+ if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.hide();
+    }
+}
  
   /**
    * @comdoc

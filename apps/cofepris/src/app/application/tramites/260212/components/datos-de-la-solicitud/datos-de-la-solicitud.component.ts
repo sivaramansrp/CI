@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CatalogoResponse, CatalogoSelectComponent, ConsultaioQuery, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoResponse, CatalogoSelectComponent, ConsultaioQuery, TablaDinamicaComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -22,6 +22,7 @@ import { RepresentanteLegalComponent } from '../representante-legal/representant
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite260212Store } from '../../estados/tramite260212.store';
 
+import { Modal } from 'bootstrap';
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
 /**
@@ -47,7 +48,8 @@ import { Tramite260212Query } from '../../estados/tramite260212.query';
     FormularioOperacionComercialComponent,
     MercanciasTableFormComponent,
     RepresentanteLegalComponent,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,
+    TablePaginationComponent
 
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
@@ -61,7 +63,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * 
    * Cuando es verdadero, el usuario no puede editar los campos del formulario.
    */
-  public esFormularioSoloLectura: boolean = true;
+  public esFormularioSoloLectura: boolean = false;
 
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
@@ -110,19 +112,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  */
   plegable = true;
 
-
-  /**
-   * Variable que indica si se debe mostrar el formulario S.C.I.A.N.
-   * Su valor inicial está establecido en false.
-   */
-  mostrarFormularioScian = false;
-
-  /**
- * Variable que indica si se debe mostrar el formulario de mercancías.
- * Su valor inicial está establecido en false.
- */
-  mostrarFormularioMercancias = false;
-
   /**
  * Variable que indica si se debe mostrar un formulario genérico.
  * Su valor inicial está establecido en false.
@@ -148,6 +137,59 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   tablaSeleccion = TablaSeleccion;
 
   /**
+   * Referencia al elemento modal para agregar mercancías.
+   */
+  @ViewChild('modalSeleccionarEstablesmiento') modalElement!: ElementRef;
+
+  /**
+   * Referencia al elemento del modal para agregar o editar claves S.C.I.A.N.
+   * Se utiliza para controlar la visualización del modal desde el componente mediante código.
+   *
+   * @type {ElementRef}
+   * @memberof DatosDeLaSolicitudComponent
+   * @example
+   * this.modalScianRef.nativeElement.show();
+   */
+  @ViewChild('modalScianRef') modalScianRef!: ElementRef;
+
+  /**
+   * Instancia del modal para agregar o editar claves S.C.I.A.N.
+   * Se utiliza para controlar la apertura y cierre del modal desde el componente.
+   *
+   * @type {Modal | null}
+   * @private
+   * @memberof DatosDeLaSolicitudComponent
+   * @example
+   * this.modalScianInstance?.show();
+   * this.modalScianInstance?.hide();
+   */
+  private modalScianInstance: Modal | null = null;
+
+  /**
+   * Referencia al elemento del modal para agregar o editar mercancías.
+   * Se utiliza para controlar la visualización del modal desde el componente mediante código.
+   *
+   * @type {ElementRef}
+   * @memberof DatosDeLaSolicitudComponent
+   * @example
+   * this.modalMercanciasRef.nativeElement.show();
+   */
+  @ViewChild('modalMercanciasRef') modalMercanciasRef!: ElementRef;
+
+  /**
+   * Instancia del modal para agregar o editar mercancías.
+   * Se utiliza para controlar la apertura y cierre del modal desde el componente.
+   *
+   * @type {Modal | null}
+   * @private
+   * @memberof DatosDeLaSolicitudComponent
+   * @example
+   * this.modalMercanciasInstance?.show();
+   * this.modalMercanciasInstance?.hide();
+   */
+  private modalMercanciasInstance: Modal | null = null;
+
+  /**
    * Constructor de la clase DatosDeLaSolicitudComponent.
    * 
    * @param solicitudService - Servicio para manejar las solicitudes.
@@ -164,7 +206,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
 
-  /**
+ /**
  * Método del ciclo de vida Angular que se ejecuta al inicializar el componente.
  * - Inicializa el formulario de datos del establecimiento.
  * - Obtiene las solicitudes desde el servicio y las almacena en `solicitudData`.
@@ -174,6 +216,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.fomInitialize();
     this.inicializarEstadoFormulario();
+     this.solicitudService.getScianDatos().pipe(takeUntil(this.destroy$))
+          .subscribe((response: ClaveModel[]) => {
+            this.claveScianDatas = response;
+          });
   }
 
   /**
@@ -296,7 +342,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  */
   configuracionTablaScian: ConfiguracionColumna<ClaveModel>[] = [
     { encabezado: 'Clave S.C.A.N.', clave: (item: ClaveModel) => item.clave, orden: 1 },
-    { encabezado: 'Descripcíon del S.C.I.A.N', clave: (item: ClaveModel) => item.descripcíon, orden: 2 },
+    { encabezado: 'Descripcíon del S.C.I.A.N', clave: (item: ClaveModel) => item.descripcion, orden: 2 },
   ];
 
   /**
@@ -307,17 +353,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   fomInitialize() {
     this.datosEstablecimientoForm = this.fb.group({
-      rfcDelResponsableSanitario: [''],
-      denominacionRazonSocial: ['', [Validators.required]],
-      correoElectronico: ['', [Validators.required, Validators.maxLength(30), Validators.email]],
-      codigoPostal: ['', [Validators.required]],
-      estado: ['', [Validators.required]],
-      municipio: ['', [Validators.required]],
-      localidad: ['', [Validators.required]],
-      colonia: ['', [Validators.required]],
-      calle: [''],
-      lada: ['', [Validators.required]],
-      telefono: ['', [Validators.required]],
+      rfcDelResponsableSanitario: [{value: '', disabled: true}],
+      denominacionRazonSocial: [{value: '', disabled: true}, [Validators.required]],
+      correoElectronico: [{value: '', disabled: true}, [Validators.required, Validators.maxLength(30), Validators.email]],
+      codigoPostal: [{value: '', disabled: true}, [Validators.required]],
+      estado: [{value: '', disabled: false}, [Validators.required]],
+      municipio: [{value: '', disabled: true}, [Validators.required]],
+      localidad: [{value: '', disabled: true}, [Validators.required]],
+      colonia: [{value: '', disabled: true}, [Validators.required]],
+      calle: [{value: '', disabled: true}],
+      lada: [{value: '', disabled: true}, [Validators.required]],
+      telefono: [{value: '', disabled: true}, [Validators.required]],
+      datosManifiestos: [false, [Validators.required]],
     });
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -345,7 +392,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   toggleScianFormulario(): void {
-    this.mostrarFormularioScian = true
+    if (this.modalScianRef) {
+      this.modalScianInstance = new Modal(this.modalScianRef.nativeElement);
+      this.modalScianInstance.show();
+    }
   }
   /**
    * Oculta el formulario de clave S.C.I.A.N.
@@ -353,25 +403,49 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   cerrarScianFormulario(): void {
-    this.mostrarFormularioScian = false;
+    if (this.modalScianInstance) {
+      this.modalScianInstance.hide();
+    }
+  }
+
+  /**
+   * @method agregarScian
+   * @description
+   * Agrega una nueva clave S.C.I.A.N. al arreglo `claveScianDatas`.
+   * Este método recibe un objeto con las propiedades `clave` y `descripcion` y lo almacena en el arreglo correspondiente.
+   * Se utiliza para gestionar las claves S.C.I.A.N. seleccionadas o capturadas por el usuario en el componente.
+   *
+   * @param {{clave: string, descripcion: string}} form - Objeto que contiene la clave y la descripción S.C.I.A.N. a agregar.
+   *
+   * @example
+   * this.agregarScian({ clave: '12345', descripcion: 'Descripción de la clave' });
+   * // Agrega la clave y descripción al arreglo de claves S.C.I.A.N.
+   */
+  agregarScian(form: {clave: string, descripcion: string}): void {
+    if (form) {
+      this.claveScianDatas.push(form);
+    }
   }
 
   /**
    * Muestra el formulario para agregar mercancías.
-   * Cambia la variable `mostrarFormularioMercancias` a true.
    * @returns {void}
    */
   openMercanciasForm(): void {
-    this.mostrarFormularioMercancias = true;
+    if (this.modalMercanciasRef) {
+      this.modalMercanciasInstance = new Modal(this.modalMercanciasRef.nativeElement);
+      this.modalMercanciasInstance.show();
+    }
   }
 
   /**
    * Oculta el formulario de mercancías.
-   * Cambia la variable `mostrarFormularioMercancias` a false.
    * @returns {void}
    */
   closeMercanciasForm(): void {
-    this.mostrarFormularioMercancias = false;
+    if (this.modalMercanciasInstance) {
+      this.modalMercanciasInstance.hide();
+    }
   }
 
   /**
@@ -386,7 +460,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     { encabezado: 'Denominación distintiva', clave: (item: MercanciaModel) => item.denominacionDistintiva, orden: 4 },
     { encabezado: 'Denominación común, nombre común o nombre científico', clave: (item: MercanciaModel) => item.denominacionComun, orden: 5 },
     { encabezado: 'Forma farmacéutica', clave: (item: MercanciaModel) => item.formaFarmaceutica, orden: 6 },
-    { encabezado: 'Estado físico', clave: (item: MercanciaModel) => item.estadoFsico, orden: 7 }
+    { encabezado: 'Estado físico', clave: (item: MercanciaModel) => item.estadoFsico, orden: 7 },
+    { encabezado: 'Fracción arancelaria', clave: (item: MercanciaModel) => item.fraccionArancelaria, orden: 8 },
+    { encabezado: 'Descripción de la fracción arancelaria', clave: (item: MercanciaModel) => item.descripcionFraccion, orden: 9 },
+    { encabezado: 'Cantidad UMT', clave: (item: MercanciaModel) => item.cantidadUMT, orden: 10 },
+    { encabezado: 'UMT', clave: (item: MercanciaModel) => item.UMT, orden: 11 },
+    { encabezado: 'Cantidad UMC', clave: (item: MercanciaModel) => item.cantidadUMC, orden: 12 },
+    { encabezado: 'UMC', clave: (item: MercanciaModel) => item.UMC, orden: 13 },
+    { encabezado: 'Presentación farmacéutica o tipo de envase', clave: (item: MercanciaModel) => item.tipoDeEnvase, orden: 14 },
+    
   ];
 
   /**
@@ -504,6 +586,60 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe((data): void => {
         this.losDatos = data
       });
+  }
+  /**
+   * @method seleccionarEstablecimiento
+   * @description
+   * Muestra el modal para seleccionar un establecimiento.
+   * Si la referencia al elemento modal existe, crea una instancia de Bootstrap Modal y la muestra.
+   *
+   * @example
+   * this.seleccionarEstablecimiento();
+   * // Abre el modal de selección de establecimiento.
+   */
+
+  seleccionarEstablecimiento(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
+  /**
+   * @method aceptar
+   * @description
+   * Cierra el modal de selección de establecimiento y habilita todos los controles del formulario `datosEstablecimientoForm`.
+   * Este método se utiliza después de que el usuario ha seleccionado un establecimiento y confirma la selección.
+   *
+   * @example
+   * this.aceptar();
+   * // Cierra el modal y habilita los campos del formulario.
+   */
+  aceptar(): void {
+    const MODAL_INSTANCE = Modal.getInstance(this.modalElement.nativeElement);
+    MODAL_INSTANCE?.hide();
+    Object.keys(this.datosEstablecimientoForm.controls).forEach(controlName => {
+          this.datosEstablecimientoForm.get(controlName)?.enable();
+      });
+  }
+
+  /**
+   * @method agregarMercanciasTabla
+   * @description
+   * Agrega una nueva mercancía al arreglo `mercanicaData`.
+   * Este método recibe un objeto con la propiedad `form` que contiene los datos de la mercancía a agregar.
+   * Se utiliza para gestionar la información de las mercancías asociadas en el componente.
+   *
+   * @param {{form: MercanciaModel}} event - Objeto que contiene el formulario con los datos de la mercancía.
+   *
+   * @example
+   * this.agregarMercanciasTabla({ form: nuevaMercancia });
+   * // Agrega la mercancía al arreglo de mercancías.
+   */
+  agregarMercanciasTabla(event: {form: MercanciaModel}): void {
+    if (event) {
+      this.mercanicaData.push(event.form);
+    }
   }
 
   /*

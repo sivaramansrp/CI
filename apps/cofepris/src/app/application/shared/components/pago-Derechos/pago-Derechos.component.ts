@@ -53,10 +53,10 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
    */
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
 
-    /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
-   */
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
   esFormularioSoloLectura: boolean = false;
 
   /**
@@ -75,7 +75,7 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
     private fb: FormBuilder, // Inyección de dependencia para construir formularios.
     private service: AvisoImportacionService, // Inyección del servicio para obtener datos.
     private avisocalidadStore: AvisocalidadStore, // Inyección del store para manejar el estado.
-    private avisocalidadQuery: AvisocalidadQuery ,// Inyección de la query para consultar el estado.
+    private avisocalidadQuery: AvisocalidadQuery,// Inyección de la query para consultar el estado.
     private consultaioQuery: ConsultaioQuery, // Inyección de la query para consultar datos de la aplicación.
   ) {
     //Reservado para futuras inyecciones de dependencias o inicializaciones.
@@ -106,18 +106,18 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
     this.loadComboUnidadMedida(); // Carga la lista de derechos.
   }
 
-/**
- * @method configurarGrupoForm
- * @description Configures the reactive form group for the "Datos del Establecimiento RFC" component.
- * This method initializes the form group with default values and validation rules for the fields:
- * - `rfcDel`: Optional field with a maximum length of 254 characters.
- * - `denominacionRazonSocial`: Required field with a maximum length of 254 characters.
- * - `correoElectronico`: Required field with a valid email format and a maximum length of 320 characters.
- * 
- * @memberof DatosDelEstablecimientoRfcComponent
- */
+  /**
+   * @method configurarGrupoForm
+   * @description Configures the reactive form group for the "Datos del Establecimiento RFC" component.
+   * This method initializes the form group with default values and validation rules for the fields:
+   * - `rfcDel`: Optional field with a maximum length of 254 characters.
+   * - `denominacionRazonSocial`: Required field with a maximum length of 254 characters.
+   * - `correoElectronico`: Required field with a valid email format and a maximum length of 320 characters.
+   * 
+   * @memberof DatosDelEstablecimientoRfcComponent
+   */
   configurarGrupoForm(): void {
- this.avisocalidadQuery.selectSolicitud$ // Observa los cambios en el estado de la solicitud.
+    this.avisocalidadQuery.selectSolicitud$ // Observa los cambios en el estado de la solicitud.
       .pipe(
         takeUntil(this.destroyed$), // Finaliza la suscripción al destruir el componente.
         map((seccionState) => { // Mapea el estado recibido.
@@ -130,23 +130,37 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
     this.derechosForm = this.fb.group({
       claveReferencia: [this.solicitudState?.claveReferencia], // Campo claveReferencia.
       cadenaDependencia: [this.solicitudState?.cadenaDependencia], // Campo cadenaDependencia.
-      banco: [this.solicitudState?.banco , Validators.required], // Campo banco.
+      banco: [this.solicitudState?.banco, Validators.required], // Campo banco.
       llavePago: [this.solicitudState?.llavePago], // Campo llavePago.
-      fechaPago: [this.solicitudState?.fechaPago , Validators.required], // Campo fechaPago.
-      importePago: [this.solicitudState?.importePago], // Campo importePago.
+      fechaPago: [this.solicitudState?.fechaPago, Validators.required], // Campo fechaPago.
+      importePago: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/), Validators.maxLength(16)
+        ]
+      ],
     });
 
-     /*
-     * Si el formulario está en modo solo lectura, deshabilita todos los campos.
-     * En caso contrario, habilita los campos para permitir la edición.
-     * Esto asegura que el formulario refleje correctamente el estado de solo lectura.
-     */
-    if (this.esFormularioSoloLectura && this.derechosForm ) {
+    /*
+    * Si el formulario está en modo solo lectura, deshabilita todos los campos.
+    * En caso contrario, habilita los campos para permitir la edición.
+    * Esto asegura que el formulario refleje correctamente el estado de solo lectura.
+    */
+    if (this.esFormularioSoloLectura && this.derechosForm) {
       this.derechosForm.disable();
     } else {
       this.derechosForm.enable();
     }
 
+  }
+/**
+ * Obtiene el control del formulario 'importePago' del formulario 'derechosForm'.
+ * 
+ * @returns {AbstractControl} El control 'importePago' del formulario.
+ */
+  get importePago() {
+    return this.derechosForm.get('importePago');
   }
   /**
    * method loadComboUnidadMedida
@@ -161,22 +175,43 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * method setValoresStore
-   * description Actualiza un valor específico en el store.
-   * template T
-   * param {FormGroup} form - Formulario reactivo.
-   * param {string} campo - Nombre del campo en el formulario.
-   * param {keyof AvisocalidadStore} metodoNombre - Método del store a invocar.
+   * @method setValoresStore
+   * @description Actualiza el estado del store con los valores del formulario.
+   * @param form Formulario reactivo.
+   * @param campo Campo del formulario que se desea actualizar.
+   * @param metodoNombre Nombre del método del store que se invocará.
    */
+
   setValoresStore<T>(form: FormGroup, campo: string, metodoNombre: keyof AvisocalidadStore): void {
-    const VALOR = form.get(campo)?.value as T; // Obtiene el valor del campo.
-    (this.avisocalidadStore[metodoNombre] as (value: T) => void)(VALOR); // Llama al método correspondiente del store.
+    const CONTROL = form.get(campo);
+
+    if (!CONTROL) {
+      console.warn(`Control '${campo}' not found in form`);
+      return;
+    }
+
+    if (CONTROL.invalid) {
+      console.warn(`Invalid input in field '${campo}':`, CONTROL.errors);
+      // Optional: Mark as touched to trigger validation error display
+      CONTROL.markAsTouched();
+      return;
+    }
+
+    const VALOR = CONTROL.value as T;
+    const STOREMETHOD = this.avisocalidadStore[metodoNombre] as (value: T) => void;
+
+    if (typeof STOREMETHOD === 'function') {
+      STOREMETHOD(VALOR);
+    } else {
+      console.error(`Store method '${String(metodoNombre)}' is not a function`);
+    }
   }
 
-   /**
-   * @method onReset
-   * @description Limpia todos los campos del formulario de pago de derechos.
-   */
+
+  /**
+  * @method onReset
+  * @description Limpia todos los campos del formulario de pago de derechos.
+  */
   alReiniciar(): void {
     this.derechosForm.reset();
   }
@@ -225,20 +260,20 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
       : false;
   }
 
- /**
-   * @method esFechaPasada
-   * @description Verifica si una fecha proporcionada es anterior a la fecha actual.
-   *
-   * @param {string} fechaStr - La fecha en formato de cadena que se desea evaluar.
-   *
-   * @returns {void} No retorna ningún valor, pero actualiza la propiedad `esFechaValida`
-   * indicando si la fecha proporcionada es una fecha pasada.
-   *
-   * @example
-   * // Supongamos que la fecha actual es 2023-03-15
-   * this.esFechaPasada('2023-03-14'); // esFechaValida será true
-   * this.esFechaPasada('2023-03-16'); // esFechaValida será false
-   */
+  /**
+    * @method esFechaPasada
+    * @description Verifica si una fecha proporcionada es anterior a la fecha actual.
+    *
+    * @param {string} fechaStr - La fecha en formato de cadena que se desea evaluar.
+    *
+    * @returns {void} No retorna ningún valor, pero actualiza la propiedad `esFechaValida`
+    * indicando si la fecha proporcionada es una fecha pasada.
+    *
+    * @example
+    * // Supongamos que la fecha actual es 2023-03-15
+    * this.esFechaPasada('2023-03-14'); // esFechaValida será true
+    * this.esFechaPasada('2023-03-16'); // esFechaValida será false
+    */
   esFechaPasada(fechaStr: string): void {
     if (!fechaStr) {
       this.esFechaValida = false;

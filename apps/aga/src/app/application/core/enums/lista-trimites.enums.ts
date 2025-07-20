@@ -214,8 +214,8 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
         tramite: 6102,
         listaComponentes: [{
             id: 'solicitud',
-            componentPath: () => import('../../tramites/6102/pages/paso-uno/paso-uno.component').then(m => m.PasoUnoComponent),
-            componentName: 'PasoUnoComponent',
+            componentPath: () => import('../../tramites/6102/components/solicitud/Solicitud.component').then(m => m.SolicitudComponent),
+            componentName: 'SolicitudComponent',
 
         }]
     },
@@ -276,6 +276,14 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
         listaComponentes: [{
             id: 'solicitud',
             componentPath: () => import('../../tramites/5601/pages/paso-uno/paso-uno.component').then(m => m.PasoUnoComponent),
+            componentName: 'PasoUnoComponent',
+        }]
+    },
+    {
+        tramite: 11102,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/11102/pages/paso-uno/paso-uno.component').then(m => m.PasoUnoComponent),
             componentName: 'PasoUnoComponent',
         }]
     },
@@ -393,5 +401,41 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
             componentName: 'PasoUnoComponent',
 
         }]
-    }
+    },
+    {
+        tramite: 11101,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/11101/pages/paso-uno/paso-uno.component').then(m => m.PasoUnoComponent),
+            componentName: 'PasoUnoComponent',
+ 
+        }]
+    },
+     {
+        tramite: 30401,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/30401/pages/paso-uno/paso-uno.component').then(m => m.PasoUnoComponent),
+            componentName: 'PasoUnoComponent',
+ 
+        }]
+    },
+    {
+        tramite: 701,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/701/pages/paso-uno/paso-uno.component').then(m => m.PasoUnoComponent),
+            componentName: 'PasoUnoComponent',
+ 
+        }]
+    },
+    {
+        tramite: 11204,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/11204/pages/paso-uno/paso-uno.component').then(m => m.PasoUnoComponent),
+            componentName: 'PasoUnoComponent',
+
+        }]
+    },
 ];

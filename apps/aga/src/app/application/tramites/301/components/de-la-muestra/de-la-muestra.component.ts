@@ -151,7 +151,7 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
 
     this.Informaciondela = this.fb.group({
       datosImportadorExportador: this.fb.group({
-        folio: [this.solicitudState?.folio, [Validators.required, Validators.maxLength(25)]],
+        folio: [{value: this.solicitudState?.folio, disabled: true}, [Validators.required, Validators.maxLength(25)]],
         mercancia: [this.solicitudState?.mercancia, Validators.required],
       }),
     });
@@ -241,6 +241,15 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
       const MODAL = new bootstrap.Modal(this.modalConfirmacionRef.nativeElement);
       MODAL.show();
     }
+  }
+
+  /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @returns {boolean | null} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  esInvalido(): boolean | null {
+    const CAMPO = this.Informaciondela.get('datosImportadorExportador.folio');
+    return CAMPO ? CAMPO.invalid && CAMPO.touched : null;
   }
 
   /**

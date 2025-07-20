@@ -1,16 +1,18 @@
+import { CancelacionesState, CancelacionesStore } from '../../estados/cancelaciones.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { Subject, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { CancelacionesQuery } from '../../estados/cancelaciones.query';
-import { CancelacionesStore } from '../../estados/cancelaciones.store';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { FECHA_DE_PAGO } from '../../models/cancelacions.model'
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
- * @description
  * Componente para manejar la entidad externa en el trámite 140201.
+ * @description
  * Este componente maneja el formulario y la lógica para la entidad externa.
  * 
  * @example
@@ -19,7 +21,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 @Component({
   selector: 'app-entidad-externa',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent],
   templateUrl: './entidad-externa.component.html',
   styleUrl: './entidad-externa.component.scss',
 })
@@ -28,6 +30,10 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
    * Formulario reactivo para la entidad externa.
    */
   entidadForm!: FormGroup;
+  /**
+    * Estado de la solicitud.
+    */
+  public cancelacionesState!: CancelacionesState;
 
   /**
    * @ignore
@@ -55,19 +61,24 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
   folioOficioSolicitudIPC$ = this.cancelacionesQuery.folioOficioSolicitudIPC$;
 
   /**
-   * Observable para el correo del solicitante IPC.
-   */
+     * Observable para el correo del solicitante IPC.
+     */
   correoSolicitanteIPC$ = this.cancelacionesQuery.correoSolicitanteIPC$;
   /**
- * Indica si el formulario está en modo solo lectura.
- * Cuando es `true`, los campos del formulario no se pueden editar.
- */
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
   esFormularioSoloLectura: boolean = false;
 
   /**
      * Suscripción a los cambios en el formulario react
      */
   private subscription: Subscription = new Subscription();
+
+  /**
+ * property {InputFecha} fechaInicioInput - Configuración de la fecha de pago.
+ */
+  fechaInicioInput: InputFecha = FECHA_DE_PAGO;
 
   /**
    * @ignore
@@ -93,15 +104,43 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
    * Configura el formulario y actualiza el estado con los datos observables.
    */
   ngOnInit(): void {
+    /**
+     * @description
+     * Selecciona el estado de la sección de cancelaciones y lo asigna a `
+     */
+    this.cancelacionesQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.cancelacionesState = seccionState;
+        })
+      ).subscribe();
+
+    /**
+     * @description
+     * Inicializa el formulario reactivo con los campos necesarios.
+     */
     this.entidadForm = this.fb.group({
       entidadExterna: ['', [Validators.required, Validators.maxLength(255)]],
       nombreSolicitanteIPC: ['', [Validators.required, Validators.maxLength(255)]],
       cargoSolicitanteIPC: ['', [Validators.maxLength(255)]],
       folioOficioSolicitudIPC: ['', [Validators.required, Validators.maxLength(30)]],
-      fechaSolicitudIPC: [{ value: '', disabled: true }, [Validators.maxLength(20)]],
+      fechaPago: [this.cancelacionesState?.fechaPago],
       correoSolicitanteIPC: ['', [Validators.maxLength(255)]]
     });
     this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Actualiza el campo de fecha de pago en el formulario y en el estado global.
+   *
+   * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
+   */
+  cambioFechaPago(nuevo_fechaPago: string): void {
+    this.entidadForm.patchValue({
+      fechaPago: nuevo_fechaPago,
+    });
+    this.cancelacionesStore.setFechaPago(nuevo_fechaPago);
   }
 
   /**
@@ -126,7 +165,7 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
       this.entidadForm.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.entidadForm.enable();
-    } 
+    }
   }
 
   /**
@@ -156,6 +195,8 @@ export class EntidadExternaComponent implements OnInit, OnDestroy {
         this.entidadForm?.get('folioOficioSolicitudIPC')?.setValue(folioOficioSolicitudIPC);
       }
     });
+
+    // Actualiza el correo del solicitante IPC
 
     this.correoSolicitanteIPC$.pipe(takeUntil(this.destroy$)).subscribe((correoSolicitanteIPC) => {
       if (correoSolicitanteIPC) {

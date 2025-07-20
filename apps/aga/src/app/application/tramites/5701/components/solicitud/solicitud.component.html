@@ -85,15 +85,18 @@
           <input
             class="form-control"
             id="rfc"
-            placeholder="RFC"
+            placeholder=""
             type="text"
             formControlName="RFCImpExp"
             maxlength="13"
-            [ngClass]="
-              isValid(datosImportadorExportador, 'RFCImpExp') ? 'required' : ''
-            "
+            [ngClass]="{
+              'is-invalid':
+                isRequired(datosImportadorExportador, 'RFCImpExp') ||
+                isErrorPattern(datosImportadorExportador, 'RFCImpExp')
+            }"
             libUppercase
             (blur)="validaRfc()"
+            (input)="cambiosInput('RFCImpExp', datosImportadorExportador)"
           />
 
           <div
@@ -118,7 +121,7 @@
             class="form-control"
             id="nombre"
             formControlName="nombre"
-            placeholder="Nombre"
+            placeholder=""
             type="text"
             appUppercase
           />
@@ -162,6 +165,7 @@
       <div class="row">
         <div class="col-md-4">
           <lib-check-input-text
+            #programaFomento
             [checkboxValor]="solicitudState.programa"
             [textoValor]="solicitudState.descripcionProgramaFomento"
             [idCheckbox]="'programa'"
@@ -171,12 +175,14 @@
             [reverse]="true"
             [hidden]="false"
             [maxLengthValidacion]="300"
+            [tipo]="'visible'"
             (checkboxChange)="checkPrograma($event)"
           ></lib-check-input-text>
         </div>
 
         <div class="col-md-4">
           <lib-check-input-text
+            #programaImmex
             [checkboxValor]="solicitudState.checkIMMEX"
             [textoValor]="solicitudState.descripcionImmex"
             [idCheckbox]="'checkIMMEX'"
@@ -184,7 +190,7 @@
             [label]="'IMMEX (Número/aaaa):'"
             [required]="false"
             [reverse]="true"
-            [hidden]="false"
+            [hidden]="false"  
             [maxLengthValidacion]="300"
             (checkboxChange)="checkImmex($event)"
           ></lib-check-input-text>
@@ -192,6 +198,7 @@
 
         <div class="col-md-4">
           <lib-check-input-text
+            #industriaAutomotriz
             [checkboxValor]="solicitudState.industriaAutomotriz"
             [textoValor]="solicitudState.descripcionIndustrialAutomotriz"
             [idCheckbox]="'industriaAutomotriz'"
@@ -240,6 +247,7 @@
             [id]="'certificacionOEA'"
             [label]="'Operador económico autorizado'"
             [required]="false"
+            [isDisabled]="certificacionOEADisabled"
             formControlName="certificacionOEA"
             (change)="
               setValoresStore(
@@ -254,6 +262,7 @@
             [id]="'revision'"
             [label]="'Revisión en origen'"
             [required]="false"
+            [isDisabled]="revisionDisabled"
             formControlName="revision"
             (change)="
               setValoresStore(
@@ -317,8 +326,10 @@
           id="fechaInicio"
           formControlName="fechaInicio"
           placeholder="dd/mm/yyyy"
+          autofocus="false"
+          (change)="changeFechaInicio(); limpiarFechas()"
+          (blur)="limpiarFechas()"
           [ngClass]="isValid(datosServicio, 'fechaInicio') ? 'required' : ''"
-          (change)="changeFechaInicio()"
           (keydown)="$event.preventDefault()"
         />
         <div
@@ -336,9 +347,7 @@
           [label]="'Hora inicio'"
           [required]="true"
           [inputId]="'horaInicio'"
-          (change)="
-            setValoresStore(datosServicio, 'horaInicio', 'setHoraInicio')
-          "
+          (change)="changeHoraInicio()"
         ></input-hora>
       </div>
     </div>
@@ -352,8 +361,9 @@
           name="fechaFinal"
           id="fechaFinal"
           formControlName="fechaFinal"
-          [ngClass]="isValid(datosServicio, 'fechaFinal') ? 'required' : ''"
           (change)="changeFechaFinal()"
+          (blur)="limpiarFechas()"
+          [ngClass]="{ 'is-invalid': isRequired(datosServicio, 'fechaFinal') }"
           (keydown)="$event.preventDefault()"
         />
         <div
@@ -459,6 +469,7 @@
             class="form-control"
             formControlName="rfcDespachoLDA"
             placeholder=""
+            (input)="cambiosInput('rfcDespachoLDA', despacho)"
             (blur)="changeRfcAutorizacionLDA()"
             maxlength="13"
             [ngClass]="isValid(despacho, 'rfcDespachoLDA') ? 'required' : ''"
@@ -474,7 +485,7 @@
       } @else if (despacho.get('dd')?.value) {
       <div class="col-md-4">
         <div class="form-group">
-          <label for="tipo" class="form-label">Autorizacion DDEX*:</label>
+          <label for="tipo" class="form-label">Autorización DDEX*:</label>
           <input
             type="text"
             id="folioDDEX"
@@ -482,6 +493,8 @@
             formControlName="folioDDEX"
             placeholder=""
             (blur)="changeFolioDDEX()"
+            (input)="cambiosInput('folioDDEX', despacho)"
+            maxlength="16"
             [ngClass]="isValid(despacho, 'folioDDEX') ? 'required' : ''"
           />
 
@@ -511,7 +524,11 @@
           (change)="changeAduana()"
         >
           <option value="-1">Selecciona una opción...</option>
-          <option *ngFor="let aduana of aduanas" [value]="aduana.clave">
+          <option
+            *ngFor="let aduana of aduanas"
+            [title]="aduana.title"
+            [value]="aduana.clave"
+          >
             {{ aduana.descripcion }}
           </option>
         </select>
@@ -530,9 +547,13 @@
           (change)="changeSeccionAduanera()"
           [required]="false"
         >
+          <option value="-2" hidden>
+            No cuenta con sección aduanera
+          </option>
           <option value="-1">Selecciona una opción...</option>
           <option
             *ngFor="let seccion of seccionAduanera"
+            [title]="seccion.title"
             [value]="seccion.clave"
           >
             {{ seccion.descripcion }}
@@ -541,7 +562,7 @@
       </div>
     </div>
     <div class="row">
-      @if (!despachoSeleccionado) {
+      @if (!mostarSelectTipoDespacho) {
       <div class="col-md-4">
         <label class="form-label" for="">Nombre del recinto:</label>
         <select
@@ -550,9 +571,13 @@
           (change)="changeRecinto()"
           [required]="false"
         >
+          <option value="-2" hidden>
+            No cuenta con recinto fiscalizado
+          </option>
           <option value="-1">Selecciona una opción...</option>
           <option
             *ngFor="let recinto of recintoCatalogo"
+            [title]="recinto.title"
             [value]="recinto.id_recinto_fiscalizado"
           >
             {{ recinto.descripcion }}
@@ -584,9 +609,7 @@
           [primerOptionValue]="SIN_VALOR"
           [hiddenPrimerOption]="false"
           [disabledPrimerOption]="false"
-          (change)="
-            setValoresStore(despacho, 'tipoOperacion', 'setTipoOperacion')
-          "
+          (change)="changeTipoOperacion()"
         ></app-catalogo-select>
       </div>
     </div>
@@ -660,6 +683,7 @@
     [validacion]="validacionPedimento"
     [datosNroPedimento]="datosPedimentoComponente"
     [tablaPedimento]="solicitudState.pedimentos"
+    [numeroPatente]="solicitudState.patente.patente"
     (validaCampos)="validaCampoPedimento()"
     (datosTablaPedimento)="changeAgregarPedimento($event)"
   ></c-pedimento>
@@ -866,13 +890,14 @@
           (listaDeFilaSeleccionada)="lineaCapturaSeleccionados = $event"
         >
         </app-tabla-dinamica>
-        <div class="row">
-          <div class="col-md-12 d-flex justify-content-center">
-            <app-table-pagination></app-table-pagination>
-          </div>
-        </div>
       </div>
       <div class="col-md-2"></div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 d-flex justify-content-center">
+        <app-paginador-tabla [totalPaginas]="1"></app-paginador-tabla>
+      </div>
     </div>
   </div>
   }
@@ -880,7 +905,7 @@
 
 <div class="row mt-5" *ngIf="editarSolicitud">
   <div class="col-md12">
-    <button type="button" class="btn btn-danger">
+    <button type="button" class="btn btn-danger" (click)="eliminarSolicitud()">
       Eliminar Solicitud Pendiente
     </button>
   </div>
@@ -890,6 +915,7 @@
 <section>
   <lib-notificaciones
     [notificacionInput]="nuevaNotificacion"
+    [forma]="datosServicio"
     (confirmacionModal)="confirmacionModal($event)"
   >
   </lib-notificaciones>

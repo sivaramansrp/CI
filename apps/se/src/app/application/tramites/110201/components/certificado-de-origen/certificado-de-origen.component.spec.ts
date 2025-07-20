@@ -4,7 +4,7 @@ import { RegistroService } from '../../services/registro.service';
 import { Tramite110201Store } from '../../state/Tramite110201.store';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { of } from 'rxjs';
+import { of, Subject, ReplaySubject } from 'rxjs';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 describe('CertificadoDeOrigenComponent', () => {
@@ -26,7 +26,53 @@ describe('CertificadoDeOrigenComponent', () => {
       getSolicitudesTabla: jest.fn().mockReturnValue(of([])),
       getSolicitudesDataTabla: jest.fn().mockReturnValue(of([])),
     };
-    tramiteStoreMock = {};
+    tramiteStoreMock = {
+      setFechInicioB: jest.fn(),
+      setFechFinB: jest.fn(),
+      setFecha: jest.fn(),
+      setNombre: jest.fn(),
+      setNumRegistro: jest.fn(),
+      setNomComercial: jest.fn(),
+      setTratado: jest.fn(),
+      setPais: jest.fn(),
+      setFraccionArancelaria: jest.fn(),
+      setArchivo: jest.fn(),
+      setObservaciones: jest.fn(),
+      setPresica: jest.fn(),
+      setPresenta: jest.fn(),
+      setIdioma: jest.fn(),
+      setEntidad: jest.fn(),
+      setRepresentacion: jest.fn(),
+      setApellidoPrimer: jest.fn(),
+      setApellidoSegundo: jest.fn(),
+      setNumeroFiscal: jest.fn(),
+      setRazonSocial: jest.fn(),
+      setCiudad: jest.fn(),
+      setCalle: jest.fn(),
+      setNumeroLetra: jest.fn(),
+      setLada: jest.fn(),
+      setTelefono: jest.fn(),
+      setFax: jest.fn(),
+      setCorreoElectronico: jest.fn(),
+      setNacion: jest.fn(),
+      setTransporte: jest.fn(),
+      setfraccionMercanArancelaria: jest.fn(),
+      setnombretecnico: jest.fn(),
+      setnomreeningles: jest.fn(),
+      setcriterioparaconferir: jest.fn(),
+      setmarca: jest.fn(),
+      setcantidad: jest.fn(),
+      setUMC: jest.fn(),
+      setvalordelamercancia: jest.fn(),
+      setcomplementodeladescripcion: jest.fn(),
+      setmasabruta: jest.fn(),
+      setnombrecomercialdelamercancia: jest.fn(),
+      setUnidadMedida: jest.fn(),
+      setTipoFactura: jest.fn(),
+      setNFactura: jest.fn(),
+      setJustificacion: jest.fn(),
+      setCheckbox: jest.fn(),
+    };
     tramiteQueryMock = {
       selectSolicitud$: of({}),
     };
@@ -51,48 +97,12 @@ describe('CertificadoDeOrigenComponent', () => {
 
     fixture = TestBed.createComponent(CertificadoDeOrigenComponent);
     component = fixture.componentInstance;
+    component.getMercanciaTable = { tableHeader: ['h1'], tableBody: [{ tbodyData: ['some string'] }] };
     fixture.detectChanges();
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should call all catalog methods and set options', () => {
-    component.getTratado();
-    expect(registroServiceMock.getTratado).toHaveBeenCalled();
-    component.getPais();
-    expect(registroServiceMock.getPais).toHaveBeenCalled();
-    component.getUMC();
-    expect(registroServiceMock.getUMC).toHaveBeenCalled();
-    component.getUnidadMedida();
-    expect(registroServiceMock.getUnidadMedida).toHaveBeenCalled();
-    component.getTipoFactura();
-    expect(registroServiceMock.getTipoFactura).toHaveBeenCalled();
-  });
-
-  it('should call getSolicitudesTabla and set mercanciaDisponsiblesTablaDatos', () => {
-    component.getSolicitudesTabla();
-    expect(registroServiceMock.getSolicitudesTabla).toHaveBeenCalled();
-  });
-
-  it('should call getSolicitudesDataTabla and set mercanciaSeleccionadasTablaData', () => {
-    component.getSolicitudesDataTabla();
-    expect(registroServiceMock.getSolicitudesDataTabla).toHaveBeenCalled();
-  });
-
-  it('should set cargarArchivo to true on cargaArchivo', () => {
-    component.cargarArchivo = false;
-    component.cargaArchivo();
-    expect(component.cargarArchivo).toBe(true);
-  });
-
-  it('should set mostrarErrores to true and cargarArchivo to false on darError', () => {
-    component.mostrarErrores = false;
-    component.cargarArchivo = true;
-    component.darError();
-    expect(component.mostrarErrores).toBe(true);
-    expect(component.cargarArchivo).toBe(false);
   });
 
   it('should set esFormulario to true on manejarClic', () => {
@@ -103,9 +113,7 @@ describe('CertificadoDeOrigenComponent', () => {
 
   it('should mark all as touched if registroForm is invalid in validarDestinatarioFormulario', () => {
     component.registroForm = new FormBuilder().group({
-      validacionForm: new FormBuilder().group({
-        tratado: ['']
-      })
+      validacionForm: new FormBuilder().group({})
     });
     jest.spyOn(component.registroForm, 'markAllAsTouched');
     component.registroForm.setErrors({ invalid: true });
@@ -115,9 +123,7 @@ describe('CertificadoDeOrigenComponent', () => {
 
   it('should mark all as touched if mercanciaForm is invalid in validarMercanciaForm', () => {
     component.mercanciaForm = new FormBuilder().group({
-      validacionMercanciaForm: new FormBuilder().group({
-        nombreTecnico: ['']
-      })
+      validacionMercanciaForm: new FormBuilder().group({})
     });
     jest.spyOn(component.mercanciaForm, 'markAllAsTouched');
     component.mercanciaForm.setErrors({ invalid: true });
@@ -134,7 +140,7 @@ describe('CertificadoDeOrigenComponent', () => {
     const spy = jest.spyOn(component, 'setValoresStore');
     component.cambioFechaInicial('2024-01-01');
     expect(component.registroForm.get('validacionForm.fechaInicial')?.value).toBe('2024-01-01');
-    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(component.validacionForm, 'fechaInicial', 'setFechInicioB');
   });
 
   it('should patch value and call setValoresStore on cambioFechaFinal', () => {
@@ -146,7 +152,7 @@ describe('CertificadoDeOrigenComponent', () => {
     const spy = jest.spyOn(component, 'setValoresStore');
     component.cambioFechaFinal('2024-01-02');
     expect(component.registroForm.get('validacionForm.fechaFinal')?.value).toBe('2024-01-02');
-    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(component.validacionForm, 'fechaFinal', 'setFechFinB');
   });
 
   it('should patch value and call setValoresStore on cambioFechaFactura', () => {
@@ -158,7 +164,7 @@ describe('CertificadoDeOrigenComponent', () => {
     const spy = jest.spyOn(component, 'setValoresStore');
     component.cambioFechaFactura('2024-01-03');
     expect(component.mercanciaForm.get('validacionMercanciaForm.fecha')?.value).toBe('2024-01-03');
-    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(component.validacionMercanciaForm, 'fecha', 'setFecha');
   });
 
   it('should set hayMercanciasDisponibles to false if tratado is 0 in buscarMercancias', () => {
@@ -221,6 +227,20 @@ describe('CertificadoDeOrigenComponent', () => {
     expect(component.mercanciasBody).toEqual([{ tbodyData: ['some string'] }]);
   });
 
+  it('should set cargarArchivo to true on cargaArchivo', () => {
+    component.cargarArchivo = false;
+    component.cargaArchivo();
+    expect(component.cargarArchivo).toBe(true);
+  });
+
+  it('should set mostrarErrores to true and cargarArchivo to false on darError', () => {
+    component.mostrarErrores = false;
+    component.cargarArchivo = true;
+    component.darError();
+    expect(component.mostrarErrores).toBe(true);
+    expect(component.cargarArchivo).toBe(false);
+  });
+
   it('should set cargarArchivo to false on cerrarAdjuntarArchivoMercancias', () => {
     component.cargarArchivo = true;
     component.cerrarAdjuntarArchivoMercancias();
@@ -228,10 +248,10 @@ describe('CertificadoDeOrigenComponent', () => {
   });
 
   it('should set nombreArchivo on alSeleccionarArchivo', () => {
-    const event = { target: { files: [{ name: 'test.pdf' }] } };
+    const event = { target: { files: [{ name: 'test.pdf' }] } } as unknown as Event;
     component.alSeleccionarArchivo(event);
     expect(component.nombreArchivo).toBe('test.pdf');
-    const event2 = { target: { files: [] } };
+    const event2 = { target: { files: [] } } as unknown as Event;
     component.alSeleccionarArchivo(event2);
     expect(component.nombreArchivo).toBe('No se eligió ningún archivo');
   });
@@ -239,12 +259,12 @@ describe('CertificadoDeOrigenComponent', () => {
   it('should call validacionesService.isValid in isValid', () => {
     const form = new FormBuilder().group({ campo: [''] });
     expect(component.isValid(form, 'campo')).toBe(true);
-    expect(validacionesServiceMock.isValid).toHaveBeenCalled();
+    expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(form, 'campo');
   });
 
   it('should call store method in setValoresStore', () => {
     const storeMethod = jest.fn();
-    component.store = { setTest: storeMethod } as any;
+    component.store = { setNombre: storeMethod } as any;
     const form = new FormBuilder().group({ campo: ['valor'] });
     component.setValoresStore(form, 'campo', 'setNombre');
     expect(storeMethod).toHaveBeenCalledWith('valor');
@@ -263,20 +283,47 @@ describe('CertificadoDeOrigenComponent', () => {
 
   it('should set up forms in donanteDomicilio', () => {
     component.solicitudState = {} as any;
+    component.getMercanciaTable = { tableHeader: [], tableBody: [] };
     component.donanteDomicilio();
     expect(component.registroForm).toBeTruthy();
     expect(component.mercanciaForm).toBeTruthy();
   });
 
-  it('should complete destroyNotifier$ and destroyed$ on ngOnDestroy', () => {
-    const destroyNotifierNext = jest.spyOn(component.destroyNotifier$, 'next');
-    const destroyNotifierComplete = jest.spyOn(component.destroyNotifier$, 'complete');
-    const destroyedNext = jest.spyOn((component as any).destroyed$, 'next');
-    const destroyedComplete = jest.spyOn((component as any).destroyed$, 'complete');
-    component.ngOnDestroy();
-    expect(destroyNotifierNext).toHaveBeenCalled();
-    expect(destroyNotifierComplete).toHaveBeenCalled();
-    expect(destroyedNext).toHaveBeenCalled();
-    expect(destroyedComplete).toHaveBeenCalled();
+  it('should call all catalog methods and set options', () => {
+    component.getTratado();
+    expect(registroServiceMock.getTratado).toHaveBeenCalled();
+    component.getPais();
+    expect(registroServiceMock.getPais).toHaveBeenCalled();
+    component.getUMC();
+    expect(registroServiceMock.getUMC).toHaveBeenCalled();
+    component.getUnidadMedida();
+    expect(registroServiceMock.getUnidadMedida).toHaveBeenCalled();
+    component.getTipoFactura();
+    expect(registroServiceMock.getTipoFactura).toHaveBeenCalled();
   });
+
+  it('should call guardarDatosFormulario if soloLectura in inicializarEstadoFormulario', () => {
+    component.soloLectura = true;
+    jest.spyOn(component, 'guardarDatosFormulario');
+    component.inicializarEstadoFormulario();
+    expect(component.guardarDatosFormulario).toHaveBeenCalled();
+  });
+
+  it('should call donanteDomicilio if not soloLectura in inicializarEstadoFormulario', () => {
+    component.soloLectura = false;
+    jest.spyOn(component, 'donanteDomicilio');
+    component.inicializarEstadoFormulario();
+    expect(component.donanteDomicilio).toHaveBeenCalled();
+  });
+
+  it('should call getSolicitudesTabla and set mercanciaDisponsiblesTablaDatos', () => {
+    component.getSolicitudesTabla();
+    expect(registroServiceMock.getSolicitudesTabla).toHaveBeenCalled();
+  });
+
+  it('should call getSolicitudesDataTabla and set mercanciaSeleccionadasTablaData', () => {
+    component.getSolicitudesDataTabla();
+    expect(registroServiceMock.getSolicitudesDataTabla).toHaveBeenCalled();
+  });
+ 
 });

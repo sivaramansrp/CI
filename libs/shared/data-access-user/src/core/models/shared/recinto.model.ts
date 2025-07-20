@@ -16,6 +16,7 @@ export interface RecintoResponse {
  */
 export interface Recinto {
     id_recinto_fiscalizado: string;
+    title?: string; // Campo opcional para almacenar el título
     nombre: string;
     descripcion: string;
 }

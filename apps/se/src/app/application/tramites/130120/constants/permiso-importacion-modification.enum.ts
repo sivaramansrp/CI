@@ -1,4 +1,23 @@
 /**
+ * Conjunto de constantes de configuración para los campos y catálogos del trámite de Permiso de Importación.
+ *
+ * Este archivo contiene los arreglos y objetos que definen la estructura, validaciones, catálogos y textos
+ * utilizados en los formularios del trámite, incluyendo datos del solicitante, domicilio fiscal, datos de la mercancía,
+ * exportador, productor, representación federal y textos de ayuda.
+ *
+ * @const
+ * @export
+ * @category Configuración
+ * @description
+ * Cada constante representa la configuración de un grupo de campos o catálogos para una sección específica del trámite.
+ * Incluye validaciones, tipos de entrada, opciones de catálogo y textos HTML para instrucciones.
+ *
+ * @ejemplo
+ * DATOS_GENERALES_SOLICITANTE, DOMICILIO_FISCAL_SOLICITANTE, DATOS_REALIZAR, DATOS_MERCANCIA, DATOS_EXPORTACION,
+ * DATOS_PRODUCTOR, DATOS_EXPORTADOR, DATOS_FEDERAL, TEXTOS_REQUISITOS, TEXTOS
+ */
+
+/**
  * Configuración de los campos para los datos generales del solicitante.
  */
 export const DATOS_GENERALES_SOLICITANTE = [
@@ -218,10 +237,10 @@ export const DATOS_MERCANCIA = [
         validators: ['required'],
         catalogos: [
             { "id": 1, "descripcion": "Aeroportuaria" },
-            { "id": 1, "descripcion": "Fronteriza" },
-            { "id": 1, "descripcion": "Interior" },
-            { "id": 1, "descripcion": "Maritima" },
-            { "id": 1, "descripcion": "Terrestre" },
+            { "id": 2, "descripcion": "Fronteriza" },
+            { "id": 3, "descripcion": "Interior" },
+            { "id": 4, "descripcion": "Maritima" },
+            { "id": 5, "descripcion": "Terrestre" },
         ],
         storeFunction: 'setTipoEntrada',
     },
@@ -354,7 +373,7 @@ export const DATOS_MERCANCIA = [
         labelNombre: 'Valor de la factura de la mercancía a importar en términos de la Moneda de Comercialización*:',
         campo: 'valor_factura',
         class: 'col-md-8',
-        tipo_input: 'number',
+        tipo_input: 'text',
         validators: [
             'required',
             'pattern:^\\d{1,14}(\\.\\d{1,2})?$'
@@ -462,7 +481,7 @@ export const DATOS_MERCANCIA = [
         labelNombre: 'Valor total de la factura en términos de la Moneda de Comercialización*:',
         campo: 'valor_total_factura',
         class: 'col-md-8',
-        tipo_input: 'number',
+        tipo_input: 'text',
         validators: [
             'required',
             'pattern:^\\d{1,14}(\\.\\d{1,2})?$'
@@ -518,7 +537,7 @@ export const DATOS_EXPORTACION = [
         placeholder: '',
     },
     {
-        labelNombre: 'Cantidad en la unidad de medida senalada en el documento de exportacion*:',
+        labelNombre: 'Cantidad en la unidad de medida señalada en el documento de exportación*:',
         campo: 'cantidad_umt',
         class: 'col-md-4',
         tipo_input: 'number',
@@ -555,7 +574,7 @@ export const DATOS_PRODUCTOR = [
         selectedValue: 'Física',
     },
     {
-        labelNombre: 'Datos personales Nombre(s)*:',
+        labelNombre: 'Nombre(s)*:',
         campo: 'personales_nombre',
         class: 'col-md-4',
         tipo_input: 'text',
@@ -613,7 +632,7 @@ export const DATOS_EXPORTADOR = [
         selectedValue: 'Física',
     },
     {
-        labelNombre: 'Datos personales Nombre(s)*:',
+        labelNombre: 'Nombre(s)*:',
         campo: 'personales_nombre',
         class: 'col-md-4',
         tipo_input: 'text',
@@ -728,3 +747,74 @@ export const TEXTOS = {
     <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista.</p>`,
     ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`,
   };
+
+
+export const FECHA_FACTURA = {
+    labelNombre: 'Fecha de factura',
+    required: true,
+    habilitado: true,
+};
+
+export const FECHA_DOCUMENTO = {
+    labelNombre: 'Fecha del documento',
+    required: true,
+    habilitado: true,
+};
+
+export const OPCION_DE_RADIO = [
+  {
+    /**
+     * Etiqueta para persona física.
+     * @type {string}
+     */
+    "label": "Física",
+    /**
+     * Valor para persona física.
+     * @type {string}
+     */
+    "value": "Física"
+  },
+  {
+    /**
+     * Etiqueta para persona moral.
+     * @type {string}
+     */
+    "label": "Moral",
+    /**
+     * Valor para persona moral.
+     * @type {string}
+     */
+    "value": "Moral"
+  },
+  {
+    "label": "Ninguno",
+    "value": "Ninguno"
+  }
+];
+
+export const OPCION_DE_RADIO_EXPORTADOR = [
+  {
+    /**
+     * Etiqueta para persona física.
+     * @type {string}
+     */
+    "label": "Física",
+    /**
+     * Valor para persona física.
+     * @type {string}
+     */
+    "value": "Física"
+  },
+  {
+    /**
+     * Etiqueta para persona moral.
+     * @type {string}
+     */
+    "label": "Moral",
+    /**
+     * Valor para persona moral.
+     * @type {string}
+     */
+    "value": "Moral"
+  }
+];

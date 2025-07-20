@@ -1,6 +1,6 @@
 
-import { AlertComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AlertComponent, ConfiguracionColumna, ConsultaioQuery, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -11,7 +11,6 @@ import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
 import { RegistroDeSolicitudesTabla } from '../../models/panallas110101.model';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
-import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import tratadosTable from '@libs/shared/theme/assets/json/110101/tratados-table.json';
 
@@ -31,14 +30,46 @@ import tratadosTable from '@libs/shared/theme/assets/json/110101/tratados-table.
   imports: [
     TituloComponent,
     CommonModule,
-    TableComponent,
     AlertComponent,
     CatalogoSelectComponent,
     ReactiveFormsModule,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    NotificacionesComponent
   ]
 })
 export class TratadosComponent implements OnInit, OnDestroy {
+   /**
+   * Notificación actual que se muestra en el componente.
+   *
+   * Esta propiedad almacena los datos de la notificación que se mostrará al usuario.
+   * Se utiliza para configurar el tipo, categoría, mensaje y otros detalles de la notificación.
+   */
+  public nuevaNotificacion!: Notificacion ;
+  /**
+   * Evento que se emite para habilitar la pestaña siguiente en el flujo del trámite.
+   * Se utiliza para notificar al componente padre que la pestaña puede ser activada,
+   * generalmente después de agregar o modificar un tratado exitosamente.
+   *
+   * @event habilitarPestana
+   * @type {EventEmitter<void>}
+   */
+  @Output() habilitarPestana = new EventEmitter<void>();
+
+  /**
+   * Array de filas seleccionadas en la tabla de tratados.
+   * 
+   * @property {RegistroDeSolicitudesTabla[]} selectedRows - Array que contiene las filas seleccionadas en la tabla.
+   */
+  selectedRows: RegistroDeSolicitudesTabla[] = [];
+  /*
+  * Indice de la fila seleccionada en la tabla de tratados.
+  */
+  selectedRowIndex: number | null = null;
+/**
+ * Indica si el componente está en modo de edición.
+ * Cuando es `true`, permite editar los tratados seleccionados.
+ */
+  isEditMode: boolean = false;
   /**
    * Formulario reactivo para gestionar los tratados.
    * 
@@ -192,7 +223,13 @@ export class TratadosComponent implements OnInit, OnDestroy {
  /**
      * Un array de objetos `RegistroDeSolicitudesTabla` que representa los datos para la tabla de solicitudes.
      */
-    public registroDeSolicitudesTablaDatos: RegistroDeSolicitudesTabla[] = [];
+    public registroDeSolicitudesTablaDatos: RegistroDeSolicitudesTabla[] = [
+       {
+    pais: 'Mexico',
+    tratado: 'T-MEC',
+    origen: 'Nacional'
+  }
+    ];
 
 /**
    * Tipo de selección utilizado en la tabla, definido como casillas de verificación (checkbox).
@@ -216,13 +253,69 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * 
    * @method agregarTratado
    */
-  agregarTratado(): void {
-    if (this.formularioTratados.valid) {
-      this.registroDeSolicitudesTablaDatos.push({ ...this.talbleData });
-      this.formularioTratados.reset();
-    }
-  }
+ 
+agregarTratado(): void {
+  if (this.formularioTratados.valid) {
+   
+    const PAIS_ID = this.formularioTratados.get('pais')?.value;
+    const TRATADO_ID = this.formularioTratados.get('tratado')?.value;
+    const ORIGEN_ID = this.formularioTratados.get('origen')?.value;
 
+    
+    const PAIS_DESC = this.paisCatalogo.find(item => item.id.toString() === PAIS_ID)?.descripcion || '';
+    const TRATADO_DESC = this.tratadoCatalogo.find(item => item.id.toString() === TRATADO_ID)?.descripcion || '';
+    const ORIGENDESC = this.origenCatalogo.find(item => item.id.toString() === ORIGEN_ID)?.descripcion || '';
+
+    const ROW_DATA = {
+      pais: PAIS_DESC,
+      tratado: TRATADO_DESC,
+      origen: ORIGENDESC
+    };
+
+   if (this.isEditMode && this.selectedRowIndex !== null && this.selectedRowIndex > -1) {
+  
+  const UPDATED_ROW = { ...this.registroDeSolicitudesTablaDatos[this.selectedRowIndex] };
+  if (PAIS_DESC){ UPDATED_ROW.pais = PAIS_DESC}
+  if (TRATADO_DESC) {UPDATED_ROW.tratado = TRATADO_DESC}
+  if (ORIGENDESC) {UPDATED_ROW.origen = ORIGENDESC}
+  this.registroDeSolicitudesTablaDatos[this.selectedRowIndex] = UPDATED_ROW;
+
+  this.isEditMode = false;
+  this.selectedRowIndex = null;
+  this.selectedRows = [];
+} else {
+  
+  this.registroDeSolicitudesTablaDatos.push(ROW_DATA);
+}
+    this.habilitarPestana.emit();
+    this.formularioTratados.reset();
+  }
+}
+/**
+ * Modifica un tratado existente en la tabla.
+ * Este método se activa cuando se selecciona una fila en la tabla.
+ * Si hay una fila seleccionada, cambia el modo de edición a `true` y carga
+ */
+modificarTratado(): void {
+  if (this.selectedRows.length === 0 ||
+    this.selectedRowIndex === null ||
+    this.selectedRowIndex < 0) {
+   this.abrirModal();
+    return;
+  }
+  this.isEditMode = true;
+  const SELECTED = this.registroDeSolicitudesTablaDatos[this.selectedRowIndex];
+
+  const PAIS_ID = this.paisCatalogo.find(item => item.descripcion === SELECTED.pais)?.id ?? '';
+  const TRATADO_ID = this.tratadoCatalogo.find(item => item.descripcion === SELECTED.tratado)?.id ?? '';
+  const ORIGEN_ID = this.origenCatalogo.find(item => item.descripcion === SELECTED.origen)?.id ?? '';
+
+  this.formularioTratados.patchValue({
+    pais: PAIS_ID,
+    tratado: TRATADO_ID,
+    origen: ORIGEN_ID
+  });
+}
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
@@ -300,5 +393,84 @@ talbleData: RegistroDeSolicitudesTabla = {
     this.destroy$.complete();
   }
 
+/**
+ * 
+ * @param selected - Array de registros seleccionados en la tabla.
+ * Este método maneja el cambio de selección en la tabla de tratados.
+ */
+onSeleccionChange(selected: RegistroDeSolicitudesTabla[]) :void{
+  if (selected && selected.length === 1) {
+    this.selectedRows = [selected[0]];
+    this.selectedRowIndex = this.registroDeSolicitudesTablaDatos.findIndex(
+      row => row === selected[0]
+    );
+  
+  } else {
+    this.selectedRows = [];
+    this.selectedRowIndex = null;
+    this.formularioTratados.reset();
+  }
+}
+/**
+ * 
+ * @returns boolean
+ * Este método verifica si hay filas seleccionadas en la tabla de tratados.
+ */
+eliminarTratado(): void {
+  if (this.selectedRows.length === 0) {
+    this.abrirModal();
+    return;
+  }
+  this.registroDeSolicitudesTablaDatos = this.registroDeSolicitudesTablaDatos.filter(
+    row => !this.selectedRows.includes(row)
+  );
+  this.selectedRows = [];
+}
 
+  /**
+   * Lista de pedimentos.
+   *
+   * Esta propiedad almacena un arreglo de objetos de tipo `Pedimento`, que representan
+   * los pedimentos gestionados en el componente.
+   */
+  pedimentos: Array<Pedimento> = [];
+   /**
+   * Índice del elemento que se desea eliminar.
+   *
+   * Esta propiedad almacena el índice del elemento seleccionado para su eliminación
+   * en la lista de pedimentos.
+   */
+  elementoParaEliminar!: number;
+  /**
+   * Abre el modal de confirmación para eliminar un pedimento.
+   *
+   * Este método configura los datos de la notificación que se mostrará en el modal
+   * de confirmación. También almacena el índice del elemento que se desea eliminar.
+   *
+   * @param i - Índice del pedimento que se desea eliminar. Por defecto, es 0.
+   */
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Seleccione un pais/tratado/criterio',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
+    this.elementoParaEliminar = i;
+  }
+  /**
+   *              
+   * @param borrar
+   * @description Elimina un pedimento de la lista si el parámetro `borrar` es `true`. 
+   */
+eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
 }

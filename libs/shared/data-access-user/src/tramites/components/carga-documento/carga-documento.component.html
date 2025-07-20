@@ -1,7 +1,7 @@
 @if(mostrarSeccionCargaArchivos) {
 <div class="row mt-5">
     <div class="col-md-12 mb-3">
-        <span class="h3">Documentos obligatorios</span>
+        <span class="h3" *ngIf="catalogoDocumentosObligatorios.length > 0">Documentos obligatorios</span>
     </div>
     <div class="col-md-12">
         <div class="col-md-12 border rounded bg-file-container px-4">
@@ -200,7 +200,7 @@
 <div class="row">
     <span class="h4">Carga de documentos</span>
     <div class="col-md-12">
-        <table class="table table-bordered">
+        <table class="table table-bordered" *ngIf="archivosCargando.obligatorios.length > 0">
             <thead>
                 <tr>
                     <th>Documento obligatorio</th>

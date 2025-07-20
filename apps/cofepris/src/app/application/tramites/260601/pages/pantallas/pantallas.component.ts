@@ -1,7 +1,19 @@
 import { Component, ViewChild } from '@angular/core';
 
-import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  BtnContinuarComponent,
+  DatosPasos,
+  ListaPasosWizard,
+  PASOS,
+  WizardComponent,
+} from '@ng-mf/data-access-user';
 import { AVISO_PRIVACIDAD } from '../../constantes/aviso-enum';
+import { CommonModule } from '@angular/common';
+import { DatosComponent } from '../datos/datos.component';
+import { FirmarSolicitudComponent } from '../firmar-solicitud/firmar-solicitud.component';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 /**
  * Interfaz que representa el botón de acción.
@@ -23,9 +35,20 @@ interface AccionBoton {
  */
 @Component({
   templateUrl: './pantallas.component.html',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    WizardComponent,
+    BtnContinuarComponent,
+    DatosComponent,
+    PasoDosComponent,
+    AlertComponent,
+    FirmarSolicitudComponent,
+  ],
   styles: ``,
 })
-export class PantallasComponent{
+export class PantallasComponent {
   /**
    * Lista de pasos del wizard.
    */
@@ -42,7 +65,7 @@ export class PantallasComponent{
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-   * 
+   *
    * Una cadena que representa la clase CSS para una alerta de información.
    * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
    */
@@ -65,7 +88,7 @@ export class PantallasComponent{
 
   /**
    * Selecciona la pestaña especificada.
-   * 
+   *
    * @param i - El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
@@ -74,7 +97,7 @@ export class PantallasComponent{
 
   /**
    * Obtiene el valor del índice y realiza la acción correspondiente.
-   * 
+   *
    * @param e - El botón de acción con el valor y la acción.
    */
   getValorIndice(e: AccionBoton): void {
@@ -88,3 +111,5 @@ export class PantallasComponent{
     }
   }
 }
+
+export { PASOS };

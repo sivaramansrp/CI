@@ -59,7 +59,7 @@ describe('DatosSolicitudComponent', () => {
 
   beforeEach(async (): Promise<void> => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, DatosSolicitudComponent],
+      imports: [ReactiveFormsModule, DatosSolicitudComponent,require('@angular/common/http/testing').HttpClientTestingModule],
       providers: [
         {
           provide: Tramite260917Query,

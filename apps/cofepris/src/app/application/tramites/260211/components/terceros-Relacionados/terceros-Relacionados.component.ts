@@ -869,9 +869,8 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
       'CDMX',
       'CDMX',
       'CDMX',
-      '07000',
-      'Colonia Destino'
-    ]
+      '07000'
+      ]
   }];
 
   /**
@@ -897,9 +896,8 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
       'CDMX',
       'CDMX',
       'CDMX',
-      '06500',
-      'Zona Industrial'
-    ]
+      '06500'
+      ]
   }];
 
   /**
@@ -926,9 +924,8 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
       'CDMX',
       'CDMX',
       'CDMX',
-      '08000',
-      'Colonia Facturador'
-    ]
+      '08000'
+      ]
   },
   ];
 

@@ -55,3 +55,13 @@ export const MSG_MODIFICA_ELEMENTO = 'Registro modificado correctamente.';
  * @description Sin titulo para el modal.
  */
 export const SIN_TITULO_MODAL = '';
+
+/**
+ * @description Campo vacío.
+ */
+export const CAMPO_VACIO = '';
+
+/**
+ * Texto boton "eliminar solicitud pendiente"
+ */
+export const TEXTO_ELIMINAR_SOLICITUD = 'Eliminar solicitud';

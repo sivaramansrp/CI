@@ -288,6 +288,10 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   buscar(): void {
+    if (!this.ninoFormGroup.touched) {
+      this.ninoFormGroup.markAllAsTouched();
+    }
+
     if (this.ninoFormGroup.valid) {
       this.mostrarCampoDeDescripcion();
       this.obtenerTablaDatos();

@@ -1,7 +1,7 @@
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Component, Inject, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MENCIONE_TABLA,Mencione } from '../../models/datos-comunes.model';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -63,6 +63,21 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
    */
   public esFormularioSoloLectura: boolean = false;
 
+/**
+ * Validador personalizado que verifica si el valor del control es un número entero.
+ *
+ * @param control - El control de formulario que se está validando.
+ * @returns Un objeto de error con la propiedad `notInteger` si el valor no es un número entero,
+ *          o `null` si el valor es válido o está vacío.
+ */
+static integerValidator(control: AbstractControl): ValidationErrors | null {
+  const VALUE = control.value;
+  if (VALUE === null || VALUE === '') {
+    return null;
+  }
+  return Number.isInteger(Number(VALUE)) ? null : { notInteger: true };
+}
+
   /**
    * Constructor del componente.
    * 
@@ -108,7 +123,7 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
     this.numeroDeEmpleadosForm = this.fb.group({
       rfc: ['', [Validators.required, Validators.pattern(REGEX_RFC)]],
       razonSocial: ['', [Validators.required, Validators.minLength(3)]],
-      numeroEmpleados: ['', [Validators.required]],
+      numeroEmpleados: ['', [Validators.required, FederalDeTrabajaoComponent.integerValidator]],
       empleadosPropios: ['', [Validators.required, Validators.maxLength(8)]],
       archivoNacionales: ['', [Validators.required]],
       comboBimestresTres: [''],
@@ -173,6 +188,31 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
       this.numeroDeEmpleadosForm.enable();
     }
   }
+
+/**
+ * Maneja la acción de aceptar en el formulario del modal.
+ *
+ * Si el formulario `numeroDeEmpleadosForm` es inválido, marca todos los controles como tocados para mostrar los errores de validación y no cierra el modal.
+ * Si el formulario es válido, cierra el modal ocultándolo.
+ */
+onAceptar(): void {
+  if (this.numeroDeEmpleadosForm.invalid) {
+    this.numeroDeEmpleadosForm.markAllAsTouched();
+    return; 
+  }
+  this.modalRef?.hide();
+}
+
+/**
+ * Maneja la acción de cancelar en el formulario del modal.
+ *
+ * Este método restablece el formulario `numeroDeEmpleadosForm` a su estado inicial
+ * y cierra el modal ocultándolo.
+ */
+onCancelar(): void {
+  this.numeroDeEmpleadosForm.reset();
+  this.modalRef?.hide();
+}
 
   /**
    * Hook del ciclo de vida que se llama cuando el componente es destruido.

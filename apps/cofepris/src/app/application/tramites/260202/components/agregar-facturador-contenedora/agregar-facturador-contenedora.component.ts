@@ -11,7 +11,6 @@ import { Tramite260202Store } from '../../estados/tramite260202Store.store';
  * para gestionar la funcionalidad relacionada con los facturadores. 
  * Este componente interactúa con el estado del trámite a través del store `Tramite260202Store`.
  */
-
 @Component({
   selector: 'app-agregar-facturador-contenedora',
   standalone: true,
@@ -19,6 +18,7 @@ import { Tramite260202Store } from '../../estados/tramite260202Store.store';
   templateUrl: './agregar-facturador-contenedora.component.html',
   styleUrl: './agregar-facturador-contenedora.component.scss',
 })
+
 export class AgregarFacturadorContenedoraComponent {
      /**
    * @property {string} idProcedimiento

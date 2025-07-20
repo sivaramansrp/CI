@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-md-4">
       <div class="form-group">
-        <label class="form-label" for="codigoPostal">Código postal*:</label>
+        <label class="form-label" for="codigoPostal">Código postal * :</label>
         <input class="form-control" id="codigoPostal" placeholder="" type="text" maxlength="12" size="29"
           formControlName="codigoPostal" (change)="setValoresStore(domicilio, 'codigoPostal', 'setCodigoPostal')" />
         <div class="d-grid">
@@ -32,8 +32,8 @@
     </div>
     <div class="col-md-4">
       <div class="form-group">
-        <label class="form-label" for="muncipio">Municipio o alcaldía*:</label>
-        <input class="form-control" id="muncipio" placeholder="" type="text" formControlName="muncipio"
+        <label class="form-label" for="muncipio">Municipio y alcaldía * :</label>
+        <input class="form-control" id="muncipio" placeholder="" type="text" formControlName="muncipio" maxlength="120"
           (change)="setValoresStore(domicilio, 'muncipio', 'setMuncipio')" />
         <div class="d-grid">
           <div *ngIf="domicilio.get('muncipio')?.touched">
@@ -49,14 +49,14 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="localidad">Localidad:</label>
-        <input class="form-control" id="localidad" placeholder="" type="text" formControlName="localidad"
+        <input class="form-control" id="localidad" placeholder="" type="text" formControlName="localidad" maxlength="120"
           (change)="setValoresStore(domicilio, 'localidad', 'setLocalidad')" />
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="colonia">Colonia:</label>
-        <input class="form-control" id="colonia" placeholder="" type="text" formControlName="colonia"
+        <input class="form-control" id="colonia" placeholder="" type="text" formControlName="colonia" maxlength="120"
           (change)="setValoresStore(domicilio, 'colonia', 'setColonia')" />
       </div>
     </div>
@@ -64,8 +64,13 @@
   <div class="row">
     <div class="col-md-8">
       <div class="form-group">
-        <label class="form-label" for="calle">Calle*:</label>
-        <input class="form-control" id="calle" placeholder="" type="text" formControlName="calle"
+        <label class="form-label" for="calle">Calle * :</label>
+        <span
+              class="bi bi-question-circle-fill"
+              title="Calle y número"
+              data-bs-toggle="tooltip"
+            ></span>
+        <input class="form-control" id="calle" placeholder="" type="text" formControlName="calle" maxlength="100"
           (change)="setValoresStore(domicilio, 'calle', 'setCalle')" />
         <div class="d-grid">
           <div *ngIf="domicilio.get('calle')?.touched">
@@ -87,7 +92,7 @@
     </div>
     <div class="col-md-3">
       <div class="form-group">
-        <label class="form-label" for="telefono">Teléfono*:</label>
+        <label class="form-label" for="telefono">Teléfono * :</label>
         <input class="form-control" id="telefono" placeholder="" type="number" maxlength="30" size="29"
           formControlName="telefono" (change)="setValoresStore(domicilio, 'telefono', 'setTelefono')" />
         <div class="d-grid">
@@ -105,7 +110,7 @@
   </div>
   <div class="row">
     <div class="col-md-12 mt-5">
-      <h4>S.C.I.A.N.*:</h4>
+      <h4>S.C.I.A.N. * :</h4>
     </div>
   </div>
   <div class="row">
@@ -114,30 +119,9 @@
     <div class="container text-end mt-5">
       <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
       <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura ? true : false" data-bs-toggle="modal"
-        data-bs-target="#modalAddAgent">
+        data-bs-target="#modalAddAgent" (click)="guardarScian()">
         Agregar
       </button>
-    </div>
-  </div>
-  <div class="row align-item-center">
-    <div class="col-md-4">
-
-      <lib-input-check [label]="'Aviso de funcionamiento'" [id]="'avisoCheckbox'" [required]="true"
-        formControlName="avisoCheckbox" [isDisabled]="esFormularioSoloLectura ? true : false"
-        (change)="setValoresStore(domicilio, 'avisoCheckbox', 'setAvisoCheckbox')"></lib-input-check>
-    </div>
-    <div class="col-md-4">
-      <div class="form-group">
-        <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria*:</label>
-        <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
-          formControlName="licenciaSanitaria" (change)="
-            setValoresStore(
-              domicilio,
-              'licenciaSanitaria',
-              'setLicenciaSanitaria'
-            )
-          " />
-      </div>
     </div>
   </div>
   <div class="row">
@@ -147,7 +131,7 @@
   </div>
   <div class="row">
     <div class="col-md-12 mt-5">
-      <h5>Datos de la mercancía*:</h5>
+      <h5>Datos de la mercancía * :</h5>
     </div>
   </div>
   <div class="row mt-5">
@@ -179,7 +163,7 @@
           <div class="form-group">
             <app-catalogo-select [catalogo]="estado" formControlName="claveScianModal" [label]="'Clave S.C.I.A.N.'"
               [required]="true" name="claveScianModal" [isDisabled]="esFormularioSoloLectura ? true : false"
-              (change)="setValoresStore(formAgente, 'claveScianModal', 'setClaveScianModal')"></app-catalogo-select>
+              (change)="onClaveScianChange($event);setValoresStore(formAgente, 'claveScianModal', 'setClaveScianModal')" ></app-catalogo-select>
           </div>
           <div class="form-group">
             <app-catalogo-select [catalogo]="estado" formControlName="claveDescripcionModal"
@@ -191,7 +175,7 @@
       </div>
       <div class="modal-footer custom-footer">
         <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura ? true : false"
-          data-bs-dismiss="modal">
+          data-bs-dismiss="modal" (click)="limpiarScianForm()">
           Limpiar
         </button>
         <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura ? true : false"
@@ -272,7 +256,7 @@
           </div>
 
           <div class="form-group">
-            <label for="fraccionArancelaria">Fracción arancelaria*:</label>
+            <label for="fraccionArancelaria">Fracción arancelaria * :</label>
             <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control"
               (change)="setValoresStore(formMercancias, 'fraccionArancelaria', 'setFraccionArancelaria')" />
             <div class="d-grid">
@@ -284,7 +268,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="descripcionFraccion">Descripción de la fracción*:</label>
+            <label for="descripcionFraccion">Descripción de la fracción * :</label>
             <input type="text" id="descripcionFraccion" formControlName="descripcionFraccion" class="form-control"
               (change)="setValoresStore(formMercancias, 'descripcionFraccion', 'setDescripcionFraccion')" />
             <div class="d-grid">
@@ -297,7 +281,7 @@
           </div>
           <div class="form-group row">
             <div class="col-md-6">
-              <label for="cantidadUMT">Cantidad UMT*:</label>
+              <label for="cantidadUMT">Cantidad UMT * :</label>
               <input type="text" id="cantidadUMT" formControlName="cantidadUMT" class="form-control"
                 (change)="setValoresStore(formMercancias, 'cantidadUMT', 'setCantidadUMT')" />
               <div class="d-grid">
@@ -309,7 +293,7 @@
               </div>
             </div>
             <div class="col-md-6">
-              <label for="UMT">UMT*:</label>
+              <label for="UMT">UMT * :</label>
               <input type="text" id="UMT" formControlName="UMT" class="form-control"
                 (change)="setValoresStore(formMercancias, 'UMT', 'setUMT')" />
               <div class="d-grid">
@@ -324,7 +308,7 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="cantidadUMC">Cantidad UMC*:</label>
+                <label for="cantidadUMC">Cantidad UMC * :</label>
                 <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control"
                   (change)="setValoresStore(formMercancias, 'cantidadUMC', 'setCantidadUMC')" />
                 <div class="d-grid">
@@ -345,7 +329,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="numerocas">Número CAS*:</label>
+            <label for="numerocas">Número CAS * :</label>
             <input type="text" id="numerocas" formControlName="numerocas" class="form-control"
               (change)="setValoresStore(formMercancias, 'numerocas', 'setNumerocas')" />
             <div class="d-grid">
@@ -357,7 +341,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="porcentajeConcentracion">Porcentaje de concentración*:</label>
+            <label for="porcentajeConcentracion">Porcentaje de concentración * :</label>
             <input type="text" id="porcentajeConcentracion" formControlName="porcentajeConcentracion"
               class="form-control"
               (change)="setValoresStore(formMercancias, 'porcentajeConcentracion', 'setPorcentajeConcentracion')" />

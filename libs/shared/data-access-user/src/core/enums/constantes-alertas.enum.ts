@@ -92,7 +92,7 @@ export const SEMANA_D = [
 ];
 
 export const MENSAJEDEALERTA = {
-  ADJUNTAR: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro</p>`,
+  ADJUNTAR: `<p style="text-align: center;">Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>`,
 };
 
 export const MENSAJE_ALERTA_TRATADOS = {
@@ -166,7 +166,11 @@ export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
   ],
 };
 export const IMPORTANTE = {
-  Importante: `<p><strong>Importante: </strong>Si existe duda respecto del producto a registrar o al pago correspondiente, favor de comunicarse a los teléfonos 55 51282544, 55 51282595 y 55 51282553</p>`,
+  Importante: `<p><strong>Importante: </strong>Si existe duda respecto del producto a registrar o al pago correspondiente, favor de comunicarse a los teléfonos 55 5128 2544, 55 5128 2595 y 55 5128 2553</p>`,
+};
+
+export const MERCHANDISE_IMPORTANTE = {
+  Importante: `<p><strong>Importante: </strong>Si existe duda respecto del producto a registrar o al pago correspondiente, por favor comunicate a los teléfonos 0155 5128 2544 y 0155 5128 2595</p>`,
 };
 
 export const ALERTA_DE_MATERIAL = {

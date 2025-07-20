@@ -5,11 +5,7 @@
       <div class="row">
         <div class="col-md-6">
           <label class="form-label" for="folio"
-            >Folio:<span
-              class="bi bi-question-circle-fill fs-4 m-1"
-              title="Title"
-              ata-bs-toggle="tooltip"
-            ></span>
+            >Folio:
           </label>
           <input
             type="text"
@@ -24,13 +20,19 @@
           <label class="form-label" for="fechaInicial"
             >Fecha inicio tr&aacute;mite:</label
           >
-          <input
-            type="text"
-            class="form-control"
-            id="fechaInicial"
-            formControlName="fechaInicial"
-            readonly
-          />
+          <div class="position-relative">
+            <input
+              type="text"
+              class="form-control input-fecha"
+              id="fechaInicial"
+              formControlName="fechaInicial"
+              readonly
+            />
+            <span class="position-absolute top-50 end-0 translate-middle-y me-3">
+              <i class="bi bi-calendar-event disabled"></i>
+            </span>
+          </div>     
+      
         </div>
 
         <div class="col-md-12">

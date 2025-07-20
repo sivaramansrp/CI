@@ -10,6 +10,15 @@ import { SeccionLibState } from '@libs/shared/data-access-user/src/core/estados/
 import { Tramite230501Query } from "../../estados/queries/tramite230501Query.query";
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 
+/**
+ * Componente Angular para gestionar el pago de derechos en el trámite 230501.
+ * Este componente permite a los usuarios seleccionar un banco y una fecha para el pago,
+ * y muestra información relacionada con el estado del pago de derechos.
+ * 
+ * @remarks
+ * Este componente utiliza formularios reactivos para gestionar la entrada del usuario
+ * y se integra con servicios para obtener datos relacionados con materiales peligrosos.
+ */
 @Component({
   selector: 'app-pago-de-derechos',
   standalone: true,
@@ -49,11 +58,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * dentro del flujo de trabajo del componente.
    */
   private seccion!: SeccionLibState;
+
   /**
 * Indica si el formulario está en modo solo lectura.
 * Cuando es `true`, los campos del formulario no se pueden editar.
 */
   esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor de la clase PagoDeDerechosComponent.
    * 
@@ -65,16 +76,34 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @description Este constructor inicializa el componente y llama al servicio de materiales peligrosos
    * para inicializar el catálogo de pago de derechos.
    */
-  constructor(public materialesPeligrososService: MaterialesPeligrososService, private fb: FormBuilder,
-    public tramite230501Store: Tramite230501Store, public tramite230501Query: Tramite230501Query, public consultaQuery: ConsultaioQuery
+  constructor(
+    public materialesPeligrososService: MaterialesPeligrososService, 
+    private fb: FormBuilder,
+    public tramite230501Store: Tramite230501Store, 
+    public tramite230501Query: Tramite230501Query, 
+    public consultaQuery: ConsultaioQuery
   ) {
     this.materialesPeligrososService.inicializaPagoDerechosCatalogo();
   }
 
+
   /**
-   * Crea y configura el formulario de pago de derechos.
-   * Los campos 'clave', 'dependencia', 'llavePago' e 'importePago' están deshabilitados por defecto.
-   * Los campos 'banco' y 'fecha' son obligatorios.
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * 
+   * En este método se configuran dos observables para gestionar el estado del componente:
+   * 
+   * 1. `tramite230501Query.seletPagoDerechosState$`:
+   *    - Se suscribe al estado de la sección de pago de derechos.
+   *    - Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente se destruye.
+   *    - Mapea el estado recibido y lo asigna a la propiedad `pagoDerechosState`.
+   * 
+   * 2. `consultaQuery.selectConsultaioState$`:
+   *    - Se suscribe al estado de consulta.
+   *    - Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente se destruye.
+   *    - Mapea el estado recibido y actualiza las propiedades `esFormularioSoloLectura` y llama al método `inicializarEstadoFormulario`.
+   * 
+   * Este método asegura que el componente esté sincronizado con los estados relevantes y que las propiedades necesarias
+   * se inicialicen correctamente.
    */
   ngOnInit(): void {
     this.tramite230501Query.seletPagoDerechosState$
@@ -95,9 +124,19 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
+  
   /**
-* Evalúa si se debe inicializar o cargar datos en el formulario.
-*/
+   * Inicializa el estado del formulario de pago de derechos.
+   * 
+   * Este método verifica si el formulario de pago de derechos (`pagoDerechos`) 
+   * ha sido creado. Si no existe, se invoca el método `createPagoDerechos` 
+   * para inicializarlo. Además, si el formulario está configurado como 
+   * de solo lectura (`esFormularioSoloLectura`), se deshabilita el formulario 
+   * para evitar modificaciones.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   inicializarEstadoFormulario(): void {
     if (!this.pagoDerechos) {
       this.createPagoDerechos();
@@ -106,6 +145,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       this.pagoDerechos.disable();
     }
   }
+  
   /**
 * Establece el estado de validación del formulario de destinatario.
 * 

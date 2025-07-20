@@ -2,6 +2,14 @@ import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
+/**
+ * Componente para la vista de anexar documentos en el trámite 80101.
+ * Este componente permite a los usuarios adjuntar documentos necesarios
+ * para completar el proceso de solicitud.
+ *
+ * @remarks
+ * Este componente es autónomo y utiliza el módulo `CommonModule` y el componente `AnexarDocumentosComponent`.
+ */
 @Component({
   selector: 'app-proveedor-por-archivo-vista',
   standalone: true,

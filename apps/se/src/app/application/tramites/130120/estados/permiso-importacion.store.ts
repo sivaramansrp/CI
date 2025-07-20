@@ -2,10 +2,36 @@ import { DatosGrupos, createDatosGruposState } from '../models/permiso-importaci
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
+/**
+ * @Injectable
+ * Marca esta clase como inyectable y disponible en el inyector raíz de Angular.
+ * Esto permite que el store sea utilizado en cualquier parte de la aplicación.
+ */
 @Injectable({
     providedIn: 'root',
 })
+
+/**
+ * @StoreConfig
+ * Configuración del store de Akita.
+ * 
+ * @param name Nombre del store: 'seccion'.
+ * @param resettable Indica si el store puede ser reseteado a su estado inicial: true.
+ */
 @StoreConfig({ name: 'seccion', resettable: true })
+
+/**
+ * Store principal para gestionar el estado del trámite de Permiso de Importación.
+ *
+ * Extiende de la clase Store de Akita y administra el estado reactivo de los datos agrupados del formulario,
+ * permitiendo actualizar, limpiar y modificar secciones específicas del permiso de importación.
+ *
+ * Proporciona métodos para actualizar campos individuales o grupos de datos, así como para resetear el estado.
+ *
+ * @export
+ * @class PermisoImportacionStore
+ * @extends {Store<DatosGrupos>}
+ */
 export class PermisoImportacionStore extends Store<DatosGrupos> {
     /**
      * Inicializa el store con el estado inicial de los datos de grupos.
@@ -26,32 +52,41 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
-     * @method setrégimen
+     * Actualiza el valor de la entidad federativa.
+     * @method setregimen
      * @description Actualiza el valor de la entidad federativa.
      * @param {string} entidadFederativa - Lista de entidades federativas.
      */
 
 
-    public setrégimen(régimen: string): void {
+    public setregimen(regimen: string): void {
         this.update((state) => ({
         ...state,
-        régimen,
+            datosRealizer: {
+                ...state.datosRealizer,
+                regimen: regimen,
+            }
         }));
     }
 
     /**
-     * @method setclassifición_régimen
+     * Actualiza el valor de la clasificación del régimen.
+     * @method setclassificion_regimen
      * @description Actualiza el valor de la clasificación del régimen.
-     * @param {string} classifición_régimen - Clasificación del régimen.
+     * @param {string} classificion_regimen - Clasificación del régimen.
      */
-    public setclassifición_régimen(classifición_régimen: string): void {
+    public setclassificion_regimen(classificion_regimen: string): void {
         this.update((state) => ({
         ...state,
-        classifición_régimen,
+        datosRealizer: {
+                ...state.datosRealizer,
+                classificion_regimen: classificion_regimen,
+            }
         }));
     }
 
     /**
+     * Actualiza el valor de la descripción.
      * @method setDescripcion
      * @description Actualiza el valor de la descripción.
      * @param {string} descripción - Descripción del régimen.
@@ -59,12 +94,16 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setDescripcion(descripción: string): void {
         this.update((state) => ({
         ...state,
-        descripción,
+            datosMercanica: {
+                ...state.datosMercanica,
+                descripcion: descripción,
+            }
         }));
     }
     
     
     /**
+     * Actualiza el valor de la marca de la mercancía.
      * @method setmarca
      * @description Actualiza el valor de la marca de la mercancía.
      * @param {string} marca - Marca(s) comercial(es) y modelo(s).
@@ -72,11 +111,15 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setMarca(marca: string): void {
         this.update((state) => ({
             ...state,
-            marca,
+            datosMercanica: {
+                ...state.datosMercanica,
+                marca: marca,
+            }
         }));
     }
 
     /**
+     * Actualiza el tipo de aduana de entrada.
      * @method settipo_entrada
      * @description Actualiza el tipo de aduana de entrada.
      * @param {string} tipo_entrada - Tipo de aduana de entrada.
@@ -84,11 +127,15 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setTipoEntrada(tipoEntrada: string): void {
         this.update((state) => ({
             ...state,
-            tipo_entrada: tipoEntrada,
+            datosMercanica: {
+                ...state.datosMercanica,
+                tipo_entrada: tipoEntrada,
+            }
         }));
     }
 
     /**
+     * Actualiza la fracción arancelaria.
      * @method setfracción
      * @description Actualiza la fracción arancelaria.
      * @param {string} fracción - Fracción arancelaria.
@@ -96,11 +143,15 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setFraccion(fraccion: string): void {
         this.update((state) => ({
             ...state,
-            fracción: fraccion,
+            datosMercanica: {
+                ...state.datosMercanica,
+                fracción: fraccion,
+            }
         }));
     }
 
     /**
+     * Actualiza el valor de NICO.
      * @method setnico
      * @description Actualiza el valor de NICO.
      * @param {string} nico - NICO.
@@ -108,11 +159,15 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setNico(nico: string): void {
         this.update((state) => ({
             ...state,
-            nico,
+            datosMercanica: {
+                ...state.datosMercanica,
+                nico:nico,
+            }
         }));
     }
 
     /**
+     * Actualiza la unidad de medida la tarifa (UMT).
      * @method setumt
      * @description Actualiza la unidad de medida la tarifa (UMT).
      * @param {string} umt - Unidad de medida la tarifa.
@@ -120,11 +175,15 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setUmt(umt: string): void {
         this.update((state) => ({
             ...state,
-            umt,
+            datosMercanica: {
+                ...state.datosMercanica,
+                umt: umt,
+            }
         }));
     }
 
     /**
+     * Actualiza el número de factura.
      * @method setfactura_número
      * @description Actualiza el número de factura.
      * @param {string} factura_número - Número de factura.
@@ -132,11 +191,15 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setFacturaNumero(facturaNumero: string): void {
         this.update((state) => ({
             ...state,
-            factura_número: facturaNumero,
+            datosMercanica: {
+                ...state.datosMercanica,
+                factura_número: facturaNumero,
+            }
         }));
     }
 
     /**
+     * Actualiza la fecha de factura.
      * @method setfactura_fecha
      * @description Actualiza la fecha de factura.
      * @param {string} factura_fecha - Fecha de factura.
@@ -152,6 +215,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * Actualiza la unidad de medida de comercialización (UMC).
      * @method setumc
      * @description Actualiza la unidad de medida de comercialización (UMC).
      * @param {string} umc - Unidad de medida de comercialización.
@@ -159,11 +223,15 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setUmc(umc: string): void {
         this.update((state) => ({
             ...state,
-            umc,
+            datosMercanica: {
+                ...state.datosMercanica,
+                umc:umc,
+            }
         }));
     }
 
     /**
+     * Actualiza el valor de otro UMC.
      * @method setotro_umc
      * @description Actualiza el valor de otro UMC.
      * @param {string} otro_umc - Otro UMC.
@@ -171,11 +239,15 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setOtroUmc(otroUmc: string): void {
         this.update((state) => ({
             ...state,
-            otro_umc: otroUmc,
+            datosMercanica: {
+                ...state.datosMercanica,
+                otro_umc: otroUmc,
+            }
         }));
     }
 
     /**
+     * Actualiza la cantidad UMC.
      * @method setcantidad_umc
      * @description Actualiza la cantidad UMC.
      * @param {string} cantidad_umc - Cantidad UMC.
@@ -183,11 +255,15 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setCantidadUmc(cantidadUmc: string): void {
         this.update((state) => ({
             ...state,
-            cantidad_umc: cantidadUmc,
+            datosMercanica: {
+                ...state.datosMercanica,
+                cantidad_umc: cantidadUmc,
+            }
         }));
     }
 
     /**
+     * Actualiza el factor de conversión.
      * @method setfactor_conversión
      * @description Actualiza el factor de conversión.
      * @param {string} factor_conversión - Factor de conversión.
@@ -195,11 +271,15 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setFactorConversion(factorConversion: string): void {
         this.update((state) => ({
             ...state,
-            factor_conversión: factorConversion,
+            datosMercanica: {
+                ...state.datosMercanica,
+                factor_conversión: factorConversion,
+            }
         }));
     }
 
     /**
+     * Actualiza la cantidad UMT.
      * @method setcantidad_umt
      * @description Actualiza la cantidad UMT.
      * @param {string} cantidad_umt - Cantidad UMT.
@@ -207,11 +287,15 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setCantidadUmt(cantidadUmt: string): void {
         this.update((state) => ({
             ...state,
-            cantidad_umt: cantidadUmt,
+            datosMercanica: {
+                ...state.datosMercanica,
+                cantidad_umt: cantidadUmt,
+            }
         }));
     }
 
     /**
+     * Actualiza el valor de la factura de la mercancía a importar en términos de la Moneda de Comercialización.
      * @method setvalor_factura
      * @description Actualiza el valor de la factura de la mercancía a importar en términos de la Moneda de Comercialización.
      * @param {string} valor_factura - Valor de la factura.
@@ -219,11 +303,15 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setValorFactura(valorFactura: string): void {
         this.update((state) => ({
             ...state,
-            valor_factura: valorFactura,
+            datosMercanica: {
+                ...state.datosMercanica,
+                valor_factura: valorFactura,
+            }
         }));
     }
 
     /**
+     * Actualiza la moneda de comercialización.
      * @method setmoneda_comercialización
      * @description Actualiza la moneda de comercialización.
      * @param {string} moneda_comercialización - Moneda de comercialización.
@@ -231,11 +319,15 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setMonedaComercializacion(monedaComercializacion: string): void {
         this.update((state) => ({
             ...state,
-            moneda_comercialización: monedaComercializacion,
+            datosMercanica: {
+                ...state.datosMercanica,
+                moneda_comercialización: monedaComercializacion,
+            }
         }));
     }
 
     /**
+     * Actualiza el valor de la factura en USD de la mercancía a importar.
      * @method setvalor_factura_usd
      * @description Actualiza el valor de la factura en USD de la mercancía a importar.
      * @param {string} valor_factura_usd - Valor de la factura en USD.
@@ -243,11 +335,15 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setValorFacturaUsd(valorFacturaUsd: string): void {
         this.update((state) => ({
             ...state,
-            valor_factura_usd: valorFacturaUsd,
+            datosMercanica: {
+                ...state.datosMercanica,
+                valor_factura_usd: valorFacturaUsd,
+            }
         }));
     }
 
     /**
+     * 
      * @method setprecio_unitario_usd
      * @description Actualiza el precio unitario en USD.
      * @param {string} precio_unitario_usd - Precio unitario en USD.
@@ -255,7 +351,10 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setPrecioUnitarioUsd(precioUnitarioUsd: string): void {
         this.update((state) => ({
             ...state,
-            precio_unitario_usd: precioUnitarioUsd,
+            datosMercanica: {
+                ...state.datosMercanica,
+                precio_unitario_usd: precioUnitarioUsd,
+            }
         }));
     }
 
@@ -267,7 +366,10 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setPaisExportador(paisExportador: string): void {
         this.update((state) => ({
             ...state,
-            país_exportador: paisExportador,
+            datosMercanica: {
+                ...state.datosMercanica,
+                país_exportador: paisExportador,
+            }
         }));
     }
 
@@ -279,7 +381,10 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setPaisOrigen(paisOrigen: string): void {
         this.update((state) => ({
             ...state,
-            país_origen: paisOrigen,
+            datosMercanica: {
+                ...state.datosMercanica,
+                país_origen: paisOrigen,
+            }
         }));
     }
 
@@ -291,7 +396,10 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setValorTotalFactura(valorTotalFactura: string): void {
         this.update((state) => ({
             ...state,
-            valor_total_factura: valorTotalFactura,
+            datosMercanica: {
+                ...state.datosMercanica,
+                valor_total_factura: valorTotalFactura,
+            }
         }));
     }
 
@@ -303,7 +411,10 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setValorTotalFacturaUsd(valorTotalFacturaUsd: string): void {
         this.update((state) => ({
             ...state,
-            valor_total_factura_usd: valorTotalFacturaUsd,
+            datosMercanica: {
+                ...state.datosMercanica,
+                valor_total_factura_usd: valorTotalFacturaUsd,
+            }
         }));
     }
 
@@ -315,7 +426,10 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setNumero_documento(número_documento: string): void {
         this.update((state) => ({
             ...state,
-            número_documento,
+            datosExporta: {
+                ...state.datosExporta,
+                número_documento: número_documento,
+            }
         }));
     }
 
@@ -339,10 +453,13 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
      * @description Actualiza la descripción de la mercancía de exportación.
      * @param {string} descripción - Descripción de la mercancía.
      */
-    public setDescripcionExportacion(descripción: string): void {
+    public setDescripcionExportacion(descripcionExportacion: string): void {
         this.update((state) => ({
             ...state,
-            descripción,
+            datosExporta: {
+                ...state.datosExporta,
+                descripcionExportacion: descripcionExportacion,
+            }
         }));
     }
 
@@ -351,10 +468,13 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
      * @description Actualiza el código arancelario.
      * @param {string} código_arancelario - Código arancelario.
      */
-    public setCodigo_arancelario(código_arancelario: string): void {
+    public setCodigo_arancelario(codigo_arancelario: string): void {
         this.update((state) => ({
             ...state,
-            código_arancelario,
+            datosExporta: {
+                ...state.datosExporta,
+                codigo_arancelario: codigo_arancelario
+            }
         }));
     }
 
@@ -366,7 +486,10 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setCantidad_umt(cantidad_umt: string): void {
         this.update((state) => ({
             ...state,
-            cantidad_umt,
+            datosExporta: {
+                ...state.datosExporta,
+                cantidad_umt: cantidad_umt,
+            }
         }));
     }
 
@@ -378,7 +501,10 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setValor_usd(valor_usd: string): void {
         this.update((state) => ({
             ...state,
-            valor_usd,
+            datosExporta: {
+                ...state.datosExporta,
+                valor_usd: valor_usd,
+            }
         }));
     }
 
@@ -390,7 +516,10 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     public setPrecio_unitario_usd(precio_unitario_usd: string): void {
         this.update((state) => ({
             ...state,
-            precio_unitario_usd,
+            datosExporta: {
+                ...state.datosExporta,
+                precio_unitario_usd: precio_unitario_usd,
+            }
         }));
     }
 
@@ -404,7 +533,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
             ...state,
             datosProductor: {
                 ...state.datosProductor,
-                persona_tipo,
+                persona_tipo: persona_tipo,
             }
         }));
     }
@@ -549,12 +678,12 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
      * @description Actualiza la denominación o razón social del exportador.
      * @param {string} denominación_razón_social - Denominación o razón social.
      */
-    public setExportadorDenominación_razón_social(denominación_razón_social: string): void {
+    public setExportadorDenominación_razón_social(denominación_razón_social_exportador: string): void {
         this.update((state) => ({
             ...state,
             datosExportador: {
                 ...state.datosExportador,
-                denominación_razón_social,
+                denominación_razón_social_exportador: denominación_razón_social_exportador,
             }
         }));
     }

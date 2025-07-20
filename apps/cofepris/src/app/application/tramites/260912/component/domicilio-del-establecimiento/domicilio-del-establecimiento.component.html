@@ -16,8 +16,18 @@
               (change)="setValorStore(form, 'codigoPostal')"
             />
             <div *ngIf="form.get('codigoPostal')?.touched && form.get('codigoPostal')?.hasError('required')" class="text-danger">
-              Por favor, corrija la codigoPostal.
+              Este campo es obligatorio
             </div>
+            <small
+            *ngIf="form.get('codigoPostal')?.errors?.['maxlength']" class="text-danger"
+            >
+              La Código postal no debe exceder los 12 caracteres.
+            </small>
+            <small
+              *ngIf="form.get('codigopostal')?.errors?.['pattern']" class="text-danger"
+            >
+              Por favor, escribe un número entero válido.
+            </small>
           </div>
         </div>
 
@@ -54,8 +64,13 @@
               (change)="setValorStore(form, 'municipioOAlcaldia')"
             />
             <div *ngIf="form.get('municipioOAlcaldia')?.touched && form.get('municipioOAlcaldia')?.hasError('required')" class="text-danger">
-              Por favor, corrija el municipio.
+              Este campo es obligatorio
             </div>
+            <small
+              *ngIf="form.get('municipioOAlcaldia')?.errors?.['maxlength']" class="text-danger"
+            >
+              La Municipio o alcaldía no debe exceder los 120 caracteres.
+            </small>
           </div>
         </div>
       </div>
@@ -83,12 +98,22 @@
             <div *ngIf="form.get('localidad')?.touched && form.get('localidad')?.hasError('required')" class="text-danger">
               Por favor, corrija el localidad.
             </div>
+            <small
+              *ngIf="form.get('localidad')?.errors?.['required']" class="text-danger"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              *ngIf="form.get('localidad')?.errors?.['maxlength']" class="text-danger"
+            >
+              La localidad no debe exceder los 120 caracteres.
+            </small>
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="colonias">Colonias:</label>
+            <label class="form-label" for="colonias">Colonia:</label>
             <input
               class="form-control"
               type="text"
@@ -101,6 +126,18 @@
             <div *ngIf="form.get('colonias')?.touched && form.get('colonias')?.hasError('required')" class="text-danger">
               Por favor, corrija la colonias.
             </div>
+            <small
+              *ngIf="form.get('colonias')?.errors?.['required']"
+              class="text-danger"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              *ngIf="form.get('colonias')?.errors?.['maxlength']"
+              class="text-danger"
+            >
+              La colonia no debe exceder los 120 caracteres.
+            </small>
           </div>
         </div>
       </div>
@@ -109,6 +146,11 @@
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" for="calle">Calle*:</label>
+            <span
+            class="bi bi-question-circle-fill"
+            title="Domicilio, calle, numero interior, numero exterior, lote"
+            data-bs-toggle="tooltip"
+            ></span>
             <input
               class="form-control"
               type="text"
@@ -119,8 +161,13 @@
               (change)="setValorStore(form, 'calle')"
             />
             <div *ngIf="form.get('calle')?.touched && form.get('calle')?.hasError('required')" class="text-danger">
-              Por favor, corrija la calle.
+              Este campo es obligatorio
             </div>
+            <small
+              *ngIf="form.get('calle')?.errors?.['maxlength']" class="text-danger"
+            >
+              La Calle no debe exceder los 120 caracteres.
+            </small>
           </div>
         </div>
       </div>
@@ -141,6 +188,21 @@
             <div *ngIf="form.get('lada')?.touched && form.get('lada')?.hasError('required')" class="text-danger">
               Por favor, corrija la lada.
             </div>
+            <small
+              *ngIf="form.get('lada')?.errors?.['required']" class="text-danger"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              *ngIf="form.get('lada')?.errors?.['minlength'] || form.get('lada')?.errors?.['maxlength']" class="text-danger"
+            >
+              La lada debe tener exactamente 5 números.
+            </small>
+            <small
+              *ngIf="form.get('lada')?.errors?.['pattern']" class="text-danger"
+            >
+              Por favor, ingresa solo números.
+            </small>
           </div>
         </div>
         <div class="col-md-3">
@@ -157,12 +219,21 @@
             />
           
             <div *ngIf="form.get('telefono')?.touched && form.get('telefono')?.invalid" class="text-danger">
-              <div *ngIf="form.get('telefono')?.errors?.['required']">
-                El teléfono es obligatorio.
-              </div>
-              <div *ngIf="form.get('telefono')?.errors?.['pattern']">
-                El teléfono debe contener exactamente 10 dígitos numéricos.
-              </div>
+              <small
+                *ngIf="form.get('telefono')?.errors?.['required']"
+              >
+                Este campo es obligatorio.
+              </small>
+              <small
+                *ngIf="form.get('telefono')?.errors?.['maxlength']"
+              >
+                El teléfono no debe exceder los 30 números.
+              </small>
+              <small
+                *ngIf="form.get('telefono')?.errors?.['pattern']"
+              >
+                Por favor, ingresa solo números.
+              </small>
             </div>
           </div>
           

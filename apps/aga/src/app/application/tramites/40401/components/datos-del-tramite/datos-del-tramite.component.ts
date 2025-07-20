@@ -52,6 +52,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Opciones de países obtenidas desde el catálogo de CAAT Aéreo.
    */
   optionsPais!: Catalogo[];
+  
+  /**
+   * Opciones de países obtenidas desde el catálogo de Codigo Aéreo.
+   */
+  optionsCodigo!: Catalogo[];
 
   /**
    * Notificador para gestionar la destrucción de suscripciones y evitar fugas de memoria.
@@ -147,8 +152,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Carga los datos del catálogo de CAAT Aéreo desde el servicio correspondiente.
    * 
    * Este método utiliza el servicio `registroCaatAereoService` para obtener los datos
-   * del catálogo de CAAT Aéreo y los asigna a la propiedad `optionsPais`. La suscripción
-   * al observable se gestiona utilizando el operador `takeUntil` para evitar fugas de memoria.
+   * del catálogo de CAAT Aéreo y los asigna a las propiedades `optionsPais` y `optionsCodigo`.
+   * La suscripción al observable se gestiona utilizando el operador `takeUntil` para evitar fugas de memoria.
    * 
    * @returns {void} Este método no retorna ningún valor.
    */
@@ -159,6 +164,12 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       .subscribe((datos: CatalogoLista) => {
         this.optionsPais = datos.datos;
       });
+    this.registroCaatAereoService
+    .obtenerCodigoAereo()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((datos: CatalogoLista) => {
+      this.optionsCodigo = datos.datos;
+    });
   }
 
   /**

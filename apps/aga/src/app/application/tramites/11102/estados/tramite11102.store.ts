@@ -11,14 +11,14 @@ export interface Catalogo {
    * @type {number}
    */
   id: number;
-
+ 
   /**
    * Descripción del catálogo.
    * @type {string}
    */
   descripcion: string;
 }
-
+ 
 /**
  * Interfaz que representa el estado inicial de la solicitud 11102.
  */
@@ -27,137 +27,305 @@ export interface Solicitud11102State {
    * Nombre del organismo público.
    */
   organismoPublico: string;
-
+ 
   /**
    * Lista de aduanas disponibles.
    */
   aduana: Catalogo[] | null;
-
+ 
   /**
    * Uso específico de la mercancía.
    */
   usoEspecifico: string;
-
+ 
   /**
    * Bandera para mostrar la tabla.
    */
   showTabla: boolean;
-
+ 
   /**
    * Tipo de mercancía.
    */
   tipoDeMercancia: string;
-
+ 
   /**
    * Unidad de medida de la mercancía.
    */
   unidadMedida: string;
-
+ 
   /**
    * Condición de la mercancía.
    */
   condicionMercancia: string;
-
+ 
   /**
    * Lista de años disponibles.
    */
   ano: Catalogo[] | null;
-
+ 
   /**
    * Cantidad de mercancía.
    */
   cantidad: string;
-
+ 
   /**
    * Marca de la mercancía.
    */
   marca: string;
-
+ 
   /**
    * Modelo de la mercancía.
    */
   modelo: string;
-
+ 
   /**
    * Serie de la mercancía.
    */
   serie: string;
-
+ 
   /**
    * Lista de países disponibles.
    */
   pais: Catalogo[] | null;
-
+ 
   /**
    * RFC del solicitante.
    */
   rfc: string;
-
+ 
   /**
    * Número del programa IMMEX.
    */
   numeroProgramaImmex: string;
-
+ 
   /**
    * Razón social del solicitante.
    */
   razonSocial: string;
-
+ 
   /**
    * Calle del domicilio fiscal.
    */
   calle: string;
-
+ 
   /**
    * Número exterior del domicilio fiscal.
    */
   numeroExterior: string;
-
+ 
   /**
    * Número interior del domicilio fiscal.
    */
   numeroInterior: string;
-
+ 
   /**
    * Correo electrónico del solicitante.
    */
   correoElectronico: string;
-
+ 
   /**
    * Teléfono del solicitante.
    */
   telefono: string;
-
+ 
   /**
    * Correo electrónico opcional del solicitante.
    */
   correoElectronicoOpcional: string;
-
+ 
   /**
    * Teléfono opcional del solicitante.
    */
   telefonoOpcional: string;
-
+ 
   /**
    * Código postal del domicilio fiscal.
    */
   codigoPostal: string;
-
+ 
   /**
    * Estado del domicilio fiscal.
    */
   estado: string;
-
+ 
   /**
    * Colonia del domicilio fiscal.
    */
   colonia: string;
-
+ 
   /**
    * Datos relacionados con la mercancía.
    */
   datosDelMercancia: [];
 }
+ 
+/**
+ * Interfaz que representa la estructura de respuesta del objeto
+ * de estado para la solicitud 11102 (IMMEX).
+ */
+export interface Solicitud11102StaObjResp {
+  /**
+   * Objeto que contiene toda la información relacionada con la modificación 
+   * de donaciones IMMEX, incluyendo datos del solicitante y de la mercancía.
+   */
+  modificacionDonacionesImmex: Solicitud11102State;
+}
+
+/**
+ * Respuesta de la API para la modificación de donaciones IMMEX.
+ * Contiene todos los datos relacionados con el trámite, incluyendo
+ * la información del solicitante y los datos de la mercancía donada.
+ */
+export interface ModificacionDonacionesImmexResponse {
+  modificacionDonacionesImmex: {
+    /**
+     * Nombre del organismo público receptor de la donación.
+     */
+    organismoPublico: string;
+
+    /**
+     * Lista de aduanas por las que ingresará la mercancía. Cada una incluye ID y descripción.
+     */
+    aduana: {
+      /**
+       * Identificador único de la aduana.
+       */
+      id: number;
+
+      /**
+       * Descripción o nombre de la aduana.
+       */
+      descripcion: string;
+    }[];
+
+    /**
+     * Lista de países involucrados en la operación. Incluye ID y descripción.
+     */
+    pais: {
+      /**
+       * Identificador único del país.
+       */
+      id: number;
+
+      /**
+       * Nombre o descripción del país.
+       */
+      descripcion: string;
+    }[];
+
+    /**
+     * RFC de la empresa que realiza la donación.
+     */
+    rfc: string;
+
+    /**
+     * Número del programa IMMEX con el que está registrada la empresa.
+     */
+    numeroProgramaImmex: string;
+
+    /**
+     * Razón social de la empresa donante.
+     */
+    razonSocial: string;
+
+    /**
+     * Correo electrónico alternativo del contacto (opcional).
+     */
+    correoElectronicoOpcional: string;
+
+    /**
+     * Teléfono alternativo de contacto (opcional).
+     */
+    telefonoOpcional: string;
+
+    /**
+     * Calle del domicilio fiscal o de operación de la empresa.
+     */
+    calle: string;
+
+    /**
+     * Número exterior del domicilio.
+     */
+    numeroExterior: string;
+
+    /**
+     * Número interior del domicilio (si aplica).
+     */
+    numeroInterior: string;
+
+    /**
+     * Teléfono principal de contacto.
+     */
+    telefono: string;
+
+    /**
+     * Correo electrónico principal de contacto.
+     */
+    correoElectronico: string;
+
+    /**
+     * Código postal correspondiente al domicilio.
+     */
+    codigoPostal: string;
+
+    /**
+     * Estado o entidad federativa donde se ubica el domicilio.
+     */
+    estado: string;
+
+    /**
+     * Colonia o fraccionamiento del domicilio.
+     */
+    colonia: string;
+
+    /**
+     * Detalles específicos de la mercancía que será donada.
+     */
+    datosMercancia: {
+      /**
+       * Tipo o categoría de la mercancía donada.
+       */
+      tipoDeMercancia: string;
+
+      /**
+       * Cantidad total de mercancía a donar.
+       */
+      cantidad: string;
+
+      /**
+       * Unidad de medida en la que se cuantifica la mercancía (kg, piezas, litros, etc.).
+       */
+      unidadMedida: string;
+
+      /**
+       * Año de fabricación o importación de la mercancía.
+       */
+      ano: string;
+
+      /**
+       * Modelo del producto o equipo donado.
+       */
+      modelo: string;
+
+      /**
+       * Marca del producto o equipo donado.
+       */
+      marca: string;
+
+      /**
+       * Número de serie único del producto (si aplica).
+       */
+      serie: string;
+
+      /**
+       * Condición física o de uso de la mercancía (nueva, usada, funcional, etc.).
+       */
+      condicionMercancia: string;
+    };
+  };
+}
+
+
 
 /**
  * Función que crea el estado inicial de la solicitud 11102.
@@ -194,7 +362,7 @@ export function createInitialState(): Solicitud11102State {
     datosDelMercancia: [],
   };
 }
-
+ 
 /**
  * Clase que representa el store para manejar el estado de la solicitud 11102.
  */
@@ -210,7 +378,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
   constructor() {
     super(createInitialState());
   }
-
+ 
   /**
    * Establece el organismo público en el estado.
    * @param organismoPublico Nombre del organismo público.
@@ -221,7 +389,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       organismoPublico,
     }));
   }
-
+ 
   /**
    * Establece la lista de aduanas en el estado.
    * @param aduana Lista de aduanas.
@@ -232,7 +400,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       aduana,
     }));
   }
-
+ 
   /**
    * Establece el tipo de mercancía en el estado.
    * @param tipoDeMercancia Tipo de mercancía.
@@ -243,7 +411,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       tipoDeMercancia,
     }));
   }
-
+ 
   /**
    * Establece la unidad de medida en el estado.
    * @param unidadMedida Unidad de medida.
@@ -254,7 +422,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       unidadMedida,
     }));
   }
-
+ 
   /**
    * Establece la condición de la mercancía en el estado.
    * @param condicionMercancia Condición de la mercancía.
@@ -265,7 +433,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       condicionMercancia,
     }));
   }
-
+ 
   /**
    * Establece la lista de años en el estado.
    * @param ano Lista de años.
@@ -276,7 +444,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       ano,
     }));
   }
-
+ 
   /**
    * Establece la cantidad de mercancía en el estado.
    * @param cantidad Cantidad de mercancía.
@@ -287,7 +455,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       cantidad,
     }));
   }
-
+ 
   /**
    * Establece la marca de la mercancía en el estado.
    * @param marca Marca de la mercancía.
@@ -298,7 +466,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       marca,
     }));
   }
-
+ 
   /**
    * Establece el modelo de la mercancía en el estado.
    * @param modelo Modelo de la mercancía.
@@ -309,7 +477,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       modelo,
     }));
   }
-
+ 
   /**
    * Establece la serie de la mercancía en el estado.
    * @param serie Serie de la mercancía.
@@ -320,7 +488,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       serie,
     }));
   }
-
+ 
   /**
    * Establece la lista de países en el estado.
    * @param pais Lista de países.
@@ -331,7 +499,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       pais,
     }));
   }
-
+ 
   /**
    * Establece el uso específico de la mercancía en el estado.
    * @param usoEspecifico Uso específico de la mercancía.
@@ -342,7 +510,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       usoEspecifico,
     }));
   }
-
+ 
   /**
    * Establece la calle del domicilio fiscal en el estado.
    * @param calle Calle del domicilio fiscal.
@@ -353,7 +521,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       calle,
     }));
   }
-
+ 
   /**
    * Establece el número exterior del domicilio fiscal en el estado.
    * @param numeroExterior Número exterior del domicilio fiscal.
@@ -364,7 +532,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       numeroExterior,
     }));
   }
-
+ 
   /**
    * Establece el número interior del domicilio fiscal en el estado.
    * @param numeroInterior Número interior del domicilio fiscal.
@@ -375,7 +543,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       numeroInterior,
     }));
   }
-
+ 
   /**
    * Establece el teléfono del solicitante en el estado.
    * @param telefono Teléfono del solicitante.
@@ -386,7 +554,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       telefono,
     }));
   }
-
+ 
   /**
    * Establece el correo electrónico del solicitante en el estado.
    * @param correoElectronico Correo electrónico del solicitante.
@@ -397,7 +565,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       correoElectronico,
     }));
   }
-
+ 
   /**
    * Establece el código postal del domicilio fiscal en el estado.
    * @param codigoPostal Código postal del domicilio fiscal.
@@ -408,7 +576,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       codigoPostal,
     }));
   }
-
+ 
   /**
    * Establece el estado del domicilio fiscal en el estado.
    * @param estado Estado del domicilio fiscal.
@@ -419,7 +587,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       estado,
     }));
   }
-
+ 
   /**
    * Establece la colonia del domicilio fiscal en el estado.
    * @param colonia Colonia del domicilio fiscal.
@@ -430,7 +598,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       colonia,
     }));
   }
-
+ 
   /**
    * Establece el RFC del solicitante en el estado.
    * @param rfc RFC del solicitante.
@@ -441,7 +609,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       rfc,
     }));
   }
-
+ 
   /**
    * Establece el número del programa IMMEX en el estado.
    * @param numeroProgramaImmex Número del programa IMMEX.
@@ -452,7 +620,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       numeroProgramaImmex,
     }));
   }
-
+ 
   /**
    * Establece la razón social del solicitante en el estado.
    * @param razonSocial Razón social del solicitante.
@@ -463,7 +631,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       razonSocial,
     }));
   }
-
+ 
   /**
    * Establece el correo electrónico opcional del solicitante en el estado.
    * @param correoElectronicoOpcional Correo electrónico opcional del solicitante.
@@ -474,7 +642,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       correoElectronicoOpcional,
     }));
   }
-
+ 
   /**
    * Establece el teléfono opcional del solicitante en el estado.
    * @param telefonoOpcional Teléfono opcional del solicitante.
@@ -485,7 +653,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       telefonoOpcional,
     }));
   }
-
+ 
   /**
    * Establece los datos del contenedor.
    * @param datosDelMercancia Datos del contenedor.
@@ -496,7 +664,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
       datosDelMercancia,
     }));
   }
-
+ 
   /**
    * Limpia los datos de la solicitud.
    */

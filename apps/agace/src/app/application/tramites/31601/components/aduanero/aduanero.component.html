@@ -1,9 +1,9 @@
 <div class="mt-4">
   <form [formGroup]="preOperativeForm">
-    <!-- Preoperativo Section -->
+    
     <div class="w-100 p-3">
       <div class="form-group">
-        <!-- Input Radio Component -->
+       
         <section class="body-text fw-bold mb-2">
           <span class="text-danger">*</span> ¿Desea obtener la autorización del
           Esquema Integral modalidad IVA e IEPS, como pre operativo? (el periodo
@@ -73,7 +73,7 @@
               />
               <label class="form-check-label" for="regimen_0">
                 Importación temporal para la elaboración, transformación o
-                reparación en programas de maquila o de exportación (IMMEX)
+                reparación en programas de maquila o de exportación (I M M E X)
               </label>
               <div class="d-none">
                 <input
@@ -168,7 +168,7 @@
 
     <div class="w-100 p-3 mt-4">
       <label class="form-label fw-bold mb-3" for="">
-        Se&ntilde;ale el sector productivo o servicio al que pertenece
+        Sector productivo o servicio al que pertenece
       </label>
       <div class="row mb-5">
         <div class="col-md-6">
@@ -299,10 +299,11 @@
           Este campo es obligatorio.
         </div>
       </div>
-      <div class="alert alert-danger mt-3 mb-5">
+      <div *ngIf="showsenale">
+        <div class="alert alert-danger mt-3 mb-5">
         <h6 class="mb-0">
           <strong>Nota:</strong> En el caso de la Modalidad de IVA e IEPS,
-          tendrá que contar con al meanos 10 trabajadores registrados.
+          tendrá que contar con al menos 10 trabajadores registrados.
         </h6>
       </div>
       <label class="fw-bold mb-5" for="">
@@ -312,39 +313,46 @@
 
       <div class="row mb-5">
         <div class="col-md-1"></div>
-        <div class="col-md-5">
-          <div class="form-group">
-            <label for="empPropios" class="form-label"
-              >Número de empleados</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="empPropios"
-              name="empPropios"
-              maxlength="8"
-              formControlName="empPropios"
-              (change)="
-                setValoresStore(preOperativeForm, 'empPropios', 'setEmpPropios')
-              "
-            />
+        <div class="col-md-10">
+          <div class="row">
+             <div class="col-md-6">
+                <div class="form-group">
+                  <label for="empPropios" class="form-label">Número de empleados</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="empPropios"
+                    name="empPropios"
+                    maxlength="8"
+                    formControlName="empPropios"
+                    (change)="setValoresStore(preOperativeForm,'empPropios', 'setEmpPropios')"
+                  />
+                </div>
+             </div>
+             <div class="col-md-6">
+                <app-catalogo-select
+                  [label]="'Bimestre'"
+                  [placeholder]="'Seleccione un valor'"
+                  [catalogo]="comboBimestresIDC"
+                  formControlName="bimestre"
+                  [isDisabled]="esFormularioSoloLectura ? true : false"
+                  (change)="setValoresStore(preOperativeForm,'bimestre', 'setBimestre')"
+                >
+                </app-catalogo-select>
+             </div>
           </div>
-        </div>
-        <div class="col-md-5">
-          <app-catalogo-select
-            [label]="'Bimestre'"
-            [placeholder]="'Seleccione un valor'"
-            [catalogo]="comboBimestresIDC"
-            formControlName="bimestre"
-            [isDisabled]="esFormularioSoloLectura ? true : false"
-            (change)="
-              setValoresStore(preOperativeForm, 'bimestre', 'setBimestre')
-            "
-          >
-          </app-catalogo-select>
-        </div>
+            <div *ngIf="
+              (preOperativeForm.get('empPropios')?.invalid && preOperativeForm.get('empPropios')?.touched) ||
+              (preOperativeForm.get('bimestre')?.invalid && preOperativeForm.get('bimestre')?.touched)" class="text-danger">
+              Se debe agregar los datos del número de empleados propios del último bimestre
+            </div>
+        </div>  
         <div class="col-md-1"></div>
       </div>
+      
+      </div>
+     
+       
       <div class="mt-4 mb-5">
         <section class="body-text fw-bold mb-2">
           <span class="text-danger">*</span> Señale si al momento de ingresar su
@@ -392,6 +400,7 @@
         [datos]="datosTablaMencione"
         [tipoSeleccionTabla]="tipoSeleccionTabla"
         (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       ></app-tabla-dinamica>
       <div class="d-flex justify-content-center">
         <app-table-pagination
@@ -424,12 +433,41 @@
         <button
           type="button"
           class="btn btn-default btn-primary"
-          (click)="openModifyModal()"
+          (click)="openAgregarModal()"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
       </div>
 
+      <div class="mt-4 form-group">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> En su caso acredite cumplir con lo establecido en el artículo 27, fracción V, tercer párrafo de la Ley del ISR
+        </section>
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+          [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio21.description"
+          [showDescription]="true"
+          formControlName="acredite"
+          (change)="
+            setValoresStore(preOperativeForm, 'acredite', 'setAcredite')
+          "
+        ></app-input-radio>
+        <div
+          *ngIf="
+            preOperativeForm.controls['acredite'].invalid &&
+            preOperativeForm.controls['acredite'].touched
+          "
+          class="text-danger"
+        >
+          Este campo es obligatorio.
+        </div>
+      </div>
       <div
         class="modal"
         tabindex="-1"
@@ -450,6 +488,7 @@
                 type="button"
                 class="btn btn-primary"
                 (click)="cerrarMultipleSeleccionPopup()"
+                [disabled]="esFormularioSoloLectura"
               >
                 Aceptar
               </button>
@@ -480,6 +519,7 @@
                 type="button"
                 class="btn btn-primary"
                 (click)="cerrarEliminarConfirmationPopup()"
+                [disabled]="esFormularioSoloLectura"
               >
                 Cancelar
               </button>
@@ -487,6 +527,7 @@
                 type="button"
                 class="btn btn-primary"
                 (click)="eliminarMercanciaItem()"
+                [disabled]="esFormularioSoloLectura"
               >
                 Aceptar
               </button>
@@ -622,83 +663,9 @@
           Este campo es obligatorio.
         </div>
       </div>
-      <div class="mb-3 form-group">
-        <app-input-radio
-          [radioOptions]="radioOptions"
-          [isRequired]="true"
-          [layout]="'horizontal'"
-          [gap]="'493px'"
-          [isBold]="true"
-          [labelMargin]="'0px'"
-          [description]="descriptionData.radio10.description"
-          [showDescription]="true"
-          formControlName="delMismo"
-          (change)="
-            setValoresStore(preOperativeForm, 'delMismo', 'setDelMismo')
-          "
-        ></app-input-radio>
-        <div
-          *ngIf="
-            preOperativeForm.controls['delMismo'].invalid &&
-            preOperativeForm.controls['delMismo'].touched
-          "
-          class="text-danger"
-        >
-          Este campo es obligatorio.
-        </div>
-      </div>
-      <div class="mb-3 form-group">
-        <app-input-radio
-          [radioOptions]="radioOptions"
-          [isRequired]="true"
-          [layout]="'horizontal'"
-          [gap]="'493px'"
-          [isBold]="true"
-          [labelMargin]="'0px'"
-          [description]="descriptionData.radio11.description"
-          [showDescription]="true"
-          formControlName="senaleMomento"
-          (change)="
-            setValoresStore(
-              preOperativeForm,
-              'senaleMomento',
-              'setSenaleMomento'
-            )
-          "
-        ></app-input-radio>
-        <div
-          *ngIf="
-            preOperativeForm.controls['senaleMomento'].invalid &&
-            preOperativeForm.controls['senaleMomento'].touched
-          "
-          class="text-danger"
-        >
-          Este campo es obligatorio.
-        </div>
-      </div>
-      <div class="mb-3 form-group">
-        <app-input-radio
-          [radioOptions]="radioOptions"
-          [isRequired]="true"
-          [layout]="'horizontal'"
-          [gap]="'493px'"
-          [isBold]="true"
-          [labelMargin]="'0px'"
-          [description]="descriptionData.radio12.description"
-          [showDescription]="true"
-          formControlName="enCaso"
-          (change)="setValoresStore(preOperativeForm, 'enCaso', 'setEnCaso')"
-        ></app-input-radio>
-        <div
-          *ngIf="
-            preOperativeForm.controls['enCaso'].invalid &&
-            preOperativeForm.controls['enCaso'].touched
-          "
-          class="text-danger"
-        >
-          Este campo es obligatorio.
-        </div>
-      </div>
+     
+
+     
     </div>
     <div class="w-100 p-3">
       <div class="col-4 mb-3">
@@ -718,7 +685,7 @@
         </app-catalogo-select>
       </div>
       <label class="fw-bold" for="">
-        Indique todos los domicilios registrados ante el FC del solicitante e
+        Indique todos los domicilios registrados ante el RFC del solicitante e
         indique aquellos en que se desarrollen actividades relacionadas con su
         proceso productivo y/o la prestación de servicios.
       </label>
@@ -733,10 +700,13 @@
         </h6>
       </div>
 
-      <ng-table
-        [commonTableHeader]="domiciliosHeaderData"
-        [commonTableBody]="domiciliosBodyData"
-      ></ng-table>
+      <app-tabla-dinamica
+    [configuracionTabla]="configuracionindiqueDatos"
+    [datos]="modificarDatos"
+    [tipoSeleccionTabla]="checkboxValor"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
+    (listaDeFilaSeleccionada)="onFilasSeleccionadas($event)"
+  ></app-tabla-dinamica>
       <div class="d-flex justify-content-center">
         <app-table-pagination
           [totalItems]="totalItems"
@@ -748,25 +718,30 @@
         </app-table-pagination>
       </div>
       <div class="d-flex justify-content-end">
-        <button
-          type="button"
-          class="btn btn-default btn-space"
-          (click)="openInstalacionesModal()"
-          disabled="esFormularioSoloLectura ? true : false"
-        >
-          Modificar
-        </button>
+       <button
+                type="button"
+                class="btn btn-primary ms-2"
+                data-bs-toggle="modal"
+                data-bs-target="#modalAgregar"
+                (click)="abrirModal()"
+                [disabled]="esFormularioSoloLectura || !hayFilasSeleccionadas"
+              >
+              Modificar
+              </button>
         <button
           type="button"
           class="btn btn-primary btn-space"
-          disabled="esFormularioSoloLectura ? true : false"
+         [disabled]="esFormularioSoloLectura || !hayFilasSeleccionadas"
+         (click)="confirmEliminarMencioneItem()"
+         (click)="eliminarFilaSeleccionada()"
         >
           Eliminar
         </button>
         <button
           type="button"
           class="btn btn-primary btn-space"
-          disabled="esFormularioSoloLectura ? true : false"
+          (click)="openInstalacionesModal()"
+         [disabled]="esFormularioSoloLectura"         
         >
           Agregar
         </button>
@@ -864,17 +839,23 @@
           <div>
             <input
               type="file"
-              id="archivoNacionales"
-              class="form-control w-auto"
+              id="archivoNacionales" 
+              class="d-none"
               formControlName="archivoNacionales"
+               (change)="onFileSelected($event)"
             />
+            <label for="archivoNacionales" class="btn btn-primary">
+              Examinar
+            </label>
+            <span class="border px-2 py-2 ms-1 border-secondary">{{ selectedFileName || 'No file choosen' }}</span>
+    
           </div>
           <div>
             <button
               id="uploadNewFileExtranjerosN"
               class="btn btn-primary"
               (click)="subirArchivo(template)"
-              disabled="esFormularioSoloLectura ? true : false"
+              [disabled]="esFormularioSoloLectura"
             >
               Anexar
             </button>
@@ -883,7 +864,7 @@
       </div>
       <div class="form-group d-flex align-items-center gap-2">
         <label for="registrosQue2" class="form-label mb-0"
-          >Registros que existen actualmente</label
+          >Registros que existen actualmente.</label
         >
         <input
           type="text"
@@ -926,19 +907,26 @@
           </label>
         </div>
         <div class="d-flex justify-content-between">
-          <div>
+           <div>
             <input
               type="file"
-              id="archivoNacionales"
-              class="form-control w-auto"
+              id="archivoNacionales" 
+              class="d-none"
+              formControlName="archivoNacionales"
+               (change)="onFileSelected($event)"
             />
+            <label for="archivoNacionales" class="btn btn-primary">
+              Examinar
+            </label>
+            <span class="border px-2 py-2 ms-1 border-secondary">{{ selectedFileName || 'No file choosen' }}</span>
+    
           </div>
           <div>
             <button
               id="uploadNewFileExtranjerosN"
               class="btn btn-primary"
               (click)="subirArchivo(template)"
-              disabled="esFormularioSoloLectura ? true : false"
+              [disabled]="esFormularioSoloLectura"
             >
               Anexar
             </button>
@@ -1007,217 +995,229 @@
       </div>
     </div>
     <div class="w-100 p-3">
-      <ng-titulo titulo="Controls Inventarios"></ng-titulo>
+      <ng-titulo titulo="Control Inventarios"></ng-titulo>
       <div class="mt-4 form-group">
         <section class="body-text fw-bold mb-2">
           <span class="text-danger">*</span> Indique si cuenta con un sistema de
           control de inventarios.
         </section>
-        <app-input-radio
-          [radioOptions]="radioOptions"
-          [isRequired]="true"
-          [layout]="'horizontal'"
-          [gap]="'493px'"
-          [isBold]="true"
-          [labelMargin]="'0px'"
-          [description]="descriptionData.radio16.description"
-          [showDescription]="true"
-          formControlName="indiqueCuenta"
-          (change)="
+        <app-input-radio [radioOptions]="radioOptions" [isRequired]="true" [layout]="'horizontal'" [gap]="'493px'"
+          [isBold]="true" [labelMargin]="'0px'" [description]="descriptionData.radio16.description" [showDescription]="true"
+          formControlName="indiqueCuenta" (change)="
             setValoresStore(
               preOperativeForm,
               'indiqueCuenta',
               'setIndiqueCuenta'
             )
-          "
-        ></app-input-radio>
-        <div
-          *ngIf="
+          "></app-input-radio>
+        <div *ngIf="
             preOperativeForm.controls['indiqueCuenta'].invalid &&
             preOperativeForm.controls['indiqueCuenta'].touched
-          "
-          class="text-danger"
-        >
+          " class="text-danger">
           Este campo es obligatorio.
         </div>
       </div>
+    
       <div class="row">
         <!-- First Form Group -->
         <div class="col-md-6">
           <div class="form-group">
             <span class="require">* </span>
-            <label for="nombreDel" class="form-label"
-              >Nombre del sistema o datos para su identificación</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="nombreDel"
-              formControlName="nombreDel"
-              (change)="
+            <label for="nombreDel" class="form-label">Nombre del sistema o datos para su identificación</label>
+            <input type="text" class="form-control" id="nombreDel"    formControlName="nombreDel" (change)="
                 setValoresStore(preOperativeForm, 'nombreDel', 'setNombreDel')
-              "
-            />
-            <div
-              *ngIf="
+              " />
+            <div *ngIf="
                 preOperativeForm.controls['nombreDel'].invalid &&
                 preOperativeForm.controls['nombreDel'].touched
-              "
-              class="text-danger"
-            >
-              <span
-                *ngIf="preOperativeForm.controls['nombreDel'].errors?.['required']"
-                >Este campo es obligatorio.</span
-              >
-              <span
-                *ngIf="preOperativeForm.controls['nombreDel'].errors?.['minlength']"
-                >Debe tener al menos 3 caracteres.</span
-              >
-              <span
-                *ngIf="preOperativeForm.controls['nombreDel'].errors?.['maxlength']"
-                >No puede exceder los 250 caracteres.</span
-              >
+              " class="text-danger">
+              <span *ngIf="preOperativeForm.controls['nombreDel'].errors?.['required']">Este campo es obligatorio.</span>
+              <span *ngIf="preOperativeForm.controls['nombreDel'].errors?.['minlength']">Debe tener al menos 3
+                caracteres.</span>
+              <span *ngIf="preOperativeForm.controls['nombreDel'].errors?.['maxlength']">No puede exceder los 250
+                caracteres.</span>
             </div>
           </div>
         </div>
-
+      
         <!-- Second Form Group -->
         <div class="col-md-6">
           <div class="form-group">
             <span class="require">* </span>
-            <label for="lugarDeRadicacion" class="form-label"
-              >Lugar de radicación</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="lugarDeRadicacion"
-              formControlName="lugarDeRadicacion"
-              (change)="
+            <label for="lugarDeRadicacion" class="form-label">Lugar de radicación</label>
+            <input type="text" class="form-control" id="lugarDeRadicacion"   formControlName="lugarDeRadicacion" (change)="
                 setValoresStore(
                   preOperativeForm,
                   'lugarDeRadicacion',
                   'setLugarDeRadicacion'
                 )
-              "
-            />
-            <div
-              *ngIf="
+              " />
+            <div *ngIf="
                 preOperativeForm.controls['lugarDeRadicacion'].invalid &&
                 preOperativeForm.controls['lugarDeRadicacion'].touched
-              "
-              class="text-danger"
-            >
-              <span
-                *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['required']"
-                >Este campo es obligatorio.</span
-              >
-              <span
-                *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['minlength']"
-                >Debe tener al menos 3 caracteres.</span
-              >
-              <span
-                *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['maxlength']"
-                >No puede exceder los 250 caracteres.</span
-              >
+              " class="text-danger">
+              <span *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['required']">Este campo es
+                obligatorio.</span>
+              <span *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['minlength']">Debe tener al menos 3
+                caracteres.</span>
+              <span *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['maxlength']">No puede exceder los 250
+                caracteres.</span>
             </div>
           </div>
         </div>
       </div>
+    
       <div class="d-flex justify-content-between">
         <div class="d-flex align-items-center">
           <label class="me-2" for="indiqueCheck">
             Indique, si cuenta con un sistema de control de inventarios de
             conformidad con las disposiciones previstas por el Anexo 24.
             <span>
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="indiqueCheck"
-                formControlName="indiqueCheck"
-                (change)="
+              <input class="form-check-input" type="checkbox" id="indiqueCheck" formControlName="indiqueCheck" (change)="
                   setValoresStore(
                     preOperativeForm,
                     'indiqueCheck',
                     'setIndiqueCheck'
                   )
-                "
-              /> </span
-          ></label>
+                " /> </span></label>
         </div>
       </div>
-      <div class="d-flex align-items-end justify-content-end">
-        <button
-          type="button"
-          class="btn btn-primary"
-          disabled="esFormularioSoloLectura ? true : false"
-        >
+    
+      <div class="d-flex align-items-end justify-content-end mb-3">
+        <button type="button" class="btn btn-primary" (click)="agregarNuevoElementoControlInventarios()"
+          [disabled]="esFormularioSoloLectura">
           Agregar
         </button>
       </div>
-      <label for=""> Control Inventarios </label>
-
-      <div class="table-responsive">
-        <table class="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <!-- Master checkbox to select all -->
-              <th scope="col">
-                <input type="checkbox" />
-              </th>
-              @for (header of controlInventarios.tableHeader; track $index) {
-              <th scope="col">{{ header }}</th>
-              }
-            </tr>
-          </thead>
-          <tbody>
-            @for (data of controlInventarios.tableBody; track $index) {
-            <tr>
-              <!-- Row checkbox -->
-              <td>
-                <input type="checkbox" />
-              </td>
-
-              @for (element of data.tbodyData; track $index) {
-              <td>
-                {{ element }}
-              </td>
-              }
-
-              <!-- Last column always contains a checkbox -->
-              <td>
-                <input type="checkbox" />
-              </td>
-            </tr>
-            }
-          </tbody>
-        </table>
+    
+      <label for="" class="mb-3"> Control Inventarios </label>
+    
+      <app-tabla-dinamica [configuracionTabla]="configuracionTablaControlInventarios" [datos]="datosTablaControlInventarios"
+        [tipoSeleccionTabla]="tipoSeleccionTabla"
+        (listaDeFilaSeleccionada)="manejarFilaSeleccionadaControlInventarios($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+    
+      <div class="d-flex justify-content-center mb-3">
+        <app-table-pagination [totalItems]="datosTablaControlInventarios.length" [itemsPerPage]="itemsPerPage"
+          [currentPage]="currentPage" (pageChange)="onPageChange($event)"
+          (itemsPerPageChange)="onItemsPerPageChange($event)">
+        </app-table-pagination>
       </div>
-
-      <div class="d-flex justify-content-end">
-        <button
-          type="button"
-          class="btn btn-default btn-space"
-          (click)="openModifyModal()"
-          disabled="esFormularioSoloLectura ? true : false"
-        >
+    
+      <div class="d-flex justify-content-end mb-3">
+        <button type="button" class="btn btn-default btn-space" (click)="openModifyControlInventariosModal()"
+          [disabled]="!enableModificarBotonControlInventarios || esFormularioSoloLectura">
           Modificar
         </button>
-        <button
-          type="button"
-          class="btn btn-primary btn-space"
-          disabled="esFormularioSoloLectura ? true : false"
-        >
+        <button type="button" class="btn btn-primary btn-space"
+          [disabled]="!enableEliminarBotonControlInventarios || esFormularioSoloLectura"
+          (click)="confirmEliminarControlInventariosItem()">
           Eliminar
         </button>
       </div>
-      <label for="">
-        Deberá anexar un archivo simple de autorizaci&oacute;n para el
-        establecimiento del depósito fiscal para someterse al proceso de
-        ensamble y fabricaci&oacute;n de vehículos a empresas de la industria
-        terminal vigente
+    
+      <div class="modal" tabindex="-1" role="dialog" [ngClass]="{ show: confirmEliminarPopupAbiertoControlInventarios }"
+        [ngStyle]="{ display: confirmEliminarPopupAbiertoControlInventarios ? 'block' : 'none' }">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-div"></div>
+            <div class="modal-body">
+              <p>¿Estás seguro que deseas eliminar los registros marcados?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="cerrarEliminarConfirmationPopupControlInventarios()">
+                Cancelar
+              </button>
+              <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="eliminarControlInventariosItem()">
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-backdrop fade show" *ngIf="confirmEliminarPopupAbiertoControlInventarios"></div>
+    
+      <label for="" class="mt-3">
+        Deberá anexar un archivo con el reporte de saldos de mercancía de importación temporal o de mercancías objeto de operaciones de comercio exterior, de un periodo de un mes, que se encuentre dentro de los tres meses anteriores a la presentación de la solicitud.
       </label>
     </div>
+    
+    <div class="modal fade" #controlInventariosModal tabindex="-1" aria-labelledby="controlInventariosModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="controlInventariosModalLabel">
+              {{ filaSeleccionadaControlInventarios ? 'Modificar' : 'Agregar' }} Inventario
+            </h5>
+          </div>
+          <div class="modal-body p-4">
+            <div class="row">
+              <div class="col-8">
+                <div class="form-group">
+                  <span class="require">*</span>
+                  <label for="nombreDelModal" class="form-label">Nombre del sistema o datos para su identificación</label>
+                  <input type="text" class="form-control" id="nombreDelModal" formControlName="nombreDel" />
+                  <div *ngIf="
+                      preOperativeForm.controls['nombreDel'].invalid &&
+                      preOperativeForm.controls['nombreDel'].touched
+                    " class="text-danger">
+                    <span *ngIf="preOperativeForm.controls['nombreDel'].errors?.['required']">
+                      Este campo es obligatorio.
+                    </span>
+                    <span *ngIf="preOperativeForm.controls['nombreDel'].errors?.['minlength']">
+                      Debe tener al menos 3 caracteres.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-8">
+                <div class="form-group">
+                  <span class="require">*</span>
+                  <label for="lugarDeRadicacionModal" class="form-label">
+                    Lugar de radicación
+                  </label>
+                  <input type="text" class="form-control" id="lugarDeRadicacionModal" formControlName="lugarDeRadicacion" />
+                  <div *ngIf="
+                      preOperativeForm.controls['lugarDeRadicacion'].invalid &&
+                      preOperativeForm.controls['lugarDeRadicacion'].touched
+                    " class="text-danger">
+                    <span *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['required']">
+                      Este campo es obligatorio.
+                    </span>
+                    <span *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['minlength']">
+                      Debe tener al menos 3 caracteres.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="indiqueCheckModal" formControlName="indiqueCheck" />
+                  <label class="form-check-label" for="indiqueCheckModal">
+                    Indique, si cuenta con un sistema de control de inventarios de
+                    conformidad con las disposiciones previstas por el Anexo 24.
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura"
+              (click)="filaSeleccionadaControlInventarios ? modificaControlInventariosItem() : agregarNuevoElementoControlInventarios()">
+              {{ filaSeleccionadaControlInventarios ? 'Modificar' : 'Agregar' }}
+            </button>
+          
+          </div>
+        </div>
+      </div>
+    </div>
+    <lib-notificaciones *ngIf="notificacionExito" [notificacionInput]="notificacionExito"
+      (confirmacionModal)="onConfirmacionNotificacion($event)">
+    </lib-notificaciones>
     <div class="w-100 p-3">
       <div class="form-group">
         <section class="body-text fw-bold mb-2">
@@ -1373,6 +1373,7 @@
 >
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
+       <form [formGroup]="entidadForm">
       <div class="modal-header">
         <h5 class="modal-title" id="instalacionesModalLabel">Instalaciones</h5>
       </div>
@@ -1384,6 +1385,8 @@
               [placeholder]="'Seleccione un valor'"
               [catalogo]="entidadFederativa"
               [isDisabled]="esFormularioSoloLectura ? true : false"
+               formControlName="federativaSeleccionada"
+               (change)="setValoresStore(entidadForm, 'federativaSeleccionada', 'setFederativaSeleccionada')"
             >
             </app-catalogo-select>
           </div>
@@ -1408,17 +1411,22 @@
             type="button"
             class="btn btn-primary"
             data-bs-dismiss="modal"
+            [disabled]="esFormularioSoloLectura"
+              (click)="acceptarValor()"
           >
             Aceptar
           </button>
           <button
             type="button"
             class="btn btn-primary"
+             data-bs-dismiss="modal"
+            [disabled]="esFormularioSoloLectura"
           >
             Cancelar
           </button>
         </div>
       </div>
+      </form>
     </div>
   </div>
 </div>
@@ -1435,7 +1443,7 @@
       <div class="modal-header">
         <h5 class="modal-title" id="modifyModalLabel">Agregar</h5>
       </div>
-      <div class="modal-body p-4">
+      <div class="modal-body p-4" [formGroup]="preOperativeForm">
         <div class="row">
           <div class="col-6">
             <div class="form-group">
@@ -1467,7 +1475,7 @@
             </div>
           </div>
           <div class="col-4 d-flex align-items-end">
-            <button type="button" class="btn btn-primary">Buscar</button>
+            <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Buscar</button>
           </div>
         </div>
         <div class="row">
@@ -1536,9 +1544,9 @@
             <div class="form-group">
               <span class="require">*</span>
               <label for="numeroAutorizacionCITES" class="form-label"
-                >N&uacue de empleados</label
+                >Numero de empleados</label
               >
-              <input type="text" class="form-control" formControlName="numeroEmpleados" id="" />
+              <input type="number" class="form-control" formControlName="numeroEmpleados" id="" />
               <div
                 *ngIf="
                   preOperativeForm.controls['numeroEmpleados'].invalid &&
@@ -1568,16 +1576,17 @@
               [placeholder]="'Seleccione un valor'"
               [catalogo]="comboBimestresIDC"
               [isDisabled]="esFormularioSoloLectura ? true : false"
+               formControlName="bimestreValor"
             >
             </app-catalogo-select>
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="addNewMencioneItem()">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="addNewMencioneItem()" [disabled]="esFormularioSoloLectura">
           Aceptar
         </button>
-        <button type="button" class="btn btn-primary"  data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary"  data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">Cancelar</button>
       </div>
     </div>
   </div>
@@ -1591,7 +1600,7 @@
       type="button"
       class="btn-close close pull-right"
       aria-label="Close"
-      disabled="esFormularioSoloLectura ? true : false"
+     [disabled]="esFormularioSoloLectura"
     >
       <span aria-hidden="true" class="visually-hidden">&times;</span>
     </button>
@@ -1602,10 +1611,198 @@
       type="button"
       class="btn btn-default"
       (click)="cerrar()"
-      disabled="esFormularioSoloLectura ? true : false"
+    [disabled]="esFormularioSoloLectura"
     >
       Aceptar
     </button>
   </div>
   }
 </ng-template>
+<div class="container mt-4">
+  <div
+    class="modal fade"
+    id="modalAgregar"
+    tabindex="-1"
+    aria-labelledby="modalAgregarLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Modificar</h4>
+        </div>
+        <div class="modal-body">
+        <form [formGroup]="modificarForm">
+        <div class="row">
+                  <div class="col-md-4">
+                      <div class="form-group">
+                        
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span>Instalaciones principales
+        </section>
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+          [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio22.description"
+          [showDescription]="true"
+          formControlName="principales"
+          (change)="
+            setValoresStore(
+              modificarForm,
+              'principales',
+              'setPrincipales'
+            )
+          "
+        ></app-input-radio>
+        <div
+          *ngIf="
+            modificarForm.controls['principales'].invalid &&
+            modificarForm.controls['principales'].touched
+          "
+          class="text-danger"
+        >
+          Este campo es obligatorio.
+        </div>
+                      </div>
+                  </div>
+
+                  <div class="col-md-4">
+                      <div class="form-group">
+                          <app-catalogo-select [catalogo]="comboIMMEX" [label]="'Municipio o alcaldía'"  name="municipio"
+                          formControlName="municipio" (change)="setValoresStore(modificarForm,'municipio', 'setMunicipio')">
+                      </app-catalogo-select>
+                      </div>
+                  </div>
+      </div>
+       <div class="row">
+                  <div class="col-md-4">
+                      <div class="form-group">
+                          <app-catalogo-select [catalogo]="comboIMMEX" [label]="'Tipo de instalación'"  name="instalacion" [required]="true"
+                          formControlName="instalacion" (change)="setValoresStore(modificarForm,'instalacion', 'setInstalacion')">
+                      </app-catalogo-select>
+                      </div>                 
+                  </div>
+                  <div class="col-md-4">
+                         <div class="form-group">
+              <label class="form-label" for="federativa">Entidad federativa</label>
+              <input class="form-control" id="federativa" type="text"
+                formControlName="federativa" (change)="setValoresStore(modificarForm, 'federativa', 'setFederativa')" />
+            </div>
+                  </div>
+                  <div class="col-md-4">
+                       <div class="form-group">
+              <label class="form-label" for="registro">Registro ante SE/SAT</label>
+              <input class="form-control" id="registro" type="text"
+                formControlName="registro" (change)="setValoresStore(modificarForm, 'registro', 'setRegistro')" />
+            </div>
+                  </div>
+
+         </div>
+         <div class="row">
+            <div class="col-md-8">
+                       <div class="form-group">
+              <label class="form-label" for="colonia">Colonia, calle y número</label>
+              <input class="form-control" id="colonia" type="text"
+                formControlName="colonia" (change)="setValoresStore(modificarForm, 'colonia', 'setColonia')" />
+            </div>
+                  </div>
+
+                    <div class="col-md-4">
+                       <div class="form-group">
+              <label class="form-label" for="postal">Código postal</label>
+              <input class="form-control" id="postal" type="number"
+                formControlName="postal" (change)="setValoresStore(modificarForm, 'postal', 'setPostal')" />
+            </div>
+          </div>
+   </div>
+   <div class="row">
+       <div class="col-md-4">
+            <div class="form-group">
+              <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span>Proceso productivo
+        </section>
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+          [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio23.description"
+          [showDescription]="true"
+          formControlName="proceso"
+          (change)="
+            setValoresStore(
+              modificarForm,
+              'proceso',
+              'setProceso'
+            )
+          "
+        ></app-input-radio>
+         <div
+          *ngIf="
+            modificarForm.controls['proceso'].invalid &&
+            modificarForm.controls['proceso'].touched
+          "
+          class="text-danger"
+        >
+          Este campo es obligatorio.
+        </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+              <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span>Acreditación del uso y goce del inmueble
+        </section>
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+          [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio24.description"
+          [showDescription]="true"
+          formControlName="inmueble"
+          (change)="
+            setValoresStore(
+              modificarForm,
+              'inmueble',
+              'setInmueble'
+            )
+          "
+        ></app-input-radio>
+         <div
+          *ngIf="
+            modificarForm.controls['inmueble'].invalid &&
+            modificarForm.controls['inmueble'].touched
+          "
+          class="text-danger"
+        >
+          Este campo es obligatorio.
+        </div>
+            </div>
+          </div>
+         </div>
+        </form>          
+        </div>
+        <div class="modal-footer custom-footer justify-content-center">  
+          <button type="button" class="btn btn-primary" (click)="guardarModificarDatos()" >Acceptar</button>        
+          <button
+            type="button"
+            class="btn btn-default"
+            data-bs-dismiss="modal"
+            #closeModal
+          >
+            Cancelar
+          </button>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

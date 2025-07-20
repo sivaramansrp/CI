@@ -12,7 +12,10 @@ import { Tramite32502Query } from '../../../../estados/queries/tramite32502.quer
 @Component({
   selector: 'agrega-personas',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, NotificacionesComponent],
+  imports: [
+    ReactiveFormsModule, 
+    CommonModule, 
+    NotificacionesComponent],
   templateUrl: './agrega-personas.component.html',
   styleUrl: './agrega-personas.component.scss',
 })
@@ -36,9 +39,9 @@ export class AgregaPersonasComponent {
    * Formulario para capturar los datos de una persona.
    */
   personaForm: FormGroup = this.fb.group({
-    nombre: [{value: this.tramite32502Store?.setNombre || "nombre", disabled: true }],
-    primerApellido: [{ value: this.tramite32502Store.setPrimerApellido, disabled: true }],
-    segundoApellido: [{ value: this.tramite32502Store.setSegundoApellido, disabled: true }],
+    nombre: [{value: this.solicitudState?.nombre, disabled: true }],
+    primerApellido: [{ value: this.solicitudState?.primerApellido, disabled: true }],
+    segundoApellido: [{ value: this.solicitudState?.segundoApellido, disabled: true }],
   });
 
   /**

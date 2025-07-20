@@ -1,151 +1,233 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { DatosDelSolicitudModificacionComponent } from './datos-del-solicitud-modificacion.component';
-import { Catalogo } from '@libs/shared/data-access-user/src';
 import { EstablecimientoService } from '../../service/establecimiento.service';
-import { DatosDelSolicituteSeccionState, DatosDelSolicituteSeccionStateStore } from '../../estados/datos-del-solicitute-seccion.store';
-import { DatosDelSolicituteSeccionQuery } from '../../estados/datos-del-solicitute-seccion.query';
+import { DatosDelSolicituteSeccionStateStoreI } from '../../estados/datos-del-solicitud-seccion.store';
+import { DatosDelSeccionQuery } from '../../estados/datos-del-solicitud-seccion.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('DatosDelSolicitudModificacionComponent', () => {
   let component: DatosDelSolicitudModificacionComponent;
   let fixture: ComponentFixture<DatosDelSolicitudModificacionComponent>;
-  let mockEstablecimientoService: jest.Mocked<EstablecimientoService>;
-  let mockStateStore: jest.Mocked<DatosDelSolicituteSeccionStateStore>;
-  let mockQuery: jest.Mocked<DatosDelSolicituteSeccionQuery>;
+  let mockEstablecimientoService: any;
+  let mockStateStore: any;
+  let mockQuery: any;
+  let mockDomicilioEstablecimientoQuery: any;
+  let mockConsultaioQuery: any;
 
   beforeEach(async () => {
     mockEstablecimientoService = {
-      getSciandata: jest.fn(),
-      getEstadodata: jest.fn(),
-      getJustificationData: jest.fn(),
-    } as unknown as jest.Mocked<EstablecimientoService>;
+      getSciandata: jest.fn().mockReturnValue(of([])),
+      getEstadodata: jest.fn().mockReturnValue(of([])),
+      getJustificationData: jest.fn().mockReturnValue(of([])),
+    };
 
     mockStateStore = {
       update: jest.fn(),
-    } as unknown as jest.Mocked<DatosDelSolicituteSeccionStateStore>;
+    };
+
+    mockDomicilioEstablecimientoQuery = {
+      select: jest.fn().mockReturnValue(of({})),
+    };
 
     mockQuery = {
-      select: jest.fn(),
-    } as unknown as jest.Mocked<DatosDelSolicituteSeccionQuery>;
+      select: jest.fn().mockReturnValue(of({})),
+    };
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule, HttpClientTestingModule,DatosDelSolicitudModificacionComponent],
-      declarations: [],
+      imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        require('@angular/common/http/testing').HttpClientTestingModule,
+        DatosDelSolicitudModificacionComponent,
+      ],
       providers: [
         { provide: EstablecimientoService, useValue: mockEstablecimientoService },
-        { provide: DatosDelSolicituteSeccionStateStore, useValue: mockStateStore },
-        { provide: DatosDelSolicituteSeccionQuery, useValue: mockQuery },
+        { provide: DatosDelSolicituteSeccionStateStoreI, useValue: mockStateStore },
+        { provide: DatosDelSeccionQuery, useValue: mockDomicilioEstablecimientoQuery },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
       ],
     }).compileComponents();
   });
+
   beforeEach(() => {
     fixture = TestBed.createComponent(DatosDelSolicitudModificacionComponent);
     component = fixture.componentInstance;
-  
-    // Mock the destroy$ Subject to avoid errors during ngOnDestroy
     component['destroy$'] = new Subject<void>();
-  
-    // Provide default values for mercanciasTablaDatos and other dependencies
     component.mercanciasTablaDatos = [];
-  
-    // Provide a proper mock state
-    const mockState: Partial<DatosDelSolicituteSeccionState> = {
-      ideGenerica1: 'Test Value',
-    };
-  
-    // Mock observables
-    jest.spyOn(mockQuery, 'select').mockReturnValue(of(mockState as DatosDelSolicituteSeccionState));
-    mockEstablecimientoService.getSciandata.mockReturnValue(of([]));
-    mockEstablecimientoService.getEstadodata.mockReturnValue(of([]));
-  
-    // Mock any additional observables used in ngOnInit or ngAfterViewInit
-    jest.spyOn(mockEstablecimientoService, 'getJustificationData').mockReturnValue(of([]));
-  
     fixture.detectChanges();
   });
+
   afterEach(() => {
-    // Ensure the destroy$ Subject is completed to avoid memory leaks
     component['destroy$'].next();
     component['destroy$'].complete();
-
     fixture.destroy();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debería limpiar las suscripciones en ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
-
     component.ngOnDestroy();
-
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should initialize forms on ngOnInit', () => {
-    const mockState: DatosDelSolicituteSeccionState = {
-  
-      establecimientoCorreoElectronico: 'test@example.com',
-      establecimientoDomicilioCodigoPostal: '12345',
-      ideGenerica1: 'Test Value',
-      observaciones: 'Test Observations',
-      establecimientoRFCResponsableSanitario: 'RFC456',
-      establecimientoRazonSocial: 'Test Establishment',
-      establecimientoEstados: 'Test State',
-      descripcionMunicipio: 'Test Municipality',
-      localidad: 'Test Locality',
-      colonias: 'Test Colony',
-      calle: 'Test Street',
-      lada: '123',
-      telefono: '4567890',
-      scian: 'Test SCIAN',
-      descripcionScian: 'Test SCIAN Description', // Added this property
-      establishomentoColonias: 'Test Colony',
-      noLicenciaSanitaria: '12345',
-      avisoCheckbox: 'true',
-      licenciaSanitaria: 'Test License',
-      regimen: 'Test Regimen',
-      aduanasEntradas: 'Test Customs',
-    };
-    jest.spyOn(mockQuery, 'select').mockReturnValue(of(mockState));
+  it('debería inicializar los formularios en ngOnInit', () => {
     component.ngOnInit();
-
     expect(component.domicilioEstablecimiento).toBeDefined();
     expect(component.scianForm).toBeDefined();
     expect(component.solicitudEstablecimientoForm).toBeDefined();
-    expect(component.domicilioEstablecimiento.get('ideGenerica1')?.value).toBe('Test Value');
+    expect(component.formMercancias).toBeDefined();
   });
 
-  it('should load SCIAN data', () => {
-    const mockScianData: Catalogo[] = [{ id: 1, descripcion: 'SCIAN 1' }];
+  it('debería cargar datos SCIAN', () => {
+    const mockScianData = [{ id: 1, descripcion: 'SCIAN 1' }];
     mockEstablecimientoService.getSciandata.mockReturnValue(of(mockScianData));
-
     component.loadScian();
-
     expect(component.scianJson).toEqual(mockScianData);
   });
 
-  it('should load estado data', () => {
-    const mockEstadoData: Catalogo[] = [{ id: 1, descripcion: 'Estado 1' }];
+  it('debería cargar datos de estado', () => {
+    const mockEstadoData = [{ id: 1, descripcion: 'Estado 1' }];
     mockEstablecimientoService.getEstadodata.mockReturnValue(of(mockEstadoData));
-
     component.loadEstadoData();
-
     expect(component.estado).toEqual(mockEstadoData);
   });
 
-  it('should toggle colapsable state', () => {
+  it('debería alternar el estado colapsable', () => {
     expect(component.colapsable).toBe(false);
-
     component.mostrar_colapsable();
     expect(component.colapsable).toBe(true);
-
     component.mostrar_colapsable();
     expect(component.colapsable).toBe(false);
+  });
+
+  it('debería alternar el estado colapsableDos', () => {
+    expect(component.colapsableDos).toBe(false);
+    component.mostrar_colapsableDos();
+    expect(component.colapsableDos).toBe(true);
+    component.mostrar_colapsableDos();
+    expect(component.colapsableDos).toBe(false);
+  });
+
+  it('debería alternar el estado colapsableTres', () => {
+    expect(component.colapsableTres).toBe(false);
+    component.mostrar_colapsableTres();
+    expect(component.colapsableTres).toBe(true);
+    component.mostrar_colapsableTres();
+    expect(component.colapsableTres).toBe(false);
+  });
+
+  it('debería abrir el modal y establecer la notificación y el índice', () => {
+    component.abrirModal(2);
+    expect(component.nuevaNotificacion).toBeDefined();
+    expect(component.elementoParaEliminar).toBe(2);
+  });
+
+  it('debería eliminar un pedimento si borrar es true', () => {
+    component.pedimentos = [{}, {}, {}] as any;
+    component.elementoParaEliminar = 1;
+    component.eliminarPedimento(true);
+    expect(component.pedimentos.length).toBe(2);
+  });
+
+  it('no debería eliminar un pedimento si borrar es false', () => {
+    component.pedimentos = [{}, {}, {}] as any;
+    component.elementoParaEliminar = 1;
+    component.eliminarPedimento(false);
+    expect(component.pedimentos.length).toBe(3);
+  });
+
+  it('debería limpiar el formulario SCIAN', () => {
+    component.scianForm = new FormBuilder().group({
+      scian: ['valor'],
+      descripcionScian: ['valor'],
+    });
+    component.scianForm.get('scian')?.setValue('algo');
+    component.limpiarScianForm();
+    expect(component.scianForm.get('scian')?.value).toBeNull();
+    expect(component.scianForm.get('descripcionScian')?.value).toBeNull();
+  });
+
+  it('debería actualizar el estado del formulario en onContriloChange', () => {
+    component.scianForm = new FormBuilder().group({
+      scian: ['valor'],
+      descripcionScian: ['valor'],
+    });
+    component.domicilioEstablecimiento = new FormBuilder().group({
+      scian: ['valor'],
+    });
+    component['domicilioEstablecimientoStore'] = mockStateStore;
+    component.onContriloChange('scian');
+    expect(mockStateStore.update).toHaveBeenCalled();
+  });
+
+  it('debería actualizar el estado y habilitar/deshabilitar observaciones en enCambioDeControl', () => {
+    component.domicilioEstablecimiento = new FormBuilder().group({
+      ideGenerica1: [''],
+      observaciones: [{ value: '', disabled: true }],
+    });
+    component['domicilioEstablecimientoStore'] = mockStateStore;
+    component.domicilioEstablecimiento.get('ideGenerica1')?.setValue('modificacion');
+    component.enCambioDeControl('ideGenerica1');
+    expect(component.domicilioEstablecimiento.get('observaciones')?.enabled).toBe(true);
+
+    component.domicilioEstablecimiento.get('ideGenerica1')?.setValue('otro');
+    component.enCambioDeControl('ideGenerica1');
+    expect(component.domicilioEstablecimiento.get('observaciones')?.disabled).toBe(true);
+  });
+
+  it('debería actualizar el estado del formulario en enControlCambioFormulario', () => {
+    component.solicitudEstablecimientoForm = new FormBuilder().group({
+      noLicenciaSanitaria: ['valor'],
+    });
+    component['domicilioEstablecimientoStore'] = mockStateStore;
+    component.enControlCambioFormulario('noLicenciaSanitaria');
+    expect(mockStateStore.update).toHaveBeenCalled();
+  });
+
+  it('debería deshabilitar y habilitar el campo noLicenciaSanitaria según el checkbox', () => {
+    component.solicitudEstablecimientoForm = new FormBuilder().group({
+      noLicenciaSanitaria: ['valor'],
+    });
+    const event = { target: { checked: true } } as any;
+    component.toggleNoLicenciaSanitaria(event);
+    expect(component.solicitudEstablecimientoForm.get('noLicenciaSanitaria')?.disabled).toBe(true);
+
+    const event2 = { target: { checked: false } } as any;
+    component.toggleNoLicenciaSanitaria(event2);
+    expect(component.solicitudEstablecimientoForm.get('noLicenciaSanitaria')?.enabled).toBe(true);
+  });
+
+  it('debería abrir el modal de mercancía', () => {
+    component.modalAddAgentMercanciasInstance = { show: jest.fn() } as any;
+    component.abrirModalMercancia();
+    expect(component.modalAddAgentMercanciasInstance.show).toHaveBeenCalled();
+  });
+
+  it('debería mostrar el modal de clave SCIAN', () => {
+    component.modalInstance = { show: jest.fn() } as any;
+    component.mostrarModeloClave();
+    expect(component.modalInstance.show).toHaveBeenCalled();
+  });
+
+  it('debería cerrar el modal si existe la instancia', () => {
+    component.modalInstance = { hide: jest.fn() } as any;
+    component.cerrarModal();
+    expect(component.modalInstance.hide).toHaveBeenCalled();
+  });
+
+  it('no debería fallar cerrarModal si no existe la instancia', () => {
+    component.modalInstance = undefined as any;
+    expect(() => component.cerrarModal()).not.toThrow();
   });
 });

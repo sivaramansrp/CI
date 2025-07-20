@@ -1,4 +1,5 @@
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CAPTURA_OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/sagarpa.enum';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
@@ -6,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { ROWS } from '../../constantes/constantes';
 import { RevisionService } from '../../services/revision.service';
 import { Solicitud220501Query } from '../../estados/tramites220501.query';
@@ -28,7 +28,7 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, InputRadioComponent, CommonModule],
 })
-export class DatosGeneralesComponent implements OnInit, OnDestroy {
+export class DatosGeneralesComponent implements OnDestroy {
   /**
    * Formulario principal.
    * @type {FormGroup}
@@ -185,7 +185,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   /**
    * Indica si el formulario está deshabilitado.
    */
-  formularioDeshabilitado!: boolean;
+  formularioDeshabilitado: boolean = false;
 
   /**
    * Índice actual de la fila.
@@ -218,18 +218,14 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.formularioDeshabilitado = seccionState.readonly;
-          this.inicializarEstadoFormulario();
+          if(seccionState.readonly || seccionState.update){
+             this.inicializarEstadoFormulario();
+          }
         })
       )
       .subscribe();
-  }
 
-  /**
-   * Método del ciclo de vida que se ejecuta al iniciar el componente.
-   * Llama a la función que determina cómo inicializar el formulario.
-   */
-  ngOnInit(): void {
-    this.inicializarEstadoFormulario();
+    this.inicializarFormulario();
   }
 
   /**
@@ -238,23 +234,10 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    */
   inicializarEstadoFormulario(): void {
     if (this.formularioDeshabilitado) {
-      this.guardarDatosFormulario();
-    } else {
-      this.inicializarFormulario();
-    }
-  }
-
-  /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  guardarDatosFormulario(): void {
-    this.inicializarFormulario();
-    if (this.formularioDeshabilitado) {
-      this.forma.disable();
+      this.forma?.disable();
     } else if (!this.formularioDeshabilitado) {
-      this.forma.enable();
-    }
+      this.forma?.enable();
+    } 
   }
 
   /**
@@ -314,7 +297,9 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
     this.getMovilizacionNacional();
     this.getPuntoVerificacion();
     this.getEmpresaTransportista();
-    this.actualizarDatosDelaSolicitud();
+    this.actualizarDatosDelaSolicitud();  
+    
+    this.inicializarEstadoFormulario();
   }
 
   /**

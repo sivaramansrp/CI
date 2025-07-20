@@ -1,5 +1,5 @@
 import { Anexo, Bitacora, Complimentaria, DomicilioInfo, Federetarios, Operacions } from "../estados/models/plantas-consulta.model";
-import { DatosDelModificacion } from "../estados/models/datos-tramite.model";
+import { DatosDelModificacion, DatosDelServicios } from "../estados/models/datos-tramite.model";
 
 export const PASOS = [
   {
@@ -20,6 +20,151 @@ export const PASOS = [
     activo: false,
     completado: false,
   },
+];
+
+export const CONFIGURACION_EMPRESAS = [
+  {
+    encabezado: 'Registro Federal de Contribuyente',
+    clave: (ele: Operacions) : string | undefined => ele.rfc,
+    orden: 1,
+  },
+  {
+    encabezado: 'Razón social',
+    clave: (ele: Operacions) : string | undefined => ele.razonSocial,
+    orden: 2,
+  },
+  {
+    encabezado: 'Calle',
+    clave: (ele: Operacions) : string | undefined => ele.calle,
+    orden: 3,
+  },
+  {
+    encabezado: 'Número Interior',
+    clave: (ele: Operacions) : string | undefined => ele.numeroInterior,
+    orden: 4,
+  },
+  {
+    encabezado: 'Número Exterior',
+    clave: (ele: Operacions) : string | undefined => ele.numeroExterior,
+    orden: 5,
+  },
+  {
+    encabezado: 'Código Postal',
+    clave: (ele: Operacions) : string | undefined => ele.codigoPostal,
+    orden: 6,
+  },
+  {
+    encabezado: 'Municipio o Delegación',
+    clave: (ele: Operacions) : string | undefined => ele.municipioDelegacion,
+    orden: 7,
+  },
+  {
+    encabezado: 'Estado o Distrito Federal',
+    clave: (ele: Operacions) : string | undefined => ele.estado,
+    orden: 8,
+  },
+  {
+    encabezado: 'País',
+    clave: (ele: Operacions) : string | undefined => ele.pais,
+    orden: 9,
+  },
+  {
+    encabezado: 'Estatus',
+    clave: (ele: Operacions) : string | undefined => (ele.estatus ? 'Activada' : 'Baja'),
+    orden: 13,
+  },
+];
+
+export const CONFIGURACION_PLANTA = [
+  {
+    encabezado: 'Calle',
+    clave: (ele: Operacions) : string | undefined => ele.calle,
+    orden: 1,
+  },
+  {
+    encabezado: 'Número Exterior',
+    clave: (ele: Operacions) : string | undefined => ele.numeroExterior,
+    orden: 2,
+  },
+  {
+    encabezado: 'Número Interior',
+    clave: (ele: Operacions) : string | undefined => ele.numeroInterior,
+    orden: 3,
+  },
+  {
+    encabezado: 'Código Postal',
+    clave: (ele: Operacions) : string | undefined => ele.codigoPostal,
+    orden: 4,
+  },
+  {
+    encabezado: 'Colonia',
+    clave: (ele: Operacions) : string | undefined => ele.colonia,
+    orden: 5,
+  },
+  {
+    encabezado: 'Localidad',
+    clave: (ele: Operacions) : string | undefined => ele.localidad,
+    orden: 6,
+  },
+  {
+    encabezado: 'Municipio o Delegación',
+    clave: (ele: Operacions) : string | undefined => ele.municipioDelegacion,
+    orden: 7,
+  },
+  {
+    encabezado: 'Estado o Distrito Federal',
+    clave: (ele: Operacions) : string | undefined => ele.estado,
+    orden: 8,
+  },
+  {
+    encabezado: 'País',
+    clave: (ele: Operacions) : string | undefined => ele.pais,
+    orden: 9,
+  },
+  {
+    encabezado: 'Registro Federal de Contribuyente(RFC)',
+    clave: (ele: Operacions) : string | undefined => ele.rfc,
+    orden: 10,
+  },
+  {
+    encabezado: 'Domicilio fiscal del solicitante',
+    clave: (ele: Operacions) : string | undefined => ele.fiscalSolicitante,
+    orden: 11,
+  },
+  {
+    encabezado: 'Denominación o razón social',
+    clave: (ele: Operacions) : string | undefined => ele.razonSocial,
+    orden: 12,
+  },
+
+  {
+    encabezado: 'Estatus',
+    clave: (ele: Operacions) : string | undefined => (ele.estatus ? 'Activada' : 'Baja'),
+    orden: 13,
+  },
+];
+
+export const CONFIGURACION_SERVICIOS = [
+    {
+      encabezado: 'Estatus',
+      clave: (ele: DatosDelServicios):string | undefined => ele.desEstatus,
+      orden: 4,
+    },
+    {
+      encabezado: 'Testado',
+      clave: (ele: DatosDelServicios):string | undefined => ele.testado,
+      orden: 3,
+    },
+    {
+      encabezado: 'Descripción del servicio',
+      clave: (ele: DatosDelServicios):string | undefined => ele.descripcion,
+      orden: 1,
+    },
+    {
+      encabezado: 'Tipo de servicio',
+      clave: (ele: DatosDelServicios):string | undefined => ele.tipoDeServicio,
+      orden: 2,
+    }
 ];
 
 export const CONFIGURACION_MODIFICACION = [

@@ -247,11 +247,6 @@ export const AVISO_AGENTE_DE_TABLA: ConfiguracionColumna<AvisoAgente>[] =
       clave: (fila) => fila.numPatenteModal,
       orden: 6,
     },
-    {
-      encabezado: 'Estatus',
-      clave: (fila) => fila.patenteModificada,
-      orden: 7,
-    }
   ];
   
 

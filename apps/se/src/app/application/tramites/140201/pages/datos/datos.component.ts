@@ -8,7 +8,7 @@ import { SolicitudService } from '../../services/solicitud.service';
   selector: 'app-datos',
   templateUrl: './datos.component.html',
 })
-export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
+export class DatosComponent implements OnInit, OnDestroy {
   /**
  * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
  */
@@ -20,7 +20,7 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
-  
+
   /**
    * Estado de la consulta actual, que contiene información sobre el trámite y su estado.
    * Se inicializa como una instancia de ConsultaioState.
@@ -71,9 +71,9 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
    * Llama al método `obtenerTipoPersona` del componente SolicitanteComponent
    * para establecer el tipo de persona como MORAL_NACIONAL.
    */
-  ngAfterViewInit(): void {
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
-  }
+  // ngAfterViewInit(): void {
+  //   this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+  //}
 
   /**
    * Índice actual del subtítulo seleccionado en la interfaz.

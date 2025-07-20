@@ -1,7 +1,8 @@
+import { AbstractControl, FormBuilder, ValidatorFn } from '@angular/forms';
 import { Catalogo, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
-import { FormBuilder } from '@angular/forms';
+import { EXENTO_DE_PAGO } from '../../constantes/certificado-zoosanitario.enum';
 import { FormGroup } from '@angular/forms';
 import { MediodetransporteService } from '../../services//medio-de-transporte.service';
 import { ReplaySubject } from 'rxjs';
@@ -66,6 +67,11 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   bancoSeleccionado!: Catalogo;
 
   /**
+    * Opciones disponibles para el grupo de radio.
+    */
+  radioOpcions = EXENTO_DE_PAGO;
+
+  /**
    * @property {CatalogosSelect} bancoCatalogo
    * @description Catálogo que contiene información sobre los bancos disponibles.
    * 
@@ -105,6 +111,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private mediodetransporteService: MediodetransporteService,
     private consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
 
   ) {
     this.fetchBancoData();
@@ -120,6 +127,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.derechoState = seccionState;
+          this.inicializarFormulario();
         })
       )
       .subscribe();
@@ -133,31 +141,30 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.inicializarFormulario();
   }
   /**
    * @method inicializarFormulario
    * @description Inicializa el formulario `FormSolicitud` con los datos del estado actual y configura su comportamiento dinámico.
    */
   inicializarFormulario(): void {
-    this.FormSolicitud = this.fb.group({
-      datosImportadorExportador: this.fb.group({
-        exentoDePago: [this.derechoState?.exentoDePago, [Validators.required]],
-        nombreImportExport: [this.derechoState?.nombreImportExport, [Validators.required]],
-        justificacion: [this.derechoState?.justificacion, [Validators.required]],
-        claveDeReferencia: [this.derechoState?.claveDeReferencia, [Validators.required]],
-        cadenaDependencia: [this.derechoState?.cadenaDependencia, [Validators.required]],
-        banco: [this.derechoState?.banco, [Validators.required]],
-        llaveDePago: [this.derechoState?.llaveDePago, [Validators.required]],
-        fechaPago: [this.derechoState?.fechaPago, [Validators.required]],
-        importePago: [this.derechoState?.importePago, [Validators.required]],
-      }),
-    });
-    this.inicializarEstadoFormulario();
-
-    // Activa la lógica cuando el formulario se ha inicializado
-    if (this.consultaDatos.create) {
-      this.actualizarCamposDeFormularioBasadosEnExentoDePago('No');
+    // Inicialice solo si el formulario no existe o el estado está disponible
+    if (!this.FormSolicitud || this.derechoState) {
+      this.FormSolicitud = this.fb.group({
+        datosImportadorExportador: this.fb.group({
+          exentoDePago: [this.derechoState?.exentoDePago, [Validators.required]],
+          nombreImportExport: [this.derechoState?.nombreImportExport, [Validators.required]],
+          justificacion: [this.derechoState?.justificacion, [Validators.required, Validators.maxLength(100)]],
+          claveDeReferencia: [this.derechoState?.claveDeReferencia, []],
+          cadenaDependencia: [this.derechoState?.cadenaDependencia, [Validators.required, Validators.maxLength(50)]],
+          banco: [this.derechoState?.banco, [Validators.required]],
+          llaveDePago: [this.derechoState?.llaveDePago, [Validators.required, Validators.maxLength(50)]],
+          fechaPago: [this.derechoState?.fechaPago, [Validators.required, PagoDeDerechoComponent.fechaLimValidator()]],
+          importePago: [this.derechoState?.importePago, []],
+        }),
+      });
+      
+      // Aplicar el estado del campo inicial según el valor de exentoDePago
+      this.actualizarCamposDeFormularioBasadosEnExentoDePago();
     }
   }
   /**
@@ -169,15 +176,16 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
       this.FormSolicitud?.disable();
     } else {
       this.FormSolicitud?.enable();
+      // Volver a aplicar el estado del campo después de habilitar el formulario
+      this.actualizarCamposDeFormularioBasadosEnExentoDePago();
     }
   }
   /**
    * @method exentoDePagoChange
    * @description Actualiza los campos del formulario según el valor seleccionado en el campo 'exentoDePago'.
    */
-  exentoDePagoChange(event: Event): void {
-    const VALUE = (event.target as HTMLSelectElement).value;
-    this.actualizarCamposDeFormularioBasadosEnExentoDePago(VALUE);
+  exentoDePagoChange(): void {
+    this.actualizarCamposDeFormularioBasadosEnExentoDePago();
   }
   /**
    * @method actualizarBanco
@@ -198,55 +206,96 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         this.bancoCatalogo.catalogos = data as Catalogo[];
       });
   }
+
   /**
-   * Actualiza los campos del formulario en función del valor de 'exentoDePago'.
-   *
-   * Si el valor es 'No', establece valores específicos en los campos del formulario y los desactiva.
-   * De lo contrario, restablece y desactiva los campos del formulario.
-   *
-   * @param value - El valor de 'exentoDePago' para determinar las actualizaciones de los campos del formulario.
-   */
-
-  actualizarCamposDeFormularioBasadosEnExentoDePago(value: string): void {
-    if (value === 'No') {
-      this.FormSolicitud.get(
-        'datosImportadorExportador.claveDeReferencia'
-      )?.setValue('454000554');
-      this.FormSolicitud.get('datosImportadorExportador.importePago')?.setValue(
-        '594.0'
-      );
-
-      this.FormSolicitud.get(
-        'datosImportadorExportador.justificacion'
-      )?.disable();
-      this.FormSolicitud.get(
-        'datosImportadorExportador.claveDeReferencia'
-      )?.disable();
-      this.FormSolicitud.get(
-        'datosImportadorExportador.importePago'
-      )?.disable();
-    } else {
-      this.FormSolicitud.get(
-        'datosImportadorExportador.justificacion'
-      )?.reset();
-      this.FormSolicitud.get(
-        'datosImportadorExportador.cadenaDependencia'
-      )?.reset();
-      this.FormSolicitud.get('datosImportadorExportador.importePago')?.reset();
-
-      this.FormSolicitud.get(
-        'datosImportadorExportador.claveDeReferencia'
-      )?.disable();
-      this.FormSolicitud.get(
-        'datosImportadorExportador.cadenaDependencia'
-      )?.disable();
-      this.FormSolicitud.get(
-        'datosImportadorExportador.importePago'
-      )?.disable();
+ * Actualiza los campos del formulario en función del valor de 'exentoDePago'.
+ *
+ * Este método ajusta la validez, habilitación y deshabilitación de los campos del formulario
+ * 'FormSolicitud' según el valor seleccionado en el campo 'exentoDePago'. Si el formulario está
+ * en modo de solo lectura o no existe, no realiza ninguna acción.
+ *
+ * Comportamiento:
+ * - Si 'exentoDePago' no tiene valor, deshabilita y limpia los validadores de los campos de pago.
+ * - Si 'exentoDePago' es 'No', habilita y asigna validadores a los campos de pago, deshabilitando
+ *   el campo de justificación.
+ * - Si 'exentoDePago' es 'Si', habilita y asigna validador al campo de justificación, deshabilitando
+ *   los campos de pago.
+ * - Actualiza la validez de todos los controles del grupo 'datosImportadorExportador'.
+ *
+ * @method
+ * @returns {void}
+ */
+  actualizarCamposDeFormularioBasadosEnExentoDePago(): void {
+    if (!this.FormSolicitud) {
+      return;
+    }
+    
+    // No modifique los estados de los campos si el formulario está en modo de solo lectura
+    if (this.soloLectura) {
+      return;
+    }
+    
+    const EXENTODEPAGO = this.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.value;
+    
+    // Si no se establece ningún valor, configure el estado predeterminado
+    if (EXENTODEPAGO === null || EXENTODEPAGO === undefined || EXENTODEPAGO === '') {
+      // Establezca el comportamiento predeterminado para cuando no se seleccione ninguna opción: deshabilite todos los campos de pago
+      this.FormSolicitud.get('datosImportadorExportador.justificacion')?.setValidators([]);
+      this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValidators([]);
+      this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.setValidators([]);
+      this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.setValidators([]);
+      this.FormSolicitud.get('datosImportadorExportador.claveDeReferencia')?.disable();
+      this.FormSolicitud.get('datosImportadorExportador.importePago')?.disable();
+      this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.disable();
+      this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.disable();
       this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.disable();
-      this.FormSolicitud.get(
-        'datosImportadorExportador.llaveDePago'
-      )?.disable();
+      this.FormSolicitud.get('datosImportadorExportador.justificacion')?.disable();
+    } else {
+      // Restablecer solo si hay un valor y se está cambiando
+      const shouldReset = this.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.dirty || false;
+      
+      if (shouldReset) {
+        this.FormSolicitud.reset({
+          datosImportadorExportador: { exentoDePago: EXENTODEPAGO }
+        });
+      }
+      
+      // Primero habilite el formulario, luego aplique deshabilitaciones específicas
+      this.FormSolicitud?.enable();
+      
+      if (EXENTODEPAGO === 'No') {
+        // No exenta - habilitar campos de pago
+        if (shouldReset) {
+          this.FormSolicitud.patchValue({
+            datosImportadorExportador: { claveDeReferencia: 454000554, importePago: 594.0 }
+          });
+        }
+        this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValidators([Validators.required]);
+        this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.setValidators([Validators.required]);
+        this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.setValidators([Validators.required, PagoDeDerechoComponent.fechaLimValidator()]);
+        this.FormSolicitud.get('datosImportadorExportador.justificacion')?.setValidators([]);
+        this.FormSolicitud.get('datosImportadorExportador.justificacion')?.disable();
+        this.FormSolicitud.get('datosImportadorExportador.claveDeReferencia')?.disable();
+        this.FormSolicitud.get('datosImportadorExportador.importePago')?.disable();
+      } else if (EXENTODEPAGO === 'Si') {
+        // Exento: habilitar solo el campo de justificación
+        this.FormSolicitud.get('datosImportadorExportador.justificacion')?.setValidators([Validators.required]);
+        this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValidators([]);
+        this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.setValidators([]);
+        this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.setValidators([]);
+        this.FormSolicitud.get('datosImportadorExportador.claveDeReferencia')?.disable();
+        this.FormSolicitud.get('datosImportadorExportador.importePago')?.disable();
+        this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.disable();
+        this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.disable();
+        this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.disable();
+      }
+    }
+    
+    const GRUPO = this.FormSolicitud.get('datosImportadorExportador') as FormGroup;
+    if (GRUPO) {
+      Object.values(GRUPO.controls).forEach(control => {
+        control.updateValueAndValidity();
+      });
     }
   }
   /**
@@ -310,6 +359,23 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   get datosImportadorExportador(): FormGroup {
     return this.FormSolicitud.get('datosImportadorExportador') as FormGroup;
   }
+  /**
+   * Validador para asegurar que la fecha seleccionada no sea en el futuro.
+   */
+  public static fechaLimValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: unknown } | null => {
+      const LIM = control.value;
+      if (LIM) {
+        const [YEAR, MONTH, DAY] = LIM.split('-');
+        const FECHA = new Date(+Number(YEAR), +Number(MONTH) - 1, +Number(DAY));
+        const TODAY = new Date();
+        if (FECHA.getTime() > TODAY.getTime()) {
+          return { fechaLim: true }; // Retorna error si la fecha está en el futuro
+        }
+      }
+      return null;
+    };
+  }
 
   /**
    * Método que se ejecuta al destruir el componente.
@@ -319,5 +385,15 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Método para mostrar errores en el formulario.
+   * 
+   * Este método activa la visualización de errores en el formulario marcando todos los campos como tocados.
+   */
+  public mostrarErrores() {
+    this.FormSolicitud?.markAllAsTouched?.();
+    this.cdr.detectChanges();
   }
 }

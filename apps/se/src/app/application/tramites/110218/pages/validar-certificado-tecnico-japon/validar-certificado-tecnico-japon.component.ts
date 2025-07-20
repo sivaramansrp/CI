@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PANTA_PASOS_VALIDAR, WizardComponent } from '@libs/shared/data-access-user/src';
+import { DatosPasos, ListaPasosWizard, PASOS,WizardComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Interfaz para definir la estructura de una acción de botón dentro del asistente.
@@ -31,7 +31,7 @@ export class ValidarCertificadoTecnicoJaponComponent {
   /**
    * Lista de pasos del asistente para la validación del certificado.
    */
-  pasosSolicitar: ListaPasosWizard[] = PANTA_PASOS_VALIDAR;
+  pasosSolicitar: ListaPasosWizard[] = PASOS;
 
   /**
    * Índice del paso actual en el asistente.

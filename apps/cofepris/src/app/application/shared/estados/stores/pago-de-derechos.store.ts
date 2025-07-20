@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
  * Creacion del estado inicial para la interfaz de tramite PagoBanco
  * @returns SolicitudPagoBanco
  */
-export interface pagoDerechosState {
+export interface PagoDerechosState {
   /**
    * claveReferencia
    * @type {string}
@@ -48,7 +48,7 @@ export interface pagoDerechosState {
 /**
  * Crea y retorna el estado inicial para el pago de derechos.
  *
- * @returns {pagoDerechosState} El estado inicial con los siguientes campos:
+ * @returns {PagoDerechosState} El estado inicial con los siguientes campos:
  * - claveReferencia: Clave de referencia del pago.
  * - cadenaDependencia: Cadena de la dependencia correspondiente.
  * - banco: Nombre del banco donde se realiza el pago.
@@ -57,7 +57,7 @@ export interface pagoDerechosState {
  * - importePago: Importe del pago realizado.
  * - estado: Estado actual del pago.
  */
-export function createInitialState(): pagoDerechosState {
+export function createInitialState(): PagoDerechosState {
   return {
     /**
      * claveReferencia
@@ -103,7 +103,7 @@ export function createInitialState(): pagoDerechosState {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'pagoDerechos', resettable: true })
-export class PagoDerechosStore extends Store<pagoDerechosState> {
+export class PagoDerechosStore extends Store<PagoDerechosState> {
   /**
    * Crea una instancia de PagoDerechosState.
    * @constructor

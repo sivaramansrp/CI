@@ -10,19 +10,6 @@
             "Numero de serie",
             "Condición de la mercancía"
         ],
-        "tableBody": [
-            {
-                "tbodyData": [
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    ""
-                ]
-            }
-        ]
+        "tableBody": []
     }
 }

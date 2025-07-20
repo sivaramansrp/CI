@@ -1,15 +1,16 @@
-import { AfterViewInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ConsultaioState } from '@libs/shared/data-access-user/src';
+import { DatosDeReporteAnnualComponent } from '../../components/datos-de-reporte-annual/datos-de-reporte-annual.component';
 import { GuardarDatosFormulario } from '../../models/programas-reporte.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { ProgramasReporteAnnualComponent } from '../../components/programas-reporte-annual/programas-reporte-annual.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
-import { TIPO_PERSONA } from '@libs/shared/data-access-user/src';
-import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 /**
@@ -18,15 +19,18 @@ import { takeUntil } from 'rxjs';
  */
 @Component({
   selector: 'app-datos',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    SolicitanteComponent,
+    ProgramasReporteAnnualComponent,
+    DatosDeReporteAnnualComponent,
+  ],
   templateUrl: './datos.component.html',
   styleUrl: './datos.component.scss',
 })
-export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
-  /**
-   * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
-   */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
-
+export class DatosComponent implements OnInit, OnDestroy {
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
   /** Subject para notificar la destrucción del componente. */
@@ -74,15 +78,6 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
           this.solicitudService.actualizarEstadoFormulario(resp);
         }
       });
-  }
-
-  /**
-   * Se ejecuta después de que la vista ha sido inicializada.
-   * Llama al método `obtenerTipoPersona` del componente SolicitanteComponent
-   * para establecer el tipo de persona como MORAL_NACIONAL.
-   */
-  ngAfterViewInit(): void {
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
   }
 
   /**

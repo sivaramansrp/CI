@@ -1,5 +1,5 @@
 <div class="container">
-  @if(indiceDePaso === 1 || indiceDePaso === 2) {
+  @if(indiceDePaso === 1) {
   <div class="row">
     <ng-titulo [titulo]="'Confirmar notificación'"></ng-titulo>
   </div>
@@ -10,7 +10,7 @@
   <app-notificacion-acto-administrativo></app-notificacion-acto-administrativo>
   } @if(indiceDePaso === 2) {
   <div class="row mt-5 mb-5">
-    <ng-titulo [titulo]="'Firmar solicitud'"></ng-titulo>
+    <ng-titulo [titulo]="'Firmar'"></ng-titulo>
     <firma-electronica
       [tipo]="''"
       (firma)="obtieneFirma($event)"
@@ -23,15 +23,8 @@
       <div class="pull-right">
         <button
           type="button"
-          name="modificarMercancias"
-          class="btn btn-default"
-        >
-          Cancelar
-        </button>
-        <button
-          type="button"
           name="eliminarMercancias"
-          class="btn btn-danger ms-2"
+          class="btn btn-primary ms-2"
           (click)="alContinuar()"
         >
           Continuar

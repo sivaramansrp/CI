@@ -12,7 +12,7 @@ describe('Tratados110203Component', () => {
   let query: Tramite110203Query;
 
   const mockSolicitudState = {
-    tratado: 'Tratado de Libre Comercio México',
+    tratado: 'Tratado de Libre Comercio México-,',
     bloque: 'ISLANDIA (REPUBLICA DE)',
     origen: 'México',
     destino: 'ISLANDIA (REPUBLICA DE)',

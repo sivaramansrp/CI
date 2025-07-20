@@ -168,4 +168,15 @@ describe('ModificacionMercanciaComponent', () => {
         expect(destroySpy).toHaveBeenCalled();
         expect(completeSpy).toHaveBeenCalled();
     });
+    it('should disable descripcionModificacion field when soloLectura is true', () => {
+        component.soloLectura = true;
+        component.inicializarEstadoFormulario();
+        expect(component.mercanciaFormulario.get('descripcionModificacion')?.disabled).toBe(true);
+    });
+
+    it('should enable descripcionModificacion field when soloLectura is false', () => {
+        component.soloLectura = false;
+        component.inicializarEstadoFormulario();
+        expect(component.mercanciaFormulario.get('descripcionModificacion')?.enabled).toBe(true);
+    });
 });

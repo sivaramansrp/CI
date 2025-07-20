@@ -4,8 +4,8 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <h1>Atender requerimiento</h1>
-      </div>
+         <h1>Atender requerimiento</h1>
+              </div>
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
     <div class="mb-5">
@@ -53,8 +53,7 @@
         </div>
       </div>
     }
-
-    @if(indice !== 2 && esAcuse === false) {
+       @if(indice !== 2 && esAcuse === false) {
         <btn-continuar
         [datos]="datosPasos"
         (continuarEvento)="getValorIndice($event)"
@@ -68,8 +67,8 @@
         (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
       ></app-reviewers-tabs>
     </div>
-
-    @if(indice === 2) {
+  
+      @if(indice === 2) {
     <btn-continuar
     [datos]="datosPasos"
     (continuarEvento)="getValorIndice($event)"

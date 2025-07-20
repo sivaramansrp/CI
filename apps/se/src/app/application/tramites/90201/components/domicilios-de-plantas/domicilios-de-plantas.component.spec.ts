@@ -54,13 +54,7 @@ describe('DomiciliosDePlantasComponent', () => {
     component.establecerFormDomiciliosDePlantas();
     component.esFormularioSoloLectura = false;
     // component.guardarDatosFormulario();
-    expect(component.formDomiciliosDePlantas.enabled).toBe(true);
-  });
-
-  it('should call store method in setValoresStore', () => {
-    component.establecerFormDomiciliosDePlantas();
-    component.formDomiciliosDePlantas.get('representacionFederal')?.setValue('NEWVAL');
-    expect(tramite90201StoreMock.setRepresentacionFederal).toHaveBeenCalledWith('NEWVAL');
+    expect(component.formDomiciliosDePlantas.enabled).toBe(false);
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {

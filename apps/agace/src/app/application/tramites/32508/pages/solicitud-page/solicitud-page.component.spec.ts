@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { PASOS } from '@ng-mf/data-access-user';
+import { provideHttpClient } from '@angular/common/http';
 
 // Mock WizardComponent
 @Component({ selector: 'wizard-component', template: '' })
@@ -19,6 +20,7 @@ describe('SolicitudPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [SolicitudPageComponent, MockWizardComponent],
+      providers: [provideHttpClient()],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
@@ -55,6 +57,18 @@ describe('SolicitudPageComponent', () => {
 
   it('should not update indice if valor is out of range in getValorIndice', () => {
     component.getValorIndice({ accion: 'cont', valor: 6 });
+    expect(component.indice).toBe(1);
+  });
+
+  it('should call wizardComponent.siguiente when getValorIndice is called with accion "cont"', () => {
+    component.wizardComponent = new MockWizardComponent() as any;
+    const spy = jest.spyOn(component.wizardComponent, 'siguiente');
+    component.getValorIndice({ accion: 'cont', valor: 2 });
+    expect(component.indice).toBe(2);
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should have indice default to 1', () => {
     expect(component.indice).toBe(1);
   });
 

@@ -43,7 +43,6 @@ import {
   TransporteDespacho,
 } from '../../../core/models/shared/agregar-transporte.model';
 import {
-  MSG_ELIMINA_ELEMENTO,
   MSG_MODIFICA_ELEMENTO,
   TITULO_MODAL_AVISO,
 } from '../../../core/enums/mensajes-modal-comunes.enum';
@@ -56,7 +55,8 @@ import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
-import { ICatalogo } from '../../../core/models/shared/catalogo.model';
+
+import { Catalogos } from '../../../core/models/shared/catalogo.model';
 import { InputCheckComponent } from '../input-check/input-check.component';
 import { InputHoraComponent } from '../input-hora/input-hora.component';
 import { Modal } from 'bootstrap';
@@ -209,7 +209,7 @@ export class TransporteComponent implements OnInit, OnChanges {
    * Lista del catalogo tipo de equipo
    * @type {ICatalogo[]}
    */
-  public tipoEquipoCatalogo: ICatalogo[] = [];
+  public tipoEquipoCatalogo: Catalogos[] = [];
 
   /**
    *  @description Lista de modelos de carros respecto al año.
@@ -281,6 +281,12 @@ export class TransporteComponent implements OnInit, OnChanges {
    * @description Indica si la acción es de modificación.
    */
   accionModificar: boolean = false;
+
+  /**
+   * bandera que controla el mostrar y ocultar los botones de guias 
+   */
+  limpiarGuiasBandera: boolean = false;
+  
 
   constructor(
     private fb: FormBuilder,
@@ -677,7 +683,7 @@ export class TransporteComponent implements OnInit, OnChanges {
   abrirModal(accion: string = ''): void {
     const MODAL_AGREGA = new Modal(this.agregarTransporte.nativeElement);
     MODAL_AGREGA.show();
-
+    this.limpiarGuias();
     if (accion === MODIFICAR_ITEM_TRANSPORTE) {
       this.accionModificar = true;
       const TIPO_TRANSPORTE = parseInt(
@@ -743,6 +749,8 @@ export class TransporteComponent implements OnInit, OnChanges {
     });
 
     this.observaciones.setValue('');
+
+    this.limpiarGuias();
   }
 
   /**
@@ -1010,13 +1018,20 @@ export class TransporteComponent implements OnInit, OnChanges {
       return;
     }
 
-    const GUIA = GUIA_MASTER ? GUIA_MASTER : GUIA_HOUSE;
+    const GUIA = GUIA_MASTER ? { guiaMasterAereo: GUIA_MASTER } : { guiaHouseAereo: GUIA_HOUSE };
     this.validaTransporteService
-      .getValidaTransporte(TIPO_TRANSPORTE.AEREO, { guiaHouseAereo: GUIA })
+      .getValidaTransporte(TIPO_TRANSPORTE.AEREO, GUIA)
       .pipe(
         tap((response) => {
           if (response.codigo === '00') {
             this.aereoForma.get('guia_valida')?.setValue(true);
+            if(GUIA_MASTER){
+              this.aereoForma.get('guia_master_aereo')?.disable();
+            }
+            if(GUIA_HOUSE) {
+              this.aereoForma.get('guia_house_aereo')?.disable();
+            }
+            this.limpiarGuiasBandera = true;
           } else {
             this.aereoForma.get('guia_master_aereo')?.setValue('');
             this.aereoForma.get('guia_house_aereo')?.setValue('');
@@ -1243,4 +1258,18 @@ export class TransporteComponent implements OnInit, OnChanges {
     this.cerrarModal();
     this.enviarTransporteTabla();
   }
+
+  /**
+   * Limpia y habilita las cajas para guia house y guia master
+   */
+  limpiarGuias(): void {
+    this.aereoForma.get('guia_master_aereo')?.setValue('');
+    this.aereoForma.get('guia_master_aereo')?.enable();
+    this.aereoForma.get('guia_house_aereo')?.setValue('');
+    this.aereoForma.get('guia_house_aereo')?.enable();
+    this.limpiarGuiasBandera = false;
+  }
+  
 }
+
+

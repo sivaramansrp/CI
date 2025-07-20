@@ -44,7 +44,7 @@ export class PaisDeOrigenComponent {
    */
   public paisDeProcedenciaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de origen',
-    derecha: 'País(es) seleccionados',
+    derecha: 'País(es) seleccionado(s)*',
   };
 
   /**
@@ -74,7 +74,7 @@ export class PaisDeOrigenComponent {
   /**
    * Configuración de los botones y sus respectivas funciones para manipular las selecciones.
    */
-  botonField = [
+  botones = [
     {
       btnNombre: 'Agregar todos',
       class: 'btn-primary',

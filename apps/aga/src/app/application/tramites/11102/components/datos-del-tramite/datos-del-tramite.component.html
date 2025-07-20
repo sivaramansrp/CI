@@ -15,10 +15,11 @@
               [required]="true"
               (change)="aduanaSeleccion()"
               name="aduana"
+              [isDisabled]="esFormularioSoloLectura "
             >
             </app-catalogo-select>
           </div>
-
+ 
           <div class="col-md-4" style="margin-top: 35px">
             <lib-input-check
               [id]="'organismoPublico'"
@@ -26,7 +27,7 @@
               [required]="true"
               formControlName="organismoPublico"
               (change)="organismoPublico()"
-              [isDisabled]="true"
+              [isDisabled]="esFormularioSoloLectura "
             ></lib-input-check>
           </div>
         </div>
@@ -75,7 +76,7 @@
             </button>
           </div>
         </div>
-
+ 
         <ng-titulo titulo="Datos del donante" />
         <div class="row">
           <div class="col-md-4">
@@ -141,7 +142,7 @@
             </div>
           </div>
         </div>
-
+ 
         <ng-titulo titulo="Domicilio fiscal" />
         <div class="row">
           <div class="col-md-4">
@@ -152,6 +153,7 @@
               formControlName="pais"
               (change)="paisSeleccion()"
               name="pais"
+              [isDisabled]="isPaisDisabled"
             ></app-catalogo-select>
           </div>
           <div class="col-md-4">
@@ -325,7 +327,7 @@
     </div>
   </form>
 </div>
-
+ 
 <div
   class="modal fade"
   id="modalAgregarMercancias"
