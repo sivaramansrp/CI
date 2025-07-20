@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_LLAVE_DE_PAGO_DE_DERECHO, RespuestaCatalogos, TituloComponent, dateLessThanOrEqualToday } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_LLAVE_DE_PAGO_DE_DERECHO, RespuestaCatalogos, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -157,7 +157,14 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
         this.pagoForm.get('llavePago')?.setValidators([Validators.required,
         Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
         Validators.maxLength(30)]);
+        
+        // Validar la fecha actual si ya tiene valor
+        const FECHA_ACTUAL = this.pagoForm.get('fechaPago')?.value;
+        if (FECHA_ACTUAL) {
+          this.validarFechaFutura(FECHA_ACTUAL);
+        }
       }
+      this.pagoForm.get('fechaPago')?.updateValueAndValidity();
     }
     /**
      * @inheritdoc
@@ -226,6 +233,11 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
           this.pagoForm.get('llavePago')?.disable();
           this.pagoForm.get('importePago')?.disable();
           this.pagoForm.get('fechaPago')?.enable();
+          // Validar la fecha actual si ya tiene valor
+          const FECHA_ACTUAL = this.pagoForm.get('fechaPago')?.value;
+          if (FECHA_ACTUAL) {
+            this.validarFechaFutura(FECHA_ACTUAL);
+          }
                
         }
         else if(!this.esFormularioSoloLectura && this.pagoForm.value.exentoPago === 'no') {
@@ -245,6 +257,7 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
           this.pagoForm.get('fechaPago')?.disable();
           this.pagoForm.get('fechaPago')?.clearValidators();
        }
+        this.pagoForm.get('fechaPago')?.updateValueAndValidity();
         }
 
           /**
@@ -255,7 +268,59 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
    */
   onFechaCambiada(fecha: string): void {
     this.pagoForm.patchValue({ fechaPago: fecha });
+    this.pagoForm.get('fechaPago')?.markAsTouched();
+    // Validar manualmente la fecha
+    this.validarFechaFutura(fecha);
+    this.pagoForm.get('fechaPago')?.updateValueAndValidity();
     this.actualizarPago();
+  }
+
+  /**
+   * @method validarFechaFutura
+   * @description Valida si la fecha seleccionada es futura y establece errores manualmente.
+   *
+   * @param {string} fecha - Fecha en formato DD/MM/YYYY.
+   */
+  validarFechaFutura(fecha: string): void {
+    if (!fecha) {
+      return;
+    }
+    
+    const FECHA_PARTES = fecha.split('/');
+    if (FECHA_PARTES.length !== 3) {
+      return;
+    }
+    
+    const DIA = parseInt(FECHA_PARTES[0], 10);
+    // Los meses en JavaScript son 0-indexed
+    const MES = parseInt(FECHA_PARTES[1], 10) - 1;
+    const ANIO = parseInt(FECHA_PARTES[2], 10);
+    
+    const FECHA_SELECCIONADA = new Date(ANIO, MES, DIA);
+    const FECHA_ACTUAL = new Date();
+    
+    // Normalizar las fechas para comparar solo días (sin horas)
+    FECHA_SELECCIONADA.setHours(0, 0, 0, 0);
+    FECHA_ACTUAL.setHours(0, 0, 0, 0);
+    
+    const CONTROL = this.pagoForm.get('fechaPago');
+    if (CONTROL) {
+      if (FECHA_SELECCIONADA > FECHA_ACTUAL) {
+        // Establecer error manualmente
+        CONTROL.setErrors({ futureDateNotAllowed: true });
+      } else {
+        // Limpiar el error específico pero mantener otros errores
+        const ERRORS = CONTROL.errors;
+        if (ERRORS) {
+          delete ERRORS['futureDateNotAllowed'];
+          if (Object.keys(ERRORS).length === 0) {
+            CONTROL.setErrors(null);
+          } else {
+            CONTROL.setErrors(ERRORS);
+          }
+        }
+      }
+    }
   }
 
   /**

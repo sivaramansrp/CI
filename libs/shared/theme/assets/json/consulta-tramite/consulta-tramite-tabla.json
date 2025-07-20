@@ -1,33 +1,36 @@
 [
     {
-        "id":"301",
+        "id": "301",
         "folioTramite": "0100001000320251005000002",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2023-10-01",
         "fechaActualizacion": "2023-10-05",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "301"
+        "numeroDeProcedimiento": "301",
+        "origin": "READ_PROCEDURE"
     },
     {
-        "id":"317",
+        "id": "317",
         "folioTramite": "3170001000320251005000002",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2023-10-01",
         "fechaActualizacion": "2023-10-05",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "317"
+        "numeroDeProcedimiento": "317",
+        "origin": "READ_PROCEDURE"
     },
     {
-        "id":"220102",
+        "id": "220102",
         "folioTramite": "3170001000320251005000002",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2023-10-01",
         "fechaActualizacion": "2023-10-05",
         "diasTranscurridos": "4",
         "departamento": "agricultura",
-        "numeroDeProcedimiento": "220102"
+        "numeroDeProcedimiento": "220102",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "290101",
@@ -36,7 +39,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AMECAFE",
-        "numeroDeProcedimiento": "290101"
+        "numeroDeProcedimiento": "290101",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260101",
@@ -45,7 +49,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260101"
+        "numeroDeProcedimiento": "260101",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "220102",
@@ -54,7 +59,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "CRT",
-        "numeroDeProcedimiento": "220102"
+        "numeroDeProcedimiento": "220102",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "280101",
@@ -63,7 +69,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "INAH",
-        "numeroDeProcedimiento": "280101"
+        "numeroDeProcedimiento": "280101",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "270101",
@@ -72,7 +79,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "INBAL",
-        "numeroDeProcedimiento": "270101"
+        "numeroDeProcedimiento": "270101",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "250101",
@@ -81,7 +89,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "PROFEPA",
-        "numeroDeProcedimiento": "250101"
+        "numeroDeProcedimiento": "250101",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "80101",
@@ -90,7 +99,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80101"
+        "numeroDeProcedimiento": "80101",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "40103",
@@ -99,7 +109,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "40103"
+        "numeroDeProcedimiento": "40103",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "240101",
@@ -108,7 +119,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240101"
+        "numeroDeProcedimiento": "240101",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "240102",
@@ -117,7 +129,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240102"
+        "numeroDeProcedimiento": "240102",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "40102",
@@ -126,7 +139,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "40102"
+        "numeroDeProcedimiento": "40102",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "40101",
@@ -135,7 +149,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "40101"
+        "numeroDeProcedimiento": "40101",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "40301",
@@ -144,7 +159,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "40301"
+        "numeroDeProcedimiento": "40301",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "230101",
@@ -153,7 +169,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEMARNAT",
-        "numeroDeProcedimiento": "230101"
+        "numeroDeProcedimiento": "230101",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "230201",
@@ -162,7 +179,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEMARNAT",
-        "numeroDeProcedimiento": "230201"
+        "numeroDeProcedimiento": "230201",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "230202",
@@ -171,7 +189,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEMARNAT",
-        "numeroDeProcedimiento": "230202"
+        "numeroDeProcedimiento": "230202",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130108",
@@ -180,7 +199,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SENER",
-        "numeroDeProcedimiento": "130108"
+        "numeroDeProcedimiento": "130108",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "220102",
@@ -189,7 +209,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "STPS",
-        "numeroDeProcedimiento": "220102"
+        "numeroDeProcedimiento": "220102",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "110101",
@@ -198,7 +219,8 @@
         "fechaActualizacion": "2020-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "110101"
+        "numeroDeProcedimiento": "110101",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130102",
@@ -207,7 +229,8 @@
         "fechaActualizacion": "2021-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130102"
+        "numeroDeProcedimiento": "130102",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "31601",
@@ -216,7 +239,8 @@
         "fechaActualizacion": "2022-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "31601"
+        "numeroDeProcedimiento": "31601",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "220401",
@@ -225,7 +249,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGRICULTURA",
-        "numeroDeProcedimiento": "220401"
+        "numeroDeProcedimiento": "220401",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "90201",
@@ -234,7 +259,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "90201"
+        "numeroDeProcedimiento": "90201",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "90305",
@@ -243,7 +269,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "90305"
+        "numeroDeProcedimiento": "90305",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "120602",
@@ -252,7 +279,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "120602"
+        "numeroDeProcedimiento": "120602",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "140103",
@@ -261,7 +289,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "140103"
+        "numeroDeProcedimiento": "140103",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "140201",
@@ -270,7 +299,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "140201"
+        "numeroDeProcedimiento": "140201",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260211",
@@ -279,7 +309,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260211"
+        "numeroDeProcedimiento": "260211",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260212",
@@ -288,7 +319,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260212"
+        "numeroDeProcedimiento": "260212",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260215",
@@ -297,7 +329,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260215"
+        "numeroDeProcedimiento": "260215",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "120101",
@@ -306,7 +339,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "120101"
+        "numeroDeProcedimiento": "120101",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "6001",
@@ -315,7 +349,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "6001"
+        "numeroDeProcedimiento": "6001",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "221601",
@@ -324,7 +359,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGRICULTURA",
-        "numeroDeProcedimiento": "221601"
+        "numeroDeProcedimiento": "221601",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130106",
@@ -333,7 +369,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130106"
+        "numeroDeProcedimiento": "130106",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "302",
@@ -342,7 +379,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "302"
+        "numeroDeProcedimiento": "302",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260303",
@@ -351,7 +389,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260303"
+        "numeroDeProcedimiento": "260303",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260401",
@@ -360,7 +399,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260401"
+        "numeroDeProcedimiento": "260401",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260402",
@@ -369,7 +409,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260402"
+        "numeroDeProcedimiento": "260402",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260501",
@@ -378,7 +419,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260501"
+        "numeroDeProcedimiento": "260501",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260502",
@@ -387,7 +429,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260502"
+        "numeroDeProcedimiento": "260502",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260503",
@@ -396,7 +439,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260503"
+        "numeroDeProcedimiento": "260503",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260512",
@@ -405,7 +449,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260512"
+        "numeroDeProcedimiento": "260512",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260514",
@@ -414,7 +459,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260514"
+        "numeroDeProcedimiento": "260514",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260603",
@@ -423,7 +469,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260603"
+        "numeroDeProcedimiento": "260603",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260604",
@@ -432,7 +479,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260604"
+        "numeroDeProcedimiento": "260604",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260605",
@@ -441,7 +489,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260605"
+        "numeroDeProcedimiento": "260605",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260902",
@@ -450,7 +499,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260902"
+        "numeroDeProcedimiento": "260902",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260903",
@@ -459,7 +509,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260903"
+        "numeroDeProcedimiento": "260903",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "261702",
@@ -468,7 +519,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "261702"
+        "numeroDeProcedimiento": "261702",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "270201",
@@ -477,7 +529,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "INBAL",
-        "numeroDeProcedimiento": "270201"
+        "numeroDeProcedimiento": "270201",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "110203",
@@ -486,7 +539,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "110203"
+        "numeroDeProcedimiento": "110203",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "110208",
@@ -495,7 +549,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "110208"
+        "numeroDeProcedimiento": "110208",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "120204",
@@ -504,7 +559,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "120204"
+        "numeroDeProcedimiento": "120204",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130103",
@@ -513,7 +569,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130103"
+        "numeroDeProcedimiento": "130103",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "104",
@@ -522,7 +579,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "104"
+        "numeroDeProcedimiento": "104",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "105",
@@ -531,7 +589,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "105"
+        "numeroDeProcedimiento": "105",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "40302",
@@ -540,7 +599,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "40302"
+        "numeroDeProcedimiento": "40302",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "221602",
@@ -549,7 +609,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGRICULTURA",
-        "numeroDeProcedimiento": "221602"
+        "numeroDeProcedimiento": "221602",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260701",
@@ -558,7 +619,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260701"
+        "numeroDeProcedimiento": "260701",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260918",
@@ -567,7 +629,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260918"
+        "numeroDeProcedimiento": "260918",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130301",
@@ -576,7 +639,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130301"
+        "numeroDeProcedimiento": "130301",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "140101",
@@ -585,7 +649,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "140101"
+        "numeroDeProcedimiento": "140101",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "231003",
@@ -594,7 +659,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEMARNAT",
-        "numeroDeProcedimiento": "231003"
+        "numeroDeProcedimiento": "231003",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260104",
@@ -603,7 +669,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260104"
+        "numeroDeProcedimiento": "260104",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "140102",
@@ -612,7 +679,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "140102"
+        "numeroDeProcedimiento": "140102",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "30505",
@@ -621,7 +689,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "30505"
+        "numeroDeProcedimiento": "30505",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "31602",
@@ -630,7 +699,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "31602"
+        "numeroDeProcedimiento": "31602",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "31603",
@@ -639,7 +709,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "31603"
+        "numeroDeProcedimiento": "31603",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260504",
@@ -648,7 +719,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260504"
+        "numeroDeProcedimiento": "260504",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260505",
@@ -657,7 +729,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260505"
+        "numeroDeProcedimiento": "260505",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260508",
@@ -666,7 +739,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260508"
+        "numeroDeProcedimiento": "260508",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260509",
@@ -675,7 +749,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260509"
+        "numeroDeProcedimiento": "260509",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260510",
@@ -684,7 +759,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260510"
+        "numeroDeProcedimiento": "260510",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260511",
@@ -693,7 +769,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260511"
+        "numeroDeProcedimiento": "260511",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260513",
@@ -702,7 +779,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260513"
+        "numeroDeProcedimiento": "260513",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260515",
@@ -711,7 +789,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260515"
+        "numeroDeProcedimiento": "260515",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260516",
@@ -720,7 +799,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260516"
+        "numeroDeProcedimiento": "260516",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260901",
@@ -729,7 +809,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260901"
+        "numeroDeProcedimiento": "260901",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260905",
@@ -738,7 +819,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260905"
+        "numeroDeProcedimiento": "260905",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260907",
@@ -747,7 +829,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260907"
+        "numeroDeProcedimiento": "260907",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260908",
@@ -756,7 +839,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260908"
+        "numeroDeProcedimiento": "260908",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260909",
@@ -765,7 +849,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260909"
+        "numeroDeProcedimiento": "260909",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260913",
@@ -774,7 +859,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260913"
+        "numeroDeProcedimiento": "260913",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260914",
@@ -783,7 +869,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260914"
+        "numeroDeProcedimiento": "260914",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260916",
@@ -792,7 +879,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260916"
+        "numeroDeProcedimiento": "260916",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260917",
@@ -801,7 +889,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260917"
+        "numeroDeProcedimiento": "260917",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "270301",
@@ -810,7 +899,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "INBAL",
-        "numeroDeProcedimiento": "270301"
+        "numeroDeProcedimiento": "270301",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "5601",
@@ -819,7 +909,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "5601"
+        "numeroDeProcedimiento": "5601",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "80103",
@@ -828,7 +919,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80103"
+        "numeroDeProcedimiento": "80103",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "80104",
@@ -837,7 +929,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80104"
+        "numeroDeProcedimiento": "80104",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "80105",
@@ -846,7 +939,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80105"
+        "numeroDeProcedimiento": "80105",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "90102",
@@ -855,7 +949,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "90102"
+        "numeroDeProcedimiento": "90102",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "90202",
@@ -864,7 +959,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "90202"
+        "numeroDeProcedimiento": "90202",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "120702",
@@ -873,7 +969,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "120702"
+        "numeroDeProcedimiento": "120702",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130302",
@@ -882,7 +979,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SENER",
-        "numeroDeProcedimiento": "130302"
+        "numeroDeProcedimiento": "130302",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "140218",
@@ -891,7 +989,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SENER",
-        "numeroDeProcedimiento": "140218"
+        "numeroDeProcedimiento": "140218",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "6502",
@@ -900,7 +999,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "6502"
+        "numeroDeProcedimiento": "6502",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "31401",
@@ -909,7 +1009,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "31401"
+        "numeroDeProcedimiento": "31401",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130107",
@@ -918,7 +1019,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130107"
+        "numeroDeProcedimiento": "130107",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "290301",
@@ -927,7 +1029,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AMECAFE",
-        "numeroDeProcedimiento": "290301"
+        "numeroDeProcedimiento": "290301",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "261601",
@@ -936,7 +1039,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "261601"
+        "numeroDeProcedimiento": "261601",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "290201",
@@ -945,7 +1049,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AMECAFE",
-        "numeroDeProcedimiento": "290201"
+        "numeroDeProcedimiento": "290201",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "150103",
@@ -954,7 +1059,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "150103"
+        "numeroDeProcedimiento": "150103",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "701",
@@ -963,17 +1069,19 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "701"
+        "numeroDeProcedimiento": "701",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id":"260704",
+        "id": "260704",
         "folioTramite": "0100001000320251005000002",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2023-10-01",
         "fechaActualizacion": "2023-10-05",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260704"  
+        "numeroDeProcedimiento": "260704",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "32503",
@@ -982,7 +1090,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "32503"
+        "numeroDeProcedimiento": "32503",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "202",
@@ -991,16 +1100,18 @@
         "fechaActualizacion": "2025-06-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "202"
+        "numeroDeProcedimiento": "202",
+        "origin": "READ_PROCEDURE"
     },
     {
-        "id":"150101",
+        "id": "150101",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2025-06-01",
         "fechaActualizacion": "2025-06-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "150101"
+        "numeroDeProcedimiento": "150101",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "120201",
@@ -1009,7 +1120,8 @@
         "fechaActualizacion": "2025-06-10",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "120201"
+        "numeroDeProcedimiento": "120201",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "120603",
@@ -1018,7 +1130,8 @@
         "fechaActualizacion": "2025-06-10",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "120603"
+        "numeroDeProcedimiento": "120603",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "31203",
@@ -1027,7 +1140,8 @@
         "fechaActualizacion": "2025-06-10",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "31203"
+        "numeroDeProcedimiento": "31203",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "240107",
@@ -1036,7 +1150,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240107"
+        "numeroDeProcedimiento": "240107",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "240108",
@@ -1045,7 +1160,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240108"
+        "numeroDeProcedimiento": "240108",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "240111",
@@ -1054,7 +1170,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240111"
+        "numeroDeProcedimiento": "240111",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "220701",
@@ -1063,7 +1180,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGRICULTURA",
-        "numeroDeProcedimiento": "220701"
+        "numeroDeProcedimiento": "220701",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "32516",
@@ -1072,16 +1190,18 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "32516"
+        "numeroDeProcedimiento": "32516",
+        "origin": "READ_PROCEDURE"
     },
-     {
+    {
         "id": "80102",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80102"
+        "numeroDeProcedimiento": "80102",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "230401",
@@ -1090,7 +1210,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEMARNAT",
-        "numeroDeProcedimiento": "230401"
+        "numeroDeProcedimiento": "230401",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260210",
@@ -1099,7 +1220,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260210"
+        "numeroDeProcedimiento": "260210",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260213",
@@ -1108,7 +1230,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260213"
+        "numeroDeProcedimiento": "260213",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260214",
@@ -1117,7 +1240,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260214"
+        "numeroDeProcedimiento": "260214",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260216",
@@ -1126,7 +1250,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260216"
+        "numeroDeProcedimiento": "260216",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "230301",
@@ -1135,7 +1260,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEMARNAT",
-        "numeroDeProcedimiento": "230301"
+        "numeroDeProcedimiento": "230301",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260702",
@@ -1144,7 +1270,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260702"
+        "numeroDeProcedimiento": "260702",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "80202",
@@ -1153,16 +1280,18 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80202"
+        "numeroDeProcedimiento": "80202",
+        "origin": "READ_PROCEDURE"
     },
-     {
+    {
         "id": "260102",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260102"
+        "numeroDeProcedimiento": "260102",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260208",
@@ -1171,7 +1300,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260208"
+        "numeroDeProcedimiento": "260208",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260207",
@@ -1180,7 +1310,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260207"
+        "numeroDeProcedimiento": "260207",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260209",
@@ -1189,7 +1320,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260209"
+        "numeroDeProcedimiento": "260209",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "31803",
@@ -1198,7 +1330,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "31803"
+        "numeroDeProcedimiento": "31803",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "11102",
@@ -1207,7 +1340,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "11102"
+        "numeroDeProcedimiento": "11102",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "140104",
@@ -1216,7 +1350,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "140104"
+        "numeroDeProcedimiento": "140104",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260219",
@@ -1225,7 +1360,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260219"
+        "numeroDeProcedimiento": "260219",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260201",
@@ -1234,7 +1370,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260201"
+        "numeroDeProcedimiento": "260201",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "110222",
@@ -1243,7 +1380,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "110222"
+        "numeroDeProcedimiento": "110222",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "110202",
@@ -1252,53 +1390,59 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "110202"
+        "numeroDeProcedimiento": "110202",
+        "origin": "READ_PROCEDURE"
     },
-     {
+    {
         "id": "240119",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240119"
+        "numeroDeProcedimiento": "240119",
+        "origin": "READ_PROCEDURE"
     },
-     {
+    {
         "id": "240120",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240120"
+        "numeroDeProcedimiento": "240120",
+        "origin": "READ_PROCEDURE"
     },
-  {
+    {
         "id": "240121",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240121"
-    }, 
-      {
+        "numeroDeProcedimiento": "240121",
+        "origin": "READ_PROCEDURE"
+    },
+    {
         "id": "230501",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEMARNAT",
-        "numeroDeProcedimiento": "230501"
+        "numeroDeProcedimiento": "230501",
+        "origin": "READ_PROCEDURE"
     },
-      {
+    {
         "id": "32515",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "32515"
-    } ,
+        "numeroDeProcedimiento": "32515",
+        "origin": "READ_PROCEDURE"
+    },
     {
         "id": "260919",
         "tipoDeTramite": "Datos generales del trámite",
@@ -1306,7 +1450,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260919"
+        "numeroDeProcedimiento": "260919",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "120202",
@@ -1315,7 +1460,8 @@
         "fechaActualizacion": "2025-06-17",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "120202"
+        "numeroDeProcedimiento": "120202",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "40202",
@@ -1324,8 +1470,9 @@
         "fechaActualizacion": "2025-06-17",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "40202"
-    } ,
+        "numeroDeProcedimiento": "40202",
+        "origin": "READ_PROCEDURE"
+    },
     {
         "id": "120301",
         "tipoDeTramite": "Datos generales del trámite",
@@ -1333,7 +1480,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "120301"
+        "numeroDeProcedimiento": "120301",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260202",
@@ -1342,7 +1490,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260202"
+        "numeroDeProcedimiento": "260202",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "80303",
@@ -1351,7 +1500,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80303"
+        "numeroDeProcedimiento": "80303",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "240114",
@@ -1360,7 +1510,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240114"
+        "numeroDeProcedimiento": "240114",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "240117",
@@ -1369,7 +1520,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240117"
+        "numeroDeProcedimiento": "240117",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "240118",
@@ -1378,7 +1530,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240118"
+        "numeroDeProcedimiento": "240118",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "140216",
@@ -1387,7 +1540,8 @@
         "fechaActualizacion": "2025-06-18",
         "diasTranscurridos": "4",
         "departamento": "SENER",
-        "numeroDeProcedimiento": "140216"
+        "numeroDeProcedimiento": "140216",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "220203",
@@ -1396,7 +1550,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGRICULTURA",
-        "numeroDeProcedimiento": "220203"
+        "numeroDeProcedimiento": "220203",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "90101",
@@ -1405,7 +1560,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "90101"
+        "numeroDeProcedimiento": "90101",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "110204",
@@ -1414,7 +1570,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "110204"
+        "numeroDeProcedimiento": "110204",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "220403",
@@ -1423,7 +1580,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGRICULTURA",
-        "numeroDeProcedimiento": "220403"
+        "numeroDeProcedimiento": "220403",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260304",
@@ -1432,7 +1590,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260304"
+        "numeroDeProcedimiento": "260304",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "32509",
@@ -1441,7 +1600,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "32509"
+        "numeroDeProcedimiento": "32509",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "240112",
@@ -1450,7 +1610,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240112"
+        "numeroDeProcedimiento": "240112",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260301",
@@ -1459,26 +1620,28 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260301"
+        "numeroDeProcedimiento": "260301",
+        "origin": "READ_PROCEDURE"
     },
-     {
+    {
         "id": "260601",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260601"
+        "numeroDeProcedimiento": "260601",
+        "origin": "READ_PROCEDURE"
     },
-
-        {
+    {
         "id": "220202",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGRICULTURA",
-        "numeroDeProcedimiento": "220202"
+        "numeroDeProcedimiento": "220202",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "80208",
@@ -1487,7 +1650,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80208"
+        "numeroDeProcedimiento": "80208",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "110205",
@@ -1496,7 +1660,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "110205"
+        "numeroDeProcedimiento": "110205",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "420102",
@@ -1505,7 +1670,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "420102"
+        "numeroDeProcedimiento": "420102",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "220703",
@@ -1514,7 +1680,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGRICULTURA",
-        "numeroDeProcedimiento": "220703"
+        "numeroDeProcedimiento": "220703",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260217",
@@ -1523,7 +1690,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260217"
+        "numeroDeProcedimiento": "260217",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260218",
@@ -1532,7 +1700,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260218"
+        "numeroDeProcedimiento": "260218",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "570101",
@@ -1541,7 +1710,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "570101"
+        "numeroDeProcedimiento": "570101",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "140105",
@@ -1550,7 +1720,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "140105"
+        "numeroDeProcedimiento": "140105",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "220404",
@@ -1559,7 +1730,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "agricultura",
-        "numeroDeProcedimiento": "220404"
+        "numeroDeProcedimiento": "220404",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "120401",
@@ -1568,7 +1740,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "120401"
+        "numeroDeProcedimiento": "120401",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260103",
@@ -1577,16 +1750,18 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260103"
+        "numeroDeProcedimiento": "260103",
+        "origin": "READ_PROCEDURE"
     },
-     {
+    {
         "id": "240106",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240106"
+        "numeroDeProcedimiento": "240106",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "32504",
@@ -1595,7 +1770,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "32504"
+        "numeroDeProcedimiento": "32504",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "240105",
@@ -1604,7 +1780,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240105"
+        "numeroDeProcedimiento": "240105",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "420101",
@@ -1613,9 +1790,9 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "420101"
+        "numeroDeProcedimiento": "420101",
+        "origin": "READ_PROCEDURE"
     },
-
     {
         "id": "220201",
         "tipoDeTramite": "Datos generales del trámite",
@@ -1623,7 +1800,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGRICULTURA",
-        "numeroDeProcedimiento": "220201"
+        "numeroDeProcedimiento": "220201",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "80203",
@@ -1632,7 +1810,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80203"
+        "numeroDeProcedimiento": "80203",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "110211",
@@ -1641,7 +1820,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "110211"
+        "numeroDeProcedimiento": "110211",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "319",
@@ -1650,7 +1830,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "319"
+        "numeroDeProcedimiento": "319",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "220102",
@@ -1659,7 +1840,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGRICULTURA",
-        "numeroDeProcedimiento": "220102"
+        "numeroDeProcedimiento": "220102",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "240122",
@@ -1668,7 +1850,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240122"
+        "numeroDeProcedimiento": "240122",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "240321",
@@ -1677,7 +1860,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240321"
+        "numeroDeProcedimiento": "240321",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260906",
@@ -1686,7 +1870,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260906"
+        "numeroDeProcedimiento": "260906",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "80308",
@@ -1695,7 +1880,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80308"
+        "numeroDeProcedimiento": "80308",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260203",
@@ -1704,7 +1890,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260203"
+        "numeroDeProcedimiento": "260203",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260204",
@@ -1713,7 +1900,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260204"
+        "numeroDeProcedimiento": "260204",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260205",
@@ -1722,7 +1910,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260205"
+        "numeroDeProcedimiento": "260205",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260206",
@@ -1731,7 +1920,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260206"
+        "numeroDeProcedimiento": "260206",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260302",
@@ -1740,7 +1930,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260302"
+        "numeroDeProcedimiento": "260302",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "32502",
@@ -1749,7 +1940,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "32502"
+        "numeroDeProcedimiento": "32502",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "110102",
@@ -1758,7 +1950,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "110102"
+        "numeroDeProcedimiento": "110102",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "120402",
@@ -1767,7 +1960,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "120402"
+        "numeroDeProcedimiento": "120402",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "120404",
@@ -1776,7 +1970,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "120404"
+        "numeroDeProcedimiento": "120404",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "120501",
@@ -1785,7 +1980,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "120501"
+        "numeroDeProcedimiento": "120501",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "120601",
@@ -1794,7 +1990,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "120601"
+        "numeroDeProcedimiento": "120601",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "231001",
@@ -1803,7 +2000,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEMARNAT",
-        "numeroDeProcedimiento": "231001"
+        "numeroDeProcedimiento": "231001",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260904",
@@ -1812,7 +2010,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260904"
+        "numeroDeProcedimiento": "260904",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260911",
@@ -1821,7 +2020,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260911"
+        "numeroDeProcedimiento": "260911",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260912",
@@ -1830,7 +2030,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260912"
+        "numeroDeProcedimiento": "260912",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "40201",
@@ -1839,7 +2040,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "40201"
+        "numeroDeProcedimiento": "40201",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "32501",
@@ -1848,7 +2050,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "32501"
+        "numeroDeProcedimiento": "32501",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260915",
@@ -1857,7 +2060,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260915"
+        "numeroDeProcedimiento": "260915",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "110209",
@@ -1866,7 +2070,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "110209"
+        "numeroDeProcedimiento": "110209",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "110210",
@@ -1875,7 +2080,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "110210"
+        "numeroDeProcedimiento": "110210",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "110218",
@@ -1884,7 +2090,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "110218"
+        "numeroDeProcedimiento": "110218",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130109",
@@ -1893,7 +2100,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130109"
+        "numeroDeProcedimiento": "130109",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130110",
@@ -1902,7 +2110,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130110"
+        "numeroDeProcedimiento": "130110",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130111",
@@ -1911,7 +2120,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130111"
+        "numeroDeProcedimiento": "130111",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130112",
@@ -1920,7 +2130,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130112"
+        "numeroDeProcedimiento": "130112",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130114",
@@ -1929,7 +2140,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130114"
+        "numeroDeProcedimiento": "130114",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130115",
@@ -1938,7 +2150,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130115"
+        "numeroDeProcedimiento": "130115",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130119",
@@ -1947,7 +2160,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130119"
+        "numeroDeProcedimiento": "130119",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130202",
@@ -1956,7 +2170,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130202"
+        "numeroDeProcedimiento": "130202",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130203",
@@ -1965,7 +2180,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130203"
+        "numeroDeProcedimiento": "130203",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130217",
@@ -1974,7 +2190,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130217"
+        "numeroDeProcedimiento": "130217",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "230901",
@@ -1983,7 +2200,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEMARNAT",
-        "numeroDeProcedimiento": "230901"
+        "numeroDeProcedimiento": "230901",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "230902",
@@ -1992,7 +2210,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEMARNAT",
-        "numeroDeProcedimiento": "230902"
+        "numeroDeProcedimiento": "230902",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130121",
@@ -2001,7 +2220,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SENER",
-        "numeroDeProcedimiento": "130121"
+        "numeroDeProcedimiento": "130121",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "140111",
@@ -2010,7 +2230,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SENER",
-        "numeroDeProcedimiento": "140111"
+        "numeroDeProcedimiento": "140111",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "140112",
@@ -2019,7 +2240,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SENER",
-        "numeroDeProcedimiento": "140112"
+        "numeroDeProcedimiento": "140112",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "31910",
@@ -2028,7 +2250,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "31910"
+        "numeroDeProcedimiento": "31910",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "420103",
@@ -2037,7 +2260,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "420103"
+        "numeroDeProcedimiento": "420103",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "630104",
@@ -2046,7 +2270,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "630104"
+        "numeroDeProcedimiento": "630104",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "630303",
@@ -2055,7 +2280,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "630303"
+        "numeroDeProcedimiento": "630303",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "630307",
@@ -2064,7 +2290,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "630307"
+        "numeroDeProcedimiento": "630307",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "31801",
@@ -2073,7 +2300,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "31801"
+        "numeroDeProcedimiento": "31801",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "32102",
@@ -2082,7 +2310,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "32102"
+        "numeroDeProcedimiento": "32102",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "221603",
@@ -2091,7 +2320,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGRICULTURA",
-        "numeroDeProcedimiento": "221603"
+        "numeroDeProcedimiento": "221603",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260703",
@@ -2100,7 +2330,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260703"
+        "numeroDeProcedimiento": "260703",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "261101",
@@ -2109,7 +2340,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "261101"
+        "numeroDeProcedimiento": "261101",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "261103",
@@ -2118,7 +2350,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "261103"
+        "numeroDeProcedimiento": "261103",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "261401",
@@ -2127,7 +2360,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "261401"
+        "numeroDeProcedimiento": "261401",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "261402",
@@ -2136,7 +2370,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "261402"
+        "numeroDeProcedimiento": "261402",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "261701",
@@ -2145,7 +2380,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "261701"
+        "numeroDeProcedimiento": "261701",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "80210",
@@ -2154,7 +2390,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80210"
+        "numeroDeProcedimiento": "80210",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "80211",
@@ -2163,7 +2400,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80211"
+        "numeroDeProcedimiento": "80211",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130104",
@@ -2172,7 +2410,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130104"
+        "numeroDeProcedimiento": "130104",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130105",
@@ -2181,7 +2420,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130105"
+        "numeroDeProcedimiento": "130105",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130113",
@@ -2190,7 +2430,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130113"
+        "numeroDeProcedimiento": "130113",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "240305",
@@ -2199,7 +2440,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240305"
+        "numeroDeProcedimiento": "240305",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "32201",
@@ -2208,7 +2450,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "32201"
+        "numeroDeProcedimiento": "32201",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "32508",
@@ -2217,7 +2460,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "32508"
+        "numeroDeProcedimiento": "32508",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "10302",
@@ -2226,7 +2470,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "10302"
+        "numeroDeProcedimiento": "10302",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "11204",
@@ -2235,7 +2480,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "11204"
+        "numeroDeProcedimiento": "11204",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "80205",
@@ -2244,7 +2490,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80205"
+        "numeroDeProcedimiento": "80205",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "80206",
@@ -2253,7 +2500,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80206"
+        "numeroDeProcedimiento": "80206",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "80207",
@@ -2262,7 +2510,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80207"
+        "numeroDeProcedimiento": "80207",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "220702",
@@ -2271,7 +2520,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGRICULTURA",
-        "numeroDeProcedimiento": "220702"
+        "numeroDeProcedimiento": "220702",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "90302",
@@ -2280,7 +2530,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "90302"
+        "numeroDeProcedimiento": "90302",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "80316",
@@ -2289,7 +2540,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80316"
+        "numeroDeProcedimiento": "80316",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "31101",
@@ -2298,7 +2550,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "31101"
+        "numeroDeProcedimiento": "31101",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130401",
@@ -2307,7 +2560,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130401"
+        "numeroDeProcedimiento": "130401",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "220402",
@@ -2316,7 +2570,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGRICULTURA",
-        "numeroDeProcedimiento": "220402"
+        "numeroDeProcedimiento": "220402",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "11201",
@@ -2325,7 +2580,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "11201"
+        "numeroDeProcedimiento": "11201",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "11202",
@@ -2334,7 +2590,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "11202"
+        "numeroDeProcedimiento": "11202",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "110212",
@@ -2343,7 +2600,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "110212"
+        "numeroDeProcedimiento": "110212",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "110214",
@@ -2352,7 +2610,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "110214"
+        "numeroDeProcedimiento": "110214",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "110216",
@@ -2361,16 +2620,18 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "110216"
+        "numeroDeProcedimiento": "110216",
+        "origin": "READ_PROCEDURE"
     },
     {
-         "id":"120403",
+        "id": "120403",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2025-06-01",
         "fechaActualizacion": "2025-06-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "120403"
+        "numeroDeProcedimiento": "120403",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "231002",
@@ -2379,7 +2640,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEMARNAT",
-        "numeroDeProcedimiento": "231002"
+        "numeroDeProcedimiento": "231002",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "11101",
@@ -2388,16 +2650,18 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "11101"
+        "numeroDeProcedimiento": "11101",
+        "origin": "READ_PROCEDURE"
     },
-     {
+    {
         "id": "6403",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "6403"
+        "numeroDeProcedimiento": "6403",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "80314",
@@ -2406,7 +2670,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80314"
+        "numeroDeProcedimiento": "80314",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "90304",
@@ -2415,7 +2680,8 @@
         "fechaActualizacion": "2023-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "90304"
+        "numeroDeProcedimiento": "90304",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "31301",
@@ -2424,7 +2690,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "31301"
+        "numeroDeProcedimiento": "31301",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "260910",
@@ -2433,44 +2700,49 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260910"
+        "numeroDeProcedimiento": "260910",
+        "origin": "READ_PROCEDURE"
     },
-     {
-    "id": "140205",
-    "tipoDeTramite": "Datos generales del trámite",
-    "fecha": "2025-06-17",
-    "fechaActualizacion": "2025-06-17",
-    "diasTranscurridos": "4",
-    "departamento": "SE",
-    "numeroDeProcedimiento": "140205"
-  },
-  {
-    "id": "110217",
-    "tipoDeTramite": "Datos generales del trámite",
-    "fecha": "2025-06-17",
-    "fechaActualizacion": "2025-06-17",
-    "diasTranscurridos": "4",
-    "departamento": "SE",
-    "numeroDeProcedimiento": "110217"
-  },
-  {
-    "id": "32507",
-    "tipoDeTramite": "Datos generales del trámite",
-    "fecha": "2024-11-01",
-    "fechaActualizacion": "2024-11-07",
-    "diasTranscurridos": "4",
-    "departamento": "AGACE",
-    "numeroDeProcedimiento": "32507"
-  },
-   {
-        "id":"32505",
+    {
+        "id": "140205",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-17",
+        "fechaActualizacion": "2025-06-17",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "140205",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "110217",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-17",
+        "fechaActualizacion": "2025-06-17",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "110217",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "32507",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32507",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "32505",
         "folioTramite": "3170001000320251005000002",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2023-10-01",
         "fechaActualizacion": "2023-10-05",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "32505"
+        "numeroDeProcedimiento": "32505",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "11105",
@@ -2479,7 +2751,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "11105"
+        "numeroDeProcedimiento": "11105",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "80301",
@@ -2488,7 +2761,8 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80301"
+        "numeroDeProcedimiento": "80301",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "130120",
@@ -2497,271 +2771,406 @@
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "130120"
+        "numeroDeProcedimiento": "130120",
+        "origin": "READ_PROCEDURE"
     },
     {
-      "id": "570102",
+        "id": "570102",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "570102"  
+        "numeroDeProcedimiento": "570102",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "240123",
+        "id": "240123",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240123"  
+        "numeroDeProcedimiento": "240123",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "240308",
+        "id": "240308",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240308"  
+        "numeroDeProcedimiento": "240308",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "240405",
+        "id": "240405",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240405"  
+        "numeroDeProcedimiento": "240405",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "240407",
+        "id": "240407",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240407"  
+        "numeroDeProcedimiento": "240407",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "240411",
+        "id": "240411",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240411"  
+        "numeroDeProcedimiento": "240411",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "130201",
+        "id": "130201",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SENER",
-        "numeroDeProcedimiento": "130201"  
+        "numeroDeProcedimiento": "130201",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "130204",
+        "id": "130204",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SENER",
-        "numeroDeProcedimiento": "130204"  
+        "numeroDeProcedimiento": "130204",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "300105",
+        "id": "300105",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SENER",
-        "numeroDeProcedimiento": "300105"  
+        "numeroDeProcedimiento": "300105",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "324",
+        "id": "324",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "324"  
+        "numeroDeProcedimiento": "324",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "630103",
+        "id": "630103",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "630103"  
+        "numeroDeProcedimiento": "630103",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "220103",
+        "id": "220103",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGRICULTURA",
-        "numeroDeProcedimiento": "220103"  
+        "numeroDeProcedimiento": "220103",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "260507",
+        "id": "260507",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260507"  
+        "numeroDeProcedimiento": "260507",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "250102",
+        "id": "250102",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "PROFEPA",
-        "numeroDeProcedimiento": "250102"  
+        "numeroDeProcedimiento": "250102",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "250103",
+        "id": "250103",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "PROFEPA",
-        "numeroDeProcedimiento": "250103"  
+        "numeroDeProcedimiento": "250103",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "240311",
+        "id": "240311",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
-        "numeroDeProcedimiento": "240311"  
+        "numeroDeProcedimiento": "240311",
+        "origin": "READ_PROCEDURE"
     },
     {
-        "id":"30401",
+        "id": "30401",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2023-10-01",
         "fechaActualizacion": "2023-10-05",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "30401"
+        "numeroDeProcedimiento": "30401",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "80302",
+        "id": "80302",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80302"  
+        "numeroDeProcedimiento": "80302",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "31501",
+        "id": "31501",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "31501"  
+        "numeroDeProcedimiento": "31501",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "6102",
+        "id": "6102",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "6102"  
+        "numeroDeProcedimiento": "6102",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "6402",
+        "id": "6402",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "6402"  
+        "numeroDeProcedimiento": "6402",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "31202",
+        "id": "31202",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "31202"  
+        "numeroDeProcedimiento": "31202",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "32101",
+        "id": "32101",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "32101"  
+        "numeroDeProcedimiento": "32101",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "80306",
+        "id": "80306",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "SE",
-        "numeroDeProcedimiento": "80306"  
+        "numeroDeProcedimiento": "80306",
+        "origin": "READ_PROCEDURE"
     },
     {
-        "id":"220501",
+        "id": "220501",
         "folioTramite": "0100001000320251005000002",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2023-10-01",
         "fechaActualizacion": "2023-10-05",
         "diasTranscurridos": "4",
         "departamento": "AGRICULTURA",
-        "numeroDeProcedimiento": "220501"
+        "numeroDeProcedimiento": "220501",
+        "origin": "READ_PROCEDURE"
     },
     {
-        "id":"32514",
+        "id": "32514",
         "folioTramite": "099226136147361192499352",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2023-10-01",
         "fechaActualizacion": "2023-10-05",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "32514"
+        "numeroDeProcedimiento": "32514",
+        "origin": "READ_PROCEDURE"
     },
     {
-       "id": "30506",
+        "id": "30506",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "30506" 
+        "numeroDeProcedimiento": "30506",
+        "origin": "READ_PROCEDURE"
     },
     {
-        "id":"32511",
+        "id": "32511",
         "folioTramite": "0100001000320251005000002",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2025-10-07",
         "fechaActualizacion": "2025-10-12",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "32511"
+        "numeroDeProcedimiento": "32511",
+        "origin": "READ_PROCEDURE"
     },
     {
-        "id":"33303",
+        "id": "33303",
         "folioTramite": "0100001000320251005000002",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2025-10-07",
         "fechaActualizacion": "2025-10-12",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "33303"
+        "numeroDeProcedimiento": "33303",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "33302",
+        "folioTramite": "3170001000320251005000002",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "33302",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "32607",
+        "folioTramite": "3170001000320251005000002",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32607",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "32604",
+        "folioTramite": "0100001000320251005000002",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-10-07",
+        "fechaActualizacion": "2025-10-12",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32604",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "103",
+        "folioTramite": "0100001000320251005000002",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-10-07",
+        "fechaActualizacion": "2025-10-12",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "103",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "40403",
+        "folioTramite": "0100001000320251005000002",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-10-07",
+        "fechaActualizacion": "2025-10-12",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "40403",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "110221",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-17",
+        "fechaActualizacion": "2025-06-17",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "110221",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "110223",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-17",
+        "fechaActualizacion": "2025-06-17",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "110223",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "31201",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-17",
+        "fechaActualizacion": "2025-06-17",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "31201",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "40402",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-17",
+        "fechaActualizacion": "2025-06-17",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "40402",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "11106",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-17",
+        "fechaActualizacion": "2025-06-17",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "11106",
+        "origin": "READ_PROCEDURE"
     }
 ]

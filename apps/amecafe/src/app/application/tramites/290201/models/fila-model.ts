@@ -40,3 +40,4 @@ export interface FilaData2 {
         correoelectronico: string; // Dirección de correo electrónico.
     };
 }
+

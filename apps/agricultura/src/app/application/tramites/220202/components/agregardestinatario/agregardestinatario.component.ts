@@ -127,7 +127,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       segundoApellido: [''],
       razonSocial: ['', Validators.required],
       pais: ['1', Validators.required],
-      codigoPostal: ['', Validators.required],
+      codigoPostal: ['', [Validators.minLength(5), Validators.maxLength(5)]],
       estado: ['', Validators.required],
       municipio: [''],
       colonia: [''],
@@ -237,7 +237,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       const LISTA_DINAMICA: TercerosrelacionadosdestinoTable[] = [];
       LISTA_DINAMICA.push(this.destinatarioForm.value as TercerosrelacionadosdestinoTable);
       this.agriculturaApiService.updateTercerosRelacionado(LISTA_DINAMICA as TercerosrelacionadosdestinoTable[]);
-      this.router.navigate(['/pago/certificado-zoosanitario/zoosanitario']);
+      this.router.navigate(['/pago/certificado-fitosanitario/agricultura']);
     } else {
       this.destinatarioForm.markAllAsTouched();
     }
@@ -262,7 +262,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method onCancelarDestinatario
    */
   onCancelarDestinatario(): void {
-    this.router.navigate(['/pago/certificado-zoosanitario/zoosanitario']);
+    this.router.navigate(['/pago/certificado-fitosanitario/agricultura']);
   }
 
   /**

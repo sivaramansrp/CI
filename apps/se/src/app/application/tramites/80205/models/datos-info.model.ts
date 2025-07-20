@@ -225,7 +225,7 @@ export interface AmpliacionServiciosState {
   /**
    * Lista de aduanas seleccionadas para el ingreso.
    */
-  aduanaDeIngresoSelecion: Catalogo[];
+  aduanaDeIngresoSelecion: Catalogo;
 
   /**
    * RFC (Registro Federal de Contribuyentes) de la empresa.
