@@ -431,7 +431,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
         categoria: CategoriaMensaje.ERROR,
         modo: 'modal',
         titulo: '',
-        mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+        mensaje: '¿Desea eliminar el registro seleccionado?',
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: 'Cancelar'
@@ -1021,7 +1021,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       
       expect(component.abrirMultipleSeleccionPopup).toHaveBeenCalledWith(
         '', 
-        'Debes seleccionar al menos un registro para eliminar.'
+        'Seleccione un registro.'
       );
     });
 

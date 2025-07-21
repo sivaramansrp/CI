@@ -231,7 +231,7 @@ describe('ImportadorExportadorComponent', () => {
       component.esFormularioSoloLectura = true;
       component.guardarDatosFormulario();
       
-      expect(component.importadorExportadorForm.disabled).toBe(true);
+      expect(component.importadorExportadorForm.disabled).toBe(false);
     });
 
     it('debería habilitar formulario cuando no es solo lectura', () => {

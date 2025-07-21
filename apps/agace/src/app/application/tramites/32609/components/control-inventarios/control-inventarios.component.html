@@ -137,7 +137,7 @@
   data-bs-backdrop="static"
   #registroControlInventariosModalForm
 >
-  <div class="modal-dialog modal-dialog-centered modal-md">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title mt-0">Modificar inventario</h4>
@@ -145,11 +145,6 @@
 
       <div class="modal-body">
         <form [formGroup]="modificarRegistroControlInventariosForm">
-  <div class="row mb-3">
-    <div class="col-md-12">
-      <label class="form-label text-left">"Mencione el nombre, RFC y número de empleados que le proveen las empresas que le prestan el servicio de subcontratación*:</label>
-    </div>
-  </div>
         <div class="row mb-3">
           <div class="col-md-6">
             <div class="form-group">
@@ -166,6 +161,22 @@
             </div>
           </div>
           <div class="col-md-6">
+                        
+            <div class="form-group">
+              <lib-input-check
+              [id]="'modificarCumpleAnexo24'"
+              [label]="cumpleAnexoNota"
+              [required]="false"
+              [reverse]="false"
+              formControlName="modificarCumpleAnexo24"
+              [isDisabled]="esFormularioSoloLectura"
+              ></lib-input-check>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
             <div class="form-group">
               <label for="modificarLugarRadicacion" class="form-label"
                 >Lugar de radicación*:</label
@@ -177,21 +188,6 @@
                 formControlName="modificarLugarRadicacion"
               />
              
-            </div>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <div class="col-md-8">
-            <div class="form-group">
-              <lib-input-check
-              [id]="'modificarCumpleAnexo24'"
-              [label]="cumpleAnexoNota"
-              [required]="false"
-              [reverse]="false"
-              formControlName="modificarCumpleAnexo24"
-              [isDisabled]="esFormularioSoloLectura"
-              ></lib-input-check>
             </div>
           </div>
         </div>
