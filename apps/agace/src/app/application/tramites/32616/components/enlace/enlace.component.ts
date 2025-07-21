@@ -6,12 +6,13 @@ import { TableBodyData, TableComponent } from '@ng-mf/data-access-user';
 import { map, takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { SolicitudDeRegistroInvocarService } from '../../services/solicitudDeRegistroInvocar/solicitud-de-registro-invocar.service';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite32616TercerosQuery } from '../../estados/queries/terceros.query';
 import enlace from '@libs/shared/theme/assets/json/31601/enlace.json';
 import enlaceData from '@libs/shared/theme/assets/json/31601/enlace-data.json';
-
+import operativo from '@libs/shared/theme/assets/json/32616/operativo-tabla.json';
 /**
  * Componente encargado de gestionar la información del enlace del trámite 32616.
  */
@@ -37,7 +38,7 @@ export class EnlaceComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de la tabla de enlace.
    */
-  public enlanceBodyData: TableBodyData[] = [];
+  public enlanceBodyData: TableBodyData[] = operativo.operativo.tableBody;
 
   /**
    * Datos de la tabla de enlace cargados desde archivo JSON.
@@ -91,6 +92,7 @@ export class EnlaceComponent implements OnInit, OnDestroy {
     private tramite32616Store: Tramite32616TercerosStore,
     private tramite32616Query: Tramite32616TercerosQuery,
     private consultaioQuery: ConsultaioQuery,
+    private service: SolicitudDeRegistroInvocarService,
   ) {
    this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -237,6 +239,7 @@ export class EnlaceComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.tramite32616Store[metodoNombre] as (value: string) => void)(VALOR);
   }
+
 
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.
