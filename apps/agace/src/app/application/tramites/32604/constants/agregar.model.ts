@@ -1,3 +1,5 @@
+import { SeccionSociosIC } from "../models/empresas-comercializadoras.model";
+
 export interface Aduanas {
   descripcion: string;
   id: number;
@@ -9,7 +11,7 @@ export interface RespuestaAduanas {
   message: string;
 }
 
-export interface Instalaciones {
+export interface Instalaciones extends SeccionSociosIC {
   id: number;
   entidadFederativa: string;
   municipio: string;
