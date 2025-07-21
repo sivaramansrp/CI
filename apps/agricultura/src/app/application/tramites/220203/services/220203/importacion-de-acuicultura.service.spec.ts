@@ -69,7 +69,7 @@ describe('ImportacionDeAcuiculturaService', () => {
 
   it('should update formularioPago in store', () => {
     const payload = { cadena: 'value' };
-    service.actualizarFormularioPago(payload as any);
+    service.actualizarPagoDeDerechos(payload as any);
     expect(mockAcuiculturaStore.actualizarFormularioPago).toHaveBeenCalledWith(payload);
   });
 
