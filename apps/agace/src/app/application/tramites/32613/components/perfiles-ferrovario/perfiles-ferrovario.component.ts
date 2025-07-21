@@ -1,27 +1,16 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { INFORMACION_GENERAL, OEA_TEMPLATE_ARRAY, OTROS_PROGRAMAS_TEMPLATE_ARRAY, PIP_TEMPLATE_ARRAY, TEMPLATE_1_ARRAY, TEMPLATE_2_ARRAY } from '../../constantes/constantes32613.enum';
+import { INFORMACION_GENERAL, OEA_TEMPLATE_ARRAY, OTROS_PROGRAMAS_TEMPLATE_ARRAY, PERFILES_ACCORDION_SECCIONES, PIP_TEMPLATE_ARRAY, TEMPLATE_1_ARRAY, TEMPLATE_2_ARRAY } from '../../constantes/constantes32613.enum';
 import { RubroTransporteFerrovario32613State, Tramite32613Store } from '../../../../estados/tramites/tramite32613.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CapacitacionEnSeguridadComponent } from '../capacitacion-en-seguridad/capacitacion-en-seguridad.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ConsultaioState } from '@ng-mf/data-access-user';
-import { ControlesDeAccesoFisicaComponent } from '../controles-de-acceso-fisica/controles-de-acceso-fisica.component';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { GestionAduaneraComponent } from '../gestion-aduanera/gestion-aduanera.component';
-import { ManejoEInvestigacionComponent } from '../manejo-e-investigacion/manejo-e-investigacion.component';
-import { PlaneacionDeLaSeguridadComponent } from '../planeacion-de-la-seguridad/planeacion-de-la-seguridad.component';
 import { RowTypeFormInput } from '../../../../shared/models/row-type-form-input.model';
 import { RowTypeFormInputComponent } from '../../../../shared/components/row-type-form-input/row-type-form-input.component';
 import { SeccionDinamica } from '@libs/shared/data-access-user/src/core/models/shared/seccion-dinamica.model';
 import { SeccionDinamicaComponent } from '../../../../shared/components/seccion-dinamica/seccion-dinamica.component';
-import { SeguridadDeLaInformacionComponent } from '../seguridad-de-la-informacion/seguridad-de-la-informacion.component';
-import { SeguridadDeLosEquiposComponent } from '../seguridad-de-los-equipos/seguridad-de-los-equipos.component';
-import { SeguridadDeProcesosComponent } from '../seguridad-de-procesos/seguridad-de-procesos.component';
-import { SeguridadDelPersonalComponent } from '../seguridad-del-personal/seguridad-del-personal.component';
-import { SeguridadFisicaComponent } from '../seguridad-fisica/seguridad-fisica.component';
-import { SociosComercialsComponent } from '../socios-comercials/socios-comercials.component';
 import { Tramite32613Query } from '../../../../estados/queries/tramite32613.query';
 
 /** Componente para gestionar el formulario dinámico de perfiles ferroviarios en el trámite 32613. */
@@ -111,52 +100,7 @@ export class PerfilesFerrovarioComponent implements OnInit, AfterViewInit, OnDes
   public mostarCustomtemplate5: boolean = false;
 
   /** Arreglo con la configuración de las secciones dinámicas y sus componentes para el formulario de perfiles ferroviarios. */
-  public perfilesSecciones: SeccionDinamica[] = [
-    {
-      titulo: '1. Planeación de la seguridad en la cadena de suministros',
-      componentClase: PlaneacionDeLaSeguridadComponent
-    },
-    {
-      titulo: '2. Seguridad física',
-      componentClase: SeguridadFisicaComponent
-    },
-    {
-      titulo: '3. Controles de acceso física',
-      componentClase: ControlesDeAccesoFisicaComponent
-    },
-    {
-      titulo: '4. Socios comerciales',
-      componentClase: SociosComercialsComponent
-    },
-    {
-      titulo: '5. Seguridad de procesos',
-      componentClase: SeguridadDeProcesosComponent
-    },
-    {
-      titulo: '6. Gestión aduanera',
-      componentClase: GestionAduaneraComponent
-    },
-    {
-      titulo: '7. Seguridad de los equipos ferrovarios de arrastre y vías férreas.',
-      componentClase: SeguridadDeLosEquiposComponent
-    },
-    {
-      titulo: '8. Seguridad del personal',
-      componentClase: SeguridadDelPersonalComponent
-    },
-    {
-      titulo: '9. Seguridad de la información y documentación',
-      componentClase: SeguridadDeLaInformacionComponent
-    },
-    {
-      titulo: '10. Capacitación en seguridad y concientización',
-      componentClase: CapacitacionEnSeguridadComponent
-    },
-    {
-      titulo: '11. Manejo e investigación de incidentes',
-      componentClase: ManejoEInvestigacionComponent
-    }
-  ];
+  public perfilesSecciones: SeccionDinamica[] = PERFILES_ACCORDION_SECCIONES;
 
   /** Estado de la solicitud de la tramite 32613.*/
   public rubroTransporteFerrovariostate!: RubroTransporteFerrovario32613State;

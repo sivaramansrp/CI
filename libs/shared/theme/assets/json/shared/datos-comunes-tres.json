@@ -56,5 +56,8 @@
   "miembroApellidoMaterno": "García",
   "miembroNombreCompleto": "Juan Pérez García",
   "senaleSiElSAT": 1,
-  "senaleSiIngresaMensualmente": 1 
+  "senaleSiIngresaMensualmente": 1,
+  "archivoExtranjero": "clientesyproveedores.xlsx",
+  "proveedoresExtranjero": "proveedores.xlsx"
+
 }

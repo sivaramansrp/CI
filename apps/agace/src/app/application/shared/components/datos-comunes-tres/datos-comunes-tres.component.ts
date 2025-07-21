@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { CONTROL_INVENTARIOS, DATOS_COMUNES, DOMICILIOS_CONFIGURACION_COLUMNAS, INVENTARIOS_CONFIGURACION, MIEMBRO_DE_LA_EMPRESA, MODAL_MIEMBRO_DE_LA_EMPRESA, MODIFICAR_INSTALACIONES, NUMERO_DE_EMPLEADOS, NUMERO_DE_EMPLEADOS_CONFIGURACION, PRINCIPALES_INSTALACIONES, PRINCIPALES_INSTALACIONES_COLUMNA, SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS } from '../../constants/datos-comunes-tres.enum';
+import { CONTROL_INVENTARIOS, DATOS_COMUNES, DOMICILIOS_CONFIGURACION_COLUMNAS, DOMICILIO_TABLA, INVENTARIOS_CONFIGURACION, MIEMBRO_DE_LA_EMPRESA, MIEMBRO_DE_LA_EMPRESA_TABLA, MODAL_MIEMBRO_DE_LA_EMPRESA, MODIFICAR_INSTALACIONES, NUMERO_DE_EMPLEADOS, NUMERO_DE_EMPLEADOS_CONFIGURACION, NUMERO_DE_EMPLEADOS_TABLA, PRINCIPALES_INSTALACIONES, PRINCIPALES_INSTALACIONES_COLUMNA, SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS, SI_NO_OPCIONES } from '../../constants/datos-comunes-tres.enum';
 import { Catalogo, ConfiguracionAporteColumna, ConfiguracionColumna, InputRadioComponent, ModeloDeFormaDinamica, TablaConEntradaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { DatosComunesTresState, DatosComunesTresStore } from '../../estados/stores/datos-comunes-tres.store';
 import { Domicilios, Inventarios, NumeroDeEmpleados, PrincipalesInstalaciones, SeccionSociosIC } from '../../models/datos-comunes-tres.model';
@@ -103,7 +103,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   public numeroDeEmpleadosConfiguracionColumnas: ConfiguracionColumna<NumeroDeEmpleados>[] = NUMERO_DE_EMPLEADOS_CONFIGURACION;
 
   /** Lista completa de número de empleados */
-  public numeroDeEmpleadosLista: NumeroDeEmpleados[] = [] as NumeroDeEmpleados[];
+  public numeroDeEmpleadosLista: NumeroDeEmpleados[] = NUMERO_DE_EMPLEADOS_TABLA as NumeroDeEmpleados[];
 
   /** Lista completa de número de empleados */
   public instalacionesTablaDatos: PrincipalesInstalaciones[] = [] as PrincipalesInstalaciones[];
@@ -136,10 +136,10 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   public instalacionesConfiguracionColumnas: ConfiguracionColumna<PrincipalesInstalaciones>[] = PRINCIPALES_INSTALACIONES_COLUMNA;
 
   /** Lista de socios IC registrados */
-  public listaSeccionSociosIC: SeccionSociosIC[] = [] as SeccionSociosIC[];
+  public listaSeccionSociosIC: SeccionSociosIC[] = MIEMBRO_DE_LA_EMPRESA_TABLA as SeccionSociosIC[];
 
   /** Datos de los domicilios disponibles */
-  public domiciliosDatos: Domicilios[] = [] as Domicilios[];
+  public domiciliosDatos: Domicilios[] = DOMICILIO_TABLA as Domicilios[];
 
   /** Datos de inventarios registrados */
   public inventariosDatos: Inventarios[] = [] as Inventarios[];
@@ -148,16 +148,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   public mostrarNumeroSolicitudSeccion: boolean = false;
 
   /** Modelo para la opción de tipo sí/no representado como radio button */
-  public sinoOpciones = [
-    {
-      "label": "Sí",
-      "value": 1
-    },
-    {
-      "label": "No",
-      "value": 2
-    }
-  ];
+  public sinoOpciones = SI_NO_OPCIONES;
 
   /** Subject para destruir el componente */
   public destroy$ = new Subject<void>();
@@ -183,6 +174,12 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
 
   /** Estado de la solicitud de la datos comunes tres.*/
   public datosComunesTresState!: DatosComunesTresState;
+
+  /** Nombre del archivo seleccionado por el usuario. */
+  public archivoSeleccionado: string | null = null;
+
+  /** Nombre del proveedor seleccionado por el usuario. */
+  public proveedoresSeleccionado: string | null = null;
 
   /** Constructor que inyecta los servicios necesarios para gestionar datos comunes, detectar cambios, manejar el estado y consultar datos en el trámite 32613. */
   constructor(
@@ -317,9 +314,13 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     if (this.consultaState.update) {
+      this.archivoSeleccionado = typeof this.datosComunesTresState?.['archivoExtranjero'] === 'string'
+        ? this.datosComunesTresState['archivoExtranjero']
+        : null;
+      this.proveedoresSeleccionado = typeof this.datosComunesTresState?.['proveedoresExtranjero'] === 'string'
+        ? this.datosComunesTresState['proveedoresExtranjero']
+        : null;
       this.datosComunesForm.patchValue({
-        archivoExtranjero: this.datosComunesTresState['archivoExtranjero'],
-        proveedoresExtranjero: this.datosComunesTresState['proveedoresExtranjero'],
         clientesActualmente: this.datosComunesTresState['clientesActualmente'],
         proveedoresActualmente: this.datosComunesTresState['proveedoresActualmente'],
         senaleSiElSAT: this.datosComunesTresState['senaleSiElSAT'],
@@ -827,7 +828,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   cambioEvento(event: Event | string | number, campo: string): void {
     let VALOR;
     if (event instanceof Event && event.target instanceof HTMLInputElement && event.target.files?.length) {
-      const FILE = event.target.files[0];
+      const FILE = event.target.files[0].name;
       this.datosComunesTresStore.setDynamicFieldValue(campo, FILE);
     } else if (event instanceof Event && event.target) {
       VALOR = (event.target as HTMLInputElement).value;

@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ENTREGAS_DE_MENSAJERIA, IDENTIFICACION_DE_LOS_EMPLEADOS, PERSONAL_DE_SEGURIDAD } from '../../constantes/constantes32613.enum';
+import { ENTREGAS_DE_MENSAJERIA, IDENTIFICACION_DE_LOS_EMPLEADOS, PERSONAL_DE_SEGURIDAD, SI_NO_OPCIONES } from '../../constantes/constantes32613.enum';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { RubroTransporteFerrovario32613State, Tramite32613Store } from '../../../../estados/tramites/tramite32613.store';
@@ -69,16 +69,7 @@ export class ControlesDeAccesoFisicaComponent implements AfterViewInit, OnInit, 
   public templateMap: Record<string, TemplateRef<unknown>> = {};
 
   /** Modelo para la opción de tipo sí/no representado como radio button */
-  public sinoOpciones = [
-    {
-      "label": "Si",
-      "value": 1
-    },
-    {
-      "label": "No",
-      "value": 2
-    }
-  ];
+  public sinoOpciones = SI_NO_OPCIONES;
 
   /** Estado de la solicitud de la tramite 32613.*/
   public rubroTransporteFerrovariostate!: RubroTransporteFerrovario32613State;

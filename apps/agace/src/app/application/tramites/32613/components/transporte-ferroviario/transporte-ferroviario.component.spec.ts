@@ -55,55 +55,55 @@ describe('TransporteFerroviarioComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 
-    it('should add correoTelefono group', () => {
+    it('debería agregar grupo correoTelefono', () => {
     const lengthBefore = component.correosTelefonicos.length;
     component.addCorreoTelefonoGroup();
     expect(component.correosTelefonicos.length).toBe(lengthBefore + 1);
   });
 
-    it('should update store on text value change', () => {
+    it('Debería actualizar la tienda cuando cambie el valor del texto.', () => {
     const event = { target: { value: 'test@example.com' } } as any;
     component.textValorCambio(event, 'correoTextInput');
     expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('correoTextInput', 'test@example.com');
   });
 
-    it('should disable senaleRadioInput when senaleSiSuSolicitud is 1', () => {
+    it('debería deshabilitar senaleRadioInput cuando senaleSiSuSolicitud es 1', () => {
     component.rubroTransporteFerrovariostate = { senaleSiSuSolicitud: 1 };
     component.initializeForm();
     component.asignarValorCondicional();
     expect(component.transporteFerroviarioForm.get('senaleRadioInput')?.disabled).toBe(true);
   });
 
-    it('should enable senaleRadioInput when senaleSiSuSolicitud is 2', () => {
+    it('debería habilitar senaleRadioInput cuando senaleSiSuSolicitud es 2', () => {
     component.rubroTransporteFerrovariostate = { senaleSiSuSolicitud: 2 };
     component.initializeForm();
     component.asignarValorCondicional();
     expect(component.transporteFerroviarioForm.get('senaleRadioInput')?.enabled).toBe(true);
   });
 
-    it('should update store and UI based on establecerCambioDeValorUno', () => {
+    it('debería actualizar la tienda y la UI en función de establecerCambioDeValorUno', () => {
     component.establecerCambioDeValorUno({ campo: 'indiqueSiCuentaCarga', valor: 'Si' });
     expect(component.mostrarAlertaUno).toBe(true);
     expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('indiqueSiCuentaCarga', 'Si');
   });
 
-    it('should return validation error when no correoTelefonicos are filled', () => {
+    it('debería retornar un error de validación cuando no se llenen los correoTelefonicos', () => {
     component.correosTelefonicos.clear();
     component.addCorreoTelefonoGroup();
     const errors = component.correosTelefonicos.errors;
     expect(errors?.['atLeastOneRequired']).toBe(true);
   });
 
-    it('should populate templateMap after view init', async () => {
+    it('debería poblar templateMap después de la inicialización de la vista', async () => {
       await component.ngAfterViewInit();
       expect(component.templateMap['customSection1']).toBeDefined();
     });
 
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+  it('debería completar destroyNotifier$ en ngOnDestroy', () => {
       const completeSpy = jest.spyOn(
         (component as any).destroyNotifier$,
         'complete'
@@ -114,12 +114,12 @@ describe('TransporteFerroviarioComponent', () => {
       expect(completeSpy).toHaveBeenCalled();
     });
 
-    it('should update store when radioValorCambio is called', () => {
+    it('debería actualizar la tienda cuando se llama a radioValorCambio', () => {
       component.radioValorCambio(1, 'senaleSiSuSolicitud');
       expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('senaleSiSuSolicitud', 1);
     });
 
-    it('should update store with correosTelefonicos array when text input in array changes', () => {
+    it('debería actualizar la tienda con el array de correosTelefonicos cuando cambie el input de texto en el array', () => {
       const fb = TestBed.inject(FormBuilder);
       component.transporteFerroviarioForm.setControl(
         'correosTelefonicos',
@@ -146,7 +146,7 @@ describe('TransporteFerroviarioComponent', () => {
       ]);
     });
 
-    it('should call validacionesService.isValid in esValido()', () => {
+    it('debería llamar a validacionesService.isValid en esValido()', () => {
       const campo = 'correoTextInput';
       const spy = jest.spyOn(component['validacionesService'], 'isValid').mockReturnValue(true);
       const result = component.esValido(campo);
@@ -154,19 +154,19 @@ describe('TransporteFerroviarioComponent', () => {
       expect(result).toBe(true);
     });
 
-    it('should set mostrarTemplate3Alerta to true and update store when unidadesArrendadas has value', () => {
+    it('debería establecer mostrarTemplate3Alerta en true y actualizar la tienda cuando unidadesArrendadas tiene valor', () => {
       component.customTemplate3Events({ campo: 'unidadesArrendadas', valor: '3' });
       expect(component.mostrarTemplate3Alerta).toBe(true);
       expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('unidadesArrendadas', '3');
     });
 
-    it('should call store.setDynamicFieldValue in emitirCambioValor()', () => {
+    it('debería llamar a store.setDynamicFieldValue en emitirCambioValor()', () => {
       const data = { campo: 'clasificacionInformacion', valor: 2 };
       component.emitirCambioValor(data);
       expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('clasificacionInformacion', 2);
     });
 
-    it('should disable unidadesPropias and unidadesArrendadas in customTemplate3Form if readonly is true', () => {
+    it('debería deshabilitar unidadesPropias y unidadesArrendadas en customTemplate3Form si readonly es true', () => {
       component.consultaState = { readonly: true, update: false } as any;
       component.template3Array = [
         { formControlName: 'unidadesPropias', required: true },
@@ -178,7 +178,7 @@ describe('TransporteFerroviarioComponent', () => {
       expect(component.customTemplate3Form.get('unidadesArrendadas')?.disabled).toBe(true);
     });
 
-    it('should patch correosTelefonicos from rubroTransporteFerrovariostate if array exists', () => {
+    it('debería hacer patch a correosTelefonicos desde rubroTransporteFerrovariostate si el array existe', () => {
       component.rubroTransporteFerrovariostate = {
         correosTelefonicos: [
           { correoLada: '01', correoTelefono: '1234' },

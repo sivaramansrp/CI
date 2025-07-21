@@ -1,4 +1,15 @@
+import { CapacitacionEnSeguridadComponent } from "../components/capacitacion-en-seguridad/capacitacion-en-seguridad.component"
+import { ControlesDeAccesoFisicaComponent } from "../components/controles-de-acceso-fisica/controles-de-acceso-fisica.component"
+import { GestionAduaneraComponent } from "../components/gestion-aduanera/gestion-aduanera.component"
+import { ManejoEInvestigacionComponent } from "../components/manejo-e-investigacion/manejo-e-investigacion.component"
+import { PlaneacionDeLaSeguridadComponent } from "../components/planeacion-de-la-seguridad/planeacion-de-la-seguridad.component"
 import { RowTypeFormInput } from "../../../shared/models/row-type-form-input.model"
+import { SeguridadDeLaInformacionComponent } from "../components/seguridad-de-la-informacion/seguridad-de-la-informacion.component"
+import { SeguridadDeLosEquiposComponent } from "../components/seguridad-de-los-equipos/seguridad-de-los-equipos.component"
+import { SeguridadDeProcesosComponent } from "../components/seguridad-de-procesos/seguridad-de-procesos.component"
+import { SeguridadDelPersonalComponent } from "../components/seguridad-del-personal/seguridad-del-personal.component"
+import { SeguridadFisicaComponent } from "../components/seguridad-fisica/seguridad-fisica.component"
+import { SociosComercialsComponent } from "../components/socios-comercials/socios-comercials.component"
 
 /** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const TRANSPORTE_FERROVARIO = [
@@ -4497,3 +4508,63 @@ export const INVESTIGACION_ANALISIS = [
     marginTop: 3,
   },
 ]
+
+/** Opciones para seleccionar entre "Sí" y "No" en formularios. */
+export const SI_NO_OPCIONES = [
+    {
+      "label": "Si",
+      "value": 1
+    },
+    {
+      "label": "No",
+      "value": 2
+    }
+  ]
+
+/** Secciones del acordeón para el formulario de perfiles de seguridad en la cadena de suministros. */
+export const PERFILES_ACCORDION_SECCIONES = [
+  {
+    titulo: '1. Planeación de la seguridad en la cadena de suministros',
+    componentClase: PlaneacionDeLaSeguridadComponent
+  },
+  {
+    titulo: '2. Seguridad física',
+    componentClase: SeguridadFisicaComponent
+  },
+  {
+    titulo: '3. Controles de acceso física',
+    componentClase: ControlesDeAccesoFisicaComponent
+  },
+  {
+    titulo: '4. Socios comerciales',
+    componentClase: SociosComercialsComponent
+  },
+  {
+    titulo: '5. Seguridad de procesos',
+    componentClase: SeguridadDeProcesosComponent
+  },
+  {
+    titulo: '6. Gestión aduanera',
+    componentClase: GestionAduaneraComponent
+  },
+  {
+    titulo: '7. Seguridad de los equipos ferrovarios de arrastre y vías férreas.',
+    componentClase: SeguridadDeLosEquiposComponent
+  },
+  {
+    titulo: '8. Seguridad del personal',
+    componentClase: SeguridadDelPersonalComponent
+  },
+  {
+    titulo: '9. Seguridad de la información y documentación',
+    componentClase: SeguridadDeLaInformacionComponent
+  },
+  {
+    titulo: '10. Capacitación en seguridad y concientización',
+    componentClase: CapacitacionEnSeguridadComponent
+  },
+  {
+    titulo: '11. Manejo e investigación de incidentes',
+    componentClase: ManejoEInvestigacionComponent
+  }
+];

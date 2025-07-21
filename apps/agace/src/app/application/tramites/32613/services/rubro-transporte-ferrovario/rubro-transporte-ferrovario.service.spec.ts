@@ -12,7 +12,7 @@ describe('RubroTransporteFerrovarioService', () => {
     service = TestBed.inject(RubroTransporteFerrovarioService);
   });
 
-  it('should be created', () => {
+  it('debería crear', () => {
     expect(service).toBeTruthy();
   });
 });

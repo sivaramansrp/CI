@@ -59,22 +59,22 @@ describe('PerfilesFerrovarioComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize custom template forms and disable them if readonly', () => {
+  it('debería inicializar formularios de plantilla personalizados y deshabilitarlos si readonly', () => {
     component.initializeCustomTemplate1Form(component.template1Array, component.customTemplate1Form);
     expect(component.customTemplate1Form.disabled).toBe(true);
   });
 
-  it('should add otrasCertificaciones groups and disable them if readonly', () => {
+  it('debería agregar grupos de otrasCertificaciones y deshabilitarlos si readonly', () => {
     component.addOtrasCertificacionesGroup();
     expect(component.otrasCertificaciones.length).toBeGreaterThan(0);
     expect(component.otrasCertificaciones.at(0).disabled).toBe(true);
   });
 
-  it('should patch value and show templates based on conditional flags', () => {
+  it('debería hacer patch a los valores y mostrar las plantillas según las banderas condicionales', () => {
     component.rubroTransporteFerrovariostate = {
       pip: 'Si',
       oea: 'Si',
@@ -90,20 +90,20 @@ describe('PerfilesFerrovarioComponent', () => {
     expect(component.mostarCustomtemplate5).toBe(false);
   });
 
-  it('should call setDynamicFieldValue when establecerCambioDeValor is triggered', () => {
+  it('debería llamar a setDynamicFieldValue cuando se activa establecerCambioDeValor', () => {
     const spy = jest.spyOn(mockStore, 'setDynamicFieldValue');
     component.establecerCambioDeValor({ campo: 'pip', valor: 'Si' });
     expect(spy).toHaveBeenCalledWith('pip', 'Si');
     expect(component.mostarCustomtemplate3).toBe(true);
   });
 
-  it('should call setDynamicFieldValue for customTemplateEvents', () => {
+  it('debería llamar a setDynamicFieldValue para customTemplateEvents', () => {
     const spy = jest.spyOn(mockStore, 'setDynamicFieldValue');
     component.customTemplateEvents({ campo: 'nivel', valor: 'Alto' });
     expect(spy).toHaveBeenCalledWith('nivel', 'Alto');
   });
 
-  it('should update text input in otrasCertificaciones and call setDynamicFieldValue', () => {
+  it('debería actualizar el input de texto en otrasCertificaciones y llamar a setDynamicFieldValue', () => {
     component.addOtrasCertificacionesGroup();
     const inputEvent = { target: { value: 'CERT1' } } as any;
 
@@ -117,7 +117,7 @@ describe('PerfilesFerrovarioComponent', () => {
     );
   });
 
-  it('should clean up subscriptions on destroy', () => {
+  it('debería limpiar las suscripciones al destruir', () => {
     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();

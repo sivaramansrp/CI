@@ -4,6 +4,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosComunesTresService } from '../../../../shared/services/datos-comunes-tres.service';
 import { RubroTransporteFerrovarioService } from '../../services/rubro-transporte-ferrovario/rubro-transporte-ferrovario.service';
+import { TercerosRelacionadosService } from '../../../../shared/services/terceros-relacionados.service';
 
 // Componente que gestiona el paso uno del trámite 32613, incluyendo la carga y actualización de datos, el control de pestañas y la suscripción al estado de consulta.
 @Component({
@@ -32,6 +33,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     private consultaQuery: ConsultaioQuery,
     private rubroTransporteFerrovarioService: RubroTransporteFerrovarioService,
     private datosComunesTresService: DatosComunesTresService,
+    private tercerosRelacionadosSvc: TercerosRelacionadosService,
   ) {
       // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
     }
@@ -69,6 +71,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           });
         }
       });
+
+    this.tercerosRelacionadosSvc.getConsultaDatos().pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((resp) => {
+      if (resp) {
+        Object.entries(resp).forEach(([key, value]) => {
+          this.tercerosRelacionadosSvc.actualizarEstadoFormulario(key, value);
+        });
+      }
+    });
 
     this.rubroTransporteFerrovarioService
       .getrubroTransporteFerrovarioData().pipe(

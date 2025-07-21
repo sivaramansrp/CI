@@ -35,7 +35,9 @@
                   <div class="col-md-4">
                     <input type="file" accept=".xlsx" class="form-control sfile" name="archivoExtranjero" id="archivoExtranjero" formControlName="archivoExtranjero" (change)="cambioEvento($event, 'archivoExtranjero')" title="Examinar"/>
                   </div>
-                  <div class="col-md-4"></div>
+                  <div class="col-md-4">
+                    <p class="mt-2">{{ archivoSeleccionado }}</p>
+                  </div>
                   <div class="col-md-4 d-flex justify-content-end">
                     <button type="button" name="cargaArchivoProcesos" id="cargaArchivoProcesos" class="btn btn-primary me-md-3" (click)="anexar()" [disabled]="consultaState.readonly">Anexar</button>
                   </div>
@@ -66,7 +68,9 @@
                   <div class="col-md-4">
                     <input type="file" accept=".xlsx" class="form-control sfile" name="proveedoresExtranjero" id="proveedoresExtranjero" formControlName="proveedoresExtranjero" title="Examinar" (change)="cambioEvento($event, 'proveedoresExtranjero')"/>
                   </div>
-                  <div class="col-md-4"></div>
+                  <div class="col-md-4">
+                    <p class="mt-2">{{ proveedoresSeleccionado }}</p>
+                  </div>
                   <div class="col-md-4 d-flex justify-content-end">
                     <button type="button" name="cargaArchivoProcesos" id="cargaArchivoProcesos" class="btn btn-primary me-md-3" (click)="anexar()" [disabled]="consultaState.readonly">Anexar</button>
                   </div>

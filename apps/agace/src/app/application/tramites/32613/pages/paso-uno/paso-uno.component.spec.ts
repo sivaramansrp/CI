@@ -48,15 +48,15 @@ describe('PasoUnoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have default indice value as 1', () => {
+  it('debería tener el valor predeterminado de indice como 1', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should update indice when seleccionaTab is called', () => {
+  it('debería actualizar el indice cuando se llama a seleccionaTab', () => {
     component.indice = 1;
     expect(component.indice).toBe(1);
 
@@ -70,7 +70,7 @@ describe('PasoUnoComponent', () => {
     expect(component.indice).toBe(4);
   });
 
-  it('should set consultaState and call guardarDatosFormulario when update is true', () => {
+  it('debería establecer consultaState y llamar a guardarDatosFormulario cuando update es true', () => {
     const mockConsultaState = { update: true, readonly: false };
     const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
     (component as any).consultaQuery = {
@@ -81,7 +81,7 @@ describe('PasoUnoComponent', () => {
     expect(guardarSpy).toHaveBeenCalled();
   });
 
-  it('should call actualizarEstadoFormulario for each key/value from datosComunesTresService and rubroTransporteFerrovarioService', () => {
+  it('debería llamar a actualizarEstadoFormulario para cada clave/valor del datosComunesTresService y rubroTransporteFerrovarioService', () => {
     component.guardarDatosFormulario();
     expect(datosComunesTresServiceMock.getDatosComunesTresData).toHaveBeenCalled();
     expect(datosComunesTresServiceMock.actualizarEstadoFormulario).toHaveBeenCalledWith('a', 1);
@@ -90,7 +90,7 @@ describe('PasoUnoComponent', () => {
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+  it('debería completar destroyNotifier$ en ngOnDestroy', () => {
       const completeSpy = jest.spyOn(
         (component as any).destroyNotifier$,
         'complete'

@@ -1311,3 +1311,79 @@ export const MODAL_MIEMBRO_DE_LA_EMPRESA = [
     mostrar: false
   },
 ]
+
+/** Tabla con el número de empleados registrados, RFC y bimestre correspondiente. */
+export const NUMERO_DE_EMPLEADOS_TABLA = [
+  {
+    denominacion: 'SINE S.A. de C.V.',
+    RFC: 'SIN123456789',
+    numeroDeEmpleados: '25',
+    bimestre: 'Enero-Febrero'
+  }
+]
+
+/** Tabla con los domicilios registrados ante el RFC y relacionados con el proceso productivo o prestación de servicios. */
+export const DOMICILIO_TABLA = [
+  {
+    instalacionPrincipal: 'Planta principal',
+    cveTipoInstalacion: '01',
+    tipoInstalacion: 'Fábrica',
+    cveEntidadFederativa: '09',
+    entidadFederativa: 'Ciudad de México',
+    cveDelegacionMunicipio: '001',
+    municipioDelegacion: 'Benito Juárez',
+    direccion: 'Av. Insurgentes Sur 1234, Col. Del Valle',
+    codigoPostal: '03100',
+    registroSESAT: 'REG123456',
+    procesoProductivo: 'Manufactura de autopartes',
+    acreditaInmueble: 'Contrato de arrendamiento',
+    operacionesCExt: 'Sí',
+    instalacionCtpat: 'No',
+    instalacionPerfil: 'Industrial',
+    instalacionPerfilRFE: 'No',
+    instalacionPerfilAuto: 'Sí',
+    instalacionPerfilFerro: 'No',
+    instalacionPerfilRf: 'No',
+    instalacionPerfilMensajeria: 'No',
+    noExterior: '1234',
+    noInterior: '2B',
+    cveColonia: '045',
+    calle: 'Av. Insurgentes Sur',
+    descCol: 'Colonia Del Valle',
+    idRecinto: 'REC001'
+  }
+]
+
+/** Tabla con los datos de los miembros de la empresa. */
+export const MIEMBRO_DE_LA_EMPRESA_TABLA = [
+  {
+    idMiembroEmpresa: '1',
+    idSolicitud: 'SOL123',
+    tipoPersona: 'Física',
+    tipoPersonaMuestra: 'Física',
+    nombreCompleto: 'Juan Pérez Ramírez',
+    rfc: 'PERJ800101ABC',
+    caracterDe: 'Representante Legal',
+    nacionalidad: 'Mexicana',
+    tipoCaracter: 'Principal',
+    paisClave: 'MX',
+    tributarMexico: 'Sí',
+    nombreEmpresa: 'SINE S.A. de C.V.',
+    nombre: 'Juan',
+    apellidoPaterno: 'Pérez',
+    apellidoMaterno: 'Ramírez',
+    razonSocial: 'SINE S.A. de C.V.'
+  }
+]
+
+/** Opciones para seleccionar entre "Sí" y "No" en formularios. */
+export const SI_NO_OPCIONES = [
+  {
+      "label": "Sí",
+      "value": 1
+    },
+    {
+      "label": "No",
+      "value": 2
+    }
+]

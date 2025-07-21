@@ -21,15 +21,15 @@ describe('PantallasComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should not update indice for invalid tab values', () => {
+  it('debería no actualizar el indice para valores de tab no válidos', () => {
     component.seleccionaTab(1);
   });
 
-  it('should handle edge cases for getValorIndice', () => {
+  it('debería manejar casos límite para getValorIndice', () => {
     const invalidEvent = { accion: 'invalid', valor: 5 };
     component.getValorIndice(invalidEvent);
 
