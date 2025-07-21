@@ -102,9 +102,15 @@ export class InputFechaComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['setFecha']) {
       this.setFecha = changes['setFecha'].currentValue;
-      this.setFechaEnInput();
+
+      if (this.setFecha === null) {
+        this.Formulario.get('fechaString')?.reset();
+      } else {
+        this.setFechaEnInput();
+      }
     }
   }
+
 
   /**
  * Método del ciclo de vida `ngOnInit` de Angular.
@@ -114,7 +120,7 @@ export class InputFechaComponent implements OnInit, OnChanges {
  * del campo de fecha basado en el valor recibido por el `@Input`.
  */
   ngOnInit(): void {
-   this.setFechaEnInput();
+    this.setFechaEnInput();
   }
 
   /**
@@ -127,17 +133,17 @@ export class InputFechaComponent implements OnInit, OnChanges {
  *
  * Si `setFecha` está vacío o no es válida, limpia el campo y lo desactiva.
  */
-  setFechaEnInput(): void{
- if (this.setFecha) {
+  setFechaEnInput(): void {
+    if (this.setFecha) {
       const FECHA = this.setFecha.split('/');
-      if(FECHA.length === 3) {
-      const OBJECT_DATE = moment(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
-      this.generarFormulario(OBJECT_DATE);
-      this.Formulario.controls['fechaString'].enable();
-      this.Formulario.get('fechaString')?.setValue(
-        moment(OBJECT_DATE).format('DD/MM/YYYY')
-      );
-    }
+      if (FECHA.length === 3) {
+        const OBJECT_DATE = moment(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
+        this.generarFormulario(OBJECT_DATE);
+        this.Formulario.controls['fechaString'].enable();
+        this.Formulario.get('fechaString')?.setValue(
+          moment(OBJECT_DATE).format('DD/MM/YYYY')
+        );
+      }
       this.Formulario.controls['fechaString'].disable();
     } else {
       this.Formulario.controls['fechaString'].enable();
@@ -145,12 +151,6 @@ export class InputFechaComponent implements OnInit, OnChanges {
       this.Formulario.controls['fechaString'].disable();
     }
   }
-
-  ngOnChanges(changes: SimpleChanges): void {
-  if (changes['setFecha'] && changes['setFecha'].currentValue === null) {
-     this.Formulario.get('fechaString')?.reset();
-  }
-}
 
   get fechaString(): string {
     return this.Formulario.get('fechaString')?.value;
