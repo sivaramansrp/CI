@@ -85,8 +85,6 @@ export class ManejoInvestigacionComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.crearFormularioDeGestión();
   }
 
 /**
@@ -104,14 +102,20 @@ export class ManejoInvestigacionComponent implements OnInit, OnDestroy {
       )
       .subscribe();
       this.crearFormularioDeGestión();
-      if (this.esFormularioSoloLectura) {
-      Object.keys(this.manejo.controls).forEach((key) => {
-        this.manejo.get(key)?.disable();
-      });
+     if (this.esFormularioSoloLectura) {
+      Object.keys(this.manejo.controls)
+        .map((key) => this.manejo.get(key))
+        .map((control) => {
+          control?.disable();
+          return control;
+        });
     } else {
-      Object.keys(this.manejo.controls).forEach((key) => {
-        this.manejo.get(key)?.enable();
-      });
+      Object.keys(this.manejo.controls)
+        .map((key) => this.manejo.get(key))
+        .map((control) => {
+          control?.enable();
+          return control;
+        });
     }
   }
 

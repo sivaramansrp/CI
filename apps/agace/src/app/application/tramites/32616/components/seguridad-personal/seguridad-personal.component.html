@@ -113,7 +113,7 @@
                 <label for="contratacionPersonal">
                     <span class="danger">*</span>{{textos.etiqueta2}}
                 </label>
-                <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
+                <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="contratacionPersonal" (change)="setValoresStore(seguridadPersonal,'contratacionPersonal', 'setContratacionPersonal')"></app-input-radio>
             </div>
 
@@ -255,7 +255,7 @@
                         </div>
                     </ul>
 
-                    <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
+                    <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                         class="gap" formControlName="administracionPersonal" (change)="setValoresStore(seguridadPersonal,'administracionPersonal', 'setAdministracionPersonal')"></app-input-radio>
                 </div>
             </div>

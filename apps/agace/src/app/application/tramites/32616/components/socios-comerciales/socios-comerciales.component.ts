@@ -109,14 +109,20 @@ export class SociosComercialesComponent implements OnInit, OnDestroy {
       )
       .subscribe();
       this.crearFormularioSociosComerciales();
-      if (this.esFormularioSoloLectura) {
-      Object.keys(this.sociosComercialesForm.controls).forEach((key) => {
-        this.sociosComercialesForm.get(key)?.disable();
-      });
+   if (this.esFormularioSoloLectura) {
+      Object.keys(this.sociosComercialesForm.controls)
+        .map((key) => this.sociosComercialesForm.get(key))
+        .map((control) => {
+          control?.disable();
+          return control;
+        });
     } else {
-      Object.keys(this.sociosComercialesForm.controls).forEach((key) => {
-        this.sociosComercialesForm.get(key)?.enable();
-      });
+      Object.keys(this.sociosComercialesForm.controls)
+        .map((key) => this.sociosComercialesForm.get(key))
+        .map((control) => {
+          control?.enable();
+          return control;
+        });
     }
   }
 
@@ -135,8 +141,6 @@ export class SociosComercialesComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.crearFormularioSociosComerciales();
   }
 
   /**

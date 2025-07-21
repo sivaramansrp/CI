@@ -117,7 +117,6 @@ export class EnlaceComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.getRegistroForm();
     this.getEnlace();
   }
 
@@ -136,14 +135,20 @@ export class EnlaceComponent implements OnInit, OnDestroy {
       )
       .subscribe();
       this.getRegistroForm();
-      if (this.esFormularioSoloLectura) {
-      Object.keys(this.enlace.controls).forEach((key) => {
-        this.enlace.get(key)?.disable();
-      });
+     if (this.esFormularioSoloLectura) {
+      Object.keys(this.enlace.controls)
+        .map((key) => this.enlace.get(key))
+        .map((control) => {
+          control?.disable();
+          return control;
+        });
     } else {
-      Object.keys(this.enlace.controls).forEach((key) => {
-        this.enlace.get(key)?.enable();
-      });
+      Object.keys(this.enlace.controls)
+        .map((key) => this.enlace.get(key))
+        .map((control) => {
+          control?.enable();
+          return control;
+        });
     }
   }
 

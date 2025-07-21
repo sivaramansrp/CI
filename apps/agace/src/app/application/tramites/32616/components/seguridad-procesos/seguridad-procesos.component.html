@@ -95,7 +95,7 @@
                 <label for="estosEmpresa">
                     <span class="danger">*</span>Indique si estos pertenecen a la empresa o es un servicio contratado a través de un tercero y sean parte de un grupo accionista.
                 </label>
-                <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
+                <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="estosEmpresa" (change)="setValoresStore(seguridadProcesosForm,'estosEmpresa','setEstosEmpresa')"></app-input-radio>
             </div>
 

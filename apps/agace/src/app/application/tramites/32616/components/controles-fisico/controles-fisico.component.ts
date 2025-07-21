@@ -109,8 +109,6 @@ export class ControlesFisicoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.crearFormularioControlesFisico();
   }
 
 /**
@@ -128,14 +126,20 @@ export class ControlesFisicoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
       this.crearFormularioControlesFisico();
-      if (this.esFormularioSoloLectura) {
-      Object.keys(this.controlesFisico.controls).forEach((key) => {
-        this.controlesFisico.get(key)?.disable();
-      });
+     if (this.esFormularioSoloLectura) {
+      Object.keys(this.controlesFisico.controls)
+        .map((key) => this.controlesFisico.get(key))
+        .map((control) => {
+          control?.disable();
+          return control;
+        });
     } else {
-      Object.keys(this.controlesFisico.controls).forEach((key) => {
-        this.controlesFisico.get(key)?.enable();
-      });
+      Object.keys(this.controlesFisico.controls)
+        .map((key) => this.controlesFisico.get(key))
+        .map((control) => {
+          control?.enable();
+          return control;
+        });
     }
   }
 

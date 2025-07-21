@@ -430,7 +430,7 @@
                     <span class="danger">*</span>Indique si todas las ventanas, puertas y cercas interiores y
                     exteriores, de acuerdo a su análisis de riesgo, disponen de mecanismos de cierre o seguridad.
                 </label>
-                <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
+                <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="indiqueTodas" (change)="setValoresStore(seguridadFisicaForm,'indiqueTodas','setIndiqueTodas')"></app-input-radio>
             </div>
 
@@ -507,7 +507,7 @@
                 <label for="indiquePlanta">
                     <span class="danger">*</span>Indique si cuenta con una planta de poder auxiliar.
                 </label>
-                <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
+                <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="indiquePlanta" (change)="setValoresStore(seguridadFisicaForm,'indiquePlanta','setIndiquePlanta')"></app-input-radio>
             </div>
 
@@ -684,7 +684,7 @@
                 <label for="cuentaDocumentado">
                     <span class="danger">*</span>{{textos.etiqueta3}}
                 </label>
-                <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
+                <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="cuentaDocumentado" (change)="setValoresStore(seguridadFisicaForm,'cuentaDocumentado','setCuentaDocumentado')"></app-input-radio>
             </div>
 
@@ -693,7 +693,7 @@
                     <span class="danger">*</span> Indique si todas las puertas y ventanas tienen sensores de alarma, así
                     como las áreas donde se cuenta con sensores de movimiento.
                 </label>
-                <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
+                <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="indiquePuertas" (change)="setValoresStore(seguridadFisicaForm,'indiquePuertas','setIndiquePuertas')" ></app-input-radio>
             </div>
 
@@ -872,7 +872,7 @@
                 <label for="indiqueCerrado">
                     <span class="danger">*</span>{{textos.etiqueta8}}
                 </label>
-                <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
+                <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="indiqueCerrado" (change)="setValoresStore(seguridadFisicaForm,'indiqueCerrado','setIndiqueCerrado')"></app-input-radio>
             </div>
 
@@ -943,7 +943,7 @@
                 <label for="indicarCircuitoCerrado">
                     <span class="danger">*</span>{{textos.etiqueta11}}
                 </label>
-                <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
+                <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="indicarCircuitoCerrado" (change)="setValoresStore(seguridadFisicaForm,'indicarCircuitoCerrado','setIndicarCircuitoCerrado')"></app-input-radio>
             </div>
 

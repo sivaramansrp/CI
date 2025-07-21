@@ -110,14 +110,20 @@ export class SeguridadProcesosComponent implements OnInit, OnDestroy {
       )
       .subscribe();
       this.crearFormularioSeguridadProcesos();
-      if (this.esFormularioSoloLectura) {
-      Object.keys(this.seguridadProcesosForm.controls).forEach((key) => {
-        this.seguridadProcesosForm.get(key)?.disable();
-      });
+   if (this.esFormularioSoloLectura) {
+      Object.keys(this.seguridadProcesosForm.controls)
+        .map((key) => this.seguridadProcesosForm.get(key))
+        .map((control) => {
+          control?.disable();
+          return control;
+        });
     } else {
-      Object.keys(this.seguridadProcesosForm.controls).forEach((key) => {
-        this.seguridadProcesosForm.get(key)?.enable();
-      });
+      Object.keys(this.seguridadProcesosForm.controls)
+        .map((key) => this.seguridadProcesosForm.get(key))
+        .map((control) => {
+          control?.enable();
+          return control;
+        });
     }
   }
 
@@ -136,8 +142,6 @@ export class SeguridadProcesosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.crearFormularioSeguridadProcesos();
   }
 
   /**

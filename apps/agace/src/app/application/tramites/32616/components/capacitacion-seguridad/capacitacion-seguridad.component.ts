@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud32616PerfilesMensajeriaState, Tramite32616PerfilesMensajeriaStore } from '../../estados/tramites/tramite32616_perfilesMensajeria.store';
-import { Subject, map , takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TEXTOS_ESTATICOS } from '../../constantes/texto-estatico.enum';
@@ -32,9 +32,9 @@ export class CapacitacionSeguridadComponent implements OnInit, OnDestroy {
    */
   capacitacion!: FormGroup;
 
-/**
-   * Determina si el formulario debe estar en modo solo lectura.
-   */
+  /**
+     * Determina si el formulario debe estar en modo solo lectura.
+     */
   esFormularioSoloLectura: boolean = false;
 
   /**
@@ -58,9 +58,9 @@ export class CapacitacionSeguridadComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite32616Store: Tramite32616PerfilesMensajeriaStore,
     private tramite32616Query: Tramite32616PerfilesMensajeriaQuery,
-     private consultaioQuery: ConsultaioQuery,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-   this.consultaioQuery.selectConsultaioState$
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -84,15 +84,13 @@ export class CapacitacionSeguridadComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.crearFormularioDeGestion();
   }
 
-/**
-   * Inicializa el formulario con datos del store y aplica validaciones.
-   * También aplica configuración de solo lectura si es necesario.
-   * @method inicializarEstadoFormulario
-   */
+  /**
+     * Inicializa el formulario con datos del store y aplica validaciones.
+     * También aplica configuración de solo lectura si es necesario.
+     * @method inicializarEstadoFormulario
+     */
   inicializarEstadoFormulario(): void {
     this.tramite32616Query.selectSolicitud$
       .pipe(
@@ -102,15 +100,21 @@ export class CapacitacionSeguridadComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-      this.crearFormularioDeGestion();
-      if (this.esFormularioSoloLectura) {
-      Object.keys(this.capacitacion.controls).forEach((key) => {
-        this.capacitacion.get(key)?.disable();
-      });
+    this.crearFormularioDeGestion();
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.capacitacion.controls)
+        .map((key) => this.capacitacion.get(key))
+        .map((control) => {
+          control?.disable();
+          return control;
+        });
     } else {
-      Object.keys(this.capacitacion.controls).forEach((key) => {
-        this.capacitacion.get(key)?.enable();
-      });
+      Object.keys(this.capacitacion.controls)
+        .map((key) => this.capacitacion.get(key))
+        .map((control) => {
+          control?.enable();
+          return control;
+        });
     }
   }
 

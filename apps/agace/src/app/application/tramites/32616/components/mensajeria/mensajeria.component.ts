@@ -70,13 +70,13 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
   public opcionInformacionProporcionada = OPCIONES_INFORMACION;
 
   /** Bandera que indica si es "La Solicitante" */
-  public isLaSolicitante:boolean = false;
+  public isLaSolicitante: boolean = false;
 
   /** Bandera que indica si aplica a "Sus Filiales" */
-  public isSusFiliales:boolean = false;
+  public isSusFiliales: boolean = false;
 
   /** Bandera que indica si aplica a "Las Empresas" */
-  public isLasEmpresas:boolean = false;
+  public isLasEmpresas: boolean = false;
 
   /** Configuración del input de fecha de factura */
   public fechaFacturaInput: InputFecha = FECHA_DE_FACTURA;
@@ -130,11 +130,11 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe();
   }
 
-/**
-   * Inicializa el formulario con datos del store y aplica validaciones.
-   * También aplica configuración de solo lectura si es necesario.
-   * @method inicializarEstadoFormulario
-   */
+  /**
+     * Inicializa el formulario con datos del store y aplica validaciones.
+     * También aplica configuración de solo lectura si es necesario.
+     * @method inicializarEstadoFormulario
+     */
   inicializarEstadoFormulario(): void {
     this.tramite32616Query.selectSolicitud$
       .pipe(
@@ -144,15 +144,21 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       )
       .subscribe();
-      this.crearFormulario();
+    this.crearFormulario();
       if (this.esFormularioSoloLectura) {
-      Object.keys(this.mensajeriaGroup.controls).forEach((key) => {
-        this.mensajeriaGroup.get(key)?.disable();
-      });
+      Object.keys(this.mensajeriaGroup.controls)
+        .map((key) => this.mensajeriaGroup.get(key))
+        .map((control) => {
+          control?.disable();
+          return control;
+        });
     } else {
-      Object.keys(this.mensajeriaGroup.controls).forEach((key) => {
-        this.mensajeriaGroup.get(key)?.enable();
-      });
+      Object.keys(this.mensajeriaGroup.controls)
+        .map((key) => this.mensajeriaGroup.get(key))
+        .map((control) => {
+          control?.enable();
+          return control;
+        });
     }
   }
 
@@ -169,8 +175,6 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       )
       .subscribe();
-
-    this.crearFormulario();
     this.obtenerTablaDatos();
   }
 
@@ -221,19 +225,19 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
       cadenaDependencia: [this.solicitudState?.cadenaDependencia, Validators.required],
       banco: [this.solicitudState?.banco, Validators.required],
       llavePago: [this.solicitudState?.llavePago, Validators.required],
-      fechaFactura: [this.solicitudState?.fechaFactura,Validators.required],
+      fechaFactura: [this.solicitudState?.fechaFactura, Validators.required],
       importePago: [this.solicitudState?.importePago, Validators.required]
     });
 
     this.susFilialesForm = this.fb.group({
-      rfc: [this.solicitudState?.rfc,Validators.required],
+      rfc: [this.solicitudState?.rfc, Validators.required],
       rfcDos: [{ value: '', disabled: true }],
       denominacionRazonSocial: [{ value: '', disabled: true }],
       domicilio: [{ value: '', disabled: true }],
     });
 
     this.lasEmpresasForm = this.fb.group({
-      rfcLasEmpresas: [this.solicitudState?.rfcLasEmpresas,Validators.required],
+      rfcLasEmpresas: [this.solicitudState?.rfcLasEmpresas, Validators.required],
       denominacionRazonSocial: [{ value: '', disabled: true }],
       domicilio: [{ value: '', disabled: true }],
     });

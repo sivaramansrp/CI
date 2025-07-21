@@ -231,8 +231,6 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.crearFormularioProfileForm();
   }
 
 /**
@@ -250,14 +248,20 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
       )
       .subscribe();
       this.crearFormularioProfileForm();
-      if (this.esFormularioSoloLectura) {
-      Object.keys(this.profileForm.controls).forEach((key) => {
-        this.profileForm.get(key)?.disable();
-      });
+       if (this.esFormularioSoloLectura) {
+      Object.keys(this.profileForm.controls)
+        .map((key) => this.profileForm.get(key))
+        .map((control) => {
+          control?.disable();
+          return control;
+        });
     } else {
-      Object.keys(this.profileForm.controls).forEach((key) => {
-        this.profileForm.get(key)?.enable();
-      });
+      Object.keys(this.profileForm.controls)
+        .map((key) => this.profileForm.get(key))
+        .map((control) => {
+          control?.enable();
+          return control;
+        });
     }
   }
 

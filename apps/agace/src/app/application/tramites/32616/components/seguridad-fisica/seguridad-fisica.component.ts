@@ -109,14 +109,20 @@ export class SeguridadFisicaComponent implements OnInit, OnDestroy {
       )
       .subscribe();
       this.crearFormularioSeguridadFisica();
-      if (this.esFormularioSoloLectura) {
-      Object.keys(this.seguridadFisicaForm.controls).forEach((key) => {
-        this.seguridadFisicaForm.get(key)?.disable();
-      });
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.seguridadFisicaForm.controls)
+        .map((key) => this.seguridadFisicaForm.get(key))
+        .map((control) => {
+          control?.disable();
+          return control;
+        });
     } else {
-      Object.keys(this.seguridadFisicaForm.controls).forEach((key) => {
-        this.seguridadFisicaForm.get(key)?.enable();
-      });
+      Object.keys(this.seguridadFisicaForm.controls)
+        .map((key) => this.seguridadFisicaForm.get(key))
+        .map((control) => {
+          control?.enable();
+          return control;
+        });
     }
   }
 
@@ -135,8 +141,6 @@ export class SeguridadFisicaComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.crearFormularioSeguridadFisica();
   }
 
   /**

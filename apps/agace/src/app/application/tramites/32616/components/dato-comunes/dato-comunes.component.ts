@@ -211,15 +211,22 @@ export class DatoComunesComponent implements OnInit, OnDestroy, AfterViewInit {
       )
       .subscribe();
       this.crearFormulario();
-      if (this.esFormularioSoloLectura) {
-      Object.keys(this.datosComunesForma.controls).forEach((key) => {
-        this.datosComunesForma.get(key)?.disable();
-      });
+     if (this.esFormularioSoloLectura) {
+      Object.keys(this.datosComunesForma.controls)
+        .map((key) => this.datosComunesForma.get(key))
+        .map((control) => {
+          control?.disable();
+          return control;
+        });
     } else {
-      Object.keys(this.datosComunesForma.controls).forEach((key) => {
-        this.datosComunesForma.get(key)?.enable();
-      });
+      Object.keys(this.datosComunesForma.controls)
+        .map((key) => this.datosComunesForma.get(key))
+        .map((control) => {
+          control?.enable();
+          return control;
+        });
     }
+    
   }
 
   /**
@@ -235,7 +242,6 @@ export class DatoComunesComponent implements OnInit, OnDestroy, AfterViewInit {
       )
       .subscribe();
       
-    this.crearFormulario();
 
     if(parseInt(this.solicitudState?.senaleCuentaEmpleados,10) === 1){
       this.showSenaleCuentaEmpleados = true;

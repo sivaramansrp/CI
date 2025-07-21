@@ -94,14 +94,20 @@ export class SeguridadLosVehiculosComponent implements OnInit, OnDestroy {
       )
       .subscribe();
       this.crearFormularioDeGestión();
-      if (this.esFormularioSoloLectura) {
-      Object.keys(this.seguridad.controls).forEach((key) => {
-        this.seguridad.get(key)?.disable();
-      });
+  if (this.esFormularioSoloLectura) {
+      Object.keys(this.seguridad.controls)
+        .map((key) => this.seguridad.get(key))
+        .map((control) => {
+          control?.disable();
+          return control;
+        });
     } else {
-      Object.keys(this.seguridad.controls).forEach((key) => {
-        this.seguridad.get(key)?.enable();
-      });
+      Object.keys(this.seguridad.controls)
+        .map((key) => this.seguridad.get(key))
+        .map((control) => {
+          control?.enable();
+          return control;
+        });
     }
   }
 
@@ -118,8 +124,6 @@ export class SeguridadLosVehiculosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.crearFormularioDeGestión();
   }
 
   /**

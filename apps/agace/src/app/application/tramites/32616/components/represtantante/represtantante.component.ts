@@ -29,8 +29,8 @@ import representanteDatos from '@libs/shared/theme/assets/json/31601/represtanta
   standalone: true,
   imports: [
     CommonModule,
-    TituloComponent, 
-    ReactiveFormsModule, 
+    TituloComponent,
+    ReactiveFormsModule,
     FormsModule
   ],
   templateUrl: './represtantante.component.html',
@@ -101,11 +101,11 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-/**
-   * Inicializa el formulario con datos del store y aplica validaciones.
-   * También aplica configuración de solo lectura si es necesario.
-   * @method inicializarEstadoFormulario
-   */
+  /**
+     * Inicializa el formulario con datos del store y aplica validaciones.
+     * También aplica configuración de solo lectura si es necesario.
+     * @method inicializarEstadoFormulario
+     */
   inicializarEstadoFormulario(): void {
     this.tramite32616Query.selectSolicitud$
       .pipe(
@@ -115,14 +115,21 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-      if (this.esFormularioSoloLectura) {
-      Object.keys(this.represtantante.controls).forEach((key) => {
-        this.represtantante.get(key)?.disable();
-      });
+    this.getFormalario();
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.represtantante.controls)
+        .map((key) => this.represtantante.get(key))
+        .map((control) => {
+          control?.disable();
+          return control;
+        });
     } else {
-      Object.keys(this.represtantante.controls).forEach((key) => {
-        this.represtantante.get(key)?.enable();
-      });
+      Object.keys(this.represtantante.controls)
+        .map((key) => this.represtantante.get(key))
+        .map((control) => {
+          control?.enable();
+          return control;
+        });
     }
   }
 
@@ -142,7 +149,34 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.represtantante.get('rfc')?.disable();
+    this.represtantante.get('nombre')?.disable();
+    this.represtantante.get('apellidoPaterno')?.disable();
+    this.represtantante.get('apellidoMaterno')?.disable();
 
+    this.represtantante.patchValue({
+      rfc: this.datosRepresentativos?.rfc,
+      nombre: this.datosRepresentativos?.nombre,
+      apellidoPaterno: this.datosRepresentativos?.apellidoPaterno,
+      apellidoMaterno: this.datosRepresentativos?.apellidoMaterno,
+    });
+  }
+
+  /**
+   * Initializes the `represtantante` form group with controls for representative information.
+   * 
+   * The form fields include:
+   * - `resigtro`: Pre-filled from `solicitudState.resigtro` if available and not empty, otherwise from `datosRepresentativos.resigtro`. Required.
+   * - `rfc`: Empty by default. Required.
+   * - `nombre`: Empty by default. Required.
+   * - `apellidoPaterno`: Empty by default. Required.
+   * - `apellidoMaterno`: Empty by default. Required.
+   * - `telefono`: Pre-filled from `solicitudState.telefono` if available and not empty, otherwise from `datosRepresentativos.telefono`. Required.
+   * - `correo`: Pre-filled from `solicitudState.correo` if available and not empty, otherwise from `datosRepresentativos.correo`. Required.
+   *
+   * All fields are marked as required using Angular's `Validators.required`.
+   */
+  getFormalario(): void {
     this.represtantante = this.fb.group({
       resigtro: [
         this.solicitudState?.resigtro && this.solicitudState?.resigtro !== ''
@@ -167,19 +201,8 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
         Validators.required
       ],
     });
-
-    this.represtantante.get('rfc')?.disable();
-    this.represtantante.get('nombre')?.disable();
-    this.represtantante.get('apellidoPaterno')?.disable();
-    this.represtantante.get('apellidoMaterno')?.disable();
-
-    this.represtantante.patchValue({
-      rfc: this.datosRepresentativos?.rfc,
-      nombre: this.datosRepresentativos?.nombre,
-      apellidoPaterno: this.datosRepresentativos?.apellidoPaterno,
-      apellidoMaterno: this.datosRepresentativos?.apellidoMaterno,
-    });
   }
+
 
   /**
    * Establece el valor de un campo específico en el store del trámite.

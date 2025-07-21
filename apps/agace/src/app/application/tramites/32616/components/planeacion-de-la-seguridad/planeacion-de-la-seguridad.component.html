@@ -201,7 +201,7 @@
           seguridad en la cadena de
           suministros.
         </label>
-        <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" class="gap"
+        <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" class="gap"
           formControlName="capacitacion"
           (change)="setValoresStore(contingencyForm,'capacitacion', 'setCapacitacion')"></app-input-radio>
       </div>
@@ -220,7 +220,7 @@
         <label for="procedimiento">
           <span class="danger">*</span>Si cuenta con un procedimiento documentado para su realización.
         </label>
-        <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" class="gap"
+        <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" class="gap"
           formControlName="procedimiento"
           (change)="setValoresStore(contingencyForm,'procedimiento', 'setProcedimiento')"></app-input-radio>
       </div>
@@ -305,7 +305,7 @@
         <label for="enfoqueAuditoria">
           <span class="danger">*</span>Si cuenta con un procedimiento documentado para su realización.
         </label>
-        <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" class="gap"
+        <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" class="gap"
           formControlName="enfoqueAuditoria"
           (change)="setValoresStore(contingencyForm,'enfoqueAuditoria', 'setEnfoqueAuditoria')"></app-input-radio>
       </div>
@@ -416,7 +416,7 @@
           negocio en caso de una situación de emergencia o de seguridad.que afecte el desarrollo normal de las
           actividades de comercio exterior de la empresa
         </label>
-        <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" class="gap"
+        <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" class="gap"
           formControlName="enfoqueAuditoria"
           (change)="setValoresStore(contingencyForm,'planEmergencia', 'setPlanEmergencia')"
           (valueChange)="inputChecked($event)"></app-input-radio>

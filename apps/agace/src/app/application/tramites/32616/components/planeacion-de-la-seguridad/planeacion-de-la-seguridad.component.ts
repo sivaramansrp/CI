@@ -108,14 +108,20 @@ export class PlaneacionDelaSeguridadComponent implements OnInit, OnDestroy {
       )
       .subscribe();
       this.crearContingencyFormulario();
-      if (this.esFormularioSoloLectura) {
-      Object.keys(this.contingencyForm.controls).forEach((key) => {
-        this.contingencyForm.get(key)?.disable();
-      });
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.contingencyForm.controls)
+        .map((key) => this.contingencyForm.get(key))
+        .map((control) => {
+          control?.disable();
+          return control;
+        });
     } else {
-      Object.keys(this.contingencyForm.controls).forEach((key) => {
-        this.contingencyForm.get(key)?.enable();
-      });
+      Object.keys(this.contingencyForm.controls)
+        .map((key) => this.contingencyForm.get(key))
+        .map((control) => {
+          control?.enable();
+          return control;
+        });
     }
   }
 
@@ -134,8 +140,6 @@ export class PlaneacionDelaSeguridadComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.crearContingencyFormulario();
   }
 
   /**

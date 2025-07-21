@@ -223,7 +223,7 @@
                 <label for="susceptibleContaminacion">
                     <span class="danger">*</span>{{textos.etiqueta3}}
                 </label>
-                <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
+                <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="susceptibleContaminacion" (change)="setValoresStore(seguridad,'susceptibleContaminacion', 'setSusceptibleContaminacion')"></app-input-radio>
             </div>
         </div>
@@ -242,7 +242,7 @@
                 <label for="encuentrenVacios">
                     <span class="danger">*</span>Indique si la empresa almacena los contenedores, remolques y/o semirremolques para su posterior despacho, o en su caso los que se encuentren vacíos.
                 </label>
-                <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
+                <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="encuentrenVacios" (change)="setValoresStore(seguridad,'encuentrenVacios', 'setEncuentrenVacios')"></app-input-radio>
             </div>
 

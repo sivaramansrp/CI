@@ -84,14 +84,20 @@ export class GestionAduaneraComponent implements OnInit, OnDestroy {
       )
       .subscribe();
       this.crearFormularioDeGestión();
-      if (this.esFormularioSoloLectura) {
-      Object.keys(this.gestionAduanera.controls).forEach((key) => {
-        this.gestionAduanera.get(key)?.disable();
-      });
+     if (this.esFormularioSoloLectura) {
+      Object.keys(this.gestionAduanera.controls)
+        .map((key) => this.gestionAduanera.get(key))
+        .map((control) => {
+          control?.disable();
+          return control;
+        });
     } else {
-      Object.keys(this.gestionAduanera.controls).forEach((key) => {
-        this.gestionAduanera.get(key)?.enable();
-      });
+      Object.keys(this.gestionAduanera.controls)
+        .map((key) => this.gestionAduanera.get(key))
+        .map((control) => {
+          control?.enable();
+          return control;
+        });
     }
   }
 
@@ -108,8 +114,6 @@ export class GestionAduaneraComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.crearFormularioDeGestión();
   }
 
   /**

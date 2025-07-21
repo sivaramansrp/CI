@@ -95,14 +95,20 @@ export class SeguridadPersonalComponent implements OnInit,OnDestroy{
       )
       .subscribe();
       this.crearFormularioDeGestión();
-      if (this.esFormularioSoloLectura) {
-      Object.keys(this.seguridadPersonal.controls).forEach((key) => {
-        this.seguridadPersonal.get(key)?.disable();
-      });
+  if (this.esFormularioSoloLectura) {
+      Object.keys(this.seguridadPersonal.controls)
+        .map((key) => this.seguridadPersonal.get(key))
+        .map((control) => {
+          control?.disable();
+          return control;
+        });
     } else {
-      Object.keys(this.seguridadPersonal.controls).forEach((key) => {
-        this.seguridadPersonal.get(key)?.enable();
-      });
+      Object.keys(this.seguridadPersonal.controls)
+        .map((key) => this.seguridadPersonal.get(key))
+        .map((control) => {
+          control?.enable();
+          return control;
+        });
     }
   }
 
@@ -119,8 +125,6 @@ export class SeguridadPersonalComponent implements OnInit,OnDestroy{
         })
       )
       .subscribe();
-
-    this.crearFormularioDeGestión();
   }
 
   /**

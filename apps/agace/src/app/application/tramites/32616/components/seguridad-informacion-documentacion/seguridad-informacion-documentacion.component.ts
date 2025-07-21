@@ -88,14 +88,20 @@ export class SeguridadInformacionDocumentacionComponent implements OnInit,OnDest
       )
       .subscribe();
       this.crearFormularioDeGestión();
-      if (this.esFormularioSoloLectura) {
-      Object.keys(this.seguridadInformacion.controls).forEach((key) => {
-        this.seguridadInformacion.get(key)?.disable();
-      });
+  if (this.esFormularioSoloLectura) {
+      Object.keys(this.seguridadInformacion.controls)
+        .map((key) => this.seguridadInformacion.get(key))
+        .map((control) => {
+          control?.disable();
+          return control;
+        });
     } else {
-      Object.keys(this.seguridadInformacion.controls).forEach((key) => {
-        this.seguridadInformacion.get(key)?.enable();
-      });
+      Object.keys(this.seguridadInformacion.controls)
+        .map((key) => this.seguridadInformacion.get(key))
+        .map((control) => {
+          control?.enable();
+          return control;
+        });
     }
   }
 
@@ -112,8 +118,6 @@ export class SeguridadInformacionDocumentacionComponent implements OnInit,OnDest
         })
       )
       .subscribe();
-
-    this.crearFormularioDeGestión();
   }
 
   /**

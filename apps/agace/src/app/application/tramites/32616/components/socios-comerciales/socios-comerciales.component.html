@@ -267,7 +267,7 @@
                 <label for="casoSocios">
                     <span class="danger">*</span>En caso de contar con socios comerciales con la certificación de C-TPAT u otro programa de certificación de seguridad en la cadena de suministros, indique la periodicidad con la que es revisado su estatus y las acciones que toma en caso de detectarse que este suspendido y/o cancelado.
                 </label>
-                <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
+                <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="casoSocios" (change)="setValoresStore(sociosComercialesForm,'casoSocios','setCasoSocios')"></app-input-radio>
             </div>
         </div>

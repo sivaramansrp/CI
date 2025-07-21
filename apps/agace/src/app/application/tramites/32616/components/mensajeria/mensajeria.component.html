@@ -60,13 +60,13 @@
         <div class="row mt-5">
             <div class="col-md-12">
                 <label for="aeronauticaCivil"><span class="danger">*</span>Señale si cuenta con el registro de rutas aéreas o aerovías dentro del espacio aéreo nacional ante la Dirección General de Aeronáutica Civil de la SCT.</label>
-                <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="aeronauticaCivil" (change)="setValoresStore(mensajeriaGroup,'aeronauticaCivil', 'setAeronauticaCivil')" ></app-input-radio>
+                <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="aeronauticaCivil" (change)="setValoresStore(mensajeriaGroup,'aeronauticaCivil', 'setAeronauticaCivil')" ></app-input-radio>
             </div>
         </div>
         <div class="row mt-5">
             <div class="col-md-12">
                 <label for="conformidadArticulos"><span class="danger">*</span>Señale si cuenta con la concesión o autorización para prestar los servicios de manejo, almacenaje y custodia de mercancías de comercio exterior de conformidad con los artículos 14 y 14-A de la ley.</label>
-                <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="conformidadArticulos" (change)="setValoresStore(mensajeriaGroup,'conformidadArticulos', 'setConformidadArticulos')" ></app-input-radio>
+                <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="conformidadArticulos" (change)="setValoresStore(mensajeriaGroup,'conformidadArticulos', 'setConformidadArticulos')" ></app-input-radio>
             </div>
         </div>
     }
@@ -89,7 +89,7 @@
         <div class="row mt-5">
             <div class="col-md-12">
                 <label for="documentosMercancias"><span class="danger">*</span>Indique si tiene celebrado un contrato de servicios, con una vigencia mínima de 5 años, la cual no deberá ser menor a un año a la fecha de su solicitud, celebrado de forma directa o a través de sus matrices, filiales o subsidiarias, con un concesionario o permisionario debidamente autorizado por la SCT, mediante el cual pongan a disposición para uso dedicado de las actividades de la empresa de mensajería o paquetería al menos 30 aeronaves y que provea frecuencias regulares a los aeropuertos donde dicha empresa realiza el despacho de los documentos o mercancías.</label>
-                <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="documentosMercancias" (change)="setValoresStore(mensajeriaGroup,'documentosMercancias', 'setDocumentosMercancias')" ></app-input-radio>
+                <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="documentosMercancias" (change)="setValoresStore(mensajeriaGroup,'documentosMercancias', 'setDocumentosMercancias')" ></app-input-radio>
             </div>
         </div>   
     }
@@ -126,13 +126,13 @@
         <div class="row mt-5">
             <div class="col-md-12">
                 <label for="generalAeronauticaCivil"><span class="danger">*</span>Indique si las empresas que forman parte del grupo, las cuales operen el transporte de las aeronaves, tienen autorizadas o registradas rutas aéreas o aerovías dentro del espacio aéreo nacional ante la Dirección General de Aeronáutica Civil de la SCT.</label>
-                <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="generalAeronauticaCivil" (change)="setValoresStore(mensajeriaGroup,'generalAeronauticaCivil', 'setGeneralAeronauticaCivil')" ></app-input-radio>
+                <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="generalAeronauticaCivil" (change)="setValoresStore(mensajeriaGroup,'generalAeronauticaCivil', 'setGeneralAeronauticaCivil')" ></app-input-radio>
             </div>
         </div>
         <div class="row mt-5">
             <div class="col-md-12">
                 <label for="exteriorConformidad"><span class="danger">*</span>Indique si las empresas que forman parte del grupo, cuentan con la concesión o autorización para prestar los servicios de manejo, almacenaje y custodia de mercancías de comercio exterior de conformidad con los artículos 14 y 14-A de la Ley Aduanera.</label>
-                <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="exteriorConformidad" (change)="setValoresStore(mensajeriaGroup,'exteriorConformidad', 'setExteriorConformidad')" ></app-input-radio>
+                <app-input-radio [disabled]="esFormularioSoloLectura"  [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="exteriorConformidad" (change)="setValoresStore(mensajeriaGroup,'exteriorConformidad', 'setExteriorConformidad')" ></app-input-radio>
             </div>
         </div>
     }
@@ -160,20 +160,20 @@
     <div class="row mt-5">
         <div class="col-md-12">
             <label for="fechaDePresentacion"><span class="danger">*</span>Señale si a la fecha de presentación de su solicitud cuenta con una inversión mínima de activos fijos por un monto equivalente en moneda nacional a 1,000,000 de dólares.</label>
-            <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="fechaDePresentacion" (change)="setValoresStore(mensajeriaGroup,'fechaDePresentacion', 'setFechaDePresentacion')" ></app-input-radio>
+            <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="fechaDePresentacion" (change)="setValoresStore(mensajeriaGroup,'fechaDePresentacion', 'setFechaDePresentacion')" ></app-input-radio>
         </div>
     </div>
     <div class="row mt-5">
         <div class="col-md-12">
             <label for="mensajeriaPaqueteria"><span class="danger">*</span>Manifieste si cumple con los estándares mínimos en materia de seguridad establecidos en el formato denominado "Perfil de la empresa de Mensajería y Paquetería".</label>
-            <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="mensajeriaPaqueteria" (change)="setValoresStore(mensajeriaGroup,'mensajeriaPaqueteria', 'setMensajeriaPaqueteria')" ></app-input-radio>
+            <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="mensajeriaPaqueteria" (change)="setValoresStore(mensajeriaGroup,'mensajeriaPaqueteria', 'setMensajeriaPaqueteria')" ></app-input-radio>
         </div>
     </div>
     <ng-titulo titulo="Reconocimiento Mutuo"></ng-titulo>
     <div class="row">
         <div class="col-md-12">
             <label for="reconocimientoMutuo"><span class="danger">*</span>{{textos.etiqueta}}</label>
-            <app-input-radio [radioOptions]="opcionReconocimiento" [isRequired]="true" [layout]="'horizontal'" formControlName="reconocimientoMutuo" (change)="setValoresStore(mensajeriaGroup,'reconocimientoMutuo', 'setReconocimientoMutuo')" ></app-input-radio>
+            <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionReconocimiento" [isRequired]="true" [layout]="'horizontal'" formControlName="reconocimientoMutuo" (change)="setValoresStore(mensajeriaGroup,'reconocimientoMutuo', 'setReconocimientoMutuo')" ></app-input-radio>
         </div>
     </div>
     <ng-titulo titulo="Listado de Socio Comercial Certificado"></ng-titulo>
@@ -185,44 +185,44 @@
     <div class="row mt-5">
         <div class="col-md-12">
             <label for="rfcListado">RFC</label>
-            <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="rfcListado" (change)="setValoresStore(mensajeriaGroup,'rfcListado', 'setRfcListado')" ></app-input-radio>
+            <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="rfcListado" (change)="setValoresStore(mensajeriaGroup,'rfcListado', 'setRfcListado')" ></app-input-radio>
         </div>
     </div>
     <div class="row mt-5">
         <div class="col-md-12">
             <label for="nombreRazonSocialListado">Nombre o Razón Social</label>
-            <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="nombreRazonSocialListado" (change)="setValoresStore(mensajeriaGroup,'nombreRazonSocialListado', 'setNombreRazonSocialListado')" ></app-input-radio>
+            <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="nombreRazonSocialListado" (change)="setValoresStore(mensajeriaGroup,'nombreRazonSocialListado', 'setNombreRazonSocialListado')" ></app-input-radio>
         </div>
     </div>
     <div class="row mt-5">
         <div class="col-md-12">
             <label for="direccionFiscalListado">Dirección Fiscal</label>
-            <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="direccionFiscalListado" (change)="setValoresStore(mensajeriaGroup,'direccionFiscalListado', 'setDireccionFiscalListado')" ></app-input-radio>
+            <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="direccionFiscalListado" (change)="setValoresStore(mensajeriaGroup,'direccionFiscalListado', 'setDireccionFiscalListado')" ></app-input-radio>
         </div>
     </div>
     <div class="row mt-5">
         <div class="col-md-12">
             <label for="paginaElectronicaListado">Página Electrónica</label>
-            <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="paginaElectronicaListado" (change)="setValoresStore(mensajeriaGroup,'paginaElectronicaListado', 'setPaginaElectronicaListado')" ></app-input-radio>
+            <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="paginaElectronicaListado" (change)="setValoresStore(mensajeriaGroup,'paginaElectronicaListado', 'setPaginaElectronicaListado')" ></app-input-radio>
         </div>
     </div>
     <div class="row mt-5">
         <div class="col-md-12">
             <label for="correoElectronicaListado">Correo Electrónico de contacto</label>
-            <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="correoElectronicaListado" (change)="setValoresStore(mensajeriaGroup,'correoElectronicaListado', 'setCorreoElectronicaListado')" ></app-input-radio>
+            <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="correoElectronicaListado" (change)="setValoresStore(mensajeriaGroup,'correoElectronicaListado', 'setCorreoElectronicaListado')" ></app-input-radio>
         </div>
     </div>
     <div class="row mt-5">
         <div class="col-md-12">
             <label for="telefonoContactoListado">Teléfono de contacto</label>
-            <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="telefonoContactoListado" (change)="setValoresStore(mensajeriaGroup,'telefonoContactoListado', 'setTelefonoContactoListado')" ></app-input-radio>
+            <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="telefonoContactoListado" (change)="setValoresStore(mensajeriaGroup,'telefonoContactoListado', 'setTelefonoContactoListado')" ></app-input-radio>
         </div>
     </div>
     <ng-titulo titulo="Clasificación de la Información"></ng-titulo>
     <div class="row">
         <div class="col-md-12">
             <label for="informacionProporcionada">La información proporcionada, durante este trámite para el Registro de Certificación de Empresas es clasificada por la empresa como:</label>
-            <app-input-radio [radioOptions]="opcionInformacionProporcionada" [isRequired]="true" [layout]="'horizontal'" formControlName="informacionProporcionada" (change)="setValoresStore(mensajeriaGroup,'informacionProporcionada', 'setInformacionProporcionada')" ></app-input-radio>
+            <app-input-radio [disabled]="esFormularioSoloLectura" [radioOptions]="opcionInformacionProporcionada" [isRequired]="true" [layout]="'horizontal'" formControlName="informacionProporcionada" (change)="setValoresStore(mensajeriaGroup,'informacionProporcionada', 'setInformacionProporcionada')" ></app-input-radio>
         </div>
     </div>
     <ng-titulo titulo="Pago de derechos"></ng-titulo>
@@ -269,7 +269,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <app-catalogo-select
+            <app-catalogo-select [isDisabled]="esFormularioSoloLectura"
               [label]="'Banco'"
               [placeholder]="'Seleccione un valor'"
               [catalogo]="sectorProductivoAgace"
