@@ -1,33 +1,53 @@
 <div class="container">
-    <div class="row">
-      <ul class="nav nav-tabs">
-        <li [ngClass]="indice === 1 ? 'active' : ''">
-          <a (click)="seleccionaTab(1)" (keyup.enter)="seleccionaTab(1)" (keydown.space)="seleccionaTab(1)" tabindex="0" data-toggle="tab" >Solicitante</a>
-        </li>
-        <li [ngClass]="indice === 2 ? 'active' : ''">
-          <a (click)="seleccionaTab(2)" (keyup.enter)="seleccionaTab(2)" (keydown.space)="seleccionaTab(2)" tabindex="0" data-toggle="tab" >Datos Comunes</a>
-        </li>
+  <div class="row">
+    <ul class="nav nav-tabs">
+      <li 
+        *ngFor="let tab of seccionesDeLaSolicitud" 
+        [ngClass]="indice === tab.index ? 'active' : ''"
+        
+      >
+        <a 
+          *ngIf="tab.index !== 5 || reconocimientoMutuoValue === '1'"
+         
+          [class.active]="indice === tab.index"
+          (click)="seleccionaTab(tab.index)"
+        >
+          {{ tab.title }}
+        </a>
+      </li>
+    </ul>
 
-        <li [ngClass]="indice === 3 ? 'active' : ''">
-          <a (click)="seleccionaTab(3)" (keyup.enter)="seleccionaTab(3)" (keydown.space)="seleccionaTab(3)" tabindex="0" data-toggle="tab" >Terceros Relacionados</a>
-        </li>
-      </ul>
-  
-      <ng-container>
-        @switch (indice) {
-        @case (1) {
-          <solicitante #Solicitante></solicitante>
-        }
-        @case (2) {
-          <solicitante #Solicitante></solicitante>
-        } 
-        @case (3) {
-           @if(esFormularioSoloLectura){
-          <app-terceros-relacionados> </app-terceros-relacionados>
-        } 
-        }
-        }
-      </ng-container>
-    </div>
+    <ng-container>
+      <solicitante #solicitanteRef [hidden]="indice !== 1"></solicitante>
+      
+      @if(esDatosRespuesta){
+        <app-datos-comunes 
+          (reconocimientoMutuoCTPATChange)="onReconocimientoMutuoChange($event)"
+          [hidden]="indice !== 2">
+        </app-datos-comunes>
+      }
+
+      @if(esDatosRespuesta){
+        <app-terceros-relacionados 
+          #tercerosRelacionadosRef  
+          [hidden]="indice !== 3">
+        </app-terceros-relacionados>
+      }
+
+      @if(esDatosRespuesta){
+        <app-recinto-fiscalizado-estrategico 
+          #recintoFiscalizadoEstrategicoRef 
+          [hidden]="indice !== 4">
+        </app-recinto-fiscalizado-estrategico>
+      }
+
+      @if(esDatosRespuesta && reconocimientoMutuoValue === '1'){
+        <app-c-tpat 
+        #ctpatRef
+        [hidden]="indice !== 5">
+        </app-c-tpat>
+      }
+    </ng-container>
+
   </div>
-  
+</div>

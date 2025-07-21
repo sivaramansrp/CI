@@ -1,56 +1,62 @@
-import {
-  AlertComponent,
-  AnexarDocumentosComponent,
-  BtnContinuarComponent,
-  CatalogosService,
-  FirmaElectronicaComponent,
-  InicioSesionService,
-  SolicitanteComponent,
-  SubirDocumentoService,
-  TituloComponent,
-  WizardComponent,
-} from '@libs/shared/data-access-user/src';
+import { AlertComponent, NotificacionesComponent } from '@ng-mf/data-access-user';
+import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { CTPATComponent } from './components/c-tpat/c-tpat.component';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { DatosComunesComponent } from './components/datos-comunes/datos-comunes.component';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { FormsModule } from '@angular/forms';
+import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RecintoFiscalizadoEstrategicoComponent } from './components/recinto-fiscalizado-estrategico/recinto-fiscalizado-estrategico.component';
 import { RegistroOaeRfeRoutingModule } from './registro-oae-rfe-routing.module';
-import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
-import { SolicitudDeRegistroInvocarService } from './services/solicitud-de-registro-invocar.service';
-import { SolicitudPasoComponent } from './pages/solicitud-paso/solicitud-paso.component';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
-import { ToastrService } from 'ngx-toastr';
-import { provideHttpClient } from '@angular/common/http';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { ToastrModule } from 'ngx-toastr';
+import { WizardComponent } from '@ng-mf/data-access-user';
 
-
+ 
 @NgModule({
   declarations: [
-    SolicitudPasoComponent,
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
+    SolicitudPageComponent
   ],
   imports: [
-    AlertComponent,
-    CommonModule,
     RegistroOaeRfeRoutingModule,
+    CommonModule,
+    ReactiveFormsModule,
+    WizardComponent,
+    SolicitanteComponent,
+    TituloComponent,
+    FormsModule,
+    CatalogoSelectComponent,
+    InputFechaComponent,
+    TablaDinamicaComponent,
+    DatosComunesComponent,
+    AlertComponent,
     WizardComponent,
     BtnContinuarComponent,
     SolicitanteComponent,
-    FirmaElectronicaComponent,
-    AnexarDocumentosComponent,
     TituloComponent,
-    TercerosRelacionadosComponent
+    TercerosRelacionadosComponent,
+    ToastrModule.forRoot(),
+    AnexarDocumentosComponent,
+    FirmaElectronicaComponent,
+    RecintoFiscalizadoEstrategicoComponent,
+    CTPATComponent,
+    NotificacionesComponent
   ],
-  providers: [
-    ToastrService,
-    provideHttpClient(),
-    CatalogosService,
-    InicioSesionService,
-    SubirDocumentoService,
-    ServiciosPantallaService,
-    SolicitudDeRegistroInvocarService,
-  ],
+  exports: [],
+  
 })
 export class RegistroOaeRfeModule { }

@@ -61,17 +61,10 @@ export const ENLACE_OPERATIVO_TABLA = [
  * Lista de paneles de configuración para la interfaz de usuario.
  * @description Define los paneles visibles en la pantalla, junto con su estado de colapso.
  */
-export const PANELS = [
+export const ENLACE_OPERATIVO_PANELS = [
   {
-    /**
-     * Etiqueta que se muestra en el encabezado del panel.
-     */
-    label: 'Enlace Operativo',
-
-    /**
-     * Indica si el panel está colapsado por defecto.
-     */
-    isCollapsed: false,
-  },
+    label: 'Enlace Operativo', // Etiqueta del panel
+    isCollapsed: false // Indica si el panel está colapsado o no
+  }
 ];
 

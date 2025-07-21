@@ -1,63 +1,96 @@
 <div class="container form-container">
-  <ng-titulo titulo="Enlace Operativo" />
-  <div class="row mt-5">
-    <div class="col-md-12">
-      <div class="panel-group ficha-collapse" id="accordion">
-        @for(panel of panels; let i = $index; track i) {
-        <div class="panel panel-default mb-3">
-          <div class="panel-heading" (click)="mostrar_colapsable(i)">
-            <h4 class="panel-title">
-              <a>
-                {{ panel.label }}
-              </a>
-            </h4>
-            <button
-              type="button"
-              class="collpase-button"
-              [class.collapsed]="panel.isCollapsed" [disabled]="esFormularioSoloLectura"
-            ></button>
-          </div>
-          <div
-            class="panel-collapse"
-            [id]="'panel-' + i"
-            [ngClass]="{ collapse: panel.isCollapsed, in: !panel.isCollapsed }"
-          >
-            <div class="panel-body">
-              <app-tabla-dinamica
-                [configuracionTabla]="configuracionTabla"
-                [datos]="enlaceOperativoData"
-                [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
-                (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
-                [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-              >
-              </app-tabla-dinamica>
+  <form [formGroup]="enlaceOperativoDataForm">
+    <ng-titulo titulo="Enlace Operativo" />
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <div class="panel-group ficha-collapse" id="accordion">
+          @for(panel of panels; let i = $index; track i) {
+          <div class="panel panel-default mb-3">
+            <div class="panel-heading" (click)="mostrar_colapsable(i)">
+              <h4 class="panel-title">
+                <a>
+                  {{ panel.label }}
+                </a>
+              </h4>
+              <button
+                type="button"
+                class="collpase-button"
+                [class.collapsed]="panel.isCollapsed"
+                [disabled]="esFormularioSoloLectura"
+              ></button>
+            </div>
+            <div
+              class="panel-collapse"
+              [id]="'panel-' + i"
+              [ngClass]="{
+                collapse: panel.isCollapsed,
+                in: !panel.isCollapsed
+              }"
+            >
+              <div class="panel-body">
+                <div
+                  class="row"
+                  *ngIf="
+                    mostrarError &&
+                    (!enlaceOperativoData || enlaceOperativoData.length === 0)
+                  "
+                >
+                  <div class="col-md-12 text-danger mt-3">
+                    <b>Se debe agregar por lo menos un enlace operativo</b>
+                  </div>
+                </div>
+                <app-tabla-dinamica
+                  [configuracionTabla]="configuracionTabla"
+                  [datos]="enlaceOperativoData"
+                  [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                  (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
+                  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+                >
+                </app-tabla-dinamica>
+              </div>
             </div>
           </div>
+          }
         </div>
-        }
       </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="agregarDialogoDatos()">
-                Agregar
-            </button>
-            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura" (click)="modificarItemEnlace()">
-                Modificar
-            </button>
-            <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura" (click)="confirmeliminarEnlaceItem()">
-                Eliminar
-            </button>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="d-flex justify-content-end">
+          <button
+            type="button"
+            class="btn btn-primary me-2"
+            [disabled]="esFormularioSoloLectura"
+            (click)="agregarDialogoDatos()"
+          >
+            Agregar
+          </button>
+          <button
+            class="btn btn-danger me-2"
+            type="button"
+            [disabled]="esFormularioSoloLectura"
+            (click)="modificarItemEnlace()"
+          >
+            Modificar
+          </button>
+          <button
+            class="btn btn-default"
+            type="button"
+            [disabled]="esFormularioSoloLectura"
+            (click)="confirmeliminarEnlaceItem()"
+          >
+            Eliminar
+          </button>
         </div>
+      </div>
     </div>
-  </div>
+  </form>
 </div>
 
-
-<div class="modal fade" id="enlaceOperativoElemento"
+<div
+  class="modal fade"
+  id="enlaceOperativoElemento"
   tabindex="-1"
   aria-labelledby="enlaceOperativoElemento"
   aria-hidden="true"
@@ -68,7 +101,9 @@
     <div class="modal-content">
       <div class="modal-body">
         <form [formGroup]="enlaceOperativoForm">
-          <h6><span class="require">*</span>Registro Federal de Contribuyentes:</h6>
+          <h6>
+            <span class="require">*</span>Registro Federal de Contribuyentes:
+          </h6>
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
@@ -79,18 +114,22 @@
                   type="text"
                 />
               </div>
-            @if (
-            enlaceOperativoForm.controls['registro'].touched &&
-            enlaceOperativoForm.controls['registro'].hasError('required')
-            ) {
-            <div class="mensaje-error">Este campo es obligatorio.</div>
-            }
+              @if ( enlaceOperativoForm.controls['registro'].touched &&
+              enlaceOperativoForm.controls['registro'].hasError('required') ) {
+              <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
             </div>
             <div class="col-md-8">
-                <div class="btn-group">
-                  <button class="btn btn-default" type="button" (click)="buscar()">Buscar</button>
-                </div>
+              <div class="btn-group">
+                <button
+                  class="btn btn-default"
+                  type="button"
+                  (click)="buscar()"
+                >
+                  Buscar
+                </button>
               </div>
+            </div>
           </div>
           <div class="row">
             <div class="col-md-4">
@@ -181,8 +220,9 @@
                   type="text"
                 />
               </div>
-              @if(enlaceOperativoForm.controls['telefono'].invalid && enlaceOperativoForm.controls['telefono'].touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
+              @if(enlaceOperativoForm.controls['telefono'].invalid &&
+              enlaceOperativoForm.controls['telefono'].touched) {
+              <div class="mensaje-error">Este campo es obligatorio.</div>
               }
             </div>
             <div class="col-md-4">
@@ -197,8 +237,9 @@
                   type="text"
                 />
               </div>
-              @if(enlaceOperativoForm.controls['correoElectronico'].invalid && enlaceOperativoForm.controls['correoElectronico'].touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
+              @if(enlaceOperativoForm.controls['correoElectronico'].invalid &&
+              enlaceOperativoForm.controls['correoElectronico'].touched) {
+              <div class="mensaje-error">Este campo es obligatorio.</div>
               }
             </div>
             <div class="col-md-4">
@@ -214,17 +255,37 @@
                   />
                 </div>
               </div>
-              @if(enlaceOperativoForm.controls['suplente'].invalid && enlaceOperativoForm.controls['suplente'].touched) {
-                <div class="mensaje-error">Este campo es obligatorio.</div>
+              @if(enlaceOperativoForm.controls['suplente'].invalid &&
+              enlaceOperativoForm.controls['suplente'].touched) {
+              <div class="mensaje-error">Este campo es obligatorio.</div>
               }
             </div>
           </div>
         </form>
-      <footer class="footer d-flex py-5 gap-3 justify-content-end">
-            <button type="button" class="btn btn-primary" (click)="modalCancelar()">Cancelar</button>
-            <button type="button" class="btn btn-primary" (click)="limpiarFormulario()">Limpiar</button>
-            <button type="button" class="btn btn-primary" (click)="enviarDialogData()" [disabled]="!enlaceOperativoForm.valid">Agregar</button>
-          </footer>
+        <footer class="footer d-flex py-5 gap-3 justify-content-end">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="modalCancelar()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="limpiarFormulario()"
+          >
+            Limpiar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="enviarDialogData()"
+            [disabled]="!enlaceOperativoForm.valid"
+          >
+            Aceptar
+          </button>
+        </footer>
       </div>
     </div>
   </div>
@@ -245,7 +306,7 @@
 </lib-notificaciones>
 
 <lib-notificaciones
-  *ngIf="rfcValido "
+  *ngIf="rfcValido"
   [notificacionInput]="nuevaNotificacion"
   (confirmacionModal)="mostrarNotificacionFormatoIncorrecto()"
 >
@@ -259,7 +320,7 @@
 </lib-notificaciones>
 
 <lib-notificaciones
-  *ngIf="multipleSeleccionPopupAbierto "
+  *ngIf="multipleSeleccionPopupAbierto"
   [notificacionInput]="nuevaNotificacion"
   (confirmacionModal)="confirmeliminarEnlaceItem()"
 >

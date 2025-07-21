@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { PANELS, PERSONAS_NOTIFICACIONES_TABLA } from '../../constantes/personas-notificaciones-tabla.enum';
+import { PERSONAS_NOTIFICACIONES_PANELS, PERSONAS_NOTIFICACIONES_TABLA } from '../../constants/personas-notificaciones-tabla.enum';
 import { PersonaRespuestaTabla, TablaPersonasNotificaciones } from '../../models/personas-notificaciones-tabla.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { SolicitudDeRegistroInvocarService } from '../../services/solicitud-de-registro-invocar.service';
+import { SolicitudService } from '../../services/solicitud.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -77,7 +77,7 @@ export class PersonasNotificacionesComponent implements OnInit, OnDestroy {
    * 
    * @type {Panel[]}
    */
-  panels = PANELS;
+  panels = PERSONAS_NOTIFICACIONES_PANELS;
 
    /**
    * Indica si el formulario está en modo solo lectura.
@@ -87,10 +87,10 @@ export class PersonasNotificacionesComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor del componente PersonasNotificacionesComponent. 
-   * @param solicitudDeRegistroInvocarService - Servicio para obtener datos de personas notificaciones
+   * @param solicitudService - Servicio para obtener datos de personas notificaciones
    */
   constructor(
-    private readonly solicitudDeRegistroInvocarService: SolicitudDeRegistroInvocarService,
+    private solicitudService: SolicitudService,
      private consultaioQuery: ConsultaioQuery
   ) {
     this.consultaioQuery.selectConsultaioState$
@@ -98,6 +98,9 @@ export class PersonasNotificacionesComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
         this.esFormularioSoloLectura = seccionState.readonly;
+         if (this.esFormularioSoloLectura) {
+             this.mostrar_colapsable(0);
+          }
       })
     )
     .subscribe();
@@ -128,7 +131,7 @@ export class PersonasNotificacionesComponent implements OnInit, OnDestroy {
    */
 
   obtenerDatosTabla(): void {
-    this.solicitudDeRegistroInvocarService.obtenerPersonaTablaDatos()
+    this.solicitudService.obtenerPersonaTablaDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta: PersonaRespuestaTabla) => {
         this.enlaceOperativoData = Array.isArray(respuesta.data)

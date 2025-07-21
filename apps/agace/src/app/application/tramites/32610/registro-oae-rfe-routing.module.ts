@@ -1,11 +1,12 @@
-import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { SolicitudPasoComponent } from './pages/solicitud-paso/solicitud-paso.component';
+import { RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
+import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
-const ROUTES: Routes = [
+export const ROUTES_SOLICITUDES: Routes = [
   {
     path: 'solicitud',
-    component: SolicitudPasoComponent,
+    component: SolicitudPageComponent,
   },
   {
     path: '',
@@ -15,7 +16,7 @@ const ROUTES: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(ROUTES)],
-  exports: [RouterModule]
+  imports: [RouterModule.forChild(ROUTES_SOLICITUDES)],
+  exports: [RouterModule],
 })
 export class RegistroOaeRfeRoutingModule { }

@@ -1,85 +1,57 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoTresComponent } from './paso-tres.component';
+import { provideToastr, ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
-import { TramiteAgaceStore } from '../../../../estados/tramite.store';
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
   let fixture: ComponentFixture<PasoTresComponent>;
-  let routerMock: jest.Mocked<Router>;
-  let serviceMock: jest.Mocked<ServiciosPantallaService>;
-  let storeMock: jest.Mocked<TramiteAgaceStore>;
-
-  @Component({
-    selector: 'firma-electronica',
-    template: ''
-  })
-  class MockFirmaElectronicaComponent {
-    @Input() tipo: string = '';
-    @Output() firma = new EventEmitter<string>();
-  }
+  let router: Router;
 
   beforeEach(async () => {
-    routerMock = {
-      navigate: jest.fn()
-    } as unknown as jest.Mocked<Router>;
-
-    serviceMock = {
-      obtenerTramite: jest.fn()
-    } as unknown as jest.Mocked<ServiciosPantallaService>;
-
-    storeMock = {
-      establecerTramite: jest.fn()
-    } as unknown as jest.Mocked<TramiteAgaceStore>;
-
     await TestBed.configureTestingModule({
-      declarations: [PasoTresComponent, MockFirmaElectronicaComponent],
+      imports: [
+        FirmaElectronicaComponent,
+        CommonModule,
+        
+        HttpClientTestingModule,
+        ReactiveFormsModule,
+      ],
+      declarations: [PasoTresComponent],
       providers: [
-        { provide: Router, useValue: routerMock },
-        { provide: ServiciosPantallaService, useValue: serviceMock },
-        { provide: TramiteAgaceStore, useValue: storeMock },
-      ]
+        ToastrService,
+        provideToastr({
+          positionClass: 'toast-top-right',
+        }),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
     fixture.detectChanges();
   });
 
-  it('debería crear el componente correctamente', () => {
+  it('debería crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('obtieneFirma', () => {
-
-    it('no debe ejecutar nada si la firma está vacía', () => {
-      component.obtieneFirma('');
-      expect(serviceMock.obtenerTramite).not.toHaveBeenCalled();
-      expect(storeMock.establecerTramite).not.toHaveBeenCalled();
-      expect(routerMock.navigate).not.toHaveBeenCalled();
-    });
-
-    it('debe manejar errores al obtener el trámite', () => {
-      const error = new Error('Fallo del servicio');
-      serviceMock.obtenerTramite.mockReturnValue(throwError(() => error));
-
-      component.obtieneFirma('firma-valida');
-
-      expect(serviceMock.obtenerTramite).toHaveBeenCalled();
-    });
+  it('debería navegar a la página de acuse con una firma válida', () => {
+    const navigateSpy = jest.spyOn(router, 'navigate');
+    const firma = 'valid-firma';
+    component.obtieneFirma(firma);
+    expect(navigateSpy).toHaveBeenCalledWith(['temporal-contenedores/acuse']);
   });
 
-  it('debería completar destroyed$ al llamar a ngOnDestroy', () => {
-    const destroyed$ = (component as any).destroyed$;
-    const completeSpy = jest.spyOn(destroyed$, 'complete');
-    const nextSpy = jest.spyOn(destroyed$, 'next');
-
-    component.ngOnDestroy();
-
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+  it('no debería navegar a la página de acuse con una firma inválida', () => {
+    const navigateSpy = jest.spyOn(router, 'navigate');
+    const firma = '';
+    component.obtieneFirma(firma);
+    expect(navigateSpy).not.toHaveBeenCalled();
   });
+
 });

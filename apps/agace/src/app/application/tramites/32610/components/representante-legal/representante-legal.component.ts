@@ -16,13 +16,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject,Subscription, map, takeUntil } from 'rxjs';
 import {
-  Tramite32610TercerosState,
-  Tramite32610TercerosStore,
-} from '../../../../estados/tramites/tramite32610-terceros.store';
+  Solicitud32610State,
+  Solicitud32610Store,
+} from '../../estados/solicitud32610.store';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Tramite32610TercerosQuery } from '../../../../estados/queries/tramite32610-terceros.query';
+import { Solicitud32610Query } from '../../estados/solicitud32610.query';
 
 @Component({
   selector: 'app-representante-legal',
@@ -47,7 +47,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>();
 
   /** Estado actual del trámite cargado desde el store */
-  solicitudState!: Tramite32610TercerosState;
+  solicitudState!: Solicitud32610State;
 
   /**
    * Indicates whether the entity is consolidated in ET.
@@ -77,27 +77,32 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    */
   public nuevaNotificacion!: Notificacion;
 
-   /**
+  /**
    * Suscripción a los cambios en el formulario reactivo.
    */
   private subscription: Subscription = new Subscription();
+  /**
+   * Bandera que controla la visualización de errores en el formulario.
+   * Se activa cuando hay errores de validación que deben mostrarse.
+   */
+  mostrarError: boolean = false;
 
   /**
    * Constructor del componente
    *
    * @param fb FormBuilder para crear formularios reactivos
-   * @param tramite32610TercerosStore Store para actualizar el estado del trámite
-   * @param tramite32610TercerosQuery Query para obtener el estado actual del trámite
+   * @param tramite32610Store Store para actualizar el estado del trámite
+   * @param tramite32610Query Query para obtener el estado actual del trámite
    * @param consultaioQuery Query para obtener el estado general del formulario (lectura/edición)
    */
   constructor(
     private fb: FormBuilder,
-    private tramite32610TercerosStore: Tramite32610TercerosStore,
-    private tramite32610TercerosQuery: Tramite32610TercerosQuery,
+    private tramite32610Store: Solicitud32610Store,
+    private tramite32610Query: Solicitud32610Query,
     private consultaioQuery: ConsultaioQuery
   ) {
     // Se suscribe al estado del formulario para saber si está en modo solo lectura
-   this.consultaioQuery.selectConsultaioState$
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
@@ -118,18 +123,17 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-      this.inicializarEstadoFormulario();
+    this.inicializarEstadoFormulario();
   }
 
   /**
    * Crea el formulario reactivo con los valores iniciales del estado de la solicitud.
    * Algunos campos se crean en modo solo lectura (deshabilitados).
-   *
-   * @returns {void}
+ 
    */
   crearFormulario(): void {
-     this.subscription.add(
-      this.tramite32610TercerosQuery.selectSolicitud$
+    this.subscription.add(
+      this.tramite32610Query.selectSolicitud$
         .pipe(
           takeUntil(this.destroyed$),
           map((seccionState) => {
@@ -201,9 +205,9 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * Actualiza el formulario con datos obtenidos desde la tienda.
    */
   public enPatchStoredFormData(): void {
-    this.tramite32610TercerosQuery.selectSolicitud$
+    this.tramite32610Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((datos: Tramite32610TercerosState) => {
+      .subscribe((datos: Solicitud32610State) => {
         this.solicitudState = datos;
       });
   }
@@ -214,38 +218,29 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    *
    * @returns {void}
    */
-botonBuscar(): void {
-  const REGISTRO_VALUE = this.representante.get('representanteRegistro')?.value;
-  const REGISTRO_CONTROL = this.representante.get('representanteRegistro');
-
-  if (!REGISTRO_CONTROL?.valid) {
-    this.mostrarNotificacionFormatoIncorrecto();
-    return;
+  botonBuscar(): void {
+    const REGISTRO_VALUE = this.representante.get(
+      'representanteRegistro'
+    )?.value;
+    const REGISTRO_CONTROL = this.representante.get('representanteRegistro');
+    if (!REGISTRO_CONTROL?.valid) {
+      this.mostrarNotificacionFormatoIncorrecto();
+      return;
+    }
+    if (REGISTRO_VALUE) {
+      this.tieneValorRfc = true;
+      this.mostrarNotificacionDeBusqueda();
+      const MOCK_DATA = {
+        representanteRfc: REGISTRO_VALUE,
+        representanteNombre: 'EUROFOODS DE MEXICO',
+        representanteApellidoPaterno: 'GONZALEZ',
+        representanteApellidoMaterno: 'PINAL',
+        representanteTelefono: '618-256-2532',
+        representanteCorreo: 'vucem2.5@hotmail.com',
+      };
+      this.representante.patchValue(MOCK_DATA);
+    }
   }
-
-  if (REGISTRO_VALUE) {
-    this.tieneValorRfc = true;
-    this.mostrarNotificacionDeBusqueda();
-
-    const MOCK_DATA = {
-      representanteRfc: REGISTRO_VALUE,
-      representanteNombre: 'EUROFOODS DE MEXICO',
-      representanteApellidoPaterno: 'GONZALEZ',
-      representanteApellidoMaterno: 'PINAL',
-      representanteTelefono: '618-256-2532',
-      representanteCorreo: 'vucem2.5@hotmail.com',
-    };
-
-    this.representante.patchValue(MOCK_DATA);
-
-    // 🔄 Guardar todos los valores en el store después de hacer patch
-    const VALORES = this.representante.getRawValue();
-    Object.keys(VALORES).forEach((campo) => {
-      this.setValoresStore(this.representante, campo);
-    });
-  }
-}
-
 
   /**
    * Muestra una notificación de búsqueda exitosa.
@@ -292,10 +287,25 @@ botonBuscar(): void {
     }
     const CONTROL = form.get(campo);
     if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
-      this.tramite32610TercerosStore.actualizarEstado({
+      this.tramite32610Store.actualizarEstado({
         [campo]: CONTROL.value,
       });
     }
+  }
+
+  /**
+   * Validates the representante form and sets the mostrarError flag if validation fails
+   * @returns boolean indicating if the form is valid
+   */
+  public validarFormulario(): boolean {
+    if (!this.representante || this.representante.invalid) {
+      this.representante?.markAllAsTouched();
+      this.mostrarError = true;
+      return false;
+    }
+
+    this.mostrarError = false;
+    return true;
   }
 
   /**

@@ -18,7 +18,9 @@
                         <div class="panel-body">
                           <app-tabla-dinamica 
                             [configuracionTabla]="configuracionTabla" 
-                            [datos]="enlaceOperativoData">
+                            [datos]="enlaceOperativoData"
+                            [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
                           </app-tabla-dinamica>
                         </div>
                     </div>

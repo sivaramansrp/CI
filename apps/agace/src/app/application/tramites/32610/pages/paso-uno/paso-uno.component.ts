@@ -1,126 +1,183 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
-import { Subject, map, takeUntil } from 'rxjs';
-import { SolicitudDeRegistroInvocarService } from '../../services/solicitud-de-registro-invocar.service';
+import { CTPATComponent } from '../../components/c-tpat/c-tpat.component';
+import { Component} from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { RecintoFiscalizadoEstrategicoComponent } from '../../components/recinto-fiscalizado-estrategico/recinto-fiscalizado-estrategico.component';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { SolicitudService } from '../../services/solicitud.service';
+import { Subject } from 'rxjs';
+import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
+import { ViewChild } from '@angular/core';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
- * Componente correspondiente al primer paso del flujo del trámite.
- * Se encarga de gestionar la selección de pestañas y la configuración del solicitante.
- *
- * @export
- * @class PasoUnoComponent
- * @implements {AfterViewInit}
+ * Componente que representa el primer paso de un trámite.
+ * Maneja la visualización y activación de diferentes secciones (tabs) según el tipo de endoso.
  */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
+  styleUrls: ['./paso-uno.component.scss'],
 })
-export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
-
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
-   * Índice para manejar la pestaña seleccionada.
-   * Este valor determina cuál pestaña está activa en la interfaz de usuario.
-   *
-   * @type {number}
-   * @memberof PasoUnoComponent
-   */
-  indice: number = 1;
-
-  /**
-   * Decorador `ViewChild` para acceder a la instancia del componente `SolicitanteComponent`.
-   * Este componente se utiliza para gestionar información relacionada con el solicitante.
-   *
-   * @type {SolicitanteComponent}
-   * @memberof PasoUnoComponent
+   * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
-  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
-  public esFormularioSoloLectura: boolean = false;
+  /**
+   * Índice utilizado para identificar la pestaña activa dentro del paso.
+   */
+  indice: number = 1;
 
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
-
-  /* Estado actual de la consulta cargado desde el store.
-   * Contiene datos como modo de solo lectura y valores del formulario.
-   */
+  /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
 
   /**
-   * Constructor que inyecta los servicios necesarios para manejar el estado y la consulta.
-   * La lógica de inicialización se delega a métodos específicos.
+   * Valor seleccionado para el reconocimiento mutuo.
+   * Se actualiza cuando el usuario selecciona una opción en el formulario.
    */
-  constructor(
-    private solicitudDeRegistroInvocarService: SolicitudDeRegistroInvocarService,
-    private consultaQuery: ConsultaioQuery
-  ) {
+  reconocimientoMutuoValue: string = '';
+
+   /**
+   * Referencia al componente ImportadorExportadorComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de datos de importador/exportador antes de continuar al siguiente paso.
+   */
+  @ViewChild('recintoFiscalizadoEstrategicoRef')recintoFiscalizadoEstrategicoComponent!: RecintoFiscalizadoEstrategicoComponent;
+
+  /**
+   * Referencia al componente TercerosRelacionadosComponent para acceder a sus métodos de validación.
+   * Permite validar los formularios de terceros relacionados incluyendo representante legal,
+   * enlace operativo y personas de notificaciones.
+   */
+  @ViewChild('tercerosRelacionadosRef') tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+
+  @ViewChild('ctpatRef') CTPATComponent!: CTPATComponent;
+
+    /**
+   * Lista de secciones del formulario.
+   * Lista de pasos dentro del formulario con sus respectivos componentes.
+   */
+  seccionesDeLaSolicitud = [
+    { index: 1, title: 'Solicitante', component: 'solicitante' },
+    { index: 2, title: 'Datos Comunes', component: 'datos-comunes' },
+    { index: 3, title: 'Terceros relacionados', component: 'terceros-relacionados' },
+    { index: 4, title: 'Recinto Fiscalizado Estratégico', component: 'recinto-fiscalizado-estrategico' },
+    { index: 5, title: 'CTPAT', component: 'c-tpat' }
+  ];
+
+  constructor(private consultaQuery: ConsultaioQuery, public solicitudService: SolicitudService) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
   /**
-   * Método del ciclo de vida de Angular que se ejecuta después de que la vista ha sido inicializada.
-   * En este método se llama al componente `SolicitanteComponent` para establecer el tipo de persona.
-   *
-   * @memberof PasoUnoComponent
+   * Método que se ejecuta al inicializar el componente.
    */
-  ngAfterViewInit(): void {
-    // Llama al método para obtener el tipo de persona (en este caso, una persona moral nacional)
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
 
   /**
-   * Inicializa el componente suscribiéndose al estado de consulta.
-   * Según el estado, carga datos del formulario o marca como respuesta disponible.
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
-  ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
-        this.consultaState = seccionState;
-    })).subscribe();
-    if(this.consultaState.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esFormularioSoloLectura = true;
-    }
-  }
-  
-  /**
-  * Obtiene los datos de la solicitud desde un servicio y actualiza el estado del formulario.  
-  * Si la respuesta es válida, activa el indicador de datos cargados.
-  */
   guardarDatosFormulario(): void {
-    this.solicitudDeRegistroInvocarService
-      .getDatosDeLaSolicitud().pipe(
-        takeUntil(this.destroyNotifier$)
-      )
+    this.solicitudService
+      .obtenerDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
-        if(resp){
-        this.esFormularioSoloLectura = true;
-        this.solicitudDeRegistroInvocarService.actualizarEstadoFormulario(resp);
-        }else {
-          this.esFormularioSoloLectura = false;
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.solicitudService.actualizarEstado(resp);
         }
       });
   }
 
   /**
-   * Permite que el usuario seleccione una pestaña cambiando el valor de `indice`.
-   * 
-   * @param {number} indice - El índice de la pestaña seleccionada.
-   * @memberof PasoUnoComponent
+   * Cambia la pestaña activa según el índice proporcionado.
+   * El índice de la pestaña que se desea activar.
    */
-  seleccionaTab(indice: number): void {
-    // Establece el índice de la pestaña seleccionada
-    this.indice = indice;
+  seleccionaTab(i: number): void {
+    this.indice = i;
   }
 
-  /**
-  * Método de limpieza que se ejecuta al destruir el componente.  
-  * Finaliza las suscripciones observables utilizando `destroyNotifier$`.
-  */
+    /**
+   * Método que se ejecuta cuando el componente se destruye.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+  /**
+   * Valida todos los formularios del paso uno.
+   * Retorna true si todos los formularios son válidos, false en caso contrario.
+   */
+ public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.tercerosRelacionadosComponent) {
+      if (!this.tercerosRelacionadosComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.recintoFiscalizadoEstrategicoComponent) {
+      if (!this.recintoFiscalizadoEstrategicoComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.CTPATComponent) {
+      if (!this.CTPATComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+    /**
+   * Maneja el cambio de valor para el reconocimiento mutuo.
+   * Actualiza la propiedad `reconocimientoMutuoValue` con el valor seleccionado.
+   *
+   * El nuevo valor seleccionado para reconocimiento mutuo.
+   */
+  onReconocimientoMutuoChange(value: string) :void {
+    this.reconocimientoMutuoValue = value;
+  }
   
+
 }

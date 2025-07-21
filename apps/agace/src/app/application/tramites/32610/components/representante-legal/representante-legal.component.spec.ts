@@ -2,10 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RepresentanteLegalComponent } from './representante-legal.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
-import { Tramite32610TercerosQuery } from '../../../../estados/queries/tramite32610-terceros.query';
-import { Tramite32610TercerosStore } from '../../../../estados/tramites/tramite32610-terceros.store';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
+import { Solicitud32610Store } from '../../estados/solicitud32610.store';
+import { Solicitud32610Query } from '../../estados/solicitud32610.query';
 
 describe('RepresentanteLegalComponent', () => {
   let component: RepresentanteLegalComponent;
@@ -41,8 +41,8 @@ describe('RepresentanteLegalComponent', () => {
   ],
   providers: [
     FormBuilder,
-    { provide: Tramite32610TercerosStore, useValue: mockStore },
-    { provide: Tramite32610TercerosQuery, useValue: mockQuery },
+    { provide: Solicitud32610Store, useValue: mockStore },
+    { provide: Solicitud32610Query, useValue: mockQuery },
     { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
   ],
 }).compileComponents();

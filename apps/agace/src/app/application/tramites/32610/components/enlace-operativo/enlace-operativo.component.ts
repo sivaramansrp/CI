@@ -1,24 +1,49 @@
-import { CategoriaMensaje, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  CategoriaMensaje,
+  ConfiguracionColumna,
+  Notificacion,
+  NotificacionesComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TipoNotificacionEnum,
+} from '@libs/shared/data-access-user/src';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ConsultaioQuery, REG_X } from '@ng-mf/data-access-user';
-import { ENLACE_OPERATIVO_TABLA, PANELS } from '../../constantes/enlace-operativo-tabla.enum';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  ENLACE_OPERATIVO_PANELS,
+  ENLACE_OPERATIVO_TABLA,
+} from '../../constants/enlace-operativo-tabla.enum';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud32610State,
+  Solicitud32610Store,
+} from '../../estados/solicitud32610.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Tramite32610TercerosState, Tramite32610TercerosStore } from '../../../../estados/tramites/tramite32610-terceros.store';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
+import { Solicitud32610Query } from '../../estados/solicitud32610.query';
 import { TablaEnlaceOperativo } from '../../models/enlace-operativo-tabla.model';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { Tramite32610TercerosQuery } from '../../../../estados/queries/tramite32610-terceros.query';
 
 /**
  * Componente para gestionar el enlace operativo en el trámite 32610.
- * 
+ *
  * Este componente maneja la funcionalidad completa del enlace operativo,
  * incluyendo la creación, edición, eliminación y visualización de registros
  * en una tabla dinámica con capacidades de selección múltiple.
- * 
+ *
  * @description
  * Proporciona una interfaz de usuario para:
  * - Registrar nuevos enlaces operativos
@@ -26,7 +51,7 @@ import { Tramite32610TercerosQuery } from '../../../../estados/queries/tramite32
  * - Eliminar enlaces operativos seleccionados
  * - Validar formularios reactivos
  * - Gestionar notificaciones y confirmaciones
- * 
+ *
  */
 @Component({
   selector: 'app-enlace-operativo',
@@ -66,6 +91,11 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    *
    */
   enlaceOperativoForm!: FormGroup;
+
+  /**
+   * Formulario reactivo que contiene los datos operativos del enlace en el componente.
+   */
+  enlaceOperativoDataForm!: FormGroup;
 
   /**
    * Referencia de solo lectura al enumerado de tipos de selección de tabla.
@@ -112,7 +142,7 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    * Define el estado y comportamiento de los paneles que pueden
    * expandirse o contraerse en la interfaz.
    */
-  panels = PANELS;
+  panels = ENLACE_OPERATIVO_PANELS;
 
   /**
    * Configuración de notificación actual para mostrar al usuario.
@@ -216,7 +246,7 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    * Contiene toda la información del estado actual del trámite
    * relacionada con terceros y enlaces operativos.
    */
-  public seccionState!: Tramite32610TercerosState;
+  public seccionState!: Solicitud32610State;
 
   /**
    * Datos de la tabla de enlaces operativos.
@@ -250,21 +280,23 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
   esFilaSeleccionada: boolean = false;
 
   /**
+   * Bandera que controla la visualización de errores en el formulario.
+   * Se activa cuando hay errores de validación que deben mostrarse.
+   */
+  mostrarError: boolean = false;
+
+  /**
    * Constructor del componente EnlaceOperativoComponent.
    *
    * @description
    * Inicializa el componente con todas las dependencias necesarias,
    * configura las suscripciones iniciales y crea el formulario reactivo.
    *
-   * @param {FormBuilder} fb - Constructor de formularios reactivos de Angular
-   * @param {Tramite32610TercerosStore} tramite32610TercerosStore - Store para gestionar el estado del trámite
-   * @param {Tramite32610TercerosQuery} tramite32610TercerosQuery - Query para consultar el estado del trámite
-   * @param {ConsultaioQuery} consultaioQuery - Query para consultar el estado de solo lectura
    */
   constructor(
     private fb: FormBuilder,
-    private tramite32610TercerosStore: Tramite32610TercerosStore,
-    private tramite32610TercerosQuery: Tramite32610TercerosQuery,
+    private tramite32610Store: Solicitud32610Store,
+    private tramite32610Query: Solicitud32610Query,
     private consultaioQuery: ConsultaioQuery
   ) {
     this.consultaioQuery.selectConsultaioState$
@@ -272,6 +304,9 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          if (this.esFormularioSoloLectura) {
+            this.mostrar_colapsable(0);
+          }
         })
       )
       .subscribe();
@@ -287,20 +322,24 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    * y carga los datos iniciales de la tabla.
    */
   ngOnInit(): void {
-    this.tramite32610TercerosQuery.selectSolicitud$
+    this.tramite32610Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((datos: Tramite32610TercerosState) => {
+      .subscribe((datos: Solicitud32610State) => {
         this.seccionState = datos;
         this.enlaceOperativoData = this.seccionState.enlaceOperativoData;
-      });   
+      });
   }
 
   /**
    * Crea el formulario reactivo para el registro de vehículos.
    */
   crearFormulario(): void {
+    this.enlaceOperativoDataForm = this.fb.group({});
     this.enlaceOperativoForm = this.fb.group({
-      registro: ['', [Validators.required,Validators.pattern(REG_X.RFC_13_ALFANUM)]],
+      registro: [
+        '',
+        [Validators.required, Validators.pattern(REG_X.RFC_13_ALFANUM)],
+      ],
       rfc: [{ value: '', disabled: true }],
       nombre: [{ value: '', disabled: true }],
       apellidoPaterno: [{ value: '', disabled: true }],
@@ -336,31 +375,31 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    * simulados basados en el valor del registro Federal de Contribuyentes.
    * En una implementación real, esto se conectaría a un servicio web.
    */
-buscar(): void {
-  const REGISTRO_VALUE = this.enlaceOperativoForm.get('registro')?.value;
-  const REGISTRO_CONTROL = this.enlaceOperativoForm.get('registro');
+  buscar(): void {
+    const REGISTRO_VALUE = this.enlaceOperativoForm.get('registro')?.value;
+    const REGISTRO_CONTROL = this.enlaceOperativoForm.get('registro');
     if (!REGISTRO_CONTROL?.valid) {
       this.mostrarNotificacionFormatoIncorrecto();
       return;
     }
-  let MOCK_DATA;
-  if (REGISTRO_VALUE) {
-  this.mostrarNotificacionDeBusqueda();
-    MOCK_DATA = {
-      rfc: REGISTRO_VALUE,
-      nombre: 'EUROFOODS DE MEXICO',
-      apellidoPaterno: 'GONZALEZ',
-      apellidoMaterno: 'PINAL',
-      telefono: '618-256-2532',
-      cuidad: 'DURANGO',
-      correoElectronico: 'vucem2.5@hotmail.com',
-    };
+    let MOCK_DATA;
+    if (REGISTRO_VALUE) {
+      this.mostrarNotificacionDeBusqueda();
+      MOCK_DATA = {
+        rfc: REGISTRO_VALUE,
+        nombre: 'EUROFOODS DE MEXICO',
+        apellidoPaterno: 'GONZALEZ',
+        apellidoMaterno: 'PINAL',
+        telefono: '618-256-2532',
+        cuidad: 'DURANGO',
+        correoElectronico: 'vucem2.5@hotmail.com',
+      };
 
-    this.enlaceOperativoForm.patchValue(MOCK_DATA);
+      this.enlaceOperativoForm.patchValue(MOCK_DATA);
+    }
   }
-}
 
-/**
+  /**
    * Muestra una notificación de búsqueda exitosa.
    * Este mensaje indica que los datos se guardaron correctamente.
    */
@@ -376,7 +415,7 @@ buscar(): void {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
-     this.tieneValorRfc = true;
+    this.tieneValorRfc = true;
   }
 
   /**
@@ -397,7 +436,6 @@ buscar(): void {
     };
     this.rfcValido = true;
   }
-
 
   /**
    * Abre el cuadro de diálogo modal para el registro de enlaces operativos.
@@ -427,12 +465,12 @@ buscar(): void {
    */
   enviarDialogData(): void {
     if (this.enlaceOperativoForm.valid) {
-    this.enlaceInfoDatos();
-    this.limpiarFormulario();
-    this.cambiarEstadoModal();
-  } else {
-    this.enlaceOperativoForm.markAllAsTouched();
-  }
+      this.enlaceInfoDatos();
+      this.limpiarFormulario();
+      this.cambiarEstadoModal();
+    } else {
+      this.enlaceOperativoForm.markAllAsTouched();
+    }
   }
 
   /**
@@ -513,7 +551,7 @@ buscar(): void {
         ENLACE_OPERATIVO,
       ];
     }
-    this.tramite32610TercerosStore.actualizarEstado({
+    this.tramite32610Store.actualizarEstado({
       enlaceOperativoData: this.enlaceOperativoData,
     });
     this.filaSeleccionadaEnlaceOperativo = {} as TablaEnlaceOperativo;
@@ -591,12 +629,11 @@ buscar(): void {
 
       this.listaFilaSeleccionadaEnlace = [];
       this.filaSeleccionadaEnlaceOperativo = {} as TablaEnlaceOperativo;
-      this.tramite32610TercerosStore.actualizarEstado({
+      this.tramite32610Store.actualizarEstado({
         enlaceOperativoData: this.enlaceOperativoData,
       });
     }
   }
-
 
   /**
    * Modifica un enlace operativo seleccionado en la tabla.
@@ -620,15 +657,18 @@ buscar(): void {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-    }else if( this.listaFilaSeleccionadaEnlace &&
-      this.listaFilaSeleccionadaEnlace.length === 1){
-      this.filaSeleccionadaEnlaceOperativo = { ...this.listaFilaSeleccionadaEnlace[0] };
+    } else if (
+      this.listaFilaSeleccionadaEnlace &&
+      this.listaFilaSeleccionadaEnlace.length === 1
+    ) {
+      this.filaSeleccionadaEnlaceOperativo = {
+        ...this.listaFilaSeleccionadaEnlace[0],
+      };
       this.modoEdicion = true;
       this.registroEditandoId = this.filaSeleccionadaEnlaceOperativo.id;
       this.agregarDialogoDatos();
       this.actualizarDatosModificados();
     }
-
   }
 
   /**
@@ -679,8 +719,8 @@ buscar(): void {
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
-      }; 
-    }else if(this.listaFilaSeleccionadaEnlace.length){
+      };
+    } else if (this.listaFilaSeleccionadaEnlace.length) {
       this.abrirElimninarConfirmationopup();
     }
   }
@@ -707,6 +747,21 @@ buscar(): void {
   }
 
   /**
+   * Validates the representante form and sets the mostrarError flag if validation fails
+   * @returns boolean indicating if the form is valid
+   */
+  validarFormulario(): boolean {
+    this.mostrarError = false;
+
+    if (!this.enlaceOperativoData || this.enlaceOperativoData.length === 0) {
+      this.mostrarError = true;
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */
   ngOnDestroy(): void {
@@ -714,5 +769,3 @@ buscar(): void {
     this.destroyed$.complete();
   }
 }
-
-

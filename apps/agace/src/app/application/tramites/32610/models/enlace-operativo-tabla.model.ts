@@ -1,90 +1,32 @@
 /**
- * Representa un enlace operativo.
- * @description Contiene los datos personales y de contacto de un enlace operativo, incluyendo su ciudad, cargo y si es suplente.
+ * @interfaz
+ * @nombre TablaEnlaceOperativo
+ * @descripción
+ * Representa un enlace operativo. Contiene los datos personales y de contacto de un enlace operativo, incluyendo su ciudad, cargo y si es suplente.
  */
 export interface TablaEnlaceOperativo {
-    
-    /**
-     * Registro único del enlace operativo.
-     */
-    registro: string;
-
-    /**
-     * Identificador único del enlace.
-     */
-    id: number;
-
-    /**
-     * Registro Federal de Contribuyentes.
-     */
-    rfc: string;
-
-    /**
-     * Nombre del enlace operativo.
-     */
-    nombre: string;
-
-    /**
-     * Apellido paterno del enlace.
-     */
-    apellidoPaterno: string;
-
-    /**
-     * Apellido materno del enlace.
-     */
-    apellidoMaterno: string;
-
-    /**
-     * Ciudad en la que reside el enlace.
-     */
-    cuidad: string;
-
-    /**
-     * Cargo que desempeña el enlace operativo.
-     */
-    cargo: string;
-
-    /**
-     * Número de teléfono de contacto.
-     */
-    telefono: string;
-
-    /**
-     * Correo electrónico del enlace operativo.
-     */
-    correoElectronico: string;
-
-    /**
-     * Indica si el enlace operativo es suplente.
-     */
-    suplente: boolean;
-
-    /**
-     * Indica si el enlace ha sido seleccionado.
-     * Campo opcional.
-     */
-    seleccionado?: boolean;
+  registro: string; // Registro único del enlace operativo.
+  id: number; // Identificador único del enlace.
+  rfc: string; // Registro Federal de Contribuyentes.
+  nombre: string; // Nombre del enlace operativo.
+  apellidoPaterno: string; // Apellido paterno del enlace.
+  apellidoMaterno: string; // Apellido materno del enlace.
+  cuidad: string; // Ciudad en la que reside el enlace.
+  cargo: string; // Cargo que desempeña el enlace operativo.
+  telefono: string; // Número de teléfono de contacto.
+  correoElectronico: string; // Correo electrónico del enlace operativo.
+  suplente: boolean; // Indica si el enlace operativo es suplente.
+  seleccionado?: boolean; // Indica si el enlace ha sido seleccionado (opcional).
 }
 
-
+/**
+ * @interfaz
+ * @nombre EnlaceOperativoRespuestaTabla
+ * @descripción
+ * Estructura de respuesta al obtener datos de enlaces operativos. Contiene código de estado, mensaje y la lista de enlaces.
+ */
 export interface EnlaceOperativoRespuestaTabla {
-    /**
-     * Código de estado de la respuesta HTTP.
-     * @description Indica el resultado de la operación (200: éxito, 4xx: error cliente, 5xx: error servidor)
-     * @example 200, 400, 404, 500
-     */
-    code: number;
-    
-    /**
-     * Arreglo de datos de personas notificaciones.
-     * @description Contiene la lista de personas obtenidas del servidor
-     */
-    data: TablaEnlaceOperativo[];
-    
-    /**
-     * Mensaje descriptivo de la respuesta.
-     * @description Proporciona información adicional sobre el resultado de la operación
-     * @example "Operación exitosa", "Error al obtener datos"
-     */
-    message: string;
+  code: number; // Código de estado de la respuesta HTTP.
+  data: TablaEnlaceOperativo[]; // Arreglo de datos de personas notificaciones.
+  message: string; // Mensaje descriptivo de la respuesta.
 }

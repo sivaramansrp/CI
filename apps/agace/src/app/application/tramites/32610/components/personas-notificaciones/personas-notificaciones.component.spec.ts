@@ -1,16 +1,16 @@
 import { PersonasNotificacionesComponent } from './personas-notificaciones.component';
-import { SolicitudDeRegistroInvocarService } from '../../services/solicitud-de-registro-invocar.service';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { of, Subject } from 'rxjs';
-import { PERSONAS_NOTIFICACIONES_TABLA, PANELS } from '../../constantes/personas-notificaciones-tabla.enum';
+import { of } from 'rxjs';
+import { SolicitudService } from '../../services/solicitud.service';
+import { PERSONAS_NOTIFICACIONES_PANELS, PERSONAS_NOTIFICACIONES_TABLA } from '../../constants/personas-notificaciones-tabla.enum';
 
 describe('PersonasNotificacionesComponent', () => {
   let component: PersonasNotificacionesComponent;
-  let solicitudDeRegistroInvocarServiceMock: jest.Mocked<SolicitudDeRegistroInvocarService>;
+  let solicitudService: jest.Mocked<SolicitudService>;
   let consultaioQueryMock: Partial<ConsultaioQuery>;
 
   beforeEach(() => {
-    solicitudDeRegistroInvocarServiceMock = {
+    solicitudService = {
       obtenerPersonaTablaDatos: jest.fn()
     } as any;
 
@@ -32,7 +32,7 @@ describe('PersonasNotificacionesComponent', () => {
     };
 
     component = new PersonasNotificacionesComponent(
-      solicitudDeRegistroInvocarServiceMock,
+      solicitudService,
       consultaioQueryMock as ConsultaioQuery
     );
   });
@@ -43,7 +43,7 @@ describe('PersonasNotificacionesComponent', () => {
 
   it('debería inicializar con valores predeterminados', () => {
     expect(component.configuracionTabla).toEqual(PERSONAS_NOTIFICACIONES_TABLA);
-    expect(component.panels).toEqual(PANELS);
+    expect(component.panels).toEqual(PERSONAS_NOTIFICACIONES_PANELS);
     expect(component.esFormularioSoloLectura).toBe(false);
   });
 
@@ -93,7 +93,7 @@ describe('PersonasNotificacionesComponent', () => {
     consultaioQueryMock.selectConsultaioState$ = of(readonlyStateMock);
 
     component = new PersonasNotificacionesComponent(
-      solicitudDeRegistroInvocarServiceMock,
+      solicitudService,
       consultaioQueryMock as ConsultaioQuery
     );
 
