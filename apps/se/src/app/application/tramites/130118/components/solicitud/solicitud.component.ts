@@ -2,10 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 
-import { CATALOGOS_ID, Catalogo, Catalogos, ConsultaioQuery, ConsultaioState, EntidadesFederativasService, FECHA_SALIDA, FraccionArancelariaService, InputFecha, PaisesService, REGEX_ONCE_ENTEROS_DOS_DECIMALES, REGEX_ONCE_ENTEROS_TRES_DECIMALES, RegimenService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID, Catalogo, Catalogos, CategoriaMensaje, ConsultaioQuery, ConsultaioState, EntidadesFederativasService, FECHA_SALIDA, FraccionArancelariaService, InputFecha, Notificacion, PaisesService, REGEX_ONCE_ENTEROS_DOS_DECIMALES, REGEX_ONCE_ENTEROS_TRES_DECIMALES, RegimenService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
 import { PeximService } from '../../service/pexim.service';
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
+
+import { GuardarService } from '../../../../core/services/130118/guardar.service';
 
 /**
  * Componente para la vista de la solicitud de la sección de "130118".
@@ -97,26 +99,43 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Estado de la consulta.
    */
   consultaDatos!: ConsultaioState;
+
+  /**
+    * Notificación que se muestra al usuario en caso de error o éxito en el proceso de firma.
+    * Incluye información sobre el tipo de notificación, categoría, título y mensaje.
+    */
+  nuevaNotificacion!: Notificacion;
+
   /**
    * Subject para destruir notificador y cancelar suscripciones.
    */
-  private destruirNotificador$: Subject<void> = new Subject();
+   destruirNotificador$: Subject<void> = new Subject();
 
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
-  
+
+  /**
+   * Máximo número de meses para el certificado de antigüedad.
+   */
+  certificadoAntiguedadMaximoMeses: number = 0;
+
 
   /**
    * Constructor del componente.
    * @param peximService Servicio para obtener datos de PEXIM.
-   * @param fb FormBuilder para crear formularios.
-   * @param validacionesService Servicio para validaciones de formularios.
-   * @param tramite130118Store Almacén de estado para el trámite 130118.
-   * @param tramite130118Query Consulta de almacén para el procedimiento 130118.
-   * @param consultaioQuery Consulta para obtener el estado de consulta.
+   * @param fb FormBuilder para crear formularios reactivos.
+   * @param validacionesService Servicio para validar formularios.
+   * @param tramite130118Store Store para manejar el estado del trámite 130118.
+   * @param tramite130118Query Query para consultar el estado del trámite 130118.
+   * @param consultaioQuery Query para consultar datos de la consulta.
+   * @param regimenService Servicio para obtener datos de régimen.
+   * @param entidadesFederativasService Servicio para obtener datos de entidades federativas.
+   * @param paisesService Servicio para obtener datos de países.
+   * @param fraccionArancelariaService Servicio para obtener datos de fracción arancelaria.
+   * @param guardarService Servicio para guardar datos del formulario.
    */
   constructor(
     private peximService: PeximService,
@@ -128,7 +147,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private regimenService: RegimenService,
     private entidadesFederativasService: EntidadesFederativasService,
     private paisesService: PaisesService,
-    private fraccionArancelariaService: FraccionArancelariaService
+    private fraccionArancelariaService: FraccionArancelariaService,
+    private guardarService: GuardarService
   ) { }
 
   /**
@@ -137,7 +157,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializaCatalogos();
-
 
     this.tramite130118Query.selectSeccionState$
       .pipe(
@@ -148,7 +167,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ).subscribe();
 
     this.crearFormSolicitud();
-
 
     const REGIMEN_VALUE = this.datosRegimen.get('regimenMercancia')?.value;
     if (REGIMEN_VALUE && REGIMEN_VALUE !== '-1') {
@@ -169,6 +187,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
     this.regimenMercanciaSeleccion();
     this.clasifiRegimenSeleccion();
+    this.obtenerAntiguedadMaxima();
     this.fraccionArancelariaSeleccion();
     this.nicoSeleccion();
     this.paisOrigenSeleccion();
@@ -176,7 +195,29 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.estadoSeleccion();
     this.unidadMedidaTarifariaSeleccion();
     this.representacionFederalSeleccion();
-    this.muestraCamposPersona();
+    if (this.solicitudState?.nombre || this.solicitudState?.razonSocial) {
+      this.muestraCamposPersona();
+    }
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Limpia las suscripciones y el estado del store.
+   */
+  obtenerAntiguedadMaxima(): void {
+    this.guardarService.getCertificadoAntiguedad().subscribe({
+      next: (response) => {
+        if (response.codigo === '00') {
+          this.certificadoAntiguedadMaximoMeses = Number(response.datos); // ← convierte el string a número
+        } else {
+          // Manejo si viene código distinto a "00"
+          console.error('Error al obtener antigüedad:', response.mensaje);
+        }
+      },
+      error: (error) => {
+        console.error('Error en la petición:', error);
+      }
+    });
   }
 
   /**
@@ -272,11 +313,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         observacionMerc: this.solicitudState?.observacionMerc
       }),
       datosProducto: this.fb.group({
-        tipoPersona: [this.solicitudState?.tipoPersona],
-        nombre: [{value: this.solicitudState?.nombre}, [Validators.required, Validators.maxLength(200)]],
-        apellidoPaterno: [{value: this.solicitudState?.apellidoPaterno}, [Validators.required, Validators.maxLength(200)]],
-        apellidoMaterno: [{value: this.solicitudState?.apellidoMaterno}, [Validators.maxLength(200)]],
-        razonSocial: [this.solicitudState?.razonSocial , [Validators.required,Validators.maxLength(250)]],
+        tipoPersona: [this.solicitudState?.tipoPersona ?? null],
+        nombre: [{ value: this.solicitudState?.nombre ?? '', disabled: true }, [Validators.required, Validators.maxLength(200)]],
+        apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno ?? '', disabled: true }, [Validators.required, Validators.maxLength(200)]],
+        apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno ?? '', disabled: true }, [Validators.maxLength(200)]],
+        razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: this.esFormularioSoloLectura }, [Validators.required, Validators.maxLength(250)]],
         domicilio: [this.solicitudState?.domicilio, [Validators.maxLength(1000)]]
       }),
       registroFederal: this.fb.group({
@@ -286,6 +327,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Obtiene el formulario principal de la solicitud.
+   * @returns {FormGroup} El formulario principal de la solicitud.
+   */
   get form(): FormGroup {
     return this.FormSolicitud;
   }
@@ -334,8 +379,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           this.estado = resp.datos;
         })
       );
-
-
 
     merge(
       REGIMEN_MERCANCIA$,
@@ -483,10 +526,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.FormSolicitud.get('datosProducto.nombre')?.setValue('');
     this.FormSolicitud.get('datosProducto.apellidoPaterno')?.setValue('');
     this.FormSolicitud.get('datosProducto.apellidoMaterno')?.setValue('');
-    
-      if (!this.esFormularioSoloLectura) {
-    this.FormSolicitud.get('datosProducto.razonSocial')?.enable();
-  }
+
+    if (!this.esFormularioSoloLectura) {
+      this.FormSolicitud.get('datosProducto.razonSocial')?.enable();
+    }
     this.FormSolicitud.get('datosProducto.nombre')?.disable();
     this.FormSolicitud.get('datosProducto.apellidoPaterno')?.disable();
     this.FormSolicitud.get('datosProducto.apellidoMaterno')?.disable();
@@ -568,11 +611,58 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param nuevo_valor Nuevo valor de la fecha final.
    */
   cambioFechaFinal(nuevo_valor: string): void {
-    this.datosMercancia.patchValue({
-      fechaSalida: nuevo_valor,
-    });
+    // Validar y convertir la fecha de formato dd/MM/yyyy a Date
+    const PARTES = nuevo_valor.split('/');
+    if (PARTES.length !== 3) {
+      this.datosMercancia.patchValue({ fechaSalida: null });
+      return;
+    }
+
+    const DIA = parseInt(PARTES[0], 10);
+    const MES = parseInt(PARTES[1], 10) - 1;
+    const ANIO = parseInt(PARTES[2], 10);
+
+    const FECHASALIDA = new Date(ANIO, MES, DIA);
+
+    if (isNaN(FECHASALIDA.getTime())) {
+      this.datosMercancia.patchValue({ fechaSalida: null });
+      return;
+    }
+
+    const MESESANTIGUEDAD = this.certificadoAntiguedadMaximoMeses;
+
+    const FECHALIMITE = new Date();
+    FECHALIMITE.setMonth(FECHALIMITE.getMonth() - MESESANTIGUEDAD);
+
+
+    if (FECHASALIDA < FECHALIMITE) {
+
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'toastr',
+        categoria: CategoriaMensaje.ERROR,
+        modo: 'action',
+        titulo: '',
+        mensaje: `La fecha no puede tener más de ${MESESANTIGUEDAD} meses de antigüedad.`,
+        cerrar: false,
+        txtBtnAceptar: '',
+        txtBtnCancelar: '',
+      };
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+      this.datosMercancia.patchValue({ fechaSalida: 'valor_temporal' });
+
+      setTimeout(() => {
+        this.datosMercancia.patchValue({ fechaSalida: null });
+      }, 0);
+
+      return;
+    }
+
+    this.datosMercancia.patchValue({ fechaSalida: nuevo_valor });
     this.tramite130118Store.setFechaSalida(nuevo_valor);
   }
+
+
+
 
   // eslint-disable-next-line class-methods-use-this
   isErrorNoMenosUno(form: FormGroup, field: string): boolean {
@@ -736,8 +826,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       UMT_CONTROL?.disable();
     }
   }
-
-
 
   /**
    * Se ejecuta al destruir el componente.

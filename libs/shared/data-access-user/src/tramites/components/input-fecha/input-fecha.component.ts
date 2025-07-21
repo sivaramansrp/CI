@@ -4,7 +4,9 @@ import {
   EventEmitter,
   HostListener,
   Input,
-  OnInit, Output
+  OnChanges,
+  OnInit, Output,
+  SimpleChanges
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MESES, SEMANA } from '../../../core/enums/constantes-alertas.enum';
@@ -19,7 +21,7 @@ import { InputFecha } from '../../../core/models/shared/components.model';
   templateUrl: './input-fecha.component.html',
   styleUrl: './input-fecha.component.scss',
 })
-export class InputFechaComponent implements OnInit {
+export class InputFechaComponent implements OnInit, OnChanges {
   /**
    * Emite el valor seleccionado cuando cambia.
    */
@@ -106,6 +108,12 @@ export class InputFechaComponent implements OnInit {
       this.Formulario.controls['fechaString'].disable();
     }
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+  if (changes['setFecha'] && changes['setFecha'].currentValue === null) {
+     this.Formulario.get('fechaString')?.reset();
+  }
+}
 
   get fechaString(): string {
     return this.Formulario.get('fechaString')?.value;

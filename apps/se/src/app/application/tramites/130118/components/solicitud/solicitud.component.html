@@ -275,7 +275,7 @@
           <div class="form-group">
             <label for="razonSocial" class="form-label">Denominación o razón social * :</label>
             <input type="text" class="form-control" [ngClass]="isValid(datosProducto, 'razonSocial') ? 'required' : ''"
-              name="razonSocial" id="razonSocial" formControlName="razonSocial" maxlength="250" [disabled]="esFormularioSoloLectura"
+              name="razonSocial" id="razonSocial" formControlName="razonSocial" maxlength="250"
               (change)="setValoresStore(datosProducto,'razonSocial', 'setRazonSocial')" />
             @if(datosProducto.controls['razonSocial'].invalid && datosProducto.controls['razonSocial'].touched) { <div
               class="d-grid"> @if(datosProducto.controls['razonSocial'].errors?.['required']) { <span
@@ -338,3 +338,10 @@
     </ng-container>
   </form>
 </div>
+
+@if(nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}

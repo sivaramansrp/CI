@@ -6,13 +6,16 @@ import { CadenaOriginal130118Service } from '../../../../core/services/130118/ca
 import { CadenaOriginalRequest } from '../../../../core/models/request/cadena-original-request.model';
 import { CadenaOriginalService } from '@libs/shared/data-access-user/src/core/services/shared/cadena-original/cadena-original.service';
 
-import { Subject, catchError, map, switchMap, takeUntil, tap, throwError } from 'rxjs';
+import { Subject, catchError, map, of, switchMap, takeUntil, tap } from 'rxjs';
 import { Firma130118Service } from '../../../../core/services/130118/firma130118.service';
 
-import { CategoriaMensaje, DocumentoService, Notificacion, base64ToHex, encodeToISO88591Hex } from '@libs/shared/data-access-user/src';
+import { CategoriaMensaje, DocumentoService, Notificacion, TramiteFolioStore, base64ToHex, encodeToISO88591Hex } from '@libs/shared/data-access-user/src';
 import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
 import { Solicitud130118State } from '../../estados/tramites/tramite130118.store';
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
+
+import { DocumentosQuery } from '@libs/shared/data-access-user/src/core/queries/documentos.query';
+import { DocumentosState } from '@libs/shared/data-access-user/src/core/estados/documentos.store';
 
 /**
  * Componente para gestionar el paso tres del trámite.
@@ -67,6 +70,12 @@ export class PasoTresComponent implements OnInit, OnDestroy {
   nuevaNotificacion!: Notificacion;
 
   /**
+   * Estado de los documentos relacionados con el trámite.
+   * Este objeto es utilizado para gestionar los documentos necesarios para el trámite.
+   */
+  private documentosState!: DocumentosState;
+
+  /**
  * Objeto que contiene los datos reales de la firma electrónica generada después del proceso de firma.
  * Incluye:
  * - firma: Cadena de la firma generada (en base64).
@@ -91,9 +100,25 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     private cadena: CadenaOriginal130118Service,
     private firma: Firma130118Service,
     private documentoService: DocumentoService,
-    private tramite130118Query: Tramite130118Query) { }
+    private tramite130118Query: Tramite130118Query,
+    private tramiteStore: TramiteFolioStore,
+    private documentosQuery: DocumentosQuery,) { }
 
+  /**
+   * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
+   */
   ngOnInit(): void {
+    // Suscribirse a los cambios en el estado de los documentos
+    this.documentosQuery.selectDocumentoState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((documentosState) => {
+          this.documentosState = documentosState;
+        })
+      )
+      .subscribe();
+
+    // Suscribirse a los cambios en el estado del trámite 130118
     this.tramite130118Query.selectSeccionState$
       .pipe(
         takeUntil(this.destroy$),
@@ -101,9 +126,13 @@ export class PasoTresComponent implements OnInit, OnDestroy {
           this.solicitudState = seccionState;
         })
       ).subscribe();
+
+    // Obtener la URL actual y separar los segmentos
     const URL_ACTUAL = this.router.url;
     const URL_SEPARADA = URL_ACTUAL.split('/');
     this.url = URL_SEPARADA.slice(0, 3).join('/');
+
+    // Obtener la cadena original del trámite
     this.obtenerCadenaOriginal();
   }
 
@@ -174,6 +203,16 @@ export class PasoTresComponent implements OnInit, OnDestroy {
   obtieneFirma(firma: string): void {
     if (!this.cadenaOriginal || !this.datosFirmaReales) {
       console.error('Faltan datos para completar la firma');
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'toastr',
+        categoria: CategoriaMensaje.ERROR,
+        modo: 'action',
+        titulo: 'Error',
+        mensaje: 'Faltan datos para completar la firma.',
+        cerrar: false,
+        txtBtnAceptar: '',
+        txtBtnCancelar: '',
+      };
       return;
     }
 
@@ -189,34 +228,70 @@ export class PasoTresComponent implements OnInit, OnDestroy {
             cadena_original: CADENAHEX,
             cert_serial_number: this.datosFirmaReales.certSerialNumber,
             clave_usuario: this.datosFirmaReales.rfc,
-            fecha_firma: this.formatFecha(new Date()),
+            fecha_firma: PasoTresComponent.formatFecha(new Date()),
             clave_rol: 'Solicitante',
             sello: FIRMAHEX,
-            fecha_fin_vigencia: this.formatFecha(this.datosFirmaReales.fechaFin),
+            fecha_fin_vigencia: PasoTresComponent.formatFecha(this.datosFirmaReales.fechaFin),
             documentos_requeridos: response.datos?.documentos_requeridos || [],
           };
 
-          return this.firma.enviarFirma<string>(String(this.solicitudState.idSolicitud), PAYLOAD).pipe(
-            tap((firmaResponse: BaseResponse<string>) => {
-              if (firmaResponse.datos) {
-                this.folio = firmaResponse.datos;
-              }
-            })
-          );
+          return this.firma.enviarFirma<string>(String(this.solicitudState.idSolicitud), PAYLOAD);
+        }),
+        tap((firmaResponse: BaseResponse<string>) => {
+          // Validar si la firma fue exitosa
+          if (firmaResponse.codigo !== '00' || !firmaResponse.datos) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error al firmar la solicitud',
+              mensaje: firmaResponse.mensaje || firmaResponse.error || 'Ocurrió un error al procesar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+            throw new Error('Firma no exitosa');
+          }
+
+          // Éxito: guardar folio
+          this.folio = firmaResponse.datos;
         }),
         tap(() => {
+          // Solo se ejecuta si todo fue exitoso
+          this.tramiteStore.establecerTramite(
+            this.folio,
+            firma,
+            this.solicitudState.idSolicitud ?? 0
+          );
           this.router.navigate([`${this.url}/acuse`]);
         }),
         catchError((error) => {
           console.error('Error en el proceso de firma:', error);
-          return throwError(() => error);
+          if (!this.nuevaNotificacion) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error inesperado',
+              mensaje: error?.error.error || 'Ocurrió un error al procesar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+          return of(null); // Evita que se propague y corte el flujo sin redirigir
         })
       )
       .subscribe();
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  formatFecha(fecha: string | Date): string {
+
+  /**
+   * Formatea una fecha a un string en el formato 'YYYY-MM-DD HH:mm:ss'.
+   * @param fecha - Fecha a formatear, puede ser un string o un objeto Date.
+   * @returns String formateado de la fecha.
+   */
+  static formatFecha(fecha: string | Date): string {
     const DATE_OBJ = new Date(fecha);
     const PAD = (n: number): string => n.toString().padStart(2, '0');
 

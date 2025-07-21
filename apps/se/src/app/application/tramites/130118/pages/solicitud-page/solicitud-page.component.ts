@@ -16,7 +16,6 @@ import { IniciarRequest } from '../../../../core/models/request/iniciar-requst.m
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
-import { ToastrService } from 'ngx-toastr';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -31,6 +30,26 @@ interface AccionBoton {
    * El valor asociado a la acción.
    */
   valor: number;
+}
+
+/**
+ * Interfaz que define la estructura del resultado de una solicitud.
+ */
+interface ResultadoSolicitud {
+  /**
+   * Indica si la solicitud fue exitosa.
+   */
+  exito: boolean;
+
+  /**
+   * Mensaje de error o éxito de la solicitud.
+   */
+  mensaje?: string;
+
+  /**
+   * Errores del modelo, si los hay.
+   */
+  erroresModelo?: { campo: string; errores: string[] }[];
 }
 
 /**
@@ -79,8 +98,10 @@ export class SolicitudPageComponent implements OnInit {
    */
   TEXTOS = AVISO.Aviso;
 
-
- public nuevaNotificacion: Notificacion | null = null;
+  /**
+   * URL de la página actual.
+   */
+  public nuevaNotificacion: Notificacion | null = null;
 
   /**
    * Mensaje de alerta a mostrar en caso de error.
@@ -92,21 +113,32 @@ export class SolicitudPageComponent implements OnInit {
    */
   esValido = true;
 
+  /**
+   * URL de la página actual.
+   */
   public solicitudState!: Solicitud130118State;
 
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
   @Output() cargarArchivosEvento = new EventEmitter<void>();
 
+  /**
+   * Evento que se emite para regresar a la sección de carga de documentos.
+   * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
+   */
   @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
 
-    /**
-   * Indica si el botón para cargar archivos está habilitado.
-   */
+  /**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
   activarBotonCargaArchivos: boolean = false;
 
-    /**
-   * Indica si la sección de carga de documentos está activa.
-   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
-   */
+  /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
   seccionCargarDocumentos: boolean = true;
 
   /**
@@ -115,13 +147,16 @@ export class SolicitudPageComponent implements OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Notificación que se muestra al usuario.
+   * Se utiliza para mostrar mensajes de éxito, error o información.
+   */
   constructor(
     private iniciarService: IniciarService,
     private location: Location,
     private guardarService: GuardarService,
     private tramite130118Store: Tramite130118Store,
     private tramite130118Query: Tramite130118Query,
-    private toastrService: ToastrService,
   ) { }
 
   /**
@@ -134,9 +169,13 @@ export class SolicitudPageComponent implements OnInit {
     txtBtnSig: 'Continuar',
   };
 
-
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Se suscribe al estado de la sección y obtiene la URL actual.
+   * Si el estado de la consulta indica que hay datos actualizados, se guardan los datos del formulario.
+   * Si no, se establece que hay datos de respuesta disponibles.
+   */
   ngOnInit(): void {
-
     this.tramite130118Query.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -145,12 +184,13 @@ export class SolicitudPageComponent implements OnInit {
         })
       ).subscribe();
 
-
+    // Obtener la URL actual y separar los segmentos
     const PAYLOAD: IniciarRequest = {
       rfc_solicitante: 'LEQI810131GA8',
       rol_actual: 'SOLICITANTE'
     };
 
+    // Realiza la solicitud de inicio del trámite
     this.iniciarService.postIniciar(PAYLOAD).subscribe({
       next: (response) => {
         if (response.codigo !== '00') {
@@ -195,6 +235,10 @@ export class SolicitudPageComponent implements OnInit {
     this.indice = i;
   }
 
+  /**
+   * Actualiza los datos de los pasos del asistente.
+   * Se utiliza para reflejar el número de pasos, el índice actual y los textos de los botones.
+   */
   actualizarDatosPasos(): void {
     this.datosPasos = {
       nroPasos: this.pasos.length,
@@ -215,19 +259,27 @@ export class SolicitudPageComponent implements OnInit {
         .pipe(
           takeUntil(this.destroyNotifier$),
           tap((respuesta) => {
-            if (!respuesta) {
+            if (!respuesta.exito) {
               console.error('entra aqui');
-               this.nuevaNotificacion = null;
+
+              const ERRORESEXTRA = (respuesta.erroresModelo || [])
+                .map((err) => `${err.campo}: ${err.errores.join(', ')}`)
+                .join('<br>');
+
+                const MENSAJEFINAL = `${respuesta.mensaje || 'Error inesperado al enviar la solicitud.'}${ERRORESEXTRA}`;
+
               this.nuevaNotificacion = {
                 tipoNotificacion: 'toastr',
                 categoria: CategoriaMensaje.ERROR,
                 modo: 'action',
-                titulo: '',
-                mensaje: 'Error inesperado al enviar la solicitud.',
+                titulo: 'Error',
+                mensaje: MENSAJEFINAL || 'Error inesperado al enviar la solicitud.',
                 cerrar: false,
                 txtBtnAceptar: '',
                 txtBtnCancelar: '',
               };
+
+              setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
               this.indice = 1;
               this.wizardComponent.indiceActual = 1;
               this.actualizarDatosPasos();
@@ -235,8 +287,8 @@ export class SolicitudPageComponent implements OnInit {
             }
 
             if (e.valor > 0 && e.valor < 5) {
-             
-              
+
+
               this.indice = e.valor;
               this.actualizarDatosPasos();
               if (e.accion === 'cont') {
@@ -246,17 +298,18 @@ export class SolicitudPageComponent implements OnInit {
               }
             }
           }),
-          catchError(() => {
-           this.nuevaNotificacion = {
-                tipoNotificacion: 'toastr',
-                categoria: CategoriaMensaje.ERROR,
-                modo: 'action',
-                titulo: '',
-                mensaje: 'Error inesperado al enviar la solicitud.',
-                cerrar: false,
-                txtBtnAceptar: '',
-                txtBtnCancelar: '',
-              };
+          catchError((err) => {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: '',
+              mensaje: err?.mensaje || 'Error inesperado al enviar la solicitud.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
             return of(false);
           })
         )
@@ -278,7 +331,7 @@ export class SolicitudPageComponent implements OnInit {
    * Método que se ejecuta al inicializar el componente.
    * Se suscribe a los cambios en el estado de la sección y obtiene la URL actual.
    */
-  private enviaSolicitudRequest(): Observable<boolean> {
+  enviaSolicitudRequest(): Observable<ResultadoSolicitud> {
     const FORM = this.pasoUnoComponent?.solicitudComponent?.form;
     const FORMVALUE = FORM.getRawValue();
 
@@ -287,6 +340,7 @@ export class SolicitudPageComponent implements OnInit {
     const DATOS_PRODUCTO = FORMVALUE.datosProducto;
     const REGISTRO_FEDERAL = FORMVALUE.registroFederal;
 
+    // Construye el payload para la solicitud
     const PAYLOAD: GuadarSolicitudRequest = {
       id_solcitud:
         this.solicitudState.idSolicitud === 0
@@ -337,14 +391,43 @@ export class SolicitudPageComponent implements OnInit {
     return this.guardarService.postSolicitud(PAYLOAD).pipe(
       map((response) => {
 
-
-        if (response?.datos?.id_solicitud) {
+        // Si la respuesta es exitosa, actualiza el ID de la solicitud en el store
+        if (response?.codigo === '00' && response?.datos?.id_solicitud) {
           this.tramite130118Store.setIdSolicitud(response.datos.id_solicitud);
-          return true;
+          return { exito: true };
         }
-        return false;
+
+        const MENSAJE =
+          response?.error ||
+          response?.mensaje ||
+          response?.causa ||
+          'Ocurrió un error al guardar la solicitud.';
+
+        const ERRORESMODELO = (response?.errores_modelo || []).map((error: any) => {
+          return {
+            campo: error.campo || 'general',
+            errores: Array.isArray(error.errores) ? error.errores : [String(error.errores)],
+          };
+        });
+
+        return {
+          exito: false,
+          MENSAJE,
+          erroresModelo: ERRORESMODELO,
+        } as ResultadoSolicitud;
       }),
-      catchError(() => of(false)),
+      catchError((error) => {
+        const MENSAJE =
+          error?.error?.error ||
+          error?.message ||
+          'Error inesperado al guardar la solicitud.';
+
+        return of({
+          exito: false,
+          MENSAJE,
+          erroresModelo: error?.error?.errores_modelo || []
+        });
+      }),
       takeUntil(this.destroyNotifier$)
     );
   }
@@ -374,12 +457,12 @@ export class SolicitudPageComponent implements OnInit {
     this.seccionCargarDocumentos = cargaRealizada ? false : true;
   }
 
-   /**
-   * Método para manejar el evento de carga de documentos.
-   * Actualiza el estado del botón de carga de archivos.
-   *  carga - Indica si la carga de documentos está activa o no.
-   * {void} No retorna ningún valor.
-   */
+  /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
   manejaEventoCargaDocumentos(carga: boolean): void {
     this.activarBotonCargaArchivos = carga;
   }
@@ -396,6 +479,11 @@ export class SolicitudPageComponent implements OnInit {
     this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
   }
 
+  /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
   anterior(): void {
     this.wizardComponent.atras();
     this.indice = this.wizardComponent.indiceActual + 1;
