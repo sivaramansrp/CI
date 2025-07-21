@@ -41,5 +41,12 @@ export interface ConfiguracionAporteColumna<T> {
 
   /** Orden en el que se mostrará la columna dentro de la tabla */
   orden: number;
-}
 
+  /**
+   * Define la longitud máxima permitida para el campo correspondiente.
+   *
+   * Esta propiedad es opcional y se utiliza, por ejemplo, para establecer
+   * la cantidad máxima de caracteres que se pueden ingresar en un input.
+   */
+  longitudMaxima?: number;
+}

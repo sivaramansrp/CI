@@ -39,6 +39,16 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    */
   indice: number = 1;
 
+    /**
+   * @method seleccionaTab
+   * @description Selecciona una pestaña específica estableciendo el índice correspondiente.
+   * @param {number} i - El índice de la pestaña a seleccionar.
+   * @returns {void}
+   */
+  seleccionaTab(i: number): void {
+    this.indice = i;
+  }
+
   /**
    * Indica si existen datos de respuesta para mostrar en el formulario.
    * @type {boolean}

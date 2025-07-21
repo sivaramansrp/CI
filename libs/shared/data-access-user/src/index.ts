@@ -210,3 +210,5 @@ export * from './core/services/shared/catalogos/regimen.service';
 export * from './core/services/shared/catalogos/fraccion-arancelaria.service';
 export * from './tramites/components/paginador-tabla/paginador-tabla.component';
 export * from './core/interceptor/http.interceptor';
+
+export * from './tramites/directives/solo-alfabetos/solo-alfabetos.directive';

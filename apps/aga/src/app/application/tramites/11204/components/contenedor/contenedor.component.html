@@ -3,27 +3,25 @@
         <ng-titulo titulo="Ingresar por:" />
         <ng-container>
             <div class="row tipo-busqueda-radio">
-                <div class="col-md-12">
-                    <div class="col-md-4">
-                        <div class="radio">
-                            <label>
-                                <input type="radio" formControlName="tipoBusqueda" id="idRadioContenedor"
-                                    value="Contenedor" class="form-check-input" (change)="onChange('tipoBusqueda', $event)"
-                                    [attr.disabled]="radioContenedor ? true : null">
-                                Contenedor
-                            </label>
-                        </div>
+                <div class="col-md-4">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" formControlName="tipoBusqueda" id="idRadioContenedor"
+                                value="Contenedor" class="form-check-input" (change)="onChange('tipoBusqueda', $event)"
+                                [attr.disabled]="radioContenedor ? true : null">
+                            Contenedor
+                        </label>
                     </div>
+                </div>
 
-                    <div class="col-md-4">
-                        <div class="radio">
-                            <label>
-                                <input type="radio" formControlName="tipoBusqueda" id="idRedioExcel" value="Archivo CSV"
-                                    class="form-check-input" (change)="onChange('tipoBusqueda', $event)"
-                                    [attr.disabled]="radioArchivoCsv ? true : null">
-                                Archivo CSV
-                            </label>
-                        </div>
+                <div class="col-md-4">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" formControlName="tipoBusqueda" id="idRedioExcel" value="Archivo CSV"
+                                class="form-check-input" (change)="onChange('tipoBusqueda', $event)"
+                                [attr.disabled]="radioArchivoCsv ? true : null">
+                            Archivo CSV
+                        </label>
                     </div>
                 </div>
             </div>

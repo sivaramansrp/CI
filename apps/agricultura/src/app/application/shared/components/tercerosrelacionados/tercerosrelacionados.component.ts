@@ -14,6 +14,7 @@ import { AlertComponent, CatalogoSelectComponent, ConfiguracionColumna, InputRad
 import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
 import { OPCION_DE_BOTON_DE_RADIO, SELECCIONADO } from '../../constantes/tercerosrelacionados.enum';
 import { DatosDeLaSolicitud, TercerosrelacionadosTable, TercerosrelacionadosdestinoTable } from '../../models/tercerosrelacionados.model';
+import { ModalComponent } from '../modal/modal.component';
 
 /**
  * Componente para la gestión de terceros relacionados.
@@ -106,6 +107,12 @@ export class TercerosrelacionadosComponent {
  * @type {TercerosrelacionadosTable[]}
  */
   @Input() cuerpoTablaExportador: TercerosrelacionadosdestinoTable[] = [];
+  /**
+   * Referencia al modal utilizado en el componente.
+   * Permite abrir y cerrar el modal según sea necesario.
+   * @type {ModalComponent}
+   */
+  @ViewChild('modalRef', { static: false }) modalRef!: ModalComponent;
 
 
   /**
@@ -148,7 +155,16 @@ export class TercerosrelacionadosComponent {
     { encabezado: 'Domicilio', clave: (fila) => fila.razonSocial, orden: 4 },
     { encabezado: 'País', clave: (fila) => fila.pais, orden: 5 },
   ];
-
+  /**
+    * Evento emitido para abrir el modal de exportador.
+    * @type {abrirModalDestinatario}
+    */
+  @Output() abrirModalDestinatario = new EventEmitter<TercerosrelacionadosdestinoTable>();
+  /**
+   * Evento emitido para abrir el modal de exportador.
+   * @type {EventEmitter<TercerosrelacionadosdestinoTable>}
+   */
+  @Output() abrirModalExportador = new EventEmitter<TercerosrelacionadosdestinoTable>();
 
   /**
    * Configuración de las columnas para la tabla de destinatarios.
@@ -199,26 +215,34 @@ export class TercerosrelacionadosComponent {
    * @method goToAgregarDestinatario
    */
   goToAgregarDestinatario(): void {
-    this.router.navigate(['../agregar-destinatario'], { relativeTo: this.route });
+    this.abrirModalDestinatario.emit();
   }
   goToAgregarExportador(): void {
-    this.router.navigate(['../agregar-destinatariofinal'], { relativeTo: this.route });
+    this.abrirModalExportador.emit();
   }
   /**
    * Navega a la pantalla para modificar un destinatario existente.
    * @method modificarDestinatario
    */
   modificarDestinatario(): void {
-    const ID = 1;
-    this.router.navigate(['../agregar-destinatario', ID], { relativeTo: this.route });
+    if (this.listaDeFilaSeleccionada[0]) {
+      this.abrirModalDestinatario.emit(this.listaDeFilaSeleccionada[0]);
+    }
+    else {
+      this.abrirModalDestinatario.emit();
+    }
   }
   /**
  * Navega a la pantalla para modificar un destinatario existente.
  * @method modificarDestinatario
  */
   modificarDestinatarioFinal(): void {
-    const ID = 1;
-    this.router.navigate(['../agregar-destinatariofinal', ID], { relativeTo: this.route });
+    if (this.listaDeFilaSeleccionadaFinal[0]) {
+      this.abrirModalExportador.emit(this.listaDeFilaSeleccionadaFinal[0]);
+    }
+    else {
+      this.abrirModalExportador.emit();
+    }
   }
 
 

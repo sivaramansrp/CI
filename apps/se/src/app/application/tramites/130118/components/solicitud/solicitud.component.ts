@@ -16,6 +16,7 @@ import { GuardarService } from '../../../../core/services/130118/guardar.service
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
+  standalone: false,
 })
 /*eslint class-methods-use-this: ["error", { "exceptMethods": ["truncar"] }] */
 export class SolicitudComponent implements OnInit, OnDestroy {

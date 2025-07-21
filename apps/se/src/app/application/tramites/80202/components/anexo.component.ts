@@ -42,9 +42,15 @@ import { TituloComponent } from '@ng-mf/data-access-user';
     ReactiveFormsModule,
     TablaDinamicaComponent,
     TituloComponent,
-  ]
+  ],
 })
 export class AnexoComponent implements OnInit, OnDestroy, AfterViewInit {
+  /**
+   * Representa la selección de entrada para el componente.
+   * Este valor se utiliza para determinar el tipo de selección en la tabla dinámica.
+   * Por defecto, está configurado como 1.
+   */
+  inputSelection = 0;
 
   /**
    * Representa la selección de la tabla en el componente.
@@ -73,7 +79,7 @@ export class AnexoComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /**
    * Representa el estado de la solicitud para la ampliación de sensibles en el contexto de IMMEX.
-   * 
+   *
    * Esta propiedad almacena el estado actual de la solicitud, que incluye información
    * relevante para el proceso de ampliación de sensibles. Es utilizada para gestionar
    * y rastrear el estado de la solicitud dentro del componente.
@@ -83,7 +89,7 @@ export class AnexoComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Estado de la sección utilizado para gestionar el estado interno de la aplicación.
    * Este objeto contiene información relevante sobre la sección actual y su estado.
-   * 
+   *
    * @private
    */
   private seccionState!: SeccionLibState;
@@ -94,7 +100,7 @@ export class AnexoComponent implements OnInit, OnDestroy, AfterViewInit {
    * @type {boolean}
    * @memberof Anexo1Component
    */
-  esFormularioSoloLectura:boolean=false;
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -109,7 +115,7 @@ export class AnexoComponent implements OnInit, OnDestroy, AfterViewInit {
     private validacionesService: ValidacionesFormularioService,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
-    private readonly consultaQuery: ConsultaioQuery,
+    private readonly consultaQuery: ConsultaioQuery
   ) {}
   ngOnInit(): void {
     this.seccionQuery.selectSeccionState$
@@ -153,9 +159,11 @@ export class AnexoComponent implements OnInit, OnDestroy, AfterViewInit {
     metodoNombre: keyof ImmexAmpliacionSensiblesStore
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.immexAmpliacionSensiblesStore[metodoNombre] as (value: string | number | boolean) => void)(
-      VALOR
-    );
+    (
+      this.immexAmpliacionSensiblesStore[metodoNombre] as (
+        value: string | number | boolean
+      ) => void
+    )(VALOR);
   }
 
   /**
@@ -316,42 +324,42 @@ export class AnexoComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /**
- * @inheritdoc
- * @description
- * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
- * 
- * Suscribe al observable `selectConsultaioState$` para escuchar cambios en el estado de la consulta.
- * Si el estado indica que no se está creando y el `procedureId` es '80202', actualiza la propiedad `esFormularioSoloLectura`
- * según el valor de `readonly` en el estado. Luego, inicializa el estado del formulario llamando a `inicializarEstadoFormulario()`.
- * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$` para evitar fugas de memoria.
- *
- */
-ngAfterViewInit(): void {
- this.consultaQuery.selectConsultaioState$
+   * @inheritdoc
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+   *
+   * Suscribe al observable `selectConsultaioState$` para escuchar cambios en el estado de la consulta.
+   * Si el estado indica que no se está creando y el `procedureId` es '80202', actualiza la propiedad `esFormularioSoloLectura`
+   * según el valor de `readonly` en el estado. Luego, inicializa el estado del formulario llamando a `inicializarEstadoFormulario()`.
+   * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$` para evitar fugas de memoria.
+   *
+   */
+  ngAfterViewInit(): void {
+    this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          if(!seccionState.create && seccionState.procedureId === '80202') {
+          if (!seccionState.create && seccionState.procedureId === '80202') {
             this.esFormularioSoloLectura = seccionState.readonly;
           }
           this.inicializarEstadoFormulario();
         })
-      ).subscribe();
-}
+      )
+      .subscribe();
+  }
 
- /**
-     * @method inicializarEstadoFormulario
-     * @description
-     * Inicializa el estado del formulario dependiendo si está en modo solo lectura.
-     * Si el formulario no existe, lo crea. Si el formulario debe ser solo de lectura,
-     * lo deshabilita; de lo contrario, lo habilita.
-     */
-    inicializarEstadoFormulario(): void {
-      if (this.esFormularioSoloLectura) {
-        this.fraccionForm.disable();
-      } else {
-        this.fraccionForm.enable();
-      }
+  /**
+   * @method inicializarEstadoFormulario
+   * @description
+   * Inicializa el estado del formulario dependiendo si está en modo solo lectura.
+   * Si el formulario no existe, lo crea. Si el formulario debe ser solo de lectura,
+   * lo deshabilita; de lo contrario, lo habilita.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.fraccionForm.disable();
+    } else {
+      this.fraccionForm.enable();
     }
-
+  }
 }

@@ -1,4 +1,4 @@
-import { Aduanas, DatosDelContenedor, DatosDelCsvArchivo } from '../../models/datos-tramite.model';
+import { Aduanas, DatosDelContenedor, DatosDelCsvArchivo, RespuestaCatalog } from '../../models/datos-tramite.model';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, REGEX_NUMEROS, REGEX_REEMPLAZAR, TEXTOS, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
@@ -295,7 +295,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     });
     this.cargarCatalogos();
     this.fetchgetaduanaLista();
-    this.loadDatosTablaData();
   }
 
   /**
@@ -328,12 +327,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.mostrarCampos();
     if (this.soloLectura) {
       this.solicitudForm?.disable();
+      this.loadDatosTablaData();
     } else {
       this.solicitudForm?.enable();
     }
   }
 
-  validateFechas() {
+  validateFechas(): void {
     const FECHA_INGRESO = this.solicitudForm.get('fechaIngreso')?.value;
     const VIGENCIA = this.solicitudForm.get('vigencia')?.value;
 
@@ -341,8 +341,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       this.solicitudForm.get('vigencia')?.setErrors(null);
       return;
     }
-    const PARSEDINGRESO = this.parseDDMMYYYY(FECHA_INGRESO);
-    const PARSEDVIGENCIA = this.parseDDMMYYYY(VIGENCIA);
+    const PARSEDINGRESO = ContenedorComponent.parseDDMMYYYY(FECHA_INGRESO);
+    const PARSEDVIGENCIA = ContenedorComponent.parseDDMMYYYY(VIGENCIA);
 
     if (PARSEDINGRESO && PARSEDVIGENCIA && PARSEDVIGENCIA < PARSEDINGRESO) {
       this.solicitudForm.get('vigencia')?.setErrors({ fechaInvalida: true });
@@ -351,13 +351,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
-  parseDDMMYYYY(dateStr: string): Date | null {
-    if (!dateStr) return null;
+  static parseDDMMYYYY(dateStr: string): Date | null {
+    if (!dateStr) { return null; }
 
-    const [day, month, year] = dateStr.split('/');
-    if (!day || !month || !year) return null;
+    const [DAY, MONTH, YEAR] = dateStr.split('/');
+    if (!DAY || !MONTH || !YEAR) { return null; }
 
-    return new Date(Number(year), Number(month) - 1, Number(day));
+    return new Date(Number(YEAR), Number(MONTH) - 1, Number(DAY));
   }
 
   onChange(controlName: string, event: Event): void {
@@ -396,14 +396,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Cargar datos de la tabla.
    */
   loadDatosTablaData(): void {
-    this.datosTramiteService.getDatosTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe(
-      (data) => {
-        this.contenedores.catalogos = data.data.map((contenedor: Catalogo) => ({
-          id: contenedor.id,
-          descripcion: contenedor.descripcion || ''
-        }));
-      },
-    );
+    this.datosTramiteService
+      .getDatosTableData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: RespuestaCatalog[]) => {
+        this.datosDelContenedor = data as unknown as DatosDelContenedor[];
+      });
   }
 
   /**

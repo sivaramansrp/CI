@@ -3,10 +3,11 @@ import {
   ListaComponentes,
   Tabulaciones,
 } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
-import { Component, OnDestroy, OnInit, Type } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnDestroy, Type } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { LISTA_TRIMITES } from '../core/enums/lista-trimites.enums';
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
 import { Router } from '@angular/router';
@@ -14,11 +15,11 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-detalle-v-dictamen',
   standalone: true,
-  imports: [ReviewersTabsComponent],
+  imports: [ReviewersTabsComponent, ReactiveFormsModule, CommonModule, FormsModule, NotificacionesComponent],
   templateUrl: './detalle-v-dictamen.component.html',
   styleUrls: ['./detalle-v-dictamen.component.scss'],
 })
-export class DetalleVDictamenComponent implements OnInit, OnDestroy {
+export class DetalleVDictamenComponent implements OnDestroy {
   /**
    * @property {number} tramite
    * @description Identificador del trámite seleccionado.
@@ -58,6 +59,21 @@ export class DetalleVDictamenComponent implements OnInit, OnDestroy {
   listaTrimites = LISTA_TRIMITES;
 
   /**
+   * Formulario reactivo para gestionar las observaciones en el componente.
+   */
+  frmObservacion: FormGroup;
+
+  /**
+   * Nombre del identificador para el modal de guardar.
+   * Se utiliza para referenciar y controlar la visibilidad del modal de guardado en la interfaz de usuario.
+   */
+  modalGuardar: string = 'modalGuardar';
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  nuevaNotificacion!: Notificacion | null;
+  /**
    * Constructor del componente `DetalleVDictamenComponent`.
    * @param {FormBuilder} fbOb - Servicio para construir formularios reactivos.
    * @param {Router} router - Servicio de enrutamiento de Angular para navegar entre rutas.
@@ -74,28 +90,15 @@ export class DetalleVDictamenComponent implements OnInit, OnDestroy {
         }
       })
     ).subscribe()
-  }
-
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   * Inicializa el formulario de tramite y consulta los datos generales del tramite.
-   */
-  ngOnInit(): void {
-    this.inicializaFormTramite();
-  }
-
-  /**
-   * Inicializa el formulario de tramite
-   * @returns {void}
-   */
-  inicializaFormTramite(): void {
-    this.FormObservacion = this.fbOb.group({
-      observacion: [''],
-      fecha: [{ value: '', disabled: true }],
-      hora: [{ value: '', disabled: true }],
-      usuario: [{ value: '', disabled: true }],
+    /**
+     * @property {FormGroup} frmObservacion
+     * @description Formulario reactivo que contiene un campo para la observación del dictamen
+     */
+    this.frmObservacion = this.fbOb.group({
+      observacion: ['', [Validators.required]]
     });
   }
+
   /**
    * @method viewChildcambioDePestana
    * @description Cambia el componente hijo mostrado según la pestaña seleccionada.
@@ -149,7 +152,16 @@ export class DetalleVDictamenComponent implements OnInit, OnDestroy {
    * @memberof DetalleVDictamenComponent
    */
   guardarObservacion(): void {
-    this.router.navigate(['bandeja-de-tareas-pendientes']);
+    this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: "Aviso",
+        mensaje: "Se ha generado una Observación al Dictamen exitosamente.",
+        cerrar: false,
+        txtBtnAceptar: "Aceptar",
+        txtBtnCancelar: "",
+      };
   }
 
   /**
@@ -169,5 +181,17 @@ export class DetalleVDictamenComponent implements OnInit, OnDestroy {
     selectTramite(i: number): void {
       this.tramite = i;
       this.slectTramite = LISTA_TRIMITES.find((v) => v.tramite === i);
+    }
+
+    /**
+     * Maneja la confirmación de un modal.
+     * Si el evento es verdadero, navega a la bandeja de tareas pendientes.
+     * @param evento Indica si se confirmó la acción.
+     */
+    confirmacionModal(evento:boolean): void {
+      if(evento === true) {
+        this.router.navigate(['bandeja-de-tareas-pendientes']);
+      }
+      
     }
 }

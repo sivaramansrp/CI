@@ -1,8 +1,8 @@
-import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
-import { BtnContinuarComponent, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
-import { MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/certificado-zoosanitario.enum';
 import { CommonModule } from '@angular/common';
+import { Component, ViewChild } from '@angular/core';
+import { AlertComponent, BtnContinuarComponent, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
+import { ERROR_FORMA_ALERT, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/certificado-zoosanitario.enum';
+import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -25,8 +25,8 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 @Component({
   selector: 'app-zoosanitario-page',
   templateUrl: './zoosanitario-page.component.html',
-  standalone:true,
-  imports: [WizardComponent,CommonModule,PasoDosComponent,PasoUnoComponent,PasoTresComponent,BtnContinuarComponent],
+  standalone: true,
+  imports: [WizardComponent, CommonModule, PasoDosComponent, PasoUnoComponent, PasoTresComponent, BtnContinuarComponent, AlertComponent],
 })
 export class ZoosanitarioPageComponent {
   /**
@@ -39,7 +39,7 @@ export class ZoosanitarioPageComponent {
    * Título del mensaje principal.
    * @property {string | null} tituloMensaje - Título que se muestra en la parte superior del formulario.
    */
-  tituloMensaje: string | null = 'Zoosanitario para importación';
+  tituloMensaje: string | null = 'Captura del certificado zoosanitario para importación';
 
   /**
    * Componente Wizard.
@@ -48,10 +48,23 @@ export class ZoosanitarioPageComponent {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
+ * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+ * const isValid = this.pasoUnoComponent.validateForms();
+ * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
+ */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
+  /**
    * Índice actual del paso.
    * @property {number} indice - Índice del paso actual en el que se encuentra el usuario.
    */
   indice: number = 1;
+  /**
+ * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+ */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
 
   /**
    * Datos para la configuración de los botones del asistente.
@@ -69,6 +82,7 @@ export class ZoosanitarioPageComponent {
    * @property {string} mensajeDeTextoDeExito - Mensaje que se muestra si el primer paso se completa con éxito.
    */
   mensajeDeTextoDeExito: string = MENSAJE_DE_EXITO_ETAPA_UNO;
+  esFormaValido: boolean = false;
 
   /**
    * Constructor del componente. Inicializa los pasos del asistente.
@@ -83,12 +97,35 @@ export class ZoosanitarioPageComponent {
    * @method getValorIndice
    * @param {AccionBoton} e - Objeto con la acción (cont/atras) y el valor (índice) del botón.
    */
-  getValorIndice(e: AccionBoton):void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
+  getValorIndice(e: AccionBoton): void {
+    this.esFormaValido = false;
+
+    // Validar formularios antes de continuar desde el paso uno
+    if (this.indice === 1 && e.accion === 'cont') {
+      const ISVALID = this.validarTodosFormulariosPasoUno();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+        return; // Detener ejecución si los formularios son inválidos
+      }
+    }
+    // Calcular el nuevo índice basado en la acción
+    let indiceActualizado = e.valor;
+    if (e.accion === 'cont') {
+      indiceActualizado = e.valor + 1;
+    } else if (e.accion === 'ant') {
+      indiceActualizado = e.valor - 1;
+    }
+
+    // Validar que el nuevo índice esté dentro de los límites permitidos
+    if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
+
+      // Actualizar el índice y datosPasos
+      this.indice = indiceActualizado;
+      this.datosPasos.indice = indiceActualizado;
+
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
-      } else {
+      } else if (e.accion === 'ant') {
         this.wizardComponent.atras();
       }
     }
@@ -121,6 +158,21 @@ export class ZoosanitarioPageComponent {
       default:
         this.tituloMensaje = 'Captura del certificado zoosanitario para importación';
         break;
+    }
+  }
+  /**
+ * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
+ */
+  private validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUnoComponent) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+    if (!ISFORM_VALID_TOUCHED) {
+      return false;
+    }
+    else {
+      return true;
     }
   }
 }

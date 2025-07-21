@@ -90,8 +90,45 @@ export class InputFechaComponent implements OnInit, OnChanges {
     this.generarFormulario(OBJECT_DATE);
   }
 
+  /**
+ * Método del ciclo de vida `ngOnChanges` de Angular.
+ *
+ * Se ejecuta automáticamente cuando cambia alguna de las propiedades con decorador `@Input()` del componente.
+ * En este caso, detecta cambios en la propiedad `setFecha` y actualiza internamente el valor,
+ * llamando al método `setFechaEnInput()` para reflejar el cambio en la interfaz.
+ *
+ * @param {SimpleChanges} changes - Objeto que contiene los cambios detectados en las propiedades de entrada.
+ */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['setFecha']) {
+      this.setFecha = changes['setFecha'].currentValue;
+      this.setFechaEnInput();
+    }
+  }
+
+  /**
+ * Método del ciclo de vida `ngOnInit` de Angular.
+ *
+ * Se ejecuta una vez que el componente ha sido inicializado.
+ * En este caso, llama al método `setFechaEnInput()` para establecer el valor inicial
+ * del campo de fecha basado en el valor recibido por el `@Input`.
+ */
   ngOnInit(): void {
-    if (this.setFecha) {
+   this.setFechaEnInput();
+  }
+
+  /**
+ * Establece el valor inicial del campo de fecha en el formulario.
+ *
+ * Si `setFecha` contiene una fecha válida en formato `DD/MM/YYYY`, la convierte
+ * a un objeto `moment`, inicializa el formulario con esa fecha y actualiza
+ * el campo `fechaString`. El campo se habilita temporalmente para asignar el valor
+ * y luego se desactiva nuevamente para mantener el modo de solo lectura.
+ *
+ * Si `setFecha` está vacío o no es válida, limpia el campo y lo desactiva.
+ */
+  setFechaEnInput(): void{
+ if (this.setFecha) {
       const FECHA = this.setFecha.split('/');
       if(FECHA.length === 3) {
       const OBJECT_DATE = moment(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);

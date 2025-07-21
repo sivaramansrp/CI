@@ -156,8 +156,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Lista de aduanas.
    */
   aduanaList: {
-    catalogos: Aduanas[];
     labelNombre: string;
+    catalogos: Aduanas[];
     primerOpcion: string;
   };
 

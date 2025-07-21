@@ -182,7 +182,7 @@
         formControlName="marca"
         (change)="setValoresStore('marca')"
         maxlength="50"
-        soloLetrasNumeros
+        libSoloAlfabetos
       />
       <div *ngIf="avisoForm.get('marca')?.touched && avisoForm.get('marca')?.invalid">
         <small *ngIf="avisoForm.get('marca')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
@@ -197,7 +197,7 @@
         formControlName="tipo"
         (change)="setValoresStore('tipo')"
         maxlength="50"
-        soloLetrasNumeros
+        libSoloAlfabetos
       />
       <div *ngIf="avisoForm.get('tipo')?.touched && avisoForm.get('tipo')?.invalid">
         <small *ngIf="avisoForm.get('tipo')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
@@ -212,6 +212,7 @@
         formControlName="modelo"
         (change)="setValoresStore('modelo')"
         maxlength="50"
+        soloLetrasNumeros
       />
       <div *ngIf="avisoForm.get('modelo')?.touched && avisoForm.get('modelo')?.invalid">
         <small *ngIf="avisoForm.get('modelo')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
@@ -226,6 +227,7 @@
         formControlName="niv"
         (change)="setValoresStore('niv')"
         maxlength="50"
+        soloLetrasNumeros
       />
       <div *ngIf="avisoForm.get('niv')?.touched && avisoForm.get('niv')?.invalid">
         <small *ngIf="avisoForm.get('niv')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
@@ -240,6 +242,7 @@
         formControlName="numeroDePlacas"
         (change)="setValoresStore('numeroDePlacas')"
         maxlength="50"
+        soloLetrasNumeros
       />
       <div *ngIf="avisoForm.get('numeroDePlacas')?.touched && avisoForm.get('numeroDePlacas')?.invalid">
         <small *ngIf="avisoForm.get('numeroDePlacas')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
@@ -254,7 +257,7 @@
         formControlName="estadoPlacas"
         (change)="setValoresStore('estadoPlacas')"
         maxlength="50"
-        soloLetrasNumeros
+        libSoloAlfabetos
       />
       <div *ngIf="avisoForm.get('estadoPlacas')?.touched && avisoForm.get('estadoPlacas')?.invalid">
         <small *ngIf="avisoForm.get('estadoPlacas')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>

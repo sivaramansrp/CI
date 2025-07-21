@@ -56,6 +56,9 @@ export class PantallasSvcService {
       this.tramite110101Store.setValorTransaccion(DATOS.valorTransaccion);
       this.tramite110101Store.setEntidad(DATOS.entidad);
       this.tramite110101Store.setRepresentacion(DATOS.representacion);
+      this.tramite110101Store.setMetodoSeparacion(DATOS.metodoSeparacion);
+      this.tramite110101Store.setExportadorAutorizado(DATOS.exportadorAutorizado);
+      this.tramite110101Store.setInformacionRadios(DATOS.informacionRadios);
     }
 
     /**
