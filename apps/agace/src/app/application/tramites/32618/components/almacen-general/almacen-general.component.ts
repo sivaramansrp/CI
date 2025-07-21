@@ -13,7 +13,15 @@ import { SolicitudeService } from '../../services/solicitude.service';
 @Component({
   selector: 'app-almacen-general',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,InputRadioComponent],
+  imports: [ 
+    CommonModule,
+    DatosComunesTresComponent,
+    ReactiveFormsModule,
+    FormasDinamicasComponent,
+    TituloComponent,
+    InputRadioComponent,
+    PagoDeDerechosComponent,
+    RowTypeFormInputComponent],
   templateUrl: './almacen-general.component.html',
   styleUrl: './almacen-general.component.scss',
 })

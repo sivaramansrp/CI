@@ -1566,4 +1566,12 @@ export class SolicitudStore extends Store<SolicitudState> {
   resetStore(): void {
     this.reset();
   }
+
+
+   public setDynamicFieldValue(fieldName: string, value: unknown): void {
+    this.update((state) => ({
+      ...state,
+      [fieldName]: value,
+    }));
+  }
 }
