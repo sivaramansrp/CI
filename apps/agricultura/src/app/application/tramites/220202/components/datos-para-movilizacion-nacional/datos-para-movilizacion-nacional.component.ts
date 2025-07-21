@@ -18,19 +18,6 @@ import { AgriculturaApiService } from '../../services/220202/agricultura-api.ser
 import { Subject, map, takeUntil } from 'rxjs';
 import { Movilizacion } from '../../models/220202/fitosanitario.model';
 
-/**
- * @fileoverview Componente para la sección de datos para movilización nacional.
- * Este componente gestiona la lógica y la presentación del formulario de datos
- * para la movilización nacional, incluyendo la inicialización, la obtención de
- * datos y la gestión de los controles del formulario.
- * @module datosParaMovilizacionNacional
- */
-
-/**
- * Componente para el formulario de datos para movilización nacional.
- * @class DatosParaMovilizacionNacionalComponent
- * @implements {OnInit}
- */
 
 /**
  * Componente para mostrar el subtítulo del asistente.

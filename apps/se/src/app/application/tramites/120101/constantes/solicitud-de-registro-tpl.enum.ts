@@ -358,7 +358,7 @@ export const CONSULTAR_CUPO = [
   },
   {
     id: 'fraccionArancelaria',
-    labelNombre: 'Fraccion arancelaria',
+    labelNombre: 'Fracción arancelaria',
     campo: 'fraccionArancelaria',
     clase: 'col-md-4',
     tipoInput: 'text',
@@ -429,7 +429,7 @@ export const CONSULTAR_CUPO = [
 export const DESCRIPCION_DEL_CUPO = [
   {
     id: 'fraccionArancelaria',
-    labelNombre: 'Fraccion arancelaria',
+    labelNombre: 'Fracción arancelaria',
     campo: 'fraccionArancelariaDescripcion',
     clase: 'col-md-4',
     tipoInput: 'text',

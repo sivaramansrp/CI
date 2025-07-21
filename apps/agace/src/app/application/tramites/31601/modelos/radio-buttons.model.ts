@@ -15,7 +15,7 @@ export interface RadioBotons {
  * Contiene las propiedades necesarias para mostrar y validar el campo en el formulario.
  */
   export const FECHA_FINAL = {
-    labelNombre: 'Fecha de pago',
-    required: true,
+    labelNombre: '*Fecha de pago',
+    required: false,
     habilitado: true
   };

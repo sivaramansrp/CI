@@ -1,0 +1,294 @@
+<div class="container">
+  <form [formGroup]="mercanciaForm">
+    <ng-titulo titulo="Datos mercancía" />
+
+    <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="tipoRequisitoList"
+          formControlName="tipoRequisito"
+          [label]="'Tipo requisito'"
+          [required]="true"
+          name="tipoRequisito"
+          [isDisabled]="mercanciaForm.disabled"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label">Requisito*: </label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="requisito"
+          maxlength="50"
+        />
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label"
+          >Número certificado internacional*:
+          <span
+            title="Si la normatividad no le solicita el Certificado puede capturar NO APLICA"
+            data-bs-toggle="tooltip"
+            class="bi bi-question-circle-fill"
+          ></span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="numeroCertificado"
+          maxlength="50"
+        />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="fraccionArancelariaList"
+          formControlName="fraccionArancelaria"
+          [label]="'Fracción arancelaria'"
+          [required]="true"
+          name="fraccionArancelaria"
+          [isDisabled]="mercanciaForm.disabled"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-8 form-group">
+        <label class="form-label"
+          >Descripción de la fracción arancelaria*:
+          <span
+            title="Ingrese una fracción"
+            data-bs-toggle="tooltip"
+            class="bi bi-question-circle-fill"
+          ></span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="descripcionFraccion"
+          maxlength="1000"
+        />
+        @if ( mercanciaForm.get('descripcionFraccion')?.hasError('maxlength') &&
+        mercanciaForm.get('descripcionFraccion')?.touched){
+        <div class="text-danger">
+          Por favor, no escribas más de 1000 caracteres
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="nicoList"
+          formControlName="nico"
+          [label]="'Nico'"
+          [required]="true"
+          name="nico"
+          [isDisabled]="mercanciaForm.disabled"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-8 form-group">
+        <label class="form-label"
+          >Descripción Nico*:
+          <span
+            title="Ingrese una fracción Nico"
+            data-bs-toggle="tooltip"
+            class="bi bi-question-circle-fill"
+          ></span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="descripcionNico"
+        />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 form-group">
+        <label class="form-label">Descripción*:</label>
+        <textarea
+          id="descripcion"
+          class="form-control"
+          style="height: 60%; resize: none"
+          formControlName="descripcion"
+        ></textarea>
+        @if ( mercanciaForm.get('descripcion')?.hasError('maxlength') &&
+        mercanciaForm.get('descripcion')?.touched){
+        <div class="text-danger">
+          Por favor, no escribas más de 1000 caracteres
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col-md-4 form-group">
+        <label class="form-label">Cantidad UMT*:</label>
+        <input type="text" class="form-control" formControlName="cantidadUMT" />
+        @if ( mercanciaForm.get('cantidadUMT')?.hasError('minLength') &&
+        mercanciaForm.get('cantidadUMT')?.touched){
+        <div class="text-danger">
+          Este campo permite doce números enteros y hasta tres decimales
+        </div>
+        } @else if (
+        mercanciaForm.get('cantidadUMT')?.hasError('maxLength') &&
+        mercanciaForm.get('cantidadUMT')?.touched) {
+        <div class="text-danger">
+          Por favor, escribe un valor menor o igual a 999999999999.999
+        </div>
+        } @else if ( mercanciaForm.get('cantidadUMT')?.hasError('required') &&
+        mercanciaForm.get('cantidadUMT')?.touched) {
+        <div class="text-danger">Este campo es obligatorio</div>
+        }
+      </div>
+
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="umtList"
+          formControlName="umt"
+          [label]="'UMT'"
+          [required]="true"
+          name="umt"
+          [tooltipQuestionCircle]="true"
+          [tooltipQuestionCircleText]="'Unidad de medida de la tarifa'"
+          [isDisabled]="mercanciaForm.disabled"
+        ></app-catalogo-select>
+      </div>
+
+      <div class="col-md-4 form-group">
+        <label class="form-label">Cantidad UMC*:</label>
+        <input type="text" class="form-control" formControlName="cantidadUMC" />
+        <div
+          *ngIf="
+            mercanciaForm.get('cantidadUMC')?.hasError('maxDecimals') &&
+            mercanciaForm.get('cantidadUMC')?.touched
+          "
+          class="text-danger"
+        >
+          Este campo permite doce números enteros y hasta tres decimales
+        </div>
+        <div
+          *ngIf="
+            mercanciaForm.get('cantidadUMC')?.hasError('maxWholeNumbers') &&
+            mercanciaForm.get('cantidadUMC')?.touched
+          "
+          class="text-danger"
+        >
+          Por favor, escribe un valor menor o igual a 999999999999.999
+        </div>
+        <div
+          *ngIf="
+            mercanciaForm.get('cantidadUMC')?.hasError('required') &&
+            mercanciaForm.get('cantidadUMC')?.touched
+          "
+          class="text-danger"
+        >
+          Este campo es obligatorio
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="umcList"
+          formControlName="umc"
+          [label]="'UMC'"
+          [required]="true"
+          name="umc"
+          [isDisabled]="mercanciaForm.disabled"
+        ></app-catalogo-select>
+      </div>
+
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="usoList"
+          formControlName="uso"
+          [label]="'Uso'"
+          [required]="true"
+          name="uso"
+          [isDisabled]="mercanciaForm.disabled"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="usoList"
+          formControlName="tipoProducto"
+          [label]="'Tipo de producto'"
+          [required]="true"
+          name="tipoProducto"
+          [isDisabled]="mercanciaForm.disabled"
+        ></app-catalogo-select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 form-group">
+        <label class="form-label">Número de lote: </label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="numeroDeLote"
+          maxlength="16"
+        />
+      </div>
+
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="paisOrigenList"
+          formControlName="paisOrigen"
+          [label]="'País de origen'"
+          [required]="true"
+          name="paisOrigen"
+          [isDisabled]="mercanciaForm.disabled"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="paisDeProcedenciaList"
+          formControlName="paisDeProcedencia"
+          [label]="'País De Procedencia'"
+          [required]="true"
+          name="paisDeProcedencia"
+          [isDisabled]="mercanciaForm.disabled"
+        ></app-catalogo-select>
+      </div>
+    </div>
+
+    <div class="row">
+      <ng-titulo titulo="Detalle" />
+      <div class="col-12 col-md-12">
+        <label class="form-label" style="font-size: 24px"
+          >Nombre científico</label
+        >
+        <crosslist
+          [fechas]="usoCrossListDatos"
+          [label]="usoNormaSeleccionadaLabel"
+          [botones]="aduanasEntradaBotons"
+        ></crosslist>
+      </div>
+    </div>
+  </form>
+
+  <div class="row my-5">
+    <div class="col-md-12 d-flex justify-content-end">
+      <button
+        type="button"
+        class="btn btn-default ms-3"
+        (click)="limpiarAnimalesVivo()"
+      >
+        Limpiar
+      </button>
+      <button type="button" class="btn btn-default ms-3" (click)="cancelar()">
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary ms-3"
+        (click)="agregarAnimales()"
+      >
+        Agregar
+      </button>
+    </div>
+  </div>
+</div>
