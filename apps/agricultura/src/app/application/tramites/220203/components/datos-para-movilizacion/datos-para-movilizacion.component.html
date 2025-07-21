@@ -28,6 +28,7 @@
             name="identificacionTransporte"
             type="text"
             (change)="setValoresStore()" 
+            [maxlength]="30"
           />
         </div>
       </div>
@@ -40,13 +41,16 @@
             [required]="false"
             name="puntoVerificacion"
             [isDisabled]="esFormularioSoloLectura"
-            (change)="setValoresStore()" 
+            (change)="setValoresStore()"
+            [tooltipQuestionCircle]="true"
+            [tooltipQuestionCircleText]="'Es el primer punto de Inspección Federal dentro del territorio nacional por donde cruzará el embarque'"
           ></app-catalogo-select>
         </div>
         <div class="col-md-8 form-group">
           <label class="form-label" for="coordenadas"
             >Nombre de la empresa transportista *:</label
           >
+      
           <input
             class="form-control"
             id="nombreEmpresaTransportista"
@@ -55,6 +59,7 @@
             placeholder=""
             type="text"
             (change)="setValoresStore()" 
+            [maxlength]="80"
           />
         </div>
       </div>

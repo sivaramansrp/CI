@@ -5,7 +5,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormularioMovilizacion } from '../../models/220203/importacion-de-acuicultura.module';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
-
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 /**
  * @fileoverview
  * Componente para la gestión de los datos de movilización en el trámite de importación de acuicultura.
@@ -31,7 +31,9 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
     TituloComponent,
     CatalogoSelectComponent,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    TooltipModule
+    
   ]
 })
 export class DatosParaMovilizacionComponent implements OnInit, OnDestroy, AfterViewInit {
