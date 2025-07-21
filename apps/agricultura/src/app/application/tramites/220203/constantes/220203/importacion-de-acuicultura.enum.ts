@@ -74,7 +74,13 @@ export const DOCUMENTOSSELECCIONADOS = [
     { id: 1, descripcion: 'Documentos que ampare el valor de la mercancía' },
     { id: 2, descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)' },
 ];
-
+/**
+ * Contenido del aviso de privacidad simplificado.
+ * @const
+ * @type {string}
+ * @description
+ * Este contenido se muestra al usuario para informarle sobre el tratamiento de sus datos personales.
+ */
 export const PRIVACY_NOTICE_CONTENT = `
   <div >
     <h4 style="text-align: center;">Aviso de privacidad simplificado</h4><br>
