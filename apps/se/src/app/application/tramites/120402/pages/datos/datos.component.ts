@@ -4,11 +4,12 @@
  * Asegura una suscripción segura a observables y limpia los recursos al destruirse.
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 
+import { AsignacionComponent } from '../asignacion/asignacion.component';
 import { RepresentacionFederalService } from '@ng-mf/data-access-user';
 import { Solocitud120402Service } from '../../services/service120402.service';
 
@@ -21,6 +22,16 @@ import { Solocitud120402Service } from '../../services/service120402.service';
   templateUrl: './datos.component.html',
 })
 export class DatosComponent implements OnInit, OnDestroy {
+
+  /**
+   * Referencia ViewChild al componente solicitante.
+   */
+  @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
+
+  /**
+   * Referencia ViewChild al componente de asignación de datos de empresa.
+   */
+  @ViewChild('asignacionRef') asignacion!: AsignacionComponent;
 
   /**
    * Indica si se han recibido correctamente los datos desde el servidor.
@@ -94,6 +105,46 @@ export class DatosComponent implements OnInit, OnDestroy {
           this.solocitud120402Service.actualizarEstadoFormulario(resp);
         }
       });
+  }
+
+  /**
+   * Valida los formularios del paso uno y marca los campos inválidos como tocados para mostrar errores de validación.
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    // Validar formulario de solicitante (pestaña 1)
+    if (this.solicitante && this.solicitante.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }else{
+        isValid = true;
+      }
+    } else {
+      isValid = false;
+    }
+
+    // Validar formularios de datos empresa (pestaña 2)
+    if (this.asignacion) {
+      const DATOS_EMPRESA_VALID = this.asignacion.validarFormularios();
+      if (!DATOS_EMPRESA_VALID) {
+        isValid = false;
+      } else {
+        isValid = true;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if(!isValid && this.indice === 1) {
+      this.indice = 2;
+      setTimeout(() => {
+        this.validarFormularios();
+      }, 1000);
+    }
+
+    return isValid;
   }
 
   /**
