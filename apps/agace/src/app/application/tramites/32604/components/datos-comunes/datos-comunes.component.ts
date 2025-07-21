@@ -10,6 +10,7 @@ import { AgregarComponent } from '../agregar/agregar.component';
 import { CommonModule } from '@angular/common';
 import { EmpresaComponent } from '../empresa/empresa.component';
 import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
+import { Instalaciones } from '../../constants/agregar.model';
 import { Modal } from 'bootstrap';
 import { ModificarComponent } from '../modificar/modificar.component';
 import { Solicitud32604Query } from '../../estados/solicitud32604.query';
@@ -955,7 +956,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * Updates the listaSeccionSociosIC with the received data
    * @param datosSeleccionados - Array of selected data from agregar component
    */
-  onDatosSeleccionados(datosSeleccionados: SeccionSociosIC[]): void {
+  onDatosSeleccionados(datosSeleccionados: Instalaciones[]): void {
     if (datosSeleccionados && datosSeleccionados.length > 0) {
       this.listaSeccionSociosIC = [...this.listaSeccionSociosIC, ...datosSeleccionados];
       this.solicitud32604Store.actualizarListaSeccionSociosIC(

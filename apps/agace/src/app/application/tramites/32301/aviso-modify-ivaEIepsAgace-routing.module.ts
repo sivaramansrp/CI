@@ -1,7 +1,6 @@
-import { AvisoModifyIvaEIepsComponent } from './pages/AvisoModifyIvaEIeps/AvisoModifyIvaEIeps.component';
-import { NgModule } from '@angular/core';
-
 import { RouterModule, Routes } from '@angular/router';
+import { AvisoModifyIvaEIepsComponent} from './pages/aviso-modify-iva-eieps/aviso-modify-iva-eieps.component';
+import { NgModule } from '@angular/core';
 
 export const ROUTES_AVISO_MODIFY_IVAELEPS: Routes = [
   {
