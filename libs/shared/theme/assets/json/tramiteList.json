@@ -4228,6 +4228,13 @@
     "linkDepartment": "/pago/importador-y-o-exportador2/solicitud",
     "department": "agace"
   },
+    {
+    "id": 606,
+    "tramite": 32614,
+    "linkDashboard": "/agace/importador-y-o-exportador2/solicitud",
+    "linkDepartment": "/pago/importador-y-o-exportador2/solicitud",
+    "department": "agace"
+  },
   {
     "id": 606,
     "tramite": 30506,

@@ -325,6 +325,13 @@ const ROUTES: Routes = [
       import('./tramites/32614/importador-y-o-exportador.module').then(
         (m) => m.ImportadorYOExportadorModule
       ),
+  },
+    {
+    path: 'importador-y-o-exportador2',
+    loadChildren: () =>
+      import('./tramites/32614/importador-y-o-exportador.module').then(
+        (m) => m.ImportadorYOExportadorModule
+      ),
   }
 ];
 
