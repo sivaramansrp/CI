@@ -193,6 +193,11 @@ export interface FilaSectors {
   sectorClave: string;
 }
 
+export interface FilaProducir{
+  arancelaria: string;
+  sector: string;
+}
+
 /**
  * @interface SectoresYMercancias
  * @description
