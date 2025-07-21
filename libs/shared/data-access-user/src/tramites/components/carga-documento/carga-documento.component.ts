@@ -210,14 +210,14 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['idTipoTRamite'] && this.idTipoTRamite) {
-    if (this.idTipoTRamite === '130118') {
-      this.getDocumentosDesdeSolicitud130118();
-      this.getDocumentosDesdeSolicitud130118Obligatorios();
-    } else {
-      this.getListaDocumentoObligatorios();
-      this.getListaDocumentoOpcionales();
+      if (this.idTipoTRamite === '130118') {
+        this.getDocumentosDesdeSolicitud130118();
+        this.getDocumentosDesdeSolicitud130118Opcionales();
+      } else {
+        this.getListaDocumentoObligatorios();
+        this.getListaDocumentoOpcionales();
+      }
     }
-  }
   }
 
   /**
@@ -271,8 +271,13 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
       .subscribe();
   }
 
+  /**
+   * Obtiene los documentos desde la solicitud 130118.
+   * @description Esta función realiza una llamada al servicio de documentos para obtener los documentos obligatorios y opcionales de la solicitud 130118.
+   * @returns {void} No retorna nada.
+   */
   getDocumentosDesdeSolicitud130118(): void {
-    const ESPECIFICO = false;
+    const ESPECIFICO = true;
     this.catalogoDocumentosService
       .getDocumentosSolicitud130118(ESPECIFICO)
       .pipe(takeUntilDestroyed(this.destroyRef$))
@@ -290,14 +295,19 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
       });
   }
 
-  getDocumentosDesdeSolicitud130118Obligatorios(): void {
-    const ESPECIFICO = true;
+  /**
+   * Obtiene los documentos opcionales desde la solicitud 130118.
+   * @description Esta función realiza una llamada al servicio de documentos para obtener los documentos opcionales de la solicitud 130118.
+   * @returns {void} No retorna nada.
+   */
+  getDocumentosDesdeSolicitud130118Opcionales(): void {
+    const ESPECIFICO = false;
     this.catalogoDocumentosService
       .getDocumentosSolicitud130118(ESPECIFICO)
       .pipe(takeUntilDestroyed(this.destroyRef$))
       .subscribe({
         next: (response) => {
-          this.catalogoDocumentosOpcionales = response.datos.documento_tramite.map((doc) => ({
+          this.catalogoDocumentosOpcionales = response.datos.documento_fraccion.map((doc) => ({
             ...doc.tipo_documento,
             adicionales: [],
             cargado: false,
@@ -580,6 +590,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
       this.documentosOpcionalesSeleccionados
     );
     this.listDocOpcionalesAgregar = [];
+
   }
 
   /**
