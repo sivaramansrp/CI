@@ -418,14 +418,14 @@
           type="button"
           class="btn btn-default btn-space"
           (click)="openModifyModal()"
-          [disabled]="!enableModficarBoton"
+          [disabled]="!enableModficarBoton || datosTablaMencione.length === 0"
         >
           Modificar
         </button>
         <button
           type="button"
           class="btn btn-primary btn-space"
-          [disabled]="!enableEliminarBoton"
+          [disabled]="!enableEliminarBoton || datosTablaMencione.length === 0"
           (click)="confirmEliminarMencioneItem()"
         >
           Eliminar
@@ -1136,7 +1136,7 @@
       </div>
       <div class="modal-backdrop fade show" *ngIf="confirmEliminarPopupAbiertoControlInventarios"></div>
     
-      <label for="" class="mt-3">
+      <label for="" class="blue-text mt-3">
         Deberá anexar un archivo con el reporte de saldos de mercancía de importación temporal o de mercancías objeto de operaciones de comercio exterior, de un periodo de un mes, que se encuentre dentro de los tres meses anteriores a la presentación de la solicitud.
       </label>
     </div>
@@ -1159,7 +1159,7 @@
                   <input type="text" class="form-control" id="nombreDelModal" formControlName="nombreDel" />
                   <div *ngIf="
                       preOperativeForm.controls['nombreDel'].invalid &&
-                      preOperativeForm.controls['nombreDel'].touched
+                      (preOperativeForm.controls['nombreDel'].touched || formSubmittedControlInventarios)
                     " class="text-danger">
                     <span *ngIf="preOperativeForm.controls['nombreDel'].errors?.['required']">
                       Este campo es obligatorio.
@@ -1181,7 +1181,7 @@
                   <input type="text" class="form-control" id="lugarDeRadicacionModal" formControlName="lugarDeRadicacion" />
                   <div *ngIf="
                       preOperativeForm.controls['lugarDeRadicacion'].invalid &&
-                      preOperativeForm.controls['lugarDeRadicacion'].touched
+                      (preOperativeForm.get('lugarDeRadicacion')?.touched || formSubmittedControlInventarios)
                     " class="text-danger">
                     <span *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['required']">
                       Este campo es obligatorio.

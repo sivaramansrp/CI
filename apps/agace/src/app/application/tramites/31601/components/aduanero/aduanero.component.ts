@@ -497,6 +497,12 @@ configuracionindiqueDatos: ConfiguracionColumna<ModificarFormState>[] = CONFIGUR
    * @memberof AduaneroComponent
    */
   mandatoryFieldsAnswered: boolean = false;
+
+  formSubmittedControlInventarios = false;
+
+  private pendingControlInventariosUpdate: { index: number, item: ControlInventariosItem } | null = null;
+
+
   /**
    * Constructor del componente
    * @param fb - FormBuilder para crear formularios reactivos
@@ -804,6 +810,18 @@ configuracionindiqueDatos: ConfiguracionColumna<ModificarFormState>[] = CONFIGUR
    * Agrega un nuevo elemento a la tabla de control de inventarios directamente.
    */
   agregarNuevoElementoControlInventarios(): void {
+    this.formSubmittedControlInventarios = true;
+
+  // Mark fields as touched if invalid
+  if (
+    !this.preOperativeForm.get('nombreDel')?.valid ||
+    !this.preOperativeForm.get('lugarDeRadicacion')?.valid
+  ) {
+    this.preOperativeForm.get('nombreDel')?.markAsTouched();
+    this.preOperativeForm.get('lugarDeRadicacion')?.markAsTouched();
+    return;
+  }
+
     this.camposObligatoriosRespondidosControlInventarios =
       Boolean(this.preOperativeForm.get('nombreDel')?.valid) &&
       Boolean(this.preOperativeForm.get('lugarDeRadicacion')?.valid);
@@ -824,7 +842,14 @@ configuracionindiqueDatos: ConfiguracionColumna<ModificarFormState>[] = CONFIGUR
         indiqueCheck: false
       });
 
+    // Reset touched state and flag
+      this.preOperativeForm.get('nombreDel')?.markAsUntouched();
+      this.preOperativeForm.get('lugarDeRadicacion')?.markAsUntouched();
+      this.preOperativeForm.get('nombreDel')?.setErrors(null);
+      this.preOperativeForm.get('lugarDeRadicacion')?.setErrors(null);
+
       this.camposObligatoriosRespondidosControlInventarios = false;
+      this.formSubmittedControlInventarios = false;
       this.mostrarNotificacionExito();
     }
   }
@@ -849,41 +874,96 @@ configuracionindiqueDatos: ConfiguracionColumna<ModificarFormState>[] = CONFIGUR
   /**
    * Maneja la confirmación de la notificación
    */
+  // onConfirmacionNotificacion(confirmado: boolean): void {
+  //   if (confirmado) {
+  //     this.notificacionExito = null;
+  //   }
+  // }
   onConfirmacionNotificacion(confirmado: boolean): void {
-    if (confirmado) {
-      this.notificacionExito = null;
+  if (confirmado) {
+    // Apply the pending update if it exists
+    if (this.pendingControlInventariosUpdate) {
+      this.datosTablaControlInventarios[this.pendingControlInventariosUpdate.index] =
+        this.pendingControlInventariosUpdate.item;
+      this.tramite31601Store.setControlInventariosTablaDatos(this.datosTablaControlInventarios);
+      this.pendingControlInventariosUpdate = null;
     }
+    this.notificacionExito = null;
   }
+}
 
   /**
    * Modifica un elemento existente en la tabla de control inventarios usando modal.
    */
+  // modificaControlInventariosItem(): void {
+  //   if (this.filaSeleccionadaControlInventarios) {
+  //     this.camposObligatoriosRespondidosControlInventarios =
+  //       Boolean(this.preOperativeForm.get('nombreDel')?.valid) &&
+  //       Boolean(this.preOperativeForm.get('lugarDeRadicacion')?.valid);
+
+  //     if (this.camposObligatoriosRespondidosControlInventarios) {
+  //       const INDEX = this.datosTablaControlInventarios.findIndex(
+  //         item => item.id === this.filaSeleccionadaControlInventarios?.id
+  //       );
+
+  //       if (INDEX !== -1) {
+  //         this.datosTablaControlInventarios[INDEX] = {
+  //           ...this.filaSeleccionadaControlInventarios,
+  //           nombreSistema: this.preOperativeForm.get('nombreDel')?.value,
+  //           lugarRadicacion: this.preOperativeForm.get('lugarDeRadicacion')?.value,
+  //           anexo24: this.preOperativeForm.get('indiqueCheck')?.value || false
+  //         };
+
+  //         this.tramite31601Store.setControlInventariosTablaDatos(this.datosTablaControlInventarios);
+  //         this.closeControlInventariosModal();
+  //         this.camposObligatoriosRespondidosControlInventarios = false;
+  //       }
+  //     }
+  //   }
+  // }
   modificaControlInventariosItem(): void {
-    if (this.filaSeleccionadaControlInventarios) {
-      this.camposObligatoriosRespondidosControlInventarios =
-        Boolean(this.preOperativeForm.get('nombreDel')?.valid) &&
-        Boolean(this.preOperativeForm.get('lugarDeRadicacion')?.valid);
+  if (this.filaSeleccionadaControlInventarios) {
+    this.camposObligatoriosRespondidosControlInventarios =
+      Boolean(this.preOperativeForm.get('nombreDel')?.valid) &&
+      Boolean(this.preOperativeForm.get('lugarDeRadicacion')?.valid);
 
-      if (this.camposObligatoriosRespondidosControlInventarios) {
-        const INDEX = this.datosTablaControlInventarios.findIndex(
-          item => item.id === this.filaSeleccionadaControlInventarios?.id
-        );
+    if (this.camposObligatoriosRespondidosControlInventarios) {
+      const INDEX = this.datosTablaControlInventarios.findIndex(
+        item => item.id === this.filaSeleccionadaControlInventarios?.id
+      );
 
-        if (INDEX !== -1) {
-          this.datosTablaControlInventarios[INDEX] = {
+      if (INDEX !== -1) {
+        // Store the pending update
+        this.pendingControlInventariosUpdate = {
+          index: INDEX,
+          item: {
             ...this.filaSeleccionadaControlInventarios,
             nombreSistema: this.preOperativeForm.get('nombreDel')?.value,
             lugarRadicacion: this.preOperativeForm.get('lugarDeRadicacion')?.value,
             anexo24: this.preOperativeForm.get('indiqueCheck')?.value || false
-          };
+          }
+        };
 
-          this.tramite31601Store.setControlInventariosTablaDatos(this.datosTablaControlInventarios);
-          this.closeControlInventariosModal();
-          this.camposObligatoriosRespondidosControlInventarios = false;
-        }
+        // Show notification
+        this.notificacionExito = {
+          tipoNotificacion: 'alert',
+          categoria: 'success',
+          modo: '',
+          titulo: '',
+          mensaje: 'Datos guardados correctamente.',
+          cerrar: false,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+          tamanioModal: 'modal-sm'
+        };
+
+        this.tramite31601Store.setControlInventariosTablaDatos(this.datosTablaControlInventarios);
+        this.closeControlInventariosModal();
+        this.camposObligatoriosRespondidosControlInventarios = false;
       }
     }
   }
+}
 
   /**
    * Confirma la eliminación de los elementos seleccionados.
@@ -1276,6 +1356,20 @@ addNewMencioneItem(): void {
     this.filaSeleccionadaMencione = null;
 
     this.modalInstance?.hide();
+       this.preOperativeForm.patchValue({
+      rfc: '',
+      razonSocial: '',
+      numeroEmpleados: '',
+      empleadosPropios: '',
+      bimestreValor: '',
+      numeroAutorizacionCITES: '',
+    });
+
+    ['rfc', 'razonSocial', 'numeroEmpleados', 'empleadosPropios', 'bimestreValor', 'numeroAutorizacionCITES'].forEach(field => {
+      const CONTROL = this.preOperativeForm.get(field);
+      CONTROL?.markAsUntouched();
+      CONTROL?.setErrors(null);
+    });
   }
 }
 /**
