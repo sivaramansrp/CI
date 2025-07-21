@@ -148,7 +148,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          this.solicitudService.actualizarEstadoFormulario(resp);
+          if (this.consultaState.update) {
+            this.solicitudService.actualizarEstadoFormulario(resp);
+          }
         }
       });
   }

@@ -8,17 +8,15 @@ import {
 } from '@angular/core';
 import {
   AlertComponent,
-  Catalogo,
-  CatalogoSelectComponent,
+  Catalogo, 
   ConsultaioQuery,
-  CrosslistComponent,
-  InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
   TableComponent,
   TablePaginationComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, CrosslistComponent,InputCheckComponent,InputRadioComponent} from '@libs/shared/data-access-user/src';
 import {
   FormBuilder,
   FormControl,
@@ -35,7 +33,6 @@ import { ALOTO_FRACCIONES } from '../../enums/adicion-fraccion.enum';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CROSLISTA_DE_PAISES } from '../../enums/pantallas-constante.enum';
 import { CommonModule } from '@angular/common';
-import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';

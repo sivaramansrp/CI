@@ -10,7 +10,6 @@ import {
   AlertComponent,
   ConsultaioQuery,
   InputFecha,
-  InputRadioComponent,
   NotificacionesComponent,
   TableComponent,
   TablePaginationComponent,
@@ -28,7 +27,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { InputFechaComponent, Notificacion } from '@libs/shared/data-access-user/src';
+import { InputFechaComponent, InputRadioComponent,Notificacion } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';

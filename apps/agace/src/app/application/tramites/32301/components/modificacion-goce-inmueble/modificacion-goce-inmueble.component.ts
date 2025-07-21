@@ -9,9 +9,7 @@ import {
 import {
   AlertComponent,
   Catalogo,
-  CatalogoSelectComponent,
   ConsultaioQuery,
-  InputRadioComponent,
   NotificacionesComponent,
   TableComponent,
   TituloComponent,
@@ -24,6 +22,7 @@ import {
   MOSTRAR_GRID_NUEVO_HEADER,
   RADIO_OPTIONS,
 } from '../../enums/modificacion-goceInmueble.enum';
+import { CatalogoSelectComponent,InputRadioComponent,Notificacion } from '@libs/shared/data-access-user/src';
 import {
   FormBuilder,
   FormGroup,
@@ -42,7 +41,6 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
-import { Notificacion } from '@libs/shared/data-access-user/src';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
 interface TableData {

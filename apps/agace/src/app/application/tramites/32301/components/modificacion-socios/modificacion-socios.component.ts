@@ -9,14 +9,13 @@ import {
 import {
   AlertComponent,
   Catalogo,
-  CatalogoSelectComponent,
   ConsultaioQuery,
-  InputRadioComponent,
   NotificacionesComponent,
   TableComponent,
   TablePaginationComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent,InputRadioComponent,Notificacion } from '@libs/shared/data-access-user/src';
 import {
   FormBuilder,
   FormGroup,
@@ -32,7 +31,6 @@ import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
 import { MESSAGE_NAC } from '../../enums/modificacion-socios.enum';
 import { Modal } from 'bootstrap';
-import { Notificacion } from '@libs/shared/data-access-user/src';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
 interface PreOperativoIn {

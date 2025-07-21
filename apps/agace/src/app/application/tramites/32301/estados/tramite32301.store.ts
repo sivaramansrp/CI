@@ -222,10 +222,10 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
    * 
    * @param {string} EV - La modalidad de certificación a establecer.
    */
-  setModalidadCertificacion(EV: string): void {
+  setModalidadCertificacion(modalidadCertificacion: string): void {
     this.update((state) => ({
       ...state,
-      modalidadCertificacion: EV
+        tipoDevAviso: { ...state.tipoDevAviso, modalidadCertificacion }
     }));
   }
 
