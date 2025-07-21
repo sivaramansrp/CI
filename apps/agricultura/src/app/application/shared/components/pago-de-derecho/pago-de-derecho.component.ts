@@ -1,12 +1,12 @@
-import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_LLAVE_DE_PAGO_DE_DERECHO, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Subject } from 'rxjs';
-import { PagoDeDerechos } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
-import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { FECHA_DE_PAGO } from '../../constantes/pago-de-derechos.enum';
 import { PagoDeDerecho } from '../../models/tercerosrelacionados.model';
+import { PagoDeDerechos } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
+import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-pago-de-derecho',
@@ -157,7 +157,6 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit 
       Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
       Validators.maxLength(30)]);
     }
-    console.log(this.pagoSelect)
   }
   /**
    * @inheritdoc
@@ -336,10 +335,8 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit 
     if (this.pagoForm.valid) {
       return true;
     }
-    else {
-      this.pagoForm.markAllAsTouched();
-      return false;
-    }
+    this.pagoForm.markAllAsTouched();
+    return false;
   }
   /**
   * Limpia las suscripciones para evitar fugas de memoria al destruir el componente.
