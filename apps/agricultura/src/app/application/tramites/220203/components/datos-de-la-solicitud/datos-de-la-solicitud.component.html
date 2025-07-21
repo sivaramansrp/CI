@@ -126,6 +126,8 @@
             'regimen'
           )
         " 
+        [tooltipQuestionCircle]="true"
+        [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
         ></app-catalogo-select>
       </div>
     </div>
@@ -232,7 +234,6 @@
           >Descripción de la fracción arancelaria *:</label
         >
         <input
-        readonly
           class="form-control"
           id="descripcionFraccionArancelaria"
           formControlName="descripcionFraccionArancelaria"
@@ -269,7 +270,6 @@
           >Descripción Nico*:</label
         >
         <input
-        readonly
           class="form-control"
           id="descripcionNico"
           formControlName="descripcionNico"
@@ -320,7 +320,6 @@
       <div class="col-md-4 form-group">
         <label class="form-label" for="umt">UMT*:</label>
         <input
-        readonly
           class="form-control"
           id="umt"
           formControlName="umt"

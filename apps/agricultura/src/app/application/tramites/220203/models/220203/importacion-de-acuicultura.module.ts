@@ -336,3 +336,71 @@ export interface PagoDeDerechos {
    */
   fechaPago: string;
 }
+/**
+ * Interfaz para los datos de la tabla de solicitudes.
+ * @interface DatoTabla
+ * @property {string} solicitud - Número de solicitud.
+ * @property {string} fechaCreacion - Fecha de creación de la solicitud.
+ * @property {string} mercancia - Nombre de la mercancía.
+ * @property {number} cantidad - Cantidad de mercancía.
+ * @property {string} proveedor - Nombre del proveedor.
+ */
+export interface DatoTabla {
+  solicitud: string;
+  fechaCreacion: string;
+  mercancia: string;
+  cantidad: number;
+  proveedor: string;
+}
+
+/**
+ * Interfaz para los datos de la tabla de detalles.
+ * @interface Fila
+ * @property {string} noPartida - Número de partida.
+ * @property {string} tipoRequisito - Tipo de requisito.
+ * @property {string} requisito - Requisito.
+ * @property {string} numeroCertificado - Número de certificado internacional.
+ * @property {string} fraccionArancelaria - Fracción arancelaria.
+ * @property {string} descripcionFraccion - Descripción de la fracción arancelaria.
+ * @property {string} nico - NICO.
+ */
+export interface Fila {
+  noPartida: string;
+  tipoRequisito: string;
+  requisito: string;
+  numeroCertificado: string;
+  fraccionArancelaria: string;
+  descripcionFraccion: string;
+  nico: string;
+  descripcionNico:string;
+  descripcion:string;
+  medidadetarifa:string;
+  cantidadUMT:string;
+  umc: string;
+  cantidadUMC:string;
+  uso: string;
+  especie:string;
+  paisDeOrigen: string;
+  paisDeProcedencia: string;
+  numeroDeLote: string;
+  faseDeDesarrollo: string;
+  certificadoInternacional: string;
+  
+}
+
+/**
+ * Interfaz para los datos de la tabla de solicitudes.
+ * @interface FilaSolicitud
+ * @property {string} solicitud - Número de solicitud.
+ * @property {string} fechaCreacion - Fecha de creación de la solicitud.
+ * @property {string} mercancia - Nombre de la mercancía.
+ * @property {number} cantidad - Cantidad de mercancía.
+ * @property {string} proveedor - Nombre del proveedor.
+ */
+export interface FilaSolicitud {
+  solicitud: string;
+  fechaCreacion: string;
+  mercancia: string;
+  cantidad: number;
+  proveedor: string;
+}

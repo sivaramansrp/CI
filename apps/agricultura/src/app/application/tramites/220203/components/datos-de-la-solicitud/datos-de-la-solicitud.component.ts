@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { DatoTabla,DatosMercancia220203, Fila, FilaSolicitud } from '../../models/220203/importacion-de-acuicultura.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DatosMercancia220203 } from '../../models/220203/importacion-de-acuicultura.module';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
@@ -81,6 +81,21 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
     { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
     { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
     { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
+    {encabezado:'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8},
+    { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
+    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.medidadetarifa, orden: 10 },
+    { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
+    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
+    { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
+    { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 14 },
+    { encabezado: 'Especie', clave: (fila) => fila.especie, orden: 15 },
+    { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
+    { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
+    { encabezado: 'Número de lote', clave: (fila) => fila.numeroDeLote, orden: 18 },
+    { encabezado: 'Fase de desarrollo', clave: (fila) => fila.faseDeDesarrollo, orden: 19 },
+    { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacional, orden: 20 }
+
+
   ];
 
   /**
@@ -94,11 +109,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    * @type {ConfiguracionColumna<FilaSolicitud>[]}
    */
   configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
-    { encabezado: 'Solicitud', clave: (fila) => fila.solicitud, orden: 1 },
-    { encabezado: 'Fecha Creación', clave: (fila) => fila.fechaCreacion, orden: 2 },
-    { encabezado: 'Mercancía', clave: (fila) => fila.mercancia, orden: 3 },
-    { encabezado: 'Cantidad', clave: (fila) => fila.cantidad.toString(), orden: 4 },
-    { encabezado: 'Proveedor', clave: (fila) => fila.proveedor, orden: 5 },
+    { encabezado: 'Fecha Creación', clave: (fila) => fila.fechaCreacion, orden: 1 },
+    { encabezado: 'Mercancía', clave: (fila) => fila.mercancia, orden: 2 },
+    { encabezado: 'Cantidad', clave: (fila) => fila.cantidad.toString(), orden: 3 },
+    { encabezado: 'Proveedor', clave: (fila) => fila.proveedor, orden: 4 },
   ];
 
   /**
@@ -512,57 +526,3 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   }
 }
 
-/**
- * Interfaz para los datos de la tabla de solicitudes.
- * @interface DatoTabla
- * @property {string} solicitud - Número de solicitud.
- * @property {string} fechaCreacion - Fecha de creación de la solicitud.
- * @property {string} mercancia - Nombre de la mercancía.
- * @property {number} cantidad - Cantidad de mercancía.
- * @property {string} proveedor - Nombre del proveedor.
- */
-export interface DatoTabla {
-  solicitud: string;
-  fechaCreacion: string;
-  mercancia: string;
-  cantidad: number;
-  proveedor: string;
-}
-
-/**
- * Interfaz para los datos de la tabla de detalles.
- * @interface Fila
- * @property {string} noPartida - Número de partida.
- * @property {string} tipoRequisito - Tipo de requisito.
- * @property {string} requisito - Requisito.
- * @property {string} numeroCertificado - Número de certificado internacional.
- * @property {string} fraccionArancelaria - Fracción arancelaria.
- * @property {string} descripcionFraccion - Descripción de la fracción arancelaria.
- * @property {string} nico - NICO.
- */
-export interface Fila {
-  noPartida: string;
-  tipoRequisito: string;
-  requisito: string;
-  numeroCertificado: string;
-  fraccionArancelaria: string;
-  descripcionFraccion: string;
-  nico: string;
-}
-
-/**
- * Interfaz para los datos de la tabla de solicitudes.
- * @interface FilaSolicitud
- * @property {string} solicitud - Número de solicitud.
- * @property {string} fechaCreacion - Fecha de creación de la solicitud.
- * @property {string} mercancia - Nombre de la mercancía.
- * @property {number} cantidad - Cantidad de mercancía.
- * @property {string} proveedor - Nombre del proveedor.
- */
-export interface FilaSolicitud {
-  solicitud: string;
-  fechaCreacion: string;
-  mercancia: string;
-  cantidad: number;
-  proveedor: string;
-}
