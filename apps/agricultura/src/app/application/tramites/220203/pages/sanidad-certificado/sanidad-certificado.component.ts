@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { PASOSACUICULTURA, PRIVACY_NOTICE_CONTENT } from '../../constantes/220203/importacion-de-acuicultura.enum';
 import { AccionBoton } from '../../models/220203/importacion-de-acuicultura.module';
-import { PASOSACUICULTURA } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
 /**
  * @fileoverview
@@ -23,6 +23,7 @@ import { PASOSACUICULTURA } from '../../constantes/220203/importacion-de-acuicul
   templateUrl: './sanidad-certificado.component.html',
 })
 export class SanidadCertificadoComponent {
+    privacyNoticeContent: string = PRIVACY_NOTICE_CONTENT;
   /**
    * Lista de pasos del wizard, obtenida de las constantes del trámite.
    * @property {ListaPasosWizard[]} pasos
