@@ -31,8 +31,12 @@
                 [placeholder]="item.props.placeholder"
                 [disabled]="esFormularioSoloLectura"
                 [formControlName]="item.props.campo"
+                [attr.maxlength]="item.props.maxlength ? item.props.maxlength : null"
                 libUppercase
               />
+              <div *ngIf="item.props.campo === 'rfc' && formulario.get(fieldGroup.formGroupName + '.rfc')?.touched && formulario.get(fieldGroup.formGroupName + '.rfc')?.hasError('required')" class="text-danger error-message">
+                Este campo es obligatorio
+              </div>
               } } @case(inputTypes.BREAK_CONTENT) {
               <div class="w-100"></div>
               } @case (inputTypes.DATE) {

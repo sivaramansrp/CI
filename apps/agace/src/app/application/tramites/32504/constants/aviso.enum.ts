@@ -8,32 +8,34 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
  */
 export const DATOS_EMPRESA = [
     {
-        labelNombre: 'Número de programa IMMEX:',
+        labelNombre: 'Número de programa IMMEX*:',
         campo: 'numeroPrograma',
         class: 'col-md-12',
         tipo_input: 'text',
         disabled: true,
         validators: ['required'],
         placeholder: '',
+        maxlength: 9,
     },
     {
-        labelNombre: 'Año de programa IMMEX:',
+        labelNombre: 'Año de programa IMMEX*:',
         campo: 'anoPrograma',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
         validators: ['required'],
         placeholder: '',
+        maxlength: 4,
     },
     {
-        labelNombre: 'Mes al que corresponde el aviso:',
+        labelNombre: 'Mes al que corresponde el aviso',
         campo: 'mesCorrespondeAviso',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
     },
     {
-        labelNombre: 'Año al que corresponde el aviso:',
+        labelNombre: 'Año al que corresponde el aviso',
         campo: 'anoCorrespondeAviso',
         required: true,
         primerOpcion: 'Selecciona un valor',
@@ -66,13 +68,14 @@ export const CARGO_TIPO = [
  */
 export const DATOS_QUIEN_RECIBE = [
     {
-        labelNombre: 'RFC:',
+        labelNombre: 'RFC*:',
         campo: 'rfc',
         class: 'col-md-12',
         tipo_input: 'text',
         disabled: true,
         validators: ['required'],
         placeholder: '',
+        maxlength: 13,
     },
     {
         labelNombre: 'Número de programa IMMEX:',
@@ -82,6 +85,7 @@ export const DATOS_QUIEN_RECIBE = [
         disabled: true,
         validators: ['required'],
         placeholder: '',
+        maxlength: 9,
     },
     {
         labelNombre: 'Año de programa IMMEX:',
@@ -91,6 +95,7 @@ export const DATOS_QUIEN_RECIBE = [
         disabled: true,
         validators: ['required'],
         placeholder: '',
+        maxlength: 4,
     },
 ];
 
@@ -111,37 +116,38 @@ export const DATOS_DOMICILIO_LUGAR = [
         placeholder: '',
     },
     {
-        labelNombre: 'Entidad federativa:',
+        labelNombre: 'Entidad federativa',
         campo: 'entidadFederativa',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
     },
     {
-        labelNombre: 'Alcaldía o Municipio:',
+        labelNombre: 'Alcaldía o Municipio',
         campo: 'alcalida_municipio',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
     },
     {
-        labelNombre: 'Colonia:',
+        labelNombre: 'Colonia',
         campo: 'colonias',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
     },
     {
-        labelNombre: 'Calle:',
+        labelNombre: 'Calle*:',
         campo: 'calles',
         class: 'col-md-4',
         tipo_input: 'text',
+        required: true,
         disabled: true,
         validators: ['required'],
         placeholder: '',
     },
     {
-        labelNombre: 'Número exterior:',
+        labelNombre: 'Número exterior*:',
         campo: 'numeroExterior',
         class: 'col-md-4',
         tipo_input: 'text',
@@ -159,7 +165,7 @@ export const DATOS_DOMICILIO_LUGAR = [
         placeholder: '',
     },
     {
-        labelNombre: 'Código postal:',
+        labelNombre: 'Código postal*:',
         campo: 'codigoPostal',
         class: 'col-md-4',
         tipo_input: 'text',
@@ -177,52 +183,49 @@ export const DATOS_DOMICILIO_LUGAR = [
  */
 export const DATOS_MERCANCIA_SUBMANUFACTURA = [
     {
-        labelNombre: 'Fracción arancelaria:',
+        labelNombre: 'Fracción arancelaria',
         campo: 'fracArancelaria',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
     },
     {
-        labelNombre: 'NICO:',
+        labelNombre: 'NICO*:',
         campo: 'nico',
+        required: true,
         class: 'col-md-4',
         tipo_input: 'text',
-        disabled: true,
         validators: ['required'],
         placeholder: '',
     },
     {
-        labelNombre: 'Unidad de medida:',
+        labelNombre: 'Unidad de medida',
         campo: 'unidadMedida',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
     },
     {
-        labelNombre: 'Cantidad:',
+        labelNombre: 'Cantidad*:',
         campo: 'cantidad',
         class: 'col-md-4',
         tipo_input: 'text',
-        disabled: true,
         validators: ['required'],
         placeholder: '',
     },
     {
-        labelNombre: 'Valor USD:',
+        labelNombre: 'Valor USD*:',
         campo: 'valorUsd',
         class: 'col-md-4',
         tipo_input: 'text',
-        disabled: true,
         validators: ['required'],
         placeholder: '',
     },
     {
-        labelNombre: 'Descripcíon de la mercancía:',
+        labelNombre: 'Descripcíon de la mercancía*:',
         campo: 'descripcionMercancia',
         class: 'col-md-4',
         tipo_input: 'text',
-        disabled: true,
         validators: ['required'],
         placeholder: '',
     },
@@ -236,7 +239,7 @@ export const DATOS_MERCANCIA_SUBMANUFACTURA = [
  */
 export const TEXTOS = {
     INSTRUCCIONES: `
-    <p>- El archivo no debe exceder los 1000 registros. Para descargar plantilla del archivo de excel de click</p>`,
+    <p> El archivo no debe exceder los 1000 registros. Para descargar plantilla del archivo de excel de click* </br> <strong>Descargar plantilla</strong> </p>`,
     CARGA_DE_ARCHIVOS: `Seleccionar archivo`,
     CARGA_DE_ARCHIVO_DE_TEXTO: `Sin archivos seleccionados`,
     CARGA_DE_ARCHIVO_DE_TEXTO_EXITOSO: `El formato del archivo es correcto. Se enviará un correo de notificación con el resultado.`,

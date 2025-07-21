@@ -51,7 +51,7 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
    */
   configuracion: InputConfig[] = [
     {
-      title: 'Datos de quien recibe las mercancías(tercero submanufacturero autoriado)',
+      title: 'Datos de quien recibe las mercancías(tercero submanufacturero autorizado)',
       formGroupName: 'datosQuienRecibe',
       menu: [
         {

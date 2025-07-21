@@ -39,6 +39,7 @@
               [disabled]="esFormularioSoloLectura"
               (change)="setValoresStore()"
               [formControlName]="item.props.campo"
+              [attr.maxlength]="item.props.maxlength ? item.props.maxlength : null"
               libUppercase
             />
             } } @case(inputTypes.BREAK_CONTENT) {
@@ -49,6 +50,7 @@
               (valorCambiado)="fechaCambiado($event)"
             ></input-fecha>
             } @case (inputTypes.RADIO) {
+            <!-- <div class="tipo-carga">
             <label class="form-label" [for]="item.props.campo">{{
               item.props.labelNombre
             }}</label
@@ -67,6 +69,27 @@
               "
               [layout]="'horizontal'"
             ></app-input-radio>
+            </div> -->
+            <div class="tipo-carga">
+              <label class="form-label mb-0" [for]="item.props.campo">
+                {{ item.props.labelNombre }}
+                <ng-container *ngIf="item.props.required"><span>*</span></ng-container>:
+              </label>
+              <app-input-radio
+                [radioOptions]="item.props.radioOptions"
+                [selectedValue]="item.props.radioSelectedValue"
+                [isRequired]="item.props.required"
+                (valueChange)="
+                  cambioValorRadio(
+                    'radio' + groupIndex,
+                    groupIndex,
+                    menuIndex,
+                    $event
+                  )
+                "
+                [layout]="'horizontal'"
+              ></app-input-radio>
+            </div>
             }}
           </div>
         </div>
@@ -75,7 +98,7 @@
     </div>
     } @if (configuracion[1] && configuracion[1].menu[0] && configuracion[1].menu[0].props && configuracion[1].menu[0].props.radioSelectedValue && configuracion[1].menu[0].props.radioSelectedValue === cargaTipo.MANUAL) {
     <div
-      class="form"
+      class="form mt-5"
       formGroupName="manualDatos"
       [ngClass]="{ 'd-none': esManualAsivoAgregarClicked }"
     >
