@@ -2,7 +2,7 @@
  * Importación de modelos relacionados con el aviso de modificación.
  * Estos modelos se utilizan para estructurar los datos dentro del sistema.
  */
-import { FormularioGrupo, ModificacionGoceInmueble, PersonaFusionEscisionDTO, ProveedorExtranjero, TipoDevAviso } from '../models/avisomodify.model';
+import { FormularioGrupo, ModificacionGoceInmueble, PersonaFusionEscisionDTO, ProveedorExtranjero } from '../models/avisomodify.model';
 
 /**
  * Importación de la librería Akita para gestionar el estado global de la aplicación.
