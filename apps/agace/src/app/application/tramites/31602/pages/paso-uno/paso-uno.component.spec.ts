@@ -3,6 +3,8 @@ import { PasoUnoComponent } from './paso-uno.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import {SolicitanteComponent} from '@libs/shared/data-access-user/src';
 import { of, Subject } from 'rxjs';
+import { SharedModalComponent } from '../../components/shared-modal/shared-modal.component';
+
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -32,7 +34,7 @@ describe('PasoUnoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule,SolicitanteComponent],
+      imports: [HttpClientTestingModule,SolicitanteComponent,SharedModalComponent],
       declarations: [PasoUnoComponent],
       providers: [
         { provide: 'ComercioExteriorService', useValue: comercioExteriorSvcMock },

@@ -4,12 +4,13 @@ import { Component } from '@angular/core';
 import { ConfirmarNotificacionService } from '../services/confirmar-notificacion.service';
 import { OnInit } from '@angular/core';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 
 @Component({
   selector: 'app-notificacion-acto-administrativo',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, TooltipModule],
   templateUrl: './notificacion-acto-administrativo.component.html',
   styleUrl: './notificacion-acto-administrativo.component.css',
 })

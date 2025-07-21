@@ -14,6 +14,7 @@ import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
+  standalone: false,
 })
 /*eslint class-methods-use-this: ["error", { "exceptMethods": ["truncar"] }] */
 export class SolicitudComponent implements OnInit, OnDestroy {
@@ -243,27 +244,27 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         clasifiRegimen: [{ value: this.solicitudState?.clasifiRegimen, disabled: true }]
       }),
       datosMercancia: this.fb.group({
-        valueTA: [this.solicitudState?.valueTA,[Validators.maxLength(1000), Validators.pattern(/^[^~`^]*$/)]],
+        valueTA: [{ value:this.solicitudState?.valueTA, disabled : this.esFormularioSoloLectura},[Validators.maxLength(1000), Validators.pattern(/^[^~`^]*$/)]],
         fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, Validators.required],
         nico: [this.solicitudState?.nico, Validators.required],
         unidadMedidaTarifaria: [this.solicitudState?.unidadMedidaTarifaria, Validators.required],
-        cantidadTarifaria: [this.solicitudState?.cantidadTarifaria, [Validators.min(0), Validators.max(999999999.99), Validators.pattern(REGEX_ONCE_ENTEROS_DOS_DECIMALES)]],
-        valorFacturaUSD: [this.solicitudState?.valorFacturaUSD, [Validators.min(0), Validators.max(999999999.999), Validators.pattern(REGEX_ONCE_ENTEROS_TRES_DECIMALES)]],
-        precioUnitarioUSD: [ { value: this.solicitudState?.precioUnitarioUSD, disabled: true }],
+        cantidadTarifaria: [{value:this.solicitudState?.cantidadTarifaria, disabled : this.esFormularioSoloLectura}, [Validators.min(0), Validators.max(999999999.99), Validators.pattern(REGEX_ONCE_ENTEROS_DOS_DECIMALES)]],
+        valorFacturaUSD: [{value:this.solicitudState?.valorFacturaUSD,disabled : this.esFormularioSoloLectura}, [Validators.min(0), Validators.max(999999999.999), Validators.pattern(REGEX_ONCE_ENTEROS_TRES_DECIMALES)]],
+        precioUnitarioUSD: [{ value: this.solicitudState?.precioUnitarioUSD, disabled: true }],
         paisOrigen: [this.solicitudState?.paisOrigen, Validators.required],
         paisDestino: [this.solicitudState?.paisDestino, Validators.required],
-        lote: [this.solicitudState?.lote, [Validators.maxLength(60)]],
-        fechaSalida: [this.solicitudState?.fechaSalida, [Validators.required]],
-        observaciones: [this.solicitudState?.observaciones, [Validators.maxLength(250)]],
+        lote: [{value:this.solicitudState?.lote,disabled : this.esFormularioSoloLectura}, [Validators.maxLength(60)]],
+        fechaSalida: [{value:this.solicitudState?.fechaSalida,disabled : this.esFormularioSoloLectura}, [Validators.required]],
+        observaciones: [{value:this.solicitudState?.observaciones,disabled : this.esFormularioSoloLectura}, [Validators.maxLength(250)]],
         observacionMerc: this.solicitudState?.observacionMerc
       }),
       datosProducto: this.fb.group({
-        tipoPersona: [this.solicitudState?.tipoPersona],
-        nombre: [this.solicitudState?.nombre, [Validators.required, Validators.maxLength(200)]],
-        apellidoPaterno: [this.solicitudState?.apellidoPaterno, [Validators.required, Validators.maxLength(200)]],
-        apellidoMaterno: [this.solicitudState?.apellidoMaterno, [Validators.maxLength(200)]],
-        razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: true }, [Validators.maxLength(250)]],
-        domicilio: [this.solicitudState?.domicilio, [Validators.maxLength(1000)]]
+        tipoPersona: [{value:this.solicitudState?.tipoPersona,disabled : this.esFormularioSoloLectura}],
+        nombre: [{value: this.solicitudState?.nombre}, [Validators.required, Validators.maxLength(200)]],
+        apellidoPaterno: [{value: this.solicitudState?.apellidoPaterno}, [Validators.required, Validators.maxLength(200)]],
+        apellidoMaterno: [{value: this.solicitudState?.apellidoMaterno}, [Validators.maxLength(200)]],
+        razonSocial: [{value:this.solicitudState?.razonSocial,disabled : this.esFormularioSoloLectura} , [Validators.required,Validators.maxLength(250)]],
+        domicilio: [{value:this.solicitudState?.domicilio,disabled : this.esFormularioSoloLectura}, [Validators.maxLength(1000)]]
       }),
       registroFederal: this.fb.group({
         estado: [this.solicitudState?.estado, Validators.required],
@@ -498,9 +499,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.FormSolicitud.get('datosProducto.nombre')?.setValue('');
     this.FormSolicitud.get('datosProducto.apellidoPaterno')?.setValue('');
     this.FormSolicitud.get('datosProducto.apellidoMaterno')?.setValue('');
-
-    this.FormSolicitud.get('datosProducto.razonSocial')?.setValue('');
+    
+      if (!this.esFormularioSoloLectura) {
     this.FormSolicitud.get('datosProducto.razonSocial')?.enable();
+  }
     this.FormSolicitud.get('datosProducto.nombre')?.disable();
     this.FormSolicitud.get('datosProducto.apellidoPaterno')?.disable();
     this.FormSolicitud.get('datosProducto.apellidoMaterno')?.disable();
@@ -515,7 +517,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.isVisibleMoral = false;
 
     // Restablecer los valores y habilitar campos para "Persona Física"
-    this.FormSolicitud.get('datosProducto.razonSocial')?.setValue('');
     this.FormSolicitud.get('datosProducto.razonSocial')?.disable();
     this.FormSolicitud.get('datosProducto.nombre')?.enable();
     this.FormSolicitud.get('datosProducto.apellidoPaterno')?.enable();

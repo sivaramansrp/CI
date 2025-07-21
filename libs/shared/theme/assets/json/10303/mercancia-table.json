@@ -12,11 +12,6 @@
             "Condición",
             "Tipo mercancía"
         ],
-        "tableBody": [
-            {
-                "tbodyData": [
-                ]
-            }
-        ]
+        "tableBody": []
     }
 }

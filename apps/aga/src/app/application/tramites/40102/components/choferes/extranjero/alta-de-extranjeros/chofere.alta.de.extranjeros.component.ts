@@ -6,7 +6,7 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
-import { CHOFERES_EXTRANJEROS_TABLA } from '../../../../enum/choferes-enum';
+import { CHOFERES_EXTRANJEROS_TABLA } from '../../../../enum/choferes.enum';
 import { Chofer40102Query } from '../../../../estados/chofer40102.query';
 import { Chofer40102Service } from '../../../../estados/chofer40102.service';
 import { ChoferesExtranjeros } from '../../../../models/registro-muestras-mercancias.model';

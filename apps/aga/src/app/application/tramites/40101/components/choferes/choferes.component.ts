@@ -10,7 +10,7 @@ import {
   Component,
 } from '@angular/core';
 import { SharedModule } from '@ng-mf/data-access-user';
-import { TEXTOS } from '../../enum/choferes-enum';
+import { TEXTOS } from '../../enum/choferes.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 @Component({

@@ -225,7 +225,7 @@ export class Tramite260214Store extends Store<Tramite260210State> {
   public updateScianConfigDatos(scianConfigDatos: TablaScianConfig[]): void {
     this.update((state) => ({
       ...state,
-      scianConfigDatos,
+      scianConfigDatos: [...state.scianConfigDatos, ...scianConfigDatos],
     }));
   }
 

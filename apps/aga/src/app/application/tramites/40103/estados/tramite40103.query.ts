@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Tramite40103State } from '../estados/Tramite40103Store';
-import { Tramite40103Store } from '../estados/Tramite40103Store';
+import { Tramite40103State } from './tramite40103.store';
+import { Tramite40103Store } from './tramite40103.store';
 /**
 * Servicio para realizar consultas relacionadas con el trámite 40103.
 * 

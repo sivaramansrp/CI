@@ -1,7 +1,10 @@
+import { BtnContinuarComponent, DatosPasos } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
-import { DatosPasos } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PASOS } from '@libs/shared/data-access-user/src';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
@@ -23,6 +26,14 @@ interface AccionBoton {
   selector: 'app-importacion-productos',
   templateUrl: './importacion-productos.component.html',
   styleUrls: ['./importacion-productos.component.scss'],
+  standalone: true,
+  imports: [
+    PasoUnoComponent,
+    PasoDosComponent,
+    PasoTresComponent,
+    BtnContinuarComponent,
+    WizardComponent
+  ],
 })
 /**
  * Componente ImportacionProductosComponent.

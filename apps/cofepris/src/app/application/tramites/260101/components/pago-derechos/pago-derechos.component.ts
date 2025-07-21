@@ -1,7 +1,8 @@
-import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
 import { InputFecha } from '@libs/shared/data-access-user/src';
 import { Solicitud260101Query } from '../../estados/tramites260101.query';
 import { Solicitud260101State } from '../../estados/tramites260101.store';
@@ -11,6 +12,7 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+
 /**
  * Componente PagoDerechosComponent.
  * Gestiona la lógica y el formulario para el registro del pago de derechos.
@@ -19,6 +21,15 @@ import { takeUntil } from 'rxjs';
   selector: 'app-pago-derechos',
   templateUrl: './pago-derechos.component.html',
   styleUrl: './pago-derechos.component.scss',
+  standalone:true,
+  imports:[
+      CommonModule,
+      ReactiveFormsModule,
+      FormsModule,
+      InputFechaComponent,
+      CatalogoSelectComponent,
+      TituloComponent,
+    ]
 })
 export class PagoDerechosComponent implements OnInit, OnDestroy {
   /**
