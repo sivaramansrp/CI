@@ -67,14 +67,15 @@
                <input class="form-control"  placeholder="" type="text" formControlName="cantidadutilizada" id="cantidadutilizada"
                (change)="setValoresStore(datosDelTramiteRealizar,'cantidadutilizada','setCantidadutilizada')"
                [disabled]="esFormularioSoloLectura"
+               [ngClass]="{
+                'is-invalid': isCantidadUtilizadaExceeds
+              }"
                >
-              
-         @if(isCantidadUtilizadaExceeds) {
-           <small class="text-danger">
-             La Cantidad Utilizada debe ser menor a la cantidad Facturada
-           </small>
-          
-        }
+            @if(isCantidadUtilizadaExceeds) {
+               <small class="text-danger">
+                   La Cantidad Utilizada debe ser menor a la cantidad Facturada
+               </small>
+            }
             </div>
          </div>
          <div class="col-md-6 mb-3">
@@ -383,6 +384,9 @@
                (change)="setValoresStore(datosDelTramiteRealizar,'otrasCaracteristicas','setOtrasCaracteristicas')"
                [disabled]="esFormularioSoloLectura"
                >
+                <div *ngIf="dataCafeForm.get('datosDelTramiteRealizar.otrasCaracteristicas')?.touched && dataCafeForm.get('datosDelTramiteRealizar.otrasCaracteristicas')?.hasError('required')" class="text-danger">
+    Este campo es obligatorio
+  </div>
               </div>
                 </div>
                  <div class="row">
@@ -402,62 +406,67 @@
                  </div>
                  <ng-titulo titulo="Transbordo" />
                  <div class="row">
-                    <div class="col-md-4 ">
-                        <div class="form-group">
-                            <div class="form-group">
-                                <app-catalogo-select
-                                id="paisdetransbordoData"
-                                formControlName="paisdetransbordo"
-                                [catalogo]="paisdetransbordoData.catalogos"
-                                [label]="'Pais de transbordo'"
-                                [tooltipQuestionCircle]="true"
-                                [placeholder]="paisdetransbordoData.primerOpcion"
-                                [required]="true"
-                                (change)="setValoresStore(datosDelTramiteRealizar,'paisdetransbordo','setPaisdetransbordo')"
-                                [disabled]="esFormularioSoloLectura"
-                              ></app-catalogo-select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <div class="form-group">
-                               <app-catalogo-select
-                                id="mediodetransporteData"
-                                formControlName="mediodetransporte"
-                                [catalogo]="mediodetransporteData.catalogos"
-                                [label]="'Medio de transporte'"
-                                [placeholder]="mediodetransporteData.primerOpcion"
-                                [required]="true"
-                                (change)="setValoresStore(datosDelTramiteRealizar,'mediodetransporte','setMediodetransporte')"
-                                [disabled]="esFormularioSoloLectura"
-                              ></app-catalogo-select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                          <label class="form-label" for="Identificadordel">Identificador del medio de transporte*:</label>
-                          <input class="form-control" id="Identificadordel" formControlName="Identificadordel"
-                          (change)="setValoresStore(datosDelTramiteRealizar,'Identificadordel','setIdentificadordel')"
-                          [disabled]="esFormularioSoloLectura"/>
-                          <div
-                          *ngIf="
-                            dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.invalid &&
-                            dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.touched
-                          "
-                          class="text-danger"
-                        >
-                          <small
-                            *ngIf="
-                              dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.errors?.['maxlength']
-                            "
-                          >
-                            Por favor, no escribas más de 5 caracteres
-                          </small>
-                          </div>
-                        </div>
-                  </div>
+                   <!-- País de transbordo -->
+                   <div class="col-md-4 mb-3">
+                     <div class="form-group">
+                       <app-catalogo-select
+                         id="paisdetransbordoData"
+                         formControlName="paisdetransbordo"
+                         [catalogo]="paisdetransbordoData.catalogos"
+                         [label]="'País de transbordo'"
+                         [tooltipQuestionCircle]="true"
+                         [tooltipQuestionCircleText]="'Si no hay país de transbordo, no seleccione país'"
+                         [placeholder]="paisdetransbordoData.primerOpcion"
+                         (change)="setValoresStore(datosDelTramiteRealizar, 'paisdetransbordo', 'setPaisdetransbordo')"
+                         [disabled]="esFormularioSoloLectura"
+                       ></app-catalogo-select>
+                     </div>
+                   </div>
+                 
+                   <!-- Medio de transporte -->
+                   <div class="col-md-4 mb-3">
+                     <div class="form-group">
+                       <app-catalogo-select
+                         id="mediodetransporteData"
+                         formControlName="mediodetransporte"
+                         [catalogo]="mediodetransporteData.catalogos"
+                         [label]="'Medio de transporte'"
+                         [placeholder]="mediodetransporteData.primerOpcion"
+                         [required]="true"
+                         (change)="setValoresStore(datosDelTramiteRealizar, 'mediodetransporte', 'setMediodetransporte')"
+                         [disabled]="esFormularioSoloLectura"
+                       ></app-catalogo-select>
+                     </div>
+                   </div>
+                 
+                   <!-- Identificador del medio de transporte -->
+                   <div class="col-md-4 mb-3">
+                     <div class="form-group">
+                       <label class="form-label" for="Identificadordel" style="white-space: nowrap;">Identificador del medio de transporte*:</label>
+                       <input
+                         class="form-control"
+                         id="Identificadordel"
+                         formControlName="Identificadordel"
+                         (change)="setValoresStore(datosDelTramiteRealizar, 'Identificadordel', 'setIdentificadordel')"
+                         [disabled]="esFormularioSoloLectura"
+                       />
+                       <div
+                         *ngIf="
+                           dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.invalid &&
+                           dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.touched
+                         "
+                         class="text-danger"
+                       >
+                         <small
+                           *ngIf="
+                             dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.errors?.['maxlength']
+                           "
+                         >
+                           Por favor, no escribas más de 5 caracteres
+                         </small>
+                       </div>
+                     </div>
+                   </div>
                  </div>
                  <ng-titulo titulo="Observaciones" />
                  <div class="col-md-4">
@@ -475,11 +484,11 @@
          </div>
      </div>  
      <div class="col-md-12 d-flex justify-content-end">      
-          <div class="btn-group">
-            <button class="btn btn-danger me-2"
+      <div class="btn-group" style="margin-bottom: 1rem;"> 
+        <button class="btn btn-danger me-2"
               type="button" data-bs-dismiss="modal">Cancelar</button>
               <button class="btn btn-primary me-2"
-              type="button" (click)="onSubmit()" data-bs-dismiss="modal">Agregar</button>
+              type="submit" data-bs-dismiss="modal">Agregar</button>
           </div>    
          </div>
           </ng-container>

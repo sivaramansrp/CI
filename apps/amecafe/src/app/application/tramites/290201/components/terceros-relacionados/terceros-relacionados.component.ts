@@ -89,7 +89,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   public paisData: CatalogosSelect = {
     labelNombre: 'País',
     required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
+    primerOpcion: 'Selecciona una opción',
     catalogos: [],
   };
   /**
@@ -261,26 +261,18 @@ public coloniaData: CatalogosSelect = {
         primerApellido: [this.destinatarioState?.denominacion,[Validators.required]],
            
        segundoApellido: [ this.destinatarioState?.denominacion,[Validators.required] ],
-
-       calle: [ this.destinatarioState?.denominacion,[Validators.required]],
-       numeroExterior: [this.destinatarioState?.denominacion,[Validators.required]],
-      numeroInterior: [this.destinatarioState?.denominacion, [Validators.required]],
         domicilio: [this.destinatarioState?.domicilio, [Validators.required]],
         pais: [this.destinatarioState?.pais, [Validators.required]],
-        entidadFederativa: [this.destinatarioState?.entidadFederativa, Validators.required],
-        alcaldiaMunicipo: [this.destinatarioState?.alcaldiaMunicipo, Validators.required],
-        colonia: [this.destinatarioState?.colonia, Validators.required],
         codigopostal: [
           this.destinatarioState?.codigopostal,
-          [Validators.required, Validators.maxLength(5), Validators.pattern(REGEX_CODIGO_POSTAL)]],
-        telefono: [this.destinatarioState?.telefono, [Validators.required, Validators.pattern(REGEX_TELEFONO)]],
+          [Validators.required, Validators.maxLength(5), Validators.pattern(/^\d+$/)]],
+        telefono: [this.destinatarioState?.telefono, [Validators.required, Validators.pattern(/^\d+$/)]],
         correoelectronico: [
           this.destinatarioState?.correoelectronico,
-          [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)]],
+          [Validators.required, Validators.email]],
         
       }),
     });
-   
 
   }
 /**
@@ -379,13 +371,18 @@ get selectedTipoPersona(): string | undefined {
    * Método para manejar el envío del formulario.
    */
   enEnviar(): void {
-    if (this.destinatarioForm.invalid) {
-      // Mark all fields as touched to show validation errors
-      this.destinatarioForm.markAllAsTouched();
-      return;
-    }
     const FORM_DATA = this.destinatarioForm.value;
-  
+   // Check if the form is valid
+   if (!this.destinatarioForm.valid) {
+    console.error('Form is invalid. Please fill in all required fields.');
+    const invalidControls = Object.keys(this.destinatarioForm.controls).filter(key => {
+      const control = this.destinatarioForm.get(key);
+      return control && control.invalid;
+    });
+    console.log('Invalid Controls:', invalidControls);
+    this.destinatarioForm.markAllAsTouched();
+    return;
+  }
     if (!FORM_DATA || Object.keys(FORM_DATA).length === 0) {
       console.error('Form data is empty');
       return;
@@ -393,7 +390,7 @@ get selectedTipoPersona(): string | undefined {
   
     const PAIS_DATA_VALUE = this.paisData.catalogos.find(
       (item: Catalogo) =>
-        String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.pais)
+        String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.pais).trim()
     )?.descripcion;
   
     FORM_DATA.datosDelTramiteRealizar.pais = PAIS_DATA_VALUE;
@@ -401,19 +398,21 @@ get selectedTipoPersona(): string | undefined {
     if (this.selectedRow) {
       const INDEX = this.tableData.indexOf(this.selectedRow);
       if (INDEX !== -1) {
-        this.tableData[INDEX] = { ...FORM_DATA }; 
+        this.tableData[INDEX] = { ...FORM_DATA, id: this.selectedRow.id }; // Retain the existing ID
       }
     } else {
-      this.tableData.push({ ...FORM_DATA }); 
-
+      const newId = this.tableData.length > 0
+        ? Math.max(...this.tableData.map((row) => row.id || 0)) + 1
+        : 1;
+      this.tableData.push({ ...FORM_DATA, id: newId }); // Assign a new unique ID
     }
+    console.log('Updated Table Data:', this.tableData);
 
-    this.tableData = [...this.tableData]; 
-
-    this.changeDetectorRef.markForCheck(); 
-    this.destinatarioForm.reset(); 
-    this.esFormularioVisible = false; 
-    this.selectedRow = null; 
+    this.tableData = [...this.tableData]; // Trigger change detection
+    this.changeDetectorRef.markForCheck();
+    this.destinatarioForm.reset();
+    this.esFormularioVisible = false;
+    this.selectedRow = null;
   }
  
  /**
@@ -423,7 +422,7 @@ onLimpiar(): void {
   this.destinatarioForm.reset();
   this.destinatarioForm.patchValue({
     datosDelTramiteRealizar: {
-      pais: 'Selecciona un medio de transporte',
+      pais: '',
     },
   });
 
@@ -442,18 +441,20 @@ onLimpiar(): void {
       CONTROL?.markAsTouched();
     }
   });
+  this.destinatarioForm.get('datosDelTramiteRealizar.pais')?.markAsTouched();
+
 }
   /**
    * Método para seleccionar una fila de la tabla.
    * @param item Fila seleccionada.
    * @param event Evento del checkbox.
    */
-
-  onSelectedRowsChange(selectedRows: FilaData2[]): void {
-    this.selectedRows = new Set(selectedRows.map((row) => row.id)); // Update selected rows
-    this.esFormularioVisible = false;
-  }
-
+ onSelectedRowsChange(selectedRows: FilaData2[]): void {
+     
+     this.selectedRows = new Set(selectedRows.map((row) => row.id)); 
+     this.esFormularioVisible = false; 
+   
+   }
   /**
    * Método para modificar los datos de una fila seleccionada.
    */
@@ -471,8 +472,11 @@ onLimpiar(): void {
     if (this.selectedRow) {
       const PAIS_ID = this.paisData.catalogos.find(
         (item: Catalogo) =>
-          item.descripcion === this.selectedRow?.datosDelTramiteRealizar?.pais
+          item.descripcion === this.selectedRow?.datosDelTramiteRealizar?.pais ||
+          String(item.id) === String(this.selectedRow?.datosDelTramiteRealizar?.pais)
       )?.id;
+
+
       this.destinatarioForm.patchValue({
         datosDelTramiteRealizar: {
           tipoPersona: this.selectedRow.datosDelTramiteRealizar.tipoPersona,
@@ -488,21 +492,37 @@ onLimpiar(): void {
 
       this.esFormularioVisible = true;
     }
+  
   }
 
   /**
    * Método para eliminar una fila seleccionada.
    */
-  onDeleteSelectedRows(): void {
-    if (this.selectedRows && this.selectedRows.size > 0) {
-      this.tableData = this.tableData.filter(
-        (row: { id: number }) => !this.selectedRows.has(row.id)
-      );
-      this.selectedRows.clear();
-      this.destinatarioForm.reset();
-      this.esFormularioVisible = false;
-    }
+ /**
+ * Método para eliminar una fila seleccionada.
+ */
+ onDeleteSelectedRows(): void {
+  if (this.selectedRows.size > 0) {
+    console.log('Selected Rows:', Array.from(this.selectedRows)); // Debugging: Log selected rows
+
+    // Ensure `id` uniqueness in `tableData`
+    const uniqueIds = new Set(this.tableData.map((row) => row.id));
+    console.log('Unique IDs in tableData:', Array.from(uniqueIds)); // Debugging: Log unique IDs
+
+    // Filter out rows that are not in the selectedRows set
+    this.tableData = this.tableData.filter(
+      (row: { id: number }) => !this.selectedRows.has(row.id)
+    );
+
+
+    // Clear the selected rows after deletion
+    this.selectedRows.clear();
+
+    // Reset the form and hide the form if visible
+    this.destinatarioForm.reset();
+    this.esFormularioVisible = false;
   }
+}
   /**
    * Método para manejar el clic en una fila de la tabla.
    * @param rowData Fila seleccionada.
@@ -545,7 +565,11 @@ onLimpiar(): void {
       this.destinatarioForm?.enable();
     }
 }
+onAgregar(): void{
+  this.esFormularioVisible = true; 
+  // this.destinatarioForm.reset(); 
 
+}
   /**
    * Método para establecer valores en el store.
    * @param form Formulario reactivo.
