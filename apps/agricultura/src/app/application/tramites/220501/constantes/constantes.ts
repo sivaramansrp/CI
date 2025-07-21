@@ -69,8 +69,19 @@ export const ROWS: Tabla[] = [
     Requisito: 'Requisito',
     Certificado: 123456,
     Fraccion: '01039201',
-    Descripcion: 'Con pedigree o certificado de alto registro.',
+    FraccionDescripcion: 'Con pedigree o certificado de alto registro.',
     Nico: '00',
+    NicoDescripcion: 'Descripción del NICO',
+    Descripcion: 'Descripción de la mercancía',
+    Umt: 'Kilogramo',
+    CantidadUMT: 100,
+    Umc: 'Unidad de medida comercialización',
+    CantidadUMC: 50,
+    Especie: 'Especie de la mercancía',
+    Uso: 'Uso de la mercancía',
+    PaisOrigen: 'País de origen',
+    PaisProcedencia: 'País de procedencia',
+    CertificadoInternacionalElectronico: 'Certificado Internacional Electrónico'
   },
   {
     Partida: '2',
@@ -78,8 +89,19 @@ export const ROWS: Tabla[] = [
     Requisito: 'Requisito',
     Certificado: 123456,
     Fraccion: '01039201',
-    Descripcion: 'Con pedigree o certificado de alto registro.',
+    FraccionDescripcion: 'Con pedigree o certificado de alto registro.',
     Nico: '00',
+    NicoDescripcion: 'Descripción del NICO',
+    Descripcion: 'Descripción de la mercancía',
+    Umt: 'Kilogramo',
+    CantidadUMT: 100,
+    Umc: 'Unidad de medida comercialización',
+    CantidadUMC: 50,
+    Especie: 'Especie de la mercancía',
+    Uso: 'Uso de la mercancía',
+    PaisOrigen: 'País de origen',
+    PaisProcedencia: 'País de procedencia',
+    CertificadoInternacionalElectronico: 'Certificado Internacional Electrónico'
   },
   {
     Partida: '3',
@@ -87,8 +109,19 @@ export const ROWS: Tabla[] = [
     Requisito: 'Requisito',
     Certificado: 123456,
     Fraccion: '01039201',
-    Descripcion: 'Con pedigree o certificado de alto registro.',
+    FraccionDescripcion: 'Con pedigree o certificado de alto registro.',
     Nico: '00',
+    NicoDescripcion: 'Descripción del NICO',
+    Descripcion: 'Descripción de la mercancía',
+    Umt: 'Kilogramo',
+    CantidadUMT: 100,
+    Umc: 'Unidad de medida comercialización',
+    CantidadUMC: 50,
+    Especie: 'Especie de la mercancía',
+    Uso: 'Uso de la mercancía',
+    PaisOrigen: 'País de origen',
+    PaisProcedencia: 'País de procedencia',
+    CertificadoInternacionalElectronico: 'Certificado Internacional Electrónico'
   },
 ];
 
@@ -97,5 +130,6 @@ export const ROWS: Tabla[] = [
  */
 export const PARAMETERO = {
  EVALUAR: 'FLUJO_FUNCIONARIO_EVALUAR',
- READ_PROCEDEMENTO: 'READ_PROCEDURE'
+ READ_PROCEDEMENTO: 'READ_PROCEDURE',
+ SUBSECUENTES: 'SUBSECUENTES'
 }

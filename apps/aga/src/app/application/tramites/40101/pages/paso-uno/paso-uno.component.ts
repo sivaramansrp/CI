@@ -101,7 +101,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
     private chofer40101Service: Chofer40101Service,
     private consultaQuery: ConsultaioQuery
   ) {
-
+    // Lógica para el constructor si es necesario.
   }
 
   /**

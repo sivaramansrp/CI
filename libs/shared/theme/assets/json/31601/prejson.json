@@ -59,5 +59,14 @@
   },
    "radio21": {
     "description": "En su caso acredite cumplir con lo establecido en el artículo 27, fracción V, tercer párrafo de la Ley del ISR"
+  },
+    "radio22": {
+    "description": "Instalaciones principales"
+  },
+   "radio23": {
+    "description": "Proceso productivo"
+  },
+   "radio24": {
+    "description": "Acreditación del uso y goce del inmueble"
   }
 }

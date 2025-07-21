@@ -1,3 +1,4 @@
+import { AcuseNotificacionRequerimiento } from '../constants/confirmar-notificacion.enum';
 import { AcuseResolucion } from '../models/confirmar-notificacion.model';
 import { Documento } from '../models/confirmar-notificacion.model';
 import { HttpClient } from '@angular/common/http';
@@ -32,6 +33,27 @@ export class ConfirmarNotificacionService {
     return this.http.get<Documento[]>(
       'assets/json/confirmar-notificacion/acuseDeRecibo.json'
     );
+  }
+
+  /**
+   * @method getAcuseConfirmarResolucionTablaDatos
+   * @description
+   * Obtiene los datos de la tabla de acuse de recibo para la confirmación de resolución.
+   * Realiza una petición HTTP GET para recuperar un arreglo de objetos `AcuseNotificacionRequerimiento`
+   * desde un archivo JSON local.
+   *
+   * @returns Un observable que emite un arreglo de `AcuseNotificacionRequerimiento`.
+   */
+  getAcuseConfirmarResolucionTablaDatos(): Observable<AcuseNotificacionRequerimiento[]> {
+    return this.http.get<AcuseNotificacionRequerimiento[]>(
+      'assets/json/confirmar-notificacion/acuse-confirmar-resolucion.json'
+    )
+  }
+
+  getResolucionConfirmarResolucionTablaDatos(): Observable<AcuseNotificacionRequerimiento[]> {
+    return this.http.get<AcuseNotificacionRequerimiento[]>(
+      'assets/json/confirmar-notificacion/resolucion-confirmar-resolucion.json'
+    )
   }
 
   /**

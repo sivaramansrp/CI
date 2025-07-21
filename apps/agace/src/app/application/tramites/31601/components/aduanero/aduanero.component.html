@@ -1,9 +1,9 @@
 <div class="mt-4">
   <form [formGroup]="preOperativeForm">
-    <!-- Preoperativo Section -->
+    
     <div class="w-100 p-3">
       <div class="form-group">
-        <!-- Input Radio Component -->
+       
         <section class="body-text fw-bold mb-2">
           <span class="text-danger">*</span> ¿Desea obtener la autorización del
           Esquema Integral modalidad IVA e IEPS, como pre operativo? (el periodo
@@ -700,10 +700,13 @@
         </h6>
       </div>
 
-      <ng-table
-        [commonTableHeader]="domiciliosHeaderData"
-        [commonTableBody]="domiciliosBodyData"
-      ></ng-table>
+      <app-tabla-dinamica
+    [configuracionTabla]="configuracionindiqueDatos"
+    [datos]="modificarDatos"
+    [tipoSeleccionTabla]="checkboxValor"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
+    (listaDeFilaSeleccionada)="onFilasSeleccionadas($event)"
+  ></app-tabla-dinamica>
       <div class="d-flex justify-content-center">
         <app-table-pagination
           [totalItems]="totalItems"
@@ -715,19 +718,22 @@
         </app-table-pagination>
       </div>
       <div class="d-flex justify-content-end">
-        <button
-          type="button"
-          class="btn btn-default btn-space"
-          (click)="openInstalacionesModal()"
-         [disabled]="esFormularioSoloLectura"
-        >
-          Modificar
-        </button>
+       <button
+                type="button"
+                class="btn btn-primary ms-2"
+                data-bs-toggle="modal"
+                data-bs-target="#modalAgregar"
+                (click)="abrirModal()"
+                [disabled]="esFormularioSoloLectura || !hayFilasSeleccionadas"
+              >
+              Modificar
+              </button>
         <button
           type="button"
           class="btn btn-primary btn-space"
-         [disabled]="esFormularioSoloLectura"
+         [disabled]="esFormularioSoloLectura || !hayFilasSeleccionadas"
          (click)="confirmEliminarMencioneItem()"
+         (click)="eliminarFilaSeleccionada()"
         >
           Eliminar
         </button>
@@ -1367,6 +1373,7 @@
 >
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
+       <form [formGroup]="entidadForm">
       <div class="modal-header">
         <h5 class="modal-title" id="instalacionesModalLabel">Instalaciones</h5>
       </div>
@@ -1378,6 +1385,8 @@
               [placeholder]="'Seleccione un valor'"
               [catalogo]="entidadFederativa"
               [isDisabled]="esFormularioSoloLectura ? true : false"
+               formControlName="federativaSeleccionada"
+               (change)="setValoresStore(entidadForm, 'federativaSeleccionada', 'setFederativaSeleccionada')"
             >
             </app-catalogo-select>
           </div>
@@ -1403,18 +1412,21 @@
             class="btn btn-primary"
             data-bs-dismiss="modal"
             [disabled]="esFormularioSoloLectura"
+              (click)="acceptarValor()"
           >
             Aceptar
           </button>
           <button
             type="button"
             class="btn btn-primary"
+             data-bs-dismiss="modal"
             [disabled]="esFormularioSoloLectura"
           >
             Cancelar
           </button>
         </div>
       </div>
+      </form>
     </div>
   </div>
 </div>
@@ -1606,3 +1618,191 @@
   </div>
   }
 </ng-template>
+<div class="container mt-4">
+  <div
+    class="modal fade"
+    id="modalAgregar"
+    tabindex="-1"
+    aria-labelledby="modalAgregarLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Modificar</h4>
+        </div>
+        <div class="modal-body">
+        <form [formGroup]="modificarForm">
+        <div class="row">
+                  <div class="col-md-4">
+                      <div class="form-group">
+                        
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span>Instalaciones principales
+        </section>
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+          [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio22.description"
+          [showDescription]="true"
+          formControlName="principales"
+          (change)="
+            setValoresStore(
+              modificarForm,
+              'principales',
+              'setPrincipales'
+            )
+          "
+        ></app-input-radio>
+        <div
+          *ngIf="
+            modificarForm.controls['principales'].invalid &&
+            modificarForm.controls['principales'].touched
+          "
+          class="text-danger"
+        >
+          Este campo es obligatorio.
+        </div>
+                      </div>
+                  </div>
+
+                  <div class="col-md-4">
+                      <div class="form-group">
+                          <app-catalogo-select [catalogo]="comboIMMEX" [label]="'Municipio o alcaldía'"  name="municipio"
+                          formControlName="municipio" (change)="setValoresStore(modificarForm,'municipio', 'setMunicipio')">
+                      </app-catalogo-select>
+                      </div>
+                  </div>
+      </div>
+       <div class="row">
+                  <div class="col-md-4">
+                      <div class="form-group">
+                          <app-catalogo-select [catalogo]="comboIMMEX" [label]="'Tipo de instalación'"  name="instalacion" [required]="true"
+                          formControlName="instalacion" (change)="setValoresStore(modificarForm,'instalacion', 'setInstalacion')">
+                      </app-catalogo-select>
+                      </div>                 
+                  </div>
+                  <div class="col-md-4">
+                         <div class="form-group">
+              <label class="form-label" for="federativa">Entidad federativa</label>
+              <input class="form-control" id="federativa" type="text"
+                formControlName="federativa" (change)="setValoresStore(modificarForm, 'federativa', 'setFederativa')" />
+            </div>
+                  </div>
+                  <div class="col-md-4">
+                       <div class="form-group">
+              <label class="form-label" for="registro">Registro ante SE/SAT</label>
+              <input class="form-control" id="registro" type="text"
+                formControlName="registro" (change)="setValoresStore(modificarForm, 'registro', 'setRegistro')" />
+            </div>
+                  </div>
+
+         </div>
+         <div class="row">
+            <div class="col-md-8">
+                       <div class="form-group">
+              <label class="form-label" for="colonia">Colonia, calle y número</label>
+              <input class="form-control" id="colonia" type="text"
+                formControlName="colonia" (change)="setValoresStore(modificarForm, 'colonia', 'setColonia')" />
+            </div>
+                  </div>
+
+                    <div class="col-md-4">
+                       <div class="form-group">
+              <label class="form-label" for="postal">Código postal</label>
+              <input class="form-control" id="postal" type="number"
+                formControlName="postal" (change)="setValoresStore(modificarForm, 'postal', 'setPostal')" />
+            </div>
+          </div>
+   </div>
+   <div class="row">
+       <div class="col-md-4">
+            <div class="form-group">
+              <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span>Proceso productivo
+        </section>
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+          [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio23.description"
+          [showDescription]="true"
+          formControlName="proceso"
+          (change)="
+            setValoresStore(
+              modificarForm,
+              'proceso',
+              'setProceso'
+            )
+          "
+        ></app-input-radio>
+         <div
+          *ngIf="
+            modificarForm.controls['proceso'].invalid &&
+            modificarForm.controls['proceso'].touched
+          "
+          class="text-danger"
+        >
+          Este campo es obligatorio.
+        </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+              <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span>Acreditación del uso y goce del inmueble
+        </section>
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+          [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          [description]="descriptionData.radio24.description"
+          [showDescription]="true"
+          formControlName="inmueble"
+          (change)="
+            setValoresStore(
+              modificarForm,
+              'inmueble',
+              'setInmueble'
+            )
+          "
+        ></app-input-radio>
+         <div
+          *ngIf="
+            modificarForm.controls['inmueble'].invalid &&
+            modificarForm.controls['inmueble'].touched
+          "
+          class="text-danger"
+        >
+          Este campo es obligatorio.
+        </div>
+            </div>
+          </div>
+         </div>
+        </form>          
+        </div>
+        <div class="modal-footer custom-footer justify-content-center">  
+          <button type="button" class="btn btn-primary" (click)="guardarModificarDatos()" >Acceptar</button>        
+          <button
+            type="button"
+            class="btn btn-default"
+            data-bs-dismiss="modal"
+            #closeModal
+          >
+            Cancelar
+          </button>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

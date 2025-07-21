@@ -1,106 +1,56 @@
 <div class="container">
   <ng-titulo titulo="Número de folio del trámite" />
   <form [formGroup]="forma">
-    <div
-      class="panel-group ficha-collapse margin-bottom-30px"
-      id="accordion"
-    ></div>
+    <div class="panel-group ficha-collapse margin-bottom-30px" id="accordion"></div>
     <div class="row">
       <div class="col-md-8">
         <label class="form-label" for="foliodel">Folio del trámite:</label>
-        <input
-          formControlName="foliodel"
-          value="1502200200120240301000015"
-          class="form-control"
-          id="foliodel"
-          placeholder=""
-          readonly
-          type="text"
-          libUppercase
-        />
+        <input formControlName="foliodel" value="1502200200120240301000015" class="form-control" id="foliodel"
+          placeholder="" readonly type="text" libUppercase />
       </div>
     </div>
     <div class="row">
       <ng-titulo titulo="Datos del tramite a realizar" />
       <div class="row">
         <div class="col-md-4">
-          <app-catalogo-select
-            id="aduanaIngreso"
-            [catalogo]="aduanaIngreso.catalogos"
-            [label]="aduanaIngreso.labelNombre"
-            [placeholder]="aduanaIngreso.primerOpcion"
-            [isDisabled]="formularioDeshabilitado"
-            formControlName="aduanaIngreso"
-            (selectionChange)="seleccionarAduanaIngreso($event)"
-          ></app-catalogo-select>
+          <app-catalogo-select id="aduanaIngreso" [catalogo]="aduanaIngreso.catalogos"
+            [label]="aduanaIngreso.labelNombre" [placeholder]="aduanaIngreso.primerOpcion"
+            [isDisabled]="formularioDeshabilitado" formControlName="aduanaIngreso"
+            (selectionChange)="seleccionarAduanaIngreso($event)"></app-catalogo-select>
         </div>
         <div class="col-md-8">
-          <app-catalogo-select
-            [catalogo]="oficianaInspeccion.catalogos"
-            [label]="oficianaInspeccion.labelNombre"
-            [placeholder]="oficianaInspeccion.primerOpcion"
-            [isDisabled]="formularioDeshabilitado"
+          <app-catalogo-select [catalogo]="oficianaInspeccion.catalogos" [label]="oficianaInspeccion.labelNombre"
+            [placeholder]="oficianaInspeccion.primerOpcion" [isDisabled]="formularioDeshabilitado"
             formControlName="oficinaInspeccion"
-            (selectionChange)="seleccionarOficianaInspeccion($event)"
-          ></app-catalogo-select>
+            (selectionChange)="seleccionarOficianaInspeccion($event)"></app-catalogo-select>
         </div>
       </div>
       <div class="row">
         <div class="col-md-4">
-          <app-catalogo-select
-            [catalogo]="puntoInspeccion.catalogos"
-            [label]="puntoInspeccion.labelNombre"
-            [placeholder]="puntoInspeccion.primerOpcion"
-            [isDisabled]="formularioDeshabilitado"
+          <app-catalogo-select [catalogo]="puntoInspeccion.catalogos" [label]="puntoInspeccion.labelNombre"
+            [placeholder]="puntoInspeccion.primerOpcion" [isDisabled]="formularioDeshabilitado"
             formControlName="puntoInspeccion"
-            (selectionChange)="seleccionarPuntoInspeccion($event)"
-          ></app-catalogo-select>
+            (selectionChange)="seleccionarPuntoInspeccion($event)"></app-catalogo-select>
         </div>
       </div>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="claveUCON"
-              >Clave UCON:
-              <i
-                class="bi bi-question-circle-fill"
-                style="margin-bottom: '5px'"
-              ></i
-            ></label>
-            <input
-              formControlName="claveUCON"
-              value=""
-              class="form-control"
-              id="claveUCON"
-              placeholder=""
-              type="text"
-              libUppercase
-            />
+            <label class="form-label" for="claveUCON">Clave UCON:
+              <i class="bi bi-question-circle-fill" style="margin-bottom: '5px'"></i></label>
+            <input formControlName="claveUCON" value="" class="form-control" id="claveUCON" placeholder="" type="text"
+              libUppercase />
           </div>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select
-            [catalogo]="establecimiento.catalogos"
-            [label]="establecimiento.labelNombre"
-            [placeholder]="establecimiento.primerOpcion"
-            [isDisabled]="formularioDeshabilitado"
-            formControlName="establecimientoTIF"
-          ></app-catalogo-select>
+          <app-catalogo-select [catalogo]="establecimiento.catalogos" [label]="establecimiento.labelNombre"
+            [placeholder]="establecimiento.primerOpcion" [isDisabled]="formularioDeshabilitado"
+            formControlName="establecimientoTIF"></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <label class="form-label" for="nombreVeterinario"
-            >Nombre del médico veterinario:</label
-          >
-          <input
-            formControlName="nombre"
-            readonly
-            value=""
-            class="form-control"
-            id="claveUCON"
-            placeholder=""
-            type="text"
-            libUppercase
-          />
+          <label class="form-label" for="nombreVeterinario">Nombre del médico veterinario:</label>
+          <input formControlName="nombre" readonly value="" class="form-control" id="claveUCON" placeholder=""
+            type="text" libUppercase />
         </div>
       </div>
 
@@ -108,26 +58,14 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="numeroGuia">Número de guía:</label>
-            <input
-              class="form-control"
-              readonly
-              id="numeroGuia"
-              placeholder=""
-              formControlName="numeroguia"
-              type="text"
-              libUppercase
-            />
+            <input class="form-control" readonly id="numeroGuia" placeholder="" formControlName="numeroguia" type="text"
+              libUppercase />
           </div>
         </div>
         <div class="col-md-8">
-          <app-catalogo-select
-            [catalogo]="regimenDestinaran.catalogos"
-            [label]="regimenDestinaran.labelNombre"
-            [placeholder]="regimenDestinaran.primerOpcion"
-            formControlName="regimen"
-            [isDisabled]="formularioDeshabilitado"
-            (selectionChange)="seleccionarRegimen($event)"
-          ></app-catalogo-select>
+          <app-catalogo-select [catalogo]="regimenDestinaran.catalogos" [label]="regimenDestinaran.labelNombre"
+            [placeholder]="regimenDestinaran.primerOpcion" formControlName="regimen"
+            [isDisabled]="formularioDeshabilitado" (selectionChange)="seleccionarRegimen($event)"></app-catalogo-select>
         </div>
       </div>
     </div>
@@ -138,14 +76,9 @@
         <label for="certficacion_a">Captura de datos de mercancía*:</label>
       </div>
       <div class="col-md-12">
-        <app-input-radio
-        [radioOptions]="opcionDeBotonDeRadio"
-        [isRequired]="true"
-        [selectedValue]="esSolicitudFerrosValor"
-        [layout]="'vertical'"
-        formControlName="capturaDatosMercancia"
-        (valueChange)="setCapturaDatosMercancia($event)"
-      ></app-input-radio>
+        <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true"
+          [selectedValue]="esSolicitudFerrosValor" [layout]="'vertical'" formControlName="capturaDatosMercancia"
+          (valueChange)="setCapturaDatosMercancia($event)"></app-input-radio>
       </div>
     </div>
     <div class="row">
@@ -154,7 +87,7 @@
           <label for="mercancia">Mercancías</label>
         </div>
         <div class="col-md-12 mt-5">
-          <div class="table-container">
+          <div class="table-container table-responsive-horizontal">
             <table class="table table-responsive">
               <thead>
                 <tr>
@@ -163,21 +96,15 @@
                   <th class="name-column">
                     No. partida
                     <div class="icon-stack">
-                      <i
-                        [ngClass]="{
+                      <i [ngClass]="{
                           'bi-caret-up-fill': currentDirection === -1,
                           'bi-caret-up': currentDirection !== -1
-                        }"
-                        (click)="rotateRow(-1)"
-                      >
+                        }" (click)="rotateRow(-1)">
                       </i>
-                      <i
-                        [ngClass]="{
+                      <i [ngClass]="{
                           'bi-caret-down-fill': currentDirection === 1,
                           'bi-caret-down': currentDirection !== 1
-                        }"
-                        (click)="rotateRow(1)"
-                      >
+                        }" (click)="rotateRow(1)">
                       </i>
                     </div>
                   </th>
@@ -187,21 +114,28 @@
                   <th>Fracción arancelaria</th>
                   <th>Descripción de la fracción</th>
                   <th>Nico</th>
+                  <th>Descripción Nico</th>
+                  <th>Descripción</th>
+                  <th>Unidad de medida de tarifa (UMT)</th>
+                  <th>Cantidad UMT</th>
+                  <th>Unidad de medida de comercializacion (UMC)</th>
+                  <th>Cantidad UMC</th>
+                  <th>Especie</th>
+                  <th>Uso</th>
+                  <th>País de orígen</th>
+                  <th>Pais de procedencia</th>
+                  <th>Certificado Internacional Electrónico</th>
                 </tr>
               </thead>
 
               <tbody>
-                <tr
-                  *ngFor="let row of rows; let i = index"
-                  [class.visible-row]="i === currentIndex"
-                  [class.hidden-row]="i !== currentIndex"
-                >
-                  <td
-                    style="
+                @for(row of rows; let i = $index; track i) {
+                <tr [class.visible-row]="i === currentIndex"
+                  [class.hidden-row]="i !== currentIndex">
+                  <td style="
                       background-color: rgb(233, 236, 239);
                       text-align: center !important;
-                    "
-                  >
+                    ">
                     1
                   </td>
                   <td>
@@ -216,76 +150,59 @@
                   <td>{{ row.Requisito }}</td>
                   <td>{{ row.Certificado }}</td>
                   <td>{{ row.Fraccion }}</td>
-                  <td>{{ row.Descripcion }}</td>
+                  <td>{{ row.FraccionDescripcion }}</td>
                   <td>{{ row.Nico }}</td>
+                  <td>{{ row.NicoDescripcion }}</td>
+                  <td>{{ row.Descripcion }}</td>
+                  <td>{{ row.Umt }}</td>
+                  <td>{{ row.CantidadUMT }}</td>
+                  <td>{{ row.Umc }}</td>
+                  <td>{{ row.CantidadUMC }}</td>
+                  <td>{{ row.Especie }}</td>
+                  <td>{{ row.Uso }}</td>
+                  <td>{{ row.PaisOrigen }}</td>
+                  <td>{{ row.PaisProcedencia }}</td>
+                  <td>{{ row.CertificadoInternacionalElectronico }}</td>
                 </tr>
+                }
               </tbody>
             </table>
           </div>
         </div>
       </div>
       <div class="container">
-          <ng-titulo titulo="Destino" />
-          <div class="row">
-            <div class="col-md-4 form-group">
-              <label class="form-label" for="coordenadas"
-                >Coordenadas geográficas:</label
-              >
-              <input
-                class="form-control"
-                id="coordenadas"
-                readonly
-                formControlName="coordenadas"
-                placeholder=""
-                type="text"
-              />
-            </div>
+        <ng-titulo titulo="Destino" />
+        <div class="row">
+          <div class="col-md-4 form-group">
+            <label class="form-label" for="coordenadas">Coordenadas geográficas:</label>
+            <input class="form-control" id="coordenadas" readonly formControlName="coordenadas" placeholder=""
+              type="text" />
           </div>
-          <ng-titulo titulo="Medio de transporte" />
-          <div class="row">
-            <div class="col-md-4">
-              <app-catalogo-select
-                [catalogo]="movilizacionNacional.catalogos"
-                [label]="movilizacionNacional.labelNombre"
-                [placeholder]="movilizacionNacional.primerOpcion"
-                [isDisabled]="formularioDeshabilitado"
-                formControlName="movilizacion"
-                (selectionChange)="seleccionarMovilizacionNacional($event)"
-              ></app-catalogo-select>
-            </div>
-            <div class="col-md-8 form-group">
-              <label class="form-label" for="identificacionTransporte"
-                >Identificación del transporte:</label
-              >
-              <input
-                class="form-control"
-                id="identificacionTransporte"
-                readonly
-                placeholder=""
-                type="text"
-                formControlName="transporte"
-              />
-            </div>
-            <div class="col-md-4">
-              <app-catalogo-select
-                [catalogo]="puntoVerificacion.catalogos"
-                [label]="puntoVerificacion.labelNombre"
-                [placeholder]="puntoVerificacion.primerOpcion"
-                [isDisabled]="formularioDeshabilitado"
-                formControlName="punto"
-                (selectionChange)="seleccionarPuntoVerificacion($event)"
-              ></app-catalogo-select>
-            </div>
-            <div class="col-md-8">
-              <app-catalogo-select
-                [catalogo]="empresaTransportista.catalogos"
-                [label]="empresaTransportista.labelNombre"
-                [placeholder]="empresaTransportista.primerOpcion"
-                [isDisabled]="formularioDeshabilitado"
-                formControlName="nombreEmpresa"
-              ></app-catalogo-select>
-            </div>
+        </div>
+        <ng-titulo titulo="Medio de transporte" />
+        <div class="row">
+          <div class="col-md-4">
+            <app-catalogo-select [catalogo]="movilizacionNacional.catalogos" [label]="movilizacionNacional.labelNombre"
+              [placeholder]="movilizacionNacional.primerOpcion" [isDisabled]="formularioDeshabilitado"
+              formControlName="movilizacion"
+              (selectionChange)="seleccionarMovilizacionNacional($event)"></app-catalogo-select>
           </div>
+          <div class="col-md-8 form-group">
+            <label class="form-label" for="identificacionTransporte">Identificación del transporte:</label>
+            <input class="form-control" id="identificacionTransporte" readonly placeholder="" type="text"
+              formControlName="transporte" />
+          </div>
+          <div class="col-md-4">
+            <app-catalogo-select [catalogo]="puntoVerificacion.catalogos" [label]="puntoVerificacion.labelNombre"
+              [placeholder]="puntoVerificacion.primerOpcion" [isDisabled]="formularioDeshabilitado"
+              formControlName="punto" (selectionChange)="seleccionarPuntoVerificacion($event)"></app-catalogo-select>
+          </div>
+          <div class="col-md-8">
+            <app-catalogo-select [catalogo]="empresaTransportista.catalogos" [label]="empresaTransportista.labelNombre"
+              [placeholder]="empresaTransportista.primerOpcion" [isDisabled]="formularioDeshabilitado"
+              formControlName="nombreEmpresa"></app-catalogo-select>
+          </div>
+        </div>
       </div>
       <div class="row my-5">
         <div class="col-md-12 d-flex justify-content-end"></div>

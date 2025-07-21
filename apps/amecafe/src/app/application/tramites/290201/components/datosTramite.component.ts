@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -17,6 +17,7 @@ import { Solicitud290201Query } from '../../../estados/queries/tramites290201.qu
 
 import { Solicitud290201State, Solicitud290201Store } from '../../../estados/tramites/tramites290201.store';
 import { CATALOGOS_CONSTANTS } from '../constants/catalogos.enum';
+import { Solicitud } from '../models/tabla-model';
 
 @Component({
   selector: 'app-datos-tramite',
@@ -33,7 +34,10 @@ import { CATALOGOS_CONSTANTS } from '../constants/catalogos.enum';
   templateUrl: './datosTramite.component.html',
   styleUrl: './datosTramite.component.css',
 })
-export class DatosTramiteComponent implements OnDestroy, OnInit {
+export class DatosTramiteComponent implements OnChanges,OnDestroy, OnInit {
+
+/** Variable para almacenar los datos de la fila seleccionada en la tabla.*/
+selectedRowData: Solicitud | null = null;
 
   /** Formulario para la información del café */
   informationCafeForm!: FormGroup;
@@ -118,6 +122,14 @@ public ciclocafetaleroData = CATALOGOS_CONSTANTS.CICLO_CAFETALERO;
  * @description Configuración de datos para el campo "Certificación".
  */
 public certificacionsData = CATALOGOS_CONSTANTS.CERTIFICACION;
+
+/** 
+ * @property {Solicitud | null} prefilledData
+ * @description Datos prellenados que se pueden pasar al componente para inicializar el formulario.
+ * @default null
+ */
+@Input() prefilledData: Solicitud | null = null;
+
   constructor(
     /** Servicio para registrar solicitudes */
     private registrarsolicitud: RegistrarSolicitudService,
@@ -135,7 +147,17 @@ public certificacionsData = CATALOGOS_CONSTANTS.CERTIFICACION;
     private consultaioQuery: ConsultaioQuery,
   ) {}
 
-
+  /**
+ * @method onRowSelected
+ * @description Maneja la selección de una fila en la tabla.
+ * Actualiza la variable `selectedRowData` con los datos de la fila seleccionada
+ * y prellena el formulario con dichos datos.
+ * @param {Solicitud} data - Datos de la fila seleccionada.
+ */
+  onRowSelected(data: Solicitud): void {
+    this.selectedRowData = data; 
+    this.prefillForm(data); 
+  }
   /** Crea el formulario para la información del café */
   createForm(): void{
     this.informationCafeForm = this.fb.group({
@@ -188,6 +210,37 @@ public certificacionsData = CATALOGOS_CONSTANTS.CERTIFICACION;
       this.inicializarEstadoFormulario();
   }
 
+  /**
+ * @method ngOnChanges
+ * @description Detecta cambios en las propiedades de entrada del componente.
+ * Si hay cambios en `prefilledData` y contiene datos, prellena el formulario con dichos datos.
+ * @param {SimpleChanges} changes - Cambios detectados en las propiedades de entrada.
+ */
+ngOnChanges(changes: SimpleChanges): void {
+    if (changes['prefilledData'] && this.prefilledData) {
+      this.prefillForm(this.prefilledData);
+    }
+}
+
+/**
+ * @method prefillForm
+ * @description Prellena el formulario con los datos proporcionados.
+ * Asigna valores a los campos del formulario basándose en los datos de la solicitud.
+ * @param {Solicitud} data - Datos de la solicitud para prellenar el formulario.
+ */
+prefillForm(data: Solicitud): void {
+    this.datosDelTramiteRealizar.patchValue({
+      formasdelcafe: data.formasdelcafe,
+      tipos: data.tipos,
+      calidad: data.calidad,
+      procesos: data.procesos,
+      certifications: data.certifications,
+      adunadesalida: data.adunadesalida,
+      paisdestino: data.paisdestino,
+      entidaddeprocedencia: data.entidaddeprocedencia,
+      ciclocafetalero: data.ciclocafetalero,
+    });
+}
   /** Obtiene los datos para el campo "Tipos" */
   getTiposData(): void {
     this.registrarsolicitud

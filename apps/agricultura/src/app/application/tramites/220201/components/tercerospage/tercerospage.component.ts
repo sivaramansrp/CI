@@ -8,14 +8,18 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
 import { TercerosrelacionadosComponent } from '../../../../shared/components/tercerosrelacionados/tercerosrelacionados.component';
 import { DatosDeLaSolicitud, TercerosrelacionadosTable, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { AgregardestinatarioComponent } from '../agregardestinatario/agregardestinatario.component';
+import { AgregardestinatariofinalComponent } from '../agregardestinatariofinal/agregardestinatariofinal.component';
 
 /**
  * Componente para la gestión de terceros relacionados en el trámite.
@@ -32,7 +36,8 @@ import { CertificadoZoosanitarioServiceService } from '../../services/220201/cer
   standalone: true,
   imports: [
     CommonModule,
-    TercerosrelacionadosComponent
+    TercerosrelacionadosComponent,
+    ModalComponent
   ],
   templateUrl: './tercerospage.component.html',
   styleUrl: './tercerospage.component.scss',
@@ -51,6 +56,13 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    * @type {TercerosrelacionadosdestinoTable[]}
    */
   personas: TercerosrelacionadosdestinoTable[] = [];
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es verdadero, el formulario se presenta únicamente para visualización,
+   * deshabilitando la edición de los campos.
+   * @type {modalRef}
+   */
+  @ViewChild('modalRef') modalRef!: ModalComponent;
 
   /**
    * Indica si el formulario se encuentra en modo solo lectura.
@@ -169,5 +181,18 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  abrirModalDestinatario(data?: any): void {
+    if (data) {
+      this.certificadoZoosanitarioStore.actualizarSelectedTerceros(data);
+    }
+    this.modalRef.abrir(AgregardestinatarioComponent);
+  }
+  abrirModalExportador(data: any): void {
+    if (data) {
+      this.certificadoZoosanitarioStore.actualizarSelectedExdora(data);
+    }
+    this.modalRef.abrir(AgregardestinatariofinalComponent);
   }
 }

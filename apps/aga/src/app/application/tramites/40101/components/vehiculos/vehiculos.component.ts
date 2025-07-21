@@ -1,30 +1,37 @@
-/* eslint-disable sort-imports */
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { map, Subject, takeUntil } from 'rxjs';
+
 import {
   Catalogo,
   Notificacion,
   TablaSeleccion,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
+
 import { Modal } from 'bootstrap';
+
 import {
   UNIDAD_TABLA_CONFIG,
   VEHICULOS_TABLA_CONFIG,
 } from '../../enum/transportista-terrestre.enum';
+
 import {
   Tramite40101State,
   Tramite40101Store,
 } from '../../estado/tramite40101.store';
+
+import { Tramite40101Query } from '../../estado/tramite40101.query';
+
 import {
   CatalogoLista,
   UnidadTabla,
   VehiculoTabla,
   VehiculoTablaDatos,
 } from '../../models/registro-muestras-mercancias.model';
+
 import { modificarTerrestreService } from '../services/modificacar-terrestre.service';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Tramite40101Query } from '../../estado/tramite40101.query';
+
 /**
  * @component VehiculosComponent
  * @description
@@ -130,7 +137,9 @@ export class VehiculosComponent implements OnInit {
     public tramiteQuery: Tramite40101Query,
     public modificarTerrestreService: modificarTerrestreService,
     private validacionesService: ValidacionesFormularioService
-  ) {}
+  ) { 
+     // Lógica para el constructor si es necesario.
+  }
 
   /**
    * Método de ciclo de vida de Angular que se llama cuando el componente se inicializa.
@@ -290,7 +299,7 @@ export class VehiculosComponent implements OnInit {
         [Validators.required],
       ],
       descripcion: [
-        this.tramiteState.datosVehiculo.descripcion,
+        { value: this.tramiteState.datosVehiculo.descripcion, disabled: true },
         [Validators.required],
       ],
     });
@@ -338,7 +347,7 @@ export class VehiculosComponent implements OnInit {
         [Validators.required],
       ],
       descripcion: [
-        this.tramiteState.datosUnidad.descripcion,
+        { value: this.tramiteState.datosUnidad.descripcion, disabled: true },
         [Validators.required],
       ],
     });
