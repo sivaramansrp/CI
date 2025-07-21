@@ -11,6 +11,7 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
   selector: 'firma-electronica',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
+  providers: [ToastrService],
   templateUrl: './firma-electronica.component.html',
   styleUrl: './firma-electronica.component.scss',
 })

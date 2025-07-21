@@ -1,4 +1,4 @@
-import { Observable, map } from 'rxjs';
+import {Observable,map } from 'rxjs';
 import { AmpliacionServiciosState } from '../models/datos-info.model';
 import {AmpliacionServiciosStore} from '../estados/tramite80205.store';
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -47,8 +47,8 @@ export class AmpliacionServiciosService {
 
   actualizarEstadoFormulario(DATOS:AmpliacionServiciosState): void {
     this.tramite80205Store.setInfoRegistro(DATOS.servicios);
-    this.tramite80205Store.setAduanaDeIngreso(DATOS.aduanaDeIngresoSelecion);
-    this.tramite80205Store.setNumeroPrograma(DATOS.numeroPrograma);
+   this.tramite80205Store.setAduanaDeIngresoSeleccion(DATOS.aduanaDeIngresoSelecion as Catalogo);
+    this.tramite80205Store.setNumeroPrograma(DATOS.numeroPrograma); 
     this.tramite80205Store.setRfcEmpresa(DATOS.rfcEmpresa);
     this.tramite80205Store.setTiempoPrograma(DATOS.tiempoPrograma);
     this.tramite80205Store.setDatosImmex(DATOS.tablaDatosIMMEX);

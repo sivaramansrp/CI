@@ -48,7 +48,11 @@ const mockAUtorizacionProsecQuery = {
     contribuyentes: '',
     domiciliosFormaValida: false,
     productorFromValida: false,
-    sectoresFromValida: false
+    sectoresFromValida: false,
+    sectorDatos: [],
+    producirDatos: [],
+    plantasDatos: [],
+    productorDatos: []
   })
 };
 
