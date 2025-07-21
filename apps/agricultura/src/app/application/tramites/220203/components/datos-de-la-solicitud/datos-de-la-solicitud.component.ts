@@ -496,7 +496,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
         }
       });
     }
-    const VALOR = this.datosMercanciaFormGroup.value;
+    const VALOR = this.datosMercanciaFormGroup.getRawValue();
     (this.importacionDeAcuiculturaServices.actualizarDatosMercancia as (value: DatosMercancia220203) => void)(
       VALOR
     );
