@@ -1,27 +1,36 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ConfiguracionAporteColumna,
+  ConfiguracionColumna,
+  Notificacion,
+  NotificacionesComponent,
+  Pedimento,
+  TablaCampoSeleccion,
+  TablaConEntradaComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  MENSAJES_EXPORTACIONES_TOTALS,
+  MENSAJES_VENTAS_TOTALES,
+} from '../../constantes/solicitud150102.enum';
+import {
+  Solicitud150102State,
+  Solicitud150102Store,
+} from '../../estados/solicitud150102.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { BienesProducidos } from '../../models/programas-reporte.model';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionAporteColumna } from '@libs/shared/data-access-user/src';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ConsultaioQuery } from "@ng-mf/data-access-user";
 import { Solicitud150102Query } from '../../estados/solicitud150102.query';
-import { Solicitud150102State } from '../../estados/solicitud150102.store';
-import { Solicitud150102Store } from '../../estados/solicitud150102.store';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TablaCampoSeleccion } from '@libs/shared/data-access-user/src';
-import { TablaConEntradaComponent } from '@libs/shared/data-access-user/src';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * @description Componente que administra los datos del reporte anual y realiza cálculos relevantes.
@@ -36,6 +45,7 @@ import { takeUntil } from 'rxjs';
     TituloComponent,
     TablaConEntradaComponent,
     TablaDinamicaComponent,
+    NotificacionesComponent,
   ],
   templateUrl: './datos-de-reporte-annual.component.html',
   styleUrl: './datos-de-reporte-annual.component.scss',
@@ -45,6 +55,18 @@ import { takeUntil } from 'rxjs';
  * Permite la visualización y edición de bienes producidos, ventas totales, exportaciones e importaciones.
  */
 export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
+  /**
+   * Identificador del índice o fila seleccionada de los bienes producidos.
+   * Se utiliza para marcar la selección en la tabla correspondiente.
+   */
+  bienesProducidosSelection!: number;
+
+  /**
+   * Identificador del índice o fila seleccionada en el listado de producidos.
+   * Se utiliza para controlar la fila activa o marcada por el usuario.
+   */
+  producidosSelection!: number;
+
   /** Formulario reactivo para gestionar los datos del reporte anual */
   formReporteAnnual!: FormGroup;
 
@@ -69,6 +91,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         clave: (item: BienesProducidos) => item.claveSector,
         opcionDeEntrada: TablaCampoSeleccion.NONE,
         orden: 1,
+        longitudMaxima: 0,
       },
       {
         encabezado: 'sector ',
@@ -76,6 +99,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         clave: (item: BienesProducidos) => item.sector,
         opcionDeEntrada: TablaCampoSeleccion.NONE,
         orden: 2,
+        longitudMaxima: 0,
       },
       {
         encabezado: 'Fracción arancelaria',
@@ -83,6 +107,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         clave: (item: BienesProducidos) => item.fraccion,
         opcionDeEntrada: TablaCampoSeleccion.INPUT,
         orden: 3,
+        longitudMaxima: 8,
       },
       {
         encabezado: 'Bienes producidos',
@@ -90,6 +115,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         clave: (item: BienesProducidos) => item.bienProducido,
         opcionDeEntrada: TablaCampoSeleccion.INPUT,
         orden: 4,
+        longitudMaxima: 250,
       },
       {
         encabezado: 'Volumen del total de bienes producidos',
@@ -97,6 +123,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         clave: (item: BienesProducidos) => item.totalBienesProducidos,
         opcionDeEntrada: TablaCampoSeleccion.INPUT,
         orden: 5,
+        longitudMaxima: 16,
       },
       {
         encabezado: 'Volumen del mercado nacional',
@@ -104,6 +131,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         clave: (item: BienesProducidos) => item.mercadoNacional,
         opcionDeEntrada: TablaCampoSeleccion.INPUT,
         orden: 6,
+        longitudMaxima: 16,
       },
       {
         encabezado: 'Volumen de exportaciones',
@@ -111,6 +139,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         clave: (item: BienesProducidos) => item.exportaciones,
         opcionDeEntrada: TablaCampoSeleccion.INPUT,
         orden: 7,
+        longitudMaxima: 16,
       },
     ];
 
@@ -168,6 +197,28 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Objeto que representa una nueva notificación a mostrar al usuario.
+   * Puede incluir información como el tipo, mensaje, duración, etc.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   *  Índice del pedimento marcado para eliminación.
+   * */
+  public elementoParaEliminar!: number;
+
+  /**
+   *  Arreglo que contiene los pedimentos registrados.
+   */
+  public pedimentos: Array<Pedimento> = [];
+
+  /**
+   * Lista de mensajes de validación que se muestran al usuario.
+   * Contiene errores de formulario u otras advertencias generadas dinámicamente.
+   */
+  mensajesDeValidacion: string[] = [];
 
   /**
    * @description Constructor que inicializa las dependencias necesarias.
@@ -259,7 +310,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
       totalImportaciones: [
         {
           value: this.solicitud150102State.totalImportaciones,
-          disabled: false,
+          disabled: true,
         },
         [Validators.maxLength(16)],
       ],
@@ -337,6 +388,35 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Valida que el total de exportaciones no sea mayor que las ventas totales.
+   * También verifica que ambos campos estén completos.
+   *
+   * - Si alguno de los campos es inválido, se agrega un mensaje a `mensajesDeValidacion`.
+   * - Si las exportaciones superan a las ventas totales, se abre un modal de advertencia.
+   *
+   * @returns `true` si los valores son válidos, de lo contrario `false`.
+   */
+  validarTotalExportaciones(): boolean {
+    this.mensajesDeValidacion = [];
+    const VENTASTOTALES = this.formReporteAnnual.get('ventasTotales')?.value;
+    if (!VENTASTOTALES) {
+      this.mensajesDeValidacion.push(MENSAJES_VENTAS_TOTALES);
+      return false;
+    }
+    const EXPORTACIONESTOTALS =
+      this.formReporteAnnual.get('totalExportaciones')?.value;
+    if (!EXPORTACIONESTOTALS) {
+      this.mensajesDeValidacion.push(MENSAJES_EXPORTACIONES_TOTALS);
+      return false;
+    }
+    if (Number(VENTASTOTALES) < Number(EXPORTACIONESTOTALS)) {
+      this.abrirModal();
+      return false;
+    }
+    return true;
+  }
+
+  /**
    * @description Método para obtener y actualizar el total de importaciones.
    * @param evento Evento de entrada con el valor ingresado.
    */
@@ -352,16 +432,29 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    */
   seleccionarFilaDeEntrada(evento: BienesProducidos): void {
     this.bienesProducidos = evento;
-    const OBJETO_JSON = [];
-    OBJETO_JSON.push(this.bienesProducidos);
+    const OBJETO_JSON = [this.bienesProducidos];
     this.solicitud150102Store.actualizarProducidosDatos(OBJETO_JSON);
+  }
+
+  /**
+   * Reinicia la selección de fila de bienes producidos si el arreglo recibido no está vacío.
+   *
+   * @param evento - Lista de bienes producidos seleccionados desde la tabla de entrada.
+   */
+  seleccionarBienesFilaDeEntrada(evento: BienesProducidos[]): void {
+    if (evento.length > 0) {
+      this.bienesProducidosSelection = -1;
+    }
   }
 
   /**
    * @description Método para agregar nuevos bienes producidos si no existen en la lista.
    */
   agregarBienesProducidos(): void {
-    if (this.bienesProducidos) {
+    if (
+      this.bienesProducidos &&
+      Object.keys(this.bienesProducidos)?.length > 0
+    ) {
       const EXISTE = this.bienesProducidosDatos.some(
         (item) => item.claveSector === this.bienesProducidos.claveSector
       );
@@ -371,6 +464,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
           this.bienesProducidos,
         ];
       }
+      this.producidosSelection = -1;
       this.solicitud150102Store.actualizarBienesProducidosDatos(
         this.bienesProducidosDatos
       );
@@ -397,6 +491,45 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
     );
     const TOTAL_SALDO: number = TOTAL_EXPORTACIONES - TOTAL_IMPORTACIONES;
     this.solicitud150102Store.actualizarSaldo(TOTAL_SALDO.toString());
+  }
+
+  /**
+ * Abre el modal de confirmación para eliminar un pedimento.
+ * 
+ * @param i Índice del elemento a eliminar. Valor predeterminado: 0.
+ */
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'Las Ventas Totales deben ser mayores o iguales al Total de Exportaciones.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.elementoParaEliminar = i;
+  }
+
+  /**
+   * Elimina un pedimento si el usuario ha confirmado la acción.
+   * 
+   * @param borrar Valor booleano que indica si se debe proceder con la eliminación.
+   */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+
+  /**
+   * Reinicia la selección de bienes producidos.
+   */
+  eliminarBienesProducidos(): void {
+    this.bienesProducidosSelection = -1;
   }
 
   /**

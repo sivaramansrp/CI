@@ -34,7 +34,9 @@
             "unidaddeMedidaDeUMT": "Cabeza",
             "cantidadTotalUMT": "1000000",
             "saldoPendiente": "1000000",
-            "mostrarSeccion": true
+            "mostrarSeccion": true,
+            "certificadoNumero": "53007012025000057",
+            "calculoResultado": "Aplica inspección"
       },
       "solicitud220502State": {
             "certificadosAutorizados": 1,

@@ -313,7 +313,13 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'economico',
+    path: 'empresas-comercializadoras',
+    loadChildren: () => 
+      import('./tramites/32604/empresas-comercializadoras.module').then(
+        (m) => m.EmpresasComercializadorasModule)
+  },
+  {
+      path: 'economico',
     loadChildren: () =>
       import('./tramites/32606/economico.module').then((m) => m.EconomicoModule),
   }
