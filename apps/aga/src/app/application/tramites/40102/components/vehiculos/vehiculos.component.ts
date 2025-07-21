@@ -150,7 +150,10 @@ export class VehiculosComponent implements OnInit {
   ) {}
 
   /**
-   * Método de ciclo de vida de Angular que se llama cuando el componente se inicializa.
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   *
+   * Suscribe a los cambios de estado del trámite y del modo de consulta (solo lectura),
+   * inicializa los formularios y carga el catálogo de tipos de vehículo.
    */
   ngOnInit(): void {
     this.tramiteQuery.selectSolicitud$
