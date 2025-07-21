@@ -112,12 +112,11 @@
           </div>
         </div>
       </div>
-       <div class="row" *ngIf="mostrarError">
-            <div class="col-md-12 text-danger mt-3">
-                <b>Debe agregar un Representante Legal</b>
-              
-            </div>
-          </div>
+      <div class="row" *ngIf="mostrarError">
+        <div class="col-md-12 text-danger mt-3">
+            <b>Debe agregar un Representante Legal</b>
+        </div>
+      </div>
     </ng-container>
   </form>
 </div>
@@ -126,14 +125,14 @@
 <lib-notificaciones
   *ngIf="tieneValorRfc"
   [notificacionInput]="nuevaNotificacion"
-  (confirmacionModal)="mostrarNotificacionDeBusqueda()"
+  (confirmacionModal)="onModalBusquedaClose()"
 >
 </lib-notificaciones>
 
 <lib-notificaciones
   *ngIf="rfcValido "
   [notificacionInput]="nuevaNotificacion"
-  (confirmacionModal)="mostrarNotificacionFormatoIncorrecto()"
+  (confirmacionModal)="onModalFormatoIncorrectoClose()"
 >
 </lib-notificaciones>
 

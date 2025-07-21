@@ -84,6 +84,10 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * Se activa cuando hay errores de validación que deben mostrarse.
    */
   mostrarError: boolean = false;
+    /**
+   * Flag to track if the "Buscar" button has been clicked
+   */
+  private buscarClicked: boolean = false;
 
   /**
    * Constructor del componente
@@ -143,7 +147,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     this.representante = this.fb.group({
       representanteRegistro: [
         this.solicitudState.representanteRegistro,
-        [Validators.required, Validators.pattern(REG_X.RFC_13_ALFANUM)],
+        [ Validators.pattern(REG_X.RFC_13_ALFANUM)],
       ],
       representanteRfc: [
         { value: this.solicitudState.representanteRfc, disabled: true },
@@ -222,10 +226,13 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     )?.value;
     const REGISTRO_CONTROL = this.representante.get('representanteRegistro');
     if (!REGISTRO_CONTROL?.valid) {
+      this.rfcValido = true;
       this.mostrarNotificacionFormatoIncorrecto();
       return;
     }
     if (REGISTRO_VALUE) {
+      this.rfcValido = false;
+      this.buscarClicked = true;
       this.tieneValorRfc = true;
       this.mostrarNotificacionDeBusqueda();
       const MOCK_DATA = {
@@ -237,6 +244,8 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
         representanteCorreo: 'vucem2.5@hotmail.com',
       };
       this.representante.patchValue(MOCK_DATA);
+
+      this.mostrarError = false;
     }
   }
 
@@ -275,6 +284,18 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   }
 
   /**
+ * Handles the confirmation modal close event for format error
+ */
+onModalFormatoIncorrectoClose(): void {
+  this.rfcValido = false;
+}
+/**
+ * Handles the confirmation modal close event for search success
+ */
+onModalBusquedaClose(): void {
+  this.tieneValorRfc = false;
+}
+  /**
    * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
    * @param form - El formulario reactivo.
    * @param campo - El nombre del campo en el formulario.
@@ -305,20 +326,67 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 
-  /**
- * Validates the representante form and sets the mostrarError flag if validation fails
- * @returns boolean indicating if the form is valid
+/**
+ * Valida el formulario del representante legal y verifica si se hizo clic en "Buscar"
+ * @returns boolean que indica si el formulario es válido y se realizó la búsqueda
  */
 public validarFormularioRepresentante(): boolean {
-  if (this.representante) {
-    if (this.representante.invalid) {
-      //this.representante.markAllAsTouched();
-      this.mostrarError = true;
-      return false;
-    }
+  // Obtener el valor del campo RFC y el control del formulario
+  const RFC_VALOR = this.representante.get('representanteRegistro')?.value;
+  const REGISTRO_CONTROL = this.representante.get('representanteRegistro');
+  
+  // Definir los campos requeridos que deben estar llenos
+  const REQ_FIELDS = [
+    'representanteRegistro',
+    'representanteRfc',
+    'representanteNombre',
+    'representanteApellidoPaterno',
+    'representanteApellidoMaterno',
+    'representanteTelefono',
+    'representanteCorreo'
+  ];
+  
+  // Verificar si todos los campos requeridos están llenos
+  const ALL_FIELDS_FILLED = REQ_FIELDS.every(field => {
+    const VALOR = this.representante.get(field)?.value;
+    return VALOR && VALOR.trim() !== '';
+  });
+  
+  // Si todos los campos están llenos, ocultar error y retornar verdadero
+  if (ALL_FIELDS_FILLED) {
     this.mostrarError = false;
     return true;
   }
+
+  // Verificar si el campo RFC tiene valor pero el formato es inválido
+  if (RFC_VALOR && !REGISTRO_CONTROL?.valid) {
+    this.rfcValido = true;
+    this.mostrarNotificacionFormatoIncorrecto();
+    return false;
+  }
+  
+  // Verificar si el campo RFC tiene valor pero no se hizo clic en buscar
+  if (RFC_VALOR && !this.buscarClicked) {
+    this.mostrarError = true;
+    return false;
+  }
+  
+  // Verificar si el campo RFC está vacío
+  if (!RFC_VALOR) {
+    this.representante.markAllAsTouched();
+    this.mostrarError = true;
+    return false;
+  }
+  
+  // Validación regular del formulario
+  if (this.representante.invalid) {
+    this.representante.markAllAsTouched();
+    this.mostrarError = true;
+    return false;
+  }
+  
+  // Ocultar error y retornar verdadero si todo está correcto
+  this.mostrarError = false;
   return true;
 }
 }

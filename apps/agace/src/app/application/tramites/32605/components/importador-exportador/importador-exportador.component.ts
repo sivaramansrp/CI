@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, ConsultaioQuery, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, ConsultaioQuery, InputFecha, InputFechaComponent,TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { EMPRESA_DEL_GRUPO, EMPRESA_DEL_GRUPO_CON_FECHA, EmpresaDelGrupo, FECHA_DE_INICIO, FECHA_DE_PAGO, INFORMACION_EMPRESA_OPTIONS, OPCIONES_DE_BOTON_DE_RADIO, PANELS, PANELS1, REGISTRO_ESQUEMA_CERTIFICACION_OPTIONS, TRANSPORTISTAS_CONFIGURACION, TransportistasTable } from '../../constants/datos-comunes.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud32605State, Solicitud32605Store } from '../../estados/solicitud32605.store';
@@ -1174,9 +1174,18 @@ public validarTablaDatos(): boolean {
   if (this.mostrarError) {
     esValido = false;
   }
-   // Validate transportistas
-  if (this.componenteAgregarTransportistas && !this.componenteAgregarTransportistas.validarTransportistas()) {
+ // Validate table data when required
+  if (!this.validarTablaDatos()) {
+    // Mark the form control as touched to show the error
+    this.importadorExportadorForm.get('esParteGrupoComercioExterior')?.markAsTouched();
     esValido = false;
+  }
+  
+  // Validate transportistas
+  if (this.componenteAgregarTransportistas) {
+    if (!this.componenteAgregarTransportistas.validarTransportistas()) {
+      esValido = false;
+    }
   }
   return esValido;
 }

@@ -1,6 +1,11 @@
 <div class="container form-container">
   <form [formGroup]="enlaceOperativoDataForm">
   <ng-titulo titulo="Enlace Operativo" />
+  <div class="row" *ngIf="mostrarError">
+    <div class="col-md-12 text-danger mt-3">
+        <b>Se debe agregar por lo menos un enlace operativo</b>
+    </div>
+  </div>
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="panel-group ficha-collapse" id="accordion">
@@ -12,6 +17,7 @@
                 {{ panel.label }}
               </a>
             </h4>
+         
             <button
               type="button"
               class="collpase-button"

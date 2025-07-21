@@ -253,6 +253,11 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
 
   /** Indica si una fila ha sido seleccionada en la tabla. */
   esFilaSeleccionada: boolean = false;
+   /**
+   * Bandera que controla la visualización de errores en el formulario.
+   * Se activa cuando hay errores de validación que deben mostrarse.
+   */
+  mostrarError: boolean = false;
 
   /**
    * Constructor del componente EnlaceOperativoComponent.
@@ -522,6 +527,7 @@ buscar(): void {
       enlaceOperativoData: this.enlaceOperativoData,
     });
     this.filaSeleccionadaEnlaceOperativo = {} as TablaEnlaceOperativo;
+    this.mostrarError = false;
   }
 
   /**
@@ -718,6 +724,19 @@ buscar(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
+  /**
+ * Validates that there is at least one enlace operativo in the list.
+ * @returns boolean indicating if there are enlace operativos
+ */
+public validarEnlaceOperativo(): boolean {
+  if (this.enlaceOperativoData.length === 0) {
+    this.mostrarError = true;
+    return false;
+  }
+  
+  this.mostrarError = false;
+  return true;
+}
 }
 
 
