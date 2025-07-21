@@ -159,12 +159,12 @@ export class TercerosrelacionadosComponent {
     * Evento emitido para abrir el modal de exportador.
     * @type {abrirModalDestinatario}
     */
-  @Output() abrirModalDestinatario = new EventEmitter<void>();
+  @Output() abrirModalDestinatario = new EventEmitter<TercerosrelacionadosdestinoTable>();
   /**
    * Evento emitido para abrir el modal de exportador.
-   * @type {EventEmitter<void>}
+   * @type {EventEmitter<TercerosrelacionadosdestinoTable>}
    */
-  @Output() abrirModalExportador = new EventEmitter<void>();
+  @Output() abrirModalExportador = new EventEmitter<TercerosrelacionadosdestinoTable>();
 
   /**
    * Configuración de las columnas para la tabla de destinatarios.
@@ -225,16 +225,24 @@ export class TercerosrelacionadosComponent {
    * @method modificarDestinatario
    */
   modificarDestinatario(): void {
-    const ID = 1;
-    this.router.navigate(['../agregar-destinatario', ID], { relativeTo: this.route });
+    if (this.listaDeFilaSeleccionada[0]) {
+      this.abrirModalDestinatario.emit(this.listaDeFilaSeleccionada[0]);
+    }
+    else {
+      this.abrirModalDestinatario.emit();
+    }
   }
   /**
  * Navega a la pantalla para modificar un destinatario existente.
  * @method modificarDestinatario
  */
   modificarDestinatarioFinal(): void {
-    const ID = 1;
-    this.router.navigate(['../agregar-destinatariofinal', ID], { relativeTo: this.route });
+    if (this.listaDeFilaSeleccionadaFinal[0]) {
+      this.abrirModalExportador.emit(this.listaDeFilaSeleccionadaFinal[0]);
+    }
+    else {
+      this.abrirModalExportador.emit();
+    }
   }
 
 

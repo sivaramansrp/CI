@@ -59,6 +59,8 @@ export interface CapturarSolicitud {
    * Datos de la forma relacionados con terceros.
    */
   datosForma: TercerosrelacionadosdestinoTable[];
+  seletedTerceros: TercerosrelacionadosdestinoTable;
+  seletedExdora: TercerosrelacionadosdestinoTable;
 }
 
 /**
@@ -557,6 +559,8 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
     tercerosRelacionados: params.tercerosRelacionados || [],
     tablaDatos: params.tablaDatos || [],
     selectedDatos: params.selectedDatos || [],
-    datosForma: params.datosForma || []
+    datosForma: params.datosForma || [],
+    seletedTerceros: params.seletedTerceros || {} as TercerosrelacionadosdestinoTable,
+    seletedExdora: params.seletedExdora || {} as TercerosrelacionadosdestinoTable
   }
 }
