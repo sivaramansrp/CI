@@ -10,7 +10,7 @@
             <li [ngClass]="indice === 3 ? 'active' : ''">
                 <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Terceros Relacionados</a>
             </li>
-            @if (consultaState.parameter === "READ_PROCEDURE") {
+            @if (consultaState?.parameter === "READ_PROCEDURE") {
             <li *ngIf="showIMMEXSensiblesSection || showDepositoFiscalSection || showRecintoFiscalizadoSection || showRecintoEstrategicoSection"
                 [ngClass]="indice === 4 ? 'active' : ''">
                 <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Datos por Régimen</a>
@@ -43,7 +43,7 @@
             }
 
             @case(4) {
-            @if(esDatosRespuesta && consultaState.parameter === "READ_PROCEDURE") {
+            @if(esDatosRespuesta && consultaState?.parameter === "READ_PROCEDURE") {
             <app-datos-por-regimen></app-datos-por-regimen>
             }
             }
