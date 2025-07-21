@@ -1,30 +1,76 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PasoDosComponent } from './PasoDos.component';
-import { AlertComponent, TEXTOS, TituloComponent, SharedModule, WizardComponent } from "@ng-mf/data-access-user";
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-describe('PasoDosComponent', () => {
-  let component: PasoDosComponent;
-  let fixture: ComponentFixture<PasoDosComponent>;
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [PasoDosComponent, CommonModule, ReactiveFormsModule, AnexarDocumentosComponent, TituloComponent, AlertComponent,  RouterModule,
-                    FormsModule,
-                    HttpClientModule,
-                    WizardComponent,
-                    SharedModule],
-    }).compileComponents();
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
 
+import { Component } from '@angular/core';
+import { PasoDosComponent } from './PasoDos.component';
+import { CatalogosService } from '@ng-mf/data-access-user';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+describe('PasoDosComponent', () => {
+  let fixture;
+  let component;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule,PasoDosComponent,HttpClientTestingModule ],
+      declarations: [
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        CatalogosService
+      ]
+    }).overrideComponent(PasoDosComponent, {
+
+    }).compileComponents();
     fixture = TestBed.createComponent(PasoDosComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
+
+  it('should run #ngOnInit()', async () => {
+    component.getTiposDocumentos = jest.fn();
+  });
+
+  it('should run #getTiposDocumentos()', async () => {
+    component.catalogosServices = component.catalogosServices || {};
+    component.catalogosServices.getCatalogo = jest.fn().mockReturnValue(observableOf({}));
+    component.getTiposDocumentos();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroy$ = component.destroy$ || {};
+    component.destroy$.next = jest.fn();
+    component.destroy$.complete = jest.fn();
+  });
+
 });

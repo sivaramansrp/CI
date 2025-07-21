@@ -35,7 +35,7 @@ jest.mock('@libs/shared/theme/assets/json/31601/table.json', () => ({
     tableHeader: [
       "RFC",
       "Denominction o razon social",
-      "CDomicilaa"
+      "Domicilaa"
     ],
     tableBody: [
       { tbodyData: [] }
@@ -109,21 +109,7 @@ fdescribe('CapturarIvaeiepsComponent', () => {
     component.cambioDeValorIndique('No');
     expect(component.predeterminadoSeleccionar).toBe('No');
   });
-
-  it('debe agregar datos a destinatarioHeaderData en agregarDatos', () => {
-    component.ivaForm.patchValue({ rfc: 'ABC123456XYZ', denominacion: 'Test Name', domicilio: 'Test Address' });
-    component.agregarDatos();
-    expect(component.destinatarioHeaderData.tableBody[0].tbodyData.length).toBeGreaterThan(0);
-  });
-
-  it('debe resetear el formulario después de agregarDatos', () => {
-    const resetSpy = jest.spyOn(component.ivaForm, 'reset');
-    component.ivaForm.patchValue({ rfc: 'ABC123456XYZ' }); 
-    component.agregarDatos(); 
-    expect(resetSpy).toHaveBeenCalled(); 
-  });
-
-  it('debe asignar valores en formularioDePago al llamar poblarPagoForm', () => {
+ it('debe asignar valores en formularioDePago al llamar poblarPagoForm', () => {
     const mockData = {
       claveReferencia: '123',
       numeroOperacion: '456',
@@ -145,4 +131,211 @@ fdescribe('CapturarIvaeiepsComponent', () => {
     expect(component.formularioDePago.get('fechaPago')?.disabled).toBe(false);
     expect(component.formularioDePago.get('importePago')?.disabled).toBe(false);
   });
+ it('debe agregar datos a la tabla si el formulario es válido y crear una notificación', () => {
+  // Arrange: Initialize the form with valid values
+  component.ivaForm.patchValue({
+    tipoDe: 'Inversión A',
+    descripcion: 'Compra de maquinaria',
+    valorPesos: '50000'
+  });
+
+  // Mock datosDeInversion structure
+  component.datosDeInversion = {
+    tableHeader: ['Tipo de', 'Descripción', 'Valor en pesos'],
+    tableBody: [
+    
+    ]
+  };
+
+  // Spy on cerrarModal
+  const cerrarModalSpy = jest.spyOn(component, 'cerrarModal');
+
+  // Act
+  component.agregarData();
+
+  // Assert: Data pushed
+  expect(component.datosDeInversion.tableBody[0].tbodyData).toEqual([
+    'Inversión A',
+    'Compra de maquinaria',
+    '50000'
+  ]);
+
+  // Assert: Notificación creada
+  expect(component.nuevaNotificacion).toEqual({
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Datos guardados correctamente.',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: ''
+  });
+
+  // Assert: Modal cerrado
+  expect(cerrarModalSpy).toHaveBeenCalled();
+});
+it('debe buscar datos y actualizar el formulario si RFC está presente', () => {
+  // Arrange: Set initial values
+  component.ivaForm.patchValue({ rfc: 'ABC123456XYZ' });
+
+  // Mock datosRepresentativos
+  component.datosRepresentativos = {
+    denominacion: 'Empresa XYZ',
+    domicilio: 'Calle Falsa 123'
+  };
+
+  // Act
+  component.buscarDatos();
+
+  // Assert
+  expect(component.ivaForm.get('denominacion')?.value).toBe('Empresa XYZ');
+  expect(component.ivaForm.get('domicilio')?.value).toBe('Calle Falsa 123');
+});
+it('should patch form and open modal if a row is selected', () => {
+  const fila = { rfc: 'RFC999', denominacion: 'Empresa X', domicilio: 'CDMX' };
+
+  component.destinatario = [fila];
+  component.filaSeleccionadaDestinatarioIndex = 0;
+  const patchSpy = jest.spyOn(component.ivaForm, 'patchValue');
+
+  component.modificarOpenModal();
+
+  expect(patchSpy).toHaveBeenCalledWith({
+    rfc: 'RFC999',
+    denominacion: 'Empresa X',
+    domicilio: 'CDMX'
+  });
+  expect(component.filasSeleccionadas).toEqual([]);
+  expect(component.modoEdicionDestinatario).toBe(true);
+  expect(component.mostrarModal).toBe(true);
+});
+
+it('should return early if index is null', () => {
+  component.filaSeleccionadaDestinatarioIndex = null;
+  const patchSpy = jest.spyOn(component.ivaForm, 'patchValue');
+
+  component.modificarOpenModal();
+
+  expect(patchSpy).not.toHaveBeenCalled();
+  expect(component.mostrarModal).not.toBe(true);
+});
+
+it('should return early if no row found at index', () => {
+  component.destinatario = [];
+  component.filaSeleccionadaDestinatarioIndex = 0;
+
+  const patchSpy = jest.spyOn(component.ivaForm, 'patchValue');
+  component.modificarOpenModal();
+
+  expect(patchSpy).not.toHaveBeenCalled();
+});
+it('should delete selected rows from destinatario and clear selection', () => {
+  const mockFila = { rfc: 'RFC123', denominacion: 'Empresa 1', domicilio: 'Dirección 1' };
+
+  component.destinatario = [mockFila];
+  component.filasSeleccionadas = [mockFila];
+
+  component.eliminarValor();
+
+  expect(component.destinatario.length).toBe(0);
+  expect(component.filasSeleccionadas).toEqual([]);
+  expect(component.filaSeleccionadaDestinatarioIndex).toBeNull();
+});
+
+it('should do nothing if no rows are selected', () => {
+  component.destinatario = [{ rfc: 'A', denominacion: 'B', domicilio: 'C' }];
+  component.filasSeleccionadas = [];
+
+  const original = [...component.destinatario];
+  component.eliminarValor();
+
+  expect(component.destinatario).toEqual(original);
+});
+it('should set filaSeleccionadaDestinatarioIndex to correct index if fila matches', () => {
+  const mockFila = {
+    rfc: 'RFC123',
+    denominacion: 'Empresa 1',
+    domicilio: 'Dirección 1'
+  };
+
+  component.destinatario = [
+    mockFila,
+    { rfc: 'RFC456', denominacion: 'Empresa 2', domicilio: 'Dirección 2' }
+  ];
+
+  component.onFilaSeleccionadaDestinatario(mockFila);
+
+  expect(component.filaSeleccionadaDestinatarioIndex).toBe(0);
+});
+
+it('should set filaSeleccionadaDestinatarioIndex to null if fila does not match', () => {
+  const mockFila = {
+    rfc: 'RFC789',
+    denominacion: 'Empresa 3',
+    domicilio: 'Dirección 3'
+  };
+
+  component.destinatario = [
+    { rfc: 'RFC123', denominacion: 'Empresa 1', domicilio: 'Dirección 1' },
+    { rfc: 'RFC456', denominacion: 'Empresa 2', domicilio: 'Dirección 2' }
+  ];
+
+  component.onFilaSeleccionadaDestinatario(mockFila);
+
+  expect(component.filaSeleccionadaDestinatarioIndex).toBeNull();
+});
+it('should patch the date into the form and call setValoresStore', () => {
+  const mockFecha = '2025-07-15';
+  const patchSpy = jest.spyOn(component.formularioDePago, 'patchValue');
+  const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
+
+  component.onFechaCambiada(mockFecha);
+
+  expect(patchSpy).toHaveBeenCalledWith({ fechaPago: mockFecha });
+  expect(setValoresStoreSpy).toHaveBeenCalledWith(
+    component.formularioDePago,
+    'fechaPago',
+    'setFechaPago'
+  );
+});
+it('should set tipoDe value from select event', () => {
+  const mockEvent = {
+    target: { value: 'Inversión A' }
+  } as unknown as Event;
+
+  const setValueSpy = jest.spyOn(component.ivaForm.get('tipoDe')!, 'setValue');
+
+  component.tipoDeInver(mockEvent);
+
+  expect(setValueSpy).toHaveBeenCalledWith('Inversión A');
+});
+
+it('should set tipoDe value to empty string if no event is passed', () => {
+  const setValueSpy = jest.spyOn(component.ivaForm.get('tipoDe')!, 'setValue');
+
+  component.tipoDeInver();
+
+  expect(setValueSpy).toHaveBeenCalledWith('');
+});
+it('should set tipoDe value from select event', () => {
+  const mockEvent = {
+    target: { value: 'Inversión A' }
+  } as unknown as Event;
+
+  const setValueSpy = jest.spyOn(component.ivaForm.get('tipoDe')!, 'setValue');
+
+  component.tipoDeInver(mockEvent);
+
+  expect(setValueSpy).toHaveBeenCalledWith('Inversión A');
+});
+
+it('should set tipoDe value to empty string if no event is passed', () => {
+  const setValueSpy = jest.spyOn(component.ivaForm.get('tipoDe')!, 'setValue');
+
+  component.tipoDeInver();
+
+  expect(setValueSpy).toHaveBeenCalledWith('');
+});
   });

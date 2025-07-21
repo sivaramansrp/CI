@@ -32,8 +32,6 @@ describe('CertificadoOrigenComponent', () => {
       setGrupoTratadoFechaFinalInput: jest.fn(),
       setFecha: jest.fn(),
       setGrupoTratadoFechaInicialInput: jest.fn(),
-
-
     };
     tramiteQueryMock = {
       selectSolicitud$: of({
@@ -192,5 +190,35 @@ describe('CertificadoOrigenComponent', () => {
     component.ngOnDestroy();
     expect(spyDestroyNotifier).toHaveBeenCalled();
     expect(spyDestroyComplete).toHaveBeenCalled();
+  });
+
+  it('should disable all forms when soloLectura is true', () => {
+    component.soloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.formularioCertificado.disabled).toBe(true);
+    expect(component.formularioMercancia.disabled).toBe(true);
+    expect(component.formularioArchivo.disabled).toBe(true);
+  });
+
+  it('should enable all forms when soloLectura is false', () => {
+    component.soloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.formularioCertificado.enabled).toBe(true);
+    expect(component.formularioMercancia.enabled).toBe(true);
+    expect(component.formularioArchivo.enabled).toBe(true);
+  });
+  it('should set estaDeshabilitado to true when onClick is called', () => {
+    component.estaDeshabilitado = false;
+    component.onClick();
+    expect(component.estaDeshabilitado).toBe(true);
+  });
+  it('should call cerrarModal and cargarMercanciasSeleccionadas when enviar is called', () => {
+    const cerrarModalSpy = jest.spyOn(component, 'cerrarModal');
+    const cargarMercanciasSeleccionadasSpy = jest.spyOn(component, 'cargarMercanciasSeleccionadas');
+
+    component.enviar();
+
+    expect(cerrarModalSpy).toHaveBeenCalled();
+    expect(cargarMercanciasSeleccionadasSpy).toHaveBeenCalled();
   });
 });

@@ -64,9 +64,11 @@
 
           <lib-input-check 
               [id]="'regimen_3'" 
+              formControlName="regimenCuatro"
               [label]="'Recinto Fiscalizado Estratégico'" 
               [isDisabled]="esFormularioSoloLectura"
-              [required]="false">
+              [required]="false"
+              (change)="setValoresStore(comunesForm,'regimenCuatro', 'setRegimenCuatro')">
           </lib-input-check>
           </fieldset>
         </div>
@@ -74,7 +76,6 @@
     </div>
     <div class="w-100 p-3 mt-4">
       <label class="form-label fw-bold mb-3" for="">
-        <span class="text-danger">*</span> 
         Se&ntilde;ale el sector productivo o servicio al que pertenece
       </label>
       <div class="row mb-5">
@@ -316,7 +317,7 @@
     </div>
   </form> 
 </div>
-<app-datos-comunes-dos></app-datos-comunes-dos>
+<app-datos-comunes-dos (radioChanged)="onRadioChanged($event)"></app-datos-comunes-dos>
 
 <div class="conatiner">
   <div class="row">
@@ -328,6 +329,7 @@
         accionistas, representante legal, administrador único o miembros del consejo
         de administración, según sea el caso.
       </p>
+      <h5 class="mb-3">Miembro de la empresa</h5>
       <app-tabla-dinamica 
         [configuracionTabla]="agregarMiembroTabla"
         [datos]="agregarMiembroTablaDatos" 

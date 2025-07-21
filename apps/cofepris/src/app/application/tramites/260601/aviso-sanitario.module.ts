@@ -17,10 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
-    DatosComponent,
-    PantallasComponent,
-    PasoDosComponent,
-    FirmarSolicitudComponent,
+    
   ],
   imports: [
     CommonModule,
@@ -34,7 +31,11 @@ import { ToastrService } from 'ngx-toastr';
     AnexarDocumentosComponent,
     TituloComponent,
     AlertComponent,
-    DatosDelEstablecimientoComponent
+    DatosDelEstablecimientoComponent,
+    DatosComponent,
+    PantallasComponent,
+    PasoDosComponent,
+    FirmarSolicitudComponent,
   ],
   providers: [
     ToastrService,
@@ -42,8 +43,6 @@ import { ToastrService } from 'ngx-toastr';
     SubirDocumentoService,
     CatalogosService
   ],
-  exports: [
-    DatosComponent
-  ]
+  exports: []
 })
 export class AvisoSanitarioModule { }

@@ -1,23 +1,31 @@
 <div class="page">
   <div class="container">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-12" *ngIf="indice !== 2">
         <h1>Certificado de Exportación Fitosanitario</h1>
       </div>
-
+      <div class="col-12" *ngIf="indice === 2">
+        <h2>Cargar Archivo</h2>
+        <ng-alert style="text-align: center;" [CONTENIDO]="TEXTOS"></ng-alert>
+      </div>
+      <div class="col-12">
+        @if (esFormaValido) {
+          <div class="alert alert-info alert-danger" [innerHTML]="formErrorAlert"></div>
+        }
+      </div>
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
 
     <div class="row">
       @switch (indice) { @case (1) {
-      <paso-uno></paso-uno>
+      <paso-uno #pasoUnoRef></paso-uno>
       } @case (2) {
       <app-paso-dos></app-paso-dos>
       } @case (3) {
       <app-paso-tres></app-paso-tres>
       } }
 
-      <btn-continuar [btnGuardar]="indice===1" (btnGuardarClicked)="guardar($event)" [datos]="datosPasos"
+      <btn-continuar [showButton]="true" [btnGuardar]="indice===1" (btnGuardarClicked)="guardar($event)" [datos]="datosPasos"
         (continuarEvento)="getValorIndice($event)"></btn-continuar>
     </div>
   </div>

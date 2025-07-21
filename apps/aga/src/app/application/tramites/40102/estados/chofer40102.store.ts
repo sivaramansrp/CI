@@ -1,3 +1,21 @@
+/**
+ * @fileoverview Tienda Akita para la gestión de estado de choferes en el trámite 40102
+ * 
+ * Este archivo contiene la implementación de la tienda Akita responsable de gestionar
+ * el estado global de los choferes nacionales y extranjeros en el contexto del trámite 40102.
+ * Incluye interfaces para el estado, funciones de inicialización y la clase principal
+ * de la tienda con todos los métodos para actualizar propiedades específicas.
+ * 
+ * La tienda maneja información personal, domiciliaria, de identificación y vehicular
+ * tanto para choferes nacionales como extranjeros, proporcionando una interfaz
+ * unificada para las operaciones de alta, modificación y retirada.
+ * 
+ * @author Sistema de Gestión de Trámites - Frontend Team
+ * @version 1.0.0
+ * @since 1.0.0
+ * @module Chofer40102Store
+ */
+
 import { Chofer, ChoferesExtranjeros, DatosDelChoferNacional } from '../models/registro-muestras-mercancias.model';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { Injectable } from '@angular/core';
@@ -5,24 +23,126 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
 /**
- * Interfaz que define el estado de los choferes nacionales y extranjeros.
+ * Interfaz que define el estado completo de los choferes en el trámite 40102.
+ * 
+ * Esta interfaz establece la estructura del estado global para gestionar información
+ * de choferes nacionales y extranjeros, incluyendo datos personales básicos y
+ * arrays específicos para diferentes operaciones (alta, modificación, retirada).
+ * 
+ * El estado se organiza en tres categorías principales:
+ * - Datos personales básicos (nombre, apellidos)
+ * - Datos de choferes nacionales (alta, modificación, retirada)
+ * - Datos de choferes extranjeros (alta, modificación, retirada)
+ * 
+ * @interface
+ * @since 1.0.0
+ * 
+ * @example
+ * ```typescript
+ * const estadoInicial: Choferesnacionales40102State = {
+ *   nombre: 'Juan Carlos',
+ *   primerApellido: 'García',
+ *   segundoApellido: 'López',
+ *   datosDelChoferNacionalAlta: [...],
+ *   // ... resto de propiedades
+ * };
+ * ```
  */
 export interface Choferesnacionales40102State {
+  /**
+   * Nombre del chofer.
+   * 
+   * @property {string} nombre
+   * Campo obligatorio que almacena el nombre o nombres del chofer.
+   */
   nombre: string;
+  
+  /**
+   * Primer apellido del chofer.
+   * 
+   * @property {string} primerApellido
+   * Campo obligatorio que almacena el primer apellido del chofer.
+   */
   primerApellido: string;
+  
+  /**
+   * Segundo apellido del chofer.
+   * 
+   * @property {string} segundoApellido
+   * Campo que almacena el segundo apellido del chofer cuando aplique.
+   */
   segundoApellido: string;
-  datosDelChoferNacionalAlta: DatosDelChoferNacional[]; 
+  
+  /**
+   * Lista de choferes nacionales para operaciones de alta.
+   * 
+   * @property {DatosDelChoferNacional[]} datosDelChoferNacionalAlta
+   * Array que contiene la información de choferes nacionales que serán dados de alta.
+   */
+  datosDelChoferNacionalAlta: DatosDelChoferNacional[];
+  
+  /**
+   * Lista de choferes nacionales para operaciones de modificación.
+   * 
+   * @property {DatosDelChoferNacional[]} datosDelChoferNacionalModification
+   * Array que contiene la información de choferes nacionales que serán modificados.
+   */
   datosDelChoferNacionalModification: DatosDelChoferNacional[];
-  datosDelChoferNacionalRetirada: DatosDelChoferNacional[]; 
+  
+  /**
+   * Lista de choferes nacionales para operaciones de retirada.
+   * 
+   * @property {DatosDelChoferNacional[]} datosDelChoferNacionalRetirada
+   * Array que contiene la información de choferes nacionales que serán retirados.
+   */
+  datosDelChoferNacionalRetirada: DatosDelChoferNacional[];
 
+  /**
+   * Lista de choferes extranjeros para operaciones de alta.
+   * 
+   * @property {ChoferesExtranjeros[]} datosDelChoferExtranjerosAlta
+   * Array que contiene la información de choferes extranjeros que serán dados de alta.
+   */
   datosDelChoferExtranjerosAlta: ChoferesExtranjeros[];
+  
+  /**
+   * Lista de choferes extranjeros para operaciones de modificación.
+   * 
+   * @property {ChoferesExtranjeros[]} datosDelChoferExtranjerosModification
+   * Array que contiene la información de choferes extranjeros que serán modificados.
+   */
   datosDelChoferExtranjerosModification: ChoferesExtranjeros[];
+  
+  /**
+   * Lista de choferes extranjeros para operaciones de retirada.
+   * 
+   * @property {ChoferesExtranjeros[]} datosDelChoferExtranjerosRetirada
+   * Array que contiene la información de choferes extranjeros que serán retirados.
+   */
   datosDelChoferExtranjerosRetirada: ChoferesExtranjeros[];
 }
 
 /**
- * Crea el estado inicial de los choferes nacionales y extranjeros.
- * @returns El estado inicial.
+ * Función factory para crear el estado inicial de los choferes.
+ * 
+ * Inicializa todos los campos del estado con valores vacíos por defecto,
+ * proporcionando un estado limpio y consistente para el inicio de la aplicación.
+ * Esta función es utilizada por la tienda Akita para establecer el estado base.
+ * 
+ * Todos los campos de texto se inicializan como cadenas vacías y todos los
+ * arrays se inicializan como arrays vacíos para evitar errores de referencia nula.
+ * 
+ * @function createChoferState
+ * @returns {Choferesnacionales40102State} El estado inicial con valores por defecto
+ * 
+ * @example
+ * ```typescript
+ * const estadoInicial = createChoferState();
+ * console.log(estadoInicial.nombre); // ''
+ * console.log(estadoInicial.datosDelChoferNacionalAlta); // []
+ * ```
+ * 
+ * @since 1.0.0
  */
 export function createChoferState(): Choferesnacionales40102State {
   return { 
@@ -40,17 +160,89 @@ export function createChoferState(): Choferesnacionales40102State {
   };
 }
 
+/**
+ * Tienda Akita para la gestión del estado de choferes en el trámite 40102.
+ * 
+ * Esta clase extiende la tienda base de Akita y proporciona métodos específicos
+ * para actualizar el estado de los choferes. Incluye funcionalidades para:
+ * 
+ * - Gestión de datos personales (nombres, apellidos, documentos)
+ * - Manejo de información domiciliaria (direcciones, códigos postales)
+ * - Control de datos de contacto (teléfonos, correos electrónicos)
+ * - Administración de información vehicular
+ * - Gestión de catálogos y listas auxiliares
+ * 
+ * La tienda implementa el patrón inmutable para garantizar la integridad del estado
+ * y utiliza el decorador @StoreConfig para configurar opciones específicas de Akita.
+ * 
+ * @class Chofer40102Store
+ * @extends {Store<Choferesnacionales40102State>}
+ * @injectable
+ * @providedIn 'root'
+ * 
+ * @example
+ * ```typescript
+ * // Inyectar en un componente
+ * constructor(private choferStore: Chofer40102Store) {}
+ * 
+ * // Actualizar el nombre del chofer
+ * this.choferStore.setNombre('Juan Carlos');
+ * 
+ * // Actualizar primer apellido
+ * this.choferStore.setPrimerApellido('García');
+ * 
+ * // Limpiar el estado
+ * this.choferStore.clearChoferes();
+ * ```
+ * 
+ * @since 1.0.0
+ */
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'chofer40102', resettable: true })
 export class Chofer40102Store extends Store<Choferesnacionales40102State> {
+  /**
+   * Constructor de la tienda Chofer40102Store.
+   * 
+   * Inicializa la tienda con el estado por defecto creado por la función
+   * createChoferState(). El constructor llama al constructor padre de Store
+   * pasando el estado inicial como parámetro.
+   * 
+   * @constructor
+   * 
+   * @example
+   * ```typescript
+   * // La tienda se inyecta automáticamente mediante Angular DI
+   * // No es necesario instanciarla manualmente
+   * constructor(private choferStore: Chofer40102Store) {
+   *   // La tienda ya está inicializada con el estado por defecto
+   * }
+   * ```
+   */
   constructor() {
     super(createChoferState());
   }
 
   /**
-   * Establece la lista de choferes nacionales.
-   * @param nacionalArray La lista de choferes nacionales.
-   * @returns void
+   * Establece la lista de choferes nacionales en el estado.
+   * 
+   * Actualiza el estado global con una nueva lista de choferes,
+   * reemplazando completamente la lista existente. Utiliza el
+   * patrón inmutable para garantizar la integridad del estado.
+   * 
+   * @method set
+   * @param {Chofer[]} nacionalArray - Lista de choferes nacionales a establecer
+   * @returns {void}
+   * 
+   * @example
+   * ```typescript
+   * const choferes: Chofer[] = [
+   *   { id: 1, nombre: 'Juan', apellido: 'García' },
+   *   { id: 2, nombre: 'María', apellido: 'López' }
+   * ];
+   * this.choferStore.set(choferes);
+   * ```
+   * 
+   * @since 1.0.0
    */
   set(nacionalArray: Chofer[]): void {
     this.update((state) => ({
@@ -60,9 +252,24 @@ export class Chofer40102Store extends Store<Choferesnacionales40102State> {
   }
 
   /**
-   * Establece el CURP del chofer.
-   * @param curp El CURP del chofer.
-   * @returns void
+   * Establece el CURP (Clave Única de Registro de Población) del chofer.
+   * 
+   * Actualiza el estado con el CURP proporcionado, que es el documento
+   * de identificación oficial único para ciudadanos mexicanos. Este campo
+   * es obligatorio para choferes nacionales y debe seguir el formato
+   * estándar de 18 caracteres alfanuméricos.
+   * 
+   * @method setCurp
+   * @param {string} curp - El CURP del chofer (18 caracteres alfanuméricos)
+   * @returns {void}
+   * 
+   * @example
+   * ```typescript
+   * const curp = 'GALE820101HDFRNR05';
+   * this.choferStore.setCurp(curp);
+   * ```
+   * 
+   * @since 1.0.0
    */
   public setCurp(curp: string): void {
     this.update((state) => ({
@@ -73,8 +280,22 @@ export class Chofer40102Store extends Store<Choferesnacionales40102State> {
 
   /**
    * Establece el primer apellido del chofer.
-   * @param primerApellido El primer apellido del chofer.
-   * @returns void
+   * 
+   * Actualiza el estado con el primer apellido (apellido paterno) del chofer.
+   * Este campo es obligatorio para la identificación correcta del conductor
+   * y debe coincidir con la documentación oficial presentada.
+   * 
+   * @method setPrimerApellido
+   * @param {string} primerApellido - El primer apellido del chofer
+   * @returns {void}
+   * 
+   * @example
+   * ```typescript
+   * const apellido = 'García';
+   * this.choferStore.setPrimerApellido(apellido);
+   * ```
+   * 
+   * @since 1.0.0
    */
   public setPrimerApellido(primerApellido: string): void {
     this.update((state) => ({
@@ -84,9 +305,23 @@ export class Chofer40102Store extends Store<Choferesnacionales40102State> {
   }
 
   /**
-   * Establece el RFC del chofer.
-   * @param rfc El RFC del chofer.
-   * @returns void
+   * Establece el RFC (Registro Federal de Contribuyentes) del chofer.
+   * 
+   * Actualiza el estado con el RFC proporcionado, que es la clave de identificación
+   * fiscal utilizada en México. Para personas físicas, consta de 13 caracteres
+   * alfanuméricos derivados del nombre completo y fecha de nacimiento.
+   * 
+   * @method setRfc
+   * @param {string} rfc - El RFC del chofer (13 caracteres para personas físicas)
+   * @returns {void}
+   * 
+   * @example
+   * ```typescript
+   * const rfc = 'GALE820101H45';
+   * this.choferStore.setRfc(rfc);
+   * ```
+   * 
+   * @since 1.0.0
    */
   public setRfc(rfc: string): void {
     this.update((state) => ({
@@ -97,8 +332,22 @@ export class Chofer40102Store extends Store<Choferesnacionales40102State> {
 
   /**
    * Establece el segundo apellido del chofer.
-   * @param segundoApellido El segundo apellido del chofer.
-   * @returns void
+   * 
+   * Actualiza el estado con el segundo apellido (apellido materno) del chofer.
+   * Este campo puede ser opcional dependiendo de la documentación del conductor,
+   * pero es recomendable completarlo para una identificación más precisa.
+   * 
+   * @method setSegundoApellido
+   * @param {string} segundoApellido - El segundo apellido del chofer
+   * @returns {void}
+   * 
+   * @example
+   * ```typescript
+   * const segundoApellido = 'López';
+   * this.choferStore.setSegundoApellido(segundoApellido);
+   * ```
+   * 
+   * @since 1.0.0
    */
   public setSegundoApellido(segundoApellido: string): void {
     this.update((state) => ({
@@ -261,18 +510,47 @@ export class Chofer40102Store extends Store<Choferesnacionales40102State> {
   }
 
   /**
-   * Establece el correo electrónico del chofer.
-   * @param correo El correo electrónico del chofer.
-   * @returns void
+   * Establece el correo electrónico de contacto del chofer.
+   * 
+   * Actualiza el estado con la dirección de correo electrónico proporcionada.
+   * Este campo es importante para comunicaciones oficiales y notificaciones
+   * relacionadas con el trámite. Debe ser una dirección válida y activa.
+   * 
+   * @method setCorreo
+   * @param {string} correo - La dirección de correo electrónico del chofer
+   * @returns {void}
+   * 
+   * @example
+   * ```typescript
+   * const email = 'juan.garcia@email.com';
+   * this.choferStore.setCorreo(email);
+   * ```
+   * 
+   * @since 1.0.0
    */
   public setCorreo(correo: string): void {
     this.update((state) => ({ ...state, correo }));
   }
 
   /**
-   * Establece el número de teléfono del chofer.
-   * @param telefono El número de teléfono del chofer.
-   * @returns void
+   * Establece el número de teléfono de contacto del chofer.
+   * 
+   * Actualiza el estado con el número telefónico proporcionado. Este contacto
+   * es fundamental para comunicaciones urgentes y verificaciones durante el
+   * proceso del trámite. Se recomienda incluir código de área para llamadas
+   * de larga distancia.
+   * 
+   * @method setTelefono
+   * @param {string} telefono - El número de teléfono del chofer (incluir código de área)
+   * @returns {void}
+   * 
+   * @example
+   * ```typescript
+   * const telefono = '5551234567';
+   * this.choferStore.setTelefono(telefono);
+   * ```
+   * 
+   * @since 1.0.0
    */
   public setTelefono(telefono: string): void {
     this.update((state) => ({ ...state, telefono }));
@@ -453,9 +731,26 @@ export class Chofer40102Store extends Store<Choferesnacionales40102State> {
   }
 
   /**
-   * Establece la lista de estados.
-   * @param estado La lista de estados.
-   * @returns void
+   * Establece la lista de catálogos de estados disponibles.
+   * 
+   * Actualiza el estado con la lista completa de estados o entidades federativas
+   * disponibles en el sistema. Esta información es utilizada para poblar controles
+   * de selección en formularios de domicilio y para validaciones geográficas.
+   * 
+   * @method setEstado
+   * @param {Catalogo[]} estado - Array de objetos Catalogo con información de estados
+   * @returns {void}
+   * 
+   * @example
+   * ```typescript
+   * const estados: Catalogo[] = [
+   *   { clave: '09', descripcion: 'Ciudad de México' },
+   *   { clave: '15', descripcion: 'Estado de México' }
+   * ];
+   * this.choferStore.setEstado(estados);
+   * ```
+   * 
+   * @since 1.0.0
    */
   setEstado(estado: Catalogo[]): void {
     this.update((state) => ({
@@ -489,8 +784,29 @@ export class Chofer40102Store extends Store<Choferesnacionales40102State> {
   }
 
   /**
-   * Limpia la lista de choferes.
-   * @returns void
+   * Limpia completamente el estado de la tienda de choferes.
+   * 
+   * Restablece la tienda a su estado inicial utilizando el método reset() de Akita.
+   * Esta operación elimina todos los datos almacenados y devuelve la tienda
+   * al estado por defecto definido en createChoferState(). Es útil para
+   * limpiar formularios o reiniciar procesos.
+   * 
+   * @method clearChoferes
+   * @returns {void}
+   * 
+   * @example
+   * ```typescript
+   * // Limpiar todos los datos al cambiar de trámite
+   * this.choferStore.clearChoferes();
+   * 
+   * // Verificar que se limpió correctamente
+   * this.choferQuery.select().subscribe(state => {
+   *   console.log(state.nombre); // ''
+   *   console.log(state.datosDelChoferNacionalAlta); // []
+   * });
+   * ```
+   * 
+   * @since 1.0.0
    */
   public clearChoferes(): void {
     this.reset();

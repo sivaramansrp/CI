@@ -4,6 +4,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, Inject, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosComunesState, DatosComunesStore } from '../../estados/stores/datos-comunes.store';
+import { EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -171,7 +172,33 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * Cuando se establece en `true`, los campos del formulario no son editables por el usuario.
    */
   public esFormularioSoloLectura: boolean = false;
-
+/**
+ * Evento emitido cuando se produce un cambio en algún control tipo radio del formulario.
+ *
+ * El evento emite un objeto que contiene el nombre del control (`controlName`) y el valor seleccionado (`value`).
+ * Este evento permite a los componentes padres reaccionar ante cambios en los botones de radio del formulario.
+ */
+  @Output() radioChanged = new EventEmitter<{ controlName: string, value: unknown }>();
+  /**
+ * Evento que emite cambios en la visualización de importaciones.
+ * Emite un valor booleano indicando si mostrar u ocultar.
+ */
+  @Output() mostrarImportacionesChange = new EventEmitter<boolean>();
+  /**
+  * Evento que emite cambios en la visualización de depósitos fiscales.
+  * Emite un valor booleano indicando si mostrar u ocultar.
+  */
+  @Output() mostrarDepositoFiscalChange = new EventEmitter<boolean>();
+  /**
+  * Evento que emite cambios en la visualización de registros en elaboración.
+  * Emite un valor booleano indicando si mostrar u ocultar.
+  */
+  @Output() mostrarElaboracionChange = new EventEmitter<boolean>();
+  /**
+  * Evento que emite cambios en la visualización de registros del recinto.
+  * Emite un valor booleano indicando si mostrar u ocultar.
+  */
+  @Output() mostrarRecintoChange = new EventEmitter<boolean>();
 
   /**
    * Constructor de la clase DatosComunesComponent.
@@ -269,6 +296,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       regimenUno:[this.solicitudState?.regimenUno],
       regimenDos:[this.solicitudState?.regimenDos],
       regimenTres:[this.solicitudState?.regimenTres],
+      regimenCuatro:[this.solicitudState?.regimenCuatro],
       sectorProductivo:[this.solicitudState?.sectorProductivo],
       servicio:[this.solicitudState?.servicio],
       preOperativo: [this.solicitudState?.preOperativo, Validators.required],
@@ -438,7 +466,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * Este método utiliza el `modalService` para crear y gestionar la instancia del modal.
    */
   public abrirModal(template: TemplateRef<void>): void {
-    this.modalRef = this.modalService.show(template, { class: 'modal-lg',});
+    this.modalRef = this.modalService.show(template, { class: 'modal-lg modal-dialog-centered',});
   }
 
   /**
@@ -452,7 +480,73 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof DatosComunesStore): void {
     const VALOR = form.get(campo)?.value;
     (this.datosComunesStore[metodoNombre] as (value: unknown) => void)(VALOR);
+
+  /**
+  * Emite un evento para actualizar la visualización de importaciones
+  * según el valor del campo 'regimenUno' del formulario.
+  */
+   if (campo === 'regimenUno') {
+    this.mostrarImportacionesChange.emit(Boolean(form.get('regimenUno')?.value));
   }
+  /**
+  * Emite un evento para actualizar la visualización de depósitos fiscales
+  * según el valor del campo 'regimenDos' del formulario.
+  */
+    if (campo === 'regimenDos') {
+    this.mostrarDepositoFiscalChange.emit(Boolean(form.get('regimenDos')?.value));
+  }
+  /**
+  * Emite un evento para actualizar la visualización de registros en elaboración
+  * según el valor del campo 'regimenTres' del formulario.
+  */
+   if (campo === 'regimenTres') {
+    this.mostrarElaboracionChange.emit(Boolean(form.get('regimenTres')?.value));
+  }
+  /**
+  * Emite un evento para actualizar la visualización de registros del recinto
+  * según el valor del campo 'regimenCuatro' del formulario.
+  */
+    if (campo === 'regimenCuatro') {
+    this.mostrarRecintoChange.emit(Boolean(form.get('regimenCuatro')?.value));
+  }
+
+/** Lista de nombres de controles tipo radio que deben emitir el evento radioChanged. 
+ * Se utiliza para identificar los controles relevantes en el formulario. */
+  const RADIO_CONTROLS = [
+    'autorizacionIVAIEPS',
+    'encuentra',
+    'delMismo',
+    'enCaso',
+    'preOperativo',
+    'indiqueSi',
+    'senale',
+    'senaleSi',
+    'senaleMomento'
+  ];
+
+/**
+ * Si el campo modificado está incluido en la lista de controles tipo radio (`RADIO_CONTROLS`),
+ * emite el evento `radioChanged` con el nombre del control y el valor seleccionado.
+ *
+ * Esto permite que los componentes padres reaccionen ante cambios en los botones de radio
+ * relevantes del formulario.
+ */
+  if (RADIO_CONTROLS.includes(campo)) {
+    this.radioChanged.emit({ controlName: campo, value: VALOR });
+  }
+  }
+  
+/**
+ * Método que emite el evento `radioChanged` cuando se produce un cambio en un control tipo radio.
+ *
+ * Este método permite propagar el evento hacia los componentes padres, enviando un objeto
+ * que contiene el nombre del control (`controlName`) y el valor seleccionado (`value`).
+ *
+ * @param event Objeto con el nombre del control y el valor seleccionado.
+ */
+onRadioChanged(event: { controlName: string, value: unknown }):void {
+  this.radioChanged.emit(event);
+}
 
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.

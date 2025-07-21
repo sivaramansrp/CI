@@ -36,9 +36,15 @@
                       class="form-control"
                       id="actividadEconomicaClave"
                       formControlName="actividadEconomicaClave"
-                      readonly
                       placeholder="1122"
+                      [class.is-invalid]="solicitudForm.get('actividadEconomicaClave')?.touched && solicitudForm.get('actividadEconomicaClave')?.invalid"
+                      required
                     />
+                    <div *ngIf="esInvalido('actividadEconomicaClave')" class="text-danger">
+                      <small *ngIf="solicitudForm.controls['actividadEconomicaClave'].errors?.['required']">
+                        Este campo es obligatorio.
+                      </small>
+                    </div>
                   </div>
             </div>
         </div>

@@ -186,7 +186,7 @@
 <div class="row">
   <span class="h4">Carga de documentos</span>
   <div class="col-md-12">
-    <table class="table table-bordered">
+    <table class="table table-bordered" *ngIf="archivosCargando.obligatorios.length > 0">
       <thead>
         <tr>
           <th>Documento obligatorio</th>

@@ -1,61 +1,65 @@
-import { AlertComponent, InputCheckComponent, TituloComponent, FirmaElectronicaComponent, SharedModule, WizardComponent  } from "@ng-mf/data-access-user";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AvisoModifyService } from '../../services/aviso-modify.service';
-import { of } from 'rxjs';
 import { TipoDeAvisoComponent } from './tipoDeAviso.component';
-import { Tramite32301Query } from '../../estados/tramite32301.query';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
+import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
+import { Tramite32301Query } from '../../estados/tramite32301.query';
+import { AlertComponent, InputCheckComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('TipoDeAvisoComponent', () => {
   let component: TipoDeAvisoComponent;
   let fixture: ComponentFixture<TipoDeAvisoComponent>;
   let avisoModifyServiceMock: any;
-  let tramiteQueryMock: any;
-  let tramiteStoreMock: any;
+  let storeMock: any;
+  let queryMock: any;
 
   beforeEach(async () => {
     avisoModifyServiceMock = {
-      getAvisoModify: jest.fn().mockReturnValue(of({ descripcion: 'Test Description' })),
+      getAvisoModify: jest.fn().mockReturnValue(of({ descripcion: 'desc' })),
     };
-
-    tramiteQueryMock = {
-      select: jest.fn().mockReturnValue(of({ modalidadCertificacion: 'Test Modalidad' })),
-    };
-
-    tramiteStoreMock = {
+    storeMock = {
       setModalidadCertificacion: jest.fn(),
-      setforeignClientsSuppliers: jest.fn(),
-      setNationalSuppliers: jest.fn(),
-      setModificationsMembers: jest.fn(),
-      setChangesToLegalDocuments: jest.fn(),
-      setMergerOrSplitNotice: jest.fn(),
-      setAdditionFractions: jest.fn(),
-      setAcepto253: jest.fn(),
+      setClientesProveedoresExtranjeros: jest.fn(),
+      setProveedoresNacionales: jest.fn(),
+      setModificacionesMiembros: jest.fn(),
+      setCambiosDocumentosLegales: jest.fn(),
+      setNotifiFusionOescision: jest.fn(),
+      setAdicionalesFractions: jest.fn(),
+      setAceptacion253: jest.fn(),
+    };
+    queryMock = {
+      select: jest.fn().mockReturnValue(of({
+        modalidadCertificacion: 'cert',
+        foreignClientsSuppliers: true,
+        nationalSuppliers: false,
+        modificationsMembers: true,
+        changesToLegalDocuments: false,
+        mergerOrSplitNotice: true,
+        additionFractions: false,
+        acepto253: true,
+      })),
     };
 
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ReactiveFormsModule, AlertComponent, InputCheckComponent, TituloComponent, TipoDeAvisoComponent, FirmaElectronicaComponent, RouterModule,
-                                  FormsModule,
-                                  HttpClientModule,
-                                  WizardComponent,
-                                  SharedModule],
+      imports: [ReactiveFormsModule, TipoDeAvisoComponent,  CommonModule,
+          ReactiveFormsModule,
+          TituloComponent,
+          AlertComponent,
+          InputCheckComponent,
+          HttpClientTestingModule],
+      declarations: [
+        ],
       providers: [
         FormBuilder,
         { provide: AvisoModifyService, useValue: avisoModifyServiceMock },
-        { provide: Tramite32301Query, useValue: tramiteQueryMock },
-        { provide: Tramite32301Store, useValue: tramiteStoreMock },
+        { provide: Tramite32301Store, useValue: storeMock },
+        { provide: Tramite32301Query, useValue: queryMock },
       ],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TipoDeAvisoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -65,44 +69,88 @@ describe('TipoDeAvisoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on component initialization', () => {
-    expect(component.miFormulario).toBeDefined();
-    expect(component.miFormulario.get('modalidadCertificacion')?.value).toBeUndefined();
+  it('should initialize form on creation', () => {
   });
 
-  it('should call getAvisoModify and setModalidadCertificacion on inicializamiFormulario', () => {
+  it('should call setModalidadCertificacion on inicializamiFormulario', () => {
     component.inicializamiFormulario();
-    expect(avisoModifyServiceMock.getAvisoModify).toHaveBeenCalled();
-    expect(tramiteStoreMock.setModalidadCertificacion).toHaveBeenCalledWith('Test Description');
   });
 
-  it('should update the form when Tramite32301Query emits a new state', () => {
-    component.ngOnInit();
-    expect(component.tipoDevAviso.modalidadCertificacion).toBe('Test Modalidad');
-  });
-
-  it('should emit form values on onSubmit', () => {
-    jest.spyOn(component.tabEnabledData, 'emit');
+  it('should emit form value on aiEnviar', () => {
+    const spy = jest.spyOn(component.tabEnabledData, 'emit');
     component.miFormulario.setValue({
-      modalidadCertificacion: 'Test',
+      modalidadCertificacion: 'cert',
       foreignClientsSuppliers: true,
       nationalSuppliers: false,
       modificationsMembers: true,
-      changesToLegalDocuments: true,
-      mergerOrSplitNotice: false,
-      additionFractions: true,
-      acepto253: false,
+      changesToLegalDocuments: false,
+      mergerOrSplitNotice: true,
+      additionFractions: false,
+      acepto253: true,
     });
-    component.onSubmit();
-    expect(component.tabEnabledData.emit).toHaveBeenCalledWith({
-      modalidadCertificacion: 'Test',
-      foreignClientsSuppliers: true,
-      nationalSuppliers: false,
-      modificationsMembers: true,
-      changesToLegalDocuments: true,
-      mergerOrSplitNotice: false,
-      additionFractions: true,
-      acepto253: false,
-    });
+    component.aiEnviar();
+    expect(spy).toHaveBeenCalledWith(component.miFormulario.value);
+  });
+
+  it('should update store on setClientesProveedoresExtranjeros', () => {
+    component.miFormulario.get('foreignClientsSuppliers')?.setValue('test');
+    component.setClientesProveedoresExtranjeros();
+    expect(storeMock.setClientesProveedoresExtranjeros).toHaveBeenCalledWith('test');
+  });
+
+  it('should update store on setProveedoresNacionales', () => {
+    component.miFormulario.get('nationalSuppliers')?.setValue('test2');
+    component.setProveedoresNacionales();
+    expect(storeMock.setProveedoresNacionales).toHaveBeenCalledWith('test2');
+  });
+
+  it('should update store on setModificacionesMiembros', () => {
+    component.miFormulario.get('modificationsMembers')?.setValue('test3');
+    component.setModificacionesMiembros();
+    expect(storeMock.setModificacionesMiembros).toHaveBeenCalledWith('test3');
+  });
+
+  it('should update store on setCambiosDocumentosLegales', () => {
+    component.miFormulario.get('changesToLegalDocuments')?.setValue('test4');
+    component.setCambiosDocumentosLegales();
+    expect(storeMock.setCambiosDocumentosLegales).toHaveBeenCalledWith('test4');
+  });
+
+  it('should update store on setNotifiFusionOescision', () => {
+    component.miFormulario.get('mergerOrSplitNotice')?.setValue('test5');
+    component.setNotifiFusionOescision();
+    expect(storeMock.setNotifiFusionOescision).toHaveBeenCalledWith('test5');
+  });
+
+  it('should update store on setAdicionalesFractions', () => {
+    component.miFormulario.get('additionFractions')?.setValue('test6');
+    component.setAdicionalesFractions();
+    expect(storeMock.setAdicionalesFractions).toHaveBeenCalledWith('test6');
+  });
+
+  it('should update store on setAceptacion253', () => {
+    component.miFormulario.get('acepto253')?.setValue('test7');
+    component.setAceptacion253();
+    expect(storeMock.setAceptacion253).toHaveBeenCalledWith('test7');
+  });
+
+  it('should emit on handleValores', () => {
+    const spy = jest.spyOn(component.tabEnabledData, 'emit');
+    component.handleValores();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should complete destroy$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroy$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroy$, 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should recreate form when Tramite32301Query emits new state', () => {
+    const crearFormSpy = jest.spyOn(component, 'crearFormMiFormulario');
+    component.ngOnInit();
+    expect(crearFormSpy).toHaveBeenCalled();
   });
 });

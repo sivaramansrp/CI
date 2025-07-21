@@ -4,7 +4,6 @@ import {
 } from '../../constantes/modificacion.enum';
 import {
   Catalogo,
-  CatalogoSelectComponent,
   ConsultaioQuery,
   FormularioDinamico,
   TablaDinamicaComponent,
@@ -26,8 +25,11 @@ import {
 import { Subject,Subscription,map,takeUntil} from 'rxjs';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80205.query';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
+import { AmpliacionServiciosState } from '../../estados/tramite80205.store';
 import { AmpliacionServiciosStore } from '../../estados/tramite80205.store';
 import { ApiResponse } from '../../models/datos-info.model';
+import {CatalogoSelectComponent} from'@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
@@ -106,6 +108,9 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @property {string} rfcEmpresa
    */
   rfcEmpresa: string = '';
+
+  
+  tramiteState: AmpliacionServiciosState = {} as AmpliacionServiciosState;
 
   /**
    * Número del programa IMMEX.
@@ -228,7 +233,7 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
      * @method inicializarFormularioPrincipal
      */
     this.formulario = this.fb.group({
-      entidadFederativa: ['', [Validators.required, Validators.min(0)]],
+      entidadFederativa: [{ value:this.tramiteState.aduanaDeIngresoSelecion}, Validators.required],
     });
     /**
      * Suscripción al observable `selectAduanaDeIngresoSelecion$` del query `ampliacionServiciosQuery`.
@@ -646,13 +651,13 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja los datos recibidos del componente hijo.
+   * Maneja los datos recibidos del componente hijo. 
    * @method procesarDatosDelHijo
    * @param {any} data - Datos recibidos.
    */
-  procesarDatosDelHijo(data: Catalogo | Catalogo[]): void {
-    this.recibioDatos = Array.isArray(data) ? data : [data];
-    this.ampliacionServiciosStore.setAduanaDeIngresoSeleccion(data as Catalogo);
+  procesarDatosDelHijo(): void {
+    const DATOS={id: this.formulario.value.entidadFederativa,descripcion:"abcd"};
+    this.ampliacionServiciosStore.setAduanaDeIngresoSeleccion(DATOS as Catalogo);
   }
 
   /**

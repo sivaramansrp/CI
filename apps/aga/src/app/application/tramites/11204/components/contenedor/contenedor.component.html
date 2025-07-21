@@ -2,25 +2,26 @@
     <form [formGroup]="solicitudForm" id="formSolicitud">
         <ng-titulo titulo="Ingresar por:" />
         <ng-container>
-            <div class="row">
-                <div class="col-md-12">
-                    <br><br>
-                    <div class="col-md-4">
-                        <div class="radio">
+            <div class="row tipo-busqueda-radio">
+                <div class="col-md-4">
+                    <div class="radio">
+                        <label>
                             <input type="radio" formControlName="tipoBusqueda" id="idRadioContenedor"
                                 value="Contenedor" class="form-check-input" (change)="onChange('tipoBusqueda', $event)"
                                 [attr.disabled]="radioContenedor ? true : null">
                             Contenedor
-                        </div>
+                        </label>
                     </div>
+                </div>
 
-                    <div class="col-md-4">
-                        <div class="radio">
+                <div class="col-md-4">
+                    <div class="radio">
+                        <label>
                             <input type="radio" formControlName="tipoBusqueda" id="idRedioExcel" value="Archivo CSV"
                                 class="form-check-input" (change)="onChange('tipoBusqueda', $event)"
                                 [attr.disabled]="radioArchivoCsv ? true : null">
                             Archivo CSV
-                        </div>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -39,9 +40,9 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="catalogoList" [label]="aduana.labelNombre"
-                                [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduana"
+                                [placeholder]="aduana.primerOpcion" formControlName="aduana"
                                 (change)="onChange('aduana', $event)" [isDisabled]="soloLectura"></app-catalogo-select>
-                                <div *ngIf="isInvalid('aduana')" class="mensaje-error">
+                                <div *ngIf="isInvalid('aduana') && solicitudForm.controls['aduana'].errors?.['required']" class="mensaje-error">
                                     Este campo es obligatorio.
                                 </div>
                         </div>
@@ -63,9 +64,9 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="inicialesContenedor">Iniciales del equipo*:</label>
-                            <input type="text" formControlName="inicialesContenedor" id="inicialesContenedor"
+                            <input type="text" formControlName="inicialesContenedor" id="inicialesContenedor" maxlength="10"
                                  class="form-control" [required]="true" (change)="onChange('inicialesContenedor', $event)" [disabled]="soloLectura">
-                                <div *ngIf="isInvalid('inicialesContenedor')" class="mensaje-error">
+                                <div *ngIf="isInvalid('inicialesContenedor') && solicitudForm.controls['inicialesContenedor'].errors?.['required']" class="mensaje-error">
                                     Este campo es obligatorio.
                                 </div>
                         </div>
@@ -74,9 +75,9 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="numeroContenedor">Número de equipo*:</label>
-                            <input type="text" formControlName="numeroContenedor" id="numeroContenedor"
+                            <input type="text" formControlName="numeroContenedor" id="numeroContenedor" maxlength="15"
                                 class="form-control" [required]="true" (change)="onChange('numeroContenedor', $event)" [disabled]="soloLectura">
-                                <div *ngIf="isInvalid('numeroContenedor')" class="mensaje-error">
+                                <div *ngIf="isInvalid('numeroContenedor') && solicitudForm.controls['numeroContenedor'].errors?.['required']" class="mensaje-error">
                                     Este campo es obligatorio.
                                 </div>
                                 <div *ngIf="solicitudForm.get('numeroContenedor')?.touched && solicitudForm.get('numeroContenedor')?.errors?.['minlength']" class="mensaje-error">
@@ -85,7 +86,6 @@
                         </div>
                     </div>
                 </div>
-                <br />
                 <div class="row">
                     <div class="col-md-12" *ngIf="mostrarButtons">
                         <div class="form-group pull-right">
@@ -102,7 +102,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="contenedores.catalogos" [label]="contenedores.labelNombre"
-                            [placeholder]="contenedores.primerOpcion" [required]="true" formControlName="contenedores"
+                            [placeholder]="contenedores.primerOpcion" formControlName="contenedores"
                             (change)="setValoresStore(solicitudForm,'contenedores', 'setContenedores')" [isDisabled]="soloLectura"></app-catalogo-select>
                             <div *ngIf="isInvalid('contenedores')" class="mensaje-error">
                                 Este campo es obligatorio.
@@ -111,8 +111,9 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="digitoDeControl">Dígito verificador:</label>
+                            <label for="digitoDeControl" class="mt-2">Dígito verificador:</label>
                             <input type="text" formControlName="digitoDeControl" id="digitoDeControl" maxlength="1"
+                                pattern="[0-9]" inputmode="numeric" autocomplete="off"
                                 class="form-control" (change)="onChange('digitoDeControl', $event)" [disabled]="soloLectura">
                         </div>
                     </div>
@@ -125,11 +126,11 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group datepicker-group">
-                            <input-fecha [datos]="Vigencia" (valorCambiado)="cambioVigencia($event)" [isDisabled]="soloLectura"></input-fecha>
-                            <div *ngIf="isInvalid('Vigencia')" class="mensaje-error">
+                            <input-fecha [datos]="vigencia" (valorCambiado)="cambioVigencia($event)" [isDisabled]="soloLectura"></input-fecha>
+                            <div *ngIf="isInvalid('vigencia') && solicitudForm.controls['vigencia'].errors?.['required']" class="mensaje-error">
                                 Este campo es obligatorio.
                             </div>
-                            <div *ngIf="isInvalid('fechaIngreso')" class="mensaje-error">
+                            <div *ngIf="solicitudForm.get('vigencia')?.hasError('fechaInvalida')" class="mensaje-error">
                                 La fecha de vigencia debe ser mayor que la fecha de ingreso
                             </div>
                         </div>
@@ -191,7 +192,7 @@
         </ng-container>
 
         <div class="col-md-12 mt-5" id="IdGridContenedoresITC"
-            *ngIf="!solicitud11204State?.tipoBusqueda || solicitud11204State?.tipoBusqueda === 'Contenedor'">
+            *ngIf="!solicitudForm.get('tipoBusqueda')?.value || solicitudForm.get('tipoBusqueda')?.value === 'Contenedor'">
             <br>
             <div class="table-responsive">
                 <div class="innercontainer">
@@ -207,7 +208,6 @@
                 </nav>
             </div>
         </div>
-        @if (consultaDatos.create) {
             <div class="row" style="margin-top: 30px;margin-bottom: 30px;">
                 <div class="form-group">
                     <div class="col-md-12">
@@ -229,7 +229,6 @@
                     </div>
                 </div>
             </div>
-        }
     </form>
 
     <div class="modal fade" id="modalAgregarConstanciaTransferencia" tabindex="-1" role="dialog"
@@ -245,7 +244,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" (click)="mostrarTipoContenedor()"
                         data-bs-dismiss="modal">Si</button>
-                    <button type="button" class="btn btn-default" (click)="hideModal()" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">No</button>
                 </div>
             </div>
         </div>
@@ -262,7 +261,7 @@
                     <p>¿Está seguro que desea cancelar?. Se borrarán los datos capturados.</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" (click)="limpiarCampos()"
+                    <button type="button" class="btn btn-danger" (click)="cancelar()"
                         data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cerrar</button>
                 </div>

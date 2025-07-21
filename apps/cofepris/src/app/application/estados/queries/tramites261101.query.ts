@@ -16,4 +16,12 @@ export class DatosProcedureQuery extends Query<DatosProcedureState> {
     protected override store: DatosProcedureStore) {
     super(store);
   }
+  
+  /**
+   * Observable que selecciona el estado completo de la sección.
+   * Permite suscribirse a los cambios en el estado del trámite 420103.
+   */
+  selectSeccionState$ = this.select((state) => {
+    return state;
+  });
 }

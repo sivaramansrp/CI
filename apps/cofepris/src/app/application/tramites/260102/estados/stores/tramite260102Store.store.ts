@@ -15,46 +15,122 @@ import { TablaOpcionConfig } from '../../../../shared/models/datos-solicitud.mod
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 
 /**
- * Modelo de datos para el estado de la solicitud del trámite 260102.
- * @export
  * @interface Tramite260102State
- *
- * @property {Destinatario[]} destinatarioFinalTablaDatos - Lista de destinatarios finales registrados.
- * @property {Facturador[]} facturadorTablaDatos - Lista de facturadores registrados.
- * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores registrados.
- * @property {Fabricante[]} fabricanteTablaDatos - Lista de fabricantes registrados.
- * @property {DatosSolicitudFormState} datosSolicitudFormState - Datos generales del formulario de solicitud.
- * @property {MercanciaForm} mercanciaForm - Información relacionada con el formulario de mercancías.
- * @property {TablaOpcionConfig[]} opcionConfigDatos - Configuración y datos para la tabla de opciones.
- * @property {TablaScianConfig[]} scianConfigDatos - Datos de la tabla SCIAN (clasificación económica).
- * @property {TablaMercanciasDatos[]} tablaMercanciasConfigDatos - Configuración y datos de la tabla de mercancías.
- * @property {TablaOpcionConfig[]} seleccionadoopcionDatos - Opciones seleccionadas en la tabla de opciones.
- * @property {TablaScianConfig[]} seleccionadoScianDatos - Elementos SCIAN seleccionados en la tabla correspondiente.
- * @property {TablaMercanciasDatos[]} seleccionadoTablaMercanciasDatos - Elementos seleccionados en la tabla de mercancías.
- * @property {boolean} opcionesColapsableState - Indica si la sección de opciones está colapsada (true) o desplegada (false).
- * @property {PagoDerechosFormState} pagoDerechos - Información del formulario de pago de derechos.
+ * @description
+ * Define la estructura del estado central utilizado para gestionar los datos del trámite 260102.
+ * Este estado abarca información general del formulario, tablas dinámicas de terceros relacionados,
+ * configuraciones de tablas y el estado del pago de derechos.
  */
 export interface Tramite260102State {
+  /**
+   * @property destinatarioFinalTablaDatos
+   * @description Lista de destinatarios finales registrados en la tabla.
+   * Utilizado para representar entidades que reciben el producto o mercancía.
+   */
   destinatarioFinalTablaDatos: Destinatario[];
+
+  /**
+   * @property facturadorTablaDatos
+   * @description Lista de facturadores registrados en la tabla.
+   * Corresponde a los terceros encargados de emitir facturas en el proceso del trámite.
+   */
   facturadorTablaDatos: Facturador[];
+
+  /**
+   * @property proveedorTablaDatos
+   * @description Lista de proveedores registrados en la tabla.
+   * Son aquellos terceros que abastecen de mercancías, productos o servicios.
+   */
   proveedorTablaDatos: Proveedor[];
+
+  /**
+   * @property fabricanteTablaDatos
+   * @description Lista de fabricantes registrados en la tabla.
+   * Incluye entidades responsables de la fabricación o elaboración del producto.
+   */
   fabricanteTablaDatos: Fabricante[];
+
+  /**
+   * @property datosSolicitudFormState
+   * @description Datos generales del formulario de solicitud.
+   * Incluye información como RFC, denominación, domicilio, contacto, entre otros.
+   */
   datosSolicitudFormState: DatosSolicitudFormState;
+
+  /**
+   * @property mercanciaForm
+   * @description Información del formulario correspondiente a los datos de la mercancía.
+   * Contiene detalles como tipo de producto, fracción arancelaria, presentación, etc.
+   */
   mercanciaForm: MercanciaForm;
+
+  /**
+   * @property opcionConfigDatos
+   * @description Configuración utilizada para poblar la tabla de opciones.
+   * Se puede utilizar para representar opciones específicas seleccionables por el usuario.
+   */
   opcionConfigDatos: TablaOpcionConfig[];
+
+  /**
+   * @property scianConfigDatos
+   * @description Configuración de la tabla SCIAN (clasificación económica).
+   * Representa categorías económicas según el Sistema de Clasificación Industrial.
+   */
   scianConfigDatos: TablaScianConfig[];
+
+  /**
+   * @property tablaMercanciasConfigDatos
+   * @description Datos y configuración para la tabla de mercancías mostrada en pantalla.
+   * Utilizado para listar productos o bienes relacionados con el trámite.
+   */
   tablaMercanciasConfigDatos: TablaMercanciasDatos[];
+
+  /**
+   * @property seleccionadoopcionDatos
+   * @description Opciones seleccionadas actualmente en la tabla de opciones.
+   * Refleja la selección hecha por el usuario durante el llenado del formulario.
+   */
   seleccionadoopcionDatos: TablaOpcionConfig[];
+
+  /**
+   * @property seleccionadoScianDatos
+   * @description Registros SCIAN actualmente seleccionados por el usuario.
+   * Permite almacenar temporalmente las categorías económicas elegidas.
+   */
   seleccionadoScianDatos: TablaScianConfig[];
+
+  /**
+   * @property seleccionadoTablaMercanciasDatos
+   * @description Registros seleccionados en la tabla de mercancías.
+   * Permite manejar qué productos han sido marcados como seleccionados por el usuario.
+   */
   seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
+
+  /**
+   * @property opcionesColapsableState
+   * @description Estado del panel de opciones (colapsado o desplegado).
+   * true indica que el panel está colapsado; false, que está visible.
+   */
   opcionesColapsableState: boolean;
+
+  /**
+   * @property pagoDerechos
+   * @description Información del formulario de pago de derechos del trámite.
+   * Incluye clave de referencia, cadena de dependencia, importe y fecha de pago.
+   */
   pagoDerechos: PagoDerechosFormState;
 }
 
 /**
- * @function createInitialState
- * @description Crea y devuelve el estado inicial para el trámite 260102.
- * @returns {Tramite260102State} El estado inicial del trámite.
+ * Crea y retorna el estado inicial para el store de Tramite260102.
+ *
+ * Este estado inicializa todas las propiedades necesarias para el manejo de datos
+ * relacionados con destinatarios, facturadores, proveedores, fabricantes, formularios
+ * de solicitud y mercancía, configuración de tablas y opciones, así como el estado
+ * de pago de derechos.
+ *
+ * @returns {Tramite260102State} El objeto de estado inicializado con valores por defecto
+ * para todos los campos requeridos en el trámite 260102.
  */
 export function createInitialState(): Tramite260102State {
   return {
@@ -129,18 +205,45 @@ export function createInitialState(): Tramite260102State {
   };
 }
 /**
- * @export
- * @class Tramite260102Store
- * @extends {Store<Tramite260102State>}
- * @description Clase que gestiona el estado (Store) del trámite 260102.
- * Almacena y actualiza los datos definidos en `Tramite260102State`,
- * permitiendo la manipulación y suscripción a dichos datos.
- **/
+ * Decorador que marca esta clase como un servicio inyectable en Angular.
+ * 
+ * Este servicio se registra en el nivel raíz del inyector, lo que significa que estará disponible
+ * en toda la aplicación sin necesidad de declararlo explícitamente en los módulos.
+ * 
+ * @Injectable({
+ *   providedIn: 'root'
+ * })
+ * 
+ * - `providedIn: 'root'`: Indica que el servicio se proporciona en el inyector raíz de la aplicación.
+ * Esto asegura que haya una única instancia del servicio compartida en toda la aplicación.
+ */
 @Injectable({
   providedIn: 'root',
 })
 @StoreConfig({ name: 'Tramite260102', resettable: true })
+/**
+ * Clase Store para gestionar el estado del módulo de aplicación "Trámite 260102".
+ * 
+ * Este store proporciona métodos para actualizar distintas partes del estado de la aplicación, como los datos de formularios,
+ * tablas de fabricantes, destinatarios, proveedores, facturadores y datos de configuración para opciones, SCIAN y mercancías.
+ * También gestiona el estado del formulario de pago de derechos.
+ * 
+ * Cada método de actualización es responsable de modificar de forma inmutable una sección específica del estado.
+ * 
+ * @extends Store<Tramite260102State>
+ * 
+ * @example
+ * const store = new Tramite260102Store();
+ * store.updateDatosSolicitudFormState(newFormState);
+ * store.updateFabricanteTablaDatos([newFabricante]);
+ */
 export class Tramite260102Store extends Store<Tramite260102State> {
+
+  /**
+   * @constructor
+   * @description
+   * Inicializa el store con el estado inicial predeterminado definido en `createInitialState`.
+   */
   constructor() {
     super(createInitialState());
   }
@@ -271,3 +374,4 @@ export class Tramite260102Store extends Store<Tramite260102State> {
     }));
   }
 }
+

@@ -200,8 +200,6 @@ export class ModificacionSociosComponent
         this.agregarMiembroDeLaEmpresaFrom.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.agregarMiembroDeLaEmpresaFrom.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
       }
   }
 

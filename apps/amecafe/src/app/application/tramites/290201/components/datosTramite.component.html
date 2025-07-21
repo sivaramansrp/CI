@@ -1,4 +1,4 @@
-<app-datos-de-la-solicitud></app-datos-de-la-solicitud>
+<app-datos-de-la-solicitud (filaSeleccionada)="onRowSelected($event)"></app-datos-de-la-solicitud>
 <div class="container">
   <form [formGroup]="informationCafeForm">
     <ng-titulo titulo="Informacion del Cafe" />
@@ -84,7 +84,7 @@
       id="adunadesalidaData"
       formControlName="adunadesalida"
       [catalogo]="adunadesalidaData.catalogos"
-      [label]="'Aduna de salida'"
+      [label]="'Aduana de salida'"
       [placeholder]="adunadesalidaData.primerOpcion"
       [required]="true"
       (change)="setValoresStore(datosDelTramiteRealizar,'adunadesalida', 'setAdunadesalida')"

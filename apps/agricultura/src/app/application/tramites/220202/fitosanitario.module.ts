@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
@@ -33,6 +33,7 @@ import {
   WizardComponent
 } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { TercerospageComponent } from './components/tercerospage/tercerospage.component';
 
 @NgModule({
   declarations: [
@@ -57,10 +58,12 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     ToastrModule.forRoot(),
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionNacionalComponent,
-    PagoDeDerechosComponent
+    PagoDeDerechosComponent,
+    TercerospageComponent
   ],
   providers: [
     ToastrService
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class FitosanitarioModule { }

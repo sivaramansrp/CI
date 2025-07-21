@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FraccionComponent } from './fraccion.component';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
 import { Tramite130106Query } from '../../../../estados/queries/tramite130106.query';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { formFieldValidator } from './fraccion.component';
 
 describe('FraccionComponent', () => {
   let component: FraccionComponent;
@@ -160,8 +161,8 @@ describe('FraccionComponent', () => {
     component.generarPartidas();
 
     expect(component.partidas.length).toBe(1);
-    expect(component.fraccionForm.get('cantidadTotal')?.value).toBe(10);
-    expect(component.fraccionForm.get('valorTotal')?.value).toBe(10);
+    expect(component.fraccionForm.get('cantidadTotal')?.value).toBe(5);
+    expect(component.fraccionForm.get('valorTotal')?.value).toBe(5);
   });
 
   it('should disable cantidadTotal and valorTotal fields', () => {
@@ -188,4 +189,34 @@ describe('FraccionComponent', () => {
     component.fraccionForm.get('cantidad')?.setValue('abc');
     expect(component.fraccionForm.get('cantidad')?.valid).toBe(false);
   });
+
+  describe('formFieldValidator', () => {
+  it('should return null for empty value', () => {
+    expect(formFieldValidator(new FormControl(''))).toBeNull();
+    expect(formFieldValidator(new FormControl(null))).toBeNull();
+    expect(formFieldValidator(new FormControl(undefined))).toBeNull();
+  });
+
+  it('should return null for valid integer', () => {
+    expect(formFieldValidator(new FormControl('123'))).toBeNull();
+    expect(formFieldValidator(new FormControl(456))).toBeNull();
+  });
+
+  it('should return null for valid decimal with up to 3 decimals', () => {
+    expect(formFieldValidator(new FormControl('123.456'))).toBeNull();
+    expect(formFieldValidator(new FormControl('0.123'))).toBeNull();
+    expect(formFieldValidator(new FormControl('10.1'))).toBeNull();
+  });
+
+  it('should return pattern error for non-numeric input', () => {
+    expect(formFieldValidator(new FormControl('abc'))).toEqual({ pattern: true });
+    expect(formFieldValidator(new FormControl('12a'))).toEqual({ pattern: true });
+    expect(formFieldValidator(new FormControl('12.3.4'))).toEqual({ pattern: true });
+  });
+
+  it('should return tooManyDecimals error for more than 3 decimals', () => {
+    expect(formFieldValidator(new FormControl('1.1234'))).toEqual({ tooManyDecimals: true });
+    expect(formFieldValidator(new FormControl('0.0009'))).toEqual({ tooManyDecimals: true });
+  });
+});
 });

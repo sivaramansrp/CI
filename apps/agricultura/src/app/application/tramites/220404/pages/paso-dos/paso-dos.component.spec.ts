@@ -1,33 +1,99 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { PasoDosComponent } from './paso-dos.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { InjectionToken } from '@angular/core';
+import { Router } from '@angular/router';
 import { TramiteStore } from '@libs/shared/data-access-user/src/core/estados/tramite.store';
 import { ServiciosExtraordinariosService } from '../../services/servicios-extraordinarios.service';
-import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+
+@Injectable()
+class MockRouter {
+  navigate() {};
+}
+
+@Injectable()
+class MockServiciosExtraordinariosService {}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
 describe('PasoDosComponent', () => {
-  let component: PasoDosComponent;
-  let fixture: ComponentFixture<PasoDosComponent>;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [PasoDosComponent],
-      imports: [HttpClientTestingModule, FirmaElectronicaComponent, ToastrModule.forRoot()],
-      providers: [ToastrService,ServiciosExtraordinariosService,TramiteStore,
-        { provide: new InjectionToken('ToastConfig'), useValue: {} }
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule ],
+      declarations: [
+        PasoDosComponent,
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: Router, useClass: MockRouter },
+        TramiteStore,
+        { provide: ServiciosExtraordinariosService, useClass: MockServiciosExtraordinariosService }
       ]
-    })
-      .compileComponents();
+    }).overrideComponent(PasoDosComponent, {
 
+    }).compileComponents();
     fixture = TestBed.createComponent(PasoDosComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should run #obtieneFirma()', async () => {
+    component.serviciosExtraordinariosService = component.serviciosExtraordinariosService || {};
+    component.serviciosExtraordinariosService.obtenerTramite = jest.fn().mockReturnValue(observableOf({}));
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.establecerTramite = jest.fn();
+    component.router = component.router || {};
+    component.router.navigate = jest.fn();
+    component.obtieneFirma({});
+    expect(component.serviciosExtraordinariosService.obtenerTramite).toHaveBeenCalled();
+   expect(component.tramiteStore.establecerTramite).toHaveBeenCalled();
+     expect(component.router.navigate).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroy$ = component.destroy$ || {};
+    component.destroy$.next = jest.fn();
+    component.destroy$.complete = jest.fn();
+    component.ngOnDestroy();
+     expect(component.destroy$.next).toHaveBeenCalled();
+    expect(component.destroy$.complete).toHaveBeenCalled();
   });
 
 });

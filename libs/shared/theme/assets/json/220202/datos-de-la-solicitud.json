@@ -6,11 +6,7 @@
         "numeroDeGuia": "GUIA123456",
         "regimen": "1",
         "numeroDeCarro": "CARRO7890",
-        "requisito": "Certificado Zoosanitario",
-        "numeroCertificadoInternacional": "CERTINTL2024",
-        "descripcionFraccion": "Caballos de raza pura",
-        "descripcionNico": "Caballos para carreras",
-        "descripcion": "Importación de caballos de carreras"
+        "tipoMercancia": "yes"
     },
     "movilizacion": {
         "transporte": "1",
@@ -19,16 +15,14 @@
         "medioTransporte": "Camión"
     },
     "pago": {
-        "exentoPago": "No",
+        "exentoPago": "no",
         "justificacion": "1",
-        "claveReferencia": "REFPAGO2024",
-        "cadenaDependencia": "CADENA123",
+        "claveReferencia": "REF-20250523-ZS",
+        "cadenaDependencia": "SAGARPA-MOVIL-2025",
         "banco": "1",
-        "llavePago": "LLAVE9876",
-        "importePago": "15000.00",
-        "fechaDePago": "2024-06-15",
-        "fechaInicioInput": "2024-06-10",
-        "fechaPago": "2024-06-15"
+        "fechaPago": "16/05/2025",
+        "llavePago": "LLP-77889900",
+        "importePago": "1500.00"
     },
     "tablaDatos": [
         {
@@ -57,6 +51,50 @@
         {
             "nombre": "abc",
             "correo": "abc"
+        }
+    ],
+    "tercerosRelacionados": [
+        {
+            "tipoMercancia": "Ganado",
+            "nombre": "Juan",
+            "primerApellido": "Pérez",
+            "segundoApellido": "García",
+            "razonSocial": "Agropecuaria del Norte S.A. de C.V.",
+            "pais": "México",
+            "codigoPostal": "64000",
+            "estado": "Nuevo León",
+            "municipio": "Monterrey",
+            "colonia": "Centro",
+            "calle": "Av. Revolución",
+            "numeroExterior": "123",
+            "numeroInterior": "4B",
+            "lada": "81",
+            "telefono": "12345678",
+            "correo": "juan.perez@agronorte.com"
+        }
+    ],
+    "validarEnvio": {
+        "dataParaMovilizacion": true,
+        "dataDeLaSolicitud": true
+    },
+    "datosForma": [
+        {
+            "tipoMercancia": "Ganado",
+            "nombre": "Juan",
+            "primerApellido": "Pérez",
+            "segundoApellido": "García",
+            "razonSocial": "Agropecuaria del Norte S.A. de C.V.",
+            "pais": "México",
+            "codigoPostal": "64000",
+            "estado": "Nuevo León",
+            "municipio": "Monterrey",
+            "colonia": "Centro",
+            "calle": "Av. Revolución",
+            "numeroExterior": "123",
+            "numeroInterior": "4B",
+            "lada": "81",
+            "telefono": "12345678",
+            "correo": "juan.perez@agronorte.com"
         }
     ]
 }

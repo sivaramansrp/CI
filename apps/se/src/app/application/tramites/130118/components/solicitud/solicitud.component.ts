@@ -259,10 +259,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       }),
       datosProducto: this.fb.group({
         tipoPersona: [this.solicitudState?.tipoPersona],
-        nombre: [this.solicitudState?.nombre, [Validators.required, Validators.maxLength(200)]],
-        apellidoPaterno: [this.solicitudState?.apellidoPaterno, [Validators.required, Validators.maxLength(200)]],
-        apellidoMaterno: [this.solicitudState?.apellidoMaterno, [Validators.maxLength(200)]],
-        razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: true }, [Validators.maxLength(250)]],
+        nombre: [{value: this.solicitudState?.nombre}, [Validators.required, Validators.maxLength(200)]],
+        apellidoPaterno: [{value: this.solicitudState?.apellidoPaterno}, [Validators.required, Validators.maxLength(200)]],
+        apellidoMaterno: [{value: this.solicitudState?.apellidoMaterno}, [Validators.maxLength(200)]],
+        razonSocial: [this.solicitudState?.razonSocial , [Validators.required,Validators.maxLength(250)]],
         domicilio: [this.solicitudState?.domicilio, [Validators.maxLength(1000)]]
       }),
       registroFederal: this.fb.group({
@@ -498,9 +498,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.FormSolicitud.get('datosProducto.nombre')?.setValue('');
     this.FormSolicitud.get('datosProducto.apellidoPaterno')?.setValue('');
     this.FormSolicitud.get('datosProducto.apellidoMaterno')?.setValue('');
-
-    this.FormSolicitud.get('datosProducto.razonSocial')?.setValue('');
+    
+      if (!this.esFormularioSoloLectura) {
     this.FormSolicitud.get('datosProducto.razonSocial')?.enable();
+  }
     this.FormSolicitud.get('datosProducto.nombre')?.disable();
     this.FormSolicitud.get('datosProducto.apellidoPaterno')?.disable();
     this.FormSolicitud.get('datosProducto.apellidoMaterno')?.disable();
@@ -515,7 +516,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.isVisibleMoral = false;
 
     // Restablecer los valores y habilitar campos para "Persona Física"
-    this.FormSolicitud.get('datosProducto.razonSocial')?.setValue('');
     this.FormSolicitud.get('datosProducto.razonSocial')?.disable();
     this.FormSolicitud.get('datosProducto.nombre')?.enable();
     this.FormSolicitud.get('datosProducto.apellidoPaterno')?.enable();

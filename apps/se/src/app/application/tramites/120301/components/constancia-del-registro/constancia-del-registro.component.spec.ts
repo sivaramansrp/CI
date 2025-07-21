@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of as observableOf, of } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Pipe, PipeTransform } from '@angular/core';
@@ -6,7 +6,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Pipe, PipeT
 import { ConstanciaDelRegistroComponent } from './constancia-del-registro.component';
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
-import { SeccionLibStore, SeccionLibQuery } from '@ng-mf/data-access-user';
+import { SeccionLibStore, SeccionLibQuery, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 
 @Directive({ selector: '[myCustom]' })
@@ -68,6 +68,11 @@ describe('ConstanciaDelRegistroComponent', () => {
     obtenerTablaDatos: jest.fn().mockReturnValue(observableOf([]))
   };
 
+  const consultaioQueryMock = {
+    selectConsultaioState$: observableOf({ readonly: false }),
+    getValue: jest.fn().mockReturnValue({ readonly: false })
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ConstanciaDelRegistroComponent, FormsModule, ReactiveFormsModule],
@@ -78,6 +83,7 @@ describe('ConstanciaDelRegistroComponent', () => {
         { provide: ElegibilidadDeTextilesQuery, useValue: queryMock },
         { provide: SeccionLibStore, useValue: seccionStoreMock },
         { provide: SeccionLibQuery, useValue: seccionQueryMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
         { provide: ElegibilidadTextilesService, useValue: serviceMock }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
@@ -104,7 +110,10 @@ it('should run ngOnInit()', () => {
   });
 
   component.initActionFormBuild = jest.fn();
-  component.fitosanitarioForm = { disable: jest.fn() } as any;
+  component.fitosanitarioForm = { 
+    disable: jest.fn(),
+    enable: jest.fn()
+  } as any;
 
   component.ngOnInit();
 
@@ -249,9 +258,20 @@ it('should filter datos correctly based on form values', () => {
   expect(result.length).toBe(1);
 });
 
-  it('should disable form if formularioDeshabilitado is true', () => {
-  component.formularioDeshabilitado = true;
-  component.fitosanitarioForm = { disable: jest.fn() } as any;
+  it('should disable form if formularioDeshabilitado is true', fakeAsync(() => {
+  // Create isolated mocks for this test
+  const isolatedConsultaioQueryMock = {
+    getValue: jest.fn().mockReturnValue({ readonly: true }),
+    selectConsultaioState$: of({ readonly: true })
+  };
+  
+  const isolatedQueryMock = {
+    selectTextile$: of({ formaValida: [] })
+  };
+
+  // Replace the component's dependencies with isolated mocks
+  (component as any).consultaioQuery = isolatedConsultaioQueryMock;
+  (component as any).elegibilidadDeTextilesQuery = isolatedQueryMock;
 
   (component as any).constanciaState = {
     formaValida: [],
@@ -259,10 +279,69 @@ it('should filter datos correctly based on form values', () => {
     guardarBandera: false
   };
 
-  component.initActionFormBuild = jest.fn();
+  // Create a spy that will actually create the form
+  const mockForm = { 
+    disable: jest.fn(),
+    enable: jest.fn()
+  };
+  
+  // Mock initActionFormBuild to set up the form properly  
+  component.initActionFormBuild = jest.fn().mockImplementation(() => {
+    component.fitosanitarioForm = mockForm as any;
+  });
+  
   component.ngOnInit();
+  
+  // Allow async operations to complete
+  tick();
 
-  expect(component.fitosanitarioForm.disable).toHaveBeenCalled();
-});
+  // Verify the form was created and disable was called
+  expect(component.initActionFormBuild).toHaveBeenCalled();
+  expect(mockForm.disable).toHaveBeenCalled();
+  expect(component.formularioDeshabilitado).toBe(true);
+}));
+
+it('should enable form if formularioDeshabilitado is false', fakeAsync(() => {
+  // Create isolated mocks for this test
+  const isolatedConsultaioQueryMock = {
+    getValue: jest.fn().mockReturnValue({ readonly: false }),
+    selectConsultaioState$: of({ readonly: false })
+  };
+  
+  const isolatedQueryMock = {
+    selectTextile$: of({ formaValida: [] })
+  };
+
+  // Replace the component's dependencies with isolated mocks
+  (component as any).consultaioQuery = isolatedConsultaioQueryMock;
+  (component as any).elegibilidadDeTextilesQuery = isolatedQueryMock;
+
+  (component as any).constanciaState = {
+    formaValida: [],
+    datosTablaConstanciaDelRegistro: [],
+    guardarBandera: false
+  };
+
+  // Create a spy that will actually create the form
+  const mockForm = { 
+    disable: jest.fn(),
+    enable: jest.fn()
+  };
+  
+  // Mock initActionFormBuild to set up the form properly
+  component.initActionFormBuild = jest.fn().mockImplementation(() => {
+    component.fitosanitarioForm = mockForm as any;
+  });
+  
+  component.ngOnInit();
+  
+  // Allow async operations to complete
+  tick();
+
+  // Verify the form was created and enable was called
+  expect(component.initActionFormBuild).toHaveBeenCalled();
+  expect(mockForm.enable).toHaveBeenCalled();
+  expect(component.formularioDeshabilitado).toBe(false);
+}));
 
 });
