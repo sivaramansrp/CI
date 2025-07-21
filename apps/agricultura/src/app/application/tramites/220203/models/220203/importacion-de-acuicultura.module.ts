@@ -217,11 +217,11 @@ export interface Consulta {
  * @property {PersonaTerceros[]} tercerosRelacionados - Lista de terceros relacionados.
  */
 export interface Acuicultura {
-    formularioPago: FormularioPago;
     formularioMovilizacion: FormularioMovilizacion;
     datosMercancia: DatosMercancia220203;
     formaValida: EnviarDatos;
     tercerosRelacionados: PersonaTerceros[];
+    pagoDeDerechos:PagoDeDerechos;
 }
 
 /**
@@ -233,16 +233,6 @@ export interface Acuicultura {
  */
 export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura {
     return {
-        formularioPago: params.formularioPago || {
-            exentoPago: '',
-            justificacion: '',
-            claveReferencia: '',
-            cadenaDependencia: '',
-            banco: '',
-            llavePago: '',
-            fechaPago: '',
-            importePago: ''
-        },
         formularioMovilizacion: params.formularioMovilizacion || {
             medioDeTransporte: '',
             identificacionTransporte: '',
@@ -288,5 +278,61 @@ export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura
             dataParaMovilizacion: false,
             dataDeLaSolicitud: false
         },
+        pagoDeDerechos: params?.pagoDeDerechos || {
+            exentoPago: '',
+            justificacion: '',
+            claveReferencia: '',
+            cadenaDependencia: '',
+            banco: '',
+            llavePago: '',
+            importePago: '',
+            fechaPago: ''
+        }
     };
+}
+/**
+ * Modelo para capturar la información correspondiente al pago de derechos.
+ * @interface PagoDeDerechos
+ * @property {string} exentoPago Indica si el pago está exento (Sí/No).
+ * @property {string} justificacion Justificación del motivo de exención (si aplica).
+ * @property {string} claveReferencia Clave de referencia para el pago.
+ * @property {string} cadenaDependencia Cadena generada por la dependencia para pago.
+ * @property {string} banco Nombre del banco donde se realiza el pago.
+ * @property {string} llavePago Llave única para realizar el pago.
+ * @property {string} importePago Monto del pago.
+ * @property {string} fechaPago Fecha en que se realizó el pago.
+ */
+export interface PagoDeDerechos {
+  /**
+   * Indica si el pago está exento (Sí/No).
+   */
+  exentoPago: string;
+  /**
+   * Justificación del motivo de exención (si aplica).
+   */
+  justificacion: string;
+  /**
+   * Clave de referencia para el pago.
+   */
+  claveReferencia: string;
+  /**
+   * Cadena generada por la dependencia para pago.
+   */
+  cadenaDependencia: string;
+  /**
+   * Nombre del banco donde se realiza el pago.
+   */
+  banco: string;
+  /**
+   * Llave única para realizar el pago.
+   */
+  llavePago: string;
+  /**
+   * Monto del pago.
+   */
+  importePago: string;
+  /**
+   * Fecha en que se realizó el pago.
+   */
+  fechaPago: string;
 }

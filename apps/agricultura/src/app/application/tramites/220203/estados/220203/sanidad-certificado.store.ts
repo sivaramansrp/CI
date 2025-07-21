@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Store, StoreConfig } from '@datorama/akita';
 
-import { Acuicultura, Consulta, DatosMercancia220203, FormularioMovilizacion, FormularioPago, createDatosState } from '../../models/220203/importacion-de-acuicultura.module';
+import { Acuicultura, Consulta, DatosMercancia220203, FormularioMovilizacion, PagoDeDerechos, createDatosState } from '../../models/220203/importacion-de-acuicultura.module';
 import { PersonaTerceros } from '@libs/shared/data-access-user/src';
 
 /**
@@ -33,17 +33,17 @@ export class AcuiculturaStore extends Store<Acuicultura> {
     constructor() {
         super(createDatosState());
     }
-
+    
     /**
      * Actualiza el estado con la información del formulario de pago.
      * @method actualizarFormularioPago
      * @param {FormularioPago} formularioPago - Datos del formulario de pago.
      * @returns {void}
      */
-    public actualizarFormularioPago(formularioPago: FormularioPago): void {
+    public actualizarPagoDeDerechos(pagoDeDerechos: PagoDeDerechos): void {
         this.update(state => ({
             ...state,
-            formularioPago,
+            pagoDeDerechos: pagoDeDerechos,
         }));
     }
 

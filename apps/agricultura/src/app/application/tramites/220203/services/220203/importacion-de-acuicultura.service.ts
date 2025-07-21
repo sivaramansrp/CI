@@ -1,4 +1,4 @@
-import { Acuicultura, DatosMercancia220203, EnviarDatos, FormularioMovilizacion, FormularioPago } from '../../models/220203/importacion-de-acuicultura.module';
+import { Acuicultura, DatosMercancia220203, EnviarDatos, FormularioMovilizacion, FormularioPago, PagoDeDerechos } from '../../models/220203/importacion-de-acuicultura.module';
 import { Observable, map } from 'rxjs';
 import { PersonaTerceros, RespuestaCatalogos, SeccionLibStore } from '@ng-mf/data-access-user';
 import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
@@ -64,15 +64,18 @@ export class ImportacionDeAcuiculturaService {
     return this.acuiculturaStore._select(state => state);
   }
 
+
+  
   /**
    * Actualizar el formulario de pago en el store.
    * @method actualizarFormularioPago
    * @param formularioPago Datos del formulario de pago.
    * @returns {void}
    */
-  public actualizarFormularioPago(formularioPago: FormularioPago): void {
-    this.acuiculturaStore.actualizarFormularioPago(formularioPago);
+  public actualizarPagoDeDerechos(pagoDeDerechos: PagoDeDerechos): void {
+    this.acuiculturaStore.actualizarPagoDeDerechos(pagoDeDerechos);
   }
+
 
   /**
    * Actualizar el formulario de movilización en el store.
@@ -156,7 +159,7 @@ export class ImportacionDeAcuiculturaService {
    * @returns {void}
    */
   public actualizarEstadoFormulario(DATOS: Acuicultura): void {
-    this.actualizarFormularioPago(DATOS.formularioPago);
+    this.actualizarPagoDeDerechos(DATOS.pagoDeDerechos);
     this.actualizarFormularioMovilizacion(DATOS.formularioMovilizacion);
     this.actualizarDatosMercancia(DATOS.datosMercancia);
   }
