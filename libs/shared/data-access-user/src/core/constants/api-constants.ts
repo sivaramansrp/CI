@@ -204,7 +204,6 @@ export const API_GET_FRACCION_ARANCELARIA_CVE = `sat-t130118/catalogo/fraccion-a
  */
 export const API_GET_NICO = `sat-t130118/catalogo/fraccion-arancelaria/${CVEFRACCION}/subdiviciones`;
 
-
 /**
  * ID de la solicitud que se utilizará en las rutas de la API.
  */
@@ -223,7 +222,7 @@ export const API_POST_GUARDAR_ACUSE = `sat-t130118/solicitud/${IDSOLICITUD}/acus
 export const API_POST_VISTA_PREVIA = `sat-t130118/solicitud/${IDSOLICITUD}/acuse/vista-previa`;
 
 /**
- * API para subir un documento.
+ * API para obtener los documentos
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/consulta-documentos
  */
 export const API_GET_DOCUMENTOS130118 = 'sat-t130118/solicitud/documentos';

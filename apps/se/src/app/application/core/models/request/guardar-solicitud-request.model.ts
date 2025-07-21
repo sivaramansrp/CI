@@ -1,3 +1,7 @@
+/**
+ * Modelo de solicitud para guardar una solicitud de trámite.
+ * Define la estructura de los datos necesarios para guardar una solicitud en el sistema.
+ */
 export interface GuadarSolicitudRequest {
     id_solcitud: number | null;
     cve_regimen: string;
@@ -8,6 +12,10 @@ export interface GuadarSolicitudRequest {
     representacion_federal: RepresentacionFederal;
 }
 
+/**
+ * Modelo que representa una mercancía en el trámite.
+ * Contiene información detallada sobre la mercancía involucrada en el trámite.
+ */
 export interface Mercancia {
     cve_fraccion_arancelaria: string;
     cve_subdivision: string;
@@ -23,6 +31,10 @@ export interface Mercancia {
     observaciones: string;
 }
 
+/**
+ * Modelo que representa un productor en el trámite.
+ * Contiene información sobre el tipo de persona, nombre, RFC y ubicación del productor.
+ */
 export interface Productor {
     tipo_persona: boolean;
     nombre: string;

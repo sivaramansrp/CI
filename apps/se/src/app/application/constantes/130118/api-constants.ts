@@ -27,3 +27,9 @@ export const API_POST_CADENA_ORIGINAL = `sat-t130118/solicitud/${IDSOLICITUD}/ge
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/firmar
  */
 export const API_POST_FIRMA = `sat-t130118/solicitud/${IDSOLICITUD}/firmar`;
+
+/**
+ * API para obtener el certificado de antigüedad máxima del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/certificado-antiguedad-maxima
+ */
+export const API_GET_CERTIFICADO_ANTIGUEDAD = `sat-t130118/certificado/antiguedad-maxima`;
