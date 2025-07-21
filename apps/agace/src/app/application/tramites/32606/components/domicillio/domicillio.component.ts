@@ -1,19 +1,20 @@
-import { Component, input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CatalogoSelectComponent, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { DOMICILIO_CATALOGO, DOMICILLIO_TABLA, RADIO_07 } from '../../constantes/adace32606.enum';
-import { Domicillio } from '../../models/adace.model';
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { DOMICILIO_CATALOGO, DOMICILLIO_TABLA, ENTIDAD_CATALOGO, ENTIDAD_TABLA, RADIO_07 } from '../../constantes/adace32606.enum';
+import { Domicillio, EntidadFederativa } from '../../models/adace.model';
 import { EconomicoService } from '../../services/economico.service';
 import { Tramite32606Query } from '../../state/Tramite32606.query';
 import { Tramite32606Store } from '../../state/Tramite32606.store';
+import { ReplaySubject, takeUntil } from 'rxjs';
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-domicillio',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, TablaDinamicaComponent, InputRadioComponent, TituloComponent,
-    NotificacionesComponent
-  ],
+    NotificacionesComponent],
   templateUrl: './domicillio.component.html',
   styleUrl: './domicillio.component.css',
 })
@@ -21,8 +22,10 @@ export class DomicillioComponent implements OnInit, OnDestroy {
 
   public domicillioForm!: FormGroup;
   public domicillio = DOMICILIO_CATALOGO;
-  TablaSeleccion = TablaSeleccion;
+  public entidadFederativa = ENTIDAD_CATALOGO;
+  public TablaSeleccion = TablaSeleccion;
   public domicillioTabla = DOMICILLIO_TABLA;
+  public entidadTabla = ENTIDAD_TABLA;
   public domicillioDatos: Domicillio[] = [];
   radioOpcions07 = RADIO_07;
   nombreArchivo: string = '';
@@ -30,19 +33,37 @@ export class DomicillioComponent implements OnInit, OnDestroy {
   public nuevaNotificacion!: Notificacion;
   public elementoParaEliminar!: number;
   public pedimentos: Array<Pedimento> = [];
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  @ViewChild('modalAgregar') modalElement!: ElementRef;
+  @ViewChild('closeModal') closeModalButton!: ElementRef;
+  public entidadTablaDatos: EntidadFederativa[] = [];
 
   constructor(private economico: EconomicoService,
     public query: Tramite32606Query,
     public store: Tramite32606Store,
-    private fb: FormBuilder) { }
-
+    private fb: FormBuilder
+  ) {
+    this.domicillioDatos = [];
+   }
 
   ngOnInit(): void {
     this.donanteDomicilio();
+    this.obtenerDomicillio();
+    this.obtenerEntidad();
+    this.obtenerTablaEntidad();
+    this.obtenerTablaDomicillio();
+
   }
 
   public seleccionarModificar(): void {
     this.abrirModal();
+  }
+
+  public onAgregarClick(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
   }
 
   eliminarPedimento(borrar: boolean): void {
@@ -67,10 +88,46 @@ export class DomicillioComponent implements OnInit, OnDestroy {
     this.elementoParaEliminar = i;
   }
 
+  obtenerDomicillio(): void {
+    this.economico
+      .obtenerDomicillio()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp): void => {
+        this.domicillio.catalogos = resp as Catalogo[];
+      });
+  }
 
-  donanteDomicilio(): void {
+  obtenerEntidad(): void {
+    this.economico
+      .obtenerEntidad()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp): void => {
+        this.entidadFederativa.catalogos = resp as Catalogo[];
+      });
+  }
+
+  public obtenerTablaEntidad(): void {
+    this.economico
+      .obtenerTablaEntidad()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.entidadTablaDatos = data;
+      });
+  }
+
+  public obtenerTablaDomicillio(): void {
+    this.economico
+      .obtenerTablaDomicillio()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.domicillioDatos = data;
+      });
+  }
+
+   donanteDomicilio(): void {
     this.domicillioForm = this.fb.group({
       domicillio: [''],
+      entidadFederativa: [''],
       tipoRadio12: [''],
       tipoRadio13: [''],
       file1: [''],
@@ -99,7 +156,20 @@ export class DomicillioComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
+  public onAceptarAgregar(): void {
+  // const seleccionados = this.entidadTablaDatos.filter((row: any) => row.selected);
 
+  // if (seleccionados.length > 0) {
+   
+  //   this.domicillioDatos = seleccionados as Domicillio[];
+    
+  // } else {
+  //   Domicillio[] = [];
+  // }
+}
+
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

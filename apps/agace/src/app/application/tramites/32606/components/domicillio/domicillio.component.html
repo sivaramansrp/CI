@@ -24,10 +24,17 @@
             </div>
         </div>
     </div>
+    <!-- Domicillio tabla -->
     <div class="row mt-12">
         <div class="col-md-12">
-            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+            <app-tabla-dinamica *ngIf="!domicillioDatos || domicillioDatos.length === 0" [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
                 [configuracionTabla]="domicillioTabla"></app-tabla-dinamica>
+        </div>
+    </div>
+    <div class="row mt-12">
+        <div class="col-md-12">
+            <app-tabla-dinamica *ngIf="domicillioDatos && domicillioDatos.length > 0" [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="domicillioTabla"
+                [datos]="domicillioDatos"></app-tabla-dinamica>
         </div>
     </div>
     <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
@@ -38,9 +45,50 @@
                 (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
         </section> }
         <button type="button" class="btn btn-danger 3 ms-3"> Eliminar </button>
-        <button type="button" class="btn btn-primary ms-3"> Agregar </button>
+        <button type="button" class="btn btn-primary ms-3" (click)="onAgregarClick()" data-bs-toggle="modal"
+            data-bs-target="#modalDomicillio"> Agregar </button>
+    </div>
+    <!-- modal popup for agregar domicilio -->
+    <div class="modal fade modal-xl" id="modalDomicillio" tabindex="-1" aria-labelledby="modalDomicillioLabel"
+        aria-hidden="true" #modalAgregar>
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Agregar</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <app-catalogo-select [catalogo]="entidadFederativa.catalogos" [label]="'Entidad Federativa'"
+                                [required]="false" formControlName="entidadFederativa"></app-catalogo-select>
+                        </div>
+                    </div>
+                    <div class="row mt-12"></div>
+                    <div class="row mt-12" *ngIf="!domicillioForm.get('entidadFederativa')?.value">
+                        <label class="form-label text-start">Instalaciones</label>
+                        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                            [configuracionTabla]="entidadTabla"></app-tabla-dinamica>
+                    </div>
+                    <div class="row mt-12" *ngIf="domicillioForm.get('entidadFederativa')?.value">
+                        <label class="form-label text-start">Instalaciones</label>
+                        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                            [configuracionTabla]="entidadTabla" [datos]="entidadTablaDatos"></app-tabla-dinamica>
+                    </div>
+                </div>
+                <div class="modal-footer custom-footer">
+                    <div class="row">
+                        <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
+                            <button type="button" name="agregar" class="btn btn-primary ms-2" #closeModal> Aceptar </button>
+                            <button type="button" name="cancelar" class="btn btn-default ms-2" data-bs-dismiss="modal"
+                                #closeModal> Cancelar </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- modal popup for agregar domicillio ends -->
     <div class="col-md-12 mt-4">
         <label class="form-label text-start"><span style="color: red;">*</span> Señale si tiene actualizado sus medios
             de contacto para efectos del buzón tributario en términos del penúltimo párrafo del artículo 17-K del

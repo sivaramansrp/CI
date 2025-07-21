@@ -27,7 +27,6 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   public sectorProductivo = SECTOR_PRODUCTIVO;
   public servicioCatalogo = SERVICIO_CATALOGO;
   public biomestreCatalogo = BIOMESTRE_CATALOGO;
-  public domicilioCatalogo = DOMICILIO_CATALOGO;
   public solicitudState!: Solicitud32606State;
   radioOpcions01 = RADIO_01;
   public datosComunesForm!: FormGroup;
@@ -60,7 +59,6 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.obtenerSectorProductivo();
     this.obtenerServicio();
     this.obtenerBimestre();
-    this.obtenerDomicillio();
   }
 
   cambiarRadio(value: string | number): void {
@@ -104,15 +102,6 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       });
   }
 
-  obtenerDomicillio(): void {
-    this.economico
-      .obtenerDomicillio()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((resp): void => {
-        this.domicilioCatalogo.catalogos = resp as Catalogo[];
-      });
-  }
-
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
@@ -140,22 +129,10 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-    * Valida un campo del formulario usando el servicio de validaciones.
-    * @param form Formulario a validar.
-    * @param field Nombre del campo.
-    * @returns Boolean indicando si el campo es válido.
-    */
-  isValid(form: FormGroup, field: string): boolean {
+   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
 
-  /**
-   * Establece un valor en el store basado en el campo y llama a alCambiarSeleccion.
-   * @param form Formulario que contiene el campo.
-   * @param campo Nombre del campo.
-   * @param metodoNombre Nombre del método en el store a ejecutar.
-   */
   setValoresStore(
     form: FormGroup,
     campo: string,

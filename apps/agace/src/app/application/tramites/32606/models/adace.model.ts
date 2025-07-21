@@ -10,22 +10,14 @@
     habilitado: true, 
  };
 export interface Domicillio {
+  /** Identificador único del domicilio */
   instalacionPrincipal: string;
-
-  /** Clave del tipo de instalación */
-  cveTipoInstalacion?: string;
 
   /** Tipo de instalación */
   tipoInstalacion: string;
 
-  /** Clave de la entidad federativa */
-  cveEntidadFederativa?: string;
-
   /** Nombre de la entidad federativa */
   entidadFederativa: string;
-
-  /** Clave de delegación o municipio */
-  cveDelegacionMunicipio?: string;
 
   /** Nombre del municipio o delegación */
   municipioDelegacion: string;
@@ -86,36 +78,25 @@ export interface Domicillio {
    * Perfil de la instalación dedicada a mensajería y paquetería.
    */
   instalacionPerfilMensajeria: string;
+ 
+}
 
-  /**
-   * Número exterior del domicilio.
-   */
-  noExterior?: string;
+export interface EntidadFederativa {
+    /** Nombre de la entidad federativa */
+  entidadFederativa: string;
 
-  /**
-   * Número interior del domicilio (opcional).
-   */
-  noInterior?: string;
+  /** Nombre del municipio o delegación */
+  municipioDelegacion: string;
 
-  /**
-   * Clave de la colonia (opcional).
-   */
-  cveColonia?: string;
+  /** Dirección completa */
+  direccion: string;
 
-  /**
-   * Nombre de la calle (opcional).
-   */
-  calle?: string;
+  /** Código postal del domicilio */
+  codigoPostal: string;
 
-  /**
-   * Descripción de la colonia (opcional).
-   */
-  descCol?: string;
+  /** Registro en SESAT */
+  registroSESAT: string;
 
-  /**
-   * Identificador del recinto (opcional).
-   */
-  idRecinto?: string;
 }
 
 export interface Querella {
