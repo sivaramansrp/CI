@@ -1,5 +1,5 @@
 <div class="page">
-    <div class="container">
+    <div class="container" *ngIf="!panelVerFirmar">
         <div class="row">
             <div class="col-12">
                 <h2 class="fw-bold my-5 titulo-tasks">Verificar dictamen</h2>        
@@ -18,20 +18,37 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="container" *ngIf="panelVerFirmar">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="fw-bold my-5 titulo-tasks">Firmar</h2>      
+                <hr class="red">  
+            </div>
+        </div>
+    <div class="row">
+        <div class="col-md-4">
+            <firma-electronica [tipo]="''" (firma)="obtieneFirma($event)"></firma-electronica>
+        </div>
+    </div>
+    </div>
     <br>
-    <form [formGroup]="FormTramite" role="form" >
+    <form [formGroup]="FormTramite" role="form" *ngIf="!panelVerFirmar">
         <div class="form-group">            
-            <div class="col-md-12 text-end pb-4">
-                <button type="button" class="btn btn-primary pb-15">Dar Vo. Bo.</button>
+            <div class="col-md-12 text-end">
+                <button type="button" class="btn btn-primary" (click)="firmar()">Dar Vo. Bo.</button>
                 <button type="button" class="btn btn-default ms-3" (click)="observacion()">Observar</button>
             </div>            
         </div>
         <div class="card">
             <div class="card-body">
+                <div class="row">
+                    <h4 class="fw-bold my-5 titulo-tasks">Verificar dictamen</h4> 
+                </div>
                 <div  class="radio ">
-                    <label class="radio-inline control-label"> <span class="span-style">*</span>Sentido del <span class="span-style">dictamen:</span></label>
+                    <label class="radio-inline control-label">*Sentido del dictamen:</label>
                     <label class="radio-inline">
-                    <input type="radio" name="radio-01" value="opcion-01"  checked="checked" disabled="disabled" class="mr-3 mr5"> Aceptado</label>
+                    <input type="radio" name="radio-01" value="opcion-01"  checked="checked" disabled="disabled">Aceptado</label>
                     <label class="radio-inline">
                     <input type="radio" name="radio-01" value="opcion-02" disabled="disabled"> Rechazado
                     </label>
@@ -96,8 +113,8 @@
         </div>
         <br>
         <div class="form-group">
-            <div class="col-md-12 text-end padding-bottom ">
-                <button type="button" class="btn btn-primary ms-3" (click)="observacion()">Vista Preliminar</button>
+            <div class="col-md-12 text-end">
+                <button type="button" class="btn btn-primary ms-3" (click)="observacion()">Vista Preliminar Aceptado</button>
             </div>
         </div>
         <br>
@@ -117,7 +134,7 @@
                                     [catalogo]="asignarAutorizadorCombo"
                                     formControlName="asignarAutorizador"
                                     [isDisabled]="true"
-                                    [label]="'Asigna autorizador'">
+                                    [label]="'Asignar autorizador'">
                                 </app-catalogo-select>
                             </div>
                         </div>
