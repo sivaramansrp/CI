@@ -6,7 +6,7 @@ import {
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -38,7 +38,7 @@ declare const bootstrap: any;
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.css',
 })
-export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
+export class DestinatarioComponent implements OnInit, OnDestroy {
   /**
      * Subject para destruir notificador.
      */
@@ -88,8 +88,12 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
    * Estas opciones se utilizan para poblar los selectores en el formulario.
    */
   options!: Catalogo[];
-
-option!: Catalogo[];
+  /**
+   * Opciones del catálogo de transporte.
+   * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
+   * Estas opciones se utilizan para poblar los selectores en el formulario.
+   */
+  option!: Catalogo[];
 
 /**
  * Notificador para destruir observables al destruir el componente.
@@ -111,7 +115,6 @@ option!: Catalogo[];
     public store: Tramite110201Store,
     private query: Tramite110201Query,
     private validacionesService: ValidacionesFormularioService,
-    private el: ElementRef,
     private consultaioQuery: ConsultaioQuery
   ) {
     this.consultaioQuery.selectConsultaioState$
@@ -183,16 +186,6 @@ option!: Catalogo[];
       this.donanteDomicilio();
     }
   }
-
-  ngAfterViewInit() {
-    // Only initialize tooltips contained in this component’s template
-    this.el.nativeElement
-      .querySelectorAll('[data-bs-toggle="tooltip"]')
-      .forEach((tooltipEl: HTMLElement) => {
-        new bootstrap.Tooltip(tooltipEl);
-      });
-  }
-
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
