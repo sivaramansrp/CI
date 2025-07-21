@@ -39,10 +39,11 @@
         <lib-input-check [id]="'sistemaControlInventarios'" [label]="''" [required]="false"
             formControlName="sistemaControlInventarios"></lib-input-check>
     </div>
-    <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
-        <button type="button" class="btn btn-primary ms-3"> Agregar </button>
+    <div class="row mb-5">
+        <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
+            <button type="button" class="btn btn-primary ms-3"> Agregar </button>
+        </div>
     </div>
-
     <div class="row mt-12">
         <div class="col-md-12">
             <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
@@ -57,19 +58,20 @@
     </div>
 
     <div class="col-md-12 mt-5">
-    <div class="alert alert-info">
-      <div class="form-check">
-         Deberá anexar un archivo con el reporte de saldos de mercancía de
-              importación temporal o de mercancías objeto de operaciones de
-              comercio exterior, de un periodo de un mes, que se encuentre
-              dentro de los tres meses anteriores a la presentación de la
-              solicitud.
-      </div>
+        <div class="alert alert-info">
+            <div class="form-check">
+                Deberá anexar un archivo con el reporte de saldos de mercancía de
+                importación temporal o de mercancías objeto de operaciones de
+                comercio exterior, de un periodo de un mes, que se encuentre
+                dentro de los tres meses anteriores a la presentación de la
+                solicitud.
+            </div>
+        </div>
     </div>
-  </div>
 
-   <div class="col-md-12 mt-4">
-        <label class="form-label text-start"><span style="color: red;">*</span> Señale si ingresa mensualmente su información contable a través del
+    <div class="col-md-12 mt-4">
+        <label class="form-label text-start"><span style="color: red;">*</span> Señale si ingresa mensualmente su
+            información contable a través del
             portal del SAT, de conformidad con el artículo 28, fracción IV, del
             CFF y las reglas 2.8.1.5. y la 2.8.1.6. de la RMF.</label>
         <app-input-radio [radioOptions]="radioOpcions08" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'"

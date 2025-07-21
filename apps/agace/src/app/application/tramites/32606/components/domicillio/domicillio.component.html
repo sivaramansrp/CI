@@ -25,28 +25,30 @@
         </div>
     </div>
     <!-- Domicillio tabla -->
-    <div class="row mt-12">
+    <!-- <div class="row mt-12">
         <div class="col-md-12">
-            <app-tabla-dinamica *ngIf="!domicillioDatos || domicillioDatos.length === 0" [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+            <app-tabla-dinamica  [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
                 [configuracionTabla]="domicillioTabla"></app-tabla-dinamica>
         </div>
-    </div>
+    </div> -->
     <div class="row mt-12">
         <div class="col-md-12">
-            <app-tabla-dinamica *ngIf="domicillioDatos && domicillioDatos.length > 0" [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="domicillioTabla"
+            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="domicillioTabla"
                 [datos]="domicillioDatos"></app-tabla-dinamica>
         </div>
     </div>
     <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
         <div class="btn-group">
-            <button type="button" class="btn btn-default" (click)="seleccionarModificar()"> Modificar </button>
+            <button type="button" class="btn btn-default" (click)="seleccionarModificar()" data-bs-toggle="modal"
+                data-bs-target="#modalInstalacionesPrincipales"> Modificar </button>
         </div> @if (nuevaNotificacion) { <section>
             <lib-notificaciones [notificacionInput]="nuevaNotificacion"
                 (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
         </section> }
-        <button type="button" class="btn btn-danger 3 ms-3"> Eliminar </button>
-        <button type="button" class="btn btn-primary ms-3" (click)="onAgregarClick()" data-bs-toggle="modal"
-            data-bs-target="#modalDomicillio"> Agregar </button>
+        <button type="button" class="btn btn-danger 3 ms-3" id="eliminar" (click)="eliminarDomiciliosDatos()"> Eliminar
+        </button>
+        <button type="button" id="agregar" class="btn btn-primary ms-3" (click)="onAgregarClick()"
+            data-bs-toggle="modal" data-bs-target="#modalDomicillio"> Agregar </button>
     </div>
     <!-- modal popup for agregar domicilio -->
     <div class="modal fade modal-xl" id="modalDomicillio" tabindex="-1" aria-labelledby="modalDomicillioLabel"
@@ -78,7 +80,8 @@
                 <div class="modal-footer custom-footer">
                     <div class="row">
                         <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
-                            <button type="button" name="agregar" class="btn btn-primary ms-2" #closeModal> Aceptar </button>
+                            <button type="button" name="agregar" class="btn btn-primary ms-2" #closeModal> Aceptar
+                            </button>
                             <button type="button" name="cancelar" class="btn btn-default ms-2" data-bs-dismiss="modal"
                                 #closeModal> Cancelar </button>
                         </div>
@@ -88,13 +91,112 @@
         </div>
     </div>
 
-    <!-- modal popup for agregar domicillio ends -->
+    <!-- modal popup for modificar domicillio -->
+    <div class="modal fade modal-xl" id="modalInstalacionesPrincipales" tabindex="-1"
+        aria-labelledby="modalInstalacionesPrincipalesLabel" aria-hidden="true" #modalInstalacionesPrincipales>
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <ng-titulo titulo="Modificar"/>
+                    </div>
+
+                    <div class="col-md-4 mt-3">
+                        <label class="form-label text-start">Instalaciones principales *:</label>
+                        <app-input-radio [radioOptions]="radioOpcions07" [isRequired]="true" [layout]="'horizontal'"
+                            [gap]="'445px'" formControlName="tipoRadio12"></app-input-radio>
+                    </div>
+
+                    <div class="col-md-4 mt-3"></div>
+
+                    <div class="col-md-4 mt-3">
+                        <label for="municipio" class="form-label">Municipio o alcaldía:</label>
+                        <input type="text" id="municipio" formControlName="municipio" class="form-control" />
+                    </div>
+
+                    <div class="col-md-4 mt-3">
+                        <!-- <app-catalogo-select formControlName="tipoDeInstalacion"
+                            [catalogo]="tipoDeInstalacion.catalogos" [label]="tipoDeInstalacion.labelNombre"
+                            [required]="tipoDeInstalacion.required"
+                            (selectionChange)="actualizarTipoDeInstalacion($event)"></app-catalogo-select> -->
+                        <app-catalogo-select [catalogo]="tipoDeInstalacion.catalogos" [label]="'Tipo de instalación'"
+                            formControlName="tipoDeInstalacion"></app-catalogo-select>
+                    </div>
+
+                    <div class="col-md-4 mt-3">
+                        <label for="entidadFederativa" class="form-label">Entidad federativa :</label>
+                        <input type="text" id="entidadFederativa" formControlName="entidadFederativa"
+                            class="form-control" />
+                    </div>
+
+                    <div class="col-md-4 mt-3">
+                        <label for="registroSESAT" class="form-label">Registro ante SE/SAT :</label>
+                        <input type="text" id="registroSESAT" formControlName="registroSESAT" class="form-control" />
+                    </div>
+
+                    <div class="col-md-8 mt-3">
+                        <label for="descripcion" class="form-label">Colonia, calle y número :</label>
+                        <input type="text" id="descripcion" formControlName="descripcion" class="form-control" />
+                    </div>
+
+                    <div class="col-md-4 mt-3">
+                        <label for="codigoPostal" class="form-label">Código postal :</label>
+                        <input type="text" id="codigoPostal" formControlName="codigoPostal" class="form-control" />
+                    </div>
+
+                    <div class="col-md-4 mt-3">
+                        <label class="form-label text-start">Proceso productivo *:</label>
+                        <app-input-radio [radioOptions]="radioOpcions07" [isRequired]="true" [layout]="'horizontal'"
+                            [gap]="'445px'" formControlName="tipoRadio27"></app-input-radio>
+                    </div>
+
+                    <div class="col-md-4 mt-3">
+                        <label class="form-label text-start">Acreditación del uso y goce del inmueble *:</label>
+                        <app-input-radio [radioOptions]="radioOpcions07" [isRequired]="true" [layout]="'horizontal'"
+                            [gap]="'445px'" formControlName="tipoRadio28"></app-input-radio>
+                    </div>
+
+                    <div class="col-md-4 mt-3">
+                        <label class="form-label text-start">Perfil de la empresa :</label>
+                        <app-input-radio [radioOptions]="radioOpcions07" [isRequired]="true" [layout]="'horizontal'"
+                            [gap]="'445px'" formControlName="tipoRadio29"></app-input-radio>
+                    </div>
+
+                    <div class="col-md-4 mt-3">
+                        <label class="form-label text-start">Realiza actividad economica de comercio exterior *:</label>
+                        <app-input-radio [radioOptions]="radioOpcions07" [isRequired]="true" [layout]="'horizontal'"
+                            [gap]="'445px'" formControlName="tipoRadio30"></app-input-radio>
+                    </div>
+
+                    <div class="col-md-4 mt-3">
+                        <label class="form-label text-start">Reconocimiento Mutuo (Instalación C-TPAT) *:</label>
+                        <app-input-radio [radioOptions]="radioOpcions07" [isRequired]="true" [layout]="'horizontal'"
+                            [gap]="'445px'" formControlName="tipoRadio31"></app-input-radio>
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="button" id="aceptar" class="btn btn-primary" data-bs-dismiss="modal"
+                                #closeModal (click)="aceptarInstalacionesPrincipales()">
+                                Aceptar
+                            </button>
+
+                            <button type="button" id="cancelar" class="btn btn-danger ms-3" data-bs-dismiss="modal"
+                                #closeModal>
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end -->
     <div class="col-md-12 mt-4">
         <label class="form-label text-start"><span style="color: red;">*</span> Señale si tiene actualizado sus medios
             de contacto para efectos del buzón tributario en términos del penúltimo párrafo del artículo 17-K del
             CFF.</label>
         <app-input-radio [radioOptions]="radioOpcions07" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'"
-            formControlName="tipoRadio12"></app-input-radio>
+            formControlName="tipoRadio32"></app-input-radio>
     </div>
 
     <div class="col-md-12 mt-4">
@@ -102,7 +204,7 @@
             Padrón de Importadores o en el Padrón de Importadores de Sectores Específicos o Padrón de Exportadores
             Sectorial.</label>
         <app-input-radio [radioOptions]="radioOpcions07" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'"
-            formControlName="tipoRadio13"></app-input-radio>
+            formControlName="tipoRadio33"></app-input-radio>
     </div>
     <!-- Clientes y Proveedores en el Extranjero -->
     <div class="col-md-12">

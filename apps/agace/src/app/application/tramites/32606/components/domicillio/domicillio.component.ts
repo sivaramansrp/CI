@@ -1,8 +1,8 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { DOMICILIO_CATALOGO, DOMICILLIO_TABLA, ENTIDAD_CATALOGO, ENTIDAD_TABLA, RADIO_07 } from '../../constantes/adace32606.enum';
+import { DOMICILIO_CATALOGO, DOMICILLIO_TABLA, ENTIDAD_CATALOGO, ENTIDAD_TABLA, RADIO_07, TIPO_INSTALACION_CATALOGO } from '../../constantes/adace32606.enum';
 import { Domicillio, EntidadFederativa } from '../../models/adace.model';
 import { EconomicoService } from '../../services/economico.service';
 import { Tramite32606Query } from '../../state/Tramite32606.query';
@@ -22,6 +22,7 @@ export class DomicillioComponent implements OnInit, OnDestroy {
 
   public domicillioForm!: FormGroup;
   public domicillio = DOMICILIO_CATALOGO;
+  public tipoDeInstalacion = TIPO_INSTALACION_CATALOGO;
   public entidadFederativa = ENTIDAD_CATALOGO;
   public TablaSeleccion = TablaSeleccion;
   public domicillioTabla = DOMICILLIO_TABLA;
@@ -37,6 +38,10 @@ export class DomicillioComponent implements OnInit, OnDestroy {
   @ViewChild('modalAgregar') modalElement!: ElementRef;
   @ViewChild('closeModal') closeModalButton!: ElementRef;
   public entidadTablaDatos: EntidadFederativa[] = [];
+  seleccionarDomiciliosDatos: Domicillio[] = [] as Domicillio[];
+    @ViewChild('modalInstalacionesPrincipales', { static: false })
+  modalInstalacionesPrincipalesElement!: ElementRef;
+  @Output() instalacionesPrincipales = new EventEmitter<Domicillio>();
 
   constructor(private economico: EconomicoService,
     public query: Tramite32606Query,
@@ -56,8 +61,28 @@ export class DomicillioComponent implements OnInit, OnDestroy {
   }
 
   public seleccionarModificar(): void {
-    this.abrirModal();
+     if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(
+        this.modalInstalacionesPrincipalesElement.nativeElement
+      );
+      MODAL_INSTANCE.show();
+    }
+      this.abrirModal();
   }
+
+  eliminarDomiciliosDatos(): void {
+    if (this.seleccionarDomiciliosDatos.length > 0) {
+      this.seleccionarDomiciliosDatos.forEach((elemento) => {
+        const INDICE = this.domicillioDatos.findIndex(
+          (inv) => inv.tipoInstalacion === elemento.tipoInstalacion
+        );
+        if (INDICE !== -1) {
+          this.domicillioDatos.splice(INDICE, 1);
+        }
+      });
+    }
+  }
+
 
   public onAgregarClick(): void {
     if (this.modalElement) {
@@ -130,10 +155,22 @@ export class DomicillioComponent implements OnInit, OnDestroy {
       entidadFederativa: [''],
       tipoRadio12: [''],
       tipoRadio13: [''],
+      tipoRadio27: [''],
+      tipoRadio28: [''],
+      tipoRadio29: [''],
+      tipoRadio30: [''],
+      tipoRadio31: [''],
+      tipoRadio32: [''],
+      tipoRadio33: [''],
       file1: [''],
       file2: [''],
       actualmente: [''],
       actualmente2: [''],
+      municipio: [''],
+      tipoDeInstalacion: [''],
+      registroSESAT: [''],
+      descripcion: [''],
+      codigoPostal: [''],
 
     });
   }
@@ -156,18 +193,44 @@ export class DomicillioComponent implements OnInit, OnDestroy {
     });
   }
 
-  public onAceptarAgregar(): void {
-  // const seleccionados = this.entidadTablaDatos.filter((row: any) => row.selected);
+   seleccionarDomiciliosDato(evento: Domicillio[]): void {
+      this.seleccionarDomiciliosDatos = evento;
+    }
 
-  // if (seleccionados.length > 0) {
-   
-  //   this.domicillioDatos = seleccionados as Domicillio[];
-    
-  // } else {
-  //   Domicillio[] = [];
-  // }
-}
-
+   aceptarInstalacionesPrincipales(): void {
+      const OBJETO_JSON: Domicillio = {
+        instalacionPrincipal:
+          this.domicillioForm.get('principales')?.value,
+        tipoInstalacion:
+          this.domicillioForm.get('tipoDeInstalacion')?.value,
+        entidadFederativa:
+          this.domicillioForm.get('entidadFederativa')?.value,
+        municipioDelegacion:
+          this.domicillioForm.get('municipio')?.value,
+        direccion: this.domicillioForm.get('descripcion')?.value,
+        codigoPostal:
+          this.domicillioForm.get('codigoPostal')?.value,
+        registroSESAT:
+          this.domicillioForm.get('registroSESAT')?.value,
+        procesoProductivo:
+          this.domicillioForm.get('procesoProductivo')?.value,
+        acreditaInmueble:
+          this.domicillioForm.get('goceDelInmueble')?.value,
+        operacionesCExt:
+          this.domicillioForm.get('comercioExterior')?.value,
+        instalacionCtpat: '',
+        instalacionPerfil: '',
+        instalacionPerfilRFE: '',
+        instalacionPerfilAuto: '',
+        instalacionPerfilFerro: '',
+        instalacionPerfilRf: '',
+        instalacionPerfilMensajeria: '',
+      };
+  
+      this.instalacionesPrincipales.emit(OBJETO_JSON);
+    }
+  
+ 
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();

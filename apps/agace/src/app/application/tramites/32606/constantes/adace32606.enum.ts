@@ -88,6 +88,16 @@ export const DOMICILIO_CATALOGO: CatalogosSelect = {
   catalogos: [],
 };
 
+export const TIPO_INSTALACION_CATALOGO: CatalogosSelect = {
+  labelNombre: 'Tipo de instalación',
+  /** Indica si el campo es obligatorio. */
+  required: true,
+  /** Texto de la primera opción del catálogo. */
+  primerOpcion: 'Selecciona un valor',
+  /** Lista de elementos del catálogo. */
+  catalogos: [],
+};
+
 export const ENTIDAD_CATALOGO: CatalogosSelect = {
  labelNombre: 'Entidad Federativa',
   /** Indica si el campo es obligatorio. */
