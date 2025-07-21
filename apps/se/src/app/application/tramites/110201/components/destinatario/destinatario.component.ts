@@ -22,7 +22,6 @@ import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/s
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
-declare const bootstrap: any;
 /**
  * Componente que representa el formulario de destinatario en el trámite.
  */

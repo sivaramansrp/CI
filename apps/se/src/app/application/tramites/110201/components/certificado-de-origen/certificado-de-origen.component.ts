@@ -528,17 +528,17 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       this.esMercanciaEnEdicion = true;
       this.esFormulario = false;
 
-      const formValues = this.mercanciaForm.value.validacionMercanciaForm;
+      const FORM_VALUES = this.mercanciaForm.value.validacionMercanciaForm;
 
       this.mercanciaSeleccionadasTablaData.splice(0, 1, {
-        fraccionArancelaria: formValues.fraccionMercanArancelaria,
-        cantidad: formValues.cantidad,
-        unidadMedida: formValues.unidadMedida,
-        valorMercancia: formValues.valordelamercancia,
-        tipoFactura: formValues.tipoFactura,
-        numFactura: formValues.numeroFactura,
-        complementoDescripcion: formValues.complementoDelaDescripcion,
-        fechaFactura: formValues.fecha,
+        fraccionArancelaria: FORM_VALUES.fraccionMercanArancelaria,
+        cantidad: FORM_VALUES.cantidad,
+        unidadMedida: FORM_VALUES.unidadMedida,
+        valorMercancia: FORM_VALUES.valordelamercancia,
+        tipoFactura: FORM_VALUES.tipoFactura,
+        numFactura: FORM_VALUES.numeroFactura,
+        complementoDescripcion: FORM_VALUES.complementoDelaDescripcion,
+        fechaFactura: FORM_VALUES.fecha,
       });
     }
   }
