@@ -44,8 +44,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
   public destroyNotifier$: Subject<void> = new Subject();
 
-  enableConversion: boolean = true;
-
   private otroUmcIncrement = 0;
 
   private DatosState!: DatosGrupos
@@ -101,7 +99,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       umc: [this.DatosState.datosMercanica.umc, Validators.required],
       otro_umc: [{value:this.DatosState.datosMercanica.otro_umc, disabled:true}, [Validators.required]],
       cantidad_umc: [this.DatosState.datosMercanica.cantidad_umc,Validators.required],
-      factor_conversion: [this.DatosState.datosMercanica.factor_conversion, Validators.required],
+      factor_conversion: [{value:this.DatosState.datosMercanica.factor_conversion, disabled:true}, Validators.required],
       cantidad_umt: [this.DatosState.datosMercanica.cantidad_umt, Validators.required],
       valor_factura: [this.DatosState.datosMercanica.valor_factura,Validators.required],
       moneda_comercializacion: [this.DatosState.datosMercanica.moneda_comercializacion, Validators.required],
@@ -152,7 +150,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
   obtenerUmtOpcion(): void {
     this.permisoImportacionService.obtenerMenuDesplegable(
-      'fraccion.json'
+      'umt.json'
     )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
@@ -219,10 +217,13 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
   setTotalMercanciaImportar(): void {
     const DATOSMERCANICA = this.datosMercanica;
-    if (!DATOSMERCANICA) { return; }
 
     const VALORTOTALFACTURA = parseFloat(DATOSMERCANICA.get('valor_total_factura')?.value);
-    const RESULTADO = VALORTOTALFACTURA * 3.27;
+    const MONDEDACOMERCIALIZACION = DATOSMERCANICA.get('moneda_comercializacion');
+    let RESULTADO
+    if (Number(MONDEDACOMERCIALIZACION?.value) === 2) {
+      RESULTADO = VALORTOTALFACTURA * 3.32;
+    }
 
     const VALORTOTALFACTURAUSDCONTROL = DATOSMERCANICA.get('valor_total_factura_usd');
     if (VALORTOTALFACTURAUSDCONTROL) {
@@ -234,18 +235,23 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
   setMercanciaImportar(): void {
     const DATOSMERCANICA = this.datosMercanica;
-    if (!DATOSMERCANICA) { return;}
 
     const VALOR_FACTURA = parseFloat(DATOSMERCANICA.get('valor_factura')?.value);
-    const MONDEDACOMERCIALIZACION = DATOSMERCANICA.get('moneda_comercialización')?.value;
+    const MONDEDACOMERCIALIZACION = DATOSMERCANICA.get('moneda_comercializacion');
+    const PRECIOUNITARIOUSDCONTROL = DATOSMERCANICA.get('precio_unitario_usd');
 
     let valorFacturaUsd = VALOR_FACTURA;
-    if (MONDEDACOMERCIALIZACION) {
-      valorFacturaUsd = VALOR_FACTURA * 3.27;
+    let precioUnitarioUsd;
+    if (Number(MONDEDACOMERCIALIZACION?.value) === 2) {
+      valorFacturaUsd = VALOR_FACTURA * 3.32;
+      precioUnitarioUsd = DATOSMERCANICA.get('cantidad_umc')?.value?(valorFacturaUsd / DATOSMERCANICA.get('cantidad_umc')?.value) : 0;
+    }
+    else {
+      valorFacturaUsd = Number(VALOR_FACTURA) * 1;
     }
 
     const VALORFACTURAUSDCONTROL = DATOSMERCANICA.get('valor_factura_usd');
-    const PRECIOUNITARIOUSDCONTROL = DATOSMERCANICA.get('precio_unitario_usd');
+
 
     if (VALORFACTURAUSDCONTROL) {
       VALORFACTURAUSDCONTROL.setValue(valorFacturaUsd, { emitEvent: false });
@@ -253,7 +259,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       VALORFACTURAUSDCONTROL.markAsTouched();
     }
     if (PRECIOUNITARIOUSDCONTROL) {
-      PRECIOUNITARIOUSDCONTROL.setValue(0, { emitEvent: false });
+      PRECIOUNITARIOUSDCONTROL.setValue(precioUnitarioUsd, { emitEvent: false });
       PRECIOUNITARIOUSDCONTROL.markAsDirty();
       PRECIOUNITARIOUSDCONTROL.markAsTouched();
     }
@@ -267,6 +273,8 @@ onUmcChange(
   this.setValoresStore(subformName, campo, metodoNombre);
 
   const CONTROL = subformName.get(`${campo}`);
+  const UMT = subformName.get('umt');
+  const FACTORCONVERSION = subformName.get('factor_conversion');
   const VALOR = CONTROL?.value;
   const UMCCATALOG = this.umcOpcion;
   if (UMCCATALOG && UMCCATALOG.length > 0) {
@@ -281,24 +289,19 @@ onUmcChange(
         this.store.setOtroUmc((this.otroUmcIncrement).toString());
       }
     }
-    const FACTORINPUT = document.getElementById('factor_conversión') as HTMLInputElement | null;
-    if (FACTORINPUT) {
-      FACTORINPUT.readOnly = false;
+    if((VALOR === UMT?.value)) {
+      FACTORCONVERSION?.setValue(1);
+      FACTORCONVERSION?.disable();
+    }
+    else{
+      FACTORCONVERSION?.enable();
     }
   }
 }
 
 onCantidadUmcOrFactorChange(): void {
     const CANTIDAD_UMC = parseFloat(this.datosMercanica.get('cantidad_umc')?.value);
-    this.enableConversion = false;
-    let FACTORCONVERSION = parseFloat(this.datosMercanica.get('factor_conversion')?.value);
-    if (isNaN(FACTORCONVERSION)) {
-      FACTORCONVERSION = 1;
-    }
-    const FACTORCONVERSIONCONTROL = this.datosMercanica.get('factor_conversion');
-    FACTORCONVERSIONCONTROL?.setValue(FACTORCONVERSION);
-    FACTORCONVERSIONCONTROL?.markAsDirty();
-    FACTORCONVERSIONCONTROL?.markAsTouched();
+    const FACTORCONVERSION = parseFloat(this.datosMercanica.get('factor_conversion')?.value);
     if (!isNaN(CANTIDAD_UMC) && !isNaN(FACTORCONVERSION)) {
       const RESULTADO = (CANTIDAD_UMC * FACTORCONVERSION).toFixed(2);
       const CANTIDAD_UMT_CONTROL = this.datosMercanica?.get('cantidad_umt');

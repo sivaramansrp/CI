@@ -1,4 +1,5 @@
-{
+[
+  {
   "calle": "CALLE 5",
   "numeroExterior": "S/N",
   "numeroInterior": "",
@@ -6,3 +7,4 @@
   "colonia": "OTRA NO ESPECIFICADA EN EL CATÁLOGO",
   "municipioOAlcaldia": "GUASAVE"
 }
+]
