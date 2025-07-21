@@ -1,5 +1,5 @@
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { EnlaceOperativoComponent } from '../enlace-operativo/enlace-operativo.component';
 import { PersonasNotificacionesComponent } from '../personas-notificaciones/personas-notificaciones.component';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
@@ -25,4 +25,41 @@ import { RepresentanteLegalComponent } from '../representante-legal/representant
   templateUrl: './terceros-relacionados.component.html',
   styleUrls: ['./terceros-relacionados.component.scss'],
 })
-export class TercerosRelacionadosComponent {}
+export class TercerosRelacionadosComponent {
+  
+  /**
+   * Referencia al componente RepresentanteLegalComponent para acceder a sus métodos y propiedades.
+   * Permite la validación y manipulación del formulario de datos del representante legal.
+   * Este componente gestiona la información personal y de contacto del representante legal de la empresa.
+   */
+  @ViewChild('representanteLegalRef') 
+  representanteLegalComponent!: RepresentanteLegalComponent;
+
+  /**
+   * Referencia al componente EnlaceOperativoComponent para acceder a sus métodos y propiedades.
+   * Permite la validación y manipulación del formulario de datos del enlace operativo.
+   * Este componente maneja la información de la persona designada como enlace operativo
+   * para las comunicaciones y operaciones con la empresa.
+   */
+  @ViewChild('enlaceOperativoRef') 
+  enlaceOperativoComponent!: EnlaceOperativoComponent;
+
+  /**
+   * Valida todos los formularios de terceros relacionados antes de permitir continuar.
+   * Este método coordina la validación de múltiples formularios hijo y se asegura de que
+   * toda la información requerida esté correctamente completada.
+   */
+  validarFormulario(): boolean {
+    // Verificar que ambos formularios sean válidos
+    if (this.representanteLegalComponent.representante.valid &&
+        this.enlaceOperativoComponent.enlaceOperativoDataForm.valid) {
+      return true;
+    }
+    
+    // Si algún formulario es inválido, marcar todos los campos como tocados
+    // para mostrar los mensajes de error correspondientes
+    this.representanteLegalComponent.representante.markAllAsTouched();
+    this.enlaceOperativoComponent.enlaceOperativoDataForm.markAllAsTouched();
+    return false;
+  }    
+}

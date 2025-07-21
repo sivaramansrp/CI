@@ -698,6 +698,7 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
   
     if (!SELECCIONADAS || SELECCIONADAS.length === 0) {
       this.abrirMultipleSeleccionPopup('', 'Selecciona un registro');
+      this.multipleSeleccionPopupAbierto = true;
       return;
     }
   
@@ -771,10 +772,11 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
    * Si hay elementos seleccionados, abre el popup de confirmación de eliminación.
    */
   confirmEliminarEmpleadoItem(): void {
+    this.confirmEliminarPopupAbierto = true;
     if (this.listaFilaSeleccionadaEmpleado.length === 0) {
       this.abrirMultipleSeleccionPopup(
         '', 
-        'Debes seleccionar al menos un registro para eliminar.'
+        'Seleccione un registro.'
       );
       return;
     }
@@ -791,7 +793,7 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
       categoria: CategoriaMensaje.ERROR,
       modo: 'modal',
       titulo: '',
-      mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+      mensaje: '¿Desea eliminar el registro seleccionado?',
       cerrar: false,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: 'Cancelar',

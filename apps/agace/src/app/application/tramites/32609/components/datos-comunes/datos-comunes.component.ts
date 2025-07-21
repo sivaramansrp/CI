@@ -417,7 +417,6 @@ private actualizarFormularioConDatosDelEstado(): void {
     if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
       this.tramite32609Store.establecerDatos({ [campo]: CONTROL.value });
       
-      // Clear validation errors if the field now has a valid value
       if (CONTROL.valid && CONTROL.touched) {
         CONTROL.markAsPristine();
       }

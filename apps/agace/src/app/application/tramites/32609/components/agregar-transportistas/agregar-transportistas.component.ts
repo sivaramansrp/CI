@@ -249,6 +249,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
       ],
       domicilio: [{value:this.solicitudState?.domicilio, disabled: true}],
       ccat: [{value:this.solicitudState?.ccat, disabled: true}],
+      validacionTransportistas: ['', Validators.required]
     })
   }
 
@@ -356,7 +357,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
             this.limpiarCamposEmpresa();
           }
         },
-        error: (error) => {
+        error: (error:Error) => {
           console.error('Error al buscar datos del RFC:', error);
           this.limpiarCamposEmpresa();
         }
@@ -724,4 +725,16 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
-}  
+
+  /**
+ * Valida que exista al menos un transportista en la lista.
+ * Retorna true si hay transportistas, false si la lista está vacía.
+ */
+public validarTransportistas(): boolean {
+  // Mark the validation field as touched to show error
+  this.transportistaCertificacionForm.get('validacionTransportistas')?.markAsTouched();
+  
+  return this.transportistasLista.length > 0;
+}
+
+}

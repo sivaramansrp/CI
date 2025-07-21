@@ -23,9 +23,18 @@ rubro Textil</h1>
         <btn-continuar
         [datos]="datosPasos"
         (continuarEvento)="getValorIndice($event)"
+        [dePadre]="true"
+        [btnGuardar]="true"
       ></btn-continuar>
       </div>
 
     </div>
   </div>
 </div>
+
+<lib-notificaciones
+  *ngIf="btnContinuar"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="mostrarNotificacionError()"
+>
+</lib-notificaciones>

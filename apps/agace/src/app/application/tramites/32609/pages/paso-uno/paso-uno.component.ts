@@ -1,8 +1,10 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { ImportadorExportadorComponent } from '../../components/importador-exportador/importador-exportador.component';
 import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
 import { StoreResponse } from '../../estados/tramites32609.store';
+import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
 
 /**
  * Componente que representa el primer paso de un trámite.
@@ -16,6 +18,12 @@ import { StoreResponse } from '../../estados/tramites32609.store';
  * Componente que representa el primer paso de un trámite.
  */
 export class PasoUnoComponent implements OnInit, OnDestroy {
+
+    /**
+   * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
+   */
+  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+  
   /**
    * Índice utilizado para identificar la posición actual en un proceso o lista.
    * @type {number}
@@ -29,16 +37,41 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Referencia al componente ImportadorExportadorComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de datos de importador/exportador antes de continuar al siguiente paso.
+   */
+  reconocimientoMutuoValue: string = '';
+
+   /**
+   * Referencia al componente ImportadorExportadorComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de datos de importador/exportador antes de continuar al siguiente paso.
+   */
+  @ViewChild('importadorExportadorRef')importadorExportadorComponent!: ImportadorExportadorComponent;
+
+  /**
+   * Referencia al componente TercerosRelacionadosComponent para acceder a sus métodos de validación.
+   * Permite validar los formularios de terceros relacionados incluyendo representante legal,
+   * enlace operativo y personas de notificaciones.
+   */
+  @ViewChild('tercerosRelacionadosRef') tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+
+    /**
+   * Lista de secciones del formulario.
+   * Lista de pasos dentro del formulario con sus respectivos componentes.
+   */
+  seccionesDeLaSolicitud = [
+    { index: 1, title: 'Solicitante', component: 'solicitante' },
+    { index: 2, title: 'Datos Comunes', component: 'datos-comunes' },
+    { index: 3, title: 'Terceros relacionados', component: 'terceros-relacionados' },
+    { index: 4, title: 'Importador/Exportador', component: 'importador-exportador' },
+    { index: 5, title: 'CTPAT', component: 'c-tpat' }
+  ];
+
+  /**
    * Estado actual de la consulta obtenido desde el store global.
    * Contiene la información relevante para el flujo del trámite en este paso.
    */
   public consultaState!:ConsultaioState;
-
-  /**
-   * Valor del reconocimiento mutuo CTPAT.
-   * Este valor se utiliza para determinar si se debe mostrar la sección de reconocimiento mutuo.
-   */
-  reconocimientoMutuoValue: string = '';
 
     constructor(
     @Inject(OeaTextilRegistroService)
@@ -96,15 +129,6 @@ ngOnInit(): void {
     this.indice = i;
   }
 
-  /**
-* Maneja el cambio de valor para el reconocimiento mutuo.
-* Actualiza la propiedad `reconocimientoMutuoValue` con el valor seleccionado.
-*
-* @param {string} value - El nuevo valor seleccionado para reconocimiento mutuo.
-*/
-onReconocimientoMutuoChange(value: string) :void {
-  this.reconocimientoMutuoValue = value;
-}
 
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.
@@ -115,5 +139,52 @@ onReconocimientoMutuoChange(value: string) :void {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Valida todos los formularios del paso uno.
+   * Retorna true si todos los formularios son válidos, false en caso contrario.
+   */
+ public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.tercerosRelacionadosComponent) {
+      if (!this.tercerosRelacionadosComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.importadorExportadorComponent) {
+      if (!this.importadorExportadorComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    
+
+    return isValid;
+  }
+
+    /**
+   * Maneja el cambio de valor para el reconocimiento mutuo.
+   * Actualiza la propiedad `reconocimientoMutuoValue` con el valor seleccionado.
+   *
+   * El nuevo valor seleccionado para reconocimiento mutuo.
+   */
+  onReconocimientoMutuoChange(value: string) :void {
+    this.reconocimientoMutuoValue = value;
   }
 }

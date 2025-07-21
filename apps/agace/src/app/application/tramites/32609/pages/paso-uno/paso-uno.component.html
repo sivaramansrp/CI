@@ -56,6 +56,18 @@
       >
     </li>
 
+    <li [ngClass]="indice === 6 ? 'active' : ''">
+      <a
+        data-toggle="tab"
+        (click)="seleccionaTab(6)"
+        (keydown.enter)="seleccionaTab(6)"
+        (keydown.space)="seleccionaTab(6)"
+        tabindex="5"
+        role="button"
+        >Perfiles</a
+      >
+    </li>
+
   </ul>
 
   <ng-container>
@@ -79,6 +91,12 @@
         <app-c-tpat></app-c-tpat>
       }
     }
+    @case (6) {
+      @if(esDatosRespuesta){
+        
+      }
+    }
+    
   }
   </ng-container>
 </div>
