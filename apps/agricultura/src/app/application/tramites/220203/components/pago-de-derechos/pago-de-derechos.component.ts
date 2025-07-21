@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import {ConsultaioQuery} from '@ng-mf/data-access-user';
