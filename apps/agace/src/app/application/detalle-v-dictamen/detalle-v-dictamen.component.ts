@@ -4,18 +4,18 @@ import {
   Tabulaciones,
 } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
 import { Component, OnDestroy, Type } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { LISTA_TRIMITES } from '../core/enums/lista-trimites.enums';
+import { LISTA_TRIMITES } from '../shared/constants/lista-trimites.enums';
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-detalle-v-dictamen',
   standalone: true,
-  imports: [ReviewersTabsComponent, ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [ReviewersTabsComponent, ReactiveFormsModule, CommonModule, FormsModule, NotificacionesComponent],
   templateUrl: './detalle-v-dictamen.component.html',
   styleUrls: ['./detalle-v-dictamen.component.scss'],
 })
@@ -58,7 +58,21 @@ export class DetalleVDictamenComponent implements OnDestroy {
    */
   listaTrimites = LISTA_TRIMITES;
 
-  public frmObservacion: FormGroup;
+  /**
+   * Formulario reactivo para gestionar las observaciones en el componente.
+   */
+  frmObservacion: FormGroup;
+
+  /**
+   * Nombre del identificador para el modal de guardar.
+   * Se utiliza para referenciar y controlar la visibilidad del modal de guardado en la interfaz de usuario.
+   */
+  modalGuardar: string = 'modalGuardar';
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  nuevaNotificacion!: Notificacion | null;
   /**
    * Constructor del componente `DetalleVDictamenComponent`.
    * @param {FormBuilder} fbOb - Servicio para construir formularios reactivos.
@@ -138,7 +152,16 @@ export class DetalleVDictamenComponent implements OnDestroy {
    * @memberof DetalleVDictamenComponent
    */
   guardarObservacion(): void {
-    this.router.navigate(['bandeja-de-tareas-pendientes']);
+    this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: "Aviso",
+        mensaje: "Se ha generado una Observación al Dictamen exitosamente.",
+        cerrar: false,
+        txtBtnAceptar: "Aceptar",
+        txtBtnCancelar: "",
+      };
   }
 
   /**
@@ -158,5 +181,17 @@ export class DetalleVDictamenComponent implements OnDestroy {
     selectTramite(i: number): void {
       this.tramite = i;
       this.slectTramite = LISTA_TRIMITES.find((v) => v.tramite === i);
+    }
+
+    /**
+     * Maneja la confirmación de un modal.
+     * Si el evento es verdadero, navega a la bandeja de tareas pendientes.
+     * @param evento Indica si se confirmó la acción.
+     */
+    confirmacionModal(evento:boolean): void {
+      if(evento === true) {
+        this.router.navigate(['bandeja-de-tareas-pendientes']);
+      }
+      
     }
 }
