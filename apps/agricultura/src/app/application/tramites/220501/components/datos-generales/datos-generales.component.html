@@ -129,7 +129,8 @@
               </thead>
 
               <tbody>
-                <tr *ngFor="let row of rows; let i = index" [class.visible-row]="i === currentIndex"
+                @for (let row of rows; let i = index) {
+                <tr [class.visible-row]="i === currentIndex"
                   [class.hidden-row]="i !== currentIndex">
                   <td style="
                       background-color: rgb(233, 236, 239);
@@ -163,6 +164,7 @@
                   <td>{{ row.PaisProcedencia }}</td>
                   <td>{{ row.CertificadoInternacionalElectronico }}</td>
                 </tr>
+                }
               </tbody>
             </table>
           </div>
