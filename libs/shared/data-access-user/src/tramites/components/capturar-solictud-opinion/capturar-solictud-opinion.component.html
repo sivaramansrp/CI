@@ -1,60 +1,61 @@
 <div class="container">
     <div class="col-md-12">
         <form [formGroup]="formCapturaOpinion">
-        <div class="row">
-            <div class="col-md-12">
-                <app-catalogo-select [catalogo]="catDependencia" formControlName="dependencia" [label]="'Dependencia'"
-                    [required]="true" name="dependencia"></app-catalogo-select>
-
+            <div class="row">
+                <div class="col-md-12">
+                    <app-catalogo-select [catalogo]="catDependencia" formControlName="dependencia"
+                        [label]="'Dependencia'" [required]="true" name="dependencia"></app-catalogo-select>
+                </div>
+                <div class="col-md-12">
+                    <label for="justificacion" class="form-label">Justificación*:</label>
+                    <textarea name="justificacion" id="justificacion" class="form-control text-height"
+                        formControlName="justificacion" [required]="true"></textarea>
+                    <div
+                        *ngIf="formCapturaOpinion.get('justificacion')?.touched && formCapturaOpinion.get('justificacion')?.invalid">
+                        <small class="text-danger"
+                            *ngIf="formCapturaOpinion.get('justificacion')?.errors?.['required']">
+                            La justificación es obligatoria.
+                        </small>
+                        <small class="text-danger"
+                            *ngIf="formCapturaOpinion.get('justificacion')?.errors?.['maxlength']">
+                            La justificación no debe exceder los 1000 caracteres.
+                        </small>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-12">
-                <label for="justificacion" class="form-label">Justificación*:</label>
-                <textarea name="justificacion" id="justificacion" class="form-control text-height"
-                    formControlName="justificacion"></textarea>
-            </div>
-        </div>
         </form>
         <div class="d-flex justify-content-lg-end h1">
             <button class="btn btn-primary ms-2" type="button" (click)="guardarOpinion()">Guardar</button>
             <button type="button" class="btn btn-default ms-2" (click)="limpiarFormulario()">Limpiar</button>
         </div>
     </div>
-    <div *ngIf="visualizaTabla"  class="col-md-12">
+    <div *ngIf="visualizaTabla" class="col-md-12">
         <div class="row">
             <div class="col-md-12">
                 <h4>Se solicitarán las siguientes opiniones:</h4>
-                <table class="table table-bordered mt-3">
-                    <thead class="table-light">
-                        <tr>
-                            <th>#</th>
-                            <th>Dependencia</th>
-                            <th>Justificación</th>
-                            <th>Estado del requerimiento</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let opinion of opinionesSeleccionados; let i = index">
-                            <td><input type="checkbox" /></td>
-                            <td>{{ opinion.dependencia }}</td>
-                            <td>{{ opinion.justificacion }}</td>
-                            <td>
-                                <label class="form-label">Capturada</label>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-primary ms-2" (click)="editarOpinion(i)">Editar</button>
-                                <button type="button" class="btn btn-default ms-2" (click)="eliminarOpinion(i)">Eliminar</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+                        [configuracionTabla]="encabezadoDeTablaOpiniones" [datos]="listadoOpiniones"
+                        (listaDeFilaSeleccionada)="opinionesSeleccionados = $event">
+                    </app-tabla-dinamica>
+                </div>
+                <div class="d-flex justify-content-lg-end h1">
+                    <button class="btn btn-primary ms-2" type="button" (click)="editarOpinion()">Editar</button>
+                    <button type="button" class="btn btn-default ms-2" (click)="eliminarOpinion()">Eliminar</button>
+                </div>
             </div>
         </div>
     </div>
     <div *ngIf="visualizaBotones" class="col-md-12">
-         <div class="d-flex justify-content-lg-end h1">
+        <div class="d-flex justify-content-lg-end h1">
             <button class="btn btn-primary ms-2" type="button" (click)="enviarOpiniones()">Enviar</button>
             <button type="button" class="btn btn-default ms-2">Cancelar</button>
         </div>
     </div>
 </div>
+@if (nuevaNotificacion) {
+<section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+</section>
+}
