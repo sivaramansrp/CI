@@ -129,7 +129,7 @@
               </thead>
 
               <tbody>
-                @for (let row of rows; let i = index) {
+                @for(row of rows; let i = $index; track i) {
                 <tr [class.visible-row]="i === currentIndex"
                   [class.hidden-row]="i !== currentIndex">
                   <td style="
