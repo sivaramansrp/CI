@@ -1,7 +1,10 @@
 <div class="container">
   <form [formGroup]="FormSolicitud">
-
-    <ng-titulo titulo="Datos del trámite a realizar" />
+    @if(consultaDatos.parameter === "READ_PROCEDURE"){
+    <ng-titulo titulo="Datos generales" />
+    } @else {
+      <ng-titulo titulo="Datos del trámite a realizar" />
+    }
     <ng-container formGroupName="datosDelTramiteRealizar">
       <div class="row">
         <div class="col-md-4">
@@ -13,6 +16,10 @@
         <div class="col-md-8  mt-2">
           <app-input-radio [radioOptions]="radioOpcions" id="opcion" formControlName="tipoDeCertificado"
             (change)="tipoDeCertificadoCambio()" [layout]="'horizontal'" class="tipo-certificado"></app-input-radio>
+          @if (FormSolicitud.get('datosDelTramiteRealizar.tipoDeCertificado')?.errors?.['required'] && 
+          FormSolicitud.get('datosDelTramiteRealizar.tipoDeCertificado')?.touched) {
+          <p class="mensaje-error">Este campo es obligatorio.</p>
+          }
         </div>
       </div>
 
@@ -22,6 +29,10 @@
             [label]="'Aduana de salida/lugar de embarque'" [required]="true"
             (change)="setValoresStore(datosDelTramiteRealizar,'seccionAduanera', 'setSeccionAduanera');"
             [isDisabled]="soloLectura" [placeholder]="'Seleccione un valor'"></app-catalogo-select>
+          @if (FormSolicitud.get('datosDelTramiteRealizar.seccionAduanera')?.errors?.['required'] && 
+          FormSolicitud.get('datosDelTramiteRealizar.seccionAduanera')?.touched) {
+          <p class="mensaje-error">Este campo es obligatorio.</p>
+          }
         </div>
       </div>
 
@@ -32,10 +43,15 @@
                 [ngClass]="isValid(datosDelTramiteRealizar,'puntoDestino') ? 'red-require ' : ''">*</span>:</label>
             <input class="form-control" id="puntoDestino" type="text" formControlName="puntoDestino"
               [ngClass]="isValid(datosDelTramiteRealizar,'puntoDestino') ? 'required' : ''"
-              (change)="setValoresStore(datosDelTramiteRealizar,'puntoDestino', 'setPuntoDestino')" />
-            @if (FormSolicitud.get('datosDelTramiteRealizar.puntoDestino')?.hasError('required') &&
+              maxlength="245"
+              (input)="setValoresStore(datosDelTramiteRealizar,'puntoDestino', 'setPuntoDestino')" />
+            @if (FormSolicitud.get('datosDelTramiteRealizar.puntoDestino')?.errors?.['required'] &&
             FormSolicitud.get('datosDelTramiteRealizar.puntoDestino')?.touched) {
-            <div class="mensaje-error">Este campo es obligatorio.</div>
+            <p class="mensaje-error">Este campo es obligatorio.</p>
+            }
+            @else if (FormSolicitud.get('datosDelTramiteRealizar.puntoDestino')?.errors?.['maxlength'] &&
+            FormSolicitud.get('datosDelTramiteRealizar.puntoDestino')?.touched) {
+            <p class="mensaje-error">Por favor, no escribas más de 245 caracteres</p>
             }
           </div>
         </div>
@@ -46,6 +62,10 @@
           <app-catalogo-select [catalogo]="Opciones" formControlName="paisDeDestino" [label]="'País de destino'"
             [required]="true" (change)="setValoresStore(datosDelTramiteRealizar,'paisDeDestino', 'setPaisDeDestino');"
             [isDisabled]="soloLectura" [placeholder]="'Seleccione un valor'"></app-catalogo-select>
+          @if (FormSolicitud.get('datosDelTramiteRealizar.paisDeDestino')?.errors?.['required'] && 
+          FormSolicitud.get('datosDelTramiteRealizar.paisDeDestino')?.touched) {
+          <p class="mensaje-error">Este campo es obligatorio.</p>
+          }
         </div>
       </div>
 
@@ -55,6 +75,10 @@
             [required]="true" [isDisabled]="true"
             (change)="setValoresStore(datosDelTramiteRealizar,'paisDeProcedencia', 'setPaisDeProcedencia');"
             [placeholder]="'Seleccione un valor'"></app-catalogo-select>
+          @if (FormSolicitud.get('datosDelTramiteRealizar.paisDeProcedencia')?.errors?.['required'] && 
+          FormSolicitud.get('datosDelTramiteRealizar.paisDeProcedencia')?.touched) {
+          <p class="mensaje-error">Este campo es obligatorio.</p>
+          }
         </div>
       </div>
 
@@ -70,10 +94,12 @@
             [ngClass]="isValid(datosMercancia,'fechaInicio') ? 'required' : ''"
             (change)="setValoresStore(datosMercancia,'fechaInicio', 'setFechaInicio')">
 
+          @if (FormSolicitud.get('datosMercancia.fechaInicio')?.errors?.['required'] && 
+          FormSolicitud.get('datosMercancia.fechaInicio')?.touched) {
+          <p class="mensaje-error">Este campo es obligatorio.</p>
+          }
           @if (isValid(datosMercancia,'fechaInicio')) {
-          <div class="mensaje-error">
-            Fecha no válida, elija otro día
-          </div>
+          <p class="mensaje-error">Fecha no válida, elija otro día</p>
           }
         </div>
         <div class="col-md-4">
@@ -89,16 +115,16 @@
             [ngClass]="isValid(datosMercancia,'fechaFinal') ? 'required' : ''" [min]="diaMinimo"
             (change)="changeFechaFinal()">
 
+          @if (FormSolicitud.get('datosMercancia.fechaFinal')?.errors?.['required'] && 
+          FormSolicitud.get('datosMercancia.fechaFinal')?.touched) {
+          <p class="mensaje-error">Este campo es obligatorio.</p>
+          }
           @if (isValid(datosMercancia,'fechaFinal')) {
-          <div class="mensaje-error">
-            Fecha no válida, elija otro día
-          </div>
+          <p class="mensaje-error">Fecha no válida, elija otro día</p>
           }
 
           @if (intervaloFechaError()) {
-          <div class="mensaje-error">
-            Intervalo de fecha no válido
-          </div>
+          <p class="mensaje-error">Intervalo de fecha no válido</p>
           }
           }
         </div>
@@ -137,6 +163,10 @@
             [label]="'Nombre de la unidad de verificación'" [required]="true"
             (change)="setValoresStore(unidadDeVerificacion,'unidadDeVerificar', 'setUnidadDeVerificar')"
             [isDisabled]="soloLectura" [placeholder]="'Seleccione un valor'"></app-catalogo-select>
+          @if (FormSolicitud.get('unidadDeVerificacion.unidadDeVerificar')?.errors?.['required'] && 
+          FormSolicitud.get('unidadDeVerificacion.unidadDeVerificar')?.touched) {
+          <p class="mensaje-error">Este campo es obligatorio.</p>
+          }
         </div>
 
         <div class="col-md-8">
@@ -144,6 +174,10 @@
             [label]="'Nombre del tercero especialista fitosanitario'" [required]="true"
             (change)="setValoresStore(unidadDeVerificacion,'terceroEspecialista', 'setTerceroEspecialista')"
             [isDisabled]="soloLectura" [placeholder]="'Seleccione un valor'"></app-catalogo-select>
+          @if (FormSolicitud.get('unidadDeVerificacion.terceroEspecialista')?.errors?.['required'] && 
+          FormSolicitud.get('unidadDeVerificacion.terceroEspecialista')?.touched) {
+          <p class="mensaje-error">Este campo es obligatorio.</p>
+          }
         </div>
       </div>
 
@@ -157,6 +191,10 @@
             [label]="'Entidad Federativa de Unidad Expedidora'" [required]="true"
             (change)="setValoresStore(unidadExpedidoraFitosanitario,'entidadFederative', 'setEntidadFederative')"
             [isDisabled]="soloLectura" [placeholder]="'Seleccione un valor'"></app-catalogo-select>
+          @if (FormSolicitud.get('unidadExpedidoraFitosanitario.entidadFederative')?.errors?.['required'] && 
+          FormSolicitud.get('unidadExpedidoraFitosanitario.entidadFederative')?.touched) {
+          <p class="mensaje-error">Este campo es obligatorio.</p>
+          }
         </div>
       </div>
       <div class="row mt-3">
@@ -165,6 +203,10 @@
             [label]="'Módulo de certificado fitosanitario'" [required]="true"
             (change)="setValoresStore(unidadExpedidoraFitosanitario,'fitosanitario', 'setFitosanitario')"
             [isDisabled]="soloLectura" [placeholder]="'Seleccione un valor'"></app-catalogo-select>
+          @if (FormSolicitud.get('unidadExpedidoraFitosanitario.fitosanitario')?.errors?.['required'] && 
+          FormSolicitud.get('unidadExpedidoraFitosanitario.fitosanitario')?.touched) {
+          <p class="mensaje-error">Este campo es obligatorio.</p>
+          }
         </div>
       </div>
 
@@ -186,12 +228,20 @@
                 <app-catalogo-select [catalogo]="Opciones" formControlName="nombreComun" [label]="'Nombre común'"
                   [required]="true" (change)="setValoresStore(datosGenerales,'nombreComun', 'setNombreComun');"
                   [isDisabled]="soloLectura" [placeholder]="'Seleccione un valor'"></app-catalogo-select>
+                @if (generalesMercanciaForm.get('datosGenerales.nombreComun')?.errors?.['required'] && 
+                generalesMercanciaForm.get('datosGenerales.nombreComun')?.touched) {
+                <p class="mensaje-error">Este campo es obligatorio.</p>
+                }
               </div>
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="Opciones" formControlName="nombreCientifico"
                   [label]="'Nombre científico'" [required]="true"
                   (change)="setValoresStore(datosGenerales,'nombreCientifico', 'setNombreCientifico');"
                   [isDisabled]="soloLectura" [placeholder]="'Seleccione un valor'"></app-catalogo-select>
+                @if (generalesMercanciaForm.get('datosGenerales.nombreCientifico')?.errors?.['required'] && 
+                generalesMercanciaForm.get('datosGenerales.nombreCientifico')?.touched) {
+                <p class="mensaje-error">Este campo es obligatorio.</p>
+                }
               </div>
             </div>
             <div class="row mb-3">
@@ -205,9 +255,9 @@
                     style="height: 100px" formControlName="descripcionProducto"
                     [ngClass]="isValid(datosGenerales,'descripcionProducto') ? 'required' : ''"
                     (change)="setValoresStore(datosGenerales,'descripcionProducto', 'setDescripcionProducto')"></textarea>
-                  @if (generalesMercanciaForm.get('datosGenerales.descripcionProducto')?.hasError('required') &&
+                  @if (generalesMercanciaForm.get('datosGenerales.descripcionProducto')?.errors?.['required'] &&
                   generalesMercanciaForm.get('datosGenerales.descripcionProducto')?.touched) {
-                  <div class="mensaje-error">Este campo es obligatorio.</div>
+                  <p class="mensaje-error">Este campo es obligatorio.</p>
                   }
                 </div>
               </div>
@@ -221,9 +271,9 @@
                     (change)="setValoresStore(datosGenerales,'fraccionArancelaria', 'setFraccionArancelaria');fraccionArancelariaActualizar()" />
                   <div
                     *ngIf="datosGenerales.get('fraccionArancelaria')?.invalid && datosGenerales.get('fraccionArancelaria')?.touched">
-                    @if(datosGenerales.get('fraccionArancelaria')?.errors?.['minlength']){
+                    @if(datosGenerales.get('fraccionArancelaria')?.errors?.['maxlength']){
                     <p class="mensaje-error">
-                      Por favor, no escribas menos de 8 caracteres
+                      Por favor, no escribas más de 8 caracteres
                     </p>
                     }@else if (datosGenerales.get('fraccionArancelaria')?.errors?.['pattern']) {
                     <p class="mensaje-error">
@@ -269,7 +319,7 @@
                   <label class="form-label" for="cantidadUMC">Cantidad UMC<span
                       [ngClass]="isValid(datosGenerales,'cantidadUMC') ? 'red-require ' : ''">*</span>
                     :</label>
-                  <input class="form-control" id="cantidadUMC" placeholder="" type="text" formControlName="cantidadUMC"
+                  <input class="form-control" maxlength="15" id="cantidadUMC" placeholder="" type="text" formControlName="cantidadUMC"
                     [ngClass]="isValid(datosGenerales,'cantidadUMC') ? 'required' : ''"
                     (change)="setValoresStore(datosGenerales,'cantidadUMC', 'setCantidadUMC')" />
                   @if(datosGenerales.get('cantidadUMC')?.invalid &&
@@ -287,10 +337,6 @@
                   <p class="mensaje-error">
                     Por favor, escribe un número entero válido
                   </p>
-                  }@else if (datosGenerales.get('cantidadUMC')?.errors?.['max']) {
-                  <p class="mensaje-error">
-                    Por favor, escribe un valor menor o igual a 999999999999.99
-                  </p>
                   }
                   }
                 </div>
@@ -300,6 +346,10 @@
                   <app-catalogo-select [catalogo]="Opciones" formControlName="UMC" [label]="'UMC'" [required]="true"
                     (change)="setValoresStore(datosGenerales,'UMC', 'setUMC')" [isDisabled]="soloLectura"
                     [tooltipQuestionCircle]="true" [placeholder]="'Seleccione un valor'"></app-catalogo-select>
+                  @if (generalesMercanciaForm.get('datosGenerales.UMC')?.errors?.['required'] && 
+                  generalesMercanciaForm.get('datosGenerales.UMC')?.touched) {
+                  <p class="mensaje-error">Este campo es obligatorio.</p>
+                  }
                 </div>
               </div>
             </div>
@@ -308,6 +358,10 @@
                 <app-catalogo-select [catalogo]="Opciones" formControlName="paisdeOrigen" [label]="'País de origen'"
                   [required]="true" (change)="setValoresStore(datosGenerales,'paisdeOrigen', 'setPaisdeOrigen')"
                   [isDisabled]="soloLectura" [placeholder]="'Seleccione un valor'"></app-catalogo-select>
+                @if (generalesMercanciaForm.get('datosGenerales.paisdeOrigen')?.errors?.['required'] && 
+                generalesMercanciaForm.get('datosGenerales.paisdeOrigen')?.touched) {
+                <p class="mensaje-error">Este campo es obligatorio.</p>
+                }
               </div>
             </div>
             <div class="row mb-3">
@@ -356,10 +410,29 @@
             <div class="row mb-3">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="marcasDistintivas">Marcas distintivas:</label>
-                  <input class="form-control" id="marcasDistintivas" placeholder="" type="text"
+                  <label class="form-label" for="marcasDistintivas">Marcas distintivas<span
+                      [ngClass]="isValid(datosGenerales,'marcasDistintivas') ? 'red-require ' : ''">*</span>:</label>
+                  <input class="form-control" maxlength="60" id="marcasDistintivas" placeholder="" type="text"
                     formControlName="marcasDistintivas"
+                    [ngClass]="isValid(datosGenerales,'marcasDistintivas') ? 'required' : ''"
                     (change)="setValoresStore(datosGenerales,'marcasDistintivas', 'setMarcasDistintivas')" />
+                  @if(datosGenerales.get('marcasDistintivas')?.invalid &&
+                  datosGenerales.get('marcasDistintivas')?.touched){
+                  @if(datosGenerales.get('marcasDistintivas')?.errors?.['required']){
+                  <p class="mensaje-error">
+                    Este campo es obligatorio.
+                  </p>
+                  }
+                  @else if (datosGenerales.get('marcasDistintivas')?.errors?.['maxlength']) {
+                  <p class="mensaje-error">
+                    Por favor, no escribas más de 60 caracteres
+                  </p>
+                  }@else if (datosGenerales.get('marcasDistintivas')?.errors?.['pattern']) {
+                  <p class="mensaje-error">
+                    Por favor, ingresa un formato válido
+                  </p>
+                  }
+                  }
                 </div>
               </div>
             </div>
@@ -369,6 +442,10 @@
                   <app-catalogo-select [catalogo]="Opciones" formControlName="USO" [label]="'USO'" [required]="true"
                     (change)="setValoresStore(datosGenerales,'USO', 'setUSO')" [isDisabled]="soloLectura"
                     [placeholder]="'Seleccione un valor'"></app-catalogo-select>
+                  @if (generalesMercanciaForm.get('datosGenerales.USO')?.errors?.['required'] && 
+                  generalesMercanciaForm.get('datosGenerales.USO')?.touched) {
+                  <p class="mensaje-error">Este campo es obligatorio.</p>
+                  }
                 </div>
               </div>
             </div>
@@ -402,6 +479,10 @@
                   [label]="'Descripción de los empaques'" [required]="true"
                   (change)="setValoresStore(numeroDescDeLosEmpaques,'empaques', 'setEmpaques')"
                   [isDisabled]="soloLectura" [placeholder]="'Seleccione un valor'"></app-catalogo-select>
+                @if (generalesMercanciaForm.get('numeroDescDeLosEmpaques.empaques')?.errors?.['required'] && 
+                generalesMercanciaForm.get('numeroDescDeLosEmpaques.empaques')?.touched) {
+                <p class="mensaje-error">Este campo es obligatorio.</p>
+                }
               </div>
             </div>
           </ng-container>

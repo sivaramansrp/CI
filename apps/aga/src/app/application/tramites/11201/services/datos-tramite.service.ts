@@ -7,7 +7,7 @@ import { RespuestaCatalogos } from "@libs/shared/data-access-user/src";
 import { RespuestaContenedor } from "@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model";
 
 @Injectable({
-  providedIn: 'any',
+  providedIn: 'root',
 })
 export class DatosTramiteService {
 

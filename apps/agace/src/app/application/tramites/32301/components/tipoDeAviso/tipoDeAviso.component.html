@@ -1,106 +1,54 @@
-<div class="container">
+<div class="container" >
   <form [formGroup]="miFormulario" (ngSubmit)="aiEnviar()">
     <div class="row">
       <div class="col-md-12 mb-4">
-        <label for="modalidadCertificacion"
-          >Modalidad de la certificación
+        <label for="modalidadCertificacion">Modalidad de la certificación
         </label>
-        <input
-          type="text"
-          id="modalidadCertificacion"
-          formControlName="modalidadCertificacion"
-          class="form-control"
-        />
+        <input type="text" id="modalidadCertificacion" formControlName="modalidadCertificacion" class="form-control" />
       </div>
     </div>
-    <ng-alert
-      [CONTENIDO]="'Debe seleccionar por lo menos un tipo de aviso'"
-    ></ng-alert>
+    <ng-alert [CONTENIDO]="'Debe seleccionar por lo menos un tipo de aviso'"></ng-alert>
     <div class="form-check">
-      <input
-        class="form-check-input"
-        type="checkbox"
+      <lib-input-check [id]="'foreignClientsSuppliers'" [fontWeight]="true" [required]="false"
+        [label]="'Aviso de modificaciones de clientes y proveedores extranjeros.'" [isDisabled]="soloLectura"
         formControlName="foreignClientsSuppliers"
-        (change)="aiEnviar(); setClientesProveedoresExtranjeros()"
-      />
-      <label class="form-check-label">
-        Aviso de modificaciones de clientes y proveedores extranjeros.
-      </label>
+        (change)="aiEnviar(); setClientesProveedoresExtranjeros()"></lib-input-check>
     </div>
     <div class="form-check">
-      <input
-        class="form-check-input"
-        type="checkbox"
-        formControlName="nationalSuppliers"
-        (change)="aiEnviar(); setProveedoresNacionales()"
-      />
-      <label class="form-check-label">
-        Aviso de modificaciones de proveedores nacionales.
-      </label>
+      <lib-input-check [id]="'nationalSuppliers'" [required]="false" 
+        [label]="'Aviso de modificaciones de proveedores nacionales.'" formControlName="nationalSuppliers"
+        [isDisabled]="soloLectura" [fontWeight]="true"  (change)="aiEnviar(); setProveedoresNacionales()"></lib-input-check>
     </div>
     <div class="form-check">
-      <input
-        class="form-check-input"
-        type="checkbox"
-        formControlName="modificationsMembers"
-        (change)="aiEnviar(); setModificacionesMiembros()"
-      />
-      <label class="form-check-label">
-        Aviso de modificciones de socios, accionistas, miembros o integrantes,
-        administrador único o consejo de administración y representantes
-        legales.
-      </label>
+      <lib-input-check [id]="'modificationsMembers'" [required]="false" [fontWeight]="true"
+        [label]="' Aviso de modificciones de socios, accionistas, miembros o integrantes,administrador único o consejo de administración y representantes legales.'"
+        formControlName="modificationsMembers" [isDisabled]="soloLectura"
+        (change)="aiEnviar(); setModificacionesMiembros()"></lib-input-check>
     </div>
     <div class="form-check">
-      <input
-        class="form-check-input"
-        type="checkbox"
-        formControlName="changesToLegalDocuments"
-        (change)="aiEnviar(); setCambiosDocumentosLegales()"
-      />
-      <label class="form-check-label">
-        Aviso cuando varíe o cambie la situación respecto del documento con el
-        que se haya acreditado el legal uso y goce del inmueble o inmuebles en
-        donde se lleven a acabo los procesos productivos o la prestación de
-        servicios según se trate, referente a la vigencia, las partes y
-        domicilio
-      </label>
+      <lib-input-check [id]="'changesToLegalDocuments'" [required]="false" [fontWeight]="true"
+        [label]="'Aviso cuando varíe o cambie la situación respecto del documento con el que se haya acreditado el legal uso y goce del inmueble o inmuebles en donde se lleven a acabo los procesos productivos o la prestación de servicios según se trate, referente a la vigencia, las partes y domicili'"
+        formControlName="changesToLegalDocuments" [isDisabled]="soloLectura"
+        (change)="aiEnviar(); setCambiosDocumentosLegales()"></lib-input-check>
     </div>
     <div class="form-check">
-      <input
-        class="form-check-input"
-        type="checkbox"
-        formControlName="mergerOrSplitNotice"
-        (change)="aiEnviar(); setNotifiFusionOescision()"
-      />
-      <label class="form-check-label"> Aviso de fusión o escisión </label>
+      <lib-input-check [id]="'mergerOrSplitNotice'" [required]="false" [label]="'Aviso de fusión o escisión'"[fontWeight]="true"
+        formControlName="mergerOrSplitNotice" [isDisabled]="soloLectura"
+        (change)="aiEnviar(); setNotifiFusionOescision()"></lib-input-check>
     </div>
     <div class="form-check">
-      <input
-        class="form-check-input"
-        type="checkbox"
-        formControlName="additionFractions"
-        (change)="aiEnviar(); setAdicionalesFractions()"
-      />
-      <label class="form-check-label"> Aviso de adición de fracciones </label>
+      <lib-input-check [id]="'additionFractions'" [required]="false" [label]="'Aviso de adición de fracciones'"[fontWeight]="true"
+        formControlName="additionFractions" [isDisabled]="soloLectura"
+        (change)="aiEnviar(); setAdicionalesFractions()"></lib-input-check>
     </div>
 
     <div class="row">
       <div class="col-md-12">
         <div class="alert alert-info">
           <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              formControlName="acepto253"
-              (change)="aiEnviar(); setAceptacion253()"
-            />
-            <label class="form-check-label">
-              * Bajo protesta de decir verdad, manifiesto que los datos
-              asentados en el presente documento son ciertos y que las
-              facultades que me fueron otorgadas para representar al solicitante
-              no me han sido modificadas y/ o revocadas.
-            </label>
+            <lib-input-check [id]="'acepto253'" [isDisabled]="soloLectura" [required]="true" [fontWeight]="true"
+              [label]="'*Bajo protesta de decir verdad, manifiesto que los datos asentados en el presente documento son ciertos y que las facultades que me fueron otorgadas para representar al solicitante no me han sido modificadas y/ o revocadas.'"
+              formControlName="acepto253" (change)="aiEnviar(); setAceptacion253()"></lib-input-check>
           </div>
         </div>
       </div>

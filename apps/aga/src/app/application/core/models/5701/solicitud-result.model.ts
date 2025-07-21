@@ -709,3 +709,16 @@ export interface ErroresModelo {
  campo: string;
  errores: string[];
 }
+
+/**
+ * Representa la respuesta de una solicitud de eliminación de una solicitud en el sistema.
+ * Esta interfaz define la estructura de la respuesta que se espera al eliminar una solicitud.
+ * @property codigo - Código de resultado de la operación de eliminación.
+ * @property mensaje - Mensaje descriptivo del resultado de la operación.
+ * @property datos - Indica si la operación de eliminación fue exitosa (true) o no (false).
+ */
+export interface EliminaSolicitudResponse {
+    codigo: string;
+    mensaje: string;
+    datos: boolean
+}

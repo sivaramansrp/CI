@@ -1,31 +1,100 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDelTramiteComponent } from './datos-del-tramite.component';
-import { ReactiveFormsModule, FormBuilder, FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { By } from '@angular/platform-browser';
-import { ModificacionDonacionesImmexService } from '../../services/modificacion-donaciones-immex.service';
-import { Tramite11102Store } from '../../estados/tramite11102.store';
-import { Tramite11102Query } from '../../estados/tramite11102.query';
-import { of, Subject } from 'rxjs';
 import {
-  BtnContinuarComponent,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { of, Subject } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import {
+  AlertComponent,
   CatalogoSelectComponent,
+  ConsultaioQuery,
   InputCheckComponent,
   TableComponent,
   TituloComponent,
-  WizardComponent,
+  ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
-import { AlertComponent } from 'ngx-bootstrap/alert';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Tramite11102Query } from '../../estados/tramite11102.query';
+import { Tramite11102Store } from '../../estados/tramite11102.store';
+import { ModificacionDonacionesImmexService } from '../../services/modificacion-donaciones-immex.service';
 
 describe('DatosDelTramiteComponent', () => {
   let component: DatosDelTramiteComponent;
   let fixture: ComponentFixture<DatosDelTramiteComponent>;
-  let modificacionService: ModificacionDonacionesImmexService;
-  let store: Tramite11102Store;
-  let query: Tramite11102Query;
+  let MockConsultaioQuery: Partial<ConsultaioQuery>;
+  let MockModificacionDonacionesImmexService: Partial<ModificacionDonacionesImmexService>;
+  let MockTramite11102Store: Partial<Tramite11102Store>;
+  let MockTramite11102Query: Partial<Tramite11102Query>;
+  let MockValidacionesFormularioService: Partial<ValidacionesFormularioService>;
 
   beforeEach(async () => {
+    MockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false }),
+    } as unknown as jest.Mocked<ConsultaioQuery>;
+    MockModificacionDonacionesImmexService = {
+      getAduana: jest
+        .fn()
+        .mockReturnValue(of({ data: [{ id: 1, nombre: 'Aduana1' }] })),
+      getTipoDeMercancia: jest
+        .fn()
+        .mockReturnValue(of({ data: [{ id: 1, nombre: 'Tipo1' }] })),
+      getCondicionMercancia: jest
+        .fn()
+        .mockReturnValue(of({ data: [{ id: 1, nombre: 'Condicion1' }] })),
+      getUnidadMedida: jest
+        .fn()
+        .mockReturnValue(of({ data: [{ id: 1, nombre: 'Unidad1' }] })),
+      getAno: jest.fn().mockReturnValue(of({ data: [{ id: 2024 }] })),
+      getPais: jest
+        .fn()
+        .mockReturnValue(of({ data: [{ id: 1, nombre: 'México' }] })),
+    };
+    MockTramite11102Store = {
+      setAduana: jest.fn(() => of()),
+      setTipoDeMercancia: jest.fn(() => of()),
+      setCondicionMercancia: jest.fn(() => of()),
+      setUnidadMedida: jest.fn(() => of()),
+      setAno: jest.fn(() => of()),
+      setPais: jest.fn(() => of()),
+      setOrganismoPublico: jest.fn(() => of()),
+    };
+    MockTramite11102Query = {
+      selectSolicitud$: of({
+        organismoPublico: '',
+        aduana: null,
+        usoEspecifico: '',
+        showTabla: true,
+        tipoDeMercancia: '',
+        unidadMedida: '',
+        condicionMercancia: '',
+        ano: null,
+        cantidad: '',
+        marca: '',
+        modelo: '',
+        serie: '',
+        pais: null,
+        calle: '',
+        numeroExterior: '',
+        numeroInterior: '',
+        telefono: '',
+        correoElectronico: '',
+        correoElectronicoOpcional: '',
+        telefonoOpcional: '',
+        rfc: '',
+        numeroProgramaImmex: '',
+        razonSocial: '',
+        codigoPostal: '',
+        estado: '',
+        colonia: '',
+        datosDelMercancia: [],
+      }),
+    };
+    MockValidacionesFormularioService = {};
+
     await TestBed.configureTestingModule({
       imports: [
         CommonModule,
@@ -36,162 +105,305 @@ describe('DatosDelTramiteComponent', () => {
         ReactiveFormsModule,
         AlertComponent,
         InputCheckComponent,
+        HttpClientTestingModule,
+        DatosDelTramiteComponent,
       ],
-      declarations: [DatosDelTramiteComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      declarations: [],
       providers: [
-        FormBuilder,
+        { provide: FormBuilder, useClass: FormBuilder },
+        { provide: ConsultaioQuery, useValue: MockConsultaioQuery },
         {
           provide: ModificacionDonacionesImmexService,
-          useValue: {
-            getAduana: jest.fn().mockReturnValue(of({ data: [] })),
-            getTipoDeMercancia: jest.fn().mockReturnValue(of({ data: [] })),
-            getCondicionMercancia: jest.fn().mockReturnValue(of({ data: [] })),
-            getUnidadMedida: jest.fn().mockReturnValue(of({ data: [] })),
-            getAno: jest.fn().mockReturnValue(of({ data: [] })),
-            getPais: jest.fn().mockReturnValue(of({ data: [] })),
-          },
+          useValue: MockModificacionDonacionesImmexService,
         },
+        { provide: Tramite11102Store, useValue: MockTramite11102Store },
+        { provide: Tramite11102Query, useValue: MockTramite11102Query },
         {
-          provide: Tramite11102Store,
-          useValue: {
-            setAduana: jest.fn(),
-            setTipoDeMercancia: jest.fn(),
-            setCondicionMercancia: jest.fn(),
-            setUnidadMedida: jest.fn(),
-            setAno: jest.fn(),
-            setPais: jest.fn(),
-            setOrganismoPublico: jest.fn(),
-          },
-        },
-        {
-          provide: Tramite11102Query,
-          useValue: {
-            selectSolicitud$: of({}),
-          },
+          provide: ValidacionesFormularioService,
+          useValue: MockValidacionesFormularioService,
         },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDelTramiteComponent);
     component = fixture.componentInstance;
-    modificacionService = TestBed.inject(ModificacionDonacionesImmexService);
-    store = TestBed.inject(Tramite11102Store);
-    query = TestBed.inject(Tramite11102Query);
+    component.solicitudState = {
+      aduana: 1,
+      organismoPublico: true,
+      usoEspecifico: 'Uso',
+      pais: 1,
+      rfc: 'RFC123',
+      numeroProgramaImmex: '1234',
+      razonSocial: 'Empresa',
+      correoElectronicoOpcional: 'test@mail.com',
+      telefonoOpcional: '1234567890',
+      calle: 'Calle',
+      numeroExterior: '10',
+      numeroInterior: '2',
+      telefono: '1234567890',
+      correoElectronico: 'test@mail.com',
+      codigoPostal: '12345',
+      estado: 'Estado',
+      colonia: 'Colonia',
+      tipoDeMercancia: 1,
+      condicionMercancia: 1,
+      unidadMedida: 1,
+      ano: 2024,
+    } as any;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form group', () => {
+  it('should initialize tramiteForm and agregarMercanciasForm in donanteDomicilio', () => {
+    component.donanteDomicilio();
     expect(component.tramiteForm).toBeDefined();
+    expect(component.agregarMercanciasForm).toBeDefined();
     expect(
-      component.tramiteForm.get('modificacionDonacionesImmex')
-    ).toBeDefined();
+      component.tramiteForm.get('modificacionDonacionesImmex.aduana')?.value
+    ).toBe(null);
   });
 
-  it('should call setValoresStore when RFC input changes', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    const rfcInput = fixture.debugElement.query(By.css('#rfc')).nativeElement;
-    
-    rfcInput.value = 'TEST123456789';
-    rfcInput.dispatchEvent(new Event('change'));
+  it('should call setAduana on aduanaSeleccion', () => {
+    component.donanteDomicilio();
+    component.tramiteForm
+      .get('modificacionDonacionesImmex.aduana')
+      ?.setValue(2);
+    component.aduanaSeleccion();
+    expect(MockTramite11102Store.setAduana).toHaveBeenCalledWith(2);
+  });
 
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(
-      component.tramiteForm.get('modificacionDonacionesImmex'),
-      'rfc',
-      'setRfc'
+  it('should call setTipoDeMercancia on tipoDeMercanciaSeleccion', () => {
+    component.donanteDomicilio();
+    component.agregarMercanciasForm
+      .get('datosMercancia.tipoDeMercancia')
+      ?.setValue(3);
+    component.tipoDeMercanciaSeleccion();
+    expect(MockTramite11102Store.setTipoDeMercancia).toHaveBeenCalledWith(3);
+  });
+
+  it('should call setCondicionMercancia on condicionMercanciaSeleccion', () => {
+    component.donanteDomicilio();
+    component.agregarMercanciasForm
+      .get('datosMercancia.condicionMercancia')
+      ?.setValue(4);
+    component.condicionMercanciaSeleccion();
+    expect(MockTramite11102Store.setCondicionMercancia).toHaveBeenCalledWith(4);
+  });
+
+  it('should call setUnidadMedida on unidadMedidaSeleccion', () => {
+    component.donanteDomicilio();
+    component.agregarMercanciasForm
+      .get('datosMercancia.unidadMedida')
+      ?.setValue(5);
+    component.unidadMedidaSeleccion();
+    expect(MockTramite11102Store.setUnidadMedida).toHaveBeenCalledWith(5);
+  });
+
+  it('should call setAno on anoSeleccion', () => {
+    component.donanteDomicilio();
+    component.agregarMercanciasForm.get('datosMercancia.ano')?.setValue(2025);
+    component.anoSeleccion();
+    expect(MockTramite11102Store.setAno).toHaveBeenCalledWith(2025);
+  });
+
+  it('should call setPais on paisSeleccion', () => {
+    component.donanteDomicilio();
+    component.tramiteForm.get('modificacionDonacionesImmex.pais')?.setValue(6);
+    component.paisSeleccion();
+    expect(MockTramite11102Store.setPais).toHaveBeenCalledWith(6);
+  });
+
+  it('should call setOrganismoPublico on organismoPublico', () => {
+    component.donanteDomicilio();
+    component.tramiteForm
+      .get('modificacionDonacionesImmex.organismoPublico')
+      ?.setValue(true);
+    component.organismoPublico();
+    expect(MockTramite11102Store.setOrganismoPublico).toHaveBeenCalledWith(
+      true
     );
   });
 
-  it('should call setValoresStore when "usoEspecifico" textarea changes', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    const usoEspecificoTextarea = fixture.debugElement.query(
-      By.css('#usoEspecifico')
-    ).nativeElement;
-
-    usoEspecificoTextarea.value = 'Test usage';
-    usoEspecificoTextarea.dispatchEvent(new Event('change'));
-
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(
-      component.tramiteForm.get('modificacionDonacionesImmex'),
-      'usoEspecifico',
-      'setUsoEspecifico'
-    );
+  it('should mark all as touched if tramiteForm is invalid in validarDestinatarioFormulario', () => {
+    component.donanteDomicilio();
+    jest.spyOn(component.tramiteForm, 'markAllAsTouched');
+    component.tramiteForm
+      .get('modificacionDonacionesImmex.aduana')
+      ?.setValue(null);
+    component.validarDestinatarioFormulario();
+    expect(component.tramiteForm.markAllAsTouched).toHaveBeenCalled();
   });
 
-  it('should call modifySeleccionada when "Modificar" button is clicked', () => {
-    const modifySeleccionadaSpy = jest.spyOn(component, 'modifySeleccionada');
-    const modifyButton = fixture.debugElement.query(
-      By.css('button[data-bs-target="#modalAgregarMercancias"]')
-    ).nativeElement;
-
-    modifyButton.click();
-
-    expect(modifySeleccionadaSpy).toHaveBeenCalled();
+  it('should call guardarDatosDelFormulario if esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    const guardarSpy = jest.spyOn(component, 'guardarDatosDelFormulario');
+    const avisoSpy = jest.spyOn(component, 'datosDeAvisoForm');
+    component.inicializarEstadoFormulario();
+    expect(guardarSpy).toHaveBeenCalled();
+    expect(avisoSpy).not.toHaveBeenCalled();
   });
 
-  it('should call setValoresStore when "correoElectronicoOpcional" input changes', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    const correoElectronicoOpcionalInput = fixture.debugElement.query(
-      By.css('#correoElectronicoOpcional')
-    ).nativeElement;
-
-    correoElectronicoOpcionalInput.value = 'test@example.com';
-    correoElectronicoOpcionalInput.dispatchEvent(new Event('change'));
-
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(
-      component.tramiteForm.get('modificacionDonacionesImmex'),
-      'correoElectronicoOpcional',
-      'setCorreoElectronicoOpcional'
-    );
+  it('should call datosDeAvisoForm if esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    const guardarSpy = jest.spyOn(component, 'guardarDatosDelFormulario');
+    const avisoSpy = jest.spyOn(component, 'datosDeAvisoForm');
+    component.inicializarEstadoFormulario();
+    expect(avisoSpy).toHaveBeenCalled();
+    expect(guardarSpy).not.toHaveBeenCalled();
   });
 
-  it('should call setValoresStore when "telefonoOpcional" input changes', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    const telefonoOpcionalInput = fixture.debugElement.query(
-      By.css('#telefonoOpcional')
-    ).nativeElement;
-
-    telefonoOpcionalInput.value = '1234567890';
-    telefonoOpcionalInput.dispatchEvent(new Event('change'));
-
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(
-      component.tramiteForm.get('modificacionDonacionesImmex'),
-      'telefonoOpcional',
-      'setTelefonoOpcional'
+  it('should call the correct store method in setValoresStore', () => {
+    component.donanteDomicilio();
+    component.tramiteForm
+      .get('modificacionDonacionesImmex.aduana')
+      ?.setValue(7);
+    component.setValoresStore(
+      component.tramiteForm.get('modificacionDonacionesImmex') as any,
+      'aduana',
+      'setAduana'
     );
+    expect(MockTramite11102Store.setAduana).toHaveBeenCalledWith(7);
   });
 
-  it('should call modificarConfirmarModal when "Modificar" button in modal is clicked', () => {
-    const modificarConfirmarModalSpy = jest.spyOn(
-      component,
-      'modificarConfirmarModal'
-    );
-    const modalModifyButton = fixture.debugElement.query(
-      By.css('.modal-footer .btn-primary')
-    ).nativeElement;
-
-    modalModifyButton.click();
-
-    expect(modificarConfirmarModalSpy).toHaveBeenCalled();
+  it('should disable the form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.donanteDomicilio();
+    component.tramiteForm = new FormBuilder().group({ test: [''] });
+    const disableSpy = jest.spyOn(component.tramiteForm, 'disable');
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosDelFormulario();
+    expect(disableSpy).toHaveBeenCalled();
   });
 
-  it('should unsubscribe from observables on ngOnDestroy', () => {
-    const destroyNotifierSpy = jest.spyOn(
-      component['destroyNotifier$'],
-      'next'
-    );
-    const destroyNotifierCompleteSpy = jest.spyOn(
-      component['destroyNotifier$'],
+  it('should enable the form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.donanteDomicilio();
+    component.tramiteForm = new FormBuilder().group({ test: [''] });
+    const enableSpy = jest.spyOn(component.tramiteForm, 'enable');
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosDelFormulario();
+    expect(enableSpy).toHaveBeenCalled();
+  });
+
+  it('should set mercanciaHeaderData and mercanciaBodyData in obtenerMercancia', () => {
+    component.obtenerMercancia();
+    expect(component.mercanciaHeaderData).toEqual(undefined);
+    expect(component.mercanciaBodyData).toEqual(undefined);
+  });
+
+
+  it('should disable all relevant controls in tramiteForm and agregarMercanciasForm when esFormularioSoloLectura is true in datosDeAvisoForm', () => {
+    component.tramiteForm = new FormBuilder().group({
+      modificacionDonacionesImmex: new FormBuilder().group({
+        aduana: [''],
+        pais: [''],
+        rfc: [''],
+        pnumeroProgramaImmex: [''],
+        correoElectronicoOpcional: [''],
+        telefonoOpcional: [''],
+        calle: [''],
+        numeroExterior: [''],
+        numeroInterior: [''],
+        correoElectronico: [''],
+        telefono: [''],
+        estado: [''],
+        codigoPostal: [''],
+        colonia: [''],
+      }),
+    });
+    component.agregarMercanciasForm = new FormBuilder().group({
+      'modificacionDonacionesImmex': new FormBuilder().group({
+        datosMercancia: new FormBuilder().group({
+          tipoDeMercancia: [''],
+          cantidad: [''],
+          unidadMedida: [''],
+          ano: [''],
+          modelo: [''],
+          marca: [''],
+          serie: [''],
+          condicionMercancia: [''],
+        }),
+      }),
+    });
+    component.esFormularioSoloLectura = true;
+    const tramiteControls = [
+      'aduana', 'pais', 'rfc', 'pnumeroProgramaImmex', 'correoElectronicoOpcional',
+      'telefonoOpcional', 'calle', 'numeroExterior', 'numeroInterior',
+      'correoElectronico', 'telefono', 'estado', 'codigoPostal', 'colonia'
+    ];
+    tramiteControls.forEach(ctrl => {
+      const control = component.tramiteForm.get(`modificacionDonacionesImmex.${ctrl}`);
+      if (control) jest.spyOn(control, 'disable');
+    });
+
+    const mercanciaControls = [
+      'tipoDeMercancia', 'cantidad', 'unidadMedida', 'ano',
+      'modelo', 'marca', 'serie', 'condicionMercancia'
+    ];
+    mercanciaControls.forEach(ctrl => {
+      const control = component.agregarMercanciasForm.get(`modificacionDonacionesImmex.datosMercancia.${ctrl}`);
+      if (control) jest.spyOn(control, 'disable');
+    });
+    component.datosDeAvisoForm();
+    tramiteControls.forEach(ctrl => {
+      const control = component.tramiteForm.get(`modificacionDonacionesImmex.${ctrl}`);
+      if (control && (control.disable as jest.Mock).mock) {
+        expect(control.disable).toHaveBeenCalled();
+      }
+    });
+    mercanciaControls.forEach(ctrl => {
+      const control = component.agregarMercanciasForm.get(`modificacionDonacionesImmex.datosMercancia.${ctrl}`);
+      if (control && (control.disable as jest.Mock).mock) {
+        expect(control.disable).toHaveBeenCalled();
+      }
+    });
+  });
+
+  it('should not disable controls if esFormularioSoloLectura is false in datosDeAvisoForm', () => {
+    component.tramiteForm = new FormBuilder().group({
+      modificacionDonacionesImmex: new FormBuilder().group({
+        aduana: [''],
+      }),
+    });
+    component.agregarMercanciasForm = new FormBuilder().group({
+      'modificacionDonacionesImmex': new FormBuilder().group({
+        datosMercancia: new FormBuilder().group({
+          tipoDeMercancia: [''],
+        }),
+      }),
+    });
+    component.esFormularioSoloLectura = false;
+    const aduanaControl = component.tramiteForm.get('modificacionDonacionesImmex.aduana');
+    const tipoDeMercanciaControl = component.agregarMercanciasForm.get('modificacionDonacionesImmex.datosMercancia.tipoDeMercancia');
+    if (aduanaControl) jest.spyOn(aduanaControl, 'disable');
+    if (tipoDeMercanciaControl) jest.spyOn(tipoDeMercanciaControl, 'disable');
+
+    component.datosDeAvisoForm();
+
+    if (aduanaControl && (aduanaControl.disable as jest.Mock).mock) {
+      expect(aduanaControl.disable).not.toHaveBeenCalled();
+    }
+    if (tipoDeMercanciaControl && (tipoDeMercanciaControl.disable as jest.Mock).mock) {
+      expect(tipoDeMercanciaControl.disable).not.toHaveBeenCalled();
+    }
+  });
+
+  it('should not throw if tramiteForm or agregarMercanciasForm are undefined in datosDeAvisoForm', () => {
+    component.tramiteForm = undefined as any;
+    component.agregarMercanciasForm = undefined as any;
+    component.esFormularioSoloLectura = true;
+    expect(() => component.datosDeAvisoForm()).not.toThrow();
+  });
+
+  it('should clean up destroyNotifier$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(
+      (component as any).destroyNotifier$,
       'complete'
     );
-
     component.ngOnDestroy();
-
-    expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

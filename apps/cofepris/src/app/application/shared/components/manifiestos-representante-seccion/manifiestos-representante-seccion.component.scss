@@ -1,8 +1,8 @@
 .content-with-checkbox {
     display: flex;
     text-align: left;
-    gap: 20px;
-    padding-left: 40px;
+    gap: 10px;
+    padding-left: 20px;
     flex-direction: row;
     align-items: center;
   }
@@ -10,3 +10,10 @@
   .align-middle {
     vertical-align: middle !important;
   }
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px; 
+  margin-top: 2px; 
+}

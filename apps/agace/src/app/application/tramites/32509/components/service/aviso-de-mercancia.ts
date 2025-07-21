@@ -6,15 +6,26 @@
  * @author Equipo VUCEM
  * @since 2025
  */
+
 import { DestruccionState, DestruccionStore } from '../../estados/Tramite32509.store';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { DestruccionQuery } from '../../estados/Tramite32509.query';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable} from 'rxjs';
 
+
+/**
+ * @descripcion
+ * Decorador que marca la clase como un servicio inyectable y la registra en el inyector raíz de Angular.
+ * Esto permite que el servicio esté disponible en toda la aplicación sin necesidad de declararlo en los providers de un módulo específico.
+ * 
+ * @see https://angular.io/api/core/Injectable
+ */
 @Injectable({
   providedIn: 'root'
 })
+
 export class AvisoDeMercanciaService {
   /**
    * Constructor del servicio AvisoDeMercanciaService.
@@ -30,6 +41,7 @@ export class AvisoDeMercanciaService {
   ) {}
 
   /**
+   * @method getAcuiculturaData
    * Obtiene los datos del formulario de certificados de origen desde un archivo JSON local.
    * @returns {Observable<DestruccionState>} Observable con el estado del trámite.
    */
@@ -37,7 +49,78 @@ export class AvisoDeMercanciaService {
     return this.httpClient.get<DestruccionState>('assets/json/32509/tipo_form.json');
   }
 
+/**
+ * @method getEntidadFederativaData
+ * Obtiene los datos de las entidades federativas desde un archivo JSON local.
+ * 
+ * @returns {Observable<Catalogo[]>} Observable con la lista de entidades federativas.
+ */
+getEntidadFederativaData(): Observable<Catalogo[]> {
+  return this.httpClient.get<Catalogo[]>('assets/json/32509/domicilio.json');
+}
+
+/**
+* @method getAlcaldiaMunicipo
+* Obtiene los datos de las alcaldías o municipios desde un archivo JSON local.
+* 
+* @returns {Observable<Catalogo[]>} Observable con la lista de alcaldías o municipios.
+*/
+getAlcaldiaMunicipo(): Observable<Catalogo[]> {
+  return this.httpClient.get<Catalogo[]>('./assets/json/32509/alcaldio.json');
+}
+
+/**
+* @method getColonia
+* Obtiene los datos de las colonias desde un archivo JSON local.
+* 
+* @returns {Observable<Catalogo[]>} Observable con la lista de colonias.
+*/
+getColonia(): Observable<Catalogo[]> {
+  return this.httpClient.get<Catalogo[]>('./assets/json/32509/colonia.json');
+}
+
+/**
+* @method getMerccanciaEntidadFederativa
+* Obtiene los datos de las entidades federativas relacionadas con la mercancía desde un archivo JSON local.
+* 
+* @returns {Observable<Catalogo[]>} Observable con la lista de entidades federativas de la mercancía.
+*/
+getMerccanciaEntidadFederativa(): Observable<Catalogo[]> {
+  return this.httpClient.get<Catalogo[]>('./assets/json/32509/domicilio.json');
+}
+
+/**
+* @method getMerccanciaAlcaldiaMunicipo
+* Obtiene los datos de las alcaldías o municipios relacionados con la mercancía desde un archivo JSON local.
+* 
+* @returns {Observable<Catalogo[]>} Observable con la lista de alcaldías o municipios de la mercancía.
+*/
+getMerccanciaAlcaldiaMunicipo(): Observable<Catalogo[]> {
+  return this.httpClient.get<Catalogo[]>('./assets/json/32509/alcaldiaomunicipio.json');
+}
+
+/**
+* @method getMerccanciaColonia
+* Obtiene los datos de las colonias relacionadas con la mercancía desde un archivo JSON local.
+* 
+* @returns {Observable<Catalogo[]>} Observable con la lista de colonias de la mercancía.
+*/
+getMerccanciaColonia(): Observable<Catalogo[]> {
+  return this.httpClient.get<Catalogo[]>('./assets/json/32509/mercanciascolonia.json');
+}
+
+/**
+* @method getTarifa
+* Obtiene los datos de las tarifas desde un archivo JSON local.
+* 
+* @returns {Observable<Catalogo[]>} Observable con la lista de tarifas.
+*/
+getTarifa(): Observable<Catalogo[]> {
+  return this.httpClient.get<Catalogo[]>('./assets/json/32509/unidaddemedia.json');
+}
+
   /**
+   * @method actualizarEstadoFormulario
    * Actualiza el estado completo del formulario en el store de acuicultura.
    * Cada campo del objeto recibido es asignado al store correspondiente.
    * 

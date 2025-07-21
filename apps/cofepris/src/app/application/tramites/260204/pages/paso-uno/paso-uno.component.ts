@@ -7,6 +7,23 @@ import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-der
 import { PermisoSanitarioImportacionMedicamentosService } from '../../services/permiso-sanitario-importacion-medicamentos.service';
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 
+/**
+ * Decorador de componente que define las propiedades y configuraciones del componente Angular `PasoUnoComponent`.
+ *
+ * Este decorador especifica el selector, las dependencias importadas, las rutas de los archivos de plantilla y estilos,
+ * y otras configuraciones necesarias para el funcionamiento del componente.
+ *
+ * @decorator
+ * @selector `app-paso-uno` - Selector utilizado para identificar este componente en las plantillas HTML.
+ * @standalone `true` - Indica que este componente es independiente y no requiere un módulo Angular.
+ * @imports {CommonModule} - Módulo común de Angular que proporciona directivas esenciales como `ngIf` y `ngFor`.
+ * @imports {SolicitanteComponent} - Componente que gestiona la información del solicitante.
+ * @imports {ContenedorDeDatosSolicitudComponent} - Componente que contiene los datos de la solicitud.
+ * @imports {TercerosRelacionadosVistaComponent} - Componente que muestra la vista de terceros relacionados.
+ * @imports {PagoDeDerechosContenedoraComponent} - Componente que gestiona el pago de derechos.
+ * @templateUrl `./paso-uno.component.html` - Ruta del archivo HTML que define la estructura visual del componente.
+ * @styleUrl `./paso-uno.component.scss` - Ruta del archivo SCSS que contiene los estilos del componente.
+ */
 @Component({
   selector: 'app-paso-uno',
   standalone: true,
@@ -48,8 +65,8 @@ export class PasoUnoComponent implements OnDestroy {
    * @param {PermisoSanitarioImportacionMedicamentosService} permisoSanitarioImportacionMedicamentosService - Servicio para gestionar el permiso sanitario de importación de medicamentos.
    */
   constructor(
-    private consultaQuery: ConsultaioQuery,
-    private permisoSanitarioImportacionMedicamentosService: PermisoSanitarioImportacionMedicamentosService
+    public consultaQuery: ConsultaioQuery,
+    public permisoSanitarioImportacionMedicamentosService: PermisoSanitarioImportacionMedicamentosService
   ) {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
       this.consultaState = seccionState;
@@ -63,9 +80,25 @@ export class PasoUnoComponent implements OnDestroy {
 
   }
 
+
   /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   * Guarda los datos del formulario y actualiza el estado del formulario en base a la respuesta obtenida.
+   * 
+   * Este método utiliza el servicio `PermisoSanitarioImportacionMedicamentosService` para obtener los datos 
+   * del trámite y actualiza el estado del formulario si se recibe una respuesta válida. Además, se asegura 
+   * de que la suscripción se cancele correctamente utilizando el operador `takeUntil` con el observable 
+   * `destroyNotifier$`.
+   * 
+   * @returns {void} No devuelve ningún valor.
+   * 
+   * @remarks
+   * - Este método es parte del componente `PasoUnoComponent` y se utiliza para manejar la lógica de 
+   *   actualización de datos del formulario.
+   * - La propiedad `esDatosRespuesta` se establece en `true` si se recibe una respuesta válida.
+   * 
+   * @example
+   * // Llamada al método para guardar los datos del formulario
+   * this.guardarDatosFormulario();
    */
   guardarDatosFormulario(): void {
     this.permisoSanitarioImportacionMedicamentosService

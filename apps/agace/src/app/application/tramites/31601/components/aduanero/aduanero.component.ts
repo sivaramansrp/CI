@@ -16,7 +16,8 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
 import Instalaciones from '@libs/shared/theme/assets/json/31601/Instalaciones.json';
-import { MENCIONE_TABLA_CONFIGURACION } from '../../enum/mencione-tabla.enum';
+
+import { CONFIGURATION_TABLA_MODIFICAR, MENCIONE_TABLA_CONFIGURACION, ModificarFormState } from '../../enum/mencione-tabla.enum';
 import { MencioneConfiguracionItem } from '../../enum/mencione-tabla.enum';
 import { Modal } from 'bootstrap';
 import { OnDestroy } from '@angular/core';
@@ -88,7 +89,48 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Almacena los datos de descripción en un formato predefinido cargado desde JSON
    */
-  descriptionData = prejson;
+/** 
+ * Datos de entrada cargados desde un archivo JSON previo.
+ */
+descriptionData = prejson;
+
+/**
+ * Formulario reactivo que gestiona los datos del formulario principal de modificación.
+ */
+modificarForm!: FormGroup;
+
+/**
+ * Formulario reactivo que gestiona los datos relacionados con la entidad seleccionada.
+ */
+entidadForm!: FormGroup;
+
+/**
+ * Filas seleccionadas actualmente en la tabla de modificación.
+ */
+selectedIndiqueDatos: ModificarFormState[] = [];
+
+/**
+ * Indica si hay al menos una fila seleccionada en la tabla.
+ */
+hayFilasSeleccionadas = false;
+
+/**
+ * Índice de la fila seleccionada actualmente en el arreglo de datos.
+ * Es null cuando no hay una fila seleccionada.
+ */
+selectedFilaIndex: number | null = null;
+
+/**
+ * Fila actualmente seleccionada. Es null si no hay selección activa.
+ */
+selectedFila: ModificarFormState | null = null;
+
+/**
+ * Índice de la fila que se encuentra en modo de edición.
+ * Es null si no se está editando ninguna fila.
+ */
+indiceEditando: number | null = null;
+
 
   /**
    * Descripción en texto plano del componente
@@ -99,13 +141,43 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Referencia al modal de modificación en la plantilla HTML
    */
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
-
+  /**
+   * Referencia al elemento de cierre del modal.
+   */
+  @ViewChild('closeModal') closeModal!: ElementRef;
   /**
    * Referencia al modal de instalaciones en la plantilla HTML
    */
   @ViewChild('instalacionesModal', { static: false })
   instalacionesModal!: ElementRef;
+  /**
+   * Variable que controla la visibilidad del modal.
+   */
+  public modal: string = 'modal';
+/**
+ * Abre el modal y, si hay una fila seleccionada, carga sus datos
+ * en el formulario de modificación para permitir la edición.
+ * 
+ * - Establece `modal = 'show'` para mostrar el modal.
+ * - Si hay una fila seleccionada y su índice no es nulo:
+ *   - Guarda el índice en `indiceEditando`.
+ *   - Rellena el formulario `modificarForm` con los datos de la fila seleccionada.
+ */
+  public abrirModal(): void {
+    this.modal = 'show'; 
+     if (this.selectedFila && this.selectedFilaIndex !== null) {
+    this.indiceEditando = this.selectedFilaIndex;
 
+    this.modificarForm.patchValue({
+      principales: this.selectedFila.principales,
+      instalacion: this.selectedFila.instalacion,
+      federativa: this.selectedFila.federativa,
+      municipio: this.selectedFila.municipio,
+      colonia: this.selectedFila.colonia,
+    });
+  }
+  
+  }
   /**
    * Instancia del modal de modificación (Bootstrap)
    */
@@ -160,11 +232,30 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Datos de control de inventarios obtenidos desde JSON
    */
   controlInventarios: Tabla = controlInventarios;
-
+  /**
+ * Índice de la fila seleccionada para edición. 
+ * Es null cuando no hay ninguna fila seleccionada.
+ */
+  filaSeleccionadaIndex: number | null = null;
   /**
    * Lista de opciones IMMEX cargadas desde JSON
    */
   comboIMMEX: Catalogo[] = comboIMMEXJson;
+/**
+ * Valor utilizado para definir el tipo de selección por checkbox en la tabla.
+ */
+public checkboxValor = TablaSeleccion.CHECKBOX;
+
+/**
+ * Arreglo que contiene los datos del formulario en forma de lista para ser mostrados y modificados.
+ */
+modificarDatos: ModificarFormState[] = [];
+
+/**
+ * Configuración de columnas para la tabla de modificación,
+ * definida por la constante `CONFIGURATION_TABLA_MODIFICAR`.
+ */
+configuracionindiqueDatos: ConfiguracionColumna<ModificarFormState>[] = CONFIGURATION_TABLA_MODIFICAR;
 
   /**
    * Encabezados de la tabla de establecimientos
@@ -246,6 +337,11 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   public domiciliosBodyData: TableBody[] = [];
 
+/**
+ * Indica si se está en modo edición. 
+ * true para modificar una fila existente, false para agregar una nueva.
+ */
+  modoEdicion: boolean = false;
   /**
    * Encabezados de la tabla de instalaciones
    */
@@ -447,7 +543,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
       )
       .subscribe((seccionState) => {
           this.datosTablaMencione = seccionState.mencioneDatos || [];
-      });
+               });
 
     this.showMencioneTabla = this.preOperativeForm.get('senaleSi')?.value === 'Si';
     this.preOperativeForm.get('senaleSi')?.valueChanges
@@ -481,7 +577,29 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
       )
       .subscribe();
 
-    // Creación del formulario reactivo con validaciones
+    /**
+ * Inicializa el formulario `entidadForm` con un control llamado `federativaSeleccionada`.
+ * Este formulario se utiliza para manejar la selección de la entidad federativa.
+ */
+    this.entidadForm = this.fb.group({
+  federativaSeleccionada: ['']
+});
+/**
+ * Formulario reactivo para capturar datos de instalaciones.
+ * Incluye validaciones requeridas en campos clave como principales, instalación, proceso e inmueble.
+ * Otros campos capturan datos como municipio, federativa, colonia y código postal.
+ */
+    this.modificarForm = this.fb.group({
+      principales: [null, Validators.required],
+      municipio: [null],
+      instalacion:  [null, Validators.required],
+      federativa: [null],
+      registro: [null],
+      colonia: [null],
+      postal: [null],
+      proceso: [null, Validators.required],
+      inmueble: [null, Validators.required],
+    });
     this.preOperativeForm = this.fb.group({
       autorizacionIVAIEPS: [
         this.solicitudState?.autorizacionIVAIEPS,
@@ -507,6 +625,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
       ],
       bimestre: [this.solicitudState?.bimestre],
       senaleSi: [this.solicitudState?.senaleSi, Validators.required],
+      acredite: [this.solicitudState?.acredite, Validators.required],
       seMomento: [this.solicitudState?.seMomento, Validators.required],
       cumplir: [this.solicitudState?.cumplir, Validators.required],
       indique: [this.solicitudState?.indique, Validators.required],
@@ -574,6 +693,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
         ],
       ],
       archivoNacionales: [''],
+      bimestreValor:['']
     });
 
     // Configuración del modo de solo lectura
@@ -586,6 +706,21 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
         this.preOperativeForm.get(key)?.enable();
       });
     }
+      this.preOperativeForm.get('nombreDel')?.disable();
+      this.preOperativeForm.get('lugarDeRadicacion')?.disable();
+      this.preOperativeForm.get('indiqueCheck')?.disable();
+   
+    this.preOperativeForm.get('indiqueCuenta')?.valueChanges.subscribe((value) => {
+    if (value === 'Si') {
+      this.preOperativeForm.get('nombreDel')?.enable();
+      this.preOperativeForm.get('lugarDeRadicacion')?.enable(); 
+       this.preOperativeForm.get('indiqueCheck')?.enable();
+    } else {
+     this.preOperativeForm.get('nombreDel')?.disable();
+      this.preOperativeForm.get('lugarDeRadicacion')?.disable();
+       this.preOperativeForm.get('indiqueCheck')?.disable();
+    }
+  });
   }
 
   /**
@@ -731,7 +866,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
 
       if (this.camposObligatoriosRespondidosControlInventarios) {
         const INDEX = this.datosTablaControlInventarios.findIndex(
-          item => item.id === this.filaSeleccionadaControlInventarios!.id
+          item => item.id === this.filaSeleccionadaControlInventarios?.id
         );
 
         if (INDEX !== -1) {
@@ -835,17 +970,47 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   get showsenale(): boolean {
     return this.preOperativeForm?.get('senale')?.value === 'Si';
   }
-
   /**
-   * Abre el modal de modificación
-   */
-  openModifyModal(): void {
+ * Abre el modal para modificar una fila existente de la tabla.
+ * Establece el modo edición y carga los datos seleccionados en el formulario.
+ */
+openModifyModal(): void {
+  if (this.filaSeleccionadaMencione) {
+    this.modoEdicion = true;
+
+      const INDEX = this.datosTablaMencione.findIndex(
+      item => item.id === this.filaSeleccionadaMencione?.id
+    );
+
+    if (INDEX !== -1) {
+      this.filaSeleccionadaIndex = INDEX; 
+    }
+
+    this.preOperativeForm.patchValue({      
+      rfc: this.filaSeleccionadaMencione.rfc,
+      razonSocial: this.filaSeleccionadaMencione.social,
+      numeroEmpleados: this.filaSeleccionadaMencione.noumero,
+      empleadosPropios: this.filaSeleccionadaMencione.bimestre,     
+    });
+
+    this.modalInstance?.show();
+  }
+}
+/**
+ * Abre el modal para agregar un nuevo elemento.
+ * Limpia el formulario y desactiva el modo edición.
+ */
+  openAgregarModal(): void {
     if (this.modalInstance) {
+       this.modoEdicion = false;
+    this.filaSeleccionadaIndex = null;
       this.preOperativeForm.patchValue({
-        rfc: this.filaSeleccionadaMencione?.rfc,
-        razonSocial: this.filaSeleccionadaMencione?.social,
-        numeroEmpleados: this.filaSeleccionadaMencione?.noumero,
-        empleadosPropios: this.filaSeleccionadaMencione?.bimestre,
+        rfc: '',
+        razonSocial: '',
+        numeroEmpleados:'',
+        empleadosPropios:'',
+        bimestreValor:'',
+        numeroAutorizacionCITES: '',
       })
       this.modalInstance.show();
     }
@@ -921,8 +1086,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
     this.currentPage = page;
     this.updatePagination();
   }
-
-  /**
+      /**
    * Maneja el cambio en el número de elementos por página
    * @param itemsPerPage - Número de elementos por página
    */
@@ -931,7 +1095,25 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
     this.currentPage = 1;
     this.updatePagination();
   }
-
+  /**
+ * Maneja la selección de filas en la tabla.
+ * Guarda la fila seleccionada si solo hay una y obtiene su índice.
+ * Limpia la selección si hay cero o múltiples filas seleccionadas.
+ */
+onFilasSeleccionadas(filas: ModificarFormState[]): void {
+   this.selectedIndiqueDatos = filas;
+  this.hayFilasSeleccionadas = filas.length > 0;
+  if (filas.length === 1) {   
+    this.selectedFila = filas[0];   
+    this.selectedFilaIndex = this.modificarDatos.indexOf(this.selectedFila);    
+    if (this.selectedFilaIndex === -1) {
+      this.selectedFilaIndex = null;
+    }
+  } else {    
+    this.selectedFila = null;
+    this.selectedFilaIndex = null;
+  }
+}
   /**
    * Establece valores en el store del trámite
    * @param form - FormGroup que contiene los datos
@@ -996,6 +1178,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Si hay elementos seleccionados, abre el popup de confirmación de eliminación.
    */
   confirmEliminarMencioneItem(): void {
+      // Verifica si hay elementos seleccionados
     if (this.listaFilaSeleccionadaMencione.length === 0) {
       return;
     }
@@ -1059,29 +1242,99 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Si la validación es exitosa, crea un nuevo objeto MencioneConfiguracionItem y lo agrega a la tabla,
    * actualizando el estado correspondiente en el store.
    */
-  addNewMencioneItem(): void {
-    this.mandatoryFieldsAnswered =
-      Boolean(this.preOperativeForm.get('rfc')?.valid) &&
-      Boolean(this.preOperativeForm.get('razonSocial')?.valid) &&
-      Boolean(this.preOperativeForm.get('numeroEmpleados')?.valid) &&
-      Boolean(this.preOperativeForm.get('empleadosPropios')?.valid) &&
-      Boolean(this.preOperativeForm.get('numeroAutorizacionCITES')?.valid);
+addNewMencioneItem(): void {
+  this.mandatoryFieldsAnswered =
+    Boolean(this.preOperativeForm.get('rfc')?.valid) &&
+    Boolean(this.preOperativeForm.get('razonSocial')?.valid) &&
+    Boolean(this.preOperativeForm.get('numeroEmpleados')?.valid) &&
+    Boolean(this.preOperativeForm.get('numeroAutorizacionCITES')?.valid) &&
+    Boolean(this.preOperativeForm.get('bimestreValor')?.valid);
 
-    if (this.mandatoryFieldsAnswered) {
-      const NEWITEM: MencioneConfiguracionItem = {
-        id: (this.datosTablaMencione.length + 1).toString(),
-        rfc: this.preOperativeForm.get('rfc')?.value,
-        social: this.preOperativeForm.get('razonSocial')?.value,
-        noumero: this.preOperativeForm.get('numeroEmpleados')?.value,
-        bimestre: this.preOperativeForm.get('empleadosPropios')?.value,
-      };
-      this.datosTablaMencione.push(NEWITEM);
-      this.tramite31601Store.setMencioneTablaDatos(this.datosTablaMencione);
-      this.mandatoryFieldsAnswered = false;
-    }
+  if (this.mandatoryFieldsAnswered) {
+    const ESDICION = this.modoEdicion && this.filaSeleccionadaIndex !== null; 
+
+    const NEWITEMS: MencioneConfiguracionItem = {
+      id: ESDICION
+        ? this.datosTablaMencione[this.filaSeleccionadaIndex as number].id
+        : (this.datosTablaMencione.length + 1).toString(),
+      rfc: this.preOperativeForm.get('rfc')?.value,
+      social: this.preOperativeForm.get('razonSocial')?.value,
+      noumero: this.preOperativeForm.get('numeroEmpleados')?.value,     
+      bimestre: this.comboBimestresIDC.find(item => item.id === Number(this.preOperativeForm.value.bimestreValor))?.descripcion ?? '',
+    };
+
+    if (ESDICION && this.filaSeleccionadaIndex !== null) {
+      const INDEX = this.filaSeleccionadaIndex;
+      this.datosTablaMencione[INDEX] = NEWITEMS;
+    } else {
+      this.datosTablaMencione.push(NEWITEMS);
+    }   
+    this.tramite31601Store.setMencioneTablaDatos(this.datosTablaMencione);
+    this.mandatoryFieldsAnswered = false;
+    this.modoEdicion = false;
+    this.filaSeleccionadaIndex = null;
+    this.filaSeleccionadaMencione = null;
+
+    this.modalInstance?.hide();
+  }
+}
+/**
+ * Guarda los datos del formulario en la lista `modificarDatos`.
+ * Si se está editando, actualiza la fila; si no, agrega una nueva.
+ * Reinicia el formulario y cierra el modal al finalizar.
+ */
+guardarModificarDatos(): void {
+  if (this.modificarForm.invalid) {
+    this.modificarForm.markAllAsTouched();
+    return;
+  }
+  const NUEVODATO: ModificarFormState = {
+    principales: this.modificarForm.value.principales,
+    instalacion: this.modificarForm.value.instalacion,
+    federativa: this.modificarForm.value.federativa,
+    municipio: this.modificarForm.value.municipio,
+    colonia: this.modificarForm.value.colonia,
+  };
+
+  if (this.indiceEditando !== null) {
+       this.modificarDatos[this.indiceEditando] = NUEVODATO;
+    this.indiceEditando = null;
+  } else {    
+    this.modificarDatos.push(NUEVODATO);
   }
 
-
+  this.modificarForm.reset();
+  this.closeModal.nativeElement.click();
+}
+/**
+ * Elimina la fila actualmente seleccionada de la lista `modificarDatos`.
+ * Limpia la selección y actualiza el estado.
+ * Solo se ejecuta si hay una fila seleccionada.
+ */
+eliminarFilaSeleccionada(): void {
+  if (this.selectedFilaIndex !== null) {
+    this.modificarDatos.splice(this.selectedFilaIndex, 1);
+    this.modificarDatos = [...this.modificarDatos];    
+    this.selectedFila = null;
+    this.selectedFilaIndex = null;
+    this.hayFilasSeleccionadas = false;
+  }
+}
+/**
+ * Agrega una nueva fila a `modificarDatos` usando datos del formulario y de la tabla `Instalaciones`.
+ * Extrae valores por posición desde `tableBody`.
+ * Asegura valores por defecto vacíos si algún dato falta.
+ * */
+acceptarValor(): void {
+  const DATOSINSTALACION = this.Instalaciones?.tableBody?.[0]?.tbodyData ?? []; 
+  this.modificarDatos.push({
+    principales: this.modificarForm.value.principales || '',
+    municipio: DATOSINSTALACION[1] || '',
+    instalacion: this.modificarForm.value.instalacion || '',
+    federativa: DATOSINSTALACION[0] || '',    
+    colonia: DATOSINSTALACION[2] || '',   
+  });
+}
   /**
    * Método ejecutado al destruir el componente:
    * - Cancela suscripciones activas

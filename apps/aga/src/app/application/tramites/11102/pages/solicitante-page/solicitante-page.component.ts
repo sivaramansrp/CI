@@ -1,8 +1,17 @@
+import {
+  AlertComponent,
+  BtnContinuarComponent,
+  DatosPasos,
+  ListaPasosWizard,
+  WizardComponent
+} from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { PASOS } from '../../constants/pasos.enum';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 /**
  * Interfaz para definir la estructura de una acción de botón.
@@ -24,6 +33,17 @@ interface AccionBoton {
  */
 @Component({
   selector: 'app-solicitante-page',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    WizardComponent,
+    PasoUnoComponent,
+    PasoDosComponent,
+    PasoTresComponent,
+    BtnContinuarComponent,
+    AlertComponent,
+  ],
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
 })

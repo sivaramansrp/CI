@@ -21,7 +21,7 @@
     @if (panelDespachoOrMercancia) {
     <div class="row">
       <div class="col-md-12 mt-3">
-        <ng-titulo [titulo]="'Oficina de muestra'" />
+        <ng-titulo [titulo]="'Información de la muestra en despacho'" />
       </div>
       <div class="col-md-8">
         <div class="form-group text-left">
@@ -168,12 +168,10 @@
           ></app-catalogo-select>
         </div>
       </div>
-      <div class="col-md-12 mt-4">
+      <div class="col-md-8 mt-4">
         <div class="form-group">
           <label for="textDescClobGenerica1" class="form-label text-left"
-            >Indique el acondicionamiento con el que se presenta la mercancía al
-            momento del despacho aduanero (sacos, totes, pipas, carro tranque,
-            iso tanque, etc)* :</label
+            >Descripción del recipiente para su transporte y conservación*:</label
           >
           <textarea
             class="form-control"
@@ -185,6 +183,7 @@
           ></textarea>
         </div>
       </div>
+      <div class="col-md-4 mt-4"></div>
     </div>
     }
   </form>

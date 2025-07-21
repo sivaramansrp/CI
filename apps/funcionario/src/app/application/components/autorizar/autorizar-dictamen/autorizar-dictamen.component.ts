@@ -17,12 +17,20 @@ export class AutorizarDictamenComponent implements OnInit{
    */
   public dictamenForm: FormGroup; 
 
+  /**
+   * @description Constructor del componente AutorizarDictamenComponent
+   * @param fb - FormBuilder para crear formularios reactivos.
+   * @param router - Router para navegar entre rutas.
+   */
   constructor(private fb: FormBuilder, private router: Router) {
     this.dictamenForm = this.fb.group({
       cumplimiento: ['1'], 
       mensajeDictamen: [{ value: '', disabled: true }]      
     });    
   }
+  /**
+   * @description Metodo que se ejecuta al inicializar el componente
+   */
   ngOnInit(): void {
     this.dictamenForm.get('mensajeDictamen')?.enable();
     this.dictamenForm.get('mensajeDictamen')?.setValue(AutorizarDictamenComponent.obtenerNombreDelTítulo(1));

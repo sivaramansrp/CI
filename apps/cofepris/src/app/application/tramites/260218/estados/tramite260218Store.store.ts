@@ -14,23 +14,100 @@ import { TablaMercanciasDatos } from '../../../shared/models/datos-solicitud.mod
 import { TablaOpcionConfig } from '../../../shared/models/datos-solicitud.model';
 import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
 
-// Definición de la interfaz que representa el estado completo de la solicitud.
+/**
+ * @interface Tramite260218State
+ * Representa el estado completo de la solicitud para el trámite 260218.
+ */
 export interface Tramite260218State {
-  destinatarioFinalTablaDatos: Destinatario[]; // Datos de destinatarios finales.
-  facturadorTablaDatos: Facturador[]; // Datos de facturadores.
-  proveedorTablaDatos: Proveedor[]; // Datos de proveedores.
-  fabricanteTablaDatos: Fabricante[]; // Datos de fabricantes.
-  datosSolicitudFormState: DatosSolicitudFormState; // Datos generales de la solicitud.
-  mercanciaForm: MercanciaForm; // Información de las mercancías.
-  opcionConfigDatos: TablaOpcionConfig[]; // Configuración de las opciones.
-  scianConfigDatos: TablaScianConfig[]; // Datos de SCIAN (Sistema de Clasificación de Actividades Económicas).
-  tablaMercanciasConfigDatos: TablaMercanciasDatos[]; // Configuración de las mercancías.
-  seleccionadoopcionDatos: TablaOpcionConfig[]; // Opciones seleccionadas.
-  seleccionadoScianDatos: TablaScianConfig[]; // Datos seleccionados de SCIAN.
-  seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[]; // Datos seleccionados de las mercancías.
-  opcionesColapsableState: boolean; // Estado de las opciones colapsables en la interfaz.
-  pagoDerechos: PagoDerechosFormState; // Datos de pago de derechos.
-  tabSeleccionado?: number; // Pestaña seleccionada en la interfaz, opcional.
+  /**
+   * @property {Destinatario[]} destinatarioFinalTablaDatos
+   * Lista de destinatarios finales asociados al trámite.
+   */
+  destinatarioFinalTablaDatos: Destinatario[];
+
+  /**
+   * @property {Facturador[]} facturadorTablaDatos
+   * Lista de facturadores asociados al trámite.
+   */
+  facturadorTablaDatos: Facturador[];
+
+  /**
+   * @property {Proveedor[]} proveedorTablaDatos
+   * Lista de proveedores asociados al trámite.
+   */
+  proveedorTablaDatos: Proveedor[];
+
+  /**
+   * @property {Fabricante[]} fabricanteTablaDatos
+   * Lista de fabricantes asociados al trámite.
+   */
+  fabricanteTablaDatos: Fabricante[];
+
+  /**
+   * @property {DatosSolicitudFormState} datosSolicitudFormState
+   * Estado del formulario de datos generales de la solicitud.
+   */
+  datosSolicitudFormState: DatosSolicitudFormState;
+
+  /**
+   * @property {MercanciaForm} mercanciaForm
+   * Información relacionada con las mercancías del trámite.
+   */
+  mercanciaForm: MercanciaForm;
+
+  /**
+   * @property {TablaOpcionConfig[]} opcionConfigDatos
+   * Configuración de las opciones seleccionables en la tabla de opciones.
+   */
+  opcionConfigDatos: TablaOpcionConfig[];
+
+  /**
+   * @property {TablaScianConfig[]} scianConfigDatos
+   * Configuración de los datos relacionados con SCIAN (Sistema de Clasificación de Actividades Económicas).
+   */
+  scianConfigDatos: TablaScianConfig[];
+
+  /**
+   * @property {TablaMercanciasDatos[]} tablaMercanciasConfigDatos
+   * Configuración de las mercancías en la tabla principal.
+   */
+  tablaMercanciasConfigDatos: TablaMercanciasDatos[];
+
+  /**
+   * @property {TablaOpcionConfig[]} seleccionadoopcionDatos
+   * Opciones seleccionadas en la tabla de opciones.
+   */
+  seleccionadoopcionDatos: TablaOpcionConfig[];
+
+  /**
+   * @property {TablaScianConfig[]} seleccionadoScianDatos
+   * Datos seleccionados de la tabla SCIAN.
+   */
+  seleccionadoScianDatos: TablaScianConfig[];
+
+  /**
+   * @property {TablaMercanciasDatos[]} seleccionadoTablaMercanciasDatos
+   * Datos seleccionados de la tabla de mercancías.
+   */
+  seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
+
+  /**
+   * @property {boolean} opcionesColapsableState
+   * Estado de las opciones colapsables en la interfaz (expandido o colapsado).
+   */
+  opcionesColapsableState: boolean;
+
+  /**
+   * @property {PagoDerechosFormState} pagoDerechos
+   * Información relacionada con el pago de derechos del trámite.
+   */
+  pagoDerechos: PagoDerechosFormState;
+
+  /**
+   * @property {number | undefined} tabSeleccionado
+   * Índice de la pestaña seleccionada en la interfaz. Es opcional.
+   */
+  tabSeleccionado?: number;
 }
 
 // Función que inicializa el estado de la solicitud.

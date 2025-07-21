@@ -50,7 +50,12 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
  * @description Lista de fracciones arancelarias PROSEC.
  * @type {FraccionArancelariaProsec[]}
  */
-     datosSocios: FraccionArancelariaProsec[] = [];
+     datosSocios: FraccionArancelariaProsec[] = [
+      {
+    fraccionArancelariaProsec: 12345678,
+    descripción: 'Producto químico para uso industrial'
+  },
+     ];
 
   /**
    * @description Formulario para el uso específico.

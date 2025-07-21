@@ -8,6 +8,7 @@ import { Tramite32503Query } from '../../../../estados/queries/tramite32503.quer
 import { Modal } from 'bootstrap';
 import { AvisoTabla, MercanciaTabla } from "../../models/aviso-traslado.model";
 import { provideHttpClient } from '@angular/common/http';
+import { AvisoTrasladoService } from '../../services/aviso-traslado.service';
 
 
 
@@ -18,12 +19,22 @@ describe('AvisoComponent', () => {
   let tramiteQueryMock: any;
   let tablaDeDatos: AvisoTabla[];
   let tablaDeMercancia: MercanciaTabla[];
+  let avisoTrasladoServiceMock: any;
 
 
   beforeEach(async () => {
     tramiteStoreMock = {
       setAvisoFormularioTipoAviso: jest.fn(),
       setAvisoFormularioFechaTranslado: jest.fn(),
+    };
+    avisoTrasladoServiceMock = {
+      obtenerFraccionArancelaria: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Fracción 1' }] })),
+      obtenerUnidadMedida: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Unidad 1' }] })),
+      obtenerFederativa: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Entidad 1' }] })),
+      obtenerMunicipio: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Municipio 1' }] })),
+      obtenerColonias: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Colonia 1' }] })),
+      obtenerAvisoTabla: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Aviso 1' }] })),
+      obtenerMercanciaTabla: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Mercancía 1' }] })),
     };
 
     tramiteQueryMock = {
@@ -87,6 +98,7 @@ describe('AvisoComponent', () => {
         provideHttpClient(),
         { provide: Tramite32503Store, useValue: tramiteStoreMock },
         { provide: Tramite32503Query, useValue: tramiteQueryMock },
+        { provide: AvisoTrasladoService, useValue: avisoTrasladoServiceMock },
         FormBuilder,
       ],
     }).compileComponents();
@@ -179,4 +191,203 @@ describe('AvisoComponent', () => {
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+
+
+
+  it('should set values in the store using setValoresStore', () => {
+    const form = new FormBuilder().group({
+      testField: ['Test Value'],
+    });
+    component.setValoresStore(form, 'testField', 'setAvisoFormularioFechaTranslado');
+    expect(tramiteStoreMock.setAvisoFormularioFechaTranslado).toHaveBeenCalledWith('Test Value');
+  });
+
+  it('should load fracción arancelaria data using cargarFraccionArancelaria', () => {
+    component.cargarFraccionArancelaria();
+    expect(avisoTrasladoServiceMock.obtenerFraccionArancelaria).toHaveBeenCalled();
+    expect(component.fraccionArancelaria).toEqual([{ id: 1, descripcion: 'Fracción 1' }]);
+  });
+  it('should load unidad de medida data using cargarUnidadMedida', () => {
+    component.cargarUnidadMedida();
+    expect(avisoTrasladoServiceMock.obtenerUnidadMedida).toHaveBeenCalled();
+    expect(component.unidadMedida).toEqual([{ id: 1, descripcion: 'Unidad 1' }]);
+  });
+  it('should load entidad federativa data using cargarFederativa', () => {
+    component.cargarFederativa();
+    expect(avisoTrasladoServiceMock.obtenerFederativa).toHaveBeenCalled();
+    expect(component.entidadFederativa).toEqual([{ id: 1, descripcion: 'Entidad 1' }]);
+  });
+  it('should load municipio data using cargarMunicipio', () => {
+    component.cargarMunicipio();
+    expect(avisoTrasladoServiceMock.obtenerMunicipio).toHaveBeenCalled();
+    expect(component.delegacionMunicipio).toEqual([{ id: 1, descripcion: 'Municipio 1' }]);
+  });
+  it('should load colonias data using cargarColonias', () => {
+    component.cargarColonias();
+    expect(avisoTrasladoServiceMock.obtenerColonias).toHaveBeenCalled();
+    expect(component.colonia).toEqual([{ id: 1, descripcion: 'Colonia 1' }]);
+  });
+  it('should load aviso tabla data using cargarAvisoTabla', () => {
+    component.cargarAvisoTabla();
+    expect(avisoTrasladoServiceMock.obtenerAvisoTabla).toHaveBeenCalled();
+    expect(component.tablaDeDatos.datos).toEqual([{ id: 1, descripcion: 'Aviso 1' }]);
+  });
+  it('should load mercancia tabla data using cargarMercanciaTabla', () => {
+    component.cargarMercanciaTabla();
+    expect(avisoTrasladoServiceMock.obtenerMercanciaTabla).toHaveBeenCalled();
+    expect(component.tablaDeMercancia.datos).toEqual([{ id: 1, descripcion: 'Mercancía 1' }]);
+  });
+  it('should disable forms when soloLectura is true', () => {
+    component.soloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.avisoFormulario.disabled).toBe(true);
+    expect(component.domicilioFormulario.disabled).toBe(true);
+    expect(component.mercanciaFormulario.disabled).toBe(true);
+  });
+
+  it('should enable forms when soloLectura is false', () => {
+    component.soloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.avisoFormulario.enabled).toBe(true);
+    expect(component.domicilioFormulario.enabled).toBe(true);
+    expect(component.mercanciaFormulario.enabled).toBe(true);
+  });
+
+  it('should update filaSeleccionadaLista when filaSeleccionada is called', () => {
+    const mockEvento: AvisoTabla[] = [{
+      id: 1,
+      rfc: "rfc",
+      nombreComercial: "nombreComercial",
+      entidadFederativa: "entidadFederativa",
+      alcaldioOMuncipio: "alcaldioOMuncipio",
+      colonia: "colonia"
+    }];
+    component.filaSeleccionada(mockEvento);
+    expect(component.filaSeleccionadaLista).toEqual(mockEvento);
+  });
+
+  it('should update filaSeleccionadaMercanciaLista when filaSeleccionadaMercancia is called', () => {
+    const mockEvento: MercanciaTabla[] = [{
+      id: 1,
+      claveFraccionArancelaria: "claveFraccionArancelaria",
+      nico: "nico",
+      cantidad: "cantidad",
+      claveUnidadMedida: "claveUnidadMedida",
+      valorUSD: "valorUSD",
+      descripcionMercancia: "descripcionMercancia",
+      descripcionProceso: "descripcionProceso",
+      numPedimentoExportacion: "numPedimentoExportacion",
+      numPedimentoImportacion: "numPedimentoImportacion",
+    }];
+    component.filaSeleccionadaMercancia(mockEvento);
+    expect(component.filaSeleccionadaMercanciaLista).toEqual(mockEvento);
+  });
+
+  it('should call cargarMercanciaTabla and close the modal when agregarMercancia is called', () => {
+    const cargarMercanciaTablaSpy = jest.spyOn(component, 'cargarMercanciaTabla');
+    component.closeMercancia = {
+      nativeElement: {
+        click: jest.fn(),
+      },
+    } as any;
+
+    component.agregarMercancia();
+
+    expect(cargarMercanciaTablaSpy).toHaveBeenCalled();
+    expect(component.closeMercancia.nativeElement.click).toHaveBeenCalled();
+  });
+
+  it('should call cargarAvisoTabla, close the modal, and open a notification when agregarDomicilio is called', () => {
+    const cargarAvisoTablaSpy = jest.spyOn(component, 'cargarAvisoTabla');
+    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    component.closeDomicilio = {
+      nativeElement: {
+        click: jest.fn(),
+      },
+    } as any;
+
+    component.agregarDomicilio();
+
+    expect(cargarAvisoTablaSpy).toHaveBeenCalled();
+    expect(component.closeDomicilio.nativeElement.click).toHaveBeenCalled();
+    expect(abrirModalSpy).toHaveBeenCalled();
+  });
+
+  it('should sanitize input by removing non-alphanumeric characters', () => {
+    const mockEvent = {
+      target: { value: 'abc123!@#' } as HTMLInputElement,
+    } as unknown as Event;
+    const form = new FormBuilder().group({
+      testField: [''],
+    });
+    component.sanitizeAlphanumeric(form, 'testField', mockEvent);
+    expect(form.get('testField')?.value).toBe('abc123');
+  });
+
+  it('should sanitize input by removing non-alphanumeric characters except spaces', () => {
+    const mockEvent = {
+      target: { value: 'abc 123!@#' } as HTMLInputElement,
+    } as unknown as Event;
+
+    const form = new FormBuilder().group({
+      testField: [''],
+    });
+    component.sanitizeAlphanumericWithSpace(form, 'testField', mockEvent);
+    expect(form.get('testField')?.value).toBe('abc 123');
+  });
+
+  it('should sanitize input by removing non-numeric characters', () => {
+    const mockEvent = {
+      target: { value: '123abc!@#' } as HTMLInputElement,
+    } as unknown as Event;
+    const form = new FormBuilder().group({
+      testField: [''],
+    });
+    component.sanitizeNumeric(form, 'testField', mockEvent);
+    expect(form.get('testField')?.value).toBe('123');
+  });
+
+  it('should clear the file input and reset the archivoMasivo control', () => {
+    const mockFileInput = {
+      value: 'mockFile',
+    } as HTMLInputElement;
+
+    component.avisoFormulario = new FormBuilder().group({
+      archivoMasivo: ['mockFile'],
+    });
+    component.limpiar(mockFileInput);
+    expect(mockFileInput.value).toBe('');
+    expect(component.avisoFormulario.get('archivoMasivo')?.value).toBe('');
+  });
+
+  it('should set the selected file in the archivoMasivo control', () => {
+    const mockFile = new File(['content'], 'testFile.txt', { type: 'text/plain' });
+    const mockEvent = {
+      target: {
+        files: [mockFile],
+      },
+    } as unknown as Event;
+
+    component.avisoFormulario = new FormBuilder().group({
+      archivoMasivo: [null],
+    });
+    component.onArchivoMasivoSeleccionado(mockEvent);
+    expect(component.avisoFormulario.get('archivoMasivo')?.value).toBe(mockFile);
+  });
+
+  it('should not set the archivoMasivo control if no file is selected', () => {
+    const mockEvent = {
+      target: {
+        files: [],
+      },
+    } as unknown as Event;
+
+    component.avisoFormulario = new FormBuilder().group({
+      archivoMasivo: [null],
+    });
+    component.onArchivoMasivoSeleccionado(mockEvent);
+    expect(component.avisoFormulario.get('archivoMasivo')?.value).toBeNull();
+  });
+
 });

@@ -4,13 +4,69 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+/**
+ * Representa la estructura estandarizada de una respuesta JSON para los servicios extraordinarios.
+ *
+ * Úsala para mapear y manejar respuestas de la API de forma consistente en el frontend.
+ */
 export interface JSONResponse {
+  /**
+   * Define el identificador único del recurso o entidad afectada.
+   *
+   * - **Usa este valor** para relacionar respuestas con registros específicos.
+   * - **Requiere** ser un número entero positivo.
+   * 
+   * @example
+   * const id = response.id; // 101
+   */
   id: number;
+
+  /**
+   * Establece una descripción legible del resultado de la operación.
+   *
+   * - **Muestra este mensaje** al usuario en la interfaz si es necesario.
+   * - **Interpreta el contenido** para entender el estado general de la petición.
+   *
+   * @example
+   * const msg = response.descripcion; // "Operación realizada con éxito"
+   */
   descripcion: string;
+
+  /**
+   * Define el código de estado estandarizado para la respuesta.
+   *
+   * - **Controla el flujo** de la aplicación según el código.
+   * - **Verifica si es éxito o error** con códigos como "OK_200", "ERR_400", etc.
+   *
+   * @example
+   * if (response.codigo === 'OK_200') { mostrarToast('Éxito'); }
+   */
   codigo: string;
+
+  /**
+   * Contiene datos adicionales de la respuesta como texto o JSON stringificado.
+   *
+   * - **Parsea esta cadena** si esperas un objeto: `JSON.parse(response.data)`
+   * - **Maneja aquí información detallada**, como errores técnicos o resultados procesados.
+   *
+   * @example
+   * const extra = JSON.parse(response.data); // { detalle: "Trámite duplicado" }
+   */
   data: string;
 }
 
+
+/**
+ * Marca la clase como un proveedor inyectable y disponible en el sistema de inyección de dependencias de Angular.
+ *
+ * El decorador `@Injectable` permite que Angular cree instancias de esta clase y la inyecte en otros componentes o servicios.
+ *
+ * @decorator Injectable
+ * 
+ * @property {providedIn: 'root'} - Indica que este servicio será provisto en el inyector raíz (root injector),
+ *   lo que significa que estará disponible de forma global en toda la aplicación como un singleton.
+ *   Esto optimiza la carga y evita múltiples instancias del servicio.
+ */
 @Injectable({
   providedIn: 'root',
 })

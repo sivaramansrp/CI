@@ -102,8 +102,11 @@ export class Tramite32502Store extends Store<Solicitud32502State> {
  * 
  * Nota: Este método debe ser implementado para actualizar correctamente el estado de la solicitud.
  */
-  static setFraccionRegla(arg0: string): void {
-    throw new Error('Method not implemented.');
+  public setFraccionRegla(campo: string,valor: string): void {
+   this.update((state) => ({
+      ...state,
+      [campo]: valor
+    }));
   }
   /**
    * Constructor: inicializa el estado con valores por defecto.
@@ -112,7 +115,7 @@ export class Tramite32502Store extends Store<Solicitud32502State> {
     super(createInitialState());
   }
 
-  public setCveFraccionArancelaria(cveFraccionArancelaria: string) {
+  public setCveFraccionArancelaria(cveFraccionArancelaria: string):void {
     this.update((state) => ({
       ...state,
       cveFraccionArancelaria,

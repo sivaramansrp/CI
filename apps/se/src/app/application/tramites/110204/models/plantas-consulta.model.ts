@@ -1,40 +1,94 @@
+/**
+ * Interfaz que representa la información detallada de una mercancía.
+ */
+export interface Mercancia {
+  /** 
+   * Fracción arancelaria Naladi asignada a la mercancía.
+   */
+  fraccionNaladi: string;
 
   /**
-   * Interfaz que representa la información de una mercancía.
-   * 
-   * @property {string} fraccionNaladi - Fracción arancelaria Naladi.
-   * @property {string} fraccionNaladiSa93 - Fracción arancelaria Naladi SA 93.
-   * @property {string} fraccionNaladiSa96 - Fracción arancelaria Naladi SA 96.
-   * @property {string} fraccionNaladiSa02 - Fracción arancelaria Naladi SA 02.
-   * @property {string} nombreTecnico - Nombre técnico de la mercancía.
-   * @property {string} nombreComercial - Nombre comercial de la mercancía.
-   * @property {string} [normaOrigen] - Norma de origen de la mercancía (opcional).
-   * @property {string} [id] - Identificador de la mercancía (opcional).
-   * @property {string} [cantidad] - Cantidad de la mercancía (opcional).
-   * @property {string} [umc] - Unidad de medida comercial (opcional).
-   * @property {string} [tipoFactura] - Tipo de factura (opcional).
-   * @property {string} [valorMercancia] - Valor de la mercancía (opcional).
-   * @property {string} [fechaFinalInput] - Fecha final de entrada (opcional).
-   * @property {string} [numeroFactura] - Número de factura (opcional).
-   * @property {string} [nalad] - Código Nalad (opcional).
-   * @property {string} [complementoClasificacion] - Complemento de clasificación (opcional).
+   * Fracción arancelaria Naladi SA 93 correspondiente.
    */
-  export interface Mercancia {
-    fraccionNaladi: string;
-    fraccionNaladiSa93: string;
-    fraccionNaladiSa96: string;
-    fraccionNaladiSa02: string;
-    nombreTecnico: string;
-    nombreComercial:string;
-    normaOrigen?:string;
-    id?:string;
-    cantidad?:string;
-    umc?:string;
-    tipoFactura?:string;
-    valorMercancia?:string;
-    fechaFinalInput?:string;
-    numeroFactura?:string;
-    nalad?:string;
-    complementoClasificacion?:string;
-  }
+  fraccionNaladiSa93: string;
 
+  /**
+   * Fracción arancelaria Naladi SA 96 correspondiente.
+   */
+  fraccionNaladiSa96: string;
+
+  /**
+   * Fracción arancelaria Naladi SA 02 correspondiente.
+   */
+  fraccionNaladiSa02: string;
+
+  /**
+   * Nombre técnico descriptivo de la mercancía.
+   */
+  nombreTecnico: string;
+
+  /**
+   * Nombre comercial utilizado para la mercancía.
+   */
+  nombreComercial: string;
+
+  /**
+   * Norma de origen aplicable a la mercancía.
+   * @optional
+   */
+  normaOrigen?: string;
+
+  /**
+   * Identificador único de la mercancía.
+   * @optional
+   */
+  id?: string;
+
+  /**
+   * Cantidad total de la mercancía.
+   * @optional
+   */
+  cantidad?: string;
+
+  /**
+   * Unidad de medida comercial para la cantidad.
+   * @optional
+   */
+  umc?: string;
+
+  /**
+   * Tipo de factura asociada a la mercancía.
+   * @optional
+   */
+  tipoFactura?: string;
+
+  /**
+   * Valor económico total de la mercancía.
+   * @optional
+   */
+  valorMercancia?: string;
+
+  /**
+   * Fecha final relacionada con la entrada o registro de la mercancía.
+   * @optional
+   */
+  fechaFinalInput?: string;
+
+  /**
+   * Número de la factura asociada.
+   * @optional
+   */
+  numeroFactura?: string;
+
+  /**
+   * Código Nalad relacionado con la mercancía.
+   * @optional
+   */
+  nalad?: string;
+
+  /**
+   * Complemento adicional para la clasificación arancelaria.
+   * @optional
+   */
+  complementoClasificacion?: string;
+}

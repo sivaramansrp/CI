@@ -69,8 +69,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.solicitudForm = this.fb.group({
-      folioDeDesistimiento: [{ value: this.solicitud260910State.folioDeDesistimiento, disabled: true }, [Validators.required]],
-      folioOriginal: [{ value: this.solicitud260910State.folioOriginal, disabled: true }, [Validators.required]]
+      folioDeDesistimiento: [{ value: this.solicitud260910State?.folioDeDesistimiento, disabled: true }, [Validators.required]],
+      folioOriginal: [{ value: this.solicitud260910State?.folioOriginal, disabled: true }, [Validators.required]]
     });
 
     this.configurarSuscripcionEstadoConsulta();
@@ -108,10 +108,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Configura la suscripción al estado de consulta.
    * - Actualiza los datos locales con el estado actual
    * - Decide si cargar nuevos datos o usar existentes
-   * @private
+   * @public
    * @returns {void}
    */
-  private configurarSuscripcionEstadoConsulta(): void {
+  public configurarSuscripcionEstadoConsulta(): void {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),

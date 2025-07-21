@@ -41,8 +41,9 @@
 
   <div>
     <ng-alert [CONTENIDO]="tituloAlerta" [CUSTOMECLASS]="infoAlerta"></ng-alert>
+    <h5 class="mb-5">Cupos disponibles*:</h5>
     <app-tabla-dinamica [configuracionTabla]="configuracionColumnasCupo" [datos]="datosTablaCupo"
-      [acciones]="[accionesEnum.EDITAR]" (alternarValor)="onAccionCupo($event)"></app-tabla-dinamica>
+      [acciones]="esFormularioSoloLectura ? [] : [accionesEnum.EDITAR]" (alternarValor)="onAccionCupo($event)"></app-tabla-dinamica>
   </div>
   <div>
     <lib-notificaciones *ngIf="modalAbierto" [notificacionInput]="nuevaNotificacion"

@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { PERMISO_MAQUILA } from '../../constantes/permiso-maquila.enum';
 
-import { DatosPasos, ListaPasosWizard,WizardComponent } from '@ng-mf/data-access-user';
+import { AVISO, DatosPasos, ListaPasosWizard,WizardComponent } from '@ng-mf/data-access-user';
 
 interface AccionBoton {
   accion: string;
@@ -19,6 +19,14 @@ interface AccionBoton {
   templateUrl: './permiso-maquila.component.html',
 })
 export class PermisoMaquilaComponent {
+  /**
+   * Constantes importadas desde el archivo de enumeración para los mensajes de advertencia.
+   *
+   * @type {AVISO}
+   * @memberof PermisoMaquilaComponent
+   */
+  public ADVERTENCIA = AVISO;
+  
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   /**
      * Esta variable se utiliza para almacenar la lista de pasos.

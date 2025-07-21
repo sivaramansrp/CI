@@ -6,12 +6,33 @@ import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-d
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260205Store } from '../../estados/stores/tramite260205.store';
 
-
 /**
  * @component PagoDeDerechosContenedoraComponent
- * @description Componente contenedor que utiliza el componente `PagoDeDerechosComponent`
- * para gestionar la funcionalidad relacionada con el pago de derechos.
- * Este componente interactúa con el estado del trámite a través del store `Tramite260205Store`.
+ * 
+ * @selector app-pago-de-derechos-contenedora
+ * 
+ * @description Componente contenedor para la gestión del formulario de pago de derechos. 
+ * Este componente utiliza el estado del store `Tramite260205Store` para inicializar y 
+ * actualizar el estado del formulario de pago de derechos. Además, se suscribe al estado 
+ * de consulta (`ConsultaioQuery`) para determinar si el formulario debe estar en modo 
+ * solo lectura.
+ * 
+ * @standalone true
+ * 
+ * @imports 
+ * - CommonModule: Módulo común de Angular que proporciona directivas y servicios básicos.
+ * - PagoDeDerechosComponent: Componente hijo que representa el formulario de pago de derechos.
+ * 
+ * @templateUrl ./pago-de-derechos-contenedora.component.html
+ * 
+ * @styleUrl ./pago-de-derechos-contenedora.component.scss
+ * 
+ * @implements OnDestroy
+ * 
+ * @remarks Este componente utiliza un `Subject` llamado `destroyNotifier$` para gestionar 
+ * la destrucción de observables y evitar fugas de memoria. También define propiedades 
+ * públicas como `pagoDerechos` y `esFormularioSoloLectura` para interactuar con el estado 
+ * del formulario y su configuración de solo lectura.
  */
 @Component({
   selector: 'app-pago-de-derechos-contenedora',
@@ -31,7 +52,6 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    * @property {PagoDerechosFormState} pagoDerechos
    * @description Estado actual del formulario de pago de derechos, obtenido del store del trámite.
    */
-
   public pagoDerechos: PagoDerechosFormState;
 
   /**

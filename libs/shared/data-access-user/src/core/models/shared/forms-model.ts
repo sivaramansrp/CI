@@ -51,6 +51,8 @@ export interface ModeloDeFormaDinamica {
   row?: number; // row number for the corresponding control
   tooltipQuestionCircle?: boolean; // tooltip icon
   gridLayout?: boolean; // grid layout for radio
+  tooltipTxt?: string;
+  templateKey?: string; // for injecting dynamic content
 }
 
 export interface Validadores {

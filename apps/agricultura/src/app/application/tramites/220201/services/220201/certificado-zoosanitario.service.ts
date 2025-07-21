@@ -1,19 +1,19 @@
 import {
   CapturarSolicitud,
   DatosDeLaSolicitud,
+  DatosDeLaSolicituds,
   DatosParaMovilizacionNacional,
+  FilaSolicitud,
   PagoDeDerechos,
   ValidarEnvio,
 } from '../../models/220201/capturar-solicitud.model';
 
-import { Injectable } from '@angular/core';
-
-import { Observable, map } from 'rxjs';
-
-import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
-
-import { PersonaTerceros, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { Observable, map } from 'rxjs';
+import { TercerosrelacionadosTable, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
 /**
  * Servicio para la gestión de solicitudes del certificado zoosanitario.
@@ -39,7 +39,7 @@ export class CertificadoZoosanitarioServiceService {
     private readonly zoosanitarioStore: ZoosanitarioStore,
     private readonly seccionStore: SeccionLibStore,
     private readonly http: HttpClient
-  ) {}
+  ) { }
 
   /**
    * Actualiza los datos de la solicitud en el store.
@@ -64,11 +64,20 @@ export class CertificadoZoosanitarioServiceService {
   /**
    * Actualiza la lista de terceros relacionados con la solicitud.
    * @method updateTercerosRelacionados
-   * @param {PersonaTerceros[]} tercerosRelacionados Lista de terceros.
+   * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de terceros.
    * @memberof CertificadoZoosanitarioServiceService
    */
-  updateTercerosRelacionados(tercerosRelacionados: PersonaTerceros[]): void {
+  updateTercerosRelacionados(tercerosRelacionados: TercerosrelacionadosdestinoTable): void {
     this.zoosanitarioStore.actualizarTercerosRelacionados(tercerosRelacionados);
+  }
+  /**
+ * Actualiza la lista de terceros relacionados con la solicitud.
+ * @method updateTercerosRelacionados
+ * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de terceros.
+ * @memberof CertificadoZoosanitarioServiceService
+ */
+  updateTercerosRelacionado(tercerosRelacionados: TercerosrelacionadosdestinoTable[]): void {
+    this.zoosanitarioStore.updateTercerosRelacionados(tercerosRelacionados);
   }
 
   /**
@@ -198,7 +207,24 @@ export class CertificadoZoosanitarioServiceService {
     this.updatePagoDeDerechos(datos?.pagoDeDerechos || {} as PagoDeDerechos);
     this.updateDatosDeLaSolicitud(datos?.datosDeLaSolicitud || {} as DatosDeLaSolicitud);
     this.updateDatosParaMovilizacionNacional(datos?.datosParaMovilizacionNacional || {} as DatosDeLaSolicitud);
-    this.updateTercerosRelacionados(datos?.tercerosRelacionados || {} as PersonaTerceros[] );
+    this.updateTercerosRelacionado(datos?.tercerosRelacionados || {} as TercerosrelacionadosdestinoTable[]);
     this.updateValidarEnvio(datos?.validarEnvio || {} as ValidarEnvio);
+    this.zoosanitarioStore.updateFilaSolicitud(datos?.tablaDatos || [] as FilaSolicitud[]);
+    this.zoosanitarioStore.updatedatosForma(datos?.datosForma || [] as TercerosrelacionadosTable[]);
+  }
+  /**
+ * @description Obtiene los datos de la solicitud a partir de una URL específica.
+ * @param {string} url - URL del archivo JSON que contiene los datos de la solicitud.
+ * @returns {Observable<DatosDeLaSolicitud>} Observable con los datos de la solicitud.
+ */
+  obtenerRespuestaPorUrl(url: string): Observable<DatosDeLaSolicituds> {
+    return this.http.get<DatosDeLaSolicituds>(`../../../../../assets/json/220201/${url}`);
+  }
+  /**
+  * @description Obtiene todos los datos del formulario como observable.
+  * @returns {Observable<ListaDeDatosFinal>} Observable con todos los datos del formulario.
+  */
+  getAllDatosForma(): Observable<CapturarSolicitud> {
+    return this.zoosanitarioStore._select(state => state); // Select the entire state
   }
 }

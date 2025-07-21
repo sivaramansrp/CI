@@ -75,7 +75,10 @@ describe('DatosAdicionalesComponent', () => {
     component.inicializarFormulario();
     expect(component.formulario.value).toEqual({
       entidad: 'SINALOA',
-      representacion: 'CULIACAN'
+      representacion: 'CULIACAN',
+      metodoSeparacion: false,
+      exportadorAutorizado: false,
+      informacionRadios: null
     });
   });
 

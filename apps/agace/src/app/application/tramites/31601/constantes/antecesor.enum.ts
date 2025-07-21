@@ -1,4 +1,4 @@
-import { Antecesor } from "../modelos/antecesor.modal";
+import { Antecesor, EmpleadoBimestre } from "../modelos/antecesor.modal";
 import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
 import { ControlInventariosItem } from "../models/models31601.model";
 
@@ -61,8 +61,71 @@ export const CONTROL_INVENTARIOS_TABLA_CONFIGURACION: ConfiguracionColumna<Contr
       orden: 2,
     },
     {
-      encabezado: 'Anexo 24',
+      encabezado: 'Indique si se trata de un sistema de control de inventarios conforme el anexo 24',
       clave: (item: ControlInventariosItem) => item.anexo24 ? '☑' : '☐',
       orden: 3,
     }
   ];
+
+  /*
+  Datos de ejemplo para la tabla de empleados por bimestre,
+  incluyendo denominación social, RFC y número de empleados por bimestre.
+*/
+export const EMPLEADOS_BIMESTRE = [
+  {
+    denominacionSocial: "ADVICS MANUFACTURING MEXICO S DE R.L. DE C.V.",
+    rfc: "AMC010203XXX",
+    numeroEmpleadoBimestre1: 50,
+    primerBimestre: "Enero - Febrero",
+    numeroEmpleadoBimestre2: 55,
+    segundoBimestre: "Marzo - Abril",
+    numeroEmpleadoBimestre3: 53,
+    tercerBimestre: "Mayo - Junio"
+  }
+];
+/*
+  Datos de ejemplo para la tabla de empleados por bimestre,
+  incluyendo denominación social, RFC y número de empleados por bimestre.
+*/
+export const CONFIGURATION_TABLA_EMPLEADOS_BIMESTRE = [
+  {
+    encabezado: 'Denominación Social',
+    clave: (item: EmpleadoBimestre): string => item.denominacionSocial,
+    orden: 1
+  },
+  {
+    encabezado: 'RFC',
+    clave: (item: EmpleadoBimestre): string => item.rfc,
+    orden: 2
+  },
+  {
+    encabezado: 'Número de Empleado (1er Bimestre)',
+    clave: (item: EmpleadoBimestre): number => item.numeroEmpleadoBimestre1,
+    orden: 3
+  },
+  {
+    encabezado: '1er Bimestre',
+    clave: (item: EmpleadoBimestre): string => item.primerBimestre,
+    orden: 4
+  },
+  {
+    encabezado: 'Número de Empleado (2do Bimestre)',
+    clave: (item: EmpleadoBimestre): number => item.numeroEmpleadoBimestre2,
+    orden: 5
+  },
+  {
+    encabezado: '2do Bimestre',
+    clave: (item: EmpleadoBimestre): string => item.segundoBimestre,
+    orden: 6
+  },
+  {
+    encabezado: 'Número de Empleado (3er Bimestre)',
+    clave: (item: EmpleadoBimestre): number => item.numeroEmpleadoBimestre3,
+    orden: 7
+  },
+  {
+    encabezado: '3er Bimestre',
+    clave: (item: EmpleadoBimestre): string => item.tercerBimestre,
+    orden: 8
+  }
+];

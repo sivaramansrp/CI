@@ -1,62 +1,128 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { RepresentanteLegalComponent } from './representante-legal.component';
-import { By } from '@angular/platform-browser';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
+import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
+import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
+import { DatosProcedureState } from '../../../../estados/tramites/tramites261103.store';
+import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
+
+jest.mock('../../services/modificacion-permiso-importacion-medicamentos.service');
 
 describe('RepresentanteLegalComponent', () => {
   let component: RepresentanteLegalComponent;
   let fixture: ComponentFixture<RepresentanteLegalComponent>;
+  let mockStore: DatosProcedureStore;
+  let mockQuery: DatosProcedureQuery;
+  let destroy$: Subject<void>;
+
+  const mockState: DatosProcedureState = {
+    ideGenerica1: '',
+    observaciones: '',
+    denominacion: '',
+    codigo: '',
+    estado: '',
+    municipio: '',
+    localidad: '',
+    colonia: '',
+    calle: '',
+    correo: '',
+    sanitario: '',
+    lada: '',
+    telefono: '',
+    funcionamiento: '',
+    licencia: '',
+    representanteLegalRFC: '',
+    representanteLegalNombre: '',
+    buscar: '',
+    representanteLegalApPaterno: '',
+    representanteLegalApMaterno: '',
+    regimen: '',
+    informacionConfidencial: '',
+    aduanas: '1',
+    claveDeReferencia: '',
+    cadenaPagoDependencia: '',
+    bancoClave: '',
+    llaveDePago: '',
+    fecPago: '',
+    impPago: '',
+  };
 
   beforeEach(async () => {
+    mockStore = {
+      establecerDatos: jest.fn()
+    } as unknown as DatosProcedureStore;
+
+    mockQuery = {
+      selectProrroga$: of(mockState)
+    } as unknown as DatosProcedureQuery;
+
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, RepresentanteLegalComponent], // Importar el componente aquí
+      imports: [ReactiveFormsModule, RepresentanteLegalComponent],
+      providers: [
+        FormBuilder,
+        { provide: DatosProcedureStore, useValue: mockStore },
+        { provide: DatosProcedureQuery, useValue: mockQuery }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(RepresentanteLegalComponent);
     component = fixture.componentInstance;
+    destroy$ = new Subject<void>();
     fixture.detectChanges();
   });
 
-  it('debería crear el componente', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar el grupo de formulario', () => {
-    expect(component.domicilioEstablecimiento).toBeInstanceOf(FormGroup);
-    expect(component.domicilioEstablecimiento.controls['representanteLegalRFC']).toBeTruthy();
-    expect(component.domicilioEstablecimiento.controls['buscar']).toBeTruthy();
-    expect(component.domicilioEstablecimiento.controls['representanteLegalNombre']).toBeTruthy();
-    expect(component.domicilioEstablecimiento.controls['representanteLegalApPaterno']).toBeTruthy();
-    expect(component.domicilioEstablecimiento.controls['representanteLegalApMaterno']).toBeTruthy();
+  it('should initialize form on ngOnInit', () => {
+    component.ngOnInit();
+    expect(component.domicilioEstablecimiento).toBeDefined();
+    expect(component.domicilioEstablecimiento.controls['representanteLegalNombre'].value).toBe('Juan');
   });
 
-  it('debería renderizar correctamente los inputs del formulario', () => {
-    const REPRESENTANTE_LEGAL_RFC_INPUT = fixture.debugElement.query(By.css('#representanteLegalRFCPostal'));
-    const BUSCAR_INPUT = fixture.debugElement.query(By.css('#buscar'));
-    const REPRESENTANTE_LEGAL_NOMBRE_INPUT = fixture.debugElement.query(By.css('#representanteLegalNombre'));
-    const REPRESENTANTE_LEGAL_AP_PATERNO_INPUT = fixture.debugElement.query(By.css('#representanteLegalApMaterno'));
-    expect(BUSCAR_INPUT).toBeTruthy();
-    expect(REPRESENTANTE_LEGAL_NOMBRE_INPUT).toBeTruthy();
-    expect(REPRESENTANTE_LEGAL_AP_PATERNO_INPUT).toBeTruthy();
+  it('should set form as read-only if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.establecerdomicilioEstablecimiento();
+    expect(component.domicilioEstablecimiento.disabled).toBe(true);
   });
 
-  it('debería llamar a setValoresStore cuando un input cambia', () => {
-    jest.spyOn(component, 'setValoresStore');
-    const REPRESENTANTE_LEGAL_RFC_INPUT = fixture.debugElement.query(By.css('#representanteLegalRFCPostal')).nativeElement;
-
-    REPRESENTANTE_LEGAL_RFC_INPUT.value = 'representanteLegalRFC123';
-    REPRESENTANTE_LEGAL_RFC_INPUT.dispatchEvent(new Event('change'));
-
-    expect(component.setValoresStore).toHaveBeenCalledWith(component.domicilioEstablecimiento, 'representanteLegalRFC');
+  it('should call store.establecerDatos in setValoresStore()', () => {
+    component.domicilioEstablecimiento = component['fb'].group({
+      representanteLegalNombre: ['Carlos']
+    });
+    component.setValoresStore(component.domicilioEstablecimiento, 'representanteLegalNombre');
+    expect(mockStore.establecerDatos).toHaveBeenCalledWith({ representanteLegalNombre: 'Carlos' });
   });
 
-  it('debería actualizar el valor del control del formulario cuando se llama setValoresStore', () => {
-    component.setValoresStore(component.domicilioEstablecimiento, 'representanteLegalRFC');
-    expect(component.domicilioEstablecimiento.get('representanteLegalRFC')?.value).toBe('representanteLegalRFC123');
+  it('should call destroy$.next and destroy$.complete on ngOnDestroy()', () => {
+    const nextSpy = jest.spyOn(component['destroy$'], 'next');
+    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('debería manejar entradas inválidas del formulario de manera adecuada', () => {
-    component.domicilioEstablecimiento.get('representanteLegalRFC')?.setValue('');
-    expect(component.domicilioEstablecimiento.valid).toBeFalsy();
+  it('should return true for isValid when service returns true', () => {
+    (ModificacionPermisoImportacionMedicamentosService.isValid as jest.Mock).mockReturnValue(true);
+    component.domicilioEstablecimiento = component['fb'].group({
+      representanteLegalNombre: ['Carlos']
+    });
+    const result = component.isValid('representanteLegalNombre');
+    expect(result).toBe(true);
+  });
+
+  it('should initialize state with obtenerDatosFormulario', () => {
+    component.obtenerDatosFormulario();
+    expect(component['seccionState']).toEqual(mockState);
+  });
+
+  it('should call both obtenerDatosFormulario and establecerdomicilioEstablecimiento in inicializarEstadoFormulario()', () => {
+    const obtenerSpy = jest.spyOn(component, 'obtenerDatosFormulario');
+    const establecerSpy = jest.spyOn(component, 'establecerdomicilioEstablecimiento');
+    component.inicializarEstadoFormulario();
+    expect(obtenerSpy).toHaveBeenCalled();
+    expect(establecerSpy).toHaveBeenCalled();
   });
 });

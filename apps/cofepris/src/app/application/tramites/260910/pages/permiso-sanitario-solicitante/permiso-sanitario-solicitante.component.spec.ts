@@ -1,60 +1,75 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PermisoSanitarioSolicitanteComponent } from './permiso-sanitario-solicitante.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
-import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
+import { PASOS } from '@ng-mf/data-access-user';
+import { DatosPasos, AccionBoton } from '@ng-mf/data-access-user';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-describe('ImportacionProductosComponent', () => {
-  let component: PermisoSanitarioSolicitanteComponent;
+describe('PermisoSanitarioSolicitanteComponent', () => {
+  let componente: PermisoSanitarioSolicitanteComponent;
   let fixture: ComponentFixture<PermisoSanitarioSolicitanteComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PermisoSanitarioSolicitanteComponent],
-      imports: [WizardComponent, BtnContinuarComponent]
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PermisoSanitarioSolicitanteComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-    component.wizardComponent = {
+  it('debería crear el componente', (): void => {
+    expect(componente).toBeTruthy();
+  });
+
+  it('debería inicializar los pasos correctamente', (): void => {
+    expect(componente.pasos).toEqual(PASOS);
+  });
+
+  it('debería inicializar datosPasos correctamente', (): void => {
+    const datosEsperados: DatosPasos = {
+      nroPasos: PASOS.length,
+      indice: 1,
+      txtBtnAnt: 'Anterior',
+      txtBtnSig: 'Continuar',
+    };
+    expect(componente.datosPasos).toEqual(datosEsperados);
+  });
+
+  it('debería actualizar el índice y avanzar en el wizard', (): void => {
+    componente.wizardComponent = {
       siguiente: jest.fn(),
-      atras: jest.fn(),
-    } as unknown as WizardComponent; 
+      atras: jest.fn()
+    } as unknown as WizardComponent;
+    
+    const accion: AccionBoton = { valor: 2, accion: 'cont' };
+    componente.getValorIndice(accion);
+
+    expect(componente.indice).toBe(2);
+    expect(componente.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('debería actualizar el índice y retroceder en el wizard', (): void => {
+    componente.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn()
+    } as unknown as WizardComponent;
+    
+    const accion: AccionBoton = { valor: 1, accion: 'prev' };
+    componente.getValorIndice(accion);
+
+    expect(componente.indice).toBe(1);
+    expect(componente.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  // it('should navigate to the next step when accion is "cont" and valor is valid', () => {
-  //   const accionBoton = { accion: 'cont', valor: 2 };
-  //   component.getValorIndice(accionBoton);
-  //   expect(component.indice).toBe(2); 
-  //   expect(component.wizardComponent.siguiente).toHaveBeenCalled(); 
-  //   expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-  // });
+  it('no debería actualizar el índice si el valor está fuera del rango permitido', (): void => {
+    componente.indice = 2;
+    
+    const accion: AccionBoton = { valor: 5, accion: 'cont' };
+    componente.getValorIndice(accion);
 
-  // it('should navigate to the previous step when accion is "atras" and valor is valid', () => {
-  //   const accionBoton = { accion: 'atras', valor: 3 };
-  //   component.getValorIndice(accionBoton);
-  //   expect(component.indice).toBe(3);
-  //   expect(component.wizardComponent.atras).toHaveBeenCalled(); 
-  //   expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-  // });
-
-  // it('should not navigate if valor is out of range (too low)', () => {
-  //   const accionBoton = { accion: 'cont', valor: 0 };
-  //   component.getValorIndice(accionBoton);
-  //   expect(component.indice).toBe(1);
-  //   expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-  //   expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-  // });
-
-  // it('should not navigate if valor is out of range (too high)', () => {
-  //   const accionBoton = { accion: 'cont', valor: 6 };
-  //   component.getValorIndice(accionBoton);
-  //   expect(component.indice).toBe(1);
-  //   expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-  //   expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-  // });
+    expect(componente.indice).toBe(2); // No cambia
+  });
 });

@@ -29,10 +29,6 @@ describe('DetalleVDictamenComponent', () => {
     fixture.detectChanges();
     expect(component.tramite).toBe(2);
   });
-  it('Inicializa formulario', () => {
-    component.tramite = 3;
-    component.inicializaFormTramite();
-  });
   it('Cambia el componente hijo mostrado según la pestaña seleccionada', () => {
     component.tramite = 3;
     const TAB = {

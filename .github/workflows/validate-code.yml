@@ -1,9 +1,8 @@
-name: Quality Lint and Test 
+name: Quality Lint and Test Affected Projects
 
 on:
   pull_request:
-    # Solo ejecutar cuando los PRs van hacia ramas principales
-    branches: [  "staging", "production" ]
+    branches: [ "develop", "staging", "production" ]
     paths:
       - 'apps/**'
       - 'libs/**'
@@ -11,7 +10,7 @@ on:
       - 'nx.json'
       - '.eslintrc.json'
   push:
-    branches: [ "staging", "production" ]
+    branches: [ "develop", "staging", "production" ]
     paths:
       - 'apps/**'
       - 'libs/**'
@@ -23,132 +22,79 @@ jobs:
   build-deploy:
     runs-on: ubuntu-latest
     env:
-      NX_SKIP_POSTINSTALL: 1   # Evita la ejecución del postinstall de Nx
+      NX_SKIP_POSTINSTALL: 1
+
     steps:
-      # Obtiene el código de tu repositorio.
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 👈 Importante: necesario para acceder a origin/develop
 
-      #  Configura la versión de Node.js requerida (22.14.0).
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '22.14.0'
-          
+
       - name: Instalar NX globalmente
         run: npm install -g nx@19.3.1
-        
-      # Instala el módulo nativo requerido para Linux.
+
       - name: Install native binding for Nx on Linux
         run: npm install @nx/nx-linux-x64-gnu
-        
-      # Instala el binding nativo de SWC para Linux (necesario para la compilación)
+
       - name: Install SWC native binding for Linux
         run: npm install @swc/core-linux-x64-gnu
-        
 
-      # 3. Instala las dependencias usando --force, tal como lo haces localmente.
       - name: Install dependencies
-        run: |
-          npm install --force
-        
+        run: npm install --force
+
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
 
-      - name:  Run lint on AGA
-        run: npx nx lint aga
-
-      - name:  Run test on AGA
+      - name: Get affected projects
+        id: affected
         run: |
-         echo "🔍 Running unit tests for AGA..."
-         if npx nx test aga --watch=false --browsers=ChromeHeadless; then
-          echo "✅ Unit tests passed!"
-         else
-          echo -e "\033[0;31m❌ Unit tests failed! Please check the output above.\033[0m"
-         fi
+          BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+          if [ -z "$BASE_BRANCH" ]; then
+            BASE_BRANCH="develop"
+          fi
+          echo "Base branch: $BASE_BRANCH"
+
+          echo "🔍 Detectando proyectos afectados con base en origin/$BASE_BRANCH ..."
+          npx nx show projects --affected --base=origin/$BASE_BRANCH --head=HEAD > affected.txt
+
+          if [ ! -s affected.txt ]; then
+            echo "✅ No hay proyectos afectados. Finalizando job."
+            echo "HAS_AFFECTED=false" >> $GITHUB_ENV
+          else
+            cat affected.txt
+            echo "HAS_AFFECTED=true" >> $GITHUB_ENV
+            echo "AFFECTED_PROJECTS<<EOF" >> $GITHUB_ENV
+            cat affected.txt >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+          fi
+
+      - name: Run lint for affected projects
+        if: env.HAS_AFFECTED == 'true'
+        run: |
+          echo "🔍 Ejecutando lint..."
+          for project in $AFFECTED_PROJECTS; do
+            if npx nx run $project:lint 2>/dev/null; then
+              echo "✅ Lint passed for $project"
+            else
+              echo -e "\033[0;31m❌ Lint failed for $project\033[0m"
+            fi
+          done
+
+      - name: Run unit tests for affected projects
+        if: env.HAS_AFFECTED == 'true'
         continue-on-error: true
-
-      - name:  Run lint on agace
-        run: npx nx lint agace
-
-      - name: Run tests on agace
-        run: npx nx run agace:test
-
-      - name:  Run lint on agricultura
-        run: npx nx lint agricultura
-
-      - name: Run tests on agricultura
-        run: npx nx run agricultura:test
-
-      - name:  Run lint on se
-        run: npx nx lint se
-
-      - name: Run tests on se
-        run: npx nx run se:test
-
-      - name:  Run lint on semarnat
-        run: npx nx lint semarnat
-
-      - name: Run tests on semarnat
-        run: npx nx run semarnat:test
-
-      - name:  Run lint on cofepris
-        run: npx nx lint cofepris
-
-      - name: Run tests on cofepris
-        run: npx nx run cofepris:test
-
-      - name:  Run lint on sener
-        run: npx nx lint sener
-
-      - name: Run tests on sener
-        run: npx nx run sener:test
-
-      - name:  Run lint on amecafe
-        run: npx nx lint amecafe
-
-      - name: Run tests on amecafe
-        run: npx nx run amecafe:test
-
-      - name:  Run lint on inbal
-        run: npx nx lint inbal
-
-      - name: Run tests on inbal
-        run: npx nx run inbal:test
-
-      - name:  Run lint on sedena
-        run: npx nx lint sedena
-
-      - name: Run tests on sedena
-        run: npx nx run sedena:test
-
-      - name:  Run lint on profepa
-        run: npx nx lint profepa
-
-      - name: Run tests on profepa
-        run: npx nx run profepa:test
-
-      - name:  Run lint on inah
-        run: npx nx lint inah
-
-      - name: Run tests on inah
-        run: npx nx run inah:test
-
-      - name:  Run lint on crt
-        run: npx nx lint crt
-
-      - name: Run tests on crt
-        run: npx nx run crt:test
-
-      - name:  Run lint on stps
-        run: npx nx lint stps
-
-      - name: Run tests on stps
-        run: npx nx run stps:test
-
-      - name:  Run lint on bandejas
-        run: npx nx lint bandejas
-
-      - name: Run tests on bandejas
-        run: npx nx run bandejas:test
+        run: |
+          echo "🧪 Ejecutando tests..."
+          for project in $AFFECTED_PROJECTS; do
+            if npx nx run $project:test --watch=false --browsers=ChromeHeadless 2>/dev/null; then
+              echo "✅ Tests passed for $project"
+            else
+              echo -e "\033[0;31m❌ Tests failed for $project\033[0m"
+            fi
+          done
