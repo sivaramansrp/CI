@@ -1,8 +1,8 @@
 import { EnlaceOperativo, GuardarDatosFormulario, Inventarios, RecibirNotificaciones, RepresentanteLegal, RespuestaConsulta, SeccionSubcontratados, SolicitudCatologoSelectLista, SolicitudRadioLista, TransportistasTable } from '../models/empresas-comercializadoras.model';
+import { Instalaciones, RespuestaAduanas } from '../constants/agregar.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RespuestaAduanas } from '../constants/agregar.model';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Solicitud32604Store } from '../estados/solicitud32604.store';
 
@@ -136,8 +136,8 @@ export class EmpresasComercializadorasService {
    * 
    * @returns {Observable<RespuestaCatalogos[]>} Un observable con la respuesta de los datos de la tabla.
    */
-  getDatosTableData(): Observable<RespuestaCatalogos[]> {
-    return this.http.get<RespuestaCatalogos[]>(`assets/json/32604/datosTabla.json`);
+  getDatosTableData(): Observable<Instalaciones[]> {
+    return this.http.get<Instalaciones[]>(`assets/json/32604/datosTabla.json`);
   }
 
     /**
