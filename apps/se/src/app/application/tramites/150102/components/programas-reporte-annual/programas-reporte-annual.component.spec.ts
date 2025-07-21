@@ -35,6 +35,7 @@ describe('ProgramasReporteAnnualComponent', () => {
         actualizarModalidad: jest.fn(() => of()),
         actualizarTipoPrograma: jest.fn(() => of()),
         actualizarEstatus: jest.fn(() => of()),
+        actualizarIndiceDeRegistroDelPrograma: jest.fn(() => of()),
       } as unknown as Partial<jest.Mocked<Solicitud150102Store>>;
 
     const solicitud150102QueryMock: Partial<jest.Mocked<Solicitud150102Query>> =
@@ -53,6 +54,7 @@ describe('ProgramasReporteAnnualComponent', () => {
           modalidad: 'modalidad-example',
           tipoPrograma: '',
           estatus: 'active',
+          indiceDeRegistroDelPrograma:-1
         }),
       };
 
@@ -129,6 +131,7 @@ describe('ProgramasReporteAnnualComponent', () => {
       modalidad: 'modalidad-example',
       tipoPrograma: '12345',
       estatus: 'active',
+      indiceDeRegistroDelPrograma:-1
     };
     solicitud150102Query.seleccionarSolicitud$ = of(state);
     component.ngOnInit();

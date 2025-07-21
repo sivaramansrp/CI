@@ -59,6 +59,7 @@ describe('DatosDeReporteAnnualComponent', () => {
       modalidad: 'modalidad-example',
       tipoPrograma: '',
       estatus: 'active',
+      indiceDeRegistroDelPrograma: -1,
     });
 
     const queryMock: Partial<jest.Mocked<Solicitud150102Query>> = {
@@ -101,6 +102,7 @@ describe('DatosDeReporteAnnualComponent', () => {
 
     fixture = TestBed.createComponent(DatosDeReporteAnnualComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -170,7 +172,7 @@ describe('DatosDeReporteAnnualComponent', () => {
     expect(enableSpy).toHaveBeenCalled();
     expect(component.formReporteAnnual.enabled).toBe(true);
   });
-  
+
   it('should set bienesProducidos and update producidosDatos in seleccionarFilaDeEntrada', () => {
     const mockBien: BienesProducidos = {
       bienProducido: 'Producto2',
@@ -182,7 +184,10 @@ describe('DatosDeReporteAnnualComponent', () => {
       mercadoNacional: '120',
       exportaciones: '80',
     };
-    const actualizarProducidosDatosSpy = jest.spyOn(solicitud150102Store, 'actualizarProducidosDatos');
+    const actualizarProducidosDatosSpy = jest.spyOn(
+      solicitud150102Store,
+      'actualizarProducidosDatos'
+    );
     component.seleccionarFilaDeEntrada(mockBien);
     expect(component.bienesProducidos).toEqual(mockBien);
     expect(actualizarProducidosDatosSpy).toHaveBeenCalledWith([mockBien]);
@@ -201,7 +206,10 @@ describe('DatosDeReporteAnnualComponent', () => {
     };
     component.bienesProducidos = mockBien;
     component.bienesProducidosDatos = [];
-    const actualizarBienesProducidosDatosSpy = jest.spyOn(solicitud150102Store, 'actualizarBienesProducidosDatos');
+    const actualizarBienesProducidosDatosSpy = jest.spyOn(
+      solicitud150102Store,
+      'actualizarBienesProducidosDatos'
+    );
     component.agregarBienesProducidos();
     expect(component.bienesProducidosDatos).toContain(mockBien);
     expect(actualizarBienesProducidosDatosSpy).toHaveBeenCalledWith([mockBien]);
@@ -220,7 +228,10 @@ describe('DatosDeReporteAnnualComponent', () => {
     };
     component.bienesProducidos = mockBien;
     component.bienesProducidosDatos = [mockBien];
-    const actualizarBienesProducidosDatosSpy = jest.spyOn(solicitud150102Store, 'actualizarBienesProducidosDatos');
+    const actualizarBienesProducidosDatosSpy = jest.spyOn(
+      solicitud150102Store,
+      'actualizarBienesProducidosDatos'
+    );
     component.agregarBienesProducidos();
     expect(component.bienesProducidosDatos.length).toBe(1);
     expect(actualizarBienesProducidosDatosSpy).toHaveBeenCalledWith([mockBien]);
@@ -229,12 +240,14 @@ describe('DatosDeReporteAnnualComponent', () => {
   it('should not update bienesProducidosDatos if bienesProducidos is undefined in agregarBienesProducidos', () => {
     component.bienesProducidos = undefined as any;
     component.bienesProducidosDatos = [];
-    const actualizarBienesProducidosDatosSpy = jest.spyOn(solicitud150102Store, 'actualizarBienesProducidosDatos');
+    const actualizarBienesProducidosDatosSpy = jest.spyOn(
+      solicitud150102Store,
+      'actualizarBienesProducidosDatos'
+    );
     component.agregarBienesProducidos();
     expect(component.bienesProducidosDatos).toEqual([]);
     expect(actualizarBienesProducidosDatosSpy).not.toHaveBeenCalled();
   });
-
 
   it('should update producidosDatos on obtenerProducidosDatos', () => {
     const mockData: BienesProducidos[] = [
@@ -320,5 +333,186 @@ describe('DatosDeReporteAnnualComponent', () => {
     component.ngOnDestroy();
     expect(spyNext).toHaveBeenCalled();
     expect(spyComplete).toHaveBeenCalled();
+  });
+
+  it('should return false and add validation message if ventasTotales is empty', () => {
+    component.formReporteAnnual.patchValue({
+      ventasTotales: '',
+      totalExportaciones: '100',
+    });
+    const result = component.validarTotalExportaciones();
+    expect(result).toBe(false);
+    expect(component.mensajesDeValidacion).toEqual(["(Ventas totales deben ser mayores o iguales a cero.) es un campo requerido"]);
+  });
+
+  it('should return false and add validation message if totalExportaciones is empty', () => {
+    component.formReporteAnnual.patchValue({
+      ventasTotales: '500',
+      totalExportaciones: '',
+    });
+    const result = component.validarTotalExportaciones();
+    expect(result).toBe(false);
+    expect(component.mensajesDeValidacion).toEqual(["(Total exportaciones deben ser mayores o iguales a cero.) es un campo requerido"]);
+  });
+
+  it('should return false and call abrirModal if totalExportaciones > ventasTotales', () => {
+    component.formReporteAnnual.patchValue({
+      ventasTotales: '500',
+      totalExportaciones: '600',
+    });
+    const modalSpy = jest.spyOn(component, 'abrirModal');
+    const result = component.validarTotalExportaciones();
+    expect(result).toBe(false);
+    expect(modalSpy).toHaveBeenCalled();
+  });
+
+  it('should return true if totalExportaciones <= ventasTotales and both are present', () => {
+    component.formReporteAnnual.patchValue({
+      ventasTotales: '1000',
+      totalExportaciones: '500',
+    });
+    const result = component.validarTotalExportaciones();
+    expect(result).toBe(true);
+  });
+
+  it('should reset bienesProducidosSelection if evento length > 0', () => {
+    component.bienesProducidosSelection = 5;
+    component.seleccionarBienesFilaDeEntrada([{ bienProducido: 'x' } as any]);
+    expect(component.bienesProducidosSelection).toBe(-1);
+  });
+
+  it('should set nuevaNotificacion and elementoParaEliminar when abrirModal is called', () => {
+    component.abrirModal(2);
+    expect(component.nuevaNotificacion).toEqual(
+      expect.objectContaining({
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        mensaje: expect.stringContaining('Ventas Totales'),
+        txtBtnAceptar: 'Aceptar',
+      })
+    );
+    expect(component.elementoParaEliminar).toBe(2);
+  });
+
+  it('should remove pedimento at given index if borrar is true', () => {
+    component.pedimentos = [
+      {
+        patente: 1,
+        pedimento: 1,
+        aduana: 1,
+        idTipoPedimento: 1,
+        descTipoPedimento: '',
+        numero: '',
+        comprobanteValor: '',
+        pedimentoValidado: false,
+      },
+    ];
+    component.elementoParaEliminar = 1;
+    component.eliminarPedimento(true);
+    expect(component.pedimentos).toEqual([
+      {
+        patente: 1,
+        pedimento: 1,
+        aduana: 1,
+        idTipoPedimento: 1,
+        descTipoPedimento: '',
+        numero: '',
+        comprobanteValor: '',
+        pedimentoValidado: false,
+      },
+    ]);
+  });
+
+  it('should not remove pedimento if borrar is false', () => {
+    component.pedimentos = [
+      {
+        patente: 1,
+        pedimento: 1,
+        aduana: 1,
+        idTipoPedimento: 1,
+        descTipoPedimento: '',
+        numero: '',
+        comprobanteValor: '',
+        pedimentoValidado: false,
+      },
+    ];
+    component.elementoParaEliminar = 1;
+    component.eliminarPedimento(false);
+    expect(component.pedimentos).toEqual([
+      {
+        patente: 1,
+        pedimento: 1,
+        aduana: 1,
+        idTipoPedimento: 1,
+        descTipoPedimento: '',
+        numero: '',
+        comprobanteValor: '',
+        pedimentoValidado: false,
+      },
+    ]);
+  });
+
+  it('should remove pedimento at given index if borrar is true', () => {
+    component.pedimentos = [
+      {
+        patente: 1,
+        pedimento: 1,
+        aduana: 1,
+        idTipoPedimento: 1,
+        descTipoPedimento: '',
+        numero: '',
+        comprobanteValor: '',
+        pedimentoValidado: false,
+      },
+    ];
+    component.elementoParaEliminar = 1;
+    component.eliminarPedimento(true);
+    expect(component.pedimentos).toEqual([
+      {
+        patente: 1,
+        pedimento: 1,
+        aduana: 1,
+        idTipoPedimento: 1,
+        descTipoPedimento: '',
+        numero: '',
+        comprobanteValor: '',
+        pedimentoValidado: false,
+      },
+    ]);
+  });
+
+  it('should not remove pedimento if borrar is false', () => {
+    component.pedimentos = [
+      {
+        patente: 1,
+        pedimento: 1,
+        aduana: 1,
+        idTipoPedimento: 1,
+        descTipoPedimento: '',
+        numero: '',
+        comprobanteValor: '',
+        pedimentoValidado: false,
+      },
+    ];
+    component.elementoParaEliminar = 1;
+    component.eliminarPedimento(false);
+    expect(component.pedimentos).toEqual([
+      {
+        patente: 1,
+        pedimento: 1,
+        aduana: 1,
+        idTipoPedimento: 1,
+        descTipoPedimento: '',
+        numero: '',
+        comprobanteValor: '',
+        pedimentoValidado: false,
+      },
+    ]);
+  });
+
+  it('should reset bienesProducidosSelection to -1', () => {
+    component.bienesProducidosSelection = 3;
+    component.eliminarBienesProducidos();
+    expect(component.bienesProducidosSelection).toBe(-1);
   });
 });
