@@ -23,7 +23,11 @@ export class FraccionArancelariaService {
     this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
-
+  /**
+ * Consulta el catálogo completo de fracciones arancelarias.
+ *
+ * @returns {Observable<CatalogosResponse>} Un observable que emite la respuesta del catálogo de fracciones.
+ */
   getFracciones(): Observable<CatalogosResponse> {
     const ENDPOINT = `${this.host}${API_GET_FRACCION_ARANCELARIA}`;
 
@@ -40,7 +44,12 @@ export class FraccionArancelariaService {
     );
   }
 
-
+  /**
+ * Consulta una fracción arancelaria específica usando su clave.
+ *
+ * @param {string} cveFraccion - Clave de la fracción arancelaria a consultar.
+ * @returns {Observable<CatalogosResponse>} Un observable con la respuesta de la fracción solicitada.
+ */
   getFraccionesCve(cveFraccion: string): Observable<CatalogosResponse> {
     const ENDPOINT =
       `${this.host}` +
@@ -59,7 +68,13 @@ export class FraccionArancelariaService {
     );
   }
 
-   getNico(cveFraccion: string): Observable<CatalogosResponse> {
+  /**
+  * Consulta el catálogo NICO (Número de Identificación Comercial) asociado a una fracción arancelaria.
+  *
+  * @param {string} cveFraccion - Clave de la fracción arancelaria.
+  * @returns {Observable<CatalogosResponse>} Un observable con la respuesta del catálogo NICO relacionado.
+  */
+  getNico(cveFraccion: string): Observable<CatalogosResponse> {
     const ENDPOINT =
       `${this.host}` +
       API_GET_NICO.replace(CVEFRACCION, cveFraccion);

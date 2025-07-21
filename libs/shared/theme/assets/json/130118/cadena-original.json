@@ -4,13 +4,6 @@
     "datos": {
         "num_folio_tramite": "0105700100020252336300007",
         "boolean_extranjero": true,
-        "documento_requerido": [
-            {
-                "id_documento_seleccionado": 1,
-                "hash_documento": "string",
-                "sello_documento": "string"
-            }
-        ],
         "solicitante": {
             "rfc": "AAL0409235E6",
             "nombre": "Juan Pérez",

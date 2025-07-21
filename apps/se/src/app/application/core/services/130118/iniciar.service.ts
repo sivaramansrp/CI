@@ -13,8 +13,16 @@ import { IniciarRequest } from '../../models/request/iniciar-requst.model';
   providedIn: 'root'
 })
 export class IniciarService {
-private readonly host: string;
 
+  /**
+   * URL del servidor donde se encuentra la API.
+   */
+  private readonly host: string;
+
+  /**
+   * Constructor del servicio IniciarService.
+   * @param http - Cliente HTTP para realizar solicitudes al servidor.
+   */
   constructor(private http: HttpClient) {
     this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
@@ -24,9 +32,8 @@ private readonly host: string;
    * @param rfc RFC del contribuyente.
    * @returns Observable con la respuesta del servidor.
    */
-  postIniciar(PAYLOAD : IniciarRequest): Observable<BaseResponse<null>> {
+  postIniciar(PAYLOAD: IniciarRequest): Observable<BaseResponse<null>> {
     const ENDPOINT = `${this.host}` + API_GET_INICIO;
-     
 
     return this.http.post<BaseResponse<null>>(ENDPOINT, PAYLOAD).pipe(
       map((response) => {

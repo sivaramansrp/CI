@@ -19,6 +19,12 @@ export class Firma130118Service {
 
   constructor(private http: HttpClient) { }
 
+  /**
+   * Envía una solicitud de firma electrónica.
+   * @param idSolicitud - ID de la solicitud a firmar.
+   * @param body - Cuerpo de la solicitud de firma.
+   * @returns Observable con la respuesta del servidor.
+   */
   enviarFirma<T>(idSolicitud: string | number, body: FirmarRequest): Observable<BaseResponse<T>> {
   const ENDPOINT = `${this.urlServer}/api/` + API_POST_FIRMA.replace(IDSOLICITUD, String(idSolicitud));
   return this.http.post<BaseResponse<T>>(ENDPOINT, body).pipe(

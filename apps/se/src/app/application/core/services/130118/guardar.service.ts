@@ -5,7 +5,8 @@ import { GuadarSolicitudResponse } from '../../models/response/guardar-solicitud
 import { Injectable } from '@angular/core';
 
 import { Observable, catchError, map, throwError } from 'rxjs';
-import { API_POST_SOLICITUD } from '../../../constantes/130118/api-constants';
+
+import { API_GET_CERTIFICADO_ANTIGUEDAD, API_POST_SOLICITUD } from '../../../constantes/130118/api-constants';
 import { GuadarSolicitudRequest } from '../../models/request/guardar-solicitud-request.model';
 
 @Injectable({
@@ -13,7 +14,7 @@ import { GuadarSolicitudRequest } from '../../models/request/guardar-solicitud-r
 })
 export class GuardarService {
 
-   private readonly host: string;
+  private readonly host: string;
 
   constructor(private http: HttpClient) {
     this.host = `${ENVIRONMENT.API_HOST}/api/`;
@@ -45,4 +46,26 @@ export class GuardarService {
       })
     );
   }
+
+  /**
+   * Obtiene el certificado de antigüedad.
+   * @returns Observable con la respuesta del servidor.
+   */
+  getCertificadoAntiguedad(): Observable<BaseResponse<null>> {
+    const ENDPOINT = `${this.host}${API_GET_CERTIFICADO_ANTIGUEDAD}`;
+
+    return this.http.get<BaseResponse<null>>(ENDPOINT).pipe(
+      map((response) => {
+        return response;
+      }),
+      catchError(() => {
+        const ERROR = new Error(
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );
+  }
+
+
 }
