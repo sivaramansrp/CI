@@ -33,13 +33,6 @@
         <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTabla" [datos]="registroDeSolicitudesTablaDatos" (listaDeFilaSeleccionada)="onSeleccionChange($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false">
         </app-tabla-dinamica>
     </div>
-
-  <div class="col-md-12">
-        <app-tabla-dinamica [configuracionTabla]="tablaSeleccionada" [datos]="tratadosTablaDatos"  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false">
-        </app-tabla-dinamica>
-    </div>
-
-
     <div class=" text-end mt-5">
 <button class="btn btn-default me-2"
         [disabled]="esFormularioSoloLectura"
@@ -52,6 +45,12 @@
     Eliminar tratado
   </button>
     </div>
+    @if(consultaState.parameter === "READ_PROCEDURE"){
+    <div class="col-md-12">
+        <app-tabla-dinamica [configuracionTabla]="tablaSeleccionada" [datos]="tratadosTablaDatos"  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false">
+        </app-tabla-dinamica>
+    </div>
+  }
 </div>
 
   @if (nuevaNotificacion) {
