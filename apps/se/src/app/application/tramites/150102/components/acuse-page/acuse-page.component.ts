@@ -1,11 +1,7 @@
-import { ACUSE_SERVICIOS_EXTRAORDINARIOS } from '@libs/shared/data-access-user/src';
-import { AccionesTabla } from '@libs/shared/data-access-user/src';
-import { AcuseComponent } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { TITULO_ACUSE } from '@libs/shared/data-access-user/src';
-import { TXT_ALERTA_ACUSE } from '@libs/shared/data-access-user/src';
+import { ACUSE_SERVICIOS_EXTRAORDINARIOS, AccionesTabla, AcuseComponent, TITULO_ACUSE, TXT_ALERTA_ACUSE } from "@libs/shared/data-access-user/src";
+import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+
 
 /**
  * Componente de la página de Acuse

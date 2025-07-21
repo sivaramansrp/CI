@@ -2,7 +2,7 @@
  * Importación de modelos relacionados con el aviso de modificación.
  * Estos modelos se utilizan para estructurar los datos dentro del sistema.
  */
-import { FormularioGrupo, ModificacionGoceInmueble, PersonaFusionEscisionDTO, ProveedorExtranjero, TipoDevAviso } from '../models/avisomodify.model';
+import { FormularioGrupo, ModificacionGoceInmueble, PersonaFusionEscisionDTO, ProveedorExtranjero } from '../models/avisomodify.model';
 
 /**
  * Importación de la librería Akita para gestionar el estado global de la aplicación.
@@ -222,10 +222,10 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
    * 
    * @param {string} EV - La modalidad de certificación a establecer.
    */
-  setModalidadCertificacion(EV: string): void {
+  setModalidadCertificacion(modalidadCertificacion: string): void {
     this.update((state) => ({
       ...state,
-      modalidadCertificacion: EV
+        tipoDevAviso: { ...state.tipoDevAviso, modalidadCertificacion }
     }));
   }
 

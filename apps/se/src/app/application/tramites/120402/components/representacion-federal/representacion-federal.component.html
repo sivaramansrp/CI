@@ -14,6 +14,11 @@
             (selectionChange)="setValorStore(representacionForm, 'entidad')"
             >
           </app-catalogo-select>
+          <div *ngIf="esInvalido('entidad')" class="text-danger">
+              <small *ngIf="representacionForm.get('entidad')?.errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+          </div>
         </div>
         <div class="col-md-4">
           <app-catalogo-select
@@ -27,6 +32,11 @@
            (selectionChange)="setValorStore(representacionForm, 'representacion')"
            >
           </app-catalogo-select>
+          <div *ngIf="esInvalido('representacion')" class="text-danger">
+              <small *ngIf="representacionForm.get('representacion')?.errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+          </div>
         </div>
       </div>
     </form>

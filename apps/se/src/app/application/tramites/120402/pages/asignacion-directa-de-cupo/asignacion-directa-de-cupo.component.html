@@ -4,11 +4,18 @@
       <div class="col-md-12">
         <h1>Asignación directa de cupo personas morales (primera vez)</h1>
       </div>
+
+      @if (esFormaValido) {
+        <div class="col-md-12">
+          <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+        </div>
+      }
+    
       <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
     </div>
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-datos></app-datos>
+      <app-datos #datosRef></app-datos>
       } @case (2) {
       <app-paso-dos></app-paso-dos>
       } @case (3) {
@@ -17,7 +24,7 @@
       }
     </div>
 
-    <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)">
+    <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [dePadre]="true">
     </btn-continuar>
 
   </div>

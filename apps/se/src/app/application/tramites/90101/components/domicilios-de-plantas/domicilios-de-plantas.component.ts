@@ -11,12 +11,13 @@
  * @import { PLANTACOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { FilaPlantas } from '../../models/prosec.module'
@@ -83,6 +84,8 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * Arreglo que contiene los datos de las plantas obtenidos del servicio.
    */
   plantasDatos: FilaPlantas[] = [];
+
+  prosecDatos: FilaPlantas[] = [];
 
   /**
    * @descripcion
@@ -162,7 +165,6 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @param {AUtorizacionProsecQuery} AUtorizacionProsecQuery - Query para consultar el estado de autorización Prosec.
    * @param {SeccionLibStore} seccionStore - Store para manejar el estado de la sección.
    * @param {SeccionLibQuery} seccionQuery - Query para consultar el estado de la sección.
-   * @param {ConsultaioQuery} consultaQuery - Query para operaciones de consulta adicionales.
    */
   constructor(
     public fb: FormBuilder, 
@@ -171,9 +173,8 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     public AUtorizacionProsecQuery: AUtorizacionProsecQuery,
     public seccionStore: SeccionLibStore,
     public seccionQuery: SeccionLibQuery,
-    public consultaQuery: ConsultaioQuery
   ) {
-    // Constructor logic can be added here if needed
+    // Se puede agregar aquí la lógica del constructor si es necesario
   }
 
   /**
@@ -223,8 +224,8 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
             })
           )
           .subscribe();
-
     if(this.formularioDeshabilitado){
+      this.esFormularioSoloLectura = true;
       this.inicializarEstadoFormulario();
     }
   }
@@ -264,6 +265,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.forma.disable();
+      this.prosecDatos = Array.isArray(this.domiciliosState.plantasDatos) ? this.domiciliosState.plantasDatos : [this.domiciliosState.plantasDatos] as FilaPlantas[];
     }
     else {
       this.forma.enable();
@@ -281,7 +283,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   initActionFormBuild(): void {
     this.forma = this.fb.group({
       modalidad: [
-        this.domiciliosState.modalidad,
+        { value: this.domiciliosState.modalidad, disabled: true },
       ],
       Estado: [
         this.domiciliosState.Estado,
@@ -374,7 +376,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     this.obtenerListaEstado();
     this.obtenerListaFederal();
     this.obtenerListaActividad();
-    this.recuperarDatos();
+    
   }
 
   /**
@@ -433,6 +435,51 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
         if (response && Array.isArray(response)) {
           this.plantasDatos = response as FilaPlantas[];
         } 
+      }
+    );
+  }
+
+  /**
+   * @method mostrarDomicilios
+   * @description
+   * Método que recupera los datos de las plantas y los asigna a la propiedad correspondiente.
+   * Utiliza el servicio ProsecService para obtener los datos desde el archivo 'plantasDatos.json'.
+   * 
+   * @returns {void}
+   * 
+   * @memberof DomiciliosDePlantasComponent
+   */
+  mostrarDomicilios(): void {
+    this.recuperarDatos();
+  }
+
+    /**
+   * @method agregarPlantas
+   * @description
+   * Limpia el arreglo de plantas y recupera los datos actualizados de plantas desde el servicio.
+   * Llama a `recuperarProsecDatos()` para obtener la información más reciente de las plantas.
+   * 
+   * @returns {void}
+   */
+  agregarPlantas(): void {
+    this.plantasDatos = [];
+    this.recuperarProsecDatos();
+  }
+
+  /**
+   * @method recuperarProsecDatos
+   * @description
+   * Recupera los datos de plantas desde el archivo 'plantasDatos.json' utilizando el servicio ProsecService.
+   * Si la respuesta es un arreglo, asigna los datos a la propiedad `prosecDatos`.
+   * 
+   * @returns {void}
+   */
+  recuperarProsecDatos(): void {
+    this.ProsecService.obtenerTablaDatos('plantasDatos.json').subscribe(
+      (response) => {
+        if (response && Array.isArray(response)) {
+          this.prosecDatos = response as FilaPlantas[];
+        }
       }
     );
   }

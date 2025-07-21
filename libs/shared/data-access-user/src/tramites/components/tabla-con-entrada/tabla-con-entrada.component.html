@@ -31,14 +31,14 @@
         <!-- Botón de radio para seleccionar una fila -->
         @if(tipoSeleccionTabla === TablaSeleccion.RADIO) {
         <td>
-          <input
+           <input
             class="cursor-pointer"
             type="radio"
-            name="filaSeleccionada"
+            name="confilaSeleccionada"
             [(ngModel)]="idFilaSeleccionada"
-            [value]="i"
+            [value]="'i' + i"
             (change)="seleccionarFila(i, fila)"
-            [checked]="idFilaSeleccionada === i"
+            [checked]="idFilaSeleccionada === 'i' + i"
             aria-label="Seleccionar"
           />
         </td>
@@ -64,6 +64,8 @@
           <input
             type="text"
             name=""
+            libSoloNumerica
+            [maxLength]="col.longitudMaxima || 250"
             [value]="col.clave(fila)"
             class="form-control"
             (change)="changeInputValue($event, i, col.llave)"
