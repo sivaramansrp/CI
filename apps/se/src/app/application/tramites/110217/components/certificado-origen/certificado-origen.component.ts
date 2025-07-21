@@ -6,8 +6,8 @@ import { CertificadosOrigenService } from '../../services/certificado-origen.ser
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { ConsultaioState } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { DISPONIBLES_ENCABEZADOS } from '../../constants/certificado-origen.enum';
 import { DisponiblesTabla } from '../../models/certificado-origen.model.js';
 import { ElementRef } from '@angular/core';
@@ -285,7 +285,17 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
- 
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {          
+          this.soloLectura = this.consultaDatos.readonly;
+          this.consultaDatos = seccionState;
+          this.inicializarFormulario();
+        })
+      )
+      .subscribe();
+
     this.inicializarFormularioCertificado();
     this.inicializarFormularioMercancia();
     this.inicializarFormularioArchivo();
@@ -293,33 +303,34 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     this.cargarMercanciasSeleccionadas();
     this.cargarTratado();
     this.cargarPais();
-
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-          this.soloLectura = this.consultaDatos.readonly;
-          this.inicializarFormulario();
-        })
-      )
-      .subscribe();
   }
 
   /**
-   * Destruye el componente y libera recursos.
+   * Inicializa el estado de los formularios según el modo de solo lectura.
    *
-   * Este método se llama cuando el componente se destruye, asegurando que no queden suscripciones activas.
+   * Este método habilita o deshabilita los formularios programáticamente según el valor de `soloLectura`.
    */
   inicializarFormulario(): void {
     if (this.soloLectura) {
-      this.formularioCertificado.disable();
-      this.formularioMercancia.disable();
-      this.formularioArchivo.disable();
+      if (this.formularioCertificado) {
+        this.formularioCertificado.disable();
+      }
+      if (this.formularioMercancia) {
+        this.formularioMercancia.disable();
+      }
+      if (this.formularioArchivo) {
+        this.formularioArchivo.disable();
+      }
     } else {
-      this.formularioCertificado.enable();
-      this.formularioMercancia.enable();
-      this.formularioArchivo.enable();
+      if (this.formularioCertificado) {
+        this.formularioCertificado.enable();
+      }
+      if (this.formularioMercancia) {
+        this.formularioMercancia.enable();
+      }
+      if (this.formularioArchivo) {
+        this.formularioArchivo.enable();
+      }
     }
   }
   /**
@@ -444,7 +455,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         ],
       }),
     });
-    this.inicializarFormulario();
   }
 
   /**
@@ -504,7 +514,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         [Validators.required],
       ],
     });
-    this.inicializarFormulario();
   }
 
   /**
@@ -516,7 +525,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     this.formularioArchivo = this.fb.group({
       archivo: [this.solicitudState?.tercerOperador, [Validators.required]],
     });
-    this.inicializarFormulario();
   }
 
   /**
