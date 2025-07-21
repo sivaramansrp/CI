@@ -24,6 +24,7 @@ import {
 } from '../../models/registro-muestras-mercancias.model';
 import { modificarTerrestreService } from '../services/modificacar-terrestre.service';
 import { map, Subject, takeUntil } from 'rxjs';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Tramite40102Query } from '../../estados/tramite40102.query';
 /**
  * @component VehiculosComponent
@@ -115,21 +116,37 @@ export class VehiculosComponent implements OnInit {
    * Referencia al botón de cierre del modal de unidad de arrastre.
    */
   @ViewChild('closeUnidadModal') public closeUnidadModal!: ElementRef;
-
+  
+  /**
+   * Indica si el formulario o componente está en modo solo lectura.
+   * Cuando es `true`, los campos no pueden ser editados por el usuario.
+   */
+  isReadonly: boolean = false;
+  
+  /**
+   * Almacena el estado de consulta actual.
+   * Contiene información relevante para determinar el modo de solo lectura y otros datos de consulta.
+   */
+  datosConsulta!: ConsultaioState;
+  
   /**
    * Constructor del componente.
-   * @param fb FormBuilder para formularios reactivos.
-   * @param store Store del trámite 40102.
-   * @param tramiteQuery Query para el estado del trámite.
-   * @param modificarTerrestreService Servicio para modificar datos terrestres.
-   * @param validacionesService Servicio de validaciones de formulario.
+   * @param fb Instancia de FormBuilder para la creación de formularios reactivos.
+   * @param store Store que gestiona el estado del trámite 40102.
+   * @param tramiteQuery Query para consultar el estado del trámite 40102.
+   * @param modificarTerrestreService Servicio encargado de modificar y obtener datos de vehículos terrestres.
+   * @param validacionesService Servicio para validaciones personalizadas de los formularios.
+   * @param consultaioQuery Query para consultar el estado de consulta y modo de solo lectura.
    */
+  
+
   constructor(
     public fb: FormBuilder,
     public store: Tramite40102Store,
     public tramiteQuery: Tramite40102Query,
     public modificarTerrestreService: modificarTerrestreService,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -144,6 +161,17 @@ export class VehiculosComponent implements OnInit {
         })
       )
       .subscribe();
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          if (seccionState.readonly) {
+            this.datosConsulta = seccionState;
+            this.isReadonly = this.datosConsulta.readonly;
+          }
+        })
+      ).subscribe();
 
     this.selectTab('parquevehicular');
     this.inicializarFormulario();
