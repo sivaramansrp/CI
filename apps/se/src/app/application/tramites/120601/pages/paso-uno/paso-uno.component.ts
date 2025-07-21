@@ -119,6 +119,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       const DATOS_EMPRESA_VALID = this.datosEmpresa.validarFormularios();
       if (!DATOS_EMPRESA_VALID) {
         isValid = false;
+      } else {
+        isValid = true;
       }
     } else {
       isValid = false;
