@@ -11,13 +11,14 @@ import {
   TablaSeleccion,
 } from '../../../core/enums/tabla-seleccion.enum';
 import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
+import { TablePaginationComponent } from '../table-pagination/table-pagination.component';
 
 @Component({
   selector: 'app-tabla-dinamica',
   templateUrl: './tabla-dinamica.component.html',
   styleUrl: './tabla-dinamica.component.scss',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TablePaginationComponent],
   host: {},
 })
 export class TablaDinamicaComponent<T> implements OnChanges {
@@ -70,6 +71,8 @@ export class TablaDinamicaComponent<T> implements OnChanges {
    * @type {T[]}
    */
   @Input() datos: T[] = [];
+
+  paginatedDatos: T[] = [];
 
   /**
    * Identificador único para la tabla dinámica.
@@ -179,6 +182,24 @@ export class TablaDinamicaComponent<T> implements OnChanges {
   public batonValor: string = ESTADO_REGISTRO.BAJA;
 
   @Input() desactivarButton: boolean = false;
+
+  /**
+   * Número total de elementos en la tabla.
+  */
+  @Input() totalItems: number = 0;
+
+  /**
+   * Cantidad de elementos por página en la paginación.
+  */
+  @Input() itemsPerPage: number = 5;
+
+  /**
+   * Página actual de la paginación.
+  */
+  @Input() currentPage: number = 1;
+
+  @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
+  @Output() itemsPerPageChange: EventEmitter<number> = new EventEmitter<number>(); 
 
   /**
    * Método para obtener la configuración de las columnas ordenada según el campo "orden".
@@ -302,6 +323,41 @@ export class TablaDinamicaComponent<T> implements OnChanges {
   }
 
   /**
+   * Método que se ejecuta cuando se cambia de página en la paginación.
+   * @param {number} page - Número de la página seleccionada.
+   */
+  onPageChange(page: number):void {
+    this.currentPage = page;
+    this.getUpdatePagination();
+    this.pageChange.emit(page);
+  }
+
+  /**
+   * Actualiza la paginación de la tabla de establecimientos.
+   * Corta los datos de la tabla según la página actual y el número de elementos por página.
+   */
+  getUpdatePagination(): void{
+    // client pagination logic
+    // Note : remove when server ide pagination implemented
+    const STARTINDEX = (this.currentPage - 1) * this.itemsPerPage;
+    this.paginatedDatos = this.datos.slice(
+      STARTINDEX,
+      STARTINDEX + this.itemsPerPage
+    );
+  }
+
+  /**
+   * Método que se ejecuta cuando cambia el número de elementos por página.
+   * @param {number} itemsPerPage - Número de elementos a mostrar por página.
+   */
+  onItemsPerPageChange(itemsPerPage: number):void{
+    this.itemsPerPage = itemsPerPage;
+    this.currentPage = 1;
+    this.getUpdatePagination();
+    this.itemsPerPageChange.emit(itemsPerPage)
+  }
+
+  /**
    * Se ejecuta cuando cambia alguna de las propiedades @Input del componente.
    * En este caso, si cambia el arreglo de datos, se limpia la selección actual de filas.
    *
@@ -311,5 +367,6 @@ export class TablaDinamicaComponent<T> implements OnChanges {
     if(cambios['datos']) {
       this.filasSeleccionadas = [];
     }
+    this.getUpdatePagination();
   }
 }

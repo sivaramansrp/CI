@@ -5,6 +5,12 @@ import { Mercancia } from '../models/mercancia.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
+
+export interface PaginaDestinatarioDatos {
+  datos: Destinatario[];
+  page: number;
+  totalRecords: number;
+}
 /**
  * Interfaz que representa el estado de la solicitud 260101.
  * Contiene toda la información necesaria relacionada con la solicitud, incluyendo datos personales, detalles de mercancías y pagos.
@@ -167,7 +173,7 @@ export interface Solicitud260101State {
   domiciliCorreoElectronioco: string;
 
   /** Lista de destinatarios relacionados con la solicitud. */
-  destinatarioDatos: Destinatario[];
+  destinatarioDatos: PaginaDestinatarioDatos;
 
   /** Clave de referencia asociada al trámite. */
   claveDeReferencia: string;
@@ -352,7 +358,7 @@ export function createInitialState(): Solicitud260101State {
     domiciliCorreoElectronioco: '',
 
     /** Lista de destinatarios relacionados con la solicitud. */
-    destinatarioDatos: [],
+    destinatarioDatos: {datos: [], page: 1, totalRecords: 0},
 
     /** Clave de referencia asociada con la solicitud. */
     claveDeReferencia: '',
@@ -1017,7 +1023,7 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
    * Actualiza los datos de destinatarios en el estado.
    * @param destinatarioDatos - Nuevo arreglo con los datos de destinatarios.
    */
-  public setDestinatarioDatos(destinatarioDatos: Destinatario[]): void {
+  public setDestinatarioDatos(destinatarioDatos: PaginaDestinatarioDatos): void {
     this.update((state) => ({
       ...state,
       destinatarioDatos,
@@ -1031,9 +1037,11 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
   public removeDestinatarioDato(destinatarioToRemove: Destinatario): void {
     this.update((state) => ({
       ...state,
-      destinatarioDatos: state.destinatarioDatos.filter(
+      destinatarioDatos: {datos: state.destinatarioDatos.datos.filter(
         (destinatario) => destinatario.rfc !== destinatarioToRemove.rfc
       ),
+      page: state.destinatarioDatos.page, totalRecords: state.destinatarioDatos.totalRecords
+    }
     }));
   }
 
@@ -1044,7 +1052,7 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
   public addDestinatarioDato(newDestinatario: Destinatario): void {
     this.update((state) => ({
       ...state,
-      destinatarioDatos: [...state.destinatarioDatos, newDestinatario],
+      destinatarioDatos: {datos: [...state.destinatarioDatos.datos, newDestinatario], page: state.destinatarioDatos.page, totalRecords: state.destinatarioDatos.totalRecords},
     }));
   }
 

@@ -15,7 +15,7 @@
             (change)="seleccionarDeseleccionarTodos($event)"
             aria-label="Seleccionar/Deseleccionar todo"
             [checked]="
-              datos.length ? filasSeleccionadas.length === datos.length : false
+              paginatedDatos.length ? filasSeleccionadas.length === paginatedDatos.length : false
             "
             [disabled]="disableSeleccionTablaCheckBox"
           />
@@ -31,7 +31,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngIf="!datos.length">
+      <tr *ngIf="!paginatedDatos.length">
         <td [attr.colspan]="obtenerConfiguracionOrdenada().length + (acciones.length ? 1 : 0) + (tipoSeleccionTabla ? 1 : 0)"
           style="text-align: center;">
           SIN DATOS
@@ -39,8 +39,8 @@
       </tr>
       <!-- Crear las filas de manera dinámica -->
       <tr
-        *ngFor="let fila of datos; let i = index"
-        (click)="onFilaClic(datos[i])"
+        *ngFor="let fila of paginatedDatos; let i = index"
+        (click)="onFilaClic(fila)"
       >
         <!-- Botón de radio para seleccionar una fila -->
         @if(tipoSeleccionTabla === TablaSeleccion.RADIO) {
@@ -130,5 +130,15 @@
       </tr>
     </tbody>
   </table>
+
+  <app-table-pagination
+  *ngIf="totalItems"
+  [totalItems]="totalItems"
+  [itemsPerPage]="itemsPerPage"
+  [currentPage]="currentPage"
+  (pageChange)="onPageChange($event)"
+  (itemsPerPageChange)="onItemsPerPageChange($event)"
+  >
+  </app-table-pagination>
 </div>
 

@@ -12,6 +12,9 @@
       [configuracionTabla]="destinatarioConfiguracionTabla"
       [datos]="destinatarioDatos"
       (listaDeFilaSeleccionada)="getDestinatarioDatos($event)"
+      (pageChange)="onPageChange($event)"
+      (itemsPerPageChange)="onItemsPerPageChange($event)"
+      [totalItems]="totalItems"
     >
     </app-tabla-dinamica>
   </div>

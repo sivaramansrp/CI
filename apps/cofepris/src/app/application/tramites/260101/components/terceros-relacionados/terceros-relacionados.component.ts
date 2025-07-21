@@ -1,4 +1,5 @@
 import { AlertComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { PaginaDestinatarioDatos, Solicitud260101State } from '../../estados/tramites260101.store';
 import { Component } from '@angular/core';
 import { Destinatario } from '../../models/destinatario.model';
 import { ElementRef } from '@angular/core';
@@ -8,7 +9,6 @@ import { ModificarDestinatarioComponent } from '../modificar-destinatario/modifi
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Solicitud260101Query } from '../../estados/tramites260101.query';
-import { Solicitud260101State } from '../../estados/tramites260101.store';
 import { Solicitud260101Store } from '../../estados/tramites260101.store';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
 import { Subject } from 'rxjs';
@@ -243,6 +243,22 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
 
+
+  /**
+   * Número total de elementos en la tabla.
+  */
+  totalItems: number = 0;
+
+  /**
+   * Cantidad de elementos por página en la paginación.
+  */
+  itemsPerPage: number = 5;
+
+  /**
+   * Página actual de la paginación.
+  */
+  currentPage: number = 1;
+
   /**
    * Constructor del componente.
    * Inicializa los servicios y obtiene las listas de destinatarios y fabricantes.
@@ -270,7 +286,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((respuesta: Solicitud260101State) => {
           this.solicitud260101State = respuesta;
-          this.destinatarioDatos = this.solicitud260101State.destinatarioDatos;
+          this.destinatarioDatos = this.solicitud260101State.destinatarioDatos?.datos;
+          this.totalItems = this.solicitud260101State.destinatarioDatos?.totalRecords;
         })
       )
       .subscribe();
@@ -285,8 +302,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       .obtenerDestinatarioListo()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
-        next: (respuesta: Destinatario[]) => {
-          this.destinatarioDatos = respuesta;
+        next: (respuesta: PaginaDestinatarioDatos) => {
+          this.destinatarioDatos = respuesta.datos;
           this.solicitud260101Store.setDestinatarioDatos(respuesta);
         },
       });
@@ -345,6 +362,25 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         this.selectedDestinatario[0]
       );
     }
+  }
+
+  /**
+   * Método que se ejecuta cuando se cambia de página en la paginación.
+   * @param {number} page - Número de la página seleccionada.
+   */
+  onPageChange(page: number):void {
+    // Note: add API call logic to fetch the data based on selected page
+    this.currentPage = page;
+  }
+
+  /**
+   * Método que se ejecuta cuando cambia el número de elementos por página.
+   * @param {number} itemsPerPage - Número de elementos a mostrar por página.
+   */
+  onItemsPerPageChange(itemsPerPage: number):void{
+    // Note: add API call logic to fetch the data based on selected page
+    this.itemsPerPage = itemsPerPage;
+    this.currentPage = 1;
   }
 
   /**
