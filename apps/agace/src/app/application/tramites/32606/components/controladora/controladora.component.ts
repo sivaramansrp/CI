@@ -26,8 +26,8 @@ export class ControladoraComponent {
   fechaDePago: InputFecha = FECHA_PAGO;
   TablaSeleccion = TablaSeleccion;
   public transportistasTabla = TRANSPORTISTAS_TABLA;
-  public controladasTabla = CONTROLADAS_TABLA
-
+  public controladasTabla = CONTROLADAS_TABLA;
+  soloLectura: boolean = false;
 
   constructor(private economico: EconomicoService,
     public query: Tramite32606Query,

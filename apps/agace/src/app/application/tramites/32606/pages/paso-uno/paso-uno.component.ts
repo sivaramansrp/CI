@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
+import { EconomicoService } from '../../services/economico.service';
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -14,66 +15,58 @@ import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606
   styleUrl: './paso-uno.component.scss',
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
+
+  tipoPersona!: number;
+  persona: FormularioDinamico[] = [];
+  domicilioFiscal: FormularioDinamico[] = [];
+  indice: number = 1;
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  consultaDatos!: ConsultaioState;
+  solicitanteForm!: FormGroup;
+  public solicitudState!: Solicitud32606State;
+  esFormularioSoloLectura: boolean = false;
+  public consultaState!: ConsultaioState;
+  public esDatosRespuesta: boolean = false;  
+
   constructor(
+    private economico : EconomicoService,
     private router: Router,
     private consultaioQuery: ConsultaioQuery,
     private tramite32606Store: Tramite32606Store,
-    private fb: FormBuilder) 
-    {
+    private fb: FormBuilder) {
     // El constructor se utiliza para la inyección de dependencias.
-    }
- 
-  /**
-   * Tipo de persona seleccionada.
-   */
-  tipoPersona!: number;
-
-  /**
-   * Configuración del formulario dinámico para la persona.
-   */
-  persona: FormularioDinamico[] = [];
-
-  /**
-   * Configuración del formulario dinámico para el domicilio fiscal.
-   */
-  domicilioFiscal: FormularioDinamico[] = [];
-
-  /**
-   * Índice del paso actual.
-   */
-  indice: number = 1;
-
-  /**
-   * @property {Subject<void>} destroyNotifier$
-   * @description Subject utilizado para notificar y completar las suscripciones activas al destruir el componente, evitando fugas de memoria.
-   */
-  public destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-   * @property {ConsultaioState} consultaDatos
-   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
-   */
-  consultaDatos!: ConsultaioState;
-
-  solicitanteForm!: FormGroup;
-
-  /**
-   * Estado actual de la solicitud.
-   */
-  public solicitudState!: Solicitud32606State;
-
-  /**
-   * @property {boolean} soloLectura
-   * @description Indica si el formulario o los campos están en modo de solo lectura.
-   * @default false
-   */
-  esFormularioSoloLectura: boolean = false;
-
-  ngOnInit(): void {
-   
   }
 
- 
+  ngOnInit(): void {
+     this.consultaioQuery.selectConsultaioState$.pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+      })
+    ).subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormularios();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+/**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormularios(): void {
+    this.economico
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.economico.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
   /**
    * Selecciona una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.
@@ -87,8 +80,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Se utiliza para limpiar las suscripciones.
    */
   ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 
 }

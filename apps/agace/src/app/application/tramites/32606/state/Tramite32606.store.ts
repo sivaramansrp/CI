@@ -41,6 +41,14 @@ export interface Solicitud32606State {
   tipoRadio24: string
   tipoRadio25: string
   tipoRadio26: string,
+  tipoRadio27: string,
+  tipoRadio28: string,
+  tipoRadio29: string,
+  tipoRadio30: string,
+  tipoRadio31: string,
+  tipoRadio32: string,
+  tipoRadio33: string,
+  tipoRadio34: string,
   sectorProductivo: string,
   servicio: string,
   domicilio: string,
@@ -69,6 +77,8 @@ export interface Solicitud32606State {
   numeroAutorizacion: string,
   radioAutorizo: string,
   radioClasificacion: string,
+  caracter: string,
+  nacionalidad: string,
 }
 
 /**
@@ -103,7 +113,14 @@ export function createInitialState(): Solicitud32606State {
     tipoRadio24: '',
     tipoRadio25: '',
     tipoRadio26: '',
-
+    tipoRadio27: '',
+    tipoRadio28: '',
+    tipoRadio29: '',
+    tipoRadio30: '',
+    tipoRadio31: '',
+    tipoRadio32: '',
+    tipoRadio33: '',
+    tipoRadio34: '',
     sectorProductivo: '',
     servicio: '', 
     domicilio: '', 
@@ -114,24 +131,26 @@ export function createInitialState(): Solicitud32606State {
     file2: '', 
     actualmente: '', 
     actualmente2: '', 
-    sistemaIdentificacion: '', // Sistema de identificación
-    lugarRadicacion: '', // Lugar de radicación
-    sistemaControlInventarios: false, // Sistema de control de inventarios
-    rfcTercero: '', // RFC del tercero
-    rfc: '', // RFC del solicitante
-    nombre: '', // Nombre del solicitante
-    apellidoPaterno: '', // Apellido paterno del solicitante
-    apellidoMaterno: '', // Apellido materno del solicitante
-    telefono: '', // Teléfono de contacto
-    correoElectronico: '', // Correo electrónico de contacto
-    monto: '', // Monto relacionado con la solicitud
-    operacionesBancarias: '', // Operaciones bancarias realizadas
-    llavePago: '', // Llave de pago para la solicitud
-    modalidad: '', // Modalidad de la solicitud
-    fechaRegistro: new Date().toISOString(), // Fecha de registro, por defecto la fecha actual en formato ISO
-    numeroAutorizacion: '', // Número de autorización si aplica
-    radioAutorizo: 'NO', // Radio que indica si se autorizó
-    radioClasificacion: 'NO', 
+    sistemaIdentificacion: '', 
+    lugarRadicacion: '', 
+    sistemaControlInventarios: false, 
+    rfcTercero: '', 
+    rfc: '', 
+    nombre: '', 
+    apellidoPaterno: '', 
+    apellidoMaterno: '', 
+    telefono: '', 
+    correoElectronico: '', 
+    monto: '', 
+    operacionesBancarias: '',
+    llavePago: '', 
+    modalidad: '', 
+    fechaRegistro: '', 
+    numeroAutorizacion: '', 
+    radioAutorizo: '',
+    radioClasificacion: '', 
+    caracter: '',
+    nacionalidad: '',
   };
 }
 
@@ -152,19 +171,266 @@ export class Tramite32606Store extends Store<Solicitud32606State> {
     super(createInitialState());
   }
 
-  /**
-   * Actualiza la clave del fiscalizado.
-   * @param claveFiscalizado Nueva clave del fiscalizado.
-   */
-  public setClaveFiscalizador(claveFiscalizado: string): void {
-    this.update((state) => ({ ...state, claveFiscalizado }));
-  }
+public setTipoRadio01(tipoRadio01: string): void {
+  this.update((state) => ({ ...state, tipoRadio01 }));
+}
 
+public setTipoRadio02(tipoRadio02: string): void {
+  this.update((state) => ({ ...state, tipoRadio02 }));
+}
 
-  /**
-   * Restaura el estado al valor inicial.
-   */
-  public limpiarSolicitud(): void {
-    this.reset();
+public setTipoRadio03(tipoRadio03: string): void {
+  this.update((state) => ({ ...state, tipoRadio03 }));
+}
+
+public setTipoRadio04(tipoRadio04: string): void {
+  this.update((state) => ({ ...state, tipoRadio04 }));
+}
+
+public setTipoRadio05(tipoRadio05: string): void {
+  this.update((state) => ({ ...state, tipoRadio05 }));
+}
+
+public setTipoRadio06(tipoRadio06: string): void {
+  this.update((state) => ({ ...state, tipoRadio06 }));
+}
+
+public setTipoRadio07(tipoRadio07: string): void {
+  this.update((state) => ({ ...state, tipoRadio07 }));
+}
+
+public setTipoRadio08(tipoRadio08: string): void {
+  this.update((state) => ({ ...state, tipoRadio08 }));
+}
+
+public setTipoRadio09(tipoRadio09: string): void {
+  this.update((state) => ({ ...state, tipoRadio09 }));
+}
+
+public setTipoRadio10(tipoRadio10: string): void {
+  this.update((state) => ({ ...state, tipoRadio10 }));
+}
+
+public setTipoRadio11(tipoRadio11: string): void {
+  this.update((state) => ({ ...state, tipoRadio11 }));
+}
+
+public setTipoRadio12(tipoRadio12: string): void {
+  this.update((state) => ({ ...state, tipoRadio12 }));
+}
+
+public setTipoRadio13(tipoRadio13: string): void {
+  this.update((state) => ({ ...state, tipoRadio13 }));
+}
+
+public setTipoRadio14(tipoRadio14: string): void {
+  this.update((state) => ({ ...state, tipoRadio14 }));
+}
+
+public setTipoRadio15(tipoRadio15: string): void {
+  this.update((state) => ({ ...state, tipoRadio15 }));
+}
+
+public setTipoRadio16(tipoRadio16: string): void {
+  this.update((state) => ({ ...state, tipoRadio16 }));
+}
+
+public setTipoRadio17(tipoRadio17: string): void {
+  this.update((state) => ({ ...state, tipoRadio17 }));
+}
+
+public setTipoRadio18(tipoRadio18: string): void {
+  this.update((state) => ({ ...state, tipoRadio18 }));
+}
+
+public setTipoRadio19(tipoRadio19: string): void {
+  this.update((state) => ({ ...state, tipoRadio19 }));
+}
+
+public setTipoRadio20(tipoRadio20: string): void {
+  this.update((state) => ({ ...state, tipoRadio20 }));
+}
+
+public setTipoRadio21(tipoRadio21: string): void {
+  this.update((state) => ({ ...state, tipoRadio21 }));
+}
+
+public setTipoRadio22(tipoRadio22: string): void {
+  this.update((state) => ({ ...state, tipoRadio22 }));
+}
+
+public setTipoRadio23(tipoRadio23: string): void {
+  this.update((state) => ({ ...state, tipoRadio23 }));
+}
+
+public setTipoRadio24(tipoRadio24: string): void {
+  this.update((state) => ({ ...state, tipoRadio24 }));
+}
+
+public setTipoRadio25(tipoRadio25: string): void {
+  this.update((state) => ({ ...state, tipoRadio25 }));
+}
+
+public setTipoRadio26(tipoRadio26: string): void {
+  this.update((state) => ({ ...state, tipoRadio26 }));
+}
+
+public setTipoRadio27(tipoRadio27: string): void {
+  this.update((state) => ({ ...state, tipoRadio27 }));
+}
+
+public setTipoRadio28(tipoRadio28: string): void {
+  this.update((state) => ({ ...state, tipoRadio28 }));
+}
+
+public setTipoRadio29(tipoRadio29: string): void {
+  this.update((state) => ({ ...state, tipoRadio29 }));
+}
+
+public setTipoRadio30(tipoRadio30: string): void {
+  this.update((state) => ({ ...state, tipoRadio30 }));
+}
+
+public setTipoRadio31(tipoRadio31: string): void {
+  this.update((state) => ({ ...state, tipoRadio31 }));
+}
+
+public setTipoRadio32(tipoRadio32: string): void {
+  this.update((state) => ({ ...state, tipoRadio32 }));
+}
+
+public setTipoRadio33(tipoRadio33: string): void {
+  this.update((state) => ({ ...state, tipoRadio33 }));
+}
+
+public setTipoRadio34(tipoRadio34: string): void {
+  this.update((state) => ({ ...state, tipoRadio34 }));
+}
+
+public setSectorProductivo(sectorProductivo: string): void {
+  this.update((state) => ({ ...state, sectorProductivo }));
+}
+
+public setServicio(servicio: string): void {
+  this.update((state) => ({ ...state, servicio }));
+}
+
+public setDomicilio(domicilio: string): void {
+  this.update((state) => ({ ...state, domicilio }));
+}
+
+public setBiomestre(biomestre: string): void {
+  this.update((state) => ({ ...state, biomestre }));
+}
+
+public setNumeroEmpleados(numeroEmpleados: string): void {
+  this.update((state) => ({ ...state, numeroEmpleados }));
+}
+
+public setDomicillio(domicillio: string): void {
+  this.update((state) => ({ ...state, domicillio }));
+}
+
+public setFile1(file1: string): void {
+  this.update((state) => ({ ...state, file1 }));
+}
+
+public setFile2(file2: string): void {
+  this.update((state) => ({ ...state, file2 }));
+}
+
+public setActualmente(actualmente: string): void {
+  this.update((state) => ({ ...state, actualmente }));
+}
+
+public setActualmente2(actualmente2: string): void {
+  this.update((state) => ({ ...state, actualmente2 }));
+}
+
+public setSistemaIdentificacion(sistemaIdentificacion: string): void {
+  this.update((state) => ({ ...state, sistemaIdentificacion }));
+}
+
+public setLugarRadicacion(lugarRadicacion: string): void {
+  this.update((state) => ({ ...state, lugarRadicacion }));
+}
+
+public setSistemaControlInventarios(sistemaControlInventarios: boolean): void {
+  this.update((state) => ({ ...state, sistemaControlInventarios }));
+}
+
+public setRfcTercero(rfcTercero: string): void {
+  this.update((state) => ({ ...state, rfcTercero }));
+}
+
+public setRfc(rfc: string): void {
+  this.update((state) => ({ ...state, rfc }));
+}
+
+public setNombre(nombre: string): void {
+  this.update((state) => ({ ...state, nombre }));
+}
+
+public setApellidoPaterno(apellidoPaterno: string): void {
+  this.update((state) => ({ ...state, apellidoPaterno }));
+}
+
+public setApellidoMaterno(apellidoMaterno: string): void {
+  this.update((state) => ({ ...state, apellidoMaterno }));
+}
+
+public setTelefono(telefono: string): void {
+  this.update((state) => ({ ...state, telefono }));
+}
+
+public setCorreoElectronico(correoElectronico: string): void {
+  this.update((state) => ({ ...state, correoElectronico }));
+}
+
+public setMonto(monto: string): void {
+  this.update((state) => ({ ...state, monto }));
+}
+
+public setOperacionesBancarias(operacionesBancarias: string): void {
+  this.update((state) => ({ ...state, operacionesBancarias }));
+}
+
+public setLlavePago(llavePago: string): void {
+  this.update((state) => ({ ...state, llavePago }));
+}
+
+public setModalidad(modalidad: string): void {
+  this.update((state) => ({ ...state, modalidad }));
+}
+
+public setFechaRegistro(fechaRegistro: string): void {
+  this.update((state) => ({ ...state, fechaRegistro }));
+}
+
+public setNumeroAutorizacion(numeroAutorizacion: string): void {
+  this.update((state) => ({ ...state, numeroAutorizacion }));
+}
+
+public setRadioAutorizo(radioAutorizo: string): void {
+  this.update((state) => ({ ...state, radioAutorizo }));
+}
+
+public setRadioClasificacion(radioClasificacion: string): void {
+  this.update((state) => ({ ...state, radioClasificacion }));
+}
+
+public setCaracter(caracter: string): void {
+  this.update((state) => ({ ...state, caracter }));
+}
+
+public setNacionalidad(nacionalidad: string): void {
+  this.update((state) => ({ ...state, nacionalidad }));
+}
+
+/**
+ * Restaura el estado al valor inicial.
+ */
+public limpiarSolicitud(): void {
+  this.reset();
   }
 }
