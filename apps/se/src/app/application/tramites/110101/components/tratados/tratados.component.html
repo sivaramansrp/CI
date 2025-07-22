@@ -1,59 +1,61 @@
 <ng-titulo titulo="Datos generales del solicitante" />
+@if (consultaState.parameter !== "READ_PROCEDURE") {
 <ng-alert [CONTENIDO]="alerta.MENSAJE_ALERTA"></ng-alert>
 <form [formGroup]="formularioTratados">
-    <div class="row">
-        <div class="col-md-8">
-            <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'Pais o bloque'"
-                [required]="true" name="Pais o bloque" [isDisabled]="esFormularioSoloLectura"
-                (change)="setValoresStore(formularioTratados,'pais', 'setPais');getLabelFromCatalogData(paisCatalogo,'pais')"></app-catalogo-select>
-        </div>
-        <div class="col-md-8">
-            <app-catalogo-select [catalogo]="tratadoCatalogo" formControlName="tratado" [label]="'Tratado o Acuerdo'"
-                [required]="true" name="Tratado o Acuerdo" [isDisabled]="esFormularioSoloLectura"
-                (change)="setValoresStore(formularioTratados,'tratado', 'setTratado');getLabelFromCatalogData(tratadoCatalogo,'tratado')"></app-catalogo-select>
-        </div>
-        <div class="col-md-8">
-            <app-catalogo-select [catalogo]="origenCatalogo" formControlName="origen" [label]="'Criterio de origen'"
-                [required]="true" name="Criterio de origen" [isDisabled]="esFormularioSoloLectura"
-                (change)="setValoresStore(formularioTratados,'origen', 'setOrigen');getLabelFromCatalogData(origenCatalogo,'origen')"></app-catalogo-select>
-        </div>
+  <div class="row">
+    <div class="col-md-8">
+      <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'Pais o bloque'" [required]="true"
+        name="Pais o bloque" [isDisabled]="esFormularioSoloLectura"
+        (change)="setValoresStore(formularioTratados,'pais', 'setPais');getLabelFromCatalogData(paisCatalogo,'pais')"></app-catalogo-select>
     </div>
-    <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-        <button class="btn btn-primary" (click)="agregarTratado()" [disabled]="esFormularioSoloLectura">Agregar
-            tratado</button>
+    <div class="col-md-8">
+      <app-catalogo-select [catalogo]="tratadoCatalogo" formControlName="tratado" [label]="'Tratado o Acuerdo'"
+        [required]="true" name="Tratado o Acuerdo" [isDisabled]="esFormularioSoloLectura"
+        (change)="setValoresStore(formularioTratados,'tratado', 'setTratado');getLabelFromCatalogData(tratadoCatalogo,'tratado')"></app-catalogo-select>
     </div>
+    <div class="col-md-8">
+      <app-catalogo-select [catalogo]="origenCatalogo" formControlName="origen" [label]="'Criterio de origen'"
+        [required]="true" name="Criterio de origen" [isDisabled]="esFormularioSoloLectura"
+        (change)="setValoresStore(formularioTratados,'origen', 'setOrigen');getLabelFromCatalogData(origenCatalogo,'origen')"></app-catalogo-select>
+    </div>
+  </div>
+  <div class="col-12 d-flex justify-content-end mt-3 mb-4">
+    <button class="btn btn-primary" (click)="agregarTratado()" [disabled]="esFormularioSoloLectura">Agregar
+      tratado</button>
+  </div>
 </form>
-
+}
+@if (consultaState.parameter !== "READ_PROCEDURE") {
 <ng-alert [CONTENIDO]="'Para continuar con el trámite, deberá agregar por lo menos un tratado o acuerdo.'"></ng-alert>
 
 <h6 class="fs-4">Pais/bloque-tratado/acuerdo seleccionados por el solicitante</h6>
 
 <div class="row">
-    <div class="col-md-12">
-        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTabla" [datos]="registroDeSolicitudesTablaDatos" (listaDeFilaSeleccionada)="onSeleccionChange($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false">
-        </app-tabla-dinamica>
-    </div>
-    <div class=" text-end mt-5">
-<button class="btn btn-default me-2"
-        [disabled]="esFormularioSoloLectura"
-        (click)="modificarTratado()">
-  Modificar tratado
-</button>
-        <button class="btn btn-primary"
-          [disabled]="esFormularioSoloLectura"
-          (click)="eliminarTratado()">
-    Eliminar tratado
-  </button>
-    </div>
-    @if(consultaState.parameter === "READ_PROCEDURE"){
-    <div class="col-md-12">
-        <app-tabla-dinamica [configuracionTabla]="tablaSeleccionada" [datos]="tratadosTablaDatos"  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false">
-        </app-tabla-dinamica>
-    </div>
-  }
+  <div class="col-md-12">
+    <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTabla"
+      [datos]="registroDeSolicitudesTablaDatos" (listaDeFilaSeleccionada)="onSeleccionChange($event)"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false">
+    </app-tabla-dinamica>
+  </div>
+  <div class=" text-end mt-5">
+    <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="modificarTratado()">
+      Modificar tratado
+    </button>
+    <button class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="eliminarTratado()">
+      Eliminar tratado
+    </button>
+  </div>
 </div>
+}
 
-  @if (nuevaNotificacion) {
+@if(consultaState.parameter === "READ_PROCEDURE"){
+<div class="col-md-12">
+  <app-tabla-dinamica [configuracionTabla]="tablaSeleccionada" [datos]="tratadosTablaDatos"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false">
+  </app-tabla-dinamica>
+</div>
+}
+@if (nuevaNotificacion) {
 <section>
   <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
   </lib-notificaciones>

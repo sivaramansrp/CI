@@ -12,8 +12,8 @@
                 <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
                     (keydown.space)="seleccionaTab(3)" role="button" tabindex="3">Protesto de Decir Verdad</a>
             </li>
-            }@else {
-            @if(consultaState.parameter === "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO") {
+            }
+            @if(consultaState.parameter === "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO" ) {
             <li [ngClass]="{ active: indice === 3}">
                 <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Datos de la mercancia</a>
             </li>
@@ -21,16 +21,14 @@
                 <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Datos adicionales</a>
             </li>
             }
-            @else{
-            <li [ngClass]="{ active: indice === 3 ,  disabled: desactivado}" ,>
+        @if(consultaState.parameter !== "READ_PROCEDURE" && consultaState.parameter !== "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO") {
+               <li [ngClass]="{ active: indice === 3 ,  disabled: desactivado}" ,>
                 <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Datos de la mercancia</a>
             </li>
             <li [ngClass]="{ active: indice === 4 , disabled: desactivado}">
                 <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Datos adicionales</a>
             </li>
-            }
-
-            }
+        }
 
         </ul>
         <ng-container>
