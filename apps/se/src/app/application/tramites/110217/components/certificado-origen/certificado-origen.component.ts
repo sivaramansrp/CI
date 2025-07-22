@@ -32,6 +32,7 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { ToastrService } from 'ngx-toastr';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
 import { Tramite110217State } from '../../../../estados/tramites/tramite110217.store';
 import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
@@ -60,6 +61,7 @@ import { takeUntil } from 'rxjs';
     AlertComponent,
     CatalogoSelectComponent,
     InputFechaComponent,
+    TooltipModule,
   ],
   providers: [ToastrService],
   templateUrl: './certificado-origen.component.html',
@@ -248,6 +250,26 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    */
   optionsTipoFactura!: Catalogo[];
 
+  /**
+   * Indica si el modal está en modo edición.
+   * 
+   * Cuando es true, el modal está editando una mercancía existente.
+   * Cuando es false, el modal está agregando una nueva mercancía.
+   */
+  modoEdicion: boolean = false;
+
+  /**
+   * ID de la mercancía que se está editando.
+   * 
+   * Se utiliza para identificar qué mercancía se está modificando.
+   */
+  mercanciaEditandoId: number | null = null;
+
+  /**
+   * Subject para notificar la destrucción del componente.
+   *
+   * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
+   */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
@@ -288,9 +310,9 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
-        map((seccionState) => {          
+        map((seccionState) => {     
+          this.consultaDatos = seccionState;     
           this.soloLectura = this.consultaDatos.readonly;
-          this.consultaDatos = seccionState;
           this.inicializarFormulario();
         })
       )
@@ -299,8 +321,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     this.inicializarFormularioCertificado();
     this.inicializarFormularioMercancia();
     this.inicializarFormularioArchivo();
-    this.cargarMercanciasDisponibles();
-    this.cargarMercanciasSeleccionadas();
     this.cargarTratado();
     this.cargarPais();
   }
@@ -312,25 +332,13 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    */
   inicializarFormulario(): void {
     if (this.soloLectura) {
-      if (this.formularioCertificado) {
-        this.formularioCertificado.disable();
-      }
-      if (this.formularioMercancia) {
-        this.formularioMercancia.disable();
-      }
-      if (this.formularioArchivo) {
-        this.formularioArchivo.disable();
-      }
+      this.formularioCertificado?.disable();
+      this.formularioMercancia?.disable();
+      this.formularioArchivo?.disable();
     } else {
-      if (this.formularioCertificado) {
-        this.formularioCertificado.enable();
-      }
-      if (this.formularioMercancia) {
-        this.formularioMercancia.enable();
-      }
-      if (this.formularioArchivo) {
-        this.formularioArchivo.enable();
-      }
+      this.formularioCertificado?.enable();
+      this.formularioMercancia?.enable();
+      this.formularioArchivo?.enable();
     }
   }
   /**
@@ -609,12 +617,37 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   /**
    * Maneja la selección de filas en la tabla de mercancías disponibles.
    *
-   * Este método asigna la fila seleccionada a `disponiblesSeleccionadasFila` y muestra el modal de búsqueda si está disponible.
+   * Este método asigna la fila seleccionada a `disponiblesSeleccionadasFila`, 
+   * popula el formulario de mercancías con los datos de la fila seleccionada
+   * y muestra el modal de búsqueda si está disponible.
    *
    * @param {DisponiblesTabla} evento - La fila seleccionada en la tabla de mercancías disponibles.
    */
   disponiblesSeleccionDeFilas(evento: DisponiblesTabla): void {
     this.disponiblesSeleccionadasFila = evento;
+    
+    // Resetear modo edición para asegurar que estamos agregando, no editando
+    this.modoEdicion = false;
+    this.mercanciaEditandoId = null;
+    
+    // Poblar el formulario de mercancías con los datos de la fila seleccionada
+    this.formularioMercancia.patchValue({
+      fraccionMercanciaArancelaria: evento.fraccionArancelaria || '',
+      nombreComercialDelaMercancia: evento.nombreComercial || '',
+      nombreTecnico: evento.nombreTecnico || '',
+      // Los demás campos se mantienen vacíos para que el usuario los complete manualmente
+      nombreEnIngles: '',
+      otrasInstancias: '',
+      criterioParaConferir: '',
+      cantidad: '',
+      pais: '',
+      valorDelaMercancia: '',
+      complementoDelaDescripcion: '',
+      fecha: '',
+      numeroFactura: '',
+      tipoFactura: ''
+    });
+    
     if (this.modalBuscar) {
       const MODAL_INSTANCE = new Modal(this.modalBuscar.nativeElement);
       MODAL_INSTANCE.show();
@@ -681,11 +714,121 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Agrega una nueva mercancía a la tabla de mercancías seleccionadas.
+   *
+   * Este método toma los datos del formulario de mercancías y los agrega a la tabla de seleccionadas.
+   */
+  agregarMercancia(): void {
+    if (this.formularioMercancia) {
+      const FORM_DATA = this.formularioMercancia.value;
+      
+      if (this.modoEdicion && this.mercanciaEditandoId !== null) {
+        // Modo edición: actualizar mercancía existente
+        const INDEX = this.mercanciaSeleccionadasTablaDatos.findIndex(
+          item => item.id === this.mercanciaEditandoId
+        );
+        
+        if (INDEX !== -1) {
+          this.mercanciaSeleccionadasTablaDatos[INDEX] = {
+            id: this.mercanciaEditandoId,
+            fraccionArancelaria: FORM_DATA.fraccionMercanciaArancelaria,
+            cantidad: FORM_DATA.cantidad,
+            unidadMedida: FORM_DATA.pais,
+            valorMercancia: FORM_DATA.valorDelaMercancia,
+            tipoFactura: FORM_DATA.tipoFactura,
+            numFactura: FORM_DATA.numeroFactura,
+            complementoDescripcion: FORM_DATA.complementoDelaDescripcion,
+            fechaFactura: FORM_DATA.fecha
+          };
+        }
+      } else {
+        // Modo agregar: crear nueva mercancía
+        const NUEVO_ID = this.mercanciaSeleccionadasTablaDatos.length > 0 
+          ? Math.max(...this.mercanciaSeleccionadasTablaDatos.map(item => item.id)) + 1 
+          : 1;
+        
+        const NUEVA_MERCANCIA: SeleccionadasTabla = {
+          id: NUEVO_ID,
+          fraccionArancelaria: FORM_DATA.fraccionMercanciaArancelaria,
+          cantidad: FORM_DATA.cantidad,
+          unidadMedida: FORM_DATA.pais,
+          valorMercancia: FORM_DATA.valorDelaMercancia,
+          tipoFactura: FORM_DATA.tipoFactura,
+          numFactura: FORM_DATA.numeroFactura,
+          complementoDescripcion: FORM_DATA.complementoDelaDescripcion,
+          fechaFactura: FORM_DATA.fecha
+        };
+        
+        this.mercanciaSeleccionadasTablaDatos.push(NUEVA_MERCANCIA);
+      }
+      
+      // Resetear modo edición
+      this.modoEdicion = false;
+      this.mercanciaEditandoId = null;
+      
+      // Limpiar el formulario
+      this.formularioMercancia.reset();
+      this.inicializarFormularioMercancia();
+      
+      // Cerrar el modal
+      this.cerrarModal();
+    }
+  }
+
+  /**
+   * Abre el modal para modificar la mercancía seleccionada.
+   * 
+   * Este método popula el formulario con los datos de la mercancía seleccionada
+   * y también incluye datos de las mercancías disponibles si hay una fila seleccionada.
+   */
+  modificarMercancia(): void {
+    if (this.mercanciaSeleccionadasFila) {
+      // Activar modo edición
+      this.modoEdicion = true;
+      this.mercanciaEditandoId = this.mercanciaSeleccionadasFila.id;
+      
+      // Poblar el formulario con los datos de la mercancía seleccionada
+      this.formularioMercancia.patchValue({
+        fraccionMercanciaArancelaria: this.mercanciaSeleccionadasFila.fraccionArancelaria,
+        cantidad: this.mercanciaSeleccionadasFila.cantidad,
+        pais: this.mercanciaSeleccionadasFila.unidadMedida,
+        valorDelaMercancia: this.mercanciaSeleccionadasFila.valorMercancia,
+        tipoFactura: this.mercanciaSeleccionadasFila.tipoFactura,
+        numeroFactura: this.mercanciaSeleccionadasFila.numFactura,
+        complementoDelaDescripcion: this.mercanciaSeleccionadasFila.complementoDescripcion,
+        fecha: this.mercanciaSeleccionadasFila.fechaFactura,
+        // Usar datos de las mercancías disponibles si están disponibles
+        nombreComercialDelaMercancia: this.disponiblesSeleccionadasFila?.nombreComercial || '',
+        nombreTecnico: this.disponiblesSeleccionadasFila?.nombreTecnico || '',
+        // Campos que no están en ninguna tabla
+        nombreEnIngles: '',
+        otrasInstancias: '',
+        criterioParaConferir: ''
+      });
+
+      // Abrir el modal
+      if (this.modalBuscar) {
+        const MODAL_INSTANCE = new Modal(this.modalBuscar.nativeElement);
+        MODAL_INSTANCE.show();
+      }
+    }
+  }
+
+  /**
    * Cierra el modal activo.
    *
-   * Este método utiliza la referencia al botón de cierre del modal para cerrarlo.
+   * Este método utiliza la referencia al botón de cierre del modal para cerrarlo
+   * y resetea el modo de edición.
    */
   cerrarModal(): void {
+    // Resetear modo edición
+    this.modoEdicion = false;
+    this.mercanciaEditandoId = null;
+    
+    // Limpiar el formulario
+    this.formularioMercancia.reset();
+    this.inicializarFormularioMercancia();
+    
     if (this.closeModal) {
       this.closeModal.nativeElement.click();
     }
