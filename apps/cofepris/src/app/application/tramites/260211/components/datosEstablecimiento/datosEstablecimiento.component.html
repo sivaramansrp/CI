@@ -72,7 +72,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label" for="correo">Correo electrónico*:
-                      <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" data-bs-toggle="tooltip"></span>
+                      <span class="bi bi-question-circle-fill fs-4 m-1" title="Correo electrónico" data-bs-toggle="tooltip"></span>
                   </label>
                   <input
                     class="form-control"
@@ -90,3 +90,9 @@
     <app-manifiestos></app-manifiestos>
     <app-representante-legal></app-representante-legal>
 </div>
+  @if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" >
+  </lib-notificaciones>
+</section>
+}
