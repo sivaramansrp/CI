@@ -1,9 +1,10 @@
+import {Catalogo, ConsultaioQuery} from '@ng-mf/data-access-user';
 import {ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import {ConsultaioQuery} from '@ng-mf/data-access-user';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
+import { PagoDeDerecho } from '../../../../shared/models/tercerosrelacionados.model';
 import { PagoDeDerechoComponent } from '../../../../shared/components/pago-de-derecho/pago-de-derecho.component';
 import { PagoDeDerechos } from '../../models/220203/importacion-de-acuicultura.module';
 
@@ -43,6 +44,16 @@ export class PagoDeDerechosComponent implements OnDestroy {
      * @property {PagoDeDerechos} pagoData
      */
     pagoData: PagoDeDerechos = {} as PagoDeDerechos;
+       /**
+        * Sujeto para manejar la destrucción de observables y evitar fugas de memoria.
+        * @property {Subject<void>} pagoSelect
+        */
+       pagoSelect: PagoDeDerecho = {
+         bancoSelector: [],
+         justificacionSelector: [],
+       };
+     
+    
   
     /**
      * Sujeto para manejar la destrucción de observables y evitar fugas de memoria.
@@ -77,6 +88,8 @@ export class PagoDeDerechosComponent implements OnDestroy {
     this.importacionAcuiculturaServicio.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
       this.pagoData = datos.pagoDeDerechos || {} as PagoDeDerechos;
     })
+    this.obtenerCatalogosTransporte();
+    this.obtenerCatalogosjustificacionTransporte();
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -87,6 +100,34 @@ export class PagoDeDerechosComponent implements OnDestroy {
       )
       .subscribe();
   }
+    /**
+     * Obtiene los datos del catálogo de transporte.
+     * @method
+     * @returns {void}
+     */
+    public obtenerCatalogosTransporte(): void {
+      this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('banco.json')
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((data) => {
+          this.pagoSelect.justificacionSelector = data.data as Catalogo[];
+        }, (error) => {
+          console.error(error);
+        });
+    }
+      /**
+     * Obtiene los datos del catálogo de transporte.
+     * @method
+     * @returns {void}
+     */
+    public obtenerCatalogosjustificacionTransporte(): void {
+      this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('justificacion.json')
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((data) => {
+          this.pagoSelect.justificacionSelector = data.data as Catalogo[];
+        }, (error) => {
+          console.error(error);
+        });
+    }
     /**
      * Envía los valores actuales del formulario al store compartido.
      * @method onPagoChanged
