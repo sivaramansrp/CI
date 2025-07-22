@@ -451,6 +451,11 @@ export class SolicitudComponent
   readonly SIN_VALOR = SIN_VALOR;
 
   /**
+   * @description Mensaje de error cuando el RFC no es válido
+   */
+  readonly ERR_RFC_NO_VALIDO = ERR_RFC_NO_VALIDO;
+
+  /**
    *@description Alamcena las lineas de capturas seleccionadas por el usuario en la tabla.
    */
   lineaCapturaSeleccionados: LineaCaptura[] = [];
