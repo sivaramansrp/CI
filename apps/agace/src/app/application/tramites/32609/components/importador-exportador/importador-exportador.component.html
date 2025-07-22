@@ -1,4 +1,4 @@
-<div class="container">
+<div class="textil-wrapper pt-5">
   <form [formGroup]="importadorExportadorForm">
     <div class="row">
       <div class="col-md-12">
@@ -25,12 +25,14 @@
         ></app-input-radio>
         <div
           *ngIf="
-            importadorExportadorForm.get('comercioExteriorRealizado')?.invalid &&
-            importadorExportadorForm.get('comercioExteriorRealizado')?.touched
+            importadorExportadorForm.controls['comercioExteriorRealizado']
+              .invalid &&
+            importadorExportadorForm.controls['comercioExteriorRealizado']
+              .touched
           "
-          class="text-danger mt-3"
+          class="text-danger"
         >
-          <b>Respuesta Obligatoria</b>
+          Este campo es obligatorio.
         </div>
       </div>
     </div>
@@ -44,15 +46,6 @@
           [isDisabled]="esFormularioSoloLectura"
           >
         </input-fecha>
-        <div
-          *ngIf="
-            importadorExportadorForm.get('fechaInicioComercio')?.invalid &&
-            importadorExportadorForm.get('fechaInicioComercio')?.touched
-          "
-          class="text-danger mt-3"
-        >
-          <b>Respuesta Obligatoria</b>
-        </div>
       </div>
     </div>
 
@@ -73,12 +66,14 @@
           ></app-input-radio>
           <div
             *ngIf="
-              importadorExportadorForm.get('esParteGrupoComercioExterior')?.invalid &&
-              importadorExportadorForm.get('esParteGrupoComercioExterior')?.touched
+              importadorExportadorForm.controls['esParteGrupoComercioExterior']
+                .invalid &&
+              importadorExportadorForm.controls['esParteGrupoComercioExterior']
+                .touched
             "
-            class="text-danger mt-3"
+            class="text-danger"
           >
-            <b>Respuesta Obligatoria</b>
+            Este campo es obligatorio.
           </div>
         </div>
       </div>
@@ -128,14 +123,6 @@
                       (filaSeleccionada)="onFilaSeleccionada($event)"
                     >
                     </app-tabla-dinamica>
-                     <div 
-                      *ngIf="debeValidarTabla() && tablaDatos.length === 0 && importadorExportadorForm.get('esParteGrupoComercioExterior')?.touched"
-                      class="row mt-3"
-                    >
-                      <div class="col-md-12 text-danger">
-                        <b>Se debe agregar por lo menos una empresa del grupo</b>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -189,12 +176,16 @@
           ></app-input-radio>
           <div
             *ngIf="
-              importadorExportadorForm.get('fusionEscisionConOperacionExterior')?.invalid &&
-              importadorExportadorForm.get('fusionEscisionConOperacionExterior')?.touched
+              importadorExportadorForm.controls[
+                'fusionEscisionConOperacionExterior'
+              ].invalid &&
+              importadorExportadorForm.controls[
+                'fusionEscisionConOperacionExterior'
+              ].touched
             "
-            class="text-danger mt-3"
+            class="text-danger"
           >
-            <b>Respuesta Obligatoria</b>
+            Este campo es obligatorio.
           </div>
         </div>
       </div>
@@ -227,12 +218,14 @@
           ></app-input-radio>
           <div
             *ngIf="
-              importadorExportadorForm.get('empresaExtranjeraIMMEX')?.invalid &&
-              importadorExportadorForm.get('empresaExtranjeraIMMEX')?.touched
+              importadorExportadorForm.controls['empresaExtranjeraIMMEX']
+                .invalid &&
+              importadorExportadorForm.controls['empresaExtranjeraIMMEX']
+                .touched
             "
-            class="text-danger mt-3"
+            class="text-danger"
           >
-            <b>Respuesta Obligatoria</b>
+            Este campo es obligatorio.
           </div>
         </div>
       </div>
@@ -372,9 +365,10 @@
       </div>
       <!-- Error message row -->
           <div class="row" *ngIf="mostrarError">
-            <div class="col-md-12 text-danger mt-3">
-                <b>Es requisito obligatorio efectuar el pago de derechos</b>
-              
+            <div class="col-md-12">
+              <small class="text-danger espaciador-campo-pequeño"
+                ><b>Es requisito obligatorio efectuar el pago de derechos</b></small
+              >
             </div>
           </div>
       <div class="form-group mt-5">
@@ -384,7 +378,168 @@
           traslado de las mercancías de comercio exterior.
         </label>
       </div>
-      <app-agregar-transportistas #agregarTransportistasRef></app-agregar-transportistas>
+      <app-agregar-transportistas></app-agregar-transportistas>
+
+
+    <div class="row" >
+        <div class="col-md-12 p-4">
+          <div class="form-group">
+            <label class="form-label text-left">
+              <span class="text-danger">*</span>Señale si cuenta con programa IMMEX del rubro seleccionado.
+            </label>
+            <app-input-radio
+              [radioOptions]="opcionDeBotonDeRadio"
+              [isRequired]="true"
+              [layout]="'horizontal'"
+              formControlName="cuentaConProgramaIMMEX"
+              (valueChange)="onSeleccionfalsa($event)"
+              (change)="setValoresStore(importadorExportadorForm, 'cuentaConProgramaIMMEX')"
+            ></app-input-radio>
+            <div
+              *ngIf="
+                importadorExportadorForm.controls[
+                  'cuentaConProgramaIMMEX'
+                ].invalid &&
+                importadorExportadorForm.controls[
+                  'cuentaConProgramaIMMEX'
+                ].touched
+              "
+              class="text-danger"
+            >
+              Respuesta Obligatoria
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="form-group">
+      <label class="form-label text-left empresaExtranjeraIMMEX">
+        <span class="text-danger">*</span>Anexe constancia de la totalidad de personal registrado ante IMSS del SUA y soporte documental del pago de cuotas obrero patronales de los tres últimos bimestres anteriores a la solicitud, de por lo menos treinta empleados en donde inidca la imagen
+
+      </label>
+    </div>
+
+    <div class="row" >
+        <div class="col-md-12 p-4">
+          <div class="form-group">
+            <label class="form-label text-left">
+              Que los socios y accionistas, representante legal, administrador unico o miembros del consejo de administración de la empresasa acrediten haber presentado la declaración anual del ISR correspondiente a los 2 últimos ejercicios fiscales previos a la solicitud.
+            </label>
+            <app-input-radio
+              [radioOptions]="opcionDeBotonDeRadio"
+              [isRequired]="false"
+              [layout]="'horizontal'"
+              formControlName="declaracionAnualISRRepresentantes"
+              (valueChange)="onSeleccionfalsa($event)"
+              (change)="setValoresStore(importadorExportadorForm, 'declaracionAnualISRRepresentantes')"
+            ></app-input-radio>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" >
+        <div class="col-md-12 p-4">
+          <div class="form-group">
+            <label class="form-label text-left">
+              <span class="text-danger">*</span>Señale si cuenta con el Registro en el Esquema de Certificación de Empresas en la Modalidad de IVA e IEPS en cualquiera de sus rubros.
+            </label>
+            <app-input-radio
+              [radioOptions]="opcionDeBotonDeRadio"
+              [isRequired]="true"
+              [layout]="'horizontal'"
+              formControlName="registroEsquemaCertificacionIVAIEPS"
+              (valueChange)="onSeleccionfalsa($event)"
+              (change)="setValoresStore(importadorExportadorForm, 'registroEsquemaCertificacionIVAIEPS')"
+            ></app-input-radio>
+            <div
+              *ngIf="
+                importadorExportadorForm.controls[
+                  'registroEsquemaCertificacionIVAIEPS'
+                ].invalid &&
+                importadorExportadorForm.controls[
+                  'registroEsquemaCertificacionIVAIEPS'
+                ].touched
+              "
+              class="text-danger"
+            >
+              Respuesta Obligatoria
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+        <div class="col-md-12 py-4" *ngIf="importadorExportadorForm.get('registroEsquemaCertificacionIVAIEPS')?.value === '1'">
+            <div class="row justify-content-center">
+              <div class="col-md-10">
+                <form [formGroup]="rubroIVATextilForm">
+                 <div class="row mt-4">
+                <div class="col-md-5 text-end">
+                  <label class="form-label text-end text-nowrap mb-0" for="modalidadivaeips"
+                    >Modalidad  I V A e  I E P S</label
+                  >
+                </div>
+                <div class="col-md-7">
+                  <input
+                    class="form-control"
+                    formControlName="monto"
+                    type="text"
+                    id="rubroCertificacion"
+                    name="rubroCertificacion"
+                    formControlName="rubroCertificacion"
+                    [readOnly]="true"
+                  />
+                </div>
+              </div>
+
+          <div class="row mt-4">
+            <div class="col-md-5 text-end">
+              <label
+                class="form-label mb-0 text-nowrap text-end"
+                for="fechaFinVigenciaRubro"
+              >
+                Fecha De Registro
+              </label>
+            </div>
+
+            <div class="col-md-7">
+            <input
+              class="form-control flex-grow-1"
+              formControlName="fechaFinVigenciaRubro"
+              type="text"
+              id="fechaFinVigenciaRubro"
+              name="fechaFinVigenciaRubro"
+              [readOnly]="true"
+            />
+            </div>
+          </div>
+
+            <div class="row mt-4">
+                <div class="col-md-5 text-end">
+                  <label class="form-label text-nowrap text-end mb-0" for="numeroOficio"
+                    >Número de autorización</label
+                  >
+                </div>
+                <div class="col-md-7">
+                  <input
+                    class="form-control"
+                    formControlName="numeroOficio"
+                    type="text"
+                    id="numeroOficio"
+                    name="numeroOficio"
+                    [readOnly]="true"
+                  />
+                </div>
+              </div>
+</form>
+              </div>
+            </div>
+             
+
+          
+        </div>
+
+
       <div class="col-md-12">
         <ng-titulo titulo="Reconocimiento Mutuo" />
       </div>
@@ -428,15 +583,6 @@
           formControlName="registroEsquemaCertificacion"
           (change)="setValoresStore(importadorExportadorForm, 'registroEsquemaCertificacion')"
         ></app-input-radio>
-        <div
-          *ngIf="
-            importadorExportadorForm.get('registroEsquemaCertificacion')?.invalid &&
-            importadorExportadorForm.get('registroEsquemaCertificacion')?.touched
-          "
-          class="text-danger mt-3"
-        >
-          <b>Respuesta Obligatoria</b>
-        </div>
       </div>
       <div class="col-md-12">
         <ng-titulo titulo="Clasificación de la Información" />
@@ -455,15 +601,6 @@
           formControlName="tipoInformacionEmpresa"
           (change)="setValoresStore(importadorExportadorForm, 'tipoInformacionEmpresa')"
         ></app-input-radio>
-        <div
-          *ngIf="
-            importadorExportadorForm.get('tipoInformacionEmpresa')?.invalid &&
-            importadorExportadorForm.get('tipoInformacionEmpresa')?.touched
-          "
-          class="text-danger mt-3"
-        >
-          <b>Respuesta Obligatoria</b>
-        </div>
       </div>
     </div>
   </form>
@@ -492,8 +629,8 @@
               (change)="setValoresStore(agregarEnlaceOperativoForm, 'rfcEnclaveOperativo')"
             />
           </div>
-          @if(agregarEnlaceOperativoForm.get('rfcEnclaveOperativo')?.invalid
-          && agregarEnlaceOperativoForm.get('rfcEnclaveOperativo')?.touched)
+          @if(agregarEnlaceOperativoForm.controls['rfcEnclaveOperativo'].invalid
+          && agregarEnlaceOperativoForm.controls['rfcEnclaveOperativo'].touched)
           {
           <div class="mensaje-error">Este campo es obligatorio.</div>
           }
@@ -697,3 +834,9 @@
     </button>
   </div>
 </ng-template>
+
+<lib-notificaciones 
+  *ngIf="esHabilitarElDialogo"
+  [notificacionInput]="nuevaNotificacion" 
+  (confirmacionModal)="cerrarModal()">
+</lib-notificaciones>
