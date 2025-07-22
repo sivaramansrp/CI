@@ -4,6 +4,7 @@ import {
   OPCIONES_INFORMACION,
   OPCIONES_RECONOCIMIENTO,
 } from '@libs/shared/data-access-user/src/tramites/constantes/32614/datos-comunes.enum';
+import {MERCANCIA_TABLA, MercanciasInfo} from '../../../../shared/models/datos-comunes.model';
 
 import {
   AfterViewInit,
@@ -39,14 +40,10 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
+import { SolicitudDeRegistroInvocarService } from '../../services/solicitud-de-registro-invocar.service';
 import { TEXTOS_ESTATICOS_MENSAJERIA } from '../../constants/texto-estatico.enum';
 import { Tramite32614MensajeriaQuery } from '../../estados/queries/mensajeria.query';
 import productivo from '@libs/shared/theme/assets/json/32614/productivo.json';
-import {
-  MercanciasInfo,
-  MERCANCIA_TABLA,
-} from '../../../../shared/models/datos-comunes.model';
-import { SolicitudDeRegistroInvocarService } from '../../services/solicitud-de-registro-invocar.service';
 /**
  * Componente que gestiona la sección de mensajería para el trámite 32614.
  * Permite capturar y mostrar información relacionada con solicitantes, filiales,

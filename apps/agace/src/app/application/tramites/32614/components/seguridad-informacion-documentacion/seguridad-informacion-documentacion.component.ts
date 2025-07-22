@@ -4,9 +4,8 @@ import { Solicitud32614PerfilesMensajeriaState, Tramite32614PerfilesMensajeriaSt
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-
-import { Tramite32614PerfilesMensajeriaQuery } from '../../estados/queries/perfilesMensajeria.query';
 import { TEXTOS_ESTATICOS_SEGURIDAD_INFORMACION } from '../../constants/texto-estatico-dos.enum';
+import { Tramite32614PerfilesMensajeriaQuery } from '../../estados/queries/perfilesMensajeria.query';
 
 /**
  * Componente encargado de gestionar la sección de "Seguridad de la Información y Documentación"

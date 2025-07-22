@@ -9,10 +9,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 /**
- * Servicio encargado de invocar y obtener los datos necesarios
- * para la solicitud de registro del trámite 32614.
- * Se encarga de consumir archivos JSON locales que simulan las respuestas
- * de diferentes catálogos o entidades relacionadas con el trámite.
+ * Service responsible for invoking and obtaining the necessary data
+ * for the registration request of procedure 32614.
+ * It handles consuming local JSON files that simulate responses
+ * from different catalogs or entities related to the procedure.
  *
  * @export
  * @class SolicitudDeRegistroInvocarService
@@ -23,20 +23,19 @@ import { Observable } from 'rxjs';
 export class SolicitudDeRegistroInvocarService {
 
   /**
-   * Crea una instancia del servicio de invocación.
+   * Creates an instance of the invocation service.
    *
-   * @param {HttpClient} http - Cliente HTTP utilizado para realizar peticiones a los recursos JSON locales.
+   * @param {HttpClient} http - HTTP client used to make requests to local JSON resources.
    * @memberof SolicitudDeRegistroInvocarService
    */
   constructor(private http: HttpClient,private tramite32614MensajeriaStore:Tramite32614MensajeriaStore, private tramite32614PerfilesStore:Tramite32614PerfilesStore, private tramite32614PerfilesMensajeriaStore:Tramite32614PerfilesMensajeriaStore, private tramite32614TercerosStore:Tramite32614TercerosStore, private tramite32614Store:Tramite32614Store ) {
-    // Constructor vacío, puede incluir lógica si es necesario.
   }
 
   /**
-   * Obtiene los datos de la tabla de mercancías.
-   * Carga un archivo JSON que contiene información simulada para llenar la tabla de mercancías.
+   * Gets the merchandise table data.
+   * Loads a JSON file containing simulated information to populate the merchandise table.
    *
-   * @returns {Observable<RespuestaTabla>} Un observable con los datos de la tabla.
+   * @returns {Observable<RespuestaTabla>} An observable with the table data.
    * @memberof SolicitudDeRegistroInvocarService
    */
   obtenerTablaDatos(): Observable<RespuestaTabla> {
@@ -44,10 +43,10 @@ export class SolicitudDeRegistroInvocarService {
   }
 
   /**
-   * Obtiene los datos de la tabla de instalaciones principales.
-   * Utiliza un recurso JSON para simular la respuesta de una tabla de instalaciones principales.
+   * Gets the main installations table data.
+   * Uses a JSON resource to simulate the response from a main installations table.
    *
-   * @returns {Observable<InstalacionesPrincipalesRespuestaTabla>} Un observable con los datos de la tabla de instalaciones principales.
+   * @returns {Observable<InstalacionesPrincipalesRespuestaTabla>} An observable with the main installations table data.
    * @memberof SolicitudDeRegistroInvocarService
    */
   obtenerInstalacionesPrincipalesTablaDatos(): Observable<InstalacionesPrincipalesRespuestaTabla> {
@@ -55,10 +54,10 @@ export class SolicitudDeRegistroInvocarService {
   }
 
   /**
-   * Obtiene los datos de la tabla de personas.
-   * Realiza una petición a un recurso local en formato JSON que contiene datos relacionados con personas.
+   * Gets the person table data.
+   * Makes a request to a local resource in JSON format containing data related to persons.
    *
-   * @returns {Observable<PersonaRespuestaTabla>} Un observable con los datos de la tabla de personas.
+   * @returns {Observable<PersonaRespuestaTabla>} An observable with the person table data.
    * @memberof SolicitudDeRegistroInvocarService
    */
   obtenerPersonaTablaDatos(): Observable<PersonaRespuestaTabla> {
@@ -67,102 +66,149 @@ export class SolicitudDeRegistroInvocarService {
 
 
   /**
- * Obtiene los datos del registro de toma de muestras de mercancías.
+ * Gets the merchandise sampling registration data.
  *
- * Realiza una solicitud HTTP GET para recuperar la información almacenada en el archivo JSON
- * correspondiente a la toma de muestras de mercancías para el trámite 32614.
+ * Makes an HTTP GET request to retrieve the information stored in the JSON file
+ * corresponding to merchandise sampling for procedure 32614.
  *
- * @returns Un observable que emite el estado de la solicitud 32614 (`Solicitud32614State`).
+ * @returns An observable that emits the 32614 request state (`Solicitud32614State`).
  */
 getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud32614MensajeriaState> {
     return this.http.get<Solicitud32614MensajeriaState>('assets/json/32614/tramite32614_mensajeria.json');
   }
 
+  /**
+   * Gets the profiles registration data.
+   * 
+   * @returns {Observable<Solicitud32614PerfilesState>} An observable with the profiles data.
+   */
   getRegistroperfilessData(): Observable<Solicitud32614PerfilesState> {
     return this.http.get<Solicitud32614PerfilesState>('assets/json/32614/tramite32614_perfiles.json');
   }
 
+  /**
+   * Gets the profiles messaging registration data.
+   * 
+   * @returns {Observable<Solicitud32614PerfilesMensajeriaState>} An observable with the profiles messaging data.
+   */
   getRegistroTperfilesMensajeriassData(): Observable<Solicitud32614PerfilesMensajeriaState> {
     return this.http.get<Solicitud32614PerfilesMensajeriaState>('assets/json/32614/tramite32614_permensajeria.json');
   }
 
+  /**
+   * Gets the third parties registration data.
+   * 
+   * @returns {Observable<Solicitud32614TercerosState>} An observable with the third parties data.
+   */
   getRegistroTotercerosData(): Observable<Solicitud32614TercerosState> {
     return this.http.get<Solicitud32614TercerosState>('assets/json/32614/tramite32614_terceros.json');
   }
+
+  /**
+   * Gets the procedure 32614 registration data.
+   * 
+   * @returns {Observable<Solicitud32614State>} An observable with the procedure 32614 data.
+   */
   getRegistroTotramite32614Data(): Observable<Solicitud32614State> {
     return this.http.get<Solicitud32614State>('assets/json/32614/tramite32614.json');
   }
 
 
-  setRegistroTomaMuestrasMercanciasData(datos:Solicitud32614MensajeriaState){
+  /**
+   * Sets the merchandise sampling registration data.
+   * Updates the messaging store with the provided data, handling both required and optional fields.
+   * 
+   * @param {Solicitud32614MensajeriaState} datos - The messaging data to set in the store.
+   */
+  setRegistroTomaMuestrasMercanciasData(datos: Solicitud32614MensajeriaState): void {
+    this.setRequiredMensajeriaFields(datos);
+    
+    this.setOptionalMensajeriaFields(datos);
+  }
+
+  /**
+   * Sets the required messaging fields in the store.
+   * 
+   * @param {Solicitud32614MensajeriaState} datos - The messaging data containing required fields.
+   */
+  private setRequiredMensajeriaFields(datos: Solicitud32614MensajeriaState): void {
     this.tramite32614MensajeriaStore.setLaSolicitante(datos.laSolicitante);
-this.tramite32614MensajeriaStore.setSusFiliales(datos.susFiliales);
-this.tramite32614MensajeriaStore.setLasEmpresas(datos.lasEmpresas);
-this.tramite32614MensajeriaStore.setFinDeVigencia(datos.finDeVigencia);
-this.tramite32614MensajeriaStore.setNumeroDeOficio(datos.numeroDeOficio);
-this.tramite32614MensajeriaStore.setFechaDePresentacion(datos.fechaDePresentacion);
-this.tramite32614MensajeriaStore.setMensajeriaPaqueteria(datos.mensajeriaPaqueteria);
-this.tramite32614MensajeriaStore.setLaSolicitanteInterna(datos.laSolicitanteInterna);
-this.tramite32614MensajeriaStore.setSubsidiaria(datos.subsidiaria ?? '');
-this.tramite32614MensajeriaStore.setFiliales(datos.filiales ?? '');
-this.tramite32614MensajeriaStore.setMatrices(datos.matrices ?? '');
-this.tramite32614MensajeriaStore.setAeronauticaCivil(datos.aeronauticaCivil ?? '');
-this.tramite32614MensajeriaStore.setConformidadArticulos(datos.conformidadArticulos ?? '');
-this.tramite32614MensajeriaStore.setRfc(datos.rfc ?? '');
-this.tramite32614MensajeriaStore.setDocumentosMercancias(datos.documentosMercancias ?? '');
-this.tramite32614MensajeriaStore.setRfcLasEmpresas(datos.rfcLasEmpresas ?? '');
-this.tramite32614MensajeriaStore.setGeneralAeronauticaCivil(datos.generalAeronauticaCivil ?? '');
-this.tramite32614MensajeriaStore.setExteriorConformidad(datos.exteriorConformidad ?? '');
-this.tramite32614MensajeriaStore.setReconocimientoMutuo(datos.reconocimientoMutuo ?? '');
-this.tramite32614MensajeriaStore.setRfcListado(datos.rfcListado ?? '');
-this.tramite32614MensajeriaStore.setNombreRazonSocialListado(datos.nombreRazonSocialListado ?? '');
-this.tramite32614MensajeriaStore.setDireccionFiscalListado(datos.direccionFiscalListado ?? '');
-this.tramite32614MensajeriaStore.setPaginaElectronicaListado(datos.paginaElectronicaListado ?? '');
-this.tramite32614MensajeriaStore.setCorreoElectronicaListado(datos.correoElectronicaListado ?? '');
-this.tramite32614MensajeriaStore.setTelefonoContactoListado(datos.telefonoContactoListado ?? '');
-this.tramite32614MensajeriaStore.setInformacionProporcionada(datos.informacionProporcionada ?? '');
-this.tramite32614MensajeriaStore.setClaveReferencia(datos.claveReferencia ?? '');
-this.tramite32614MensajeriaStore.setNumeroOperacion(datos.numeroOperacion ?? '');
-this.tramite32614MensajeriaStore.setCadenaDependencia(datos.cadenaDependencia ?? '');
-this.tramite32614MensajeriaStore.setBanco(datos.banco ?? '');
-this.tramite32614MensajeriaStore.setLlavePago(datos.llavePago ?? '');
-this.tramite32614MensajeriaStore.setFechaFactura(datos.fechaFactura ?? '');
-this.tramite32614MensajeriaStore.setLaSolicitante(datos.laSolicitante);
-this.tramite32614MensajeriaStore.setSusFiliales(datos.susFiliales);
-this.tramite32614MensajeriaStore.setLasEmpresas(datos.lasEmpresas);
-this.tramite32614MensajeriaStore.setFinDeVigencia(datos.finDeVigencia);
-this.tramite32614MensajeriaStore.setNumeroDeOficio(datos.numeroDeOficio);
-this.tramite32614MensajeriaStore.setFechaDePresentacion(datos.fechaDePresentacion);
-this.tramite32614MensajeriaStore.setMensajeriaPaqueteria(datos.mensajeriaPaqueteria);
-this.tramite32614MensajeriaStore.setLaSolicitanteInterna(datos.laSolicitanteInterna);
-this.tramite32614MensajeriaStore.setSubsidiaria(datos.subsidiaria ?? '');
-this.tramite32614MensajeriaStore.setFiliales(datos.filiales ?? '');
-this.tramite32614MensajeriaStore.setMatrices(datos.matrices ?? '');
-this.tramite32614MensajeriaStore.setAeronauticaCivil(datos.aeronauticaCivil ?? '');
-this.tramite32614MensajeriaStore.setConformidadArticulos(datos.conformidadArticulos ?? '');
-this.tramite32614MensajeriaStore.setRfc(datos.rfc ?? '');
-this.tramite32614MensajeriaStore.setDocumentosMercancias(datos.documentosMercancias ?? '');
-this.tramite32614MensajeriaStore.setRfcLasEmpresas(datos.rfcLasEmpresas ?? '');
-this.tramite32614MensajeriaStore.setGeneralAeronauticaCivil(datos.generalAeronauticaCivil ?? '');
-this.tramite32614MensajeriaStore.setExteriorConformidad(datos.exteriorConformidad ?? '');
-this.tramite32614MensajeriaStore.setReconocimientoMutuo(datos.reconocimientoMutuo ?? '');
-this.tramite32614MensajeriaStore.setRfcListado(datos.rfcListado ?? '');
-this.tramite32614MensajeriaStore.setNombreRazonSocialListado(datos.nombreRazonSocialListado ?? '');
-this.tramite32614MensajeriaStore.setDireccionFiscalListado(datos.direccionFiscalListado ?? '');
-this.tramite32614MensajeriaStore.setPaginaElectronicaListado(datos.paginaElectronicaListado ?? '');
-this.tramite32614MensajeriaStore.setCorreoElectronicaListado(datos.correoElectronicaListado ?? '');
-this.tramite32614MensajeriaStore.setTelefonoContactoListado(datos.telefonoContactoListado ?? '');
-this.tramite32614MensajeriaStore.setInformacionProporcionada(datos.informacionProporcionada ?? '');
-this.tramite32614MensajeriaStore.setClaveReferencia(datos.claveReferencia ?? '');
-this.tramite32614MensajeriaStore.setNumeroOperacion(datos.numeroOperacion ?? '');
-this.tramite32614MensajeriaStore.setCadenaDependencia(datos.cadenaDependencia ?? '');
-this.tramite32614MensajeriaStore.setBanco(datos.banco ?? '');
-this.tramite32614MensajeriaStore.setLlavePago(datos.llavePago ?? '');
-this.tramite32614MensajeriaStore.setFechaFactura(datos.fechaFactura ?? '');
-this.tramite32614MensajeriaStore.setImportePago(datos.importePago ?? '');
+    this.tramite32614MensajeriaStore.setSusFiliales(datos.susFiliales);
+    this.tramite32614MensajeriaStore.setLasEmpresas(datos.lasEmpresas);
+    this.tramite32614MensajeriaStore.setFinDeVigencia(datos.finDeVigencia);
+    this.tramite32614MensajeriaStore.setNumeroDeOficio(datos.numeroDeOficio);
+    this.tramite32614MensajeriaStore.setFechaDePresentacion(datos.fechaDePresentacion);
+    this.tramite32614MensajeriaStore.setMensajeriaPaqueteria(datos.mensajeriaPaqueteria);
+    this.tramite32614MensajeriaStore.setLaSolicitanteInterna(datos.laSolicitanteInterna);
+  }
+
+  /**
+   * Sets the optional messaging fields in the store by delegating to specific field groups.
+   * 
+   * @param {Solicitud32614MensajeriaState} datos - The messaging data containing optional fields.
+   */
+  private setOptionalMensajeriaFields(datos: Solicitud32614MensajeriaState): void {
+    this.setBasicOptionalFields(datos);
+    this.setContactOptionalFields(datos);
+    this.setPaymentOptionalFields(datos);
+  }
+
+  /**
+   * Sets the basic optional fields in the messaging store.
+   * 
+   * @param {Solicitud32614MensajeriaState} datos - The messaging data containing basic optional fields.
+   */
+  private setBasicOptionalFields(datos: Solicitud32614MensajeriaState): void {
+    this.tramite32614MensajeriaStore.setSubsidiaria(datos.subsidiaria ?? '');
+    this.tramite32614MensajeriaStore.setFiliales(datos.filiales ?? '');
+    this.tramite32614MensajeriaStore.setMatrices(datos.matrices ?? '');
+    this.tramite32614MensajeriaStore.setAeronauticaCivil(datos.aeronauticaCivil ?? '');
+    this.tramite32614MensajeriaStore.setConformidadArticulos(datos.conformidadArticulos ?? '');
+    this.tramite32614MensajeriaStore.setRfc(datos.rfc ?? '');
+    this.tramite32614MensajeriaStore.setDocumentosMercancias(datos.documentosMercancias ?? '');
+    this.tramite32614MensajeriaStore.setRfcLasEmpresas(datos.rfcLasEmpresas ?? '');
+    this.tramite32614MensajeriaStore.setGeneralAeronauticaCivil(datos.generalAeronauticaCivil ?? '');
+  }
+
+  /**
+   * Sets the contact-related optional fields in the messaging store.
+   * 
+   * @param {Solicitud32614MensajeriaState} datos - The messaging data containing contact optional fields.
+   */
+  private setContactOptionalFields(datos: Solicitud32614MensajeriaState): void {
+    this.tramite32614MensajeriaStore.setExteriorConformidad(datos.exteriorConformidad ?? '');
+    this.tramite32614MensajeriaStore.setReconocimientoMutuo(datos.reconocimientoMutuo ?? '');
+    this.tramite32614MensajeriaStore.setRfcListado(datos.rfcListado ?? '');
+    this.tramite32614MensajeriaStore.setNombreRazonSocialListado(datos.nombreRazonSocialListado ?? '');
+    this.tramite32614MensajeriaStore.setDireccionFiscalListado(datos.direccionFiscalListado ?? '');
+    this.tramite32614MensajeriaStore.setPaginaElectronicaListado(datos.paginaElectronicaListado ?? '');
+    this.tramite32614MensajeriaStore.setCorreoElectronicaListado(datos.correoElectronicaListado ?? '');
+    this.tramite32614MensajeriaStore.setTelefonoContactoListado(datos.telefonoContactoListado ?? '');
+    this.tramite32614MensajeriaStore.setInformacionProporcionada(datos.informacionProporcionada ?? '');
+  }
+
+  /**
+   * Sets the payment-related optional fields in the messaging store.
+   * 
+   * @param {Solicitud32614MensajeriaState} datos - The messaging data containing payment optional fields.
+   */
+  private setPaymentOptionalFields(datos: Solicitud32614MensajeriaState): void {
+    this.tramite32614MensajeriaStore.setClaveReferencia(datos.claveReferencia ?? '');
+    this.tramite32614MensajeriaStore.setNumeroOperacion(datos.numeroOperacion ?? '');
+    this.tramite32614MensajeriaStore.setCadenaDependencia(datos.cadenaDependencia ?? '');
+    this.tramite32614MensajeriaStore.setBanco(datos.banco ?? '');
+    this.tramite32614MensajeriaStore.setLlavePago(datos.llavePago ?? '');
+    this.tramite32614MensajeriaStore.setFechaFactura(datos.fechaFactura ?? '');
+    this.tramite32614MensajeriaStore.setImportePago(datos.importePago ?? '');
   }
 
 
+/**
+ * Updates all profile fields in the profiles store.
+ * Sets all the profile-related data fields in the corresponding store.
+ * 
+ * @param {Solicitud32614PerfilesState} datos - The profile data to update in the store.
+ */
 actualizarTodosCampos(datos: Solicitud32614PerfilesState): void {
   this.tramite32614PerfilesStore.setProcedimientoDocumentado(datos.procedimientoDocumentado);
   this.tramite32614PerfilesStore.setIndiqueNumero(datos.indiqueNumero);
@@ -289,6 +335,12 @@ actualizarTodosCampos(datos: Solicitud32614PerfilesState): void {
   this.tramite32614PerfilesStore.setMecanismosContinuidad(datos.mecanismosContinuidad);
 }
 
+/**
+ * Updates all profile messaging fields in the profiles messaging store.
+ * Sets all the profile messaging-related data fields in the corresponding store.
+ * 
+ * @param {Solicitud32614PerfilesMensajeriaState} datos - The profile messaging data to update in the store.
+ */
 actualizarTodosCamposPerfilesMensajeria(datos: Solicitud32614PerfilesMensajeriaState): void {
   this.tramite32614PerfilesMensajeriaStore.setDescribaProcedimiento(datos.describaProcedimiento);
   this.tramite32614PerfilesMensajeriaStore.setIndiqueLosCriterios(datos.indiqueLosCriterios);
@@ -367,6 +419,12 @@ actualizarTodosCamposPerfilesMensajeria(datos: Solicitud32614PerfilesMensajeriaS
   this.tramite32614PerfilesMensajeriaStore.setVigenciaTres(datos.vigencia3);
 }
 
+/**
+ * Updates all third parties fields in the third parties store.
+ * Sets all the third parties-related data fields in the corresponding store.
+ * 
+ * @param {Solicitud32614TercerosState} datos - The third parties data to update in the store.
+ */
 actualizarTodosCamposTerceros(datos: Solicitud32614TercerosState): void {
   this.tramite32614TercerosStore.setResigtro(datos.resigtro);
   this.tramite32614TercerosStore.setTelefono(datos.telefono);
@@ -378,6 +436,12 @@ actualizarTodosCamposTerceros(datos: Solicitud32614TercerosState): void {
   this.tramite32614TercerosStore.setSuplente(datos.suplente);
 }
 
+/**
+ * Updates all procedure fields in the procedure store.
+ * Sets all the procedure-related data fields in the corresponding store.
+ * 
+ * @param {Solicitud32614State} datos - The procedure data to update in the store.
+ */
 actualizarTodosCamposTramite(datos: Solicitud32614State): void {
   this.tramite32614Store.setSectorProductivo(datos.sectorProductivo);
   this.tramite32614Store.setServicio(datos.servicio);
