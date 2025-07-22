@@ -23,11 +23,10 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   /**
     * Observable para gestionar la destrucción del componente.
     */
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
   public sectorProductivo = SECTOR_PRODUCTIVO;
   public servicioCatalogo = SERVICIO_CATALOGO;
   public biomestreCatalogo = BIOMESTRE_CATALOGO;
-  public solicitudState!: Solicitud32606State;
   radioOpcions01 = RADIO_01;
   public datosComunesForm!: FormGroup;
   valorSeleccionado!: string;
@@ -37,6 +36,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   public elementoParaEliminar2!: number;
   public pedimentos: Array<Pedimento> = [];
   soloLectura: boolean = false;
+  public solicitudState!: Solicitud32606State;
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(private economico: EconomicoService,
     public query: Tramite32606Query,
@@ -46,8 +47,6 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.donanteDomicilio();
-
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -56,6 +55,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.donanteDomicilio();
     this.obtenerSectorProductivo();
     this.obtenerServicio();
     this.obtenerBimestre();
@@ -129,10 +129,25 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
-   isValid(form: FormGroup, field: string): boolean {
+  isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
+  /**
+    * Marca todos los campos del formulario como tocados si es inválido.
+    */
+  validarDestinatarioFormulario(): void {
+    if (this.datosComunesForm.invalid) {
+      this.datosComunesForm.markAllAsTouched();
+    }
+  }
 
+  /**
+   * Actualiza un valor en el estado global utilizando el almacén.
+   *
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo en el formulario.
+   * @param metodoNombre Nombre del método en el almacén para actualizar el valor.
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,
@@ -141,7 +156,6 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
-
   donanteDomicilio(): void {
     this.datosComunesForm = this.fb.group({
       sectorProductivo: [{ value: this.solicitudState?.sectorProductivo, disabled: this.soloLectura }, [Validators.required]],

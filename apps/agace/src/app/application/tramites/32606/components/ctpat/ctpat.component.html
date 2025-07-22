@@ -17,14 +17,14 @@
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">Señale si autorizá a CBP (CTPAT) a compartir información con México, a través de su portal de CTPAT o del mecanismo que la autoridad de dicho país haya definido.</label>
-    <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio24"></app-input-radio>
+    <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio24" (change)=" setValoresStore( ctpatForm, 'tipoRadio24', 'setTipoRadio24' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">Señale si las instalaciones que cuentan con la certificación de CBP (CTPAT) y de las cuales no se deberá de presentar el "Perfil de Auto Transportista Terrestre", "Perfil de la empresa" o el "Perfil del Recinto Fiscalizado Estratégico", según corresponda, cumplen con los estándares mínimos en materia de seguridad.</label>
-    <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio25"></app-input-radio>
+    <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio25" (change)=" setValoresStore( ctpatForm, 'tipoRadio25', 'setTipoRadio25' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">Señale si a la fecha de la presentación de su solicitud se encuentra sujeta a un proceso de suspensión o cancelación por parte de CBP (CTPAT)</label>
-    <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio26"></app-input-radio>
+    <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio26" (change)=" setValoresStore( ctpatForm, 'tipoRadio26', 'setTipoRadio26' )"></app-input-radio>
   </div>
 </form>

@@ -6,7 +6,7 @@
     <div class="col-md-4">
       <label class="form-label text-start" for="rfcTercero">
         <span style="color: red;">*</span> Registro Federal de Contribuyentes </label>
-      <input class="form-control" type="text" size="25" id="rfcTercero" name="rfcTercero" formControlName="rfcTercero" />
+      <input class="form-control" type="text" size="25" id="rfcTercero" name="rfcTercero" formControlName="rfcTercero" (change)="setValoresStore( tercerosRelacionadosForm, 'rfcTercero', 'setRfcTercero' )"/>
     </div>
     <div class="col-md-8">
       <div class="form-group mt-5 pull-left">
@@ -16,32 +16,32 @@
     <div class="row">
       <div class="col-md-4">
         <label class="form-label text-start" for="rfc">RFC:</label>
-        <input class="form-control" type="text" size="25" id="rfc" name="rfc" formControlName="rfc" />
+        <input class="form-control" type="text" size="25" id="rfc" name="rfc" formControlName="rfc" (change)="setValoresStore( tercerosRelacionadosForm, 'rfc', 'setRfc' )"/>
       </div>
       <div class="col-md-8"></div>
     </div>
     <div class="row">
       <div class="col-md-4">
         <label class="form-label text-start" for="nombre">Nombre:</label>
-        <input class="form-control" type="text" size="25" id="nombre" name="nombre" formControlName="nombre" />
+        <input class="form-control" type="text" size="25" id="nombre" name="nombre" formControlName="nombre" (change)="setValoresStore( tercerosRelacionadosForm, 'nombre', 'setNombre' )"/>
       </div>
       <div class="col-md-4">
         <label class="form-label text-start" for="apellidoPaterno">Apellido Paterno:</label>
-        <input class="form-control" type="text" size="25" id="apellidoPaterno" name="apellidoPaterno" formControlName="apellidoPaterno" />
+        <input class="form-control" type="text" size="25" id="apellidoPaterno" name="apellidoPaterno" formControlName="apellidoPaterno" (change)="setValoresStore( tercerosRelacionadosForm, 'apellidoPaterno', 'setApellidoPaterno' )"/>
       </div>
       <div class="col-md-4">
         <label class="form-label text-start" for="apellidoMaterno">Apellido Materno:</label>
-        <input class="form-control" type="text" size="25" id="apellidoMaterno" name="apellidoMaterno" formControlName="apellidoMaterno" />
+        <input class="form-control" type="text" size="25" id="apellidoMaterno" name="apellidoMaterno" formControlName="apellidoMaterno" (change)="setValoresStore( tercerosRelacionadosForm, 'apellidoMaterno', 'setApellidoMaterno' )"/>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
         <label class="form-label text-start" for="telefono">Teléfono:</label>
-        <input class="form-control" type="text" size="25" id="telefono" name="telefono" formControlName="telefono" />
+        <input class="form-control" type="text" size="25" id="telefono" name="telefono" formControlName="telefono" (change)="setValoresStore( tercerosRelacionadosForm, 'telefono', 'setTelefono' )"/>
       </div>
       <div class="col-md-4">
         <label class="form-label text-start" for="correoElectronico">Correo Electrónico:</label>
-        <input class="form-control" type="text" size="25" id="correoElectronico" name="correoElectronico" formControlName="correoElectronico" />
+        <input class="form-control" type="text" size="25" id="correoElectronico" name="correoElectronico" formControlName="correoElectronico" (change)="setValoresStore( tercerosRelacionadosForm, 'correoElectronico', 'setCorreoElectronico' )"/>
       </div>
     </div>
   </div>

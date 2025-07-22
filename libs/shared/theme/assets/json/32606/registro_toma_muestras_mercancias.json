@@ -62,5 +62,13 @@
   "radioAutorizo": "ficcion",
   "radioClasificacion": "ficcion",
   "caracter": "ficcion",
-  "nacionalidad": "ficcion"
+  "nacionalidad": "ficcion",
+  "fechaInicio": "2023-10-01",
+  "fechaPago": "2023-10-01",
+  "entidadFederativa": "ficcion",
+  "municipio": "ficcion",
+  "tipoDeInstalacion": "ficcion",
+  "registroSESAT": "ficcion",
+  "descripcion": "ficcion",
+  "codigoPostal": "135617"
 }

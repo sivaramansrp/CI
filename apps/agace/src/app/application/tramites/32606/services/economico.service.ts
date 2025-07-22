@@ -85,6 +85,14 @@ export class EconomicoService {
     this.tramite32606Store.setRadioClasificacion(DATOS.radioClasificacion);
     this.tramite32606Store.setCaracter(DATOS.caracter);
     this.tramite32606Store.setNacionalidad(DATOS.nacionalidad);
+    this.tramite32606Store.setFechaInicio(DATOS.fechaInicio);
+    this.tramite32606Store.setFechaPago(DATOS.fechaPago);
+    this.tramite32606Store.setEntidadFederativa(DATOS.entidadFederativa);
+    this.tramite32606Store.setMunicipio(DATOS.municipio);
+    this.tramite32606Store.setTipoDeInstalacion(DATOS.tipoDeInstalacion);
+    this.tramite32606Store.setRegistroSESAT(DATOS.registroSESAT);
+    this.tramite32606Store.setDescripcion(DATOS.descripcion); 
+    this.tramite32606Store.setCodigoPostal(DATOS.codigoPostal);
   }
   /**
      * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.

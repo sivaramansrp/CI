@@ -79,6 +79,14 @@ export interface Solicitud32606State {
   radioClasificacion: string,
   caracter: string,
   nacionalidad: string,
+  fechaInicio: string,
+  fechaPago: string,
+  entidadFederativa : string,
+  municipio: string,
+  tipoDeInstalacion: string,
+  registroSESAT: string,
+  descripcion: string,
+  codigoPostal: string
 }
 
 /**
@@ -151,6 +159,14 @@ export function createInitialState(): Solicitud32606State {
     radioClasificacion: '', 
     caracter: '',
     nacionalidad: '',
+    fechaInicio: '',
+    fechaPago: '',
+    entidadFederativa: '',
+    municipio: '',
+    tipoDeInstalacion: '',
+    registroSESAT: '',
+    descripcion: '',
+    codigoPostal: ''
   };
 }
 
@@ -427,6 +443,37 @@ public setNacionalidad(nacionalidad: string): void {
   this.update((state) => ({ ...state, nacionalidad }));
 }
 
+public setFechaInicio(fechaInicio: string): void {
+  this.update((state) => ({ ...state, fechaInicio }));
+}
+
+public setFechaPago(fechaPago: string): void {
+  this.update((state) => ({ ...state, fechaPago }));
+}
+
+public setEntidadFederativa(entidadFederativa: string): void {
+  this.update((state) => ({ ...state, entidadFederativa }));
+}
+
+public setMunicipio(municipio: string): void {
+  this.update((state) => ({ ...state, municipio }));
+}
+
+public setTipoDeInstalacion(tipoDeInstalacion: string): void {
+  this.update((state) => ({ ...state, tipoDeInstalacion }));
+}
+
+public setRegistroSESAT(registroSESAT: string): void {
+  this.update((state) => ({ ...state, registroSESAT }));
+}
+
+public setDescripcion(descripcion: string): void {
+  this.update((state) => ({ ...state, descripcion }));
+}
+
+public setCodigoPostal(codigoPostal: string): void {
+  this.update((state) => ({ ...state, codigoPostal }));
+}
 /**
  * Restaura el estado al valor inicial.
  */
