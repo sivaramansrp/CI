@@ -223,10 +223,20 @@ export class FirmaElectronicaComponent {
     } catch (error) {
       console.error('Error al firmar:', error);
       this.valido.emit(false);
-      this.toastrService.error(
-        error instanceof Error ? error.message : 'Error al validar la firma'
-      );
-    } finally {
+
+      let mensaje = 'Error al validar la firma';
+
+      if (error instanceof Error) {
+        if (error.message.includes('La contrasena no es valida')) {
+          mensaje = 'Se produjo un error al firmar la cadena: La contraseña no es válida';
+        } else {
+          mensaje = `Se produjo un error al firmar la cadena: ${error.message}`;
+        }
+      }
+
+      this.toastrService.error(mensaje);
+    }
+    finally {
       this.isLoading = false;
     }
   }
