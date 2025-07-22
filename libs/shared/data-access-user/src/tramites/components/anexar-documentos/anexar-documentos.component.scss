@@ -88,8 +88,24 @@
   
   &::after {
     content: attr(data-filename);
-    color: #6c757d;
-    font-style: italic;
+    color: #495057;
+    font-style: normal;
     font-size: 0.875rem;
+    font-weight: 500;
+    margin-left: 0.5rem;
+    display: inline-block;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Style when file is selected */
+  &[data-filename]:not([data-filename=""])::after {
+    background-color: #e7f3ff;
+    color: #0066cc;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    border: 1px solid #b3d9ff;
   }
 }
