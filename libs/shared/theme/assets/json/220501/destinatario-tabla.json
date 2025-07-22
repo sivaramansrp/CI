@@ -6,6 +6,10 @@
     "calle": "#10",
     "numeroExterior": "856",
     "numeroInterior": "1",
-    "pais": "MEXICO(ESTAD UNIDOS MEXICANOS"
+    "pais": "MEXICO(ESTAD UNIDOS MEXICANOS",
+    "colonia": "BARRIO DE LA ALAMEDA",
+    "municipioAlcaldia": "GUANAJUATO",
+    "entidadFederativa": "GUANAJUATO",
+    "codigoPostal": "45435"
   }
 ]

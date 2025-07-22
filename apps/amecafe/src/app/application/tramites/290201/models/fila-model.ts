@@ -17,6 +17,7 @@ export interface FilaData {
         lote: string; // Número de lote.
         otrasmarcas: string; // Otras marcas relacionadas.
         elcafe: string; // Información adicional sobre el café.
+        otrasCaracteristicas: string; // @description Otras características adicionales del domicilio, como referencias o detalles específicos.
         fechaexportacion: string; // Fecha de exportación.
         paisdetransbordo: string; // País de transbordo.
         mediodetransporte: string; // Medio de transporte utilizado.

@@ -1,9 +1,9 @@
+import { Aduanas, Instalaciones } from '../../constants/agregar.model';
 import { Catalogo, CatalogoSelectComponent,ConsultaioQuery,TablaDinamicaComponent,TablaSeleccion,TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud32604State, Solicitud32604Store } from '../../estados/solicitud32604.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Aduanas } from '../../constants/agregar.model';
 import { CommonModule } from '@angular/common';
 import { ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO } from '../../constants/empresas-comercializadoras.enum';
 import { EmpresasComercializadorasService } from '../../services/empresas-comercializadoras.service';
@@ -48,7 +48,7 @@ export class AgregarComponent implements OnInit, OnDestroy {
    * Define los datos que se mostrarán en la tabla dinámica.
    * Inicialmente vacío, se poblará cuando se seleccione una aduana.
    */
-  datosTabla: any[] = [];
+  datosTabla: Instalaciones[] = [];
 
   /**
    * Indica si se ha seleccionado una aduana.
@@ -69,7 +69,7 @@ export class AgregarComponent implements OnInit, OnDestroy {
   /**
    * Array to store selected data from the table
    */
-  selectedTableData: any[] = [];
+  selectedTableData: Instalaciones[] = [];
 
     /**
      * Estado de la solicitud.
@@ -79,7 +79,7 @@ export class AgregarComponent implements OnInit, OnDestroy {
   /**
    * Event emitter to send selected data to parent component
    */
-  @Output() datosSeleccionados = new EventEmitter<any[]>();
+  @Output() datosSeleccionados = new EventEmitter<Instalaciones[]>();
 
   constructor(
     public fb: FormBuilder,
@@ -195,11 +195,11 @@ export class AgregarComponent implements OnInit, OnDestroy {
     }
   }
 
-    /**
+  /**
    * Handles table row selection events
    * @param selectedData - Array of selected rows from the table
    */
-  onTableRowSelected(selectedData: any[]): void {
+  onTableRowSelected(selectedData: Instalaciones[]): void {
     this.selectedTableData = selectedData;
   }
 

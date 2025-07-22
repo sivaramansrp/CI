@@ -6,11 +6,11 @@ import { Tramite260214Store } from '../../estados/tramite260210Store.store';
 
 /**
  * Componente contenedor para la tabla SCIAN (Sistema de Clasificación Industrial de América del Norte).
- * 
+ *
  * Este componente actúa como un wrapper que gestiona la interacción con la tabla SCIAN,
  * permitiendo la selección de códigos SCIAN y actualizando el estado del store correspondiente
  * para el trámite 260210.
- * 
+ *
  * @class ScianTablaContenedoraComponent
  * @description Componente standalone que encapsula la funcionalidad de selección SCIAN
  * @version 1.0.0
@@ -24,13 +24,12 @@ import { Tramite260214Store } from '../../estados/tramite260210Store.store';
   styleUrl: './scian-tabla-contenedora.component.scss',
 })
 export class ScianTablaContenedoraComponent {
-  
   /**
    * Constructor del componente.
-   * 
+   *
    * Inicializa el componente inyectando las dependencias necesarias para
    * la gestión del estado del trámite 260214.
-   * 
+   *
    * @param tramite260214Store - Store que maneja el estado global del trámite 260214,
    *                            utilizado para actualizar la configuración SCIAN seleccionada
    */
@@ -38,11 +37,11 @@ export class ScianTablaContenedoraComponent {
 
   /**
    * Configuración SCIAN actualmente seleccionada.
-   * 
+   *
    * Esta propiedad almacena la configuración de la tabla SCIAN que ha sido
    * seleccionada por el usuario. Se utiliza para mantener una referencia
    * local de la selección actual antes de ser enviada al store.
-   * 
+   *
    * @type {TablaScianConfig}
    * @public
    * @description Objeto que contiene los datos de configuración de la tabla SCIAN seleccionada
@@ -53,23 +52,23 @@ export class ScianTablaContenedoraComponent {
 
   /**
    * Método que procesa y actualiza el estado del store con la configuración seleccionada de la tabla SCIAN.
-   * 
+   *
    * Este método es invocado cuando el usuario selecciona un elemento de la tabla SCIAN.
    * Recibe la configuración seleccionada y la propaga al store del trámite 260214,
    * actualizando específicamente el campo `scianConfigDatos` con los nuevos datos.
-   * 
+   *
    * El método utiliza el patrón de actualización inmutable, preservando el estado
    * existente y solo modificando la propiedad necesaria.
-   * 
+   *
    * @param {TablaScianConfig} event - Objeto que contiene la configuración completa
    *                                   de la fila seleccionada en la tabla SCIAN
    * @param event.codigo - Código SCIAN seleccionado
    * @param event.descripcion - Descripción de la actividad económica
    * @param event.sector - Sector económico al que pertenece
    * @param event.subsector - Subsector específico de la clasificación
-   * 
+   *
    * @returns {void} - No retorna ningún valor
-   * 
+   *
    * @example
    * ```typescript
    * const configSeleccionada: TablaScianConfig = {
@@ -80,17 +79,14 @@ export class ScianTablaContenedoraComponent {
    * };
    * this.obtenerSeleccionado(configSeleccionada);
    * ```
-   * 
+   *
    * @see {@link TablaScianConfig} - Para más detalles sobre la estructura del objeto
    * @see {@link Tramite260214Store} - Para información sobre el store utilizado
-   * 
+   *
    * @since 1.0.0
    * @public
    */
   obtenerSeleccionado(event: TablaScianConfig): void {
-    this.tramite260214Store.update((state) => ({
-      ...state,
-      scianConfigDatos: [event],
-    }));
+    this.tramite260214Store.updateScianConfigDatos([event]);
   }
 }

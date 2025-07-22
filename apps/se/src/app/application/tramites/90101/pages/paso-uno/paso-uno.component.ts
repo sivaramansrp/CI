@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DomiciliosDePlantasComponent } from '../../components/domicilios-de-plantas/domicilios-de-plantas.component';
 import { ProductorIndirectoComponent } from '../../components/productor-indirecto/productor-indirecto.component';
 import { ProsecService } from '../../services/prosec.service';
 import { SectoresYMercanciasComponent } from '../../components/sectores-y-mercancias/sectores-y-mercancias.component';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * @component
@@ -85,7 +86,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         if (seccionState.update) {
           this.formularioDeshabilitado = false;
           this.guardarDatosFormulario();
-        } else if (seccionState.readonly) {
+        }
+        if (seccionState.readonly) {
           this.formularioDeshabilitado = true;
         }
       });

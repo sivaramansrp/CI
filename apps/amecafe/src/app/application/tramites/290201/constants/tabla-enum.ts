@@ -165,29 +165,34 @@ export const CONFIGURACION_COLUMNAS_SOLI: ConfiguracionColumna<FilaData>[] = [
     orden: 13,
   },
   {
+    encabezado: 'Otras características',
+    clave: (fila) => fila.datosDelTramiteRealizar.otrasCaracteristicas,
+    orden: 14,
+  },
+  {
     encabezado: 'Fecha de exportación',
     clave: (fila) => fila.datosDelTramiteRealizar.fechaexportacion,
-    orden: 14,
+    orden: 15,
   },
   {
     encabezado: 'País de transbordo',
     clave: (fila) => fila.datosDelTramiteRealizar.paisdetransbordo,
-    orden: 15,
+    orden: 16,
   },
   {
     encabezado: 'Medio de transporte',
     clave: (fila) => fila.datosDelTramiteRealizar.mediodetransporte,
-    orden: 16,
+    orden: 17,
   },
   {
     encabezado: 'Identifique transporte',
     clave: (fila) => fila.datosDelTramiteRealizar.Identificadordel,
-    orden: 17,
+    orden: 18,
   },
   {
     encabezado: 'Observaciones',
     clave: (fila) => fila.datosDelTramiteRealizar.observaciones,
-    orden: 18,
+    orden: 19,
   },
 ];
 

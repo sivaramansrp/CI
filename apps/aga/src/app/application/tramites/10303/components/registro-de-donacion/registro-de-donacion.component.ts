@@ -1,18 +1,17 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subject, map, merge, takeUntil } from 'rxjs';
-import { Modal } from 'bootstrap';
-
-import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
-import mercanciaTable from '@libs/shared/theme/assets/json/10303/mercancia-table.json';
-
 import { BasicRequerimientos, BasicRequerimientosRespuesta, Manifiestos, ManifiestosRespuesta } from '../../models/donaciones-extranjeras.model';
 import { Catalogo, ConsultaioQuery, TableBodyData } from '@ng-mf/data-access-user';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FECHA_CADUCIDAD, GENERAL_TIPO_DE_MERCANCIA, MEDICAMENTOS_TIPO_DE_MERCANCIA, MEDICOS_EQUIPO_TIPO_DE_MERCANCIA, OPCIONES_DE_BOTON_DE_RADIO, PANELS, TEXTOS, VEHICULO_TIPO_DE_MERCANCIA } from '../../constantes/donaciones-extranjeras.enum';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { RegistroDeDonacion10303State, Tramite10303Store } from '../../estados/tramites/tramite10303.store';
+import { Subject, map, merge, takeUntil } from 'rxjs';
+import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 import { InputFecha } from '@ng-mf/data-access-user';
+import { Modal } from 'bootstrap';
 import { Tramite10303Query } from '../../estados/queries/tramite10303.query';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import mercanciaTable from '@libs/shared/theme/assets/json/10303/mercancia-table.json';
+
 /**
  * Componente para gestionar el registro de donación.
  */

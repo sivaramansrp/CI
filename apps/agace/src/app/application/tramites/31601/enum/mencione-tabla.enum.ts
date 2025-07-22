@@ -4,11 +4,11 @@
  * Se utiliza para renderizar y manipular la información en la tabla dinámica.
  */
 export interface MencioneConfiguracionItem {
-    id: string;
-    social: string;
-    rfc: string;
-    noumero: string;
-    bimestre: string
+  id: string;
+  social: string;
+  rfc: string;
+  noumero: string;
+  bimestre: string
 }
 /**
  * Configuración de columnas para la tabla de "Mencione".
@@ -16,27 +16,27 @@ export interface MencioneConfiguracionItem {
  * Se usa para renderizar columnas dinámicamente en la tabla.
  */
 export const MENCIONE_TABLA_CONFIGURACION = [
-    {
-        encabezado: 'Denominacion Social',
-        clave: (item: MencioneConfiguracionItem): string => item.social,
-        orden: 1,
-    },
-    {
-        encabezado: 'RFC',
-        clave: (item: MencioneConfiguracionItem): string => item.rfc,
-        orden: 2,
-    },
-    {
-        encabezado: 'Numero de Empleados',
-        clave: (item: MencioneConfiguracionItem): string => item.noumero,
-        orden: 3,
-    },
-    {
-        encabezado: 'Bimestre',
-        clave: (item: MencioneConfiguracionItem): string => item.bimestre,
-        orden: 4,
-    }
-    
+  {
+    encabezado: 'Denominacion Social',
+    clave: (item: MencioneConfiguracionItem): string => item.social,
+    orden: 1,
+  },
+  {
+    encabezado: 'RFC',
+    clave: (item: MencioneConfiguracionItem): string => item.rfc,
+    orden: 2,
+  },
+  {
+    encabezado: 'Numero de Empleados',
+    clave: (item: MencioneConfiguracionItem): string => item.noumero,
+    orden: 3,
+  },
+  {
+    encabezado: 'Bimestre',
+    clave: (item: MencioneConfiguracionItem): string => item.bimestre,
+    orden: 4,
+  }
+
 ];
 /**
  * @description
