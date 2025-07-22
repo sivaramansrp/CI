@@ -308,9 +308,9 @@
                     Este campo es obligatorio.
                   </small>
                   <small
-                    *ngIf="FormSolicitud.get(['datosGeneralesSocios','correoElectronico'])?.errors?.['email']"
+                    *ngIf="FormSolicitud.get(['datosGeneralesSocios','correoElectronico'])?.errors?.['pattern']"
                   >
-                    Ingrese un correo electrónico válido.
+                    El correo no cumple con el formato requerido.
                   </small>
                 </div>
               </div>
