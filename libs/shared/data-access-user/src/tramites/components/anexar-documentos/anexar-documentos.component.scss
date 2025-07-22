@@ -29,9 +29,6 @@
   position: relative;
   display: inline-block;
   width: 100%;
-  color: transparent;
-  background-color: transparent;
-  border: none;
   
   &::-webkit-file-upload-button {
     display: none;
@@ -40,26 +37,6 @@
   &::file-selector-button {
     display: none;
   }
-  
-  /* Hide native text completely */
-  &::-webkit-input-placeholder {
-    color: transparent;
-  }
-  
-  &::-moz-placeholder {
-    color: transparent;
-  }
-  
-  &:-ms-input-placeholder {
-    color: transparent;
-  }
-  
-  &::placeholder {
-    color: transparent;
-  }
-  
-  /* Override any native file input text */
-  font-size: 0;
   
   &::before {
     content: 'Elegir archivo';
@@ -89,23 +66,17 @@
   &::after {
     content: attr(data-filename);
     color: #495057;
-    font-style: normal;
     font-size: 0.875rem;
-    font-weight: 500;
-    margin-left: 0.5rem;
-    display: inline-block;
-    max-width: 200px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   
-  /* Style when file is selected */
-  &[data-filename]:not([data-filename=""])::after {
-    background-color: #e7f3ff;
-    color: #0066cc;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    border: 1px solid #b3d9ff;
+  /* Hide the placeholder text when no file is selected */
+  &[data-filename="No hay archivo seleccionado"]::after {
+    display: none;
+  }
+  
+  /* Show filename when file is selected - not the placeholder */
+  &:not([data-filename="No hay archivo seleccionado"])::after {
+    display: inline-block;
+    margin-left: 0.5rem;
   }
 }
