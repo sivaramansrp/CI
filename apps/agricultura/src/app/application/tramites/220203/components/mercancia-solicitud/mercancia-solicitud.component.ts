@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CatalogoData, Detalles, Fila, MercanciaGroup } from '../../models/220203/importacion-de-acuicultura.module';
+import { CatalogoData, Detalles, Fila } from '../../models/220203/importacion-de-acuicultura.module';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
@@ -66,11 +66,14 @@ export class MercanciaSolicitudComponent implements OnInit {
 this.obtenerCatalogosTransporte();
 this.obtenerNicoCatalogosTransporte();
 this.obtenerUMCCatalogosTransporte();
+  this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+      this.datosMercanciaStore = datos.selectedmercanciaGroupDatos || {} as Fila;
+    })
   }
- async ngOnInit(): Promise<void> {
-    this.mercanciaGroup = await this.createMercanciaGroup();
-    this.detallesGroup =await this.createDetallesGroup();
-    
+  ngOnInit():void {
+    this.mercanciaGroup =this.createMercanciaGroup();
+    this.detallesGroup = this.createDetallesGroup();
+
   }
   /**
    * Obtiene los datos del catálogo de transporte.
@@ -219,11 +222,24 @@ this.obtenerUMCCatalogosTransporte();
     this.mercanciaGroup.reset();
       this.cerrar.emit();
   }
+  onLimpiarDestinatario(): void {
+    this.mercanciaGroup.reset();
+    this.detallesGroup.reset();
+  }
   agregarFila(): void {
       const NUEVO_DETALLE: Fila = this.mercanciaGroup.getRawValue(); 
       const ESTADO_ACTUAL = this.acuiculturaQuery.getValue().mercanciaGroup;
+      let FILTERED_VALOR:Fila[]=[];
+      if(this.datosMercanciaStore){
+      FILTERED_VALOR = ESTADO_ACTUAL.filter(
+        (item) => item !== this.datosMercanciaStore
+      );
+      }
+      else{
+        FILTERED_VALOR = ESTADO_ACTUAL;
+      }
        const NUEVA_DETALLE_LIST = [
-    ...(ESTADO_ACTUAL || []),
+    ...(FILTERED_VALOR || []),
     NUEVO_DETALLE
   ];
       this.acuiculturaStore.actualizarMercanciaGroup(NUEVA_DETALLE_LIST);

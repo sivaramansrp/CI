@@ -254,11 +254,16 @@
         ></app-tabla-dinamica>
       </div>
        <div class="col-md-12 d-flex justify-content-end mb-2">
-        <div>
-          <button class="btn btn-default me-2" type="button" (click)="eliminarFila()">Limpiar</button>    </div>
-        <div>
-          <button class="btn btn-primary me-2" type="button" (click)="agregarFila()" [disabled]="mercanciaGroup.invalid">Agregar</button>
-        </div>
+          <button type="button" class="btn btn-default me-5" [disabled]="esFormularioSoloLectura"
+                            (click)="onLimpiarDestinatario()">
+                            Limpiar
+                        </button>
+                        <button type="button" class="btn btn-danger me-5" [disabled]="esFormularioSoloLectura"
+                          (click)="eliminarFila()">
+                            Cancelar
+                        </button>
+                          <button class="btn btn-primary me-2" type="button" (click)="agregarFila()" [disabled]="mercanciaGroup.invalid">Agregar</button>
+
       </div>
     </div>
     </form>

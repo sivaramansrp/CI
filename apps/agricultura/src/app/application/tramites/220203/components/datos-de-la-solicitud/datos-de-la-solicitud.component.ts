@@ -526,6 +526,11 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
       this.eliminarDatosTabla = false;
     }
   }
+  modificarFila(): void {
+    if (this.listSelectedView.length > 0) {
+      this.modalRef.abrir(MercanciaSolicitudComponent);
+    }
+  }
   /**
    * @inheritdoc
         
