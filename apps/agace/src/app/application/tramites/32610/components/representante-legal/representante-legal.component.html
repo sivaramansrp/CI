@@ -126,14 +126,7 @@
 <lib-notificaciones
   *ngIf="tieneValorRfc"
   [notificacionInput]="nuevaNotificacion"
-  (confirmacionModal)="mostrarNotificacionDeBusqueda()"
->
-</lib-notificaciones>
-
-<lib-notificaciones
-  *ngIf="rfcValido "
-  [notificacionInput]="nuevaNotificacion"
-  (confirmacionModal)="mostrarNotificacionFormatoIncorrecto()"
+  (confirmacionModal)="botonBuscar()"
 >
 </lib-notificaciones>
 

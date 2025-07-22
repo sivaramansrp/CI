@@ -680,14 +680,23 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
    */
   modificarItemEmpleado(): void {
     const SELECCIONADAS = this.listaFilaSeleccionadaEmpleado;
-  
-    if (!SELECCIONADAS || SELECCIONADAS.length === 0) {
-      this.abrirMultipleSeleccionPopup('', 'Selecciona un registro');
+    if (this.DomiciliosRfcSolicitanteList.length === 0) {
+      this.abrirMultipleSeleccionPopup('', 'No se encontró información');
+      this.multipleSeleccionPopupAbierto = true;
       return;
     }
-  
+
+    if (!SELECCIONADAS || SELECCIONADAS.length === 0) {
+      this.abrirMultipleSeleccionPopup('', 'Selecciona un registro');
+      this.multipleSeleccionPopupAbierto = true;
+      return;
+    }
+
     if (SELECCIONADAS.length > 1) {
-      this.abrirMultipleSeleccionPopup('', 'Selecciona sólo un registro para modificar.');
+      this.abrirMultipleSeleccionPopup(
+        '',
+        'Selecciona sólo un registro para modificar'
+      );
       this.multipleSeleccionPopupAbierto = true;
       return;
     }
@@ -735,7 +744,7 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
   abrirMultipleSeleccionPopup(
     titulo: string,
     mensaje: string,
-    txtBtnAceptar: string = 'Cerrar',
+    txtBtnAceptar: string = 'Aceptar',
     txtBtnCancelar: string = ''
   ): void {
     this.nuevaNotificacion = {
@@ -746,7 +755,7 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
       mensaje: mensaje,
       cerrar: false,
       txtBtnAceptar: txtBtnAceptar,
-      txtBtnCancelar: txtBtnCancelar,
+      txtBtnCancelar: txtBtnCancelar
     };
   }
 
@@ -755,12 +764,15 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
    * Si no hay elementos seleccionados, no realiza ninguna acción.
    * Si hay elementos seleccionados, abre el popup de confirmación de eliminación.
    */
-  confirmEliminarEmpleadoItem(): void {
+    confirmEliminarEmpleadoItem(): void {
+    if (this.DomiciliosRfcSolicitanteList.length === 0) {
+      this.abrirMultipleSeleccionPopup('', 'No se encontró información');
+      this.confirmEliminarPopupAbierto = true;
+      return;
+    }
     if (this.listaFilaSeleccionadaEmpleado.length === 0) {
-      this.abrirMultipleSeleccionPopup(
-        '', 
-        'Debes seleccionar al menos un registro para eliminar.'
-      );
+      this.abrirMultipleSeleccionPopup('','Seleccione un registro');
+      this.confirmEliminarPopupAbierto = true;
       return;
     }
     this.abrirElimninarConfirmationopup();

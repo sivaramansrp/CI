@@ -63,11 +63,6 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   tieneValorRfc: boolean = false;
 
   /**
-   * Indica si el campo RFC es válido.
-   */
-  rfcValido: boolean = false;
-
-  /**
    * Configuración de notificación actual para mostrar al usuario.
    *
    * @description
@@ -219,17 +214,22 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   botonBuscar(): void {
-    const REGISTRO_VALUE = this.representante.get(
-      'representanteRegistro'
-    )?.value;
+    const REGISTRO_VALUE = this.representante.get('representanteRegistro')?.value;
     const REGISTRO_CONTROL = this.representante.get('representanteRegistro');
+    if(!REGISTRO_VALUE) {
+    this.mostrarNotificacionDeBusqueda('', 'No se ha proporcionado información que es requerida');
+    this.tieneValorRfc = true;
+    return;
+    }
+
     if (!REGISTRO_CONTROL?.valid) {
-      this.mostrarNotificacionFormatoIncorrecto();
+      this.mostrarNotificacionDeBusqueda('', 'Ha proporcionado información con un formato incorrecto');
+      this.tieneValorRfc = true;
       return;
     }
     if (REGISTRO_VALUE) {
       this.tieneValorRfc = true;
-      this.mostrarNotificacionDeBusqueda();
+      this.mostrarNotificacionDeBusqueda('', 'Datos guardados correctamente');
       const MOCK_DATA = {
         representanteRfc: REGISTRO_VALUE,
         representanteNombre: 'EUROFOODS DE MEXICO',
@@ -246,33 +246,19 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * Muestra una notificación de búsqueda exitosa.
    * Este mensaje indica que los datos se guardaron correctamente.
    */
-  mostrarNotificacionDeBusqueda(): void {
+  mostrarNotificacionDeBusqueda(titulo: string,
+    mensaje: string,
+    txtBtnAceptar: string = 'Aceptar',
+    txtBtnCancelar: string = ''): void {
     this.nuevaNotificacion = {
-      tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      categoria: CategoriaMensaje.ERROR,
+       tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
       modo: 'modal',
-      titulo: '',
-      mensaje: 'Datos guardados correctamente.',
+      titulo: titulo,
+      mensaje: mensaje,
       cerrar: false,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
-  }
-
-  /**
-   * Muestra una notificación cuando el RFC tiene un formato incorrecto.
-   * El mensaje alerta al usuario sobre un error en el formato ingresado.
-   */
-  mostrarNotificacionFormatoIncorrecto(): void {
-    this.nuevaNotificacion = {
-      tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      categoria: CategoriaMensaje.ERROR,
-      modo: 'modal',
-      titulo: '',
-      mensaje: 'Ha proporcionado información con un formato incorrecto.',
-      cerrar: false,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
+      txtBtnAceptar: txtBtnAceptar,
+      txtBtnCancelar: txtBtnCancelar
     };
   }
 

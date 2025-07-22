@@ -271,11 +271,6 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    */
   tieneValorRfc: boolean = false;
 
-  /**
-   * Indica si el campo RFC es válido.
-   */
-  rfcValido: boolean = false;
-
   /** Indica si una fila ha sido seleccionada en la tabla. */
   esFilaSeleccionada: boolean = false;
 
@@ -375,17 +370,24 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    * simulados basados en el valor del registro Federal de Contribuyentes.
    * En una implementación real, esto se conectaría a un servicio web.
    */
-  buscar(): void {
+  botonBuscar(): void {
+    let MOCK_DATA;
     const REGISTRO_VALUE = this.enlaceOperativoForm.get('registro')?.value;
     const REGISTRO_CONTROL = this.enlaceOperativoForm.get('registro');
+    if(!REGISTRO_VALUE) {
+      this.mostrarNotificacionDeBusqueda('', 'No se ha proporcionado información que es requerida');
+      this.tieneValorRfc = true;
+      return;
+      }
     if (!REGISTRO_CONTROL?.valid) {
-      this.mostrarNotificacionFormatoIncorrecto();
+      this.mostrarNotificacionDeBusqueda('', 'Ha proporcionado información con un formato incorrecto');
+      this.tieneValorRfc = true;
       return;
     }
-    let MOCK_DATA;
     if (REGISTRO_VALUE) {
-      this.mostrarNotificacionDeBusqueda();
-      MOCK_DATA = {
+       this.mostrarNotificacionDeBusqueda('', 'Datos guardados correctamente');
+       this.tieneValorRfc = true;
+        MOCK_DATA = {
         rfc: REGISTRO_VALUE,
         nombre: 'EUROFOODS DE MEXICO',
         apellidoPaterno: 'GONZALEZ',
@@ -394,7 +396,6 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
         cuidad: 'DURANGO',
         correoElectronico: 'vucem2.5@hotmail.com',
       };
-
       this.enlaceOperativoForm.patchValue(MOCK_DATA);
     }
   }
@@ -403,38 +404,20 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    * Muestra una notificación de búsqueda exitosa.
    * Este mensaje indica que los datos se guardaron correctamente.
    */
-  mostrarNotificacionDeBusqueda(): void {
-    this.cerrarModal();
+  mostrarNotificacionDeBusqueda(titulo: string,
+    mensaje: string,
+    txtBtnAceptar: string = 'Aceptar',
+    txtBtnCancelar: string = ''): void {
     this.nuevaNotificacion = {
-      tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      categoria: CategoriaMensaje.ERROR,
+       tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
       modo: 'modal',
-      titulo: '',
-      mensaje: 'Datos guardados correctamente.',
+      titulo: titulo,
+      mensaje: mensaje,
       cerrar: false,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
+      txtBtnAceptar: txtBtnAceptar,
+      txtBtnCancelar: txtBtnCancelar
     };
-    this.tieneValorRfc = true;
-  }
-
-  /**
-   * Muestra una notificación cuando el RFC tiene un formato incorrecto.
-   * El mensaje alerta al usuario sobre un error en el formato ingresado.
-   */
-  mostrarNotificacionFormatoIncorrecto(): void {
-    this.cerrarModal();
-    this.nuevaNotificacion = {
-      tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      categoria: CategoriaMensaje.ERROR,
-      modo: 'modal',
-      titulo: '',
-      mensaje: 'Ha proporcionado información con un formato incorrecto.',
-      cerrar: false,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
-    this.rfcValido = true;
   }
 
   /**
@@ -564,7 +547,6 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
   cerrarModal(): void {
     this.confirmEliminarPopupAbierto = false;
     this.tieneValorRfc = false;
-    this.rfcValido = false;
     this.esFilaSeleccionada = false;
     this.multipleSeleccionPopupAbierto = false;
   }
@@ -645,30 +627,54 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    */
   modificarItemEnlace(): void {
     this.cerrarModal();
-    if (this.listaFilaSeleccionadaEnlace.length === 0) {
+    if(this.enlaceOperativoData.length === 0) {
+      this.abrirMultipleSeleccionPopup('', 'No se encontró información');
       this.esFilaSeleccionada = true;
-      this.nuevaNotificacion = {
-        tipoNotificacion: TipoNotificacionEnum.ALERTA,
-        categoria: CategoriaMensaje.ALERTA,
-        modo: 'modal',
-        titulo: '',
-        mensaje: 'Seleccione un registro.',
-        cerrar: false,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-    } else if (
+      return;
+    }
+    if (this.listaFilaSeleccionadaEnlace.length === 0) {
+     this.abrirMultipleSeleccionPopup('', 'Seleccione un registro');
+      this.esFilaSeleccionada = true;
+      return;
+    } if (
       this.listaFilaSeleccionadaEnlace &&
       this.listaFilaSeleccionadaEnlace.length === 1
     ) {
       this.filaSeleccionadaEnlaceOperativo = {
         ...this.listaFilaSeleccionadaEnlace[0],
       };
-      this.modoEdicion = true;
       this.registroEditandoId = this.filaSeleccionadaEnlaceOperativo.id;
+      this.modoEdicion = true;
       this.agregarDialogoDatos();
       this.actualizarDatosModificados();
     }
+  }
+
+    /**
+   * @method abrirMultipleSeleccionPopup
+   * Muestra un popup de notificación con contenido dinámico.
+   * Este método permite personalizar el título, mensaje y etiquetas de los botones del popup.
+   * @param titulo - Título del popup
+   * @param mensaje - Mensaje a mostrar en el popup
+   * @param txtBtnAceptar - Texto del botón de aceptar (opcional, por defecto 'Cerrar')
+   * @param txtBtnCancelar - Texto del botón de cancelar (opcional, por defecto '')
+   */
+  abrirMultipleSeleccionPopup(
+    titulo: string,
+    mensaje: string,
+    txtBtnAceptar: string = 'Aceptar',
+    txtBtnCancelar: string = ''
+  ): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
+      modo: 'modal',
+      titulo: titulo,
+      mensaje: mensaje,
+      cerrar: false,
+      txtBtnAceptar: txtBtnAceptar,
+      txtBtnCancelar: txtBtnCancelar,
+    };
   }
 
   /**
@@ -708,19 +714,16 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    */
   confirmeliminarEnlaceItem(): void {
     this.cerrarModal();
+    if (this.enlaceOperativoData.length === 0) {
+      this.multipleSeleccionPopupAbierto = true;
+      this.abrirMultipleSeleccionPopup('', 'No se encontró información');
+      return;
+    }
     if (this.listaFilaSeleccionadaEnlace.length === 0) {
       this.multipleSeleccionPopupAbierto = true;
-      this.nuevaNotificacion = {
-        tipoNotificacion: TipoNotificacionEnum.ALERTA,
-        categoria: CategoriaMensaje.ALERTA,
-        modo: 'modal',
-        titulo: '',
-        mensaje: 'Seleccione un registro.',
-        cerrar: false,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-    } else if (this.listaFilaSeleccionadaEnlace.length) {
+      this.abrirMultipleSeleccionPopup('', 'Seleccione un registro');
+      return;
+    } if (this.listaFilaSeleccionadaEnlace.length) {
       this.abrirElimninarConfirmationopup();
     }
   }

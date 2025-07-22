@@ -58,13 +58,13 @@
     <div class="row">
       <div class="col-md-12">
         <div class="d-flex justify-content-end">
-          <button
+            <button
+            class="btn btn-default"
             type="button"
-            class="btn btn-primary me-2"
             [disabled]="esFormularioSoloLectura"
-            (click)="agregarDialogoDatos()"
+            (click)="confirmeliminarEnlaceItem()"
           >
-            Agregar
+            Eliminar
           </button>
           <button
             class="btn btn-danger me-2"
@@ -74,13 +74,13 @@
           >
             Modificar
           </button>
-          <button
-            class="btn btn-default"
+            <button
             type="button"
+            class="btn btn-primary me-2"
             [disabled]="esFormularioSoloLectura"
-            (click)="confirmeliminarEnlaceItem()"
+            (click)="agregarDialogoDatos()"
           >
-            Eliminar
+            Agregar
           </button>
         </div>
       </div>
@@ -124,7 +124,7 @@
                 <button
                   class="btn btn-default"
                   type="button"
-                  (click)="buscar()"
+                  (click)="botonBuscar()"
                 >
                   Buscar
                 </button>
@@ -273,13 +273,6 @@
           <button
             type="button"
             class="btn btn-primary"
-            (click)="limpiarFormulario()"
-          >
-            Limpiar
-          </button>
-          <button
-            type="button"
-            class="btn btn-primary"
             (click)="enviarDialogData()"
             [disabled]="!enlaceOperativoForm.valid"
           >
@@ -301,14 +294,7 @@
 <lib-notificaciones
   *ngIf="tieneValorRfc"
   [notificacionInput]="nuevaNotificacion"
-  (confirmacionModal)="mostrarNotificacionDeBusqueda()"
->
-</lib-notificaciones>
-
-<lib-notificaciones
-  *ngIf="rfcValido"
-  [notificacionInput]="nuevaNotificacion"
-  (confirmacionModal)="mostrarNotificacionFormatoIncorrecto()"
+  (confirmacionModal)="botonBuscar()"
 >
 </lib-notificaciones>
 
