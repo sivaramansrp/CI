@@ -20,7 +20,7 @@ import { Tramite120601Store } from '../../estados/tramite-120601.store';
     ReactiveFormsModule
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
-  styleUrls: ['./datos-de-la-solicitud.component.css'],
+  styleUrls: ['./datos-de-la-solicitud.component.scss'],
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
@@ -139,6 +139,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public docSeleccionado(_e: Event): void {
     // Esta es una función dinámica; una vez que tengamos la API, la implementaremos.
     this.store.setTipoDeEmpresa(this.solicitudForm.get('tipoDeEmpresa')?.value);
+  }
+
+  /**
+   * Actualiza la clave de actividad económica en el store.
+   * 
+   * @method setActividadEconomicaClave
+   * @description Obtiene el valor actual del campo 'actividadEconomicaClave' del formulario
+   *              y lo establece en el store mediante el método setActividadEconomicaClave.
+   */
+  public setActividadEconomicaClave(): void {
+    this.store.setActividadEconomicaClave(this.solicitudForm.get('actividadEconomicaClave')?.value);
   }
 /**
    * @method crearFormCombinacion

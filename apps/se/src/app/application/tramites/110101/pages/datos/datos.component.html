@@ -7,28 +7,51 @@
             <li [ngClass]="indice === 2 ? 'active' : ''">
                 <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(2)">Tratados</a>
             </li>
-            <li [ngClass]="{ active: indice === 3, disabled: desactivado }">
+            @if(consultaState.parameter === "READ_PROCEDURE"){
+            <li [ngClass]="indice === 3 ? 'active' : ''">
+                <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
+                    (keydown.space)="seleccionaTab(3)" role="button" tabindex="3">Protesto de Decir Verdad</a>
+            </li>
+            }
+            @if(consultaState.parameter === "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO" ) {
+            <li [ngClass]="{ active: indice === 3}">
                 <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Datos de la mercancia</a>
             </li>
-            <li [ngClass]="{ active: indice === 4, disabled: desactivado }">
+            <li [ngClass]="{ active: indice === 4}">
                 <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Datos adicionales</a>
             </li>
+            }
+        @if(consultaState.parameter !== "READ_PROCEDURE" && consultaState.parameter !== "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO") {
+               <li [ngClass]="{ active: indice === 3 ,  disabled: desactivado}" ,>
+                <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Datos de la mercancia</a>
+            </li>
+            <li [ngClass]="{ active: indice === 4 , disabled: desactivado}">
+                <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Datos adicionales</a>
+            </li>
+        }
+
         </ul>
         <ng-container>
             @switch (indice) {
             @case (1) {
-                <solicitante #Solicitante></solicitante>
+            <solicitante #Solicitante></solicitante>
             }
             @case (2) {
-                <app-tratados (habilitarPestana)="habilitarPestana()"></app-tratados>
+            <app-tratados  (habilitarPestana)="habilitarPestana()"></app-tratados>
             }
             @case (3) {
-                <app-datos-mercancia></app-datos-mercancia>
+            @if (consultaState.parameter === "READ_PROCEDURE") {
+            <app-protesto-decir-verdad></app-protesto-decir-verdad>
+            } @else {
+            <app-datos-mercancia></app-datos-mercancia>
+            }
             }
             @case (4) {
-                <app-datos-adicionales></app-datos-adicionales>
+            @if (consultaState.parameter !== "READ_PROCEDURE") {
+            <app-datos-adicionales></app-datos-adicionales>
             }
-        }
+            }
+            }
         </ng-container>
     </div>
 </div>

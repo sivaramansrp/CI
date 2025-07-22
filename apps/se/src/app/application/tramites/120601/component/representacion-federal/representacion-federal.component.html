@@ -13,6 +13,16 @@
                     name="representacion" formControlName="representacion"
                     (change)="validarRepresentacionFederalIDCSECEROR_($event)">
                 </app-catalogo-select>
+                <div
+                *ngIf="esInvalido('representacion')"
+                    class="text-danger"
+                >
+                    <small
+                    *ngIf="formulario.get('representacion')?.errors?.['required']"
+                    >
+                    Este campo es obligatorio.
+                    </small>
+                </div>
             </div>
         </div>
     </form>

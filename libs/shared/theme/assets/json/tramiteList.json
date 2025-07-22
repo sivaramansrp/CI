@@ -4223,6 +4223,13 @@
   },
   {
     "id": 606,
+    "tramite": 32616,
+    "linkDashboard": "/agace/solicitud-de-registro/solicitud",
+    "linkDepartment": "/pago/solicitud-de-registro/solicitud",
+    "department": "se"
+  },
+  {
+    "id": 606,
     "tramite": 30506,
     "linkDashboard": "/agace/registros/solicitud",
     "linkDepartment": "/pago/registros/solicitud",

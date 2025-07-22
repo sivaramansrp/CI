@@ -84,8 +84,7 @@ export class DatosComponent implements OnInit, OnDestroy {
     })
    }
 
-   /**
-   * Habilita la pestaña si actualmente está desactivada.
+  /* Habilita la pestaña si actualmente está desactivada.
    * Cambia la variable `desactivado` a `false` para permitir la interacción con la pestaña.
    *
    * @example
@@ -97,6 +96,8 @@ export class DatosComponent implements OnInit, OnDestroy {
       this.desactivado = false;
     }
    }
+
+    /**
 
     /**
      * Método del ciclo de vida que se llama cuando el componente es destruido.

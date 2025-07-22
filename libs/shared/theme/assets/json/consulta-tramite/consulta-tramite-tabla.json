@@ -3195,6 +3195,15 @@
         "origin": "READ_PROCEDURE"
     },
     {
+      "id": "32616",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32616"  
+    },
+    {
         "id":"32615",
         "folioTramite": "3170001000320251005000002",
         "tipoDeTramite": "Datos generales del trámite",

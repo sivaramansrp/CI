@@ -2854,6 +2854,15 @@
     "numeroDeProcedimiento": "570102"
   },
   {
+    "id": 32616,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32616"
+  },
+  {
     "id": 6001,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
