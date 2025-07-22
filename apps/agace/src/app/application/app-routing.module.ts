@@ -323,6 +323,12 @@ const ROUTES: Routes = [
     path: 'rubro-transporte-ferroviario',
     loadChildren: () => 
       import('./tramites/32613/rubro-transporte-ferroviario.module').then((m) => m.RubroTransporteFerroviarioModule)
+  },
+  {
+      path: 'solicitud-de-registro',
+    loadChildren: () => 
+      import('./tramites/32616/solicitud-de-registro-invocar.module').then(
+        (m) => m.SolicitudDeRegistroInvocarModule)
   }
 ];
 
