@@ -33,7 +33,9 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
    * Lista documentos requeridos
    */
   exampleDocumentosRequeridos!: RespuestaDocuemntosRequeridos[];
-
+  /**
+   * Lista de documentos
+   */
   listadoDocumentos: string[] = [];
   /**
    * Lista de documentos agregados a la tabla
@@ -74,6 +76,9 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
   /** Enum para la selección en la tabla */
   tablaSeleccion = TablaSeleccion;
 
+  /**
+   * Encabezado de tabla para agregar documentos
+   */
   encabezadoDeTablaCapturistas: ConfiguracionColumna<string>[] = [
     {
       encabezado: 'Nombre del documento',
