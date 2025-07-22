@@ -9,7 +9,8 @@
 
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-paso-uno (indiceNombre)="alEventoHijo($event)" (isdataEvent)="isDataEvent($event)" (eventoDatosHijo)="alEventoGuarder($event)"></app-paso-uno>
+      <app-paso-uno (indiceNombre)="alEventoHijo($event)" (isdataEvent)="isDataEvent($event)"
+        (eventoDatosHijo)="alEventoGuarder($event)"></app-paso-uno>
       } @case (2) {
       <app-paso-tres></app-paso-tres>
       }
