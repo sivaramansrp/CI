@@ -3,8 +3,8 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { CTPATComponent } from './c-tpat.component';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { Solicitud32614Store } from '../../estados/solicitud32614.store';
+import { Solicitud32614Query } from '../../estados/solicitud32614.query';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -13,8 +13,8 @@ describe('CTPATComponent', () => {
   let component: CTPATComponent;
   let fixture: ComponentFixture<CTPATComponent>;
   let solicitudServiceMock: any;
-  let solicitud32605StoreMock: any;
-  let solicitud32605QueryMock: any;
+  let solicitud32614StoreMock: any;
+  let solicitud32614QueryMock: any;
 
   beforeEach(async () => {
     solicitudServiceMock = {
@@ -37,13 +37,13 @@ describe('CTPATComponent', () => {
       ),
     };
 
-    solicitud32605StoreMock = {
+    solicitud32614StoreMock = {
       actualizar2089: jest.fn(),
       actualizar2090: jest.fn(),
       actualizar2091: jest.fn(),
     };
 
-    solicitud32605QueryMock = {
+    solicitud32614QueryMock = {
       selectSolicitud$: of({
         2089: 'value2089',
         2090: 'value2090',
@@ -63,8 +63,8 @@ describe('CTPATComponent', () => {
       providers: [
         FormBuilder,
         { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: Solicitud32605Store, useValue: solicitud32605StoreMock },
-        { provide: Solicitud32605Query, useValue: solicitud32605QueryMock },
+        { provide: Solicitud32614Store, useValue: solicitud32614StoreMock },
+        { provide: Solicitud32614Query, useValue: solicitud32614QueryMock },
       ],
     }).compileComponents();
 
@@ -91,8 +91,8 @@ describe('CTPATComponent', () => {
     expect(component.conseguirOpcionDeRadio).toHaveBeenCalled();
   });
 
-  it('should update solicitud32605State and patch form values when selectSolicitud$ emits', () => {
-    expect(component.solicitud32605State).toEqual({
+  it('should update solicitud32614State and patch form values when selectSolicitud$ emits', () => {
+    expect(component.solicitud32614State).toEqual({
       2089: 'value2089',
       2090: 'value2090',
       2091: 'value2091',
@@ -106,21 +106,21 @@ describe('CTPATComponent', () => {
 
   it('should call actualizar2089 with the correct value', () => {
     component.actualizar2089('newValue2089');
-    expect(solicitud32605StoreMock.actualizar2089).toHaveBeenCalledWith(
+    expect(solicitud32614StoreMock.actualizar2089).toHaveBeenCalledWith(
       'newValue2089'
     );
   });
 
   it('should call actualizar2090 with the correct value', () => {
     component.actualizar2090('newValue2090');
-    expect(solicitud32605StoreMock.actualizar2090).toHaveBeenCalledWith(
+    expect(solicitud32614StoreMock.actualizar2090).toHaveBeenCalledWith(
       'newValue2090'
     );
   });
 
   it('should call actualizar2091 with the correct value', () => {
     component.actualizar2091('newValue2091');
-    expect(solicitud32605StoreMock.actualizar2091).toHaveBeenCalledWith(
+    expect(solicitud32614StoreMock.actualizar2091).toHaveBeenCalledWith(
       'newValue2091'
     );
   });

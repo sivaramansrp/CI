@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImportadorExportadorComponent } from './importador-exportador.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { Solicitud32614Store } from '../../estados/solicitud32614.store';
+import { Solicitud32614Query } from '../../estados/solicitud32614.query';
 import { of } from 'rxjs';
 import {
   Domicilios,
@@ -28,8 +28,8 @@ describe('ImportadorExportadorComponent', () => {
   let component: ImportadorExportadorComponent;
   let fixture: ComponentFixture<ImportadorExportadorComponent>;
   let solicitudServiceMock: jest.Mocked<SolicitudService>;
-  let solicitud32605StoreMock: jest.Mocked<Solicitud32605Store>;
-  let solicitud32605QueryMock: jest.Mocked<Solicitud32605Query>;
+  let solicitud32614StoreMock: jest.Mocked<Solicitud32614Store>;
+  let solicitud32614QueryMock: jest.Mocked<Solicitud32614Query>;
 
   beforeEach(async () => {
     solicitudServiceMock = {
@@ -89,7 +89,7 @@ describe('ImportadorExportadorComponent', () => {
       ),
     } as unknown as jest.Mocked<SolicitudService>;
 
-    solicitud32605StoreMock = {
+    solicitud32614StoreMock = {
       actualizar2042: jest.fn(() => of('testValue')),
       actualizar2043: jest.fn(() => of('testValue')),
       actualizar2044: jest.fn(() => of('testValue')),
@@ -98,9 +98,9 @@ describe('ImportadorExportadorComponent', () => {
       actualizarMonto: jest.fn(() => of('1000')),
       actualizarOperacionesBancarias: jest.fn(() => of('operation123')),
       actualizarLlavePago: jest.fn(() => of('key123')),
-    } as unknown as jest.Mocked<Solicitud32605Store>;
+    } as unknown as jest.Mocked<Solicitud32614Store>;
 
-    solicitud32605QueryMock = {
+    solicitud32614QueryMock = {
       selectSolicitud$: of({
         idPersonaSolicitud: '',
         rfcTercero: '',
@@ -213,7 +213,7 @@ describe('ImportadorExportadorComponent', () => {
         listaSeccionSociosIC: [] as SeccionSociosIC[],
         enlaceOperativosLista: [] as EnlaceOperativo[],
       }),
-    } as jest.Mocked<Solicitud32605Query>;
+    } as jest.Mocked<Solicitud32614Query>;
 
     await TestBed.configureTestingModule({
       imports: [
@@ -231,8 +231,8 @@ describe('ImportadorExportadorComponent', () => {
       providers: [
         FormBuilder,
         { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: Solicitud32605Store, useValue: solicitud32605StoreMock },
-        { provide: Solicitud32605Query, useValue: solicitud32605QueryMock },
+        { provide: Solicitud32614Store, useValue: solicitud32614StoreMock },
+        { provide: Solicitud32614Query, useValue: solicitud32614QueryMock },
       ],
     }).compileComponents();
   });
@@ -276,33 +276,33 @@ describe('ImportadorExportadorComponent', () => {
   it('should update 2042 value in the store', () => {
     const evento = 'testValue';
     component.actualizar2042(evento);
-    expect(solicitud32605StoreMock.actualizar2042).toHaveBeenCalledWith(evento);
+    expect(solicitud32614StoreMock.actualizar2042).toHaveBeenCalledWith(evento);
   });
 
   it('should update 2043 value in the store', () => {
     const evento = 'testValue';
     component.actualizar2043(evento);
-    expect(solicitud32605StoreMock.actualizar2043).toHaveBeenCalledWith(evento);
+    expect(solicitud32614StoreMock.actualizar2043).toHaveBeenCalledWith(evento);
   });
 
   it('should update 2044 value in the store', () => {
     const evento = 'testValue';
     component.actualizar2044(evento);
-    expect(solicitud32605StoreMock.actualizar2044).toHaveBeenCalledWith(evento);
+    expect(solicitud32614StoreMock.actualizar2044).toHaveBeenCalledWith(evento);
   });
 
   it('should update fechaInicioComercio in the store', () => {
     const evento = '2023/01/01';
     component.actualizarFechaInicioComercio(evento);
     expect(
-      solicitud32605StoreMock.actualizarFechaInicioComercio
+      solicitud32614StoreMock.actualizarFechaInicioComercio
     ).toHaveBeenCalledWith(evento);
   });
 
   it('should update fechaPago in the store', () => {
     const evento = '2023/01/01';
     component.actualizarFechaPago(evento);
-    expect(solicitud32605StoreMock.actualizarFechaPago).toHaveBeenCalledWith(
+    expect(solicitud32614StoreMock.actualizarFechaPago).toHaveBeenCalledWith(
       evento
     );
   });
@@ -310,7 +310,7 @@ describe('ImportadorExportadorComponent', () => {
   it('should update monto in the store', () => {
     const evento = '1000';
     component.actualizarMonto(evento);
-    expect(solicitud32605StoreMock.actualizarMonto).toHaveBeenCalledWith(
+    expect(solicitud32614StoreMock.actualizarMonto).toHaveBeenCalledWith(
       evento
     );
   });
@@ -319,14 +319,14 @@ describe('ImportadorExportadorComponent', () => {
     const evento = 'operation123';
     component.actualizarOperacionesBancarias(evento);
     expect(
-      solicitud32605StoreMock.actualizarOperacionesBancarias
+      solicitud32614StoreMock.actualizarOperacionesBancarias
     ).toHaveBeenCalledWith(evento);
   });
 
   it('should update llavePago in the store', () => {
     const evento = 'key123';
     component.actualizarLlavePago(evento);
-    expect(solicitud32605StoreMock.actualizarLlavePago).toHaveBeenCalledWith(
+    expect(solicitud32614StoreMock.actualizarLlavePago).toHaveBeenCalledWith(
       evento
     );
   });

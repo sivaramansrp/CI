@@ -3,8 +3,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { InstalacionesPrincipalesComponent } from './instalaciones-principales.component';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { Solicitud32614Store } from '../../estados/solicitud32614.store';
+import { Solicitud32614Query } from '../../estados/solicitud32614.query';
 import { Domicilios } from '../../models/solicitud.model';
 import { CommonModule } from '@angular/common';
 import {
@@ -18,8 +18,8 @@ describe('InstalacionesPrincipalesComponent', () => {
   let component: InstalacionesPrincipalesComponent;
   let fixture: ComponentFixture<InstalacionesPrincipalesComponent>;
   let solicitudServiceMock: any;
-  let solicitud32605StoreMock: any;
-  let solicitud32605QueryMock: any;
+  let solicitud32614StoreMock: any;
+  let solicitud32614QueryMock: any;
 
   beforeEach(async () => {
     solicitudServiceMock = {
@@ -61,7 +61,7 @@ describe('InstalacionesPrincipalesComponent', () => {
       ),
     };
 
-    solicitud32605StoreMock = {
+    solicitud32614StoreMock = {
       actualizarPrincipales: jest.fn(),
       actualizarMunicipio: jest.fn(),
       actualizarTipoDeInstalacion: jest.fn(),
@@ -76,7 +76,7 @@ describe('InstalacionesPrincipalesComponent', () => {
       actualizarMutuo: jest.fn(),
     };
 
-    solicitud32605QueryMock = {
+    solicitud32614QueryMock = {
       selectSolicitud$: of({}),
     };
 
@@ -93,8 +93,8 @@ describe('InstalacionesPrincipalesComponent', () => {
       ],
       providers: [
         { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: Solicitud32605Store, useValue: solicitud32605StoreMock },
-        { provide: Solicitud32605Query, useValue: solicitud32605QueryMock },
+        { provide: Solicitud32614Store, useValue: solicitud32614StoreMock },
+        { provide: Solicitud32614Query, useValue: solicitud32614QueryMock },
       ],
     }).compileComponents();
 
@@ -165,7 +165,7 @@ describe('InstalacionesPrincipalesComponent', () => {
 
   it('should call actualizarPrincipales with the correct value', () => {
     component.actualizarPrincipales('test');
-    expect(solicitud32605StoreMock.actualizarPrincipales).toHaveBeenCalledWith(
+    expect(solicitud32614StoreMock.actualizarPrincipales).toHaveBeenCalledWith(
       'test'
     );
   });
@@ -173,7 +173,7 @@ describe('InstalacionesPrincipalesComponent', () => {
   it('should call actualizarMunicipio with the correct value', () => {
     const event = { target: { value: 'test' } } as unknown as Event;
     component.actualizarMunicipio(event);
-    expect(solicitud32605StoreMock.actualizarMunicipio).toHaveBeenCalledWith(
+    expect(solicitud32614StoreMock.actualizarMunicipio).toHaveBeenCalledWith(
       'test'
     );
   });
@@ -181,7 +181,7 @@ describe('InstalacionesPrincipalesComponent', () => {
   it('should call actualizarTipoDeInstalacion with the correct value', () => {
     component.actualizarTipoDeInstalacion({ id: 1, descripcion: 'Test' });
     expect(
-      solicitud32605StoreMock.actualizarTipoDeInstalacion
+      solicitud32614StoreMock.actualizarTipoDeInstalacion
     ).toHaveBeenCalledWith(1);
   });
 
@@ -189,7 +189,7 @@ describe('InstalacionesPrincipalesComponent', () => {
     const event = { target: { value: 'test' } } as unknown as Event;
     component.actualizarEntidadFederativa(event);
     expect(
-      solicitud32605StoreMock.actualizarEntidadFederativa
+      solicitud32614StoreMock.actualizarEntidadFederativa
     ).toHaveBeenCalledWith('test');
   });
 
@@ -197,14 +197,14 @@ describe('InstalacionesPrincipalesComponent', () => {
     const event = { target: { value: 'test' } } as unknown as Event;
     component.actualizarRegistroSESAT(event);
     expect(
-      solicitud32605StoreMock.actualizarRegistroSESAT
+      solicitud32614StoreMock.actualizarRegistroSESAT
     ).toHaveBeenCalledWith('test');
   });
 
   it('should call actualizarDescripcion with the correct value', () => {
     const event = { target: { value: 'test' } } as unknown as Event;
     component.actualizarDescripcion(event);
-    expect(solicitud32605StoreMock.actualizarDescripcion).toHaveBeenCalledWith(
+    expect(solicitud32614StoreMock.actualizarDescripcion).toHaveBeenCalledWith(
       'test'
     );
   });
@@ -212,7 +212,7 @@ describe('InstalacionesPrincipalesComponent', () => {
   it('should call actualizarCodigoPostal with the correct value', () => {
     const event = { target: { value: 'test' } } as unknown as Event;
     component.actualizarCodigoPostal(event);
-    expect(solicitud32605StoreMock.actualizarCodigoPostal).toHaveBeenCalledWith(
+    expect(solicitud32614StoreMock.actualizarCodigoPostal).toHaveBeenCalledWith(
       'test'
     );
   });
@@ -220,20 +220,20 @@ describe('InstalacionesPrincipalesComponent', () => {
   it('should call actualizarProcesoProductivo with the correct value', () => {
     component.actualizarProcesoProductivo('test');
     expect(
-      solicitud32605StoreMock.actualizarProcesoProductivo
+      solicitud32614StoreMock.actualizarProcesoProductivo
     ).toHaveBeenCalledWith('test');
   });
 
   it('should call actualizarGoceDelInmueble with the correct value', () => {
     component.actualizarGoceDelInmueble('test');
     expect(
-      solicitud32605StoreMock.actualizarGoceDelInmueble
+      solicitud32614StoreMock.actualizarGoceDelInmueble
     ).toHaveBeenCalledWith('test');
   });
 
   it('should call actualizarEmpresa with the correct value', () => {
     component.actualizarEmpresa('test');
-    expect(solicitud32605StoreMock.actualizarEmpresa).toHaveBeenCalledWith(
+    expect(solicitud32614StoreMock.actualizarEmpresa).toHaveBeenCalledWith(
       'test'
     );
   });
@@ -241,13 +241,13 @@ describe('InstalacionesPrincipalesComponent', () => {
   it('should call actualizarComercioExterior with the correct value', () => {
     component.actualizarComercioExterior('test');
     expect(
-      solicitud32605StoreMock.actualizarComercioExterior
+      solicitud32614StoreMock.actualizarComercioExterior
     ).toHaveBeenCalledWith('test');
   });
 
   it('should call actualizarMutuo with the correct value', () => {
     component.actualizarMutuo('test');
-    expect(solicitud32605StoreMock.actualizarMutuo).toHaveBeenCalledWith(
+    expect(solicitud32614StoreMock.actualizarMutuo).toHaveBeenCalledWith(
       'test'
     );
   });

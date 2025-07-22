@@ -1,37 +1,62 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { SeccionSubcontratadosComponent } from './seccion-subcontratados.component';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { Solicitud32614Store } from '../../estados/solicitud32614.store';
+import { Solicitud32614Query } from '../../estados/solicitud32614.query';
 import {
   Catalogo,
   CatalogoSelectComponent,
   TituloComponent,
+  ConsultaioQuery,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { SolicitudCatologoSelectLista, SeccionSubcontratados } from '../../models/solicitud.model';
 
 describe('SeccionSubcontratadosComponent', () => {
   let component: SeccionSubcontratadosComponent;
   let fixture: ComponentFixture<SeccionSubcontratadosComponent>;
   let solicitudServiceMock: any;
-  let solicitud32605StoreMock: any;
-  let solicitud32605QueryMock: any;
+  let solicitud32614StoreMock: any;
+  let solicitud32614QueryMock: any;
+  let consultaioQueryMock: any;
+
+  const mockBimestreData = {
+    catalogos: [
+      { id: 1, descripcion: 'Primer Bimestre' },
+      { id: 2, descripcion: 'Segundo Bimestre' },
+    ],
+    labelNombre: 'Bimestre',
+    primerOpcion: 'Seleccione un bimestre',
+    required: true,
+  };
+
+  const mockSolicitudState = {
+    subcontrataRFCBusqueda: 'TEST123456',
+    subcontrataRFC: 'TEST123456ABC',
+    subcontrataRazonSocial: 'Empresa Test S.A. de C.V.',
+    subcontrataEmpleados: '25',
+    subcontrataBimestre: '1',
+  };
 
   beforeEach(async () => {
     solicitudServiceMock = {
-      conseguirSolicitudCatologoSelectLista: jest.fn().mockReturnValue(of({})),
+      conseguirSolicitudCatologoSelectLista: jest.fn().mockReturnValue(
+        of({
+          bimestre: mockBimestreData,
+        } as SolicitudCatologoSelectLista)
+      ),
       conseguirSeccionSubcontratados: jest.fn().mockReturnValue(
         of({
-          subcontrataRFC: 'RFC123',
-          subcontrataRazonSocial: 'Test Company',
-        })
+          subcontrataRFC: 'TEST123456ABC',
+          subcontrataRazonSocial: 'Empresa Test S.A. de C.V.',
+        } as SeccionSubcontratados)
       ),
     };
 
-    solicitud32605StoreMock = {
+    solicitud32614StoreMock = {
       actualizarSubcontrataRFCBusqueda: jest.fn(),
       actualizarSubcontrataRFC: jest.fn(),
       actualizarSubcontrataRazonSocial: jest.fn(),
@@ -39,13 +64,13 @@ describe('SeccionSubcontratadosComponent', () => {
       actualizarSubcontrataBimestre: jest.fn(),
     };
 
-    solicitud32605QueryMock = {
-      selectSolicitud$: of({
-        subcontrataRFCBusqueda: 'RFC123',
-        subcontrataRFC: 'RFC123',
-        subcontrataRazonSocial: 'Test Company',
-        subcontrataEmpleados: '10',
-        subcontrataBimestre: '1',
+    solicitud32614QueryMock = {
+      selectSolicitud$: of(mockSolicitudState),
+    };
+
+    consultaioQueryMock = {
+      selectConsultaioState$: of({
+        readonly: false,
       }),
     };
 
@@ -62,8 +87,9 @@ describe('SeccionSubcontratadosComponent', () => {
       providers: [
         FormBuilder,
         { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: Solicitud32605Store, useValue: solicitud32605StoreMock },
-        { provide: Solicitud32605Query, useValue: solicitud32605QueryMock },
+        { provide: Solicitud32614Store, useValue: solicitud32614StoreMock },
+        { provide: Solicitud32614Query, useValue: solicitud32614QueryMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
       ],
     }).compileComponents();
   });
@@ -74,165 +100,269 @@ describe('SeccionSubcontratadosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
-  });
+  describe('Component Creation and Initialization', () => {
+    it('should create the component', () => {
+      expect(component).toBeTruthy();
+    });
 
-  it('should initialize the form on ngOnInit', () => {
-    expect(component.subcontratadosForm).toBeDefined();
-    expect(
-      component.subcontratadosForm.controls['subcontrataRFCBusqueda']
-    ).toBeDefined();
-  });
+    it('should initialize with default values', () => {
+      expect(component.subcontratadosForm).toBeDefined();
+      expect(component.esFormularioSoloLectura).toBe(false);
+      expect(component.bimestre).toBeDefined();
+    });
 
-  it('should patch form values from state on ngOnInit', () => {
-    expect(component.subcontratadosForm.value).toEqual({
-      subcontrataRFCBusqueda: 'RFC123',
-      subcontrataEmpleados: '10',
-      subcontrataBimestre: '1',
+    it('should initialize the form with all required controls', () => {
+      expect(component.subcontratadosForm.get('subcontrataRFCBusqueda')).toBeDefined();
+      expect(component.subcontratadosForm.get('subcontrataRFC')).toBeDefined();
+      expect(component.subcontratadosForm.get('subcontrataRazonSocial')).toBeDefined();
+      expect(component.subcontratadosForm.get('subcontrataEmpleados')).toBeDefined();
+      expect(component.subcontratadosForm.get('subcontrataBimestre')).toBeDefined();
+    });
+
+    it('should disable RFC and Razon Social fields by default', () => {
+      expect(component.subcontratadosForm.get('subcontrataRFC')?.disabled).toBe(true);
+      expect(component.subcontratadosForm.get('subcontrataRazonSocial')?.disabled).toBe(true);
+    });
+
+    it('should load catalog data on initialization', () => {
+      expect(solicitudServiceMock.conseguirSolicitudCatologoSelectLista).toHaveBeenCalled();
+      expect(component.bimestre).toEqual(mockBimestreData);
     });
   });
 
-  it('should update store on actualizarSubcontrataRFCBusqueda', () => {
-    const event = { target: { value: 'RFC456' } } as unknown as Event;
-    component.actualizarSubcontrataRFCBusqueda(event);
-    expect(
-      solicitud32605StoreMock.actualizarSubcontrataRFCBusqueda
-    ).toHaveBeenCalledWith('RFC456');
-  });
-
-  it('should update store on actualizarSubcontrataRFC', () => {
-    const event = { target: { value: 'RFC789' } } as unknown as Event;
-    component.actualizarSubcontrataRFC(event);
-    expect(
-      solicitud32605StoreMock.actualizarSubcontrataRFC
-    ).toHaveBeenCalledWith('RFC789');
-  });
-
-  it('should update store on actualizarSubcontrataRazonSocial', () => {
-    const event = { target: { value: 'New Company' } } as unknown as Event;
-    component.actualizarSubcontrataRazonSocial(event);
-    expect(
-      solicitud32605StoreMock.actualizarSubcontrataRazonSocial
-    ).toHaveBeenCalledWith('New Company');
-  });
-
-  it('should update store on actualizarSubcontrataEmpleados', () => {
-    const event = { target: { value: '20' } } as unknown as Event;
-    component.actualizarSubcontrataEmpleados(event);
-    expect(
-      solicitud32605StoreMock.actualizarSubcontrataEmpleados
-    ).toHaveBeenCalledWith('20');
-  });
-
-  it('should update store on actualizarSubcontrataBimestre', () => {
-    solicitud32605StoreMock.actualizarSubcontrataBimestre(2);
-    expect(
-      solicitud32605StoreMock.actualizarSubcontrataBimestre
-    ).toHaveBeenCalledWith(2);
-  });
-
-  it('should update store on actualizarCatseleccionados', () => {
-    solicitud32605StoreMock.actualizarCatseleccionados = jest.fn();
-    const catalogo: Catalogo = { id: 5 } as Catalogo;
-    solicitud32605StoreMock.actualizarCatseleccionados(catalogo.id);
-    expect(solicitud32605StoreMock.actualizarCatseleccionados).toHaveBeenCalledWith(5);
-  });
-
-  it('should update store on actualizarServicio', () => {
-    solicitud32605StoreMock.actualizarServicio = jest.fn();
-    const catalogo: Catalogo = { id: 7 } as Catalogo;
-    solicitud32605StoreMock.actualizarServicio(catalogo.id);
-    expect(solicitud32605StoreMock.actualizarServicio).toHaveBeenCalledWith(7);
-  });
-
-  it('should update store on actualizar190', () => {
-    solicitud32605StoreMock.actualizar190 = jest.fn();
-    solicitud32605StoreMock.actualizar190('valor190');
-    expect(solicitud32605StoreMock.actualizar190).toHaveBeenCalledWith('valor190');
-    solicitud32605StoreMock.actualizar190(190);
-    expect(solicitud32605StoreMock.actualizar190).toHaveBeenCalledWith(190);
-  });
-
-  it('should update store on actualizar191', () => {
-    solicitud32605StoreMock.actualizar191 = jest.fn();
-    solicitud32605StoreMock.actualizar191('valor191');
-    expect(solicitud32605StoreMock.actualizar191).toHaveBeenCalledWith('valor191');
-    solicitud32605StoreMock.actualizar191(191);
-    expect(solicitud32605StoreMock.actualizar191).toHaveBeenCalledWith(191);
-  });
-
-  it('should update store on actualizar199', () => {
-    solicitud32605StoreMock.actualizar199 = jest.fn();
-    solicitud32605StoreMock.actualizar199('valor199');
-    expect(solicitud32605StoreMock.actualizar199).toHaveBeenCalledWith('valor199');
-    solicitud32605StoreMock.actualizar199(199);
-    expect(solicitud32605StoreMock.actualizar199).toHaveBeenCalledWith(199);
-  });
-
-  it('should update store on actualizarEmpleados', () => {
-    solicitud32605StoreMock.actualizarEmpleados = jest.fn();
-    const event = { target: { value: '33' } } as unknown as Event;
-    const value = (event.target as HTMLInputElement | null)?.value;
-    solicitud32605StoreMock.actualizarEmpleados(value);
-    expect(solicitud32605StoreMock.actualizarEmpleados).toHaveBeenCalledWith('33');
-  });
-
-  it('should update store on actualizarBimestre', () => {
-    solicitud32605StoreMock.actualizarBimestre = jest.fn();
-    const catalogo: Catalogo = { id: 2 } as Catalogo;
-    solicitud32605StoreMock.actualizarBimestre(catalogo.id);
-    expect(solicitud32605StoreMock.actualizarBimestre).toHaveBeenCalledWith(2);
-  });
-
-  it('should update store on actualizar2034', () => {
-    solicitud32605StoreMock.actualizar2034 = jest.fn();
-    solicitud32605StoreMock.actualizar2034('valor2034');
-    expect(solicitud32605StoreMock.actualizar2034).toHaveBeenCalledWith('valor2034');
-    solicitud32605StoreMock.actualizar2034(2034);
-    expect(solicitud32605StoreMock.actualizar2034).toHaveBeenCalledWith(2034);
-  });
-
-  it('should update store on actualizar236', () => {
-    solicitud32605StoreMock.actualizar236 = jest.fn();
-    solicitud32605StoreMock.actualizar236('valor236');
-    expect(solicitud32605StoreMock.actualizar236).toHaveBeenCalledWith('valor236');
-    solicitud32605StoreMock.actualizar236(236);
-    expect(solicitud32605StoreMock.actualizar236).toHaveBeenCalledWith(236);
-  });
-
-  it('should update store on actualizar237', () => {
-    solicitud32605StoreMock.actualizar237 = jest.fn();
-    solicitud32605StoreMock.actualizar237('valor237');
-    expect(solicitud32605StoreMock.actualizar237).toHaveBeenCalledWith('valor237');
-    solicitud32605StoreMock.actualizar237(237);
-    expect(solicitud32605StoreMock.actualizar237).toHaveBeenCalledWith(237);
-  });
-
-
-  it('should emit data on cerrarModal', () => {
-    jest.spyOn(component.seccionSubcontratados, 'emit');
-    component.subcontratadosForm.setValue({
-      subcontrataRFCBusqueda: 'RFC123',
-      subcontrataRFC: 'RFC123',
-      subcontrataRazonSocial: 'Test Company',
-      subcontrataEmpleados: '10',
-      subcontrataBimestre: '1',
+  describe('Form State Management', () => {
+    it('should patch form values from state', () => {
+      const formValues = component.subcontratadosForm.getRawValue();
+      expect(formValues.subcontrataRFCBusqueda).toBe(mockSolicitudState.subcontrataRFCBusqueda);
+      expect(formValues.subcontrataRFC).toBe(mockSolicitudState.subcontrataRFC);
+      expect(formValues.subcontrataRazonSocial).toBe(mockSolicitudState.subcontrataRazonSocial);
+      expect(formValues.subcontrataEmpleados).toBe(mockSolicitudState.subcontrataEmpleados);
+      expect(formValues.subcontrataBimestre).toBe(mockSolicitudState.subcontrataBimestre);
     });
-    component.cerrarModal();
-    expect(component.seccionSubcontratados.emit).toHaveBeenCalledWith({
-      denominacion: 'Test Company',
-      RFC: 'RFC123',
-      numeroDeEmpleados: '10',
-      bimestre: '1',
+
+    it('should handle readonly state from ConsultaioQuery', () => {
+      consultaioQueryMock.selectConsultaioState$ = of({ readonly: true });
+      
+      const newComponent = TestBed.createComponent(SeccionSubcontratadosComponent);
+      newComponent.detectChanges();
+      
+      expect(newComponent.componentInstance.esFormularioSoloLectura).toBe(true);
+    });
+
+    it('should disable form when in readonly mode', () => {
+      component.esFormularioSoloLectura = true;
+      component.guardarDatosFormulario();
+      
+      expect(component.subcontratadosForm.disabled).toBe(true);
+    });
+
+    it('should enable form when not in readonly mode', () => {
+      component.esFormularioSoloLectura = false;
+      component.guardarDatosFormulario();
+      
+      expect(component.subcontratadosForm.enabled).toBe(true);
     });
   });
 
-  it('should complete destroy$ on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
-    component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+  describe('Form Validation', () => {
+    it('should validate required fields', () => {
+      component.subcontratadosForm.patchValue({
+        subcontrataRFCBusqueda: '',
+        subcontrataEmpleados: '',
+        subcontrataBimestre: '',
+      });
+
+      expect(component.subcontratadosForm.get('subcontrataRFCBusqueda')?.invalid).toBe(true);
+      expect(component.subcontratadosForm.get('subcontrataEmpleados')?.invalid).toBe(true);
+      expect(component.subcontratadosForm.get('subcontrataBimestre')?.invalid).toBe(true);
+    });
+
+    it('should validate RFC max length', () => {
+      const longRFC = 'A'.repeat(14); // Exceeds 13 character limit
+      component.subcontratadosForm.patchValue({
+        subcontrataRFCBusqueda: longRFC,
+      });
+
+      expect(component.subcontratadosForm.get('subcontrataRFCBusqueda')?.hasError('maxlength')).toBe(true);
+    });
+
+    it('should validate employees number max length', () => {
+      const longNumber = '123456'; // Exceeds 5 character limit
+      component.subcontratadosForm.patchValue({
+        subcontrataEmpleados: longNumber,
+      });
+
+      expect(component.subcontratadosForm.get('subcontrataEmpleados')?.hasError('maxlength')).toBe(true);
+    });
+  });
+
+  describe('Store Update Methods', () => {
+    it('should update RFC busqueda in store', () => {
+      const event = { target: { value: 'NEW123456' } } as unknown as Event;
+      component.actualizarSubcontrataRFCBusqueda(event);
+      
+      expect(solicitud32614StoreMock.actualizarSubcontrataRFCBusqueda).toHaveBeenCalledWith('NEW123456');
+    });
+
+    it('should update RFC in store', () => {
+      const event = { target: { value: 'NEW123456ABC' } } as unknown as Event;
+      component.actualizarSubcontrataRFC(event);
+      
+      expect(solicitud32614StoreMock.actualizarSubcontrataRFC).toHaveBeenCalledWith('NEW123456ABC');
+    });
+
+    it('should update razon social in store', () => {
+      const event = { target: { value: 'Nueva Empresa S.A.' } } as unknown as Event;
+      component.actualizarSubcontrataRazonSocial(event);
+      
+      expect(solicitud32614StoreMock.actualizarSubcontrataRazonSocial).toHaveBeenCalledWith('Nueva Empresa S.A.');
+    });
+
+    it('should update employees number in store', () => {
+      const event = { target: { value: '50' } } as unknown as Event;
+      component.actualizarSubcontrataEmpleados(event);
+      
+      expect(solicitud32614StoreMock.actualizarSubcontrataEmpleados).toHaveBeenCalledWith('50');
+    });
+
+    it('should update bimestre in store', () => {
+      const catalogo: Catalogo = { 
+        id: 2, 
+        descripcion: 'Segundo Bimestre'
+      } as Catalogo;
+      component.actualizarSubcontrataBimestre(catalogo);
+      
+      expect(solicitud32614StoreMock.actualizarSubcontrataBimestre).toHaveBeenCalledWith(2);
+    });
+  });
+
+  describe('RFC Search Functionality', () => {
+    it('should call service to search RFC data', () => {
+      component.buscarRFC();
+      
+      expect(solicitudServiceMock.conseguirSeccionSubcontratados).toHaveBeenCalled();
+    });
+
+    it('should update store with searched RFC data', () => {
+      component.buscarRFC();
+      
+      expect(solicitud32614StoreMock.actualizarSubcontrataRFC).toHaveBeenCalledWith('TEST123456ABC');
+      expect(solicitud32614StoreMock.actualizarSubcontrataRazonSocial).toHaveBeenCalledWith('Empresa Test S.A. de C.V.');
+    });
+
+    it('should handle service errors gracefully', () => {
+      solicitudServiceMock.conseguirSeccionSubcontratados.mockReturnValue(
+        new Subject().asObservable() // Observable that never emits
+      );
+      
+      expect(() => component.buscarRFC()).not.toThrow();
+    });
+  });
+
+  describe('Modal Actions', () => {
+    it('should emit correct data on cerrarModal', () => {
+      jest.spyOn(component.seccionSubcontratados, 'emit');
+      
+      component.subcontratadosForm.patchValue({
+        subcontrataRFC: 'TEST123',
+        subcontrataRazonSocial: 'Test Company',
+        subcontrataEmpleados: '15',
+        subcontrataBimestre: '2',
+      });
+      
+      component.cerrarModal();
+      
+      expect(component.seccionSubcontratados.emit).toHaveBeenCalledWith({
+        denominacion: 'Test Company',
+        RFC: 'TEST123',
+        numeroDeEmpleados: '15',
+        bimestre: '2',
+      });
+    });
+
+    it('should emit empty values when form is empty', () => {
+      jest.spyOn(component.seccionSubcontratados, 'emit');
+      
+      component.subcontratadosForm.patchValue({
+        subcontrataRFC: '',
+        subcontrataRazonSocial: '',
+        subcontrataEmpleados: '',
+        subcontrataBimestre: '',
+      });
+      
+      component.cerrarModal();
+      
+      expect(component.seccionSubcontratados.emit).toHaveBeenCalledWith({
+        denominacion: '',
+        RFC: '',
+        numeroDeEmpleados: '',
+        bimestre: '',
+      });
+    });
+  });
+
+  describe('Component Lifecycle', () => {
+    it('should call inicializarEstadoFormulario on ngOnInit', () => {
+      jest.spyOn(component, 'inicializarEstadoFormulario');
+      
+      component.ngOnInit();
+      
+      expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
+    });
+
+    it('should complete destroy$ subject on ngOnDestroy', () => {
+      const nextSpy = jest.spyOn(component['destroy$'], 'next');
+      const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+      
+      component.ngOnDestroy();
+      
+      expect(nextSpy).toHaveBeenCalled();
+      expect(completeSpy).toHaveBeenCalled();
+    });
+
+    it('should unsubscribe from observables on destroy', () => {
+      const subscription = component['destroy$'];
+      jest.spyOn(subscription, 'next');
+      
+      component.ngOnDestroy();
+      
+      expect(subscription.next).toHaveBeenCalled();
+    });
+  });
+
+  describe('Error Handling', () => {
+    it('should handle service errors when loading catalogs', () => {
+      solicitudServiceMock.conseguirSolicitudCatologoSelectLista.mockReturnValue(
+        new Subject().asObservable()
+      );
+      
+      expect(() => component.conseguirSolicitudCatologoSelectLista()).not.toThrow();
+    });
+
+    it('should handle null/undefined values in form events', () => {
+      const nullEvent = { target: null } as unknown as Event;
+      
+      expect(() => component.actualizarSubcontrataRFCBusqueda(nullEvent)).toThrow();
+    });
+  });
+
+  describe('Form State Initialization', () => {
+    it('should call guardarDatosFormulario when readonly is true', () => {
+      jest.spyOn(component, 'guardarDatosFormulario');
+      component.esFormularioSoloLectura = true;
+      
+      component.inicializarEstadoFormulario();
+      
+      expect(component.guardarDatosFormulario).toHaveBeenCalled();
+    });
+
+    it('should call inicializarFormulario when readonly is false', () => {
+      jest.spyOn(component, 'inicializarFormulario');
+      component.esFormularioSoloLectura = false;
+      
+      component.inicializarEstadoFormulario();
+      
+      expect(component.inicializarFormulario).toHaveBeenCalled();
+    });
   });
 });

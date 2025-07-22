@@ -4,8 +4,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { of } from 'rxjs';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { Solicitud32614Store } from '../../estados/solicitud32614.store';
+import { Solicitud32614Query } from '../../estados/solicitud32614.query';
 import { CommonModule } from '@angular/common';
 import {
   NotificacionesComponent,
@@ -25,8 +25,8 @@ describe('TercerosRelacionadosComponent', () => {
   let component: TercerosRelacionadosComponent;
   let fixture: ComponentFixture<TercerosRelacionadosComponent>;
   let solicitudServiceMock: jest.Mocked<SolicitudService>;
-  let solicitud32605StoreMock: jest.Mocked<Solicitud32605Store>;
-  let solicitud32605QueryMock: jest.Mocked<Solicitud32605Query>;
+  let solicitud32614StoreMock: jest.Mocked<Solicitud32614Store>;
+  let solicitud32614QueryMock: jest.Mocked<Solicitud32614Query>;
 
   beforeEach(async () => {
     solicitudServiceMock = {
@@ -84,7 +84,7 @@ describe('TercerosRelacionadosComponent', () => {
       ),
     } as unknown as jest.Mocked<SolicitudService>;
 
-    solicitud32605StoreMock = {
+    solicitud32614StoreMock = {
       actualizarRfc: jest.fn(() => of('ZURC721023D12')),
       actualizarNombre: jest.fn(() => of('test')),
       actualizarApellidoPaterno: jest.fn(() => of('test')),
@@ -93,9 +93,9 @@ describe('TercerosRelacionadosComponent', () => {
       actualizarCorreoElectronico: jest.fn(() => of('vucem2.5@hotmail.com')),
       actualizarRfcTercero: jest.fn(() => of('ZURC721023D12')),
       actualizarEnlaceOperativosLista: jest.fn(() => of('test')),
-    } as unknown as jest.Mocked<Solicitud32605Store>;
+    } as unknown as jest.Mocked<Solicitud32614Store>;
 
-    solicitud32605QueryMock = {
+    solicitud32614QueryMock = {
       selectSolicitud$: of({
         idPersonaSolicitud: 'test',
         rfcTercero: 'test',
@@ -208,7 +208,7 @@ describe('TercerosRelacionadosComponent', () => {
         listaSeccionSociosIC: [] as SeccionSociosIC[],
         enlaceOperativosLista: [] as EnlaceOperativo[],
       }),
-    } as unknown as jest.Mocked<Solicitud32605Query>;
+    } as unknown as jest.Mocked<Solicitud32614Query>;
 
     await TestBed.configureTestingModule({
       imports: [
@@ -226,14 +226,14 @@ describe('TercerosRelacionadosComponent', () => {
       declarations: [],
       providers: [
         { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: Solicitud32605Store, useValue: solicitud32605StoreMock },
-        { provide: Solicitud32605Query, useValue: solicitud32605QueryMock },
+        { provide: Solicitud32614Store, useValue: solicitud32614StoreMock },
+        { provide: Solicitud32614Query, useValue: solicitud32614QueryMock },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TercerosRelacionadosComponent);
     component = fixture.componentInstance;
-    solicitud32605QueryMock.selectSolicitud$ = of({
+    solicitud32614QueryMock.selectSolicitud$ = of({
       idPersonaSolicitud: 'test',
       rfcTercero: 'test',
       rfc: 'test',
@@ -412,7 +412,7 @@ describe('TercerosRelacionadosComponent', () => {
   it('should update store on actualizarRfcTercero', () => {
     const event = { target: { value: 'RFC789' } } as any;
     component.actualizarRfcTercero(event);
-    expect(solicitud32605StoreMock.actualizarRfcTercero).toHaveBeenCalledWith(
+    expect(solicitud32614StoreMock.actualizarRfcTercero).toHaveBeenCalledWith(
       'RFC789'
     );
   });
@@ -420,7 +420,7 @@ describe('TercerosRelacionadosComponent', () => {
   it('should update store on actualizarTelefono', () => {
     const event = { target: { value: '9876543210' } } as any;
     component.actualizarTelefono(event);
-    expect(solicitud32605StoreMock.actualizarTelefono).toHaveBeenCalledWith(
+    expect(solicitud32614StoreMock.actualizarTelefono).toHaveBeenCalledWith(
       '9876543210'
     );
   });
@@ -519,13 +519,13 @@ describe('TercerosRelacionadosComponent', () => {
     const event = { target: { value: 'new@example.com' } } as any;
     component.actualizarCorreoElectronico(event);
     expect(
-      solicitud32605StoreMock.actualizarCorreoElectronico
+      solicitud32614StoreMock.actualizarCorreoElectronico
     ).toHaveBeenCalledWith('new@example.com');
   });
 
   it('should add a new enlace operativo and pedimento, open modal, and update store when agregarEnlaceOperativo is called', () => {
     const abrirModalSpy = jest.spyOn(component, 'abrirModal');
-    const actualizarEnlaceOperativosListaSpy = jest.spyOn(solicitud32605StoreMock, 'actualizarEnlaceOperativosLista');
+    const actualizarEnlaceOperativosListaSpy = jest.spyOn(solicitud32614StoreMock, 'actualizarEnlaceOperativosLista');
     component.pedimentos = [];
     component.enlaceOperativosLista = [{ rfc: 'RFC_EXISTENTE' }] as any;
     const nuevoEnlace: any = { rfc: 'RFC_NUEVO', nombre: 'Nuevo' };
@@ -590,12 +590,12 @@ describe('TercerosRelacionadosComponent', () => {
     component.buscarTerceroNacionalIDC();
 
     expect(solicitudServiceMock.conseguirRepresentanteLegalDatos).not.toHaveBeenCalled();
-    expect(solicitud32605StoreMock.actualizarRfc).not.toHaveBeenCalled();
-    expect(solicitud32605StoreMock.actualizarNombre).not.toHaveBeenCalled();
-    expect(solicitud32605StoreMock.actualizarApellidoPaterno).not.toHaveBeenCalled();
-    expect(solicitud32605StoreMock.actualizarApellidoMaterno).not.toHaveBeenCalled();
-    expect(solicitud32605StoreMock.actualizarTelefono).not.toHaveBeenCalled();
-    expect(solicitud32605StoreMock.actualizarCorreoElectronico).not.toHaveBeenCalled();
+    expect(solicitud32614StoreMock.actualizarRfc).not.toHaveBeenCalled();
+    expect(solicitud32614StoreMock.actualizarNombre).not.toHaveBeenCalled();
+    expect(solicitud32614StoreMock.actualizarApellidoPaterno).not.toHaveBeenCalled();
+    expect(solicitud32614StoreMock.actualizarApellidoMaterno).not.toHaveBeenCalled();
+    expect(solicitud32614StoreMock.actualizarTelefono).not.toHaveBeenCalled();
+    expect(solicitud32614StoreMock.actualizarCorreoElectronico).not.toHaveBeenCalled();
   });
 
 

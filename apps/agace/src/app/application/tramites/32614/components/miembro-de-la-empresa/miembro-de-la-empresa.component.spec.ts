@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MiembroDeLaEmpresaComponent } from './miembro-de-la-empresa.component';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { Solicitud32614Store } from '../../estados/solicitud32614.store';
+import { Solicitud32614Query } from '../../estados/solicitud32614.query';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import {
@@ -20,8 +20,8 @@ describe('MiembroDeLaEmpresaComponent', () => {
   let component: MiembroDeLaEmpresaComponent;
   let fixture: ComponentFixture<MiembroDeLaEmpresaComponent>;
   let solicitudService: SolicitudService;
-  let solicitud32605Store: Solicitud32605Store;
-  let solicitud32605Query: Solicitud32605Query;
+  let solicitud32614Store: Solicitud32614Store;
+  let solicitud32614Query: Solicitud32614Query;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -109,7 +109,7 @@ describe('MiembroDeLaEmpresaComponent', () => {
           },
         },
         {
-          provide: Solicitud32605Store,
+          provide: Solicitud32614Store,
           useValue: {
             actualizarMiembroCaracterDe: jest.fn(() => of('Test')),
             actualizarMiembroTributarMexico: jest.fn(),
@@ -125,7 +125,7 @@ describe('MiembroDeLaEmpresaComponent', () => {
           },
         },
         {
-          provide: Solicitud32605Query,
+          provide: Solicitud32614Query,
           useValue: {
             selectSolicitud$: of({}),
           },
@@ -136,8 +136,8 @@ describe('MiembroDeLaEmpresaComponent', () => {
     fixture = TestBed.createComponent(MiembroDeLaEmpresaComponent);
     component = fixture.componentInstance;
     solicitudService = TestBed.inject(SolicitudService);
-    solicitud32605Store = TestBed.inject(Solicitud32605Store);
-    solicitud32605Query = TestBed.inject(Solicitud32605Query);
+    solicitud32614Store = TestBed.inject(Solicitud32614Store);
+    solicitud32614Query = TestBed.inject(Solicitud32614Query);
     fixture.detectChanges();
   });
 
@@ -173,14 +173,14 @@ describe('MiembroDeLaEmpresaComponent', () => {
   });
 
   it('should call actualizarMiembroCaracterDe with correct value', () => {
-    const spy = jest.spyOn(solicitud32605Store, 'actualizarMiembroCaracterDe');
+    const spy = jest.spyOn(solicitud32614Store, 'actualizarMiembroCaracterDe');
     component.actualizarMiembroCaracterDe({ id: 1 } as Catalogo);
     expect(spy).toHaveBeenCalledWith(1);
   });
 
   it('should call actualizarMiembroTributarMexico with correct value', () => {
     const spy = jest.spyOn(
-      solicitud32605Store,
+      solicitud32614Store,
       'actualizarMiembroTributarMexico'
     );
     component.actualizarMiembroTributarMexico(1);
@@ -189,7 +189,7 @@ describe('MiembroDeLaEmpresaComponent', () => {
 
   it('should call actualizarMiembroNacionalidad with correct value', () => {
     const spy = jest.spyOn(
-      solicitud32605Store,
+      solicitud32614Store,
       'actualizarMiembroNacionalidad'
     );
     component.actualizarMiembroNacionalidad({ id: 1 } as Catalogo);
@@ -197,7 +197,7 @@ describe('MiembroDeLaEmpresaComponent', () => {
   });
 
   it('should call actualizarMiembroRFC with correct value', () => {
-    const spy = jest.spyOn(solicitud32605Store, 'actualizarMiembroRFC');
+    const spy = jest.spyOn(solicitud32614Store, 'actualizarMiembroRFC');
     const event = { target: { value: 'RFC123' } } as unknown as Event;
     component.actualizarMiembroRFC(event);
     expect(spy).toHaveBeenCalledWith('RFC123');
@@ -206,11 +206,11 @@ describe('MiembroDeLaEmpresaComponent', () => {
   it('should call buscarRFCDatos and update store values', () => {
     component.miembroEmpresaForm.get('miembroRfc')?.setValue('RFC123');
     const spyRegistro = jest.spyOn(
-      solicitud32605Store,
+      solicitud32614Store,
       'actualizarMiembroRegistroFederal'
     );
     const spyNombre = jest.spyOn(
-      solicitud32605Store,
+      solicitud32614Store,
       'actualizarMiembroNombreCompleto'
     );
     component.buscarRFCDatos();
@@ -221,7 +221,7 @@ describe('MiembroDeLaEmpresaComponent', () => {
   });
 
   it('should call actualizarMiembroTipoPersonaMuestra with correct value and set seleccionarTipoDePersona', () => {
-    const spy = jest.spyOn(solicitud32605Store, 'actualizarMiembroTipoPersonaMuestra');
+    const spy = jest.spyOn(solicitud32614Store, 'actualizarMiembroTipoPersonaMuestra');
     const catalogo = { id: 2 } as Catalogo;
     component.actualizarMiembroTipoPersonaMuestra(catalogo);
     expect(spy).toHaveBeenCalledWith(2);
@@ -229,28 +229,28 @@ describe('MiembroDeLaEmpresaComponent', () => {
   });
 
   it('should call actualizarMiembroNombre with correct value', () => {
-    const spy = jest.spyOn(solicitud32605Store, 'actualizarMiembroNombre');
+    const spy = jest.spyOn(solicitud32614Store, 'actualizarMiembroNombre');
     const event = { target: { value: 'Juan' } } as unknown as Event;
     component.actualizarMiembroNombre(event);
     expect(spy).toHaveBeenCalledWith('Juan');
   });
 
   it('should call actualizarMiembroApellidoPaterno with correct value', () => {
-    const spy = jest.spyOn(solicitud32605Store, 'actualizarMiembroApellidoPaterno');
+    const spy = jest.spyOn(solicitud32614Store, 'actualizarMiembroApellidoPaterno');
     const event = { target: { value: 'Pérez' } } as unknown as Event;
     component.actualizarMiembroApellidoPaterno(event);
     expect(spy).toHaveBeenCalledWith('Pérez');
   });
 
   it('should call actualizarMiembroApellidoMaterno with correct value', () => {
-    const spy = jest.spyOn(solicitud32605Store, 'actualizarMiembroApellidoMaterno');
+    const spy = jest.spyOn(solicitud32614Store, 'actualizarMiembroApellidoMaterno');
     const event = { target: { value: 'García' } } as unknown as Event;
     component.actualizarMiembroApellidoMaterno(event);
     expect(spy).toHaveBeenCalledWith('García');
   });
 
   it('should call actualizarMiembroNombreEmpresa with correct value', () => {
-    const spy = jest.spyOn(solicitud32605Store, 'actualizarMiembroNombreEmpresa');
+    const spy = jest.spyOn(solicitud32614Store, 'actualizarMiembroNombreEmpresa');
     const event = { target: { value: 'Empresa S.A.' } } as unknown as Event;
     component.actualizarMiembroNombreEmpresa(event);
     expect(spy).toHaveBeenCalledWith('Empresa S.A.');

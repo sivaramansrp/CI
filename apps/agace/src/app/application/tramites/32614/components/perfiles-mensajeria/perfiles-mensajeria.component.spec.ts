@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { PerfilesMensajeriaComponent } from './perfiles-mensajeria.component';
-import { Tramite32616PerfilesMensajeriaStore } from '../../estados/tramites/tramite32616_perfilesMensajeria.store';
-import { Tramite32616PerfilesMensajeriaQuery } from '../../estados/queries/perfilesMensajeria.query';
+import { Tramite32614PerfilesMensajeriaStore } from '../../estados/tramites/tramite32614_perfilesMensajeria.store';
+import { Tramite32614PerfilesMensajeriaQuery } from '../../estados/queries/perfilesMensajeria.query';
 import { of, Subject } from 'rxjs';
 
 describe('PerfilesMensajeriaComponent', () => {
   let component: PerfilesMensajeriaComponent;
-  let store: Tramite32616PerfilesMensajeriaStore;
-  let query: Tramite32616PerfilesMensajeriaQuery;
+  let store: Tramite32614PerfilesMensajeriaStore;
+  let query: Tramite32614PerfilesMensajeriaQuery;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -16,7 +16,7 @@ describe('PerfilesMensajeriaComponent', () => {
       providers: [
         FormBuilder,
         {
-          provide: Tramite32616PerfilesMensajeriaStore,
+          provide: Tramite32614PerfilesMensajeriaStore,
           useValue: {
             setAntiguedad: jest.fn(),
             setProductos: jest.fn(),
@@ -30,7 +30,7 @@ describe('PerfilesMensajeriaComponent', () => {
           },
         },
         {
-          provide: Tramite32616PerfilesMensajeriaQuery,
+          provide: Tramite32614PerfilesMensajeriaQuery,
           useValue: {
             selectSolicitud$: of({
               domicilio: 'Test Domicilio',
@@ -51,8 +51,8 @@ describe('PerfilesMensajeriaComponent', () => {
 
     const fixture = TestBed.createComponent(PerfilesMensajeriaComponent);
     component = fixture.componentInstance;
-    store = TestBed.inject(Tramite32616PerfilesMensajeriaStore);
-    query = TestBed.inject(Tramite32616PerfilesMensajeriaQuery);
+    store = TestBed.inject(Tramite32614PerfilesMensajeriaStore);
+    query = TestBed.inject(Tramite32614PerfilesMensajeriaQuery);
     fixture.detectChanges();
   });
 
