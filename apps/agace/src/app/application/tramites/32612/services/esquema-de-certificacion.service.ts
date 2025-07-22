@@ -223,4 +223,21 @@ export class EsquemaDeCertificacionService {
         })
       );
     }
+
+    /**
+     * Recupera la lista de mandatarios de agente desde un archivo JSON local.
+     *
+     * @returns {Observable<JSONResponse>} Un observable que emite la respuesta JSON con los datos de los mandatarios de agente.
+     *
+     * @remarks
+     * Este método realiza una solicitud HTTP GET para obtener los datos desde 'assets/json/32612/mandatarios-de-agente.json'.
+     * Si ocurre un error durante la solicitud, este es capturado y relanzado como un error observable.
+     */
+    getMandatariosDeAgenteTabla(): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>('assets/json/32612/mandatarios-de-agente.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+    }
 }

@@ -214,6 +214,10 @@ export interface DatosComunesState {
      * El valor de actualizado.
      */
   actualizado: string;
+    /**
+     * El valor de cumpleConDos.
+     */
+  cumpleConDos: string;
 
 }
 
@@ -427,6 +431,10 @@ export function createInitialState(): DatosComunesState {
          * El valor de actualizado.
          */
         actualizado: '',
+    /**
+     * El valor de cumpleConDos.
+     */
+    cumpleConDos: '',
       };
 }
 
@@ -927,4 +935,16 @@ public setVinculacionRegistroCancelado(vinculacionRegistroCancelado: boolean): v
             actualizado,
         }));
     }
+
+    /**
+     * Establece el estado de cumpleConDos.
+     * @param cumpleConDos - El valor de cumpleConDos.
+     */
+    public setCumpleConDos(cumpleConDos: string): void {
+        this.update((state) => ({
+            ...state,
+            cumpleConDos,
+        }));
+    }
+
 }

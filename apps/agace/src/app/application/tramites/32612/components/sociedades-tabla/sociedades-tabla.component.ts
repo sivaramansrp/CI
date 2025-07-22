@@ -282,6 +282,7 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
       ).subscribe();
     this.getSociedadesTabla();
     this.getDatosDeLasInstalacionesDatos();
+    this.getMandatariosDeAgenteTablaDatos();
   }
 
   /**
@@ -354,6 +355,27 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
       next: (response) => {
         const API_RESPONSE = JSON.parse(JSON.stringify(response));
         this.instalacionesDatos = API_RESPONSE;
+      },
+      error: (error) => {
+        // Manejo de errores
+      }
+    });
+  }
+
+  /**
+   * Obtiene la lista de "mandatarios" asociados a un agente y actualiza la fuente de datos del componente.
+   *
+   * Este método llama al servicio `getMandatariosDeAgenteTabla`, se suscribe a su observable
+   * y asigna la respuesta a la propiedad `mandatariosDatos`. También asegura la cancelación
+   * adecuada de la suscripción utilizando el observable `destroyNotifier$` para evitar fugas de memoria.
+   *
+   * El manejo de errores se realiza en el callback de error de la suscripción.
+   */
+  getMandatariosDeAgenteTablaDatos(): void {
+    this.esquemaDeCertificacionSvc.getMandatariosDeAgenteTabla().pipe(takeUntil(this.destroyNotifier$)).subscribe({
+      next: (response) => {
+        const API_RESPONSE = JSON.parse(JSON.stringify(response));
+        this.mandatariosDatos = API_RESPONSE;
       },
       error: (error) => {
         // Manejo de errores

@@ -313,6 +313,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       bimestre:[this.solicitudState?.bimestre],
       senaleSi: [this.solicitudState?.senaleSi, Validators.required],
       cumpleCon: [this.solicitudState?.cumpleCon, Validators.required],
+      cumpleConDos: [this.solicitudState?.cumpleConDos, Validators.required],
       acreditaRealizar: [this.solicitudState?.acreditaRealizar, Validators.required],
       seMomento: [this.solicitudState?.seMomento, Validators.required],
       encuentra: [this.solicitudState?.encuentra, Validators.required],
