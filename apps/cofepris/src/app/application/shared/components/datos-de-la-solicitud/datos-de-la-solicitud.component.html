@@ -878,6 +878,15 @@
         >
           Este campo es obligatorio.</small
         >
+        <div
+          class="mensaje-error"
+          *ngIf="
+            datosSolicitudForm.get('correoElectronico')?.touched &&
+            datosSolicitudForm.get('correoElectronico')?.hasError('email')
+          "
+        >
+          El valor ingresado no es una dirección válida de correo electrónico.
+        </div>
       </div>
     </ng-template>
   </form>
