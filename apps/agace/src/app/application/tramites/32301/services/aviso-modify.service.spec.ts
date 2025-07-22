@@ -2,7 +2,6 @@
 import { async } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
 import { Observable, of as observableOf, throwError } from 'rxjs';
-
 import { AvisoModifyService } from './aviso-modify.service';
 import { HttpClient } from '@angular/common/http';
 

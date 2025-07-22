@@ -149,13 +149,79 @@ export interface Tabla {
    * Descripción de la mercancía.
    * @type {string}
    */
-  Descripcion: string;
+  FraccionDescripcion: string;
 
   /**
    * Nico del responsable de la mercancía.
    * @type {string}
    */
   Nico: string;
+
+  /**
+   * Descripción del Nico.
+   * @type {string}
+   */
+  NicoDescripcion: string;
+
+  /**
+   * Descripción adicional de la mercancía.
+   * @type {string}
+   */
+  Descripcion: string;
+
+  /**
+   * Unidad de medida del tipo de mercancía.
+   * @type {string}
+   */
+  Umt: string;
+
+  /**
+   * Cantidad en UMT de la mercancía.
+   * @type {number}
+   */
+  CantidadUMT: number;
+
+  /**
+   * Unidad de medida comercial de la mercancía.
+   * @type {string}
+   */
+  Umc: string;
+
+  /**
+   * Cantidad en UMC de la mercancía.
+   * @type {number}
+   */
+  CantidadUMC: number;
+
+  /**
+   * Especie de la mercancía.
+   * @type {string}
+   */
+  Especie: string;
+
+  /**
+   * Uso de la mercancía.
+   * @type {string}
+   */
+  Uso: string;
+
+  /**
+   * País de origen de la mercancía.
+   * @type {string}
+   */
+  PaisOrigen: string;
+
+  /**
+   * País de procedencia de la mercancía.
+   * @type {string}
+   */
+  PaisProcedencia: string;
+
+  /**
+   * Certificado internacional electrónico asociado a la mercancía.
+   * @type {string}
+   */
+  CertificadoInternacionalElectronico: string;
 }
 /**
  * Interfaz que define la estructura de un destinatario.
@@ -191,5 +257,12 @@ export interface Destinatario {
   numeroInterior: string;
   /** País del destinatario. */
   pais: string;
-  
+  /** Colonia del destinatario. */
+  colonia: string;
+  /** Municipio o alcaldía del destinatario. */
+  municipioAlcaldia: string;
+  /** Entidad federativa del destinatario. */
+  entidadFederativa: string;
+  /** Código postal del destinatario. */
+  codigoPostal: string;
 }

@@ -22,7 +22,11 @@ describe('ProsecService', () => {
       setActividadProductiva: jest.fn(),
       setSector: jest.fn(),
       setFraccionArancelaria: jest.fn(),
-      setcontribuyentes: jest.fn()
+      setcontribuyentes: jest.fn(),
+      setSectorDatos: jest.fn(),
+      setProducirDatos: jest.fn(),
+      setPlantasDatos: jest.fn(),
+      setProductorDatos: jest.fn()
     };
 
     TestBed.configureTestingModule({
@@ -71,7 +75,7 @@ describe('ProsecService', () => {
 
     service.getAcuiculturaData().subscribe(data => {
       expect(data).toEqual(mockState);
-      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/220203/autorizacion-prosec.json');
+      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/90101/prosec_form.json');
       done();
     });
   });

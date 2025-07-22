@@ -355,15 +355,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
 
   ngAfterViewInit(): void {
     this.radioBotonSeleccionado();
-    this.datosDelaSolicitud.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
-      const FORMA_VALIDA_ACTUALIZADA = {
-        dataDeLaSolicitud: false,
-      };
-      if (this.datosDelaSolicitud.valid) {
-        FORMA_VALIDA_ACTUALIZADA.dataDeLaSolicitud = true;
-      }
-      this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
-    });
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -695,6 +686,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       this.modalRef.abrir(AnimalesVivoContenedoraComponent);
     }
 
+  }
+  /**
+  * @description Navega a la página de modificar mercancía.
+  * Este método redirige al usuario a la ruta relativa '../animales-vivo' para modificar una mercancía existente.
+  * @method validarFormulario
+  * @returns {boolean}
+  */
+  validarFormulario(): boolean {
+    if (this.forma.valid) {
+      return true;
+    }
+    else {
+      this.forma.markAllAsTouched();
+      return false
+    }
   }
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.

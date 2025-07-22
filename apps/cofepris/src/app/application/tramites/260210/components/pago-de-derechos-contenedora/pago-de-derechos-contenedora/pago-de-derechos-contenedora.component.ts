@@ -25,7 +25,7 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    * @description Estado actual del formulario de pago de derechos, obtenido del store del trámite.
    * Contiene toda la información relacionada con los datos del formulario de pago de derechos,
    * incluyendo los montos, conceptos y demás información necesaria para el proceso de pago.
-   * 
+   *
    * @public
    * @type {PagoDerechosFormState}
    * @memberof PagoDeDerechosContenedoraComponent
@@ -37,13 +37,13 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    * @description Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar y solo se pueden visualizar.
    * Esta propiedad se actualiza dinámicamente basándose en el estado de consulta del sistema.
-   * 
+   *
    * @public
    * @type {boolean}
    * @default false
    * @memberof PagoDeDerechosContenedoraComponent
    */
-  public esFormularioSoloLectura: boolean = false; 
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * @property {Subject<void>} destroyNotifier$
@@ -64,7 +64,7 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    * Inicializa el store `Tramite260214Store` para gestionar el estado del trámite y el query `ConsultaioQuery`
    * para manejar el estado de consulta. También configura la suscripción para detectar cambios en el modo
    * de solo lectura del formulario y establece el valor inicial del pago de derechos.
-   * 
+   *
    * El constructor realiza las siguientes operaciones:
    * 1. Suscribe al estado de consulta para detectar cambios en el modo de solo lectura
    * 2. Inicializa la propiedad `pagoDerechos` con el valor actual del store
@@ -74,10 +74,12 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    *                                            Proporciona métodos para actualizar y obtener el estado del formulario.
    * @param {ConsultaioQuery} consultaQuery - Query service para manejar el estado de consulta del sistema.
    *                                          Permite detectar si el formulario debe estar en modo de solo lectura.
-   * 
+   *
    * @memberof PagoDeDerechosContenedoraComponent
    */
-  constructor(public tramiteStore: Tramite260214Store, private consultaQuery: ConsultaioQuery
+  constructor(
+    public tramiteStore: Tramite260214Store,
+    private consultaQuery: ConsultaioQuery
   ) {
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -95,7 +97,7 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    * @description Actualiza los datos del formulario de pago de derechos en el store del trámite.
    * Este método actúa como un puente entre el componente hijo `PagoDeDerechosComponent` y el store
    * del trámite, permitiendo que los cambios realizados en el formulario se reflejen en el estado global.
-   * 
+   *
    * Cuando se produce un cambio en el formulario hijo, este método recibe el nuevo estado
    * y lo propaga al store correspondiente, asegurando que la información esté sincronizada
    * en toda la aplicación.
@@ -103,9 +105,9 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    * @param {PagoDerechosFormState} event - Estado actualizado del formulario de pago de derechos.
    *                                        Contiene todos los datos del formulario incluyendo montos,
    *                                        conceptos, fechas y demás información relevante del pago.
-   * 
+   *
    * @returns {void} Este método no retorna ningún valor.
-   * 
+   *
    * @example
    * // Ejemplo de uso cuando se actualiza el formulario
    * const nuevoEstado: PagoDerechosFormState = {
@@ -114,7 +116,7 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    *   // ... otros campos
    * };
    * this.updatePagoDerechos(nuevoEstado);
-   * 
+   *
    * @memberof PagoDeDerechosContenedoraComponent
    */
   updatePagoDerechos(event: PagoDerechosFormState): void {
@@ -125,20 +127,20 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    * @method ngOnDestroy
    * @description Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
    * Se utiliza para limpiar las suscripciones activas y evitar fugas de memoria.
-   * 
+   *
    * Este método es crucial para el manejo adecuado de recursos y memoria en la aplicación.
    * Al ejecutarse cuando el componente va a ser destruido, se encarga de:
    * 1. Emitir una señal a través del `destroyNotifier$` para notificar a todas las suscripciones activas
    * 2. Completar el Subject `destroyNotifier$` para liberar todos los recursos asociados
-   * 
+   *
    * Esto es especialmente importante en aplicaciones Angular para prevenir:
    * - Fugas de memoria por suscripciones no cerradas
    * - Comportamientos inesperados por observables que continúan ejecutándose
    * - Problemas de rendimiento por acumulación de suscripciones
-   * 
+   *
    * @implements {OnDestroy}
    * @returns {void} Este método no retorna ningún valor.
-   * 
+   *
    * @memberof PagoDeDerechosContenedoraComponent
    */
   ngOnDestroy(): void {
