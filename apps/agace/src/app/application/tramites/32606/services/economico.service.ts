@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Domicillio, EntidadFederativa, RecibirNotificaciones } from '../models/adace.model';
+import { Domicillio, EntidadFederativa, Querella, RecibirNotificaciones } from '../models/adace.model';
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +46,14 @@ export class EconomicoService {
 
   obtenerTablaDomicillio(): Observable<Domicillio[]> {
     return this.http.get<Domicillio[]>('assets/json/32606/domicillio-tabla.json')
+      .pipe(catchError((error) => {
+        return throwError(() => error);
+      })
+      );
+  }
+
+  obtenerTablaQuerella(): Observable<Querella[]> {
+    return this.http.get<Querella[]>('assets/json/32606/querella-tabla.json')
       .pipe(catchError((error) => {
         return throwError(() => error);
       })

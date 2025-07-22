@@ -106,7 +106,7 @@ export interface Querella {
   lugarRadicacion: string;
 
   /** Tipo de instalación */
-  indiqueSiCuenta: string;
+  indiqueSiCuenta: boolean;
 
 }
 
