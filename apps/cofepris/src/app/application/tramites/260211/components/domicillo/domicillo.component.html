@@ -72,7 +72,7 @@
         <div class="col-md-8">
             <div class="form-group">
                 <label class="form-label" for="calle">Calle*: 
-                      <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" data-bs-toggle="tooltip"></span>
+                      <span class="bi bi-question-circle-fill fs-4 m-1" title="Calle" data-bs-toggle="tooltip"></span>
                 </label>
                 <input
                     class="form-control"
@@ -133,7 +133,7 @@
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="avisoCheckbox" formControlName="avisoCheckbox" (change)="onAvisoCheckboxChange($event,domicilio,'avisoCheckbox', 'setAvisoCheckbox')">
                 <label class="form-check-label" for="avisoCheckbox">
-                    <span>Aviso de funcionamiento:  <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" data-bs-toggle="tooltip"></span></span>
+                    <span>Aviso de funcionamiento:  <span class="bi bi-question-circle-fill fs-4 m-1" title="Aviso de funcionamiento" data-bs-toggle="tooltip"></span></span>
                 </label>
             </div>
         </div>
@@ -162,6 +162,7 @@
                 name="regimen"
                  [isDisabled]="esFormularioSoloLectura ? true : false"
                 (change)="setValoresStore(domicilio,'regimen', 'setRegimen')"
+                [tooltipQuestionCircle]="true"
             ></app-catalogo-select>
         </div>
         <div class="col-md-8">
@@ -181,7 +182,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label class="form-label text-start" for="numeroPermiso">Número de Permiso de Importación expedido por la CNSNS:
-                      <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" data-bs-toggle="tooltip"></span>
+                      <span class="bi bi-question-circle-fill fs-4 m-1" title="Número de Permiso de Importación expedido por la CNSNS" data-bs-toggle="tooltip"></span>
                 </label>
                 <input
                     class="form-control"
@@ -211,7 +212,7 @@
         data-bs-target="#modalAddAgentMercancias"
         [disabled]="esFormularioSoloLectura">Modificar</button>
             <button class="btn btn-default me-2" (click)="eliminarMercanciaSeleccionados()" [disabled]="esFormularioSoloLectura">Eliminar</button>
-            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"  [disabled]="esFormularioSoloLectura">Agregar</button>
+            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"  [disabled]="esFormularioSoloLectura">Agregars</button>
         </div>
     </div>
 
@@ -324,12 +325,12 @@
                     </div>
                     <div class="form-group">
                         <label for="fraccionArancelaria">Fracción arancelaria*:</label>
-                        <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" data-bs-toggle="tooltip"></span>
+                        <span class="bi bi-question-circle-fill fs-4 m-1" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
                         <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control" (change)="setValoresStore(formMercancias,'fraccionArancelaria', 'setFraccionArancelaria')">
                     </div>
                     <div class="form-group">
                         <label for="descripcionFraccion">Descripción de la fracción arancelaria*:</label>
-                        <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" data-bs-toggle="tooltip"></span>
+                        <span class="bi bi-question-circle-fill fs-4 m-1" title="Descripción de la fracción arancelaria" data-bs-toggle="tooltip"></span>
                         <input type="text" id="descripcionFraccion" formControlName="descripcionFraccion" class="form-control" (change)="setValoresStore(formMercancias,'descripcionFraccion', 'setDescripcionFraccion')">
                     </div>
                     <div class="form-group">
@@ -338,7 +339,7 @@
                     </div>
                     <div class="form-group">
                         <label for="UMT">UMT*:</label>
-                        <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" data-bs-toggle="tooltip"></span>
+                        <span class="bi bi-question-circle-fill fs-4 m-1" title="UMT" data-bs-toggle="tooltip"></span>
                         <input type="text" id="UMT" formControlName="UMT" class="form-control" (change)="setValoresStore(formMercancias,'UMT', 'setUMT')">
                     </div>
                     <div class="form-group">

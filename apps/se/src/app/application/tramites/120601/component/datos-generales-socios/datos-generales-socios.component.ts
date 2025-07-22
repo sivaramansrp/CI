@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject,map, takeUntil } from 'rxjs';
 
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, TableComponent, TituloComponent} from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, REGEX_CORREO_ELECTRONICO_EXPORTADOR, TableComponent, TituloComponent} from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 
@@ -207,7 +207,7 @@ actualizarEstadoFormulario(): void {
         pais: [''],
         codigoPostal: [''],
         estado: [''],
-        correoElectronico: [''],
+        correoElectronico: ['', [Validators.pattern(REGEX_CORREO_ELECTRONICO_EXPORTADOR), Validators.required]],
         taxId: [''],
         denominacion: [''],
       }),
@@ -350,10 +350,10 @@ actualizarEstadoFormulario(): void {
    * Actualiza el índice de la fila seleccionada y el estado del formulario.
    */
   enCambioNacionalidad(nacionalidad:string): void {
-      const NACIONALIDAD_VALUE = this.FormSolicitud.get(['datosGeneralesSocios', 'nacionalidad'])?.value;
       const PERSONA_VALUE = this.FormSolicitud.get(['datosGeneralesSocios','persona'])?.value;
-      this.store.setNacionalidad(NACIONALIDAD_VALUE);
       this.actualizarBanderasCamposEntrada(nacionalidad,PERSONA_VALUE);
+      const NACIONALIDAD_VALUE = this.FormSolicitud.get(['datosGeneralesSocios', 'nacionalidad'])?.value;
+      this.store.setNacionalidad(NACIONALIDAD_VALUE);
   }
 
   /**
