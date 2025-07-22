@@ -15,7 +15,7 @@
     <div class="row mt-4">
       <div class="col-md-12">
         <label for="message" class="form-label">Tratamiento :</label>
-        <textarea id="message" formControlName="tratamiento" class="form-control mb-5" placeholder=""></textarea>
+        <textarea id="message" formControlName="tratamiento" class="form-control mb-5" placeholder="" [disabled]="esFormularioSoloLectura"></textarea>
       </div>
     </div>
   </form>
@@ -112,7 +112,7 @@
    <div class="row" *ngIf="datosdelForm.get('certificada')?.value === 'Producto' || datosdelForm.get('certificada')?.value === 'QFBA'">
     <div class="col-md-4">
       <label class="form-label" for="numeroTotal">Número total de bultos:</label>
-      <input type="text" class="form-control" id="numeroTotal" formControlName="numeroTotal">
+      <input type="text" class="form-control" id="numeroTotal" formControlName="numeroTotal" [disabled]="esFormularioSoloLectura">
    </div>
     <div class="col-md-4" *ngIf="datosdelForm.get('certificada')?.value === 'QFBA'">
       <app-catalogo-select
@@ -144,7 +144,7 @@
     <div class="col-md-4">
       <label class="form-label" for="CantidadTotal">Cantidad total:<i
               class="bi bi-question-circle-fill"></i></label>
-      <input type="text" class="form-control" id="CantidadTotal"  formControlName="cantidadTotal">
+      <input type="text" class="form-control" id="CantidadTotal"  formControlName="cantidadTotal" [disabled]="esFormularioSoloLectura">
    </div>
    <div class="col-md-4">
       <app-catalogo-select
@@ -161,7 +161,7 @@
   </div>
     <div class="mb-5" *ngIf="datosdelForm.get('certificada')?.value === 'Animal' || datosdelForm.get('certificada')?.value === 'Producto' || datosdelForm.get('certificada')?.value === 'QFBA'">
       <label for="message" class="form-label">Tratamiento:</label>
-      <textarea class="form-control" rows="5" formControlName="datoscertificado"
+      <textarea class="form-control" rows="5" formControlName="datoscertificado" [disabled]="esFormularioSoloLectura"
         (change)="setValoresStore(datosdelForm,'datoscertificado','setdatoscertificado')"></textarea>
     </div>
     <div class="container text-end mt-5">

@@ -35,13 +35,13 @@ constructor(
  */
 actualizarEstadoFormulario(DATOS: typeof INITIAL_STATE): void {
   this.tramite301Store.setModalidadCertificacion(DATOS.tipoDevAviso.modalidadCertificacion);
-  this.tramite301Store.setClientesProveedoresExtranjeros(DATOS.tipoDevAviso);
-  this.tramite301Store.setProveedoresNacionales(DATOS.tipoDevAviso);
-  this.tramite301Store.setModificacionesMiembros(DATOS.tipoDevAviso);
-  this.tramite301Store.setCambiosDocumentosLegales(DATOS.tipoDevAviso);
-  this.tramite301Store.setNotifiFusionOescision(DATOS.tipoDevAviso);
-  this.tramite301Store.setAdicionalesFractions(DATOS.tipoDevAviso);
-  this.tramite301Store.setAceptacion253(DATOS.tipoDevAviso);
+  this.tramite301Store.setClientesProveedoresExtranjeros(DATOS.tipoDevAviso.foreignClientsSuppliers);
+  this.tramite301Store.setProveedoresNacionales(DATOS.tipoDevAviso.nationalSuppliers);
+  this.tramite301Store.setModificacionesMiembros(DATOS.tipoDevAviso.modificationsMembers);
+  this.tramite301Store.setCambiosDocumentosLegales(DATOS.tipoDevAviso.changesToLegalDocuments);
+  this.tramite301Store.setNotifiFusionOescision(DATOS.tipoDevAviso.mergerOrSplitNotice);
+  this.tramite301Store.setAdicionalesFractions(DATOS.tipoDevAviso.additionFractions);
+  this.tramite301Store.setAceptacion253(DATOS.tipoDevAviso.acepto253);
   this.tramite301Store.setArchivoExtranjero(DATOS.proveedorExtranjero);
   this.tramite301Store.setRegistrosProveedoresExtranjeros(DATOS.proveedorExtranjero);
   this.tramite301Store.setSnsucarácterde(DATOS.modificacionSocios.ensucarácterde);

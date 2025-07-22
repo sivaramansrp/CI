@@ -4,27 +4,27 @@ import { Row, Rows, Tabla } from "../models/pago-de-derechos.model";
  * Constantes para el catálogo de tipos de solicitud
  */
 export const CATALOGOS_ID = {
-    CAT_TIPO_SOL: 'tipos-solicitud',
-    CAT_PAISES: 'paises',
-    CAT_ADUANAS: 'aduanas',
-    CAT_SECCION_ADUANAS: 25,
-    DATOS_GNRLS_SOL: 5,
-    CAT_TIPO_DOCUMENTO: 'tipos-documento',
-    CAT_TIPO_OPERACION: 26,
-    CAT_MEDIO_DE_TRANSPORTE: 'medio-de-transporte',
-    CAT_REGIMEN_MERCANCIA: 'regimen-mercancia',
-    CAT_CLASIFI_REGIMEN: 'clasifi-regimen',
-    CAT_FRACCION_ARANCELARIA: 'fraccion-arancelaria',
-    CAT_NICO: 'nico',
-    CAT_UNIDAD_MEDIDA_TARIFARIA: 'unidad-medida-tarifaria',
-    CAT_PAIS_ORIGEN: 'pais-origen',
-    CAT_PAIS_DESTINO: 'pais-destino',
-    CAT_MOLINO: 'molino',
-    CAT_ESTADO: 'estado',
-    CAT_REPRESENTACION_FEDERAL: 'representacion-federal',
-    DATOS_PERSONA_FISICA: 21,
-  }
-  
+  CAT_TIPO_SOL: 'tipos-solicitud',
+  CAT_PAISES: 'paises',
+  CAT_ADUANAS: 'aduanas',
+  CAT_SECCION_ADUANAS: 25,
+  DATOS_GNRLS_SOL: 5,
+  CAT_TIPO_DOCUMENTO: 'tipos-documento',
+  CAT_TIPO_OPERACION: 26,
+  CAT_MEDIO_DE_TRANSPORTE: 'medio-de-transporte',
+  CAT_REGIMEN_MERCANCIA: 'regimen-mercancia',
+  CAT_CLASIFI_REGIMEN: 'clasifi-regimen',
+  CAT_FRACCION_ARANCELARIA: 'fraccion-arancelaria',
+  CAT_NICO: 'nico',
+  CAT_UNIDAD_MEDIDA_TARIFARIA: 'unidad-medida-tarifaria',
+  CAT_PAIS_ORIGEN: 'pais-origen',
+  CAT_PAIS_DESTINO: 'pais-destino',
+  CAT_MOLINO: 'molino',
+  CAT_ESTADO: 'estado',
+  CAT_REPRESENTACION_FEDERAL: 'representacion-federal',
+  DATOS_PERSONA_FISICA: 21,
+}
+
 /**
  * Lista de elementos de tipo Row.
  */
@@ -69,8 +69,19 @@ export const ROWS: Tabla[] = [
     Requisito: 'Requisito',
     Certificado: 123456,
     Fraccion: '01039201',
-    Descripcion: 'Con pedigree o certificado de alto registro.',
+    FraccionDescripcion: 'Con pedigree o certificado de alto registro.',
     Nico: '00',
+    NicoDescripcion: 'Descripción del NICO',
+    Descripcion: 'Descripción de la mercancía',
+    Umt: 'Kilogramo',
+    CantidadUMT: 100,
+    Umc: 'Unidad de medida comercialización',
+    CantidadUMC: 50,
+    Especie: 'Especie de la mercancía',
+    Uso: 'Uso de la mercancía',
+    PaisOrigen: 'País de origen',
+    PaisProcedencia: 'País de procedencia',
+    CertificadoInternacionalElectronico: 'Certificado Internacional Electrónico'
   },
   {
     Partida: '2',
@@ -78,8 +89,19 @@ export const ROWS: Tabla[] = [
     Requisito: 'Requisito',
     Certificado: 123456,
     Fraccion: '01039201',
-    Descripcion: 'Con pedigree o certificado de alto registro.',
+    FraccionDescripcion: 'Con pedigree o certificado de alto registro.',
     Nico: '00',
+    NicoDescripcion: 'Descripción del NICO',
+    Descripcion: 'Descripción de la mercancía',
+    Umt: 'Kilogramo',
+    CantidadUMT: 100,
+    Umc: 'Unidad de medida comercialización',
+    CantidadUMC: 50,
+    Especie: 'Especie de la mercancía',
+    Uso: 'Uso de la mercancía',
+    PaisOrigen: 'País de origen',
+    PaisProcedencia: 'País de procedencia',
+    CertificadoInternacionalElectronico: 'Certificado Internacional Electrónico'
   },
   {
     Partida: '3',
@@ -87,7 +109,27 @@ export const ROWS: Tabla[] = [
     Requisito: 'Requisito',
     Certificado: 123456,
     Fraccion: '01039201',
-    Descripcion: 'Con pedigree o certificado de alto registro.',
+    FraccionDescripcion: 'Con pedigree o certificado de alto registro.',
     Nico: '00',
+    NicoDescripcion: 'Descripción del NICO',
+    Descripcion: 'Descripción de la mercancía',
+    Umt: 'Kilogramo',
+    CantidadUMT: 100,
+    Umc: 'Unidad de medida comercialización',
+    CantidadUMC: 50,
+    Especie: 'Especie de la mercancía',
+    Uso: 'Uso de la mercancía',
+    PaisOrigen: 'País de origen',
+    PaisProcedencia: 'País de procedencia',
+    CertificadoInternacionalElectronico: 'Certificado Internacional Electrónico'
   },
 ];
+
+/**
+ * Constante que define el parámetro utilizado para determinar el tipo de datos a mostrar.
+ */
+export const PARAMETERO = {
+ EVALUAR: 'FLUJO_FUNCIONARIO_EVALUAR',
+ READ_PROCEDEMENTO: 'READ_PROCEDURE',
+ SUBSECUENTES: 'SUBSECUENTES'
+}

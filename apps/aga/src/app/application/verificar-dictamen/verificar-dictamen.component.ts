@@ -1,5 +1,5 @@
 import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
-import { Catalogo, CatalogoSelectComponent, ConsultaioState } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConsultaioState, FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, Type } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -21,11 +21,13 @@ import { VerificarDictamenModel } from '@libs/shared/data-access-user/src/core/m
     ReactiveFormsModule,
     CatalogoSelectComponent,
     ReviewersTabsComponent,
-  ],
+    FirmaElectronicaComponent
+],
   templateUrl: './verificar-dictamen.component.html',
   styleUrl: './verificar-dictamen.component.scss',
 })
 export class VerificarDictamenComponent implements OnInit, OnDestroy {
+
   /** 
    * Subject para destruir las suscripciones.
    */
@@ -85,6 +87,16 @@ export class VerificarDictamenComponent implements OnInit, OnDestroy {
    * @description Lista de trámites disponibles para evaluación, obtenida de la constante LISTA_TRIMITES.
    */
   listaTrimites = LISTA_TRIMITES;
+
+  /**
+   * Indica si el panel de verificación y firma está visible.
+   */
+  panelVerFirmar: boolean = false;
+
+  /**
+   * Cadena que almacena el valor original para verificación.
+   */
+  cadenaOriginal: string = '';
     
   constructor(
     private fb: FormBuilder, 
@@ -232,5 +244,24 @@ export class VerificarDictamenComponent implements OnInit, OnDestroy {
   selectTramite(i: number): void {
     this.tramite = i;
     this.slectTramite = LISTA_TRIMITES.find((v) => v.tramite === i);
+  }
+
+  /**
+   * Muestra el panel de verificación para firmar el dictamen.
+   */
+  firmar(): void {
+    this.panelVerFirmar = true;
+  }
+
+  /**
+   * Maneja el evento de obtención de firma.
+   * Si se recibe una firma válida, navega a la bandeja de tareas pendientes.
+   * @param ev Cadena que representa la firma obtenida.
+   */
+  obtieneFirma(ev: string): void {
+    const FIRMA = ev;
+    if (FIRMA) {
+      this.router.navigate(['bandeja-de-tareas-pendientes']);
+    }
   }
 }

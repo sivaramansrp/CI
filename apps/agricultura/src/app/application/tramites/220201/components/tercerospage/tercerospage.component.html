@@ -1,1 +1,7 @@
-<app-tercerosrelacionados [esFormularioSoloLectura]="esFormularioSoloLectura" [cuerpoTablaDestino]="personas" [cuerpoTablaExportador]="datosForma" [catalogosDatos]="catalogosDatos" (eliminarSeleccion)="handleEliminar()"></app-tercerosrelacionados>
+<app-tercerosrelacionados [esFormularioSoloLectura]="esFormularioSoloLectura" [cuerpoTablaDestino]="personas"
+    [cuerpoTablaExportador]="datosForma" [catalogosDatos]="catalogosDatos" (eliminarSeleccion)="handleEliminar()"
+    (eliminarSeleccionEstinoTable)="handleEliminarExportador()"
+    (abrirModalDestinatario)="abrirModalDestinatario($event)"
+    (abrirModalExportador)="abrirModalExportador($event)"></app-tercerosrelacionados>
+
+<app-modal #modalRef></app-modal>

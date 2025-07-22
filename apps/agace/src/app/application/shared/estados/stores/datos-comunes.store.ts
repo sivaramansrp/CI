@@ -25,6 +25,11 @@ export interface DatosComunesState {
    * El valor de regimenTres.
    */
   regimenTres: boolean;
+
+  /**
+   * El valor de regimenCuatro.
+   */
+  regimenCuatro: boolean;
   
   /**
    * El valor de sectorProductivo.
@@ -202,6 +207,11 @@ export function createInitialState(): DatosComunesState {
       * El valor de regimenTres.
       */
      regimenTres: false,
+
+      /**
+      * El valor de regimenCuatro.
+      */
+     regimenCuatro: false,
      
      /**
       * El valor de sectorProductivo.
@@ -411,6 +421,17 @@ public setRegimenTres(regimenTres: boolean): void {
     this.update((state) => ({
         ...state,
         regimenTres,
+    }));
+}
+
+/**
+ * Establece el estado de regimenCuatro.
+ * @param regimenCuatro - El valor de regimenCuatro.
+ */
+public setRegimenCuatro(regimenCuatro: boolean): void {
+    this.update((state) => ({
+        ...state,
+        regimenCuatro,
     }));
 }
 

@@ -16,8 +16,11 @@
                 (change)="setValorStore(form, 'cantidadSolicitada')"
               />
               <div *ngIf="esInvalido('cantidadSolicitada')" class="text-danger">
-                <small *ngIf="form.controls['cantidadSolicitada'].hasError('required')">La cantidad solicitada es un campo obligatorio.</small>
-            </div>
+                <small *ngIf="form.controls['cantidadSolicitada'].hasError('required')">(Monto a ampliar) es un campo requerido</small>
+                <small class="text-danger" *ngIf="form.get('cantidadSolicitada')?.errors?.['pattern']">
+                  el valor ({{form.get('cantidadSolicitada')?.value}}) debe ser un número válido
+                </small>
+              </div>
             </div>
           </div>
         </div>

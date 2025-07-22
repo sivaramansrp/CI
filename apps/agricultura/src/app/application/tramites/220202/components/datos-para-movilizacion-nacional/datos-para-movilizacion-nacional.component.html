@@ -32,6 +32,7 @@
             type="text"
             name="medioTransporte"
             formControlName="medioTransporte"
+            maxlength="30"
             (change)="
             setValoresStore(
               forma,
@@ -61,7 +62,7 @@
         </div>
         <div class="col-md-12 mt-2">
           <label class="control-label" for="empresaTransportista"
-            >Nombre de la empresa transportista:*</label
+            >Nombre de la empresa transportista*:</label
           >
           <input
             class="form-control mt-1"
@@ -69,6 +70,7 @@
             name="empresaTransportista"
             placeholder=""
             formControlName="empresaTransportista"
+            maxlength="80"
             type="text"
             (change)="
             setValoresStore(

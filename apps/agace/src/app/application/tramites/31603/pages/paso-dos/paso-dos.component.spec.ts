@@ -4,7 +4,7 @@ import { CatalogosService } from '@libs/shared/data-access-user/src';
 import { of, throwError } from 'rxjs';
 import { AlertComponent,AnexarDocumentosComponent,TituloComponent } from '@libs/shared/data-access-user/src';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-
+import { CATALOGOS_ID } from '@libs/shared/data-access-user/src';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -12,7 +12,7 @@ describe('PasoDosComponent', () => {
   let mockCatalogosService: any;
 
   beforeEach(async () => {
-   const mockCatalogosService = {
+  mockCatalogosService = {
   getCatalogo: jest.fn().mockReturnValue(of([]))
 };
 
@@ -33,26 +33,25 @@ describe('PasoDosComponent', () => {
 
   it('should call getCatalogo on ngOnInit and populate catalogoDocumentos', () => {
     const mockResponse = [{ id: 1, nombre: 'Documento 1' }];
-    mockCatalogosService.getCatalogo.and.returnValue(of(mockResponse));
+    mockCatalogosService.getCatalogo.mockReturnValue(of(mockResponse));
 
     component.ngOnInit();
 
-    expect(mockCatalogosService.getCatalogo).toHaveBeenCalledWith('CAT_TIPO_DOCUMENTO');
+    expect(mockCatalogosService.getCatalogo).toHaveBeenCalledWith(CATALOGOS_ID.CAT_TIPO_DOCUMENTO);
     expect(component.catalogoDocumentos).toEqual(mockResponse);
   });
 
   it('should handle error when getCatalogo fails', () => {
-    mockCatalogosService.getCatalogo.and.returnValue(throwError(() => new Error('Error fetching catalog')));
-
+    mockCatalogosService.getCatalogo.mockReturnValue(throwError(() => new Error('Error fetching catalog')));
     component.ngOnInit();
 
-    expect(mockCatalogosService.getCatalogo).toHaveBeenCalledWith('CAT_TIPO_DOCUMENTO');
+    expect(mockCatalogosService.getCatalogo).toHaveBeenCalledWith(CATALOGOS_ID.CAT_TIPO_DOCUMENTO);
     expect(component.catalogoDocumentos).toEqual([]);
   });
 
   it('should complete destroy$ on ngOnDestroy', () => {
-    const destroySpy = spyOn(component['destroyed$'], 'next');
-    const completeSpy = spyOn(component['destroyed$'], 'complete');
+    const destroySpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
 
     component.ngOnDestroy();
 

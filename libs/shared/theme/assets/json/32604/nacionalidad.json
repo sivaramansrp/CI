@@ -1,0 +1,18 @@
+{
+    "code": 200,
+    "data": [
+        {
+            "id": "0",
+            "descripcion": "INDIA"
+        },
+        {
+            "id": "1",
+            "descripcion": "MÉXICO"
+        },
+        {
+            "id": "2",
+            "descripcion": "USA"
+        }
+    ],
+    "message": ""
+}

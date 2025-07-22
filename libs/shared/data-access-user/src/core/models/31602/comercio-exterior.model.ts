@@ -39,12 +39,12 @@ export const EMPRESAS_TABLA = [
       orden: 1,
     },
     {
-      encabezado: 'Denominction o razon social',
+      encabezado: 'Denominación o Razón social',
       clave: (ele: EmpresasDelGrupo): string => ele.denominctionORazonSocial,
       orden: 2,
     },
     {
-      encabezado: 'Domicillo',
+      encabezado: 'Domicilio',
       clave: (ele: EmpresasDelGrupo): string => ele.domicillo,
       orden: 3,
     },
