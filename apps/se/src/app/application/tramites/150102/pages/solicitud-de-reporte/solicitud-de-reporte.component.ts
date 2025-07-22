@@ -1,13 +1,15 @@
-import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
+import {
+  AlertComponent,
+  BtnContinuarComponent,
+  DatosPasos,
+  ListaPasosWizard,
+  WizardComponent,
+} from '@libs/shared/data-access-user/src';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosComponent } from '../datos/datos.component';
-import { DatosPasos } from '@libs/shared/data-access-user/src';
-import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { REPORTE_ANUAL_PASOS } from '../../enums/reporte-anual.enum';
-import { ViewChild } from '@angular/core';
-import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * @description Interfaz que define la estructura y propiedades de una acción asociada a un botón interactivo.
@@ -34,13 +36,32 @@ interface AccionBoton {
 @Component({
   selector: 'app-solicitud-de-reporte', // Selector del componente
   standalone: true, // Indica que este componente no es independiente y depende de otros módulos
-  imports: [CommonModule, WizardComponent, DatosComponent, PasoTresComponent, BtnContinuarComponent], // Importa el componente Wizard para su uso en este componente
+  imports: [
+    CommonModule,
+    WizardComponent,
+    DatosComponent,
+    PasoTresComponent,
+    AlertComponent,
+    BtnContinuarComponent,
+  ], // Importa el componente Wizard para su uso en este componente
   templateUrl: './solicitud-de-reporte.component.html', // Ruta del archivo de plantilla HTML
   styleUrl: './solicitud-de-reporte.component.scss', // Ruta del archivo de estilos
 })
 export class SolicitudDeReporteComponent {
+  /**
+   * Mensaje de error a mostrar.
+   */
+  esValido = true;
+
   /** Referencia al componente del asistente (wizard) */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * Referencia al componente `DatosComponent` identificado mediante el template reference variable `#datos`.
+   *
+   * Permite acceder directamente a las propiedades y métodos del componente hijo desde el componente padre.
+   */
+  @ViewChild('datos') datosComponent!: DatosComponent;
 
   /** Lista de pasos dentro del asistente */
   pantallasPasos: ListaPasosWizard[] = REPORTE_ANUAL_PASOS;
@@ -53,6 +74,13 @@ export class SolicitudDeReporteComponent {
    */
   indice: number = 1;
 
+  /**
+   * Contiene el mensaje de error que se mostrará al usuario.
+   *
+   * Se actualiza dinámicamente en función de las validaciones del formulario u otras operaciones fallidas.
+   */
+  mensajeError: string = '';
+
   /** Configuración de los datos de los pasos para el asistente */
   datosPasos: DatosPasos = {
     nroPasos: this.pantallasPasos.length, // Número total de pasos en el asistente
@@ -62,20 +90,57 @@ export class SolicitudDeReporteComponent {
   };
 
   /**
+   * Genera una cadena HTML con los mensajes de validación del componente de datos anuales.
+   *
+   * Recorre la lista de mensajes almacenados en `mensajesDeValidacion` y construye
+   * un bloque HTML para ser insertado en la interfaz, normalmente en un componente de alerta.
+   *
+   * @returns HTML en forma de string con los mensajes de error formateados.
+   */
+  generarValidacionHTML(): string {
+    const SOLICITUD_COMPONENT =
+      this.datosComponent?.datosDeReporteAnnualComponent;
+    const ERRORES_HTML = SOLICITUD_COMPONENT.mensajesDeValidacion
+      .map(
+        (message, index) => `
+        <div class="validation-wrapper">
+          <span class="validation-index">${index + 1}.</span>
+          <span class="validation-message">${message}</span>
+        </div>`
+      )
+      .join('');
+    const HTML = `
+    <div class="validation-title">Corrija los siguientes errores:</div>
+    ${ERRORES_HTML}
+  `;
+    return HTML;
+  }
+
+  /**
    * @description Método que actualiza el índice del paso actual dentro del asistente.
    * Ejecuta una acción dependiendo del valor de `e.accion` ('cont' para continuar, otro para retroceder).
    *
-   * @param {AccionBoton} e Objeto que contiene la acción y el valor del índice.
+   * @param {AccionBoton} evento Objeto que contiene la acción y el valor del índice.
    */
-  getValorIndice(e: AccionBoton): void {
-    // Verifica que el valor esté dentro del rango válido
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor; // Actualiza el índice actual
-      if (e.accion === 'cont') {
-        // Llama al método siguiente() del asistente
+  getValorIndice(evento: AccionBoton): void {
+    if (evento.valor > 0 && evento.valor < 5) {
+      if (this.indice === 1 && this.datosComponent.indice === 3) {
+        const SOLICITUD_COMPONENT =
+          this.datosComponent?.datosDeReporteAnnualComponent;
+        this.esValido =
+          SOLICITUD_COMPONENT?.validarTotalExportaciones() ?? false;
+      }
+
+      if (!this.esValido) {
+        this.mensajeError = this.generarValidacionHTML();
+        this.datosPasos.indice = 1;
+        return;
+      }
+
+      this.indice = evento.valor;
+      if (evento.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
-        // Llama al método atras() del asistente
         this.wizardComponent.atras();
       }
     }

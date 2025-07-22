@@ -3182,5 +3182,15 @@
         "departamento": "AGA",
         "numeroDeProcedimiento": "11106",
         "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "30901",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-15",
+        "fechaActualizacion": "2025-06-17",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "30901",
+        "origin": "READ_PROCEDURE"
     }
 ]

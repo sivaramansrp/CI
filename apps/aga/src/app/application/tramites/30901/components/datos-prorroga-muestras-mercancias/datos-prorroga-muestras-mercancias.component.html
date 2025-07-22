@@ -16,6 +16,7 @@
         [setFecha]="formDatosProrroga.get('fechaInicioVigencia')?.value"
         [datos]="configuracionFechaFinVigencia"
         [icono]="false"
+        [isDisabled]="esFormularioSoloLectura"
         (valorCambiado)="onFechaFinVigenciaChange($event)"
       ></input-fecha>
     </div>
@@ -23,7 +24,8 @@
       <input-fecha
         [setFecha]="formDatosProrroga.get('fechaFinVigencia')?.value"
         [datos]="configuracionFechaInicioVigencia"
-         [icono]="false"
+        [icono]="false"
+        [isDisabled]="esFormularioSoloLectura"
         (valorCambiado)="onFechaInicioChange($event)"
       ></input-fecha>
     </div>

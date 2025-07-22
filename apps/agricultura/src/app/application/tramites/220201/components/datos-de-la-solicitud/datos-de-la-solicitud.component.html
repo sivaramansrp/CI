@@ -40,16 +40,28 @@
         <app-catalogo-select [catalogo]="aduanaDeIngreso" formControlName="aduanaIngreso" [label]="'Aduana de ingreso'"
           [required]="true" name="aduanaIngreso" [isDisabled]="esFormularioSoloLectura"
           (change)="setValoresStore()"></app-catalogo-select>
+        <div
+          *ngIf="datosDelaSolicitud.get('aduanaIngreso')?.invalid && datosDelaSolicitud.get('aduanaIngreso')?.touched">
+          <small class="mensaje-error">Este campo es obligatorio.</small>
+        </div>
       </div>
       <div class="col-md-12">
         <app-catalogo-select [catalogo]="sanidadAgropecuaria" formControlName="oficinaInspeccion"
           [label]="'Oficina de inspección de sanidad Agropecuaria'" [required]="true" name="oficinaInspeccion"
           [isDisabled]="esFormularioSoloLectura" (change)="setValoresStore()"></app-catalogo-select>
+        <div
+          *ngIf="datosDelaSolicitud.get('oficinaInspeccion')?.invalid && datosDelaSolicitud.get('oficinaInspeccion')?.touched">
+          <small class="mensaje-error">Este campo es obligatorio.</small>
+        </div>
       </div>
       <div class="col-md-12">
         <app-catalogo-select [catalogo]="puntoInspeccion" formControlName="puntoInspeccion"
           [label]="'Punto de inspección'" [required]="true" name="puntoInspeccion"
           [isDisabled]="esFormularioSoloLectura" (change)="setValoresStore()"></app-catalogo-select>
+        <div
+          *ngIf="datosDelaSolicitud.get('puntoInspeccion')?.invalid && datosDelaSolicitud.get('puntoInspeccion')?.touched">
+          <small class="mensaje-error">Este campo es obligatorio.</small>
+        </div>
       </div>
       <div class="col-md-6">
         <div class="form-group">
@@ -82,6 +94,9 @@
           name="regimen" [isDisabled]="esFormularioSoloLectura" (change)="setValoresStore()"
           [tooltipQuestionCircle]="true"
           [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"></app-catalogo-select>
+        <div *ngIf="datosDelaSolicitud.get('regimen')?.invalid && datosDelaSolicitud.get('regimen')?.touched">
+          <small class="mensaje-error">Este campo es obligatorio.</small>
+        </div>
       </div>
 
 

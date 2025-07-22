@@ -199,7 +199,7 @@
     "id": 29,
     "tramite": 80205,
     "linkDashboard": "/se/certificado-registro/registro",
-    "linkDepartment": "/se/certificado-registro/registro",
+    "linkDepartment": "/pago/certificado-registro/registro",
     "department": "se"
   },
   {
@@ -4250,7 +4250,7 @@
     "department": "agace"
   },
     {
-    "id": 606,
+    "id": 609,
     "tramite": 32607,
     "linkDashboard": "/agace/aeronaves/solicitud",
     "linkDepartment": "/pago/aeronaves/solicitud",
