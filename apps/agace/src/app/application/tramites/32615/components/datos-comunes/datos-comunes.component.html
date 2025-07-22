@@ -289,8 +289,8 @@
         </div>
         <div class="row w-100">
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
-                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
+                <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura ? true : false" (click)="openMiembroDeLaEmpresaModal()">Modificar</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false" (click)="openMiembroDeLaEmpresaModal()">Eliminar</button>
             </div>
         </div>
         <div class="row mt-5">
@@ -318,7 +318,7 @@
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
                 <button class="btn btn-primary me-2" (click)="openMiembroDeLaEmpresaModal()" [disabled]="esFormularioSoloLectura ? true : false">Agregar</button>
                 <button class="btn btn-primary me-2" (click)="openMiembroDeLaEmpresaModal()" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
-                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false" (click)="openMiembroDeLaEmpresaModal()">Eliminar</button>
             </div>
         </div>
         <div class="row mt-5">

@@ -25,8 +25,8 @@
       >
         Agregar
       </button>
-      <button type="button" class="btn btn-default me-3" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
-      <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
+      <button type="button" class="btn btn-default me-3" [disabled]="esFormularioSoloLectura ? true : false" (click)="abrirModal()">Modificar</button>
+      <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura ? true : false" (click)="abrirModal()">Eliminar</button>
     </div>
   </div>
 </div>

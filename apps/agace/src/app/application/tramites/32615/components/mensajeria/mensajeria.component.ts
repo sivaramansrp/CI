@@ -372,6 +372,13 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
     (this.tramite32615Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
   /**
+   * busca el RFC en la lista de solicitudes.
+   * @method buscarRfc
+   */
+  public buscar(){
+    this.solicitudState?.rfcListado
+  }
+  /**
    * Método del ciclo de vida `ngOnDestroy`.
    * Se ejecuta al destruir el componente para liberar recursos.
    */
