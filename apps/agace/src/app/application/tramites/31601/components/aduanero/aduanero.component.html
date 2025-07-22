@@ -730,7 +730,7 @@
               </button>
         <button
           type="button"
-          class="btn btn-primary btn-space"
+          class="btn btn-primary btn-space ms-3"
          [disabled]="esFormularioSoloLectura || !hayFilasSeleccionadas"
          (click)="confirmEliminarMencioneItem()"
          (click)="eliminarFilaSeleccionada()"
@@ -1150,6 +1150,7 @@
               {{ filaSeleccionadaControlInventarios ? 'Modificar' : 'Agregar' }} Inventario
             </h5>
           </div>
+          <form [formGroup]="controlInventariosModalForm">
           <div class="modal-body p-4">
             <div class="row">
               <div class="col-8">
@@ -1158,13 +1159,13 @@
                   <label for="nombreDelModal" class="form-label">Nombre del sistema o datos para su identificación</label>
                   <input type="text" class="form-control" id="nombreDelModal" formControlName="nombreDel" />
                   <div *ngIf="
-                      preOperativeForm.controls['nombreDel'].invalid &&
-                      (preOperativeForm.controls['nombreDel'].touched || formSubmittedControlInventarios)
+                       controlInventariosModalForm.controls['nombreDel'].invalid &&
+                      (controlInventariosModalForm.controls['nombreDel'].touched || formSubmittedControlInventarios)
                     " class="text-danger">
-                    <span *ngIf="preOperativeForm.controls['nombreDel'].errors?.['required']">
+                    <span *ngIf="controlInventariosModalForm.controls['nombreDel'].errors?.['required']">
                       Este campo es obligatorio.
                     </span>
-                    <span *ngIf="preOperativeForm.controls['nombreDel'].errors?.['minlength']">
+                    <span *ngIf="controlInventariosModalForm.controls['nombreDel'].errors?.['minlength']">
                       Debe tener al menos 3 caracteres.
                     </span>
                   </div>
@@ -1180,13 +1181,13 @@
                   </label>
                   <input type="text" class="form-control" id="lugarDeRadicacionModal" formControlName="lugarDeRadicacion" />
                   <div *ngIf="
-                      preOperativeForm.controls['lugarDeRadicacion'].invalid &&
-                      (preOperativeForm.get('lugarDeRadicacion')?.touched || formSubmittedControlInventarios)
+                      controlInventariosModalForm.controls['lugarDeRadicacion'].invalid &&
+                      (controlInventariosModalForm.get('lugarDeRadicacion')?.touched || formSubmittedControlInventarios)
                     " class="text-danger">
-                    <span *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['required']">
+                    <span *ngIf="controlInventariosModalForm.controls['lugarDeRadicacion'].errors?.['required']">
                       Este campo es obligatorio.
                     </span>
-                    <span *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['minlength']">
+                    <span *ngIf="controlInventariosModalForm.controls['lugarDeRadicacion'].errors?.['minlength']">
                       Debe tener al menos 3 caracteres.
                     </span>
                   </div>
@@ -1212,6 +1213,7 @@
             </button>
           
           </div>
+          </form>
         </div>
       </div>
     </div>

@@ -709,21 +709,6 @@ it('should close confirmation popup for delete', () => {
   expect(component.confirmEliminarPopupAbierto).toBe(false);
   expect(component.confirmEliminarPopupCerrado).toBe(false);
 });
-it('should reset and show modal if modalInstanceControlInventarios exists', () => {
-  component.modalInstanceControlInventarios = { show: jest.fn() } as any;
-
-  const patchSpy = jest.spyOn(component.preOperativeForm, 'patchValue');
-
-  component.openControlInventariosModal();
-
-  expect(patchSpy).toHaveBeenCalledWith({
-    nombreDel: '',
-    lugarDeRadicacion: '',
-    indiqueCheck: false
-  });
-
-  expect(component.modalInstanceControlInventarios.show).toHaveBeenCalled();
-});
 
 it('should do nothing if modalInstanceControlInventarios does not exist', () => {
   component.modalInstanceControlInventarios = null as any;
@@ -737,7 +722,7 @@ it('should do nothing if modalInstanceControlInventarios does not exist', () => 
 it('should reset and show modal if modalInstanceControlInventarios exists', () => {
   component.modalInstanceControlInventarios = { show: jest.fn() } as any;
 
-  const patchSpy = jest.spyOn(component.preOperativeForm, 'patchValue');
+  const patchSpy = jest.spyOn(component.controlInventariosModalForm, 'reset');
 
   component.openControlInventariosModal();
 
