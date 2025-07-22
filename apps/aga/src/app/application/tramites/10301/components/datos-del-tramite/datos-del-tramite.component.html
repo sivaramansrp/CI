@@ -20,6 +20,7 @@
                   'setManifesto'
                 )
               "
+              [disabled]="esFormularioSoloLectura"
             />
             *Manifesto bajo protesta de decir verdad que el donante de la
             mercancía es extranjero
@@ -37,7 +38,7 @@
               (change)="
                 setValoresStore(importadorExportador, 'aduana', 'setAduana')
               "
-               [isDisabled] ="isAdunaMarcancia"
+               [isDisabled] ="esFormularioSoloLectura"
             >
             </app-catalogo-select>
           </div>
@@ -49,15 +50,16 @@
           <label for="mercancia">Mercancías*:</label>
         </div>
         <div class="table-container">
-          <ng-table [commonTableHeader]="encabezadosTabla"> </ng-table>
+          <ng-table [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"></ng-table>
         </div>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-default">Modificar</button>
-          <button type="button" class="btn btn-default ms-3">Eliminar</button>
+          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
+          <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
           <button
             type="button"
             class="btn btn-primary ms-3"
             (click)="nextTabla()"
+            [disabled]="esFormularioSoloLectura"
           >
             Agregar
           </button>
@@ -96,6 +98,7 @@
                   'setTipoMercancia'
                 )
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
         </div>
@@ -122,6 +125,7 @@
                     'setUsoEspecifico'
                   )
                 "
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
             <div class="col-md-4">
@@ -139,6 +143,7 @@
                     'setCondicion'
                   )
                 "
+                [isDisabled]="esFormularioSoloLectura"
               ></app-catalogo-select>
             </div>
             <div class="col-md-4">
@@ -154,6 +159,7 @@
                 (change)="
                   setValoresStore(importadorExportador, 'marca', 'setMarca')
                 "
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
           </div>
@@ -169,6 +175,7 @@
                 (change)="
                   setValoresStore(importadorExportador, 'ano', 'setAno')
                 "
+                [isDisabled]="esFormularioSoloLectura"
               ></app-catalogo-select>
             </div>
             <div class="col-md-4">
@@ -184,6 +191,7 @@
                 (change)="
                   setValoresStore(importadorExportador, 'modelo', 'setModelo')
                 "
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
             <div class="col-md-4">
@@ -199,18 +207,20 @@
                 (change)="
                   setValoresStore(importadorExportador, 'serie', 'setSerie')
                 "
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
           </div>
         </ng-container>
 
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-default">Limpiar</button>
-          <button type="button" class="btn btn-default ms-3">Cancelar</button>
+          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Limpiar</button>
+          <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura">Cancelar</button>
           <button
             type="button"
             class="btn btn-primary ms-3"
             (click)="openPopup()"
+            [disabled]="esFormularioSoloLectura"
           >
             Agregar
           </button>
@@ -264,6 +274,7 @@
               (change)="
                 setValoresStore(importadorExportador, 'nombre', 'setNombre')
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
         </div>
@@ -283,6 +294,7 @@
               (change)="
                 setValoresStore(importadorExportador, 'calle', 'setCalle')
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
           <div class="col-md-4">
@@ -306,6 +318,7 @@
                   'setNumeroExterior'
                 )
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
         </div>
@@ -330,6 +343,7 @@
                   'setNumeroInterior'
                 )
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
 
@@ -347,6 +361,7 @@
               (change)="
                 setValoresStore(importadorExportador, 'telefono', 'setTelefono')
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
           <div class="col-md-4">
@@ -369,6 +384,7 @@
                   'setCorreoElectronico'
                 )
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
         </div>
@@ -381,10 +397,8 @@
               [required]="true"
               id="pais"
               formControlName="pais"
-              (change)="
-                setValoresStore(importadorExportador, 'pais', 'setPais')
-              "
-              [isDisabled]="isPais"
+              (change)="setValoresStore(importadorExportador, 'pais', 'setPais')"
+              [isDisabled]="esFormularioSoloLectura"
             ></app-catalogo-select>
           </div>
           <div class="col-md-4">
@@ -405,6 +419,7 @@
                   'setCodigoPostal'
                 )
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
           <div class="col-md-4">
@@ -421,6 +436,7 @@
               (change)="
                 setValoresStore(importadorExportador, 'estado', 'setEstado')
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
         </div>
@@ -439,6 +455,7 @@
               (change)="
                 setValoresStore(importadorExportador, 'colonia', 'setColonia')
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
         </div>
@@ -454,10 +471,9 @@
             (valueChange)="cambiarRadio($event)"
             id="opcion"
             formControlName="opcion"
-            (change)="
-              setValoresStore(importadorExportador, 'opcion', 'setOpcion')
-            "
-          >
+            (change)="setValoresStore(importadorExportador, 'opcion', 'setOpcion')"
+            [disabled]="esFormularioSoloLectura"
+            >
           </app-input-radio>
         </div>
       </ng-container>

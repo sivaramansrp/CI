@@ -1,49 +1,31 @@
 {
-  "aduna": [
-    {
-      "id": 0,
-      "descripcion": "AGUA PRIETA"
-    },
-    {
-      "id": 1,
-      "descripcion": "AEROPUERTOS"
-    },
-    {
-      "id": 2,
-      "descripcion": "PUERTOS MARÍTIMOS"
-    },
-    {
-      "id": 3,
-      "descripcion": "FRONTERAS TERRESTRES"
-    }    
-  ],
-  "nombre": "Electronica",
-  "calle": "Calle Principal",
-  "numeroExterior": "100",
-  "numeroInterior": "15",
-  "telefono": "5551234567",
-  "correoElectronico": "usuario@ejemplo.com",
-  "codigoPostal": "12345",
-  "pais": [
-    {
-      "id": 0,
-      "descripcion": "SPAIN"
-    },
-    {
-      "id": 1,
-      "descripcion": "MEXICO"
-    },
-    {
-      "id": 2,
-      "descripcion": "REPUBLICA DOMINICANA"
-    },
-    {
-      "id": 3,
-      "descripcion": "HONDURAS"
-    }
-  ],
-
-  "estado": "11122",
-  "colonia": "55",
-  "opcion":true
+  "success": true,
+  "message": "",
+  "datos": {
+    "manifesto": true,
+    "aduna": 1,
+    "nombre": "Electronica",
+    "calle": "Calle Principal",
+    "numeroExterior": "100",
+    "numeroInterior": "15",
+    "telefono": "5551234567",
+    "correoElectronico": "usuario@ejemplo.com",
+    "codigoPostal": "12345",
+    "pais": 1,
+    "estado": "11122",
+    "colonia": "55",
+    "opcion": "sí",
+    "tbodyData": [
+        {
+          "Fines a los que se destinará la mercancía": "Comercialización",
+          "Tipo de mercancía": "Electrónica",
+          "Año": "2023",
+          "Modelo": "Modelo X",
+          "Marca": "Marca Y",
+          "Número de serie": "1234567890",
+          "Uso específico de la mercancía": "Uso comercial",
+          "Condición de la mercancía": "Nuevo"
+        }
+    ]
+  }
 }

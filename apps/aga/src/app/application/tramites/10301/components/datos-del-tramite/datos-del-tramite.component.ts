@@ -3,8 +3,10 @@ import {
   CatalogoSelectComponent,
   CatalogosSelect,
   ConsultaioQuery,
+  ConsultaioState,
   CrosslistComponent,
   InputRadioComponent,
+  TableBodyData,
   TableComponent,
   TituloComponent,
   ValidacionesFormularioService,
@@ -28,6 +30,7 @@ import { CommonModule } from '@angular/common';
 import { ImportadorExportadorService } from '../../services/importador-exportador.service';
 import { SELECCION } from '../../constantes/importador-exportador.enum';
 import { Tramite10301Query } from '../../estados/tramite10301.query';
+import mercanciaTable from '@libs/shared/theme/assets/json/10301/mercancia-table.json';
 
 /**
  * Texto de adjuntar para terceros.
@@ -173,22 +176,28 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   valorSeleccionado!: string;
 
   /**
-   * Encabezados de la tabla.
+   * Encabezados de la tabla de mercancías.
    */
-  encabezadosTabla: string[] = [
-    'Fines a los que se destinará la mercancía',
-    'Tipo de mercancía',
-    'Año',
-    'Modelo',
-    'Marca',
-    'Número de serie',
-    'Uso específico de la mercancía',
-  ];
-  tableData = [
-    {
-      "tbodyData": ["Ananas comosus", "P&iacute;na"]
-    }
-  ]
+  public mercanciaHeaderData: string[] = [];
+
+  /**
+   * Datos del cuerpo de la tabla de mercancías.
+   */
+  public mercanciaBodyData: TableBodyData[] = [];
+
+  /**
+   * Datos de la tabla de mercancías obtenidos desde un archivo JSON.
+   */
+  public getMercanciaTableData = mercanciaTable;
+
+  /**
+   * Inicializa los datos de la tabla de mercancías.
+   */
+  public obtenerMercancia(): void {
+    this.mercanciaHeaderData = this.getMercanciaTableData?.mercanciaTable?.tableHeader;
+    this.mercanciaBodyData = this.getMercanciaTableData?.mercanciaTable?.tableBody;
+  }
+
   esFormularioSoloLectura: boolean = false;
   /**
    * Indica si el formulario es de solo lectura.
@@ -237,6 +246,12 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   ];
 
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
    * Constructor que se utiliza para la inyección de dependencias.
    * Constructor que se utiliza para la inyección de dependencias.
    * @param importarExportar Servicio de importador/exportador.
@@ -262,14 +277,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-        })
-      )
-      .subscribe();
   }
 
   /**
@@ -289,12 +296,15 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.donanteDomicilio();
-    this.getAduanaIngresara();
-    this.getAno();
-    this.getCondicion();
-    this.getPais();
-
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+        })
+      )
+      .subscribe();
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -303,6 +313,12 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.donanteDomicilio();
+    this.getAduanaIngresara();
+    this.getAno();
+    this.getCondicion();
+    this.getPais();
+    this.obtenerMercancia();
     this.inicializarEstadoFormulario();
 
     this.subscriptions.push(
@@ -634,34 +650,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         opcion: [this.solicitudState?.opcion],
       }),
     });
-
-    this.datosDeltrimiteForm();
   }
-  /**
-   * datosDeltrimiteForm los campos del formulario si es de solo lectura.
-   * Si el formulario es de solo lectura, deshabilita los campos del formulario de importador/exportador.
-   */
-  datosDeltrimiteForm(): void {
-    if (this.esFormularioSoloLectura) {
-      this.importadorExportador?.get('aduana')?.disable();
-      this.importadorExportador?.get('nombre')?.disable();
-      this.importadorExportador?.get('calle')?.disable();
-      this.importadorExportador?.get('numeroExterior')?.disable();
-      this.importadorExportador?.get('numeroInterior')?.disable();
-      this.importadorExportador?.get('telefono')?.disable();
-      this.importadorExportador?.get('correoElectronico')?.disable();
-      this.importadorExportador?.get('pais')?.disable();
-      this.importadorExportador?.get('codigoPostal')?.disable();
-      this.importadorExportador?.get('estado')?.disable();
-      this.importadorExportador?.get('colonia')?.disable();
-      this.importadorExportador?.get('opcion')?.disable();
-      this.isDesplegableDepaises = true;
-      this.isAdunaMarcancia = true;
-      this.isPais = true;
-      this.formularioDeshabilitado = true;
-    }
-  }
-
+  
   /**
    * Método de limpieza que se ejecuta cuando el componente se destruye.
    */
