@@ -1,24 +1,11 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, REGEX_SOLO_DIGITOS, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { Tramite110217State, Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { REGEX_SOLO_DIGITOS } from '@ng-mf/data-access-user';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ReplaySubject} from 'rxjs';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
-import { Tramite110217State } from '../../../../estados/tramites/tramite110217.store';
-import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar los datos del destinatario.

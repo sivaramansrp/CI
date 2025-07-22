@@ -1,25 +1,18 @@
-import { Catalogo } from '../../models/certificado-origen.model';
-import { CatalogoLista } from '../../models/certificado-origen.model';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoLista } from '../../models/certificado-origen.model';
+import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ReplaySubject } from 'rxjs';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
 import { Tramite110217State } from '../../../../estados/tramites/tramite110217.store';
 import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
 import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar los datos del certificado.

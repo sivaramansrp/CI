@@ -1,46 +1,62 @@
-import { AlertComponent } from '@libs/shared/data-access-user/src';
-import { Catalogo } from '../../models/certificado-origen.model.js';
-import { CatalogoLista } from '../../models/certificado-origen.model.js';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  ConfiguracionColumna,
+  InputFecha,
+  InputFechaComponent,
+  REGEX_SOLO_DIGITOS,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+  ValidacionesFormularioService
+} from '@libs/shared/data-access-user/src';
+import {
+  Catalogo,
+  CatalogoLista,
+  DisponiblesTabla,
+  SeleccionadasTabla
+} from '../../models/certificado-origen.model.js';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  ConsultaioQuery,
+  ConsultaioState
+} from '@ng-mf/data-access-user';
+import {
+  DISPONIBLES_ENCABEZADOS,
+  FECHA_FACTURA,
+  FECHA_FINAL,
+  FECHA_INICIAL,
+  SLECCIONADAS_ENCABEZADOS,
+  TERCEROS_TEXTO_DE_ALERTA
+} from '../../constants/certificado-origen.enum';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+import {
+  ReplaySubject,
+  Subject,
+  map,
+  takeUntil
+} from 'rxjs';
+import {
+  Tramite110217State,
+  Tramite110217Store
+} from '../../../../estados/tramites/tramite110217.store';
 import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ConsultaioState } from '@ng-mf/data-access-user';
-import { DISPONIBLES_ENCABEZADOS } from '../../constants/certificado-origen.enum';
-import { DisponiblesTabla } from '../../models/certificado-origen.model.js';
-import { ElementRef } from '@angular/core';
-import { FECHA_FACTURA } from '../../constants/certificado-origen.enum';
-import { FECHA_FINAL } from '../../constants/certificado-origen.enum';
-import { FECHA_INICIAL } from '../../constants/certificado-origen.enum';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputFecha } from '@libs/shared/data-access-user/src';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ReplaySubject } from 'rxjs';
-import {SLECCIONADAS_ENCABEZADOS } from '../../constants/certificado-origen.enum';
-import { SeleccionadasTabla } from '../../models/certificado-origen.model.js';
-import { Subject } from 'rxjs';
-import { TERCEROS_TEXTO_DE_ALERTA } from '../../constants/certificado-origen.enum';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { ToastrService } from 'ngx-toastr';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
-import { Tramite110217State } from '../../../../estados/tramites/tramite110217.store';
-import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar el Certificado de Origen.

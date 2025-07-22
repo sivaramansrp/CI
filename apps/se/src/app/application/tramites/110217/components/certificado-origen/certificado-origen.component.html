@@ -18,7 +18,8 @@
       </div>
     </div>
 
-    <div class="row" *ngIf="solicitudState?.tercerOperador">
+    @if(solicitudState.tercerOperador){
+    <div class="row">
       <ng-container formGroupName="grupoOperador" *ngIf="formularioCertificado.get('grupoOperador')">
         <div class="row">
           <div class="col-md-4 mb-3">
@@ -69,8 +70,10 @@
         </div>
       </ng-container>
     </div>
+    }
 
-    <div class="row" *ngIf="solicitudState?.tercerOperador">
+    @if(solicitudState.tercerOperador){
+    <div class="row">
       <ng-titulo titulo="Domicilio del tracer operador" />
       <ng-container formGroupName="grupoDeDomicilio">
         <div class="row">
@@ -135,6 +138,8 @@
         </div>
       </ng-container>
     </div>
+    }
+
     <ng-container formGroupName="grupoTratado">
       <div class="row">
         <ng-titulo titulo="Tratado y país o bloque" />

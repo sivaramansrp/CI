@@ -1,19 +1,14 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite110217State, Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
 import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
 import { HistoricoProductoresComponent } from '../../components/historico-productores/historico-productores.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { Subject } from 'rxjs';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
-import { Tramite110217State } from '../../../../estados/tramites/tramite110217.store';
-import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar el paso uno del trámite.
