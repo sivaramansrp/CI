@@ -1974,6 +1974,11 @@ export class SolicitudComponent
       'desProgramaFomento',
       'setDescripcionProgramaFomento'
     );
+    
+    // Update the component's disabled state based on the data
+    if (this.programaFomento) {
+      this.programaFomento.isDisabled = valores.disabled || false;
+    }
   }
 
   /**
@@ -1996,6 +2001,11 @@ export class SolicitudComponent
       'desImmex',
       'setDescripcionImmex'
     );
+    
+    // Update the component's disabled state based on the data
+    if (this.programaImmex) {
+      this.programaImmex.isDisabled = valores.disabled || false;
+    }
   }
 
   /**
@@ -2020,6 +2030,11 @@ export class SolicitudComponent
       'desIndustrialAutomotriz',
       'setDescripcionIndustriaAutomotriz'
     );
+    
+    // Update the component's disabled state based on the data
+    if (this.industriaAutomotriz) {
+      this.industriaAutomotriz.isDisabled = valores.disabled || false;
+    }
   }
 
   /**
