@@ -295,7 +295,7 @@
         </div>
         <div class="col-md-4">
             <div class="form-group">
-                <input-fecha [datos]="fechaFacturaInput" [setFecha]="mensajeriaGroup.get('fechaFactura')?.value"
+                <input-fecha [datos]="fechaFacturaInput" [setFecha]="mensajeriaGroup.get('fechaFactura')?.value" [isDisabled]="esFormularioSoloLectura"
                 (valorCambiado)="cambioFechaFactura($event,mensajeriaGroup,'fechaFactura', 'setFechaFactura')"></input-fecha>
                 @if(mensajeriaGroup.controls['fechaFactura'].invalid && mensajeriaGroup.controls['fechaFactura'].touched){
                     <div class="d-grid">

@@ -72,7 +72,7 @@
     </div>
 
     <div class="col-md-4">
-      <input-fecha [datos]="fechaInicioInput" [setFecha]="profileForm.get('vigencia')?.value" (valorCambiado)="seleccionarVigenciaUno($event)"></input-fecha>
+      <input-fecha [datos]="fechaInicioInput" [isDisabled]="esFormularioSoloLectura" [setFecha]="profileForm.get('vigencia')?.value" (valorCambiado)="seleccionarVigenciaUno($event)"></input-fecha>
     </div>
 
     <div class="col-md-12">
@@ -88,7 +88,7 @@
     </div>
 
     <div class="col-md-4">
-      <input-fecha [datos]="fechaInicioInput" [setFecha]="profileForm.get('vigencia2')?.value" (valorCambiado)="seleccionarVigenciaDos($event)"></input-fecha>
+      <input-fecha [isDisabled]="esFormularioSoloLectura"[datos]="fechaInicioInput" [setFecha]="profileForm.get('vigencia2')?.value" (valorCambiado)="seleccionarVigenciaDos($event)"></input-fecha>
     </div>
 
     <div class="col-md-12">
@@ -104,7 +104,7 @@
     </div>
 
     <div class="col-md-4">
-      <input-fecha [datos]="fechaInicioInput" [setFecha]="profileForm.get('vigencia3')?.value" (valorCambiado)="seleccionarVigenciaTres($event)"></input-fecha>
+      <input-fecha [datos]="fechaInicioInput" [isDisabled]="esFormularioSoloLectura" [setFecha]="profileForm.get('vigencia3')?.value" (valorCambiado)="seleccionarVigenciaTres($event)"></input-fecha>
     </div>
   </div>
 
