@@ -1,7 +1,9 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Subject, catchError, map, takeUntil} from 'rxjs';
+import { Subject, catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 
+import { CommonModule } from '@angular/common';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { TramiteCofeprisStore } from '../../../../estados/tramite.store';
 import { TramiteFolioService } from '@ng-mf/data-access-user';
 
@@ -10,11 +12,12 @@ import { TramiteFolioService } from '@ng-mf/data-access-user';
  */
 @Component({
   selector: 'app-firmar-solicitud',
+  standalone: true,
+  imports: [CommonModule, FirmaElectronicaComponent],
   templateUrl: './firmar-solicitud.component.html',
   styles: ``,
 })
 export class FirmarSolicitudComponent implements OnDestroy {
-
   /**
    * Subject para destruir notificador.
    */
@@ -22,7 +25,7 @@ export class FirmarSolicitudComponent implements OnDestroy {
 
   /**
    * Constructor del componente.
-   * 
+   *
    * @param router Servicio de enrutamiento.
    * @param serviciosExtraordinariosServices Servicio para gestionar los servicios extraordinarios.
    * @param tramiteCofeprisStore Almacén para gestionar el estado del trámite.

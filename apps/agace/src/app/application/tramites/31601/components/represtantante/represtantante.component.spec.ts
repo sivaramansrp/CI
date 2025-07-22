@@ -7,13 +7,13 @@ import { CommonModule } from '@angular/common';
 jest.mock('@libs/shared/theme/assets/json/31601/represtantante-data.json', () => ({
   __esModule: true,
   default: {
-    resigtro: '123',
-    rfc: 'RFC123',
-    nombre: 'Juan',
-    apellidoPaterno: 'Pérez',
-    apellidoMaterno: 'García',
-    telefono: '555-1234',
-    correo: 'juan@example.com'
+    resigtro: '',
+    rfc: '',
+    nombre: '',
+    apellidoPaterno: '',
+    apellidoMaterno: '',
+    telefono: '',
+    correo: ''
   }
 }), { virtual: true });
 
@@ -45,7 +45,7 @@ describe('ReprestantanteComponent', () => {
   it('debe inicializar el formulario correctamente', () => {
     expect(component.represtantante).toBeDefined();
     expect(component.represtantante.get('resigtro')).toBeDefined();
-    expect(component.represtantante.get('rfc')).toBeDefined();
+    expect(component.represtantante.get('rfcDatos')).toBeDefined();
     expect(component.represtantante.get('nombre')).toBeDefined();
     expect(component.represtantante.get('apellidoPaterno')).toBeDefined();
     expect(component.represtantante.get('apellidoMaterno')).toBeDefined();
@@ -57,7 +57,7 @@ describe('ReprestantanteComponent', () => {
   component.esFormularioSoloLectura = true;
   component.inicializarEstadoFormulario();
 
-  const rfc = component.represtantante.get('rfc');
+  const rfc = component.represtantante.get('rfcDatos');
   const nombre = component.represtantante.get('nombre');
   const apellidoPaterno = component.represtantante.get('apellidoPaterno');
   const apellidoMaterno = component.represtantante.get('apellidoMaterno');
@@ -72,7 +72,7 @@ describe('ReprestantanteComponent', () => {
     const representativeData = component.datosRepresentativos;
 
     const resigtro = component.represtantante.get('resigtro');
-    const rfc = component.represtantante.get('rfc');
+    const rfc = component.represtantante.get('rfcDatos');
     const nombre = component.represtantante.get('nombre');
     const apellidoPaterno = component.represtantante.get('apellidoPaterno');
     const apellidoMaterno = component.represtantante.get('apellidoMaterno');
@@ -94,7 +94,7 @@ it('debe llamar a ngOnInit y configurar el formulario correctamente', () => {
   component.ngOnInit();
 
   expect(spyPatchValue).toHaveBeenCalled();
-  expect(component.represtantante.get('rfc')?.disabled).toBe(true);
+  expect(component.represtantante.get('rfcDatos')?.disabled).toBe(true);
   expect(component.represtantante.get('nombre')?.disabled).toBe(true);
   expect(component.represtantante.get('apellidoPaterno')?.disabled).toBe(true);
   expect(component.represtantante.get('apellidoMaterno')?.disabled).toBe(true);

@@ -37,7 +37,7 @@ export class SolicitanteComponent implements OnInit {
    * @param fb - Una instancia de FormBuilder utilizada para crear y gestionar formularios.
    */
   constructor(private fb: FormBuilder) {
-    this.establecerSolicitudForm();
+    //
   }
 
   /**
@@ -46,6 +46,7 @@ export class SolicitanteComponent implements OnInit {
    * 
    */
   ngOnInit(): void {
+    this.establecerSolicitudForm();
     this.establecerValoresDeFormulario();
   }
 

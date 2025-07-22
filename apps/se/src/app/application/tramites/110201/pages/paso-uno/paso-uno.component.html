@@ -25,7 +25,7 @@
       <solicitante [tabindex]="1"></solicitante>
       }
       @case (2) {
-      <app-certificado-de-origen [tabIndex]="2"></app-certificado-de-origen>
+      <app-certificado-de-origen (dataEvent)="cargaArchivo($event)" [tabIndex]="2"></app-certificado-de-origen>
       }
       @case (3) {
       <app-destinatario [tabIndex]="3"></app-destinatario>

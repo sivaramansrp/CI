@@ -1,14 +1,10 @@
+import {AccionBoton,BtnContinuarComponent,ConsultaioQuery,ConsultaioState,DatosPasos,FormularioDinamico,ListaPasosWizard,PASOS,SolicitanteComponent,WizardComponent} from '@ng-mf/data-access-user';
 import { AfterViewInit, EventEmitter, Output } from '@angular/core';
-import {
-  ConsultaioQuery,
-  ConsultaioState,
-  FormularioDinamico,
-  SolicitanteComponent,
-} from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AltaPlantaComponent } from '../../components/alta-planta/alta-planta.component';
 import { BitacoraComponent } from '../../components/bitacora/bitacora.component';
 import { CommonModule } from '@angular/common';
+import { ComplementariaImmexComponent } from '../../components/complementaria-immex/complementaria-immex.component';
 import { Component } from '@angular/core';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { Input } from '@angular/core';
@@ -29,6 +25,8 @@ import { ViewChild } from '@angular/core';
     ModificacionComponent,
     BitacoraComponent,
     AltaPlantaComponent,
+    ComplementariaImmexComponent,
+    BtnContinuarComponent
   ],
 })
 export class PasoUnoComponent implements AfterViewInit {
@@ -102,6 +100,26 @@ export class PasoUnoComponent implements AfterViewInit {
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
+
+    /**
+     * Lista de pasos del asistente.
+     */
+    pasos: ListaPasosWizard[] = PASOS;
+
+    /**
+     * Datos de los pasos del asistente.
+     */
+    datosPasos: DatosPasos = {
+      nroPasos: this.pasos.length,
+      indice: this.indice,
+      txtBtnAnt: 'Anterior',
+      txtBtnSig: 'Continuar',
+    };
+
+      /**
+       * Referencia al componente del asistente.
+       */
+      @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
    * Constructor del componente PasoUno.
@@ -177,5 +195,20 @@ export class PasoUnoComponent implements AfterViewInit {
    */
   continuar(): void {
     this.continuarEvento.emit('');
+  }
+
+    /**
+   * Obtiene el valor del índice de la acción del botón.
+   * @param e Acción del botón.
+   */
+  getValorIndice(e: AccionBoton): void {
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
   }
 }

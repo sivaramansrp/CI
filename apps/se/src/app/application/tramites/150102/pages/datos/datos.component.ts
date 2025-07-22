@@ -1,18 +1,14 @@
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from "@ng-mf/data-access-user";
+import { map, takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { DatosDeReporteAnnualComponent } from '../../components/datos-de-reporte-annual/datos-de-reporte-annual.component';
 import { GuardarDatosFormulario } from '../../models/programas-reporte.model';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { ProgramasReporteAnnualComponent } from '../../components/programas-reporte-annual/programas-reporte-annual.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 /**
  * @description Componente encargado de gestionar y mostrar los datos relacionados con la aplicación.
  * Implementa la interfaz `AfterViewInit` para realizar acciones adicionales después de que la vista ha sido inicializada.
@@ -38,6 +34,23 @@ export class DatosComponent implements OnInit, OnDestroy {
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
 
+  /**
+   * Referencia al componente `DatosDeReporteAnnualComponent` dentro de la plantilla.
+   *
+   * Se utiliza para acceder a métodos o propiedades del componente hijo desde el componente padre.
+   */
+  @ViewChild(DatosDeReporteAnnualComponent)
+  datosDeReporteAnnualComponent!: DatosDeReporteAnnualComponent;
+
+  /**
+   * Constructor del componente.
+   *
+   * Inyecta las dependencias necesarias para consultar el estado de la solicitud y
+   * acceder a los servicios relacionados con el formulario.
+   *
+   * @param consultaQuery - Query para obtener datos reactivos desde el estado de la solicitud.
+   * @param solicitudService - Servicio que maneja operaciones relacionadas con la solicitud.
+   */
   constructor(
     private consultaQuery: ConsultaioQuery,
     public solicitudService: SolicitudService

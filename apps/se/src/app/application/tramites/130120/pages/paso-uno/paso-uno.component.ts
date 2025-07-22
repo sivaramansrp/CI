@@ -1,7 +1,7 @@
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from "@ng-mf/data-access-user";
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { DatosDeLaSolicitudComponent } from "../../components/datos-de-la-solicitud/datos-de-la-solicitud.component";
+import { DatosGeneralesComponent } from "../../components/datos-generales/datos-generales.component";
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PermisoImportacionService } from "../../services/permiso-importacion.service";
@@ -23,7 +23,7 @@ import { takeUntil } from 'rxjs';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
-  imports: [CommonModule, SolicitanteComponent, DatosDeLaSolicitudComponent, SolicitanteComponent],
+  imports: [CommonModule, SolicitanteComponent, SolicitanteComponent, DatosGeneralesComponent],
   standalone: true,
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {

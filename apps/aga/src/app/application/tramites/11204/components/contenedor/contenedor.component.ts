@@ -1,4 +1,4 @@
-import { Aduanas, DatosDelContenedor, DatosDelCsvArchivo } from '../../models/datos-tramite.model';
+import { Aduanas, DatosDelContenedor, DatosDelCsvArchivo, RespuestaCatalog } from '../../models/datos-tramite.model';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, REGEX_NUMEROS, REGEX_REEMPLAZAR, TEXTOS, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
@@ -141,7 +141,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * @type {InputFecha}
    * @default VIGENCIA
    */
-  public Vigencia: InputFecha = VIGENCIA;
+  public vigencia: InputFecha = VIGENCIA;
 
   /** 
    * Desactiva el radio de "Contenedor" cuando se selecciona "Archivo CSV"
@@ -287,9 +287,14 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       .subscribe();
     this.inicializarFormulario();
     this.tabSeleccionado();
+    this.solicitudForm.get('fechaIngreso')?.valueChanges.subscribe(() => {
+      this.validateFechas();
+    });
+    this.solicitudForm.get('vigencia')?.valueChanges.subscribe(() => {
+      this.validateFechas();
+    });
     this.cargarCatalogos();
     this.fetchgetaduanaLista();
-    this.loadDatosTablaData();
   }
 
   /**
@@ -322,9 +327,37 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.mostrarCampos();
     if (this.soloLectura) {
       this.solicitudForm?.disable();
+      this.loadDatosTablaData();
     } else {
       this.solicitudForm?.enable();
     }
+  }
+
+  validateFechas(): void {
+    const FECHA_INGRESO = this.solicitudForm.get('fechaIngreso')?.value;
+    const VIGENCIA = this.solicitudForm.get('vigencia')?.value;
+
+    if (!FECHA_INGRESO || !VIGENCIA) {
+      this.solicitudForm.get('vigencia')?.setErrors(null);
+      return;
+    }
+    const PARSEDINGRESO = ContenedorComponent.parseDDMMYYYY(FECHA_INGRESO);
+    const PARSEDVIGENCIA = ContenedorComponent.parseDDMMYYYY(VIGENCIA);
+
+    if (PARSEDINGRESO && PARSEDVIGENCIA && PARSEDVIGENCIA < PARSEDINGRESO) {
+      this.solicitudForm.get('vigencia')?.setErrors({ fechaInvalida: true });
+    } else {
+      this.solicitudForm.get('vigencia')?.setErrors(null);
+    }
+  }
+
+  static parseDDMMYYYY(dateStr: string): Date | null {
+    if (!dateStr) { return null; }
+
+    const [DAY, MONTH, YEAR] = dateStr.split('/');
+    if (!DAY || !MONTH || !YEAR) { return null; }
+
+    return new Date(Number(YEAR), Number(MONTH) - 1, Number(DAY));
   }
 
   onChange(controlName: string, event: Event): void {
@@ -363,14 +396,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Cargar datos de la tabla.
    */
   loadDatosTablaData(): void {
-    this.datosTramiteService.getDatosTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe(
-      (data) => {
-        this.contenedores.catalogos = data.data.map((contenedor: Catalogo) => ({
-          id: contenedor.id,
-          descripcion: contenedor.descripcion || ''
-        }));
-      },
-    );
+    this.datosTramiteService
+      .getDatosTableData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: RespuestaCatalog[]) => {
+        this.datosDelContenedor = data as unknown as DatosDelContenedor[];
+      });
   }
 
   /**
@@ -421,6 +452,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   limpiarCampos(): void {
     this.solicitudForm.reset();
+  }
+
+  /**
+   * cancelar del formulario.
+   */
+  cancelar(): void {
+    this.solicitudForm.reset();
     this.radioContenedor = false;
     this.radioArchivoCsv = false;
     this.mostrarSeccionArchivoCsv = false;
@@ -435,6 +473,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Mostrar tipo de contenedor.
    */
   mostrarTipoContenedor(): void {
+    this.mostrarButtons = false;
     this.mostrarAgregarTipoContenedor = true;
   }
 
@@ -446,21 +485,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       if (this.modalElement) {
         const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
         MODAL_INSTANCE.show();
-        this.mostrarButtons = false;
-        this.solicitudForm.reset();
       }
     } else {
       this.solicitudForm.markAllAsTouched();
     }
-  }
-
-  /** 
-  * Cierra el modal manualmente desde el componente
-  */
-  hideModal(): void {
-    const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-    MODAL_INSTANCE.hide();
-    this.mostrarButtons = true;
   }
 
   /**
@@ -479,11 +507,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Verifica si el control del formulario es inválido y ha sido tocado.
    * @param {string} id El nombre del control del formulario.
-   * @returns {boolean | undefined} `true` si el control es inválido y tocado, `null` si no existe el control.
+   * @returns {boolean} `true` si el control es inválido y tocado, `null` si no existe el control.
    */
-  isInvalid(id: string): boolean | undefined {
+  isInvalid(id: string): boolean {
     const CONTROL = this.solicitudForm.get(id);
-    return CONTROL ? CONTROL.invalid && CONTROL.touched : undefined;
+    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
   }
 
   /**
@@ -578,15 +606,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           respuesta.datos.id = this.datosDelContenedor.length + 1;
           this.datosDelContenedor.push(respuesta.datos);
           (this.Tramite11204Store.setDelContenedor as (valor: DatosDelContenedor[]) => void)(this.datosDelContenedor);
-          this.solicitudForm.patchValue({
-            aduana: '',
-            fechaIngreso: '',
-            vigencia: '',
-            digitoDeControl: '',
-            inicialesContenedor: '',
-            numeroContenedor: '',
-            contenedores: ''
-          });
           this.solicitudForm.reset();
           this.solicitudForm.markAsUntouched();
           this.solicitudForm.markAsPristine();

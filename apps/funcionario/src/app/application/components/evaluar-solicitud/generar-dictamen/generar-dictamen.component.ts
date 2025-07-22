@@ -10,13 +10,16 @@ import { Component } from '@angular/core';
   styleUrl: './generar-dictamen.component.scss',
 })
 export class GenerarDictamenComponent {
-  
-constructor(private fb: FormBuilder
-) {
-    // do nothing.
-}
+
+  /**
+   * Constructor del componente GenerarDictamenComponent.
+   * @param fb - FormBuilder para crear formularios reactivos.
+   */
+  constructor(private fb: FormBuilder
+  ) {
+  }
   formDictamen: FormGroup = this.fb.group({
-  sentidoDictamen: ['', [Validators.required]],
-  justificacionDictamen:['', [Validators.required]]
+    sentidoDictamen: ['', [Validators.required]],
+    justificacionDictamen: ['', [Validators.required]]
   });
 }

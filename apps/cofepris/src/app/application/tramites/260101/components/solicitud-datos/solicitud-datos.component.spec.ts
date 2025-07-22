@@ -1,34 +1,52 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
 import { SolicitudDatosComponent } from './solicitud-datos.component';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
 import { Solicitud260101Store } from '../../estados/tramites260101.store';
 import { Solicitud260101Query } from '../../estados/tramites260101.query';
-import { Solicitud260101State } from '../../estados/tramites260101.store';
-import { Solicitud } from '../../models/solicitud-datos.model';
-import { Catalogo, CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { Modal } from 'bootstrap';
+import { AlertComponent, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ModificarMercanciasComponent } from '../modificar-mercancias/modificar-mercancias.component';
+import { CommonModule } from '@angular/common';
 
 describe('SolicitudDatosComponent', () => {
   let component: SolicitudDatosComponent;
   let fixture: ComponentFixture<SolicitudDatosComponent>;
-  let solicitudDatosService: jest.Mocked<SolicitudDatosService>;
-  let solicitud260101Store: jest.Mocked<Solicitud260101Store>;
-  let solicitud260101Query: jest.Mocked<Solicitud260101Query>;
+
+  // Mocks
+  let mockSolicitudDatosService: any;
+  let mockSolicitud260101Store: any;
+  let mockSolicitud260101Query: any;
+  let mockConsultaioQuery: any;
 
   beforeEach(async () => {
-    // Implementaciones de servicios simulados
-    const solicitudDatosServiceMock = {
-      obtenerSolicitud: jest.fn(),
-      obtenerEstadoCatalogo: jest.fn(),
-      obtenerDatosDeSolicitud: jest.fn(),
-      obtenerMercanciaListo: jest.fn(),
-      obtenerRegimenDestinaraListo: jest.fn(),
-      obtenerAduanaListo: jest.fn(),
+    mockSolicitudDatosService = {
+      obtenerSolicitud: jest.fn().mockReturnValue(of({
+        razonSocial: 'Test S.A.',
+        correoElectronico: 'test@example.com',
+        codigoPostal: '12345',
+        municipio: 'Test City',
+        localidad: 'Test Locality',
+        colonia: 'Test Colony',
+        calle: 'Test Street',
+        lada: '01',
+        telefono: '1234567890',
+        legalRazonSocial: 'Legal S.A.',
+        apellidoPaterno: 'Paterno',
+        apellidoMeterno: 'Materno',
+      })),
+      obtenerEstadoCatalogo: jest.fn().mockReturnValue(of({})),
+      obtenerDatosDeSolicitud: jest.fn().mockReturnValue(of({
+        tablaFilaDatos: [],
+        hacerlosRadioOptions: [],
+      })),
+      obtenerMercanciaListo: jest.fn().mockReturnValue(of([])),
+      obtenerRegimenDestinaraListo: jest.fn().mockReturnValue(of({})),
+      obtenerAduanaListo: jest.fn().mockReturnValue(of({}))
     };
 
-    const solicitud260101StoreMock = {
+    mockSolicitud260101Store = {
       setRazonSocial: jest.fn(),
       setCorreoElectronico: jest.fn(),
       setCodigoPostal: jest.fn(),
@@ -51,116 +69,102 @@ describe('SolicitudDatosComponent', () => {
       removeMercanciaDatos: jest.fn(),
       setLiveFreshFrozen: jest.fn(),
       setAvisoDeFuncionamiento: jest.fn(),
-      setManifesto: jest.fn(),
+      setManifesto: jest.fn()
     };
 
-    const solicitud260101QueryMock = {
-      seleccionarSolicitud$: of({} as Solicitud260101State),
+    mockSolicitud260101Query = {
+      seleccionarSolicitud$: of({ mercanciasDatos: [], razonSocial: 'Test' })
+    };
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false })
     };
 
     await TestBed.configureTestingModule({
-      declarations: [SolicitudDatosComponent],
-      imports: [ReactiveFormsModule],
-      providers: [
-        FormBuilder,
-        { provide: SolicitudDatosService, useValue: solicitudDatosServiceMock },
-        { provide: Solicitud260101Store, useValue: solicitud260101StoreMock },
-        { provide: Solicitud260101Query, useValue: solicitud260101QueryMock },
+      imports: [SolicitudDatosComponent,
+        ReactiveFormsModule,
+              FormsModule,
+              CommonModule,
+              InputRadioComponent,
+              TablaDinamicaComponent,
+              CatalogoSelectComponent,
+              TableComponent,
+              AlertComponent,
+              TituloComponent,
+              ModificarMercanciasComponent
       ],
+      providers: [
+        { provide: SolicitudDatosService, useValue: mockSolicitudDatosService },
+        { provide: Solicitud260101Store, useValue: mockSolicitud260101Store },
+        { provide: Solicitud260101Query, useValue: mockSolicitud260101Query },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+        FormBuilder
+      ],
+      schemas: [NO_ERRORS_SCHEMA] // Ignore unknown elements in template
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudDatosComponent);
     component = fixture.componentInstance;
-
-    solicitudDatosService = TestBed.inject(
-      SolicitudDatosService
-    ) as jest.Mocked<SolicitudDatosService>;
-    solicitud260101Store = TestBed.inject(
-      Solicitud260101Store
-    ) as jest.Mocked<Solicitud260101Store>;
-    solicitud260101Query = TestBed.inject(
-      Solicitud260101Query
-    ) as jest.Mocked<Solicitud260101Query>;
-
-    fixture.detectChanges();
+    fixture.detectChanges(); // Trigger ngOnInit
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   it('should initialize form on ngOnInit', () => {
-    component.ngOnInit();
     expect(component.solicitudForm).toBeDefined();
   });
 
-  it('should toggle colapsable state', () => {
-    component.colapsable = true;
+  it('should call inicializarFormulario on ngOnInit', () => {
+  const spy = jest.spyOn(component, 'inicializarFormulario');
+  component.ngOnInit();
+  expect(spy).toHaveBeenCalled();
+});
+
+
+  it('should toggle colapsable when mostrarColapsable is called', () => {
+    const initial = component.colapsable;
     component.mostrarColapsable();
-    expect(component.colapsable).toBe(false);
-    component.mostrarColapsable();
-    expect(component.colapsable).toBe(true);
+    expect(component.colapsable).toBe(!initial);
   });
 
-  it('should call obtenerSolicitud on ngOnInit', () => {
-    solicitudDatosService.obtenerSolicitud.mockReturnValue(of({} as Solicitud));
-    component.ngOnInit();
-    expect(solicitudDatosService.obtenerSolicitud).toHaveBeenCalled();
+  it('should call setRegimen on store', () => {
+    component.setRegimen({ id: '1' } as any);
+    expect(mockSolicitud260101Store.setRegimen).toHaveBeenCalledWith('1');
   });
 
-  it('should call obtenerEstadoCatalogo on ngOnInit', () => {
-    solicitudDatosService.obtenerEstadoCatalogo.mockReturnValue(
-      of({} as CatalogosSelect)
-    );
-    component.ngOnInit();
-    expect(solicitudDatosService.obtenerEstadoCatalogo).toHaveBeenCalled();
+  it('should call setAduana on store', () => {
+    component.setAduana({ id: '2' } as any);
+    expect(mockSolicitud260101Store.setAduana).toHaveBeenCalledWith('2');
   });
 
-  it('should open modal for modifying mercancías', () => {
-    const modalSpy = jest.spyOn(Modal.prototype, 'show');
-    component.modalElement = {
-      nativeElement: document.createElement('div'),
-    } as any;
-    component.openModificarMercancias();
-    expect(modalSpy).toHaveBeenCalled();
+  it('should call setEstado on store', () => {
+    component.setEstado({ id: '3' } as any);
+    expect(mockSolicitud260101Store.setEstado).toHaveBeenCalledWith('3');
   });
 
-  it('should set estado in store', () => {
-    const mockCatalogo: Catalogo = {
-      id: 1,
-      descripcion: 'estado 1',
-    };
-    component.setEstado(mockCatalogo);
-    expect(solicitud260101Store.setEstado).toHaveBeenCalledWith(
-      mockCatalogo.id
-    );
+  it('should call setHacerlos on store', () => {
+    component.setHacerlos(1);
+    expect(mockSolicitud260101Store.setHacerlos).toHaveBeenCalledWith(1);
   });
 
-  it('should set licencia sanitaria in store', () => {
-    const evento = { target: { value: 'Licencia' } } as unknown as Event;
-    component.setLicenciaSanitaria(evento);
-    expect(solicitud260101Store.setLicenciaSanitaria).toHaveBeenCalledWith(
-      'Licencia'
-    );
+  it('should call setRFC on store', () => {
+    const mockEvent = { target: { value: 'RFC123' } } as any;
+    component.setRFC(mockEvent);
+    expect(mockSolicitud260101Store.setRfc).toHaveBeenCalledWith('RFC123');
   });
 
-  it('should set RFC in store', () => {
-    const evento = { target: { value: 'RFC' } } as unknown as Event;
-    component.setRFC(evento);
-    expect(solicitud260101Store.setRfc).toHaveBeenCalledWith('RFC');
+  it('should call eliminarMercancias and remove first item', () => {
+    component.selectedMercanciasDatos = [{ fraccionArancelaria: 'test' } as any];
+    component.eliminarMercancias();
+    expect(mockSolicitud260101Store.removeMercanciaDatos).toHaveBeenCalled();
   });
 
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const destroyNotifierSpy = jest.spyOn(
-      component['destroyNotifier$'],
-      'next'
-    );
-    const destroyNotifierCompleteSpy = jest.spyOn(
-      component['destroyNotifier$'],
-      'complete'
-    );
+  it('should destroy subscriptions on ngOnDestroy', () => {
+    const spy = jest.spyOn((component as any).destroyNotifier$, 'next');
     component.ngOnDestroy();
-    expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
+
 });

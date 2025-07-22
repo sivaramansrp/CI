@@ -1,109 +1,160 @@
-<div class="container">
-    <ng-titulo titulo="Datos mercancía" />
-    <form [formGroup]="datosMercanciaForm">
+<div class="page">
+    <div class="container">
         <div class="row">
-            <div class="col-md-8 ml">
-                <app-catalogo-select [catalogo]="clasificacionProducto" [label]="'Clasificación del producto*:'" [required]="true"
-                    name="clasificacionProducto" formControlName="clasificacion"  [isDisabled]="esFormularioSoloLectura">
-                </app-catalogo-select>
-            </div>
-            <div class="col-md-8 ">
-                <app-catalogo-select [catalogo]="especificarClasificacion" [label]="'Especificar clasificación del producto*:'"
-                    [required]="true" name="especificarClasificacion" formControlName="especificarClasificacion"  (change)="getEspecificar()" [isDisabled]="esFormularioSoloLectura">
-                </app-catalogo-select>
-            </div>
-            <div class="col-md-8">
-                <div class="form-group">
-                    <label class="form-label" for="específicaDelProducto">Denominación específica del producto*:</label>
-                    <input class="form-control" type="text" id="específicaDelProducto"
-                        formControlName="especificaDelProducto">
-                </div>
-            </div>
-            <div class="col-md-8">
-                <div class="form-group">
-                    <label class="form-label" for="denominaciónDistintiva">Denominación distintiva*:</label>
-                    <input class="form-control" type="text" id="denominaciónDistintiva"
-                        formControlName="denominacionDistintiva">
-                </div>
-            </div>
-            <div class="col-md-8">
-                <div class="form-group">
-                    <label class="form-label" for="nombreCientífico">Denominación o nombre científico*:</label>
-                    <input class="form-control" type="text" id="nombreCientífico" formControlName="nombreCientifico">
-                </div>
-            </div>
-            <div class="col-md-8">
-                <div class="form-group">
-                    <label class="form-label" for="tipoDeProducto">Tipo de producto*:</label>
-                    <input class="form-control" type="text" id="tipoDeProducto" formControlName="tipoDeProducto">
-                </div>
-            </div>
-            <div class="col-md-8 ml">
-                <div class="form-group">
-                    <app-catalogo-select [catalogo]="estadoFisico" [label]="'Estado físico*:'" [required]="true"
-                    name="estadoFisico" formControlName="estadoFisico"  [isDisabled]="esFormularioSoloLectura">
-                </app-catalogo-select>
-                </div>
-            </div>
-            <div class="col-md-8">
-                <div class="form-group">
-                    <label class="form-label" for="fracciónArancelaria">Fracción arancelaria*:</label>
-                    <input class="form-control" type="text" id="fracciónArancelaria"
-                        formControlName="fraccionArancelaria">
-                </div>
-            </div>
-            <div class="col-md-8">
-                <div class="form-group">
-                    <label class="form-label" for="descripcionFraccion">Descripción de la fracción arancelaria*:</label>
-                    <input class="form-control" type="text" id="descripcionFraccion"
-                        formControlName="descripcionFraccion">
-                </div>
-            </div>
+            <ng-titulo titulo="Datos mercancía" />
         </div>
+        <div class="row p-4">
+            <form [formGroup]="datosMercanciaForm">
+                <div class="row">
+                    <div class="col-md-8 ml">
+                        <app-catalogo-select [catalogo]="clasificacionProducto" [label]="'Clasificación del producto'" [required]="true"
+                            name="clasificacionProducto" formControlName="clasificacion"  [isDisabled]="esFormularioSoloLectura">
+                        </app-catalogo-select>
+                    </div>
+                    <div class="col-md-8 ">
+                        <app-catalogo-select [catalogo]="especificarClasificacion" [label]="'Especificar clasificación del producto'"
+                            [required]="true" name="especificarClasificacion" formControlName="especificarClasificacion"  (change)="getEspecificar()" [isDisabled]="esFormularioSoloLectura">
+                        </app-catalogo-select>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label class="form-label" for="específicaDelProducto">Denominación específica del producto*:</label>
+                            <input class="form-control" type="text" id="específicaDelProducto"  [ngClass]="esValido('especificaDelProducto') ? 'required' : ''"
+                                formControlName="especificaDelProducto">
+                                @if (datosMercanciaForm.get('especificaDelProducto')?.hasError('required') && datosMercanciaForm.get('especificaDelProducto')?.touched) {
+                                <div class="mensaje-error">Este campo es obligatorio.</div>
+                                }
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label class="form-label" for="denominaciónDistintiva">Denominación distintiva*:</label>
+                            <input class="form-control" type="text" id="denominaciónDistintiva" [ngClass]="esValido('denominacionDistintiva') ? 'required' : ''"
+                                formControlName="denominacionDistintiva">
+                                @if (datosMercanciaForm.get('denominacionDistintiva')?.hasError('required') && datosMercanciaForm.get('denominacionDistintiva')?.touched) {
+                                <div class="mensaje-error">Este campo es obligatorio.</div>
+                                }
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label class="form-label" for="nombreCientífico">Denominación o nombre científico*:
+                                <span class="bi bi-question-circle-fill fs-4 m-1" title="Denominación o nombre científico" data-bs-toggle="tooltip"></span>
+                            </label>
+                            <input class="form-control" type="text" id="nombreCientífico" formControlName="nombreCientifico" [ngClass]="esValido('nombreCientifico') ? 'required' : ''">
+                            @if (datosMercanciaForm.get('nombreCientifico')?.hasError('required') && datosMercanciaForm.get('nombreCientifico')?.touched) {
+                                <div class="mensaje-error">Este campo es obligatorio.</div>
+                                }
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label class="form-label" for="tipoDeProducto">Tipo de producto*:</label>
+                            <input class="form-control" type="text" id="tipoDeProducto" formControlName="tipoDeProducto" [ngClass]="esValido('tipoDeProducto') ? 'required' : ''">
+                             @if (datosMercanciaForm.get('tipoDeProducto')?.hasError('required') && datosMercanciaForm.get('tipoDeProducto')?.touched) {
+                                <div class="mensaje-error">Este campo es obligatorio.</div>
+                                }
+                        </div>
+                    </div>
+                    <div class="col-md-8 ml">
+                        <div class="form-group">
+                            <app-catalogo-select [catalogo]="estadoFisico" [label]="'Estado físico'" [required]="true"
+                            name="estadoFisico" formControlName="estadoFisico"  [isDisabled]="esFormularioSoloLectura">
+                        </app-catalogo-select>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label class="form-label" for="fracciónArancelaria">Fracción arancelaria*:
+                                <span class="bi bi-question-circle-fill fs-4 m-1" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
+                            </label>
+                            <input class="form-control" type="text" id="fracciónArancelaria" formControlName="fraccionArancelaria" [ngClass]="esValido('fraccionArancelaria') ? 'required' : ''">
+                            @if (datosMercanciaForm.get('fraccionArancelaria')?.hasError('required') && datosMercanciaForm.get('fraccionArancelaria')?.touched) {
+                                <div class="mensaje-error">Este campo es obligatorio.</div>
+                                }
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label class="form-label" for="descripcionFraccion">Descripción de la fracción arancelaria*:</label>
+                            <input class="form-control" type="text" id="descripcionFraccion" formControlName="descripcionFraccion" [ngClass]="esValido('descripcionFraccion') ? 'required' : ''">
+                            @if (datosMercanciaForm.get('descripcionFraccion')?.hasError('required') && datosMercanciaForm.get('descripcionFraccion')?.touched) {
+                                <div class="mensaje-error">Este campo es obligatorio.</div>
+                                }
+                        </div>
+                    </div>
+                </div>
 
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="form-label" for="cantidadUMT">Cantidad UMT*:</label>
-                    <input class="form-control" type="text" id="cantidadUMT" formControlName="cantidadUMT">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="cantidadUMT">Cantidad UMT*:</label>
+                            <input class="form-control" type="text" id="cantidadUMT" formControlName="cantidadUMT" [ngClass]="esValido('cantidadUMT') ? 'required' : ''">
+                            @if (datosMercanciaForm.get('cantidadUMT')?.hasError('required') && datosMercanciaForm.get('cantidadUMT')?.touched) {
+                                <div class="mensaje-error">Este campo es obligatorio.</div>
+                                }
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="UMT"> UMT*:
+                                <span class="bi bi-question-circle-fill fs-4 m-1" title="UMT" data-bs-toggle="tooltip"></span>
+                            </label>
+                            <input class="form-control" type="text" id="UMT" formControlName="UMT" [ngClass]="esValido('UMT') ? 'required' : ''">
+                             @if (datosMercanciaForm.get('UMT')?.hasError('required') && datosMercanciaForm.get('UMT')?.touched) {
+                                <div class="mensaje-error">Este campo es obligatorio.</div>
+                                }
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="form-label" for="UMT"> UMT*:</label>
-                    <input class="form-control" type="text" id="UMT" formControlName="UMT">
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="cantidadUMC">Cantidad UMC*:</label>
+                            <input class="form-control" type="text" id="cantidadUMC" formControlName="cantidadUMC" [ngClass]="esValido('cantidadUMC') ? 'required' : ''">
+                            @if (datosMercanciaForm.get('cantidadUMC')?.hasError('required') && datosMercanciaForm.get('cantidadUMC')?.touched) {
+                                <div class="mensaje-error">Este campo es obligatorio.</div>
+                                }
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="UMC"> UMC*:
+                                <span class="bi bi-question-circle-fill fs-4 m-1" title="UMC" data-bs-toggle="tooltip"></span>
+                            </label>
+                            <input class="form-control" type="text" id="UMC" formControlName="UMC" [ngClass]="esValido('UMC') ? 'required' : ''">
+                            @if (datosMercanciaForm.get('UMC')?.hasError('required') && datosMercanciaForm.get('UMC')?.touched) {
+                                <div class="mensaje-error">Este campo es obligatorio.</div>
+                                }
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="tipoDeEnvase" class="form-label">Presentación farmacéutica o tipo de envase*:</label>
+                            <textarea id="tipoDeEnvase" class="form-control mb-4 min-height" placeholder="" formControlName="tipoDeEnvase" rows="5" [ngClass]="esValido('tipoDeEnvase') ? 'required' : ''"></textarea>
+                            @if (datosMercanciaForm.get('tipoDeEnvase')?.hasError('required') && datosMercanciaForm.get('tipoDeEnvase')?.touched) {
+                                <div class="mensaje-error">Este campo es obligatorio.</div>
+                                }
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <app-pais-de-origen></app-pais-de-origen>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 d-flex justify-content-end">
+                        <button class="btn btn-default ms-2" (click)="limpiar()">Limpiar</button>
+                        <button class="btn btn-primary ms-2" (click)="cerrarMercanciasTableForm()">Cancelar</button>
+                        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="agregar()">Agregar</button>
+                    </div>
+                </div>
+            </form>
         </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="form-label" for="cantidadUMC">Cantidad UMC*:</label>
-                    <input class="form-control" type="text" id="cantidadUMC" formControlName="cantidadUMC">
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="form-label" for="UMC"> UMC*:</label>
-                    <input class="form-control" type="text" id="UMC" formControlName="UMC">
-                </div>
-            </div>
-
-            <div class="col-md-8">
-                <label for="tipoDeEnvase" class="form-label">Presentación farmacéutica o tipo de envase*:</label>
-                <textarea id="tipoDeEnvase" class="form-control mb-4" placeholder=""
-                    formControlName="tipoDeEnvase"></textarea>
-            </div>
-        </div>
-
-        <app-pais-de-origen></app-pais-de-origen>
-        <div class="d-flex justify-content-end">
-            <button class="btn btn-primary" (click)="cerrarMercanciasTableForm()">
-                Cancelar
-            </button>
-            <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Agregar</button>
-            <button class="btn btn-default ms-2">Limpiar</button>
-        </div>
-    </form>
+    </div>
 </div>

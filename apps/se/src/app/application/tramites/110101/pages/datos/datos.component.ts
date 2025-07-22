@@ -37,7 +37,7 @@ export class DatosComponent implements OnInit, OnDestroy {
    * Se utiliza para controlar la habilitación o deshabilitación de la pestaña en la interfaz.
    * Por defecto, la pestaña inicia desactivada (`true`).
    */
-  public desactivado: boolean = false;
+  public desactivado: boolean = true;
 
   /**
    * Inicializa una nueva instancia del componente.
@@ -79,7 +79,7 @@ export class DatosComponent implements OnInit, OnDestroy {
    * La suscripción se cancela automáticamente cuando `destroyNotifier$` emite, evitando fugas de memoria.
    */
    public guardarDatosFormulario(): void {
-    this.pantallasSvc.getConsultaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
+    this.pantallasSvc.getConsultaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => { 
       this.pantallasSvc.actualizarEstadoFormulario(response);
     })
    }

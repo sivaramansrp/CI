@@ -6,7 +6,7 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
-import { CHOFERES_EXTRANJEROS_TABLA } from '../../../../enum/choferes-enum';
+import { CHOFERES_EXTRANJEROS_TABLA } from '../../../../enum/choferes.enum';
 import { Chofer40101Query } from '../../../../estado/chofer40101.query';
 import { Chofer40101Service } from '../../../../estado/chofer40101.service';
 import { ChoferesExtranjeros } from '../../../../models/registro-muestras-mercancias.model';
@@ -100,7 +100,9 @@ export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
     private chofer40101Service: Chofer40101Service,
     private chofer40101Query: Chofer40101Query,
     private consultaioQuery: ConsultaioQuery
-  ) {}
+  ) {
+     // Lógica para el constructor si es necesario.
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.

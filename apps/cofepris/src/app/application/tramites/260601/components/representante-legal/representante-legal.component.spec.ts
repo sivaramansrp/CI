@@ -1,12 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormsModule } from '@angular/forms';
 import { RepresentanteLegalComponent } from './representante-legal.component';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
-import { Tramite260601Store } from '../../estados/tramites/tramite260601.store';
-import { Tramite260601Query } from '../../estados/queries/tramite260601.query';
+import { Tramite260601Store } from '../../../../estados/tramites/tramite260601.store';
+import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
 import { ToastrService } from 'ngx-toastr';
 import { of, Subject } from 'rxjs';
 import { MSG_ERROR_REPRESENTANTE_LEGAL } from '../../constantes/aviso-enum';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('RepresentanteLegalComponent', () => {
   let component: RepresentanteLegalComponent;
@@ -91,8 +94,28 @@ describe('RepresentanteLegalComponent', () => {
         numeroInterior: 'Interior1',
         domicilioLada: 'Lada1',
         domicilioTelefono: 'Telefono1',
-        domicilioCorreoElectronico: 'email@proveedor.com'
-      }),
+        domicilioCorreoElectronico: 'email@proveedor.com',
+        // Mock all required properties from AvisoSanitarioState with dummy values
+        rfcProveedorInhabilitar: false,
+        curpInhabilitar: false,
+        proveedorNombreInhabilitar: false,
+        proveedorPrimerApellidoInhabilitar: false,
+        proveedorSegundoApellidoInhabilitar: false,
+        proveedorRazonSocialInhabilitar: false,
+        cvePaisInhabilitar: false,
+        domicilioEstadoInhabilitar: false,
+        alcaldiaInhabilitar: false,
+        localidadInhabilitar: false,
+        domicilioCodigoPostalInhabilitar: false,
+        coloniaInhabilitar: false,
+        domicilioCalleInhabilitar: false,
+        numeroExteriorInhabilitar: false,
+        numeroInteriorInhabilitar: false,
+        domicilioLadaInhabilitar: false,
+        domicilioTelefonoInhabilitar: false,
+        domicilioCorreoElectronicoInhabilitar: false,
+        // Add any other missing required properties here as needed for AvisoSanitarioState
+      }) as any ,
     };
 
     mockToastr = {
@@ -100,8 +123,8 @@ describe('RepresentanteLegalComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [RepresentanteLegalComponent],
+      imports: [ReactiveFormsModule, CommonModule, FormsModule, ReactiveFormsModule, TituloComponent, RepresentanteLegalComponent, HttpClientTestingModule],
+      declarations: [],
       providers: [
         FormBuilder,
         { provide: AvisoSanitarioService, useValue: mockAvisoSanitarioService },
@@ -141,7 +164,48 @@ describe('RepresentanteLegalComponent', () => {
     expect(mockToastr.error).toHaveBeenCalledWith(MSG_ERROR_REPRESENTANTE_LEGAL);
     expect(component.representanteLegalForm.pristine).toBe(true);
   });
+  it('should call inicializarFormulario and disable form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.crearFormulario();
+    component.inicializarFormulario = jest.fn();
+    component.esFormularioSoloLectura = true;
+    const disableSpy = jest.spyOn(component.representanteLegalForm, 'disable');
+    const enableSpy = jest.spyOn(component.representanteLegalForm, 'enable');
 
+    component.guardarDatosFormulario();
+
+    expect(component.inicializarFormulario).toHaveBeenCalled();
+    expect(disableSpy).toHaveBeenCalled();
+    expect(enableSpy).not.toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario and enable form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.crearFormulario();
+    component.inicializarFormulario = jest.fn();
+    component.esFormularioSoloLectura = false;
+    const disableSpy = jest.spyOn(component.representanteLegalForm, 'disable');
+    const enableSpy = jest.spyOn(component.representanteLegalForm, 'enable');
+
+    component.guardarDatosFormulario();
+
+    expect(component.inicializarFormulario).toHaveBeenCalled();
+    expect(enableSpy).toHaveBeenCalled();
+    expect(disableSpy).not.toHaveBeenCalled();
+  });
+
+  it('should not enable or disable form if esFormularioSoloLectura is undefined in guardarDatosFormulario', () => {
+    component.crearFormulario();
+    component.inicializarFormulario = jest.fn();
+    // @ts-ignore
+    component.esFormularioSoloLectura = undefined;
+    const disableSpy = jest.spyOn(component.representanteLegalForm, 'disable');
+    const enableSpy = jest.spyOn(component.representanteLegalForm, 'enable');
+
+    component.guardarDatosFormulario();
+
+    expect(component.inicializarFormulario).toHaveBeenCalled();
+    expect(enableSpy).not.toHaveBeenCalled();
+    expect(disableSpy).not.toHaveBeenCalled();
+  });
   it('should fetch and populate data when RFC is valid in obtenerRespuestaIDCPorRFC', () => {
     component.crearFormulario();
     component.representanteLegalForm.get('rfc')?.setValue('RFC123456');

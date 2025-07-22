@@ -129,3 +129,15 @@ table {
   background-color: lightgrey;
 }
 
+
+ .disabled-input-fecha {
+    background-color: rgb(227, 226, 226) !important;
+    pointer-events: none;
+    opacity: 1;
+  }
+  
+  ::ng-deep .disabled-input-fecha{
+    background-color: rgb(227, 226, 226) !important;
+    pointer-events: none;
+    opacity: 1;
+  }

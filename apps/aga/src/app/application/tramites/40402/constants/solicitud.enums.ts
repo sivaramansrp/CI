@@ -33,3 +33,29 @@ export const SECCIONES_TRAMITE_40402 = {
         requiereValidacion: true,
     },
 };
+
+/**
+ * @constant
+ * @name PASOS
+ * @description Arreglo constante que define los pasos del proceso.
+ * 
+ * Cada objeto contiene:
+ * - `indice`: número del paso dentro del flujo.
+ * - `titulo`: texto descriptivo del paso.
+ * - `activo`: indica si el paso está activo actualmente.
+ * - `completado`: indica si el paso ya ha sido completado.
+ */
+export const PASOS = [
+  {
+    indice: 1,
+    titulo: 'Capturar solicitud',
+    activo: true,
+    completado: true
+  },
+  {
+    indice: 2,
+    titulo: 'Firmar solicitud',
+    activo: false,
+    completado: false
+  }
+];

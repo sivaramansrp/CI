@@ -34,14 +34,16 @@
             "unidaddeMedidaDeUMT": "Cabeza",
             "cantidadTotalUMT": "1000000",
             "saldoPendiente": "1000000",
-            "mostrarSeccion": true
+            "mostrarSeccion": true,
+            "certificadoNumero": "53007012025000057",
+            "calculoResultado": "Aplica inspección"
       },
       "solicitud220502State": {
             "certificadosAutorizados": 1,
             "horaDeInspeccion": 1,
             "aduanaDeIngreso": 1,
             "sanidadAgropecuaria": 1,
-            "fechaDeInspeccion": "01/05/2025",
+            "fechaInspeccion": "01/05/2025",
             "primerapellido": "Primer_Apellido",
             "segundoapellido": "Segundo_Apellido",
             "mercancia": "Mercancia",

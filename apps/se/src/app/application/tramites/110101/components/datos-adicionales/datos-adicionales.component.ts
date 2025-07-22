@@ -21,7 +21,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   imports: [
     TituloComponent,
     CommonModule,
-    AlertComponent,    
+    AlertComponent,
     CatalogoSelectComponent,
     ReactiveFormsModule,
     InputRadioComponent
@@ -116,7 +116,7 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
     private tramite110101Store: Tramite110101Store,
     private solicitanteQuery: Solicitante110101Query,
     private consultaioQuery: ConsultaioQuery,
-    
+
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -124,9 +124,10 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
           this.crearFormulario();
-          if(seccionState.update) {
-            this.actualizacionCounsulta=seccionState.update;
-          }
+          if (seccionState.update) {
+            this.actualizacionCounsulta = seccionState.update;
+
+           }
         })
       )
       .subscribe();
@@ -139,8 +140,8 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getEntidadFederativa();
     this.getRepresentacionFederal();
-    this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$),map((seccionState) => {
-        this.solicitudeState = seccionState;
+    this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$), map((seccionState) => {
+      this.solicitudeState = seccionState;
     })).subscribe();
     this.crearFormulario();
   }
@@ -172,10 +173,10 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
     });
   }
 
-    /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
+  /**
+ * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+ * Luego reinicializa el formulario con los valores actualizados desde el store.
+ */
   public guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
@@ -183,7 +184,7 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
     } else if (!this.esFormularioSoloLectura) {
       this.formulario.enable();
     }
-}
+  }
 
   /**
    * Recupera y establece la información de la entidad federativa.
@@ -233,10 +234,7 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
    */
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110101Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite110101Store[metodoNombre] as (value: unknown) => void)(VALOR); 
-    if (campo === 'exportadorAutorizado') {
-      this.mostrarCampos = !this.mostrarCampos;
-    }
+    (this.tramite110101Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
 
