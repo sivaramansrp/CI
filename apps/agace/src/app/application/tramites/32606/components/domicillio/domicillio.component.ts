@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { DOMICILIO_CATALOGO, DOMICILLIO_TABLA, ENTIDAD_CATALOGO, ENTIDAD_TABLA, RADIO_07, TIPO_INSTALACION_CATALOGO } from '../../constantes/adace32606.enum';
 import { Domicillio, EntidadFederativa } from '../../models/adace.model';
 import { EconomicoService } from '../../services/economico.service';
@@ -42,32 +42,76 @@ export class DomicillioComponent implements OnInit, OnDestroy {
   modalInstalacionesPrincipalesElement!: ElementRef;
   @Output() instalacionesPrincipales = new EventEmitter<Domicillio>();
   soloLectura: boolean = false;
-public solicitudState!: Solicitud32606State;
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);  
+  public solicitudState!: Solicitud32606State;
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  consultaDatos!: ConsultaioState;
 
   constructor(private economico: EconomicoService,
     public query: Tramite32606Query,
     public store: Tramite32606Store,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.domicillioDatos = [];
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   ngOnInit(): void {
-     this.query.selectSolicitud$
-              .pipe(
-                takeUntil(this.destroyed$),
-                map((seccionState) => {
-                  this.solicitudState = seccionState;       
-                })
-              )
-              .subscribe();
-        this.donanteDomicilio();
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.donanteDomicilio();
+    this.inicializarEstadoFormulario();
     this.obtenerDomicillio();
     this.obtenerEntidad();
     this.obtenerTablaEntidad();
     this.obtenerTablaDomicillio();
 
+  }
+
+
+  /**
+ * Determina el estado inicial del formulario según el modo de solo lectura.
+ * 
+ * Si el formulario está en modo solo lectura, llama a `guardarDatosDelFormulario()` para deshabilitar los campos.
+ * Si no está en modo solo lectura, llama a `datosDeAvisoForm()` para aplicar la configuración correspondiente.
+ */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
+
+  /**
+ * Habilita o deshabilita el formulario de acuerdo al modo de solo lectura.
+ * 
+ * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), 
+ * deshabilita todos los campos del formulario para evitar modificaciones.
+ * En caso contrario, habilita los campos para permitir la edición.
+ */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.domicillioForm.disable();
+    } else {
+      this.domicillioForm.enable();
+    }
   }
 
 
@@ -160,30 +204,30 @@ public solicitudState!: Solicitud32606State;
       });
   }
 
-   /**
-     * Marca todos los campos del formulario como tocados si es inválido.
-     */
-    validarDestinatarioFormulario(): void {
-      if (this.domicillioForm.invalid) {
-        this.domicillioForm.markAllAsTouched();
-      }
+  /**
+    * Marca todos los campos del formulario como tocados si es inválido.
+    */
+  validarDestinatarioFormulario(): void {
+    if (this.domicillioForm.invalid) {
+      this.domicillioForm.markAllAsTouched();
     }
-  
-    /**
-     * Actualiza un valor en el estado global utilizando el almacén.
-     *
-     * @param form Formulario reactivo.
-     * @param campo Nombre del campo en el formulario.
-     * @param metodoNombre Nombre del método en el almacén para actualizar el valor.
-     */
-    setValoresStore(
-      form: FormGroup,
-      campo: string,
-      metodoNombre: keyof Tramite32606Store
-    ): void {
-      const VALOR = form.get(campo)?.value;
-      (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
-    }
+  }
+
+  /**
+   * Actualiza un valor en el estado global utilizando el almacén.
+   *
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo en el formulario.
+   * @param metodoNombre Nombre del método en el almacén para actualizar el valor.
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite32606Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
   donanteDomicilio(): void {
     this.domicillioForm = this.fb.group({
       domicillio: [{ value: this.solicitudState?.domicillio, disabled: this.soloLectura }, [Validators.required]],
@@ -234,25 +278,16 @@ public solicitudState!: Solicitud32606State;
 
   aceptarInstalacionesPrincipales(): void {
     const OBJETO_JSON: Domicillio = {
-      instalacionPrincipal:
-        this.domicillioForm.get('principales')?.value,
-      tipoInstalacion:
-        this.domicillioForm.get('tipoDeInstalacion')?.value,
-      entidadFederativa:
-        this.domicillioForm.get('entidadFederativa')?.value,
-      municipioDelegacion:
-        this.domicillioForm.get('municipio')?.value,
+      instalacionPrincipal: this.domicillioForm.get('principales')?.value,
+      tipoInstalacion: this.domicillioForm.get('tipoDeInstalacion')?.value,
+      entidadFederativa: this.domicillioForm.get('entidadFederativa')?.value,
+      municipioDelegacion: this.domicillioForm.get('municipio')?.value,
       direccion: this.domicillioForm.get('descripcion')?.value,
-      codigoPostal:
-        this.domicillioForm.get('codigoPostal')?.value,
-      registroSESAT:
-        this.domicillioForm.get('registroSESAT')?.value,
-      procesoProductivo:
-        this.domicillioForm.get('procesoProductivo')?.value,
-      acreditaInmueble:
-        this.domicillioForm.get('goceDelInmueble')?.value,
-      operacionesCExt:
-        this.domicillioForm.get('comercioExterior')?.value,
+      codigoPostal: this.domicillioForm.get('codigoPostal')?.value,
+      registroSESAT: this.domicillioForm.get('registroSESAT')?.value,
+      procesoProductivo: this.domicillioForm.get('procesoProductivo')?.value,
+      acreditaInmueble: this.domicillioForm.get('goceDelInmueble')?.value,
+      operacionesCExt: this.domicillioForm.get('comercioExterior')?.value,
       instalacionCtpat: '',
       instalacionPerfil: '',
       instalacionPerfilRFE: '',

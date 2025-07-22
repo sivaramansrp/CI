@@ -31,7 +31,7 @@
   </div>
   <div class="row mb-5">
     <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
-      <button type="button" class="btn btn-primary ms-3" (click)="seleccionarAgregar()"> Agregar </button>
+      <button type="button" class="btn btn-primary ms-3" [disabled]="this.soloLectura" (click)="seleccionarAgregar()"> Agregar </button>
     </div> @if (nuevaNotificacion) { <section>
       <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
     </section> }
@@ -43,8 +43,8 @@
   </div>
   <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
     <div class="btn-group">
-      <button type="button" class="btn btn-default"> Modificar </button>
-      <button type="button" class="btn btn-danger 3 ms-3"> Eliminar </button>
+      <button type="button" class="btn btn-default" [disabled]="this.soloLectura"> Modificar </button>
+      <button type="button" class="btn btn-danger 3 ms-3" [disabled]="this.soloLectura"> Eliminar </button>
     </div>
   </div>
   <div class="col-md-12 mt-5">

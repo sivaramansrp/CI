@@ -10,7 +10,7 @@
     </div>
     <div class="col-md-8">
       <div class="form-group mt-5 pull-left">
-        <button type="button" name="Buscar" id="Buscar" class="btn btn-primary me-5">Buscar</button>
+        <button type="button" name="Buscar" id="Buscar" class="btn btn-primary me-5" [disabled]="this.soloLectura">Buscar</button>
       </div>
     </div>
     <div class="row">
@@ -57,9 +57,9 @@
   </div>
   <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
     <div class="btn-group">
-      <button type="button" class="btn btn-primary"> Agregar </button>
-      <button type="button" class="btn btn-default ms-3"> Modificar </button>
-      <button type="button" class="btn btn-danger 3 ms-3"> Eliminar </button>
+      <button type="button" class="btn btn-primary" [disabled]="this.soloLectura"> Agregar </button>
+      <button type="button" class="btn btn-default ms-3" [disabled]="this.soloLectura"> Modificar </button>
+      <button type="button" class="btn btn-danger 3 ms-3" [disabled]="this.soloLectura"> Eliminar </button>
     </div>
   </div>
   <!-- Personas para oír y recibir notificaciones -->

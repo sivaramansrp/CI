@@ -44,9 +44,9 @@
   </div>
   <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
     <div class="btn-group">
-      <button type="button" class="btn btn-primary"> Agregar </button>
-      <button type="button" class="btn btn-default ms-3"> Modificar </button>
-      <button type="button" class="btn btn-danger 3 ms-3"> Eliminar </button>
+      <button type="button" class="btn btn-primary" [disabled]="this.soloLectura"> Agregar </button>
+      <button type="button" class="btn btn-default ms-3" [disabled]="this.soloLectura"> Modificar </button>
+      <button type="button" class="btn btn-danger 3 ms-3" [disabled]="this.soloLectura"> Eliminar </button>
     </div>
   </div>
   <div class="col-md-12 mt-4">
@@ -89,9 +89,9 @@
   </div>
   <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
     <div class="btn-group">
-      <button type="button" class="btn btn-primary"> Agregar </button>
-      <button type="button" class="btn btn-default ms-3"> Modificar </button>
-      <button type="button" class="btn btn-danger 3 ms-3"> Eliminar </button>
+      <button type="button" class="btn btn-primary" [disabled]="this.soloLectura"> Agregar </button>
+      <button type="button" class="btn btn-default ms-3" [disabled]="this.soloLectura"> Modificar </button>
+      <button type="button" class="btn btn-danger 3 ms-3" [disabled]="this.soloLectura"> Eliminar </button>
     </div>
   </div>
   <div class="col-md-12 mt-5">

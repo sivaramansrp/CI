@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { BIOMESTRE_CATALOGO, DOMICILIO_CATALOGO, RADIO_01, SECTOR_PRODUCTIVO, SERVICIO_CATALOGO } from '../../constantes/adace32606.enum';
 import { EconomicoService } from '../../services/economico.service';
 import { map, ReplaySubject, takeUntil } from 'rxjs';
@@ -38,13 +38,26 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   soloLectura: boolean = false;
   public solicitudState!: Solicitud32606State;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  consultaDatos!: ConsultaioState;
 
   constructor(private economico: EconomicoService,
     public query: Tramite32606Query,
     public store: Tramite32606Store,
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-  ) { }
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
+  }
 
   ngOnInit(): void {
     this.query.selectSolicitud$
@@ -56,10 +69,43 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.donanteDomicilio();
+    this.inicializarEstadoFormulario();
     this.obtenerSectorProductivo();
     this.obtenerServicio();
     this.obtenerBimestre();
   }
+
+
+  /**
+ * Determina el estado inicial del formulario según el modo de solo lectura.
+ * 
+ * Si el formulario está en modo solo lectura, llama a `guardarDatosDelFormulario()` para deshabilitar los campos.
+ * Si no está en modo solo lectura, llama a `datosDeAvisoForm()` para aplicar la configuración correspondiente.
+ */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
+
+  /**
+ * Habilita o deshabilita el formulario de acuerdo al modo de solo lectura.
+ * 
+ * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), 
+ * deshabilita todos los campos del formulario para evitar modificaciones.
+ * En caso contrario, habilita los campos para permitir la edición.
+ */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.datosComunesForm.disable();
+    } else {
+      this.datosComunesForm.enable();
+    }
+  }
+
 
   cambiarRadio(value: string | number): void {
     this.valorSeleccionado = value as string;

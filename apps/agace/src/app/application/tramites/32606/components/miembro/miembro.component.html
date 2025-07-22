@@ -17,9 +17,9 @@
   </div>
   <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
     <div class="btn-group">
-      <button type="button" class="btn btn-primary" (click)="agregarMiembro()" data-bs-toggle="modal" data-bs-target="#miembroModal"> Agregar </button>
-      <button type="button" class="btn btn-default ms-3"> Modificar </button>
-      <button type="button" class="btn btn-danger 3 ms-3"> Eliminar </button>
+      <button type="button" class="btn btn-primary" [disabled]="this.soloLectura" (click)="agregarMiembro()" data-bs-toggle="modal" data-bs-target="#miembroModal"> Agregar </button>
+      <button type="button" class="btn btn-default ms-3" [disabled]="this.soloLectura"> Modificar </button>
+      <button type="button" class="btn btn-danger 3 ms-3" [disabled]="this.soloLectura"> Eliminar </button>
     </div>
   </div>
   <!-- modal popup on agregar -->
@@ -52,8 +52,8 @@
         <div class="modal-footer custom-footer">
           <div class="row">
             <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
-              <button type="button" name="agregar" class="btn btn-primary ms-2" #closeModal> Aceptar </button>
-              <button type="button" name="cancelar" class="btn btn-default ms-2" data-bs-dismiss="modal" #closeModal> Cancelar </button>
+              <button type="button" name="agregar" [disabled]="this.soloLectura" class="btn btn-primary ms-2" #closeModal> Aceptar </button>
+              <button type="button" name="cancelar" [disabled]="this.soloLectura" class="btn btn-default ms-2" data-bs-dismiss="modal" #closeModal> Cancelar </button>
             </div>
           </div>
         </div>

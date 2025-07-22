@@ -26,10 +26,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud32606State;
   esFormularioSoloLectura: boolean = false;
   public consultaState!: ConsultaioState;
-  public esDatosRespuesta: boolean = false;  
+  public esDatosRespuesta: boolean = false;
 
   constructor(
-    private economico : EconomicoService,
+    private economico: EconomicoService,
     private router: Router,
     private consultaioQuery: ConsultaioQuery,
     private tramite32606Store: Tramite32606Store,
@@ -38,7 +38,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-     this.consultaioQuery.selectConsultaioState$.pipe(
+    this.consultaioQuery.selectConsultaioState$.pipe(
       takeUntil(this.destroyed$),
       map((seccionState) => {
         this.consultaState = seccionState;
@@ -51,10 +51,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
   }
 
-/**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
+  /**
+     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+     * Luego reinicializa el formulario con los valores actualizados desde el store.
+     */
   guardarDatosFormularios(): void {
     this.economico
       .getRegistroTomaMuestrasMercanciasData().pipe(

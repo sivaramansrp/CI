@@ -25,11 +25,11 @@
   </div>
   <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
     <div class="btn-group">
-      <button type="button" class="btn btn-default" (click)="seleccionarModificar()" data-bs-toggle="modal" data-bs-target="#modalInstalacionesPrincipales"> Modificar </button>
+      <button type="button" class="btn btn-default" [disabled]="this.soloLectura" (click)="seleccionarModificar()" data-bs-toggle="modal" data-bs-target="#modalInstalacionesPrincipales"> Modificar </button>
     </div> @if (nuevaNotificacion) { <section>
       <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
-    </section> } <button type="button" class="btn btn-danger 3 ms-3" id="eliminar" (click)="eliminarDomiciliosDatos()"> Eliminar </button>
-    <button type="button" id="agregar" class="btn btn-primary ms-3" (click)="onAgregarClick()" data-bs-toggle="modal" data-bs-target="#modalDomicillio"> Agregar </button>
+    </section> } <button type="button" class="btn btn-danger 3 ms-3" id="eliminar" [disabled]="this.soloLectura" (click)="eliminarDomiciliosDatos()"> Eliminar </button>
+    <button type="button" id="agregar" class="btn btn-primary ms-3" [disabled]="this.soloLectura" (click)="onAgregarClick()" data-bs-toggle="modal" data-bs-target="#modalDomicillio"> Agregar </button>
   </div>
   <!-- modal popup for agregar domicilio -->
   <div class="modal fade modal-xl" id="modalDomicillio" tabindex="-1" aria-labelledby="modalDomicillioLabel" aria-hidden="true" #modalAgregar>
@@ -57,8 +57,8 @@
         <div class="modal-footer custom-footer">
           <div class="row">
             <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
-              <button type="button" name="agregar" class="btn btn-primary ms-2" #closeModal> Aceptar </button>
-              <button type="button" name="cancelar" class="btn btn-default ms-2" data-bs-dismiss="modal" #closeModal> Cancelar </button>
+              <button type="button" name="agregar" [disabled]="this.soloLectura" class="btn btn-primary ms-2" #closeModal> Aceptar </button>
+              <button type="button" name="cancelar" [disabled]="this.soloLectura" class="btn btn-default ms-2" data-bs-dismiss="modal" #closeModal> Cancelar </button>
             </div>
           </div>
         </div>
@@ -124,8 +124,8 @@
           </div>
           <div class="col-md-12 mt-3">
             <div class="d-flex justify-content-end mt-4">
-              <button type="button" id="aceptar" class="btn btn-primary" data-bs-dismiss="modal" #closeModal (click)="aceptarInstalacionesPrincipales()"> Aceptar </button>
-              <button type="button" id="cancelar" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal> Cancelar </button>
+              <button type="button" id="aceptar" [disabled]="this.soloLectura" class="btn btn-primary" data-bs-dismiss="modal" #closeModal (click)="aceptarInstalacionesPrincipales()"> Aceptar </button>
+              <button type="button" id="cancelar" [disabled]="this.soloLectura" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal> Cancelar </button>
             </div>
           </div>
         </div>
@@ -165,7 +165,7 @@
             </div>
           </div>
           <div class="col-md-4 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-primary ms-3"> Anexar... </button>
+            <button type="button" [disabled]="this.soloLectura" class="btn btn-primary ms-3"> Anexar... </button>
           </div>
         </div>
       </div>
@@ -201,7 +201,7 @@
             </div>
           </div>
           <div class="col-md-4 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-primary ms-3"> Anexar... </button>
+            <button type="button" [disabled]="this.soloLectura" class="btn btn-primary ms-3"> Anexar... </button>
           </div>
         </div>
       </div>
