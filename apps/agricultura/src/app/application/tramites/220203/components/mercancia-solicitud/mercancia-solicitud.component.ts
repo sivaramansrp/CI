@@ -89,7 +89,6 @@ this.obtenerUMCCatalogosTransporte();
       }, (error) => {
           this.detallesCatalogo.tipoRequisitoList=[];
           this.detallesCatalogo.arancelariaList=[];
-        console.error(error);
       });
   }
    /**
@@ -104,7 +103,6 @@ this.obtenerUMCCatalogosTransporte();
         this.detallesCatalogo.nicoList = data.data as Catalogo[];
       }, (error) => {
           this.detallesCatalogo.nicoList=[];
-        console.error(error);
       });
   }
    /**
@@ -125,7 +123,6 @@ this.obtenerUMCCatalogosTransporte();
         this.detallesCatalogo.paisDeOrigenList=[];    
         this.detallesCatalogo.paisDeProcedenciaList=[];
           this.detallesCatalogo.umcList=[];
-        console.error(error);
       });
   }
   /**
