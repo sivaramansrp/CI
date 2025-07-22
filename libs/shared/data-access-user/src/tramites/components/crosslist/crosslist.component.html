@@ -4,7 +4,7 @@
       <label>País disponible</label>
       <input type="text" class="form-control mb-2" placeholder="País disponible" >
     </div>
-    <label class="form-label" *ngIf="label?.tituluDeLaIzquierda">{{ label?.tituluDeLaIzquierda }}:
+    <label class="form-label" *ngIf="label?.tituluDeLaIzquierda">{{ label?.tituluDeLaIzquierda }}
       <span class="bi bi-question-circle-fill" *ngIf="label?.showUnoTitulo" title="{{label?.tituluDeLaIzquierda}}" data-bs-toggle="tooltip"></span>
       </label>
     <select class="form-select" multiple aria-label="Multiple select example" [formControl]="fecha">
@@ -48,7 +48,7 @@
       <label>País seleccionado</label>
       <input type="text" class="form-control mb-2" placeholder="País seleccionado" >
      </div>
-     <label class="form-label" *ngIf="label?.derecha">{{ label?.derecha }}:
+     <label class="form-label" *ngIf="label?.derecha">{{ label?.derecha }}
       <span class="bi bi-question-circle-fill" *ngIf="label?.showDosTitulo" title="{{label?.derecha}}" data-bs-toggle="tooltip"></span>
       </label>
     <select class="form-select" multiple aria-label="Multiple select example" [formControl]="fechaSeleccionada"
