@@ -1,4 +1,4 @@
-import { PersonaTerceros } from "@libs/shared/data-access-user/src";
+import { Catalogo, PersonaTerceros } from "@libs/shared/data-access-user/src";
 
 /**
  * @fileoverview
@@ -403,4 +403,13 @@ export interface FilaSolicitud {
   mercancia: string;
   cantidad: number;
   proveedor: string;
+}
+export interface CatalogoData {
+  tipoRequisitoList: Catalogo[];
+  arancelariaList: Catalogo[];
+  nicoList: Catalogo[];
+  usoList: Catalogo[];
+  paisDeOrigenList: Catalogo[];
+  paisDeProcedenciaList: Catalogo[];
+  umcList: Catalogo[];
 }

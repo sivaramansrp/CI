@@ -1,11 +1,13 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { DatoTabla,DatosMercancia220203, Fila, FilaSolicitud } from '../../models/220203/importacion-de-acuicultura.module';
+import { DatoTabla,DatosMercancia220203, Fila, FilaSolicitud, RealizarGroup } from '../../models/220203/importacion-de-acuicultura.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuicultura.enum';
+import { MercanciaSolicitudComponent } from '../mercancia-solicitud/mercancia-solicitud.component';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 
 /**
  * @fileoverview
@@ -34,11 +36,12 @@ import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuic
     AlertComponent,
     TablaDinamicaComponent,
     CatalogoSelectComponent,
-    TableComponent,
-    CommonModule
+    CommonModule,
+    ModalComponent
   ],
 })
 export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterViewInit {
+    @ViewChild('modalRef') modalRef!: ModalComponent;
   /**
    * Subject para controlar la destrucción de suscripciones.
    * @type {Subject<void>}
@@ -193,17 +196,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    */
   paisDeProcedenciaList: Catalogo[] = [];
 
-  /**
-   * Encabezados de la tabla de detalles.
-   * @type {string[]}
-   */
-  detalleTable: string[] = ["Nombre científico"];
 
-  /**
-   * Datos de la tabla de detalles.
-   * @type {TableBodyData[]}
-   */
-  detallecuerpoTabla: TableBodyData[] = [];
 
   /**
    * Datos de la tabla principal.
@@ -260,8 +253,6 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   public createFromGroup(): void {
     this.datosMercanciaFormGroup = this.fb.group({
       realizarGroup: this.createRealizarGroup(),
-      mercanciaGroup: this.createMercanciaGroup(),
-      detalles: this.createDetallesGroup(),
     });
   }
 
@@ -313,16 +304,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
     return FORMGROUP;
   }
 
-  /**
-   * Crea el grupo de formularios 'detalles'.
-   * @method
-   * @returns {FormGroup}
-   */
-  public createDetallesGroup(): FormGroup {
-    return this.fb.group({
-      nombreCientifico: [this.datosMercanciaStore.detalles.nombreCientifico || ''],
-    });
-  }
+ 
 
   /**
    * @inheritdoc
@@ -475,30 +457,9 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
     form?: FormGroup,
     campo?: string,
   ): void {
-    if (campo === 'fraccionArancelaria') {
-      this.datosMercanciaFormGroup.patchValue({
-        mercanciaGroup: {
-          descripcionFraccionArancelaria: 'Nuevo valor para descripcion',
-        }
-      });
-    }
-    else if (campo === 'nico') {
-      this.datosMercanciaFormGroup.patchValue({
-        mercanciaGroup: {
-          descripcionNico: 'Nuevo valor para descripcionNico',
-        }
-      });
-    }
-    else if (campo === 'cantidadUMT') {
-      this.datosMercanciaFormGroup.patchValue({
-        mercanciaGroup: {
-          umt: 'Nuevo valor para cantidadUMT',
-        }
-      });
-    }
     const VALOR = this.datosMercanciaFormGroup.getRawValue();
-    (this.importacionDeAcuiculturaServices.actualizarDatosMercancia as (value: DatosMercancia220203) => void)(
-      VALOR
+    (this.importacionDeAcuiculturaServices.actualizarSoloRealizarGroup as (value: RealizarGroup) => void)(
+      VALOR.realizarGroup as RealizarGroup
     );
   }
 
@@ -514,6 +475,9 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
     else {
       this.datosMercanciaFormGroup.enable();
     }
+  }
+  agregarFila(): void {
+       this.modalRef.abrir(MercanciaSolicitudComponent);
   }
 
   /**

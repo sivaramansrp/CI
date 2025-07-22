@@ -114,7 +114,11 @@ export class AcuiculturaStore extends Store<Acuicultura> {
             tercerosRelacionados: tercerosRelacionados,
         }));
     }
-
+  datosMercancia$ = this._select(state => state.datosMercancia);
+    // Optionally expose a getter for snapshot
+  getDatosMercancia(): DatosMercancia220203 {
+    return this.getValue().datosMercancia;
+  }
     /**
      * Restablece el estado a su estado inicial.
      * @method limpiarFormulario

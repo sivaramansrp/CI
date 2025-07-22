@@ -1,4 +1,4 @@
-import { Acuicultura, DatosMercancia220203, EnviarDatos, FormularioMovilizacion, PagoDeDerechos } from '../../models/220203/importacion-de-acuicultura.module';
+import { Acuicultura, DatosMercancia220203, Detalles, EnviarDatos, FormularioMovilizacion, MercanciaGroup, PagoDeDerechos, RealizarGroup } from '../../models/220203/importacion-de-acuicultura.module';
 import { Observable, map } from 'rxjs';
 import { PersonaTerceros, RespuestaCatalogos, SeccionLibStore } from '@ng-mf/data-access-user';
 import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
@@ -96,6 +96,33 @@ export class ImportacionDeAcuiculturaService {
   public actualizarDatosMercancia(datosMercancia: DatosMercancia220203): void {
     this.acuiculturaStore.actualizarDatosMercancia(datosMercancia);
   }
+  public actualizarSoloRealizarGroup(nuevoRealizarGroup: RealizarGroup): void {
+  const DATOS_ACTUALES = this.acuiculturaStore.getDatosMercancia(); 
+  const DATOS_ACTUALIZADOS: DatosMercancia220203 = {
+    ...DATOS_ACTUALES,
+    realizarGroup: nuevoRealizarGroup,
+  };
+  this.acuiculturaStore.actualizarDatosMercancia(DATOS_ACTUALIZADOS);
+}
+
+  public actualizarSoloMercanciaGroup(nuevoMercanciaGroup: MercanciaGroup): void {
+  const DATOS_ACTUALES = this.acuiculturaStore.getDatosMercancia(); 
+  const DATOS_ACTUALIZADOS: DatosMercancia220203 = {
+    ...DATOS_ACTUALES,
+    mercanciaGroup: nuevoMercanciaGroup,
+  };
+
+  this.acuiculturaStore.actualizarDatosMercancia(DATOS_ACTUALIZADOS);
+}
+  public actualizarSoloDetallesGroup(nuevoDetallesGroup: Detalles): void {
+  const DATOS_ACTUALES = this.acuiculturaStore.getDatosMercancia(); 
+  const DATOS_ACTUALIZADOS: DatosMercancia220203 = {
+    ...DATOS_ACTUALES,
+    detalles: nuevoDetallesGroup,
+  };
+
+  this.acuiculturaStore.actualizarDatosMercancia(DATOS_ACTUALIZADOS);
+}
 
   /**
    * Actualiza el campo 'formaValida' en el store de acuicultura.
