@@ -10,7 +10,7 @@ import { StoreConfig } from '@datorama/akita';
  * Interfaz que define las propiedades relacionadas con listas de datos
  * de empleados, domicilios, socios, y enlaces operativos.
  */
-export interface Solicitud32605State {
+export interface Solicitud32614State {
   /**
    * Identificador único de la persona que realiza la solicitud.
    */
@@ -523,11 +523,11 @@ export interface Solicitud32605State {
 }
 
 /**
- * Crea el estado inicial para `Solicitud32605State`.
+ * Crea el estado inicial para `Solicitud32614State`.
  *
  * @returns El estado inicial con valores predeterminados.
  */
-export function createInitialSolicitudState(): Solicitud32605State {
+export function createInitialSolicitudState(): Solicitud32614State {
   return {
     idPersonaSolicitud: '',
     rfcTercero: '',
@@ -637,13 +637,13 @@ export function createInitialSolicitudState(): Solicitud32605State {
   providedIn: 'root',
 })
 @StoreConfig({
-  name: 'solicitud32605',
+  name: 'solicitud32614',
   resettable: true,
 })
-/** Clase encargada de manejar el estado de 'Solicitud32605' mediante el uso de un store.
+/** Clase encargada de manejar el estado de 'Solicitud32614' mediante el uso de un store.
  *  Esta clase extiende de la clase 'Store', lo que permite la gestión centralizada del estado.
  */
-export class Solicitud32605Store extends Store<Solicitud32605State> {
+export class Solicitud32614Store extends Store<Solicitud32614State> {
   /**
    * Constructor que inicializa el estado de la solicitud.
    * Utiliza la función `createInitialSolicitudState` para establecer el estado inicial.

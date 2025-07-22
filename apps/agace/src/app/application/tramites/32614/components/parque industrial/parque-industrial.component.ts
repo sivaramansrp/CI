@@ -1,9 +1,14 @@
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  ConfiguracionColumna,
+} from '@libs/shared/data-access-user/src';
 import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ElementRef } from '@angular/core';
+import { FECHA_DE_FACTURA } from '@libs/shared/data-access-user/src/tramites/constantes/32614/datos-comunes.enum';
 import { FECHA_DE_INICIO } from '../../constants/solicitud.enum';
 import { FECHA_DE_PAGO } from '../../constants/solicitud.enum';
 import { FormBuilder } from '@angular/forms';
@@ -12,13 +17,15 @@ import { InputFecha } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { InputRadio } from '../../models/solicitud.model';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { MensajeriaComponent } from '../mensajeria/mensajeria.component';
 import { Modal } from 'bootstrap';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { PerfilesMensajeriaComponent } from '../perfiles-mensajeria/perfiles-mensajeria.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
-import { Solicitud32605State } from '../../estados/solicitud32605.store';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
+import { Solicitud32614Query } from '../../estados/solicitud32614.query';
+import { Solicitud32614State } from '../../estados/solicitud32614.store';
+import { Solicitud32614Store } from '../../estados/solicitud32614.store';
 import { SolicitudRadioLista } from '../../models/solicitud.model';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
@@ -26,10 +33,12 @@ import { TRANSPORTISTAS_CONFIGURACION } from '../../constants/solicitud.enum';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { Tramite32614MensajeriaStore } from '../../estados/tramites/tramite32614_mensajeria.store';
 import { TransportistasTable } from '../../models/solicitud.model';
 import { Validators } from '@angular/forms';
 import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
+import productivo from '@libs/shared/theme/assets/json/32614/productivo.json';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -42,12 +51,15 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [
     CommonModule,
+    CatalogoSelectComponent,
     ReactiveFormsModule,
     InputRadioComponent,
     InputFechaComponent,
     TituloComponent,
     TablaDinamicaComponent,
     AgregarTransportistasComponent,
+    PerfilesMensajeriaComponent,
+    MensajeriaComponent,
   ],
   providers: [SolicitudService],
   templateUrl: './parque-industrial.component.html',
@@ -75,10 +87,13 @@ export class ParqueIndustrialComponent implements OnInit, OnDestroy {
   clasificacionInformacion: InputRadio = {} as InputRadio;
 
   /** Estado de la solicitud */
-  solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
+  solicitud32614State: Solicitud32614State = {} as Solicitud32614State;
 
   /** Fechas de inicio y pago de la solicitud */
   fechaDeFinDeVigencia: InputFecha = FECHA_DE_INICIO;
+
+  /** Formulario principal de la sección de mensajería */
+  public mensajeriaGroup!: FormGroup;
   /**
    * Fecha de pago asociada a la solicitud.
    * Se inicializa con el valor constante `FECHA_DE_PAGO` que contiene la fecha predeterminada de pago.
@@ -114,15 +129,16 @@ export class ParqueIndustrialComponent implements OnInit, OnDestroy {
    * Constructor del componente
    * @param fb FormBuilder para crear formularios reactivos
    * @param solicitudService Servicio para manejar la lógica de solicitudes
-   * @param solicitud32605Store Store para manejar el estado de la solicitud
-   * @param solicitud32605Query Consulta para obtener el estado de la solicitud
+   * @param solicitud32614Store Store para manejar el estado de la solicitud
+   * @param solicitud32614Query Consulta para obtener el estado de la solicitud
    */
   constructor(
     private fb: FormBuilder,
     public solicitudService: SolicitudService,
-    public solicitud32605Store: Solicitud32605Store,
-    public solicitud32605Query: Solicitud32605Query,
-    public consultaioQuery: ConsultaioQuery
+    public solicitud32614Store: Solicitud32614Store,
+    public solicitud32614Query: Solicitud32614Query,
+    public consultaioQuery: ConsultaioQuery,
+    private tramite32614Store: Tramite32614MensajeriaStore
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -160,7 +176,62 @@ export class ParqueIndustrialComponent implements OnInit, OnDestroy {
     } else {
       this.inicializarFormulario();
     }
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.mensajeriaGroup.controls)
+        .map((key) => this.mensajeriaGroup.get(key))
+        .map((control) => {
+          control?.disable();
+          return control;
+        });
+    } else {
+      Object.keys(this.mensajeriaGroup.controls)
+        .map((key) => this.mensajeriaGroup.get(key))
+        .map((control) => {
+          control?.enable();
+          return control;
+        });
+    }
   }
+
+  /**
+   * Establece el valor de un campo y lo propaga al store.
+   * @param form Formulario reactivo que contiene el campo.
+   * @param campo Nombre del campo en el formulario.
+   * @param metodoNombre Nombre del método del store para actualizar el valor.
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite32614MensajeriaStore
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite32614Store[metodoNombre] as (value: string) => void)(VALOR);
+  }
+
+  /** Configuración del input de fecha de factura */
+  public fechaFacturaInput: InputFecha = FECHA_DE_FACTURA;
+
+  /**
+   * Actualiza la fecha de la factura en el formulario y en el store.
+   * @param nuevo_valor Nuevo valor para la fecha
+   * @param form Formulario reactivo
+   * @param campo Nombre del campo a actualizar
+   * @param metodoNombre Método del store a invocar
+   */
+  cambioFechaFactura(
+    nuevo_valor: string,
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite32614MensajeriaStore
+  ): void {
+    this.mensajeriaGroup.get('fechaFactura')?.setValue(nuevo_valor);
+    this.mensajeriaGroup.get('fechaFactura')?.markAsUntouched();
+    const VALOR = form.get(campo)?.value;
+    (this.tramite32614Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /** Lista de sectores productivos leída desde un archivo JSON */
+  public sectorProductivoAgace: Catalogo[] = productivo;
 
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
@@ -178,7 +249,7 @@ export class ParqueIndustrialComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Inicializa el formulario `parqueIndustrialForm` con los valores del estado actual `solicitud32605State`.
+   * Inicializa el formulario `parqueIndustrialForm` con los valores del estado actual `solicitud32614State`.
    *
    * Este formulario recopila información relacionada con operaciones de importación y exportación,
    * como identificadores de campos (`2042`, `2043`, `2044`), fechas clave, montos y detalles bancarios.
@@ -194,39 +265,50 @@ export class ParqueIndustrialComponent implements OnInit, OnDestroy {
    */
   inicializarFormulario(): void {
     this.parqueIndustrialForm = this.fb.group({
-      '2042': [this.solicitud32605State[2042]],
-      '2043': [this.solicitud32605State[2043]],
-      '2044': [this.solicitud32605State[2044]],
+      '2042': [this.solicitud32614State[2042]],
+      '2043': [this.solicitud32614State[2043]],
+      '2044': [this.solicitud32614State[2044]],
       fechaInicioComercio: [
-        { value: this.solicitud32605State.fechaInicioComercio, disabled: true },
+        { value: this.solicitud32614State.fechaInicioComercio, disabled: true },
         Validators.required,
       ],
-      fechaPago: [this.solicitud32605State.fechaPago],
-      monto: [this.solicitud32605State.monto, [Validators.maxLength(10)]],
+      fechaPago: [this.solicitud32614State.fechaPago],
+      monto: [this.solicitud32614State.monto, [Validators.maxLength(10)]],
       operacionesBancarias: [
-        this.solicitud32605State.operacionesBancarias,
+        this.solicitud32614State.operacionesBancarias,
         [Validators.maxLength(25)],
       ],
       llavePago: [
-        this.solicitud32605State.llavePago,
+        this.solicitud32614State.llavePago,
         [Validators.maxLength(25)],
       ],
     });
 
-    this.solicitud32605Query.selectSolicitud$
+    // Initialize mensajeriaGroup for the payment section
+    this.mensajeriaGroup = this.fb.group({
+      claveReferencia: ['', Validators.required],
+      numeroOperacion: ['', Validators.required],
+      cadenaDependencia: ['', Validators.required],
+      banco: ['', Validators.required],
+      llavePago: ['', Validators.required],
+      fechaFactura: [''],
+      importePago: ['', Validators.required],
+    });
+
+    this.solicitud32614Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
-        map((respuesta: Solicitud32605State) => {
-          this.solicitud32605State = respuesta;
+        map((respuesta: Solicitud32614State) => {
+          this.solicitud32614State = respuesta;
           this.parqueIndustrialForm.patchValue({
-            '2042': this.solicitud32605State[2042],
-            '2043': this.solicitud32605State[2043],
-            '2044': this.solicitud32605State[2044],
-            fechaInicioComercio: this.solicitud32605State.fechaInicioComercio,
-            fechaPago: this.solicitud32605State.fechaPago,
-            monto: this.solicitud32605State.monto,
-            operacionesBancarias: this.solicitud32605State.operacionesBancarias,
-            llavePago: this.solicitud32605State.llavePago,
+            '2042': this.solicitud32614State[2042],
+            '2043': this.solicitud32614State[2043],
+            '2044': this.solicitud32614State[2044],
+            fechaInicioComercio: this.solicitud32614State.fechaInicioComercio,
+            fechaPago: this.solicitud32614State.fechaPago,
+            monto: this.solicitud32614State.monto,
+            operacionesBancarias: this.solicitud32614State.operacionesBancarias,
+            llavePago: this.solicitud32614State.llavePago,
           });
         })
       )
@@ -268,7 +350,7 @@ export class ParqueIndustrialComponent implements OnInit, OnDestroy {
    * @param evento Nuevo valor para la propiedad
    */
   actualizar2042(evento: string | number): void {
-    this.solicitud32605Store.actualizar2042(evento);
+    this.solicitud32614Store.actualizar2042(evento);
   }
 
   /**
@@ -276,7 +358,7 @@ export class ParqueIndustrialComponent implements OnInit, OnDestroy {
    * @param evento Nuevo valor para la propiedad
    */
   actualizar2043(evento: string | number): void {
-    this.solicitud32605Store.actualizar2043(evento);
+    this.solicitud32614Store.actualizar2043(evento);
   }
 
   /**
@@ -284,7 +366,7 @@ export class ParqueIndustrialComponent implements OnInit, OnDestroy {
    * @param evento Nuevo valor para la propiedad
    */
   actualizar2044(evento: string | number): void {
-    this.solicitud32605Store.actualizar2044(evento);
+    this.solicitud32614Store.actualizar2044(evento);
   }
 
   /**
@@ -292,7 +374,7 @@ export class ParqueIndustrialComponent implements OnInit, OnDestroy {
    * @param evento Fecha de inicio del comercio
    */
   actualizarFechaInicioComercio(evento: string): void {
-    this.solicitud32605Store.actualizarFechaInicioComercio(evento);
+    this.solicitud32614Store.actualizarFechaInicioComercio(evento);
   }
 
   /**
@@ -300,7 +382,7 @@ export class ParqueIndustrialComponent implements OnInit, OnDestroy {
    * @param evento Fecha de pago
    */
   actualizarFechaPago(evento: string): void {
-    this.solicitud32605Store.actualizarFechaPago(evento);
+    this.solicitud32614Store.actualizarFechaPago(evento);
   }
 
   /**
@@ -308,7 +390,7 @@ export class ParqueIndustrialComponent implements OnInit, OnDestroy {
    * @param evento Monto de la solicitud
    */
   actualizarMonto(evento: string): void {
-    this.solicitud32605Store.actualizarMonto(evento);
+    this.solicitud32614Store.actualizarMonto(evento);
   }
 
   /**
@@ -316,7 +398,7 @@ export class ParqueIndustrialComponent implements OnInit, OnDestroy {
    * @param evento Operaciones bancarias
    */
   actualizarOperacionesBancarias(evento: string): void {
-    this.solicitud32605Store.actualizarOperacionesBancarias(evento);
+    this.solicitud32614Store.actualizarOperacionesBancarias(evento);
   }
 
   /**
@@ -324,7 +406,7 @@ export class ParqueIndustrialComponent implements OnInit, OnDestroy {
    * @param evento Llave de pago
    */
   actualizarLlavePago(evento: string): void {
-    this.solicitud32605Store.actualizarLlavePago(evento);
+    this.solicitud32614Store.actualizarLlavePago(evento);
   }
 
   /**

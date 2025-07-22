@@ -15,9 +15,9 @@ import { Output } from '@angular/core';
 import { RadioOptions } from '../../models/solicitud.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SeccionSociosIC } from '../../models/solicitud.model';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
-import { Solicitud32605State } from '../../estados/solicitud32605.store';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
+import { Solicitud32614Query } from '../../estados/solicitud32614.query';
+import { Solicitud32614State } from '../../estados/solicitud32614.store';
+import { Solicitud32614Store } from '../../estados/solicitud32614.store';
 import { SolicitudCatologoSelectLista } from '../../models/solicitud.model';
 import { SolicitudRadioLista } from '../../models/solicitud.model';
 import { SolicitudService } from '../../services/solicitud.service';
@@ -61,8 +61,8 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
   /** Opción seleccionada para "Sí" o "No" */
   sinoOpcion: InputRadio = {} as InputRadio;
 
-  /** Estado actual de la solicitud 32605 */
-  solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
+  /** Estado actual de la solicitud 32614 */
+  solicitud32614State: Solicitud32614State = {} as Solicitud32614State;
 
   /** Lista de opciones para el carácter del miembro */
   enSuCaracterDeLista: CatalogosSelect = {} as CatalogosSelect;
@@ -86,8 +86,8 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
   constructor(
     public fb: FormBuilder, // /** Servicio para manejar formularios reactivos */
     public solicitudService: SolicitudService, // /** Servicio para manejar solicitudes */
-    public solicitud32605Store: Solicitud32605Store, // /** Estado de la solicitud */
-    public solicitud32605Query: Solicitud32605Query, // /** Consultas sobre la solicitud */
+    public solicitud32614Store: Solicitud32614Store, // /** Estado de la solicitud */
+    public solicitud32614Query: Solicitud32614Query, // /** Consultas sobre la solicitud */
     public consultaioQuery: ConsultaioQuery
   ) {
     /**
@@ -142,7 +142,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Inicializa el formulario `miembroEmpresaForm` con los datos del estado actual `solicitud32605State`.
+   * Inicializa el formulario `miembroEmpresaForm` con los datos del estado actual `solicitud32614State`.
    *
    * Este formulario recopila información detallada sobre un miembro de la empresa, como su nombre,
    * nacionalidad, RFC, tipo de persona y relación con la empresa.
@@ -151,13 +151,13 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
     this.miembroEmpresaForm = this.fb.group({
       /** Caracter del miembro dentro de la empresa */
       miembroCaracterDe: [
-        { value: this.solicitud32605State.miembroCaracterDe, disabled: false },
+        { value: this.solicitud32614State.miembroCaracterDe, disabled: false },
         [Validators.required],
       ],
       /** Indica si el miembro está obligado a tributar en México */
       miembroTributarMexico: [
         {
-          value: this.solicitud32605State.miembroTributarMexico,
+          value: this.solicitud32614State.miembroTributarMexico,
           disabled: false,
         },
         [Validators.required],
@@ -165,20 +165,20 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       /** Nacionalidad del miembro */
       miembroNacionalidad: [
         {
-          value: this.solicitud32605State.miembroNacionalidad,
+          value: this.solicitud32614State.miembroNacionalidad,
           disabled: false,
         },
         [Validators.required],
       ],
       /** RFC del miembro */
       miembroRfc: [
-        { value: this.solicitud32605State.miembroRfc, disabled: false },
+        { value: this.solicitud32614State.miembroRfc, disabled: false },
         [Validators.required],
       ],
       /** Registro federal del miembro */
       miembroRegistroFederal: [
         {
-          value: this.solicitud32605State.miembroRegistroFederal,
+          value: this.solicitud32614State.miembroRegistroFederal,
           disabled: true,
         },
         [Validators.required],
@@ -186,7 +186,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       /** Nombre completo del miembro */
       miembroNombreCompleto: [
         {
-          value: this.solicitud32605State.miembroNombreCompleto,
+          value: this.solicitud32614State.miembroNombreCompleto,
           disabled: true,
         },
         [Validators.required],
@@ -194,20 +194,20 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       /** Tipo de persona (física o moral) */
       miembroTipoPersonaMuestra: [
         {
-          value: this.solicitud32605State.miembroTipoPersonaMuestra,
+          value: this.solicitud32614State.miembroTipoPersonaMuestra,
           disabled: false,
         },
         [Validators.required],
       ],
       /** Nombre del miembro */
       miembroNombre: [
-        { value: this.solicitud32605State.miembroNombre, disabled: false },
+        { value: this.solicitud32614State.miembroNombre, disabled: false },
         [Validators.required],
       ],
       /** Apellido paterno del miembro */
       miembroApellidoPaterno: [
         {
-          value: this.solicitud32605State.miembroApellidoPaterno,
+          value: this.solicitud32614State.miembroApellidoPaterno,
           disabled: false,
         },
         [Validators.required],
@@ -215,7 +215,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       /** Apellido materno del miembro */
       miembroApellidoMaterno: [
         {
-          value: this.solicitud32605State.miembroApellidoMaterno,
+          value: this.solicitud32614State.miembroApellidoMaterno,
           disabled: false,
         },
         [Validators.required],
@@ -223,7 +223,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       /** Nombre de la empresa asociada al miembro */
       miembroNombreEmpresa: [
         {
-          value: this.solicitud32605State.miembroNombreEmpresa,
+          value: this.solicitud32614State.miembroNombreEmpresa,
           disabled: false,
         },
         [Validators.required],
@@ -231,29 +231,29 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
     });
 
     /** Escucha cambios en el estado de la solicitud y actualiza el formulario */
-    this.solicitud32605Query.selectSolicitud$
+    this.solicitud32614Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
-        map((respuesta: Solicitud32605State) => {
-          this.solicitud32605State = respuesta;
+        map((respuesta: Solicitud32614State) => {
+          this.solicitud32614State = respuesta;
           this.miembroEmpresaForm.patchValue({
-            miembroCaracterDe: this.solicitud32605State.miembroCaracterDe,
+            miembroCaracterDe: this.solicitud32614State.miembroCaracterDe,
             miembroTributarMexico:
-              this.solicitud32605State.miembroTributarMexico,
-            miembroNacionalidad: this.solicitud32605State.miembroNacionalidad,
-            miembroRfc: this.solicitud32605State.miembroRfc,
+              this.solicitud32614State.miembroTributarMexico,
+            miembroNacionalidad: this.solicitud32614State.miembroNacionalidad,
+            miembroRfc: this.solicitud32614State.miembroRfc,
             miembroRegistroFederal:
-              this.solicitud32605State.miembroRegistroFederal,
+              this.solicitud32614State.miembroRegistroFederal,
             miembroNombreCompleto:
-              this.solicitud32605State.miembroNombreCompleto,
+              this.solicitud32614State.miembroNombreCompleto,
             miembroTipoPersonaMuestra:
-              this.solicitud32605State.miembroTipoPersonaMuestra,
-            miembroNombre: this.solicitud32605State.miembroNombre,
+              this.solicitud32614State.miembroTipoPersonaMuestra,
+            miembroNombre: this.solicitud32614State.miembroNombre,
             miembroApellidoPaterno:
-              this.solicitud32605State.miembroApellidoPaterno,
+              this.solicitud32614State.miembroApellidoPaterno,
             miembroApellidoMaterno:
-              this.solicitud32605State.miembroApellidoMaterno,
-            miembroNombreEmpresa: this.solicitud32605State.miembroNombreEmpresa,
+              this.solicitud32614State.miembroApellidoMaterno,
+            miembroNombreEmpresa: this.solicitud32614State.miembroNombreEmpresa,
           });
         })
       )
@@ -302,7 +302,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
    * @param {Catalogo} evento - Datos del catálogo seleccionados.
    */
   actualizarMiembroCaracterDe(evento: Catalogo): void {
-    this.solicitud32605Store.actualizarMiembroCaracterDe(evento.id);
+    this.solicitud32614Store.actualizarMiembroCaracterDe(evento.id);
   }
 
   /**
@@ -311,7 +311,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
    */
   actualizarMiembroTributarMexico(evento: number | string): void {
     this.seleccionarObligadoTributar = evento;
-    this.solicitud32605Store.actualizarMiembroTributarMexico(evento);
+    this.solicitud32614Store.actualizarMiembroTributarMexico(evento);
   }
 
   /**
@@ -319,7 +319,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
    * @param {Catalogo} evento - Datos del catálogo seleccionados.
    */
   actualizarMiembroNacionalidad(evento: Catalogo): void {
-    this.solicitud32605Store.actualizarMiembroNacionalidad(evento.id);
+    this.solicitud32614Store.actualizarMiembroNacionalidad(evento.id);
   }
 
   /**
@@ -328,7 +328,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
    */
   actualizarMiembroRFC(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarMiembroRFC(VALOR);
+    this.solicitud32614Store.actualizarMiembroRFC(VALOR);
   }
 
   /**
@@ -336,7 +336,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
    * @param {Catalogo} evento - Datos del catálogo seleccionados.
    */
   actualizarMiembroTipoPersonaMuestra(evento: Catalogo): void {
-    this.solicitud32605Store.actualizarMiembroTipoPersonaMuestra(evento.id);
+    this.solicitud32614Store.actualizarMiembroTipoPersonaMuestra(evento.id);
     this.seleccionarTipoDePersona = evento.id;
   }
 
@@ -346,7 +346,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
    */
   actualizarMiembroNombre(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarMiembroNombre(VALOR);
+    this.solicitud32614Store.actualizarMiembroNombre(VALOR);
   }
 
   /**
@@ -355,7 +355,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
    */
   actualizarMiembroApellidoPaterno(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarMiembroApellidoPaterno(VALOR);
+    this.solicitud32614Store.actualizarMiembroApellidoPaterno(VALOR);
   }
 
   /**
@@ -364,7 +364,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
    */
   actualizarMiembroApellidoMaterno(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarMiembroApellidoMaterno(VALOR);
+    this.solicitud32614Store.actualizarMiembroApellidoMaterno(VALOR);
   }
 
   /**
@@ -373,7 +373,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
    */
   actualizarMiembroNombreEmpresa(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarMiembroNombreEmpresa(VALOR);
+    this.solicitud32614Store.actualizarMiembroNombreEmpresa(VALOR);
   }
 
   /**
@@ -382,10 +382,10 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
   buscarRFCDatos(): void {
     const VALOR = this.miembroEmpresaForm.get('miembroRfc')?.value;
     if (VALOR) {
-      this.solicitud32605Store.actualizarMiembroRegistroFederal(
+      this.solicitud32614Store.actualizarMiembroRegistroFederal(
         'MAVL621207C95'
       );
-      this.solicitud32605Store.actualizarMiembroNombreCompleto(
+      this.solicitud32614Store.actualizarMiembroNombreCompleto(
         'EUROFOODS DE MEXICO GONZALEZ PINAL'
       );
     }

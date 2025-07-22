@@ -12,9 +12,9 @@ import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SeccionSubcontratados } from '../../models/solicitud.model';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
-import { Solicitud32605State } from '../../estados/solicitud32605.store';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
+import { Solicitud32614Query } from '../../estados/solicitud32614.query';
+import { Solicitud32614State } from '../../estados/solicitud32614.store';
+import { Solicitud32614Store } from '../../estados/solicitud32614.store';
 import { SolicitudCatologoSelectLista } from '../../models/solicitud.model';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
@@ -57,7 +57,7 @@ export class SeccionSubcontratadosComponent implements OnInit, OnDestroy {
   bimestre: CatalogosSelect = {} as CatalogosSelect;
 
   /** Estado que contiene los datos de la solicitud */
-  solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
+  solicitud32614State: Solicitud32614State = {} as Solicitud32614State;
 
   /** Emisor de eventos con los datos de subcontratados */
   @Output() seccionSubcontratados = new EventEmitter<NumeroDeEmpleados>();
@@ -75,11 +75,11 @@ export class SeccionSubcontratadosComponent implements OnInit, OnDestroy {
     /** Servicio para gestionar las solicitudes */
     public solicitudService: SolicitudService,
 
-    /** Store para gestionar el estado de la solicitud 32605 */
-    public solicitud32605Store: Solicitud32605Store,
+    /** Store para gestionar el estado de la solicitud 32614 */
+    public solicitud32614Store: Solicitud32614Store,
 
-    /** Query para obtener datos del store de solicitud 32605 */
-    public solicitud32605Query: Solicitud32605Query,
+    /** Query para obtener datos del store de solicitud 32614 */
+    public solicitud32614Query: Solicitud32614Query,
     public consultaioQuery: ConsultaioQuery
   ) {
     /**
@@ -134,7 +134,7 @@ export class SeccionSubcontratadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Inicializa el formulario `miembroEmpresaForm` con los datos del estado actual `solicitud32605State`.
+   * Inicializa el formulario `miembroEmpresaForm` con los datos del estado actual `solicitud32614State`.
    *
    * Este formulario recopila información detallada sobre un miembro de la empresa, como su nombre,
    * nacionalidad, RFC, tipo de persona y relación con la empresa.
@@ -162,19 +162,19 @@ export class SeccionSubcontratadosComponent implements OnInit, OnDestroy {
     });
 
     /** Suscripción al estado de la solicitud para actualizar el formulario con los datos */
-    this.solicitud32605Query.selectSolicitud$
+    this.solicitud32614Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$), // Asegura que la suscripción se cancele al destruir el componente
-        map((respuesta: Solicitud32605State) => {
-          this.solicitud32605State = respuesta; // Asigna el estado a la variable
+        map((respuesta: Solicitud32614State) => {
+          this.solicitud32614State = respuesta; // Asigna el estado a la variable
           this.subcontratadosForm.patchValue({
             subcontrataRFCBusqueda:
-              this.solicitud32605State.subcontrataRFCBusqueda,
-            subcontrataRFC: this.solicitud32605State.subcontrataRFC,
+              this.solicitud32614State.subcontrataRFCBusqueda,
+            subcontrataRFC: this.solicitud32614State.subcontrataRFC,
             subcontrataRazonSocial:
-              this.solicitud32605State.subcontrataRazonSocial,
-            subcontrataEmpleados: this.solicitud32605State.subcontrataEmpleados,
-            subcontrataBimestre: this.solicitud32605State.subcontrataBimestre,
+              this.solicitud32614State.subcontrataRazonSocial,
+            subcontrataEmpleados: this.solicitud32614State.subcontrataEmpleados,
+            subcontrataBimestre: this.solicitud32614State.subcontrataBimestre,
           });
         })
       )
@@ -201,10 +201,10 @@ export class SeccionSubcontratadosComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (respuesta: SeccionSubcontratados) => {
           /** Actualiza el estado del RFC y la razón social con los datos obtenidos */
-          this.solicitud32605Store.actualizarSubcontrataRFC(
+          this.solicitud32614Store.actualizarSubcontrataRFC(
             respuesta.subcontrataRFC
           );
-          this.solicitud32605Store.actualizarSubcontrataRazonSocial(
+          this.solicitud32614Store.actualizarSubcontrataRazonSocial(
             respuesta.subcontrataRazonSocial
           );
         },
@@ -214,30 +214,30 @@ export class SeccionSubcontratadosComponent implements OnInit, OnDestroy {
   /** Método para actualizar el RFC de búsqueda en el store */
   actualizarSubcontrataRFCBusqueda(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarSubcontrataRFCBusqueda(VALOR);
+    this.solicitud32614Store.actualizarSubcontrataRFCBusqueda(VALOR);
   }
 
   /** Método para actualizar el RFC de la subcontratista en el store */
   actualizarSubcontrataRFC(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarSubcontrataRFC(VALOR);
+    this.solicitud32614Store.actualizarSubcontrataRFC(VALOR);
   }
 
   /** Método para actualizar la razón social de la subcontratista en el store */
   actualizarSubcontrataRazonSocial(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarSubcontrataRazonSocial(VALOR);
+    this.solicitud32614Store.actualizarSubcontrataRazonSocial(VALOR);
   }
 
   /** Método para actualizar el número de empleados en el store */
   actualizarSubcontrataEmpleados(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarSubcontrataEmpleados(VALOR);
+    this.solicitud32614Store.actualizarSubcontrataEmpleados(VALOR);
   }
 
   /** Método para actualizar el bimestre en el store */
   actualizarSubcontrataBimestre(evento: Catalogo): void {
-    this.solicitud32605Store.actualizarSubcontrataBimestre(evento.id);
+    this.solicitud32614Store.actualizarSubcontrataBimestre(evento.id);
   }
 
   /** Método para emitir los datos del formulario al componente padre */

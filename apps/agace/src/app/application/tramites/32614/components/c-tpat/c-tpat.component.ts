@@ -8,9 +8,9 @@ import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
-import { Solicitud32605State } from '../../estados/solicitud32605.store';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
+import { Solicitud32614Query } from '../../estados/solicitud32614.query';
+import { Solicitud32614State } from '../../estados/solicitud32614.store';
+import { Solicitud32614Store } from '../../estados/solicitud32614.store';
 import { SolicitudRadioLista } from '../../models/solicitud.model';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
@@ -43,7 +43,7 @@ export class CTPATComponent implements OnInit, OnDestroy {
   sinoOpcion: InputRadio = {} as InputRadio;
 
   /** Estado actual de la solicitud obtenido desde el store */
-  solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
+  solicitud32614State: Solicitud32614State = {} as Solicitud32614State;
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -55,14 +55,14 @@ export class CTPATComponent implements OnInit, OnDestroy {
    * Constructor del componente. Inyecta dependencias necesarias y carga las opciones del radio button.
    * @param fb - FormBuilder para crear el formulario reactivo.
    * @param solicitudService - Servicio que realiza operaciones sobre la solicitud.
-   * @param solicitud32605Store - Store para actualizar el estado de la solicitud.
-   * @param solicitud32605Query - Query para observar cambios en el estado de la solicitud.
+   * @param solicitud32614Store - Store para actualizar el estado de la solicitud.
+   * @param solicitud32614Query - Query para observar cambios en el estado de la solicitud.
    */
   constructor(
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
-    public solicitud32605Store: Solicitud32605Store,
-    public solicitud32605Query: Solicitud32605Query,
+    public solicitud32614Store: Solicitud32614Store,
+    public solicitud32614Query: Solicitud32614Query,
     public consultaioQuery: ConsultaioQuery
   ) {
     /**
@@ -118,7 +118,7 @@ export class CTPATComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Inicializa el formulario `ctpatForm` con los valores actuales del estado `solicitud32605State`.
+   * Inicializa el formulario `ctpatForm` con los valores actuales del estado `solicitud32614State`.
    *
    * Este método crea un formulario reactivo usando `FormBuilder`, asignando los valores
    * de los campos `'2089'`, `'2090'` y `'2091'`. Además, se suscribe al observable
@@ -129,20 +129,20 @@ export class CTPATComponent implements OnInit, OnDestroy {
    */
   inicializarFormulario(): void {
     this.ctpatForm = this.fb.group({
-      '2089': [this.solicitud32605State[2089]],
-      '2090': [this.solicitud32605State[2090]],
-      '2091': [this.solicitud32605State[2091]],
+      '2089': [this.solicitud32614State[2089]],
+      '2090': [this.solicitud32614State[2090]],
+      '2091': [this.solicitud32614State[2091]],
     });
 
-    this.solicitud32605Query.selectSolicitud$
+    this.solicitud32614Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
-        map((respuesta: Solicitud32605State) => {
-          this.solicitud32605State = respuesta;
+        map((respuesta: Solicitud32614State) => {
+          this.solicitud32614State = respuesta;
           this.ctpatForm.patchValue({
-            '2089': this.solicitud32605State[2089],
-            '2090': this.solicitud32605State[2090],
-            '2091': this.solicitud32605State[2091],
+            '2089': this.solicitud32614State[2089],
+            '2090': this.solicitud32614State[2090],
+            '2091': this.solicitud32614State[2091],
           });
         })
       )
@@ -168,7 +168,7 @@ export class CTPATComponent implements OnInit, OnDestroy {
    * @param evento - Valor seleccionado en el radio button.
    */
   actualizar2089(evento: number | string): void {
-    this.solicitud32605Store.actualizar2089(evento);
+    this.solicitud32614Store.actualizar2089(evento);
   }
 
   /**
@@ -176,7 +176,7 @@ export class CTPATComponent implements OnInit, OnDestroy {
    * @param evento - Valor seleccionado en el radio button.
    */
   actualizar2090(evento: number | string): void {
-    this.solicitud32605Store.actualizar2090(evento);
+    this.solicitud32614Store.actualizar2090(evento);
   }
 
   /**
@@ -184,7 +184,7 @@ export class CTPATComponent implements OnInit, OnDestroy {
    * @param evento - Valor seleccionado en el radio button.
    */
   actualizar2091(evento: number | string): void {
-    this.solicitud32605Store.actualizar2091(evento);
+    this.solicitud32614Store.actualizar2091(evento);
   }
 
   /**

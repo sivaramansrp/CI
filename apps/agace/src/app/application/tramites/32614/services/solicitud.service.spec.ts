@@ -2,13 +2,13 @@ import { TestBed } from '@angular/core/testing';
 import { SolicitudService } from './solicitud.service';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
-import { Solicitud32605Store } from '../estados/solicitud32605.store';
+import { Solicitud32614Store } from '../estados/solicitud32614.store';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('SolicitudService', () => {
   let service: SolicitudService;
   let httpClientSpy: jest.Mocked<HttpClient>;
-  let storeSpy: jest.Mocked<Solicitud32605Store>;
+  let storeSpy: jest.Mocked<Solicitud32614Store>;
 
   beforeEach(() => {
     httpClientSpy = {
@@ -60,7 +60,7 @@ describe('SolicitudService', () => {
       providers: [
         SolicitudService,
         { provide: HttpClient, useValue: httpClientSpy },
-        { provide: Solicitud32605Store, useValue: storeSpy }
+        { provide: Solicitud32614Store, useValue: storeSpy }
       ]
     });
     service = TestBed.inject(SolicitudService);
@@ -75,7 +75,7 @@ describe('SolicitudService', () => {
     httpClientSpy.get.mockReturnValue(of(mockData));
     service.conseguirRecibirNotificaciones().subscribe(data => {
       expect(data).toEqual(mockData);
-      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32605/recibir-notificaciones.json');
+      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32614/recibir-notificaciones.json');
       done();
     });
   });
@@ -85,7 +85,7 @@ describe('SolicitudService', () => {
     httpClientSpy.get.mockReturnValue(of(mockData));
     service.conseguirEnlaceOperativoDatos().subscribe(data => {
       expect(data).toEqual(mockData);
-      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32605/enlace-operativo-datos.json');
+      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32614/enlace-operativo-datos.json');
       done();
     });
   });
@@ -95,7 +95,7 @@ describe('SolicitudService', () => {
     httpClientSpy.get.mockReturnValue(of(mockData));
     service.conseguirRepresentanteLegalDatos().subscribe(data => {
       expect(data).toEqual(mockData);
-      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32605/representante-legal-datos.json');
+      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32614/representante-legal-datos.json');
       done();
     });
   });
@@ -105,7 +105,7 @@ describe('SolicitudService', () => {
     httpClientSpy.get.mockReturnValue(of(mockData));
     service.conseguirOpcionDeRadio().subscribe(data => {
       expect(data).toEqual(mockData);
-      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32605/solicitud-radio-lista.json');
+      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32614/solicitud-radio-lista.json');
       done();
     });
   });
@@ -115,7 +115,7 @@ describe('SolicitudService', () => {
     httpClientSpy.get.mockReturnValue(of(mockData));
     service.conseguirTransportistasLista().subscribe(data => {
       expect(data).toEqual(mockData);
-      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32605/transportistas-lista.json');
+      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32614/transportistas-lista.json');
       done();
     });
   });
@@ -125,7 +125,7 @@ describe('SolicitudService', () => {
     httpClientSpy.get.mockReturnValue(of(mockData));
     service.conseguirSolicitudCatologoSelectLista().subscribe(data => {
       expect(data).toEqual(mockData);
-      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32605/solicitud-catologo-select-lista.json');
+      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32614/solicitud-catologo-select-lista.json');
       done();
     });
   });
@@ -135,7 +135,7 @@ describe('SolicitudService', () => {
     httpClientSpy.get.mockReturnValue(of(mockData));
     service.conseguirSeccionSubcontratados().subscribe(data => {
       expect(data).toEqual(mockData);
-      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32605/seccion-subcontratados.json');
+      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32614/seccion-subcontratados.json');
       done();
     });
   });
@@ -145,7 +145,7 @@ describe('SolicitudService', () => {
     httpClientSpy.get.mockReturnValue(of(mockData));
     service.conseguirInventarios().subscribe(data => {
       expect(data).toEqual(mockData);
-      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32605/inventarios-datos.json');
+      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32614/inventarios-datos.json');
       done();
     });
   });
@@ -155,7 +155,7 @@ describe('SolicitudService', () => {
     httpClientSpy.get.mockReturnValue(of(mockData));
     service.guardarDatosFormulario().subscribe(data => {
       expect(data).toEqual(mockData);
-      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32605/guardar-datos-formulario.json');
+      expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32614/guardar-datos-formulario.json');
       done();
     });
   });

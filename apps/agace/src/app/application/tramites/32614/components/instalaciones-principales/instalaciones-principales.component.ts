@@ -13,9 +13,9 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
-import { Solicitud32605State } from '../../estados/solicitud32605.store';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
+import { Solicitud32614Query } from '../../estados/solicitud32614.query';
+import { Solicitud32614State } from '../../estados/solicitud32614.store';
+import { Solicitud32614Store } from '../../estados/solicitud32614.store';
 import { SolicitudCatologoSelectLista } from '../../models/solicitud.model';
 import { SolicitudRadioLista } from '../../models/solicitud.model';
 import { SolicitudService } from '../../services/solicitud.service';
@@ -75,7 +75,7 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
    * Estado de la solicitud.
    * Se utiliza para obtener y gestionar el estado actual de la solicitud en el formulario.
    */
-  solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
+  solicitud32614State: Solicitud32614State = {} as Solicitud32614State;
 
   /**
    * Emisor de eventos para emitir los datos de las instalaciones principales.
@@ -96,8 +96,8 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
   constructor(
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
-    public solicitud32605Store: Solicitud32605Store,
-    public solicitud32605Query: Solicitud32605Query,
+    public solicitud32614Store: Solicitud32614Store,
+    public solicitud32614Query: Solicitud32614Query,
     public consultaioQuery: ConsultaioQuery
   ) {
     /**
@@ -155,7 +155,7 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Inicializa el formulario `instalacionesPrincipalesForm` con los datos del estado actual `solicitud32605State`.
+   * Inicializa el formulario `instalacionesPrincipalesForm` con los datos del estado actual `solicitud32614State`.
    *
    * Este formulario recopila información sobre las instalaciones principales de la empresa, incluyendo:
    * - Ubicación geográfica (municipio, entidad federativa, código postal).
@@ -171,52 +171,52 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
   inicializarFormulario(): void {
     this.instalacionesPrincipalesForm = this.fb.group({
       principales: [
-        this.solicitud32605State.principales,
+        this.solicitud32614State.principales,
         [Validators.required],
       ],
-      municipio: [this.solicitud32605State.municipio],
+      municipio: [this.solicitud32614State.municipio],
       tipoDeInstalacion: [
-        this.solicitud32605State.tipoDeInstalacion,
+        this.solicitud32614State.tipoDeInstalacion,
         [Validators.required],
       ],
-      entidadFederativa: [this.solicitud32605State.entidadFederativa],
-      registroSESAT: [this.solicitud32605State.entidadFederativa],
-      descripcion: [this.solicitud32605State.descripcion],
-      codigoPostal: [this.solicitud32605State.codigoPostal],
+      entidadFederativa: [this.solicitud32614State.entidadFederativa],
+      registroSESAT: [this.solicitud32614State.entidadFederativa],
+      descripcion: [this.solicitud32614State.descripcion],
+      codigoPostal: [this.solicitud32614State.codigoPostal],
       procesoProductivo: [
-        this.solicitud32605State.procesoProductivo,
+        this.solicitud32614State.procesoProductivo,
         [Validators.required],
       ],
       goceDelInmueble: [
-        this.solicitud32605State.goceDelInmueble,
+        this.solicitud32614State.goceDelInmueble,
         [Validators.required],
       ],
-      empresa: [this.solicitud32605State.empresa],
+      empresa: [this.solicitud32614State.empresa],
       comercioExterior: [
-        this.solicitud32605State.comercioExterior,
+        this.solicitud32614State.comercioExterior,
         [Validators.required],
       ],
-      mutuo: [this.solicitud32605State.mutuo, [Validators.required]],
+      mutuo: [this.solicitud32614State.mutuo, [Validators.required]],
     });
 
-    this.solicitud32605Query.selectSolicitud$
+    this.solicitud32614Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
-        map((respuesta: Solicitud32605State) => {
-          this.solicitud32605State = respuesta;
+        map((respuesta: Solicitud32614State) => {
+          this.solicitud32614State = respuesta;
           this.instalacionesPrincipalesForm.patchValue({
-            principales: this.solicitud32605State.principales,
-            municipio: this.solicitud32605State.municipio,
-            tipoDeInstalacion: this.solicitud32605State.tipoDeInstalacion,
-            entidadFederativa: this.solicitud32605State.entidadFederativa,
-            registroSESAT: this.solicitud32605State.registroSESAT,
-            descripcion: this.solicitud32605State.descripcion,
-            codigoPostal: this.solicitud32605State.codigoPostal,
-            procesoProductivo: this.solicitud32605State.procesoProductivo,
-            goceDelInmueble: this.solicitud32605State.goceDelInmueble,
-            empresa: this.solicitud32605State.empresa,
-            comercioExterior: this.solicitud32605State.comercioExterior,
-            mutuo: this.solicitud32605State.mutuo,
+            principales: this.solicitud32614State.principales,
+            municipio: this.solicitud32614State.municipio,
+            tipoDeInstalacion: this.solicitud32614State.tipoDeInstalacion,
+            entidadFederativa: this.solicitud32614State.entidadFederativa,
+            registroSESAT: this.solicitud32614State.registroSESAT,
+            descripcion: this.solicitud32614State.descripcion,
+            codigoPostal: this.solicitud32614State.codigoPostal,
+            procesoProductivo: this.solicitud32614State.procesoProductivo,
+            goceDelInmueble: this.solicitud32614State.goceDelInmueble,
+            empresa: this.solicitud32614State.empresa,
+            comercioExterior: this.solicitud32614State.comercioExterior,
+            mutuo: this.solicitud32614State.mutuo,
           });
         })
       )
@@ -258,7 +258,7 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
    * Se utiliza para reflejar el cambio en el formulario.
    */
   actualizarPrincipales(valor: string | number): void {
-    this.solicitud32605Store.actualizarPrincipales(valor);
+    this.solicitud32614Store.actualizarPrincipales(valor);
   }
 
   /**
@@ -267,7 +267,7 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
    */
   actualizarMunicipio(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarMunicipio(VALOR);
+    this.solicitud32614Store.actualizarMunicipio(VALOR);
   }
 
   /**
@@ -275,7 +275,7 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
    * Se utiliza para reflejar el cambio en el formulario.
    */
   actualizarTipoDeInstalacion(evento: Catalogo): void {
-    this.solicitud32605Store.actualizarTipoDeInstalacion(evento.id);
+    this.solicitud32614Store.actualizarTipoDeInstalacion(evento.id);
   }
 
   /**
@@ -284,7 +284,7 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
    */
   actualizarEntidadFederativa(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarEntidadFederativa(VALOR);
+    this.solicitud32614Store.actualizarEntidadFederativa(VALOR);
   }
 
   /**
@@ -293,7 +293,7 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
    */
   actualizarRegistroSESAT(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarRegistroSESAT(VALOR);
+    this.solicitud32614Store.actualizarRegistroSESAT(VALOR);
   }
 
   /**
@@ -302,7 +302,7 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
    */
   actualizarDescripcion(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarDescripcion(VALOR);
+    this.solicitud32614Store.actualizarDescripcion(VALOR);
   }
 
   /**
@@ -311,7 +311,7 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
    */
   actualizarCodigoPostal(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarCodigoPostal(VALOR);
+    this.solicitud32614Store.actualizarCodigoPostal(VALOR);
   }
 
   /**
@@ -319,7 +319,7 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
    * Se utiliza para reflejar el cambio en el formulario.
    */
   actualizarProcesoProductivo(valor: string | number): void {
-    this.solicitud32605Store.actualizarProcesoProductivo(valor);
+    this.solicitud32614Store.actualizarProcesoProductivo(valor);
   }
 
   /**
@@ -327,7 +327,7 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
    * Se utiliza para reflejar el cambio en el formulario.
    */
   actualizarGoceDelInmueble(valor: string | number): void {
-    this.solicitud32605Store.actualizarGoceDelInmueble(valor);
+    this.solicitud32614Store.actualizarGoceDelInmueble(valor);
   }
 
   /**
@@ -335,7 +335,7 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
    * Se utiliza para reflejar el cambio en el formulario.
    */
   actualizarEmpresa(valor: string | number): void {
-    this.solicitud32605Store.actualizarEmpresa(valor);
+    this.solicitud32614Store.actualizarEmpresa(valor);
   }
 
   /**
@@ -343,7 +343,7 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
    * Se utiliza para reflejar el cambio en el formulario.
    */
   actualizarComercioExterior(valor: string | number): void {
-    this.solicitud32605Store.actualizarComercioExterior(valor);
+    this.solicitud32614Store.actualizarComercioExterior(valor);
   }
 
   /**
@@ -351,7 +351,7 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
    * Se utiliza para reflejar el cambio en el formulario.
    */
   actualizarMutuo(valor: string | number): void {
-    this.solicitud32605Store.actualizarMutuo(valor);
+    this.solicitud32614Store.actualizarMutuo(valor);
   }
 
   /**

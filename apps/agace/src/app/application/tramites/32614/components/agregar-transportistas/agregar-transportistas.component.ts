@@ -8,9 +8,9 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
-import { Solicitud32605State } from '../../estados/solicitud32605.store';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
+import { Solicitud32614Query } from '../../estados/solicitud32614.query';
+import { Solicitud32614State } from '../../estados/solicitud32614.store';
+import { Solicitud32614Store } from '../../estados/solicitud32614.store';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
@@ -42,7 +42,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
 
   /** Estado actual de la solicitud obtenido desde el store */
-  solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
+  solicitud32614State: Solicitud32614State = {} as Solicitud32614State;
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -59,8 +59,8 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     public solicitudService: SolicitudService,
-    public solicitud32605Store: Solicitud32605Store,
-    public solicitud32605Query: Solicitud32605Query,
+    public solicitud32614Store: Solicitud32614Store,
+    public solicitud32614Query: Solicitud32614Query,
     public consultaioQuery: ConsultaioQuery
   ) {
     /**
@@ -114,9 +114,9 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
     }
   }
 
-   /**
+  /**
    * Inicializa el formulario `agregarEnlaceOperativoForm` con los valores actuales
-   * del estado `solicitud32605State`.
+   * del estado `solicitud32614State`.
    *
    * Algunos campos están deshabilitados porque no deben ser editables por el usuario.
    * Aplica validaciones como `required`, `email`, y un patrón para el teléfono.
@@ -129,50 +129,50 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
   inicializarFormulario(): void {
     this.transportistaCertificacionForm = this.fb.group({
       transportistaRFC: [
-        this.solicitud32605State.transportistaRFC,
+        this.solicitud32614State.transportistaRFC,
         [Validators.required, Validators.maxLength(13)],
       ],
       transportistaRFCModifTrans: [
         {
-          value: this.solicitud32605State.transportistaRFCModifTrans,
+          value: this.solicitud32614State.transportistaRFCModifTrans,
           disabled: true,
         },
         [Validators.maxLength(13)],
       ],
       transportistaRazonSocial: [
         {
-          value: this.solicitud32605State.transportistaRazonSocial,
+          value: this.solicitud32614State.transportistaRazonSocial,
           disabled: true,
         },
         [Validators.maxLength(254)],
       ],
       transportistaDomicilio: [
         {
-          value: this.solicitud32605State.transportistaDomicilio,
+          value: this.solicitud32614State.transportistaDomicilio,
           disabled: true,
         },
         [Validators.maxLength(300)],
       ],
       transportistaCaat: [
-        { value: this.solicitud32605State.transportistaCaat, disabled: true },
+        { value: this.solicitud32614State.transportistaCaat, disabled: true },
         [Validators.maxLength(254)],
       ],
       transportistaIdDomicilio: [
-        this.solicitud32605State.transportistaIdDomicilio,
+        this.solicitud32614State.transportistaIdDomicilio,
       ],
-      transportistaIdRFC: [this.solicitud32605State.transportistaIdRFC],
+      transportistaIdRFC: [this.solicitud32614State.transportistaIdRFC],
       transportistaIdRazonSocial: [
-        this.solicitud32605State.transportistaIdRazonSocial,
+        this.solicitud32614State.transportistaIdRazonSocial,
       ],
-      transportistaIdCaat: [this.solicitud32605State.transportistaIdCaat],
+      transportistaIdCaat: [this.solicitud32614State.transportistaIdCaat],
     });
 
     /** Se suscribe al estado de la solicitud para mantener sincronizado el formulario */
-    this.solicitud32605Query.selectSolicitud$
+    this.solicitud32614Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
-        map((respuesta: Solicitud32605State) => {
-          this.solicitud32605State = respuesta;
+        map((respuesta: Solicitud32614State) => {
+          this.solicitud32614State = respuesta;
           this.transportistaCertificacionForm.patchValue({
             transportistaRFC: respuesta.transportistaIdRFC,
             transportistaRFCModifTrans: respuesta.transportistaRFCModifTrans,
@@ -190,7 +190,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    */
   actualizarTransportistaRFC(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarTransportistaRFC(VALOR);
+    this.solicitud32614Store.actualizarTransportistaRFC(VALOR);
   }
 
   /**
@@ -198,7 +198,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    */
   actualizarTransportistaRFCModifTrans(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarTransportistaRFCModifTrans(VALOR);
+    this.solicitud32614Store.actualizarTransportistaRFCModifTrans(VALOR);
   }
 
   /**
@@ -206,7 +206,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    */
   actualizarTransportistaRazonSocial(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarTransportistaRazonSocial(VALOR);
+    this.solicitud32614Store.actualizarTransportistaRazonSocial(VALOR);
   }
 
   /**
@@ -214,7 +214,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    */
   actualizarTransportistaDomicilio(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarTransportistaDomicilio(VALOR);
+    this.solicitud32614Store.actualizarTransportistaDomicilio(VALOR);
   }
 
   /**
@@ -222,7 +222,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    */
   actualizarTransportistaCaat(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarTransportistaCaat(VALOR);
+    this.solicitud32614Store.actualizarTransportistaCaat(VALOR);
   }
 
   /**
@@ -253,13 +253,13 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (respuesta: TransportistasTable[]) => {
-          this.solicitud32605Store.actualizarTransportistaRazonSocial(
+          this.solicitud32614Store.actualizarTransportistaRazonSocial(
             respuesta[0].razonSocial
           );
-          this.solicitud32605Store.actualizarTransportistaDomicilio(
+          this.solicitud32614Store.actualizarTransportistaDomicilio(
             respuesta[0].domicilio
           );
-          this.solicitud32605Store.actualizarTransportistaCaat(
+          this.solicitud32614Store.actualizarTransportistaCaat(
             respuesta[0].caat
           );
         },

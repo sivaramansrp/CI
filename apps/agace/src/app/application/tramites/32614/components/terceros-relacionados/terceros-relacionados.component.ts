@@ -19,9 +19,9 @@ import { RECIBIR_NOTIFICACIONES_CONFIGURACION } from '../../constants/solicitud.
 import { ReactiveFormsModule } from '@angular/forms';
 import { RecibirNotificaciones } from '../../models/solicitud.model';
 import { RepresentanteLegal } from '../../models/solicitud.model';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
-import { Solicitud32605State } from '../../estados/solicitud32605.store';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
+import { Solicitud32614Query } from '../../estados/solicitud32614.query';
+import { Solicitud32614State } from '../../estados/solicitud32614.store';
+import { Solicitud32614Store } from '../../estados/solicitud32614.store';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
@@ -102,7 +102,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
 
   /** Estado de la solicitud actual */
-  solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
+  solicitud32614State: Solicitud32614State = {} as Solicitud32614State;
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -115,14 +115,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * realiza las cargas iniciales de datos.
    *
    * @param solicitudService Servicio que maneja las solicitudes
-   * @param solicitud32605Store Almacena el estado de la solicitud
-   * @param solicitud32605Query Consulta el estado de la solicitud
+   * @param solicitud32614Store Almacena el estado de la solicitud
+   * @param solicitud32614Query Consulta el estado de la solicitud
    */
   constructor(
     private fb: FormBuilder,
     public solicitudService: SolicitudService,
-    public solicitud32605Store: Solicitud32605Store,
-    public solicitud32605Query: Solicitud32605Query,
+    public solicitud32614Store: Solicitud32614Store,
+    public solicitud32614Query: Solicitud32614Query,
     public consultaioQuery: ConsultaioQuery
   ) {
     /**
@@ -180,47 +180,47 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Inicializa el formulario `miembroEmpresaForm` con los datos del estado actual `solicitud32605State`.
+   * Inicializa el formulario `miembroEmpresaForm` con los datos del estado actual `solicitud32614State`.
    *
    * Este formulario recopila información detallada sobre un miembro de la empresa, como su nombre,
    * nacionalidad, RFC, tipo de persona y relación con la empresa.
    */
   inicializarFormulario(): void {
     this.tercerosRelacionadosForm = this.fb.group({
-      idPersonaSolicitud: [this.solicitud32605State.idPersonaSolicitud],
-      rfcTercero: [this.solicitud32605State.rfcTercero, [Validators.required]],
-      rfc: [{ value: this.solicitud32605State.rfc, disabled: true }],
-      nombre: [{ value: this.solicitud32605State.nombre, disabled: true }],
+      idPersonaSolicitud: [this.solicitud32614State.idPersonaSolicitud],
+      rfcTercero: [this.solicitud32614State.rfcTercero, [Validators.required]],
+      rfc: [{ value: this.solicitud32614State.rfc, disabled: true }],
+      nombre: [{ value: this.solicitud32614State.nombre, disabled: true }],
       apellidoPaterno: [
-        { value: this.solicitud32605State.apellidoPaterno, disabled: true },
+        { value: this.solicitud32614State.apellidoPaterno, disabled: true },
       ],
       apellidoMaterno: [
-        { value: this.solicitud32605State.apellidoMaterno, disabled: true },
+        { value: this.solicitud32614State.apellidoMaterno, disabled: true },
       ],
-      telefono: [this.solicitud32605State.telefono, [Validators.required]],
+      telefono: [this.solicitud32614State.telefono, [Validators.required]],
       correoElectronico: [
-        this.solicitud32605State.correoElectronico,
+        this.solicitud32614State.correoElectronico,
         [Validators.required, Validators.email],
       ],
     });
 
-    this.solicitud32605Query.selectSolicitud$
+    this.solicitud32614Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
-        map((respuesta: Solicitud32605State) => {
-          this.solicitud32605State = respuesta;
+        map((respuesta: Solicitud32614State) => {
+          this.solicitud32614State = respuesta;
           this.tercerosRelacionadosForm.patchValue({
-            idPersonaSolicitud: this.solicitud32605State.idPersonaSolicitud,
-            rfcTercero: this.solicitud32605State.rfcTercero,
-            rfc: this.solicitud32605State.rfc,
-            nombre: this.solicitud32605State.nombre,
-            apellidoPaterno: this.solicitud32605State.apellidoPaterno,
-            apellidoMaterno: this.solicitud32605State.apellidoMaterno,
-            telefono: this.solicitud32605State.telefono,
-            correoElectronico: this.solicitud32605State.correoElectronico,
+            idPersonaSolicitud: this.solicitud32614State.idPersonaSolicitud,
+            rfcTercero: this.solicitud32614State.rfcTercero,
+            rfc: this.solicitud32614State.rfc,
+            nombre: this.solicitud32614State.nombre,
+            apellidoPaterno: this.solicitud32614State.apellidoPaterno,
+            apellidoMaterno: this.solicitud32614State.apellidoMaterno,
+            telefono: this.solicitud32614State.telefono,
+            correoElectronico: this.solicitud32614State.correoElectronico,
           });
           this.enlaceOperativosLista =
-            this.solicitud32605State.enlaceOperativosLista;
+            this.solicitud32614State.enlaceOperativosLista;
         })
       )
       .subscribe();
@@ -259,16 +259,16 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         .conseguirRepresentanteLegalDatos()
         .pipe(takeUntil(this.destroy$))
         .subscribe((respuesta: RepresentanteLegal) => {
-          this.solicitud32605Store.actualizarRfc(respuesta.rfc);
-          this.solicitud32605Store.actualizarNombre(respuesta.nombre);
-          this.solicitud32605Store.actualizarApellidoPaterno(
+          this.solicitud32614Store.actualizarRfc(respuesta.rfc);
+          this.solicitud32614Store.actualizarNombre(respuesta.nombre);
+          this.solicitud32614Store.actualizarApellidoPaterno(
             respuesta.apellidoPaterno
           );
-          this.solicitud32605Store.actualizarApellidoMaterno(
+          this.solicitud32614Store.actualizarApellidoMaterno(
             respuesta.apellidoMaterno
           );
-          this.solicitud32605Store.actualizarTelefono(respuesta.telefono);
-          this.solicitud32605Store.actualizarCorreoElectronico(
+          this.solicitud32614Store.actualizarTelefono(respuesta.telefono);
+          this.solicitud32614Store.actualizarCorreoElectronico(
             respuesta.correoElectronico
           );
         });
@@ -278,19 +278,19 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   /** Métodos para actualizar los valores en el store */
   actualizarRfcTercero(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarRfcTercero(VALOR);
+    this.solicitud32614Store.actualizarRfcTercero(VALOR);
   }
 
   /** Métodos para actualizar los valores en el store */
   actualizarTelefono(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarTelefono(VALOR);
+    this.solicitud32614Store.actualizarTelefono(VALOR);
   }
 
   /** Métodos para actualizar los valores en el store */
   actualizarCorreoElectronico(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarCorreoElectronico(VALOR);
+    this.solicitud32614Store.actualizarCorreoElectronico(VALOR);
   }
 
   /**
@@ -357,7 +357,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     );
     this.pedimentos.push(PEDIMENTO);
     this.enlaceOperativosLista = [...this.enlaceOperativosLista, evento];
-    this.solicitud32605Store.actualizarEnlaceOperativosLista(
+    this.solicitud32614Store.actualizarEnlaceOperativosLista(
       this.enlaceOperativosLista
     );
   }

@@ -1,13 +1,13 @@
-import { Solicitud32605State, Solicitud32605Store } from './solicitud32605.store';
+import { Solicitud32614State, Solicitud32614Store } from './solicitud32614.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
 /**
- * Servicio de consulta (Query) para la solicitud 32605.
+ * Servicio de consulta (Query) para la solicitud 32614.
  * Permite acceder y suscribirse a los cambios en el estado de la solicitud.
  */
 @Injectable({ providedIn: 'root' })
-export class Solicitud32605Query extends Query<Solicitud32605State> {
+export class Solicitud32614Query extends Query<Solicitud32614State> {
 
   /**
    * Observable que selecciona y emite el estado completo de la solicitud.
@@ -17,11 +17,11 @@ export class Solicitud32605Query extends Query<Solicitud32605State> {
   });
 
   /**
-   * Constructor de la consulta de la solicitud 32605.
+   * Constructor de la consulta de la solicitud 32614.
    * @param store - Almacén de estado de la solicitud.
    */
   constructor(
-    protected override store: Solicitud32605Store) {
+    protected override store: Solicitud32614Store) {
     super(store);
   }
 }

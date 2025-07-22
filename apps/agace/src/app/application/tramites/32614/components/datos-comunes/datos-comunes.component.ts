@@ -29,9 +29,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
 import { SeccionSociosIC } from '../../models/solicitud.model';
 import { SeccionSubcontratadosComponent } from '../seccion-subcontratados/seccion-subcontratados.component';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
-import { Solicitud32605State } from '../../estados/solicitud32605.store';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
+import { Solicitud32614Query } from '../../estados/solicitud32614.query';
+import { Solicitud32614State } from '../../estados/solicitud32614.store';
+import { Solicitud32614Store } from '../../estados/solicitud32614.store';
 import { SolicitudCatologoSelectLista } from '../../models/solicitud.model';
 import { SolicitudRadioLista } from '../../models/solicitud.model';
 import { SolicitudService } from '../../services/solicitud.service';
@@ -101,8 +101,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   /** Catálogo con opción para indicar "todos" */
   indiqueTodos: CatalogosSelect = {} as CatalogosSelect;
 
-  /** Estado actual del formulario 32605 */
-  solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
+  /** Estado actual del formulario 32614 */
+  solicitud32614State: Solicitud32614State = {} as Solicitud32614State;
 
   /** Tipo de tabla utilizada para mostrar número de empleados (checkbox) */
   numeroDeEmpleadosTabla = TablaSeleccion.CHECKBOX;
@@ -193,8 +193,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   constructor(
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
-    public solicitud32605Store: Solicitud32605Store,
-    public solicitud32605Query: Solicitud32605Query,
+    public solicitud32614Store: Solicitud32614Store,
+    public solicitud32614Query: Solicitud32614Query,
     public consultaioQuery: ConsultaioQuery
   ) {
     /**
@@ -255,97 +255,97 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Inicializa el formulario `datosComunesForm` con los valores actuales del estado `solicitud32605State`.
+   * Inicializa el formulario `datosComunesForm` con los valores actuales del estado `solicitud32614State`.
    *
    * Este formulario contiene una amplia variedad de campos que representan diferentes datos
-   * requeridos por la solicitud 32605. Los valores iniciales de cada control se obtienen
+   * requeridos por la solicitud 32614. Los valores iniciales de cada control se obtienen
    * directamente del estado actual gestionado por el store.
    *
    */
   inicializarFormulario(): void {
     this.datosComunesForm = this.fb.group({
-      catseleccionados: [this.solicitud32605State.catseleccionados],
-      servicio: [this.solicitud32605State.servicio],
-      '190': [this.solicitud32605State['190']],
-      '191': [this.solicitud32605State['191']],
-      '199': [this.solicitud32605State['199']],
-      empleados: [this.solicitud32605State.empleados],
-      bimestre: [this.solicitud32605State.bimestre],
-      '2034': [this.solicitud32605State['2034']],
-      '236': [this.solicitud32605State['236']],
-      '237': [this.solicitud32605State['237']],
-      '238': [this.solicitud32605State['238']],
-      '239': [this.solicitud32605State['239']],
-      '240': [this.solicitud32605State['240']],
-      '243': [this.solicitud32605State['243']],
-      '244': [this.solicitud32605State['244']],
-      '245': [this.solicitud32605State['245']],
-      indiqueTodos: [this.solicitud32605State.indiqueTodos],
-      '246': [this.solicitud32605State['246']],
-      file1: [this.solicitud32605State.file1],
-      file2: [this.solicitud32605State.file2],
-      '247': [this.solicitud32605State['247']],
-      '248': [this.solicitud32605State['248']],
-      identificacion: [this.solicitud32605State.identificacion],
-      lugarDeRadicacion: [this.solicitud32605State.lugarDeRadicacion],
-      '249': [this.solicitud32605State['249']],
-      '250': [this.solicitud32605State['250']],
-      '251': [this.solicitud32605State['251']],
-      checkbox1: [this.solicitud32605State.checkbox1],
-      checkbox2: [this.solicitud32605State.checkbox2],
-      checkbox3: [this.solicitud32605State.checkbox3],
-      actualmente2: [this.solicitud32605State.actualmente2],
-      actualmente1: [this.solicitud32605State.actualmente1],
+      catseleccionados: [this.solicitud32614State.catseleccionados],
+      servicio: [this.solicitud32614State.servicio],
+      '190': [this.solicitud32614State['190']],
+      '191': [this.solicitud32614State['191']],
+      '199': [this.solicitud32614State['199']],
+      empleados: [this.solicitud32614State.empleados],
+      bimestre: [this.solicitud32614State.bimestre],
+      '2034': [this.solicitud32614State['2034']],
+      '236': [this.solicitud32614State['236']],
+      '237': [this.solicitud32614State['237']],
+      '238': [this.solicitud32614State['238']],
+      '239': [this.solicitud32614State['239']],
+      '240': [this.solicitud32614State['240']],
+      '243': [this.solicitud32614State['243']],
+      '244': [this.solicitud32614State['244']],
+      '245': [this.solicitud32614State['245']],
+      indiqueTodos: [this.solicitud32614State.indiqueTodos],
+      '246': [this.solicitud32614State['246']],
+      file1: [this.solicitud32614State.file1],
+      file2: [this.solicitud32614State.file2],
+      '247': [this.solicitud32614State['247']],
+      '248': [this.solicitud32614State['248']],
+      identificacion: [this.solicitud32614State.identificacion],
+      lugarDeRadicacion: [this.solicitud32614State.lugarDeRadicacion],
+      '249': [this.solicitud32614State['249']],
+      '250': [this.solicitud32614State['250']],
+      '251': [this.solicitud32614State['251']],
+      checkbox1: [this.solicitud32614State.checkbox1],
+      checkbox2: [this.solicitud32614State.checkbox2],
+      checkbox3: [this.solicitud32614State.checkbox3],
+      actualmente2: [this.solicitud32614State.actualmente2],
+      actualmente1: [this.solicitud32614State.actualmente1],
     });
 
     /**
      * Suscripción al estado de solicitud en el store para mantener
      * sincronizados los datos del formulario con el estado global.
      */
-    this.solicitud32605Query.selectSolicitud$
+    this.solicitud32614Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
-        map((respuesta: Solicitud32605State) => {
-          this.solicitud32605State = respuesta;
+        map((respuesta: Solicitud32614State) => {
+          this.solicitud32614State = respuesta;
           this.datosComunesForm.patchValue({
-            catseleccionados: this.solicitud32605State.catseleccionados,
-            servicio: this.solicitud32605State.servicio,
-            '190': this.solicitud32605State['190'],
-            '191': this.solicitud32605State['191'],
-            '199': this.solicitud32605State['199'],
-            empleados: this.solicitud32605State.empleados,
-            bimestre: this.solicitud32605State.bimestre,
-            '2034': this.solicitud32605State['2034'],
-            '236': this.solicitud32605State['236'],
-            '237': this.solicitud32605State['237'],
-            '238': this.solicitud32605State['238'],
-            '239': this.solicitud32605State['239'],
-            '240': this.solicitud32605State['240'],
-            '243': this.solicitud32605State['243'],
-            '244': this.solicitud32605State['244'],
-            '245': this.solicitud32605State['245'],
-            indiqueTodos: this.solicitud32605State.indiqueTodos,
-            '246': this.solicitud32605State['246'],
-            file1: this.solicitud32605State.file1,
-            file2: this.solicitud32605State.file2,
-            '247': this.solicitud32605State['247'],
-            '248': this.solicitud32605State['248'],
-            identificacion: this.solicitud32605State.identificacion,
-            lugarDeRadicacion: this.solicitud32605State.lugarDeRadicacion,
-            '249': this.solicitud32605State['249'],
-            '250': this.solicitud32605State['250'],
-            '251': this.solicitud32605State['251'],
-            checkbox1: this.solicitud32605State.checkbox1,
-            checkbox2: this.solicitud32605State.checkbox2,
-            checkbox3: this.solicitud32605State.checkbox3,
-            actualmente2: this.solicitud32605State.actualmente2,
-            actualmente1: this.solicitud32605State.actualmente1,
+            catseleccionados: this.solicitud32614State.catseleccionados,
+            servicio: this.solicitud32614State.servicio,
+            '190': this.solicitud32614State['190'],
+            '191': this.solicitud32614State['191'],
+            '199': this.solicitud32614State['199'],
+            empleados: this.solicitud32614State.empleados,
+            bimestre: this.solicitud32614State.bimestre,
+            '2034': this.solicitud32614State['2034'],
+            '236': this.solicitud32614State['236'],
+            '237': this.solicitud32614State['237'],
+            '238': this.solicitud32614State['238'],
+            '239': this.solicitud32614State['239'],
+            '240': this.solicitud32614State['240'],
+            '243': this.solicitud32614State['243'],
+            '244': this.solicitud32614State['244'],
+            '245': this.solicitud32614State['245'],
+            indiqueTodos: this.solicitud32614State.indiqueTodos,
+            '246': this.solicitud32614State['246'],
+            file1: this.solicitud32614State.file1,
+            file2: this.solicitud32614State.file2,
+            '247': this.solicitud32614State['247'],
+            '248': this.solicitud32614State['248'],
+            identificacion: this.solicitud32614State.identificacion,
+            lugarDeRadicacion: this.solicitud32614State.lugarDeRadicacion,
+            '249': this.solicitud32614State['249'],
+            '250': this.solicitud32614State['250'],
+            '251': this.solicitud32614State['251'],
+            checkbox1: this.solicitud32614State.checkbox1,
+            checkbox2: this.solicitud32614State.checkbox2,
+            checkbox3: this.solicitud32614State.checkbox3,
+            actualmente2: this.solicitud32614State.actualmente2,
+            actualmente1: this.solicitud32614State.actualmente1,
           });
           this.numeroDeEmpleadosLista =
-            this.solicitud32605State.numeroDeEmpleadosLista;
-          this.domiciliosDatos = this.solicitud32605State.domiciliosDatos;
+            this.solicitud32614State.numeroDeEmpleadosLista;
+          this.domiciliosDatos = this.solicitud32614State.domiciliosDatos;
           this.listaSeccionSociosIC =
-            this.solicitud32605State.listaSeccionSociosIC;
+            this.solicitud32614State.listaSeccionSociosIC;
         })
       )
       .subscribe();
@@ -445,7 +445,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   eventoActualizarMiembro(evento: SeccionSociosIC): void {
     this.listaSeccionSociosIC = [...this.listaSeccionSociosIC, evento];
-    this.solicitud32605Store.actualizarListaSeccionSociosIC(
+    this.solicitud32614Store.actualizarListaSeccionSociosIC(
       this.listaSeccionSociosIC
     );
     const PEDIMENTO = {
@@ -492,7 +492,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   seccionSubcontratados(evento: NumeroDeEmpleados): void {
     this.numeroDeEmpleadosLista = [...this.numeroDeEmpleadosLista, evento];
-    this.solicitud32605Store.actualizarNumeroDeEmpleadosLista(
+    this.solicitud32614Store.actualizarNumeroDeEmpleadosLista(
       this.numeroDeEmpleadosLista
     );
   }
@@ -505,7 +505,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   instalacionesPrincipales(evento: Domicilios): void {
     this.domiciliosDatos = [...this.domiciliosDatos, evento];
-    this.solicitud32605Store.actualizarDomiciliosDatos(this.domiciliosDatos);
+    this.solicitud32614Store.actualizarDomiciliosDatos(this.domiciliosDatos);
     const PEDIMENTO = {
       patente: 0,
       pedimento: 0,
@@ -525,7 +525,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @param {Catalogo} valor - Elemento del catálogo seleccionado.
    */
   actualizarCatseleccionados(valor: Catalogo): void {
-    this.solicitud32605Store.actualizarCatseleccionados(valor.id);
+    this.solicitud32614Store.actualizarCatseleccionados(valor.id);
   }
 
   /**
@@ -534,7 +534,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @param {Catalogo} valor - Elemento del catálogo correspondiente al servicio.
    */
   actualizarServicio(valor: Catalogo): void {
-    this.solicitud32605Store.actualizarServicio(valor.id);
+    this.solicitud32614Store.actualizarServicio(valor.id);
   }
 
   /**
@@ -543,7 +543,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @param {string | number} valor - Valor numérico o de texto para el campo 190.
    */
   actualizar190(valor: string | number): void {
-    this.solicitud32605Store.actualizar190(valor);
+    this.solicitud32614Store.actualizar190(valor);
   }
 
   /**
@@ -552,7 +552,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @param {string | number} valor - Valor numérico o de texto para el campo 191.
    */
   actualizar191(valor: string | number): void {
-    this.solicitud32605Store.actualizar191(valor);
+    this.solicitud32614Store.actualizar191(valor);
   }
 
   /**
@@ -561,7 +561,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @param {string | number} valor - Valor numérico o de texto para el campo 199.
    */
   actualizar199(valor: string | number): void {
-    this.solicitud32605Store.actualizar199(valor);
+    this.solicitud32614Store.actualizar199(valor);
   }
 
   /**
@@ -571,7 +571,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   actualizarEmpleados(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarEmpleados(VALOR);
+    this.solicitud32614Store.actualizarEmpleados(VALOR);
   }
 
   /**
@@ -580,7 +580,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @param {Catalogo} valor - Elemento del catálogo correspondiente al bimestre.
    */
   actualizarBimestre(valor: Catalogo): void {
-    this.solicitud32605Store.actualizarBimestre(valor.id);
+    this.solicitud32614Store.actualizarBimestre(valor.id);
   }
 
   /**
@@ -589,7 +589,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @param {string | number} valor - Valor para el campo 2034.
    */
   actualizar2034(valor: string | number): void {
-    this.solicitud32605Store.actualizar2034(valor);
+    this.solicitud32614Store.actualizar2034(valor);
   }
 
   /**
@@ -598,7 +598,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @param {string | number} valor - Valor para el campo 236.
    */
   actualizar236(valor: string | number): void {
-    this.solicitud32605Store.actualizar236(valor);
+    this.solicitud32614Store.actualizar236(valor);
   }
 
   /**
@@ -607,7 +607,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @param {string | number} valor - Valor para el campo 237.
    */
   actualizar237(valor: string | number): void {
-    this.solicitud32605Store.actualizar237(valor);
+    this.solicitud32614Store.actualizar237(valor);
   }
 
   /**
@@ -616,7 +616,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @param {string | number} valor - Valor para el campo 239.
    */
   actualizar239(valor: string | number): void {
-    this.solicitud32605Store.actualizar239(valor);
+    this.solicitud32614Store.actualizar239(valor);
     if (valor === 1) {
       const PEDIMENTO = {
         patente: 0,
@@ -641,7 +641,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @param {string | number} valor - Valor para el campo 240.
    */
   actualizar240(valor: string | number): void {
-    this.solicitud32605Store.actualizar240(valor);
+    this.solicitud32614Store.actualizar240(valor);
   }
 
   /**
@@ -650,7 +650,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @param {string | number} valor - Valor para el campo 243.
    */
   actualizar243(valor: string | number): void {
-    this.solicitud32605Store.actualizar243(valor);
+    this.solicitud32614Store.actualizar243(valor);
   }
 
   /**
@@ -659,7 +659,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @param {string | number} valor - Valor para el campo 244.
    */
   actualizar244(valor: string | number): void {
-    this.solicitud32605Store.actualizar244(valor);
+    this.solicitud32614Store.actualizar244(valor);
   }
 
   /**
@@ -668,7 +668,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @param {string | number} valor - Valor para el campo 245.
    */
   actualizar245(valor: string | number): void {
-    this.solicitud32605Store.actualizar245(valor);
+    this.solicitud32614Store.actualizar245(valor);
   }
 
   /**
@@ -677,7 +677,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @param {Catalogo} valor - Elemento del catálogo correspondiente.
    */
   actualizarIndiqueTodos(valor: Catalogo): void {
-    this.solicitud32605Store.actualizarIndiqueTodos(valor.id);
+    this.solicitud32614Store.actualizarIndiqueTodos(valor.id);
   }
 
   /**
@@ -686,7 +686,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @param {string | number} valor - Valor para el campo 246.
    */
   actualizar246(valor: string | number): void {
-    this.solicitud32605Store.actualizar246(valor);
+    this.solicitud32614Store.actualizar246(valor);
   }
 
   /**
@@ -696,7 +696,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   actualizarFile1(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarFile1(VALOR);
+    this.solicitud32614Store.actualizarFile1(VALOR);
   }
 
   /**
@@ -706,21 +706,21 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   actualizarFile2(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarFile2(VALOR);
+    this.solicitud32614Store.actualizarFile2(VALOR);
   }
 
   /**
    * Actualiza el campo '247' en el estado global.
    */
   actualizar247(valor: string | number): void {
-    this.solicitud32605Store.actualizar247(valor);
+    this.solicitud32614Store.actualizar247(valor);
   }
 
   /**
    * Actualiza el campo '248' en el estado global.
    */
   actualizar248(valor: string | number): void {
-    this.solicitud32605Store.actualizar248(valor);
+    this.solicitud32614Store.actualizar248(valor);
   }
 
   /**
@@ -728,7 +728,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   actualizarIdentificacion(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarIdentificacion(VALOR);
+    this.solicitud32614Store.actualizarIdentificacion(VALOR);
   }
 
   /**
@@ -736,28 +736,28 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   actualizarLugarDeRadicacion(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarLugarDeRadicacion(VALOR);
+    this.solicitud32614Store.actualizarLugarDeRadicacion(VALOR);
   }
 
   /**
    * Actualiza el campo '249' en el estado global.
    */
   actualizar249(valor: string | number): void {
-    this.solicitud32605Store.actualizar249(valor);
+    this.solicitud32614Store.actualizar249(valor);
   }
 
   /**
    * Actualiza el campo '250' en el estado global.
    */
   actualizar250(valor: string | number): void {
-    this.solicitud32605Store.actualizar250(valor);
+    this.solicitud32614Store.actualizar250(valor);
   }
 
   /**
    * Actualiza el campo '251' en el estado global.
    */
   actualizar251(valor: string | number): void {
-    this.solicitud32605Store.actualizar251(valor);
+    this.solicitud32614Store.actualizar251(valor);
   }
 
   /**
@@ -765,7 +765,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   actualizarCheckbox1(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).checked;
-    this.solicitud32605Store.actualizarCheckbox1(VALOR);
+    this.solicitud32614Store.actualizarCheckbox1(VALOR);
   }
 
   /**
@@ -773,7 +773,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   actualizarCheckbox2(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).checked;
-    this.solicitud32605Store.actualizarCheckbox2(VALOR);
+    this.solicitud32614Store.actualizarCheckbox2(VALOR);
   }
 
   /**
@@ -781,7 +781,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   actualizarCheckbox3(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).checked;
-    this.solicitud32605Store.actualizarCheckbox3(VALOR);
+    this.solicitud32614Store.actualizarCheckbox3(VALOR);
   }
 
   /**
@@ -789,7 +789,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   actualizarActualmente2(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarActualmente2(VALOR);
+    this.solicitud32614Store.actualizarActualmente2(VALOR);
   }
 
   /**
@@ -797,7 +797,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   actualizarActualmente1(valor: Event): void {
     const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarActualmente1(VALOR);
+    this.solicitud32614Store.actualizarActualmente1(VALOR);
   }
 
   /**
