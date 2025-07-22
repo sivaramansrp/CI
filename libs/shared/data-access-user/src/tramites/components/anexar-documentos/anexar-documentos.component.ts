@@ -282,6 +282,9 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       );
 
       this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+      
+      // Trigger change detection to update filename display
+      this.cdr.detectChanges();
     }
   }
 
@@ -293,6 +296,16 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   existePreview(id: number): boolean {
     const ENCONTRADO = this.listadoArchivos.find((f) => f.id === id);
     return ENCONTRADO !== undefined;
+  }
+
+  /**
+   * Obtiene el nombre del archivo cargado para mostrar en la interfaz.
+   * @param {number} id - El ID del archivo.
+   * @returns {string} El nombre del archivo o "No hay archivo seleccionado".
+   */
+  obtenerNombreArchivo(id: number): string {
+    const ENCONTRADO = this.listadoArchivos.find((f) => f.id === id);
+    return ENCONTRADO ? ENCONTRADO.name : 'No hay archivo seleccionado';
   }
 
   /**
@@ -418,6 +431,9 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     );
 
     this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+    
+    // Trigger change detection to update filename display
+    this.cdr.detectChanges();
   }
 
   /**
