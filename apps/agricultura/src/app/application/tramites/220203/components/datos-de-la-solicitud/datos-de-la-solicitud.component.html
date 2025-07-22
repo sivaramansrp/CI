@@ -140,22 +140,27 @@
           [tipoSeleccionTabla]="tipoSeleccion"
           [configuracionTabla]="configuracionColumnas"
           [datos]="cuerpoTablaFila"
+          (listaDeFilaSeleccionada)="seleccionTabla($event)"
         >
         </app-tabla-dinamica>
       </div>
       <div class="col-md-12 d-flex justify-content-end">
         <div>
-          <button class="btn btn-primary me-2" type="button">Modificar</button>
+          <button class="btn btn-default me-2" type="button" [disabled]="listSelectedView.length === 0 ||esFormularioSoloLectura">Modificar</button>
         </div>
         <div>
-          <button class="btn btn-default me-2" type="button">Eliminar</button>
+          <button class="btn btn-danger me-2" type="button" [disabled]="listSelectedView.length === 0 ||esFormularioSoloLectura " (click)="eliminarFila()">Eliminar</button>
         </div>
         <div>
-          <button class="btn btn-default me-2" type="button" (click)="agregarFila()">Agregar</button>
+          <button class="btn btn-primary  me-2" type="button" (click)="agregarFila()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
       </div>
     </div>
 
   </form>
 </div>
+  @if(eliminarDatosTabla){
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="eliminarPedimentoDatos($event)"></lib-notificaciones>
+    }
 <app-modal #modalRef></app-modal>

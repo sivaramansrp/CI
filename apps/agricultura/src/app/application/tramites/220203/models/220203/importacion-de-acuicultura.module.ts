@@ -207,10 +207,11 @@ export interface Consulta {
 export interface Acuicultura {
     formularioMovilizacion: FormularioMovilizacion;
     realizarGroup: RealizarGroup;
-    mercanciaGroup: MercanciaGroup[];
+    mercanciaGroup: Fila[];
     formaValida: EnviarDatos;
     tercerosRelacionados: PersonaTerceros[];
     pagoDeDerechos:PagoDeDerechos;
+    selectedmercanciaGroupDatos:Fila;
 }
 
 /**
@@ -254,6 +255,7 @@ export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura
             fechaPago: ''
         },
         mercanciaGroup: params?.mercanciaGroup || [],
+        selectedmercanciaGroupDatos: params?.selectedmercanciaGroupDatos || {} as Fila
     };
 }
 /**
@@ -351,7 +353,10 @@ export interface Fila {
   numeroDeLote: string;
   faseDeDesarrollo: string;
   certificadoInternacional: string;
-  
+  numeroCertificadoInternacional?:string
+  numeroOficioCasoEspecial?:string;
+  descripcionFraccionArancelaria?: string;
+  umt?:string;
 }
 
 /**

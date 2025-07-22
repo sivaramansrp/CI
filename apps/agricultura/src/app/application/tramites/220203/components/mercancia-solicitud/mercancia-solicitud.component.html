@@ -13,12 +13,6 @@
           [required]="true"
           name="tipoRequisito"
           [isDisabled]="esFormularioSoloLectura"
-          (change)="
-          setValoresStore(
-            mercanciaGroup,
-            'tipoRequisito'
-          )
-        " 
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 form-group">
@@ -30,12 +24,6 @@
           placeholder=""
           name="requisito"
           type="text"
-          (change)="
-          setValoresStore(
-            mercanciaGroup,
-            'requisito'
-          )
-        " 
         />
       </div>
       <div class="col-md-4 form-group">
@@ -49,12 +37,6 @@
           placeholder=""
           name="numeroCertificadoInternacional"
           type="text"
-          (change)="
-          setValoresStore(
-            mercanciaGroup,
-            'numeroCertificadoInternacional'
-          )
-        " 
         />
       </div>
       <div class="col-md-4">
@@ -65,12 +47,7 @@
           [required]="true"
           name="fraccionArancelaria"
           [isDisabled]="esFormularioSoloLectura"
-          (change)="
-          setValoresStore(
-            mercanciaGroup,
-            'fraccionArancelaria'
-          )
-        " 
+          (change)="setValoresStore(mercanciaGroup, 'fraccionArancelaria')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 form-group">
@@ -84,12 +61,6 @@
           placeholder=""
           name="descripcionFraccionArancelaria"
           type="text"
-          (change)="
-          setValoresStore(
-            mercanciaGroup,
-            'descripcionFraccionArancelaria'
-          )
-        " 
         />
       </div>
       <div class="col-md-4">
@@ -99,13 +70,8 @@
           [label]="'Nico'"
           [required]="true"
           name="nico"
+          (change)="setValoresStore(mercanciaGroup, 'nico')"
           [isDisabled]="esFormularioSoloLectura"
-          (change)="
-          setValoresStore(
-            mercanciaGroup,
-            'nico'
-          )
-        " 
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 form-group">
@@ -119,12 +85,6 @@
           placeholder=""
           name="descripcionNico"
           type="text"
-          (change)="
-          setValoresStore(
-            mercanciaGroup,
-            'descripcionNico'
-          )
-        " 
         />
       </div>
       <div class="col-md-12">
@@ -135,12 +95,6 @@
           id="descripcion"
           rows="10"
           formControlName="descripcion"
-          (change)="
-          setValoresStore(
-            mercanciaGroup,
-            'descripcion'
-          )
-        " 
         ></textarea>
       </div>
       <div class="col-md-4 form-group">
@@ -152,12 +106,7 @@
           placeholder=""
           name="cantidadUMT"
           type="text"
-          (change)="
-          setValoresStore(
-            mercanciaGroup,
-            'cantidadUMT'
-          )
-        " 
+          (change)="setValoresStore(mercanciaGroup, 'cantidadUMT')"
         />
       </div>
       <div class="col-md-4 form-group">
@@ -169,12 +118,6 @@
           placeholder=""
           name="umt"
           type="text"
-          (change)="
-          setValoresStore(
-            mercanciaGroup,
-            'umt'
-          )
-        " 
         />
       </div>
       <div class="col-md-4"></div>
@@ -187,12 +130,6 @@
           placeholder=""
           name="cantidadUMC"
           type="text"
-          (change)="
-          setValoresStore(
-            mercanciaGroup,
-            'cantidadUMC'
-          )
-        " 
         />
       </div>
       <div class="col-md-4">
@@ -203,13 +140,6 @@
           [required]="true"
           name="umc" 
           [isDisabled]="esFormularioSoloLectura"
-          (change)="
-          setValoresStore(
-            mercanciaGroup,
-            'umc'
-          )
-        " 
-          
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -220,12 +150,6 @@
           [required]="true"
           name="uso"
           [isDisabled]="esFormularioSoloLectura"
-          (change)="
-          setValoresStore(
-            mercanciaGroup,
-            'uso'
-          )
-        " 
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 form-group">
@@ -237,12 +161,6 @@
           placeholder=""
           name="numeroDeLote"
           type="text"
-          (change)="
-          setValoresStore(
-            mercanciaGroup,
-            'numeroDeLote'
-          )
-        " 
         />
       </div>
       <div class="col-md-4 form-group">
@@ -256,12 +174,6 @@
           placeholder=""
           name="faseDeDesarrollo"
           type="text"
-          (change)="
-          setValoresStore(
-            mercanciaGroup,
-            'faseDeDesarrollo'
-          )
-        " 
         />
       </div>
       <div class="col-md-4 form-group">
@@ -273,12 +185,6 @@
           placeholder=""
           name="especie"
           type="text"
-          (change)="
-          setValoresStore(
-            mercanciaGroup,
-            'especie'
-          )
-        " 
         />
       </div>
       <div class="col-md-8">
@@ -289,12 +195,6 @@
           [required]="true"
           name="paisDeOrigen"
           [isDisabled]="esFormularioSoloLectura"
-          (change)="
-          setValoresStore(
-            mercanciaGroup,
-            'paisDeOrigen'
-          )
-        " 
         ></app-catalogo-select>
       </div>
       <div class="col-md-8">
@@ -305,12 +205,7 @@
           [required]="true"
           name="paisDeProcedencia"
           [isDisabled]="esFormularioSoloLectura"
-          (change)="
-          setValoresStore(
-            mercanciaGroup,
-            'paisDeProcedencia'
-          )
-        " 
+
         ></app-catalogo-select>
       </div>
     </div>
@@ -360,10 +255,9 @@
       </div>
        <div class="col-md-12 d-flex justify-content-end mb-2">
         <div>
-          <button class="btn btn-default me-2" type="button"(click)="eliminarFila()">Eliminar</button>
-        </div>
+          <button class="btn btn-default me-2" type="button" (click)="eliminarFila()">Limpiar</button>    </div>
         <div>
-          <button class="btn btn-default me-2" type="button">Agregar</button>
+          <button class="btn btn-primary me-2" type="button" (click)="agregarFila()" [disabled]="mercanciaGroup.invalid">Agregar</button>
         </div>
       </div>
     </div>

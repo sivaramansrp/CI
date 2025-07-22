@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { DatoTabla, Fila, FilaSolicitud, RealizarGroup } from '../../models/220203/importacion-de-acuicultura.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
 import { CommonModule } from '@angular/common';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuicultura.enum';
@@ -37,11 +38,23 @@ import { ModalComponent } from '../../../../shared/components/modal/modal.compon
     TablaDinamicaComponent,
     CatalogoSelectComponent,
     CommonModule,
-    ModalComponent
+    ModalComponent,
+    NotificacionesComponent
   ],
 })
 export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterViewInit {
+    /**
+     * Representa una nueva notificación que será utilizada en el componente.
+     * @type {Notificacion}
+     */
+    public nuevaNotificacion!: Notificacion;
+    /**
+     * Indica si se deben eliminar los datos de la tabla.
+     * @type {boolean}
+     */
     @ViewChild('modalRef') modalRef!: ModalComponent;
+    
+      listSelectedView: Fila[] = [];
   /**
    * Subject para controlar la destrucción de suscripciones.
    * @type {Subject<void>}
@@ -228,6 +241,8 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    */
   esFormularioSoloLectura: boolean = false;
 
+  public eliminarDatosTabla: boolean = false;
+
   /**
    * Constructor del componente.
    * Inicializa el store y obtiene los datos de la mercancía.
@@ -238,9 +253,12 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   constructor(
     private readonly fb: FormBuilder,
     private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private readonly acuiculturaStore: AcuiculturaStore
+
   ) {
     this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+      this.cuerpoTablaFila = datos.mercanciaGroup ;
       this.datosMercanciaStore = datos.realizarGroup;
     })
   }
@@ -276,6 +294,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    * @inheritdoc
    */
   public ngOnInit(): void {
+
     this.createFromGroup();
     this.obtenerCatalogosTransporte();
     this.obtenerCatalogosArancelaria();
@@ -445,7 +464,78 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   agregarFila(): void {
        this.modalRef.abrir(MercanciaSolicitudComponent);
   }
-
+  /**
+ * @description Selecciona una fila de la tabla de solicitudes y actualiza el estado del store.
+ * Este método se llama cuando se selecciona una fila en la tabla de solicitudes.
+ * Actualiza el estado del store con los datos de la fila seleccionada.
+ * @method seleccionTabla
+ * @param {FilaSolicitud} event - Datos de la fila seleccionada.
+ */
+  seleccionTabla(event: Fila[]): void {
+    this.listSelectedView = event;
+    this.acuiculturaStore.update(
+      (state) => ({
+        ...state,
+        selectedmercanciaGroupDatos: event[0]||{}
+      })
+    )
+  }
+  eliminarFila(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Eliminar datos de la tabla',
+      mensaje: 'Está seguro que desea eliminar estos datos?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+    this.eliminarDatosTabla = true;
+  }
+    /**
+  * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
+  * @method eliminarPedimento
+  * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
+  */
+  eliminarPedimentoDatos(borrar: boolean): void {
+    if (borrar) {
+      this.eliminarDatosTabla = false;
+      const VALOR = this.acuiculturaStore.getValue().mercanciaGroup;
+      if (VALOR.length === 0) {
+        return;
+      }
+      const SELECTED = this.acuiculturaStore.getValue().selectedmercanciaGroupDatos;
+      const FILTERED_VALOR = VALOR.filter(
+        (item) => item !== SELECTED
+      );
+      this.acuiculturaStore.update(
+        (state) => ({
+          ...state,
+          mercanciaGroup: FILTERED_VALOR
+        })
+      );
+      this.acuiculturaStore.update((state)=>({
+        ...state,
+        selectedmercanciaGroupDatos: {} as Fila
+      }))
+      this.listSelectedView=[];
+    }
+    else {
+      this.eliminarDatosTabla = false;
+    }
+  }
+  /**
+   * @inheritdoc
+        
+      }))
+      this.listSelectedView=[];
+    }
+    else {
+      this.eliminarDatosTabla = false;
+    }
+  }
   /**
    * @inheritdoc
    * @method

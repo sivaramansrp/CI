@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Store, StoreConfig } from '@datorama/akita';
 
-import { Acuicultura, Consulta, FormularioMovilizacion, PagoDeDerechos, RealizarGroup, createDatosState } from '../../models/220203/importacion-de-acuicultura.module';
+import { Acuicultura, Consulta, Fila, FormularioMovilizacion, MercanciaGroup, PagoDeDerechos, RealizarGroup, createDatosState } from '../../models/220203/importacion-de-acuicultura.module';
 import { PersonaTerceros } from '@libs/shared/data-access-user/src';
 
 /**
@@ -126,7 +126,18 @@ export class AcuiculturaStore extends Store<Acuicultura> {
             tercerosRelacionados: tercerosRelacionados,
         }));
     }
-
+  /**
+     * Actualiza el estado con la información de los terceros relacionados.
+     * @method actualizarTercerosRelacionados
+     * @param {PersonaTerceros[]} tercerosRelacionados - Arreglo de personas relacionadas como terceros.
+     * @returns {void}
+     */
+    public actualizarMercanciaGroup(mercanciaGroup: Fila[]): void {
+        this.update(state => ({
+            ...state,
+            mercanciaGroup: mercanciaGroup,
+        }));
+    }
     /**
      * Restablece el estado a su estado inicial.
      * @method limpiarFormulario

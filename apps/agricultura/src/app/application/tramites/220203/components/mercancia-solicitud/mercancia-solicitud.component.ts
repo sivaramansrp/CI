@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CatalogoData, Detalles, MercanciaGroup } from '../../models/220203/importacion-de-acuicultura.module';
+import { CatalogoData, Detalles, Fila, MercanciaGroup } from '../../models/220203/importacion-de-acuicultura.module';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
@@ -32,7 +32,7 @@ export class MercanciaSolicitudComponent implements OnInit {
      * Datos de la mercancía almacenados en el store.
      * @type {DatosMercancia220203}
      */
-    datosMercanciaStore: MercanciaGroup= {} as MercanciaGroup;
+    datosMercanciaStore: Fila = {} as Fila;
     mercanciaGroup!:FormGroup;
     detallesGroup!: FormGroup;
     detallesCatalogo:CatalogoData={} as CatalogoData;
@@ -151,7 +151,6 @@ this.obtenerUMCCatalogosTransporte();
             umt: 'Nuevo valor para cantidadUMT',
         });
       }
-      const VALOR = this.mercanciaGroup.getRawValue();
     }
   /**
      * Guarda los valores en el store.
@@ -183,16 +182,16 @@ this.obtenerUMCCatalogosTransporte();
         return this.buildMercanciaFormGroup(MERCANCIADATA);
       }
 
-      private buildMercanciaFormGroup(MERCANCIADATA: MercanciaGroup): FormGroup {
+      private buildMercanciaFormGroup(MERCANCIADATA: Fila): FormGroup {
         return this.fb.group({
           tipoRequisito: [MERCANCIADATA.tipoRequisito || '', Validators.required],
-          requisito: [MERCANCIADATA.requisito || '', Validators.required],
+          requisito: [MERCANCIADATA.requisito || ''],
           numeroCertificadoInternacional: [MERCANCIADATA.numeroCertificadoInternacional || '', Validators.required],
           numeroOficioCasoEspecial: [MERCANCIADATA.numeroOficioCasoEspecial || ''],
           fraccionArancelaria: [MERCANCIADATA.fraccionArancelaria || '', Validators.required],
           descripcionFraccionArancelaria: [MERCANCIADATA.descripcionFraccionArancelaria || '', Validators.required],
           nico: [MERCANCIADATA.nico || '', Validators.required],
-          descripcionNico: [MERCANCIADATA.descripcionNico || '', Validators.required],
+          descripcionNico: [MERCANCIADATA.descripcionNico || ''],
           descripcion: [MERCANCIADATA.descripcion || '', Validators.required],
           cantidadUMT: [MERCANCIADATA.cantidadUMT || '', Validators.required],
           umt: [{value:MERCANCIADATA.umt|| '', disabled: true}, Validators.required],
@@ -217,6 +216,18 @@ this.obtenerUMCCatalogosTransporte();
     });
   }
   eliminarFila(): void {
+    this.mercanciaGroup.reset();
+      this.cerrar.emit();
+  }
+  agregarFila(): void {
+      const NUEVO_DETALLE: Fila = this.mercanciaGroup.getRawValue(); 
+      const ESTADO_ACTUAL = this.acuiculturaQuery.getValue().mercanciaGroup;
+       const NUEVA_DETALLE_LIST = [
+    ...(ESTADO_ACTUAL || []),
+    NUEVO_DETALLE
+  ];
+      this.acuiculturaStore.actualizarMercanciaGroup(NUEVA_DETALLE_LIST);
+      this.detallesGroup.reset();
       this.cerrar.emit();
   }
 }
