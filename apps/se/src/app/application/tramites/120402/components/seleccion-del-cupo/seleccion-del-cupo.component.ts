@@ -122,6 +122,11 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   /** Cupo seleccionado o lista de cupos seleccionados */
   seleccionDelCupo: DatoCupo | DatoCupo[] = [];
 
+  /**
+   * Indica si algún campo del formulario ha sido tocado.
+   */
+  esTocado: boolean = false;
+
   // /** Sujeto para cancelar subscripciones */
   // private destroyed$ = new Subject<void>();
 
@@ -202,10 +207,10 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
         )
         .subscribe();
     this.seleccionForm = this.fb.group({
-      regimen: [this.solicitudState?.regimen, Validators.required],
-      tratado: [this.solicitudState?.tratado, Validators.required],
-      producto: [this.solicitudState.producto, Validators.required],
-      subproducto: [this.solicitudState.subproducto, Validators.required],
+      regimen: [this.solicitudState?.regimen],
+      tratado: [this.solicitudState?.tratado],
+      producto: [this.solicitudState.producto],
+      subproducto: [this.solicitudState.subproducto],
     });
 
     this.datosTablaCupo = this.solicitudState.cupoTablaDatos || [];
@@ -334,6 +339,11 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
     this.tramite120402Store.setTramite120402State({
       [control]: VALOR
     });
+  }
+
+  esInvalido(control: string): boolean {
+    const FORM_CONTROL = this.seleccionForm.get(control);
+    return FORM_CONTROL ? FORM_CONTROL.invalid && (FORM_CONTROL.dirty || FORM_CONTROL.touched) : false;
   }
 }
 

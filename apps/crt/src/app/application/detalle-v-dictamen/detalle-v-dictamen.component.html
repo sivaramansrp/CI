@@ -22,7 +22,7 @@
     <div class="form-group">            
         <div class="col-md-12 text-end">
             <button type="button" class="btn btn-primary" [disabled]="frmObservacion.invalid" (click)="guardarObservacion()">Generar observación</button>
-            <button type="button" class="btn btn-primary" (click)="regresar()">Regresar</button>
+            <button type="button" class="btn btn-default ms-3" (click)="regresar()">Regresar</button>
         </div>            
     </div>
     <div class="form-group">            
@@ -45,3 +45,12 @@
     </div>
     </form>
 </div>
+@if(nuevaNotificacion) {
+<section>
+    <lib-notificaciones
+        [notificacionInput]="nuevaNotificacion"
+        (confirmacionModal)="confirmacionModal($event)"
+    >
+    </lib-notificaciones>
+</section>
+}
