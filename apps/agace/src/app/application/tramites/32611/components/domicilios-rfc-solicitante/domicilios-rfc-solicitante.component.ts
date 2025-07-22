@@ -312,6 +312,7 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
       codigoPostal: ['', [Validators.required, Validators.pattern(REGEX_POSTAL)]],
       acreditaUsoGoceInmueble: ['', Validators.required],
       perfilEmpresa: ['', Validators.required],
+      perfilAutoTransportistaTerrestre: ['', Validators.required],
       reconocimientoMutuoCTPAT: ['', Validators.required],
     });
   }
@@ -585,7 +586,8 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
       codigoPostal: FORM_DATA.codigoPostal,
       acreditaUsoGoceInmueble: FORM_DATA.acreditaUsoGoceInmueble ? DomiciliosRfcSolicitanteComponent.convertirValorRadioATexto(FORM_DATA.acreditaUsoGoceInmueble) : '',
       perfilEmpresa: FORM_DATA.perfilEmpresa ? DomiciliosRfcSolicitanteComponent.convertirValorRadioATexto(FORM_DATA.perfilEmpresa) : '',
-      reconocimientoMutuoCTPAT: FORM_DATA.reconocimientoMutuoCTPAT ? DomiciliosRfcSolicitanteComponent.convertirValorRadioATexto(FORM_DATA.reconocimientoMutuoCTPAT) : ''
+      reconocimientoMutuoCTPAT: FORM_DATA.reconocimientoMutuoCTPAT ? DomiciliosRfcSolicitanteComponent.convertirValorRadioATexto(FORM_DATA.reconocimientoMutuoCTPAT) : '',
+      perfilAutoTransportistaTerrestre: FORM_DATA.perfilAutoTransportistaTerrestre ? DomiciliosRfcSolicitanteComponent.convertirValorRadioATexto(FORM_DATA.perfilAutoTransportistaTerrestre) : ''
     };
 
     // Buscar el índice del objeto a modificar

@@ -2,7 +2,7 @@
 
 <div class="row">
 <div class="col-md-12">
-  <label class="form-label text-left">"Mencione el nombre, RFC y número de empleados que le proveen las empresas que le prestan el servicio de subcontratación*:</label>
+  <label class="form-label text-left">Mencione el nombre, RFC y número de empleados que le proveen las empresas que le prestan el servicio de subcontratación*:</label>
 </div>
 
 <div class="col-md-12 accordion-bar">
@@ -36,8 +36,8 @@
     <div class="d-flex flex-row flex-wrap gap-3">
         <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
         (click)="confirmEliminarEmpleadoItem()" [disabled]="esFormularioSoloLectura">Eliminar</button>
-        <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}" (click)="modificarItemEmpleado()" [disabled]="esFormularioSoloLectura">Modificar</button>
-        <button class="btn btn-primary" (click)="agregarDialogoDatos()" [disabled]="esFormularioSoloLectura">Agregar</button>
+        <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}" (click)="modificarItemEmpleado('Modificar')" [disabled]="esFormularioSoloLectura">Modificar</button>
+        <button class="btn btn-primary" (click)="agregarDialogoDatos('Aceptar')" [disabled]="esFormularioSoloLectura">Aceptar</button>
     </div>
   </div>
 </div>
@@ -54,7 +54,9 @@
   <div class="modal-dialog modal-dialog-centered modal-md">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title mt-0">Agregar</h4>
+        <h4 class="modal-title mt-0" *ngIf="!isModificar">Agregar</h4>
+        <h4 class="modal-title mt-0" *ngIf="isModificar">Modificar</h4>
+
       </div>
 
       <div class="modal-body">
@@ -68,8 +70,9 @@
                   type="text"
                   class="form-control"
                   id="rfcInput"
+                  maxlength="13"
                   formControlName="rfcInput"
-                  placeholder="Ingrese RFC"
+                  placeholder=""
                 />
                 <button class="btn btn-secondary ms-2" type="button" (click)="onBuscarRfc()">
                   Buscar
@@ -123,6 +126,7 @@
               <input
                 type="text"
                 class="form-control mb-2"
+                maxlength="5"
                 formControlName="numeroDeEmpleados"
               />
             </div>
@@ -143,7 +147,7 @@
         </form>
         <footer class="footer d-flex py-5 gap-3 justify-content-end">
             <button type="button" class="btn btn-primary" (click)="modalCancelar()">Cancelar</button>
-            <button type="button" class="btn btn-primary" (click)="enviarDialogData()">Agregar</button>
+            <button type="button" class="btn btn-primary" (click)="enviarDialogData()">Aceptar</button>
           </footer>
       </div>
     </div>

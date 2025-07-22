@@ -103,6 +103,7 @@ export interface DomiciliosRfcSolicitanteTabla {
   realizaActividadComercioExterior: string;
   reconocimientoMutuoCTPAT: string;
   perfilEmpresa: string;
+  perfilAutoTransportistaTerrestre: string;
 }
 
 

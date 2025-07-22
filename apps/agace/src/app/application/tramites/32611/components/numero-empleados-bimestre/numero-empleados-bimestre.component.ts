@@ -241,6 +241,8 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
    * Indica si el formulario es colapsable.
    */
   colapsable: boolean = true;
+  isModificar: boolean = false;
+
 
   /**
    * Constructor del componente NumeroEmpleadosBimestreComponent.
@@ -327,7 +329,13 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-  agregarDialogoDatos(): void {
+  agregarDialogoDatos(isModificar: string): void {
+    if (isModificar === 'Modificar') {
+      this.isModificar = true;
+    }
+    else {
+      this.isModificar = false;
+    }
     if (this.registroDeNumeroEmpleadosElemento) {
       const MODAL_INSTANCIA = new Modal(
         this.registroDeNumeroEmpleadosElemento?.nativeElement,
@@ -395,6 +403,8 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
    */
   modalCancelar(): void {
     this.cambiarEstadoModal();
+    this.rfcForm.reset();
+    this.registroNumeroEmpleadosForm.reset();
   }
 
   /**
@@ -569,7 +579,7 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-  modificarItemEmpleado(): void {
+  modificarItemEmpleado(isModificar: string): void {
     const SELECCIONADAS = this.listaFilaSeleccionadaEmpleado;
   
     if (!SELECCIONADAS || SELECCIONADAS.length === 0) {
@@ -602,7 +612,7 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
       return;
     }
     this.actualizarFilaSeleccionada();
-    this.agregarDialogoDatos();
+    this.agregarDialogoDatos(isModificar);
     this.patchModifyiedData();
   }
   

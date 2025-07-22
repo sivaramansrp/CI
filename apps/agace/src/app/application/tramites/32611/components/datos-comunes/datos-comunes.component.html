@@ -1,5 +1,8 @@
 <form [formGroup]="forma" *ngIf="esFormularioInicializado">
     <div class="row mt-5">
+      <div class="col-md-12">
+        <label class="form-label text-left">Señale el sector productivo o servicio al que pertenece:</label>
+      </div>
         <div class="col-md-6">
             <div class="form-group">
                 <app-catalogo-select [catalogo]="sectorProductivoList" [label]="'Sector Productivo'"
@@ -103,7 +106,7 @@
         </div>
 
         <div class="col-md-12 pt-4" *ngIf="validarDatosEmpleadosCompletos()">
-            <div class="text-danger">Se debe agregar los datos del número de empleados propios del último bimestre</div>
+            <h5 class="m-0 text-danger">Se debe agregar los datos del número de empleados propios del último bimestre</h5>
         </div>
     </div>
 
@@ -247,7 +250,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-md-12 pt-5">
             <label class="form-label text-left">Señale si se encuentra suspendida en el Padrón de Importadores o en el Padrón de Importadores de Sectores Específicos o Padrón de Exportadores Sectorial.*:</label>
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
@@ -257,11 +260,11 @@
                 <small *ngIf="forma.controls['suspensionPadronImportadoresExportadores'].hasError('required')">Respuesta Obligatoria</small>
             </div>
         </div>
-    </div>
+    </div> -->
 
 
     
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-12">
                 <ng-titulo titulo="Clientes y Proveedores en el Extranjero"></ng-titulo>
                 <p>Anexe un archivo que contenga el nombre y dirección de sus clientes y proveedores en el extranjero directa o indirectamente vinculados con el régimen aduanero con el que se solicita el registro, con los que realizó operaciones de comercio exterior durante los últimos doce meses<br/>Para descargar plantilla del archivo de excel de click <strong>aquí</strong></p>
@@ -279,10 +282,10 @@
             <div class="col-md-2 d-flex justify-content-end">
                 <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura">Anexar...</button>
             </div>
-        </div>
+        </div> -->
 
         
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-12">
                 <ng-titulo titulo="Proveedores"></ng-titulo>
             <p>Anexe un archivo que contenga el nombre y clave en el R F C de sus proveedores de insumos adquiridos en territorio nacional, vinculados al proceso bajo el régimen que solicita, de los últimos 6 meses<br/>Para descargar la plantilla del archivo de excel de clic <strong>aquí</strong></p>
@@ -303,7 +306,7 @@
         </div>
         <div class="row mt-5">
             <p>Nota: Los proveedores nacionales que se declaren deberán contar con la opinión positiva del cumplimiento de las obligaciones fiscales prevista en el artículo 32-D del código en la RFM.</p>
-        </div>
+        </div> -->
 
 
 
@@ -318,14 +321,23 @@
                 <small *ngIf="forma.controls['querellaSATUltimos3Anios'].hasError('required')">Respuesta Obligatoria</small>
             </div>
         </div>
+        <!-- <div class="col-md-12">
+          <label for="" class="form-label text-left"> Señale si ingresa mensualmente su información contable a través del portal del SAT, de conformidad con el artículo 28, fracción IV, del CFF y las reglas 2.8.1.5. y la 2.8.1.6. de la RMF.*:</label>
+           <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
+                formControlName="querellaSATUltimos3Anios" (valueChange)="onSeleccionVerdadera($event)"
+                (change)="setValoresStore(forma,'querellaSATUltimos3Anios')"></app-input-radio>
+            <div *ngIf="esInvalido('querellaSATUltimos3Anios')" class="text-danger">
+                <small *ngIf="forma.controls['querellaSATUltimos3Anios'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
+        </div> -->
     </div>
 
 
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-md-12">
 <app-control-inventarios></app-control-inventarios>
         </div>
-    </div>
+    </div> -->
 
      <div class="row">
         <div class="col-md-12 pt-5">
