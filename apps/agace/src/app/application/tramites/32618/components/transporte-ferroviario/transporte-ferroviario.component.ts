@@ -1,25 +1,18 @@
-
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { InputRadio, SolicitudRadioLista } from '../../models/solicitud.model';
-import { ConsultaioQuery, ConsultaioState, InputRadioComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { map, Subject, takeUntil } from 'rxjs';
-import { SolicitudeService } from '../../services/solicitude.service';
-import { DatosComunesTresComponent } from '../datos-comunes-tres/datos-comunes-tres.component';
-import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { PagoDeDerechosComponent, PagoDeDerechosComponent } from '../pago-de-derechos/pago-de-derechos.component';
-import { RowTypeFormInputComponent } from '../row-type-form-input/row-type-form-input.component';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators ,ReactiveFormsModule} from '@angular/forms';
 import { LISTADO_DE_SOCIO_COMERCIAL_CERTIFICADO, TEMPLATE_3_ARRAY, TRANSPORTE_FERROVARIO } from '../../constants/constantes32618.enum';
+import { map, Subject, takeUntil } from 'rxjs';
 import { RubroTransporteFerrovario32618State, Tramite32618Store } from '../../estados/tramite32618.store';
+import { ConsultaioQuery, ConsultaioState, InputRadioComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Tramite32618Query } from '../../estados/tramite32618query';
-import { TransporteFerroviarioComponent } from '../transporte-ferroviario/transporte-ferroviario.component';
-
-
-
+import { DatosComunesTresComponent, DatosComunesTresComponent } from '../datos-comunes-tres/datos-comunes-tres.component';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { PagoDeDerechosComponent } from '../pago-de-derechos/pago-de-derechos.component';
+import { RowTypeFormInputComponent } from '../row-type-form-input/row-type-form-input.component';
 
 @Component({
-  selector: 'app-almacen-general',
+  selector: 'app-transporte-ferroviario',
   standalone: true,
   imports: [ 
     CommonModule,
@@ -30,10 +23,10 @@ import { TransporteFerroviarioComponent } from '../transporte-ferroviario/transp
     InputRadioComponent,
     PagoDeDerechosComponent,
     RowTypeFormInputComponent],
-  templateUrl: './almacen-general.component.html',
-  styleUrl: './almacen-general.component.scss',
+  templateUrl: './transporte-ferroviario.component.html',
+  styleUrl: './transporte-ferroviario.component.scss',
 })
-export class AlmacenGeneralComponent implements OnInit, AfterViewInit, OnDestroy {
+export class TransporteFerroviarioComponent implements OnInit, AfterViewInit, OnDestroy {
     /** Referencia a la plantilla personalizada customTemplate1 utilizada en el componente. */
   @ViewChild('customTemplate1') customTemplate1!: TemplateRef<unknown>;
 
@@ -465,40 +458,4 @@ export class AlmacenGeneralComponent implements OnInit, AfterViewInit, OnDestroy
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-  //   /** Sujeto que maneja la destrucción de suscripciones */
-  //   private destroy$: Subject<void> = new Subject<void>();
-  // almacenGeneralForm : FormGroup = this.fb.group({
-  //   // Aquí puedes definir los controles del formulario
-  // });
-  // /** Opciones de radio para la selección de valores */
-  // sinoOpcion: InputRadio = {} as InputRadio;
-  // constructor(private fb: FormBuilder, private solicitudService: SolicitudeService) {
-   
-   
-  // }
-  // ngOnInit(): void {
-  //   this.conseguirOpcionDeRadio();
-  // }
-  //   /**
-  //    * Obtiene las opciones de radio desde el servicio de solicitud
-  //    */
-  //   conseguirOpcionDeRadio(): void {
-  //     this.solicitudService
-  //       .conseguirOpcionDeRadio()
-  //       .pipe(takeUntil(this.destroy$))
-  //       .subscribe({
-  //         next: (respuesta: SolicitudRadioLista) => {
-  //           this.sinoOpcion = respuesta.requisitos;
-  //           // this.mutuo = respuesta.reconocimientoMutuo;
-  //           // this.clasificacionInformacion = respuesta.clasificacionInformacion;
-  //         },
-  //       });
-  //   }
-  //    /**
-  //  * Método llamado al destruir el componente, limpia las suscripciones
-  //  */
-  // ngOnDestroy(): void {
-  //   this.destroy$.next();
-  //   this.destroy$.complete();
-  // }
 }

@@ -1,4 +1,4 @@
-import { AlmacenGeneralComponent } from './components/almacen-general/almacen-general.component';
+
 import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosComunesComponent } from './components/datos-comunes/datos-comunes.component';
@@ -12,6 +12,6 @@ import { TercerosRelacionadosComponent } from './components/terceros-relacionado
 
 @NgModule({
   declarations: [SolicitudPageComponent, PasoUnoComponent],
-  imports: [CommonModule,DatosComunesComponent, SceSocioAlmacenRoutingModule,TercerosRelacionadosComponent, SolicitanteComponent, BtnContinuarComponent,WizardComponent ,AlmacenGeneralComponent],
+  imports: [CommonModule,DatosComunesComponent, SceSocioAlmacenRoutingModule,TercerosRelacionadosComponent, SolicitanteComponent, BtnContinuarComponent,WizardComponent],
 })
 export class SceSocioAlmacenModule {}
