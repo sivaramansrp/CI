@@ -45,18 +45,6 @@ export interface OpcionDeRadio {
     value: string;
 }
 
-/**
- * Interfaz que agrupa los datos de la mercancía para el trámite 220203.
- * @interface DatosMercancia220203
- * @property {RealizarGroup} realizarGroup - Datos de ingreso y verificación.
- * @property {MercanciaGroup} mercanciaGroup - Datos específicos de la mercancía.
- * @property {Detalles} detalles - Detalles adicionales de la mercancía.
- */
-export interface DatosMercancia220203 {
-    realizarGroup: RealizarGroup;
-    mercanciaGroup: MercanciaGroup;
-    detalles: Detalles;
-}
 
 /**
  * Interfaz que define los datos de ingreso y verificación de la mercancía.
@@ -218,7 +206,8 @@ export interface Consulta {
  */
 export interface Acuicultura {
     formularioMovilizacion: FormularioMovilizacion;
-    datosMercancia: DatosMercancia220203;
+    realizarGroup: RealizarGroup;
+    mercanciaGroup: MercanciaGroup[];
     formaValida: EnviarDatos;
     tercerosRelacionados: PersonaTerceros[];
     pagoDeDerechos:PagoDeDerechos;
@@ -239,39 +228,15 @@ export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura
             puntoVerificacion: '',
             nombreEmpresaTransportista: ''
         },
-        datosMercancia: params?.datosMercancia || {
-            realizarGroup: {
+        realizarGroup: params?.realizarGroup || 
+          {
                 aduanaIngreso: '',
                 oficinaInspeccion: '',
                 puntoInspeccion: '',
                 numeroGuia: '',
                 regimen: ''
-            },
-            mercanciaGroup: {
-                tipoRequisito: '',
-                requisito: '',
-                numeroCertificadoInternacional: '',
-                numeroOficioCasoEspecial: '',
-                fraccionArancelaria: '',
-                descripcionFraccionArancelaria: '',
-                nico: '',
-                descripcionNico: '',
-                descripcion: '',
-                cantidadUMT: '',
-                umt: '',
-                cantidadUMC: '',
-                umc: '',
-                uso: '',
-                numeroDeLote: '',
-                faseDeDesarrollo: '',
-                especie: '',
-                paisDeOrigen: '',
-                paisDeProcedencia: ''
-            },
-            detalles: {
-                nombreCientifico: ''
-            },
-        },
+            }
+        ,
         tercerosRelacionados: params.tercerosRelacionados || [],
         formaValida: params?.formaValida || {
             pagoDeformaValida: false,
@@ -287,7 +252,8 @@ export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura
             llavePago: '',
             importePago: '',
             fechaPago: ''
-        }
+        },
+        mercanciaGroup: params?.mercanciaGroup || [],
     };
 }
 /**

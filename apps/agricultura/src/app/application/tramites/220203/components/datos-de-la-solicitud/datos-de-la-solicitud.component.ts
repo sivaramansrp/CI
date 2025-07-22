@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { DatoTabla,DatosMercancia220203, Fila, FilaSolicitud, RealizarGroup } from '../../models/220203/importacion-de-acuicultura.module';
+import { DatoTabla, Fila, FilaSolicitud, RealizarGroup } from '../../models/220203/importacion-de-acuicultura.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -208,7 +208,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    * Datos de la mercancía almacenados en el store.
    * @type {DatosMercancia220203}
    */
-  datosMercanciaStore: DatosMercancia220203 = {} as DatosMercancia220203;
+  datosMercanciaStore: RealizarGroup = {} as RealizarGroup;
 
   /**
    * Datos de la tabla de solicitudes.
@@ -241,7 +241,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
     private consultaQuery: ConsultaioQuery
   ) {
     this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
-      this.datosMercanciaStore = datos.datosMercancia;
+      this.datosMercanciaStore = datos.realizarGroup;
     })
   }
 
@@ -263,47 +263,13 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    */
   public createRealizarGroup(): FormGroup {
     return this.fb.group({
-      aduanaIngreso: [this.datosMercanciaStore.realizarGroup.aduanaIngreso || '', Validators.required],
-      oficinaInspeccion: [this.datosMercanciaStore.realizarGroup.oficinaInspeccion || '', Validators.required],
-      puntoInspeccion: [this.datosMercanciaStore.realizarGroup.puntoInspeccion || '', Validators.required],
-      numeroGuia: [this.datosMercanciaStore.realizarGroup.numeroGuia || ''],
-      regimen: [this.datosMercanciaStore.realizarGroup.regimen || '', Validators.required],
+      aduanaIngreso: [this.datosMercanciaStore.aduanaIngreso || '', Validators.required],
+      oficinaInspeccion: [this.datosMercanciaStore.oficinaInspeccion || '', Validators.required],
+      puntoInspeccion: [this.datosMercanciaStore.puntoInspeccion || '', Validators.required],
+      numeroGuia: [this.datosMercanciaStore.numeroGuia || ''],
+      regimen: [this.datosMercanciaStore.regimen || '', Validators.required],
     });
   }
-
-  /**
-   * Crea el grupo de formularios 'mercanciaGroup'.
-   * @method
-   * @returns {FormGroup}
-   */
-  public createMercanciaGroup(): FormGroup {
-    const MERCANCIADATA = this.datosMercanciaStore.mercanciaGroup || {};
-
-    const FORMGROUP = this.fb.group({
-      tipoRequisito: [MERCANCIADATA.tipoRequisito || '', Validators.required],
-      requisito: [MERCANCIADATA.requisito || '', Validators.required],
-      numeroCertificadoInternacional: [MERCANCIADATA.numeroCertificadoInternacional || '', Validators.required],
-      numeroOficioCasoEspecial: [MERCANCIADATA.numeroOficioCasoEspecial || ''],
-      fraccionArancelaria: [MERCANCIADATA.fraccionArancelaria || '', Validators.required],
-      descripcionFraccionArancelaria: [MERCANCIADATA.descripcionFraccionArancelaria || '', Validators.required],
-      nico: [MERCANCIADATA.nico || '', Validators.required],
-      descripcionNico: [MERCANCIADATA.descripcionNico || '', Validators.required],
-      descripcion: [MERCANCIADATA.descripcion || '', Validators.required],
-      cantidadUMT: [MERCANCIADATA.cantidadUMT || '', Validators.required],
-      umt: [MERCANCIADATA.umt, Validators.required],
-      cantidadUMC: [MERCANCIADATA.cantidadUMC || '', Validators.required],
-      umc: [MERCANCIADATA.umc || '', Validators.required],
-      uso: [MERCANCIADATA.uso || '', Validators.required],
-      numeroDeLote: [MERCANCIADATA.numeroDeLote || '', Validators.required],
-      faseDeDesarrollo: [MERCANCIADATA.faseDeDesarrollo || '', Validators.required],
-      especie: [MERCANCIADATA.especie || '', Validators.required],
-      paisDeOrigen: [MERCANCIADATA.paisDeOrigen || '', Validators.required],
-      paisDeProcedencia: [MERCANCIADATA.paisDeProcedencia || '', Validators.required],
-    });
-
-    return FORMGROUP;
-  }
-
  
 
   /**

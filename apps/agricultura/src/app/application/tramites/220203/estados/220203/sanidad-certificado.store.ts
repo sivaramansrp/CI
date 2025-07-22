@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Store, StoreConfig } from '@datorama/akita';
 
-import { Acuicultura, Consulta, DatosMercancia220203, FormularioMovilizacion, PagoDeDerechos, createDatosState } from '../../models/220203/importacion-de-acuicultura.module';
+import { Acuicultura, Consulta, FormularioMovilizacion, PagoDeDerechos, RealizarGroup, createDatosState } from '../../models/220203/importacion-de-acuicultura.module';
 import { PersonaTerceros } from '@libs/shared/data-access-user/src';
 
 /**
@@ -46,6 +46,18 @@ export class AcuiculturaStore extends Store<Acuicultura> {
             pagoDeDerechos: pagoDeDerechos,
         }));
     }
+     /**
+     * Actualiza el estado con la información del formulario de pago.
+     * @method actualizarFormularioPago
+     * @param {FormularioPago} formularioPago - Datos del formulario de pago.
+     * @returns {void}
+     */
+    public actualizarSoloRealizarGroup(realizarGroup: RealizarGroup): void {
+        this.update(state => ({
+            ...state,
+            realizarGroup: realizarGroup,
+        }));
+    }
 
     /**
      * Actualiza el estado con la información del formulario de movilización.
@@ -66,10 +78,10 @@ export class AcuiculturaStore extends Store<Acuicultura> {
      * @param {DatosMercancia220203} datosMercancia - Datos de la mercancía.
      * @returns {void}
      */
-    public actualizarDatosMercancia(datosMercancia: DatosMercancia220203): void {
+    public actualizarDatosMercancia(realizarGroup: RealizarGroup): void {
         this.update(state => ({
             ...state,
-            datosMercancia
+            realizarGroup
         }));
     }
 
@@ -114,11 +126,7 @@ export class AcuiculturaStore extends Store<Acuicultura> {
             tercerosRelacionados: tercerosRelacionados,
         }));
     }
-  datosMercancia$ = this._select(state => state.datosMercancia);
-    // Optionally expose a getter for snapshot
-  getDatosMercancia(): DatosMercancia220203 {
-    return this.getValue().datosMercancia;
-  }
+
     /**
      * Restablece el estado a su estado inicial.
      * @method limpiarFormulario

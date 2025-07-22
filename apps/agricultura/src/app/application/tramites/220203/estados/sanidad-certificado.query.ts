@@ -41,5 +41,12 @@ export class AcuiculturaQuery extends Query<Acuicultura> {
    * @property {Observable<any>} seleccionarTercerosRelacionados$
    */
   seleccionarTercerosRelacionados$ = this.select(estado => estado.tercerosRelacionados);
+  
+  /**
+   * Observable que emite la lista de terceros relacionados del estado.
+   * @property {Observable<any>} seleccionarTercerosRelacionados$
+   */
+  seleccionaraMercanciaGroup$ = this.select(estado => estado.mercanciaGroup);
+
 
 }

@@ -1,8 +1,10 @@
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CatalogoData, DatosMercancia220203, Detalles, MercanciaGroup } from '../../models/220203/importacion-de-acuicultura.module';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoData, Detalles, MercanciaGroup } from '../../models/220203/importacion-de-acuicultura.module';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { AcuiculturaQuery } from '../../estados/sanidad-certificado.query';
+import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
 import { CommonModule } from '@angular/common';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
@@ -30,7 +32,7 @@ export class MercanciaSolicitudComponent implements OnInit {
      * Datos de la mercancía almacenados en el store.
      * @type {DatosMercancia220203}
      */
-    datosMercanciaStore: DatosMercancia220203 = {} as DatosMercancia220203;
+    datosMercanciaStore: MercanciaGroup= {} as MercanciaGroup;
     mercanciaGroup!:FormGroup;
     detallesGroup!: FormGroup;
     detallesCatalogo:CatalogoData={} as CatalogoData;
@@ -60,7 +62,7 @@ export class MercanciaSolicitudComponent implements OnInit {
    * @type {boolean}
    */
   esFormularioSoloLectura: boolean = false;
-  constructor(private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService, private readonly fb: FormBuilder,){
+  constructor(private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService, private readonly fb: FormBuilder,private readonly acuiculturaStore: AcuiculturaStore,private readonly acuiculturaQuery:AcuiculturaQuery) {
 this.obtenerCatalogosTransporte();
 this.obtenerNicoCatalogosTransporte();
 this.obtenerUMCCatalogosTransporte();
@@ -150,9 +152,6 @@ this.obtenerUMCCatalogosTransporte();
         });
       }
       const VALOR = this.mercanciaGroup.getRawValue();
-      (this.importacionDeAcuiculturaServices.actualizarSoloMercanciaGroup as (value: MercanciaGroup) => void)(
-        VALOR
-      );
     }
   /**
      * Guarda los valores en el store.
@@ -165,10 +164,13 @@ this.obtenerUMCCatalogosTransporte();
       form?: FormGroup,
       campo?: string,
     ): void {
+    // Obtiene el estado actual del grupo de mercancía desde el query
+    const ESTADO_ACTUAL = this.acuiculturaQuery.getValue().mercanciaGroup;
       const VALOR = this.detallesGroup.getRawValue();
-      (this.importacionDeAcuiculturaServices.actualizarSoloDetallesGroup as (value: Detalles) => void)(
-        VALOR
-      );
+      ESTADO_ACTUAL.push(VALOR);
+      // (this.importacionDeAcuiculturaServices.actualizarSoloDetallesGroup as (value: Detalles) => void)(
+      //   ESTADO_ACTUAL
+      // );
     }
     
      /**
@@ -177,7 +179,7 @@ this.obtenerUMCCatalogosTransporte();
        * @returns {FormGroup}
        */
       public createMercanciaGroup(): FormGroup {
-        const MERCANCIADATA = this.datosMercanciaStore.mercanciaGroup || {};
+        const MERCANCIADATA = this.datosMercanciaStore || {}
         return this.buildMercanciaFormGroup(MERCANCIADATA);
       }
 
@@ -211,7 +213,7 @@ this.obtenerUMCCatalogosTransporte();
    */
   public createDetallesGroup(): FormGroup {
     return this.fb.group({
-      nombreCientifico: [this.datosMercanciaStore.detalles.nombreCientifico || ''],
+      nombreCientifico: [ ''],
     });
   }
   eliminarFila(): void {
