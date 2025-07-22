@@ -10,7 +10,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReplaySubject,debounceTime,map, takeUntil } from 'rxjs';
 
-import { AcuseComponent, ConsultaioQuery, ConsultaioState, InputFecha, InputFechaComponent, REGEX_SOLO_DIGITOS, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { AcuseComponent, ConsultaioQuery, ConsultaioState, InputFecha, InputFechaComponent, REGEX_7_ENTEROS_3_DECIMALES, REGEX_SOLO_DIGITOS, REGEX_SOLO_NUMEROS, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Catalogo, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -227,11 +227,11 @@ editingRowId: number | null = null;
         fraccionarancelaria: [{ value: this.dataCafeState?.fraccionarancelaria, disabled: true }, Validators.required],
         cantidad: [this.dataCafeState?.cantidad, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
         unidaddemedida: [this.dataCafeState?.unidaddemedida, Validators.required],
-        precioapplicable: [this.dataCafeState?.precioapplicable, Validators.pattern(/^\d{1,7}(\.\d{1,3})?$/)],
+        precioapplicable: [this.dataCafeState?.precioapplicable, Validators.pattern(REGEX_7_ENTEROS_3_DECIMALES)],
         dolar: [this.dataCafeState?.dolar, Validators.required],
         lote: [this.dataCafeState?.lote,[
           Validators.required,
-          Validators.pattern('^[0-9]*$') 
+          Validators.pattern(REGEX_SOLO_NUMEROS) 
         ]],
         otrasmarcas: [this.dataCafeState?.otrasmarcas, Validators.required],
         otros: [false],
