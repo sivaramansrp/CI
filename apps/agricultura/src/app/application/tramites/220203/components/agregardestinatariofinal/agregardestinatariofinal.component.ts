@@ -124,14 +124,7 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
       razonSocial: [''],
-      pais: ['1', Validators.required],
-      codigoPostal: ['', Validators.required],
-      estado: ['', Validators.required],
-      municipio: [''],
-      colonia: [''],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
+      pais: ['', Validators.required],
       lada: [''],
       telefono: [''],
       correo: ['']
@@ -149,13 +142,6 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
             segundoApellido: DESTINATARIO.segundoApellido || '',
             razonSocial: DESTINATARIO.razonSocial || '',
             pais: DESTINATARIO.pais || '1',
-            codigoPostal: DESTINATARIO.codigoPostal || '',
-            estado: DESTINATARIO.estado || '',
-            municipio: DESTINATARIO.municipio || '',
-            colonia: DESTINATARIO.colonia || '',
-            calle: DESTINATARIO.calle || '',
-            numeroExterior: DESTINATARIO.numeroExterior || '',
-            numeroInterior: DESTINATARIO.numeroInterior || '',
             lada: DESTINATARIO.lada || '',
             telefono: DESTINATARIO.telefono || '',
             correo: DESTINATARIO.correo || ''
@@ -171,9 +157,6 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
    */
   ngAfterViewInit(): void {
     this.pairsCatalogChange();
-    this.estadoCatalogChange();
-    this.municipioCatalogChange();
-    this.coloniaCatalogChange();
   }
 
   /**
@@ -188,41 +171,9 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
       });
   }
 
-  /**
-   * Obtiene el catálogo de estados.
-   * @method estadoCatalogChange
-   */
-  estadoCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('estados.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(data => {
-        this.estadoCatalog = data;
-      });
-  }
 
-  /**
-   * Obtiene el catálogo de municipios.
-   * @method municipioCatalogChange
-   */
-  municipioCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('municipios.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(data => {
-        this.municipioCatalog = data;
-      });
-  }
 
-  /**
-   * Obtiene el catálogo de colonias.
-   * @method coloniaCatalogChange
-   */
-  coloniaCatalogChange(): void {
-    this.tercerosrelacionadosService.obtenerSelectorList('colonias.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(data => {
-        this.coloniaCatalog = data;
-      });
-  }
+ 
 
   /**
    * Guarda el destinatario si el formulario es válido, actualiza el store y navega a la pantalla principal.
