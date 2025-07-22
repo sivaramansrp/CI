@@ -9,17 +9,27 @@
             </li>
             @if(consultaState.parameter === "READ_PROCEDURE"){
             <li [ngClass]="indice === 3 ? 'active' : ''">
-                <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
-                    (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Protesto de Decir Verdad</a>
+                <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
+                    (keydown.space)="seleccionaTab(3)" role="button" tabindex="3">Protesto de Decir Verdad</a>
             </li>
             }@else {
-
-            <li [ngClass]="{ active: indice === 3, disabled: desactivado }">
+            @if(consultaState.parameter === "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO") {
+            <li [ngClass]="{ active: indice === 3}">
                 <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Datos de la mercancia</a>
             </li>
-            <li [ngClass]="{ active: indice === 4, disabled: desactivado }">
+            <li [ngClass]="{ active: indice === 4}">
                 <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Datos adicionales</a>
             </li>
+            }
+            @else{
+            <li [ngClass]="{ active: indice === 3 ,  disabled: desactivado}" ,>
+                <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Datos de la mercancia</a>
+            </li>
+            <li [ngClass]="{ active: indice === 4 , disabled: desactivado}">
+                <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Datos adicionales</a>
+            </li>
+            }
+
             }
 
         </ul>
@@ -29,7 +39,7 @@
             <solicitante #Solicitante></solicitante>
             }
             @case (2) {
-            <app-tratados (habilitarPestana)="habilitarPestana()"></app-tratados>
+            <app-tratados  (habilitarPestana)="habilitarPestana()"></app-tratados>
             }
             @case (3) {
             @if (consultaState.parameter === "READ_PROCEDURE") {

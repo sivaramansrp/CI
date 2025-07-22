@@ -1,5 +1,5 @@
 
-import { AlertComponent, ConfiguracionColumna, ConsultaioQuery, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { AlertComponent, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
@@ -110,7 +110,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
    */
   public origenCatalogo: Catalogo[] = [];
 
-
+  public consultaState!: ConsultaioState;
     /**
      * Inicializa el TratadosComponent.
      * @param fb - Servicio FormBuilder utilizado para crear y gestionar formularios reactivos.
@@ -132,6 +132,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => { 
+          this.consultaState= seccionState;
           this.esFormularioSoloLectura = seccionState.readonly;
           this.inicializarFormularioTratados();
         })
