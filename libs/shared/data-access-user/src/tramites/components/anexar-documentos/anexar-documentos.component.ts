@@ -301,11 +301,11 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Obtiene el nombre del archivo cargado para mostrar en la interfaz.
    * @param {number} id - El ID del archivo.
-   * @returns {string} El nombre del archivo o "No hay archivo seleccionado".
+   * @returns {string} El nombre del archivo o cadena vacía.
    */
   obtenerNombreArchivo(id: number): string {
     const ENCONTRADO = this.listadoArchivos.find((f) => f.id === id);
-    return ENCONTRADO ? ENCONTRADO.name : 'No hay archivo seleccionado';
+    return ENCONTRADO ? ENCONTRADO.name : '';
   }
 
   /**
