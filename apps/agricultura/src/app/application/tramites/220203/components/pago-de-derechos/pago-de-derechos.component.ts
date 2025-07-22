@@ -109,7 +109,7 @@ export class PagoDeDerechosComponent implements OnDestroy {
       this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('banco.json')
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((data) => {
-          this.pagoSelect.justificacionSelector = data.data as Catalogo[];
+          this.pagoSelect.bancoSelector = data.data as Catalogo[];
         }, (error) => {
           console.error(error);
         });
