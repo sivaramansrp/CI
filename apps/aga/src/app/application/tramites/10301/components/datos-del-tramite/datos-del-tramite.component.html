@@ -58,15 +58,28 @@
           <button
             type="button"
             class="btn btn-primary ms-3"
-            (click)="nextTabla()"
+            data-bs-toggle="modal"
+            data-bs-target="#modalAgregarMercancias"
             [disabled]="esFormularioSoloLectura"
           >
+          <!-- (click)="nextTabla()" -->
             Agregar
           </button>
         </div>
       </div>
 
-      <ng-container *ngIf="!showTabla && isPopupClose">
+      <!-- <ng-container *ngIf="!showTabla && isPopupClose"> -->
+<div
+  class="modal fade"
+  id="modalAgregarMercancias"
+  tabindex="-1"
+  aria-labelledby="modalAgregarMercanciasLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <form [formGroup]="agregarMercanciasForm">
         <div class="row mt-5">
           <ng-alert [CONTENIDO]="TEXTO_DE_ADJUNTAR"></ng-alert>
         </div>
@@ -77,7 +90,7 @@
           [showSearchInput2]="true"
           [botonField]="botonField"
         ></crosslist>
-        <ng-container formGroupName="importadorExportador">
+        <ng-container formGroupName="datosMercancia">
         <div class="row mt-5">
           <div class="col-md-12">
             <label>Tipo de mercancía*:</label>
@@ -89,11 +102,11 @@
               id="tipoMercancia"
               formControlName="tipoMercancia"
               [ngClass]="
-                isValid(importadorExportador, 'tipoMercancia') ? 'required' : ''
+                isValid(datosMercancia, 'tipoMercancia') ? 'required' : ''
               "
               (change)="
                 setValoresStore(
-                  importadorExportador,
+                  datosMercancia,
                   'tipoMercancia',
                   'setTipoMercancia'
                 )
@@ -103,7 +116,7 @@
           </div>
         </div>
         </ng-container>
-        <ng-container formGroupName="importadorExportador">
+        <ng-container formGroupName="datosMercancia">
           <div class="row mt-3">
             <div class="col-md-4">
               <label>Uso específico de la mercancía*:</label>
@@ -114,13 +127,13 @@
                 id="usoEspecifico"
                 formControlName="usoEspecifico"
                 [ngClass]="
-                  isValid(importadorExportador, 'usoEspecifico')
+                  isValid(datosMercancia, 'usoEspecifico')
                     ? 'required'
                     : ''
                 "
                 (change)="
                   setValoresStore(
-                    importadorExportador,
+                    datosMercancia,
                     'usoEspecifico',
                     'setUsoEspecifico'
                   )
@@ -138,7 +151,7 @@
                 formControlName="condicion"
                 (change)="
                   setValoresStore(
-                    importadorExportador,
+                    datosMercancia,
                     'condicion',
                     'setCondicion'
                   )
@@ -154,10 +167,10 @@
                 id="marca"
                 formControlName="marca"
                 [ngClass]="
-                  isValid(importadorExportador, 'marca') ? 'required' : ''
+                  isValid(datosMercancia, 'marca') ? 'required' : ''
                 "
                 (change)="
-                  setValoresStore(importadorExportador, 'marca', 'setMarca')
+                  setValoresStore(datosMercancia, 'marca', 'setMarca')
                 "
                 [disabled]="esFormularioSoloLectura"
               />
@@ -173,7 +186,7 @@
                 id="ano"
                 formControlName="ano"
                 (change)="
-                  setValoresStore(importadorExportador, 'ano', 'setAno')
+                  setValoresStore(datosMercancia, 'ano', 'setAno')
                 "
                 [isDisabled]="esFormularioSoloLectura"
               ></app-catalogo-select>
@@ -186,10 +199,10 @@
                 id="modelo"
                 formControlName="modelo"
                 [ngClass]="
-                  isValid(importadorExportador, 'modelo') ? 'required' : ''
+                  isValid(datosMercancia, 'modelo') ? 'required' : ''
                 "
                 (change)="
-                  setValoresStore(importadorExportador, 'modelo', 'setModelo')
+                  setValoresStore(datosMercancia, 'modelo', 'setModelo')
                 "
                 [disabled]="esFormularioSoloLectura"
               />
@@ -202,10 +215,10 @@
                 id="serie"
                 formControlName="serie"
                 [ngClass]="
-                  isValid(importadorExportador, 'serie') ? 'required' : ''
+                  isValid(datosMercancia, 'serie') ? 'required' : ''
                 "
                 (change)="
-                  setValoresStore(importadorExportador, 'serie', 'setSerie')
+                  setValoresStore(datosMercancia, 'serie', 'setSerie')
                 "
                 [disabled]="esFormularioSoloLectura"
               />
@@ -225,6 +238,12 @@
             Agregar
           </button>
         </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
         <div
           class="modal"
           tabindex="-1"
@@ -255,7 +274,7 @@
         </div>
 
         <div class="modal-backdrop fade show" *ngIf="isPopupOpen"></div>
-      </ng-container>
+      <!-- </ng-container> -->
 
       <ng-titulo titulo="Datos del donante extranjero" />
       <ng-container formGroupName="importadorExportador">

@@ -16,7 +16,7 @@ import {
   Solicitud10301State,
   Tramite10301Store,
 } from '../../estados/tramite10301.store';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -250,6 +250,16 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
   consultaDatos!: ConsultaioState;
+
+  /**
+   * Referencia al elemento del modal para agregar mercancías.
+   */
+  @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
+
+  /**
+   * Formulario para agregar mercancías.
+   */
+  agregarMercanciasForm!: FormGroup;
 
   /**
    * Constructor que se utiliza para la inyección de dependencias.
@@ -579,6 +589,16 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   get importadorExportador(): FormGroup {
     return this.tramiteForm.get('importadorExportador') as FormGroup;
   }
+
+  /**
+   * Obtiene el grupo de formulario de datos de mercancía.
+   *
+   * @returns {FormGroup} - El grupo de formulario de datos de mercancía.
+   */
+  get datosMercancia(): FormGroup {
+    return this.agregarMercanciasForm.get('datosMercancia') as FormGroup;
+  }
+  
   /**
    * Inicializa el formulario de donante y domicilio con los valores del estado de la solicitud.
    */
@@ -589,28 +609,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         aduana: [this.solicitudState?.aduana, [Validators.required]],
         nombre: [
           this.solicitudState?.nombre,
-          [Validators.required, Validators.maxLength(50)],
-        ],
-        tipoMercancia: [
-          this.solicitudState?.tipoMercancia,
-          [Validators.required, Validators.maxLength(100)],
-        ],
-        usoEspecifico: [
-          this.solicitudState?.usoEspecifico,
-          [Validators.required, Validators.maxLength(512)],
-        ],
-        condicion: [this.solicitudState?.condicion, Validators.required],
-        marca: [
-          this.solicitudState?.marca,
-          [Validators.required, Validators.maxLength(50)],
-        ],
-        ano: [this.solicitudState?.ano, [Validators.required]],
-        modelo: [
-          this.solicitudState?.modelo,
-          [Validators.required, Validators.maxLength(50)],
-        ],
-        serie: [
-          this.solicitudState?.serie,
           [Validators.required, Validators.maxLength(50)],
         ],
         manifesto: [this.solicitudState?.manifesto, Validators.required],
@@ -650,6 +648,34 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         opcion: [this.solicitudState?.opcion],
       }),
     });
+
+    this.agregarMercanciasForm = this.fb.group({
+      datosMercancia: this.fb.group({
+        tipoMercancia: [
+          this.solicitudState?.tipoMercancia,
+          [Validators.required, Validators.maxLength(100)],
+        ],
+        usoEspecifico: [
+          this.solicitudState?.usoEspecifico,
+          [Validators.required, Validators.maxLength(512)],
+        ],
+        condicion: [this.solicitudState?.condicion, Validators.required],
+        marca: [
+          this.solicitudState?.marca,
+          [Validators.required, Validators.maxLength(50)],
+        ],
+        ano: [this.solicitudState?.ano, [Validators.required]],
+        modelo: [
+          this.solicitudState?.modelo,
+          [Validators.required, Validators.maxLength(50)],
+        ],
+        serie: [
+          this.solicitudState?.serie,
+          [Validators.required, Validators.maxLength(50)],
+        ]
+      }),
+    });
+
   }
   
   /**
