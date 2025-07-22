@@ -253,17 +253,17 @@
     {
         "nombre": "OTRAS 1",
         "categoria": "Categoria 1",
-        "vigencia": "18-01-2025"
+        "vigencia": "2025-01-18"
     },
     {
         "nombre": "OTRAS 2",
         "categoria": "Categoria 2",
-        "vigencia": "19-01-2025"
+        "vigencia": "2025-01-19"
     },
     {
         "nombre": "OTRAS 3",
         "categoria": "Categoria 3",
-        "vigencia": "20-01-2025"
+        "vigencia": "2025-01-20"
     }
   ],
   "elRegistroDeVisitantes": 1

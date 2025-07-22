@@ -58,6 +58,8 @@
   "senaleSiElSAT": 1,
   "senaleSiIngresaMensualmente": 1,
   "archivoExtranjero": "clientesyproveedores.xlsx",
-  "proveedoresExtranjero": "proveedores.xlsx"
+  "proveedoresExtranjero": "proveedores.xlsx",
+  "clientesActualmente": "1",
+  "proveedoresActualmente": "1"
 
 }
