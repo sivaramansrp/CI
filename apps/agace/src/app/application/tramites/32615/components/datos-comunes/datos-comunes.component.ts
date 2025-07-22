@@ -2,7 +2,8 @@ import { ALERTA_COM, OPCIONES_DE_BOTON_DE_RADIO } from '@libs/shared/data-access
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { INSTALACIONES_PRINCIPALES_TABLA, INVENTARIOS_TABLA, InstalacionesPrincipalesTablaInfo, InventariosInfo, MERCANCIA_TABLA, MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/32615/dato-comunes.model';
+import { InstalacionesPrincipalesTablaInfo, InventariosInfo, MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/32615/dato-comunes.model';
+import { INSTALACIONES_PRINCIPALES_TABLA, INVENTARIOS_TABLA, MERCANCIA_TABLA} from '@libs/shared/data-access-user/src/tramites/constantes/32615/datos-comunes.enum';
 import { Solicitud32615State, Tramite32615Store } from '../../../../estados/tramites/tramite32615.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';

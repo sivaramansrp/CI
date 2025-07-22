@@ -1,5 +1,4 @@
 import { FECHA_DE_FACTURA,FECHA_DE_INICIO, FECHA_DE_VIGENCIA, OPCIONES_DE_BOTON_DE_RADIO, OPCIONES_INFORMACION, OPCIONES_RECONOCIMIENTO } from '@libs/shared/data-access-user/src/tramites/constantes/32615/datos-comunes.enum';
-import { MERCANCIA_TABLA, MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/32615/dato-comunes.model';
 
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
@@ -8,6 +7,8 @@ import { Solicitud32615MensajeriaState, Tramite32615MensajeriaStore } from '../.
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { MERCANCIA_TABLA } from '@libs/shared/data-access-user/src/tramites/constantes/32615/datos-comunes.enum';
+import { MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/32615/dato-comunes.model';
 import { Modal } from 'bootstrap';
 import {RecintoFiscalizadoService} from '../../services/recinto-fiscalizado.service';
 import { TEXTOS_ESTATICOS_MENSAJERIA } from '../../constantes/texto-estatico.enum';

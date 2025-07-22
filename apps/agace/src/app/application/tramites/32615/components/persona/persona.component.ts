@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { PERSONAS_TABLA, PersonasInfo } from '@libs/shared/data-access-user/src/core/models/32615/dato-comunes.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { PERSONAS_TABLA } from '@libs/shared/data-access-user/src/tramites/constantes/32615/datos-comunes.enum';
+import { PersonasInfo } from '@libs/shared/data-access-user/src/core/models/32615/dato-comunes.model';
 import {RecintoFiscalizadoService} from '../../services/recinto-fiscalizado.service';
 
 /**
