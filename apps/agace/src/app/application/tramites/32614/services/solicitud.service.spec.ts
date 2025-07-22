@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { SolicitudService } from './solicitud.service';
 import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
+import { of, throwError, Observable } from 'rxjs';
 import { Solicitud32614Store } from '../estados/solicitud32614.store';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
@@ -287,5 +287,139 @@ describe('SolicitudService', () => {
     expect(storeSpy.actualizarCheckbox3).toHaveBeenCalledWith(true);
     expect(storeSpy.actualizarActualmente2).toHaveBeenCalledWith('act2');
     expect(storeSpy.actualizarActualmente1).toHaveBeenCalledWith('act1');
+  });
+
+  describe('Error handling tests', () => {
+    it('should handle HTTP errors in conseguirRecibirNotificaciones', (done) => {
+      const errorResponse = new Error('HTTP Error');
+      httpClientSpy.get.mockReturnValue(throwError(errorResponse));
+      
+      service.conseguirRecibirNotificaciones().subscribe({
+        next: () => fail('Should have failed'),
+        error: (error) => {
+          expect(error).toBe(errorResponse);
+          expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32614/recibir-notificaciones.json');
+          done();
+        }
+      });
+    });
+
+    it('should handle HTTP errors in conseguirEnlaceOperativoDatos', (done) => {
+      const errorResponse = new Error('Network Error');
+      httpClientSpy.get.mockReturnValue(throwError(errorResponse));
+      
+      service.conseguirEnlaceOperativoDatos().subscribe({
+        next: () => fail('Should have failed'),
+        error: (error) => {
+          expect(error).toBe(errorResponse);
+          expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32614/enlace-operativo-datos.json');
+          done();
+        }
+      });
+    });
+
+    it('should handle HTTP errors in guardarDatosFormulario', (done) => {
+      const errorResponse = new Error('File not found');
+      httpClientSpy.get.mockReturnValue(throwError(errorResponse));
+      
+      service.guardarDatosFormulario().subscribe({
+        next: () => fail('Should have failed'),
+        error: (error) => {
+          expect(error).toBe(errorResponse);
+          expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/32614/guardar-datos-formulario.json');
+          done();
+        }
+      });
+    });
+  });
+
+  describe('Service dependencies', () => {
+    it('should be injected with HttpClient', () => {
+      expect(service['http']).toBeDefined();
+    });
+
+    it('should be injected with Solicitud32614Store', () => {
+      expect(service.solicitud32614Store).toBeDefined();
+    });
+  });
+
+  describe('Observable behavior tests', () => {
+    it('should return Observable for conseguirRecibirNotificaciones', () => {
+      const mockData = [{ id: 1, nombre: 'Test' }];
+      httpClientSpy.get.mockReturnValue(of(mockData));
+      
+      const result = service.conseguirRecibirNotificaciones();
+      expect(result).toBeInstanceOf(Observable);
+    });
+
+    it('should return Observable for conseguirEnlaceOperativoDatos', () => {
+      const mockData = [{ id: 1, nombre: 'Test' }];
+      httpClientSpy.get.mockReturnValue(of(mockData));
+      
+      const result = service.conseguirEnlaceOperativoDatos();
+      expect(result).toBeInstanceOf(Observable);
+    });
+
+    it('should return Observable for guardarDatosFormulario', () => {
+      const mockData = { idPersonaSolicitud: 1 };
+      httpClientSpy.get.mockReturnValue(of(mockData));
+      
+      const result = service.guardarDatosFormulario();
+      expect(result).toBeInstanceOf(Observable);
+    });
+  });
+
+  describe('actualizarEstadoFormulario edge cases', () => {
+    it('should handle empty response object', () => {
+      const resp: any = {};
+      expect(() => service.actualizarEstadoFormulario(resp)).not.toThrow();
+    });
+
+    it('should handle null values in response', () => {
+      const resp: any = {
+        190: null,
+        191: null,
+        idPersonaSolicitud: null,
+        nombre: null
+      };
+      
+      expect(() => service.actualizarEstadoFormulario(resp)).not.toThrow();
+      expect(storeSpy.actualizar190).toHaveBeenCalledWith(null);
+      expect(storeSpy.actualizar191).toHaveBeenCalledWith(null);
+      expect(storeSpy.actualizarIdPersonaSolicitud).toHaveBeenCalledWith(null);
+      expect(storeSpy.actualizarNombre).toHaveBeenCalledWith(null);
+    });
+
+    it('should handle undefined values in response', () => {
+      const resp: any = {
+        190: undefined,
+        191: undefined,
+        idPersonaSolicitud: undefined
+      };
+      
+      expect(() => service.actualizarEstadoFormulario(resp)).not.toThrow();
+      expect(storeSpy.actualizar190).toHaveBeenCalledWith(undefined);
+      expect(storeSpy.actualizar191).toHaveBeenCalledWith(undefined);
+      expect(storeSpy.actualizarIdPersonaSolicitud).toHaveBeenCalledWith(undefined);
+    });
+  });
+
+  describe('HTTP method call verification', () => {
+    it('should call http.get exactly once for each method', () => {
+      const mockData = {};
+      httpClientSpy.get.mockReturnValue(of(mockData));
+
+      service.conseguirRecibirNotificaciones().subscribe();
+      service.conseguirEnlaceOperativoDatos().subscribe();
+      service.conseguirRepresentanteLegalDatos().subscribe();
+      service.conseguirOpcionDeRadio().subscribe();
+      service.conseguirTransportistasLista().subscribe();
+      service.conseguirSolicitudCatologoSelectLista().subscribe();
+      service.conseguirSeccionSubcontratados().subscribe();
+      service.conseguirInventarios().subscribe();
+      service.guardarDatosFormulario().subscribe();
+
+      expect(httpClientSpy.get).toHaveBeenCalledTimes(9);
+    });
   });
 });

@@ -1,21 +1,8 @@
-import { CTPATComponent } from '../../components/c-tpat/c-tpat.component';
-import { CommonModule } from '@angular/common';
-import { Component} from '@angular/core';
-import { ConsultaioQuery} from '@libs/shared/data-access-user/src';
-import { ConsultaioState } from '@libs/shared/data-access-user/src';
-import { DatosComunesComponent } from '../../components/datos-comunes/datos-comunes.component';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs';
 import { GuardarDatosFormulario } from '../../models/solicitud.model';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ParqueIndustrialComponent } from '../../components/parque industrial/parque-industrial.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente que representa el primer paso de un trámite.
