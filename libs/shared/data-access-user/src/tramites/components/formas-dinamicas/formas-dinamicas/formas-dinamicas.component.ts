@@ -120,7 +120,6 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * Por defecto es `false`.
   */
   @Input() soloLectura: boolean = false;
-
   /**
   * @input templateMap
   * @type {Record<string, TemplateRef<unknown>>}

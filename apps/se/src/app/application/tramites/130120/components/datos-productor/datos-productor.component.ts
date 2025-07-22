@@ -121,6 +121,10 @@ export class DatosProductorComponent implements OnInit, OnDestroy{
       })
     )
     .subscribe();
+
+    if(this.esFormularioSoloLectura){
+      this.datosProductor.disable();
+    }
   }
 
   /**

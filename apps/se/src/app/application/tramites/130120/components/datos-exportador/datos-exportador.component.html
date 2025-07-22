@@ -13,6 +13,7 @@
               [selectedValue]="datosExportador.get('persona_tipo')?.value"
               [isRequired]="true"
               (valueChange)="onTipoPersonaExportadorChange($event)"
+              formControlName="persona_tipo"
               [layout]="'horizontal'">
               </app-input-radio>
             </b>
