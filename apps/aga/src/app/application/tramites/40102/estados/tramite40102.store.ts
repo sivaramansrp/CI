@@ -63,6 +63,11 @@ export interface Tramite40102State {
    * Contiene la información específica de remolques, semirremolques y otros vehículos auxiliares.
    */
   datosUnidad: DatosUnidad;
+
+  /**
+   * Indica si el trámite está en modo solo lectura (readonly), útil para flujos de consulta.
+   */
+  readonly?: boolean;
 }
 /**
  * Función que crea el estado inicial para el store del trámite 40102.

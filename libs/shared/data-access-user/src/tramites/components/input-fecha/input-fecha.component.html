@@ -2,7 +2,7 @@
   <label for="input_fecha" class="form-label" >{{datos.labelNombre}} {{datos.required ? ' *:' : ''}} @if(tooltipQuestionCircle){ <span class="bi bi-question-circle-fill" title="{{datos.labelNombre}}"
         data-bs-toggle="tooltip"></span>}</label>
   <div class="d-flex justify-content-start" [formGroup]="Formulario">
-    <div class="input-group-text" id="input_fecha">
+    <div class="input-group-text" id="input_fecha" [ngClass]="{'disabled-div': isDisabled}" (click)="mostrarCalendario()">
       <div class="fecha">
         <span>{{fechaString}}</span>
       </div>

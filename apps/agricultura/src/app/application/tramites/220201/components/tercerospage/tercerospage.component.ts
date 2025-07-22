@@ -183,10 +183,16 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.destroyNotifier$.complete();
   }
 
-  abrirModalDestinatario(): void {
+  abrirModalDestinatario(data?: any): void {
+    if (data) {
+      this.certificadoZoosanitarioStore.actualizarSelectedTerceros(data);
+    }
     this.modalRef.abrir(AgregardestinatarioComponent);
   }
-  abrirModalExportador(): void {
+  abrirModalExportador(data: any): void {
+    if (data) {
+      this.certificadoZoosanitarioStore.actualizarSelectedExdora(data);
+    }
     this.modalRef.abrir(AgregardestinatariofinalComponent);
   }
 }
