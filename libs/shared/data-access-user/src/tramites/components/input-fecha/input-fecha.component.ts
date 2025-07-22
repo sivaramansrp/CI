@@ -42,6 +42,9 @@ export class InputFechaComponent implements OnInit, OnChanges {
    */
   @Input() tooltipQuestionCircle: boolean = false;
 
+  @Input() deshabilitarFuturas: boolean = false;
+
+
   /**
    * Arreglo con los nombres de los meses.
    */
@@ -332,4 +335,20 @@ export class InputFechaComponent implements OnInit, OnChanges {
       this.mostrar = false;
     }
   }
+
+  isFutureDate(day: { value: number; indexWeek: number }): boolean {
+  if (!this.deshabilitarFuturas) {
+    return false;
+  }
+
+  const SELECTED_YEAR = this.Formulario.get('anio')?.value;
+  const SELECTMONTH = this.Formulario.get('mes')?.value;
+  const DAYVALUE = day.value;
+
+  const FECHADIA = moment(`${SELECTED_YEAR}-${SELECTMONTH}-${DAYVALUE}`, 'YYYY-M-D');
+  const HOY = moment().startOf('day');
+
+  return FECHADIA.isAfter(HOY);
+}
+
 }
