@@ -608,8 +608,8 @@
     </div>
     @if (datosSolicitudForm.get('adunasDeEntradas')?.value) {
     <div class="row mt-2">
-      <div class="col-md-12 pull-right">
-        <div class="form-check">
+      <div class="col-md-12">
+        <div class="form-check pull-right">
           <input
             class="form-check-input"
             type="checkbox"
@@ -621,9 +621,10 @@
             >Aeropuerto Internacional Ciudad de México (AICM)
           </label>
           <span
-            class="bi bi-question-circle-fill"
-            title="Aeropuerto Internacional Ciudad de México"
+            tooltip="Marcar la casilla si requiere usar esta aduana."
             data-bs-toggle="tooltip"
+          >
+            <i class="bi bi-question-circle-fill"></i
           ></span>
         </div>
       </div>
