@@ -124,22 +124,17 @@
                    <input class="form-control" required="true" placeholder="" type="text" formControlName="cantidad" id="cantidad"
                    (change)="setValoresStore(datosDelTramiteRealizar,'cantidad','setCantidad')"
                    [disabled]="esFormularioSoloLectura"
+                   [ngClass]="{
+                    'is-invalid': isCantidadInvalid
+                  }">
                    >
-                   <div
-                   *ngIf="
-                     dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.invalid &&
-                     dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.touched
-                   "
-                   class="text-danger"
-                 >
-                   <small
-                     *ngIf="
-                       dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.errors?.['pattern']
-                     "
-                   >
-                     Por favor, sólo escribe dígitos
-                   </small>
-                 </div>
+                  
+                 @if(isCantidadInvalid){
+                  <small class="text-danger" *ngIf="dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.errors?.['pattern']">
+                  Por favor, sólo escribe dígitos
+                </small>
+                 }
+                  
                 </div>
              </div>
              <div class="col-md-4 mb-3">
@@ -165,23 +160,17 @@
                    <label class="form-label" for="precioapplicable">Precio aplicable*:</label>
                    <input class="form-control" required="true" placeholder="" type="text" formControlName="precioapplicable" id="precioapplicable"
                    (change)="setValoresStore(datosDelTramiteRealizar,'precioapplicable','setPrecioapplicable')"
-                   [disabled]="esFormularioSoloLectura">
+                   [disabled]="esFormularioSoloLectura"
+                   [ngClass]="{
+                    'is-invalid': isPrecioApplicableInvalid
+                  }">
                 </div>
-                <div
-        *ngIf="
-         dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.invalid &&
-        dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.touched
-       "
-      class="text-danger"
-      >
-     <small
-      *ngIf="
-        dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.errors?.['pattern']
-      "
-     >
-      Solo 7 enteros y hasta 3 Decimales
-     </small>
-     </div>
+      @if(isPrecioApplicableInvalid){
+        <small class="text-danger"
+        *ngIf="dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.errors?.['pattern']">
+        Solo 7 enteros y hasta 3 Decimales
+       </small>
+      }
              </div>
              <div class="col-md-4 mb-3">
                 <div class="form-group">
@@ -449,22 +438,20 @@
                          formControlName="Identificadordel"
                          (change)="setValoresStore(datosDelTramiteRealizar, 'Identificadordel', 'setIdentificadordel')"
                          [disabled]="esFormularioSoloLectura"
+                         [ngClass]="{
+                          'is-invalid': isIdentificadorDelInvalid
+                        }"
                        />
-                       <div
-                         *ngIf="
-                           dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.invalid &&
-                           dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.touched
-                         "
-                         class="text-danger"
-                       >
-                         <small
-                           *ngIf="
-                             dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.errors?.['maxlength']
-                           "
-                         >
-                           Por favor, no escribas más de 5 caracteres
-                         </small>
-                       </div>
+                       @if(isIdentificadorDelInvalid){
+                        <small class="text-danger"
+                        *ngIf="
+                          dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.errors?.['maxlength']
+                        "
+                      >
+                        Por favor, no escribas más de 5 caracteres
+                      </small>
+                       }
+ 
                      </div>
                    </div>
                  </div>

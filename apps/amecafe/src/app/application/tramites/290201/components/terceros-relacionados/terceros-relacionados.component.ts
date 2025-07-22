@@ -13,9 +13,6 @@ import {
   ConsultaioQuery,
   ConsultaioState,
   InputRadioComponent,
-  REGEX_CODIGO_POSTAL,
-  REGEX_CORREO_ELECTRONICO,
-  REGEX_TELEFONO,
   TablaSeleccion,
   TableComponent,
 } from '@libs/shared/data-access-user/src';
@@ -372,19 +369,11 @@ get selectedTipoPersona(): string | undefined {
    */
   enEnviar(): void {
     const FORM_DATA = this.destinatarioForm.value;
-   // Check if the form is valid
    if (!this.destinatarioForm.valid) {
-    console.error('Form is invalid. Please fill in all required fields.');
-    const invalidControls = Object.keys(this.destinatarioForm.controls).filter(key => {
-      const control = this.destinatarioForm.get(key);
-      return control && control.invalid;
-    });
-    console.log('Invalid Controls:', invalidControls);
     this.destinatarioForm.markAllAsTouched();
     return;
   }
     if (!FORM_DATA || Object.keys(FORM_DATA).length === 0) {
-      console.error('Form data is empty');
       return;
     }
   
@@ -398,17 +387,16 @@ get selectedTipoPersona(): string | undefined {
     if (this.selectedRow) {
       const INDEX = this.tableData.indexOf(this.selectedRow);
       if (INDEX !== -1) {
-        this.tableData[INDEX] = { ...FORM_DATA, id: this.selectedRow.id }; // Retain the existing ID
+        this.tableData[INDEX] = { ...FORM_DATA, id: this.selectedRow.id }; 
       }
     } else {
-      const newId = this.tableData.length > 0
+      const NEW_ID = this.tableData.length > 0
         ? Math.max(...this.tableData.map((row) => row.id || 0)) + 1
         : 1;
-      this.tableData.push({ ...FORM_DATA, id: newId }); // Assign a new unique ID
+      this.tableData.push({ ...FORM_DATA, id: NEW_ID }); 
     }
-    console.log('Updated Table Data:', this.tableData);
 
-    this.tableData = [...this.tableData]; // Trigger change detection
+    this.tableData = [...this.tableData]; 
     this.changeDetectorRef.markForCheck();
     this.destinatarioForm.reset();
     this.esFormularioVisible = false;
@@ -466,7 +454,6 @@ onLimpiar(): void {
        }
        
     if (!this.isPaisdatoscargados) {
-      console.warn('Los datos del catálogo de países aún no están cargados');
       return;
     }
     if (this.selectedRow) {
@@ -503,22 +490,11 @@ onLimpiar(): void {
  */
  onDeleteSelectedRows(): void {
   if (this.selectedRows.size > 0) {
-    console.log('Selected Rows:', Array.from(this.selectedRows)); // Debugging: Log selected rows
 
-    // Ensure `id` uniqueness in `tableData`
-    const uniqueIds = new Set(this.tableData.map((row) => row.id));
-    console.log('Unique IDs in tableData:', Array.from(uniqueIds)); // Debugging: Log unique IDs
-
-    // Filter out rows that are not in the selectedRows set
-    this.tableData = this.tableData.filter(
+       this.tableData = this.tableData.filter(
       (row: { id: number }) => !this.selectedRows.has(row.id)
     );
-
-
-    // Clear the selected rows after deletion
     this.selectedRows.clear();
-
-    // Reset the form and hide the form if visible
     this.destinatarioForm.reset();
     this.esFormularioVisible = false;
   }
@@ -565,10 +541,14 @@ onLimpiar(): void {
       this.destinatarioForm?.enable();
     }
 }
-onAgregar(): void{
+/**
+ * Método para mostrar el formulario de destinatarios.
+ * 
+ * Este método establece la bandera `esFormularioVisible` en `true`,
+ * lo que permite que el formulario sea visible en la interfaz de usuario.
+ */
+onAgregar(): void {
   this.esFormularioVisible = true; 
-  // this.destinatarioForm.reset(); 
-
 }
   /**
    * Método para establecer valores en el store.

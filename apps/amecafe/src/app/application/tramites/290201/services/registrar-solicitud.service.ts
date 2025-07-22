@@ -216,7 +216,11 @@ getDestinatarioData(): Observable<Solicitud290201State> {
   return this.http.get<Solicitud290201State>('assets/json/290201/destinatariodata.json');
 }
 
-
+/**
+ * Obtiene los datos de las entidades federativas.
+ * 
+ * @returns {Observable<Catalogo[]>} Observable con la lista de entidades federativas obtenida desde un archivo JSON local.
+ */
 getEntidadFederativaData(): Observable<Catalogo[]> {
   return this.http.get<Catalogo[]>('assets/json/290201/domicilio.json');
 }

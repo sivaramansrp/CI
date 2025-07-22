@@ -256,22 +256,19 @@ editingRowId: number | null = null;
         tasqNespresso: ['',],
         utzCertified: ['',],
       },
-      { validators: DatosDelCafeComponent.cantidadUtilizadaValidator } // Apply the custom validator here
+      { validators: DatosDelCafeComponent.cantidadUtilizadaValidator } 
   ),
       
     });
     this.dataCafeForm.get('datosDelTramiteRealizar.elcafe')?.valueChanges.subscribe((value) => {
-      if (value === 1) { // If "elcafe" is selected as "Yes"
+      if (value === 1) { 
         this.dataCafeForm.get('datosDelTramiteRealizar.calidadEspecial')?.setValidators(Validators.required);
         this.dataCafeForm.get('datosDelTramiteRealizar.cafePractices')?.setValidators(Validators.required);
-        // Add validators for other fields as needed
       } else {
         this.dataCafeForm.get('datosDelTramiteRealizar.calidadEspecial')?.clearValidators();
         this.dataCafeForm.get('datosDelTramiteRealizar.cafePractices')?.clearValidators();
-        // Clear validators for other fields as needed
       }
     
-      // Update the validity of the form controls
       this.dataCafeForm.get('datosDelTramiteRealizar.calidadEspecial')?.updateValueAndValidity();
       this.dataCafeForm.get('datosDelTramiteRealizar.cafePractices')?.updateValueAndValidity();
     });
@@ -445,8 +442,6 @@ editingRowId: number | null = null;
  * en el formulario, transformarlos según los catálogos correspondientes y agregarlos a la tabla de datos.
  */
 onSubmit(): void {
-
-  // this.logFormControls(); 
   if (this.dataCafeForm.invalid) {
     this.dataCafeForm.markAllAsTouched();
     return;
@@ -526,7 +521,6 @@ if (MODAL_ELEMENT) {
     MODAL_INSTANCE.hide();
   }
 }
-
  
 }
 /**
@@ -599,17 +593,10 @@ if (MODAL_ELEMENT) {
   *  */ 
  onDeleteSelectedRows(): void {
   if (this.selectedRows.size > 0) {
-
-    // Filter out rows that are not in the selectedRows set
     this.tableData = this.tableData.filter(
       (row: { id: number }) => !this.selectedRows.has(row.id)
     );
-
-
-    // Clear the selected rows after deletion
     this.selectedRows.clear();
-
-    // Reset the form and hide the form if visible
     this.dataCafeForm.reset();
     this.esFormularioVisible = false;
   }
@@ -631,6 +618,43 @@ if (MODAL_ELEMENT) {
         }
     }
   }
+
+  
+/**
+ * Getter para verificar si el campo 'Identificadordel' es inválido y ha sido tocado.
+ * 
+ * @returns {boolean} Devuelve `true` si el campo 'Identificadordel' es inválido y ha sido tocado, de lo contrario, devuelve `false`.
+ */
+get isIdentificadorDelInvalid(): boolean {
+  return (
+    (this.dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.invalid ?? false) &&
+    (this.dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.touched ?? false)
+  );
+}
+
+
+/**
+ * Getter para verificar si el campo 'precioapplicable' es inválido y ha sido tocado.
+ * 
+ * @returns {boolean} Devuelve `true` si el campo 'precioapplicable' es inválido y ha sido tocado, de lo contrario, devuelve `false`.
+ */
+get isPrecioApplicableInvalid(): boolean {
+  return (
+    (this.dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.invalid ?? false) &&
+    (this.dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.touched ?? false)
+  );
+}
+/**
+ * Getter para verificar si el campo 'cantidad' es inválido y ha sido tocado.
+ * 
+ * @returns {boolean} Devuelve `true` si el campo 'cantidad' es inválido y ha sido tocado, de lo contrario, devuelve `false`.
+ */
+get isCantidadInvalid(): boolean {
+  return (
+    (this.dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.invalid ?? false) &&
+    (this.dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.touched ?? false)
+  );
+}
   /**
  * Getter para acceder al grupo de formularios 'datosDelTramiteRealizar'.
  * 
@@ -651,13 +675,7 @@ get datosDelTramiteRealizar(): FormGroup {
       this.dataCafeForm?.enable();
     }
 }
-// private logFormControls(): void {
-//   const GROUP = this.dataCafeForm.get('datosDelTramiteRealizar') as FormGroup;
-//   // Object.keys(GROUP.controls).forEach((key) => {
-//   //   const CONTROL = GROUP.get(key);
-//   //   // console.log(`Control: ${key}, Value: ${CONTROL?.value}, Valid: ${CONTROL?.valid}, Errors: ${CONTROL?.errors}`);
-//   // });
-// }
+
 /**
  * Validador estático para verificar que la cantidad utilizada no exceda la cantidad disponible.
  * 
@@ -680,12 +698,19 @@ static cantidadUtilizadaValidator(group: AbstractControl): { [key: string]: unkn
   }
   return null;
 }
+/**
+ * Getter para verificar si la cantidad utilizada excede la cantidad disponible.
+ * 
+ * @returns {boolean} Devuelve `true` si el validador `cantidadUtilizadaExceeds` está presente en el grupo de formularios
+ * `datosDelTramiteRealizar` y el campo `cantidadutilizada` ha sido tocado. De lo contrario, devuelve `false`.
+ */
 get isCantidadUtilizadaExceeds(): boolean {
   return (
     this.dataCafeForm.get('datosDelTramiteRealizar')?.errors?.['cantidadUtilizadaExceeds'] &&
     this.dataCafeForm.get('datosDelTramiteRealizar.cantidadutilizada')?.touched
   );
 }
+
   /**
    * Este método se utiliza para actualizar un valor específico en el store de la solicitud.
    * @param form 
