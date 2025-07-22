@@ -195,7 +195,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   emitirEventoClick(): void {
     this.indice = 1;
     this.datosPasos.indice = 1;
-    this.datosPasos.txtBtnAnt;
     this.dataEvent.emit(1);
   }
 
