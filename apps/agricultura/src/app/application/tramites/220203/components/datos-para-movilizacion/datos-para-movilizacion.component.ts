@@ -116,14 +116,6 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy, AfterV
    * @returns {void}
    */
   ngAfterViewInit(): void {
-    this.formularioMovilizacion.valueChanges
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(() => {
-        this.verificarEstadoDelBoton();
-      }, (error) => {
-        console.error('Error en cambios de formulario:', error);
-      });
-
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -176,21 +168,6 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy, AfterV
       }, (error) => {
         console.error('Error al obtener datos de puntos:', error);
       });
-  }
-
-  /**
-   * Verifica si el formulario de movilización es válido y actualiza el estado del botón.
-   * @method verificarEstadoDelBoton
-   * @returns {void}
-   */
-  verificarEstadoDelBoton(): void {
-    const DATOS = {
-      dataParaMovilizacion: false,
-    };
-    if (this.formularioMovilizacion.valid) {
-      DATOS.dataParaMovilizacion = true;
-    }
-    this.importacionDeAcuiculturaServices.actualizarFormaValida(DATOS);
   }
 
   /**

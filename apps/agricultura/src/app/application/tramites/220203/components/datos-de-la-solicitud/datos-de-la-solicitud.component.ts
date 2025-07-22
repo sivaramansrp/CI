@@ -307,14 +307,6 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    * @inheritdoc
    */
   public ngAfterViewInit(): void {
-    this.datosMercanciaFormGroup.valueChanges
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(() => {
-        this.verificarEstadoDelBoton();
-      }, (error) => {
-        console.error(error);
-      });
-
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -414,21 +406,6 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    */
   public mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
-  }
-
-  /**
-   * Verifica el estado del formulario y habilita o deshabilita el botón según su validez.
-   * @method
-   * @returns {void}
-   */
-  public verificarEstadoDelBoton(): void {
-    const DATOS = {
-      dataDeLaSolicitud: false,
-    };
-    if (this.datosMercanciaFormGroup.valid) {
-      DATOS.dataDeLaSolicitud = true;
-    }
-    this.importacionDeAcuiculturaServices.actualizarFormaValida(DATOS);
   }
 
   /**

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
 import { PASOSACUICULTURA, PRIVACY_NOTICE_CONTENT } from '../../constantes/220203/importacion-de-acuicultura.enum';
 import { AccionBoton } from '../../models/220203/importacion-de-acuicultura.module';
 
@@ -47,16 +47,6 @@ export class SanidadCertificadoComponent {
     txtBtnAnt: 'Guardar',
     txtBtnSig: 'Continuar',
   };
-
-  /**
-   * Constructor del componente.
-   * Inicializa el estado de la sección en el store, estableciendo la validez y la activación de la sección.
-   * @param {SeccionLibStore} seccionStore Servicio store para el manejo del estado de la sección.
-   */
-  constructor(private readonly seccionStore: SeccionLibStore) {
-    this.seccionStore.establecerFormaValida([false]);
-    this.seccionStore.establecerSeccion([true]);
-  }
 
   /**
    * Referencia al componente Wizard para controlar la navegación entre pasos.

@@ -48,5 +48,15 @@ export class AcuiculturaQuery extends Query<Acuicultura> {
    */
   seleccionaraMercanciaGroup$ = this.select(estado => estado.mercanciaGroup);
 
+    /**
+  * Selector para obtener la lista de terceros relacionados.
+  *
+  * @readonly
+  * @type {Observable<any>}
+  * @memberof ZoosanitarioQuery
+  */
+  seleccionarTerceros$ = this.select(estado => estado.seletedTerceros);
+
+
 
 }

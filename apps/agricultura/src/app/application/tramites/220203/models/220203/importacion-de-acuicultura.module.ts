@@ -1,4 +1,5 @@
 import { Catalogo, PersonaTerceros } from "@libs/shared/data-access-user/src";
+import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
 
 /**
  * @fileoverview
@@ -208,10 +209,12 @@ export interface Acuicultura {
     formularioMovilizacion: FormularioMovilizacion;
     realizarGroup: RealizarGroup;
     mercanciaGroup: Fila[];
-    formaValida: EnviarDatos;
-    tercerosRelacionados: PersonaTerceros[];
+  tercerosRelacionados: TercerosrelacionadosdestinoTable[];
     pagoDeDerechos:PagoDeDerechos;
     selectedmercanciaGroupDatos:Fila;
+    datosForma: TercerosrelacionadosdestinoTable[];
+  seletedTerceros: TercerosrelacionadosdestinoTable;
+  seletedExdora: TercerosrelacionadosdestinoTable;
 }
 
 /**
@@ -238,12 +241,6 @@ export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura
                 regimen: ''
             }
         ,
-        tercerosRelacionados: params.tercerosRelacionados || [],
-        formaValida: params?.formaValida || {
-            pagoDeformaValida: false,
-            dataParaMovilizacion: false,
-            dataDeLaSolicitud: false
-        },
         pagoDeDerechos: params?.pagoDeDerechos || {
             exentoPago: '',
             justificacion: '',
@@ -255,7 +252,11 @@ export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura
             fechaPago: ''
         },
         mercanciaGroup: params?.mercanciaGroup || [],
-        selectedmercanciaGroupDatos: params?.selectedmercanciaGroupDatos || {} as Fila
+        selectedmercanciaGroupDatos: params?.selectedmercanciaGroupDatos || {} as Fila,
+        tercerosRelacionados: params.tercerosRelacionados || [],
+        datosForma: params.datosForma || [],
+        seletedTerceros: params.seletedTerceros || {} as TercerosrelacionadosdestinoTable,
+        seletedExdora: params.seletedExdora || {} as TercerosrelacionadosdestinoTable
     };
 }
 /**

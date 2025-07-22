@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { Store, StoreConfig } from '@datorama/akita';
 
-import { Acuicultura, Consulta, Fila, FormularioMovilizacion, MercanciaGroup, PagoDeDerechos, RealizarGroup, createDatosState } from '../../models/220203/importacion-de-acuicultura.module';
-import { PersonaTerceros } from '@libs/shared/data-access-user/src';
+import { Acuicultura, Consulta, Fila, FormularioMovilizacion, PagoDeDerechos, RealizarGroup, createDatosState } from '../../models/220203/importacion-de-acuicultura.module';
+import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 
 /**
  * @fileoverview
@@ -85,21 +85,6 @@ export class AcuiculturaStore extends Store<Acuicultura> {
         }));
     }
 
-    /**
-     * Actualiza el estado con la información de la validez de los formularios.
-     * @method actualizarformaValida
-     * @param {{ [key: string]: boolean }} updatedFormaValida - Objeto con los valores de validez de los formularios.
-     * @returns {void}
-     */
-    public actualizarformaValida(updatedFormaValida: { [key: string]: boolean }): void {
-        this.update(state => ({
-            ...state,
-            formaValida: {
-                ...state.formaValida,
-                ...updatedFormaValida,
-            }
-        }));
-    }
 
     /**
      * Actualiza el estado con la información de la consulta.
@@ -114,18 +99,7 @@ export class AcuiculturaStore extends Store<Acuicultura> {
         }));
     }
 
-    /**
-     * Actualiza el estado con la información de los terceros relacionados.
-     * @method actualizarTercerosRelacionados
-     * @param {PersonaTerceros[]} tercerosRelacionados - Arreglo de personas relacionadas como terceros.
-     * @returns {void}
-     */
-    public actualizarTercerosRelacionados(tercerosRelacionados: PersonaTerceros[]): void {
-        this.update(state => ({
-            ...state,
-            tercerosRelacionados: tercerosRelacionados,
-        }));
-    }
+
   /**
      * Actualiza el estado con la información de los terceros relacionados.
      * @method actualizarTercerosRelacionados
@@ -138,6 +112,51 @@ export class AcuiculturaStore extends Store<Acuicultura> {
             mercanciaGroup: mercanciaGroup,
         }));
     }
+   /**
+   * Actualiza el store con la lista de terceros relacionados.
+   * @method updateTercerosRelacionados
+   * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de personas terceros relacionadas.
+   */
+  public updateTercerosRelacionados(tercerosRelacionados: TercerosrelacionadosdestinoTable[]): void {
+    this.update(state => ({
+      ...state,
+      tercerosRelacionados: tercerosRelacionados,
+    }));
+  }
+   /**
+   * Actualiza el store con la lista de terceros relacionados.
+   * @method updateTercerosRelacionados
+   * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de personas terceros relacionadas.
+   */
+  public updatedatosForma(tercerosRelacionados: TercerosrelacionadosdestinoTable[]): void {
+    this.update(state => ({
+      ...state,
+      datosForma: tercerosRelacionados,
+    }));
+  }
+
+    /**
+ * Actualiza el store con los datos de movilización nacional.
+ * @method actualizarDatosParaMovilizacionNacional
+ * @param {DatosParaMovilizacionNacional} datosParaMovilizacionNacional Datos de movilización nacional.
+ */
+  public actualizarSelectedTerceros(datosParaMovilizacionNacional: TercerosrelacionadosdestinoTable): void {
+    this.update(state => ({
+      ...state,
+      seletedTerceros: datosParaMovilizacionNacional
+    }));
+  }
+   /**
+  * Actualiza el store con los datos de movilización nacional.
+  * @method actualizarDatosParaMovilizacionNacional
+  * @param {DatosParaMovilizacionNacional} datosParaMovilizacionNacional Datos de movilización nacional.
+  */
+  public actualizarSelectedExdora(datosParaMovilizacionNacional: TercerosrelacionadosdestinoTable): void {
+    this.update(state => ({
+      ...state,
+      seletedExdora: datosParaMovilizacionNacional
+    }));
+  }
     /**
      * Restablece el estado a su estado inicial.
      * @method limpiarFormulario
