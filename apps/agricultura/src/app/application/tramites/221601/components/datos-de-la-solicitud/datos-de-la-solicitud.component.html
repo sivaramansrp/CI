@@ -199,62 +199,172 @@
 
     <div class="row mb-3">
       <div class="col-md-4">
-        <label class="form-label">Tipo especie*</label>
-        <input class="form-control" formControlName="tipoEspecie" />
+      
+        <app-catalogo-select
+          formControlName="paisOrigen"
+          [catalogo]="veterinario"
+          [label]="'Tipo requisito*'">
+        </app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Regulación*</label>
+        <label class="form-label">Requisito*:</label>
         <input class="form-control" formControlName="regulacion" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Nombre del Producto*</label>
+        <label class="form-label">Número de certificado internacional*:</label>
         <input class="form-control" formControlName="nombreProducto" />
       </div>
     </div>
 
     <div class="row mb-3">
       <div class="col-md-4">
-        <label class="form-label">Unidad 1*</label>
-        <input class="form-control" formControlName="unidad1" />
+        <app-catalogo-select
+          formControlName="fracciónArancelaria"
+          [catalogo]="veterinario"
+          [label]="'Fracción arancelaria*:'">
+        </app-catalogo-select>
       </div>
-      <div class="col-md-4">
-        <label class="form-label">Unidad 2*</label>
+      <div class="col-md-8">
+        <label class="form-label">Descripción de la fracción arancelaria*:<span
+                class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+                ata-bs-toggle="tooltip"></span></label>
         <input class="form-control" formControlName="unidad2" />
       </div>
+      </div>
+    <div class="row mb-3">
       <div class="col-md-4">
-        <label class="form-label">País de origen*</label>
         <app-catalogo-select
-          formControlName="paisOrigen"
+          formControlName="nico"
           [catalogo]="veterinario"
-          [label]="'País de origen'">
+          [label]="'Nico*:'">
+        </app-catalogo-select>
+      </div>
+      <div class="col-md-8">
+        <label class="form-label">Descripción Nico:<span
+                class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+                ata-bs-toggle="tooltip"></span></label>
+        <input class="form-control" formControlName="unidad1" />
+      </div>
+    </div>
+ 
+    <div class="row mb-3">
+      <textarea class="form-control" formControlName="observaciones" rows="3"
+       > Descripción*:</textarea>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label class="form-label">Cantidad UMT*:</label>
+        <input class="form-control" formControlName="cantidadUmt" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">UMT*:<span
+                class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+                ata-bs-toggle="tooltip"></span></label>
+        <input class="form-control" formControlName="umt" />
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label class="form-label">Cantidad UMC*:</label>
+        <input class="form-control" formControlName="cantidadUmc" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">UMC*:<span
+                class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+                ata-bs-toggle="tooltip"></span></label>
+        <input class="form-control" formControlName="umc" />
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-4">
+      <app-catalogo-select
+          formControlName="especie"
+          [catalogo]="veterinario"
+          [label]="'Especie*:'">
+        </app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          formControlName="edadAnimal"
+          [catalogo]="veterinario"
+          [label]="'Uso*:'">
+        </app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          formControlName="paisOrigen1"
+          [catalogo]="veterinario"
+          [label]="'País de origen*:'">
         </app-catalogo-select>
       </div>
     </div>
-
-    <ng-titulo titulo="Detalle" />
-
     <div class="row mb-3">
+      <div class="col-md-4">
+        <app-catalogo-select
+          formControlName="paisdeprocedencia"
+          [catalogo]="veterinario"
+          [label]="'País de procedencia*:'">
+        </app-catalogo-select>
+      </div>
+  </div>
+<ng-titulo titulo="Detalle" />
+<div class="row mb-3">
       <div class="col-md-3">
-        <label class="form-label">Nombre de lote</label>
+        <label class="form-label">Número de lote:</label>
         <input class="form-control" formControlName="nombreLote" />
       </div>
       <div class="col-md-3">
-        <label class="form-label">Código arancelario</label>
+        <label class="form-label">Color/Pelaje:</label>
         <input class="form-control" formControlName="codigoArancelario" />
       </div>
       <div class="col-md-3">
-        <label class="form-label">Edad del animal</label>
-        <input class="form-control" formControlName="edadAnimal" />
-      </div>
-      <div class="col-md-3">
-        <label class="form-label">Nombre científico</label>
-        <input class="form-control" formControlName="nombreCientifico" />
+        <label class="form-label">Edad del animal:</label>
+        <input class="form-control" formControlName="edadAnimal1" />
       </div>
     </div>
-
+   <div class="row mb-3">
+      <div class="col-md-3">
+        <label class="form-label">Fase de desarrollo:</label>
+        <input class="form-control" formControlName="fasedeDesarrollo" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Función zootécnica:</label>
+        <input class="form-control" formControlName="funciónZootecnica" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Nombre de la mercancía:</label>
+        <input class="form-control" formControlName="nombredela" />
+      </div>
+   </div>
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <label class="form-label">Número de identificación:</label>
+        <input class="form-control" formControlName="numerodeIdentificacion" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Raza:</label>
+        <input class="form-control" formControlName="raza" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Nombre científico:</label>
+        <input class="form-control" formControlName="nombreCientifico" />
+      </div>
+   </div>
+   <div class="row mb-3">
+      <div class="col-md-3">
+        <app-catalogo-select
+          formControlName="sexo"
+          [catalogo]="veterinario"
+          [label]="'Sexo:'">
+        </app-catalogo-select>
+        </div>
+        </div>
+ 
     <div class="col-md-12 mt-4 d-flex justify-content-end">
-      <button class="btn btn-secondary" type="button" (click)="cerrarModal()">Cancelar</button>
-      <button class="btn btn-primary ms-3" type="submit" (click)="guardarMercancia()">Agregar</button>
+      <button class="btn btn-secondary" type="button" (click)="cerrarModal()">Eliminar detalle</button>
+      <button class="btn btn-primary ms-3" type="submit" (click)="guardarMercancia()">Agregar detalle</button>
+      <button class="btn btn-primary ms-3" type="submit">Carga por archivo</button>
     </div>
   </form>
     

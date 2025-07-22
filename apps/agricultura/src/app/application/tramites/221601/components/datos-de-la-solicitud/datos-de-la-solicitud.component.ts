@@ -239,16 +239,32 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   showMercanciaModal = false;
 
 mercanciaForm = this.fb.group({
-  tipoEspecie: ['', Validators.required],
+  paisOrigen: ['', Validators.required],
   regulacion: ['', Validators.required],
   nombreProducto: ['', Validators.required],
-  unidad1: ['', Validators.required],
-  unidad2: ['', Validators.required],
-  paisOrigen: ['', Validators.required],
+  fracciónArancelaria: ['', Validators.required],
+  unidad2: ['', Validators.required, { disabled: true }],
+  nico: ['', Validators.required],
+  unidad1: ['',{ disabled: true }],
+  observaciones: [''],
+  cantidadUmt: ['', Validators.required],
+  umt: ['', Validators.required,{disabled:true}],
+  cantidadUmc: ['', Validators.required],
+  umc: ['', Validators.required],
+  especie: ['', Validators.required],
+  edadAnimal: ['', Validators.required],
+  paisOrigen1: ['', Validators.required],
+  paisdeprocedencia: ['', Validators.required],
   nombreLote: [''],
   codigoArancelario: [''],
-  edadAnimal: [''],
-  nombreCientifico: ['']
+  edadAnimal1: [''],
+  fasedeDesarrollo: [''],
+  funciónZootecnica: [''],
+  nombredela: [''],
+  numerodeIdentificacion: [''],
+  raza: [''],
+  nombreCientifico: [''],
+  sexo: [''],
 });
 
 
