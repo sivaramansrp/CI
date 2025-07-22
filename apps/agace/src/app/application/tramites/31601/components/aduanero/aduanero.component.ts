@@ -498,10 +498,20 @@ configuracionindiqueDatos: ConfiguracionColumna<ModificarFormState>[] = CONFIGUR
    */
   mandatoryFieldsAnswered: boolean = false;
 
+  /** Indica si el formulario de Control Inventarios ha sido enviado. 
+ * Se utiliza para mostrar validaciones y controlar el estado de envío del formulario. */
   public formSubmittedControlInventarios = false;
 
+  /**
+ * Almacena temporalmente el índice y el elemento de Control Inventarios que está pendiente de actualización.
+ * Es útil para manejar la confirmación antes de modificar los datos en la tabla.
+ */
   private pendingControlInventariosUpdate: { index: number, item: ControlInventariosItem } | null = null;
 
+  /**
+ * Formulario reactivo utilizado exclusivamente para el modal de Control Inventarios.
+ * Permite gestionar y validar los datos cuando se agrega o modifica un elemento desde el modal.
+ */
   public controlInventariosModalForm!: FormGroup;
 
 
@@ -845,17 +855,14 @@ configuracionindiqueDatos: ConfiguracionColumna<ModificarFormState>[] = CONFIGUR
 
       this.datosTablaControlInventarios.push(NEW_ITEM);
       this.tramite31601Store.setControlInventariosTablaDatos(this.datosTablaControlInventarios);
-      this.preOperativeForm.patchValue({
-        nombreDel: '',
-        lugarDeRadicacion: '',
-        indiqueCheck: false
-      });
 
-    
+      this.preOperativeForm.get('nombreDel')?.reset();
+      this.preOperativeForm.get('lugarDeRadicacion')?.reset();
+      this.preOperativeForm.get('indiqueCheck')?.reset();
+      this.preOperativeForm.updateValueAndValidity();
+
       this.preOperativeForm.get('nombreDel')?.markAsUntouched();
       this.preOperativeForm.get('lugarDeRadicacion')?.markAsUntouched();
-      this.preOperativeForm.get('nombreDel')?.setErrors(null);
-      this.preOperativeForm.get('lugarDeRadicacion')?.setErrors(null);
 
       this.camposObligatoriosRespondidosControlInventarios = false;
       this.formSubmittedControlInventarios = false;

@@ -1029,7 +1029,7 @@
               " />
             <div *ngIf="
                 preOperativeForm.controls['nombreDel'].invalid &&
-                preOperativeForm.controls['nombreDel'].touched
+                (preOperativeForm.controls['nombreDel'].touched || formSubmittedControlInventarios)
               " class="text-danger">
               <span *ngIf="preOperativeForm.controls['nombreDel'].errors?.['required']">Este campo es obligatorio.</span>
               <span *ngIf="preOperativeForm.controls['nombreDel'].errors?.['minlength']">Debe tener al menos 3
@@ -1054,7 +1054,7 @@
               " />
             <div *ngIf="
                 preOperativeForm.controls['lugarDeRadicacion'].invalid &&
-                preOperativeForm.controls['lugarDeRadicacion'].touched
+                (preOperativeForm.controls['lugarDeRadicacion'].touched || formSubmittedControlInventarios)
               " class="text-danger">
               <span *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['required']">Este campo es
                 obligatorio.</span>
