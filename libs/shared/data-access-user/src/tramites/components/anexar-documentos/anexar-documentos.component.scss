@@ -29,6 +29,9 @@
   position: relative;
   display: inline-block;
   width: 100%;
+  color: transparent;
+  background-color: transparent;
+  border: none;
   
   &::-webkit-file-upload-button {
     display: none;
@@ -37,6 +40,26 @@
   &::file-selector-button {
     display: none;
   }
+  
+  /* Hide native text completely */
+  &::-webkit-input-placeholder {
+    color: transparent;
+  }
+  
+  &::-moz-placeholder {
+    color: transparent;
+  }
+  
+  &:-ms-input-placeholder {
+    color: transparent;
+  }
+  
+  &::placeholder {
+    color: transparent;
+  }
+  
+  /* Override any native file input text */
+  font-size: 0;
   
   &::before {
     content: 'Elegir archivo';
@@ -67,5 +90,6 @@
     content: attr(data-filename);
     color: #6c757d;
     font-style: italic;
+    font-size: 0.875rem;
   }
 }
