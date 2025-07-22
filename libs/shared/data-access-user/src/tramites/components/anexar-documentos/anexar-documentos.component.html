@@ -19,7 +19,9 @@
                 <label for="formFile{{item.id}}" class="form-label"></label>
                 <input class="form-control custom-file-label" type="file" [id]="'formFile' + item.id" #fileInput
                   [attr.data-filename]="obtenerNombreArchivo(item.id)"
-                  (change)="cargarDoc($event, fileInput,item.id,'obligatorio')">
+                  (change)="cargarDoc($event, fileInput,item.id,'obligatorio')"
+                  style="color: transparent;"
+                  title="Seleccionar archivo">
               </div>
             </div>
 
@@ -49,7 +51,8 @@
                 <label for="formFile{{adicional.id}}" class="form-label"></label>
                 <input class="form-control custom-file-label" type="file" id="formFile{{adicional.id}}" #fileInput
                   [attr.data-filename]="obtenerNombreArchivo(adicional.id)"
-                  (change)="cargarDoc($event, fileInput,adicional.id,'obligatorio')">
+                  (change)="cargarDoc($event, fileInput,adicional.id,'obligatorio')" placeholder=""
+                  style="color: transparent;">
               </div>
             </div>
 
@@ -93,7 +96,8 @@
                 <label for="formFileOpcionales{{item.id}}" class="form-label"></label>
                 <input class="form-control custom-file-label" type="file" id="formFileOpcionales{{item.id}}" #fileInput
                   [attr.data-filename]="obtenerNombreArchivo(item.id)"
-                  (change)="cargarDoc($event, fileInput,item.id,'opcional')">
+                  (change)="cargarDoc($event, fileInput,item.id,'opcional')" placeholder=""
+                  style="color: transparent;">
               </div>
             </div>
             <div class="col-md-3 d-flex justify-content-end">
@@ -127,7 +131,8 @@
                 <label for="formFileOpcionales{{adicional.id}}" class="form-label"></label>
                 <input class="form-control custom-file-label" type="file" id="formFileOpcionales{{adicional.id}}"
                   [attr.data-filename]="obtenerNombreArchivo(adicional.id)"
-                  #fileInput (change)="cargarDoc($event, fileInput,adicional.id,'opcional')" placeholder="">
+                  #fileInput (change)="cargarDoc($event, fileInput,adicional.id,'opcional')" placeholder=""
+                  style="color: transparent;">
               </div>
             </div>
             <div class="col-md-3 mt-2 d-flex justify-content-end">

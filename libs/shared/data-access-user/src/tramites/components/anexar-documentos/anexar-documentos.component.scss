@@ -29,15 +29,24 @@
   position: relative;
   display: inline-block;
   width: 100%;
-  
+
   &::-webkit-file-upload-button {
     display: none;
   }
-  
+
   &::file-selector-button {
     display: none;
   }
-  
+
+  /* Oculta el texto "No file chosen" del input file */
+  input[type="file"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+    left: -9999px;
+  }
+
   &::before {
     content: 'Elegir archivo';
     display: inline-block;
@@ -57,24 +66,28 @@
     user-select: none;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   }
-  
+
   &:hover::before {
     background-color: #e9ecef;
     border-color: #adb5bd;
   }
-  
+
   &::after {
     content: attr(data-filename);
     color: #495057;
     font-size: 0.875rem;
   }
-  
-  /* Hide the placeholder text when no file is selected */
+
+  /* Mostrar texto en español cuando no hay archivo seleccionado */
   &[data-filename="No hay archivo seleccionado"]::after {
-    display: none;
+    content: "No se ha elegido archivo";
+    display: inline-block;
+    margin-left: 0.5rem;
+    color: #6c757d;
+    font-style: italic;
   }
-  
-  /* Show filename when file is selected - not the placeholder */
+
+  /* Mostrar nombre de archivo cuando se selecciona */
   &:not([data-filename="No hay archivo seleccionado"])::after {
     display: inline-block;
     margin-left: 0.5rem;
