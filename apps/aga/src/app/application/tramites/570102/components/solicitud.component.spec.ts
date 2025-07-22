@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SolicitudComponent } from './Solicitud.component';
+import { SolicitudComponent } from './solicitud.component';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Tramite570102Store } from '../state/Tramite570102.store';

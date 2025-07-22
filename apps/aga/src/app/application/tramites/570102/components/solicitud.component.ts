@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { BtnContinuarComponent, ConsultaioQuery, ConsultaioState, DatosPasos, ListaPasosWizard, PASOS, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud570102State, Tramite570102Store } from '../state/Tramite570102.store';
@@ -12,11 +12,47 @@ import { Tramite570102Query } from '../state/Tramite570102.query';
 @Component({
   selector: 'app-solicitud',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, BtnContinuarComponent],
   templateUrl: './Solicitud.component.html',
   styleUrl: './Solicitud.component.css',
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
+
+  /**
+   * Valor de entrada para el componente, utilizado para inicializar el índice u otros datos.
+   */
+  @Input() nombree: number = 1;
+
+  /**
+   * Emisor de eventos para comunicar el índice actual al componente padre.
+   */
+  @Output() dataEvent = new EventEmitter<number>();
+
+  /**
+   * Emisor de eventos para comunicar si existen datos al componente padre.
+   */
+  @Output() isdataEvent = new EventEmitter<boolean>(true);
+
+  /**
+   * Lista de pasos del asistente.
+   */
+  pasos: ListaPasosWizard[] = PASOS;
+
+  /**
+   * Índice del paso actual en el asistente.
+   */
+  indice: number = 1;
+
+  /**
+   * Datos de los pasos del asistente, incluyendo textos de botones y el índice actual.
+   */
+  datosPasos: DatosPasos = {
+    nroPasos: this.pasos.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Guardar y firmar',
+  };
+
   /**
    * Subject para destruir notificador.
    */
@@ -72,6 +108,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Configura el formulario, obtiene datos iniciales y suscribe al estado global.
    */
   ngOnInit(): void {
+    this.nombree = 5;
+    this.isdataEvent.emit(true);
+
+    this.emitirEventoClick();
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -144,9 +184,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   donanteDomicilio(): void {
     this.solicitudForm = this.fb.group({
-       folio: [{ value: this.solicitudState?.folio, disabled: this.soloLectura }, [Validators.required]],
-  motivoDelDes: [{ value: this.solicitudState?.motivoDelDes, disabled: this.soloLectura }, [Validators.required]],
+      folio: [{ value: this.solicitudState?.folio, disabled: this.soloLectura }, [Validators.required]],
+      motivoDelDes: [{ value: this.solicitudState?.motivoDelDes, disabled: this.soloLectura }, [Validators.required]],
     });
+  }
+
+  /**
+   * Emite el evento para indicar el cambio de paso al componente padre.
+   */
+  emitirEventoClick() {
+    this.indice = 1;
+    this.datosPasos.indice = 1;
+    this.datosPasos.txtBtnAnt;
+    this.dataEvent.emit(1);
   }
 
   /**

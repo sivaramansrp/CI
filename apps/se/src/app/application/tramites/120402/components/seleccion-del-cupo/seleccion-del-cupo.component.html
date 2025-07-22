@@ -4,24 +4,24 @@
     <div class="row mb-3">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="regimen" [label]="'Régimen aduanero'" name="regimen"
-          [isDisabled]="esFormularioSoloLectura" [required]="true" formControlName="regimen" (change)="setValorStore(seleccionForm,'regimen')"
+          [isDisabled]="esFormularioSoloLectura" formControlName="regimen" (change)="setValorStore(seleccionForm,'regimen')"
           [required]="true">
         </app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="tratado" [label]="'Tratado o bloque comercial'" name="tratado"
-          [isDisabled]="esFormularioSoloLectura" [required]="true" formControlName="tratado" (change)="setValorStore(seleccionForm,'tratado')">
+          [isDisabled]="esFormularioSoloLectura" formControlName="tratado" (change)="setValorStore(seleccionForm,'tratado')">
         </app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="producto" [label]="'Nombre de producto'" name="producto"
-          [isDisabled]="esFormularioSoloLectura" [required]="true" formControlName="producto"
+          [isDisabled]="esFormularioSoloLectura" formControlName="producto"
           (change)="setValorStore(seleccionForm,'producto')">
         </app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="subproducto" [label]="'Nombre del subproducto'" name="subproducto"
-          [isDisabled]="esFormularioSoloLectura" [required]="true" formControlName="subproducto"
+          [isDisabled]="esFormularioSoloLectura" formControlName="subproducto"
           (change)="setValorStore(seleccionForm,'subproducto')">
         </app-catalogo-select>
       </div>
@@ -41,10 +41,15 @@
 
   <div>
     <ng-alert [CONTENIDO]="tituloAlerta" [CUSTOMECLASS]="infoAlerta"></ng-alert>
-    <h5 class="mb-5">Cupos disponibles*:</h5>
-    <app-tabla-dinamica [configuracionTabla]="configuracionColumnasCupo" [datos]="datosTablaCupo"
+    <h5 class="mb-3">Cupos disponibles*:</h5>
+    <app-tabla-dinamica [configuracionTabla]="configuracionColumnasCupo" [datos]="datosTablaCupo" [ngClass]="{'tabla-danger' : datosTablaCupo.length === 0 && esTocado}"
       [acciones]="esFormularioSoloLectura ? [] : [accionesEnum.EDITAR]" (alternarValor)="onAccionCupo($event)"></app-tabla-dinamica>
-  </div>
+      <div class="text-danger">
+        <small *ngIf="datosTablaCupo.length === 0 && esTocado">
+          Este campo es obligatorio.
+        </small>
+      </div>
+    </div>
   <div>
     <lib-notificaciones *ngIf="modalAbierto" [notificacionInput]="nuevaNotificacion"
       (confirmacionModal)="cerrarModal()">

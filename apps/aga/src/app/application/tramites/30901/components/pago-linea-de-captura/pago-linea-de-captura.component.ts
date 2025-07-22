@@ -1,35 +1,16 @@
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ConfiguracionColumna, GENERAR_LINEA_CAPTURA_URL, InputFechaComponent, Notificacion, NotificacionesComponent, REGEX_LINEA_CAPTURA, REGEX_REEMPLAZAR, TablaDinamicaComponent, TablaSeleccion, TableData, TituloComponent } from "@libs/shared/data-access-user/src";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { ImportanteCatalogoSeleccion, PagoDerechosLista } from "../../models/registro-muestras-mercancias.model";
+import { Solicitud30901State, Solicitud30901Store } from "../../estados/tramites30901.store";
+import { Subject, Subscription, map, takeUntil } from "rxjs";
+import { BsModalService } from "ngx-bootstrap/modal";
+import { CommonModule } from "@angular/common";
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { GENERAR_LINEA_CAPTURA_URL } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
-import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { Notificacion } from '@ng-mf/data-access-user';
-import { NotificacionesComponent } from '@ng-mf/data-access-user';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { PagoDerechosLista } from '../../models/registro-muestras-mercancias.model';
-import { REGEX_LINEA_CAPTURA } from '@ng-mf/data-access-user';
-import { REGEX_REEMPLAZAR } from '@ng-mf/data-access-user';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
-import { Solicitud30901Query } from '../../estados/tramites30901.query';
-import { Solicitud30901State } from '../../estados/tramites30901.store';
-import { Solicitud30901Store } from '../../estados/tramites30901.store';
-import { Subject } from 'rxjs';
-import { Subscription } from 'rxjs';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { TableData } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { ToastrService } from 'ngx-toastr';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import { RenovacionesMuestrasMercanciasService } from "../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service";
+import { Solicitud30901Query } from "../../estados/tramites30901.query";
+import { ToastrService } from "ngx-toastr";
+
 /**
  * Componente para el manejo del pago de la línea de captura.
  *
@@ -143,10 +124,16 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false; 
 
   /**
-   * Constructor de la clase PagoLcComponent.
+   * Constructor del componente `DatosProrrogaMuestrasMercanciasComponent`.
    *
-   * @param fb - Instancia de FormBuilder para la creación y manejo de formularios reactivos.
-   * @param renovacionesService - Servicio para manejar las renovaciones de muestras de mercancías.
+   * Este constructor inyecta los servicios y stores necesarios para manejar el formulario de prórroga,
+   * el estado de la solicitud 30901, y la configuración de solo lectura basada en el estado global de consulta.
+   *
+   * @param {FormBuilder} fb - Utilizado para construir y gestionar formularios reactivos.
+   * @param {RenovacionesMuestrasMercanciasService} renovacionesService - Servicio que gestiona la lógica de negocio para renovaciones de muestras de mercancías.
+   * @param {Solicitud30901Store} solicitud30901Store - Store que mantiene el estado centralizado de la solicitud 30901.
+   * @param {Solicitud30901Query} solicitud30901Query - Query que permite observar los cambios en el estado de la solicitud 30901.
+   * @param {ConsultaioQuery} consultaioQuery - Query que proporciona el estado de consulta general, incluyendo si el formulario debe estar en modo solo lectura.
    */
   constructor(
     public fb: FormBuilder,
@@ -235,7 +222,7 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
         ],
       ],
       valorPago: [
-        { value: this.solicitud30901State.valorPago, disabled: true },
+        { value: this.solicitud30901State.valorPago, disabled: false },
         [Validators.required, Validators.maxLength(20)],
       ],
     });

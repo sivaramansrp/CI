@@ -53,7 +53,7 @@
   <div class="row">
     <div class="col-md-12">
         <h3>
-            <label for="solicitud.immex.serviciosImmex">Servicios IMMEX:</label>
+            <label for="solicitud.immex.serviciosImmex">Servicios IMMEX</label>
         </h3>
         <hr class="red" />
     </div>
@@ -66,9 +66,12 @@
        <app-catalogo-select
           [catalogo]="aduanaDeIngreso"
           [label]="'Servicios IMMEX'"
-          [required]="true"
+          [required]="false"
           id="clave"
-          placeholder="'Seleccionar Servicio IMMEX'"
+          [primerOptionValue]="predeterminado"
+          [hiddenPrimerOption]="false"
+          [disabledPrimerOption]="false"
+          [placeholder]="'Seleccionar un valor'"
           [isDisabled]="esFormularioSoloLectura"
           formControlName="entidadFederativa"
           (change)="procesarDatosDelHijo()"

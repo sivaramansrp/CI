@@ -53,8 +53,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!:ConsultaioState;
-/**
- * Constructor del componente PasoUnoComponent.
+
+  
+  /**
+ * Constructor del componente `PasoUnoComponent`.
+ *
+ * Este constructor inyecta los servicios necesarios para obtener el estado de consulta
+ * y manejar las operaciones relacionadas con la solicitud 30901.
+ *
+ * @param {ConsultaioQuery} consultaQuery - Query que expone el estado de la consulta, como el modo solo lectura.
+ * @param {Solocitud30901Service} solocitud30901Service - Servicio que gestiona la lógica y operaciones de la solicitud 30901.
  */
   constructor(
     private consultaQuery: ConsultaioQuery,

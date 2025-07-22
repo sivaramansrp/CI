@@ -25,14 +25,14 @@
       </app-tabla-dinamica>
 
       <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-danger ms-3" [disabled]="false" (click)="eliminarPedimento()">
+        <button type="button" class="btn btn-danger ms-3" [disabled]="isReadonly" (click)="eliminarPedimento()">
           Eliminar
         </button>
-        <button type="button" class="btn btn-primary ms-3" [disabled]="false"
+        <button type="button" class="btn btn-primary ms-3" [disabled]="isReadonly"
           *ngFor="let row of vehiculosTablaConfig.datos; let i = index" (click)="startEditVehiculo(i)">
           Modificar
         </button>
-        <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="abiertoPedimento()">
+        <button type="button" class="btn btn-primary ms-3" [disabled]="isReadonly" (click)="abiertoPedimento()">
           Agregar
         </button>
       </div>
@@ -214,14 +214,14 @@
       [datos]="unidadesTablaConfig.datos">
     </app-tabla-dinamica>
     <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-danger ms-3" [disabled]="false" (click)="eliminarUnidadPedimento()">
+      <button type="button" class="btn btn-danger ms-3" [disabled]="isReadonly" (click)="eliminarUnidadPedimento()">
         Eliminar
       </button>
-      <button type="button" class="btn btn-primary ms-3" [disabled]="false"
+      <button type="button" class="btn btn-primary ms-3" [disabled]="isReadonly"
         *ngFor="let row of unidadesTablaConfig.datos; let i = index" (click)="startEditUnidad(i)">
         Modificar
       </button>
-      <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="abiertoPedimentoUnidad()">
+      <button type="button" class="btn btn-primary ms-3" [disabled]="isReadonly" (click)="abiertoPedimentoUnidad()">
         Agregar
       </button>
     </div>
