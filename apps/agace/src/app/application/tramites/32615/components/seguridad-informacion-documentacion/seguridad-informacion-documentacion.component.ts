@@ -31,12 +31,12 @@ export class SeguridadInformacionDocumentacionComponent implements OnInit,OnDest
   /**
    * Formulario reactivo que contiene los campos relacionados con la seguridad de la información.
    */
-  seguridadInformacion!: FormGroup;
+  public seguridadInformacion!: FormGroup;
 
     /**
    * Determina si el formulario debe estar en modo solo lectura.
    */
-  esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Estado actual de la solicitud del trámite, obtenido desde el query.
@@ -85,7 +85,7 @@ export class SeguridadInformacionDocumentacionComponent implements OnInit,OnDest
    * También aplica configuración de solo lectura si es necesario.
    * @method inicializarEstadoFormulario
    */
-  inicializarEstadoFormulario(): void {
+  public inicializarEstadoFormulario(): void {
     this.tramite32615Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -111,7 +111,7 @@ export class SeguridadInformacionDocumentacionComponent implements OnInit,OnDest
    * Crea el formulario reactivo utilizando los valores actuales del estado.
    * Cada campo incluye una validación requerida para asegurar su completitud.
    */
-  crearFormularioDeGestión(): void {
+  public crearFormularioDeGestión(): void {
     this.seguridadInformacion = this.fb.group({
       seguridadDeLaTecnologia: [this.solicitudState?.seguridadDeLaTecnologia],
       encuentranFuera: [this.solicitudState?.encuentranFuera, Validators.required],

@@ -39,37 +39,37 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Formulario principal para los datos comunes del trámite
    */
-  datosComunesForma!: FormGroup;
+  public datosComunesForma!: FormGroup;
 
   /**
    * Formulario para la tabla modal de mercancías
    */
-  tablaModalForma!: FormGroup;
+  public tablaModalForma!: FormGroup;
 
   /**
    * Formulario para la tabla modal de instalaciones principales
    */
-  tablaDosModalForma!: FormGroup;
+  public tablaDosModalForma!: FormGroup;
 
   /**
    * Formulario para información de miembros de la empresa
    */
-  miembroDeLaEmpresa!: FormGroup;
+  public miembroDeLaEmpresa!: FormGroup;
 
   /**
    * Lista de sectores productivos obtenidos desde archivo JSON
    */
-  sectorProductivoAgace: Catalogo[] = productivo;
+  public sectorProductivoAgace: Catalogo[] = productivo;
 
   /**
    * Lista de servicios Agace obtenidos desde archivo JSON
    */
-  serviciosAgace: Catalogo[] = serviciosAgace;
+  public serviciosAgace: Catalogo[] = serviciosAgace;
 
   /**
    * Determina si el formulario debe estar en modo solo lectura.
    */
-  esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Estado actual de la solicitud del trámite
@@ -79,12 +79,12 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Constante de alertas utilizadas en el componente
    */
-  alerta = ALERTA_COM;
+  public alerta = ALERTA_COM;
 
   /**
    * Opciones para los botones de radio
    */
-  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+  public opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
    * Subject para manejar la destrucción de observables
@@ -114,72 +114,72 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Instancia del modal de confirmación
    */
-  confirmInstance!: Modal;
+  public confirmInstance!: Modal;
 
   /**
    * Instancia del modal de tabla de mercancías
    */
-  tablaInstance!: Modal;
+  public tablaInstance!: Modal;
 
   /**
    * Instancia del modal de instalaciones principales
    */
-  instalacionesPrincipalesTablaInstance!: Modal;
+  public instalacionesPrincipalesTablaInstance!: Modal;
 
   /**
    * Instancia del modal de miembros de la empresa
    */
-  miembroDeLaEmpresaInstance!: Modal;
+  public miembroDeLaEmpresaInstance!: Modal;
 
   /**
    * Bandera para mostrar campo de número de empleados
    */
-  showSenaleCuentaEmpleados:boolean = false;
+  public showSenaleCuentaEmpleados:boolean = false;
 
   /**
    * Bandera para mostrar campo "si al momento"
    */
-  showSenaleSiAlMomento:boolean = false;
+  public showSenaleSiAlMomento:boolean = false;
 
   /**
    * Bandera para indicar cambios en el formulario
    */
-  changed:boolean = false;
+  public changed:boolean = false;
 
   /**
    * Configuración de columnas para la tabla de mercancías
    */
-  mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIA_TABLA;
+  public mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIA_TABLA;
 
   /**
    * Datos para la tabla de mercancías
    */
-  mercanciasTablaDatos: MercanciasInfo[] = [];
+  public mercanciasTablaDatos: MercanciasInfo[] = [];
 
   /**
    * Configuración de columnas para la tabla de instalaciones principales
    */
-  instalacionesPrincipalesTabla: ConfiguracionColumna<InstalacionesPrincipalesTablaInfo>[] = INSTALACIONES_PRINCIPALES_TABLA;
+  public instalacionesPrincipalesTabla: ConfiguracionColumna<InstalacionesPrincipalesTablaInfo>[] = INSTALACIONES_PRINCIPALES_TABLA;
 
   /**
    * Configuración de columnas para la tabla de inventarios
    */
-  inventariosTabla: ConfiguracionColumna<InventariosInfo>[] = INVENTARIOS_TABLA;
+  public inventariosTabla: ConfiguracionColumna<InventariosInfo>[] = INVENTARIOS_TABLA;
 
   /**
    * Datos para la tabla de inventarios
    */
-  inventariosTablaDatos: InventariosInfo[] = [];
+  public inventariosTablaDatos: InventariosInfo[] = [];
 
   /**
    * Datos para la tabla de instalaciones principales
    */
-  instalacionesPrincipalesTablaDatos: InstalacionesPrincipalesTablaInfo[] = [];
+  public instalacionesPrincipalesTablaDatos: InstalacionesPrincipalesTablaInfo[] = [];
 
   /**
    * Tipo de selección para las tablas (checkbox)
    */
-  tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  public tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
    * Constructor del componente
@@ -230,7 +230,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
    * También aplica configuración de solo lectura si es necesario.
    * @method inicializarEstadoFormulario
    */
-  inicializarEstadoFormulario(): void {
+  public inicializarEstadoFormulario(): void {
     this.tramite32615Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -303,7 +303,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Abre el modal de confirmación
    */
-  openConfirmModal(): void {
+  public openConfirmModal(): void {
     if (this.confirmInstance) {
       this.confirmInstance.show();
     }
@@ -312,7 +312,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Cierra el modal de confirmación
    */
-  closeConfirmModal(): void {
+  public closeConfirmModal(): void {
     if (this.confirmInstance) {
       this.confirmInstance.hide();
     }
@@ -321,7 +321,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Abre el modal de tabla de mercancías
    */
-  openTablaModal(): void {
+  public openTablaModal(): void {
     if (this.tablaInstance) {
       this.tablaInstance.show();
     }
@@ -330,7 +330,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Cierra el modal de tabla de mercancías
    */
-  closeTablaModal(): void {
+  public closeTablaModal(): void {
     if (this.tablaInstance) {
       this.tablaInstance.hide();
     }
@@ -339,7 +339,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Abre el modal de miembros de la empresa
    */
-  openMiembroDeLaEmpresaModal(): void {
+  public openMiembroDeLaEmpresaModal(): void {
     if (this.miembroDeLaEmpresaInstance) {
       this.miembroDeLaEmpresaInstance.show();
     }
@@ -348,7 +348,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Cierra el modal de miembros de la empresa
    */
-  closeMiembroDeLaEmpresaModal(): void {
+  public closeMiembroDeLaEmpresaModal(): void {
     if (this.miembroDeLaEmpresaInstance) {
       this.miembroDeLaEmpresaInstance.hide();
     }
@@ -357,7 +357,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Crea los datos para la tabla de mercancías
    */
-  crearTablaDatos(): void {
+  public crearTablaDatos(): void {
     this.obtenerTablaDatos();
     this.closeTablaModal();
   }
@@ -365,7 +365,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Crea los datos para la tabla de instalaciones principales
    */
-  crearTablaDosDatos(): void {
+  public crearTablaDosDatos(): void {
     this.obtenerInstalacionesPrincipalesTablaDatos();
     this.closeTablaDosModal();
   }
@@ -373,7 +373,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Abre el modal de tabla de instalaciones principales
    */
-  openTablaDosModal(): void {
+  public openTablaDosModal(): void {
     if (this.instalacionesPrincipalesTablaInstance) {
       this.instalacionesPrincipalesTablaInstance.show();
     }
@@ -382,7 +382,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Cierra el modal de tabla de instalaciones principales
    */
-  closeTablaDosModal(): void {
+  public closeTablaDosModal(): void {
     if (this.instalacionesPrincipalesTablaInstance) {
       this.instalacionesPrincipalesTablaInstance.hide();
     }
@@ -391,7 +391,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Crea e inicializa los formularios del componente
    */
-  crearFormulario(): void {
+  public crearFormulario(): void {
     this.datosComunesForma = this.fb.group({
       sectorProductivo: [this.solicitudState?.sectorProductivo],
       servicio: [this.solicitudState?.servicio],
@@ -455,7 +455,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Obtiene los datos para la tabla de mercancías
    */
-  obtenerTablaDatos(): void {
+  public obtenerTablaDatos(): void {
     this.service.obtenerTablaDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -467,7 +467,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Obtiene los datos para la tabla de instalaciones principales
    */
-  obtenerInstalacionesPrincipalesTablaDatos(): void {
+  public obtenerInstalacionesPrincipalesTablaDatos(): void {
     this.service.obtenerInstalacionesPrincipalesTablaDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -479,7 +479,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Obtiene los datos para la tabla de inventarios
    */
-  obtenerInventariosTablaDatos(): void {
+  public obtenerInventariosTablaDatos(): void {
     this.service.obtenerInventariosTablaDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -497,7 +497,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
    * @param comprobarModal Indica si se debe comprobar el modal
    * @param comprobarModalValor Valor para comprobar el modal
    */
-  setValoresStore(
+  public setValoresStore(
     form: FormGroup,
     campo: string,
     metodoNombre: keyof Tramite32615Store,
@@ -536,7 +536,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Maneja el evento de cambio de valor
    */
-  enCambioDeValor(): void {
+  public enCambioDeValor(): void {
     this.changed = !this.changed;
   }
 

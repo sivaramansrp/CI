@@ -51,30 +51,30 @@ describe('EnlaceComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
+  it('debería inicializar el formulario en ngOnInit', () => {
     component.ngOnInit();
     expect(component.enlace).toBeDefined();
     expect(component.enlace.get('resigtroFedral')?.value).toBe('12345');
     expect(component.enlace.get('cargo')?.value).toBe('Manager');
   });
 
-  it('should load enlace header data from JSON', () => {
+  it('debería cargar datos del encabezado de enlace desde JSON', () => {
     component.getEnlace();
     expect(component.enlaceHeaderData).toBeDefined();
     expect(component.enlaceHeaderData.length).toBeGreaterThan(0);
   });
 
-  it('should open the modal and initialize the form', () => {
+  it('debería abrir el modal e inicializar el formulario', () => {
     component.abrirModal();
     expect(component.modal).toBe('show');
     expect(component.enlace).toBeDefined();
   });
 
-  it('should patch form data with representative data', () => {
+  it('debería actualizar el formulario con datos del representante', () => {
     component.patchData();
     expect(component.enlace.get('rfc')?.value).toBe(component.representativeData.rfc);
     expect(component.enlace.get('nombre')?.value).toBe(component.representativeData.nombre);
@@ -83,7 +83,7 @@ describe('EnlaceComponent', () => {
     expect(component.enlace.get('cuidad')?.value).toBe(component.representativeData.cuidad);
   });
 
-  it('should disable specific form fields after patching data', () => {
+  it('debería deshabilitar campos específicos del formulario después de actualizar datos', () => {
     component.patchData();
     expect(component.enlace.get('rfc')?.disabled).toBe(true);
     expect(component.enlace.get('nombre')?.disabled).toBe(true);
@@ -92,14 +92,14 @@ describe('EnlaceComponent', () => {
     expect(component.enlace.get('cuidad')?.disabled).toBe(true);
   });
 
-  it('should set values in the store', () => {
+  it('debería establecer valores en el store', () => {
     const form = component.enlace;
     form.get('resigtroFedral')?.setValue('67890');
     component.setValoresStore(form, 'resigtroFedral', 'setResigtroFedral');
     expect(tramite32615StoreMock.setResigtroFedral).toHaveBeenCalledWith('67890');
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debería limpiar suscripciones en ngOnDestroy', () => {
     const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
@@ -108,14 +108,14 @@ describe('EnlaceComponent', () => {
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
 
-  it('should validate required fields in the form', () => {
+  it('debería validar campos obligatorios en el formulario', () => {
     component.enlace.get('resigtroFedral')?.setValue('');
     component.enlace.get('cargo')?.setValue('');
     expect(component.enlace.get('resigtroFedral')?.valid).toBe(false);
     expect(component.enlace.get('cargo')?.valid).toBe(false);
   });
 
-  it('should handle modal visibility correctly', () => {
+  it('debería manejar correctamente la visibilidad del modal', () => {
     component.abrirModal();
     expect(component.modal).toBe('show');
     component.modal = 'hide';

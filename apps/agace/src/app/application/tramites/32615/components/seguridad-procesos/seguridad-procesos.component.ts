@@ -41,19 +41,19 @@ export class SeguridadProcesosComponent implements OnInit, OnDestroy {
    * @description
    * Opciones disponibles para los botones de radio en el formulario.
    */
-  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+  public opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
    * @property {FormGroup} seguridadProcesosForm
    * @description
    * Formulario reactivo que contiene los campos relacionados con la seguridad de los procesos.
    */
-  seguridadProcesosForm!: FormGroup;
+  public seguridadProcesosForm!: FormGroup;
 
     /**
    * Determina si el formulario debe estar en modo solo lectura.
    */
-  esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * @property {Solicitud32615PerfilesState} solicitudState
@@ -110,7 +110,7 @@ export class SeguridadProcesosComponent implements OnInit, OnDestroy {
    * También aplica configuración de solo lectura si es necesario.
    * @method inicializarEstadoFormulario
    */
-  inicializarEstadoFormulario(): void {
+  public inicializarEstadoFormulario(): void {
     this.tramite32615Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -138,7 +138,7 @@ export class SeguridadProcesosComponent implements OnInit, OnDestroy {
    * Crea y configura el formulario reactivo con los campos necesarios para la seguridad de los procesos.
    * Los valores iniciales se obtienen del estado de la solicitud.
    */
-  crearFormularioSeguridadProcesos(): void {
+  public crearFormularioSeguridadProcesos(): void {
     this.seguridadProcesosForm = this.fb.group({
       indiqueAlmacenes: [
         this.solicitudState?.indiqueAlmacenes,
@@ -199,6 +199,9 @@ export class SeguridadProcesosComponent implements OnInit, OnDestroy {
       recintoFiscalizado: [
         this.solicitudState?.recintoFiscalizado,
         Validators.required,
+      ],
+      indiqueCuenta: [
+        this.solicitudState?.indiqueCuenta,
       ],
     });
   }

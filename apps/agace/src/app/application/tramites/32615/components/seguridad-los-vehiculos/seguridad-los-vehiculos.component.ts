@@ -33,17 +33,17 @@ export class SeguridadLosVehiculosComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo que contiene los campos de seguridad vehicular.
    */
-  seguridad!: FormGroup;
+  public seguridad!: FormGroup;
 
   /**
    * Opciones para los botones de radio, utilizadas en los campos del formulario.
    */
-  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+  public opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
     /**
    * Determina si el formulario debe estar en modo solo lectura.
    */
-  esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Estado actual de la solicitud del trámite, obtenido desde el query.
@@ -91,7 +91,7 @@ export class SeguridadLosVehiculosComponent implements OnInit, OnDestroy {
    * También aplica configuración de solo lectura si es necesario.
    * @method inicializarEstadoFormulario
    */
-  inicializarEstadoFormulario(): void {
+  public inicializarEstadoFormulario(): void {
     this.tramite32615Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -117,7 +117,7 @@ export class SeguridadLosVehiculosComponent implements OnInit, OnDestroy {
    * Crea el formulario reactivo con los valores actuales del estado.
    * Todos los campos son requeridos y están ligados a los valores del estado de solicitud.
    */
-  crearFormularioDeGestión(): void {
+  public crearFormularioDeGestión(): void {
     this.seguridad = this.fb.group({
       candadosSeguridad: [this.solicitudState?.candadosSeguridad, Validators.required],
       proveedorExterno: [this.solicitudState?.proveedorExterno, Validators.required],

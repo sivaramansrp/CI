@@ -34,17 +34,17 @@ export class SeguridadPersonalComponent implements OnInit,OnDestroy{
   /**
    * Formulario reactivo que contiene los campos relacionados con la seguridad del personal.
    */
-  seguridadPersonal!: FormGroup;
+  public seguridadPersonal!: FormGroup;
 
   /**
    * Opciones de selección para botones de radio reutilizables en el formulario.
    */
-  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+  public opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
     /**
    * Determina si el formulario debe estar en modo solo lectura.
    */
-  esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Estado actual de la solicitud del trámite, obtenido desde el query.
@@ -93,7 +93,7 @@ export class SeguridadPersonalComponent implements OnInit,OnDestroy{
    * También aplica configuración de solo lectura si es necesario.
    * @method inicializarEstadoFormulario
    */
-  inicializarEstadoFormulario(): void {
+  public inicializarEstadoFormulario(): void {
     this.tramite32615Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -119,7 +119,7 @@ export class SeguridadPersonalComponent implements OnInit,OnDestroy{
    * Crea el formulario reactivo utilizando los valores actuales del estado.
    * Cada campo incluye una validación requerida para asegurar su completitud.
    */
-  crearFormularioDeGestión(): void {
+  public crearFormularioDeGestión(): void {
     this.seguridadPersonal = this.fb.group({
       describaContratacion: [this.solicitudState?.describaContratacion, Validators.required],
       documentacionExigida: [this.solicitudState?.documentacionExigida, Validators.required],

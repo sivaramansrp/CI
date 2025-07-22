@@ -21,11 +21,11 @@ describe('ReprestantanteComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
+  it('debería inicializar el formulario con valores por defecto', () => {
     const formValues = component.represtantante.value;
     expect(formValues.rfc).toBe(component.datosRepresentativos.rfc);
     expect(formValues.nombre).toBe(component.datosRepresentativos.nombre);
@@ -35,14 +35,14 @@ describe('ReprestantanteComponent', () => {
     expect(formValues.correo).toBe(component.datosRepresentativos.correo);
   });
 
-  it('should disable specific form controls on initialization', () => {
+  it('debería deshabilitar controles específicos del formulario al inicializar', () => {
     expect(component.represtantante.get('rfc')?.disabled).toBe(true);
     expect(component.represtantante.get('nombre')?.disabled).toBe(true);
     expect(component.represtantante.get('apellidoPaterno')?.disabled).toBe(true);
     expect(component.represtantante.get('apellidoMaterno')?.disabled).toBe(true);
   });
 
-  it('should update the store when setValoresStore is called', () => {
+  it('debería actualizar el store cuando se llama a setValoresStore', () => {
     const mockStoreMethod = jest.fn();
     component['tramite32615Store'] = { updateField: mockStoreMethod } as any;
 
@@ -50,7 +50,7 @@ describe('ReprestantanteComponent', () => {
     expect(mockStoreMethod).toHaveBeenCalledWith(component.represtantante.get('telefono')?.value);
   });
 
-  it('should unsubscribe from observables on destroy', () => {
+  it('debería cancelar las suscripciones al destruir el componente', () => {
     const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
@@ -60,7 +60,7 @@ describe('ReprestantanteComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should validate required fields in the form', () => {
+  it('debería validar los campos obligatorios del formulario', () => {
     const form = component.represtantante;
     form.get('telefono')?.setValue('');
     form.get('correo')?.setValue('');

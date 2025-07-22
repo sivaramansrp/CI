@@ -31,11 +31,11 @@ export class ManejoInvestigacionComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo que contiene los campos relacionados con el manejo e investigación de incidentes.
    */
-  manejo!: FormGroup;
+  public manejo!: FormGroup;
   /**
    * Determina si el formulario debe estar en modo solo lectura.
    */
-  esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Estado actual de la solicitud del trámite, obtenido desde el query.
@@ -84,7 +84,7 @@ export class ManejoInvestigacionComponent implements OnInit, OnDestroy {
    * También aplica configuración de solo lectura si es necesario.
    * @method inicializarEstadoFormulario
    */
-  inicializarEstadoFormulario(): void {
+  public inicializarEstadoFormulario(): void {
     this.tramite32615Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -111,7 +111,7 @@ export class ManejoInvestigacionComponent implements OnInit, OnDestroy {
    * Crea el formulario reactivo utilizando los valores actuales del estado.
    * Cada campo incluye una validación requerida para asegurar su completitud.
    */
-  crearFormularioDeGestión(): void {
+  public crearFormularioDeGestión(): void {
     this.manejo = this.fb.group({
       relacionadosSeguridad: [this.solicitudState?.relacionadosSeguridad, Validators.required],
       reportarIncidentes: [this.solicitudState?.reportarIncidentes, Validators.required],

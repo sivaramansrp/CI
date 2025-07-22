@@ -52,7 +52,7 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
     /**
    * Determina si el formulario debe estar en modo solo lectura.
    */
-  esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
   /** Observable utilizado para cancelar suscripciones activas */
   public destroyNotifier$: Subject<void> = new Subject();
@@ -124,7 +124,7 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private fb: FormBuilder,
     private service: RecintoFiscalizadoService,
-    private tramite32615Store: Tramite32615MensajeriaStore,
+    public tramite32615Store: Tramite32615MensajeriaStore,
     private tramite32615Query: Tramite32615MensajeriaQuery,
     private consultaioQuery: ConsultaioQuery,
   ) {
@@ -153,7 +153,7 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
    * También aplica configuración de solo lectura si es necesario.
    * @method inicializarEstadoFormulario
    */
-  inicializarEstadoFormulario(): void {
+  public inicializarEstadoFormulario(): void {
     this.tramite32615Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -211,7 +211,7 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Crea e inicializa los formularios del componente.
    */
-  crearFormulario(): void {
+  public crearFormulario(): void {
     this.mensajeriaGroup = this.fb.group({
       comercioExterior: [this.solicitudState?.comercioExterior],
       recintoFiscalizado: [this.solicitudState?.recintoFiscalizado],
@@ -268,7 +268,7 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Obtiene los datos de la tabla de mercancías desde el servicio.
    */
-  obtenerTablaDatos(): void {
+  public obtenerTablaDatos(): void {
     this.service.obtenerTablaDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -280,7 +280,7 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Abre el modal de la primera tabla.
    */
-  openTablaModal(): void {
+  public openTablaModal(): void {
     if (this.tablaInstance) {
       this.tablaInstance.show();
     }
@@ -289,7 +289,7 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Cierra el modal de la primera tabla.
    */
-  closeTablaModal(): void {
+  public closeTablaModal(): void {
     if (this.tablaInstance) {
       this.tablaInstance.hide();
     }
@@ -298,7 +298,7 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Abre el modal de la segunda tabla.
    */
-  openTablaDosModal(): void {
+  public openTablaDosModal(): void {
     if (this.tablaDosInstance) {
       this.tablaDosInstance.show();
     }
@@ -307,7 +307,7 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Cierra el modal de la segunda tabla.
    */
-  closeTablaDosModal(): void {
+  public closeTablaDosModal(): void {
     if (this.tablaDosInstance) {
       this.tablaDosInstance.hide();
     }
@@ -319,7 +319,7 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
    * @param campo Nombre del campo en el formulario.
    * @param metodoNombre Nombre del método del store para actualizar el valor.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite32615MensajeriaStore): void {
+  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite32615MensajeriaStore): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite32615Store[metodoNombre] as (value: string) => void)(VALOR);
 
@@ -342,7 +342,7 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
    * @param campo Nombre del campo a actualizar
    * @param metodoNombre Método del store a invocar
    */
-  cambioFechaFactura(
+  public cambioFechaFactura(
     nuevo_valor: string,
     form: FormGroup,
     campo: string,
@@ -360,7 +360,7 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
    * @param campo Nombre del campo a actualizar
    * @param metodoNombre Método del store a invocar
    */
-  cambioFechaInicio(
+  public cambioFechaInicio(
     nuevo_valor: string,
     form: FormGroup,
     campo: string,

@@ -32,7 +32,7 @@ export class PersonaComponent implements OnInit, OnDestroy {
    * @type {ConfiguracionColumna<PersonasInfo>[]}
    * @memberof PersonaComponent
    */
-  personasTabla: ConfiguracionColumna<PersonasInfo>[] = PERSONAS_TABLA;
+  public personasTabla: ConfiguracionColumna<PersonasInfo>[] = PERSONAS_TABLA;
 
   /**
    * Datos obtenidos para mostrar en la tabla de personas.
@@ -40,7 +40,7 @@ export class PersonaComponent implements OnInit, OnDestroy {
    * @type {PersonasInfo[]}
    * @memberof PersonaComponent
    */
-  personasTablaDatos: PersonasInfo[] = [];
+  public personasTablaDatos: PersonasInfo[] = [];
 
   /**
    * Notificador utilizado para cancelar suscripciones activas al destruir el componente
@@ -80,7 +80,7 @@ export class PersonaComponent implements OnInit, OnDestroy {
    *
    * @memberof PersonaComponent
    */
-  obtenerTablaDatos(): void {
+  public obtenerTablaDatos(): void {
     this.service.obtenerPersonaTablaDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {

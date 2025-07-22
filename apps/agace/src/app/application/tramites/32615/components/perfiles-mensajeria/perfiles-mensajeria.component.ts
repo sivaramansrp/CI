@@ -89,7 +89,7 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
    * @memberof PerfilesMensajeriaComponent
    */
-  profileForm!: FormGroup;
+  public profileForm!: FormGroup;
 
   /**
    * Indica si se debe mostrar la sección de contenido general.
@@ -183,7 +183,7 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
   /**
    * Determina si el formulario debe estar en modo solo lectura.
    */
-  esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Estado interno de la solicitud, utilizado para manejar los datos relacionados a perfiles y mensajería.
@@ -193,7 +193,7 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
   /**
    * Subject utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria (memory leaks).
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Valor de fecha de inicio seleccionado, inicializado con la constante `FECHA_DE_PAGO`.
@@ -244,7 +244,7 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
    * También aplica configuración de solo lectura si es necesario.
    * @method inicializarEstadoFormulario
    */
-  inicializarEstadoFormulario(): void {
+  public inicializarEstadoFormulario(): void {
     this.tramite32615Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -273,7 +273,7 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
    * Crea y configura el formulario reactivo con los campos necesarios para los controles físicos.
    * Los valores iniciales se obtienen del estado de la solicitud.
    */
-  crearFormularioProfileForm(): void {
+  public crearFormularioProfileForm(): void {
     this.profileForm = this.fb.group({
       domicilio: [this.solicitudState?.domicilio, Validators.required],
       antiguedad: [this.solicitudState?.antiguedad, Validators.required],
@@ -311,7 +311,7 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
      * @param campo Nombre del campo a actualizar
      * @param metodoNombre Método del store a invocar
      */
-    cambioFechaInicio(
+    public cambioFechaInicio(
       nuevo_valor: string,
       form: FormGroup,
       campo: string,
@@ -326,77 +326,77 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
   /**
    * Alterna la visibilidad de la sección "Contenido general".
    */
-  alternarContenido(): void {
+  public alternarContenido(): void {
     this.mostrarContenido = !this.mostrarContenido;
   }
 
   /**
    * Alterna la visibilidad de la sección "Seguridad física".
    */
-  alternarSeguridad(): void {
+  public alternarSeguridad(): void {
     this.mostrarSeguridad = !this.mostrarSeguridad;
   }
 
   /**
    * Alterna la visibilidad de la sección "Acceso físico".
    */
-  alternarAccesoFisico(): void {
+  public alternarAccesoFisico(): void {
     this.mostrarAccesoFisico = !this.mostrarAccesoFisico;
   }
 
   /**
    * Alterna la visibilidad de la sección "Socios comerciales".
    */
-  alternarSociosComerciales(): void {
+  public alternarSociosComerciales(): void {
     this.mostrarSociosComeciales = !this.mostrarSociosComeciales;
   }
 
   /**
    * Alterna la visibilidad de la sección "Seguridad en procesos".
    */
-  alternarSeguridadProcesos(): void {
+  public alternarSeguridadProcesos(): void {
     this.mostrarSeguridadProcesos = !this.mostrarSeguridadProcesos;
   }
 
   /**
    * Alterna la visibilidad de la sección "Gestión aduanera".
    */
-  alternarGestionAduanera(): void {
+  public alternarGestionAduanera(): void {
     this.mostrarGestionAduanera = !this.mostrarGestionAduanera;
   }
 
   /**
    * Alterna la visibilidad de la sección "Seguridad en vehículos".
    */
-  alternarSeguridadVehiculos(): void {
+  public alternarSeguridadVehiculos(): void {
     this.mostrarSeguridadVehiculos = !this.mostrarSeguridadVehiculos;
   }
 
   /**
    * Alterna la visibilidad de la sección "Seguridad del personal".
    */
-  alternarSeguridadPersonal(): void {
+  public alternarSeguridadPersonal(): void {
     this.mostrarSeguridadPersonal = !this.mostrarSeguridadPersonal;
   }
 
   /**
    * Alterna la visibilidad de la sección "Seguridad de la información".
    */
-  alternarSeguridadInformacion(): void {
+  public alternarSeguridadInformacion(): void {
     this.mostrarSeguridadInformacion = !this.mostrarSeguridadInformacion;
   }
 
   /**
    * Alterna la visibilidad de la sección "Capacitación en seguridad".
    */
-  alternarCapacitacionSeguridad(): void {
+  public alternarCapacitacionSeguridad(): void {
     this.mostrarCapacitacionSeguridad = !this.mostrarCapacitacionSeguridad;
   }
 
   /**
    * Alterna la visibilidad de la sección "Manejo e investigación de incidentes".
    */
-  alternarManejoInvestigacion(): void {
+  public alternarManejoInvestigacion(): void {
     this.mostrarManejoInvestigacion = !this.mostrarManejoInvestigacion;
   }
 
@@ -422,7 +422,7 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
    *
    * Obtiene el valor del campo `antiguedad` desde `profileForm` y lo envía al store mediante `setAntiguedad`.
    */
-  actualizarAntiguedad(): void {
+  public actualizarAntiguedad(): void {
     const ANTIGUEDAD = this.profileForm.get('antiguedad')?.value;
     this.tramite32615Store.setAntiguedad(ANTIGUEDAD);
   }
@@ -431,7 +431,7 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
    *
    * Obtiene el valor del campo `actividad` desde `profileForm` y lo envía al store mediante `setActividad`.
    */
-  actualizarActividad(): void {
+  public actualizarActividad(): void {
     const ACTIVIDAD = this.profileForm.get('actividad')?.value;
     this.tramite32615Store.setActividad(ACTIVIDAD);
   }
@@ -441,7 +441,7 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
    *
    * Obtiene el valor del campo `productos` desde `profileForm` y lo actualiza usando `setProductos`.
    */
-  actualizarProductos(): void {
+  public actualizarProductos(): void {
     const PRODUCTOS = this.profileForm.get('productos')?.value;
     this.tramite32615Store.setProductos(PRODUCTOS);
   }
@@ -451,7 +451,7 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
    *
    * Obtiene el valor del campo `embarquesExp` y lo guarda en el estado mediante `setEmbarquesExp`.
    */
-  actualizarEmbarquesExp(): void {
+  public actualizarEmbarquesExp(): void {
     const EMBARQUES_EXP = this.profileForm.get('embarquesExp')?.value;
     this.tramite32615Store.setEmbarquesExp(EMBARQUES_EXP);
   }
@@ -461,7 +461,7 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
    *
    * Obtiene el valor del campo `embarquesImp` y lo actualiza en el estado a través de `setEmbarquesImp`.
    */
-  actualizarEmbarquesImp(): void {
+  public actualizarEmbarquesImp(): void {
     const EMBARQUES_IMP = this.profileForm.get('embarquesImp')?.value;
     this.tramite32615Store.setEmbarquesImp(EMBARQUES_IMP);
   }
@@ -471,7 +471,7 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
    *
    * Toma el valor del campo `empleados` y lo establece en el estado usando `setEmpleados`.
    */
-  actualizarEmpleados(): void {
+  public actualizarEmpleados(): void {
     const EMPLEADOS = this.profileForm.get('empleados')?.value;
     this.tramite32615Store.setEmpleados(EMPLEADOS);
   }
@@ -481,7 +481,7 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
    *
    * Obtiene el valor del campo `superficie` desde `profileForm` y lo envía al store mediante `setSuperficie`.
    */
-  actualizarSuperficie(): void {
+  public actualizarSuperficie(): void {
     const SUPERFICIE = this.profileForm.get('superficie')?.value;
     this.tramite32615Store.setSuperficie(SUPERFICIE);
   }
@@ -491,7 +491,7 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
    *
    * @param evento - Valor de la vigencia seleccionada, recibido desde un evento (por ejemplo, de un `<select>` o `<radio>`).
    */
-  seleccionarVigenciaUno(evento: string): void {
+  public seleccionarVigenciaUno(evento: string): void {
     this.tramite32615Store.setVigencia(evento);
   }
 
@@ -500,7 +500,7 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
    *
    * @param evento - Valor de la segunda vigencia seleccionada.
    */
-  seleccionarVigenciaDos(evento: string): void {
+  public seleccionarVigenciaDos(evento: string): void {
     this.tramite32615Store.setVigenciaDos(evento);
   }
 
@@ -509,7 +509,7 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
    *
    * @param evento - Valor de la tercera vigencia seleccionada.
    */
-  seleccionarVigenciaTres(evento: string): void {
+  public seleccionarVigenciaTres(evento: string): void {
     this.tramite32615Store.setVigenciaTres(evento);
   }
 

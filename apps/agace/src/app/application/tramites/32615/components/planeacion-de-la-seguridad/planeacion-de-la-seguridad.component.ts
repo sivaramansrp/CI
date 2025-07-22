@@ -39,19 +39,19 @@ export class PlaneacionDelaSeguridadComponent implements OnInit, OnDestroy {
    * @description
    * Opciones disponibles para los botones de radio en el formulario.
    */
-  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+  public opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
    * @property {FormGroup} contingencyForm
    * @description
    * Formulario reactivo que contiene los campos relacionados con la contingencia.
    */
-  contingencyForm!: FormGroup;
+  public contingencyForm!: FormGroup;
 
     /**
    * Determina si el formulario debe estar en modo solo lectura.
    */
-  esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * @property {Solicitud32615PerfilesState} solicitudState
@@ -108,7 +108,7 @@ export class PlaneacionDelaSeguridadComponent implements OnInit, OnDestroy {
    * También aplica configuración de solo lectura si es necesario.
    * @method inicializarEstadoFormulario
    */
-  inicializarEstadoFormulario(): void {
+  public inicializarEstadoFormulario(): void {
     this.tramite32615Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -137,7 +137,7 @@ export class PlaneacionDelaSeguridadComponent implements OnInit, OnDestroy {
    * Crea y configura el formulario reactivo con los campos necesarios para la contingencia.
    * Los valores iniciales se obtienen del estado de la solicitud.
    */
-  crearContingencyFormulario(): void {
+  public crearContingencyFormulario(): void {
     this.contingencyForm = this.fb.group({
       actualizacion: [
         this.solicitudState?.actualizacion,

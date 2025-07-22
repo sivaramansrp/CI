@@ -44,7 +44,7 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
    * @memberof ReprestantanteComponent
    */
-  represtantante!: FormGroup;
+  public represtantante!: FormGroup;
 
   /**
    * Datos estáticos o predefinidos del representante, cargados desde un archivo JSON.
@@ -52,12 +52,12 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
    * @type {*}
    * @memberof ReprestantanteComponent
    */
-  datosRepresentativos = representanteDatos;
+  public datosRepresentativos = representanteDatos;
 
    /**
    * Determina si el formulario debe estar en modo solo lectura.
    */
-  esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Estado actual de la solicitud del trámite.
@@ -117,7 +117,7 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
    * También aplica configuración de solo lectura si es necesario.
    * @method inicializarEstadoFormulario
    */
-  inicializarEstadoFormulario(): void {
+  public inicializarEstadoFormulario(): void {
     this.tramite32615Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -183,7 +183,7 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
    * @param {keyof Tramite32615TercerosStore} metodoNombre - Nombre del método en el store que se ejecutará.
    * @memberof ReprestantanteComponent
    */
-  setValoresStore(
+  public setValoresStore(
     form: FormGroup,
     campo: string,
     metodoNombre: keyof Tramite32615TercerosStore

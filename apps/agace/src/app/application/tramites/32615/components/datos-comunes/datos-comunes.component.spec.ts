@@ -21,7 +21,7 @@ describe('DatosComunesComponent', () => {
       setSectorProductivo: jest.fn(),
       setServicio: jest.fn(),
       setSolicitudDeInspeccion: jest.fn(),
-      // Add other store methods as needed
+      // Agregar otros métodos del store según sea necesario
     };
 
     mockQuery = {
@@ -79,8 +79,8 @@ describe('DatosComunesComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule],
-      declarations: [DatosComunesComponent],
+      imports: [CommonModule, ReactiveFormsModule, DatosComunesComponent],
+      declarations: [],
       providers: [
         FormBuilder,
         { provide: Tramite32615Store, useValue: mockStore },
@@ -94,28 +94,28 @@ describe('DatosComunesComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with default values', () => {
+  it('debería inicializar el formulario con valores por defecto', () => {
     expect(component.datosComunesForma).toBeDefined();
     expect(component.tablaModalForma).toBeDefined();
     expect(component.tablaDosModalForma).toBeDefined();
     expect(component.miembroDeLaEmpresa).toBeDefined();
   });
 
-  it('should load catalog data', () => {
+  it('debería cargar datos de catálogo', () => {
     expect(component.sectorProductivoAgace.length).toBeGreaterThan(0);
     expect(component.serviciosAgace.length).toBeGreaterThan(0);
   });
 
-  it('should set alert constants', () => {
+  it('debería establecer constantes de alerta', () => {
     expect(component.alerta).toEqual(ALERTA_COM);
     expect(component.opcionDeBotonDeRadio).toEqual(OPCIONES_DE_BOTON_DE_RADIO);
   });
 
-  it('should call service methods to load table data', () => {
+  it('debería llamar a los métodos del servicio para cargar datos de tabla', () => {
     component.obtenerTablaDatos();
     component.obtenerInstalacionesPrincipalesTablaDatos();
     component.obtenerInventariosTablaDatos();
@@ -125,22 +125,22 @@ describe('DatosComunesComponent', () => {
     expect(mockService.obtenerInventariosTablaDatos).toHaveBeenCalled();
   });
 
-  it('should update store values when form changes', () => {
+  it('debería actualizar valores en el store cuando cambia el formulario', () => {
     const testValue = 'test-value';
     component.datosComunesForma.get('sectorProductivo')?.setValue(testValue);
     
     expect(mockStore.setSectorProductivo).toHaveBeenCalledWith(testValue);
   });
 
-  it('should show/hide fields based on radio button selection', () => {
-    // Test senaleCuentaEmpleados field
+  it('debería mostrar/ocultar campos según la selección de botones de radio', () => {
+    // Probar campo senaleCuentaEmpleados
     component.datosComunesForma.get('senaleCuentaEmpleados')?.setValue('1');
     expect(component.showSenaleCuentaEmpleados).toBe(true);
     
     component.datosComunesForma.get('senaleCuentaEmpleados')?.setValue('0');
     expect(component.showSenaleCuentaEmpleados).toBe(false);
 
-    // Test senaleSiAlMomento field
+    // Probar campo senaleSiAlMomento
     component.datosComunesForma.get('senaleSiAlMomento')?.setValue('1');
     expect(component.showSenaleSiAlMomento).toBe(true);
     
@@ -148,7 +148,7 @@ describe('DatosComunesComponent', () => {
     expect(component.showSenaleSiAlMomento).toBe(false);
   });
 
-  it('should clear servicio when sectorProductivo changes and vice versa', () => {
+  it('debería limpiar servicio cuando cambia sectorProductivo y viceversa', () => {
     component.datosComunesForma.get('sectorProductivo')?.setValue('test');
     expect(mockStore.setServicio).toHaveBeenCalledWith('');
     
@@ -156,32 +156,32 @@ describe('DatosComunesComponent', () => {
     expect(mockStore.setSectorProductivo).toHaveBeenCalledWith('');
   });
 
-  it('should open confirm modal when certain conditions are met', () => {
+  it('debería abrir modal de confirmación cuando se cumplen ciertas condiciones', () => {
     component.openConfirmModal = jest.fn();
     
-    // Test with a field that should trigger the modal
+    // Probar con un campo que debería activar el modal
     component.setValoresStore(component.datosComunesForma, 'solicitudDeInspeccion', 'setSolicitudDeInspeccion', true, 0);
     expect(component.openConfirmModal).toHaveBeenCalled();
   });
 
-  it('should handle form validation', () => {
-    const requiredFields = [
+  it('debería manejar la validación del formulario', () => {
+    const camposRequeridos = [
       'solicitudDeInspeccion',
       'indiqueAutorizo',
       'senaleCuentaEmpleados',
-      // Add other required fields
+      // Agregar otros campos requeridos
     ];
 
-    requiredFields.forEach(field => {
-      const control = component.datosComunesForma.get(field);
+    camposRequeridos.forEach(campo => {
+      const control = component.datosComunesForma.get(campo);
       control?.setValue('');
       expect(control?.valid).toBeFalsy();
-      control?.setValue('valid-value');
+      control?.setValue('valor-valido');
       expect(control?.valid).toBeTruthy();
     });
   });
 
-  it('should disable form controls in read-only mode', () => {
+  it('debería deshabilitar controles del formulario en modo solo lectura', () => {
     component.esFormularioSoloLectura = true;
     component.inicializarEstadoFormulario();
     
@@ -190,7 +190,7 @@ describe('DatosComunesComponent', () => {
     });
   });
 
-  it('should create table data when modal is accepted', () => {
+  it('debería crear datos de tabla cuando se acepta el modal', () => {
     component.crearTablaDatos();
     expect(component.mercanciasTablaDatos.length).toBe(1);
     
@@ -198,8 +198,8 @@ describe('DatosComunesComponent', () => {
     expect(component.instalacionesPrincipalesTablaDatos.length).toBe(1);
   });
 
-  it('should open and close modals', () => {
-    // Mock modal instances
+  it('debería abrir y cerrar modales', () => {
+    // Mock de instancias de modal
     component.confirmInstance = { show: jest.fn(), hide: jest.fn() } as any;
     component.tablaInstance = { show: jest.fn(), hide: jest.fn() } as any;
     component.instalacionesPrincipalesTablaInstance = { show: jest.fn(), hide: jest.fn() } as any;
@@ -211,10 +211,10 @@ describe('DatosComunesComponent', () => {
     component.closeConfirmModal();
     expect(component.confirmInstance.hide).toHaveBeenCalled();
     
-    // Test other modals similarly
+    // Probar otros modales de manera similar
   });
 
-  it('should clean up on destroy', () => {
+  it('debería limpiar recursos al destruir el componente', () => {
     const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
     const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
     
@@ -224,12 +224,12 @@ describe('DatosComunesComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should render required fields with asterisk', () => {
-    const requiredLabels = fixture.debugElement.queryAll(By.css('.danger'));
-    expect(requiredLabels.length).toBeGreaterThan(0);
+  it('debería renderizar campos requeridos con asterisco', () => {
+    const etiquetasRequeridas = fixture.debugElement.queryAll(By.css('.danger'));
+    expect(etiquetasRequeridas.length).toBeGreaterThan(0);
   });
 
-  it('should update changed flag on value change', () => {
+  it('debería actualizar el flag changed al cambiar valores', () => {
     const initialChanged = component.changed;
     component.enCambioDeValor();
     expect(component.changed).toBe(!initialChanged);

@@ -31,12 +31,12 @@ export class CapacitacionSeguridadComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo que contiene los campos relacionados con la capacitación.
    */
-  capacitacion!: FormGroup;
+  public capacitacion!: FormGroup;
 
   /**
    * Determina si el formulario debe estar en modo solo lectura.
    */
-  esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Estado actual de la solicitud del trámite, obtenido desde el query.
@@ -85,7 +85,7 @@ export class CapacitacionSeguridadComponent implements OnInit, OnDestroy {
    * También aplica configuración de solo lectura si es necesario.
    * @method inicializarEstadoFormulario
    */
-  inicializarEstadoFormulario(): void {
+  public inicializarEstadoFormulario(): void {
     this.tramite32615Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -110,7 +110,7 @@ export class CapacitacionSeguridadComponent implements OnInit, OnDestroy {
    * Crea el formulario reactivo utilizando los valores actuales del estado.
    * Cada campo incluye una validación requerida para asegurar su completitud.
    */
-  crearFormularioDeGestion(): void {
+  public crearFormularioDeGestion(): void {
     this.capacitacion = this.fb.group({
       mediosTransporte: [this.solicitudState?.mediosTransporte, Validators.required],
       estaDifusion: [this.solicitudState?.estaDifusion, Validators.required],

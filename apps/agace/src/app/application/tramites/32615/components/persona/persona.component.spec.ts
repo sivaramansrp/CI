@@ -26,21 +26,21 @@ describe('PersonaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize personasTablaDatos on init', () => {
+  it('debería inicializar personasTablaDatos al iniciar', () => {
     expect(component.personasTablaDatos).toEqual([{ id: 1, nombre: 'Test Persona' }]);
   });
 
-  it('should call obtenerPersonaTablaDatos on service when obtenerTablaDatos is called', () => {
+  it('debería llamar a obtenerPersonaTablaDatos del servicio cuando se ejecuta obtenerTablaDatos', () => {
     const serviceSpy = jest.spyOn(mockService, 'obtenerPersonaTablaDatos');
     component.obtenerTablaDatos();
     expect(serviceSpy).toHaveBeenCalled();
   });
 
-  it('should unsubscribe from observables on destroy', () => {
+  it('debería cancelar las suscripciones al destruir el componente', () => {
     const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();

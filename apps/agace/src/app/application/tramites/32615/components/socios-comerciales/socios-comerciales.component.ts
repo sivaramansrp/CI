@@ -40,19 +40,19 @@ export class SociosComercialesComponent implements OnInit, OnDestroy {
    * @description
    * Opciones disponibles para los botones de radio en el formulario.
    */
-  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+  public opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
    * @property {FormGroup} sociosComercialesForm
    * @description
    * Formulario reactivo que contiene los campos relacionados con los socios comerciales.
    */
-  sociosComercialesForm!: FormGroup;
+  public sociosComercialesForm!: FormGroup;
 
     /**
    * Determina si el formulario debe estar en modo solo lectura.
    */
-  esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * @property {Solicitud32615PerfilesState} solicitudState
@@ -109,7 +109,7 @@ export class SociosComercialesComponent implements OnInit, OnDestroy {
    * También aplica configuración de solo lectura si es necesario.
    * @method inicializarEstadoFormulario
    */
-  inicializarEstadoFormulario(): void {
+  public inicializarEstadoFormulario(): void {
     this.tramite32615Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -137,7 +137,7 @@ export class SociosComercialesComponent implements OnInit, OnDestroy {
    * Crea y configura el formulario reactivo con los campos necesarios para los socios comerciales.
    * Los valores iniciales se obtienen del estado de la solicitud.
    */
-  crearFormularioSociosComerciales(): void {
+  public crearFormularioSociosComerciales(): void {
     this.sociosComercialesForm = this.fb.group({
       indiqueLleva: [
         this.solicitudState?.indiqueLleva,
@@ -157,10 +157,6 @@ export class SociosComercialesComponent implements OnInit, OnDestroy {
       ],
       indiqueExisten: [
         this.solicitudState?.indiqueExisten,
-        Validators.required,
-      ],
-      indiqueCuenta: [
-        this.solicitudState?.indiqueCuenta,
         Validators.required,
       ],
       procedimientoRealizar: [
