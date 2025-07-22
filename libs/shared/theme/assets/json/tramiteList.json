@@ -4262,5 +4262,12 @@
     "linkDashboard": "/agace/empresas-comercializadoras/solicitud",
     "linkDepartment": "/pago/empresas-comercializadoras/solicitud",
     "department": "agace"
+  },
+  {
+    "id": 610,
+    "tramite": 32613,
+    "linkDashboard": "/agace/rubro-transporte-ferroviario/pantallas",
+    "linkDepartment": "/pago/rubro-transporte-ferroviario/pantallas",
+    "department": "agace"
   }
 ]

@@ -13,6 +13,7 @@
             (change)="seleccionarDeseleccionarTodos($event)"
             aria-label="Seleccionar/Deseleccionar todo"
             [checked]="filasSeleccionadas.length === datos.length"
+            [disabled]="disableSeleccionTablaCheckBox"
           />
         </th>
         }
@@ -40,6 +41,7 @@
             (change)="seleccionarFila(i, fila)"
             [checked]="idFilaSeleccionada === 'i' + i"
             aria-label="Seleccionar"
+            [disabled]="disableSeleccionTablaRadio"
           />
         </td>
 
@@ -52,6 +54,7 @@
             [value]="i"
             (change)="cambiarEstadoCheckbox($event, i)"
             [checked]="filasSeleccionadas.includes(i)"
+            [disabled]="disableSeleccionTablaCheckBox"
             aria-label="Seleccionar"
           />
         </td>
@@ -76,6 +79,7 @@
             [value]="col.clave(fila)"
             class="form-check-input"
             (change)="changeCheckBoxValue($event, i, col.llave)"
+            [disabled]="disableSeleccionTablaCheckBox"
           />
           } @else {
           {{ col.clave(fila) || ' ' }}
