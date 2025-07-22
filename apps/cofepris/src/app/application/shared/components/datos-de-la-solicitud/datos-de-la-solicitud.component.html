@@ -99,7 +99,7 @@
             *ngIf="esCampoRequerido('denominacionRazon')"
             >*</span
           >
-          <span class="form-label municipio-labe"> :</span>
+          <span class="form-label municipio-labe">:</span>
           <input
             class="form-control"
             id="denominacionRazon"
@@ -138,7 +138,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="codigoPostal">Código postal * :</label>
+          <label class="form-label" for="codigoPostal">Código postal*:</label>
           <input
             class="form-control"
             id="codigoPostal"
@@ -159,7 +159,7 @@
             class="mensaje-error"
             *ngIf="datosSolicitudForm.get('codigoPostal')?.errors?.['pattern']"
           >
-            por favor escribe un número entero valido
+            Por favor, escribe un número entero válido.
           </div>
         </div>
       </div>
@@ -180,7 +180,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label municipio-label" for="municipioAlcaldia"
-            >{{ etiquetaMunicipio }} * :</label
+            >{{ etiquetaMunicipio }}*:</label
           >
           <input
             class="form-control"
@@ -210,7 +210,7 @@
           <span class="form-label" *ngIf="esCampoRequerido('localidad')">
             *</span
           >
-          <span class="form-label"> :</span>
+          <span class="form-label">:</span>
           <input
             class="form-control"
             id="localidad"
@@ -234,7 +234,7 @@
         <div class="form-group">
           <label class="form-label" for="colonia">Colonia</label>
           <span class="form-label" *ngIf="esCampoRequerido('colonia')"> *</span>
-          <span class="form-label"> :</span>
+          <span class="form-label">:</span>
           <input
             class="form-control"
             id="colonia"
@@ -291,7 +291,7 @@
       @if(mostrarRFCCalle){
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="calle">Calle *:</label>
+          <label class="form-label" for="calle">Calle*:</label>
           <span
             tooltip="Domicilio, calle, numero interior, numero exterior, lote"
           >
@@ -323,7 +323,7 @@
       >
         <div class="form-group">
           <label class="form-label" for="correoElectronico"
-            >Correo electrónico * :
+            >Correo electrónico*:
           </label>
           <span tooltip="ejemplo@dominio.com">
             <i class="bi bi-question-circle-fill"></i>
@@ -413,7 +413,7 @@
 
       <div class="col-md-3">
         <div class="form-group">
-          <label class="form-label" for="telefono">Teléfono * :</label>
+          <label class="form-label" for="telefono">Teléfono*:</label>
           <input
             class="form-control"
             id="telefono"
@@ -434,7 +434,7 @@
             *ngIf="datosSolicitudForm.get('telefono')?.errors?.['pattern']"
             class="mensaje-error"
           >
-            El teléfono debe contener solo números.
+            Por favor, escribe un número entero válido
           </div>
         </div>
       </div>
@@ -447,8 +447,8 @@
           <label class="form-label municipio-label" for="telefono"
             >S. C. I. A. N
           </label>
-          <span class="form-label" *ngIf="esCampoRequerido('scian')"> *</span>
-          <span class="form-label"> :</span>
+          <span class="form-label" *ngIf="esCampoRequerido('scian')">*</span>
+          <span class="form-label">:</span>
         </div>
       </div>
       <app-tabla-dinamica
@@ -854,7 +854,7 @@
           *ngIf="esCampoRequerido('correoElectronico')"
           >*</span
         >
-        <span class="form-label mx-1"> :</span>
+        <span class="form-label mx-1">:</span>
         <span tooltip="ejemplo@dominio.com">
           <i class="bi bi-question-circle-fill"></i>
         </span>
