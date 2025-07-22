@@ -68,10 +68,10 @@
                (change)="setValoresStore(datosDelTramiteRealizar,'cantidadutilizada','setCantidadutilizada')"
                [disabled]="esFormularioSoloLectura"
                [ngClass]="{
-                'is-invalid': isCantidadUtilizadaExceeds
+                'is-invalid': esCantidadUtilizadaExcede
               }"
                >
-            @if(isCantidadUtilizadaExceeds) {
+            @if(esCantidadUtilizadaExcede) {
                <small class="text-danger">
                    La Cantidad Utilizada debe ser menor a la cantidad Facturada
                </small>
@@ -127,12 +127,12 @@
                    [ngClass]="{
                     'is-invalid': isCantidadInvalid
                   }">
-                   >
-                  
                  @if(isCantidadInvalid){
-                  <small class="text-danger" *ngIf="dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.errors?.['pattern']">
+                  @if(isCantidadPatternInvalid){
+                  <small class="text-danger">
                   Por favor, sólo escribe dígitos
                 </small>
+              }
                  }
                   
                 </div>
@@ -162,14 +162,15 @@
                    (change)="setValoresStore(datosDelTramiteRealizar,'precioapplicable','setPrecioapplicable')"
                    [disabled]="esFormularioSoloLectura"
                    [ngClass]="{
-                    'is-invalid': isPrecioApplicableInvalid
+                    'is-invalid': esPrecioAplicableInvalido
                   }">
                 </div>
-      @if(isPrecioApplicableInvalid){
-        <small class="text-danger"
-        *ngIf="dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.errors?.['pattern']">
-        Solo 7 enteros y hasta 3 Decimales
-       </small>
+      @if(esPrecioAplicableInvalido){
+        @if(isPrecioApplicablePatternInvalid){
+          <small class="text-danger">
+          Solo 7 enteros y hasta 3 Decimales
+         </small>
+        }
       }
              </div>
              <div class="col-md-4 mb-3">
@@ -194,13 +195,14 @@
                        <input class="form-control" required="true" placeholder="" type="text" formControlName="lote" id="lote"
                        (change)="setValoresStore(datosDelTramiteRealizar,'lote','setLote')"
                        [disabled]="esFormularioSoloLectura">
-                       <div *ngIf="dataCafeForm.get('datosDelTramiteRealizar.lote')?.invalid && dataCafeForm.get('datosDelTramiteRealizar.lote')?.touched"
-                       class="text-danger">
-                            <small *ngIf="
-                            dataCafeForm.get('datosDelTramiteRealizar.lote')?.errors?.['pattern'] ">
-                           Por favor, sólo escribe dígitos
-                        </small>
-                      </div>
+                       
+                       @if(isLoteInvalid){
+                        @if(isLotePatternInvalid){
+                          <small>
+                            Por favor, sólo escribe dígitos
+                         </small>
+                        }
+                       }
                     </div>
                  </div>
                  <div class="col-md-8 mb-3">
@@ -372,10 +374,16 @@
                <input class="form-control"  placeholder="" type="text" formControlName="otrasCaracteristicas" id="otrasCaracteristicas"
                (change)="setValoresStore(datosDelTramiteRealizar,'otrasCaracteristicas','setOtrasCaracteristicas')"
                [disabled]="esFormularioSoloLectura"
+               [ngClass]="{
+                'is-invalid': isOtrasCaracteristicasRequired
+              }"
                >
-                <div *ngIf="dataCafeForm.get('datosDelTramiteRealizar.otrasCaracteristicas')?.touched && dataCafeForm.get('datosDelTramiteRealizar.otrasCaracteristicas')?.hasError('required')" class="text-danger">
-    Este campo es obligatorio
-  </div>
+               @if(isOtrasCaracteristicasRequired){
+                <small class="text-danger">
+                  Este campo es obligatorio
+                        </small>
+               }
+     
               </div>
                 </div>
                  <div class="row">
@@ -443,13 +451,12 @@
                         }"
                        />
                        @if(isIdentificadorDelInvalid){
-                        <small class="text-danger"
-                        *ngIf="
-                          dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.errors?.['maxlength']
-                        "
-                      >
-                        Por favor, no escribas más de 5 caracteres
-                      </small>
+                        @if(isIdentificadorDelPatternInvalid){
+                          <small class="text-danger">
+                          Por favor, no escribas más de 5 caracteres
+                        </small>
+                        }
+                        
                        }
  
                      </div>
@@ -463,9 +470,12 @@
                       placeholder="" style="height: 100px" formControlName="observaciones"
                       (change)="setValoresStore(datosDelTramiteRealizar,'observaciones','setObservaciones')"
                       [disabled]="esFormularioSoloLectura"></textarea>
-                      <div *ngIf="dataCafeForm.get('datosDelTramiteRealizar.observaciones')?.hasError('maxlength')">
-                        Por favor, no escribas más de 250 caracteres.
-                      </div>
+                      @if(isObservacionesMaxLengthExceeded){
+                        <small >
+                          Por favor, no escribas más de 250 caracteres.
+                        </small>
+                      }
+                      
                     </div>
               </div>
          </div>

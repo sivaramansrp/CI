@@ -13,6 +13,7 @@ import {
   ConsultaioQuery,
   ConsultaioState,
   InputRadioComponent,
+  REGEX_SOLO_DIGITOS,
   TablaSeleccion,
   TableComponent,
 } from '@libs/shared/data-access-user/src';
@@ -262,8 +263,8 @@ public coloniaData: CatalogosSelect = {
         pais: [this.destinatarioState?.pais, [Validators.required]],
         codigopostal: [
           this.destinatarioState?.codigopostal,
-          [Validators.required, Validators.maxLength(5), Validators.pattern(/^\d+$/)]],
-        telefono: [this.destinatarioState?.telefono, [Validators.required, Validators.pattern(/^\d+$/)]],
+          [Validators.required, Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
+        telefono: [this.destinatarioState?.telefono, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
         correoelectronico: [
           this.destinatarioState?.correoelectronico,
           [Validators.required, Validators.email]],
@@ -540,6 +541,50 @@ onLimpiar(): void {
     else {
       this.destinatarioForm?.enable();
     }
+}
+/**
+ * Getter to check if the 'pais' field is required.
+ * 
+ * @returns {boolean} Returns `true` if the 'pais' field has a 'required' error, otherwise `false`.
+ */
+get isPaisRequired(): boolean {
+  return this.destinatarioForm.get('pais')?.errors?.['required'] ?? false;
+}
+
+/**
+ * Getter to check if the 'codigopostal' field has a 'maxlength' error.
+ * 
+ * @returns {boolean} Returns `true` if the 'codigopostal' field has a 'maxlength' error, otherwise `false`.
+ */
+get isCodigoPostalMaxLengthExceeded(): boolean {
+  return this.destinatarioForm.get('datosDelTramiteRealizar.codigopostal')?.errors?.['maxlength'] ?? false;
+}
+/**
+ * Getter to check if the 'telefono' field has a 'pattern' error.
+ * 
+ * @returns {boolean} Returns `true` if the 'telefono' field has a 'pattern' error, otherwise `false`.
+ */
+get isTelefonoPatternInvalid(): boolean {
+  return this.destinatarioForm.get('datosDelTramiteRealizar.telefono')?.errors?.['pattern'] ?? false;
+}
+/**
+ * Getter to check if the 'correoelectronico' field has an 'email' error.
+ * 
+ * @returns {boolean} Returns `true` if the 'correoelectronico' field has an 'email' error, otherwise `false`.
+ */
+get isCorreoElectronicoInvalid(): boolean {
+  return this.destinatarioForm.get('datosDelTramiteRealizar.correoelectronico')?.errors?.['email'] ?? false;
+}
+/**
+ * Getter to check if the 'pais' field is touched and invalid.
+ * 
+ * @returns {boolean} Returns `true` if the 'pais' field is touched and invalid, otherwise `false`.
+ */
+get isPaisInvalid(): boolean {
+  return (
+    (this.destinatarioForm.get('datosDelTramiteRealizar.pais')?.touched ?? false)&&
+    (this.destinatarioForm.get('datosDelTramiteRealizar.pais')?.invalid ?? false)
+  );
 }
 /**
  * Método para mostrar el formulario de destinatarios.

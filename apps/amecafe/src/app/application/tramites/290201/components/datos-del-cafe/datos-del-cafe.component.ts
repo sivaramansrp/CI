@@ -10,7 +10,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReplaySubject,debounceTime,map, takeUntil } from 'rxjs';
 
-import { AcuseComponent, ConsultaioQuery, ConsultaioState, InputFecha, InputFechaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { AcuseComponent, ConsultaioQuery, ConsultaioState, InputFecha, InputFechaComponent, REGEX_SOLO_DIGITOS, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Catalogo, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -225,7 +225,7 @@ editingRowId: number | null = null;
         numerodepedimento: [{ value: this.dataCafeState?.numerodepedimento, disabled: true }, Validators.required],
         paisdeimportacion: [{ value: this.dataCafeState?.paisdeimportacion, disabled: true }, Validators.required],
         fraccionarancelaria: [{ value: this.dataCafeState?.fraccionarancelaria, disabled: true }, Validators.required],
-        cantidad: [this.dataCafeState?.cantidad, [Validators.required, Validators.pattern(/^\d+$/)]],
+        cantidad: [this.dataCafeState?.cantidad, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
         unidaddemedida: [this.dataCafeState?.unidaddemedida, Validators.required],
         precioapplicable: [this.dataCafeState?.precioapplicable, Validators.pattern(/^\d{1,7}(\.\d{1,3})?$/)],
         dolar: [this.dataCafeState?.dolar, Validators.required],
@@ -245,16 +245,16 @@ editingRowId: number | null = null;
           Validators.maxLength(5) 
         ]],
         observaciones: [this.dataCafeState?.observaciones, [Validators.required, Validators.maxLength(250)]],
-        calidadEspecial: ['', ],
-        cafePractices: ['', ],
-        avesMigratorias: ['', ],
-        codigoComunidad: ['', ],
-        comercioJusto: ['', ],
-        euregap: ['',],
-        rainforestAlliance: ['',],
-        sistemaQ: ['', ],
-        tasqNespresso: ['',],
-        utzCertified: ['',],
+        calidadEspecial: [''],
+        cafePractices: [''],
+        avesMigratorias: [''],
+        codigoComunidad: [''],
+        comercioJusto: [''],
+        euregap: [''],
+        rainforestAlliance: [''],
+        sistemaQ: [''],
+        tasqNespresso: [''],
+        utzCertified: [''],
       },
       { validators: DatosDelCafeComponent.cantidadUtilizadaValidator } 
   ),
@@ -638,7 +638,7 @@ get isIdentificadorDelInvalid(): boolean {
  * 
  * @returns {boolean} Devuelve `true` si el campo 'precioapplicable' es inválido y ha sido tocado, de lo contrario, devuelve `false`.
  */
-get isPrecioApplicableInvalid(): boolean {
+get esPrecioAplicableInvalido(): boolean {
   return (
     (this.dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.invalid ?? false) &&
     (this.dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.touched ?? false)
@@ -655,6 +655,72 @@ get isCantidadInvalid(): boolean {
     (this.dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.touched ?? false)
   );
 }
+/**
+ * Getter to check if the 'otrasCaracteristicas' field is required and has been touched.
+ * 
+ * @returns {boolean} Returns `true` if the 'otrasCaracteristicas' field is required and touched, otherwise `false`.
+ */
+get isOtrasCaracteristicasRequired(): boolean {
+  return (
+    (this.dataCafeForm.get('datosDelTramiteRealizar.otrasCaracteristicas')?.touched ?? false)&&
+    (this.dataCafeForm.get('datosDelTramiteRealizar.otrasCaracteristicas')?.hasError('required') ?? false)
+  );
+ 
+}
+/**
+ * Getter para verificar si el campo 'lote' es inválido y ha sido tocado.
+ * 
+ * @returns {boolean} Devuelve `true` si el campo 'lote' es inválido y ha sido tocado, de lo contrario, devuelve `false`.
+ */
+get isLoteInvalid(): boolean {
+  return (
+    (this.dataCafeForm.get('datosDelTramiteRealizar.lote')?.invalid ?? false) &&
+    (this.dataCafeForm.get('datosDelTramiteRealizar.lote')?.touched ?? false)
+  );
+}
+/**
+ * Getter to check if the 'cantidad' field has a 'pattern' error.
+ * 
+ * @returns {boolean} Returns `true` if the 'cantidad' field has a 'pattern' error, otherwise `false`.
+ */
+get isCantidadPatternInvalid(): boolean {
+  return this.dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.errors?.['pattern'] ?? false;
+}
+/**
+ * Getter para verificar si el campo 'precioapplicable' tiene un error de patrón.
+ * 
+ * @returns {boolean} Devuelve `true` si el campo 'precioapplicable' tiene un error de patrón, de lo contrario, devuelve `false`.
+ */
+get isPrecioApplicablePatternInvalid(): boolean {
+  return this.dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.errors?.['pattern'] ?? false;
+}
+
+/**
+ * Getter para verificar si el campo 'lote' tiene un error de patrón.
+ * 
+ * @returns {boolean} Devuelve `true` si el campo 'lote' tiene un error de patrón, de lo contrario, devuelve `false`.
+ */
+get isLotePatternInvalid(): boolean {
+  return this.dataCafeForm.get('datosDelTramiteRealizar.lote')?.errors?.['pattern'] ?? false;
+}
+
+/**
+ * Getter para verificar si el campo 'Identificadordel' tiene un error de longitud máxima.
+ * 
+ * @returns {boolean} Devuelve `true` si el campo 'Identificadordel' tiene un error de longitud máxima, de lo contrario, devuelve `false`.
+ */
+get isIdentificadorDelPatternInvalid(): boolean {
+  return this.dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.errors?.['maxlength'] ?? false;
+}
+/**
+ * Getter to check if the 'observaciones' field has a 'maxlength' error.
+ * 
+ * @returns {boolean} Returns `true` if the 'observaciones' field has a 'maxlength' error, otherwise `false`.
+ */
+get isObservacionesMaxLengthExceeded(): boolean {
+  return this.dataCafeForm.get('datosDelTramiteRealizar.observaciones')?.hasError('maxlength') ?? false;
+}
+
   /**
  * Getter para acceder al grupo de formularios 'datosDelTramiteRealizar'.
  * 
@@ -704,7 +770,7 @@ static cantidadUtilizadaValidator(group: AbstractControl): { [key: string]: unkn
  * @returns {boolean} Devuelve `true` si el validador `cantidadUtilizadaExceeds` está presente en el grupo de formularios
  * `datosDelTramiteRealizar` y el campo `cantidadutilizada` ha sido tocado. De lo contrario, devuelve `false`.
  */
-get isCantidadUtilizadaExceeds(): boolean {
+get esCantidadUtilizadaExcede(): boolean {
   return (
     this.dataCafeForm.get('datosDelTramiteRealizar')?.errors?.['cantidadUtilizadaExceeds'] &&
     this.dataCafeForm.get('datosDelTramiteRealizar.cantidadutilizada')?.touched
