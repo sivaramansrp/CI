@@ -20,6 +20,223 @@ export interface StoreResponse {
   data: Tramites32609State;
   message: string;
 }
+
+export interface PerfilesDatos {
+  describaProcedimiento: string;
+  indiqueLosCriterios: string;
+  indiqueLosMetodos: string;
+  describaLosIndicadores: string;
+  comercioExterior: string;
+  candadosSeguridad: string;
+  proveedorExterno: string;
+  susceptibleContaminacion: string;
+  encuentrenVacios: string;
+  semirremolquesVacios: string;
+  utilizarCandado: string;
+  seguridadMismas: string;
+  describaContratacion: string;
+  documentacionExigida: string;
+  examenesSolicitados: string;
+  conformeAnalisis: string;
+  periodicidad: string;
+  confidencialidad: string;
+  contratacionPersonal: string;
+  describaProcedimientoPersonal: string;
+  seguimientoProcedimiento: string;
+  identificaciones: string;
+  sistemasInformaticos: string;
+  proveedoresServicios: string;
+  administracionPersonal: string;
+  expliqueBrevemente: string;
+  encuentranFuera: string;
+  actualizacionesSeguridad: string;
+  accesoLosMismos: string;
+  continuidadNegocio: string;
+  semanaCorresponda: string;
+  recuperarInformacion: string;
+  informacionArchivada: string;
+  procesoDatos: string;
+  copiasSeguridad: string;
+  proteccionDeLaInformacion: string;
+  perdidaDeLaInformacion: string;
+  controlanSistemas: string;
+  accionesDelResto: string;
+  sistemasConfidenciales: string;
+  proporcionaEsasContrasenas: string;
+  actualizacionesPeriodicas: string;
+  falsificadosLicencias: string;
+  procesoDeImportacion: string;
+  telecomunicaciones: string;
+  sistemaComprometido: string;
+  seguridadDeLaTecnologia: string;
+  mediosTransporte: string;
+  estaDifusion: string;
+  enunciativaLimitativa: string;
+  procedimientosEmpresa: string;
+  mediosDeTransporte: string;
+  relacionadosSeguridad: string;
+  reportarIncidentes: string;
+  actividadesSospechosas: string;
+  brevementeSonsiste: string;
+  incidenteSeguridad: string;
+  caboInvestigacion: string;
+  operacionCaboInvestigacion: string;
+  antiguedad: number | string;
+  productos: number | string;
+  embarquesExp: number | string;
+  embarquesImp: number | string;
+  empleados: number | string;
+  superficie: number | string;
+  blCtpat: string;
+  niverCertificado?: string;
+  ctpatAccountNumber?: string;
+  codigoMid?: string;
+  fecUltimaCtapt?: Date | string;
+  blnPip: string;
+  numRegistroPip?: string;
+  blnOea: string;
+  nomProgramapaisOea?: string;
+  numRegistroOea?: string;
+  blnOtrosProgramasSegu: string;
+  nombreProgramaOtros?: string;
+  numRegistroOtros?: string;
+  fechaVigenciaOtros?: Date | string;
+  nombre: string;
+  categoria: string;
+  vigencia: string;
+  nombre2: string;
+  categoria2: string;
+  vigencia2: string;
+  nombre3: string;
+  categoria3: string;
+  vigencia3: string;
+
+  procedimientoDocumentado: string;
+indiqueNumero: string;
+cargosFunciones: string;
+casoContratarse: string;
+casoContar: string;
+describirProcedimiento: string;
+indiqueMecanismos: string;
+indicarEmpleados: string;
+indiqueIdentifica: string;
+describaEmpresa: string;
+indiqueAsegura: string;
+procedimientoParaControl: string;
+senaleRegistros: string;
+senaleQuien: string;
+describaRecepion: string;
+indiqueEncargado: string;
+indiqueIdentfica: string;
+senaleComo: string;
+describaCaracteristicas: string;
+senaleAccion: string;
+indiqueLleva: string;
+describaProcedimiento2: string;
+indiqueSocios: string;
+indiqueForma: string;
+indiqueExisten: string;
+indiqueCuenta: string;
+procedimientoRealizar: string;
+indiquePeriodicidad: string;
+describaComo: string;
+comoAseguran: string;
+indiqueFormatos: string;
+senalarMedidas: string;
+indiqueAlmacenes: string;
+expliqueBrevemente2: string;
+indiqueCerciora: string;
+indiqueEstos: string;
+indiquePertenecen: string;
+indiqueResponsable: string;
+indiqueTecnologia: string;
+describirProcesamiento: string;
+detalleComo: string;
+indiqueUtiliza: string;
+detalleValida: string;
+comoNumero: string;
+senaleAsociados: string;
+indiqueMateriales: string;
+queForma: string;
+personalResponsable: string;
+indiqueCuantas: string;
+indiqueMonitoreadas: string;
+detalleExisten: string;
+describaAcceso: string;
+describirTipo: string;
+describaAreas: string;
+senaleMismas: string;
+casoNoContar: string;
+periodicidadVerifica: string;
+indiqueTareas: string;
+describaManera: string;
+indiqueSepara: string;
+senaleRestringido: string;
+describaMonitoreo: string;
+responsablesControlar: string;
+estacionamientos: string;
+llevaEntrada: string;
+politicasMecanismos: string;
+procedimientoOperacion: string;
+senaleEncuentran: string;
+mencioneCuenta: string;
+queManera: string;
+describaContactar: string;
+indiqueOperativo: string;
+indiqueAparatos: string;
+mantenimiento: string;
+politicasAparatos: string;
+programaMantenimiento: string;
+indiqueRespaldo: string;
+describaAlarma: string;
+indiqueUtilizan: string;
+describaSistemas: string;
+indicarCamaras: string;
+mencioneInspeccion: string;
+senalarUbicacion: string;
+indiqueHorarios: string;
+indiqueRevisan: string;
+indiqueDesignado: string;
+comoDocumentan: string;
+indiqueTiempo: string;
+contarPlanta: string;
+estosSistemas: string;
+indicarCircuito: string;
+describaImplementado: string;
+formaControlan: string;
+indiqueTodas: string;
+indiquePlanta: string;
+cuentaDocumentado: string;
+indiquePuertas: string;
+indiqueCerrado: string;
+indicarCircuitoCerrado: string;
+registroVisitantes: string;
+casoSocios: string;
+estosEmpresa: string;
+comiteSeguridad: string;
+fuentesInformacion: string;
+politica: string;
+indique: string;
+periodicidad2: string;
+programa: string;
+capacitacion: string;
+procedimiento: string;
+descripcionProcedimiento: string;
+nombreProcedimiento: string;
+programacionAuditoria: string;
+participantesAuditoria: string;
+enfoqueAuditoria: string;
+procesosAuditados: string;
+registrosAuditoria: string;
+programacion: string;
+registrosNombre: string;
+registrosEmpresa: string;
+planEmergencia: string;
+situacionesContempladas: string;
+mecanismosContinuidad: string;
+simulacrosDocumentacion: string;
+
+}
 export interface Tramites32609State {
   sectorProductivo: string; // Sector productivo al que pertenece la empresa
   sectorServicio: string; // Sector productivo o de servicios al que pertenece la empresa
@@ -99,6 +316,11 @@ export interface Tramites32609State {
   autorizacionCBP: string,
   instalacionesCertificadasCBP: string,
   suspensionCancelacionCBP: string
+
+/// perfiles
+  perfiles: Partial<PerfilesDatos>;
+
+
 }
 
 
@@ -189,7 +411,224 @@ export function createInitialState(): Tramites32609State {
 
   autorizacionCBP: '',
   instalacionesCertificadasCBP: '',
-  suspensionCancelacionCBP: ''
+  suspensionCancelacionCBP: '',
+
+  //perfiles
+  perfiles: {
+    describaProcedimiento: '',
+    indiqueLosCriterios: '',
+    indiqueLosMetodos: '',
+    describaLosIndicadores: '',
+    comercioExterior: '',
+    candadosSeguridad: '',
+    proveedorExterno: '',
+    susceptibleContaminacion: '',
+    encuentrenVacios: '',
+    semirremolquesVacios: '',
+    utilizarCandado: '',
+    seguridadMismas: '',
+    describaContratacion: '',
+    documentacionExigida: '',
+    examenesSolicitados: '',
+    conformeAnalisis: '',
+    periodicidad: '',
+    confidencialidad: '',
+    contratacionPersonal: '',
+    describaProcedimientoPersonal: '',
+    seguimientoProcedimiento: '',
+    identificaciones: '',
+    sistemasInformaticos: '',
+    proveedoresServicios: '',
+    administracionPersonal: '',
+    expliqueBrevemente: '',
+    encuentranFuera: '',
+    actualizacionesSeguridad: '',
+    accesoLosMismos: '',
+    continuidadNegocio: '',
+    semanaCorresponda: '',
+    recuperarInformacion: '',
+    informacionArchivada: '',
+    procesoDatos: '',
+    copiasSeguridad: '',
+    proteccionDeLaInformacion: '',
+    perdidaDeLaInformacion: '',
+    controlanSistemas: '',
+    accionesDelResto: '',
+    sistemasConfidenciales: '',
+    proporcionaEsasContrasenas: '',
+    actualizacionesPeriodicas: '',
+    falsificadosLicencias: '',
+    procesoDeImportacion: '',
+    telecomunicaciones: '',
+    sistemaComprometido: '',
+    seguridadDeLaTecnologia: '',
+    mediosTransporte: '',
+    estaDifusion: '',
+    enunciativaLimitativa: '',
+    procedimientosEmpresa: '',
+    mediosDeTransporte: '',
+    relacionadosSeguridad: '',
+    reportarIncidentes: '',
+    actividadesSospechosas: '',
+    brevementeSonsiste: '',
+    incidenteSeguridad: '',
+    caboInvestigacion: '',
+    operacionCaboInvestigacion: '',
+    antiguedad: '',
+    productos: '',
+    embarquesExp: '',
+    embarquesImp: '',
+    empleados: '',
+    superficie: '',
+    blCtpat: '',
+    niverCertificado: '',
+    ctpatAccountNumber: '',
+    codigoMid: '',
+    fecUltimaCtapt: '',
+    blnPip: '',
+    numRegistroPip: '',
+    blnOea: '',
+    nomProgramapaisOea: '',
+    numRegistroOea: '',
+    blnOtrosProgramasSegu: '',
+    nombreProgramaOtros: '',
+    numRegistroOtros: '',
+    fechaVigenciaOtros: '',
+    nombre: '',
+    categoria: '',
+    vigencia: '',
+    nombre2: '',
+    categoria2: '',
+    vigencia2: '',
+    nombre3: '',
+    categoria3: '',
+    vigencia3: '',
+    procedimientoDocumentado: '',
+  indiqueNumero: '',
+  cargosFunciones: '',
+  casoContratarse: '',
+  casoContar: '',
+  describirProcedimiento: '',
+  indiqueMecanismos: '',
+  indicarEmpleados: '',
+  indiqueIdentifica: '',
+  describaEmpresa: '',
+  indiqueAsegura: '',
+  procedimientoParaControl: '',
+  senaleRegistros: '',
+  senaleQuien: '',
+  describaRecepion: '',
+  indiqueEncargado: '',
+  indiqueIdentfica: '',
+  senaleComo: '',
+  describaCaracteristicas: '',
+  senaleAccion: '',
+  indiqueLleva: '',
+  describaProcedimiento2: '',
+  indiqueSocios: '',
+  indiqueForma: '',
+  indiqueExisten: '',
+  indiqueCuenta: '',
+  procedimientoRealizar: '',
+  indiquePeriodicidad: '',
+  describaComo: '',
+  comoAseguran: '',
+  indiqueFormatos: '',
+  senalarMedidas: '',
+  indiqueAlmacenes: '',
+  expliqueBrevemente2: '',
+  indiqueCerciora: '',
+  indiqueEstos: '',
+  indiquePertenecen: '',
+  indiqueResponsable: '',
+  indiqueTecnologia: '',
+  describirProcesamiento: '',
+  detalleComo: '',
+  indiqueUtiliza: '',
+  detalleValida: '',
+  comoNumero: '',
+  senaleAsociados: '',
+  indiqueMateriales: '',
+  queForma: '',
+  personalResponsable: '',
+  indiqueCuantas: '',
+  indiqueMonitoreadas: '',
+  detalleExisten: '',
+  describaAcceso: '',
+  describirTipo: '',
+  describaAreas: '',
+  senaleMismas: '',
+  casoNoContar: '',
+  periodicidadVerifica: '',
+  indiqueTareas: '',
+  describaManera: '',
+  indiqueSepara: '',
+  senaleRestringido: '',
+  describaMonitoreo: '',
+  responsablesControlar: '',
+  estacionamientos: '',
+  llevaEntrada: '',
+  politicasMecanismos: '',
+  procedimientoOperacion: '',
+  senaleEncuentran: '',
+  mencioneCuenta: '',
+  queManera: '',
+  describaContactar: '',
+  indiqueOperativo: '',
+  indiqueAparatos: '',
+  mantenimiento: '',
+  politicasAparatos: '',
+  programaMantenimiento: '',
+  indiqueRespaldo: '',
+  describaAlarma: '',
+  indiqueUtilizan: '',
+  describaSistemas: '',
+  indicarCamaras: '',
+  mencioneInspeccion: '',
+  senalarUbicacion: '',
+  indiqueHorarios: '',
+  indiqueRevisan: '',
+  indiqueDesignado: '',
+  comoDocumentan: '',
+  indiqueTiempo: '',
+  contarPlanta: '',
+  estosSistemas: '',
+  indicarCircuito: '',
+  describaImplementado: '',
+  formaControlan: '',
+  indiqueTodas: '',
+  indiquePlanta: '',
+  cuentaDocumentado: '',
+  indiquePuertas: '',
+  indiqueCerrado: '',
+  indicarCircuitoCerrado: '',
+  registroVisitantes: '',
+  casoSocios: '',
+  estosEmpresa: '',
+  comiteSeguridad: '',
+  fuentesInformacion: '',
+  politica: '',
+  indique: '',
+  periodicidad2: '',
+  programa: '',
+  capacitacion: '',
+  procedimiento: '',
+  descripcionProcedimiento: '',
+  nombreProcedimiento: '',
+  programacionAuditoria: '',
+  participantesAuditoria: '',
+  enfoqueAuditoria: '',
+  procesosAuditados: '',
+  registrosAuditoria: '',
+  programacion: '',
+  registrosNombre: '',
+  registrosEmpresa: '',
+  planEmergencia: '',
+  situacionesContempladas: '',
+  mecanismosContinuidad: '',
+  simulacrosDocumentacion: ''
+  }
+  
 };
 }
 
@@ -223,13 +662,28 @@ export class Tramite32609Store extends Store<Tramites32609State> {
    * @nombre establecerDatos
    * @descripción
    * Actualiza el estado con los valores proporcionados.
+   * Realiza una fusión profunda para objetos anidados como 'perfiles'.
    * 
    * @param {Partial<Tramites32609State>} values - Valores parciales para actualizar el estado.
    */
   public establecerDatos(values: Partial<Tramites32609State>): void {    
-    this.update((state) => ({
-      ...state,
-      ...values,
-    }));
+    this.update((state) => {
+      // Extract perfiles from values to handle separately
+      const { perfiles: PERFILES, ...OTHER_VALUES } = values;
+      
+      const NEW_STATE = {
+        ...state,
+        ...OTHER_VALUES,
+        // Deep merge for perfiles if provided
+        ...(PERFILES && {
+          perfiles: {
+            ...state.perfiles,
+            ...PERFILES,
+          }
+        }),
+      };
+      
+      return NEW_STATE;
+    });
   }
 }
