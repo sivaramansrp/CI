@@ -11,7 +11,7 @@
       [tipoSeleccionTabla]="destinatarioSeleccionTabla"
       [configuracionTabla]="destinatarioConfiguracionTabla"
       [datos]="destinatarioDatos"
-      (listaDeFilaSeleccionada)="getDestinatarioDatos($event)"
+      (listaDeFilaSeleccionada)="seleccionDestinatarioDatos($event)"
     >
     </app-tabla-dinamica>
   </div>
@@ -54,8 +54,41 @@
       [tipoSeleccionTabla]="fabricanteSeleccionTabla"
       [configuracionTabla]="fabricanteConfiguracionTabla"
       [datos]="fabricanteDatos"
+      (listaDeFilaSeleccionada)="seleccionFabricanteDatos($event)"
     >
     </app-tabla-dinamica>
+  </div>
+
+  <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
+    <div class="btn-group">
+      @if (selectedFabricante.length > 0) {
+      <button
+        class="btn btn-default 3"
+        type="button"
+        (click)="eliminarMercancias()"
+      >
+        Eliminar
+      </button>
+      <button
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#modalFabricante"
+        class="btn btn-default btn-space ms-3"
+        (click)="modificarModalFabricante()"
+      >
+        Modificar
+      </button>
+      }
+      <button
+        type="button"
+        class="btn btn-primary ms-3"
+        data-bs-toggle="modal"
+        data-bs-target="#modalFabricante"
+        (click)="agregarModalFabricante()"
+      >
+        Agregar
+      </button>
+    </div>
   </div>
 </div>
 <div
@@ -67,7 +100,27 @@
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <app-modificar-destinatario></app-modificar-destinatario>
+      <app-modificar-destinatario
+        [datosDestinatario]="modificarDestinatario"
+        (cerrarModal)="cerrarModal($event)"
+      ></app-modificar-destinatario>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="modalFabricante"
+  tabindex="-1"
+  aria-labelledby="modalFabricanteLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <app-fabricante
+        [datosDestinatario]="modificarFabricante"
+        (cerrarModal)="cerrarFabricanteModal($event)"
+      ></app-fabricante>
     </div>
   </div>
 </div>

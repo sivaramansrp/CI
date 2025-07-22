@@ -1,9 +1,9 @@
+import { DatosDeSolicitud, RadioOptions } from '../models/solicitud-datos.model';
+import { DestinatarioImitar, TercerosDestinatarioImitar } from '../models/mercancia.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { ClavesDeLotes } from '../models/claves-de-lotes.model';
-import { DatosDeSolicitud } from '../models/solicitud-datos.model';
 import { Destinatario } from '../models/destinatario.model';
 import { DestinatarioCatalogos } from '../models/destinatario.model';
-import { DestinatarioImitar } from '../models/mercancia.model';
 import { Fabricante } from '../models/fabricante.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -138,11 +138,35 @@ export class SolicitudDatosService {
    * @returns Observable con las opciones de tipo de persona.
    */
   obtenerDestinatarioRadio(): Observable<
-    { label: string; value: string | number }[]
+    RadioOptions[]
   > {
     return this.http
-      .get<{ label: string; value: string | number }[]>(
+      .get<RadioOptions[]>(
         '../../../assets/json/260101/destinatario-radio.json'
+      )
+      .pipe();
+  }
+
+  obtenerFabricanteRadio(): Observable<
+    RadioOptions[]
+  > {
+    return this.http
+      .get<RadioOptions[]>(
+        '../../../assets/json/260101/fabricante-radio.json'
+      )
+      .pipe();
+  }
+
+  /**
+   * Obtiene las opciones de selección de tipo de persona (radio).
+   * @returns Observable con las opciones de tipo de persona.
+   */
+  obtenerTercerosNacionalidadRadioOptions(): Observable<
+    RadioOptions[]
+  > {
+    return this.http
+      .get<RadioOptions[]>(
+        '../../../assets/json/260101/terceros-nacionalidad-radio.json'
       )
       .pipe();
   }
@@ -189,6 +213,14 @@ export class SolicitudDatosService {
     return this.http
       .get<DestinatarioImitar>(
         '../../../assets/json/260101/destinatario-mock.json'
+      )
+      .pipe();
+  }
+
+    obtenerTercerosDestinatarioImitar(): Observable<TercerosDestinatarioImitar> {
+    return this.http
+      .get<TercerosDestinatarioImitar>(
+        '../../../assets/json/260101/terceros-destinatario-mock.json'
       )
       .pipe();
   }

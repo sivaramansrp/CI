@@ -1,8 +1,14 @@
-import { AlertComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import {
+  AlertComponent,
+  ConfiguracionColumna,
+  TablaDinamicaComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
 import { Destinatario } from '../../models/destinatario.model';
 import { ElementRef } from '@angular/core';
 import { Fabricante } from '../../models/fabricante.model';
+import { FabricanteComponent } from '../fabricante/fabricante.component';
 import { Modal } from 'bootstrap';
 import { ModificarDestinatarioComponent } from '../modificar-destinatario/modificar-destinatario.component';
 import { OnDestroy } from '@angular/core';
@@ -26,19 +32,24 @@ import { takeUntil } from 'rxjs';
   selector: 'app-terceros-relacionados',
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
-  standalone:true,
-  imports:[
-      TablaDinamicaComponent,
-      AlertComponent,
-      TituloComponent,
-      ModificarDestinatarioComponent
-    ]
+  standalone: true,
+  imports: [
+    TablaDinamicaComponent,
+    AlertComponent,
+    TituloComponent,
+    ModificarDestinatarioComponent,
+    FabricanteComponent,
+  ],
 })
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Textos utilizados en la vista del componente.
    */
   TEXTOS = TEXTOS;
+
+  MODAL_INSTANCE!: Modal;
+
+  MODAL_INSTANCE_FABRICANTE!: Modal;
 
   /**
    * Configuración para la selección de filas en la tabla de destinatarios.
@@ -229,6 +240,15 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   selectedDestinatario: Fabricante[] = [];
 
   /**
+   * Lista de destinatarios seleccionados.
+   */
+  selectedFabricante: Fabricante[] = [];
+
+  modificarDestinatario: Fabricante[] = [];
+
+  modificarFabricante: Fabricante[] = [];
+
+  /**
    * Controlador para manejar la destrucción del componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
@@ -242,6 +262,11 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Referencia al elemento del modal para agregar mercancías.
    */
   @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
+
+  /**
+   * Referencia al elemento del modal para agregar mercancías.
+   */
+  @ViewChild('modalAgregarMercancias') modalFabricanteElement!: ElementRef;
 
   /**
    * Constructor del componente.
@@ -270,7 +295,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((respuesta: Solicitud260101State) => {
           this.solicitud260101State = respuesta;
-          this.destinatarioDatos = this.solicitud260101State.destinatarioDatos;
+          // this.destinatarioDatos = this.solicitud260101State.destinatarioDatos;
         })
       )
       .subscribe();
@@ -307,13 +332,20 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       });
   }
 
+  seleccionDestinatarioDatos(evento: Fabricante[]): void {
+    this.selectedDestinatario = evento;
+  }
+
   /**
    * Abre el modal para modificar mercancías.
    */
   openModificarMercancias(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
+    if (this.selectedDestinatario.length === 0) {
+      if (this.modalElement) {
+        this.modificarDestinatario = this.selectedDestinatario;
+        this.MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+        this.MODAL_INSTANCE.show();
+      }
     }
   }
 
@@ -322,17 +354,61 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   agregarMercancias(): void {
     if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
+      this.MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      this.MODAL_INSTANCE.show();
     }
   }
 
-  /**
-   * Obtiene los datos seleccionados de destinatarios desde el evento emitido.
-   * @param evento - Lista de fabricantes seleccionados.
-   */
-  getDestinatarioDatos(evento: Fabricante[]): void {
-    this.selectedDestinatario = evento;
+    cerrarModal(evento: Destinatario): void {
+    if (this.selectedDestinatario.length > 0) {
+      this.destinatarioDatos.forEach((destinatario, index) => {
+        if (this.destinatarioDatos[index].rfc === evento.rfc) {
+          this.destinatarioDatos[index].nombre = evento.nombre;
+          this.destinatarioDatos[index].curp = evento.curp;
+          this.destinatarioDatos[index].telefono = evento.telefono;
+          this.destinatarioDatos[index].correoElectronico =
+            evento.correoElectronico;
+          this.destinatarioDatos[index].calle = evento.calle;
+          this.destinatarioDatos[index].numeroExterior = evento.numeroExterior;
+          this.destinatarioDatos[index].numeroInterior = evento.numeroInterior;
+          this.destinatarioDatos[index].pais = evento.pais;
+          this.destinatarioDatos[index].colonia = evento.colonia;
+          this.destinatarioDatos[index].municipio = evento.municipio;
+          this.destinatarioDatos[index].localidad = evento.localidad;
+          this.destinatarioDatos[index].estado = evento.estado;
+          this.destinatarioDatos[index].estado2 = evento.estado2;
+          this.destinatarioDatos[index].codigo = evento.codigo;
+        }
+      });
+      this.MODAL_INSTANCE.hide();
+    } else {
+      this.destinatarioDatos.push(evento);
+    }
+  }
+
+  seleccionFabricanteDatos(evento: Fabricante[]): void {
+    this.selectedFabricante = evento;
+  }
+
+  agregarModalFabricante(): void {
+    if (this.modalFabricanteElement) {
+      this.MODAL_INSTANCE_FABRICANTE = new Modal(
+        this.modalFabricanteElement.nativeElement
+      );
+      this.MODAL_INSTANCE_FABRICANTE.show();
+    }
+  }
+
+  modificarModalFabricante(): void {
+    if (this.selectedFabricante.length === 0) {
+      if (this.modalFabricanteElement) {
+        this.modificarDestinatario = this.selectedDestinatario;
+        this.MODAL_INSTANCE_FABRICANTE = new Modal(
+          this.modalFabricanteElement.nativeElement
+        );
+        this.MODAL_INSTANCE_FABRICANTE.show();
+      }
+    }
   }
 
   /**
@@ -344,6 +420,33 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.solicitud260101Store.removeDestinatarioDato(
         this.selectedDestinatario[0]
       );
+    }
+  }
+
+    cerrarFabricanteModal(evento: Fabricante): void {
+    if (this.selectedFabricante.length > 0) {
+      this.fabricanteDatos.forEach((fabricante, index) => {
+        if (this.fabricanteDatos[index].rfc === evento.rfc) {
+          this.fabricanteDatos[index].nombre = evento.nombre;
+          this.fabricanteDatos[index].curp = evento.curp;
+          this.fabricanteDatos[index].telefono = evento.telefono;
+          this.fabricanteDatos[index].correoElectronico =
+            evento.correoElectronico;
+          this.fabricanteDatos[index].calle = evento.calle;
+          this.fabricanteDatos[index].numeroExterior = evento.numeroExterior;
+          this.fabricanteDatos[index].numeroInterior = evento.numeroInterior;
+          this.fabricanteDatos[index].pais = evento.pais;
+          this.fabricanteDatos[index].colonia = evento.colonia;
+          this.fabricanteDatos[index].municipio = evento.municipio;
+          this.fabricanteDatos[index].localidad = evento.localidad;
+          this.fabricanteDatos[index].estado = evento.estado;
+          this.fabricanteDatos[index].estado2 = evento.estado2;
+          this.fabricanteDatos[index].codigo = evento.codigo;
+        }
+      });
+      this.MODAL_INSTANCE.hide();
+    } else {
+      this.fabricanteDatos.push(evento);
     }
   }
 

@@ -29,25 +29,37 @@ export interface Destinatario {
   numeroInterior: string;
 
   /** País donde reside el destinatario. */
-  pais: string;
+  pais: number;
+
+  paisNombre?: string;
 
   /** Colonia del domicilio del destinatario. */
-  colonia: string;
+  colonia: number;
+
+  coloniaNombre?: string;
 
   /** Municipio donde reside el destinatario. */
-  municipio: string;
+  municipio: number;
+
+  municipioNombre?: string;
 
   /** Localidad específica del domicilio del destinatario. */
-  localidad: string;
+  localidad: number;
+
+  localidadNombre?: string;
 
   /** Estado asociado al domicilio del destinatario. */
-  estado: string;
+  estado: number;
+
+  estadoNombre?: string;
 
   /** Estado alternativo (o subdivisión administrativa) asociado al domicilio del destinatario, si aplica. */
   estado2: string;
 
   /** Código postal del domicilio del destinatario. */
-  codigo: string;
+  codigo: number;
+
+  codigoNombre?: string;
 }
 
 /**

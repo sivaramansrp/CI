@@ -130,23 +130,29 @@ export interface Solicitud260101State {
   /** Denominación social del solicitante. */
   denominacion: string;
 
+  denominacionNombre: string;
+
+  denominacionApellidoPaterno: string;
+
+  denominacionApellidoMaterno: string;
+
   /** Identificador del país asociado al domicilio del solicitante. */
-  domicilioPais: number;
+  domicilioPais: number | string;
 
   /** Identificador del estado asociado al domicilio del solicitante. */
-  domicilioEstado: number;
+  domicilioEstado: number | string;
 
   /** Identificador del municipio asociado al domicilio del solicitante. */
-  domicilioMunicipio: number;
+  domicilioMunicipio: number | string;
 
   /** Identificador de la localidad asociada al domicilio del solicitante. */
-  domicilioLocalidad: number;
+  domicilioLocalidad: number | string;
 
   /** Código postal asociado al domicilio del solicitante. */
-  domicilioCodigo: number;
+  domicilioCodigo: number | string;
 
   /** Identificador de la colonia asociada al domicilio del solicitante. */
-  domicilioColonia: number;
+  domicilioColonia: number | string;
 
   /** Calle asociada al domicilio del solicitante. */
   domiciliCalle: string;
@@ -165,6 +171,27 @@ export interface Solicitud260101State {
 
   /** Correo electrónico asociado al domicilio del solicitante. */
   domiciliCorreoElectronioco: string;
+
+  tercerosNacionalidad: string | number;
+  tercerosTipoPersona: string | number;
+  tercerosRFC: string;
+  tercerosCurp: string;
+  tercerosDenominacion: string;
+  tercerosDenominacionNombre: string;
+  tercerosApellidoPaterno: string;
+  tercerosApellidoMaterno: string;
+  tercerosPais: string | number;
+  tercerosEstado: string | number;
+  tercerosMunicipio: string | number;
+  tercerosLocalidad: string | number;
+  tercerosCodigo: string | number;
+  tercerosColonia: string | number;
+  tercerosCalle: string;
+  tercerosNumeroExterior: string | number;
+  tercerosNumeroInterior: string | number;
+  tercerosLada: string | number;
+  tercerosTelefono: string | number;
+  tercerosCorreoElectronico: string;
 
   /** Lista de destinatarios relacionados con la solicitud. */
   destinatarioDatos: Destinatario[];
@@ -315,23 +342,29 @@ export function createInitialState(): Solicitud260101State {
     /** Denominación social del solicitante. */
     denominacion: '',
 
+    denominacionNombre: '',
+
+    denominacionApellidoPaterno: '',
+
+    denominacionApellidoMaterno: '',
+
     /** Identificador del país asociado al domicilio del solicitante. */
-    domicilioPais: 0,
+    domicilioPais: '',
 
     /** Identificador del estado asociado al domicilio del solicitante. */
-    domicilioEstado: 0,
+    domicilioEstado: '',
 
     /** Identificador del municipio asociado al domicilio del solicitante. */
-    domicilioMunicipio: 0,
+    domicilioMunicipio: '',
 
     /** Identificador de la localidad asociada al domicilio del solicitante. */
-    domicilioLocalidad: 0,
+    domicilioLocalidad: '',
 
     /** Código postal asociado al domicilio del solicitante. */
-    domicilioCodigo: 0,
+    domicilioCodigo: '',
 
     /** Identificador de la colonia asociada al domicilio del solicitante. */
-    domicilioColonia: 0,
+    domicilioColonia: '',
 
     /** Calle del domicilio del solicitante. */
     domiciliCalle: '',
@@ -350,6 +383,27 @@ export function createInitialState(): Solicitud260101State {
 
     /** Correo electrónico del domicilio del solicitante. */
     domiciliCorreoElectronioco: '',
+
+    tercerosNacionalidad: 0,
+    tercerosTipoPersona: 0,
+    tercerosRFC: '',
+    tercerosCurp: '',
+    tercerosDenominacion: '',
+    tercerosDenominacionNombre: '',
+    tercerosApellidoPaterno: '',
+    tercerosApellidoMaterno: '',
+    tercerosPais: '',
+    tercerosEstado: '',
+    tercerosMunicipio: '',
+    tercerosLocalidad: '',
+    tercerosCodigo: '',
+    tercerosColonia: '',
+    tercerosCalle: '',
+    tercerosNumeroExterior: '',
+    tercerosNumeroInterior: '',
+    tercerosLada: '',
+    tercerosTelefono: '',
+    tercerosCorreoElectronico: '',
 
     /** Lista de destinatarios relacionados con la solicitud. */
     destinatarioDatos: [],
@@ -879,11 +933,36 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
     }));
   }
 
+  public setDenominacionNombre(denominacionNombre: string): void {
+    this.update((state) => ({
+      ...state,
+      denominacionNombre,
+    }));
+  }
+
+  public setDenominacionApellidoPaterno(
+    denominacionApellidoPaterno: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      denominacionApellidoPaterno,
+    }));
+  }
+
+  public setDenominacionApellidoMaterno(
+    denominacionApellidoMaterno: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      denominacionApellidoMaterno,
+    }));
+  }
+
   /**
    * Actualiza el país del domicilio en el estado.
    * @param domicilioPais - Nuevo identificador para el país.
    */
-  public setDomicilioPais(domicilioPais: number): void {
+  public setDomicilioPais(domicilioPais: number | string): void {
     this.update((state) => ({
       ...state,
       domicilioPais,
@@ -894,7 +973,7 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
    * Actualiza el estado asociado al domicilio en el estado.
    * @param domicilioEstado - Nuevo identificador para el estado.
    */
-  public setDomicilioEstado(domicilioEstado: number): void {
+  public setDomicilioEstado(domicilioEstado: number | string): void {
     this.update((state) => ({
       ...state,
       domicilioEstado,
@@ -905,7 +984,7 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
    * Actualiza el municipio asociado al domicilio en el estado.
    * @param domicilioMunicipio - Nuevo identificador para el municipio.
    */
-  public setDomicilioMunicipio(domicilioMunicipio: number): void {
+  public setDomicilioMunicipio(domicilioMunicipio: number | string): void {
     this.update((state) => ({
       ...state,
       domicilioMunicipio,
@@ -916,7 +995,7 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
    * Actualiza la localidad asociada al domicilio en el estado.
    * @param domicilioLocalidad - Nuevo identificador para la localidad.
    */
-  public setDomicilioLocalidad(domicilioLocalidad: number): void {
+  public setDomicilioLocalidad(domicilioLocalidad: number | string): void {
     this.update((state) => ({
       ...state,
       domicilioLocalidad,
@@ -927,7 +1006,7 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
    * Actualiza el código postal asociado al domicilio en el estado.
    * @param domicilioCodigo - Nuevo identificador para el código postal.
    */
-  public setDomicilioCodigo(domicilioCodigo: number): void {
+  public setDomicilioCodigo(domicilioCodigo: number | string): void {
     this.update((state) => ({
       ...state,
       domicilioCodigo,
@@ -938,7 +1017,7 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
    * Actualiza la colonia asociada al domicilio en el estado.
    * @param domicilioColonia - Nuevo identificador para la colonia.
    */
-  public setDomicilioColonia(domicilioColonia: number): void {
+  public setDomicilioColonia(domicilioColonia: number | string): void {
     this.update((state) => ({
       ...state,
       domicilioColonia,
@@ -1012,6 +1091,147 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
       domiciliCorreoElectronioco,
     }));
   }
+
+  public setTercerosNacionalidad(tercerosNacionalidad: string | number): void {
+  this.update((state) => ({
+    ...state,
+    tercerosNacionalidad,
+  }));
+}
+
+public setTercerosTipoPersona(tercerosTipoPersona: string | number): void {
+  this.update((state) => ({
+    ...state,
+    tercerosTipoPersona,
+  }));
+}
+
+public setTercerosRFC(tercerosRFC: string): void {
+  this.update((state) => ({
+    ...state,
+    tercerosRFC,
+  }));
+}
+
+public setTercerosCurp(tercerosCurp: string): void {
+  this.update((state) => ({
+    ...state,
+    tercerosCurp,
+  }));
+}
+
+public setTercerosDenominacion(tercerosDenominacion: string): void {
+  this.update((state) => ({
+    ...state,
+    tercerosDenominacion,
+  }));
+}
+
+public setTercerosDenominacionNombre(tercerosDenominacionNombre: string): void {
+  this.update((state) => ({
+    ...state,
+    tercerosDenominacionNombre,
+  }));
+}
+
+public setTercerosApellidoPaterno(tercerosApellidoPaterno: string): void {
+  this.update((state) => ({
+    ...state,
+    tercerosApellidoPaterno,
+  }));
+}
+
+public setTercerosApellidoMaterno(tercerosApellidoMaterno: string): void {
+  this.update((state) => ({
+    ...state,
+    tercerosApellidoMaterno,
+  }));
+}
+
+public setTercerosPais(tercerosPais: string | number): void {
+  this.update((state) => ({
+    ...state,
+    tercerosPais,
+  }));
+}
+
+public setTercerosEstado(tercerosEstado: string | number): void {
+  this.update((state) => ({
+    ...state,
+    tercerosEstado,
+  }));
+}
+
+public setTercerosMunicipio(tercerosMunicipio: string | number): void {
+  this.update((state) => ({
+    ...state,
+    tercerosMunicipio,
+  }));
+}
+
+public setTercerosLocalidad(tercerosLocalidad: string | number): void {
+  this.update((state) => ({
+    ...state,
+    tercerosLocalidad,
+  }));
+}
+
+public setTercerosCodigo(tercerosCodigo: string | number): void {
+  this.update((state) => ({
+    ...state,
+    tercerosCodigo,
+  }));
+}
+
+public setTercerosColonia(tercerosColonia: string | number): void {
+  this.update((state) => ({
+    ...state,
+    tercerosColonia,
+  }));
+}
+
+public setTercerosCalle(tercerosCalle: string): void {
+  this.update((state) => ({
+    ...state,
+    tercerosCalle,
+  }));
+}
+
+public setTercerosNumeroExterior(tercerosNumeroExterior: string | number): void {
+  this.update((state) => ({
+    ...state,
+    tercerosNumeroExterior,
+  }));
+}
+
+public setTercerosNumeroInterior(tercerosNumeroInterior: string | number): void {
+  this.update((state) => ({
+    ...state,
+    tercerosNumeroInterior,
+  }));
+}
+
+public setTercerosLada(tercerosLada: string | number): void {
+  this.update((state) => ({
+    ...state,
+    tercerosLada,
+  }));
+}
+
+public setTercerosTelefono(tercerosTelefono: string | number): void {
+  this.update((state) => ({
+    ...state,
+    tercerosTelefono,
+  }));
+}
+
+public setTercerosCorreoElectronico(tercerosCorreoElectronico: string): void {
+  this.update((state) => ({
+    ...state,
+    tercerosCorreoElectronico,
+  }));
+}
+
 
   /**
    * Actualiza los datos de destinatarios en el estado.

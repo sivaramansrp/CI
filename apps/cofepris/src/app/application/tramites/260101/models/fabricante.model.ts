@@ -27,23 +27,23 @@ export interface Fabricante {
   numeroInterior: string;
 
   /** País donde está ubicado el fabricante. */
-  pais: string;
+  pais: number;
 
   /** Colonia donde se encuentra el fabricante. */
-  colonia: string;
+  colonia: number;
 
   /** Municipio donde se encuentra el fabricante. */
-  municipio: string;
+  municipio: number;
 
   /** Localidad específica del domicilio del fabricante. */
-  localidad: string;
+  localidad: number;
 
   /** Estado donde se encuentra el fabricante. */
-  estado: string;
+  estado: number;
 
   /** Segundo estado o subdivisión administrativa (si aplica). */
   estado2: string;
 
   /** Código postal del domicilio del fabricante. */
-  codigo: string;
+  codigo: number;
 }

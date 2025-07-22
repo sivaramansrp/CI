@@ -32,6 +32,9 @@ export interface RadioOptions {
 
   /** Valor asociado a la opción, que puede ser una cadena o un número. */
   value: string | number;
+
+  /** Descripción opcional para la opción */
+  hint?: string; 
 }
 
 /**

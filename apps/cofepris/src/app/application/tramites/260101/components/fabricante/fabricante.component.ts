@@ -27,7 +27,6 @@ import {
 } from '@angular/forms';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { DestinatarioImitar } from '../../models/mercancia.model';
 import { Fabricante } from '../../models/fabricante.model';
 import { REGEX_CORREO_ELECTRONICO } from '@libs/shared/data-access-user/src';
 import { REGEX_TELEFONO } from '@libs/shared/data-access-user/src';
@@ -37,20 +36,21 @@ import { Solicitud260101State } from '../../estados/tramites260101.store';
 import { Solicitud260101Store } from '../../estados/tramites260101.store';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
 import { Subject } from 'rxjs';
+import { TercerosDestinatarioImitar } from '../../models/mercancia.model';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 /**
- * Componente ModificarDestinatarioComponent.
- * Este componente gestiona la lógica y funcionalidad para la modificación de los datos de destinatarios.
+ * Componente FabricanteComponent.
+ * Este componente gestiona la lógica y funcionalidad para la modificación de los datos de fabricantes.
  */
 @Component({
-  selector: 'app-modificar-destinatario',
-  templateUrl: './modificar-destinatario.component.html',
-  styleUrl: './modificar-destinatario.component.scss',
+  selector: 'app-fabricante',
+  templateUrl: './fabricante.component.html',
+  styleUrl: './fabricante.component.scss',
   standalone: true,
   imports: [
-    ModificarDestinatarioComponent,
+    FabricanteComponent,
     CommonModule,
     ReactiveFormsModule,
     CatalogoSelectComponent,
@@ -59,22 +59,22 @@ import { takeUntil } from 'rxjs';
     TituloComponent,
   ],
 })
-export class ModificarDestinatarioComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() cerrarModal: EventEmitter<Destinatario> =
     new EventEmitter<Destinatario>();
   /**
-   * Formulario reactivo para la modificación de destinatarios.
+   * Formulario reactivo para la de fabricantes.
    * Inicializado posteriormente en el método `ngOnInit`.
    */
-  modificarDestinatarioForm!: FormGroup;
+  fabricanteComponentForm!: FormGroup;
 
   /**
    * Opciones para los botones de selección (radio) de tipo de persona.
    * Cada opción incluye una etiqueta y un valor asociado.
    */
-  tipoPersonaRadioOptions: { label: string; value: string | number }[] = [];
+  tipoPersonaRadioOptions: RadioOptions[] = [];
+
+  tercerosNacionalidadRadioOptions: RadioOptions[] = [];
 
   /**
    * Valor predeterminado para el tipo de persona.
@@ -171,7 +171,8 @@ export class ModificarDestinatarioComponent
       )
       .subscribe();
     this.obtenerDestinatarioCatalogos();
-    this.obtenerDestinatarioRadio();
+    this.obtenerTercerosNacionalidadRadioOptions();
+    this.obtenerFabricanteRadio();
     this.obtenerDestinatarioImitar();
   }
 
@@ -212,9 +213,9 @@ export class ModificarDestinatarioComponent
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
-      this.modificarDestinatarioForm.disable();
+      this.fabricanteComponentForm.disable();
     } else if (!this.esFormularioSoloLectura) {
-      this.modificarDestinatarioForm.enable();
+      this.fabricanteComponentForm.enable();
     } else {
       // No se requiere ninguna acción en el formulario
     }
@@ -228,79 +229,72 @@ export class ModificarDestinatarioComponent
    */
 
   inicializarFormulario(): void {
-    this.modificarDestinatarioForm = this.fb.group({
-      /** Tipo de persona, requerido. */
-      tipoPersona: [
-        this.solicitud260101State.tipoPersona,
+    this.fabricanteComponentForm = this.fb.group({
+      tercerosNacionalidad: [this.solicitud260101State.tercerosNacionalidad],
+      tercerosTipoPersona: [
+        this.solicitud260101State.tercerosTipoPersona,
         [Validators.required],
       ],
-      /** RFC del destinatario, requerido con validación de longitud máxima. */
-      modificarRFC: [
-        this.solicitud260101State.modificarRFC,
+      tercerosRFC: [
+        this.solicitud260101State.tercerosRFC,
         [Validators.required, Validators.maxLength(13)],
       ],
-      /** Denominación o razón social del destinatario, requerido. */
-      denominacion: [this.solicitud260101State.denominacion],
-      denominacionNombre: [this.solicitud260101State.denominacionNombre],
-      denominacionApellidoPaterno: [
-        this.solicitud260101State.denominacionApellidoPaterno,
+      tercerosCurp: [
+        this.solicitud260101State.tercerosCurp,
+        [Validators.required, Validators.maxLength(18)],
       ],
-      denominacionApellidoMaterno: [
-        this.solicitud260101State.denominacionApellidoMaterno,
+      tercerosDenominacion: [this.solicitud260101State.tercerosDenominacion],
+      tercerosDenominacionNombre: [
+        this.solicitud260101State.tercerosDenominacionNombre,
+      ],
+      tercerosApellidoPaterno: [
+        this.solicitud260101State.tercerosApellidoPaterno,
+      ],
+      tercerosApellidoMaterno: [
+        this.solicitud260101State.tercerosApellidoMaterno,
         [Validators.maxLength(200)],
       ],
-      /** País asociado al domicilio, requerido (solo lectura). */
-      domicilioPais: [
-        { value: this.solicitud260101State.domicilioPais, disabled: true },
+      tercerosPais: [
+        { value: this.solicitud260101State.tercerosPais, disabled: true },
         [Validators.required],
       ],
-      /** Estado asociado al domicilio, requerido. */
-      domicilioEstado: [
-        this.solicitud260101State.domicilioEstado,
+      tercerosEstado: [
+        this.solicitud260101State.tercerosEstado,
         [Validators.required],
       ],
-      /** Municipio asociado al domicilio, requerido. */
-      domicilioMunicipio: [
-        this.solicitud260101State.domicilioMunicipio,
+      tercerosMunicipio: [
+        this.solicitud260101State.tercerosMunicipio,
         [Validators.required],
       ],
-      /** Localidad asociada al domicilio, requerido. */
-      domicilioLocalidad: [
-        this.solicitud260101State.domicilioLocalidad,
+      tercerosLocalidad: [
+        this.solicitud260101State.tercerosLocalidad,
         [Validators.required],
       ],
-      /** Código postal del domicilio, requerido con validación de longitud máxima. */
-      domicilioCodigo: [
-        this.solicitud260101State.domicilioCodigo,
+      tercerosCodigo: [
+        this.solicitud260101State.tercerosCodigo,
         [Validators.required, Validators.maxLength(10)],
       ],
-      /** Colonia asociada al domicilio. */
-      domicilioColonia: [this.solicitud260101State.domicilioColonia],
-      /** Calle del domicilio, requerido con validación de longitud máxima. */
-      domiciliCalle: [
-        this.solicitud260101State.domiciliCalle,
+      tercerosColonia: [this.solicitud260101State.tercerosColonia],
+      tercerosCalle: [
+        this.solicitud260101State.tercerosCalle,
         [Validators.required, Validators.maxLength(68)],
       ],
-      /** Número exterior del domicilio, requerido con validación de longitud máxima. */
-      domiciliNumeroExterior: [
-        this.solicitud260101State.domiciliNumeroExterior,
+      tercerosNumeroExterior: [
+        this.solicitud260101State.tercerosNumeroExterior,
         [Validators.required, Validators.maxLength(10)],
       ],
-      /** Número interior del domicilio con validación de longitud máxima. */
-      domiciliNumeroInterior: [
-        this.solicitud260101State.domiciliNumeroInterior,
+      tercerosNumeroInterior: [
+        this.solicitud260101State.tercerosNumeroInterior,
         [Validators.maxLength(10)],
       ],
-      /** Código LADA asociado al domicilio. */
-      domiciliLada: [this.solicitud260101State.domiciliLada],
-      /** Número telefónico con validación de patrón. */
-      domiciliTelefono: [
-        this.solicitud260101State.domiciliTelefono,
+      tercerosLada: [this.solicitud260101State.tercerosLada],
+      tercerosTelefono: [
+        this.solicitud260101State.tercerosTelefono,
         [Validators.maxLength(10), Validators.pattern(REGEX_TELEFONO)],
       ],
-      /** Correo electrónico con validación de formato y longitud máxima. */
-      domiciliCorreoElectronioco: [
-        this.solicitud260101State.domiciliCorreoElectronioco,
+
+      tercerosCorreoElectronico: [
+        this.solicitud260101State.tercerosCorreoElectronico,
         [
           Validators.pattern(REGEX_CORREO_ELECTRONICO),
           Validators.maxLength(30),
@@ -314,16 +308,19 @@ export class ModificarDestinatarioComponent
         takeUntil(this.destroyNotifier$),
         map((respuesta: Solicitud260101State) => {
           this.solicitud260101State = respuesta;
-          this.modificarDestinatarioForm.patchValue({
-            tipoPersona: this.solicitud260101State.tipoPersona,
-            modificarRFC: this.solicitud260101State.modificarRFC,
-            denominacion: this.solicitud260101State.denominacion,
-            domicilioPais: this.solicitud260101State.domicilioPais,
-            domicilioEstado: this.solicitud260101State.domicilioEstado,
-            domicilioMunicipio: this.solicitud260101State.domicilioMunicipio,
-            domicilioLocalidad: this.solicitud260101State.domicilioLocalidad,
-            domicilioCodigo: this.solicitud260101State.domicilioCodigo,
-            domicilioColonia: this.solicitud260101State.domicilioColonia,
+          this.fabricanteComponentForm.patchValue({
+            tercerosNacionalidad:
+              this.solicitud260101State.tercerosNacionalidad,
+            tercerosTipoPersona: this.solicitud260101State.tercerosTipoPersona,
+            tercerosRFC: this.solicitud260101State.tercerosRFC,
+            tercerosDenominacion:
+              this.solicitud260101State.tercerosDenominacion,
+            tercerosPais: this.solicitud260101State.tercerosPais,
+            tercerosEstado: this.solicitud260101State.tercerosEstado,
+            tercerosMunicipio: this.solicitud260101State.tercerosMunicipio,
+            tercerosLocalidad: this.solicitud260101State.tercerosLocalidad,
+            tercerosCodigo: this.solicitud260101State.tercerosCodigo,
+            tercerosColonia: this.solicitud260101State.tercerosColonia,
             domiciliCalle: this.solicitud260101State.domiciliCalle,
             domiciliNumeroExterior:
               this.solicitud260101State.domiciliNumeroExterior,
@@ -335,21 +332,22 @@ export class ModificarDestinatarioComponent
               this.solicitud260101State.domiciliCorreoElectronioco,
           });
           this.tipoPublicos =
-            this.modificarDestinatarioForm.get('tipoPersona')?.value;
+            this.fabricanteComponentForm.get('tipoPersona')?.value;
         })
       )
       .subscribe();
 
     if (this.datosDestinatario.length > 0) {
-      this.modificarDestinatarioForm.patchValue({
-        modificarRFC: this.datosDestinatario[0].rfc,
-        denominacion: this.datosDestinatario[0].nombre,
-        domicilioPais: this.datosDestinatario[0].pais,
-        domicilioEstado: this.datosDestinatario[0].estado,
-        domicilioMunicipio: this.datosDestinatario[0].municipio,
-        domicilioLocalidad: this.datosDestinatario[0].localidad,
-        domicilioCodigo: this.datosDestinatario[0].codigo,
-        domicilioColonia: this.datosDestinatario[0].colonia,
+      this.fabricanteComponentForm.patchValue({
+        // tercerosNacionalidad: this.datosDestinatario[0].nacionalidad,
+        tercerosRFC: this.datosDestinatario[0].rfc,
+        tercerosDenominacion: this.datosDestinatario[0].nombre,
+        tercerosPais: this.datosDestinatario[0].pais,
+        tercerosEstado: this.datosDestinatario[0].estado,
+        tercerosMunicipio: this.datosDestinatario[0].municipio,
+        tercerosLocalidad: this.datosDestinatario[0].localidad,
+        tercerosCodigo: this.datosDestinatario[0].codigo,
+        tercerosColonia: this.datosDestinatario[0].colonia,
         domiciliCalle: this.datosDestinatario[0].calle,
         domiciliNumeroExterior: this.datosDestinatario[0].numeroExterior,
         domiciliNumeroInterior: this.datosDestinatario[0].numeroInterior,
@@ -360,9 +358,9 @@ export class ModificarDestinatarioComponent
   }
 
   updateTipoPersonaValidators(valor: number | string): void {
-    const DENOMINACION = this.modificarDestinatarioForm.get('denominacion');
-    const NOMBRE = this.modificarDestinatarioForm.get('denominacionNombre');
-    const APELLIDO_PATERNO = this.modificarDestinatarioForm.get(
+    const DENOMINACION = this.fabricanteComponentForm.get('denominacion');
+    const NOMBRE = this.fabricanteComponentForm.get('denominacionNombre');
+    const APELLIDO_PATERNO = this.fabricanteComponentForm.get(
       'denominacionApellidoPaterno'
     );
 
@@ -411,9 +409,23 @@ export class ModificarDestinatarioComponent
   /**
    * Obtiene las opciones de los botones de selección (radio) para el tipo de persona.
    */
-  obtenerDestinatarioRadio(): void {
+  obtenerTercerosNacionalidadRadioOptions(): void {
     this.solicitudDatosService
-      .obtenerDestinatarioRadio()
+      .obtenerTercerosNacionalidadRadioOptions()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: RadioOptions[]) => {
+          this.tercerosNacionalidadRadioOptions = respuesta;
+        },
+      });
+  }
+
+  /**
+   * Obtiene las opciones de los botones de selección (radio) para el tipo de persona.
+   */
+  obtenerFabricanteRadio(): void {
+    this.solicitudDatosService
+      .obtenerFabricanteRadio()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (respuesta: RadioOptions[]) => {
@@ -423,17 +435,23 @@ export class ModificarDestinatarioComponent
   }
 
   /**
-   * Obtiene los datos de destinatarios a imitar y actualiza el estado del país del domicilio.
+   * Obtiene los datos de destinatarios a imitar y actualiza el estado del país del terceros.
    */
   obtenerDestinatarioImitar(): void {
     this.solicitudDatosService
-      .obtenerDestinatarioImitar()
+      .obtenerTercerosDestinatarioImitar()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
-        next: (respuesta: DestinatarioImitar) => {
-          this.solicitud260101Store.setDomicilioPais(respuesta.domicilioPais);
+        next: (respuesta: TercerosDestinatarioImitar) => {
+          this.solicitud260101Store.setTercerosPais(respuesta.tercerosPais);
         },
       });
+  }
+
+  setTercerosNacionalidad(evento: string | number): void {
+    this.tipoPublicos = evento;
+    this.solicitud260101Store.setTercerosNacionalidad(evento);
+    this.updateTipoPersonaValidators(evento);
   }
 
   /**
@@ -450,142 +468,147 @@ export class ModificarDestinatarioComponent
    * Actualiza el RFC del destinatario en el Store.
    * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setModificarRFC(evento: Event): void {
+  setTercerosRFC(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud260101Store.setModificarRFC(VALOR);
+    this.solicitud260101Store.setTercerosRFC(VALOR);
+  }
+
+  setCurp(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setTercerosCurp(VALOR);
   }
 
   /**
    * Actualiza la denominación del destinatario en el Store.
    * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setDenominacion(evento: Event): void {
+  setTercerosDenominacion(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud260101Store.setDenominacion(VALOR);
+    this.solicitud260101Store.setTercerosDenominacion(VALOR);
   }
 
-  setNombre(evento: Event): void {
+  setTercerosDenominacionNombre(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud260101Store.setDenominacionNombre(VALOR);
+    this.solicitud260101Store.setTercerosDenominacionNombre(VALOR);
   }
 
-  setApellidoPaterno(evento: Event): void {
+  setTercerosApellidoPaterno(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud260101Store.setDenominacionApellidoPaterno(VALOR);
+    this.solicitud260101Store.setTercerosApellidoPaterno(VALOR);
   }
 
-  setApellidoMaterno(evento: Event): void {
+  setTercerosApellidoMaterno(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud260101Store.setDenominacionApellidoMaterno(VALOR);
+    this.solicitud260101Store.setTercerosApellidoMaterno(VALOR);
   }
 
   /**
-   * Selecciona el país del domicilio y lo actualiza en el Store.
+   * Selecciona el país del terceros y lo actualiza en el Store.
    * @param evento - Objeto del catálogo que contiene el país seleccionado.
    */
   seleccionaPais(evento: Catalogo): void {
-    this.solicitud260101Store.setDomicilioPais(evento.id);
+    this.solicitud260101Store.setTercerosPais(evento.id);
   }
 
   /**
-   * Selecciona el estado del domicilio y lo actualiza en el Store.
+   * Selecciona el estado del terceros y lo actualiza en el Store.
    * @param evento - Objeto del catálogo que contiene el estado seleccionado.
    */
   seleccionaEstado(evento: Catalogo): void {
-    this.solicitud260101Store.setDomicilioEstado(evento.id);
+    this.solicitud260101Store.setTercerosEstado(evento.id);
   }
 
   /**
-   * Selecciona el municipio del domicilio y lo actualiza en el Store.
+   * Selecciona el municipio del terceros y lo actualiza en el Store.
    * @param evento - Objeto del catálogo que contiene el municipio seleccionado.
    */
   seleccionaMunicipio(evento: Catalogo): void {
-    this.solicitud260101Store.setDomicilioMunicipio(evento.id);
+    this.solicitud260101Store.setTercerosMunicipio(evento.id);
   }
 
   /**
-   * Selecciona la localidad del domicilio y la actualiza en el Store.
+   * Selecciona la localidad del terceros y la actualiza en el Store.
    * @param evento - Objeto del catálogo que contiene la localidad seleccionada.
    */
   seleccionaLocalidad(evento: Catalogo): void {
-    this.solicitud260101Store.setDomicilioLocalidad(evento.id);
+    this.solicitud260101Store.setTercerosLocalidad(evento.id);
   }
 
   /**
-   * Selecciona el código postal del domicilio y lo actualiza en el Store.
+   * Selecciona el código postal del terceros y lo actualiza en el Store.
    * @param evento - Objeto del catálogo que contiene el código postal seleccionado.
    */
   seleccionaCodigo(evento: Catalogo): void {
-    this.solicitud260101Store.setDomicilioCodigo(evento.id);
+    this.solicitud260101Store.setTercerosCodigo(evento.id);
   }
 
   /**
-   * Selecciona la colonia del domicilio y la actualiza en el Store.
+   * Selecciona la colonia del terceros y la actualiza en el Store.
    * @param evento - Objeto del catálogo que contiene la colonia seleccionada.
    */
   seleccionaColonia(evento: Catalogo): void {
-    this.solicitud260101Store.setDomicilioColonia(evento.id);
+    this.solicitud260101Store.setTercerosColonia(evento.id);
   }
 
   /**
-   * Actualiza la calle del domicilio en el Store.
+   * Actualiza la calle del terceros en el Store.
    * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setDomiciliCalle(evento: Event): void {
+  setTercerosCalle(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud260101Store.setDomicilioCalle(VALOR);
+    this.solicitud260101Store.setTercerosCalle(VALOR);
   }
 
   /**
-   * Actualiza el número exterior del domicilio en el Store.
+   * Actualiza el número exterior del terceros en el Store.
    * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setDomiciliNumeroExterior(evento: Event): void {
+  setTercerosNumeroExterior(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud260101Store.setDomicilioNumeroExterior(VALOR);
+    this.solicitud260101Store.setTercerosNumeroExterior(VALOR);
   }
 
   /**
-   * Actualiza el número interior del domicilio en el Store.
+   * Actualiza el número interior del terceros en el Store.
    * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setDomiciliNumeroInterior(evento: Event): void {
+  setTercerosNumeroInterior(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud260101Store.setDomicilioNumeroInterior(VALOR);
+    this.solicitud260101Store.setTercerosNumeroInterior(VALOR);
   }
 
   /**
-   * Actualiza el código LADA del domicilio en el Store.
+   * Actualiza el código LADA del terceros en el Store.
    * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setDomiciliLada(evento: Event): void {
+  setTercerosLada(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud260101Store.setDomicilioLada(VALOR);
+    this.solicitud260101Store.setTercerosLada(VALOR);
   }
 
   /**
-   * Actualiza el número telefónico del domicilio en el Store.
+   * Actualiza el número telefónico del terceros en el Store.
    * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setDomiciliTelefono(evento: Event): void {
+  setTercerosTelefono(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud260101Store.setDomicilioTelefono(VALOR);
+    this.solicitud260101Store.setTercerosTelefono(VALOR);
   }
 
   /**
-   * Actualiza el correo electrónico del domicilio en el Store.
+   * Actualiza el correo electrónico del terceros en el Store.
    * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setDomiciliCorreoElectronioco(evento: Event): void {
+  setTercerosCorreoElectronioco(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud260101Store.setDomicilioCorreoElectronico(VALOR);
+    this.solicitud260101Store.setTercerosCorreoElectronico(VALOR);
   }
 
   /**
    * Limpia todos los datos del formulario de destinatarios.
    */
   limpiarDestinatario(): void {
-    this.modificarDestinatarioForm.reset();
+    this.fabricanteComponentForm.reset();
   }
 
   /**
@@ -594,36 +617,32 @@ export class ModificarDestinatarioComponent
    */
   guardarDestinatario(): void {
     this.updateTipoPersonaValidators(
-      this.modificarDestinatarioForm.get('tipoPersona')?.value
+      this.fabricanteComponentForm.get('tipoPersona')?.value
     );
-    this.modificarDestinatarioForm.markAllAsTouched();
-    if (this.modificarDestinatarioForm.invalid) {
+    this.fabricanteComponentForm.markAllAsTouched();
+    if (this.fabricanteComponentForm.invalid) {
       return;
     }
     const OBJETO_JSON = {
-      nombre: this.modificarDestinatarioForm.get('denominacion')?.value,
-      rfc: this.modificarDestinatarioForm.get('modificarRFC')?.value,
+      nombre: this.fabricanteComponentForm.get('denominacion')?.value,
+      rfc: this.fabricanteComponentForm.get('modificarRFC')?.value,
       curp: '--',
-      telefono: this.modificarDestinatarioForm.get('domiciliTelefono')?.value,
-      correoElectronico: this.modificarDestinatarioForm.get(
+      telefono: this.fabricanteComponentForm.get('domiciliTelefono')?.value,
+      correoElectronico: this.fabricanteComponentForm.get(
         'domiciliCorreoElectronioco'
       )?.value,
-      calle: this.modificarDestinatarioForm.get('domiciliCalle')?.value,
-      numeroExterior: this.modificarDestinatarioForm.get(
-        'domiciliNumeroExterior'
-      )?.value,
-      numeroInterior: this.modificarDestinatarioForm.get(
-        'domiciliNumeroInterior'
-      )?.value,
-      pais: this.modificarDestinatarioForm.get('domicilioPais')?.value,
-      colonia: this.modificarDestinatarioForm.get('domicilioColonia')?.value,
-      municipio:
-        this.modificarDestinatarioForm.get('domicilioMunicipio')?.value,
-      localidad:
-        this.modificarDestinatarioForm.get('domicilioLocalidad')?.value,
-      estado: this.modificarDestinatarioForm.get('domicilioEstado')?.value,
+      calle: this.fabricanteComponentForm.get('domiciliCalle')?.value,
+      numeroExterior: this.fabricanteComponentForm.get('domiciliNumeroExterior')
+        ?.value,
+      numeroInterior: this.fabricanteComponentForm.get('domiciliNumeroInterior')
+        ?.value,
+      pais: this.fabricanteComponentForm.get('tercerosPais')?.value,
+      colonia: this.fabricanteComponentForm.get('tercerosColonia')?.value,
+      municipio: this.fabricanteComponentForm.get('tercerosMunicipio')?.value,
+      localidad: this.fabricanteComponentForm.get('tercerosLocalidad')?.value,
+      estado: this.fabricanteComponentForm.get('tercerosEstado')?.value,
       estado2: '--',
-      codigo: this.modificarDestinatarioForm.get('domicilioCodigo')?.value,
+      codigo: this.fabricanteComponentForm.get('tercerosCodigo')?.value,
     };
     // this.solicitud260101Store.addDestinatarioDato(OBJETO_JSON);
     this.cerrarModal.emit(OBJETO_JSON);
