@@ -312,25 +312,24 @@
                             <div class="col-md-2">
                                 <app-catalogo-select [catalogo]="unidadMedida" [label]="'UMC'" [required]="true"
                                     name="unidadMedida" formControlName="unidadMedidaVehiculo"
-                                    (change)="unidadMedidaSeleccion()" [isDisabled]="formularioDeshabilitado"
+                                    (change)="unidadMedidaSeleccion()" [isDisabled]="true"
                                     [tooltipQuestionCircle]="true"></app-catalogo-select>
                             </div>
                             <div class="col-md-2">
                                 <app-catalogo-select [catalogo]="UMT" [label]="'UMT'" [required]="true" name="UMT"
-                                    formControlName="UMTVehiculo" (change)="umtSeleccion()"
-                                    [isDisabled]="formularioDeshabilitado"
+                                    formControlName="UMTVehiculo" (change)="umtSeleccion()" [isDisabled]="true"
                                     [tooltipQuestionCircle]="true"></app-catalogo-select>
                             </div>
                             }
                             <div class="col-md-4">
-                                <app-catalogo-select [catalogo]="paisProcedenciaOtro" [label]="'País de procedencia'"
+                                <app-catalogo-select [catalogo]="paisProcedenciaOtro" [label]="'País de origen'"
                                     formControlName="paisProcedenciaOtro" [required]="true"
                                     (change)="paisProcedenciaOtroSeleccion()" [isDisabled]="formularioDeshabilitado"
                                     name="paisProcedenciaOtro"></app-catalogo-select>
                             </div>
                             <div class="col-md-4">
                                 <app-catalogo-select [catalogo]="condicionMercancia"
-                                    [label]="'Condición de la mercancía '" [required]="true"
+                                    [label]="'Condición de la mercancía'" [required]="true"
                                     formControlName="condicionMercancia" (change)="condicionMercanciaSeleccion()"
                                     [isDisabled]="formularioDeshabilitado"
                                     name="condicionMercanciaA"></app-catalogo-select>

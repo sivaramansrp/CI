@@ -407,6 +407,11 @@ export interface Solicitud32605State {
   '240': string | number;
 
   /**
+   * Valor asociado con el código 240 (puede ser un número o una cadena).
+   */
+  '242': string | number;
+
+  /**
    * Valor asociado con el código 243 (puede ser un número o una cadena).
    */
   '243': string | number;
@@ -608,6 +613,7 @@ export function createInitialSolicitudState(): Solicitud32605State {
     '238': 0,
     '239': 0,
     '240': 0,
+    '242': 0,
     '243': 0,
     '244': 0,
     '245': 0,

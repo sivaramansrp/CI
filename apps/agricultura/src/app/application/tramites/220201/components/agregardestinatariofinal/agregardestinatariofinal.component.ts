@@ -134,34 +134,33 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
       telefono: [''],
       correo: ['']
     });
-    const ID = this.route.snapshot.paramMap.get('id');
-    if (ID) {
-      this.certificadoZoosanitarioServices.getAllDatosForma()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((data: CapturarSolicitud) => {
-          const DESTINATARIO = data.datosForma[0];
-          if (DESTINATARIO) {
-            this.destinatarioForm.patchValue({
-              tipoMercancia: DESTINATARIO.tipoMercancia || 'yes',
-              nombre: DESTINATARIO.nombre || '',
-              primerApellido: DESTINATARIO.primerApellido || '',
-              segundoApellido: DESTINATARIO.segundoApellido || '',
-              razonSocial: DESTINATARIO.razonSocial || '',
-              pais: DESTINATARIO.pais || '1',
-              codigoPostal: DESTINATARIO.codigoPostal || '',
-              estado: DESTINATARIO.estado || '',
-              municipio: DESTINATARIO.municipio || '',
-              colonia: DESTINATARIO.colonia || '',
-              calle: DESTINATARIO.calle || '',
-              numeroExterior: DESTINATARIO.numeroExterior || '',
-              numeroInterior: DESTINATARIO.numeroInterior || '',
-              lada: DESTINATARIO.lada || '',
-              telefono: DESTINATARIO.telefono || '',
-              correo: DESTINATARIO.correo || ''
-            });
-          }
-        });
-    }
+
+    this.certificadoZoosanitarioServices.getAllDatosForma()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: CapturarSolicitud) => {
+        const DESTINATARIO = data.seletedExdora;
+        if (DESTINATARIO) {
+          this.destinatarioForm.patchValue({
+            tipoMercancia: DESTINATARIO.tipoMercancia || 'yes',
+            nombre: DESTINATARIO.nombre || '',
+            primerApellido: DESTINATARIO.primerApellido || '',
+            segundoApellido: DESTINATARIO.segundoApellido || '',
+            razonSocial: DESTINATARIO.razonSocial || '',
+            pais: DESTINATARIO.pais || '1',
+            codigoPostal: DESTINATARIO.codigoPostal || '',
+            estado: DESTINATARIO.estado || '',
+            municipio: DESTINATARIO.municipio || '',
+            colonia: DESTINATARIO.colonia || '',
+            calle: DESTINATARIO.calle || '',
+            numeroExterior: DESTINATARIO.numeroExterior || '',
+            numeroInterior: DESTINATARIO.numeroInterior || '',
+            lada: DESTINATARIO.lada || '',
+            telefono: DESTINATARIO.telefono || '',
+            correo: DESTINATARIO.correo || ''
+          });
+        }
+      });
+
   }
 
   /**

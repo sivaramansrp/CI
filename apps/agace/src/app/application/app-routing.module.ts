@@ -320,6 +320,11 @@ const ROUTES: Routes = [
         (m) => m.EmpresasComercializadorasModule)
   },
   {
+    path: 'rubro-transporte-ferroviario',
+    loadChildren: () => 
+      import('./tramites/32613/rubro-transporte-ferroviario.module').then((m) => m.RubroTransporteFerroviarioModule)
+  },
+  {
     path: 'auto-transportista',
     loadChildren: () =>
       import('./tramites/32611/auto-transportista.module').then(

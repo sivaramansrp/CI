@@ -199,7 +199,7 @@
     "id": 29,
     "tramite": 80205,
     "linkDashboard": "/se/certificado-registro/registro",
-    "linkDepartment": "/se/certificado-registro/registro",
+    "linkDepartment": "/pago/certificado-registro/registro",
     "department": "se"
   },
   {
@@ -4243,7 +4243,7 @@
     "department": "agace"
   },
     {
-    "id": 606,
+    "id": 609,
     "tramite": 32607,
     "linkDashboard": "/agace/aeronaves/solicitud",
     "linkDepartment": "/pago/aeronaves/solicitud",
@@ -4257,7 +4257,14 @@
     "department": "agace"
   },
   {
-    "id": 609,
+    "id": 610,
+    "tramite": 32613,
+    "linkDashboard": "/agace/rubro-transporte-ferroviario/pantallas",
+    "linkDepartment": "/pago/rubro-transporte-ferroviario/pantallas",
+    "department": "agace"
+  },
+   {
+    "id": 611,
     "tramite": 32611,
     "linkDashboard": "/agace/auto-transportista/solicitud",
     "linkDepartment": "/pago/auto-transportista/solicitud",
