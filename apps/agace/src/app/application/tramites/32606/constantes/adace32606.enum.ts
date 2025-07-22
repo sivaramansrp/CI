@@ -598,3 +598,17 @@ export const CONTROLADAS_TABLA: ConfiguracionColumna<ControladasTable>[] = [
     },
 ];
 
+export const CARACTER_CATALOGO: CatalogosSelect = {
+  labelNombre: 'Eu su carácter de',
+  required: true,
+  primerOpcion: 'Selecciona un valor',
+  catalogos: [],
+};
+
+export const NACIONALIDAD_CATALOGO: CatalogosSelect = {
+  labelNombre: 'Nacionalidad',
+  required: true,
+  primerOpcion: 'Selecciona un valor',
+  catalogos: [],
+};
+

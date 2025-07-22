@@ -60,6 +60,7 @@ export class DomicillioComponent implements OnInit, OnDestroy {
 
   }
 
+  
   public seleccionarModificar(): void {
      if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(

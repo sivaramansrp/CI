@@ -73,7 +73,7 @@ export class QuerellaComponent implements OnInit, OnDestroy {
     this.elementoParaEliminar = i;
   }
 
-    public obtenerTablaQuerella(): void {
+  public obtenerTablaQuerella(): void {
     this.economico
       .obtenerTablaQuerella()
       .pipe(takeUntil(this.destroyed$))

@@ -36,6 +36,14 @@ export class EconomicoService {
     return this.http.get<Catalogo[]>('assets/json/32606/entidad.json');
   }
 
+  obtenerCaracter(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/32606/caracter.json');
+  }
+
+  obtenerNacionalidad(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/32606/nacionalidad.json');
+  }
+
   obtenerTablaEntidad(): Observable<EntidadFederativa[]> {
     return this.http.get<EntidadFederativa[]>('assets/json/32606/entidad-tabla.json')
       .pipe(catchError((error) => {
