@@ -42,7 +42,6 @@
     <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
     formControlName="blCtpat"
   (change)="setValoresStore(profileForm,'blCtpat')"></app-input-radio>
-
 <ng-container *ngIf="profileForm.get('blCtpat')?.value === '1'">
     <div class="form-row mb-3">
   <label class="custom-label" for="niverCertificado">Nivel: certificado / certificado-validado</label>
@@ -81,7 +80,6 @@
     <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
     formControlName="blnPip"
   (change)="setValoresStore(profileForm,'blnPip')"></app-input-radio>
-
 <ng-container *ngIf="profileForm.get('blnPip')?.value === '1'">
     <div class="form-row mb-3">
       <label class="custom-label" for="numRegistroPip">Número de registro</label>

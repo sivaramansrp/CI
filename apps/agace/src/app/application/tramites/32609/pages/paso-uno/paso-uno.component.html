@@ -71,32 +71,36 @@
   </ul>
 
   <ng-container>
-    @switch (indice) { @case (1) {
-    <solicitante></solicitante>
-    } @case (2) {
+   <solicitante #solicitanteRef [hidden]="indice !== 1"></solicitante>
+      
       @if(esDatosRespuesta){
-        <app-datos-comunes (reconocimientoMutuoCTPATChange)="onReconocimientoMutuoChange($event)"></app-datos-comunes>
+        <app-datos-comunes
+          #datosComunesRef 
+          (reconocimientoMutuoCTPATChange)="onReconocimientoMutuoChange($event)"
+          [hidden]="indice !== 2">
+        </app-datos-comunes>
       }
-    } @case (3) {
+
       @if(esDatosRespuesta){
-        <app-terceros-relacionados></app-terceros-relacionados>
+        <app-terceros-relacionados 
+          #tercerosRelacionadosRef  
+          [hidden]="indice !== 3">
+        </app-terceros-relacionados>
       }
-    } @case (4) {
+
       @if(esDatosRespuesta){
-        <app-importador-exportador></app-importador-exportador>
+        <app-importador-exportador 
+          #importadorExportadorRef 
+          [hidden]="indice !== 4">
+        </app-importador-exportador>
       }
-    }
-    @case (5) {
+
+      @if(esDatosRespuesta && reconocimientoMutuoValue === '1'){
+        <app-c-tpat #ctpatRef [hidden]="indice !== 5"></app-c-tpat>
+      }
+
       @if(esDatosRespuesta){
-        <app-c-tpat></app-c-tpat>
+        <app-perfiles #perfilesRef [hidden]="indice !== 6"></app-perfiles>
       }
-    }
-    @case (6) {
-      @if(esDatosRespuesta){
-        
-      }
-    }
-    
-  }
   </ng-container>
 </div>

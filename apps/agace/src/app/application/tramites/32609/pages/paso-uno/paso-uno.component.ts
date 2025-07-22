@@ -1,6 +1,8 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CTPATComponent } from '../../components/c-tpat/c-tpat.component';
+import { DatosComunesComponent } from '../../components/datos-comunes/datos-comunes.component';
 import { ImportadorExportadorComponent } from '../../components/importador-exportador/importador-exportador.component';
 import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
 import { StoreResponse } from '../../estados/tramites32609.store';
@@ -54,6 +56,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * enlace operativo y personas de notificaciones.
    */
   @ViewChild('tercerosRelacionadosRef') tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+
+    /**
+   * Referencia al componente DatosComunesComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de datos comunes antes de continuar al siguiente paso.
+   */
+  @ViewChild('datosComunesRef') datosComunesComponent!: DatosComunesComponent;
+
+  /**
+   * Referencia al componente CTPATComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de CTPAT antes de continuar al siguiente paso.
+   */
+  @ViewChild('ctpatRef') ctpatComponent!: CTPATComponent;
 
     /**
    * Lista de secciones del formulario.
@@ -157,6 +171,15 @@ ngOnInit(): void {
       isValid = false;
     }
 
+      if (this.datosComunesComponent) {
+    const DATOS_COMUNES_VALID = this.datosComunesComponent.validarFormulario();
+    if (!DATOS_COMUNES_VALID) {
+      isValid = false;
+    }
+  } else {
+    isValid = false;
+  }
+
     if (this.tercerosRelacionadosComponent) {
       if (!this.tercerosRelacionadosComponent.validarFormulario()) {
         isValid = false;
@@ -173,6 +196,13 @@ ngOnInit(): void {
       isValid = false;
     }
 
+     if (this.ctpatComponent) {
+      if (!this.ctpatComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
     
 
     return isValid;

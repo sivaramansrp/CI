@@ -86,15 +86,15 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label for="describaProcedimiento">
+                <label for="describaProcedimientoDos">
                     <span class="danger">*</span>Describa el procedimiento que indique cómo lleva a cabo la identificación de socios comerciales que requieran el cumplimiento de estándares mínimos en materia de seguridad.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" id="describaProcedimiento" formControlName="describaProcedimiento" (change)="setValoresStore(sociosComercialesForm,'describaProcedimiento')"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="describaProcedimientoDos" formControlName="describaProcedimientoDos" (change)="setValoresStore(sociosComercialesForm,'describaProcedimientoDos')"></textarea>
             </div>
-            @if(sociosComercialesForm.controls['describaProcedimiento'].invalid &&
-            sociosComercialesForm.controls['describaProcedimiento'].touched){
+            @if(sociosComercialesForm.controls['describaProcedimientoDos'].invalid &&
+            sociosComercialesForm.controls['describaProcedimientoDos'].touched){
             <div class="d-grid">
-              @if(sociosComercialesForm.controls['describaProcedimiento'].errors?.['required']) {
+              @if(sociosComercialesForm.controls['describaProcedimientoDos'].errors?.['required']) {
               <span class="mensaje-error">Este campo es obligatorio</span>
               }
             </div>

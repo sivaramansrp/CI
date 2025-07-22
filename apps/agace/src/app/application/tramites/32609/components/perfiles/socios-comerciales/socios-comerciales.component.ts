@@ -125,7 +125,7 @@ export class SociosComercialesComponent implements OnInit, OnDestroy {
     return {
       indiqueLleva: [perfiles['indiqueLleva'] || '', Validators.required],
       // eslint-disable-next-line @typescript-eslint/dot-notation, dot-notation
-      describaProcedimiento2: [perfiles['describaProcedimiento2'] || '', Validators.required],
+      describaProcedimientoDos: [perfiles['describaProcedimientoDos'] || '', Validators.required],
       indiqueSocios: [perfiles['indiqueSocios'] || '', Validators.required],
       indiqueForma: [perfiles['indiqueForma'] || '', Validators.required],
       indiqueExisten: [perfiles['indiqueExisten'] || '', Validators.required],
