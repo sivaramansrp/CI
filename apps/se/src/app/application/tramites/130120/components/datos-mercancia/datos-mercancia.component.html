@@ -259,9 +259,7 @@
               required="true"
               maxlength="19"
               pattern="^\d{1,14}(\.\d{1,4})?$"
-              readonly
-              [disabled]="enableConversion"
-              (change)="setValoresStore(datosMercanica, 'factor_conversion', 'setFactorConversion')"
+              (change)="setValoresStore(datosMercanica, 'factor_conversion', 'setFactorConversion'); onCantidadUmcOrFactorChange();"
             />
             <div *ngIf="datosMercanica.get('factor_conversion')?.touched && datosMercanica.get('factor_conversion')?.invalid">
               <small *ngIf="datosMercanica.get('factor_conversion')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>

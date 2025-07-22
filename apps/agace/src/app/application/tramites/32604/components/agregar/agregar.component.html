@@ -1,0 +1,33 @@
+<div class="container">
+  <form [formGroup]="form">
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <ng-titulo titulo="Agregar" />
+      </div>
+      <div class="col-md-12">
+        <app-catalogo-select [catalogo]="aduanaList.catalogos" [label]="aduanaList.labelNombre" [placeholder]="aduanaList.primerOpcion" [required]="true" formControlName="aduana" (selectionChange)="onAduanaSelectionChange($event)"></app-catalogo-select>
+      </div>
+      <div class="col-md-12" id="IdGridContenedoresITC" *ngIf="aduanaSeleccionada">
+        <ng-titulo titulo="Control Inventarios" />
+        <div class="table-responsive">
+          <div class="innercontainer">
+            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="encabezadoDeTablaManifiesto" [datos]="datosTabla" (listaDeFilaSeleccionada)="onTableRowSelected($event)"></app-tabla-dinamica>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 mt-3">
+      <div class="d-flex justify-content-end mt-4">
+        <button type="button" id="aceptar" class="btn btn-primary" (click)="cerrarModal()" data-bs-dismiss="modal"
+          #closeModal>
+          Aceptar
+        </button>
+
+        <button type="button" id="cancelar" class="btn btn-danger ms-3" (click)="cancelarModal()"
+          data-bs-dismiss="modal" #closeModal>
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

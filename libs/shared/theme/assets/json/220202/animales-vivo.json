@@ -38,9 +38,5 @@
   "paisDeProcedenciaList": [
     { "id": 1, "descripcion": "Brasil", "clave": "BR" },
     { "id": 2, "descripcion": "Canadá", "clave": "CA" }
-  ],
-  "sexoList": [
-    { "id": 1, "descripcion": "Macho" },
-    { "id": 2, "descripcion": "Hembra" }
   ]
 }

@@ -5,8 +5,8 @@ import { NgModule } from '@angular/core';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RegistroSolicitudDesistimientoRoutingModule } from './registro-solicitud-desistimiento-routing.module';
-import { SolicitudComponent } from './components/Solicitud.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { SolicitudComponent } from './components/Solicitud.component';
 
 
 @NgModule({

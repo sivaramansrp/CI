@@ -3069,7 +3069,7 @@
         "origin": "READ_PROCEDURE"
     },
     {
-        "id":"33302",
+        "id": "33302",
         "folioTramite": "3170001000320251005000002",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2023-10-01",
@@ -3080,7 +3080,7 @@
         "origin": "READ_PROCEDURE"
     },
     {
-        "id":"32607",
+        "id": "32607",
         "folioTramite": "3170001000320251005000002",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2023-10-01",
@@ -3088,6 +3088,110 @@
         "diasTranscurridos": "4",
         "departamento": "AGACE",
         "numeroDeProcedimiento": "32607",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "32604",
+        "folioTramite": "0100001000320251005000002",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-10-07",
+        "fechaActualizacion": "2025-10-12",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32604",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "103",
+        "folioTramite": "0100001000320251005000002",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-10-07",
+        "fechaActualizacion": "2025-10-12",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "103",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "40403",
+        "folioTramite": "0100001000320251005000002",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-10-07",
+        "fechaActualizacion": "2025-10-12",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "40403",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "110221",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-17",
+        "fechaActualizacion": "2025-06-17",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "110221",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "110223",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-17",
+        "fechaActualizacion": "2025-06-17",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "110223",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "31201",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-17",
+        "fechaActualizacion": "2025-06-17",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "31201",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "40402",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-17",
+        "fechaActualizacion": "2025-06-17",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "40402",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "11106",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-17",
+        "fechaActualizacion": "2025-06-17",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "11106",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "30901",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-15",
+        "fechaActualizacion": "2025-06-17",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "30901",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id":"32613",
+        "folioTramite": "3170001000320251005000002",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32613",
         "origin": "READ_PROCEDURE"
     }
 ]

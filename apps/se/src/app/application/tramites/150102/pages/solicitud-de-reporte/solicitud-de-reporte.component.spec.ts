@@ -98,4 +98,58 @@ describe('SolicitudDeReporteComponent', () => {
     expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
     expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
+
+  it('should generate HTML with validation messages', () => {
+    const mockMessages = ['Error 1', 'Error 2'];
+
+    component.datosComponent = {
+      datosDeReporteAnnualComponent: {
+        mensajesDeValidacion: mockMessages,
+      },
+    } as any;
+
+    const html = component.generarValidacionHTML();
+
+    expect(html).toContain('Corrija los siguientes errores:');
+    expect(html).toContain('1.'); 
+    expect(html).toContain('Error 1');
+    expect(html).toContain('2.');
+    expect(html).toContain('Error 2');
+  });
+
+  it('should set mensajeError and not proceed when datosComponent is invalid', () => {
+    component.indice = 1;
+    component.datosComponent = {
+      indice: 3,
+      datosDeReporteAnnualComponent: {
+        validarTotalExportaciones: () => false,
+        mensajesDeValidacion: ['Exportación inválida'],
+      },
+    } as any;
+
+    const evento = { accion: 'cont', valor: 2 };
+    component.getValorIndice(evento);
+
+    expect(component.mensajeError).toContain('Corrija los siguientes errores');
+    expect(component.datosPasos.indice).toBe(1);
+    expect(component.indice).toBe(1);
+    expect(wizardComponentSpy.siguiente).not.toHaveBeenCalled();
+  });
+
+  it('should proceed when datosComponent is valid', () => {
+    component.indice = 1;
+    component.datosComponent = {
+      indice: 3,
+      datosDeReporteAnnualComponent: {
+        validarTotalExportaciones: () => true,
+        mensajesDeValidacion: [],
+      },
+    } as any;
+
+    const evento = { accion: 'cont', valor: 2 };
+    component.getValorIndice(evento);
+
+    expect(component.indice).toBe(2);
+    expect(component.mensajeError).toBe("");
+  });
 });
