@@ -237,6 +237,8 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
    */
   @Output() reconocimientoMutuoCTPATChange = new EventEmitter<string>();
 
+  
+  public mostrarErroresValidacion: boolean = false;
   /**
    * Constructor para DomiciliosRfcSolicitanteBimestreComponent.
    * Inicializa el formulario e inyecta los servicios necesarios.
@@ -296,7 +298,8 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
    */
   crearFormulario(): void {
     this.forma = this.fb.group({
-      domiciliosRegistrados: [this.seccionState?.domiciliosRegistrados || null]
+      domiciliosRegistrados: [this.seccionState?.domiciliosRegistrados || null],
+      domiciliosRFCTabla: ['']
     });
 
     this.registroDomiciliosRfcSolicitanteForm = this.fb.group({
@@ -386,6 +389,7 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
       this.esHabilitarElDialogo = true;
       this.DomiciliosRfcSolicitanteInfoDatos();
       this.cambiarEstadoModal();
+      this.mostrarErroresValidacion = false;
     } else {
       this.abrirMultipleSeleccionPopup('', 'Seleccione un registro.', 'Aceptar', '');
       this.esHabilitarElDialogo = true;
@@ -540,7 +544,8 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
     
     // Actualizar el store con los nuevos datos
     this.tramite32605Store.actualizarEstado({DomiciliosRfcSolicitante: this.DomiciliosRfcSolicitanteList});
-    
+      // Limpiar campos de validación cuando se agregan datos válidos
+    this.limpiarValidacionesSegunDatos();
     // Limpiar el array de datos seleccionados después de procesarlos
     this.datosTablaModalSeleccionados = [];
   }
@@ -627,6 +632,10 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
       this.enableEliminarBoton = false;
       return;
     }
+     // Habilitar botones cuando hay selección
+  this.enableModficarBoton = true;
+  this.enableEliminarBoton = true;
+
   this.filaSeleccionadaDomiciliosRfcSolicitante = fila[fila.length - 1];
   }
   
@@ -661,6 +670,7 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
       this.listaFilaSeleccionadaEmpleado = [];
       this.filaSeleccionadaDomiciliosRfcSolicitante = {} as DomiciliosRfcSolicitanteTabla;
       this.tramite32605Store.actualizarEstado({DomiciliosRfcSolicitante:this.DomiciliosRfcSolicitanteList});
+      this.resetearValidaciones();
       this.cerrarEliminarConfirmationPopup();
     }
   }
@@ -678,16 +688,25 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
    * Actualiza el formulario de mercancía con los datos de la fila seleccionada
    * y abre el modal para editar los datos.
    */
-  modificarItemEmpleado(): void {
+   modificarItemEmpleado(): void {
     const SELECCIONADAS = this.listaFilaSeleccionadaEmpleado;
-  
-    if (!SELECCIONADAS || SELECCIONADAS.length === 0) {
-      this.abrirMultipleSeleccionPopup('', 'Selecciona un registro');
+    if (this.DomiciliosRfcSolicitanteList.length === 0) {
+      this.abrirMultipleSeleccionPopup('', 'No se encontró información');
+      this.multipleSeleccionPopupAbierto = true;
       return;
     }
-  
+ 
+    if (!SELECCIONADAS || SELECCIONADAS.length === 0) {
+      this.abrirMultipleSeleccionPopup('', 'Selecciona un registro');
+      this.multipleSeleccionPopupAbierto = true;
+      return;
+    }
+ 
     if (SELECCIONADAS.length > 1) {
-      this.abrirMultipleSeleccionPopup('', 'Selecciona sólo un registro para modificar.');
+      this.abrirMultipleSeleccionPopup(
+        '',
+        'Selecciona sólo un registro para modificar'
+      );
       this.multipleSeleccionPopupAbierto = true;
       return;
     }
@@ -695,6 +714,7 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
     this.modificarDialogoDatos();
     this.patchModifyiedData();
   }
+ 
   
   /**
    * @method patchModifyiedData
@@ -755,12 +775,15 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
    * Si no hay elementos seleccionados, no realiza ninguna acción.
    * Si hay elementos seleccionados, abre el popup de confirmación de eliminación.
    */
-  confirmEliminarEmpleadoItem(): void {
+confirmEliminarEmpleadoItem(): void {
+    if (this.DomiciliosRfcSolicitanteList.length === 0) {
+      this.abrirMultipleSeleccionPopup('', 'No se encontró información');
+      this.confirmEliminarPopupAbierto = true;
+      return;
+    }
     if (this.listaFilaSeleccionadaEmpleado.length === 0) {
-      this.abrirMultipleSeleccionPopup(
-        '', 
-        'Debes seleccionar al menos un registro para eliminar.'
-      );
+      this.abrirMultipleSeleccionPopup('','Seleccione un registro');
+      this.confirmEliminarPopupAbierto = true;
       return;
     }
     this.abrirElimninarConfirmationopup();
@@ -776,7 +799,7 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
       categoria: CategoriaMensaje.ERROR,
       modo: 'modal',
       titulo: '',
-      mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+      mensaje: '¿Desea eliminar el registro seleccionado?',
       cerrar: false,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: 'Cancelar',
@@ -907,5 +930,78 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
+  }
+  /**
+ * Valida que exista al menos un domicilio registrado en la lista.
+ * boolean indicating if there are domicilios registrados
+ */
+public validarDomiciliosRfcSolicitante(): boolean {
+  this.mostrarErroresValidacion = true;
+
+  let isValid = true;
+
+  if (this.DomiciliosRfcSolicitanteList.length === 0) {
+    // Mark the control as touched so the error shows
+    this.forma.get('domiciliosRFCTabla')?.markAsTouched();
+    isValid = false;
+  } else {
+    if (!this.tieneInstalacionPrincipal()) {
+      isValid = false;
+    }
+    if (!this.tieneOperacionesComercioExterior()) {
+      isValid = false;
+    }
+  }
+
+  return isValid;
+}
+/**
+ * Verifica si existe al menos una instalación principal con valor "Sí"
+ * @returns boolean indicating if there's at least one main installation
+ */
+public tieneInstalacionPrincipal(): boolean {
+  return this.DomiciliosRfcSolicitanteList.some(
+    item => item.InstalacionesPrincipales === 'Sí'
+  );
+}
+/**
+ * Verifica si existe al menos una instalación que realice operaciones de comercio exterior
+ * @returns boolean indicating if there's at least one installation doing foreign trade operations
+ */
+public tieneOperacionesComercioExterior(): boolean {
+  return this.DomiciliosRfcSolicitanteList.some(
+    item => item.realizaActividadComercioExterior === 'Sí'
+  );
+}
+
+  /**
+   * Limpia las validaciones según los datos disponibles
+   */
+  limpiarValidacionesSegunDatos(): void {
+    // Limpiar validación de domicilios si hay al menos uno
+    if (this.DomiciliosRfcSolicitanteList.length > 0) {
+      this.forma.get('domiciliosRFCTabla')?.markAsUntouched();
+      
+      // Solo limpiar las validaciones específicas si se cumplen las condiciones
+      if (this.tieneInstalacionPrincipal()) {
+        this.forma.get('instalacionPrincipalTabla')?.markAsUntouched();
+      }
+      
+      if (this.tieneOperacionesComercioExterior()) {
+        this.forma.get('operacionesComercioExteriorTabla')?.markAsUntouched();
+      }
+    } else {
+      // Si no hay datos, asegurar que las validaciones específicas no se muestren
+      this.forma.get('instalacionPrincipalTabla')?.markAsUntouched();
+      this.forma.get('operacionesComercioExteriorTabla')?.markAsUntouched();
+    }
+  }
+  /**
+   * Resetea todas las validaciones a su estado inicial
+   */
+  resetearValidaciones(): void {
+    this.forma.get('domiciliosRFCTabla')?.markAsUntouched();
+    this.forma.get('instalacionPrincipalTabla')?.markAsUntouched();
+    this.forma.get('operacionesComercioExteriorTabla')?.markAsUntouched();
   }
 }

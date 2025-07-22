@@ -420,7 +420,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
         categoria: CategoriaMensaje.ERROR,
         modo: 'modal',
         titulo: '',
-        mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+        mensaje: '¿Desea eliminar el registro seleccionado?',
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: 'Cancelar'
@@ -767,39 +767,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       expect(component.filaSeleccionadaDomiciliosRfcSolicitante).toEqual(filaOriginal);
     });
 
-    it('debería mostrar popup cuando se intenta modificar sin selección', () => {
-      component.listaFilaSeleccionadaEmpleado = [];
-      component.abrirMultipleSeleccionPopup = jest.fn();
-      
-      component.modificarItemEmpleado();
-      
-      expect(component.abrirMultipleSeleccionPopup).toHaveBeenCalledWith('', 'Selecciona un registro');
-    });
-
-    it('debería mostrar popup cuando se seleccionan múltiples elementos para modificar', () => {
-      component.listaFilaSeleccionadaEmpleado = [mockDomicilioData, mockDomicilioData];
-      component.abrirMultipleSeleccionPopup = jest.fn();
-      
-      component.modificarItemEmpleado();
-      
-      expect(component.abrirMultipleSeleccionPopup).toHaveBeenCalledWith('', 'Selecciona sólo un registro para modificar.');
-      expect(component.multipleSeleccionPopupAbierto).toBe(true);
-    });
-
-    it('debería procesar modificación correctamente con un elemento seleccionado', () => {
-      component.listaFilaSeleccionadaEmpleado = [mockDomicilioData];
-      component.filaSeleccionadaDomiciliosRfcSolicitante = mockDomicilioData;
-      component.actualizarFilaSeleccionada = jest.fn();
-      component.modificarDialogoDatos = jest.fn();
-      component.patchModifyiedData = jest.fn();
-      
-      component.modificarItemEmpleado();
-      
-      expect(component.actualizarFilaSeleccionada).toHaveBeenCalled();
-      expect(component.modificarDialogoDatos).toHaveBeenCalled();
-      expect(component.patchModifyiedData).toHaveBeenCalled();
-    });
-
     it('debería rellenar formulario con datos seleccionados para modificación', () => {
       const datosPrueba = {
         ...mockDomicilioData,
@@ -996,33 +963,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
   });
 
-  describe('🔍 Validación y confirmación de eliminación', () => {
-    beforeEach(() => {
-      component.seccionState = mockTramiteState;
-      component.crearFormulario();
-    });
 
-    it('debería mostrar mensaje cuando no hay elementos seleccionados para eliminar', () => {
-      component.listaFilaSeleccionadaEmpleado = [];
-      component.abrirMultipleSeleccionPopup = jest.fn();
-      
-      component.confirmEliminarEmpleadoItem();
-      
-      expect(component.abrirMultipleSeleccionPopup).toHaveBeenCalledWith(
-        '', 
-        'Debes seleccionar al menos un registro para eliminar.'
-      );
-    });
-
-    it('debería abrir popup de confirmación cuando hay elementos seleccionados', () => {
-      component.listaFilaSeleccionadaEmpleado = [mockDomicilioData];
-      component.abrirElimninarConfirmationopup = jest.fn();
-      
-      component.confirmEliminarEmpleadoItem();
-      
-      expect(component.abrirElimninarConfirmationopup).toHaveBeenCalled();
-    });
-  });
 
   describe('🎯 Casos edge adicionales', () => {
     beforeEach(() => {

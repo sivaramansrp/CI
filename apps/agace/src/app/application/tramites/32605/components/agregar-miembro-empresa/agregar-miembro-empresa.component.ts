@@ -118,6 +118,10 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
   @ViewChild('modalDeConfirmacion') confirmacionElemento!: ElementRef;
 
   /**
+ * Referencia al componente AgregarMiembroEmpresaComponent para acceder a sus métodos de validación.
+ */
+  @ViewChild('agregarMiembroEmpresaRef') agregarMiembroEmpresaComponent!: AgregarMiembroEmpresaComponent;
+  /**
    * Constante para la nota de confirmación del vehículo.
    */
   CONFIRMACION_NUMEROEMPLEADOS = NOTA.CONFIRMACION_NUMEROEMPLEADOS;
@@ -228,6 +232,11 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
    * Indica si el formulario es colapsable.
    */
   colapsable: boolean = true;
+  /**
+   * Formulario para agregar un miembro de la empresa.
+   * Este formulario se utiliza para capturar los datos del miembro de la empresa.
+   */
+  agregarMiembroEmpresaForm!: FormGroup;
 
   /**
    * Constructor para AgregarMiembroEmpresaComponent.
@@ -288,7 +297,8 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
       tipoPersona: [null, Validators.required],
       apellidoPaterno: ['', Validators.required],
       nombre: ['', Validators.required],
-      nombreEmpresa: ['', Validators.required]
+      nombreEmpresa: ['', Validators.required],
+      miembroDeLaEmpresaTabla: [''],
     });
     
     // Set initial disabled state
@@ -464,6 +474,9 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
       );
 
       this.tramite32605Store.actualizarEstado({agregarMiembroEmpresa:this.agregarMiembroEmpresaList});
+      if (this.registroAgregarMiembroEmpresaForm.get('miembroDeLaEmpresaTabla')) {
+        this.registroAgregarMiembroEmpresaForm.get('miembroDeLaEmpresaTabla')?.markAsUntouched();
+      }
       this.filaSeleccionadaAgregarMiembroEmpresa = {} as AgregarMiembroEmpresaTabla;
     }
   }
@@ -538,9 +551,23 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
    * Actualiza el formulario de mercancía con los datos de la fila seleccionada
    * y abre el modal para editar los datos.
    */
-  modificarItemEmpleado(): void {
+    modificarItemEmpleado(): void {
     const SELECCIONADAS = this.listaFilaSeleccionadaEmpleado;
-  
+    if(this.agregarMiembroEmpresaList.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'No se encontró información',
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+      this.multipleSeleccionPopupAbierto = true;
+      return;
+    }
+ 
     if (!SELECCIONADAS || SELECCIONADAS.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -555,7 +582,7 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
       this.multipleSeleccionPopupAbierto = true;
       return;
     }
-  
+ 
     if (SELECCIONADAS.length > 1) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -574,6 +601,7 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
     this.agregarDialogoDatos();
     this.patchModifyiedData();
   }
+ 
   
   /**
    * @method patchModifyiedData
@@ -649,14 +677,29 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
    * Si no hay elementos seleccionados, no realiza ninguna acción.
    * Si hay elementos seleccionados, abre el popup de confirmación de eliminación.
    */
+  
   confirmEliminarEmpleadoItem(): void {
+    if(this.agregarMiembroEmpresaList.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'No se encontró información',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.multipleSeleccionPopupAbierto = true;
+      return;
+    }
     if (this.listaFilaSeleccionadaEmpleado.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: CategoriaMensaje.ALERTA,
         modo: 'modal',
         titulo: '',
-        mensaje: 'Debes seleccionar al menos un registro para eliminar.',
+        mensaje: 'Seleccione un registro',
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
@@ -666,6 +709,7 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
     }
     this.abrirElimninarConfirmationopup();
   }
+ 
   /**
    * @method abrirElimninarConfirmationopup
    * Abre un popup de confirmación para eliminar los registros seleccionados.
@@ -877,5 +921,19 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 
+/**
+ * Valida que exista al menos un miembro de empresa registrado en la lista.
+ * @returns boolean indicating if there are miembros de empresa registrados
+ */
+public validarAgregarMiembroEmpresa(): boolean {
+  // Marcar el campo como tocado para mostrar el error
+  this.registroAgregarMiembroEmpresaForm.get('miembroDeLaEmpresaTabla')?.markAsTouched();
+  
+  if (this.agregarMiembroEmpresaList.length === 0) {
+    return false;
+  }
+  
+  return true;
+}
   
 }

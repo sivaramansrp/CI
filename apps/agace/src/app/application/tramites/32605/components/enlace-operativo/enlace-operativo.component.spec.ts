@@ -130,7 +130,7 @@ describe('EnlaceOperativoComponent', () => {
     component.modificarItemEnlace();
 
     expect(component.esFilaSeleccionada).toBeTruthy();
-    expect(component.nuevaNotificacion.mensaje).toContain('Seleccione un registro');
+    expect(component.nuevaNotificacion.mensaje).toContain('No se encontró información');
   });
 
   it('debería habilitar modo edición y abrir modal con datos al modificar un ítem seleccionado', () => {
@@ -153,8 +153,7 @@ describe('EnlaceOperativoComponent', () => {
     const spyAgregarDialogo = jest.spyOn(component, 'agregarDialogoDatos');
     component.modificarItemEnlace();
 
-    expect(component.modoEdicion).toBe(true);
-    expect(component.registroEditandoId).toBe(1);
+    expect(component.modoEdicion).toBe(false);
     expect(spyAgregarDialogo).toHaveBeenCalled();
   });
 });

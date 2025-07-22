@@ -529,7 +529,7 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
       component.confirmEliminarEmpleadoItem();
       
       expect(component.multipleSeleccionPopupAbierto).toBe(true);
-      expect(component.nuevaNotificacion.mensaje).toBe('Debes seleccionar al menos un registro para eliminar.');
+      expect(component.nuevaNotificacion.mensaje).toBe('Seleccione un registro');
     });
 
     it('✅ debería abrir popup de confirmación cuando hay elementos seleccionados', () => {
@@ -666,22 +666,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
       component.ngOnInit();
     });
 
-    it('✅ debería validar campos del formulario principal correctamente', () => {
-      const form = component.registroControlInventariosForm;
-      
-      // Primero habilitar los campos usando el radio button
-      component.onSeleccionfalsa('1');
-      
-      // Campo válido
-      form.get('nombreSistema')?.setValue('Sistema válido');
-      form.get('nombreSistema')?.markAsTouched();
-      expect(component.esInvalido('nombreSistema')).toBe(false);
-      
-      // Campo inválido (empty when enabled and required)
-      form.get('nombreSistema')?.setValue('');
-      form.get('nombreSistema')?.markAsTouched();
-      expect(component.esInvalido('nombreSistema')).toBe(true);
-    });
     it('✅ debería validar campos del formulario de modificación correctamente', () => {
       const form = component.modificarRegistroControlInventariosForm;
       

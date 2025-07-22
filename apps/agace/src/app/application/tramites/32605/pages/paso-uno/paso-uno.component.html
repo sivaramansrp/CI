@@ -21,7 +21,8 @@
       <solicitante #solicitanteRef [hidden]="indice !== 1"></solicitante>
       
       @if(esDatosRespuesta){
-        <app-datos-comunes 
+        <app-datos-comunes
+          #datosComunesRef 
           (reconocimientoMutuoCTPATChange)="onReconocimientoMutuoChange($event)"
           [hidden]="indice !== 2">
         </app-datos-comunes>
@@ -42,7 +43,7 @@
       }
 
       @if(esDatosRespuesta && reconocimientoMutuoValue === '1'){
-        <app-c-tpat [hidden]="indice !== 5"></app-c-tpat>
+        <app-c-tpat #ctpatRef [hidden]="indice !== 5"></app-c-tpat>
       }
     </ng-container>
 

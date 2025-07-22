@@ -349,6 +349,20 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
 buscar(): void {
   const REGISTRO_VALUE = this.enlaceOperativoForm.get('registro')?.value;
   const REGISTRO_CONTROL = this.enlaceOperativoForm.get('registro');
+  if(!REGISTRO_VALUE) {
+       this.rfcValido = true;
+      this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ERROR,
+      modo: 'modal',
+      titulo: '',
+      mensaje: 'No se encontró información',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    return;
+  }
     if (!REGISTRO_CONTROL?.valid) {
       this.mostrarNotificacionFormatoIncorrecto();
       return;
@@ -617,31 +631,58 @@ buscar(): void {
    * una fila seleccionada, abre el modal de edición con los datos cargados.
    * Si hay múltiples filas seleccionadas, muestra un popup de error.
    */
-  modificarItemEnlace(): void {
+ modificarItemEnlace(): void {
     this.cerrarModal();
-    if (this.listaFilaSeleccionadaEnlace.length === 0) {
+    if(this.enlaceOperativoData.length === 0) {
+      this.abrirMultipleSeleccionPopup('', 'No se encontró información');
       this.esFilaSeleccionada = true;
-      this.nuevaNotificacion = {
-        tipoNotificacion: TipoNotificacionEnum.ALERTA,
-        categoria: CategoriaMensaje.ALERTA,
-        modo: 'modal',
-        titulo: '',
-        mensaje: 'Seleccione un registro.',
-        cerrar: false,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
+      return;
+    }
+    if (this.listaFilaSeleccionadaEnlace.length === 0) {
+     this.abrirMultipleSeleccionPopup('', 'Seleccione un registro');
+      this.esFilaSeleccionada = true;
+      return;
+    } if (
+      this.listaFilaSeleccionadaEnlace &&
+      this.listaFilaSeleccionadaEnlace.length === 1
+    ) {
+      this.filaSeleccionadaEnlaceOperativo = {
+        ...this.listaFilaSeleccionadaEnlace[0],
       };
-    }else if( this.listaFilaSeleccionadaEnlace &&
-      this.listaFilaSeleccionadaEnlace.length === 1){
-      this.filaSeleccionadaEnlaceOperativo = { ...this.listaFilaSeleccionadaEnlace[0] };
-      this.modoEdicion = true;
       this.registroEditandoId = this.filaSeleccionadaEnlaceOperativo.id;
+      this.modoEdicion = true;
       this.agregarDialogoDatos();
       this.actualizarDatosModificados();
     }
-
   }
-
+ 
+ /**
+   * @method abrirMultipleSeleccionPopup
+   * Muestra un popup de notificación con contenido dinámico.
+   * Este método permite personalizar el título, mensaje y etiquetas de los botones del popup.
+   * @param titulo - Título del popup
+   * @param mensaje - Mensaje a mostrar en el popup
+   * @param txtBtnAceptar - Texto del botón de aceptar (opcional, por defecto 'Cerrar')
+   * @param txtBtnCancelar - Texto del botón de cancelar (opcional, por defecto '')
+   */
+  abrirMultipleSeleccionPopup(
+    titulo: string,
+    mensaje: string,
+    txtBtnAceptar: string = 'Aceptar',
+    txtBtnCancelar: string = ''
+  ): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
+      modo: 'modal',
+      titulo: titulo,
+      mensaje: mensaje,
+      cerrar: false,
+      txtBtnAceptar: txtBtnAceptar,
+      txtBtnCancelar: txtBtnCancelar,
+    };
+  }
+ 
   /**
    * Actualiza el formulario con los datos de la fila seleccionada para modificación.
    *
@@ -677,21 +718,18 @@ buscar(): void {
    * el popup de confirmación. Si no hay elementos seleccionados, muestra
    * un mensaje de error. Si hay elementos, abre el popup de confirmación.
    */
-  confirmeliminarEnlaceItem(): void {
+   confirmeliminarEnlaceItem(): void {
     this.cerrarModal();
+    if (this.enlaceOperativoData.length === 0) {
+      this.multipleSeleccionPopupAbierto = true;
+      this.abrirMultipleSeleccionPopup('', 'No se encontró información');
+      return;
+    }
     if (this.listaFilaSeleccionadaEnlace.length === 0) {
       this.multipleSeleccionPopupAbierto = true;
-      this.nuevaNotificacion = {
-        tipoNotificacion: TipoNotificacionEnum.ALERTA,
-        categoria: CategoriaMensaje.ALERTA,
-        modo: 'modal',
-        titulo: '',
-        mensaje: 'Seleccione un registro.',
-        cerrar: false,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      }; 
-    }else if(this.listaFilaSeleccionadaEnlace.length){
+      this.abrirMultipleSeleccionPopup('', 'Seleccione un registro');
+      return;
+    } if (this.listaFilaSeleccionadaEnlace.length) {
       this.abrirElimninarConfirmationopup();
     }
   }

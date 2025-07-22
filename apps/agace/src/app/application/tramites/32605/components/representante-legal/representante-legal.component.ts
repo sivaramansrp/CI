@@ -225,6 +225,20 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       'representanteRegistro'
     )?.value;
     const REGISTRO_CONTROL = this.representante.get('representanteRegistro');
+    if(!REGISTRO_VALUE) {
+       this.rfcValido = true;
+      this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ERROR,
+      modo: 'modal',
+      titulo: '',
+      mensaje: 'No se encontró información',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    return;
+    }
     if (!REGISTRO_CONTROL?.valid) {
       this.rfcValido = true;
       this.mostrarNotificacionFormatoIncorrecto();

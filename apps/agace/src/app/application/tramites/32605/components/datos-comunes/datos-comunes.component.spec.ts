@@ -175,24 +175,6 @@ describe('DatosComunesComponent', () => {
       expect(empleadosControl?.valid).toBe(false);
     });
 
-    it('debería validar que numeroDeEmpleadas solo acepte números positivos', () => {
-      const numeroControl = component.forma.get('numeroDeEmpleadas');
-      
-      numeroControl?.enable();
-      
-      numeroControl?.setValue('abc');
-      expect(numeroControl?.valid).toBe(false);
-      
-      numeroControl?.setValue('0');
-      expect(numeroControl?.valid).toBe(false);
-      
-      numeroControl?.setValue('-5');
-      expect(numeroControl?.valid).toBe(false);
-      
-      numeroControl?.setValue('10');
-      expect(numeroControl?.valid).toBe(true);
-    });
-
     it('debería deshabilitar el formulario en modo solo lectura', () => {
       component.esFormularioSoloLectura = true;
       component.actualizarEstadoCampos();

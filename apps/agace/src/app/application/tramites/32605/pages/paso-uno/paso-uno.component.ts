@@ -1,5 +1,7 @@
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { CTPATComponent } from '../../components/c-tpat/c-tpat.component';
 import { Component} from '@angular/core';
+import { DatosComunesComponent } from '../../components/datos-comunes/datos-comunes.component';
 import { ImportadorExportadorComponent } from '../../components/importador-exportador/importador-exportador.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -38,6 +40,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
 
+  /**
+   * @desc Valor seleccionado para el campo de reconocimiento mutuo en el formulario.
+   * @remarks Utilizado para almacenar la opción elegida por el usuario en el paso uno del trámite.
+   */
   reconocimientoMutuoValue: string = '';
 
    /**
@@ -53,6 +59,17 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   @ViewChild('tercerosRelacionadosRef') tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
 
+    /**
+   * Referencia al componente DatosComunesComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de datos comunes antes de continuar al siguiente paso.
+   */
+  @ViewChild('datosComunesRef') datosComunesComponent!: DatosComunesComponent;
+
+  /**
+   * Referencia al componente CTPATComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de CTPAT antes de continuar al siguiente paso.
+   */
+  @ViewChild('ctpatRef') ctpatComponent!: CTPATComponent;
     /**
    * Lista de secciones del formulario.
    * Lista de pasos dentro del formulario con sus respectivos componentes.
@@ -135,6 +152,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       isValid = false;
     }
 
+      if (this.datosComunesComponent) {
+    const DATOS_COMUNES_VALID = this.datosComunesComponent.validarFormulario();
+    if (!DATOS_COMUNES_VALID) {
+      isValid = false;
+    }
+  } else {
+    isValid = false;
+  }
+
     if (this.tercerosRelacionadosComponent) {
       if (!this.tercerosRelacionadosComponent.validarFormulario()) {
         isValid = false;
@@ -151,6 +177,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       isValid = false;
     }
 
+     if (this.ctpatComponent) {
+      if (!this.ctpatComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
     
 
     return isValid;

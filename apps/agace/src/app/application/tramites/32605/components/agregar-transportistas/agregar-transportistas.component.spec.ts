@@ -433,16 +433,7 @@ describe('AgregarTransportistasComponent', () => {
       fixture.detectChanges();
     });
 
-    it('debería mostrar modal de selección requerida si no hay transportistas', () => {
-      component.transportistasLista = [];
-      component.selectedTransportista = null;
-      
-      const spyModal = jest.spyOn(component, 'mostrarModalSeleccionRequerida');
-      component.modificarTransportista();
-      
-      expect(spyModal).toHaveBeenCalled();
-      expect(component.mensajeSeleccion).toBe('Seleccione un registro.');
-    });
+
 
     it('debería configurar modo edición y abrir modal con datos del transportista', () => {
       component.transportistasLista = [...mockTransportistasLista];

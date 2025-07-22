@@ -597,12 +597,16 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    * Rellena el formulario con los datos del transportista seleccionado.
    */
   modificarTransportista(): void {
-    if (this.transportistasLista.length === 0 || !this.selectedTransportista) {
-      this.mensajeSeleccion = 'Seleccione un registro.';
-      this.mostrarModalSeleccionRequerida();
-      return;
-    }
-    
+    if (this.transportistasLista.length === 0) {
+  this.mensajeSeleccion = 'No se encontró información.';
+  this.mostrarModalSeleccionRequerida();
+  return;
+  }
+  if (!this.selectedTransportista) {
+    this.mensajeSeleccion = 'Seleccione un registro.';
+    this.mostrarModalSeleccionRequerida();
+    return;
+  }
     this.isEditMode = true;
     
     // Limpiar solo el campo RFC y rellenar otros campos desde la fila seleccionada

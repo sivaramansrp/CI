@@ -40,6 +40,9 @@
           formControlName="autorizacionCBP"
           (change)="setValoresStore(ctpatForm, 'autorizacionCBP')"
         ></app-input-radio>
+         <div *ngIf="esInvalido('autorizacionCBP')" class="text-danger mt-3">
+            <b *ngIf="ctpatForm.controls['autorizacionCBP'].hasError('required')">Respuesta Obligatoria</b>
+        </div>
       </div>
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
@@ -57,6 +60,9 @@
           formControlName="instalacionesCertificadasCBP"
           (change)="setValoresStore(ctpatForm, 'instalacionesCertificadasCBP')"
         ></app-input-radio>
+        <div *ngIf="esInvalido('instalacionesCertificadasCBP')" class="text-danger mt-3">
+            <b *ngIf="ctpatForm.controls['instalacionesCertificadasCBP'].hasError('required')">Respuesta Obligatoria</b>
+        </div>
       </div>
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
@@ -72,6 +78,9 @@
           formControlName="suspensionCancelacionCBP"
           (change)="setValoresStore(ctpatForm, 'suspensionCancelacionCBP');manejarCambioSuspensionCancelacion($event)"
         ></app-input-radio>
+         <div *ngIf="esInvalido('suspensionCancelacionCBP')" class="text-danger mt-3">
+            <b *ngIf="ctpatForm.controls['suspensionCancelacionCBP'].hasError('required')">Respuesta Obligatoria</b>
+        </div>
       </div>
     </div>
   </form>
