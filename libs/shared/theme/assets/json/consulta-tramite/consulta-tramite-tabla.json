@@ -3202,5 +3202,16 @@
         "diasTranscurridos": "4",
         "departamento": "AGACE",
         "numeroDeProcedimiento": "32616"  
+    },
+        {
+        "id":"32614",
+        "folioTramite": "3170001000320251005000002",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32614",
+        "origin": "READ_PROCEDURE"
     }
 ]
