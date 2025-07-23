@@ -91,6 +91,23 @@ constructor(private consultaQuery: ConsultaioQuery,private solicitudDeRegistroIn
       });
   }
 
+   /**
+     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+     * Luego reinicializa el formulario con los valores actualizados desde el store.
+     */
+  guardarDatosMensajerias(): void {
+    this.solicitudDeRegistroInvocarService
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.solicitudDeRegistroInvocarService.setPaymentOptionalFields(resp);
+        }
+      });
+  }
+
   /**
      * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
      * Luego reinicializa el formulario con los valores actualizados desde el store.

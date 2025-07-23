@@ -3,6 +3,7 @@ import {
   CatalogoSelectComponent,
   ConfiguracionColumna,
 } from '@libs/shared/data-access-user/src';
+import { Solicitud32614MensajeriaState, Tramite32614MensajeriaStore} from '../../estados/tramites/tramite32614_mensajeria.store';
 import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -33,7 +34,6 @@ import { TRANSPORTISTAS_CONFIGURACION } from '../../constants/solicitud.enum';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite32614MensajeriaStore } from '../../estados/tramites/tramite32614_mensajeria.store';
 import { TransportistasTable } from '../../models/solicitud.model';
 import { Validators } from '@angular/forms';
 import { ViewChild } from '@angular/core';
@@ -233,6 +233,12 @@ export class ParqueIndustrialComponent implements OnInit, OnDestroy {
   /** Lista de sectores productivos leída desde un archivo JSON */
   public sectorProductivoAgace: Catalogo[] = productivo;
 
+    /**
+   * Estado actual de la solicitud del trámite
+   */
+  public solicitudState!: Solicitud32614MensajeriaState;
+ 
+
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
@@ -286,13 +292,13 @@ export class ParqueIndustrialComponent implements OnInit, OnDestroy {
 
     // Initialize mensajeriaGroup for the payment section
     this.mensajeriaGroup = this.fb.group({
-      claveReferencia: ['', Validators.required],
-      numeroOperacion: ['', Validators.required],
-      cadenaDependencia: ['', Validators.required],
-      banco: ['', Validators.required],
-      llavePago: ['', Validators.required],
-      fechaFactura: [''],
-      importePago: ['', Validators.required],
+      claveReferencia: [this.solicitudState?.claveReferencia, Validators.required],
+      numeroOperacion: [this.solicitudState?.numeroOperacion, Validators.required],
+      cadenaDependencia: [this.solicitudState?.cadenaDependencia, Validators.required],
+      banco: [this.solicitudState?.banco, Validators.required],
+      llavePago: [this.solicitudState?.llavePago, Validators.required],
+      fechaFactura: [this.solicitudState?.fechaFactura],
+      importePago: [this.solicitudState?.importePago, Validators.required],
     });
 
     this.solicitud32614Query.selectSolicitud$

@@ -192,7 +192,7 @@ getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud32614MensajeriaStat
    * 
    * @param {Solicitud32614MensajeriaState} datos - The messaging data containing payment optional fields.
    */
-  private setPaymentOptionalFields(datos: Solicitud32614MensajeriaState): void {
+  public setPaymentOptionalFields(datos: Solicitud32614MensajeriaState): void {
     this.tramite32614MensajeriaStore.setClaveReferencia(datos.claveReferencia ?? '');
     this.tramite32614MensajeriaStore.setNumeroOperacion(datos.numeroOperacion ?? '');
     this.tramite32614MensajeriaStore.setCadenaDependencia(datos.cadenaDependencia ?? '');

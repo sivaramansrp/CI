@@ -65,6 +65,20 @@ export class SolicitudDeRegistroInvocarService {
     return this.http.get<PersonaRespuestaTabla>('assets/json/32614/personapara.json');
   }
 
+    /**
+   * Sets the payment-related optional fields in the messaging store.
+   * 
+   * @param {Solicitud32614MensajeriaState} datos - The messaging data containing payment optional fields.
+   */
+  public setPaymentOptionalFields(datos: Solicitud32614MensajeriaState): void {
+    this.tramite32614MensajeriaStore.setClaveReferencia(datos.claveReferencia ?? '');
+    this.tramite32614MensajeriaStore.setNumeroOperacion(datos.numeroOperacion ?? '');
+    this.tramite32614MensajeriaStore.setCadenaDependencia(datos.cadenaDependencia ?? '');
+    this.tramite32614MensajeriaStore.setBanco(datos.banco ?? '');
+    this.tramite32614MensajeriaStore.setLlavePago(datos.llavePago ?? '');
+    this.tramite32614MensajeriaStore.setFechaFactura(datos.fechaFactura ?? '');
+    this.tramite32614MensajeriaStore.setImportePago(datos.importePago ?? '');
+  }
 
   /**
  * Obtiene los datos del registro de toma de muestras de mercancías.
