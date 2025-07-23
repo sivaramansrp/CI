@@ -118,16 +118,17 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
    * @method ngOnInit
    */
   ngOnInit(): void {
-    this.destinatarioForm = this.fb.group({
-      tipoMercancia: ['yes', Validators.required],
-      nombre: ['', Validators.required],
-      primerApellido: ['', Validators.required],
+     this.destinatarioForm = this.fb.group({
+      tipoMercancia: ['yes', Validators.required], 
+      nombre: ['', []],
+      primerApellido: ['', []], 
       segundoApellido: [''],
-      razonSocial: [''],
+      razonSocial: ['', []], 
       pais: ['', Validators.required],
-      lada: [''],
-      telefono: [''],
-      correo: ['']
+      domicilio: ['', Validators.required],
+      lada: ['', [Validators.maxLength(5)]],
+      telefono: ['', [Validators.maxLength(30)]],
+      correo: ['', [Validators.maxLength(320), Validators.email]],
     });
 
     this.certificadoZoosanitarioServices.getAllDatosForma()

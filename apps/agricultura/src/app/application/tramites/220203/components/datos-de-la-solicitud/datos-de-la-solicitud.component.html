@@ -149,6 +149,10 @@
           (listaDeFilaSeleccionada)="seleccionTabla($event)"
         >
         </app-tabla-dinamica>
+        <div
+          *ngIf="tableErrorMeassageDispaly">
+          <small class="mensaje-error">Este campo es obligatorio.</small>
+        </div>
       </div>
       <div class="col-md-12 d-flex justify-content-end">
         <div>

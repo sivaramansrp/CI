@@ -209,6 +209,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    */
   paisDeProcedenciaList: Catalogo[] = [];
 
+  tableErrorMeassageDispaly:boolean=false;
 
 
   /**
@@ -507,10 +508,15 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
     }
   }
 public validarFormulario():boolean{
+   this.tableErrorMeassageDispaly=this.cuerpoTablaFila.length === 0 ? true: false;
 if(this.datosMercanciaFormGroup.invalid){
   this.datosMercanciaFormGroup.markAllAsTouched();
   return false;
 }
+else if(!this.tableErrorMeassageDispaly){
+  return false;
+}
+
 return true;
 }
 
