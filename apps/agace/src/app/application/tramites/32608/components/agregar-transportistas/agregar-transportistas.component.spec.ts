@@ -8,8 +8,8 @@ import { ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSel
 
 import { AgregarTransportistasComponent } from './agregar-transportistas.component';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Solicitud32605Store, Solicitud32605State } from '../../estados/solicitud32605.store';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { Solicitud32608Store, Solicitud32608State } from '../../estados/solicitud32608.store';
+import { Solicitud32608Query } from '../../estados/solicitud32608.query';
 import { PANELS1, TRANSPORTISTAS_CONFIGURACION, TransportistasTable } from '../../constants/datos-comunes.enum';
 import { TransportistasListaInterface } from '../../models/solicitud.model';
 
@@ -17,8 +17,8 @@ describe('AgregarTransportistasComponent', () => {
   let component: AgregarTransportistasComponent;
   let fixture: ComponentFixture<AgregarTransportistasComponent>;
   let mockSolicitudService: jest.Mocked<SolicitudService>;
-  let mockSolicitud32605Store: jest.Mocked<Solicitud32605Store>;
-  let mockSolicitud32605Query: jest.Mocked<Solicitud32605Query>;
+  let mockSolicitud32608Store: jest.Mocked<Solicitud32608Store>;
+  let mockSolicitud32608Query: jest.Mocked<Solicitud32608Query>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
   let mockBsModalService: jest.Mocked<BsModalService>;
   let mockBsModalRef: jest.Mocked<BsModalRef>;
@@ -38,14 +38,14 @@ describe('AgregarTransportistasComponent', () => {
     }
   ];
 
-  const mockSolicitudState: Solicitud32605State = {
+  const mockSolicitudState: Solicitud32608State = {
     rfcEnclaveOperativo: 'RFC123456789',
     enlaceOperativorfc: 'RFC123456789',
     denominacionRazonsocial: 'Transportes Test SA',
     domicilio: 'Calle Test 123',
     ccat: 'CCAT123',
     transportistasLista: mockTransportistasLista
-  } as Solicitud32605State;
+  } as Solicitud32608State;
 
   const mockConsultaioState = {
     readonly: false
@@ -66,11 +66,11 @@ describe('AgregarTransportistasComponent', () => {
       conseguirTransportistasLista: jest.fn().mockReturnValue(of(mockTransportistasListaData))
     } as any;
 
-    mockSolicitud32605Store = {
+    mockSolicitud32608Store = {
       actualizarEstado: jest.fn()
     } as any;
 
-    mockSolicitud32605Query = {
+    mockSolicitud32608Query = {
       selectSolicitud$: of(mockSolicitudState)
     } as any;
 
@@ -96,8 +96,8 @@ describe('AgregarTransportistasComponent', () => {
       providers: [
         FormBuilder,
         { provide: SolicitudService, useValue: mockSolicitudService },
-        { provide: Solicitud32605Store, useValue: mockSolicitud32605Store },
-        { provide: Solicitud32605Query, useValue: mockSolicitud32605Query },
+        { provide: Solicitud32608Store, useValue: mockSolicitud32608Store },
+        { provide: Solicitud32608Query, useValue: mockSolicitud32608Query },
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
         { provide: BsModalService, useValue: mockBsModalService }
       ]
@@ -300,8 +300,9 @@ describe('AgregarTransportistasComponent', () => {
         domicilio: 'Test Address',
         ccat: 'CCAT123'
       };
+      const rfc = 'RFC123456789';
       
-      component.patchearDatosEmpresa(empresaData);
+      component.patchearDatosEmpresa(empresaData, rfc);
       
       expect(component.transportistaCertificacionForm.get('enlaceOperativorfc')?.value).toBe('RFC123456789');
       expect(component.transportistaCertificacionForm.get('denominacionRazonsocial')?.value).toBe('Test Company');
@@ -554,7 +555,7 @@ describe('AgregarTransportistasComponent', () => {
       
       component.actualizarTransportistasListaEnStore();
       
-      expect(mockSolicitud32605Store.actualizarEstado).toHaveBeenCalledWith({
+      expect(mockSolicitud32608Store.actualizarEstado).toHaveBeenCalledWith({
         transportistasLista: mockTransportistasLista
       });
     });

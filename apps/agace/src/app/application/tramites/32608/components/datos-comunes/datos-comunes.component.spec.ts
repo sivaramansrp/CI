@@ -3,16 +3,16 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject, BehaviorSubject } from 'rxjs';
 import { DatosComunesComponent } from './datos-comunes.component';
 import { ConsultaioQuery, TipoNotificacionEnum, CategoriaMensaje } from '@libs/shared/data-access-user/src';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { Solicitud32608Store } from '../../estados/solicitud32608.store';
+import { Solicitud32608Query } from '../../estados/solicitud32608.query';
 import { SolicitudService } from '../../services/solicitud.service';
 
 describe('DatosComunesComponent', () => {
   let component: DatosComunesComponent;
   let fixture: ComponentFixture<DatosComunesComponent>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
-  let mockTramite32609Store: jest.Mocked<Solicitud32605Store>;
-  let mockTramite32609Query: jest.Mocked<Solicitud32605Query>;
+  let mockTramite32609Store: jest.Mocked<Solicitud32608Store>;
+  let mockTramite32609Query: jest.Mocked<Solicitud32608Query>;
   let mockOeaTextilRegistroService: jest.Mocked<SolicitudService>;
   let formBuilder: FormBuilder;
 
@@ -95,8 +95,8 @@ describe('DatosComunesComponent', () => {
       providers: [
         FormBuilder,
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
-        { provide: Solicitud32605Store, useValue: mockTramite32609Store },
-        { provide: Solicitud32605Query, useValue: mockTramite32609Query },
+        { provide: Solicitud32608Store, useValue: mockTramite32609Store },
+        { provide: Solicitud32608Query, useValue: mockTramite32609Query },
         { provide: SolicitudService, useValue: mockOeaTextilRegistroService }
       ]
     }).compileComponents();

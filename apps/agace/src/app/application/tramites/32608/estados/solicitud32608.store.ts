@@ -182,6 +182,13 @@ export interface Solicitud32608State {
   rubroCertificacion: string; // Rubro de certificación asociado a la solicitud
   fechaFinVigenciaRubro: string; // Fecha de fin de vigencia del rubro de certificación
   numeroOficio: string; // Número de oficio asociado a la solicitud
+  autorizacion100A: string; // Autorización 100A requerida para la solicitud
+  opcionTrabajadores: boolean; // Opción de contar con trabajadores registrados ante el IMSS
+  opcionActivosFijos?: boolean; // Opción de contar con activos fijos
+  numeroEmpleadosIMSS?: string; // Número de empleados registrados ante el IMSS
+  valorTotalDe?: string; // Valor total de activos fijos o mercancías, según el contexto
+  sistemaControl?: string; // Sistema de control de inventarios
+  modalidadProgramaIMMEX?: string; // Modalidad del programa IMMEX, si aplica
 }
 
 /**
@@ -366,6 +373,13 @@ export function createInitialSolicitudState(): Solicitud32608State {
     rubroCertificacion: '', // Rubro de certificación asociado a la solicitud
     fechaFinVigenciaRubro: '', // Fecha de fin de vigencia del rubro de certificación
     numeroOficio: '', // Número de oficio asociado a la solicitud
+    autorizacion100A: '', // Autorización 100A requerida para la solicitud
+    opcionTrabajadores: false, // Opción de contar con trabajadores registrados ante el IMSS
+    opcionActivosFijos: false, // Opción de contar con activos fijos
+    numeroEmpleadosIMSS: '', // Número de empleados registrados ante el IMSS
+    valorTotalDe: '', // Valor total de activos fijos o mercancías, según el contexto
+    sistemaControl: '', // Sistema de control de inventarios
+    modalidadProgramaIMMEX: '', // Modalidad del programa IMMEX, si aplica
   };
 }
 @Injectable({

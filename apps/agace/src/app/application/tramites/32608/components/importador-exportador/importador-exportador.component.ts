@@ -9,7 +9,7 @@ import { AgregarTransportistasComponent } from '../agregar-transportistas/agrega
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
-import { FECHA_DELA_ULTIMA_OPERACION } from'../../enums/oea-textil-registro.enum';
+import { FECHA_DELA_ULTIMA_OPERACION } from '../../enums/oea-textil-registro.enum';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src'
 import { Solicitud32608Query } from '../../estados/solicitud32608.query';
 import { SolicitudService } from '../../services/solicitud.service';
@@ -46,13 +46,13 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    * Previene fugas de memoria al destruir el componente.
    */
   destroy$: Subject<void> = new Subject<void>();
-  
+
   /**
    * Formulario reactivo principal para capturar datos de importador y exportador.
    * Incluye campos como fechas, montos, operaciones bancarias y validaciones.
    */
   importadorExportadorForm!: FormGroup;
-  
+
   /**
    * Formulario reactivo para agregar enlaces operativos de empresas.
    * Maneja RFC, denominación social, domicilio y fechas de operación.
@@ -65,181 +65,181 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
    **/
   rubroIVATextilForm!: FormGroup;
-  
+
   /**
    * Opciones configurables para botones de radio en el formulario.
    * Importado desde las constantes de datos comunes.
    */
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
-  
+
   /**
    * Opciones disponibles para el registro de esquema de certificación.
    * Define las opciones seleccionables para certificaciones.
    */
   registroEsquemaCertificacionOptions = REGISTRO_ESQUEMA_CERTIFICACION_OPTIONS;
-  
+
   /**
    * Opciones de información de empresa disponibles en el formulario.
    * Configuración para tipos de información empresarial.
    */
   informacionEmpresaOptions = INFORMACION_EMPRESA_OPTIONS;
-  
+
   /**
    * Estado actual de la solicitud del trámite 32608.
    * Contiene toda la información del estado de la aplicación.
    */
   solicitudState!: Solicitud32608State;
-  
+
   /**
    * Configuración del input de fecha de inicio para el formulario.
    * Define el formato y validaciones para fechas de pago.
    */
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
-  
+
   /**
    * Configuración del input de fecha de fin de vigencia.
    * Define el formato y validaciones para fechas de inicio.
    */
   fechaDeFinDeVigencia: InputFecha = FECHA_DE_INICIO;
-  
+
   /**
    * Configuración del input de fecha de la última operación.
    * Define el formato y validaciones para fechas de operaciones.
    */
   fechaDeLaUltimaOperacion: InputFecha = FECHA_DELA_ULTIMA_OPERACION;
-  
+
   /**
    * Bandera que indica si el comercio exterior está activo.
    * Controla la visibilidad de campos relacionados con comercio exterior.
    */
   comercioExteriorActivo: boolean = false;
-  
+
   /**
    * Bandera que indica si no hay comercio exterior activo.
    * Controla la lógica inversa de comercio exterior.
    */
   noComercioExteriorActivo: boolean = false;
-  
+
   /**
    * Bandera que indica si la empresa es parte de un grupo de comercio exterior.
    * Controla campos específicos para grupos empresariales.
    */
   parteGrupoComercioExterior: boolean = false;
-  
+
   /**
    * Bandera que indica si hay fusión o escisión con comercio exterior.
    * Controla validaciones específicas para fusiones empresariales.
    */
   esFusionOEscisionConComercioExterior: boolean = false;
-  
+
   /**
    * Bandera que indica si es una empresa extranjera IMMEX.
    * Controla validaciones específicas para empresas IMMEX.
    */
   esEmpresaExtranjeraIMMEX: boolean = false;
-  
+
   /**
    * Bandera que indica si no hay fusión/escisión con operación exterior.
    * Controla la lógica inversa de fusiones con comercio exterior.
    */
   noFusionEscisionConOperacionExterior: boolean = false;
-  
+
   /**
    * Bandera que controla la visualización de errores en el formulario.
    * Se activa cuando hay errores de validación que deben mostrarse.
    */
   mostrarError: boolean = false;
-  
+
   /**
    * Bandera que controla la visibilidad del campo de registro de esquema de certificación.
    * Se activa según las selecciones del usuario en el formulario.
    */
   registroEsquemaCertificacion: boolean = false;
-  
+
   /**
    * Bandera que controla la visibilidad del campo de tipo de información de empresa.
    * Se activa según las configuraciones del formulario.
    */
   tipoInformacionEmpresa: boolean = false;
-  
+
   /**
    * Configuración de columnas para la tabla de empresas del grupo.
    * Define la estructura y formato de las columnas a mostrar.
    */
   tableHeaderDatos: ConfiguracionColumna<EmpresaDelGrupo>[] = EMPRESA_DEL_GRUPO;
-  
+
   /**
    * Configuración de columnas para la tabla de transportistas.
    * Define la estructura y formato de las columnas de transportistas.
    */
   transportistasConfiguracionColumnas: ConfiguracionColumna<TransportistasTable>[] = TRANSPORTISTAS_CONFIGURACION;
-  
+
   /**
    * Lista de transportistas que se muestra en la tabla.
    * Array que contiene todos los transportistas agregados al trámite.
    */
   transportistasLista: TransportistasTable[] = [];
-  
+
   /**
    * Lista de empresas del grupo que se muestra en la tabla principal.
    * Array que contiene todas las empresas agregadas con sus datos.
    */
   tablaDatos: EmpresaDelGrupo[] = [];
-  
+
   /**
    * Bandera que controla la visibilidad de la columna de fecha en la tabla.
    * Se activa después de agregar el primer elemento a la tabla.
    */
   mostrarColumnaFecha: boolean = false;
-  
+
   /**
    * Tipo de selección para la tabla dinámica.
    * Configurado para usar checkboxes en la selección de filas.
    */
   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
-  
+
   /**
    * Referencia al modal principal para mostrar diferentes tipos de modales.
    * Se utiliza para gestionar el estado de modales de Bootstrap.
    */
   modalRef?: BsModalRef;
-  
+
   /**
    * Referencia al modal secundario para abrir formularios.
    * Se utiliza específicamente para modales de agregar/editar datos.
    */
   modalRefabir?: BsModalRef;
-  
+
   /**
    * Bandera que indica si el componente está en modo edición.
    * Controla el comportamiento del formulario entre agregar y modificar.
    */
   isEditMode: boolean = false;
-  
+
   /**
    * Empresa actualmente seleccionada en la tabla.
    * Se utiliza para operaciones de edición y eliminación.
    */
   selectedEmpresa: EmpresaDelGrupo | null = null;
-  
+
   /**
    * Mensaje que se muestra en los modales de selección.
    * Contiene texto dinámico para diferentes estados de validación.
    */
   mensajeSeleccion: string = '';
-  
+
   /**
    * Configuración de paneles colapsables principales para la interfaz.
    * Importado desde las constantes de datos comunes.
    */
   panels = PANELS;
-  
+
   /**
    * Configuración de paneles colapsables secundarios para la interfaz.
    * Importado desde las constantes de datos comunes.
    */
   panels1 = PANELS1;
-  
+
   /**
    * Bandera que indica si el formulario debe estar en modo solo lectura.
    * Se actualiza según el estado de consulta del trámite.
@@ -250,7 +250,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    * Indica si el diálogo de notificación está habilitado.
    */
   public esHabilitarElDialogo: boolean = false;
-  
+
   /**
    * Mensaje que indica un requisito obligatorio para acceder a la nota.
    */
@@ -259,44 +259,47 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
   /**
    * Notificación que se muestra al usuario.
    */
-  public nuevaNotificacion!: Notificacion;  
-    
+  public nuevaNotificacion!: Notificacion;
+
+  /** Variable para almacenar la opción seleccionada para IVA e IEPS */
+  autorizacion: boolean = false;
+
   /**
    * Referencia al template principal del modal.
    * Template para mostrar formularios de empresa.
    */
   @ViewChild('template') template!: TemplateRef<void>;
-  
+
   /**
    * Referencia al template del modal de fecha inválida.
    * Se muestra cuando se selecciona una fecha futura no permitida.
    */
   @ViewChild('templateFechaInvalida') templateFechaInvalida!: TemplateRef<void>;
-  
+
   /**
    * Referencia al template del modal de éxito.
    * Template para mostrar confirmaciones de operaciones exitosas.
    */
   @ViewChild('templateExito') templateExito!: TemplateRef<void>;
-  
+
   /**
    * Referencia al template del modal de RFC duplicado.
    * Se muestra cuando se intenta agregar un RFC que ya existe.
    */
   @ViewChild('templateRFCDuplicado') templateRFCDuplicado!: TemplateRef<void>;
-  
+
   /**
    * Referencia al template del modal de datos obligatorios.
    * Se muestra cuando faltan campos requeridos o hay errores de validación.
    */
   @ViewChild('templateDatosObligatorios') templateDatosObligatorios!: TemplateRef<void>;
-  
+
   /**
    * Referencia al template del modal de confirmación de eliminación.
    * Template para confirmar la eliminación de empresas.
    */
   @ViewChild('templateConfirmacionEliminacion') templateConfirmacionEliminacion!: TemplateRef<void>;
-  
+
   /**
    * Referencia al template del modal de selección requerida.
    * Se muestra cuando se requiere seleccionar un elemento de la tabla.
@@ -310,7 +313,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    * param fb - FormBuilder para crear formularios reactivos
    * param modalService - Servicio para gestionar modales de Bootstrap
    */
-  constructor( 
+  constructor(
     public fb: FormBuilder,
     @Inject(BsModalService)
     private modalService: BsModalService,
@@ -336,7 +339,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario(); 
+      this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
     }
@@ -362,8 +365,37 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
     this.getDatosrubroTextil();
+     this.importadorExportadorForm.get('opcionTrabajadores')?.valueChanges.subscribe((checked: boolean) => {
+      const CONTROL = this.importadorExportadorForm.get('numeroEmpleadosIMSS');
+
+      if (checked && !this.esFormularioSoloLectura) {
+        CONTROL?.enable();
+      } else {
+        CONTROL?.disable();
+      }
+    });
+    this.opcionActivosFijosFuncion();
   }
 
+   opcionActivosFijosFuncion(): void {
+
+    this.importadorExportadorForm.get('opcionActivosFijos')?.valueChanges.subscribe((checked: boolean) => {
+      const CONTROL = this.importadorExportadorForm.get('valorTotalDe');
+
+      if (checked && !this.esFormularioSoloLectura) {
+        CONTROL?.enable();
+      } else {
+        CONTROL?.disable();
+      }
+    });
+
+    // const control = this.importadorExportadorForm.get('valorTotalDe');  
+    // if (checked && !this.esFormularioSoloLectura) {
+    //   control?.enable();
+    // } else {
+    //   control?.disable();
+    // }
+  }
   /**
    * Inicializa los formularios reactivos con los valores del estado actual.
    * Configura validaciones y campos deshabilitados según las reglas de negocio.
@@ -372,31 +404,40 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
   inicializarFormulario(): void {
     this.obtenerEstadoSolicitud();
     this.importadorExportadorForm = this.fb.group({
-      comercioExteriorRealizado : [this.solicitudState?.comercioExteriorRealizado, Validators.required],
+      comercioExteriorRealizado: [this.solicitudState?.comercioExteriorRealizado, Validators.required],
       fechaDePago: [this.solicitudState?.fechaDePago, Validators.required],
       fechaInicioComercio: [this.solicitudState?.fechaInicioComercio, Validators.required],
       esParteGrupoComercioExterior: [this.solicitudState?.esParteGrupoComercioExterior, Validators.required],
       fusionEscisionConOperacionExterior: [this.solicitudState?.fusionEscisionConOperacionExterior, Validators.required],
       empresaExtranjeraIMMEX: [this.solicitudState?.empresaExtranjeraIMMEX, Validators.required],
-      monto:[ this.solicitudState?.monto, Validators.required],
-      operacionesBancarias:[this.solicitudState?.operacionesBancarias, Validators.required],
+      monto: [this.solicitudState?.monto, Validators.required],
+      operacionesBancarias: [this.solicitudState?.operacionesBancarias, Validators.required],
       llavePago: [this.solicitudState?.llavePago, Validators.required],
       registroEsquemaCertificacion: [this.solicitudState?.registroEsquemaCertificacion, Validators.required],
       tipoInformacionEmpresa: [this.solicitudState?.tipoInformacionEmpresa, Validators.required],
       cuentaConProgramaIMMEX: [this.solicitudState?.cuentaConProgramaIMMEX, Validators.required],
       declaracionAnualISRRepresentantes: [this.solicitudState?.declaracionAnualISRRepresentantes],
       registroEsquemaCertificacionIVAIEPS: [this.solicitudState?.registroEsquemaCertificacionIVAIEPS, Validators.required],
+      autorizacion100A: [this.solicitudState?.autorizacion100A, Validators.required],
+      opcionTrabajadores: [this.solicitudState?.opcionTrabajadores, Validators.required], 
+      opcionActivosFijos: [false], 
+      numeroEmpleadosIMSS: [{ value: '', disabled: true }],
+      valorTotalDe: [{ value: this.solicitudState?.valorTotalDe, disabled: true }],
+      opcionCotizacion: [false],
+      actualizar2051: [false],
+      sistemaControl: [this.solicitudState?.sistemaControl, Validators.required],
+      modalidadProgramaIMMEX: [this.solicitudState?.modalidadProgramaIMMEX, Validators.required],
     })
     this.agregarEnlaceOperativoForm = this.fb.group({
-      rfcEnclaveOperativo:[this.solicitudState?.rfcEnclaveOperativo, Validators.required],
+      rfcEnclaveOperativo: [this.solicitudState?.rfcEnclaveOperativo, Validators.required],
       enlaceOperativorfc: [
-        {value:this.solicitudState?.enlaceOperativorfc, disabled: true}
+        { value: this.solicitudState?.enlaceOperativorfc, disabled: true }
       ],
       denominacionRazonsocial: [
-        {value:this.solicitudState?.denominacionRazonsocial, disabled: true}
+        { value: this.solicitudState?.denominacionRazonsocial, disabled: true }
       ],
-      domicilio: [{value:this.solicitudState?.domicilio, disabled: true}],
-      inputfechaDeLaUltimaOperacion: [{value:this.solicitudState?.inputfechaDeLaUltimaOperacion, disabled: true}],
+      domicilio: [{ value: this.solicitudState?.domicilio, disabled: true }],
+      inputfechaDeLaUltimaOperacion: [{ value: this.solicitudState?.inputfechaDeLaUltimaOperacion, disabled: true }],
     });
     if (this.solicitudState?.tablaDatos) {
       this.tablaDatos = [...this.solicitudState.tablaDatos];
@@ -418,7 +459,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
   onFechaCambiada(nuevo_valor: string): void {
     this.importadorExportadorForm.get('fechaDePago')?.setValue(nuevo_valor);
     this.importadorExportadorForm.get('fechaDePago')?.markAsUntouched();
-    
+
     if (ImportadorExportadorComponent.esFechaFutura(nuevo_valor)) {
       this.mostrarModalFechaInvalida();
     }
@@ -444,8 +485,8 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    */
   actualizarFechaDeLaUltimaOperacion(nuevo_valor: string): void {
     this.agregarEnlaceOperativoForm.get('inputfechaDeLaUltimaOperacion')?.setValue(nuevo_valor);
-    this.agregarEnlaceOperativoForm.get('inputfechaDeLaUltimaOperacion')?.markAsUntouched(); 
-   
+    this.agregarEnlaceOperativoForm.get('inputfechaDeLaUltimaOperacion')?.markAsUntouched();
+
     if (ImportadorExportadorComponent.esFechaFutura(nuevo_valor)) {
       this.mostrarModalFechaInvalida();
     }
@@ -462,10 +503,10 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     if (!fechaSeleccionada) {
       return false;
     }
-    
+
     // Analizar la fecha - asumiendo formato DD/MM/YYYY
     let fechaSeleccionadaDate: Date;
-    
+
     if (fechaSeleccionada.includes('/')) {
       const FECHA_PARTS = fechaSeleccionada.split('/');
       if (FECHA_PARTS.length !== 3) {
@@ -531,7 +572,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    * param template - Template del modal a mostrar
    */
   abrirModal(template: TemplateRef<void>): void {
-    this.modalRefabir = this.modalService.show(template, { class: 'modal-lg',});
+    this.modalRefabir = this.modalService.show(template, { class: 'modal-lg', });
   }
 
   /**
@@ -547,7 +588,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
         this.mostrarModalRFCDuplicado();
         return;
       }
-      
+
       this.buscarDatosPorRFC(RFC);
     }
   }
@@ -560,7 +601,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    * returns true si el RFC existe, false en caso contrario
    */
   existeRFCEnTabla(rfc: string): boolean {
-    return this.tablaDatos.some(empresa => 
+    return this.tablaDatos.some(empresa =>
       empresa.rfcEnclaveOperativo?.toLowerCase() === rfc.toLowerCase()
     );
   }
@@ -650,13 +691,13 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
   aceptarEnlaceOperativo(): void {
     const RFC_VALUE = this.agregarEnlaceOperativoForm.get('rfcEnclaveOperativo')?.value;
     const DATE_VALUE = this.agregarEnlaceOperativoForm.get('inputfechaDeLaUltimaOperacion')?.value;
-    
+
     // Verificar que el campo RFC requerido esté lleno
     if (!RFC_VALUE?.trim()) {
       this.agregarEnlaceOperativoForm.get('rfcEnclaveOperativo')?.markAsTouched();
       return;
     }
-    
+
     // En modo edición, verificar si el RFC existe en otros registros (excluyendo el actual)
     if (this.isEditMode && this.existeRFCEnTablaExcluyendo(RFC_VALUE, this.selectedEmpresa?.rfcEnclaveOperativo)) {
       this.mostrarModalDatosObligatorios();
@@ -672,10 +713,10 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
       this.mostrarModalFechaInvalida();
       return;
     }
-    
+
     // Proceder con agregar los datos
     const FORMDATOS = this.agregarEnlaceOperativoForm.getRawValue();
-    
+
     const EMPRESA_DATA: EmpresaDelGrupo = {
       rfcEnclaveOperativo: FORMDATOS.rfcEnclaveOperativo,
       denominacionRazonsocial: FORMDATOS.denominacionRazonsocial,
@@ -684,17 +725,17 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     };
 
     if (this.isEditMode && this.selectedEmpresa) {
-      const INDEX = this.tablaDatos.findIndex(emp => 
+      const INDEX = this.tablaDatos.findIndex(emp =>
         emp.rfcEnclaveOperativo === this.selectedEmpresa?.rfcEnclaveOperativo
       );
       if (INDEX !== -1) {
         this.tablaDatos[INDEX] = EMPRESA_DATA;
-        this.tablaDatos = [...this.tablaDatos]; 
+        this.tablaDatos = [...this.tablaDatos];
       }
     } else {
       this.tablaDatos = [...this.tablaDatos, EMPRESA_DATA];
     }
-    
+
     this.actualizarTablaDatosEnStore();
 
     // Mostrar la columna de fecha después de agregar el primer elemento
@@ -702,7 +743,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
       this.mostrarColumnaFecha = true;
       this.tableHeaderDatos = EMPRESA_DEL_GRUPO_CON_FECHA;
     }
-    
+
     this.limpiarFormulario();
     this.isEditMode = false;
     this.limpiarSeleccion();
@@ -719,7 +760,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    * returns true si existe el RFC (excluyendo el especificado), false en caso contrario
    */
   existeRFCEnTablaExcluyendo(rfc: string, rfcExcluir?: string): boolean {
-    return this.tablaDatos.some(empresa => 
+    return this.tablaDatos.some(empresa =>
       empresa.rfcEnclaveOperativo?.toLowerCase() === rfc.toLowerCase() &&
       empresa.rfcEnclaveOperativo?.toLowerCase() !== rfcExcluir?.toLowerCase()
     );
@@ -776,7 +817,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
       enlaceOperativorfc: '',
       denominacionRazonsocial: '',
       domicilio: '',
-      inputfechaDeLaUltimaOperacion:''
+      inputfechaDeLaUltimaOperacion: ''
     });
     this.isEditMode = false;
   }
@@ -836,9 +877,9 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
       this.mostrarModalSeleccionRequerida();
       return;
     }
-    
+
     this.isEditMode = true;
-    
+
     this.agregarEnlaceOperativoForm.patchValue({
       rfcEnclaveOperativo: '',
       enlaceOperativorfc: this.selectedEmpresa.rfcEnclaveOperativo,
@@ -846,7 +887,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
       domicilio: this.selectedEmpresa.domicilio,
       inputfechaDeLaUltimaOperacion: this.selectedEmpresa.inputfechaDeLaUltimaOperacion || ''
     });
-    
+
     // Abrir el modal
     this.abrirModal(this.template);
   }
@@ -862,7 +903,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
       this.mostrarModalSeleccionRequerida();
       return;
     }
-    
+
     // Mostrar modal de confirmación antes de eliminar
     this.mostrarModalConfirmacionEliminacion();
   }
@@ -875,15 +916,15 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     if (!this.selectedEmpresa) {
       return;
     }
-    
+
     // Eliminar la empresa seleccionada de la tabla
-    this.tablaDatos = this.tablaDatos.filter(empresa => 
+    this.tablaDatos = this.tablaDatos.filter(empresa =>
       empresa.rfcEnclaveOperativo !== this.selectedEmpresa?.rfcEnclaveOperativo
     );
 
     this.actualizarTablaDatosEnStore();
     this.limpiarSeleccion();
-    
+
     // Cerrar modal de confirmación y mostrar éxito
     this.modalRef?.hide();
     this.mensajeSeleccion = 'Datos eliminados correctamente';
@@ -999,25 +1040,25 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     }
 
     const CHARCODE = event.which ? event.which : event.keyCode;
-    
+
     // Permitir: backspace (8), delete (46), tab (9), escape (27), enter (13)
     if ([8, 9, 27, 13, 46].indexOf(CHARCODE) !== -1 ||
-        // Permitir: Ctrl+A (65), Ctrl+C (67), Ctrl+V (86), Ctrl+X (88)
-        (CHARCODE === 65 && event.ctrlKey === true) ||
-        (CHARCODE === 67 && event.ctrlKey === true) ||
-        (CHARCODE === 86 && event.ctrlKey === true) ||
-        (CHARCODE === 88 && event.ctrlKey === true) ||
-        // Permitir: Home (36), End (35), flecha izquierda (37), flecha derecha (39)
-        (CHARCODE >= 35 && CHARCODE <= 39)) {
+      // Permitir: Ctrl+A (65), Ctrl+C (67), Ctrl+V (86), Ctrl+X (88)
+      (CHARCODE === 65 && event.ctrlKey === true) ||
+      (CHARCODE === 67 && event.ctrlKey === true) ||
+      (CHARCODE === 86 && event.ctrlKey === true) ||
+      (CHARCODE === 88 && event.ctrlKey === true) ||
+      // Permitir: Home (36), End (35), flecha izquierda (37), flecha derecha (39)
+      (CHARCODE >= 35 && CHARCODE <= 39)) {
       return true;
     }
-    
+
     // Bloquear si no es un número (0-9)
     if (CHARCODE < 48 || CHARCODE > 57) {
       event.preventDefault();
       return false;
     }
-    
+
     return true;
   }
 
@@ -1032,11 +1073,11 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     event.preventDefault();
     const TEXTO_PEGADO = event.clipboardData?.getData('text') || '';
     const SOLO_NUMEROS = TEXTO_PEGADO.replace(/[^0-9]/g, '');
-    
+
     const ELEMENTO_DESTINO = event.target as HTMLInputElement;
     const LONGITUD_MAXIMA = parseInt(ELEMENTO_DESTINO.getAttribute('maxlength') || '10', 10);
     const NUEVO_VALOR = SOLO_NUMEROS.substring(0, LONGITUD_MAXIMA);
-    
+
     // Actualizar el control del formulario
     this.importadorExportadorForm.get(fieldName)?.setValue(NUEVO_VALOR);
   }
@@ -1055,26 +1096,26 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     }
 
     const CHARCODE = event.which ? event.which : event.keyCode;
-    
+
     // Permitir: backspace (8), delete (46), tab (9), escape (27), enter (13), espacio (32)
     if ([8, 9, 27, 13, 46, 32].indexOf(CHARCODE) !== -1 ||
-        // Permitir: Ctrl+A (65), Ctrl+C (67), Ctrl+V (86), Ctrl+X (88)
-        (CHARCODE === 65 && event.ctrlKey === true) ||
-        (CHARCODE === 67 && event.ctrlKey === true) ||
-        (CHARCODE === 86 && event.ctrlKey === true) ||
-        (CHARCODE === 88 && event.ctrlKey === true) ||
-        // Permitir: Home (36), End (35), flecha izquierda (37), flecha derecha (39)
-        (CHARCODE >= 35 && CHARCODE <= 39)) {
+      // Permitir: Ctrl+A (65), Ctrl+C (67), Ctrl+V (86), Ctrl+X (88)
+      (CHARCODE === 65 && event.ctrlKey === true) ||
+      (CHARCODE === 67 && event.ctrlKey === true) ||
+      (CHARCODE === 86 && event.ctrlKey === true) ||
+      (CHARCODE === 88 && event.ctrlKey === true) ||
+      // Permitir: Home (36), End (35), flecha izquierda (37), flecha derecha (39)
+      (CHARCODE >= 35 && CHARCODE <= 39)) {
       return true;
     }
-    
+
     // Permitir: números (48-57), letras mayúsculas (65-90), letras minúsculas (97-122)
     if ((CHARCODE >= 48 && CHARCODE <= 57) || // 0-9
-        (CHARCODE >= 65 && CHARCODE <= 90) || // A-Z
-        (CHARCODE >= 97 && CHARCODE <= 122)) { // a-z
+      (CHARCODE >= 65 && CHARCODE <= 90) || // A-Z
+      (CHARCODE >= 97 && CHARCODE <= 122)) { // a-z
       return true;
     }
-    
+
     // Bloquear cualquier otro caracter
     event.preventDefault();
     return false;
@@ -1091,11 +1132,11 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     event.preventDefault();
     const TEXTO_PEGADO = event.clipboardData?.getData('text') || '';
     const SOLO_ALFANUMERICOS = TEXTO_PEGADO.replace(/[^a-zA-Z0-9\s]/g, '');
-    
+
     const ELEMENTO_DESTINO = event.target as HTMLInputElement;
     const LONGITUD_MAXIMA = parseInt(ELEMENTO_DESTINO.getAttribute('maxlength') || '25', 10);
     const NUEVO_VALOR = SOLO_ALFANUMERICOS.substring(0, LONGITUD_MAXIMA);
-    
+
     // Actualizar el control del formulario
     this.importadorExportadorForm.get(fieldName)?.setValue(NUEVO_VALOR);
   }
@@ -1124,37 +1165,37 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    * param value - Valor seleccionado del campo de registro de esquema
    */
 
-/**
- * Maneja el cambio en el campo de registro de esquema de certificación IVA/IEPS.
- * Si se selecciona "No" (0), limpia los campos relacionados y los habilita.
- * Si se selecciona "Sí" (1), carga datos desde el servicio y deshabilita los campos.
- * 
- * param value - Valor seleccionado del campo de registro de esquema
- */
-onRegistroEsquemaCertificacionIVAIEPSChange(value: string | number): void {
-  const VALUE_STRING = value.toString();
-  
-  if (VALUE_STRING === '0') {
-    // Clear the form and enable fields when "No" is selected
-    this.rubroIVATextilForm.patchValue({
-      rubroCertificacion: '',
-      fechaFinVigenciaRubro: '',
-      numeroOficio: ''
-    });
-    
-    // Enable all fields in the form
-    this.rubroIVATextilForm.enable();
-    
-  } else if (VALUE_STRING === '1') {
-    // Load data from service and disable fields when "Yes" is selected
-    this.getDatosrubroTextil();
-    
-    // Disable all fields in the form after data is loaded
-    setTimeout(() => {
-      this.rubroIVATextilForm.disable();
-    }, 100); // Small delay to ensure data is loaded first
+  /**
+   * Maneja el cambio en el campo de registro de esquema de certificación IVA/IEPS.
+   * Si se selecciona "No" (0), limpia los campos relacionados y los habilita.
+   * Si se selecciona "Sí" (1), carga datos desde el servicio y deshabilita los campos.
+   * 
+   * param value - Valor seleccionado del campo de registro de esquema
+   */
+  onRegistroEsquemaCertificacionIVAIEPSChange(value: string | number): void {
+    const VALUE_STRING = value.toString();
+
+    if (VALUE_STRING === '0') {
+      // Clear the form and enable fields when "No" is selected
+      this.rubroIVATextilForm.patchValue({
+        rubroCertificacion: '',
+        fechaFinVigenciaRubro: '',
+        numeroOficio: ''
+      });
+
+      // Enable all fields in the form
+      this.rubroIVATextilForm.enable();
+
+    } else if (VALUE_STRING === '1') {
+      // Load data from service and disable fields when "Yes" is selected
+      this.getDatosrubroTextil();
+
+      // Disable all fields in the form after data is loaded
+      setTimeout(() => {
+        this.rubroIVATextilForm.disable();
+      }, 100); // Small delay to ensure data is loaded first
+    }
   }
-}
 
 
   /**
@@ -1181,83 +1222,98 @@ onRegistroEsquemaCertificacionIVAIEPSChange(value: string | number): void {
   }
 
   /**
+  * Actualiza el valor de la propiedad 2050 (Autorización 100-A) en el store
+  * @param evento Nuevo valor para la propiedad
+  */
+  onAutorizacion100AChange(evento: string | number): void {
+
+
+    if (evento === 0 || evento === '0') {
+      this.autorizacion = true; // Show authorization fields
+    }
+    else {
+      this.autorizacion = false; // Hide authorization fields
+    }
+  }
+
+  /**
    * Método que se ejecuta cuando se selecciona una opción del botón de radio.
    * Habilita o deshabilita el diálogo de confirmación según la opción seleccionada.
    * @param {string, number} evento - El evento del cambio de valor del botón de radio.
    * @param {string} nota - Nota opcional para enviar al diálogo.
    */
-  onSeleccionfalsa(evento:string | number, nota?:string): void {
+  onSeleccionfalsa(evento: string | number, nota?: string): void {
     if (evento && (evento === '0' || evento === 0)) {
       this.enviarDialogData(nota);
       this.esHabilitarElDialogo = true;
     } else {
       this.esHabilitarElDialogo = false;
     }
-  
+
   }
 
-   /**
-     * Envía los datos del formulario y muestra el modal de confirmación.
-     * Si el formulario es inválido, marca todos los campos como tocados.
-     */
-    enviarDialogData(datos?:string): void {
-      this.nuevaNotificacion = {
-          tipoNotificacion: TipoNotificacionEnum.ALERTA,
-          categoria: CategoriaMensaje.ALERTA,
-          modo: 'modal',
-          titulo: '',
-          mensaje: datos ? datos : this.REQUISITO_OBLIGATORIO,
-          cerrar: false,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-          tamanioModal: 'modal-md',
-        };
-    }
+  /**
+    * Envía los datos del formulario y muestra el modal de confirmación.
+    * Si el formulario es inválido, marca todos los campos como tocados.
+    */
+  enviarDialogData(datos?: string): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
+      modo: 'modal',
+      titulo: '',
+      mensaje: datos ? datos : this.REQUISITO_OBLIGATORIO,
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-md',
+    };
+  }
 
-     /**
-   * Método para cerrar el modal de confirmación.
-   * @returns {void}
-   */
+  /**
+* Método para cerrar el modal de confirmación.
+* @returns {void}
+*/
   cerrarModal(): void {
     this.esHabilitarElDialogo = false;
   }
 
- getDatosrubroTextil(): void {
-  this.solicitudService.getDatosrubroTextil()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((datos: RubroTextil) => {
-      this.rubroIVATextilForm.patchValue({
-        rubroCertificacion: datos.rubroCertificacion,
-        fechaFinVigenciaRubro: datos.fechaFinVigenciaRubro,
-        numeroOficio: datos.numeroOficio
-      });
-      this.tramite32608Store.actualizarEstado(datos);
-      
-      // Disable the form after patching values if the current selection is '1'
-      const CURRENT_VALUE = this.importadorExportadorForm.get('registroEsquemaCertificacionIVAIEPS')?.value;
-      if (CURRENT_VALUE === '1') {
-        this.rubroIVATextilForm.disable();
-      }
-    });
-}
+  getDatosrubroTextil(): void {
+    this.solicitudService.getDatosrubroTextil()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((datos: RubroTextil) => {
+        this.rubroIVATextilForm.patchValue({
+          rubroCertificacion: datos.rubroCertificacion,
+          fechaFinVigenciaRubro: datos.fechaFinVigenciaRubro,
+          numeroOficio: datos.numeroOficio
+        });
+        this.tramite32608Store.actualizarEstado(datos);
 
-   /**
- * Verifica si el formulario `importadorExportadorForm` es válido.
- * Si el formulario es válido, retorna `true`. 
- * Si no es válido, marca todos los campos como tocados para mostrar los errores y retorna `false`.
- */
- validarFormulario(): boolean {
-  let esValido = true;
-  
-  // Validate main form
-  if (this.importadorExportadorForm.invalid) {
-    this.importadorExportadorForm.markAllAsTouched();
-    esValido = false;
+        // Disable the form after patching values if the current selection is '1'
+        const CURRENT_VALUE = this.importadorExportadorForm.get('registroEsquemaCertificacionIVAIEPS')?.value;
+        if (CURRENT_VALUE === '1') {
+          this.rubroIVATextilForm.disable();
+        }
+      });
   }
- 
- 
-  return esValido;
-}
+
+  /**
+* Verifica si el formulario `importadorExportadorForm` es válido.
+* Si el formulario es válido, retorna `true`. 
+* Si no es válido, marca todos los campos como tocados para mostrar los errores y retorna `false`.
+*/
+  validarFormulario(): boolean {
+    let esValido = true;
+
+    // Validate main form
+    if (this.importadorExportadorForm.invalid) {
+      this.importadorExportadorForm.markAllAsTouched();
+      esValido = false;
+    }
+
+
+    return esValido;
+  }
 
   /**
    * Hook del ciclo de vida que se ejecuta antes de destruir el componente.

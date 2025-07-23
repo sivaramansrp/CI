@@ -9,8 +9,8 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { CTPATComponent } from './c-tpat.component';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Solicitud32605Store, Solicitud32605State } from '../../estados/solicitud32605.store';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { Solicitud32608Store, Solicitud32608State } from '../../estados/solicitud32608.store';
+import { Solicitud32608Query } from '../../estados/solicitud32608.query';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constants/datos-comunes.enum';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -18,17 +18,17 @@ describe('CTPATComponent', () => {
   let component: CTPATComponent;
   let fixture: ComponentFixture<CTPATComponent>;
   let mockSolicitudService: jest.Mocked<SolicitudService>;
-  let mockSolicitud32605Store: jest.Mocked<Solicitud32605Store>;
-  let mockSolicitud32605Query: jest.Mocked<Solicitud32605Query>;
+  let mockSolicitud32608Store: jest.Mocked<Solicitud32608Store>;
+  let mockSolicitud32608Query: jest.Mocked<Solicitud32608Query>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
   let mockBsModalService: jest.Mocked<BsModalService>;
   let mockBsModalRef: jest.Mocked<BsModalRef>;
 
-  const mockSolicitudState: Solicitud32605State = {
+  const mockSolicitudState: Solicitud32608State = {
     autorizacionCBP: '1',
     instalacionesCertificadasCBP: '0',
     suspensionCancelacionCBP: '',
-  } as Solicitud32605State;
+  } as Solicitud32608State;
 
   const mockConsultaioState = {
     readonly: false
@@ -41,11 +41,11 @@ describe('CTPATComponent', () => {
       obtenerDatos: jest.fn().mockReturnValue(of(mockSolicitudState))
     } as any;
 
-    mockSolicitud32605Store = {
+    mockSolicitud32608Store = {
       actualizarEstado: jest.fn()
     } as any;
 
-    mockSolicitud32605Query = {
+    mockSolicitud32608Query = {
       selectSolicitud$: of(mockSolicitudState)
     } as any;
 
@@ -72,8 +72,8 @@ describe('CTPATComponent', () => {
       providers: [
         FormBuilder,
         { provide: SolicitudService, useValue: mockSolicitudService },
-        { provide: Solicitud32605Store, useValue: mockSolicitud32605Store },
-        { provide: Solicitud32605Query, useValue: mockSolicitud32605Query },
+        { provide: Solicitud32608Store, useValue: mockSolicitud32608Store },
+        { provide: Solicitud32608Query, useValue: mockSolicitud32608Query },
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
         { provide: BsModalService, useValue: mockBsModalService }
       ]
@@ -168,7 +168,7 @@ describe('CTPATComponent', () => {
     });
 
     it('debería suscribirse a selectSolicitud$ del query', () => {
-      const spy = jest.spyOn(mockSolicitud32605Query.selectSolicitud$, 'pipe');
+      const spy = jest.spyOn(mockSolicitud32608Query.selectSolicitud$, 'pipe');
       
       component.obtenerEstadoSolicitud();
       
@@ -189,7 +189,7 @@ describe('CTPATComponent', () => {
       component.ctpatForm.get(campo)?.setValue(valor);
       component.setValoresStore(component.ctpatForm, campo);
       
-      expect(mockSolicitud32605Store.actualizarEstado).toHaveBeenCalledWith({
+      expect(mockSolicitud32608Store.actualizarEstado).toHaveBeenCalledWith({
         [campo]: valor
       });
     });
@@ -197,7 +197,7 @@ describe('CTPATComponent', () => {
     it('no debería actualizar el store cuando el formulario es null', () => {
       component.setValoresStore(null, 'autorizacionCBP');
       
-      expect(mockSolicitud32605Store.actualizarEstado).not.toHaveBeenCalled();
+      expect(mockSolicitud32608Store.actualizarEstado).not.toHaveBeenCalled();
     });
 
     it('no debería actualizar el store cuando el control tiene valor null', () => {
@@ -206,7 +206,7 @@ describe('CTPATComponent', () => {
       component.ctpatForm.get(campo)?.setValue(null);
       component.setValoresStore(component.ctpatForm, campo);
       
-      expect(mockSolicitud32605Store.actualizarEstado).not.toHaveBeenCalled();
+      expect(mockSolicitud32608Store.actualizarEstado).not.toHaveBeenCalled();
     });
 
     it('no debería actualizar el store cuando el control tiene valor undefined', () => {
@@ -215,7 +215,7 @@ describe('CTPATComponent', () => {
       component.ctpatForm.get(campo)?.setValue(undefined);
       component.setValoresStore(component.ctpatForm, campo);
       
-      expect(mockSolicitud32605Store.actualizarEstado).not.toHaveBeenCalled();
+      expect(mockSolicitud32608Store.actualizarEstado).not.toHaveBeenCalled();
     });
   });
 
@@ -326,8 +326,8 @@ describe('CTPATComponent', () => {
       ]);
     });
 
-    it('debería inicializar solicitud32605State como objeto vacío', () => {
-      expect(component.solicitud32605State).toEqual({});
+    it('debería inicializar solicitud32608State como objeto vacío', () => {
+      expect(component.solicitud32608State).toEqual({});
     });
 
     it('debería tener modalRef como undefined inicialmente', () => {
@@ -390,7 +390,7 @@ describe('CTPATComponent', () => {
 
   describe('Casos edge y manejo de errores', () => {
     it('debería manejar el caso cuando el estado de la solicitud es null', () => {
-      mockSolicitud32605Query.selectSolicitud$ = of(null as any);
+      mockSolicitud32608Query.selectSolicitud$ = of(null as any);
       
       expect(() => component.obtenerEstadoSolicitud()).not.toThrow();
     });
@@ -406,7 +406,7 @@ describe('CTPATComponent', () => {
       
       component.setValoresStore(component.ctpatForm, 'campoInexistente');
       
-      expect(mockSolicitud32605Store.actualizarEstado).not.toHaveBeenCalled();
+      expect(mockSolicitud32608Store.actualizarEstado).not.toHaveBeenCalled();
     });
   });
 });

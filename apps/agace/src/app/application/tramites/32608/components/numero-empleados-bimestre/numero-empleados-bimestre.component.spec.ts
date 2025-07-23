@@ -12,8 +12,8 @@ import {
   ConsultaioState,
   createConsultaInitialState
 } from '@libs/shared/data-access-user/src';
-import { Solicitud32605Store, createInitialSolicitudState } from '../../estados/solicitud32605.store';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { Solicitud32608Store, createInitialSolicitudState } from '../../estados/solicitud32608.store';
+import { Solicitud32608Query } from '../../estados/solicitud32608.query';
 import { SolicitudService } from '../../services/solicitud.service';
 import { BuscarRfcResponse, NumeroEmpleadosTabla } from '../../models/oea-textil-registro.model';
 
@@ -35,8 +35,8 @@ jest.mock('bootstrap', () => {
 describe('NumeroEmpleadosBimestreComponent - Pruebas unitarias', () => {
   let component: NumeroEmpleadosBimestreComponent;
   let fixture: ComponentFixture<NumeroEmpleadosBimestreComponent>;
-  let mockSolicitud32605Store: jest.Mocked<Solicitud32605Store>;
-  let mockSolicitud32605Query: jest.Mocked<Solicitud32605Query>;
+  let mockSolicitud32608Store: jest.Mocked<Solicitud32608Store>;
+  let mockSolicitud32608Query: jest.Mocked<Solicitud32608Query>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
   let mockSolicitudService: jest.Mocked<SolicitudService>;
 
@@ -76,7 +76,7 @@ describe('NumeroEmpleadosBimestreComponent - Pruebas unitarias', () => {
 
   beforeEach(async () => {
     // Configuración de espías para servicios simulados
-    mockSolicitud32605Store = {
+    mockSolicitud32608Store = {
       establecerDatos: jest.fn(),
       actualizarSeccion: jest.fn(),
       eliminarElemento: jest.fn(),
@@ -84,7 +84,7 @@ describe('NumeroEmpleadosBimestreComponent - Pruebas unitarias', () => {
     } as any;
 
     // Usar of() para crear un observable compatible con pipe
-    mockSolicitud32605Query = {
+    mockSolicitud32608Query = {
       selectSolicitud$: of(estadoTramiteMock),
       __store__: {} as any,
       select: jest.fn(),
@@ -112,8 +112,8 @@ describe('NumeroEmpleadosBimestreComponent - Pruebas unitarias', () => {
       ],
       providers: [
         FormBuilder,
-        { provide: Solicitud32605Store, useValue: mockSolicitud32605Store },
-        { provide: Solicitud32605Query, useValue: mockSolicitud32605Query },
+        { provide: Solicitud32608Store, useValue: mockSolicitud32608Store },
+        { provide: Solicitud32608Query, useValue: mockSolicitud32608Query },
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
         { provide: SolicitudService, useValue: mockSolicitudService }
       ],
@@ -177,8 +177,8 @@ describe('NumeroEmpleadosBimestreComponent - Pruebas unitarias', () => {
         ],
         providers: [
           FormBuilder,
-          { provide: Solicitud32605Store, useValue: mockSolicitud32605Store },
-          { provide: Solicitud32605Query, useValue: mockSolicitud32605Query },
+          { provide: Solicitud32608Store, useValue: mockSolicitud32608Store },
+          { provide: Solicitud32608Query, useValue: mockSolicitud32608Query },
           { provide: ConsultaioQuery, useValue: nuevoMockConsultaioQuery },
           { provide: SolicitudService, useValue: mockSolicitudService }
         ],
@@ -602,7 +602,7 @@ describe('NumeroEmpleadosBimestreComponent - Pruebas unitarias', () => {
       expect(component.numeroEmpleadosBimestreList).not.toContain(datosNumeroEmpleadosMock[0]);
       expect(component.listaFilaSeleccionadaEmpleado).toEqual([]);
       expect(component.filaSeleccionadaNumeroEmpleados).toEqual({} as any);
-      expect(mockSolicitud32605Store.actualizarEstado).toHaveBeenCalled();
+      expect(mockSolicitud32608Store.actualizarEstado).toHaveBeenCalled();
     });
 
     it('✅ no debería eliminar elementos cuando se cancela la eliminación', () => {
@@ -834,7 +834,7 @@ describe('NumeroEmpleadosBimestreComponent - Pruebas unitarias', () => {
       const elementoActualizado = component.numeroEmpleadosBimestreList.find(e => e.id === datosNumeroEmpleadosMock[0].id);
       expect(elementoActualizado?.denominacionSocial).toBe('Empresa Actualizada');
       expect(elementoActualizado?.numeroDeEmpleados).toBe('100');
-      expect(mockSolicitud32605Store.actualizarEstado).toHaveBeenCalled();
+      expect(mockSolicitud32608Store.actualizarEstado).toHaveBeenCalled();
     });
 
     it('✅ debería agregar nuevo registro cuando no hay fila seleccionada', () => {
@@ -852,7 +852,7 @@ describe('NumeroEmpleadosBimestreComponent - Pruebas unitarias', () => {
       
       expect(component.numeroEmpleadosBimestreList.length).toBe(longitudInicial + 1);
       expect(component.numeroEmpleadosBimestreList[0].denominacionSocial).toBe('Empresa Nueva');
-      expect(mockSolicitud32605Store.actualizarEstado).toHaveBeenCalled();
+      expect(mockSolicitud32608Store.actualizarEstado).toHaveBeenCalled();
     });
 
     it('✅ debería generar ID incremental para nuevos registros', () => {

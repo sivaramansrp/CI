@@ -4,8 +4,8 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { Solicitud32608Store } from '../../estados/solicitud32608.store';
+import { Solicitud32608Query } from '../../estados/solicitud32608.query';
 
 describe('RepresentanteLegalComponent', () => {
   let component: RepresentanteLegalComponent;
@@ -41,8 +41,8 @@ describe('RepresentanteLegalComponent', () => {
   ],
   providers: [
     FormBuilder,
-    { provide: Solicitud32605Store, useValue: mockStore },
-    { provide: Solicitud32605Query, useValue: mockQuery },
+    { provide: Solicitud32608Store, useValue: mockStore },
+    { provide: Solicitud32608Query, useValue: mockQuery },
     { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
   ],
 }).compileComponents();

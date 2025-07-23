@@ -9,15 +9,15 @@ import {
   TipoNotificacionEnum, 
   CategoriaMensaje 
 } from '@libs/shared/data-access-user/src';
-import { createInitialSolicitudState, Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { createInitialSolicitudState, Solicitud32608Store } from '../../estados/solicitud32608.store';
+import { Solicitud32608Query } from '../../estados/solicitud32608.query';
 import { ControlInventariosTabla } from '../../models/oea-textil-registro.model';
 
 describe('ControlInventariosComponent - Pruebas unitarias', () => {
   let component: ControlInventariosComponent;
   let fixture: ComponentFixture<ControlInventariosComponent>;
-  let mockTramite32609Store: jest.Mocked<Solicitud32605Store>;
-  let mockTramite32609Query: jest.Mocked<Solicitud32605Query>;
+  let mockTramite32609Store: jest.Mocked<Solicitud32608Store>;
+  let mockTramite32609Query: jest.Mocked<Solicitud32608Query>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
 
   // Datos de prueba simulados
@@ -83,8 +83,8 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
       ],
       providers: [
         FormBuilder,
-        { provide: Solicitud32605Store, useValue: mockTramite32609Store },
-        { provide: Solicitud32605Query, useValue: mockTramite32609Query },
+        { provide: Solicitud32608Store, useValue: mockTramite32609Store },
+        { provide: Solicitud32608Query, useValue: mockTramite32609Query },
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
       ],
       schemas: [NO_ERRORS_SCHEMA]
@@ -796,8 +796,8 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
         ],
         providers: [
           FormBuilder,
-          { provide: Solicitud32605Store, useValue: mockTramite32609Store },
-          { provide: Solicitud32605Query, useValue: mockTramite32609Query },
+          { provide: Solicitud32608Store, useValue: mockTramite32609Store },
+          { provide: Solicitud32608Query, useValue: mockTramite32609Query },
           { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
         ],
         schemas: [NO_ERRORS_SCHEMA]
@@ -882,7 +882,7 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
 
     it('✅ debería manejar errores en suscripciones', () => {
       const errorObservable = new Subject();
-      mockTramite32609Query.selectSolicitud$ = errorObservable.asObservable() as any as import('../../estados/solicitud32605.store').Solicitud32605State extends infer T ? import('rxjs').Observable<T> : never;
+      mockTramite32609Query.selectSolicitud$ = errorObservable.asObservable() as any as import('../../estados/solicitud32608.store').Solicitud32608State extends infer T ? import('rxjs').Observable<T> : never;
 
       component.ngOnInit();
       
