@@ -507,16 +507,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cierra el popup.
-   */
-  closePopup():void {
-    this.isPopupOpen = false;
-    this.isPopupClose = false;
-    this.store.setIsPopupOpen(this.isPopupOpen);
-    this.store.setIsPopupClose(this.isPopupClose);
-  }
-
-  /**
    * Muestra la siguiente tabla.
    */
   nextTabla():void{

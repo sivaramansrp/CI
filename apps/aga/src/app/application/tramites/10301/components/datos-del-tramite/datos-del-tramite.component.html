@@ -68,7 +68,6 @@
         </div>
       </div>
 
-      <!-- <ng-container *ngIf="!showTabla && isPopupClose"> -->
 <div
   class="modal fade"
   id="modalAgregarMercancias"
@@ -247,9 +246,6 @@
     </div>
   </div>
 </div>
-
-      <div class="modal-backdrop fade show" *ngIf="isPopupOpen"></div>
-      <!-- </ng-container> -->
 
       <ng-titulo titulo="Datos del donante extranjero" />
       <ng-container formGroupName="importadorExportador">
@@ -495,7 +491,8 @@
           <button
             type="button"
             class="btn btn-primary"
-            (click)="closePopup()"
+            data-bs-dismiss="modal" 
+            #closeModal
           >
             Acceptar
           </button>
