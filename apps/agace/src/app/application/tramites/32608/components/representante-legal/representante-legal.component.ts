@@ -87,7 +87,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     /**
    * Flag to track if the "Buscar" button has been clicked
    */
-  private buscarClicked: boolean = false;
+  public buscarClicked: boolean = false;
 
   /**
    * Constructor del componente

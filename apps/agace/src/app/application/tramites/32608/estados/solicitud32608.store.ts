@@ -189,6 +189,7 @@ export interface Solicitud32608State {
   valorTotalDe?: string; // Valor total de activos fijos o mercancías, según el contexto
   sistemaControl?: string; // Sistema de control de inventarios
   modalidadProgramaIMMEX?: string; // Modalidad del programa IMMEX, si aplica
+  numeroProgramaIMMEX?: string; // Número del programa IMMEX, si aplica
 }
 
 /**
@@ -380,6 +381,7 @@ export function createInitialSolicitudState(): Solicitud32608State {
     valorTotalDe: '', // Valor total de activos fijos o mercancías, según el contexto
     sistemaControl: '', // Sistema de control de inventarios
     modalidadProgramaIMMEX: '', // Modalidad del programa IMMEX, si aplica
+    numeroProgramaIMMEX: '', // Número del programa IMMEX, si aplica
   };
 }
 @Injectable({

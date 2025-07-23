@@ -36,7 +36,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
   /** Subject para notificar la destrucción del componente. */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
 
@@ -82,7 +82,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     // { index: 5, title: 'CTPAT', component: 'c-tpat' }
   ];
 
-  constructor(private consultaQuery: ConsultaioQuery, public solicitudService: SolicitudService) {
+  constructor(public consultaQuery: ConsultaioQuery, public solicitudService: SolicitudService) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 

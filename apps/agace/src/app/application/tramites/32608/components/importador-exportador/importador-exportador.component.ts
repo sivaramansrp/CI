@@ -427,6 +427,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
       actualizar2051: [false],
       sistemaControl: [this.solicitudState?.sistemaControl, Validators.required],
       modalidadProgramaIMMEX: [this.solicitudState?.modalidadProgramaIMMEX, Validators.required],
+      numeroProgramaIMMEX: [this.solicitudState?.numeroProgramaIMMEX, Validators.required],
     })
     this.agregarEnlaceOperativoForm = this.fb.group({
       rfcEnclaveOperativo: [this.solicitudState?.rfcEnclaveOperativo, Validators.required],

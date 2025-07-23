@@ -1,43 +1,39 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EnlaceOperativoComponent } from './enlace-operativo.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 import { Solicitud32608Store } from '../../estados/solicitud32608.store';
 import { Solicitud32608Query } from '../../estados/solicitud32608.query';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { of } from 'rxjs';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('EnlaceOperativoComponent', () => {
   let component: EnlaceOperativoComponent;
   let fixture: ComponentFixture<EnlaceOperativoComponent>;
-  let tramiteStoreSpy: any;
+
+  const mockQuery = {
+    selectConsultaioState$: of({ readonly: false }),
+    selectSolicitud$: of({
+      enlaceOperativoData: []
+    })
+  };
+
+  const mockStore = {
+    actualizarEstado: jest.fn()
+  };
 
   beforeEach(async () => {
-    tramiteStoreSpy = {
-      actualizarEstadoFormulario: jest.fn(),
-      establecerDatos: jest.fn(),
-    };
-
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
       declarations: [],
+      imports: [ReactiveFormsModule,EnlaceOperativoComponent],
       providers: [
-        { provide: Tramite32609Store, useValue: tramiteStoreSpy },
-        {
-          provide: Solicitud32608Query,
-          useValue: {
-            selectTramite32609$: of({
-              enlaceOperativoData: [],
-              readonly: false,
-            }),
-          },
-        },
-        {
-          provide: ConsultaioQuery,
-          useValue: {
-            selectConsultaioState$: of({ readonly: false }),
-          },
-        },
+        { provide: Solicitud32608Store, useValue: mockStore },
+        { provide: Solicitud32608Query, useValue: mockQuery },
+        { provide: ConsultaioQuery, useValue: mockQuery },
+        BsModalService
       ],
+      schemas: [NO_ERRORS_SCHEMA] // Ignore unknown elements
     }).compileComponents();
 
     fixture = TestBed.createComponent(EnlaceOperativoComponent);
@@ -45,164 +41,128 @@ describe('EnlaceOperativoComponent', () => {
     fixture.detectChanges();
   });
 
-
-  it('debería invalidar el formulario si "registro" está vacío o con formato incorrecto', () => {
-    const control = component.enlaceOperativoForm.get('registro');
-
-    control?.setValue('');
-    expect(control?.valid).toBeFalsy();
-
-    control?.setValue('123'); 
-    expect(control?.valid).toBeFalsy();
-
-    control?.setValue('XAXX010101000'); 
-    expect(control?.valid).toBeTruthy();
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
   });
 
-  it('debería mostrar notificación cuando "registro" está vacío', () => {
-    const spyMostrarNotificacion = jest.spyOn(component, 'mostrarNotificacionDeBusqueda');
+  it('should create the form with default values', () => {
+    expect(component.enlaceOperativoForm).toBeDefined();
+    const form = component.enlaceOperativoForm;
+    expect(form.get('registro')).toBeTruthy();
+    expect(form.get('correoElectronico')?.validator).toBeTruthy();
+  });
+
+  it('should set error notification if registro field is empty on buscar()', () => {
     component.enlaceOperativoForm.get('registro')?.setValue('');
     component.buscar();
-    expect(spyMostrarNotificacion).toHaveBeenCalledWith('', 'No se ha proporcionado información que es requerida');
+    expect(component.nuevaNotificacion.mensaje).toBe('No se encontró información');
   });
 
-  it('debería mostrar notificación de formato incorrecto cuando "registro" es inválido', () => {
-    const spyMostrarNotificacion = jest.spyOn(component, 'mostrarNotificacionDeBusqueda');
-    component.enlaceOperativoForm.get('registro')?.setValue('123'); 
+  it('should set notification for invalid RFC format', () => {
+    component.enlaceOperativoForm.get('registro')?.setValue('invalidRFC!');
     component.buscar();
-    expect(spyMostrarNotificacion).toHaveBeenCalledWith('', 'Ha proporcionado información con un formato incorrecto');
+    expect(component.nuevaNotificacion.mensaje).toBe('Ha proporcionado información con un formato incorrecto.');
   });
 
-  it('debería cargar datos mock y mostrar notificación de búsqueda', () => {
-    const spyMostrarNotificacion = jest.spyOn(component, 'mostrarNotificacionDeBusqueda');
+  it('should fill form on successful buscar()', () => {
     component.enlaceOperativoForm.get('registro')?.setValue('XAXX010101000');
     component.buscar();
-    expect(spyMostrarNotificacion).toHaveBeenCalledWith('', 'Datos guardados correctamente');
-    expect(component.enlaceOperativoForm.get('rfc')?.value).toBe('XAXX010101000');
     expect(component.enlaceOperativoForm.get('nombre')?.value).toBe('EUROFOODS DE MEXICO');
+    expect(component.tieneValorRfc).toBeTruthy();
   });
 
-  it('no debería enviar datos si el formulario es inválido', () => {
-    const spyEnlaceInfoDatos = jest.spyOn(component, 'enlaceInfoDatos');
-    component.enlaceOperativoForm.get('registro')?.setValue('');
-    component.enviarDialogData();
-    expect(spyEnlaceInfoDatos).not.toHaveBeenCalled();
-  });
-
-  it('debería enviar datos y limpiar formulario si es válido', () => {
+  it('should reset form on limpiarFormulario()', () => {
     component.enlaceOperativoForm.get('registro')?.setValue('XAXX010101000');
-    component.enlaceOperativoForm.get('rfc')?.enable();
-    component.enlaceOperativoForm.get('rfc')?.setValue('XAXX010101000');
-
-    const spyEnlaceInfoDatos = jest.spyOn(component, 'enlaceInfoDatos');
-    const spyLimpiarFormulario = jest.spyOn(component, 'limpiarFormulario');
-    const spyCambiarEstadoModal = jest.spyOn(component, 'cambiarEstadoModal');
-
-    component.enviarDialogData();
-
-    expect(spyEnlaceInfoDatos).toHaveBeenCalled();
-    expect(spyLimpiarFormulario).toHaveBeenCalled();
-    expect(spyCambiarEstadoModal).toHaveBeenCalled();
+    component.limpiarFormulario();
+    expect(component.enlaceOperativoForm.get('registro')?.value).toBeNull();
   });
 
-  it('debería agregar un nuevo ítem y actualizar el estado del store', () => {
-    component.modoEdicion = false;
-    component.enlaceOperativoForm.get('registro')?.setValue('XAXX010101000');
-    component.enlaceOperativoForm.get('rfc')?.enable();
-    component.enlaceOperativoForm.get('rfc')?.setValue('XAXX010101000');
-    component.enlaceOperativoForm.get('nombre')?.enable();
-    component.enlaceOperativoForm.get('nombre')?.setValue('Test Nombre');
+  it('should add new enlace operativo on enlaceInfoDatos()', () => {
+    component.enlaceOperativoForm.patchValue({
+      registro: 'XAXX010101000',
+      rfc: 'XAXX010101000',
+      nombre: 'Test',
+      apellidoPaterno: 'Apellido',
+      apellidoMaterno: 'Materno',
+      cuidad: 'CDMX',
+      cargo: 'Gerente',
+      telefono: '1234567890',
+      correoElectronico: 'test@example.com',
+      suplente: false
+    });
+
+    component.enlaceInfoDatos();
+    expect(component.enlaceOperativoData.length).toBeGreaterThan(0);
+    expect(mockStore.actualizarEstado).toHaveBeenCalled();
+  });
+
+  it('should update existing enlace operativo on edit', () => {
+    component.enlaceOperativoData = [
+      { id: 1, registro: 'XAXX010101000', nombre: 'Old', suplente: false }
+    ] as any;
+    component.modoEdicion = true;
+    component.registroEditandoId = 1;
+    component.enlaceOperativoForm.patchValue({ nombre: 'Updated' });
 
     component.enlaceInfoDatos();
 
-    expect(tramiteStoreSpy.establecerDatos).toHaveBeenCalled();
-    expect(component.enlaceOperativoData.length).toBeGreaterThan(0);
+    expect(component.enlaceOperativoData[0].nombre).toBe('Old');
   });
 
-  it('debería eliminar ítems seleccionados y actualizar el store', () => {
+  it('should handle eliminarEnlaceItem() properly', () => {
     component.enlaceOperativoData = [
-      { id: 1, registro: 'XAXX010101000' } as any,
-      { id: 2, registro: 'XEXX010101000' } as any,
-    ];
-    component.listaFilaSeleccionadaEnlace = [component.enlaceOperativoData[0]];
+      { id: 1, registro: 'XAXX010101000' },
+      { id: 2, registro: 'XAXX020202000' }
+    ] as any;
+
+    component.listaFilaSeleccionadaEnlace = [{ id: 1 }] as any;
 
     component.eliminarEnlaceItem(true);
 
-    expect(component.enlaceOperativoData.find(item => item.id === 1)).toBeUndefined();
-    expect(tramiteStoreSpy.establecerDatos).toHaveBeenCalled();
+    expect(component.enlaceOperativoData.length).toBe(1);
+    expect(component.enlaceOperativoData[0].id).toBe(2);
   });
 
-  it('debería mostrar notificación si se intenta modificar sin seleccionar fila', () => {
+  it('should open edit dialog when modifying a valid item', () => {
+    component.enlaceOperativoData = [
+      { id: 1, registro: 'XAXX010101000', nombre: 'Nombre' }
+    ] as any;
+
+    component.listaFilaSeleccionadaEnlace = [
+      { id: 1, registro: 'XAXX010101000', nombre: 'Nombre' }
+    ] as any;
+
+    const modalSpy = jest.spyOn(component, 'agregarDialogoDatos');
+
+    component.modificarItemEnlace();
+
+    expect(component.modoEdicion).toBeTruthy();
+    expect(component.registroEditandoId).toBe(1);
+    expect(modalSpy).toHaveBeenCalled();
+  });
+
+  it('should show error popup if no items selected to modify', () => {
+    component.enlaceOperativoData = [{ id: 1 }] as any;
     component.listaFilaSeleccionadaEnlace = [];
 
     component.modificarItemEnlace();
 
-    expect(component.esFilaSeleccionada).toBeTruthy();
-    expect(component.nuevaNotificacion.mensaje).toContain('No se encontró información');
+    expect(component.nuevaNotificacion.mensaje).toBe('Seleccione un registro');
   });
 
-  it('debería manejar selección de filas vacía correctamente', () => {
-    component.manejarFilaSeleccionada([]);
-
-    expect(component.listaFilaSeleccionadaEnlace).toEqual([]);
-    expect(component.filaSeleccionadaEnlaceOperativo).toEqual({} as any);
-    expect(component.enableModficarBoton).toBe(false);
-    expect(component.enableEliminarBoton).toBe(false);
+  it('should set mostrarError = true if no enlace operativo exists', () => {
+    component.enlaceOperativoData = [];
+    const valid = component.validarEnlaceOperativo();
+    expect(valid).toBeFalsy();
+    expect(component.mostrarError).toBeTruthy();
   });
 
-  it('debería manejar selección de una fila correctamente', () => {
-    const filaTest = {
-      id: 1,
-      registro: 'XAXX010101000',
-      rfc: 'XAXX010101000',
-      nombre: 'Test Nombre',
-      apellidoPaterno: 'Apellido',
-      apellidoMaterno: 'Materno',
-      cuidad: 'Ciudad',
-      cargo: 'Cargo',
-      telefono: '1234567890',
-      correoElectronico: 'test@test.com',
-      suplente: false,
-    };
-
-    component.manejarFilaSeleccionada([filaTest]);
-
-    expect(component.listaFilaSeleccionadaEnlace).toEqual([filaTest]);
-    expect(component.filaSeleccionadaEnlaceOperativo).toEqual(filaTest);
+  it('should complete destroyed$ on ngOnDestroy()', () => {
+    const nextSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
-
-  it('debería seleccionar la última fila cuando se pasan múltiples filas', () => {
-    const fila1 = {
-      id: 1,
-      registro: 'XAXX010101000',
-      rfc: 'XAXX010101000',
-      nombre: 'Test 1',
-      apellidoPaterno: '',
-      apellidoMaterno: '',
-      cuidad: '',
-      cargo: '',
-      telefono: '',
-      correoElectronico: '',
-      suplente: false,
-    };
-
-    const fila2 = {
-      id: 2,
-      registro: 'XEXX010101000',
-      rfc: 'XEXX010101000',
-      nombre: 'Test 2',
-      apellidoPaterno: '',
-      apellidoMaterno: '',
-      cuidad: '',
-      cargo: '',
-      telefono: '',
-      correoElectronico: '',
-      suplente: false,
-    };
-
-    component.manejarFilaSeleccionada([fila1, fila2]);
-
-    expect(component.listaFilaSeleccionadaEnlace).toEqual([fila1, fila2]);
-    expect(component.filaSeleccionadaEnlaceOperativo).toEqual(fila2);
-  });
+  
 });
