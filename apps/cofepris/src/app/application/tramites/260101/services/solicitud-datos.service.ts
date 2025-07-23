@@ -1,6 +1,7 @@
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { ClavesDeLotes } from '../models/claves-de-lotes.model';
 import { DatosDeSolicitud } from '../models/solicitud-datos.model';
+import { Destinatario } from '../models/destinatario.model';
 import { DestinatarioCatalogos } from '../models/destinatario.model';
 import { DestinatarioImitar } from '../models/mercancia.model';
 import { Fabricante } from '../models/fabricante.model';
@@ -10,7 +11,6 @@ import { Mercancia } from '../models/mercancia.model';
 import { MercanciaCatalogos } from '../models/mercancia.model';
 import { MercanciaCrossList } from '../models/mercancia.model';
 import { Observable } from 'rxjs';
-import { PaginaDestinatarioDatos } from '../estados/tramites260101.store';
 import { Solicitud } from '../models/solicitud-datos.model';
 /**
  * Servicio `SolicitudDatosService`.
@@ -105,9 +105,9 @@ export class SolicitudDatosService {
    * Obtiene la lista de destinatarios disponibles.
    * @returns Observable con los destinatarios.
    */
-  obtenerDestinatarioListo(): Observable<PaginaDestinatarioDatos> {
+  obtenerDestinatarioListo(): Observable<Destinatario[]> {
     return this.http
-      .get<PaginaDestinatarioDatos>('../../../assets/json/260101/destinatario.json')
+      .get<Destinatario[]>('../../../assets/json/260101/destinatario.json')
       .pipe();
   }
 
