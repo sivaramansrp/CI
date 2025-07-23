@@ -93,3 +93,19 @@ export const PRIVACY_NOTICE_CONTENT = `
       </div>
   </div>
 `;
+
+/**
+ * Fecha de pago por defecto (formato DD/MM/YYYY).
+ * @const
+ * @type {string}
+ */
+export const ERROR_FORMA_ALERT =
+  `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`

@@ -1,5 +1,5 @@
 import {Catalogo, ConsultaioQuery} from '@ng-mf/data-access-user';
-import {ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -38,6 +38,7 @@ import { PagoDeDerechos } from '../../models/220203/importacion-de-acuicultura.m
   ]
 })
 export class PagoDeDerechosComponent implements OnDestroy {
+      @ViewChild('pagoDerechosRef') pagoDerechos!: PagoDeDerechoComponent;
   
     /**
      * Datos del pago de derechos.
@@ -137,6 +138,9 @@ export class PagoDeDerechosComponent implements OnDestroy {
       this.importacionAcuiculturaServicio.actualizarPagoDeDerechos(event as PagoDeDerechos);
     }
     
+    validarFormulario(): boolean {
+      return this.pagoDerechos.validarFormulario();
+    }
   /**
    * Limpia las suscripciones para evitar fugas de memoria al destruir el componente.
    * @method ngOnDestroy

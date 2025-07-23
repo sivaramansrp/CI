@@ -15,6 +15,10 @@
             [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore()" 
           ></app-catalogo-select>
+             <div
+          *ngIf="formularioMovilizacion.get('medioDeTransporte')?.invalid && formularioMovilizacion.get('medioDeTransporte')?.touched">
+          <small class="mensaje-error">Este campo es obligatorio.</small>
+        </div>
         </div>
         <div class="col-md-4 form-group">
           <label class="form-label" for="coordenadas"
@@ -61,6 +65,10 @@
             (change)="setValoresStore()" 
             [maxlength]="80"
           />
+            <div
+          *ngIf="formularioMovilizacion.get('nombreEmpresaTransportista')?.invalid && formularioMovilizacion.get('nombreEmpresaTransportista')?.touched">
+          <small class="mensaje-error">Este campo es obligatorio.</small>
+        </div>
         </div>
       </div>
     </form>

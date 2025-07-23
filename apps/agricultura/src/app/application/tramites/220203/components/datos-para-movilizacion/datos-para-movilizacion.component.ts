@@ -181,6 +181,14 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy, AfterV
       VALOR
     );
   }
+  public validarFormulario():boolean{
+if(this.formularioMovilizacion.invalid){
+  this.formularioMovilizacion.markAllAsTouched();
+  return false;
+}
+return true;
+}
+
 
   /**
    * Método del ciclo de vida que se ejecuta cuando el componente es destruido.

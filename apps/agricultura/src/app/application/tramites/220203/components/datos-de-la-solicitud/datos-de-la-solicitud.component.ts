@@ -416,8 +416,6 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    * @returns {void}
    */
   public setValoresStore(
-    form?: FormGroup,
-    campo?: string,
   ): void {
     const VALOR = this.datosMercanciaFormGroup.getRawValue();
     (this.importacionDeAcuiculturaServices.actualizarSoloRealizarGroup as (value: RealizarGroup) => void)(
@@ -508,6 +506,14 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
       this.modalRef.abrir(MercanciaSolicitudComponent);
     }
   }
+public validarFormulario():boolean{
+if(this.datosMercanciaFormGroup.invalid){
+  this.datosMercanciaFormGroup.markAllAsTouched();
+  return false;
+}
+return true;
+}
+
   /**
    * @inheritdoc
         
