@@ -185,13 +185,13 @@ this.obtenerUMCCatalogosTransporte();
       private buildMercanciaFormGroup(MERCANCIADATA: Fila): FormGroup {
         return this.fb.group({
           tipoRequisito: [MERCANCIADATA.tipoRequisito || '', Validators.required],
-          requisito: [MERCANCIADATA.requisito || ''],
+          requisito: [MERCANCIADATA.requisito || '',Validators.required],
           numeroCertificadoInternacional: [MERCANCIADATA.numeroCertificadoInternacional || '', Validators.required],
           numeroOficioCasoEspecial: [MERCANCIADATA.numeroOficioCasoEspecial || ''],
           fraccionArancelaria: [MERCANCIADATA.fraccionArancelaria || '', Validators.required],
-          descripcionFraccionArancelaria: [MERCANCIADATA.descripcionFraccionArancelaria || '', Validators.required],
+          descripcionFraccionArancelaria: [{value: MERCANCIADATA.descripcionFraccionArancelaria || '', disabled: true}, Validators.required],
           nico: [MERCANCIADATA.nico || '', Validators.required],
-          descripcionNico: [MERCANCIADATA.descripcionNico || ''],
+          descripcionNico: [{value: MERCANCIADATA.descripcionNico || '', disabled: true}, Validators.required],
           descripcion: [MERCANCIADATA.descripcion || '', Validators.required],
           cantidadUMT: [MERCANCIADATA.cantidadUMT || '', Validators.required],
           umt: [{value:MERCANCIADATA.umt|| '', disabled: true}, Validators.required],
