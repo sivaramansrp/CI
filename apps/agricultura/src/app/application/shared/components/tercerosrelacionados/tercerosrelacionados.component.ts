@@ -324,7 +324,7 @@ export class TercerosrelacionadosComponent {
       pais: '1',
     });
   }
-  eliminarPedimentoDatos(borrar: boolean) {
+  eliminarPedimentoDatos(borrar: boolean):void {
     if (borrar) {
       this.eliminarDatosTabla = false;
       this.eliminarSeleccion.emit(this.listaDeFilaSeleccionada);
@@ -333,7 +333,7 @@ export class TercerosrelacionadosComponent {
     }
 
   }
-  eliminarExportador(borrar: boolean) {
+  eliminarExportador(borrar: boolean):void {
     if (borrar) {
       this.eliminarDatoExportador = false;
       this.eliminarSeleccionEstinoTable.emit(this.listaDeFilaSeleccionadaFinal);
