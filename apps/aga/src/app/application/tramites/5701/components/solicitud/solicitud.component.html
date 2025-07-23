@@ -523,7 +523,7 @@
           formControlName="idAduanaDespacho"
           (change)="changeAduana()"
         >
-          <option value="-1">Selecciona una opción...</option>
+          <option value="-1">Seleccione una opción</option>
           <option
             *ngFor="let aduana of aduanas"
             [title]="aduana.title"
@@ -550,7 +550,7 @@
           <option value="-2" hidden>
             No cuenta con sección aduanera
           </option>
-          <option value="-1">Selecciona una opción...</option>
+          <option value="-1">Seleccione una opción</option>
           <option
             *ngFor="let seccion of seccionAduanera"
             [title]="seccion.title"
@@ -574,7 +574,7 @@
           <option value="-2" hidden>
             No cuenta con recinto fiscalizado
           </option>
-          <option value="-1">Selecciona una opción...</option>
+          <option value="-1">Seleccione una opción</option>
           <option
             *ngFor="let recinto of recintoCatalogo"
             [title]="recinto.title"
