@@ -8,6 +8,7 @@ import { Tramite32606Query } from '../../state/Tramite32606.query';
 import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
 import { map, ReplaySubject, takeUntil } from 'rxjs';
 
+/** Componente para la sección CTPAT del trámite 32606. */
 @Component({
   selector: 'app-ctpat',
   standalone: true,
@@ -16,18 +17,27 @@ import { map, ReplaySubject, takeUntil } from 'rxjs';
   styleUrl: './ctpat.component.css',
 })
 export class CtpatComponent implements OnDestroy, OnInit {
+  /** Opciones para el radio tipo 01. */
   radioOpcions01 = RADIO_01;
+  /** Formulario reactivo principal de la sección CTPAT. */
   public ctpatForm !: FormGroup;
+  /** Indica si el formulario está en modo solo lectura. */
   soloLectura: boolean = false;
+  /** Estado actual de la solicitud. */
   public solicitudState!: Solicitud32606State;
+  /** Observable para controlar la destrucción de suscripciones. */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  /** Estado de consulta actual. */
   consultaDatos!: ConsultaioState;
 
-  constructor(private economico: EconomicoService,
+  /** Constructor que inicializa servicios y suscripciones. */
+  constructor(
+    private economico: EconomicoService,
     public query: Tramite32606Query,
     public store: Tramite32606Store,
     private fb: FormBuilder,
-    private consultaioQuery: ConsultaioQuery) {
+    private consultaioQuery: ConsultaioQuery
+  ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
@@ -40,7 +50,7 @@ export class CtpatComponent implements OnDestroy, OnInit {
       .subscribe();
   }
 
-
+  /** Inicializa el formulario y sus valores según el modo solo lectura. */
   ngOnInit(): void {
     this.query.selectSolicitud$
       .pipe(
@@ -54,13 +64,7 @@ export class CtpatComponent implements OnDestroy, OnInit {
     this.inicializarEstadoFormulario();
   }
 
-
-  /**
- * Determina el estado inicial del formulario según el modo de solo lectura.
- * 
- * Si el formulario está en modo solo lectura, llama a `guardarDatosDelFormulario()` para deshabilitar los campos.
- * Si no está en modo solo lectura, llama a `datosDeAvisoForm()` para aplicar la configuración correspondiente.
- */
+  /** Establece el estado inicial del formulario según soloLectura. */
   inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.guardarDatosFormulario();
@@ -69,13 +73,7 @@ export class CtpatComponent implements OnDestroy, OnInit {
     }
   }
 
-  /**
- * Habilita o deshabilita el formulario de acuerdo al modo de solo lectura.
- * 
- * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), 
- * deshabilita todos los campos del formulario para evitar modificaciones.
- * En caso contrario, habilita los campos para permitir la edición.
- */
+  /** Habilita o deshabilita el formulario según soloLectura. */
   guardarDatosFormulario(): void {
     this.donanteDomicilio();
     if (this.soloLectura) {
@@ -85,9 +83,7 @@ export class CtpatComponent implements OnDestroy, OnInit {
     }
   }
 
-  /**
-    * Marca todos los campos del formulario como tocados si es inválido.
-    */
+  /** Marca todos los campos como tocados si el formulario es inválido. */
   validarDestinatarioFormulario(): void {
     if (this.ctpatForm.invalid) {
       this.ctpatForm.markAllAsTouched();
@@ -95,8 +91,7 @@ export class CtpatComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Actualiza un valor en el estado global utilizando el almacén.
-   *
+   * Actualiza un valor en el store usando el nombre del método.
    * @param form Formulario reactivo.
    * @param campo Nombre del campo en el formulario.
    * @param metodoNombre Nombre del método en el almacén para actualizar el valor.
@@ -109,6 +104,8 @@ export class CtpatComponent implements OnDestroy, OnInit {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+  /** Inicializa el formulario con los valores del estado de la solicitud. */
   donanteDomicilio(): void {
     this.ctpatForm = this.fb.group({
       tipoRadio24: [{ value: this.solicitudState?.tipoRadio24, disabled: this.soloLectura }, [Validators.required]],
@@ -117,6 +114,7 @@ export class CtpatComponent implements OnDestroy, OnInit {
     });
   }
 
+  /** Libera recursos y completa el observable destroyed$ al destruir el componente. */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();

@@ -3,62 +3,35 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 
-/**
- * Componente que representa el segundo paso del trámite.
- * Permite al usuario anexar documentos necesarios para el trámite.
- */
+/** Componente que representa el segundo paso del trámite y permite anexar documentos. */
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
- 
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
-  /**
-     * Observable para manejar la destrucción del componente.
-     * Se utiliza para cancelar suscripciones activas.
-     */
-    private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-  /**
-   * Textos utilizados en el componente.
-   */
+  /** Observable para manejar la destrucción del componente y cancelar suscripciones. */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  /** Textos utilizados en el componente. */
   TEXTOS = TEXTOS;
-
-  /**
-   * Lista de tipos de documentos disponibles para el trámite.
-   */
+  /** Lista de tipos de documentos disponibles para el trámite. */
   tiposDocumentos: Catalogo[] = [];
-
-  /**
-   * Clase CSS para mostrar una alerta informativa.
-   */
+  /** Clase CSS para mostrar una alerta informativa. */
   claseAlertaInformativa = 'alert-info';
-
-  /**
-   * Catálogo de documentos disponibles.
-   */
+  /** Catálogo de documentos disponibles. */
   catalogoDocumentos: Catalogo[] = [];
-  
-  /**
-   * Constructor del componente.
-   * @param catalogosServices Servicio para obtener los catálogos necesarios para el trámite.
-   */
+
+  /** Constructor que inyecta el servicio de catálogos. */
   constructor(private catalogosServices: CatalogosService) {
     // El constructor se utiliza para la inyección de dependencias.
   }
-  
-  
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   * Obtiene los tipos de documentos disponibles y establece los documentos seleccionados por defecto.
-   */
+
+  /** Método que se ejecuta al inicializar el componente y obtiene los tipos de documentos. */
   ngOnInit(): void {
     this.getTiposDocumentos();
   }
 
-  /**
-   * Obtiene el catálogo de los tipos de documentos disponibles para el trámite.
-   */
+  /** Obtiene el catálogo de los tipos de documentos disponibles para el trámite. */
   getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).pipe(takeUntil(this.destroyed$))
@@ -74,13 +47,9 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Método que se ejecuta al destruir el componente.
-   * Libera los recursos utilizados por las suscripciones.
-   */
+  /** Método que se ejecuta al destruir el componente y libera recursos de suscripciones. */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
   }
-
 }

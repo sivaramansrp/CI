@@ -5,20 +5,16 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { Domicillio, EntidadFederativa, Querella, RecibirNotificaciones } from '../models/adace.model';
 import { Solicitud32606State, Tramite32606Store } from '../state/Tramite32606.store';
 
+/** Servicio para operaciones económicas y gestión de datos del trámite 32606. */
 @Injectable({
   providedIn: 'root'
 })
-
 export class EconomicoService {
-
+  /** Constructor que inyecta HttpClient y el store del trámite. */
   constructor(private http: HttpClient, private tramite32606Store: Tramite32606Store) { }
 
-  /**
-    * Actualiza el estado global del formulario con los datos proporcionados.
-    * @param DATOS Objeto con los datos del formulario de tipo Solicitud32606State.
-    */
+  /** Actualiza el estado del formulario en el store con los datos proporcionados. */
   actualizarEstadoFormulario(DATOS: Solicitud32606State): void {
-    // this.tramite32606Store.setBanco(DATOS.banco);
     this.tramite32606Store.setTipoRadio01(DATOS.tipoRadio01);
     this.tramite32606Store.setTipoRadio02(DATOS.tipoRadio02);
     this.tramite32606Store.setTipoRadio03(DATOS.tipoRadio03);
@@ -91,48 +87,56 @@ export class EconomicoService {
     this.tramite32606Store.setMunicipio(DATOS.municipio);
     this.tramite32606Store.setTipoDeInstalacion(DATOS.tipoDeInstalacion);
     this.tramite32606Store.setRegistroSESAT(DATOS.registroSESAT);
-    this.tramite32606Store.setDescripcion(DATOS.descripcion); 
+    this.tramite32606Store.setDescripcion(DATOS.descripcion);
     this.tramite32606Store.setCodigoPostal(DATOS.codigoPostal);
   }
-  /**
-     * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
-     * @returns Observable con los datos del formulario.
-     */
+
+  /** Obtiene los datos del registro de toma de muestras de mercancías. */
   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud32606State> {
     return this.http.get<Solicitud32606State>('assets/json/32606/registro_toma_muestras_mercancias.json');
   }
+
+  /** Obtiene el catálogo de sector productivo. */
   obtenerSectorProductivo(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/32606/sector-productivo.json');
   }
 
+  /** Obtiene el catálogo de servicio. */
   obtenerServicio(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/32606/servicio.json');
   }
 
+  /** Obtiene el catálogo de bimestre. */
   obtenerBimestre(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/32606/bimestre.json');
   }
 
+  /** Obtiene el catálogo de domicilio. */
   obtenerDomicillio(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/32606/domicillio.json');
   }
 
+  /** Obtiene la lista de personas para notificaciones. */
   personasNotificaciones(): Observable<RecibirNotificaciones[]> {
     return this.http.get<RecibirNotificaciones[]>('assets/json/32606/personas.json');
   }
 
+  /** Obtiene el catálogo de entidad federativa. */
   obtenerEntidad(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/32606/entidad.json');
   }
 
+  /** Obtiene el catálogo de carácter. */
   obtenerCaracter(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/32606/caracter.json');
   }
 
+  /** Obtiene el catálogo de nacionalidad. */
   obtenerNacionalidad(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/32606/nacionalidad.json');
   }
 
+  /** Obtiene los datos de la tabla de entidad federativa. */
   obtenerTablaEntidad(): Observable<EntidadFederativa[]> {
     return this.http.get<EntidadFederativa[]>('assets/json/32606/entidad-tabla.json')
       .pipe(catchError((error) => {
@@ -141,6 +145,7 @@ export class EconomicoService {
       );
   }
 
+  /** Obtiene los datos de la tabla de domicilio. */
   obtenerTablaDomicillio(): Observable<Domicillio[]> {
     return this.http.get<Domicillio[]>('assets/json/32606/domicillio-tabla.json')
       .pipe(catchError((error) => {
@@ -149,6 +154,7 @@ export class EconomicoService {
       );
   }
 
+  /** Obtiene los datos de la tabla de querella. */
   obtenerTablaQuerella(): Observable<Querella[]> {
     return this.http.get<Querella[]>('assets/json/32606/querella-tabla.json')
       .pipe(catchError((error) => {
@@ -156,6 +162,4 @@ export class EconomicoService {
       })
       );
   }
-
-
 }

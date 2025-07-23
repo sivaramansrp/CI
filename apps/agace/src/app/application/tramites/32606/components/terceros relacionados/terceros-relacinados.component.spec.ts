@@ -110,7 +110,6 @@ describe('TercerosRelacinadosComponent', () => {
     component.soloLectura = true;
     const spy = jest.spyOn(component.tercerosRelacionadosForm, 'disable');
     component.guardarDatosFormulario();
-    // expect(spy).toHaveBeenCalled();
   });
 
   it('guardarDatosFormulario habilita el formulario si no soloLectura', () => {
@@ -118,7 +117,6 @@ describe('TercerosRelacinadosComponent', () => {
     component.soloLectura = false;
     const spy = jest.spyOn(component.tercerosRelacionadosForm, 'enable');
     component.guardarDatosFormulario();
-    // expect(spy).toHaveBeenCalled();
   });
 
   it('validarDestinatarioFormulario marca todos como tocados si inválido', () => {

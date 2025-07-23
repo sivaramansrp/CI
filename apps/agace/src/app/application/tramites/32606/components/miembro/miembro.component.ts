@@ -9,6 +9,7 @@ import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606
 import { Modal } from 'bootstrap';
 import { map, ReplaySubject, takeUntil } from 'rxjs';
 
+/** Componente para la sección de miembros del trámite 32606. */
 @Component({
   selector: 'app-miembro',
   standalone: true,
@@ -19,20 +20,32 @@ import { map, ReplaySubject, takeUntil } from 'rxjs';
   styleUrl: './miembro.component.css',
 })
 export class MiembroComponent implements OnInit, OnDestroy {
+  /** Formulario reactivo principal de miembros. */
   public miembroForm !: FormGroup;
+  /** Opciones para el radio tipo 08. */
   radioOpcions08 = RADIO_08;
+  /** Referencia a la tabla de selección. */
   TablaSeleccion = TablaSeleccion;
+  /** Configuración de la tabla de empresa. */
   public empresaTabla = EMPRESA_TABLA;
+  /** Referencia al modal para agregar miembro. */
   @ViewChild('modalAgregar') modalElement!: ElementRef;
+  /** Referencia al botón de cerrar modal. */
   @ViewChild('closeModal') closeModalButton!: ElementRef;
+  /** Catálogo de carácter. */
   public caracterCatalogo = CARACTER_CATALOGO;
+  /** Catálogo de nacionalidad. */
   public nacionalidadCatalogo = NACIONALIDAD_CATALOGO;
+  /** Observable para controlar la destrucción de suscripciones. */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  /** Indica si el formulario está en modo solo lectura. */
   soloLectura: boolean = false;
+  /** Estado actual de la solicitud. */
   public solicitudState!: Solicitud32606State;
+  /** Estado de consulta actual. */
   consultaDatos!: ConsultaioState;
 
-
+  /** Constructor que inicializa servicios y suscripciones. */
   constructor(private economico: EconomicoService,
     public query: Tramite32606Query,
     public store: Tramite32606Store,
@@ -50,8 +63,7 @@ export class MiembroComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-
-
+  /** Inicializa el formulario y sus valores según el modo solo lectura. */
   ngOnInit(): void {
     this.query.selectSolicitud$
       .pipe(
@@ -67,12 +79,7 @@ export class MiembroComponent implements OnInit, OnDestroy {
     this.obtenerNacionalidad();
   }
 
-  /**
-   * Determina el estado inicial del formulario según el modo de solo lectura.
-   * 
-   * Si el formulario está en modo solo lectura, llama a `guardarDatosDelFormulario()` para deshabilitar los campos.
-   * Si no está en modo solo lectura, llama a `datosDeAvisoForm()` para aplicar la configuración correspondiente.
-   */
+  /** Establece el estado inicial del formulario según soloLectura. */
   inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.guardarDatosFormulario();
@@ -81,13 +88,7 @@ export class MiembroComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
- * Habilita o deshabilita el formulario de acuerdo al modo de solo lectura.
- * 
- * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), 
- * deshabilita todos los campos del formulario para evitar modificaciones.
- * En caso contrario, habilita los campos para permitir la edición.
- */
+  /** Habilita o deshabilita el formulario según soloLectura. */
   guardarDatosFormulario(): void {
     this.donanteDomicilio();
     if (this.soloLectura) {
@@ -97,6 +98,7 @@ export class MiembroComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Muestra el modal para agregar miembro. */
   agregarMiembro(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
@@ -104,6 +106,7 @@ export class MiembroComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Obtiene el catálogo de carácter desde el servicio. */
   obtenerCaracter(): void {
     this.economico
       .obtenerCaracter()
@@ -113,6 +116,7 @@ export class MiembroComponent implements OnInit, OnDestroy {
       });
   }
 
+  /** Obtiene el catálogo de nacionalidad desde el servicio. */
   obtenerNacionalidad(): void {
     this.economico
       .obtenerNacionalidad()
@@ -122,9 +126,7 @@ export class MiembroComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-    * Marca todos los campos del formulario como tocados si es inválido.
-    */
+  /** Marca todos los campos del formulario como tocados si es inválido. */
   validarDestinatarioFormulario(): void {
     if (this.miembroForm.invalid) {
       this.miembroForm.markAllAsTouched();
@@ -133,7 +135,6 @@ export class MiembroComponent implements OnInit, OnDestroy {
 
   /**
    * Actualiza un valor en el estado global utilizando el almacén.
-   *
    * @param form Formulario reactivo.
    * @param campo Nombre del campo en el formulario.
    * @param metodoNombre Nombre del método en el almacén para actualizar el valor.
@@ -146,6 +147,8 @@ export class MiembroComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+  /** Inicializa el formulario con los valores del estado de la solicitud. */
   donanteDomicilio(): void {
     this.miembroForm = this.fb.group({
       tipoRadio14: [{ value: this.solicitudState?.tipoRadio14, disabled: this.soloLectura }, [Validators.required]],
@@ -155,10 +158,10 @@ export class MiembroComponent implements OnInit, OnDestroy {
       tipoRadio34: [{ value: this.solicitudState?.tipoRadio34, disabled: this.soloLectura }, [Validators.required]],
       caracter: [{ value: this.solicitudState?.caracter, disabled: this.soloLectura }, [Validators.required]],
       nacionalidad: [{ value: this.solicitudState?.nacionalidad, disabled: this.soloLectura }, [Validators.required]],
-
     });
   }
 
+  /** Libera recursos y completa el observable destroyed$ al destruir el componente. */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();

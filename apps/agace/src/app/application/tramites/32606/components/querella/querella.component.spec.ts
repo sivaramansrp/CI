@@ -113,7 +113,6 @@ describe('QuerellaComponent', () => {
     component.soloLectura = true;
     const spy = jest.spyOn(component.querellaForm, 'disable');
     component.guardarDatosFormulario();
-    // expect(spy).toHaveBeenCalled();
   });
 
   it('guardarDatosFormulario habilita el formulario si no soloLectura', () => {
@@ -121,15 +120,7 @@ describe('QuerellaComponent', () => {
     component.soloLectura = false;
     const spy = jest.spyOn(component.querellaForm, 'enable');
     component.guardarDatosFormulario();
-    // expect(spy).toHaveBeenCalled();
   });
-
-  // it('seleccionarAgregar muestra el modal y llama abrirModal', () => {
-  //   component.modalElement = { nativeElement: document.createElement('div') } as ElementRef;
-  //   const spy = jest.spyOn(component, 'abrirModal');
-  //   component.seleccionarAgregar();
-  //   expect(spy).toHaveBeenCalled();
-  // });
 
   it('eliminarPedimento elimina elementos si borrar es true', () => {
     component.pedimentos = [{}, {}, {}] as Pedimento[];

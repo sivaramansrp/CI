@@ -10,6 +10,7 @@ import { Modal } from 'bootstrap';
 import { Querella } from '../../models/adace.model';
 import { map, ReplaySubject, takeUntil } from 'rxjs';
 
+/** Componente para la sección de querella del trámite 32606. */
 @Component({
   selector: 'app-querella',
   standalone: true,
@@ -20,20 +21,34 @@ import { map, ReplaySubject, takeUntil } from 'rxjs';
   styleUrl: './querella.component.css',
 })
 export class QuerellaComponent implements OnInit, OnDestroy {
+  /** Formulario reactivo principal de querella. */
   public querellaForm!: FormGroup;
+  /** Opciones para el radio tipo 08. */
   radioOpcions08 = RADIO_08;
+  /** Referencia a la tabla de selección. */
   TablaSeleccion = TablaSeleccion;
+  /** Configuración de la tabla de querella. */
   public querellaTabla = QUERELLA_TABLA;
+  /** Referencia al modal de alerta. */
   @ViewChild('modalAlerta') modalElement!: ElementRef;
+  /** Lista de pedimentos. */
   public pedimentos: Array<Pedimento> = [];
+  /** Índice del elemento a eliminar. */
   public elementoParaEliminar!: number;
+  /** Notificación para el modal. */
   public nuevaNotificacion!: Notificacion;
+  /** Datos de la tabla de querella. */
   public querellaDatos: Querella[] = [];
+  /** Observable para controlar la destrucción de suscripciones. */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  /** Indica si el formulario está en modo solo lectura. */
   soloLectura: boolean = false;
+  /** Estado actual de la solicitud. */
   public solicitudState!: Solicitud32606State;
+  /** Estado de consulta actual. */
   consultaDatos!: ConsultaioState;
 
+  /** Constructor que inicializa servicios y suscripciones. */
   constructor(private economico: EconomicoService,
     public query: Tramite32606Query,
     public store: Tramite32606Store,
@@ -52,8 +67,7 @@ export class QuerellaComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-
-
+  /** Inicializa el formulario y sus valores según el modo solo lectura. */
   ngOnInit(): void {
     this.query.selectSolicitud$
       .pipe(
@@ -68,13 +82,7 @@ export class QuerellaComponent implements OnInit, OnDestroy {
     this.obtenerTablaQuerella();
   }
 
-
-  /**
- * Determina el estado inicial del formulario según el modo de solo lectura.
- * 
- * Si el formulario está en modo solo lectura, llama a `guardarDatosDelFormulario()` para deshabilitar los campos.
- * Si no está en modo solo lectura, llama a `datosDeAvisoForm()` para aplicar la configuración correspondiente.
- */
+  /** Establece el estado inicial del formulario según soloLectura. */
   inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.guardarDatosFormulario();
@@ -83,13 +91,7 @@ export class QuerellaComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
- * Habilita o deshabilita el formulario de acuerdo al modo de solo lectura.
- * 
- * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), 
- * deshabilita todos los campos del formulario para evitar modificaciones.
- * En caso contrario, habilita los campos para permitir la edición.
- */
+  /** Habilita o deshabilita el formulario según soloLectura. */
   guardarDatosFormulario(): void {
     this.donanteDomicilio();
     if (this.soloLectura) {
@@ -99,6 +101,7 @@ export class QuerellaComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Muestra el modal para agregar y abre la notificación. */
   public seleccionarAgregar(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
@@ -107,13 +110,14 @@ export class QuerellaComponent implements OnInit, OnDestroy {
     this.abrirModal();
   }
 
+  /** Elimina un pedimento de la lista si borrar es true. */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
   }
 
-  // Abre el modal y configura la notificación para eliminar un pedimento.
+  /** Abre el modal y configura la notificación para eliminar un pedimento. */
   abrirModal(i: number = 0): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -129,6 +133,7 @@ export class QuerellaComponent implements OnInit, OnDestroy {
     this.elementoParaEliminar = i;
   }
 
+  /** Obtiene los datos de la tabla de querella desde el servicio. */
   public obtenerTablaQuerella(): void {
     this.economico
       .obtenerTablaQuerella()
@@ -138,9 +143,7 @@ export class QuerellaComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-    * Marca todos los campos del formulario como tocados si es inválido.
-    */
+  /** Marca todos los campos del formulario como tocados si es inválido. */
   validarDestinatarioFormulario(): void {
     if (this.querellaForm.invalid) {
       this.querellaForm.markAllAsTouched();
@@ -149,7 +152,6 @@ export class QuerellaComponent implements OnInit, OnDestroy {
 
   /**
    * Actualiza un valor en el estado global utilizando el almacén.
-   *
    * @param form Formulario reactivo.
    * @param campo Nombre del campo en el formulario.
    * @param metodoNombre Nombre del método en el almacén para actualizar el valor.
@@ -163,6 +165,7 @@ export class QuerellaComponent implements OnInit, OnDestroy {
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+  /** Inicializa el formulario con los valores del estado de la solicitud. */
   donanteDomicilio(): void {
     this.querellaForm = this.fb.group({
       tipoRadio18: [{ value: this.solicitudState?.tipoRadio18, disabled: this.soloLectura }, [Validators.required]],
@@ -174,6 +177,7 @@ export class QuerellaComponent implements OnInit, OnDestroy {
     });
   }
 
+  /** Libera recursos y completa el observable destroyed$ al destruir el componente. */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();

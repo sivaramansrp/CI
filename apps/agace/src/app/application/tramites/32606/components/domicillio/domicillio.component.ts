@@ -10,6 +10,7 @@ import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606
 import { map, ReplaySubject, takeUntil } from 'rxjs';
 import { Modal } from 'bootstrap';
 
+/** Componente para la sección de domicilio del trámite 32606. */
 @Component({
   selector: 'app-domicillio',
   standalone: true,
@@ -19,33 +20,57 @@ import { Modal } from 'bootstrap';
   styleUrl: './domicillio.component.css',
 })
 export class DomicillioComponent implements OnInit, OnDestroy {
-
+  /** Formulario reactivo principal de domicilio. */
   public domicillioForm!: FormGroup;
+  /** Catálogo de domicilio. */
   public domicillio = DOMICILIO_CATALOGO;
+  /** Catálogo de tipo de instalación. */
   public tipoDeInstalacion = TIPO_INSTALACION_CATALOGO;
+  /** Catálogo de entidad federativa. */
   public entidadFederativa = ENTIDAD_CATALOGO;
+  /** Referencia a la tabla de selección. */
   public TablaSeleccion = TablaSeleccion;
+  /** Configuración de la tabla de domicilio. */
   public domicillioTabla = DOMICILLIO_TABLA;
+  /** Configuración de la tabla de entidad. */
   public entidadTabla = ENTIDAD_TABLA;
+  /** Datos de domicilio para la tabla. */
   public domicillioDatos: Domicillio[] = [];
+  /** Opciones para el radio tipo 07. */
   radioOpcions07 = RADIO_07;
+  /** Nombre del archivo seleccionado. */
   nombreArchivo: string = '';
+  /** Nombre del segundo archivo seleccionado. */
   nombreArchivo2: string = '';
+  /** Notificación para el modal. */
   public nuevaNotificacion!: Notificacion;
+  /** Índice del elemento a eliminar. */
   public elementoParaEliminar!: number;
+  /** Lista de pedimentos. */
   public pedimentos: Array<Pedimento> = [];
+  /** Referencia al modal de agregar domicilio. */
   @ViewChild('modalAgregar') modalElement!: ElementRef;
+  /** Referencia al botón de cerrar modal. */
   @ViewChild('closeModal') closeModalButton!: ElementRef;
+  /** Datos de la tabla de entidad federativa. */
   public entidadTablaDatos: EntidadFederativa[] = [];
+  /** Domicilios seleccionados para eliminar. */
   seleccionarDomiciliosDatos: Domicillio[] = [] as Domicillio[];
+  /** Referencia al modal de instalaciones principales. */
   @ViewChild('modalInstalacionesPrincipales', { static: false })
   modalInstalacionesPrincipalesElement!: ElementRef;
+  /** Evento para emitir instalaciones principales seleccionadas. */
   @Output() instalacionesPrincipales = new EventEmitter<Domicillio>();
+  /** Indica si el formulario está en modo solo lectura. */
   soloLectura: boolean = false;
+  /** Estado actual de la solicitud. */
   public solicitudState!: Solicitud32606State;
+  /** Observable para controlar la destrucción de suscripciones. */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  /** Estado de consulta actual. */
   consultaDatos!: ConsultaioState;
 
+  /** Constructor que inicializa servicios y suscripciones. */
   constructor(private economico: EconomicoService,
     public query: Tramite32606Query,
     public store: Tramite32606Store,
@@ -65,6 +90,7 @@ export class DomicillioComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /** Inicializa el formulario y sus valores según el modo solo lectura. */
   ngOnInit(): void {
     this.query.selectSolicitud$
       .pipe(
@@ -80,16 +106,9 @@ export class DomicillioComponent implements OnInit, OnDestroy {
     this.obtenerEntidad();
     this.obtenerTablaEntidad();
     this.obtenerTablaDomicillio();
-
   }
 
-
-  /**
- * Determina el estado inicial del formulario según el modo de solo lectura.
- * 
- * Si el formulario está en modo solo lectura, llama a `guardarDatosDelFormulario()` para deshabilitar los campos.
- * Si no está en modo solo lectura, llama a `datosDeAvisoForm()` para aplicar la configuración correspondiente.
- */
+  /** Establece el estado inicial del formulario según soloLectura. */
   inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.guardarDatosFormulario();
@@ -98,13 +117,7 @@ export class DomicillioComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
- * Habilita o deshabilita el formulario de acuerdo al modo de solo lectura.
- * 
- * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), 
- * deshabilita todos los campos del formulario para evitar modificaciones.
- * En caso contrario, habilita los campos para permitir la edición.
- */
+  /** Habilita o deshabilita el formulario según soloLectura. */
   guardarDatosFormulario(): void {
     this.donanteDomicilio();
     if (this.soloLectura) {
@@ -114,7 +127,7 @@ export class DomicillioComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  /** Muestra el modal de instalaciones principales y abre el modal de notificación. */
   public seleccionarModificar(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(
@@ -125,6 +138,7 @@ export class DomicillioComponent implements OnInit, OnDestroy {
     this.abrirModal();
   }
 
+  /** Elimina los domicilios seleccionados de la lista. */
   eliminarDomiciliosDatos(): void {
     if (this.seleccionarDomiciliosDatos.length > 0) {
       this.seleccionarDomiciliosDatos.forEach((elemento) => {
@@ -138,7 +152,7 @@ export class DomicillioComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  /** Muestra el modal para agregar domicilio. */
   public onAgregarClick(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
@@ -146,13 +160,14 @@ export class DomicillioComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Elimina un pedimento de la lista si borrar es true. */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
-
   }
 
+  /** Abre el modal de notificación y guarda el índice del elemento. */
   abrirModal(i: number = 0): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -168,6 +183,7 @@ export class DomicillioComponent implements OnInit, OnDestroy {
     this.elementoParaEliminar = i;
   }
 
+  /** Obtiene el catálogo de domicilio desde el servicio. */
   obtenerDomicillio(): void {
     this.economico
       .obtenerDomicillio()
@@ -177,6 +193,7 @@ export class DomicillioComponent implements OnInit, OnDestroy {
       });
   }
 
+  /** Obtiene el catálogo de entidad federativa desde el servicio. */
   obtenerEntidad(): void {
     this.economico
       .obtenerEntidad()
@@ -186,6 +203,7 @@ export class DomicillioComponent implements OnInit, OnDestroy {
       });
   }
 
+  /** Obtiene los datos de la tabla de entidad federativa desde el servicio. */
   public obtenerTablaEntidad(): void {
     this.economico
       .obtenerTablaEntidad()
@@ -195,6 +213,7 @@ export class DomicillioComponent implements OnInit, OnDestroy {
       });
   }
 
+  /** Obtiene los datos de la tabla de domicilio desde el servicio. */
   public obtenerTablaDomicillio(): void {
     this.economico
       .obtenerTablaDomicillio()
@@ -204,9 +223,7 @@ export class DomicillioComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-    * Marca todos los campos del formulario como tocados si es inválido.
-    */
+  /** Marca todos los campos del formulario como tocados si es inválido. */
   validarDestinatarioFormulario(): void {
     if (this.domicillioForm.invalid) {
       this.domicillioForm.markAllAsTouched();
@@ -215,7 +232,6 @@ export class DomicillioComponent implements OnInit, OnDestroy {
 
   /**
    * Actualiza un valor en el estado global utilizando el almacén.
-   *
    * @param form Formulario reactivo.
    * @param campo Nombre del campo en el formulario.
    * @param metodoNombre Nombre del método en el almacén para actualizar el valor.
@@ -228,6 +244,8 @@ export class DomicillioComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+  /** Inicializa el formulario con los valores del estado de la solicitud. */
   donanteDomicilio(): void {
     this.domicillioForm = this.fb.group({
       domicillio: [{ value: this.solicitudState?.domicillio, disabled: this.soloLectura }, [Validators.required]],
@@ -250,10 +268,10 @@ export class DomicillioComponent implements OnInit, OnDestroy {
       registroSESAT: [{ value: this.solicitudState?.registroSESAT, disabled: this.soloLectura }, [Validators.required]],
       descripcion: [{ value: this.solicitudState?.descripcion, disabled: this.soloLectura }, [Validators.required]],
       codigoPostal: [{ value: this.solicitudState?.codigoPostal, disabled: this.soloLectura }, [Validators.required]],
-
     });
   }
 
+  /** Actualiza el nombre del archivo seleccionado y lo asigna al formulario. */
   alSeleccionarArchivo(event: Event): void {
     const TARGET = event.target as HTMLInputElement;
     const FILE = TARGET?.files ? TARGET.files[0] : null;
@@ -263,6 +281,7 @@ export class DomicillioComponent implements OnInit, OnDestroy {
     });
   }
 
+  /** Actualiza el nombre del segundo archivo seleccionado y lo asigna al formulario. */
   alSeleccionarArchivo2(event: Event): void {
     const TARGET = event.target as HTMLInputElement;
     const FILE = TARGET?.files ? TARGET.files[0] : null;
@@ -272,10 +291,12 @@ export class DomicillioComponent implements OnInit, OnDestroy {
     });
   }
 
+  /** Actualiza la lista de domicilios seleccionados. */
   seleccionarDomiciliosDato(evento: Domicillio[]): void {
     this.seleccionarDomiciliosDatos = evento;
   }
 
+  /** Emite el objeto de instalaciones principales seleccionado. */
   aceptarInstalacionesPrincipales(): void {
     const OBJETO_JSON: Domicillio = {
       instalacionPrincipal: this.domicillioForm.get('principales')?.value,
@@ -300,7 +321,7 @@ export class DomicillioComponent implements OnInit, OnDestroy {
     this.instalacionesPrincipales.emit(OBJETO_JSON);
   }
 
-
+  /** Libera recursos y completa el observable destroyed$ al destruir el componente. */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();

@@ -109,7 +109,6 @@ describe('MiembroComponent', () => {
     component.soloLectura = true;
     const spy = jest.spyOn(component.miembroForm, 'disable');
     component.guardarDatosFormulario();
-    // expect(spy).toHaveBeenCalled();
   });
 
   it('guardarDatosFormulario habilita el formulario si no soloLectura', () => {
@@ -117,14 +116,7 @@ describe('MiembroComponent', () => {
     component.soloLectura = false;
     const spy = jest.spyOn(component.miembroForm, 'enable');
     component.guardarDatosFormulario();
-    // expect(spy).toHaveBeenCalled();
   });
-
-  // it('agregarMiembro muestra el modal', () => {
-  //   component.modalElement = { nativeElement: document.createElement('div') } as ElementRef;
-  //   component.agregarMiembro();
-  //   expect(component.modalElement).toBeDefined();
-  // });
 
   it('obtenerCaracter actualiza catalogos', () => {
     const resp = [{ id: 1, descripcion: 'A' }];

@@ -9,6 +9,11 @@ import { Tramite32606Query } from '../../state/Tramite32606.query';
 import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
 import { map, ReplaySubject, takeUntil } from 'rxjs';
 
+/**
+ * Componente encargado de gestionar el formulario de la sección "Controladora".
+ * Permite inicializar, habilitar/deshabilitar y actualizar los valores del formulario,
+ * así como interactuar con el estado global y los servicios relacionados.
+ */
 @Component({
   selector: 'app-controladora',
   standalone: true,
@@ -19,20 +24,34 @@ import { map, ReplaySubject, takeUntil } from 'rxjs';
   styleUrl: './controladora.component.css',
 })
 export class ControladoraComponent {
+  /** Formulario reactivo principal de la sección controladora. */
   public controladoraForm !: FormGroup;
+  /** Opciones para el radio tipo 01. */
   radioOpcions01 = RADIO_01;
+  /** Opciones para el radio de autorización. */
   radioAutorizo = RADIO_AUTORIZO;
+  /** Opciones para el radio de clasificación. */
   radioClasificacion = RADIO_CLASIFICACION;
+  /** Configuración para el campo de fecha de inicio. */
   fechaInicio: InputFecha = FECHA_INICIO;
+  /** Configuración para el campo de fecha de pago. */
   fechaDePago: InputFecha = FECHA_PAGO;
+  /** Referencia a la tabla de selección. */
   TablaSeleccion = TablaSeleccion;
+  /** Configuración de la tabla de transportistas. */
   public transportistasTabla = TRANSPORTISTAS_TABLA;
+  /** Configuración de la tabla de controladas. */
   public controladasTabla = CONTROLADAS_TABLA;
+  /** Indica si el formulario está en modo solo lectura. */
   soloLectura: boolean = false;
+  /** Estado actual de la solicitud. */
   public solicitudState!: Solicitud32606State;
+  /** Observable para controlar la destrucción de suscripciones. */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  /** Estado de consulta actual. */
   consultaDatos!: ConsultaioState;
 
+  /** Constructor que inicializa servicios y suscripciones. */
   constructor(private economico: EconomicoService,
     public query: Tramite32606Query,
     public store: Tramite32606Store,
@@ -50,7 +69,7 @@ export class ControladoraComponent {
       .subscribe()
   }
 
-
+  /** Inicializa el formulario y sus valores según el modo solo lectura. */
   ngOnInit(): void {
     this.query.selectSolicitud$
       .pipe(
@@ -64,12 +83,7 @@ export class ControladoraComponent {
     this.inicializarEstadoFormulario();
   }
 
-  /**
- * Determina el estado inicial del formulario según el modo de solo lectura.
- * 
- * Si el formulario está en modo solo lectura, llama a `guardarDatosDelFormulario()` para deshabilitar los campos.
- * Si no está en modo solo lectura, llama a `datosDeAvisoForm()` para aplicar la configuración correspondiente.
- */
+  /** Establece el estado inicial del formulario según soloLectura. */
   inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.guardarDatosFormulario();
@@ -78,13 +92,7 @@ export class ControladoraComponent {
     }
   }
 
-  /**
- * Habilita o deshabilita el formulario de acuerdo al modo de solo lectura.
- * 
- * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), 
- * deshabilita todos los campos del formulario para evitar modificaciones.
- * En caso contrario, habilita los campos para permitir la edición.
- */
+  /** Habilita o deshabilita el formulario según soloLectura. */
   guardarDatosFormulario(): void {
     this.donanteDomicilio();
     if (this.soloLectura) {
@@ -94,6 +102,7 @@ export class ControladoraComponent {
     }
   }
 
+  /** Actualiza el campo fechaInicio en el formulario y store. */
   cambioFechaInicio(nuevo_fechaInicio: string): void {
     this.controladoraForm.patchValue({
       fechaPago: nuevo_fechaInicio,
@@ -101,6 +110,7 @@ export class ControladoraComponent {
     this.setValoresStore(this.controladoraForm, 'fechaInicio', 'setFechaInicio');
   }
 
+  /** Actualiza el campo fechaPago en el formulario y store. */
   cambioFechaPago(nuevo_fechaPago: string): void {
     this.controladoraForm.patchValue({
       fechaPago: nuevo_fechaPago,
@@ -108,22 +118,14 @@ export class ControladoraComponent {
     this.setValoresStore(this.controladoraForm, 'fechaInicio', 'setFechaPago');
   }
 
-  /**
-    * Marca todos los campos del formulario como tocados si es inválido.
-    */
+  /** Marca todos los campos como tocados si el formulario es inválido. */
   validarDestinatarioFormulario(): void {
     if (this.controladoraForm.invalid) {
       this.controladoraForm.markAllAsTouched();
     }
   }
 
-  /**
-   * Actualiza un valor en el estado global utilizando el almacén.
-   *
-   * @param form Formulario reactivo.
-   * @param campo Nombre del campo en el formulario.
-   * @param metodoNombre Nombre del método en el almacén para actualizar el valor.
-   */
+  /** Actualiza un valor en el store usando el nombre del método. */
   setValoresStore(
     form: FormGroup,
     campo: string,
@@ -133,6 +135,7 @@ export class ControladoraComponent {
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+  /** Inicializa el formulario con los valores del estado de la solicitud. */
   donanteDomicilio(): void {
     this.controladoraForm = this.fb.group({
       tipoRadio21: [{ value: this.solicitudState?.tipoRadio21, disabled: this.soloLectura }, [Validators.required]],
@@ -149,7 +152,7 @@ export class ControladoraComponent {
     });
   }
 
-
+  /** Libera recursos y completa el observable destroyed$ al destruir el componente. */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();

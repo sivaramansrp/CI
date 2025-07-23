@@ -15,7 +15,6 @@ describe('EconomicoService', () => {
       get: jest.fn()
     } as any;
 
-    // Mock all setters used in actualizarEstadoFormulario
     storeMock = {
       setTipoRadio01: jest.fn(),
       setTipoRadio02: jest.fn(),

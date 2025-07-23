@@ -60,14 +60,6 @@ describe('PasoUnoComponent', () => {
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  // it('ngOnInit llama guardarDatosFormularios si update es true', () => {
-  //   consultaioQueryMock.selectConsultaioState$ = of({ ...consultaState, update: true });
-  //   component.consultaioQuery = consultaioQueryMock;
-  //   const spy = jest.spyOn(component, 'guardarDatosFormularios');
-  //   component.ngOnInit();
-  //   expect(spy).toHaveBeenCalled();
-  // });
-
   it('guardarDatosFormularios actualiza estado y llama actualizarEstadoFormulario', () => {
     const resp = { tipoRadio01: 'a' } as any;
     economicoMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(resp));

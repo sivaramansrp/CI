@@ -6,7 +6,6 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { PASOS } from '@ng-mf/data-access-user';
 import { provideHttpClient } from '@angular/common/http';
 
-// Mock WizardComponent
 @Component({ selector: 'wizard-component', template: '' })
 class MockWizardComponent {
   siguiente = jest.fn();

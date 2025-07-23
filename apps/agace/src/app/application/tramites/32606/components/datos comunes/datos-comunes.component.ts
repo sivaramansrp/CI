@@ -11,6 +11,7 @@ import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606
 import { QuerellaComponent } from '../querella/querella.component';
 import { MiembroComponent } from '../miembro/miembro.component';
 
+/** Componente para la sección de datos comunes del trámite 32606. */
 @Component({
   selector: 'app-datos-comunes',
   standalone: true,
@@ -20,26 +21,38 @@ import { MiembroComponent } from '../miembro/miembro.component';
   styleUrl: './datos-comunes.component.css',
 })
 export class DatosComunesComponent implements OnInit, OnDestroy {
-  /**
-    * Observable para gestionar la destrucción del componente.
-    */
-
+  /** Catálogo de sector productivo. */
   public sectorProductivo = SECTOR_PRODUCTIVO;
+  /** Catálogo de servicio. */
   public servicioCatalogo = SERVICIO_CATALOGO;
+  /** Catálogo de biomestre. */
   public biomestreCatalogo = BIOMESTRE_CATALOGO;
+  /** Opciones para el radio tipo 01. */
   radioOpcions01 = RADIO_01;
+  /** Formulario reactivo principal de datos comunes. */
   public datosComunesForm!: FormGroup;
+  /** Valor seleccionado en los radios. */
   valorSeleccionado!: string;
+  /** Notificación para el modal principal. */
   public nuevaNotificacion!: Notificacion;
+  /** Notificación para el segundo modal. */
   public nuevaNotificacion2!: Notificacion;
+  /** Índice del elemento a eliminar en la lista principal. */
   public elementoParaEliminar!: number;
+  /** Índice del elemento a eliminar en la segunda lista. */
   public elementoParaEliminar2!: number;
+  /** Lista de pedimentos. */
   public pedimentos: Array<Pedimento> = [];
+  /** Indica si el formulario está en modo solo lectura. */
   soloLectura: boolean = false;
+  /** Estado actual de la solicitud. */
   public solicitudState!: Solicitud32606State;
+  /** Observable para controlar la destrucción de suscripciones. */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  /** Estado de consulta actual. */
   consultaDatos!: ConsultaioState;
 
+  /** Constructor que inicializa servicios y suscripciones. */
   constructor(private economico: EconomicoService,
     public query: Tramite32606Query,
     public store: Tramite32606Store,
@@ -59,6 +72,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       .subscribe()
   }
 
+  /** Inicializa el formulario y obtiene catálogos al iniciar el componente. */
   ngOnInit(): void {
     this.query.selectSolicitud$
       .pipe(
@@ -75,13 +89,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.obtenerBimestre();
   }
 
-
-  /**
- * Determina el estado inicial del formulario según el modo de solo lectura.
- * 
- * Si el formulario está en modo solo lectura, llama a `guardarDatosDelFormulario()` para deshabilitar los campos.
- * Si no está en modo solo lectura, llama a `datosDeAvisoForm()` para aplicar la configuración correspondiente.
- */
+  /** Establece el estado inicial del formulario según soloLectura. */
   inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.guardarDatosFormulario();
@@ -90,13 +98,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
- * Habilita o deshabilita el formulario de acuerdo al modo de solo lectura.
- * 
- * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), 
- * deshabilita todos los campos del formulario para evitar modificaciones.
- * En caso contrario, habilita los campos para permitir la edición.
- */
+  /** Habilita o deshabilita el formulario según soloLectura. */
   guardarDatosFormulario(): void {
     this.donanteDomicilio();
     if (this.soloLectura) {
@@ -106,7 +108,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  /** Cambia el valor del radio y abre el modal si corresponde. */
   cambiarRadio(value: string | number): void {
     this.valorSeleccionado = value as string;
     if (value === 'si') {
@@ -114,6 +116,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Cambia el valor del segundo radio y abre el modal si corresponde. */
   cambiarRadio2(value: string | number): void {
     this.valorSeleccionado = value as string;
     if (value === 'no') {
@@ -121,6 +124,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Obtiene el catálogo de sector productivo desde el servicio. */
   obtenerSectorProductivo(): void {
     this.economico
       .obtenerSectorProductivo()
@@ -130,6 +134,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       });
   }
 
+  /** Obtiene el catálogo de servicio desde el servicio. */
   obtenerServicio(): void {
     this.economico
       .obtenerServicio()
@@ -139,6 +144,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       });
   }
 
+  /** Obtiene el catálogo de biomestre desde el servicio. */
   obtenerBimestre(): void {
     this.economico
       .obtenerBimestre()
@@ -148,12 +154,14 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       });
   }
 
+  /** Elimina un pedimento de la lista principal si borrar es true. */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
-
   }
+
+  /** Abre el modal de notificación y guarda el índice del elemento. */
   abrirModal(i: number = 0): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -169,18 +177,19 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.elementoParaEliminar = i;
   }
 
+  /** Elimina un pedimento de la segunda lista si borrar es true. */
   eliminarPedimento2(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
   }
 
+  /** Valida si un campo del formulario es válido usando el servicio de validaciones. */
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
-  /**
-    * Marca todos los campos del formulario como tocados si es inválido.
-    */
+
+  /** Marca todos los campos del formulario como tocados si es inválido. */
   validarDestinatarioFormulario(): void {
     if (this.datosComunesForm.invalid) {
       this.datosComunesForm.markAllAsTouched();
@@ -188,8 +197,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Actualiza un valor en el estado global utilizando el almacén.
-   *
+   * Actualiza un valor en el store usando el nombre del método.
    * @param form Formulario reactivo.
    * @param campo Nombre del campo en el formulario.
    * @param metodoNombre Nombre del método en el almacén para actualizar el valor.
@@ -202,6 +210,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+  /** Inicializa el formulario con los valores del estado de la solicitud. */
   donanteDomicilio(): void {
     this.datosComunesForm = this.fb.group({
       sectorProductivo: [{ value: this.solicitudState?.sectorProductivo, disabled: this.soloLectura }, [Validators.required]],
@@ -223,6 +233,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     });
   }
 
+  /** Libera recursos y completa el observable destroyed$ al destruir el componente. */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();

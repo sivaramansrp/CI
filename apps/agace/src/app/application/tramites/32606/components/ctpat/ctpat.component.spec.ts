@@ -99,7 +99,6 @@ describe('CtpatComponent', () => {
     component.soloLectura = true;
     const spy = jest.spyOn(component.ctpatForm, 'disable');
     component.guardarDatosFormulario();
-    // expect(spy).toHaveBeenCalled();
   });
 
   it('guardarDatosFormulario habilita el formulario si no soloLectura', () => {
@@ -107,7 +106,6 @@ describe('CtpatComponent', () => {
     component.soloLectura = false;
     const spy = jest.spyOn(component.ctpatForm, 'enable');
     component.guardarDatosFormulario();
-    // expect(spy).toHaveBeenCalled();
   });
 
   it('validarDestinatarioFormulario marca todos como tocados si inválido', () => {

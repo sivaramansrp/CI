@@ -118,7 +118,6 @@ describe('DomicillioComponent', () => {
     component.soloLectura = true;
     component.domicillioForm.disable = jest.fn();
     component.guardarDatosFormulario();
-    // expect(component.domicillioForm.disable).toHaveBeenCalled();
   });
 
   it('guardarDatosFormulario habilita el formulario si no soloLectura', () => {
@@ -126,7 +125,6 @@ describe('DomicillioComponent', () => {
     component.soloLectura = false;
     component.domicillioForm.enable = jest.fn();
     component.guardarDatosFormulario();
-    // expect(component.domicillioForm.enable).toHaveBeenCalled();
   });
 
   it('seleccionarModificar muestra el modal y llama abrirModal', () => {
@@ -153,7 +151,6 @@ describe('DomicillioComponent', () => {
   it('onAgregarClick muestra el modal', () => {
     component.modalElement = { nativeElement: document.createElement('div') } as ElementRef;
     component.onAgregarClick();
-    // No hay error, modal se muestra
     expect(component.modalElement).toBeDefined();
   });
 
@@ -244,7 +241,6 @@ describe('DomicillioComponent', () => {
     component.domicillioForm.setErrors(null);
     jest.spyOn(component.domicillioForm, 'markAllAsTouched');
     component.validarDestinatarioFormulario();
-    // expect(component.domicillioForm.markAllAsTouched).not.toHaveBeenCalled();
   });
 
   it('setValoresStore llama al método correcto del store', () => {

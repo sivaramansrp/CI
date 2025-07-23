@@ -94,14 +94,6 @@ describe('ControladoraComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('inicializa soloLectura y consultaDatos desde consultaioQuery', () => {
-  //   expect(component.soloLectura).toBe(false);
-  //   expect(component.consultaDatos).toEqual(mockConsultaioState);
-
-  //   selectConsultaioState$.next({ ...mockConsultaioState, readonly: true });
-  //   expect(component.soloLectura).toBe(true);
-  // });
-
   it('inicializa solicitudState desde query.selectSolicitud$', () => {
     expect(component.solicitudState).toEqual(mockSolicitudState);
 
@@ -129,7 +121,6 @@ describe('ControladoraComponent', () => {
     component.donanteDomicilio();
     const spy = jest.spyOn(component.controladoraForm, 'disable');
     component.guardarDatosFormulario();
-    // expect(spy).toHaveBeenCalled();
   });
 
   it('guardarDatosFormulario habilita el formulario si no soloLectura', () => {
@@ -137,14 +128,12 @@ describe('ControladoraComponent', () => {
     component.donanteDomicilio();
     const spy = jest.spyOn(component.controladoraForm, 'enable');
     component.guardarDatosFormulario();
-    // expect(spy).toHaveBeenCalled();
   });
 
   it('cambioFechaInicio actualiza el valor y llama setValoresStore', () => {
     component.donanteDomicilio();
     const spy = jest.spyOn(component, 'setValoresStore');
     component.cambioFechaInicio('2023-05-15');
-    // expect(component.controladoraForm.get('fechaPago')?.value).toBe('2023-05-15');
     expect(spy).toHaveBeenCalledWith(component.controladoraForm, 'fechaInicio', 'setFechaInicio');
   });
 
@@ -152,7 +141,6 @@ describe('ControladoraComponent', () => {
     component.donanteDomicilio();
     const spy = jest.spyOn(component, 'setValoresStore');
     component.cambioFechaPago('2023-06-20');
-    // expect(component.controladoraForm.get('fechaPago')?.value).toBe('2023-06-20');
     expect(spy).toHaveBeenCalledWith(component.controladoraForm, 'fechaInicio', 'setFechaPago');
   });
 

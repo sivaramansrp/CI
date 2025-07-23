@@ -6,35 +6,45 @@ import { Router } from '@angular/router';
 import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
 import { EconomicoService } from '../../services/economico.service';
 
-/**
- * Componente que representa el primer paso del trámite.
- */
+/** Componente que representa el primer paso del trámite. */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
-
+  /** Tipo de persona seleccionada. */
   tipoPersona!: number;
+  /** Datos del formulario de persona. */
   persona: FormularioDinamico[] = [];
+  /** Datos del formulario de domicilio fiscal. */
   domicilioFiscal: FormularioDinamico[] = [];
+  /** Índice de la pestaña seleccionada. */
   indice: number = 1;
+  /** Observable para manejar la destrucción del componente y cancelar suscripciones. */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  /** Estado de consulta actual. */
   consultaDatos!: ConsultaioState;
+  /** Formulario reactivo principal del solicitante. */
   solicitanteForm!: FormGroup;
+  /** Estado actual de la solicitud. */
   public solicitudState!: Solicitud32606State;
+  /** Indica si el formulario está en modo solo lectura. */
   esFormularioSoloLectura: boolean = false;
+  /** Estado de consulta actual para el formulario. */
   public consultaState!: ConsultaioState;
+  /** Indica si se muestran los datos de respuesta. */
   public esDatosRespuesta: boolean = false;
 
+  /** Constructor que inyecta los servicios necesarios. */
   constructor(
     public economico: EconomicoService,
     public consultaioQuery: ConsultaioQuery,
-   ) {
+  ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
+  /** Método que se ejecuta al inicializar el componente. */
   ngOnInit(): void {
     this.consultaioQuery.selectConsultaioState$.pipe(
       takeUntil(this.destroyed$),
@@ -50,9 +60,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-     * Luego reinicializa el formulario con los valores actualizados desde el store.
-     */
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
   guardarDatosFormularios(): void {
     this.economico
       .getRegistroTomaMuestrasMercanciasData().pipe(
@@ -65,21 +75,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         }
       });
   }
-  /**
-   * Selecciona una pestaña del asistente.
-   * @param i Índice de la pestaña a seleccionar.
-   */
+
+  /** Selecciona una pestaña del asistente. */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
 
-  /**
-   * Método que se ejecuta al destruir el componente.
-   * Se utiliza para limpiar las suscripciones.
-   */
+  /** Método que se ejecuta al destruir el componente y libera recursos de suscripciones. */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
   }
-
 }
