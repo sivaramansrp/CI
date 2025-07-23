@@ -6,7 +6,7 @@ import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { API_GET_INICIO } from '../../../constantes/130118/api-constants';
-import { IniciarRequest } from '../../models/request/iniciar-requst.model';
+import { IniciarRequest } from '../../models/request/iniciar-request.model';
 
 
 @Injectable({

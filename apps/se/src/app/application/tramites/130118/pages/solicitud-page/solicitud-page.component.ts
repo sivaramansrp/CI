@@ -11,7 +11,7 @@ import { IniciarService } from '../../../../core/services/130118/iniciar.service
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
-import { IniciarRequest } from '../../../../core/models/request/iniciar-requst.model';
+import { IniciarRequest } from '../../../../core/models/request/iniciar-request.model';
 
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 

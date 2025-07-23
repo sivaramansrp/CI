@@ -639,7 +639,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param nuevo_valor Nuevo valor de la fecha final.
    */
   cambioFechaFinal(nuevo_valor: string): void {
-    // Validar y convertir la fecha de formato dd/MM/yyyy a Date
     const PARTES = nuevo_valor.split('/');
     if (PARTES.length !== 3) {
       this.datosMercancia.patchValue({ fechaSalida: null });

@@ -11,12 +11,24 @@ import { DocumentoResponse } from '../../models/shared/documentos-request.model'
 })
 export class DocumentosService {
 
+  /**
+   * URL base del servicio
+   */
   private readonly host: string;
 
+  /**
+   * Constructor del servicio DocumentosService
+   * @param http HttpClient para realizar peticiones HTTP
+   */
   constructor(private http: HttpClient) {
     this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
+  /**
+   * Guarda el acuse de la solicitud
+   * @param idSolicitud Identificador de la solicitud
+   * @returns Observable con la respuesta del servidor
+   */
   guardarAcuse(idSolicitud: string): Observable<BaseResponse<null>> {
     const ENDPOINT = `${this.host}` + API_POST_GUARDAR_ACUSE.replace(IDSOLICITUD, idSolicitud);
 
@@ -28,6 +40,11 @@ export class DocumentosService {
     );
   }
 
+  /**
+   * Obtiene la vista previa del documento asociado a la solicitud
+   * @param idSolicitud Identificador de la solicitud
+   * @returns Observable con la respuesta del servidor que contiene el documento
+   */
   vistaPrevia(idSolicitud: string): Observable<BaseResponse<DocumentoResponse>> {
     const ENDPOINT = `${this.host}` + API_POST_VISTA_PREVIA.replace(IDSOLICITUD, idSolicitud);
 
