@@ -4,11 +4,20 @@ import { CatalogosSelect } from '@libs/shared/data-access-user/src';
  * Interfaz que representa los datos de un destinatario.
  */
 export interface Destinatario {
-  /** Nombre completo del destinatario. */
-  nombre: string;
+
+  tipoPersona: number;
 
   /** Registro Federal de Contribuyentes (RFC) del destinatario. */
   rfc: string;
+
+  denominacion: string;
+
+   /** Nombre completo del destinatario. */
+  nombre: string;
+
+  apellidoPaterno: string;
+
+  apellidoMaterno: string;
 
   /** Clave Única de Registro de Población (CURP) del destinatario. */
   curp: string;
@@ -47,6 +56,8 @@ export interface Destinatario {
   localidad: number;
 
   localidadNombre?: string;
+
+  lada: string;
 
   /** Estado asociado al domicilio del destinatario. */
   estado: number;

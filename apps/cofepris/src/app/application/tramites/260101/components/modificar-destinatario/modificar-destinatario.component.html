@@ -1,10 +1,10 @@
 <form [formGroup]="modificarDestinatarioForm">
   <div class="row mt-5">
     <div class="col-md-12">
-      @if(datosDestinatario.length > 0) {
-        <ng-titulo titulo="Modificar destinatario (destino final)" />
-      }@else if(datosDestinatario.length === 0) {
-        <ng-titulo titulo="Agregar destinatario (destino final)" />
+      @if(modificarDestinatario) {
+      <ng-titulo titulo="Modificar destinatario (destino final)" />
+      }@else {
+      <ng-titulo titulo="Agregar destinatario (destino final)" />
       }
     </div>
 
@@ -184,7 +184,7 @@
         [label]="paisCatalogo.labelNombre"
         [placeholder]="paisCatalogo.primerOpcion"
         [required]="paisCatalogo.required"
-        [isDisabled]="esFormularioSoloLectura"
+        [isDisabled]="true"
         formControlName="domicilioPais"
         (selectionChange)="seleccionaPais($event)"
       >
@@ -334,9 +334,8 @@
         id="lada"
         placeholder=""
         maxlength="3"
-        size="4"
         type="text"
-        fomrControlName="domiciliLada"
+        formControlName="domiciliLada"
         (change)="setDomiciliLada($event)"
       />
     </div>
@@ -348,9 +347,8 @@
         id="telefono"
         placeholder=""
         maxlength="30"
-        size="29"
         type="text"
-        fomrControlName="domiciliTelefono"
+        formControlName="domiciliTelefono"
         (change)="setDomiciliTelefono($event)"
       />
       @if
@@ -376,9 +374,8 @@
         id="correoElectronioco"
         placeholder=""
         maxlength="320"
-        size="29"
         type="text"
-        fomrControlName="domiciliCorreoElectronioco"
+        formControlName="domiciliCorreoElectronioco"
         (change)="setDomiciliCorreoElectronioco($event)"
       />
       @if

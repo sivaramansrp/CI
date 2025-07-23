@@ -11,6 +11,8 @@
       [tipoSeleccionTabla]="destinatarioSeleccionTabla"
       [configuracionTabla]="destinatarioConfiguracionTabla"
       [datos]="destinatarioDatos"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+      [inputSelection]="inputSelectionDestinatario"
       (listaDeFilaSeleccionada)="seleccionDestinatarioDatos($event)"
     >
     </app-tabla-dinamica>
@@ -28,8 +30,6 @@
       </button>
       <button
         type="button"
-        data-bs-toggle="modal"
-        data-bs-target="#modalAgregarMercancias"
         class="btn btn-default btn-space ms-3"
         (click)="openModificarMercancias()"
       >
@@ -39,8 +39,6 @@
       <button
         type="button"
         class="btn btn-primary ms-3"
-        data-bs-toggle="modal"
-        data-bs-target="#modalAgregarMercancias"
         (click)="agregarMercancias()"
       >
         Agregar
@@ -54,6 +52,7 @@
       [tipoSeleccionTabla]="fabricanteSeleccionTabla"
       [configuracionTabla]="fabricanteConfiguracionTabla"
       [datos]="fabricanteDatos"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       (listaDeFilaSeleccionada)="seleccionFabricanteDatos($event)"
     >
     </app-tabla-dinamica>
@@ -71,8 +70,6 @@
       </button>
       <button
         type="button"
-        data-bs-toggle="modal"
-        data-bs-target="#modalFabricante"
         class="btn btn-default btn-space ms-3"
         (click)="modificarModalFabricante()"
       >
@@ -82,8 +79,6 @@
       <button
         type="button"
         class="btn btn-primary ms-3"
-        data-bs-toggle="modal"
-        data-bs-target="#modalFabricante"
         (click)="agregarModalFabricante()"
       >
         Agregar
@@ -93,7 +88,7 @@
 </div>
 <div
   class="modal fade"
-  id="modalAgregarMercancias"
+  #modalAgregarMercancias
   tabindex="-1"
   aria-labelledby="modalAgregarMercanciasLabel"
   aria-hidden="true"
@@ -101,8 +96,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <app-modificar-destinatario
-        [datosDestinatario]="modificarDestinatario"
-        (cerrarModal)="cerrarModal($event)"
+        (cerrarModal)="cerrarMercanciasModal($event)"
       ></app-modificar-destinatario>
     </div>
   </div>
@@ -110,7 +104,7 @@
 
 <div
   class="modal fade"
-  id="modalFabricante"
+  #modalFabricante
   tabindex="-1"
   aria-labelledby="modalFabricanteLabel"
   aria-hidden="true"

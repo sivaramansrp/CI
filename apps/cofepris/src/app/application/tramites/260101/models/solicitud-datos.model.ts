@@ -17,7 +17,7 @@ export interface SolicitudDatos {
   proovedor: string;
 
   /** Datos del catálogo SCIAN relacionados con la mercancía. */
-  SCIANLista: TableData;
+  SCIANLista: SCIAN[];
 
   /** Lista opcional de otras mercancías relacionadas. */
   mercancias?: TableData;
@@ -114,4 +114,10 @@ export interface Solicitud {
 
   /** Apellido materno del solicitante. */
   apellidoMeterno: string;
+}
+
+
+export interface SCIAN {
+  clave: string;
+  descripcion: string;
 }

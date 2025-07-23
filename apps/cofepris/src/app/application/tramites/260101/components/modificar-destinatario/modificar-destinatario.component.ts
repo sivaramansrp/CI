@@ -2,7 +2,6 @@ import {
   AfterViewInit,
   Component,
   EventEmitter,
-  Input,
   OnDestroy,
   OnInit,
   Output,
@@ -10,8 +9,10 @@ import {
 import {
   Catalogo,
   CatalogoSelectComponent,
-  ConsultaioQuery,
+  CatalogosSelect,
   InputRadioComponent,
+  REGEX_CORREO_ELECTRONICO,
+  REGEX_TELEFONO,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import {
@@ -25,20 +26,17 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import {
+  Solicitud260101State,
+  Solicitud260101Store,
+} from '../../estados/tramites260101.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DestinatarioImitar } from '../../models/mercancia.model';
-import { Fabricante } from '../../models/fabricante.model';
-import { REGEX_CORREO_ELECTRONICO } from '@libs/shared/data-access-user/src';
-import { REGEX_TELEFONO } from '@libs/shared/data-access-user/src';
 import { RadioOptions } from '../../models/solicitud-datos.model';
 import { Solicitud260101Query } from '../../estados/tramites260101.query';
-import { Solicitud260101State } from '../../estados/tramites260101.store';
-import { Solicitud260101Store } from '../../estados/tramites260101.store';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente ModificarDestinatarioComponent.
@@ -74,7 +72,7 @@ export class ModificarDestinatarioComponent
    * Opciones para los botones de selección (radio) de tipo de persona.
    * Cada opción incluye una etiqueta y un valor asociado.
    */
-  tipoPersonaRadioOptions: { label: string; value: string | number }[] = [];
+  tipoPersonaRadioOptions: RadioOptions[] = [];
 
   /**
    * Valor predeterminado para el tipo de persona.
@@ -136,7 +134,7 @@ export class ModificarDestinatarioComponent
    */
   esFormularioSoloLectura: boolean = false;
 
-  @Input() datosDestinatario: Fabricante[] = [] as Fabricante[];
+  modificarDestinatario: boolean = false;
 
   /**
    * Constructor del componente.
@@ -314,10 +312,16 @@ export class ModificarDestinatarioComponent
         takeUntil(this.destroyNotifier$),
         map((respuesta: Solicitud260101State) => {
           this.solicitud260101State = respuesta;
+          this.modificarDestinatario =
+            this.solicitud260101State.modificarDestinatario;
           this.modificarDestinatarioForm.patchValue({
             tipoPersona: this.solicitud260101State.tipoPersona,
             modificarRFC: this.solicitud260101State.modificarRFC,
             denominacion: this.solicitud260101State.denominacion,
+            denominacionApellidoMaterno:
+              this.solicitud260101State.denominacionApellidoMaterno,
+            denominacionApellidoPaterno:
+              this.solicitud260101State.denominacionApellidoPaterno,
             domicilioPais: this.solicitud260101State.domicilioPais,
             domicilioEstado: this.solicitud260101State.domicilioEstado,
             domicilioMunicipio: this.solicitud260101State.domicilioMunicipio,
@@ -336,56 +340,54 @@ export class ModificarDestinatarioComponent
           });
           this.tipoPublicos =
             this.modificarDestinatarioForm.get('tipoPersona')?.value;
+          if (this.tipoPublicos) {
+            this.actualizarTipoPersonaValidators(this.tipoPublicos);
+          }
         })
       )
       .subscribe();
-
-    if (this.datosDestinatario.length > 0) {
-      this.modificarDestinatarioForm.patchValue({
-        modificarRFC: this.datosDestinatario[0].rfc,
-        denominacion: this.datosDestinatario[0].nombre,
-        domicilioPais: this.datosDestinatario[0].pais,
-        domicilioEstado: this.datosDestinatario[0].estado,
-        domicilioMunicipio: this.datosDestinatario[0].municipio,
-        domicilioLocalidad: this.datosDestinatario[0].localidad,
-        domicilioCodigo: this.datosDestinatario[0].codigo,
-        domicilioColonia: this.datosDestinatario[0].colonia,
-        domiciliCalle: this.datosDestinatario[0].calle,
-        domiciliNumeroExterior: this.datosDestinatario[0].numeroExterior,
-        domiciliNumeroInterior: this.datosDestinatario[0].numeroInterior,
-        domiciliTelefono: this.datosDestinatario[0].telefono,
-        domiciliCorreoElectronioco: this.datosDestinatario[0].correoElectronico,
-      });
-    }
   }
 
-  updateTipoPersonaValidators(valor: number | string): void {
-    const DENOMINACION = this.modificarDestinatarioForm.get('denominacion');
-    const NOMBRE = this.modificarDestinatarioForm.get('denominacionNombre');
-    const APELLIDO_PATERNO = this.modificarDestinatarioForm.get(
-      'denominacionApellidoPaterno'
-    );
-
+  actualizarTipoPersonaValidators(valor: number | string): void {
     if (valor === 1) {
       // Persona Moral
-      DENOMINACION?.setValidators([Validators.required]);
-      NOMBRE?.clearValidators();
-      APELLIDO_PATERNO?.clearValidators();
+      this.modificarDestinatarioForm
+        .get('denominacion')
+        ?.setValidators([Validators.required]);
+      this.modificarDestinatarioForm
+        .get('denominacionNombre')
+        ?.clearValidators();
+      this.modificarDestinatarioForm
+        .get('denominacionApellidoPaterno')
+        ?.clearValidators();
     } else if (valor === 2) {
       // Persona Física
-      DENOMINACION?.clearValidators();
-      NOMBRE?.setValidators([Validators.required]);
-      APELLIDO_PATERNO?.setValidators([Validators.required]);
+      this.modificarDestinatarioForm.get('denominacion')?.clearValidators();
+      this.modificarDestinatarioForm
+        .get('denominacionNombre')
+        ?.setValidators([Validators.required]);
+      this.modificarDestinatarioForm
+        .get('denominacionApellidoPaterno')
+        ?.setValidators([Validators.required]);
     } else {
-      // Reset all
-      DENOMINACION?.clearValidators();
-      NOMBRE?.clearValidators();
-      APELLIDO_PATERNO?.clearValidators();
+      this.modificarDestinatarioForm.get('denominacion')?.clearValidators();
+      this.modificarDestinatarioForm
+        .get('denominacionNombre')
+        ?.clearValidators();
+      this.modificarDestinatarioForm
+        .get('denominacionApellidoPaterno')
+        ?.clearValidators();
     }
 
-    DENOMINACION?.updateValueAndValidity();
-    NOMBRE?.updateValueAndValidity();
-    APELLIDO_PATERNO?.updateValueAndValidity();
+    this.modificarDestinatarioForm
+      .get('denominacion')
+      ?.updateValueAndValidity();
+    this.modificarDestinatarioForm
+      .get('denominacionNombre')
+      ?.updateValueAndValidity();
+    this.modificarDestinatarioForm
+      .get('denominacionApellidoPaterno')
+      ?.updateValueAndValidity();
   }
 
   /**
@@ -443,7 +445,7 @@ export class ModificarDestinatarioComponent
   setTipoPersona(evento: string | number): void {
     this.tipoPublicos = evento;
     this.solicitud260101Store.setTipoPersona(evento);
-    this.updateTipoPersonaValidators(evento);
+    this.actualizarTipoPersonaValidators(evento);
   }
 
   /**
@@ -593,15 +595,20 @@ export class ModificarDestinatarioComponent
    * Si el formulario es inválido, no realiza la operación.
    */
   guardarDestinatario(): void {
-    this.updateTipoPersonaValidators(
-      this.modificarDestinatarioForm.get('tipoPersona')?.value
-    );
     this.modificarDestinatarioForm.markAllAsTouched();
     if (this.modificarDestinatarioForm.invalid) {
       return;
     }
-    const OBJETO_JSON = {
-      nombre: this.modificarDestinatarioForm.get('denominacion')?.value,
+    const OBJETO_JSON: Destinatario = {
+      tipoPersona: this.modificarDestinatarioForm.get('tipoPersona')?.value,
+      denominacion: this.modificarDestinatarioForm.get('denominacion')?.value,
+      nombre: this.modificarDestinatarioForm.get('denominacionNombre')?.value,
+      apellidoPaterno: this.modificarDestinatarioForm.get(
+        'denominacionApellidoPaterno'
+      )?.value,
+      apellidoMaterno: this.modificarDestinatarioForm.get(
+        'denominacionApellidoMaterno'
+      )?.value,
       rfc: this.modificarDestinatarioForm.get('modificarRFC')?.value,
       curp: '--',
       telefono: this.modificarDestinatarioForm.get('domiciliTelefono')?.value,
@@ -616,16 +623,46 @@ export class ModificarDestinatarioComponent
         'domiciliNumeroInterior'
       )?.value,
       pais: this.modificarDestinatarioForm.get('domicilioPais')?.value,
+      paisNombre: this.paisCatalogo.catalogos.find(
+        (res) =>
+          res.id === this.modificarDestinatarioForm.get('domicilioPais')?.value
+      )?.descripcion,
       colonia: this.modificarDestinatarioForm.get('domicilioColonia')?.value,
+      coloniaNombre: this.coloniaCatalogo.catalogos.find(
+        (res) =>
+          res.id ===
+          this.modificarDestinatarioForm.get('domicilioColonia')?.value
+      )?.descripcion,
       municipio:
         this.modificarDestinatarioForm.get('domicilioMunicipio')?.value,
+      municipioNombre: this.municipioCatalogo.catalogos.find(
+        (res) =>
+          res.id ===
+          this.modificarDestinatarioForm.get('domicilioMunicipio')?.value
+      )?.descripcion,
       localidad:
         this.modificarDestinatarioForm.get('domicilioLocalidad')?.value,
+      localidadNombre: this.localidadCatalogo.catalogos.find(
+        (res) =>
+          res.id ===
+          this.modificarDestinatarioForm.get('domicilioLocalidad')?.value
+      )?.descripcion,
+      lada: this.modificarDestinatarioForm.get('domiciliLada')?.value,
       estado: this.modificarDestinatarioForm.get('domicilioEstado')?.value,
+      estadoNombre: this.estadoCatalogo.catalogos.find(
+        (res) =>
+          res.id ===
+          this.modificarDestinatarioForm.get('domicilioEstado')?.value
+      )?.descripcion,
       estado2: '--',
       codigo: this.modificarDestinatarioForm.get('domicilioCodigo')?.value,
+      codigoNombre: this.codigoCatalogo.catalogos.find(
+        (res) =>
+          res.id ===
+          this.modificarDestinatarioForm.get('domicilioCodigo')?.value
+      )?.descripcion,
     };
-    // this.solicitud260101Store.addDestinatarioDato(OBJETO_JSON);
+    this.limpiarDestinatario();
     this.cerrarModal.emit(OBJETO_JSON);
   }
 

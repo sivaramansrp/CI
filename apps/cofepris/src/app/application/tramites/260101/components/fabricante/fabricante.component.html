@@ -1,9 +1,9 @@
 <form [formGroup]="fabricanteComponentForm">
   <div class="row mt-5">
     <div class="col-md-12">
-      @if(datosDestinatario.length > 0) {
+      @if(modificarFabricante) {
       <ng-titulo titulo="Modificar fabricante" />
-      }@else if(datosDestinatario.length === 0) {
+      }@else {
       <ng-titulo titulo="Agregar fabricante" />
       }
     </div>
@@ -236,7 +236,7 @@
         [label]="paisCatalogo.labelNombre"
         [placeholder]="paisCatalogo.primerOpcion"
         [required]="paisCatalogo.required"
-        [isDisabled]="esFormularioSoloLectura"
+        [isDisabled]="true"
         formControlName="tercerosPais"
         (selectionChange)="seleccionaPais($event)"
       >

@@ -213,6 +213,10 @@ export interface Solicitud260101State {
 
   /** Importe del pago realizado para la solicitud. */
   importeDePago: string;
+
+  modificarDestinatario: boolean;
+
+  modificarFabricante: boolean;
 }
 
 /**
@@ -425,6 +429,10 @@ export function createInitialState(): Solicitud260101State {
 
     /** Importe del pago realizado. */
     importeDePago: '',
+
+    modificarDestinatario: false,
+
+    modificarFabricante: false,
   };
 }
 
@@ -1093,145 +1101,150 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
   }
 
   public setTercerosNacionalidad(tercerosNacionalidad: string | number): void {
-  this.update((state) => ({
-    ...state,
-    tercerosNacionalidad,
-  }));
-}
+    this.update((state) => ({
+      ...state,
+      tercerosNacionalidad,
+    }));
+  }
 
-public setTercerosTipoPersona(tercerosTipoPersona: string | number): void {
-  this.update((state) => ({
-    ...state,
-    tercerosTipoPersona,
-  }));
-}
+  public setTercerosTipoPersona(tercerosTipoPersona: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosTipoPersona,
+    }));
+  }
 
-public setTercerosRFC(tercerosRFC: string): void {
-  this.update((state) => ({
-    ...state,
-    tercerosRFC,
-  }));
-}
+  public setTercerosRFC(tercerosRFC: string): void {
+    this.update((state) => ({
+      ...state,
+      tercerosRFC,
+    }));
+  }
 
-public setTercerosCurp(tercerosCurp: string): void {
-  this.update((state) => ({
-    ...state,
-    tercerosCurp,
-  }));
-}
+  public setTercerosCurp(tercerosCurp: string): void {
+    this.update((state) => ({
+      ...state,
+      tercerosCurp,
+    }));
+  }
 
-public setTercerosDenominacion(tercerosDenominacion: string): void {
-  this.update((state) => ({
-    ...state,
-    tercerosDenominacion,
-  }));
-}
+  public setTercerosDenominacion(tercerosDenominacion: string): void {
+    this.update((state) => ({
+      ...state,
+      tercerosDenominacion,
+    }));
+  }
 
-public setTercerosDenominacionNombre(tercerosDenominacionNombre: string): void {
-  this.update((state) => ({
-    ...state,
-    tercerosDenominacionNombre,
-  }));
-}
+  public setTercerosDenominacionNombre(
+    tercerosDenominacionNombre: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      tercerosDenominacionNombre,
+    }));
+  }
 
-public setTercerosApellidoPaterno(tercerosApellidoPaterno: string): void {
-  this.update((state) => ({
-    ...state,
-    tercerosApellidoPaterno,
-  }));
-}
+  public setTercerosApellidoPaterno(tercerosApellidoPaterno: string): void {
+    this.update((state) => ({
+      ...state,
+      tercerosApellidoPaterno,
+    }));
+  }
 
-public setTercerosApellidoMaterno(tercerosApellidoMaterno: string): void {
-  this.update((state) => ({
-    ...state,
-    tercerosApellidoMaterno,
-  }));
-}
+  public setTercerosApellidoMaterno(tercerosApellidoMaterno: string): void {
+    this.update((state) => ({
+      ...state,
+      tercerosApellidoMaterno,
+    }));
+  }
 
-public setTercerosPais(tercerosPais: string | number): void {
-  this.update((state) => ({
-    ...state,
-    tercerosPais,
-  }));
-}
+  public setTercerosPais(tercerosPais: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosPais,
+    }));
+  }
 
-public setTercerosEstado(tercerosEstado: string | number): void {
-  this.update((state) => ({
-    ...state,
-    tercerosEstado,
-  }));
-}
+  public setTercerosEstado(tercerosEstado: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosEstado,
+    }));
+  }
 
-public setTercerosMunicipio(tercerosMunicipio: string | number): void {
-  this.update((state) => ({
-    ...state,
-    tercerosMunicipio,
-  }));
-}
+  public setTercerosMunicipio(tercerosMunicipio: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosMunicipio,
+    }));
+  }
 
-public setTercerosLocalidad(tercerosLocalidad: string | number): void {
-  this.update((state) => ({
-    ...state,
-    tercerosLocalidad,
-  }));
-}
+  public setTercerosLocalidad(tercerosLocalidad: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosLocalidad,
+    }));
+  }
 
-public setTercerosCodigo(tercerosCodigo: string | number): void {
-  this.update((state) => ({
-    ...state,
-    tercerosCodigo,
-  }));
-}
+  public setTercerosCodigo(tercerosCodigo: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosCodigo,
+    }));
+  }
 
-public setTercerosColonia(tercerosColonia: string | number): void {
-  this.update((state) => ({
-    ...state,
-    tercerosColonia,
-  }));
-}
+  public setTercerosColonia(tercerosColonia: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosColonia,
+    }));
+  }
 
-public setTercerosCalle(tercerosCalle: string): void {
-  this.update((state) => ({
-    ...state,
-    tercerosCalle,
-  }));
-}
+  public setTercerosCalle(tercerosCalle: string): void {
+    this.update((state) => ({
+      ...state,
+      tercerosCalle,
+    }));
+  }
 
-public setTercerosNumeroExterior(tercerosNumeroExterior: string | number): void {
-  this.update((state) => ({
-    ...state,
-    tercerosNumeroExterior,
-  }));
-}
+  public setTercerosNumeroExterior(
+    tercerosNumeroExterior: string | number
+  ): void {
+    this.update((state) => ({
+      ...state,
+      tercerosNumeroExterior,
+    }));
+  }
 
-public setTercerosNumeroInterior(tercerosNumeroInterior: string | number): void {
-  this.update((state) => ({
-    ...state,
-    tercerosNumeroInterior,
-  }));
-}
+  public setTercerosNumeroInterior(
+    tercerosNumeroInterior: string | number
+  ): void {
+    this.update((state) => ({
+      ...state,
+      tercerosNumeroInterior,
+    }));
+  }
 
-public setTercerosLada(tercerosLada: string | number): void {
-  this.update((state) => ({
-    ...state,
-    tercerosLada,
-  }));
-}
+  public setTercerosLada(tercerosLada: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosLada,
+    }));
+  }
 
-public setTercerosTelefono(tercerosTelefono: string | number): void {
-  this.update((state) => ({
-    ...state,
-    tercerosTelefono,
-  }));
-}
+  public setTercerosTelefono(tercerosTelefono: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosTelefono,
+    }));
+  }
 
-public setTercerosCorreoElectronico(tercerosCorreoElectronico: string): void {
-  this.update((state) => ({
-    ...state,
-    tercerosCorreoElectronico,
-  }));
-}
-
+  public setTercerosCorreoElectronico(tercerosCorreoElectronico: string): void {
+    this.update((state) => ({
+      ...state,
+      tercerosCorreoElectronico,
+    }));
+  }
 
   /**
    * Actualiza los datos de destinatarios en el estado.
@@ -1342,6 +1355,20 @@ public setTercerosCorreoElectronico(tercerosCorreoElectronico: string): void {
     this.update((state) => ({
       ...state,
       manifesto,
+    }));
+  }
+
+  public setModificarDestinatario(modificarDestinatario: boolean): void {
+    this.update((state) => ({
+      ...state,
+      modificarDestinatario,
+    }));
+  }
+
+  public setModificarFabricante(modificarFabricante: boolean): void {
+    this.update((state) => ({
+      ...state,
+      modificarFabricante,
     }));
   }
 

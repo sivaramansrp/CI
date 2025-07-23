@@ -1,5 +1,6 @@
 <form [formGroup]="solicitudForm">
   <div class="row mt-5">
+    @if(!esFormularioSoloLectura){
     <div class="col-md-12">
       <div class="panel-group ficha-collapse" id="accordion">
         <div class="panel panel-default">
@@ -10,10 +11,12 @@
             tabindex="0"
           >
             <h6 class="panel-title">
-             
-              <h6> <a aria-label="Repeat"
-                ><i class="bi bi-clipboard2-fill" aria-hidden="true"></i
-              ></a> Opciones de pre-llenado de Solicitud</h6>
+              <h6>
+                <a aria-label="Repeat"
+                  ><i class="bi bi-clipboard2-fill" aria-hidden="true"></i
+                ></a>
+                Opciones de pre-llenado de Solicitud
+              </h6>
             </h6>
             <button
               type="button"
@@ -32,6 +35,7 @@
                 <app-tabla-dinamica
                   [tipoSeleccionTabla]="solicitudSeleccionTabla"
                   [datos]="solicitudDatos"
+                  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
                   [configuracionTabla]="solicitudConfiguracionTabla"
                 >
                 </app-tabla-dinamica>
@@ -42,14 +46,18 @@
         </div>
       </div>
     </div>
-
+    }
     <div class="col-md-12">
       <ng-titulo titulo="Datos del establecimiento" />
     </div>
 
     <div class="col-md-12 mt-4 d-flex justify-content-end align-items-end">
       <div class="btn-group">
-        <button class="btn btn-primary ms-2" type="button">
+        <button
+          class="btn btn-primary ms-2"
+          [disabled]="esFormularioSoloLectura"
+          type="button"
+        >
           Seleccionar establecimiento
         </button>
       </div>
@@ -70,8 +78,13 @@
 
     <div class="col-md-4 mt-4">
       <label class="form-label" for="correoElectronico"
-        >Correo electrónico*:</label
-      >
+        >Correo electrónico*:
+        <span
+          class="bi bi-question-circle-fill"
+          title="ejemplo@dominio.com"
+          data-bs-toggle="tooltip"
+        ></span
+      ></label>
       <input
         class="form-control"
         id="correoElectronico"
@@ -144,7 +157,14 @@
     </div>
 
     <div class="col-md-8 mt-4">
-      <label class="form-label" for="calle">Calle*: <span class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span></label>
+      <label class="form-label" for="calle"
+        >Calle*:
+        <span
+          class="bi bi-question-circle-fill"
+          title="Domicilio, calle, número interior, numero exterior, lote"
+          data-bs-toggle="tooltip"
+        ></span
+      ></label>
       <input
         class="form-control"
         id="calle"
@@ -179,10 +199,18 @@
 
     <div class="col-md-12 mt-5">
       <label class="form-label mb-5" for="">S.C.I.A.N.*:</label>
-      <ng-table
+      <app-tabla-dinamica
+        [tipoSeleccionTabla]="scianSeleccionTabla"
+        [datos]="scianDatos"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+        (listaDeFilaSeleccionada)="getscianDatos($event)"
+        [configuracionTabla]="scianConfiguracionTabla"
+      >
+      </app-tabla-dinamica>
+      <!-- <ng-table
         [commonTableHeader]="tableDataSCIAN.tableHeader"
         [commonTableBody]="tableDataSCIAN.tableBody"
-      ></ng-table>
+      ></ng-table> -->
     </div>
 
     <div class="col-md-4 mt-4">
@@ -190,6 +218,7 @@
         <input
           class="form-check-input"
           type="checkbox"
+          [disabled]="esFormularioSoloLectura"
           id="avisoDeFuncionamiento"
           formControlName="avisoDeFuncionamiento"
           (change)="setAvisoDeFuncionamiento($event)"
@@ -203,9 +232,13 @@
 
     <div class="col-md-4 mt-4">
       <label class="form-label" for="licenciaSanitaria"
-        >No. de licencia sanitaria: <span class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span>
-        </label
-      >
+        >No. de licencia sanitaria:
+        <span
+          class="bi bi-question-circle-fill"
+          title="Nï¿½mero de la autorizaciï¿½n indicado en el documento emitido por la autoridad sanitaria competente"
+          data-bs-toggle="tooltip"
+        ></span>
+      </label>
       <input
         class="form-control"
         id="licenciaSanitaria"
@@ -223,6 +256,7 @@
           class="form-check-input"
           type="checkbox"
           id="flexCheckDefault"
+          [disabled]="esFormularioSoloLectura"
           aria-label="Aviso de funcionamiento"
           formControlName="liveFreshFrozen"
           (change)="setLiveFreshFrozen($event)"
@@ -241,8 +275,10 @@
         [placeholder]="regimenCatalogo.primerOpcion"
         [required]="regimenCatalogo.required"
         formControlName="regimen"
+        [tooltipQuestionCircle]="true"
+        [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
         (selectionChange)="setRegimen($event)"
-         [isDisabled]="esFormularioSoloLectura"
+        [isDisabled]="esFormularioSoloLectura"
       >
       </app-catalogo-select>
     </div>
@@ -256,7 +292,7 @@
         [required]="aduanaCatalogo.required"
         formControlName="aduana"
         (selectionChange)="setAduana($event)"
-         [isDisabled]="esFormularioSoloLectura"
+        [isDisabled]="esFormularioSoloLectura"
       >
       </app-catalogo-select>
     </div>
@@ -266,6 +302,7 @@
       <app-tabla-dinamica
         [tipoSeleccionTabla]="mercanciasSeleccionTabla"
         [datos]="mercanciasDatos"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         (listaDeFilaSeleccionada)="getMercanciasDatos($event)"
         [configuracionTabla]="mercanciasConfiguracionTabla"
       >
@@ -277,6 +314,7 @@
         <button
           type="button"
           class="btn btn-default btn-space"
+          [disabled]="esFormularioSoloLectura"
           data-bs-toggle="modal"
           data-bs-target="#modalAgregarMercancias"
           (click)="openModificarMercancias()"
@@ -287,6 +325,7 @@
           class="btn btn-default ms-3"
           type="button"
           name="aceptar"
+          [disabled]="esFormularioSoloLectura"
           id="agregarAduana"
           (click)="eliminarMercancias()"
         >
@@ -295,6 +334,7 @@
         <button
           type="button"
           class="btn btn-primary ms-3"
+          [disabled]="esFormularioSoloLectura"
           data-bs-toggle="modal"
           data-bs-target="#modalAgregarMercancias"
           (click)="openAgregarMercancias()"
@@ -311,6 +351,7 @@
           <div class="col-md-1 mt-5">
             <input
               type="checkbox"
+              [disabled]="esFormularioSoloLectura"
               class="mt-5"
               formControlName="manifesto"
               (change)="setManifesto($event)"
@@ -332,7 +373,8 @@
 
     <div class="col-md-12 mt-4">
       <label class="form-label" for=""
-        >Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label
+        >Los datos o anexos pueden contener información confidencial ¿Está de
+        acuerdo en hacerlos públicos?*:</label
       >
       <app-input-radio
         [radioOptions]="hacerlosRadioOptions"
@@ -356,13 +398,20 @@
         id="rfc"
         placeholder=""
         type="text"
+        [disabled]="esFormularioSoloLectura"
         formControlName="rfc"
         (change)="setRFC($event)"
       />
     </div>
 
     <div class="col-md-2 mt-4">
-      <button type="button" class="btn btn-primary btn-space">Buscar</button>
+      <button
+        type="button"
+        class="btn btn-primary btn-space"
+        [disabled]="esFormularioSoloLectura"
+      >
+        Buscar
+      </button>
     </div>
 
     <div class="col-md-6 mt-4"></div>
@@ -402,21 +451,18 @@
       />
     </div>
   </div>
-
-  
 </form>
 
 <div
-    class="modal fade"
-    id="modalAgregarMercancias"
-    tabindex="-1"
-    aria-labelledby="modalAgregarMercanciasLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <app-modificar-mercancias></app-modificar-mercancias> 
-      </div>
+  class="modal fade"
+  id="modalAgregarMercancias"
+  tabindex="-1"
+  aria-labelledby="modalAgregarMercanciasLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <app-modificar-mercancias></app-modificar-mercancias>
     </div>
   </div>
-  
+</div>

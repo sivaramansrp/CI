@@ -35,7 +35,7 @@ export class SolicitudDatosService {
    */
   obtenerDatosDeSolicitud(): Observable<DatosDeSolicitud> {
     return this.http
-      .get<DatosDeSolicitud>('../../../assets/json/260101/solicitud-datos.json')
+      .get<DatosDeSolicitud>('assets/json/260101/solicitud-datos.json')
       .pipe();
   }
 
@@ -45,7 +45,7 @@ export class SolicitudDatosService {
    */
   obtenerSolicitud(): Observable<Solicitud> {
     return this.http
-      .get<Solicitud>('../../../assets/json/260101/solicitud.json')
+      .get<Solicitud>('assets/json/260101/solicitud.json')
       .pipe();
   }
 
@@ -56,7 +56,7 @@ export class SolicitudDatosService {
   obtenerRegimenDestinaraListo(): Observable<CatalogosSelect> {
     return this.http
       .get<CatalogosSelect>(
-        '../../../assets/json/260101/regimen-destinaran.json'
+        'assets/json/260101/regimen-destinaran.json'
       )
       .pipe();
   }
@@ -67,7 +67,7 @@ export class SolicitudDatosService {
    */
   obtenerAduanaListo(): Observable<CatalogosSelect> {
     return this.http
-      .get<CatalogosSelect>('../../../assets/json/260101/aduana.json')
+      .get<CatalogosSelect>('assets/json/260101/aduana.json')
       .pipe();
   }
 
@@ -77,7 +77,7 @@ export class SolicitudDatosService {
    */
   obtenerEstadoCatalogo(): Observable<CatalogosSelect> {
     return this.http
-      .get<CatalogosSelect>('../../../assets/json/260101/estado-catalogo.json')
+      .get<CatalogosSelect>('assets/json/260101/estado-catalogo.json')
       .pipe();
   }
 
@@ -87,7 +87,7 @@ export class SolicitudDatosService {
    */
   obtenerMercanciaListo(): Observable<Mercancia[]> {
     return this.http
-      .get<Mercancia[]>('../../../assets/json/260101/mercancia.json')
+      .get<Mercancia[]>('assets/json/260101/mercancia.json')
       .pipe();
   }
 
@@ -97,7 +97,7 @@ export class SolicitudDatosService {
    */
   obtenerClavesDeLotesListo(): Observable<ClavesDeLotes[]> {
     return this.http
-      .get<ClavesDeLotes[]>('../../../assets/json/260101/claves-de-lotes.json')
+      .get<ClavesDeLotes[]>('assets/json/260101/claves-de-lotes.json')
       .pipe();
   }
 
@@ -107,7 +107,7 @@ export class SolicitudDatosService {
    */
   obtenerDestinatarioListo(): Observable<Destinatario[]> {
     return this.http
-      .get<Destinatario[]>('../../../assets/json/260101/destinatario.json')
+      .get<Destinatario[]>('assets/json/260101/destinatario.json')
       .pipe();
   }
 
@@ -117,7 +117,7 @@ export class SolicitudDatosService {
    */
   obtenerFabricanteListo(): Observable<Fabricante[]> {
     return this.http
-      .get<Fabricante[]>('../../../assets/json/260101/fabricante.json')
+      .get<Fabricante[]>('assets/json/260101/fabricante.json')
       .pipe();
   }
 
@@ -128,7 +128,7 @@ export class SolicitudDatosService {
   obtenerDestinatarioCatalogos(): Observable<DestinatarioCatalogos> {
     return this.http
       .get<DestinatarioCatalogos>(
-        '../../../assets/json/260101/destinatario-catalogos.json'
+        'assets/json/260101/destinatario-catalogos.json'
       )
       .pipe();
   }
@@ -142,7 +142,7 @@ export class SolicitudDatosService {
   > {
     return this.http
       .get<RadioOptions[]>(
-        '../../../assets/json/260101/destinatario-radio.json'
+        'assets/json/260101/destinatario-radio.json'
       )
       .pipe();
   }
@@ -152,7 +152,7 @@ export class SolicitudDatosService {
   > {
     return this.http
       .get<RadioOptions[]>(
-        '../../../assets/json/260101/fabricante-radio.json'
+        'assets/json/260101/fabricante-radio.json'
       )
       .pipe();
   }
@@ -166,7 +166,7 @@ export class SolicitudDatosService {
   > {
     return this.http
       .get<RadioOptions[]>(
-        '../../../assets/json/260101/terceros-nacionalidad-radio.json'
+        'assets/json/260101/terceros-nacionalidad-radio.json'
       )
       .pipe();
   }
@@ -178,7 +178,7 @@ export class SolicitudDatosService {
   obtenerMercanciaCatalogos(): Observable<MercanciaCatalogos> {
     return this.http
       .get<MercanciaCatalogos>(
-        '../../../assets/json/260101/mercancia-catalogos.json'
+        'assets/json/260101/mercancia-catalogos.json'
       )
       .pipe();
   }
@@ -190,7 +190,7 @@ export class SolicitudDatosService {
   obtenerCrosslisto(): Observable<MercanciaCrossList> {
     return this.http
       .get<MercanciaCrossList>(
-        '../../../assets/json/260101/mercancia-cross-list.json'
+        'assets/json/260101/mercancia-cross-list.json'
       )
       .pipe();
   }
@@ -201,7 +201,7 @@ export class SolicitudDatosService {
    */
   obtenerPagoDerechos(): Observable<CatalogosSelect> {
     return this.http
-      .get<CatalogosSelect>('../../../assets/json/260101/pago-derechos.json')
+      .get<CatalogosSelect>('assets/json/260101/pago-derechos.json')
       .pipe();
   }
 
@@ -212,7 +212,7 @@ export class SolicitudDatosService {
   obtenerDestinatarioImitar(): Observable<DestinatarioImitar> {
     return this.http
       .get<DestinatarioImitar>(
-        '../../../assets/json/260101/destinatario-mock.json'
+        'assets/json/260101/destinatario-mock.json'
       )
       .pipe();
   }
@@ -220,7 +220,7 @@ export class SolicitudDatosService {
     obtenerTercerosDestinatarioImitar(): Observable<TercerosDestinatarioImitar> {
     return this.http
       .get<TercerosDestinatarioImitar>(
-        '../../../assets/json/260101/terceros-destinatario-mock.json'
+        'assets/json/260101/terceros-destinatario-mock.json'
       )
       .pipe();
   }

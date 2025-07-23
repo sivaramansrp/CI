@@ -10,14 +10,12 @@ import {
 import {
   Catalogo,
   CatalogoSelectComponent,
-  ConsultaioQuery,
+  CatalogosSelect,
   InputRadioComponent,
+  REGEX_CORREO_ELECTRONICO,
+  REGEX_TELEFONO,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import {
-  Destinatario,
-  DestinatarioCatalogos,
-} from '../../models/destinatario.model';
 import {
   FormBuilder,
   FormGroup,
@@ -25,20 +23,19 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import {
+  Solicitud260101State,
+  Solicitud260101Store,
+} from '../../estados/tramites260101.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DestinatarioCatalogos } from '../../models/destinatario.model';
 import { Fabricante } from '../../models/fabricante.model';
-import { REGEX_CORREO_ELECTRONICO } from '@libs/shared/data-access-user/src';
-import { REGEX_TELEFONO } from '@libs/shared/data-access-user/src';
 import { RadioOptions } from '../../models/solicitud-datos.model';
 import { Solicitud260101Query } from '../../estados/tramites260101.query';
-import { Solicitud260101State } from '../../estados/tramites260101.store';
-import { Solicitud260101Store } from '../../estados/tramites260101.store';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
-import { Subject } from 'rxjs';
 import { TercerosDestinatarioImitar } from '../../models/mercancia.model';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente FabricanteComponent.
@@ -60,8 +57,8 @@ import { takeUntil } from 'rxjs';
   ],
 })
 export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Output() cerrarModal: EventEmitter<Destinatario> =
-    new EventEmitter<Destinatario>();
+  @Output() cerrarModal: EventEmitter<Fabricante> =
+    new EventEmitter<Fabricante>();
   /**
    * Formulario reactivo para la de fabricantes.
    * Inicializado posteriormente en el método `ngOnInit`.
@@ -137,6 +134,8 @@ export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
   esFormularioSoloLectura: boolean = false;
 
   @Input() datosDestinatario: Fabricante[] = [] as Fabricante[];
+
+  modificarFabricante: boolean = false;
 
   /**
    * Constructor del componente.
@@ -308,6 +307,8 @@ export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
         takeUntil(this.destroyNotifier$),
         map((respuesta: Solicitud260101State) => {
           this.solicitud260101State = respuesta;
+          this.modificarFabricante =
+            this.solicitud260101State.modificarFabricante;
           this.fabricanteComponentForm.patchValue({
             tercerosNacionalidad:
               this.solicitud260101State.tercerosNacionalidad,
@@ -321,69 +322,66 @@ export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
             tercerosLocalidad: this.solicitud260101State.tercerosLocalidad,
             tercerosCodigo: this.solicitud260101State.tercerosCodigo,
             tercerosColonia: this.solicitud260101State.tercerosColonia,
-            domiciliCalle: this.solicitud260101State.domiciliCalle,
-            domiciliNumeroExterior:
-              this.solicitud260101State.domiciliNumeroExterior,
-            domiciliNumeroInterior:
-              this.solicitud260101State.domiciliNumeroInterior,
-            domiciliLada: this.solicitud260101State.domiciliLada,
-            domiciliTelefono: this.solicitud260101State.domiciliTelefono,
-            domiciliCorreoElectronioco:
-              this.solicitud260101State.domiciliCorreoElectronioco,
+            tercerosCalle: this.solicitud260101State.tercerosCalle,
+            tercerosNumeroExterior:
+              this.solicitud260101State.tercerosNumeroExterior,
+            tercerosNumeroInterior:
+              this.solicitud260101State.tercerosNumeroInterior,
+            tercerosLada: this.solicitud260101State.tercerosLada,
+            tercerosTelefono: this.solicitud260101State.tercerosTelefono,
+            tercerosCorreoElectronioco:
+              this.solicitud260101State.tercerosCorreoElectronico,
           });
           this.tipoPublicos =
             this.fabricanteComponentForm.get('tipoPersona')?.value;
+          if (this.tipoPublicos) {
+            this.actualizarTipoPersonaValidators(this.tipoPublicos);
+          }
         })
       )
       .subscribe();
-
-    if (this.datosDestinatario.length > 0) {
-      this.fabricanteComponentForm.patchValue({
-        // tercerosNacionalidad: this.datosDestinatario[0].nacionalidad,
-        tercerosRFC: this.datosDestinatario[0].rfc,
-        tercerosDenominacion: this.datosDestinatario[0].nombre,
-        tercerosPais: this.datosDestinatario[0].pais,
-        tercerosEstado: this.datosDestinatario[0].estado,
-        tercerosMunicipio: this.datosDestinatario[0].municipio,
-        tercerosLocalidad: this.datosDestinatario[0].localidad,
-        tercerosCodigo: this.datosDestinatario[0].codigo,
-        tercerosColonia: this.datosDestinatario[0].colonia,
-        domiciliCalle: this.datosDestinatario[0].calle,
-        domiciliNumeroExterior: this.datosDestinatario[0].numeroExterior,
-        domiciliNumeroInterior: this.datosDestinatario[0].numeroInterior,
-        domiciliTelefono: this.datosDestinatario[0].telefono,
-        domiciliCorreoElectronioco: this.datosDestinatario[0].correoElectronico,
-      });
-    }
   }
 
-  updateTipoPersonaValidators(valor: number | string): void {
-    const DENOMINACION = this.fabricanteComponentForm.get('denominacion');
-    const NOMBRE = this.fabricanteComponentForm.get('denominacionNombre');
-    const APELLIDO_PATERNO = this.fabricanteComponentForm.get(
-      'denominacionApellidoPaterno'
-    );
-
+  actualizarTipoPersonaValidators(valor: number | string): void {
     if (valor === 1) {
       // Persona Moral
-      DENOMINACION?.setValidators([Validators.required]);
-      NOMBRE?.clearValidators();
-      APELLIDO_PATERNO?.clearValidators();
+      this.fabricanteComponentForm
+        .get('tercerosDenominacion')
+        ?.setValidators([Validators.required]);
+      this.fabricanteComponentForm.get('denominacionNombre')?.clearValidators();
+      this.fabricanteComponentForm
+        .get('tercerosApellidoPaterno')
+        ?.clearValidators();
     } else if (valor === 2) {
       // Persona Física
-      DENOMINACION?.clearValidators();
-      NOMBRE?.setValidators([Validators.required]);
-      APELLIDO_PATERNO?.setValidators([Validators.required]);
+      this.fabricanteComponentForm
+        .get('tercerosDenominacion')
+        ?.clearValidators();
+      this.fabricanteComponentForm
+        .get('tercerosDenominacionNombre')
+        ?.setValidators([Validators.required]);
+      this.fabricanteComponentForm
+        .get('tercerosApellidoPaterno')
+        ?.setValidators([Validators.required]);
     } else {
-      // Reset all
-      DENOMINACION?.clearValidators();
-      NOMBRE?.clearValidators();
-      APELLIDO_PATERNO?.clearValidators();
+      this.fabricanteComponentForm.get('denominacion')?.clearValidators();
+      this.fabricanteComponentForm
+        .get('tercerosDenominacionNombre')
+        ?.clearValidators();
+      this.fabricanteComponentForm
+        .get('tercerosApellidoPaterno')
+        ?.clearValidators();
     }
 
-    DENOMINACION?.updateValueAndValidity();
-    NOMBRE?.updateValueAndValidity();
-    APELLIDO_PATERNO?.updateValueAndValidity();
+    this.fabricanteComponentForm
+      .get('tercerosDenominacion')
+      ?.updateValueAndValidity();
+    this.fabricanteComponentForm
+      .get('tercerosDenominacionNombre')
+      ?.updateValueAndValidity();
+    this.fabricanteComponentForm
+      .get('denominacionApellidoPaterno')
+      ?.updateValueAndValidity();
   }
 
   /**
@@ -451,7 +449,7 @@ export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
   setTercerosNacionalidad(evento: string | number): void {
     this.tipoPublicos = evento;
     this.solicitud260101Store.setTercerosNacionalidad(evento);
-    this.updateTipoPersonaValidators(evento);
+    this.actualizarTipoPersonaValidators(evento);
   }
 
   /**
@@ -461,7 +459,7 @@ export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
   setTipoPersona(evento: string | number): void {
     this.tipoPublicos = evento;
     this.solicitud260101Store.setTipoPersona(evento);
-    this.updateTipoPersonaValidators(evento);
+    this.actualizarTipoPersonaValidators(evento);
   }
 
   /**
@@ -616,35 +614,73 @@ export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
    * Si el formulario es inválido, no realiza la operación.
    */
   guardarDestinatario(): void {
-    this.updateTipoPersonaValidators(
-      this.fabricanteComponentForm.get('tipoPersona')?.value
-    );
     this.fabricanteComponentForm.markAllAsTouched();
     if (this.fabricanteComponentForm.invalid) {
       return;
     }
     const OBJETO_JSON = {
-      nombre: this.fabricanteComponentForm.get('denominacion')?.value,
-      rfc: this.fabricanteComponentForm.get('modificarRFC')?.value,
-      curp: '--',
-      telefono: this.fabricanteComponentForm.get('domiciliTelefono')?.value,
-      correoElectronico: this.fabricanteComponentForm.get(
-        'domiciliCorreoElectronioco'
+      tercerosNacionalidad: this.fabricanteComponentForm.get(
+        'tercerosNacionalidad'
       )?.value,
-      calle: this.fabricanteComponentForm.get('domiciliCalle')?.value,
-      numeroExterior: this.fabricanteComponentForm.get('domiciliNumeroExterior')
+      tipoPersona: this.fabricanteComponentForm.get('tercerosTipoPersona')
         ?.value,
-      numeroInterior: this.fabricanteComponentForm.get('domiciliNumeroInterior')
+      denominacion: this.fabricanteComponentForm.get('tercerosDenominacion')
+        ?.value,
+      apellidoPaterno: this.fabricanteComponentForm.get(
+        'tercerosApellidoPaterno'
+      )?.value,
+      apellidoMaterno: this.fabricanteComponentForm.get(
+        'tercerosApellidoMaterno'
+      )?.value,
+      nombre: this.fabricanteComponentForm.get('tercerosDenominacionNombre')
+        ?.value,
+      rfc: this.fabricanteComponentForm.get('tercerosRFC')?.value,
+      curp: this.fabricanteComponentForm.get('tercerosCurp')?.value,
+      telefono: this.fabricanteComponentForm.get('tercerosTelefono')?.value,
+      correoElectronico: this.fabricanteComponentForm.get(
+        'tercerosCorreoElectronioco'
+      )?.value,
+      calle: this.fabricanteComponentForm.get('tercerosCalle')?.value,
+      numeroExterior: this.fabricanteComponentForm.get('tercerosNumeroExterior')
+        ?.value,
+      numeroInterior: this.fabricanteComponentForm.get('tercerosNumeroInterior')
         ?.value,
       pais: this.fabricanteComponentForm.get('tercerosPais')?.value,
+      paisNombre: this.paisCatalogo.catalogos.find(
+        (res) =>
+          res.id === this.fabricanteComponentForm.get('tercerosPais')?.value
+      )?.descripcion,
       colonia: this.fabricanteComponentForm.get('tercerosColonia')?.value,
+      coloniaNombre: this.coloniaCatalogo.catalogos.find(
+        (res) =>
+          res.id === this.fabricanteComponentForm.get('tercerosColonia')?.value
+      )?.descripcion,
       municipio: this.fabricanteComponentForm.get('tercerosMunicipio')?.value,
+      municipioNombre: this.municipioCatalogo.catalogos.find(
+        (res) =>
+          res.id ===
+          this.fabricanteComponentForm.get('tercerosMunicipio')?.value
+      )?.descripcion,
       localidad: this.fabricanteComponentForm.get('tercerosLocalidad')?.value,
+      localidadNombre: this.localidadCatalogo.catalogos.find(
+        (res) =>
+          res.id ===
+          this.fabricanteComponentForm.get('tercerosLocalidad')?.value
+      )?.descripcion,
+      lada: this.fabricanteComponentForm.get('tercerosLada')?.value,
       estado: this.fabricanteComponentForm.get('tercerosEstado')?.value,
+      estadoNombre: this.estadoCatalogo.catalogos.find(
+        (res) =>
+          res.id === this.fabricanteComponentForm.get('tercerosEstado')?.value
+      )?.descripcion,
       estado2: '--',
       codigo: this.fabricanteComponentForm.get('tercerosCodigo')?.value,
+      codigoNombre: this.codigoCatalogo.catalogos.find(
+        (res) =>
+          res.id === this.fabricanteComponentForm.get('tercerosCodigo')?.value
+      )?.descripcion,
     };
-    // this.solicitud260101Store.addDestinatarioDato(OBJETO_JSON);
+    this.limpiarDestinatario();
     this.cerrarModal.emit(OBJETO_JSON);
   }
 

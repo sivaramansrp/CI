@@ -97,6 +97,7 @@ constructor(
       .getRegistroTomaMuestrasMercanciasData()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
+        console.log('Datos obtenidos del servicio:', resp);
         if (resp) {
           this.esDatosRespuesta = true;
           this.service260101Service.actualizarEstadoFormulario(resp);

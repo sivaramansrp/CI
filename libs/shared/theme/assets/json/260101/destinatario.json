@@ -1,20 +1,31 @@
 [
     {
-      "nombre": "TOROS",
+      "tipoPersona":1,
       "rfc": "AAL0409235E6",
       "curp": "--",
+      "denominacion":"ESTADOS UNIDOS MEXICANOS",
+      "nombre": "",
+      "apellidoPaterno":"",
+      "apellidoMaterno":"",
       "telefono": "98764532",
       "correoElectronico": "prueba@prueba.com",
       "calle": "Plan de igual",
       "numeroExterior": "1353",
       "numeroInterior": "12",
-      "pais": "ESTADOS UNIDOS MEXICANOS",
-      "colonia": "MIGUEL HIDALGO",
-      "municipio": "ZACATEPEC DE HIDALGO",
-      "localidad": "LOS MOCHIS",
-      "estado": "MORELOS",
+      "pais": 1,
+      "paisNombre":"AFGANISTAN (EMIRATO ISLAMICO DE)",
+      "colonia": 1,
+      "coloniaNombre":"ARBOLEDAS",
+      "municipio": 1,
+      "municipioNombre":"ABASOLO",
+      "localidad": 1,
+      "localidadNombre":"CERRITO ALTO",
+      "lada":"123",
+      "estado": 1,
+      "estadoNombre":"BAJA CALIFORNIA",
       "estado2": "--",
-      "codigo": "--"
+      "codigo": 1,
+      "codigoNombre":"36990"
     }
   ]
   
