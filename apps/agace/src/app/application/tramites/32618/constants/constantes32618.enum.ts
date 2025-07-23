@@ -18,7 +18,7 @@ import { RowTypeFormInput } from "../models/row-type-form-input.model"
 export const TRANSPORTE_FERROVARIO = [
     {
     id: 'senaleSiCuenta',
-    labelNombre: 'Señale si cuenta con al menos 2 años de experiencia en la prestación de servicios de transporte de mercancías por ferrocarril, anteriores a su solicitud.',
+    labelNombre: 'Indique si cuenta con al menos dos años de experiencia en la prestación del servicio de manejo y almacenaje de mercancías de comercio exterior.',
     campo: 'senaleSiCuenta',
     clase: 'col-md-12',
     tipoInput: 'radio',
@@ -42,7 +42,7 @@ export const TRANSPORTE_FERROVARIO = [
   },
   {
     id: 'indiqueLaFecha',
-    labelNombre: 'Indique la fecha en que inició la prestación de servicios de transporte de mercancías por ferrocarril.',
+    labelNombre: 'Indique la fecha en que inicio a prestar el servicio de manejo y almacenaje de mercancías de comercio exterior.',
     campo: 'indiqueLaFecha',
     clase: 'col-md-12',
     tipoInput: 'label-only',
@@ -55,7 +55,7 @@ export const TRANSPORTE_FERROVARIO = [
   },
   {
     id: 'fechaDeInicio',
-    labelNombre: 'Fecha de Inicio de Servicios de Transporte',
+    labelNombre: 'Fecha de inicio de la prestación del servicio',
     campo: 'fechaDeInicio',
     clase: 'col-md-6',
     tipoInput: 'date',
@@ -69,7 +69,7 @@ export const TRANSPORTE_FERROVARIO = [
   },
   {
     id: 'senaleSiSuSolicitud',
-    labelNombre: 'Señale si su solicitud es sobre la red completa de ferrocarril o sobre un tramo',
+    labelNombre: 'Señale si al momento de la presentación de su solicitud cuenta con la autorización del régimen de Almacén General de Depósito.',
     campo: 'senaleSiSuSolicitud',
     clase: 'col-md-12',
     tipoInput: 'radio',
@@ -79,17 +79,18 @@ export const TRANSPORTE_FERROVARIO = [
     valorPredeterminado: '',
     marcadorDePosicion: '',
     marginTop: 0,
-    opciones: [
+     opciones: [
       {
-        label: 'Red Completa',
-        value: 1,
+        label: 'Si',
+        value: 'Si',
       },
       {
-        label: 'Tramo de Red',
-        value: 2,
+        label: 'No',
+        value: 'No',
       },
-    ]
+    ],
   },
+  
   {
     id: 'customSection1_transporte',
     labelNombre: '',
@@ -426,7 +427,7 @@ export const INFORMACION_GENERAL = [
   },
   {
     id: 'elObjetivoDeEstePerfil',
-    labelNombre: 'El objetivo de este Perfil, es el de asegurar que la empresa concesionaria de transporte ferroviario, desarrolle e implemente prácticas y procesos de seguridad que aseguren su cadena de suministro mitigando el riesgo de contaminación en sus equipos tractivos y de arrastre (furgones, góndolas, tolvas, carros tanque, contenedores, chasises, remolques, plataformas etc., que no tienen tracción propia que circulan en las vías férreas y que utilizan para transportar mercancía en su interior y en contenedores) con productos ilícitos, así como de pérdida o robo de mercancía y/o cualquier otro factor que pueda vulnerar la seguridad de la cadena de suministro',
+    labelNombre: 'El objetivo de este Perfil es asegurar que los almacénes generales de deposito, cuenten con prácticas y procesos de seguridad implementados en sus instalaciones, enfocados a fortalecer la cadena de suministro y a mitigar el riesgo de contaminación de los embarques con productos ilícitos.Los almacénes generales de depósito interesados en obtener la autorización a que se refiere la regla 7.1.5., de las RGCE vigentes deberán demostrar que cuentan con procesos documentados y verificables; así mismo, deberán integrar los criterios exigidos en el presente documento de acuerdo al modelo o diseño empresarial que tenga establecido, buscando durante la implementación de los estándares en materia de seguridad, la aplicación de una cultura de análisis de riesgos soportada en la toma de decisiones acorde a los valores, la misión, visión, los códigos de ética y conducta de la propia empresa.',
     campo: 'elObjetivoDeEstePerfil',
     clase: 'col-md-12',
     tipoInput: 'label-only',
@@ -441,6 +442,19 @@ export const INFORMACION_GENERAL = [
     id: 'conformeLaRegla',
     labelNombre: 'Conforme a la regla 7.1.5. fracción III, inciso a) y al formato denominado Perfil del Transportista Ferroviario" establecido en el Anexo 1 de las RGCE declare los siguiente:*',
     campo: 'conformeLaRegla',
+    clase: 'col-md-12',
+    tipoInput: 'label-only',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+  {
+    id: 'conformeLaRegla1',
+    labelNombre: 'Indique la siguiente información de la Instalación:',
+    campo: 'conformeLaRegla1',
     clase: 'col-md-12',
     tipoInput: 'label-only',
     desactivado: false,
@@ -688,7 +702,7 @@ export const TEMPLATE_1_ARRAY: RowTypeFormInput[] = [
   },
   {
     id: 'actividadPreponderante',
-    label: 'Actividad preponderante',
+    label: 'Actividad que se realizan en la instalación',
     tipoInput: 'number',
     formControlName: 'actividadPreponderante',
     required: false,
@@ -696,7 +710,7 @@ export const TEMPLATE_1_ARRAY: RowTypeFormInput[] = [
   },
   {
     id: 'tipoDeServicio',
-    label: 'Tipo de servicio (Carga General/Especializada)	',
+    label: 'Productos preponderantes que manejan en el Almacén General de Depósito',
     tipoInput: 'number',
     formControlName: 'tipoDeServicio',
     required: false,
@@ -754,14 +768,7 @@ export const TEMPLATE_2_ARRAY: RowTypeFormInput[] = [
     required: false,
     labelColClase: 'col-md-6'
   },
-  {
-    id: 'tipoDeServicio',
-    label: 'Tipo de servicio (Carga General/Especializada)	',
-    tipoInput: 'number',
-    formControlName: 'tipoDeServicioCarga',
-    required: false,
-    labelColClase: 'col-md-6'
-  },
+ 
   {
     id: 'mic',
     label: 'Manufacturer Identification Code (MID)',
@@ -844,26 +851,48 @@ export const ANALISIS_DE_RIESGO = [
     labelNombre: 'Indique si el procedimiento le permita identificar otros riesgos o amenazas en la cadena de suministros, que se originen por cambios en las condiciones iniciales de la empresa.',
     campo: 'indiqueSiElProcedimiento',
     clase: 'col-md-12',
-    tipoInput: 'textarea',
+    tipoInput: 'radio',
     desactivado: false,
     soloLectura: false,
     validadores: [{tipo: 'required'}],
     valorPredeterminado: '',
     marcadorDePosicion: '',
-    marginTop: 3,
+    marginTop: 0,
+    opciones: [
+      {
+        label: 'Si',
+        value: 'Si',
+      },
+      {
+        label: 'No',
+        value: 'No',
+      },
+    ],
+    gridLayout: true
   },
   {
     id: 'senaleSiElProcedimiento',
     labelNombre: 'Señale si el procedimiento le permite identificar que las políticas, procedimientos y otros mecanismos de control y seguridad se estén cumpliendo.',
     campo: 'senaleSiElProcedimiento',
     clase: 'col-md-12',
-    tipoInput: 'textarea',
+   tipoInput: 'radio',
     desactivado: false,
     soloLectura: false,
     validadores: [{tipo: 'required'}],
     valorPredeterminado: '',
     marcadorDePosicion: '',
-    marginTop: 3,
+    marginTop: 0,
+    opciones: [
+      {
+        label: 'Si',
+        value: 'Si',
+      },
+      {
+        label: 'No',
+        value: 'No',
+      },
+    ],
+    gridLayout: true
   },
    {
     id: 'senaleQuienesConforman',
@@ -891,26 +920,14 @@ export const ANALISIS_DE_RIESGO = [
     marcadorDePosicion: '',
     marginTop: 3,
   },
-  {
-    id: 'tipoDeServicio',
-    labelNombre: 'Tipo de servicio: Tránsito interno/internacional',
-    campo: 'tipoDeServicioAnalisis',
-    clase: 'col-md-12',
-    tipoInput: 'textarea',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [{tipo: 'required'}],
-    valorPredeterminado: '',
-    marcadorDePosicion: '',
-    marginTop: 3,
-  },
+ 
 ]
 
 /** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const POLITICAS_DE_SEGURIDAD = [
   {
     id: 'enunciarlaPolitica',
-    labelNombre: 'Enunciar la política del transportista ferroviario en materia de seguridad orientada a prevenir, asegurar y reconocer amenazas en la cadena de suministros y de todas sus instalaciones de la compañía.',
+    labelNombre: 'Enuncie la política de seguridad orientada a prevenir, asegurar y reconocer amenazas en la cadena de suministros e instalaciones del almacén general de depósito.',
     campo: 'enunciarlaPolitica',
     clase: 'col-md-12',
     tipoInput: 'textarea',
@@ -1064,7 +1081,7 @@ export const AUDITORIAS_INTERNAS = [
   },
   {
     id: 'indiqueQueProcesos',
-    labelNombre: 'Indique que procesos o tópicos se auditan.',
+    labelNombre: 'Los procesos o tópicos que se auditan.',
     campo: 'indiqueQueProcesos',
     clase: 'col-md-12',
     tipoInput: 'textarea',
@@ -1077,7 +1094,7 @@ export const AUDITORIAS_INTERNAS = [
   },
   {
     id: 'senaleSiCuentaConRegistros',
-    labelNombre: 'Señale si cuenta con registros de los resultados de las auditorías y su seguimiento.',
+    labelNombre: 'Si cuenta con registros de los resultados de las auditorías y su seguimiento.',
     campo: 'senaleSiCuentaConRegistros',
     clase: 'col-md-12',
     tipoInput: 'radio',
@@ -1155,7 +1172,7 @@ export const AUDITORIAS_INTERNAS = [
 export const PLANES_DE_CONTINGENCIA = [
   {
     id: 'indiqueCiCuentaTransportista',
-    labelNombre: 'Indique si cuenta con procedimiento o plan de emergencia documentado, para asegurar la continuidad del negocio, en caso de una situación de emergencia o de seguridad, que pueden afectar el funcionamiento del transportista.',
+    labelNombre: 'Indique si cuenta con procedimiento o plan de emergencia documentado, para asegurar la continuidad del negocio, en caso de una situación de emergencia o de seguridad, que afecte el desarrollo normal de las actividades de comercio exterior de la empresa.*',
     campo: 'indiqueCiCuentaTransportista',
     clase: 'col-md-12',
     tipoInput: 'radio',
@@ -1219,7 +1236,7 @@ export const PLANES_DE_CONTINGENCIA = [
   },
   {
     id: 'indiqueSiCuentaContingencia',
-    labelNombre: 'Indique si cuenta con registros de capacitaciones periódicas, pruebas, ejercicios prácticos o simulacros anuales de los planes de contingencia.',
+    labelNombre: 'Indique si cuenta con registros de capacitaciones periódicas, pruebas, ejercicios prácticos o simulacros de los planes de contingencia.*',
     campo: 'indiqueSiCuentaContingencia',
     clase: 'col-md-12',
     tipoInput: 'radio',
@@ -1243,7 +1260,7 @@ export const PLANES_DE_CONTINGENCIA = [
   },
   {
     id: 'indiqueSiRealizaTraslados',
-    labelNombre: 'Indique si realiza traslados de Materiales y Residuos Peligrosos.',
+    labelNombre: ' Indique si cuenta con registros de capacitaciones periódicas, pruebas, ejercicios prácticos o simulacros de los planes de contingencia.',
     campo: 'indiqueSiRealizaTraslados',
     clase: 'col-md-12',
     tipoInput: 'radio',
@@ -1271,7 +1288,7 @@ export const PLANES_DE_CONTINGENCIA = [
 export const INSTALACIONES = [
   {
     id: 'losMaterialesPredominantes',
-    labelNombre: 'Los materiales predominantes con los que se encuentran construidas las instalaciones (por ejemplo, de estructura de metal y paredes de lámina, paredes de ladrillo, de madera, entre otros)',
+    labelNombre: 'Indeque los materiales predominantes con los que se encuentran construidas las instalaciones (por ejemplo, de estructura de metal y paredes de lámina, paredes de ladrillo, de madera, entre otros)',
     campo: 'losMaterialesPredominantes',
     clase: 'col-md-12',
     tipoInput: 'textarea',
@@ -1284,7 +1301,7 @@ export const INSTALACIONES = [
   },
   {
     id: 'senaleDeQueForma',
-    labelNombre: 'Señale de qué forma se lleva a cabo la revisión y mantenimiento de la integridad de las estructuras.',
+    labelNombre: 'De qué forma se lleva a cabo la revisión y mantenimiento de la integridad de las estructuras.',
     campo: 'senaleDeQueForma',
     clase: 'col-md-12',
     tipoInput: 'textarea',
@@ -1308,27 +1325,14 @@ export const INSTALACIONES = [
     marcadorDePosicion: '',
     marginTop: 3,
   },
-  {
-    id: 'customSection1_instalaciones',
-    labelNombre: '',
-    campo: '',
-    clase: 'col-md-12',
-    tipoInput: 'custom-html',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 5,
-    templateKey: 'customSection1',
-  },
+  
 ]
 
 /** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const ACCESO_EN_PUERTAS = [
   {
     id: 'indiqueCuantasPuertasAccesos',
-    labelNombre: 'Indique cuantas puertas y/o accesos existen en las instalaciones, así como el horario de operación de cada una, e indique de qué forma son monitoreadas (en caso de tener personal asignado, indicar la cantidad).',
+    labelNombre: 'Cuantas puertas y/o accesos existen en las instalaciones.',
     campo: 'indiqueCuantasPuertasAccesos',
     clase: 'col-md-12',
     tipoInput: 'textarea',
@@ -1341,8 +1345,34 @@ export const ACCESO_EN_PUERTAS = [
   },
   {
     id: 'detalleSiExistenPuertas',
-    labelNombre: 'Detalle si existen puertas y/o accesos bloqueados, o permanentemente cerradas.',
+    labelNombre: 'El horario de operación de cada una de las puertas y/o accesos.',
     campo: 'detalleSiExistenPuertas',
+    clase: 'col-md-12',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{tipo: 'required'}],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 3,
+  },
+  {
+    id: 'monitors',
+    labelNombre: 'Indique de qué forma son monitoreadas (En caso de tener personal asignado, indicar la cantidad). QAS',
+    campo: 'monitors',
+    clase: 'col-md-12',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{tipo: 'required'}],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 3,
+  },
+  {
+    id: 'bloqueadas',
+    labelNombre: 'Detalle si existen puertas y/o accesos bloqueados, o permanentemente cerradas.',
+    campo: 'bloqueadas',
     clase: 'col-md-12',
     tipoInput: 'textarea',
     desactivado: false,
@@ -1364,7 +1394,7 @@ export const ACCESO_EN_PUERTAS = [
     valorPredeterminado: '',
     marcadorDePosicion: '',
     marginTop: 3,
-  },
+  }
 ]
 
 /** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
@@ -1373,6 +1403,19 @@ export const BARDAS_PERIMETRALES = [
     id: 'describireltipo',
     labelNombre: 'Describir el tipo de cerca, barrera periférica y/o bardas con las que cuenta la empresa',
     campo: 'describireltipo',
+    clase: 'col-md-12',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{tipo: 'required'}],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 3,
+  },
+   {
+    id: 'instalacio',
+    labelNombre: 'Especifique qué áreas segrega en la instalación por ser consideradas críticas y/o sensibles.',
+    campo: 'instalacion',
     clase: 'col-md-12',
     tipoInput: 'textarea',
     desactivado: false,
@@ -1460,6 +1503,33 @@ export const BARDAS_PERIMETRALES = [
     marcadorDePosicion: '',
     marginTop: 3,
   },
+  
+   {
+    id: 'mercanciaNacional',
+    labelNombre: 'Indique cómo separa la mercancía nacional y la de comercio exterior, y si está identificada de manera adicional (Por ejemplo: empaque distinto; etiquetas; embalaje, entre otros)',
+    campo: 'mercanciaNacional',
+    clase: 'col-md-12',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{tipo: 'required'}],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 3,
+  },
+   {
+    id: 'restringido',
+    labelNombre: 'Identifique y señale las áreas de acceso restringido. (Mercancías peligrosas, alto valor, confidenciales, etcetera).',
+    campo: 'restringido',
+    clase: 'col-md-12',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{tipo: 'required'}],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 3,
+  }
 ]
 
 /** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
@@ -1492,7 +1562,7 @@ export const ESTACIONAMIENTOS = [
   },
   {
     id: 'identificacionDeLos',
-    labelNombre: 'Identificación de los estacionamientos (especifique si el estacionamiento de empleados, visitantes, se encuentra separado de los equipos tractivos y de arrastre, (furgones, góndolas, tolvas, carros tanque, chasises, remolques, plataformas que no tienen tracción propia que circulan en las vías férreas y que utilizan para transportar mercancía en su interior y en contenedores) y manejo de mercancías.',
+    labelNombre: 'Identificación de los estacionamientos (especificar si el estacionamiento de visitantes, se encuentra separado de las áreas de almacenaje y manejo de mercancía)',
     campo: 'identificacionDeLos',
     clase: 'col-md-12',
     tipoInput: 'textarea',
@@ -1557,30 +1627,7 @@ export const CONTROL_DE_LLAVES = [
     ],
     gridLayout: true,
   },
-  {
-    id: 'siCuentaConUnRegistro',
-    labelNombre: 'Si cuenta con un registro de las personas que en base a sus funciones cuenten con llaves o accesos autorizados.',
-    campo: 'siCuentaConUnRegistro',
-    clase: 'col-md-12',
-    tipoInput: 'radio',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [{tipo: 'required'}],
-    valorPredeterminado: '',
-    marcadorDePosicion: '',
-    marginTop: 3,
-    opciones: [
-      {
-        label: 'Si',
-        value: 'Si',
-      },
-      {
-        label: 'No',
-        value: 'No',
-      },
-    ],
-    gridLayout: true,
-  },
+  
   {
     id: 'responsablesDeAdministrar',
     labelNombre: 'Responsables de administrar y controlar la seguridad de las llaves.',
@@ -1633,20 +1680,7 @@ export const CONTROL_DE_LLAVES = [
     marcadorDePosicion: '',
     marginTop: 3,
   },
-  {
-    id: 'customSection2_ControlDeLLaves',
-    labelNombre: '',
-    campo: '',
-    clase: 'col-md-12',
-    tipoInput: 'custom-html',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 5,
-    templateKey: 'customSection2',
-  },
+ 
 ]
 
 /** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
@@ -1679,7 +1713,7 @@ export const ALUMBRADO = [
   },
   {
     id: 'indiqueAuxiliar',
-    labelNombre: 'Indique si cuenta con una planta de poder auxiliar.',
+    labelNombre: 'Si cuenta con una planta de poder auxiliar.',
     campo: 'indiqueAuxiliar',
     clase: 'col-md-12',
     tipoInput: 'radio',
@@ -1716,7 +1750,7 @@ export const ALUMBRADO = [
   },
   {
     id: 'deQueManera',
-    labelNombre: 'De qué manera se cerciora que el sistema de iluminación sea el apropiado en cada una de las áreas de la empresa, de manera que permita una clara identificación del personal, material y/o equipo que abarca.',
+    labelNombre: 'De qué manera se cerciora que el sistema de iluminación tenga continuidad ante la falta de suministro en cada una de las áreas de la instalación y con especial énfasis de las áreas consideradas como críticas y/o sensibles, de manera que permita una clara identificación del personal, material y/o equipo que ahí se encuentre.',
     campo: 'deQueManera',
     clase: 'col-md-12',
     tipoInput: 'textarea',
@@ -1758,7 +1792,7 @@ export const ALUMBRADO = [
 export const APARATOS = [
   {
     id: 'describaIncidente',
-    labelNombre: 'Describa el procedimiento que el personal debe realizar para contactar al personal de seguridad o, en su caso, con la autoridad correspondiente en caso de algún incidente.',
+    labelNombre: 'Describa el procedimiento que el personal debe realizar para contactar al personal de seguridad de la empresa o, en su caso, de la autoridad correspondiente en caso de algún incidente de seguridad.',
     campo: 'describaIncidente',
     clase: 'col-md-12',
     tipoInput: 'textarea',
@@ -1774,24 +1808,13 @@ export const APARATOS = [
     labelNombre: 'Indique si el personal operativo y administrativo cuenta o dispone de aparatos (teléfonos fijos, móviles, botones de alerta y/o emergencia) para comunicarse con el personal de seguridad y/o con quien corresponda. (Estos deberán estar accesibles a los usuarios, para poder tener una pronta reacción).',
     campo: 'indiqueReaccion',
     clase: 'col-md-12',
-    tipoInput: 'radio',
+   tipoInput: 'textarea',
     desactivado: false,
     soloLectura: false,
     validadores: [{tipo: 'required'}],
     valorPredeterminado: '',
     marcadorDePosicion: '',
     marginTop: 3,
-    opciones: [
-      {
-        label: 'Si',
-        value: 'Si',
-      },
-      {
-        label: 'No',
-        value: 'No',
-      },
-    ],
-    gridLayout: true,
   },
   {
     id: 'indiqueEtcetera',
@@ -1858,39 +1881,14 @@ export const APARATOS = [
     marcadorDePosicion: '',
     marginTop: 3,
   },
-  {
-    id: 'indiquePersonalDeSeguridad',
-    labelNombre: 'Indique qué aparatos de comunicación utiliza el personal de seguridad de la empresa concesionaria de transporte ferroviario (teléfonos fijos, celulares, radios, sistema de alarma, etcétera).',
-    campo: 'indiquePersonalDeSeguridad',
-    clase: 'col-md-12',
-    tipoInput: 'textarea',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [{tipo: 'required'}],
-    valorPredeterminado: '',
-    marcadorDePosicion: '',
-    marginTop: 3,
-  },
-  {
-    id: 'indiqueTripulacion',
-    labelNombre: 'Indique si la tripulación de la empresa utiliza teléfonos, radios, celulares, banda civil (CB), o algún otro medio para su comunicación interna y las políticas de asignación de los mismos',
-    campo: 'indiqueTripulacion',
-    clase: 'col-md-12',
-    tipoInput: 'textarea',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [{tipo: 'required'}],
-    valorPredeterminado: '',
-    marcadorDePosicion: '',
-    marginTop: 3,
-  },
+  
 ]
 
 /** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const SISTEMAS_DE_ALARMA = [
   {
     id: 'mencionarElProcedimiento',
-    labelNombre: 'Mencionar el procedimiento en el que indique el funcionamiento del sistema central de alarmas externo o sensores.',
+    labelNombre: 'Describa el procedimiento en el que indique el funcionamiento del sistema de central de alarmas externo o sensores.',
     campo: 'mencionarElProcedimiento',
     clase: 'col-md-12',
     tipoInput: 'textarea',
@@ -1953,7 +1951,7 @@ export const SISTEMAS_DE_ALARMA = [
   },
   {
     id: 'indiqueCamaras',
-    labelNombre: 'Indique el número de cámaras de los sistemas de alarma y de circuito cerrado de televisión y video vigilancia instaladas, características técnicas y su ubicación (detalle si cubre los puntos de entrada y salida de las instalaciones, para cubrir el movimiento de vehículos e individuos, así como el lugar de almacenajes de los vehículos).',
+    labelNombre: 'Indique el número de cámaras de seguridad de los sistemas de alarma y de circuito cerrado de televisión y video vigilancia instaladas, y su ubicación por áreas (Detalle si cubre las zonas de embarque y descarga, incluyendo los puntos de entrada y salida de las instalaciones, para cubrir el movimiento de vehículos e individuos. QAS',
     campo: 'indiqueCamaras',
     clase: 'col-md-12',
     tipoInput: 'textarea',
@@ -2136,24 +2134,13 @@ export const SISTEMAS_DE_ALARMA = [
     labelNombre: 'Indicar si el proveedor de alarmas y sistemas de alarma y de circuito cerrado de televisión y video vigilancia tiene acceso a las cámaras de seguridad, si es el encargado de realizar el monitoreo de las mismas.',
     campo: 'indicarSiElProveedor',
     clase: 'col-md-12',
-    tipoInput: 'radio',
+    tipoInput: 'textarea',
     desactivado: false,
     soloLectura: false,
     validadores: [{tipo: 'required'}],
     valorPredeterminado: '',
     marcadorDePosicion: '',
     marginTop: 3,
-    opciones: [
-      {
-        label: 'Si',
-        value: 'Si',
-      },
-      {
-        label: 'No',
-        value: 'No',
-      },
-    ],
-    gridLayout: true,
   },
   {
     id: 'indiqueControlan',

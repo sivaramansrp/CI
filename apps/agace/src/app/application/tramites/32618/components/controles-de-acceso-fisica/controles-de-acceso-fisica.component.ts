@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ENTREGAS_DE_MENSAJERIA, IDENTIFICACION_DE_LOS_EMPLEADOS, PERSONAL_DE_SEGURIDAD, SI_NO_OPCIONES } from '../../constantes/constantes32613.enum';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
@@ -10,6 +9,7 @@ import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { RubroTransporteFerrovario32618State, Tramite32618Store } from '../../estados/tramite32618.store';
 import { Tramite32618Query } from '../../estados/tramite32618query';
+import { ENTREGAS_DE_MENSAJERIA, IDENTIFICACION_DE_LOS_EMPLEADOS, PERSONAL_DE_SEGURIDAD, SI_NO_OPCIONES } from '../../constants/constantes32618.enum';
 
 
 /** Componente para gestionar el formulario dinámico de controles de acceso físico en el trámite 32613. */

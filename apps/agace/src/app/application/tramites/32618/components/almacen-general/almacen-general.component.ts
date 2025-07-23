@@ -1,20 +1,16 @@
 
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { InputRadio, SolicitudRadioLista } from '../../models/solicitud.model';
 import { ConsultaioQuery, ConsultaioState, InputRadioComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { map, Subject, takeUntil } from 'rxjs';
-import { SolicitudeService } from '../../services/solicitude.service';
-import { DatosComunesTresComponent } from '../datos-comunes-tres/datos-comunes-tres.component';
+import {Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { PagoDeDerechosComponent, PagoDeDerechosComponent } from '../pago-de-derechos/pago-de-derechos.component';
-import { RowTypeFormInputComponent } from '../row-type-form-input/row-type-form-input.component';
 import { LISTADO_DE_SOCIO_COMERCIAL_CERTIFICADO, TEMPLATE_3_ARRAY, TRANSPORTE_FERROVARIO } from '../../constants/constantes32618.enum';
+import { PagoDeDerechosComponent } from '../pago-de-derechos/pago-de-derechos.component';
+import { RowTypeFormInputComponent } from '../../../../shared/components/row-type-form-input/row-type-form-input.component';
 import { RubroTransporteFerrovario32618State, Tramite32618Store } from '../../estados/tramite32618.store';
 import { Tramite32618Query } from '../../estados/tramite32618query';
 import { TransporteFerroviarioComponent } from '../transporte-ferroviario/transporte-ferroviario.component';
-
 
 
 
@@ -23,7 +19,6 @@ import { TransporteFerroviarioComponent } from '../transporte-ferroviario/transp
   standalone: true,
   imports: [ 
     CommonModule,
-    DatosComunesTresComponent,
     ReactiveFormsModule,
     FormasDinamicasComponent,
     TituloComponent,

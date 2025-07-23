@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators ,ReactiveFormsModule} from '@angular/forms';
 import { LISTADO_DE_SOCIO_COMERCIAL_CERTIFICADO, TEMPLATE_3_ARRAY, TRANSPORTE_FERROVARIO } from '../../constants/constantes32618.enum';
@@ -6,17 +6,15 @@ import { map, Subject, takeUntil } from 'rxjs';
 import { RubroTransporteFerrovario32618State, Tramite32618Store } from '../../estados/tramite32618.store';
 import { ConsultaioQuery, ConsultaioState, InputRadioComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Tramite32618Query } from '../../estados/tramite32618query';
-import { DatosComunesTresComponent, DatosComunesTresComponent } from '../datos-comunes-tres/datos-comunes-tres.component';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { PagoDeDerechosComponent } from '../pago-de-derechos/pago-de-derechos.component';
-import { RowTypeFormInputComponent } from '../row-type-form-input/row-type-form-input.component';
+import { RowTypeFormInputComponent } from '../../../../shared/components/row-type-form-input/row-type-form-input.component';
 
 @Component({
   selector: 'app-transporte-ferroviario',
   standalone: true,
   imports: [ 
     CommonModule,
-    DatosComunesTresComponent,
     ReactiveFormsModule,
     FormasDinamicasComponent,
     TituloComponent,

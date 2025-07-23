@@ -1,16 +1,21 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { map, Subject, takeUntil } from 'rxjs';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CAPACITACION_EN_SEGURIDAD } from '../../constants/constantes32618.enum';
 import { RubroTransporteFerrovario32618State, Tramite32618Store } from '../../estados/tramite32618.store';
 import { Tramite32618Query } from '../../estados/tramite32618query';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 
 @Component({
   selector: 'app-capacitacion-en-seguridad',
   standalone: true,
-  imports: [CommonModule],
+  imports: [  CommonModule,
+      ReactiveFormsModule,
+      FormasDinamicasComponent,
+      TituloComponent,
+      InputRadioComponent],
   templateUrl: './capacitacion-en-seguridad.component.html',
   styleUrl: './capacitacion-en-seguridad.component.scss',
 })
