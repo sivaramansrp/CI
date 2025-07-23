@@ -172,6 +172,11 @@ export const MSG_CAMBIO_TIPO_SOLICITUD =
 export const MSG_ERROR_NO_INFORMACION = 'No se encontró información';
 
 /**
+ * @description Mensaje de error cuando no se ha seleccionado un registro para eliminar
+ */
+export const MSG_ERROR_SELECCIONE_REGISTRO = 'Seleccione un registro.';
+
+/**
  * @description Mensaje de rror cuando no se encuentra el ID del Socio Comercial
  */
 export const MSJ_ERROR_ID_SOCIO_COMERCIAL =

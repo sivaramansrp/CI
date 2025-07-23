@@ -149,6 +149,7 @@ import {
   MSG_BORRAR_CAMPOS_RECINTOS,
   MSG_ERROR_NO_INFORMACION,
   MSG_ERROR_RFC_NO_ENCONTRADO,
+  MSG_ERROR_SELECCIONE_REGISTRO,
   MSG_MONTO_PAGADO_CUBIERTO,
   MSJ_ERROR_FECHAS_NO_SELECCIONADAS,
   MSJ_ERROR_FECHA_DIA,
@@ -515,6 +516,12 @@ export class SolicitudComponent
    * @description Bandera para deshabilitar el campo de certificación industria automotriz.
    */
   industriaAutomotriz!: CheckInputTextComponent;
+
+  /**
+   * Referencia al componente IMMEX.
+   * Debe ser asignada por @ViewChild si es un componente hijo.
+   */
+  programaImmex?: { isDisabled: boolean };
 
   /**
    * Bandera para indicar si se debe resetear la fecha de inicio del servicio.
@@ -1319,7 +1326,7 @@ export class SolicitudComponent
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Aviso',
+        titulo: TITULO_MODAL_AVISO,
         mensaje: ERR_RFC_NO_VALIDO,
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
@@ -1377,7 +1384,7 @@ export class SolicitudComponent
                 tipoNotificacion: 'alert',
                 categoria: 'danger',
                 modo: 'action',
-                titulo: 'Aviso',
+                titulo: TITULO_MODAL_AVISO,
                 mensaje: MSG_ERROR_RFC_NO_ENCONTRADO,
                 cerrar: false,
                 txtBtnAceptar: 'Aceptar',
@@ -1487,7 +1494,7 @@ export class SolicitudComponent
           tipoNotificacion: 'alert',
           categoria: 'danger',
           modo: 'action',
-          titulo: 'Aviso',
+          titulo: TITULO_MODAL_AVISO,
           mensaje: MSJ_ERROR_FECHA,
           cerrar: false,
           txtBtnAceptar: 'Aceptar',
@@ -1524,7 +1531,7 @@ export class SolicitudComponent
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Aviso',
+        titulo: TITULO_MODAL_AVISO,
         mensaje: MSG_ADUANA_PEDIMENTO,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
@@ -1654,7 +1661,7 @@ export class SolicitudComponent
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Aviso',
+        titulo: TITULO_MODAL_AVISO,
         mensaje: MSJ_ERROR_FECHA,
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
@@ -1701,7 +1708,7 @@ export class SolicitudComponent
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Aviso',
+        titulo: TITULO_MODAL_AVISO,
         mensaje: MSJ_ERROR_FECHA,
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
@@ -1734,7 +1741,7 @@ export class SolicitudComponent
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Aviso',
+        titulo: TITULO_MODAL_AVISO,
         mensaje: MSJ_ERROR_HORA_FINAL_MENOR_INICIAL,
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
@@ -1761,7 +1768,7 @@ export class SolicitudComponent
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Aviso',
+        titulo: TITULO_MODAL_AVISO,
         mensaje: MSJ_ERROR_FECHA,
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
@@ -1958,6 +1965,12 @@ export class SolicitudComponent
       })
     );
   }
+
+  /**
+   * Referencia al componente de Programa Fomento.
+   * Debe ser asignada por @ViewChild si es un componente hijo.
+   */
+  programaFomento?: { isDisabled: boolean };
 
   /**
    * Actualiza los valores del campo Programa Fomento y almacena los cambios en el store.
@@ -3133,7 +3146,7 @@ export class SolicitudComponent
         categoria: '',
         modo: 'action',
         titulo: TITULO_MODAL_AVISO,
-        mensaje: MSG_ERROR_NO_INFORMACION,
+        mensaje: MSG_ERROR_SELECCIONE_REGISTRO,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
