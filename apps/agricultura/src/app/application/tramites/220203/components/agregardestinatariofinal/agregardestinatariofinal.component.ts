@@ -188,6 +188,8 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
       const LISTA_DINAMICA: DestinatarioForm[] = [];
       LISTA_DINAMICA.push(this.destinatarioForm.value as DestinatarioForm);
       this.zoosanitarioStore.updatedatosForma(LISTA_DINAMICA as DestinatarioForm[]);
+      this.zoosanitarioStore.actualizarSelectedExdora({} as DestinatarioForm);
+      this.destinatarioForm.reset();
       this.cerrar.emit();
     } else {
       this.destinatarioForm.markAllAsTouched();
