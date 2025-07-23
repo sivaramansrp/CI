@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { PROTESTA } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-protesto-decir-verdad',
@@ -24,7 +25,25 @@ export class ProtestoDecirVerdadComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   public esFormularioSoloLectura: boolean = false;
+  /**
+   * Representa el formulario del componente.
+   * Se espera que esta propiedad sea del tipo 'FormGroup'.
+   *
+   * @property {FormGroup} protestoForm - El formulario del componente.
+   */
   public protestoForm!: FormGroup;
+    /**
+    * Una constante que contiene el valor del objeto 'PROTESTA'.
+    * Se utiliza para almacenar datos adicionales relacionados con el componente.
+    */
+
+  public TEXTOS = PROTESTA;
+  /**
+   * Indica si se está realizando una actualización de la consulta.
+   * 
+   * @default false
+   */
+  public actualizacionCounsulta: boolean = false;
   
   constructor(private consultaioQuery: ConsultaioQuery,
               private fb: FormBuilder) {
@@ -33,6 +52,10 @@ export class ProtestoDecirVerdadComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         map((seccionState) => { 
           this.esFormularioSoloLectura = seccionState.readonly;
+           if (seccionState.update) {
+            this.actualizacionCounsulta = seccionState.update;
+
+           }
         })
       )
       .subscribe(); 
