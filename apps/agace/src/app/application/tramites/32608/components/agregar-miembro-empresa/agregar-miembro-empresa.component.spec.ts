@@ -21,16 +21,16 @@ import {
   ConsultaioState,
   createConsultaInitialState
 } from '@libs/shared/data-access-user/src';
-import { createInitialSolicitudState, Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { createInitialSolicitudState, Solicitud32608Store } from '../../estados/solicitud32608.store';
+import { Solicitud32608Query } from '../../estados/solicitud32608.query';
 import { SolicitudService } from '../../services/solicitud.service';
 import { AgregarMiembroEmpresaTabla, BuscarRfcResponse } from '../../models/oea-textil-registro.model';
 
 describe('AgregarMiembroEmpresaComponent - Pruebas unitarias', () => {
   let component: AgregarMiembroEmpresaComponent;
   let fixture: ComponentFixture<AgregarMiembroEmpresaComponent>;
-  let mockTramite32609Store: jest.Mocked<Solicitud32605Store>;
-  let mockTramite32609Query: jest.Mocked<Solicitud32605Query>;
+  let mockTramite32609Store: jest.Mocked<Solicitud32608Store>;
+  let mockTramite32609Query: jest.Mocked<Solicitud32608Query>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
   let mockOeaTextilRegistroService: jest.Mocked<SolicitudService>;
 
@@ -139,8 +139,8 @@ describe('AgregarMiembroEmpresaComponent - Pruebas unitarias', () => {
       ],
       providers: [
         FormBuilder,
-        { provide: Solicitud32605Store, useValue: mockTramite32609Store },
-        { provide: Solicitud32605Query, useValue: mockTramite32609Query },
+        { provide: Solicitud32608Store, useValue: mockTramite32609Store },
+        { provide: Solicitud32608Query, useValue: mockTramite32609Query },
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
         { provide: SolicitudService, useValue: mockOeaTextilRegistroService }
       ],
@@ -467,8 +467,8 @@ describe('AgregarMiembroEmpresaComponent - Pruebas unitarias', () => {
         ],
         providers: [
           FormBuilder,
-          { provide: Solicitud32605Store, useValue: mockTramite32609Store },
-          { provide: Solicitud32605Query, useValue: mockTramite32609Query },
+          { provide: Solicitud32608Store, useValue: mockTramite32609Store },
+          { provide: Solicitud32608Query, useValue: mockTramite32609Query },
           { provide: ConsultaioQuery, useValue: { 
             selectConsultaioState$: of(estadoSoloLectura) 
           } },
