@@ -22,7 +22,7 @@ import { Tramite120601Store } from '../../estados/tramite-120601.store';
     TablaDinamicaComponent
   ],
   templateUrl: './representacion-federal.component.html',
-  styleUrl: './representacion-federal.component.css',
+  styleUrl: './representacion-federal.component.scss',
 })
 
 export class RepresentacionFederalComponent implements OnInit, OnDestroy {
@@ -191,6 +191,16 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   public docSeleccionado(_e: Event): void {
     // Esta es una función dinámica; una vez que obtengamos la API, la implementaremos.
     this.store.setEstado(this.formulario.get('estado')?.value);
+  }
+
+  /**
+   * @description Verifica si un control del formulario es inválido.
+   * @param nombreControl El nombre del control a verificar.
+   * @returns Verdadero si el control es inválido y está tocado o modificado, de lo contrario, falso.
+   */
+  esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.formulario.get(nombreControl);
+    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
   }
 
   /**

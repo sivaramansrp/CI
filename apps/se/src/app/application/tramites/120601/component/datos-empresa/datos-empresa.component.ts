@@ -1,5 +1,5 @@
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 
 import { CargarArchivosComponent } from '../cargar-archivos/cargar-archivos.component';
 import { DatosDeLaSolicitudComponent } from '../datos-de-la-solicitud/datos-de-la-solicitud.component';
@@ -22,8 +22,82 @@ import { RepresentacionFederalComponent } from '../representacion-federal/repres
     CargarArchivosComponent
   ],
   templateUrl: './datos-empresa.component.html',
-  styleUrls: ['./datos-empresa.component.css'],
+  styleUrls: ['./datos-empresa.component.scss'],
 })
 export class DatosEmpresaComponent {
-  // Agrega las propiedades y métodos necesarios aquí
+  
+  /**
+   * Referencias ViewChild a los componentes hijos con formularios
+   */
+  /** Referencia al componente de representación federal */
+  @ViewChild('representacionFederalRef') representacionFederal!: RepresentacionFederalComponent;
+  
+  /** Referencia al componente de datos de la solicitud */
+  @ViewChild('datosSolicitudRef') datosSolicitud!: DatosDeLaSolicitudComponent;
+  
+  /** Referencia al componente de domicilio */
+  @ViewChild('domicilioRef') domicilio!: DomicilioComponent;
+  
+  /** Referencia al componente de datos generales de socios */
+  @ViewChild('datosGeneralesRef') datosGenerales!: DatosGeneralesSociosComponent;
+  
+  /** Referencia al componente de carga de archivos */
+  @ViewChild('cargarArchivosRef') cargarArchivos!: CargarArchivosComponent;
+
+  /**
+   * Constructor del componente DatosEmpresaComponent.
+   * 
+   * @description
+   * Inicializa el componente que gestiona los datos de la empresa.
+   * Este componente coordina múltiples formularios hijos para recopilar
+   * información completa de la empresa.
+   */
+  constructor() {
+    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
+  }
+
+  /**
+   * Valida todos los formularios de los componentes hijos de datos-empresa.
+   * Marca todos los campos como tocados para mostrar errores de validación.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    // Validar formulario de representación federal
+    if (this.representacionFederal && this.representacionFederal.formulario) {
+      if (this.representacionFederal.formulario.invalid) {
+        this.representacionFederal.formulario.markAllAsTouched();
+        isValid = false;
+      }
+    }
+
+    // Validar formulario de datos de la solicitud
+    if (this.datosSolicitud && this.datosSolicitud.solicitudForm) {
+      if (this.datosSolicitud.solicitudForm.invalid) {
+        this.datosSolicitud.solicitudForm.markAllAsTouched();
+        isValid = false;
+      }
+    }
+
+    // Validar formulario de domicilio
+    if (this.domicilio && this.domicilio.form) {
+      if (this.domicilio.form.invalid) {
+        this.domicilio.form.markAllAsTouched();
+        isValid = false;
+      }
+    }
+
+    // Validar formulario de datos generales de socios
+    if (this.datosGenerales && this.datosGenerales.FormSolicitud) {
+      if (this.datosGenerales.FormSolicitud.invalid) {
+        this.datosGenerales.FormSolicitud.markAllAsTouched();
+        isValid = false;
+      }
+    }
+
+    return isValid;
+  }
+  
 }

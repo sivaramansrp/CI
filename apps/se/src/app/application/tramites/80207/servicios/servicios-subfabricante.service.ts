@@ -1,5 +1,6 @@
 import {
   InfoRegistro,
+  PlantasDireccionModelo,
   SubfabricanteDireccionModelo,
   Tramite80207State,
 } from '../modelos/subfabricante.model';
@@ -70,6 +71,19 @@ export class SubfabricanteService {
         )
         .pipe(map((res) => res)));
   }
+  /**
+   * Obtiene la lista de plantas disponibles.
+   * @method getPlantasDisponibles
+   * @returns {Observable<PlantasDireccionModelo[]>} Observable con la lista de plantas disponibles.
+   * */
+
+  getPlantasDisponibles(): Observable<PlantasDireccionModelo[]> {
+    return this.http.get<PlantasDireccionModelo[]>(
+      'assets/json/80207/plantas-disponibles.json'
+    ).pipe(
+      map((res) => res)
+    );
+  }
 
   /**
    * Actualiza el estado del formulario con los datos proporcionados.
@@ -81,6 +95,7 @@ export class SubfabricanteService {
     this.tramites80207Store.setInfoRegistro(DATOS.infoRegistro);
     this.tramites80207Store.setDatosContr(DATOS.datosSubcontratista);
     this.tramites80207Store.setPlantasBuscadas(DATOS.plantasBuscadas);
+    this.tramites80207Store.setPlantas(DATOS.plantas);
     this.tramites80207Store.setFormValida(DATOS.formaValida);
   }
 

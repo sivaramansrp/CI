@@ -1,10 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   ConsultaioQuery,
   ConsultaioState,
 } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
+import { DatosEmpresaComponent } from '../../component/datos-empresa/datos-empresa.component';
 import { DatosEmpresaService } from '../../services/datos-empresa.service';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente que representa el primer paso en un proceso de múltiples pasos.
@@ -29,6 +31,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Estado de la consulta, que contiene información sobre el estado actual del formulario.
    */
   public consultaState!: ConsultaioState;
+
+  /**
+   * Referencia ViewChild al componente solicitante.
+   */
+  @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
+
+  /**
+   * Referencia ViewChild al componente datos-empresa.
+   */
+  @ViewChild('datosEmpresaRef') datosEmpresa!: DatosEmpresaComponent;
 
   /**
    * Constructor del componente PasoUnoComponent.
@@ -85,6 +97,45 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+
+  /**
+   * Valida los formularios del paso uno y marca los campos inválidos como tocados para mostrar errores de validación.
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    // Validar formulario de solicitante (pestaña 1)
+    if (this.solicitante && this.solicitante.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    // Validar formularios de datos empresa (pestaña 2)
+    if (this.datosEmpresa) {
+      const DATOS_EMPRESA_VALID = this.datosEmpresa.validarFormularios();
+      if (!DATOS_EMPRESA_VALID) {
+        isValid = false;
+      } else {
+        isValid = true;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if(!isValid && this.indice === 1) {
+      this.indice = 2;
+      setTimeout(() => {
+        this.validarFormularios();
+      }, 1000);
+    }
+
+    return isValid;
+  }
+
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Limpia los recursos suscritos para evitar fugas de memoria.

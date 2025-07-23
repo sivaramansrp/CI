@@ -268,7 +268,9 @@
       <app-tabla-dinamica [configuracionTabla]="configuracionTablaMencione" [datos]="datosTablaMencione"
         [tipoSeleccionTabla]="tipoSeleccionTabla" (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
-      <div class="d-flex justify-content-center">
+      <div class="d-flex justify-content-center" [class.disabled]="esFormularioSoloLectura"
+        [style.pointerEvents]="esFormularioSoloLectura ? 'none' : 'auto'"
+        [style.opacity]="esFormularioSoloLectura ? '0.5' : '1'">
         <app-table-pagination [totalItems]="totalItems" [itemsPerPage]="itemsPerPage" [currentPage]="currentPage"
           (pageChange)="onPageChange($event)" (itemsPerPageChange)="onItemsPerPageChange($event)">
         </app-table-pagination>
@@ -276,11 +278,11 @@
 
       <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-default btn-space" (click)="openModifyModal()"
-          [disabled]="!enableModficarBoton">
+          [disabled]="!enableModficarBoton || datosTablaMencione.length === 0">
           Modificar
         </button>
-        <button type="button" class="btn btn-primary btn-space" [disabled]="!enableEliminarBoton"
-          (click)="confirmEliminarMencioneItem()">
+        <button type="button" class="btn btn-primary btn-space"
+          [disabled]="!enableEliminarBoton || datosTablaMencione.length === 0" (click)="confirmEliminarMencioneItem()">
           Eliminar
         </button>
         <button type="button" class="btn btn-default btn-primary" (click)="openAgregarModal()"
@@ -458,7 +460,9 @@
       <app-tabla-dinamica [configuracionTabla]="configuracionindiqueDatos" [datos]="modificarDatos"
         [tipoSeleccionTabla]="checkboxValor" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
         (listaDeFilaSeleccionada)="onFilasSeleccionadas($event)"></app-tabla-dinamica>
-      <div class="d-flex justify-content-center">
+      <div class="d-flex justify-content-center" [class.disabled]="esFormularioSoloLectura"
+        [style.pointerEvents]="esFormularioSoloLectura ? 'none' : 'auto'"
+        [style.opacity]="esFormularioSoloLectura ? '0.5' : '1'">
         <app-table-pagination [totalItems]="totalItems" [itemsPerPage]="itemsPerPage" [currentPage]="currentPage"
           (pageChange)="onPageChange($event)" (itemsPerPageChange)="onItemsPerPageChange($event)">
         </app-table-pagination>
@@ -468,7 +472,7 @@
           (click)="abrirModal()" [disabled]="esFormularioSoloLectura || !hayFilasSeleccionadas">
           Modificar
         </button>
-        <button type="button" class="btn btn-primary btn-space"
+        <button type="button" class="btn btn-primary btn-space ms-3"
           [disabled]="esFormularioSoloLectura || !hayFilasSeleccionadas" (click)="confirmEliminarMencioneItem()"
           (click)="eliminarFilaSeleccionada()">
           Eliminar
@@ -529,19 +533,22 @@
           </div>
           <label class="form-label text-justify" for="">
             Para descargar plantilla del archivo de excel de click
-            <a [href]="
+            <a [href]="esFormularioSoloLectura ? null :
                 contextPath +
                 '/agace/rubroAIC/registrarSolicitud.action?mostrarArchivoExcelExtranjeros'
-              " target="_blank" class="text-primary fw-bold">aquí</a>.
+              " [class.disabled]="esFormularioSoloLectura"
+              [style.pointerEvents]="esFormularioSoloLectura ? 'none' : 'auto'" target="_blank"
+              class="text-primary fw-bold">aquí</a>.
           </label>
         </div>
         <div class="d-flex justify-content-between">
           <div>
-            <input type="file" id="archivoNacionales" class="d-none" formControlName="archivoNacionales"
-              (change)="onFileSelected($event)" />
-            <label for="archivoNacionales" class="btn btn-primary">
+            <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">
               Examinar
-            </label>
+            </button>
+            <input type="file" id="archivoNacionales" class="d-none" formControlName="archivoNacionales"
+              (change)="onFileSelected($event)" [disabled]="esFormularioSoloLectura" />
+
             <span class="border px-2 py-2 ms-1 border-secondary">{{ selectedFileName || 'No file choosen' }}</span>
 
           </div>
@@ -578,19 +585,21 @@
           </div>
           <label class="form-label text-justify" for="">
             Para descargar plantilla del archivo de excel de click
-            <a [href]="
+            <a [href]="esFormularioSoloLectura ? null :
                 contextPath +
                 '/agace/rubroAIC/registrarSolicitud.action?mostrarArchivoExcelExtranjeros'
-              " target="_blank" class="text-primary fw-bold">aquí</a>.
+              " [class.disabled]="esFormularioSoloLectura"
+              [style.pointerEvents]="esFormularioSoloLectura ? 'none' : 'auto'" target="_blank"
+              class="text-primary fw-bold">aquí</a>.
           </label>
         </div>
         <div class="d-flex justify-content-between">
           <div>
-            <input type="file" id="archivoNacionales" class="d-none" formControlName="archivoNacionales"
-              (change)="onFileSelected($event)" />
-            <label for="archivoNacionales" class="btn btn-primary">
+            <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">
               Examinar
-            </label>
+            </button>
+            <input type="file" id="archivoNacionales" class="d-none" formControlName="archivoNacionales"
+              (change)="onFileSelected($event)" [disabled]="esFormularioSoloLectura" />
             <span class="border px-2 py-2 ms-1 border-secondary">{{ selectedFileName || 'No file choosen' }}</span>
 
           </div>
@@ -675,7 +684,7 @@
               " />
             <div *ngIf="
                 preOperativeForm.controls['nombreDel'].invalid &&
-                preOperativeForm.controls['nombreDel'].touched
+                (preOperativeForm.controls['nombreDel'].touched || formSubmittedControlInventarios)
               " class="text-danger">
               <span *ngIf="preOperativeForm.controls['nombreDel'].errors?.['required']">Este campo es
                 obligatorio.</span>
@@ -701,7 +710,7 @@
               " />
             <div *ngIf="
                 preOperativeForm.controls['lugarDeRadicacion'].invalid &&
-                preOperativeForm.controls['lugarDeRadicacion'].touched
+                (preOperativeForm.controls['lugarDeRadicacion'].touched || formSubmittedControlInventarios)
               " class="text-danger">
               <span *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['required']">Este campo es
                 obligatorio.</span>
@@ -745,7 +754,11 @@
         (listaDeFilaSeleccionada)="manejarFilaSeleccionadaControlInventarios($event)"
         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
 
-      <div class="d-flex justify-content-center mb-3">
+      <div class="d-flex justify-content-center mb-3" [class.disabled]="esFormularioSoloLectura"
+        [style.pointerEvents]="esFormularioSoloLectura ? 'none' : 'auto'"
+        [style.opacity]="esFormularioSoloLectura ? '0.5' : '1'" [class.disabled]="esFormularioSoloLectura"
+        [style.pointerEvents]="esFormularioSoloLectura ? 'none' : 'auto'"
+        [style.opacity]="esFormularioSoloLectura ? '0.5' : '1'">
         <app-table-pagination [totalItems]="datosTablaControlInventarios.length" [itemsPerPage]="itemsPerPage"
           [currentPage]="currentPage" (pageChange)="onPageChange($event)"
           (itemsPerPageChange)="onItemsPerPageChange($event)">
@@ -787,7 +800,7 @@
       </div>
       <div class="modal-backdrop fade show" *ngIf="confirmEliminarPopupAbiertoControlInventarios"></div>
 
-      <label for="" class="mt-3">
+      <label for="" class="blue-text mt-3">
         Deberá anexar un archivo con el reporte de saldos de mercancía de importación temporal o de mercancías objeto de
         operaciones de comercio exterior, de un periodo de un mes, que se encuentre dentro de los tres meses anteriores
         a la presentación de la solicitud.
@@ -803,71 +816,73 @@
               {{ filaSeleccionadaControlInventarios ? 'Modificar' : 'Agregar' }} Inventario
             </h5>
           </div>
-          <div class="modal-body p-4">
-            <div class="row">
-              <div class="col-8">
-                <div class="form-group">
-                  <span class="require">*</span>
-                  <label for="nombreDelModal" class="form-label">Nombre del sistema o datos para su
-                    identificación</label>
-                  <input type="text" class="form-control" id="nombreDelModal" formControlName="nombreDel" />
-                  <div *ngIf="
-                      preOperativeForm.controls['nombreDel'].invalid &&
-                      preOperativeForm.controls['nombreDel'].touched
+          <form [formGroup]="controlInventariosModalForm">
+            <div class="modal-body p-4">
+              <div class="row">
+                <div class="col-8">
+                  <div class="form-group">
+                    <span class="require">*</span>
+                    <label for="nombreDelModal" class="form-label">Nombre del sistema o datos para su
+                      identificación</label>
+                    <input type="text" class="form-control" id="nombreDelModal" formControlName="nombreDel" />
+                    <div *ngIf="
+                       controlInventariosModalForm.controls['nombreDel'].invalid &&
+                      (controlInventariosModalForm.controls['nombreDel'].touched || formSubmittedControlInventarios)
                     " class="text-danger">
-                    <span *ngIf="preOperativeForm.controls['nombreDel'].errors?.['required']">
-                      Este campo es obligatorio.
-                    </span>
-                    <span *ngIf="preOperativeForm.controls['nombreDel'].errors?.['minlength']">
-                      Debe tener al menos 3 caracteres.
-                    </span>
+                      <span *ngIf="controlInventariosModalForm.controls['nombreDel'].errors?.['required']">
+                        Este campo es obligatorio.
+                      </span>
+                      <span *ngIf="controlInventariosModalForm.controls['nombreDel'].errors?.['minlength']">
+                        Debe tener al menos 3 caracteres.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-8">
+                  <div class="form-group">
+                    <span class="require">*</span>
+                    <label for="lugarDeRadicacionModal" class="form-label">
+                      Lugar de radicación
+                    </label>
+                    <input type="text" class="form-control" id="lugarDeRadicacionModal"
+                      formControlName="lugarDeRadicacion" />
+                    <div *ngIf="
+                      controlInventariosModalForm.controls['lugarDeRadicacion'].invalid &&
+                      (controlInventariosModalForm.get('lugarDeRadicacion')?.touched || formSubmittedControlInventarios)
+                    " class="text-danger">
+                      <span *ngIf="controlInventariosModalForm.controls['lugarDeRadicacion'].errors?.['required']">
+                        Este campo es obligatorio.
+                      </span>
+                      <span *ngIf="controlInventariosModalForm.controls['lugarDeRadicacion'].errors?.['minlength']">
+                        Debe tener al menos 3 caracteres.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="indiqueCheckModal"
+                      formControlName="indiqueCheck" />
+                    <label class="form-check-label" for="indiqueCheckModal">
+                      Indique, si cuenta con un sistema de control de inventarios de
+                      conformidad con las disposiciones previstas por el Anexo 24.
+                    </label>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-8">
-                <div class="form-group">
-                  <span class="require">*</span>
-                  <label for="lugarDeRadicacionModal" class="form-label">
-                    Lugar de radicación
-                  </label>
-                  <input type="text" class="form-control" id="lugarDeRadicacionModal"
-                    formControlName="lugarDeRadicacion" />
-                  <div *ngIf="
-                      preOperativeForm.controls['lugarDeRadicacion'].invalid &&
-                      preOperativeForm.controls['lugarDeRadicacion'].touched
-                    " class="text-danger">
-                    <span *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['required']">
-                      Este campo es obligatorio.
-                    </span>
-                    <span *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['minlength']">
-                      Debe tener al menos 3 caracteres.
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="indiqueCheckModal"
-                    formControlName="indiqueCheck" />
-                  <label class="form-check-label" for="indiqueCheckModal">
-                    Indique, si cuenta con un sistema de control de inventarios de
-                    conformidad con las disposiciones previstas por el Anexo 24.
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura"
-              (click)="filaSeleccionadaControlInventarios ? modificaControlInventariosItem() : agregarNuevoElementoControlInventarios()">
-              {{ filaSeleccionadaControlInventarios ? 'Modificar' : 'Agregar' }}
-            </button>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura"
+                (click)="filaSeleccionadaControlInventarios ? modificaControlInventariosItem() : agregarNuevoElementoControlInventarios()">
+                {{ filaSeleccionadaControlInventarios ? 'Modificar' : 'Agregar' }}
+              </button>
 
-          </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -987,7 +1002,9 @@
             <label class="fw-bold" for=""> Instalaciones </label>
             <ng-table [commonTableHeader]="InstalacionesHeaderData"
               [commonTableBody]="InstalacionesBodyData"></ng-table>
-            <div class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center" [class.disabled]="esFormularioSoloLectura"
+              [style.pointerEvents]="esFormularioSoloLectura ? 'none' : 'auto'"
+              [style.opacity]="esFormularioSoloLectura ? '0.5' : '1'">
               <app-table-pagination [totalItems]="totalItems" [itemsPerPage]="itemsPerPage" [currentPage]="currentPage"
                 (pageChange)="onPageChange($event)" (itemsPerPageChange)="onItemsPerPageChange($event)">
               </app-table-pagination>
