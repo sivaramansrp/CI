@@ -117,6 +117,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.indice = i;
   }
 
+  
+  /**
+   * Este método se utiliza para validar el formulario antes de proceder con la solicitud.
+   * @returns Devuelve true si el formulario de solicitud es válido, false en caso contrario.
+   */
+  validarFormulario(): boolean {
+  return this.solicitudComponent?.validarFormulario() ?? false;
+}
+
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Cancela todas las suscripciones activas.

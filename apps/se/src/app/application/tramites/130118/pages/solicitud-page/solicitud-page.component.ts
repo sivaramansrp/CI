@@ -255,6 +255,15 @@ export class SolicitudPageComponent implements OnInit {
    */
   getValorIndice(e: AccionBoton): void {
     if (this.indice === 1) {
+      const FORM_VALIDO = this.pasoUnoComponent?.validarFormulario() ?? false;
+      this.esValido = FORM_VALIDO;
+
+      if (!this.esValido) {
+        this.datosPasos.indice = 1;
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        return;
+      }
+
       this.enviaSolicitudRequest()
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -266,7 +275,7 @@ export class SolicitudPageComponent implements OnInit {
                 .map((err) => `${err.campo}: ${err.errores.join(', ')}`)
                 .join('<br>');
 
-                const MENSAJEFINAL = `${respuesta.mensaje || 'Error inesperado al enviar la solicitud.'}${ERRORESEXTRA}`;
+              const MENSAJEFINAL = `${respuesta.mensaje || 'Error inesperado al enviar la solicitud.'}${ERRORESEXTRA}`;
 
               this.nuevaNotificacion = {
                 tipoNotificacion: 'toastr',

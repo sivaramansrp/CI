@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 
 import { CATALOGOS_ID, Catalogo, Catalogos, CategoriaMensaje, ConsultaioQuery, ConsultaioState, EntidadesFederativasService, FECHA_SALIDA, FraccionArancelariaService, InputFecha, Notificacion, PaisesService, REGEX_ONCE_ENTEROS_DOS_DECIMALES, REGEX_ONCE_ENTEROS_TRES_DECIMALES, RegimenService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
@@ -110,7 +110,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Subject para destruir notificador y cancelar suscripciones.
    */
-   destruirNotificador$: Subject<void> = new Subject();
+  destruirNotificador$: Subject<void> = new Subject();
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -149,7 +149,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private entidadesFederativasService: EntidadesFederativasService,
     private paisesService: PaisesService,
     private fraccionArancelariaService: FraccionArancelariaService,
-    private guardarService: GuardarService
+    private guardarService: GuardarService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   /**
@@ -295,20 +296,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
     this.FormSolicitud = this.fb.group({
       datosRegimen: this.fb.group({
-        regimenMercancia: [this.solicitudState?.regimenMercancia || '-1', Validators.required],
-        clasifiRegimen: [{ value: this.solicitudState?.clasifiRegimen || '-1', disabled: true }, Validators.required]
+        regimenMercancia: [this.solicitudState?.regimenMercancia || null, Validators.required],
+        clasifiRegimen: [{ value: this.solicitudState?.clasifiRegimen || null, disabled: true }, Validators.required]
       }),
       datosMercancia: this.fb.group({
-        valueTA: [this.solicitudState?.valueTA, [Validators.maxLength(1000), Validators.pattern(/^[^~`^]*$/)]],
-        fraccionArancelaria: [this.solicitudState?.fraccionArancelaria || '-1', Validators.required],
-        nico: [{ value: this.solicitudState?.nico || '-1', disabled: true }, Validators.required],
-        unidadMedidaTarifaria: [{ value: this.solicitudState?.unidadMedidaTarifaria || '-1', disabled: true }, Validators.required],
-        cantidadTarifaria: [this.solicitudState?.cantidadTarifaria, [Validators.min(0), Validators.max(999999999.99), Validators.pattern(REGEX_ONCE_ENTEROS_DOS_DECIMALES)]],
-        valorFacturaUSD: [this.solicitudState?.valorFacturaUSD, [Validators.min(0), Validators.max(999999999.999), Validators.pattern(REGEX_ONCE_ENTEROS_TRES_DECIMALES)]],
+        valueTA: [this.solicitudState?.valueTA, [Validators.maxLength(1000), Validators.required, Validators.pattern(/^[^~`^]*$/)]],
+        fraccionArancelaria: [this.solicitudState?.fraccionArancelaria || null, Validators.required],
+        nico: [{ value: this.solicitudState?.nico || null, disabled: true }, Validators.required],
+        unidadMedidaTarifaria: [{ value: this.solicitudState?.unidadMedidaTarifaria || null, disabled: true }, Validators.required],
+        cantidadTarifaria: [this.solicitudState?.cantidadTarifaria, [Validators.min(0), Validators.required, Validators.max(999999999.99), Validators.pattern(REGEX_ONCE_ENTEROS_DOS_DECIMALES)]],
+        valorFacturaUSD: [this.solicitudState?.valorFacturaUSD, [Validators.min(0), Validators.max(999999999.999), Validators.pattern(REGEX_ONCE_ENTEROS_TRES_DECIMALES), Validators.required]],
         precioUnitarioUSD: [{ value: this.solicitudState?.precioUnitarioUSD, disabled: true }],
-        paisOrigen: [this.solicitudState?.paisOrigen || '-1', Validators.required],
-        paisDestino: [this.solicitudState?.paisDestino || '-1', Validators.required],
-        lote: [this.solicitudState?.lote, [Validators.maxLength(60)]],
+        paisOrigen: [this.solicitudState?.paisOrigen || null, Validators.required],
+        paisDestino: [this.solicitudState?.paisDestino || null, Validators.required],
+        lote: [this.solicitudState?.lote, [Validators.maxLength(60), Validators.required]],
         fechaSalida: [this.solicitudState?.fechaSalida, [Validators.required]],
         observaciones: [this.solicitudState?.observaciones, [Validators.maxLength(250)]],
         observacionMerc: this.solicitudState?.observacionMerc
@@ -319,11 +320,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno ?? '', disabled: true }, [Validators.required, Validators.maxLength(200)]],
         apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno ?? '', disabled: true }, [Validators.maxLength(200)]],
         razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: this.esFormularioSoloLectura }, [Validators.required, Validators.maxLength(250)]],
-        domicilio: [this.solicitudState?.domicilio, [Validators.maxLength(1000)]]
+        domicilio: [this.solicitudState?.domicilio, [Validators.maxLength(1000), Validators.required]]
       }),
       registroFederal: this.fb.group({
-        estado: [this.solicitudState?.estado || '-1', Validators.required],
-        representacionFederal: [{ value: this.solicitudState?.representacionFederal || '-1', disabled: true }, Validators.required]
+        estado: [this.solicitudState?.estado || null, Validators.required],
+        representacionFederal: [{ value: this.solicitudState?.representacionFederal || null, disabled: true }, Validators.required]
       })
     });
   }
@@ -482,10 +483,36 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns boolean
    */
   validarFormulario(): boolean {
-    if (this.FormSolicitud.invalid) {
-      this.FormSolicitud.markAllAsTouched();
-    }
+    this.marcarFormularioComoTocado(this.FormSolicitud);
+    this.cdr.detectChanges();
     return this.FormSolicitud.valid;
+  }
+
+  /**
+   * Marca todos los controles del formulario como tocados y actualiza su validez.
+   * Recorre recursivamente todos los controles, incluidos FormGroups y FormArrays.
+   * @param formGroup El FormGroup a marcar como tocado.
+   */
+  private marcarFormularioComoTocado(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach((key) => {
+      const CONTROL = formGroup.get(key);
+
+      if (CONTROL instanceof FormControl) {
+        CONTROL.markAsTouched();
+        CONTROL.updateValueAndValidity();
+      } else if (CONTROL instanceof FormGroup) {
+        this.marcarFormularioComoTocado(CONTROL);
+      } else if (CONTROL instanceof FormArray) {
+        CONTROL.controls.forEach((c) => {
+          if (c instanceof FormGroup) {
+            this.marcarFormularioComoTocado(c);
+          } else {
+            c.markAsTouched();
+            c.updateValueAndValidity();
+          }
+        });
+      }
+    });
   }
 
   /**
@@ -678,41 +705,41 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  changeRegimen(): void {
-    const SELECTED_REGIMEN = this.datosRegimen.get('regimenMercancia')?.value;
-    this.tramite130118Store.setRegimenMercancia(SELECTED_REGIMEN);
+ changeRegimen(): void {
+  const SELECTED_REGIMEN = this.datosRegimen.get('regimenMercancia')?.value;
+  this.tramite130118Store.setRegimenMercancia(SELECTED_REGIMEN);
 
-    const CLASIFI_CONTROL = this.datosRegimen.get('clasifiRegimen');
+  const CLASIFI_CONTROL = this.datosRegimen.get('clasifiRegimen');
 
-    if (SELECTED_REGIMEN && SELECTED_REGIMEN !== '-1') {
-      this.regimenService.getRegimenesCve(SELECTED_REGIMEN).subscribe({
-        next: (response) => {
-          this.clasifiRegimen = response.datos || [];
+  if (SELECTED_REGIMEN !== null) {
+    this.regimenService.getRegimenesCve(SELECTED_REGIMEN).subscribe({
+      next: (response) => {
+        this.clasifiRegimen = response.datos || [];
 
-          if (this.clasifiRegimen.length > 0) {
-            CLASIFI_CONTROL?.enable();
-          } else {
-            CLASIFI_CONTROL?.disable();
-          }
-
-          // Restaurar valor si ya había uno guardado
-          const CLASIFI_GUARDADO = this.solicitudState?.clasifiRegimen || '-1';
-          CLASIFI_CONTROL?.setValue(CLASIFI_GUARDADO);
-        },
-        error: (error) => {
-          console.error('Error al obtener clasificación de régimen:', error);
-          this.clasifiRegimen = [];
+        if (this.clasifiRegimen.length > 0) {
+          CLASIFI_CONTROL?.enable();
+        } else {
           CLASIFI_CONTROL?.disable();
-          const CLASIFI_GUARDADO = this.solicitudState?.clasifiRegimen || '-1';
-          CLASIFI_CONTROL?.setValue(CLASIFI_GUARDADO);
         }
-      });
-    } else {
-      this.clasifiRegimen = [];
-      CLASIFI_CONTROL?.disable();
-      CLASIFI_CONTROL?.setValue('-1');
-    }
+
+        const CLASIFI_GUARDADO = this.solicitudState?.clasifiRegimen || null;
+        CLASIFI_CONTROL?.setValue(CLASIFI_GUARDADO);
+      },
+      error: (error) => {
+        console.error('Error al obtener clasificación de régimen:', error);
+        this.clasifiRegimen = [];
+        CLASIFI_CONTROL?.disable();
+        const CLASIFI_GUARDADO = this.solicitudState?.clasifiRegimen || null;
+        CLASIFI_CONTROL?.setValue(CLASIFI_GUARDADO);
+      }
+    });
+  } else {
+    this.clasifiRegimen = [];
+    CLASIFI_CONTROL?.disable();
+    CLASIFI_CONTROL?.setValue(null); // <- aquí también ajustas
   }
+}
+
 
 
   // eslint-disable-next-line class-methods-use-this
@@ -724,7 +751,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
     const FEDERAL_CONTROL = this.registroFederal.get('representacionFederal');
 
-    if (SELECTED_ESTADO && SELECTED_ESTADO !== '-1') {
+    if (SELECTED_ESTADO && SELECTED_ESTADO !== null) {
       this.entidadesFederativasService.getEntidadesCve(SELECTED_ESTADO).subscribe({
         next: (response) => {
           this.representacionFederal = response.datos || [];
@@ -738,11 +765,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           // Obtener valor guardado (si existe)
           const REPRESENTACION_GUARDADA = this.solicitudState?.representacionFederal;
 
-          // Establecer valor: si está guardado, úsalo; si no, pon '-1'
-          if (REPRESENTACION_GUARDADA && REPRESENTACION_GUARDADA !== '-1') {
+          // Si hay una representación federal guardada, la establece; de lo contrario, la deshabilita
+          if (REPRESENTACION_GUARDADA && REPRESENTACION_GUARDADA !== null) {
             FEDERAL_CONTROL?.setValue(REPRESENTACION_GUARDADA);
           } else {
-            FEDERAL_CONTROL?.setValue('-1');
+            FEDERAL_CONTROL?.setValue(null);
           }
         },
         error: (error) => {
@@ -754,7 +781,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
     } else {
       this.representacionFederal = [];
-      FEDERAL_CONTROL?.setValue('-1');
+      FEDERAL_CONTROL?.setValue(null);
       FEDERAL_CONTROL?.disable();
     }
   }
@@ -770,7 +797,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     const NICO_CONTROL = this.datosMercancia.get('nico');
     const UMT_CONTROL = this.datosMercancia.get('unidadMedidaTarifaria');
 
-    if (SELECTED_FRACCION && SELECTED_FRACCION !== '-1') {
+    if (SELECTED_FRACCION && SELECTED_FRACCION !== null) {
       // Llamada 1: obtener Nico
       this.fraccionArancelariaService.getNico(SELECTED_FRACCION).subscribe({
         next: (response) => {
@@ -782,13 +809,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             NICO_CONTROL?.disable();
           }
 
-          const NICO_GUARDADO = this.solicitudState?.nico || '-1';
+          const NICO_GUARDADO = this.solicitudState?.nico || null;
           NICO_CONTROL?.setValue(NICO_GUARDADO);
         },
         error: (error) => {
           console.error('Error al obtener Nico:', error);
           this.nico = [];
-          const NICO_GUARDADO = this.solicitudState?.nico || '-1';
+          const NICO_GUARDADO = this.solicitudState?.nico || null;
           NICO_CONTROL?.setValue(NICO_GUARDADO);
           NICO_CONTROL?.disable();
         }
@@ -805,13 +832,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             UMT_CONTROL?.disable();
           }
 
-          const UMT_GUARDADO = this.solicitudState?.unidadMedidaTarifaria || '-1';
+          const UMT_GUARDADO = this.solicitudState?.unidadMedidaTarifaria || null;
           UMT_CONTROL?.setValue(UMT_GUARDADO);
         },
         error: (error) => {
           console.error('Error al obtener unidad de medida tarifaria:', error);
           this.unidadMedidaTarifaria = [];
-          const UMT_GUARDADO = this.solicitudState?.unidadMedidaTarifaria || '-1';
+          const UMT_GUARDADO = this.solicitudState?.unidadMedidaTarifaria || null;
           UMT_CONTROL?.setValue(UMT_GUARDADO);
           UMT_CONTROL?.disable();
         }
@@ -821,9 +848,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       // Si seleccionan "Selecciona una opción..."
       this.nico = [];
       this.unidadMedidaTarifaria = [];
-      NICO_CONTROL?.setValue('-1');
+      NICO_CONTROL?.setValue(null);
       NICO_CONTROL?.disable();
-      UMT_CONTROL?.setValue('-1');
+      UMT_CONTROL?.setValue(null);
       UMT_CONTROL?.disable();
     }
   }
