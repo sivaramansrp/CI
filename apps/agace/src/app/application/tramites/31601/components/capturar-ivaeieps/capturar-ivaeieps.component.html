@@ -355,7 +355,7 @@
           </div>
         </div>
         <div class="col-md-3">
-            <input-fecha [datos]="fechaFinalInput" name="fechaPago" [isDisabled]="true" [setFecha]="formularioDePago.get('fechaPago')?.value" (valorCambiado)="onFechaCambiada($event)" ></input-fecha>
+            <input-fecha [datos]="fechaFinalInput" name="fechaPago" [setFecha]="formularioDePago.get('fechaPago')?.value" (valorCambiado)="onFechaCambiada($event)" ></input-fecha>
 
         </div>
         <div class="col-md-3">
