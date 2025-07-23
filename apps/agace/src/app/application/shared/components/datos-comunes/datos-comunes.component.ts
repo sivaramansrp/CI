@@ -42,8 +42,31 @@ import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 })
 export class DatosComunesComponent implements OnInit, OnDestroy {
 
+  /**
+   * Esta propiedad de entrada recibe un valor de tipo string que representa el identificador
+   * único o número del trámite. Se utiliza para mostrar o procesar información
+   * relacionada con un trámite específico dentro del componente.
+   *
+   * @example
+   * <app-datos-comunes [procedureNumero]="'12345'"></app-datos-comunes>
+   */
   @Input() procedureNumero: string = '';
+  /**
+   * Indica si el trámite está actualmente activo.
+   * 
+   * @remarks
+   * Esta propiedad de entrada controla el estado activo del trámite.
+   * 
+   * @defaultValue false
+   */
   @Input() procedureActivo: boolean = false;
+  /**
+   * Representa el objeto de datos comunes utilizado en el componente.
+   * 
+   * @property tieneProcedure - Contiene información sobre un trámite.
+   * @property tieneProcedure.numero - El número del trámite como cadena.
+   * @property tieneProcedure.activo - Indica si el trámite está activo.
+   */
   public datosComunesObj = {
     tieneProcedure: { numero: '', activo: false }
   }
