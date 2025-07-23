@@ -24,11 +24,13 @@
           placeholder=""
           name="requisito"
           type="text"
+           [maxlength]="50"
         />
       </div>
       <div class="col-md-4 form-group">
         <label class="form-label" for="numeroCertificadoInternacional"
-          >Número de certificado internacional *:</label
+          >Número de certificado internacional<i class="bi bi-question-circle-fill" style="margin-bottom: '5px'"
+              [title]="'Si la normatividad no le solicita el Certificado puede capturar NO APLICA ó'"></i> *:</label
         >
         <input
           class="form-control"
@@ -37,6 +39,7 @@
           placeholder=""
           name="numeroCertificadoInternacional"
           type="text"
+          [maxlength]="50"
         />
       </div>
       <div class="col-md-4">
@@ -47,12 +50,14 @@
           [required]="true"
           name="fraccionArancelaria"
           [isDisabled]="esFormularioSoloLectura"
+          [tooltipQuestionCircle]="true"
+          [tooltipQuestionCircleText]="'Fracción arancelaria de la mercancía'"
           (change)="setValoresStore(mercanciaGroup, 'fraccionArancelaria')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 form-group">
         <label class="form-label" for="descripcionFraccionArancelaria"
-          >Descripción de la fracción arancelaria *:</label
+          >Descripción de la fracción arancelaria  *:</label
         >
         <input
           class="form-control"
@@ -76,7 +81,8 @@
       </div>
       <div class="col-md-8 form-group">
         <label class="form-label" for="descripcionFraccionArancelaria"
-          >Descripción Nico*:</label
+          >Descripción Nico <i class="bi bi-question-circle-fill" style="margin-bottom: '5px'"
+              [title]="'Ingrese una fracción Nico'"></i>*:</label
         >
         <input
           class="form-control"
@@ -106,11 +112,13 @@
           placeholder=""
           name="cantidadUMT"
           type="text"
+          [maxlength]="16"
           (change)="setValoresStore(mercanciaGroup, 'cantidadUMT')"
         />
       </div>
       <div class="col-md-4 form-group">
-        <label class="form-label" for="umt">UMT*:</label>
+        <label class="form-label" for="umt">UMT*:<i class="bi bi-question-circle-fill" style="margin-bottom: '5px'"
+              [title]="'Sólo para usuarios que cuenten con la contraseña UCON e importen productos cárnicos'"></i></label>
         <input
           class="form-control"
           id="umt"
@@ -118,6 +126,7 @@
           placeholder=""
           name="umt"
           type="text"
+          [maxlength]="100"
         />
       </div>
       <div class="col-md-4"></div>
@@ -130,6 +139,7 @@
           placeholder=""
           name="cantidadUMC"
           type="text"
+          [maxlength]="16"
         />
       </div>
       <div class="col-md-4">
@@ -140,6 +150,8 @@
           [required]="true"
           name="umc" 
           [isDisabled]="esFormularioSoloLectura"
+          [tooltipQuestionCircle]="true"
+          [tooltipQuestionCircleText]="'Unidad de medida comercial de la mercancía'"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -161,6 +173,7 @@
           placeholder=""
           name="numeroDeLote"
           type="text"
+          [maxlength]="16"
         />
       </div>
       <div class="col-md-4 form-group">
@@ -174,6 +187,7 @@
           placeholder=""
           name="faseDeDesarrollo"
           type="text"
+            [maxlength]="50"
         />
       </div>
       <div class="col-md-4 form-group">
@@ -185,6 +199,7 @@
           placeholder=""
           name="especie"
           type="text"
+            [maxlength]="50"
         />
       </div>
       <div class="col-md-8">
@@ -223,6 +238,7 @@
           placeholder=""
           name="nombreCientifico"
           type="text"
+          [maxlength]="40"
           (change)="
           setValoresDetalleStore(
           )

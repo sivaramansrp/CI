@@ -12,6 +12,24 @@ import { TercerospageComponent } from '../../components/tercerospage/tercerospag
 
 
 
+/**
+ * @fileoverview
+ * Componente para gestionar el primer paso del proceso de importación de acuicultura (trámite 220203).
+ * Coordina múltiples formularios incluyendo solicitante, datos de solicitud, movilización, terceros y pagos.
+ * Cobertura de documentación completa: cada clase, método, propiedad y ViewChild está documentado en español.
+ * @module PasoUnoComponent
+ */
+
+/**
+ * Componente standalone que gestiona el primer paso del proceso de importación de acuicultura.
+ * Coordina la validación y gestión de datos de múltiples secciones del formulario.
+ * Implementa las interfaces OnInit y OnDestroy para el manejo adecuado del ciclo de vida.
+ * 
+ * @class PasoUnoComponent
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ * @memberof PasoUnoComponent
+ */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
@@ -24,16 +42,19 @@ import { TercerospageComponent } from '../../components/tercerospage/tercerospag
 export class PasoUnoComponent implements OnInit,OnDestroy {
 
   /**
-    * Índice de la pestaña seleccionada.
-    * @property {number} indice - Índice de la pestaña actualmente seleccionada.
-    * @default 1
-    */
+   * Índice de la pestaña actualmente seleccionada en el formulario.
+   * @public
+   * @type {number}
+   * @default 1
+   * @memberof PasoUnoComponent
+   */
   indice: number = 1;
 
   /**
-   * Lista de secciones del formulario.
-   * @property {Array<{ index: number; title: string; component: string; }>} seccionesDeLaSolicitud
-   * - Lista de pasos dentro del formulario con sus respectivos componentes.
+   * Lista de secciones del formulario con sus respectivos índices, títulos y componentes asociados.
+   * @public
+   * @type {Array<{ index: number; title: string; component: string; }>}
+   * @memberof PasoUnoComponent
    */
   seccionesDeLaSolicitud = [
     { index: 1, title: 'Solicitante', component: 'solicitante' },
@@ -43,54 +64,88 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     { index: 5, title: 'Pago de derechos', component: 'pago-de-derechos' }
   ];
 
-    /**
-   * @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
-   *                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
-   * @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+  /**
+   * Referencia al componente hijo SolicitanteComponent para manejar los datos del solicitante.
+   * @public
+   * @type {SolicitanteComponent}
+   * @memberof PasoUnoComponent
    */
-    @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
-    @ViewChild('datosSolicitudRef') datosSolicitud!: DatosDeLaSolicitudComponent;
-    @ViewChild('datosParaMovilizacionRef') datosParaMovilizacion!: DatosParaMovilizacionComponent;
-    @ViewChild('pagoDerechosRef') pagoDerechos!: PagoDeDerechosComponent;
-    @ViewChild('tercerospageRef') tercerospage!: TercerospageComponent;
+  @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
+  
   /**
- * @descripcion
- * Subject utilizado para notificar y completar las suscripciones activas al destruir el componente,
- * evitando fugas de memoria.
- * Se utiliza junto con el operador `takeUntil`.
- * @private
- */
-private destroyNotifier$ = new Subject<void>();
+   * Referencia al componente hijo DatosDeLaSolicitudComponent para manejar los datos de la solicitud.
+   * @public
+   * @type {DatosDeLaSolicitudComponent}
+   * @memberof PasoUnoComponent
+   */
+  @ViewChild('datosSolicitudRef') datosSolicitud!: DatosDeLaSolicitudComponent;
+  
+  /**
+   * Referencia al componente hijo DatosParaMovilizacionComponent para manejar los datos de movilización.
+   * @public
+   * @type {DatosParaMovilizacionComponent}
+   * @memberof PasoUnoComponent
+   */
+  @ViewChild('datosParaMovilizacionRef') datosParaMovilizacion!: DatosParaMovilizacionComponent;
+  
+  /**
+   * Referencia al componente hijo PagoDeDerechosComponent para manejar los pagos de derechos.
+   * @public
+   * @type {PagoDeDerechosComponent}
+   * @memberof PasoUnoComponent
+   */
+  @ViewChild('pagoDerechosRef') pagoDerechos!: PagoDeDerechosComponent;
+  
+  /**
+   * Referencia al componente hijo TercerospageComponent para manejar los terceros relacionados.
+   * @public
+   * @type {TercerospageComponent}
+   * @memberof PasoUnoComponent
+   */
+  @ViewChild('tercerospageRef') tercerospage!: TercerospageComponent;
+
+  /**
+   * Subject utilizado para notificar y completar las suscripciones activas al destruir el componente.
+   * Evita fugas de memoria y se utiliza junto con el operador takeUntil.
+   * @private
+   * @readonly
+   * @type {Subject<void>}
+   * @memberof PasoUnoComponent
+   */
+  private readonly DESTROY_NOTIFIER$ = new Subject<void>();
 
 
   /**
+   * Constructor que inyecta los servicios requeridos para el funcionamiento del componente.
    * @constructor
-   * @param importacionDeAcuiculturaService Servicio para gestionar operaciones relacionadas con la importación de acuicultura.
-   * 
-   * @description
-   * Inyecta el servicio `ImportacionDeAcuiculturaService` para manejar la lógica de negocio relacionada con los trámites de importación de acuicultura en el componente.
+   * @param {ImportacionDeAcuiculturaService} importacionDeAcuiculturaService - Servicio para gestionar operaciones relacionadas con la importación de acuicultura
+   * @param {ConsultaioQuery} consultaQuery - Query para manejar el estado de las consultas
+   * @memberof PasoUnoComponent
    */
   constructor(private importacionDeAcuiculturaService: ImportacionDeAcuiculturaService, private consultaQuery: ConsultaioQuery) {
 
   }
 
   /**
-  * Cambia el índice de la pestaña seleccionada.
-  * @method seleccionaTab
-  * @param {number} i - El índice de la pestaña a seleccionar.
-  */
+   * Cambia el índice de la pestaña seleccionada en el formulario.
+   * @public
+   * @param {number} i - El índice de la pestaña a seleccionar
+   * @memberof PasoUnoComponent
+   */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Aquí se puede inicializar datos o suscribirse a servicios necesarios para el componente.
+   * Suscribe al estado de consulta para detectar actualizaciones y guardar datos del formulario.
+   * @public
+   * @memberof PasoUnoComponent
    */
   ngOnInit(): void {
 
     this.consultaQuery.selectConsultaioState$
-    .pipe(takeUntil(this.destroyNotifier$))
+    .pipe(takeUntil(this.DESTROY_NOTIFIER$))
     .subscribe((seccionState) => {
       if(seccionState.update){
               this.guardarDatosFormulario();
@@ -98,8 +153,11 @@ private destroyNotifier$ = new Subject<void>();
     });
   }
   /**
-   * Método que valida todos los formularios del paso uno.
-   * @returns {boolean} Retorna true si todos los formularios son válidos, false en caso contrario.
+   * Método que valida todos los formularios del paso uno del trámite de acuicultura.
+   * Verifica la validez de cada sección: solicitante, datos de solicitud, movilización, terceros y pagos.
+   * @public
+   * @returns {boolean} Retorna true si todos los formularios son válidos, false en caso contrario
+   * @memberof PasoUnoComponent
    */ 
 public validarFormularios(): boolean {
   let isValid = true;
@@ -146,18 +204,16 @@ public validarFormularios(): boolean {
   return isValid;
 }
   /**
- * @descripcion
- * Obtiene los datos de acuicultura y actualiza el estado del formulario.
- * 
- * @remarks
- * Realiza una suscripción al observable que retorna los datos de acuicultura.
- * Utiliza `takeUntil` para evitar fugas de memoria al destruir el componente.
- * Si la respuesta es válida, actualiza el estado del formulario con los datos recibidos.
- */
+   * Obtiene los datos de acuicultura y actualiza el estado del formulario.
+   * Realiza una suscripción al observable que retorna los datos de acuicultura.
+   * Utiliza takeUntil para evitar fugas de memoria al destruir el componente.
+   * @public
+   * @memberof PasoUnoComponent
+   */
 guardarDatosFormulario(): void {
   this.importacionDeAcuiculturaService
     .getAcuiculturaData().pipe(
-      takeUntil(this.destroyNotifier$)
+      takeUntil(this.DESTROY_NOTIFIER$)
     )
     .subscribe((resp) => {
       if (resp) {
@@ -165,15 +221,16 @@ guardarDatosFormulario(): void {
       }
     });
 }
+
 /**
-   * Método del ciclo de vida que se ejecuta cuando el componente es destruido.
-   * Limpia los recursos suscritos y detiene las emisiones de datos.
-   * @method ngOnDestroy
-   * @returns {void}
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
+ * Método del ciclo de vida que se ejecuta cuando el componente es destruido.
+ * Limpia los recursos suscritos y detiene las emisiones de datos para prevenir memory leaks.
+ * @public
+ * @memberof PasoUnoComponent
+ */
+ngOnDestroy(): void {
+  this.DESTROY_NOTIFIER$.next();
+  this.DESTROY_NOTIFIER$.complete();
+}
 
 }
