@@ -6,7 +6,8 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
-import { DatosComunesComponent } from './components/datos-comunes/datos-comunes.component';
+import { DatoComunesComponent } from './components/dato-comunes/dato-comunes.component';
+import { EnlaceComponent } from './components/enlace/enlace.component';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -20,12 +21,14 @@ import { ParqueIndustrialComponent } from './components/parque industrial/parque
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { PersonaComponent } from './components/persona/persona.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ReprestantanteComponent } from './components/represtantante/represtantante.component';
 import { RouterModule } from '@angular/router';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { SharedModule } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { SolicitudPasoComponent } from './pages/solicitud-paso/solicitud-paso.component';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -35,7 +38,8 @@ import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
-  declarations: [PasoUnoComponent, SolicitudPageComponent],
+  declarations: [SolicitudPasoComponent,PasoUnoComponent,
+      ],
   imports: [
     FirmaElectronicaComponent,
     CommonModule,
@@ -64,8 +68,14 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     ParqueIndustrialComponent,
     CTPATComponent,
     TercerosRelacionadosComponent,
-    DatosComunesComponent,
     BtnContinuarComponent,
+    DatoComunesComponent,
+    ReprestantanteComponent,
+    PersonaComponent,
+    EnlaceComponent,
+
+
+    
   ],
   exports: [],
   providers: [

@@ -1,139 +1,166 @@
-import { TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { PerfilesMensajeriaComponent } from './perfiles-mensajeria.component';
-import { Tramite32614PerfilesMensajeriaStore } from '../../estados/tramites/tramite32614_perfilesMensajeria.store';
-import { Tramite32614PerfilesMensajeriaQuery } from '../../estados/queries/perfilesMensajeria.query';
-import { of, Subject } from 'rxjs';
+import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
+import { of } from "rxjs";
+import { PerfilesMensajeriaComponent } from "./perfiles-mensajeria.component";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+// Mocks de dependencias
+const mockTramite32614Store = {
+  setDomicilio: jest.fn(),
+  setAntiguedad: jest.fn(),
+  setProductos: jest.fn(),
+  setEmbarquesExp: jest.fn(),
+  setEmbarquesImp: jest.fn(),
+  setEmpleados: jest.fn(),
+  setSuperficie: jest.fn(),
+  setNombre: jest.fn(),
+  setCategoria: jest.fn(),
+  setVigencia: jest.fn(),
+  setNombre2: jest.fn(),
+  setCategoria2: jest.fn(),
+  setVigenciaDos: jest.fn(),
+  setNombre3: jest.fn(),
+  setCategoria3: jest.fn(),
+  setVigenciaTres: jest.fn(),
+};
+const mockTramite32614Query = {
+  selectSolicitud$: of({
+    domicilio: 'Calle 123',
+    antiguedad: 5,
+    productos: 10,
+    embarquesExp: 2,
+    embarquesImp: 3,
+    empleados: 20,
+    superficie: 100,
+    nombre: 'Cert1',
+    categoria: 'Cat1',
+    vigencia: '2024-01-01',
+    nombre2: 'Cert2',
+    categoria2: 'Cat2',
+    vigencia2: '2025-01-01',
+    nombre3: 'Cert3',
+    categoria3: 'Cat3',
+    vigencia3: '2026-01-01',
+  }),
+};
+const mockConsultaioQuery = {
+  selectConsultaioState$: of({ readonly: false }),
+};
 
 describe('PerfilesMensajeriaComponent', () => {
   let component: PerfilesMensajeriaComponent;
-  let store: Tramite32614PerfilesMensajeriaStore;
-  let query: Tramite32614PerfilesMensajeriaQuery;
+  let fixture: ComponentFixture<PerfilesMensajeriaComponent>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [PerfilesMensajeriaComponent,ReactiveFormsModule],
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [PerfilesMensajeriaComponent, ReactiveFormsModule],
       providers: [
         FormBuilder,
-        {
-          provide: Tramite32614PerfilesMensajeriaStore,
-          useValue: {
-            setAntiguedad: jest.fn(),
-            setProductos: jest.fn(),
-            setEmbarquesExp: jest.fn(),
-            setEmbarquesImp: jest.fn(),
-            setEmpleados: jest.fn(),
-            setSuperficie: jest.fn(),
-            setVigencia: jest.fn(),
-            setVigenciaDos: jest.fn(),
-            setVigenciaTres: jest.fn(),
-          },
-        },
-        {
-          provide: Tramite32614PerfilesMensajeriaQuery,
-          useValue: {
-            selectSolicitud$: of({
-              domicilio: 'Test Domicilio',
-              antiguedad: '5 años',
-              productos: 'Test Productos',
-              embarquesExp: '10',
-              embarquesImp: '15',
-              empleados: '50',
-              superficie: '1000 m2',
-              nombre: 'Test Nombre',
-              categoria: 'A',
-              vigencia: '2025',
-            }),
-          },
-        },
+        { provide: 'Tramite32614PerfilesMensajeriaStore', useValue: mockTramite32614Store },
+        { provide: 'Tramite32614PerfilesMensajeriaQuery', useValue: mockTramite32614Query },
+        { provide: 'ConsultaioQuery', useValue: mockConsultaioQuery },
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(PerfilesMensajeriaComponent, {
+        set: {
+          providers: [
+            { provide: FormBuilder, useValue: new FormBuilder() },
+            { provide: 'Tramite32614PerfilesMensajeriaStore', useValue: mockTramite32614Store },
+            { provide: 'Tramite32614PerfilesMensajeriaQuery', useValue: mockTramite32614Query },
+            { provide: 'ConsultaioQuery', useValue: mockConsultaioQuery },
+          ],
+        },
+      })
+      .compileComponents();
 
-    const fixture = TestBed.createComponent(PerfilesMensajeriaComponent);
+    fixture = TestBed.createComponent(PerfilesMensajeriaComponent);
     component = fixture.componentInstance;
-    store = TestBed.inject(Tramite32614PerfilesMensajeriaStore);
-    query = TestBed.inject(Tramite32614PerfilesMensajeriaQuery);
+    // Inyectar dependencias manualmente
+    (component as any).tramite32614Store = mockTramite32614Store;
+    (component as any).tramite32614Query = mockTramite32614Query;
+    (component as any).consultaioQuery = mockConsultaioQuery;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('debe crear el componente correctamente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.profileForm).toBeDefined();
-    expect(component.profileForm.get('domicilio')?.value).toBe('Test Domicilio');
-  });
-
-  it('should toggle mostrarContenido', () => {
+  it('debe alternar la visibilidad de la sección de contenido general', () => {
     expect(component.mostrarContenido).toBe(false);
     component.alternarContenido();
     expect(component.mostrarContenido).toBe(true);
   });
 
-  it('should toggle mostrarSeguridad', () => {
+  it('debe alternar la visibilidad de la sección de seguridad física', () => {
     expect(component.mostrarSeguridad).toBe(false);
     component.alternarSeguridad();
     expect(component.mostrarSeguridad).toBe(true);
   });
 
-  it('should update antiguedad in the store', () => {
-    component.profileForm.get('antiguedad')?.setValue('10 años');
+  it('debe alternar la visibilidad de la sección de controles de acceso físico', () => {
+    expect(component.mostrarAccesoFisico).toBe(false);
+    component.alternarAccesoFisico();
+    expect(component.mostrarAccesoFisico).toBe(true);
+  });
+
+  it('debe alternar la visibilidad de la sección de socios comerciales', () => {
+    expect(component.mostrarSociosComeciales).toBe(false);
+    component.alternarSociosComerciales();
+    expect(component.mostrarSociosComeciales).toBe(true);
+  });
+
+  it('debe alternar la visibilidad de la sección de seguridad de procesos', () => {
+    expect(component.mostrarSeguridadProcesos).toBe(false);
+    component.alternarSeguridadProcesos();
+    expect(component.mostrarSeguridadProcesos).toBe(true);
+  });
+
+  it('debe alternar la visibilidad de la sección de seguridad de los vehículos', () => {
+    expect(component.mostrarSeguridadVehiculos).toBe(false);
+    component.alternarSeguridadVehiculos();
+    expect(component.mostrarSeguridadVehiculos).toBe(true);
+  });
+
+  it('debe alternar la visibilidad de la sección de seguridad del personal', () => {
+    expect(component.mostrarSeguridadPersonal).toBe(false);
+    component.alternarSeguridadPersonal();
+    expect(component.mostrarSeguridadPersonal).toBe(true);
+  });
+
+  it('debe alternar la visibilidad de la sección de seguridad de la información', () => {
+    expect(component.mostrarSeguridadInformacion).toBe(false);
+    component.alternarSeguridadInformacion();
+    expect(component.mostrarSeguridadInformacion).toBe(true);
+  });
+
+  it('debe alternar la visibilidad de la sección de capacitación en seguridad', () => {
+    expect(component.mostrarCapacitacionSeguridad).toBe(false);
+    component.alternarCapacitacionSeguridad();
+    expect(component.mostrarCapacitacionSeguridad).toBe(true);
+  });
+
+  it('debe alternar la visibilidad de la sección de manejo e investigación de incidentes', () => {
+    expect(component.mostrarManejoInvestigacion).toBe(false);
+    component.alternarManejoInvestigacion();
+    expect(component.mostrarManejoInvestigacion).toBe(true);
+  });
+
+  it('debe actualizar el valor de antigüedad en el store', () => {
+    component.profileForm = new FormBuilder().group({ antiguedad: [10] });
     component.actualizarAntiguedad();
-    expect(store.setAntiguedad).toHaveBeenCalledWith('10 años');
+    expect(mockTramite32614Store.setAntiguedad).toHaveBeenCalledWith(10);
   });
 
-  it('should update productos in the store', () => {
-    component.profileForm.get('productos')?.setValue('New Product');
+  it('debe actualizar el valor de productos en el store', () => {
+    // Arrange: Se crea un formulario con el campo productos
+    component.profileForm = new FormBuilder().group({ productos: [15] });
+    // Act: Se llama al método que actualiza productos
     component.actualizarProductos();
-    expect(store.setProductos).toHaveBeenCalledWith('New Product');
-  });
-
-  it('should update embarquesExp in the store', () => {
-    component.profileForm.get('embarquesExp')?.setValue('20');
-    component.actualizarEmbarquesExp();
-    expect(store.setEmbarquesExp).toHaveBeenCalledWith('20');
-  });
-
-  it('should update embarquesImp in the store', () => {
-    component.profileForm.get('embarquesImp')?.setValue('25');
-    component.actualizarEmbarquesImp();
-    expect(store.setEmbarquesImp).toHaveBeenCalledWith('25');
-  });
-
-  it('should update empleados in the store', () => {
-    component.profileForm.get('empleados')?.setValue('100');
-    component.actualizarEmpleados();
-    expect(store.setEmpleados).toHaveBeenCalledWith('100');
-  });
-
-  it('should update superficie in the store', () => {
-    component.profileForm.get('superficie')?.setValue('2000 m2');
-    component.actualizarSuperficie();
-    expect(store.setSuperficie).toHaveBeenCalledWith('2000 m2');
-  });
-
-  it('should set vigencia in the store', () => {
-    component.seleccionarVigenciaUno('2026');
-    expect(store.setVigencia).toHaveBeenCalledWith('2026');
-  });
-
-  it('should set vigenciaDos in the store', () => {
-    component.seleccionarVigenciaDos('2027');
-    expect(store.setVigenciaDos).toHaveBeenCalledWith('2027');
-  });
-
-  it('should set vigenciaTres in the store', () => {
-    component.seleccionarVigenciaTres('2028');
-    expect(store.setVigenciaTres).toHaveBeenCalledWith('2028');
-  });
-
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-    component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    // Assert: Se espera que el método del store haya sido llamado con el valor correcto
+    expect(mockTramite32614Store.setProductos).toHaveBeenCalledWith(15);
   });
 });

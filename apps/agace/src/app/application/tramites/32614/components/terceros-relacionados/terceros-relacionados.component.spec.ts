@@ -21,6 +21,282 @@ import {
   SeccionSociosIC,
 } from '../../models/solicitud.model';
 
+describe('TercerosRelacionadosComponent additional tests', () => {
+  let component: TercerosRelacionadosComponent;
+  let fixture: ComponentFixture<TercerosRelacionadosComponent>;
+  let solicitudServiceMock: jest.Mocked<SolicitudService>;
+  let solicitud32614StoreMock: jest.Mocked<Solicitud32614Store>;
+  let solicitud32614QueryMock: jest.Mocked<Solicitud32614Query>;
+
+  beforeEach(async () => {
+    solicitudServiceMock = {
+      conseguirRecibirNotificaciones: jest.fn(() => of([])),
+      conseguirEnlaceOperativoDatos: jest.fn(() => of([])),
+      conseguirRepresentanteLegalDatos: jest.fn(() => of({})),
+    } as unknown as jest.Mocked<SolicitudService>;
+
+    solicitud32614StoreMock = {
+      actualizarRfc: jest.fn(() => of('')),
+      actualizarNombre: jest.fn(() => of('')),
+      actualizarApellidoPaterno: jest.fn(() => of('')),
+      actualizarApellidoMaterno: jest.fn(() => of('')),
+      actualizarTelefono: jest.fn(() => of('')),
+      actualizarCorreoElectronico: jest.fn(() => of('')),
+      actualizarRfcTercero: jest.fn(() => of('')),
+      actualizarEnlaceOperativosLista: jest.fn(() => of([])),
+    } as unknown as jest.Mocked<Solicitud32614Store>;
+
+    solicitud32614QueryMock = {
+      selectSolicitud$: of({
+        idPersonaSolicitud: 'id',
+        rfcTercero: 'rfcTercero',
+        rfc: 'rfc',
+        nombre: 'nombre',
+        apellidoPaterno: 'apellidoPaterno',
+        apellidoMaterno: 'apellidoMaterno',
+        telefono: 'telefono',
+        correoElectronico: 'correoElectronico',
+        enlaceOperativosLista: [],
+      }),
+    } as unknown as jest.Mocked<Solicitud32614Query>;
+
+    await TestBed.configureTestingModule({
+      imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        TituloComponent,
+        TablaDinamicaComponent,
+        AgregarEnlaceOperativoComponent,
+        NotificacionesComponent,
+        TercerosRelacionadosComponent,
+        HttpClientModule, // <-- Add this line
+      ],
+      providers: [
+        { provide: SolicitudService, useValue: solicitudServiceMock },
+        { provide: Solicitud32614Store, useValue: solicitud32614StoreMock },
+        { provide: Solicitud32614Query, useValue: solicitud32614QueryMock },
+      ],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(TercerosRelacionadosComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should patch form values when solicitud32614Query emits new state', () => {
+    const patchSpy = jest.spyOn(component.tercerosRelacionadosForm, 'patchValue');
+    solicitud32614QueryMock.selectSolicitud$ = of({
+      idPersonaSolicitud: 'nuevoId',
+      rfcTercero: 'nuevoRfcTercero',
+      rfc: 'nuevoRfc',
+      nombre: 'nuevoNombre',
+      apellidoPaterno: 'nuevoApellidoPaterno',
+      apellidoMaterno: 'nuevoApellidoMaterno',
+      telefono: 'nuevoTelefono',
+      correoElectronico: 'nuevoCorreo',
+      enlaceOperativosLista: [],
+      agregarEnlaceRfcTercero: '',
+      agregarEnlaceRfc: '',
+      agregarEnlaceNombre: '',
+      agregarEnlaceApellidoPaterno: '',
+      agregarEnlaceApellidoMaterno: '',
+      agregarEnlaceCiudadEstado: '',
+      agregarEnlaceCargo: '',
+      agregarEnlaceTelefono: '',
+      agregarEnlaceCorreoElectronico: '',
+      agregarEnlaceSuplente: false,
+      '2089': 0,
+      '2090': 0,
+      '2091': 0,
+      '2042': 0,
+      '2043': 0,
+      '2044': 0,
+      fechaInicioComercio: '',
+      fechaPago: '',
+      monto: '',
+      operacionesBancarias: '',
+      llavePago: '',
+      transportistaRFC: '',
+      transportistaRFCModifTrans: '',
+      transportistaRazonSocial: '',
+      transportistaDomicilio: '',
+      transportistaCaat: '',
+      transportistaIdDomicilio: '',
+      transportistaIdRFC: '',
+      transportistaIdRazonSocial: '',
+      transportistaIdCaat: '',
+      miembroCaracterDe: '',
+      miembroTributarMexico: 0,
+      miembroNacionalidad: '',
+      miembroRfc: '',
+      miembroRegistroFederal: '',
+      miembroNombreCompleto: '',
+      miembroTipoPersonaMuestra: '',
+      miembroNombre: '',
+      miembroApellidoPaterno: '',
+      miembroApellidoMaterno: '',
+      miembroNombreEmpresa: '',
+      subcontrataRFCBusqueda: '',
+      subcontrataRFC: '',
+      subcontrataRazonSocial: '',
+      subcontrataEmpleados: '',
+      subcontrataBimestre: 0,
+      principales: 0,
+      municipio: '',
+      tipoDeInstalacion: 0,
+      entidadFederativa: '',
+      registroSESAT: '',
+      descripcion: '',
+      codigoPostal: '',
+      procesoProductivo: 0,
+      goceDelInmueble: 0,
+      empresa: 0,
+      comercioExterior: 0,
+      mutuo: 0,
+      catseleccionados: 0,
+      servicio: 0,
+      '190': 0,
+      '191': 0,
+      '199': 0,
+      empleados: '',
+      bimestre: 0,
+      '2034': 0,
+      '236': 0,
+      '237': 0,
+      '238': 0,
+      '239': 0,
+      '240': 0,
+      '243': 0,
+      '244': 0,
+      '245': 0,
+      indiqueTodos: 0,
+      '246': 0,
+      file1: '',
+      file2: '',
+      '247': 0,
+      '248': 0,
+      identificacion: '',
+      lugarDeRadicacion: '',
+      '249': 0,
+      '250': 0,
+      '251': 0,
+      checkbox1: false,
+      checkbox2: false,
+      checkbox3: false,
+      actualmente2: '',
+      actualmente1: '',
+      numeroDeEmpleadosLista: [],
+      domiciliosDatos: [],
+      listaSeccionSociosIC: [],
+    });
+    component.inicializarFormulario();
+    expect(patchSpy).toHaveBeenCalledWith({
+      idPersonaSolicitud: 'nuevoId',
+      rfcTercero: 'nuevoRfcTercero',
+      rfc: 'nuevoRfc',
+      nombre: 'nuevoNombre',
+      apellidoPaterno: 'nuevoApellidoPaterno',
+      apellidoMaterno: 'nuevoApellidoMaterno',
+      telefono: 'nuevoTelefono',
+      correoElectronico: 'nuevoCorreo',
+    });
+  });
+
+  it('should call store update methods when buscarTerceroNacionalIDC is called and rfcTercero exists', () => {
+    component.tercerosRelacionadosForm = {
+      get: jest.fn().mockReturnValue({ value: 'RFC_EXISTE' }),
+    } as any;
+    const mockResponse = {
+      rfcTercero: 'RFC_EXISTE',
+      rfc: 'RFC_EXISTE',
+      nombre: 'Nombre',
+      apellidoPaterno: 'Paterno',
+      apellidoMaterno: 'Materno',
+      telefono: '123456',
+      correoElectronico: 'correo@correo.com',
+    };
+    solicitudServiceMock.conseguirRepresentanteLegalDatos.mockReturnValue(of(mockResponse));
+    component.solicitud32614Store = solicitud32614StoreMock;
+    component.buscarTerceroNacionalIDC();
+    expect(solicitudServiceMock.conseguirRepresentanteLegalDatos).toHaveBeenCalled();
+    expect(solicitud32614StoreMock.actualizarRfc).toHaveBeenCalledWith('RFC_EXISTE');
+    expect(solicitud32614StoreMock.actualizarNombre).toHaveBeenCalledWith('Nombre');
+    expect(solicitud32614StoreMock.actualizarApellidoPaterno).toHaveBeenCalledWith('Paterno');
+    expect(solicitud32614StoreMock.actualizarApellidoMaterno).toHaveBeenCalledWith('Materno');
+    expect(solicitud32614StoreMock.actualizarTelefono).toHaveBeenCalledWith('123456');
+    expect(solicitud32614StoreMock.actualizarCorreoElectronico).toHaveBeenCalledWith('correo@correo.com');
+  });
+
+  it('should not throw if cerrarDialogoEnlaceOperativo is called with empty seleccionEnlaceOperativoDatos', () => {
+    component.seleccionEnlaceOperativoDatos = [];
+    component.enlaceOperativosLista = [{ rfc: 'A' }, { rfc: 'B' }] as any;
+    expect(() => component.cerrarDialogoEnlaceOperativo()).not.toThrow();
+    expect(component.enlaceOperativosLista.length).toBe(2);
+  });
+
+  it('should call Modal.show when guardarDatosEnlaceOperativo is called and modificacionEnlaceOperativoElement exists', () => {
+    const showMock = jest.fn();
+    (window as any).Modal = function () {
+      return { show: showMock };
+    };
+    component.modificacionEnlaceOperativoElement = {
+      nativeElement: {},
+    } as any;
+    component.guardarDatosEnlaceOperativo();
+    expect(typeof showMock).toBe('function');
+  });
+
+  it('should call Modal.show when guardarModificacionEnlaceOperativo is called and modificacionEnlaceOperativoElement exists', () => {
+    const showMock = jest.fn();
+    (window as any).Modal = function () {
+      return { show: showMock };
+    };
+    component.modificacionEnlaceOperativoElement = {
+      nativeElement: {},
+    } as any;
+    component.guardarModificacionEnlaceOperativo();
+    expect(typeof showMock).toBe('function');
+  });
+
+  it('should call conseguirRecibirNotificaciones and set orecibirNotificacionesLista', () => {
+    const notificaciones = [{ rfc: 'A' }, { rfc: 'B' }] as any;
+    solicitudServiceMock.conseguirRecibirNotificaciones.mockReturnValue(of(notificaciones));
+    component.conseguirRecibirNotificaciones();
+    expect(component.orecibirNotificacionesLista).toEqual(notificaciones);
+  });
+
+  it('should call conseguirEnlaceOperativoDatos and set enlaceOperativosLista', () => {
+    const enlaces = [{ rfc: 'A' }, { rfc: 'B' }] as any;
+    solicitudServiceMock.conseguirEnlaceOperativoDatos.mockReturnValue(of(enlaces));
+    component.conseguirEnlaceOperativoDatos();
+    expect(component.enlaceOperativosLista).toEqual(enlaces);
+  });
+
+  it('should disable form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.tercerosRelacionadosForm = {
+      disable: jest.fn(),
+      enable: jest.fn(),
+    } as any;
+    component.esFormularioSoloLectura = true;
+    component.inicializarFormulario = jest.fn();
+    component.guardarDatosFormulario();
+    expect(component.tercerosRelacionadosForm.disable).toHaveBeenCalled();
+    expect(component.tercerosRelacionadosForm.enable).not.toHaveBeenCalled();
+  });
+
+  it('should enable form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.tercerosRelacionadosForm = {
+      disable: jest.fn(),
+      enable: jest.fn(),
+    } as any;
+    component.esFormularioSoloLectura = false;
+    component.inicializarFormulario = jest.fn();
+    component.guardarDatosFormulario();
+    expect(component.tercerosRelacionadosForm.enable).toHaveBeenCalled();
+    expect(component.tercerosRelacionadosForm.disable).not.toHaveBeenCalled();
+  });
+});
+
 describe('TercerosRelacionadosComponent', () => {
   let component: TercerosRelacionadosComponent;
   let fixture: ComponentFixture<TercerosRelacionadosComponent>;
