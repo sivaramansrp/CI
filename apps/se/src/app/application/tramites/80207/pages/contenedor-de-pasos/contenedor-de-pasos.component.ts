@@ -5,6 +5,7 @@ import {
   SeccionLibStore,
   WizardComponent,
 } from '@ng-mf/data-access-user';
+import { AVISO } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constantes/pasos.enum';
 import { Subject } from 'rxjs';
 import { Tramites80207Queries } from '../../estados/tramite80207.query';
@@ -31,6 +32,7 @@ interface AccionBoton {
    */
   valor: number;
 }
+
 /**
  * Componente para la gestión del contenedor de pasos.
  * @class ContenedorDePasosComponent --80207
@@ -58,6 +60,11 @@ export class ContenedorDePasosComponent implements OnDestroy {
    */
   indice: number = 1;
 
+  /**
+   * Textos constantes utilizados en el componente.
+   * @property {any} TEXTOS
+   */
+  TEXTOS = AVISO;
   /**
    * Referencia al componente del wizard.
    * @property {WizardComponent} wizardComponent
