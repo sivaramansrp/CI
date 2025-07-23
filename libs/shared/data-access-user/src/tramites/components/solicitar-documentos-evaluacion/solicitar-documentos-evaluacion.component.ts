@@ -1,18 +1,22 @@
 import { Catalogo, RespuestaDocuemntosRequeridos } from '../../../core/models/shared/catalogos.model';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
 import { SolicitudDocumentosState, SolicitudDocumentosStore } from '../../../core/estados/solicitud-documentos.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
 import { SolicitudDocumentosQuery } from '../../../core/queries/solicitud-documentos.query';
+import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
 import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-documento.json';
 import dataDocuemtos from '@libs/shared/theme/assets/json/funcionario/lista-documentos-requeridos.json'
 
 @Component({
   selector: 'app-solicitar-documentos',
   standalone: true,
-  imports: [CommonModule, FormsModule, CatalogoSelectComponent, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, CatalogoSelectComponent, ReactiveFormsModule, NotificacionesComponent, TablaDinamicaComponent],
   templateUrl: './solicitar-documentos-evaluacion.component.html',
   styleUrl: './solicitar-documentos-evaluacion.component.scss',
 })
@@ -29,6 +33,10 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
    * Lista documentos requeridos
    */
   exampleDocumentosRequeridos!: RespuestaDocuemntosRequeridos[];
+  /**
+   * Lista de documentos
+   */
+  listadoDocumentos: string[] = [];
   /**
    * Lista de documentos agregados a la tabla
    */
@@ -61,6 +69,23 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
    * Obtiene el nombre de la opcion seleccionada del documento
    */
   description: string | undefined;
+
+  /** Notificación a mostrar al usuario */
+  public nuevaNotificacion!: Notificacion;
+
+  /** Enum para la selección en la tabla */
+  tablaSeleccion = TablaSeleccion;
+
+  /**
+   * Encabezado de tabla para agregar documentos
+   */
+  encabezadoDeTablaCapturistas: ConfiguracionColumna<string>[] = [
+    {
+      encabezado: 'Nombre del documento',
+      clave: (row) => row,
+      orden: 1
+    }
+  ];
 
   constructor(private fb: FormBuilder,
     private documentosStates: SolicitudDocumentosStore,
@@ -97,6 +122,36 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
    * Metodo para agregar documento seleccionado a la tabla 
    */
   agregarDocumento(): void {
+    if (this.formSolicitudDocumentos.invalid) {
+      this.formSolicitudDocumentos.markAllAsTouched(); // Marca todos los campos como tocados para mostrar errores
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'error',
+        modo: 'action',
+        titulo: 'Error',
+        mensaje: 'Aun no ha seleccionado una opción.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    this.tipoDocumentoId = this.formSolicitudDocumentos.get('tipoDocumento')?.value;
+
+    // Validación: asegurarse que tipoDocumentoId tenga un valor numérico válido
+    if (!this.tipoDocumentoId || isNaN(this.tipoDocumentoId)) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'error',
+        modo: 'action',
+        titulo: 'Error',
+        mensaje: 'Debe seleccionar al menos una opción.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
     if (this.documentosSeleccionados.length === 0) {
       this.documentosSeleccionados = [];
     }
@@ -111,8 +166,15 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
   /**
    * Método para eliminar el documento de la tabla 
    */
-  eliminarDocumento(index: number): void {
-    this.documentosSeleccionados.splice(index, 1);
+  eliminarDocumento(): void {
+    this.listadoDocumentos.forEach((documento) => {
+      const INDEX = this.documentosSeleccionados.indexOf(documento);
+      if (INDEX > -1) {
+        this.documentosSeleccionados.splice(INDEX, 1);
+      }
+    });
+    this.documentosStates.setSolicitudDocumentos(this.documentosSeleccionados);
+    this.listadoDocumentos = [];
   }
   /**
    * Establece los valores en el store de tramite5701.
