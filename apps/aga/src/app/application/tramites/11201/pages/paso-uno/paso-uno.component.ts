@@ -1,5 +1,5 @@
 import { AfterViewInit, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ContenedorComponent } from '../../components/contenedor/contenedor.component';
@@ -16,7 +16,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [SolicitanteComponent, CommonModule, ContenedorComponent]
+  imports: [SolicitanteComponent, CommonModule, ContenedorComponent, NotificacionesComponent]
 })
 export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
   /**
@@ -25,6 +25,13 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
     * Esta propiedad utiliza `@ViewChild` para obtener una referencia al componente `SolicitanteComponent`.
     */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+
+  /**
+   * Representa una nueva notificación que será utilizada en el componente.
+   * 
+   * @type {Notificacion}
+   */
+  public nuevaNotificacion: Notificacion | null = null;
 
   /**
    * Tipo de persona.
@@ -141,15 +148,65 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
   /**
    * Cancela el proceso actual y notifica a la página principal.
    * 
-   * Este método restablece el índice a la primera pestaña (opcional)
+   * Este método muestra un popup de confirmación antes de cancelar.
+   * Si el usuario confirma, restablece el índice a la primera pestaña
    * y emite el evento `cancelarEvento` para informar al componente padre
    * que el usuario ha decidido cancelar la operación.
    */
   cancelar(): void {
-    this.contenedorComponent.solicitudForm.reset();
-    this.indice = 1;
-    this.cancelarEvento.emit();
-    this.obtenerTipoPersona();
+    this.abrirModal();
+  }
+
+  abrirModal(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Está seguro que desea cancelar?. Se borrarán los datos capturados.',
+      cerrar: false,
+      tiempoDeEspera: 0,
+      txtBtnAceptar: 'Cancelar',
+      txtBtnCancelar: 'Cerrar',
+    };
+  }
+
+  /**
+   * Maneja la confirmación del modal de cancelación.
+   * @param confirmar - Indica si el usuario confirmó la cancelación.
+   */
+  confirmarCancelacion(confirmar: boolean): void {
+    if (confirmar) {
+      if (this.solicitante) {
+        try {
+          const SOLICITANTE_WITH_FORM = this.solicitante as unknown as { form?: { reset: () => void } };
+          if (SOLICITANTE_WITH_FORM.form) {
+            SOLICITANTE_WITH_FORM.form.reset();
+          }
+          const SOLICITANTE_WITH_SOLICITUD_FORM = this.solicitante as unknown as { solicitudForm?: { reset: () => void } };
+          if (SOLICITANTE_WITH_SOLICITUD_FORM.solicitudForm) {
+            SOLICITANTE_WITH_SOLICITUD_FORM.solicitudForm.reset();
+          }
+        } catch (error) {
+            // Manejar el error de forma silenciosa en producción
+        }
+      }
+      
+      // Reiniciar el formulario de ContenedorComponent
+      if (this.contenedorComponent) {
+        this.contenedorComponent.solicitudForm.reset();
+        this.contenedorComponent.limpiarCampos();
+      }
+      
+      // Limpiar el store del trámite
+      this.tramite11201Store.limpiarSolicitud();
+      
+      this.indice = 2;
+      this.cancelarEvento.emit();
+      this.obtenerTipoPersona();
+    }
+    // Si no confirma (cerrar), simplemente se cierra el modal y permanece en la misma página
+    this.nuevaNotificacion = null;
   }
   /**
    * @method fetchGetDatosConsulta
