@@ -517,6 +517,12 @@ export class SolicitudComponent
   industriaAutomotriz!: CheckInputTextComponent;
 
   /**
+   * Referencia al componente IMMEX.
+   * Debe ser asignada por @ViewChild si es un componente hijo.
+   */
+  programaImmex?: { isDisabled: boolean };
+
+  /**
    * Bandera para indicar si se debe resetear la fecha de inicio del servicio.
    */
   resetearFechaInicioTouch = false;
@@ -1958,6 +1964,12 @@ export class SolicitudComponent
       })
     );
   }
+
+  /**
+   * Referencia al componente de Programa Fomento.
+   * Debe ser asignada por @ViewChild si es un componente hijo.
+   */
+  programaFomento?: { isDisabled: boolean };
 
   /**
    * Actualiza los valores del campo Programa Fomento y almacena los cambios en el store.
