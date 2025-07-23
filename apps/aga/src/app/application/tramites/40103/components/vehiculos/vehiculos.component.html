@@ -19,22 +19,37 @@
   <div *ngIf="selectedTab === 'Parque vehicular'" class="tab-content">
     <div class="tab-pane fade show active" id="subtabs-4" role="tabpanel">
       <ng-titulo titulo="Parque vehicular" />
+      <!-- Alta de vehículos -->
       <label>Alta de vehículos:</label>
-      <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla"
-        [configuracionTabla]="vehiculosTablaConfig.encabezadas" [datos]="vehiculosTablaConfig.datos">
+      <app-tabla-dinamica 
+        [tipoSeleccionTabla]="tipoSeleccionTabla"
+        [configuracionTabla]="vehiculosTablaConfig.encabezadas" 
+        [datos]="vehiculosTablaConfig.datos"
+        (listaDeFilaSeleccionada)="onVehiculoRowSelected($event)">
       </app-tabla-dinamica>
+      <div class="row mt-3">
+        <div class="col-md-12 text-end">
+          <div class="btn-group">
+            <button class="btn btn-default" type="button" (click)="startEditVehiculo(selectedVehiculoIndex!)" [disabled]="isReadonly || selectedVehiculoIndex === null">
+              Modificar
+            </button>
+            <button class="btn btn-default ms-2" type="button" (click)="deleteVehiculoRow()" [disabled]="isReadonly || selectedVehiculoIndex === null">
+              Eliminar
+            </button>
+            <button class="btn btn-primary ms-2" (click)="abiertoPedimento()" [disabled]="isReadonly">
+              Agregar
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Modificación de vehículos -->
+      <div class="mt-5">
+        <app-modificacion-vehiculo></app-modificacion-vehiculo>
+      </div>
 
-      <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-danger ms-2" [disabled]="isReadonly" (click)="eliminarPedimento()">
-          Eliminar
-        </button>
-        <button type="button" class="btn btn-primary ms-2" [disabled]="isReadonly"
-          *ngFor="let row of vehiculosTablaConfig.datos; let i = index" (click)="startEditVehiculo(i)">
-          Modificar
-        </button>
-        <button type="button" class="btn btn-primary ms-2" [disabled]="isReadonly" (click)="abiertoPedimento()">
-          Agregar
-        </button>
+      <!-- Baja de vehículos -->
+      <div class="mt-5">
+        <app-baja-vehiculo></app-baja-vehiculo>
       </div>
     </div>
   </div>
@@ -280,21 +295,37 @@
 <div *ngIf="selectedTab === 'Unidad de arrastre'" class="tab-content">
   <div class="tab-pane fade show active" id="subtabs-3" role="tabpanel">
     <ng-titulo titulo="Unidad de arrastre" />
+    <!-- Alta de unidades de arrastre -->
     <label>Alta de unidades de arrastre:</label>
-    <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="unidadesTablaConfig.encabezadas"
-      [datos]="unidadesTablaConfig.datos">
+    <app-tabla-dinamica 
+      [tipoSeleccionTabla]="tipoSeleccionTabla" 
+      [configuracionTabla]="unidadesTablaConfig.encabezadas"
+      [datos]="unidadesTablaConfig.datos"
+      (listaDeFilaSeleccionada)="onUnidadRowSelected($event)">
     </app-tabla-dinamica>
-    <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-danger ms-2" [disabled]="isReadonly" (click)="eliminarUnidadPedimento()">
-        Eliminar
-      </button>
-      <button type="button" class="btn btn-primary ms-2" [disabled]="isReadonly"
-        *ngFor="let row of unidadesTablaConfig.datos; let i = index" (click)="startEditUnidad(i)">
-        Modificar
-      </button>
-      <button type="button" class="btn btn-primary ms-2" [disabled]="isReadonly" (click)="abiertoPedimentoUnidad()">
-        Agregar
-      </button>
+    <div class="row mt-3">
+      <div class="col-md-12 text-end">
+        <div class="btn-group">
+          <button class="btn btn-default" type="button" (click)="startEditUnidad(selectedUnidadIndex!)" [disabled]="isReadonly || selectedUnidadIndex === null">
+            Modificar
+          </button>
+          <button class="btn btn-default ms-2" type="button" (click)="deleteUnidadRow()" [disabled]="isReadonly || selectedUnidadIndex === null">
+            Eliminar
+          </button>
+          <button class="btn btn-primary ms-2" (click)="abiertoPedimentoUnidad()" [disabled]="isReadonly">
+            Agregar
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Modificación de unidades de arrastre -->
+    <div class="mt-5">
+      <app-modificacion-unidad></app-modificacion-unidad>
+    </div>
+
+    <!-- Baja de unidades de arrastre -->
+    <div class="mt-5">
+      <app-baja-unidad></app-baja-unidad>
     </div>
   </div>
 </div>

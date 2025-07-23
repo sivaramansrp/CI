@@ -726,5 +726,30 @@ export class VehiculosComponent implements OnInit {
         this.paisEmisorCatalogo = datos.datos as Catalogo[];
       });
   }
+
+  selectedVehiculoIndex: number | null = null;
+  selectedUnidadIndex: number | null = null;
+
+  onVehiculoRowSelected(event: any) {
+    this.selectedVehiculoIndex = event && event.length > 0 ? event[0].index : null;
+  }
+
+  onUnidadRowSelected(event: any) {
+    this.selectedUnidadIndex = event && event.length > 0 ? event[0].index : null;
+  }
+
+  deleteVehiculoRow() {
+    if (this.selectedVehiculoIndex !== null) {
+      this.vehiculosTablaConfig.datos.splice(this.selectedVehiculoIndex, 1);
+      this.selectedVehiculoIndex = null;
+    }
+  }
+
+  deleteUnidadRow() {
+    if (this.selectedUnidadIndex !== null) {
+      this.unidadesTablaConfig.datos.splice(this.selectedUnidadIndex, 1);
+      this.selectedUnidadIndex = null;
+    }
+  }
 }
 
