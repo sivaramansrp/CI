@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoData, Detalles, Fila } from '../../models/220203/importacion-de-acuicultura.module';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -13,16 +13,18 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
   selector: 'app-mercancia-solicitud',
   standalone: true,
   imports: [
-      ReactiveFormsModule,
-        TituloComponent,
-        TablaDinamicaComponent,
-        CatalogoSelectComponent,
-        CommonModule
-  ],
+    ReactiveFormsModule,
+    TituloComponent,
+    TablaDinamicaComponent,
+    CatalogoSelectComponent,
+    CommonModule,
+    NotificacionesComponent
+],
   templateUrl: './mercancia-solicitud.component.html',
   styleUrl: './mercancia-solicitud.component.scss',
 })
 export class MercanciaSolicitudComponent implements OnInit {
+  detallesSeleccionados: Detalles = {} as Detalles;
     /**
      * Evento emitido al cerrar el formulario de destinatario.
      * @type {EventEmitter<void>}
@@ -36,6 +38,7 @@ export class MercanciaSolicitudComponent implements OnInit {
     mercanciaGroup!:FormGroup;
     detallesGroup!: FormGroup;
     detallesCatalogo:CatalogoData={} as CatalogoData;
+    eliminarDatosTabla: boolean = false;
       /**
        * Tipo de selección para la tabla principal.
        * @type {TablaSeleccion}
@@ -62,6 +65,11 @@ export class MercanciaSolicitudComponent implements OnInit {
    * @type {boolean}
    */
   esFormularioSoloLectura: boolean = false;
+      /**
+       * Representa una nueva notificación que será utilizada en el componente.
+       * @type {Notificacion}
+       */
+      public nuevaNotificacion!: Notificacion;
   constructor(private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService, private readonly fb: FormBuilder,private readonly acuiculturaStore: AcuiculturaStore,private readonly acuiculturaQuery:AcuiculturaQuery) {
 this.obtenerCatalogosTransporte();
 this.obtenerNicoCatalogosTransporte();
@@ -160,18 +168,16 @@ this.obtenerUMCCatalogosTransporte();
      * @returns {void}
      */
     public setValoresDetalleStore(
-      form?: FormGroup,
-      campo?: string,
     ): void {
     // Obtiene el estado actual del grupo de mercancía desde el query
     const ESTADO_ACTUAL = this.acuiculturaQuery.getValue().mercanciaGroup;
       const VALOR = this.detallesGroup.getRawValue();
       ESTADO_ACTUAL.push(VALOR);
-      // (this.importacionDeAcuiculturaServices.actualizarSoloDetallesGroup as (value: Detalles) => void)(
-      //   ESTADO_ACTUAL
-      // );
     }
-    
+    agregarFilaDetalle(): void {
+      this.cuerpoTablaDetalle.push(this.detallesGroup.getRawValue());
+      this.detallesGroup.reset();
+    }
      /**
        * Crea el grupo de formularios 'mercanciaGroup'.
        * @method
@@ -243,4 +249,39 @@ this.obtenerUMCCatalogosTransporte();
       this.detallesGroup.reset();
       this.cerrar.emit();
   }
+   eliminarFilaDetalle(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Eliminar datos de la tabla',
+      mensaje: 'Está seguro que desea eliminar estos datos?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+
+    this.eliminarDatosTabla = true;
+  }
+     /**
+  * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
+  * @method eliminarPedimento
+  * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
+  */
+  eliminarPedimentoDatos(borrar: boolean): void {
+    if (borrar) {
+      this.eliminarDatosTabla = false;
+      this.cuerpoTablaDetalle = this.cuerpoTablaDetalle.filter(
+        (item) => item !== this.detallesSeleccionados
+      );
+      this.detallesSeleccionados = {} as Detalles;
+  }
+  else{
+    this.eliminarDatosTabla=false;
+  }
+}
+seleccionTabla(event: Detalles[]): void {
+  this.detallesSeleccionados = event[0] || {} as Detalles;
+}
 }

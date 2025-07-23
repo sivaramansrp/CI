@@ -225,8 +225,6 @@
           type="text"
           (change)="
           setValoresDetalleStore(
-            detallesGroup,
-            'nombreCientifico'
           )
         " 
         />
@@ -235,12 +233,12 @@
     <div class="row">
       <div class="col-md-12 mt-2 d-flex justify-content-end">
         <div>
-          <button class="btn btn-primary me-2" type="button">
+          <button class="btn btn-danger me-2" type="button" (click)="eliminarFilaDetalle()">
             Eliminar detalle
           </button>
         </div>
         <div>
-          <button class="btn btn-default" type="button">Agregar detalle</button>
+          <button class="btn btn-primary" type="button" (click)="agregarFilaDetalle()">Agregar detalle</button>
         </div>
       </div>
       <div class="col-md-12">
@@ -251,6 +249,7 @@
           [tipoSeleccionTabla]="tipoSeleccion"
           [configuracionTabla]="configuracionColumnas"
           [datos]="cuerpoTablaDetalle"
+          (listaDeFilaSeleccionada)="seleccionTabla($event)"
         ></app-tabla-dinamica>
       </div>
        <div class="col-md-12 d-flex justify-content-end mb-2">
@@ -266,5 +265,9 @@
 
       </div>
     </div>
-    </form>
+    </form> 
+      @if(eliminarDatosTabla){
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="eliminarPedimentoDatos($event)"></lib-notificaciones>
+    }
     </div>
