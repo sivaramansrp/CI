@@ -4256,6 +4256,13 @@
     "linkDepartment": "/pago/aviso-modification-certificacion/pantallas",
     "department": "agace"
   },
+  {
+    "id": 609,
+    "tramite": 32612,
+    "linkDashboard": "/agace/esquema-de-certificacion/registro-solicitud32612",
+    "linkDepartment": "/pago/esquema-de-certificacion/registro-solicitud32612",
+    "department": "agace"
+  },
     {
     "id": 609,
     "tramite": 32607,
