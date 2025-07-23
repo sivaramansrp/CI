@@ -211,7 +211,7 @@
         <input class="form-control" formControlName="regulacion" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Número de certificado internacional*:</label>
+        <label class="form-label custum-numero">Número de certificado internacional*:</label>
         <input class="form-control" formControlName="nombreProducto" />
       </div>
     </div>
@@ -248,8 +248,8 @@
     </div>
  
     <div class="row mb-3">
-      <textarea class="form-control" formControlName="observaciones" rows="3"
-       > Descripción*:</textarea>
+      <label class="form-label d-flex" >Descripción*:</label>
+      <textarea class="form-control custom-textarea" formControlName="observaciones" rows="3"></textarea>
     </div>
 
     <div class="row mb-3">
@@ -339,7 +339,7 @@
    </div>
     <div class="row mb-3">
       <div class="col-md-3">
-        <label class="form-label">Número de identificación:</label>
+        <label class="form-label custom-identificacion">Número de identificación:</label>
         <input class="form-control" formControlName="numerodeIdentificacion" />
       </div>
       <div class="col-md-3">
@@ -362,7 +362,7 @@
         </div>
  
     <div class="col-md-12 mt-4 d-flex justify-content-end">
-      <button class="btn btn-secondary" type="button" (click)="cerrarModal()">Eliminar detalle</button>
+      <button class="btn btn-primary" type="button" (click)="cerrarModal()">Eliminar detalle</button>
       <button class="btn btn-primary ms-3" type="submit" (click)="guardarMercancia()">Agregar detalle</button>
       <button class="btn btn-primary ms-3" type="submit">Carga por archivo</button>
     </div>
