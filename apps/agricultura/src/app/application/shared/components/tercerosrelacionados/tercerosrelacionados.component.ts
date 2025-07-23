@@ -115,6 +115,9 @@ export class TercerosrelacionadosComponent {
    */
   @ViewChild('modalRef', { static: false }) modalRef!: ModalComponent;
 
+  @Input() exportadorRequired:boolean = false;
+  @Input() destinatarioRequired:boolean = false;
+
 
   /**
    * Evento emitido al eliminar una selección de destinatarios.
