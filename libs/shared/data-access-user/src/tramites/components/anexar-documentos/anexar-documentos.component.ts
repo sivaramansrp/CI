@@ -243,9 +243,41 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         return;
       }
 
-      this.documentoSeleccionado = this.catalogoDocumentos.find(
-        (doc) => doc.id === id
-      ) as CatalogoDocumento;
+      /**  Buscar el documento principal por el ID base */
+      let DOCUMENTO = this.catalogoDocumentos.find((DOC) => DOC.id === id);
+
+      if (!DOCUMENTO) {
+        /** Si no existe, buscar si es un hijo (adicional) de algún documento principal */
+        for (const DOC of this.catalogoDocumentos) {
+          if (DOC.adicionales) {
+        const ADICIONAL = DOC.adicionales.find((AD) => AD.id === id);
+        if (ADICIONAL) {
+          DOCUMENTO = ADICIONAL;
+          break;
+        }
+          }
+        }
+      }
+
+      /** Si aún no existe, agregarlo como hijo del primer documento principal */
+      if (!DOCUMENTO) {
+        const PRINCIPAL = this.catalogoDocumentos[0];
+        if (PRINCIPAL) {
+          const NUEVO_ADICIONAL: CatalogoDocumento = {
+        id,
+        descripcion: '',
+        tam: PRINCIPAL.tam,
+        dpi: PRINCIPAL.dpi,
+        nuevo: true,
+        uniqueId: crypto.randomUUID(),
+          };
+          PRINCIPAL.adicionales = PRINCIPAL.adicionales || [];
+          PRINCIPAL.adicionales.push(NUEVO_ADICIONAL);
+          DOCUMENTO = NUEVO_ADICIONAL;
+        }
+      }
+
+      this.documentoSeleccionado = DOCUMENTO as CatalogoDocumento;
       const TAMANIO_REQUERIDO: number =
         AnexarDocumentosComponent.convertirKbaBytes(
           this.documentoSeleccionado.tam
@@ -282,8 +314,8 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       );
 
       this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
-      
-      // Trigger change detection to update filename display
+
+      /** Disparar la detección de cambios para actualizar la visualización del nombre de archivo */
       this.cdr.detectChanges();
     }
   }
