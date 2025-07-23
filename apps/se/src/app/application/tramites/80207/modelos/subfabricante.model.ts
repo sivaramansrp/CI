@@ -77,7 +77,111 @@ export interface SubfabricanteDireccionModelo {
    * @property {string} colonia
    */
   colonia: string;
+
+  /**
+   * Nombre de la delegación o municipio.
+   * @property {string} delegacionMunicipio
+   */
+  delegacionMunicipio: string;
+  /**
+   * Nombre de la entidad federativa.
+   * @property {string} entidadFederativa
+   */
+  entidadFederativa: string;
+  /**
+   * Nombre del país.
+   * @property {string} pais
+   */
+  pais: string;
+  /**
+   * Identificador único del subfabricante.
+   * @property {string} idSubfabricante
+   */
+  idSubfabricante: string;
+  /**
+   * Registro Federal de Contribuyentes del subfabricante.
+   * @property {string} rfc
+   */
+  rfc: string;
+  /**
+   * Domicilio fiscal del solicitante.
+   * @property {string} domicilioFiscalSolicitante
+   */
+  domicilioFiscalSolicitante: string;
+  /**
+   * Razón social del subfabricante.
+   * @property {string} razonSocial
+   */
+  razonSocial: string;
 }
+export interface PlantasDireccionModelo {
+  /**
+   * Nombre de la calle.
+   * @property {string} calle
+   */
+  calle: string;
+
+  /**
+   * Número exterior del domicilio.
+   * @property {number} numExterior
+   */
+  numExterior: number;
+
+  /**
+   * Número interior del domicilio.
+   * @property {number} numInterior
+   */
+  numInterior: number;
+
+  /**
+   * Código postal del domicilio.
+   * @property {number} codigoPostal
+   */
+  codigoPostal: number;
+
+  /**
+   * Nombre de la colonia.
+   * @property {string} colonia
+   */
+  localidad: string;
+
+  /**
+   * Nombre de la delegación o municipio.
+   * @property {string} delegacionMunicipio
+   */
+  delegacionMunicipio: string;
+  /**
+   * Nombre de la entidad federativa.
+   * @property {string} entidadFederativa
+   */
+  entidadFederativa: string;
+  /**
+   * Nombre del país.
+   * @property {string} pais
+   */
+  pais: string;
+  /**
+   * Identificador único del subfabricante.
+   * @property {string} idSubfabricante
+   */
+  idSubfabricante: string;
+  /**
+   * Registro Federal de Contribuyentes del subfabricante.
+   * @property {string} rfc
+   */
+  rfc: string;
+  /**
+   * Domicilio fiscal del solicitante.
+   * @property {string} domicilioFiscalSolicitante
+   */
+  domicilioFiscalSolicitante: string;
+  /**
+   * Razón social del subfabricante.
+   * @property {string} razonSocial
+   */
+  razonSocial: string;
+}
+
 
 /**
  * Representa el estado del trámite 80207.
@@ -103,11 +207,18 @@ export interface Tramite80207State {
    */
   plantasBuscadas: SubfabricanteDireccionModelo[];
 
+  
+  /**
+   * Lista de plantas que se agregarán al subfabricante.
+   * @property {PlantasDireccionModelo[]} plantas
+   */
+  plantas: PlantasDireccionModelo[];
+
   /**
    * Lista de plantas de subfabricantes que se agregarán.
    * @property {SubfabricanteDireccionModelo[]} plantasSubfabricantesAgregar
    */
-  plantasSubfabricantesAgregar: SubfabricanteDireccionModelo[];
+  plantasSubfabricantesAgregar:PlantasDireccionModelo[];
 
   /**
    * Validación de la forma.
