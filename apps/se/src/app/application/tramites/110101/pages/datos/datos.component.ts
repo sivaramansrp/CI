@@ -98,8 +98,6 @@ export class DatosComponent implements OnInit, OnDestroy {
   }
 
   /**
-
-  /**
    * Método del ciclo de vida que se llama cuando el componente es destruido.
    * Emite un valor y completa el subject `destroyNotifier$` para notificar a cualquier suscripción
    * que debe limpiar recursos y prevenir fugas de memoria.
