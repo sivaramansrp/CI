@@ -59,7 +59,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    */
   tieneValorRfc: boolean = false;
 
-  /**
+    /**
    * Indica si el campo RFC es válido.
    */
   rfcValido: boolean = false;
@@ -78,6 +78,17 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * Suscripción a los cambios en el formulario reactivo.
    */
   private subscription: Subscription = new Subscription();
+
+/**
+   * Bandera que controla la visualización de errores en el formulario.
+   * Se activa cuando hay errores de validación que deben mostrarse.
+   */
+  mostrarError: boolean = false;
+  
+    /**
+   * Flag to track if the "Buscar" button has been clicked
+   */
+  private buscarClicked: boolean = false;
 
   /**
    * Constructor del componente
@@ -205,44 +216,54 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
+ /**
    * Simula una búsqueda de datos basándose en el valor del campo 'representanteRegistro'.
    * Si existe valor, parchea el formulario con datos simulados (MOCK_DATA).
    *
    * @returns {void}
    */
-botonBuscar(): void {
-  const REGISTRO_VALUE = this.representante.get('representanteRegistro')?.value;
-  const REGISTRO_CONTROL = this.representante.get('representanteRegistro');
-
-  if (!REGISTRO_CONTROL?.valid) {
-    this.mostrarNotificacionFormatoIncorrecto();
-    return;
-  }
-
-  if (REGISTRO_VALUE) {
-    this.tieneValorRfc = true;
-    this.mostrarNotificacionDeBusqueda();
-
-    const MOCK_DATA = {
-      representanteRfc: REGISTRO_VALUE,
-      representanteNombre: 'EUROFOODS DE MEXICO',
-      representanteApellidoPaterno: 'GONZALEZ',
-      representanteApellidoMaterno: 'PINAL',
-      representanteTelefono: '618-256-2532',
-      representanteCorreo: 'vucem2.5@hotmail.com',
+  botonBuscar(): void {
+    const REGISTRO_VALUE = this.representante.get(
+      'representanteRegistro'
+    )?.value;
+    const REGISTRO_CONTROL = this.representante.get('representanteRegistro');
+    if(!REGISTRO_VALUE) {
+       this.rfcValido = true;
+      this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ERROR,
+      modo: 'modal',
+      titulo: '',
+      mensaje: 'No se encontró información',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
     };
+    return;
+    }
+    if (!REGISTRO_CONTROL?.valid) {
+      this.rfcValido = true;
+      this.mostrarNotificacionFormatoIncorrecto();
+      return;
+    }
+    if (REGISTRO_VALUE) {
+      this.rfcValido = false;
+      this.buscarClicked = true;
+      this.tieneValorRfc = true;
+      this.mostrarNotificacionDeBusqueda();
+      const MOCK_DATA = {
+        representanteRfc: REGISTRO_VALUE,
+        representanteNombre: 'EUROFOODS DE MEXICO',
+        representanteApellidoPaterno: 'GONZALEZ',
+        representanteApellidoMaterno: 'PINAL',
+        representanteTelefono: '618-256-2532',
+        representanteCorreo: 'vucem2.5@hotmail.com',
+      };
+      this.representante.patchValue(MOCK_DATA);
 
-    this.representante.patchValue(MOCK_DATA);
-
-    // 🔄 Guardar todos los valores en el store después de hacer patch
-    const VALORES = this.representante.getRawValue();
-    Object.keys(VALORES).forEach((campo) => {
-      this.setValoresStore(this.representante, campo);
-    });
+      this.mostrarError = false;
+    }
   }
-}
-
 
   /**
    * Muestra una notificación de búsqueda exitosa.
@@ -296,6 +317,21 @@ botonBuscar(): void {
   }
 
   /**
+   * Validates the representante form and sets the mostrarError flag if validation fails
+   * @returns boolean indicating if the form is valid
+   */
+  public validarFormulario(): boolean {
+    if (!this.representante || this.representante.invalid) {
+      this.representante?.markAllAsTouched();
+      this.mostrarError = true;
+      return false;
+    }
+
+    this.mostrarError = false;
+    return true;
+  }
+
+  /**
    * Método del ciclo de vida OnDestroy.
    *
    * Se ejecuta justo antes de que Angular destruya el componente.
@@ -308,4 +344,69 @@ botonBuscar(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
+
+  
+/**
+ * Valida el formulario del representante legal y verifica si se hizo clic en "Buscar"
+ * @returns boolean que indica si el formulario es válido y se realizó la búsqueda
+ */
+public validarFormularioRepresentante(): boolean {
+  // Obtener el valor del campo RFC y el control del formulario
+  const RFC_VALOR = this.representante.get('representanteRegistro')?.value;
+  const REGISTRO_CONTROL = this.representante.get('representanteRegistro');
+  
+  // Definir los campos requeridos que deben estar llenos
+  const REQ_FIELDS = [
+    'representanteRegistro',
+    'representanteRfc',
+    'representanteNombre',
+    'representanteApellidoPaterno',
+    'representanteApellidoMaterno',
+    'representanteTelefono',
+    'representanteCorreo'
+  ];
+  
+  // Verificar si todos los campos requeridos están llenos
+  const ALL_FIELDS_FILLED = REQ_FIELDS.every(field => {
+    const VALOR = this.representante.get(field)?.value;
+    return VALOR && VALOR.trim() !== '';
+  });
+  
+  // Si todos los campos están llenos, ocultar error y retornar verdadero
+  if (ALL_FIELDS_FILLED) {
+    this.mostrarError = false;
+    return true;
+  }
+
+  // Verificar si el campo RFC tiene valor pero el formato es inválido
+  if (RFC_VALOR && !REGISTRO_CONTROL?.valid) {
+    this.rfcValido = true;
+    this.mostrarNotificacionFormatoIncorrecto();
+    return false;
+  }
+  
+  // Verificar si el campo RFC tiene valor pero no se hizo clic en buscar
+  if (RFC_VALOR && !this.buscarClicked) {
+    this.mostrarError = true;
+    return false;
+  }
+  
+  // Verificar si el campo RFC está vacío
+  if (!RFC_VALOR) {
+    this.representante.markAllAsTouched();
+    this.mostrarError = true;
+    return false;
+  }
+  
+  // Validación regular del formulario
+  if (this.representante.invalid) {
+    this.representante.markAllAsTouched();
+    this.mostrarError = true;
+    return false;
+  }
+  
+  // Ocultar error y retornar verdadero si todo está correcto
+  this.mostrarError = false;
+  return true;
+}
 }

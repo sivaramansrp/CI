@@ -6,8 +6,15 @@
 
 <div class="row">
 <div class="col-md-12">
-  <label class="form-label text-left">Señale si los socios, accionistas, según corresponda, representante legal con facultad para actos de dominio e integrantes de la administración de conformidad con la constitución de la empresa solicitante, se encuentran al corriente en el cumplimiento de sus obligaciones fiscales.*:</label>
+  <label class="form-label text-left"><span class="text-danger">*</span>Señale si los socios, accionistas, según corresponda, representante legal con facultad para actos de dominio e integrantes de la administración de conformidad con la constitución de la empresa solicitante, se encuentran al corriente en el cumplimiento de sus obligaciones fiscales.</label>
 </div>
+
+<div *ngIf="agregarMiembroEmpresaList.length === 0 && registroAgregarMiembroEmpresaForm.get('miembroDeLaEmpresaTabla')?.touched"
+        class="mt-3">
+        <div class="col-md-12 text-danger mb-3">
+          <b>Se debe agregar por lo menos un miembro de la empresa</b>
+        </div>
+      </div>
 
 <div class="col-md-12 accordion-bar">
       <div class="panel-group ficha-collapse" id="accordion">

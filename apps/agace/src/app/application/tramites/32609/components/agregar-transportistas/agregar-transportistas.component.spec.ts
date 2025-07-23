@@ -172,19 +172,6 @@ describe('AgregarTransportistasComponent', () => {
     });
   });
 
-  // describe('Obtención del estado de la solicitud', () => {
-  //   beforeEach(() => {
-  //     fixture.detectChanges();
-  //   });
-
-  //   it('debería obtener el estado de la solicitud y actualizar transportistasLista', () => {
-  //     component.obtenerEstadoSolicitud();
-      
-  //     expect(component.solicitudState).toEqual(mockSolicitudState);
-  //     expect(component.transportistasLista).toEqual(mockTransportistasLista);
-  //   });
-  //   });
-
 
   describe('Funcionalidad de paneles colapsables', () => {
     beforeEach(() => {
@@ -442,7 +429,7 @@ describe('AgregarTransportistasComponent', () => {
       component.modificarTransportista();
       
       expect(spyModal).toHaveBeenCalled();
-      expect(component.mensajeSeleccion).toBe('Seleccione un registro.');
+      expect(component.mensajeSeleccion).toBe('No se encontró información.');
     });
 
     it('debería configurar modo edición y abrir modal con datos del transportista', () => {

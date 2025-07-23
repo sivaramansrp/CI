@@ -502,6 +502,21 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
   modificarItemEmpleado(): void {
     const SELECCIONADAS = this.listaFilaSeleccionadaEmpleado;
   
+    if(this.controlInventariosList.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'No se encontró información',
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+      this.multipleSeleccionPopupAbierto = true;
+      return;
+    }
+
     if (!SELECCIONADAS || SELECCIONADAS.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -600,13 +615,28 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
    * Si hay elementos seleccionados, abre el popup de confirmación de eliminación.
    */
   confirmEliminarEmpleadoItem(): void {
+
+    if(this.controlInventariosList.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'No se encontró información',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.multipleSeleccionPopupAbierto = true;
+      return;
+    }
     if (this.listaFilaSeleccionadaEmpleado.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: CategoriaMensaje.ALERTA,
         modo: 'modal',
         titulo: '',
-        mensaje: 'Debes seleccionar al menos un registro para eliminar.',
+        mensaje: 'Seleccione un registro',
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
@@ -838,10 +868,12 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-  public validarFormularios(): void {
+  public validarFormularios(): boolean {
     // Validar formulario principal de registro
-    if (this.registroControlInventariosForm) {
-      this.registroControlInventariosForm.markAllAsTouched();
+    if (this.registroControlInventariosForm.get('sistemaControlInventariosArt59')) {
+      this.registroControlInventariosForm.get('sistemaControlInventariosArt59')?.markAllAsTouched();
+      return this.registroControlInventariosForm.get('sistemaControlInventariosArt59')?.valid as boolean;
     }
+    return false;
   }
 }

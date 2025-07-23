@@ -258,10 +258,12 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    * Se suscribe a los cambios del estado y actualiza la lista de transportistas.
    * Mantiene sincronizada la información entre el store y el componente.
    */
+
   obtenerEstadoSolicitud(): void {
     this.tramite32609Query.selectTramite32609$?.pipe(takeUntil(this.destroy$))
       .subscribe((data: Tramites32609State) => {
         this.solicitudState = data;
+        this.transportistasLista = this.solicitudState.transportistasLista;
         if (data.transportistasLista) {
           this.transportistasLista = [...data.transportistasLista];
         }
@@ -357,7 +359,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
             this.limpiarCamposEmpresa();
           }
         },
-        error: (error:Error) => {
+        error: (error) => {
           console.error('Error al buscar datos del RFC:', error);
           this.limpiarCamposEmpresa();
         }
@@ -596,7 +598,12 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    * Rellena el formulario con los datos del transportista seleccionado.
    */
   modificarTransportista(): void {
-    if (this.transportistasLista.length === 0 || !this.selectedTransportista) {
+    if (this.transportistasLista.length === 0) {
+    this.mensajeSeleccion = 'No se encontró información.';
+    this.mostrarModalSeleccionRequerida();
+    return;
+    }
+    if (!this.selectedTransportista) {
       this.mensajeSeleccion = 'Seleccione un registro.';
       this.mostrarModalSeleccionRequerida();
       return;
@@ -731,7 +738,6 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
  * Retorna true si hay transportistas, false si la lista está vacía.
  */
 public validarTransportistas(): boolean {
-  // Mark the validation field as touched to show error
   this.transportistaCertificacionForm.get('validacionTransportistas')?.markAsTouched();
   
   return this.transportistasLista.length > 0;

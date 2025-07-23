@@ -10,6 +10,12 @@
     "denominacionRazonsocial": "COMERCIALIZADORA ABC SA DE CV",
     "domicilio": "CALLE EJEMPLO 456, COL. CENTRO, GUADALAJARA",
     "ccat": "CCAT0987654321"
-    
+  },
+
+  "MAVL621207C95": {
+    "enlaceOperativorfc": "MAVL621207C95",
+    "denominacionRazonsocial": "TRANSPORTES MAVAL S.A. DE C.V.",
+    "domicilio": "AVENIDA DE LOS INSURGENTES 1234, COL. NAPOLES, CIUDAD DE MÉXICO",
+    "ccat": "CCAT1122334455"
   }
 }

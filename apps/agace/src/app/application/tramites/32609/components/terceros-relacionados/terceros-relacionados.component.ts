@@ -45,21 +45,42 @@ export class TercerosRelacionadosComponent {
   enlaceOperativoComponent!: EnlaceOperativoComponent;
 
   /**
-   * Valida todos los formularios de terceros relacionados antes de permitir continuar.
-   * Este método coordina la validación de múltiples formularios hijo y se asegura de que
-   * toda la información requerida esté correctamente completada.
-   */
-  validarFormulario(): boolean {
-    // Verificar que ambos formularios sean válidos
-    if (this.representanteLegalComponent.representante.valid &&
-        this.enlaceOperativoComponent.enlaceOperativoDataForm.valid) {
-      return true;
+ * Valida todos los formularios de terceros relacionados antes de permitir continuar.
+ * Este método coordina la validación de múltiples formularios hijo y se asegura de que
+ * toda la información requerida esté correctamente completada.
+ */
+validarFormulario(): boolean {
+  // Inicializar variable de validación como verdadera
+  let isValid = true;
+
+  // Validar formulario del representante legal y verificar que se haya realizado la búsqueda
+  if (this.representanteLegalComponent) {
+    if (!this.representanteLegalComponent.validarFormularioRepresentante()) {
+      isValid = false;
+    }
+  } else {
+    // Si no existe el componente, marcar como inválido
+    isValid = false;
+  }
+
+  //Validar formulario de enlace operativo y verificar que existan datos
+  if (this.enlaceOperativoComponent) {
+    // Validar que exista al menos un enlace operativo en la lista
+    if (!this.enlaceOperativoComponent.validarEnlaceOperativo()) {
+      isValid = false;
     }
     
-    // Si algún formulario es inválido, marcar todos los campos como tocados
-    // para mostrar los mensajes de error correspondientes
-    this.representanteLegalComponent.representante.markAllAsTouched();
-    this.enlaceOperativoComponent.enlaceOperativoDataForm.markAllAsTouched();
-    return false;
-  }    
+    // Validar el formulario del enlace operativo
+    if (this.enlaceOperativoComponent.enlaceOperativoDataForm.invalid) {
+      this.enlaceOperativoComponent.enlaceOperativoDataForm.markAllAsTouched();
+      isValid = false;
+    }
+  } else {
+    // Si no existe el componente, marcar como inválido
+    isValid = false;
+  }
+
+  // Retornar el resultado final de la validación
+  return isValid;
+}      
 }

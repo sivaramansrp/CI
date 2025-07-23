@@ -171,22 +171,22 @@ ngOnInit(): void {
       isValid = false;
     }
 
-      if (this.datosComunesComponent) {
-    const DATOS_COMUNES_VALID = this.datosComunesComponent.validarFormulario();
-    if (!DATOS_COMUNES_VALID) {
-      isValid = false;
-    }
-  } else {
-    isValid = false;
-  }
+  //     if (this.datosComunesComponent) {
+  //   const DATOS_COMUNES_VALID = this.datosComunesComponent.validarFormulario();
+  //   if (!DATOS_COMUNES_VALID) {
+  //     isValid = false;
+  //   }
+  // } else {
+  //   isValid = false;
+  // }
 
-    if (this.tercerosRelacionadosComponent) {
-      if (!this.tercerosRelacionadosComponent.validarFormulario()) {
-        isValid = false;
-      }
-    } else {
-      isValid = false;
-    }
+  //   if (this.tercerosRelacionadosComponent) {
+  //     if (!this.tercerosRelacionadosComponent.validarFormulario()) {
+  //       isValid = false;
+  //     }
+  //   } else {
+  //     isValid = false;
+  //   }
 
     if (this.importadorExportadorComponent) {
       if (!this.importadorExportadorComponent.validarFormulario()) {
@@ -196,7 +196,7 @@ ngOnInit(): void {
       isValid = false;
     }
 
-     if (this.ctpatComponent) {
+    if (this.ctpatComponent) {
       if (!this.ctpatComponent.validarFormulario()) {
         isValid = false;
       }

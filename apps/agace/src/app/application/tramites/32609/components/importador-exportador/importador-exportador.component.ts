@@ -302,6 +302,11 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    */
   @ViewChild('templateSeleccionRequerida') templateSeleccionRequerida!: TemplateRef<void>;
 
+    /**
+   * Referencia al componente de transportistas para validación
+   */
+  @ViewChild('agregarTransportistasRef') componenteAgregarTransportistas!: AgregarTransportistasComponent;
+
   /**
    * Constructor del componente.
    * Inicializa los servicios necesarios y configura las suscripciones iniciales.
@@ -1114,6 +1119,10 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
       this.tramite32609Store.establecerDatos({ [campo]: CONTROL.value });
     }
+
+    if (campo === 'comercioExteriorRealizado') {
+    this.actualizarValidacionBasadaEnComercioExterior(CONTROL?.value);
+    }
   }
 
   /**
@@ -1203,4 +1212,101 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+
+  
+  /**
+ * Determines if the table should be validated based on form values
+ */
+ debeValidarTabla(): boolean {
+  const ES_PARTE_GRUPO = this.importadorExportadorForm.get('esParteGrupoComercioExterior')?.value;
+  return ES_PARTE_GRUPO === '1';
+}
+/**
+ * Checks if the table has data when required
+ */
+public validarTablaDatos(): boolean {
+  if (this.debeValidarTabla()) {
+    return this.tablaDatos.length > 0;
+  }
+  return true; 
+}
+
+/**
+ * Verifica si el formulario `importadorExportadorForm` es válido.
+ * Si el formulario es válido, retorna `true`. 
+ * Si no es válido, marca todos los campos como tocados para mostrar los errores y retorna `false`.
+ */
+ validarFormulario(): boolean {
+  let esValido = true;
+  
+  // Validate main form
+  if (this.importadorExportadorForm.invalid) {
+    this.importadorExportadorForm.markAllAsTouched();
+    esValido = false;
+  }
+  
+  // Validate payment fields specifically (same as blur validation)
+  this.validarCamposPago();
+  if (this.mostrarError) {
+    esValido = false;
+  }
+   // Validate transportistas
+  if (this.componenteAgregarTransportistas && !this.componenteAgregarTransportistas.validarTransportistas()) {
+    esValido = false;
+  }
+  return esValido;
+}
+
+/**
+ * Configura la validación dinámica basada en el valor de comercioExteriorRealizado
+ */
+configurarValidacionDinamica(): void {
+  const COMERCIO_EXTERIORCONTROL = this.importadorExportadorForm.get('comercioExteriorRealizado');
+  
+  if (COMERCIO_EXTERIORCONTROL) {
+    // Escuchar cambios en comercioExteriorRealizado
+    COMERCIO_EXTERIORCONTROL.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(value => {
+      this.actualizarValidacionBasadaEnComercioExterior(value);
+    });
+    
+    // Establecer validación inicial
+    this.actualizarValidacionBasadaEnComercioExterior(COMERCIO_EXTERIORCONTROL.value);
+  }
+}
+
+
+/**
+ * Actualiza la validación del formulario basada en el valor de comercioExteriorRealizado
+ */
+actualizarValidacionBasadaEnComercioExterior(value: string): void {
+  const FECHA_INICIO_CONTROL = this.importadorExportadorForm.get('fechaInicioComercio');
+  const ES_PARTE_GRUPO_CONTROL = this.importadorExportadorForm.get('esParteGrupoComercioExterior');
+  const FUSION_ESCISION_CONTROL = this.importadorExportadorForm.get('fusionEscisionConOperacionExterior');
+  const EMPRESA_EXTRANJERA_CONTROL = this.importadorExportadorForm.get('empresaExtranjeraIMMEX');
+  
+  if (value === '1') {
+    FECHA_INICIO_CONTROL?.setValidators([Validators.required]);
+    ES_PARTE_GRUPO_CONTROL?.clearValidators();
+    FUSION_ESCISION_CONTROL?.clearValidators();
+    EMPRESA_EXTRANJERA_CONTROL?.clearValidators();
+  } else if (value === '0') {
+    FECHA_INICIO_CONTROL?.clearValidators();
+    ES_PARTE_GRUPO_CONTROL?.setValidators([Validators.required]);
+    FUSION_ESCISION_CONTROL?.setValidators([Validators.required]);
+    EMPRESA_EXTRANJERA_CONTROL?.setValidators([Validators.required]);
+  } else {
+    FECHA_INICIO_CONTROL?.clearValidators();
+    ES_PARTE_GRUPO_CONTROL?.clearValidators();
+    FUSION_ESCISION_CONTROL?.clearValidators();
+    EMPRESA_EXTRANJERA_CONTROL?.clearValidators();
+  }
+  
+  FECHA_INICIO_CONTROL?.updateValueAndValidity();
+  ES_PARTE_GRUPO_CONTROL?.updateValueAndValidity();
+  FUSION_ESCISION_CONTROL?.updateValueAndValidity();
+  EMPRESA_EXTRANJERA_CONTROL?.updateValueAndValidity();
+}
 }

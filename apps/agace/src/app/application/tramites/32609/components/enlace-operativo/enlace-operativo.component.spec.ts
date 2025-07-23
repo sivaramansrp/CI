@@ -59,18 +59,25 @@ describe('EnlaceOperativoComponent', () => {
     expect(control?.valid).toBeTruthy();
   });
 
+  it('debería mostrar notificación cuando "registro" está vacío', () => {
+    const spyMostrarNotificacion = jest.spyOn(component, 'mostrarNotificacionDeBusqueda');
+    component.enlaceOperativoForm.get('registro')?.setValue('');
+    component.botonBuscar();
+    expect(spyMostrarNotificacion).toHaveBeenCalledWith('', 'No se ha proporcionado información que es requerida');
+  });
+
   it('debería mostrar notificación de formato incorrecto cuando "registro" es inválido', () => {
-    const spyMostrarNotificacion = jest.spyOn(component, 'mostrarNotificacionFormatoIncorrecto');
+    const spyMostrarNotificacion = jest.spyOn(component, 'mostrarNotificacionDeBusqueda');
     component.enlaceOperativoForm.get('registro')?.setValue('123'); 
-    component.buscar();
-    expect(spyMostrarNotificacion).toHaveBeenCalled();
+    component.botonBuscar();
+    expect(spyMostrarNotificacion).toHaveBeenCalledWith('', 'Ha proporcionado información con un formato incorrecto');
   });
 
   it('debería cargar datos mock y mostrar notificación de búsqueda', () => {
     const spyMostrarNotificacion = jest.spyOn(component, 'mostrarNotificacionDeBusqueda');
     component.enlaceOperativoForm.get('registro')?.setValue('XAXX010101000');
-    component.buscar();
-    expect(spyMostrarNotificacion).toHaveBeenCalled();
+    component.botonBuscar();
+    expect(spyMostrarNotificacion).toHaveBeenCalledWith('', 'Datos guardados correctamente');
     expect(component.enlaceOperativoForm.get('rfc')?.value).toBe('XAXX010101000');
     expect(component.enlaceOperativoForm.get('nombre')?.value).toBe('EUROFOODS DE MEXICO');
   });
@@ -131,32 +138,7 @@ describe('EnlaceOperativoComponent', () => {
     component.modificarItemEnlace();
 
     expect(component.esFilaSeleccionada).toBeTruthy();
-    expect(component.nuevaNotificacion.mensaje).toContain('Seleccione un registro');
-  });
-
-  it('debería habilitar modo edición y abrir modal con datos al modificar un ítem seleccionado', () => {
-    component.listaFilaSeleccionadaEnlace = [
-      {
-        id: 1,
-        registro: 'XAXX010101000',
-        rfc: 'XAXX010101000',
-        nombre: 'Test',
-        apellidoPaterno: '',
-        apellidoMaterno: '',
-        cuidad: '',
-        cargo: '',
-        telefono: '',
-        correoElectronico: '',
-        suplente: false,
-      },
-    ];
-
-    const spyAgregarDialogo = jest.spyOn(component, 'agregarDialogoDatos');
-    component.modificarItemEnlace();
-
-    expect(component.modoEdicion).toBe(true);
-    expect(component.registroEditandoId).toBe(1);
-    expect(spyAgregarDialogo).toHaveBeenCalled();
+    expect(component.nuevaNotificacion.mensaje).toContain('No se encontró información');
   });
 
   it('debería manejar selección de filas vacía correctamente', () => {

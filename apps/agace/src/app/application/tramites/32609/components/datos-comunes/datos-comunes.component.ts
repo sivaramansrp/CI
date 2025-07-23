@@ -62,6 +62,16 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   @ViewChild(ControlInventariosComponent) controlInventariosComponent!: ControlInventariosComponent;
 
+    /**
+   * Referencia al componente DomiciliosRfcSolicitanteComponent para acceder a sus métodos de validación.
+   */
+  @ViewChild('domiciliosRfcSolicitanteRef') domiciliosRfcSolicitanteComponent!: DomiciliosRfcSolicitanteComponent;
+
+    /**
+   * Referencia al componente AgregarMiembroEmpresaComponent para acceder a sus métodos de validación.
+   */
+  @ViewChild('agregarMiembroEmpresaRef') agregarMiembroEmpresaComponent!: AgregarMiembroEmpresaComponent;
+
    /**
    * Indicates whether the entity is consolidated in ET.
    *
@@ -233,8 +243,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           proveedores: [this.seccionState?.proveedores || null],
           querellaSATUltimos3Anios: [this.seccionState?.querellaSATUltimos3Anios, Validators.required],
           ingresoInfoContableSAT: [this.seccionState?.ingresoInfoContableSAT, Validators.required],
-          manifests: [true, Validators.required],
-          bajoProtesta: [true, Validators.required],
+          manifests: [false, Validators.required],
+          bajoProtesta: [false, Validators.required],
       }, { validators: alMenosUnSectorValidator });
 
       this.esFormularioInicializado = true;
@@ -544,7 +554,7 @@ onSeleccionVerdadera(evento:string | number, nota?:string): void {
     });
   }
 
-  /**
+   /**
   * @method validarFormulario
   * Valida todos los controles del formulario.
   * 
@@ -554,16 +564,52 @@ onSeleccionVerdadera(evento:string | number, nota?:string): void {
   * 
   * @returns {void}
   */
-  validarFormulario(): void {
-    if(this.forma) {
+validarFormulario(): boolean {
+  let isValid = true;
+
+  if (this.forma) {
     this.forma.markAllAsTouched();
+    this.forma.updateValueAndValidity();
+
+    if (this.forma.invalid) {
+      isValid = false;
     }
-    // Marcar específicamente los campos de empleados si la sección está visible
-    this.marcarCamposEmpleadosComoTocados();
-    // Validar formularios del componente hijo control-inventarios
-    if (this.controlInventariosComponent) {
-      this.controlInventariosComponent.validarFormularios();
+  } else {
+    isValid = false;
+  }
+
+  if (this.controlInventariosComponent) {
+    const CONTROL_INVENTARIOS_VALID = this.controlInventariosComponent.validarFormularios();
+    if (!CONTROL_INVENTARIOS_VALID) {
+      isValid = false;
     }
+  }
+
+  if (this.domiciliosRfcSolicitanteComponent) {
+    const DOMICILIOS_VALID = this.domiciliosRfcSolicitanteComponent.validarDomiciliosRfcSolicitante();
+    if (!DOMICILIOS_VALID) {
+      isValid = false;
+    }
+  }
+
+  if (this.agregarMiembroEmpresaComponent) {
+    const MIEMBRO_EMPRESA_VALID = this.agregarMiembroEmpresaComponent.validarAgregarMiembroEmpresa();
+    if (!MIEMBRO_EMPRESA_VALID) {
+      isValid = false;
+    }
+  }
+
+  return isValid;
+}
+
+  /**
+   * Método que se ejecuta cuando cambia el valor del campo reconocimientoMutuoCTPAT.
+   * Emite el nuevo valor a través del EventEmitter.
+   * 
+   * @param {string} value - Nuevo valor del campo reconocimientoMutuoCTPAT.
+   */
+  onReconocimientoMutuoCTPATChanged(value: string): void {
+    this.reconocimientoMutuoCTPATChange.emit(value);
   }
 
   /**
@@ -672,15 +718,6 @@ public marcarCamposEmpleadosComoTocados(): void {
     BIMESTRE_CONTROL?.markAsTouched();
   }
 }
-
-/**
-   * Maneja el cambio en el reconocimiento mutuo CTPAT y emite el valor seleccionado.
-   *
-   * @param {string} value - El valor seleccionado para reconocimiento mutuo CTPAT.
-   */
-  onReconocimientoMutuoCTPATChanged(value: string): void {
-    this.reconocimientoMutuoCTPATChange.emit(value);
-  }
 
   /**
    * @method ngOnDestroy

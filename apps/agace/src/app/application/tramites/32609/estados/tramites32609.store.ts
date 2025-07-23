@@ -132,7 +132,7 @@ senaleComo: string;
 describaCaracteristicas: string;
 senaleAccion: string;
 indiqueLleva: string;
-describaProcedimiento2: string;
+describaProcedimientoDos: string;
 indiqueSocios: string;
 indiqueForma: string;
 indiqueExisten: string;
@@ -524,7 +524,7 @@ export function createInitialState(): Tramites32609State {
   describaCaracteristicas: '',
   senaleAccion: '',
   indiqueLleva: '',
-  describaProcedimiento2: '',
+  describaProcedimientoDos: '',
   indiqueSocios: '',
   indiqueForma: '',
   indiqueExisten: '',

@@ -779,6 +779,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería mostrar popup cuando se intenta modificar sin selección', () => {
+      component.DomiciliosRfcSolicitanteList = [mockDomicilioData]; // Ensure list is not empty
       component.listaFilaSeleccionadaEmpleado = [];
       component.abrirMultipleSeleccionPopup = jest.fn();
       
@@ -788,6 +789,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería mostrar popup cuando se seleccionan múltiples elementos para modificar', () => {
+      component.DomiciliosRfcSolicitanteList = [mockDomicilioData]; // Ensure list is not empty
       component.listaFilaSeleccionadaEmpleado = [mockDomicilioData, mockDomicilioData];
       component.abrirMultipleSeleccionPopup = jest.fn();
       
@@ -798,6 +800,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería procesar modificación correctamente con un elemento seleccionado', () => {
+      component.DomiciliosRfcSolicitanteList = [mockDomicilioData]; // Ensure list is not empty
       component.listaFilaSeleccionadaEmpleado = [mockDomicilioData];
       component.filaSeleccionadaDomiciliosRfcSolicitante = mockDomicilioData;
       component.actualizarFilaSeleccionada = jest.fn();
@@ -1014,6 +1017,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería mostrar mensaje cuando no hay elementos seleccionados para eliminar', () => {
+      component.DomiciliosRfcSolicitanteList = [mockDomicilioData]; // Ensure list is not empty
       component.listaFilaSeleccionadaEmpleado = [];
       component.abrirMultipleSeleccionPopup = jest.fn();
       
@@ -1026,6 +1030,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería abrir popup de confirmación cuando hay elementos seleccionados', () => {
+      component.DomiciliosRfcSolicitanteList = [mockDomicilioData]; // Ensure list is not empty
       component.listaFilaSeleccionadaEmpleado = [mockDomicilioData];
       component.abrirElimninarConfirmationopup = jest.fn();
       

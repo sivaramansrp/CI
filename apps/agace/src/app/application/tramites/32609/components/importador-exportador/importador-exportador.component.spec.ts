@@ -231,7 +231,7 @@ describe('ImportadorExportadorComponent', () => {
       component.esFormularioSoloLectura = true;
       component.guardarDatosFormulario();
       
-      expect(component.importadorExportadorForm.disabled).toBe(false);
+      expect(component.importadorExportadorForm.disabled).toBe(true);
     });
 
     it('debería habilitar formulario cuando no es solo lectura', () => {
@@ -1019,6 +1019,8 @@ describe('ImportadorExportadorComponent', () => {
     beforeEach(() => {
       component.inicializarFormulario();
       fixture.detectChanges();
+      // Reset mock calls that may have been made during initialization
+      jest.clearAllMocks();
     });
 
     it('debería actualizar valores en el store', () => {

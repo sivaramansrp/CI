@@ -244,6 +244,12 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
   @Output() reconocimientoMutuoCTPATChange = new EventEmitter<string>();
 
   /**
+   * Indica si los datos de respuesta están disponibles.
+   * Se utiliza para determinar si se deben mostrar los datos de respuesta en el formulario.
+   */
+  public mostrarErroresValidacion: boolean = false;
+
+  /**
    * Constructor para DomiciliosRfcSolicitanteBimestreComponent.
    * Inicializa el formulario e inyecta los servicios necesarios.
    * @param fb - FormBuilder para crear formularios reactivos.
@@ -281,8 +287,6 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
       .pipe(takeUntil(this.destroyed$))
       .subscribe((datos: Tramites32609State) => {
         this.seccionState = datos;
-        
-
         if (!this.forma) {
           this.crearFormulario();
         }
@@ -302,7 +306,8 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
    */
   crearFormulario(): void {
     this.forma = this.fb.group({
-      domiciliosRegistrados: [this.seccionState?.domiciliosRegistrados || null]
+      domiciliosRegistrados: [this.seccionState?.domiciliosRegistrados || null],
+      domiciliosRFCTabla: ['']
     });
 
     this.registroDomiciliosRfcSolicitanteForm = this.fb.group({
@@ -696,6 +701,12 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
   modificarItemEmpleado(): void {
     const SELECCIONADAS = this.listaFilaSeleccionadaEmpleado;
   
+     if(this.DomiciliosRfcSolicitanteList.length === 0) {
+      this.abrirMultipleSeleccionPopup('', 'No se encontró información');
+      this.multipleSeleccionPopupAbierto = true;
+      return;
+    }
+
     if (!SELECCIONADAS || SELECCIONADAS.length === 0) {
       this.abrirMultipleSeleccionPopup('', 'Selecciona un registro');
       this.multipleSeleccionPopupAbierto = true;
@@ -745,13 +756,13 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
    * Este método permite personalizar el título, mensaje y etiquetas de los botones del popup.
    * @param titulo - Título del popup
    * @param mensaje - Mensaje a mostrar en el popup
-   * @param txtBtnAceptar - Texto del botón de aceptar (opcional, por defecto 'Cerrar')
+   * @param txtBtnAceptar - Texto del botón de aceptar (opcional, por defecto 'Aceptar')
    * @param txtBtnCancelar - Texto del botón de cancelar (opcional, por defecto '')
    */
   abrirMultipleSeleccionPopup(
     titulo: string,
     mensaje: string,
-    txtBtnAceptar: string = 'Cerrar',
+    txtBtnAceptar: string = 'Aceptar',
     txtBtnCancelar: string = ''
   ): void {
     this.nuevaNotificacion = {
@@ -762,7 +773,7 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
       mensaje: mensaje,
       cerrar: false,
       txtBtnAceptar: txtBtnAceptar,
-      txtBtnCancelar: txtBtnCancelar,
+      txtBtnCancelar: txtBtnCancelar
     };
   }
 
@@ -773,6 +784,13 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
    */
   confirmEliminarEmpleadoItem(): void {
     this.confirmEliminarPopupAbierto = true;
+    if(this.DomiciliosRfcSolicitanteList.length === 0) {
+      this.abrirMultipleSeleccionPopup(
+        '', 
+        'No se encontró información'
+      );
+      return;
+    }
     if (this.listaFilaSeleccionadaEmpleado.length === 0) {
       this.abrirMultipleSeleccionPopup(
         '', 
@@ -924,5 +942,79 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
+  }
+
+   /**
+ * Valida que exista al menos un domicilio registrado en la lista.
+ * boolean indicating if there are domicilios registrados
+ */
+public validarDomiciliosRfcSolicitante(): boolean {
+  this.mostrarErroresValidacion = true;
+
+  let isValid = true;
+
+  if (this.DomiciliosRfcSolicitanteList.length === 0) {
+    // Mark the control as touched so the error shows
+    this.forma.get('domiciliosRFCTabla')?.markAsTouched();
+    isValid = false;
+  } else {
+    if (!this.tieneInstalacionPrincipal()) {
+      isValid = false;
+    }
+    if (!this.tieneOperacionesComercioExterior()) {
+      isValid = false;
+    }
+  }
+
+  return isValid;
+}
+/**
+ * Verifica si existe al menos una instalación principal con valor "Sí"
+ * @returns boolean indicating if there's at least one main installation
+ */
+public tieneInstalacionPrincipal(): boolean {
+  return this.DomiciliosRfcSolicitanteList.some(
+    item => item.InstalacionesPrincipales === 'Sí'
+  );
+}
+/**
+ * Verifica si existe al menos una instalación que realice operaciones de comercio exterior
+ * @returns boolean indicating if there's at least one installation doing foreign trade operations
+ */
+public tieneOperacionesComercioExterior(): boolean {
+  return this.DomiciliosRfcSolicitanteList.some(
+    item => item.realizaActividadComercioExterior === 'Sí'
+  );
+}
+
+  /**
+   * Limpia las validaciones según los datos disponibles
+   */
+  limpiarValidacionesSegunDatos(): void {
+    // Limpiar validación de domicilios si hay al menos uno
+    if (this.DomiciliosRfcSolicitanteList.length > 0) {
+      this.forma.get('domiciliosRFCTabla')?.markAsUntouched();
+      
+      // Solo limpiar las validaciones específicas si se cumplen las condiciones
+      if (this.tieneInstalacionPrincipal()) {
+        this.forma.get('instalacionPrincipalTabla')?.markAsUntouched();
+      }
+      
+      if (this.tieneOperacionesComercioExterior()) {
+        this.forma.get('operacionesComercioExteriorTabla')?.markAsUntouched();
+      }
+    } else {
+      // Si no hay datos, asegurar que las validaciones específicas no se muestren
+      this.forma.get('instalacionPrincipalTabla')?.markAsUntouched();
+      this.forma.get('operacionesComercioExteriorTabla')?.markAsUntouched();
+    }
+  }
+  /**
+   * Resetea todas las validaciones a su estado inicial
+   */
+  resetearValidaciones(): void {
+    this.forma.get('domiciliosRFCTabla')?.markAsUntouched();
+    this.forma.get('instalacionPrincipalTabla')?.markAsUntouched();
+    this.forma.get('operacionesComercioExteriorTabla')?.markAsUntouched();
   }
 }

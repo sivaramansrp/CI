@@ -293,7 +293,8 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
       tipoPersona: [null, Validators.required],
       apellidoPaterno: ['', Validators.required],
       nombre: ['', Validators.required],
-      nombreEmpresa: ['', Validators.required]
+      nombreEmpresa: ['', Validators.required],
+      miembroDeLaEmpresaTabla: [''],
     });
     
     this.actualizarEstadoFormulario();
@@ -468,6 +469,9 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
       );
 
       this.tramite32609Store.establecerDatos({agregarMiembroEmpresa:this.agregarMiembroEmpresaList});
+      if (this.registroAgregarMiembroEmpresaForm.get('miembroDeLaEmpresaTabla')) {
+        this.registroAgregarMiembroEmpresaForm.get('miembroDeLaEmpresaTabla')?.markAsUntouched();
+      }
       this.filaSeleccionadaAgregarMiembroEmpresa = {} as AgregarMiembroEmpresaTabla;
     }
   }
@@ -545,6 +549,21 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
   modificarItemEmpleado(): void {
     const SELECCIONADAS = this.listaFilaSeleccionadaEmpleado;
   
+    if(this.agregarMiembroEmpresaList.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'No se encontró información',
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+      this.multipleSeleccionPopupAbierto = true;
+      return;
+    }
+
     if (!SELECCIONADAS || SELECCIONADAS.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -655,6 +674,22 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
    * Si hay elementos seleccionados, abre el popup de confirmación de eliminación.
    */
   confirmEliminarEmpleadoItem(): void {
+    
+     if(this.agregarMiembroEmpresaList.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'No se encontró información',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.multipleSeleccionPopupAbierto = true;
+      return;
+    }
+
     if (this.listaFilaSeleccionadaEmpleado.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -869,5 +904,19 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 
+  /**
+ * Valida que exista al menos un miembro de empresa registrado en la lista.
+ * @returns boolean indicating if there are miembros de empresa registrados
+ */
+public validarAgregarMiembroEmpresa(): boolean {
+  // Marcar el campo como tocado para mostrar el error
+  this.registroAgregarMiembroEmpresaForm.get('miembroDeLaEmpresaTabla')?.markAsTouched();
+  
+  if (this.agregarMiembroEmpresaList.length === 0) {
+    return false;
+  }
+  
+  return true;
+}
   
 }

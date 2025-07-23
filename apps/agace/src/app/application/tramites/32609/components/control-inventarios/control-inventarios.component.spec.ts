@@ -527,7 +527,7 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
       component.confirmEliminarEmpleadoItem();
       
       expect(component.multipleSeleccionPopupAbierto).toBe(true);
-      expect(component.nuevaNotificacion.mensaje).toBe('Debes seleccionar al menos un registro para eliminar.');
+      expect(component.nuevaNotificacion.mensaje).toBe('Seleccione un registro');
     });
 
     it('✅ debería abrir popup de confirmación cuando hay elementos seleccionados', () => {

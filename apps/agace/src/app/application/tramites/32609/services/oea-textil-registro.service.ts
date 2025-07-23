@@ -121,18 +121,18 @@ sectorListaDeSelects(): Observable<{
    * @returns Observable con los datos de la empresa
    */
   conseguirDatosPorRFC(_rfc: string): Observable<{ [key: string]: RFCEnlaceOperativo }> {
-    return this.http.get<{ [key: string]: RFCEnlaceOperativo }>('assets/json/32605/rfc-datos.json');
+    return this.http.get<{ [key: string]: RFCEnlaceOperativo }>('assets/json/32609/rfc-datos.json');
   }
   /**
    * Obtiene la lista de transportistas desde un archivo JSON local.
    * @returns Observable con un arreglo de TransportistasTable.
    */
   conseguirTransportistasLista(_rfc: string): Observable<{ [key: string]: TransportistasListaInterface }> {
-    return this.http.get<{ [key: string]: TransportistasListaInterface }>('assets/json/32605/transportistas-lista.json');
+    return this.http.get<{ [key: string]: TransportistasListaInterface }>('assets/json/32609/transportistas-lista.json');
   }
 
    getDatos(): Observable<Tramites32609State> {
-    return this.http.get<Tramites32609State>('assets/json/32605/datos.json');
+    return this.http.get<Tramites32609State>('assets/json/32609/datos.json');
   }
 
 

@@ -1,5 +1,10 @@
 <div class="container form-container">
   <ng-titulo titulo="Enlace Operativo" />
+  <div class="row" *ngIf="mostrarError">
+    <div class="col-md-12 text-danger mt-3">
+        <b>Se debe agregar por lo menos un enlace operativo</b>
+    </div>
+  </div>  
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="panel-group ficha-collapse" id="accordion">
@@ -42,14 +47,14 @@
   <div class="row">
     <div class="col-md-12">
       <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="agregarDialogoDatos()">
-                Agregar
+            <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura" (click)="confirmeliminarEnlaceItem()">
+                Eliminar
             </button>
             <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura" (click)="modificarItemEnlace()">
                 Modificar
             </button>
-            <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura" (click)="confirmeliminarEnlaceItem()">
-                Eliminar
+            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="agregarDialogoDatos()">
+                Agregar
             </button>
         </div>
     </div>
@@ -88,7 +93,7 @@
             </div>
             <div class="col-md-8">
                 <div class="btn-group">
-                  <button class="btn btn-default" type="button" (click)="buscar()">Buscar</button>
+                  <button class="btn btn-default" type="button" (click)="botonBuscar()">Buscar</button>
                 </div>
               </div>
           </div>
@@ -240,14 +245,7 @@
 <lib-notificaciones
   *ngIf="tieneValorRfc"
   [notificacionInput]="nuevaNotificacion"
-  (confirmacionModal)="mostrarNotificacionDeBusqueda()"
->
-</lib-notificaciones>
-
-<lib-notificaciones
-  *ngIf="rfcValido "
-  [notificacionInput]="nuevaNotificacion"
-  (confirmacionModal)="mostrarNotificacionFormatoIncorrecto()"
+  (confirmacionModal)="botonBuscar()"
 >
 </lib-notificaciones>
 
@@ -259,7 +257,7 @@
 </lib-notificaciones>
 
 <lib-notificaciones
-  *ngIf="multipleSeleccionPopupAbierto "
+  *ngIf="multipleSeleccionPopupAbierto"
   [notificacionInput]="nuevaNotificacion"
   (confirmacionModal)="confirmeliminarEnlaceItem()"
 >

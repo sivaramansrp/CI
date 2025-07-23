@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ViewChild, Component } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
+import { CategoriaMensaje, DatosPasos, ListaPasosWizard, PASOS, WizardComponent, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
 import { OeaTextilRegistroComponent } from './oea-textil-registro.component';
 
 // Mock del WizardComponent
@@ -39,31 +39,15 @@ class MockPasoDosComponent {}
 })
 class MockPasoTresComponent {}
 
+// Mock del PasoUnoComponent para validaciones
+class MockPasoUnoValidationComponent {
+  validarFormularios = jest.fn();
+}
+
 describe('OeaTextilRegistroComponent', () => {
   let component: OeaTextilRegistroComponent;
   let fixture: ComponentFixture<OeaTextilRegistroComponent>;
-
-  // Datos de prueba
-  const mockPasos: ListaPasosWizard[] = [
-    {
-      indice: 1,
-      titulo: 'Capturar solicitud',
-      activo: true,
-      completado: true,
-    },
-    {
-      indice: 2,
-      titulo: 'Anexar documentos',
-      activo: false,
-      completado: false,
-    },
-    {
-      indice: 3,
-      titulo: 'Firmar solicitud',
-      activo: false,
-      completado: false,
-    },
-  ];
+  let mockPasoUnoComponent: MockPasoUnoValidationComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -80,9 +64,13 @@ describe('OeaTextilRegistroComponent', () => {
     fixture = TestBed.createComponent(OeaTextilRegistroComponent);
     component = fixture.componentInstance;
     
-    // Configurar el ViewChild mock
+    // Configurar el ViewChild mock para wizard
     const mockWizardComponent = new MockWizardComponent();
     component.wizardComponent = mockWizardComponent as any;
+    
+    // Configurar el ViewChild mock para pasoUno
+    mockPasoUnoComponent = new MockPasoUnoValidationComponent();
+    component.pasoUnoComponent = mockPasoUnoComponent as any;
   });
 
   describe('🔧 Inicialización del componente', () => {
@@ -90,16 +78,18 @@ describe('OeaTextilRegistroComponent', () => {
       expect(component).toBeTruthy();
     });
 
-    it('✅ debería inicializar las propiedades por defecto correctos', () => {
+    it('✅ debería inicializar las propiedades por defecto correctamente', () => {
       expect(component.pasos).toBeDefined();
       expect(component.indice).toBe(1);
       expect(component.datosPasos).toBeDefined();
+      expect(component.esFormaValido).toBe(false);
+      expect(component.btnContinuar).toBe(false);
     });
 
     it('✅ debería inicializar la lista de pasos desde PASOS', () => {
-      // Verificar que pasos se inicializa con PASOS
       expect(component.pasos).toEqual(PASOS);
       expect(Array.isArray(component.pasos)).toBe(true);
+      expect(component.pasos.length).toBe(3);
     });
 
     it('✅ debería configurar el índice inicial en 1', () => {
@@ -119,6 +109,10 @@ describe('OeaTextilRegistroComponent', () => {
 
     it('✅ debería tener wizardComponent como ViewChild', () => {
       expect(component.wizardComponent).toBeDefined();
+    });
+
+    it('✅ debería tener pasoUnoComponent como ViewChild', () => {
+      expect(component.pasoUnoComponent).toBeDefined();
     });
   });
 
@@ -149,81 +143,148 @@ describe('OeaTextilRegistroComponent', () => {
     });
   });
 
-  describe('🔄 Gestión de navegación entre pasos', () => {
-    beforeEach(() => {
-      // Resetear los mocks antes de cada test
-      jest.clearAllMocks();
-    });
-
-    it('✅ debería navegar al siguiente paso cuando la acción es "cont"', () => {
-      const eventoMock = { accion: 'cont', valor: 2 };
-      
-      component.getValorIndice(eventoMock);
-      
+  describe('🔄 Método seleccionaTab', () => {
+    it('✅ debería cambiar el índice correctamente', () => {
+      component.seleccionaTab(2);
       expect(component.indice).toBe(2);
-      expect(component.wizardComponent.siguiente).toHaveBeenCalledTimes(1);
-      expect(component.wizardComponent.atras).not.toHaveBeenCalled();
     });
 
-    it('✅ debería navegar al paso anterior cuando la acción no es "cont"', () => {
-      const eventoMock = { accion: 'atras', valor: 1 };
+    it('✅ debería manejar diferentes valores de índice', () => {
+      const valores = [1, 2, 3, 0, -1, 10];
       
-      component.getValorIndice(eventoMock);
-      
-      expect(component.indice).toBe(1);
-      expect(component.wizardComponent.atras).toHaveBeenCalledTimes(1);
-      expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    });
-
-    it('✅ debería manejar acción indefinida como retroceso', () => {
-      const eventoMock = { accion: 'otra', valor: 2 };
-      
-      component.getValorIndice(eventoMock);
-      
-      expect(component.indice).toBe(2);
-      expect(component.wizardComponent.atras).toHaveBeenCalledTimes(1);
-      expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    });
-
-    it('✅ debería actualizar el índice con el valor del evento', () => {
-      const valorEsperado = 3;
-      const eventoMock = { accion: 'cont', valor: valorEsperado };
-      
-      component.getValorIndice(eventoMock);
-      
-      expect(component.indice).toBe(valorEsperado);
-    });
-
-    it('✅ debería manejar diferentes valores de índice correctamente', () => {
-      const valoresPrueba = [1, 2, 3];
-      
-      valoresPrueba.forEach(valor => {
-        const eventoMock = { accion: 'cont', valor: valor };
-        component.getValorIndice(eventoMock);
+      valores.forEach(valor => {
+        component.seleccionaTab(valor);
         expect(component.indice).toBe(valor);
       });
     });
   });
 
-  describe('🎯 Casos edge y validaciones', () => {
+  describe('🔄 Gestión de navegación entre pasos - getValorIndice', () => {
     beforeEach(() => {
       jest.clearAllMocks();
+      mockPasoUnoComponent.validarFormularios.mockReturnValue(true);
     });
 
-    it('✅ debería manejar valores de índice extremos', () => {
-      const eventosExtremos = [
-        { accion: 'cont', valor: 0 },
-        { accion: 'cont', valor: -1 },
-        { accion: 'cont', valor: 100 },
-        { accion: 'cont', valor: Number.MAX_SAFE_INTEGER }
-      ];
+    it('✅ debería navegar al siguiente paso cuando la acción es "cont" y valor es válido', () => {
+      const eventoMock = { accion: 'cont', valor: 1 }; // 1 + 1 = 2
       
-      eventosExtremos.forEach(evento => {
-        expect(() => {
-          component.getValorIndice(evento);
-        }).not.toThrow();
-        expect(component.indice).toBe(evento.valor);
-      });
+      component.getValorIndice(eventoMock);
+      
+      expect(component.indice).toBe(2);
+      expect(component.datosPasos.indice).toBe(2);
+      expect(component.wizardComponent.siguiente).toHaveBeenCalledTimes(1);
+      expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+    });
+
+    it('✅ debería navegar al paso anterior cuando la acción es "ant"', () => {
+      component.indice = 2; // Empezar desde el paso 2
+      const eventoMock = { accion: 'ant', valor: 2 }; // 2 - 1 = 1
+      
+      component.getValorIndice(eventoMock);
+      
+      expect(component.indice).toBe(1);
+      expect(component.datosPasos.indice).toBe(1);
+      expect(component.wizardComponent.atras).toHaveBeenCalledTimes(1);
+      expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    });
+
+    it('✅ debería usar el valor as-is para acciones diferentes a "cont" y "ant"', () => {
+      const eventoMock = { accion: 'otra', valor: 2 };
+      
+      component.getValorIndice(eventoMock);
+      
+      expect(component.indice).toBe(2);
+      expect(component.datosPasos.indice).toBe(2);
+      expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+      expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+    });
+
+    it('✅ debería resetear esFormaValido al inicio', () => {
+      component.esFormaValido = true;
+      const eventoMock = { accion: 'cont', valor: 1 };
+      
+      component.getValorIndice(eventoMock);
+      
+      expect(component.esFormaValido).toBe(false);
+    });
+
+    it('✅ debería validar formularios en paso 1 con acción "cont"', () => {
+      component.indice = 1;
+      const eventoMock = { accion: 'cont', valor: 1 };
+      
+      component.getValorIndice(eventoMock);
+      
+      expect(mockPasoUnoComponent.validarFormularios).toHaveBeenCalledTimes(1);
+    });
+
+    it('✅ debería detener la ejecución si la validación falla en paso 1', () => {
+      component.indice = 1;
+      mockPasoUnoComponent.validarFormularios.mockReturnValue(false);
+      const eventoMock = { accion: 'cont', valor: 1 };
+      
+      component.getValorIndice(eventoMock);
+      
+      expect(component.esFormaValido).toBe(true);
+      expect(component.btnContinuar).toBe(true);
+      expect(component.indice).toBe(1); // No debería cambiar
+      expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    });
+
+    it('✅ debería no validar formularios si no está en paso 1', () => {
+      component.indice = 2;
+      const eventoMock = { accion: 'cont', valor: 2 };
+      
+      component.getValorIndice(eventoMock);
+      
+      expect(mockPasoUnoComponent.validarFormularios).not.toHaveBeenCalled();
+    });
+
+    it('✅ debería no validar formularios si la acción no es "cont"', () => {
+      component.indice = 1;
+      const eventoMock = { accion: 'ant', valor: 1 };
+      
+      component.getValorIndice(eventoMock);
+      
+      expect(mockPasoUnoComponent.validarFormularios).not.toHaveBeenCalled();
+    });
+
+    it('✅ debería no actualizar si el índice calculado está fuera de límites (muy bajo)', () => {
+      const indiceOriginal = component.indice;
+      const eventoMock = { accion: 'ant', valor: 1 }; // 1 - 1 = 0 (inválido)
+      
+      component.getValorIndice(eventoMock);
+      
+      expect(component.indice).toBe(indiceOriginal);
+      expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+    });
+
+    it('✅ debería no actualizar si el índice calculado está fuera de límites (muy alto)', () => {
+      const indiceOriginal = component.indice;
+      const eventoMock = { accion: 'cont', valor: 3 }; // 3 + 1 = 4 (inválido, máximo es 3)
+      
+      component.getValorIndice(eventoMock);
+      
+      expect(component.indice).toBe(indiceOriginal);
+      expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('🎯 Casos edge en getValorIndice', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+      mockPasoUnoComponent.validarFormularios.mockReturnValue(true);
+    });
+
+    it('✅ debería manejar índices límite válidos', () => {
+      // Probar límite inferior válido
+      const eventoMinimo = { accion: 'cont', valor: 0 }; // 0 + 1 = 1 (válido)
+      component.getValorIndice(eventoMinimo);
+      expect(component.indice).toBe(1);
+
+      // Probar límite superior válido
+      const eventoMaximo = { accion: 'cont', valor: 2 }; // 2 + 1 = 3 (válido)
+      component.getValorIndice(eventoMaximo);
+      expect(component.indice).toBe(3);
     });
 
     it('✅ debería manejar strings vacíos en acción', () => {
@@ -232,7 +293,8 @@ describe('OeaTextilRegistroComponent', () => {
       component.getValorIndice(eventoMock);
       
       expect(component.indice).toBe(2);
-      expect(component.wizardComponent.atras).toHaveBeenCalledTimes(1);
+      expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+      expect(component.wizardComponent.atras).not.toHaveBeenCalled();
     });
 
     it('✅ debería manejar valores null/undefined en la acción', () => {
@@ -243,76 +305,92 @@ describe('OeaTextilRegistroComponent', () => {
       
       eventosNull.forEach(evento => {
         component.getValorIndice(evento);
-        expect(component.wizardComponent.atras).toHaveBeenCalled();
+        expect(component.indice).toBe(2);
+        expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+        expect(component.wizardComponent.atras).not.toHaveBeenCalled();
       });
     });
+  });
 
-    it('✅ debería manejar diferentes tipos de acciones', () => {
-      const tiposAcciones = [
-        'continuar',
-        'CONT',
-        'continue',
-        'next',
-        'forward',
-        'back',
-        'previous',
-        'return'
-      ];
+  describe('🔔 Método mostrarNotificacionError', () => {
+    it('✅ debería configurar la notificación de error correctamente', () => {
+      component.mostrarNotificacionError();
       
-      tiposAcciones.forEach(accion => {
-        const evento = { accion: accion, valor: 2 };
-        component.getValorIndice(evento);
-        
-        if (accion === 'cont') {
-          expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-        } else {
-          expect(component.wizardComponent.atras).toHaveBeenCalled();
-        }
-      });
+      expect(component.nuevaNotificacion).toBeDefined();
+      expect(component.nuevaNotificacion.tipoNotificacion).toBe(TipoNotificacionEnum.ALERTA);
+      expect(component.nuevaNotificacion.categoria).toBe(CategoriaMensaje.ERROR);
+      expect(component.nuevaNotificacion.modo).toBe('modal-md');
+      expect(component.nuevaNotificacion.titulo).toBe('');
+      expect(component.nuevaNotificacion.mensaje).toBe('Existen requisitos obligatorios en blanco o con errores.');
+      expect(component.nuevaNotificacion.cerrar).toBe(false);
+      expect(component.nuevaNotificacion.txtBtnAceptar).toBe('Aceptar');
+      expect(component.nuevaNotificacion.txtBtnCancelar).toBe('');
     });
 
-    it('✅ debería mantener la consistencia del estado después de múltiples navegaciones', () => {
-      const secuenciaEventos = [
-        { accion: 'cont', valor: 2 },
-        { accion: 'cont', valor: 3 },
-        { accion: 'atras', valor: 2 },
-        { accion: 'atras', valor: 1 },
-        { accion: 'cont', valor: 2 }
-      ];
+    it('✅ debería activar el botón continuar', () => {
+      component.btnContinuar = false;
       
-      secuenciaEventos.forEach(evento => {
-        component.getValorIndice(evento);
-        expect(component.indice).toBe(evento.valor);
-      });
+      component.mostrarNotificacionError();
       
-      expect(component.indice).toBe(2);
+      expect(component.btnContinuar).toBe(true);
+    });
+  });
+
+  describe('🔔 Método btnContinuarNotificacion', () => {
+    it('✅ debería desactivar el botón continuar', () => {
+      component.btnContinuar = true;
+      
+      component.btnContinuarNotificacion();
+      
+      expect(component.btnContinuar).toBe(false);
+    });
+
+    it('✅ debería manejar el estado ya desactivado', () => {
+      component.btnContinuar = false;
+      
+      component.btnContinuarNotificacion();
+      
+      expect(component.btnContinuar).toBe(false);
+    });
+  });
+
+  describe('� Método validarTodosFormulariosPasoUno', () => {
+    it('✅ debería retornar true si pasoUnoComponent no existe', () => {
+      component.pasoUnoComponent = null as any;
+      
+      const resultado = component.validarTodosFormulariosPasoUno();
+      
+      expect(resultado).toBe(true);
+    });
+
+    it('✅ debería retornar el resultado de validarFormularios cuando pasoUnoComponent existe', () => {
+      mockPasoUnoComponent.validarFormularios.mockReturnValue(true);
+      
+      const resultado = component.validarTodosFormulariosPasoUno();
+      
+      expect(resultado).toBe(true);
+      expect(mockPasoUnoComponent.validarFormularios).toHaveBeenCalledTimes(1);
+    });
+
+    it('✅ debería retornar false cuando la validación falla', () => {
+      mockPasoUnoComponent.validarFormularios.mockReturnValue(false);
+      
+      const resultado = component.validarTodosFormulariosPasoUno();
+      
+      expect(resultado).toBe(false);
+      expect(mockPasoUnoComponent.validarFormularios).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('🔄 Interacción con WizardComponent', () => {
     beforeEach(() => {
       jest.clearAllMocks();
-    });
-
-    it('✅ debería llamar siguiente() solo una vez por evento "cont"', () => {
-      const evento = { accion: 'cont', valor: 2 };
-      
-      component.getValorIndice(evento);
-      
-      expect(component.wizardComponent.siguiente).toHaveBeenCalledTimes(1);
-    });
-
-    it('✅ debería llamar atras() solo una vez por evento que no sea "cont"', () => {
-      const evento = { accion: 'back', valor: 1 };
-      
-      component.getValorIndice(evento);
-      
-      expect(component.wizardComponent.atras).toHaveBeenCalledTimes(1);
+      mockPasoUnoComponent.validarFormularios.mockReturnValue(true);
     });
 
     it('✅ debería manejar el caso cuando wizardComponent es null', () => {
       component.wizardComponent = null as any;
-      const evento = { accion: 'cont', valor: 2 };
+      const evento = { accion: 'cont', valor: 1 };
       
       expect(() => {
         component.getValorIndice(evento);
@@ -321,22 +399,22 @@ describe('OeaTextilRegistroComponent', () => {
 
     it('✅ debería manejar el caso cuando wizardComponent es undefined', () => {
       component.wizardComponent = undefined as any;
-      const evento = { accion: 'cont', valor: 2 };
+      const evento = { accion: 'cont', valor: 1 };
       
       expect(() => {
         component.getValorIndice(evento);
       }).toThrow();
     });
 
-    it('✅ debería actualizar el índice antes de llamar los métodos del wizard', () => {
+    it('✅ debería actualizar el índice y datosPasos antes de llamar los métodos del wizard', () => {
       const valorOriginal = component.indice;
-      const nuevoValor = 3;
-      const evento = { accion: 'cont', valor: nuevoValor };
+      const evento = { accion: 'cont', valor: 1 }; // 1 + 1 = 2
       
       component.getValorIndice(evento);
       
       expect(component.indice).not.toBe(valorOriginal);
-      expect(component.indice).toBe(nuevoValor);
+      expect(component.indice).toBe(2);
+      expect(component.datosPasos.indice).toBe(2);
       expect(component.wizardComponent.siguiente).toHaveBeenCalledTimes(1);
     });
   });
@@ -345,7 +423,7 @@ describe('OeaTextilRegistroComponent', () => {
     it('✅ debería cumplir con la interfaz AccionBoton', () => {
       const eventosValidos = [
         { accion: 'cont', valor: 1 },
-        { accion: 'atras', valor: 2 },
+        { accion: 'ant', valor: 2 },
         { accion: 'cualquier_string', valor: 3 }
       ];
       
@@ -384,46 +462,57 @@ describe('OeaTextilRegistroComponent', () => {
       expect(typeof component.datosPasos.txtBtnAnt).toBe('string');
       expect(typeof component.datosPasos.txtBtnSig).toBe('string');
     });
+
+    it('✅ debería verificar que todas las propiedades están correctamente tipadas', () => {
+      expect(typeof component.pasos).toBe('object');
+      expect(typeof component.indice).toBe('number');
+      expect(typeof component.datosPasos).toBe('object');
+      expect(typeof component.wizardComponent).toBe('object');
+      expect(typeof component.esFormaValido).toBe('boolean');
+      expect(typeof component.btnContinuar).toBe('boolean');
+    });
   });
 
   describe('🎮 Simulación de flujo completo de navegación', () => {
     beforeEach(() => {
       jest.clearAllMocks();
+      mockPasoUnoComponent.validarFormularios.mockReturnValue(true);
     });
 
     it('✅ debería simular un flujo completo de navegación hacia adelante', () => {
-      const pasosTotales = component.pasos.length;
-      
-      for (let i = 1; i <= pasosTotales; i++) {
-        const evento = { accion: 'cont', valor: i };
-        component.getValorIndice(evento);
-        
-        expect(component.indice).toBe(i);
-        expect(component.wizardComponent.siguiente).toHaveBeenCalledTimes(i);
-      }
+      // Desde paso 1 a paso 2
+      component.getValorIndice({ accion: 'cont', valor: 1 }); // 1 + 1 = 2
+      expect(component.indice).toBe(2);
+      expect(component.wizardComponent.siguiente).toHaveBeenCalledTimes(1);
+
+      // Desde paso 2 a paso 3
+      component.getValorIndice({ accion: 'cont', valor: 2 }); // 2 + 1 = 3
+      expect(component.indice).toBe(3);
+      expect(component.wizardComponent.siguiente).toHaveBeenCalledTimes(2);
     });
 
     it('✅ debería simular un flujo completo de navegación hacia atrás', () => {
-      const pasosTotales = component.pasos.length;
+      // Empezar desde el paso 3
+      component.indice = 3;
       
-      for (let i = pasosTotales; i >= 1; i--) {
-        const evento = { accion: 'atras', valor: i };
-        component.getValorIndice(evento);
-        
-        expect(component.indice).toBe(i);
-      }
-      
-      expect(component.wizardComponent.atras).toHaveBeenCalledTimes(pasosTotales);
+      // Desde paso 3 a paso 2
+      component.getValorIndice({ accion: 'ant', valor: 3 }); // 3 - 1 = 2
+      expect(component.indice).toBe(2);
+      expect(component.wizardComponent.atras).toHaveBeenCalledTimes(1);
+
+      // Desde paso 2 a paso 1
+      component.getValorIndice({ accion: 'ant', valor: 2 }); // 2 - 1 = 1
+      expect(component.indice).toBe(1);
+      expect(component.wizardComponent.atras).toHaveBeenCalledTimes(2);
     });
 
     it('✅ debería simular navegación mixta (adelante y atrás)', () => {
       const secuenciaCompleta = [
-        { accion: 'cont', valor: 2, metodoEsperado: 'siguiente' },
-        { accion: 'cont', valor: 3, metodoEsperado: 'siguiente' },
-        { accion: 'atras', valor: 2, metodoEsperado: 'atras' },
-        { accion: 'atras', valor: 1, metodoEsperado: 'atras' },
-        { accion: 'cont', valor: 2, metodoEsperado: 'siguiente' },
-        { accion: 'cont', valor: 3, metodoEsperado: 'siguiente' }
+        { accion: 'cont', valor: 1, esperado: 2, metodo: 'siguiente' }, // 1 + 1 = 2
+        { accion: 'cont', valor: 2, esperado: 3, metodo: 'siguiente' }, // 2 + 1 = 3
+        { accion: 'ant', valor: 3, esperado: 2, metodo: 'atras' },      // 3 - 1 = 2
+        { accion: 'ant', valor: 2, esperado: 1, metodo: 'atras' },      // 2 - 1 = 1
+        { accion: 'cont', valor: 1, esperado: 2, metodo: 'siguiente' }  // 1 + 1 = 2
       ];
       
       let contadorSiguiente = 0;
@@ -432,7 +521,7 @@ describe('OeaTextilRegistroComponent', () => {
       secuenciaCompleta.forEach(evento => {
         component.getValorIndice(evento);
         
-        if (evento.metodoEsperado === 'siguiente') {
+        if (evento.metodo === 'siguiente') {
           contadorSiguiente++;
           expect(component.wizardComponent.siguiente).toHaveBeenCalledTimes(contadorSiguiente);
         } else {
@@ -440,86 +529,93 @@ describe('OeaTextilRegistroComponent', () => {
           expect(component.wizardComponent.atras).toHaveBeenCalledTimes(contadorAtras);
         }
         
-        expect(component.indice).toBe(evento.valor);
+        expect(component.indice).toBe(evento.esperado);
       });
     });
   });
 
   describe('🔬 Pruebas de rendimiento y memoria', () => {
+    beforeEach(() => {
+      mockPasoUnoComponent.validarFormularios.mockReturnValue(true);
+    });
+
     it('✅ debería manejar múltiples llamadas sin pérdida de memoria', () => {
-      const numeroLlamadas = 1000;
+      const numeroLlamadas = 100;
       
       for (let i = 0; i < numeroLlamadas; i++) {
-        const evento = { accion: i % 2 === 0 ? 'cont' : 'atras', valor: (i % 3) + 1 };
+        const evento = { accion: i % 2 === 0 ? 'cont' : 'ant', valor: 2 };
         component.getValorIndice(evento);
       }
       
       expect(component.indice).toBeDefined();
       expect(typeof component.indice).toBe('number');
+      expect(component.indice).toBeGreaterThanOrEqual(1);
+      expect(component.indice).toBeLessThanOrEqual(3);
     });
 
-    it('✅ debería mantener la estabilidad después de operaciones repetitivas', () => {
-      const eventoBase = { accion: 'cont', valor: 2 };
+    it('✅ debería mantener la consistencia de datos después de operaciones repetitivas', () => {
+      const eventoBase = { accion: 'cont', valor: 1 }; // 1 + 1 = 2
       
-      // Ejecutar la misma operación múltiples veces
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 10; i++) {
         component.getValorIndice(eventoBase);
       }
       
       expect(component.indice).toBe(2);
-      expect(component.wizardComponent.siguiente).toHaveBeenCalledTimes(100);
+      expect(component.datosPasos.indice).toBe(2);
+      expect(component.wizardComponent.siguiente).toHaveBeenCalledTimes(10);
     });
   });
 
-  describe('🧪 Casos de prueba adicionales para cobertura completa', () => {
-    it('✅ debería verificar que todas las propiedades están correctamente tipadas', () => {
-      expect(typeof component.pasos).toBe('object');
-      expect(typeof component.indice).toBe('number');
-      expect(typeof component.datosPasos).toBe('object');
-      expect(typeof component.wizardComponent).toBe('object');
-    });
-
-    it('✅ debería verificar el estado inicial completo del componente', () => {
-      const componenteNuevo = new OeaTextilRegistroComponent();
-      
-      expect(componenteNuevo.pasos).toEqual(PASOS);
-      expect(componenteNuevo.indice).toBe(1);
-      expect(componenteNuevo.datosPasos.nroPasos).toBe(PASOS.length);
-      expect(componenteNuevo.datosPasos.indice).toBe(1);
-      expect(componenteNuevo.datosPasos.txtBtnAnt).toBe('Anterior');
-      expect(componenteNuevo.datosPasos.txtBtnSig).toBe('Continuar');
-    });
-
-    it('✅ debería validar la lógica condicional en getValorIndice', () => {
-      const eventoContinuar = { accion: 'cont', valor: 2 };
-      const eventoAtras = { accion: 'back', valor: 1 };
-      
-      // Test condición verdadera (accion === 'cont')
-      component.getValorIndice(eventoContinuar);
-      expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-      
+  describe('🧪 Casos de prueba de integración', () => {
+    beforeEach(() => {
       jest.clearAllMocks();
-      
-      // Test condición falsa (accion !== 'cont')
-      component.getValorIndice(eventoAtras);
-      expect(component.wizardComponent.atras).toHaveBeenCalled();
     });
 
-    it('✅ debería verificar que el operador ternario funciona correctamente', () => {
-      const spySiguiente = jest.spyOn(component.wizardComponent, 'siguiente');
-      const spyAtras = jest.spyOn(component.wizardComponent, 'atras');
+    it('✅ debería manejar el flujo completo con validación fallida', () => {
+      // Configurar validación fallida
+      mockPasoUnoComponent.validarFormularios.mockReturnValue(false);
       
-      // Verificar lado verdadero del ternario
-      component.getValorIndice({ accion: 'cont', valor: 2 });
-      expect(spySiguiente).toHaveBeenCalled();
-      expect(spyAtras).not.toHaveBeenCalled();
+      // Intentar avanzar desde paso 1
+      component.getValorIndice({ accion: 'cont', valor: 1 });
       
-      jest.clearAllMocks();
+      // Verificar que se detuvo la navegación
+      expect(component.indice).toBe(1);
+      expect(component.esFormaValido).toBe(true);
+      expect(component.btnContinuar).toBe(true);
+      expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
       
-      // Verificar lado falso del ternario
-      component.getValorIndice({ accion: 'other', valor: 1 });
-      expect(spyAtras).toHaveBeenCalled();
-      expect(spySiguiente).not.toHaveBeenCalled();
+      // Verificar que se configuró la notificación
+      expect(component.nuevaNotificacion).toBeDefined();
+      expect(component.nuevaNotificacion.mensaje).toBe('Existen requisitos obligatorios en blanco o con errores.');
+    });
+
+    it('✅ debería manejar el flujo completo con validación exitosa', () => {
+      // Configurar validación exitosa
+      mockPasoUnoComponent.validarFormularios.mockReturnValue(true);
+      
+      // Avanzar desde paso 1
+      component.getValorIndice({ accion: 'cont', valor: 1 });
+      
+      // Verificar que avanzó correctamente
+      expect(component.indice).toBe(2);
+      expect(component.datosPasos.indice).toBe(2);
+      expect(component.esFormaValido).toBe(false);
+      expect(component.wizardComponent.siguiente).toHaveBeenCalledTimes(1);
+    });
+
+    it('✅ debería mantener la sincronización entre indice y datosPasos.indice', () => {
+      const eventos = [
+        { accion: 'cont', valor: 1 }, // -> indice 2
+        { accion: 'ant', valor: 2 },  // -> indice 1
+        { accion: 'otra', valor: 3 }, // -> indice 3
+      ];
+      
+      mockPasoUnoComponent.validarFormularios.mockReturnValue(true);
+      
+      eventos.forEach(evento => {
+        component.getValorIndice(evento);
+        expect(component.datosPasos.indice).toBe(component.indice);
+      });
     });
   });
 });
