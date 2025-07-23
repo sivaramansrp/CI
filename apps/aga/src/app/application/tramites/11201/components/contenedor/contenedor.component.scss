@@ -55,7 +55,6 @@ select {
 
 .form-control {
     height: 39px;
-    background-color: #80808024;
     font-size: 15px;
     font-weight: 500;
 }
@@ -80,6 +79,24 @@ select {
     }
 }
 
+.horizontal {
+    display: inline-block;
+    margin-right: 30px;
+}
+
+.etiqueta-de-radio {
+    margin-left: 15px;
+}
+
+.fw-bold {
+    font-weight: 600;
+}
+
+.radio-row {
+    display: flex;
+    justify-content: space-around;
+}
+
 ::ng-deep app-catalogo-select .form-label {
     padding-top: 0;
 }
@@ -90,4 +107,49 @@ select {
     width: 35px;
     background: #EEEEEE;
     color: #888888;
+}
+
+.custom-input-file{
+  border: 1px solid #cccc;
+  padding: 3.2px;
+}
+
+.justify-content-space-around {
+    justify-content: space-around;
+}
+
+/* Haz que el asterisco sea rojo cuando el campo tenga errores de validación */
+.form-group.has-error label .require,
+.form-group:has(.is-invalid) label .require,
+label:has(+ input.is-invalid) .require,
+label:has(+ input-fecha.is-invalid) .require,
+label:has(+ app-catalogo-select .required) .require,
+.has-error .form-label,
+.has-error label .require {
+    color: #dc3545 !important;
+}
+
+/* Estilo para input-fecha cuando es inválido */
+input-fecha.is-invalid .input-group-text,
+.input-fecha-wrapper.is-invalid input-fecha .input-group-text {
+    border-color: #dc3545;
+    background-color: #fff5f5;
+}
+
+/* Estilos adicionales para los campos de fecha */
+.input-fecha-wrapper.is-invalid {
+    position: relative;
+}
+
+.input-fecha-wrapper.is-invalid::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border: 1px solid #dc3545;
+    border-radius: 0.25rem;
+    pointer-events: none;
+    z-index: 1;
 }

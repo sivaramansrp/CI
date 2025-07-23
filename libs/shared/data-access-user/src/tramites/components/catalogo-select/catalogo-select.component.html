@@ -1,10 +1,10 @@
-<div [formGroup]="formSelect" [ngClass]="{ row: isInline }">
+<div [formGroup]="formSelect" [ngClass]="{ row: isInline, 'has-error': isInvalid() }">
   <label
     for="{id}"
     class="form-label text-left"
     [ngClass]="{ 'col-sm-3': isInline }"
     *ngIf="label"
-    >{{ label }}@if(required){*}: @if(tooltipQuestionCircle){
+    >{{ label }}@if(required){<span class="require">*</span>}: @if(tooltipQuestionCircle){
     <span
       class="bi bi-question-circle-fill"
       title="{{ tooltipQuestionCircleText ? tooltipQuestionCircleText : label }}"
