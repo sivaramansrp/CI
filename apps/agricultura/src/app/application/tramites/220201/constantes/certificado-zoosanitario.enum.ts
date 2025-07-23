@@ -138,7 +138,7 @@ export const IDDEUSUARIO = 21;
  * @const
  * @type {string}
  */
-export const FECHAPAGODATE ='15/03/2025'
+export const FECHAPAGODATE = '15/03/2025'
 
 /**
  * @description
@@ -153,3 +153,18 @@ export const FECHAPAGODATE ='15/03/2025'
  * @type {string}
  */
 export const SELECCIONADO = 'Al dar doble clic en el registro seleccionado creara una nueva solicitud con los mismos datos de la solicitud elegida';
+/**
+ * Fecha de pago por defecto (formato DD/MM/YYYY).
+ * @const
+ * @type {string}
+ */
+export const ERROR_FORMA_ALERT =
+  `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`

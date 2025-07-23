@@ -24,6 +24,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Modal } from 'bootstrap';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
 import enlace from '@libs/shared/theme/assets/json/31601/enlace.json';
@@ -328,8 +329,8 @@ filaSeleccionadaEnlaceIndex: number | null = null;
    * Parchea ciertos campos del formulario como solo lectura.
    */
   public patchData(): void {
-    this.represtantante.get('rfc')?.disable();
-    this.represtantante.get('nombre')?.disable();
+    this.represtantante.get('rfcReprestantante')?.disable();
+    this.represtantante.get('nombreReprestante')?.disable();
     this.represtantante.get('apellidoPaterno')?.disable();
     this.represtantante.get('apellidoMaterno')?.disable();
     this.represtantante.get('cuidad')?.disable();
@@ -371,7 +372,6 @@ filaSeleccionadaEnlaceIndex: number | null = null;
    * Si hay más de una fila seleccionada, abre un popup de selección múltiple.
    */ 
 modificarItemEnlace(): void {
- 
   if (this.listaFilaSeleccionadaEnlace.length === 1) {
     const SELECCIONDA = this.listaFilaSeleccionadaEnlace[0];
 
@@ -396,15 +396,25 @@ modificarItemEnlace(): void {
         correoReprestantante: FILA.correo,
         suplente: FILA.suplente,
       });
-
-       this.modal = 'show';
+        this.abrirModalAgregar();       
     }
   } else {
    
     this.abrirMultipleSeleccionPopup();
   }
 }
-
+/**
+ * Abre el modal con ID 'modalAgregar' usando Bootstrap programáticamente.
+ * Solo se llama si la lógica del componente lo permite (ej. una fila seleccionada).
+ * Usa document.getElementById y Modal de Bootstrap para mostrar el modal.
+ */
+abrirModalAgregar(): void {
+  const MODAL_ELEMENT = document.getElementById('modalAgregar');
+  if (MODAL_ELEMENT) {
+    const MODAL = new Modal(MODAL_ELEMENT);
+    MODAL.show();
+  }
+}
   /**
    * Elimina un enlace item seleccionado.
    * Filtra los datos de la tabla para eliminar el item seleccionado.

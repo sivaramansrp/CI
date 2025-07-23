@@ -115,6 +115,10 @@ export class DocumentoExportacionComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe();
+
+    if(this.esFormularioSoloLectura){
+      this.datosExporta.disable();
+    }
   }
 
   /**

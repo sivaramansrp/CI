@@ -1,18 +1,13 @@
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
+import { Component, ViewChild } from '@angular/core';
+import { ERROR_DE_CAMPO, ERROR_VERIFICAR, SIGUIENTES_ERRORES } from '../../constantes/constantes';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { ERROR_DE_CAMPO } from '../../constantes/constantes';
-import { ERROR_VERIFICAR } from '../../constantes/constantes';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { RENOVACIONES_PASOS } from '../../enums/renovaciones-muestras-mercancias.enum';
-import { SIGUIENTES_ERRORES } from '../../constantes/constantes';
-import { ViewChild } from '@angular/core';
-import { WizardComponent } from '@ng-mf/data-access-user';
+
+
 
 /**
  * Interfaz que representa el botón de acción.

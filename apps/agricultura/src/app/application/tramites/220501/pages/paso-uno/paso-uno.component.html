@@ -12,7 +12,9 @@
       </li>
       @if(mostrarRevisionDocumental ||
       consultaState.parameter.toUpperCase() === parametero.EVALUAR ||
-      consultaState.parameter.toUpperCase() === parametero.READ_PROCEDEMENTO) {
+      consultaState.parameter.toUpperCase() === parametero.READ_PROCEDEMENTO ||
+      consultaState.parameter.toUpperCase() === parametero.SUBSECUENTES
+      ) {
       <li [ngClass]="indice === 3 ? 'active' : ''">
         <a (click)="seleccionaTab(3)" (keyup.enter)="seleccionaTab(3)" (keydown.space)="seleccionaTab(3)" tabindex="0"
           data-toggle="tab">Revisión Documental</a>

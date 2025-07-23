@@ -764,3 +764,19 @@ export const REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO = /^[A-Za-z0-9,() ]*$/
  * - user_123+prueba@sub.dominio.org
  */
 export const REGEX_CORREO_ELECTRONICO_EXPORTADOR = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+/**
+ * Expresión regular para validar números con hasta 7 dígitos enteros y 3 decimales opcionales.
+ * 
+ * Ejemplos válidos:
+ * - "123"
+ * - "1234567"
+ * - "123.456"
+ * - "1234567.123"
+ * 
+ * Ejemplos no válidos:
+ * - "12345678" (más de 7 dígitos enteros)
+ * - "123.4567" (más de 3 decimales)
+ * - "abc" (no es un número)
+ */
+export const REGEX_7_ENTEROS_3_DECIMALES = /^\d{1,7}(\.\d{1,3})?$/;

@@ -1,7 +1,7 @@
-import { CapturarSolicitud } from "../../models/220201/capturar-solicitud.model";
 import { Injectable } from "@angular/core";
 import { Query } from "@datorama/akita";
 import { ZoosanitarioStore } from "../../estados/220201/zoosanitario.store";
+import { CapturarSolicitud } from "../../models/220201/capturar-solicitud.model";
 
 /**
  * @fileoverview Servicio de consulta para el estado zoosanitario.
@@ -68,6 +68,14 @@ export class ZoosanitarioQuery extends Query<CapturarSolicitud> {
    * @memberof ZoosanitarioQuery
    */
   seleccionarTercerosRelacionados$ = this.select(estado => estado.tercerosRelacionados);
+  /**
+  * Selector para obtener la lista de terceros relacionados.
+  *
+  * @readonly
+  * @type {Observable<any>}
+  * @memberof ZoosanitarioQuery
+  */
+  seleccionarTerceros$ = this.select(estado => estado.seletedTerceros);
 
   /**
    * Selector para obtener los datos de pago de derechos.
@@ -87,7 +95,7 @@ export class ZoosanitarioQuery extends Query<CapturarSolicitud> {
    */
   seleccionarValidarEnvio$ = this.select(estado => estado.validarEnvio);
 
-  
+
   /**
    * Selector para obtener los datos de movilización.
    *
