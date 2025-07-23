@@ -106,7 +106,8 @@
                   } @case ('select-catalogos') {
                     @if (item.mostrar !== false) {
                       <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
-                        <app-catalogo-select
+                        <div class="form-group">
+                          <app-catalogo-select
                           id="{{item.id}}"
                           [catalogo]="item?.opciones || []" 
                           [formControlName]="item.campo" 
@@ -125,7 +126,7 @@
                               [controlDeFormulario]="item.campo" 
                               [validadores]="item.validadores ?? []"
                             ></validadores-de-formularios>
-                        
+                        </div>
                       </div>
                     }
                   } @case ('checkbox') {
@@ -142,7 +143,7 @@
                           (change)="eventoDeCambioDeValor($event, item.campo)"
                         />
                         <label class="form-label" [for]="item.id" style="margin-left: 10px;" *ngIf="item.labelNombre">
-                          {{ item.labelNombre }}{{ seRequiere(item.campo) ? '*:' : ':' }}:
+                          {{ item.labelNombre }}{{ seRequiere(item.campo) ? '*' : '' }}
                         </label>
 
                       </div>
@@ -168,7 +169,7 @@
                       <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
                         <div class="form-group">
                           @if (item.labelNombre) {
-                            <label class="form-label" [for]="item.id">{{item.labelNombre }} {{seRequiere(item.campo) ? '*:' : ':'}}
+                            <label class="form-label" [for]="item.id">{{item.labelNombre }} {{seRequiere(item.campo) ? '*' : ''}}
                               @if(item.tooltipQuestionCircle) {
                                 <span class="bi bi-question-circle-fill" title="{{item.tooltipTxt ? item.tooltipTxt : item.labelNombre}}" data-bs-toggle="tooltip"></span>
                               }
@@ -179,7 +180,9 @@
                             id="{{item.id}}"
                             formControlName="{{item.campo}}"
                             [layout]="item.layout ? item.layout : 'vertical'"
+                            [gridLayout]="item.gridLayout ? item.gridLayout : false"
                             [isRequired]="seRequiere(item.campo)"
+                            [gridLayout]="item.gridLayout ? item.gridLayout : false"
                             (valueChange)="eventoDeCambioDeValor($event, item.campo)"
                           ></app-input-radio>
                           
@@ -208,6 +211,20 @@
                   } @case ('') {
                     <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]" class="min-height">
                     </div>
+                  } @case('custom-html') {
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
+                      @if (item.templateKey && templateMap[item.templateKey]) {
+                        <ng-container *ngTemplateOutlet="templateMap[item.templateKey]"></ng-container>
+                      }
+                    </div>
+                  } @case ('label-only') {
+                    @if (item.mostrar !== false) {
+                      <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
+                        <div class="form-group">
+                          <label class="form-label" [for]="item.id">{{item.labelNombre }}</label>
+                        </div>
+                      </div>
+                    }
                   }
             }
     }

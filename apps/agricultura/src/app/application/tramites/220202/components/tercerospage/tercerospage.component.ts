@@ -14,7 +14,7 @@ import { AgriculturaApiService } from '../../services/220202/agricultura-api.ser
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
-import { TercerosrelacionadosComponent } from '../../../../shared/components/tercerosrelacionados/tercerosrelacionados.component';
+import { TercerosrelacionadosComponent } from '../../shared/tercerosrelacionados/tercerosrelacionados.component';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
 
 /**
@@ -147,7 +147,9 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   handleEliminar(): void {
     this.personas = [];
+    this.datosForma = [];
     this.agriculturaApiService.updateTercerosRelacionado([] as TercerosrelacionadosdestinoTable[]);
+    this.agriculturaApiService.updateTercerosExportador([] as TercerosrelacionadosdestinoTable[]);
   }
 
   /**

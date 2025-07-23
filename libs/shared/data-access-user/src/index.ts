@@ -207,3 +207,5 @@ export * from './core/services/shared/cadena-original/cadena-original.service';
 
 export * from './tramites/components/paginador-tabla/paginador-tabla.component';
 export * from './core/interceptor/http.interceptor';
+
+export * from './tramites/directives/solo-alfabetos/solo-alfabetos.directive';

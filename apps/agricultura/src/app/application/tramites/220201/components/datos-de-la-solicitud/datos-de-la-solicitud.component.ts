@@ -1,6 +1,6 @@
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
@@ -14,10 +14,13 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Subject, debounceTime, map, takeUntil } from 'rxjs';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solicitud.model';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { AnimalesVivoContenedoraComponent } from '../animales-vivo-contenedora/animales-vivo-contenedora.component';
+import { SubProductosContenedoraComponent } from '../sub-productos-contenedora/sub-productos-contenedora.component';
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos de la solicitud.
@@ -44,9 +47,11 @@ import { CertificadoZoosanitarioServiceService } from '../../services/220201/cer
     InputRadioComponent,
     AlertComponent,
     TablaDinamicaComponent,
-    NotificacionesComponent]
+    NotificacionesComponent,
+    ModalComponent]
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('modalRef') modalRef!: ModalComponent;
   /**
    * Constantes de texto.
    * @property {string} TEXTOS
@@ -350,15 +355,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
 
   ngAfterViewInit(): void {
     this.radioBotonSeleccionado();
-    this.datosDelaSolicitud.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
-      const FORMA_VALIDA_ACTUALIZADA = {
-        dataDeLaSolicitud: false,
-      };
-      if (this.datosDelaSolicitud.valid) {
-        FORMA_VALIDA_ACTUALIZADA.dataDeLaSolicitud = true;
-      }
-      this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
-    });
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -634,14 +630,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   modificarMercancia(): void {
     const VALOR = this.datosDelaSolicitud.value.tipoMercancia;
     if (VALOR === 'yes') {
-      this.router.navigate(['../animales-vivo'], {
-        relativeTo: this.activatedRoute,
-      });
+      this.modalRef.abrir(AnimalesVivoContenedoraComponent);
     }
     else if (VALOR === 'no') {
-      this.router.navigate(['../sub-productos'], {
-        relativeTo: this.activatedRoute,
-      });
+      this.modalRef.abrir(SubProductosContenedoraComponent);
     }
   }
   /**
@@ -687,18 +679,28 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   * @returns {void}
   */
   agregarMercancia(): void {
-
     if (this.datosDelaSolicitud.value.tipoMercancia === 'no') {
-      this.router.navigate(['../sub-productos'], {
-        relativeTo: this.activatedRoute,
-      });
+      this.modalRef.abrir(SubProductosContenedoraComponent);
     }
     else if (this.datosDelaSolicitud.value.tipoMercancia === 'yes') {
-      this.router.navigate(['../animales-vivo'], {
-        relativeTo: this.activatedRoute,
-      });
+      this.modalRef.abrir(AnimalesVivoContenedoraComponent);
     }
 
+  }
+  /**
+  * @description Navega a la página de modificar mercancía.
+  * Este método redirige al usuario a la ruta relativa '../animales-vivo' para modificar una mercancía existente.
+  * @method validarFormulario
+  * @returns {boolean}
+  */
+  validarFormulario(): boolean {
+    if (this.forma.valid) {
+      return true;
+    }
+    else {
+      this.forma.markAllAsTouched();
+      return false
+    }
   }
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.

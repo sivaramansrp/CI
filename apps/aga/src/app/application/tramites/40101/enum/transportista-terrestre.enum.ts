@@ -4,8 +4,8 @@ import { UnidadTablaConfig } from "../../40102/models/registro-muestras-mercanci
 export const CHOFERES_PAGE = {
   MODAL: 'modal',
   ACTIVETAB: 'nacional',
-  CHOFERES_EXTRANJEROS: 'Choferes extranjeros',
-  CHOFERES_NACIONALES: 'Choferes nacionales',
+  CHOFERES_EXTRANJEROS: 'Datos del chofer extranjero',
+  CHOFERES_NACIONALES: 'Datos del chofer nacional',
   SOLICITUD_TITULO_CHOFER_EXTRANJERO: 'Datos del chofer extranjero',
   LABEL_SOLICITUD_PERSONA_NOMBRE: 'Nombre',
   LABEL_SOLICITUD_PERSONA_PRIMER_APELLIDO: 'Primer Apellido ',
@@ -79,75 +79,45 @@ export const VEHICULOS_TABLA_CONFIG: VehiculoTablaConfig = {
       orden: 2,
     },
     {
-      encabezado: 'ID de vehículo',
-      clave: (item: VehiculoTabla) => item.idDeVehiculo,
+      encabezado: 'Número económico',
+      clave: (item: VehiculoTabla) => item.numuroEconomico,
       orden: 3,
-    },
-    {
-      encabezado: 'Número de Placas',
-      clave: (item: VehiculoTabla) => item.numeroPlaca,
-      orden: 4,
-    },
-    {
-      encabezado: 'País Emisor',
-      clave: (item: VehiculoTabla) => item.paisEmisor,
-      orden: 5,
-    },
-    {
-      encabezado: 'Estado o provincia',
-      clave: (item: VehiculoTabla) => item.estado,
-      orden: 6,
-    },
-    {
-      encabezado: 'Marca',
-      clave: (item: VehiculoTabla) => item.marca,
-      orden: 7,
-    },
-    {
-      encabezado: 'Modelo',
-      clave: (item: VehiculoTabla) => item.modelo,
-      orden: 8,
-    },
-    {
-      encabezado: 'Año',
-      clave: (item: VehiculoTabla) => item.ano,
-      orden: 9,
     },
     {
       encabezado: 'Transponder',
       clave: (item: VehiculoTabla) => item.transponder,
+      orden: 4,
+    },
+    {
+      encabezado: 'Número de placas',
+      clave: (item: VehiculoTabla) => item.numeroPlaca,
+      orden: 5,
+    },
+    {
+      encabezado: 'País emisor',
+      clave: (item: VehiculoTabla) => item.paisEmisor,
+      orden: 6,
+    },
+    {
+      encabezado: 'Estado o provincia',
+      clave: (item: VehiculoTabla) => item.estado,
+      orden: 7,
+    },
+    {
+      encabezado: 'Marca',
+      clave: (item: VehiculoTabla) => item.marca,
+      orden: 8,
+    },
+    {
+      encabezado: 'Modelo',
+      clave: (item: VehiculoTabla) => item.modelo,
+      orden: 9,
+    },
+    {
+      encabezado: 'Año',
+      clave: (item: VehiculoTabla) => item.ano,
       orden: 10,
-    },
-    {
-      encabezado: 'Color',
-      clave: (item: VehiculoTabla) => item.colorVehiculo,
-      orden: 11,
-    },
-    {
-      encabezado: 'Número económico',
-      clave: (item: VehiculoTabla) => item.numuroEconomico,
-      orden: 12,
-    },
-    {
-      encabezado: 'Número 2da Placa',
-      clave: (item: VehiculoTabla) => item.numero2daPlaca,
-      orden: 13,
-    },
-    {
-      encabezado: 'Estado Emisor 2da Placa',
-      clave: (item: VehiculoTabla) => item.estado2daPlaca,
-      orden: 14,
-    },
-    {
-      encabezado: 'País Emisor 2da Placa',
-      clave: (item: VehiculoTabla) => item.paisEmisor2daPlaca,
-      orden: 15,
-    },
-    {
-      encabezado: 'Descripción',
-      clave: (item: VehiculoTabla) => item.descripcion,
-      orden: 16,
-    },
+    }
   ],
    datos: [],
 };

@@ -3,16 +3,33 @@
     <div class="form-group">
       <label class="form-label" for="cer">Certificado (cer)*:</label>
       <input type="file" class="form-control" id="cer" (change)="handleFile('cer', $event)" accept=".cer">
+      @if (certFileError) {
+      <div class="d-grid">
+        <span class="mensaje-error">{{ certFileError }}</span>
+      </div>
+      }
     </div>
     <div class="form-group">
       <label class="form-label" for="key">Clave privada (key)*:</label>
       <input type="file" class="form-control" id="key" (change)="handleFile('key', $event)" accept=".key">
+      @if (keyFileError) {
+      <div class="d-grid">
+        <span class="mensaje-error">{{ keyFileError }}</span>
+      </div>
+      }
     </div>
 
     <div class="form-group">
       <label class="form-label" for="password">Contraseña de clave privada*:</label>
       <input type="password" class="form-control" [ngClass]="isValid('password') ? 'required' : ''" id="password"
         formControlName="password">
+      @if (FormCertificado.controls['password'].touched && FormCertificado.controls['password'].invalid) {
+      <div class="d-grid">
+        @if (FormCertificado.controls['password'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio.</span>
+        }
+      </div>
+      }
     </div>
 
     <div class="row">

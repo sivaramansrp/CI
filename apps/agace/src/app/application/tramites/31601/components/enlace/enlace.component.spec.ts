@@ -128,4 +128,52 @@ describe('EnlaceComponent', () => {
     component.modificarItemEnlace();
     expect(component.multipleSeleccionPopupAbierto).toBe(true);
   });
+it('should close multiple selection popup', () => {
+  component.multipleSeleccionPopupAbierto = true;
+  component.multipleSeleccionPopupCerrado = true;
+
+  component.cerrarMultipleSeleccionPopup();
+
+  expect(component.multipleSeleccionPopupAbierto).toBe(false);
+  expect(component.multipleSeleccionPopupCerrado).toBe(false);
+});
+it('should open eliminar confirmation popup', () => {
+  component.confirmEliminarPopupAbierto = false;
+
+  component.abrirElimninarConfirmationopup();
+
+  expect(component.confirmEliminarPopupAbierto).toBe(true);
+});
+it('should close the multiple selection popup', () => {
+  component.multipleSeleccionPopupAbierto = true;
+  component.multipleSeleccionPopupCerrado = true;
+
+  component.cerrarMultipleSeleccionPopup();
+
+  expect(component.multipleSeleccionPopupAbierto).toBe(false);
+  expect(component.multipleSeleccionPopupCerrado).toBe(false);
+});
+it('should open the eliminar confirmation popup', () => {
+  component.confirmEliminarPopupAbierto = false;
+
+  component.abrirElimninarConfirmationopup();
+
+  expect(component.confirmEliminarPopupAbierto).toBe(true);
+});
+it('should close the eliminar confirmation popup', () => {
+  component.confirmEliminarPopupAbierto = true;
+  component.confirmEliminarPopupCerrado = true;
+
+  component.cerrarEliminarConfirmationPopup();
+
+  expect(component.confirmEliminarPopupAbierto).toBe(false);
+  expect(component.confirmEliminarPopupCerrado).toBe(false);
+});
+it('should close the eliminar confirmation popup', () => {
+  component.confirmEliminarPopupAbierto = true;
+  component.confirmEliminarPopupCerrado = true;
+  component.cerrarEliminarConfirmationPopup();  
+  expect(component.confirmEliminarPopupAbierto).toBe(false);
+  expect(component.confirmEliminarPopupCerrado).toBe(false);
+});
 });

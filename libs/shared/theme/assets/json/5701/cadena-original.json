@@ -5,19 +5,6 @@
     "id_solicitud": 24,
     "num_folio_tramite": "FOLIO-TEST-001",
     "boolean_extranjero": false,
-    "documento_requerido": [
-      {
-        "nombre": "Martin",
-        "id": "1",
-        "id_documento_seleccionado": 1,
-        "id_tipo_Documento": "1",
-        "hash_documento": "1234567890ABCDEF",
-        "sello_documento": "",
-        "cve_persona": 9007199254740991,
-        "regla_anexada": true,
-        "num_anexo_documento": "string"
-      }
-    ],
     "solicitante": {
       "id_domicilio": 42,
       "nombre": "Maria",

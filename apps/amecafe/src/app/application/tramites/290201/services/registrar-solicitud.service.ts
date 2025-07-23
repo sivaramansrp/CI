@@ -215,4 +215,34 @@ export class RegistrarSolicitudService {
 getDestinatarioData(): Observable<Solicitud290201State> {
   return this.http.get<Solicitud290201State>('assets/json/290201/destinatariodata.json');
 }
+
+/**
+ * Obtiene los datos de las entidades federativas.
+ * 
+ * @returns {Observable<Catalogo[]>} Observable con la lista de entidades federativas obtenida desde un archivo JSON local.
+ */
+getEntidadFederativaData(): Observable<Catalogo[]> {
+  return this.http.get<Catalogo[]>('assets/json/290201/domicilio.json');
+}
+
+/**
+* @method getAlcaldiaMunicipo
+* Obtiene los datos de las alcaldías o municipios desde un archivo JSON local.
+* 
+* @returns {Observable<Catalogo[]>} Observable con la lista de alcaldías o municipios.
+*/
+getAlcaldiaMunicipo(): Observable<Catalogo[]> {
+  return this.http.get<Catalogo[]>('./assets/json/290201/alcaldio.json');
+}
+
+/**
+* @method getColonia
+* Obtiene los datos de las colonias desde un archivo JSON local.
+* 
+* @returns {Observable<Catalogo[]>} Observable con la lista de colonias.
+*/
+getColonia(): Observable<Catalogo[]> {
+  return this.http.get<Catalogo[]>('./assets/json/290201/colonia.json');
+}
+
 }
