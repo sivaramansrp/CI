@@ -60,6 +60,18 @@ export class TablaConEntradaComponent<T> {
    */
   @Input() datos: T[] = [];
 
+   /**
+   * Este input permite deshabilitar la selección de filas mediante checkboxes en la tabla.
+   * Si se establece en `true`, los checkboxes de selección estarán deshabilitados.
+   */
+  @Input() disableSeleccionTablaCheckBox: boolean = false;
+
+  /**
+   * Este input permite deshabilitar la selección de filas mediante botones de radio en la tabla.
+   * Si se establece en `true`, los botones de radio de selección estarán deshabilitados.
+   */
+  @Input() disableSeleccionTablaRadio: boolean = false;
+
   /**
    * Evento que se emite cuando el usuario selecciona una fila de la tabla.
    * Este evento envía la fila seleccionada (objeto completo) al componente padre.

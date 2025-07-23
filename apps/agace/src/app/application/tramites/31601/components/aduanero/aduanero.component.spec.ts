@@ -393,6 +393,70 @@ describe('AduaneroComponent', () => {
       });
     });
 
+
+it('should not open confirmation popup if no items are selected', () => {
+  component.listaFilaSeleccionadaMencione = [];
+  const spy = jest.spyOn(component, 'abrirElimninarConfirmationopup');
+  
+  component.confirmEliminarMencioneItem();
+
+  expect(spy).not.toHaveBeenCalled();
+});
+  
+it('should open confirmation popup if items are selected', () => {
+  component.listaFilaSeleccionadaMencione = [{
+    id: '',
+    social: '',
+    rfc: '',
+    noumero: '',
+    bimestre: ''
+  }]; 
+  const spy = jest.spyOn(component, 'abrirElimninarConfirmationopup');
+
+  component.confirmEliminarMencioneItem();
+
+  expect(spy).toHaveBeenCalled();
+});
+it('should open multiple selection popup if enableModficarBoton is true', () => {
+  component.enableModficarBoton = true;
+
+  component.abrirMultipleSeleccionPopup();
+
+  expect(component.multipleSeleccionPopupAbierto).toBe(true);
+});
+
+it('should not open multiple selection popup if enableModficarBoton is false', () => {
+  component.enableModficarBoton = false;
+
+  component.abrirMultipleSeleccionPopup();
+
+  expect(component.multipleSeleccionPopupAbierto).toBeFalsy();
+});
+it('should close multiple selection popup', () => {
+  component.multipleSeleccionPopupAbierto = true;
+  component.multipleSeleccionPopupCerrado = false;
+
+  component.cerrarMultipleSeleccionPopup();
+
+  expect(component.multipleSeleccionPopupAbierto).toBe(false);
+  expect(component.multipleSeleccionPopupCerrado).toBe(false);
+});
+it('should open confirmation popup for delete', () => {
+  component.confirmEliminarPopupAbierto = false;
+
+  component.abrirElimninarConfirmationopup();
+
+  expect(component.confirmEliminarPopupAbierto).toBe(true);
+});
+it('should close confirmation popup for delete', () => {
+  component.confirmEliminarPopupAbierto = true;
+  component.confirmEliminarPopupCerrado = false;
+
+  component.cerrarEliminarConfirmationPopup();
+
+  expect(component.confirmEliminarPopupAbierto).toBe(false);
+  expect(component.confirmEliminarPopupCerrado).toBe(false);
+});
     it('debe habilitar campos cuando indiqueCuenta es "Si"', () => {
       const form = component.preOperativeForm;
       

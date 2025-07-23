@@ -27,9 +27,9 @@
 
     <ng-container>
       @switch (indice) { @case (1) {
-      <solicitante [tabindex]="1"></solicitante>
+      <solicitante [tabindex]="1" #solicitanteRef></solicitante>
       } @case (2) { @if(esDatosRespuesta){
-      <app-datos-empresa [tabindex]="2"></app-datos-empresa>
+      <app-datos-empresa [tabindex]="2" #datosEmpresaRef></app-datos-empresa>
       } } }
     </ng-container>
   </div>

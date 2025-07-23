@@ -1,0 +1,21 @@
+<form [formGroup]="protestoForm" class="mt-4">
+  <div class="form-check bg-light p-0">
+    <div class="alert alert-info content-with-checkbox py-4">
+      
+      <div class="mb-2">
+        <input
+          type="checkbox"
+          id="mensaje"
+          formControlName="mensaje"
+          [checked]="esFormularioSoloLectura"
+          [disabled]="esFormularioSoloLectura"
+        />
+      </div>
+    
+      <div>
+        El/la que suscribe manifiesto(a) bajo protesta de decir verdad, que la información declarada en el presente trámite de REGISTRO ÚNICO DE PRODUCTOS ELEGIBLES PARA PREFERENCIAS Y CONCESIONES ARANCELARIAS es copia fiel, íntegra e inalterada de la información y documentación soporte que obra en poder del (de la) solicitante.
+      </div>
+
+    </div>
+  </div>
+</form>
