@@ -1,5 +1,5 @@
 services:
-#----------------------------------------------------------------
+#---------------------------------------------------------------
   modulefederation-agricultura-microfront:
     image: ghcr.io/vucem30/dockerized-modulefederation-agricultura-microfront:1.0.8
     build: 
