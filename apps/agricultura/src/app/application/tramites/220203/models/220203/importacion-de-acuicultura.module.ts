@@ -1,4 +1,4 @@
-import { Catalogo, PersonaTerceros } from "@libs/shared/data-access-user/src";
+import { Catalogo } from "@libs/shared/data-access-user/src";
 import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
 
 /**
@@ -212,9 +212,9 @@ export interface Acuicultura {
   tercerosRelacionados: TercerosrelacionadosdestinoTable[];
     pagoDeDerechos:PagoDeDerechos;
     selectedmercanciaGroupDatos:Fila;
-    datosForma: TercerosrelacionadosdestinoTable[];
+    datosForma: DestinatarioForm[];
   seletedTerceros: TercerosrelacionadosdestinoTable;
-  seletedExdora: TercerosrelacionadosdestinoTable;
+  seletedExdora: DestinatarioForm;
 }
 
 /**
@@ -254,9 +254,9 @@ export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura
         mercanciaGroup: params?.mercanciaGroup || [],
         selectedmercanciaGroupDatos: params?.selectedmercanciaGroupDatos || {} as Fila,
         tercerosRelacionados: params.tercerosRelacionados || [],
-        datosForma: params.datosForma || [],
+        datosForma: params.datosForma || [] as DestinatarioForm[],
         seletedTerceros: params.seletedTerceros || {} as TercerosrelacionadosdestinoTable,
-        seletedExdora: params.seletedExdora || {} as TercerosrelacionadosdestinoTable
+        seletedExdora: params.seletedExdora || {} as DestinatarioForm
     };
 }
 /**
@@ -384,4 +384,16 @@ export interface CatalogoData {
   paisDeOrigenList: Catalogo[];
   paisDeProcedenciaList: Catalogo[];
   umcList: Catalogo[];
+}
+export interface DestinatarioForm {
+  tipoMercancia: 'yes' | 'no'; 
+  nombre: string;
+  primerApellido: string;
+  segundoApellido: string;
+  razonSocial: string;
+  pais: string;
+  domicilio: string;
+  lada: string;
+  telefono: string;
+  correo: string;
 }

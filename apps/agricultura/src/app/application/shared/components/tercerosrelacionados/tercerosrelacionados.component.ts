@@ -6,15 +6,16 @@
  * @module TercerosrelacionadosComponent
  */
 
-import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertComponent, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { DatosDeLaSolicitud, TercerosrelacionadosdestinoTable } from '../../models/tercerosrelacionados.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { OPCION_DE_BOTON_DE_RADIO, SELECCIONADO } from '../../constantes/tercerosrelacionados.enum';
-import { DatosDeLaSolicitud, TercerosrelacionadosTable, TercerosrelacionadosdestinoTable } from '../../models/tercerosrelacionados.model';
+import { CommonModule } from '@angular/common';
+import { DestinatarioForm } from '../../../tramites/220203/models/220203/importacion-de-acuicultura.module';
 import { ModalComponent } from '../modal/modal.component';
+import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
 
 /**
  * Componente para la gestión de terceros relacionados.
@@ -106,7 +107,7 @@ export class TercerosrelacionadosComponent {
  * Cuerpo de la tabla de exportadores.
  * @type {TercerosrelacionadosTable[]}
  */
-  @Input() cuerpoTablaExportador: TercerosrelacionadosdestinoTable[] = [];
+  @Input() cuerpoTablaExportador: DestinatarioForm[] = [];
   /**
    * Referencia al modal utilizado en el componente.
    * Permite abrir y cerrar el modal según sea necesario.
@@ -124,7 +125,7 @@ export class TercerosrelacionadosComponent {
  * Evento emitido al eliminar una selección de destinatarios.
  * @type {EventEmitter<TercerosrelacionadosdestinoTable[]>}
  */
-  @Output() eliminarSeleccionEstinoTable: EventEmitter<TercerosrelacionadosdestinoTable[]> = new EventEmitter();
+  @Output() eliminarSeleccionEstinoTable: EventEmitter<DestinatarioForm[]> = new EventEmitter();
 
   /**
    * Tipo de selección para la tabla de destinatarios.
@@ -142,13 +143,13 @@ export class TercerosrelacionadosComponent {
    * Lista de filas seleccionadas de destinatarios finales.
    * @type {TercerosrelacionadosdestinoTable[]}
    */
-  listaDeFilaSeleccionadaFinal: TercerosrelacionadosdestinoTable[] = [];
+  listaDeFilaSeleccionadaFinal: DestinatarioForm[] = [];
 
   /**
    * Configuración de las columnas para la tabla de exportadores.
    * @type {ConfiguracionColumna<TercerosrelacionadosTable>[]}
    */
-  configuracionColumnasExportador: ConfiguracionColumna<TercerosrelacionadosdestinoTable>[] = [
+  configuracionColumnasExportador: ConfiguracionColumna<DestinatarioForm>[] = [
     { encabezado: 'Nombre/denominación o razón social', clave: (fila) => fila.nombre, orden: 1 },
     { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 2 },
     { encabezado: 'Correo', clave: (fila) => fila.correo, orden: 3 },
@@ -164,7 +165,7 @@ export class TercerosrelacionadosComponent {
    * Evento emitido para abrir el modal de exportador.
    * @type {EventEmitter<TercerosrelacionadosdestinoTable>}
    */
-  @Output() abrirModalExportador = new EventEmitter<TercerosrelacionadosdestinoTable>();
+  @Output() abrirModalExportador = new EventEmitter<DestinatarioForm>();
 
   /**
    * Configuración de las columnas para la tabla de destinatarios.
@@ -260,7 +261,7 @@ export class TercerosrelacionadosComponent {
    * @param filas Filas seleccionadas.
    * @method onSeleccionDestinatario
    */
-  onSeleccionDestinatarioFinal(filas: TercerosrelacionadosdestinoTable[]): void {
+  onSeleccionDestinatarioFinal(filas: DestinatarioForm[]): void {
     this.listaDeFilaSeleccionadaFinal = filas;
   }
   /**

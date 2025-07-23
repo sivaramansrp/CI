@@ -6,6 +6,7 @@ import { AgregardestinatarioComponent } from '../agregardestinatario/agregardest
 import { AgregardestinatariofinalComponent } from '../agregardestinatariofinal/agregardestinatariofinal.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DestinatarioForm } from '../../models/220203/importacion-de-acuicultura.module';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { TercerosrelacionadosComponent } from '../../../../shared/components/tercerosrelacionados/tercerosrelacionados.component';
@@ -70,7 +71,7 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    * @type {TercerosrelacionadosTable[]}
    */
 
-  datosForma: TercerosrelacionadosdestinoTable[] = [];
+  datosForma: DestinatarioForm[] = [];
 
   /**
    * Constructor del componente.
@@ -156,7 +157,7 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   */
   handleEliminarExportador(): void {
     this.personas = [];
-    this.certificadoZoosanitarioStore.updatedatosForma([] as TercerosrelacionadosdestinoTable[]);
+    this.certificadoZoosanitarioStore.updatedatosForma([] as DestinatarioForm[]);
   }
 
 
@@ -176,7 +177,7 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.modalRef.abrir(AgregardestinatarioComponent);
   }
-  abrirModalExportador(data: TercerosrelacionadosdestinoTable): void {
+  abrirModalExportador(data: DestinatarioForm): void {
     if (data) {
       this.certificadoZoosanitarioStore.actualizarSelectedExdora(data);
     }

@@ -12,6 +12,7 @@ import {
   ValidarEnvio,
   createDatosState
 } from '../../models/220201/capturar-solicitud.model';
+import { DestinatarioForm } from '../../../220203/models/220203/importacion-de-acuicultura.module';
 
 
 /**
@@ -80,7 +81,7 @@ export class ZoosanitarioStore extends Store<CapturarSolicitud> {
   * @method actualizarDatosParaMovilizacionNacional
   * @param {DatosParaMovilizacionNacional} datosParaMovilizacionNacional Datos de movilización nacional.
   */
-  public actualizarSelectedExdora(datosParaMovilizacionNacional: TercerosrelacionadosdestinoTable): void {
+  public actualizarSelectedExdora(datosParaMovilizacionNacional: DestinatarioForm): void {
     this.update(state => ({
       ...state,
       seletedExdora: datosParaMovilizacionNacional
@@ -166,7 +167,7 @@ export class ZoosanitarioStore extends Store<CapturarSolicitud> {
    * @method updateTercerosRelacionados
    * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de personas terceros relacionadas.
    */
-  public updatedatosForma(tercerosRelacionados: TercerosrelacionadosdestinoTable[]): void {
+  public updatedatosForma(tercerosRelacionados: DestinatarioForm[]): void {
     this.update(state => ({
       ...state,
       datosForma: tercerosRelacionados,

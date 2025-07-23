@@ -7,11 +7,11 @@
  */
 
 import { ActivatedRoute, Router } from "@angular/router";
+import { Acuicultura, DestinatarioForm } from "../../models/220203/importacion-de-acuicultura.module";
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from "@libs/shared/data-access-user/src";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Subject, takeUntil } from "rxjs";
-import { Acuicultura } from "../../models/220203/importacion-de-acuicultura.module";
 import { AcuiculturaStore } from "../../estados/220203/sanidad-certificado.store";
 import { CommonModule } from "@angular/common";
 import { ImportacionDeAcuiculturaService } from "../../services/220203/importacion-de-acuicultura.service";
@@ -19,6 +19,7 @@ import { OPCION_DE_BOTON_DE_RADIO } from "../../../../shared/constantes/terceros
 import { RadioOpcion } from "../../../220201/models/220201/certificado-zoosanitario.model";
 import { TercerosrelacionadosService } from "../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service";
 import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
+import { d } from "@datorama/akita-ngdevtools";
 
 
 @Component({
@@ -145,7 +146,8 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
             pais: DESTINATARIO.pais || '1',
             lada: DESTINATARIO.lada || '',
             telefono: DESTINATARIO.telefono || '',
-            correo: DESTINATARIO.correo || ''
+            correo: DESTINATARIO.correo || '',
+            domicilio: DESTINATARIO.domicilio || '',
           });
         }
       });
@@ -183,9 +185,9 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
    */
   onGuardarDestinatarioFinal(): void {
     if (this.destinatarioForm.valid) {
-      const LISTA_DINAMICA: TercerosrelacionadosdestinoTable[] = [];
-      LISTA_DINAMICA.push(this.destinatarioForm.value as TercerosrelacionadosdestinoTable);
-      this.zoosanitarioStore.updatedatosForma(LISTA_DINAMICA as TercerosrelacionadosdestinoTable[]);
+      const LISTA_DINAMICA: DestinatarioForm[] = [];
+      LISTA_DINAMICA.push(this.destinatarioForm.value as DestinatarioForm);
+      this.zoosanitarioStore.updatedatosForma(LISTA_DINAMICA as DestinatarioForm[]);
       this.cerrar.emit();
     } else {
       this.destinatarioForm.markAllAsTouched();

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Store, StoreConfig } from '@datorama/akita';
 
-import { Acuicultura, Consulta, Fila, FormularioMovilizacion, PagoDeDerechos, RealizarGroup, createDatosState } from '../../models/220203/importacion-de-acuicultura.module';
+import { Acuicultura, Consulta, DestinatarioForm, Fila, FormularioMovilizacion, PagoDeDerechos, RealizarGroup, createDatosState } from '../../models/220203/importacion-de-acuicultura.module';
 import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 
 /**
@@ -128,7 +128,7 @@ export class AcuiculturaStore extends Store<Acuicultura> {
    * @method updateTercerosRelacionados
    * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de personas terceros relacionadas.
    */
-  public updatedatosForma(tercerosRelacionados: TercerosrelacionadosdestinoTable[]): void {
+  public updatedatosForma(tercerosRelacionados: DestinatarioForm[]): void {
     this.update(state => ({
       ...state,
       datosForma: tercerosRelacionados,
@@ -151,7 +151,7 @@ export class AcuiculturaStore extends Store<Acuicultura> {
   * @method actualizarDatosParaMovilizacionNacional
   * @param {DatosParaMovilizacionNacional} datosParaMovilizacionNacional Datos de movilización nacional.
   */
-  public actualizarSelectedExdora(datosParaMovilizacionNacional: TercerosrelacionadosdestinoTable): void {
+  public actualizarSelectedExdora(datosParaMovilizacionNacional: DestinatarioForm): void {
     this.update(state => ({
       ...state,
       seletedExdora: datosParaMovilizacionNacional
