@@ -18,7 +18,6 @@ export const ENCABEZADO_TABLA_CONTENEDOR: ConfiguracionColumna<DatosDelContenedo
   { encabezado: 'Fecha inicio', clave: (articulo) => articulo.fechaInicio, orden: 13 },
 ];
 export const ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO: ConfiguracionColumna<DatosDelContenedor>[] = [
-  { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
   { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.inicialesEquipo, orden: 1 },
   { encabezado: 'Número de equipo', clave: (articulo) => articulo.numeroEquipo, orden: 2 },
   { encabezado: 'Dígito Verificador', clave: (articulo) => articulo.digitoVerificador, orden: 3 },
