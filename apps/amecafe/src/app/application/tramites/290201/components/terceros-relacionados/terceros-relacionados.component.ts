@@ -87,7 +87,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   public paisData: CatalogosSelect = {
     labelNombre: 'País',
     required: true,
-    primerOpcion: 'Selecciona una opción',
+    primerOpción: 'Seleccione una opción',
     catalogos: [],
   };
   /**
