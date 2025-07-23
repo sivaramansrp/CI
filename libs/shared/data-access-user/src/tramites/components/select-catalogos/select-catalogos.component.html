@@ -3,7 +3,7 @@
   {{catalogosDatos.labelNombre}}
   @if (catalogosDatos.required) {*}:
 </label>
-<select class="form-control" id="tipo-solicitud" [formControl]="itemSeleccionado" (change)="seleccion()"
+<select class="form-select" id="tipo-solicitud" [formControl]="itemSeleccionado" (change)="seleccion()"
   [ngClass]="isValid() ? 'required' : ''">
   <option value=0 disabled>Selecciona un valor</option>
   @for (item of catalogosDatos.catalogos; track $index)

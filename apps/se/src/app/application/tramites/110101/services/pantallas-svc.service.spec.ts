@@ -46,7 +46,10 @@ describe('PantallasSvcService', () => {
       setDescripcion: jest.fn(),
       setValorTransaccion: jest.fn(),
       setEntidad: jest.fn(),
-      setRepresentacion: jest.fn()
+      setRepresentacion: jest.fn(),
+      setMetodoSeparacion: jest.fn(),
+      setExportadorAutorizado: jest.fn(),
+      setInformacionRadios: jest.fn()
     } as unknown as jest.Mocked<Tramite110101Store>;
 
     TestBed.configureTestingModule({
@@ -133,5 +136,8 @@ describe('PantallasSvcService', () => {
     expect(mockStore.setValorTransaccion).toHaveBeenCalledWith(MOCK_DATOS.valorTransaccion);
     expect(mockStore.setEntidad).toHaveBeenCalledWith(MOCK_DATOS.entidad);
     expect(mockStore.setRepresentacion).toHaveBeenCalledWith(MOCK_DATOS.representacion);
+    expect(mockStore.setMetodoSeparacion).toHaveBeenCalledWith(MOCK_DATOS.metodoSeparacion);
+    expect(mockStore.setExportadorAutorizado).toHaveBeenCalledWith(MOCK_DATOS.exportadorAutorizado);
+    expect(mockStore.setInformacionRadios).toHaveBeenCalledWith(MOCK_DATOS.informacionRadios);
   });
 });

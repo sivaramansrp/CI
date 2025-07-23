@@ -80,6 +80,7 @@ import { takeUntil } from 'rxjs';
  * datos necesarios en el flujo de la solicitud.
  */
 export class DatosComunesComponent implements OnInit, OnDestroy {
+
   /** Formulario principal que contiene los datos comunes del componente */
   datosComunesForm!: FormGroup;
 
@@ -277,6 +278,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       '238': [this.solicitud32605State['238']],
       '239': [this.solicitud32605State['239']],
       '240': [this.solicitud32605State['240']],
+      '242': [this.solicitud32605State['242']],
       '243': [this.solicitud32605State['243']],
       '244': [this.solicitud32605State['244']],
       '245': [this.solicitud32605State['245']],

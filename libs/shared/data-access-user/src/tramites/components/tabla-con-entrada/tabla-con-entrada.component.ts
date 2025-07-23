@@ -1,19 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
-import { TablaCampoSeleccion, TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
+import {
+  TablaCampoSeleccion,
+  TablaSeleccion,
+} from '../../../core/enums/tabla-seleccion.enum';
 import { ConfiguracionAporteColumna } from '../../../core/models/shared/configuracion-columna.model';
 import { EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Input } from '@angular/core';
 import { Output } from '@angular/core';
+import { SoloNumericaDirective } from '../../directives/solo-numerica/solo-numerica.directive';
 
 @Component({
   selector: 'app-tabla-con-entrada',
   templateUrl: './tabla-con-entrada.component.html',
   styleUrl: './tabla-con-entrada.component.scss',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,SoloNumericaDirective],
   host: {},
 })
 export class TablaConEntradaComponent<T> {
@@ -56,6 +60,18 @@ export class TablaConEntradaComponent<T> {
    */
   @Input() datos: T[] = [];
 
+   /**
+   * Este input permite deshabilitar la selección de filas mediante checkboxes en la tabla.
+   * Si se establece en `true`, los checkboxes de selección estarán deshabilitados.
+   */
+  @Input() disableSeleccionTablaCheckBox: boolean = false;
+
+  /**
+   * Este input permite deshabilitar la selección de filas mediante botones de radio en la tabla.
+   * Si se establece en `true`, los botones de radio de selección estarán deshabilitados.
+   */
+  @Input() disableSeleccionTablaRadio: boolean = false;
+
   /**
    * Evento que se emite cuando el usuario selecciona una fila de la tabla.
    * Este evento envía la fila seleccionada (objeto completo) al componente padre.
@@ -91,7 +107,7 @@ export class TablaConEntradaComponent<T> {
    *
    * @type {number}
    */
-  idFilaSeleccionada!: number;
+  idFilaSeleccionada!: number | string;
 
   /**
    * Almacena un array de los índices de las filas seleccionadas.
@@ -100,6 +116,37 @@ export class TablaConEntradaComponent<T> {
    * @type {number[]}
    */
   filasSeleccionadas: number[] = [];
+
+  /**
+   * Propiedad privada que almacena un valor numérico relacionado con la selección de entrada.
+   *
+   * @private
+   * @type {number}
+   */
+  private _inputSelection!: number;
+  /**
+   * Setter para la propiedad `inputSelection`.
+   * Este método se utiliza para actualizar el valor de `_inputSelection` y sincronizarlo con `idFilaSeleccionada`.
+   *
+   * @param {number} value - El nuevo valor que se asignará a `inputSelection` y `idFilaSeleccionada`.
+   */
+  @Input()
+  get inputSelection(): number {
+    return this._inputSelection; // Devuelve el valor interno de `_inputSelection`
+  }
+
+  /**
+   * Establece el valor de la selección de entrada y sincroniza el identificador de la fila seleccionada.
+   *
+   * @param value - El nuevo valor numérico que representa la fila seleccionada.
+   *
+   * Al asignar un valor a esta propiedad, se actualiza tanto la variable interna `_inputSelection`
+   * como la propiedad `idFilaSeleccionada`, asegurando que ambas estén sincronizadas.
+   */
+  set inputSelection(value: number) {
+    this._inputSelection = value; // Actualiza el valor interno de `_inputSelection`
+    this.idFilaSeleccionada = value; // Sincroniza el valor con `idFilaSeleccionada`
+  }
 
   /**
    * Método para obtener la configuración de las columnas ordenada según el campo "orden".
@@ -120,7 +167,7 @@ export class TablaConEntradaComponent<T> {
    * @returns {void} - No retorna nada, solo emite el evento con la fila seleccionada.
    */
   seleccionarFila(id: number, fila: T): void {
-    this.idFilaSeleccionada = id;
+    this.idFilaSeleccionada = 'i' + id;
     this.filaSeleccionada.emit(fila); // Emite la fila seleccionada al componente padre
   }
 

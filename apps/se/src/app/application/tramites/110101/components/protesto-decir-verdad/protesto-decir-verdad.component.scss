@@ -1,0 +1,29 @@
+
+.tab-content {
+      border: 1px solid #c4c4c4;
+      background: #f9f9f9;
+      padding: 20px;
+      margin-top: -1px;
+      border-radius: 0 0 5px 5px;
+      width: 600px;
+    }
+
+    .checkbox-text {
+      color: #333;
+      font-family: sans-serif;
+      font-size: 14px;
+    }
+
+    .checkbox-text input {
+      margin-right: 8px;
+    }
+
+
+    .content-with-checkbox {
+    display: flex;
+    text-align: justify;
+    gap: 5px;
+    padding-left: 15px;
+    flex-direction: row;
+    align-items: baseline;
+  }

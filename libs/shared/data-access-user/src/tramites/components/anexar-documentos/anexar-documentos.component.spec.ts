@@ -1,162 +1,117 @@
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { AnexarDocumentosComponent } from "./anexar-documentos.component";
-import { ToastrService } from "ngx-toastr";
-import { InicioSesionService } from "../../../core/services/shared/inicio-sesion/inicio-sesion.service";
-import { SubirDocumentoService } from "../../../core/services/shared/subir-documento/subir-documento.service";
-import { DocumentosQuery } from "../../../core/queries/documentos.query";
-import { DocumentosStore } from "../../../core/estados/documentos.store";
-import { BsModalService } from "ngx-bootstrap/modal";
-import { of } from "rxjs";
-import { Catalogo } from "../../../core/models/shared/catalogos.model";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AnexarDocumentosComponent } from './anexar-documentos.component';
+import { CatalogoDocumento } from '../../../core/models/shared/catalogos.model';
+import { EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
+import { DocumentosQuery } from '../../../core/queries/documentos.query';
+import { DocumentosStore } from '../../../core/estados/documentos.store';
 
 describe('AnexarDocumentosComponent', () => {
   let component: AnexarDocumentosComponent;
   let fixture: ComponentFixture<AnexarDocumentosComponent>;
-  let mockToastrService: ToastrService;
-  let mockInicioSesionService: InicioSesionService;
-  let mockSubirDocumentoService: SubirDocumentoService;
-  let mockDocumentosQuery: DocumentosQuery;
-  let mockDocumentosStore: DocumentosStore;
-  let mockModalService: BsModalService;
 
   beforeEach(async () => {
-    mockToastrService = {
-      error: jest.fn(),
-    } as unknown as ToastrService;
-
-    mockInicioSesionService = {
-      obtenerToken: jest.fn().mockReturnValue(of({ jwt: 'mockToken' })),
-    } as unknown as InicioSesionService;
-
-    mockSubirDocumentoService = {
-      subirDocumento: jest.fn().mockReturnValue(of({})),
-    } as unknown as SubirDocumentoService;
-
-    mockDocumentosQuery = {
-      selectDocumentoState$: of({ catalogoDocumentos: [] }),
-    } as unknown as DocumentosQuery;
-
-    mockDocumentosStore = {
-      establecerCatalogoDocumentos: jest.fn(),
-    } as unknown as DocumentosStore;
-
-    mockModalService = {
-      show: jest.fn(),
-    } as unknown as BsModalService;
-
     await TestBed.configureTestingModule({
       imports: [AnexarDocumentosComponent],
       providers: [
-        { provide: ToastrService, useValue: mockToastrService },
-        { provide: InicioSesionService, useValue: mockInicioSesionService },
-        { provide: SubirDocumentoService, useValue: mockSubirDocumentoService },
-        { provide: DocumentosQuery, useValue: mockDocumentosQuery },
-        { provide: DocumentosStore, useValue: mockDocumentosStore },
-        { provide: BsModalService, useValue: mockModalService },
-      ],
+        { provide: DocumentosQuery, useValue: {} },
+        { provide: DocumentosStore, useValue: {} },
+        { provide: SubirDocumentoService, useValue: { subirDocumento: jest.fn(() => ({ pipe: () => ({ subscribe: jest.fn() }) })) } },
+        { provide: ChangeDetectorRef, useValue: { detectChanges: jest.fn() } }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AnexarDocumentosComponent);
     component = fixture.componentInstance;
+    component.token = 'test-token';
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crearse correctamente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
+  it('debe inicializar y suscribirse a eventos', () => {
+    component.cargaArchivosEvento = new EventEmitter<void>();
+    component.regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+    jest.spyOn(component.cargaArchivosEvento, 'pipe');
+    jest.spyOn(component.regresarSeccionCargarDocumentoEvento, 'pipe');
     component.ngOnInit();
-    expect(component.documentoForma).toBeDefined();
+    expect(component.cargaArchivosEvento.pipe).toHaveBeenCalled();
+    expect(component.regresarSeccionCargarDocumentoEvento.pipe).toHaveBeenCalled();
   });
 
-  it('should call obtenerToken and set token', () => {
-    component.obtenerToken({ user: 'test', password: 'test' });
-    expect(mockInicioSesionService.obtenerToken).toHaveBeenCalled();
-    expect(component.token).toBe('mockToken');
+  it('debe agregar un documento opcional correctamente', () => {
+    component.catalogoDocumentosOpcionales = [{ id: 1, descripcion: 'Doc', tam: '1000', dpi: '300', adicionales: [] }];
+    component.listDocOpcionalesAgregar = [1];
+    component.agregarOpcionales();
+    expect(component.documentosOpcionalesSeleccionados.length).toBe(1);
+    expect(component.listDocOpcionalesAgregar.length).toBe(0);
   });
 
-  it('should select a document and set tamMaximo', () => {
-    component.catalogoDocumentos = [{ id: 1, tam: '1024' } as Catalogo];
-    component.documentoForma.setValue({ documento: 1 });
-    component.seleccionarDocumento();
-    expect(component.documentoSeleccionado).toEqual({ id: 1, tam: '1024' });
-    expect(component.tamMaximo).toBe(1);
-  });
-
-  it('should show error if document is not found', () => {
-    component.catalogoDocumentos = [];
-    component.documentoForma.setValue({ documento: 1 });
-    component.seleccionarDocumento();
-    expect(mockToastrService.error).toHaveBeenCalledWith('Documento no encontrado');
-  });
-
-  it('should validate and add a file to listadoArchivos', () => {
-    const mockFile = new File(['content'], 'test.pdf', { type: 'application/pdf' });
-    const mockEvent = { target: { files: [mockFile] } } as unknown as Event;
-    component.cargarDoc(mockEvent, {} as HTMLInputElement, 1, 'obligatorio');
-    expect(component.listadoArchivos.length).toBe(1);
-    expect(component.listadoArchivos[0].name).toBe('test.pdf');
-  });
-
-  it('should show error if file is not a PDF', () => {
-    const mockFile = new File(['content'], 'test.txt', { type: 'text/plain' });
-    const mockEvent = { target: { files: [mockFile] } } as unknown as Event;
-    component.cargarDoc(mockEvent, {} as HTMLInputElement, 1, 'obligatorio');
-    expect(mockToastrService.error).toHaveBeenCalledWith('Solo se permiten archivos PDF.');
-  });
-
-  it('should open a modal for PDF preview', () => {
-    component.listadoArchivos = [{
-      id: 1, ruta: 'mockRuta',
-      name: "",
-      cargado: false,
-      tipo: "",
-      mensaje: "",
-      estatus: ""
-    }];
-    component.verPdf(1);
-    expect(mockModalService.show).toHaveBeenCalled();
-  });
-
-  it('should confirm upload and emit cargaRealizada', () => {
-    jest.spyOn(component.cargaRealizada, 'emit');
-    component.listadoArchivos = [{
-      id: 1, tipo: 'obligatorio',
-      name: "",
-      ruta: "",
-      cargado: false,
-      mensaje: "",
-      estatus: ""
-    }];
-    component.confirmUpload();
-    expect(component.cargaRealizada.emit).toHaveBeenCalledWith(true);
-  });
-
-  it('should clean file input and remove file from listadoArchivos', () => {
-    component.listadoArchivos = [{
-      id: 1,
-      name: "",
-      ruta: "",
-      cargado: false,
-      tipo: "",
-      mensaje: "",
-      estatus: ""
-    }];
-    component.limpiarFile({ id: 1 } as Catalogo, 'obligatorios');
+  it('debe limpiar un archivo correctamente', () => {
+    const doc: CatalogoDocumento = { id: 1, descripcion: 'Doc', tam: '1000', dpi: '300', adicionales: [] };
+    component.listadoArchivos = [{ id: 1, name: 'file.pdf', ruta: '', cargado: false, tipo: 'obligatorio', mensaje: '', estatus: 'Pendiente' }];
+    document.body.innerHTML = `<input id="formFile1" value="file.pdf">`;
+    component.limpiarFile(doc, 'obligatorios');
     expect(component.listadoArchivos.length).toBe(0);
   });
 
-  it('should add optional documents to listDocOpcionales', () => {
-    component.archivosOpcionales = [{ id: 1 } as Catalogo];
-    component.listDocOpcionalesAgregar = [1];
-    component.agregarOpcionales();
-    expect(component.listDocOpcionales.length).toBe(1);
+  it('debe eliminar un documento opcional correctamente', () => {
+    const doc: CatalogoDocumento = { id: 2, descripcion: 'Opcional', tam: '1000', dpi: '300', adicionales: [] };
+    component.documentosOpcionalesSeleccionados = [doc];
+    component.listadoArchivos = [{ id: 2, name: 'file.pdf', ruta: '', cargado: false, tipo: 'opcional', mensaje: '', estatus: 'Pendiente' }];
+    component.eliminarOpcional(doc);
+    expect(component.documentosOpcionalesSeleccionados.length).toBe(0);
+    expect(component.listadoArchivos.length).toBe(0);
   });
 
-  it('should remove optional document from listDocOpcionales', () => {
-    component.listDocOpcionales = [{ id: 1 } as Catalogo];
-    component.eliminarOpcional({ id: 1 } as Catalogo);
-    expect(component.listDocOpcionales.length).toBe(0);
+  it('debe verificar si existe preview de archivo', () => {
+    component.listadoArchivos = [{ id: 3, name: 'file.pdf', ruta: '', cargado: false, tipo: 'obligatorio', mensaje: '', estatus: 'Pendiente' }];
+    expect(component.existePreview(3)).toBe(true);
+    expect(component.existePreview(99)).toBe(false);
+  });
+
+  it('debe obtener el nombre del archivo', () => {
+    component.listadoArchivos = [{ id: 4, name: 'archivo.pdf', ruta: '', cargado: false, tipo: 'obligatorio', mensaje: '', estatus: 'Pendiente' }];
+    expect(component.obtenerNombreArchivo(4)).toBe('archivo.pdf');
+    expect(component.obtenerNombreArchivo(99)).toBe('No hay archivo seleccionado');
+  });
+
+  it('debe limpiar la notificación', () => {
+    component.nuevaNotificacion = { tipoNotificacion: 'alert', categoria: '', modo: '', titulo: '', mensaje: '', cerrar: false, txtBtnAceptar: '', txtBtnCancelar: '', tamanioModal: '' };
+    component.limpiarNotificacion();
+    expect(component.nuevaNotificacion.tipoNotificacion).toBe('');
+  });
+
+  it('debe convertir kilobytes a megabytes', () => {
+    expect(component.convertirKilobytesAMegabytes(2048)).toBe(2);
+  });
+
+  it('debe convertir kb a mb como string', () => {
+    expect(component.convertKbToMb('2000')).toBe('2.00');
+    expect(component.convertKbToMb(undefined)).toBe('0');
+  });
+
+  it('debe convertir kb a bytes como static', () => {
+    expect(AnexarDocumentosComponent.convertirKbaBytes('2')).toBe(2000);
+    expect(AnexarDocumentosComponent.convertirKbaBytes(undefined)).toBe(0);
+  });
+
+  it('debe mostrar sección de carga de archivos y emitir eventos', () => {
+    const activarSpy = jest.spyOn(component.activarBotonCargaArchivos, 'emit');
+    const cargaSpy = jest.spyOn(component.cargaRealizada, 'emit');
+    component.listadoArchivos = [{ id: 1, name: 'file.pdf', ruta: '', cargado: true, tipo: 'obligatorio', mensaje: '', estatus: 'Pendiente' }];
+    component.mostrarSeccionCargaArchivosAccion();
+    expect(activarSpy).toHaveBeenCalled();
+    expect(cargaSpy).toHaveBeenCalledWith(false);
+  });
+
+  it('debe limpiar correctamente en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

@@ -35,7 +35,8 @@
             <h5> Documento a anexar</h5>
         </div>
         <div class="col-md-6" style="text-align: end !important;">
-            <button class="btn btn-default ms-2" type="button" (click)="mostrarModalDocumentos()">Anexar documentos</button>
+            <button class="btn btn-default ms-2" type="button" (click)="mostrarModalDocumentos()">Anexar
+                documentos</button>
         </div>
         <div class="col-md-12">
             <table class="table table-bordered mt-3">
@@ -49,7 +50,7 @@
                     <tr *ngFor="let archivo of archivos; index as i">
                         <td>{{ i + 1 }}</td>
                         <td>{{ archivo.name }}</td>
-                      </tr>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -61,9 +62,11 @@
         </div>
     </div>
 </div>
+@if (abrirModal) {
 <section>
-    <lib-modal-funciones [abrirModal]="abrirModal"  [titulo]="'Anexar nuevo documento'" [descripcion]="descripcionModal"
-        [maxSizeMB]="10" [aceptado]="'application/pdf'" (archivoSeleccionado)="agregarArchivo($event)" 
+    <lib-modal-funciones [abrirModal]="abrirModal" [titulo]="'Anexar nuevo documento'" [descripcion]="descripcionModal"
+        [maxSizeMB]="10" [aceptado]="'application/pdf'" (archivoSeleccionado)="agregarArchivo($event)"
         (cerrar)="abrirModal = false">
     </lib-modal-funciones>
 </section>
+}

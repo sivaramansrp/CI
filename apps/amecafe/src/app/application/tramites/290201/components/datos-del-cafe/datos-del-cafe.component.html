@@ -67,14 +67,15 @@
                <input class="form-control"  placeholder="" type="text" formControlName="cantidadutilizada" id="cantidadutilizada"
                (change)="setValoresStore(datosDelTramiteRealizar,'cantidadutilizada','setCantidadutilizada')"
                [disabled]="esFormularioSoloLectura"
+               [ngClass]="{
+                'is-invalid': esCantidadUtilizadaExcede
+              }"
                >
-              
-         @if(isCantidadUtilizadaExceeds) {
-           <small class="text-danger">
-             La Cantidad Utilizada debe ser menor a la cantidad Facturada
-           </small>
-          
-        }
+            @if(esCantidadUtilizadaExcede) {
+               <small class="text-danger">
+                   La Cantidad Utilizada debe ser menor a la cantidad Facturada
+               </small>
+            }
             </div>
          </div>
          <div class="col-md-6 mb-3">
@@ -123,22 +124,17 @@
                    <input class="form-control" required="true" placeholder="" type="text" formControlName="cantidad" id="cantidad"
                    (change)="setValoresStore(datosDelTramiteRealizar,'cantidad','setCantidad')"
                    [disabled]="esFormularioSoloLectura"
-                   >
-                   <div
-                   *ngIf="
-                     dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.invalid &&
-                     dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.touched
-                   "
-                   class="text-danger"
-                 >
-                   <small
-                     *ngIf="
-                       dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.errors?.['pattern']
-                     "
-                   >
-                     Por favor, sólo escribe dígitos
-                   </small>
-                 </div>
+                   [ngClass]="{
+                    'is-invalid': isCantidadInvalid
+                  }">
+                 @if(isCantidadInvalid){
+                  @if(isCantidadPatternInvalid){
+                  <small class="text-danger">
+                  Por favor, sólo escribe dígitos
+                </small>
+              }
+                 }
+                  
                 </div>
              </div>
              <div class="col-md-4 mb-3">
@@ -164,23 +160,18 @@
                    <label class="form-label" for="precioapplicable">Precio aplicable*:</label>
                    <input class="form-control" required="true" placeholder="" type="text" formControlName="precioapplicable" id="precioapplicable"
                    (change)="setValoresStore(datosDelTramiteRealizar,'precioapplicable','setPrecioapplicable')"
-                   [disabled]="esFormularioSoloLectura">
+                   [disabled]="esFormularioSoloLectura"
+                   [ngClass]="{
+                    'is-invalid': esPrecioAplicableInvalido
+                  }">
                 </div>
-                <div
-        *ngIf="
-         dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.invalid &&
-        dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.touched
-       "
-      class="text-danger"
-      >
-     <small
-      *ngIf="
-        dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.errors?.['pattern']
-      "
-     >
-      Solo 7 enteros y hasta 3 Decimales
-     </small>
-     </div>
+      @if(esPrecioAplicableInvalido){
+        @if(isPrecioApplicablePatternInvalid){
+          <small class="text-danger">
+          Solo 7 enteros y hasta 3 Decimales
+         </small>
+        }
+      }
              </div>
              <div class="col-md-4 mb-3">
                 <div class="form-group">
@@ -204,13 +195,14 @@
                        <input class="form-control" required="true" placeholder="" type="text" formControlName="lote" id="lote"
                        (change)="setValoresStore(datosDelTramiteRealizar,'lote','setLote')"
                        [disabled]="esFormularioSoloLectura">
-                       <div *ngIf="dataCafeForm.get('datosDelTramiteRealizar.lote')?.invalid && dataCafeForm.get('datosDelTramiteRealizar.lote')?.touched"
-                       class="text-danger">
-                            <small *ngIf="
-                            dataCafeForm.get('datosDelTramiteRealizar.lote')?.errors?.['pattern'] ">
-                           Por favor, sólo escribe dígitos
-                        </small>
-                      </div>
+                       
+                       @if(isLoteInvalid){
+                        @if(isLotePatternInvalid){
+                          <small>
+                            Por favor, sólo escribe dígitos
+                         </small>
+                        }
+                       }
                     </div>
                  </div>
                  <div class="col-md-8 mb-3">
@@ -382,7 +374,16 @@
                <input class="form-control"  placeholder="" type="text" formControlName="otrasCaracteristicas" id="otrasCaracteristicas"
                (change)="setValoresStore(datosDelTramiteRealizar,'otrasCaracteristicas','setOtrasCaracteristicas')"
                [disabled]="esFormularioSoloLectura"
+               [ngClass]="{
+                'is-invalid': isOtrasCaracteristicasRequired
+              }"
                >
+               @if(isOtrasCaracteristicasRequired){
+                <small class="text-danger">
+                  Este campo es obligatorio
+                        </small>
+               }
+     
               </div>
                 </div>
                  <div class="row">
@@ -402,62 +403,64 @@
                  </div>
                  <ng-titulo titulo="Transbordo" />
                  <div class="row">
-                    <div class="col-md-4 ">
-                        <div class="form-group">
-                            <div class="form-group">
-                                <app-catalogo-select
-                                id="paisdetransbordoData"
-                                formControlName="paisdetransbordo"
-                                [catalogo]="paisdetransbordoData.catalogos"
-                                [label]="'Pais de transbordo'"
-                                [tooltipQuestionCircle]="true"
-                                [placeholder]="paisdetransbordoData.primerOpcion"
-                                [required]="true"
-                                (change)="setValoresStore(datosDelTramiteRealizar,'paisdetransbordo','setPaisdetransbordo')"
-                                [disabled]="esFormularioSoloLectura"
-                              ></app-catalogo-select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <div class="form-group">
-                               <app-catalogo-select
-                                id="mediodetransporteData"
-                                formControlName="mediodetransporte"
-                                [catalogo]="mediodetransporteData.catalogos"
-                                [label]="'Medio de transporte'"
-                                [placeholder]="mediodetransporteData.primerOpcion"
-                                [required]="true"
-                                (change)="setValoresStore(datosDelTramiteRealizar,'mediodetransporte','setMediodetransporte')"
-                                [disabled]="esFormularioSoloLectura"
-                              ></app-catalogo-select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                          <label class="form-label" for="Identificadordel">Identificador del medio de transporte*:</label>
-                          <input class="form-control" id="Identificadordel" formControlName="Identificadordel"
-                          (change)="setValoresStore(datosDelTramiteRealizar,'Identificadordel','setIdentificadordel')"
-                          [disabled]="esFormularioSoloLectura"/>
-                          <div
-                          *ngIf="
-                            dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.invalid &&
-                            dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.touched
-                          "
-                          class="text-danger"
-                        >
-                          <small
-                            *ngIf="
-                              dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.errors?.['maxlength']
-                            "
-                          >
-                            Por favor, no escribas más de 5 caracteres
-                          </small>
-                          </div>
-                        </div>
-                  </div>
+                   <!-- País de transbordo -->
+                   <div class="col-md-4 mb-3">
+                     <div class="form-group">
+                       <app-catalogo-select
+                         id="paisdetransbordoData"
+                         formControlName="paisdetransbordo"
+                         [catalogo]="paisdetransbordoData.catalogos"
+                         [label]="'País de transbordo'"
+                         [tooltipQuestionCircle]="true"
+                         [tooltipQuestionCircleText]="'Si no hay país de transbordo, no seleccione país'"
+                         [placeholder]="paisdetransbordoData.primerOpcion"
+                         (change)="setValoresStore(datosDelTramiteRealizar, 'paisdetransbordo', 'setPaisdetransbordo')"
+                         [disabled]="esFormularioSoloLectura"
+                       ></app-catalogo-select>
+                     </div>
+                   </div>
+                 
+                   <!-- Medio de transporte -->
+                   <div class="col-md-4 mb-3">
+                     <div class="form-group">
+                       <app-catalogo-select
+                         id="mediodetransporteData"
+                         formControlName="mediodetransporte"
+                         [catalogo]="mediodetransporteData.catalogos"
+                         [label]="'Medio de transporte'"
+                         [placeholder]="mediodetransporteData.primerOpcion"
+                         [required]="true"
+                         (change)="setValoresStore(datosDelTramiteRealizar, 'mediodetransporte', 'setMediodetransporte')"
+                         [disabled]="esFormularioSoloLectura"
+                       ></app-catalogo-select>
+                     </div>
+                   </div>
+                 
+                   <!-- Identificador del medio de transporte -->
+                   <div class="col-md-4 mb-3">
+                     <div class="form-group">
+                       <label class="form-label" for="Identificadordel" style="white-space: nowrap;">Identificador del medio de transporte*:</label>
+                       <input
+                         class="form-control"
+                         id="Identificadordel"
+                         formControlName="Identificadordel"
+                         (change)="setValoresStore(datosDelTramiteRealizar, 'Identificadordel', 'setIdentificadordel')"
+                         [disabled]="esFormularioSoloLectura"
+                         [ngClass]="{
+                          'is-invalid': isIdentificadorDelInvalid
+                        }"
+                       />
+                       @if(isIdentificadorDelInvalid){
+                        @if(isIdentificadorDelPatternInvalid){
+                          <small class="text-danger">
+                          Por favor, no escribas más de 5 caracteres
+                        </small>
+                        }
+                        
+                       }
+ 
+                     </div>
+                   </div>
                  </div>
                  <ng-titulo titulo="Observaciones" />
                  <div class="col-md-4">
@@ -467,19 +470,22 @@
                       placeholder="" style="height: 100px" formControlName="observaciones"
                       (change)="setValoresStore(datosDelTramiteRealizar,'observaciones','setObservaciones')"
                       [disabled]="esFormularioSoloLectura"></textarea>
-                      <div *ngIf="dataCafeForm.get('datosDelTramiteRealizar.observaciones')?.hasError('maxlength')">
-                        Por favor, no escribas más de 250 caracteres.
-                      </div>
+                      @if(isObservacionesMaxLengthExceeded){
+                        <small >
+                          Por favor, no escribas más de 250 caracteres.
+                        </small>
+                      }
+                      
                     </div>
               </div>
          </div>
      </div>  
      <div class="col-md-12 d-flex justify-content-end">      
-          <div class="btn-group">
-            <button class="btn btn-danger me-2"
+      <div class="btn-group" style="margin-bottom: 1rem;"> 
+        <button class="btn btn-danger me-2"
               type="button" data-bs-dismiss="modal">Cancelar</button>
               <button class="btn btn-primary me-2"
-              type="button" (click)="onSubmit()" data-bs-dismiss="modal">Agregar</button>
+              type="submit" data-bs-dismiss="modal">Agregar</button>
           </div>    
          </div>
           </ng-container>
