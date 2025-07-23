@@ -82,9 +82,9 @@ export class SanidadCertificadoComponent {
 
     // Validar formularios antes de continuar desde el paso uno
     if (this.indice === 1 && e.accion === 'cont') {
-      const ISVALID = false;
+      const ISVALID = this.validarTodosFormulariosPasoUno();
       if (!ISVALID) {
-        this.esFormaValido = !this.validarTodosFormulariosPasoUno();
+        this.esFormaValido = true;
         return; // Detener ejecución si los formularios son inválidos
       }
     }

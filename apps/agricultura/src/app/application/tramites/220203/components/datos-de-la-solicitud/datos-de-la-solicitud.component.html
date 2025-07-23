@@ -150,7 +150,7 @@
         >
         </app-tabla-dinamica>
         <div
-          *ngIf="tableErrorMeassageDispaly">
+          *ngIf="tableErrorMeassageDispaly && cuerpoTablaFila.length === 0">
           <small class="mensaje-error">Este campo es obligatorio.</small>
         </div>
       </div>

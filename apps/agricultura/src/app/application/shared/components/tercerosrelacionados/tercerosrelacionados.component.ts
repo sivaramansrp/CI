@@ -194,6 +194,10 @@ export class TercerosrelacionadosComponent {
    */
   buscarForm!: FormGroup;
 
+  tableErrorMeassageDispalyExportador: boolean = false;
+   tableErrorMeassageDispalyDestinatario: boolean = false;
+
+
   /**
    * Constructor del componente.
    * @param router Servicio de enrutamiento de Angular.
@@ -340,6 +344,21 @@ export class TercerosrelacionadosComponent {
     } else {
       this.eliminarDatoExportador = false;
     }
-
   }
+    validarFormulario(): boolean {
+      let VALIDATE = false;
+     if(this.exportadorRequired) {
+      
+      VALIDATE =this.cuerpoTablaExportador.length > 0;
+      this.tableErrorMeassageDispalyExportador=!VALIDATE;
+     }
+     if(this.destinatarioRequired){
+      VALIDATE = this.cuerpoTablaDestino.length > 0;
+        this.tableErrorMeassageDispalyDestinatario=!VALIDATE;
+     }
+     if(!this.destinatarioRequired && !this.exportadorRequired) {
+       VALIDATE = true;
+     }
+     return VALIDATE;
+    }
 }

@@ -52,6 +52,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     @ViewChild('datosSolicitudRef') datosSolicitud!: DatosDeLaSolicitudComponent;
     @ViewChild('datosParaMovilizacionRef') datosParaMovilizacion!: DatosParaMovilizacionComponent;
     @ViewChild('pagoDerechosRef') pagoDerechos!: PagoDeDerechosComponent;
+    @ViewChild('tercerospageRef') tercerospage!: TercerospageComponent;
   /**
  * @descripcion
  * Subject utilizado para notificar y completar las suscripciones activas al destruir el componente,
@@ -110,6 +111,7 @@ public validarFormularios(): boolean {
     } else {
       isValid = false;
     }
+    console.log('solicitante:', isValid);
     if(this.datosSolicitud.datosMercanciaFormGroup){
       if(!this.datosSolicitud.validarFormulario()){
         isValid = false;
@@ -118,6 +120,7 @@ public validarFormularios(): boolean {
     else{
       isValid = false;
     }
+        console.log('datosSolicitud:', isValid);
     if(this.datosParaMovilizacion.formularioMovilizacion){
       if(!this.datosParaMovilizacion.validarFormulario()){
         isValid = false;
@@ -126,6 +129,7 @@ public validarFormularios(): boolean {
     else{
       isValid = false;
     }
+      console.log('datosParaMovilizacion:', isValid);
     if(this.pagoDerechos){
       if(!this.pagoDerechos.validarFormulario()){
         isValid = false;
@@ -134,6 +138,16 @@ public validarFormularios(): boolean {
     else{
       isValid = false;
     }
+     console.log('pagoDerechos:', isValid);
+    if(this.tercerospage){
+      if(!this.tercerospage.validarFormulario()){
+        isValid = false;
+      }
+    }
+    else{
+      isValid = false;
+    }
+     console.log('tercerospage:', isValid);
   return isValid;
 }
   /**

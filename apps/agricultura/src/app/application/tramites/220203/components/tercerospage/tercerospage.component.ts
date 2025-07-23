@@ -72,7 +72,7 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    */
 
   datosForma: DestinatarioForm[] = [];
-
+  @ViewChild('tercerosRelacionadosRef') tercerosRelacionados!: TercerosrelacionadosComponent;
   /**
    * Constructor del componente.
    * @param consultaQuery Servicio para consultar el estado de solo lectura.
@@ -183,4 +183,9 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.modalRef.abrir(AgregardestinatariofinalComponent);
   }
+ 
+    validarFormulario(): boolean {
+      return this.tercerosRelacionados.validarFormulario();
+    }
+
 }

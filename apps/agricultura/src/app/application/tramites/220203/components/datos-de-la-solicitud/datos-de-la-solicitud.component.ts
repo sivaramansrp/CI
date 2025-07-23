@@ -513,7 +513,7 @@ if(this.datosMercanciaFormGroup.invalid){
   this.datosMercanciaFormGroup.markAllAsTouched();
   return false;
 }
-else if(!this.tableErrorMeassageDispaly){
+else if(this.tableErrorMeassageDispaly){
   return false;
 }
 

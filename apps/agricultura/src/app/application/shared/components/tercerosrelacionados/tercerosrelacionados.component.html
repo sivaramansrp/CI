@@ -63,6 +63,9 @@
                 [configuracionTabla]="configuracionColumnasExportador" [datos]="cuerpoTablaExportador"
                 [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
                 (listaDeFilaSeleccionada)="onSeleccionDestinatarioFinal($event)"></app-tabla-dinamica>
+                     <div
+          *ngIf="tableErrorMeassageDispalyExportador && cuerpoTablaExportador.length === 0">
+          <small class="mensaje-error">Este campo es obligatorio.</small>
         </div>
         <div class="col-md-12 d-flex justify-content-end" *ngIf="cuerpoTablaExportador.length === 0">
             <button class="btn btn-primary me-3" [disabled]="esFormularioSoloLectura"
@@ -87,6 +90,10 @@
                     [configuracionTabla]="configuracionColumnasDestino" [datos]="cuerpoTablaDestino"
                     [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
                     (listaDeFilaSeleccionada)="onSeleccionDestinatario($event)"></app-tabla-dinamica>
+                     <div
+          *ngIf="tableErrorMeassageDispalyDestinatario && cuerpoTablaDestino.length === 0">
+          <small class="mensaje-error">Este campo es obligatorio.</small>
+        </div>
             </div>
             <div class="col-md-12 d-flex justify-content-end" *ngIf="cuerpoTablaDestino.length === 0">
                 <button class="btn btn-primary me-3" [disabled]="esFormularioSoloLectura"
