@@ -42,7 +42,7 @@
   <div class="col-md-12 mt-5 d-flex justify-content-end">
     <button type="button" class="btn btn-primary ms-3" (click)="tercerosAgregar()"
       [disabled]="esFormularioSoloLectura">Agregar</button>
-    <button type="button" class="btn btn-default ms-3">Buscar</button>
+    <button type="button" class="btn btn-default ms-3" (click)="abrirBuscarTercerosModal()">Buscar</button>
   </div>
 
   <!-- Modal -->
@@ -339,6 +339,80 @@
         <button type="button" class="btn btn-primary ms-3" (click)="guardarDestinatario()"
           [disabled]="esFormularioSoloLectura">Guardar</button>
       </div>
+    </div>
+  </app-modal>
+
+  <!-- Search Terceros Modal -->
+  <app-modal [active]="showBuscarTercerosModal">
+    <div>
+      <ng-titulo titulo="Terceros relacionados" />
+      
+      <form [formGroup]="buscarTercerosForm" class="form">
+        <!-- Radio buttons for Física and Moral -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <input class="form-check-input me-2" type="radio" name="tipoPersonaBuscar" 
+              formControlName="tipoPersonaBuscar" value="fisica" id="fisicaBuscar" />
+            <label for="fisicaBuscar">Física</label>
+          </div>
+          <div class="col-md-6">
+            <input class="form-check-input me-2" type="radio" name="tipoPersonaBuscar" 
+              formControlName="tipoPersonaBuscar" value="moral" id="moralBuscar" />
+            <label for="moralBuscar">Moral</label>
+          </div>
+        </div>
+
+        <!-- Form fields based on selection -->
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <label class="form-label" for="nombreBuscar">Nombre:</label>
+            <input class="form-control" id="nombreBuscar" type="text" formControlName="nombre" />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="apellidoPaternoBuscar">Apellido paterno:</label>
+            <input class="form-control" id="apellidoPaternoBuscar" type="text" formControlName="apellidoPaterno" />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="apellidoMaternoBuscar">Apellido materno:</label>
+            <input class="form-control" id="apellidoMaternoBuscar" type="text" formControlName="apellidoMaterno" />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label" for="correoElectronicoBuscar">Correo electrónico:</label>
+            <input class="form-control" id="correoElectronicoBuscar" type="email" formControlName="correoElectronico" />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label" for="paisBuscar">País:</label>
+            <select class="form-select" id="paisBuscar" formControlName="pais">
+              <option value="1">MÉXICO (ESTADOS UNIDOS MEXICANOS)</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="entidadFederativaBuscar">Entidad federativa:</label>
+            <select class="form-select" id="entidadFederativaBuscar" formControlName="entidadFederativa">
+              <option value="">Selecciona un valor</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-secondary me-2" (click)="cerrarBuscarTercerosModal()">Cerrar</button>
+          <button type="button" class="btn btn-outline-secondary me-2" (click)="limpiarBuscarTerceros()">Limpiar</button>
+          <button type="button" class="btn btn-primary" (click)="buscarTerceros()">Buscar</button>
+        </div>
+      </form>
+    </div>
+     <div class="row">
+    <h6>Terceros</h6>
+    <app-tabla-dinamica [configuracionTabla]="configuracionTablaDatos" [datos]="destinatario"
+      [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+    </app-tabla-dinamica>
     </div>
   </app-modal>
 </div>

@@ -62,7 +62,9 @@ import { CommonModule } from '@angular/common';
 export class TercerosComponent implements OnInit, OnDestroy {
   datosPersonales!: FormGroup;
   tipoPersonaForm!: FormGroup;
+  buscarTercerosForm!: FormGroup;
   showtercerosModal = false;
+  showBuscarTercerosModal = false;
   public paisCatalogo: Catalogo[] = realizar.pais;
   public estadoCatalogo: Catalogo[] = realizar.estado;
   public municipioCatalogo: Catalogo[] = realizar.municipio;
@@ -127,6 +129,16 @@ export class TercerosComponent implements OnInit, OnDestroy {
 
     this.tipoPersonaForm = this.fb.group({
       tipoPersona: [this.solicitudState.tipoPersona, Validators.required],
+    });
+
+    this.buscarTercerosForm = this.fb.group({
+      tipoPersonaBuscar: ['fisica'],
+      nombre: [''],
+      apellidoPaterno: [''],
+      apellidoMaterno: [''],
+      correoElectronico: [''],
+      pais: [this.paisCatalogo[0].id],
+      entidadFederativa: ['']
     });
 
     this.datosPersonales = this.fb.group({
@@ -241,9 +253,39 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.exportadorSeleccionado = filas;
   }
 
+  // limpiarBusquedaTif(): void {
+  //   this.nombreEstablecimientoTif = '';
+  //   this.numeroEstablecimientoTif = '';
+  // }
+
   limpiarBusquedaTif(): void {
     this.nombreEstablecimientoTif = '';
     this.numeroEstablecimientoTif = '';
+  }
+
+  abrirBuscarTercerosModal(): void {
+    this.showBuscarTercerosModal = true;
+    // Reset the search form
+    this.buscarTercerosForm.reset({
+      tipoPersonaBuscar: 'fisica',
+      pais: this.paisCatalogo[0].id
+    });
+  }
+
+  cerrarBuscarTercerosModal(): void {
+    this.showBuscarTercerosModal = false;
+  }
+
+  limpiarBuscarTerceros(): void {
+    this.buscarTercerosForm.reset({
+      tipoPersonaBuscar: 'fisica',
+      pais: this.paisCatalogo[0].id
+    });
+  }
+
+  buscarTerceros(): void {
+    console.log('Buscar terceros:', this.buscarTercerosForm.value);
+    // Implement search logic here
   }
 
 }
