@@ -1,4 +1,8 @@
-import { Catalogo, REGEX_LLAVE_DE_PAGO_DE_DERECHO, REGEX_PATRON_DECIMAL_2 } from '@ng-mf/data-access-user';
+import {
+  Catalogo,
+  REGEX_LLAVE_DE_PAGO_DE_DERECHO,
+  REGEX_PATRON_DECIMAL_2,
+} from '@ng-mf/data-access-user';
 import {
   Component,
   EventEmitter,
@@ -10,8 +14,11 @@ import {
   FECHA_DE_PAGO,
   PagoDerechosFormState,
 } from '../../models/terceros-relacionados.model';
-import { PagoDerechosState,PagoDerechosStore } from '../../estados/stores/pago-de-derechos.store';
-import { Subject,map } from 'rxjs';
+import {
+  PagoDerechosState,
+  PagoDerechosStore,
+} from '../../estados/stores/pago-de-derechos.store';
+import { Subject, map } from 'rxjs';
 import { BANCO } from '../../constantes/datos-solicitud.enum';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
@@ -66,7 +73,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
    */
-   @Input() public formularioDeshabilitado: boolean = false;
+  @Input() public formularioDeshabilitado: boolean = false;
 
   /**
    * @property {EventEmitter<PagoDerechosFormState>} updatePagoDerechos
@@ -146,20 +153,20 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private datosSolicitudService: DatosSolicitudService,
     private pagoDerechosStore: PagoDerechosStore,
     private pagoDerechosQuery: PagoDerechosQuery,
-      private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.cargarDatos();
     this.getBancoDatos();
 
-        // Inicializa el formulario.
+    // Inicializa el formulario.
     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.unsubscribe$),
-      map((seccionState)=>{
-        this.formularioDeshabilitado = seccionState.readonly;
-      })
-    )
-    .subscribe()
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -169,14 +176,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * con esos valores y suscribe a cambios para mantener el estado sincronizado.
    */
   ngOnInit(): void {
-     this.pagoDerechosQuery.selectSolicitud$
-            .pipe(
-              takeUntil(this.unsubscribe$),
-              map((seccionState) => {
-                this.solicitudState = seccionState;
-              })
-            )
-            .subscribe();
+    this.pagoDerechosQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.mostrarBanco = BANCO.includes(this.idProcedimiento) ? true : false;
     this.pagoDerechosForm = this.fb.group({
       claveReferencia: [
@@ -193,15 +200,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         this.solicitudState?.llavePago || '',
         [
           Validators.required,
-           Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
+          Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
           Validators.maxLength(30),
-         
         ],
       ],
-      fechaPago: [
-        this.solicitudState?.fechaPago || '',
-        Validators.required,
-      ],
+      fechaPago: [this.solicitudState?.fechaPago || '', Validators.required],
       importePago: [
         this.solicitudState?.importePago || '',
         [
@@ -218,6 +221,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     if (this.formularioDeshabilitado) {
       this.pagoDerechosForm.disable();
     }
+    console.log(this.pagoDerechoFormState);
+    this.pagoDerechosForm.patchValue(this.pagoDerechoFormState);
   }
 
   /**
@@ -271,11 +276,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   onFechaCambiada(fecha: string): void {
     this.pagoDerechosForm.patchValue({ fechaPago: fecha });
-    this.setValoresStore(
-      this.pagoDerechosForm,
-      'fechaPago',
-      'setFechaPago'
-    );
+    this.setValoresStore(this.pagoDerechosForm, 'fechaPago', 'setFechaPago');
   }
 
   /**
@@ -341,22 +342,22 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.esFechaValida = FECHA_ENTRADA <= HOY;
   }
 
-    /**
-     * Método para actualizar el banco seleccionado.
-     * @param e {Catalogo} Banco seleccionado.
-     */
-    setValoresStore(
-      form: FormGroup,
-      campo: string,
-      metodoNombre: keyof PagoDerechosStore
-    ): void {
-      const VALOR = form.get(campo)?.value;
-      (
-        this.pagoDerechosStore[metodoNombre] as (
-          value: string | number | null
-        ) => void
-      )(VALOR);
-    }
+  /**
+   * Método para actualizar el banco seleccionado.
+   * @param e {Catalogo} Banco seleccionado.
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof PagoDerechosStore
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (
+      this.pagoDerechosStore[metodoNombre] as (
+        value: string | number | null
+      ) => void
+    )(VALOR);
+  }
 
   /**
    * Método que se ejecuta al destruir el componente.
