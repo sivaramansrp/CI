@@ -1,12 +1,12 @@
+import { ALCALDIA_CONFIG, DATOS_DOMICILIO_LUGAR, DATOS_MERCANCIA_SUBMANUFACTURA, DATOS_QUIEN_RECIBE, ENTIDAD_FEDERATIVA_CONFIG, FRACCION_ARANCELARIA_CONFIG, UNIDAD_MEDIDA_CONFIG } from '../../constants/aviso.enum';
 import { BotonAccionesTipos, ConsultaioQuery, FormaValidators, InputTypes, Props } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { DATOS_DOMICILIO_LUGAR, DATOS_MERCANCIA_SUBMANUFACTURA, DATOS_QUIEN_RECIBE } from '../../constants/aviso.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ActionType } from '../../enum/aviso.enum';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
-import { ColumnasTabla } from '../../models/aviso.model';
+import { ColumnsTableMercancia } from '../../models/aviso.model';
 import { CommonModule } from '@angular/common';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { InputConfig } from '@ng-mf/data-access-user';
@@ -17,6 +17,11 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite32504Store } from '../../estados/tramite32504.store';
+
+DATOS_MERCANCIA_SUBMANUFACTURA[0].catalogos = FRACCION_ARANCELARIA_CONFIG;
+DATOS_MERCANCIA_SUBMANUFACTURA[2].catalogos = UNIDAD_MEDIDA_CONFIG;
+DATOS_DOMICILIO_LUGAR[1].catalogos = ENTIDAD_FEDERATIVA_CONFIG;
+DATOS_DOMICILIO_LUGAR[2].catalogos = ALCALDIA_CONFIG;
 
 @Component({
   selector: 'app-manual-aviso',
@@ -181,31 +186,36 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
   tableData: {
     headers: {
       encabezado: string,
-      clave: (ele: ColumnasTabla) => string,
+      clave: (ele: ColumnsTableMercancia) => string,
       orden: number
     }[],
     data: [],
   } = {
       headers: [
-        { encabezado: 'RFC', clave: (ele: ColumnasTabla) => ele.rfc, orden: 1 },
+        { encabezado: 'Fracción arancelaria', clave: (ele: ColumnsTableMercancia) => ele.fracArancelaria, orden: 1 },
         {
-          encabezado: 'Nombre comercial',
-          clave: (ele: ColumnasTabla) => ele.nombreComercial,
+          encabezado: 'NICO',
+          clave: (ele: ColumnsTableMercancia) => ele.nico,
           orden: 2,
         },
         {
-          encabezado: 'Entidad federativa',
-          clave: (ele: ColumnasTabla) => ele.entidadFederativa,
+          encabezado: 'Unidad de medida',
+          clave: (ele: ColumnsTableMercancia) => ele.unidadMedida,
           orden: 3,
         },
         {
-          encabezado: 'Alcaldía o Municipio',
-          clave: (ele: ColumnasTabla) => ele.alcaldioOMuncipio,
+          encabezado: 'Cantidad',
+          clave: (ele: ColumnsTableMercancia) => ele.cantidad,
           orden: 4,
         },
         {
-          encabezado: 'Colonia',
-          clave: (ele: ColumnasTabla) => ele.colonia,
+          encabezado: 'Valor USD',
+          clave: (ele: ColumnsTableMercancia) => ele.valorUsd,
+          orden: 5,
+        },
+        {
+          encabezado: 'Descripción de la mercancía',
+          clave: (ele: ColumnsTableMercancia) => ele.descripcionMercancia,
           orden: 5,
         },
       ],
@@ -490,6 +500,17 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
     this.store.setDatosDomicilioLugar(this.formulario.get('datosDomicilioLugar')?.value);
     this.store.setDatosMercanciaSubmanufactura(this.formulario.get('datosMercanciaSubmanufactura')?.value);
   }
+
+  validarYAgregarFila(): void {
+  const GRUPO = this.formulario.get('datosMercanciaSubmanufactura') as FormGroup;
+  if (GRUPO.invalid) {
+    // Mark all controls as touched to show errors
+    Object.values(GRUPO.controls).forEach(control => control.markAsTouched());
+    return; // Do not navigate or add row
+  }
+  // All fields are valid, proceed
+  this.botonDeTablaInfantilAccion(this.botonAccionesTipos.AGREGAR);
+}
 
   /**
    * Libera los recursos y destruye las suscripciones activas al destruir el componente.

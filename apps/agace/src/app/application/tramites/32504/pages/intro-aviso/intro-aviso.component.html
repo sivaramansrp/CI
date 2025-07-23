@@ -23,6 +23,9 @@
           [datos]="datosPasos"
           (continuarEvento)="getValorIndice($event)"
         ></btn-continuar>
+          @if(indice ===1){
+            <ng-alert [CONTENIDO]="AVISO.Aviso"></ng-alert>
+          }
       </div>
     </div>
   </div>

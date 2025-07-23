@@ -112,8 +112,8 @@
         <div class="d-flex justify-content-end">
           <button
             type="button"
-            class="btn btn-primary ms-3"
-            [disabled]="true"
+            class="btn btn-danger ms-3"
+            [disabled]="false"
             (click)="accionesBotones(botonAccionesTipos.ELIMINAR)"
           >
             Eliminar
@@ -145,4 +145,25 @@
     <app-carga-masiva></app-carga-masiva>
     }
   </form>
+</div>
+<div
+  class="modal fade show popup"
+  tabindex="-1"
+  role="dialog"
+  *ngIf="mostrarPopupSeleccionRegistro"
+>
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      </div>
+      <div class="modal-body">
+        <p>{{ mensajePopupSeleccionRegistro }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="mostrarPopupSeleccionRegistro = false">
+          Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

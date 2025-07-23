@@ -34,8 +34,15 @@
                 [attr.maxlength]="item.props.maxlength ? item.props.maxlength : null"
                 libUppercase
               />
-              <div *ngIf="item.props.campo === 'rfc' && formulario.get(fieldGroup.formGroupName + '.rfc')?.touched && formulario.get(fieldGroup.formGroupName + '.rfc')?.hasError('required')" class="text-danger error-message">
+              <div class="error-container">
+                <span 
+                *ngIf="['rfc', 'calles', 'numeroExterior', 'codigoPostal'].includes(item.props.campo)
+                  && formulario.get(fieldGroup.formGroupName + '.' + item.props.campo)?.touched
+                  && formulario.get(fieldGroup.formGroupName + '.' + item.props.campo)?.hasError('required')"
+                class="text-danger error-message small"
+              >
                 Este campo es obligatorio
+                </span>
               </div>
               } } @case(inputTypes.BREAK_CONTENT) {
               <div class="w-100"></div>
@@ -70,8 +77,10 @@
         </div>
       </div>
       }
+
+      <!-- this section is changed -->
       <div class="form" formGroupName="manualDatos" [ngClass]="{'d-none' : esAgregarClicked}">
-        <ng-titulo titulo="Datos del aviso" />
+        <ng-titulo titulo="Datos de la mercancía transferida para submanufactura" />
         <div class="row">
           <app-tabla-dinamica 
             [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" 
@@ -81,8 +90,8 @@
           <div class="d-flex justify-content-end">
             <button
               type="button"
-              class="btn btn-primary ms-3"
-              [disabled]="true"
+              class="btn btn-danger ms-3"
+              [disabled]="false"
               (click)="accionesBotones(actionTypes.TABLE_ACTION, botonAccionesTipos.ELIMINAR)"
             >
               Eliminar
@@ -142,6 +151,16 @@
                   [formControlName]="item.props.campo"
                   libUppercase
                 />
+                <div class="error-container">                  
+                  <span
+                  *ngIf="['nico', 'cantidad', 'valorUsd', 'descripcionMercancia'].includes(item.props.campo)
+                    && formulario.get(fieldGroup.formGroupName + '.' + item.props.campo)?.touched
+                    && formulario.get(fieldGroup.formGroupName + '.' + item.props.campo)?.hasError('required')"
+                  class="text-danger error-message small"
+                >
+                Este campo es obligatorio
+                  </span>
+                </div>
                 } } @case(inputTypes.BREAK_CONTENT) {
                 <div class="w-100"></div>
                 }}
@@ -162,7 +181,7 @@
               type="button"
               class="btn btn-primary ms-3"
               [disabled]="false"
-              (click)="botonDeTablaInfantilAccion(botonAccionesTipos.AGREGAR)"
+              (click)="validarYAgregarFila()"
             >
               Agregar
             </button>

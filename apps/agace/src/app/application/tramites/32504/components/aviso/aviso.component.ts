@@ -152,6 +152,11 @@ export class AvisoComponent implements OnInit {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Propiedad para almacenar la fila seleccionada en la tabla.
+   */
+  filaSeleccionada: unknown = null;
+
+  /**
    * @private
    * @description
    * Notificador utilizado para destruir las suscripciones activas cuando el componente se destruye,
@@ -161,6 +166,9 @@ export class AvisoComponent implements OnInit {
    * @memberof AvisoComponent
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+public mostrarPopupSeleccionRegistro = false;
+public mensajePopupSeleccionRegistro = 'Debe seleccionar un registro para modificar sus datos';
 
 
 /**
@@ -374,14 +382,28 @@ export class AvisoComponent implements OnInit {
       case BotonAccionesTipos.ELIMINAR:
         
         break;
-      case BotonAccionesTipos.MODIFICAR:
-        
+      case BotonAccionesTipos.MODIFICAR: {
+        const HAY_DATOS = this.tableData.data && this.tableData.data.length > 0;
+        const FILA_SELECCIONADA = this.obtenerFilaSeleccionada(); // Implement this method as needed
+
+        if (!HAY_DATOS || !FILA_SELECCIONADA) {
+          this.mostrarPopupSeleccionRegistro = true;
+        }
         break;
+      }
     
       default:
         break;
     }
   }
+  
+obtenerFilaSeleccionada(): unknown {
+  // Example: if you store the selected row in a property called 'filaSeleccionada'
+  return this.filaSeleccionada ? this.filaSeleccionada : null;
+
+  // If you use a selection array or index, adjust accordingly:
+  // return this.tableData.selectedRow ? this.tableData.selectedRow : null;
+}
 
   /**
   *  @method onSubmit

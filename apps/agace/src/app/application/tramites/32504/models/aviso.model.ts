@@ -49,3 +49,11 @@ export interface ColumnasTabla {
     alcaldioOMuncipio: string,
     colonia: string,
 }
+export interface ColumnsTableMercancia {
+  fracArancelaria: string,
+  nico: string,
+  unidadMedida: string,
+  cantidad: string,
+  valorUsd: string,
+  descripcionMercancia: string,
+}
