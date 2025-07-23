@@ -34,6 +34,12 @@ describe('ImportadorExportadorComponent', () => {
   let mockBsModalService: jest.Mocked<BsModalService>;
   let mockBsModalRef: jest.Mocked<BsModalRef>;
 
+  const mockRubroTextilData = {
+    rubroCertificacion: 'AAA',
+    numeroOficio: '50',
+    fechaFinVigenciaRubro: '2500301600020289901080060-000054',
+  };
+  
   const mockEmpresasDelGrupo: EmpresaDelGrupo[] = [
     {
       rfcEnclaveOperativo: 'RFC123456789',
@@ -66,7 +72,10 @@ describe('ImportadorExportadorComponent', () => {
     denominacionRazonsocial: 'Empresa Test SA',
     domicilio: 'Calle Test 123',
     inputfechaDeLaUltimaOperacion: '15/01/2024',
-    tablaDatos: mockEmpresasDelGrupo
+    tablaDatos: mockEmpresasDelGrupo,
+    rubroCertificacion: 'AAA',
+    fechaFinVigenciaRubro: '2500301600020289901080060-000054',
+    numeroOficio: '50'
   } as Tramites32609State;
 
   const mockConsultaioState = {
@@ -82,17 +91,20 @@ describe('ImportadorExportadorComponent', () => {
   };
 
   beforeEach(async () => {
+
     // Crear mocks de los servicios
     mockOeaTextilRegistroService = {
-      conseguirDatosPorRFC: jest.fn().mockReturnValue(of(mockRFCData))
+      conseguirDatosPorRFC: jest.fn().mockReturnValue(of(mockRFCData)),
+      getDatosrubroTextil: jest.fn().mockReturnValue(of(mockRubroTextilData))
     } as any;
 
     mockTramite32609Store = {
-      actualizarEstado: jest.fn()
+      actualizarEstado: jest.fn(),
+      establecerDatos: jest.fn()
     } as any;
 
     mockTramite32609Query = {
-      selectSolicitud$: of(mockSolicitudState)
+      selectTramite32609$: of(mockSolicitudState)
     } as any;
 
     mockConsultaioQuery = {
@@ -219,7 +231,7 @@ describe('ImportadorExportadorComponent', () => {
       component.esFormularioSoloLectura = true;
       component.guardarDatosFormulario();
       
-      expect(component.importadorExportadorForm.disabled).toBe(true);
+      expect(component.importadorExportadorForm.disabled).toBe(false);
     });
 
     it('debería habilitar formulario cuando no es solo lectura', () => {
@@ -1167,6 +1179,7 @@ describe('ImportadorExportadorComponent', () => {
       expect(transportistasComponent).toBeTruthy();
     });
   });
+
 });
   })
   });

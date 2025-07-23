@@ -1,6 +1,4 @@
-//import { TablaEnlaceOperativo } from '../models/enlace-operativo-tabla.model';
-
-import { TablaEnlaceOperativo } from "../modelos/enlace-operativo-tabla.model";
+import { TablaEnlaceOperativo } from '../models/enlace-operativo-tabla.model';
 
 export const ENLACE_OPERATIVO_TABLA = [
   {
@@ -73,7 +71,7 @@ export const PANELS = [
     /**
      * Indica si el panel está colapsado por defecto.
      */
-    isCollapsed: true,
+    isCollapsed: false,
   },
 ];
 

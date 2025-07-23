@@ -1,20 +1,21 @@
 import { CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TipoNotificacionEnum, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EMPRESA_DEL_GRUPO, EMPRESA_DEL_GRUPO_CON_FECHA, FECHA_DE_INICIO, FECHA_DE_PAGO, INFORMACION_EMPRESA_OPTIONS, NOTA, OPCIONES_DE_BOTON_DE_RADIO, PANELS, PANELS1, REGISTRO_ESQUEMA_CERTIFICACION_OPTIONS, TRANSPORTISTAS_CONFIGURACION } from '../../enums/oea-textil-registro.enum';
-import { EmpresaDelGrupo, RFCEnlaceOperativo, TransportistasTable } from '../../modelos/oea-textil-registro.model';
+import { EmpresaDelGrupo, RFCEnlaceOperativo, RubroTextil, TransportistasTable } from '../../models/oea-textil-registro.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Tramite32608Store, Tramites32608State } from '../../estados/tramites32608.store';
+import { Solicitud32608State, Solicitud32608Store } from '../../estados/solicitud32608.store';
 import { map, takeUntil } from 'rxjs';
 import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 import { FECHA_DELA_ULTIMA_OPERACION } from'../../enums/oea-textil-registro.enum';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src'
+import { Solicitud32608Query } from '../../estados/solicitud32608.query';
+import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
-import { Tramite32608Query } from '../../estados/tramites32608.query';
+
 
 /**
  * Componente principal para gestionar los datos de importador y exportador
@@ -87,7 +88,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    * Estado actual de la solicitud del trámite 32608.
    * Contiene toda la información del estado de la aplicación.
    */
-  solicitudState!: Tramites32608State;
+  solicitudState!: Solicitud32608State;
   
   /**
    * Configuración del input de fecha de inicio para el formulario.
@@ -313,9 +314,9 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     @Inject(BsModalService)
     private modalService: BsModalService,
-    private solicitudService: OeaTextilRegistroService,
-    private tramite32608Store: Tramite32608Store,
-    private tramite32608Query: Tramite32608Query,
+    private solicitudService: SolicitudService,
+    private tramite32608Store: Solicitud32608Store,
+    private tramite32608Query: Solicitud32608Query,
     private consultaioQuery: ConsultaioQuery
   ) {
     this.consultaioQuery.selectConsultaioState$
@@ -945,7 +946,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    */
   mostrar_colapsable(index: number): void {
     const IS_CURRENTLY_OPEN = this.panels[index].isCollapsed;
-    this.panels.forEach((panel:any, i:any) => {
+    this.panels.forEach((panel: { isCollapsed: boolean }, i: number) => {
       panel.isCollapsed = i === index ? !IS_CURRENTLY_OPEN : true;
     });
   }
@@ -979,7 +980,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    */
   mostrar_colapsable1(index: number): void {
     const IS_CURRENTLY_OPEN = this.panels1[index].isCollapsed;
-    this.panels1.forEach((panel1:any, i:any) => {
+    this.panels1.forEach((panel1: { isCollapsed: boolean }, i: number) => {
       panel1.isCollapsed = i === index ? !IS_CURRENTLY_OPEN : true;
     });
   }
@@ -1112,9 +1113,49 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     }
     const CONTROL = form.get(campo);
     if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
-      this.tramite32608Store.establecerDatos({ [campo]: CONTROL.value });
+      this.tramite32608Store.actualizarEstado({ [campo]: CONTROL.value });
     }
   }
+  /**
+   * Maneja el cambio en el campo de registro de esquema de certificación IVA/IEPS.
+   * Si se selecciona "No", limpia los campos relacionados en el formulario.
+   * Si se selecciona "Sí", puede cargar datos desde un servicio o mantener los valores existentes.
+   * 
+   * param value - Valor seleccionado del campo de registro de esquema
+   */
+
+/**
+ * Maneja el cambio en el campo de registro de esquema de certificación IVA/IEPS.
+ * Si se selecciona "No" (0), limpia los campos relacionados y los habilita.
+ * Si se selecciona "Sí" (1), carga datos desde el servicio y deshabilita los campos.
+ * 
+ * param value - Valor seleccionado del campo de registro de esquema
+ */
+onRegistroEsquemaCertificacionIVAIEPSChange(value: string | number): void {
+  const VALUE_STRING = value.toString();
+  
+  if (VALUE_STRING === '0') {
+    // Clear the form and enable fields when "No" is selected
+    this.rubroIVATextilForm.patchValue({
+      rubroCertificacion: '',
+      fechaFinVigenciaRubro: '',
+      numeroOficio: ''
+    });
+    
+    // Enable all fields in the form
+    this.rubroIVATextilForm.enable();
+    
+  } else if (VALUE_STRING === '1') {
+    // Load data from service and disable fields when "Yes" is selected
+    this.getDatosrubroTextil();
+    
+    // Disable all fields in the form after data is loaded
+    setTimeout(() => {
+      this.rubroIVATextilForm.disable();
+    }, 100); // Small delay to ensure data is loaded first
+  }
+}
+
 
   /**
    * Obtiene el estado actual de la solicitud desde el store.
@@ -1122,8 +1163,8 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    * Mantiene sincronizada la información entre el store y el componente.
    */
   obtenerEstadoSolicitud(): void {
-    this.tramite32608Query.selectTramite32608$?.pipe(takeUntil(this.destroy$))
-      .subscribe((data: Tramites32608State) => {
+    this.tramite32608Query.selectSolicitud$?.pipe(takeUntil(this.destroy$))
+      .subscribe((data: Solicitud32608State) => {
         this.solicitudState = data;
         if (data.tablaDatos) {
           this.tablaDatos = [...data.tablaDatos];
@@ -1136,7 +1177,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    * Sincroniza los cambios locales con el estado global de la aplicación.
    */
   actualizarTablaDatosEnStore(): void {
-    this.tramite32608Store.establecerDatos({ tablaDatos: this.tablaDatos });
+    this.tramite32608Store.actualizarEstado({ tablaDatos: this.tablaDatos });
   }
 
   /**
@@ -1181,17 +1222,42 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     this.esHabilitarElDialogo = false;
   }
 
-  getDatosrubroTextil(): void {
-    this.solicitudService.getDatosrubroTextil()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data: Tramites32608State) => {
-        this.rubroIVATextilForm.patchValue({
-          rubroCertificacion: data.rubroCertificacion,
-          fechaFinVigenciaRubro: data.fechaFinVigenciaRubro,
-          numeroOficio: data.numeroOficio
-        });
+ getDatosrubroTextil(): void {
+  this.solicitudService.getDatosrubroTextil()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((datos: RubroTextil) => {
+      this.rubroIVATextilForm.patchValue({
+        rubroCertificacion: datos.rubroCertificacion,
+        fechaFinVigenciaRubro: datos.fechaFinVigenciaRubro,
+        numeroOficio: datos.numeroOficio
       });
+      this.tramite32608Store.actualizarEstado(datos);
+      
+      // Disable the form after patching values if the current selection is '1'
+      const CURRENT_VALUE = this.importadorExportadorForm.get('registroEsquemaCertificacionIVAIEPS')?.value;
+      if (CURRENT_VALUE === '1') {
+        this.rubroIVATextilForm.disable();
+      }
+    });
+}
+
+   /**
+ * Verifica si el formulario `importadorExportadorForm` es válido.
+ * Si el formulario es válido, retorna `true`. 
+ * Si no es válido, marca todos los campos como tocados para mostrar los errores y retorna `false`.
+ */
+ validarFormulario(): boolean {
+  let esValido = true;
+  
+  // Validate main form
+  if (this.importadorExportadorForm.invalid) {
+    this.importadorExportadorForm.markAllAsTouched();
+    esValido = false;
   }
+ 
+ 
+  return esValido;
+}
 
   /**
    * Hook del ciclo de vida que se ejecuta antes de destruir el componente.

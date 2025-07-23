@@ -1,17 +1,17 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, CategoriaMensaje, InputCheckComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TipoNotificacionEnum, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { NOTA, OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/oea-textil-registro.enum';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { NOTA, OPCIONES_DE_BOTON_DE_RADIO } from '../../constants/oea-textil-registro.enum';
+import { Solicitud32608State, Solicitud32608Store } from '../../estados/solicitud32608.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Tramite32608Store, Tramites32608State } from '../../estados/tramites32608.store';
 import { AgregarMiembroEmpresaComponent } from '../agregar-miembro-empresa/agregar-miembro-empresa.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ControlInventariosComponent } from '../control-inventarios/control-inventarios.component';
 import { DomiciliosRfcSolicitanteComponent } from '../domicilios-rfc-solicitante/domicilios-rfc-solicitante.component';
 import { NumeroEmpleadosBimestreComponent } from '../numero-empleados-bimestre/numero-empleados-bimestre.component';
-import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
-import { Tramite32608Query } from '../../estados/tramites32608.query';
+import { Solicitud32608Query } from '../../estados/solicitud32608.query';
+import { SolicitudService } from '../../services/solicitud.service';
 
 /**
  * Componente para la gestión de datos comunes del trámite OEA textil.
@@ -52,7 +52,7 @@ import { Tramite32608Query } from '../../estados/tramites32608.query';
       AlertComponent
     ],
   templateUrl: './datos-comunes.component.html',
-  styleUrl: './datos-comunes.component.css',
+  styleUrl: './datos-comunes.component.scss',
 })
 export class DatosComunesComponent implements OnInit, OnDestroy {
 
@@ -60,9 +60,17 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @property {ControlInventariosComponent} controlInventariosComponent
    * Referencia al componente hijo de control de inventarios para poder acceder a sus métodos.
    */
-  @ViewChild(ControlInventariosComponent) controlInventariosComponent!: ControlInventariosComponent;
+  @ViewChild('controlInventariosRef') controlInventariosComponent!: ControlInventariosComponent;
+    /**
+   * Referencia al componente DomiciliosRfcSolicitanteComponent para acceder a sus métodos de validación.
+   */
+  @ViewChild('domiciliosRfcSolicitanteRef') domiciliosRfcSolicitanteComponent!: DomiciliosRfcSolicitanteComponent;
 
-   /**
+    /**
+   * Referencia al componente AgregarMiembroEmpresaComponent para acceder a sus métodos de validación.
+   */
+  @ViewChild('agregarMiembroEmpresaRef') agregarMiembroEmpresaComponent!: AgregarMiembroEmpresaComponent;
+  /**
    * Indicates whether the entity is consolidated in ET.
    *
    * @type {boolean}
@@ -93,10 +101,10 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   public forma!: FormGroup;
 
    /**
-   * @property {Tramites32608State} seccionState
+   * @property {Solicitud32608State} seccionState
    * Estado actual del formulario.
    */
-  public seccionState!: Tramites32608State;
+  public seccionState!: Solicitud32608State;
 
     /**
    * Opciones de botón de radio.
@@ -107,7 +115,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   sectorProductivoList!: Catalogo[];
   /**
-   * Lista de sectores de servicio.
+   * Lista de sectores de solicitudService.
    */
   sectorServicio!: Catalogo[];
   /**
@@ -150,6 +158,11 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @type {string}
    */
   SECTOR_PRODUCTIVO = NOTA.SECTOR_PRODUCTIVO;
+   /**
+   * Evento emitido cuando cambia el valor de reconocimientoMutuoCTPAT.
+   * @type {EventEmitter<string>}
+   */
+  @Output() reconocimientoMutuoCTPATChange = new EventEmitter<string>();
 
   /**
    * Constructor del componente DatosComunesComponent.
@@ -159,16 +172,16 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * 
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos
    * @param {ConsultaioQuery} consultaioQuery - Query para obtener el estado de consulta
-   * @param {Tramite32608Store} tramite32608Store - Store para gestionar el estado del trámite
-   * @param {Tramite32608Query} tramite32608Query - Query para obtener datos del trámite
-   * @param {OeaTextilRegistroService} servicio - Servicio para operaciones del trámite OEA textil
+   * @param {Tramite32609Store} tramite32608Store - Store para gestionar el estado del trámite
+   * @param {Tramite32609Query} tramite32608Query - Query para obtener datos del trámite
+   * @param {OeaTextilRegistroService} solicitudService - Servicio para operaciones del trámite OEA textil
    */
 
   constructor(public fb: FormBuilder, 
     private consultaioQuery: ConsultaioQuery,
-    private tramite32608Store: Tramite32608Store,
-    private tramite32608Query: Tramite32608Query,
-    private servicio: OeaTextilRegistroService,
+    private solicitudService: SolicitudService,
+    private tramite32608Store: Solicitud32608Store,
+    private tramite32608Query: Solicitud32608Query,
   ) {
     this.crearForm();
     this.consultaioQuery.selectConsultaioState$
@@ -208,7 +221,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           autorizaOpinionSAT: [this.seccionState?.autorizaOpinionSAT, Validators.required],
           cuentaConEmpleadosPropios: [this.seccionState?.cuentaConEmpleadosPropios, Validators.required],
           bimestreUltimo: [this.seccionState?.bimestreUltimo, Validators.required],
-          numeroDeEmpleadas: [{value:this.seccionState?.numeroDeEmpleadas, disabled:true}, [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]],
+          numeroDeEmpleadas: [{value:this.seccionState?.numeroDeEmpleadas, disabled:true}],
           retencionISRTrabajadores: [this.seccionState?.retencionISRTrabajadores, Validators.required],
           pagoCuotasIMSS: [this.seccionState?.pagoCuotasIMSS, Validators.required],
           cuentaConSubcontratacionEspecializada: [this.seccionState?.cuentaConSubcontratacionEspecializada, Validators.required],
@@ -224,8 +237,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           proveedores: [this.seccionState?.proveedores || null],
           querellaSATUltimos3Anios: [this.seccionState?.querellaSATUltimos3Anios, Validators.required],
           ingresoInfoContableSAT: [this.seccionState?.ingresoInfoContableSAT, Validators.required],
-          manifests: [true, Validators.required],
-          bajoProtesta: [true, Validators.required],
+          manifests: [false, Validators.required],
+          bajoProtesta: [false, Validators.required],
       }, { validators: alMenosUnSectorValidator });
 
       this.esFormularioInicializado = true;
@@ -301,7 +314,7 @@ private actualizarFormularioConDatosDelEstado(): void {
         this.setValoresStore(this.forma, campoSeleccionado);
         
         // Limpiar el valor del campo opuesto en el store
-        this.tramite32608Store.establecerDatos({ [campoAResetear]: null });
+        this.tramite32608Store.actualizarEstado({ [campoAResetear]: null });
       }
     }  
 
@@ -332,9 +345,9 @@ private actualizarFormularioConDatosDelEstado(): void {
    * Actualiza el formulario con los datos almacenados en el estado.
    */
   public enPatchStoredFormData(): void {
-    this.tramite32608Query.selectTramite32608$
+    this.tramite32608Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((datos: Tramites32608State) => {
+      .subscribe((datos: Solicitud32608State) => {
         this.seccionState = datos;
         this.actualizarFormularioConDatosDelEstado();
       });
@@ -406,9 +419,8 @@ private actualizarFormularioConDatosDelEstado(): void {
     }
     const CONTROL = form.get(campo);
     if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
-      this.tramite32608Store.establecerDatos({ [campo]: CONTROL.value });
+      this.tramite32608Store.actualizarEstado({ [campo]: CONTROL.value });
       
-      // Clear validation errors if the field now has a valid value
       if (CONTROL.valid && CONTROL.touched) {
         CONTROL.markAsPristine();
       }
@@ -420,7 +432,7 @@ private actualizarFormularioConDatosDelEstado(): void {
    * Obtiene las listas necesarias para llenar los selectores del formulario.
    */
   obtenerlistadescargable(): void {
-    this.servicio.sectorListaDeSelects()
+    this.solicitudService.sectorListaDeSelects()
       .pipe(takeUntil(this.destroyed$),
   map((data) => {
     this.sectorProductivoList = data.sectorProductivoList;
@@ -546,16 +558,53 @@ onSeleccionVerdadera(evento:string | number, nota?:string): void {
   * 
   * @returns {void}
   */
-  validarFormulario(): void {
-    if(this.forma) {
+validarFormulario(): boolean {
+  let isValid = true;
+
+  if (this.forma) {
     this.forma.markAllAsTouched();
+    this.forma.updateValueAndValidity();
+
+    if (this.forma.invalid) {
+      isValid = false;
     }
-    // Validar formularios del componente hijo control-inventarios
-    if (this.controlInventariosComponent) {
-      this.controlInventariosComponent.validarFormularios();
+  } else {
+    isValid = false;
+  }
+
+  if (this.controlInventariosComponent) {
+    const CONTROL_INVENTARIOS_VALID = this.controlInventariosComponent.validarFormularios();
+    if (!CONTROL_INVENTARIOS_VALID) {
+      isValid = false;
     }
   }
 
+  if (this.domiciliosRfcSolicitanteComponent) {
+    const DOMICILIOS_VALID = this.domiciliosRfcSolicitanteComponent.validarDomiciliosRfcSolicitante();
+    if (!DOMICILIOS_VALID) {
+      isValid = false;
+    }
+  }
+
+  if (this.agregarMiembroEmpresaComponent) {
+    const MIEMBRO_EMPRESA_VALID = this.agregarMiembroEmpresaComponent.validarAgregarMiembroEmpresa();
+    if (!MIEMBRO_EMPRESA_VALID) {
+      isValid = false;
+    }
+  }
+
+  return isValid;
+}
+    /**
+   * Maneja el cambio en el reconocimiento mutuo CTPAT y emite el valor seleccionado.
+   *
+   * @param {string} value - El valor seleccionado para reconocimiento mutuo CTPAT.
+   */
+  onReconocimientoMutuoCTPATChanged(value: string): void {
+    this.reconocimientoMutuoCTPATChange.emit(value);
+  }
+ 
+ 
   /**
    * @method ngOnDestroy
    * Hook de ciclo de vida que se ejecuta al destruir el componente.

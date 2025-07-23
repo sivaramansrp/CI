@@ -1,6 +1,4 @@
-//import { TablaPersonasNotificaciones } from '../models/personas-notificaciones-tabla.model';
-
-import { TablaPersonasNotificaciones } from "../modelos/personas-notificaciones-tabla.model";
+import { TablaPersonasNotificaciones } from '../models/personas-notificaciones-tabla.model';
 
 /**
  * Configuración de columnas para la tabla de personas notificaciones.
@@ -87,6 +85,6 @@ export const PANELS = [
     { 
         /** Panel principal para la gestión de personas notificaciones */
         label: 'Personas para oír y recibir notificaciones', 
-        isCollapsed: false
+        isCollapsed: false 
     }
 ];

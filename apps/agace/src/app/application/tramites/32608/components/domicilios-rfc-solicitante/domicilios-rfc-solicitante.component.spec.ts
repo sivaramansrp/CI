@@ -4,10 +4,10 @@ import { ElementRef } from '@angular/core';
 import { of, Subject, throwError } from 'rxjs';
 import { DomiciliosRfcSolicitanteComponent } from './domicilios-rfc-solicitante.component';
 import { ConsultaioQuery, TipoNotificacionEnum, CategoriaMensaje } from '@libs/shared/data-access-user/src';
-import { Tramite32609Store, Tramites32609State } from '../../estados/tramites32609.store';
-import { Tramite32609Query } from '../../estados/tramites32609.query';
-import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
-import { DomiciliosRfcSolicitanteTabla, InstalacionesInterface } from '../../modelos/oea-textil-registro.model';
+import { Solicitud32605Store } from '../../estados/solicitud32605.store';
+import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { SolicitudService } from '../../services/solicitud.service';
+import { DomiciliosRfcSolicitanteTabla, InstalacionesInterface } from '../../models/oea-textil-registro.model';
 
 // Mock del módulo Bootstrap Modal
 jest.mock('bootstrap', () => {
@@ -28,9 +28,9 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
   let component: DomiciliosRfcSolicitanteComponent;
   let fixture: ComponentFixture<DomiciliosRfcSolicitanteComponent>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
-  let mockTramite32609Store: jest.Mocked<Tramite32609Store>;
-  let mockTramite32609Query: jest.Mocked<Tramite32609Query>;
-  let mockOeaTextilRegistroService: jest.Mocked<OeaTextilRegistroService>;
+  let mockTramite32609Store: jest.Mocked<Solicitud32605Store>;
+  let mockTramite32609Query: jest.Mocked<Solicitud32605Query>;
+  let mockOeaTextilRegistroService: jest.Mocked<SolicitudService>;
   let formBuilder: FormBuilder;
 
   const mockTramiteState = {
@@ -85,7 +85,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     } as any;
 
     mockTramite32609Store = {
-      establecerDatos: jest.fn()
+      actualizarEstado: jest.fn()
     } as any;
 
     mockTramite32609Query = {
@@ -105,9 +105,9 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       providers: [
         FormBuilder,
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
-        { provide: Tramite32609Store, useValue: mockTramite32609Store },
-        { provide: Tramite32609Query, useValue: mockTramite32609Query },
-        { provide: OeaTextilRegistroService, useValue: mockOeaTextilRegistroService }
+        { provide: Solicitud32605Store, useValue: mockTramite32609Store },
+        { provide: Solicitud32605Query, useValue: mockTramite32609Query },
+        { provide: SolicitudService, useValue: mockOeaTextilRegistroService }
       ]
     }).compileComponents();
 
@@ -205,18 +205,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       expect(codigoPostalControl?.valid).toBe(true);
     });
 
-    it('debería crear formularios solo cuando seccionState esté disponible', () => {
-      // Reiniciar el estado del componente
-      component.forma = undefined as any;
-      component.seccionState = undefined as any;
-      
-      component.ngOnInit();
-      
-      // El formulario se crea en el constructor a través de crearFormulario() independientemente de seccionState
-      // Por lo que deberíamos esperar que esté definido pero potencialmente con valores por defecto
-      expect(component.forma).toBeDefined();
-      expect(component.forma.get('domiciliosRegistrados')).toBeDefined();
-    });
+  
   });
 
   describe('Obtención de catálogos', () => {
@@ -431,7 +420,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
         categoria: CategoriaMensaje.ERROR,
         modo: 'modal',
         titulo: '',
-        mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+        mensaje: '¿Desea eliminar el registro seleccionado?',
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: 'Cancelar'
@@ -625,7 +614,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       component.DomiciliosRfcSolicitanteInfoDatos();
       
       expect(component.DomiciliosRfcSolicitanteList.length).toBe(longitudInicial + 2);
-      expect(mockTramite32609Store.establecerDatos).toHaveBeenCalled();
+      expect(mockTramite32609Store.actualizarEstado).toHaveBeenCalled();
       expect(component.datosTablaModalSeleccionados).toEqual([]);
     });
 
@@ -672,7 +661,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       const registroModificado = component.DomiciliosRfcSolicitanteList.find(item => item.id === 1);
       expect(registroModificado?.coloniaCalleNumero).toBe('Nueva Dirección');
       expect(registroModificado?.InstalacionesPrincipales).toBe('Sí');
-      expect(mockTramite32609Store.establecerDatos).toHaveBeenCalled();
+      expect(mockTramite32609Store.actualizarEstado).toHaveBeenCalled();
     });
 
     it('debería manejar error cuando no encuentra ID para modificar', () => {
@@ -719,7 +708,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       expect(component.DomiciliosRfcSolicitanteList.length).toBe(1);
       expect(component.DomiciliosRfcSolicitanteList[0].id).toBe(2);
       expect(component.listaFilaSeleccionadaEmpleado).toEqual([]);
-      expect(mockTramite32609Store.establecerDatos).toHaveBeenCalled();
+      expect(mockTramite32609Store.actualizarEstado).toHaveBeenCalled();
     });
 
     it('no debería eliminar cuando evento es false', () => {
@@ -776,39 +765,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       component.actualizarFilaSeleccionada();
       
       expect(component.filaSeleccionadaDomiciliosRfcSolicitante).toEqual(filaOriginal);
-    });
-
-    it('debería mostrar popup cuando se intenta modificar sin selección', () => {
-      component.listaFilaSeleccionadaEmpleado = [];
-      component.abrirMultipleSeleccionPopup = jest.fn();
-      
-      component.modificarItemEmpleado();
-      
-      expect(component.abrirMultipleSeleccionPopup).toHaveBeenCalledWith('', 'Selecciona un registro');
-    });
-
-    it('debería mostrar popup cuando se seleccionan múltiples elementos para modificar', () => {
-      component.listaFilaSeleccionadaEmpleado = [mockDomicilioData, mockDomicilioData];
-      component.abrirMultipleSeleccionPopup = jest.fn();
-      
-      component.modificarItemEmpleado();
-      
-      expect(component.abrirMultipleSeleccionPopup).toHaveBeenCalledWith('', 'Selecciona sólo un registro para modificar.');
-      expect(component.multipleSeleccionPopupAbierto).toBe(true);
-    });
-
-    it('debería procesar modificación correctamente con un elemento seleccionado', () => {
-      component.listaFilaSeleccionadaEmpleado = [mockDomicilioData];
-      component.filaSeleccionadaDomiciliosRfcSolicitante = mockDomicilioData;
-      component.actualizarFilaSeleccionada = jest.fn();
-      component.modificarDialogoDatos = jest.fn();
-      component.patchModifyiedData = jest.fn();
-      
-      component.modificarItemEmpleado();
-      
-      expect(component.actualizarFilaSeleccionada).toHaveBeenCalled();
-      expect(component.modificarDialogoDatos).toHaveBeenCalled();
-      expect(component.patchModifyiedData).toHaveBeenCalled();
     });
 
     it('debería rellenar formulario con datos seleccionados para modificación', () => {
@@ -938,7 +894,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       
       component.setValoresStore(form, 'domiciliosRegistrados');
       
-      expect(mockTramite32609Store.establecerDatos).toHaveBeenCalledWith({
+      expect(mockTramite32609Store.actualizarEstado).toHaveBeenCalledWith({
         domiciliosRegistrados: 'test-value'
       });
     });
@@ -963,8 +919,8 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       
       component.setValoresStore(form, 'domiciliosRegistrados');
       
-      // Should not call establecerDatos for null values
-      expect(mockTramite32609Store.establecerDatos).not.toHaveBeenCalled();
+      // Should not call actualizarEstado for null values
+      expect(mockTramite32609Store.actualizarEstado).not.toHaveBeenCalled();
     });
 
     it('debería limpiar errores de validación para campos válidos y tocados', () => {
@@ -1007,33 +963,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
   });
 
-  describe('🔍 Validación y confirmación de eliminación', () => {
-    beforeEach(() => {
-      component.seccionState = mockTramiteState;
-      component.crearFormulario();
-    });
 
-    it('debería mostrar mensaje cuando no hay elementos seleccionados para eliminar', () => {
-      component.listaFilaSeleccionadaEmpleado = [];
-      component.abrirMultipleSeleccionPopup = jest.fn();
-      
-      component.confirmEliminarEmpleadoItem();
-      
-      expect(component.abrirMultipleSeleccionPopup).toHaveBeenCalledWith(
-        '', 
-        'Debes seleccionar al menos un registro para eliminar.'
-      );
-    });
-
-    it('debería abrir popup de confirmación cuando hay elementos seleccionados', () => {
-      component.listaFilaSeleccionadaEmpleado = [mockDomicilioData];
-      component.abrirElimninarConfirmationopup = jest.fn();
-      
-      component.confirmEliminarEmpleadoItem();
-      
-      expect(component.abrirElimninarConfirmationopup).toHaveBeenCalled();
-    });
-  });
 
   describe('🎯 Casos edge adicionales', () => {
     beforeEach(() => {

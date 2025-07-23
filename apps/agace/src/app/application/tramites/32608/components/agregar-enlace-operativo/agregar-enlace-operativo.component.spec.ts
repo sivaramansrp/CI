@@ -5,14 +5,14 @@ import { SimpleChanges, NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { AgregarEnlaceOperativoComponent } from './agregar-enlace-operativo.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
-import { ApiResponse, EntidadFederativa, InstalacionesInterface } from '../../modelos/oea-textil-registro.model';
+import { ApiResponse, EntidadFederativa, InstalacionesInterface } from '../../models/oea-textil-registro.model';
+import { SolicitudService } from '../../services/solicitud.service';
 
 describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
   let component: AgregarEnlaceOperativoComponent;
   let fixture: ComponentFixture<AgregarEnlaceOperativoComponent>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
-  let mockOeaTextilRegistroService: jest.Mocked<OeaTextilRegistroService>;
+  let mockOeaTextilRegistroService: jest.Mocked<SolicitudService>;
   let consoleSpy: jest.SpyInstance;
 
   // Datos de prueba simulados
@@ -81,7 +81,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       providers: [
         FormBuilder,
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
-        { provide: OeaTextilRegistroService, useValue: mockOeaTextilRegistroService }
+        { provide: SolicitudService, useValue: mockOeaTextilRegistroService }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
@@ -593,7 +593,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
         providers: [
           FormBuilder,
           { provide: ConsultaioQuery, useValue: mockConsultaioQueryEditable },
-          { provide: OeaTextilRegistroService, useValue: mockOeaTextilRegistroService }
+          { provide: SolicitudService, useValue: mockOeaTextilRegistroService }
         ],
         schemas: [NO_ERRORS_SCHEMA]
       }).compileComponents().then(() => {

@@ -1,18 +1,19 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, Inject, TemplateRef, ViewChild } from '@angular/core';
 import { ConfiguracionColumna,ConsultaioQuery,ConsultaioState,TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
-import { PANELS1, TRANSPORTISTAS_CONFIGURACION } from '../../enums/oea-textil-registro.enum';
+import { PANELS1, TRANSPORTISTAS_CONFIGURACION, TransportistasTable } from '../../constants/datos-comunes.enum';
 import { Subject, map } from 'rxjs';
-import { Tramite32608Store, Tramites32608State } from '../../estados/tramites32608.store';
-import { TransportistasListaInterface, TransportistasTable } from '../../modelos/oea-textil-registro.model';
 import { CommonModule } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Tramite32608Query } from '../../estados/tramites32608.query';
+import { Solicitud32608Query } from '../../estados/solicitud32608.query';
+import { Solicitud32608State } from '../../estados/solicitud32608.store';
+import { Solicitud32608Store } from '../../estados/solicitud32608.store';
+import { SolicitudService } from '../../services/solicitud.service';
+import { TransportistasListaInterface } from '../../models/solicitud.model';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 
@@ -46,7 +47,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    * Estado actual de la solicitud del trámite 32608.
    * Contiene toda la información del estado de la aplicación.
    */
-  solicitudState!: Tramites32608State;
+  solicitudState!: Solicitud32608State;
 
   /**
    * Configuración de paneles colapsables para la interfaz de usuario.
@@ -183,9 +184,9 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     @Inject(BsModalService)
     private modalService: BsModalService,
-    public solicitudService: OeaTextilRegistroService,
-    private tramite32608Store: Tramite32608Store,
-    private tramite32608Query: Tramite32608Query,
+    public solicitudService: SolicitudService,
+    private tramite32608Store: Solicitud32608Store,
+    private tramite32608Query: Solicitud32608Query,
     private consultaioQuery: ConsultaioQuery
   ) {
     this.consultaioQuery.selectConsultaioState$
@@ -249,6 +250,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
       ],
       domicilio: [{value:this.solicitudState?.domicilio, disabled: true}],
       ccat: [{value:this.solicitudState?.ccat, disabled: true}],
+      validacionTransportistas: ['', Validators.required]
     })
   }
 
@@ -258,8 +260,8 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    * Mantiene sincronizada la información entre el store y el componente.
    */
   obtenerEstadoSolicitud(): void {
-    this.tramite32608Query.selectTramite32608$?.pipe(takeUntil(this.destroy$))
-      .subscribe((data: Tramites32608State) => {
+    this.tramite32608Query.selectSolicitud$?.pipe(takeUntil(this.destroy$))
+      .subscribe((data: Solicitud32608State) => {
         this.solicitudState = data;
         if (data.transportistasLista) {
           this.transportistasLista = [...data.transportistasLista];
@@ -291,23 +293,22 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Busca información de un transportista por su RFC.
-   * Valida que el RFC no esté duplicado antes de realizar la búsqueda.
-   * Ejecuta la consulta al servicio para obtener datos adicionales.
-   */
-  buscarRFC():void{
-    const RFC = this.transportistaCertificacionForm.get('rfcEnclaveOperativo')?.value;
-    if (RFC) {
-      // Verificar si el RFC ya existe en la tabla
-      if (this.existeRFCEnTabla(RFC)) {
-        this.mostrarModalRFCDuplicado();
-        return;
-      }
-      
-      this.buscarDatosPorRFC(RFC);
+ * Busca información de un transportista por su RFC.
+ * Valida que el RFC no esté duplicado antes de realizar la búsqueda.
+ * Ejecuta la consulta al servicio para obtener datos adicionales.
+ */
+buscarRFC(): void {
+  const RFC = this.transportistaCertificacionForm.get('rfcEnclaveOperativo')?.value;
+  if (RFC && RFC.trim()) {
+    // Verificar si el RFC ya existe en la tabla
+    if (this.existeRFCEnTabla(RFC)) {
+      this.mostrarModalRFCDuplicado();
+      return;
     }
+    
+    this.buscarDatosPorRFC(RFC);
   }
-
+}
   /**
    * Verifica si un RFC ya existe en la lista de transportistas.
    * Realiza comparación insensible a mayúsculas/minúsculas.
@@ -337,60 +338,113 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
     this.modalRefabir = this.modalService.show(this.templateRFCDuplicado, MODAL_CONFIG);
   }
 
-  /**
-   * Realiza la búsqueda de datos del transportista en el servicio por RFC.
-   * Maneja respuestas exitosas y errores de la consulta.
-   * Actualiza el formulario con los datos encontrados o limpia campos si no hay resultados.
-   * 
-   * param rfc - RFC del transportista a buscar
-   */
-  buscarDatosPorRFC(rfc: string): void {
-    this.solicitudService.conseguirTransportistasLista(rfc)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (datos) => {
-          const EMPRESA_DATA = datos[rfc];
-          if (EMPRESA_DATA) {
-            this.patchearDatosEmpresa(EMPRESA_DATA);
-          } else {
-            this.limpiarCamposEmpresa();
-          }
-        },
-        error: (error) => {
-          console.error('Error al buscar datos del RFC:', error);
+/**
+ * Realiza la búsqueda de datos del transportista en el servicio por RFC.
+ * Maneja respuestas exitosas y errores de la consulta.
+ * Actualiza el formulario con los datos encontrados o limpia campos si no hay resultados.
+ * 
+ * param rfc - RFC del transportista a buscar
+ */
+buscarDatosPorRFC(rfc: string): void {
+  this.solicitudService.conseguirTransportistasLista(rfc)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (datos) => {
+        let empresaData = null;
+        
+        if (Array.isArray(datos)) {
+          // Find the company data that matches the RFC
+          empresaData = datos.find(empresa => 
+            empresa.rfc?.toLowerCase() === rfc.toLowerCase()
+          );
+        }
+        
+        if (empresaData) {
+          const MAPPED_DATA: TransportistasListaInterface = {
+            enlaceOperativorfc: empresaData.rfc,
+            denominacionRazonsocial: empresaData.razonSocial,
+            domicilio: empresaData.domicilio,
+            ccat: empresaData.caat // Note: service returns 'caat', form expects 'ccat'
+          };
+          this.patchearDatosEmpresa(MAPPED_DATA, rfc);
+        } else {
           this.limpiarCamposEmpresa();
         }
-      });
-  }
-
-  /**
-   * Actualiza el formulario con los datos de la empresa encontrada.
-   * Rellena automáticamente los campos de solo lectura con la información obtenida.
-   * 
-   * param empresaData - Datos de la empresa obtenidos del servicio
-   */
-  patchearDatosEmpresa(empresaData: TransportistasListaInterface): void {
-    this.transportistaCertificacionForm.patchValue({
-      enlaceOperativorfc: empresaData.enlaceOperativorfc,
-      denominacionRazonsocial: empresaData.denominacionRazonsocial,
-      domicilio: empresaData.domicilio,
-      ccat: empresaData.ccat
+      },
+      error: (error) => {
+        console.error('Error al buscar datos del RFC:', error);
+        this.limpiarCamposEmpresa();
+      }
     });
-  }
+}
+/**
+ * Actualiza el formulario con los datos de la empresa encontrada.
+ * Temporalmente habilita los campos deshabilitados para poder actualizarlos.
+ * Rellena automáticamente los campos de solo lectura con la información obtenida.
+ * 
+ * @param empresaData - Datos de la empresa obtenidos del servicio
+ * @param rfc - RFC original buscado
+ */
+patchearDatosEmpresa(empresaData: TransportistasListaInterface, rfc: string): void {
+  // Store current disabled state
+  const ENLACE_DISABLED = this.transportistaCertificacionForm.get('enlaceOperativorfc')?.disabled;
+  const DENOMINACION_DISABLED = this.transportistaCertificacionForm.get('denominacionRazonsocial')?.disabled;
+  const DOMICILIO_DISABLED = this.transportistaCertificacionForm.get('domicilio')?.disabled;
+  const CCAT_DISABLED = this.transportistaCertificacionForm.get('ccat')?.disabled;
 
-  /**
-   * Limpia los campos de información de la empresa en el formulario.
-   * Se ejecuta cuando no se encuentran datos para el RFC consultado.
-   */
-  limpiarCamposEmpresa(): void {
-    this.transportistaCertificacionForm.patchValue({
-      enlaceOperativorfc: '',
-      denominacionRazonsocial: '',
-      domicilio: '',
-      ccat: ''
-    });
-  }
+  // Temporarily enable all controls
+  this.transportistaCertificacionForm.get('enlaceOperativorfc')?.enable();
+  this.transportistaCertificacionForm.get('denominacionRazonsocial')?.enable();
+  this.transportistaCertificacionForm.get('domicilio')?.enable();
+  this.transportistaCertificacionForm.get('ccat')?.enable();
 
+  // Patch the values with fallback to original RFC
+  this.transportistaCertificacionForm.patchValue({
+    enlaceOperativorfc: empresaData.enlaceOperativorfc || rfc,
+    denominacionRazonsocial: empresaData.denominacionRazonsocial || '',
+    domicilio: empresaData.domicilio || '',
+    ccat: empresaData.ccat || ''
+  });
+
+  // Restore disabled state only if they were originally disabled
+  if (ENLACE_DISABLED) { this.transportistaCertificacionForm.get('enlaceOperativorfc')?.disable(); }
+  if (DENOMINACION_DISABLED) { this.transportistaCertificacionForm.get('denominacionRazonsocial')?.disable(); }
+  if (DOMICILIO_DISABLED) { this.transportistaCertificacionForm.get('domicilio')?.disable(); }
+  if (CCAT_DISABLED) { this.transportistaCertificacionForm.get('ccat')?.disable(); }
+}
+
+/**
+ * Limpia los campos de información de la empresa en el formulario.
+ * Temporalmente habilita los campos deshabilitados para poder limpiarlos.
+ * Se ejecuta cuando no se encuentran datos para el RFC consultado.
+ */
+limpiarCamposEmpresa(): void {
+  // Store current disabled state
+  const ENLACE_DISABLED = this.transportistaCertificacionForm.get('enlaceOperativorfc')?.disabled;
+  const DENOMINACION_DISABLED = this.transportistaCertificacionForm.get('denominacionRazonsocial')?.disabled;
+  const DOMICILIO_DISABLED = this.transportistaCertificacionForm.get('domicilio')?.disabled;
+  const CCAT_DISABLED = this.transportistaCertificacionForm.get('ccat')?.disabled;
+
+  // Temporarily enable all controls
+  this.transportistaCertificacionForm.get('enlaceOperativorfc')?.enable();
+  this.transportistaCertificacionForm.get('denominacionRazonsocial')?.enable();
+  this.transportistaCertificacionForm.get('domicilio')?.enable();
+  this.transportistaCertificacionForm.get('ccat')?.enable();
+
+  // Clear the values
+  this.transportistaCertificacionForm.patchValue({
+    enlaceOperativorfc: '',
+    denominacionRazonsocial: '',
+    domicilio: '',
+    ccat: ''
+  });
+
+  // Restore disabled state only if they were originally disabled
+  if (ENLACE_DISABLED) { this.transportistaCertificacionForm.get('enlaceOperativorfc')?.disable(); }
+  if (DENOMINACION_DISABLED) { this.transportistaCertificacionForm.get('denominacionRazonsocial')?.disable(); }
+  if (DOMICILIO_DISABLED) { this.transportistaCertificacionForm.get('domicilio')?.disable(); }
+  if (CCAT_DISABLED) { this.transportistaCertificacionForm.get('ccat')?.disable(); }
+}
   /**
    * Procesa la aceptación y validación del transportista.
    * Ejecuta todas las validaciones necesarias antes de agregar/actualizar.
@@ -595,12 +649,16 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    * Rellena el formulario con los datos del transportista seleccionado.
    */
   modificarTransportista(): void {
-    if (this.transportistasLista.length === 0 || !this.selectedTransportista) {
-      this.mensajeSeleccion = 'Seleccione un registro.';
-      this.mostrarModalSeleccionRequerida();
-      return;
-    }
-    
+    if (this.transportistasLista.length === 0) {
+  this.mensajeSeleccion = 'No se encontró información.';
+  this.mostrarModalSeleccionRequerida();
+  return;
+  }
+  if (!this.selectedTransportista) {
+    this.mensajeSeleccion = 'Seleccione un registro.';
+    this.mostrarModalSeleccionRequerida();
+    return;
+  }
     this.isEditMode = true;
     
     // Limpiar solo el campo RFC y rellenar otros campos desde la fila seleccionada
@@ -712,7 +770,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    * Sincroniza los cambios locales con el estado global de la aplicación.
    */
   actualizarTransportistasListaEnStore(): void {
-    this.tramite32608Store.establecerDatos({ transportistasLista: this.transportistasLista });
+    this.tramite32608Store.actualizarEstado({ transportistasLista: this.transportistasLista });
   }
 
   /**
@@ -724,4 +782,16 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+ * Valida que exista al menos un transportista en la lista.
+ * Retorna true si hay transportistas, false si la lista está vacía.
+ */
+public validarTransportistas(): boolean {
+  // Mark the validation field as touched to show error
+  this.transportistaCertificacionForm.get('validacionTransportistas')?.markAsTouched();
+  
+  return this.transportistasLista.length > 0;
+}
+
 }  

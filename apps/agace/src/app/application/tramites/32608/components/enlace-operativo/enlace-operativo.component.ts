@@ -1,20 +1,19 @@
 import { CategoriaMensaje, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, REG_X } from '@ng-mf/data-access-user';
-import { ENLACE_OPERATIVO_TABLA, PANELS } from '../../constantes/enlace-operativo-tabla.enum';
+import { ENLACE_OPERATIVO_TABLA, PANELS } from '../../constants/enlace-operativo-tabla.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Solicitud32608State, Solicitud32608Store } from '../../estados/solicitud32608.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import {Tramites32608State,Tramite32608Store} from '../../estados/tramites32608.store';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
-//import { TablaEnlaceOperativo } from '../../models/enlace-operativo-tabla.model';
+import { Solicitud32608Query } from '../../estados/solicitud32608.query';
+import { TablaEnlaceOperativo } from '../../models/enlace-operativo-tabla.model';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { Tramite32608Query } from '../../estados/tramites32608.query';
-import { TablaEnlaceOperativo } from '../../modelos/enlace-operativo-tabla.model';
 
 /**
- * Componente para gestionar el enlace operativo en el trámite 32608.
+ * Componente para gestionar el enlace operativo en el trámite 32610.
  * 
  * Este componente maneja la funcionalidad completa del enlace operativo,
  * incluyendo la creación, edición, eliminación y visualización de registros
@@ -67,6 +66,11 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    *
    */
   enlaceOperativoForm!: FormGroup;
+
+  /**
+   * Formulario reactivo que contiene los datos operativos del enlace en el componente.
+   */
+  enlaceOperativoDataForm!: FormGroup;
 
   /**
    * Referencia de solo lectura al enumerado de tipos de selección de tabla.
@@ -211,13 +215,13 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
-   * Estado actual de la sección de terceros del trámite 32608.
+   * Estado actual de la sección de terceros del trámite 32610.
    *
    * @description
    * Contiene toda la información del estado actual del trámite
    * relacionada con terceros y enlaces operativos.
    */
-  public seccionState!: Tramites32608State;
+  public seccionState!: Solicitud32608State;
 
   /**
    * Datos de la tabla de enlaces operativos.
@@ -249,6 +253,11 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
 
   /** Indica si una fila ha sido seleccionada en la tabla. */
   esFilaSeleccionada: boolean = false;
+   /**
+   * Bandera que controla la visualización de errores en el formulario.
+   * Se activa cuando hay errores de validación que deben mostrarse.
+   */
+  mostrarError: boolean = false;
 
   /**
    * Constructor del componente EnlaceOperativoComponent.
@@ -257,15 +266,11 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    * Inicializa el componente con todas las dependencias necesarias,
    * configura las suscripciones iniciales y crea el formulario reactivo.
    *
-   * @param {FormBuilder} fb - Constructor de formularios reactivos de Angular
-   * @param {Tramite32608TercerosStore} tramite32608TercerosStore - Store para gestionar el estado del trámite
-   * @param {Tramite32608TercerosQuery} tramite32608TercerosQuery - Query para consultar el estado del trámite
-   * @param {ConsultaioQuery} consultaioQuery - Query para consultar el estado de solo lectura
    */
   constructor(
     private fb: FormBuilder,
-    private tramite32608TercerosStore: Tramite32608Store,
-    private tramite32608TercerosQuery: Tramite32608Query,
+    private tramite32608Store: Solicitud32608Store,
+    private tramite32608Query: Solicitud32608Query,
     private consultaioQuery: ConsultaioQuery
   ) {
     this.consultaioQuery.selectConsultaioState$
@@ -273,6 +278,9 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          if (this.esFormularioSoloLectura) {
+            this.mostrar_colapsable(0);
+          }
         })
       )
       .subscribe();
@@ -288,9 +296,9 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    * y carga los datos iniciales de la tabla.
    */
   ngOnInit(): void {
-    this.tramite32608TercerosQuery.selectTramite32608$
+    this.tramite32608Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((datos: Tramites32608State) => {
+      .subscribe((datos: Solicitud32608State) => {
         this.seccionState = datos;
         this.enlaceOperativoData = this.seccionState.enlaceOperativoData;
       });   
@@ -300,6 +308,7 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    * Crea el formulario reactivo para el registro de vehículos.
    */
   crearFormulario(): void {
+    this.enlaceOperativoDataForm = this.fb.group({});
     this.enlaceOperativoForm = this.fb.group({
       registro: ['', [Validators.required,Validators.pattern(REG_X.RFC_13_ALFANUM)]],
       rfc: [{ value: '', disabled: true }],
@@ -323,12 +332,10 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    * de acordeón donde solo un panel puede estar abierto a la vez.
    */
   mostrar_colapsable(index: number): void {
-    if(!this.esFormularioSoloLectura){
     const IS_CURRENTLY_OPEN = this.panels[index].isCollapsed;
     this.panels.forEach((panel: { isCollapsed: boolean }, i: number) => {
       panel.isCollapsed = i === index ? !IS_CURRENTLY_OPEN : true;
     });
-  }
   }
 
   /**
@@ -342,6 +349,20 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
 buscar(): void {
   const REGISTRO_VALUE = this.enlaceOperativoForm.get('registro')?.value;
   const REGISTRO_CONTROL = this.enlaceOperativoForm.get('registro');
+  if(!REGISTRO_VALUE) {
+       this.rfcValido = true;
+      this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ERROR,
+      modo: 'modal',
+      titulo: '',
+      mensaje: 'No se encontró información',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    return;
+  }
     if (!REGISTRO_CONTROL?.valid) {
       this.mostrarNotificacionFormatoIncorrecto();
       return;
@@ -516,10 +537,11 @@ buscar(): void {
         ENLACE_OPERATIVO,
       ];
     }
-    this.tramite32608TercerosStore.establecerDatos({
+    this.tramite32608Store.actualizarEstado({
       enlaceOperativoData: this.enlaceOperativoData,
     });
     this.filaSeleccionadaEnlaceOperativo = {} as TablaEnlaceOperativo;
+    this.mostrarError = false;
   }
 
   /**
@@ -594,7 +616,7 @@ buscar(): void {
 
       this.listaFilaSeleccionadaEnlace = [];
       this.filaSeleccionadaEnlaceOperativo = {} as TablaEnlaceOperativo;
-      this.tramite32608TercerosStore.establecerDatos({
+      this.tramite32608Store.actualizarEstado({
         enlaceOperativoData: this.enlaceOperativoData,
       });
     }
@@ -609,31 +631,58 @@ buscar(): void {
    * una fila seleccionada, abre el modal de edición con los datos cargados.
    * Si hay múltiples filas seleccionadas, muestra un popup de error.
    */
-  modificarItemEnlace(): void {
+ modificarItemEnlace(): void {
     this.cerrarModal();
-    if (this.listaFilaSeleccionadaEnlace.length === 0) {
+    if(this.enlaceOperativoData.length === 0) {
+      this.abrirMultipleSeleccionPopup('', 'No se encontró información');
       this.esFilaSeleccionada = true;
-      this.nuevaNotificacion = {
-        tipoNotificacion: TipoNotificacionEnum.ALERTA,
-        categoria: CategoriaMensaje.ALERTA,
-        modo: 'modal',
-        titulo: '',
-        mensaje: 'Seleccione un registro.',
-        cerrar: false,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
+      return;
+    }
+    if (this.listaFilaSeleccionadaEnlace.length === 0) {
+     this.abrirMultipleSeleccionPopup('', 'Seleccione un registro');
+      this.esFilaSeleccionada = true;
+      return;
+    } if (
+      this.listaFilaSeleccionadaEnlace &&
+      this.listaFilaSeleccionadaEnlace.length === 1
+    ) {
+      this.filaSeleccionadaEnlaceOperativo = {
+        ...this.listaFilaSeleccionadaEnlace[0],
       };
-    }else if( this.listaFilaSeleccionadaEnlace &&
-      this.listaFilaSeleccionadaEnlace.length === 1){
-      this.filaSeleccionadaEnlaceOperativo = { ...this.listaFilaSeleccionadaEnlace[0] };
-      this.modoEdicion = true;
       this.registroEditandoId = this.filaSeleccionadaEnlaceOperativo.id;
+      this.modoEdicion = true;
       this.agregarDialogoDatos();
       this.actualizarDatosModificados();
     }
-
   }
-
+ 
+ /**
+   * @method abrirMultipleSeleccionPopup
+   * Muestra un popup de notificación con contenido dinámico.
+   * Este método permite personalizar el título, mensaje y etiquetas de los botones del popup.
+   * @param titulo - Título del popup
+   * @param mensaje - Mensaje a mostrar en el popup
+   * @param txtBtnAceptar - Texto del botón de aceptar (opcional, por defecto 'Cerrar')
+   * @param txtBtnCancelar - Texto del botón de cancelar (opcional, por defecto '')
+   */
+  abrirMultipleSeleccionPopup(
+    titulo: string,
+    mensaje: string,
+    txtBtnAceptar: string = 'Aceptar',
+    txtBtnCancelar: string = ''
+  ): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
+      modo: 'modal',
+      titulo: titulo,
+      mensaje: mensaje,
+      cerrar: false,
+      txtBtnAceptar: txtBtnAceptar,
+      txtBtnCancelar: txtBtnCancelar,
+    };
+  }
+ 
   /**
    * Actualiza el formulario con los datos de la fila seleccionada para modificación.
    *
@@ -669,21 +718,18 @@ buscar(): void {
    * el popup de confirmación. Si no hay elementos seleccionados, muestra
    * un mensaje de error. Si hay elementos, abre el popup de confirmación.
    */
-  confirmeliminarEnlaceItem(): void {
+   confirmeliminarEnlaceItem(): void {
     this.cerrarModal();
+    if (this.enlaceOperativoData.length === 0) {
+      this.multipleSeleccionPopupAbierto = true;
+      this.abrirMultipleSeleccionPopup('', 'No se encontró información');
+      return;
+    }
     if (this.listaFilaSeleccionadaEnlace.length === 0) {
       this.multipleSeleccionPopupAbierto = true;
-      this.nuevaNotificacion = {
-        tipoNotificacion: TipoNotificacionEnum.ALERTA,
-        categoria: CategoriaMensaje.ALERTA,
-        modo: 'modal',
-        titulo: '',
-        mensaje: 'Seleccione un registro.',
-        cerrar: false,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      }; 
-    }else if(this.listaFilaSeleccionadaEnlace.length){
+      this.abrirMultipleSeleccionPopup('', 'Seleccione un registro');
+      return;
+    } if (this.listaFilaSeleccionadaEnlace.length) {
       this.abrirElimninarConfirmationopup();
     }
   }
@@ -716,6 +762,19 @@ buscar(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
+  /**
+ * Validates that there is at least one enlace operativo in the list.
+ * @returns boolean indicating if there are enlace operativos
+ */
+public validarEnlaceOperativo(): boolean {
+  if (this.enlaceOperativoData.length === 0) {
+    this.mostrarError = true;
+    return false;
+  }
+  
+  this.mostrarError = false;
+  return true;
+}
 }
 
 

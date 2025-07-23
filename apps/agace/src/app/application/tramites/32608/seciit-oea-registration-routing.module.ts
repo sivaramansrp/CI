@@ -1,22 +1,22 @@
 import { NgModule } from '@angular/core';
-import { OeaTextilRegistroComponent } from './pages/oea-textil-registro/oea-textil-registro.component';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
+import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
-const ROUTES: Routes = [
+export const ROUTES_SOLICITUDES: Routes = [
   {
     path: 'solicitud',
-    component: OeaTextilRegistroComponent,
+    component: SolicitudPageComponent,
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: '',
+    redirectTo: 'solicitud',
   },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(ROUTES)],
+  imports: [RouterModule.forChild(ROUTES_SOLICITUDES)],
   exports: [RouterModule],
 })
 export class SeciitOeaRegistrationRoutingModule {}

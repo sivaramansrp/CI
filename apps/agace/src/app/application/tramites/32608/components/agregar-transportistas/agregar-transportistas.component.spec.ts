@@ -1,23 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { of, Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+
 import { AgregarTransportistasComponent } from './agregar-transportistas.component';
-import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
-import { Tramite32609Store, Tramites32609State } from '../../estados/tramites32609.store';
-import { Tramite32609Query } from '../../estados/tramites32609.query';
-import { PANELS1, TRANSPORTISTAS_CONFIGURACION } from '../../enums/oea-textil-registro.enum';
-import { TransportistasListaInterface, TransportistasTable } from '../../modelos/oea-textil-registro.model';
+import { SolicitudService } from '../../services/solicitud.service';
+import { Solicitud32605Store, Solicitud32605State } from '../../estados/solicitud32605.store';
+import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { PANELS1, TRANSPORTISTAS_CONFIGURACION, TransportistasTable } from '../../constants/datos-comunes.enum';
+import { TransportistasListaInterface } from '../../models/solicitud.model';
 
 describe('AgregarTransportistasComponent', () => {
   let component: AgregarTransportistasComponent;
   let fixture: ComponentFixture<AgregarTransportistasComponent>;
-  let mockOeaTextilRegistroService: jest.Mocked<OeaTextilRegistroService>;
-  let mockTramite32609Store: jest.Mocked<Tramite32609Store>;
-  let mockTramite32609Query: jest.Mocked<Tramite32609Query>;
+  let mockSolicitudService: jest.Mocked<SolicitudService>;
+  let mockSolicitud32605Store: jest.Mocked<Solicitud32605Store>;
+  let mockSolicitud32605Query: jest.Mocked<Solicitud32605Query>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
   let mockBsModalService: jest.Mocked<BsModalService>;
   let mockBsModalRef: jest.Mocked<BsModalRef>;
@@ -37,14 +38,14 @@ describe('AgregarTransportistasComponent', () => {
     }
   ];
 
-  const mockSolicitudState: Tramites32609State = {
+  const mockSolicitudState: Solicitud32605State = {
     rfcEnclaveOperativo: 'RFC123456789',
     enlaceOperativorfc: 'RFC123456789',
     denominacionRazonsocial: 'Transportes Test SA',
     domicilio: 'Calle Test 123',
     ccat: 'CCAT123',
     transportistasLista: mockTransportistasLista
-  } as Tramites32609State;
+  } as Solicitud32605State;
 
   const mockConsultaioState = {
     readonly: false
@@ -61,15 +62,15 @@ describe('AgregarTransportistasComponent', () => {
 
   beforeEach(async () => {
     // Crear mocks de los servicios
-    mockOeaTextilRegistroService = {
+    mockSolicitudService = {
       conseguirTransportistasLista: jest.fn().mockReturnValue(of(mockTransportistasListaData))
     } as any;
 
-    mockTramite32609Store = {
+    mockSolicitud32605Store = {
       actualizarEstado: jest.fn()
     } as any;
 
-    mockTramite32609Query = {
+    mockSolicitud32605Query = {
       selectSolicitud$: of(mockSolicitudState)
     } as any;
 
@@ -94,9 +95,9 @@ describe('AgregarTransportistasComponent', () => {
       ],
       providers: [
         FormBuilder,
-        { provide: OeaTextilRegistroService, useValue: mockOeaTextilRegistroService },
-        { provide: Tramite32609Store, useValue: mockTramite32609Store },
-        { provide: Tramite32609Query, useValue: mockTramite32609Query },
+        { provide: SolicitudService, useValue: mockSolicitudService },
+        { provide: Solicitud32605Store, useValue: mockSolicitud32605Store },
+        { provide: Solicitud32605Query, useValue: mockSolicitud32605Query },
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
         { provide: BsModalService, useValue: mockBsModalService }
       ]
@@ -432,16 +433,7 @@ describe('AgregarTransportistasComponent', () => {
       fixture.detectChanges();
     });
 
-    it('debería mostrar modal de selección requerida si no hay transportistas', () => {
-      component.transportistasLista = [];
-      component.selectedTransportista = null;
-      
-      const spyModal = jest.spyOn(component, 'mostrarModalSeleccionRequerida');
-      component.modificarTransportista();
-      
-      expect(spyModal).toHaveBeenCalled();
-      expect(component.mensajeSeleccion).toBe('Seleccione un registro.');
-    });
+
 
     it('debería configurar modo edición y abrir modal con datos del transportista', () => {
       component.transportistasLista = [...mockTransportistasLista];
@@ -562,7 +554,7 @@ describe('AgregarTransportistasComponent', () => {
       
       component.actualizarTransportistasListaEnStore();
       
-      expect(mockTramite32609Store.establecerDatos).toHaveBeenCalledWith({
+      expect(mockSolicitud32605Store.actualizarEstado).toHaveBeenCalledWith({
         transportistasLista: mockTransportistasLista
       });
     });

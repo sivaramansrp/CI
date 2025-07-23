@@ -1,104 +1,203 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
-import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
-import { StoreResponse } from '../../estados/tramites32608.store';
+import { CTPATComponent } from '../../components/c-tpat/c-tpat.component';
+import { Component} from '@angular/core';
+import { DatosComunesComponent } from '../../components/datos-comunes/datos-comunes.component';
+import { ImportadorExportadorComponent } from '../../components/importador-exportador/importador-exportador.component';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { SolicitudService } from '../../services/solicitud.service';
+import { Subject } from 'rxjs';
+import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
+import { ViewChild } from '@angular/core';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente que representa el primer paso de un trámite.
+ * Maneja la visualización y activación de diferentes secciones (tabs) según el tipo de endoso.
  */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss'],
 })
-/**
- * Componente que representa el primer paso de un trámite.
- */
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
-   * Índice utilizado para identificar la posición actual en un proceso o lista.
-   * @type {number}
+   * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
+   */
+  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+
+  /**
+   * Índice utilizado para identificar la pestaña activa dentro del paso.
    */
   indice: number = 1;
 
-      /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
-
   /** Subject para notificar la destrucción del componente. */
-  public destroyNotifier$: Subject<void> = new Subject();
+  private destroyNotifier$: Subject<void> = new Subject();
+  /** Estado de la consulta que se obtiene del store. */
+  public consultaState!: ConsultaioState;
 
   /**
-   * Estado actual de la consulta obtenido desde el store global.
-   * Contiene la información relevante para el flujo del trámite en este paso.
+   * @desc Valor seleccionado para el campo de reconocimiento mutuo en el formulario.
+   * @remarks Utilizado para almacenar la opción elegida por el usuario en el paso uno del trámite.
    */
-  public consultaState!:ConsultaioState;
+  reconocimientoMutuoValue: string = '';
 
+   /**
+   * Referencia al componente ImportadorExportadorComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de datos de importador/exportador antes de continuar al siguiente paso.
+   */
+  @ViewChild('importadorExportadorRef')importadorExportadorComponent!: ImportadorExportadorComponent;
 
-    constructor(
-    @Inject(OeaTextilRegistroService)
-    public registroService: OeaTextilRegistroService,
-    public consultaQuery: ConsultaioQuery
-  ) {
-// Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
+  /**
+   * Referencia al componente TercerosRelacionadosComponent para acceder a sus métodos de validación.
+   * Permite validar los formularios de terceros relacionados incluyendo representante legal,
+   * enlace operativo y personas de notificaciones.
+   */
+  @ViewChild('tercerosRelacionadosRef') tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+
+    /**
+   * Referencia al componente DatosComunesComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de datos comunes antes de continuar al siguiente paso.
+   */
+  @ViewChild('datosComunesRef') datosComunesComponent!: DatosComunesComponent;
+
+  /**
+   * Referencia al componente CTPATComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de CTPAT antes de continuar al siguiente paso.
+   */
+  @ViewChild('ctpatRef') ctpatComponent!: CTPATComponent;
+    /**
+   * Lista de secciones del formulario.
+   * Lista de pasos dentro del formulario con sus respectivos componentes.
+   */
+  seccionesDeLaSolicitud = [
+    { index: 1, title: 'Solicitante', component: 'solicitante' },
+    { index: 2, title: 'Datos Comunes', component: 'datos-comunes' },
+    { index: 3, title: 'Terceros relacionados', component: 'terceros-relacionados' },
+    { index: 4, title: 'SECIIT', component: 'importador-exportador' },
+    // { index: 5, title: 'CTPAT', component: 'c-tpat' }
+  ];
+
+  constructor(private consultaQuery: ConsultaioQuery, public solicitudService: SolicitudService) {
+    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
-/**
- * Método del ciclo de vida que se ejecuta al inicializar el componente.
- *
- * Suscribe al observable `selectConsultaioState$` para obtener el estado actual de la consulta
- * y lo asigna a la propiedad `consultaState`. Dependiendo del valor de `update` en el estado,
- * decide si debe cargar los datos del formulario o marcar que los datos de respuesta están listos.
- *
- * @returns {void}
- */
-ngOnInit(): void {
-      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
           this.consultaState = seccionState;
-      })).subscribe();
-    if (this.consultaState && this.consultaState.update) {
+        })
+      )
+      .subscribe();
+    if (this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
     }
-}
+  }
 
-/**
+  /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-    this.registroService
-      .getRegistroTomaMuestrasMercanciasData().pipe(
-        map((resp: StoreResponse) => resp),
-        takeUntil(this.destroyNotifier$)
-      )
+    this.solicitudService
+      .obtenerDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
-        if (resp && resp.data) {
+        if (resp) {
           this.esDatosRespuesta = true;
-          this.registroService.actualizarEstadoFormulario(resp.data);
-        } else {
-          this.esDatosRespuesta = false;
+          this.solicitudService.actualizarEstado(resp);
         }
       });
   }
 
   /**
-   * Selecciona una pestaña específica.
-   * @param i - El índice de la pestaña a seleccionar.
+   * Cambia la pestaña activa según el índice proporcionado.
+   * El índice de la pestaña que se desea activar.
    */
-  seleccionaTab(i:number): void {
+  seleccionaTab(i: number): void {
     this.indice = i;
   }
 
-  /**
-   * Método del ciclo de vida que se ejecuta al destruir el componente.
-   * Limpia las suscripciones activas para prevenir fugas de memoria.
-   *
-   * @returns {void}
+    /**
+   * Método que se ejecuta cuando el componente se destruye.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+  /**
+   * Valida todos los formularios del paso uno.
+   * Retorna true si todos los formularios son válidos, false en caso contrario.
+   */
+ public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+      if (this.datosComunesComponent) {
+    const DATOS_COMUNES_VALID = this.datosComunesComponent.validarFormulario();
+    if (!DATOS_COMUNES_VALID) {
+      isValid = false;
+    }
+  } else {
+    isValid = false;
+  }
+
+    if (this.tercerosRelacionadosComponent) {
+      if (!this.tercerosRelacionadosComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.importadorExportadorComponent) {
+      if (!this.importadorExportadorComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+     if (this.ctpatComponent) {
+      if (!this.ctpatComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    
+
+    return isValid;
+  }
+
+    /**
+   * Maneja el cambio de valor para el reconocimiento mutuo.
+   * Actualiza la propiedad `reconocimientoMutuoValue` con el valor seleccionado.
+   *
+   * El nuevo valor seleccionado para reconocimiento mutuo.
+   */
+  onReconocimientoMutuoChange(value: string) :void {
+    this.reconocimientoMutuoValue = value;
+  }
+  
+
 }

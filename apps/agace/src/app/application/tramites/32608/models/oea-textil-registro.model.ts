@@ -152,3 +152,15 @@ export interface TransportistasListaInterface {
   domicilio: string;
   ccat: string;
 }
+
+/**
+ * Represents the response structure for the OEA textile registration process.
+ *
+ * @property rubroCertificacion - Certification code for the textile sector.
+ * @property fechaFinVigenciaRubro - End date of the certification validity.
+ * @property numeroOficio - Official document number associated with the certification.
+ */export interface RubroTextil {
+  rubroCertificacion: string;
+  fechaFinVigenciaRubro: string;
+  numeroOficio: string;
+}

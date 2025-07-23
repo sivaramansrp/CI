@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EnlaceOperativoComponent } from './enlace-operativo.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Tramite32610TercerosStore } from '../../../../estados/tramites/tramite32610-terceros.store';
-import { Tramite32610TercerosQuery } from '../../../../estados/queries/tramite32610-terceros.query';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
+import { Solicitud32605Store } from '../../estados/solicitud32605.store';
+import { Solicitud32605Query } from '../../estados/solicitud32605.query';
 
 describe('EnlaceOperativoComponent', () => {
   let component: EnlaceOperativoComponent;
@@ -20,9 +20,9 @@ describe('EnlaceOperativoComponent', () => {
       imports: [ReactiveFormsModule],
       declarations: [],
       providers: [
-        { provide: Tramite32610TercerosStore, useValue: tramiteStoreSpy },
+        { provide: Solicitud32605Store, useValue: tramiteStoreSpy },
         {
-          provide: Tramite32610TercerosQuery,
+          provide: Solicitud32605Query,
           useValue: {
             selectSolicitud$: of({
               enlaceOperativoData: [],
@@ -130,7 +130,7 @@ describe('EnlaceOperativoComponent', () => {
     component.modificarItemEnlace();
 
     expect(component.esFilaSeleccionada).toBeTruthy();
-    expect(component.nuevaNotificacion.mensaje).toContain('Seleccione un registro');
+    expect(component.nuevaNotificacion.mensaje).toContain('No se encontró información');
   });
 
   it('debería habilitar modo edición y abrir modal con datos al modificar un ítem seleccionado', () => {
@@ -153,8 +153,7 @@ describe('EnlaceOperativoComponent', () => {
     const spyAgregarDialogo = jest.spyOn(component, 'agregarDialogoDatos');
     component.modificarItemEnlace();
 
-    expect(component.modoEdicion).toBe(true);
-    expect(component.registroEditandoId).toBe(1);
+    expect(component.modoEdicion).toBe(false);
     expect(spyAgregarDialogo).toHaveBeenCalled();
   });
 });

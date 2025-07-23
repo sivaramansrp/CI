@@ -1,7 +1,7 @@
-<div class="container">
+<div class="textil-wrapper pt-5">
   <form [formGroup]="importadorExportadorForm">
     <div class="row">
-      <div class="col-md-12 pt-5">
+      <div class="col-md-12">
         <label class="form-label text-start"
           >Conforme a la regla 7.1.4 primer párrafo, fracciones I a la IV,
           acredite lo siguiente:</label
@@ -385,7 +385,7 @@
         <div class="col-md-12 p-4">
           <div class="form-group">
             <label class="form-label text-left">
-              <span class="text-danger">*</span>Señale si cuenta con programa IMMEX del rubro seleccionado.
+              <span class="text-danger">*</span>Indique el número de su Programa IMMEX y la modalidad
             </label>
             <app-input-radio
               [radioOptions]="opcionDeBotonDeRadio"
@@ -412,30 +412,66 @@
         </div>
       </div>
 
-    <div class="form-group">
-      <label class="form-label text-left empresaExtranjeraIMMEX">
-        <span class="text-danger">*</span>Anexe constancia de la totalidad de personal registrado ante IMSS del SUA y soporte documental del pago de cuotas obrero patronales de los tres últimos bimestres anteriores a la solicitud, de por lo menos treinta empleados en donde inidca la imagen
-
-      </label>
-    </div>
-
-    <div class="row" >
+       <div class="row" >
         <div class="col-md-12 p-4">
           <div class="form-group">
             <label class="form-label text-left">
-              Que los socios y accionistas, representante legal, administrador unico o miembros del consejo de administración de la empresasa acrediten haber presentado la declaración anual del ISR correspondiente a los 2 últimos ejercicios fiscales previos a la solicitud.
+              <span class="text-danger">*</span>Número de Programa IMMEX:
             </label>
-            <app-input-radio
-              [radioOptions]="opcionDeBotonDeRadio"
-              [isRequired]="false"
-              [layout]="'horizontal'"
-              formControlName="declaracionAnualISRRepresentantes"
-              (valueChange)="onSeleccionfalsa($event)"
-              (change)="setValoresStore(importadorExportadorForm, 'declaracionAnualISRRepresentantes')"
-            ></app-input-radio>
+             <div class="row mt-2">
+            <div class="col-md-6">
+              <input class="form-control" type="text" id="numeroProgramaIMMEX" name="numeroProgramaIMMEX"
+                formControlName="numeroProgramaIMMEX" [disabled]="esFormularioSoloLectura" />
+            </div>
+          </div>
+        
+            <div
+              *ngIf="
+                importadorExportadorForm.controls[
+                  'cuentaConProgramaIMMEX'
+                ].invalid &&
+                importadorExportadorForm.controls[
+                  'cuentaConProgramaIMMEX'
+                ].touched
+              "
+              class="text-danger"
+            >
+              Respuesta Obligatoria
+            </div>
           </div>
         </div>
       </div>
+
+       <div class="row" >
+        <div class="col-md-12 p-4">
+          <div class="form-group">
+            <label class="form-label text-left">
+              <span class="text-danger">*</span>Modalidad del Programa IMMEX:
+            </label>
+             <div class="row mt-2">
+            <div class="col-md-6">
+           <input class="form-control" type="text" id="modalidadProgramaIMMEX" name="modalidadProgramaIMMEX"
+              formControlName="modalidadProgramaIMMEX" [disabled]="esFormularioSoloLectura" />
+            </div>
+          </div>
+        
+            <div
+              *ngIf="
+                importadorExportadorForm.controls[
+                  'cuentaConProgramaIMMEX'
+                ].invalid &&
+                importadorExportadorForm.controls[
+                  'cuentaConProgramaIMMEX'
+                ].touched
+              "
+              class="text-danger"
+            >
+              Respuesta Obligatoria
+            </div>
+          </div>
+        </div>
+      </div>
+
 
       <div class="row" >
         <div class="col-md-12 p-4">
@@ -443,14 +479,14 @@
             <label class="form-label text-left">
               <span class="text-danger">*</span>Señale si cuenta con el Registro en el Esquema de Certificación de Empresas en la Modalidad de IVA e IEPS en cualquiera de sus rubros.
             </label>
-            <app-input-radio
-              [radioOptions]="opcionDeBotonDeRadio"
-              [isRequired]="true"
-              [layout]="'horizontal'"
-              formControlName="registroEsquemaCertificacionIVAIEPS"
-              (valueChange)="onSeleccionfalsa($event)"
-              (change)="setValoresStore(importadorExportadorForm, 'registroEsquemaCertificacionIVAIEPS')"
-            ></app-input-radio>
+          <app-input-radio
+            [radioOptions]="opcionDeBotonDeRadio"
+            [isRequired]="true"
+            [layout]="'horizontal'"
+            formControlName="registroEsquemaCertificacionIVAIEPS"
+            (valueChange)="onRegistroEsquemaCertificacionIVAIEPSChange($event)"
+            (change)="setValoresStore(importadorExportadorForm, 'registroEsquemaCertificacionIVAIEPS')"
+          ></app-input-radio>
             <div
               *ngIf="
                 importadorExportadorForm.controls[
@@ -469,75 +505,133 @@
       </div>
 
 
-        <div class="col-md-12 py-4" *ngIf="importadorExportadorForm.get('registroEsquemaCertificacionIVAIEPS')?.value === '1'">
-            <div class="row justify-content-center">
-              <div class="col-md-10">
-                <form [formGroup]="rubroIVATextilForm">
-                 <div class="row mt-4">
-                <div class="col-md-5 text-end">
-                  <label class="form-label text-end text-nowrap mb-0" for="modalidadivaeips"
-                    >Modalidad  I V A e  I E P S</label
-                  >
-                </div>
-                <div class="col-md-7">
-                  <input
-                    class="form-control"
-                    formControlName="monto"
-                    type="text"
-                    id="rubroCertificacion"
-                    name="rubroCertificacion"
-                    formControlName="rubroCertificacion"
-                    [readOnly]="true"
-                  />
-                </div>
-              </div>
+<div class="col-md-12 py-4" *ngIf="importadorExportadorForm.get('registroEsquemaCertificacionIVAIEPS')?.value === '0'">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <form [formGroup]="rubroIVATextilForm">
+        <div class="row mt-4">
+          <div class="col-md-5 text-end">
+            <label class="form-label text-end text-nowrap mb-0" for="modalidadivaeips"
+              >Modalidad  I V A e  I E P S</label
+            >
+          </div>
+          <div class="col-md-7">
+            <input
+              class="form-control"
+              type="text"
+              id="rubroCertificacion"
+              name="rubroCertificacion"
+              formControlName="rubroCertificacion"
+            />
+          </div>
+        </div>
 
-          <div class="row mt-4">
-            <div class="col-md-5 text-end">
-              <label
-                class="form-label mb-0 text-nowrap text-end"
-                for="fechaFinVigenciaRubro"
-              >
-                Fecha De Registro
-              </label>
-            </div>
+        <div class="row mt-4">
+          <div class="col-md-5 text-end">
+            <label
+              class="form-label mb-0 text-nowrap text-end"
+              for="fechaFinVigenciaRubro"
+            >
+              Fecha De Registro
+            </label>
+          </div>
 
-            <div class="col-md-7">
+          <div class="col-md-7">
             <input
               class="form-control flex-grow-1"
               formControlName="fechaFinVigenciaRubro"
               type="text"
               id="fechaFinVigenciaRubro"
               name="fechaFinVigenciaRubro"
-              [readOnly]="true"
             />
-            </div>
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-md-5 text-end">
+            <label class="form-label text-nowrap text-end mb-0" for="numeroOficio"
+              >Número de autorización</label
+            >
+          </div>
+          <div class="col-md-7">
+            <input
+              class="form-control"
+              formControlName="numeroOficio"
+              type="text"
+              id="numeroOficio"
+              name="numeroOficio"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+       <div class="col-md-12 py-4" *ngIf="importadorExportadorForm.get('registroEsquemaCertificacionIVAIEPS')?.value === '1'">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <form [formGroup]="rubroIVATextilForm">
+        <div class="row mt-4">
+          <div class="col-md-5 text-end">
+            <label class="form-label text-end text-nowrap mb-0" for="modalidadivaeips"
+              >Modalidad  I V A e  I E P S</label
+            >
+          </div>
+          <div class="col-md-7">
+            <input
+              class="form-control"
+              type="text"
+              id="rubroCertificacion"
+              name="rubroCertificacion"
+              formControlName="rubroCertificacion"
+            />
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-md-5 text-end">
+            <label
+              class="form-label mb-0 text-nowrap text-end"
+              for="fechaFinVigenciaRubro"
+            >
+              Fecha De Registro
+            </label>
           </div>
 
-            <div class="row mt-4">
-                <div class="col-md-5 text-end">
-                  <label class="form-label text-nowrap text-end mb-0" for="numeroOficio"
-                    >Número de autorización</label
-                  >
-                </div>
-                <div class="col-md-7">
-                  <input
-                    class="form-control"
-                    formControlName="numeroOficio"
-                    type="text"
-                    id="numeroOficio"
-                    name="numeroOficio"
-                    [readOnly]="true"
-                  />
-                </div>
-              </div>
-</form>
-              </div>
-            </div>
-             
-
-          
+          <div class="col-md-7">
+            <input
+              class="form-control flex-grow-1"
+              formControlName="fechaFinVigenciaRubro"
+              type="text"
+              id="fechaFinVigenciaRubro"
+              name="fechaFinVigenciaRubro"
+            />
+          </div>
         </div>
+
+        <div class="row mt-4">
+          <div class="col-md-5 text-end">
+            <label class="form-label text-nowrap text-end mb-0" for="numeroOficio"
+              >Número de autorización</label
+            >
+          </div>
+          <div class="col-md-7">
+            <input
+              class="form-control"
+              formControlName="numeroOficio"
+              type="text"
+              id="numeroOficio"
+              name="numeroOficio"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ...existing code... -->
 
 
       <div class="col-md-12">

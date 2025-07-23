@@ -1,70 +1,51 @@
-<div class="row">
-  <ul class="nav nav-tabs">
-    <li [ngClass]="indice === 1 ? 'active' : ''">
-      <a
-        data-toggle="tab"
-        (click)="seleccionaTab(1)"
-        (keydown.enter)="seleccionaTab(1)"
-        (keydown.space)="seleccionaTab(1)"
-        tabindex="1"
-        role="button"
-        >Solicitante</a
+<div class="container">
+  <div class="row">
+    <ul class="nav nav-tabs">
+      <li 
+        *ngFor="let tab of seccionesDeLaSolicitud" 
+        [ngClass]="indice === tab.index ? 'active' : ''"
+        
       >
-    </li>
-    <li [ngClass]="indice === 2 ? 'active' : ''">
-      <a
-        data-toggle="tab"
-        (click)="seleccionaTab(2)"
-        (keydown.enter)="seleccionaTab(1)"
-        (keydown.space)="seleccionaTab(1)"
-        tabindex="2"
-        role="button"
-        >Datos Comunes</a
-      >
-    </li>
-    <li [ngClass]="indice === 3 ? 'active' : ''">
-      <a
-        data-toggle="tab"
-        (click)="seleccionaTab(3)"
-        (keydown.enter)="seleccionaTab(1)"
-        (keydown.space)="seleccionaTab(1)"
-        tabindex="3"
-        role="button"
-        >Terceros Relacionados</a
-      >
-    </li>
-    <li [ngClass]="indice === 4 ? 'active' : ''">
-      <a
-        data-toggle="tab"
-        (click)="seleccionaTab(4)"
-        (keydown.enter)="seleccionaTab(4)"
-        (keydown.space)="seleccionaTab(4)"
-        tabindex="4"
-        role="button"
-        >SECIIT</a
-      >
-    </li> </ul>
+        <a 
+          *ngIf="tab.index !== 5 || reconocimientoMutuoValue === '1'"
+         
+          [class.active]="indice === tab.index"
+          (click)="seleccionaTab(tab.index)"
+        >
+          {{ tab.title }}
+        </a>
+      </li>
+    </ul>
 
-  <ng-container>
-    @switch (indice) { @case (1) {
-    <solicitante></solicitante>
-    } @case (2) {
+    <ng-container>
+      <solicitante #solicitanteRef [hidden]="indice !== 1"></solicitante>
+      
       @if(esDatosRespuesta){
-        <app-datos-comunes></app-datos-comunes>
+        <app-datos-comunes
+          #datosComunesRef 
+          (reconocimientoMutuoCTPATChange)="onReconocimientoMutuoChange($event)"
+          [hidden]="indice !== 2">
+        </app-datos-comunes>
       }
-    } @case (3) {
+
       @if(esDatosRespuesta){
-        <app-terceros-relacionados></app-terceros-relacionados>
+        <app-terceros-relacionados 
+          #tercerosRelacionadosRef  
+          [hidden]="indice !== 3">
+        </app-terceros-relacionados>
       }
-    } @case (4) {
+
       @if(esDatosRespuesta){
-        <app-importador-exportador></app-importador-exportador>
+        <app-importador-exportador 
+          #importadorExportadorRef 
+          [hidden]="indice !== 4">
+        </app-importador-exportador>
       }
-    }
-    @case (5) {
-      @if(esDatosRespuesta){
-      }
-    }
-  }
-  </ng-container>
+
+      <!-- @if(esDatosRespuesta && reconocimientoMutuoValue === '1'){
+        <app-c-tpat #ctpatRef [hidden]="indice !== 5"></app-c-tpat>
+      } -->
+    </ng-container>
+
+  </div>
 </div>

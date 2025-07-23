@@ -1,5 +1,6 @@
-<div class="content-wrap">
+<div class="container">
   <ng-titulo titulo="Requisitos opcionales" />
-
-  <anexar-documentos></anexar-documentos>
+  
+  <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
+  <anexar-documentos  [catalogoDocumentos]='catalogoDocumentos'></anexar-documentos>
 </div>

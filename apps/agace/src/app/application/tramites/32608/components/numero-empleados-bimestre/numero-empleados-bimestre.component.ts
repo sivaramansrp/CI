@@ -12,15 +12,15 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MENSAJE_DE_VALIDACION, NOTA, NUMERO_EMPLEADOS_TABLA_DATOS } from '../../enums/oea-textil-registro.enum';
+import { MENSAJE_DE_VALIDACION, NOTA, NUMERO_EMPLEADOS_TABLA_DATOS } from '../../constants/oea-textil-registro.enum';
+import { Solicitud32608State, Solicitud32608Store } from '../../estados/solicitud32608.store';
 import { Subject, map, takeUntil} from 'rxjs';
-import { Tramite32608Store, Tramites32608State } from '../../estados/tramites32608.store';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
-import { NumeroEmpleadosTabla } from '../../modelos/oea-textil-registro.model';
-import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
-import { Tramite32608Query } from '../../estados/tramites32608.query';
+import { NumeroEmpleadosTabla } from '../../models/oea-textil-registro.model';
+import { Solicitud32608Query } from '../../estados/solicitud32608.query';
+import { SolicitudService } from '../../services/solicitud.service';
 
 
 /**
@@ -227,10 +227,10 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   multipleSeleccionPopupCerrado: boolean = true;
 
   /**
-   * @property {Tramites32608State} seccionState
+   * @property {Solicitud32608State} seccionState
    * Estado actual del formulario.
    */
-  public seccionState!: Tramites32608State;
+  public seccionState!: Solicitud32608State;
 
    /**
      * Lista de bimestres.
@@ -249,18 +249,13 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
    * para el manejo del estado del componente y formularios reactivos.
    * También configura la suscripción para el estado de solo lectura.
    * 
-   * @param {FormBuilder} fb - Servicio para crear formularios reactivos
-   * @param {Tramite32608Store} tramite32608Store - Store para gestionar el estado del trámite
-   * @param {Tramite32608Query} tramite32608Query - Query para obtener datos del trámite
-   * @param {ConsultaioQuery} consultaioQuery - Query para obtener el estado de consulta
-   * @param {OeaTextilRegistroService} servicio - Servicio para operaciones del trámite OEA textil
    */
   constructor(
     public fb: FormBuilder,
-    private tramite32608Store: Tramite32608Store,
-    private tramite32608Query: Tramite32608Query,
     private consultaioQuery: ConsultaioQuery,
-    private servicio: OeaTextilRegistroService
+    private solicitudService: SolicitudService,
+    private tramite32608Store: Solicitud32608Store,
+    private tramite32608Query: Solicitud32608Query
   ) {
       this.consultaioQuery.selectConsultaioState$
     .pipe(
@@ -275,7 +270,7 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
 
   /**
    * Método del ciclo de vida que se ejecuta cuando el componente se inicializa.
-   * - Se suscribe a `selectTramite32608$` para obtener datos del estado.
+   * - Se suscribe a `selectSolicitud$` para obtener datos del estado.
    * - Actualiza `seccionState` con la información más reciente del estado.
    * - Asigna `NumeroEmpleadosTablaDatos` a `numeroEmpleadosBimestreList`.
    *
@@ -283,9 +278,9 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
    * para garantizar la limpieza cuando el componente se destruye.
    */
   ngOnInit(): void {
-    this.tramite32608Query.selectTramite32608$
+    this.tramite32608Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((datos: Tramites32608State) => {
+      .subscribe((datos: Solicitud32608State) => {
         this.seccionState = datos;
       });
 
@@ -453,7 +448,7 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
       const OBJETO = { id: ID, denominacionSocial: DENOMINACION_SOCIAL, rfc: RFC, numeroDeEmpleados: NUMERO_DE_EMPLEADOS, numeroUno: NUMERO_UNO, bimestre: SELECTEDBIMESTRE } as NumeroEmpleadosTabla;
 
       this.numeroEmpleadosBimestreList = [...this.numeroEmpleadosBimestreList, OBJETO];
-      this.tramite32608Store.establecerDatos({numeroEmpleadosBimestre:this.numeroEmpleadosBimestreList});
+      this.tramite32608Store.actualizarEstado({numeroEmpleadosBimestre:this.numeroEmpleadosBimestreList});
     } else {
       this.numeroEmpleadosBimestreList = this.numeroEmpleadosBimestreList.map((elemento) =>
         elemento.id === this.filaSeleccionadaNumeroEmpleados.id
@@ -461,7 +456,7 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
           : elemento
       );
 
-      this.tramite32608Store.establecerDatos({numeroEmpleadosBimestre:this.numeroEmpleadosBimestreList});
+      this.tramite32608Store.actualizarEstado({numeroEmpleadosBimestre:this.numeroEmpleadosBimestreList});
       this.filaSeleccionadaNumeroEmpleados = {} as NumeroEmpleadosTabla;
     }
   }
@@ -541,7 +536,7 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
 
       this.listaFilaSeleccionadaEmpleado = [];
       this.filaSeleccionadaNumeroEmpleados = {} as NumeroEmpleadosTabla;
-      this.tramite32608Store.establecerDatos({numeroEmpleadosBimestre:this.numeroEmpleadosBimestreList});
+      this.tramite32608Store.actualizarEstado({numeroEmpleadosBimestre:this.numeroEmpleadosBimestreList});
       this.cerrarEliminarConfirmationPopup();
     }
   }
@@ -737,14 +732,14 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
    * @method onBuscarRfc
    * Busca los detalles del RFC para una persona física nacional (PFN).
    * 
-   * Si el RFC tiene longitud mayor a 0, realiza una llamada al servicio para obtener los detalles.
+   * Si el RFC tiene longitud mayor a 0, realiza una llamada al solicitudService para obtener los detalles.
    * Actualiza el formulario con la denominación social y el número de empleados obtenidos.
    * 
    * @returns {void}
    */
   onBuscarRfc(): void {
     if (this.rfcForm.valid) {
-      this.servicio.getRFCDetails().pipe(
+      this.solicitudService.getRFCDetails().pipe(
         takeUntil(this.destroyed$)
       ).subscribe({
         next: (result) => {
@@ -755,8 +750,7 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
           });
         }
       });
-    }
-    else {
+    }else {
       this.enNuevaNotificacion(this.MENSAJE_DE_VALIDACION);
       this.esHabilitarElDialogo = true;
       this.rfcForm.markAllAsTouched();
