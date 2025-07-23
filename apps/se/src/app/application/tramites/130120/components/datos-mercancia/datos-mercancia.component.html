@@ -172,7 +172,8 @@
               [datos]="fechaFactura"
               [setFecha]="datosMercanica.get('factura_fecha')?.value"
               name="factura_fecha"
-              (valorCambiado)="fechaCambiado($event)">
+              (valorCambiado)="fechaCambiado($event)"
+              [isDisabled]="esFormularioSoloLectura">
             </input-fecha>
           </div>
         </div>

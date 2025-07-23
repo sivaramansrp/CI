@@ -4,35 +4,23 @@
         <ng-container>
             <div class="row tipo-busqueda-radio">
                 <div class="col-md-12">
-                    <div class="col-md-4">
-                        <div class="radio">
-                            <label>
-                                <input type="radio" formControlName="tipoBusqueda" id="idRadioContenedor"
-                                    value="Contenedor" class="form-check-input"
-                                    [attr.disabled]="radioContenedor ? true : null">
-                                Contenedor
-                            </label>
+                    <div class="radio-row">
+                        <div class="horizontal">
+                            <input type="radio" formControlName="tipoBusqueda" id="idRadioContenedor"
+                                value="Contenedor" [attr.disabled]="radioContenedor ? true : null">
+                            <span class="etiqueta-de-radio fw-bold">Contenedor</span>
                         </div>
-                    </div>
 
-                    <div class="col-md-4">
-                        <div class="radio">
-                            <label>
-                                <input type="radio" formControlName="tipoBusqueda" id="idRadioManifiesto"
-                                    value="No. de Manifiesto" class="form-check-input"
-                                    [attr.disabled]="radioManifesto ? true : null">
-                                No. de Manifiesto
-                            </label>
+                        <div class="horizontal">
+                            <input type="radio" formControlName="tipoBusqueda" id="idRadioManifiesto"
+                                value="No. de Manifiesto" [attr.disabled]="radioManifesto ? true : null">
+                            <span class="etiqueta-de-radio fw-bold">No. de Manifiesto</span>
                         </div>
-                    </div>
 
-                    <div class="col-md-4">
-                        <div class="radio">
-                            <label>
-                                <input type="radio" formControlName="tipoBusqueda" id="idRedioExcel" value="Archivo CSV"
-                                    class="form-check-input" [attr.disabled]="radioArchivoCsv ? true : null">
-                                Archivo CSV
-                            </label>
+                        <div class="horizontal">
+                            <input type="radio" formControlName="tipoBusqueda" id="idRedioExcel" value="Archivo CSV"
+                                [attr.disabled]="radioArchivoCsv ? true : null">
+                            <span class="etiqueta-de-radio fw-bold">Archivo CSV</span>
                         </div>
                     </div>
                 </div>
@@ -44,18 +32,29 @@
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <ng-titulo titulo="Datos generales" />
-                        <app-catalogo-select [catalogo]="aduanaList.catalogos" [label]="aduana.labelNombre"
+                        <div class="form-group" [ngClass]="{'has-error': esInvalido('aduana')}">
+                            <app-catalogo-select [catalogo]="aduanaList.catalogos" [label]="aduana.labelNombre"
                             [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduana"
                             (change)="setValoresStore(solicitudForm,'aduana', 'setAduana')"
                             [isDisabled]="soloLectura"></app-catalogo-select>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="form-group datepicker-group">
-                            <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaIngreso($event)"
+                        <div class="form-group datepicker-group" [ngClass]="{'has-error': esInvalido('fechaIngreso')}">
+                            <div class="input-fecha-wrapper" [ngClass]="{'is-invalid': esInvalido('fechaIngreso')}"
+                                (click)="onDateFieldInteraction('fechaIngreso')">
+                                <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaIngreso($event)"
                                 [isDisabled]="soloLectura"
-                                [setFecha]="solicitudForm.get('fechaIngreso')?.value"></input-fecha>
+                                [setFecha]="solicitudForm.get('fechaIngreso')?.value"
+                                    [ngClass]="{'is-invalid': esInvalido('fechaIngreso')}"></input-fecha>
+                            </div>
+                            <div *ngIf="esInvalido('fechaIngreso')" class="text-danger">
+                                <small *ngIf="solicitudForm.controls['fechaIngreso'].errors?.['required']">
+                                    Este campo es obligatorio.
+                                </small>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -73,11 +72,12 @@
 
                 <div class="row">
                     <div class="col-md-4 mb-4">
-                        <div class="form-group">
+                        <div class="form-group" [ngClass]="{'has-error': esInvalido('inicialesContenedor')}">
                             <label for="inicialesContenedor">Iniciales del equipo<span class="require">*</span>:</label>
                             <input type="text" formControlName="inicialesContenedor" id="inicialesContenedor"
                                 maxlength="10" class="form-control"
-                                [ngClass]="isValid('inicialesContenedor') ? 'required' : ''">
+                                [ngClass]="{'is-invalid': esInvalido('inicialesContenedor')}"
+                                (blur)="onFieldBlur('inicialesContenedor')">
                             <div *ngIf="esInvalido('inicialesContenedor')" class="text-danger">
                                 <small *ngIf="solicitudForm.controls['inicialesContenedor'].errors?.['required']">
                                     Este campo es obligatorio.
@@ -87,18 +87,19 @@
                     </div>
 
                     <div class="col-md-4">
-                        <div class="form-group">
+                        <div class="form-group" [ngClass]="{'has-error': esInvalido('numeroContenedor')}">
                             <label for="numeroContenedor">Número de equipo<span class="require">*</span>:</label>
                             <input type="text" formControlName="numeroContenedor" id="numeroContenedor" maxlength="15"
-                                class="form-control" [ngClass]="isValid('numeroContenedor') ? 'required' : ''">
+                                class="form-control" [ngClass]="{'is-invalid': esInvalido('numeroContenedor')}"
+                                (blur)="onFieldBlur('numeroContenedor')">
                             <div *ngIf="esInvalido('numeroContenedor')" class="text-danger">
                                 <small *ngIf="solicitudForm.controls['numeroContenedor'].errors?.['required']">
                                     Este campo es obligatorio.
                                 </small>
-                                <div *ngIf="solicitudForm.get('numeroContenedor')?.touched && solicitudForm.get('numeroContenedor')?.errors?.['minlength']"
-                                    class="mensaje-error">
+                                <small *ngIf="solicitudForm.get('numeroContenedor')?.touched && solicitudForm.get('numeroContenedor')?.errors?.['minlength']"
+                                    class="d-block">
                                     Por favor, no escribas menos de 6 caracteres
-                                </div>
+                                </small>
                             </div>
                         </div>
                     </div>
@@ -114,10 +115,12 @@
                     </div>
 
                     <div class="col-md-4 menu-desplegable">
-                        <app-catalogo-select [catalogo]="contenedores.catalogos" [label]="contenedores.labelNombre"
+                        <div class="form-group" [ngClass]="{'has-error': esInvalido('contenedores')}">
+                            <app-catalogo-select [catalogo]="contenedores.catalogos" [label]="contenedores.labelNombre"
                             [placeholder]="aduana.primerOpcion" [required]="true" formControlName="contenedores"
                             (change)="setValoresStore(solicitudForm,'contenedores', 'setContenedores')"
                             [isDisabled]="soloLectura"></app-catalogo-select>
+                        </div>
                     </div>
                 </div>
 
@@ -142,19 +145,25 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <app-catalogo-select [catalogo]="catalogoList" [label]="transporteList.labelNombre"
+                        <div class="form-group" [ngClass]="{'has-error': esInvalido('menuDesplegable')}">
+                            <app-catalogo-select [catalogo]="catalogoList" [label]="transporteList.labelNombre"
                             [placeholder]="transporteList.primerOpcion" formControlName="menuDesplegable"
                             (change)="setValoresStore(solicitudForm,'menuDesplegable', 'setMenuDesplegable')"
-                            [isDisabled]="soloLectura" [required]="true"
-                            [ngClass]="isValid('numeroManifiesta') ? 'required' : ''"></app-catalogo-select>
+                            [isDisabled]="soloLectura" [required]="true"></app-catalogo-select>
+                        </div>
                     </div>
 
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="numeroManifiesta">No. Manifiesto<span class="require">*</span>:</label>
                             <input type="text" formControlName="numeroManifiesta" id="numeroManifiesta" maxlength="50"
-                                class="form-control" [ngClass]="isValid('numeroManifiesta') ? 'required' : ''"
+                                class="form-control" [ngClass]="{'is-invalid': esInvalido('numeroManifiesta')}"
                                 (change)="setValoresStore(solicitudForm,'numeroManifiesta', 'setNumeroManifiesta')">
+                            <div *ngIf="esInvalido('numeroManifiesta')" class="text-danger">
+                                <small *ngIf="solicitudForm.controls['numeroManifiesta'].errors?.['required']">
+                                    Este campo es obligatorio.
+                                </small>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -167,9 +176,9 @@
                     </div>
                 </div>
             </div>
-            <div id="mensaje" style="margin-top: 1em;"
+            <div id="mensaje" class="margin-top"
                 *ngIf="!solicitud11201State?.tipoBusqueda || solicitud11201State?.tipoBusqueda === 'No. de Manifiesto'">
-                <ng-alert [CONTENIDO]="TEXTOS.ADVERTENCIA"></ng-alert>
+                <ng-alert class="text-align" [CONTENIDO]="TEXTOS.ADVERTENCIA"></ng-alert>
                 <div class="col-md-12" id="IdGridContenedoresITC">
                     <div class="table-responsive">
                         <div class="innercontainer">
@@ -182,7 +191,7 @@
                     <div align="center" id="paginGridContenedoresITC">
                         <nav aria-label="Page navigation example">
                             <ul class="pagination d-flex justify-content-center">
-                                <li class="page-item"><a class="page-link" href="Javascript:;">1</a></li>
+                                <li class="page-item "><a class="page-link width" href="Javascript:;">1</a></li>
                             </ul>
                         </nav>
                     </div>
@@ -205,37 +214,49 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="form-group datepicker-group">
-                                <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaDeIngreso($event)"
+                            <div class="form-group datepicker-group" [ngClass]="{'has-error': esInvalido('fechaDeIngreso')}">
+                                <div class="input-fecha-wrapper" [ngClass]="{'is-invalid': esInvalido('fechaDeIngreso')}"
+                                    (click)="onDateFieldInteraction('fechaDeIngreso')">
+                                    <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaDeIngreso($event)"
                                     [isDisabled]="soloLectura"
-                                    [setFecha]="solicitudForm.get('fechaDeIngreso')?.value"></input-fecha>
+                                    [setFecha]="solicitudForm.get('fechaDeIngreso')?.value"
+                                        [ngClass]="{'is-invalid': esInvalido('fechaDeIngreso')}"></input-fecha>
+                                </div>
+                                <div *ngIf="esInvalido('fechaDeIngreso')" class="text-danger">
+                                    <small *ngIf="solicitudForm.controls['fechaDeIngreso'].errors?.['required']">
+                                        Este campo es obligatorio.
+                                    </small>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <ng-titulo titulo="Adjuntar archivo" />
-                            <label for="archivoSeleccionado" class="form-label">Archivo Seleccionado*:</label>
-                            <input class="form-control" type="string" name="archivoSeleccionado"
-                                id="archivoSeleccionado" [value]="etiquetaDeArchivo" readonly>
+                            <div class="display">
+                                <label class="margin-right" for="archivoSeleccionado" class="form-label">Archivo Seleccionado*:</label>
+                            <input class="form-control" type="text" name="archivoSeleccionado"
+                                id="archivoSeleccionado" [value]="etiquetaDeArchivo || 'No se eligió ningún archivo'" readonly>
+                            </div>
+                            
                         </div>
-                        <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
+                        <div class="col-md-4 d-flex justify-content-end width-dos">
                             <button
                                 [disabled]="!solicitudForm.get('aduanaMenuDesplegable')?.value || !solicitudForm.get('fechaDeIngreso')?.value"
                                 type="button" class="btn btn-default" (click)="adjuntarArchivo() ">Cargar
                                 archivo</button>
                         </div>
-                        <div class="row" style="margin-top: 20px" *ngIf="mostrarArchivoSeleccionadoTable">
+                        <div class="row margin-top-dos" *ngIf="mostrarArchivoSeleccionadoTable">
                             <div class="col-md-8">
-                                <ng-titulo titulo="Cargar Archivo" />
+                                <ng-titulo titulo="Cargar archivo" />
                                 <div class="col-md-8">
                                     <label for="cargarArchivo" class="form-label d-flex">Archivo*:</label>
                                     <button class="mb-2" type="button" for="cargarArchivo" class="file-upload"
                                         (click)="activarSeleccionArchivo()">
-                                        Seleccionar archivo
+                                        Elegir archivo
                                     </button>
-                                    <span class="ml-2">{{ etiquetaDeArchivo }}</span>
-                                    <input type="file" id="cargarArchivo" class="file-upload" style="display: none;"
+                                    <span class="ml-2 custom-input-file">{{ etiquetaDeArchivo || 'No se eligió ningún archivo' }}</span>
+                                    <input type="file" id="cargarArchivo" class="file-upload display-dos"
                                         accept=".csv" (change)="onCambioDeArchivo($event)">
                                     @if (nuevaNotificacion) { <section>
                                         <lib-notificaciones [notificacionInput]="nuevaNotificacion"
@@ -243,7 +264,7 @@
                                     </section> }
                                 </div>
                             </div>
-                            <div class="col-md-4 d-flex justify-content-end p-5 gap-3" style="width: 100%">
+                            <div class="col-md-4 d-flex justify-content-end p-5 gap-3 width-dos">
                                 <button type="button" class="btn btn-default" (click)="regresar()">Regresar</button>
                                 <button type="button" class="btn btn-default" (click)="archivo()">Enviar</button>
                             </div>
@@ -270,7 +291,7 @@
             <div align="center" id="paginGridContenedoresITC">
                 <nav aria-label="Page navigation example">
                     <ul class="pagination d-flex justify-content-center">
-                        <li class="page-item"><a class="page-link" href="Javascript:;">1</a></li>
+                        <li class="page-item"><a class="page-link width" href="Javascript:;">1</a></li>
                     </ul>
                 </nav>
             </div>
@@ -286,7 +307,7 @@
                     una</ng-container>
                 <ng-container *ngSwitchCase="'verificadorerror'">
                     Dígito verificador incorrecto</ng-container>
-                <ng-container **ngSwitchDefault></ng-container>
+                <ng-container *ngSwitchDefault></ng-container>
             </ng-container>
         </div>
         <div class="modal-footer m-auto">

@@ -2,7 +2,7 @@
  * @description
  * Constantes para el manejo de mensajes del componente de terceros relacionados que se van a mostrar en el modal.
  */
-export const MSG_CAMPOS_VACIOS = 'Debe ingresar el nombre/razón social y correo electrónico del tercero relacionado';
+export const MSG_CAMPOS_VACIOS = 'Debe ingresar el nombre/razón social y correo del tercero relacionado';
 
 /**
  * @description

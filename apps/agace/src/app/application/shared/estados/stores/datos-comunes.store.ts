@@ -182,7 +182,42 @@ export interface DatosComunesState {
      * El valor de protesta.
      */
     protesta: boolean;
-
+   /**
+    * El valor de cumpleCon.
+    */
+   cumpleCon: string;
+    /**
+     * El valor de acreditaRealizar.
+     */
+  acreditaRealizar: string;
+    /**
+     * El valor de ensucaso.
+     */
+  ensucaso: string;
+    /**
+     * El valor de alMomento.
+     */
+  alMomento: string;
+    /**
+     * El valor de delMismomodo.
+     */
+  delMismomodo: string;
+    /**
+     * El valor de susCertificados.
+     */
+  susCertificados: string;
+    /**
+     * El valor de afirmativo.
+     */
+  afirmativo: string;
+    /**
+     * El valor de actualizado.
+     */
+  actualizado: string;
+    /**
+     * El valor de cumpleConDos.
+     */
+  cumpleConDos: string;
 
 }
 
@@ -364,6 +399,42 @@ export function createInitialState(): DatosComunesState {
          * El valor de protesta.
          */
         protesta: false,
+        /**
+         * El valor de cumpleCon.
+         */
+        cumpleCon: '',
+        /**
+         * El valor de acreditaRealizar.
+         */
+        acreditaRealizar: '',
+        /**
+         * El valor de ensucaso.
+         */
+        ensucaso: '',
+        /**
+         * El valor de alMomento.
+         */
+        alMomento: '',
+        /**
+         * El valor de delMismomodo.
+         */
+        delMismomodo: '',
+        /**
+         * El valor de susCertificados.
+         */
+        susCertificados: '',
+        /**
+         * El valor de afirmativo.
+         */
+        afirmativo: '',
+        /**
+         * El valor de actualizado.
+         */
+        actualizado: '',
+    /**
+     * El valor de cumpleConDos.
+     */
+    cumpleConDos: '',
       };
 }
 
@@ -784,4 +855,96 @@ public setVinculacionRegistroCancelado(vinculacionRegistroCancelado: boolean): v
             protesta,
         }));
     }
+    /**
+     * Establece el estado de cumpleCon.
+     * @param cumpleCon - El valor de cumpleCon.
+     */
+    public setCumpleCon(cumpleCon: string): void {
+        this.update((state) => ({
+            ...state,
+            cumpleCon,
+        }));
+    }
+    /**
+     * Establece el estado de acreditaRealizar.
+     * @param acreditaRealizar - El valor de acreditaRealizar.
+     */
+    public setAcreditaRealizar(acreditaRealizar: string): void {
+        this.update((state) => ({
+            ...state,
+            acreditaRealizar,
+        }));
+    }
+    /**
+     * Establece el estado de ensucaso.
+     * @param ensucaso - El valor de ensucaso.
+     */
+    public setEnsucaso(ensucaso: string): void {
+        this.update((state) => ({
+            ...state,
+            ensucaso,
+        }));
+    }
+    /**
+     * Establece el estado de alMomento.
+     * @param alMomento - El valor de alMomento.
+     */
+    public setAlMomento(alMomento: string): void {
+        this.update((state) => ({
+            ...state,
+            alMomento,
+        }));
+    }
+    /**
+     * Establece el estado de delMismomodo.
+     * @param delMismomodo - El valor de delMismomodo.
+     */
+    public setDelMismomodo(delMismomodo: string): void {
+        this.update((state) => ({
+            ...state,
+            delMismomodo,
+        }));
+    }
+    /**
+     * Establece el estado de susCertificados.
+     * @param susCertificados - El valor de susCertificados.
+     */
+    public setSusCertificados(susCertificados: string): void {
+        this.update((state) => ({
+            ...state,
+            susCertificados,
+        }));
+    }
+    /**
+     * Establece el estado de afirmativo.
+     * @param afirmativo - El valor de afirmativo.
+     */
+    public setAfirmativo(afirmativo: string): void {
+        this.update((state) => ({
+            ...state,
+            afirmativo,
+        }));
+    }
+    /**
+     * Establece el estado de actualizado.
+     * @param actualizado - El valor de actualizado.
+     */
+    public setActualizado(actualizado: string): void {
+        this.update((state) => ({
+            ...state,
+            actualizado,
+        }));
+    }
+
+    /**
+     * Establece el estado de cumpleConDos.
+     * @param cumpleConDos - El valor de cumpleConDos.
+     */
+    public setCumpleConDos(cumpleConDos: string): void {
+        this.update((state) => ({
+            ...state,
+            cumpleConDos,
+        }));
+    }
+
 }

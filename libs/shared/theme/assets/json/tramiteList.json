@@ -4223,6 +4223,13 @@
   },
   {
     "id": 606,
+    "tramite": 32616,
+    "linkDashboard": "/agace/solicitud-de-registro/solicitud",
+    "linkDepartment": "/pago/solicitud-de-registro/solicitud",
+    "department": "se"
+  },
+  {
+    "id": 606,
     "tramite": 30506,
     "linkDashboard": "/agace/registros/solicitud",
     "linkDepartment": "/pago/registros/solicitud",
@@ -4242,6 +4249,13 @@
     "linkDepartment": "/pago/aviso-modification-certificacion/pantallas",
     "department": "agace"
   },
+  {
+    "id": 609,
+    "tramite": 32612,
+    "linkDashboard": "/agace/esquema-de-certificacion/registro-solicitud32612",
+    "linkDepartment": "/pago/esquema-de-certificacion/registro-solicitud32612",
+    "department": "agace"
+  },
     {
     "id": 609,
     "tramite": 32607,
@@ -4254,6 +4268,13 @@
     "tramite": 32604,
     "linkDashboard": "/agace/empresas-comercializadoras/solicitud",
     "linkDepartment": "/pago/empresas-comercializadoras/solicitud",
+    "department": "agace"
+  },
+  {
+    "id": 610,
+    "tramite": 32613,
+    "linkDashboard": "/agace/rubro-transporte-ferroviario/pantallas",
+    "linkDepartment": "/pago/rubro-transporte-ferroviario/pantallas",
     "department": "agace"
   }
 ]

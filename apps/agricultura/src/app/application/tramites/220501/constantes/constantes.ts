@@ -81,6 +81,11 @@ export const ROWS: Tabla[] = [
     Uso: 'Uso de la mercancía',
     PaisOrigen: 'País de origen',
     PaisProcedencia: 'País de procedencia',
+    Presentacion: 'Presentación',
+    CantidadPresentacion: 10,
+    TipoPresentacion: 'Tipo de presentación',
+    TipoPlanta: 'Tipo planta',
+    PlantaAutorizadaOrigen: 'Planta autorizada de origen',
     CertificadoInternacionalElectronico: 'Certificado Internacional Electrónico'
   },
   {
@@ -101,6 +106,11 @@ export const ROWS: Tabla[] = [
     Uso: 'Uso de la mercancía',
     PaisOrigen: 'País de origen',
     PaisProcedencia: 'País de procedencia',
+    Presentacion: 'Presentación',
+    CantidadPresentacion: 10,
+    TipoPresentacion: 'Tipo de presentación',
+    TipoPlanta: 'Tipo planta',
+    PlantaAutorizadaOrigen: 'Planta autorizada de origen',
     CertificadoInternacionalElectronico: 'Certificado Internacional Electrónico'
   },
   {
@@ -121,6 +131,11 @@ export const ROWS: Tabla[] = [
     Uso: 'Uso de la mercancía',
     PaisOrigen: 'País de origen',
     PaisProcedencia: 'País de procedencia',
+    Presentacion: 'Presentación',
+    CantidadPresentacion: 10,
+    TipoPresentacion: 'Tipo de presentación',
+    TipoPlanta: 'Tipo planta',
+    PlantaAutorizadaOrigen: 'Planta autorizada de origen',
     CertificadoInternacionalElectronico: 'Certificado Internacional Electrónico'
   },
 ];
