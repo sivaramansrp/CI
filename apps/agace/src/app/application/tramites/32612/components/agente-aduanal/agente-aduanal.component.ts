@@ -1,5 +1,5 @@
-import { CLASIFICACION, CONFIGURACION, CONFIGURACION_COMERCIAL_CERTIFICADO, PAGO_DE_DERECHOS, RADIO_OPCIONS } from '../../constants/agente-aduanal.enum';
-import { Catalogo, CatalogoSelectComponent, CrosslistComponent, InputRadioComponent, ModeloDeFormaDinamica, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CLASIFICACION, CONFIGURACION, CONFIGURACION_CERTIFICACION_DE_EMPRESAS, CONFIGURACION_COMERCIAL_CERTIFICADO, PAGO_DE_DERECHOS, RADIO_OPCIONS } from '../../constants/agente-aduanal.enum';
+import { Catalogo, CatalogoSelectComponent, CrosslistComponent, ModeloDeFormaDinamica, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ConsultaioQuery,ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -35,8 +35,7 @@ import { Tramite32612Query } from '../../estados/solicitud32612.query';
     SociedadesTablaComponent,
     FormasDinamicasComponent,
     ReactiveFormsModule,
-    TituloComponent,
-    InputRadioComponent
+    TituloComponent
   ],
   templateUrl: './agente-aduanal.component.html',
   styleUrl: './agente-aduanal.component.scss',
@@ -122,7 +121,8 @@ export class AgenteAduanalComponent implements OnInit,OnDestroy {
     agenteFormGroup: new FormGroup({}),
     comercialCertificadoFormGroup: new FormGroup({}),
     clasificacionFormGroup: new FormGroup({}),
-    pagoDeDerechosFormGroup: new FormGroup({})
+    pagoDeDerechosFormGroup: new FormGroup({}),
+    certificacionDeEmpresasFormGroup: new FormGroup({})
   });
   /**
    * Almacena el objeto de configuración para el componente "Agente Aduanal".
@@ -130,12 +130,6 @@ export class AgenteAduanalComponent implements OnInit,OnDestroy {
    * todos los ajustes y datos necesarios para la funcionalidad del componente.
    */
   public agenteDatos = CONFIGURACION;
-  /**
-   * Almacena las opciones disponibles de botones de radio para el componente.
-   * El valor se inicializa desde la constante `RADIO_OPCIONS`.
-   * Se utiliza para mostrar y gestionar la selección de botones de radio en la interfaz de usuario.
-   */
-  public opcionDeBotonDeRadio = RADIO_OPCIONS;
   /**
    * Almacena la configuración dinámica del formulario para la sección "Comercial Certificado".
    */
@@ -172,6 +166,15 @@ export class AgenteAduanalComponent implements OnInit,OnDestroy {
    * Indica si el formulario debe mostrarse en modo solo lectura..
    */
   public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Almacena la configuración para la sección "Certificación de Empresas".
+   * 
+   * Esta propiedad se inicializa con el valor de `CONFIGURACION_CERTIFICACION_DE_EMPRESAS`,
+   * que contiene los ajustes y parámetros necesarios para gestionar el proceso de
+   * certificación de empresas dentro de la aplicación.
+   */
+  public certificacionDeEmpresasDatos = CONFIGURACION_CERTIFICACION_DE_EMPRESAS;
 
   /**
    * Inicializa el AgenteAduanalComponent con los servicios y stores requeridos.
@@ -272,6 +275,15 @@ export class AgenteAduanalComponent implements OnInit,OnDestroy {
    */
   get pagoDeDerechosFormGroup(): FormGroup {
     return this.forma.get('pagoDeDerechosFormGroup') as FormGroup;
+  }
+
+  /**
+   * Obtiene la instancia de FormGroup asociada al control 'certificacionDeEmpresasFormGroup' del formulario principal.
+   * 
+   * @returns {FormGroup} El FormGroup correspondiente al control 'certificacionDeEmpresasFormGroup'.
+   */
+  get certificacionDeEmpresasFormGroup(): FormGroup {
+    return this.forma.get('certificacionDeEmpresasFormGroup') as FormGroup;
   }
 
   /**

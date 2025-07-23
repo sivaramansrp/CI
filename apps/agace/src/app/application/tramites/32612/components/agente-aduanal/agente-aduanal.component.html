@@ -115,18 +115,15 @@
         >
     </formas-dinamicas>
     <ng-titulo titulo="Reconocimiento Mutuo"></ng-titulo>
-    <div class="row">
-      <div class="col-md-12">
-        <p class="fw-bold">La adopción de México de las normas establecidas en el Marco Normativo SAFE de la OMA para Asegurar y Facilitar el Comercio Global publicado por la OMA, donde se incorporan prácticas y normas en materia de seguridad, tiene como uno de sus objetivos, alcanzar el Reconocimiento Mutuo" con aquellos países que cuentan con un programa similar en materia de seguridad, que cumplen con la condición de Operadores Económicos Autorizados de acuerdo al "Marco SAFE" y la legislación de cada país. Por lo tanto, como parte de la estrategia para evitar la duplicación de controles de seguridad y contribuir de manera significativa a la facilitación y control de las mercancías que circulan en la cadena de suministro internacional, es necesario contar con la participación de aquellos que logren obtener el Registro en el Esquema de Certificación de Empresas y autorizar el intercambio de información que permita enriquecer los sistemas informáticos, eliminar y/o reducir la redundancia y/o duplicación de esfuerzos en el proceso de inscripción.</p>
-          <label for="opcion">Por lo anterior y de conformidad con lo dispuesto en el artículo 21 de la Ley Federal de Transparencia y Acceso a la Información Pública Gubernamental, autorizo al sujeto obligado denominado SAT, a través de la AGACE, a compartir, difundir o distribuir con otras autoridades nacionales o extranjeras los datos personales y demás información de la empresa que represento, y que se genere durante el transcurso en que la misma se encuentre inscrita en el Registro en el Esquema de Certificación de Empresas.</label>
-          <app-input-radio 
-            [radioOptions]="opcionDeBotonDeRadio"
-            id="serviciosTerceros"
-            [layout]="'horizontal'"
-            >
-          </app-input-radio>
-      </div>
-    </div>
+      <formas-dinamicas 
+        formularioSubtitulo="La adopción de México de las normas establecidas en el Marco Normativo SAFE de la OMA para Asegurar y Facilitar el Comercio Global publicado por la OMA, donde se incorporan prácticas y normas en materia de seguridad, tiene como uno de sus objetivos, alcanzar el Reconocimiento Mutuo con aquellos países que cuentan con un programa similar en materia de seguridad, que cumplen con la condición de Operadores Económicos Autorizados de acuerdo al 'Marco SAFE' y la legislación de cada país. Por lo tanto, como parte de la estrategia para evitar la duplicación de controles de seguridad y contribuir de manera significativa a la facilitación y control de las mercancías que circulan en la cadena de suministro internacional, es necesario contar con la participación de aquellos que logren obtener el Registro en el Esquema de Certificación de Empresas y autorizar el intercambio de información que permita enriquecer los sistemas informáticos, eliminar y/o reducir la redundancia y/o duplicación de esfuerzos en el proceso de inscripción."
+        [forma]="certificacionDeEmpresasFormGroup" 
+        [formularioDatos]="certificacionDeEmpresasDatos"
+        [estado]="solicitudeState"
+        [soloLectura]="consultaState.readonly"
+        (emitirCambioDeValor)="emitirCambioDeValor($event)"
+        >
+    </formas-dinamicas>
     <formas-dinamicas 
       formularioTitulo="Listado de Socio Comercial Certificado"
       formularioSubtitulo="Con la finalidad de crear cadenas de suministros más seguras, se establecerá un listado con las empresas que hayan obtenido la certificación como Socio Comercial, misma que se publicará en el Portal del SAT que incluirá los datos generales que la empresa autorice, así como el estatus de su certificación, mismas que podrán ser consultadas por las empresas que hayan obtenido su inscripción en el Registro de certificación de empresas."

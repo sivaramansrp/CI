@@ -439,8 +439,7 @@ export const CLASIFICACION = [
         opciones: [
         { label: 'Pública', value: 'Si' },
         { label: 'Privada', value: 'No' }
-        ],
-        mostrar: false
+        ]
     } 
 ]
 
@@ -582,3 +581,42 @@ export const PAGO_DE_DERECHOS = [
     marginTop: 0
   },
 ];
+
+
+/**
+ * Configuración para el formulario de Certificación de Empresas.
+ *
+ * Cada objeto en el arreglo representa un campo del formulario relacionado con la autorización para compartir información
+ * de la empresa en el contexto del Esquema de Certificación de Empresas, conforme al artículo 21 de la Ley Federal de Transparencia.
+ *
+ * @property {string} id - Identificador único del campo.
+ * @property {number} row - Número de fila en el layout del formulario.
+ * @property {string} labelNombre - Texto descriptivo que se muestra como etiqueta del campo.
+ * @property {string} campo - Nombre del campo en el modelo de datos.
+ * @property {string} clase - Clases CSS aplicadas al campo para el diseño responsivo.
+ * @property {string} tipoInput - Tipo de input del campo (por ejemplo, 'radio').
+ * @property {boolean} desactivado - Indica si el campo está deshabilitado.
+ * @property {boolean} soloLectura - Indica si el campo es solo de lectura.
+ * @property {Array} validadores - Lista de validadores aplicados al campo.
+ * @property {string} layout - Disposición del campo en el formulario ('horizontal', etc.).
+ * @property {string} marcadorDePosicion - Texto de marcador de posición para el campo.
+ * @property {number} marginBottom - Espaciado inferior del campo en píxeles.
+ * @property {Array} opciones - Opciones disponibles para el input tipo radio.
+ */
+export const CONFIGURACION_CERTIFICACION_DE_EMPRESAS = [
+    {
+        id: 'certificacionDeEmpresas',
+        row: 1,
+        labelNombre: 'Por lo anterior y de conformidad con lo dispuesto en el artículo 21 de la Ley Federal de Transparencia y Acceso a la Información Pública Gubernamental, autorizo al sujeto obligado denominado SAT, a través de la AGACE, a compartir, difundir o distribuir con otras autoridades nacionales o extranjeras los datos personales y demás información de la empresa que represento, y que se genere durante el transcurso en que la misma se encuentre inscrita en el Registro en el Esquema de Certificación de Empresas.',
+        campo: 'certificacionDeEmpresas',
+        clase: 'col-md-12',
+        tipoInput: 'radio',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [],
+        layout: 'horizontal',
+        marcadorDePosicion: '',
+        marginBottom: 5,
+        opciones: RADIO_OPCIONS
+    } 
+]
