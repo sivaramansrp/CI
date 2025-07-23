@@ -1,11 +1,9 @@
 <form [formGroup]="protestoForm" class="mt-4">
-    <div class="alert alert-info manifest-box">
-        <div class="form-check">
-            <input class="form-check-input me-2" type="checkbox" id="protesta" [disabled]="esFormularioSoloLectura"
-                [checked]="esFormularioSoloLectura || actualizacionCounsulta">
-            <span class="form-check-label" for="protesta">
-                {{ TEXTOS.ADJUNTAR }}
-            </span>
-        </div>
+    <div class="declaration-container">
+        <input type="checkbox" class="declaration-checkbox" id="protesta" [disabled]="esFormularioSoloLectura"
+            [checked]="esFormularioSoloLectura">
+        <label for="confirm" class="declaration-text">
+            {{ TEXTOS.ADJUNTAR }}
+        </label>
     </div>
 </form>
