@@ -187,6 +187,15 @@ export class DatosComunesService {
       this.datosComunes.setRmfRadio(DATOS.rmfRadio);
       this.datosComunes.setVinculacionRegistroCancelado(DATOS.vinculacionRegistroCancelado);
       this.datosComunes.setProveedoresListadoSAT(DATOS.proveedoresListadoSAT);
+      this.datosComunes.setCumpleCon(DATOS.cumpleCon);
+      this.datosComunes.setAcreditaRealizar(DATOS.acreditaRealizar);
+      this.datosComunes.setCumpleConDos(DATOS.cumpleConDos);
+      this.datosComunes.setEnsucaso(DATOS.ensucaso);
+      this.datosComunes.setAlMomento(DATOS.alMomento);
+      this.datosComunes.setDelMismomodo(DATOS.delMismomodo);
+      this.datosComunes.setSusCertificados(DATOS.susCertificados);
+      this.datosComunes.setAfirmativo(DATOS.afirmativo);
+      this.datosComunes.setActualizado(DATOS.actualizado);
    }
 
 }

@@ -233,7 +233,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Etiqueta del archivo seleccionado.
    */
-  etiquetaDeArchivo: string = 'Sin archivo seleccionados';
+  etiquetaDeArchivo: string = '';
 
   /**
    * Indica si el archivo seleccionado no es de tipo CSV.
@@ -628,6 +628,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.radioContenedor = false;
     this.radioArchivoCsv = false;
     this.radioManifesto = false;
+    // Restablecer la etiqueta del archivo
+    this.etiquetaDeArchivo = '';
+    
+    // Limpiar el estado de validación usando el método auxiliar
+    this.clearFormValidationState();
   }
 
   /**
@@ -700,7 +705,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     ) as HTMLInputElement;
     this.mostrarCargarArchivoTable = false;
     FILE_INPUT.value = '';
-    this.etiquetaDeArchivo = 'Sin archivo seleccionados';
+    this.etiquetaDeArchivo = '';
   }
 
   /**
@@ -821,6 +826,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
               valor: DatosDelContenedor[]
             ) => void
           )(this.datosDelContenedor);
+          
+            // Restablecer los valores del formulario para los campos de la sección de contenedor
           this.solicitudForm.patchValue({
             aduana: '',
             fechaIngreso: '',
@@ -829,10 +836,28 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             numeroContenedor: '',
             contenedores: '',
           });
-          this.solicitudForm.markAsUntouched();
-          this.solicitudForm.markAsPristine();
+          
+            // Limpiar el estado de validación de todos los controles del formulario
+          this.clearFormValidationState();
         }
       });
+  }
+
+  /**
+   * Clears the validation state of all form controls to remove inline validation errors.
+   * This method marks all controls as untouched and pristine.
+   */
+  private clearFormValidationState(): void {
+    this.solicitudForm.markAsUntouched();
+    this.solicitudForm.markAsPristine();
+    Object.keys(this.solicitudForm.controls).forEach(key => {
+      const CONTROL = this.solicitudForm.get(key);
+      if (CONTROL) {
+        CONTROL.markAsUntouched();
+        CONTROL.markAsPristine();
+        CONTROL.setErrors(null);
+      }
+    });
   }
 
   /**
@@ -891,7 +916,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   public cambioFechaDeIngreso(nuevo_valor: string): void {
     this.solicitudForm.get('fechaDeIngreso')?.setValue(nuevo_valor);
-    this.solicitudForm.get('fechaDeIngreso')?.markAsUntouched();
+    this.solicitudForm.get('fechaDeIngreso')?.markAsTouched();
+    this.solicitudForm.get('fechaDeIngreso')?.markAsDirty();
+    this.setValoresStore(this.solicitudForm, 'fechaDeIngreso', 'setFechaDeIngreso');
   }
 
   /**
@@ -901,7 +928,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   public cambioFechaIngreso(nuevo_valor: string): void {
     this.solicitudForm.get('fechaIngreso')?.setValue(nuevo_valor);
-    this.solicitudForm.get('fechaIngreso')?.markAsUntouched();
+    this.solicitudForm.get('fechaIngreso')?.markAsTouched();
+    this.solicitudForm.get('fechaIngreso')?.markAsDirty();
+    this.setValoresStore(this.solicitudForm, 'fechaIngreso', 'setFechaIngreso');
   }
 
   /**
@@ -940,7 +969,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         this.archivoMedicamentos = TARGET.files[0];
         this.etiquetaDeArchivo = this.archivoMedicamentos.name;
       } else {
-        this.etiquetaDeArchivo = 'Sin archivo seleccionados';
+        this.etiquetaDeArchivo = '';
       }
     }
   }
@@ -971,7 +1000,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: 'Por favor seleccione un archivo CSV.',
+      mensaje: 'El archivo no tiene la extensión definida CSV, deberá de adjuntar el archivo correcto.',
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'OK',
@@ -979,6 +1008,33 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     };
     this.elementoParaEliminar = i;
   }
+  /**
+   * Maneja el evento blur (pérdida de foco) en los campos del formulario
+   * para activar la validación visual.
+   *
+   * @param fieldName - Nombre del campo que perdió el foco.
+   */
+  public onFieldBlur(fieldName: string): void {
+    const CONTROL = this.solicitudForm.get(fieldName);
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+      CONTROL.markAsDirty();
+    }
+  }
+
+  /**
+   * Maneja la validación específica para campos de fecha cuando se interactúa con ellos.
+   *
+   * @param fieldName - Nombre del campo de fecha.
+   */
+  public onDateFieldInteraction(fieldName: string): void {
+    const CONTROL = this.solicitudForm.get(fieldName);
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+      CONTROL.markAsDirty();
+    }
+  }
+
   /**
     * Verifica si un control del formulario es inválido, tocado o modificado.
     * @param nombreControl - Nombre del control a verificar.

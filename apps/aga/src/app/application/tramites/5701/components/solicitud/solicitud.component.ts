@@ -149,6 +149,7 @@ import {
   MSG_BORRAR_CAMPOS_RECINTOS,
   MSG_ERROR_NO_INFORMACION,
   MSG_ERROR_RFC_NO_ENCONTRADO,
+  MSG_ERROR_SELECCIONE_REGISTRO,
   MSG_MONTO_PAGADO_CUBIERTO,
   MSJ_ERROR_FECHAS_NO_SELECCIONADAS,
   MSJ_ERROR_FECHA_DIA,
@@ -451,6 +452,11 @@ export class SolicitudComponent
   readonly SIN_VALOR = SIN_VALOR;
 
   /**
+   * @description Mensaje de error cuando el RFC no es válido
+   */
+  readonly ERR_RFC_NO_VALIDO = ERR_RFC_NO_VALIDO;
+
+  /**
    *@description Alamcena las lineas de capturas seleccionadas por el usuario en la tabla.
    */
   lineaCapturaSeleccionados: LineaCaptura[] = [];
@@ -510,6 +516,12 @@ export class SolicitudComponent
    * @description Bandera para deshabilitar el campo de certificación industria automotriz.
    */
   industriaAutomotriz!: CheckInputTextComponent;
+
+  /**
+   * Referencia al componente IMMEX.
+   * Debe ser asignada por @ViewChild si es un componente hijo.
+   */
+  programaImmex?: { isDisabled: boolean };
 
   /**
    * Bandera para indicar si se debe resetear la fecha de inicio del servicio.
@@ -1955,6 +1967,12 @@ export class SolicitudComponent
   }
 
   /**
+   * Referencia al componente de Programa Fomento.
+   * Debe ser asignada por @ViewChild si es un componente hijo.
+   */
+  programaFomento?: { isDisabled: boolean };
+
+  /**
    * Actualiza los valores del campo Programa Fomento y almacena los cambios en el store.
    * @param valores - Objeto que contiene el estado del checkbox y el texto asociado.
    * @returns {void}
@@ -1974,6 +1992,11 @@ export class SolicitudComponent
       'desProgramaFomento',
       'setDescripcionProgramaFomento'
     );
+    
+    // Update the component's disabled state based on the data
+    if (this.programaFomento) {
+      this.programaFomento.isDisabled = valores.disabled || false;
+    }
   }
 
   /**
@@ -1996,6 +2019,11 @@ export class SolicitudComponent
       'desImmex',
       'setDescripcionImmex'
     );
+    
+    // Update the component's disabled state based on the data
+    if (this.programaImmex) {
+      this.programaImmex.isDisabled = valores.disabled || false;
+    }
   }
 
   /**
@@ -2020,6 +2048,11 @@ export class SolicitudComponent
       'desIndustrialAutomotriz',
       'setDescripcionIndustriaAutomotriz'
     );
+    
+    // Update the component's disabled state based on the data
+    if (this.industriaAutomotriz) {
+      this.industriaAutomotriz.isDisabled = valores.disabled || false;
+    }
   }
 
   /**
@@ -3113,7 +3146,7 @@ export class SolicitudComponent
         categoria: '',
         modo: 'action',
         titulo: TITULO_MODAL_AVISO,
-        mensaje: MSG_ERROR_NO_INFORMACION,
+        mensaje: MSG_ERROR_SELECCIONE_REGISTRO,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
