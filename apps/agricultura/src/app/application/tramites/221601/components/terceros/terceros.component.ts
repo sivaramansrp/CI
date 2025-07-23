@@ -17,10 +17,11 @@ import {
 import {
   Exportador,
   MENSAJE_TABLA_OBLIGATORIA,
-  CONFIGURATION_TABLA_DATOS,
-  CONFIGURATION_TABLA_DESTINATARIO,
-  Destinatario
 } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
+
+import { CONFIGURATION_TABLA_DATOS, CONFIGURATION_TABLA_DESTINATARIO } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
+import { Destinatario } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
+
 import {
   FormBuilder,
   FormGroup,
@@ -41,6 +42,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../modal/modal.component';
 import { Tramite221601Query } from '../../../../estados/queries/tramite221601.query';
 import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
+
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -248,16 +250,11 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.showtercerosModal = !this.showtercerosModal;
   }
 
-  exportadorSeleccionado: any[];
+  exportadorSeleccionado: Exportador[];
 
-  onExportadorSeleccionado(filas: any[]) {
+  onExportadorSeleccionado(filas: Exportador[]):void {
     this.exportadorSeleccionado = filas;
   }
-
-  // limpiarBusquedaTif(): void {
-  //   this.nombreEstablecimientoTif = '';
-  //   this.numeroEstablecimientoTif = '';
-  // }
 
   limpiarBusquedaTif(): void {
     this.nombreEstablecimientoTif = '';
@@ -295,10 +292,4 @@ export class TercerosComponent implements OnInit, OnDestroy {
       entidadFederativa: ''
     });
   }
-
-  buscarTerceros(): void {
-    console.log('Buscar terceros:', this.buscarTercerosForm.value);
-    // Implement search logic here
-  }
-
 }

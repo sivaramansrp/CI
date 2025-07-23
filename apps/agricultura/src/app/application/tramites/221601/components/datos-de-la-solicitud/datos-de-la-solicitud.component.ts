@@ -265,6 +265,7 @@ mercanciaForm = this.fb.group({
   raza: [''],
   nombreCientifico: [''],
   sexo: [''],
+  tipoEspecie: [''], // <-- Added this line
 });
 
 
@@ -397,43 +398,10 @@ mercanciaForm = this.fb.group({
   tercerosAgregar(): void {
     this.showtercerosModal = !this.showtercerosModal;
   }
-guardarMercancia() {
+guardarMercancia():void {
   if (this.mercanciaForm.valid) {
-    // const FORM_VALUE = this.mercanciaForm.value;
-
-    // const NUEVA_MERCANCIA: Mercancias = {
-    
-      // tipoEspecie: FORM_VALUE.tipoEspecie,
-      // regulacion: FORM_VALUE.regulacion,
-      // nombreProducto: FORM_VALUE.nombreProducto,
-      // unidad1: FORM_VALUE.unidad1,
-      // unidad2: FORM_VALUE.unidad2,
-      // paisOrigen: formValue.paisOrigen,
-      // nombreLote: FORM_VALUE.nombreLote,
-      // codigoArancelario: FORM_VALUE.codigoArancelario,
-      // edadAnimal: FORM_VALUE.edadAnimal,
-      // nombreCientifico: FORM_VALUE.nombreCientifico,
-
-      // Additional required fields with defaults
-      // noPartida: '',
-      // tipoRequisito: '',
-      // requisito: '',
-      // numeroCertificadoInternacional: '',
-      // Add all other missing required fields
-      // fechaVencimiento: '',
-      // cantidad: 0,
-      // unidadCantidad: '',
-      // unidadPeso: '',
-      // peso: 0,
-      // ... continue for all remaining properties from `Mercancias`
-    };
-
-  //   this.mercancias.push(NUEVA_MERCANCIA);
-  //   this.showtercerosModal = false;
-  //   this.mercanciaForm.reset();
-  // } else {
-  //   this.mercanciaForm.markAllAsTouched();
-  // }
+    // Map all required Mercancias properties here, using FORM_VALUE and defaults as needed
+}
 }
 cerrarModal(): void {
   this.showtercerosModal = false;
@@ -447,5 +415,4 @@ cerrarModal(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }
