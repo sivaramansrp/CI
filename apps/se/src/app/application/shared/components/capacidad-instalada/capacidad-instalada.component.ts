@@ -127,11 +127,28 @@ export class CapacidadInstaladaComponent implements OnInit {
     (this.complementarStore[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-  /**
-   * Método que se ejecuta al cambiar el valor del formulario.
-   * 
-   * Actualiza el store con los valores actuales del formulario.
-   */
+ 
+/**
+ * Agrega una nueva capacidad instalada al arreglo `capacidadInstaladaDatos` 
+ * basado en los valores proporcionados en el formulario `capacidadForm`.
+ * 
+ * Este método crea un objeto de tipo `CapacidadInstalada` con los datos 
+ * ingresados en el formulario, lo agrega al arreglo y luego limpia el formulario.
+ * 
+ * @remarks
+ * - Asegúrese de que los campos del formulario estén correctamente mapeados 
+ *   a las propiedades del objeto `CapacidadInstalada`.
+ * - Este método también llama al método `limpiar` para restablecer los valores 
+ *   del formulario después de agregar los datos.
+ * 
+ * @example
+ * // Ejemplo de uso:
+ * componente.agregar();
+ * 
+ * @throws
+ * Este método no lanza excepciones explícitas, pero puede fallar si los valores 
+ * del formulario no están definidos o no son válidos.
+ */
  agregar(): void {
   const CAPACIDAD: CapacidadInstalada = {
     PLANTA: this.capacidadForm.value.fraccionArancelariaProductoTerminado, // Adjust field mapping as needed
@@ -154,13 +171,30 @@ export class CapacidadInstaladaComponent implements OnInit {
 }
 
   /**
-   * Método que se ejecuta al cambiar el valor del campo de fracción arancelaria.
+   * Método invocado cuando ocurre un cambio en la fracción arancelaria.
    * 
-   * Actualiza el store con los valores actuales del formulario.
+   * Este método actualiza el estado de la tienda con los valores correspondientes
+   * relacionados con la fracción arancelaria del producto terminado. Utiliza el formulario
+   * `capacidadForm` para obtener los datos necesarios y llama a la función `setValoresStore`
+   * para realizar la actualización en el estado global.
+   * 
+   * @returns {void} Este método no devuelve ningún valor.
    */
   onFraccionArancelariaChange(): void {
     this.setValoresStore(this.capacidadForm, 'fraccionArancelariaProductoTerminado', 'setFraccionArancelariaProductoTerminado');
   }
+
+/**
+ * Restablece el formulario de capacidad a su estado inicial.
+ *
+ * Este método realiza las siguientes acciones en el formulario `capacidadForm`:
+ * - Restablece todos los valores del formulario a sus valores iniciales mediante `reset()`.
+ * - Marca el formulario como "prístino" (sin cambios) utilizando `markAsPristine()`.
+ * - Marca el formulario como "no tocado" utilizando `markAsUntouched()`.
+ * - Actualiza el estado de validez del formulario llamando a `updateValueAndValidity()`.
+ *
+ * Útil para limpiar el formulario y prepararlo para un nuevo ingreso de datos.
+ */
 limpiar(): void {
   this.capacidadForm.reset();
   this.capacidadForm.markAsPristine();
