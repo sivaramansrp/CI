@@ -9,6 +9,7 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   DatosDeFila,
   DatosForma,
@@ -25,7 +26,6 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
 
@@ -346,6 +346,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     },
   ];
 
+    /**
+    * Estado de la consulta actual, contiene la información relevante del solicitante.
+    * @type {ConsultaioState}
+    */
+   public consultaState!: ConsultaioState;
+
   /**
    * @description Indica si se debe mostrar la notificación de verificación.
    * Esta propiedad se utiliza para controlar la visibilidad de una notificación en la interfaz de usuario.
@@ -425,8 +431,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.mostrarSolicitudTabla = !seccionState.readonly;
-          this.mostrarSolicitudTabla = !seccionState.update;
+          if(this.consultaState.parameter === "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"){
+            this.mostrarSolicitudTabla = false
+          }
           this.inicializarEstadoFormulario();
         })
       )

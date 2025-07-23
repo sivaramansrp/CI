@@ -7,16 +7,17 @@
  */
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { AfterViewInit, Component, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, REGEX_CORREO_ELECTRONICO_EXPORTADOR, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ListaDeDatosFinal, RadioOpcion } from '../../models/220202/fitosanitario.model';
 import { Subject, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { CommonModule } from '@angular/common';
 import { EventEmitter } from '@angular/core';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
+import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { OPCION_DE_BOTON_DE_RADIO } from '../../../../shared/constantes/tercerosrelacionados.enum';
+import { RadioOpcion } from '../../models/220202/fitosanitario.model';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
 import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 
@@ -38,7 +39,7 @@ import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/terc
   ],
   templateUrl: './agregar-exportador.component.html',
 })
-export class AgregarExportadorComponent implements OnInit, AfterViewInit {
+export class AgregarExportadorComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Indica si el formulario debe mostrarse en modo solo lectura.
    * Cuando es verdadero, el formulario se presenta únicamente para visualización,
@@ -53,6 +54,12 @@ export class AgregarExportadorComponent implements OnInit, AfterViewInit {
    * @type {EventEmitter<TercerosrelacionadosdestinoTable>}
    */
   @Output() guardarDestinatario = new EventEmitter<TercerosrelacionadosdestinoTable>();
+
+  /**
+   * Evento emitido al cerrar el formulario de destinatario.
+   * @type {EventEmitter<void>}
+   */
+  @Output() cerrar = new EventEmitter<void>();
 
   /**
    * Opciones para el botón de radio.
@@ -112,6 +119,7 @@ export class AgregarExportadorComponent implements OnInit, AfterViewInit {
     private router: Router,
     private readonly agriculturaApiService: AgriculturaApiService,
     private readonly fitosanitarioQuery: FitosanitarioQuery,
+    private readonly fitosanitarioStore: FitosanitarioStore,
     private route: ActivatedRoute
   ) {}
 
@@ -135,34 +143,32 @@ export class AgregarExportadorComponent implements OnInit, AfterViewInit {
       telefono: [''], 
       correo: ['', [Validators.pattern(REGEX_CORREO_ELECTRONICO_EXPORTADOR), Validators.maxLength(320)]]
     });
-    const ID = this.route.snapshot.paramMap.get('id');
-      if (ID) {
-        this.agriculturaApiService.getAllDatosForma()
-          .pipe(takeUntil(this.destroyNotifier$))
-          .subscribe((data: ListaDeDatosFinal) => {
-            const DESTINATARIO = data.datosForma[0];
-            if (DESTINATARIO) {
-              this.destinatarioForm.patchValue({
-                tipoMercancia: DESTINATARIO.tipoMercancia || 'yes',
-                nombre: DESTINATARIO.nombre || '',
-                primerApellido: DESTINATARIO.primerApellido || '',
-                segundoApellido: DESTINATARIO.segundoApellido || '',
-                razonSocial: DESTINATARIO.razonSocial || '',
-                pais: DESTINATARIO.pais || '',
-                codigoPostal: DESTINATARIO.codigoPostal || '',
-                estado: DESTINATARIO.estado || '',
-                municipio: DESTINATARIO.municipio || '',
-                colonia: DESTINATARIO.colonia || '',
-                calle: DESTINATARIO.calle || '',
-                numeroExterior: DESTINATARIO.numeroExterior || '',
-                numeroInterior: DESTINATARIO.numeroInterior || '',
-                lada: DESTINATARIO.lada || '',
-                telefono: DESTINATARIO.telefono || '',
-                correo: DESTINATARIO.correo || ''
-              });
-            }
+
+    this.fitosanitarioQuery.seleccionarExportador$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: TercerosrelacionadosdestinoTable) => {
+        const DESTINATARIO = data;
+        if (DESTINATARIO) {
+          this.destinatarioForm.patchValue({
+            tipoMercancia: DESTINATARIO.tipoMercancia || 'yes',
+            nombre: DESTINATARIO.nombre || '',
+            primerApellido: DESTINATARIO.primerApellido || '',
+            segundoApellido: DESTINATARIO.segundoApellido || '',
+            razonSocial: DESTINATARIO.razonSocial || '',
+            pais: DESTINATARIO.pais || '',
+            codigoPostal: DESTINATARIO.codigoPostal || '',
+            estado: DESTINATARIO.estado || '',
+            municipio: DESTINATARIO.municipio || '',
+            colonia: DESTINATARIO.colonia || '',
+            calle: DESTINATARIO.calle || '',
+            numeroExterior: DESTINATARIO.numeroExterior || '',
+            numeroInterior: DESTINATARIO.numeroInterior || '',
+            lada: DESTINATARIO.lada || '',
+            telefono: DESTINATARIO.telefono || '',
+            correo: DESTINATARIO.correo || ''
           });
-      }
+        }
+      });
   }
 
   /**
@@ -234,7 +240,7 @@ export class AgregarExportadorComponent implements OnInit, AfterViewInit {
       const LISTA_DINAMICA: TercerosrelacionadosdestinoTable[] = [];
       LISTA_DINAMICA.push(this.destinatarioForm.value as TercerosrelacionadosdestinoTable);
       this.agriculturaApiService.updateTercerosExportador(LISTA_DINAMICA as TercerosrelacionadosdestinoTable[]);
-      this.router.navigate(['/pago/certificado-fitosanitario/agricultura']);
+      this.cerrar.emit();
     } else {
       this.destinatarioForm.markAllAsTouched();
     }
@@ -259,7 +265,7 @@ export class AgregarExportadorComponent implements OnInit, AfterViewInit {
    * @method onCancelarDestinatario
    */
   onCancelarDestinatario(): void {
-    this.router.navigate(['/pago/certificado-fitosanitario/agricultura']);
+    this.cerrar.emit();
   }
 
   /**
@@ -276,5 +282,16 @@ export class AgregarExportadorComponent implements OnInit, AfterViewInit {
       RAZON_SOCIAL_CTRL?.setValidators([Validators.required]);
       RAZON_SOCIAL_CTRL?.updateValueAndValidity();
     }
+  }
+
+  /**
+   * Ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones y resetea los datos seleccionados en el store.
+   * @method ngOnDestroy
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+    this.fitosanitarioStore.actualizarSelectedExdora({} as TercerosrelacionadosdestinoTable);
   }
 }

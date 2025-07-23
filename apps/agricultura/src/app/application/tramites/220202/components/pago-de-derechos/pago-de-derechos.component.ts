@@ -1,8 +1,10 @@
+import { Catalogo, ConsultaioQuery, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
+import { HttpClient } from '@angular/common/http';
+import { PagoDeDerecho } from '../../../../shared/models/tercerosrelacionados.model';
 import { PagoDeDerechoComponent } from '../../../../shared/components/pago-de-derecho/pago-de-derecho.component';
 import { PagoDeDerechos } from '../../models/220202/fitosanitario.model';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -45,6 +47,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+  public pagoSelect: PagoDeDerecho = {
+    bancoSelector: [],
+    justificacionSelector: [],
+  };
+
   /**
    * Constructor del componente. Inyecta los servicios y realiza una carga inicial de catálogos.
    * @param fb Constructor de formularios reactivos.
@@ -57,8 +64,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private readonly agriculturaApiService: AgriculturaApiService,
     private readonly fitosanitarioQuery: FitosanitarioQuery,
     private readonly consultaioQuery: ConsultaioQuery,
-    private readonly cdr: ChangeDetectorRef
-  ) {}
+    private readonly cdr: ChangeDetectorRef,
+    private readonly httpServicios: HttpClient,
+  ) {
+    this.obtenerBancoSelectorList();
+    this.obtenerListaDeJustificaciones();
+  }
 
   /**
    * Ciclo de vida de Angular que se ejecuta al iniciar el componente.
@@ -77,17 +88,41 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.cdr.detectChanges();
         })
       )
       .subscribe();
   }
 
+    /**
+   * Realiza una petición para obtener el catálogo de bancos.
+   */
+  obtenerBancoSelectorList(): void {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/banco.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        const DATOS = data?.data;
+        this.pagoSelect.bancoSelector = DATOS;
+      });
+  }
+
+  /**
+   * Realiza una petición para obtener el catálogo de justificaciones.
+   */
+  obtenerListaDeJustificaciones(): void {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/Justificación.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        const DATOS = data?.data;
+        this.pagoSelect.justificacionSelector = DATOS as Catalogo[];
+      });
+  }
+
+
   /**
    * Envía los valores actuales del formulario al store compartido.
    */
   onPagoChanged(event: PagoDeDerechos): void {
-    this.agriculturaApiService.updatePago(event as PagoDeDerechos);
+    this.agriculturaApiService.updatePagoDeDerechos(event as PagoDeDerechos);
   }
 
   /**

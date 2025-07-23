@@ -12,6 +12,8 @@ import {
   CatalogoSelectComponent,
   ConfiguracionColumna,
   InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -27,7 +29,6 @@ import {
 import {
   DatosDeLaSolicitud,
   RadioOpcion,
-  TercerosrelacionadosTable,
 } from '../../models/220202/fitosanitario.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -54,6 +55,7 @@ import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/terc
     ReactiveFormsModule,
     InputRadioComponent,
     CatalogoSelectComponent,
+    NotificacionesComponent
   ],
   templateUrl: './tercerosrelacionados.component.html',
 })
@@ -115,6 +117,18 @@ export class TercerosrelacionadosComponent {
   @Input() cuerpoTablaExportador: TercerosrelacionadosdestinoTable[] = [];
 
   /**
+  * Evento emitido para abrir el modal de destinatario.
+  * @type {abrirModalDestinatario}
+  */
+  @Output() abrirModalDestinatario = new EventEmitter<TercerosrelacionadosdestinoTable>();
+
+  /**
+   * Evento emitido para abrir el modal de exportador.
+   * @type {EventEmitter<TercerosrelacionadosdestinoTable>}
+   */
+  @Output() abrirModalExportador = new EventEmitter<TercerosrelacionadosdestinoTable>();
+
+  /**
    * Evento emitido al eliminar una selección de destinatarios.
    * @type {EventEmitter<TercerosrelacionadosdestinoTable[]>}
    */
@@ -171,6 +185,28 @@ export class TercerosrelacionadosComponent {
   ];
 
   /**
+ * Representa una nueva notificación que será utilizada en el componente.
+ * @type {Notificacion}
+ */
+  public nuevaNotificacion!: Notificacion;
+  /**
+   * Indica si se deben eliminar los datos de la tabla.
+   * @type {boolean}
+   */
+  public eliminarDatosTabla: boolean = false;
+  /**
+   * Indica si se deben eliminar los datos de exportador.
+   * @type {boolean}
+   */
+  public eliminarDatoExportador: boolean = false;
+
+  /**
+   * Evento emitido al eliminar una selección de destinatarios.
+   * @type {EventEmitter<TercerosrelacionadosdestinoTable[]>}
+   */
+  @Output() eliminarSeleccionEstinoTable: EventEmitter<TercerosrelacionadosdestinoTable[]> = new EventEmitter();
+
+  /**
    * Formulario reactivo para búsqueda de destinatarios.
    * @type {FormGroup}
    */
@@ -201,34 +237,35 @@ export class TercerosrelacionadosComponent {
    * @method goToAgregarDestinatario
    */
   goToAgregarDestinatario(): void {
-    this.router.navigate(['../agregar-destinatario-final'], {
-      relativeTo: this.route,
-    });
+    this.abrirModalDestinatario.emit();
   }
+
   goToAgregarExportador(): void {
-    this.router.navigate(['../agregar-exportador'], {
-      relativeTo: this.route,
-    });
+    this.abrirModalExportador.emit();
   }
   /**
    * Navega a la pantalla para modificar un destinatario existente.
    * @method modificarDestinatario
    */
   modificarDestinatario(): void {
-    const ID = 1;
-    this.router.navigate(['../agregar-destinatario-final', ID], {
-      relativeTo: this.route,
-    });
+   if (this.listaDeFilaSeleccionada[0]) {
+      this.abrirModalDestinatario.emit(this.listaDeFilaSeleccionada[0]);
+    }
+    else {
+      this.abrirModalDestinatario.emit();
+    }
   }
   /**
-   * Navega a la pantalla para modificar un destinatario existente.
-   * @method modificarDestinatario
+   * Navega a la pantalla para modificar un exportador existente.
+   * @method modificarExportador
    */
   modificarExportador(): void {
-    const ID = 1;
-    this.router.navigate(['../agregar-exportador', ID], {
-      relativeTo: this.route,
-    });
+    if (this.listaDeFilaSeleccionadaFinal ) {
+      this.abrirModalExportador.emit(this.listaDeFilaSeleccionadaFinal[0]);
+    }
+    else {
+      this.abrirModalExportador.emit();
+    }
   }
 
   /**
@@ -253,16 +290,43 @@ export class TercerosrelacionadosComponent {
   /**
    * Emite el evento para eliminar la selección de destinatarios.
    * @method emitEliminar
+   * Agrupa ambas funcionalidades: notificación y emisión del evento.
    */
   emitEliminar(): void {
-    this.eliminarSeleccion.emit(this.listaDeFilaSeleccionada);
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Confirmar eliminación',
+      mensaje: 'Está seguro que desea eliminar estos datos?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+    this.eliminarDatosTabla = true;
+    this.eliminarSeleccion.emit(this.listaDeFilaSeleccionada); 
   }
+
   /**
-   * Emite el evento para eliminar la selección de destinatarios.
-   * @method emitEliminar
+   * Emite el evento para eliminar la selección de destinatarios finales.
+   * @method emitEliminarFinal
+   * Agrupa ambas funcionalidades: notificación y emisión del evento.
    */
   emitEliminarFinal(): void {
-    this.eliminarSeleccion.emit(this.listaDeFilaSeleccionadaFinal);
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Confirmar eliminación',
+      mensaje: 'Está seguro que desea eliminar estos datos?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+    this.eliminarDatoExportador = true;
+    this.eliminarSeleccion.emit(this.listaDeFilaSeleccionada); 
   }
 
   /**
@@ -285,4 +349,24 @@ export class TercerosrelacionadosComponent {
       pais: '1',
     });
   }
+
+  eliminarPedimentoDatos(borrar: boolean): void {
+    if (borrar) {
+      this.eliminarDatosTabla = false;
+      this.eliminarSeleccion.emit(this.listaDeFilaSeleccionada);
+    } else {
+      this.eliminarDatosTabla = false;
+    }
+
+  }
+  eliminarExportador(borrar: boolean): void {
+    if (borrar) {
+      this.eliminarDatoExportador = false;
+      this.eliminarSeleccionEstinoTable.emit(this.listaDeFilaSeleccionadaFinal);
+    } else {
+      this.eliminarDatoExportador = false;
+    }
+
+  }
+
 }

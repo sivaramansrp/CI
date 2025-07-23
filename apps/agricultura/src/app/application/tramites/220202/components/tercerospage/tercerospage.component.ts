@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * @fileoverview
  * Componente para la gestión de terceros relacionados en el trámite 220201 de agricultura.
@@ -7,13 +8,17 @@
  * @module TercerospageComponent
  */
 
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosDeLaSolicitud, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { Subject, takeUntil } from 'rxjs';
+import { AgregarExportadorComponent } from '../agregar-exportador/agregar-exportador.component';
+import { AgregardestinatarioComponent } from '../agregardestinatario/agregardestinatario.component';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
+import { FitosanitarioStore } from '../../estados/fitosanitario.store';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { TercerosrelacionadosComponent } from '../../shared/tercerosrelacionados/tercerosrelacionados.component';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
 
@@ -32,7 +37,8 @@ import { TercerosrelacionadosService } from '../../../../shared/components/servi
   standalone: true,
   imports: [
     CommonModule,
-    TercerosrelacionadosComponent
+    TercerosrelacionadosComponent,
+    ModalComponent
   ],
   templateUrl: './tercerospage.component.html',
 })
@@ -73,6 +79,14 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   datosForma: TercerosrelacionadosdestinoTable[] = [];
 
   /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es verdadero, el formulario se presenta únicamente para visualización,
+   * deshabilitando la edición de los campos.
+   * @type {modalRef}
+   */
+  @ViewChild('modalRef') modalRef!: ModalComponent;
+
+  /**
    * Constructor del componente.
    * @param consultaQuery Servicio para consultar el estado de solo lectura.
    * @param agriculturaApiService Servicio para actualizar terceros relacionados.
@@ -83,8 +97,9 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
     private consultaQuery: ConsultaioQuery,
     private readonly agriculturaApiService: AgriculturaApiService,
     private readonly fitosanitarioQuery: FitosanitarioQuery,
-    public tercerosrelacionadosService: TercerosrelacionadosService
-  ) {}
+    public tercerosrelacionadosService: TercerosrelacionadosService,
+    public fitosanitarioStore: FitosanitarioStore
+  ) { }
 
   /**
    * Ciclo de vida de Angular que se ejecuta al iniciar el componente.
@@ -92,11 +107,12 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    * @method ngOnInit
    */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$
+  this.consultaQuery.selectConsultaioState$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((seccionState) => {
-        this.esFormularioSoloLectura = seccionState?.readonly;
+        this.esFormularioSoloLectura = seccionState.readonly;
       });
+      
     this.agriculturaApiService.getAllDatosForma()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datosDeLaSolicitud) => {
@@ -145,10 +161,13 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    * Elimina todos los terceros relacionados y actualiza el servicio correspondiente.
    * @method handleEliminar
    */
-  handleEliminar(): void {
+  handleEliminarDestinatario(): void {
     this.personas = [];
-    this.datosForma = [];
     this.agriculturaApiService.updateTercerosRelacionado([] as TercerosrelacionadosdestinoTable[]);
+  }
+
+  handleEliminarExportador(): void {
+    this.datosForma = [];
     this.agriculturaApiService.updateTercerosExportador([] as TercerosrelacionadosdestinoTable[]);
   }
 
@@ -161,4 +180,19 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  abrirModalExportador(data: any): void { 
+    if (data) {
+      this.fitosanitarioStore.actualizarSelectedExdora(data);
+    }
+    this.modalRef.abrir(AgregarExportadorComponent);
+  }
+
+  abrirModalDestinatario(data?: any): void {
+    if (data) {
+      this.fitosanitarioStore.actualizarSelectedTerceros(data);
+    }
+    this.modalRef.abrir(AgregardestinatarioComponent);
+  }
+
 }
