@@ -80,15 +80,17 @@
     <div class="modal-content">
       <div class="modal-body">
         <form [formGroup]="agregarMercanciasForm">
-        <div class="row mt-5">
+        <div class="row">
           <ng-alert [CONTENIDO]="TEXTO_DE_ADJUNTAR"></ng-alert>
         </div>
         <ng-titulo titulo="Datos de la mercancía" />
+        <label class="mb-5">Fines a los que se destinará la mercancía*:</label>
         <crosslist
           [fechas]="selectRangoDias"
-          [showSearchInput1]="true"
-          [showSearchInput2]="true"
-          [botonField]="botonField"
+          [botones]="finesDeMercanciaBotons"
+          [fechasSeleccionadas]="solicitudState.fechasSeleccionadas"
+          [isDisabled]="esFormularioSoloLectura"
+          (fechasSeleccionadasChange)="changeCrosslist($event)"
         ></crosslist>
         <ng-container formGroupName="datosMercancia">
         <div class="row mt-5">
@@ -226,7 +228,7 @@
           </div>
         </ng-container>
 
-        <div class="col-md-12 mt-5 d-flex justify-content-end">
+        <div class="col-md-12 mt-5 mb-5 d-flex justify-content-end">
           <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura"
             (click)="limpiarMercancias()">Limpiar</button>
           <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura" 

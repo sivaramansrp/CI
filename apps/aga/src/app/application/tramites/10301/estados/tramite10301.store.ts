@@ -51,7 +51,7 @@ export interface Solicitud10301State {
   tipoDocumento: Catalogo[] | null;
 
   /** Fechas disponibles para seleccionar dentro del trámite. */
-  fechasSeleccionadas: Catalogo[] | null;
+  fechasSeleccionadas: string[];
 
   /** Fines o propósitos seleccionados por el usuario. */
   finesElegidos: string[];
@@ -160,7 +160,7 @@ export function createInitialState(): Solicitud10301State {
     condicion: null,
     pais: null,
     tipoDocumento: null,
-    fechasSeleccionadas: null,
+    fechasSeleccionadas: [],
     finesElegidos: [],
     elegidosSeleccionados: [],
     selectRangoDias: [],
@@ -270,7 +270,7 @@ export class Tramite10301Store extends Store<Solicitud10301State> {
   }
 
   /** Actualiza las fechas seleccionadas del formulario. */
-  public setFechasSeleccionadas(fechasSeleccionadas: Catalogo[]): void {
+  public setFechasSeleccionadas(fechasSeleccionadas: string[]): void {
     this.update((state) => ({ ...state, fechasSeleccionadas }));
   }
 

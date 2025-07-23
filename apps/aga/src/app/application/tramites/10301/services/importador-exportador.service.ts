@@ -66,9 +66,17 @@ export class ImportadorExportadorService {
    * @returns Observable con la respuesta del catálogo de países.
    */
   getPais(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/10301/pais.json').pipe(
-      tap(response => this.store.setPais(response.data))
-    );
+    return this.http.get<RespuestaCatalogos>('assets/json/10301/pais.json');
+  }
+
+  /**
+   * Obtiene el catálogo de fines de la mercancía.
+   * Realiza una petición HTTP para obtener los fines posibles que puede tener la mercancía en el trámite.
+   * 
+   * @returns Observable con la respuesta del catálogo de fines de mercancía.
+   */
+  getFinesDeMercancia(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/10301/fines.json');
   }
 
   /**
@@ -81,19 +89,6 @@ export class ImportadorExportadorService {
       'assets/json/10301/tipodocumento.json'
     ).pipe(
       tap(response => this.store.setTipoDocumento(response.data))
-    );
-  }
-
-  /**
-   * Obtiene el catálogo de fechas seleccionadas para uso en el trámite.
-   * Actualiza el estado con los datos obtenidos.
-   * @returns Observable con la respuesta del catálogo de fechas seleccionadas.
-   */
-  getFechasSeleccionadas(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>(
-      'assets/json/10301/fechasSeleccionadas.json'
-    ).pipe(
-      tap(response => this.store.setFechasSeleccionadas(response.data))
     );
   }
 

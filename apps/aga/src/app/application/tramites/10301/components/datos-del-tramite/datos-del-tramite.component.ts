@@ -16,8 +16,9 @@ import {
   Solicitud10301State,
   Tramite10301Store,
 } from '../../estados/tramite10301.store';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import {
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -25,7 +26,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ImportadorExportadorService } from '../../services/importador-exportador.service';
 import { SELECCION } from '../../constantes/importador-exportador.enum';
@@ -145,17 +146,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Lista de rangos de días seleccionados.
    */
-  selectRangoDias: [] = [];
-  /**
-   * Lista de fechas seleccionadas.
-   */
+  selectRangoDias: string[] = [];
 
-  fechasSeleccionadas: Catalogo[] = [];
-
-  /**
-   * Lista de datos de fechas disponibles.
-   */
-  fechasDatos: Catalogo[] = [];
   /**
    * Control de formulario para la fecha.
    */
@@ -219,31 +211,46 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Set to `true` if the location is a country, otherwise `false`.
    */
   isAdunaMarcancia: boolean = false;
+
   /**
-   * Botones de acción disponibles para gestionar las listas de fechas.
+   * Referencia a los componentes Crosslist en la vista.
    */
-  botonField = [
-    {
-      btnNombre: 'Agregar',
-      class: 'btn-primary',
-      funcion: (): void => this.agregar(''),
-    },
-    {
-      btnNombre: 'Agregar todo',
-      class: 'btn-default',
-      funcion: ():void => this.agregar(SELECCION.SELECT_ALL),
-    },
-    {
-      btnNombre: 'Remover',
-      class: 'btn-danger',
-      funcion: ():void => this.quitar(''),
-    },
-    {
-      btnNombre: 'Remover todo',
-      class: 'btn-default',
-      funcion: ():void => this.quitar(SELECCION.SELECT_ALL),
-    },
-  ];
+  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+  
+  /**
+   * Botones para gestionar la lista de países de origen.
+   */
+  public finesDeMercanciaBotons = this.getCrossListBtn();
+
+  public getCrossListBtn(): Array<{ btnNombre: string; class: string; funcion: () => void }> {
+    return [
+      {
+        btnNombre: 'Agregar todos',
+        class: 'btn-default',
+        funcion: (): void => this.crossList.forEach(cmp => cmp.agregar('t')),
+      },
+      {
+        btnNombre: 'Agregar selección',
+        class: 'btn-primary',
+        funcion: (): void => this.crossList.forEach(cmp => cmp.agregar('')),
+      },
+      {
+        btnNombre: 'Restar selección',
+        class: 'btn-primary',
+        funcion: (): void => this.crossList.forEach(cmp => cmp.quitar('')),
+      },
+      {
+        btnNombre: 'Restar todos',
+        class: 'btn-default',
+        funcion: (): void => this.crossList.forEach(cmp => cmp.quitar('t')),
+      },
+    ];
+  }
+
+  /**
+   * Lista de catálogos disponibles para países.
+   */
+  fines!: Catalogo[];
 
   /**
    * @property {ConsultaioState} consultaDatos
@@ -339,13 +346,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     this.getCondicion();
     this.getPais();
     this.obtenerMercancia();
+    this.inicializaCatalogos();
     this.inicializarEstadoFormulario();
 
-    this.subscriptions.push(
-      this.query.selectFechasSeleccionadas$.subscribe((fechas) => {
-        this.fechasSeleccionadas = fechas ?? [];
-      })
-    );
     this.subscriptions.push(
       this.query.selectAduana$.subscribe((aduana) => {
         this.aduana = {
@@ -387,6 +390,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       })
     );
   }
+
   /**
    * Inicializa el estado del formulario según si es de solo lectura o no.
    * Si es de solo lectura, guarda los datos del formulario; de lo contrario, inicializa el formulario con los datos del donante y domicilio.
@@ -397,52 +401,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     } else {
       this.donanteDomicilio();
     }
-  }
-
-  /**
-   * Agrega elementos a la lista de fechas según el tipo especificado.
-   * @param {string} tipo - Tipo de acción a realizar.
-   */
-  agregar(tipo: string): void {
-    if (tipo === SELECCION.SELECT_ALL) {
-      this.fechasSeleccionadas = [...this.selectRangoDias];
-      this.fechasDatos = [];
-    } else {
-      const FECHA_VALOR = this.fecha.value;
-      const SELECTEDFECHA = this.fechasDatos.find(
-        (fecha) => fecha.id === FECHA_VALOR
-      );
-      if (SELECTEDFECHA) {
-        this.fechasSeleccionadas.push(SELECTEDFECHA);
-        this.fechasDatos = this.fechasDatos.filter(
-          (fecha) => fecha.id !== FECHA_VALOR
-        );
-      }
-    }
-    this.store.setFechasSeleccionadas(this.fechasSeleccionadas);
-  }
-
-  /**
-   * Elimina elementos de la lista de fechas según el tipo especificado.
-   * @param {string} tipo - Tipo de acción a realizar.
-   */
-  quitar(tipo: string = ''): void {
-    if (tipo === SELECCION.SELECT_ALL) {
-      this.fechasDatos = [...this.fechasSeleccionadas];
-      this.fechasSeleccionadas = [];
-    } else {
-      const FECHA_VALOR = this.fechaSeleccionada.value;
-      const SELECTEDFECHA = this.fechasSeleccionadas.find(
-        (fecha) => fecha.id === FECHA_VALOR
-      );
-      if (SELECTEDFECHA) {
-        this.fechasDatos.push(SELECTEDFECHA);
-        this.fechasSeleccionadas = this.fechasSeleccionadas.filter(
-          (fecha) => fecha.id !== FECHA_VALOR
-        );
-      }
-    }
-    this.store.setFechasSeleccionadas(this.fechasSeleccionadas);
   }
 
   /**
@@ -503,6 +461,23 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Inicializa los catálogos necesarios para el componente.
+   */
+  inicializaCatalogos(): void {
+    const FINES$ = this.importarExportar.getFinesDeMercancia().pipe(
+      map((resp) => {
+        console.log('Fines de mercancía:', resp);
+        this.fines = resp.data;
+        this.selectRangoDias = this.pais.catalogos.map(
+          (fines: Catalogo) => fines.descripcion
+        );
+      })
+    );
+    console.log('Fines:', FINES$);
+    merge(FINES$).pipe(takeUntil(this.destroyNotifier$)).subscribe();
+
+  }
 
   /**
    * Obtiene la información de la aduana por la que ingresará la mercancía y actualiza el store con los datos obtenidos.
@@ -714,6 +689,28 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     //   this.selectedRows = [];
     // } 
   }
+
+/**
+   * Obtiene el array del formulario 'fechasSeleccionadas' del grupo de formulario  'datosServicio'.
+   *
+   * @returns {FormArray} El array de formulario 'fechasSeleccionadas'.
+   */
+  get fechasSeleccionadas(): FormArray {
+    return this.tramiteForm.get('fechasSeleccionadas') as FormArray;
+  }
+
+  /**
+   * Actualiza la lista de fechas seleccionadas y las almacena en el estado.
+   * 
+   * @param fechas - Arreglo de fechas a agregar.
+   * @returns void
+   */
+  changeCrosslist(fechas: string[]): void {
+    fechas.forEach((fecha) => {
+      this.fechasSeleccionadas.push(new FormControl(fecha));
+    });
+    this.store.setFechasSeleccionadas(fechas);
+  }
   
   /**
    * Método de limpieza que se ejecuta cuando el componente se destruye.
@@ -732,5 +729,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       this.getCondicionSubscription.unsubscribe();
     }
     this.subscriptions.forEach((sub) => sub.unsubscribe());
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
