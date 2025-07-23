@@ -7,20 +7,20 @@
       </li>
       <li [ngClass]="indice === 2 ? 'active' : ''">
         <a (click)="seleccionaTab(2)" (keyup.enter)="seleccionaTab(2)" (keydown.space)="seleccionaTab(2)" tabindex="0"
-          data-toggle="tab">{{ consultaState.parameter?.toUpperCase() === parametero.READ_PROCEDEMENTO ? 'Datos
+          data-toggle="tab">{{ consultaState.parameter.toUpperCase() === parametero.READ_PROCEDEMENTO ? 'Datos
           generales' : 'Datos de la solicitud' }}</a>
       </li>
       @if(mostrarRevisionDocumental ||
-      consultaState.parameter?.toUpperCase() === parametero.EVALUAR ||
-      consultaState.parameter?.toUpperCase() === parametero.READ_PROCEDEMENTO ||
-      consultaState.parameter?.toUpperCase() === parametero.SUBSECUENTES
+      consultaState.parameter.toUpperCase() === parametero.EVALUAR ||
+      consultaState.parameter.toUpperCase() === parametero.READ_PROCEDEMENTO ||
+      consultaState.parameter.toUpperCase() === parametero.SUBSECUENTES
       ) {
       <li [ngClass]="indice === 3 ? 'active' : ''">
         <a (click)="seleccionaTab(3)" (keyup.enter)="seleccionaTab(3)" (keydown.space)="seleccionaTab(3)" tabindex="0"
           data-toggle="tab">Revisión Documental</a>
       </li>
       }
-      @if(consultaState.parameter?.toUpperCase() === parametero.READ_PROCEDEMENTO) {
+      @if(consultaState.parameter.toUpperCase() === parametero.READ_PROCEDEMENTO) {
       <li [ngClass]="indice === 4 ? 'active' : ''">
         <a (click)="seleccionaTab(4)" (keyup.enter)="seleccionaTab(4)" (keydown.space)="seleccionaTab(4)" tabindex="0"
           data-toggle="tab">Frecuencia de inspección</a>
