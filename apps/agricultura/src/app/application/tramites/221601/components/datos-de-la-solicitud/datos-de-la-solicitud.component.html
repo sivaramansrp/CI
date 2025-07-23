@@ -281,21 +281,21 @@
       <app-catalogo-select
           formControlName="especie"
           [catalogo]="veterinario"
-          [label]="'Especie*:'">
+          [label]="'Especie*'">
         </app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select
           formControlName="edadAnimal"
           [catalogo]="veterinario"
-          [label]="'Uso*:'">
+          [label]="'Uso*'">
         </app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select
           formControlName="paisOrigen1"
           [catalogo]="veterinario"
-          [label]="'País de origen*:'">
+          [label]="'País de origen*'">
         </app-catalogo-select>
       </div>
     </div>
@@ -356,7 +356,7 @@
         <app-catalogo-select
           formControlName="sexo"
           [catalogo]="veterinario"
-          [label]="'Sexo:'">
+          [label]="'Sexo'">
         </app-catalogo-select>
         </div>
         </div>
@@ -366,8 +366,25 @@
       <button class="btn btn-primary ms-3" type="submit" (click)="guardarMercancia()">Agregar detalle</button>
       <button class="btn btn-primary ms-3" type="submit">Carga por archivo</button>
     </div>
-  </form>
-    
+    </form>
+  <form>
+    <div class="row">
+      <h6 class="fw-bold">Detalle</h6>
+      <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="mercancias" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
+        [tipoSeleccionTabla]="checkbox"></app-tabla-dinamica>
+
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item"><a class="page-link">1</a></li>
+        </ul>
+      </nav>
+    </div>
+  <div class="col-md-12 mt-5 d-flex justify-content-end">
+      <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
+      <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura" (click)="cerrarModal()">Eliminar</button>
+      <button type="button" class="btn btn-primary ms-3"[disabled]="esFormularioSoloLectura">Agregar</button>
+    </div>
+    </form>
   </app-modal>
 </div>
 
