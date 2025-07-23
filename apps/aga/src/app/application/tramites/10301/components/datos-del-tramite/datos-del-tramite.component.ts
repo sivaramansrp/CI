@@ -257,9 +257,19 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
 
   /**
+   * Referencia al botón para cerrar el modal.
+   */
+  @ViewChild('closeModal') closeModal!: ElementRef;
+  
+  /**
    * Formulario para agregar mercancías.
    */
   agregarMercanciasForm!: FormGroup;
+
+  /**
+   * Filas seleccionadas en la tabla.
+   */
+  selectedRows: number[] = [];
 
   /**
    * Constructor que se utiliza para la inyección de dependencias.
@@ -598,7 +608,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   get datosMercancia(): FormGroup {
     return this.agregarMercanciasForm.get('datosMercancia') as FormGroup;
   }
-  
+
   /**
    * Inicializa el formulario de donante y domicilio con los valores del estado de la solicitud.
    */
@@ -676,6 +686,33 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       }),
     });
 
+  }
+
+  /**
+   * Cierra el modal actual.
+   */
+  cerrarModal(): void {
+    if (this.closeModal) {
+      this.closeModal.nativeElement.click();
+    }
+  }
+
+  /**
+   * Limpiar mercancias del formulario.
+   */
+  limpiarMercancias(): void {
+    this.agregarMercanciasForm.reset();
+  }
+
+  /**
+   * Elimina las filas seleccionadas de la tabla de solicitudes.
+   */
+  eliminar(): void {
+    // if (this.selectedRows && this.selectedRows.length > 0) {
+    //   this.mercanciaBodyData = this.mercanciaBodyData.filter(row => !this.selectedRows.includes(row.id));
+    //   this.store.setMercanciaBodyData(this.mercanciaBodyData);
+    //   this.selectedRows = [];
+    // } 
   }
   
   /**

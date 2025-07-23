@@ -53,8 +53,9 @@
           <ng-table [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"></ng-table>
         </div>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
-          <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura"
+            data-bs-toggle="modal" data-bs-target="#modalAgregarMercancias">Modificar</button>
+          <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura" (click)="eliminar()">Eliminar</button>
           <button
             type="button"
             class="btn btn-primary ms-3"
@@ -62,7 +63,6 @@
             data-bs-target="#modalAgregarMercancias"
             [disabled]="esFormularioSoloLectura"
           >
-          <!-- (click)="nextTabla()" -->
             Agregar
           </button>
         </div>
@@ -227,8 +227,10 @@
         </ng-container>
 
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Limpiar</button>
-          <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura">Cancelar</button>
+          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura"
+            (click)="limpiarMercancias()">Limpiar</button>
+          <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura" 
+            data-bs-dismiss="modal" #closeModal>Cancelar</button>
           <button
             type="button"
             class="btn btn-primary ms-3"
@@ -244,36 +246,7 @@
   </div>
 </div>
 
-        <div
-          class="modal"
-          tabindex="-1"
-          role="dialog"
-          [ngClass]="{ show: isPopupOpen }"
-          [ngStyle]="{ display: isPopupOpen ? 'block' : 'none' }"
-        >
-          <div class="modal-dialog" role="document">
-            <div
-              class="modal-content"
-              style="width: fit-content; margin-left: 115px"
-            >
-              <div style="background-color: black; height: 55px"></div>
-              <div class="modal-body">
-                <p>La mercancía fue <br />agregada correctamente.</p>
-              </div>
-              <div class="modal-footer" style="justify-content: center">
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  (click)="closePopup()"
-                >
-                  Acceptar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="modal-backdrop fade show" *ngIf="isPopupOpen"></div>
+      <div class="modal-backdrop fade show" *ngIf="isPopupOpen"></div>
       <!-- </ng-container> -->
 
       <ng-titulo titulo="Datos del donante extranjero" />
@@ -499,3 +472,32 @@
     </div>
   </form>
 </div>
+
+  <div
+    class="modal"
+    tabindex="-1"
+    role="dialog"
+    [ngClass]="{ show: isPopupOpen }"
+    [ngStyle]="{ display: isPopupOpen ? 'block' : 'none' }"
+  >
+    <div class="modal-dialog" role="document">
+      <div
+        class="modal-content"
+        style="width: fit-content; margin-left: 115px"
+      >
+        <div style="background-color: black; height: 55px"></div>
+        <div class="modal-body">
+          <p>La mercancía fue <br />agregada correctamente.</p>
+        </div>
+        <div class="modal-footer" style="justify-content: center">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="closePopup()"
+          >
+            Acceptar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
