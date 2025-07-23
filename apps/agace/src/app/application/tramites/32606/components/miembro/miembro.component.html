@@ -1,0 +1,79 @@
+<form [formGroup]="miembroForm">
+  <div class="col-md-12">
+    <ng-titulo titulo="Agregar miembro de la empresa" />
+  </div>
+  <div class="col-md-12 mt-4">
+    <label class="form-label text-start">
+      <span style="color: red;">*</span> Señale si los socios, accionistas, según corresponda, representante legal con facultad para actos de dominio e integrantes de la administración de conformidad con la constitución de la empresa solicitante, se encuentran al corriente en el cumplimiento de sus obligaciones fiscales. </label>
+    <app-input-radio [radioOptions]="radioOpcions08" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio14" (change)="setValoresStore( miembroForm, 'tipoRadio14', 'setTipoRadio14' )"></app-input-radio>
+  </div>
+  <div class="col-md-12">
+    <ng-titulo titulo="Miembro de la empresa" />
+  </div>
+  <div class="row mt-12">
+    <div class="col-md-12">
+      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="empresaTabla"></app-tabla-dinamica>
+    </div>
+  </div>
+  <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary" [disabled]="this.soloLectura" (click)="agregarMiembro()" data-bs-toggle="modal" data-bs-target="#miembroModal"> Agregar </button>
+      <button type="button" class="btn btn-default ms-3" [disabled]="this.soloLectura"> Modificar </button>
+      <button type="button" class="btn btn-danger 3 ms-3" [disabled]="this.soloLectura"> Eliminar </button>
+    </div>
+  </div>
+  <!-- modal popup on agregar -->
+  <div class="modal fade modal-xl" id="miembroModal" tabindex="-1" aria-labelledby="miembroModalLabel" aria-hidden="true" #modalAgregar>
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Agregar miembro de la empresa</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-4">
+              <app-catalogo-select [catalogo]="caracterCatalogo.catalogos" [label]="'Eu su carácter de'" [required]="true" formControlName="caracter" (change)="setValoresStore( miembroForm, 'caracter', 'setCaracter' )"></app-catalogo-select>
+            </div>
+          </div>
+          <div class="row mt-12">
+            <div class="col-md-4 mt-4">
+              <label class="form-label text-start">
+                <span style="color: red;">*</span> Obligado a tributar en México </label>
+              <app-input-radio [radioOptions]="radioOpcions08" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio34" (change)="setValoresStore( miembroForm, 'tipoRadio34', 'setTipoRadio34' )"></app-input-radio>
+            </div>
+          </div>
+          <div class="row mt-12"></div>
+          <div class="row mt-12">
+            <div class="col-md-4">
+              <app-catalogo-select [catalogo]="nacionalidadCatalogo.catalogos" [label]="'Nacionalidad'" [required]="true" formControlName="nacionalidad" ></app-catalogo-select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer custom-footer">
+          <div class="row">
+            <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
+              <button type="button" name="agregar" [disabled]="this.soloLectura" class="btn btn-primary ms-2" #closeModal> Aceptar </button>
+              <button type="button" name="cancelar" [disabled]="this.soloLectura" class="btn btn-default ms-2" data-bs-dismiss="modal" #closeModal> Cancelar </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- modal popup on agregar ends-->
+  <div class="col-md-12 mt-4">
+    <label class="form-label text-start">
+      <span style="color: red;">*</span> Manifieste si sus socios o accionistas, según corresponda, representantes legales con facultad para actos de dominio e integrantes de la administración, no se encuentren vinculados con alguna empresa a la que se le hubiere cancelado su Registro en el Esquema de Certificación de Empresas, de conformidad con la regla 7.2.4., apartado A, fracciones V, VI y VII y apartado B, fracciones II, y III y V y/o de la regla 7.2.5., fracciones VI, VII y XI. </label>
+    <app-input-radio [radioOptions]="radioOpcions08" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio15" (change)="setValoresStore( miembroForm, 'tipoRadio15', 'setTipoRadio15' )"></app-input-radio>
+  </div>
+  <div class="col-md-12 mt-4">
+    <label class="form-label text-start">
+      <span style="color: red;">*</span> Una vez manifestado lo anterior, se solicita al SAT, a través de AGACE, que realice las inspecciones a que hace referencia la fracción IX de la regla 7.1.1, a las instalaciones señaladas en las que se realizan las operaciones de comercio exterior con el propósito de verificar la información plasmada en la presente solicitud del Registro en el Esquema Integral de Certificación. </label>
+    <app-input-radio [radioOptions]="radioOpcions08" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio16" (change)="setValoresStore( miembroForm, 'tipoRadio16', 'setTipoRadio16' )"></app-input-radio>
+  </div>
+  <div class="col-md-12 mt-4">
+    <label class="form-label text-start">
+      <span style="color: red;">*</span> Bajo protesta de decir verdad, manifiesto que los datos asentados en el presente documento son ciertos y que las facultades que me fueron otorgadas para representar al solicitante no me han sido modificadas y/ o revocadas.. </label>
+    <app-input-radio [radioOptions]="radioOpcions08" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio17" (change)="setValoresStore( miembroForm, 'tipoRadio17', 'setTipoRadio17' )"></app-input-radio>
+  </div>
+</form>

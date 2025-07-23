@@ -1,0 +1,60 @@
+<form [formGroup]="querellaForm">
+  <div class="col-md-12">
+    <ng-titulo titulo="Querella" />
+  </div>
+  <div class="col-md-12 mt-4">
+    <label class="form-label text-start">
+      <span style="color: red;">*</span> Señale si el SAT ha interpuesto querella o denuncia penal en contra de los socios, accionistas, según corresponda, representante legal, e integrantes de la administración de la empresa solicitante o declaratoria de perjuicio, según corresponda, durante los últimos tres años anteriores a la presentación de la solicitud de certificación. </label>
+    <app-input-radio [radioOptions]="radioOpcions08" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio18" (change)="setValoresStore( querellaForm, 'tipoRadio18', 'setTipoRadio18' )"></app-input-radio>
+  </div>
+  <div class="col-md-12">
+    <ng-titulo titulo="Control Inventarios" />
+  </div>
+  <div class="col-md-12 mt-4">
+    <label class="form-label text-start">
+      <span style="color: red;">*</span> Indique si cuenta con un sistema de control de inventarios, para el registro de sus operaciones de comercio exterior de conformidad con el artículo 59, fracción I de la Ley. </label>
+    <app-input-radio [radioOptions]="radioOpcions08" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio19" (change)="setValoresStore( querellaForm, 'tipoRadio19', 'setTipoRadio19' )"></app-input-radio>
+  </div>
+  <div class="row mt-12">
+    <div class="col-md-6">
+      <label class="form-label">Nombre del sistema o datos para su identificación</label>
+      <input class="form-control" type="text" formControlName="sistemaIdentificacion" (change)="setValoresStore( querellaForm, 'sistemaIdentificacion', 'setSistemaIdentificacion' )"/>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Lugar de radicación</label>
+      <input class="form-control" type="text" formControlName="lugarRadicacion" (change)="setValoresStore( querellaForm, 'lugarRadicacion', 'setLugarRadicacion' )"/>
+    </div>
+  </div>
+  <div class="col-md-12 mt-4 d-flex align-items-center">
+    <label class="form-label text-start me-2">Indique, si cuenta con un sistema de control de inventarios de conformidad con las disposiciones previstas por el Anexo 24.</label>
+    <lib-input-check [id]="'sistemaControlInventarios'" [label]="''" [required]="false" formControlName="sistemaControlInventarios" (change)="setValoresStore( querellaForm, 'sistemaControlInventarios', 'setSistemaControlInventarios' )"></lib-input-check>
+  </div>
+  <div class="row mb-5">
+    <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
+      <button type="button" class="btn btn-primary ms-3" [disabled]="this.soloLectura" (click)="seleccionarAgregar()"> Agregar </button>
+    </div> @if (nuevaNotificacion) { <section>
+      <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+    </section> }
+  </div>
+  <div class="row mt-12">
+    <div class="col-md-12">
+      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="querellaTabla" [datos]="querellaDatos"></app-tabla-dinamica>
+    </div>
+  </div>
+  <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
+    <div class="btn-group">
+      <button type="button" class="btn btn-default" [disabled]="this.soloLectura"> Modificar </button>
+      <button type="button" class="btn btn-danger 3 ms-3" [disabled]="this.soloLectura"> Eliminar </button>
+    </div>
+  </div>
+  <div class="col-md-12 mt-5">
+    <div class="alert alert-info">
+      <div class="form-check"> Deberá anexar un archivo con el reporte de saldos de mercancía de importación temporal o de mercancías objeto de operaciones de comercio exterior, de un periodo de un mes, que se encuentre dentro de los tres meses anteriores a la presentación de la solicitud. </div>
+    </div>
+  </div>
+  <div class="col-md-12 mt-4">
+    <label class="form-label text-start">
+      <span style="color: red;">*</span> Señale si ingresa mensualmente su información contable a través del portal del SAT, de conformidad con el artículo 28, fracción IV, del CFF y las reglas 2.8.1.5. y la 2.8.1.6. de la RMF. </label>
+    <app-input-radio [radioOptions]="radioOpcions08" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio20" (change)="setValoresStore( querellaForm, 'tipoRadio20', 'setTipoRadio20' )"></app-input-radio>
+  </div>
+</form>

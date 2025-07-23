@@ -305,7 +305,6 @@ const ROUTES: Routes = [
         (m) => m.AvisoTesoreriaModule
       ),
   },
-
   {
     path: 'aviso-certificacion',
     loadChildren: () =>
@@ -336,6 +335,11 @@ const ROUTES: Routes = [
     loadChildren: () => 
       import('./tramites/32616/solicitud-de-registro-invocar.module').then(
         (m) => m.SolicitudDeRegistroInvocarModule)
+  },
+  {
+    path: 'economico',
+    loadChildren: () =>
+      import('./tramites/32606/economico.module').then((m) => m.EconomicoModule),
   }
 ];
 
