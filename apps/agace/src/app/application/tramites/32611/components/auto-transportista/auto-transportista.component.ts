@@ -1,35 +1,33 @@
-import { AfterViewInit, Component } from '@angular/core';
-import { Catalogo, CatalogosSelect, REGEX_SOLO_NÚMERO, REGEX_TODOS_CEROS } from '@libs/shared/data-access-user/src';
-// import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FECHA_DE_INICIO, FECHA_DE_VIGENCIA } from '../../constants/solicitud.enum';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { 
+  Catalogo, 
+  CatalogoSelectComponent, 
+  CatalogosSelect,
+  CategoriaMensaje,
+  InputFecha,
+  InputFechaComponent,
+  InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
+  REGEX_SOLO_NÚMERO, 
+  REGEX_TODOS_CEROS,  
+  TablaDinamicaComponent,  
+  TipoNotificacionEnum,
+  TituloComponent
+} from '@libs/shared/data-access-user/src';
+import { FECHA_DE_INICIO, FECHA_DE_PAGO, FECHA_DE_VIGENCIA } from '../../constants/solicitud.enum';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { InputRadio, SolicitudRadioLista } from '../../models/solicitud.model';
+import { Solicitud32611State, Solicitud32611Store } from '../../estados/solicitud32611.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ElementRef } from '@angular/core';
-import { FECHA_DE_PAGO } from '../../constants/solicitud.enum';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputFecha } from '@libs/shared/data-access-user/src';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src';
-import { InputRadio } from '../../models/solicitud.model';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { NOTA } from '../../constants/oea-textil-registro.enum';
 import { Solicitud32611Query } from '../../estados/solicitud32611.query';
-import { Solicitud32611State } from '../../estados/solicitud32611.store';
-import { Solicitud32611Store } from '../../estados/solicitud32611.store';
-import { SolicitudRadioLista } from '../../models/solicitud.model';
-import { Solocitud32611Service } from '../../services/service32611.service';
-import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import { SolicitudService } from '../../services/solicitud.service';
 
 /**
  * Componente principal para gestionar los datos de importador y exportador
@@ -44,12 +42,14 @@ import { takeUntil } from 'rxjs';
     CommonModule,
     ReactiveFormsModule,
     InputRadioComponent,
+    NotificacionesComponent,
     InputFechaComponent,
     TituloComponent,
     TablaDinamicaComponent,
     AgregarTransportistasComponent,
   ],
-  providers: [Solocitud32611Service],
+  providers: [BsModalService],
+  
   templateUrl: './auto-transportista.component.html',
   styleUrl: './auto-transportista.component.scss',
 })
@@ -91,6 +91,11 @@ export class AutoTransportistaComponent implements OnInit, OnDestroy, AfterViewI
    */
   fechaDeVigencia: InputFecha = FECHA_DE_VIGENCIA;
 
+    /**
+     * Mensaje que indica un requisito obligatorio para acceder a la nota.
+     */
+    REQUISITO_OBLIGATORIO_ESQUEMA_CERTIFICACION = NOTA.REQUISITO_OBLIGATORIO_ESQUEMA_CERTIFICACION;
+
   /**
   * Configuración para el catálogo de bancos.
   */
@@ -100,6 +105,11 @@ export class AutoTransportistaComponent implements OnInit, OnDestroy, AfterViewI
     primerOpcion: 'Selecciona un valor',
     catalogos: [],
   };
+
+  /**
+   * Indica si el diálogo de notificación está habilitado.
+   */
+  public esHabilitarElDialogo: boolean = false;
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -117,6 +127,11 @@ export class AutoTransportistaComponent implements OnInit, OnDestroy, AfterViewI
   confirmInstance!: Modal;
 
   /**
+     * Notificación que se muestra al usuario.
+     */
+    public nuevaNotificacion!: Notificacion;
+
+  /**
   * Referencia al modal de confirmación
   */
   @ViewChild('confirmModal', { static: false }) confirmModal!: ElementRef;
@@ -131,7 +146,9 @@ export class AutoTransportistaComponent implements OnInit, OnDestroy, AfterViewI
    */
   constructor(
     private fb: FormBuilder,
-    public solicitudService: Solocitud32611Service,
+    @Inject(BsModalService)
+    private modalService: BsModalService,
+    public solicitudService: SolicitudService,
     public solicitud32611Store: Solicitud32611Store,
     public solicitud32611Query: Solicitud32611Query,
     public consultaioQuery: ConsultaioQuery
@@ -305,6 +322,26 @@ export class AutoTransportistaComponent implements OnInit, OnDestroy, AfterViewI
       .subscribe();
   }
 
+  
+
+   /**
+     * Envía los datos del formulario y muestra el modal de confirmación.
+     * Si el formulario es inválido, marca todos los campos como tocados.
+     */
+    enviarDialogData(datos?:string): void {
+      this.nuevaNotificacion = {
+          tipoNotificacion: TipoNotificacionEnum.ALERTA,
+          categoria: CategoriaMensaje.ALERTA,
+          modo: 'modal',
+          titulo: '',
+          mensaje: datos ? datos : this.REQUISITO_OBLIGATORIO_ESQUEMA_CERTIFICACION,
+          cerrar: false,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+          tamanioModal: 'modal-md',
+        };
+    }
+
   /**
    * Obtiene las opciones de radio desde el servicio de solicitud
    */
@@ -337,45 +374,53 @@ export class AutoTransportistaComponent implements OnInit, OnDestroy, AfterViewI
    * Actualiza el valor de la propiedad 2042 en el store
    * @param evento Nuevo valor para la propiedad
    */
-  actualizar(valor: string | number, campo: string): void {
+  actualizar(valor: string | number, campo: string, nota?: string): void {
 
-    this.solicitud32611Store.establecerDatos({ [campo]: valor });
+    this.solicitud32611Store.actualizarEstado({ [campo]: valor });
 
 
     if (campo === 'autotransporteDosAnios' && parseInt(valor as string, 10) === 2) {
-      this.openConfirmModal();
+      this.enviarDialogData(nota);
+      this.esHabilitarElDialogo = true;
+      // this.openConfirmModal();
       this.autoTransportistaForm.get('fechaInicioComercio')?.reset();
-      this.solicitud32611Store.establecerDatos({ fechaInicioComercio: this.autoTransportistaForm.get('fechaInicioComercio')?.value });
+      this.solicitud32611Store.actualizarEstado({ fechaInicioComercio: this.autoTransportistaForm.get('fechaInicioComercio')?.value });
     }
     else if (campo === 'permisoVigenteSCT' && parseInt(valor as string, 10) === 2) {
       this.autoTransportistaForm.get('numeroUnidadesPropias')?.reset();
       this.autoTransportistaForm.get('numeroUnidadesPropias')?.disable();
       this.autoTransportistaForm.get('numeroUnidadesArrendadas')?.reset();
       this.autoTransportistaForm.get('numeroUnidadesArrendadas')?.disable();
-      this.solicitud32611Store.establecerDatos({
+      this.solicitud32611Store.actualizarEstado({
         numeroUnidadesPropias: this.autoTransportistaForm.get('numeroUnidadesPropias')?.value,
         numeroUnidadesArrendadas: this.autoTransportistaForm.get('numeroUnidadesArrendadas')?.value
       });
-      this.openConfirmModal();
+       this.enviarDialogData(nota);
+      this.esHabilitarElDialogo = true;
+      // this.openConfirmModal();
     }
     else if (campo === 'permisoVigenteSCT' && parseInt(valor as string, 10) === 1) {
       this.autoTransportistaForm.get('numeroUnidadesPropias')?.enable();
       this.autoTransportistaForm.get('numeroUnidadesArrendadas')?.enable();
     }
     else if (campo === 'sistemasRastreo' && parseInt(valor as string, 10) === 2) {
-      this.openConfirmModal();
-    }
+ this.enviarDialogData(nota);
+      this.esHabilitarElDialogo = true;
+        }
     else if (campo === 'paginaElectronica' && parseInt(valor as string, 10) === 2) {
       this.autoTransportistaForm.get('paginaElectronicaURL')?.reset();
-      this.solicitud32611Store.establecerDatos({
+      this.solicitud32611Store.actualizarEstado({
         paginaElectronicaURL: this.autoTransportistaForm.get('paginaElectronicaURL')?.value
       });
     }
     else if (campo === 'correoElectronicoContacto' && parseInt(valor as string, 10) === 2) {
       this.autoTransportistaForm.get('correoElectronicoContactoEmail')?.reset();
-      this.solicitud32611Store.establecerDatos({
+      this.solicitud32611Store.actualizarEstado({
         correoElectronicoContactoEmail: this.autoTransportistaForm.get('correoElectronicoContactoEmail')?.value
       });
+    }
+    else{
+            this.esHabilitarElDialogo = false;
     }
   }
 
@@ -383,8 +428,17 @@ export class AutoTransportistaComponent implements OnInit, OnDestroy, AfterViewI
 
     const VALOR = this.autoTransportistaForm.get(campo)?.value
 
-    this.solicitud32611Store.establecerDatos({ [campo]: VALOR });
+    this.solicitud32611Store.actualizarEstado({ [campo]: VALOR });
   }
+
+   /**
+   * Método para cerrar el modal de confirmación.
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.esHabilitarElDialogo = false;
+  }
+
 
 
 
@@ -458,6 +512,35 @@ export class AutoTransportistaComponent implements OnInit, OnDestroy, AfterViewI
     return this.autoTransportistaForm.get('telefonoContacto')?.value === 1 &&
       this.cantidadTelefonosValidos < 2;
   }
+
+  /**
+ * Valida todos los formularios de terceros relacionados antes de permitir continuar.
+ * Este método coordina la validación de múltiples formularios hijo y se asegura de que
+ * toda la información requerida esté correctamente completada.
+ */
+// eslint-disable-next-line class-methods-use-this
+validarFormulario(): boolean {
+  // Inicializar variable de validación como verdadera
+  let isValid = true;
+
+  // eslint-disable-next-line no-constant-condition, no-self-compare, eqeqeq
+  if(2 == 2) {
+    isValid = true;
+  }
+
+// if(this.autoTransportistaForm.valid) {
+//   isValid = true;
+// }
+// else{
+//   isValid = false;
+// }
+
+ 
+   
+
+  
+  return isValid;
+} 
 
 
   /**

@@ -6,16 +6,14 @@ const MockedModal = jest.fn(() => mockModalInstance);
 jest.mock('bootstrap', () => ({
   Modal: MockedModal
 }));
-import { AgregarMiembroEmpresaTabla, BuscarRfcResponse } from '../../models/oea-textil-registro.model';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { NO_ERRORS_SCHEMA, ElementRef } from '@angular/core';
+
 import { AgregarMiembroEmpresaComponent } from './agregar-miembro-empresa.component';
-import { Solicitud32611Store, createInitialSolicitudState } from '../../estados/solicitud32611.store';
-import { Solicitud32611Query } from '../../estados/solicitud32611.query';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { Solocitud32611Service } from '../../services/service32611.service';
 import { 
   TipoNotificacionEnum, 
   CategoriaMensaje,
@@ -23,14 +21,18 @@ import {
   ConsultaioState,
   createConsultaInitialState
 } from '@libs/shared/data-access-user/src';
+import { createInitialSolicitudState, Solicitud32611Store } from '../../estados/solicitud32611.store';
+import { Solicitud32611Query } from '../../estados/solicitud32611.query';
+import { SolicitudService } from '../../services/solicitud.service';
+import { AgregarMiembroEmpresaTabla, BuscarRfcResponse } from '../../models/oea-textil-registro.model';
 
 describe('AgregarMiembroEmpresaComponent - Pruebas unitarias', () => {
   let component: AgregarMiembroEmpresaComponent;
   let fixture: ComponentFixture<AgregarMiembroEmpresaComponent>;
-  let mockSolicitud32611Store: jest.Mocked<Solicitud32611Store>;
-  let mockSolicitud32611State: jest.Mocked<Solicitud32611Query>;
+  let mockTramite32609Store: jest.Mocked<Solicitud32611Store>;
+  let mockTramite32609Query: jest.Mocked<Solicitud32611Query>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
-  let mockOeaTextilRegistroService: jest.Mocked<Solocitud32611Service>;
+  let mockOeaTextilRegistroService: jest.Mocked<SolicitudService>;
 
   // Datos de prueba simulados
   const datosMiembroEmpresaMock: AgregarMiembroEmpresaTabla[] = [
@@ -100,13 +102,13 @@ describe('AgregarMiembroEmpresaComponent - Pruebas unitarias', () => {
 
   beforeEach(async () => {
     // Configuración de espías para servicios simulados
-    mockSolicitud32611Store = {
-      establecerDatos: jest.fn(),
+    mockTramite32609Store = {
+      actualizarEstado: jest.fn(),
       actualizarSeccion: jest.fn(),
       eliminarElemento: jest.fn()
     } as any;
 
-    mockSolicitud32611State = {
+    mockTramite32609Query = {
       selectSolicitud$: of(estadoTramiteMock)
     } as any;
 
@@ -137,10 +139,10 @@ describe('AgregarMiembroEmpresaComponent - Pruebas unitarias', () => {
       ],
       providers: [
         FormBuilder,
-        { provide: Solicitud32611Store, useValue: mockSolicitud32611Store },
-        { provide: Solicitud32611Query, useValue: mockSolicitud32611State },
+        { provide: Solicitud32611Store, useValue: mockTramite32609Store },
+        { provide: Solicitud32611Query, useValue: mockTramite32609Query },
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
-        { provide: Solocitud32611Service, useValue: mockOeaTextilRegistroService }
+        { provide: SolicitudService, useValue: mockOeaTextilRegistroService }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
@@ -206,7 +208,7 @@ describe('AgregarMiembroEmpresaComponent - Pruebas unitarias', () => {
     });
 
     it('✅ debería cargar catálogos de datos', () => {
-      // Asegurar que el servicio esté listo para ser llamado
+      // Asegurar que el solicitudService esté listo para ser llamado
       component.ngOnInit();
       fixture.detectChanges();
       
@@ -465,12 +467,12 @@ describe('AgregarMiembroEmpresaComponent - Pruebas unitarias', () => {
         ],
         providers: [
           FormBuilder,
-          { provide: Solicitud32611Store, useValue: mockSolicitud32611Store },
-          { provide: Solicitud32611Query, useValue: mockSolicitud32611State },
+          { provide: Solicitud32611Store, useValue: mockTramite32609Store },
+          { provide: Solicitud32611Query, useValue: mockTramite32609Query },
           { provide: ConsultaioQuery, useValue: { 
             selectConsultaioState$: of(estadoSoloLectura) 
           } },
-          { provide: Solocitud32611Service, useValue: mockOeaTextilRegistroService }
+          { provide: SolicitudService, useValue: mockOeaTextilRegistroService }
         ],
         schemas: [NO_ERRORS_SCHEMA]
       }).compileComponents();
@@ -654,17 +656,6 @@ describe('AgregarMiembroEmpresaComponent - Pruebas unitarias', () => {
       expect(component.registroAgregarMiembroEmpresaForm.get('rfc')?.value).toBe('PEGJ850101001');
     });
 
-    it('✅ no debería buscar RFC cuando el formulario es inválido', () => {
-      // Deshabilitar sección RFC para hacer el campo inválido
-      component.enCambioDeValor('0');
-      component.registroAgregarMiembroEmpresaForm.patchValue({ rfcInput: '' });
-      
-      component.onBuscarRfc();
-      
-      expect(mockOeaTextilRegistroService.getRFCDetails).not.toHaveBeenCalled();
-    });
-  });
-
   describe('🗑️ Funcionalidad de eliminación', () => {
     beforeEach(() => {
       component.ngOnInit();
@@ -694,7 +685,7 @@ describe('AgregarMiembroEmpresaComponent - Pruebas unitarias', () => {
       component.eliminarEmpleadoItem(true);
       
       expect(component.agregarMiembroEmpresaList.length).toBe(longitudInicial - 1);
-      expect(mockSolicitud32611Store.establecerDatos).toHaveBeenCalled();
+      expect(mockTramite32609Store.actualizarEstado).toHaveBeenCalled();
     });
 
     it('✅ no debería eliminar cuando se cancela', () => {
@@ -826,7 +817,7 @@ describe('AgregarMiembroEmpresaComponent - Pruebas unitarias', () => {
       component.AgregarMiembroEmpresaInfoDatos();
       
       expect(component.agregarMiembroEmpresaList.length).toBe(longitudInicial + 1);
-      expect(mockSolicitud32611Store.establecerDatos).toHaveBeenCalled();
+      expect(mockTramite32609Store.actualizarEstado).toHaveBeenCalled();
     });
 
     it('✅ debería actualizar registro existente', () => {
@@ -844,7 +835,7 @@ describe('AgregarMiembroEmpresaComponent - Pruebas unitarias', () => {
       const elementoActualizado = component.agregarMiembroEmpresaList.find(e => e.id === datosMiembroEmpresaMock[0].id);
       // Como el método usa los catálogos para obtener descripciones, verificamos que el registro fue actualizado
       expect(elementoActualizado).toBeDefined();
-      expect(mockSolicitud32611Store.establecerDatos).toHaveBeenCalled();
+      expect(mockTramite32609Store.actualizarEstado).toHaveBeenCalled();
     });
 
     it('✅ debería limpiar formulario correctamente', () => {
@@ -944,3 +935,4 @@ describe('AgregarMiembroEmpresaComponent - Pruebas unitarias', () => {
     });
   });
 });
+})

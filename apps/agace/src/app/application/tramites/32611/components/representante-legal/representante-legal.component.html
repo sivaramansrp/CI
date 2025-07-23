@@ -7,7 +7,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="representanteRegistro"
-              ><span class="require">*</span>Registro Federal de Contribuyentes:</label>
+              ><span class="require">*</span> Registro Federal de Contribuyentes:</label>
             <input
               class="form-control"
               id="representanteRegistro"
@@ -17,8 +17,8 @@
             />
           </div>
           @if (
-          representante.controls['representanteRegistro'].touched &&
-          representante.controls['representanteRegistro'].hasError('required')
+          representante.get('representanteRegistro')?.touched &&
+          representante.get('representanteRegistro')?.hasError('required')
           ) {
           <div class="mensaje-error">Este campo es obligatorio.</div>
           }
@@ -112,7 +112,11 @@
           </div>
         </div>
       </div>
-
+      <div class="row" *ngIf="mostrarError">
+        <div class="col-md-12 text-danger mt-3">
+            <b>Debe agregar un Representante Legal</b>
+        </div>
+      </div>
     </ng-container>
   </form>
 </div>
@@ -121,14 +125,14 @@
 <lib-notificaciones
   *ngIf="tieneValorRfc"
   [notificacionInput]="nuevaNotificacion"
-  (confirmacionModal)="mostrarNotificacionDeBusqueda()"
+  (confirmacionModal)="onModalBusquedaClose()"
 >
 </lib-notificaciones>
 
 <lib-notificaciones
   *ngIf="rfcValido "
   [notificacionInput]="nuevaNotificacion"
-  (confirmacionModal)="mostrarNotificacionFormatoIncorrecto()"
+  (confirmacionModal)="onModalFormatoIncorrectoClose()"
 >
 </lib-notificaciones>
 

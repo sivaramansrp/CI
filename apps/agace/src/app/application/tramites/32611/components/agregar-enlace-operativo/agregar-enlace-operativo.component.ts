@@ -10,8 +10,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil} from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { INSTALACIONES_TABLA_DATOS, } from '../../constants/oea-textil-registro.enum';
-import { Solocitud32611Service } from '../../services/service32611.service';
+import { INSTALACIONES_TABLA_DATOS } from '../../constants/oea-textil-registro.enum';
+import { SolicitudService } from '../../services/solicitud.service';
 
 
 /**
@@ -121,14 +121,11 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy, OnCha
    * Inicializa las dependencias necesarias y configura la suscripción
    * para el estado de solo lectura del formulario.
    * 
-   * @param {FormBuilder} fb - Servicio para construir formularios reactivos
-   * @param {ConsultaioQuery} consultaioQuery - Query para obtener el estado de consulta
-   * @param {Solocitud32611Service} servicio - Servicio para operaciones del trámite OEA textil
    */
   constructor(
     public fb: FormBuilder,
     private consultaioQuery: ConsultaioQuery,
-    private servicio: Solocitud32611Service
+    private solicitudService: SolicitudService,
   ) {
     this.consultaioQuery.selectConsultaioState$
     .pipe(
@@ -168,7 +165,7 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy, OnCha
    * Actualiza el estado del formulario en el store.
    */
   getEntidadesFederativas(): void {
-      this.servicio.getEntidadesFederativas().pipe(takeUntil(this.destroyed$)).subscribe({
+      this.solicitudService.getEntidadesFederativas().pipe(takeUntil(this.destroyed$)).subscribe({
         next: (resp: ApiResponse<EntidadFederativa>) => {
           this.entidadFederalivaList = resp.data;
         },
@@ -179,14 +176,8 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy, OnCha
       });
   }
 
-  /**
-   * Método que se ejecuta al cambiar la entidad federativa en el formulario.
-   * Obtiene las instalaciones asociadas a la entidad seleccionada y actualiza la lista de instalaciones.
-   *
-   * @param _event - Evento de cambio de selección de entidad federativa
-   */
   alCambiarEntidadFederaliva(_event: Event): void {
-   this.servicio.getInstalacionesDatos().pipe(
+   this.solicitudService.getInstalacionesDatos().pipe(
       takeUntil(this.destroyed$)
     ).subscribe({
       next: (resp: ApiResponse<InstalacionesInterface>) => {

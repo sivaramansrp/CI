@@ -1,8 +1,8 @@
 {
     "code": 200,
     "data": [
-                {"id": 1, "descripcion": "35532006 - Autorización Programa Nuevo Servicio"},
-                {"id": 2, "descripcion": "82024 - Ampliación Subsecuente de Productos Sensibles"}
+                {"id": 1, "descripcion": "102024 Ampliación Productos Surules"},
+                {"id": 2, "descripcion": "2024 Autorizatión Programa Nuevo Servicio"}
     ]
     ,
     "message": "exitosa"

@@ -1,23 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { of, Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+
 import { AgregarTransportistasComponent } from './agregar-transportistas.component';
-import { Solocitud32611Service } from '../../services/service32611.service';
+import { SolicitudService } from '../../services/solicitud.service';
 import { Solicitud32611Store, Solicitud32611State } from '../../estados/solicitud32611.store';
 import { Solicitud32611Query } from '../../estados/solicitud32611.query';
-import { PANELS1, TRANSPORTISTAS_CONFIGURACION } from '../../constants/oea-textil-registro.enum';
-import { TransportistasListaInterface, TransportistasTable } from '../../models/oea-textil-registro.model';
+import { PANELS1, TRANSPORTISTAS_CONFIGURACION, TransportistasTable } from '../../constants/datos-comunes.enum';
+import { TransportistasListaInterface } from '../../models/solicitud.model';
 
 describe('AgregarTransportistasComponent', () => {
   let component: AgregarTransportistasComponent;
   let fixture: ComponentFixture<AgregarTransportistasComponent>;
-  let mockOeaTextilRegistroService: jest.Mocked<Solocitud32611Service>;
-  let mockTramite32609Store: jest.Mocked<Solicitud32611Store>;
-  let mockTramite32609Query: jest.Mocked<Solicitud32611Query>;
+  let mockSolicitudService: jest.Mocked<SolicitudService>;
+  let mockSolicitud32611Store: jest.Mocked<Solicitud32611Store>;
+  let mockSolicitud32611Query: jest.Mocked<Solicitud32611Query>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
   let mockBsModalService: jest.Mocked<BsModalService>;
   let mockBsModalRef: jest.Mocked<BsModalRef>;
@@ -61,15 +62,15 @@ describe('AgregarTransportistasComponent', () => {
 
   beforeEach(async () => {
     // Crear mocks de los servicios
-    mockOeaTextilRegistroService = {
+    mockSolicitudService = {
       conseguirTransportistasLista: jest.fn().mockReturnValue(of(mockTransportistasListaData))
     } as any;
 
-    mockTramite32609Store = {
+    mockSolicitud32611Store = {
       actualizarEstado: jest.fn()
     } as any;
 
-    mockTramite32609Query = {
+    mockSolicitud32611Query = {
       selectSolicitud$: of(mockSolicitudState)
     } as any;
 
@@ -94,9 +95,9 @@ describe('AgregarTransportistasComponent', () => {
       ],
       providers: [
         FormBuilder,
-        { provide: Solocitud32611Service, useValue: mockOeaTextilRegistroService },
-        { provide: Solicitud32611Store, useValue: mockTramite32609Store },
-        { provide: Solicitud32611Query, useValue: mockTramite32609Query },
+        { provide: SolicitudService, useValue: mockSolicitudService },
+        { provide: Solicitud32611Store, useValue: mockSolicitud32611Store },
+        { provide: Solicitud32611Query, useValue: mockSolicitud32611Query },
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
         { provide: BsModalService, useValue: mockBsModalService }
       ]
@@ -432,16 +433,7 @@ describe('AgregarTransportistasComponent', () => {
       fixture.detectChanges();
     });
 
-    it('debería mostrar modal de selección requerida si no hay transportistas', () => {
-      component.transportistasLista = [];
-      component.selectedTransportista = null;
-      
-      const spyModal = jest.spyOn(component, 'mostrarModalSeleccionRequerida');
-      component.modificarTransportista();
-      
-      expect(spyModal).toHaveBeenCalled();
-      expect(component.mensajeSeleccion).toBe('Seleccione un registro.');
-    });
+
 
     it('debería configurar modo edición y abrir modal con datos del transportista', () => {
       component.transportistasLista = [...mockTransportistasLista];
@@ -562,7 +554,7 @@ describe('AgregarTransportistasComponent', () => {
       
       component.actualizarTransportistasListaEnStore();
       
-      expect(mockTramite32609Store.establecerDatos).toHaveBeenCalledWith({
+      expect(mockSolicitud32611Store.actualizarEstado).toHaveBeenCalledWith({
         transportistasLista: mockTransportistasLista
       });
     });

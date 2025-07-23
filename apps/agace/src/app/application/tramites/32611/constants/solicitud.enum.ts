@@ -285,7 +285,6 @@ export const FECHA_DE_VIGENCIA: InputFecha = {
 };
 
 
-
 /**
  * Configuración de columnas para la tabla de Transportistas.
  * Cada objeto en el arreglo define los detalles de una columna.

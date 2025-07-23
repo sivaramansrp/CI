@@ -11,7 +11,7 @@ import { CTPATComponent } from './c-tpat.component';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Solicitud32611Store, Solicitud32611State } from '../../estados/solicitud32611.store';
 import { Solicitud32611Query } from '../../estados/solicitud32611.query';
-import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constants/oea-textil-registro.enum';
+import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constants/datos-comunes.enum';
 import { HttpClientModule } from '@angular/common/http';
 
 describe('CTPATComponent', () => {
@@ -37,12 +37,12 @@ describe('CTPATComponent', () => {
   beforeEach(async () => {
     // Crear mocks de los servicios
     mockSolicitudService = {
-      establecerDatos: jest.fn(),
+      actualizarEstado: jest.fn(),
       obtenerDatos: jest.fn().mockReturnValue(of(mockSolicitudState))
     } as any;
 
     mockSolicitud32611Store = {
-      establecerDatos: jest.fn()
+      actualizarEstado: jest.fn()
     } as any;
 
     mockSolicitud32611Query = {
@@ -189,7 +189,7 @@ describe('CTPATComponent', () => {
       component.ctpatForm.get(campo)?.setValue(valor);
       component.setValoresStore(component.ctpatForm, campo);
       
-      expect(mockSolicitud32611Store.establecerDatos).toHaveBeenCalledWith({
+      expect(mockSolicitud32611Store.actualizarEstado).toHaveBeenCalledWith({
         [campo]: valor
       });
     });
@@ -197,7 +197,7 @@ describe('CTPATComponent', () => {
     it('no debería actualizar el store cuando el formulario es null', () => {
       component.setValoresStore(null, 'autorizacionCBP');
       
-      expect(mockSolicitud32611Store.establecerDatos).not.toHaveBeenCalled();
+      expect(mockSolicitud32611Store.actualizarEstado).not.toHaveBeenCalled();
     });
 
     it('no debería actualizar el store cuando el control tiene valor null', () => {
@@ -206,7 +206,7 @@ describe('CTPATComponent', () => {
       component.ctpatForm.get(campo)?.setValue(null);
       component.setValoresStore(component.ctpatForm, campo);
       
-      expect(mockSolicitud32611Store.establecerDatos).not.toHaveBeenCalled();
+      expect(mockSolicitud32611Store.actualizarEstado).not.toHaveBeenCalled();
     });
 
     it('no debería actualizar el store cuando el control tiene valor undefined', () => {
@@ -215,7 +215,7 @@ describe('CTPATComponent', () => {
       component.ctpatForm.get(campo)?.setValue(undefined);
       component.setValoresStore(component.ctpatForm, campo);
       
-      expect(mockSolicitud32611Store.establecerDatos).not.toHaveBeenCalled();
+      expect(mockSolicitud32611Store.actualizarEstado).not.toHaveBeenCalled();
     });
   });
 
@@ -406,7 +406,7 @@ describe('CTPATComponent', () => {
       
       component.setValoresStore(component.ctpatForm, 'campoInexistente');
       
-      expect(mockSolicitud32611Store.establecerDatos).not.toHaveBeenCalled();
+      expect(mockSolicitud32611Store.actualizarEstado).not.toHaveBeenCalled();
     });
   });
 });

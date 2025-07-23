@@ -1,66 +1,91 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { PasoDosComponent } from './paso-dos.component';
-import { CatalogosService } from '@ng-mf/data-access-user';
-import { of, Subject, throwError } from 'rxjs';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  CatalogosService,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import { of, Subject } from 'rxjs';
+import { CATALOGOS_ID } from '@libs/shared/data-access-user/src';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
-  let fixture: ComponentFixture<PasoDosComponent>;
-  let catalogosServiceMock: Partial<CatalogosService>;
+  let fixture: any;
+  let catalogosServiceMock: jest.Mocked<CatalogosService>;
 
   beforeEach(async () => {
     catalogosServiceMock = {
-      getCatalogo: jest.fn()
-    };
+      getCatalogo: jest.fn(() => of([])),
+    } as any;
 
     await TestBed.configureTestingModule({
       declarations: [PasoDosComponent],
-      providers: [{ provide: CatalogosService, useValue: catalogosServiceMock }],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      imports: [
+        
+        HttpClientTestingModule,
+        CommonModule,
+        ReactiveFormsModule,
+        TituloComponent,
+        AlertComponent,
+        AnexarDocumentosComponent,
+      ],
+      providers: [
+        { provide: CatalogosService, useValue: catalogosServiceMock },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
   });
 
-  it('debería crear el componente', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería obtener tipos de documentos correctamente al inicializar', () => {
-    const documentosMock = [{ id: 1, descripcion: 'Documento A' }];
-    (catalogosServiceMock.getCatalogo as jest.Mock).mockReturnValue(of(documentosMock));
-
+  it('should call getTiposDocumentos on ngOnInit', () => {
+    const spy = jest.spyOn(component, 'getTiposDocumentos');
     component.ngOnInit();
-
-    expect(catalogosServiceMock.getCatalogo).toHaveBeenCalled();
-    expect(component.catalogoDocumentos).toEqual(documentosMock);
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('no debería asignar documentos si la respuesta está vacía', () => {
-    (catalogosServiceMock.getCatalogo as jest.Mock).mockReturnValue(of([]));
+  it('should assign catalogoDocumentos when getTiposDocumentos returns data', () => {
+    const mockDocs: Catalogo[] = [{ id: 1, descripcion: 'Doc1' } as Catalogo];
+    catalogosServiceMock.getCatalogo.mockReturnValue(of(mockDocs));
 
     component.getTiposDocumentos();
 
-    expect(component.catalogoDocumentos).toEqual([]);
+    expect(catalogosServiceMock.getCatalogo).toHaveBeenCalledWith(
+      CATALOGOS_ID.CAT_TIPO_DOCUMENTO
+    );
+    expect(component.catalogoDocumentos).toEqual(mockDocs);
   });
 
-  it('debería manejar error al obtener los documentos sin lanzar excepción', () => {
-    const error = new Error('Error al obtener catálogos');
-    (catalogosServiceMock.getCatalogo as jest.Mock).mockReturnValue(throwError(() => error));
+  it('should not assign catalogoDocumentos when getTiposDocumentos returns empty array', () => {
+    catalogosServiceMock.getCatalogo.mockReturnValue(of([]));
+    component.catalogoDocumentos = [{ id: 1, descripcion: 'Doc1' } as Catalogo];
 
-    expect(() => component.getTiposDocumentos()).not.toThrow();
+    component.getTiposDocumentos();
+
+    expect(component.catalogoDocumentos).toEqual([
+      { id: 1, descripcion: 'Doc1' } as Catalogo,
+    ]);
   });
 
-  it('debería completar destroyed$ al destruir el componente', () => {
-    const destroyed$ = (component as any).destroyed$ as Subject<void>;
-    const nextSpy = jest.spyOn(destroyed$, 'next');
-    const completeSpy = jest.spyOn(destroyed$, 'complete');
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const completeSpy = jest.spyOn(
+      (component as any).destroyNotifier$,
+      'complete'
+    );
+    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
 
     component.ngOnDestroy();
 
-    expect(nextSpy).toHaveBeenCalledTimes(1);
-    expect(completeSpy).toHaveBeenCalledTimes(1);
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

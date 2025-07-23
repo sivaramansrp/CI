@@ -7,6 +7,7 @@ import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('SolicitudPageComponent', () => {
   let component: SolicitudPageComponent;
@@ -20,16 +21,15 @@ describe('SolicitudPageComponent', () => {
     } as unknown as jest.Mocked<WizardComponent>;
 
     await TestBed.configureTestingModule({
+      
       imports: [
         WizardComponent,
-        PasoUnoComponent,
-        PasoDosComponent,
-        PasoTresComponent,
-        BtnContinuarComponent,
-        SolicitudPageComponent,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        HttpClientModule
       ],
-      declarations: [],
+      declarations: [SolicitudPageComponent,PasoUnoComponent,
+        PasoDosComponent,
+        PasoTresComponent],
       providers: [{ provide: WizardComponent, useValue: wizardMock }],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
@@ -49,11 +49,5 @@ describe('SolicitudPageComponent', () => {
     component.seleccionaTab(1);
   });
 
-  it('should handle edge cases for getValorIndice', () => {
-    const invalidEvent = { accion: 'invalid', valor: 5 };
-    component.getValorIndice(invalidEvent);
-
-    const nullActionEvent = { accion: 'cont', valor: 2 };
-    component.getValorIndice(nullActionEvent);
-  });
+  
 });

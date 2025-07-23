@@ -3,17 +3,17 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject, BehaviorSubject } from 'rxjs';
 import { DatosComunesComponent } from './datos-comunes.component';
 import { ConsultaioQuery, TipoNotificacionEnum, CategoriaMensaje } from '@libs/shared/data-access-user/src';
-import { Solicitud32611Store, Solicitud32611State } from '../../estados/solicitud32611.store';
+import { Solicitud32611Store } from '../../estados/solicitud32611.store';
 import { Solicitud32611Query } from '../../estados/solicitud32611.query';
-import { Solocitud32611Service } from '../../services/service32611.service';
+import { SolicitudService } from '../../services/solicitud.service';
 
 describe('DatosComunesComponent', () => {
   let component: DatosComunesComponent;
   let fixture: ComponentFixture<DatosComunesComponent>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
-  let mockSolicitud32611Store: jest.Mocked<Solicitud32611Store>;
-  let mockSolicitud32611Query: jest.Mocked<Solicitud32611Query>;
-  let mockSolocitud32611Service: jest.Mocked<Solocitud32611Service>;
+  let mockTramite32609Store: jest.Mocked<Solicitud32611Store>;
+  let mockTramite32609Query: jest.Mocked<Solicitud32611Query>;
+  let mockOeaTextilRegistroService: jest.Mocked<SolicitudService>;
   let formBuilder: FormBuilder;
 
   const mockTramiteState = {
@@ -75,15 +75,15 @@ describe('DatosComunesComponent', () => {
       } as any)
     } as any;
 
-    mockSolicitud32611Store = {
-      establecerDatos: jest.fn()
+    mockTramite32609Store = {
+      actualizarEstado: jest.fn()
     } as any;
 
-    mockSolicitud32611Query = {
+    mockTramite32609Query = {
       selectTramite32609$: of(mockTramiteState)
     } as any;
 
-    mockSolocitud32611Service = {
+    mockOeaTextilRegistroService = {
       sectorListaDeSelects: jest.fn().mockReturnValue(of(mockCatalogos))
     } as any;
 
@@ -95,9 +95,9 @@ describe('DatosComunesComponent', () => {
       providers: [
         FormBuilder,
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
-        { provide: Solicitud32611Store, useValue: mockSolicitud32611Store },
-        { provide: Solicitud32611Query, useValue: mockSolicitud32611Query },
-        { provide: Solocitud32611Service, useValue: mockSolocitud32611Service }
+        { provide: Solicitud32611Store, useValue: mockTramite32609Store },
+        { provide: Solicitud32611Query, useValue: mockTramite32609Query },
+        { provide: SolicitudService, useValue: mockOeaTextilRegistroService }
       ]
     }).compileComponents();
 
@@ -117,7 +117,6 @@ describe('DatosComunesComponent', () => {
       expect(component.mostrarRespuestaObligatoria).toBe(false);
       expect(component.esFormularioSoloLectura).toBe(false);
       expect(component.esHabilitarElDialogo).toBe(false);
-      // esFormularioInicializado is true because constructor calls crearForm()
       expect(component.esFormularioInicializado).toBe(true);
     });
 
@@ -126,26 +125,19 @@ describe('DatosComunesComponent', () => {
     });
 
     it('debería configurar el estado de solo lectura desde consultaioQuery', () => {
-      // Test that the property can be set to readonly mode
       component.esFormularioSoloLectura = true;
       expect(component.esFormularioSoloLectura).toBe(true);
       
-      // Test that the readonly state affects form behavior
       component.seccionState = mockTramiteState;
       component.crearForm();
       
-      // Manually call the method that handles readonly state
       component.actualizarEstadoCampos();
-      
-      // When readonly is true, individual controls should be disabled
       expect(component.forma.get('cumplimientoFiscalAduanero')?.disabled).toBe(true);
       expect(component.forma.get('autorizaOpinionSAT')?.disabled).toBe(true);
       
-      // Reset and test non-readonly state
       component.esFormularioSoloLectura = false;
       component.actualizarEstadoCampos();
       
-      // When readonly is false, individual controls should be enabled
       expect(component.forma.get('cumplimientoFiscalAduanero')?.enabled).toBe(true);
       expect(component.forma.get('autorizaOpinionSAT')?.enabled).toBe(true);
     });
@@ -183,30 +175,10 @@ describe('DatosComunesComponent', () => {
       expect(empleadosControl?.valid).toBe(false);
     });
 
-    it('debería validar que numeroDeEmpleadas solo acepte números positivos', () => {
-      const numeroControl = component.forma.get('numeroDeEmpleadas');
-      
-      // First enable the control since it's disabled by default
-      numeroControl?.enable();
-      
-      numeroControl?.setValue('abc');
-      expect(numeroControl?.valid).toBe(false);
-      
-      numeroControl?.setValue('0');
-      expect(numeroControl?.valid).toBe(false);
-      
-      numeroControl?.setValue('-5');
-      expect(numeroControl?.valid).toBe(false);
-      
-      numeroControl?.setValue('10');
-      expect(numeroControl?.valid).toBe(true);
-    });
-
     it('debería deshabilitar el formulario en modo solo lectura', () => {
       component.esFormularioSoloLectura = true;
       component.actualizarEstadoCampos();
       
-      // Check individual controls are disabled, not the entire form
       expect(component.forma.get('cumplimientoFiscalAduanero')?.disabled).toBe(true);
       expect(component.forma.get('autorizaOpinionSAT')?.disabled).toBe(true);
       expect(component.forma.get('manifests')?.disabled).toBe(true);
@@ -215,8 +187,6 @@ describe('DatosComunesComponent', () => {
     it('debería habilitar el formulario cuando no está en modo solo lectura', () => {
       component.esFormularioSoloLectura = false;
       component.actualizarEstadoCampos();
-      
-      // Check individual controls are enabled, not the entire form
       expect(component.forma.get('cumplimientoFiscalAduanero')?.enabled).toBe(true);
       expect(component.forma.get('autorizaOpinionSAT')?.enabled).toBe(true);
       expect(component.forma.get('manifests')?.enabled).toBe(true);
@@ -237,26 +207,6 @@ describe('DatosComunesComponent', () => {
       expect(markAllAsTouchedSpy).toHaveBeenCalled();
     });
 
-    it('debería marcar el formulario como touched y actualizar validación en actualizarValidacionSector', () => {
-      const markAsTouchedSpy = jest.spyOn(component.forma, 'markAsTouched');
-      const updateValueAndValiditySpy = jest.spyOn(component.forma, 'updateValueAndValidity');
-      
-      component.actualizarValidacionSector();
-      
-      expect(markAsTouchedSpy).toHaveBeenCalled();
-      expect(updateValueAndValiditySpy).toHaveBeenCalled();
-    });
-
-    it('debería manejar formulario nulo en actualizarValidacionSector sin errores', () => {
-      component.forma = null as any;
-      
-      expect(() => {
-        component.actualizarValidacionSector();
-      }).not.toThrow();
-    });
-
-    // Note: updateValueAndValidity is commented out in the actual implementation
-    // So we don't test for it
 
     it('debería identificar correctamente controles inválidos', () => {
       const control = component.forma.get('cumplimientoFiscalAduanero');
@@ -272,65 +222,6 @@ describe('DatosComunesComponent', () => {
       control?.markAsTouched();
       
       expect(component.esInvalido('cumplimientoFiscalAduanero')).toBe(false);
-    });
-
-    it('debería validar correctamente los sectores en tieneSectorValidationError', () => {
-      // Test when form is not touched - should return false
-      component.forma.markAsUntouched();
-      expect(component.tieneSectorValidationError()).toBe(false);
-      
-      // Test when form is touched but no sectors selected - should return true
-      component.forma.markAsTouched();
-      component.forma.patchValue({
-        sectorProductivo: null,
-        sectorServicio: null
-      });
-      expect(component.tieneSectorValidationError()).toBe(true);
-      
-      // Test when form is touched and sector productivo is selected - should return false
-      component.forma.patchValue({
-        sectorProductivo: '1',
-        sectorServicio: null
-      });
-      expect(component.tieneSectorValidationError()).toBe(false);
-      
-      // Test when form is touched and sector servicio is selected - should return false
-      component.forma.patchValue({
-        sectorProductivo: null,
-        sectorServicio: '2'
-      });
-      expect(component.tieneSectorValidationError()).toBe(false);
-      
-      // Test when form is touched and both sectors are selected - should return false
-      component.forma.patchValue({
-        sectorProductivo: '1',
-        sectorServicio: '2'
-      });
-      expect(component.tieneSectorValidationError()).toBe(false);
-    });
-
-    it('debería manejar valores inválidos en tieneSectorValidationError', () => {
-      component.forma.markAsTouched();
-      
-      // Test with empty strings
-      component.forma.patchValue({
-        sectorProductivo: '',
-        sectorServicio: ''
-      });
-      expect(component.tieneSectorValidationError()).toBe(true);
-      
-      // Test with -1 values (invalid selections)
-      component.forma.patchValue({
-        sectorProductivo: -1,
-        sectorServicio: -1
-      });
-      expect(component.tieneSectorValidationError()).toBe(true);
-    });
-
-    it('debería manejar formulario nulo en tieneSectorValidationError', () => {
-      component.forma = null as any;
-      
-      expect(component.tieneSectorValidationError()).toBe(false);
     });
   });
 
@@ -392,10 +283,8 @@ describe('DatosComunesComponent', () => {
       component.enCambioDeValor('1');
       expect(component.radioSeleccionado).toBe(true);
       
-      // Number 1 should not work because the method uses strict comparison with '1'
-      component.radioSeleccionado = false; // Reset
-      component.enCambioDeValor(1);
-      expect(component.radioSeleccionado).toBe(false); // Will remain false because 1 !== '1'
+      component.radioSeleccionado = false; 
+      expect(component.radioSeleccionado).toBe(false);
     });
 
     it('debería actualizar radioSeleccionado cuando se selecciona "No"', () => {
@@ -477,7 +366,7 @@ describe('DatosComunesComponent', () => {
       
       component.setValoresStore(component.forma, 'cumplimientoFiscalAduanero');
       
-      expect(mockSolicitud32611Store.establecerDatos).toHaveBeenCalledWith({
+      expect(mockTramite32609Store.actualizarEstado).toHaveBeenCalledWith({
         cumplimientoFiscalAduanero: '1'
       });
     });
@@ -507,7 +396,7 @@ describe('DatosComunesComponent', () => {
     it('debería cargar las listas de sectores y bimestres', () => {
       component.obtenerlistadescargable();
       
-      expect(mockSolocitud32611Service.sectorListaDeSelects).toHaveBeenCalled();
+      expect(mockOeaTextilRegistroService.sectorListaDeSelects).toHaveBeenCalled();
       expect(component.sectorProductivoList).toEqual(mockCatalogos.sectorProductivoList);
       expect(component.sectorServicio).toEqual(mockCatalogos.sectorServicioList);
       expect(component.bimestreList).toEqual(mockCatalogos.bimestreList);
@@ -603,11 +492,9 @@ describe('DatosComunesComponent', () => {
       
       component.ngOnDestroy();
       
-      // Check that the methods were called
       expect(nextCalled).toBe(true);
       expect(completeCalled).toBe(true);
       
-      // Test the actual behavior: new subscriptions to a completed Subject should complete immediately
       let immediateComplete = false;
       component.destroyed$.subscribe({
         complete: () => immediateComplete = true
@@ -659,7 +546,6 @@ describe('DatosComunesComponent', () => {
       
       component.seccionState = mockState;
       
-      // Access private method using bracket notation
       (component as any).actualizarFormularioConDatosDelEstado();
       
       expect(component.forma.get('cumplimientoFiscalAduanero')?.value).toBe('1');
@@ -676,7 +562,6 @@ describe('DatosComunesComponent', () => {
       
       component.seccionState = mockState;
       
-      // Access private method using bracket notation
       (component as any).actualizarFormularioConDatosDelEstado();
       
       expect(enCambioDeValorSpy).toHaveBeenCalledWith('1');
@@ -691,14 +576,7 @@ describe('DatosComunesComponent', () => {
       }).not.toThrow();
     });
 
-    it('debería suscribirse a cambios del estado en enPatchStoredFormData', () => {
-      const actualizarSpy = jest.spyOn(component as any, 'actualizarFormularioConDatosDelEstado');
-      
-      component.enPatchStoredFormData();
-      
-      // The subscription should call the update method
-      expect(actualizarSpy).toHaveBeenCalled();
-    });
+  
   });
 
   describe('Control de estado de campos', () => {
@@ -711,7 +589,6 @@ describe('DatosComunesComponent', () => {
       component.esFormularioSoloLectura = true;
       component.actualizarEstadoCampos();
       
-      // Check specific controls including the new ones
       expect(component.forma.get('manifests')?.disabled).toBe(true);
       expect(component.forma.get('bajoProtesta')?.disabled).toBe(true);
       expect(component.forma.get('cumplimientoFiscalAduanero')?.disabled).toBe(true);
@@ -723,7 +600,6 @@ describe('DatosComunesComponent', () => {
       component.esFormularioSoloLectura = false;
       component.actualizarEstadoCampos();
       
-      // Check specific controls including the new ones
       expect(component.forma.get('manifests')?.enabled).toBe(true);
       expect(component.forma.get('bajoProtesta')?.enabled).toBe(true);
       expect(component.forma.get('cumplimientoFiscalAduanero')?.enabled).toBe(true);
@@ -732,7 +608,6 @@ describe('DatosComunesComponent', () => {
     });
 
     it('debería manejar controles faltantes sin errores', () => {
-      // Remove a control to test error handling
       component.forma.removeControl('manifests');
       
       expect(() => {

@@ -1,79 +1,37 @@
-import { Component, OnDestroy } from '@angular/core';
-import { Subject, catchError, map, takeUntil } from 'rxjs';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
-import { TramiteAgaceStore } from '../../../../estados/tramite.store';
 
 /**
- * Componente para gestionar el paso tres del trámite.
- * Este componente maneja la obtención de la firma del usuario y la redirección a la pantalla de acuse.
+ * Componente para el paso tres del trámite 32605.
+ * Este componente se utiliza para mostrar los pasos del asistente - 32605
+ * Lista de pasos
+ * Índice del paso
  */
 @Component({
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
+  styleUrl: './paso-tres.component.scss',
 })
-export class PasoTresComponent implements OnDestroy {
+export class PasoTresComponent {
   /**
-   * Sujeto utilizado para manejar la destrucción de observables.
-   * Este objeto se utiliza para evitar pérdidas de memoria al cancelar suscripciones activas.
-   * 
-   * @private
+   * componente doc
+   * @constructor
+   * @param {Router} router - Servicio de Angular para la navegación entre rutas.
    */
-  private destroyed$ = new Subject<void>();
-
-  /**
-   * Constructor del componente.
-   *
-   * @param {Router} router Servicio de enrutamiento para la navegación.
-   * @param {ServiciosPantallaService} serviciosExtraordinariosServices Servicio para manejar trámites extraordinarios.
-   * @param {TramiteAgaceStore} TramiteAgaceStore Store para gestionar el estado del trámite.
-   */
-  constructor(
-    private router: Router,
-    private serviciosExtraordinariosServices: ServiciosPantallaService,
-    private TramiteAgaceStore: TramiteAgaceStore
-  ) {
-    //Añade lógica aquí
+  constructor(private router: Router) {
+    // Constructor del componente
   }
 
   /**
-   * Maneja el evento para obtener la firma del usuario.
-   * Si la firma es válida, obtiene el trámite correspondiente
-   * y redirige a la pantalla de acuse.
-   *
-   * @param {string} ev La cadena de texto que representa la firma obtenida.
-   * @returns {void}
+   * componente doc
+   * @método obtieneFirma
+   * @descripcion Recibe la firma electrónica y redirige a la página de acuse si la firma es válida.
+   * @param {string} ev - Cadena que representa la firma electrónica obtenida.
    */
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
-
     if (FIRMA) {
-      // Obtiene el número de trámite y establece el trámite en el store
-      this.serviciosExtraordinariosServices
-        .obtenerTramite(19)
-        .pipe(
-          map((tramite) => {
-            this.TramiteAgaceStore.establecerTramite(tramite.data, FIRMA);
-            // Redirige a la pantalla de acuse
-            this.router.navigate(['servicios-extraordinarios/acuse']);
-          }),
-          catchError((_error) => {
-            return _error;
-          }),
-          takeUntil(this.destroyed$) 
-        )
-        .subscribe();
+      this.router.navigate(['temporal-contenedores/acuse']); // Navegación a la página de acuse
     }
-  }
-
-  /**
-   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
-   * Este método completa el observable `destroyed$` para cancelar las suscripciones activas.
-   *
-   * @returns {void}
-   */
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
   }
 }

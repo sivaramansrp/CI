@@ -5,14 +5,14 @@ import { SimpleChanges, NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { AgregarEnlaceOperativoComponent } from './agregar-enlace-operativo.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { Solocitud32611Service } from '../../services/service32611.service';
 import { ApiResponse, EntidadFederativa, InstalacionesInterface } from '../../models/oea-textil-registro.model';
+import { SolicitudService } from '../../services/solicitud.service';
 
 describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
   let component: AgregarEnlaceOperativoComponent;
   let fixture: ComponentFixture<AgregarEnlaceOperativoComponent>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
-  let mockSolocitud32611Service: jest.Mocked<Solocitud32611Service>;
+  let mockOeaTextilRegistroService: jest.Mocked<SolicitudService>;
   let consoleSpy: jest.SpyInstance;
 
   // Datos de prueba simulados
@@ -60,7 +60,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       selectConsultaioState$: of(estadoConsultaMock)
     } as jest.Mocked<ConsultaioQuery>;
 
-    mockSolocitud32611Service = {
+    mockOeaTextilRegistroService = {
       getEntidadesFederativas: jest.fn().mockReturnValue(of(datosEntidadesFederativasMock)),
       getInstalacionesDatos: jest.fn().mockReturnValue(of(datosInstalacionesMock)),
       sectorListaDeSelects: jest.fn().mockReturnValue(of({ data: [] })),
@@ -81,7 +81,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       providers: [
         FormBuilder,
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
-        { provide: Solocitud32611Service, useValue: mockSolocitud32611Service }
+        { provide: SolicitudService, useValue: mockOeaTextilRegistroService }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
@@ -152,7 +152,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
     it('✅ debería obtener y asignar correctamente la lista de entidades federativas', () => {
       component.getEntidadesFederativas();
 
-      expect(mockSolocitud32611Service.getEntidadesFederativas).toHaveBeenCalled();
+      expect(mockOeaTextilRegistroService.getEntidadesFederativas).toHaveBeenCalled();
       expect(component.entidadFederalivaList).toEqual(datosEntidadesFederativasMock.data);
     });
 
@@ -163,7 +163,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
         message: 'Sin datos disponibles'
       };
       
-      mockSolocitud32611Service.getEntidadesFederativas.mockReturnValue(of(respuestaVacia));
+      mockOeaTextilRegistroService.getEntidadesFederativas.mockReturnValue(of(respuestaVacia));
       
       component.getEntidadesFederativas();
       
@@ -175,7 +175,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       component.entidadFederalivaList = datosAnteriores;
 
       const errorObservable = new Subject<ApiResponse<EntidadFederativa>>();
-      mockSolocitud32611Service.getEntidadesFederativas.mockReturnValue(errorObservable.asObservable());
+      mockOeaTextilRegistroService.getEntidadesFederativas.mockReturnValue(errorObservable.asObservable());
       
       component.getEntidadesFederativas();
       errorObservable.error('Error de conexión');
@@ -195,7 +195,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       
       component.alCambiarEntidadFederaliva(eventoMock);
 
-      expect(mockSolocitud32611Service.getInstalacionesDatos).toHaveBeenCalled();
+      expect(mockOeaTextilRegistroService.getInstalacionesDatos).toHaveBeenCalled();
       expect(component.instalacionesList).toEqual(datosInstalacionesMock.data);
     });
 
@@ -321,15 +321,15 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
     beforeEach(() => {
       jest.clearAllMocks();
       // Reset all mocks and ensure no erroring observables are left hanging
-      if (mockSolocitud32611Service.getEntidadesFederativas.mockClear) {
-        mockSolocitud32611Service.getEntidadesFederativas.mockClear();
+      if (mockOeaTextilRegistroService.getEntidadesFederativas.mockClear) {
+        mockOeaTextilRegistroService.getEntidadesFederativas.mockClear();
       }
-      if (mockSolocitud32611Service.getInstalacionesDatos.mockClear) {
-        mockSolocitud32611Service.getInstalacionesDatos.mockClear();
+      if (mockOeaTextilRegistroService.getInstalacionesDatos.mockClear) {
+        mockOeaTextilRegistroService.getInstalacionesDatos.mockClear();
       }
       // Ensure all service mocks return successful observables for this suite
-      mockSolocitud32611Service.getEntidadesFederativas.mockReturnValue(of(datosEntidadesFederativasMock));
-      mockSolocitud32611Service.getInstalacionesDatos.mockReturnValue(of(datosInstalacionesMock));
+      mockOeaTextilRegistroService.getEntidadesFederativas.mockReturnValue(of(datosEntidadesFederativasMock));
+      mockOeaTextilRegistroService.getInstalacionesDatos.mockReturnValue(of(datosInstalacionesMock));
       component.ngOnInit();
       jest.spyOn(component, 'resetearSeleccionTabla');
     });
@@ -534,7 +534,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
         message: 'No se encontraron datos'
       };
       
-      mockSolocitud32611Service.getEntidadesFederativas.mockReturnValue(of(respuestaVacia));
+      mockOeaTextilRegistroService.getEntidadesFederativas.mockReturnValue(of(respuestaVacia));
       
       component.getEntidadesFederativas();
       
@@ -563,7 +563,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       const estadoInicial = { ...component };
       
       const errorObservable = new Subject<ApiResponse<InstalacionesInterface>>();
-      mockSolocitud32611Service.getInstalacionesDatos.mockReturnValue(errorObservable.asObservable());
+      mockOeaTextilRegistroService.getInstalacionesDatos.mockReturnValue(errorObservable.asObservable());
       
       component.alCambiarEntidadFederaliva(new Event('change'));
       errorObservable.error({ message: 'Error de conexión', status: 500 });
@@ -593,7 +593,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
         providers: [
           FormBuilder,
           { provide: ConsultaioQuery, useValue: mockConsultaioQueryEditable },
-          { provide: Solocitud32611Service, useValue: mockSolocitud32611Service }
+          { provide: SolicitudService, useValue: mockOeaTextilRegistroService }
         ],
         schemas: [NO_ERRORS_SCHEMA]
       }).compileComponents().then(() => {

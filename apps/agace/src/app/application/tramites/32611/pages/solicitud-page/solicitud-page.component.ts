@@ -1,92 +1,165 @@
-import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { CategoriaMensaje, DatosPasos, Notificacion, TipoNotificacionEnum } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { PASOS } from "@libs/shared/data-access-user/src/core/enums/31616/modificacion.enum";
-
-
-
-
-// import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/paso-tres-steps.enum';
-
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/paso-tres-steps.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
- * Componente que representa el contenedor principal del asistente (wizard)
- * para la solicitud del trámite 31616. Controla el flujo entre los pasos,
- * actualiza el índice del paso actual y coordina las acciones de navegación.
- *
- * @export
- * @class SolicitudPasoComponent
+ * Interfaz que define la estructura de una acción de botón.
  */
+interface AccionBoton {
+  /**
+   * La acción que se realizará.
+   */
+  accion: string;
+
+  /**
+   * El valor asociado a la acción.
+   */
+  valor: number;
+}
+
 @Component({
   selector: 'app-solicitud-page',
-  templateUrl: './solicitud-page.component.html', 
+  templateUrl: './solicitud-page.component.html',
+  styles: ``,
 })
-
+/**
+ * Componente que representa la página de solicitud.
+ */
 export class SolicitudPageComponent {
-
   /**
-   * Índice actual del paso en el asistente.
-   *
-   * @type {number}
-   * @memberof SolicitudPasoComponent
-   */
-  indice: number = 1;
-  
-  /**
-   * Referencia al componente del asistente (wizard).
-   * Se utiliza para interactuar con el wizard y controlar su flujo (pasar al siguiente paso, ir al anterior, etc.).
-   *
-   * @type {WizardComponent}
-   * @memberof SolicitudPasoComponent
-   */
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-
-   /**
    * Lista de pasos del asistente.
-   * Contiene un arreglo con los pasos definidos en `PASOS` que será utilizado en el wizard.
-   *
-   * @type {ListaPasosWizard[]}
-   * @memberof SolicitudPasoComponent
    */
   pasos: ListaPasosWizard[] = PASOS;
 
-    /**
+  /**
+   * Índice del paso actual.
+   */
+  indice: number = 1;
+
+  /**
+   * Referencia al componente del asistente.
+   */
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  /**
+ * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+ * const isValid = this.pasoUnoComponent.validateForms();
+ * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
+ */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
+  /**
+ * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+ * }
+ */
+  esFormaValido: boolean = false;
+   /**
+     * Configuración de notificación actual para mostrar al usuario.
+     *
+     * @description
+     * Almacena la configuración de la notificación que se mostrará
+     * en modales de confirmación, error o información.
+     *
+     */
+  public nuevaNotificacion!: Notificacion;
+  /**
+   * Indica si se debe mostrar el botón de continuar.
+   */
+  btnContinuar: boolean = false;
+  /**
    * Datos de los pasos del asistente.
-   * Incluye el número total de pasos, el índice del paso actual y los textos de los botones de navegación.
-   *
-   * @type {DatosPasos}
-   * @memberof SolicitudPasoComponent
    */
   datosPasos: DatosPasos = {
-    /** Número total de pasos en el asistente. */
     nroPasos: this.pasos.length,
-    /** Índice del paso actual. */
     indice: this.indice,
-    /** Texto del botón "Anterior". */
     txtBtnAnt: 'Anterior',
-    /** Texto del botón "Continuar". */
     txtBtnSig: 'Continuar',
   };
 
- /**
-   * Obtiene el valor del índice de la acción del botón.
-   * Este método controla el cambio de paso en el wizard dependiendo de la acción del botón presionado.
-   *
-   * Si la acción es `'cont'`, pasa al siguiente paso.
-   * Si la acción es `'atras'`, regresa al paso anterior.
-   *
-   * @param {AccionBoton} e - Acción del botón (cont o atras) y el valor asociado a la acción.
-   * @returns {void}
-   * @memberof SolicitudPasoComponent
+  /**
+   * Selecciona una pestaña del asistente.
+   * Índice de la pestaña a seleccionar.
    */
-  
+  seleccionaTab(i: number): void {
+    this.indice = i;
+  }
+
+  /**
+   * Obtiene el valor del índice de la acción del botón.
+   * Acción del botón.
+   */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
+  this.esFormaValido = false;
+  
+  // Validar formularios antes de continuar desde el paso uno
+  if (this.indice === 1 && e.accion === 'cont') {
+    const ES_VALIDO = this.validarTodosFormulariosPasoUno();
+    if (!ES_VALIDO) {
+      this.esFormaValido = true;
+      this.mostrarNotificacionError();
+      return; // Detener ejecución si los formularios son inválidos
     }
+  }
+
+  // Calcular el nuevo índice basado en la acción
+  let indiceActualizado = e.valor;
+  if (e.accion === 'cont') {
+    indiceActualizado = e.valor + 1;
+  } else if (e.accion === 'ant') {
+    indiceActualizado = e.valor - 1;
+  }
+
+  // Validar que el nuevo índice esté dentro de los límites permitidos
+  if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
+    
+    // Actualizar el índice y datosPasos
+    this.indice = indiceActualizado;
+    this.datosPasos.indice = indiceActualizado;
+    
+    if (e.accion === 'cont') {
+      this.wizardComponent.siguiente();
+    } else if (e.accion === 'ant') {
+      this.wizardComponent.atras();
+    }
+  }
+}
+
+/**
+   * Muestra una notificación cuando el RFC tiene un formato incorrecto.
+   * El mensaje alerta al usuario sobre un error en el formato ingresado.
+   */
+  mostrarNotificacionError(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ERROR,
+      modo: 'modal-md',
+      titulo: '',
+      mensaje: 'Existen requisitos obligatorios en blanco o con errores.',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.btnContinuar = true;
+  }
+
+      /**
+     * Maneja la confirmación del modal de notificación.
+     */
+    btnContinuarNotificacion(): void {
+      this.btnContinuar = false;
+    }
+
+/**
+ * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
+ */
+  validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUnoComponent) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+    return ISFORM_VALID_TOUCHED;
+    
   }
 }

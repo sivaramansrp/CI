@@ -1,63 +1,84 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Solocitud32611Service } from '../../services/service32611.service';
-
+import { AutoTransportistaComponent } from '../../components/auto-transportista/auto-transportista.component';
+import { CTPATComponent } from '../../components/c-tpat/c-tpat.component';
+import { DatosComunesComponent } from '../../components/datos-comunes/datos-comunes.component';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { SolicitudService } from '../../services/solicitud.service';
+import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
 
 /**
  * Componente que representa el primer paso de un trámite.
  * Maneja la visualización y activación de diferentes secciones (tabs) según el tipo de endoso.
  */
 @Component({
-  selector: 'app-paso-uno', 
+  selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
+  styleUrls: ['./paso-uno.component.scss'],
 })
-export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
-
-   /**
-   * Índice para manejar la pestaña seleccionada.
-   * Este valor determina cuál pestaña está activa en la interfaz de usuario.
-   *
-   * @type {number}
-   * @memberof PasoUnoComponent
-   */
-  indice: number = 1;
-  
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
+  /**
+   * Índice utilizado para identificar la pestaña activa dentro del paso.
+   */
+  indice: number = 1;
+
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
-
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
-
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
 
-   /**
-   * Constructor que inyecta los servicios necesarios para manejar el estado y la consulta.
-   * La lógica de inicialización se delega a métodos específicos.
+  /**
+   * @desc Valor seleccionado para el campo de reconocimiento mutuo en el formulario.
+   * @remarks Utilizado para almacenar la opción elegida por el usuario en el paso uno del trámite.
    */
-  constructor(
-    public solicitudService: Solocitud32611Service,
-    private consultaQuery: ConsultaioQuery
-) {
-    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
-  }
+  reconocimientoMutuoValue: string = '';
+
+   /**
+   * Referencia al componente AutoTransportistaComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de datos de importador/exportador antes de continuar al siguiente paso.
+   */
+  @ViewChild('autoTransportistaRef')autoTransportistaComponent!: AutoTransportistaComponent;
+
+  /**
+   * Referencia al componente TercerosRelacionadosComponent para acceder a sus métodos de validación.
+   * Permite validar los formularios de terceros relacionados incluyendo representante legal,
+   * enlace operativo y personas de notificaciones.
+   */
+  @ViewChild('tercerosRelacionadosRef') tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
 
     /**
-   * Método del ciclo de vida de Angular que se ejecuta después de que la vista ha sido inicializada.
-   * En este método se llama al componente `SolicitanteComponent` para establecer el tipo de persona.
-   *
-   * @memberof PasoUnoComponent
+   * Referencia al componente DatosComunesComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de datos comunes antes de continuar al siguiente paso.
    */
-  ngAfterViewInit(): void {
-    // Llama al método para obtener el tipo de persona (en este caso, una persona moral nacional)
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+  @ViewChild('datosComunesRef') datosComunesComponent!: DatosComunesComponent;
+
+  /**
+   * Referencia al componente CTPATComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de CTPAT antes de continuar al siguiente paso.
+   */
+  @ViewChild('ctpatRef') ctpatComponent!: CTPATComponent;
+    /**
+   * Lista de secciones del formulario.
+   * Lista de pasos dentro del formulario con sus respectivos componentes.
+   */
+  seccionesDeLaSolicitud = [
+    { index: 1, title: 'Solicitante', component: 'solicitante' },
+    { index: 2, title: 'Datos Comunes', component: 'datos-comunes' },
+    { index: 3, title: 'Terceros Relacionados', component: 'terceros-relacionados' },
+    { index: 4, title: 'Auto Transportista', component: 'auto-transportista' },
+    { index: 5, title: 'CTPAT', component: 'c-tpat' }
+  ];
+
+  constructor(private consultaQuery: ConsultaioQuery, public solicitudService: SolicitudService) {
+    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
   /**
@@ -85,35 +106,94 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.solicitudService
-      .getRegistroTomaMuestrasMercanciasData()
+      .obtenerDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          this.solicitudService.actualizarEstadoFormulario(resp);
-        }
-        else{
-          this.esDatosRespuesta = false;
+          this.solicitudService.actualizarEstado(resp);
         }
       });
   }
 
-   /**
-   * Permite que el usuario seleccione una pestaña cambiando el valor de `indice`.
-   * 
-   * @param {number} indice - El índice de la pestaña seleccionada.
-   * @memberof PasoUnoComponent
-   */
-  seleccionaTab(indice: number): void {
-    // Establece el índice de la pestaña seleccionada
-    this.indice = indice;
-  }
-
   /**
+   * Cambia la pestaña activa según el índice proporcionado.
+   * El índice de la pestaña que se desea activar.
+   */
+seleccionaTab(index: number): void {
+  this.indice = index;
+}
+
+    /**
    * Método que se ejecuta cuando el componente se destruye.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+  /**
+   * Valida todos los formularios del paso uno.
+   * Retorna true si todos los formularios son válidos, false en caso contrario.
+   */
+ public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+      if (this.datosComunesComponent) {
+    const DATOS_COMUNES_VALID = this.datosComunesComponent.validarFormulario();
+    if (!DATOS_COMUNES_VALID) {
+      isValid = false;
+    }
+  } else {
+    isValid = false;
+  }
+
+    if (this.tercerosRelacionadosComponent) {
+      if (!this.tercerosRelacionadosComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.autoTransportistaComponent) {
+      if (!this.autoTransportistaComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+
+     if (this.ctpatComponent) {
+      if (!this.ctpatComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    
+
+    return isValid;
+  }
+
+    /**
+   * Maneja el cambio de valor para el reconocimiento mutuo.
+   * Actualiza la propiedad `reconocimientoMutuoValue` con el valor seleccionado.
+   *
+   * El nuevo valor seleccionado para reconocimiento mutuo.
+   */
+  onReconocimientoMutuoChange(value: string) :void {
+    this.reconocimientoMutuoValue = value;
+  }
+  
+
 }

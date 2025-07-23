@@ -1,22 +1,24 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Component, Inject,OnDestroy, OnInit , TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, TemplateRef, ViewChild } from '@angular/core';
 import { ConfiguracionColumna,ConsultaioQuery,ConsultaioState,TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
-import { PANELS1, TRANSPORTISTAS_CONFIGURACION } from '../../constants/oea-textil-registro.enum';
-import { Solicitud32611State, Solicitud32611Store } from '../../estados/solicitud32611.store';
+import { PANELS1, TRANSPORTISTAS_CONFIGURACION, TransportistasTable } from '../../constants/datos-comunes.enum';
 import { Subject, map } from 'rxjs';
-import { TransportistasListaInterface, TransportistasTable } from '../../models/oea-textil-registro.model';
 import { CommonModule } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud32611Query } from '../../estados/solicitud32611.query';
-import { Solocitud32611Service } from '../../services/service32611.service';
+import { Solicitud32611State } from '../../estados/solicitud32611.store';
+import { Solicitud32611Store } from '../../estados/solicitud32611.store';
+import { SolicitudService } from '../../services/solicitud.service';
+import { TransportistasListaInterface } from '../../models/solicitud.model';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 
-
 /**
- * Componente para agregar y gestionar transportistas en el trámite 32609.
+ * Componente para agregar y gestionar transportistas en el trámite 32611.
  * Permite crear, modificar, eliminar y consultar transportistas con validaciones de RFC.
  * Incluye funcionalidades de modal para diferentes estados y notificaciones.
  */
@@ -42,7 +44,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    destroy$: Subject<void> = new Subject<void>();
 
   /**
-   * Estado actual de la solicitud del trámite 32609.
+   * Estado actual de la solicitud del trámite 32611.
    * Contiene toda la información del estado de la aplicación.
    */
   solicitudState!: Solicitud32611State;
@@ -174,17 +176,17 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    * param fb - FormBuilder para crear formularios reactivos
    * param modalService - Servicio para gestionar modales de Bootstrap
    * param solicitudService - Servicio para operaciones de solicitud y consultas
-   * param solicitud32611Store - Store para gestionar el estado del trámite
-   * param solicitud32611Query - Query para consultar el estado del trámite
+   * param tramite32611Store - Store para gestionar el estado del trámite
+   * param tramite32611Query - Query para consultar el estado del trámite
    * param consultaioQuery - Query para consultar el estado de solo lectura
    */
   constructor(
     private fb: FormBuilder,
     @Inject(BsModalService)
     private modalService: BsModalService,
-    public solicitudService: Solocitud32611Service,
-    private solicitud32611Store: Solicitud32611Store,
-    private solicitud32611Query: Solicitud32611Query,
+    public solicitudService: SolicitudService,
+    private tramite32611Store: Solicitud32611Store,
+    private tramite32611Query: Solicitud32611Query,
     private consultaioQuery: ConsultaioQuery
   ) {
     this.consultaioQuery.selectConsultaioState$
@@ -248,6 +250,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
       ],
       domicilio: [{value:this.solicitudState?.domicilio, disabled: true}],
       ccat: [{value:this.solicitudState?.ccat, disabled: true}],
+      validacionTransportistas: ['', Validators.required]
     })
   }
 
@@ -257,7 +260,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    * Mantiene sincronizada la información entre el store y el componente.
    */
   obtenerEstadoSolicitud(): void {
-    this.solicitud32611Query.selectSolicitud$?.pipe(takeUntil(this.destroy$))
+    this.tramite32611Query.selectSolicitud$?.pipe(takeUntil(this.destroy$))
       .subscribe((data: Solicitud32611State) => {
         this.solicitudState = data;
         if (data.transportistasLista) {
@@ -594,12 +597,16 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    * Rellena el formulario con los datos del transportista seleccionado.
    */
   modificarTransportista(): void {
-    if (this.transportistasLista.length === 0 || !this.selectedTransportista) {
-      this.mensajeSeleccion = 'Seleccione un registro.';
-      this.mostrarModalSeleccionRequerida();
-      return;
-    }
-    
+    if (this.transportistasLista.length === 0) {
+  this.mensajeSeleccion = 'No se encontró información.';
+  this.mostrarModalSeleccionRequerida();
+  return;
+  }
+  if (!this.selectedTransportista) {
+    this.mensajeSeleccion = 'Seleccione un registro.';
+    this.mostrarModalSeleccionRequerida();
+    return;
+  }
     this.isEditMode = true;
     
     // Limpiar solo el campo RFC y rellenar otros campos desde la fila seleccionada
@@ -711,7 +718,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    * Sincroniza los cambios locales con el estado global de la aplicación.
    */
   actualizarTransportistasListaEnStore(): void {
-    this.solicitud32611Store.establecerDatos({ transportistasLista: this.transportistasLista });
+    this.tramite32611Store.actualizarEstado({ transportistasLista: this.transportistasLista });
   }
 
   /**
@@ -723,4 +730,16 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+ * Valida que exista al menos un transportista en la lista.
+ * Retorna true si hay transportistas, false si la lista está vacía.
+ */
+public validarTransportistas(): boolean {
+  // Mark the validation field as touched to show error
+  this.transportistaCertificacionForm.get('validacionTransportistas')?.markAsTouched();
+  
+  return this.transportistasLista.length > 0;
+}
+
 }  

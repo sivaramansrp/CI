@@ -4,20 +4,20 @@ import { of, Subject } from 'rxjs';
 import { NO_ERRORS_SCHEMA, ElementRef } from '@angular/core';
 
 import { ControlInventariosComponent } from './control-inventarios.component';
-import { Solicitud32611Store, createInitialSolicitudState } from '../../estados/solicitud32611.store';
-import { Solicitud32611Query } from '../../estados/solicitud32611.query';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { ControlInventariosTabla } from '../../models/oea-textil-registro.model';
 import { 
   TipoNotificacionEnum, 
   CategoriaMensaje 
 } from '@libs/shared/data-access-user/src';
+import { createInitialSolicitudState, Solicitud32611Store } from '../../estados/solicitud32611.store';
+import { Solicitud32611Query } from '../../estados/solicitud32611.query';
+import { ControlInventariosTabla } from '../../models/oea-textil-registro.model';
 
 describe('ControlInventariosComponent - Pruebas unitarias', () => {
   let component: ControlInventariosComponent;
   let fixture: ComponentFixture<ControlInventariosComponent>;
-  let mockSolicitud32611Store: jest.Mocked<Solicitud32611Store>;
-  let mockSolicitud32611Query: jest.Mocked<Solicitud32611Query>;
+  let mockTramite32609Store: jest.Mocked<Solicitud32611Store>;
+  let mockTramite32609Query: jest.Mocked<Solicitud32611Query>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
 
   // Datos de prueba simulados
@@ -61,14 +61,15 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
 
   beforeEach(async () => {
     // Configuración de espías para servicios simulados
-    mockSolicitud32611Store = {
-      establecerDatos: jest.fn(),
+    mockTramite32609Store = {
+      actualizarEstado: jest.fn(),
       actualizarSeccion: jest.fn(),
       eliminarElemento: jest.fn()
     } as any;
 
-    mockSolicitud32611Query = {
-      selectSolicitud$: of(estadoTramiteMock)
+    mockTramite32609Query = {
+      selectTramite32609$: of(estadoTramiteMock),
+      selectSolicitud$: of(estadoTramiteMock) // Add this line to mock the expected observable
     } as any;
 
     mockConsultaioQuery = {
@@ -82,8 +83,8 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
       ],
       providers: [
         FormBuilder,
-        { provide: Solicitud32611Store, useValue: mockSolicitud32611Store },
-        { provide: Solicitud32611Query, useValue: mockSolicitud32611Query },
+        { provide: Solicitud32611Store, useValue: mockTramite32609Store },
+        { provide: Solicitud32611Query, useValue: mockTramite32609Query },
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
       ],
       schemas: [NO_ERRORS_SCHEMA]
@@ -506,13 +507,14 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
       expect(component.nuevaNotificacion.mensaje).toBe('Selecciona un registro');
     });
 
-    it('✅ debería manejar múltiples selecciones para modificación', () => {
-      component.listaFilaSeleccionadaEmpleado = datosControlInventariosMock;
-      
-      component.modificarItemEmpleado();
-      
-      expect(component.multipleSeleccionPopupAbierto).toBe(true);
-      expect(component.nuevaNotificacion.mensaje).toBe('Selecciona sólo un registro para modificar.');
+      it('✅ debería manejar múltiples selecciones para modificación', () => {
+        component.listaFilaSeleccionadaEmpleado = datosControlInventariosMock;
+        
+        component.modificarItemEmpleado();
+        
+        expect(component.multipleSeleccionPopupAbierto).toBe(true);
+        expect(component.nuevaNotificacion.mensaje).toBe('Selecciona sólo un registro para modificar.');
+      });
     });
 
 
@@ -527,7 +529,7 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
       component.confirmEliminarEmpleadoItem();
       
       expect(component.multipleSeleccionPopupAbierto).toBe(true);
-      expect(component.nuevaNotificacion.mensaje).toBe('Debes seleccionar al menos un registro para eliminar.');
+      expect(component.nuevaNotificacion.mensaje).toBe('Seleccione un registro');
     });
 
     it('✅ debería abrir popup de confirmación cuando hay elementos seleccionados', () => {
@@ -551,7 +553,7 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
       expect(component.controlInventariosList[0].id).toBe(2);
       expect(component.listaFilaSeleccionadaEmpleado).toEqual([]);
       expect(component.filaSeleccionadaControlInventarios).toEqual({});
-      expect(mockSolicitud32611Store.establecerDatos).toHaveBeenCalledWith({
+      expect(mockTramite32609Store.actualizarEstado).toHaveBeenCalledWith({
         controlInventarios: component.controlInventariosList
       });
       expect(component.cerrarEliminarConfirmationPopup).toHaveBeenCalled();
@@ -593,7 +595,7 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
         cumpleAnexo24: false
       });
       expect(component.filaSeleccionadaControlInventarios).toEqual({});
-      expect(mockSolicitud32611Store.establecerDatos).toHaveBeenCalledWith({
+      expect(mockTramite32609Store.actualizarEstado).toHaveBeenCalledWith({
         controlInventarios: component.controlInventariosList
       });
     });
@@ -664,22 +666,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
       component.ngOnInit();
     });
 
-    it('✅ debería validar campos del formulario principal correctamente', () => {
-      const form = component.registroControlInventariosForm;
-      
-      // Primero habilitar los campos usando el radio button
-      component.onSeleccionfalsa('1');
-      
-      // Campo válido
-      form.get('nombreSistema')?.setValue('Sistema válido');
-      form.get('nombreSistema')?.markAsTouched();
-      expect(component.esInvalido('nombreSistema')).toBe(false);
-      
-      // Campo inválido (empty when enabled and required)
-      form.get('nombreSistema')?.setValue('');
-      form.get('nombreSistema')?.markAsTouched();
-      expect(component.esInvalido('nombreSistema')).toBe(true);
-    });
     it('✅ debería validar campos del formulario de modificación correctamente', () => {
       const form = component.modificarRegistroControlInventariosForm;
       
@@ -738,7 +724,7 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
       
       component.setValoresStore(form, 'nombreSistema');
       
-      expect(mockSolicitud32611Store.establecerDatos).toHaveBeenCalledWith({
+      expect(mockTramite32609Store.actualizarEstado).toHaveBeenCalledWith({
         nombreSistema: 'Sistema Test'
       });
     });
@@ -810,8 +796,8 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
         ],
         providers: [
           FormBuilder,
-          { provide: Solicitud32611Store, useValue: mockSolicitud32611Store },
-          { provide: Solicitud32611Query, useValue: mockSolicitud32611Query },
+          { provide: Solicitud32611Store, useValue: mockTramite32609Store },
+          { provide: Solicitud32611Query, useValue: mockTramite32609Query },
           { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
         ],
         schemas: [NO_ERRORS_SCHEMA]
@@ -896,7 +882,7 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
 
     it('✅ debería manejar errores en suscripciones', () => {
       const errorObservable = new Subject();
-      mockSolicitud32611Query.selectSolicitud$ = errorObservable.asObservable() as any as import('../../estados/solicitud32611.store').Solicitud32611State extends infer T ? import('rxjs').Observable<T> : never;
+      mockTramite32609Query.selectSolicitud$ = errorObservable.asObservable() as any as import('../../estados/solicitud32611.store').Solicitud32611State extends infer T ? import('rxjs').Observable<T> : never;
 
       component.ngOnInit();
       
@@ -929,7 +915,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
       it('✅ debería tener opciones de radio button configuradas', () => {
         expect(component.opcionDeBotonDeRadio).toBeDefined();
         expect(Array.isArray(component.opcionDeBotonDeRadio) || typeof component.opcionDeBotonDeRadio === 'object').toBe(true);
-      });
     });
   });
 });

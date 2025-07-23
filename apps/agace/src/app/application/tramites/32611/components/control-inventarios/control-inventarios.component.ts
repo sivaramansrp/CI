@@ -20,7 +20,6 @@ import { ControlInventariosTabla } from '../../models/oea-textil-registro.model'
 import { Modal } from 'bootstrap';
 import { Solicitud32611Query } from '../../estados/solicitud32611.query';
 
-
 /**
  * Componente para la gestión de control de inventarios en el trámite OEA textil.
  * 
@@ -223,13 +222,11 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
   /**
    * Constructor para ControlInventariosBimestreComponent.
    * Inicializa el formulario e inyecta los servicios necesarios.
-   * @param fb - FormBuilder para crear formularios reactivos.
-   * @param solicitud32611Store - Store para gestionar el estado relacionado con el Trámite 32609.
    */
   constructor(
     public fb: FormBuilder,
-    private solicitud32611Store: Solicitud32611Store,
-    private solicitud32611Query: Solicitud32611Query,
+    private tramite32611Store: Solicitud32611Store,
+    private tramite32611Query: Solicitud32611Query,
     private consultaioQuery: ConsultaioQuery,
   ) {
     this.crearFormulario();
@@ -249,7 +246,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
 
   /**
    * Método del ciclo de vida que se ejecuta cuando el componente se inicializa.
-   * - Se suscribe a `selectSolicitud$` para obtener datos del estado.
+   * - Se suscribe a `selectTramite32609$` para obtener datos del estado.
    * - Actualiza `seccionState` con la información más reciente del estado.
    * - Asigna `ControlInventariosTablaDatos` a `controlInventariosList`.
    *
@@ -257,7 +254,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
    * para garantizar la limpieza cuando el componente se destruye.
    */
   ngOnInit(): void {
-    this.solicitud32611Query.selectSolicitud$
+    this.tramite32611Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((datos: Solicitud32611State) => {
         this.seccionState = datos;
@@ -282,8 +279,8 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     this.registroControlInventariosForm = this.fb.group({
       id: [null],
       sistemaControlInventariosArt59: ['', [Validators.required]],
-      nombreSistema: [{value: '', disabled: true}, [Validators.required]],
-      lugarRadicacion: [{value: '', disabled: true}, Validators.required],
+      nombreSistema: [{value: '', disabled: true}],
+      lugarRadicacion: [{value: '', disabled: true}],
       cumpleAnexo24: [false],
     });
 
@@ -296,20 +293,16 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     this.esFormularioInicializado = true;
   }
 
-  /**
-   * Método del ciclo de vida que se ejecuta cuando el componente se destruye.
-   * Limpia las suscripciones y libera recursos.
-   */
   private actualizarFormularioConDatosDelEstado(): void {
-    if (this.registroControlInventariosForm && this.seccionState && this.esFormularioInicializado) {
-      this.actualizarEstadoFormulario();
-      const STATEVALOR = {
-        sistemaControlInventariosArt59: this.seccionState.sistemaControlInventariosArt59,
-      };
+  if (this.registroControlInventariosForm && this.seccionState && this.esFormularioInicializado) {
+    this.actualizarEstadoFormulario();
+    const STATEVALOR = {
+      sistemaControlInventariosArt59: this.seccionState.sistemaControlInventariosArt59,
+    };
 
-      this.registroControlInventariosForm.patchValue(STATEVALOR);
-    }
+    this.registroControlInventariosForm.patchValue(STATEVALOR);
   }
+}
 
   /**
    * Envía los datos del formulario y muestra el modal de confirmación.
@@ -387,7 +380,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
       } as ControlInventariosTabla;
 
       this.controlInventariosList = [...this.controlInventariosList, OBJETO];
-      this.solicitud32611Store.establecerDatos({controlInventarios:this.controlInventariosList});
+      this.tramite32611Store.actualizarEstado({controlInventarios:this.controlInventariosList});
     } else {
       // Actualizar registro existente
       this.controlInventariosList = this.controlInventariosList.map((elemento) =>
@@ -396,7 +389,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
           : elemento
       );
 
-      this.solicitud32611Store.establecerDatos({controlInventarios:this.controlInventariosList});
+      this.tramite32611Store.actualizarEstado({controlInventarios:this.controlInventariosList});
       this.filaSeleccionadaControlInventarios = {} as ControlInventariosTabla;
     }
   }
@@ -482,7 +475,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
 
       this.listaFilaSeleccionadaEmpleado = [];
       this.filaSeleccionadaControlInventarios = {} as ControlInventariosTabla;
-      this.solicitud32611Store.establecerDatos({controlInventarios:this.controlInventariosList});
+      this.tramite32611Store.actualizarEstado({controlInventarios:this.controlInventariosList});
       this.cerrarEliminarConfirmationPopup();
     }
   }
@@ -502,7 +495,20 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
    */
   modificarItemEmpleado(): void {
     const SELECCIONADAS = this.listaFilaSeleccionadaEmpleado;
-  
+    if(this.controlInventariosList.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'No se encontró información',
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+      this.multipleSeleccionPopupAbierto = true;
+      return;
+    }
     if (!SELECCIONADAS || SELECCIONADAS.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -517,7 +523,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
       this.multipleSeleccionPopupAbierto = true;
       return;
     }
-  
+ 
     if (SELECCIONADAS.length > 1) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -536,6 +542,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     this.agregarDialogoDatos();
     this.patchModifyiedData();
   }
+ 
   
 
 
@@ -601,13 +608,27 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
    * Si hay elementos seleccionados, abre el popup de confirmación de eliminación.
    */
   confirmEliminarEmpleadoItem(): void {
+    if(this.controlInventariosList.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'No se encontró información',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.multipleSeleccionPopupAbierto = true;
+      return;
+    }
     if (this.listaFilaSeleccionadaEmpleado.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: CategoriaMensaje.ALERTA,
         modo: 'modal',
         titulo: '',
-        mensaje: 'Debes seleccionar al menos un registro para eliminar.',
+        mensaje: 'Seleccione un registro',
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
@@ -617,6 +638,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     }
     this.abrirElimninarConfirmationopup();
   }
+ 
   /**
    * @method abrirElimninarConfirmationopup
    * Abre un popup de confirmación para eliminar los registros seleccionados.
@@ -779,7 +801,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
+/**
    * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
    * @param form - El formulario reactivo.
    * @param campo - El nombre del campo en el formulario.
@@ -790,7 +812,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     }
     const CONTROL = form.get(campo);
     if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
-      this.solicitud32611Store.establecerDatos({ [campo]: CONTROL.value });
+      this.tramite32611Store.actualizarEstado({ [campo]: CONTROL.value });
     }
   }
 
@@ -839,10 +861,12 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-  public validarFormularios(): void {
+  public validarFormularios(): boolean {
     // Validar formulario principal de registro
     if (this.registroControlInventariosForm) {
       this.registroControlInventariosForm.markAllAsTouched();
+      return this.registroControlInventariosForm.valid;
     }
+    return false;
   }
 }

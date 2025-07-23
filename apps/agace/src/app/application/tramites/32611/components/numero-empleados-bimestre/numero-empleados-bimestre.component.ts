@@ -20,7 +20,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { NumeroEmpleadosTabla } from '../../models/oea-textil-registro.model';
 import { Solicitud32611Query } from '../../estados/solicitud32611.query';
-import { Solocitud32611Service } from '../../services/service32611.service';
+import { SolicitudService } from '../../services/solicitud.service';
 
 
 /**
@@ -241,8 +241,6 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
    * Indica si el formulario es colapsable.
    */
   colapsable: boolean = true;
-  isModificar: boolean = false;
-
 
   /**
    * Constructor del componente NumeroEmpleadosBimestreComponent.
@@ -251,18 +249,13 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
    * para el manejo del estado del componente y formularios reactivos.
    * También configura la suscripción para el estado de solo lectura.
    * 
-   * @param {FormBuilder} fb - Servicio para crear formularios reactivos
-   * @param {Solicitud32611Store} Solicitud32611Store - Store para gestionar el estado del trámite
-   * @param {Solicitud32611Query} solicitud32611Query - Query para obtener datos del trámite
-   * @param {ConsultaioQuery} consultaioQuery - Query para obtener el estado de consulta
-   * @param {Solocitud32611Service} servicio - Servicio para operaciones del trámite OEA textil
    */
   constructor(
     public fb: FormBuilder,
-    private solicitud32611Store: Solicitud32611Store,
-    private solicitud32611Query: Solicitud32611Query,
     private consultaioQuery: ConsultaioQuery,
-    private servicio: Solocitud32611Service
+    private solicitudService: SolicitudService,
+    private tramite32611Store: Solicitud32611Store,
+    private tramite32611Query: Solicitud32611Query
   ) {
       this.consultaioQuery.selectConsultaioState$
     .pipe(
@@ -277,7 +270,7 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
 
   /**
    * Método del ciclo de vida que se ejecuta cuando el componente se inicializa.
-   * - Se suscribe a `selectTramite32609$` para obtener datos del estado.
+   * - Se suscribe a `selectSolicitud$` para obtener datos del estado.
    * - Actualiza `seccionState` con la información más reciente del estado.
    * - Asigna `NumeroEmpleadosTablaDatos` a `numeroEmpleadosBimestreList`.
    *
@@ -285,7 +278,7 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
    * para garantizar la limpieza cuando el componente se destruye.
    */
   ngOnInit(): void {
-    this.solicitud32611Query.selectSolicitud$
+    this.tramite32611Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((datos: Solicitud32611State) => {
         this.seccionState = datos;
@@ -307,12 +300,12 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
   crearFormulario(): void {
 
     this.rfcForm = this.fb.group({
-      rfcInput: ['', [Validators.required, Validators.pattern(REGEX_RFC)]]
+      rfcInput: ['', Validators.required]
     });
 
     this.registroNumeroEmpleadosForm = this.fb.group({
       id: [null],
-      rfc: ['', [Validators.required]],
+      rfc: ['', [Validators.required, Validators.pattern(REGEX_RFC)]],
       denominacionSocial: ['', Validators.required],
       numeroDeEmpleados: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]],
       bimestre: [null, Validators.required]
@@ -329,13 +322,7 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-  agregarDialogoDatos(isModificar: string): void {
-    if (isModificar === 'Modificar') {
-      this.isModificar = true;
-    }
-    else {
-      this.isModificar = false;
-    }
+  agregarDialogoDatos(): void {
     if (this.registroDeNumeroEmpleadosElemento) {
       const MODAL_INSTANCIA = new Modal(
         this.registroDeNumeroEmpleadosElemento?.nativeElement,
@@ -403,8 +390,6 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
    */
   modalCancelar(): void {
     this.cambiarEstadoModal();
-    this.rfcForm.reset();
-    this.registroNumeroEmpleadosForm.reset();
   }
 
   /**
@@ -463,7 +448,7 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
       const OBJETO = { id: ID, denominacionSocial: DENOMINACION_SOCIAL, rfc: RFC, numeroDeEmpleados: NUMERO_DE_EMPLEADOS, numeroUno: NUMERO_UNO, bimestre: SELECTEDBIMESTRE } as NumeroEmpleadosTabla;
 
       this.numeroEmpleadosBimestreList = [...this.numeroEmpleadosBimestreList, OBJETO];
-      this.solicitud32611Store.establecerDatos({numeroEmpleadosBimestre:this.numeroEmpleadosBimestreList});
+      this.tramite32611Store.actualizarEstado({numeroEmpleadosBimestre:this.numeroEmpleadosBimestreList});
     } else {
       this.numeroEmpleadosBimestreList = this.numeroEmpleadosBimestreList.map((elemento) =>
         elemento.id === this.filaSeleccionadaNumeroEmpleados.id
@@ -471,7 +456,7 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
           : elemento
       );
 
-      this.solicitud32611Store.establecerDatos({numeroEmpleadosBimestre:this.numeroEmpleadosBimestreList});
+      this.tramite32611Store.actualizarEstado({numeroEmpleadosBimestre:this.numeroEmpleadosBimestreList});
       this.filaSeleccionadaNumeroEmpleados = {} as NumeroEmpleadosTabla;
     }
   }
@@ -551,7 +536,7 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
 
       this.listaFilaSeleccionadaEmpleado = [];
       this.filaSeleccionadaNumeroEmpleados = {} as NumeroEmpleadosTabla;
-      this.solicitud32611Store.establecerDatos({numeroEmpleadosBimestre:this.numeroEmpleadosBimestreList});
+      this.tramite32611Store.actualizarEstado({numeroEmpleadosBimestre:this.numeroEmpleadosBimestreList});
       this.cerrarEliminarConfirmationPopup();
     }
   }
@@ -579,7 +564,7 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-  modificarItemEmpleado(isModificar: string): void {
+  modificarItemEmpleado(): void {
     const SELECCIONADAS = this.listaFilaSeleccionadaEmpleado;
   
     if (!SELECCIONADAS || SELECCIONADAS.length === 0) {
@@ -612,7 +597,7 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
       return;
     }
     this.actualizarFilaSeleccionada();
-    this.agregarDialogoDatos(isModificar);
+    this.agregarDialogoDatos();
     this.patchModifyiedData();
   }
   
@@ -747,14 +732,14 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
    * @method onBuscarRfc
    * Busca los detalles del RFC para una persona física nacional (PFN).
    * 
-   * Si el RFC tiene longitud mayor a 0, realiza una llamada al servicio para obtener los detalles.
+   * Si el RFC tiene longitud mayor a 0, realiza una llamada al solicitudService para obtener los detalles.
    * Actualiza el formulario con la denominación social y el número de empleados obtenidos.
    * 
    * @returns {void}
    */
   onBuscarRfc(): void {
     if (this.rfcForm.valid) {
-      this.servicio.getRFCDetails().pipe(
+      this.solicitudService.getRFCDetails().pipe(
         takeUntil(this.destroyed$)
       ).subscribe({
         next: (result) => {
@@ -765,7 +750,7 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
           });
         }
       });
-    } else {
+    }else {
       this.enNuevaNotificacion(this.MENSAJE_DE_VALIDACION);
       this.esHabilitarElDialogo = true;
       this.rfcForm.markAllAsTouched();

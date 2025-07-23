@@ -90,7 +90,7 @@ export class PersonasNotificacionesComponent implements OnInit, OnDestroy {
    * @param solicitudService - Servicio para obtener datos de personas notificaciones
    */
   constructor(
-    private readonly solicitudService: SolicitudService,
+    private solicitudService: SolicitudService,
      private consultaioQuery: ConsultaioQuery
   ) {
     this.consultaioQuery.selectConsultaioState$
@@ -152,13 +152,11 @@ export class PersonasNotificacionesComponent implements OnInit, OnDestroy {
    * 
    */
   mostrar_colapsable(index: number): void {
-    if (!this.esFormularioSoloLectura) {
-       const IS_CURRENTLY_OPEN = this.panels[index].isCollapsed;
+    const IS_CURRENTLY_OPEN = this.panels[index].isCollapsed;
     this.panels.forEach((panel, i) => {
       panel.isCollapsed = i === index ? !IS_CURRENTLY_OPEN : true;
-    });   
+    });
   }
-}
 
   /**
    * Método del ciclo de vida OnDestroy.

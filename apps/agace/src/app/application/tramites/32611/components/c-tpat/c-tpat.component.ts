@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constants/oea-textil-registro.enum';
+import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constants/datos-comunes.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -178,7 +178,7 @@ export class CTPATComponent implements OnInit, OnDestroy {
     }
     const CONTROL = form.get(campo);
     if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
-      this.solicitud32611Store.establecerDatos({ [campo]: CONTROL.value });
+      this.solicitud32611Store.actualizarEstado({ [campo]: CONTROL.value });
     }
   }
     /**
@@ -230,4 +230,35 @@ export class CTPATComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+   /**
+   * @method esInvalido
+   * Verifica si un control del formulario es inválido.
+   * @param {string} nombreControl - Nombre del control a verificar.
+   * @returns {boolean} - `true` si el control es inválido, de lo contrario `false`.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.ctpatForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  /**
+ * Verifica si el formulario `importadorExportadorForm` es válido.
+ * Si el formulario es válido, retorna `true`. 
+ * Si no es válido, marca todos los campos como tocados para mostrar los errores y retorna `false`.
+ */
+ validarFormulario(): boolean {
+  let esValido = true;
+  
+  // Validate main form
+  if (this.ctpatForm.invalid) {
+    this.ctpatForm.markAllAsTouched();
+    esValido = false;
+  }
+ 
+ 
+  return esValido;
+}
 }

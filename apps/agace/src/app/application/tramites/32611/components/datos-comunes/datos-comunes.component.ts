@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, CategoriaMensaje, InputCheckComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TipoNotificacionEnum, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { NOTA, OPCIONES_DE_BOTON_DE_RADIO } from '../../constants/oea-textil-registro.enum';
 import { Solicitud32611State, Solicitud32611Store } from '../../estados/solicitud32611.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -11,7 +11,7 @@ import { ControlInventariosComponent } from '../control-inventarios/control-inve
 import { DomiciliosRfcSolicitanteComponent } from '../domicilios-rfc-solicitante/domicilios-rfc-solicitante.component';
 import { NumeroEmpleadosBimestreComponent } from '../numero-empleados-bimestre/numero-empleados-bimestre.component';
 import { Solicitud32611Query } from '../../estados/solicitud32611.query';
-import { Solocitud32611Service } from '../../services/service32611.service';
+import { SolicitudService } from '../../services/solicitud.service';
 
 /**
  * Componente para la gestión de datos comunes del trámite OEA textil.
@@ -52,7 +52,7 @@ import { Solocitud32611Service } from '../../services/service32611.service';
       AlertComponent
     ],
   templateUrl: './datos-comunes.component.html',
-  styleUrl: './datos-comunes.component.css',
+  styleUrl: './datos-comunes.component.scss',
 })
 export class DatosComunesComponent implements OnInit, OnDestroy {
 
@@ -60,9 +60,17 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @property {ControlInventariosComponent} controlInventariosComponent
    * Referencia al componente hijo de control de inventarios para poder acceder a sus métodos.
    */
-  @ViewChild(ControlInventariosComponent) controlInventariosComponent!: ControlInventariosComponent;
+  @ViewChild('controlInventariosRef') controlInventariosComponent!: ControlInventariosComponent;
+    /**
+   * Referencia al componente DomiciliosRfcSolicitanteComponent para acceder a sus métodos de validación.
+   */
+  @ViewChild('domiciliosRfcSolicitanteRef') domiciliosRfcSolicitanteComponent!: DomiciliosRfcSolicitanteComponent;
 
-   /**
+    /**
+   * Referencia al componente AgregarMiembroEmpresaComponent para acceder a sus métodos de validación.
+   */
+  @ViewChild('agregarMiembroEmpresaRef') agregarMiembroEmpresaComponent!: AgregarMiembroEmpresaComponent;
+  /**
    * Indicates whether the entity is consolidated in ET.
    *
    * @type {boolean}
@@ -107,7 +115,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   sectorProductivoList!: Catalogo[];
   /**
-   * Lista de sectores de servicio.
+   * Lista de sectores de solicitudService.
    */
   sectorServicio!: Catalogo[];
   /**
@@ -124,9 +132,6 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * Mensaje que indica un requisito obligatorio para acceder a la nota.
    */
   REQUISITO_OBLIGATORIO = NOTA.REQUISITO_OBLIGATORIO_PARA_ACCEDER_NOTA;
-  /**
-   * Mensaje que indica un requisito para el empleado.
-   */
   EMPLEADO_REQUISITO = NOTA.EMPLEADO_REQUISITO_RGCE;
 
 
@@ -153,6 +158,11 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @type {string}
    */
   SECTOR_PRODUCTIVO = NOTA.SECTOR_PRODUCTIVO;
+   /**
+   * Evento emitido cuando cambia el valor de reconocimientoMutuoCTPAT.
+   * @type {EventEmitter<string>}
+   */
+  @Output() reconocimientoMutuoCTPATChange = new EventEmitter<string>();
 
   /**
    * Constructor del componente DatosComunesComponent.
@@ -162,16 +172,16 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * 
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos
    * @param {ConsultaioQuery} consultaioQuery - Query para obtener el estado de consulta
-   * @param {Solicitud32611Store} Solicitud32611Store - Store para gestionar el estado del trámite
-   * @param {Solicitud32611Query} Solicitud32611Query - Query para obtener datos del trámite
-   * @param {Solocitud32611Service} servicio - Servicio para operaciones del trámite OEA textil
+   * @param {Tramite32609Store} tramite32611Store - Store para gestionar el estado del trámite
+   * @param {Tramite32609Query} tramite32611Query - Query para obtener datos del trámite
+   * @param {OeaTextilRegistroService} solicitudService - Servicio para operaciones del trámite OEA textil
    */
 
   constructor(public fb: FormBuilder, 
     private consultaioQuery: ConsultaioQuery,
-    private solicitud32611Store: Solicitud32611Store,
-    private solicitud32611Query: Solicitud32611Query,
-    private servicio: Solocitud32611Service,
+    private solicitudService: SolicitudService,
+    private tramite32611Store: Solicitud32611Store,
+    private tramite32611Query: Solicitud32611Query,
   ) {
     this.crearForm();
     this.consultaioQuery.selectConsultaioState$
@@ -210,8 +220,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           cumplimientoFiscalAduanero: [this.seccionState?.cumplimientoFiscalAduanero, Validators.required],
           autorizaOpinionSAT: [this.seccionState?.autorizaOpinionSAT, Validators.required],
           cuentaConEmpleadosPropios: [this.seccionState?.cuentaConEmpleadosPropios, Validators.required],
-          bimestreUltimo: [this.seccionState?.bimestreUltimo,[]],
-          numeroDeEmpleadas: [{value:this.seccionState?.numeroDeEmpleadas, disabled:true}, [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]],
+          bimestreUltimo: [this.seccionState?.bimestreUltimo, Validators.required],
+          numeroDeEmpleadas: [{value:this.seccionState?.numeroDeEmpleadas, disabled:true}],
           retencionISRTrabajadores: [this.seccionState?.retencionISRTrabajadores, Validators.required],
           pagoCuotasIMSS: [this.seccionState?.pagoCuotasIMSS, Validators.required],
           cuentaConSubcontratacionEspecializada: [this.seccionState?.cuentaConSubcontratacionEspecializada, Validators.required],
@@ -227,8 +237,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           proveedores: [this.seccionState?.proveedores || null],
           querellaSATUltimos3Anios: [this.seccionState?.querellaSATUltimos3Anios, Validators.required],
           ingresoInfoContableSAT: [this.seccionState?.ingresoInfoContableSAT, Validators.required],
-          manifests: [true, Validators.required],
-          bajoProtesta: [true, Validators.required],
+          manifests: [false, Validators.required],
+          bajoProtesta: [false, Validators.required],
       }, { validators: alMenosUnSectorValidator });
 
       this.esFormularioInicializado = true;
@@ -304,7 +314,7 @@ private actualizarFormularioConDatosDelEstado(): void {
         this.setValoresStore(this.forma, campoSeleccionado);
         
         // Limpiar el valor del campo opuesto en el store
-        this.solicitud32611Store.establecerDatos({ [campoAResetear]: null });
+        this.tramite32611Store.actualizarEstado({ [campoAResetear]: null });
       }
     }  
 
@@ -335,7 +345,7 @@ private actualizarFormularioConDatosDelEstado(): void {
    * Actualiza el formulario con los datos almacenados en el estado.
    */
   public enPatchStoredFormData(): void {
-    this.solicitud32611Query.selectSolicitud$
+    this.tramite32611Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((datos: Solicitud32611State) => {
         this.seccionState = datos;
@@ -409,9 +419,8 @@ private actualizarFormularioConDatosDelEstado(): void {
     }
     const CONTROL = form.get(campo);
     if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
-      this.solicitud32611Store.establecerDatos({ [campo]: CONTROL.value });
+      this.tramite32611Store.actualizarEstado({ [campo]: CONTROL.value });
       
-      // Clear validation errors if the field now has a valid value
       if (CONTROL.valid && CONTROL.touched) {
         CONTROL.markAsPristine();
       }
@@ -423,7 +432,7 @@ private actualizarFormularioConDatosDelEstado(): void {
    * Obtiene las listas necesarias para llenar los selectores del formulario.
    */
   obtenerlistadescargable(): void {
-    this.servicio.sectorListaDeSelects()
+    this.solicitudService.sectorListaDeSelects()
       .pipe(takeUntil(this.destroyed$),
   map((data) => {
     this.sectorProductivoList = data.sectorProductivoList;
@@ -549,125 +558,56 @@ onSeleccionVerdadera(evento:string | number, nota?:string): void {
   * 
   * @returns {void}
   */
-  validarFormulario(): void {
-    if(this.forma) {
+validarFormulario(): boolean {
+  let isValid = true;
+
+  if (this.forma) {
     this.forma.markAllAsTouched();
+    this.forma.updateValueAndValidity();
+
+    if (this.forma.invalid) {
+      isValid = false;
     }
-    // Marcar específicamente los campos de empleados si la sección está visible
-    this.marcarCamposEmpleadosComoTocados();
-    // Validar formularios del componente hijo control-inventarios
-    if (this.controlInventariosComponent) {
-      this.controlInventariosComponent.validarFormularios();
+  } else {
+    isValid = false;
+  }
+
+  if (this.controlInventariosComponent) {
+    const CONTROL_INVENTARIOS_VALID = this.controlInventariosComponent.validarFormularios();
+    if (!CONTROL_INVENTARIOS_VALID) {
+      isValid = false;
     }
   }
 
-  /**
- * @method validarDatosEmpleadosCompletos
- * @description Valida que tanto el número de empleados como el bimestre estén completos cuando uno de ellos tiene valor o es tocado.
- * 
- * @returns {boolean} true si debe mostrar el mensaje de error, false si no
- * 
- * @remarks
- * - Solo valida cuando radioSeleccionado es true
- * - Muestra error si uno de los campos tiene valor pero el otro no
- * - Muestra error si uno de los campos fue tocado pero no ambos tienen valor
- * - Se ejecuta después de validarFormulario() o cuando se cambia algún campo
- */
-public validarDatosEmpleadosCompletos(): boolean {
-  // Solo validar si la sección de empleados está visible
-  if (!this.radioSeleccionado) {
-    return false;
+  if (this.domiciliosRfcSolicitanteComponent) {
+    const DOMICILIOS_VALID = this.domiciliosRfcSolicitanteComponent.validarDomiciliosRfcSolicitante();
+    if (!DOMICILIOS_VALID) {
+      isValid = false;
+    }
   }
 
-  const NUMERO_CONTROL = this.forma?.get('numeroDeEmpleadas');
-  const BIMESTRE_CONTROL = this.forma?.get('bimestreUltimo');
-
-  if (!NUMERO_CONTROL || !BIMESTRE_CONTROL) {
-    return false;
+  if (this.agregarMiembroEmpresaComponent) {
+    const MIEMBRO_EMPRESA_VALID = this.agregarMiembroEmpresaComponent.validarAgregarMiembroEmpresa();
+    if (!MIEMBRO_EMPRESA_VALID) {
+      isValid = false;
+    }
   }
 
-  // Verificar si los campos tienen valor válido
-  const NUMERO_TIENE_VALOR = NUMERO_CONTROL.value && 
-    NUMERO_CONTROL.value.toString().trim() !== '';
-  const BIMESTRE_TIENE_VALOR = BIMESTRE_CONTROL.value && 
-    BIMESTRE_CONTROL.value !== '' && 
-    BIMESTRE_CONTROL.value !== -1 && 
-    BIMESTRE_CONTROL.value !== null;
-
-  // Verificar si al menos uno de los campos fue tocado
-  const AL_MENOS_UNO_TOCADO = NUMERO_CONTROL.touched || BIMESTRE_CONTROL.touched;
-  
-  // Verificar si al menos uno de los campos tiene valor (dropdown seleccionado o texto ingresado)
-  const AL_MENOS_UNO_TIENE_VALOR = NUMERO_TIENE_VALOR || BIMESTRE_TIENE_VALOR;
-
-  // Mostrar error si:
-  // 1. Al menos uno fue tocado pero no ambos tienen valor, O
-  // 2. Al menos uno tiene valor pero no ambos tienen valor
-  return (AL_MENOS_UNO_TOCADO || AL_MENOS_UNO_TIENE_VALOR) && 
-         !(NUMERO_TIENE_VALOR && BIMESTRE_TIENE_VALOR);
+  return isValid;
 }
 
-/**
- * @method onEmpleadosValueChange
- * @description Maneja el cambio de valor en el campo número de empleados.
- * 
- * @param {Event} event - Evento del input
- * @returns {void}
- * 
- * @remarks
- * - Se ejecuta cada vez que el usuario escribe en el campo
- * - Actualiza la validación para mostrar/ocultar el mensaje de error
- */
-public onEmpleadosValueChange(event: Event): void {
-  const TARGET = event.target as HTMLInputElement;
-  if (TARGET && this.forma) {
-    // Force change detection to update validation message
-    setTimeout(() => {
-      // This will trigger the validarDatosEmpleadosCompletos() method
-      // in the template due to change detection
-    }, 0);
-  }
-}
 
-/**
- * @method onBimestreValueChange
- * @description Maneja el cambio de valor en el campo bimestre.
- * 
- * @param {Event} event - Evento del select
- * @returns {void}
- * 
- * @remarks
- * - Se ejecuta cada vez que el usuario selecciona un valor del dropdown
- * - Actualiza la validación para mostrar/ocultar el mensaje de error
- */
-public onBimestreValueChange(event: Event): void {
-  const TARGET = event.target as HTMLSelectElement;
-  if (TARGET && this.forma) {
-    // Force change detection to update validation message
-    setTimeout(() => {
-      // This will trigger the validarDatosEmpleadosCompletos() method
-      // in the template due to change detection
-    }, 0);
-  }
-}
 
-/**
- * @method marcarCamposEmpleadosComoTocados
- * @description Marca los campos de empleados como tocados para activar la validación.
- * 
- * Se ejecuta cuando se llama validarFormulario() para asegurar que se muestren
- * los errores de validación de empleados si están incompletos.
- */
-public marcarCamposEmpleadosComoTocados(): void {
-  if (this.radioSeleccionado && this.forma) {
-    const NUMERO_CONTROL = this.forma.get('numeroDeEmpleadas');
-    const BIMESTRE_CONTROL = this.forma.get('bimestreUltimo');
-    
-    NUMERO_CONTROL?.markAsTouched();
-    BIMESTRE_CONTROL?.markAsTouched();
+    /**
+   * Maneja el cambio en el reconocimiento mutuo CTPAT y emite el valor seleccionado.
+   *
+   * @param {string} value - El valor seleccionado para reconocimiento mutuo CTPAT.
+   */
+  onReconocimientoMutuoCTPATChanged(value: string): void {
+    this.reconocimientoMutuoCTPATChange.emit(value);
   }
-}
-
+ 
+ 
   /**
    * @method ngOnDestroy
    * Hook de ciclo de vida que se ejecuta al destruir el componente.

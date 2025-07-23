@@ -5,7 +5,6 @@ import {
   InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
-  REGEX_RFC,
   TablaDinamicaComponent,
   TablaSeleccion,
   TipoNotificacionEnum,
@@ -21,7 +20,8 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { Solicitud32611Query } from '../../estados/solicitud32611.query';
-import { Solocitud32611Service } from '../../services/service32611.service';
+import { SolicitudService } from '../../services/solicitud.service';
+
 /**
  * Componente para agregar miembros de empresa en el trámite OEA textil.
  * 
@@ -118,13 +118,14 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
   @ViewChild('modalDeConfirmacion') confirmacionElemento!: ElementRef;
 
   /**
+ * Referencia al componente AgregarMiembroEmpresaComponent para acceder a sus métodos de validación.
+ */
+  @ViewChild('agregarMiembroEmpresaRef') agregarMiembroEmpresaComponent!: AgregarMiembroEmpresaComponent;
+  /**
    * Constante para la nota de confirmación del vehículo.
    */
   CONFIRMACION_NUMEROEMPLEADOS = NOTA.CONFIRMACION_NUMEROEMPLEADOS;
 
-  /**
-   * Mensaje de validación para el formulario.
-   */
   MENSAJE_DE_VALIDACION = MENSAJE_DE_VALIDACION;
 
  /**
@@ -231,19 +232,23 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
    * Indica si el formulario es colapsable.
    */
   colapsable: boolean = true;
+  /**
+   * Formulario para agregar un miembro de la empresa.
+   * Este formulario se utiliza para capturar los datos del miembro de la empresa.
+   */
+  agregarMiembroEmpresaForm!: FormGroup;
 
   /**
    * Constructor para AgregarMiembroEmpresaComponent.
    * Inicializa el formulario e inyecta los servicios necesarios.
-   * @param fb - FormBuilder para crear formularios reactivos.
-   * @param solicitud32611Store - Store para gestionar el estado relacionado con la Solicitud 32611.
+
    */
   constructor(
     public fb: FormBuilder,
-    private solicitud32611Store: Solicitud32611Store,
-    private solicitud32611Query: Solicitud32611Query,
     private consultaioQuery: ConsultaioQuery,
-    private servicio: Solocitud32611Service
+    private solicitudService: SolicitudService,
+    private tramite32611Store: Solicitud32611Store,
+    private tramite32611Query: Solicitud32611Query,
   ) {
       this.consultaioQuery.selectConsultaioState$
     .pipe(
@@ -258,7 +263,7 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
 
   /**
    * Método del ciclo de vida que se ejecuta cuando el componente se inicializa.
-   * - Se suscribe a `selectTramite32609$` para obtener datos del estado.
+   * - Se suscribe a `selectSolicitud$` para obtener datos del estado.
    * - Actualiza `seccionState` con la información más reciente del estado.
    * - Asigna `AgregarMiembroEmpresaTablaDatos` a `agregarMiembroEmpresaList`.
    *
@@ -267,7 +272,7 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.obtenerlistadescargable();
-    this.solicitud32611Query.selectSolicitud$
+    this.tramite32611Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((datos: Solicitud32611State) => {
         this.seccionState = datos;
@@ -282,7 +287,7 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
   crearFormulario(): void {
     this.registroAgregarMiembroEmpresaForm = this.fb.group({
       id: [null],
-      rfcInput: ['', [Validators.required, Validators.pattern(REGEX_RFC)]],
+      rfcInput: ['', Validators.required],
       nombreCompleto: ['', Validators.required],
       rfc: ['', Validators.required],
       caracter: [null, Validators.required],
@@ -292,9 +297,11 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
       tipoPersona: [null, Validators.required],
       apellidoPaterno: ['', Validators.required],
       nombre: ['', Validators.required],
-      nombreEmpresa: ['', Validators.required]
+      nombreEmpresa: ['', Validators.required],
+      miembroDeLaEmpresaTabla: [''],
     });
     
+    // Set initial disabled state
     this.actualizarEstadoFormulario();
   }
 
@@ -304,7 +311,7 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
    * Obtiene las listas necesarias para llenar los selectores del formulario.
    */
   obtenerlistadescargable(): void {
-    this.servicio.empresaListaDeSelects()
+    this.solicitudService.empresaListaDeSelects()
       .pipe(takeUntil(this.destroyed$),
   map((data) => {
     this.enSuCaracterDeList = data.enSuCaracterDeList;
@@ -408,7 +415,7 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
       nombreEmpresa: NOMBRE_EMPRESA,
     } = this.registroAgregarMiembroEmpresaForm.value;
 
-    const PARTESNOMBRE = [
+     const PARTESNOMBRE = [
           NOMBRE,
           APELLIDO_PATERNO,
           APELLIDO_MATERNO
@@ -431,10 +438,10 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
         : 1;
 
       const OBJETO = { 
-        id: ID,
+        id: ID, 
         tipoPersona: SELECTED_TIPO_PERSONA,
         nombre: NOMBRE,
-        nombreColleccion: (this.radioSeleccionado === 'tipdeSeccion' && this.elementoSeleccionado === '1') ? NOMBRE_COLLECCION : '',
+         nombreColleccion: (this.radioSeleccionado === 'tipdeSeccion' && this.elementoSeleccionado === '1') ? NOMBRE_COLLECCION : '',
         apellidoPaterno: (this.radioSeleccionado === 'tipdeSeccion' && this.elementoSeleccionado === '1') ? APELLIDO_PATERNO : '',
         apellidoMaterno: (this.radioSeleccionado === 'tipdeSeccion' && this.elementoSeleccionado === '1') ? APELLIDO_MATERNO : '',
         nombreCompleto: this.radioSeleccionado === 'rfcSeccion' ? NOMBRE_COMPLETO : '',
@@ -446,7 +453,7 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
       } as AgregarMiembroEmpresaTabla;
 
       this.agregarMiembroEmpresaList = [...this.agregarMiembroEmpresaList, OBJETO];
-      this.solicitud32611Store.establecerDatos({agregarMiembroEmpresa:this.agregarMiembroEmpresaList});
+      this.tramite32611Store.actualizarEstado({agregarMiembroEmpresa:this.agregarMiembroEmpresaList});
     } else {
       this.agregarMiembroEmpresaList = this.agregarMiembroEmpresaList.map((elemento) =>
         elemento.id === this.filaSeleccionadaAgregarMiembroEmpresa.id
@@ -462,11 +469,14 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
             nacionalidad: SELECTED_NACIONALIDAD,
             obligadoTributarMexico: OBLIGADO_TRIBUTAR_MEXICO ? AgregarMiembroEmpresaComponent.convertirValorRadioATexto(OBLIGADO_TRIBUTAR_MEXICO) : '',
             nombreEmpresa: (this.radioSeleccionado === 'tipdeSeccion' && this.elementoSeleccionado === '2') ? NOMBRE_EMPRESA : '',
-          }
+         }
           : elemento
       );
 
-      this.solicitud32611Store.establecerDatos({agregarMiembroEmpresa:this.agregarMiembroEmpresaList});
+      this.tramite32611Store.actualizarEstado({agregarMiembroEmpresa:this.agregarMiembroEmpresaList});
+      if (this.registroAgregarMiembroEmpresaForm.get('miembroDeLaEmpresaTabla')) {
+        this.registroAgregarMiembroEmpresaForm.get('miembroDeLaEmpresaTabla')?.markAsUntouched();
+      }
       this.filaSeleccionadaAgregarMiembroEmpresa = {} as AgregarMiembroEmpresaTabla;
     }
   }
@@ -523,7 +533,7 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
 
       this.listaFilaSeleccionadaEmpleado = [];
       this.filaSeleccionadaAgregarMiembroEmpresa = {} as AgregarMiembroEmpresaTabla;
-      this.solicitud32611Store.establecerDatos({agregarMiembroEmpresa:this.agregarMiembroEmpresaList});
+      this.tramite32611Store.actualizarEstado({agregarMiembroEmpresa:this.agregarMiembroEmpresaList});
       this.cerrarEliminarConfirmationPopup();
     }
   }
@@ -541,9 +551,23 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
    * Actualiza el formulario de mercancía con los datos de la fila seleccionada
    * y abre el modal para editar los datos.
    */
-  modificarItemEmpleado(): void {
+    modificarItemEmpleado(): void {
     const SELECCIONADAS = this.listaFilaSeleccionadaEmpleado;
-  
+    if(this.agregarMiembroEmpresaList.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'No se encontró información',
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+      this.multipleSeleccionPopupAbierto = true;
+      return;
+    }
+ 
     if (!SELECCIONADAS || SELECCIONADAS.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -558,7 +582,7 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
       this.multipleSeleccionPopupAbierto = true;
       return;
     }
-  
+ 
     if (SELECCIONADAS.length > 1) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -577,6 +601,7 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
     this.agregarDialogoDatos();
     this.patchModifyiedData();
   }
+ 
   
   /**
    * @method patchModifyiedData
@@ -609,7 +634,6 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
         this.elementoSeleccionado = '2'; // Persona Moral
       }
     }
-    
     
     this.registroAgregarMiembroEmpresaForm.patchValue({
       id: this.filaSeleccionadaAgregarMiembroEmpresa?.id,
@@ -653,14 +677,29 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
    * Si no hay elementos seleccionados, no realiza ninguna acción.
    * Si hay elementos seleccionados, abre el popup de confirmación de eliminación.
    */
+  
   confirmEliminarEmpleadoItem(): void {
+    if(this.agregarMiembroEmpresaList.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'No se encontró información',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.multipleSeleccionPopupAbierto = true;
+      return;
+    }
     if (this.listaFilaSeleccionadaEmpleado.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: CategoriaMensaje.ALERTA,
         modo: 'modal',
         titulo: '',
-        mensaje: 'Debes seleccionar al menos un registro para eliminar.',
+        mensaje: 'Seleccione un registro',
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
@@ -670,6 +709,7 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
     }
     this.abrirElimninarConfirmationopup();
   }
+ 
   /**
    * @method abrirElimninarConfirmationopup
    * Abre un popup de confirmación para eliminar los registros seleccionados.
@@ -712,13 +752,13 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
 
   /**
    * Busca los detalles del RFC para una persona física nacional (PFN).
-   * Si el RFC tiene longitud mayor a 0, realiza una llamada al servicio para obtener los detalles.
+   * Si el RFC tiene longitud mayor a 0, realiza una llamada al solicitudService para obtener los detalles.
    * Actualiza el formulario con la denominación social y el número de empleados obtenidos.
    * @param rfc - El RFC de la persona física nacional.
    */
   onBuscarRfc(): void {
     if (this.registroAgregarMiembroEmpresaForm.get('rfcInput')?.valid) {
-      this.servicio.getRFCDetails().pipe(
+      this.solicitudService.getRFCDetails().pipe(
         takeUntil(this.destroyed$)
       ).subscribe({
         next: (result) => {
@@ -729,11 +769,12 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
           });
         }
       });
-    } else {
+    }else {
       this.enNuevaNotificacion(this.MENSAJE_DE_VALIDACION);
       this.esHabilitarElDialogo = true;
       this.registroAgregarMiembroEmpresaForm.markAllAsTouched();
     }
+
   }
 
   /**
@@ -858,6 +899,18 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
     }
     return value === '1' ? 'Sí' : 'No';
   }
+
+  /**
+   * Convierte el texto (No/Sí) a valor del radio button (0/1)
+   * @param texto - El texto a convertir ('No' o 'Sí')
+   * @returns El valor del radio button correspondiente
+   */
+  private static convertirTextoAValorRadio(texto: string): string {
+    if (!texto || texto === '') {
+      return '';
+    }
+    return texto === 'Sí' ? '1' : '0';
+  }
   /**
    * @method ngOnDestroy
    * Hook de ciclo de vida que se ejecuta al destruir el componente.
@@ -868,5 +921,19 @@ export class AgregarMiembroEmpresaComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 
+/**
+ * Valida que exista al menos un miembro de empresa registrado en la lista.
+ * @returns boolean indicating if there are miembros de empresa registrados
+ */
+public validarAgregarMiembroEmpresa(): boolean {
+  // Marcar el campo como tocado para mostrar el error
+  this.registroAgregarMiembroEmpresaForm.get('miembroDeLaEmpresaTabla')?.markAsTouched();
+  
+  if (this.agregarMiembroEmpresaList.length === 0) {
+    return false;
+  }
+  
+  return true;
+}
   
 }

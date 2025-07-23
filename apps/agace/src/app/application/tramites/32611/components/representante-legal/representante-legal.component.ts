@@ -16,8 +16,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Solicitud32611State, Solicitud32611Store} from '../../estados/solicitud32611.store';
 import { Subject,Subscription, map, takeUntil } from 'rxjs';
+
+import { Solicitud32611State, Solicitud32611Store } from '../../estados/solicitud32611.store';
 import { CommonModule } from '@angular/common';
 import { Solicitud32611Query } from '../../estados/solicitud32611.query';
 
@@ -78,19 +79,28 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * Suscripción a los cambios en el formulario reactivo.
    */
   private subscription: Subscription = new Subscription();
+   /**
+   * Bandera que controla la visualización de errores en el formulario.
+   * Se activa cuando hay errores de validación que deben mostrarse.
+   */
+  mostrarError: boolean = false;
+    /**
+   * Flag to track if the "Buscar" button has been clicked
+   */
+  private buscarClicked: boolean = false;
 
   /**
    * Constructor del componente
    *
    * @param fb FormBuilder para crear formularios reactivos
-   * @param solicitud32611Store Store para actualizar el estado del trámite
-   * @param solicitud32611Query Query para obtener el estado actual del trámite
+   * @param tramite32611Store Store para actualizar el estado del trámite
+   * @param tramite32611Query Query para obtener el estado actual del trámite
    * @param consultaioQuery Query para obtener el estado general del formulario (lectura/edición)
    */
   constructor(
     private fb: FormBuilder,
-    private solicitud32611Store: Solicitud32611Store,
-    private solicitud32611Query: Solicitud32611Query,
+    private tramite32611Store: Solicitud32611Store,
+    private tramite32611Query: Solicitud32611Query,
     private consultaioQuery: ConsultaioQuery
   ) {
     // Se suscribe al estado del formulario para saber si está en modo solo lectura
@@ -121,12 +131,11 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   /**
    * Crea el formulario reactivo con los valores iniciales del estado de la solicitud.
    * Algunos campos se crean en modo solo lectura (deshabilitados).
-   *
-   * @returns {void}
+ 
    */
- crearFormulario(): void {
+   crearFormulario(): void {
      this.subscription.add(
-      this.solicitud32611Query.selectSolicitud$
+      this.tramite32611Query.selectSolicitud$
         .pipe(
           takeUntil(this.destroyed$),
           map((seccionState) => {
@@ -138,7 +147,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     this.representante = this.fb.group({
       representanteRegistro: [
         this.solicitudState.representanteRegistro,
-        [Validators.required, Validators.pattern(REG_X.RFC_13_ALFANUM)],
+        [ Validators.pattern(REG_X.RFC_13_ALFANUM)],
       ],
       representanteRfc: [
         { value: this.solicitudState.representanteRfc, disabled: true },
@@ -198,7 +207,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * Actualiza el formulario con datos obtenidos desde la tienda.
    */
   public enPatchStoredFormData(): void {
-    this.solicitud32611Query.selectSolicitud$
+    this.tramite32611Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((datos: Solicitud32611State) => {
         this.solicitudState = datos;
@@ -216,11 +225,28 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       'representanteRegistro'
     )?.value;
     const REGISTRO_CONTROL = this.representante.get('representanteRegistro');
+    if(!REGISTRO_VALUE) {
+       this.rfcValido = true;
+      this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ERROR,
+      modo: 'modal',
+      titulo: '',
+      mensaje: 'No se encontró información',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    return;
+    }
     if (!REGISTRO_CONTROL?.valid) {
+      this.rfcValido = true;
       this.mostrarNotificacionFormatoIncorrecto();
       return;
     }
     if (REGISTRO_VALUE) {
+      this.rfcValido = false;
+      this.buscarClicked = true;
       this.tieneValorRfc = true;
       this.mostrarNotificacionDeBusqueda();
       const MOCK_DATA = {
@@ -232,6 +258,8 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
         representanteCorreo: 'vucem2.5@hotmail.com',
       };
       this.representante.patchValue(MOCK_DATA);
+
+      this.mostrarError = false;
     }
   }
 
@@ -270,6 +298,18 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   }
 
   /**
+ * Handles the confirmation modal close event for format error
+ */
+onModalFormatoIncorrectoClose(): void {
+  this.rfcValido = false;
+}
+/**
+ * Handles the confirmation modal close event for search success
+ */
+onModalBusquedaClose(): void {
+  this.tieneValorRfc = false;
+}
+  /**
    * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
    * @param form - El formulario reactivo.
    * @param campo - El nombre del campo en el formulario.
@@ -280,7 +320,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     }
     const CONTROL = form.get(campo);
     if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
-      this.solicitud32611Store.establecerDatos({
+      this.tramite32611Store.actualizarEstado({
         [campo]: CONTROL.value,
       });
     }
@@ -299,4 +339,68 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
+
+/**
+ * Valida el formulario del representante legal y verifica si se hizo clic en "Buscar"
+ * @returns boolean que indica si el formulario es válido y se realizó la búsqueda
+ */
+public validarFormularioRepresentante(): boolean {
+  // Obtener el valor del campo RFC y el control del formulario
+  const RFC_VALOR = this.representante.get('representanteRegistro')?.value;
+  const REGISTRO_CONTROL = this.representante.get('representanteRegistro');
+  
+  // Definir los campos requeridos que deben estar llenos
+  const REQ_FIELDS = [
+    'representanteRegistro',
+    'representanteRfc',
+    'representanteNombre',
+    'representanteApellidoPaterno',
+    'representanteApellidoMaterno',
+    'representanteTelefono',
+    'representanteCorreo'
+  ];
+  
+  // Verificar si todos los campos requeridos están llenos
+  const ALL_FIELDS_FILLED = REQ_FIELDS.every(field => {
+    const VALOR = this.representante.get(field)?.value;
+    return VALOR && VALOR.trim() !== '';
+  });
+  
+  // Si todos los campos están llenos, ocultar error y retornar verdadero
+  if (ALL_FIELDS_FILLED) {
+    this.mostrarError = false;
+    return true;
+  }
+
+  // Verificar si el campo RFC tiene valor pero el formato es inválido
+  if (RFC_VALOR && !REGISTRO_CONTROL?.valid) {
+    this.rfcValido = true;
+    this.mostrarNotificacionFormatoIncorrecto();
+    return false;
+  }
+  
+  // Verificar si el campo RFC tiene valor pero no se hizo clic en buscar
+  if (RFC_VALOR && !this.buscarClicked) {
+    this.mostrarError = true;
+    return false;
+  }
+  
+  // Verificar si el campo RFC está vacío
+  if (!RFC_VALOR) {
+    this.representante.markAllAsTouched();
+    this.mostrarError = true;
+    return false;
+  }
+  
+  // Validación regular del formulario
+  if (this.representante.invalid) {
+    this.representante.markAllAsTouched();
+    this.mostrarError = true;
+    return false;
+  }
+  
+  // Ocultar error y retornar verdadero si todo está correcto
+  this.mostrarError = false;
+  return true;
+}
 }
