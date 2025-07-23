@@ -143,7 +143,7 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
             primerApellido: DESTINATARIO.primerApellido || '',
             segundoApellido: DESTINATARIO.segundoApellido || '',
             razonSocial: DESTINATARIO.razonSocial || '',
-            pais: DESTINATARIO.pais || '1',
+            pais: DESTINATARIO.pais || '',
             lada: DESTINATARIO.lada || '',
             telefono: DESTINATARIO.telefono || '',
             correo: DESTINATARIO.correo || '',
@@ -206,7 +206,6 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
     this.destinatarioForm.markAsUntouched();
     this.destinatarioForm.patchValue({
       tipoMercancia: 'yes',
-      pais: '1',
     });
   }
 
