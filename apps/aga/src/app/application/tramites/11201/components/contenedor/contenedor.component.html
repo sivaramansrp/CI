@@ -176,9 +176,9 @@
                     </div>
                 </div>
             </div>
-            <div id="mensaje" style="margin-top: 1em;"
+            <div id="mensaje" class="margin-top"
                 *ngIf="!solicitud11201State?.tipoBusqueda || solicitud11201State?.tipoBusqueda === 'No. de Manifiesto'">
-                <ng-alert style="text-align: center;" [CONTENIDO]="TEXTOS.ADVERTENCIA"></ng-alert>
+                <ng-alert class="text-align" [CONTENIDO]="TEXTOS.ADVERTENCIA"></ng-alert>
                 <div class="col-md-12" id="IdGridContenedoresITC">
                     <div class="table-responsive">
                         <div class="innercontainer">
@@ -191,7 +191,7 @@
                     <div align="center" id="paginGridContenedoresITC">
                         <nav aria-label="Page navigation example">
                             <ul class="pagination d-flex justify-content-center">
-                                <li class="page-item"><a class="page-link" style="width: 40px;" href="Javascript:;">1</a></li>
+                                <li class="page-item "><a class="page-link width" href="Javascript:;">1</a></li>
                             </ul>
                         </nav>
                     </div>
@@ -233,20 +233,20 @@
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <ng-titulo titulo="Adjuntar archivo" />
-                            <div style="display: -webkit-box;">
-                                <label style="margin-right: 120px;" for="archivoSeleccionado" class="form-label">Archivo Seleccionado*:</label>
+                            <div class="display">
+                                <label class="margin-right" for="archivoSeleccionado" class="form-label">Archivo Seleccionado*:</label>
                             <input class="form-control" type="text" name="archivoSeleccionado"
                                 id="archivoSeleccionado" [value]="etiquetaDeArchivo || 'No se eligió ningún archivo'" readonly>
                             </div>
                             
                         </div>
-                        <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
+                        <div class="col-md-4 d-flex justify-content-end width-dos">
                             <button
                                 [disabled]="!solicitudForm.get('aduanaMenuDesplegable')?.value || !solicitudForm.get('fechaDeIngreso')?.value"
                                 type="button" class="btn btn-default" (click)="adjuntarArchivo() ">Cargar
                                 archivo</button>
                         </div>
-                        <div class="row" style="margin-top: 20px" *ngIf="mostrarArchivoSeleccionadoTable">
+                        <div class="row margin-top-dos" *ngIf="mostrarArchivoSeleccionadoTable">
                             <div class="col-md-8">
                                 <ng-titulo titulo="Cargar archivo" />
                                 <div class="col-md-8">
@@ -256,7 +256,7 @@
                                         Elegir archivo
                                     </button>
                                     <span class="ml-2 custom-input-file">{{ etiquetaDeArchivo || 'No se eligió ningún archivo' }}</span>
-                                    <input type="file" id="cargarArchivo" class="file-upload" style="display: none;"
+                                    <input type="file" id="cargarArchivo" class="file-upload display-dos"
                                         accept=".csv" (change)="onCambioDeArchivo($event)">
                                     @if (nuevaNotificacion) { <section>
                                         <lib-notificaciones [notificacionInput]="nuevaNotificacion"
@@ -264,7 +264,7 @@
                                     </section> }
                                 </div>
                             </div>
-                            <div class="col-md-4 d-flex justify-content-end p-5 gap-3" style="width: 100%">
+                            <div class="col-md-4 d-flex justify-content-end p-5 gap-3 width-dos">
                                 <button type="button" class="btn btn-default" (click)="regresar()">Regresar</button>
                                 <button type="button" class="btn btn-default" (click)="archivo()">Enviar</button>
                             </div>
@@ -291,7 +291,7 @@
             <div align="center" id="paginGridContenedoresITC">
                 <nav aria-label="Page navigation example">
                     <ul class="pagination d-flex justify-content-center">
-                        <li class="page-item"><a class="page-link" style="width: 40px;" href="Javascript:;">1</a></li>
+                        <li class="page-item"><a class="page-link width" href="Javascript:;">1</a></li>
                     </ul>
                 </nav>
             </div>
