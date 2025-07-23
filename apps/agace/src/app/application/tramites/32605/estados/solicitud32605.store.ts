@@ -10,6 +10,62 @@ import { TransportistasTable } from '../constants/datos-comunes.enum';
  * de empleados, domicilios, socios, y enlaces operativos.
  */
 export interface Solicitud32605State {
+  sectorProductivo: string; // Sector productivo al que pertenece la empresa
+  sectorServicio: string; // Sector productivo o de servicios al que pertenece la empresa
+  cumplimientoFiscalAduanero: string; // Indica si se cumple con las obligaciones fiscales aduaneras
+  autorizaOpinionSAT: string; // Indica si se autoriza la opinión del SAT
+  cuentaConEmpleadosPropios: string; // Indica si la empresa cuenta con empleados propios
+  bimestreUltimo: string; // Último bimestre reportado
+  numeroDeEmpleadas: string; // Número de empleadas en el último bimestre
+  retencionISRTrabajadores: string; // Indica si se retiene ISR a los trabajadores
+  pagoCuotasIMSS: string; // Indica si se pagan cuotas al IMSS
+  cuentaConSubcontratacionEspecializada: string; // Indica si se cuenta con subcontratación especializada
+  registroPadronLFT: string; // Indica si se cuenta con registro en el padrón de la Ley Federal del Trabajo
+  listadoSATArt69: string; // Lista de artículos 69 del SAT
+  listadoSATArt69B: string; // Lista de artículos 69 del SAT
+  listadoSATArt69BBis: string; // Lista de artículos 69-B Bis del SAT
+  certificadosSellosVigentes: string; // Indica si los certificados de sellos digitales están vigentes
+  infringioSupuestos17HBis: string; // Indica si se infringieron los supuestos del artículo 17-H Bis
+  mediosContactoActualizadosBuzon: string; // Indica si los medios de contacto están actualizados en el buzón
+  suspensionPadronImportadoresExportadores: string; // Indica si está suspendido en el padrón de importadores/exportadores
+  archivoNacionales?: string; // Indica si se han archivado documentos nacionales
+  proveedores: string; // Lista de proveedores asociados al trámite
+  domiciliosRegistrados: string; // Indica si los domicilios están registrados
+  numeroEmpleadosBimestre:NumeroEmpleadosTabla[]; // Lista de números de empleados por bimestre
+  DomiciliosRfcSolicitante:DomiciliosRfcSolicitanteTabla[], // Lista de domicilios del RFC solicitante
+  controlInventarios:ControlInventariosTabla[]; // Lista de control de inventarios
+  querellaSATUltimos3Anios: string; // Indica si hay querellas del SAT en los últimos 3 años
+  ingresoInfoContableSAT:string; // Indica si se ingresa información contable al SAT
+  agregarMiembroEmpresa:AgregarMiembroEmpresaTabla[]; 
+  manifests:boolean; // Indica si se han agregado manifiestos
+  bajoProtesta:boolean; // Indica si se realiza bajo protesta
+  sistemaControlInventariosArt59:string;
+  comercioExteriorRealizado: string; // Indica si se realiza comercio exterior
+  fechaDePago:string; // Fecha de pago asociada a la solicitud
+  fechaInicioComercio: string;
+  esParteGrupoComercioExterior: string; // Indica si es parte de un grupo de comercio exterior
+  rfcEnclaveOperativo: string; // RFC del enclave operativo
+  enlaceOperativorfc: string; // RFC del enlace operativo
+  denominacionRazonsocial: string; // Razón social del enlace operativo
+  domicilio: string; // Domicilio del enlace operativo
+  inputfechaDeLaUltimaOperacion: string; // Fecha de la última operación
+  fusionEscisionConOperacionExterior: string; // Indica si hay fusión o escisión con operación exterior
+  empresaExtranjeraIMMEX: string; // Indica si es una empresa extranjera IMMEX
+  monto: string; // Monto total asociado a la solicitud
+  operacionesBancarias: string; // Detalles de las operaciones bancarias relacionadas con la solicitud
+  llavePago: string; // Llave de pago asociada a la solicitud
+  cuentaConProgramaIMMEX: string; // Indica si cuenta con un programa IMMEX
+  rubroCertificacion: string; // Rubro de certificación asociado a la solicitud
+  fechaFinVigenciaRubro: string; // Fecha de fin de vigencia del rubro de certificación
+  numeroOficio: string; // Número de oficio asociado a la solicitud
+  declaracionAnualISRRepresentantes: string; // Indica si los representantes han presentado la declaración anual del ISR
+  registroEsquemaCertificacionIVAIEPS: string; // Registro del esquema de certificación IVA e IEPS
+  registroEsquemaCertificacion: string; // Registro del esquema de certificación
+  tipoInformacionEmpresa: string; // Indica si la información de la empresa es clasificada
+  ccat: string; // CAAT del enlace operativo
+  tablaDatos: EmpresaDelGrupo[]; // Tabla de datos de empresas del grupo
+  transportistasLista: TransportistasTable[]; // Lista de transportistas relacionados con la solicitud
+  
   representanteRegistro: string;
   representanteRfc: string;
   representanteNombre: string;
@@ -28,156 +84,230 @@ export interface Solicitud32605State {
   correo: string;
   suplente: boolean;
   enlaceOperativoData: TablaEnlaceOperativo[];
-  sectorProductivo: string;
-  sectorServicio: string;
-  cumplimientoFiscalAduanero: string;
-  autorizaOpinionSAT: string;
-  cuentaConEmpleadosPropios: string;
-  bimestreUltimo: string;
-  numeroDeEmpleadas: string;
-  retencionISRTrabajadores: string;
-  pagoCuotasIMSS: string;
-  cuentaConSubcontratacionEspecializada: string;
-  registroPadronLFT: string;
-  listadoSATArt69: string;
-  listadoSATArt69B: string;
-  listadoSATArt69BBis: string;
-  certificadosSellosVigentes: string;
-  infringioSupuestos17HBis: string;
-  mediosContactoActualizadosBuzon: string;
-  suspensionPadronImportadoresExportadores: string;
-  archivoNacionales?: string;
-  proveedores: string;
-  domiciliosRegistrados: string;
-  numeroEmpleadosBimestre:NumeroEmpleadosTabla[];
-  DomiciliosRfcSolicitante:DomiciliosRfcSolicitanteTabla[],
-  controlInventarios:ControlInventariosTabla[];
-  querellaSATUltimos3Anios: string;
-  ingresoInfoContableSAT:string;
-  agregarMiembroEmpresa:AgregarMiembroEmpresaTabla[];
-  manifests:boolean;
-  bajoProtesta:boolean;
-  sistemaControlInventariosArt59:string;
 
+  autorizacionCBP: string,
+  instalacionesCertificadasCBP: string,
+  suspensionCancelacionCBP: string
 
-    /**
-     * Indica si la empresa realiza operaciones de comercio exterior.
-     * Valor booleano representado como string ('1' para Sí, '0' para No).
-     */
-    comercioExteriorRealizado: string;
-
-    /**
-     * Fecha en que se realizó el pago asociado a la solicitud.
-     * Formato esperado: DD/MM/YYYY.
-     */
-    fechaDePago: string;
-
-    /**
-     * Fecha de inicio de las operaciones de comercio exterior de la empresa.
-     * Formato esperado: DD/MM/YYYY.
-     */
-    fechaInicioComercio: string;
-
-    /**
-     * Indica si la empresa es parte de un grupo empresarial que realiza comercio exterior.
-     * Valor booleano representado como string ('1' para Sí, '0' para No).
-     */
-    esParteGrupoComercioExterior: string;
-
-    /**
-     * RFC o clave operativa de la empresa del enlace operativo.
-     * Identificador fiscal único de 12 o 13 caracteres.
-     */
-    rfcEnclaveOperativo: string;
-
-    /**
-     * RFC del enlace operativo obtenido automáticamente del servicio.
-     * Campo de solo lectura que se llena al buscar por RFC.
-     */
-    enlaceOperativorfc: string;
-
-    /**
-     * Denominación social o razón social de la empresa del enlace operativo.
-     * Nombre legal completo de la empresa registrada.
-     */
-    denominacionRazonsocial: string;
-
-    /**
-     * Domicilio fiscal completo de la empresa del enlace operativo.
-     * Dirección registrada ante las autoridades fiscales.
-     */
-    domicilio: string;
-
-    /**
-     * Fecha de la última operación comercial registrada por la empresa.
-     * Formato esperado: DD/MM/YYYY. Campo opcional.
-     */
-    inputfechaDeLaUltimaOperacion: string;
-
-    /**
-     * Indica si existe fusión o escisión con operaciones de comercio exterior.
-     * Valor booleano representado como string ('1' para Sí, '0' para No).
-     */
-    fusionEscisionConOperacionExterior: string;
-
-    /**
-     * Indica si la empresa es extranjera con programa IMMEX.
-     * Valor booleano representado como string ('1' para Sí, '0' para No).
-     */
-    empresaExtranjeraIMMEX: string;
-
-    /**
-     * Monto total en pesos mexicanos asociado a las operaciones.
-     * Valor numérico representado como string.
-     */
-    monto: string;
-
-    /**
-     * Detalles de las operaciones bancarias relacionadas con la solicitud.
-     * Información alfanumérica sobre transacciones financieras.
-     */
-    operacionesBancarias: string;
-
-    /**
-     * Llave de pago única para identificar la transacción.
-     * Código alfanumérico generado por el sistema bancario.
-     */
-    llavePago: string;
-
-    /**
-     * Registro del esquema de certificación empresarial.
-     * Indica si se autoriza o no el esquema ('1' para Sí Autorizo, '0' para No Autorizo).
-     */
-    registroEsquemaCertificacion: string;
-
-    /**
-     * Tipo de información de la empresa según su clasificación.
-     * Indica si es información pública o privada ('1' para Pública, '0' para Privada).
-     */
-    tipoInformacionEmpresa: string;
-
-    /**
-     * Número de registro CAAT vigente del transportista.
-     * Código de autorización para transportistas de carga.
-     */
-    ccat: string;
-
-    /**
-     * Lista de empresas del grupo comercial relacionadas con la solicitud.
-     * Array que contiene objetos de tipo EmpresaDelGrupo con RFC, denominación, domicilio y fecha.
-     */
-    tablaDatos: EmpresaDelGrupo[];
-
-    /**
-     * Lista de transportistas autorizados para la operación.
-     * Array que contiene objetos de tipo TransportistasTable con RFC, denominación, domicilio y CAAT.
-     */
-    transportistasLista: TransportistasTable[];
-    autorizacionCBP: string;
-    instalacionesCertificadasCBP: string;
-    suspensionCancelacionCBP: string;
+/// perfiles
+  perfiles: Partial<PerfilesDatos>;
 }
+export interface PerfilesDatos {
+  describaProcedimiento: string;
+  indiqueLosCriterios: string;
+  indiqueLosMetodos: string;
+  describaLosIndicadores: string;
+  comercioExterior: string;
+  candadosSeguridad: string;
+  proveedorExterno: string;
+  susceptibleContaminacion: string;
+  encuentrenVacios: string;
+  semirremolquesVacios: string;
+  utilizarCandado: string;
+  seguridadMismas: string;
+  describaContratacion: string;
+  documentacionExigida: string;
+  examenesSolicitados: string;
+  conformeAnalisis: string;
+  periodicidad: string;
+  confidencialidad: string;
+  contratacionPersonal: string;
+  describaProcedimientoPersonal: string;
+  seguimientoProcedimiento: string;
+  identificaciones: string;
+  sistemasInformaticos: string;
+  proveedoresServicios: string;
+  administracionPersonal: string;
+  expliqueBrevemente: string;
+  encuentranFuera: string;
+  actualizacionesSeguridad: string;
+  accesoLosMismos: string;
+  continuidadNegocio: string;
+  semanaCorresponda: string;
+  recuperarInformacion: string;
+  informacionArchivada: string;
+  procesoDatos: string;
+  copiasSeguridad: string;
+  proteccionDeLaInformacion: string;
+  perdidaDeLaInformacion: string;
+  controlanSistemas: string;
+  accionesDelResto: string;
+  sistemasConfidenciales: string;
+  proporcionaEsasContrasenas: string;
+  actualizacionesPeriodicas: string;
+  falsificadosLicencias: string;
+  procesoDeImportacion: string;
+  telecomunicaciones: string;
+  sistemaComprometido: string;
+  seguridadDeLaTecnologia: string;
+  mediosTransporte: string;
+  estaDifusion: string;
+  enunciativaLimitativa: string;
+  procedimientosEmpresa: string;
+  mediosDeTransporte: string;
+  relacionadosSeguridad: string;
+  reportarIncidentes: string;
+  actividadesSospechosas: string;
+  brevementeSonsiste: string;
+  incidenteSeguridad: string;
+  caboInvestigacion: string;
+  operacionCaboInvestigacion: string;
+  antiguedad: number | string;
+  productos: number | string;
+  embarquesExp: number | string;
+  embarquesImp: number | string;
+  empleados: number | string;
+  superficie: number | string;
+  blCtpat: string;
+  niverCertificado?: string;
+  ctpatAccountNumber?: string;
+  codigoMid?: string;
+  fecUltimaCtapt?: Date | string;
+  blnPip: string;
+  numRegistroPip?: string;
+  blnOea: string;
+  nomProgramapaisOea?: string;
+  numRegistroOea?: string;
+  blnOtrosProgramasSegu: string;
+  nombreProgramaOtros?: string;
+  numRegistroOtros?: string;
+  fechaVigenciaOtros?: Date | string;
+  nombre: string;
+  categoria: string;
+  vigencia: string;
+  nombre2: string;
+  categoria2: string;
+  vigencia2: string;
+  nombre3: string;
+  categoria3: string;
+  vigencia3: string;
 
+  procedimientoDocumentado: string;
+indiqueNumero: string;
+cargosFunciones: string;
+casoContratarse: string;
+casoContar: string;
+describirProcedimiento: string;
+indiqueMecanismos: string;
+indicarEmpleados: string;
+indiqueIdentifica: string;
+describaEmpresa: string;
+indiqueAsegura: string;
+procedimientoParaControl: string;
+senaleRegistros: string;
+senaleQuien: string;
+describaRecepion: string;
+indiqueEncargado: string;
+indiqueIdentfica: string;
+senaleComo: string;
+describaCaracteristicas: string;
+senaleAccion: string;
+indiqueLleva: string;
+describaProcedimientoDos: string;
+indiqueSocios: string;
+indiqueForma: string;
+indiqueExisten: string;
+indiqueCuenta: string;
+procedimientoRealizar: string;
+indiquePeriodicidad: string;
+describaComo: string;
+comoAseguran: string;
+indiqueFormatos: string;
+senalarMedidas: string;
+indiqueAlmacenes: string;
+expliqueBrevemente2: string;
+indiqueCerciora: string;
+indiqueEstos: string;
+indiquePertenecen: string;
+indiqueResponsable: string;
+indiqueTecnologia: string;
+describirProcesamiento: string;
+detalleComo: string;
+indiqueUtiliza: string;
+detalleValida: string;
+comoNumero: string;
+senaleAsociados: string;
+indiqueMateriales: string;
+queForma: string;
+personalResponsable: string;
+indiqueCuantas: string;
+indiqueMonitoreadas: string;
+detalleExisten: string;
+describaAcceso: string;
+describirTipo: string;
+describaAreas: string;
+senaleMismas: string;
+casoNoContar: string;
+periodicidadVerifica: string;
+indiqueTareas: string;
+describaManera: string;
+indiqueSepara: string;
+senaleRestringido: string;
+describaMonitoreo: string;
+responsablesControlar: string;
+estacionamientos: string;
+llevaEntrada: string;
+politicasMecanismos: string;
+procedimientoOperacion: string;
+senaleEncuentran: string;
+mencioneCuenta: string;
+queManera: string;
+describaContactar: string;
+indiqueOperativo: string;
+indiqueAparatos: string;
+mantenimiento: string;
+politicasAparatos: string;
+programaMantenimiento: string;
+indiqueRespaldo: string;
+describaAlarma: string;
+indiqueUtilizan: string;
+describaSistemas: string;
+indicarCamaras: string;
+mencioneInspeccion: string;
+senalarUbicacion: string;
+indiqueHorarios: string;
+indiqueRevisan: string;
+indiqueDesignado: string;
+comoDocumentan: string;
+indiqueTiempo: string;
+contarPlanta: string;
+estosSistemas: string;
+indicarCircuito: string;
+describaImplementado: string;
+formaControlan: string;
+indiqueTodas: string;
+indiquePlanta: string;
+cuentaDocumentado: string;
+indiquePuertas: string;
+indiqueCerrado: string;
+indicarCircuitoCerrado: string;
+registroVisitantes: string;
+casoSocios: string;
+estosEmpresa: string;
+comiteSeguridad: string;
+fuentesInformacion: string;
+politica: string;
+indique: string;
+periodicidad2: string;
+programa: string;
+capacitacion: string;
+procedimiento: string;
+descripcionProcedimiento: string;
+nombreProcedimiento: string;
+programacionAuditoria: string;
+participantesAuditoria: string;
+enfoqueAuditoria: string;
+procesosAuditados: string;
+registrosAuditoria: string;
+programacion: string;
+registrosNombre: string;
+registrosEmpresa: string;
+planEmergencia: string;
+situacionesContempladas: string;
+mecanismosContinuidad: string;
+simulacrosDocumentacion: string;
+
+}
 /**
  * Crea el estado inicial para `Solicitud32605State`.
  *
@@ -185,175 +315,300 @@ export interface Solicitud32605State {
  */
 export function createInitialSolicitudState(): Solicitud32605State {
   return {
+sectorProductivo: '',
+  sectorServicio: '',
+  cumplimientoFiscalAduanero: '',
+  autorizaOpinionSAT: '',
+  cuentaConEmpleadosPropios: '',
+  bimestreUltimo: '',
+  numeroDeEmpleadas: '',
+  retencionISRTrabajadores: '',
+  pagoCuotasIMSS: '',
+  cuentaConSubcontratacionEspecializada: '',
+  registroPadronLFT: '',
+  listadoSATArt69: '',
+  listadoSATArt69B: '',
+  listadoSATArt69BBis: '',
+  certificadosSellosVigentes: '',
+  infringioSupuestos17HBis: '',
+  mediosContactoActualizadosBuzon: '',
+  suspensionPadronImportadoresExportadores: '',
+  archivoNacionales: '',
+  proveedores: '',
+  domiciliosRegistrados:'',
+  numeroEmpleadosBimestre:[],
+  DomiciliosRfcSolicitante:[],
+  controlInventarios: [],
+  querellaSATUltimos3Anios: '',
+  ingresoInfoContableSAT: '',
+  agregarMiembroEmpresa: [],
+  manifests:true,
+  bajoProtesta:true,
+  sistemaControlInventariosArt59: '',
+  comercioExteriorRealizado:'',
+  fechaDePago: '',
+  fechaInicioComercio: '',
+  esParteGrupoComercioExterior: '',
+  rfcEnclaveOperativo: '',
+  enlaceOperativorfc:'',
+  denominacionRazonsocial: '',
+  domicilio: '',
+  inputfechaDeLaUltimaOperacion: '',
+  fusionEscisionConOperacionExterior: '',
+  empresaExtranjeraIMMEX: '',
+  monto: '',
+  operacionesBancarias: '',
+  llavePago: '',
+  cuentaConProgramaIMMEX: '',
+  rubroCertificacion: '',
+  fechaFinVigenciaRubro: '',
+  numeroOficio: '',
+  declaracionAnualISRRepresentantes: '',
+  registroEsquemaCertificacionIVAIEPS: '',
+  registroEsquemaCertificacion: '',
+  tipoInformacionEmpresa: '',
+  ccat: '',
+  tablaDatos: [],
+  transportistasLista: [],
 
-        representanteRegistro: '',
-        representanteRfc: '',
-        representanteNombre: '',
-        representanteApellidoPaterno: '',
-        representanteApellidoMaterno: '',
-        representanteTelefono: '',
-        representanteCorreo: '',
-        registro: '',
-        rfc: '',
-        nombre: '',
-        apellidoPaterno: '',
-        apellidoMaterno: '',
-        ciudad: '',
-        cargo: '',
-        telefono: '',
-        correo: '',
-        suplente: false,
-        enlaceOperativoData: [],
+  representanteRegistro: '',
+  representanteRfc: '',
+  representanteNombre: '',
+  representanteApellidoPaterno: '',
+  representanteApellidoMaterno: '',
+  representanteTelefono: '',
+  representanteCorreo: '',
+  registro: '',
+  rfc: '',
+  nombre: '',
+  apellidoPaterno: '',
+  apellidoMaterno: '',
+  ciudad: '',
+  cargo: '',
+  telefono: '',
+  correo: '',
+  suplente: false,
+  enlaceOperativoData: [],
 
-        sectorProductivo: '',
-        sectorServicio: '',
-        cumplimientoFiscalAduanero: '',
-        autorizaOpinionSAT: '',
-        cuentaConEmpleadosPropios: '',
-        bimestreUltimo: '',
-        numeroDeEmpleadas: '',
-        retencionISRTrabajadores: '',
-        pagoCuotasIMSS: '',
-        cuentaConSubcontratacionEspecializada: '',
-        registroPadronLFT: '',
-        listadoSATArt69: '',
-        listadoSATArt69B: '',
-        listadoSATArt69BBis: '',
-        certificadosSellosVigentes: '',
-        infringioSupuestos17HBis: '',
-        mediosContactoActualizadosBuzon: '',
-        suspensionPadronImportadoresExportadores: '',
-        archivoNacionales: '',
-        proveedores: '',
-        domiciliosRegistrados:'',
-        numeroEmpleadosBimestre:[],
-        DomiciliosRfcSolicitante:[],
-        controlInventarios: [],
-        querellaSATUltimos3Anios: '',
-        ingresoInfoContableSAT: '',
-        agregarMiembroEmpresa: [],
-        manifests:true,
-        bajoProtesta:true,
-        sistemaControlInventariosArt59: '',
-  //---------------------------------------
+  autorizacionCBP: '',
+  instalacionesCertificadasCBP: '',
+  suspensionCancelacionCBP: '',
 
-    /**
-     * Indica si la empresa realiza operaciones de comercio exterior.
-     * Valor booleano representado como string ('1' para Sí, '0' para No).
-     */
-    comercioExteriorRealizado: '',
-
-    /**
-    * Fecha en que se realizó el pago asociado a la solicitud.
-    * Formato esperado: DD/MM/YYYY.
-    */
-    fechaDePago: '',
-
-    /**
-    * Fecha de inicio de las operaciones de comercio exterior de la empresa.
-    * Formato esperado: DD/MM/YYYY.
-    */
-    fechaInicioComercio: '',
-
-    /**
-    * Indica si la empresa es parte de un grupo empresarial que realiza comercio exterior.
-    * Valor booleano representado como string ('1' para Sí, '0' para No).
-    */
-    esParteGrupoComercioExterior: '',
-
-    /**
-    * RFC o clave operativa de la empresa del enlace operativo.
-    * Identificador fiscal único de 12 o 13 caracteres.
-    */
-    rfcEnclaveOperativo: '',
-
-    /**
-    * RFC del enlace operativo obtenido automáticamente del servicio.
-    * Campo de solo lectura que se llena al buscar por RFC.
-    */
-    enlaceOperativorfc: '',
-
-    /**
-    * Denominación social o razón social de la empresa del enlace operativo.
-    * Nombre legal completo de la empresa registrada.
-    */
-    denominacionRazonsocial: '',
-
-    /**
-    * Domicilio fiscal completo de la empresa del enlace operativo.
-    * Dirección registrada ante las autoridades fiscales.
-    */
-    domicilio: '',
-
-    /**
-    * Fecha de la última operación comercial registrada por la empresa.
-    * Formato esperado: DD/MM/YYYY. Campo opcional.
-    */
-    inputfechaDeLaUltimaOperacion: '',
-
-    /**
-    * Indica si existe fusión o escisión con operaciones de comercio exterior.
-    * Valor booleano representado como string ('1' para Sí, '0' para No).
-    */
-    fusionEscisionConOperacionExterior: '',
-
-    /**
-    * Indica si la empresa es extranjera con programa IMMEX.
-    * Valor booleano representado como string ('1' para Sí, '0' para No).
-    */
-    empresaExtranjeraIMMEX: '',
-
-    /**
-    * Monto total en pesos mexicanos asociado a las operaciones.
-    * Valor numérico representado como string.
-    */
-    monto: '',
-
-    /**
-    * Detalles de las operaciones bancarias relacionadas con la solicitud.
-    * Información alfanumérica sobre transacciones financieras.
-    */
-    operacionesBancarias: '',
-
-    /**
-    * Llave de pago única para identificar la transacción.
-    * Código alfanumérico generado por el sistema bancario.
-    */
-    llavePago: '',
-
-    /**
-    * Registro del esquema de certificación empresarial.
-    * Indica si se autoriza o no el esquema ('1' para Sí Autorizo, '0' para No Autorizo).
-    */
-    registroEsquemaCertificacion: '',
-
-    /**
-    * Tipo de información de la empresa según su clasificación.
-    * Indica si es información pública o privada ('1' para Pública, '0' para Privada).
-    */
-    tipoInformacionEmpresa: '',
-
-    /**
-    * Número de registro CAAT vigente del transportista.
-    * Código de autorización para transportistas de carga.
-    */
-    ccat: '',
-
-    /**
-    * Lista de empresas del grupo comercial relacionadas con la solicitud.
-    * Array que contiene objetos de tipo EmpresaDelGrupo con RFC, denominación, domicilio y fecha.
-    */
-    tablaDatos: [],
-
-    /**
-    * Lista de transportistas autorizados para la operación.
-    * Array que contiene objetos de tipo TransportistasTable con RFC, denominación, domicilio y CAAT.
-    */
-    transportistasLista: [],
-
-    autorizacionCBP: '',
-    instalacionesCertificadasCBP: '',
-    suspensionCancelacionCBP: ''
+  //perfiles
+  perfiles: {
+    describaProcedimiento: '',
+    indiqueLosCriterios: '',
+    indiqueLosMetodos: '',
+    describaLosIndicadores: '',
+    comercioExterior: '',
+    candadosSeguridad: '',
+    proveedorExterno: '',
+    susceptibleContaminacion: '',
+    encuentrenVacios: '',
+    semirremolquesVacios: '',
+    utilizarCandado: '',
+    seguridadMismas: '',
+    describaContratacion: '',
+    documentacionExigida: '',
+    examenesSolicitados: '',
+    conformeAnalisis: '',
+    periodicidad: '',
+    confidencialidad: '',
+    contratacionPersonal: '',
+    describaProcedimientoPersonal: '',
+    seguimientoProcedimiento: '',
+    identificaciones: '',
+    sistemasInformaticos: '',
+    proveedoresServicios: '',
+    administracionPersonal: '',
+    expliqueBrevemente: '',
+    encuentranFuera: '',
+    actualizacionesSeguridad: '',
+    accesoLosMismos: '',
+    continuidadNegocio: '',
+    semanaCorresponda: '',
+    recuperarInformacion: '',
+    informacionArchivada: '',
+    procesoDatos: '',
+    copiasSeguridad: '',
+    proteccionDeLaInformacion: '',
+    perdidaDeLaInformacion: '',
+    controlanSistemas: '',
+    accionesDelResto: '',
+    sistemasConfidenciales: '',
+    proporcionaEsasContrasenas: '',
+    actualizacionesPeriodicas: '',
+    falsificadosLicencias: '',
+    procesoDeImportacion: '',
+    telecomunicaciones: '',
+    sistemaComprometido: '',
+    seguridadDeLaTecnologia: '',
+    mediosTransporte: '',
+    estaDifusion: '',
+    enunciativaLimitativa: '',
+    procedimientosEmpresa: '',
+    mediosDeTransporte: '',
+    relacionadosSeguridad: '',
+    reportarIncidentes: '',
+    actividadesSospechosas: '',
+    brevementeSonsiste: '',
+    incidenteSeguridad: '',
+    caboInvestigacion: '',
+    operacionCaboInvestigacion: '',
+    antiguedad: '',
+    productos: '',
+    embarquesExp: '',
+    embarquesImp: '',
+    empleados: '',
+    superficie: '',
+    blCtpat: '',
+    niverCertificado: '',
+    ctpatAccountNumber: '',
+    codigoMid: '',
+    fecUltimaCtapt: '',
+    blnPip: '',
+    numRegistroPip: '',
+    blnOea: '',
+    nomProgramapaisOea: '',
+    numRegistroOea: '',
+    blnOtrosProgramasSegu: '',
+    nombreProgramaOtros: '',
+    numRegistroOtros: '',
+    fechaVigenciaOtros: '',
+    nombre: '',
+    categoria: '',
+    vigencia: '',
+    nombre2: '',
+    categoria2: '',
+    vigencia2: '',
+    nombre3: '',
+    categoria3: '',
+    vigencia3: '',
+    procedimientoDocumentado: '',
+  indiqueNumero: '',
+  cargosFunciones: '',
+  casoContratarse: '',
+  casoContar: '',
+  describirProcedimiento: '',
+  indiqueMecanismos: '',
+  indicarEmpleados: '',
+  indiqueIdentifica: '',
+  describaEmpresa: '',
+  indiqueAsegura: '',
+  procedimientoParaControl: '',
+  senaleRegistros: '',
+  senaleQuien: '',
+  describaRecepion: '',
+  indiqueEncargado: '',
+  indiqueIdentfica: '',
+  senaleComo: '',
+  describaCaracteristicas: '',
+  senaleAccion: '',
+  indiqueLleva: '',
+  describaProcedimientoDos: '',
+  indiqueSocios: '',
+  indiqueForma: '',
+  indiqueExisten: '',
+  indiqueCuenta: '',
+  procedimientoRealizar: '',
+  indiquePeriodicidad: '',
+  describaComo: '',
+  comoAseguran: '',
+  indiqueFormatos: '',
+  senalarMedidas: '',
+  indiqueAlmacenes: '',
+  expliqueBrevemente2: '',
+  indiqueCerciora: '',
+  indiqueEstos: '',
+  indiquePertenecen: '',
+  indiqueResponsable: '',
+  indiqueTecnologia: '',
+  describirProcesamiento: '',
+  detalleComo: '',
+  indiqueUtiliza: '',
+  detalleValida: '',
+  comoNumero: '',
+  senaleAsociados: '',
+  indiqueMateriales: '',
+  queForma: '',
+  personalResponsable: '',
+  indiqueCuantas: '',
+  indiqueMonitoreadas: '',
+  detalleExisten: '',
+  describaAcceso: '',
+  describirTipo: '',
+  describaAreas: '',
+  senaleMismas: '',
+  casoNoContar: '',
+  periodicidadVerifica: '',
+  indiqueTareas: '',
+  describaManera: '',
+  indiqueSepara: '',
+  senaleRestringido: '',
+  describaMonitoreo: '',
+  responsablesControlar: '',
+  estacionamientos: '',
+  llevaEntrada: '',
+  politicasMecanismos: '',
+  procedimientoOperacion: '',
+  senaleEncuentran: '',
+  mencioneCuenta: '',
+  queManera: '',
+  describaContactar: '',
+  indiqueOperativo: '',
+  indiqueAparatos: '',
+  mantenimiento: '',
+  politicasAparatos: '',
+  programaMantenimiento: '',
+  indiqueRespaldo: '',
+  describaAlarma: '',
+  indiqueUtilizan: '',
+  describaSistemas: '',
+  indicarCamaras: '',
+  mencioneInspeccion: '',
+  senalarUbicacion: '',
+  indiqueHorarios: '',
+  indiqueRevisan: '',
+  indiqueDesignado: '',
+  comoDocumentan: '',
+  indiqueTiempo: '',
+  contarPlanta: '',
+  estosSistemas: '',
+  indicarCircuito: '',
+  describaImplementado: '',
+  formaControlan: '',
+  indiqueTodas: '',
+  indiquePlanta: '',
+  cuentaDocumentado: '',
+  indiquePuertas: '',
+  indiqueCerrado: '',
+  indicarCircuitoCerrado: '',
+  registroVisitantes: '',
+  casoSocios: '',
+  estosEmpresa: '',
+  comiteSeguridad: '',
+  fuentesInformacion: '',
+  politica: '',
+  indique: '',
+  periodicidad2: '',
+  programa: '',
+  capacitacion: '',
+  procedimiento: '',
+  descripcionProcedimiento: '',
+  nombreProcedimiento: '',
+  programacionAuditoria: '',
+  participantesAuditoria: '',
+  enfoqueAuditoria: '',
+  procesosAuditados: '',
+  registrosAuditoria: '',
+  programacion: '',
+  registrosNombre: '',
+  registrosEmpresa: '',
+  planEmergencia: '',
+  situacionesContempladas: '',
+  mecanismosContinuidad: '',
+  simulacrosDocumentacion: ''
+  }
   };
 }
 @Injectable({
@@ -381,10 +636,24 @@ export class Solicitud32605Store extends Store<Solicitud32605State> {
    * Valores parciales para actualizar el estado.
    */
   public actualizarEstado(valores: Partial<Solicitud32605State>): void {
-    this.update((state) => ({
-      ...state,
-      ...valores,
-    }));
+    this.update((state) => {
+      // Extract perfiles from values to handle separately
+      const { perfiles: PERFILES, ...OTHER_VALUES } = valores;
+      
+      const NEW_STATE = {
+        ...state,
+        ...OTHER_VALUES,
+        // Deep merge for perfiles if provided
+        ...(PERFILES && {
+          perfiles: {
+            ...state.perfiles,
+            ...PERFILES,
+          }
+        }),
+      };
+      
+      return NEW_STATE;
+    });
   }
 
 }

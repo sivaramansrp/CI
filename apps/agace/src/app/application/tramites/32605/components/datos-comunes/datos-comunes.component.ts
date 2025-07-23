@@ -1,5 +1,5 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, CategoriaMensaje, InputCheckComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TipoNotificacionEnum, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CategoriaMensaje, InputRadioComponent, Notificacion, NotificacionesComponent, TipoNotificacionEnum, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { NOTA, OPCIONES_DE_BOTON_DE_RADIO } from '../../constants/oea-textil-registro.enum';
 import { Solicitud32605State, Solicitud32605Store } from '../../estados/solicitud32605.store';
@@ -48,7 +48,6 @@ import { SolicitudService } from '../../services/solicitud.service';
       ControlInventariosComponent,
       TituloComponent,
       AgregarMiembroEmpresaComponent,
-      InputCheckComponent,
       AlertComponent
     ],
   templateUrl: './datos-comunes.component.html',

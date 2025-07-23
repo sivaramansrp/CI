@@ -301,16 +301,19 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
       .subscribe((datos: Solicitud32605State) => {
         this.seccionState = datos;
         this.enlaceOperativoData = this.seccionState.enlaceOperativoData;
-      });   
+      });
   }
-
+ 
   /**
    * Crea el formulario reactivo para el registro de vehículos.
    */
   crearFormulario(): void {
     this.enlaceOperativoDataForm = this.fb.group({});
     this.enlaceOperativoForm = this.fb.group({
-      registro: ['', [Validators.required,Validators.pattern(REG_X.RFC_13_ALFANUM)]],
+      registro: [
+        '',
+        [Validators.required, Validators.pattern(REG_X.RFC_13_ALFANUM)],
+      ],
       rfc: [{ value: '', disabled: true }],
       nombre: [{ value: '', disabled: true }],
       apellidoPaterno: [{ value: '', disabled: true }],
@@ -322,7 +325,7 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
       suplente: [false],
     });
   }
-
+ 
   /**
    * Controla la visibilidad de los paneles colapsables.
    *
@@ -337,7 +340,7 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
       panel.isCollapsed = i === index ? !IS_CURRENTLY_OPEN : true;
     });
   }
-
+ 
   /**
    * Realiza la búsqueda de información basada en el registro ingresado.
    *
@@ -346,83 +349,56 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    * simulados basados en el valor del registro Federal de Contribuyentes.
    * En una implementación real, esto se conectaría a un servicio web.
    */
-buscar(): void {
-  const REGISTRO_VALUE = this.enlaceOperativoForm.get('registro')?.value;
-  const REGISTRO_CONTROL = this.enlaceOperativoForm.get('registro');
-  if(!REGISTRO_VALUE) {
-       this.rfcValido = true;
-      this.nuevaNotificacion = {
-      tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      categoria: CategoriaMensaje.ERROR,
-      modo: 'modal',
-      titulo: '',
-      mensaje: 'No se encontró información',
-      cerrar: false,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
-    return;
-  }
+  botonBuscar(): void {
+    let MOCK_DATA;
+    const REGISTRO_VALUE = this.enlaceOperativoForm.get('registro')?.value;
+    const REGISTRO_CONTROL = this.enlaceOperativoForm.get('registro');
+    if(!REGISTRO_VALUE) {
+      this.mostrarNotificacionDeBusqueda('', 'No se ha proporcionado información que es requerida');
+      this.tieneValorRfc = true;
+      return;
+      }
     if (!REGISTRO_CONTROL?.valid) {
-      this.mostrarNotificacionFormatoIncorrecto();
+      this.mostrarNotificacionDeBusqueda('', 'Ha proporcionado información con un formato incorrecto');
+      this.tieneValorRfc = true;
       return;
     }
-  let MOCK_DATA;
-  if (REGISTRO_VALUE) {
-  this.mostrarNotificacionDeBusqueda();
-    MOCK_DATA = {
-      rfc: REGISTRO_VALUE,
-      nombre: 'EUROFOODS DE MEXICO',
-      apellidoPaterno: 'GONZALEZ',
-      apellidoMaterno: 'PINAL',
-      telefono: '618-256-2532',
-      cuidad: 'DURANGO',
-      correoElectronico: 'vucem2.5@hotmail.com',
-    };
-
-    this.enlaceOperativoForm.patchValue(MOCK_DATA);
+    if (REGISTRO_VALUE) {
+       this.mostrarNotificacionDeBusqueda('', 'Datos guardados correctamente');
+       this.tieneValorRfc = true;
+        MOCK_DATA = {
+        rfc: REGISTRO_VALUE,
+        nombre: 'EUROFOODS DE MEXICO',
+        apellidoPaterno: 'GONZALEZ',
+        apellidoMaterno: 'PINAL',
+        telefono: '618-256-2532',
+        cuidad: 'DURANGO',
+        correoElectronico: 'vucem2.5@hotmail.com',
+      };
+      this.enlaceOperativoForm.patchValue(MOCK_DATA);
+    }
   }
-}
-
-/**
+ 
+  /**
    * Muestra una notificación de búsqueda exitosa.
    * Este mensaje indica que los datos se guardaron correctamente.
    */
-  mostrarNotificacionDeBusqueda(): void {
-    this.cerrarModal();
+  mostrarNotificacionDeBusqueda(titulo: string,
+    mensaje: string,
+    txtBtnAceptar: string = 'Aceptar',
+    txtBtnCancelar: string = ''): void {
     this.nuevaNotificacion = {
-      tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      categoria: CategoriaMensaje.ERROR,
+       tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
       modo: 'modal',
-      titulo: '',
-      mensaje: 'Datos guardados correctamente.',
+      titulo: titulo,
+      mensaje: mensaje,
       cerrar: false,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
+      txtBtnAceptar: txtBtnAceptar,
+      txtBtnCancelar: txtBtnCancelar
     };
-     this.tieneValorRfc = true;
   }
-
-  /**
-   * Muestra una notificación cuando el RFC tiene un formato incorrecto.
-   * El mensaje alerta al usuario sobre un error en el formato ingresado.
-   */
-  mostrarNotificacionFormatoIncorrecto(): void {
-    this.cerrarModal();
-    this.nuevaNotificacion = {
-      tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      categoria: CategoriaMensaje.ERROR,
-      modo: 'modal',
-      titulo: '',
-      mensaje: 'Ha proporcionado información con un formato incorrecto.',
-      cerrar: false,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
-    this.rfcValido = true;
-  }
-
-
+ 
   /**
    * Abre el cuadro de diálogo modal para el registro de enlaces operativos.
    *
@@ -439,7 +415,7 @@ buscar(): void {
       MODAL_INSTANCIA.show();
     }
   }
-
+ 
   /**
    * Envía los datos del formulario y muestra el modal de confirmación.
    *
@@ -451,14 +427,14 @@ buscar(): void {
    */
   enviarDialogData(): void {
     if (this.enlaceOperativoForm.valid) {
-    this.enlaceInfoDatos();
-    this.limpiarFormulario();
-    this.cambiarEstadoModal();
-  } else {
-    this.enlaceOperativoForm.markAllAsTouched();
+      this.enlaceInfoDatos();
+      this.limpiarFormulario();
+      this.cambiarEstadoModal();
+    } else {
+      this.enlaceOperativoForm.markAllAsTouched();
+    }
   }
-  }
-
+ 
   /**
    * Cancela el cuadro de diálogo modal para el registro de enlaces operativos.
    *
@@ -471,7 +447,7 @@ buscar(): void {
     this.cambiarEstadoModal();
     this.limpiarFormulario();
   }
-
+ 
   /**
    * Restablece el formulario de registro de enlaces operativos a su estado inicial.
    *
@@ -483,7 +459,7 @@ buscar(): void {
   limpiarFormulario(): void {
     this.enlaceOperativoForm.reset();
   }
-
+ 
   /**
    * Alterna la visibilidad del cuadro de diálogo modal para el registro de enlaces operativos.
    *
@@ -500,7 +476,7 @@ buscar(): void {
       MODAL_INSTANCIA.hide();
     }
   }
-
+ 
   /**
    * Agrega o actualiza los datos del enlace operativo en la lista de registros.
    *
@@ -513,9 +489,9 @@ buscar(): void {
     if (!this.enlaceOperativoForm.valid) {
       return;
     }
-
+ 
     const FORM_DATA = this.enlaceOperativoForm.getRawValue();
-
+ 
     if (this.modoEdicion && this.registroEditandoId !== undefined) {
       this.enlaceOperativoData = this.enlaceOperativoData.map((item) =>
         item.id === this.registroEditandoId ? { ...item, ...FORM_DATA } : item
@@ -526,12 +502,12 @@ buscar(): void {
           ? Math.max(...this.enlaceOperativoData.map((item) => item.id || 0)) +
             1
           : 1;
-
+ 
       const ENLACE_OPERATIVO: TablaEnlaceOperativo = {
         ...FORM_DATA,
         id: NEW_ID,
       };
-
+ 
       this.enlaceOperativoData = [
         ...this.enlaceOperativoData,
         ENLACE_OPERATIVO,
@@ -541,9 +517,8 @@ buscar(): void {
       enlaceOperativoData: this.enlaceOperativoData,
     });
     this.filaSeleccionadaEnlaceOperativo = {} as TablaEnlaceOperativo;
-    this.mostrarError = false;
   }
-
+ 
   /**
    * Método para cerrar el modal de confirmación.
    * @returns {void}
@@ -551,11 +526,10 @@ buscar(): void {
   cerrarModal(): void {
     this.confirmEliminarPopupAbierto = false;
     this.tieneValorRfc = false;
-    this.rfcValido = false;
     this.esFilaSeleccionada = false;
     this.multipleSeleccionPopupAbierto = false;
   }
-
+ 
   /**
    * Maneja la selección de filas en la tabla de enlaces operativos.
    *
@@ -575,7 +549,7 @@ buscar(): void {
     }
     this.filaSeleccionadaEnlaceOperativo = fila[fila.length - 1];
   }
-
+ 
   /**
    * Actualiza la fila seleccionada con los datos más recientes de la tabla.
    *
@@ -589,12 +563,12 @@ buscar(): void {
     const DATOS_ACTUALIZADOS = this.enlaceOperativoData.find(
       (item) => item.id === this.filaSeleccionadaEnlaceOperativo.id
     );
-
+ 
     if (DATOS_ACTUALIZADOS) {
       this.filaSeleccionadaEnlaceOperativo = { ...DATOS_ACTUALIZADOS };
     }
   }
-
+ 
   /**
    * Elimina los elementos seleccionados de la tabla de enlaces operativos.
    *
@@ -609,11 +583,11 @@ buscar(): void {
       const IDS_TO_DELETE = this.listaFilaSeleccionadaEnlace.map(
         (item) => item.id
       );
-
+ 
       this.enlaceOperativoData = this.enlaceOperativoData.filter(
         (item) => !IDS_TO_DELETE.includes(item.id)
       );
-
+ 
       this.listaFilaSeleccionadaEnlace = [];
       this.filaSeleccionadaEnlaceOperativo = {} as TablaEnlaceOperativo;
       this.tramite32605Store.actualizarEstado({
@@ -621,8 +595,7 @@ buscar(): void {
       });
     }
   }
-
-
+ 
   /**
    * Modifica un enlace operativo seleccionado en la tabla.
    *
@@ -631,7 +604,7 @@ buscar(): void {
    * una fila seleccionada, abre el modal de edición con los datos cargados.
    * Si hay múltiples filas seleccionadas, muestra un popup de error.
    */
- modificarItemEnlace(): void {
+  modificarItemEnlace(): void {
     this.cerrarModal();
     if(this.enlaceOperativoData.length === 0) {
       this.abrirMultipleSeleccionPopup('', 'No se encontró información');
@@ -656,7 +629,7 @@ buscar(): void {
     }
   }
  
- /**
+    /**
    * @method abrirMultipleSeleccionPopup
    * Muestra un popup de notificación con contenido dinámico.
    * Este método permite personalizar el título, mensaje y etiquetas de los botones del popup.
@@ -695,7 +668,7 @@ buscar(): void {
     if (!this.filaSeleccionadaEnlaceOperativo) {
       return;
     }
-
+ 
     this.enlaceOperativoForm.patchValue({
       registro: this.filaSeleccionadaEnlaceOperativo.registro,
       rfc: this.filaSeleccionadaEnlaceOperativo.rfc,
@@ -709,7 +682,7 @@ buscar(): void {
       suplente: this.filaSeleccionadaEnlaceOperativo.suplente,
     });
   }
-
+ 
   /**
    * Confirma la eliminación de los elementos seleccionados en la tabla.
    *
@@ -718,7 +691,7 @@ buscar(): void {
    * el popup de confirmación. Si no hay elementos seleccionados, muestra
    * un mensaje de error. Si hay elementos, abre el popup de confirmación.
    */
-   confirmeliminarEnlaceItem(): void {
+  confirmeliminarEnlaceItem(): void {
     this.cerrarModal();
     if (this.enlaceOperativoData.length === 0) {
       this.multipleSeleccionPopupAbierto = true;
@@ -754,7 +727,22 @@ buscar(): void {
       txtBtnCancelar: 'Cancelar',
     };
   }
-
+ 
+  /**
+   * Validates the representante form and sets the mostrarError flag if validation fails
+   * @returns boolean indicating if the form is valid
+   */
+  validarFormulario(): boolean {
+    this.mostrarError = false;
+ 
+    if (!this.enlaceOperativoData || this.enlaceOperativoData.length === 0) {
+      this.mostrarError = true;
+      return false;
+    }
+ 
+    return true;
+  }
+ 
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */
@@ -762,19 +750,4 @@ buscar(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
-  /**
- * Validates that there is at least one enlace operativo in the list.
- * @returns boolean indicating if there are enlace operativos
- */
-public validarEnlaceOperativo(): boolean {
-  if (this.enlaceOperativoData.length === 0) {
-    this.mostrarError = true;
-    return false;
-  }
-  
-  this.mostrarError = false;
-  return true;
 }
-}
-
-

@@ -45,6 +45,10 @@
       @if(esDatosRespuesta && reconocimientoMutuoValue === '1'){
         <app-c-tpat #ctpatRef [hidden]="indice !== 5"></app-c-tpat>
       }
+
+      @if(esDatosRespuesta){
+        <app-perfiles #perfilesRef [hidden]="indice !== 6"></app-perfiles>
+      }
     </ng-container>
 
   </div>

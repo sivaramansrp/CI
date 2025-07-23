@@ -79,7 +79,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     { index: 2, title: 'Datos Comunes', component: 'datos-comunes' },
     { index: 3, title: 'Terceros relacionados', component: 'terceros-relacionados' },
     { index: 4, title: 'Importador/Exportador', component: 'importador-exportador' },
-    { index: 5, title: 'CTPAT', component: 'c-tpat' }
+    { index: 5, title: 'CTPAT', component: 'c-tpat' },
+    { index: 6, title: 'Perfiles', component: 'perfiles' }
   ];
 
   constructor(private consultaQuery: ConsultaioQuery, public solicitudService: SolicitudService) {

@@ -22,6 +22,7 @@ import { TercerosRelacionadosComponent } from './components/terceros-relacionado
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrModule } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { PerfilesComponent } from './components/perfiles/perfiles.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
     CTPATComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    PerfilesComponent
   ],
   exports: [],
   

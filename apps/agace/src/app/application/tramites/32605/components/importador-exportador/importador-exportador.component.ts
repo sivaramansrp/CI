@@ -164,12 +164,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    * Define la estructura y formato de las columnas de transportistas.
    */
   transportistasConfiguracionColumnas: ConfiguracionColumna<TransportistasTable>[] = TRANSPORTISTAS_CONFIGURACION;
-  
-  /**
-   * Lista de transportistas que se muestra en la tabla.
-   * Array que contiene todos los transportistas agregados al trámite.
-   */
-  transportistasLista: TransportistasTable[] = [];
+
   
   /**
    * Lista de empresas del grupo que se muestra en la tabla principal.
@@ -294,10 +289,10 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     @Inject(BsModalService)
     private modalService: BsModalService,
-    private solicitudService: SolicitudService,
-    private tramite32605Store: Solicitud32605Store,
-    private tramite32605Query: Solicitud32605Query,
-    private consultaioQuery: ConsultaioQuery
+    public solicitudService: SolicitudService,
+    public tramite32605Store: Solicitud32605Store,
+    public tramite32605Query: Solicitud32605Query,
+    public consultaioQuery: ConsultaioQuery
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(

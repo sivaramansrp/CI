@@ -27,7 +27,9 @@
                   formControlName="nombreSistema"
                   [disabled]="!radioSeleccionado"
                   />
-               
+               <div *ngIf="esInvalido('nombreSistema')" class="text-danger mt-3">
+                <b *ngIf="registroControlInventariosForm.controls['nombreSistema'].hasError('required')">Respuesta Obligatoria</b>
+            </div>
             </div>
          </div>
          <div class="col-md-6">
@@ -42,7 +44,9 @@
                   formControlName="lugarRadicacion"
                   [disabled]="!radioSeleccionado"
                   />
-              
+              <div *ngIf="esInvalido('lugarRadicacion')" class="text-danger mt-3">
+                <b *ngIf="registroControlInventariosForm.controls['lugarRadicacion'].hasError('required')">Respuesta Obligatoria</b>
+            </div>
             </div>
          </div>
       </div>

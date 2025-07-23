@@ -279,8 +279,8 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     this.registroControlInventariosForm = this.fb.group({
       id: [null],
       sistemaControlInventariosArt59: ['', [Validators.required]],
-      nombreSistema: [{value: '', disabled: true}],
-      lugarRadicacion: [{value: '', disabled: true}],
+      nombreSistema: [{value: '', disabled: true},[Validators.required]],
+      lugarRadicacion: [{value: '', disabled: true},[Validators.required]],
       cumpleAnexo24: [false],
     });
 
@@ -861,11 +861,11 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-  public validarFormularios(): boolean {
+public validarFormularios(): boolean {
     // Validar formulario principal de registro
-    if (this.registroControlInventariosForm) {
-      this.registroControlInventariosForm.markAllAsTouched();
-      return this.registroControlInventariosForm.valid;
+    if (this.registroControlInventariosForm.get('sistemaControlInventariosArt59')) {
+      this.registroControlInventariosForm.get('sistemaControlInventariosArt59')?.markAllAsTouched();
+      return this.registroControlInventariosForm.get('sistemaControlInventariosArt59')?.valid as boolean;
     }
     return false;
   }

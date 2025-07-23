@@ -64,7 +64,7 @@ validarFormulario(): boolean {
   //Validar formulario de enlace operativo y verificar que existan datos
   if (this.enlaceOperativoComponent) {
     // Validar que exista al menos un enlace operativo en la lista
-    if (!this.enlaceOperativoComponent.validarEnlaceOperativo()) {
+    if (!this.enlaceOperativoComponent.validarFormulario()) {
       isValid = false;
     }
     

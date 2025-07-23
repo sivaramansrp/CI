@@ -263,6 +263,7 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
     this.tramite32605Query.selectSolicitud$?.pipe(takeUntil(this.destroy$))
       .subscribe((data: Solicitud32605State) => {
         this.solicitudState = data;
+        this.transportistasLista = this.solicitudState.transportistasLista;
         if (data.transportistasLista) {
           this.transportistasLista = [...data.transportistasLista];
         }
