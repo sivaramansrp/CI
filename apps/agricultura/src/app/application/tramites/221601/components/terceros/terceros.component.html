@@ -363,7 +363,8 @@
         </div>
 
         <!-- Form fields based on selection -->
-        <div class="row mb-3">
+        <!-- Fields for Física -->
+        <div class="row mb-3" *ngIf="buscarTercerosForm.get('tipoPersonaBuscar')?.value === 'fisica'">
           <div class="col-md-4">
             <label class="form-label" for="nombreBuscar">Nombre:</label>
             <input class="form-control" id="nombreBuscar" type="text" formControlName="nombre" />
@@ -378,6 +379,14 @@
           </div>
         </div>
 
+        <!-- Fields for Moral -->
+        <div class="row mb-3" *ngIf="buscarTercerosForm.get('tipoPersonaBuscar')?.value === 'moral'">
+          <div class="col-md-8">
+            <label class="form-label" for="razonSocialBuscar">Razón social:</label>
+            <input class="form-control" id="razonSocialBuscar" type="text" formControlName="razonSocial" />
+          </div>
+        </div>
+
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label" for="correoElectronicoBuscar">Correo electrónico:</label>
@@ -387,22 +396,18 @@
 
         <div class="row mb-3">
           <div class="col-md-6">
-            <label class="form-label" for="paisBuscar">País:</label>
-            <select class="form-select" id="paisBuscar" formControlName="pais">
-              <option value="1">MÉXICO (ESTADOS UNIDOS MEXICANOS)</option>
-            </select>
+            <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'País'" [isDisabled]="true"
+                [isDisabled]="esFormularioSoloLectura" [required]="true" name="pais"></app-catalogo-select>
           </div>
+        
           <div class="col-md-6">
-            <label class="form-label" for="entidadFederativaBuscar">Entidad federativa:</label>
-            <select class="form-select" id="entidadFederativaBuscar" formControlName="entidadFederativa">
-              <option value="">Selecciona un valor</option>
-            </select>
+            <app-catalogo-select [catalogo]="estadoCatalogo" formControlName="entidadFederativa" [label]="'Entidad Federativa'" [isDisabled]="true"
+                [isDisabled]="esFormularioSoloLectura" [required]="true" name="entidadFederativa" [placeholder]="'Selecciona una valor'"></app-catalogo-select>
           </div>
-        </div>
-
-        <!-- Action buttons -->
+</div>
+<!-- Action buttons -->
         <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-secondary me-2" (click)="cerrarBuscarTercerosModal()">Cerrar</button>
+          <button type="button" class="btn btn-primary me-2" (click)="cerrarBuscarTercerosModal()">Cerrar</button>
           <button type="button" class="btn btn-outline-secondary me-2" (click)="limpiarBuscarTerceros()">Limpiar</button>
           <button type="button" class="btn btn-primary" (click)="buscarTerceros()">Buscar</button>
         </div>

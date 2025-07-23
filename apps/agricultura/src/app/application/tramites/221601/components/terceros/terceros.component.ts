@@ -136,6 +136,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
       nombre: [''],
       apellidoPaterno: [''],
       apellidoMaterno: [''],
+      razonSocial: [''],
       correoElectronico: [''],
       pais: [this.paisCatalogo[0].id],
       entidadFederativa: ['']
@@ -268,7 +269,13 @@ export class TercerosComponent implements OnInit, OnDestroy {
     // Reset the search form
     this.buscarTercerosForm.reset({
       tipoPersonaBuscar: 'fisica',
-      pais: this.paisCatalogo[0].id
+      pais: this.paisCatalogo[0].id,
+      nombre: '',
+      apellidoPaterno: '',
+      apellidoMaterno: '',
+      razonSocial: '',
+      correoElectronico: '',
+      entidadFederativa: ''
     });
   }
 
@@ -279,7 +286,13 @@ export class TercerosComponent implements OnInit, OnDestroy {
   limpiarBuscarTerceros(): void {
     this.buscarTercerosForm.reset({
       tipoPersonaBuscar: 'fisica',
-      pais: this.paisCatalogo[0].id
+      pais: this.paisCatalogo[0].id,
+      nombre: '',
+      apellidoPaterno: '',
+      apellidoMaterno: '',
+      razonSocial: '',
+      correoElectronico: '',
+      entidadFederativa: ''
     });
   }
 
