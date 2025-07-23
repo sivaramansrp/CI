@@ -16,13 +16,15 @@ import {
 } from '@angular/forms';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+
 @Component({
   selector: 'app-catalogo-select',
   standalone: true,
   templateUrl: './catalogo-select.component.html',
   styleUrl: './catalogo-select.component.scss',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TooltipModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

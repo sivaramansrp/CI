@@ -80,7 +80,7 @@ export const MSG_NRO_PEDIMENTO = 'Necesita agregar un número de pedimento';
  * @description Mensaje de error cuando se intenta agregar un numero de pedimento sin haber seleccionado una aduana de despacho.
  */
 export const MSG_ADUANA_PEDIMENTO =
-  'Necesita seleccionar una aduana de despacho.';
+  'Necesitas seleccionar una aduana de despacho';
 
 /**
  * @description Mensaje pedimento válido

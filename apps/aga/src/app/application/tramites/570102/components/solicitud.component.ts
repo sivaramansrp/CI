@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BtnContinuarComponent, ConsultaioQuery, ConsultaioState, DatosPasos, ListaPasosWizard, PASOS, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud570102State, Tramite570102Store } from '../state/Tramite570102.store';
@@ -13,8 +13,8 @@ import { Tramite570102Query } from '../state/Tramite570102.query';
   selector: 'app-solicitud',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, BtnContinuarComponent],
-  templateUrl: './Solicitud.component.html',
-  styleUrl: './Solicitud.component.css',
+  templateUrl: './solicitud.component.html',
+  styleUrl: './solicitud.component.css',
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
 
@@ -192,10 +192,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Emite el evento para indicar el cambio de paso al componente padre.
    */
-  emitirEventoClick() {
+  emitirEventoClick(): void {
     this.indice = 1;
     this.datosPasos.indice = 1;
-    this.datosPasos.txtBtnAnt;
     this.dataEvent.emit(1);
   }
 
