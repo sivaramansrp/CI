@@ -38,8 +38,12 @@
   <div class="row">
     <div class="col-md-12">
       <div class="pull-right ml-2">
-        <button type="button" class="btn btn-primary" (click)="abrirModal()"
-          [disabled]="formularioDeshabilitado">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="abrirModal()"
+          [disabled]="formularioDeshabilitado"
+        >
           Seleccionar establecimiento
         </button>
       </div>
@@ -68,10 +72,16 @@
             "
           />
           <div
-            *ngIf="datosSolicitudForm.get('rfcSanitario')?.touched && datosSolicitudForm.get('rfcSanitario')?.errors?.['pattern']"
+            *ngIf="datosSolicitudForm.get('rfcSanitario')?.hasError('pattern')"
             class="mensaje-error"
           >
             El RFC no tiene un formato válido.
+          </div>
+          <div
+            class="mensaje-error"
+            *ngIf="datosSolicitudForm.get('rfcSanitario')?.errors?.['required'] && datosSolicitudForm.get('rfcSanitario')?.touched"
+          >
+            Este campo es obligatorio.
           </div>
         </div>
       </div>
@@ -84,10 +94,12 @@
           <label class="form-label municipio-label" for="denominacionRazon"
             >Denominación o razón social</label
           >
-          <span class="form-label municipio-label" *ngIf="esCampoRequerido('denominacionRazon')"
+          <span
+            class="form-label municipio-label"
+            *ngIf="esCampoRequerido('denominacionRazon')"
             >*</span
           >
-          <span class="form-label municipio-labe"> :</span>
+          <span class="form-label municipio-labe">:</span>
           <input
             class="form-control"
             id="denominacionRazon"
@@ -126,7 +138,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="codigoPostal">Código postal * :</label>
+          <label class="form-label" for="codigoPostal">Código postal*:</label>
           <input
             class="form-control"
             id="codigoPostal"
@@ -147,7 +159,7 @@
             class="mensaje-error"
             *ngIf="datosSolicitudForm.get('codigoPostal')?.errors?.['pattern']"
           >
-            por favor escribe un número entero valido
+            Por favor, escribe un número entero válido.
           </div>
         </div>
       </div>
@@ -168,7 +180,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label municipio-label" for="municipioAlcaldia"
-            >{{ etiquetaMunicipio }} * :</label
+            >{{ etiquetaMunicipio }}*:</label
           >
           <input
             class="form-control"
@@ -195,10 +207,10 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="localidad">Localidad</label>
-          <span class="form-label" *ngIf="esCampoRequerido('localidad')"
-            > *</span
+          <span class="form-label" *ngIf="esCampoRequerido('localidad')">
+            *</span
           >
-          <span class="form-label"> :</span>
+          <span class="form-label">:</span>
           <input
             class="form-control"
             id="localidad"
@@ -222,7 +234,7 @@
         <div class="form-group">
           <label class="form-label" for="colonia">Colonia</label>
           <span class="form-label" *ngIf="esCampoRequerido('colonia')"> *</span>
-          <span class="form-label"> :</span>
+          <span class="form-label">:</span>
           <input
             class="form-control"
             id="colonia"
@@ -279,12 +291,12 @@
       @if(mostrarRFCCalle){
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="calle">Calle *:</label>
+          <label class="form-label" for="calle">Calle*:</label>
           <span
-            class="bi bi-question-circle-fill"
-            title="Domicilio, calle, numero interior, numero exterior, lote"
-            data-bs-toggle="tooltip"
-          ></span>
+            tooltip="Domicilio, calle, numero interior, numero exterior, lote"
+          >
+            <i class="bi bi-question-circle-fill"></i>
+          </span>
           <input
             class="form-control"
             id="calle"
@@ -311,13 +323,11 @@
       >
         <div class="form-group">
           <label class="form-label" for="correoElectronico"
-            >Correo electrónico * : </label
-          >
-          <span
-            class="bi bi-question-circle-fill"
-            title="ejemplo@dominio.com"
-            data-bs-toggle="tooltip"
-          ></span>
+            >Correo electrónico*:
+          </label>
+          <span tooltip="ejemplo@dominio.com">
+            <i class="bi bi-question-circle-fill"></i>
+          </span>
           <input
             class="form-control"
             id="correoElectronico"
@@ -336,6 +346,16 @@
           >
             Este campo es obligatorio.
           </small>
+
+          <div
+            class="mensaje-error"
+            *ngIf="
+              datosSolicitudForm.get('correoElectronico')?.touched &&
+              datosSolicitudForm.get('correoElectronico')?.hasError('email')
+            "
+          >
+            El valor ingresado no es una dirección válida de correo electrónico.
+          </div>
         </div>
       </div>
       <div
@@ -393,7 +413,7 @@
 
       <div class="col-md-3">
         <div class="form-group">
-          <label class="form-label" for="telefono">Teléfono * :</label>
+          <label class="form-label" for="telefono">Teléfono*:</label>
           <input
             class="form-control"
             id="telefono"
@@ -414,7 +434,7 @@
             *ngIf="datosSolicitudForm.get('telefono')?.errors?.['pattern']"
             class="mensaje-error"
           >
-            El teléfono debe contener solo números.
+            Por favor, escribe un número entero válido
           </div>
         </div>
       </div>
@@ -424,11 +444,11 @@
     <div class="row mt-5">
       <div class="col-md-3 my-3">
         <div class="form-group">
-          <label class="form-label municipio-label" for="telefono">S. C. I. A. N </label>
-          <span class="form-label" *ngIf="esCampoRequerido('scian')"
-            > *</span
-          >
-          <span class="form-label"> :</span>
+          <label class="form-label municipio-label" for="telefono"
+            >S. C. I. A. N
+          </label>
+          <span class="form-label" *ngIf="esCampoRequerido('scian')">*</span>
+          <span class="form-label">:</span>
         </div>
       </div>
       <app-tabla-dinamica
@@ -448,7 +468,7 @@
             name="eliminarScian"
             class="btn btn-danger ms-2"
             (click)="eliminarModal()"
-          [disabled]="formularioDeshabilitado"
+            [disabled]="formularioDeshabilitado"
           >
             Eliminar
           </button>
@@ -459,7 +479,7 @@
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarScain"
             (click)="agregarScian()"
-          [disabled]="formularioDeshabilitado"
+            [disabled]="formularioDeshabilitado"
           >
             Agregar
           </button>
@@ -487,13 +507,14 @@
       <div class="col-md-4">
         <label class="form-label mx-1" for="licenciaSanitaria"
           >No. de licencia sanitaria
-          <span *ngIf="!datosSolicitudForm.value.aviso">*</span> :</label
+          <span *ngIf="!datosSolicitudForm.value.aviso">*</span>:</label
         >
+
         <span
-          class="bi bi-question-circle-fill"
-          title="Número de la autorización indicado en el  documento emitido por la autoridad sanitaria competente"
-          data-bs-toggle="tooltip"
-        ></span>
+          tooltip="Número de la autorización indicado en el  documento emitido por la autoridad sanitaria competente"
+        >
+          <i class="bi bi-question-circle-fill"></i>
+        </span>
         <input
           class="form-control"
           id="licenciaSanitaria"
@@ -528,6 +549,9 @@
             [placeholder]="'Selecciona un valor'"
             [tooltipQuestionCircle]="true"
             [questionCircleTooltip]="'Régimen al que se destinará la mercancía'"
+            [tooltipQuestionCircleText]="
+              'Régimen al que se destinará la mercancía'
+            "
             [required]="true"
             name="regimen"
             [isDisabled]="formularioDeshabilitado"
@@ -584,8 +608,8 @@
     </div>
     @if (datosSolicitudForm.get('adunasDeEntradas')?.value) {
     <div class="row mt-2">
-      <div class="col-md-12 pull-right">
-        <div class="form-check">
+      <div class="col-md-12">
+        <div class="form-check pull-right">
           <input
             class="form-check-input"
             type="checkbox"
@@ -597,9 +621,10 @@
             >Aeropuerto Internacional Ciudad de México (AICM)
           </label>
           <span
-            class="bi bi-question-circle-fill"
-            title="Aeropuerto Internacional Ciudad de México"
+            tooltip="Marcar la casilla si requiere usar esta aduana."
             data-bs-toggle="tooltip"
+          >
+            <i class="bi bi-question-circle-fill"></i
           ></span>
         </div>
       </div>
@@ -625,7 +650,7 @@
             name="modificarMercancias"
             class="btn btn-default"
             (click)="modificarDatos()"
-          [disabled]="formularioDeshabilitado"
+            [disabled]="formularioDeshabilitado"
           >
             Modificar
           </button>
@@ -635,7 +660,7 @@
             name="eliminarMercancias"
             class="btn btn-danger ms-2"
             (click)="eliminarMercancias()"
-          [disabled]="formularioDeshabilitado"
+            [disabled]="formularioDeshabilitado"
           >
             Eliminar
           </button>
@@ -647,7 +672,7 @@
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarMercancias"
             (click)="agregarMercancias()"
-          [disabled]="formularioDeshabilitado"
+            [disabled]="formularioDeshabilitado"
           >
             Agregar
           </button>
@@ -823,17 +848,17 @@
     <ng-template #campoCorreoElectronico>
       <div class="form-group">
         <label class="form-label" for="correoElectronico"
-          >Correo electrónico</label
-        >
-        <span class="form-label municipio-label" *ngIf="esCampoRequerido('correoElectronico')"
-          > </span
-        >
-        <span class="form-label mx-1"> :</span>
+          >Correo electrónico
+        </label>
         <span
-          class="bi bi-question-circle-fill"
-          title="ejemplo@dominio.com"
-          data-bs-toggle="tooltip"
-        ></span>
+          class="form-label municipio-label"
+          *ngIf="esCampoRequerido('correoElectronico')"
+          >*</span
+        >
+        <span class="form-label mx-1">:</span>
+        <span tooltip="ejemplo@dominio.com">
+          <i class="bi bi-question-circle-fill"></i>
+        </span>
         <input
           class="form-control"
           id="correoElectronico"
@@ -854,6 +879,15 @@
         >
           Este campo es obligatorio.</small
         >
+        <div
+          class="mensaje-error"
+          *ngIf="
+            datosSolicitudForm.get('correoElectronico')?.touched &&
+            datosSolicitudForm.get('correoElectronico')?.hasError('email')
+          "
+        >
+          El valor ingresado no es una dirección válida de correo electrónico.
+        </div>
       </div>
     </ng-template>
   </form>

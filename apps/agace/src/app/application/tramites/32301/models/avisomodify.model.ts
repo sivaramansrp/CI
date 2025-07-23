@@ -1,3 +1,12 @@
+/**
+ * Representa el grupo principal de datos para el formulario de trámite.
+ *
+ * Incluye información relevante como fechas seleccionadas, tipo de devolución y aviso,
+ * datos del proveedor extranjero, modificaciones de socios y goce de inmueble,
+ * información de personas involucradas en fusiones o escisiones, datos de la empresa,
+ * tipo de carga del trámite, datos de quien recibe el trámite, domicilio relacionado,
+ * y detalles de mercancía y submanufactura.
+ */
 export interface FormularioGrupo {
   /** Fechas seleccionadas para el formulario */
   fechasSeleccionadas: FechasSeleccionadas;
@@ -23,6 +32,18 @@ export interface FormularioGrupo {
   datosMercanciaSubmanufactura: DatosMercanciaSubmanufactura,
 }
 
+/**
+ * Representa los detalles de un aviso de modificación para procesos de certificación.
+ *
+ * @property modalidadCertificacion - Modalidad de certificación.
+ * @property foreignClientsSuppliers - Indica si la entidad es cliente o proveedor extranjero.
+ * @property nationalSuppliers - Indica si la entidad es proveedor nacional.
+ * @property modificationsMembers - Indica si existen modificaciones de socios.
+ * @property changesToLegalDocuments - Indica si existen cambios en documentos legales.
+ * @property mergerOrSplitNotice - Indica si el aviso es por fusión o escisión.
+ * @property additionFractions - Indica si existen fracciones adicionales.
+ * @property acepto253 - Aceptación de la sección 253.
+ */
 export interface TipoDevAviso {
   /** Modalidad de certificación */
   modalidadCertificacion: string;
@@ -42,13 +63,33 @@ export interface TipoDevAviso {
   acepto253: boolean,
 }
 
+/**
+ * Representa la información de un proveedor extranjero.
+ *
+ * @property archivoExtranjero - Archivo relacionado con el proveedor extranjero (puede ser nulo).
+ * @property registrosProveedoresExtranjeros - Registros de proveedores extranjeros.
+ * @property isActive - Indica si el componente de modificación de socios está activo (opcional).
+ */
 export interface ProveedorExtranjero {
   /** Archivo relacionado con el proveedor extranjero (puede ser nulo) */
   archivoExtranjero: object | null,
   /** Registros de proveedores extranjeros */
-  registrosProveedoresExtranjeros: string
+  registrosProveedoresExtranjeros: string,
+  /** Indica si el componente de modificación de socios está activo */
+  isActive?: boolean,
 }
 
+/**
+ * Representa la información relacionada con la modificación de un socio.
+ *
+ * @property ensucarácterde - Número que identifica la modificación del socio.
+ * @property obligadoaTributarenMéxico - Indica si el socio está obligado a tributar en México.
+ * @property nacionalidad - Nacionalidad del socio.
+ * @property registroFederaldeContribuyentes - Registro federal de contribuyentes del socio (puede ser nulo).
+ * @property rfc - RFC del socio.
+ * @property nombreCompleto - Nombre completo del socio.
+ * @property isActive - Indica si el componente de modificación de socios está activo (opcional).
+ */
 export interface ModificacionSocios {
   /** Número que identifica la modificación del socio */
   ensucarácterde: number,
@@ -61,9 +102,32 @@ export interface ModificacionSocios {
   /** RFC del socio */
   rfc: string,
   /** Nombre completo del socio */
-  nombreCompleto: string
+  nombreCompleto: string,
+  /** Indica si el componente de modificación de socios está activo */
+  isActive?: boolean,
 }
 
+/**
+ * Representa la modificación del goce de un inmueble, incluyendo información sobre la ubicación,
+ * fechas de goce anterior y actual, datos de las partes contratantes y observaciones relevantes.
+ *
+ * @property idAviInmueble - Identificador del inmueble.
+ * @property direccion - Dirección del inmueble.
+ * @property codigoPostal - Código postal del inmueble.
+ * @property cveEntidad - Clave de la entidad federativa.
+ * @property cveMunicipio - Clave del municipio.
+ * @property cveTipoDoc - Clave del tipo de documento.
+ * @property fechaInicioAnterior - Fecha de inicio del goce anterior.
+ * @property fechaFinAnterior - Fecha de fin del goce anterior.
+ * @property fechaInicioActual - Fecha de inicio del goce actual.
+ * @property fechaFinActual - Fecha de fin del goce actual.
+ * @property rfcPartesC - RFC de las partes contratantes.
+ * @property rfcPartesCons - RFC de las partes contratantes (consorcio).
+ * @property nombrePartesCons - Nombre de las partes contratantes (consorcio).
+ * @property caracterDeCons - Carácter de las partes contratantes.
+ * @property observaciones - Observaciones sobre el inmueble.
+ * @property isActive - Indica si el componente de modificación de socios está activo.
+ */
 export interface ModificacionGoceInmueble {
   /** Identificador del inmueble */
   idAviInmueble: string,
@@ -94,9 +158,22 @@ export interface ModificacionGoceInmueble {
   /** Caracter de las partes contratantes */
   caracterDeCons: string,
   /** Observaciones sobre el inmueble */
-  observaciones: string
+  observaciones: string,
+  /** Indica si el componente de modificación de socios está activo */
+  isActive?: boolean,
 }
 
+
+/**
+ * Representa el DTO de una persona o entidad involucrada en un proceso de fusión o escisión.
+ *
+ * @property rfc - RFC (Registro Federal de Contribuyentes) de la persona o entidad.
+ * @property razonSocial - Razón social o nombre legal de la persona o entidad.
+ * @property numFolioTramite - Número de folio del trámite.
+ * @property fechaInicioVigencia - Fecha de inicio de la vigencia.
+ * @property fechaFinVigencia - Fecha de fin de la vigencia.
+ * @property isActive - Indica si el componente de modificación de socios está activo.
+ */
 export interface PersonaFusionEscisionDTO {
   /** RFC de la persona o entidad */
   rfc: string,
@@ -107,9 +184,20 @@ export interface PersonaFusionEscisionDTO {
   /** Fecha de inicio de la vigencia */
   fechaInicioVigencia: string,
   /** Fecha de fin de la vigencia */
-  fechaFinVigencia: string
+  fechaFinVigencia: string,
+  /** Indica si el componente de modificación de socios está activo */
+  isActive?: boolean,
 }
 
+/**
+ * Representa los datos de la empresa relacionados con el aviso de modificación.
+ *
+ * @property numeroPrograma - Número de programa asociado.
+ * @property anoPrograma - Año del programa.
+ * @property mesCorrespondeAviso - Mes al que corresponde el aviso.
+ * @property anoCorrespondeAviso - Año al que corresponde el aviso.
+ * @property isActive - Indica si el componente de modificación de socios está activo (opcional).
+ */
 export interface DatosEmpresa {
   /** Número de programa asociado */
   numeroPrograma: string,
@@ -119,18 +207,37 @@ export interface DatosEmpresa {
   mesCorrespondeAviso: string,
   /** Año al que corresponde el aviso */
   anoCorrespondeAviso: string,
+  /** Indica si el componente de modificación de socios está activo */
+  isActive?: boolean,
 }
 
+/**
+ * Representa el tipo de carga para el formulario.
+ *
+ * @property cargaTipo - Tipo de carga del formulario.
+ */
 export interface CargaTipo {
   /** Tipo de carga del formulario */
   cargaTipo: string,
 }
 
+/**
+ * Representa un conjunto de fechas seleccionadas.
+ *
+ * @property fechasSeleccionadas - Un arreglo de cadenas, cada una representa una fecha seleccionada.
+ */
 export interface FechasSeleccionadas {
   /** Array de fechas seleccionadas */
   fechasSeleccionadas: string[] // Se asume que es un array de cadenas, ajustar si es necesario
 }
 
+/**
+ * Representa los datos de la persona o entidad que recibe el trámite.
+ *
+ * @property rfc - RFC (Registro Federal de Contribuyentes) de quien recibe.
+ * @property numberProgramaQr - Número de programa asociado al receptor.
+ * @property anoProgramaQr - Año del programa asociado al receptor.
+ */
 export interface DatosQuienRecibe {
   /** RFC de quien recibe */
   rfc: string,
@@ -140,6 +247,18 @@ export interface DatosQuienRecibe {
   anoProgramaQr: string,
 }
 
+/**
+ * Representa los datos de domicilio de un lugar, incluyendo información comercial y de ubicación.
+ *
+ * @property nombreComercial - Nombre comercial del lugar.
+ * @property entidadFederativa - Entidad federativa donde se encuentra el lugar.
+ * @property alcaldiaMunicipio - Alcaldía o municipio del lugar.
+ * @property colonias - Colonias asociadas al lugar.
+ * @property calle - Calle del lugar.
+ * @property numeroExterior - Número exterior del lugar.
+ * @property numeroInterior - Número interior del lugar.
+ * @property codigoPostal - Código postal del lugar.
+ */
 export interface DatosDomicilioLugar {
   /** Nombre comercial del lugar */
   nombreComercial: string,
@@ -159,6 +278,16 @@ export interface DatosDomicilioLugar {
   codigoPostal: string,
 }
 
+/**
+ * Representa los datos de una mercancía en el contexto de submanufactura.
+ *
+ * @property fracArancelaria - Fracción arancelaria de la mercancía.
+ * @property nico - Número de Identificación de la Mercancía (NICO).
+ * @property unidadMedida - Unidad de medida de la mercancía.
+ * @property cantidad - Cantidad de mercancía.
+ * @property valorUsd - Valor en dólares estadounidenses de la mercancía.
+ * @property descripcionMercancia - Descripción de la mercancía.
+ */
 export interface DatosMercanciaSubmanufactura {
   /** Fracción arancelaria de la mercancía */
   fracArancelaria: string,
@@ -174,6 +303,15 @@ export interface DatosMercanciaSubmanufactura {
   descripcionMercancia: string,
 }
 
+/**
+ * Representa las columnas de una tabla con información de una entidad.
+ *
+ * @property rfc - RFC de la entidad.
+ * @property nombreComercial - Nombre comercial de la entidad.
+ * @property entidadFederativa - Entidad federativa de la entidad.
+ * @property alcaldioOMuncipio - Alcaldía o municipio de la entidad.
+ * @property colonia - Colonia de la entidad.
+ */
 export interface ColumnasTabla {
   /** RFC de la entidad */
   rfc: string,
@@ -187,6 +325,12 @@ export interface ColumnasTabla {
   colonia: string,
 }
 
+/**
+ * Representa la estructura de datos para un componente de tabla en Angular.
+ *
+ * @property tableHeader - Un arreglo de cadenas que representa los encabezados de la tabla.
+ * @property tableBody - Un arreglo de objetos `TBodyData` que representa las filas de la tabla.
+ */
 export interface TableDataNgTable {
   /** Encabezados de la tabla */
   tableHeader: string[],
@@ -194,6 +338,11 @@ export interface TableDataNgTable {
   tableBody: TBodyData[],
 }
 
+/**
+ * Representa la estructura de datos para las filas del cuerpo de una tabla.
+ *
+ * @property tbodyData - Un arreglo de cadenas que contiene los datos de cada fila en el cuerpo de la tabla.
+ */
 export interface TBodyData {
   /** Datos de las filas del cuerpo de la tabla */
   tbodyData: string[]
