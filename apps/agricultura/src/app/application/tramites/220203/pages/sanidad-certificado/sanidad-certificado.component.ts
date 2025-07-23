@@ -6,50 +6,79 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
  * @fileoverview
- * Componente principal para la gestión del certificado de sanidad en el trámite de importación de acuicultura.
- * Controla el flujo de pasos del wizard, la navegación entre secciones y la gestión del estado de la sección.
- * Cobertura compodoc 100%: cada propiedad, método y constructor está documentado.
+ * Componente principal para la gestión del certificado de sanidad en el trámite de importación de acuicultura (220203).
+ * Controla el flujo de pasos del wizard, la navegación entre secciones y la validación de formularios.
+ * Cobertura de documentación completa: cada clase, método, propiedad y ViewChild está documentado en español.
  * @module SanidadCertificadoComponent
  */
 
 /**
  * Componente principal para la gestión del certificado de sanidad en el trámite de importación de acuicultura.
- * Permite navegar entre los pasos del wizard y controla el estado de la sección mediante el store.
- * @component SanidadCertificadoComponent
- * @selector app-sanidad-certificado
- * @templateUrl ./sanidad-certificado.component.html
+ * Permite navegar entre los pasos del wizard, controla la validación de formularios y gestiona el estado del trámite.
+ * Coordina la navegación entre diferentes secciones del proceso de importación.
+ * 
+ * @class SanidadCertificadoComponent
+ * @memberof SanidadCertificadoComponent
  */
 @Component({
   selector: 'app-sanidad-certificado',
   templateUrl: './sanidad-certificado.component.html',
 })
 export class SanidadCertificadoComponent {
-      esFormaValido: boolean = false;
-        /**
-       * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
-       */
-        public formErrorAlert = ERROR_FORMA_ALERT
-        ;
-    privacyNoticeContent: string = PRIVACY_NOTICE_CONTENT;
+
   /**
-   * Lista de pasos del wizard, obtenida de las constantes del trámite.
-   * @property {ListaPasosWizard[]} pasos
+   * Indicador de validez del formulario para mostrar mensajes de error.
+   * @public
+   * @type {boolean}
+   * @default false
+   * @memberof SanidadCertificadoComponent
    */
-  pasos: ListaPasosWizard[] = PASOSACUICULTURA;
+  esFormaValido: boolean = false;
+
+  /**
+   * Mensaje de error que se muestra cuando la validación de formularios falla.
+   * @public
+   * @readonly
+   * @type {string}
+   * @memberof SanidadCertificadoComponent
+   */
+  public readonly FORM_ERROR_ALERT = ERROR_FORMA_ALERT;
+
+  /**
+   * Contenido del aviso de privacidad utilizado en el componente.
+   * @public
+   * @readonly
+   * @type {string}
+   * @memberof SanidadCertificadoComponent
+   */
+  readonly PRIVACY_NOTICE_CONTENT: string = PRIVACY_NOTICE_CONTENT;
+
+  /**
+   * Lista de pasos del wizard obtenida de las constantes del trámite de acuicultura.
+   * @public
+   * @readonly
+   * @type {ListaPasosWizard[]}
+   * @memberof SanidadCertificadoComponent
+   */
+  readonly PASOS: ListaPasosWizard[] = PASOSACUICULTURA;
 
   /**
    * Índice actual del paso seleccionado en el wizard.
-   * @property {number} indice
+   * @public
+   * @type {number}
    * @default 1
+   * @memberof SanidadCertificadoComponent
    */
   indice: number = 1;
 
   /**
    * Objeto con la configuración de los textos y número de pasos del wizard.
-   * @property {DatosPasos} datosPasos
+   * @public
+   * @type {DatosPasos}
+   * @memberof SanidadCertificadoComponent
    */
   datosPasos: DatosPasos = {
-    nroPasos: this.pasos.length,
+    nroPasos: this.PASOS.length,
     indice: this.indice,
     txtBtnAnt: 'Guardar',
     txtBtnSig: 'Continuar',
@@ -57,33 +86,34 @@ export class SanidadCertificadoComponent {
 
   /**
    * Referencia al componente Wizard para controlar la navegación entre pasos.
-   * @property {WizardComponent} wizardComponent
+   * @public
+   * @type {WizardComponent}
+   * @memberof SanidadCertificadoComponent
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * Referencia al componente del primer paso para validación de formularios.
+   * @public
+   * @type {PasoUnoComponent}
+   * @memberof SanidadCertificadoComponent
+   */
   @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
 
   /**
-   * Método que actualiza el índice del paso actual y navega en el wizard según la acción recibida.
-   * Si la acción es 'cont', avanza al siguiente paso; si no, retrocede.
-   * @method getValorIndice
-   * @param {AccionBoton} e - Objeto que contiene el valor del nuevo índice y la acción a realizar.
-   * @returns {void}
-   * @step Paso 1: Verifica que el valor del índice esté en el rango permitido.
-   * @step Paso 2: Actualiza el índice actual.
-   * @step Paso 3: Llama al método correspondiente del wizard para avanzar o retroceder.
-   */
-  /**
-   * Maneja la acción del botón y navega entre los pasos.
-   * @method getValorIndice
-   * @param {AccionBoton} e - Objeto con la acción (cont/atras) y el valor (índice) del botón.
+   * Método que maneja la acción del botón y navega entre los pasos del wizard.
+   * Valida formularios antes de continuar desde el primer paso y controla la navegación.
+   * @public
+   * @param {AccionBoton} e - Objeto que contiene la acción (cont/ant) y el valor del índice del botón
+   * @memberof SanidadCertificadoComponent
    */
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
 
     // Validar formularios antes de continuar desde el paso uno
     if (this.indice === 1 && e.accion === 'cont') {
-      const ISVALID = this.validarTodosFormulariosPasoUno();
-      if (!ISVALID) {
+      const ES_VALIDO = this.validarTodosFormulariosPasoUno();
+      if (!ES_VALIDO) {
         this.esFormaValido = true;
         return; // Detener ejecución si los formularios son inválidos
       }
@@ -97,7 +127,7 @@ export class SanidadCertificadoComponent {
     }
 
     // Validar que el nuevo índice esté dentro de los límites permitidos
-    if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
+    if (indiceActualizado > 0 && indiceActualizado <= this.PASOS.length) {
 
       // Actualizar el índice y datosPasos
       this.indice = indiceActualizado;
@@ -110,15 +140,19 @@ export class SanidadCertificadoComponent {
       }
     }
   }
-    /**
- * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
- */
+  /**
+   * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
+   * Verifica que el componente del primer paso esté disponible y ejecuta su método de validación.
+   * @private
+   * @returns {boolean} Retorna true si todos los formularios son válidos, false en caso contrario
+   * @memberof SanidadCertificadoComponent
+   */
   private validarTodosFormulariosPasoUno(): boolean {
     if (!this.pasoUnoComponent) {
       return true;
     }
-    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
-    return ISFORM_VALID_TOUCHED;
+    const ES_FORMULARIO_VALIDO = this.pasoUnoComponent.validarFormularios();
+    return ES_FORMULARIO_VALIDO;
   }
 
 }
