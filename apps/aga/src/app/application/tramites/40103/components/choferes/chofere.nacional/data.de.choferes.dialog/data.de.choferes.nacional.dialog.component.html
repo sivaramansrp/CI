@@ -25,13 +25,16 @@
               <div>
                 <input type="text" class="form-control" formControlName="curp" maxlength="18" />
               </div>
-              @if(getFormValues['curp'].invalid && (getFormValues['curp'].dirty || getFormValues['curp'].touched)) {
+              @if(formChoferes.get('curp')?.invalid && (formChoferes.get('curp')?.dirty || formChoferes.get('curp')?.touched)) {
               <div class="text-danger">
-                @if(getFormValues['curp'].errors?.['required']) {
-                <small>Este campo es obligatorio.</small>
+                @if(formChoferes.get('curp')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
                 }
-                @if(getFormValues['curp'].errors?.['maxLength']) {
-                <small>CURP debe tener exactamente 18 caracteres.</small>
+                @if(formChoferes.get('curp')?.errors?.['pattern']) {
+                  <small>CURP no tiene un formato válido.</small>
+                }
+                @if(formChoferes.get('curp')?.errors?.['maxLength']) {
+                  <small>CURP debe tener exactamente 18 caracteres.</small>
                 }
               </div>
               }
@@ -45,13 +48,13 @@
               <div>
                 <input type="text" class="form-control" formControlName="rfc" maxlength="13" />
               </div>
-              @if(getFormValues['rfc'].invalid && (getFormValues['rfc'].dirty || getFormValues['rfc'].touched)) {
+              @if(formChoferes.get('rfc')?.invalid && (formChoferes.get('rfc')?.dirty || formChoferes.get('rfc')?.touched)) {
               <div class="text-danger">
-                @if(getFormValues['rfc'].errors?.['required']) {
-                <small>Este campo es obligatorio.</small>
+                @if(formChoferes.get('rfc')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
                 }
-                @if(getFormValues['rfc'].errors?.['maxLength']) {
-                <small>RFC debe tener exactamente 13 caracteres.</small>
+                @if(formChoferes.get('rfc')?.errors?.['pattern']) {
+                  <small>RFC no tiene un formato válido.</small>
                 }
               </div>
               }

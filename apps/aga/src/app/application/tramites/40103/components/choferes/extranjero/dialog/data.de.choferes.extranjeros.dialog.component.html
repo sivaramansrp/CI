@@ -61,7 +61,7 @@
                 <label for="apellidoMaterno">Segundo Apellido:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="segundoApellido" readonly maxlength="200" />
+                <input type="text" class="form-control" formControlName="segundoApellido" maxlength="200" />
               </div>
               @if(isInvalid('segundoApellido')) {
               <div class="text-danger">
@@ -347,7 +347,7 @@
                 <label for="solicitud.correo">Correo electrónico:</label>
               </div>
               <div>
-                <input type="email" class="form-control" formControlName="correoElectronico" />
+                <input type="email" class="form-control" formControlName="correoElectronico" maxlength="100" />
               </div>
               @if(formChoferes.get('correoElectronico')?.errors?.['email']) {
               <div class="text-danger">
@@ -360,7 +360,7 @@
                 <label for="solicitud.telefono">Teléfono</label>
               </div>
               <div>
-                <input type="tel" class="form-control" formControlName="telefono" />
+                <input type="tel" class="form-control" formControlName="telefono" maxlength="14" />
               </div>
               @if(formChoferes.get('telefono')?.errors?.['pattern']) {
               <div class="text-danger">
