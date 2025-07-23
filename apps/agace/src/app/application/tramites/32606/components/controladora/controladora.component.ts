@@ -1,14 +1,13 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ConsultaioQuery, ConsultaioState, InputFecha, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CONTROLADAS_TABLA, RADIO_01, RADIO_AUTORIZO, RADIO_CLASIFICACION, TRANSPORTISTAS_TABLA } from '../../constantes/adace32606.enum';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, InputFecha, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FECHA_INICIO, FECHA_PAGO } from '../../models/adace.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
+import { CommonModule } from '@angular/common';
 import { EconomicoService } from '../../services/economico.service';
 import { Tramite32606Query } from '../../state/Tramite32606.query';
-import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
-
 /**
  * Componente encargado de gestionar el formulario de la sección "Controladora".
  * Permite inicializar, habilitar/deshabilitar y actualizar los valores del formulario,
@@ -23,7 +22,7 @@ import { map, ReplaySubject, takeUntil } from 'rxjs';
   templateUrl: './controladora.component.html',
   styleUrl: './controladora.component.css',
 })
-export class ControladoraComponent {
+export class ControladoraComponent implements OnInit, OnDestroy {
   /** Formulario reactivo principal de la sección controladora. */
   public controladoraForm !: FormGroup;
   /** Opciones para el radio tipo 01. */

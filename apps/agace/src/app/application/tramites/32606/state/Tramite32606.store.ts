@@ -11,9 +11,7 @@ export interface Catalogo {
   descripcion: string;
 }
 
-/**
- * Estado inicial para la interfaz del trámite 32606.
- */
+/*** Estado inicial para la interfaz del trámite 32606. */
 export interface Solicitud32606State {
   tipoRadio01: string,
   tipoRadio02: string,
@@ -179,305 +177,373 @@ export function createInitialState(): Solicitud32606State {
 })
 @StoreConfig({ name: 'tramite32606', resettable: true })
 export class Tramite32606Store extends Store<Solicitud32606State> {
-  /**
-   * Constructor del almacén.
-   * Inicializa el estado con los valores predeterminados.
-   */
+  /** Constructor que inicializa el estado con los valores predeterminados. */
   constructor() {
     super(createInitialState());
   }
 
-public setTipoRadio01(tipoRadio01: string): void {
-  this.update((state) => ({ ...state, tipoRadio01 }));
-}
-
-public setTipoRadio02(tipoRadio02: string): void {
-  this.update((state) => ({ ...state, tipoRadio02 }));
-}
-
-public setTipoRadio03(tipoRadio03: string): void {
-  this.update((state) => ({ ...state, tipoRadio03 }));
-}
-
-public setTipoRadio04(tipoRadio04: string): void {
-  this.update((state) => ({ ...state, tipoRadio04 }));
-}
-
-public setTipoRadio05(tipoRadio05: string): void {
-  this.update((state) => ({ ...state, tipoRadio05 }));
-}
-
-public setTipoRadio06(tipoRadio06: string): void {
-  this.update((state) => ({ ...state, tipoRadio06 }));
-}
-
-public setTipoRadio07(tipoRadio07: string): void {
-  this.update((state) => ({ ...state, tipoRadio07 }));
-}
-
-public setTipoRadio08(tipoRadio08: string): void {
-  this.update((state) => ({ ...state, tipoRadio08 }));
-}
-
-public setTipoRadio09(tipoRadio09: string): void {
-  this.update((state) => ({ ...state, tipoRadio09 }));
-}
-
-public setTipoRadio10(tipoRadio10: string): void {
-  this.update((state) => ({ ...state, tipoRadio10 }));
-}
-
-public setTipoRadio11(tipoRadio11: string): void {
-  this.update((state) => ({ ...state, tipoRadio11 }));
-}
-
-public setTipoRadio12(tipoRadio12: string): void {
-  this.update((state) => ({ ...state, tipoRadio12 }));
-}
-
-public setTipoRadio13(tipoRadio13: string): void {
-  this.update((state) => ({ ...state, tipoRadio13 }));
-}
-
-public setTipoRadio14(tipoRadio14: string): void {
-  this.update((state) => ({ ...state, tipoRadio14 }));
-}
-
-public setTipoRadio15(tipoRadio15: string): void {
-  this.update((state) => ({ ...state, tipoRadio15 }));
-}
-
-public setTipoRadio16(tipoRadio16: string): void {
-  this.update((state) => ({ ...state, tipoRadio16 }));
-}
-
-public setTipoRadio17(tipoRadio17: string): void {
-  this.update((state) => ({ ...state, tipoRadio17 }));
-}
-
-public setTipoRadio18(tipoRadio18: string): void {
-  this.update((state) => ({ ...state, tipoRadio18 }));
-}
-
-public setTipoRadio19(tipoRadio19: string): void {
-  this.update((state) => ({ ...state, tipoRadio19 }));
-}
-
-public setTipoRadio20(tipoRadio20: string): void {
-  this.update((state) => ({ ...state, tipoRadio20 }));
-}
-
-public setTipoRadio21(tipoRadio21: string): void {
-  this.update((state) => ({ ...state, tipoRadio21 }));
-}
-
-public setTipoRadio22(tipoRadio22: string): void {
-  this.update((state) => ({ ...state, tipoRadio22 }));
-}
-
-public setTipoRadio23(tipoRadio23: string): void {
-  this.update((state) => ({ ...state, tipoRadio23 }));
-}
-
-public setTipoRadio24(tipoRadio24: string): void {
-  this.update((state) => ({ ...state, tipoRadio24 }));
-}
-
-public setTipoRadio25(tipoRadio25: string): void {
-  this.update((state) => ({ ...state, tipoRadio25 }));
-}
-
-public setTipoRadio26(tipoRadio26: string): void {
-  this.update((state) => ({ ...state, tipoRadio26 }));
-}
-
-public setTipoRadio27(tipoRadio27: string): void {
-  this.update((state) => ({ ...state, tipoRadio27 }));
-}
-
-public setTipoRadio28(tipoRadio28: string): void {
-  this.update((state) => ({ ...state, tipoRadio28 }));
-}
-
-public setTipoRadio29(tipoRadio29: string): void {
-  this.update((state) => ({ ...state, tipoRadio29 }));
-}
-
-public setTipoRadio30(tipoRadio30: string): void {
-  this.update((state) => ({ ...state, tipoRadio30 }));
-}
-
-public setTipoRadio31(tipoRadio31: string): void {
-  this.update((state) => ({ ...state, tipoRadio31 }));
-}
-
-public setTipoRadio32(tipoRadio32: string): void {
-  this.update((state) => ({ ...state, tipoRadio32 }));
-}
-
-public setTipoRadio33(tipoRadio33: string): void {
-  this.update((state) => ({ ...state, tipoRadio33 }));
-}
-
-public setTipoRadio34(tipoRadio34: string): void {
-  this.update((state) => ({ ...state, tipoRadio34 }));
-}
-
-public setSectorProductivo(sectorProductivo: string): void {
-  this.update((state) => ({ ...state, sectorProductivo }));
-}
-
-public setServicio(servicio: string): void {
-  this.update((state) => ({ ...state, servicio }));
-}
-
-public setDomicilio(domicilio: string): void {
-  this.update((state) => ({ ...state, domicilio }));
-}
-
-public setBiomestre(biomestre: string): void {
-  this.update((state) => ({ ...state, biomestre }));
-}
-
-public setNumeroEmpleados(numeroEmpleados: string): void {
-  this.update((state) => ({ ...state, numeroEmpleados }));
-}
-
-public setDomicillio(domicillio: string): void {
-  this.update((state) => ({ ...state, domicillio }));
-}
-
-public setFile1(file1: string): void {
-  this.update((state) => ({ ...state, file1 }));
-}
-
-public setFile2(file2: string): void {
-  this.update((state) => ({ ...state, file2 }));
-}
-
-public setActualmente(actualmente: string): void {
-  this.update((state) => ({ ...state, actualmente }));
-}
-
-public setActualmente2(actualmente2: string): void {
-  this.update((state) => ({ ...state, actualmente2 }));
-}
-
-public setSistemaIdentificacion(sistemaIdentificacion: string): void {
-  this.update((state) => ({ ...state, sistemaIdentificacion }));
-}
-
-public setLugarRadicacion(lugarRadicacion: string): void {
-  this.update((state) => ({ ...state, lugarRadicacion }));
-}
-
-public setSistemaControlInventarios(sistemaControlInventarios: boolean): void {
-  this.update((state) => ({ ...state, sistemaControlInventarios }));
-}
-
-public setRfcTercero(rfcTercero: string): void {
-  this.update((state) => ({ ...state, rfcTercero }));
-}
-
-public setRfc(rfc: string): void {
-  this.update((state) => ({ ...state, rfc }));
-}
-
-public setNombre(nombre: string): void {
-  this.update((state) => ({ ...state, nombre }));
-}
-
-public setApellidoPaterno(apellidoPaterno: string): void {
-  this.update((state) => ({ ...state, apellidoPaterno }));
-}
-
-public setApellidoMaterno(apellidoMaterno: string): void {
-  this.update((state) => ({ ...state, apellidoMaterno }));
-}
-
-public setTelefono(telefono: string): void {
-  this.update((state) => ({ ...state, telefono }));
-}
-
-public setCorreoElectronico(correoElectronico: string): void {
-  this.update((state) => ({ ...state, correoElectronico }));
-}
-
-public setMonto(monto: string): void {
-  this.update((state) => ({ ...state, monto }));
-}
-
-public setOperacionesBancarias(operacionesBancarias: string): void {
-  this.update((state) => ({ ...state, operacionesBancarias }));
-}
-
-public setLlavePago(llavePago: string): void {
-  this.update((state) => ({ ...state, llavePago }));
-}
-
-public setModalidad(modalidad: string): void {
-  this.update((state) => ({ ...state, modalidad }));
-}
-
-public setFechaRegistro(fechaRegistro: string): void {
-  this.update((state) => ({ ...state, fechaRegistro }));
-}
-
-public setNumeroAutorizacion(numeroAutorizacion: string): void {
-  this.update((state) => ({ ...state, numeroAutorizacion }));
-}
-
-public setRadioAutorizo(radioAutorizo: string): void {
-  this.update((state) => ({ ...state, radioAutorizo }));
-}
-
-public setRadioClasificacion(radioClasificacion: string): void {
-  this.update((state) => ({ ...state, radioClasificacion }));
-}
-
-public setCaracter(caracter: string): void {
-  this.update((state) => ({ ...state, caracter }));
-}
-
-public setNacionalidad(nacionalidad: string): void {
-  this.update((state) => ({ ...state, nacionalidad }));
-}
-
-public setFechaInicio(fechaInicio: string): void {
-  this.update((state) => ({ ...state, fechaInicio }));
-}
-
-public setFechaPago(fechaPago: string): void {
-  this.update((state) => ({ ...state, fechaPago }));
-}
-
-public setEntidadFederativa(entidadFederativa: string): void {
-  this.update((state) => ({ ...state, entidadFederativa }));
-}
-
-public setMunicipio(municipio: string): void {
-  this.update((state) => ({ ...state, municipio }));
-}
-
-public setTipoDeInstalacion(tipoDeInstalacion: string): void {
-  this.update((state) => ({ ...state, tipoDeInstalacion }));
-}
-
-public setRegistroSESAT(registroSESAT: string): void {
-  this.update((state) => ({ ...state, registroSESAT }));
-}
-
-public setDescripcion(descripcion: string): void {
-  this.update((state) => ({ ...state, descripcion }));
-}
-
-public setCodigoPostal(codigoPostal: string): void {
-  this.update((state) => ({ ...state, codigoPostal }));
-}
-/**
- * Restaura el estado al valor inicial.
- */
-public limpiarSolicitud(): void {
-  this.reset();
+  /** Actualiza el valor de tipoRadio01 en el estado. */
+  public setTipoRadio01(tipoRadio01: string): void {
+    this.update((state) => ({ ...state, tipoRadio01 }));
+  }
+
+  /** Actualiza el valor de tipoRadio02 en el estado. */
+  public setTipoRadio02(tipoRadio02: string): void {
+    this.update((state) => ({ ...state, tipoRadio02 }));
+  }
+
+  /** Actualiza el valor de tipoRadio03 en el estado. */
+  public setTipoRadio03(tipoRadio03: string): void {
+    this.update((state) => ({ ...state, tipoRadio03 }));
+  }
+
+  /** Actualiza el valor de tipoRadio04 en el estado. */
+  public setTipoRadio04(tipoRadio04: string): void {
+    this.update((state) => ({ ...state, tipoRadio04 }));
+  }
+
+  /** Actualiza el valor de tipoRadio05 en el estado. */
+  public setTipoRadio05(tipoRadio05: string): void {
+    this.update((state) => ({ ...state, tipoRadio05 }));
+  }
+
+  /** Actualiza el valor de tipoRadio06 en el estado. */
+  public setTipoRadio06(tipoRadio06: string): void {
+    this.update((state) => ({ ...state, tipoRadio06 }));
+  }
+
+  /** Actualiza el valor de tipoRadio07 en el estado. */
+  public setTipoRadio07(tipoRadio07: string): void {
+    this.update((state) => ({ ...state, tipoRadio07 }));
+  }
+
+  /** Actualiza el valor de tipoRadio08 en el estado. */
+  public setTipoRadio08(tipoRadio08: string): void {
+    this.update((state) => ({ ...state, tipoRadio08 }));
+  }
+
+  /** Actualiza el valor de tipoRadio09 en el estado. */
+  public setTipoRadio09(tipoRadio09: string): void {
+    this.update((state) => ({ ...state, tipoRadio09 }));
+  }
+
+  /** Actualiza el valor de tipoRadio10 en el estado. */
+  public setTipoRadio10(tipoRadio10: string): void {
+    this.update((state) => ({ ...state, tipoRadio10 }));
+  }
+
+  /** Actualiza el valor de tipoRadio11 en el estado. */
+  public setTipoRadio11(tipoRadio11: string): void {
+    this.update((state) => ({ ...state, tipoRadio11 }));
+  }
+
+  /** Actualiza el valor de tipoRadio12 en el estado. */
+  public setTipoRadio12(tipoRadio12: string): void {
+    this.update((state) => ({ ...state, tipoRadio12 }));
+  }
+
+  /** Actualiza el valor de tipoRadio13 en el estado. */
+  public setTipoRadio13(tipoRadio13: string): void {
+    this.update((state) => ({ ...state, tipoRadio13 }));
+  }
+
+  /** Actualiza el valor de tipoRadio14 en el estado. */
+  public setTipoRadio14(tipoRadio14: string): void {
+    this.update((state) => ({ ...state, tipoRadio14 }));
+  }
+
+  /** Actualiza el valor de tipoRadio15 en el estado. */
+  public setTipoRadio15(tipoRadio15: string): void {
+    this.update((state) => ({ ...state, tipoRadio15 }));
+  }
+
+  /** Actualiza el valor de tipoRadio16 en el estado. */
+  public setTipoRadio16(tipoRadio16: string): void {
+    this.update((state) => ({ ...state, tipoRadio16 }));
+  }
+
+  /** Actualiza el valor de tipoRadio17 en el estado. */
+  public setTipoRadio17(tipoRadio17: string): void {
+    this.update((state) => ({ ...state, tipoRadio17 }));
+  }
+
+  /** Actualiza el valor de tipoRadio18 en el estado. */
+  public setTipoRadio18(tipoRadio18: string): void {
+    this.update((state) => ({ ...state, tipoRadio18 }));
+  }
+
+  /** Actualiza el valor de tipoRadio19 en el estado. */
+  public setTipoRadio19(tipoRadio19: string): void {
+    this.update((state) => ({ ...state, tipoRadio19 }));
+  }
+
+  /** Actualiza el valor de tipoRadio20 en el estado. */
+  public setTipoRadio20(tipoRadio20: string): void {
+    this.update((state) => ({ ...state, tipoRadio20 }));
+  }
+
+  /** Actualiza el valor de tipoRadio21 en el estado. */
+  public setTipoRadio21(tipoRadio21: string): void {
+    this.update((state) => ({ ...state, tipoRadio21 }));
+  }
+
+  /** Actualiza el valor de tipoRadio22 en el estado. */
+  public setTipoRadio22(tipoRadio22: string): void {
+    this.update((state) => ({ ...state, tipoRadio22 }));
+  }
+
+  /** Actualiza el valor de tipoRadio23 en el estado. */
+  public setTipoRadio23(tipoRadio23: string): void {
+    this.update((state) => ({ ...state, tipoRadio23 }));
+  }
+
+  /** Actualiza el valor de tipoRadio24 en el estado. */
+  public setTipoRadio24(tipoRadio24: string): void {
+    this.update((state) => ({ ...state, tipoRadio24 }));
+  }
+
+  /** Actualiza el valor de tipoRadio25 en el estado. */
+  public setTipoRadio25(tipoRadio25: string): void {
+    this.update((state) => ({ ...state, tipoRadio25 }));
+  }
+
+  /** Actualiza el valor de tipoRadio26 en el estado. */
+  public setTipoRadio26(tipoRadio26: string): void {
+    this.update((state) => ({ ...state, tipoRadio26 }));
+  }
+
+  /** Actualiza el valor de tipoRadio27 en el estado. */
+  public setTipoRadio27(tipoRadio27: string): void {
+    this.update((state) => ({ ...state, tipoRadio27 }));
+  }
+
+  /** Actualiza el valor de tipoRadio28 en el estado. */
+  public setTipoRadio28(tipoRadio28: string): void {
+    this.update((state) => ({ ...state, tipoRadio28 }));
+  }
+
+  /** Actualiza el valor de tipoRadio29 en el estado. */
+  public setTipoRadio29(tipoRadio29: string): void {
+    this.update((state) => ({ ...state, tipoRadio29 }));
+  }
+
+  /** Actualiza el valor de tipoRadio30 en el estado. */
+  public setTipoRadio30(tipoRadio30: string): void {
+    this.update((state) => ({ ...state, tipoRadio30 }));
+  }
+
+  /** Actualiza el valor de tipoRadio31 en el estado. */
+  public setTipoRadio31(tipoRadio31: string): void {
+    this.update((state) => ({ ...state, tipoRadio31 }));
+  }
+
+  /** Actualiza el valor de tipoRadio32 en el estado. */
+  public setTipoRadio32(tipoRadio32: string): void {
+    this.update((state) => ({ ...state, tipoRadio32 }));
+  }
+
+  /** Actualiza el valor de tipoRadio33 en el estado. */
+  public setTipoRadio33(tipoRadio33: string): void {
+    this.update((state) => ({ ...state, tipoRadio33 }));
+  }
+
+  /** Actualiza el valor de tipoRadio34 en el estado. */
+  public setTipoRadio34(tipoRadio34: string): void {
+    this.update((state) => ({ ...state, tipoRadio34 }));
+  }
+
+  /** Actualiza el valor de sectorProductivo en el estado. */
+  public setSectorProductivo(sectorProductivo: string): void {
+    this.update((state) => ({ ...state, sectorProductivo }));
+  }
+
+  /** Actualiza el valor de servicio en el estado. */
+  public setServicio(servicio: string): void {
+    this.update((state) => ({ ...state, servicio }));
+  }
+
+  /** Actualiza el valor de domicilio en el estado. */
+  public setDomicilio(domicilio: string): void {
+    this.update((state) => ({ ...state, domicilio }));
+  }
+
+  /** Actualiza el valor de biomestre en el estado. */
+  public setBiomestre(biomestre: string): void {
+    this.update((state) => ({ ...state, biomestre }));
+  }
+
+  /** Actualiza el valor de numeroEmpleados en el estado. */
+  public setNumeroEmpleados(numeroEmpleados: string): void {
+    this.update((state) => ({ ...state, numeroEmpleados }));
+  }
+
+  /** Actualiza el valor de domicillio en el estado. */
+  public setDomicillio(domicillio: string): void {
+    this.update((state) => ({ ...state, domicillio }));
+  }
+
+  /** Actualiza el valor de file1 en el estado. */
+  public setFile1(file1: string): void {
+    this.update((state) => ({ ...state, file1 }));
+  }
+
+  /** Actualiza el valor de file2 en el estado. */
+  public setFile2(file2: string): void {
+    this.update((state) => ({ ...state, file2 }));
+  }
+
+  /** Actualiza el valor de actualmente en el estado. */
+  public setActualmente(actualmente: string): void {
+    this.update((state) => ({ ...state, actualmente }));
+  }
+
+  /** Actualiza el valor de actualmente2 en el estado. */
+  public setActualmente2(actualmente2: string): void {
+    this.update((state) => ({ ...state, actualmente2 }));
+  }
+
+  /** Actualiza el valor de sistemaIdentificacion en el estado. */
+  public setSistemaIdentificacion(sistemaIdentificacion: string): void {
+    this.update((state) => ({ ...state, sistemaIdentificacion }));
+  }
+
+  /** Actualiza el valor de lugarRadicacion en el estado. */
+  public setLugarRadicacion(lugarRadicacion: string): void {
+    this.update((state) => ({ ...state, lugarRadicacion }));
+  }
+
+  /** Actualiza el valor de sistemaControlInventarios en el estado. */
+  public setSistemaControlInventarios(sistemaControlInventarios: boolean): void {
+    this.update((state) => ({ ...state, sistemaControlInventarios }));
+  }
+
+  /** Actualiza el valor de rfcTercero en el estado. */
+  public setRfcTercero(rfcTercero: string): void {
+    this.update((state) => ({ ...state, rfcTercero }));
+  }
+
+  /** Actualiza el valor de rfc en el estado. */
+  public setRfc(rfc: string): void {
+    this.update((state) => ({ ...state, rfc }));
+  }
+
+  /** Actualiza el valor de nombre en el estado. */
+  public setNombre(nombre: string): void {
+    this.update((state) => ({ ...state, nombre }));
+  }
+
+  /** Actualiza el valor de apellidoPaterno en el estado. */
+  public setApellidoPaterno(apellidoPaterno: string): void {
+    this.update((state) => ({ ...state, apellidoPaterno }));
+  }
+
+  /** Actualiza el valor de apellidoMaterno en el estado. */
+  public setApellidoMaterno(apellidoMaterno: string): void {
+    this.update((state) => ({ ...state, apellidoMaterno }));
+  }
+
+  /** Actualiza el valor de telefono en el estado. */
+  public setTelefono(telefono: string): void {
+    this.update((state) => ({ ...state, telefono }));
+  }
+
+  /** Actualiza el valor de correoElectronico en el estado. */
+  public setCorreoElectronico(correoElectronico: string): void {
+    this.update((state) => ({ ...state, correoElectronico }));
+  }
+
+  /** Actualiza el valor de monto en el estado. */
+  public setMonto(monto: string): void {
+    this.update((state) => ({ ...state, monto }));
+  }
+
+  /** Actualiza el valor de operacionesBancarias en el estado. */
+  public setOperacionesBancarias(operacionesBancarias: string): void {
+    this.update((state) => ({ ...state, operacionesBancarias }));
+  }
+
+  /** Actualiza el valor de llavePago en el estado. */
+  public setLlavePago(llavePago: string): void {
+    this.update((state) => ({ ...state, llavePago }));
+  }
+
+  /** Actualiza el valor de modalidad en el estado. */
+  public setModalidad(modalidad: string): void {
+    this.update((state) => ({ ...state, modalidad }));
+  }
+
+  /** Actualiza el valor de fechaRegistro en el estado. */
+  public setFechaRegistro(fechaRegistro: string): void {
+    this.update((state) => ({ ...state, fechaRegistro }));
+  }
+
+  /** Actualiza el valor de numeroAutorizacion en el estado. */
+  public setNumeroAutorizacion(numeroAutorizacion: string): void {
+    this.update((state) => ({ ...state, numeroAutorizacion }));
+  }
+
+  /** Actualiza el valor de radioAutorizo en el estado. */
+  public setRadioAutorizo(radioAutorizo: string): void {
+    this.update((state) => ({ ...state, radioAutorizo }));
+  }
+
+  /** Actualiza el valor de radioClasificacion en el estado. */
+  public setRadioClasificacion(radioClasificacion: string): void {
+    this.update((state) => ({ ...state, radioClasificacion }));
+  }
+
+  /** Actualiza el valor de caracter en el estado. */
+  public setCaracter(caracter: string): void {
+    this.update((state) => ({ ...state, caracter }));
+  }
+
+  /** Actualiza el valor de nacionalidad en el estado. */
+  public setNacionalidad(nacionalidad: string): void {
+    this.update((state) => ({ ...state, nacionalidad }));
+  }
+
+  /** Actualiza el valor de fechaInicio en el estado. */
+  public setFechaInicio(fechaInicio: string): void {
+    this.update((state) => ({ ...state, fechaInicio }));
+  }
+
+  /** Actualiza el valor de fechaPago en el estado. */
+  public setFechaPago(fechaPago: string): void {
+    this.update((state) => ({ ...state, fechaPago }));
+  }
+
+  /** Actualiza el valor de entidadFederativa en el estado. */
+  public setEntidadFederativa(entidadFederativa: string): void {
+    this.update((state) => ({ ...state, entidadFederativa }));
+  }
+
+  /** Actualiza el valor de municipio en el estado. */
+  public setMunicipio(municipio: string): void {
+    this.update((state) => ({ ...state, municipio }));
+  }
+
+  /** Actualiza el valor de tipoDeInstalacion en el estado. */
+  public setTipoDeInstalacion(tipoDeInstalacion: string): void {
+    this.update((state) => ({ ...state, tipoDeInstalacion }));
+  }
+
+  /** Actualiza el valor de registroSESAT en el estado. */
+  public setRegistroSESAT(registroSESAT: string): void {
+    this.update((state) => ({ ...state, registroSESAT }));
+  }
+
+  /** Actualiza el valor de descripcion en el estado. */
+  public setDescripcion(descripcion: string): void {
+    this.update((state) => ({ ...state, descripcion }));
+  }
+
+  /** Actualiza el valor de codigoPostal en el estado. */
+  public setCodigoPostal(codigoPostal: string): void {
+    this.update((state) => ({ ...state, codigoPostal }));
+  }
+
+  /** Restaura el estado al valor inicial. */
+  public limpiarSolicitud(): void {
+    this.reset();
   }
 }

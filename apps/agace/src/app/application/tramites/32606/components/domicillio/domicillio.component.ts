@@ -1,14 +1,14 @@
-import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { DOMICILIO_CATALOGO, DOMICILLIO_TABLA, ENTIDAD_CATALOGO, ENTIDAD_TABLA, RADIO_07, TIPO_INSTALACION_CATALOGO } from '../../constantes/adace32606.enum';
 import { Domicillio, EntidadFederativa } from '../../models/adace.model';
-import { EconomicoService } from '../../services/economico.service';
-import { Tramite32606Query } from '../../state/Tramite32606.query';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { EconomicoService } from '../../services/economico.service';
 import { Modal } from 'bootstrap';
+import { Tramite32606Query } from '../../state/Tramite32606.query';
 
 /** Componente para la sección de domicilio del trámite 32606. */
 @Component({

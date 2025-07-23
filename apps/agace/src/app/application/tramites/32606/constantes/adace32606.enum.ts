@@ -1,31 +1,37 @@
 import { CatalogosSelect, ConfiguracionColumna } from "@libs/shared/data-access-user/src";
 import { ControladasTable, Domicillio, Empresa, EnlaceOperativo, EntidadFederativa, Querella, RecibirNotificaciones, TransportistasTable } from "../models/adace.model";
 
+/** Opciones para el radio tipo 01. */
 export const RADIO_01 = [
   { label: 'Sí', value: 'si' },
   { label: 'No', value: 'no' },
 ];
 
+/** Opciones para el radio tipo 07. */
 export const RADIO_07 = [
   { label: 'Sí', value: 'si' },
   { label: 'No', value: 'no' },
 ];
 
+/** Opciones para el radio tipo 08. */
 export const RADIO_08 = [
   { label: 'Sí', value: 'si' },
   { label: 'No', value: 'no' },
 ];
 
+/** Opciones para el radio de autorización. */
 export const RADIO_AUTORIZO = [
   { label: 'Si Autorizo', value: 'si_autorizo' },
   { label: 'No Autorizo', value: 'no_autorizo' },
 ];
 
+/** Opciones para el radio de clasificación. */
 export const RADIO_CLASIFICACION = [
   { label: 'Pública', value: 'publica' },
   { label: 'Privada', value: 'privada' },
 ];
 
+/** Configuración para la fecha inicial. */
 export const FECHA_INICIAL = {
   /** Etiqueta para la fecha inicial. */
   labelNombre: 'Fecha de elaboración del dictamen',
@@ -35,6 +41,7 @@ export const FECHA_INICIAL = {
   habilitado: true,
 };
 
+/** Configuración para la fecha de pago. */
 export const FECHA_PAGO = {
   /** Etiqueta para la fecha de pago. */
   labelNombre: 'Fecha de pago',
@@ -44,6 +51,7 @@ export const FECHA_PAGO = {
   habilitado: true,
 };
 
+/** Catálogo de sector productivo. */
 export const SECTOR_PRODUCTIVO: CatalogosSelect = {
   /** Etiqueta para el catálogo de años. */
   labelNombre: 'Sector Productivo',
@@ -55,6 +63,7 @@ export const SECTOR_PRODUCTIVO: CatalogosSelect = {
   catalogos: [],
 };
 
+/** Catálogo de servicio. */
 export const SERVICIO_CATALOGO: CatalogosSelect = {
   /** Etiqueta para el catálogo de meses. */
   labelNombre: 'Servicio',
@@ -66,6 +75,7 @@ export const SERVICIO_CATALOGO: CatalogosSelect = {
   catalogos: [],
 };
 
+/** Catálogo de biomestre. */
 export const BIOMESTRE_CATALOGO: CatalogosSelect = {
   /** Etiqueta para el catálogo de bimestres. */
   labelNombre: 'Biomestre',
@@ -77,6 +87,7 @@ export const BIOMESTRE_CATALOGO: CatalogosSelect = {
   catalogos: [],
 };
 
+/** Catálogo de domicilio. */
 export const DOMICILIO_CATALOGO: CatalogosSelect = {
   /** Etiqueta para el catálogo de Domicillio. */
   labelNombre: '',
@@ -88,6 +99,7 @@ export const DOMICILIO_CATALOGO: CatalogosSelect = {
   catalogos: [],
 };
 
+/** Catálogo de tipo de instalación. */
 export const TIPO_INSTALACION_CATALOGO: CatalogosSelect = {
   labelNombre: 'Tipo de instalación',
   /** Indica si el campo es obligatorio. */
@@ -98,8 +110,9 @@ export const TIPO_INSTALACION_CATALOGO: CatalogosSelect = {
   catalogos: [],
 };
 
+/** Catálogo de entidad federativa. */
 export const ENTIDAD_CATALOGO: CatalogosSelect = {
- labelNombre: 'Entidad Federativa',
+  labelNombre: 'Entidad Federativa',
   /** Indica si el campo es obligatorio. */
   required: true,
   /** Texto de la primera opción del catálogo. */
@@ -108,6 +121,7 @@ export const ENTIDAD_CATALOGO: CatalogosSelect = {
   catalogos: [],
 };
 
+/** Configuración de columnas para la tabla de domicilio. */
 export const DOMICILLIO_TABLA: ConfiguracionColumna<Domicillio>[] = [
   {
     /** Instalaciones principales de la empresa. */
@@ -213,8 +227,9 @@ export const DOMICILLIO_TABLA: ConfiguracionColumna<Domicillio>[] = [
   },
 ];
 
+/** Configuración de columnas para la tabla de entidad federativa. */
 export const ENTIDAD_TABLA: ConfiguracionColumna<EntidadFederativa>[] = [
-   {
+  {
     /** Entidad federativa donde está ubicada la instalación. */
     encabezado: 'Entidad federativa',
     clave: (item: EntidadFederativa) => item.entidadFederativa,
@@ -224,28 +239,29 @@ export const ENTIDAD_TABLA: ConfiguracionColumna<EntidadFederativa>[] = [
     /** Municipio o delegación donde se encuentra la instalación. */
     encabezado: 'Municipio o delegación',
     clave: (item: EntidadFederativa) => item.municipioDelegacion,
-    orden: 1,
+    orden: 2,
   },
   {
     /** Dirección completa del domicilio, incluyendo colonia, calle y número. */
     encabezado: 'Colonia, calle y número',
     clave: (item: EntidadFederativa) => item.direccion,
-    orden: 1,
+    orden: 3,
   },
   {
     /** Código postal correspondiente al domicilio. */
     encabezado: 'Código postal',
     clave: (item: EntidadFederativa) => item.codigoPostal,
-    orden: 1,
+    orden: 4,
   },
   {
     /** Registro del domicilio ante la Secretaría de Economía (SE) o el Servicio de Administración Tributaria (SAT). */
     encabezado: 'Registro ante SE/SAT',
     clave: (item: EntidadFederativa) => item.registroSESAT,
-    orden: 1,
+    orden: 5,
   }
 ];
 
+/** Configuración de columnas para la tabla de querella. */
 export const QUERELLA_TABLA: ConfiguracionColumna<Querella>[] = [
   {
     /** Instalaciones principales de la empresa. */
@@ -267,6 +283,7 @@ export const QUERELLA_TABLA: ConfiguracionColumna<Querella>[] = [
   }
 ];
 
+/** Configuración de columnas para la tabla de empresa. */
 export const EMPRESA_TABLA: ConfiguracionColumna<Empresa>[] =
   [
     {
@@ -279,41 +296,42 @@ export const EMPRESA_TABLA: ConfiguracionColumna<Empresa>[] =
       /** Nombre completo */
       encabezado: 'Nombre',
       clave: (item: Empresa) => item.nombreCompleto,
-      orden: 1,
+      orden: 2,
     },
     {
       /** RFC del Socio IC */
       encabezado: 'RFC',
       clave: (item: Empresa) => item.rfc,
-      orden: 1,
+      orden: 3,
     },
     {
       /** Carácter en que actúa el Socio IC */
       encabezado: 'En su carácter de',
       clave: (item: Empresa) => item.caracterDe,
-      orden: 1,
+      orden: 4,
     },
     {
       /** Carácter en que actúa el Socio IC */
       encabezado: 'Nacionalidad',
       clave: (item: Empresa) => item.nacionalidad,
-      orden: 1,
+      orden: 5,
     },
 
     {
       /** ¿Obligado a tributar en México? */
       encabezado: 'Obligado a tributar en México',
       clave: (item: Empresa) => item.tributarMexico,
-      orden: 1,
+      orden: 6,
     },
     {
       /** Nombre de la empresa */
       encabezado: 'Nombre de la empresa',
       clave: (item: Empresa) => item.nombreEmpresa,
-      orden: 1,
+      orden: 7,
     },
-];
+  ];
 
+/** Configuración de columnas para la tabla de enlace operativo. */
 export const ENLACE_OPERATIVO_TABLA: ConfiguracionColumna<EnlaceOperativo>[] =
   [
     /**
@@ -333,7 +351,7 @@ export const ENLACE_OPERATIVO_TABLA: ConfiguracionColumna<EnlaceOperativo>[] =
     {
       encabezado: 'Nombre',
       clave: (item: EnlaceOperativo) => item.nombre,
-      orden: 1,
+      orden: 2,
     },
 
     /**
@@ -343,7 +361,7 @@ export const ENLACE_OPERATIVO_TABLA: ConfiguracionColumna<EnlaceOperativo>[] =
     {
       encabezado: 'Apellido Paterno',
       clave: (item: EnlaceOperativo) => item.apellidoPaterno,
-      orden: 1,
+      orden: 3,
     },
 
     /**
@@ -353,7 +371,7 @@ export const ENLACE_OPERATIVO_TABLA: ConfiguracionColumna<EnlaceOperativo>[] =
     {
       encabezado: 'Apellido Materno',
       clave: (item: EnlaceOperativo) => item.apellidoMaterno,
-      orden: 1,
+      orden: 4,
     },
 
     /**
@@ -363,7 +381,7 @@ export const ENLACE_OPERATIVO_TABLA: ConfiguracionColumna<EnlaceOperativo>[] =
     {
       encabezado: 'Ciudad o Estado de Residencia',
       clave: (item: EnlaceOperativo) => item.claveCiudad,
-      orden: 1,
+      orden: 5,
     },
 
     /**
@@ -373,7 +391,7 @@ export const ENLACE_OPERATIVO_TABLA: ConfiguracionColumna<EnlaceOperativo>[] =
     {
       encabezado: 'Ciudad',
       clave: (item: EnlaceOperativo) => item.ciudad,
-      orden: 1,
+      orden: 6,
     },
 
     /**
@@ -383,7 +401,7 @@ export const ENLACE_OPERATIVO_TABLA: ConfiguracionColumna<EnlaceOperativo>[] =
     {
       encabezado: 'Cargo',
       clave: (item: EnlaceOperativo) => item.cargo,
-      orden: 1,
+      orden: 7,
     },
 
     /**
@@ -393,7 +411,7 @@ export const ENLACE_OPERATIVO_TABLA: ConfiguracionColumna<EnlaceOperativo>[] =
     {
       encabezado: 'teléfono',
       clave: (item: EnlaceOperativo) => item.telefono,
-      orden: 1,
+      orden: 8,
     },
 
     /**
@@ -403,7 +421,7 @@ export const ENLACE_OPERATIVO_TABLA: ConfiguracionColumna<EnlaceOperativo>[] =
     {
       encabezado: 'Correo',
       clave: (item: EnlaceOperativo) => item.correo,
-      orden: 1,
+      orden: 9,
     },
 
     /**
@@ -413,7 +431,7 @@ export const ENLACE_OPERATIVO_TABLA: ConfiguracionColumna<EnlaceOperativo>[] =
     {
       encabezado: 'Suplente',
       clave: (item: EnlaceOperativo) => item.suplente,
-      orden: 1,
+      orden: 10,
     },
 
     /**
@@ -423,7 +441,7 @@ export const ENLACE_OPERATIVO_TABLA: ConfiguracionColumna<EnlaceOperativo>[] =
     {
       encabezado: 'Calle',
       clave: (item: EnlaceOperativo) => item.calle,
-      orden: 1,
+      orden: 11,
     },
 
     /**
@@ -433,7 +451,7 @@ export const ENLACE_OPERATIVO_TABLA: ConfiguracionColumna<EnlaceOperativo>[] =
     {
       encabezado: 'Numero Exterior',
       clave: (item: EnlaceOperativo) => item.numeroExterior,
-      orden: 1,
+      orden: 12,
     },
 
     /**
@@ -443,7 +461,7 @@ export const ENLACE_OPERATIVO_TABLA: ConfiguracionColumna<EnlaceOperativo>[] =
     {
       encabezado: 'Numero Interior',
       clave: (item: EnlaceOperativo) => item.numeroInterior,
-      orden: 1,
+      orden: 13,
     },
 
     /**
@@ -453,7 +471,7 @@ export const ENLACE_OPERATIVO_TABLA: ConfiguracionColumna<EnlaceOperativo>[] =
     {
       encabezado: 'Colonia',
       clave: (item: EnlaceOperativo) => item.colonia,
-      orden: 1,
+      orden: 14,
     },
 
     /**
@@ -463,7 +481,7 @@ export const ENLACE_OPERATIVO_TABLA: ConfiguracionColumna<EnlaceOperativo>[] =
     {
       encabezado: 'Codigo Postal',
       clave: (item: EnlaceOperativo) => item.codigoPostal,
-      orden: 1,
+      orden: 15,
     },
 
     /**
@@ -473,7 +491,7 @@ export const ENLACE_OPERATIVO_TABLA: ConfiguracionColumna<EnlaceOperativo>[] =
     {
       encabezado: 'Localidad',
       clave: (item: EnlaceOperativo) => item.localidad,
-      orden: 1,
+      orden: 16,
     },
 
     /**
@@ -483,11 +501,12 @@ export const ENLACE_OPERATIVO_TABLA: ConfiguracionColumna<EnlaceOperativo>[] =
     {
       encabezado: 'Delegacion Municipio',
       clave: (item: EnlaceOperativo) => item.delegacionMunicipio,
-      orden: 1,
+      orden: 17,
     },
-];
+  ];
 
-export const  PERSONAS_TABLA: ConfiguracionColumna<RecibirNotificaciones>[] =
+/** Configuración de columnas para la tabla de personas relacionadas. */
+export const PERSONAS_TABLA: ConfiguracionColumna<RecibirNotificaciones>[] =
   [
     {
       /** RFC del destinatario de la notificación */
@@ -519,8 +538,9 @@ export const  PERSONAS_TABLA: ConfiguracionColumna<RecibirNotificaciones>[] =
       clave: (item: RecibirNotificaciones) => item.apellidoMaterno,
       orden: 5,
     },
-];
+  ];
 
+/** Configuración de columnas para la tabla de transportistas. */
 export const TRANSPORTISTAS_TABLA: ConfiguracionColumna<TransportistasTable>[] =
   [
     /**
@@ -562,42 +582,44 @@ export const TRANSPORTISTAS_TABLA: ConfiguracionColumna<TransportistasTable>[] =
       clave: (item: TransportistasTable) => item.caat,
       orden: 4,
     },
-];
+  ];
 
+/** Configuración de columnas para la tabla de empresas controladas. */
 export const CONTROLADAS_TABLA: ConfiguracionColumna<ControladasTable>[] = [
   {
-      encabezado: 'RFC',
-      clave: (item: ControladasTable) => item.rfc,
-      orden: 1,
-    },
-    {
-      encabezado: 'Denominación o Razón social',
-      clave: (item: ControladasTable) => item.razonSocial,
-      orden: 2,
-    },
-    {
-      encabezado: 'Domicilio',
-      clave: (item: ControladasTable) => item.domicilio,
-      orden: 3,
-    },
+    encabezado: 'RFC',
+    clave: (item: ControladasTable) => item.rfc,
+    orden: 1,
+  },
+  {
+    encabezado: 'Denominación o Razón social',
+    clave: (item: ControladasTable) => item.razonSocial,
+    orden: 2,
+  },
+  {
+    encabezado: 'Domicilio',
+    clave: (item: ControladasTable) => item.domicilio,
+    orden: 3,
+  },
 
-    {
-      encabezado: 'Participación Accionaria',
-      clave: (item: ControladasTable) => item.accinaria,
-      orden: 4,
-    },
-    {
-      encabezado: 'Importaciones',
-      clave: (item: ControladasTable) => item.importaciones,
-      orden: 5,
-    },
-    {
-      encabezado: 'Exportaciones',
-      clave: (item: ControladasTable) => item.exportaciones,
-      orden: 6,
-    },
+  {
+    encabezado: 'Participación Accionaria',
+    clave: (item: ControladasTable) => item.accinaria,
+    orden: 4,
+  },
+  {
+    encabezado: 'Importaciones',
+    clave: (item: ControladasTable) => item.importaciones,
+    orden: 5,
+  },
+  {
+    encabezado: 'Exportaciones',
+    clave: (item: ControladasTable) => item.exportaciones,
+    orden: 6,
+  },
 ];
 
+/** Catálogo de carácter. */
 export const CARACTER_CATALOGO: CatalogosSelect = {
   labelNombre: 'Eu su carácter de',
   required: true,
@@ -605,10 +627,10 @@ export const CARACTER_CATALOGO: CatalogosSelect = {
   catalogos: [],
 };
 
+/** Catálogo de nacionalidad. */
 export const NACIONALIDAD_CATALOGO: CatalogosSelect = {
   labelNombre: 'Nacionalidad',
   required: true,
   primerOpcion: 'Selecciona un valor',
   catalogos: [],
 };
-

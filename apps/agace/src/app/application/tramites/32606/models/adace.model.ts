@@ -1,328 +1,195 @@
- export const FECHA_INICIO = {
-    labelNombre: 'Fecha de Inicio de Operaciones de Comercio Exterior', 
-    required: false,
-    habilitado: true, 
- };
+export const FECHA_INICIO = {
+  /** Etiqueta para la fecha de inicio de operaciones de comercio exterior. */
+  labelNombre: 'Fecha de Inicio de Operaciones de Comercio Exterior',
+  /** Indica si el campo es obligatorio. */
+  required: false,
+  /** Indica si el campo está habilitado. */
+  habilitado: true,
+};
 
- export const FECHA_PAGO = {
-    labelNombre: 'Fecha de Pago', 
-    required: false,
-    habilitado: true, 
- };
+export const FECHA_PAGO = {
+  /** Etiqueta para la fecha de pago. */
+  labelNombre: 'Fecha de Pago',
+  /** Indica si el campo es obligatorio. */
+  required: false,
+  /** Indica si el campo está habilitado. */
+  habilitado: true,
+};
+
+/** Modelo que representa un domicilio en el trámite. */
 export interface Domicillio {
-  /** Identificador único del domicilio */
+  /** Identificador único del domicilio. */
   instalacionPrincipal: string;
-
-  /** Tipo de instalación */
+  /** Tipo de instalación. */
   tipoInstalacion: string;
-
-  /** Nombre de la entidad federativa */
+  /** Nombre de la entidad federativa. */
   entidadFederativa: string;
-
-  /** Nombre del municipio o delegación */
+  /** Nombre del municipio o delegación. */
   municipioDelegacion: string;
-
-  /** Dirección completa */
+  /** Dirección completa. */
   direccion: string;
-
-  /** Código postal del domicilio */
+  /** Código postal del domicilio. */
   codigoPostal: string;
-
-  /** Registro en SESAT */
+  /** Registro en SESAT. */
   registroSESAT: string;
-
-  /** Proceso productivo en el domicilio */
+  /** Proceso productivo en el domicilio. */
   procesoProductivo: string;
-
-  /**
-   * Documento que acredita la propiedad o posesión del inmueble.
-   */
+  /** Documento que acredita la propiedad o posesión del inmueble. */
   acreditaInmueble: string;
-
-  /**
-   * Operaciones de comercio exterior realizadas en el inmueble.
-   */
+  /** Operaciones de comercio exterior realizadas en el inmueble. */
   operacionesCExt: string;
-
-  /**
-   * Indica si la instalación cuenta con certificación CTPAT.
-   */
+  /** Indica si la instalación cuenta con certificación CTPAT. */
   instalacionCtpat: string;
-
-  /**
-   * Perfil de la instalación general.
-   */
+  /** Perfil de la instalación general. */
   instalacionPerfil: string;
-
-  /**
-   * Perfil de la instalación como Recinto Fiscalizado Estratégico (RFE).
-   */
+  /** Perfil de la instalación como Recinto Fiscalizado Estratégico (RFE). */
   instalacionPerfilRFE: string;
-
-  /**
-   * Perfil de la instalación en el sector automotriz.
-   */
+  /** Perfil de la instalación en el sector automotriz. */
   instalacionPerfilAuto: string;
-
-  /**
-   * Perfil de la instalación en el sector ferroviario.
-   */
+  /** Perfil de la instalación en el sector ferroviario. */
   instalacionPerfilFerro: string;
-
-  /**
-   * Perfil de la instalación como Recinto Fiscal (RF).
-   */
+  /** Perfil de la instalación como Recinto Fiscal (RF). */
   instalacionPerfilRf: string;
-
-  /**
-   * Perfil de la instalación dedicada a mensajería y paquetería.
-   */
+  /** Perfil de la instalación dedicada a mensajería y paquetería. */
   instalacionPerfilMensajeria: string;
- 
 }
 
+/** Modelo que representa una entidad federativa en el trámite. */
 export interface EntidadFederativa {
-    /** Nombre de la entidad federativa */
+  /** Nombre de la entidad federativa. */
   entidadFederativa: string;
-
-  /** Nombre del municipio o delegación */
+  /** Nombre del municipio o delegación. */
   municipioDelegacion: string;
-
-  /** Dirección completa */
+  /** Dirección completa. */
   direccion: string;
-
-  /** Código postal del domicilio */
+  /** Código postal del domicilio. */
   codigoPostal: string;
-
-  /** Registro en SESAT */
+  /** Registro en SESAT. */
   registroSESAT: string;
-
 }
 
+/** Modelo que representa una querella en el trámite. */
 export interface Querella {
+  /** Sistema o datos para identificación. */
   sistemaIdentificacion: string;
-
-  /** Clave del tipo de instalación */
+  /** Clave del tipo de instalación. */
   lugarRadicacion: string;
-
-  /** Tipo de instalación */
+  /** Indica si cuenta con sistema de control de inventarios. */
   indiqueSiCuenta: boolean;
-
 }
 
+/** Modelo que representa una empresa en el trámite. */
 export interface Empresa {
-  /** Identificador del miembro en la empresa */
+  /** Identificador del miembro en la empresa. */
   idMiembroEmpresa?: string;
-
-  /** Identificador de la solicitud relacionada */
+  /** Identificador de la solicitud relacionada. */
   idSolicitud?: string;
-
-  /** Tipo de persona (Física o Moral) */
+  /** Tipo de persona (Física o Moral). */
   tipoPersona?: string;
-
-  /** Tipo de persona mostrado al usuario */
+  /** Tipo de persona mostrado al usuario. */
   tipoPersonaMuestra: string;
-
-  /** Nombre completo del miembro */
+  /** Nombre completo del miembro. */
   nombreCompleto: string;
-
-  /** RFC del miembro */
+  /** RFC del miembro. */
   rfc: string;
-
-  /** Carácter o rol dentro de la empresa */
+  /** Carácter o rol dentro de la empresa. */
   caracterDe: string;
-
-  /** Nombre del país de origen */
+  /** Nombre del país de origen. */
   nacionalidad: string;
-
-  /** Tipo de carácter (adicional) */
+  /** Tipo de carácter (adicional). */
   tipoCaracter?: string;
-
-  /** Clave del país */
+  /** Clave del país. */
   paisClave?: string;
-
-  /** Indica si tributa en México */
+  /** Indica si tributa en México. */
   tributarMexico: string;
-
-  /** Nombre de la empresa */
+  /** Nombre de la empresa. */
   nombreEmpresa: string;
-
-  /** Nombre de la persona (si aplica) */
+  /** Nombre de la persona (si aplica). */
   nombre?: string;
-
-  /** Apellido paterno (si aplica) */
+  /** Apellido paterno (si aplica). */
   apellidoPaterno?: string;
-
-  /** Apellido materno (si aplica) */
+  /** Apellido materno (si aplica). */
   apellidoMaterno?: string;
-
-  /** Razón social (si aplica) */
+  /** Razón social (si aplica). */
   razonSocial?: string;
-
 }
 
+/** Modelo que representa un enlace operativo en el trámite. */
 export interface EnlaceOperativo {
-  /**
-   * RFC del enlace operativo.
-   * Es un identificador único asignado a la persona a nivel fiscal.
-   */
+  /** RFC del enlace operativo. */
   rfc: string;
-
-  /**
-   * Nombre del enlace operativo.
-   * Representa el primer nombre de la persona.
-   */
+  /** Nombre del enlace operativo. */
   nombre: string;
-
-  /**
-   * Apellido paterno del enlace operativo.
-   * Es el apellido que corresponde al padre del individuo.
-   */
+  /** Apellido paterno del enlace operativo. */
   apellidoPaterno: string;
-
-  /**
-   * Apellido materno del enlace operativo.
-   * Es el apellido que corresponde a la madre del individuo.
-   */
+  /** Apellido materno del enlace operativo. */
   apellidoMaterno: string;
-
-  /**
-   * Clave de la ciudad del enlace operativo.
-   * Es una clave numérica o alfanumérica que identifica de manera única una ciudad.
-   */
+  /** Clave de la ciudad del enlace operativo. */
   claveCiudad: string;
-
-  /**
-   * Ciudad en la que se encuentra el enlace operativo.
-   * Es el nombre de la ciudad donde reside la persona.
-   */
+  /** Ciudad en la que se encuentra el enlace operativo. */
   ciudad: string;
-
-  /**
-   * Cargo que desempeña el enlace operativo.
-   * Es la posición o función que ocupa la persona dentro de una organización.
-   */
+  /** Cargo que desempeña el enlace operativo. */
   cargo: string;
-
-  /**
-   * Teléfono del enlace operativo.
-   * Es el número telefónico donde se puede contactar a la persona.
-   */
+  /** Teléfono del enlace operativo. */
   telefono: string;
-
-  /**
-   * Correo electrónico del enlace operativo.
-   * Es la dirección de correo electrónico para comunicarse con la persona.
-   */
+  /** Correo electrónico del enlace operativo. */
   correo: string;
-
-  /**
-   * Indica si la persona es suplente de otro enlace operativo.
-   * Es un valor que determina si el enlace operativo puede reemplazar a otro en su ausencia.
-   */
+  /** Indica si la persona es suplente de otro enlace operativo. */
   suplente: string;
-
-  /**
-   * Calle donde reside el enlace operativo.
-   * Es el nombre de la vía pública en la que se ubica la dirección de la persona.
-   */
+  /** Calle donde reside el enlace operativo. */
   calle: string;
-
-  /**
-   * Número exterior de la vivienda del enlace operativo.
-   * Es el número que identifica el exterior de la casa o edificio en la dirección.
-   */
+  /** Número exterior de la vivienda del enlace operativo. */
   numeroExterior: string;
-
-  /**
-   * Número interior de la vivienda del enlace operativo.
-   * Es el número que identifica un departamento o unidad dentro de un edificio, si aplica.
-   */
+  /** Número interior de la vivienda del enlace operativo. */
   numeroInterior: string;
-
-  /**
-   * Colonia donde reside el enlace operativo.
-   * Es el nombre de la zona o barrio dentro de una ciudad o municipio.
-   */
+  /** Colonia donde reside el enlace operativo. */
   colonia: string;
-
-  /**
-   * Código postal de la residencia del enlace operativo.
-   * Es el código numérico que facilita la localización de la dirección.
-   */
+  /** Código postal de la residencia del enlace operativo. */
   codigoPostal: string;
-
-  /**
-   * Localidad donde reside el enlace operativo.
-   * Es el nombre de la localidad dentro de un municipio o delegación.
-   */
+  /** Localidad donde reside el enlace operativo. */
   localidad: string;
-
-  /**
-   * Delegación o municipio donde reside el enlace operativo.
-   * Es la demarcación territorial dentro de una ciudad o estado donde reside la persona.
-   */
+  /** Delegación o municipio donde reside el enlace operativo. */
   delegacionMunicipio: string;
 }
 
+/** Modelo que representa una persona para recibir notificaciones. */
 export interface RecibirNotificaciones {
-  /** Registro Federal de Contribuyentes */
+  /** Registro Federal de Contribuyentes. */
   rfc: string;
-
-  /** Clave Única de Registro de Población */
+  /** Clave Única de Registro de Población. */
   curp: string;
-
-  /** Nombre del solicitante */
+  /** Nombre del solicitante. */
   nombre: string;
-
-  /** Apellido paterno del solicitante */
+  /** Apellido paterno del solicitante. */
   apellidoPaterno: string;
-
-  /** Apellido materno del solicitante */
+  /** Apellido materno del solicitante. */
   apellidoMaterno: string;
 }
 
+/** Modelo que representa un transportista en el trámite. */
 export interface TransportistasTable {
-  /**
-   * RFC del transportista.
-   * Representa el Registro Federal de Contribuyentes del transportista, utilizado para su identificación fiscal.
-   */
+  /** RFC del transportista. */
   rfc: string;
-
-  /**
-   * Razón social del transportista.
-   * Es el nombre legal de la empresa o entidad que presta el servicio de transporte.
-   */
+  /** Razón social del transportista. */
   razonSocial: string;
-
-  /**
-   * Domicilio del transportista.
-   * Dirección física donde se encuentra ubicado el transportista o su empresa.
-   */
+  /** Domicilio del transportista. */
   domicilio: string;
-
-  /**
-   * CAAT del transportista.
-   * Representa el Certificado de Autorización de Autotransporte, necesario para la operación legal del transportista.
-   */
+  /** CAAT del transportista. */
   caat: string;
 }
 
+/** Modelo que representa una empresa controlada en el trámite. */
 export interface ControladasTable {
-rfc: string;
-
-  /**
-   * Razón social del transportista.
-   * Es el nombre legal de la empresa o entidad que presta el servicio de transporte.
-   */
+  /** RFC de la empresa controlada. */
+  rfc: string;
+  /** Razón social de la empresa controlada. */
   razonSocial: string;
-
-  /**
-   * Domicilio del transportista.
-   * Dirección física donde se encuentra ubicado el transportista o su empresa.
-   */
+  /** Domicilio de la empresa controlada. */
   domicilio: string;
+  /** Participación accionaria de la empresa controlada. */
   accinaria: string;
+  /** Importaciones realizadas por la empresa controlada. */
   importaciones: string;
+  /** Exportaciones realizadas por la empresa controlada. */
   exportaciones: string;
 }

@@ -1,13 +1,14 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TablaDinamicaComponent, TituloComponent, TablaSeleccion, ConsultaioState, ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { Tramite32606Query } from '../../state/Tramite32606.query';
-import { EconomicoService } from '../../services/economico.service';
-import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { ENLACE_OPERATIVO_TABLA, PERSONAS_TABLA } from '../../constantes/adace32606.enum';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
+import { CommonModule } from '@angular/common';
+import { EconomicoService } from '../../services/economico.service';
 import { RecibirNotificaciones } from '../../models/adace.model';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
+import { Tramite32606Query } from '../../state/Tramite32606.query';
+
 
 /** Componente para la sección de terceros relacionados del trámite 32606. */
 @Component({
@@ -17,7 +18,7 @@ import { map, ReplaySubject, takeUntil } from 'rxjs';
   templateUrl: './terceros-relacinados.component.html',
   styleUrl: './terceros-relacinados.component.css',
 })
-export class TercerosRelacinadosComponent {
+export class TercerosRelacinadosComponent implements OnInit, OnDestroy {
   /** Formulario reactivo principal de terceros relacionados. */
   public tercerosRelacionadosForm !: FormGroup;
   /** Referencia a la tabla de selección. */

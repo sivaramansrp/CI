@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import { Router } from '@angular/router';
-import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
 import { EconomicoService } from '../../services/economico.service';
+import { FormGroup } from '@angular/forms';
+import { Solicitud32606State } from '../../state/Tramite32606.store';
 
 /** Componente que representa el primer paso del trámite. */
 @Component({

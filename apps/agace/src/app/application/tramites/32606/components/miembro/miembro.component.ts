@@ -1,13 +1,13 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CARACTER_CATALOGO, EMPRESA_TABLA, NACIONALIDAD_CATALOGO, RADIO_08 } from '../../constantes/adace32606.enum';
-import { EconomicoService } from '../../services/economico.service';
-import { Tramite32606Query } from '../../state/Tramite32606.query';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
+import { CommonModule } from '@angular/common';
+import { EconomicoService } from '../../services/economico.service';
 import { Modal } from 'bootstrap';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
+import { Tramite32606Query } from '../../state/Tramite32606.query';
 
 /** Componente para la sección de miembros del trámite 32606. */
 @Component({

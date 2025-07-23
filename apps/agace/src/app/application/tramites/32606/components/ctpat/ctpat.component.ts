@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ConsultaioQuery, ConsultaioState, InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RADIO_01 } from '../../constantes/adace32606.enum';
-import { EconomicoService } from '../../services/economico.service';
-import { Tramite32606Query } from '../../state/Tramite32606.query';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { EconomicoService } from '../../services/economico.service';
+import { RADIO_01 } from '../../constantes/adace32606.enum';
+import { Tramite32606Query } from '../../state/Tramite32606.query';
 
 /** Componente para la sección CTPAT del trámite 32606. */
 @Component({

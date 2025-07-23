@@ -1,14 +1,14 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { InputRadioComponent, TituloComponent, InputCheckComponent, TablaDinamicaComponent, TablaSeleccion, Pedimento, Notificacion, NotificacionesComponent, ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState, InputCheckComponent, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QUERELLA_TABLA, RADIO_08 } from '../../constantes/adace32606.enum';
-import { EconomicoService } from '../../services/economico.service';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
-import { Tramite32606Query } from '../../state/Tramite32606.query';
+import { CommonModule } from '@angular/common';
+import { EconomicoService } from '../../services/economico.service';
 import { Modal } from 'bootstrap';
 import { Querella } from '../../models/adace.model';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
+import { Tramite32606Query } from '../../state/Tramite32606.query';
 
 /** Componente para la sección de querella del trámite 32606. */
 @Component({

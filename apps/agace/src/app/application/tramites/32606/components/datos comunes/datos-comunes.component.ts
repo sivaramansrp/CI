@@ -1,15 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { BIOMESTRE_CATALOGO, RADIO_01, SECTOR_PRODUCTIVO, SERVICIO_CATALOGO } from '../../constantes/adace32606.enum';
 import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { BIOMESTRE_CATALOGO, DOMICILIO_CATALOGO, RADIO_01, SECTOR_PRODUCTIVO, SERVICIO_CATALOGO } from '../../constantes/adace32606.enum';
-import { EconomicoService } from '../../services/economico.service';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
-import { Tramite32606Query } from '../../state/Tramite32606.query';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DomicillioComponent } from '../domicillio/domicillio.component';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
-import { QuerellaComponent } from '../querella/querella.component';
+import { CommonModule } from '@angular/common';
+import { DomicillioComponent } from '../domicillio/domicillio.component';
+import { EconomicoService } from '../../services/economico.service';
 import { MiembroComponent } from '../miembro/miembro.component';
+import { QuerellaComponent } from '../querella/querella.component';
+import { Tramite32606Query } from '../../state/Tramite32606.query';
 
 /** Componente para la sección de datos comunes del trámite 32606. */
 @Component({

@@ -1,10 +1,9 @@
+import { Domicillio, EntidadFederativa, Querella, RecibirNotificaciones } from '../models/adace.model';
+import { Observable, catchError, throwError } from 'rxjs';
+import { Solicitud32606State, Tramite32606Store } from '../state/Tramite32606.store';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { catchError, Observable, throwError } from 'rxjs';
-import { Domicillio, EntidadFederativa, Querella, RecibirNotificaciones } from '../models/adace.model';
-import { Solicitud32606State, Tramite32606Store } from '../state/Tramite32606.store';
-
 /** Servicio para operaciones económicas y gestión de datos del trámite 32606. */
 @Injectable({
   providedIn: 'root'
