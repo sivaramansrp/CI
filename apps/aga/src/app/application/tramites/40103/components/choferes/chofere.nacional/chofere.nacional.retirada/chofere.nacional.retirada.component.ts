@@ -56,18 +56,19 @@ export class ChofereNacionalRetiradaComponent implements OnInit, OnDestroy {
    */
   datosDelChoferNacionalSelected: DatosDelChoferNacional[] = [];
 
+    /**
+   * Indica si el formulario o componente está en modo solo lectura.
+   * Cuando es `true`, los campos no pueden ser editados por el usuario.
+   * @type {boolean}
+   */
+  isReadonly: boolean = false;
+
   /**
    * Estado de consulta relacionado con los choferes nacionales.
    * @type {ConsultaioState}
    */
   datosConsulta!: ConsultaioState;
 
-  /**
-   * Indica si el formulario o componente está en modo solo lectura.
-   * Cuando es `true`, los campos no pueden ser editados por el usuario.
-   * @type {boolean}
-   */
-  isReadonly: boolean = false;
 
   /**
    * Referencia al modal de Bootstrap utilizado en el componente.
@@ -111,7 +112,9 @@ export class ChofereNacionalRetiradaComponent implements OnInit, OnDestroy {
     private chofer40103Service: Chofer40103Service,
     private chofer40103Query: Chofer40103Query,
     private consultaioQuery: ConsultaioQuery
-  ) {}
+  ) {
+    // Lógica constructora
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -119,9 +122,6 @@ export class ChofereNacionalRetiradaComponent implements OnInit, OnDestroy {
    * Establece el modo de solo lectura según el estado recibido.
    */
   ngOnInit(): void {
-    
-    this.isReadonly = true;
-
     this.chofer40103Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -135,10 +135,10 @@ export class ChofereNacionalRetiradaComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
-          if(seccionState.readonly) {
+          if (seccionState.readonly) {
             this.datosConsulta = seccionState;
-            this.isReadonly = seccionState?.readonly ?? true;
-          } 
+            this.isReadonly = this.datosConsulta.readonly;
+          }
         })
       ).subscribe();
 

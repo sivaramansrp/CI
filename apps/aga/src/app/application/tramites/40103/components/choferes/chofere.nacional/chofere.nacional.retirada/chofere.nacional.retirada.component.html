@@ -17,12 +17,12 @@
     <div class="col-md-12 text-end">
       <div class="btn-group">
         <button class="btn btn-default" type="button" 
-          (click)="deleteSelectedRow()">
+          (click)="deleteSelectedRow()" [disabled]="isReadonly">
           Eliminar
         </button>
         <button 
           class="btn btn-primary ms-2" 
-          (click)="addNewRow(agregarModalDialog)">
+          (click)="addNewRow(agregarModalDialog)" [disabled]="isReadonly">
           Buscar
         </button>
       </div>

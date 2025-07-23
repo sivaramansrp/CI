@@ -4,11 +4,33 @@ import { Catalogo, CategoriaMensaje, Notificacion, NotificacionesComponent, Tipo
 import { CatalogoSelectComponent, SharedModule, TituloComponent } from "@libs/shared/data-access-user/src";
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
 import { Subject, firstValueFrom, takeUntil } from "rxjs";
+import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { Chofer40103Service } from "../../../../estados/chofer40103.service";
 import { ChoferesExtranjeros } from '../../../../models/registro-muestras-mercancias.model';
 import { CommonModule } from "@angular/common";
 
-
+/**
+ * Componente para la gestión del diálogo de datos de choferes extranjeros en el trámite 40103.
+ *
+ * Este archivo contiene la definición del componente, sus propiedades, eventos y métodos principales
+ * para la captura, edición y validación de datos de choferes extranjeros, así como la gestión de catálogos
+ * y la interacción con servicios relacionados.
+ *
+ * - Permite la visualización y edición de datos de choferes extranjeros.
+ * - Gestiona formularios reactivos y validaciones.
+ * - Administra la apertura y cierre de modales.
+ * - Emite eventos para agregar o cancelar la edición de choferes.
+ * - Interactúa con servicios para obtener catálogos de países, estados, municipios y colonias.
+ *
+ * @component
+ * @example
+ * <app-choferes-datos-extranjeros-dialog
+ *   [readonly]="true"
+ *   [datosDeChofere]="chofer"
+ *   (addModalEvent)="onAdd($event)"
+ *   (cancelEvent)="onCancel()"
+ * ></app-choferes-datos-extranjeros-dialog>
+ */
 @Component({
   selector: 'app-choferes-datos-extranjeros-dialog',
   templateUrl: './data.de.choferes.extranjeros.dialog.component.html',
@@ -25,6 +47,10 @@ import { CommonModule } from "@angular/common";
   ],
 })
 export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDestroy {
+  /**
+   * Marcar para mostrar un error de solo dígitos cuando el usuario escribe caracteres que no son dígitos.
+   */
+  showDigitsOnlyError: boolean = false;
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -43,6 +69,21 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * @type {FormGroup}
    */
   formChoferes!: FormGroup;
+
+  /**
+   * Permite solo dígitos en el campo numeroDelSeguroSocial.
+   */
+  onInputDigitsOnly(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const originalValue = input.value;
+    const digitsOnly = originalValue.replace(/\D/g, '');
+    this.showDigitsOnlyError = originalValue !== digitsOnly;
+    input.value = digitsOnly;
+    this.formChoferes.get('numeroDelSeguroSocial')?.setValue(digitsOnly, { emitEvent: false });
+    if (!this.showDigitsOnlyError) {
+      setTimeout(() => { this.showDigitsOnlyError = false; }, 1000);
+    }
+  }
 
   /**
    * Sujeto utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
@@ -131,10 +172,8 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * @returns {Promise<void>}
    */
   async ngOnInit(): Promise<void> {
-
-
     this.formChoferes = this.fb.group({
-      numero: [{ value: this.datosDeChofere?.numero, disabled: this.readonly}, [Validators.required, Validators.maxLength(10)]],
+      numero: [{ value: this.datosDeChofere?.numero, disabled: this.readonly }, [Validators.required, Validators.maxLength(10)]],
       primerApellido: [{ value: this.datosDeChofere?.primerApellido, disabled: this.readonly }, [Validators.required, Validators.maxLength(50)]],
       segundoApellido: [{ value: this.datosDeChofere?.segundoApellido, disabled: this.readonly }],
 
@@ -142,7 +181,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
       numeroDeGafete: [{ value: this.datosDeChofere?.numeroDeGafete, disabled: true }],
       vigenciaGafete: [{ value: this.datosDeChofere?.vigenciaGafete, disabled: true }],
 
-      numeroDelSeguroSocial: [{ value: this.datosDeChofere?.numeroDelSeguroSocial, disabled: this.readonly }, [Validators.required, Validators.maxLength(11), Validators.pattern(/^\d{11}$/)]],
+      numeroDelSeguroSocial: [{ value: this.datosDeChofere?.numeroDelSeguroSocial, disabled: this.readonly }, [Validators.required, Validators.maxLength(11), Validators.pattern(REGEX_SOLO_DIGITOS)]],
       numberDeIdeFiscal: [{ value: this.datosDeChofere?.numberDeIdeFiscal, disabled: this.readonly }, [Validators.required, Validators.maxLength(13)]],
 
       pais: [{ value: this.datosDeChofere?.pais, disabled: true }, [Validators.required]],
@@ -152,12 +191,12 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
       calle: [{ value: this.datosDeChofere?.calle, disabled: this.readonly }, [Validators.required, Validators.maxLength(100)]],
       numeroExterior: [{ value: this.datosDeChofere?.numeroExterior, disabled: this.readonly }, [Validators.required, Validators.maxLength(10)]],
       numeroInterior: [{ value: this.datosDeChofere?.numeroInterior, disabled: this.readonly }, [Validators.maxLength(10)]],
-      
+
       paisDeResidencia: [{ value: this.datosDeChofere?.paisDeResidencia, disabled: this.readonly }, [Validators.required]],
       ciudad: [{ value: this.datosDeChofere?.ciudad, disabled: this.readonly }, [Validators.required, Validators.maxLength(50)]],
-      
-      correoElectronico: [{ value: this.datosDeChofere?.correoElectronico, disabled: this.readonly }],
-      telefono: [{ value: this.datosDeChofere?.telefono, disabled: this.readonly }],
+
+      correoElectronico: [{ value: this.datosDeChofere?.correoElectronico, disabled: this.readonly }, [Validators.required, Validators.email]],
+      telefono: [{ value: this.datosDeChofere?.telefono, disabled: this.readonly }, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
     });
 
     await this.paisListData();
@@ -334,7 +373,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
       correoElectronico: '',
       telefono: ''
     });
-    
+
   }
 
   /**
@@ -372,20 +411,20 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
     await this.chofer40103Service
       .obtenerTablaDatos<ChoferesExtranjeros>('mock-data-choferes-extranjero.json')
       .pipe(takeUntil(this.destroyed$))
-      .subscribe( (response) => {
-            if(response?.length === 0) {
-              this.alertaNotificacion = {
-                tipoNotificacion: TipoNotificacionEnum.ALERTA,
-                categoria: CategoriaMensaje.INFORMACION,
-                modo: 'action',
-                titulo: 'Alert',
-                mensaje: 'No se encontró información para el CURP o RFC proporcionado.',
-                cerrar: true,
-                txtBtnAceptar: 'Aceptar',
-                txtBtnCancelar: '',
-              };
-              return;
-            }
+      .subscribe((response) => {
+        if (response?.length === 0) {
+          this.alertaNotificacion = {
+            tipoNotificacion: TipoNotificacionEnum.ALERTA,
+            categoria: CategoriaMensaje.INFORMACION,
+            modo: 'action',
+            titulo: 'Alert',
+            mensaje: 'No se encontró información para el CURP o RFC proporcionado.',
+            cerrar: true,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+          };
+          return;
+        }
         this.updateListsData(response[0]);
         // Rellenar el formulario
         this.formChoferes.patchValue(response[0]);
@@ -398,7 +437,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * @returns {Promise<void>}
    */
   private updateListsData(data: ChoferesExtranjeros): void {
-    data.pais = (this.paisList.find((p:Catalogo )=> p.descripcion === data.pais)?.id)?.toString();
+    data.pais = (this.paisList.find((p: Catalogo) => p.descripcion === data.pais)?.id)?.toString();
   }
 
   /**
@@ -408,15 +447,15 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
   limpiarFormulario(): void {
     this.formChoferes.reset();
   }
-  
+
   /**
    * Guarda los datos editados del chofer nacional si el formulario es válido, emite el evento y cierra el modal.
    * Si el formulario es inválido, muestra una notificación de alerta.
    * @returns {void}
    */
   guardarFilaEditada(): void {
-      this.formChoferes.markAllAsTouched();
-      this.formChoferes.updateValueAndValidity();
+    this.formChoferes.markAllAsTouched();
+    this.formChoferes.updateValueAndValidity();
 
     if (this.formChoferes.valid) {
       const DATA = this.formChoferes.getRawValue() as ChoferesExtranjeros;
@@ -428,16 +467,16 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
       this.addModalEvent.emit(DATA);
       this.closeModal();
     } else {
-        this.alertaNotificacion = {
-          tipoNotificacion: TipoNotificacionEnum.ALERTA,
-          categoria: CategoriaMensaje.INFORMACION,
-          modo: 'action',
-          titulo: 'Alert',
-          mensaje: 'Formulario inválido, por favor verifica los campos.',
-          cerrar: true,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        };
+      this.alertaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.INFORMACION,
+        modo: 'action',
+        titulo: 'Alert',
+        mensaje: 'Formulario inválido, por favor verifica los campos.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     }
   }
 
