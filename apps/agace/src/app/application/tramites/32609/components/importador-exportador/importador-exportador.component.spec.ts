@@ -7,7 +7,7 @@ import {  ConsultaioQuery, InputFechaComponent, TablaDinamicaComponent, TablaSel
 
 import { ImportadorExportadorComponent } from './importador-exportador.component';
 import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
-import { Tramite32609Store, Tramites32609State } from '../../estados/tramites32609.store';
+import { Tramite32609Store, Tramites32609State, createInitialState } from '../../estados/tramites32609.store';
 import { Tramite32609Query } from '../../estados/tramites32609.query';
 import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
@@ -56,6 +56,7 @@ describe('ImportadorExportadorComponent', () => {
   ];
 
   const mockSolicitudState: Tramites32609State = {
+    ...createInitialState(),
     comercioExteriorRealizado: '1',
     fechaDePago: '15/03/2024',
     fechaInicioComercio: '01/01/2024',
@@ -73,10 +74,11 @@ describe('ImportadorExportadorComponent', () => {
     domicilio: 'Calle Test 123',
     inputfechaDeLaUltimaOperacion: '15/01/2024',
     tablaDatos: mockEmpresasDelGrupo,
+    transportistasLista: [],
     rubroCertificacion: 'AAA',
     fechaFinVigenciaRubro: '2500301600020289901080060-000054',
     numeroOficio: '50'
-  } as Tramites32609State;
+  };
 
   const mockConsultaioState = {
     readonly: false

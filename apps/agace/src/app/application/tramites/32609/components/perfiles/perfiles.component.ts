@@ -18,12 +18,13 @@ import { PERFILES_FECHA_DE_PAGO, PERFILES_FECHA_INPUT } from '../../enums/perfil
 import { CommonModule } from '@angular/common';
 // Componentes hijos que forman las distintas secciones del formulario
 import {
+  ConsultaioQuery,
   InputFecha,
   InputFechaComponent,
   InputRadioComponent,
   REGEX_VALORES_NUMERICOS,
 } from '@libs/shared/data-access-user/src';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import {
   Tramite32609Store,
   Tramites32609State,
@@ -199,6 +200,8 @@ export class PerfilesComponent implements OnInit, OnDestroy {
    */
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Crea una instancia de PerfilesComponent.
    *
@@ -207,14 +210,49 @@ export class PerfilesComponent implements OnInit, OnDestroy {
    * @param {FormBuilder} fb Inyección del servicio FormBuilder para construir el formulario.
    * @memberof PerfilesComponent
    */
+
   constructor(
     private fb: FormBuilder,
     private tramite32609Store: Tramite32609Store,
-    private tramite32609Query: Tramite32609Query
+    private tramite32609Query: Tramite32609Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    //Añade lógica aquí
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * Determina si debe guardar datos existentes o inicializar un formulario nuevo.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormularioProfileForm();
+    }
+  }
+ 
+   /**
+   * Guarda los datos del formulario y establece el estado de solo lectura.
+   * Deshabilita todos los controles del formulario cuando está en modo consulta.
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormularioProfileForm();
+    if (this.esFormularioSoloLectura) {
+      this.profileForm.disable();
+    } else {
+      this.profileForm.enable();
+    }
+  }
+ 
   /**
    * @method ngOnInit
    * @description
@@ -222,13 +260,19 @@ export class PerfilesComponent implements OnInit, OnDestroy {
    * Configura el formulario y suscribe al estado de la solicitud.
    */
   ngOnInit(): void {
-    this.tramite32609Query.selectTramite32609$
-      .pipe(
-        takeUntil(this.destroyNotifier$)
-      )
-      .subscribe((seccionState) => {
-        this.solicitudState = seccionState;
-        if (!this.profileForm) {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Obtiene el estado actual de la solicitud desde el store.
+   * Se suscribe a los cambios del estado y actualiza la tabla de datos.
+   * Mantiene sincronizada la información entre el store y el componente.
+   */
+  obtenerEstadoSolicitud(): void {
+    this.tramite32609Query.selectTramite32609$?.pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: Tramites32609State) => {
+        this.solicitudState = data;
+         if (!this.profileForm) {
           this.crearFormularioProfileForm();
         } else {
           this.actualizarFormularioConEstado();
@@ -243,9 +287,9 @@ export class PerfilesComponent implements OnInit, OnDestroy {
    * Los valores iniciales se obtienen del estado de la solicitud.
    */
   crearFormularioProfileForm(): void {
-    // Ensure perfiles object exists, fallback to empty object if undefined
+    this.obtenerEstadoSolicitud();
     const PERFILES = this.solicitudState?.perfiles || {};
-    
+   
     this.profileForm = this.fb.group({
       antiguedad: [PERFILES.antiguedad || '', [Validators.required, Validators.pattern(REGEX_VALORES_NUMERICOS)]],
       productos: [PERFILES.productos || '', [Validators.required, Validators.pattern(REGEX_VALORES_NUMERICOS)]],
@@ -253,22 +297,22 @@ export class PerfilesComponent implements OnInit, OnDestroy {
       embarquesImp: [PERFILES.embarquesImp || '', [Validators.required, Validators.pattern(REGEX_VALORES_NUMERICOS)]],
       empleados: [PERFILES.empleados || '', [Validators.required, Validators.pattern(REGEX_VALORES_NUMERICOS)]],
       superficie: [PERFILES.superficie || '', [Validators.required, Validators.pattern(REGEX_VALORES_NUMERICOS)]],
-
-      blCtpat: ['', Validators.required],
-      niverCertificado: [''],
-      ctpatAccountNumber: [''],
-      codigoMid: [''],
+ 
+      blCtpat: [PERFILES.blCtpat ?? '', Validators.required],
+      niverCertificado: [PERFILES.niverCertificado || ''],
+      ctpatAccountNumber: [PERFILES.ctpatAccountNumber || ''],
+      codigoMid: [PERFILES.codigoMid],
       fecUltimaCtapt: [null],
-      blnPip: ['', Validators.required],
-      numRegistroPip: [''],
-      blnOea: ['', Validators.required],
-      nomProgramapaisOea: [''],
-      numRegistroOea: [''],
-      blnOtrosProgramasSegu: ['', Validators.required],
-      nombreProgramaOtros: [''],
-      numRegistroOtros: [''],
+      blnPip: [PERFILES.blnPip, Validators.required],
+      numRegistroPip: [PERFILES.numRegistroPip],
+      blnOea: [PERFILES.blnOea, Validators.required],
+      nomProgramapaisOea: [PERFILES.nomProgramapaisOea],
+      numRegistroOea: [PERFILES.numRegistroOea],
+      blnOtrosProgramasSegu: [PERFILES.blnOtrosProgramasSegu, Validators.required],
+      nombreProgramaOtros: [PERFILES.nombreProgramaOtros],
+      numRegistroOtros: [PERFILES.numRegistroOtros],
       fechaVigenciaOtros: [null],
-
+ 
       nombre: [PERFILES.nombre || '', Validators.required],
       categoria: [PERFILES.categoria || '', Validators.required],
       vigencia: [PERFILES.vigencia || '', Validators.required],
