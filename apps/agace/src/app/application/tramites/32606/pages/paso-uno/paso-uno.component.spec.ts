@@ -1,47 +1,92 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
+import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { EconomicoService } from '../../services/economico.service';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Tramite32606Store } from '../../state/Tramite32606.store';
+import { ReplaySubject, of } from 'rxjs';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
-  let fixture: ComponentFixture<PasoUnoComponent>;
-  let mockRouter: any;
+  let economicoMock: jest.Mocked<EconomicoService>;
+  let routerMock: jest.Mocked<Router>;
+  let consultaioQueryMock: jest.Mocked<ConsultaioQuery>;
+  let tramite32606StoreMock: jest.Mocked<Tramite32606Store>;
+  let fb: FormBuilder;
+  let destroyed$: ReplaySubject<boolean>;
 
-  beforeEach(async () => {
-    mockRouter = { navigate: jest.fn() };
+  const consultaState: ConsultaioState = {
+    procedureId: '',
+    parameter: '',
+    department: '',
+    folioTramite: '',
+    tipoDeTramite: '',
+    estadoDeTramite: '',
+    readonly: false,
+    create: true,
+    update: false,
+    consultaioSolicitante: null
+  };
 
-    await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent],
-      providers: [provideHttpClient(),
-        { provide: Router, useValue: mockRouter }
-      ]
-    }).compileComponents();
+  beforeEach(() => {
+    economicoMock = {
+      getRegistroTomaMuestrasMercanciasData: jest.fn(),
+      actualizarEstadoFormulario: jest.fn()
+    } as any;
+    routerMock = { navigate: jest.fn() } as any;
+    consultaioQueryMock = {
+      selectConsultaioState$: of(consultaState)
+    } as any;
+    tramite32606StoreMock = {} as any;
+    fb = new FormBuilder();
+    destroyed$ = new ReplaySubject(1);
 
-    fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.componentInstance;
+    component = new PasoUnoComponent(
+      economicoMock,
+      consultaioQueryMock,
+    );
+    component['destroyed$'] = destroyed$;
   });
 
-  it('should create', () => {
+  it('crea el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('seleccionaTab should update indice', () => {
-    component.indice = 1;
+  it('ngOnInit asigna consultaState y esDatosRespuesta', () => {
+    consultaioQueryMock.selectConsultaioState$ = of({ ...consultaState, update: false });
+    component.consultaioQuery = consultaioQueryMock;
+    component.ngOnInit();
+    expect(component.consultaState).toEqual(expect.objectContaining({ update: false }));
+    expect(component.esDatosRespuesta).toBe(true);
+  });
+
+  // it('ngOnInit llama guardarDatosFormularios si update es true', () => {
+  //   consultaioQueryMock.selectConsultaioState$ = of({ ...consultaState, update: true });
+  //   component.consultaioQuery = consultaioQueryMock;
+  //   const spy = jest.spyOn(component, 'guardarDatosFormularios');
+  //   component.ngOnInit();
+  //   expect(spy).toHaveBeenCalled();
+  // });
+
+  it('guardarDatosFormularios actualiza estado y llama actualizarEstadoFormulario', () => {
+    const resp = { tipoRadio01: 'a' } as any;
+    economicoMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(resp));
+    component.economico = economicoMock;
+    component.guardarDatosFormularios();
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(economicoMock.actualizarEstadoFormulario).toHaveBeenCalledWith(resp);
+  });
+
+  it('seleccionaTab cambia el índice', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
   });
 
-  it('should run #constructor()', async () => {
-    expect(component).toBeTruthy();
+  it('ngOnDestroy completa destroyed$', () => {
+    const spyNext = jest.spyOn(destroyed$, 'next');
+    const spyComplete = jest.spyOn(destroyed$, 'complete');
+    component.ngOnDestroy();
+    expect(spyNext).toHaveBeenCalledWith(true);
+    expect(spyComplete).toHaveBeenCalled();
   });
-
-  it('should run #seleccionaTab()', async () => {
-    component.seleccionaTab(1);
-  });
-
-  it('should run ngOnInit without errors', () => {
-    expect(() => component.ngOnInit()).not.toThrow();
-  });
-
 });

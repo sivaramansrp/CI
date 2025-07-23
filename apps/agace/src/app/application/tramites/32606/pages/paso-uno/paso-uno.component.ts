@@ -29,11 +29,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public esDatosRespuesta: boolean = false;
 
   constructor(
-    private economico: EconomicoService,
-    private router: Router,
-    private consultaioQuery: ConsultaioQuery,
-    private tramite32606Store: Tramite32606Store,
-    private fb: FormBuilder) {
+    public economico: EconomicoService,
+    public consultaioQuery: ConsultaioQuery,
+   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
