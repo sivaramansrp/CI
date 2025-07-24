@@ -152,6 +152,7 @@ export class EnlaceComponent implements OnInit, OnDestroy {
    */
   public getEnlace(): void {
     this.enlaceHeaderData = this.enlaceTableData?.tableHeader;
+    this.enlanceBodyData = this.enlaceTableData?.tableBody;
   }
 
   /**
