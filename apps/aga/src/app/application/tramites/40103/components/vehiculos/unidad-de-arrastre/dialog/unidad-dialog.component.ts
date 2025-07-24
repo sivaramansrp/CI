@@ -32,7 +32,7 @@ export class UnidadDialogComponent implements OnInit {
   modalRef?: any; // Replace with BsModalRef if using ngx-bootstrap
 
   public destroyNotifier$: Subject<void> = new Subject();
-  constructor(private fb: FormBuilder, private modificarTerrestreService: modificarTerrestreService) {}
+  constructor(private fb: FormBuilder, private modificarTerrestreService: modificarTerrestreService) { }
 
   ngOnInit() {
     // Fetch catalogs if not provided
@@ -102,13 +102,10 @@ export class UnidadDialogComponent implements OnInit {
   }
 
   openModal(): void {
-    // Implement modal open logic if using a modal service
-    // this.modalRef = this.modalService.show(this.unidadDialogModal, { class: 'modal-xl' });
+    // Este método debería abrir el diálogo modal.
   }
 
   closeModal(): void {
-    // Implement modal close logic if using a modal service
-    // this.modalRef?.hide();
     this.cancel.emit();
   }
 
@@ -125,8 +122,11 @@ export class UnidadDialogComponent implements OnInit {
     this.unidadForm.markAllAsTouched();
     this.unidadForm.updateValueAndValidity();
     if (this.unidadForm.valid) {
+      const raw = this.unidadForm.getRawValue();
       const unidadData = {
-        ...this.unidadForm.getRawValue()
+        ...raw,
+        tipoDeUnidadArrastre: raw.tipoDeUnidad,
+        vinVehiculo: raw.numero
       };
       this.save.emit(unidadData);
       this.closeModal();
