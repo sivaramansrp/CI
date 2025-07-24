@@ -279,7 +279,7 @@ modoEdicionDestinatario = false;
           Validators.maxLength(20),
         ],
       ],
-      fechaPago: [{ value: '', disabled: true }],
+      fechaPago: [{ value: ''}],
       importePago: [{ value: '', disabled: true }],
     });
 
