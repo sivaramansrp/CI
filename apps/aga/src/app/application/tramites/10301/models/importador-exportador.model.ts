@@ -1,9 +1,15 @@
+/**
+ * Respuesta de la consulta de datos del trámite.
+ */
 export interface RespuestaConsulta {
   success: boolean;
   datos: ConsultaDatos;
   message: string;
 }
 
+/**
+ * Datos generales de la consulta del trámite.
+ */
 export interface ConsultaDatos {
 
   /** Identificador del manifiesto asociado al trámite */
@@ -62,6 +68,9 @@ export interface ConsultaDatos {
 
 }
 
+/**
+ * Datos de una mercancía específica.
+ */
 export interface DatosMercancia {
   /** Identificador único de la mercancía. */
   id: number;

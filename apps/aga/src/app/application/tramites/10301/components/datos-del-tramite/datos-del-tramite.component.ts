@@ -155,31 +155,23 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   valorSeleccionado!: string;
 
   /**
-   * Encabezados de la tabla de mercancías.
-   */
-  public mercanciaHeaderData: string[] = [];
-
-  /**
-   * Datos del cuerpo de la tabla de mercancías.
-   */
-  public mercanciaBodyData: TableBodyData[] = [];
-
-  /**
-   * Datos de la tabla de mercancías obtenidos desde un archivo JSON.
-   */
-  public getMercanciaTableData = mercanciaTable;
-
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
   esFormularioSoloLectura: boolean = false;
+
   /**
    * Indica si el formulario es de solo lectura.
    * 
    */
   formularioDeshabilitado: boolean = true;
+
   /**
    * Indicates whether the selected location is a country.
    * Set to `true` if the location is a country, otherwise `false`.
    */
   isPais: boolean = false;
+
     /**
    * Indicates whether the selected location is a country.
    * Set to `true` if the location is a country, otherwise `false`.
@@ -199,9 +191,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Botones para gestionar la lista de países de origen.
    */
-  public finesDeMercanciaBotons = this.getCrossListBtn();
+  public finesDeMercanciaBotons = this.obtenerCrossListBtn();
 
-  public getCrossListBtn(): Array<{ btnNombre: string; class: string; funcion: () => void }> {
+  public obtenerCrossListBtn(): Array<{ btnNombre: string; class: string; funcion: () => void }> {
     return [
       {
         btnNombre: 'Agregar todos',
@@ -265,7 +257,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Filas seleccionadas en la tabla.
    */
-  selectedRows: number[] = [];
+  filaSeleccionadas: number[] = [];
 
   /**
    * Configuración de la tabla de selección.
@@ -539,10 +531,10 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
 
   /**
    * Maneja el cambio de filas seleccionadas en la tabla de solicitudes.
-   * @param selectedRows Lista de filas seleccionadas en la tabla de solicitudes.
+   * @param filaSeleccionadas Lista de filas seleccionadas en la tabla de solicitudes.
    */
-  onSelectedRowsChange(selectedRows: DatosMercancia[]): void {
-    this.selectedRows = selectedRows.map(row => row.id);
+  onSelectedRowsChange(filaSeleccionadas: DatosMercancia[]): void {
+    this.filaSeleccionadas = filaSeleccionadas.map(row => row.id);
   }
 
   /**
@@ -723,10 +715,10 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Elimina las filas seleccionadas de la tabla de solicitudes.
    */
   eliminar(): void {
-    if (this.selectedRows && this.selectedRows.length > 0) {
-      this.mercanciaDatos = this.mercanciaDatos.filter(row => !this.selectedRows.includes(row.id));
+    if (this.filaSeleccionadas && this.filaSeleccionadas.length > 0) {
+      this.mercanciaDatos = this.mercanciaDatos.filter(row => !this.filaSeleccionadas.includes(row.id));
       this.store.setDatosMercancia(this.mercanciaDatos);
-      this.selectedRows = [];
+      this.filaSeleccionadas = [];
     }
   }
 
