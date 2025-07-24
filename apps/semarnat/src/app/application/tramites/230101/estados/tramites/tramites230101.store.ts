@@ -115,32 +115,32 @@ export interface Solicitud230101State {
 /**
  * Rango de días seleccionado.
  */
-selectRangoDias: string,
+seleccionarsRangoDias: string,
 
 /**
  * País de origen seleccionado.
  */
-selectPaisOrigen: string,
+seleccionePaisOrigen: string,
 
 /**
  * Destino seleccionado.
  */
-selectDestino: string,
+seleccionarsDestino: string,
 
 /**
  * Rango de días seleccionado para las aduanas.
  */
-selectRangoDiasAduanas: string,
+seleccionarsRangoDiasAduanas: string,
 
 /**
  * Rango de días seleccionado para el país de origen.
  */
-selectRangoDiasPaisOrigen: string,
+seleccionarsRangoDiasPaisOrigen: string,
 
 /**
  * Rango de días seleccionado para el destino.
  */
-selectRangoDiasDestino: string,
+seleccionarsRangoDiasDestino: string,
 }
 
 /**
@@ -256,32 +256,32 @@ impPago: '',
 /**
  * Rango de días seleccionado.
  */
-selectRangoDias: '',
+seleccionarsRangoDias: '',
 
 /**
  * País de origen seleccionado.
  */
-selectPaisOrigen: '',
+seleccionePaisOrigen: '',
 
 /**
  * Destino seleccionado.
  */
-selectDestino: '',
+seleccionarsDestino: '',
 
 /**
  * Rango de días seleccionado para las aduanas.
  */
-selectRangoDiasAduanas: '',
+seleccionarsRangoDiasAduanas: '',
 
 /**
  * Rango de días seleccionado para el país de origen.
  */
-selectRangoDiasPaisOrigen: '',
+seleccionarsRangoDiasPaisOrigen: '',
 
 /**
  * Rango de días seleccionado para el destino.
  */
-selectRangoDiasDestino: ''
+seleccionarsRangoDiasDestino: ''
 
   };
 }
@@ -530,67 +530,67 @@ export class Solicitud230101Store extends Store<Solicitud230101State> {
   }
  /**
  * Actualiza el rango de días seleccionado.
- * @param {string} selectRangoDias - Nuevo rango de días seleccionado.
+ * @param {string} seleccionarsRangoDias - Nuevo rango de días seleccionado.
  */
-public setSelectRangoDias(selectRangoDias: string): void {
+public setseleccionarsRangoDias(seleccionarsRangoDias: string): void {
   this.update((state) => ({
     ...state,
-    selectRangoDias
+    seleccionarsRangoDias
   }));
 }
 
 /**
  * Actualiza el país de origen seleccionado.
- * @param {string} selectPaisOrigen - Nuevo país de origen seleccionado.
+ * @param {string} seleccionePaisOrigen - Nuevo país de origen seleccionado.
  */
-public setSelectPaisOrigen(selectPaisOrigen: string): void {
+public setseleccionePaisOrigen(seleccionePaisOrigen: string): void {
   this.update((state) => ({
     ...state,
-    selectPaisOrigen
+    seleccionePaisOrigen
   }));
 }
 
 /**
  * Actualiza el destino seleccionado.
- * @param {string} selectDestino - Nuevo destino seleccionado.
+ * @param {string} seleccionarsDestino - Nuevo destino seleccionado.
  */
-public setSelectDestino(selectDestino: string): void {
+public setseleccionarsDestino(seleccionarsDestino: string): void {
   this.update((state) => ({
     ...state,
-    selectDestino
+    seleccionarsDestino
   }));
 }
 
 /**
  * Actualiza el rango de días seleccionado para las aduanas.
- * @param {string} selectRangoDiasAduanas - Nuevo rango de días seleccionado para las aduanas.
+ * @param {string} seleccionarsRangoDiasAduanas - Nuevo rango de días seleccionado para las aduanas.
  */
-public setSelectRangoDiasAduanas(selectRangoDiasAduanas: string): void {
+public setseleccionarsRangoDiasAduanas(seleccionarsRangoDiasAduanas: string): void {
   this.update((state) => ({
     ...state,
-    selectRangoDiasAduanas
+    seleccionarsRangoDiasAduanas
   }));
 }
 
 /**
  * Actualiza el rango de días seleccionado para el país de origen.
- * @param {string} selectRangoDiasPaisOrigen - Nuevo rango de días seleccionado para el país de origen.
+ * @param {string} seleccionarsRangoDiasPaisOrigen - Nuevo rango de días seleccionado para el país de origen.
  */
-public setSelectRangoDiasPaisOrigen(selectRangoDiasPaisOrigen: string): void {
+public setseleccionarsRangoDiasPaisOrigen(seleccionarsRangoDiasPaisOrigen: string): void {
   this.update((state) => ({
     ...state,
-    selectRangoDiasPaisOrigen
+    seleccionarsRangoDiasPaisOrigen
   }));
 }
 
 /**
  * Actualiza el rango de días seleccionado para el destino.
- * @param {string} selectRangoDiasDestino - Nuevo rango de días seleccionado para el destino.
+ * @param {string} seleccionarsRangoDiasDestino - Nuevo rango de días seleccionado para el destino.
  */
-public setSelectRangoDiasDestino(selectRangoDiasDestino: string): void {
+public setseleccionarsRangoDiasDestino(seleccionarsRangoDiasDestino: string): void {
   this.update((state) => ({
     ...state,
-    selectRangoDiasDestino
+    seleccionarsRangoDiasDestino
   }));
 }
 

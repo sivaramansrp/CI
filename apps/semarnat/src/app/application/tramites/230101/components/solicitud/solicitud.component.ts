@@ -15,6 +15,8 @@ import {
   SimpleChanges,
   ViewChildren,
 } from '@angular/core';
+import { map,takeUntil } from 'rxjs';
+
 import { DETALLE } from '../../constantes/disponibles-constante.enum';
 import { DISPONSIBLE_ADUANA_CHECKBOXES } from '../../constantes/disponibles-constante.enum';
 import { FormArray } from '@angular/forms';
@@ -34,8 +36,7 @@ import { Subject } from 'rxjs';
 import { TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 
 /**
  * Componente para la vista de la solicitud de la sección de "230101".
@@ -103,17 +104,17 @@ export class SolicitudComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * Lista de rangos de días seleccionados para el destino.
    */
-  selectRangoDiasDestino: string[] = [];
+  seleccionarsRangoDiasDestino: string[] = [];
 
   /**
    * Lista de rangos de días seleccionados para el país de origen.
    */
-  selectRangoDiasPaisOrigen: string[] = [];
+  seleccionarsRangoDiasPaisOrigen: string[] = [];
 
   /**
    * Lista de rangos de días seleccionados para las aduanas.
    */
-  selectRangoDiasAduanas: string[] = [];
+  seleccionarsRangoDiasAduanas: string[] = [];
   /**
    * Control de formulario para manejar una fecha individual.
    */
@@ -410,11 +411,19 @@ export class SolicitudComponent implements OnInit, OnDestroy, OnChanges {
     return this.FormSolicitud.get('manifiestosForm') as FormGroup;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['prefilledData'] && this.prefilledData) {
-      this.prefillForm(this.prefilledData);
-    }
+  /**
+ * Método que se ejecuta cuando hay cambios en las propiedades de entrada del componente.
+ * 
+ * Este método verifica si hay cambios en la propiedad `prefilledData` y, si existen,
+ * llama al método `formularioprellenado` para prellenar el formulario con los datos proporcionados.
+ * 
+ * @param {SimpleChanges} changes - Objeto que contiene los cambios en las propiedades de entrada.
+ */
+ngOnChanges(changes: SimpleChanges): void {
+  if (changes['prefilledData'] && this.prefilledData) {
+    this.formularioprellenado(this.prefilledData);
   }
+}
   /**
    * Método para crear el formulario de la solicitud.
    */
@@ -434,20 +443,20 @@ export class SolicitudComponent implements OnInit, OnDestroy, OnChanges {
           this.solicitudState?.clasificacionMercancia,
           Validators.required,
         ],
-        selectRangoDias: [
-          this.solicitudState?.selectRangoDias,
+        seleccionarsRangoDias: [
+          this.solicitudState?.seleccionarsRangoDias,
           Validators.required,
         ],
-        selectRangoDiasAduanas: [
-          this.solicitudState?.selectRangoDiasAduanas,
+        seleccionarsRangoDiasAduanas: [
+          this.solicitudState?.seleccionarsRangoDiasAduanas,
           Validators.required,
         ],
-        selectRangoDiasPaisOrigen: [
-          this.solicitudState?.selectRangoDiasPaisOrigen,
+        seleccionarsRangoDiasPaisOrigen: [
+          this.solicitudState?.seleccionarsRangoDiasPaisOrigen,
           Validators.required,
         ],
-        selectRangoDiasDestino: [
-          this.solicitudState?.selectRangoDiasDestino,
+        seleccionarsRangoDiasDestino: [
+          this.solicitudState?.seleccionarsRangoDiasDestino,
           Validators.required,
         ],
       }),
@@ -516,26 +525,26 @@ export class SolicitudComponent implements OnInit, OnDestroy, OnChanges {
    *
    * @param {Solicitud} data - Datos de la fila seleccionada.
    */
-  onRowSelected(data: Solicitud): void {
-    const SOURCE_LIST_ADUANAS = [...this.crosListaDePaises];
-    const SOURCE_LIST_PAIS_ORIGEN = [...this.crosListaDePaises];
-    const SOURCE_LIST_DESTINO = [...this.crosListaDePaises];
+  enFilaSeleccionada(data: Solicitud): void {
+    const LISTA_DE_FUENTES_ADUANAS = [...this.crosListaDePaises];
+    const LISTA_DE_FUENTES_PAÍS_DE_ORIGEN = [...this.crosListaDePaises];
+    const LISTA_DE_ORIGEN_DESTINO = [...this.crosListaDePaises];
 
     const CONTEXTS = [
       {
-        contextKey: 'selectRangoDiasAduanas',
-        sourceList: SOURCE_LIST_ADUANAS,
-        targetList: this.selectRangoDiasAduanas,
+        contextKey: 'seleccionarsRangoDiasAduanas',
+        sourceList: LISTA_DE_FUENTES_ADUANAS,
+        targetList: this.seleccionarsRangoDiasAduanas,
       },
       {
-        contextKey: 'selectRangoDiasPaisOrigen',
-        sourceList: SOURCE_LIST_PAIS_ORIGEN,
-        targetList: this.selectRangoDiasPaisOrigen,
+        contextKey: 'seleccionarsRangoDiasPaisOrigen',
+        sourceList: LISTA_DE_FUENTES_PAÍS_DE_ORIGEN,
+        targetList: this.seleccionarsRangoDiasPaisOrigen,
       },
       {
-        contextKey: 'selectRangoDiasDestino',
-        sourceList: SOURCE_LIST_DESTINO,
-        targetList: this.selectRangoDiasDestino,
+        contextKey: 'seleccionarsRangoDiasDestino',
+        sourceList: LISTA_DE_ORIGEN_DESTINO,
+        targetList: this.seleccionarsRangoDiasDestino,
       },
     ];
 
@@ -554,7 +563,7 @@ export class SolicitudComponent implements OnInit, OnDestroy, OnChanges {
       }
     });
 
-    this.prefillForm(data);
+    this.formularioprellenado(data);
   }
 
   /**
@@ -565,7 +574,7 @@ export class SolicitudComponent implements OnInit, OnDestroy, OnChanges {
    *
    * @param {Solicitud} data - Datos de la solicitud para prellenar el formulario.
    */
-  prefillForm(data: Solicitud): void {
+  formularioprellenado(data: Solicitud): void {
     this.FormSolicitud.patchValue({
       tipoRegimen: {
         regimen: data.regimen,
@@ -574,10 +583,10 @@ export class SolicitudComponent implements OnInit, OnDestroy, OnChanges {
         tipoProducto: data.tipoProducto,
         paisProcedencia: data.paisProcedencia,
         clasificacionMercancia: data.clasificacionMercancia,
-        selectRangoDias: data.selectRangoDias,
-        selectRangoDiasAduanas: data.selectRangoDiasAduanas,
-        selectRangoDiasPaisOrigen: data.selectRangoDiasPaisOrigen,
-        selectRangoDiasDestino: data.selectRangoDiasDestino,
+        seleccionarsRangoDias: data.seleccionarsRangoDias,
+        seleccionarsRangoDiasAduanas: data.seleccionarsRangoDiasAduanas,
+        seleccionarsRangoDiasPaisOrigen: data.seleccionarsRangoDiasPaisOrigen,
+        seleccionarsRangoDiasDestino: data.seleccionarsRangoDiasDestino,
       },
 
       mercancia: {

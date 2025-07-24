@@ -32,7 +32,7 @@
                 <tbody>
                   @for (item of tablaFilaDatos; let i = $index; track i) {
                   <tr class="table-row"
-                  (click)="onRowClick()">
+                  (click)="enFilahacerClic()">
                     <td>{{ item.fechaCreacion }}</td>
                     <td>{{ item.mercancia }}</td>
                     <td>{{ item.cantidad }}</td>

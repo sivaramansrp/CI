@@ -5,7 +5,7 @@
     <ng-container>
       <div class="row">
         <div class="col-md-12">
-          <app-solicitud-datos (filaSeleccionada)="onRowSelected($event)" [tablaHeadData]="hSolicitud" [tablaFilaDatos]="dSolicitud"
+          <app-solicitud-datos (filaSeleccionada)="enFilaSeleccionada($event)" [tablaHeadData]="hSolicitud" [tablaFilaDatos]="dSolicitud"
           
         ></app-solicitud-datos>
         </div>
@@ -43,7 +43,7 @@
         <div class="col-md-12">
           <label class="form-label">Aduanas de entradas (M&aacute;ximo 3 aduanas)</label>
           <crosslist   
-          [fechasSeleccionadas]="selectRangoDiasAduanas"
+          [fechasSeleccionadas]="seleccionarsRangoDiasAduanas"
             [fechas]="seleccionarOrigenDelPais" 
             [label]="aduanaLabel" 
             [botones]="paisDeProcedenciaBotons"
@@ -65,7 +65,7 @@
         <div class="col-md-12">
           <label class="form-label">Pa&iacute;s origen</label>
           <crosslist  
-          [fechasSeleccionadas]="selectRangoDiasPaisOrigen"
+          [fechasSeleccionadas]="seleccionarsRangoDiasPaisOrigen"
           [fechas]="seleccionarOrigenDelPaisDos" 
           [label]="destinoLabel"
          [botones]="paisDeProcedenciaBotonsDos"
@@ -87,7 +87,7 @@
         <div class="col-md-12">
           <label class="form-label">Destino dentro del país (Entidad federativa)</label>
           <crosslist 
-          [fechasSeleccionadas]="selectRangoDiasDestino" 
+          [fechasSeleccionadas]="seleccionarsRangoDiasDestino" 
            [fechas]="seleccionarOrigenDelPaisTres" 
            [label]="paisDeProcedenciaLabel" 
            [botones]="paisDeProcedenciaBotonsTres"

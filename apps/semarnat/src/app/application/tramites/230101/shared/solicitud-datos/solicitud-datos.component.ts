@@ -92,10 +92,10 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
     mercancia: '',
     cantidad: '1',
     proovedor: 'Example Proveedor',
-    selectRangoDias: 'ANGUILLA',
-    selectRangoDiasAduanas: 'ANGUILLA',
-    selectRangoDiasPaisOrigen: 'ANGUILLA',
-    selectRangoDiasDestino: 'ANGUILLA',
+    seleccionarsRangoDias: 'ANGUILLA',
+    seleccionarsRangoDiasAduanas: 'ANGUILLA',
+    seleccionarsRangoDiasPaisOrigen: 'ANGUILLA',
+    seleccionarsRangoDiasDestino: 'ANGUILLA',
   };
   /**
    * Estado de los datos de consulta.
@@ -125,7 +125,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * Emite el objeto `MOCK_SOLICITUD` a través del evento de salida `filaSeleccionada`
    * para notificar al componente padre sobre la fila seleccionada.
    */
-  onRowClick(): void {
+  enFilahacerClic(): void {
     this.filaSeleccionada.emit(this.MOCK_SOLICITUD);
   }
   /**

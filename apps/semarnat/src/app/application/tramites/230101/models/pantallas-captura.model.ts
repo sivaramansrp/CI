@@ -151,22 +151,22 @@ manifiestosYdesc: boolean;
 /**
  * Rango de días seleccionado.
  */
-selectRangoDias: string;
+seleccionarsRangoDias: string;
 
 /**
  * Rango de días seleccionado para las aduanas.
  */
-selectRangoDiasAduanas: string;
+seleccionarsRangoDiasAduanas: string;
 
 /**
  * Rango de días seleccionado para el país de origen.
  */
-selectRangoDiasPaisOrigen: string;
+seleccionarsRangoDiasPaisOrigen: string;
 
 /**
  * Rango de días seleccionado para el destino.
  */
-selectRangoDiasDestino: string;
+seleccionarsRangoDiasDestino: string;
 }
 
 /** 
