@@ -696,7 +696,7 @@ export const DATOS_FEDERAL = [
         campo: 'entidad_federativa',
         class: 'col-md-8',
         required: true,
-        primerOpcion: 'Selecciona una opción',
+        primerOpcion: 'Seleccione una opción',
         validators: ['required'],
         catalogos: [
             { "id": 1, "descripcion": "Aguascalientes" },
@@ -716,7 +716,7 @@ export const DATOS_FEDERAL = [
         campo: 'representacion_federal',
         class: 'col-md-8',
         required: true,
-        primerOpcion: 'Selecciona una opción',
+        primerOpcion: 'Seleccione una opción',
         validators: ['required'],
         catalogos: [
             { "id": 1, "descripcion": "MEXICALI" },

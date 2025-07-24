@@ -13,6 +13,20 @@ export interface RegistroDeSolicitudesTabla {
 }
 
 /**
+ * Representa una fila de la tabla de tratados.
+ */
+export interface TratadosTabla {
+    pais: string;
+    tratado: string;
+    origen: string;
+    normaOrigen: string;
+    requisitoEspecifico: string;
+    calificacionSistema: string;
+    calificacionDictaminad: string;
+    otrasInstancias: string;
+    procesoTransformacion: string;
+}
+/**
  * Representa una fila de la tabla de insumos.
  *
  * @property nombreTecnico - Nombre técnico del insumo.

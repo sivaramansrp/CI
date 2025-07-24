@@ -51,6 +51,15 @@ export class Tramites80207Queries extends Query<Tramite80207State> {
   });
 
   /**
+   * Selector para obtener las plantas desde el estado.
+   * @property {Observable<any>} plantas$
+   */
+  plantas$ = this.select((state) => {
+    return state.plantas;
+  }
+  );
+
+  /**
    * Selector que evalúa si todos los valores del objeto `formaValida` en el estado son `true`.
    * @property {Observable<boolean>} formaValida$
    */

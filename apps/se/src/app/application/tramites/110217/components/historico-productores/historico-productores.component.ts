@@ -1,29 +1,15 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConfiguracionColumna,REGEX_SOLO_DIGITOS,TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { Tramite110217State, Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
 import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { ConsultaioState } from '@libs/shared/data-access-user/src';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
 import { HISTORICO_ENCABZADOS } from '../../constants/certificado-origen.enum';
 import { HistoricoColumnas } from '../../models/certificado-origen.model';
 import { Modal } from 'bootstrap';
-import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ReplaySubject } from 'rxjs';
-import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
-import { Tramite110217State } from '../../../../estados/tramites/tramite110217.store';
-import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 
 /**

@@ -134,6 +134,10 @@ export class RepresentacionFederalComponent implements OnInit {
           })
         )
       .subscribe();
+
+    if (this.esFormularioSoloLectura) {
+      this.datosFederal.disable();
+    }
     }
     
   /**

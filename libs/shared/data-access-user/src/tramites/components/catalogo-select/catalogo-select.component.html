@@ -6,10 +6,11 @@
     *ngIf="label"
     >{{ label }}@if(required){<span class="require">*</span>}: @if(tooltipQuestionCircle){
     <span
-      class="bi bi-question-circle-fill"
-      title="{{ tooltipQuestionCircleText ? tooltipQuestionCircleText : label }}"
-      data-bs-toggle="tooltip"
-    ></span
+      tooltip="{{
+        tooltipQuestionCircleText ? tooltipQuestionCircleText : label
+      }}"
+    >
+      <i class="bi bi-question-circle-fill"></i></span
     >}
   </label>
   <label *ngIf="!label" for="{{ id }}" class="form-label label-height"></label>
@@ -27,7 +28,7 @@
       [hidden]="hiddenPrimerOption"
       [disabled]="disabledPrimerOption"
     >
-      {{placeholder ? placeholder : 'Seleccione una opción'}}
+      {{ placeholder ? placeholder : 'Seleccione una opción' }}
     </option>
     <option *ngFor="let option of catalogo" [value]="option.id">
       {{ option.descripcion }}

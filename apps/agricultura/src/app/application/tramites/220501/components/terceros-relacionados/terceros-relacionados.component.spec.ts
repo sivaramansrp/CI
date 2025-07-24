@@ -38,6 +38,10 @@ const mockDestinatarios: Destinatario[] = [
     calle: 'Calle D1',
     numeroExterior: '10',
     numeroInterior: 'A',
+    colonia: 'Colonia D1',
+    municipioAlcaldia: 'Municipio D1',
+    entidadFederativa: 'Estado D1',
+    codigoPostal: '12345'
   } as Destinatario,
   {
     nombre: 'Destinatario 2',
@@ -48,6 +52,10 @@ const mockDestinatarios: Destinatario[] = [
     calle: 'Calle D2',
     numeroExterior: '20',
     numeroInterior: 'B',
+    colonia: 'Colonia D1',
+    municipioAlcaldia: 'Municipio D1',
+    entidadFederativa: 'Estado D1',
+    codigoPostal: '12345'
   } as Destinatario,
 ];
 
