@@ -10,6 +10,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDelTramiteComponent } from '../../components/datos-del-tramite/datos-del-tramite.component';
 import { Solicitud10301Service } from '../../services/solicitud10301.service';
+import { Tramite10301Store } from '../../estados/tramite10301.store';
 
 /**
  * Componente que representa el paso uno del trámite.
@@ -37,7 +38,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private solicitud10301Service: Solicitud10301Service, // Servicio para manejar la solicitud
-    private consultaQuery: ConsultaioQuery // Servicio para consultar el estado
+    private consultaQuery: ConsultaioQuery, // Servicio para consultar el estado
+    public tramite10301Store: Tramite10301Store
   ) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
@@ -104,10 +106,25 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       .getDatosDeTrtamitelDoc().pipe(
         takeUntil(this.destroyNotifier$) // Se desuscribe al destruir el componente
       )
-      .subscribe((resp) => {
-        if (resp) {
-          this.esDatosRespuesta = true; // Marca que hay datos de respuesta
-          this.solicitud10301Service.actualizarEstadoFormulario(resp); // Actualiza el estado del formulario con la respuesta
+      .subscribe((respuesta) => {
+        if (respuesta.success) {
+          this.tramite10301Store.setManifesto(respuesta.datos.manifesto);
+          this.tramite10301Store.setAduana([{ id: 1, descripcion: respuesta.datos.aduana }]);
+          this.tramite10301Store.setNombre(respuesta.datos.nombre);
+          this.tramite10301Store.setTipoMercancia(respuesta.datos.tipoMercancia);
+          this.tramite10301Store.setUsoEspecifico(respuesta.datos.usoEspecifico);
+          this.tramite10301Store.setMarca(respuesta.datos.marca);
+          this.tramite10301Store.setModelo(respuesta.datos.modelo);
+          this.tramite10301Store.setSerie(respuesta.datos.serie);
+          this.tramite10301Store.setCalle(respuesta.datos.calle);
+          this.tramite10301Store.setNumeroExterior(respuesta.datos.numeroExterior);
+          this.tramite10301Store.setNumeroInterior(respuesta.datos.numeroInterior);
+          this.tramite10301Store.setTelefono(respuesta.datos.telefono);
+          this.tramite10301Store.setCorreoElectronico(respuesta.datos.correoElectronico);
+          this.tramite10301Store.setCodigoPostal(respuesta.datos.codigoPostal);
+          this.tramite10301Store.setEstado(respuesta.datos.estado);
+          this.tramite10301Store.setColonia(respuesta.datos.colonia);
+          this.tramite10301Store.setOpcion(respuesta.datos.opcion);
         }
       });
   }
