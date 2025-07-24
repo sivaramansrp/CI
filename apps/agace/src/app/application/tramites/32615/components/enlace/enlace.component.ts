@@ -164,6 +164,13 @@ export class EnlaceComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Muestra el modal para eliminar el enlace.
+   */
+  public eliminar(): void {
+    this.enlanceBodyData = [];
+  }
+
+  /**
    * Inicializa el formulario con validadores y datos del estado o los datos predeterminados.
    */
   public getRegistroForm(): void {
