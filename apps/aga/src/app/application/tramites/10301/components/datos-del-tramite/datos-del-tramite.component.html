@@ -49,9 +49,13 @@
         <div class="col-md-6">
           <label for="mercancia">Mercancías*:</label>
         </div>
-        <div class="table-container">
-          <ng-table [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"></ng-table>
-        </div>
+          <app-tabla-dinamica
+            [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+            [configuracionTabla]="encabezadoDeTabla"
+            [datos]="mercanciaDatos"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+            (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
+          ></app-tabla-dinamica>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
           <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura"
             data-bs-toggle="modal" data-bs-target="#modalAgregarMercancias">Modificar</button>
@@ -235,8 +239,10 @@
           <button
             type="button"
             class="btn btn-primary ms-3"
-            (click)="openPopup()"
+            data-bs-toggle="modal"
+            data-bs-target="#modalConfirmacion"
             [disabled]="esFormularioSoloLectura"
+            (click)="agregarMercancia()"
           >
             Agregar
           </button>
@@ -471,32 +477,29 @@
   </form>
 </div>
 
-  <div
-    class="modal"
-    tabindex="-1"
-    role="dialog"
-    [ngClass]="{ show: isPopupOpen }"
-    [ngStyle]="{ display: isPopupOpen ? 'block' : 'none' }"
-  >
-    <div class="modal-dialog" role="document">
-      <div
-        class="modal-content"
-        style="width: fit-content; margin-left: 115px"
-      >
-        <div style="background-color: black; height: 55px"></div>
-        <div class="modal-body">
-          <p>La mercancía fue <br />agregada correctamente.</p>
-        </div>
-        <div class="modal-footer" style="justify-content: center">
-          <button
-            type="button"
-            class="btn btn-primary"
-            data-bs-dismiss="modal" 
-            #closeModal
-          >
-            Acceptar
-          </button>
-        </div>
+<div
+  id="modalConfirmacion"
+  aria-labelledby="modalConfirmacionLabel"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  #modalConfirmacion
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content modalsm">
+      <div class="modal-body">
+        <p>La mercancía fue <br />agregada correctamente.</p>
+      </div>
+      <div class="modal-footer" style="justify-content: center">
+        <button
+          type="button"
+          class="btn btn-primary"
+          #closeModalConfirmacion
+          data-bs-dismiss="modal"
+        >
+          Acceptar
+        </button>
       </div>
     </div>
   </div>
+</div>

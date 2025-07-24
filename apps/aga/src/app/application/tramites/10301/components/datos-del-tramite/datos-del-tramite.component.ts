@@ -2,12 +2,14 @@ import {
   AlertComponent,
   CatalogoSelectComponent,
   CatalogosSelect,
+  ConfiguracionColumna,
   ConsultaioQuery,
   ConsultaioState,
   CrosslistComponent,
   InputRadioComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
   TableBodyData,
-  TableComponent,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
@@ -29,9 +31,9 @@ import {
 import { Subject, Subscription, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ImportadorExportadorService } from '../../services/importador-exportador.service';
-import { SELECCION } from '../../constantes/importador-exportador.enum';
 import { Tramite10301Query } from '../../estados/tramite10301.query';
 import mercanciaTable from '@libs/shared/theme/assets/json/10301/mercancia-table.json';
+import { DatosMercancia } from '../../models/importador-exportador.model';
 
 /**
  * Texto de adjuntar para terceros.
@@ -50,7 +52,7 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
     CommonModule,
     CatalogoSelectComponent,
     TituloComponent,
-    TableComponent,
+    TablaDinamicaComponent,
     AlertComponent,
     CrosslistComponent,
     InputRadioComponent,
@@ -97,21 +99,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Texto de adjuntar para terceros.
    */
   TEXTO_DE_ADJUNTAR: string = TERCEROS_TEXTO_DE_ADJUNTAR;
-
-  /**
-   * Indica si la tabla debe mostrarse.
-   */
-  showTabla = true;
-
-  /**
-   * Indica si el popup está abierto.
-   */
-  isPopupOpen = false;
-
-  /**
-   * Indica si el popup está cerrado.
-   */
-  isPopupClose = true;
 
   /**
    * Lista de fines elegidos.
@@ -181,14 +168,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Datos de la tabla de mercancías obtenidos desde un archivo JSON.
    */
   public getMercanciaTableData = mercanciaTable;
-
-  /**
-   * Inicializa los datos de la tabla de mercancías.
-   */
-  public obtenerMercancia(): void {
-    this.mercanciaHeaderData = this.getMercanciaTableData?.mercanciaTable?.tableHeader;
-    this.mercanciaBodyData = this.getMercanciaTableData?.mercanciaTable?.tableBody;
-  }
 
   esFormularioSoloLectura: boolean = false;
   /**
@@ -263,10 +242,20 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
 
+   /**
+   * Referencia al modal de confirmación.
+   */
+  @ViewChild('modalConfirmacion', { static: false }) modalConfirmacion!: ElementRef;
+
   /**
    * Referencia al botón para cerrar el modal.
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
+
+  /**
+   * Referencia al botón para cerrar el modal Confirmacion.
+   */
+  @ViewChild('closeModalConfirmacion') closeModalConfirmacion!: ElementRef;
   
   /**
    * Formulario para agregar mercancías.
@@ -277,6 +266,58 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Filas seleccionadas en la tabla.
    */
   selectedRows: number[] = [];
+
+  /**
+   * Configuración de la tabla de selección.
+   */
+  TablaSeleccion = TablaSeleccion;
+
+  /**
+   * Lista de datos de la solicitud.
+   */
+  public mercanciaDatos: DatosMercancia[] = [];
+
+  /**
+   * Configuración de las columnas de la tabla de solicitudes.
+   */
+  public encabezadoDeTabla: ConfiguracionColumna<DatosMercancia>[] = [
+    { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
+    {
+      encabezado: 'Fines a los que se destinará la mercancía',
+      clave: (articulo) => articulo.fines,
+      orden: 2,
+    },
+    {
+      encabezado: 'Tipo de mercancía',
+      clave: (articulo) => articulo.tipoMercancia,
+      orden: 3,
+    },
+    {
+      encabezado: 'Año',
+      clave: (articulo) => articulo.ano,
+      orden: 4,
+    },
+    {
+      encabezado: 'Modelo',
+      clave: (articulo) => articulo.modelo,
+      orden: 5,
+    },
+    {
+      encabezado: 'Marca',
+      clave: (articulo) => articulo.marca,
+      orden: 6,
+    },
+    {
+      encabezado: 'Número de serie',
+      clave: (articulo) => articulo.serie,
+      orden: 7,
+    },
+    {
+      encabezado: 'Uso específico de la mercancía',
+      clave: (articulo) => articulo.usoEspecifico,
+      orden: 8,
+    }
+  ];
 
   /**
    * Constructor que se utiliza para la inyección de dependencias.
@@ -345,7 +386,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     this.getAno();
     this.getCondicion();
     this.getPais();
-    this.obtenerMercancia();
     this.inicializaCatalogos();
     this.inicializarEstadoFormulario();
 
@@ -398,6 +438,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosDelFormulario();
+      this.agregarMercancia();
     } else {
       this.donanteDomicilio();
     }
@@ -467,14 +508,12 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   inicializaCatalogos(): void {
     const FINES$ = this.importarExportar.getFinesDeMercancia().pipe(
       map((resp) => {
-        console.log('Fines de mercancía:', resp);
         this.fines = resp.data;
         this.selectRangoDias = this.pais.catalogos.map(
           (fines: Catalogo) => fines.descripcion
         );
       })
     );
-    console.log('Fines:', FINES$);
     merge(FINES$).pipe(takeUntil(this.destroyNotifier$)).subscribe();
 
   }
@@ -499,19 +538,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Abre el popup.
+   * Maneja el cambio de filas seleccionadas en la tabla de solicitudes.
+   * @param selectedRows Lista de filas seleccionadas en la tabla de solicitudes.
    */
-  openPopup():void{
-    this.isPopupOpen = true;
-    this.store.setIsPopupOpen(this.isPopupOpen);
-  }
-
-  /**
-   * Muestra la siguiente tabla.
-   */
-  nextTabla():void{
-    this.showTabla = false;
-    this.store.setShowTabla(this.showTabla);
+  onSelectedRowsChange(selectedRows: DatosMercancia[]): void {
+    this.selectedRows = selectedRows.map(row => row.id);
   }
 
   /**
@@ -663,6 +694,25 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Agregar mercancia.
+   */
+  agregarMercancia(): void {
+    this.importarExportar.agregarMercancia().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+      (respuesta) => {
+        if (respuesta?.success) {
+          respuesta.datos.id = this.mercanciaDatos.length + 1;
+          this.mercanciaDatos.push(respuesta.datos);
+          (this.store.setDatosMercancia as (valor: DatosMercancia[]) => void)(this.mercanciaDatos);
+          this.agregarMercanciasForm.reset();
+          this.agregarMercanciasForm.markAsUntouched();
+          this.agregarMercanciasForm.markAsPristine();
+          this.cerrarModal();
+        }
+      }
+    );
+  }
+
+  /**
    * Limpiar mercancias del formulario.
    */
   limpiarMercancias(): void {
@@ -673,11 +723,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Elimina las filas seleccionadas de la tabla de solicitudes.
    */
   eliminar(): void {
-    // if (this.selectedRows && this.selectedRows.length > 0) {
-    //   this.mercanciaBodyData = this.mercanciaBodyData.filter(row => !this.selectedRows.includes(row.id));
-    //   this.store.setMercanciaBodyData(this.mercanciaBodyData);
-    //   this.selectedRows = [];
-    // } 
+    if (this.selectedRows && this.selectedRows.length > 0) {
+      this.mercanciaDatos = this.mercanciaDatos.filter(row => !this.selectedRows.includes(row.id));
+      this.store.setDatosMercancia(this.mercanciaDatos);
+      this.selectedRows = [];
+    }
   }
 
 /**

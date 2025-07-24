@@ -1,28 +1,15 @@
 {
-   "mercanciaTable": {
-        "tableHeader": [
-            "Fines a los que se destinará la mercancía",
-            "Tipo de mercancía",
-            "Año",
-            "Modelo",
-            "Marca",
-            "Número de serie",
-            "Uso específico de la mercancía",
-            "Condición de la mercancía"
-        ],
-        "tableBody": [
-            {
-                "tbodyData": [
-                    "Importación temporal",
-                    "Vehículo",
-                    "2023",
-                    "Modelo X",
-                    "Marca Y",
-                    "1234567890",
-                    "Uso comercial",
-                    "Nuevo"
-                ]
-            }
-        ]
+    "success": true,
+    "message": "Solicitud enviada exitosamente",
+    "datos": {
+        "id": 1,
+        "fines": "Importación temporal",
+        "tipoMercancia": "Vehículo",
+        "ano": "2023",
+        "modelo": "Modelo X",
+        "marca": "Marca Y",
+        "serie": "1234567890",
+        "usoEspecifico": "Uso comercial",
+        "condicion": "Nuevo"
     }
 }

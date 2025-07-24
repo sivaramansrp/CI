@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Tramite10301Store } from '../../10301/estados/tramite10301.store';
+import { RespuestaMercancia } from '../models/importador-exportador.model';
 
 /**
  * Servicio para obtener datos relacionados con importadores y exportadores.
@@ -104,4 +105,9 @@ export class ImportadorExportadorService {
       tap(response => this.store.setDocumentos(response.data))
     );
   }
+
+  agregarMercancia(): Observable<RespuestaMercancia> {
+    return this.http.get<RespuestaMercancia>(`assets/json/10301/mercancia-table.json`);
+  }
+
 }

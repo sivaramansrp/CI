@@ -15,17 +15,18 @@
     "estado": "11122",
     "colonia": "55",
     "opcion": "sí",
-    "tbodyData": [
-        {
-          "Fines a los que se destinará la mercancía": "Comercialización",
-          "Tipo de mercancía": "Electrónica",
-          "Año": "2023",
-          "Modelo": "Modelo X",
-          "Marca": "Marca Y",
-          "Número de serie": "1234567890",
-          "Uso específico de la mercancía": "Uso comercial",
-          "Condición de la mercancía": "Nuevo"
-        }
+    "mercanciaDatos": [
+      {
+        "id": 1,
+        "fines": "Exportación temporal",
+        "tipoMercancia": "Electrónica",
+        "ano": "2023",
+        "modelo": "Modelo Y",
+        "marca": "Marca Z",
+        "serie": "0987654321",
+        "usoEspecifico": "Uso personal",
+        "condicion": "Usado"
+      }
     ]
   }
 }

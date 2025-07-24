@@ -1,4 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { DatosMercancia } from '../models/importador-exportador.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -56,9 +57,6 @@ export interface Solicitud10301State {
   /** Fines o propósitos seleccionados por el usuario. */
   finesElegidos: string[];
 
-  /** Elementos seleccionados por el usuario dentro de los fines disponibles. */
-  elegidosSeleccionados: string[];
-
   /** Rango de días seleccionado por el usuario. */
   selectRangoDias: string[];
 
@@ -70,15 +68,6 @@ export interface Solicitud10301State {
 
   /** Fecha que fue seleccionada específicamente por el usuario. */
   fechaSeleccionada: string | null;
-
-  /** Controla la visibilidad de la tabla principal en la UI. */
-  showTabla: boolean;
-
-  /** Controla si el popup está abierto. */
-  isPopupOpen: boolean;
-
-  /** Controla si el popup debe cerrarse. */
-  isPopupClose: boolean;
 
   /** Valor actualmente seleccionado en algún campo dinámico. */
   valorSeleccionado: string | null;
@@ -162,14 +151,10 @@ export function createInitialState(): Solicitud10301State {
     tipoDocumento: null,
     fechasSeleccionadas: [],
     finesElegidos: [],
-    elegidosSeleccionados: [],
     selectRangoDias: [],
     fechasDatos: [],
     fecha: null,
     fechaSeleccionada: null,
-    showTabla: true,
-    isPopupOpen: false,
-    isPopupClose: true,
     valorSeleccionado: null,
     documentos: null,
     nombre: '',
@@ -304,21 +289,6 @@ export class Tramite10301Store extends Store<Solicitud10301State> {
     this.update((state) => ({ ...state, fechaSeleccionada }));
   }
 
-  /** Muestra u oculta la tabla principal del formulario. */
-  public setShowTabla(showTabla: boolean): void {
-    this.update((state) => ({ ...state, showTabla }));
-  }
-
-  /** Controla la apertura del popup. */
-  public setIsPopupOpen(isPopupOpen: boolean): void {
-    this.update((state) => ({ ...state, isPopupOpen }));
-  }
-
-  /** Controla el cierre del popup. */
-  public setIsPopupClose(isPopupClose: boolean): void {
-    this.update((state) => ({ ...state, isPopupClose }));
-  }
-
   /** Actualiza el valor actualmente seleccionado. */
   public setValorSeleccionado(valorSeleccionado: string): void {
     this.update((state) => ({ ...state, valorSeleccionado }));
@@ -392,6 +362,17 @@ export class Tramite10301Store extends Store<Solicitud10301State> {
   /** Establece la opción seleccionada (checkbox u otra opción). */
   public setOpcion(opcion: string): void {
     this.update((state) => ({ ...state, opcion }));
+  }
+
+  /**
+   * Actualiza los datos de la solicitud en el estado.
+   * @param {DatosMercancia[]} mercanciaDatos - Lista de datos de la solicitud.
+   */
+  public setDatosMercancia(mercanciaDatos: DatosMercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaDatos,
+    }));
   }
 
   /**
