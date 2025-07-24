@@ -147,6 +147,17 @@ export class AcuiculturaStore extends Store<Acuicultura> {
             mercanciaGroup: mercanciaGroup,
         }));
     }
+    async actualizarTodoElEstado(datos: Acuicultura): Promise<void> {
+  await this.update(state => ({
+    ...state,
+    pagoDeDerechos: datos.pagoDeDerechos,
+    formularioMovilizacion: datos.formularioMovilizacion,
+    realizarGroup: datos.realizarGroup,
+    mercanciaGroup: datos.mercanciaGroup,
+    tercerosRelacionados: datos.tercerosRelacionados,
+    datosForma: datos.datosForma
+  }));
+}
    /**
    * Método para actualizar el store con la lista de terceros relacionados.
    * Actualiza la información de las personas asociadas como terceros en el trámite.

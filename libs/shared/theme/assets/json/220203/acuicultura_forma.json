@@ -2,8 +2,8 @@
   "formularioMovilizacion": {
     "medioDeTransporte": "1",
     "identificacionTransporte": "1",
-    "puntoVerificacion": "PVF-001",
-    "nombreEmpresaTransportista": "1"
+    "puntoVerificacion": "1",
+    "nombreEmpresaTransportista": "PVF-001"
   },
   "realizarGroup": {
     "aduanaIngreso": "1",
@@ -65,7 +65,7 @@
     "justificacion": "1",
     "claveReferencia": "REF1234567890",
     "cadenaDependencia": "CAD-DEP-0001",
-    "banco": "BBVA",
+    "banco": "1",
     "llavePago": "KEY-PAGO-9999",
     "importePago": "2500.00",
     "fechaPago": "2025-07-24"

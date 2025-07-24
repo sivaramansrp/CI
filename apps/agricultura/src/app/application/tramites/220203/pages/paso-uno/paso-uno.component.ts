@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
+import {Subject, firstValueFrom, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
@@ -40,7 +40,7 @@ import { TercerospageComponent } from '../../components/tercerospage/tercerospag
     SolicitanteComponent, TercerospageComponent, ReactiveFormsModule, DatosDeLaSolicitudComponent, DatosParaMovilizacionComponent, PagoDeDerechosComponent, CommonModule
   ]
 })
-export class PasoUnoComponent implements OnInit,OnDestroy {
+export class PasoUnoComponent implements OnDestroy {
 
   /**
    * Índice de la pestaña actualmente seleccionada en el formulario.
@@ -115,6 +115,8 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    */
   private readonly DESTROY_NOTIFIER$ = new Subject<void>();
 
+  public RENDERDOM:boolean = false;
+
 
   /**
    * Constructor que inyecta los servicios requeridos para el funcionamiento del componente.
@@ -124,7 +126,18 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * @memberof PasoUnoComponent
    */
   constructor(private importacionDeAcuiculturaService: ImportacionDeAcuiculturaService, private consultaQuery: ConsultaioQuery) {
-
+ this.guardarDatosFormulario();
+    this.consultaQuery.selectConsultaioState$
+    .pipe(takeUntil(this.DESTROY_NOTIFIER$))
+    .subscribe((seccionState) => {
+      if(seccionState.update){
+              this.guardarDatosFormulario();
+      }
+      else{
+           this.RENDERDOM=true;
+      }
+    });
+ 
   }
 
   /**
@@ -137,23 +150,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     this.indice = i;
   }
 
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Suscribe al estado de consulta para detectar actualizaciones y guardar datos del formulario.
-   * @public
-   * @memberof PasoUnoComponent
-   */
-  ngOnInit(): void {
-
-    this.consultaQuery.selectConsultaioState$
-    .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-    .subscribe((seccionState) => {
-      console.log(seccionState);
-      if(seccionState.update){
-              this.guardarDatosFormulario();
-      }
-    });
-  }
+  
   /**
    * Método que valida todos los formularios del paso uno del trámite de acuicultura.
    * Verifica la validez de cada sección: solicitante, datos de solicitud, movilización, terceros y pagos.
@@ -212,17 +209,23 @@ public validarFormularios(): boolean {
    * @public
    * @memberof PasoUnoComponent
    */
-guardarDatosFormulario(): void {
-  this.importacionDeAcuiculturaService
-    .getAcuiculturaData().pipe(
-      takeUntil(this.DESTROY_NOTIFIER$)
-    )
-    .subscribe((resp) => {
-      if (resp) {
-        this.importacionDeAcuiculturaService.actualizarEstadoFormulario(resp);
-      }
-    });
+async guardarDatosFormulario(): Promise<void> {
+  try {
+    const RESP = await firstValueFrom(
+      this.importacionDeAcuiculturaService.getAcuiculturaData().pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      )
+    );
+    if (RESP) {
+      await this.importacionDeAcuiculturaService.actualizarEstadoFormulario(RESP);
+    }
+    this.RENDERDOM = true;
+
+  } catch (error) {
+    this.RENDERDOM = true;
+  }
 }
+
 
 /**
  * Método del ciclo de vida que se ejecuta cuando el componente es destruido.

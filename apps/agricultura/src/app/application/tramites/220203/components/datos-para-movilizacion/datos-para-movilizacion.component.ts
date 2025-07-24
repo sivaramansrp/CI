@@ -105,9 +105,12 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy, AfterV
     private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService,
     private consultaQuery: ConsultaioQuery
   ) {
-    this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.DESTROY_NOTIFIER$)).subscribe((datos) => {
-      this.formularioMovilizacionStore = datos.formularioMovilizacion
-    })
+    this.formularioMovilizacion = this.fb.group({
+      medioDeTransporte: [ '', Validators.required],
+      identificacionTransporte: [ ''],
+      puntoVerificacion: [ ''],
+      nombreEmpresaTransportista: [ '', Validators.required]
+    });
   }
 
   /**
@@ -120,12 +123,13 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy, AfterV
    * @returns {void}
    */
   ngOnInit(): void {
-    this.formularioMovilizacion = this.fb.group({
-      medioDeTransporte: [this.formularioMovilizacionStore.medioDeTransporte || '', Validators.required],
-      identificacionTransporte: [this.formularioMovilizacionStore.identificacionTransporte || ''],
-      puntoVerificacion: [this.formularioMovilizacionStore.puntoVerificacion || ''],
-      nombreEmpresaTransportista: [this.formularioMovilizacionStore.nombreEmpresaTransportista || '', Validators.required]
-    });
+     this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.DESTROY_NOTIFIER$)).subscribe((datos) => {
+      this.formularioMovilizacionStore = datos.formularioMovilizacion
+      if(this.formularioMovilizacionStore){
+         this.formularioMovilizacion.patchValue(this.formularioMovilizacionStore);
+      }
+    })
+   
 
     this.obtenerCatalogosTransporte();
     this.obtenerCatalogosPuntos();

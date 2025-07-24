@@ -124,13 +124,8 @@ export class ImportacionDeAcuiculturaService {
    * @param DATOS Objeto de tipo Acuicultura con los datos a actualizar.
    * @returns {void}
    */
-  public actualizarEstadoFormulario(DATOS: Acuicultura): void {
-    this.actualizarPagoDeDerechos(DATOS.pagoDeDerechos);
-    this.actualizarFormularioMovilizacion(DATOS.formularioMovilizacion);
-    this.actualizarDatosMercancia(DATOS.realizarGroup);
-    this.acuiculturaStore.actualizarMercanciaGroup(DATOS.mercanciaGroup);
-    this.acuiculturaStore.updateTercerosRelacionados(DATOS.tercerosRelacionados);
-    this.acuiculturaStore.updatedatosForma(DATOS.datosForma);
+  public async actualizarEstadoFormulario(DATOS: Acuicultura): Promise<void> {
+   await this.acuiculturaStore.actualizarTodoElEstado(DATOS);
   }
 
 

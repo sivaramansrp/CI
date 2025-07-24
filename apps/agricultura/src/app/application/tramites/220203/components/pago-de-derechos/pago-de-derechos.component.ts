@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import {Catalogo} from '@ng-mf/data-access-user';
@@ -39,7 +39,7 @@ import { PagoDeDerechos } from '../../models/220203/importacion-de-acuicultura.m
     PagoDeDerechoComponent
   ]
 })
-export class PagoDeDerechosComponent implements OnDestroy {
+export class PagoDeDerechosComponent implements OnInit,OnDestroy {
   /**
    * Referencia al componente hijo de pago de derechos.
    * Permite acceder a los métodos y propiedades del componente PagoDeDerechoComponent.
@@ -112,9 +112,7 @@ export class PagoDeDerechosComponent implements OnDestroy {
     private consultaQuery: ConsultaioQuery,
     private readonly cdr: ChangeDetectorRef
   ) {
-    this.importacionAcuiculturaServicio.obtenerDatos().pipe(takeUntil(this.DESTROY_NOTIFIER$)).subscribe((datos) => {
-      this.pagoData = datos.pagoDeDerechos || {} as PagoDeDerechos;
-    })
+   
     this.obtenerCatalogosTransporte();
     this.obtenerCatalogosjustificacionTransporte();
     this.consultaQuery.selectConsultaioState$
@@ -122,10 +120,16 @@ export class PagoDeDerechosComponent implements OnDestroy {
         takeUntil(this.DESTROY_NOTIFIER$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          this.esFormularioSoloLectura =true
           this.cdr.detectChanges();
         })
       )
       .subscribe();
+  }
+  ngOnInit(): void {
+     this.importacionAcuiculturaServicio.obtenerDatos().pipe(takeUntil(this.DESTROY_NOTIFIER$)).subscribe((datos) => {
+      this.pagoData = datos.pagoDeDerechos || {} as PagoDeDerechos;
+    })
   }
   /**
    * Método para obtener el catálogo de bancos disponibles.

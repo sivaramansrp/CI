@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { DatoTabla, Fila, FilaSolicitud, RealizarGroup } from '../../models/220203/importacion-de-acuicultura.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -360,10 +360,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
     private consultaQuery: ConsultaioQuery,
     private readonly acuiculturaStore: AcuiculturaStore
   ) {
-    this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.DESTROY_NOTIFIER$)).subscribe((datos) => {
-      this.cuerpoTablaFila = datos.mercanciaGroup ;
-      this.datosMercanciaStore = datos.realizarGroup;
-    })
+  
   }
 
   /**
@@ -392,11 +389,11 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    */
   public createRealizarGroup(): FormGroup {
     return this.fb.group({
-      aduanaIngreso: [this.datosMercanciaStore.aduanaIngreso || '', Validators.required],
-      oficinaInspeccion: [this.datosMercanciaStore.oficinaInspeccion || '', Validators.required],
-      puntoInspeccion: [this.datosMercanciaStore.puntoInspeccion || '', Validators.required],
-      numeroGuia: [this.datosMercanciaStore.numeroGuia || ''],
-      regimen: [this.datosMercanciaStore.regimen || '', Validators.required],
+      aduanaIngreso: [ '', Validators.required],
+      oficinaInspeccion: [ '', Validators.required],
+      puntoInspeccion: [ '', Validators.required],
+      numeroGuia: [ ''],
+      regimen: [ '', Validators.required],
     });
   }
  
@@ -411,6 +408,15 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    * @returns {void}
    */
   public ngOnInit(): void {
+      this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.DESTROY_NOTIFIER$)).subscribe((datos) => {
+      this.cuerpoTablaFila = datos.mercanciaGroup ;
+      this.datosMercanciaStore = datos.realizarGroup;
+      if(this.datosMercanciaFormGroup) {
+        this.datosMercanciaFormGroup.patchValue({
+          realizarGroup: this.datosMercanciaStore
+        });
+      }
+    })
     this.createFromGroup();
     this.obtenerCatalogosTransporte();
     this.obtenerCatalogosArancelaria();
