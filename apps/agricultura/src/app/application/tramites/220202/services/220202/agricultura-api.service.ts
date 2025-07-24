@@ -44,6 +44,16 @@ export class AgriculturaApiService {
   }
 
   /**
+   * Actualiza los datos relacionados con el pago de derechos.
+   * @method updatePagoDeDerechos
+   * @param {PagoDeDerechos} pagoDeDerechos Datos del pago.
+   * @memberof CertificadoZoosanitarioServiceService
+   */
+  updatePagoDeDerechos(pagoDeDerechos: PagoDeDerechos): void {
+    this.fitosanitarioStore.actualizarPagoDeDerechos(pagoDeDerechos);
+  }
+
+  /**
    * Actualiza la lista de terceros relacionados con la solicitud.
    * @method updateTercerosExportador
    * @param {TercerosrelacionadosTable[]} datosForma Lista de terceros.
