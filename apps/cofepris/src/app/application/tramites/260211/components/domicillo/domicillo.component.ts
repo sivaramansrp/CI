@@ -110,6 +110,8 @@ export class DomicilloComponent implements OnInit,OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
  public esFormularioSoloLectura: boolean = false; 
+  public noSeleccionado: boolean = true; 
+ 
   /**
    * Lista de componentes Crosslist disponibles en la vista.
    */
@@ -148,6 +150,12 @@ export class DomicilloComponent implements OnInit,OnDestroy {
   */
 onSeleccionChangeEvent(selected: any[]) {
   this.selectedRowsEvent = selected;
+  if (this.selectedRowsEvent.length === 1) {
+    this.noSeleccionado = false;
+  }
+  else{
+   this.noSeleccionado = true;
+  }
 }
 /** 
  Recibe los seleccionados del componente tabla
@@ -316,8 +324,8 @@ editMercanciaIndex: number | null = null;
    * Etiqueta para el crosslist de país de procedencia.
    */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionados',
+    tituluDeLaIzquierda: 'País de procedencia*',
+    derecha: 'País(es) seleccionados*',
   };
 
   
@@ -337,6 +345,7 @@ ngOnInit(): void {
  
  
 }
+
 /**
  * Modifica una fila de la tabla NICO con los datos del formulario de agente.
  * Si hay una fila seleccionada, actualiza el índice de edición y carga los datos en el formulario.
@@ -380,7 +389,7 @@ agregarFilaMercancia():void {
       denominacionEspecifica: this.formMercancias.get('denominacionEspecifica')?.value,
       denominacionDistintiva: this.formMercancias.get('denominacionDistintiva')?.value,
       denominacionComun: this.formMercancias.get('denominacionComun')?.value,
-      formaFarmaceutica: this.formMercancias.get('formaFarmaceutica')?.value,
+      formaFarmaceutica: this.formMercancias.get('fraccionArancelaria')?.value,
       estadoFisico:this.estado.find(item => item.id === Number(this.formMercancias.value.estadoFisico))?.descripcion ?? '',
       fraccionArancelaria: this.formMercancias.get('fraccionArancelaria')?.value,
       descripcionFraccion: this.formMercancias.get('descripcionFraccion')?.value,
@@ -392,12 +401,12 @@ agregarFilaMercancia():void {
       numeroRegistro: this.formMercancias.get('numeroRegistro')?.value,
       paisDeOrigen: this.formMercancias.get('paisDeOrigen')?.value,
       paisDeProcedencia: this.formMercancias.get('paisDeProcedencia')?.value,
-      tipoProducto: this.estado.find(item => item.id === Number(this.formMercancias.value.tipoProducto))?.descripcion ?? '',
+      tipoProducto: this.estado.find(item => item.id === Number(this.formMercancias.value.tipoDeProducto))?.descripcion ?? '',
       usoEspecifico: this.formMercancias.get('usoEspecifico')?.value,
       fechaCaducidad: this.formMercancias.get('fechaCaducidad')?.value,
     };
 
-    if (this.editMercanciaIndex !== null && this.editMercanciaIndex > -1) {
+    if (this.editMercanciaIndex !== null && this.editMercanciaIndex > -1) {      
       const UPDATED = [...this.mercanciasTablaDatos];
       UPDATED[this.editMercanciaIndex] = MERCANCIA_DATA;
       this.mercanciasTablaDatos = UPDATED;
