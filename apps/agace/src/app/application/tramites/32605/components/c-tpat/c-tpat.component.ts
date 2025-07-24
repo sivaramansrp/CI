@@ -252,7 +252,6 @@ export class CTPATComponent implements OnInit, OnDestroy {
  validarFormulario(): boolean {
   let esValido = true;
   
-  // Validate main form
   if (this.ctpatForm.invalid) {
     this.ctpatForm.markAllAsTouched();
     esValido = false;
