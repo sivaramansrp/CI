@@ -193,6 +193,10 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   public finesDeMercanciaBotons = this.obtenerCrossListBtn();
 
+  /**
+   * Devuelve la configuración de los botones para gestionar la lista de países de origen en el Crosslist.
+   * Cada botón ejecuta una acción sobre todos o la selección actual del Crosslist.
+   */
   public obtenerCrossListBtn(): Array<{ btnNombre: string; class: string; funcion: () => void }> {
     return [
       {
