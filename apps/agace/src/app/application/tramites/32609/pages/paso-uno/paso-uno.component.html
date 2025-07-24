@@ -44,7 +44,7 @@
         >Textil</a
       >
     </li>
-    <li *ngIf="reconocimientoMutuoValue === '1'" [ngClass]="indice === 5 ? 'active' : ''">
+    <li [ngClass]="indice === 5 ? 'active' : ''">
       <a
         data-toggle="tab"
         (click)="seleccionaTab(5)"
@@ -95,7 +95,7 @@
         </app-importador-exportador>
       }
 
-      @if(esDatosRespuesta && reconocimientoMutuoValue === '1'){
+      @if(esDatosRespuesta){
         <app-c-tpat #ctpatRef [hidden]="indice !== 5"></app-c-tpat>
       }
 

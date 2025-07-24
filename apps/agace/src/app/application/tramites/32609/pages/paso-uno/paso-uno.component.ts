@@ -24,7 +24,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+  @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
   
   /**
    * Índice utilizado para identificar la posición actual en un proceso o lista.
