@@ -18,7 +18,6 @@ import { PERFILES_FECHA_DE_PAGO, PERFILES_FECHA_INPUT } from '../../enums/perfil
 import { CommonModule } from '@angular/common';
 // Componentes hijos que forman las distintas secciones del formulario
 import {
-  ConsultaioQuery,
   InputFecha,
   InputFechaComponent,
   InputRadioComponent,
@@ -30,6 +29,7 @@ import {
   Tramites32609State,
 } from '../../estados/tramites32609.store';
 import { CapacitacionSeguridadComponent } from './capacitacion-seguridad/capacitacion-seguridad.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user'; 
 import { ControlesFisicoComponent } from './controles-fisico/controles-fisico.component';
 import { GestionAduaneraComponent } from './gestion-aduanera/gestion-aduanera.component';
 import { ManejoInvestigacionComponent } from './manejo-investigacion/manejo-investigacion.component';

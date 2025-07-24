@@ -294,28 +294,28 @@ export interface Tramites32609State {
   tablaDatos: EmpresaDelGrupo[]; // Tabla de datos de empresas del grupo
   transportistasLista: TransportistasTable[]; // Lista de transportistas relacionados con la solicitud
   
-  representanteRegistro: string;
-  representanteRfc: string;
-  representanteNombre: string;
-  representanteApellidoPaterno: string;
-  representanteApellidoMaterno: string;
-  representanteTelefono: string;
-  representanteCorreo: string;
-  registro: string;
-  rfc: string;
-  nombre: string;
-  apellidoPaterno: string;
-  apellidoMaterno: string;
-  ciudad: string;
-  cargo: string;
-  telefono: string;
-  correo: string;
-  suplente: boolean;
-  enlaceOperativoData: TablaEnlaceOperativo[];
+  representanteRegistro: string; // Registro del representante legal
+  representanteRfc: string; // RFC del representante legal
+  representanteNombre: string; // Nombre del representante legal
+  representanteApellidoPaterno: string; // Apellido paterno del representante legal
+  representanteApellidoMaterno: string; // Apellido materno del representante legal
+  representanteTelefono: string; // Teléfono del representante legal
+  representanteCorreo: string; // Correo del representante legal
+  registro: string; // Registro del representante legal
+  rfc: string; // RFC del representante legal
+  nombre: string; // Nombre del representante legal
+  apellidoPaterno: string; // Apellido paterno del representante legal
+  apellidoMaterno: string; // Apellido materno del representante legal
+  ciudad: string; // Ciudad del representante legal
+  cargo: string; // Cargo del representante legal
+  telefono: string; // Teléfono del representante legal
+  correo: string; // Correo del representante legal
+  suplente: boolean; // Indica si el representante es suplente
+  enlaceOperativoData: TablaEnlaceOperativo[]; // Datos del enlace operativo, incluyendo RFC, nombre, apellidos, teléfono y correo electrónico
 
-  autorizacionCBP: string,
-  instalacionesCertificadasCBP: string,
-  suspensionCancelacionCBP: string
+  autorizacionCBP: string, // Autorización CBP (Customs and Border Protection)
+  instalacionesCertificadasCBP: string, // Indica si las instalaciones están certificadas por CBP
+  suspensionCancelacionCBP: string // Indica si hay suspensión o cancelación por parte de CBP
 
 /// perfiles
   perfiles: Partial<PerfilesDatos>;
@@ -361,8 +361,8 @@ export function createInitialState(): Tramites32609State {
   querellaSATUltimos3Anios: '',
   ingresoInfoContableSAT: '',
   agregarMiembroEmpresa: [],
-  manifests:true,
-  bajoProtesta:true,
+  manifests:false,
+  bajoProtesta:false,
   sistemaControlInventariosArt59: '',
   comercioExteriorRealizado:'',
   fechaDePago: '',

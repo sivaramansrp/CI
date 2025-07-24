@@ -243,8 +243,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           proveedores: [this.seccionState?.proveedores || null],
           querellaSATUltimos3Anios: [this.seccionState?.querellaSATUltimos3Anios, Validators.required],
           ingresoInfoContableSAT: [this.seccionState?.ingresoInfoContableSAT, Validators.required],
-          manifests: [false, Validators.required],
-          bajoProtesta: [false, Validators.required],
+          manifests: [this.seccionState?.manifests ?? false, Validators.required],
+          bajoProtesta: [this.seccionState?.bajoProtesta ?? false, Validators.required],
       }, { validators: alMenosUnSectorValidator });
 
       this.esFormularioInicializado = true;
@@ -290,7 +290,9 @@ private actualizarFormularioConDatosDelEstado(): void {
       mediosContactoActualizadosBuzon: this.seccionState.mediosContactoActualizadosBuzon,
       suspensionPadronImportadoresExportadores: this.seccionState.suspensionPadronImportadoresExportadores,
       querellaSATUltimos3Anios: this.seccionState.querellaSATUltimos3Anios,
-      ingresoInfoContableSAT: this.seccionState.ingresoInfoContableSAT
+      ingresoInfoContableSAT: this.seccionState.ingresoInfoContableSAT,
+      manifests: this.seccionState.manifests ?? false,
+      bajoProtesta: this.seccionState.bajoProtesta ?? false
     };
 
      
