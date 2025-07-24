@@ -855,21 +855,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   eliminarMercancia(): void {
-      // Comentado: popup de confirmación
-      // this.nuevaNotificacion = {
-      //   tipoNotificacion: 'alert',
-      //   categoria: 'danger',
-      //   modo: 'action',
-      //   titulo: 'Confirmar eliminación',
-      //   mensaje: 'Está seguro que desea eliminar estos datos?',
-      //   cerrar: false,
-      //   tiempoDeEspera: 2000,
-      //   txtBtnAceptar: 'Aceptar',
-      //   txtBtnCancelar: 'Cancelar',
-      // };
-      // this.eliminarDatosTabla = true;
-
-      // Eliminar directamente sin popup
       const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
       if (VALOR.length === 0) {
         return;

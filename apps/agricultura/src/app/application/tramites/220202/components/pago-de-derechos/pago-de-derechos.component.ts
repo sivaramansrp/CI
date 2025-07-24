@@ -47,6 +47,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * Objeto que contiene la información relacionada con el pago de derechos.
+   * Este objeto se utiliza para inicializar el formulario y manejar los datos del pago.
+   */
   public pagoSelect: PagoDeDerecho = {
     bancoSelector: [],
     justificacionSelector: [],

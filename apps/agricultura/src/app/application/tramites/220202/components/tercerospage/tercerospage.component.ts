@@ -166,6 +166,10 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.agriculturaApiService.updateTercerosRelacionado([] as TercerosrelacionadosdestinoTable[]);
   }
 
+  /**
+   * Elimina todos los exportadores relacionados y actualiza el servicio correspondiente.
+   * @method handleEliminarExportador
+   */
   handleEliminarExportador(): void {
     this.datosForma = [];
     this.agriculturaApiService.updateTercerosExportador([] as TercerosrelacionadosdestinoTable[]);
@@ -181,6 +185,11 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.destroyNotifier$.complete();
   }
 
+  /**
+   * Abre el modal para agregar o editar un exportador.
+   * Si se proporciona datos, los utiliza para prellenar el formulario del modal.
+   * @param {any} data Datos del exportador a editar (opcional).
+   */
   abrirModalExportador(data: any): void { 
     if (data) {
       this.fitosanitarioStore.actualizarSelectedExdora(data);
@@ -188,6 +197,11 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.modalRef.abrir(AgregarExportadorComponent);
   }
 
+  /**
+   * Abre el modal para agregar o editar un destinatario.
+   * Si se proporciona datos, los utiliza para prellenar el formulario del modal.
+   * @param {any} data Datos del destinatario a editar (opcional).
+   */
   abrirModalDestinatario(data?: any): void {
     if (data) {
       this.fitosanitarioStore.actualizarSelectedTerceros(data);
