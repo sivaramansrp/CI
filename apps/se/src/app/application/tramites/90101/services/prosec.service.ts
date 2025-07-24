@@ -76,7 +76,7 @@ export class ProsecService {
    * @returns {Observable<ProsecState>} Observable con los datos del formulario.
    */
   public getAcuiculturaData(): Observable<ProsecState> {
-    return this.http.get<ProsecState>('assets/json/220203/autorizacion-prosec.json');
+    return this.http.get<ProsecState>('assets/json/90101/prosec_form.json');
   }
 
   /**
@@ -94,6 +94,10 @@ export class ProsecService {
     this.store.setSector(DATOS.Sector);
     this.store.setFraccionArancelaria(DATOS.Fraccion_arancelaria);
     this.store.setcontribuyentes(DATOS.contribuyentes);
+    this.store.setSectorDatos(DATOS.sectorDatos);
+    this.store.setProducirDatos(DATOS.producirDatos);
+    this.store.setPlantasDatos(DATOS.plantasDatos);
+    this.store.setProductorDatos(DATOS.productorDatos);
   }
 
   /**

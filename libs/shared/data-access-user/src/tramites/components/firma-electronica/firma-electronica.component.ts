@@ -11,6 +11,7 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
   selector: 'firma-electronica',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
+  providers: [ToastrService],
   templateUrl: './firma-electronica.component.html',
   styleUrl: './firma-electronica.component.scss',
 })
@@ -91,6 +92,10 @@ export class FirmaElectronicaComponent {
    */
   passwordInputElement?: HTMLInputElement;
 
+  certFileError: string = '';
+
+  keyFileError: string = '';
+
   /** Formulario reactivo */
   FormCertificado = this.fb.group({
     password: ['', [Validators.required]],
@@ -130,17 +135,23 @@ export class FirmaElectronicaComponent {
     if (INPUT.files?.length) {
       const FILE = INPUT.files[0];
 
+      // Resetear errores previos
+      this.certFileError = '';
+      this.keyFileError = '';
+
       // Validar extensión y tipo MIME
       if (type === FileType.CERTIFICATE) {
         if (!FILE.name.endsWith('.cer') && !FILE.type.includes('application/x-x509-ca-cert')) {
-          this.toastrService.error('El archivo debe ser un certificado (.cer)');
+          this.certFileError = 'Por favor, escriba un valor con una extensión aceptada (.cer)';
+          INPUT.value = ''; // limpiar input
           return;
         }
         this.certFileObj = FILE;
         this.cerInputElement = INPUT;
       } else if (type === FileType.PRIVATE_KEY) {
         if (!FILE.name.endsWith('.key') && !FILE.type.includes('application/x-pem-file')) {
-          this.toastrService.error('El archivo debe ser una llave privada (.key)');
+          this.keyFileError = 'Por favor, escriba un valor con una extensión aceptada (.key)';
+          INPUT.value = ''; // limpiar input
           return;
         }
         this.keyFileObj = FILE;
@@ -158,7 +169,7 @@ export class FirmaElectronicaComponent {
 
     if (this.FormCertificado.invalid) {
       this.FormCertificado.markAllAsTouched();
-      this.toastrService.error('Por favor complete todos los campos');
+      this.toastrService.error('Se produjo un error al firmar la cadena: Escriba la contraseña');
       return;
     }
 
@@ -177,10 +188,10 @@ export class FirmaElectronicaComponent {
 
       // Si es un escenario de prueba (dummy), emite una firma ficticia
       if (ESCENARIO_DUMMY) {
-      this.firma.emit('firma-dummy-30901');
-      this.isLoading = false;
-      return;
-    }
+        this.firma.emit('firma-dummy-30901');
+        this.isLoading = false;
+        return;
+      }
 
       const RESULTADO = await this.firmaService.firmarCadena(
         this.cerInputElement,
@@ -212,10 +223,20 @@ export class FirmaElectronicaComponent {
     } catch (error) {
       console.error('Error al firmar:', error);
       this.valido.emit(false);
-      this.toastrService.error(
-        error instanceof Error ? error.message : 'Error al validar la firma'
-      );
-    } finally {
+
+      let mensaje = 'Error al validar la firma';
+
+      if (error instanceof Error) {
+        if (error.message.includes('La contrasena no es valida')) {
+          mensaje = 'Se produjo un error al firmar la cadena: La contraseña no es válida';
+        } else {
+          mensaje = `Se produjo un error al firmar la cadena: ${error.message}`;
+        }
+      }
+
+      this.toastrService.error(mensaje);
+    }
+    finally {
       this.isLoading = false;
     }
   }

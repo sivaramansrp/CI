@@ -1,8 +1,5 @@
 <ng-container *ngIf="!esFormulario">
-  <ng-titulo
-    *ngIf="!cargarArchivo"
-    titulo="Validación inicial del certificado de circulación de mercancías"
-  />
+  <ng-titulo *ngIf="!cargarArchivo" titulo="Validación inicial del certificado de circulación de mercancías" />
   <ng-titulo *ngIf="!cargarArchivo" titulo="Tratado y país o bloque" />
 </ng-container>
 <div class="container" *ngIf="!esFormulario">
@@ -130,7 +127,13 @@
             (click)="manejarClic(mercanciaDisponsiblesTablaDatos)"
           ></app-tabla-dinamica>
         </div>
-        <i id="bi-1-square" class="bi bi-1-square" viewBox="0 0 16 16"></i>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination d-flex justify-content-center">
+            <li class="page-item">
+              <a class="page-link">1</a>
+            </li>
+          </ul>
+        </nav>
       </ng-container>
       <ng-titulo titulo="Carga de mercancías por archivo" />
 
@@ -153,27 +156,9 @@
               <div>
                 <label class="control-label"> Archivo: </label>
               </div>
-              <input
-                class="visually-hidden-file"
-                type="file"
-                formControlName="archivo"
-                id="archivoAdjuntar"
-                size="60"
-                (change)="alSeleccionarArchivo($event)"
-                (change)="
-                  setValoresStore(validacionForm, 'archivo', 'setArchivo')
-                "
-              />
-              <label
-                class="custome-file-label"
-                for="archivoAdjuntar"
-                value="Seleccionar archivo"
-                style="background-color: lightgrey; font-weight: bold"
-                >Elegir archivo</label
-              >
-              <p style="display: inline-block">
-                {{ nombreArchivo || 'No se eligió ningún archivo' }}
-              </p>
+              <input class="visually-hidden-file" type="file" formControlName="archivo" id="archivoAdjuntar" size="60" (change)="alSeleccionarArchivo($event)" (change)=" setValoresStore(validacionForm, 'archivo', 'setArchivo') " />
+              <label class="custome-file-label" for="archivoAdjuntar" value="Seleccionar archivo" style="background-color: lightgrey; font-weight: bold">Elegir archivo</label>
+              <p style="display: inline-block"> {{ nombreArchivo || 'No se eligió ningún archivo' }} </p>
               <br />
             </div>
           </div>
@@ -205,25 +190,18 @@
         </div>
       </div>
       <div class="row mt-5">
-        <ng-alert
-          *ngIf="!cargarArchivo"
-          [CONTENIDO]="TEXTO_DE_ALERTA"
-          style="margin-top: 40px"
-        >
-        </ng-alert>
+        <ng-alert *ngIf="!cargarArchivo" [CONTENIDO]="TEXTO_DE_ALERTA" style="margin-top: 40px"></ng-alert>
       </div>
       <ng-container *ngIf="!cargarArchivo">
         <div class="row mt-5">
           <label>Mercancías seleccionadas</label>
         </div>
-
         <div class="table-container mt-5" *ngIf="!esMercanciaEnEdicion">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.RADIO" [datos]="mercanciaSeleccionadasTablaData"
             [configuracionTabla]="headersData" [disableSeleccionTablaRadio]="soloLectura? true : false"
           ></app-tabla-dinamica>
         </div>
-
         <div class="table-container mt-5" *ngIf="esMercanciaEnEdicion">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.RADIO"
@@ -251,23 +229,14 @@
           </button>
         </div>
         <div class="row mt-5">
-          <div
-            class="alert alert-danger"
-            style="margin-top: 40px"
-            *ngIf="mostrarErrores"
-          >
-            <strong
-              >Existen errores en la carga de mercancías por archivo</strong
-            >
+          <div class="alert alert-danger" style="margin-top: 40px" *ngIf="mostrarErrores">
+            <strong>Existen errores en la carga de mercancías por archivo</strong>
           </div>
         </div>
         <div class="row mt-5">
           <label *ngIf="mostrarErrores">Mercancías*:</label>
         </div>
-        <div
-          class="table-container instance-special mt-5"
-          *ngIf="mostrarErrores"
-        >
+        <div class="table-container instance-special mt-5" *ngIf="mostrarErrores">
           <label style="margin-left: 490px">Error</label>
           <ng-table
             id="myElement "
@@ -282,7 +251,6 @@
     </ng-container>
   </form>
 </div>
-
 <div class="container" *ngIf="!esMercanciaEnEdicion && esFormulario">
   <ng-titulo titulo="Datos de la mercancía" />
   <form [formGroup]="mercanciaForm" (ngSubmit)="validarMercanciaForm()">
@@ -409,18 +377,8 @@
             "
           />
         </div>
-        <div
-          *ngIf="
-            mercanciaForm.get('validacionMercanciaForm.cantidad')?.invalid &&
-            mercanciaForm.get('validacionMercanciaForm.cantidad')?.touched
-          "
-          class="text-danger"
-        >
-          <small
-            class="text-danger"
-            *ngIf="mercanciaForm.get('validacionMercanciaForm.cantidad')?.errors?.['pattern']"
-            >Este campo es obligatorio.</small
-          >
+        <div *ngIf=" mercanciaForm.get('validacionMercanciaForm.cantidad')?.invalid && mercanciaForm.get('validacionMercanciaForm.cantidad')?.touched " class="text-danger">
+          <small class="text-danger" *ngIf="mercanciaForm.get('validacionMercanciaForm.cantidad')?.errors?.['pattern']">Este campo es obligatorio.</small>
         </div>
       </div>
       <div class="row mt-5">

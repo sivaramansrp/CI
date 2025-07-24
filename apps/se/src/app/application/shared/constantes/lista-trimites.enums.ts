@@ -113,9 +113,9 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
         id: 'solicitud',
         componentPath: () =>
           import(
-            '../../tramites/120101/pages/paso-uno/paso-uno.component'
-          ).then((m) => m.PasoUnoComponent),
-        componentName: 'PasoUnoComponent',
+            '../../tramites/120101/pages/pantallas/pantallas.component'
+          ).then((m) => m.PantallasComponent),
+        componentName: 'PantallasComponent',
       },
     ],
   },

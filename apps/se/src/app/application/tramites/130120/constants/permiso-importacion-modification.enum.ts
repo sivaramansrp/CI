@@ -696,7 +696,7 @@ export const DATOS_FEDERAL = [
         campo: 'entidad_federativa',
         class: 'col-md-8',
         required: true,
-        primerOpcion: 'Selecciona una opción',
+        primerOpcion: 'Seleccione una opción',
         validators: ['required'],
         catalogos: [
             { "id": 1, "descripcion": "Aguascalientes" },
@@ -716,7 +716,7 @@ export const DATOS_FEDERAL = [
         campo: 'representacion_federal',
         class: 'col-md-8',
         required: true,
-        primerOpcion: 'Selecciona una opción',
+        primerOpcion: 'Seleccione una opción',
         validators: ['required'],
         catalogos: [
             { "id": 1, "descripcion": "MEXICALI" },
@@ -747,3 +747,74 @@ export const TEXTOS = {
     <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista.</p>`,
     ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`,
   };
+
+
+export const FECHA_FACTURA = {
+    labelNombre: 'Fecha de factura',
+    required: true,
+    habilitado: true,
+};
+
+export const FECHA_DOCUMENTO = {
+    labelNombre: 'Fecha del documento',
+    required: true,
+    habilitado: true,
+};
+
+export const OPCION_DE_RADIO = [
+  {
+    /**
+     * Etiqueta para persona física.
+     * @type {string}
+     */
+    "label": "Física",
+    /**
+     * Valor para persona física.
+     * @type {string}
+     */
+    "value": "Física"
+  },
+  {
+    /**
+     * Etiqueta para persona moral.
+     * @type {string}
+     */
+    "label": "Moral",
+    /**
+     * Valor para persona moral.
+     * @type {string}
+     */
+    "value": "Moral"
+  },
+  {
+    "label": "Ninguno",
+    "value": "Ninguno"
+  }
+];
+
+export const OPCION_DE_RADIO_EXPORTADOR = [
+  {
+    /**
+     * Etiqueta para persona física.
+     * @type {string}
+     */
+    "label": "Física",
+    /**
+     * Valor para persona física.
+     * @type {string}
+     */
+    "value": "Física"
+  },
+  {
+    /**
+     * Etiqueta para persona moral.
+     * @type {string}
+     */
+    "label": "Moral",
+    /**
+     * Valor para persona moral.
+     * @type {string}
+     */
+    "value": "Moral"
+  }
+];

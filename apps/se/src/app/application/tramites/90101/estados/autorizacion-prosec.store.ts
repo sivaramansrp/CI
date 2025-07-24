@@ -1,3 +1,4 @@
+import { FilaPlantas, FilaProducir, FilaProductos, FilaSectors } from '../models/prosec.module';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
@@ -89,6 +90,10 @@ export interface ProsecState {
    * Indica si el formulario de sectores es válido.
    */
   sectoresFromValida: boolean;
+  sectorDatos: FilaSectors[];
+  producirDatos: FilaProducir[];
+  plantasDatos: FilaPlantas[];
+  productorDatos: FilaProductos[];
 }
 
 /**
@@ -102,7 +107,7 @@ export interface ProsecState {
  */
 export function createInitialState(): ProsecState {
   return {
-    modalidad: '',
+    modalidad: 'Productor directo',
     Estado: [],
     RepresentacionFederal: [],
     ActividadProductiva: [],
@@ -112,6 +117,13 @@ export function createInitialState(): ProsecState {
     domiciliosFormaValida: false,
     productorFromValida: false,
     sectoresFromValida: false,
+    sectorDatos: [
+    ],
+    producirDatos: [],
+    plantasDatos: [
+    ],
+    productorDatos: [
+    ]
   };
 }
 
@@ -245,5 +257,49 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
    */
   public setSectoresFromValida(sectoresFromValida: boolean): void {
     this.update((state) => ({ ...state, sectoresFromValida }));
+  }
+
+    /**
+   * @method setSectorDatos
+   * @description
+   * Actualiza el arreglo de datos de sectores en el estado.
+   * @param {FilaSectors[]} sectorDatos - Nuevo arreglo de sectores a almacenar.
+   * @returns {void}
+   */
+  public setSectorDatos(sectorDatos: FilaSectors[]): void {
+    this.update((state) => ({ ...state, sectorDatos }));
+  }
+
+  /**
+   * @method setProducirDatos
+   * @description
+   * Actualiza el arreglo de datos de producción en el estado.
+   * @param {FilaProducir[]} producirDatos - Nuevo arreglo de datos de producción a almacenar.
+   * @returns {void}
+   */
+  public setProducirDatos(producirDatos: FilaProducir[]): void {
+    this.update((state) => ({ ...state, producirDatos }));
+  }
+
+  /**
+   * @method setPlantasDatos
+   * @description
+   * Actualiza el arreglo de datos de plantas en el estado.
+   * @param {FilaPlantas[]} plantasDatos - Nuevo arreglo de datos de plantas a almacenar.
+   * @returns {void}
+   */
+  public setPlantasDatos(plantasDatos: FilaPlantas[]): void {
+    this.update((state) => ({ ...state, plantasDatos }));
+  }
+
+  /**
+   * @method setProductorDatos
+   * @description
+   * Actualiza el arreglo de datos de productores en el estado.
+   * @param {FilaProductos[]} productorDatos - Nuevo arreglo de datos de productores a almacenar.
+   * @returns {void}
+   */
+  public setProductorDatos(productorDatos: FilaProductos[]): void {
+    this.update((state) => ({ ...state, productorDatos }));
   }
 }

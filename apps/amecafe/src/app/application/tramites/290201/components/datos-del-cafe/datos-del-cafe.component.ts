@@ -8,9 +8,9 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ReplaySubject,map, takeUntil } from 'rxjs';
+import { ReplaySubject,debounceTime,map, takeUntil } from 'rxjs';
 
-import { AcuseComponent, ConsultaioQuery, ConsultaioState, InputFecha, InputFechaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { AcuseComponent, ConsultaioQuery, ConsultaioState, InputFecha, InputFechaComponent, REGEX_7_ENTEROS_3_DECIMALES, REGEX_SOLO_DIGITOS, REGEX_SOLO_NUMEROS, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Catalogo, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -33,6 +33,7 @@ import { CATALOGOS, CONFIGURACION_COLUMNAS_SOLI } from '../../constants/tabla-en
   imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, TableComponent, AcuseComponent, DatosDeLaSolicitudComponent,TablaDinamicaComponent,InputFechaComponent],
   templateUrl: './datos-del-cafe.component.html',
   styleUrl: './datos-del-cafe.component.css',
+
 })
 export class DatosDelCafeComponent implements OnDestroy, OnInit {
   /**
@@ -116,12 +117,27 @@ public mediodetransporteData = { ...CATALOGOS.MEDIO_DE_TRANSPORTE };
  */
 
 consultaDatos!: ConsultaioState;
-    /**
-     * @property {boolean} soloLectura
-     * @description Indica si el formulario o los campos están en modo de solo lectura.
-     * @default false
-     */
-    esFormularioSoloLectura: boolean = false;
+  /**
+ * @property {boolean} esFormularioSoloLectura
+ * @description Indica si el formulario está en modo de solo lectura.
+ * @default false
+ */
+esFormularioSoloLectura: boolean = false;
+
+/**
+ * @property {boolean} isUtilizoCafeComoSi
+ * @description Indica si se seleccionó "Sí" en el campo "¿Utilizó café como materia prima importada?".
+ * @default false
+ */
+isUtilizoCafeComoSi: boolean = false;
+
+/**
+ * @property {boolean} isElCafeSi
+ * @description Indica si se seleccionó "Sí" en el campo "¿El café tiene características especiales?".
+ * @default false
+ */
+isElCafeSi: boolean = false;
+    
 
   /**
    * Constructor del componente.
@@ -169,6 +185,23 @@ consultaDatos!: ConsultaioState;
     required: false,
     habilitado: true,
   };
+  /**
+ * @property {boolean} isEditMode
+ * @description Indica si el formulario está en modo de edición.
+ * Cuando es `true`, el formulario permite editar una fila existente en la tabla.
+ * @default false
+ */
+isEditMode: boolean = false;
+
+/**
+ * @property {number | null} editingRowId
+ * @description Almacena el ID de la fila que se está editando actualmente.
+ * Si es `null`, no hay ninguna fila en modo de edición.
+ * @default null
+ */
+editingRowId: number | null = null;
+
+
 
   /**
    * Método para cambiar la fecha final del formulario.
@@ -188,31 +221,93 @@ consultaDatos!: ConsultaioState;
       datosDelTramiteRealizar: this.fb.group({
         envasadoen: [this.dataCafeState?.envasadoen, Validators.required],
         utilizoCafeComo: [this.dataCafeState?.utilizoCafeComo, Validators.required],
-        cantidadutilizada: [this.dataCafeState?.cantidadutilizada, Validators.required],
-        numerodepedimento: [this.dataCafeState?.numerodepedimento, Validators.required],
-        paisdeimportacion: [this.dataCafeState?.paisdeimportacion, Validators.required],
-        fraccionarancelaria: [this.dataCafeState?.fraccionarancelaria, Validators.required],
-        cantidad: [this.dataCafeState?.cantidad, Validators.pattern(/^\d+$/)],
+        cantidadutilizada: [{ value: this.dataCafeState?.cantidadutilizada, disabled: true }, Validators.required],
+        numerodepedimento: [{ value: this.dataCafeState?.numerodepedimento, disabled: true }, Validators.required],
+        paisdeimportacion: [{ value: this.dataCafeState?.paisdeimportacion, disabled: true }, Validators.required],
+        fraccionarancelaria: [{ value: this.dataCafeState?.fraccionarancelaria, disabled: true }, Validators.required],
+        cantidad: [this.dataCafeState?.cantidad, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
         unidaddemedida: [this.dataCafeState?.unidaddemedida, Validators.required],
-        precioapplicable: [this.dataCafeState?.precioapplicable,Validators.pattern(/^\d{1,7}(\.\d{1,3})?$/)],
+        precioapplicable: [this.dataCafeState?.precioapplicable, Validators.pattern(REGEX_7_ENTEROS_3_DECIMALES)],
         dolar: [this.dataCafeState?.dolar, Validators.required],
         lote: [this.dataCafeState?.lote,[
           Validators.required,
-          Validators.pattern('^[0-9]*$') 
+          Validators.pattern(REGEX_SOLO_NUMEROS) 
         ]],
         otrasmarcas: [this.dataCafeState?.otrasmarcas, Validators.required],
+        otros: [false],
+        otrasCaracteristicas:['',Validators.required],
         elcafe: [this.dataCafeState?.elcafe, Validators.required],
-        fechaexportacion: [this.dataCafeState?.fechaexportacion, Validators.required],
+        fechaexportacion: [this.dataCafeState?.fechaexportacion || '', Validators.required],
         paisdetransbordo: [this.dataCafeState?.paisdetransbordo, Validators.required],
         mediodetransporte: [this.dataCafeState?.mediodetransporte, Validators.required],
         Identificadordel: [this.dataCafeState?.Identificadordel,[
           Validators.required,
           Validators.maxLength(5) 
         ]],
-        observaciones: [this.dataCafeState?.observaciones, [Validators.required, Validators.maxLength(250)]]}),
+        observaciones: [this.dataCafeState?.observaciones, [Validators.required, Validators.maxLength(250)]],
+        calidadEspecial: [''],
+        cafePractices: [''],
+        avesMigratorias: [''],
+        codigoComunidad: [''],
+        comercioJusto: [''],
+        euregap: [''],
+        rainforestAlliance: [''],
+        sistemaQ: [''],
+        tasqNespresso: [''],
+        utzCertified: [''],
+      },
+      { validators: DatosDelCafeComponent.cantidadUtilizadaValidator } 
+  ),
+      
     });
-  }
-
+    this.dataCafeForm.get('datosDelTramiteRealizar.elcafe')?.valueChanges.subscribe((value) => {
+      if (value === 1) { 
+        this.dataCafeForm.get('datosDelTramiteRealizar.calidadEspecial')?.setValidators(Validators.required);
+        this.dataCafeForm.get('datosDelTramiteRealizar.cafePractices')?.setValidators(Validators.required);
+      } else {
+        this.dataCafeForm.get('datosDelTramiteRealizar.calidadEspecial')?.clearValidators();
+        this.dataCafeForm.get('datosDelTramiteRealizar.cafePractices')?.clearValidators();
+      }
+    
+      this.dataCafeForm.get('datosDelTramiteRealizar.calidadEspecial')?.updateValueAndValidity();
+      this.dataCafeForm.get('datosDelTramiteRealizar.cafePractices')?.updateValueAndValidity();
+    });
+    this.dataCafeForm.get('datosDelTramiteRealizar.utilizoCafeComo')?.valueChanges.subscribe((value) => {
+      if (typeof value === 'number') {
+        this.isUtilizoCafeComoSi = value === 1; 
+      } else if (typeof value === 'string') {
+        this.isUtilizoCafeComoSi = value === '1'; 
+      } else if (typeof value === 'object' && value?.id) {
+        this.isUtilizoCafeComoSi = value.id === 1; 
+      } else {
+        this.isUtilizoCafeComoSi = false; 
+      }
+    });
+    this.dataCafeForm.get('datosDelTramiteRealizar.elcafe')?.valueChanges.subscribe((value) => {
+      if (typeof value === 'number') {
+        this.isElCafeSi = value === 1; 
+      } else if (typeof value === 'string') {
+        this.isElCafeSi = value === '1'; 
+      } else if (typeof value === 'object' && value?.id) {
+        this.isElCafeSi = value.id === 1; 
+      } else {
+        this.isElCafeSi = false; 
+      }
+    });
+   
+    this.dataCafeForm.get('datosDelTramiteRealizar.cantidadutilizada')?.valueChanges
+    .pipe(debounceTime(300), takeUntil(this.destroyed$))
+    .subscribe(() => {
+      this.dataCafeForm.get('datosDelTramiteRealizar')?.updateValueAndValidity();
+    });
+  
+  this.dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.valueChanges
+    .pipe(debounceTime(300), takeUntil(this.destroyed$))
+    .subscribe(() => {
+      this.dataCafeForm.get('datosDelTramiteRealizar')?.updateValueAndValidity();
+    });
+   }
+  
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    */
@@ -239,9 +334,9 @@ consultaDatos!: ConsultaioState;
       )
       .subscribe();
       this.inicializarEstadoFormulario();
+     
   }
-  
-  
+ 
   /**
    * Obtiene los datos del catálogo "Envasado".
    */
@@ -341,13 +436,17 @@ consultaDatos!: ConsultaioState;
         this.mediodetransporteData.catalogos = data as Catalogo[];
       });
   }
-  isEditMode: boolean = false; 
-editingRowId: number | null = null; 
+
 /**
  * Este método se ejecuta al enviar el formulario. Su propósito es procesar los datos ingresados
  * en el formulario, transformarlos según los catálogos correspondientes y agregarlos a la tabla de datos.
  */
 onSubmit(): void {
+  if (this.dataCafeForm.invalid) {
+    this.dataCafeForm.markAllAsTouched();
+    return;
+  }
+
   const FORM_DATA = { id: this.editingRowId || this.tableData.length + 1, ...this.dataCafeForm.value };
 
   FORM_DATA.datosDelTramiteRealizar.envasadoen = this.envasadoenData.catalogos.find(
@@ -386,6 +485,10 @@ onSubmit(): void {
     (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.mediodetransporte),
   )?.descripcion;
 
+
+  if (!this.isEditMode) {
+    FORM_DATA.id = this.tableData.length > 0 ? Math.max(...this.tableData.map(row => row.id)) + 1 : 1;
+  }
   if (this.isEditMode && this.editingRowId !== null) {
     const INDEX = this.tableData.findIndex((row) => row.id === this.editingRowId);
     if (INDEX !== -1) {
@@ -397,16 +500,28 @@ onSubmit(): void {
 
   this.isEditMode = false;
   this.editingRowId = null;
-  this.dataCafeForm.reset();
+  this.dataCafeForm.reset(
+    {
+      datosDelTramiteRealizar: {
+        envasadoen: '',
+        utilizoCafeComo: '',
+        
+      }
+    },
+    { emitEvent: false } 
+
+  );
+ 
   this.esFormularioVisible = false;
 
   const MODAL_ELEMENT = document.getElementById('datosCafeModal');
-  if (MODAL_ELEMENT) {
-    const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT);
-    if (MODAL_INSTANCE) {
-      MODAL_INSTANCE.hide();
-    }
+if (MODAL_ELEMENT) {
+  const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT);
+  if (MODAL_INSTANCE) {
+    MODAL_INSTANCE.hide();
   }
+}
+ 
 }
 /**
  * Este método se utiliza para mostrar el formulario al usuario.
@@ -476,17 +591,16 @@ onSubmit(): void {
  /**
   * Este método se utiliza para eliminar las filas seleccionadas de la tabla.
   *  */ 
-  onDeleteSelectedRows(): void {
-    if (this.selectedRows.size === 1) {
-      const SELECTED_ID = Array.from(this.selectedRows)[0];
-
-      this.tableData = this.tableData.filter((row) => row.id !== SELECTED_ID);
-      this.selectedRows.clear();
-      this.dataCafeForm.reset();
-      this.esFormularioVisible = false;
-    }
-    
+ onDeleteSelectedRows(): void {
+  if (this.selectedRows.size > 0) {
+    this.tableData = this.tableData.filter(
+      (row: { id: number }) => !this.selectedRows.has(row.id)
+    );
+    this.selectedRows.clear();
+    this.dataCafeForm.reset();
+    this.esFormularioVisible = false;
   }
+}
   /**
    * 
    * @param selectedRows Este método se utiliza para actualizar las filas seleccionadas en la tabla.
@@ -504,9 +618,117 @@ onSubmit(): void {
         }
     }
   }
-  get datosDelTramiteRealizar(): FormGroup {
-    return this.dataCafeForm.get('datosDelTramiteRealizar') as FormGroup;
-  }
+
+  
+/**
+ * Getter para verificar si el campo 'Identificadordel' es inválido y ha sido tocado.
+ * 
+ * @returns {boolean} Devuelve `true` si el campo 'Identificadordel' es inválido y ha sido tocado, de lo contrario, devuelve `false`.
+ */
+get isIdentificadorDelInvalid(): boolean {
+  return (
+    (this.dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.invalid ?? false) &&
+    (this.dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.touched ?? false)
+  );
+}
+
+
+/**
+ * Getter para verificar si el campo 'precioapplicable' es inválido y ha sido tocado.
+ * 
+ * @returns {boolean} Devuelve `true` si el campo 'precioapplicable' es inválido y ha sido tocado, de lo contrario, devuelve `false`.
+ */
+get esPrecioAplicableInvalido(): boolean {
+  return (
+    (this.dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.invalid ?? false) &&
+    (this.dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.touched ?? false)
+  );
+}
+/**
+ * Getter para verificar si el campo 'cantidad' es inválido y ha sido tocado.
+ * 
+ * @returns {boolean} Devuelve `true` si el campo 'cantidad' es inválido y ha sido tocado, de lo contrario, devuelve `false`.
+ */
+get isCantidadInvalid(): boolean {
+  return (
+    (this.dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.invalid ?? false) &&
+    (this.dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.touched ?? false)
+  );
+}
+/**
+ * Getter to check if the 'otrasCaracteristicas' field is required and has been touched.
+ * 
+ * @returns {boolean} Returns `true` if the 'otrasCaracteristicas' field is required and touched, otherwise `false`.
+ */
+get isOtrasCaracteristicasRequired(): boolean {
+  return (
+    (this.dataCafeForm.get('datosDelTramiteRealizar.otrasCaracteristicas')?.touched ?? false)&&
+    (this.dataCafeForm.get('datosDelTramiteRealizar.otrasCaracteristicas')?.hasError('required') ?? false)
+  );
+ 
+}
+/**
+ * Getter para verificar si el campo 'lote' es inválido y ha sido tocado.
+ * 
+ * @returns {boolean} Devuelve `true` si el campo 'lote' es inválido y ha sido tocado, de lo contrario, devuelve `false`.
+ */
+get isLoteInvalid(): boolean {
+  return (
+    (this.dataCafeForm.get('datosDelTramiteRealizar.lote')?.invalid ?? false) &&
+    (this.dataCafeForm.get('datosDelTramiteRealizar.lote')?.touched ?? false)
+  );
+}
+/**
+ * Getter to check if the 'cantidad' field has a 'pattern' error.
+ * 
+ * @returns {boolean} Returns `true` if the 'cantidad' field has a 'pattern' error, otherwise `false`.
+ */
+get isCantidadPatternInvalid(): boolean {
+  return this.dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.errors?.['pattern'] ?? false;
+}
+/**
+ * Getter para verificar si el campo 'precioapplicable' tiene un error de patrón.
+ * 
+ * @returns {boolean} Devuelve `true` si el campo 'precioapplicable' tiene un error de patrón, de lo contrario, devuelve `false`.
+ */
+get isPrecioApplicablePatternInvalid(): boolean {
+  return this.dataCafeForm.get('datosDelTramiteRealizar.precioapplicable')?.errors?.['pattern'] ?? false;
+}
+
+/**
+ * Getter para verificar si el campo 'lote' tiene un error de patrón.
+ * 
+ * @returns {boolean} Devuelve `true` si el campo 'lote' tiene un error de patrón, de lo contrario, devuelve `false`.
+ */
+get isLotePatternInvalid(): boolean {
+  return this.dataCafeForm.get('datosDelTramiteRealizar.lote')?.errors?.['pattern'] ?? false;
+}
+
+/**
+ * Getter para verificar si el campo 'Identificadordel' tiene un error de longitud máxima.
+ * 
+ * @returns {boolean} Devuelve `true` si el campo 'Identificadordel' tiene un error de longitud máxima, de lo contrario, devuelve `false`.
+ */
+get isIdentificadorDelPatternInvalid(): boolean {
+  return this.dataCafeForm.get('datosDelTramiteRealizar.Identificadordel')?.errors?.['maxlength'] ?? false;
+}
+/**
+ * Getter to check if the 'observaciones' field has a 'maxlength' error.
+ * 
+ * @returns {boolean} Returns `true` if the 'observaciones' field has a 'maxlength' error, otherwise `false`.
+ */
+get isObservacionesMaxLengthExceeded(): boolean {
+  return this.dataCafeForm.get('datosDelTramiteRealizar.observaciones')?.hasError('maxlength') ?? false;
+}
+
+  /**
+ * Getter para acceder al grupo de formularios 'datosDelTramiteRealizar'.
+ * 
+ * @returns {FormGroup} El grupo de formularios 'datosDelTramiteRealizar' dentro del formulario principal.
+ */
+get datosDelTramiteRealizar(): FormGroup {
+  return this.dataCafeForm.get('datosDelTramiteRealizar') as FormGroup;
+}
 
   /**
    * Este método se utiliza para inicializar el estado del formulario según si es de solo lectura o no.
@@ -520,15 +742,41 @@ onSubmit(): void {
     }
 }
 
-static cantidadUtilizadaValidator(group: AbstractControl): { [key: string]: boolean } | null {
+/**
+ * Validador estático para verificar que la cantidad utilizada no exceda la cantidad disponible.
+ * 
+ * @param {AbstractControl} group - Grupo de controles del formulario que contiene los campos `cantidadutilizada` y `cantidad`.
+ * @returns { { [key: string]: boolean } | null } - Devuelve un objeto con la clave `cantidadUtilizadaExceeds` si la cantidad utilizada excede la cantidad disponible, o `null` si es válido.
+ */
+static cantidadUtilizadaValidator(group: AbstractControl): { [key: string]: unknown } | null {
   const CANTIDAD_UTILIZADA = group.get('cantidadutilizada')?.value;
   const CANTIDAD = group.get('cantidad')?.value;
 
-  if (CANTIDAD_UTILIZADA && CANTIDAD && CANTIDAD_UTILIZADA > CANTIDAD) {
+
+  if (
+    CANTIDAD_UTILIZADA !== null &&
+    CANTIDAD !== null &&
+    !isNaN(CANTIDAD_UTILIZADA) &&
+    !isNaN(CANTIDAD) &&
+    CANTIDAD_UTILIZADA > CANTIDAD
+  ) {
     return { cantidadUtilizadaExceeds: true };
   }
   return null;
 }
+/**
+ * Getter para verificar si la cantidad utilizada excede la cantidad disponible.
+ * 
+ * @returns {boolean} Devuelve `true` si el validador `cantidadUtilizadaExceeds` está presente en el grupo de formularios
+ * `datosDelTramiteRealizar` y el campo `cantidadutilizada` ha sido tocado. De lo contrario, devuelve `false`.
+ */
+get esCantidadUtilizadaExcede(): boolean {
+  return (
+    this.dataCafeForm.get('datosDelTramiteRealizar')?.errors?.['cantidadUtilizadaExceeds'] &&
+    this.dataCafeForm.get('datosDelTramiteRealizar.cantidadutilizada')?.touched
+  );
+}
+
   /**
    * Este método se utiliza para actualizar un valor específico en el store de la solicitud.
    * @param form 

@@ -12,10 +12,18 @@
       </li>
       @if(mostrarRevisionDocumental ||
       consultaState.parameter.toUpperCase() === parametero.EVALUAR ||
-      consultaState.parameter.toUpperCase() === parametero.READ_PROCEDEMENTO) {
+      consultaState.parameter.toUpperCase() === parametero.READ_PROCEDEMENTO ||
+      consultaState.parameter.toUpperCase() === parametero.SUBSECUENTES
+      ) {
       <li [ngClass]="indice === 3 ? 'active' : ''">
         <a (click)="seleccionaTab(3)" (keyup.enter)="seleccionaTab(3)" (keydown.space)="seleccionaTab(3)" tabindex="0"
           data-toggle="tab">Revisión Documental</a>
+      </li>
+      }
+      @if(consultaState.parameter.toUpperCase() === parametero.READ_PROCEDEMENTO) {
+      <li [ngClass]="indice === 4 ? 'active' : ''">
+        <a (click)="seleccionaTab(4)" (keyup.enter)="seleccionaTab(4)" (keydown.space)="seleccionaTab(4)" tabindex="0"
+          data-toggle="tab">Frecuencia de inspección</a>
       </li>
       }
     </ul>
@@ -33,6 +41,11 @@
       @case (3) {
       @if(esDatosRespuesta) {
       <app-revision-documental></app-revision-documental>
+      }
+      }
+      @case (4) {
+      @if(esDatosRespuesta) {
+      <app-frecuencia-inspeccion></app-frecuencia-inspeccion>
       }
       }
       }

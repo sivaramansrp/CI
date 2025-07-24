@@ -1,7 +1,8 @@
 <div class="conatiner">
   <form [formGroup]="comunesForm">
     <div class="row mb-3">
-      <div class="w-100 p-3 mt-3">
+      @if(!datosComunesObj.tieneProcedure.activo) {
+              <div class="w-100 p-3 mt-3">
       <div class="form-group">
           <label for="autorizacionIVAIEPS"><span class="text-danger">*</span> {{dinamicaRadio.radio1.descripcion}}</label>
             <app-input-radio
@@ -20,8 +21,10 @@
             <div class="mensaje-error">Este campo es obligatorio.</div>
           }
       </div>
+      }
   </div>
-  <div class="row mt-4">
+  @if(!datosComunesObj.tieneProcedure.activo) {
+      <div class="row mt-4">
       <div class="d-flex align-items-center mt-4">
         <div class="col-12 col-md-4 d-flex justify-content-center">
           <fieldset class="border p-3 text-center">
@@ -64,17 +67,19 @@
 
           <lib-input-check 
               [id]="'regimen_3'" 
+              formControlName="regimenCuatro"
               [label]="'Recinto Fiscalizado Estratégico'" 
               [isDisabled]="esFormularioSoloLectura"
-              [required]="false">
+              [required]="false"
+              (change)="setValoresStore(comunesForm,'regimenCuatro', 'setRegimenCuatro')">
           </lib-input-check>
           </fieldset>
         </div>
       </div>
     </div>
+  }
     <div class="w-100 p-3 mt-4">
       <label class="form-label fw-bold mb-3" for="">
-        <span class="text-danger">*</span> 
         Se&ntilde;ale el sector productivo o servicio al que pertenece
       </label>
       <div class="row mb-5">
@@ -205,6 +210,50 @@
           </div>
         </div>
     }
+        @if(datosComunesObj.tieneProcedure.activo) {
+    <div class="row mb-3">
+      <div class="col-md-12">
+          <div class="form-group">
+              <label for="cumpleCon"><span class="text-danger">*</span> {{dinamicaRadio.radio21.descripcion}}</label>
+                <app-input-radio
+                  [radioOptions]="radioOptions"
+                  [isRequired]="true"
+                  [layout]="'horizontal'"
+                  [gap]="'493px'"
+                  [isBold]="true"
+                  [labelMargin]="'0px'"
+                  formControlName="cumpleCon"
+                  [showDescription]="true"
+                  (change)="setValoresStore(comunesForm,'cumpleCon', 'setCumpleCon')"
+                ></app-input-radio>
+              </div>
+              @if(comunesForm.controls['cumpleCon'].invalid && comunesForm.controls['cumpleCon'].touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
+          </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-12">
+          <div class="form-group">
+              <label for="acreditaRealizar"><span class="text-danger">*</span> {{dinamicaRadio.radio22.descripcion}}</label>
+                <app-input-radio
+                  [radioOptions]="radioOptions"
+                  [isRequired]="true"
+                  [layout]="'horizontal'"
+                  [gap]="'493px'"
+                  [isBold]="true"
+                  [labelMargin]="'0px'"
+                  formControlName="acreditaRealizar"
+                  [showDescription]="true"
+                  (change)="setValoresStore(comunesForm,'acreditaRealizar', 'setAcreditaRealizar')"
+                ></app-input-radio>
+              </div>
+              @if(comunesForm.controls['acreditaRealizar'].invalid && comunesForm.controls['acreditaRealizar'].touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
+          </div>
+    </div>
+    }
     <div class="row mb-3">
       <div class="col-md-12">
           <div class="form-group">
@@ -230,7 +279,8 @@
     @if(cambioObj.deTrabajao) {
       <app-federal-de-trabajao></app-federal-de-trabajao>
     }
-    <div class="row mb-3">
+    @if(!datosComunesObj.tieneProcedure.activo) {
+          <div class="row mb-3">
       <div class="col-md-12">
           <div class="form-group">
               <label for="encuentra"><span class="text-danger">*</span> {{dinamicaRadio.radio9.descripcion}}</label>
@@ -314,11 +364,16 @@
               }
           </div>
     </div>
+    }
   </form> 
 </div>
-<app-datos-comunes-dos (radioChanged)="onRadioChanged($event)"></app-datos-comunes-dos>
+<app-datos-comunes-dos 
+  [datosComunesObj]="datosComunesObj"
+  (radioChanged)="onRadioChanged($event)">
+</app-datos-comunes-dos>
 
-<div class="conatiner">
+<div class="container">
+  @if(!datosComunesObj.tieneProcedure.activo) {
   <div class="row">
     <ng-titulo [titulo]="'Agregar Miembro de la Empresa'"></ng-titulo>
     <div class="col-md-12">
@@ -328,6 +383,7 @@
         accionistas, representante legal, administrador único o miembros del consejo
         de administración, según sea el caso.
       </p>
+      <h5 class="mb-3">Miembro de la empresa</h5>
       <app-tabla-dinamica 
         [configuracionTabla]="agregarMiembroTabla"
         [datos]="agregarMiembroTablaDatos" 
@@ -344,6 +400,7 @@
       <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura">Eliminar</button>
     </div>
   </div>
+  }
   <div class="row mt-3">
     <div class="col-md-12">
       <form [formGroup]="manifestadoForm">

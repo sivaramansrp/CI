@@ -114,6 +114,10 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   public requerimientoState!: SolicitudRequerimientosState;
   /**
+   * Variable para deshabilitar pestaña documento
+   */
+  deshabilitarSolicitarDocumentos: boolean = false;
+  /**
  * @constructor
  * @description Constructor del componente. Inicializa los servicios y suscripciones necesarias para la evaluación del trámite.
  * 
@@ -132,6 +136,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery,
     private solicitudRequerimientoQuery: SolicitudRequerimientoQuery,
   ) {
+
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -145,6 +150,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.requerimientoState = seccionState;
+          this.deshabilitarSolicitarDocumentos = !seccionState.activarTabSolicitarDocumentos;
         })
       )
       .subscribe();

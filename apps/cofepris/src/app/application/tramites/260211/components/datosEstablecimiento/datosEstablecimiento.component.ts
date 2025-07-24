@@ -1,5 +1,5 @@
 
-import { AL_DAR, AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AL_DAR, AlertComponent, Notificacion, NotificacionesComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -33,7 +33,7 @@ import { Tramite260211Query } from '../../../../estados/queries/tramite260211.qu
     TituloComponent,
     DomicilloComponent,
     ManifiestosComponent,
-    RepresentanteLegalComponent,
+    RepresentanteLegalComponent,NotificacionesComponent
   ],
   templateUrl: './datosEstablecimiento.component.html',
   styleUrls: ['./datosEstablecimiento.component.scss'],
@@ -180,12 +180,28 @@ constructor(
   public mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
- 
+   /**
+   * @description
+   * Notificación actual que se muestra en el componente.
+   */
+  public nuevaNotificacion!: Notificacion;
   /**
    * Habilita todos los controles del formulario si están deshabilitados.
    * @returns {void}
    */
   public toggleFormControls(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
     Object.keys(this.forma.controls).forEach((controlName) => {
       const CONTROL = this.forma.get(controlName);
       if (CONTROL?.disabled) {

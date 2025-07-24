@@ -1,6 +1,6 @@
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, Destinatario, Fabricante260701,Notificacion,NotificacionesComponent,Pedimento,TERCEROS, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, Destinatario, Fabricante260701,Notificacion,NotificacionesComponent,Pedimento,TERCEROS, TablaDinamicaComponent, TablaSeleccion, TITULO_MODAL_AVISO } from '@libs/shared/data-access-user/src';
 import { Subject,map, takeUntil } from 'rxjs';
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
@@ -222,7 +222,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Avisos',
+        titulo: TITULO_MODAL_AVISO,
         mensaje: '¿Confirma la eliminación?',
         cerrar: false,
         tiempoDeEspera: 2000,
