@@ -42,7 +42,7 @@ export const MANIFIESTOS_ALERT = {
 export const FECHA_DE_PAGO = {
   labelNombre: 'Fecha de pago:',
   required: false,
-  habilitado: false,
+  habilitado: true,
 };
 
 export const NACIONALIDAD_OPCIONES_DE_BOTON_DE_RADIO = [
@@ -60,11 +60,11 @@ export const PERSONA_OPCIONES_DE_BOTON_DE_RADIO = [
   {
       label: 'Física',
       value: '1',
-      hint: 'Física'
+      hint: 'Una persona física es entendida como toda persona con una actividad específica.'
   },
   {
       label: 'Moral',
       value: '0',
-      hint: 'Moral'
+      hint: 'Una persona moral es entendida como una empresa con una actividad específica.'
   }
 ];

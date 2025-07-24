@@ -27,7 +27,7 @@ import {
 } from '@angular/forms';
 import { TercerosService } from '../../services/terceros.service';
 
-import {
+import { 
   NACIONALIDAD_OPCIONES_DE_BOTON_DE_RADIO,
   PERSONA_OPCIONES_DE_BOTON_DE_RADIO
 } from '../../constantes/permiso-maquila.enum';
@@ -520,7 +520,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * País del destinatario.
        */
-      pais: new FormControl({value: 1, disabled: true}, [Validators.required]),
+      pais: new FormControl({disabled: true}, [Validators.required]),
       /**
        * Estado o localidad del destinatario.
        */
@@ -609,7 +609,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * País del proveedor.
        */
-      pais: new FormControl({value: 1, disabled: true}, [Validators.required]),
+      pais: new FormControl({disabled: true}, [Validators.required]),
       /**
        * Estado del proveedor.
        */
@@ -683,7 +683,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * País del facturador.
        * Requiere validación adicional mediante `requiredPaisValidator`.
        */
-      pais: new FormControl({value: 1, disabled: true}, [
+      pais: new FormControl({ disabled: true}, [
         Validators.required,
         this.requiredPaisValidator,
       ]),
@@ -850,7 +850,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.showTableDiv = !this.showTableDiv;
     this.showFabricante = !this.showFabricante;
   }
-
+    limpiarFabricanteForm(): void { 
+      this.agregarFabricanteFormGroup.reset();  
+   }
+      limpiarDestinatarioForm(): void {   
+        this.agregarDestinatarioFormGroup.reset();
+   }
+      limpiarProveedorForm(): void {   
+        this.agregarProveedorFormGroup.reset();
+   }
+      limpiarFacturadorForm(): void {   
+        this.agregarFacturadorFormGroup.reset();
+   } 
   /**
    * Cambia la visibilidad del formulario de Destinatario.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
