@@ -1,5 +1,5 @@
 <form [formGroup]="formSolicitudDocumentos">
-  <h5>Agregar Documento</h5>
+  <h5>Seleccione los documentos que van a ser requeridos</h5>
   <div class="col-md-12">
     <div class="row">
       <table class="table table-bordered">
@@ -35,26 +35,11 @@
     <div class="row ">
       <div class="col-md-6">
         <br>
-        <table class="table table-bordered mt-3">
-          <thead class="table-light">
-            <tr>
-              <th>#</th>
-              <th></th>
-              <th>Tipo de Documento</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let doc of documentosSeleccionados; let i = index">
-              <td>{{ i + 1 }}</td>
-              <td><input type="checkbox" /></td>
-              <td>{{ doc }}</td>
-              <td>
-                <button class="btn btn-danger btn-sm btn-size" (click)="eliminarDocumento(i)">Eliminar</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+          [configuracionTabla]="encabezadoDeTablaCapturistas" [datos]="documentosSeleccionados"
+          (listaDeFilaSeleccionada)="listadoDocumentos = $event">
+        </app-tabla-dinamica>
+        <button class="btn btn-primary" (click)="eliminarDocumento()">Eliminar</button>
       </div>
       <div class="col-md-6">
         <app-catalogo-select [catalogo]="catTipoDocumento" formControlName="tipoDocumento" [label]="'Tipo documento'"

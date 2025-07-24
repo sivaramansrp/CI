@@ -1,0 +1,81 @@
+name: Actualiza estatus de issue en vucem30 Defects (Copilot Agent)
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  actualizar_estatus_issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extraer número de issue vinculado
+        id: issue
+        run: |
+          ISSUE=$(echo "${{ github.event.pull_request.body }}" | grep -oE 'Fixes #([0-9]+)' | grep -oE '[0-9]+')
+          if [ -n "$ISSUE" ]; then
+            echo "ISSUE_NUMBER=$ISSUE" >> $GITHUB_ENV
+          else
+            echo "ISSUE_NUMBER=" >> $GITHUB_ENV
+          fi
+
+      - name: Verificar si Copilot Agent atendió el PR
+        id: copilot_agent
+        run: |
+          AUTHOR="${{ github.event.pull_request.user.login }}"
+          if [[ "$AUTHOR" == "github-copilot[bot]" ]]; then
+            echo "COPILOT_AGENT=true" >> $GITHUB_ENV
+          else
+            echo "COPILOT_AGENT=false" >> $GITHUB_ENV
+          fi
+
+      - name: Cambiar estatus en proyecto vucem30 Defects
+        if: github.event.action == 'closed' && github.event.pull_request.merged == true && env.ISSUE_NUMBER != '' && env.COPILOT_AGENT == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            // Busca el item del issue en el proyecto "vucem30 Defects"
+            const projectName = "vucem30 Defects";
+            const statusFieldName = "estatus";
+            const statusValue = "Fixed and ready for Retest";
+            const issueNumber = process.env.ISSUE_NUMBER;
+
+            // Obtiene el issue
+            const { data: issue } = await github.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber
+            });
+
+            // Busca el proyecto
+            const { data: projects } = await github.rest.projects.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            const project = projects.find(p => p.name === projectName);
+            if (!project) throw new Error("Proyecto no encontrado");
+
+            // Busca el card del issue en el proyecto
+            const { data: columns } = await github.rest.projects.listColumns({
+              project_id: project.id
+            });
+            let card;
+            for (const column of columns) {
+              const { data: cards } = await github.rest.projects.listCards({
+                column_id: column.id
+              });
+              card = cards.find(c => c.content_url && c.content_url.endsWith(`/issues/${issueNumber}`));
+              if (card) break;
+            }
+            if (!card) throw new Error("Card no encontrado");
+
+            // Actualiza el campo de estatus (esto depende de si usas Projects v2, si es v1 solo puedes mover el card)
+            // Si es Projects v2, deberías usar GraphQL para actualizar el campo personalizado.
+            // Aquí solo se muestra cómo mover el card a una columna llamada "fixed and ready for retest"
+            const targetColumn = columns.find(c => c.name.toLowerCase().includes("Fixed and ready for Retest"));
+            if (!targetColumn) throw new Error("Columna de estatus no encontrada");
+            await github.rest.projects.moveCard({
+              card_id: card.id,
+              column_id: targetColumn.id,
+              position: "top"
+            });

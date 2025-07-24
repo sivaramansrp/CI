@@ -4278,7 +4278,14 @@
     "department": "agace"
   },
   {
-     "id": 611,
+    "id": 611,
+    "tramite": 32610,
+    "linkDashboard": "/agace/registro-oae-rfe/solicitud",
+    "linkDepartment": "/pago/registro-oae-rfe/solicitud",
+    "department": "agace"
+  },
+  {
+    "id": 611,
     "tramite": 32606,
     "linkDashboard": "/agace/economico/solicitud",
     "linkDepartment": "/pago/economico/solicitud",

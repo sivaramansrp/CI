@@ -3007,7 +3007,16 @@
     "numeroDeProcedimiento": "32613"
   },
   {
-    "id": 32606,
+    "id": 32610,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2025-10-07",
+    "fechaActualizacion": "2027-10-12",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32610"
+  },
+  {
+     "id": 32606,
     "tipoDeTramite": "Solicitud de cs Permiso",
     "fecha": "2024-10-01",
     "fechaActualizacion": "2024-10-05",
