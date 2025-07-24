@@ -1,6 +1,6 @@
 <form [formGroup]="datosComunesForm">
   <div class="col-md-12">
-    <label class="form-label text-start">Señale el sector productivo o servicio al que pertenece</label>
+    <label class="form-label text-start">{{ labelEnum.SECTOR_PRODUCTIVO_SERVICIO }}</label>
   </div>
   <div class="col-md-6">
     <app-catalogo-select [catalogo]="sectorProductivo.catalogos" [label]="'Sector Productivo'" formControlName="sectorProductivo" (change)="setValoresStore( datosComunesForm, 'sectorProductivo', 'setSectorProductivo' )"></app-catalogo-select>
@@ -11,32 +11,30 @@
   <div class="col-md-12 mt-5">
     <div class="alert alert-info">
       <div class="form-check">
-        <b> Nota:</b> Si no encuadra en los sectores o los servicios de los catálogos, deberá seleccionar el más cercano a sus actividades.
+        <b> Nota:</b>{{ labelEnum.NOTA_SECTOR }}
       </div>
     </div>
   </div>
-  <!-- 2nd section -->
   <div class="col-md-12">
     <ng-titulo titulo="" />
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> Señale si al momento de ingresar su solicitud si se encuentra al corriente en el cumplimiento de sus obligaciones fiscales y aduaneras </label>
+      <span class="required-asterisk">*</span> {{ labelEnum.OBLIGACIONES_FISCALES }}</label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio01" (change)="setValoresStore( datosComunesForm, 'tipoRadio01', 'setTipoRadio01' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> Indique si autorizó al S A T hacer pública su opinión positiva sobre el cumplimiento de obligaciones fiscales </label>
+      <span class="required-asterisk">*</span> {{ labelEnum.AUTORIZA_OPINION_SAT }}</label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio02" (change)="setValoresStore( datosComunesForm, 'tipoRadio02', 'setTipoRadio02' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> Señale si cuenta con empleados propios para realizar el proceso productivo o la prestación de servicios, registrado ante el I M S S </label>
+      <span class="required-asterisk">*</span> {{ labelEnum.EMPLEADOS_PROPIOS }} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio03" (change)="setValoresStore( datosComunesForm, 'tipoRadio03', 'setTipoRadio03' )"></app-input-radio>
   </div>
-  <!-- on radio select condition -->
   <div class="col-md-12 mt-4" *ngIf="datosComunesForm.get('tipoRadio03')?.value === 'si'">
-    <label class="form-label text-start">Cual es el número de empleados propios con los que contó en el último bimestre anterior a su solicitud</label>
+    <label class="form-label text-start">{{ labelEnum.NUMERO_EMPLEADOS }}</label>
     <div class="col-md-3"></div>
     <div class="col-md-3">
       <label class="form-label">Número de empleados</label>
@@ -52,48 +50,47 @@
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> Cumple con la obligación de retener y enterar el I S R de los trabajadores </label>
+      <span class="required-asterisk">*</span> {{ labelEnum.ISR_TRABAJADORES }} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio04" (change)="setValoresStore( datosComunesForm, 'tipoRadio04', 'setTipoRadio04' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> Acredita realizar el pago de cuotas obrero patronales </label>
+      <span class="required-asterisk">*</span> {{ labelEnum.CUOTAS_OBRERO_PATRONALES }} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio05" (change)="setValoresStore( datosComunesForm, 'tipoRadio05', 'setTipoRadio05' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> Señale si al momento de ingresar su solicitud la empresa solicitante cuenta con subcontratación de servicios especializados o de ejecución de obras especializadas </label>
+      <span class="required-asterisk">*</span> {{ labelEnum.SUBCONTRATACION }} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio06" (change)="setValoresStore( datosComunesForm, 'tipoRadio06', 'setTipoRadio06' )"></app-input-radio>
   </div>
-  <!-- 3rd section -->
   <div class="col-md-12">
     <ng-titulo titulo="" />
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> Señale si al momento de ingresar su solicitud se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69, con excepción de lo dispuesto en la fracción VI. </label>
+      <span class="required-asterisk">*</span> {{ labelEnum.LISTADO_ART_69 }} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" [selectedValue]="valorSeleccionado" (valueChange)="cambiarRadio($event)" formControlName="tipoRadio07" (change)="setValoresStore( datosComunesForm, 'tipoRadio07', 'setTipoRadio07' )"></app-input-radio>
   </div> @if (nuevaNotificacion) { <section>
     <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
   </section> } <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> Del mismo modo indique si al momento de ingresar su solicitud se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69-B, cuarto párrafo del CFF. </label>
+      <span class="required-asterisk">*</span> {{ labelEnum.LISTADO_ART_69B }} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio08" (change)="setValoresStore( datosComunesForm, 'tipoRadio08', 'setTipoRadio08' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> Señale si se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69-B Bis noveno párrafo del CFF. </label>
+      <span class="required-asterisk">*</span> {{ labelEnum.LISTADO_ART_69B_BIS }} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio09" (change)="setValoresStore( datosComunesForm, 'tipoRadio09', 'setTipoRadio09' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> Señale si sus certificados de sellos digitales están vigentes. </label>
+      <span class="required-asterisk">*</span> {{ labelEnum.SELLOS_VIGENTES }} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" [selectedValue]="valorSeleccionado" (valueChange)="cambiarRadio2($event)" formControlName="tipoRadio10" (change)="setValoresStore( datosComunesForm, 'tipoRadio10', 'setTipoRadio10' )"></app-input-radio>
   </div> @if (nuevaNotificacion) { <section>
     <lib-notificaciones [notificacionInput]="nuevaNotificacion2" (confirmacionModal)="eliminarPedimento2($event)"></lib-notificaciones>
   </section> } <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> En caso afirmativo señale si se infringió alguno de los supuestos previstos en el artículo 17-H Bis del CFF, durante los últimos doce meses. </label>
+      <span class="required-asterisk">*</span> {{ labelEnum.SUPUESTOS_17H_BIS }} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" [selectedValue]="valorSeleccionado" (valueChange)="cambiarRadio($event)" formControlName="tipoRadio11" (change)="setValoresStore( datosComunesForm, 'tipoRadio11', 'setTipoRadio11' )"></app-input-radio>
   </div> @if (nuevaNotificacion) { <section>
     <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>

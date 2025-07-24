@@ -1,10 +1,10 @@
 <form [formGroup]="controladoraForm">
   <div class="col-md-12">
-    <label class="form-label text-start">Conforme a la regla 7.1.4 primer párrafo, fracciones I a la IV, acredite lo siguiente:</label>
+    <label class="form-label text-start">{{labelEnum.CONFIRME}}</label>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> Señale si ha realizado operaciones de comercio exterior durante los últimos dos años anteriores a su solicitud e indique la fecha de inicio de operaciones de comercio exterior. </label>
+      <span class="required-asterisk">*</span> {{labelEnum.OPERACIONES_COMERCIO_EXTERIOR}}</label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio21" (change)=" setValoresStore( controladoraForm, 'tipoRadio21', 'setTipoRadio21' ) "></app-input-radio>
   </div>
   <div class="col-md-6">
@@ -12,7 +12,7 @@
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> Señale si ha efectuado el pago del derecho correspondiente a la fecha de presentación de la solicitud, a que se refiere el artículo 40, inciso m) de la LFD, en relación con el Anexo 19 de la RMF vigente a la fecha de presentación de la solicitud del registro. </label>
+      <span class="required-asterisk">*</span> {{labelEnum.PAGO_DERECHO}}</label>
   </div>
   <div class="col-md-4 mt-4">
     <input-fecha [setFecha]="controladoraForm.get('fechaPago')?.value" [datos]="fechaDePago" (valorCambiado)="cambioFechaPago($event)"></input-fecha>
@@ -29,11 +29,10 @@
     <label class="form-label text-start" for="llaveOEA">Llave de pago :</label>
     <input class="form-control" formControlName="llavePago" type="text" id="llaveOEA" name="llaveOEA" (change)=" setValoresStore( controladoraForm, 'llavePago', 'setLlavePago' ) "/>
   </div>
-  <!-- Transportistas -->
   <div class="col-md-12 mt-5">
     <div class="alert alert-info">
-      <span style="color: red;">*</span>
-      <b>Reportar el nombre y clave en el RFC de las empresas transportistas autorizadas para efectuar el traslado de las mercancías de comercio exterior.</b>
+      <span class="required-asterisk">*</span>
+      <b>{{labelEnum.TRANSPORTISTAS}}</b>
     </div>
   </div>
   <div class="col-md-12">
@@ -51,36 +50,35 @@
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> Señale si cuenta con un programa IMMEX. </label>
+      <span class="required-asterisk">*</span> {{labelEnum.CUENTA_PROGRAMA_IMMEX}} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio22" (change)=" setValoresStore( controladoraForm, 'tipoRadio22', 'setTipoRadio22' ) "></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> Señale si cuenta con el Registro en el Esquema de Certificación de Empresas en la Modalidad IVA e IEPS conforme la normatividad vigente. </label>
+      <span class="required-asterisk">*</span> {{labelEnum.CUENTA_REGISTRO_IVA_IEPS}} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio23" (change)=" setValoresStore( controladoraForm, 'tipoRadio23', 'setTipoRadio23' ) "></app-input-radio>
   </div>
   <div class="col-md-4 mt-4">
-    <label class="form-label text-start" for="modalidad">Modalidad I V A e I E P S</label>
+    <label class="form-label text-start" for="modalidad">{{labelEnum.MODALIDAD_IVA_IEPS}}</label>
     <input class="form-control" formControlName="modalidad" type="text" id="modalidad" name="modalidad" (change)=" setValoresStore( controladoraForm, 'modalidad', 'setModalidad' ) "/>
   </div>
   <div class="col-md-4 mt-4">
-    <label class="form-label text-start" for="fechaRegistro">Fecha De Registro</label>
+    <label class="form-label text-start" for="fechaRegistro">{{labelEnum.FECHA_REGISTRO}}</label>
     <input class="form-control" formControlName="fechaRegistro" type="text" id="fechaRegistro" name="fechaRegistro" (change)=" setValoresStore( controladoraForm, 'fechaRegistro', 'setFechaRegistro' ) "/>
   </div>
   <div class="col-md-4 mt-4">
-    <label class="form-label text-start" for="numeroAutorizacion">Número de autorización</label>
+    <label class="form-label text-start" for="numeroAutorizacion">{{labelEnum.NUMERO_AUTORIZACION}}</label>
     <input class="form-control" formControlName="numeroAutorizacion" type="text" id="numeroAutorizacion" name="numeroAutorizacion" (change)=" setValoresStore( controladoraForm, 'numeroAutorizacion', 'setNumeroAutorizacion' ) "/>
   </div>
   <div class="col-md-12 mt-5">
     <div class="alert alert-info">
-      <b>Anexar documento emitido por la SE, mediante el cual se acredite que han sido designadas como sociedades controladoras para mejorar las operaciones de manufactura o maquin de dos o más sociedades controladas, respecto de las cuales la controladora participará en materia directa o indirecta y sea administrativa, contraria o capital, cuando una tercera empresa se reserva dicha participación directa o indirecta sobre las otras controladas y la controladora, o bien, cuando una tercera empresa ya sea residente en territorio nacional en el escritorio electrónico directo o indirectamente en la administración, control o en el capital tanto de la sociedad controladora como de las sociedades controladas.</b>
+      <b>{{labelEnum.ANEXAR_DOCUMENTO}}</b>
     </div>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> Haga una relación de las sociedades controladas. </label>
+      <span class="required-asterisk">*</span> {{labelEnum.RELACION_SOCIEDADES_CONTROLADAS}} </label>
   </div>
-  <!-- Empresas Controladas -->
   <div class="col-md-12">
     <label>Empresas Controladas</label>
   </div>
@@ -96,32 +94,30 @@
   </div>
   <div class="col-md-12 mt-5">
     <div class="alert alert-info">
-      <b>Anexar un diagrama de la estructura accionaria y corporativa, así como copia certificada de las escrituras públicas, en las que conste la participación accionaria de la sociedad controladora y de las sociedades controladas.</b>
+      <b> {{labelEnum.ANEXAR_DOCUMENTO_2}}</b>
     </div>
   </div>
-  <!-- Reconocimiento Mutuo -->
   <div class="col-md-12">
     <ng-titulo titulo="Reconocimiento Mutuo" />
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> La adopción de México de las normas establecidas en el Marco Normativo SAFE de la OMA para Asegurar y Facilitar el Comercio Global publicado por la OMA, donde se incorporan prácticas y normas en materia de seguridad, tiene como uno de sus objetivos, alcanzar el Reconocimiento Mutuo" con aquellos países que cuentan con un programa similar en materia de seguridad, que cumplen con la condición de Operadores Económicos Autorizados de acuerdo al "Marco SAFE" y la legislación de cada país. </label>
+      <span class="required-asterisk">*</span> {{labelEnum.RECONOCIMIENTO_MUTUO}} </label>
   </div>
   <div class="col-md-12 mt-4">
-    <label class="form-label text-start">Por lo tanto, como parte de la estrategia para evitar la duplicación de controles de seguridad y contribuir de manera significativa a la facilitación y control de las mercancías que circulan en la cadena de suministro internacional, es necesario contar con la participación de aquellos que logren obtener el Registro en el Esquema de Certificación de Empresas y autorizar el intercambio de información que permita enriquecer los sistemas informáticos, eliminar y/o reducir la redundancia y/o duplicación de esfuerzos en el proceso de inscripción.</label>
+    <label class="form-label text-start">{{labelEnum.ESTRATEGIA}}</label>
   </div>
   <div class="col-md-12 mt-4">
-    <label class="form-label text-start">Por lo anterior y de conformidad con lo dispuesto en el artículo 117 de Ley Federal de Transparencia y Acceso a la Información Pública, autorizo al sujeto obligado denominado SAT, a través de la AGACE, a compartir, difundir o distribuir con otras autoridades nacionales o extranjeras los datos personales y demás información de la empresa que represento, y que se genere durante el transcurso en que la misma se encuentre inscrita en el Registro en el Esquema de Certificación de Empresas</label>
+    <label class="form-label text-start">{{labelEnum.AUTORIZACION}}</label>
   </div>
   <div class="col-md-12 mt-4">
     <app-input-radio [radioOptions]="radioAutorizo" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="radioAutorizo" (change)=" setValoresStore( controladoraForm, 'radioAutorizo', 'setRadioAutorizo' ) "></app-input-radio>
   </div>
-  <!-- Clasificación de la Información -->
   <div class="col-md-12">
     <ng-titulo titulo="Clasificación de la Información" />
   </div>
   <div class="col-md-12 mt-4">
-    <label class="form-label text-start">La información proporcionada, durante este trámite para el Registro de Certificación de Empresas es clasificada por la empresa como:</label>
+    <label class="form-label text-start">{{labelEnum.CLASIFICACION_INFORMACION}}</label>
     <app-input-radio [radioOptions]="radioClasificacion" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="radioClasificacion" (change)=" setValoresStore( controladoraForm, 'radioClasificacion', 'setRadioClasificacion' ) "></app-input-radio>
   </div>
 </form>

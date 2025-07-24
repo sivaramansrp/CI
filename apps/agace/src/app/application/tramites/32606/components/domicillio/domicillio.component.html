@@ -8,16 +8,15 @@
     </div>
   </div>
   <div class="row mt-12" style="margin-top: 10px;">
-    <label class="form-label text-start">Indique todos los domicilios registrados ante el RFC del solicitante e indique aquellos en que se desarrollen actividades relacionadas con su proceso productivo y/o la prestación de servicios.</label>
+    <label class="form-label text-start">{{ labelEnum.SELECCIONE_DOMICILIO }}</label>
   </div>
   <div class="col-md-12 mt-5">
     <div class="alert alert-info">
       <div class="form-check">
-        <b> Nota:</b> De contar con un programa IMMEX activo y vigente al momento de ingresar la solicitud, se mostrarán los domicilios registrados ante la Secretaria de Economía. Así mismo, podrá incluir otros domicilios que se encuentren relacionados con el RFC del solicitante, dando click en el botón "Agregar" y seleccionado la Entidad Federativa.
+        <b> Nota:</b> {{ labelEnum.NOTA_DOMICILIO }}
       </div>
     </div>
   </div>
-  <!-- Domicillio tabla -->
   <div class="row mt-12">
     <div class="col-md-12">
       <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="domicillioTabla" [datos]="domicillioDatos"></app-tabla-dinamica>
@@ -31,7 +30,6 @@
     </section> } <button type="button" class="btn btn-danger 3 ms-3" id="eliminar" [disabled]="this.soloLectura" (click)="eliminarDomiciliosDatos()"> Eliminar </button>
     <button type="button" id="agregar" class="btn btn-primary ms-3" [disabled]="this.soloLectura" (click)="onAgregarClick()" data-bs-toggle="modal" data-bs-target="#modalDomicillio"> Agregar </button>
   </div>
-  <!-- modal popup for agregar domicilio -->
   <div class="modal fade modal-xl" id="modalDomicillio" tabindex="-1" aria-labelledby="modalDomicillioLabel" aria-hidden="true" #modalAgregar>
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -65,7 +63,6 @@
       </div>
     </div>
   </div>
-  <!-- modal popup for modificar domicillio -->
   <div class="modal fade modal-xl" id="modalInstalacionesPrincipales" tabindex="-1" aria-labelledby="modalInstalacionesPrincipalesLabel" aria-hidden="true" #modalInstalacionesPrincipales>
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -83,7 +80,6 @@
             <input type="text" id="municipio" formControlName="municipio" class="form-control" (change)="setValoresStore( domicillioForm, 'municipio', 'setMunicipio' )"/>
           </div>
           <div class="col-md-4 mt-3">
-            <!-- <app-catalogo-select formControlName="tipoDeInstalacion" [catalogo]="tipoDeInstalacion.catalogos" [label]="tipoDeInstalacion.labelNombre" [required]="tipoDeInstalacion.required" (selectionChange)="actualizarTipoDeInstalacion($event)"></app-catalogo-select> -->
             <app-catalogo-select [catalogo]="tipoDeInstalacion.catalogos" [label]="'Tipo de instalación'" formControlName="tipoDeInstalacion" (change)="setValoresStore( domicillioForm, 'tipoDeInstalacion', 'setTipoDeInstalacion' )"></app-catalogo-select>
           </div>
           <div class="col-md-4 mt-3">
@@ -107,19 +103,19 @@
             <app-input-radio [radioOptions]="radioOpcions07" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio27" (change)="setValoresStore( domicillioForm, 'tipoRadio27', 'setTipoRadio27' )"></app-input-radio>
           </div>
           <div class="col-md-4 mt-3">
-            <label class="form-label text-start">Acreditación del uso y goce del inmueble *:</label>
+            <label class="form-label text-start">{{ labelEnum.ACREDITACION_INMUEBLE }}</label>
             <app-input-radio [radioOptions]="radioOpcions07" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio28" (change)="setValoresStore( domicillioForm, 'tipoRadio28', 'setTipoRadio28' )"></app-input-radio>
           </div>
           <div class="col-md-4 mt-3">
-            <label class="form-label text-start">Perfil de la empresa :</label>
+            <label class="form-label text-start">{{ labelEnum.PERFIL_EMPRESA }}</label>
             <app-input-radio [radioOptions]="radioOpcions07" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio29" (change)="setValoresStore( domicillioForm, 'tipoRadio29', 'setTipoRadio29' )"></app-input-radio>
           </div>
           <div class="col-md-4 mt-3">
-            <label class="form-label text-start">Realiza actividad economica de comercio exterior *:</label>
+            <label class="form-label text-start">{{ labelEnum.ACTIVIDAD_COMERCIO_EXTERIOR }}</label>
             <app-input-radio [radioOptions]="radioOpcions07" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio30" (change)="setValoresStore( domicillioForm, 'tipoRadio30', 'setTipoRadio30' )"></app-input-radio>
           </div>
           <div class="col-md-4 mt-3">
-            <label class="form-label text-start">Reconocimiento Mutuo (Instalación C-TPAT) *:</label>
+            <label class="form-label text-start">{{ labelEnum.RECONOCIMIENTO_MUTUO }}</label>
             <app-input-radio [radioOptions]="radioOpcions07" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio31" (change)="setValoresStore( domicillioForm, 'tipoRadio31', 'setTipoRadio31' )"></app-input-radio>
           </div>
           <div class="col-md-12 mt-3">
@@ -132,23 +128,21 @@
       </div>
     </div>
   </div>
-  <!-- end -->
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> Señale si tiene actualizado sus medios de contacto para efectos del buzón tributario en términos del penúltimo párrafo del artículo 17-K del CFF. </label>
+      <span class="required-asterisk">*</span> {{ labelEnum.ACTUALIZADO_BUZON }}</label>
     <app-input-radio [radioOptions]="radioOpcions07" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio32" (change)="setValoresStore( domicillioForm, 'tipoRadio32', 'setTipoRadio32' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span style="color: red;">*</span> Señale si se encuentra suspendida en el Padrón de Importadores o en el Padrón de Importadores de Sectores Específicos o Padrón de Exportadores Sectorial. </label>
+      <span class="required-asterisk">*</span> {{ labelEnum.SUSPENDIDA_PADRON }} </label>
     <app-input-radio [radioOptions]="radioOpcions07" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio33" (change)="setValoresStore( domicillioForm, 'tipoRadio33', 'setTipoRadio33' )"></app-input-radio>
   </div>
-  <!-- Clientes y Proveedores en el Extranjero -->
   <div class="col-md-12">
     <ng-titulo titulo="Clientes y Proveedores en el Extranjero" />
   </div>
   <div class="col-md-12">
-    <label class="form-label text-start">Anexe un archivo que contenga el nombre y dirección de sus clientes y proveedores en el extranjero directa o indirectamente vinculados con el régimen aduanero con el que se solicita el registro, con los que realizó operaciones de comercio exterior durante los últimos doce meses</label>
+    <label class="form-label text-start">{{ labelEnum.CLIENTES_PROVEEDORES_EXTRANJERO }}</label>
     <div>
       <b>Para descargar plantilla del archivo de excel de click </b>
       <a href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx">aquí</a>
@@ -179,14 +173,13 @@
       </div>
     </div>
   </div>
-  <!-- Proveedores -->
   <div class="col-md-12">
     <ng-titulo titulo="Proveedores" />
   </div>
   <div class="col-md-12">
-    <label class="form-label text-start">Anexe un archivo que contenga el nombre y clave en el R F C de sus proveedores de insumos adquiridos en territorio nacional, vinculados al proceso bajo el régimen que solicita, de los últimos 6 meses</label>
+    <label class="form-label text-start">{{ labelEnum.PROVEEDORES_NACIONAL }}</label>
     <div>
-      <b>Para descargar plantilla del archivo de excel de click </b>
+      <b>{{ labelEnum.DESCARGAR_PLANTILLA_EXTRANJERO }}</b>
       <a href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx">aquí</a>
     </div>
     <div class="row mt-3">

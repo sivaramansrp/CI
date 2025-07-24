@@ -5,7 +5,7 @@
   <div class="row">
     <div class="col-md-4">
       <label class="form-label text-start" for="rfcTercero">
-        <span style="color: red;">*</span> Registro Federal de Contribuyentes </label>
+        <span class="required-asterisk">*</span> {{ labelEnum.RFC_TERCERO }} </label>
       <input class="form-control" type="text" size="25" id="rfcTercero" name="rfcTercero" formControlName="rfcTercero" (change)="setValoresStore( tercerosRelacionadosForm, 'rfcTercero', 'setRfcTercero' )"/>
     </div>
     <div class="col-md-8">
@@ -45,7 +45,6 @@
       </div>
     </div>
   </div>
-  <!-- Enlace Operativo -->
   <div class="col-md-12">
     <ng-titulo titulo="Enlace Operativo" />
   </div>
@@ -62,12 +61,11 @@
       <button type="button" class="btn btn-danger 3 ms-3" [disabled]="this.soloLectura"> Eliminar </button>
     </div>
   </div>
-  <!-- Personas para oír y recibir notificaciones -->
   <div class="col-md-12">
     <ng-titulo titulo="Personas para oír y recibir notificaciones" />
   </div>
   <div class="col-md-12">
-    <label>Personas para oír y recibir notificaciones</label>
+    <label>{{ labelEnum.PERSONAS_NOTIFICACION }}</label>
   </div>
   <div class="col-md-12">
     <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED" [configuracionTabla]="personasTabla" [datos]="personasLista"></app-tabla-dinamica>

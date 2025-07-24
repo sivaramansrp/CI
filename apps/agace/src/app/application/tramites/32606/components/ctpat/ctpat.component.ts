@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
 import { CommonModule } from '@angular/common';
-import { EconomicoService } from '../../services/economico.service';
+import { CtpatLabelEnum } from '../../constantes/labels32606.enum';
 import { RADIO_01 } from '../../constantes/adace32606.enum';
 import { Tramite32606Query } from '../../state/Tramite32606.query';
 
@@ -29,10 +29,20 @@ export class CtpatComponent implements OnDestroy, OnInit {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /** Estado de consulta actual. */
   consultaDatos!: ConsultaioState;
+  /** Etiquetas para los campos del formulario. */
+  labelEnum = CtpatLabelEnum;
 
-  /** Constructor que inicializa servicios y suscripciones. */
+  /**
+   * Constructor del componente CtpatComponent.
+   * Se utiliza para la inyección de dependencias y la suscripción al estado de consulta,
+   * lo que permite determinar si el formulario debe estar en modo solo lectura y actualizar su estado inicial.
+   *
+   * @param query Servicio para consultar el estado actual del trámite 32606.
+   * @param store Almacén global para gestionar el estado del trámite 32606.
+   * @param fb Constructor de formularios reactivos.
+   * @param consultaioQuery Servicio para consultar el estado de la sección y determinar el modo de solo lectura.
+   */
   constructor(
-    private economico: EconomicoService,
     public query: Tramite32606Query,
     public store: Tramite32606Store,
     private fb: FormBuilder,

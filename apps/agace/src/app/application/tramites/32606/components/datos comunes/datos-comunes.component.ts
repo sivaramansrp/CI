@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
 import { CommonModule } from '@angular/common';
+import { DatosLabelEnum } from '../../constantes/labels32606.enum';
 import { DomicillioComponent } from '../domicillio/domicillio.component';
 import { EconomicoService } from '../../services/economico.service';
 import { MiembroComponent } from '../miembro/miembro.component';
@@ -51,8 +52,21 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /** Estado de consulta actual. */
   consultaDatos!: ConsultaioState;
+  /** Etiquetas para los campos del formulario. */
+  labelEnum = DatosLabelEnum;
 
-  /** Constructor que inicializa servicios y suscripciones. */
+    /**
+   * Constructor del componente DatosComunesComponent.
+   * Se utiliza para la inyección de dependencias y la suscripción al estado de consulta,
+   * lo que permite determinar si el formulario debe estar en modo solo lectura y actualizar su estado inicial.
+   *
+   * @param economico Servicio para operaciones económicas y obtención de catálogos.
+   * @param query Servicio para consultar el estado actual del trámite 32606.
+   * @param store Almacén global para gestionar el estado del trámite 32606.
+   * @param fb Constructor de formularios reactivos.
+   * @param validacionesService Servicio para validar campos del formulario.
+   * @param consultaioQuery Servicio para consultar el estado de la sección y determinar el modo de solo lectura.
+   */
   constructor(private economico: EconomicoService,
     public query: Tramite32606Query,
     public store: Tramite32606Store,

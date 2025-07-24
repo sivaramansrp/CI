@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
 import { CommonModule } from '@angular/common';
+import { ControladoraLabelEnum } from '../../constantes/labels32606.enum';
 import { EconomicoService } from '../../services/economico.service';
 import { Tramite32606Query } from '../../state/Tramite32606.query';
 /**
@@ -49,6 +50,8 @@ export class ControladoraComponent implements OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /** Estado de consulta actual. */
   consultaDatos!: ConsultaioState;
+  /** Etiquetas para los campos del formulario. */
+  labelEnum = ControladoraLabelEnum;
 
   /** Constructor que inicializa servicios y suscripciones. */
   constructor(private economico: EconomicoService,
