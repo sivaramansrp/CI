@@ -58,7 +58,6 @@ import {
 } from '@angular/forms';
 import {
   CONFIGURACION_ENCABEZADO_TABLA_PAGOS,
-  EMPRESAS_CERTIFICADAS,
   ERR_RFC_NO_VALIDO,
   ESTATUS_PAGADO,
   ID_NAME_DD,
@@ -354,11 +353,6 @@ export class SolicitudComponent
   idTipoDespacho!: string;
 
   /**
-   * Opciones disponibles para empresas certificadas.
-   */
-  radioOpciones = EMPRESAS_CERTIFICADAS;
-
-  /**
    * Notificador para gestionar la destrucción de suscripciones y evitar fugas de memoria.
    * @private
    */
@@ -513,6 +507,13 @@ export class SolicitudComponent
   revisionDisabled: boolean = true;
 
   /**
+   * @description Banderas para deshabilitar los campos de tipo de empresa certificada.
+   */
+  tipoEmpresaCertificadaADisabled: boolean = false;
+  tipoEmpresaCertificadaAADisabled: boolean = false;
+  tipoEmpresaCertificadaAAADisabled: boolean = false;
+
+  /**
    * @description Bandera para deshabilitar el campo de certificación industria automotriz.
    */
   industriaAutomotriz!: CheckInputTextComponent;
@@ -614,7 +615,7 @@ export class SolicitudComponent
 
     this.crearFormSolicitud();
 
-    this.datosImportadorExportador.get('tipoEmpresaCertificada')?.disable();
+    this.initializeTipoEmpresaCertificadaStates();
 
     this.FormSolicitud.statusChanges
       .pipe(
@@ -1112,7 +1113,9 @@ export class SolicitudComponent
           [Validators.maxLength(25)],
         ],
 
-        tipoEmpresaCertificada: [this.solicitudState?.tipoEmpresaCertificada],
+        tipoEmpresaCertificadaA: [this.solicitudState?.tipoEmpresaCertificada === 'a'],
+        tipoEmpresaCertificadaAA: [this.solicitudState?.tipoEmpresaCertificada === 'aa'],
+        tipoEmpresaCertificadaAAA: [this.solicitudState?.tipoEmpresaCertificada === 'aaa'],
         socioComercial: [this.solicitudState?.socioComercial],
         certificacionOEA: [this.solicitudState?.certificacionOEA],
         revision: [this.solicitudState?.revision],
@@ -1598,6 +1601,62 @@ export class SolicitudComponent
       'socioComercial',
       'setSocioComercial'
     );
+  }
+
+  /**
+   * Maneja el cambio de selección en los checkboxes de tipo de empresa certificada.
+   * Implementa la lógica de mutua exclusión: solo un checkbox puede estar seleccionado a la vez.
+   * @param value - El valor de la opción seleccionada ('a', 'aa', 'aaa')
+   * @param controlName - El nombre del control del formulario que cambió
+   */
+  onTipoEmpresaChange(value: string, controlName: string): void {
+    const isChecked = this.datosImportadorExportador.get(controlName)?.value;
+    
+    if (isChecked) {
+      // Si se selecciona uno, deseleccionar los otros y deshabilitarlos
+      const controls = ['tipoEmpresaCertificadaA', 'tipoEmpresaCertificadaAA', 'tipoEmpresaCertificadaAAA'];
+      controls.forEach(ctrl => {
+        if (ctrl !== controlName) {
+          this.datosImportadorExportador.get(ctrl)?.setValue(false);
+        }
+      });
+      
+      // Actualizar estados disabled
+      this.tipoEmpresaCertificadaADisabled = controlName !== 'tipoEmpresaCertificadaA';
+      this.tipoEmpresaCertificadaAADisabled = controlName !== 'tipoEmpresaCertificadaAA';
+      this.tipoEmpresaCertificadaAAADisabled = controlName !== 'tipoEmpresaCertificadaAAA';
+      
+      // Guardar el valor en el store
+      this.tramite5701Store.setTipoEmpresaCertificada(value);
+    } else {
+      // Si se deselecciona, habilitar todos los checkboxes
+      this.tipoEmpresaCertificadaADisabled = false;
+      this.tipoEmpresaCertificadaAADisabled = false;
+      this.tipoEmpresaCertificadaAAADisabled = false;
+      
+      // Limpiar el valor en el store
+      this.tramite5701Store.setTipoEmpresaCertificada(null);
+    }
+  }
+
+  /**
+   * Inicializa los estados de deshabilitado para los checkboxes de tipo de empresa certificada
+   * basándose en el valor actual del store.
+   */
+  initializeTipoEmpresaCertificadaStates(): void {
+    const currentValue = this.solicitudState?.tipoEmpresaCertificada;
+    
+    if (currentValue) {
+      // Si hay un valor seleccionado, deshabilitar los otros
+      this.tipoEmpresaCertificadaADisabled = currentValue !== 'a';
+      this.tipoEmpresaCertificadaAADisabled = currentValue !== 'aa';
+      this.tipoEmpresaCertificadaAAADisabled = currentValue !== 'aaa';
+    } else {
+      // Si no hay valor seleccionado, habilitar todos
+      this.tipoEmpresaCertificadaADisabled = false;
+      this.tipoEmpresaCertificadaAADisabled = false;
+      this.tipoEmpresaCertificadaAAADisabled = false;
+    }
   }
 
   /**
@@ -2500,17 +2559,17 @@ export class SolicitudComponent
             this.datosImportadorExportador
               .get('certificacionOEA')
               ?.setValue(true);
-            this.datosImportadorExportador
-              .get('tipoEmpresaCertificada')
-              ?.disable();
+            // Deshabilitar todos los checkboxes de tipo empresa certificada
+            this.tipoEmpresaCertificadaADisabled = true;
+            this.tipoEmpresaCertificadaAADisabled = true;
+            this.tipoEmpresaCertificadaAAADisabled = true;
             this.certificacionOEADisabled = true;
           } else {
             this.datosImportadorExportador
               .get('certificacionOEA')
               ?.setValue(false);
-            this.datosImportadorExportador
-              .get('tipoEmpresaCertificada')
-              ?.enable();
+            // Habilitar checkboxes según el estado actual
+            this.initializeTipoEmpresaCertificadaStates();
             this.certificacionOEADisabled = false;
           }
         })
@@ -3469,7 +3528,9 @@ export class SolicitudComponent
     this.datosImportadorExportador.patchValue({
       RFCImpExp: '',
       nombre: '',
-      tipoEmpresaCertificada: '',
+      tipoEmpresaCertificadaA: false,
+      tipoEmpresaCertificadaAA: false,
+      tipoEmpresaCertificadaAAA: false,
       certificacionOEA: false,
       revision: false,
     });
@@ -3492,7 +3553,10 @@ export class SolicitudComponent
       descripcionIndustrialAutomotriz: '',
     });
 
-    this.datosImportadorExportador.get('tipoEmpresaCertificada')?.disable();
+    // Deshabilitar todos los checkboxes de tipo empresa certificada
+    this.tipoEmpresaCertificadaADisabled = true;
+    this.tipoEmpresaCertificadaAADisabled = true;
+    this.tipoEmpresaCertificadaAAADisabled = true;
     this.certificacionOEADisabled = true;
     this.revisionDisabled = true;
     this.certificacionesDisabled = true;
