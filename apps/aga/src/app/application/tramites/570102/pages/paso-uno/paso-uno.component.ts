@@ -179,7 +179,7 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
    * Método que recibe un evento booleano y lo emite al componente padre.
    * @param event Valor booleano que indica si existen datos.
    */
-  isDataEvent(event: boolean) {
+  isDataEvent(event: boolean):void {
     this.isDataevent = event;
     this.isdataEvent.emit(this.isDataevent);
   }

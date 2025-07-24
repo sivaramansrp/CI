@@ -399,7 +399,7 @@ export const REPRESENTACION_FEDERAL = [
     validadores: [
       { tipo: 'required' }
     ],
-    marcadorDePosicion: 'Selecciona una opción',
+    marcadorDePosicion: 'Seleccione una opción',
     marginTop: 0
   },
 ];

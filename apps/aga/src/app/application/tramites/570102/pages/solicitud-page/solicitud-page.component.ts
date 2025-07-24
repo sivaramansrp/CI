@@ -192,7 +192,7 @@ export class SolicitudPageComponent implements OnInit {
    * @param i Índice del elemento a eliminar (opcional).
    */
   abrirModal(i: number = 0): void {
-    if (this.isData == true) {
+    if (this.isData === true) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -223,7 +223,7 @@ export class SolicitudPageComponent implements OnInit {
    * Maneja el evento de guardar emitido por un componente hijo.
    * @param event Número del evento emitido.
    */
-  alEventoGuarder(event: number) {
+  alEventoGuarder(event: number):void {
     this.nombree = event;
     this.getValorIndice({ accion: 'cont', valor: 1 });
   }
@@ -232,7 +232,7 @@ export class SolicitudPageComponent implements OnInit {
    * Maneja el evento que indica si existen datos disponibles.
    * @param event Valor booleano que indica si hay datos.
    */
-  isDataEvent(event: boolean) {
+  isDataEvent(event: boolean):void {
     this.isData = event;
   }
 }

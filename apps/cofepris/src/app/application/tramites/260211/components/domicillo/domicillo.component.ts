@@ -357,12 +357,12 @@ modificarMercancia() {
  * Agrega una nueva fila a la tabla NICO con los datos del formulario de agente.
  * Si el formulario es válido, crea un nuevo objeto `NicoInfo` con los valores del formulario y lo agrega a la lista `nicoTablaDatos`.
  */
- agregarFilaScian() {
+ agregarFilaScian():void {
   if (this.formAgente.valid) {
 
     const NEWVA_FILA: NicoInfo = {
-      clave_Scian: this.formAgente.get('claveScianModal')?.value,
-      descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
+      clave_Scian: this.estado.find(item => item.id === Number(this.formAgente.value.claveScianModal))?.descripcion ?? '',
+      descripcion_Scian: this.estado.find(item => item.id === Number(this.formAgente.value.claveDescripcionModal))?.descripcion ?? '',
     };
 
  this.nicoTablaDatos.push(NEWVA_FILA);
@@ -372,27 +372,27 @@ modificarMercancia() {
 /*
 * Método que se ejecuta al inicializar el componente.
 */
-agregarFilaMercancia() {
+agregarFilaMercancia():void {
   if (this.formMercancias.valid) {
     const MERCANCIA_DATA: MercanciasInfo = {
-      clasificacion: this.formMercancias.get('clasificacion')?.value,
-      especificar: this.formMercancias.get('especificarClasificacionProducto')?.value,
+      clasificacion: this.estado.find(item => item.id === Number(this.formMercancias.value.clasificacion))?.descripcion ?? '',
+      especificar: this.estado.find(item => item.id === Number(this.formMercancias.value.especificar))?.descripcion ?? '',
       denominacionEspecifica: this.formMercancias.get('denominacionEspecifica')?.value,
       denominacionDistintiva: this.formMercancias.get('denominacionDistintiva')?.value,
       denominacionComun: this.formMercancias.get('denominacionComun')?.value,
       formaFarmaceutica: this.formMercancias.get('formaFarmaceutica')?.value,
-      estadoFisico: this.formMercancias.get('estadoFisico')?.value,
+      estadoFisico:this.estado.find(item => item.id === Number(this.formMercancias.value.estadoFisico))?.descripcion ?? '',
       fraccionArancelaria: this.formMercancias.get('fraccionArancelaria')?.value,
       descripcionFraccion: this.formMercancias.get('descripcionFraccion')?.value,
       cantidadUMC: this.formMercancias.get('cantidadUMC')?.value,
-      unidad: this.formMercancias.get('UMC')?.value,
+      unidad: this.estado.find(item => item.id === Number(this.formMercancias.value.UMC))?.descripcion ?? '',
       cantidadUMT: this.formMercancias.get('cantidadUMT')?.value,
       unidadUMT: this.formMercancias.get('UMT')?.value,
       presentacion: this.formMercancias.get('presentacion')?.value,
       numeroRegistro: this.formMercancias.get('numeroRegistro')?.value,
       paisDeOrigen: this.formMercancias.get('paisDeOrigen')?.value,
       paisDeProcedencia: this.formMercancias.get('paisDeProcedencia')?.value,
-      tipoProducto: this.formMercancias.get('tipoDeProducto')?.value,
+      tipoProducto: this.estado.find(item => item.id === Number(this.formMercancias.value.tipoProducto))?.descripcion ?? '',
       usoEspecifico: this.formMercancias.get('usoEspecifico')?.value,
       fechaCaducidad: this.formMercancias.get('fechaCaducidad')?.value,
     };

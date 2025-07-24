@@ -13,9 +13,7 @@ import {
   ConsultaioQuery,
   ConsultaioState,
   InputRadioComponent,
-  REGEX_CODIGO_POSTAL,
-  REGEX_CORREO_ELECTRONICO,
-  REGEX_TELEFONO,
+  REGEX_SOLO_DIGITOS,
   TablaSeleccion,
   TableComponent,
 } from '@libs/shared/data-access-user/src';
@@ -89,7 +87,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   public paisData: CatalogosSelect = {
     labelNombre: 'País',
     required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
+    primerOpcion: 'Seleccione una opción',
     catalogos: [],
   };
   /**
@@ -261,26 +259,18 @@ public coloniaData: CatalogosSelect = {
         primerApellido: [this.destinatarioState?.denominacion,[Validators.required]],
            
        segundoApellido: [ this.destinatarioState?.denominacion,[Validators.required] ],
-
-       calle: [ this.destinatarioState?.denominacion,[Validators.required]],
-       numeroExterior: [this.destinatarioState?.denominacion,[Validators.required]],
-      numeroInterior: [this.destinatarioState?.denominacion, [Validators.required]],
         domicilio: [this.destinatarioState?.domicilio, [Validators.required]],
         pais: [this.destinatarioState?.pais, [Validators.required]],
-        entidadFederativa: [this.destinatarioState?.entidadFederativa, Validators.required],
-        alcaldiaMunicipo: [this.destinatarioState?.alcaldiaMunicipo, Validators.required],
-        colonia: [this.destinatarioState?.colonia, Validators.required],
         codigopostal: [
           this.destinatarioState?.codigopostal,
-          [Validators.required, Validators.maxLength(5), Validators.pattern(REGEX_CODIGO_POSTAL)]],
-        telefono: [this.destinatarioState?.telefono, [Validators.required, Validators.pattern(REGEX_TELEFONO)]],
+          [Validators.required, Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
+        telefono: [this.destinatarioState?.telefono, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
         correoelectronico: [
           this.destinatarioState?.correoelectronico,
-          [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)]],
+          [Validators.required, Validators.email]],
         
       }),
     });
-   
 
   }
 /**
@@ -379,21 +369,18 @@ get selectedTipoPersona(): string | undefined {
    * Método para manejar el envío del formulario.
    */
   enEnviar(): void {
-    if (this.destinatarioForm.invalid) {
-      // Mark all fields as touched to show validation errors
-      this.destinatarioForm.markAllAsTouched();
-      return;
-    }
     const FORM_DATA = this.destinatarioForm.value;
-  
+   if (!this.destinatarioForm.valid) {
+    this.destinatarioForm.markAllAsTouched();
+    return;
+  }
     if (!FORM_DATA || Object.keys(FORM_DATA).length === 0) {
-      console.error('Form data is empty');
       return;
     }
   
     const PAIS_DATA_VALUE = this.paisData.catalogos.find(
       (item: Catalogo) =>
-        String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.pais)
+        String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.pais).trim()
     )?.descripcion;
   
     FORM_DATA.datosDelTramiteRealizar.pais = PAIS_DATA_VALUE;
@@ -401,19 +388,20 @@ get selectedTipoPersona(): string | undefined {
     if (this.selectedRow) {
       const INDEX = this.tableData.indexOf(this.selectedRow);
       if (INDEX !== -1) {
-        this.tableData[INDEX] = { ...FORM_DATA }; 
+        this.tableData[INDEX] = { ...FORM_DATA, id: this.selectedRow.id }; 
       }
     } else {
-      this.tableData.push({ ...FORM_DATA }); 
-
+      const NEW_ID = this.tableData.length > 0
+        ? Math.max(...this.tableData.map((row) => row.id || 0)) + 1
+        : 1;
+      this.tableData.push({ ...FORM_DATA, id: NEW_ID }); 
     }
 
     this.tableData = [...this.tableData]; 
-
-    this.changeDetectorRef.markForCheck(); 
-    this.destinatarioForm.reset(); 
-    this.esFormularioVisible = false; 
-    this.selectedRow = null; 
+    this.changeDetectorRef.markForCheck();
+    this.destinatarioForm.reset();
+    this.esFormularioVisible = false;
+    this.selectedRow = null;
   }
  
  /**
@@ -423,7 +411,7 @@ onLimpiar(): void {
   this.destinatarioForm.reset();
   this.destinatarioForm.patchValue({
     datosDelTramiteRealizar: {
-      pais: 'Selecciona un medio de transporte',
+      pais: '',
     },
   });
 
@@ -442,18 +430,20 @@ onLimpiar(): void {
       CONTROL?.markAsTouched();
     }
   });
+  this.destinatarioForm.get('datosDelTramiteRealizar.pais')?.markAsTouched();
+
 }
   /**
    * Método para seleccionar una fila de la tabla.
    * @param item Fila seleccionada.
    * @param event Evento del checkbox.
    */
-
-  onSelectedRowsChange(selectedRows: FilaData2[]): void {
-    this.selectedRows = new Set(selectedRows.map((row) => row.id)); // Update selected rows
-    this.esFormularioVisible = false;
-  }
-
+ onSelectedRowsChange(selectedRows: FilaData2[]): void {
+     
+     this.selectedRows = new Set(selectedRows.map((row) => row.id)); 
+     this.esFormularioVisible = false; 
+   
+   }
   /**
    * Método para modificar los datos de una fila seleccionada.
    */
@@ -465,14 +455,16 @@ onLimpiar(): void {
        }
        
     if (!this.isPaisdatoscargados) {
-      console.warn('Los datos del catálogo de países aún no están cargados');
       return;
     }
     if (this.selectedRow) {
       const PAIS_ID = this.paisData.catalogos.find(
         (item: Catalogo) =>
-          item.descripcion === this.selectedRow?.datosDelTramiteRealizar?.pais
+          item.descripcion === this.selectedRow?.datosDelTramiteRealizar?.pais ||
+          String(item.id) === String(this.selectedRow?.datosDelTramiteRealizar?.pais)
       )?.id;
+
+
       this.destinatarioForm.patchValue({
         datosDelTramiteRealizar: {
           tipoPersona: this.selectedRow.datosDelTramiteRealizar.tipoPersona,
@@ -488,21 +480,26 @@ onLimpiar(): void {
 
       this.esFormularioVisible = true;
     }
+  
   }
 
   /**
    * Método para eliminar una fila seleccionada.
    */
-  onDeleteSelectedRows(): void {
-    if (this.selectedRows && this.selectedRows.size > 0) {
-      this.tableData = this.tableData.filter(
-        (row: { id: number }) => !this.selectedRows.has(row.id)
-      );
-      this.selectedRows.clear();
-      this.destinatarioForm.reset();
-      this.esFormularioVisible = false;
-    }
+ /**
+ * Método para eliminar una fila seleccionada.
+ */
+ onDeleteSelectedRows(): void {
+  if (this.selectedRows.size > 0) {
+
+       this.tableData = this.tableData.filter(
+      (row: { id: number }) => !this.selectedRows.has(row.id)
+    );
+    this.selectedRows.clear();
+    this.destinatarioForm.reset();
+    this.esFormularioVisible = false;
   }
+}
   /**
    * Método para manejar el clic en una fila de la tabla.
    * @param rowData Fila seleccionada.
@@ -545,7 +542,59 @@ onLimpiar(): void {
       this.destinatarioForm?.enable();
     }
 }
+/**
+ * Getter to check if the 'pais' field is required.
+ * 
+ * @returns {boolean} Returns `true` if the 'pais' field has a 'required' error, otherwise `false`.
+ */
+get isPaisRequired(): boolean {
+  return this.destinatarioForm.get('pais')?.errors?.['required'] ?? false;
+}
 
+/**
+ * Getter to check if the 'codigopostal' field has a 'maxlength' error.
+ * 
+ * @returns {boolean} Returns `true` if the 'codigopostal' field has a 'maxlength' error, otherwise `false`.
+ */
+get isCodigoPostalMaxLengthExceeded(): boolean {
+  return this.destinatarioForm.get('datosDelTramiteRealizar.codigopostal')?.errors?.['maxlength'] ?? false;
+}
+/**
+ * Getter to check if the 'telefono' field has a 'pattern' error.
+ * 
+ * @returns {boolean} Returns `true` if the 'telefono' field has a 'pattern' error, otherwise `false`.
+ */
+get isTelefonoPatternInvalid(): boolean {
+  return this.destinatarioForm.get('datosDelTramiteRealizar.telefono')?.errors?.['pattern'] ?? false;
+}
+/**
+ * Getter to check if the 'correoelectronico' field has an 'email' error.
+ * 
+ * @returns {boolean} Returns `true` if the 'correoelectronico' field has an 'email' error, otherwise `false`.
+ */
+get isCorreoElectronicoInvalid(): boolean {
+  return this.destinatarioForm.get('datosDelTramiteRealizar.correoelectronico')?.errors?.['email'] ?? false;
+}
+/**
+ * Getter to check if the 'pais' field is touched and invalid.
+ * 
+ * @returns {boolean} Returns `true` if the 'pais' field is touched and invalid, otherwise `false`.
+ */
+get isPaisInvalid(): boolean {
+  return (
+    (this.destinatarioForm.get('datosDelTramiteRealizar.pais')?.touched ?? false)&&
+    (this.destinatarioForm.get('datosDelTramiteRealizar.pais')?.invalid ?? false)
+  );
+}
+/**
+ * Método para mostrar el formulario de destinatarios.
+ * 
+ * Este método establece la bandera `esFormularioVisible` en `true`,
+ * lo que permite que el formulario sea visible en la interfaz de usuario.
+ */
+onAgregar(): void {
+  this.esFormularioVisible = true; 
+}
   /**
    * Método para establecer valores en el store.
    * @param form Formulario reactivo.

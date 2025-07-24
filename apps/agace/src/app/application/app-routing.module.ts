@@ -267,6 +267,13 @@ const ROUTES: Routes = [
       import('./tramites/30505/aviso-de-modificacion.module').then(
         (m) => m.AvisoDeModificacionModule)
   },
+  {
+        path: 'esquema-de-certificacion',
+    loadChildren: () =>
+      import('./tramites/32612/esquema-de-certificacion/esquema-de-certificacion.module').then(
+        (m) => m.EsquemaDeCertificacionModule
+      )
+  },
    {
       path: 'aviso-modification-certificacion',
     loadChildren: () => 
@@ -298,7 +305,6 @@ const ROUTES: Routes = [
         (m) => m.AvisoTesoreriaModule
       ),
   },
-
   {
     path: 'aviso-certificacion',
     loadChildren: () =>
@@ -318,6 +324,29 @@ const ROUTES: Routes = [
     loadChildren: () => 
       import('./tramites/32604/empresas-comercializadoras.module').then(
         (m) => m.EmpresasComercializadorasModule)
+  },
+  {
+    path: 'rubro-transporte-ferroviario',
+    loadChildren: () => 
+      import('./tramites/32613/rubro-transporte-ferroviario.module').then((m) => m.RubroTransporteFerroviarioModule)
+  },
+  {
+      path: 'solicitud-de-registro',
+    loadChildren: () => 
+      import('./tramites/32616/solicitud-de-registro-invocar.module').then(
+        (m) => m.SolicitudDeRegistroInvocarModule)
+  },
+  {
+    path: 'registro-oae-rfe',
+    loadChildren: () =>
+      import('./tramites/32610/registro-oae-rfe.module').then(
+        (m) => m.RegistroOaeRfeModule
+      )
+  },
+  {
+    path: 'economico',
+    loadChildren: () =>
+      import('./tramites/32606/economico.module').then((m) => m.EconomicoModule),
   }
 ];
 

@@ -10,6 +10,7 @@ import { NavComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
 import { PantallasComponent } from '../pages/pantallas/pantallas.component';
 import { PantallasRoutingModule } from './pantallas-routing.module';
+import { ProtestoDecirVerdadComponent } from '../components/protesto-decir-verdad/protesto-decir-verdad.component';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TratadosComponent } from '../components/tratados/tratados.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -31,7 +32,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     DatosAdicionalesComponent,
     TratadosComponent,
     BtnContinuarComponent,
-    FirmaElectronicaComponent
+    FirmaElectronicaComponent,
+    ProtestoDecirVerdadComponent
   ]
 })
 

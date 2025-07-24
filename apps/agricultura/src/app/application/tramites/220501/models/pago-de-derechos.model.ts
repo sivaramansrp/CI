@@ -218,6 +218,36 @@ export interface Tabla {
   PaisProcedencia: string;
 
   /**
+   * Presentación de la mercancía.
+   * @type {string}
+   */
+  Presentacion?: string;
+
+  /**
+   * Cantidad de presentación de la mercancía.
+   * @type {number}
+   */
+  CantidadPresentacion?: number;
+
+  /**
+   * Tipo de presentación de la mercancía.
+   * @type {string}
+   */
+  TipoPresentacion?: string;
+
+  /**
+   * Tipo de planta de la mercancía.
+   * @type {string}
+   */
+  TipoPlanta?: string;
+
+  /**
+   * Planta autorizada de origen de la mercancía.
+   * @type {string}
+   */
+  PlantaAutorizadaOrigen?: string;
+
+  /**
    * Certificado internacional electrónico asociado a la mercancía.
    * @type {string}
    */
