@@ -35,7 +35,7 @@
   "numeroRegistro":"valor ficticio",
   "fechaCaducidad":"valor ficticio",
   "cumplimientoc":"valor ficticio",
-  "rfc ":"XAXX010101000",
+  "rfc":"XAXX010101000",
   "nombre":"11111",
   "apellidoPaterno":"valor ficticio",
   "apellidoMaterno":"valor ficticio",
@@ -44,5 +44,6 @@
   "Llave":"valor ficticio",
   "banco":"1",
   "importe":"1000",
-  "deFetch":"1-2-2025"
+  "deFetch":"01/02/2025",
+  "mensaje": true
 }

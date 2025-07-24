@@ -48,3 +48,10 @@ export const PAISSELECTDATA = [
     'Código postal',
     'Colonia o equivalente',
   ];
+
+ export const TERCEROS_DATAS = [
+  { id: 1, descripcion: 'AGUASCALIENTES'},
+  { id: 2, descripcion: 'BAJA CALIFORNIA' },
+  { id: 3, descripcion: 'BAJA CALIFORNIA SUR' },
+  { id: 4, descripcion: 'CAMPECHE' }
+];

@@ -29,9 +29,10 @@ import tipoPersonaoptions from '@libs/shared/theme/assets/json/260211/tipoPerson
 
 import {Subject, map,takeUntil } from 'rxjs';
 
-import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA, MUNICIPIOSELECTDATA, PAISSELECTDATA, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '@libs/shared/data-access-user/src/core/enums/260906/permiso.enum';
-import { Solicitud260211State, Tramite260211Store } from '../../../../estados/tramites/tramite260211.store';
-import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
+import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA, MUNICIPIOSELECTDATA, PAISSELECTDATA, TERCEROS_DATAS, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '@libs/shared/data-access-user/src/core/enums/260906/permiso.enum';
+
+import { Terceros260211State, Terceros260211Store } from '../../../../estados/tramites/terceros260211.store';
+import { Terceros260211Query } from '../../../../estados/queries/terceros260211.query';
 
 
  
@@ -51,7 +52,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
     /**
      * Estado de la solicitud obtenido desde el store.
      */
-    public solicitudStates!: Solicitud260211State;
+    public solicitudStates!: Terceros260211State;
     /**
      * Notificador para destruir observables y evitar memory leaks.
      * @private
@@ -146,7 +147,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    *
    * @description Este arreglo almacena los datos generales para los selectores.
    */
-  dropdownData: Catalogo[] = [];
+  dropdownData: Catalogo[] = TERCEROS_DATAS;
 
   /**
    * Datos para el dropdown de países.
@@ -243,9 +244,8 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
     private fb: FormBuilder,
     private Sanitario260215Store:Sanitario260215Store,
     private service: SanitarioService,
-     private consultaioQuery: ConsultaioQuery,
-       private tramite260211Store: Tramite260211Store,
-         private tramite260211Query: Tramite260211Query,
+     private consultaioQuery: ConsultaioQuery,     
+     private terceros260211Query: Terceros260211Query,
   ) {
      /**
          * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -271,15 +271,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
   ngOnInit(): void {
-      this.inicializarEstadoFormulario();
-       
-    /**
-     * Obtiene los datos para los selectores desde el servicio de terceros.
-     * Actualiza la propiedad `dropdownData` con los datos obtenidos.
-     */
-    this.service.getData().subscribe((data) => {
-      this.dropdownData = data;
-    });
+    this.inicializarEstadoFormulario();
 
     /**
      * Inicializa los formularios reactivos para agregar terceros.
@@ -305,7 +297,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
  * Inicializa el formulario con los grupos de formularios para agregar fabricantes, destinatarios, proveedores y facturadores.
  */
  inicializarFormulario(): void {
-     this.tramite260211Query.selectSolicitud$
+     this.terceros260211Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -351,16 +343,16 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
       /**
        * Nacionalidad del tercero.
        */
-      tercerosNacionalidad: new FormControl('', [Validators.required]),
+      tercerosNacionalidad: new FormControl(this.solicitudStates.tercerosNacionalidad, [Validators.required]),
       /**
        * Tipo de persona (física o moral).
        */
-      tipoPersona: new FormControl('', [Validators.required]),
+      tipoPersona: new FormControl(this.solicitudStates.tipoPersona, [Validators.required]),
       /**
        * RFC del tercero.
        * Requiere validación adicional mediante `rfcValidator`.
        */
-      rfc: new FormControl('', [
+      rfc: new FormControl(this.solicitudStates.rfc, [
         Validators.required,
         TercerosRelacionadoesComponent.rfcValidator,
       ]),
@@ -368,7 +360,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
        * CURP del tercero.
        * Requiere validación adicional mediante `curpValidator`.
        */
-      curp: new FormControl('', [
+      curp: new FormControl(this.solicitudStates.curp, [
         Validators.required,
         TercerosRelacionadoesComponent.curpValidator,
       ]),
@@ -376,96 +368,96 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
        * Control del formulario para el nombre del usuario.
        * Este campo es obligatorio.
        */
-      nombre: new FormControl('', [Validators.required]),
+      nombre: new FormControl(this.solicitudStates.nombre, [Validators.required]),
       /**
        * Control del formulario para el primer apellido del usuario.
        * Este campo es obligatorio.
        */
-      primerApellido: new FormControl('', [Validators.required]),
+      primerApellido: new FormControl(this.solicitudStates.primerApellido, [Validators.required]),
       /**
        * Control del formulario para el segundo apellido del usuario.
        * Este campo es obligatorio.
        */
-      segundoApellido: new FormControl('', [Validators.required]),
+      segundoApellido: new FormControl(this.solicitudStates.segundoApellido, [Validators.required]),
       /**
        * Denominación o razón social del tercero.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl(this.solicitudStates.denominacionRazonSocial, [Validators.required]),
       /**
        * País del tercero.
        * Requiere validación adicional mediante `requiredPaisValidator`.
        */
-      pais: new FormControl('', [
+      pais: new FormControl(this.solicitudStates.pais, [
         Validators.required,
         TercerosRelacionadoesComponent.requiredPaisValidator,
       ]),
       /**
        * Estado o localidad del tercero.
        */
-      estadoLocalidad: new FormControl('', [Validators.required]),
+      estadoLocalidad: new FormControl(this.solicitudStates.estadoLocalidad, [Validators.required]),
       /**
        * Municipio o alcaldía del tercero.
        */
-      municipioAlcaldia: new FormControl('', [Validators.required]),
+      municipioAlcaldia: new FormControl(this.solicitudStates.municipioAlcaldia, [Validators.required]),
       /**
        * Localidad del tercero.
        */
-      localidad: new FormControl(''),
+      localidad: new FormControl(this.solicitudStates.localidad),
       /**
        * Entidad federativa del tercero.
        */
-      entidadFederativa: new FormControl('', [Validators.required]),
+      entidadFederativa: new FormControl(this.solicitudStates.entidadFederativa, [Validators.required]),
       /**
        * Código postal del tercero.
        */
-      codigoPostaloEquivalente: new FormControl('', [Validators.required]),
+      codigoPostaloEquivalente: new FormControl(this.solicitudStates.codigoPostaloEquivalente, [Validators.required]),
       /**
        * Colonia del tercero.
        */
-      colonia: new FormControl(''),
+      colonia: new FormControl(this.solicitudStates.colonia),
       /**
        * Colonia equivalente del tercero.
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl(this.solicitudStates.coloniaoEquivalente),
       /**
        * Calle del tercero.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl(this.solicitudStates.calle, [Validators.required]),
       /**
        * Número exterior del tercero.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl(this.solicitudStates.numeroExterior, [Validators.required]),
       /**
        * Número interior del tercero.
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl(this.solicitudStates.numeroInterior),
       /**
        * Lada del tercero.
        */
-      lada: new FormControl(''),
+      lada: new FormControl(this.solicitudStates.lada),
       /**
        * Teléfono del tercero.
        * Requiere validación adicional mediante `telefonoValidator`.
        */
-      telefono: new FormControl('', [
+      telefono: new FormControl(this.solicitudStates.telefono, [
         TercerosRelacionadoesComponent.telefonoValidator,
       ]),
       /**
        * Correo electrónico del tercero.
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl(this.solicitudStates.correoElectronico),
       /**
        * Código del extranjero.
        */
-      extranjeroCodigo: new FormControl('', [Validators.required]),
+      extranjeroCodigo: new FormControl(this.solicitudStates.extranjeroCodigo, [Validators.required]),
       /**
        * Estado del extranjero.
        */
-      extranjeroEstado: new FormControl('', [Validators.required]),
+      extranjeroEstado: new FormControl(this.solicitudStates.extranjeroEstado, [Validators.required]),
       /**
        * Colonia del extranjero.
        */
-      extranjeroColonia: new FormControl('', [Validators.required]),
+      extranjeroColonia: new FormControl(this.solicitudStates.extranjeroColonia, [Validators.required]),
     });
 
     // Deshabilita campos hasta que se seleccione el tipo de persona
@@ -498,77 +490,77 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
       /**
        * Tipo de persona (física o moral).
        */
-      tipoPersona: new FormControl('', [Validators.required]),
+      tipoPersona: new FormControl(this.solicitudStates.tipoPersona, [Validators.required]),
       /**
        * RFC del destinatario.
        */
-      rfc: new FormControl('', [Validators.required]),
+      rfc: new FormControl(this.solicitudStates.rfc, [Validators.required]),
       /**
        * CURP del destinatario.
        */
-      curp: new FormControl('', [Validators.required]),
+      curp: new FormControl(this.solicitudStates.curp, [Validators.required]),
       /**
        * Denominación o razón social del destinatario.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl(this.solicitudStates.denominacionRazonSocial, [Validators.required]),
       /**
        * País del destinatario.
        */
-      pais: new FormControl('', [Validators.required]),
+      pais: new FormControl(this.solicitudStates.pais, [Validators.required]),
       /**
        * Estado o localidad del destinatario.
        */
-      estadoLocalidad: new FormControl('', [Validators.required]),
+      estadoLocalidad: new FormControl(this.solicitudStates.estadoLocalidad, [Validators.required]),
       /**
        * Municipio o alcaldía del destinatario.
        */
-      municipioAlcaldia: new FormControl('', [Validators.required]),
+      municipioAlcaldia: new FormControl(this.solicitudStates.municipioAlcaldia, [Validators.required]),
       /**
        * Localidad del destinatario.
        */
-      localidad: new FormControl(''),
+      localidad: new FormControl(this.solicitudStates.localidad),
       /**
        * Entidad federativa del destinatario.
        */
-      entidadFederativa: new FormControl('', [Validators.required]),
+      entidadFederativa: new FormControl(this.solicitudStates.entidadFederativa, [Validators.required]),
       /**
        * Código postal del destinatario.
        */
-      codigoPostaloEquivalente: new FormControl('', [Validators.required]),
+      codigoPostaloEquivalente: new FormControl(this.solicitudStates.codigoPostaloEquivalente, [Validators.required]),
       /**
        * Colonia del destinatario.
        */
-      colonia: new FormControl(''),
+      colonia: new FormControl(this.solicitudStates.colonia),
       /**
        * Colonia equivalente del destinatario.
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl(this.solicitudStates.coloniaoEquivalente),
       /**
        * Calle del destinatario.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl(this.solicitudStates.calle, [Validators.required]),
       /**
        * Número exterior del destinatario.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl(this.solicitudStates.numeroExterior, [Validators.required]),
       /**
        * Número interior del destinatario.
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl(this.solicitudStates.numeroInterior),
       /**
        * Lada del destinatario.
        */
-      lada: new FormControl(''),
+      lada: new FormControl(this.solicitudStates.lada),
       /**
        * Teléfono del destinatario.
        */
-      telefono: new FormControl('', [
+      telefono: new FormControl(this.solicitudStates.telefono, [
         TercerosRelacionadoesComponent.telefonoValidator,
       ]),
       /**
        * Correo electrónico del destinatario.
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl(this.solicitudStates.correoElectronico),
     });
 
     // Deshabilita campos hasta que se seleccione el tipo de persona
@@ -601,65 +593,65 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
       /**
        * Tipo de persona (física o moral).
        */
-      tipoPersona: new FormControl('', [Validators.required]),
+      tipoPersona: new FormControl(this.solicitudStates.tipoPersona, [Validators.required]),
       /**
        * Nombre del proveedor.
        */
-      nombre: new FormControl('', [Validators.required]),
+      nombre: new FormControl(this.solicitudStates.nombre, [Validators.required]),
       /**
        * Primer apellido del proveedor.
        */
-      primerApellido: new FormControl('', [Validators.required]),
+      primerApellido: new FormControl(this.solicitudStates.primerApellido, [Validators.required]),
       /**
        * Denominación o razón social del proveedor.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl(this.solicitudStates.denominacionRazonSocial, [Validators.required]),
       /**
        * Segundo apellido del proveedor (opcional).
        */
-      segundoApellido: new FormControl(''),
+      segundoApellido: new FormControl(this.solicitudStates.segundoApellido),
       /**
        * País del proveedor.
        */
-      pais: new FormControl('', [Validators.required]),
+      pais: new FormControl(this.solicitudStates.pais, [Validators.required]),
       /**
        * Estado del proveedor.
        */
-      estado: new FormControl('', [Validators.required]),
+      estado: new FormControl(this.solicitudStates.estado, [Validators.required]),
       /**
        * Código postal del proveedor (opcional).
        */
-      codigoPostaloEquivalente: new FormControl(''),
+      codigoPostaloEquivalente: new FormControl(this.solicitudStates.codigoPostaloEquivalente),
       /**
        * Colonia equivalente del proveedor (opcional).
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl(this.solicitudStates.coloniaoEquivalente),
       /**
        * Calle del proveedor.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl(this.solicitudStates.calle, [Validators.required]),
       /**
        * Número exterior del proveedor.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl(this.solicitudStates.numeroExterior, [Validators.required]),
       /**
        * Número interior del proveedor (opcional).
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl(this.solicitudStates.numeroInterior),
       /**
        * Lada del proveedor (opcional).
        */
-      lada: new FormControl(''),
+      lada: new FormControl(this.solicitudStates.lada),
       /**
        * Teléfono del proveedor (opcional).
        */
-      telefono: new FormControl('', [
+      telefono: new FormControl(this.solicitudStates.telefono, [
         TercerosRelacionadoesComponent.telefonoValidator,
       ]),
       /**
        * Correo electrónico del proveedor (opcional).
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl(this.solicitudStates.correoElectronico),
     });
 
     // Deshabilita campos hasta que se seleccione el tipo de persona
@@ -692,69 +684,69 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
       /**
        * Tipo de persona (física o moral).
        */
-      tipoPersona: new FormControl('', [Validators.required]),
+      tipoPersona: new FormControl(this.solicitudStates.tipoPersona, [Validators.required]),
       /**
        * Nombre del facturador.
        */
-      nombre: new FormControl('', [Validators.required]),
+      nombre: new FormControl(this.solicitudStates.nombre, [Validators.required]),
       /**
        * Primer apellido del facturador.
        */
-      primerApellido: new FormControl('', [Validators.required]),
+      primerApellido: new FormControl(this.solicitudStates.primerApellido, [Validators.required]),
       /**
        * Denominación o razón social del facturador.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl(this.solicitudStates.denominacionRazonSocial, [Validators.required]),
       /**
        * Segundo apellido del facturador (opcional).
        */
-      segundoApellido: new FormControl(''),
+      segundoApellido: new FormControl(this.solicitudStates.segundoApellido),
       /**
        * País del facturador.
        * Requiere validación adicional mediante `requiredPaisValidator`.
        */
-      pais: new FormControl('', [
+      pais: new FormControl(this.solicitudStates.pais, [
         Validators.required,
         TercerosRelacionadoesComponent.requiredPaisValidator,
       ]),
       /**
        * Estado del facturador.
        */
-      estado: new FormControl('', [Validators.required]),
+      estado: new FormControl(this.solicitudStates.estado, [Validators.required]),
       /**
        * Código postal del facturador (opcional).
        */
-      codigoPostaloEquivalente: new FormControl(''),
+      codigoPostaloEquivalente: new FormControl(this.solicitudStates.codigoPostaloEquivalente),
       /**
        * Colonia equivalente del facturador (opcional).
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl(this.solicitudStates.coloniaoEquivalente),
       /**
        * Calle del facturador.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl(this.solicitudStates.calle, [Validators.required]),
       /**
        * Número exterior del facturador.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl(this.solicitudStates.numeroExterior, [Validators.required]),
       /**
        * Número interior del facturador (opcional).
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl(this.solicitudStates.numeroInterior),
       /**
        * Lada del facturador (opcional).
        */
-      lada: new FormControl(''),
+      lada: new FormControl(this.solicitudStates.lada),
       /**
        * Teléfono del facturador (opcional).
        */
-      telefono: new FormControl('', [
+      telefono: new FormControl(this.solicitudStates.telefono, [
         TercerosRelacionadoesComponent.telefonoValidator,
       ]),
       /**
        * Correo electrónico del facturador (opcional).
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl(this.solicitudStates.correoElectronico),
     });
 
     // Deshabilita campos hasta que se seleccione el tipo de persona
