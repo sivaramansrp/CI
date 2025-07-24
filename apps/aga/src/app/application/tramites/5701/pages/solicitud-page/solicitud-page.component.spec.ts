@@ -290,6 +290,57 @@ describe('SolicitudPageComponent', () => {
 
   it('getValorIndice should call enviaSolicitudRequest and handle success', () => {
     component.indice = 1;
+    // Asegúrate de que solicitudState tenga todas las propiedades de tipo array inicializadas
+    component.solicitudState = {
+      personasResponsablesDespacho: [],
+      pedimentos: [],
+      transporteArriboDatos: [],
+      transporte: [],
+      selectRangoDias: [],
+      idSolicitud: 0,
+      RFCImportadorExportador: 'RFC',
+      nombre: 'Empresa',
+      industriaAutomotriz: false,
+      descripcionIndustrialAutomotriz: '',
+      programa: '',
+      descripcionProgramaFomento: '',
+      checkIMMEX: false,
+      descripcionImmex: '',
+      descripcionNumeroRegistro: '',
+      tipoEmpresaCertificada: '',
+      socioComercial: '',
+      idSocioComercial: '',
+      certificacionOEA: false,
+      revision: false,
+      aduanaDespacho: 850,
+      idSeccionDespacho: '1',
+      lda: false,
+      autorizacionLDA: '',
+      dd: false,
+      autorizacionDDEX: '',
+      descripcionTipoDespacho: '',
+      nombreRecinto: '',
+      domicilioDespacho: '',
+      especifique: '',
+      fechaInicio: '',
+      fechaFinal: '',
+      horaInicio: '',
+      horaFinal: '',
+      tipoOperacion: '',
+      encargoConferido: false,
+      relacionSociedad: false,
+      tipoSolicitud: '',
+      descripcionTipoSolicitud: '',
+      patente: { patente: '1234' },
+      lineaCaptura: '',
+      monto: '0',
+      paisOrigen: 1,
+      descripcionGenerica: '',
+      justificacion: '',
+      paisProcedencia: 1,
+      tipoTransporteArriboSalida: '1',
+      tipoTransporte: '1'
+    } as any;
     (component as any).enviaSolicitudRequest = jest.fn().mockReturnValue(of(true));
     component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() } as any;
     component.getValorIndice({ accion: 'cont', valor: 2 });
