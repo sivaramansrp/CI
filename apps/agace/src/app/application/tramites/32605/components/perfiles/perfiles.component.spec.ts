@@ -45,86 +45,85 @@ describe('PerfilesComponent', () => {
     component = fixture.componentInstance;
     store = TestBed.inject(Solicitud32605Store);
     query = TestBed.inject(Solicitud32605Query);
-    // Assign the mock store to the property used in the component if needed
+    // Asigna el mock del store a la propiedad utilizada en el componente si es necesario
     (component as any).tramite32605Store = store;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente correctamente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
+  it('debe inicializar el formulario en ngOnInit', () => {
     component.ngOnInit();
-    // Use the same component instance for assertions
     expect(component.profileForm).toBeDefined();
   });
 
-  it('should toggle mostrarContenido', () => {
+  it('debe alternar el valor de mostrarContenido', () => {
     expect(component.mostrarContenido).toBe(false);
     component.alternarContenido();
     expect(component.mostrarContenido).toBe(true);
   });
 
-  it('should toggle mostrarSeguridad', () => {
+  it('debe alternar el valor de mostrarSeguridad', () => {
     expect(component.mostrarSeguridad).toBe(false);
     component.alternarSeguridad();
     expect(component.mostrarSeguridad).toBe(true);
   });
 
-  it('should update antiguedad in the store', () => {
+  it('debe actualizar antiguedad en el store', () => {
     component.profileForm.get('antiguedad')?.setValue('antiguedad');
     component.actualizarAntiguedad();
     expect(store.actualizarEstado).toHaveBeenCalledWith({"perfiles": {"antiguedad": "antiguedad"}});
   });
 
-  it('should update productos in the store', () => {
+  it('debe actualizar productos en el store', () => {
     component.profileForm.get('productos')?.setValue('New Product');
     component.actualizarProductos();
     expect(store.actualizarEstado).toHaveBeenCalledWith( {"perfiles": {"productos": "New Product"}});
   });
 
-  it('should update embarquesExp in the store', () => {
+  it('debe actualizar embarquesExp en el store', () => {
     component.profileForm.get('embarquesExp')?.setValue('20');
     component.actualizarEmbarquesExp();
     expect(store.actualizarEstado).toHaveBeenCalledWith({"perfiles": {"embarquesExp": "20"}});
   });
 
-  it('should update embarquesImp in the store', () => {
+  it('debe actualizar embarquesImp en el store', () => {
     component.profileForm.get('embarquesImp')?.setValue('25');
     component.actualizarEmbarquesImp();
     expect(store.actualizarEstado).toHaveBeenCalledWith({"perfiles": {"embarquesImp": "25"}});
   });
 
-  it('should update empleados in the store', () => {
+  it('debe actualizar empleados en el store', () => {
     component.profileForm.get('empleados')?.setValue('100');
     component.actualizarEmpleados();
     expect(store.actualizarEstado).toHaveBeenCalledWith({"perfiles": {"empleados": "100"}}
 );
   });
 
-  it('should update superficie in the store', () => {
+  it('debe actualizar superficie en el store', () => {
     component.profileForm.get('superficie')?.setValue('2000 m2');
     component.actualizarSuperficie();
     expect(store.actualizarEstado).toHaveBeenCalledWith({"perfiles": {"superficie": "2000 m2"}});
   });
 
-  it('should set vigencia in the store', () => {
+  it('debe establecer vigencia en el store', () => {
     component.seleccionarVigenciaUno('2026');
     expect(store.actualizarEstado).toHaveBeenCalledWith({"perfiles": {"vigencia": "2026"}});
   });
 
-  it('should set vigenciaDos in the store', () => {
+  it('debe establecer vigenciaDos en el store', () => {
     component.seleccionarVigenciaDos('2027');
     expect(store.actualizarEstado).toHaveBeenCalledWith({"perfiles": {"vigencia2": "2027"}});
   });
 
-  it('should set vigenciaTres in the store', () => {
+  it('debe establecer vigenciaTres en el store', () => {
     component.seleccionarVigenciaTres('2028');
     expect(store.actualizarEstado).toHaveBeenCalledWith({"perfiles": {"vigencia3": "2028"}});
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();

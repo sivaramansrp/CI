@@ -36,7 +36,7 @@ describe('PasoTresComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente correctamente', () => {
     expect(component).toBeTruthy();
   });
   it('should navigate to acuse page on valid firma', () => {

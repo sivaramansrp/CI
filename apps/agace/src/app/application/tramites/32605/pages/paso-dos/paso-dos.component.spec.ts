@@ -43,7 +43,7 @@ describe('PasoDosComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
+  it('debe crear el componente correctamente', () => {
     expect(component).toBeTruthy();
   });
 

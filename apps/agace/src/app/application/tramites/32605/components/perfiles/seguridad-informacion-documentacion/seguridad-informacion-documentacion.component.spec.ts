@@ -17,7 +17,7 @@ describe('SeguridadInformacionDocumentacionComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente correctamente', () => {
     expect(component).toBeTruthy();
   });
 });

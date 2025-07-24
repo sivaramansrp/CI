@@ -41,7 +41,7 @@ describe('SolicitudPageComponent', () => {
     component.wizardComponent = wizardMock;
   });
 
-  it('should create', () => {
+  it('debe crear el componente correctamente', () => {
     expect(component).toBeTruthy();
   });
 
