@@ -7,7 +7,7 @@ import { Solicitud32614MensajeriaState, Tramite32614MensajeriaStore} from '../..
 import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ElementRef } from '@angular/core';
 import { FECHA_DE_FACTURA } from '@libs/shared/data-access-user/src/tramites/constantes/32614/datos-comunes.enum';
 import { FECHA_DE_INICIO } from '../../constants/solicitud.enum';
@@ -34,6 +34,7 @@ import { TRANSPORTISTAS_CONFIGURACION } from '../../constants/solicitud.enum';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { Tramite32614MensajeriaQuery } from '../../estados/queries/mensajeria.query';
 import { TransportistasTable } from '../../models/solicitud.model';
 import { Validators } from '@angular/forms';
 import { ViewChild } from '@angular/core';
@@ -138,7 +139,8 @@ export class ParqueIndustrialComponent implements OnInit, OnDestroy {
     public solicitud32614Store: Solicitud32614Store,
     public solicitud32614Query: Solicitud32614Query,
     public consultaioQuery: ConsultaioQuery,
-    private tramite32614Store: Tramite32614MensajeriaStore
+    private tramite32614Store: Tramite32614MensajeriaStore,
+    private tramite32614MensajeriaQuery: Tramite32614MensajeriaQuery
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -164,7 +166,15 @@ export class ParqueIndustrialComponent implements OnInit, OnDestroy {
    * Método llamado al inicializar el componente, configura el formulario con los valores del estado de solicitud
    */
   ngOnInit(): void {
-    this.inicializarEstadoFormulario();
+        this.tramite32614MensajeriaQuery.selectSolicitud$
+          .pipe(
+            takeUntil(this.destroy$),
+            map((seccionState) => {
+              this.solicitudState = seccionState;
+              this.inicializarEstadoFormulario();
+            })
+          )
+          .subscribe();
   }
 
   /**
@@ -301,24 +311,6 @@ export class ParqueIndustrialComponent implements OnInit, OnDestroy {
       importePago: [this.solicitudState?.importePago, Validators.required],
     });
 
-    this.solicitud32614Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((respuesta: Solicitud32614State) => {
-          this.solicitud32614State = respuesta;
-          this.parqueIndustrialForm.patchValue({
-            '2042': this.solicitud32614State[2042],
-            '2043': this.solicitud32614State[2043],
-            '2044': this.solicitud32614State[2044],
-            fechaInicioComercio: this.solicitud32614State.fechaInicioComercio,
-            fechaPago: this.solicitud32614State.fechaPago,
-            monto: this.solicitud32614State.monto,
-            operacionesBancarias: this.solicitud32614State.operacionesBancarias,
-            llavePago: this.solicitud32614State.llavePago,
-          });
-        })
-      )
-      .subscribe();
   }
 
   /**

@@ -64,6 +64,7 @@ constructor(private consultaQuery: ConsultaioQuery,private solicitudDeRegistroIn
         this.guardarDatosperfilesMensajerias();
         this.guardarDatosTercerosStore();
         this.guardarDatostramite32614DataStore();
+        this.guardarDatosMensajerias();
       } else {
         this.esDatosRespuesta = true;
       }

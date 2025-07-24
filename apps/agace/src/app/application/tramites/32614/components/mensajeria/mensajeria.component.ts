@@ -17,10 +17,8 @@ import {
 } from '@angular/core';
 import {
   Catalogo,
-  CatalogoSelectComponent,
   ConfiguracionColumna,
   InputFecha,
-  InputFechaComponent,
   InputRadioComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -58,8 +56,6 @@ import productivo from '@libs/shared/theme/assets/json/32614/productivo.json';
     InputRadioComponent,
     TituloComponent,
     TablaDinamicaComponent,
-    CatalogoSelectComponent,
-    InputFechaComponent,
   ],
   templateUrl: './mensajeria.component.html',
   styleUrl: './mensajeria.component.scss',
