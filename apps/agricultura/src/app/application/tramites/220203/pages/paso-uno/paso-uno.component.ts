@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosParaMovilizacionComponent } from '../../components/datos-para-movilizacion/datos-para-movilizacion.component';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import{SolicitanteComponent} from '@libs/shared/data-access-user/src'
 import { TercerospageComponent } from '../../components/tercerospage/tercerospage.component';
 
 
@@ -147,6 +148,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     this.consultaQuery.selectConsultaioState$
     .pipe(takeUntil(this.DESTROY_NOTIFIER$))
     .subscribe((seccionState) => {
+      console.log(seccionState);
       if(seccionState.update){
               this.guardarDatosFormulario();
       }

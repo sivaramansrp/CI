@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { FormularioMovilizacion } from '../../models/220203/importacion-de-acuicultura.module';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';

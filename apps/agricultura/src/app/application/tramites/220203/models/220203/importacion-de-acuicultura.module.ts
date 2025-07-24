@@ -407,7 +407,6 @@ export interface Fila {
  * @property {string} proveedor - Nombre del proveedor.
  */
 export interface FilaSolicitud {
-  solicitud: string;
   fechaCreacion: string;
   mercancia: string;
   cantidad: number;

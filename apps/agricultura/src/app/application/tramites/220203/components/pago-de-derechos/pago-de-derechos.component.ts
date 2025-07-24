@@ -1,8 +1,9 @@
-import {Catalogo, ConsultaioQuery} from '@ng-mf/data-access-user';
 import {ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import {Catalogo} from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { PagoDeDerecho } from '../../../../shared/models/tercerosrelacionados.model';
 import { PagoDeDerechoComponent } from '../../../../shared/components/pago-de-derecho/pago-de-derecho.component';

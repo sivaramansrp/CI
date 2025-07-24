@@ -128,6 +128,9 @@ export class ImportacionDeAcuiculturaService {
     this.actualizarPagoDeDerechos(DATOS.pagoDeDerechos);
     this.actualizarFormularioMovilizacion(DATOS.formularioMovilizacion);
     this.actualizarDatosMercancia(DATOS.realizarGroup);
+    this.acuiculturaStore.actualizarMercanciaGroup(DATOS.mercanciaGroup);
+    this.acuiculturaStore.updateTercerosRelacionados(DATOS.tercerosRelacionados);
+    this.acuiculturaStore.updatedatosForma(DATOS.datosForma);
   }
 
 

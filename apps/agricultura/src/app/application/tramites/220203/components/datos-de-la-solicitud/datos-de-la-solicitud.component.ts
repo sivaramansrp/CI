@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { DatoTabla, Fila, FilaSolicitud, RealizarGroup } from '../../models/220203/importacion-de-acuicultura.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuicultura.enum';
 import { MercanciaSolicitudComponent } from '../mercancia-solicitud/mercancia-solicitud.component';
@@ -281,7 +282,26 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    * @type {FilaSolicitud[]}
    * @memberof DatosDeLaSolicitudComponent
    */
-  cuerpoTabla: FilaSolicitud[] = [];
+  cuerpoTabla: FilaSolicitud[] = [
+    {
+      fechaCreacion: '2024-06-01',
+      mercancia: 'Camarón',
+      cantidad: 1000,
+      proveedor: 'Proveedor A'
+    },
+    {
+      fechaCreacion: '2024-06-02',
+      mercancia: 'Tilapia',
+      cantidad: 500,
+      proveedor: 'Proveedor B'
+    },
+    {
+      fechaCreacion: '2024-06-03',
+      mercancia: 'Ostión',
+      cantidad: 750,
+      proveedor: 'Proveedor C'
+    }
+  ];
 
   /**
    * Datos de la mercancía almacenados en el store del componente.
