@@ -132,8 +132,6 @@ export class CTPATComponent implements OnInit, OnDestroy {
       this.ctpatForm.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.ctpatForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
     }
   }
 
@@ -248,15 +246,9 @@ export class CTPATComponent implements OnInit, OnDestroy {
       'operacionesBancarias'
     )?.value;
     const LLAVEPAGO = this.ctpatForm.get('llavePago')?.value;
-
-    // Check if any payment field is empty
     const CAMPOS_VACIOS =
-      !FECHADEPAGE || !MONTO || !OPERACIONESBANCARIAS || !LLAVEPAGO;
-
-    // Show error if any required payment field is empty
+    !FECHADEPAGE || !MONTO || !OPERACIONESBANCARIAS || !LLAVEPAGO;
     this.mostrarError = CAMPOS_VACIOS;
-
-    // Mark payment fields as touched to show individual field errors when validation fails
     if (CAMPOS_VACIOS) {
       this.ctpatForm.get('fechaDePago')?.markAsTouched();
       this.ctpatForm.get('monto')?.markAsTouched();
