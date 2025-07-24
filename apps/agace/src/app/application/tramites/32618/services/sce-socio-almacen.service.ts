@@ -16,7 +16,7 @@ export class RubroTransporteFerrovarioService {
  * @description
  * Constructor del servicio  `RubroTransporteFerrovarioService`.
  * @param {HttpClient} http - Servicio de Angular para realizar solicitudes HTTP.
- * @param {Tramite32613Store} tramite32613Store - Store para manejar el estado del trámite 32613.
+ * 
  */
   constructor(private http: HttpClient, private tramite32618Store: Tramite32618Store) {
     // Lógica de inicialización si es necesario

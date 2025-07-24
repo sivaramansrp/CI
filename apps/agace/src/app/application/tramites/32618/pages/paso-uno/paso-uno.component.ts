@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosComunesTresService } from '../../../../shared/services/datos-comunes-tres.service';
+// eslint-disable-next-line sort-imports
 import { Subject, map, takeUntil } from 'rxjs';
 import { SolicitanteComponent} from '@libs/shared/data-access-user/src';
 
@@ -52,7 +53,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
         )
         .subscribe();
       if (this.consultaState.update) {
-      //  this.guardarDatosFormulario();
+       this.guardarDatosFormulario();
       } else {
         this.esDatosRespuesta = true;
       }
