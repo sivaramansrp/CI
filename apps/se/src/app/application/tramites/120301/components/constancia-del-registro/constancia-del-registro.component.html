@@ -32,6 +32,10 @@
               [label]="'Año de la Constancia de registro'"
               [required]="true"
               [isDisabled]="formularioDeshabilitado"
+              [primerOptionValue]="-1"
+              [placeholder]="'Seleccione un año'"
+              (change)="onAnoConstanciaChangeFromSelect($event)"
+              (selectionChange)="onAnoConstanciaChange($event)"
             ></app-catalogo-select>
               @if (fitosanitarioForm.get('anoDeLaConstancia')?.touched && fitosanitarioForm.get('anoDeLaConstancia')?.invalid) {
                 <div class="text-danger">
@@ -80,7 +84,6 @@
               <div class="form-group">
                 <label class="form-label" for="estado">Estado:</label>
                 <input
-                  value=""
                   class="form-control"
                   id="estado"
                   placeholder=""
@@ -104,7 +107,6 @@
                   >Representación federal:</label
                 >
                 <input
-                  value=""
                   class="form-control"
                   id="representacionFederal"
                   placeholder=""
@@ -131,7 +133,6 @@
                   >Fracción arancelaria:</label
                 >
                 <input
-                  value=""
                   class="form-control"
                   id="fraccionArancelaria"
                   placeholder=""
@@ -315,7 +316,6 @@
               <div class="form-group">
                 <label class="form-label" for="PaisDestino">País destino/origen:</label>
                 <input
-                  value=""
                   class="form-control"
                   id="PaisDestino"
                   placeholder=""

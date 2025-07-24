@@ -1,8 +1,8 @@
+import { RespuestaCatalog, RespuestaConsulta } from "../models/datos-tramite.model";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { RespuestaCatalogos } from "@libs/shared/data-access-user/src";
-import { RespuestaConsulta } from "../models/datos-tramite.model";
 import { RespuestaContenedor } from "../models/datos-tramite.model";
 
 /**
@@ -50,8 +50,8 @@ export class DatosTramiteService {
    * Obtiene los datos para mostrar en la tabla.
    * @returns Un observable con la respuesta de los catálogos de datos de la tabla.
    */
-  getDatosTableData(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>(`assets/json/11204/datosTabla.json`);
+  getDatosTableData(): Observable<RespuestaCatalog[]> {
+    return this.http.get<RespuestaCatalog[]>(`assets/json/11204/datosTabla.json`);
   }
 
   /**

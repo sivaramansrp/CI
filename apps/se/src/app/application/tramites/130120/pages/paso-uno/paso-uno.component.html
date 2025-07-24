@@ -5,7 +5,7 @@
             <a data-toggle="tab" (click)="seleccionaTab(1)">Solicitante</a>
         </li>
         <li [ngClass]="indice === 2 ? 'active' : ''">
-            <a data-toggle="tab" (click)="seleccionaTab(2)">Datos de la solicitud</a>
+            <a data-toggle="tab" (click)="seleccionaTab(2)">Datos generales</a>
         </li>
       </ul>
   
@@ -18,7 +18,7 @@
           }
           @case (2) {
               @if(esDatosRespuesta){
-                <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
+                <app-datos-generales></app-datos-generales>
               }
           }
         }

@@ -21,7 +21,11 @@ const mockProsecState: ProsecState = {
   contribuyentes: 'ABC123XYZ',
   domiciliosFormaValida: false,
   productorFromValida: false,
-  sectoresFromValida: false
+  sectoresFromValida: false,
+  sectorDatos: [],
+  producirDatos: [],
+  plantasDatos: [],
+  productorDatos: []
 };
 
 class MockAUtorizacionProsecQuery {

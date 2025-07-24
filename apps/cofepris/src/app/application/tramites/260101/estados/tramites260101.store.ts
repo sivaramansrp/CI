@@ -1033,7 +1033,7 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
       ...state,
       destinatarioDatos: state.destinatarioDatos.filter(
         (destinatario) => destinatario.rfc !== destinatarioToRemove.rfc
-      ),
+      )
     }));
   }
 

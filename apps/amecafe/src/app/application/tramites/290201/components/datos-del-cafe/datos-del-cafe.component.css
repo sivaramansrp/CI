@@ -2,3 +2,10 @@
     max-width: 95%; 
     width: 95%;     
   }
+  .form-check-label {
+    font-weight: normal;
+  }
+
+  .is-invalid {
+    border: 1px solid red;
+  }

@@ -213,12 +213,12 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   public crearEnlaceOperativoForm(): void {
     this.enlaceOperativoForm = this.fb.group({
         resigtro: ['', Validators.required],
-        irfc: ['', Validators.required],
-        inombre: ['', Validators.required],
-        apellidoPaterno: ['', Validators.required],
-        apellidoMaterno: ['', Validators.required],
+        irfc: [{ value: '', disabled: true }, Validators.required],
+        inombre: [{ value: '', disabled: true }, Validators.required],
+        apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
+        apellidoMaterno: [{ value: '', disabled: true }, Validators.required],
         cargo: ['', Validators.required],
-        cuidad: ['', Validators.required],
+        cuidad: [{ value: '', disabled: true }, Validators.required],
         telefono: ['', Validators.required],
         correo: ['', Validators.required],
         suplente: ['', Validators.required],

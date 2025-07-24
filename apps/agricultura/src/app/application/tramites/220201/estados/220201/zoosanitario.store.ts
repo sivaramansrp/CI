@@ -1,11 +1,12 @@
-import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { PersonaTerceros } from '@libs/shared/data-access-user/src';
+import { Store, StoreConfig } from '@datorama/akita';
 
+import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import {
-    CapturarSolicitud,
-    DatosDeLaSolicitud,
+  CapturarSolicitud,
+  DatosDeLaSolicitud,
   DatosParaMovilizacionNacional,
+  FilaSolicitud,
   PagoDeDerechos,
   Solicitante,
   ValidarEnvio,
@@ -75,6 +76,28 @@ export class ZoosanitarioStore extends Store<CapturarSolicitud> {
   }
 
   /**
+  * Actualiza el store con los datos de movilización nacional.
+  * @method actualizarDatosParaMovilizacionNacional
+  * @param {DatosParaMovilizacionNacional} datosParaMovilizacionNacional Datos de movilización nacional.
+  */
+  public actualizarSelectedExdora(datosParaMovilizacionNacional: TercerosrelacionadosdestinoTable): void {
+    this.update(state => ({
+      ...state,
+      seletedExdora: datosParaMovilizacionNacional
+    }));
+  }
+  /**
+ * Actualiza el store con los datos de movilización nacional.
+ * @method actualizarDatosParaMovilizacionNacional
+ * @param {DatosParaMovilizacionNacional} datosParaMovilizacionNacional Datos de movilización nacional.
+ */
+  public actualizarSelectedTerceros(datosParaMovilizacionNacional: TercerosrelacionadosdestinoTable): void {
+    this.update(state => ({
+      ...state,
+      seletedTerceros: datosParaMovilizacionNacional
+    }));
+  }
+  /**
    * Actualiza el store con los datos de pago de derechos.
    * @method actualizarPagoDeDerechos
    * @param {PagoDeDerechos} pagoDeDerechos Datos del pago de derechos.
@@ -114,17 +137,52 @@ export class ZoosanitarioStore extends Store<CapturarSolicitud> {
   }
 
   /**
+  * Actualiza el store con una persona tercero relacionada.
+  * @method actualizarTercerosRelacionados
+  * @param {TercerosrelacionadosdestinoTable} nuevoTercero Persona tercero relacionada.
+  */
+  public actualizarTercerosRelacionados(nuevoTercero: TercerosrelacionadosdestinoTable): void {
+    this.update(state => ({
+      ...state,
+      tercerosRelacionados: [
+        ...state.tercerosRelacionados,
+        nuevoTercero
+      ]
+    }));
+  }
+  /**
    * Actualiza el store con la lista de terceros relacionados.
-   * @method actualizarTercerosRelacionados
-   * @param {PersonaTerceros[]} tercerosRelacionados Lista de personas terceros relacionadas.
+   * @method updateTercerosRelacionados
+   * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de personas terceros relacionadas.
    */
-  public actualizarTercerosRelacionados(tercerosRelacionados: PersonaTerceros[]): void {
+  public updateTercerosRelacionados(tercerosRelacionados: TercerosrelacionadosdestinoTable[]): void {
     this.update(state => ({
       ...state,
       tercerosRelacionados: tercerosRelacionados,
     }));
   }
-
+  /**
+   * Actualiza el store con la lista de terceros relacionados.
+   * @method updateTercerosRelacionados
+   * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de personas terceros relacionadas.
+   */
+  public updatedatosForma(tercerosRelacionados: TercerosrelacionadosdestinoTable[]): void {
+    this.update(state => ({
+      ...state,
+      datosForma: tercerosRelacionados,
+    }));
+  }
+  /**
+  * Actualiza el store con la lista de terceros relacionados.
+  * @method updateTercerosRelacionados
+  * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de personas terceros relacionadas.
+  */
+  public updateFilaSolicitud(tercerosRelacionados: FilaSolicitud[]): void {
+    this.update(state => ({
+      ...state,
+      tablaDatos: tercerosRelacionados,
+    }));
+  }
   /**
    * Restaura el estado inicial del store, limpiando toda la información almacenada.
    * @method limpiarFormulario

@@ -1,5 +1,6 @@
 <form [formGroup]="comunesDosForm">
-<div class="row mb-3">
+@if(!datosComunesObj.tieneProcedure.activo) {
+  <div class="row mb-3">
     <div class="col-md-6">
         <app-catalogo-select
             [placeholder]="'Seleccione un valor'"
@@ -14,7 +15,7 @@
 <div class="row mb-3">
     <div class="col-md-12">
         <p class="fw-bold">
-            Indique todos los domicilios registrados ante el FC del solicitante e
+            Indique todos los domicilios registrados ante el RFC del solicitante e
             indique aquellos en que se desarrollen actividades relacionadas con su
             proceso productivo y/o la prestación de servicios.
         </p>
@@ -30,9 +31,9 @@
         </app-tabla-dinamica>
     </div>
     <div class="d-flex justify-content-end mt-3 mb-4">
-        <button class="btn btn-primary me-2" (click)="abrirModal(instalacionesPrincipales)" [disabled]="esFormularioSoloLectura">Agregar</button>
-        <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
-        <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+      <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+      <button class="btn btn-primary me-2" (click)="abrirModal(instalacionesPrincipales)" [disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
 </div>
 <div class="row mt-5">
@@ -87,8 +88,8 @@
 <div class="row">
     <div class="col-md-12">
         <div class="form-group d-flex align-items-center gap-2">
-            <label for="registrosQue2" class="form-label mb-0">Registros que existen actualmente</label>
-            <input type="text" class="form-control w-50"
+            <label for="registrosQue2" class="form-label mb-0">Registros que existen actualmente. </label>
+            <input type="text" class="form-control w-50 input-margin-left"
                  formControlName="registrosQue2"
                   id="registrosQue2"
                   (change)="setValoresStore(comunesDosForm,'registrosQue2','setRegistrosQue2')"
@@ -126,9 +127,9 @@
     <div class="col-md-12">
         <div class="form-group d-flex align-items-center gap-2 mb-5">
             <label for="registrosQueO" class="form-label mb-0"
-              >Registros que existen actualmente.</label
+              >Registros que existen actualmente. </label
             >
-            <input type="text" class="form-control w-50" 
+            <input type="text" class="form-control w-50 input-margin-left" 
                 formControlName="registrosQue" 
                 id="registrosQue"
                 (change)="setValoresStore(comunesDosForm,'registrosQue','setRegistrosQue')"
@@ -141,6 +142,156 @@
           </label>
     </div>
 </div>
+} @else {
+  <div class="row">
+    <div class="col-md-12">
+        <label for="ensucaso"><span class="text-danger">*</span> {{dinamicaRadio.radio23.descripcion}}</label>
+        <div class="form-group">
+            <app-input-radio
+              [radioOptions]="opcionDeBotonDeRadio"
+              [isRequired]="true"
+              [layout]="'horizontal'"
+              [gap]="'493px'"
+              formControlName="ensucaso"
+              (change)="setValoresStore(comunesDosForm,'ensucaso','setEnsucaso')"
+              [isBold]="true"
+              [labelMargin]="'0px'"
+              [showDescription]="true"
+            ></app-input-radio>
+          </div>
+          @if(comunesDosForm.controls['ensucaso'].invalid && comunesDosForm.controls['ensucaso'].touched) {
+            <div class="mensaje-error">Este campo es obligatorio.</div>
+          }
+    </div>
+</div>
+  <div class="row">
+    <div class="col-md-12">
+        <label for="alMomento"><span class="text-danger">*</span> {{dinamicaRadio.radio24.descripcion}}</label>
+        <div class="form-group">
+            <app-input-radio
+              [radioOptions]="opcionDeBotonDeRadio"
+              [isRequired]="true"
+              [layout]="'horizontal'"
+              [gap]="'493px'"
+              formControlName="alMomento"
+              (change)="setValoresStore(comunesDosForm,'alMomento','setAlMomento')"
+              [isBold]="true"
+              [labelMargin]="'0px'"
+              [showDescription]="true"
+            ></app-input-radio>
+          </div>
+          @if(comunesDosForm.controls['alMomento'].invalid && comunesDosForm.controls['alMomento'].touched) {
+            <div class="mensaje-error">Este campo es obligatorio.</div>
+          }
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <label for="delMismomodo"><span class="text-danger">*</span> {{dinamicaRadio.radio25.descripcion}}</label>
+        <div class="form-group">
+            <app-input-radio
+              [radioOptions]="opcionDeBotonDeRadio"
+              [isRequired]="true"
+              [layout]="'horizontal'"
+              [gap]="'493px'"
+              (change)="setValoresStore(comunesDosForm,'delMismomodo','setDelMismomodo')"
+              formControlName="delMismomodo"
+              [isBold]="true"
+              [labelMargin]="'0px'"
+              [showDescription]="true"
+            ></app-input-radio>
+          </div>
+          @if(comunesDosForm.controls['delMismomodo'].invalid && comunesDosForm.controls['delMismomodo'].touched) {
+            <div class="mensaje-error">Este campo es obligatorio.</div>
+          } 
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <label for="encuentra"><span class="text-danger">*</span> {{dinamicaRadio.radio26.descripcion}}</label>
+        <div class="form-group">
+            <app-input-radio
+              [radioOptions]="opcionDeBotonDeRadio"
+              [isRequired]="true"
+              [layout]="'horizontal'"
+              [gap]="'493px'"
+              formControlName="encuentra"
+              (change)="setValoresStore(comunesDosForm,'encuentra','setEncuentra')"
+              [isBold]="true"
+              [labelMargin]="'0px'"
+              [showDescription]="true"
+            ></app-input-radio>
+          </div>
+          @if(comunesDosForm.controls['encuentra'].invalid && comunesDosForm.controls['encuentra'].touched) {
+            <div class="mensaje-error">Este campo es obligatorio.</div>
+          }
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <label for="susCertificados"><span class="text-danger">*</span> {{dinamicaRadio.radio27.descripcion}}</label>
+        <div class="form-group">
+            <app-input-radio
+              [radioOptions]="opcionDeBotonDeRadio"
+              [isRequired]="true"
+              [layout]="'horizontal'"
+              [gap]="'493px'"
+              formControlName="susCertificados"
+              (change)="setValoresStore(comunesDosForm,'susCertificados','setSusCertificados')"
+              [isBold]="true"
+              [labelMargin]="'0px'"
+              [showDescription]="true"
+            ></app-input-radio>
+          </div>
+          @if(comunesDosForm.controls['susCertificados'].invalid && comunesDosForm.controls['susCertificados'].touched) {
+            <div class="mensaje-error">Este campo es obligatorio.</div>
+          }
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <label for="afirmativo"><span class="text-danger">*</span> {{dinamicaRadio.radio28.descripcion}}</label>
+        <div class="form-group">
+            <app-input-radio
+              [radioOptions]="opcionDeBotonDeRadio"
+              [isRequired]="true"
+              [layout]="'horizontal'"
+              [gap]="'493px'"
+              formControlName="afirmativo"
+              (change)="setValoresStore(comunesDosForm,'afirmativo','setAfirmativo')"
+              [isBold]="true"
+              [labelMargin]="'0px'"
+              [showDescription]="true"
+            ></app-input-radio>
+          </div>
+          @if(comunesDosForm.controls['afirmativo'].invalid && comunesDosForm.controls['afirmativo'].touched) {
+            <div class="mensaje-error">Este campo es obligatorio.</div>
+          }
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <label for="actualizado"><span class="text-danger">*</span> {{dinamicaRadio.radio29.descripcion}}</label>
+        <div class="form-group">
+            <app-input-radio
+              [radioOptions]="opcionDeBotonDeRadio"
+              [isRequired]="true"
+              [layout]="'horizontal'"
+              [gap]="'493px'"
+              [isBold]="true"
+              formControlName="actualizado"
+              (change)="setValoresStore(comunesDosForm,'actualizado','setActualizado')"
+              [labelMargin]="'0px'"
+              [showDescription]="true"
+            ></app-input-radio>
+          </div>
+          @if(comunesDosForm.controls['actualizado'].invalid && comunesDosForm.controls['actualizado'].touched) {
+            <div class="mensaje-error">Este campo es obligatorio.</div>
+          }
+    </div>
+</div>
+}
+
 <ng-titulo titulo="Querella"></ng-titulo>
 <div class="row">
     <div class="col-md-12">
@@ -163,7 +314,8 @@
           }
     </div>
 </div>
-<ng-titulo titulo="Controls Inventarios"></ng-titulo>
+@if(!datosComunesObj.tieneProcedure.activo) {
+  <ng-titulo titulo="Controls Inventarios"></ng-titulo>
 <div class="row">
     <div class="col-md-12">
         <label for="indiqueCuenta"><span class="text-danger">*</span> {{dinamicaRadio.radio16.descripcion}}</label>
@@ -188,30 +340,44 @@
 <div class="row mt-3">
     <div class="col-md-6">
       <div class="form-group">
-        <span class="require">* </span>
+        <span class="require text-danger">* </span>
         <label for="nombreDel" class="form-label">Nombre del sistema o datos para su identificación</label>
         <input type="text" class="form-control" 
             formControlName="nombreDel" 
             id="nombreDel"
+            maxlength="250"
+            pattern="^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ.,-]*$"
             (change)="setValoresStore(comunesDosForm,'nombreDel','setNombreDel')"
             />
       </div>
       @if(comunesDosForm.controls['nombreDel'].invalid && comunesDosForm.controls['nombreDel'].touched) {
-        <div class="mensaje-error">Este campo es obligatorio.</div>
+        @if(comunesDosForm.controls['nombreDel'].errors?.['required']) {
+          <div class="mensaje-error">Este campo es obligatorio.</div>
+        }
+        @if(comunesDosForm.controls['nombreDel'].errors?.['pattern']) {
+          <div class="mensaje-error">No se permiten caracteres especiales.</div>
+        }
       }
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <span class="require">* </span>
+        <span class="require text-danger">* </span>
         <label for="lugarDeRadicacion" class="form-label">Lugar de radicación</label>
         <input type="text" class="form-control" 
             formControlName="lugarDeRadicacion" 
             id="lugarDeRadicacion"
+            maxlength="250"
+            pattern="^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ.,-]*$"
             (change)="setValoresStore(comunesDosForm,'lugarDeRadicacion','setLugarDeRadicacion')"
             />
       </div>
         @if(comunesDosForm.controls['lugarDeRadicacion'].invalid && comunesDosForm.controls['lugarDeRadicacion'].touched) {
+          @if(comunesDosForm.controls['nombreDel'].errors?.['required']) {
             <div class="mensaje-error">Este campo es obligatorio.</div>
+          }
+          @if(comunesDosForm.controls['nombreDel'].errors?.['pattern']) {
+            <div class="mensaje-error">No se permiten caracteres especiales.</div>
+          }
         }
     </div>
   </div>
@@ -243,10 +409,7 @@
         <button class="btn btn-primary me-2" (click)="abrirModal(modificar)" [disabled]="esFormularioSoloLectura">Modificar</button>
         <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
     </div>
-    <p class="fw-bold">Deberá anexar un archivo simple de autorizaci&oacute;n para el
-        establecimiento del depósito fiscal para someterse al proceso de
-        ensamble y fabricaci&oacute;n de vehículos a empresas de la industria
-        terminal vigente</p>
+    <p>Deberá anexar un archivo con el reporte de saldos de mercancía de importación temporal de un periodo de un mes, que se encuentre dentro de los tres meses anteriores a la fecha de la presente solicitud.</p>
   </div>
   <div class="row mt-3">
     <div class="col-md-12">
@@ -269,6 +432,7 @@
           }
     </div>
 </div>
+}
 <div class="row mt-3">
     <div class="col-md-12">
         <label for="rmfRadio"><span class="text-danger">*</span> {{dinamicaRadio.radio18.descripcion}}</label>
@@ -345,7 +509,7 @@
         <form [formGroup]="instalacionesPrincipalesForm">
             <div class="row">
                 <div class="col-md-8">
-                    <label for="instalacionesPrincipales"><span class="danger">*</span>Instalaciones principales</label>
+                    <label for="instalacionesPrincipales"><span class="text-danger">*</span>Instalaciones principales</label>
                     <app-input-radio [radioOptions]="opcionDeBotonDeRadio" formControlName="instalacionesPrincipales" [isRequired]="true" [layout]="'horizontal'"></app-input-radio>
                 </div>
                 <div class="col-md-4">
@@ -385,11 +549,11 @@
             </div>
             <div class="row mt-3">
                 <div class="col-md-4">
-                    <label for="procesoProductivo"><span class="danger">*</span>Proceso productivo</label>
+                    <label for="procesoProductivo"><span class="text-danger">*</span>Proceso productivo</label>
                     <app-input-radio [radioOptions]="opcionDeBotonDeRadio" formControlName="procesoProductivo" [isRequired]="true" [layout]="'horizontal'"></app-input-radio>
                 </div>
                 <div class="col-md-8">
-                    <label for="acreditacionDelUso"><span class="danger">*</span>Acreditación del uso y goce del inmueble</label>
+                    <label for="acreditacionDelUso"><span class="text-danger">*</span>Acreditación del uso y goce del inmueble</label>
                     <app-input-radio [radioOptions]="opcionDeBotonDeRadio" formControlName="acreditacionDelUso" [isRequired]="true" [layout]="'horizontal'"></app-input-radio>
                 </div>
             </div>

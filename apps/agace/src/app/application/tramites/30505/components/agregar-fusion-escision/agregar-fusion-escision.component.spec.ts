@@ -17,6 +17,9 @@ describe('AgregarFusionEscisionComponent', () => {
   let locationMock: any;
 
   beforeEach(async () => {
+    jest.useFakeTimers();
+    locationMock = { back: jest.fn() }; 
+
     storeMock = {
       setAvisoDatos: jest.fn(),
       updateFusionDatos: jest.fn()
@@ -41,8 +44,6 @@ describe('AgregarFusionEscisionComponent', () => {
         fechaFinVigencia: '2022-12-31'
       }))
     };
-    locationMock = { back: jest.fn() };
-
     await TestBed.configureTestingModule({
       imports: [CommonModule, ReactiveFormsModule, AgregarFusionEscisionComponent,HttpClientTestingModule],
       providers: [
@@ -80,7 +81,6 @@ describe('AgregarFusionEscisionComponent', () => {
     component.mostrarCertificacion();
     expect(component.fusionEscisionForm.get('razonSocialFusionanteSC')?.enabled).toBe(true);
   });
-
   it('should add fusionEscisionData, update store, reset form, and call location.back on agregarFusionEscision', () => {
     component.fusionEscisionForm.patchValue({
       certificacionModal: '1',
@@ -90,16 +90,19 @@ describe('AgregarFusionEscisionComponent', () => {
       fechaInicioVigenciaFusionante: '2023-01-01',
       fechaFinVigenciaFusionante: '2023-12-31',
       rfcBusquedaModalSC: 'RFCSC',
-      razonSocialFusionanteSC: 'Empresa SC'
+      razonSocialFusionanteSC: 'Empresa SC',
     });
-    component.fusionEscisionData = [];
+  
     component.agregarFusionEscision();
+  
     expect(component.fusionEscisionData.length).toBe(1);
+  
     expect(storeMock.updateFusionDatos).toHaveBeenCalledWith(component.fusionEscisionData);
-    expect(component.fusionEscisionForm.pristine).toBe(true);
+      expect(component.fusionEscisionForm.pristine).toBe(true);
+  
+    jest.advanceTimersByTime(2000); 
     expect(locationMock.back).toHaveBeenCalled();
   });
-
   it('should call location.back on cerrarDialogoFusionEscision', () => {
     component.cerrarDialogoFusionEscision();
     expect(locationMock.back).toHaveBeenCalled();

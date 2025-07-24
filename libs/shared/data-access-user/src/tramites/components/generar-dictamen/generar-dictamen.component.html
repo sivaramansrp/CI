@@ -1,8 +1,10 @@
 <form [formGroup]="dictamenForm">
     <div class="row ">
+        @if (mostrarTitulo) {
         <div class="col-md-12">
             <h3 class="titulo-dictamen">Generar Dictamen</h3>
         </div>
+        }
         <div class="d-flex gap-3 justify-content-center">
             <div class="border px-4 py-2 d-flex align-items-center radio-button">
                 <input class="form-check-input me-3 seleccion-radio" type="radio" name="cumplimiento" value="1"
@@ -19,11 +21,44 @@
     <div class="row mt-5">
         <div class="col-md-12">
             <label for="justificacionDictamen" class="form-label">Sentido dictamen / justificación del
-                dictamen</label><span class="text-danger">*</span>
+                dictamen<span class="text-danger">*</span>:</label>
             <textarea id="justificacionDictamen" class="form-control text-height" formControlName="mensajeDictamen"
                 placeholder="" [ngClass]="isValid('mensajeDictamen') ? 'required' : ''"></textarea>
+            @if (dictamenForm.get('mensajeDictamen')?.invalid && dictamenForm.get('mensajeDictamen')?.touched) {
+            <div class="text-danger">
+                Este campo es obligatorio.
+            </div>
+            }
         </div>
     </div>
+
+    <!-- Campos de fecha condicionales -->
+    @if (mostrarCamposFecha) {
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <label for="fechaInicioVigenciaAutorizada" class="form-label">*Fecha de inicio de vigencia autorizada:</label>
+            <input type="date" id="fechaInicioVigenciaAutorizada" class="form-control" 
+                   formControlName="fechaInicioVigenciaAutorizada"
+                   [ngClass]="isValid('fechaInicioVigenciaAutorizada') ? 'required' : ''">
+            @if (dictamenForm.get('fechaInicioVigenciaAutorizada')?.invalid && dictamenForm.get('fechaInicioVigenciaAutorizada')?.touched) {
+            <div class="text-danger">
+                Este campo es obligatorio.
+            </div>
+            }
+        </div>
+        <div class="col-md-6">
+            <label for="fechaFinVigenciaAutorizada" class="form-label">*Fecha de fin de vigencia autorizada:</label>
+            <input type="date" id="fechaFinVigenciaAutorizada" class="form-control" 
+                   formControlName="fechaFinVigenciaAutorizada"
+                   [ngClass]="isValid('fechaFinVigenciaAutorizada') ? 'required' : ''">
+            @if (dictamenForm.get('fechaFinVigenciaAutorizada')?.invalid && dictamenForm.get('fechaFinVigenciaAutorizada')?.touched) {
+            <div class="text-danger">
+                Este campo es obligatorio.
+            </div>
+            }
+        </div>
+    </div>
+    }
 
     <div class="row mt-5 mb-5">
         <div class="col-md-12 d-flex justify-content-end">

@@ -44,11 +44,14 @@ export const DESTINATARIO_CONFIGURACION_TABLA: ConfiguracionColumna<Destinatario
   { encabezado: "Nombre/denominación o razón social", clave: (item: Destinatario) => item.nombre, orden: 1, },
   { encabezado: "Teléfono", clave: (item: Destinatario) => item.telefono, orden: 2, },
   { encabezado: "Correo electrónico", clave: (item: Destinatario) => item.correoElectronico, orden: 3, },
-  { encabezado: "calle", clave: (item: Destinatario) => item.calle, orden: 4, },
-  { encabezado: "numeroExterior", clave: (item: Destinatario) => item.numeroExterior, orden: 5, },
-  { encabezado: "numeroInterior", clave: (item: Destinatario) => item.numeroInterior, orden: 6, },
+  { encabezado: "Calle", clave: (item: Destinatario) => item.calle, orden: 4, },
+  { encabezado: "Número exterior", clave: (item: Destinatario) => item.numeroExterior, orden: 5, },
+  { encabezado: "Número interior", clave: (item: Destinatario) => item.numeroInterior, orden: 6, },
   { encabezado: "País", clave: (item: Destinatario) => item.pais, orden: 7, },
-
+  { encabezado: "Colonia", clave: (item: Destinatario) => item.colonia, orden: 8, },
+  { encabezado: "Municipio o alcaldía", clave: (item: Destinatario) => item.municipioAlcaldia, orden: 9, },
+  { encabezado: "Entidad federativa", clave: (item: Destinatario) => item.entidadFederativa, orden: 10, },
+  { encabezado: "Código postal", clave: (item: Destinatario) => item.codigoPostal, orden: 11, }
 ];
 /**
 * Configuración de columnas para la tabla de exportador.
@@ -57,7 +60,7 @@ export const EXPORTADOR_CONFIGURACION_TABLA: ConfiguracionColumna<Exportador>[] 
   { encabezado: "Nombre/denominación o razón social", clave: (item: Exportador) => item.nombre, orden: 1, },
   { encabezado: "Teléfono", clave: (item: Exportador) => item.telefono, orden: 2, },
   { encabezado: "Correo electrónico", clave: (item: Exportador) => item.correoElectronico, orden: 3, },
-  { encabezado: "domoicilio", clave: (item: Exportador) => item.domoicilio, orden: 4, },
+  { encabezado: "Domoicilio", clave: (item: Exportador) => item.domoicilio, orden: 4, },
   { encabezado: "País", clave: (item: Exportador) => item.pais, orden: 5, },
 
 ];

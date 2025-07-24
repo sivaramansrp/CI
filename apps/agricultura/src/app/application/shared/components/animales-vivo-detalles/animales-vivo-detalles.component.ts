@@ -1,10 +1,11 @@
-import { CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { DatosDeLaSolicitud, Sensible } from '../../models/datos-de-la-solicitue.model';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CONFIGURACION_SENSIBLES } from '../../constantes/datos-de-la-solicitue.enum';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
+import { FilaSolicitud } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
+import { CONFIGURACION_SENSIBLES } from '../../constantes/datos-de-la-solicitue.enum';
+import { AnimalesEventos, DatosDeLaSolicitud, Sensible } from '../../models/datos-de-la-solicitue.model';
 
 @Component({
   selector: 'app-animales-vivo-detalles',
@@ -12,6 +13,7 @@ import { Subject } from 'rxjs';
   imports: [CommonModule, CatalogoSelectComponent, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent],
   templateUrl: './animales-vivo-detalles.component.html',
   styleUrl: './animales-vivo-detalles.component.scss',
+
 })
 export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
 
@@ -44,6 +46,23 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * @type {Sensible[]}
    */
   @Input() sensiblesTablaDatos: Sensible[] = [];
+
+  /**
+   * Datos del formulario de solicitud de animales vivos.
+   * Este objeto contiene la información relacionada con la solicitud de animales vivos,
+   * como los detalles de la mercancía y los datos específicos de los animales.
+   * 
+   * @type {AnimalesFormularioSolicitud}
+   */
+  @Input() formularioSolicitud!: FilaSolicitud;
+
+  /**
+   * Evento que se emite cuando se agregan datos al formulario de solicitud de animales vivos.
+   * Este evento permite al componente padre recibir los datos del formulario para su procesamiento.
+   * 
+   * @type {EventEmitter<AnimalesEventos>}
+   */
+  @Output() agregarDatosFormulario = new EventEmitter<AnimalesEventos>();
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -83,13 +102,31 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    * @type {Sensible[]}
    */
   public sensiblesTablaSeleccionada: Sensible[] = [];
-
+  /**
+   * Evento que se emite para cerrar el componente de detalles de animales vivos.
+   * Permite al componente padre manejar la acción de cierre del modal o sección.
+   * 
+   * @type {EventEmitter<void>}
+   */
+  @Output() cerrar = new EventEmitter<void>();
+  /**
+   * @ignore
+   * @description
+   * Evento emitido por el componente AnimalesVivoDetallesComponent.
+   * 
+   * Este EventEmitter se utiliza para notificar a los componentes padres cuando ocurre una acción relevante
+   * dentro del componente de detalles de animales vivos.
+   * 
+   * @event
+   */
+  @Output() animalesVivoDetallesComponent = new EventEmitter<void>();
   /**
    * Constructor del componente.
    * 
    * @param fb FormBuilder para crear formularios reactivos.
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+  ) {
   }
 
   /**
@@ -117,27 +154,27 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
    */
   crearFormulario(): void {
     this.mercanciaForm = this.fb.group({
+      id: [0, Validators.required],
       tipoRequisito: ['', Validators.required],
       requisito: ['', Validators.required],
-      numeroCertificado: [''],
+      numeroCertificadoInternacional: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       fraccionArancelaria: ['', Validators.required],
-      descripcionFraccion: [''],
+      descripcionFraccion: [{ value: 'Descripción', disabled: true }, [Validators.required]],
       nico: ['', Validators.required],
-      descripcionNico: [''],
-      descripcion: [''],
-      cantidadUMT: [''],
-      umt: [{ value: '', disabled: true }, Validators.required,],
-      cantidadUMC: [''],
+      descripcionNico: [{ value: 'Detalle', disabled: true }, [Validators.required]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
+      cantidadUMT: ['', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
+      umt: [{ value: '1', disabled: true }, Validators.required],
+      cantidadUMC: ['', [Validators.required, Validators.pattern(/^\d{1,12}(\.\d{1,3})?$/)]],
       umc: ['', Validators.required],
       especie: ['', Validators.required],
       uso: ['', Validators.required],
-      paisOrigen: ['', Validators.required],
+      paisDeOrigen: ['', Validators.required],
       paisDeProcedencia: ['', Validators.required],
     });
 
     this.detalleForm = this.fb.group({
-      // Detalle fields
-      numeroLote: [''],
+      numeroLote: ['', [Validators.required, Validators.maxLength(16), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       colorPelaje: [''],
       edadAnimal: [''],
       faseDesarrollo: [''],
@@ -146,8 +183,14 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
       numeroIdentificacion: [''],
       raza: [''],
       nombreCientifico: [''],
-      sexo: ['', Validators.required]
+      sexo: ['']
     });
+
+    if (this.formularioSolicitud) {
+      this.mercanciaForm.patchValue({
+        ...this.formularioSolicitud
+      });
+    }
   }
 
   /**
@@ -197,6 +240,34 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
   limpiarAnimalesVivo(): void {
     this.sensiblesTablaDatos = [];
     this.mercanciaForm.reset();
+  }
+
+  /**
+ * Navega a la ubicación anterior en el historial de navegación.
+ * Utiliza el servicio de ubicación para retroceder una página.
+ */
+  cancelar(): void {
+    this.cerrar.emit();
+  }
+
+  /**
+   * Método para agregar animales a la lista de datos sensibles.
+   * Actualmente no implementa ninguna funcionalidad, pero se puede extender en el futuro.
+   */
+  agregarAnimales(): void {
+    if (this.mercanciaForm.invalid) {
+      this.mercanciaForm.markAllAsTouched();
+    }
+    else {
+      this.agregarDatosFormulario.emit(
+        {
+          formulario: this.mercanciaForm.getRawValue(),
+          tablaDatos: this.sensiblesTablaDatos
+        }
+      );
+      this.cerrar.emit();
+    }
+
   }
 
   /**

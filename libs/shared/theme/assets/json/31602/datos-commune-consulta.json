@@ -3,6 +3,7 @@
     "regimenUno": "General",
     "regimenDos": "Simplificado",
     "regimenTres": "Especial",
+    "regimenCuatro": "General de Importación",
     "sectorProductivo": "1",
     "servicio": "1",
     "preOperativo": "Si",
@@ -33,5 +34,14 @@
     "numeroAutorizacionCITES": "RFC123456789",
     "archivoNacionales": "archivo",
     "manifestado": true,
-    "protesta": true
+    "protesta": true,
+    "cumpleCon": "Si",
+    "acreditaRealizar": "Si",
+    "cumpleConDos": "Si",
+    "ensucaso": "Si",
+    "alMomento": "Si",
+    "delMismomodo": "Si",
+    "susCertificados": "Si",
+    "afirmativo": "Si",
+    "actualizado": "Si"
 }

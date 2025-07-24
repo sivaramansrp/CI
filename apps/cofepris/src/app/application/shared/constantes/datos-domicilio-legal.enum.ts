@@ -101,7 +101,17 @@ export const NUEVA_NOTIFICACION = {
   txtBtnCancelar: 'Cancelar', // Texto del botón para cancelar la notificación.
 };
 
+export const USO_ESPECIFICO_LABEL: CrossListLable = {
+    tituluDeLaIzquierda: 'Uso específico',
+    derecha: 'Uso específico seleccionado*',
+  }
+
 export const PAIS_DE_PROCEDENCIA_LABEL: CrossListLable = {
-    tituluDeLaIzquierda: ' País de orígen',
-    derecha: 'País(es) seleccionado(s)',
+    tituluDeLaIzquierda: 'País de procedencia',
+    derecha: 'País(es) seleccionado(s)*',
+  }
+
+export const PAIS_DE_ORIGEN_LABEL: CrossListLable = {
+    tituluDeLaIzquierda: 'País de origen',
+    derecha: 'País(es) seleccionado(s)*',
   }
