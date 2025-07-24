@@ -497,6 +497,24 @@ configuracionindiqueDatos: ConfiguracionColumna<ModificarFormState>[] = CONFIGUR
    * @memberof AduaneroComponent
    */
   mandatoryFieldsAnswered: boolean = false;
+
+  /** Indica si el formulario de Control Inventarios ha sido enviado. 
+ * Se utiliza para mostrar validaciones y controlar el estado de envío del formulario. */
+  public formSubmittedControlInventarios = false;
+
+  /**
+ * Almacena temporalmente el índice y el elemento de Control Inventarios que está pendiente de actualización.
+ * Es útil para manejar la confirmación antes de modificar los datos en la tabla.
+ */
+  private pendingControlInventariosUpdate: { index: number, item: ControlInventariosItem } | null = null;
+
+  /**
+ * Formulario reactivo utilizado exclusivamente para el modal de Control Inventarios.
+ * Permite gestionar y validar los datos cuando se agrega o modifica un elemento desde el modal.
+ */
+  public controlInventariosModalForm!: FormGroup;
+
+
   /**
    * Constructor del componente
    * @param fb - FormBuilder para crear formularios reactivos
@@ -696,6 +714,12 @@ configuracionindiqueDatos: ConfiguracionColumna<ModificarFormState>[] = CONFIGUR
       bimestreValor:['']
     });
 
+  this.controlInventariosModalForm = this.fb.group({
+  nombreDel: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(250)]],
+  lugarDeRadicacion: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(250)]],
+  indiqueCheck: [false]
+});
+
     // Configuración del modo de solo lectura
     if (this.esFormularioSoloLectura) {
       Object.keys(this.preOperativeForm.controls).forEach((key) => {
@@ -766,29 +790,31 @@ configuracionindiqueDatos: ConfiguracionColumna<ModificarFormState>[] = CONFIGUR
    * Abre el modal de control inventarios para agregar nuevo elemento.
    */
   openControlInventariosModal(): void {
-    if (this.modalInstanceControlInventarios) {
-      this.preOperativeForm.patchValue({
-        nombreDel: '',
-        lugarDeRadicacion: '',
-        indiqueCheck: false
-      });
-      this.modalInstanceControlInventarios.show();
-    }
+  if (this.modalInstanceControlInventarios) {
+    this.controlInventariosModalForm.reset({
+      nombreDel: '',
+      lugarDeRadicacion: '',
+      indiqueCheck: false
+    });
+    this.controlInventariosModalForm.markAsUntouched();
+    this.modalInstanceControlInventarios.show();
   }
+}
 
   /**
    * Abre el modal de control inventarios para modificar elemento existente.
    */
   openModifyControlInventariosModal(): void {
-    if (this.modalInstanceControlInventarios && this.filaSeleccionadaControlInventarios) {
-      this.preOperativeForm.patchValue({
-        nombreDel: this.filaSeleccionadaControlInventarios.nombreSistema,
-        lugarDeRadicacion: this.filaSeleccionadaControlInventarios.lugarRadicacion,
-        indiqueCheck: this.filaSeleccionadaControlInventarios.anexo24
-      });
-      this.modalInstanceControlInventarios.show();
-    }
+  if (this.modalInstanceControlInventarios && this.filaSeleccionadaControlInventarios) {
+    this.controlInventariosModalForm.patchValue({
+      nombreDel: this.filaSeleccionadaControlInventarios.nombreSistema,
+      lugarDeRadicacion: this.filaSeleccionadaControlInventarios.lugarRadicacion,
+      indiqueCheck: this.filaSeleccionadaControlInventarios.anexo24
+    });
+    this.controlInventariosModalForm.markAsUntouched();
+    this.modalInstanceControlInventarios.show();
   }
+}
 
   /**
    * Cierra el modal de control inventarios.
@@ -804,6 +830,17 @@ configuracionindiqueDatos: ConfiguracionColumna<ModificarFormState>[] = CONFIGUR
    * Agrega un nuevo elemento a la tabla de control de inventarios directamente.
    */
   agregarNuevoElementoControlInventarios(): void {
+    this.formSubmittedControlInventarios = true;
+
+  if (
+    !this.preOperativeForm.get('nombreDel')?.valid ||
+    !this.preOperativeForm.get('lugarDeRadicacion')?.valid
+  ) {
+    this.preOperativeForm.get('nombreDel')?.markAsTouched();
+    this.preOperativeForm.get('lugarDeRadicacion')?.markAsTouched();
+    return;
+  }
+
     this.camposObligatoriosRespondidosControlInventarios =
       Boolean(this.preOperativeForm.get('nombreDel')?.valid) &&
       Boolean(this.preOperativeForm.get('lugarDeRadicacion')?.valid);
@@ -818,13 +855,17 @@ configuracionindiqueDatos: ConfiguracionColumna<ModificarFormState>[] = CONFIGUR
 
       this.datosTablaControlInventarios.push(NEW_ITEM);
       this.tramite31601Store.setControlInventariosTablaDatos(this.datosTablaControlInventarios);
-      this.preOperativeForm.patchValue({
-        nombreDel: '',
-        lugarDeRadicacion: '',
-        indiqueCheck: false
-      });
+
+      this.preOperativeForm.get('nombreDel')?.reset();
+      this.preOperativeForm.get('lugarDeRadicacion')?.reset();
+      this.preOperativeForm.get('indiqueCheck')?.reset();
+      this.preOperativeForm.updateValueAndValidity();
+
+      this.preOperativeForm.get('nombreDel')?.markAsUntouched();
+      this.preOperativeForm.get('lugarDeRadicacion')?.markAsUntouched();
 
       this.camposObligatoriosRespondidosControlInventarios = false;
+      this.formSubmittedControlInventarios = false;
       this.mostrarNotificacionExito();
     }
   }
@@ -850,40 +891,68 @@ configuracionindiqueDatos: ConfiguracionColumna<ModificarFormState>[] = CONFIGUR
    * Maneja la confirmación de la notificación
    */
   onConfirmacionNotificacion(confirmado: boolean): void {
-    if (confirmado) {
-      this.notificacionExito = null;
+  if (confirmado) {
+    if (this.pendingControlInventariosUpdate) {
+      this.datosTablaControlInventarios[this.pendingControlInventariosUpdate.index] =
+        this.pendingControlInventariosUpdate.item;
+      this.tramite31601Store.setControlInventariosTablaDatos(this.datosTablaControlInventarios);
+      this.pendingControlInventariosUpdate = null;
     }
+    this.notificacionExito = null;
   }
+}
 
   /**
    * Modifica un elemento existente en la tabla de control inventarios usando modal.
    */
-  modificaControlInventariosItem(): void {
-    if (this.filaSeleccionadaControlInventarios) {
-      this.camposObligatoriosRespondidosControlInventarios =
-        Boolean(this.preOperativeForm.get('nombreDel')?.valid) &&
-        Boolean(this.preOperativeForm.get('lugarDeRadicacion')?.valid);
-
-      if (this.camposObligatoriosRespondidosControlInventarios) {
-        const INDEX = this.datosTablaControlInventarios.findIndex(
-          item => item.id === this.filaSeleccionadaControlInventarios?.id
-        );
-
-        if (INDEX !== -1) {
-          this.datosTablaControlInventarios[INDEX] = {
-            ...this.filaSeleccionadaControlInventarios,
-            nombreSistema: this.preOperativeForm.get('nombreDel')?.value,
-            lugarRadicacion: this.preOperativeForm.get('lugarDeRadicacion')?.value,
-            anexo24: this.preOperativeForm.get('indiqueCheck')?.value || false
-          };
-
-          this.tramite31601Store.setControlInventariosTablaDatos(this.datosTablaControlInventarios);
-          this.closeControlInventariosModal();
-          this.camposObligatoriosRespondidosControlInventarios = false;
-        }
-      }
-    }
+modificaControlInventariosItem(): void {
+  this.formSubmittedControlInventarios = true;
+  if (
+    !this.controlInventariosModalForm.get('nombreDel')?.valid ||
+    !this.controlInventariosModalForm.get('lugarDeRadicacion')?.valid
+  ) {
+    this.controlInventariosModalForm.get('nombreDel')?.markAsTouched();
+    this.controlInventariosModalForm.get('lugarDeRadicacion')?.markAsTouched();
+    return;
   }
+
+  const INDEX = this.datosTablaControlInventarios.findIndex(
+    item => item.id === this.filaSeleccionadaControlInventarios?.id
+  );
+
+  if (INDEX !== -1) {
+    this.datosTablaControlInventarios[INDEX] = {
+      id: this.filaSeleccionadaControlInventarios?.id ?? (INDEX + 1).toString(),
+      nombreSistema: this.controlInventariosModalForm.get('nombreDel')?.value,
+      lugarRadicacion: this.controlInventariosModalForm.get('lugarDeRadicacion')?.value,
+      anexo24: this.controlInventariosModalForm.get('indiqueCheck')?.value || false
+    };
+
+    this.tramite31601Store.setControlInventariosTablaDatos(this.datosTablaControlInventarios);
+
+    this.notificacionExito = {
+      tipoNotificacion: 'alert',
+      categoria: 'success',
+      modo: '',
+      titulo: '',
+      mensaje: 'Datos guardados correctamente.',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm'
+    };
+
+    this.controlInventariosModalForm.reset({
+      nombreDel: '',
+      lugarDeRadicacion: '',
+      indiqueCheck: false
+    });
+    this.controlInventariosModalForm.markAsUntouched();
+    this.formSubmittedControlInventarios = false;
+    this.closeControlInventariosModal();
+    this.camposObligatoriosRespondidosControlInventarios = false;
+  }
+}
 
   /**
    * Confirma la eliminación de los elementos seleccionados.
@@ -922,6 +991,9 @@ configuracionindiqueDatos: ConfiguracionColumna<ModificarFormState>[] = CONFIGUR
     );
 
     this.listaFilaSeleccionadaControlInventarios = [];
+    this.filaSeleccionadaControlInventarios = null;
+    this.enableModificarBotonControlInventarios = false;
+    this.enableEliminarBotonControlInventarios = false;
     this.tramite31601Store.setControlInventariosTablaDatos(this.datosTablaControlInventarios);
     this.cerrarEliminarConfirmationPopupControlInventarios();
   }
@@ -1276,6 +1348,20 @@ addNewMencioneItem(): void {
     this.filaSeleccionadaMencione = null;
 
     this.modalInstance?.hide();
+       this.preOperativeForm.patchValue({
+      rfc: '',
+      razonSocial: '',
+      numeroEmpleados: '',
+      empleadosPropios: '',
+      bimestreValor: '',
+      numeroAutorizacionCITES: '',
+    });
+
+    ['rfc', 'razonSocial', 'numeroEmpleados', 'empleadosPropios', 'bimestreValor', 'numeroAutorizacionCITES'].forEach(field => {
+      const CONTROL = this.preOperativeForm.get(field);
+      CONTROL?.markAsUntouched();
+      CONTROL?.setErrors(null);
+    });
   }
 }
 /**

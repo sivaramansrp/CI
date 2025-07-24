@@ -18,3 +18,15 @@
   .end-td {
     border-right: 1px solid #ddd;
   }
+
+  app-tabla-dinamica.tabla-danger {
+    &::ng-deep {
+      .table-wrapper{
+        border: 1px solid #dc3545 !important;
+        padding: 8px;
+        .table {
+          margin-bottom: 0px;
+        }
+      }
+    }
+  }

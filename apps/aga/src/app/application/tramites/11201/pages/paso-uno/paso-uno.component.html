@@ -45,4 +45,10 @@
       }
     </ng-container>
   </div>
+  @if (nuevaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="confirmarCancelacion($event)"></lib-notificaciones>
+  </section>
+  }
 </div>

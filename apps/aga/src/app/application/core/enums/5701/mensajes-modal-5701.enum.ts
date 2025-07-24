@@ -80,7 +80,7 @@ export const MSG_NRO_PEDIMENTO = 'Necesita agregar un número de pedimento';
  * @description Mensaje de error cuando se intenta agregar un numero de pedimento sin haber seleccionado una aduana de despacho.
  */
 export const MSG_ADUANA_PEDIMENTO =
-  'Necesita seleccionar una aduana de despacho.';
+  'Necesitas seleccionar una aduana de despacho';
 
 /**
  * @description Mensaje pedimento válido
@@ -170,6 +170,11 @@ export const MSG_CAMBIO_TIPO_SOLICITUD =
  * @description Mensaje error, no se encontró información
  */
 export const MSG_ERROR_NO_INFORMACION = 'No se encontró información';
+
+/**
+ * @description Mensaje de error cuando no se ha seleccionado un registro para eliminar
+ */
+export const MSG_ERROR_SELECCIONE_REGISTRO = 'Seleccione un registro.';
 
 /**
  * @description Mensaje de rror cuando no se encuentra el ID del Socio Comercial

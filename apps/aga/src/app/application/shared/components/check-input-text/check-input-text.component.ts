@@ -76,6 +76,11 @@ export class CheckInputTextComponent implements OnChanges {
   @Input() textoValor!: string;
   @Input() labelText!: string;
 
+  /**
+   * Indica si el checkbox debe estar deshabilitado.
+   */
+  @Input() isDisabled: boolean = false;
+
   @Output() checkboxChange = new EventEmitter<DatosCheckInputText>();
 
 
@@ -121,7 +126,16 @@ export class CheckInputTextComponent implements OnChanges {
       this.forma.get('texto')?.enable();
       this.forma.get('texto')?.setValue(this.textoValor);
       this.forma.get('texto')?.disable();
-      this.forma.get('checkbox')?.disable();
+    }
+    
+    // Handle disabled state separately
+    if (changes['isDisabled']) {
+      this.isDisabled = changes['isDisabled'].currentValue;
+      if (this.isDisabled) {
+        this.forma.get('checkbox')?.disable();
+      } else {
+        this.forma.get('checkbox')?.enable();
+      }
     }
   }
 

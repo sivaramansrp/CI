@@ -144,8 +144,14 @@
         <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
 
         <div class="d-flex justify-content-end">
-          <button class="btn btn-primary" (click)="openMercanciasForm()" [disabled]="esFormularioSoloLectura">
+          <button class="btn btn-primary me-2" (click)="openMercanciasForm()" [disabled]="esFormularioSoloLectura">
             Agregar
+          </button>
+            <button class="btn btn-secondary me-2" [disabled]="esFormularioSoloLectura">
+            Modificar
+          </button>
+            <button class="btn btn-danger" [disabled]="esFormularioSoloLectura">
+            Eliminar
           </button>
         </div>
 

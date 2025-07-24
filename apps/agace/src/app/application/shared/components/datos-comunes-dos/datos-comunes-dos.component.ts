@@ -6,7 +6,7 @@ import { CONTROL_INVENTARIOS_TABLA } from '../../models/datos-comunes.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ControlInventarios } from '../../models/datos-comunes.model';
@@ -61,6 +61,9 @@ import { takeUntil } from 'rxjs';
 })
 export class DatosComunesDosComponent implements OnInit,OnDestroy {
 
+  @Input() datosComunesObj = {
+    tieneProcedure: { numero: '', activo: false }
+  };
   /**
    * Un subject utilizado para emitir una señal para limpiar suscripciones y otros recursos
    * cuando el componente es destruido. Esto ayuda a prevenir fugas de memoria asegurando
@@ -306,7 +309,14 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
         vinculacionRegistroCancelado: [this.solicitudState?.vinculacionRegistroCancelado, Validators.required],
         proveedoresListadoSAT: [this.solicitudState?.proveedoresListadoSAT, Validators.required],
         numeroAutorizacionCITES: ['',[Validators.required,Validators.pattern(REGEX_RFC)]],
-        archivoNacionales: ['']
+        archivoNacionales: [''],
+        ensucaso: [this.solicitudState?.ensucaso],
+        alMomento: [this.solicitudState?.alMomento],
+        delMismomodo: [this.solicitudState?.delMismomodo],
+        encuentra: [this.solicitudState?.encuentra],
+        susCertificados: [this.solicitudState?.susCertificados],
+        afirmativo: [this.solicitudState?.afirmativo],
+        actualizado: [this.solicitudState?.actualizado]
     });
   }
 
