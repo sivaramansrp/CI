@@ -219,20 +219,32 @@
         </div>
 
         <div class="col-md-6">
-          <app-input-radio
-            [radioOptions]="radioOpciones"
-            [allowDeselection]="true"
-            (change)="
-              setValoresStore(
-                datosImportadorExportador,
-                'tipoEmpresaCertificada',
-                'setTipoEmpresaCertificada'
-              )
-            "
-            id="tipoEmpresaCertificada"
-            formControlName="tipoEmpresaCertificada"
-          >
-          </app-input-radio>
+          <lib-input-check
+            [id]="'tipoEmpresaCertificadaA'"
+            [label]="'I.V.A e I.E.P.S Certificación A'"
+            [required]="false"
+            [isDisabled]="tipoEmpresaCertificadaADisabled"
+            formControlName="tipoEmpresaCertificadaA"
+            (change)="onTipoEmpresaChange('a', 'tipoEmpresaCertificadaA')"
+          ></lib-input-check>
+          
+          <lib-input-check
+            [id]="'tipoEmpresaCertificadaAA'"
+            [label]="'I.V.A e I.E.P.S Certificación AA'"
+            [required]="false"
+            [isDisabled]="tipoEmpresaCertificadaAADisabled"
+            formControlName="tipoEmpresaCertificadaAA"
+            (change)="onTipoEmpresaChange('aa', 'tipoEmpresaCertificadaAA')"
+          ></lib-input-check>
+          
+          <lib-input-check
+            [id]="'tipoEmpresaCertificadaAAA'"
+            [label]="'I.V.A e I.E.P.S Certificación AAA'"
+            [required]="false"
+            [isDisabled]="tipoEmpresaCertificadaAAADisabled"
+            formControlName="tipoEmpresaCertificadaAAA"
+            (change)="onTipoEmpresaChange('aaa', 'tipoEmpresaCertificadaAAA')"
+          ></lib-input-check>
         </div>
 
         <div class="col-md-6">
