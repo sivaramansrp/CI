@@ -28,7 +28,6 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
    * Notificador para destruir las suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-  // tipoRequerimiento!: string;
   /**
     * Estado de la solicitud.
     */
@@ -46,7 +45,6 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private requerimientosStates: RequerimientosStates,
     private solicitudRequerimientoQuery: SolicitudRequerimientoQuery,
-    // private estadoService: EvaluarSolicitudService,
   ) {
     // do nothing.
   }
@@ -78,8 +76,9 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
    */
   crearFormRequerimiento(): void {
     this.formRequerimiento = this.fb.group({
-      tipoRequerimiento: [this.solicitudRequerimientosState?.idTipoRequerimiento, [Validators.required]],
-      justificacionRequerimiento: [this.solicitudRequerimientosState?.justificacionRequerimiento, [Validators.required, Validators.maxLength(this.MAX_CHARS)]]
+      tipoRequerimiento: [this.solicitudRequerimientosState.idTipoRequerimiento, [Validators.required]],
+      areaSolicitante: [this.solicitudRequerimientosState?.areaSolicitante, [Validators.required, Validators.maxLength(10000)]],
+      justificacionRequerimiento: [this.solicitudRequerimientosState?.justificacionRequerimiento, [Validators.required, Validators.maxLength(10000)]]
     });
   }
   /**
@@ -102,6 +101,12 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
     */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof RequerimientosStates): void {
     const VALOR = form.get(campo)?.value;
+    if (VALOR === '1' || VALOR === '2') {
+      this.requerimientosStates.setPestaniaSolicitudDocumento(true);
+    }
+    else {
+      this.requerimientosStates.setPestaniaSolicitudDocumento(false); // agrega esto si no lo tenías
+    }
     (this.requerimientosStates[metodoNombre] as (value: string) => void)(VALOR);
   }
 

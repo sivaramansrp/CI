@@ -10,12 +10,12 @@ interface TratadosAcuerdos {
 
 export const CONFIGURACION_ACCIONISTAS = [
     {
-        encabezado: 'País/Bloque',
+        encabezado: 'País / Bloque',
         clave: (ele: TratadosAcuerdos): string => ele.paisBloque,
         orden: 1
     },
     {
-        encabezado: 'Tratado/Acuerdo',
+        encabezado: 'Tratado / Acuerdo',
         clave: (ele: TratadosAcuerdos): string => ele.tratadoAcuerdo,
         orden: 2
     },
@@ -35,7 +35,7 @@ export const CONFIGURACION_ACCIONISTAS = [
         orden: 5
     },
     {
-        encabezado: 'Juegos Surtidos',
+        encabezado: 'Juegos o surtidos',
         clave: (ele: TratadosAcuerdos): string => ele.juegosSurtidos,
         orden: 6
     }
