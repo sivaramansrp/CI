@@ -92,7 +92,11 @@ export interface Solicitud32605State {
 /// perfiles
   perfiles: Partial<PerfilesDatos>;
 }
+/**
+ * Interfaz para los datos de perfiles de seguridad y procedimientos.
+ */
 export interface PerfilesDatos {
+  domicilioDeLaInstalacion: string;
   describaProcedimiento: string;
   indiqueLosCriterios: string;
   indiqueLosMetodos: string;
@@ -315,7 +319,7 @@ simulacrosDocumentacion: string;
  */
 export function createInitialSolicitudState(): Solicitud32605State {
   return {
-sectorProductivo: '',
+  sectorProductivo: '',
   sectorServicio: '',
   cumplimientoFiscalAduanero: '',
   autorizaOpinionSAT: '',
@@ -396,6 +400,7 @@ sectorProductivo: '',
 
   //perfiles
   perfiles: {
+    domicilioDeLaInstalacion: '',
     describaProcedimiento: '',
     indiqueLosCriterios: '',
     indiqueLosMetodos: '',
@@ -611,6 +616,13 @@ sectorProductivo: '',
   }
   };
 }
+/**
+ * Store encargado de manejar el estado de la solicitud 32605.
+ * Extiende de Akita Store y permite actualizar el estado de forma parcial.
+ * Realiza merge profundo en el objeto perfiles para evitar sobrescribir datos existentes.
+ * const store = new Solicitud32605Store();
+ * store.actualizarEstado({ nombre: 'Empresa S.A.', perfiles: { domicilioDeLaInstalacion: 'CDMX' } });
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -637,13 +649,11 @@ export class Solicitud32605Store extends Store<Solicitud32605State> {
    */
   public actualizarEstado(valores: Partial<Solicitud32605State>): void {
     this.update((state) => {
-      // Extract perfiles from values to handle separately
       const { perfiles: PERFILES, ...OTHER_VALUES } = valores;
       
       const NEW_STATE = {
         ...state,
         ...OTHER_VALUES,
-        // Deep merge for perfiles if provided
         ...(PERFILES && {
           perfiles: {
             ...state.perfiles,
