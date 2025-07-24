@@ -5,7 +5,9 @@
     <ng-container>
       <div class="row">
         <div class="col-md-12">
-          <app-solicitud-datos [tablaHeadData]="hSolicitud" [tablaFilaDatos]="dSolicitud"></app-solicitud-datos>
+          <app-solicitud-datos (filaSeleccionada)="onRowSelected($event)" [tablaHeadData]="hSolicitud" [tablaFilaDatos]="dSolicitud"
+          
+        ></app-solicitud-datos>
         </div>
       </div>
     </ng-container>
@@ -40,10 +42,14 @@
       <div class="row">
         <div class="col-md-12">
           <label class="form-label">Aduanas de entradas (M&aacute;ximo 3 aduanas)</label>
-          <crosslist [fechas]="selectRangoDias" [label]="aduanaLabel" 
-          [isDisabled]="esFormularioSoloLectura ? true : false"
-          >
-          </crosslist>
+          <crosslist   
+          [fechasSeleccionadas]="selectRangoDiasAduanas"
+            [fechas]="seleccionarOrigenDelPais" 
+            [label]="aduanaLabel" 
+            [botones]="paisDeProcedenciaBotons"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
+            ></crosslist>
+
         </div>
       </div>
       <div class="row mt-5">
@@ -58,8 +64,13 @@
       <div class="row mt-5">
         <div class="col-md-12">
           <label class="form-label">Pa&iacute;s origen</label>
-          <crosslist [fechas]="selectRangoDias" [label]="paisLabel" [isDisabled]="esFormularioSoloLectura ? true : false">
-          </crosslist>
+          <crosslist  
+          [fechasSeleccionadas]="selectRangoDiasPaisOrigen"
+          [fechas]="seleccionarOrigenDelPaisDos" 
+          [label]="destinoLabel"
+         [botones]="paisDeProcedenciaBotonsDos"
+         [isDisabled]="esFormularioSoloLectura ? true : false"></crosslist>
+
         </div>
       </div>
 
@@ -75,8 +86,13 @@
       <div class="row mt-5">
         <div class="col-md-12">
           <label class="form-label">Destino dentro del país (Entidad federativa)</label>
-          <crosslist [fechas]="selectRangoDias" [label]="destinoLabel" [isDisabled]="esFormularioSoloLectura ? true : false">
-          </crosslist>
+          <crosslist 
+          [fechasSeleccionadas]="selectRangoDiasDestino" 
+           [fechas]="seleccionarOrigenDelPaisTres" 
+           [label]="paisDeProcedenciaLabel" 
+           [botones]="paisDeProcedenciaBotonsTres"
+           [isDisabled]="esFormularioSoloLectura ? true : false"></crosslist>
+
         </div>
       </div>
 
