@@ -240,9 +240,15 @@ export class TercerosrelacionadosComponent {
     this.abrirModalDestinatario.emit();
   }
 
+  /**
+   * Navega a la pantalla para agregar un nuevo exportador.
+   * Resetea las selecciones y el formulario para evitar mostrar datos previos.
+   * @method goToAgregarExportador
+   */
   goToAgregarExportador(): void {
     this.abrirModalExportador.emit();
   }
+
   /**
    * Navega a la pantalla para modificar un destinatario existente.
    * @method modificarDestinatario

@@ -131,7 +131,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       nombre: ['', Validators.required],
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
-      razonSocial: ['', Validators.required],
+      razonSocial: [''],
       pais: ['1', Validators.required],
       codigoPostal: ['', [Validators.minLength(5), Validators.maxLength(5)]],
       estado: ['', Validators.required],
@@ -277,20 +277,32 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    */
   enCambioValorRadio(): void {
     const RAZON_SOCIAL_CTRL = this.destinatarioForm.get('razonSocial');
+    const NOMBRE_CTRL = this.destinatarioForm.get('nombre');
+    const PRIMER_APELLIDO_CTRL = this.destinatarioForm.get('primerApellido');
+
     if (this.destinatarioForm.value.tipoMercancia === 'no') {
-      RAZON_SOCIAL_CTRL?.clearValidators();
-      RAZON_SOCIAL_CTRL?.updateValueAndValidity();
-      this.destinatarioForm.get('nombre')?.setValidators([Validators.required]);
-      this.destinatarioForm.get('nombre')?.updateValueAndValidity();
-      this.destinatarioForm.get('primerApellido')?.setValidators([Validators.required]);
-      this.destinatarioForm.get('primerApellido')?.updateValueAndValidity();
-    } else {
+      // Moral: Razón social es requerida, nombre y apellidos no
       RAZON_SOCIAL_CTRL?.setValidators([Validators.required]);
       RAZON_SOCIAL_CTRL?.updateValueAndValidity();
-      this.destinatarioForm.get('nombre')?.clearValidators();
-      this.destinatarioForm.get('nombre')?.updateValueAndValidity();
-      this.destinatarioForm.get('primerApellido')?.clearValidators();
-      this.destinatarioForm.get('primerApellido')?.updateValueAndValidity();
+      
+      NOMBRE_CTRL?.clearValidators();
+      NOMBRE_CTRL?.setValue('');
+      NOMBRE_CTRL?.updateValueAndValidity();
+      
+      PRIMER_APELLIDO_CTRL?.clearValidators();
+      PRIMER_APELLIDO_CTRL?.setValue('');
+      PRIMER_APELLIDO_CTRL?.updateValueAndValidity();
+    } else {
+      // Física: Nombre y apellidos son requeridos, razón social no
+      NOMBRE_CTRL?.setValidators([Validators.required]);
+      NOMBRE_CTRL?.updateValueAndValidity();
+      
+      PRIMER_APELLIDO_CTRL?.setValidators([Validators.required]);
+      PRIMER_APELLIDO_CTRL?.updateValueAndValidity();
+      
+      RAZON_SOCIAL_CTRL?.clearValidators();
+      RAZON_SOCIAL_CTRL?.setValue('');
+      RAZON_SOCIAL_CTRL?.updateValueAndValidity();
     }
   }
 }
