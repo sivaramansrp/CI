@@ -11,9 +11,9 @@ import { CatalogoResponse, CatalogoSelectComponent, InputFecha, InputFechaCompon
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
-import { Tramite260212Store } from '../../estados/tramite260212.store';
+import { Tramite260212State, Tramite260212Store } from '../../estados/tramite260212.store';
 
-import { FECHA_DE_PAGO } from '../../constantes/permiso-maquila.enum';
+import { ESTADOS_DATA, FECHA_DE_PAGO } from '../../constantes/permiso-maquila.enum';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
@@ -38,6 +38,10 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
   styleUrls: ['./pago-de-derechos.component.scss',],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+   /**
+   * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
+   */
+  public solicitudState!: Tramite260212State;
   /**
    * Indica si el formulario está en modo solo lectura.
    */
@@ -87,7 +91,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Configuración para el input de fecha de inicio.
    */
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
-
+  /**
+   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Fecha de pago por defecto (ejemplo).
    */
@@ -96,7 +103,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Datos para poblar el selector de bancos.
    */
-  dropdownData: CatalogoResponse[] = [];
+  dropdownData: CatalogoResponse[] = ESTADOS_DATA;
 
   /**
    * Inicializa el formulario y el estado de solo lectura según el store global.
@@ -115,14 +122,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo y el estado del componente.
    */
   ngOnInit(): void {
-    this.pagoDerechos = this.fb.group({
-      claveDeReferncia: ['', [Validators.required]],
-      cadenaDeLaDependencia: ['', [Validators.required]],
-      banco: ['', [Validators.required]],
-      llaveDePago: ['', [Validators.required]],
-      fechaDePago: ['', [Validators.required]],
-      importeDePago: ['', [Validators.required]],
-    });
+  
      this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroy$),
@@ -167,24 +167,27 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Sincroniza el formulario con el estado global y carga los datos del selector.
    */
   actualizarEstado(): void {
-    this.pagoDeDerechosService.getData().subscribe((data) => {
-      this.dropdownData = data;
+      this.pagoDerechos = this.fb.group({
+      claveDeReferncia: ['', [Validators.required]],
+      cadenaDeLaDependencia: ['', [Validators.required]],
+      banco: ['', [Validators.required]],
+      llaveDePago: ['', [Validators.required]],
+      fechaDePago: ['', [Validators.required]],
+      importeDePago: ['', [Validators.required]],
     });
-
+   
     this.selectedBanco$.subscribe((selectedBanco) => {
       if (selectedBanco) {
         this.pagoDerechos.get('banco')?.setValue(selectedBanco);
       }
     });
-
     this.claveDeReferncia$.pipe(takeUntil(this.destroy$)).subscribe((claveDeReferncia) => {
-      if (claveDeReferncia) {
+      if (claveDeReferncia) {       
         this.pagoDerechos.get('claveDeReferncia')?.setValue(claveDeReferncia);
       }
     });
-
     this.cadenaDeLaDependencia$.pipe(takeUntil(this.destroy$)).subscribe((cadenaDeLaDependencia) => {
-      if (cadenaDeLaDependencia) {
+      if (cadenaDeLaDependencia) {       
         this.pagoDerechos.get('cadenaDeLaDependencia')?.setValue(cadenaDeLaDependencia);
       }
     });

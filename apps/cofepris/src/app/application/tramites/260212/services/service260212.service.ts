@@ -71,6 +71,14 @@ export class Service260212Service {
    this.tramite260212Store.setLlaveDePago(DATOS.llaveDePago);
    this.tramite260212Store.setFechaDePago(DATOS.setFechaDePago);
     this.tramite260212Store.setImporteDePago(DATOS.importeDePago);
+    
+  this.tramite260212Store.setLosDatos(DATOS.losDatos);
+  this.tramite260212Store.setRfc(DATOS.rfc);
+  this.tramite260212Store.setNombre(DATOS.nombre);
+  this.tramite260212Store.setPrimerApellido(DATOS.primerApellido);
+  this.tramite260212Store.setSegundoApellido(DATOS.segundoApellido);
+    this.tramite260212Store.setAvisoclave(DATOS.avisoclave);
+  this.tramite260212Store.setNoLicenciaSanitaria(DATOS.noLicenciaSanitaria);
   }
 
   /**

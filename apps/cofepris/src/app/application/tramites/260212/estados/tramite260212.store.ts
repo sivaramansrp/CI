@@ -95,7 +95,14 @@ export interface Tramite260212State {
   /**
    * Importe de pago.
    */
-  importeDePago:string
+  importeDePago:string,
+   losDatos: string;
+  rfc: string;
+  nombre: string;
+  primerApellido: string;
+  segundoApellido: string;
+      avisoclave: string;
+      noLicenciaSanitaria: string;
 }
 
 /**
@@ -126,7 +133,14 @@ export function createInitialState(): Tramite260212State {
     CadenaDeLaDependencia:'',
     llaveDePago:'',
     setFechaDePago:'',
-    importeDePago:''
+    importeDePago:'',
+       losDatos: '',
+      rfc: '',
+      nombre: '',
+      primerApellido: '',
+      segundoApellido: '',
+          avisoclave: '',
+      noLicenciaSanitaria: '',
   };
 }
 @Injectable({
@@ -377,5 +391,47 @@ export class Tramite260212Store extends Store<Tramite260212State> {
       ...state,
       importeDePago,
     }));
+  }
+   public setLosDatos(losDatos: string): void {
+    this.update((state) => ({
+      ...state,
+      losDatos,
+    }));
+  }
+
+  public setRfc(rfc: string): void {
+    this.update((state) => ({
+      ...state,
+      rfc,
+    }));
+  }
+
+  public setNombre(nombre: string): void {
+    this.update((state) => ({
+      ...state,
+      nombre,
+    }));
+  }
+
+  public setPrimerApellido(primerApellido: string): void {
+    this.update((state) => ({
+      ...state,
+      primerApellido,
+    }));
+  }
+
+  public setSegundoApellido(segundoApellido: string): void {
+    this.update((state) => ({
+      ...state,
+      segundoApellido,
+    }));
+  }
+
+  public setAvisoclave(avisoclave: string): void {
+    this.update(state => ({ ...state, avisoclave }));
+  }
+
+  public setNoLicenciaSanitaria(noLicenciaSanitaria: string): void {
+    this.update(state => ({ ...state, noLicenciaSanitaria }));
   }
 }

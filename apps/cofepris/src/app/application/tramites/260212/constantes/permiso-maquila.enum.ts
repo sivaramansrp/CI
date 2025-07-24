@@ -68,3 +68,14 @@ export const PERSONA_OPCIONES_DE_BOTON_DE_RADIO = [
       hint: 'Una persona moral es entendida como una empresa con una actividad específica.'
   }
 ];
+export const ESTADOS_DATA = [
+  { id: 1, descripcion: "AGUASCALIENTES" },
+  { id: 2, descripcion: "BAJA CALIFORNIA" },
+  { id: 3, descripcion: "BAJA CALIFORNIA SUR" },
+  { id: 4, descripcion: "CAMPECHE" }
+];
+export const ADUANAS_DATA = [
+  { id: 1, descripcion: "SINALOA" },
+  { id: 2, descripcion: "Aduana 2" },
+  { id: 3, descripcion: "Aduana 3" }
+];

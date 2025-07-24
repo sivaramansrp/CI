@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CatalogoResponse, CatalogoSelectComponent, } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Tramite260212Store } from '../../estados/tramite260212.store';
+import { Tramite260212State, Tramite260212Store } from '../../estados/tramite260212.store';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
@@ -34,6 +34,14 @@ export class FormularioOperacionComercialComponent implements OnInit, OnDestroy 
  * Cuando es verdadero, el usuario no puede editar los campos del formulario.
  */
    public esFormularioSoloLectura: boolean = true;
+     /**
+   * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
+   */
+  public solicitudState!: Tramite260212State;
+  /**
+   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
  /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
   /** Observable para el estado seleccionado */
@@ -70,32 +78,7 @@ export class FormularioOperacionComercialComponent implements OnInit, OnDestroy 
     private tramite260212Query: Tramite260212Query,
     private consultaioQuery: ConsultaioQuery
   ) {
-     
-  }
-
-  /**
- * Método del ciclo de vida Angular que se ejecuta al inicializar el componente.
- * - Inicializa el formulario.
- * - Recupera las claves del catálogo mediante el servicio.
- */
-  ngOnInit(): void {
-this.formularioOperacionInitial();
-this. inicializarEstadoFormulario();
-}
-
-  /**
-   * Inicializa el formulario de operación comercial con los campos requeridos y sus validaciones.
-   * @returns {void}
-   */
-  formularioOperacionInitial(): void {
-    this.formularioOperacionForm = this.fb.group({
-      avisoclave: [''],
-      noLicenciaSanitaria: [''],
-      regimen: ['', Validators.required],
-      entradas: []
-
-    })
-    this.consultaioQuery.selectConsultaioState$
+        this.consultaioQuery.selectConsultaioState$
         .pipe(
           takeUntil(this.destroy$),
           map((seccionState)=>{
@@ -107,19 +90,25 @@ this. inicializarEstadoFormulario();
   }
 
   /**
+ * Método del ciclo de vida Angular que se ejecuta al inicializar el componente.
+ * - Inicializa el formulario.
+ * - Recupera las claves del catálogo mediante el servicio.
+ */
+  ngOnInit(): void { 
+this. inicializarEstadoFormulario();
+}
+
+  /**
    * Inicializa el estado del formulario según el modo de solo lectura.
    * Si está en modo solo lectura, deshabilita el formulario; si no, lo habilita y actualiza los valores.
    * @returns {void}
    */
   inicializarEstadoFormulario(): void {
-    if (!this.formularioOperacionForm) {
-      return;
-    }
-    if (this.esFormularioSoloLectura) {
+     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-      this.actualizarEstado();
-    }  
+     this.actualizarEstado()
+    } 
   }
 
   /**
@@ -128,14 +117,13 @@ this. inicializarEstadoFormulario();
    * @returns {void}
    */
   guardarDatosFormulario(): void {
-    if (!this.formularioOperacionForm) {
-     return;
-    }
     this.actualizarEstado();
     if (this.esFormularioSoloLectura) {
-      this.formularioOperacionForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
+         if (this.esFormularioSoloLectura) {
+       this.formularioOperacionForm.disable();
+      } else {
       this.formularioOperacionForm.enable();
+      }    
     }
   }
 
@@ -145,6 +133,24 @@ this. inicializarEstadoFormulario();
    * @returns {void}
    */
   actualizarEstado(): void {
+       this.tramite260212Query.selectSolicitud$
+              .pipe(
+                takeUntil(this.destroyNotifier$),
+                map((seccionState) => {
+                  this.solicitudState = seccionState as Tramite260212State;
+                })
+              )
+              .subscribe()
+
+       this.formularioOperacionForm = this.fb.group({
+      avisoclave: [this.solicitudState.avisoclave],
+      noLicenciaSanitaria: [this.solicitudState.noLicenciaSanitaria],
+      regimen: ['', Validators.required],
+      entradas: []
+
+    })
+  
+
    this.solicitudService.getClave()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data): void => {
