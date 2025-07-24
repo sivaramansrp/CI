@@ -85,15 +85,11 @@ import { ModalComponent } from '../modal/modal.component';
  * @method setValoresStore() - Actualiza el store del trámite con el valor de un campo específico del formulario.
  * @method ngOnDestroy() - Se ejecuta cuando el componente es destruido. Limpia los recursos y previene memory leaks.
  */
-// export interface Mercancias {
-//   // existing properties...
-//   tipoEspecie: string; // or whatever type it should be
-// }
 
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
-   
+  /** Modal para mostrar la información de terceros */
   
-  showtercerosModal = false;
+   showtercerosModal = false;
 
 /** Indica si el formulario debe mostrarse en modo solo lectura.  
  *  Controla la habilitación o deshabilitación de los campos. */
