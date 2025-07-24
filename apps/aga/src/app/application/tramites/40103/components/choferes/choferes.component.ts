@@ -83,29 +83,67 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   ],
 })
 export class ChoferesComponent {
+  /**
+   * Constante con las páginas de choferes.
+   * @type {typeof CHOFERES_PAGE}
+   */
   CHOFERES_PAGE = CHOFERES_PAGE;
+
+  /**
+   * Constante con los textos utilizados en el componente.
+   * @type {typeof TEXTOS}
+   */
   TEXTOS = TEXTOS;
+
+  /**
+   * Pestaña activa en la interfaz de choferes ('nacional' o 'extranjero').
+   * @type {string}
+   */
   activeTab: string = 'nacional';
 
-  // Arrays to store choferes data
+  /**
+   * Lista de choferes nacionales registrados.
+   * @type {any[]}
+   */
   choferesNacionales: any[] = [];
+
+  /**
+   * Lista de choferes extranjeros registrados.
+   * @type {any[]}
+   */
   choferesExtranjeros: any[] = [];
 
+  /**
+   * Cambia la pestaña activa entre choferes nacionales y extranjeros.
+   * @param {string} tab - Nombre de la pestaña a activar ('nacional' o 'extranjero').
+   */
   setActiveTab(tab: string): void {
     this.activeTab = tab;
   }
 
-  // Handler for adding a nacional chofer
+  /**
+   * Agrega un chofer nacional a la lista de choferes nacionales.
+   * @param {any} chofer - Objeto con los datos del chofer nacional.
+   */
   onAddChoferNacional(chofer: any) {
     this.choferesNacionales = [...this.choferesNacionales, chofer];
   }
 
-  // Handler for adding an extranjero chofer
+  /**
+   * Agrega un chofer extranjero a la lista de choferes extranjeros.
+   * @param {any} chofer - Objeto con los datos del chofer extranjero.
+   */
   onAddChoferExtranjero(chofer: any) {
     this.choferesExtranjeros = [...this.choferesExtranjeros, chofer];
   }
 
-  // Optionally handle cancel events (no-op for now)
+  /**
+   * Cancela la operación de alta o edición de chofer nacional.
+   */
   onCancelChoferNacional() {}
+
+  /**
+   * Cancela la operación de alta o edición de chofer extranjero.
+   */
   onCancelChoferExtranjero() {}
 }
