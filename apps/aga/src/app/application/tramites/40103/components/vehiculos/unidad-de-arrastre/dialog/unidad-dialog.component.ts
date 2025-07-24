@@ -199,14 +199,14 @@ export class UnidadDialogComponent implements OnInit {
    * Abre el modal de la unidad.
    * (Implementar lógica de apertura si es necesario)
    */
-  openModal(): void {
+  abiertoModal(): void {
     // Este método debería abrir el diálogo modal.
   }
 
   /**
    * Cierra el modal y emite el evento de cancelación.
    */
-  closeModal(): void {
+  cerrarModal(): void {
     this.cancel.emit();
   }
 
@@ -237,7 +237,7 @@ export class UnidadDialogComponent implements OnInit {
         vinVehiculo: raw.numero
       };
       this.save.emit(unidadData);
-      this.closeModal();
+      this.cerrarModal();
     } else {
       this.alertaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,

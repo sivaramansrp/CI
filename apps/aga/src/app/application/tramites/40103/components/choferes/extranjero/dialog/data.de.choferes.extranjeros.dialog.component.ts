@@ -28,7 +28,7 @@ import { CommonModule } from "@angular/common";
  *   [readonly]="true"
  *   [datosDeChofere]="chofer"
  *   (addModalEvent)="onAdd($event)"
- *   (cancelEvent)="onCancel()"
+ *   (cancelarEvent)="onCancel()"
  * ></app-choferes-datos-extranjeros-dialog>
  */
 @Component({
@@ -73,7 +73,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
   /**
    * Permite solo dígitos en el campo numeroDelSeguroSocial.
    */
-  onInputDigitsOnly(event: Event): void {
+  enInputDigitsOnly(event: Event): void {
     const input = event.target as HTMLInputElement;
     const originalValue = input.value;
     const digitsOnly = originalValue.replace(/\D/g, '');
@@ -137,7 +137,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * Evento emitido al cancelar el modal.
    * @type {EventEmitter<void>}
    */
-  @Output() cancelEvent = new EventEmitter<void>();
+  @Output() cancelarEvent = new EventEmitter<void>();
 
   /**
    * Evento emitido al agregar o editar un chofer nacional.
@@ -200,7 +200,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
     });
 
     await this.paisListData();
-    await this.updateListsData(this.datosDeChofere);
+    await this.actualizarListasDatos(this.datosDeChofere);
 
   }
 
@@ -331,7 +331,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * Abre el modal de choferes.
    * @returns {void}
    */
-  openModal(): void {
+  abiertoModal(): void {
     this.modalRef = this.modalService.show(this.datosDeChoferesModal, { class: 'modal-xl' });
   }
 
@@ -339,9 +339,9 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * Cierra el modal de choferes y emite el evento de cancelación.
    * @returns {void}
    */
-  closeModal(): void {
+  cerrarModal(): void {
     this.modalRef?.hide();
-    this.cancelEvent.emit();
+    this.cancelarEvent.emit();
   }
 
   /**
@@ -350,7 +350,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * Este método reinicia todos los campos del formulario `formChoferes` con valores vacíos o por defecto,
    * permitiendo limpiar el formulario para una nueva entrada de datos.
    */
-  resetForm(): void {
+  restablecerFormulario(): void {
     this.formChoferes.reset({
       curp: '',
       rfc: '',
@@ -425,7 +425,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
           };
           return;
         }
-        this.updateListsData(response[0]);
+        this.actualizarListasDatos(response[0]);
         // Rellenar el formulario
         this.formChoferes.patchValue(response[0]);
       });
@@ -436,7 +436,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * @param data Datos del chofer nacional.
    * @returns {Promise<void>}
    */
-  private updateListsData(data: ChoferesExtranjeros): void {
+  private actualizarListasDatos(data: ChoferesExtranjeros): void {
     data.pais = (this.paisList.find((p: Catalogo) => p.descripcion === data.pais)?.id)?.toString();
   }
 
@@ -465,7 +465,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
 
       // Aquí puedes realizar la lógica para guardar los datos del chofer
       this.addModalEvent.emit(DATA);
-      this.closeModal();
+      this.cerrarModal();
     } else {
       this.alertaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,

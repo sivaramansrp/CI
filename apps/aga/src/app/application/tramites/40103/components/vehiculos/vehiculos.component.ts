@@ -751,14 +751,14 @@ export class VehiculosComponent implements OnInit {
     this.selectedUnidadIndex = event && event.length > 0 ? event[0].index : null;
   }
 
-  deleteVehiculoRow() {
+  eliminarVehiculoRow() {
     if (this.selectedVehiculoIndex !== null) {
       this.vehiculosTablaConfig.datos.splice(this.selectedVehiculoIndex, 1);
       this.selectedVehiculoIndex = null;
     }
   }
 
-  deleteUnidadRow() {
+  eliminarUnidadRow() {
     if (this.selectedUnidadIndex !== null) {
       this.unidadesTablaConfig.datos.splice(this.selectedUnidadIndex, 1);
       this.selectedUnidadIndex = null;

@@ -6,11 +6,11 @@
     <div class="row mt-3">
         <div class="col-md-12 text-end">
             <div class="btn-group">
-                <button class="btn btn-default" type="button" (click)="deleteUnidadRow()"
-                    [disabled]="isReadonly || unidadesArrastreSelected.length === 0">
+                <button class="btn btn-default" type="button" (click)="eliminarUnidadRow()"
+                    [disabled]="esSoloLectura || unidadesArrastreSelected.length === 0">
                     Eliminar
                 </button>
-                <button class="btn btn-primary ms-2" type="button" (click)="showUnidadDialog = true" [disabled]="isReadonly">
+                <button class="btn btn-primary ms-2" type="button" (click)="showUnidadDialog = true" [disabled]="esSoloLectura">
                     Buscar
                 </button>
             </div>
@@ -21,7 +21,7 @@
       <div class="modal d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
         <app-unidad-dialog
           [unidad]="unidadDialogData"
-          [readonly]="isReadonly"
+          [readonly]="esSoloLectura"
           [tipoDeUnidadCatalogo]="tipoDeUnidadCatalogo"
           [paisEmisorCatalogo]="paisEmisorCatalogo"
           [anoCatalogo]="anoCatalogo"

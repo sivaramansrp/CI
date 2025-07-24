@@ -33,7 +33,7 @@
             <button class="btn btn-default" type="button" (click)="startEditVehiculo(selectedVehiculoIndex!)" [disabled]="isReadonly || selectedVehiculoIndex === null">
               Modificar
             </button>
-            <button class="btn btn-default ms-2" type="button" (click)="deleteVehiculoRow()" [disabled]="isReadonly || selectedVehiculoIndex === null">
+            <button class="btn btn-default ms-2" type="button" (click)="eliminarVehiculoRow()" [disabled]="isReadonly || selectedVehiculoIndex === null">
               Eliminar
             </button>
             <button class="btn btn-primary ms-2" (click)="abiertoPedimento()" [disabled]="isReadonly">
@@ -309,7 +309,7 @@
           <button class="btn btn-default" type="button" (click)="startEditUnidad(selectedUnidadIndex!)" [disabled]="isReadonly || selectedUnidadIndex === null">
             Modificar
           </button>
-          <button class="btn btn-default ms-2" type="button" (click)="deleteUnidadRow()" [disabled]="isReadonly || selectedUnidadIndex === null">
+          <button class="btn btn-default ms-2" type="button" (click)="eliminarUnidadRow()" [disabled]="isReadonly || selectedUnidadIndex === null">
             Eliminar
           </button>
           <button class="btn btn-primary ms-2" (click)="abiertoPedimentoUnidad()" [disabled]="isReadonly">

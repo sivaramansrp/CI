@@ -1,5 +1,23 @@
+
+/**
+ * Importa la definición de columna para tablas dinámicas.
+ */
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 
+
+/**
+ * Interfaz que representa la estructura de una unidad de arrastre.
+ * Incluye los campos principales para identificar y describir una unidad de arrastre utilizada en el transporte.
+ *
+ * @interface UnidadArrastre
+ * @property {string} numeroEconomico - Número económico de la unidad.
+ * @property {string} tipoUnidad - Tipo de unidad de arrastre (ej. remolque, semirremolque).
+ * @property {string} marca - Marca del fabricante de la unidad.
+ * @property {string} modelo - Modelo de la unidad.
+ * @property {string} placas - Placas de circulación.
+ * @property {string} capacidad - Capacidad de carga de la unidad.
+ * @property {string} propietario - Nombre del propietario de la unidad.
+ */
 export interface UnidadArrastre {
   numeroEconomico: string;
   tipoUnidad: string;
@@ -10,6 +28,13 @@ export interface UnidadArrastre {
   propietario: string;
 }
 
+/**
+ * Columnas de la tabla para mostrar las unidades de arrastre.
+ * Cada columna define el encabezado, la clave de acceso y el orden de aparición.
+ *
+ * @const UNIDADES_ARRASTRE_COLUMNAS
+ * @type {ConfiguracionColumna<UnidadArrastre>[]}
+ */
 export const UNIDADES_ARRASTRE_COLUMNAS: ConfiguracionColumna<UnidadArrastre>[] = [
   {
     encabezado: 'Número económico',
@@ -48,6 +73,13 @@ export const UNIDADES_ARRASTRE_COLUMNAS: ConfiguracionColumna<UnidadArrastre>[] 
   },
 ];
 
+
+/**
+ * Textos y mensajes utilizados en la gestión de unidades de arrastre.
+ *
+ * @const TEXTOS_UNIDAD_ARRASTRE
+ * @property {string} MENSAJE_MODIFICACION - Mensaje de ayuda para modificar o eliminar una unidad de arrastre.
+ */
 export const TEXTOS_UNIDAD_ARRASTRE = {
   MENSAJE_MODIFICACION: `<p>Para modificar o dar de baja una unidad de arrastre existente, primero debe seleccionarla de la tabla.</p>`,
 };

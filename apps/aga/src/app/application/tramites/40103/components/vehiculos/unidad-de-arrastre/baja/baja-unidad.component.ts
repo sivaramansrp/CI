@@ -73,7 +73,7 @@ export class BajaUnidadComponent {
    * Indica si la vista es de solo lectura.
    * @type {boolean}
    */
-  isReadonly = false;
+  esSoloLectura = false;
 
   /**
    * Indica si se muestra el diálogo de unidad.
@@ -125,7 +125,7 @@ export class BajaUnidadComponent {
    * Elimina la fila de unidad seleccionada.
    * @returns {void}
    */
-  deleteUnidadRow() {
+  eliminarUnidadRow() {
     this.eliminarUnidad();
   }
 }

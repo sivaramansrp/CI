@@ -96,13 +96,13 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    * Evento emitido al cancelar el modal.
    * @type {EventEmitter<void>}
    */
-  @Output() cancelEvent = new EventEmitter<void>();
+  @Output() cancelarEvento = new EventEmitter<void>();
 
   /**
    * Evento emitido al agregar o editar un chofer nacional.
    * @type {EventEmitter<DatosDelChoferNacional>}
    */
-  @Output() addModalEvent = new EventEmitter<DatosDelChoferNacional>();
+  @Output() agregarEventoModal = new EventEmitter<DatosDelChoferNacional>();
 
   /**
    * Alerta de notificación para mostrar mensajes al usuario.
@@ -305,9 +305,11 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    * Cierra el modal de choferes y emite el evento de cancelación.
    * @returns {void}
    */
-  closeModal(): void {
-    this.modalRef?.hide();
-    this.cancelEvent.emit();
+  cerrarModal(): void {
+    if (this.modalRef) {
+      this.modalRef.hide();
+    }
+    this.cancelarEvento.emit();
   }
 
   /**
@@ -316,7 +318,7 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    * Este método reinicia todos los campos del formulario `formChoferes` con valores vacíos o por defecto,
    * permitiendo limpiar el formulario para una nueva entrada de datos.
    */
-  resetForm(): void {
+  restablecerFormulario(): void {
     this.formChoferes.reset({
       curp: '',
       rfc: '',
@@ -450,8 +452,8 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
       DATA.paisDeResidencia = this.paisList.find(p => p.id === Number(DATA.paisDeResidencia))?.descripcion || '';
 
       // Aquí puedes realizar la lógica para guardar los datos del chofer
-      this.addModalEvent.emit(DATA);
-      this.closeModal();
+      this.agregarEventoModal.emit(DATA);
+      this.cerrarModal();
     } else {
       this.alertaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,

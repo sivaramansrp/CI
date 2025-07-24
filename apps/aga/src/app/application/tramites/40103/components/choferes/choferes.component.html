@@ -34,8 +34,8 @@
     @if(activeTab ==='nacional') {
       <ng-titulo [titulo]="CHOFERES_PAGE.CHOFERES_NACIONALES"></ng-titulo>
       <app-chofere-nacional 
-        (addModalEvent)="onAddChoferNacional($event)" 
-        (cancelEvent)="onCancelChoferNacional()">
+        (addModalEvent)="onAgregarChoferNacional($event)" 
+        (cancelEvent)="onCancelarChoferNacional()">
       </app-chofere-nacional>
       <app-chofere-nacional-notification [mensaje]="TEXTOS.MENSAJE_NACIONAL"></app-chofere-nacional-notification>
       <app-chofere-nacional-modificacion></app-chofere-nacional-modificacion>
@@ -44,8 +44,8 @@
     @if(activeTab ==='extranjero') {
       <ng-titulo [titulo]="CHOFERES_PAGE.CHOFERES_EXTRANJEROS"></ng-titulo>
       <app-chofere-alta-de-extranjeros 
-        (addModalEvent)="onAddChoferExtranjero($event)" 
-        (cancelEvent)="onCancelChoferExtranjero()">
+        (addModalEvent)="onAgregarChoferExtranjero($event)" 
+        (cancelEvent)="onCancelarChoferExtranjero()">
       </app-chofere-alta-de-extranjeros>
       <app-chofere-nacional-notification [mensaje]="TEXTOS.MENSAJE_EXTRANJERO"></app-chofere-nacional-notification>
       <app-chofere-modification-de-choferes></app-chofere-modification-de-choferes>

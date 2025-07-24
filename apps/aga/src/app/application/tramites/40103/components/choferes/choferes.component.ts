@@ -125,7 +125,7 @@ export class ChoferesComponent {
    * Agrega un chofer nacional a la lista de choferes nacionales.
    * @param {any} chofer - Objeto con los datos del chofer nacional.
    */
-  onAddChoferNacional(chofer: any) {
+  onAgregarChoferNacional(chofer: any) {
     this.choferesNacionales = [...this.choferesNacionales, chofer];
   }
 
@@ -133,17 +133,17 @@ export class ChoferesComponent {
    * Agrega un chofer extranjero a la lista de choferes extranjeros.
    * @param {any} chofer - Objeto con los datos del chofer extranjero.
    */
-  onAddChoferExtranjero(chofer: any) {
+  onAgregarChoferExtranjero(chofer: any) {
     this.choferesExtranjeros = [...this.choferesExtranjeros, chofer];
   }
 
   /**
    * Cancela la operación de alta o edición de chofer nacional.
    */
-  onCancelChoferNacional() {}
+  onCancelarChoferNacional() {}
 
   /**
    * Cancela la operación de alta o edición de chofer extranjero.
    */
-  onCancelChoferExtranjero() {}
+  onCancelarChoferExtranjero() {}
 }

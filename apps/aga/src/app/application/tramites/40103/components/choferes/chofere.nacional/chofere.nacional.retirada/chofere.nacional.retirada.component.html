@@ -17,12 +17,12 @@
     <div class="col-md-12 text-end">
       <div class="btn-group">
         <button class="btn btn-default" type="button" 
-          (click)="deleteSelectedRow()" [disabled]="isReadonly">
+          (click)="eliminarFilaSeleccionada()" [disabled]="esSoloLectura">
           Eliminar
         </button>
         <button 
           class="btn btn-primary ms-2" 
-          (click)="addNewRow(agregarModalDialog)" [disabled]="isReadonly">
+          (click)="agregarNuevaFila(agregarModalDialog)" [disabled]="esSoloLectura">
           Buscar
         </button>
       </div>
@@ -32,9 +32,9 @@
         <app-choferes-datos 
           [datosDeChofere]="datosChofere" 
           #datosDeChoferesModal 
-          [readonly]="isReadonly"
-          (addModalEvent)="addModal($event)" 
-          (cancelEvent)="cancelModal()"
+          [readonly]="esSoloLectura"
+          (agregarEventoModal)="agregarModal($event)" 
+          (cancelarEvent)="cancelarModal()" 
         ></app-choferes-datos>
 
       </div>

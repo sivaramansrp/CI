@@ -61,7 +61,7 @@ export class ChofereNacionalRetiradaComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos no pueden ser editados por el usuario.
    * @type {boolean}
    */
-  isReadonly: boolean = false;
+  esSoloLectura: boolean = false;
 
   /**
    * Estado de consulta relacionado con los choferes nacionales.
@@ -137,7 +137,7 @@ export class ChofereNacionalRetiradaComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           if (seccionState.readonly) {
             this.datosConsulta = seccionState;
-            this.isReadonly = this.datosConsulta.readonly;
+            this.esSoloLectura = this.datosConsulta.readonly;
           }
         })
       ).subscribe();
@@ -167,7 +167,7 @@ export class ChofereNacionalRetiradaComponent implements OnInit, OnDestroy {
    * Inicializa un nuevo objeto de chofer nacional y abre el modal para agregar un nuevo registro.
    * @param template - Referencia al template del modal a mostrar.
    */
-  addNewRow(template: TemplateRef<unknown>): void {
+  agregarNuevaFila(template: TemplateRef<unknown>): void {
     this.datosChofere = {} as DatosDelChoferNacional;
     this.openModal(template);
   }
@@ -190,7 +190,7 @@ export class ChofereNacionalRetiradaComponent implements OnInit, OnDestroy {
    * Elimina los registros seleccionados de la lista de choferes nacionales.
    * Si no hay ningún registro seleccionado, muestra una advertencia en consola.
    */
-  deleteSelectedRow(): void {
+  eliminarFilaSeleccionada(): void {
     if (this.datosDelChoferNacionalSelected.length > 0) {
       this.datosDelChoferNacional = this.datosDelChoferNacional.filter(
         (item) => !this.datosDelChoferNacionalSelected.includes(item)
@@ -214,7 +214,7 @@ export class ChofereNacionalRetiradaComponent implements OnInit, OnDestroy {
   /**
    * Cierra el modal de Bootstrap y limpia la referencia.
    */
-  cancelModal(): void {
+  cancelarModal(): void {
     this.modalRef?.hide();
     this.modalRef = null;
   }
@@ -225,12 +225,12 @@ export class ChofereNacionalRetiradaComponent implements OnInit, OnDestroy {
    *
    * @param data - El objeto de datos que representa al chofer nacional que se va a agregar.
    */
-  addModal(data: DatosDelChoferNacional): void {
+  agregarModal(data: DatosDelChoferNacional): void {
     if (this.modalComponent) {
       this.datosDelChoferNacional.push(data);
       this.datosDelChoferNacionalSelected = [];
       this.chofer40103Service.updateDatosDelChoferNacionalRetirada(this.datosDelChoferNacional);
     }
-    this.cancelModal();
+    this.cancelarModal();
   }
 }

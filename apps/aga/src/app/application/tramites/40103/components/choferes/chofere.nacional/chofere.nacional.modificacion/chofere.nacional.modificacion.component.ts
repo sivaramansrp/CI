@@ -215,7 +215,7 @@ export class ChofereNacionalModificacionComponent implements OnInit, OnDestroy {
   /**
    * Cierra el modal de Bootstrap y limpia la referencia.
    */
-  cancelModal(): void {
+  cancelarModal(): void {
     this.modalRef?.hide();
     this.modalRef = null;
   }
@@ -224,12 +224,12 @@ export class ChofereNacionalModificacionComponent implements OnInit, OnDestroy {
    * Agrega un nuevo chofer nacional a la lista y cierra el modal.
    * @param data - Datos del chofer nacional a agregar.
    */
-  addModal(data: DatosDelChoferNacional): void {
+  agregarModal(data: DatosDelChoferNacional): void {
     if (this.modalComponent) {
       this.datosDelChoferNacional.push(data);
       this.datosDelChoferNacionalSelected = [];
       this.chofer40103Service.updateDatosDelChoferNacionalModification(this.datosDelChoferNacional);
     }
-    this.cancelModal();
+    this.cancelarModal();
   }
 }
