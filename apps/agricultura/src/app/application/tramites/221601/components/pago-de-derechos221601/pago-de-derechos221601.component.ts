@@ -276,6 +276,4 @@ fechaFuturaSeleccionada = false;
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }
-

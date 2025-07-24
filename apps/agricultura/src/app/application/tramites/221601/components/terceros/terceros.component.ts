@@ -45,6 +45,23 @@ import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
 
 import { CommonModule } from '@angular/common';
 
+/**
+ * Componente para la gestión de terceros en el trámite 221601 de zoosanitario.
+ * Permite registrar, buscar y administrar datos de personas físicas, morales y plantas TIF.
+ * 
+ * @description Este componente maneja toda la funcionalidad relacionada con terceros,
+ * incluyendo formularios de datos personales, búsqueda de terceros existentes,
+ * gestión de destinatarios y exportadores.
+ * 
+ * @example
+ * ```html
+ * <app-terceros></app-terceros>
+ * ```
+ * 
+ * @author Equipo de desarrollo VUCEM
+ * @version 1.0.0
+ * @since 2025
+ */
 @Component({
   selector: 'app-terceros',
   standalone: true,
@@ -62,31 +79,172 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./terceros.component.scss']
 })
 export class TercerosComponent implements OnInit, OnDestroy {
+  
+  /** 
+   * Formulario reactivo para datos personales del tercero.
+   * Contiene todos los campos necesarios para registrar información personal.
+   * @type {FormGroup}
+   */
   datosPersonales!: FormGroup;
+  
+  /** 
+   * Formulario para seleccionar el tipo de persona (física, moral, planta).
+   * @type {FormGroup}
+   */
   tipoPersonaForm!: FormGroup;
+  
+  /** 
+   * Formulario para búsqueda de terceros existentes en el sistema.
+   * @type {FormGroup}
+   */
   buscarTercerosForm!: FormGroup;
+  
+  /** 
+   * Control de visibilidad del modal de terceros.
+   * @type {boolean}
+   * @default false
+   */
   showtercerosModal = false;
+  
+  /** 
+   * Control de visibilidad del modal de búsqueda de terceros.
+   * @type {boolean}
+   * @default false
+   */
   showBuscarTercerosModal = false;
+  
+  /** 
+   * Catálogo de países disponibles para selección.
+   * @type {Catalogo[]}
+   */
   public paisCatalogo: Catalogo[] = realizar.pais;
+  
+  /** 
+   * Catálogo de estados/entidades federativas disponibles.
+   * @type {Catalogo[]}
+   */
   public estadoCatalogo: Catalogo[] = realizar.estado;
+  
+  /** 
+   * Catálogo de municipios disponibles para selección.
+   * @type {Catalogo[]}
+   */
   public municipioCatalogo: Catalogo[] = realizar.municipio;
+  
+  /** 
+   * Catálogo de colonias disponibles para selección.
+   * @type {Catalogo[]}
+   */
   public coloniaCatalogo: Catalogo[] = realizar.colonia;
+  
+  /** 
+   * Mensaje de texto para tabla obligatoria.
+   * @type {string}
+   */
   TEXTOS: string = MENSAJE_TABLA_OBLIGATORIA;
+  
+  /** 
+   * Lista de exportadores disponibles en el sistema.
+   * @type {Exportador[]}
+   */
   exportador: Exportador[] = realizar.exportador;
+  
+  /** 
+   * Configuración para checkbox en tabla de selección.
+   * @type {TablaSeleccion}
+   */
   public checkbox = TablaSeleccion.CHECKBOX;
+  
+  /** 
+   * Configuración de columnas para la tabla de datos de exportadores.
+   * @type {ConfiguracionColumna<Exportador>[]}
+   */
   configuracionTabla: ConfiguracionColumna<Exportador>[] = CONFIGURATION_TABLA_DATOS;
+  
+  /** 
+   * Lista de destinatarios registrados.
+   * @type {Destinatario[]}
+   */
   destinatario: Destinatario[] = [];
+  
+  /** 
+   * Configuración de columnas para la tabla de destinatarios.
+   * @type {ConfiguracionColumna<Destinatario>[]}
+   */
   configuracionTablaDatos: ConfiguracionColumna<Destinatario>[] = CONFIGURATION_TABLA_DESTINATARIO;
+  
+  /** 
+   * Estado actual de la solicitud del trámite 221601.
+   * @type {Solicitud221601State}
+   */
   public solicitudState!: Solicitud221601State;
+  
+  /** 
+   * Subject para manejar la destrucción de suscripciones.
+   * @type {Subject<void>}
+   * @private
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+  
+  /** 
+   * Control de visibilidad para campos de persona física.
+   * @type {boolean}
+   * @default true
+   */
   showFisicaRow: boolean = true;
+  
+  /** 
+   * Control de visibilidad para campos de persona moral.
+   * @type {boolean}
+   * @default true
+   */
   showMoralRow: boolean = true;
+  
+  /** 
+   * Control de visibilidad para campos de planta TIF.
+   * @type {boolean}
+   * @default false
+   */
   showPlantaRow: boolean = false;
+  
+  /** 
+   * Indica si el formulario debe ser de solo lectura.
+   * @type {boolean}
+   * @default false
+   */
   esFormularioSoloLectura: boolean = false;
 
+  /** 
+   * Nombre del establecimiento TIF seleccionado.
+   * @type {string}
+   * @default ''
+   */
   nombreEstablecimientoTif: string = '';
+  
+  /** 
+   * Número del establecimiento TIF seleccionado.
+   * @type {string}
+   * @default ''
+   */
   numeroEstablecimientoTif: string = '';
 
+  /**
+   * Lista de exportadores seleccionados en la tabla.
+   * @type {Exportador[]}
+   */
+  exportadorSeleccionado: Exportador[];
+
+  /**
+   * Constructor del componente TercerosComponent.
+   * Inicializa los servicios necesarios y configura las suscripciones iniciales.
+   * 
+   * @param fb - Servicio FormBuilder para crear formularios reactivos
+   * @param tramite221601Store - Store para gestión del estado del trámite 221601
+   * @param tramite221601Query - Query para consultar el estado del trámite 221601
+   * @param consultaioQuery - Query para consultar el estado de consultaio
+   * @param cdr - Servicio ChangeDetectorRef para detección de cambios
+   * @param validacionesService - Servicio para validaciones de formularios
+   */
   constructor(
     private fb: FormBuilder,
     private tramite221601Store: Tramite221601Store,
@@ -107,10 +265,23 @@ export class TercerosComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /**
+   * Método del ciclo de vida OnInit.
+   * Se ejecuta después de la inicialización del componente.
+   * Llama a la inicialización del formulario de certificado.
+   * 
+   * @memberof TercerosComponent
+   */
   ngOnInit(): void {
     this.inicializarCertificadoFormulario();
   }
 
+  /**
+   * Inicializa el formulario de certificado basado en el estado de solo lectura.
+   * Determina si debe guardar datos existentes o inicializar formularios nuevos.
+   * 
+   * @memberof TercerosComponent
+   */
   inicializarCertificadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
@@ -119,6 +290,13 @@ export class TercerosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Inicializa todos los formularios reactivos del componente.
+   * Configura el formulario de tipo de persona, búsqueda de terceros y datos personales.
+   * Establece validaciones y suscripciones a cambios de valores.
+   * 
+   * @memberof TercerosComponent
+   */
   inicializarFormulario(): void {
     this.tramite221601Query.selectSolicitud$
       .pipe(
@@ -170,6 +348,12 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.updateStoreWithFormData();
   }
 
+  /**
+   * Guarda los datos del formulario y configura el estado de solo lectura.
+   * Habilita o deshabilita los formularios según el estado de solo lectura.
+   * 
+   * @memberof TercerosComponent
+   */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
@@ -181,6 +365,12 @@ export class TercerosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Actualiza el store con los datos del formulario de datos personales.
+   * Sincroniza el estado local con el estado global de la aplicación.
+   * 
+   * @memberof TercerosComponent
+   */
   updateStoreWithFormData(): void {
     const UPDATE_PERSONALES_FORM: Solicitud221601State = {
       ...this.solicitudState,
@@ -189,6 +379,13 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.tramite221601Store.update(UPDATE_PERSONALES_FORM);
   }
 
+  /**
+   * Maneja los cambios en el tipo de persona seleccionado.
+   * Controla la visibilidad de los diferentes tipos de formularios y campos.
+   * 
+   * @param tipoPersona - Tipo de persona seleccionado ('fisica', 'moral', 'planta')
+   * @memberof TercerosComponent
+   */
   handleTipoPersonaChange(tipoPersona: string): void {
     if (tipoPersona === 'fisica') {
       this.showFisicaRow = true;
@@ -208,16 +405,38 @@ export class TercerosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Establece valores en el store utilizando métodos dinámicos.
+   * Método genérico para actualizar cualquier campo en el store.
+   * 
+   * @param form - Formulario del cual obtener el valor
+   * @param campo - Nombre del campo a obtener
+   * @param metodoNombre - Nombre del método del store a ejecutar
+   * @memberof TercerosComponent
+   */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite221601Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite221601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+  /**
+   * Método del ciclo de vida OnDestroy.
+   * Limpia las suscripciones para evitar memory leaks.
+   * 
+   * @memberof TercerosComponent
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
 
+  /**
+   * Guarda un nuevo destinatario basado en los datos del formulario.
+   * Crea un objeto destinatario y lo agrega a la lista.
+   * Cierra el modal después de guardar.
+   * 
+   * @memberof TercerosComponent
+   */
   guardarDestinatario(): void {
     const FORM_VALUE = this.datosPersonales.value;
     const NUEVO_DESTINATARIO = {
@@ -237,30 +456,65 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.showtercerosModal = !this.showtercerosModal;
   }
 
+  /**
+   * Limpia todos los datos del formulario de datos personales.
+   * Fuerza la detección de cambios y resetea el formulario.
+   * 
+   * @memberof TercerosComponent
+   */
   limpiarDatosFormulario(): void {
     this.cdr.detectChanges();
     this.datosPersonales.reset();
   }
 
+  /**
+   * Cancela la operación de agregar destinatario.
+   * Cierra el modal de terceros sin guardar cambios.
+   * 
+   * @memberof TercerosComponent
+   */
   cancelarDestinatario(): void {
     this.showtercerosModal = !this.showtercerosModal;
   }
 
+  /**
+   * Abre el modal para agregar un nuevo tercero.
+   * Alterna el estado de visibilidad del modal de terceros.
+   * 
+   * @memberof TercerosComponent
+   */
   tercerosAgregar(): void {
     this.showtercerosModal = !this.showtercerosModal;
   }
 
-  exportadorSeleccionado: Exportador[];
-
-  onExportadorSeleccionado(filas: Exportador[]):void {
+  /**
+   * Maneja la selección de exportadores desde la tabla dinámica.
+   * Actualiza la lista de exportadores seleccionados.
+   * 
+   * @param filas - Array de exportadores seleccionados por el usuario
+   * @memberof TercerosComponent
+   */
+  onExportadorSeleccionado(filas: Exportador[]): void {
     this.exportadorSeleccionado = filas;
   }
 
+  /**
+   * Limpia los campos de búsqueda TIF.
+   * Resetea el nombre y número del establecimiento TIF.
+   * 
+   * @memberof TercerosComponent
+   */
   limpiarBusquedaTif(): void {
     this.nombreEstablecimientoTif = '';
     this.numeroEstablecimientoTif = '';
   }
 
+  /**
+   * Abre el modal de búsqueda de terceros existentes.
+   * Muestra el modal y resetea el formulario de búsqueda con valores por defecto.
+   * 
+   * @memberof TercerosComponent
+   */
   abrirBuscarTercerosModal(): void {
     this.showBuscarTercerosModal = true;
     // Reset the search form
@@ -276,10 +530,22 @@ export class TercerosComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Cierra el modal de búsqueda de terceros.
+   * Oculta el modal sin realizar ninguna acción adicional.
+   * 
+   * @memberof TercerosComponent
+   */
   cerrarBuscarTercerosModal(): void {
     this.showBuscarTercerosModal = false;
   }
 
+  /**
+   * Limpia todos los campos del formulario de búsqueda de terceros.
+   * Resetea el formulario con valores por defecto para una nueva búsqueda.
+   * 
+   * @memberof TercerosComponent
+   */
   limpiarBuscarTerceros(): void {
     this.buscarTercerosForm.reset({
       tipoPersonaBuscar: 'fisica',

@@ -265,7 +265,7 @@ mercanciaForm = this.fb.group({
   raza: [''],
   nombreCientifico: [''],
   sexo: [''],
-  tipoEspecie: [''], // <-- Added this line
+  tipoEspecie: [''], 
 });
 
 
@@ -366,9 +366,7 @@ mercanciaForm = this.fb.group({
     const VALOR = form.get(campo)?.value;
     (this.tramite221601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
-
-  
-  /**
+/**
  * Método para abrir dialogo mercancías.
  * 
  * @returns {void}
@@ -391,24 +389,55 @@ mercanciaForm = this.fb.group({
     });
     this.valorSeleccionado = valor;
   }
+  /**
+   * Método que se ejecuta cuando se selecciona un exportador en la tabla.
+   * 
+   * @param filas - Filas seleccionadas del exportador.
+   */
  cancelarDestinatario(): void {
     this.showtercerosModal = !this.showtercerosModal;
   }
 
+/**
+   * Toggles the visibility of the "terceros" modal.
+   *
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
+   */
   tercerosAgregar(): void {
     this.showtercerosModal = !this.showtercerosModal;
   }
+
+
+/**
+ * Saves the merchandise information if the form is valid.
+ *
+ * This method checks the validity of the `mercanciaForm` and, if valid,
+ * maps all required properties of the merchandise using the form values
+ * and default values as needed.
+ *
+ * @returns {void}
+ *
+ * @memberof DatosDeLaSolicitudComponent
+ */
 guardarMercancia():void {
   if (this.mercanciaForm.valid) {
     // Map all required Mercancias properties here, using FORM_VALUE and defaults as needed
 }
 }
+  /**
+   * Closes the modal for adding merchandise.
+   *
+   * This method hides the modal by toggling the `showtercerosModal` property.
+   *
+   * @returns {void}
+   *
+   * @memberof DatosDeLaSolicitudComponent
+   */
 cerrarModal(): void {
   this.showtercerosModal = false;
 }
-
-  
-  /**
+/**
    * Método que se ejecuta cuando el componente es destruido. Limpia los recursos y previene memory leaks.
    */
   ngOnDestroy(): void {
