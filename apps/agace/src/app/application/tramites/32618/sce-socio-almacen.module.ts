@@ -19,8 +19,10 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PerfilesFerrovarioComponent } from './components/perfiles-ferrovario/perfiles-ferrovario.component';
 import { SceSocioAlmacenRoutingModule } from './sce-socio-almacen-routing.module';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
+
 import { TransporteFerroviarioComponent } from './components/transporte-ferroviario/transporte-ferroviario.component';
+
+import { TercerosRelacionadosComponent } from '../../shared/components/terceros-relacionados/terceros-relacionados.component';
 
 
 @NgModule({
@@ -46,7 +48,8 @@ import { TransporteFerroviarioComponent } from './components/transporte-ferrovia
     TituloComponent,
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
-    TransporteFerroviarioComponent
+    TransporteFerroviarioComponent,
+   
   ],
 })
 export class SceSocioAlmacenModule {}

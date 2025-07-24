@@ -65,7 +65,7 @@
       } @case (2) { @if(esDatosRespuesta){
   <app-datos-comunes-tres [consultaState]="consultaState"></app-datos-comunes-tres>
       } } @case (3) { @if(esDatosRespuesta){
-    <app-terceros-relacionados></app-terceros-relacionados>
+    <shared-terceros-relacionados [consultaState]="consultaState"></shared-terceros-relacionados>
       } } @case (4) { @if(esDatosRespuesta){
      
       <app-transporte-ferroviario></app-transporte-ferroviario>

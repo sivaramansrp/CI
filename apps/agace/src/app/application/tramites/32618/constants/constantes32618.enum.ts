@@ -90,21 +90,6 @@ export const TRANSPORTE_FERROVARIO = [
       },
     ],
   },
-  
-  {
-    id: 'customSection1_transporte',
-    labelNombre: '',
-    campo: '',
-    clase: 'col-md-4',
-    tipoInput: 'custom-html',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
-    templateKey: 'customSection1',
-  },
   {
     id: 'indiqueSiCuentaCarga',
     labelNombre: 'Indique si cuenta con la concesión o el permiso vigente, expedido por la SCT para prestar el servicio de transporte ferroviario de carga.',
