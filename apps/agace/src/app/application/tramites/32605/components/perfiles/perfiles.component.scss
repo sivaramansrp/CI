@@ -43,7 +43,7 @@
     cursor: pointer;
   }
   button.toggle-btn:disabled {
-    cursor: none;
+    cursor: no-drop;
   }
   .table-container {
     border: 1px solid #ccc;
