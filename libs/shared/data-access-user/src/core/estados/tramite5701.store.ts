@@ -430,10 +430,10 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param tipoEmpresaCertificada - Tipo de empresa certificada.
    * @description Guarda el tipo de empresa certificada en el estado.
    */
-  public setTipoEmpresaCertificada(tipoEmpresaCertificada: string): void {
+  public setTipoEmpresaCertificada(tipoEmpresaCertificada: string | null): void {
     this.update((state) => ({
       ...state,
-      tipoEmpresaCertificada,
+      tipoEmpresaCertificada: tipoEmpresaCertificada || '',
     }));
   }
 

@@ -243,9 +243,41 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         return;
       }
 
-      this.documentoSeleccionado = this.catalogoDocumentos.find(
-        (doc) => doc.id === id
-      ) as CatalogoDocumento;
+      /**  Buscar el documento principal por el ID base */
+      let DOCUMENTO = this.catalogoDocumentos.find((DOC) => DOC.id === id);
+
+      if (!DOCUMENTO) {
+        /** Si no existe, buscar si es un hijo (adicional) de algún documento principal */
+        for (const DOC of this.catalogoDocumentos) {
+          if (DOC.adicionales) {
+        const ADICIONAL = DOC.adicionales.find((AD) => AD.id === id);
+        if (ADICIONAL) {
+          DOCUMENTO = ADICIONAL;
+          break;
+        }
+          }
+        }
+      }
+
+      /** Si aún no existe, agregarlo como hijo del primer documento principal */
+      if (!DOCUMENTO) {
+        const PRINCIPAL = this.catalogoDocumentos[0];
+        if (PRINCIPAL) {
+          const NUEVO_ADICIONAL: CatalogoDocumento = {
+        id,
+        descripcion: '',
+        tam: PRINCIPAL.tam,
+        dpi: PRINCIPAL.dpi,
+        nuevo: true,
+        uniqueId: crypto.randomUUID(),
+          };
+          PRINCIPAL.adicionales = PRINCIPAL.adicionales || [];
+          PRINCIPAL.adicionales.push(NUEVO_ADICIONAL);
+          DOCUMENTO = NUEVO_ADICIONAL;
+        }
+      }
+
+      this.documentoSeleccionado = DOCUMENTO as CatalogoDocumento;
       const TAMANIO_REQUERIDO: number =
         AnexarDocumentosComponent.convertirKbaBytes(
           this.documentoSeleccionado.tam
@@ -282,6 +314,9 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       );
 
       this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+
+      /** Disparar la detección de cambios para actualizar la visualización del nombre de archivo */
+      this.cdr.detectChanges();
     }
   }
 
@@ -293,6 +328,16 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   existePreview(id: number): boolean {
     const ENCONTRADO = this.listadoArchivos.find((f) => f.id === id);
     return ENCONTRADO !== undefined;
+  }
+
+  /**
+   * Obtiene el nombre del archivo cargado para mostrar en la interfaz.
+   * @param {number} id - El ID del archivo.
+   * @returns {string} El nombre del archivo o texto por defecto.
+   */
+  obtenerNombreArchivo(id: number): string {
+    const ENCONTRADO = this.listadoArchivos.find((f) => f.id === id);
+    return ENCONTRADO ? ENCONTRADO.name : 'No hay archivo seleccionado';
   }
 
   /**
@@ -418,6 +463,9 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     );
 
     this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+    
+    // Trigger change detection to update filename display
+    this.cdr.detectChanges();
   }
 
   /**

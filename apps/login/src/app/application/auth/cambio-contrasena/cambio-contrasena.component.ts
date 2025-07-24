@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Notificacion, NotificacionesComponent, REGEX_CONRASENIA } from '@libs/shared/data-access-user/src';
+import { Notificacion, NotificacionesComponent, REGEX_CONRASENIA, TITULO_MODAL_AVISO } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, catchError, map, of, takeUntil } from 'rxjs';
 import { CambioContrasena } from '../../core/models/cambio-contrasena.model';
 import { CommonModule } from '@angular/common';
@@ -85,7 +85,7 @@ export class CambioContrasenaComponent implements OnInit, OnDestroy {
               tipoNotificacion: 'alert',
               categoria: 'success',
               modo: 'action',
-              titulo: 'Avisos',
+              titulo: TITULO_MODAL_AVISO,
               mensaje: 'Contraseña cambiada correctamente.',
               cerrar: true,
               txtBtnAceptar: 'Aceptar',

@@ -273,6 +273,13 @@ const ROUTES: Routes = [
       import('./tramites/32615/recinto-fiscalizado.module').then(
         (m) => m.RecintoFiscalizadoModule)
       },
+      {
+        path: 'esquema-de-certificacion',
+    loadChildren: () =>
+      import('./tramites/32612/esquema-de-certificacion/esquema-de-certificacion.module').then(
+        (m) => m.EsquemaDeCertificacionModule
+      )
+  },
    {
       path: 'aviso-modification-certificacion',
     loadChildren: () => 

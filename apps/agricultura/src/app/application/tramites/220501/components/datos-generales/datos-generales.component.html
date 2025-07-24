@@ -124,6 +124,13 @@
                   <th>Uso</th>
                   <th>País de orígen</th>
                   <th>Pais de procedencia</th>
+                  @if (solicitud220501State.capturaDatosMercancia === '0') {
+                  <th>Presentación</th>
+                  <th>Cantidad de presentación</th>
+                  <th>Tipo de presentación</th>
+                  <th>Tipo planta</th>
+                  <th>Planta autorizada de origen</th>
+                  }
                   <th>Certificado Internacional Electrónico</th>
                 </tr>
               </thead>
@@ -162,6 +169,13 @@
                   <td>{{ row.Uso }}</td>
                   <td>{{ row.PaisOrigen }}</td>
                   <td>{{ row.PaisProcedencia }}</td>
+                  @if (solicitud220501State.capturaDatosMercancia === '0') {
+                  <td>{{ row.Presentacion }}</td>
+                  <td>{{ row.CantidadPresentacion }}</td>
+                  <td>{{ row.TipoPresentacion }}</td>
+                  <td>{{ row.TipoPlanta }}</td>
+                  <td>{{ row.PlantaAutorizadaOrigen }}</td>
+                  }
                   <td>{{ row.CertificadoInternacionalElectronico }}</td>
                 </tr>
                 }
