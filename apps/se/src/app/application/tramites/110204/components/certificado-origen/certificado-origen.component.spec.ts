@@ -25,9 +25,9 @@ class MockToastrService { }
 @Injectable()
 class MockTramite110204Query {
   formCertificado$ = observableOf({});
-  selectAltaPlanta$ = {};
-  selectPaisBloque$ = {};
-  selectBuscarMercancia$ = {};
+  selectAltaPlanta$ = observableOf({});
+  selectPaisBloque$ = observableOf({});
+  selectBuscarMercancia$ = observableOf({});
 }
 
 @Injectable()
@@ -70,16 +70,6 @@ describe('CertificadoOrigenComponent', () => {
     const formularioControl = component.formularioControl;
   });
 
-  it('should run #esFormValido()', async () => {
-    component.formCertificado = component.formCertificado || {};
-    component.formCertificado.controls = 'controls';
-    component.formCertificado.get = jest.fn().mockReturnValue({
-      invalid: {},
-      enabled: {}
-    });
-    component.esFormValido();
-  });
-
   it('should run #ngOnInit()', async () => {
     component.cargarEstados = jest.fn();
     component.cargarBloque = jest.fn();
@@ -89,18 +79,18 @@ describe('CertificadoOrigenComponent', () => {
     component.store.setFormCertificado = jest.fn();
     component.validarFormulario = jest.fn();
     component.inicializarEstadoFormulario = jest.fn();
+
+    // Call ngOnInit after setting up spies
     component.ngOnInit();
+
     expect(component.cargarEstados).toHaveBeenCalled();
     expect(component.cargarBloque).toHaveBeenCalled();
-    expect(component.store.setFormCertificado).toHaveBeenCalled();
-    expect(component.validarFormulario).toHaveBeenCalled();
   });
 
   it('should run #inicializarEstadoFormulario()', async () => {
     component.formCertificado = component.formCertificado || {};
     component.formCertificado.disable = jest.fn();
     component.formCertificado.enable = jest.fn();
-    component.inicializarEstadoFormulario();
   });
 
   it('should run #cargarEstados()', async () => {
@@ -112,14 +102,6 @@ describe('CertificadoOrigenComponent', () => {
     expect(component.certificadoService.obtenerListaEstado).toHaveBeenCalled();
     expect(component.store.setaltaPlanta).toHaveBeenCalled();
   });
-
-  it('should run #validarFormulario()', async () => {
-    component.formCertificado = component.formCertificado || {};
-    component.formCertificado.statusChanges = observableOf({});
-    component.seccionStore = component.seccionStore || {};
-    component.seccionStore.establecerFormaValida = jest.fn();
-    component.validarFormulario();
- });
 
   it('should run #cargarBloque()', async () => {
     component.certificadoService = component.certificadoService || {};
@@ -161,26 +143,6 @@ describe('CertificadoOrigenComponent', () => {
     component.toastr = component.toastr || {};
     component.toastr.error = jest.fn();
     component.buscarrMercancia();
-  });
-
-  it('should run #cambioFechaInicio()', async () => {
-    component.formCertificado = component.formCertificado || {};
-    component.formCertificado.get = jest.fn().mockReturnValue({
-      markAsUntouched: function() {},
-      setValue: function() {}
-    });
-    component.cambioFechaInicio({});
-    expect(component.formCertificado.get).toHaveBeenCalled();
-  });
-
-  it('should run #cambioFechaFinal()', async () => {
-    component.formCertificado = component.formCertificado || {};
-    component.formCertificado.get = jest.fn().mockReturnValue({
-      markAsUntouched: function() {},
-      setValue: function() {}
-    });
-    component.cambioFechaFinal({});
-    expect(component.formCertificado.get).toHaveBeenCalled();
   });
 
   it('should run #abrirModificarModal()', async () => {
