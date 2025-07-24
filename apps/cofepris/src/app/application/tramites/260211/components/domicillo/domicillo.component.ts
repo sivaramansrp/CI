@@ -47,6 +47,7 @@ import { HttpClient } from '@angular/common/http';
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
 
 import { SanitarioService } from '../../services/sanitario.service';
+import { BANCOS_DATA } from '../../constantes/derechos.model';
 
  
 /**
@@ -239,7 +240,7 @@ editMercanciaIndex: number | null = null;
   /**
    * Lista de catálogos de estados.
    */
-  estado: Catalogo[] = [];
+  estado: Catalogo[] = BANCOS_DATA;
  
   /**
    * Lista de países para la selección de origen.
@@ -331,7 +332,6 @@ public fechaCaducidadInput: InputFecha = FECHA_DE_PAGO;
  */
 ngOnInit(): void {
     this.inicializarEstadoFormulario();
-  this.obtenerEstadoList();
   this.obtenerTablaDatos();
   this.obtenerMercanciasDatos();
  
@@ -536,20 +536,7 @@ paisDeProcedenciaBotonsTres = [
   { btnNombre: 'Agregar selección', class: 'btn-default', funcion: ():void => this.crossList.toArray()[2].agregar('') },
   { btnNombre: 'Restar selección', class: 'btn-danger', funcion: ():void => this.crossList.toArray()[2].quitar('') },
   { btnNombre: 'Restar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[2].quitar('t') },
-];
- 
-/**
- * Obtiene la lista de estados desde un archivo JSON.
- */
-obtenerEstadoList(): void {
-  this.service.obtenerEstadoList()
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe((data) => {
-      const DATOS = data?.data;
-      this.estado = DATOS;
-    });
-}
- 
+];  
 /**
  * Obtiene los datos para la tabla de NICO desde un archivo JSON.
  */
