@@ -5,16 +5,26 @@ export interface SolicitudRequerimientosState {
     /**
      * Parametro del tipo de requerimieto
      */
-    idTipoRequerimiento: number;
+    idTipoRequerimiento: string;
     /**
      * Parametro justificación de evaluación
      */
     justificacionRequerimiento: string;
+    /**
+     * Parametro area solicitante
+     */
+    areaSolicitante: string;
+    /**
+     * Parametro activa pestaña
+     */
+    activarTabSolicitarDocumentos: boolean;
 }
 export function createInitialRequerimientosStates(): SolicitudRequerimientosState {
     return {
-        idTipoRequerimiento: 0,
-        justificacionRequerimiento: ''
+        idTipoRequerimiento: "",
+        justificacionRequerimiento: '',
+        areaSolicitante: '',
+        activarTabSolicitarDocumentos: false
     };
 }
 @Injectable({ providedIn: 'root' })
@@ -33,7 +43,7 @@ export class RequerimientosStates extends Store<SolicitudRequerimientosState> {
      * Guarda el tipo de requerimiento seleccionado 
      * @param idTipoRequerimiento parametro del tipo de requerimieto
      */
-    settipoRequerimientoValue(idTipoRequerimiento: number): void {
+    settipoRequerimientoValue(idTipoRequerimiento: string): void {
         this.update(state => ({ ...state, idTipoRequerimiento }));
     }
     /**
@@ -42,5 +52,19 @@ export class RequerimientosStates extends Store<SolicitudRequerimientosState> {
      */
     setjustificacionRequerimientoValue(justificacionRequerimiento: string): void {
         this.update(state => ({ ...state, justificacionRequerimiento }));
+    }
+    /**
+         * Guardar el area de solicitud de 
+         * @param justificacionRequerimiento parametro 
+         */
+    setareaSolicitanteValue(areaSolicitante: string): void {
+        this.update(state => ({ ...state, areaSolicitante }));
+    }
+    /**
+         * Guardar el valor de la pestaña
+         * @param justificacionRequerimiento parametro 
+         */
+    setPestaniaSolicitudDocumento(activarTabSolicitarDocumentos: boolean): void {
+        this.update(state => ({ ...state, activarTabSolicitarDocumentos }));
     }
 }

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewC
 import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 import { Notificacion } from '../notificaciones/notificaciones.component';
+import { TITULO_MODAL_AVISO } from '../../constantes/terceros.enums';
 
 @Component({
   selector: 'lib-modal-funciones',
@@ -71,7 +72,7 @@ export class ModalFuncionesComponent implements OnChanges {
           tipoNotificacion: 'alert',
           categoria: 'danger',
           modo: 'action',
-          titulo: 'Avisos',
+          titulo: TITULO_MODAL_AVISO,
           mensaje: 'Tipo de archivo no permitido',
           cerrar: false,
           tiempoDeEspera: 2000,
@@ -85,7 +86,7 @@ export class ModalFuncionesComponent implements OnChanges {
           tipoNotificacion: 'alert',
           categoria: 'danger',
           modo: 'action',
-          titulo: 'Avisos',
+          titulo: TITULO_MODAL_AVISO,
           mensaje: 'El tamaño del archivo excede el límite permitido de ' + this.maxSizeMB + ' MB',
           cerrar: false,
           tiempoDeEspera: 2000,

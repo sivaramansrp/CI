@@ -21,7 +21,7 @@ import {
   FECHAINICIAL,
   SeleccionadasTabla,
 } from '../../models/registro.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -74,6 +74,10 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   soloLectura: boolean = false;
+  /**
+    * Evento para comunicar datos al componente padre.
+    */
+  @Output() dataEvent = new EventEmitter<boolean>();
   /**
    * Texto de alerta mostrado en el componente.
    */
@@ -227,37 +231,37 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
  * Notificador para destruir observables al destruir el componente.
  * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
  */
-private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-/**
- * Opciones del catálogo de tratados.
- * Contiene una lista de objetos del catálogo de tratados obtenidos desde el servicio.
- */
-optionsTratado!: Catalogo[];
+  /**
+   * Opciones del catálogo de tratados.
+   * Contiene una lista de objetos del catálogo de tratados obtenidos desde el servicio.
+   */
+  optionsTratado!: Catalogo[];
 
-/**
- * Opciones del catálogo de países.
- * Contiene una lista de objetos del catálogo de países obtenidos desde el servicio.
- */
-optionsPais!: Catalogo[];
+  /**
+   * Opciones del catálogo de países.
+   * Contiene una lista de objetos del catálogo de países obtenidos desde el servicio.
+   */
+  optionsPais!: Catalogo[];
 
-/**
- * Opciones del catálogo de unidades de medida comercial (UMC).
- * Contiene una lista de objetos del catálogo de UMC obtenidos desde el servicio.
- */
-optionsUMC!: Catalogo[];
+  /**
+   * Opciones del catálogo de unidades de medida comercial (UMC).
+   * Contiene una lista de objetos del catálogo de UMC obtenidos desde el servicio.
+   */
+  optionsUMC!: Catalogo[];
 
-/**
- * Opciones del catálogo de unidades de medida.
- * Contiene una lista de objetos del catálogo de unidades de medida obtenidos desde el servicio.
- */
-optionsUnidadMedida!: Catalogo[];
+  /**
+   * Opciones del catálogo de unidades de medida.
+   * Contiene una lista de objetos del catálogo de unidades de medida obtenidos desde el servicio.
+   */
+  optionsUnidadMedida!: Catalogo[];
 
-/**
- * Opciones del catálogo de tipos de factura.
- * Contiene una lista de objetos del catálogo de tipos de factura obtenidos desde el servicio.
- */
-optionsTipoFactura!: Catalogo[];
+  /**
+   * Opciones del catálogo de tipos de factura.
+   * Contiene una lista de objetos del catálogo de tipos de factura obtenidos desde el servicio.
+   */
+  optionsTipoFactura!: Catalogo[];
 
   /**
    * Datos de la tabla de mercancías disponibles.
@@ -523,25 +527,27 @@ optionsTipoFactura!: Catalogo[];
     if (this.mercanciaForm.valid) {
       this.esMercanciaEnEdicion = true;
       this.esFormulario = false;
+
+      const FORM_VALUES = this.mercanciaForm.value.validacionMercanciaForm;
+
       this.mercanciaSeleccionadasTablaData.splice(0, 1, {
-        fraccionArancelaria:
-          this.mercanciaForm?.value.validacionMercanciaForm
-            .fraccionMercanArancelaria,
-        cantidad: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
-        unidadMedida:
-          this.mercanciaForm?.value.validacionMercanciaForm.unidadMedida,
-        valorMercancia:
-          this.mercanciaForm?.value.validacionMercanciaForm.valordelamercancia,
-        tipoFactura:
-          this.mercanciaForm?.value.validacionMercanciaForm.tipoFactura,
-        numFactura:
-          this.mercanciaForm?.value.validacionMercanciaForm.numeroFactura,
-        complementoDescripcion:
-          this.mercanciaForm?.value.validacionMercanciaForm
-            .complementoDelaDescripcion,
-        fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.fecha,
+        fraccionArancelaria: FORM_VALUES.fraccionMercanArancelaria,
+        cantidad: FORM_VALUES.cantidad,
+        unidadMedida: FORM_VALUES.unidadMedida,
+        valorMercancia: FORM_VALUES.valordelamercancia,
+        tipoFactura: FORM_VALUES.tipoFactura,
+        numFactura: FORM_VALUES.numeroFactura,
+        complementoDescripcion: FORM_VALUES.complementoDelaDescripcion,
+        fechaFactura: FORM_VALUES.fecha,
       });
     }
+  }
+  /**
+    * Cancela la edición de una mercancía.
+    */
+  cancelar() {
+    this.esMercanciaEnEdicion = true;
+    this.esFormulario = false;
   }
   /**
    * Modifica una mercancía existente.
@@ -570,6 +576,7 @@ optionsTipoFactura!: Catalogo[];
    */
   cargaArchivo():void {
     this.cargarArchivo = true;
+    this.dataEvent.emit(false);
   }
   /**
    * Muestra errores en el formulario y desactiva la carga de archivos.

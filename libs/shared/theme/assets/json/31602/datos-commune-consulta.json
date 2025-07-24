@@ -34,5 +34,14 @@
     "numeroAutorizacionCITES": "RFC123456789",
     "archivoNacionales": "archivo",
     "manifestado": true,
-    "protesta": true
+    "protesta": true,
+    "cumpleCon": "Si",
+    "acreditaRealizar": "Si",
+    "cumpleConDos": "Si",
+    "ensucaso": "Si",
+    "alMomento": "Si",
+    "delMismomodo": "Si",
+    "susCertificados": "Si",
+    "afirmativo": "Si",
+    "actualizado": "Si"
 }

@@ -9,7 +9,6 @@ import { ExportadorautorizadoRoutingModule } from './exportador-autorizado-routi
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from "./pages/paso-dos/paso-dos.component";
 import { PasoTresComponent } from "./pages/paso-tres/paso-tres.component";
-import { RegistroExportadorAutorizadoComponent } from "./components/registro-exportador-autorizado/registro-exportador-autorizado.component";
 import { RegistroMercanciaComercializadorComponent } from "./components/registro-mercancia-comercializador/registro-mercancia-comercializador.component";
 import { RepresentacionFederalComponent } from "./components/representacion-federal/representacion-federal.component";
 import { SolicitanteComponent } from "@ng-mf/data-access-user";
@@ -34,7 +33,6 @@ import { BsModalService } from "ngx-bootstrap/modal";
     DatosTratadosAcuerdosComponent,
     RegistroMercanciaComercializadorComponent,
     DatosDeLaMercanciaComponent,
-    RegistroExportadorAutorizadoComponent,
     RepresentacionFederalComponent,
     BtnContinuarComponent,
     TablaDinamicaComponent,
