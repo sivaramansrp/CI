@@ -4276,5 +4276,12 @@
     "linkDashboard": "/agace/rubro-transporte-ferroviario/pantallas",
     "linkDepartment": "/pago/rubro-transporte-ferroviario/pantallas",
     "department": "agace"
+  },
+  {
+    "id": 611,
+    "tramite": 32610,
+    "linkDashboard": "/agace/registro-oae-rfe/solicitud",
+    "linkDepartment": "/pago/registro-oae-rfe/solicitud",
+    "department": "agace"
   }
 ]

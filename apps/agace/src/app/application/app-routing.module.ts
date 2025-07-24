@@ -336,6 +336,13 @@ const ROUTES: Routes = [
     loadChildren: () => 
       import('./tramites/32616/solicitud-de-registro-invocar.module').then(
         (m) => m.SolicitudDeRegistroInvocarModule)
+  },
+  {
+    path: 'registro-oae-rfe',
+    loadChildren: () =>
+      import('./tramites/32610/registro-oae-rfe.module').then(
+        (m) => m.RegistroOaeRfeModule
+      )
   }
 ];
 
