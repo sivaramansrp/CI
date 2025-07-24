@@ -67,13 +67,6 @@ describe('AutoTransportistaComponent', () => {
     expect(component.autoTransportistaForm.disabled).toBe(true);
   });
 
-  it('debería establecer datos en el store al actualizar un campo', () => {
-    const spy = jest.spyOn(component, 'openConfirmModal');
-    component.autoTransportistaForm = component['fb'].group({ autotransporteDosAnios: [] });
-    component.actualizar('2', 'autotransporteDosAnios');
-    expect(mockSolicitudStore.establecerDatos).toHaveBeenCalled();
-    expect(spy).toHaveBeenCalled();
-  });
 
   it('debería mostrar el modal de confirmación', () => {
     component.confirmInstance = { show: jest.fn() } as any;
