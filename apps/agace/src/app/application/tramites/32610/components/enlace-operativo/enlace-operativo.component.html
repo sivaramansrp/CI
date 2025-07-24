@@ -28,13 +28,7 @@
               }"
             >
               <div class="panel-body">
-                <div
-                  class="row"
-                  *ngIf="
-                    mostrarError &&
-                    (!enlaceOperativoData || enlaceOperativoData.length === 0)
-                  "
-                >
+                <div class="row" *ngIf="mostrarError && (!enlaceOperativoData || enlaceOperativoData.length === 0)">
                   <div class="col-md-12 text-danger mt-3">
                     <b>Se debe agregar por lo menos un enlace operativo</b>
                   </div>
@@ -55,11 +49,10 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-12">
-        <div class="d-flex justify-content-end">
-            <button
-            class="btn btn-default"
+      <div class="d-flex justify-content-end">
+        <div class="d-flex flex-row flex-wrap gap-3">
+          <button
+            class="btn btn-primary"
             type="button"
             [disabled]="esFormularioSoloLectura"
             (click)="confirmeliminarEnlaceItem()"
@@ -67,16 +60,16 @@
             Eliminar
           </button>
           <button
-            class="btn btn-danger me-2"
+            class="btn btn-primary"
             type="button"
             [disabled]="esFormularioSoloLectura"
             (click)="modificarItemEnlace()"
           >
             Modificar
           </button>
-            <button
+          <button
             type="button"
-            class="btn btn-primary me-2"
+            class="btn btn-primary"
             [disabled]="esFormularioSoloLectura"
             (click)="agregarDialogoDatos()"
           >
@@ -84,7 +77,6 @@
           </button>
         </div>
       </div>
-    </div>
   </form>
 </div>
 

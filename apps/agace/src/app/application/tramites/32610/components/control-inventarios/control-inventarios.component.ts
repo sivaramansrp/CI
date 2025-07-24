@@ -57,7 +57,7 @@ import { Solicitud32610Query } from '../../estados/solicitud32610.query';
   styleUrl: './control-inventarios.component.scss',
 })
 export class ControlInventariosComponent implements OnInit, OnDestroy {
-    /**
+     /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
@@ -279,8 +279,8 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     this.registroControlInventariosForm = this.fb.group({
       id: [null],
       sistemaControlInventariosArt59: ['', [Validators.required]],
-      nombreSistema: [{value: '', disabled: true}, [Validators.required]],
-      lugarRadicacion: [{value: '', disabled: true}, Validators.required],
+      nombreSistema: [{value: '', disabled: true}],
+      lugarRadicacion: [{value: '', disabled: true}],
       cumpleAnexo24: [false],
     });
 
@@ -523,7 +523,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
       this.multipleSeleccionPopupAbierto = true;
       return;
     }
-  
+ 
     if (SELECCIONADAS.length > 1) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -542,8 +542,11 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     this.agregarDialogoDatos();
     this.patchModifyiedData();
   }
+ 
   
-  /**
+
+
+    /**
    * Abre el cuadro de diálogo modal para el registro de inventarios.
    */
   agregarDialogoDatos(): void {
@@ -555,6 +558,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
       MODAL_INSTANCIA.show();
     }
   }
+
 
   /**
    * @method patchModifyiedData
@@ -634,6 +638,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     }
     this.abrirElimninarConfirmationopup();
   }
+ 
   /**
    * @method abrirElimninarConfirmationopup
    * Abre un popup de confirmación para eliminar los registros seleccionados.
@@ -840,18 +845,6 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     this.colapsable = !this.colapsable;
   }
   /**
-   * @method validarFormularios
-   * Método público que valida todos los formularios del componente.
-   * Este método puede ser llamado desde el componente padre para triggear validación.
-   * 
-   * @returns {void}
-   */
-  public validarFormularios(): void {
-    if (this.registroControlInventariosForm) {
-      this.registroControlInventariosForm.markAllAsTouched();
-    }
-  }
-    /**
    * @method ngOnDestroy
    * Hook de ciclo de vida que se ejecuta al destruir el componente.
    * Libera recursos y suscripciones.
@@ -861,4 +854,19 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 
+  /**
+   * @method validarFormularios
+   * Método público que valida todos los formularios del componente.
+   * Este método puede ser llamado desde el componente padre para triggear validación.
+   * 
+   * @returns {void}
+   */
+  public validarFormularios(): boolean {
+    // Validar formulario principal de registro
+    if (this.registroControlInventariosForm) {
+      this.registroControlInventariosForm.markAllAsTouched();
+      return this.registroControlInventariosForm.valid;
+    }
+    return false;
+  }
 }

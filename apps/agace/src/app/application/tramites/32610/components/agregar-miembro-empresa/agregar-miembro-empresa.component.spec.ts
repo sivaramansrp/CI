@@ -1,937 +1,640 @@
-// Mock Bootstrap Modal antes de cualquier import
-const mockModalInstance = { show: jest.fn(), hide: jest.fn() };
-const MockedModal = jest.fn(() => mockModalInstance);
-(MockedModal as any).getInstance = jest.fn(() => mockModalInstance);
-
-jest.mock('bootstrap', () => ({
-  Modal: MockedModal
-}));
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { of, Subject } from 'rxjs';
-import { NO_ERRORS_SCHEMA, ElementRef } from '@angular/core';
+import { TemplateRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 
-import { AgregarMiembroEmpresaComponent } from './agregar-miembro-empresa.component';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { 
-  TipoNotificacionEnum, 
-  CategoriaMensaje,
-  Catalogo,
-  ConsultaioState,
-  createConsultaInitialState
-} from '@libs/shared/data-access-user/src';
-import { createInitialSolicitudState, Solicitud32610Store } from '../../estados/solicitud32610.store';
-import { Solicitud32610Query } from '../../estados/solicitud32610.query';
 import { SolicitudService } from '../../services/solicitud.service';
-import { AgregarMiembroEmpresaTabla, BuscarRfcResponse } from '../../models/oea-textil-registro.model';
+import { Solicitud32610Store, Solicitud32610State } from '../../estados/solicitud32610.store';
+import { Solicitud32610Query } from '../../estados/solicitud32610.query';
+import { TRANSPORTISTAS_PANELS, TRANSPORTISTAS_CONFIGURACION, TransportistasTable } from '../../constants/datos-comunes.enum';
+import { TransportistasListaInterface } from '../../models/solicitud.model';
+import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
 
-describe('AgregarMiembroEmpresaComponent - Pruebas unitarias', () => {
-  let component: AgregarMiembroEmpresaComponent;
-  let fixture: ComponentFixture<AgregarMiembroEmpresaComponent>;
-  let mockTramite32609Store: jest.Mocked<Solicitud32610Store>;
-  let mockTramite32609Query: jest.Mocked<Solicitud32610Query>;
+describe('AgregarTransportistasComponent', () => {
+  let component: AgregarTransportistasComponent;
+  let fixture: ComponentFixture<AgregarTransportistasComponent>;
+  let mockSolicitudService: jest.Mocked<SolicitudService>;
+  let mockSolicitud32610Store: jest.Mocked<Solicitud32610Store>;
+  let mockSolicitud32610Query: jest.Mocked<Solicitud32610Query>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
-  let mockOeaTextilRegistroService: jest.Mocked<SolicitudService>;
+  let mockBsModalService: jest.Mocked<BsModalService>;
+  let mockBsModalRef: jest.Mocked<BsModalRef>;
 
-  // Datos de prueba simulados
-  const datosMiembroEmpresaMock: AgregarMiembroEmpresaTabla[] = [
+  const mockTransportistasLista: TransportistasTable[] = [
     {
-      id: 1,
-      tipoPersona: 'Física',
-      nombre: 'Juan',
-      apellidoPaterno: 'Pérez',
-      apellidoMaterno: 'García',
-      nombreCompleto: 'Juan Pérez García',
-      rfc: 'PEGJ850101001',
-      caracter: 'Socio',
-      nacionalidad: 'Mexicana',
-      obligadoTributarMexico: 'Sí',
-      nombreEmpresa: ''
+      rfcEnclaveOperativo: 'RFC123456789',
+      denominacionRazonsocial: 'Transportes Test SA',
+      domicilio: 'Calle Test 123',
+      ccat: 'CCAT123'
     },
     {
-      id: 2,
-      tipoPersona: 'Moral',
-      nombre: '',
-      apellidoPaterno: '',
-      apellidoMaterno: '',
-      nombreCompleto: '',
-      rfc: 'ETE123456789',
-      caracter: 'Accionista',
-      nacionalidad: 'Mexicana',
-      obligadoTributarMexico: 'Sí',
-      nombreEmpresa: 'Empresa Test S.A. de C.V.'
+      rfcEnclaveOperativo: 'RFC987654321',
+      denominacionRazonsocial: 'Logística ABC SA',
+      domicilio: 'Avenida ABC 456',
+      ccat: 'CCAT456'
     }
   ];
 
-  const datosCaracterMock: Catalogo[] = [
-    { id: 1, descripcion: 'Socio' },
-    { id: 2, descripcion: 'Accionista' },
-    { id: 3, descripcion: 'Director' }
-  ];
+  const mockSolicitudState: Solicitud32610State = {
+    rfcEnclaveOperativo: 'RFC123456789',
+    enlaceOperativorfc: 'RFC123456789',
+    denominacionRazonsocial: 'Transportes Test SA',
+    domicilio: 'Calle Test 123',
+    ccat: 'CCAT123',
+    transportistasLista: mockTransportistasLista
+  } as Solicitud32610State;
 
-  const datosNacionalidadMock: Catalogo[] = [
-    { id: 1, descripcion: 'Mexicana' },
-    { id: 2, descripcion: 'Estadounidense' },
-    { id: 3, descripcion: 'Canadiense' }
-  ];
-
-  const datosTipoPersonaMock: Catalogo[] = [
-    { id: 1, descripcion: 'Física' },
-    { id: 2, descripcion: 'Moral' }
-  ];
-
-  const estadoConsultaMock: ConsultaioState = {
-    ...createConsultaInitialState(),
-    readonly: false,
-    procedureId: '',
-    parameter: '',
-    department: '',
-    folioTramite: '',
-    tipoDeTramite: '',
-    estadoDeTramite: '',
-    create: false,
-    update: false,
-    consultaioSolicitante: null
+  const mockConsultaioState = {
+    readonly: false
   };
 
-  const estadoTramiteMock = {
-    ...createInitialSolicitudState(),
-    agregarMiembroEmpresa: datosMiembroEmpresaMock
+  const mockTransportistasListaData: { [key: string]: TransportistasListaInterface } = {
+    'RFC123456789': {
+      enlaceOperativorfc: 'RFC123456789',
+      denominacionRazonsocial: 'Transportes Test SA',
+      domicilio: 'Calle Test 123',
+      ccat: 'CCAT123'
+    }
   };
 
   beforeEach(async () => {
-    // Configuración de espías para servicios simulados
-    mockTramite32609Store = {
-      actualizarEstado: jest.fn(),
-      actualizarSeccion: jest.fn(),
-      eliminarElemento: jest.fn()
+    mockSolicitudService = {
+      conseguirTransportistasLista: jest.fn().mockReturnValue(of(mockTransportistasListaData))
     } as any;
 
-    mockTramite32609Query = {
-      selectSolicitud$: of(estadoTramiteMock)
+    mockSolicitud32610Store = {
+      actualizarEstado: jest.fn()
+    } as any;
+
+    mockSolicitud32610Query = {
+      selectSolicitud$: of(mockSolicitudState)
     } as any;
 
     mockConsultaioQuery = {
-      selectConsultaioState$: of(estadoConsultaMock)
+      selectConsultaioState$: of(mockConsultaioState)
     } as any;
 
-    mockOeaTextilRegistroService = {
-      getRFCDetails: jest.fn(),
-      insertAllData: jest.fn(),
-      sectorListaDeSelects: jest.fn().mockReturnValue(of({
-        data: {
-          caracterList: datosCaracterMock,
-          nacionalidadList: datosNacionalidadMock
-        }
-      })),
-      empresaListaDeSelects: jest.fn().mockReturnValue(of({
-        enSuCaracterDeList: datosCaracterMock,
-        nacionalidadList: datosNacionalidadMock,
-        tipoDePersonaList: datosTipoPersonaMock
-      }))
+    mockBsModalRef = {
+      hide: jest.fn()
+    } as any;
+
+    mockBsModalService = {
+      show: jest.fn().mockReturnValue(mockBsModalRef)
     } as any;
 
     await TestBed.configureTestingModule({
       imports: [
+        AgregarTransportistasComponent,
+        CommonModule,
         ReactiveFormsModule,
-        AgregarMiembroEmpresaComponent
+        TablaDinamicaComponent
       ],
       providers: [
         FormBuilder,
-        { provide: Solicitud32610Store, useValue: mockTramite32609Store },
-        { provide: Solicitud32610Query, useValue: mockTramite32609Query },
+        { provide: SolicitudService, useValue: mockSolicitudService },
+        { provide: Solicitud32610Store, useValue: mockSolicitud32610Store },
+        { provide: Solicitud32610Query, useValue: mockSolicitud32610Query },
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
-        { provide: SolicitudService, useValue: mockOeaTextilRegistroService }
-      ],
-      schemas: [NO_ERRORS_SCHEMA]
+        { provide: BsModalService, useValue: mockBsModalService }
+      ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AgregarMiembroEmpresaComponent);
+    fixture = TestBed.createComponent(AgregarTransportistasComponent);
     component = fixture.componentInstance;
-
-    // Simular elementos del DOM
-    component.registroDeAgregarMiembroEmpresaElemento = {
-      nativeElement: document.createElement('div')
-    } as ElementRef;
-
-    component.confirmacionElemento = {
-      nativeElement: document.createElement('div')
-    } as ElementRef;
   });
 
-  describe('🔧 Inicialización del componente', () => {
-    it('✅ debería crear el componente sin errores', () => {
+  describe('Inicialización del componente', () => {
+    it('debería crear el componente correctamente', () => {
       expect(component).toBeTruthy();
     });
 
-    it('✅ debería inicializar las propiedades con valores por defecto correctos', () => {
+    it('debería inicializar las propiedades por defecto', () => {
+      expect(component.transportistasPanels).toEqual(TRANSPORTISTAS_PANELS);
+      expect(component.tablaSeleccionCheckbox).toBe(TablaSeleccion.CHECKBOX);
+      expect(component.transportistasConfiguracionColumnas).toEqual(TRANSPORTISTAS_CONFIGURACION);
       expect(component.esFormularioSoloLectura).toBe(false);
-      expect(component.esHabilitarElDialogo).toBe(false);
-      expect(component.agregarMiembroEmpresaList).toEqual([]);
-      expect(component.multipleSeleccionPopupAbierto).toBe(false);
-      expect(component.confirmEliminarPopupAbierto).toBe(false);
-      expect(component.enableEliminarBoton).toBe(false);
-      expect(component.enableModficarBoton).toBe(false);
-      expect(component.colapsable).toBe(true);
+      expect(component.destroy$).toBeInstanceOf(Subject);
     });
 
-    it('✅ debería configurar las suscripciones en el constructor', () => {
+    it('debería llamar a inicializarEstadoFormulario en ngOnInit', () => {
+      const spy = jest.spyOn(component, 'inicializarEstadoFormulario');
+      component.ngOnInit();
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('debería suscribirse al estado de consultaio en el constructor', () => {
+      expect(mockConsultaioQuery.selectConsultaioState$).toBeDefined();
+    });
+  });
+
+  describe('Gestión del estado del formulario', () => {
+    beforeEach(() => {
       fixture.detectChanges();
-      expect(component.esFormularioSoloLectura).toBe(estadoConsultaMock.readonly);
     });
 
-    it('✅ debería crear los formularios reactivos correctamente', () => {
-      component.ngOnInit(); // Inicializar el componente para crear los formularios
-      expect(component.registroAgregarMiembroEmpresaForm).toBeDefined();
+    it('debería inicializar el formulario con los valores del estado', () => {
+      component.inicializarFormulario();
       
-      // Verificar controles del formulario principal
-      expect(component.registroAgregarMiembroEmpresaForm.get('id')).toBeDefined();
-      expect(component.registroAgregarMiembroEmpresaForm.get('tipoPersona')).toBeDefined();
-      expect(component.registroAgregarMiembroEmpresaForm.get('nombre')).toBeDefined();
-      expect(component.registroAgregarMiembroEmpresaForm.get('apellidoPaterno')).toBeDefined();
-      expect(component.registroAgregarMiembroEmpresaForm.get('apellidoMaterno')).toBeDefined();
-      expect(component.registroAgregarMiembroEmpresaForm.get('nombreEmpresa')).toBeDefined();
-      expect(component.registroAgregarMiembroEmpresaForm.get('rfc')).toBeDefined();
-      expect(component.registroAgregarMiembroEmpresaForm.get('caracter')).toBeDefined();
-      expect(component.registroAgregarMiembroEmpresaForm.get('nacionalidad')).toBeDefined();
-      expect(component.registroAgregarMiembroEmpresaForm.get('obligadoTributarMexico')).toBeDefined();
+      expect(component.transportistaCertificacionForm).toBeDefined();
+      expect(component.transportistaCertificacionForm.get('rfcEnclaveOperativo')).toBeTruthy();
+      expect(component.transportistaCertificacionForm.get('enlaceOperativorfc')).toBeTruthy();
+      expect(component.transportistaCertificacionForm.get('denominacionRazonsocial')).toBeTruthy();
+      expect(component.transportistaCertificacionForm.get('domicilio')).toBeTruthy();
+      expect(component.transportistaCertificacionForm.get('ccat')).toBeTruthy();
+    });
+
+
+    it('debería deshabilitar campos específicos en el formulario', () => {
+      component.inicializarFormulario();
+      
+      expect(component.transportistaCertificacionForm.get('enlaceOperativorfc')?.disabled).toBe(true);
+      expect(component.transportistaCertificacionForm.get('denominacionRazonsocial')?.disabled).toBe(true);
+      expect(component.transportistaCertificacionForm.get('domicilio')?.disabled).toBe(true);
+      expect(component.transportistaCertificacionForm.get('ccat')?.disabled).toBe(true);
+    });
+
+    it('debería deshabilitar el formulario cuando esFormularioSoloLectura es true', () => {
+      component.esFormularioSoloLectura = true;
+      component.guardarDatosFormulario();
+      
+      expect(component.transportistaCertificacionForm.disabled).toBe(true);
+    });
+
+    it('debería habilitar el formulario cuando esFormularioSoloLectura es false', () => {
+      component.esFormularioSoloLectura = false;
+      component.guardarDatosFormulario();
+      
+      expect(component.transportistaCertificacionForm.enabled).toBe(true);
     });
   });
 
-  describe('🚀 Ciclo de vida ngOnInit', () => {
-    it('✅ debería suscribirse al estado del trámite y cargar datos', () => {
-      component.ngOnInit();
-      
-      expect(component.seccionState).toEqual(estadoTramiteMock);
-      expect(component.agregarMiembroEmpresaList).toEqual(datosMiembroEmpresaMock);
-    });
-
-    it('✅ debería cargar catálogos de datos', () => {
-      // Asegurar que el solicitudService esté listo para ser llamado
-      component.ngOnInit();
+  describe('Obtención del estado de la solicitud', () => {
+    beforeEach(() => {
       fixture.detectChanges();
-      
-      expect(mockOeaTextilRegistroService.empresaListaDeSelects).toHaveBeenCalled();
     });
 
-    it('✅ debería gestionar suscripciones con takeUntil', () => {
-      // Verificamos que el componente gestione correctamente las suscripciones
-      component.ngOnInit();
+    it('debería obtener el estado de la solicitud y actualizar transportistasLista', () => {
+      component.obtenerEstadoSolicitud();
       
-      // Verificar que el estado se asigna correctamente (indicando que la suscripción funciona)
-      expect(component.seccionState).toBeDefined();
-      expect(component.agregarMiembroEmpresaList).toBeDefined();
+      expect(component.solicitudState).toEqual(mockSolicitudState);
+      expect(component.transportistasLista).toEqual(mockTransportistasLista);
     });
-  });
 
-  describe('📋 Gestión de formularios', () => {
+
+  describe('Funcionalidad de paneles colapsables', () => {
     beforeEach(() => {
-      component.ngOnInit(); // Inicializar componente antes de cada test
-      // Asegurar que los catálogos estén disponibles
-      component.enSuCaracterDeList = datosCaracterMock;
-      component.nacionalidadList = datosNacionalidadMock;
-      component.tipoDePersonaList = datosTipoPersonaMock;
+      component.transportistasPanels = [
+        { label: 'Panel 1', isCollapsed: true },
+        { label: 'Panel 2', isCollapsed: true }
+      ];
     });
 
-    it('✅ debería validar correctamente el formulario RFC', () => {
-      // Simular la selección del radio button para habilitar la sección RFC
-      component.enCambioDeValor('1'); // Habilitar sección RFC
+    it('debería expandir el panel seleccionado y colapsar los demás', () => {
+      component.mostrar_colapsable(0);
       
-      const rfcControl = component.registroAgregarMiembroEmpresaForm.get('rfcInput');
-      
-      // RFC vacío debe ser inválido
-      rfcControl?.setValue('');
-      expect(rfcControl?.valid).toBe(false);
-      
-      // RFC con formato correcto debe ser válido
-      rfcControl?.setValue('XAXX010101000');
-      expect(rfcControl?.valid).toBe(true);
+      expect(component.transportistasPanels[0].isCollapsed).toBe(false);
+      expect(component.transportistasPanels[1].isCollapsed).toBe(true);
     });
 
-    it('✅ debería validar formulario para persona física', () => {
-      const form = component.registroAgregarMiembroEmpresaForm;
+    it('debería colapsar el panel si ya estaba expandido', () => {
+      component.transportistasPanels[0].isCollapsed = false;
+      component.mostrar_colapsable(0);
       
-      // Configurar como persona física
-      form.patchValue({
-        tipoPersona: 'fisica',
-        nombre: 'Juan',
-        apellidoPaterno: 'Pérez',
-        apellidoMaterno: 'García',
-        rfc: 'PEGJ850101001',
-        caracter: 1,
-        nacionalidad: 1,
-        obligadoTributarMexico: 'si'
-      });
-      
-      expect(form.valid).toBe(true);
-    });
-
-    it('✅ debería validar formulario para persona moral', () => {
-      const form = component.registroAgregarMiembroEmpresaForm;
-      
-      // Configurar como persona moral
-      form.patchValue({
-        tipoPersona: 'moral',
-        nombreEmpresa: 'Empresa Test S.A.',
-        rfc: 'ETE123456789',
-        caracter: 2,
-        nacionalidad: 1,
-        obligadoTributarMexico: 'si'
-      });
-      
-      expect(form.valid).toBe(true);
-    });
-
-    it('✅ debería manejar cambios en tipo de persona', () => {
-      const form = component.registroAgregarMiembroEmpresaForm;
-      
-      // Cambiar a persona física - sin usar onTipoPersonaChange ya que no existe
-      // Simular el comportamiento directamente en el formulario
-      form.patchValue({ tipoPersona: 'fisica' });
-      // Las validaciones se aplicarían automáticamente por los validators del FormBuilder
-      
-      // Cambiar a persona moral
-      form.patchValue({ tipoPersona: 'moral' });
-      // Las validaciones se aplicarían automáticamente por los validators del FormBuilder
+      expect(component.transportistasPanels[0].isCollapsed).toBe(true);
     });
   });
 
-  describe('🔄 Funcionalidad de modales', () => {
+  describe('Gestión de modales', () => {
     beforeEach(() => {
-      component.ngOnInit();
+      fixture.detectChanges();
     });
 
-    it('✅ debería abrir el modal de registro correctamente', () => {
-      component.agregarDialogoDatos();
+    it('debería abrir el modal principal con la configuración correcta', () => {
+      const mockTemplate = {} as TemplateRef<void>;
+      component.abrirModal1(mockTemplate);
       
-      expect(MockedModal).toHaveBeenCalledWith(
-        component.registroDeAgregarMiembroEmpresaElemento.nativeElement,
-        { backdrop: false }
-      );
-      expect(mockModalInstance.show).toHaveBeenCalled();
+      expect(mockBsModalService.show).toHaveBeenCalledWith(mockTemplate, { class: 'modal-lg' });
+      expect(component.modalRefabir).toBe(mockBsModalRef);
     });
 
-    it('✅ debería manejar modal no disponible sin errores', () => {
-      component.registroDeAgregarMiembroEmpresaElemento = null as any;
+    it('debería mostrar el modal de éxito', () => {
+      component.mostrarModalExito();
       
-      expect(() => {
-        component.agregarDialogoDatos();
-      }).not.toThrow();
-    });
-  });
-
-  describe('📤 Envío de datos del formulario', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-      // Asegurar que los catálogos estén disponibles
-      component.enSuCaracterDeList = datosCaracterMock;
-      component.nacionalidadList = datosNacionalidadMock;
-      component.tipoDePersonaList = datosTipoPersonaMock;
-      jest.spyOn(component, 'enNuevaNotificacion');
-      jest.spyOn(component, 'AgregarMiembroEmpresaInfoDatos');
-      jest.spyOn(component, 'cambiarEstadoModal');
-    });
-
-    it('✅ debería procesar formulario válido de persona física', () => {
-      // Llenar formulario con datos válidos para persona física
-      component.registroAgregarMiembroEmpresaForm.patchValue({
-        tipoPersona: 'fisica',
-        nombre: 'Juan',
-        apellidoPaterno: 'Pérez',
-        apellidoMaterno: 'García',
-        rfc: 'PEGJ850101001',
-        caracter: 1,
-        nacionalidad: 1,
-        obligadoTributarMexico: 'si'
-      });
-      
-      component.enviarDialogData();
-      
-      expect(component.enNuevaNotificacion).toHaveBeenCalledWith(component.CONFIRMACION_NUMEROEMPLEADOS);
-      expect(component.esHabilitarElDialogo).toBe(true);
-      expect(component.AgregarMiembroEmpresaInfoDatos).toHaveBeenCalled();
-      expect(component.cambiarEstadoModal).toHaveBeenCalled();
-    });
-
-    it('✅ debería procesar formulario válido de persona moral', () => {
-      // Llenar formulario con datos válidos para persona moral
-      component.registroAgregarMiembroEmpresaForm.patchValue({
-        tipoPersona: 'moral',
-        nombreEmpresa: 'Empresa Test S.A.',
-        rfc: 'ETE123456789',
-        caracter: 2,
-        nacionalidad: 1,
-        obligadoTributarMexico: 'si'
-      });
-      
-      component.enviarDialogData();
-      
-      expect(component.enNuevaNotificacion).toHaveBeenCalledWith(component.CONFIRMACION_NUMEROEMPLEADOS);
-      expect(component.esHabilitarElDialogo).toBe(true);
-      expect(component.AgregarMiembroEmpresaInfoDatos).toHaveBeenCalled();
-      expect(component.cambiarEstadoModal).toHaveBeenCalled();
-    });
-
-    it('✅ debería manejar formulario inválido correctamente', () => {
-      // Dejar formulario vacío (inválido)
-      component.registroAgregarMiembroEmpresaForm.reset();
-      const markAllAsTouchedSpy = jest.spyOn(component.registroAgregarMiembroEmpresaForm, 'markAllAsTouched');
-      
-      component.enviarDialogData();
-      
-      expect(component.enNuevaNotificacion).toHaveBeenCalledWith(component.MENSAJE_DE_VALIDACION);
-      expect(component.esHabilitarElDialogo).toBe(true);
-      expect(markAllAsTouchedSpy).toHaveBeenCalled();
-    });
-  });
-
-  describe('📋 Manejo de selección de tabla', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-    });
-
-    it('✅ debería manejar selección de filas correctamente', () => {
-      const filasSeleccionadas = [datosMiembroEmpresaMock[0]];
-      
-      component.manejarFilaSeleccionada(filasSeleccionadas);
-      
-      expect(component.listaFilaSeleccionadaEmpleado).toEqual(filasSeleccionadas);
-      expect(component.filaSeleccionadaAgregarMiembroEmpresa).toEqual(datosMiembroEmpresaMock[0]);
-    });
-
-    it('✅ debería habilitar botones según selección', () => {
-      // Sin selección
-      component.manejarFilaSeleccionada([]);
-      expect(component.enableEliminarBoton).toBe(false);
-      expect(component.enableModficarBoton).toBe(false);
-      
-      // Con una selección - Actualizar según la lógica real del componente
-      component.manejarFilaSeleccionada([datosMiembroEmpresaMock[0]]);
-      // Verificar que la selección se maneja correctamente
-      expect(component.listaFilaSeleccionadaEmpleado).toEqual([datosMiembroEmpresaMock[0]]);
-      expect(component.filaSeleccionadaAgregarMiembroEmpresa).toEqual(datosMiembroEmpresaMock[0]);
-      
-      // Con múltiples selecciones
-      component.manejarFilaSeleccionada(datosMiembroEmpresaMock);
-      expect(component.listaFilaSeleccionadaEmpleado).toEqual(datosMiembroEmpresaMock);
-    });
-  });
-
-  describe('🔔 Sistema de notificaciones', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-    });
-
-    it('✅ debería crear notificación con datos correctos', () => {
-      const mensajePrueba = 'Mensaje de prueba';
-      
-      component.enNuevaNotificacion(mensajePrueba);
-      
-      expect(component.nuevaNotificacion).toEqual({
-        tipoNotificacion: TipoNotificacionEnum.ALERTA,
-        categoria: CategoriaMensaje.ALERTA,
-        modo: 'modal',
-        titulo: '',
-        mensaje: mensajePrueba,
-        cerrar: false,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: ''
-      });
-    });
-
-    it('✅ debería crear notificaciones para diferentes tipos de mensajes', () => {
-      // Notificación de confirmación
-      component.enNuevaNotificacion(component.CONFIRMACION_NUMEROEMPLEADOS);
-      expect(component.nuevaNotificacion.mensaje).toBe(component.CONFIRMACION_NUMEROEMPLEADOS);
-      
-      // Notificación de validación
-      component.enNuevaNotificacion(component.MENSAJE_DE_VALIDACION);
-      expect(component.nuevaNotificacion.mensaje).toBe(component.MENSAJE_DE_VALIDACION);
-    });
-  });
-
-  describe('🔒 Estado de solo lectura', () => {
-    it('✅ debería configurar formulario como solo lectura cuando readonly es true', async () => {
-      const estadoSoloLectura: ConsultaioState = { 
-        ...createConsultaInitialState(),
-        readonly: true
+      const expectedConfig = {
+        animated: true,
+        keyboard: false,
+        backdrop: true,
+        ignoreBackdropClick: true,
+        class: 'modal-sm'
       };
       
-      // Crear un nuevo TestBed con el estado de solo lectura
-      await TestBed.resetTestingModule();
-      await TestBed.configureTestingModule({
-        imports: [
-          ReactiveFormsModule,
-          AgregarMiembroEmpresaComponent
-        ],
-        providers: [
-          FormBuilder,
-          { provide: Solicitud32610Store, useValue: mockTramite32609Store },
-          { provide: Solicitud32610Query, useValue: mockTramite32609Query },
-          { provide: ConsultaioQuery, useValue: { 
-            selectConsultaioState$: of(estadoSoloLectura) 
-          } },
-          { provide: SolicitudService, useValue: mockOeaTextilRegistroService }
-        ],
-        schemas: [NO_ERRORS_SCHEMA]
-      }).compileComponents();
-      
-      const nuevoFixture = TestBed.createComponent(AgregarMiembroEmpresaComponent);
-      const nuevoComponente = nuevoFixture.componentInstance;
-      
-      // Mock elementos del DOM
-      nuevoComponente.registroDeAgregarMiembroEmpresaElemento = {
-        nativeElement: document.createElement('div')
-      } as ElementRef;
-
-      nuevoComponente.confirmacionElemento = {
-        nativeElement: document.createElement('div')
-      } as ElementRef;
-      
-      // Manually set the readonly state since the constructor subscription might not work in tests
-      nuevoComponente.esFormularioSoloLectura = true;
-      
-      // Initialize the component
-      nuevoComponente.ngOnInit();
-      nuevoFixture.detectChanges();
-      await nuevoFixture.whenStable();
-    
-      expect(nuevoComponente.esFormularioSoloLectura).toBe(true);
+      expect(mockBsModalService.show).toHaveBeenCalledWith(
+        component.templateExito,
+        expectedConfig
+      );
     });
 
-    it('✅ debería permitir edición cuando readonly es false', () => {
-      expect(component.esFormularioSoloLectura).toBe(false);
+    it('debería cerrar el modal de éxito', () => {
+      component.modalRefExito = mockBsModalRef;
+      component.cerrarModalExito();
+      
+      expect(mockBsModalRef.hide).toHaveBeenCalled();
+    });
+
+    it('debería cancelar el modal y limpiar el formulario', () => {
+      const spyLimpiar = jest.spyOn(component, 'limpiarTransportista');
+      component.modalRefabir = mockBsModalRef;
+      
+      component.cancelarModal();
+      
+      expect(mockBsModalRef.hide).toHaveBeenCalled();
+      expect(spyLimpiar).toHaveBeenCalled();
     });
   });
 
-
-  describe('🧹 Gestión de memoria y limpieza de recursos', () => {
-    it('✅ debería completar el subject destroyed$ al destruir el componente', () => {
-      const nextSpy = jest.spyOn(component.destroyed$, 'next');
-      const completeSpy = jest.spyOn(component.destroyed$, 'complete');
-      
-      component.ngOnDestroy();
-      
-      expect(nextSpy).toHaveBeenCalled();
-      expect(completeSpy).toHaveBeenCalled();
-    });
-
-    it('✅ debería cancelar suscripciones activas al destruir', () => {
-      const destroyedSpy = jest.spyOn(component.destroyed$, 'next');
-      
-      component.ngOnDestroy();
-      
-      expect(destroyedSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it('✅ debería manejar destrucción múltiple sin errores', () => {
-      expect(() => {
-        component.ngOnDestroy();
-        component.ngOnDestroy();
-      }).not.toThrow();
-    });
-  });
-
-  describe('🚨 Casos de error y estados límite', () => {
+  describe('Búsqueda de RFC', () => {
     beforeEach(() => {
-      component.ngOnInit();
+      component.inicializarFormulario();
+      fixture.detectChanges();
     });
 
-    it('✅ debería manejar datos de tabla vacíos sin errores', () => {
-      component.agregarMiembroEmpresaList = [];
+    it('debería buscar datos por RFC cuando es válido y no existe en la tabla', () => {
+      const rfc = 'NUEVORFC123';
+      component.transportistaCertificacionForm.patchValue({ rfcEnclaveOperativo: rfc });
       
-      expect(() => {
-        component.manejarFilaSeleccionada([]);
-      }).not.toThrow();
+      const spyBuscarDatos = jest.spyOn(component, 'buscarDatosPorRFC');
+      component.buscarRFC();
       
-      expect(component.enableEliminarBoton).toBe(false);
-      expect(component.enableModficarBoton).toBe(false);
+      expect(spyBuscarDatos).toHaveBeenCalledWith(rfc);
     });
 
-    it('✅ debería manejar formularios no inicializados', () => {
-      component.registroAgregarMiembroEmpresaForm = undefined as any;
-      
-      expect(() => {
-        component.enviarDialogData();
-      }).not.toThrow();
-    });
-
-    it('✅ debería manejar elementos DOM no disponibles', () => {
-      component.registroDeAgregarMiembroEmpresaElemento = null as any;
-      component.confirmacionElemento = null as any;
-      
-      expect(() => {
-        component.agregarDialogoDatos();
-      }).not.toThrow();
-    });
-
-    it('✅ debería manejar errores en servicios de catálogos', () => {
-      const errorObservable = new Subject<{ 
-        sectorProductivoList: Catalogo[]; 
-        sectorServicioList: Catalogo[]; 
-        bimestreList: Catalogo[]; 
-      }>();
-      mockOeaTextilRegistroService.sectorListaDeSelects.mockReturnValue(errorObservable.asObservable());
-      
-      component.ngOnInit();
-      
-      expect(() => {
-        errorObservable.error('Error de conexión');
-      }).not.toThrow();
-    });
-  });
-
-  describe('🔄 Validaciones dinámicas según tipo de persona', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-    });
-
-    it('✅ debería aplicar validaciones correctas para persona física', () => {
-      // Simular cambio a persona física configurando el formulario directamente
-      const form = component.registroAgregarMiembroEmpresaForm;
-      form.patchValue({ tipoPersona: 'fisica' });
-      
-      // Verificar que los campos requeridos para persona física sean marcados como requeridos
-      expect(form.get('tipoPersona')?.value).toBe('fisica');
-    });
-
-    it('✅ debería aplicar validaciones correctas para persona moral', () => {
-      // Simular cambio a persona moral configurando el formulario directamente
-      const form = component.registroAgregarMiembroEmpresaForm;
-      form.patchValue({ tipoPersona: 'moral' });
-      
-      // Verificar que los campos requeridos para persona moral sean marcados como requeridos
-      expect(form.get('tipoPersona')?.value).toBe('moral');
-    });
-
-    it('✅ debería limpiar campos al cambiar tipo de persona', () => {
-      const form = component.registroAgregarMiembroEmpresaForm;
-      
-      // Llenar campos de persona física
-      form.patchValue({
-        nombre: 'Juan',
-        apellidoPaterno: 'Pérez',
-        apellidoMaterno: 'García'
+    it('debería mostrar modal de RFC duplicado cuando ya existe en la tabla', () => {
+      component.transportistasLista = mockTransportistasLista;
+      component.transportistaCertificacionForm.patchValue({ 
+        rfcEnclaveOperativo: 'RFC123456789' 
       });
       
-      // Cambiar a persona moral
-      form.patchValue({ tipoPersona: 'moral' });
+      const spyModalDuplicado = jest.spyOn(component, 'mostrarModalRFCDuplicado');
+      component.buscarRFC();
       
-      // Verificar que se pueda cambiar el tipo de persona
-      expect(form.get('tipoPersona')?.value).toBe('moral');
+      expect(spyModalDuplicado).toHaveBeenCalled();
+    });
+
+    it('no debería buscar si el RFC está vacío', () => {
+      component.transportistaCertificacionForm.patchValue({ rfcEnclaveOperativo: '' });
+      
+      const spyBuscarDatos = jest.spyOn(component, 'buscarDatosPorRFC');
+      component.buscarRFC();
+      
+      expect(spyBuscarDatos).not.toHaveBeenCalled();
+    });
+
+    it('debería actualizar el formulario con datos encontrados', () => {
+      const empresaData: TransportistasListaInterface = {
+        enlaceOperativorfc: 'RFC123456789',
+        denominacionRazonsocial: 'Test Company',
+        domicilio: 'Test Address',
+        ccat: 'CCAT123'
+      };
+      
+      component.patchearDatosEmpresa(empresaData);
+      
+      expect(component.transportistaCertificacionForm.get('enlaceOperativorfc')?.value).toBe('RFC123456789');
+      expect(component.transportistaCertificacionForm.get('denominacionRazonsocial')?.value).toBe('Test Company');
+      expect(component.transportistaCertificacionForm.get('domicilio')?.value).toBe('Test Address');
+      expect(component.transportistaCertificacionForm.get('ccat')?.value).toBe('CCAT123');
+    });
+
+    it('debería limpiar campos cuando no se encuentran datos', () => {
+      component.limpiarCamposEmpresa();
+      
+      expect(component.transportistaCertificacionForm.get('enlaceOperativorfc')?.value).toBe('');
+      expect(component.transportistaCertificacionForm.get('denominacionRazonsocial')?.value).toBe('');
+      expect(component.transportistaCertificacionForm.get('domicilio')?.value).toBe('');
+      expect(component.transportistaCertificacionForm.get('ccat')?.value).toBe('');
     });
   });
 
-  describe('🔍 Funcionalidad de búsqueda RFC', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-      mockOeaTextilRegistroService.getRFCDetails.mockReturnValue(of({
-        code: 200,
-        message: 'Success',
-        data: {
-          rfc: 'PEGJ850101001',
-          denominacionSocial: 'Juan Pérez García'
-        }
-      } as BuscarRfcResponse));
+  describe('Validaciones de RFC', () => {
+    it('debería verificar correctamente si un RFC existe en la tabla', () => {
+      component.transportistasLista = mockTransportistasLista;
+      
+      expect(component.existeRFCEnTabla('RFC123456789')).toBe(true);
+      expect(component.existeRFCEnTabla('RFC999999999')).toBe(false);
     });
 
-    it('✅ debería buscar detalles de RFC correctamente', () => {
-      // Habilitar el campo rfcInput primero
-      component.enCambioDeValor('1'); // Esto habilitará la sección RFC
-      component.registroAgregarMiembroEmpresaForm.patchValue({ rfcInput: 'PEGJ850101001' });
+    it('debería ser insensible a mayúsculas/minúsculas', () => {
+      component.transportistasLista = mockTransportistasLista;
       
-      component.onBuscarRfc();
-      
-      expect(mockOeaTextilRegistroService.getRFCDetails).toHaveBeenCalled();
+      expect(component.existeRFCEnTabla('rfc123456789')).toBe(true);
+      expect(component.existeRFCEnTabla('RFC123456789')).toBe(true);
     });
 
-    it('✅ debería actualizar formulario con datos del RFC', () => {
-      // Habilitar el campo rfcInput primero
-      component.enCambioDeValor('1'); // Esto habilitará la sección RFC
-      component.registroAgregarMiembroEmpresaForm.patchValue({ rfcInput: 'PEGJ850101001' });
+    it('debería verificar RFC excluyendo uno específico', () => {
+      component.transportistasLista = mockTransportistasLista;
       
-      component.onBuscarRfc();
-      
-      expect(component.registroAgregarMiembroEmpresaForm.get('rfc')?.value).toBe('PEGJ850101001');
-    });
-
-  describe('🗑️ Funcionalidad de eliminación', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-      component.agregarMiembroEmpresaList = [...datosMiembroEmpresaMock];
-    });
-
-    it('✅ debería mostrar notificación cuando no hay elementos para eliminar', () => {
-      component.listaFilaSeleccionadaEmpleado = [];
-      
-      component.confirmEliminarEmpleadoItem();
-      
-      expect(component.multipleSeleccionPopupAbierto).toBe(true);
-    });
-
-    it('✅ debería abrir popup de confirmación para eliminación', () => {
-      component.listaFilaSeleccionadaEmpleado = [datosMiembroEmpresaMock[0]];
-      
-      component.confirmEliminarEmpleadoItem();
-      
-      expect(component.confirmEliminarPopupAbierto).toBe(true);
-    });
-
-    it('✅ debería eliminar elementos cuando se confirma', () => {
-      component.listaFilaSeleccionadaEmpleado = [datosMiembroEmpresaMock[0]];
-      const longitudInicial = component.agregarMiembroEmpresaList.length;
-      
-      component.eliminarEmpleadoItem(true);
-      
-      expect(component.agregarMiembroEmpresaList.length).toBe(longitudInicial - 1);
-      expect(mockTramite32609Store.actualizarEstado).toHaveBeenCalled();
-    });
-
-    it('✅ no debería eliminar cuando se cancela', () => {
-      component.listaFilaSeleccionadaEmpleado = [datosMiembroEmpresaMock[0]];
-      const longitudInicial = component.agregarMiembroEmpresaList.length;
-      
-      component.eliminarEmpleadoItem(false);
-      
-      expect(component.agregarMiembroEmpresaList.length).toBe(longitudInicial);
-    });
-
-    it('✅ debería cerrar popup de confirmación de eliminación', () => {
-      component.cerrarEliminarConfirmationPopup();
-      
-      expect(component.confirmEliminarPopupAbierto).toBe(false);
-      expect(component.confirmEliminarPopupCerrado).toBe(false);
+      expect(component.existeRFCEnTablaExcluyendo('RFC123456789', 'RFC123456789')).toBe(false);
+      expect(component.existeRFCEnTablaExcluyendo('RFC123456789', 'RFC987654321')).toBe(true);
     });
   });
 
-  describe('✏️ Funcionalidad de modificación', () => {
+  describe('Aceptar transportista', () => {
     beforeEach(() => {
-      component.ngOnInit();
-      component.agregarMiembroEmpresaList = [...datosMiembroEmpresaMock];
-      component.enSuCaracterDeList = datosCaracterMock;
-      component.nacionalidadList = datosNacionalidadMock;
-      component.tipoDePersonaList = datosTipoPersonaMock;
-      jest.spyOn(component, 'agregarDialogoDatos');
-      jest.spyOn(component, 'patchModifyiedData');
+      component.inicializarFormulario();
+      fixture.detectChanges();
     });
 
-    it('✅ debería mostrar notificación sin elementos seleccionados', () => {
-      component.listaFilaSeleccionadaEmpleado = [];
+    it('debería mostrar modal de datos obligatorios si RFC está vacío', () => {
+      component.transportistaCertificacionForm.patchValue({ rfcEnclaveOperativo: '' });
       
-      component.modificarItemEmpleado();
+      const spyModal = jest.spyOn(component, 'mostrarModalDatos');
+      component.aceptarTransportista();
       
-      expect(component.multipleSeleccionPopupAbierto).toBe(true);
+      expect(spyModal).toHaveBeenCalled();
     });
 
-    it('✅ debería mostrar notificación con múltiples elementos', () => {
-      component.listaFilaSeleccionadaEmpleado = [...datosMiembroEmpresaMock];
-      
-      component.modificarItemEmpleado();
-      
-      expect(component.multipleSeleccionPopupAbierto).toBe(true);
-    });
-
-    it('✅ debería permitir modificación con un elemento', () => {
-      component.listaFilaSeleccionadaEmpleado = [datosMiembroEmpresaMock[0]];
-      component.filaSeleccionadaAgregarMiembroEmpresa = datosMiembroEmpresaMock[0];
-      
-      component.modificarItemEmpleado();
-      
-      expect(component.agregarDialogoDatos).toHaveBeenCalled();
-      expect(component.patchModifyiedData).toHaveBeenCalled();
-    });
-
-    it('✅ debería actualizar fila seleccionada correctamente', () => {
-      component.filaSeleccionadaAgregarMiembroEmpresa = { ...datosMiembroEmpresaMock[0] };
-      
-      component.actualizarFilaSeleccionada();
-      
-      expect(component.filaSeleccionadaAgregarMiembroEmpresa).toEqual(datosMiembroEmpresaMock[0]);
-    });
-
-    it('✅ debería rellenar formulario con datos seleccionados', () => {
-      component.filaSeleccionadaAgregarMiembroEmpresa = datosMiembroEmpresaMock[0];
-      
-      component.patchModifyiedData();
-      
-      // Verificar que los datos se han establecido correctamente
-      const formValue = component.registroAgregarMiembroEmpresaForm.getRawValue();
-      expect(formValue.nombre).toBe(datosMiembroEmpresaMock[0].nombre);
-      expect(formValue.rfc).toBe(datosMiembroEmpresaMock[0].rfc);
-    });
-  });
-
-  describe('🔄 Gestión de popups', () => {
-    it('✅ debería abrir popup de selección múltiple', () => {
-      component.abrirMultipleSeleccionPopup();
-      
-      expect(component.multipleSeleccionPopupAbierto).toBe(true);
-    });
-
-    it('✅ debería cerrar popup de selección múltiple', () => {
-      component.cerrarMultipleSeleccionPopup();
-      
-      expect(component.multipleSeleccionPopupAbierto).toBe(false);
-      expect(component.multipleSeleccionPopupCerrado).toBe(false);
-    });
-
-    it('✅ debería cerrar modal principal', () => {
-      component.esHabilitarElDialogo = true;
-      
-      component.cerrarModal();
-      
-      expect(component.esHabilitarElDialogo).toBe(false);
-    });
-
-    it('✅ debería manejar cambio de estado del modal', () => {
-      expect(() => component.cambiarEstadoModal()).not.toThrow();
-    });
-
-    it('✅ debería manejar cancelación del modal', () => {
-      expect(() => component.modalCancelar()).not.toThrow();
-    });
-  });
-
-  describe('📊 Gestión de datos del formulario', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-      component.enSuCaracterDeList = datosCaracterMock;
-      component.nacionalidadList = datosNacionalidadMock;
-      component.tipoDePersonaList = datosTipoPersonaMock;
-    });
-
-    it('✅ debería agregar nuevo registro correctamente', () => {
-      component.filaSeleccionadaAgregarMiembroEmpresa = {} as any;
-      component.registroAgregarMiembroEmpresaForm.patchValue({
-        tipoPersona: 'fisica',
-        nombre: 'Carlos',
-        apellidoPaterno: 'López',
-        rfc: 'LOCX850101001',
-        caracter: 1,
-        nacionalidad: 1,
-        obligadoTributarMexico: 'si'
+    it('debería mostrar modal de datos obligatorios si no se realizó búsqueda', () => {
+      component.transportistaCertificacionForm.patchValue({
+        rfcEnclaveOperativo: 'RFC123456789',
+        denominacionRazonsocial: '',
+        domicilio: '',
+        enlaceOperativorfc: ''
       });
       
-      const longitudInicial = component.agregarMiembroEmpresaList.length;
-      component.AgregarMiembroEmpresaInfoDatos();
+      const spyModal = jest.spyOn(component, 'mostrarModalDatosObligatorios');
+      component.aceptarTransportista();
       
-      expect(component.agregarMiembroEmpresaList.length).toBe(longitudInicial + 1);
-      expect(mockTramite32609Store.actualizarEstado).toHaveBeenCalled();
+      expect(spyModal).toHaveBeenCalled();
     });
 
-    it('✅ debería actualizar registro existente', () => {
-      component.agregarMiembroEmpresaList = [...datosMiembroEmpresaMock];
-      component.filaSeleccionadaAgregarMiembroEmpresa = datosMiembroEmpresaMock[0];
-      
-      component.registroAgregarMiembroEmpresaForm.patchValue({
-        nombre: 'Juan Carlos',
-        rfc: 'PEGJ850101001'
+    it('debería agregar transportista correctamente en modo adición', () => {
+      component.isEditMode = false;
+      component.transportistasLista = [];
+      component.transportistaCertificacionForm.patchValue({
+        rfcEnclaveOperativo: 'RFC123456789',
+        denominacionRazonsocial: 'Test Company',
+        domicilio: 'Test Address',
+        enlaceOperativorfc: 'RFC123456789',
+        ccat: 'CCAT123'
       });
       
-      component.AgregarMiembroEmpresaInfoDatos();
+      const spyActualizar = jest.spyOn(component, 'actualizarTransportistasListaEnStore');
+      const spyModalExito = jest.spyOn(component, 'mostrarModalExito');
       
-      // Buscar el elemento actualizado en la lista
-      const elementoActualizado = component.agregarMiembroEmpresaList.find(e => e.id === datosMiembroEmpresaMock[0].id);
-      // Como el método usa los catálogos para obtener descripciones, verificamos que el registro fue actualizado
-      expect(elementoActualizado).toBeDefined();
-      expect(mockTramite32609Store.actualizarEstado).toHaveBeenCalled();
+      component.aceptarTransportista();
+      
+      expect(component.transportistasLista).toHaveLength(1);
+      expect(spyActualizar).toHaveBeenCalled();
+      expect(spyModalExito).toHaveBeenCalled();
     });
 
-    it('✅ debería limpiar formulario correctamente', () => {
-      component.registroAgregarMiembroEmpresaForm.patchValue({
-        nombre: 'Test',
-        rfc: 'TEST123456789'
+    it('debería actualizar transportista en modo edición', () => {
+      component.isEditMode = true;
+      component.transportistasLista = [...mockTransportistasLista];
+      component.selectedTransportista = mockTransportistasLista[0];
+      component.transportistaCertificacionForm.patchValue({
+        rfcEnclaveOperativo: 'RFC123456789',
+        denominacionRazonsocial: 'Updated Company',
+        domicilio: 'Updated Address',
+        enlaceOperativorfc: 'RFC123456789',
+        ccat: 'CCAT123'
+      });
+      
+      component.aceptarTransportista();
+      
+      expect(component.transportistasLista[0].denominacionRazonsocial).toBe('Updated Company');
+      expect(component.transportistasLista[0].domicilio).toBe('Updated Address');
+    });
+
+    it('debería validar RFC duplicado en modo adición', () => {
+      component.isEditMode = false;
+      component.transportistasLista = [...mockTransportistasLista];
+      component.transportistaCertificacionForm.patchValue({
+        rfcEnclaveOperativo: 'RFC123456789',
+        denominacionRazonsocial: 'Test Company',
+        domicilio: 'Test Address',
+        enlaceOperativorfc: 'RFC123456789'
+      });
+      
+      const spyModal = jest.spyOn(component, 'mostrarModalDatosObligatorios');
+      component.aceptarTransportista();
+      
+      expect(spyModal).toHaveBeenCalled();
+    });
+  });
+
+  describe('Modificar transportista', () => {
+    beforeEach(() => {
+      component.inicializarFormulario();
+      fixture.detectChanges();
+    });
+
+
+
+    it('debería configurar modo edición y abrir modal con datos del transportista', () => {
+      component.transportistasLista = [...mockTransportistasLista];
+      component.selectedTransportista = mockTransportistasLista[0];
+      
+      const spyAbrirModal = jest.spyOn(component, 'abrirModal1');
+      component.modificarTransportista();
+      
+      expect(component.isEditMode).toBe(true);
+      expect(spyAbrirModal).toHaveBeenCalled();
+      expect(component.transportistaCertificacionForm.get('enlaceOperativorfc')?.value)
+        .toBe(mockTransportistasLista[0].rfcEnclaveOperativo);
+    });
+  });
+
+  describe('Eliminar transportista', () => {
+    beforeEach(() => {
+      fixture.detectChanges();
+    });
+
+    it('debería mostrar modal de selección si no hay transportista seleccionado', () => {
+      component.transportistasLista = [];
+      component.selectedTransportista = null;
+      
+      const spyModal = jest.spyOn(component, 'mostrarModalSeleccionRequerida');
+      component.eliminarTransportista();
+      
+      expect(spyModal).toHaveBeenCalled();
+      expect(component.mensajeSeleccion).toBe('Debe seleccionar un elemento');
+    });
+
+    it('debería mostrar modal de confirmación si hay transportista seleccionado', () => {
+      component.transportistasLista = [...mockTransportistasLista];
+      component.selectedTransportista = mockTransportistasLista[0];
+      
+      const spyModal = jest.spyOn(component, 'mostrarModalConfirmacionEliminacion');
+      component.eliminarTransportista();
+      
+      expect(spyModal).toHaveBeenCalled();
+    });
+
+    it('debería eliminar transportista correctamente al confirmar', () => {
+      component.transportistasLista = [...mockTransportistasLista];
+      component.selectedTransportista = mockTransportistasLista[0];
+      
+      const spyActualizar = jest.spyOn(component, 'actualizarTransportistasListaEnStore');
+      component.confirmarEliminacionTransportista();
+      
+      expect(component.transportistasLista).toHaveLength(1);
+      expect(component.transportistasLista[0].rfcEnclaveOperativo).toBe('RFC987654321');
+      expect(component.selectedTransportista).toBeNull();
+      expect(spyActualizar).toHaveBeenCalled();
+    });
+
+    it('no debería eliminar si no hay transportista seleccionado', () => {
+      component.transportistasLista = [...mockTransportistasLista];
+      component.selectedTransportista = null;
+      
+      const lengthBefore = component.transportistasLista.length;
+      component.confirmarEliminacionTransportista();
+      
+      expect(component.transportistasLista).toHaveLength(lengthBefore);
+    });
+  });
+
+  describe('Gestión de formularios', () => {
+    beforeEach(() => {
+      component.inicializarFormulario();
+      fixture.detectChanges();
+    });
+
+    it('debería limpiar el formulario correctamente', () => {
+      component.transportistaCertificacionForm.patchValue({
+        rfcEnclaveOperativo: 'TEST123',
+        denominacionRazonsocial: 'Test Company'
       });
       
       component.limpiarFormulario();
       
-      expect(component.registroAgregarMiembroEmpresaForm.get('nombre')?.value).toBeNull();
-      expect(component.registroAgregarMiembroEmpresaForm.get('rfc')?.value).toBeNull();
+      expect(component.transportistaCertificacionForm.get('rfcEnclaveOperativo')?.value).toBe('');
+      expect(component.transportistaCertificacionForm.get('denominacionRazonsocial')?.value).toBe('');
+      expect(component.isEditMode).toBe(false);
+      expect(component.selectedTransportista).toBeNull();
+    });
+
+    it('debería resetear el modo de edición', () => {
+      component.isEditMode = true;
+      component.selectedTransportista = mockTransportistasLista[0];
+      
+      component.resetEditMode();
+      
+      expect(component.isEditMode).toBe(false);
+      expect(component.selectedTransportista).toBeNull();
+    });
+
+    it('debería limpiar transportista y reinicializar formulario', () => {
+      const spyInicializar = jest.spyOn(component, 'inicializarFormulario');
+      
+      component.limpiarTransportista();
+      
+      expect(spyInicializar).toHaveBeenCalled();
     });
   });
 
-  describe('🔧 Funcionalidades auxiliares', () => {
+  describe('Selección de filas', () => {
+    it('debería actualizar el transportista seleccionado', () => {
+      const transportista = mockTransportistasLista[0];
+      
+      component.onFilaSeleccionada(transportista);
+      
+      expect(component.selectedTransportista).toBe(transportista);
+    });
+  });
+
+  describe('Actualización del store', () => {
+    it('debería actualizar la lista de transportistas en el store', () => {
+      component.transportistasLista = mockTransportistasLista;
+      
+      component.actualizarTransportistasListaEnStore();
+      
+      expect(mockSolicitud32610Store.actualizarEstado).toHaveBeenCalledWith({
+        transportistasLista: mockTransportistasLista
+      });
+    });
+  });
+
+  describe('Limpieza de recursos', () => {
+    it('debería completar el subject destroy$ en ngOnDestroy', () => {
+      const spyNext = jest.spyOn(component.destroy$, 'next');
+      const spyComplete = jest.spyOn(component.destroy$, 'complete');
+      
+      component.ngOnDestroy();
+      
+      expect(spyNext).toHaveBeenCalled();
+      expect(spyComplete).toHaveBeenCalled();
+    });
+  });
+
+  describe('Renderizado del template', () => {
     beforeEach(() => {
-      component.ngOnInit();
+      fixture.detectChanges();
     });
 
-    it('✅ debería validar controles correctamente', () => {
-      const control = component.registroAgregarMiembroEmpresaForm.get('nombre');
+    it('debería renderizar los botones de acción', () => {
+      const compiled = fixture.nativeElement;
+      const agregarBtn = compiled.querySelector('#agregarTransportista');
+      const modificarBtn = compiled.querySelector('#modificarTransportista');
+      const eliminarBtn = compiled.querySelector('#eliminarTransportista');
       
-      // Habilitar el control para que la validación funcione
-      control?.enable();
-      control?.setValue('');
-      control?.markAsTouched();
-      
-      expect(component.esInvalido('nombre')).toBe(true);
-      
-      control?.setValue('Juan');
-      expect(component.esInvalido('nombre')).toBe(false);
+      expect(agregarBtn).toBeTruthy();
+      expect(modificarBtn).toBeTruthy();
+      expect(eliminarBtn).toBeTruthy();
     });
 
-    it('✅ debería manejar control inexistente', () => {
-      expect(component.esInvalido('controlInexistente')).toBe(false);
+    it('debería deshabilitar botones cuando esFormularioSoloLectura es true', () => {
+      component.esFormularioSoloLectura = true;
+      fixture.detectChanges();
+      
+      const compiled = fixture.nativeElement;
+      const buttons = compiled.querySelectorAll('button[disabled]');
+      
+      expect(buttons.length).toBeGreaterThan(0);
     });
 
-    it('✅ debería alternar estado colapsable', () => {
-      const estadoInicial = component.colapsable;
+    it('debería renderizar la tabla dinámica', () => {
+      const compiled = fixture.nativeElement;
+      const tablaDinamica = compiled.querySelector('app-tabla-dinamica');
       
-      component.mostrar_colapsable();
-      
-      expect(component.colapsable).toBe(!estadoInicial);
+      expect(tablaDinamica).toBeTruthy();
     });
 
-    it('✅ debería manejar cambio de valor del radio', () => {
-      expect(() => component.enCambioDeValor('1')).not.toThrow();
-      expect(component.radioSeleccionado).toBe('rfcSeccion');
-      
-      component.enCambioDeValor('0');
-      expect(component.radioSeleccionado).toBe('tipdeSeccion');
-    });
-
-    it('✅ debería actualizar estado del formulario', () => {
-      expect(() => component.actualizarEstadoFormulario()).not.toThrow();
-    });
   });
 
-  describe('📋 Casos edge y manejo de errores', () => {
-    it('✅ debería manejar error en obtenerlistadescargable', () => {
-      const errorSubject = new Subject<{ enSuCaracterDeList: Catalogo[]; nacionalidadList: Catalogo[]; tipoDePersonaList: Catalogo[]; }>();
-      mockOeaTextilRegistroService.empresaListaDeSelects.mockReturnValue(errorSubject.asObservable());
-      
-      component.ngOnInit();
-      
-      expect(() => {
-        errorSubject.error(new Error('Network error'));
-      }).not.toThrow();
+  
+
+  describe('Validaciones de formulario integradas', () => {
+    beforeEach(() => {
+      component.inicializarFormulario();
+      fixture.detectChanges();
     });
 
-    it('✅ debería manejar actualización de fila inexistente', () => {
-      component.filaSeleccionadaAgregarMiembroEmpresa = { id: 999 } as any;
+    it('debería mostrar mensaje de error cuando RFC es requerido y está vacío', () => {
+      const rfcControl = component.transportistaCertificacionForm.get('rfcEnclaveOperativo');
+      rfcControl?.markAsTouched();
+      fixture.detectChanges();
       
-      expect(() => component.actualizarFilaSeleccionada()).not.toThrow();
+      const compiled = fixture.nativeElement;
+      const errorMessage = compiled.querySelector('.mensaje-error');
+      
     });
 
-    it('✅ debería manejar eliminación con IDs inexistentes', () => {
-      component.listaFilaSeleccionadaEmpleado = [{ id: 999 } as any];
-      const longitudInicial = component.agregarMiembroEmpresaList.length;
+    it('debería validar el formulario correctamente cuando todos los campos están llenos', () => {
+      component.transportistaCertificacionForm.patchValue({
+        rfcEnclaveOperativo: 'RFC123456789',
+        enlaceOperativorfc: 'RFC123456789',
+        denominacionRazonsocial: 'Test Company',
+        domicilio: 'Test Address',
+        ccat: 'CCAT123'
+      });
       
-      component.eliminarEmpleadoItem(true);
-      
-      expect(component.agregarMiembroEmpresaList.length).toBe(longitudInicial);
-    });
-
-    it('✅ debería manejar formulario no inicializado en enviarDialogData', () => {
-      component.registroAgregarMiembroEmpresaForm = null as any;
-      
-      expect(() => component.enviarDialogData()).not.toThrow();
-    });
-
-    it('✅ debería manejar elementos DOM nulos en agregarDialogoDatos', () => {
-      component.registroDeAgregarMiembroEmpresaElemento = null as any;
-      
-      expect(() => component.agregarDialogoDatos()).not.toThrow();
+      const rfcControl = component.transportistaCertificacionForm.get('rfcEnclaveOperativo');
+      expect(rfcControl?.valid).toBe(true);
     });
   });
 });

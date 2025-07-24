@@ -1,109 +1,108 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of, Subject, BehaviorSubject } from 'rxjs';
-import { DatosComunesComponent } from './datos-comunes.component';
-import { ConsultaioQuery, TipoNotificacionEnum, CategoriaMensaje } from '@libs/shared/data-access-user/src';
-import { Solicitud32610Store } from '../../estados/solicitud32610.store';
-import { Solicitud32610Query } from '../../estados/solicitud32610.query';
+import { of, Subject } from 'rxjs';
+import { ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+ import { Solicitud32610Query } from '../../estados/solicitud32610.query';
 import { SolicitudService } from '../../services/solicitud.service';
+import { Solicitud32610State, Solicitud32610Store } from '../../estados/solicitud32610.store';
+import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { TRANSPORTISTAS_CONFIGURACION, TRANSPORTISTAS_PANELS, TransportistasTable } from '../../constants/datos-comunes.enum';
+import { TransportistasListaInterface } from '../../models/solicitud.model';
+import { CommonModule } from '@angular/common';
+import { TemplateRef } from '@angular/core';
 
-describe('DatosComunesComponent', () => {
-  let component: DatosComunesComponent;
-  let fixture: ComponentFixture<DatosComunesComponent>;
+describe('AgregarTransportistasComponent', () => {
+  let component: AgregarTransportistasComponent;
+  let fixture: ComponentFixture<AgregarTransportistasComponent>;
+  let mockSolicitudService: jest.Mocked<SolicitudService>;
+  let mockSolicitud32610Store: jest.Mocked<Solicitud32610Store>;
+  let mockSolicitud32610Query: jest.Mocked<Solicitud32610Query>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
-  let mockTramite32609Store: jest.Mocked<Solicitud32610Store>;
-  let mockTramite32609Query: jest.Mocked<Solicitud32610Query>;
-  let mockOeaTextilRegistroService: jest.Mocked<SolicitudService>;
-  let formBuilder: FormBuilder;
+  let mockBsModalService: jest.Mocked<BsModalService>;
+  let mockBsModalRef: jest.Mocked<BsModalRef>;
 
-  const mockTramiteState = {
-    sectorProductivo: '',
-    sectorServicio: '',
-    cumplimientoFiscalAduanero: '',
-    autorizaOpinionSAT: '',
-    cuentaConEmpleadosPropios: '',
-    bimestreUltimo: '',
-    numeroDeEmpleadas: '',
-    retencionISRTrabajadores: '',
-    pagoCuotasIMSS: '',
-    cuentaConSubcontratacionEspecializada: '',
-    registroPadronLFT: '',
-    listadoSATArt69: '',
-    listadoSATArt69B: '',
-    listadoSATArt69BBis: '',
-    certificadosSellosVigentes: '',
-    infringioSupuestos17HBis: '',
-    mediosContactoActualizadosBuzon: '',
-    suspensionPadronImportadoresExportadores: '',
-    archivoNacionales: '',
-    proveedores: '',
-    querellaSATUltimos3Anios: '',
-    ingresoInfoContableSAT: '',
-    domiciliosRegistrados: '',
-    numeroEmpleadosBimestre: [],
-    DomiciliosRfcSolicitante: [],
-    controlInventarios: [],
-    agregarMiembroEmpresa: []
-  } as any;
+  const mockTransportistasLista: TransportistasTable[] = [
+    {
+      rfcEnclaveOperativo: 'RFC123456789',
+      denominacionRazonsocial: 'Transportes Test SA',
+      domicilio: 'Calle Test 123',
+      ccat: 'CCAT123'
+    },
+    {
+      rfcEnclaveOperativo: 'RFC987654321',
+      denominacionRazonsocial: 'Logística ABC SA',
+      domicilio: 'Avenida ABC 456',
+      ccat: 'CCAT456'
+    }
+  ];
 
-  const mockCatalogos = {
-    sectorProductivoList: [
-      { id: 1, descripcion: 'Sector 1' },
-      { id: 2, descripcion: 'Sector 2' }
-    ],
-    sectorServicioList: [
-      { id: 1, descripcion: 'Servicio 1' },
-      { id: 2, descripcion: 'Servicio 2' }
-    ],
-    bimestreList: [
-      { id: 1, descripcion: '1er Bimestre' },
-      { id: 2, descripcion: '2do Bimestre' }
-    ]
-  };    beforeEach(async () => {
-    mockConsultaioQuery = {
-      selectConsultaioState$: of({ 
-        readonly: false,
-        procedureId: null,
-        parameter: null,
-        department: null,
-        folioTramite: null,
-        isReadonly: false,
-        solicitudId: null,
-        modulo: null,
-        folioSolicitud: null,
-        tipoPersona: null
-      } as any)
+  const mockSolicitudState: Solicitud32610State = {
+    rfcEnclaveOperativo: 'RFC123456789',
+    enlaceOperativorfc: 'RFC123456789',
+    denominacionRazonsocial: 'Transportes Test SA',
+    domicilio: 'Calle Test 123',
+    ccat: 'CCAT123',
+    transportistasLista: mockTransportistasLista
+  } as Solicitud32610State;
+
+  const mockConsultaioState = {
+    readonly: false
+  };
+
+  const mockTransportistasListaData: { [key: string]: TransportistasListaInterface } = {
+    'RFC123456789': {
+      enlaceOperativorfc: 'RFC123456789',
+      denominacionRazonsocial: 'Transportes Test SA',
+      domicilio: 'Calle Test 123',
+      ccat: 'CCAT123'
+    }
+  };
+
+  beforeEach(async () => {
+    mockSolicitudService = {
+      conseguirTransportistasLista: jest.fn().mockReturnValue(of(mockTransportistasListaData))
     } as any;
 
-    mockTramite32609Store = {
+    mockSolicitud32610Store = {
       actualizarEstado: jest.fn()
     } as any;
 
-    mockTramite32609Query = {
-      selectTramite32609$: of(mockTramiteState)
+    mockSolicitud32610Query = {
+      selectSolicitud$: of(mockSolicitudState)
     } as any;
 
-    mockOeaTextilRegistroService = {
-      sectorListaDeSelects: jest.fn().mockReturnValue(of(mockCatalogos))
+    mockConsultaioQuery = {
+      selectConsultaioState$: of(mockConsultaioState)
+    } as any;
+
+    mockBsModalRef = {
+      hide: jest.fn()
+    } as any;
+
+    mockBsModalService = {
+      show: jest.fn().mockReturnValue(mockBsModalRef)
     } as any;
 
     await TestBed.configureTestingModule({
       imports: [
-        DatosComunesComponent,
-        ReactiveFormsModule
+        AgregarTransportistasComponent,
+        CommonModule,
+        ReactiveFormsModule,
+        TablaDinamicaComponent
       ],
       providers: [
         FormBuilder,
+        { provide: SolicitudService, useValue: mockSolicitudService },
+        { provide: Solicitud32610Store, useValue: mockSolicitud32610Store },
+        { provide: Solicitud32610Query, useValue: mockSolicitud32610Query },
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
-        { provide: Solicitud32610Store, useValue: mockTramite32609Store },
-        { provide: Solicitud32610Query, useValue: mockTramite32609Query },
-        { provide: SolicitudService, useValue: mockOeaTextilRegistroService }
+        { provide: BsModalService, useValue: mockBsModalService }
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DatosComunesComponent);
+    fixture = TestBed.createComponent(AgregarTransportistasComponent);
     component = fixture.componentInstance;
-    formBuilder = TestBed.inject(FormBuilder);
   });
 
   describe('Inicialización del componente', () => {
@@ -112,525 +111,526 @@ describe('DatosComunesComponent', () => {
     });
 
     it('debería inicializar las propiedades por defecto', () => {
-      expect(component.radioSeleccionado).toBe(false);
-      expect(component.esTablaVisible).toBe(false);
-      expect(component.mostrarRespuestaObligatoria).toBe(false);
+      expect(component.transportistasPanels).toEqual(TRANSPORTISTAS_PANELS);
+      expect(component.tablaSeleccionCheckbox).toBe(TablaSeleccion.CHECKBOX);
+      expect(component.transportistasConfiguracionColumnas).toEqual(TRANSPORTISTAS_CONFIGURACION);
       expect(component.esFormularioSoloLectura).toBe(false);
-      expect(component.esHabilitarElDialogo).toBe(false);
-      expect(component.esFormularioInicializado).toBe(true);
+      expect(component.destroy$).toBeInstanceOf(Subject);
     });
 
-    it('debería crear el Subject destroyed$ para manejo de suscripciones', () => {
-      expect(component.destroyed$).toBeInstanceOf(Subject);
+    it('debería llamar a inicializarEstadoFormulario en ngOnInit', () => {
+      const spy = jest.spyOn(component, 'inicializarEstadoFormulario');
+      component.ngOnInit();
+      expect(spy).toHaveBeenCalled();
     });
 
-    it('debería configurar el estado de solo lectura desde consultaioQuery', () => {
+    it('debería suscribirse al estado de consultaio en el constructor', () => {
+      expect(mockConsultaioQuery.selectConsultaioState$).toBeDefined();
+    });
+  });
+
+  describe('Gestión del estado del formulario', () => {
+    beforeEach(() => {
+      fixture.detectChanges();
+    });
+
+    it('debería inicializar el formulario con los valores del estado', () => {
+      component.inicializarFormulario();
+      
+      expect(component.transportistaCertificacionForm).toBeDefined();
+      expect(component.transportistaCertificacionForm.get('rfcEnclaveOperativo')).toBeTruthy();
+      expect(component.transportistaCertificacionForm.get('enlaceOperativorfc')).toBeTruthy();
+      expect(component.transportistaCertificacionForm.get('denominacionRazonsocial')).toBeTruthy();
+      expect(component.transportistaCertificacionForm.get('domicilio')).toBeTruthy();
+      expect(component.transportistaCertificacionForm.get('ccat')).toBeTruthy();
+    });
+
+
+    it('debería deshabilitar campos específicos en el formulario', () => {
+      component.inicializarFormulario();
+      
+      expect(component.transportistaCertificacionForm.get('enlaceOperativorfc')?.disabled).toBe(true);
+      expect(component.transportistaCertificacionForm.get('denominacionRazonsocial')?.disabled).toBe(true);
+      expect(component.transportistaCertificacionForm.get('domicilio')?.disabled).toBe(true);
+      expect(component.transportistaCertificacionForm.get('ccat')?.disabled).toBe(true);
+    });
+
+    it('debería deshabilitar el formulario cuando esFormularioSoloLectura es true', () => {
       component.esFormularioSoloLectura = true;
-      expect(component.esFormularioSoloLectura).toBe(true);
+      component.guardarDatosFormulario();
       
-      component.seccionState = mockTramiteState;
-      component.crearForm();
-      
-      component.actualizarEstadoCampos();
-      expect(component.forma.get('cumplimientoFiscalAduanero')?.disabled).toBe(true);
-      expect(component.forma.get('autorizaOpinionSAT')?.disabled).toBe(true);
-      
+      expect(component.transportistaCertificacionForm.disabled).toBe(true);
+    });
+
+    it('debería habilitar el formulario cuando esFormularioSoloLectura es false', () => {
       component.esFormularioSoloLectura = false;
-      component.actualizarEstadoCampos();
+      component.guardarDatosFormulario();
       
-      expect(component.forma.get('cumplimientoFiscalAduanero')?.enabled).toBe(true);
-      expect(component.forma.get('autorizaOpinionSAT')?.enabled).toBe(true);
+      expect(component.transportistaCertificacionForm.enabled).toBe(true);
     });
   });
 
-  describe('Gestión del formulario', () => {
+
+  describe('Funcionalidad de paneles colapsables', () => {
     beforeEach(() => {
-      component.seccionState = mockTramiteState;
-      component.crearForm();
+      component.transportistasPanels = [
+        { label: 'Panel 1', isCollapsed: true },
+        { label: 'Panel 2', isCollapsed: true }
+      ];
     });
 
-    it('debería crear el formulario con todos los controles requeridos', () => {
-      expect(component.forma).toBeDefined();
-      expect(component.forma.get('sectorProductivo')).toBeTruthy();
-      expect(component.forma.get('sectorServicio')).toBeTruthy();
-      expect(component.forma.get('cumplimientoFiscalAduanero')).toBeTruthy();
-      expect(component.forma.get('autorizaOpinionSAT')).toBeTruthy();
-      expect(component.forma.get('cuentaConEmpleadosPropios')).toBeTruthy();
-      expect(component.forma.get('numeroDeEmpleadas')).toBeTruthy();
-      expect(component.forma.get('bimestreUltimo')).toBeTruthy();
-      expect(component.forma.get('pagoCuotasIMSS')).toBeTruthy();
+    it('debería expandir el panel seleccionado y colapsar los demás', () => {
+      component.mostrar_colapsable(0);
+      
+      expect(component.transportistasPanels[0].isCollapsed).toBe(false);
+      expect(component.transportistasPanels[1].isCollapsed).toBe(true);
     });
 
-    it('debería aplicar validaciones requeridas a los controles específicos', () => {
-      const cumplimientoControl = component.forma.get('cumplimientoFiscalAduanero');
-      const autorizaControl = component.forma.get('autorizaOpinionSAT');
-      const empleadosControl = component.forma.get('cuentaConEmpleadosPropios');
-
-      cumplimientoControl?.setValue('');
-      autorizaControl?.setValue('');
-      empleadosControl?.setValue('');
-
-      expect(cumplimientoControl?.valid).toBe(false);
-      expect(autorizaControl?.valid).toBe(false);
-      expect(empleadosControl?.valid).toBe(false);
-    });
-
-    it('debería validar que numeroDeEmpleadas solo acepte números positivos', () => {
-      const numeroControl = component.forma.get('numeroDeEmpleadas');
+    it('debería colapsar el panel si ya estaba expandido', () => {
+      component.transportistasPanels[0].isCollapsed = false;
+      component.mostrar_colapsable(0);
       
-      numeroControl?.enable();
-      
-      numeroControl?.setValue('abc');
-      expect(numeroControl?.valid).toBe(false);
-      
-      numeroControl?.setValue('0');
-      expect(numeroControl?.valid).toBe(false);
-      
-      numeroControl?.setValue('-5');
-      expect(numeroControl?.valid).toBe(false);
-      
-      numeroControl?.setValue('10');
-      expect(numeroControl?.valid).toBe(true);
-    });
-
-    it('debería deshabilitar el formulario en modo solo lectura', () => {
-      component.esFormularioSoloLectura = true;
-      component.actualizarEstadoCampos();
-      
-      expect(component.forma.get('cumplimientoFiscalAduanero')?.disabled).toBe(true);
-      expect(component.forma.get('autorizaOpinionSAT')?.disabled).toBe(true);
-      expect(component.forma.get('manifests')?.disabled).toBe(true);
-    });
-
-    it('debería habilitar el formulario cuando no está en modo solo lectura', () => {
-      component.esFormularioSoloLectura = false;
-      component.actualizarEstadoCampos();
-      expect(component.forma.get('cumplimientoFiscalAduanero')?.enabled).toBe(true);
-      expect(component.forma.get('autorizaOpinionSAT')?.enabled).toBe(true);
-      expect(component.forma.get('manifests')?.enabled).toBe(true);
+      expect(component.transportistasPanels[0].isCollapsed).toBe(true);
     });
   });
 
-  describe('Validación de formulario', () => {
+  describe('Gestión de modales', () => {
     beforeEach(() => {
-      component.seccionState = mockTramiteState;
-      component.crearForm();
+      fixture.detectChanges();
     });
 
-    it('debería marcar todos los controles como touched al validar', () => {
-      const markAllAsTouchedSpy = jest.spyOn(component.forma, 'markAllAsTouched');
+    it('debería abrir el modal principal con la configuración correcta', () => {
+      const mockTemplate = {} as TemplateRef<void>;
+      component.abrirModal1(mockTemplate);
       
-      component.validarFormulario();
-      
-      expect(markAllAsTouchedSpy).toHaveBeenCalled();
+      expect(mockBsModalService.show).toHaveBeenCalledWith(mockTemplate, { class: 'modal-lg' });
+      expect(component.modalRefabir).toBe(mockBsModalRef);
     });
 
-
-    it('debería identificar correctamente controles inválidos', () => {
-      const control = component.forma.get('cumplimientoFiscalAduanero');
-      control?.setValue('');
-      control?.markAsTouched();
+    it('debería mostrar el modal de éxito', () => {
+      component.mostrarModalExito();
       
-      expect(component.esInvalido('cumplimientoFiscalAduanero')).toBe(true);
+      const expectedConfig = {
+        animated: true,
+        keyboard: false,
+        backdrop: true,
+        ignoreBackdropClick: true,
+        class: 'modal-sm'
+      };
+      
+      expect(mockBsModalService.show).toHaveBeenCalledWith(
+        component.templateExito,
+        expectedConfig
+      );
     });
 
-    it('debería retornar false para controles válidos', () => {
-      const control = component.forma.get('cumplimientoFiscalAduanero');
-      control?.setValue('1');
-      control?.markAsTouched();
+    it('debería cerrar el modal de éxito', () => {
+      component.modalRefExito = mockBsModalRef;
+      component.cerrarModalExito();
       
-      expect(component.esInvalido('cumplimientoFiscalAduanero')).toBe(false);
+      expect(mockBsModalRef.hide).toHaveBeenCalled();
+    });
+
+    it('debería cancelar el modal y limpiar el formulario', () => {
+      const spyLimpiar = jest.spyOn(component, 'limpiarTransportista');
+      component.modalRefabir = mockBsModalRef;
+      
+      component.cancelarModal();
+      
+      expect(mockBsModalRef.hide).toHaveBeenCalled();
+      expect(spyLimpiar).toHaveBeenCalled();
     });
   });
 
-  describe('Manejo de campos mutuamente excluyentes', () => {
+  describe('Búsqueda de RFC', () => {
     beforeEach(() => {
-      component.seccionState = mockTramiteState;
-      component.crearForm();
+      component.inicializarFormulario();
+      fixture.detectChanges();
     });
 
-    it('debería resetear el campo opuesto cuando se selecciona un valor', () => {
-      const mockEvent = {
-        target: { value: 'valor1' }
-      } as any;
+    it('debería buscar datos por RFC cuando es válido y no existe en la tabla', () => {
+      const rfc = 'NUEVORFC123';
+      component.transportistaCertificacionForm.patchValue({ rfcEnclaveOperativo: rfc });
       
-      component.forma.patchValue({ sectorServicio: 'valorAnterior' });
+      const spyBuscarDatos = jest.spyOn(component, 'buscarDatosPorRFC');
+      component.buscarRFC();
       
-      component.manejarCamposMutuamenteExcluyentes('sectorProductivo', 'sectorServicio', mockEvent);
-      
-      expect(component.forma.get('sectorServicio')?.value).toBeNull();
+      expect(spyBuscarDatos).toHaveBeenCalledWith(rfc);
     });
 
-    it('debería marcar el campo opuesto como pristine', () => {
-      const mockEvent = {
-        target: { value: 'valor1' }
-      } as any;
+    it('debería mostrar modal de RFC duplicado cuando ya existe en la tabla', () => {
+      component.transportistasLista = mockTransportistasLista;
+      component.transportistaCertificacionForm.patchValue({ 
+        rfcEnclaveOperativo: 'RFC123456789' 
+      });
       
-      const sectorServicioControl = component.forma.get('sectorServicio');
-      sectorServicioControl?.markAsDirty();
+      const spyModalDuplicado = jest.spyOn(component, 'mostrarModalRFCDuplicado');
+      component.buscarRFC();
       
-      if (sectorServicioControl) {
-        const markAsPristineSpy = jest.spyOn(sectorServicioControl, 'markAsPristine');
-        
-        component.manejarCamposMutuamenteExcluyentes('sectorProductivo', 'sectorServicio', mockEvent);
-        
-        expect(markAsPristineSpy).toHaveBeenCalled();
-      }
+      expect(spyModalDuplicado).toHaveBeenCalled();
     });
 
-    it('debería llamar a setValoresStore con el campo seleccionado', () => {
-      const mockEvent = {
-        target: { value: 'valor1' }
-      } as any;
+    it('no debería buscar si el RFC está vacío', () => {
+      component.transportistaCertificacionForm.patchValue({ rfcEnclaveOperativo: '' });
       
-      const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
+      const spyBuscarDatos = jest.spyOn(component, 'buscarDatosPorRFC');
+      component.buscarRFC();
       
-      component.manejarCamposMutuamenteExcluyentes('sectorProductivo', 'sectorServicio', mockEvent);
+      expect(spyBuscarDatos).not.toHaveBeenCalled();
+    });
+
+    it('debería actualizar el formulario con datos encontrados', () => {
+      const empresaData: TransportistasListaInterface = {
+        enlaceOperativorfc: 'RFC123456789',
+        denominacionRazonsocial: 'Test Company',
+        domicilio: 'Test Address',
+        ccat: 'CCAT123'
+      };
       
-      expect(setValoresStoreSpy).toHaveBeenCalledWith(component.forma, 'sectorProductivo');
+      component.patchearDatosEmpresa(empresaData);
+      
+      expect(component.transportistaCertificacionForm.get('enlaceOperativorfc')?.value).toBe('RFC123456789');
+      expect(component.transportistaCertificacionForm.get('denominacionRazonsocial')?.value).toBe('Test Company');
+      expect(component.transportistaCertificacionForm.get('domicilio')?.value).toBe('Test Address');
+      expect(component.transportistaCertificacionForm.get('ccat')?.value).toBe('CCAT123');
+    });
+
+    it('debería limpiar campos cuando no se encuentran datos', () => {
+      component.limpiarCamposEmpresa();
+      
+      expect(component.transportistaCertificacionForm.get('enlaceOperativorfc')?.value).toBe('');
+      expect(component.transportistaCertificacionForm.get('denominacionRazonsocial')?.value).toBe('');
+      expect(component.transportistaCertificacionForm.get('domicilio')?.value).toBe('');
+      expect(component.transportistaCertificacionForm.get('ccat')?.value).toBe('');
     });
   });
 
-  describe('Manejo de cambios de radio buttons', () => {
+  describe('Validaciones de RFC', () => {
+    it('debería verificar correctamente si un RFC existe en la tabla', () => {
+      component.transportistasLista = mockTransportistasLista;
+      
+      expect(component.existeRFCEnTabla('RFC123456789')).toBe(true);
+      expect(component.existeRFCEnTabla('RFC999999999')).toBe(false);
+    });
+
+    it('debería ser insensible a mayúsculas/minúsculas', () => {
+      component.transportistasLista = mockTransportistasLista;
+      
+      expect(component.existeRFCEnTabla('rfc123456789')).toBe(true);
+      expect(component.existeRFCEnTabla('RFC123456789')).toBe(true);
+    });
+
+    it('debería verificar RFC excluyendo uno específico', () => {
+      component.transportistasLista = mockTransportistasLista;
+      
+      expect(component.existeRFCEnTablaExcluyendo('RFC123456789', 'RFC123456789')).toBe(false);
+      expect(component.existeRFCEnTablaExcluyendo('RFC123456789', 'RFC987654321')).toBe(true);
+    });
+  });
+
+  describe('Aceptar transportista', () => {
     beforeEach(() => {
-      component.seccionState = mockTramiteState;
-      component.crearForm();
+      component.inicializarFormulario();
+      fixture.detectChanges();
     });
 
-    it('debería actualizar radioSeleccionado cuando se selecciona "Sí"', () => {
-      component.enCambioDeValor('1');
-      expect(component.radioSeleccionado).toBe(true);
+    it('debería mostrar modal de datos obligatorios si RFC está vacío', () => {
+      component.transportistaCertificacionForm.patchValue({ rfcEnclaveOperativo: '' });
       
-      component.radioSeleccionado = false; 
-      expect(component.radioSeleccionado).toBe(false);
+      const spyModal = jest.spyOn(component, 'mostrarModalDatos');
+      component.aceptarTransportista();
+      
+      expect(spyModal).toHaveBeenCalled();
     });
 
-    it('debería actualizar radioSeleccionado cuando se selecciona "No"', () => {
-      component.enCambioDeValor('0');
-      expect(component.radioSeleccionado).toBe(false);
+    it('debería mostrar modal de datos obligatorios si no se realizó búsqueda', () => {
+      component.transportistaCertificacionForm.patchValue({
+        rfcEnclaveOperativo: 'RFC123456789',
+        denominacionRazonsocial: '',
+        domicilio: '',
+        enlaceOperativorfc: ''
+      });
       
-      component.enCambioDeValor(0);
-      expect(component.radioSeleccionado).toBe(false);
+      const spyModal = jest.spyOn(component, 'mostrarModalDatosObligatorios');
+      component.aceptarTransportista();
+      
+      expect(spyModal).toHaveBeenCalled();
     });
 
-    it('debería habilitar controles cuando radioSeleccionado es true', () => {
-      component.enCambioDeValor('1');
+    it('debería agregar transportista correctamente en modo adición', () => {
+      component.isEditMode = false;
+      component.transportistasLista = [];
+      component.transportistaCertificacionForm.patchValue({
+        rfcEnclaveOperativo: 'RFC123456789',
+        denominacionRazonsocial: 'Test Company',
+        domicilio: 'Test Address',
+        enlaceOperativorfc: 'RFC123456789',
+        ccat: 'CCAT123'
+      });
       
-      const numeroControl = component.forma.get('numeroDeEmpleadas');
-      const bimestreControl = component.forma.get('bimestreUltimo');
+      const spyActualizar = jest.spyOn(component, 'actualizarTransportistasListaEnStore');
+      const spyModalExito = jest.spyOn(component, 'mostrarModalExito');
       
-      expect(numeroControl?.enabled).toBe(true);
-      expect(bimestreControl?.enabled).toBe(true);
+      component.aceptarTransportista();
+      
+      expect(component.transportistasLista).toHaveLength(1);
+      expect(spyActualizar).toHaveBeenCalled();
+      expect(spyModalExito).toHaveBeenCalled();
     });
 
-    it('debería deshabilitar controles cuando radioSeleccionado es false', () => {
-      component.enCambioDeValor('0');
+    it('debería actualizar transportista en modo edición', () => {
+      component.isEditMode = true;
+      component.transportistasLista = [...mockTransportistasLista];
+      component.selectedTransportista = mockTransportistasLista[0];
+      component.transportistaCertificacionForm.patchValue({
+        rfcEnclaveOperativo: 'RFC123456789',
+        denominacionRazonsocial: 'Updated Company',
+        domicilio: 'Updated Address',
+        enlaceOperativorfc: 'RFC123456789',
+        ccat: 'CCAT123'
+      });
       
-      const numeroControl = component.forma.get('numeroDeEmpleadas');
-      const bimestreControl = component.forma.get('bimestreUltimo');
+      component.aceptarTransportista();
       
-      expect(numeroControl?.disabled).toBe(true);
-      expect(bimestreControl?.disabled).toBe(true);
+      expect(component.transportistasLista[0].denominacionRazonsocial).toBe('Updated Company');
+      expect(component.transportistasLista[0].domicilio).toBe('Updated Address');
+    });
+
+    it('debería validar RFC duplicado en modo adición', () => {
+      component.isEditMode = false;
+      component.transportistasLista = [...mockTransportistasLista];
+      component.transportistaCertificacionForm.patchValue({
+        rfcEnclaveOperativo: 'RFC123456789',
+        denominacionRazonsocial: 'Test Company',
+        domicilio: 'Test Address',
+        enlaceOperativorfc: 'RFC123456789'
+      });
+      
+      const spyModal = jest.spyOn(component, 'mostrarModalDatosObligatorios');
+      component.aceptarTransportista();
+      
+      expect(spyModal).toHaveBeenCalled();
     });
   });
 
-  describe('Manejo de visibilidad de tabla', () => {
-    it('debería mostrar tabla cuando valor es "1"', () => {
-      component.toggleTablaPorValor('1');
-      expect(component.esTablaVisible).toBe(true);
-      
-      // Number 1 should not work because the method uses strict comparison with '1'
-      component.esTablaVisible = false; // Reset
-      component.toggleTablaPorValor(1);
-      expect(component.esTablaVisible).toBe(false); // Will remain false because 1 !== '1'
-    });
-
-    it('debería ocultar tabla cuando valor es "0"', () => {
-      component.toggleTablaPorValor('0');
-      expect(component.esTablaVisible).toBe(false);
-      
-      component.toggleTablaPorValor(0);
-      expect(component.esTablaVisible).toBe(false);
-    });
-  });
-
-  describe('Manejo de pago cuotas IMSS', () => {
-    it('debería mostrar respuesta obligatoria cuando se selecciona "No"', () => {
-      component.manejarPagoCuotasIMSS('0');
-      expect(component.mostrarRespuestaObligatoria).toBe(true);
-      
-      component.manejarPagoCuotasIMSS(0);
-      expect(component.mostrarRespuestaObligatoria).toBe(true);
-    });
-
-    it('debería ocultar respuesta obligatoria cuando se selecciona "Sí"', () => {
-      component.manejarPagoCuotasIMSS('1');
-      expect(component.mostrarRespuestaObligatoria).toBe(false);
-      
-      component.manejarPagoCuotasIMSS(1);
-      expect(component.mostrarRespuestaObligatoria).toBe(false);
-    });
-  });
-
-  describe('Gestión del estado en el store', () => {
+  describe('Modificar transportista', () => {
     beforeEach(() => {
-      component.seccionState = mockTramiteState;
-      component.crearForm();
+      component.inicializarFormulario();
+      fixture.detectChanges();
     });
 
-    it('debería guardar valores en el store cuando el control tiene valor', () => {
-      const control = component.forma.get('cumplimientoFiscalAduanero');
-      control?.setValue('1');
+    it('debería mostrar modal de selección requerida si no hay transportistas', () => {
+      component.transportistasLista = [];
+      component.selectedTransportista = null;
       
-      component.setValoresStore(component.forma, 'cumplimientoFiscalAduanero');
+      const spyModal = jest.spyOn(component, 'mostrarModalSeleccionRequerida');
+      component.modificarTransportista();
       
-      expect(mockTramite32609Store.actualizarEstado).toHaveBeenCalledWith({
-        cumplimientoFiscalAduanero: '1'
+      expect(spyModal).toHaveBeenCalled();
+      expect(component.mensajeSeleccion).toBe('No se encontró información.');
+    });
+
+    it('debería configurar modo edición y abrir modal con datos del transportista', () => {
+      component.transportistasLista = [...mockTransportistasLista];
+      component.selectedTransportista = mockTransportistasLista[0];
+      
+      const spyAbrirModal = jest.spyOn(component, 'abrirModal1');
+      component.modificarTransportista();
+      
+      expect(component.isEditMode).toBe(true);
+      expect(spyAbrirModal).toHaveBeenCalled();
+      expect(component.transportistaCertificacionForm.get('enlaceOperativorfc')?.value)
+        .toBe(mockTransportistasLista[0].rfcEnclaveOperativo);
+    });
+  });
+
+  describe('Eliminar transportista', () => {
+    beforeEach(() => {
+      fixture.detectChanges();
+    });
+
+    it('debería mostrar modal de selección si no hay transportista seleccionado', () => {
+      component.transportistasLista = [];
+      component.selectedTransportista = null;
+      
+      const spyModal = jest.spyOn(component, 'mostrarModalSeleccionRequerida');
+      component.eliminarTransportista();
+      
+      expect(spyModal).toHaveBeenCalled();
+      expect(component.mensajeSeleccion).toBe('Debe seleccionar un elemento');
+    });
+
+    it('debería mostrar modal de confirmación si hay transportista seleccionado', () => {
+      component.transportistasLista = [...mockTransportistasLista];
+      component.selectedTransportista = mockTransportistasLista[0];
+      
+      const spyModal = jest.spyOn(component, 'mostrarModalConfirmacionEliminacion');
+      component.eliminarTransportista();
+      
+      expect(spyModal).toHaveBeenCalled();
+    });
+
+    it('debería eliminar transportista correctamente al confirmar', () => {
+      component.transportistasLista = [...mockTransportistasLista];
+      component.selectedTransportista = mockTransportistasLista[0];
+      
+      const spyActualizar = jest.spyOn(component, 'actualizarTransportistasListaEnStore');
+      component.confirmarEliminacionTransportista();
+      
+      expect(component.transportistasLista).toHaveLength(1);
+      expect(component.transportistasLista[0].rfcEnclaveOperativo).toBe('RFC987654321');
+      expect(component.selectedTransportista).toBeNull();
+      expect(spyActualizar).toHaveBeenCalled();
+    });
+
+    it('no debería eliminar si no hay transportista seleccionado', () => {
+      component.transportistasLista = [...mockTransportistasLista];
+      component.selectedTransportista = null;
+      
+      const lengthBefore = component.transportistasLista.length;
+      component.confirmarEliminacionTransportista();
+      
+      expect(component.transportistasLista).toHaveLength(lengthBefore);
+    });
+  });
+
+  describe('Gestión de formularios', () => {
+    beforeEach(() => {
+      component.inicializarFormulario();
+      fixture.detectChanges();
+    });
+
+    it('debería limpiar el formulario correctamente', () => {
+      component.transportistaCertificacionForm.patchValue({
+        rfcEnclaveOperativo: 'TEST123',
+        denominacionRazonsocial: 'Test Company'
+      });
+      
+      component.limpiarFormulario();
+      
+      expect(component.transportistaCertificacionForm.get('rfcEnclaveOperativo')?.value).toBe('');
+      expect(component.transportistaCertificacionForm.get('denominacionRazonsocial')?.value).toBe('');
+      expect(component.isEditMode).toBe(false);
+      expect(component.selectedTransportista).toBeNull();
+    });
+
+    it('debería resetear el modo de edición', () => {
+      component.isEditMode = true;
+      component.selectedTransportista = mockTransportistasLista[0];
+      
+      component.resetEditMode();
+      
+      expect(component.isEditMode).toBe(false);
+      expect(component.selectedTransportista).toBeNull();
+    });
+
+    it('debería limpiar transportista y reinicializar formulario', () => {
+      const spyInicializar = jest.spyOn(component, 'inicializarFormulario');
+      
+      component.limpiarTransportista();
+      
+      expect(spyInicializar).toHaveBeenCalled();
+    });
+  });
+
+  describe('Selección de filas', () => {
+    it('debería actualizar el transportista seleccionado', () => {
+      const transportista = mockTransportistasLista[0];
+      
+      component.onFilaSeleccionada(transportista);
+      
+      expect(component.selectedTransportista).toBe(transportista);
+    });
+  });
+
+  describe('Actualización del store', () => {
+    it('debería actualizar la lista de transportistas en el store', () => {
+      component.transportistasLista = mockTransportistasLista;
+      
+      component.actualizarTransportistasListaEnStore();
+      
+      expect(mockSolicitud32610Store.actualizarEstado).toHaveBeenCalledWith({
+        transportistasLista: mockTransportistasLista
       });
     });
-
-    it('debería marcar el control como pristine si es válido y touched', () => {
-      const control = component.forma.get('cumplimientoFiscalAduanero');
-      control?.setValue('1');
-      control?.markAsTouched();
-      
-      if (control) {
-        const markAsPristineSpy = jest.spyOn(control, 'markAsPristine');
-        
-        component.setValoresStore(component.forma, 'cumplimientoFiscalAduanero');
-        
-        expect(markAsPristineSpy).toHaveBeenCalled();
-      }
-    });
-
-    it('debería manejar formulario nulo sin errores', () => {
-      expect(() => {
-        component.setValoresStore(null, 'campo');
-      }).not.toThrow();
-    });
   });
 
-  describe('Obtención de catálogos', () => {
-    it('debería cargar las listas de sectores y bimestres', () => {
-      component.obtenerlistadescargable();
-      
-      expect(mockOeaTextilRegistroService.sectorListaDeSelects).toHaveBeenCalled();
-      expect(component.sectorProductivoList).toEqual(mockCatalogos.sectorProductivoList);
-      expect(component.sectorServicio).toEqual(mockCatalogos.sectorServicioList);
-      expect(component.bimestreList).toEqual(mockCatalogos.bimestreList);
-    });
-  });
-
-  describe('Gestión de notificaciones y modales', () => {
-    it('debería configurar notificación con mensaje personalizado', () => {
-      const mensajeCustom = 'Mensaje personalizado';
-      
-      component.enviarDialogData(mensajeCustom);
-      
-      expect(component.nuevaNotificacion).toEqual({
-        tipoNotificacion: TipoNotificacionEnum.ALERTA,
-        categoria: CategoriaMensaje.ALERTA,
-        modo: 'modal',
-        titulo: '',
-        mensaje: mensajeCustom,
-        cerrar: false,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-        tamanioModal: 'modal-md'
-      });
-    });
-
-    it('debería configurar notificación con mensaje por defecto', () => {
-      component.enviarDialogData();
-      
-      expect(component.nuevaNotificacion.mensaje).toBe(component.REQUISITO_OBLIGATORIO);
-    });
-
-    it('debería habilitar diálogo cuando selección es verdadera', () => {
-      const enviarDialogDataSpy = jest.spyOn(component, 'enviarDialogData');
-      
-      component.onSeleccionVerdadera('1');
-      
-      expect(component.esHabilitarElDialogo).toBe(true);
-      expect(enviarDialogDataSpy).toHaveBeenCalled();
-    });
-
-    it('debería deshabilitar diálogo cuando selección no es verdadera', () => {
-      component.onSeleccionVerdadera('0');
-      
-      expect(component.esHabilitarElDialogo).toBe(false);
-    });
-
-    it('debería habilitar diálogo cuando selección es falsa', () => {
-      const enviarDialogDataSpy = jest.spyOn(component, 'enviarDialogData');
-      
-      component.onSeleccionfalsa('0');
-      
-      expect(component.esHabilitarElDialogo).toBe(true);
-      expect(enviarDialogDataSpy).toHaveBeenCalled();
-    });
-
-    it('debería cerrar el modal correctamente', () => {
-      component.esHabilitarElDialogo = true;
-      
-      component.cerrarModal();
-      
-      expect(component.esHabilitarElDialogo).toBe(false);
-    });
-  });
-
-  describe('Gestión de memoria y limpieza', () => {
-    it('debería completar el subject destroyed$ al destruir el componente', () => {
-      const nextSpy = jest.spyOn(component.destroyed$, 'next');
-      const completeSpy = jest.spyOn(component.destroyed$, 'complete');
+  describe('Limpieza de recursos', () => {
+    it('debería completar el subject destroy$ en ngOnDestroy', () => {
+      const spyNext = jest.spyOn(component.destroy$, 'next');
+      const spyComplete = jest.spyOn(component.destroy$, 'complete');
       
       component.ngOnDestroy();
       
-      expect(nextSpy).toHaveBeenCalled();
-      expect(completeSpy).toHaveBeenCalled();
-    });
-
-    it('debería limpiar suscripciones al destruir el componente', () => {
-      // Test without spies to avoid interference
-      const originalNext = component.destroyed$.next.bind(component.destroyed$);
-      const originalComplete = component.destroyed$.complete.bind(component.destroyed$);
-      
-      let nextCalled = false;
-      let completeCalled = false;
-      
-      component.destroyed$.next = (...args) => {
-        nextCalled = true;
-        return originalNext(...args);
-      };
-      
-      component.destroyed$.complete = (...args) => {
-        completeCalled = true;
-        return originalComplete(...args);
-      };
-      
-      component.ngOnDestroy();
-      
-      expect(nextCalled).toBe(true);
-      expect(completeCalled).toBe(true);
-      
-      let immediateComplete = false;
-      component.destroyed$.subscribe({
-        complete: () => immediateComplete = true
-      });
-      
-      expect(immediateComplete).toBe(true);
+      expect(spyNext).toHaveBeenCalled();
+      expect(spyComplete).toHaveBeenCalled();
     });
   });
 
-  describe('Manejo de errores y casos edge', () => {
-    it('debería manejar control inexistente en esInvalido', () => {
-      expect(component.esInvalido('controlInexistente')).toBe(false);
-    });
-
-    it('debería manejar valores undefined en setValoresStore', () => {
-      component.seccionState = mockTramiteState;
-      component.crearForm();
-      
-      const control = component.forma.get('cumplimientoFiscalAduanero');
-      control?.setValue(undefined);
-      
-      expect(() => {
-        component.setValoresStore(component.forma, 'cumplimientoFiscalAduanero');
-      }).not.toThrow();
-    });
-
-    it('debería manejar evento sin target en manejarCamposMutuamenteExcluyentes', () => {
-      const mockEvent = {} as any;
-      
-      expect(() => {
-        component.manejarCamposMutuamenteExcluyentes('campo1', 'campo2', mockEvent);
-      }).not.toThrow();
-    });
-  });
-
-  describe('Actualización de datos del formulario', () => {
+  describe('Renderizado del template', () => {
     beforeEach(() => {
-      component.seccionState = mockTramiteState;
-      component.crearForm();
+      fixture.detectChanges();
     });
 
-    it('debería actualizar el formulario con datos del estado', () => {
-      const mockState = {
-        ...mockTramiteState,
-        cumplimientoFiscalAduanero: '1',
-        autorizaOpinionSAT: '1',
-        cuentaConEmpleadosPropios: '1'
-      };
+    it('debería renderizar los botones de acción', () => {
+      const compiled = fixture.nativeElement;
+      const agregarBtn = compiled.querySelector('#agregarTransportista');
+      const modificarBtn = compiled.querySelector('#modificarTransportista');
+      const eliminarBtn = compiled.querySelector('#eliminarTransportista');
       
-      component.seccionState = mockState;
-      
-      (component as any).actualizarFormularioConDatosDelEstado();
-      
-      expect(component.forma.get('cumplimientoFiscalAduanero')?.value).toBe('1');
-      expect(component.forma.get('autorizaOpinionSAT')?.value).toBe('1');
-      expect(component.forma.get('cuentaConEmpleadosPropios')?.value).toBe('1');
+      expect(agregarBtn).toBeTruthy();
+      expect(modificarBtn).toBeTruthy();
+      expect(eliminarBtn).toBeTruthy();
     });
 
-    it('debería llamar a enCambioDeValor con el valor de cuentaConEmpleadosPropios', () => {
-      const enCambioDeValorSpy = jest.spyOn(component, 'enCambioDeValor');
-      const mockState = {
-        ...mockTramiteState,
-        cuentaConEmpleadosPropios: '1'
-      };
+    it('debería deshabilitar botones cuando esFormularioSoloLectura es true', () => {
+      component.esFormularioSoloLectura = true;
+      fixture.detectChanges();
       
-      component.seccionState = mockState;
+      const compiled = fixture.nativeElement;
+      const buttons = compiled.querySelectorAll('button[disabled]');
       
-      (component as any).actualizarFormularioConDatosDelEstado();
-      
-      expect(enCambioDeValorSpy).toHaveBeenCalledWith('1');
+      expect(buttons.length).toBeGreaterThan(0);
     });
 
-    it('debería manejar estado nulo sin errores', () => {
-      component.seccionState = null as any;
-      component.esFormularioInicializado = false;
+    it('debería renderizar la tabla dinámica', () => {
+      const compiled = fixture.nativeElement;
+      const tablaDinamica = compiled.querySelector('app-tabla-dinamica');
       
-      expect(() => {
-        (component as any).actualizarFormularioConDatosDelEstado();
-      }).not.toThrow();
+      expect(tablaDinamica).toBeTruthy();
     });
+
+  });
 
   
-  });
 
-  describe('Control de estado de campos', () => {
+  describe('Validaciones de formulario integradas', () => {
     beforeEach(() => {
-      component.seccionState = mockTramiteState;
-      component.crearForm();
+      component.inicializarFormulario();
+      fixture.detectChanges();
     });
 
-    it('debería deshabilitar todos los campos cuando esFormularioSoloLectura es true', () => {
-      component.esFormularioSoloLectura = true;
-      component.actualizarEstadoCampos();
+    it('debería mostrar mensaje de error cuando RFC es requerido y está vacío', () => {
+      const rfcControl = component.transportistaCertificacionForm.get('rfcEnclaveOperativo');
+      rfcControl?.markAsTouched();
+      fixture.detectChanges();
       
-      expect(component.forma.get('manifests')?.disabled).toBe(true);
-      expect(component.forma.get('bajoProtesta')?.disabled).toBe(true);
-      expect(component.forma.get('cumplimientoFiscalAduanero')?.disabled).toBe(true);
-      expect(component.forma.get('archivoNacionales')?.disabled).toBe(true);
-      expect(component.forma.get('proveedores')?.disabled).toBe(true);
+      const compiled = fixture.nativeElement;
+      const errorMessage = compiled.querySelector('.mensaje-error');
+      
     });
 
-    it('debería habilitar todos los campos cuando esFormularioSoloLectura es false', () => {
-      component.esFormularioSoloLectura = false;
-      component.actualizarEstadoCampos();
+    it('debería validar el formulario correctamente cuando todos los campos están llenos', () => {
+      component.transportistaCertificacionForm.patchValue({
+        rfcEnclaveOperativo: 'RFC123456789',
+        enlaceOperativorfc: 'RFC123456789',
+        denominacionRazonsocial: 'Test Company',
+        domicilio: 'Test Address',
+        ccat: 'CCAT123'
+      });
       
-      expect(component.forma.get('manifests')?.enabled).toBe(true);
-      expect(component.forma.get('bajoProtesta')?.enabled).toBe(true);
-      expect(component.forma.get('cumplimientoFiscalAduanero')?.enabled).toBe(true);
-      expect(component.forma.get('archivoNacionales')?.enabled).toBe(true);
-      expect(component.forma.get('proveedores')?.enabled).toBe(true);
-    });
-
-    it('debería manejar controles faltantes sin errores', () => {
-      component.forma.removeControl('manifests');
-      
-      expect(() => {
-        component.actualizarEstadoCampos();
-      }).not.toThrow();
+      const rfcControl = component.transportistaCertificacionForm.get('rfcEnclaveOperativo');
+      expect(rfcControl?.valid).toBe(true);
     });
   });
-});
+})

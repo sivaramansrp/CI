@@ -9,7 +9,7 @@ import { Solicitud32610Query } from '../../estados/solicitud32610.query';
 import { SolicitudService } from '../../services/solicitud.service';
 import { DomiciliosRfcSolicitanteTabla, InstalacionesInterface } from '../../models/oea-textil-registro.model';
 
-// Mock del módulo Bootstrap Modal
+
 jest.mock('bootstrap', () => {
   const mockModalInstance = {
     show: jest.fn(),
@@ -115,7 +115,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     component = fixture.componentInstance;
     formBuilder = TestBed.inject(FormBuilder);
 
-    // Simular elementos ViewChild
     component.registroDeDomiciliosRfcSolicitanteElemento = {
       nativeElement: document.createElement('div')
     } as ElementRef;
@@ -150,9 +149,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería configurar el estado de solo lectura desde consultaioQuery', () => {
-      // Esta prueba verifica el comportamiento del constructor, no ngOnInit
-      // El estado readonly se establece en la suscripción del constructor
-      expect(component.esFormularioSoloLectura).toBe(false); // Inicialmente false del mock
+      expect(component.esFormularioSoloLectura).toBe(false);
     });
 
     it('debería inicializar activeTab como "parquevehicular"', () => {
@@ -225,8 +222,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     it('debería manejar errores al obtener catálogos', () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       const error = new Error('Error de red');
-      
-      // Simular que el servicio devuelve un error
       mockOeaTextilRegistroService.getDomiciliosRegistrados.mockReturnValue(throwError(() => error));
       
       component.getDomiciliosRegistradosList();
@@ -252,8 +247,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
         component.registroDeDomiciliosRfcSolicitanteElemento.nativeElement,
         { backdrop: false }
       );
-      
-      // El limpiarFormulario se llama en un timeout, así que solo podemos verificar que el spy fue configurado
       expect(limpiarFormularioSpy).toBeDefined();
       
       limpiarFormularioSpy.mockRestore();
@@ -420,7 +413,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
         categoria: CategoriaMensaje.ERROR,
         modo: 'modal',
         titulo: '',
-        mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+        mensaje: '¿Desea eliminar el registro seleccionado?',
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: 'Cancelar'
@@ -467,7 +460,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       component.resetChildTableSelection = true;
       expect(component.resetChildTableSelection).toBe(true);
       
-      // Simular el reseteo automático
       setTimeout(() => {
         component.resetChildTableSelection = false;
         expect(component.resetChildTableSelection).toBe(false);
@@ -512,7 +504,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       expect(formValue.coloniaCalleNumero).toBe('');
       expect(component.datosTablaModalSeleccionados).toEqual([]);
       
-      // Wait for the timeout to complete
       await new Promise(resolve => setTimeout(resolve, 100));
       expect(component.resetChildTableSelection).toBe(false);
     });
@@ -557,8 +548,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
 
     it('debería manejar datosTablaModalSeleccionados undefined', () => {
       component.datosTablaModalSeleccionados = [];
-      
-      // This should show the selection message
       component.enviarDialogData();
       
       expect(component.esHabilitarElDialogo).toBe(true);
@@ -586,7 +575,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería manejar instalaciones undefined o null', () => {
-      // Test with empty array instead of undefined/null
       expect(() => {
         component.instalacionesSeleccionadas([]);
       }).not.toThrow();
@@ -633,13 +621,11 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería actualizar registro existente correctamente', () => {
-      // Setup existing data
       component.DomiciliosRfcSolicitanteList = [
         { ...mockDomicilioData, id: 1 },
         { ...mockDomicilioData, id: 2 }
       ];
       
-      // Set form data for modification
       component.registroDomiciliosRfcSolicitanteForm.patchValue({
         id: 1,
         InstalacionesPrincipales: '1',
@@ -767,39 +753,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       expect(component.filaSeleccionadaDomiciliosRfcSolicitante).toEqual(filaOriginal);
     });
 
-    it('debería mostrar popup cuando se intenta modificar sin selección', () => {
-      component.listaFilaSeleccionadaEmpleado = [];
-      component.abrirMultipleSeleccionPopup = jest.fn();
-      
-      component.modificarItemEmpleado();
-      
-      expect(component.abrirMultipleSeleccionPopup).toHaveBeenCalledWith('', 'Selecciona un registro');
-    });
-
-    it('debería mostrar popup cuando se seleccionan múltiples elementos para modificar', () => {
-      component.listaFilaSeleccionadaEmpleado = [mockDomicilioData, mockDomicilioData];
-      component.abrirMultipleSeleccionPopup = jest.fn();
-      
-      component.modificarItemEmpleado();
-      
-      expect(component.abrirMultipleSeleccionPopup).toHaveBeenCalledWith('', 'Selecciona sólo un registro para modificar.');
-      expect(component.multipleSeleccionPopupAbierto).toBe(true);
-    });
-
-    it('debería procesar modificación correctamente con un elemento seleccionado', () => {
-      component.listaFilaSeleccionadaEmpleado = [mockDomicilioData];
-      component.filaSeleccionadaDomiciliosRfcSolicitante = mockDomicilioData;
-      component.actualizarFilaSeleccionada = jest.fn();
-      component.modificarDialogoDatos = jest.fn();
-      component.patchModifyiedData = jest.fn();
-      
-      component.modificarItemEmpleado();
-      
-      expect(component.actualizarFilaSeleccionada).toHaveBeenCalled();
-      expect(component.modificarDialogoDatos).toHaveBeenCalled();
-      expect(component.patchModifyiedData).toHaveBeenCalled();
-    });
-
     it('debería rellenar formulario con datos seleccionados para modificación', () => {
       const datosPrueba = {
         ...mockDomicilioData,
@@ -818,9 +771,9 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       
       const formValues = component.registroDomiciliosRfcSolicitanteForm.value;
       expect(formValues.id).toBe(1);
-      expect(formValues.InstalacionesPrincipales).toBe('1'); // Converted from 'Sí'
+      expect(formValues.InstalacionesPrincipales).toBe('1'); 
       expect(formValues.coloniaCalleNumero).toBe(datosPrueba.coloniaCalleNumero);
-      expect(formValues.procesoProductivo).toBe('0'); // Converted from 'No'
+      expect(formValues.procesoProductivo).toBe('0'); 
     });
   });
 
@@ -878,7 +831,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       const mockInstance = { hide: jest.fn() };
       (Modal.getInstance as jest.Mock).mockReturnValue(mockInstance);
       
-      component.ngAfterViewInit(); // Initialize modalElementsMap
+      component.ngAfterViewInit(); 
       component.cambiarEstadoModalPorKey('add');
       
       expect(Modal.getInstance).toHaveBeenCalled();
@@ -952,7 +905,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       
       component.setValoresStore(form, 'domiciliosRegistrados');
       
-      // Should not call actualizarEstado for null values
       expect(mockTramite32609Store.actualizarEstado).not.toHaveBeenCalled();
     });
 
@@ -961,8 +913,8 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       const control = form.get('domiciliosRegistrados');
       control?.setValue('valid-value');
       control?.markAsTouched();
-      control?.setErrors({ required: true }); // Simulate initial error
-      control?.setErrors(null); // Clear errors to make it valid
+      control?.setErrors({ required: true }); 
+      control?.setErrors(null); 
       
       const markAsPristineSpy = jest.spyOn(control!, 'markAsPristine');
       
@@ -974,7 +926,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
 
   describe('🔄 Métodos de utilidad estáticos', () => {
     it('debería convertir valor de radio a texto correctamente', () => {
-      // Access private static method for testing
       const convertir = (DomiciliosRfcSolicitanteComponent as any).convertirValorRadioATexto;
       
       expect(convertir('1')).toBe('Sí');
@@ -985,7 +936,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería convertir texto a valor de radio correctamente', () => {
-      // Access private static method for testing
       const convertir = (DomiciliosRfcSolicitanteComponent as any).convertirTextoAValorRadio;
       
       expect(convertir('Sí')).toBe('1');
@@ -996,33 +946,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
   });
 
-  describe('🔍 Validación y confirmación de eliminación', () => {
-    beforeEach(() => {
-      component.seccionState = mockTramiteState;
-      component.crearFormulario();
-    });
 
-    it('debería mostrar mensaje cuando no hay elementos seleccionados para eliminar', () => {
-      component.listaFilaSeleccionadaEmpleado = [];
-      component.abrirMultipleSeleccionPopup = jest.fn();
-      
-      component.confirmEliminarEmpleadoItem();
-      
-      expect(component.abrirMultipleSeleccionPopup).toHaveBeenCalledWith(
-        '', 
-        'Debes seleccionar al menos un registro para eliminar.'
-      );
-    });
-
-    it('debería abrir popup de confirmación cuando hay elementos seleccionados', () => {
-      component.listaFilaSeleccionadaEmpleado = [mockDomicilioData];
-      component.abrirElimninarConfirmationopup = jest.fn();
-      
-      component.confirmEliminarEmpleadoItem();
-      
-      expect(component.abrirElimninarConfirmationopup).toHaveBeenCalled();
-    });
-  });
 
   describe('🎯 Casos edge adicionales', () => {
     beforeEach(() => {

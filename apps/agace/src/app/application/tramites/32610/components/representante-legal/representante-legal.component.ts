@@ -284,15 +284,25 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * @returns boolean indicating if the form is valid
    */
   public validarFormulario(): boolean {
-    if (!this.representante || this.representante.invalid) {
-      this.representante?.markAllAsTouched();
-      this.mostrarError = true;
-      return false;
-    }
-
-    this.mostrarError = false;
-    return true;
+  if (!this.representante) {
+    this.mostrarError = true;
+    return false;
   }
+  const VALUES = this.representante.value;
+  const ALL_FIELDS_EMPTY = Object.values(VALUES).every(val => val === null || val === '');
+
+  if (ALL_FIELDS_EMPTY) {
+    this.mostrarError = true;
+    return false;
+  }
+  if (this.representante.invalid) {
+    this.representante.markAllAsTouched();
+    return false;
+  }
+  this.mostrarError = false;
+  return true;
+}
+
 
   /**
    * Método del ciclo de vida OnDestroy.

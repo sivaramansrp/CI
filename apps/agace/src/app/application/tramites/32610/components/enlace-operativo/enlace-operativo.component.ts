@@ -343,7 +343,7 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
       cargo: [''],
       telefono: [''],
       correoElectronico: ['', [Validators.email]],
-      suplente: [false],
+      suplente: [false]
     });
   }
 
@@ -355,12 +355,14 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
    * cierra todos los demás paneles. Implementa un comportamiento
    * de acordeón donde solo un panel puede estar abierto a la vez.
    */
-  mostrar_colapsable(index: number): void {
+mostrar_colapsable(index: number): void {
+    if (!this.esFormularioSoloLectura) {
     const IS_CURRENTLY_OPEN = this.panels[index].isCollapsed;
     this.panels.forEach((panel: { isCollapsed: boolean }, i: number) => {
       panel.isCollapsed = i === index ? !IS_CURRENTLY_OPEN : true;
     });
   }
+}
 
   /**
    * Realiza la búsqueda de información basada en el registro ingresado.
@@ -765,7 +767,22 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Método de limpieza que se ejecuta al destruir el componente.
+   * 
+   * @description
+   * Se ejecuta automáticamente cuando el componente se destruye.
+   * Cancela todas las suscripciones activas para evitar memory leaks
+   * y libera los recursos utilizados por el componente.
+   * 
+   * @returns {void}
+   * @since 1.0.0
+   * @memberof EnlaceOperativoComponent
+   * 
+   * @example
+   * ```typescript
+   * // Angular llama automáticamente este método
+   * // No es necesario llamarlo manualmente
+   * ```
    */
   ngOnDestroy(): void {
     this.destroyed$.next();

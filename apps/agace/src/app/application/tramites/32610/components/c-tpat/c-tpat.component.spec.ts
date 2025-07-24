@@ -35,7 +35,6 @@ describe('CTPATComponent', () => {
   };
 
   beforeEach(async () => {
-    // Crear mocks de los servicios
     mockSolicitudService = {
       actualizarEstado: jest.fn(),
       obtenerDatos: jest.fn().mockReturnValue(of(mockSolicitudState))

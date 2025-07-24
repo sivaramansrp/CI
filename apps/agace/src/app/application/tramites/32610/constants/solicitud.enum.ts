@@ -5,7 +5,6 @@ import {
   TablaCampoSeleccion,
 } from '@libs/shared/data-access-user/src';
 import {
-  Domicilios,
   EnlaceOperativo,
   Inventarios,
   NumeroDeEmpleados,
@@ -339,116 +338,6 @@ export const NUMERO_DE_EMPLEADOS_CONFIGURACION: ConfiguracionColumna<NumeroDeEmp
       encabezado: 'Bimestre',
       clave: (item: NumeroDeEmpleados) => item.bimestre,
       orden: 4,
-    },
-  ];
-
-/**
- * Configuración de las columnas para la visualización de la información de domicilios.
- * Cada columna corresponde a una propiedad de la entidad `Domicilios` y se utiliza para mostrarla en una tabla.
- */
-export const DOMICILIOS_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Domicilios>[] =
-  [
-    {
-      /** Instalaciones principales de la empresa. */
-      encabezado: 'Instalaciones principales',
-      clave: (item: Domicilios) => item.instalacionPrincipal,
-      orden: 1,
-    },
-    {
-      /** Tipo de instalación de la empresa. */
-      encabezado: 'Tipo de instalación',
-      clave: (item: Domicilios) => item.tipoInstalacion,
-      orden: 1,
-    },
-    {
-      /** Entidad federativa donde está ubicada la instalación. */
-      encabezado: 'Entidad federativa',
-      clave: (item: Domicilios) => item.entidadFederativa,
-      orden: 1,
-    },
-    {
-      /** Municipio o delegación donde se encuentra la instalación. */
-      encabezado: 'Municipio o delegación',
-      clave: (item: Domicilios) => item.municipioDelegacion,
-      orden: 1,
-    },
-    {
-      /** Dirección completa del domicilio, incluyendo colonia, calle y número. */
-      encabezado: 'Colonia, calle y número',
-      clave: (item: Domicilios) => item.direccion,
-      orden: 1,
-    },
-    {
-      /** Código postal correspondiente al domicilio. */
-      encabezado: 'Código postal',
-      clave: (item: Domicilios) => item.codigoPostal,
-      orden: 1,
-    },
-    {
-      /** Registro del domicilio ante la Secretaría de Economía (SE) o el Servicio de Administración Tributaria (SAT). */
-      encabezado: 'Registro ante SE/SAT',
-      clave: (item: Domicilios) => item.registroSESAT,
-      orden: 1,
-    },
-    {
-      /** Proceso productivo que se realiza en la instalación. */
-      encabezado: 'Proceso Productivo',
-      clave: (item: Domicilios) => item.procesoProductivo,
-      orden: 1,
-    },
-    {
-      /** Indica si el domicilio acredita el uso y goce del inmueble. */
-      encabezado: 'Acredita el uso y Goce del Inmueble',
-      clave: (item: Domicilios) => item.acreditaInmueble,
-      orden: 1,
-    },
-    {
-      /** Indica si la instalación realiza operaciones de Comercio Exterior. */
-      encabezado: 'Realiza operaciones de Comercio Exterior',
-      clave: (item: Domicilios) => item.operacionesCExt,
-      orden: 1,
-    },
-    {
-      /** Reconocimiento mutuo para la instalación C-TPAT. */
-      encabezado: 'Reconocimiento Mutuo (Instalación C-TPAT)',
-      clave: (item: Domicilios) => item.instalacionCtpat,
-      orden: 1,
-    },
-    {
-      /** Perfil de la empresa correspondiente a la instalación. */
-      encabezado: 'Perfil de la empresa',
-      clave: (item: Domicilios) => item.instalacionPerfil,
-      orden: 1,
-    },
-    {
-      /** Perfil del Recinto Fiscalizado Estratégico. */
-      encabezado: 'Perfil del Recinto Fiscalizado Estratégico',
-      clave: (item: Domicilios) => item.instalacionPerfilRFE,
-      orden: 1,
-    },
-    {
-      /** Perfil del Auto Transportista Terrestre. */
-      encabezado: 'Perfil del Auto Transportista Terrestre',
-      clave: (item: Domicilios) => item.instalacionPerfilAuto,
-      orden: 1,
-    },
-    {
-      /** Perfil del Transportista Ferroviario. */
-      encabezado: 'Perfil del Transportista Ferroviario',
-      clave: (item: Domicilios) => item.instalacionPerfilFerro,
-      orden: 1,
-    },
-    {
-      /** Perfil del Recinto Fiscalizado. */
-      encabezado: 'Perfil del Recinto Fiscalizado',
-      clave: (item: Domicilios) => item.instalacionPerfilRf,
-      orden: 1,
-    },
-    {
-      /** Perfil de Mensajería y Paquetería. */
-      encabezado: 'Perfil de Mensajería y Paquetería',
-      clave: (item: Domicilios) => item.instalacionPerfilMensajeria,
-      orden: 1,
     },
   ];
 

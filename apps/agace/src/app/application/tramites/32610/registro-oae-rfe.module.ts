@@ -12,6 +12,7 @@ import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { PerfilesComponent } from './components/perfiles/perfiles.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RecintoFiscalizadoEstrategicoComponent } from './components/recinto-fiscalizado-estrategico/recinto-fiscalizado-estrategico.component';
 import { RegistroOaeRfeRoutingModule } from './registro-oae-rfe-routing.module';
@@ -22,6 +23,7 @@ import { TercerosRelacionadosComponent } from './components/terceros-relacionado
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrModule } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
+
 
  
 @NgModule({
@@ -54,6 +56,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     FirmaElectronicaComponent,
     RecintoFiscalizadoEstrategicoComponent,
     CTPATComponent,
+    PerfilesComponent,
     NotificacionesComponent
   ],
   exports: [],

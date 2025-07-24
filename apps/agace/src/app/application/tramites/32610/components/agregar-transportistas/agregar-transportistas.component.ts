@@ -276,16 +276,16 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    * Se suscribe a los cambios del estado y actualiza la lista de transportistas.
    * Mantiene sincronizada la información entre el store y el componente.
    */
-  obtenerEstadoSolicitud(): void {
-    this.tramite32610Query.selectSolicitud$
-      ?.pipe(takeUntil(this.destroy$))
+obtenerEstadoSolicitud(): void {
+    this.tramite32610Query.selectSolicitud$?.pipe(takeUntil(this.destroy$))
       .subscribe((data: Solicitud32610State) => {
         this.solicitudState = data;
+        this.transportistasLista = this.solicitudState.transportistasLista;
         if (data.transportistasLista) {
           this.transportistasLista = [...data.transportistasLista];
         }
       });
-  }
+}
 
   /**
    * Controla la funcionalidad de paneles colapsables en la interfaz.
@@ -293,11 +293,13 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
    *
    * param index - Índice del panel a mostrar/ocultar
    */
-  mostrar_colapsable1(index: number): void {
+  mostrar_colapsable(index: number): void {
+    if (!this.esFormularioSoloLectura) {
     const IS_CURRENTLY_OPEN = this.transportistasPanels[index].isCollapsed;
-    this.transportistasPanels.forEach((panel, i) => {
+    this.transportistasPanels.forEach((panel: { isCollapsed: boolean }, i: number) => {
       panel.isCollapsed = i === index ? !IS_CURRENTLY_OPEN : true;
     });
+  }
   }
 
   /**

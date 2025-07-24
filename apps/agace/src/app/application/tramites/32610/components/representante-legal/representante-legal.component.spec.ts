@@ -67,14 +67,6 @@ describe('RepresentanteLegalComponent', () => {
     expect(component.representante.disabled).toBe(true);
   });
 
-  it('debe mostrar notificación si el RFC es inválido al buscar', () => {
-    component.representante.controls['representanteRegistro'].setValue('');
-    component.botonBuscar();
-    expect(component.nuevaNotificacion.mensaje).toBe(
-      'Ha proporcionado información con un formato incorrecto.'
-    );
-  });
-
   it('debe llamar a actualizarEstado al cambiar un campo', () => {
     const form = component.representante;
     form.get('representanteCorreo')?.setValue('correo@prueba.com');

@@ -88,113 +88,31 @@ export interface NumeroDeEmpleados {
 
 /** Indica si es instalación principal */
 export interface Domicilios {
-  /** Indica si es instalación principal */
-  instalacionPrincipal: string;
-
-  /** Clave del tipo de instalación */
-  cveTipoInstalacion?: string;
-
-  /** Tipo de instalación */
-  tipoInstalacion: string;
-
-  /** Clave de la entidad federativa */
-  cveEntidadFederativa?: string;
-
-  /** Nombre de la entidad federativa */
-  entidadFederativa: string;
-
-  /** Clave de delegación o municipio */
-  cveDelegacionMunicipio?: string;
-
-  /** Nombre del municipio o delegación */
-  municipioDelegacion: string;
-
-  /** Dirección completa */
-  direccion: string;
-
-  /** Código postal del domicilio */
-  codigoPostal: string;
-
-  /** Registro en SESAT */
-  registroSESAT: string;
-
-  /** Proceso productivo en el domicilio */
-  procesoProductivo: string;
-
-  /**
-   * Documento que acredita la propiedad o posesión del inmueble.
-   */
-  acreditaInmueble: string;
-
-  /**
-   * Operaciones de comercio exterior realizadas en el inmueble.
-   */
-  operacionesCExt: string;
-
-  /**
-   * Indica si la instalación cuenta con certificación CTPAT.
-   */
-  instalacionCtpat: string;
-
-  /**
-   * Perfil de la instalación general.
-   */
-  instalacionPerfil: string;
-
-  /**
-   * Perfil de la instalación como Recinto Fiscalizado Estratégico (RFE).
-   */
-  instalacionPerfilRFE: string;
-
-  /**
-   * Perfil de la instalación en el sector automotriz.
-   */
-  instalacionPerfilAuto: string;
-
-  /**
-   * Perfil de la instalación en el sector ferroviario.
-   */
-  instalacionPerfilFerro: string;
-
-  /**
-   * Perfil de la instalación como Recinto Fiscal (RF).
-   */
-  instalacionPerfilRf: string;
-
-  /**
-   * Perfil de la instalación dedicada a mensajería y paquetería.
-   */
-  instalacionPerfilMensajeria: string;
-
-  /**
-   * Número exterior del domicilio.
-   */
-  noExterior?: string;
-
-  /**
-   * Número interior del domicilio (opcional).
-   */
-  noInterior?: string;
-
-  /**
-   * Clave de la colonia (opcional).
-   */
-  cveColonia?: string;
-
-  /**
-   * Nombre de la calle (opcional).
-   */
-  calle?: string;
-
-  /**
-   * Descripción de la colonia (opcional).
-   */
-  descCol?: string;
-
-  /**
-   * Identificador del recinto (opcional).
-   */
-  idRecinto?: string;
+instalacionAduanera: string; // Indica si es una instalación aduanera
+instalacionFiscal: string; // Indica si es instalación fiscal
+instalacionAlmacen: string; // Indica si cuenta con almacén
+instalacionDistribucion: string; // Indica si cuenta con centro de distribución
+instalacionTemporal: string; // Indica si es una instalación temporal
+instalacionTransitoria: string; // Indica si es una instalación transitoria
+telefonoContacto?: string; // Teléfono de contacto de la instalación
+correoContacto?: string; // Correo electrónico de contacto
+nombreResponsable?: string; // Nombre del responsable de la instalación
+cargoResponsable?: string; // Cargo del responsable
+horarioOperacion?: string; // Horario de operación
+diasOperacion?: string; // Días de operación (ej. Lunes a Viernes)
+longitud?: string; // Coordenada de longitud
+latitud?: string; // Coordenada de latitud
+referenciasDireccion?: string; // Referencias adicionales de la dirección
+fechaInicioOperacion?: string; // Fecha de inicio de operaciones
+fechaRegistro?: string; // Fecha en que se registró la instalación
+certificadoISO?: string; // Indica si cuenta con certificación ISO
+certificadoOEA?: string; // Certificación OEA (Operador Económico Autorizado)
+certificadoCTPAT?: string; // Certificación CTPAT
+cuentaConRampa?: string; // Indica si cuenta con rampa de carga
+cuentaConBascula?: string; // Indica si cuenta con báscula
+cuentaConSistemaSeguridad?: string; // Indica si cuenta con sistema de seguridad
+idInstalacion?: string; // Identificador único de la instalación
+nombreInstalacion?: string; // Nombre o alias de la instalación
 }
 
 /**

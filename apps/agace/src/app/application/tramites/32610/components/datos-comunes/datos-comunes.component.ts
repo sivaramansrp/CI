@@ -60,9 +60,17 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * @property {ControlInventariosComponent} controlInventariosComponent
    * Referencia al componente hijo de control de inventarios para poder acceder a sus métodos.
    */
-  @ViewChild(ControlInventariosComponent) controlInventariosComponent!: ControlInventariosComponent;
+  @ViewChild('controlInventariosRef') controlInventariosComponent!: ControlInventariosComponent;
+    /**
+   * Referencia al componente DomiciliosRfcSolicitanteComponent para acceder a sus métodos de validación.
+   */
+  @ViewChild('domiciliosRfcSolicitanteRef') domiciliosRfcSolicitanteComponent!: DomiciliosRfcSolicitanteComponent;
 
-   /**
+    /**
+   * Referencia al componente AgregarMiembroEmpresaComponent para acceder a sus métodos de validación.
+   */
+  @ViewChild('agregarMiembroEmpresaRef') agregarMiembroEmpresaComponent!: AgregarMiembroEmpresaComponent;
+  /**
    * Indicates whether the entity is consolidated in ET.
    *
    * @type {boolean}
@@ -213,7 +221,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           autorizaOpinionSAT: [this.seccionState?.autorizaOpinionSAT, Validators.required],
           cuentaConEmpleadosPropios: [this.seccionState?.cuentaConEmpleadosPropios, Validators.required],
           bimestreUltimo: [this.seccionState?.bimestreUltimo, Validators.required],
-          numeroDeEmpleadas: [{value:this.seccionState?.numeroDeEmpleadas, disabled:true}, [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)]],
+          numeroDeEmpleadas: [{value:this.seccionState?.numeroDeEmpleadas, disabled:true}],
           retencionISRTrabajadores: [this.seccionState?.retencionISRTrabajadores, Validators.required],
           pagoCuotasIMSS: [this.seccionState?.pagoCuotasIMSS, Validators.required],
           cuentaConSubcontratacionEspecializada: [this.seccionState?.cuentaConSubcontratacionEspecializada, Validators.required],
@@ -229,8 +237,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           proveedores: [this.seccionState?.proveedores || null],
           querellaSATUltimos3Anios: [this.seccionState?.querellaSATUltimos3Anios, Validators.required],
           ingresoInfoContableSAT: [this.seccionState?.ingresoInfoContableSAT, Validators.required],
-          manifests: [true, Validators.required],
-          bajoProtesta: [true, Validators.required],
+          manifests: [false, Validators.required],
+          bajoProtesta: [false, Validators.required],
       }, { validators: alMenosUnSectorValidator });
 
       this.esFormularioInicializado = true;
@@ -413,7 +421,6 @@ private actualizarFormularioConDatosDelEstado(): void {
     if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
       this.tramite32610Store.actualizarEstado({ [campo]: CONTROL.value });
       
-      // Clear validation errors if the field now has a valid value
       if (CONTROL.valid && CONTROL.touched) {
         CONTROL.markAsPristine();
       }
@@ -551,16 +558,43 @@ onSeleccionVerdadera(evento:string | number, nota?:string): void {
   * 
   * @returns {void}
   */
-  validarFormulario(): void {
-    if(this.forma) {
+validarFormulario(): boolean {
+  let isValid = true;
+
+  if (this.forma) {
     this.forma.markAllAsTouched();
+    this.forma.updateValueAndValidity();
+
+    if (this.forma.invalid) {
+      isValid = false;
     }
-    // Validar formularios del componente hijo control-inventarios
-    if (this.controlInventariosComponent) {
-      this.controlInventariosComponent.validarFormularios();
+  } else {
+    isValid = false;
+  }
+
+  if (this.controlInventariosComponent) {
+    const CONTROL_INVENTARIOS_VALID = this.controlInventariosComponent.validarFormularios();
+    if (!CONTROL_INVENTARIOS_VALID) {
+      isValid = false;
     }
   }
 
+  if (this.domiciliosRfcSolicitanteComponent) {
+    const DOMICILIOS_VALID = this.domiciliosRfcSolicitanteComponent.validarDomiciliosRfcSolicitante();
+    if (!DOMICILIOS_VALID) {
+      isValid = false;
+    }
+  }
+
+  if (this.agregarMiembroEmpresaComponent) {
+    const MIEMBRO_EMPRESA_VALID = this.agregarMiembroEmpresaComponent.validarAgregarMiembroEmpresa();
+    if (!MIEMBRO_EMPRESA_VALID) {
+      isValid = false;
+    }
+  }
+
+  return isValid;
+}
     /**
    * Maneja el cambio en el reconocimiento mutuo CTPAT y emite el valor seleccionado.
    *

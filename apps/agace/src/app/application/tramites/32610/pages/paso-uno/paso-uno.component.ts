@@ -1,6 +1,7 @@
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { CTPATComponent } from '../../components/c-tpat/c-tpat.component';
 import { Component} from '@angular/core';
+import { DatosComunesComponent } from '../../components/datos-comunes/datos-comunes.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { RecintoFiscalizadoEstrategicoComponent } from '../../components/recinto-fiscalizado-estrategico/recinto-fiscalizado-estrategico.component';
@@ -11,6 +12,7 @@ import { TercerosRelacionadosComponent } from '../../components/terceros-relacio
 import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+
 
 /**
  * Componente que representa el primer paso de un trámite.
@@ -40,14 +42,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public consultaState!: ConsultaioState;
 
   /**
-   * Valor seleccionado para el reconocimiento mutuo.
-   * Se actualiza cuando el usuario selecciona una opción en el formulario.
+   * @desc Valor seleccionado para el campo de reconocimiento mutuo en el formulario.
+   * @remarks Utilizado para almacenar la opción elegida por el usuario en el paso uno del trámite.
    */
   reconocimientoMutuoValue: string = '';
 
-   /**
-   * Referencia al componente ImportadorExportadorComponent para acceder a sus métodos de validación.
-   * Permite validar el formulario de datos de importador/exportador antes de continuar al siguiente paso.
+  /**
+   * Referencia al componente RecintoFiscalizadoEstrategicoComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de datos de recinto fiscalizado estratégico antes de continuar al siguiente paso.
    */
   @ViewChild('recintoFiscalizadoEstrategicoRef')recintoFiscalizadoEstrategicoComponent!: RecintoFiscalizadoEstrategicoComponent;
 
@@ -58,18 +60,28 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   @ViewChild('tercerosRelacionadosRef') tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
 
-  @ViewChild('ctpatRef') CTPATComponent!: CTPATComponent;
+    /**
+   * Referencia al componente DatosComunesComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de datos comunes antes de continuar al siguiente paso.
+   */
+  @ViewChild('datosComunesRef') datosComunesComponent!: DatosComunesComponent;
 
+  /**
+   * Referencia al componente CTPATComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de CTPAT antes de continuar al siguiente paso.
+   */
+  @ViewChild('ctpatRef') ctpatComponent!: CTPATComponent;
     /**
    * Lista de secciones del formulario.
    * Lista de pasos dentro del formulario con sus respectivos componentes.
    */
-  seccionesDeLaSolicitud = [
+    seccionesDeLaSolicitud = [
     { index: 1, title: 'Solicitante', component: 'solicitante' },
     { index: 2, title: 'Datos Comunes', component: 'datos-comunes' },
     { index: 3, title: 'Terceros relacionados', component: 'terceros-relacionados' },
     { index: 4, title: 'Recinto Fiscalizado Estratégico', component: 'recinto-fiscalizado-estrategico' },
-    { index: 5, title: 'CTPAT', component: 'c-tpat' }
+    { index: 5, title: 'CTPAT', component: 'c-tpat' },
+    { index: 6, title: 'Perfiles', component: 'perfiles' }
   ];
 
   constructor(private consultaQuery: ConsultaioQuery, public solicitudService: SolicitudService) {
@@ -142,6 +154,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       isValid = false;
     }
 
+      if (this.datosComunesComponent) {
+    const DATOS_COMUNES_VALID = this.datosComunesComponent.validarFormulario();
+    if (!DATOS_COMUNES_VALID) {
+      isValid = false;
+    }
+  } else {
+    isValid = false;
+  }
+
     if (this.tercerosRelacionadosComponent) {
       if (!this.tercerosRelacionadosComponent.validarFormulario()) {
         isValid = false;
@@ -151,20 +172,21 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
 
     if (this.recintoFiscalizadoEstrategicoComponent) {
-      if (!this.recintoFiscalizadoEstrategicoComponent.validarFormulario()) {
+        if (!this.recintoFiscalizadoEstrategicoComponent.validarFormulario()) {
+          isValid = false;
+        }
+      } else {
         isValid = false;
-      }
-    } else {
-      isValid = false;
     }
 
-    if (this.CTPATComponent) {
-      if (!this.CTPATComponent.validarFormulario()) {
+     if (this.ctpatComponent) {
+      if (!this.ctpatComponent.validarFormulario()) {
         isValid = false;
       }
     } else {
       isValid = false;
     }
+    
 
     return isValid;
   }

@@ -5,7 +5,7 @@
         <div class="panel-group ficha-collapse" id="accordion">
           @for(panel of transportistasPanels; let i = $index; track i) {
           <div class="panel panel-default mb-3">
-            <div class="panel-heading" (click)="mostrar_colapsable1(i)">
+            <div class="panel-heading" (click)="mostrar_colapsable(i)">
               <h4 class="panel-title">
                 <a>
                   {{ panel.label }}
@@ -48,12 +48,12 @@
         </div>
       </div>
     </div>
-    <div class="col-md-12 mt-3">
-      <div class="form-group mt-5 pull-right">
+    <div class="d-flex justify-content-end">
+      <div class="d-flex flex-row flex-wrap gap-3">
         <button
           type="button"
           id="agregarTransportista"
-          class="btn btn-primary me-2"
+          class="btn btn-primary"
           (click)="abrirModal1(templateTransposrtistas)"
           [disabled]="esFormularioSoloLectura"
         >
@@ -62,7 +62,7 @@
         <button
           type="button"
           id="modificarTransportista"
-          class="btn btn-default me-2"
+          class="btn btn-primary"
           (click)="modificarTransportista()"
           [disabled]="esFormularioSoloLectura"
         >
@@ -71,7 +71,7 @@
         <button
           type="button"
           id="eliminarTransportista"
-          class="btn btn-danger"
+          class="btn btn-primary"
           (click)="eliminarTransportista()"
           [disabled]="esFormularioSoloLectura"
         >

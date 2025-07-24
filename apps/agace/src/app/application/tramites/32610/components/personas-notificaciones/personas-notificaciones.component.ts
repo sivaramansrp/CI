@@ -151,11 +151,13 @@ export class PersonasNotificacionesComponent implements OnInit, OnDestroy {
    * @returns {void}
    * 
    */
-  mostrar_colapsable(index: number): void {
+ mostrar_colapsable(index: number): void {
+    if (!this.esFormularioSoloLectura) {
     const IS_CURRENTLY_OPEN = this.panels[index].isCollapsed;
-    this.panels.forEach((panel, i) => {
+    this.panels.forEach((panel: { isCollapsed: boolean }, i: number) => {
       panel.isCollapsed = i === index ? !IS_CURRENTLY_OPEN : true;
     });
+  }
   }
 
   /**

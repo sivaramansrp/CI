@@ -14,8 +14,6 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
   let mockOeaTextilRegistroService: jest.Mocked<SolicitudService>;
   let consoleSpy: jest.SpyInstance;
-
-  // Datos de prueba simulados
   const datosEntidadesFederativasMock: ApiResponse<EntidadFederativa> = {
     code: 200,
     data: [
@@ -52,10 +50,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
   };
 
   beforeEach(async () => {
-    // Simular console.error para suprimir mensajes de error durante las pruebas
     consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
-    // Configuración de espías para servicios simulados
     mockConsultaioQuery = {
       selectConsultaioState$: of(estadoConsultaMock)
     } as jest.Mocked<ConsultaioQuery>;
@@ -91,18 +86,17 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
   });
 
   afterEach(() => {
-    // Restaurar console.error después de cada prueba
     if (consoleSpy) {
       consoleSpy.mockRestore();
     }
   });
 
   describe('🔧 Inicialización del componente', () => {
-    it('✅ debería crear el componente sin errores', () => {
+    it(' debería crear el componente sin errores', () => {
       expect(component).toBeTruthy();
     });
 
-    it('✅ debería inicializar las propiedades con valores por defecto correctos', () => {
+    it(' debería inicializar las propiedades con valores por defecto correctos', () => {
       expect(component.esFormularioSoloLectura).toBe(false);
       expect(component.instalacionesList).toEqual([]);
       expect(component.resetTableSelection).toBe(false);
@@ -110,14 +104,14 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(component.entidadFederalivaList).toEqual([]);
     });
 
-    it('✅ debería configurar la suscripción al estado de solo lectura en el constructor', () => {
+    it(' debería configurar la suscripción al estado de solo lectura en el constructor', () => {
       fixture.detectChanges();
       expect(component.esFormularioSoloLectura).toBe(estadoConsultaMock.readonly);
     });
   });
 
   describe('🚀 Ciclo de vida ngOnInit', () => {
-    it('✅ debería ejecutar getEntidadesFederativas y crearFormulario durante la inicialización', () => {
+    it(' debería ejecutar getEntidadesFederativas y crearFormulario durante la inicialización', () => {
       const getEntidadesSpy = jest.spyOn(component, 'getEntidadesFederativas');
       const crearFormularioSpy = jest.spyOn(component, 'crearFormulario');
 
@@ -127,7 +121,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(crearFormularioSpy).toHaveBeenCalled();
     });
 
-    it('✅ debería crear el formulario reactivo con el control entidadFederaliva', () => {
+    it(' debería crear el formulario reactivo con el control entidadFederaliva', () => {
       component.ngOnInit();
 
       expect(component.forma).toBeDefined();
@@ -135,7 +129,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(component.forma.get('entidadFederaliva')?.value).toBeNull();
     });
 
-    it('✅ debería configurar el formulario como una instancia de FormGroup válida', () => {
+    it(' debería configurar el formulario como una instancia de FormGroup válida', () => {
       component.ngOnInit();
 
       expect(component.forma).toBeInstanceOf(Object);
@@ -149,14 +143,14 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       component.ngOnInit();
     });
 
-    it('✅ debería obtener y asignar correctamente la lista de entidades federativas', () => {
+    it(' debería obtener y asignar correctamente la lista de entidades federativas', () => {
       component.getEntidadesFederativas();
 
       expect(mockOeaTextilRegistroService.getEntidadesFederativas).toHaveBeenCalled();
       expect(component.entidadFederalivaList).toEqual(datosEntidadesFederativasMock.data);
     });
 
-    it('✅ debería manejar correctamente respuestas vacías del servicio de entidades federativas', () => {
+    it(' debería manejar correctamente respuestas vacías del servicio de entidades federativas', () => {
       const respuestaVacia: ApiResponse<EntidadFederativa> = {
         code: 200,
         data: [],
@@ -170,7 +164,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(component.entidadFederalivaList).toEqual([]);
     });
 
-    it('✅ debería limpiar la lista si ocurre un error al obtener entidades federativas', () => {
+    it(' debería limpiar la lista si ocurre un error al obtener entidades federativas', () => {
       const datosAnteriores = [{ id: 99, descripcion: 'Estado Anterior' }];
       component.entidadFederalivaList = datosAnteriores;
 
@@ -190,7 +184,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       component.ngOnInit();
     });
 
-    it('✅ debería cargar instalaciones cuando se cambia la entidad federativa', () => {
+    it(' debería cargar instalaciones cuando se cambia la entidad federativa', () => {
       const eventoMock = new Event('change');
       
       component.alCambiarEntidadFederaliva(eventoMock);
@@ -199,8 +193,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(component.instalacionesList).toEqual(datosInstalacionesMock.data);
     });
 
-    it('✅ debería reemplazar instalaciones previas al cambiar entidad federativa', () => {
-      // Establecer datos iniciales
+    it(' debería reemplazar instalaciones previas al cambiar entidad federativa', () => {
       const datosIniciales = [{
         entidadFederativa: 'Estado Anterior',
         municipio: 'Municipio Anterior',
@@ -217,7 +210,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(component.instalacionesList).not.toContain(datosIniciales[0]);
     });
 
-    it('✅ debería manejar eventos null o undefined sin errores', () => {
+    it(' debería manejar eventos null o undefined sin errores', () => {
       expect(() => {
         component.alCambiarEntidadFederaliva(null as any);
       }).not.toThrow();
@@ -233,7 +226,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       component.ngOnInit();
     });
 
-    it('✅ debería manejar correctamente la selección de una sola fila', () => {
+    it(' debería manejar correctamente la selección de una sola fila', () => {
       const filaSeleccionada = [datosInstalacionesMock.data[0]];
       const emitSpy = jest.spyOn(component.instalacionesSeleccionadas, 'emit');
 
@@ -244,18 +237,18 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(emitSpy).toHaveBeenCalledWith(filaSeleccionada);
     });
 
-    it('✅ debería manejar correctamente la selección de múltiples filas', () => {
+    it(' debería manejar correctamente la selección de múltiples filas', () => {
       const filasSeleccionadas = datosInstalacionesMock.data;
       const emitSpy = jest.spyOn(component.instalacionesSeleccionadas, 'emit');
 
       component.manejarFilaSeleccionada(filasSeleccionadas);
 
       expect(component.listaFilaSeleccionadaEmpleado).toEqual(filasSeleccionadas);
-      expect(component.filaSeleccionadaNumeroEmpleados).toEqual(datosInstalacionesMock.data[1]); // Última fila
+      expect(component.filaSeleccionadaNumeroEmpleados).toEqual(datosInstalacionesMock.data[1]);
       expect(emitSpy).toHaveBeenCalledWith(filasSeleccionadas);
     });
 
-    it('✅ debería limpiar la selección cuando se pasa un array vacío', () => {
+    it(' debería limpiar la selección cuando se pasa un array vacío', () => {
       const filasVacias: InstalacionesInterface[] = [];
       const emitSpy = jest.spyOn(component.instalacionesSeleccionadas, 'emit');
 
@@ -266,7 +259,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(emitSpy).toHaveBeenCalledWith([]);
     });
 
-    it('✅ debería seleccionar siempre la última fila como fila principal cuando hay múltiples selecciones', () => {
+    it(' debería seleccionar siempre la última fila como fila principal cuando hay múltiples selecciones', () => {
       const primeraFila = datosInstalacionesMock.data[0];
       const segundaFila = datosInstalacionesMock.data[1];
       const filasSeleccionadas = [primeraFila, segundaFila];
@@ -281,14 +274,13 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
   describe('🔄 Funcionalidad de reseteo de tabla', () => {
     beforeEach(() => {
       component.ngOnInit();
-      // Configurar datos previos para verificar el reseteo
       component.listaFilaSeleccionadaEmpleado = datosInstalacionesMock.data;
       component.filaSeleccionadaNumeroEmpleados = datosInstalacionesMock.data[0];
       component.instalacionesList = datosInstalacionesMock.data;
       component.forma.patchValue({ entidadFederaliva: 1 });
     });
 
-    it('✅ debería resetear completamente la selección de tabla y formulario', () => {
+    it(' debería resetear completamente la selección de tabla y formulario', () => {
       const emitSpy = jest.spyOn(component.instalacionesSeleccionadas, 'emit');
 
       component.resetearSeleccionTabla();
@@ -300,14 +292,14 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(emitSpy).toHaveBeenCalledWith([]);
     });
 
-    it('✅ debería limpiar todos los controles del formulario al resetear', () => {
+    it(' debería limpiar todos los controles del formulario al resetear', () => {
       component.resetearSeleccionTabla();
 
       expect(component.forma.get('entidadFederaliva')?.value).toBeNull();
       expect(component.forma.pristine).toBe(true);
     });
 
-    it('✅ debería emitir un evento con array vacío al componente padre', () => {
+    it(' debería emitir un evento con array vacío al componente padre', () => {
       const emitSpy = jest.spyOn(component.instalacionesSeleccionadas, 'emit');
 
       component.resetearSeleccionTabla();
@@ -320,24 +312,20 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
   describe('🔍 Detección de cambios en propiedades de entrada', () => {
     beforeEach(() => {
       jest.clearAllMocks();
-      // Reset all mocks and ensure no erroring observables are left hanging
       if (mockOeaTextilRegistroService.getEntidadesFederativas.mockClear) {
         mockOeaTextilRegistroService.getEntidadesFederativas.mockClear();
       }
       if (mockOeaTextilRegistroService.getInstalacionesDatos.mockClear) {
         mockOeaTextilRegistroService.getInstalacionesDatos.mockClear();
       }
-      // Ensure all service mocks return successful observables for this suite
       mockOeaTextilRegistroService.getEntidadesFederativas.mockReturnValue(of(datosEntidadesFederativasMock));
       mockOeaTextilRegistroService.getInstalacionesDatos.mockReturnValue(of(datosInstalacionesMock));
       component.ngOnInit();
       jest.spyOn(component, 'resetearSeleccionTabla');
     });
 
-    it('✅ debería resetear la tabla cuando resetTableSelection cambia a true', (done) => {
-      // Limpiar cualquier spy existente para evitar interferencias
-      jest.clearAllMocks();
-      
+    it(' debería resetear la tabla cuando resetTableSelection cambia a true', (done) => {
+      jest.clearAllMocks(); 
       const cambios: SimpleChanges = {
         resetTableSelection: {
           currentValue: true,
@@ -346,13 +334,9 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
           isFirstChange: () => false
         }
       };
-
-      const resetSpy = jest.spyOn(component, 'resetearSeleccionTabla');
-
-      try {
+    const resetSpy = jest.spyOn(component, 'resetearSeleccionTabla');
+    try {
         component.ngOnChanges(cambios);
-
-        // Verificar ejecución asíncrona con setTimeout
         setTimeout(() => {
           try {
             expect(resetSpy).toHaveBeenCalled();
@@ -366,7 +350,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       }
     });
 
-    it('✅ no debería resetear la tabla cuando resetTableSelection permanece en false', () => {
+    it(' no debería resetear la tabla cuando resetTableSelection permanece en false', () => {
       const cambios: SimpleChanges = {
         resetTableSelection: {
           currentValue: false,
@@ -381,7 +365,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(component.resetearSeleccionTabla).not.toHaveBeenCalled();
     });
 
-    it('✅ debería ignorar cambios en otras propiedades que no sean resetTableSelection', () => {
+    it(' debería ignorar cambios en otras propiedades que no sean resetTableSelection', () => {
       const cambios: SimpleChanges = {
         instalacionesList: {
           currentValue: [datosInstalacionesMock.data[0]],
@@ -396,7 +380,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(component.resetearSeleccionTabla).not.toHaveBeenCalled();
     });
 
-    it('✅ debería manejar múltiples cambios de propiedades simultáneamente', () => {
+    it(' debería manejar múltiples cambios de propiedades simultáneamente', () => {
       const cambios: SimpleChanges = {
         resetTableSelection: {
           currentValue: false,
@@ -423,7 +407,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       component.ngOnInit();
     });
 
-    it('✅ debería emitir instalacionesSeleccionadas al seleccionar filas', () => {
+    it(' debería emitir instalacionesSeleccionadas al seleccionar filas', () => {
       const emitSpy = jest.spyOn(component.instalacionesSeleccionadas, 'emit');
       const filasSeleccionadas = [datosInstalacionesMock.data[0]];
 
@@ -433,7 +417,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(emitSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('✅ debería emitir array vacío al resetear la selección', () => {
+    it(' debería emitir array vacío al resetear la selección', () => {
       const emitSpy = jest.spyOn(component.instalacionesSeleccionadas, 'emit');
 
       component.resetearSeleccionTabla();
@@ -441,14 +425,11 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(emitSpy).toHaveBeenCalledWith([]);
     });
 
-    it('✅ debería emitir eventos múltiples cuando se cambia la selección varias veces', () => {
+    it(' debería emitir eventos múltiples cuando se cambia la selección varias veces', () => {
       const emitSpy = jest.spyOn(component.instalacionesSeleccionadas, 'emit');
 
-      // Primera selección
       component.manejarFilaSeleccionada([datosInstalacionesMock.data[0]]);
-      // Segunda selección
       component.manejarFilaSeleccionada([datosInstalacionesMock.data[1]]);
-      // Limpiar selección
       component.manejarFilaSeleccionada([]);
 
       expect(emitSpy).toHaveBeenCalledTimes(3);
@@ -456,7 +437,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
   });
 
   describe('🧹 Gestión de memoria y limpieza de recursos', () => {
-    it('✅ debería completar el subject destroyed$ al destruir el componente', () => {
+    it(' debería completar el subject destroyed$ al destruir el componente', () => {
       const nextSpy = jest.spyOn(component.destroyed$, 'next');
       const completeSpy = jest.spyOn(component.destroyed$, 'complete');
 
@@ -466,7 +447,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(completeSpy).toHaveBeenCalled();
     });
 
-    it('✅ debería cancelar todas las suscripciones activas al destruir', () => {
+    it(' debería cancelar todas las suscripciones activas al destruir', () => {
       const espiaDest = jest.spyOn(component.destroyed$, 'next');
       
       component.ngOnDestroy();
@@ -474,7 +455,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(espiaDest).toHaveBeenCalledTimes(1);
     });
 
-    it('✅ debería manejar la destrucción múltiples veces sin errores', () => {
+    it(' debería manejar la destrucción múltiples veces sin errores', () => {
       expect(() => {
         component.ngOnDestroy();
         component.ngOnDestroy();
@@ -483,7 +464,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
   });
 
   describe('📥 Propiedades de entrada del componente', () => {
-    it('✅ debería aceptar y almacenar correctamente instalacionesList como entrada', () => {
+    it(' debería aceptar y almacenar correctamente instalacionesList como entrada', () => {
       const instalacionesEntrada = datosInstalacionesMock.data;
       
       component.instalacionesList = instalacionesEntrada;
@@ -492,7 +473,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(component.instalacionesList.length).toBe(2);
     });
 
-    it('✅ debería aceptar y almacenar correctamente resetTableSelection como entrada', () => {      
+    it(' debería aceptar y almacenar correctamente resetTableSelection como entrada', () => {      
       component.resetTableSelection = true;
       
       expect(component.resetTableSelection).toBe(true);
@@ -502,7 +483,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(component.resetTableSelection).toBe(false);
     });
 
-    it('✅ debería manejar instalacionesList vacía sin errores', () => {
+    it(' debería manejar instalacionesList vacía sin errores', () => {
       component.instalacionesList = [];
       
       expect(component.instalacionesList).toEqual([]);
@@ -511,12 +492,12 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
   });
 
   describe('⚙️ Configuración de componentes de tabla', () => {
-    it('✅ debería tener configurado correctamente el tipo de selección de tabla', () => {
+    it(' debería tener configurado correctamente el tipo de selección de tabla', () => {
       expect(component.tipoSeleccionTabla).toBeDefined();
       expect(typeof component.tipoSeleccionTabla).toBe('string');
     });
 
-    it('✅ debería tener configurada correctamente la estructura de columnas de tabla', () => {
+    it(' debería tener configurada correctamente la estructura de columnas de tabla', () => {
       expect(component.ParqueVehicular).toBeDefined();
       expect(Array.isArray(component.ParqueVehicular) || typeof component.ParqueVehicular === 'object').toBe(true);
     });
@@ -527,7 +508,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       component.ngOnInit();
     });
 
-    it('✅ debería manejar servicios que devuelven respuestas vacías', () => {
+    it(' debería manejar servicios que devuelven respuestas vacías', () => {
       const respuestaVacia: ApiResponse<EntidadFederativa> = {
         code: 404,
         data: [],
@@ -541,13 +522,13 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(component.entidadFederalivaList).toEqual([]);
     });
 
-    it('✅ debería manejar formulario no inicializado sin lanzar errores', () => {
+    it(' debería manejar formulario no inicializado sin lanzar errores', () => {
       component.forma = undefined as any;
       
       expect(() => component.resetearSeleccionTabla()).not.toThrow();
     });
 
-    it('✅ debería manejar selección de filas null o undefined correctamente', () => {
+    it(' debería manejar selección de filas null o undefined correctamente', () => {
       const emitSpy = jest.spyOn(component.instalacionesSeleccionadas, 'emit');
       
       expect(() => {
@@ -559,7 +540,7 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       }).not.toThrow();
     });
 
-    it('✅ debería manejar errores de red en servicios sin afectar el estado del componente', () => {
+    it(' debería manejar errores de red en servicios sin afectar el estado del componente', () => {
       const estadoInicial = { ...component };
       
       const errorObservable = new Subject<ApiResponse<InstalacionesInterface>>();
@@ -568,7 +549,6 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       component.alCambiarEntidadFederaliva(new Event('change'));
       errorObservable.error({ message: 'Error de conexión', status: 500 });
       
-      // El componente debería mantener su estado estable
       expect(component.destroyed$.closed).toBe(false);
       expect(component.instalacionesList).toEqual([]);
       expect(consoleSpy).toHaveBeenCalledWith('Error al obtener instalaciones:', { message: 'Error de conexión', status: 500 });
@@ -576,13 +556,12 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
   });
 
   describe('🔒 Manejo del estado de solo lectura', () => {
-    it('✅ debería configurar esFormularioSoloLectura como false cuando el estado permite edición', (done) => {
+    it(' debería configurar esFormularioSoloLectura como false cuando el estado permite edición', (done) => {
       const estadoEditable = { readonly: false };
       const mockConsultaioQueryEditable = {
         selectConsultaioState$: of(estadoEditable)
       } as any;
 
-      // Crear un nuevo TestBed limpio
       TestBed.resetTestingModule();
       
       TestBed.configureTestingModule({
@@ -600,10 +579,8 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
         const nuevoFixture = TestBed.createComponent(AgregarEnlaceOperativoComponent);
         const nuevoComponente = nuevoFixture.componentInstance;
         
-        // Ejecutar la detección de cambios inmediatamente para inicializar el componente
         nuevoFixture.detectChanges();
-        
-        // Esperar suficiente tiempo para que la suscripción asíncrona se complete
+      
         setTimeout(() => {
           try {
             expect(nuevoComponente.esFormularioSoloLectura).toBe(false);
@@ -623,13 +600,12 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       component.ngOnInit();
     });
 
-    it('✅ debería mantener sincronización entre selección de tabla y emisión de eventos', () => {
+    it(' debería mantener sincronización entre selección de tabla y emisión de eventos', () => {
       const emitSpy = jest.spyOn(component.instalacionesSeleccionadas, 'emit');
       
-      // Simular flujo completo: seleccionar, cambiar selección, resetear
       const primeraSeleccion = [datosInstalacionesMock.data[0]];
       const segundaSeleccion = [datosInstalacionesMock.data[1]];
-      
+    
       component.manejarFilaSeleccionada(primeraSeleccion);
       expect(emitSpy).toHaveBeenCalledWith(primeraSeleccion);
       
@@ -642,18 +618,14 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       expect(emitSpy).toHaveBeenCalledTimes(3);
     });
 
-    it('✅ debería mantener coherencia entre reseteo manual y reseteo por cambios', (done) => {
-      // Limpiar cualquier mock existente
+    it(' debería mantener coherencia entre reseteo manual y reseteo por cambios', (done) => {
       jest.clearAllMocks();
-      
       const resetSpy = jest.spyOn(component, 'resetearSeleccionTabla');
       const emitSpy = jest.spyOn(component.instalacionesSeleccionadas, 'emit');
       
       try {
-        // Reseteo manual
         component.resetearSeleccionTabla();
-        
-        // Reseteo por cambios
+ 
         const cambios: SimpleChanges = {
           resetTableSelection: {
             currentValue: true,
@@ -667,7 +639,6 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
         
         setTimeout(() => {
           try {
-            // Verificar que se llamó el reseteo al menos una vez
             expect(resetSpy).toHaveBeenCalled();
             done();
           } catch (assertionError) {

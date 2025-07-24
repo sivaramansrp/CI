@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { of, Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
-
+import { ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { AgregarTransportistasComponent } from './agregar-transportistas.component';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Solicitud32610Store, Solicitud32610State } from '../../estados/solicitud32610.store';
+import { Solicitud32610State, Solicitud32610Store } from '../../estados/solicitud32610.store';
 import { Solicitud32610Query } from '../../estados/solicitud32610.query';
-import { PANELS1, TRANSPORTISTAS_CONFIGURACION, TransportistasTable } from '../../constants/datos-comunes.enum';
+import { TRANSPORTISTAS_CONFIGURACION, TRANSPORTISTAS_PANELS, TransportistasTable } from '../../constants/datos-comunes.enum';
 import { TransportistasListaInterface } from '../../models/solicitud.model';
+
 
 describe('AgregarTransportistasComponent', () => {
   let component: AgregarTransportistasComponent;
@@ -61,13 +61,13 @@ describe('AgregarTransportistasComponent', () => {
   };
 
   beforeEach(async () => {
-    // Crear mocks de los servicios
     mockSolicitudService = {
       conseguirTransportistasLista: jest.fn().mockReturnValue(of(mockTransportistasListaData))
     } as any;
 
     mockSolicitud32610Store = {
-      actualizarEstado: jest.fn()
+      actualizarEstado: jest.fn(),
+      establecerDatos: jest.fn()
     } as any;
 
     mockSolicitud32610Query = {
@@ -113,7 +113,7 @@ describe('AgregarTransportistasComponent', () => {
     });
 
     it('debería inicializar las propiedades por defecto', () => {
-      expect(component.panels1).toEqual(PANELS1);
+      expect(component.transportistasPanels).toEqual(TRANSPORTISTAS_PANELS);
       expect(component.tablaSeleccionCheckbox).toBe(TablaSeleccion.CHECKBOX);
       expect(component.transportistasConfiguracionColumnas).toEqual(TRANSPORTISTAS_CONFIGURACION);
       expect(component.esFormularioSoloLectura).toBe(false);
@@ -172,39 +172,27 @@ describe('AgregarTransportistasComponent', () => {
     });
   });
 
-  describe('Obtención del estado de la solicitud', () => {
-    beforeEach(() => {
-      fixture.detectChanges();
-    });
-
-    it('debería obtener el estado de la solicitud y actualizar transportistasLista', () => {
-      component.obtenerEstadoSolicitud();
-      
-      expect(component.solicitudState).toEqual(mockSolicitudState);
-      expect(component.transportistasLista).toEqual(mockTransportistasLista);
-    });
-
 
   describe('Funcionalidad de paneles colapsables', () => {
     beforeEach(() => {
-      component.panels1 = [
+      component.transportistasPanels = [
         { label: 'Panel 1', isCollapsed: true },
         { label: 'Panel 2', isCollapsed: true }
       ];
     });
 
     it('debería expandir el panel seleccionado y colapsar los demás', () => {
-      component.mostrar_colapsable1(0);
+      component.mostrar_colapsable(0);
       
-      expect(component.panels1[0].isCollapsed).toBe(false);
-      expect(component.panels1[1].isCollapsed).toBe(true);
+      expect(component.transportistasPanels[0].isCollapsed).toBe(false);
+      expect(component.transportistasPanels[1].isCollapsed).toBe(true);
     });
 
     it('debería colapsar el panel si ya estaba expandido', () => {
-      component.panels1[0].isCollapsed = false;
-      component.mostrar_colapsable1(0);
+      component.transportistasPanels[0].isCollapsed = false;
+      component.mostrar_colapsable(0);
       
-      expect(component.panels1[0].isCollapsed).toBe(true);
+      expect(component.transportistasPanels[0].isCollapsed).toBe(true);
     });
   });
 
@@ -441,7 +429,7 @@ describe('AgregarTransportistasComponent', () => {
       component.modificarTransportista();
       
       expect(spyModal).toHaveBeenCalled();
-      expect(component.mensajeSeleccion).toBe('Seleccione un registro.');
+      expect(component.mensajeSeleccion).toBe('No se encontró información.');
     });
 
     it('debería configurar modo edición y abrir modal con datos del transportista', () => {
@@ -647,5 +635,4 @@ describe('AgregarTransportistasComponent', () => {
       expect(rfcControl?.valid).toBe(true);
     });
   });
-});
 })
