@@ -64,11 +64,6 @@ export class Tramite10301Query extends Query<Solicitud10301State> {
   selectFinesElegidos$ = this.select((state) => state.finesElegidos);
 
   /**
-   * Selecciona los elementos seleccionados dentro de los fines.
-   */
-  selectElegidosSeleccionados$ = this.select((state) => state.elegidosSeleccionados);
-
-  /**
    * Selecciona el rango de días seleccionado.
    */
   selectSelectRangoDias$ = this.select((state) => state.selectRangoDias);
@@ -87,21 +82,6 @@ export class Tramite10301Query extends Query<Solicitud10301State> {
    * Selecciona la fecha seleccionada por el usuario.
    */
   selectFechaSeleccionada$ = this.select((state) => state.fechaSeleccionada);
-
-  /**
-   * Controla si la tabla debe mostrarse en la UI.
-   */
-  selectShowTabla$ = this.select((state) => state.showTabla);
-
-  /**
-   * Controla si el popup debe estar abierto.
-   */
-  selectIsPopupOpen$ = this.select((state) => state.isPopupOpen);
-
-  /**
-   * Controla si el popup debe estar cerrado.
-   */
-  selectIsPopupClose$ = this.select((state) => state.isPopupClose);
 
   /**
    * Selecciona el valor actualmente seleccionado en un control dinámico.
