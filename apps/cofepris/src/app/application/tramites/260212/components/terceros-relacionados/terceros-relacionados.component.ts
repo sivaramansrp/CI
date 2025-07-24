@@ -39,6 +39,8 @@ import {
 } from '../../models/permiso-maquila.models';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260212Store } from '../../../../estados/tramites/tramite260212.store';
+import { Terceros260211State } from '../../../../estados/tramites/terceros260211.store';
+import { Terceros260211Query } from '../../../../estados/queries/terceros260211.query';
 
 /**
  * Texto de alerta para los terceros relacionados.
@@ -271,7 +273,16 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * this.desactivarCampos = true;  // Deshabilita los campos
    */
   public desactivarCampos: boolean = true;
-
+   /**
+     * Estado de la solicitud obtenido desde el store.
+     */
+    public solicitudStates!: Terceros260211State;
+    /**
+     * Notificador para destruir observables y evitar memory leaks.
+     * @private
+     * @type {Subject<void>}
+     */
+    private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Constructor del componente.
    * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
@@ -284,7 +295,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite260212Store: Tramite260212Store,
     private tercerosService: TercerosService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+         private terceros260211Query: Terceros260211Query,
   ) {}
 
   /**
@@ -363,6 +375,15 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     /**
      * Inicializa los formularios reactivos para agregar terceros.
      */
+     this.terceros260211Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudStates = seccionState;
+          console.log('Solicitud States:', this.solicitudStates);
+        })
+      )
+      .subscribe();
     this.initializeAgregarFabricanteFormGroup();
     this.initializeAgregarDestinatarioFormGroup();
     this.initializeAgregarProveedorFormGroup();
@@ -382,29 +403,29 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Nacionalidad del tercero.
        */
-      tercerosNacionalidad: new FormControl('', [Validators.required]),
+      tercerosNacionalidad: new FormControl(this.solicitudStates.tercerosNacionalidad, [Validators.required]),
       /**
        * Tipo de persona (física o moral).
        */
-      tipoPersona: new FormControl('', [Validators.required]),
+      tipoPersona: new FormControl(this.solicitudStates.tipoPersona, [Validators.required]),
       /**
        * RFC del tercero.
        * Requiere validación adicional mediante `rfcValidator`.
        */
-      rfc: new FormControl({value: '', disabled: true}, [Validators.required, this.rfcValidator]),
+      rfc: new FormControl({value: this.solicitudStates.rfc, disabled: true}, [Validators.required, this.rfcValidator]),
       /**
        * CURP del tercero.
        * Requiere validación adicional mediante `curpValidator`.
        */
-      curp: new FormControl({value: '', disabled: true}, [Validators.required, this.curpValidator]),
+      curp: new FormControl({value: this.solicitudStates.curp, disabled: true}, [Validators.required, this.curpValidator]),
       /**
        * Nombre del tercero.
        */
-      nombre: new FormControl({value: '', disabled: true}, [Validators.required]),
+      nombre: new FormControl({value: this.solicitudStates.nombre, disabled: true}, [Validators.required]),
       /**
        *Primer Apellido del tercero.
        */
-      primerApellido: new FormControl({value: '', disabled: true}, [Validators.required]),
+      primerApellido: new FormControl({value: this.solicitudStates.primerApellido, disabled: true}, [Validators.required]),
       /**
        * Segundo Apellido del tercero.
        */
