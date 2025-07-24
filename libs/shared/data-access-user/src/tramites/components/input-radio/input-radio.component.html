@@ -10,12 +10,12 @@
           <ng-container [ngSwitch]="part">
             <input
               *ngSwitchCase="'input'"
-              type="radio"
+              [type]="allowDeselection ? 'checkbox' : 'radio'"
               [value]="option.value"
               [id]="option.value"
-              [checked]="selectedValue === option.value"
+              [checked]="isOptionSelected(option.value)"
+              [disabled]="isOptionDisabled(option.value)"
               (change)="onSelectionChange(option.value)"
-              formControlName="seleccion"
             />
             <span
               *ngSwitchCase="'label'"
@@ -23,7 +23,8 @@
               [ngClass]="{
                 'fw-bold': gridLayout || isBold,
                 'radio-label-margin-left': labelName === 'last',
-                'radio-label-margin-right': labelName !== 'last'
+                'radio-label-margin-right': labelName !== 'last',
+                'text-muted': isOptionDisabled(option.value)
               }"
               [title]="option.label"
               >{{ option.label }}</span
@@ -34,7 +35,7 @@
           *ngIf="showTooltip && option.hint"
           class="bi bi-question-circle-fill fs-4 m-1"
           [title]="option.hint"
-          ata-bs-toggle="tooltip"
+          data-bs-toggle="tooltip"
         >
         </span>
       </div>

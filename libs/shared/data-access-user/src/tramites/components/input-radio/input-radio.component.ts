@@ -83,6 +83,13 @@ export class InputRadioComponent implements ControlValueAccessor, OnInit {
 
   @Input() gridLayout: boolean = false;
 
+  /**
+   * Permite deseleccionar la opción actualmente seleccionada y habilita 
+   * comportamiento de checkboxes mutuamente excluyentes.
+   * @default false
+   */
+  @Input() allowDeselection: boolean = false;
+
   @ViewChild('radioContainer', { static: true }) radioContainer!: ElementRef;
 
   public anchoDelBotonDeRadio = '100%';
@@ -107,6 +114,13 @@ export class InputRadioComponent implements ControlValueAccessor, OnInit {
     this.FormInputRadio = this.fb.group({
       seleccion: [this.selectedValue || '', VALIDATORS],
     });
+    
+    // Para checkboxes deselecionables, necesitamos manejar el estado de forma diferente
+    if (this.allowDeselection) {
+      this.FormInputRadio.get('seleccion')?.valueChanges.subscribe(value => {
+        // No hacer nada aquí, manejamos el cambio en onSelectionChange
+      });
+    }
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -119,21 +133,43 @@ export class InputRadioComponent implements ControlValueAccessor, OnInit {
   };
   /**
    * Maneja el evento de cambio de selección y emite el nuevo valor.
-   * @param value - El nuevo valor seleccionado.
+   * Si allowDeselection está habilitado, permite deseleccionar la opción actual.
+   * @param value - El valor de la opción clickeada.
    */
   onSelectionChange(value: string | number): void {
+    if (this.allowDeselection) {
+      // Si ya está seleccionado, deseleccionar
+      if (this.selectedValue === value) {
+        this.selectedValue = null;
+        this.updateFormControl(null);
+        this.valueChange.emit(null);
+        this.onChange(null);
+        this.onTouched();
+        return;
+      }
+    }
+    
     this.selectedValue = value;
+    this.updateFormControl(value);
     this.valueChange.emit(value);
     this.onChange(value);
     this.onTouched();
   }
 
-  // ✅ Implement `ControlValueAccessor`
-  writeValue(value: string | number | null): void {
-    this.selectedValue = value;
+  /**
+   * Actualiza el valor del FormControl interno.
+   * @param value - El nuevo valor.
+   */
+  private updateFormControl(value: string | number | null): void {
     if (this.FormInputRadio) {
       this.FormInputRadio.patchValue({ seleccion: value });
     }
+  }
+
+  // ✅ Implement `ControlValueAccessor`
+  writeValue(value: string | number | null): void {
+    this.selectedValue = value;
+    this.updateFormControl(value);
   }
 
   registerOnChange(fn: (value: string | number | null) => void): void {
@@ -264,5 +300,29 @@ export class InputRadioComponent implements ControlValueAccessor, OnInit {
    */
   getParts(): ('label' | 'input')[] {
     return this.labelName === 'first' ? ['label', 'input'] : ['input', 'label'];
+  }
+
+  /**
+   * Determina si una opción específica debe estar deshabilitada.
+   * En modo allowDeselection, deshabilita todas las opciones excepto la seleccionada.
+   * @param optionValue - El valor de la opción a evaluar.
+   * @returns true si la opción debe estar deshabilitada, false en caso contrario.
+   */
+  isOptionDisabled(optionValue: string | number): boolean {
+    if (!this.allowDeselection) {
+      return false;
+    }
+    
+    // Si hay un valor seleccionado y no es esta opción, deshabilitar
+    return this.selectedValue !== null && this.selectedValue !== optionValue;
+  }
+
+  /**
+   * Determina si una opción específica está seleccionada.
+   * @param optionValue - El valor de la opción a evaluar.
+   * @returns true si la opción está seleccionada, false en caso contrario.
+   */
+  isOptionSelected(optionValue: string | number): boolean {
+    return this.selectedValue === optionValue;
   }
 }
