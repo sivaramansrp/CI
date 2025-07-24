@@ -465,7 +465,7 @@ this.tramite260211Query
     lada: [this.solicitudState?.lada],
     telefono: [this.solicitudState?.telefono, Validators.required],
     avisoCheckbox: [this.solicitudState?.avisoCheckbox],
-    licenciaSanitaria: ['',{disabled: false }],
+    licenciaSanitaria: [this.solicitudState?.licenciaSanitaria,{disabled: false }],
     regimen: [this.solicitudState?.regimen],
     aduanasEntradas: [this.solicitudState?.aduanasEntradas],
     numeroPermiso: [this.solicitudState?.numeroPermiso],

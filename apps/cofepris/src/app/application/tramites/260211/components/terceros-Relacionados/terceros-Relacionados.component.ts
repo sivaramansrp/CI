@@ -30,6 +30,8 @@ import tipoPersonaoptions from '@libs/shared/theme/assets/json/260211/tipoPerson
 import {Subject, map,takeUntil } from 'rxjs';
 
 import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA, MUNICIPIOSELECTDATA, PAISSELECTDATA, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '@libs/shared/data-access-user/src/core/enums/260906/permiso.enum';
+import { Solicitud260211State, Tramite260211Store } from '../../../../estados/tramites/tramite260211.store';
+import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
 
 
  
@@ -45,6 +47,11 @@ const TERCEROS_TEXTO_DE_ALERTA =
  
 })
 export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
+
+    /**
+     * Estado de la solicitud obtenido desde el store.
+     */
+    public solicitudStates!: Solicitud260211State;
     /**
      * Notificador para destruir observables y evitar memory leaks.
      * @private
@@ -236,7 +243,9 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
     private fb: FormBuilder,
     private Sanitario260215Store:Sanitario260215Store,
     private service: SanitarioService,
-     private consultaioQuery: ConsultaioQuery
+     private consultaioQuery: ConsultaioQuery,
+       private tramite260211Store: Tramite260211Store,
+         private tramite260211Query: Tramite260211Query,
   ) {
      /**
          * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -296,6 +305,14 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
  * Inicializa el formulario con los grupos de formularios para agregar fabricantes, destinatarios, proveedores y facturadores.
  */
  inicializarFormulario(): void {
+     this.tramite260211Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudStates = seccionState;
+        })
+      )
+      .subscribe();
     this.initializeAgregarFabricanteFormGroup();
     this.initializeAgregarDestinatarioFormGroup();
     this.initializeAgregarProveedorFormGroup();
