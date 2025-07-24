@@ -77,7 +77,7 @@
 
         <ng-titulo titulo="Tratado y país o bloque" />
         <div class="row mb-3">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <app-catalogo-select [catalogo]="tratadoAcuerdo || []" [label]="'Tratado / Acuerdo'"
                     [required]="true" name="estado" formControlName="entidadFederativa"
                     (selectionChange)="tipoEstadoSeleccion($event)"
@@ -88,7 +88,7 @@
                     ></app-catalogo-select>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <app-catalogo-select [catalogo]="paisBloqu || []" [label]="'País / Bloque'" [required]="true"
                     name="estado" formControlName="bloque"
                     (selectionChange)="tipoSeleccion($event)"
@@ -166,8 +166,17 @@
             </div>
           }
 
+           
+        @if(mercanciasDisponiblesTabla){
+            <div class="row">
+                <app-tabla-dinamica [tipoSeleccionTabla]="seleccionTabla"  [configuracionTabla]="configuracionTablaMercanciaDisponible"
+                [datos]="tableData || []" (filaClic)="abrirModificarModal($event)"  ></app-tabla-dinamica>
+            </div>
+        }
+        @else{
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="tableData || []"
             [tipoSeleccionTabla]="seleccionTabla" (filaClic)="abrirModificarModal($event)"></app-tabla-dinamica>
+        }
 
             @if (cargoDeMercancias) {
                 <div class="row">

@@ -89,6 +89,21 @@ export interface DatosMercancia {
 
   /** Valor total de la factura en dólares estadounidenses (USD). */
   valorTotalFacturaUsd: string;
+
+    /** Fracción Naladi vigente. */
+  fraccionNaladi: string;
+
+  /** Fracción Naladi versión SA 1993. */
+  fraccionNaladiSa93: string;
+
+  /** Fracción Naladi versión SA 1996. */
+  fraccionNaladiSa96: string;
+
+  /** Fracción Naladi versión SA 2002. */
+  fraccionNaladiSa02: string;
+
+  /** Código Nalad asociado a la mercancía (opcional). */
+  nalad?: string;
 }
 
 /**
@@ -157,4 +172,9 @@ export interface Mercancia {
 
   /** Complemento para la clasificación arancelaria (opcional). */
   complementoClasificacion?: string;
+
+  fraccionNaladi: string;
+  fraccionNaladiSa93: string;
+  fraccionNaladiSa96: string;
+  fraccionNaladiSa02: string;
 }

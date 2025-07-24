@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
 import { CommonModule } from '@angular/common';
-import { Mercancia } from '../../models/plantas-consulta.model';
+import { Mercancias } from '../../models/plantas-consulta.model';
 import { Tramite110204Query } from '../../estados/tramite110204.query';
 import { Tramite110204Store } from '../../estados/tramite110204.store';
 /**
@@ -17,7 +17,7 @@ import { Tramite110204Store } from '../../estados/tramite110204.store';
  * @property {boolean} habilitado - Indica si el campo de fecha final está habilitado.
  */
 export const FECHA_FINAL = {
-  labelNombre: 'Fecha fin',
+  labelNombre: 'Fecha de factura',
   required: true,
   habilitado: true,
 };
@@ -34,6 +34,9 @@ export const FECHA_FINAL = {
 })
 
 export class MercanciasModalComponent implements OnInit, OnDestroy {
+
+  @Input() esFormularioSoloLectura!: boolean;
+
   mostrarAlerta: boolean = false;
   /**
    * @property {string} mensajeDeAlerta - La lista de mercancías mostrada solamente contiene aquellas mercancías que tienen un registro de productos vigente para el tratado/acuerdo-país/bloque y cuya fracción arancelaria no está asociada a un cupo.
@@ -50,7 +53,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
  *
  * @type {T[]}
  */
-  @Input() datosSeleccionados!: Mercancia;
+  @Input() datosSeleccionados!: Mercancias;
   /**
    * Subject utilizado para gestionar el ciclo de vida del componente y cancelar l`as suscripciones.
    */
@@ -99,13 +102,13 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
       nombreComercial: [{ value: '', disabled: true }],
       nombreTecnico: [{ value: '', disabled: true }],
       normaOrigen: [{ value: '', disabled: true }],
-      cantidad: [''],
-      umc: [''],
-      valorMercancia: [''],
-      complementoClasificacion: [''],
+      cantidad: ['',[Validators.required]],
+      umc: ['', [Validators.required]],
+      valorMercancia: ['', [Validators.required]],
+      complementoClasificacion: ['', [Validators.required]],
       fechaFinalInput: ['',[Validators.required]],
-      numeroFactura: [''],
-      tipoFactura: ['']
+      numeroFactura: ['', [Validators.required]],
+      tipoFactura: ['', [Validators.required]]
     });
 
     this.parchearValoresDelFormulario();
@@ -116,6 +119,9 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
         this.store.setFormMercancia(value);
       }
     });
+    if(this.esFormularioSoloLectura){
+      this.mercanciaForm.disable();
+    }
   }
   /**
    * @method parchearValoresDelFormulario

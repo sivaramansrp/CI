@@ -1,5 +1,5 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
+import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -20,7 +20,7 @@ import { Subject } from 'rxjs';
  */
 export const FECHA_INICIO = {
   labelNombre: 'Fecha inicio',
-  required: true,
+  required: false,
   habilitado: true,
 };
 
@@ -35,7 +35,7 @@ export const FECHA_INICIO = {
  */
 export const FECHA_FINAL = {
   labelNombre: 'Fecha final',
-  required: true,
+  required: false,
   habilitado: true,
 };
 
@@ -123,6 +123,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
   @Input() guardarClicado!: Mercancia[];
 
   /**
+   * Indica si hay mercancías disponibles en la tabla para su procesamiento o visualización.
+   * @type {boolean}
+   */
+  @Input() mercanciasDisponiblesTabla!: boolean;
+
+  /**
    * Propiedad de salida que emite el valor del formulario cuando se actualiza.
    * @type {EventEmitter<undefined>}
    */
@@ -200,6 +206,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
   configuracionTablaMercancia: ConfiguracionColumna<Mercancia>[] = MERCANCIA_SELECCIONADAS;
+
+  /**
+   * Configuración de las columnas de la tabla de mercancía disponible.
+   * @type {ConfiguracionColumna<Mercancia>[]}
+   */
+  configuracionTablaMercanciaDisponible: ConfiguracionColumna<Mercancia>[] = CONFIGURACION_MERCANCIA_TABLA;
 
   /**
    * Configuración de las columnas de la tabla de mercancia seleccionada.
@@ -294,8 +306,8 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
       fraccionArancelariaForm: [''],
       registroProductoForm: [''],
       nombreComercialForm: [''],
-      fechaInicioInput: ['', [Validators.required]],
-      fechaFinalInput: ['', [Validators.required]],
+      fechaInicioInput: [''],
+      fechaFinalInput: [''],
       nombres: ['' ],
       primerApellido: [''],
       segundoApellido: [''],

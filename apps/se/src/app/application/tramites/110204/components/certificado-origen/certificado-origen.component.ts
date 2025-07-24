@@ -1,18 +1,19 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Catalogo, InputFecha, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Observable, Subject, delay, map, takeUntil, tap } from 'rxjs';
-import { CONFIGURACION_MERCANCIA } from '../../constantes/modificacion.enum';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent} from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
-import { Mercancia } from '../../models/plantas-consulta.model';
+import { Mercancia } from '../../../../shared/models/modificacion.enum';
+import { Mercancias } from '../../models/plantas-consulta.model';
 import { MercanciasModalComponent } from '../mercancias-modal/mercancias-modal.component';
 import { Modal } from 'bootstrap';                     
 import { ToastrService } from 'ngx-toastr';
 import { Tramite110204Query } from '../../estados/tramite110204.query';
 import { Tramite110204Store } from '../../estados/tramite110204.store';
+
 
 /**
  * Constante que representa la configuración de la fecha final en el componente de certificado de origen.
@@ -58,13 +59,20 @@ export const FECHA_FINAL = {
     TablaDinamicaComponent,
     InputFechaComponent,
     CatalogoSelectComponent,
-    MercanciasModalComponent
+    MercanciasModalComponent,
+    CertificadoDeOrigenComponent
 ],
   providers: [ToastrService],
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.scss',
 })
 export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewInit {
+
+  /**
+   * @descripcion
+   * Indica si el operador está activo.
+   */
+  operador: boolean = true;
 
   /**
    * @input
@@ -78,7 +86,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * Formulario reactivo utilizado para la gestión de los datos del certificado.
    * @type {FormGroup}
    */
-  formCertificado!: FormGroup;
+  formCertificado!: { [key: string]: undefined | boolean | string | number | object };
 
   /**
    * Configuración de las fechas de inicio y fin.
@@ -115,16 +123,9 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * @type {Subject<void>}
    */
   destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-   * Configuración de las columnas de la tabla de bitácora.
-   * @type {ConfiguracionColumna<Mercancia>[]}
-   */
-  configuracionTabla: ConfiguracionColumna<Mercancia>[] = CONFIGURACION_MERCANCIA;
-
   /**
    * Datos de la bitácora obtenidos desde el servicio.
-   * @type {Mercancia[]}
+   * @type {MercanciaShared[]}
    */
   datos: Mercancia[] = [];
 
@@ -132,7 +133,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * Observable que emite los datos de la mercancia obtenida.
    * @type {Observable<Mercancia[]>}
    */
-  datos1$: Observable<Mercancia[]>;
+  datos1: Observable<Mercancia[]>;
 
   /**
    * Estado de la selección de la tabla.
@@ -152,11 +153,25 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * @type {Mercancia[]}
    */
 
-    datosSeleccionados!: Mercancia;
+    datosSeleccionados!: Mercancias;
     /**
    * Instancia del modal de modificación.
    */
     modalInstance!: Modal;
+
+    /**
+     * @descripcion
+     * Indica si el campo de mercancías está activo.
+     */
+    cargoDeMercancias: boolean = true;
+
+    /**
+     * @descripcion
+     * Indica si hay mercancías disponibles.
+     */
+    mercanciasDisponibles: boolean = true;
+
+    mercanciasDisponiblesTabla: boolean = true;
 
     /**
    * Referencia al modal de modificación en la plantilla HTML.
@@ -183,6 +198,18 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * Estado de selección de la tabla.
+   * @type {boolean}
+   */
+  tablaSeleccionEvent: boolean = false;
+
+  /**
+   * Observable que emite los datos de la mercancia en formato tabla.
+   * @type {Observable<Mercancia[]>}
+   */
+  datosTabla$: Observable<Mercancia[]> | undefined;
+
   constructor(
     private fb: FormBuilder,
     private store: Tramite110204Store,
@@ -192,19 +219,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore
   ) {
-    /**
-     * Inicializa el formulario con los campos requeridos y sus validaciones.
-     */
-    this.formCertificado = this.fb.group({
-      entidadFederativa: ['', [Validators.required, Validators.min(0)]],
-      bloque: ['', [Validators.required, Validators.min(0)]],
-      tercerOperador: ['', [Validators.requiredTrue]],
-      fracciónArancelariaForm: [''],
-      registroProductoForm: [''],
-      nombreComercialForm: [''],
-      fechaFinal: ['',[Validators.required]],
-      fechaInicio: ['',[Validators.required]],
-    });
 
     /**
      * Suscripción para cargar los valores del formulario desde el store.
@@ -214,7 +228,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     ).subscribe(estado => {
       if (!this.actualizandoFormulario && estado) {
         this.actualizandoFormulario = true;        
-        this.formCertificado.patchValue(estado);
+        this.formCertificado=estado;
         this.actualizandoFormulario = false;
       }
     });
@@ -237,26 +251,10 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
      */
     this.estados$ = this.tramiteQuery.selectAltaPlanta$;
     this.pais$ = this.tramiteQuery.selectPaisBloque$;
-    this.datos1$ = this.tramiteQuery.selectBuscarMercancia$;
-  }
-
-
-  /**
-   * Verifica si el formulario es válido.
-   * @returns {boolean} Retorna true si el formulario es válido, de lo contrario false.
-   */
-  esFormValido(): boolean {
-    // Recorre todos los controles del formulario para verificar si alguno es inválido.
-    for (const NOMBRE_DEL_CONTROL in this.formCertificado.controls) {
-      if (Object.prototype.hasOwnProperty.call(this.formCertificado.controls,
-        NOMBRE_DEL_CONTROL)) {
-        const CONTROL = this.formCertificado.get(NOMBRE_DEL_CONTROL);
-        if (CONTROL && CONTROL.enabled && CONTROL.invalid) {
-          return false;
-        }
-      }
-    }
-    return true;
+    this.datos1 = (this.tramiteQuery.selectBuscarMercancia$ as Observable<Mercancias[]>).pipe(
+      map((mercancias: Mercancias[]) => mercancias as unknown as Mercancia[])
+    );
+    this.datosTabla$ = this.tramiteQuery.selectmercanciaTabla$ as Observable<Mercancia[]>;
   }
 
   /**
@@ -266,35 +264,9 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   ngOnInit(): void {
     this.cargarEstados();
     this.cargarBloque();
-    this.formCertificado.valueChanges.subscribe(value => {      
-      if (!this.actualizandoFormulario) {
-      this.store.setFormCertificado(value);
-      this.validarFormulario();
-      }
-    });
-    if(this.formularioDeshabilitado){
-      this.esFormularioSoloLectura = true;
-      this.inicializarEstadoFormulario();
-    }
 
   }
 
-  /**
-   * Inicializa el estado del formulario según si está en modo solo lectura o editable.
-   * Si el formulario está en modo solo lectura, deshabilita todos los controles.
-   * Si no, habilita los controles para permitir la edición.
-   *
-   * @method
-   * @memberof CertificadoOrigenComponent
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.formCertificado.disable();
-    }
-    else {
-      this.formCertificado.enable();
-    } 
-  }
   /**
    * Carga la lista de estados desde el servicio y actualiza el store con los datos.
    */
@@ -310,31 +282,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
           console.error('Error al cargar los estados:', error);
         }
       );
-  }
-
-  /**
-   * Valida el formulario y actualiza el estado de la sección en el store.
-   */
-  validarFormulario(): void {
-    this.formCertificado.statusChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(10),
-        tap((_value) => {
-          const SECCION: number = 1;
-          const FORMAS_VALIDADAS = this.seccion.formaValida;
-          const ES_VALIDO_EL_FORM = this.esFormValido();
-
-          if (this.formCertificado.valid || (ES_VALIDO_EL_FORM)) {
-            FORMAS_VALIDADAS[SECCION] = true;
-            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-          } else {
-            FORMAS_VALIDADAS[SECCION] = false;
-            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-          }
-        })
-      )
-      .subscribe();
   }
 
   /**
@@ -379,67 +326,35 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   }
 
   /**
-   * Getter para obtener el control del formulario de la entidad federativa.
-   * @returns {FormControl} El control para la entidad federativa.
-   */
-  get formularioControl(): FormControl {
-    return this.formCertificado.get('') as FormControl;
-  }
-
-  /**
    * Busca la mercancia y actualiza los datos en el store.
    */
   buscarrMercancia(): void {
-    const ENTIDAD = this.formCertificado?.value;
 
-    if (ENTIDAD && ENTIDAD !== '-1') {
       this.certificadoService
         .obtenerMercancia()
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe(
-          (data: Mercancia[]) => {
+          (data: Mercancias[]) => {
             this.store.setbuscarMercancia(data);
           },
           () => {
             this.toastr.error('Error al buscar Mercancia');
           }
         );
-    } else {
-      // Muestra un error si no se ha seleccionado una entidad federativa válida.
-      this.toastr.error('Seleccione una entidad federativa válida.');
-    }
-  }
-
-  /**
-   * Cambia el valor de la fecha de inicio en el formulario.
-   * @param nuevo_valor Nuevo valor de la fecha.
-   */
-  public cambioFechaInicio(nuevo_valor: string): void {
-    this.formCertificado.get('fechaInicio')?.setValue(nuevo_valor);
-    this.formCertificado.get('fechaInicio')?.markAsUntouched();
-  }
-
-  /**
-   * Cambia el valor de la fecha final en el formulario.
-   * @param nuevo_valor Nuevo valor de la fecha final.
-   */
-  public cambioFechaFinal(nuevo_valor: string): void {
-
-    this.formCertificado.get('fechaFinal')?.setValue(nuevo_valor);
-    this.formCertificado.get('fechaFinal')?.markAsUntouched();
   }
 
     /**
    * Método para abrir el modal de modificación.
    */
     abrirModificarModal(datos1: Mercancia): void {
-      this.datosSeleccionados = datos1;    
+      this.datosSeleccionados = datos1 as unknown as Mercancias;    
       this.store.setFormMercancia({ ...datos1 });
         
       if (this.modalInstance) {
         this.modalInstance.show();
       }      
     }
+    
 
     /**
      * Cierra el modal de modificación si está abierto.
@@ -450,9 +365,28 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
      */
     cerrarModificarModal():void {
       if (this.modalInstance) {
+        this.tablaSeleccionEvent = true;
         this.modalInstance.hide();
       }
     }
+
+    /**
+   * Establece el estado de validez del formulario en el store.
+   * @param valida Indica si el formulario es válido o no.
+   */
+  setFormValida(valida: boolean): void {
+    this.store.setFormValida({ certificado: valida });
+  }
+
+  /**
+ * @descripcion
+ * Actualiza el almacén con los datos del formulario de certificado.
+ * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
+ */
+setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+  const { campo: CAMPO, valor: VALOR } = event;
+  this.store.setFormCertificado({ [CAMPO]: VALOR });
+}
 
     /**
      * @inheritdoc
