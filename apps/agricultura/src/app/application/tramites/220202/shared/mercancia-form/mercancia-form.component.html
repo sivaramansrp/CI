@@ -125,13 +125,13 @@
       <div class="col-md-4 form-group">
         <label class="form-label">Cantidad UMT*:</label>
         <input type="text" class="form-control" formControlName="cantidadUMT" />
-        @if ( mercanciaForm.get('cantidadUMT')?.hasError('minLength') &&
+        @if ( mercanciaForm.get('cantidadUMT')?.hasError('maxDecimals') &&
         mercanciaForm.get('cantidadUMT')?.touched){
         <div class="text-danger">
           Este campo permite doce números enteros y hasta tres decimales
         </div>
         } @else if (
-        mercanciaForm.get('cantidadUMT')?.hasError('maxLength') &&
+        mercanciaForm.get('cantidadUMT')?.hasError('maxWholeNumbers') &&
         mercanciaForm.get('cantidadUMT')?.touched) {
         <div class="text-danger">
           Por favor, escribe un valor menor o igual a 999999999999.999
