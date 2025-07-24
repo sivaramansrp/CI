@@ -11,15 +11,6 @@
       </div>
     </div>
 
-    <div class="row mt-4" *ngIf="mostrarNombreIngles">
-      <div class="col-md-8 form-group">
-        <label for="mercanciaAsociadaNombreIngles" class="form-label">
-          Nombre en inglés :
-        </label>
-        <input type="text" id="mercanciaAsociadaNombreIngles" formControlName="nombreIngles" class="form-control" />
-      </div>
-    </div>
-
     <div class="row mt-4" formGroupName="fraccionArancelaria">
       <div class="col-md-4 form-group">
         <label for="mercanciaFraccionArancelaria" class="form-label">
@@ -34,78 +25,13 @@
         <label for="nombreTecnico" class="form-label">
           Nombre Técnico (TIGIE) :
         </label>
-        <textarea id="nombreTecnico" class="form-control" formControlName="nombreTecnico"></textarea>
+        <textarea id="nombreTecnico" class="form-control min-height" formControlName="nombreTecnico" rows="5"></textarea>
       </div>
     </div>
-      <div class="row mt-4" formGroupName="fraccionNALADI"  *ngIf="mostrarClasificacionNaladi">
-        <div class="col-md-4 form-group">
-          <label for="mercanciaClasificacionNaladi" class="form-label">
-            Clasificación Naladi :
-          </label>
-          <input type="text" id="mercanciaClasificacionNaladi" formControlName="clave" class="form-control" />
-        </div>
-        <div class="col-md-8 form-group">
-          <label for="mercanciaDescripcionNaladi" class="form-label">
-            Descripción Naladi :
-          </label>
-          <input type="text" id="mercanciaDescripcionNaladi" formControlName="descripcion" class="form-control" />
-        </div>
-      </div>
-      <div class="row mt-4" formGroupName="fraccionNALADISA93" *ngIf="mostrarClasificacionNaladisa93">
-        <div class="col-md-4 form-group">
-          <label for="mercanciaClasificacionNaladisa93" class="form-label">
-            Clasificación Naladisa93 :
-          </label>
-          <input type="text" id="mercanciaClasificacionNaladisa93" formControlName="clave" class="form-control" />
-        </div>
-        <div class="col-md-8 form-group">
-          <label for="mercanciaDescripcionNaladisa93" class="form-label">
-            Descripción Naladisa93 :
-          </label>
-          <input type="text" id="mercanciaDescripcionNaladisa93" formControlName="descripcion" class="form-control" />
-        </div>
-      </div>
-      <div class="row mt-4" formGroupName="fraccionNALADISA96" *ngIf="mostrarClasificacionNaladisa96">
-        <div class="col-md-4 form-group">
-          <label for="mercanciaClasificacionNaladisa96" class="form-label">
-            Clasificación Naladisa96 :
-          </label>
-          <input type="text" id="mercanciaClasificacionNaladisa96" formControlName="clave" class="form-control" />
-        </div>
-        <div class="col-md-8 form-group">
-          <label for="mercanciaDescripcionNaladisa96" class="form-label">
-            Descripción Naladisa96 :
-          </label>
-          <input type="text" id="mercanciaDescripcionNaladisa96" formControlName="descripcion" class="form-control" />
-        </div>
-      </div>
-      <div class="row mt-4" formGroupName="fraccionNALADISA02"  *ngIf="mostrarClasificacionNaladisa02">
-        <div class="col-md-4 form-group">
-          <label for="mercanciaClasificacionNaladisa02" class="form-label">
-            Clasificación Naladisa02 :
-          </label>
-          <input type="text" id="mercanciaClasificacionNaladisa02" formControlName="clave" class="form-control" />
-        </div>
-        <div class="col-md-8 form-group">
-          <label for="mercanciaDescripcionNaladisa02" class="form-label">
-            Descripción Naladisa02 :
-          </label>
-          <input type="text" id="mercanciaDescripcionNaladisa02" formControlName="descripcion" class="form-control" />
-        </div>
-      </div>
+      
     </div>
-  <div class="form">
-    <ng-titulo [titulo]="'Juegos Surtidos'"></ng-titulo>
-      <div class="row mt-4" id="divJuegosSurtidos" *ngIf="mostrarJuegosSurtidos">
-        <div class="col-md-8 form-group">
-          <label for="descripcionJuego" class="form-label">
-            Descripción Juegos Surtidos :
-          </label>
-          <textarea id="descripcionJuego" class="form-control" formControlName="descripcionJuego"></textarea>
-        </div>
-      </div>
+  
       <div class="row mt-4 me-auto">
         <app-datos-tratados-acuerdos></app-datos-tratados-acuerdos> 
       </div>
-    </div>
 </form>
