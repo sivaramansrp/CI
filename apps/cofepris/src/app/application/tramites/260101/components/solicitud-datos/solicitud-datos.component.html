@@ -1,6 +1,5 @@
 <form [formGroup]="solicitudForm">
   <div class="row mt-5">
-    @if(!esFormularioSoloLectura){
     <div class="col-md-12">
       <div class="panel-group ficha-collapse" id="accordion">
         <div class="panel panel-default">
@@ -46,7 +45,6 @@
         </div>
       </div>
     </div>
-    }
     <div class="col-md-12">
       <ng-titulo titulo="Datos del establecimiento" />
     </div>
@@ -202,15 +200,12 @@
       <app-tabla-dinamica
         [tipoSeleccionTabla]="scianSeleccionTabla"
         [datos]="scianDatos"
+        [filasSeleccionadas]="scianSeleccionados"
         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         (listaDeFilaSeleccionada)="getscianDatos($event)"
         [configuracionTabla]="scianConfiguracionTabla"
       >
       </app-tabla-dinamica>
-      <!-- <ng-table
-        [commonTableHeader]="tableDataSCIAN.tableHeader"
-        [commonTableBody]="tableDataSCIAN.tableBody"
-      ></ng-table> -->
     </div>
 
     <div class="col-md-4 mt-4">
@@ -302,6 +297,7 @@
       <app-tabla-dinamica
         [tipoSeleccionTabla]="mercanciasSeleccionTabla"
         [datos]="mercanciasDatos"
+        [filasSeleccionadas]="mercanciasSeleccionados"
         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         (listaDeFilaSeleccionada)="getMercanciasDatos($event)"
         [configuracionTabla]="mercanciasConfiguracionTabla"
@@ -377,6 +373,14 @@
         acuerdo en hacerlos públicos?*:</label
       >
       <app-input-radio
+        formControlName="hacerlos"
+        [selectedValue]="solicitudForm.get('hacerlos')?.value"
+        [radioOptions]="hacerlosRadioOptions"
+        [layout]="'horizontal'"
+        [isRequired]="true"
+        (valueChange)="setHacerlos($event)"
+      ></app-input-radio>
+      <!-- <app-input-radio
         [radioOptions]="hacerlosRadioOptions"
         [selectedValue]="solicitudForm.get('hacerlos')?.value"
         [isRequired]="true"
@@ -384,7 +388,7 @@
         fromControlName="hacerlos"
         (valueChange)="setHacerlos($event)"
       >
-      </app-input-radio>
+      </app-input-radio> -->
     </div>
 
     <div class="col-md-12">

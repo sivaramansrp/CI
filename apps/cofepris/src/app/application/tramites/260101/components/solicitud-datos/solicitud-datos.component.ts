@@ -92,13 +92,24 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Configuración de la tabla SCIAN.
-   * Contiene encabezados y cuerpo de datos vacíos al inicio.
+   * Lista de identificadores SCIAN seleccionados.
+   *
+   * Contiene los IDs (de tipo `number`) correspondientes a las actividades
+   * económicas seleccionadas por el usuario dentro del formulario.
+   *
+   * @type {number[]}
    */
-  // public tableDataSCIAN: TableData = {
-  //   tableHeader: [],
-  //   tableBody: [],
-  // };
+  scianSeleccionados: number[] = [];
+
+  /**
+   * Lista de identificadores de mercancías seleccionadas.
+   *
+   * Este arreglo almacena los IDs de las mercancías que el usuario ha elegido,
+   * ya sea para registrar, modificar o visualizar en el contexto del formulario.
+   *
+   * @type {number[]}
+   */
+  mercanciasSeleccionados: number[] = [];
 
   /**
    * Configuración de la tabla de mercancías.
@@ -139,6 +150,17 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   selectedMercanciasDatos: Mercancia[] = [];
 
+  /**
+   * Lista de objetos SCIAN seleccionados por el usuario.
+   *
+   * Este arreglo contiene los elementos completos del catálogo SCIAN
+   * que han sido seleccionados en el formulario o componente actual.
+   *
+   * A diferencia de `scianSeleccionados`, que solo guarda los IDs,
+   * esta propiedad almacena los objetos `SCIAN` completos con toda su información.
+   *
+   * @type {SCIAN[]}
+   */
   selectedscianDatos: SCIAN[] = [];
 
   /**
@@ -171,6 +193,16 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   mercanciasSeleccionTabla = TablaSeleccion.CHECKBOX;
 
+  /**
+   * Modo de selección de la tabla SCIAN.
+   *
+   * Define el tipo de selección que permite la tabla de actividades económicas SCIAN.
+   * En este caso, se configura como selección por `CHECKBOX`, lo que permite seleccionar múltiples filas.
+   *
+   * Esta propiedad utiliza un valor del enum `TablaSeleccion`.
+   *
+   * @type {TablaSeleccion}
+   */
   scianSeleccionTabla = TablaSeleccion.CHECKBOX;
 
   /**
@@ -305,6 +337,22 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
     },
   ];
 
+  /**
+   * Configuración de columnas para la tabla de actividades económicas SCIAN.
+   *
+   * Define las columnas que se mostrarán en la tabla de selección SCIAN,
+   * incluyendo encabezados, claves de acceso a los datos y el orden de aparición.
+   *
+   * Cada objeto en el arreglo representa una columna de la tabla y utiliza
+   * el tipo genérico `ConfiguracionColumna<SCIAN>`, que asume que los datos
+   * provienen de objetos del tipo `SCIAN`.
+   *
+   * - `encabezado`: Título de la columna visible para el usuario.
+   * - `clave`: Función que extrae el valor correspondiente del objeto `SCIAN`.
+   * - `orden`: Determina el orden en que se muestra la columna.
+   *
+   * @type {ConfiguracionColumna<SCIAN>[]}
+   */
   scianConfiguracionTabla: ConfiguracionColumna<SCIAN>[] = [
     {
       encabezado: 'Clave S.C.I.A.N',
@@ -324,6 +372,16 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   mercanciasDatos: Mercancia[] = [];
 
+  /**
+   * Catálogo completo de actividades económicas SCIAN.
+   *
+   * Este arreglo contiene todos los elementos del catálogo SCIAN disponibles
+   * para mostrar en la tabla o para ser seleccionados por el usuario.
+   *
+   * Los objetos de tipo `SCIAN` pueden incluir propiedades como clave, descripción, etc.
+   *
+   * @type {SCIAN[]}
+   */
   scianDatos: SCIAN[] = [];
 
   /**
@@ -455,15 +513,36 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
         ],
       ],
       /** Indicador de aviso de funcionamiento del solicitante. */
-      avisoDeFuncionamiento: [{value:this.solicitud260101State.avisoDeFuncionamiento, disabled: false}],
+      avisoDeFuncionamiento: [
+        {
+          value: this.solicitud260101State.avisoDeFuncionamiento,
+          disabled: this.esFormularioSoloLectura,
+        },
+      ],
       /** Licencia sanitaria del solicitante. */
-      licenciaSanitaria: [{value:this.solicitud260101State.licenciaSanitaria, disabled: false}],
+      licenciaSanitaria: [
+        {
+          value: this.solicitud260101State.licenciaSanitaria,
+          disabled: this.esFormularioSoloLectura,
+        },
+      ],
       /** Estado del producto (fresco, congelado o vivo). */
-      liveFreshFrozen: [{value:this.solicitud260101State.liveFreshFrozen, disabled: false}],
+      liveFreshFrozen: [
+        {
+          value: this.solicitud260101State.liveFreshFrozen,
+          disabled: this.esFormularioSoloLectura,
+        },
+      ],
       /** Régimen asociado al trámite. */
-      regimen: [{value:this.solicitud260101State.regimen, disabled: false}, [Validators.required]],
+      regimen: [
+        { value: this.solicitud260101State.regimen, disabled: false },
+        [Validators.required],
+      ],
       /** Aduana asociada al trámite. */
-      aduana: [{value:this.solicitud260101State.aduana, disabled: false}, [Validators.required]],
+      aduana: [
+        { value: this.solicitud260101State.aduana, disabled: false },
+        [Validators.required],
+      ],
       /** Indicador de selección "hacerlos". */
       hacerlos: [
         {
@@ -474,7 +553,10 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
       ],
       /** RFC del solicitante. */
       rfc: [
-        { value: this.solicitud260101State.rfc, disabled: false },
+        {
+          value: this.solicitud260101State.rfc,
+          disabled: this.esFormularioSoloLectura,
+        },
         [Validators.required, Validators.maxLength(13)],
       ],
       /** Razón social del representante legal. */
@@ -493,7 +575,12 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
         [Validators.maxLength(30)],
       ],
       /** Indicador de manifiesto en el estado actual. */
-      manifesto: [{ value: this.solicitud260101State.manifesto, disabled: false }],
+      manifesto: [
+        {
+          value: this.solicitud260101State.manifesto,
+          disabled: this.esFormularioSoloLectura,
+        },
+      ],
     });
 
     // Observa cambios en el estado de la solicitud y actualiza el formulario reactivo.
@@ -526,7 +613,12 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
             apellidoMeterno: this.solicitud260101State.apellidoMeterno,
             manifesto: this.solicitud260101State.manifesto,
           });
+          // Actualiza las tablas de
           this.mercanciasDatos = this.solicitud260101State.mercanciasDatos;
+          this.scianSeleccionados =
+            this.solicitud260101State.scianSeleccionados;
+          this.mercanciasSeleccionados =
+            this.solicitud260101State.mercanciasSeleccionados;
         })
       )
       .subscribe();
@@ -735,6 +827,15 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
     this.selectedMercanciasDatos = evento;
   }
 
+  /**
+   * Establece los elementos SCIAN seleccionados por el usuario.
+   *
+   * Este método recibe un arreglo de objetos `SCIAN` seleccionados desde un componente
+   * hijo (como una tabla dinámica), y los asigna a la propiedad `selectedscianDatos`
+   * para su uso posterior (visualización, validación o envío).
+   *
+   * @param {SCIAN[]} evento - Arreglo de objetos `SCIAN` seleccionados.
+   */
   getscianDatos(evento: SCIAN[]): void {
     this.selectedscianDatos = evento;
   }

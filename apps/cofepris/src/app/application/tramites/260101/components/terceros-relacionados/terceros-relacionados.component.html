@@ -24,12 +24,14 @@
       <button
         class="btn btn-default 3"
         type="button"
+        [disabled]="esFormularioSoloLectura"
         (click)="eliminarMercancias()"
       >
         Eliminar
       </button>
       <button
         type="button"
+        [disabled]="esFormularioSoloLectura"
         class="btn btn-default btn-space ms-3"
         (click)="openModificarMercancias()"
       >
@@ -39,6 +41,7 @@
       <button
         type="button"
         class="btn btn-primary ms-3"
+        [disabled]="esFormularioSoloLectura"
         (click)="agregarMercancias()"
       >
         Agregar
@@ -64,12 +67,14 @@
       <button
         class="btn btn-default 3"
         type="button"
+        [disabled]="esFormularioSoloLectura"
         (click)="eliminarMercancias()"
       >
         Eliminar
       </button>
       <button
         type="button"
+        [disabled]="esFormularioSoloLectura"
         class="btn btn-default btn-space ms-3"
         (click)="modificarModalFabricante()"
       >
@@ -78,6 +83,7 @@
       }
       <button
         type="button"
+        [disabled]="esFormularioSoloLectura"
         class="btn btn-primary ms-3"
         (click)="agregarModalFabricante()"
       >

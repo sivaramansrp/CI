@@ -60,8 +60,17 @@ import { SolicitudDatosService } from '../../services/solicitud-datos.service';
 export class ModificarDestinatarioComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
+  /**
+   * Evento que se emite al cerrar el modal.
+   *
+   * Este `EventEmitter` envía un objeto de tipo `Destinatario` al componente padre
+   * cuando se cierra el modal, ya sea por confirmación, cancelación u otra acción.
+   *
+   * @type {EventEmitter<Destinatario>}
+   */
   @Output() cerrarModal: EventEmitter<Destinatario> =
     new EventEmitter<Destinatario>();
+
   /**
    * Formulario reactivo para la modificación de destinatarios.
    * Inicializado posteriormente en el método `ngOnInit`.
@@ -134,6 +143,14 @@ export class ModificarDestinatarioComponent
    */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * Indica si el formulario se encuentra en modo de modificación.
+   *
+   * Si el valor es `true`, el formulario permitirá editar los datos del destinatario existente.
+   * Si es `false`, se asume que se está creando un nuevo destinatario o visualizando en modo solo lectura.
+   *
+   * @type {boolean}
+   */
   modificarDestinatario: boolean = false;
 
   /**
@@ -348,6 +365,23 @@ export class ModificarDestinatarioComponent
       .subscribe();
   }
 
+  /**
+   * Actualiza los validadores del formulario según el tipo de persona seleccionado.
+   *
+   * Este método se encarga de establecer o limpiar validadores requeridos en los campos
+   * del formulario `modificarDestinatarioForm`, dependiendo del tipo de persona:
+   *
+   * - Si `valor` es `1` (Persona Moral), se requiere el campo `denominacion` y se limpian
+   *   los validadores de `denominacionNombre` y `denominacionApellidoPaterno`.
+   * - Si `valor` es `2` (Persona Física), se requiere `denominacionNombre` y `denominacionApellidoPaterno`,
+   *   y se limpia la validación del campo `denominacion`.
+   * - Para cualquier otro valor, se eliminan los validadores de todos esos tres campos.
+   *
+   * Finalmente, se actualiza manualmente la validez de los campos modificados para que el formulario
+   * refleje correctamente los cambios de validación.
+   *
+   * @param {number | string} valor - Tipo de persona seleccionada (1 = Persona Moral, 2 = Persona Física).
+   */
   actualizarTipoPersonaValidators(valor: number | string): void {
     if (valor === 1) {
       // Persona Moral
@@ -466,16 +500,40 @@ export class ModificarDestinatarioComponent
     this.solicitud260101Store.setDenominacion(VALOR);
   }
 
+  /**
+   * Asigna el valor del campo "Nombre" (o denominación nombre) al store.
+   *
+   * Este método se ejecuta al escribir en el campo de nombre del formulario.
+   * Extrae el valor del input HTML y lo envía al store mediante `setDenominacionNombre`.
+   *
+   * @param {Event} evento - Evento generado por el input HTML.
+   */
   setNombre(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud260101Store.setDenominacionNombre(VALOR);
   }
 
+  /**
+   * Asigna el valor del campo "Apellido paterno" al store.
+   *
+   * Captura el valor introducido en el campo correspondiente y lo envía
+   * al store usando `setDenominacionApellidoPaterno`.
+   *
+   * @param {Event} evento - Evento generado por el input HTML.
+   */
   setApellidoPaterno(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud260101Store.setDenominacionApellidoPaterno(VALOR);
   }
 
+  /**
+   * Asigna el valor del campo "Apellido materno" al store.
+   *
+   * Este método detecta el cambio en el campo de apellido materno y
+   * actualiza el valor en el store usando `setDenominacionApellidoMaterno`.
+   *
+   * @param {Event} evento - Evento generado por el input HTML.
+   */
   setApellidoMaterno(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud260101Store.setDenominacionApellidoMaterno(VALOR);

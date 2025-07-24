@@ -53,10 +53,37 @@ export class TercerosRelacionadosComponent
    */
   TEXTOS = TEXTOS;
 
+  /**
+   * Instancia del modal general.
+   *
+   * Esta propiedad almacena la referencia al modal principal que se utiliza
+   * para mostrar contenido dinámico o formularios relacionados con destinatarios u otras entidades.
+   *
+   * Se inicializa posteriormente (por ejemplo, en `ngAfterViewInit`) usando Bootstrap u otro manejador de modales.
+   *
+   * @type {Modal}
+   */
   MODAL_INSTANCE!: Modal;
 
+  /**
+   * Instancia del modal de fabricante.
+   *
+   * Contiene la referencia específica al modal que se usa para agregar o modificar fabricantes.
+   *
+   * Permite abrir, cerrar o manipular el modal programáticamente.
+   *
+   * @type {Modal}
+   */
   MODAL_INSTANCE_FABRICANTE!: Modal;
 
+  /**
+   * Índice del destinatario seleccionado desde una tabla o lista.
+   *
+   * Se utiliza para identificar qué destinatario fue seleccionado para editar o visualizar.
+   * Un valor de `-1` indica que no hay ningún destinatario actualmente seleccionado.
+   *
+   * @type {number}
+   */
   inputSelectionDestinatario: number = -1;
 
   /**
@@ -247,6 +274,17 @@ export class TercerosRelacionadosComponent
    */
   selectedDestinatario: Destinatario[] = [];
 
+  /**
+   * Lista de destinatarios a modificar.
+   *
+   * Esta propiedad contiene un arreglo de objetos `Destinatario` que han sido
+   * seleccionados para su modificación dentro del formulario o flujo actual.
+   *
+   * Se utiliza principalmente cuando se desea cargar los datos previamente guardados
+   * de uno o varios destinatarios para permitir su edición.
+   *
+   * @type {Destinatario[]}
+   */
   modificarDestinatario: Destinatario[] = [];
 
   /**
@@ -254,6 +292,17 @@ export class TercerosRelacionadosComponent
    */
   selectedFabricante: Fabricante[] = [];
 
+  /**
+   * Lista de fabricantes a modificar.
+   *
+   * Esta propiedad contiene un arreglo de objetos `Fabricante` que han sido
+   * seleccionados para su modificación dentro del formulario o flujo actual.
+   *
+   * Se utiliza principalmente cuando se desea cargar los datos previamente guardados
+   * de uno o varios fabricantes para permitir su edición.
+   *
+   * @type {Fabricante[]}
+   */
   modificarFabricante: Fabricante[] = [];
 
   /**
@@ -290,6 +339,7 @@ export class TercerosRelacionadosComponent
    * @param solicitudDatosService - Servicio para manejar datos de la solicitud.
    * @param solicitud260101Store - Almacén para gestionar el estado de la solicitud.
    * @param solicitud260101Query - Consulta para observar cambios en el estado de la solicitud.
+   * @param consultaioQuery - Servicio para consultar el estado actual desde el store.
    */
   constructor(
     public solicitudDatosService: SolicitudDatosService,
@@ -327,12 +377,16 @@ export class TercerosRelacionadosComponent
         takeUntil(this.destroyNotifier$),
         map((respuesta: Solicitud260101State) => {
           this.solicitud260101State = respuesta;
-          // this.destinatarioDatos = this.solicitud260101State.destinatarioDatos;
         })
       )
       .subscribe();
   }
 
+  /**
+   * Inicializa el modal para agregar mercancías.
+   * Se llama después de que la vista ha sido inicializada.
+   * Se asegura de que el modal esté disponible para su uso.
+   */
   ngAfterViewInit(): void {
     if (this.modalElement?.nativeElement) {
       this.MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
@@ -376,6 +430,10 @@ export class TercerosRelacionadosComponent
       });
   }
 
+  /**
+   * Maneja la selección de destinatarios.
+   * @param evento - Evento que contiene el valor ingresado por el usuario.
+   */
   seleccionDestinatarioDatos(evento: Destinatario[]): void {
     this.selectedDestinatario = evento;
   }
@@ -460,6 +518,18 @@ export class TercerosRelacionadosComponent
     }
   }
 
+  /**
+   * Cierra el modal de mercancías y actualiza la información del destinatario.
+   *
+   * Este método se ejecuta cuando se cierra el modal y se recibe un objeto `Destinatario`.
+   * Si ya existe un destinatario seleccionado con el mismo RFC, se actualizan sus datos
+   * con los nuevos valores del evento. Si no existe, se agrega como nuevo destinatario
+   * a la lista `destinatarioDatos`.
+   *
+   * Además, oculta el modal y marca en el store que ya no se está modificando el destinatario.
+   *
+   * @param {Destinatario} evento - Objeto `Destinatario` con la información actualizada.
+   */
   cerrarMercanciasModal(evento: Destinatario): void {
     if (this.selectedDestinatario.length > 0) {
       this.destinatarioDatos.forEach((destinatario, index) => {
@@ -498,10 +568,22 @@ export class TercerosRelacionadosComponent
     }
   }
 
+  /**
+   * Asigna la lista de fabricantes seleccionados.
+   * Este método se invoca cuando se seleccionan fabricantes desde la tabla dinámica.
+   * @param {Fabricante[]} evento - Lista de objetos `Fabricante` seleccionados.
+   */
   seleccionFabricanteDatos(evento: Fabricante[]): void {
     this.selectedFabricante = evento;
   }
 
+  /**
+   * Muestra el modal para agregar un nuevo fabricante.
+   *
+   * Este método se encarga de abrir el modal correspondiente y
+   * asegurarse de que la bandera de modificación esté en `false`
+   * para indicar que se trata de una alta (nuevo registro).
+   */
   agregarModalFabricante(): void {
     if (this.MODAL_INSTANCE_FABRICANTE) {
       this.solicitud260101Store.setModificarFabricante(false);
@@ -509,6 +591,15 @@ export class TercerosRelacionadosComponent
     }
   }
 
+  /**
+   * Abre el modal de fabricante en modo edición con los datos precargados.
+   *
+   * Este método se ejecuta cuando hay un fabricante seleccionado para editar.
+   * Toma el primer elemento seleccionado, carga sus datos en el store y
+   * abre el modal correspondiente en modo de modificación.
+   *
+   * @returns {void}
+   */
   modificarModalFabricante(): void {
     if (this.selectedFabricante.length > 0) {
       this.solicitud260101Store.setTercerosNacionalidad(
@@ -586,6 +677,18 @@ export class TercerosRelacionadosComponent
     }
   }
 
+  /**
+   * Cierra el modal de fabricante y actualiza o agrega los datos del fabricante.
+   *
+   * Si existe un fabricante previamente seleccionado, se actualizan sus propiedades
+   * con los valores del evento recibido (formulario de edición). Si no hay ningún
+   * fabricante seleccionado, se agrega uno nuevo al arreglo de `fabricanteDatos`.
+   *
+   * Finalmente, se cierra el modal de fabricante si está activo.
+   *
+   * @param {Fabricante} evento - Objeto de tipo Fabricante con la información a guardar o actualizar.
+   * @returns {void}
+   */
   cerrarFabricanteModal(evento: Fabricante): void {
     if (this.selectedFabricante.length > 0) {
       this.fabricanteDatos.forEach((fabricante, index) => {

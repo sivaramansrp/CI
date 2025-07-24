@@ -116,8 +116,13 @@ export interface Solicitud {
   apellidoMeterno: string;
 }
 
-
+/**
+ * Representa un elemento del catálogo SCIAN, que incluye una clave y una descripción.
+ * Esta interfaz es utilizada para describir las categorías de actividades económicas.
+ */
 export interface SCIAN {
+  /** Clave única del SCIAN. */
   clave: string;
+  /** Descripción de la actividad económica asociada a la clave. */
   descripcion: string;
 }

@@ -1,12 +1,8 @@
-import { BtnContinuarComponent, DatosPasos } from '@libs/shared/data-access-user/src';
-import { Component } from '@angular/core';
-import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
-import { PASOS } from '@libs/shared/data-access-user/src';
+import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
+import { Component, ViewChild } from '@angular/core';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { ViewChild } from '@angular/core';
-import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Interfaz para definir las acciones de los botones en el flujo del wizard.
@@ -14,7 +10,13 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
  * @property valor - El índice o paso relacionado con la acción.
  */
 interface AccionBoton {
+  /**
+   * Acción a realizar, puede ser 'cont' para continuar o 'atras' para retroceder.
+   */
   accion: string;
+  /**
+   * Valor asociado a la acción, generalmente el índice del paso en el wizard.
+   */
   valor: number;
 }
 

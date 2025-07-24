@@ -107,6 +107,8 @@ actualizarEstadoFormulario(DATOS: Solicitud260101State): void {
   this.tramite301Store.setTercerosColonia(DATOS.tercerosColonia);
   this.tramite301Store.setTercerosCalle(DATOS.tercerosCalle);
   this.tramite301Store.setLiaveDePago(DATOS.liaveDePago);
+  this.tramite301Store.setScianSeleccionados(DATOS.scianSeleccionados);
+  this.tramite301Store.setMercanciasSeleccionados(DATOS.mercanciasSeleccionados);
 }
 
 

@@ -1,5 +1,11 @@
-import { DatosDeSolicitud, RadioOptions } from '../models/solicitud-datos.model';
-import { DestinatarioImitar, TercerosDestinatarioImitar } from '../models/mercancia.model';
+import {
+  DatosDeSolicitud,
+  RadioOptions,
+} from '../models/solicitud-datos.model';
+import {
+  DestinatarioImitar,
+  TercerosDestinatarioImitar,
+} from '../models/mercancia.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { ClavesDeLotes } from '../models/claves-de-lotes.model';
 import { Destinatario } from '../models/destinatario.model';
@@ -44,9 +50,7 @@ export class SolicitudDatosService {
    * @returns Observable con la solicitud.
    */
   obtenerSolicitud(): Observable<Solicitud> {
-    return this.http
-      .get<Solicitud>('assets/json/260101/solicitud.json')
-      .pipe();
+    return this.http.get<Solicitud>('assets/json/260101/solicitud.json').pipe();
   }
 
   /**
@@ -55,9 +59,7 @@ export class SolicitudDatosService {
    */
   obtenerRegimenDestinaraListo(): Observable<CatalogosSelect> {
     return this.http
-      .get<CatalogosSelect>(
-        'assets/json/260101/regimen-destinaran.json'
-      )
+      .get<CatalogosSelect>('assets/json/260101/regimen-destinaran.json')
       .pipe();
   }
 
@@ -137,23 +139,20 @@ export class SolicitudDatosService {
    * Obtiene las opciones de selección de tipo de persona (radio).
    * @returns Observable con las opciones de tipo de persona.
    */
-  obtenerDestinatarioRadio(): Observable<
-    RadioOptions[]
-  > {
+  obtenerDestinatarioRadio(): Observable<RadioOptions[]> {
     return this.http
-      .get<RadioOptions[]>(
-        'assets/json/260101/destinatario-radio.json'
-      )
+      .get<RadioOptions[]>('assets/json/260101/destinatario-radio.json')
       .pipe();
   }
 
-  obtenerFabricanteRadio(): Observable<
-    RadioOptions[]
-  > {
+  /**
+   * Obtiene las opciones de selección de fabricante (radio).
+   * @param {string} tipo - Tipo de fabricante (nacional o extranjero).
+   * @returns Observable con las opciones de fabricante.
+   * */
+  obtenerFabricanteRadio(): Observable<RadioOptions[]> {
     return this.http
-      .get<RadioOptions[]>(
-        'assets/json/260101/fabricante-radio.json'
-      )
+      .get<RadioOptions[]>('assets/json/260101/fabricante-radio.json')
       .pipe();
   }
 
@@ -161,9 +160,7 @@ export class SolicitudDatosService {
    * Obtiene las opciones de selección de tipo de persona (radio).
    * @returns Observable con las opciones de tipo de persona.
    */
-  obtenerTercerosNacionalidadRadioOptions(): Observable<
-    RadioOptions[]
-  > {
+  obtenerTercerosNacionalidadRadioOptions(): Observable<RadioOptions[]> {
     return this.http
       .get<RadioOptions[]>(
         'assets/json/260101/terceros-nacionalidad-radio.json'
@@ -177,9 +174,7 @@ export class SolicitudDatosService {
    */
   obtenerMercanciaCatalogos(): Observable<MercanciaCatalogos> {
     return this.http
-      .get<MercanciaCatalogos>(
-        'assets/json/260101/mercancia-catalogos.json'
-      )
+      .get<MercanciaCatalogos>('assets/json/260101/mercancia-catalogos.json')
       .pipe();
   }
 
@@ -189,9 +184,7 @@ export class SolicitudDatosService {
    */
   obtenerCrosslisto(): Observable<MercanciaCrossList> {
     return this.http
-      .get<MercanciaCrossList>(
-        'assets/json/260101/mercancia-cross-list.json'
-      )
+      .get<MercanciaCrossList>('assets/json/260101/mercancia-cross-list.json')
       .pipe();
   }
 
@@ -211,13 +204,14 @@ export class SolicitudDatosService {
    */
   obtenerDestinatarioImitar(): Observable<DestinatarioImitar> {
     return this.http
-      .get<DestinatarioImitar>(
-        'assets/json/260101/destinatario-mock.json'
-      )
+      .get<DestinatarioImitar>('assets/json/260101/destinatario-mock.json')
       .pipe();
   }
 
-    obtenerTercerosDestinatarioImitar(): Observable<TercerosDestinatarioImitar> {
+  /**
+   * @returns Observable con un destinatario de terceros de ejemplo.
+   */
+  obtenerTercerosDestinatarioImitar(): Observable<TercerosDestinatarioImitar> {
     return this.http
       .get<TercerosDestinatarioImitar>(
         'assets/json/260101/terceros-destinatario-mock.json'

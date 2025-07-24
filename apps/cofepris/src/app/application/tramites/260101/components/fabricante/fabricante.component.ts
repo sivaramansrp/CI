@@ -57,8 +57,17 @@ import { TercerosDestinatarioImitar } from '../../models/mercancia.model';
   ],
 })
 export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
+  /**
+   * Evento que se emite al cerrar el modal.
+   *
+   * Este `EventEmitter` envía un objeto del tipo `Fabricante`
+   * al componente padre cuando el modal es cerrado.
+   *
+   * @type {EventEmitter<Fabricante>}
+   */
   @Output() cerrarModal: EventEmitter<Fabricante> =
     new EventEmitter<Fabricante>();
+
   /**
    * Formulario reactivo para la de fabricantes.
    * Inicializado posteriormente en el método `ngOnInit`.
@@ -71,6 +80,15 @@ export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   tipoPersonaRadioOptions: RadioOptions[] = [];
 
+  /**
+   * Opciones del radio button para la nacionalidad de terceros.
+   *
+   * Este arreglo contiene los valores que se muestran como opciones
+   * de selección (radio buttons) para definir la nacionalidad del tercero,
+   * como por ejemplo "Nacional" o "Extranjero".
+   *
+   * @type {RadioOptions[]}
+   */
   tercerosNacionalidadRadioOptions: RadioOptions[] = [];
 
   /**
@@ -133,8 +151,24 @@ export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * Datos del destinatario recibidos desde el componente padre.
+   *
+   * Este arreglo contiene objetos del tipo `Fabricante`, que representan
+   * la información de los destinatarios a modificar o visualizar.
+   *
+   * @type {Fabricante[]}
+   */
   @Input() datosDestinatario: Fabricante[] = [] as Fabricante[];
 
+  /**
+   * Indica si el modo actual es para modificar un fabricante.
+   *
+   * Si es `true`, se habilitan los controles necesarios para editar un fabricante existente.
+   * Si es `false`, el formulario se usa en modo creación o visualización.
+   *
+   * @type {boolean}
+   */
   modificarFabricante: boolean = false;
 
   /**
@@ -151,7 +185,7 @@ export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
     public solicitudDatosService: SolicitudDatosService,
     public solicitud260101Store: Solicitud260101Store,
     public solicitud260101Query: Solicitud260101Query,
-    private consultaioQuery: ConsultaioQuery
+    public consultaioQuery: ConsultaioQuery
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -342,6 +376,19 @@ export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe();
   }
 
+  /**
+   * Actualiza los validadores del formulario según el tipo de persona seleccionado.
+   *
+   * Si el valor es `1`, se considera una Persona Moral y se requiere el campo `tercerosDenominacion`.
+   * Si el valor es `2`, se considera una Persona Física y se requieren los campos `tercerosDenominacionNombre`
+   * y `tercerosApellidoPaterno`.
+   *
+   * Para cualquier otro valor, se eliminan todos los validadores relacionados con la denominación y apellidos.
+   *
+   * Al final, se actualiza manualmente la validez de los campos afectados.
+   *
+   * @param {number | string} valor - Tipo de persona (1 = Moral, 2 = Física).
+   */
   actualizarTipoPersonaValidators(valor: number | string): void {
     if (valor === 1) {
       // Persona Moral
@@ -446,6 +493,18 @@ export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
+  /**
+   * Establece la nacionalidad del tercero y actualiza los validadores del formulario.
+   *
+   * Este método se ejecuta cuando el usuario selecciona una nacionalidad (por ejemplo, nacional o extranjera).
+   *
+   * - Asigna el valor seleccionado a la propiedad `tipoPublicos`.
+   * - Informa al store (`solicitud260101Store`) del cambio de nacionalidad.
+   * - Llama a `actualizarTipoPersonaValidators` para actualizar los validadores del formulario
+   *   según el tipo de persona correspondiente a la nacionalidad.
+   *
+   * @param {string | number} evento - Valor de la nacionalidad seleccionada.
+   */
   setTercerosNacionalidad(evento: string | number): void {
     this.tipoPublicos = evento;
     this.solicitud260101Store.setTercerosNacionalidad(evento);
@@ -471,6 +530,16 @@ export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
     this.solicitud260101Store.setTercerosRFC(VALOR);
   }
 
+  /**
+   * Asigna el valor del campo CURP al store.
+   *
+   * Este método se ejecuta al detectar un cambio en el input correspondiente al CURP del tercero.
+   *
+   * - Extrae el valor del evento del input HTML.
+   * - Envía el valor al store mediante `setTercerosCurp`, para mantener sincronizado el estado global.
+   *
+   * @param {Event} evento - Evento del input donde se escribe la CURP.
+   */
   setCurp(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud260101Store.setTercerosCurp(VALOR);
@@ -485,16 +554,40 @@ export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
     this.solicitud260101Store.setTercerosDenominacion(VALOR);
   }
 
+  /**
+   * Asigna el valor del campo "Denominación o nombre" del tercero al store.
+   *
+   * Este método se activa cuando el usuario escribe en el campo correspondiente,
+   * extrayendo el valor del input y almacenándolo en el estado global mediante el store.
+   *
+   * @param {Event} evento - Evento del input HTML que contiene la denominación o nombre.
+   */
   setTercerosDenominacionNombre(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud260101Store.setTercerosDenominacionNombre(VALOR);
   }
 
+  /**
+   * Asigna el valor del campo "Apellido paterno" del tercero al store.
+   *
+   * Este método escucha el cambio en el input del apellido paterno y envía el valor
+   * actualizado al store para su gestión centralizada.
+   *
+   * @param {Event} evento - Evento del input HTML del apellido paterno.
+   */
   setTercerosApellidoPaterno(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud260101Store.setTercerosApellidoPaterno(VALOR);
   }
 
+  /**
+   * Asigna el valor del campo "Apellido materno" del tercero al store.
+   *
+   * Se ejecuta cuando el usuario modifica el campo de apellido materno, capturando
+   * el valor y enviándolo al store para mantener sincronizado el estado.
+   *
+   * @param {Event} evento - Evento del input HTML del apellido materno.
+   */
   setTercerosApellidoMaterno(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud260101Store.setTercerosApellidoMaterno(VALOR);
