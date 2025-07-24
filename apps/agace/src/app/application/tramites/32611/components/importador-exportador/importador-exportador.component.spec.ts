@@ -8,8 +8,8 @@ import { ConfiguracionColumna, ConsultaioQuery, InputFechaComponent, TablaDinami
 
 import { ImportadorExportadorComponent } from './importador-exportador.component';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Solicitud32605Store, Solicitud32605State } from '../../estados/solicitud32605.store';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { Solicitud32611Store, Solicitud32611State } from '../../estados/solicitud32611.store';
+import { Solicitud32611Query } from '../../estados/solicitud32611.query';
 import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { 
@@ -30,8 +30,8 @@ describe('ImportadorExportadorComponent', () => {
   let component: ImportadorExportadorComponent;
   let fixture: ComponentFixture<ImportadorExportadorComponent>;
   let mockSolicitudService: jest.Mocked<SolicitudService>;
-  let mockSolicitud32605Store: jest.Mocked<Solicitud32605Store>;
-  let mockSolicitud32605Query: jest.Mocked<Solicitud32605Query>;
+  let mockSolicitud32611Store: jest.Mocked<Solicitud32611Store>;
+  let mockSolicitud32611Query: jest.Mocked<Solicitud32611Query>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
   let mockBsModalService: jest.Mocked<BsModalService>;
   let mockBsModalRef: jest.Mocked<BsModalRef>;
@@ -51,7 +51,7 @@ describe('ImportadorExportadorComponent', () => {
     }
   ];
 
-  const mockSolicitudState: Solicitud32605State = {
+  const mockSolicitudState: Solicitud32611State = {
     comercioExteriorRealizado: '1',
     fechaDePago: '15/03/2024',
     fechaInicioComercio: '01/01/2024',
@@ -69,7 +69,7 @@ describe('ImportadorExportadorComponent', () => {
     domicilio: 'Calle Test 123',
     inputfechaDeLaUltimaOperacion: '15/01/2024',
     tablaDatos: mockEmpresasDelGrupo
-  } as Solicitud32605State;
+  } as Solicitud32611State;
 
   const mockConsultaioState = {
     readonly: false
@@ -89,11 +89,11 @@ describe('ImportadorExportadorComponent', () => {
       conseguirDatosPorRFC: jest.fn().mockReturnValue(of(mockRFCData))
     } as any;
 
-    mockSolicitud32605Store = {
+    mockSolicitud32611Store = {
       actualizarEstado: jest.fn()
     } as any;
 
-    mockSolicitud32605Query = {
+    mockSolicitud32611Query = {
       selectSolicitud$: of(mockSolicitudState)
     } as any;
 
@@ -123,8 +123,8 @@ describe('ImportadorExportadorComponent', () => {
       providers: [
         FormBuilder,
         { provide: SolicitudService, useValue: mockSolicitudService },
-        { provide: Solicitud32605Store, useValue: mockSolicitud32605Store },
-        { provide: Solicitud32605Query, useValue: mockSolicitud32605Query },
+        { provide: Solicitud32611Store, useValue: mockSolicitud32611Store },
+        { provide: Solicitud32611Query, useValue: mockSolicitud32611Query },
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
         { provide: BsModalService, useValue: mockBsModalService }
       ]
@@ -1012,7 +1012,7 @@ describe('ImportadorExportadorComponent', () => {
       component.importadorExportadorForm.get(campo)?.setValue(valor);
       component.setValoresStore(component.importadorExportadorForm, campo);
       
-      expect(mockSolicitud32605Store.actualizarEstado).toHaveBeenCalledWith({
+      expect(mockSolicitud32611Store.actualizarEstado).toHaveBeenCalledWith({
         [campo]: valor
       });
     });
@@ -1020,7 +1020,7 @@ describe('ImportadorExportadorComponent', () => {
     it('no debería actualizar si el formulario es null', () => {
       component.setValoresStore(null, 'comercioExteriorRealizado');
       
-      expect(mockSolicitud32605Store.actualizarEstado).not.toHaveBeenCalled();
+      expect(mockSolicitud32611Store.actualizarEstado).not.toHaveBeenCalled();
     });
 
     it('no debería actualizar si el valor es null o undefined', () => {
@@ -1029,7 +1029,7 @@ describe('ImportadorExportadorComponent', () => {
       component.importadorExportadorForm.get(campo)?.setValue(null);
       component.setValoresStore(component.importadorExportadorForm, campo);
       
-      expect(mockSolicitud32605Store.actualizarEstado).not.toHaveBeenCalled();
+      expect(mockSolicitud32611Store.actualizarEstado).not.toHaveBeenCalled();
     });
 
     it('debería actualizar tabla de datos en el store', () => {
@@ -1037,7 +1037,7 @@ describe('ImportadorExportadorComponent', () => {
       
       component.actualizarTablaDatosEnStore();
       
-      expect(mockSolicitud32605Store.actualizarEstado).toHaveBeenCalledWith({
+      expect(mockSolicitud32611Store.actualizarEstado).toHaveBeenCalledWith({
         tablaDatos: mockEmpresasDelGrupo
       });
     });
