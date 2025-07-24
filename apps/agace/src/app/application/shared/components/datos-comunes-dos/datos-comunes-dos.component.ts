@@ -1,3 +1,4 @@
+import { Component, Input } from '@angular/core';
 import { EventEmitter, Output } from '@angular/core';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -6,7 +7,6 @@ import { CONTROL_INVENTARIOS_TABLA } from '../../models/datos-comunes.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ControlInventarios } from '../../models/datos-comunes.model';
