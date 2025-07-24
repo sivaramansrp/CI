@@ -32,7 +32,7 @@ import { Tramite32618Query } from '../../estados/tramite32618query';
     TituloComponent,
   ],
   templateUrl: './gestion-aduanera.component.html',
-  styleUrl: './gestion-aduanera.component.scss',
+  
 })
 export class GestionAduaneraComponent
   implements AfterViewInit, OnInit, OnDestroy

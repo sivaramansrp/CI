@@ -40,7 +40,7 @@ import { takeUntil } from 'rxjs';
     InputRadioComponent, // /** Componente para botones de opción */
   ],
   templateUrl: './miembro-de-la-empresa.component.html', // /** Ruta de la plantilla HTML del componente */
-  styleUrl: './miembro-de-la-empresa.component.scss', // /** Ruta del archivo de estilos SCSS */
+ 
 })
 /** Componente que representa un miembro de la empresa */
 export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
@@ -135,11 +135,9 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.miembroEmpresaForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.miembroEmpresaForm.enable();
     } else {
-      // No se requiere ninguna acción en el formulario
-    }
+      this.miembroEmpresaForm.enable();
+    } 
   }
 
   /**

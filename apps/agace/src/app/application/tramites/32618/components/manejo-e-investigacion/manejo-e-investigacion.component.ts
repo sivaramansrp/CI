@@ -16,7 +16,7 @@ import { Tramite32618Query } from '../../estados/tramite32618query';
     ReactiveFormsModule,
     FormasDinamicasComponent],
   templateUrl: './manejo-e-investigacion.component.html',
-  styleUrl: './manejo-e-investigacion.component.scss',
+ 
 })
 export class ManejoEInvestigacionComponent implements OnInit, OnDestroy, AfterViewInit {
     /** Referencia a la plantilla personalizada customTemplate1 utilizada en el componente. */

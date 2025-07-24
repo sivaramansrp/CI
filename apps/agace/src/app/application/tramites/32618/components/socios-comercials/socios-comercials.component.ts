@@ -27,7 +27,7 @@ import { CRITERIO_DE_SELECCION, REQUERIMIENTOS_EN_SEGURIDAD, REVISIONS_OF_COMMER
     TituloComponent
   ],
   templateUrl: './socios-comercials.component.html',
-  styleUrl: './socios-comercials.component.scss',
+ 
 })
 
 export class SociosComercialsComponent implements OnInit, OnDestroy {

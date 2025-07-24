@@ -43,7 +43,7 @@ import { takeUntil } from 'rxjs';
     TituloComponent,
   ],
   templateUrl: './seccion-subcontratados.component.html',
-  styleUrl: './seccion-subcontratados.component.scss',
+ 
 })
 /** Selector del componente, utilizado para integrarlo en el HTML
  *  Indica que este componente es independiente (standalone) y no depende de un módulo Angular específico
@@ -74,17 +74,18 @@ export class SeccionSubcontratadosComponent implements OnInit, OnDestroy {
 
   constructor(
     /** Servicio para crear formularios reactivos */
-    public fb: FormBuilder,
+    private fb: FormBuilder,
 
     /** Servicio para gestionar las solicitudes */
-    public solicitudService: SolicitudeService,
+    private solicitudService: SolicitudeService,
 
-    /** Store para gestionar el estado de la solicitud 32605 */
-    public solicitudStore: SolicitudStore,
+    /** Store para gestionar el estado de la solicitud 32618 */
+    private solicitudStore: SolicitudStore,
 
-    /** Query para obtener datos del store de solicitud 32605 */
-    public SolicitudQuery: SolicitudQuery,
-    public consultaioQuery: ConsultaioQuery
+    /** Query para obtener datos del store de solicitud 32618 */
+    private SolicitudQuery: SolicitudQuery,
+    /** Servicio para consultar el estado de la consulta */
+    private consultaioQuery: ConsultaioQuery
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -130,11 +131,9 @@ export class SeccionSubcontratadosComponent implements OnInit, OnDestroy {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.subcontratadosForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.subcontratadosForm.enable();
     } else {
-      // No se requiere ninguna acción en el formulario
-    }
+      this.subcontratadosForm.enable();
+    } 
   }
 
   /**

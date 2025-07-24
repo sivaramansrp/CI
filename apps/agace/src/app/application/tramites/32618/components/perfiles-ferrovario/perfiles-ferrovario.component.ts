@@ -29,7 +29,7 @@ import { Tramite32618Store } from '../../estados/tramite32618.store';
     SeccionDinamicaComponent
   ],
   templateUrl: './perfiles-ferrovario.component.html',
-  styleUrl: './perfiles-ferrovario.component.scss',
+  
 })
 
 export class PerfilesFerrovarioComponent implements OnInit, AfterViewInit, OnDestroy {

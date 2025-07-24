@@ -27,7 +27,7 @@ import { Tramite32618Query } from '../../estados/tramite32618query';
     FormasDinamicasComponent,
   ],
   templateUrl: './seguridad-de-los-equipos.component.html',
-  styleUrl: './seguridad-de-los-equipos.component.scss',
+  
 })
 
 export class SeguridadDeLosEquiposComponent implements AfterViewInit, OnInit, OnDestroy {

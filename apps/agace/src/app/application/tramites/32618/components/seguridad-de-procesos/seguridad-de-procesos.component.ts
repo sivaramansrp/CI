@@ -27,7 +27,7 @@ import { ENTREGA_Y_RECEPCION, PROCEDIMIENTO_DE_SEGUIMIENTO, PROCESAMIENTO_DE_INF
     TituloComponent
   ],
   templateUrl: './seguridad-de-procesos.component.html',
-  styleUrls: ['./seguridad-de-procesos.component.scss'],
+
 })
 
 export class SeguridadDeProcesosComponent implements AfterViewInit, OnInit, OnDestroy {

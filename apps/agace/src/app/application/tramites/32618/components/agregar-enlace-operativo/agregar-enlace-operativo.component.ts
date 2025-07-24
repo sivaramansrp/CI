@@ -112,11 +112,9 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.agregarEnlaceOperativoForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.agregarEnlaceOperativoForm.enable();
     } else {
-      // No se requiere ninguna acción en el formulario
-    }
+      this.agregarEnlaceOperativoForm.enable();
+    } 
   }
 
   /**

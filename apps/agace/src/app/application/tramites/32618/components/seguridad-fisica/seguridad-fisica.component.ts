@@ -27,7 +27,7 @@ import { Tramite32618Store } from '../../estados/tramite32618.store';
     TituloComponent
   ],
   templateUrl: './seguridad-fisica.component.html',
-  styleUrls: ['./seguridad-fisica.component.scss'],
+  
 })
 
 export class SeguridadFisicaComponent implements AfterViewInit, OnInit, OnDestroy {

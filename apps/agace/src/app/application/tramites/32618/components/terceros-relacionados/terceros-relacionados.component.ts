@@ -99,7 +99,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
 
   /** Estado de la solicitud actual */
-  SolicitudState: SolicitudState = {} as SolicitudState;
+  solicitudState: SolicitudState = {} as SolicitudState;
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -117,10 +117,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    public solicitudService: SolicitudeService,
-    public SolicitudStore: SolicitudStore,
-    public SolicitudQuery: SolicitudQuery,
-    public consultaioQuery: ConsultaioQuery
+    private solicitudService: SolicitudeService,
+    private SolicitudStore: SolicitudStore,
+    private SolicitudQuery: SolicitudQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -169,11 +169,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.tercerosRelacionadosForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.tercerosRelacionadosForm.enable();
     } else {
-      // No se requiere ninguna acción en el formulario
-    }
+      this.tercerosRelacionadosForm.enable();
+    } 
   }
 
   /**
@@ -184,19 +182,19 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   inicializarFormulario(): void {
     this.tercerosRelacionadosForm = this.fb.group({
-      idPersonaSolicitud: [this.SolicitudState.idPersonaSolicitud],
-      rfcTercero: [this.SolicitudState.rfcTercero, [Validators.required]],
-      rfc: [{ value: this.SolicitudState.rfc, disabled: true }],
-      nombre: [{ value: this.SolicitudState.nombre, disabled: true }],
+      idPersonaSolicitud: [this.solicitudState.idPersonaSolicitud],
+      rfcTercero: [this.solicitudState.rfcTercero, [Validators.required]],
+      rfc: [{ value: this.solicitudState.rfc, disabled: true }],
+      nombre: [{ value: this.solicitudState.nombre, disabled: true }],
       apellidoPaterno: [
-        { value: this.SolicitudState.apellidoPaterno, disabled: true },
+        { value: this.solicitudState.apellidoPaterno, disabled: true },
       ],
       apellidoMaterno: [
-        { value: this.SolicitudState.apellidoMaterno, disabled: true },
+        { value: this.solicitudState.apellidoMaterno, disabled: true },
       ],
-      telefono: [this.SolicitudState.telefono, [Validators.required]],
+      telefono: [this.solicitudState.telefono, [Validators.required]],
       correoElectronico: [
-        this.SolicitudState.correoElectronico,
+        this.solicitudState.correoElectronico,
         [Validators.required, Validators.email],
       ],
     });
@@ -205,19 +203,19 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         map((respuesta: SolicitudState) => {
-          this.SolicitudState = respuesta;
+          this.solicitudState = respuesta;
           this.tercerosRelacionadosForm.patchValue({
-            idPersonaSolicitud: this.SolicitudState.idPersonaSolicitud,
-            rfcTercero: this.SolicitudState.rfcTercero,
-            rfc: this.SolicitudState.rfc,
-            nombre: this.SolicitudState.nombre,
-            apellidoPaterno: this.SolicitudState.apellidoPaterno,
-            apellidoMaterno: this.SolicitudState.apellidoMaterno,
-            telefono: this.SolicitudState.telefono,
-            correoElectronico: this.SolicitudState.correoElectronico,
+            idPersonaSolicitud: this.solicitudState.idPersonaSolicitud,
+            rfcTercero: this.solicitudState.rfcTercero,
+            rfc: this.solicitudState.rfc,
+            nombre: this.solicitudState.nombre,
+            apellidoPaterno: this.solicitudState.apellidoPaterno,
+            apellidoMaterno: this.solicitudState.apellidoMaterno,
+            telefono: this.solicitudState.telefono,
+            correoElectronico: this.solicitudState.correoElectronico,
           });
           this.enlaceOperativosLista =
-            this.SolicitudState.enlaceOperativosLista;
+            this.solicitudState.enlaceOperativosLista;
         })
       )
       .subscribe();

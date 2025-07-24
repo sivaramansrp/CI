@@ -25,7 +25,7 @@ import { ADMINISTACION_DE_PERSONAL, PROCEDIMIENTO_BAJA_PERSONAL, VERIFICACION_DE
     FormasDinamicasComponent
   ],
   templateUrl: './seguridad-del-personal.component.html',
-  styleUrls: ['./seguridad-del-personal.component.scss'],
+ 
 })
 
 export class SeguridadDelPersonalComponent implements AfterViewInit, OnInit, OnDestroy {

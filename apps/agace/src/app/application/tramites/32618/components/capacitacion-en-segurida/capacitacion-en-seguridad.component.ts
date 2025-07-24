@@ -18,12 +18,13 @@ import { Tramite32618Query } from '../../estados/tramite32618query';
       FormasDinamicasComponent,
     ],
   templateUrl: './capacitacion-en-seguridad.component.html',
-  styleUrl: './capacitacion-en-seguridad.component.scss',
+ 
 })
 export class CapacitacionEnSeguridadComponent implements OnInit, OnDestroy {
   
   /** Arreglo con la configuración dinámica de los campos para el formulario de capacitación en seguridad. */
   public capacitacionEnSeguridadFormData = CAPACITACION_EN_SEGURIDAD;
+  /** Arreglo con la configuración dinámica de los campos para el formulario de concientización en seguridad. */
 public capacitacionEnCaoncientizacionFormData = CAPACITACION_EN_SEGURIDAD_CAONCIENTIZACION;
   /** Inicializa el formulario principal y el grupo anidado para la capacitación en seguridad.*/
   public capacitacionEnSeguridadForm: FormGroup = new FormGroup({
@@ -51,7 +52,7 @@ get capacitacionEnCaoncientizacionFormGroup(): FormGroup {
   /** Constructor que inyecta los servicios necesarios para gestionar el estado y las consultas del trámite 32613. */
   constructor(
       private tramite32618Store: Tramite32618Store,
-       private Tramite32618Query: Tramite32618Query,
+       private tramite32618Query: Tramite32618Query,
     private consultaQuery: ConsultaioQuery,
   ) {
     //
@@ -68,7 +69,7 @@ get capacitacionEnCaoncientizacionFormGroup(): FormGroup {
       )
       .subscribe();
 
-    this.Tramite32618Query.selectRubroTransporteFerrovario$
+    this.tramite32618Query.selectRubroTransporteFerrovario$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {

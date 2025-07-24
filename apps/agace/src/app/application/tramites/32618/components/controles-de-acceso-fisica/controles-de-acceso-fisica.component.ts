@@ -26,7 +26,7 @@ import { Tramite32618Store } from '../../estados/tramite32618.store';
     InputRadioComponent
   ],
   templateUrl: './controles-de-acceso-fisica.component.html',
-  styleUrls: ['./controles-de-acceso-fisica.component.scss'],
+ 
 })
 
 export class ControlesDeAccesoFisicaComponent implements AfterViewInit, OnInit, OnDestroy {

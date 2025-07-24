@@ -1,7 +1,7 @@
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import {ConsultaioQuery} from '@ng-mf/data-access-user';
 import {map} from 'rxjs'; 
-// eslint-disable-next-line sort-imports
+
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
@@ -21,7 +21,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitudCatologoSelectLista } from '../../models/solicitud.model';
 import { SolicitudQuery } from '../../estados/solicitud.query';
 import { SolicitudRadioLista } from '../../models/solicitud.model';
-// eslint-disable-next-line sort-imports
+
 import { SolicitudState, SolicitudStore } from '../../estados/solicitud.store';
 import { SolicitudeService } from '../../services/solicitude.service';
 import { Subject } from 'rxjs';
@@ -45,7 +45,7 @@ import { takeUntil } from 'rxjs';
     InputRadioComponent,
   ],
   templateUrl: './instalaciones-principales.component.html',
-  styleUrl: './instalaciones-principales.component.scss',
+  
 })
 /**
  * Componente para manejar las instalaciones principales.
@@ -98,11 +98,11 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
    * Se inicializan los servicios necesarios para obtener las opciones del formulario.
    */
   constructor(
-    public fb: FormBuilder,
-    public solicitudService: SolicitudeService,
-    public solicitudStore: SolicitudStore,
-    public SolicitudQuery: SolicitudQuery,
-    public consultaioQuery: ConsultaioQuery
+    private fb: FormBuilder,
+    private solicitudService: SolicitudeService,
+    private solicitudStore: SolicitudStore,
+    private SolicitudQuery: SolicitudQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -151,11 +151,9 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.instalacionesPrincipalesForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.instalacionesPrincipalesForm.enable();
     } else {
-      // No se requiere ninguna acción en el formulario
-    }
+      this.instalacionesPrincipalesForm.enable();
+    } 
   }
 
   /**

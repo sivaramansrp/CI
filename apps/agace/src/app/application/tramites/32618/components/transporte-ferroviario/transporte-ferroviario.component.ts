@@ -24,7 +24,7 @@ import { Tramite32618Query } from '../../estados/tramite32618query';
     PagoDeDerechosComponent,
     RowTypeFormInputComponent],
   templateUrl: './transporte-ferroviario.component.html',
-  styleUrl: './transporte-ferroviario.component.scss',
+ 
 })
 export class TransporteFerroviarioComponent implements OnInit, AfterViewInit, OnDestroy {
     /** Referencia a la plantilla personalizada customTemplate1 utilizada en el componente. */

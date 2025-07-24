@@ -18,7 +18,7 @@ import { Tramite32618Query } from '../../estados/tramite32618query';
       FormasDinamicasComponent,
       TituloComponent],
   templateUrl: './planeacion-de-la-seguridad.component.html',
-  styleUrl: './planeacion-de-la-seguridad.component.scss',
+  
 })
 export class PlaneacionDeLaSeguridadComponent implements OnInit, OnDestroy ,AfterViewInit {
   

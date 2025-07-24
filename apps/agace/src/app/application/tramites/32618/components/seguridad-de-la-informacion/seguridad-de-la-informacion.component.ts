@@ -33,7 +33,7 @@ import { Tramite32618Query } from '../../estados/tramite32618query';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent],
   templateUrl: './seguridad-de-la-informacion.component.html',
-  styleUrl: './seguridad-de-la-informacion.component.scss',
+ 
 })
 export class SeguridadDeLaInformacionComponent
   implements AfterViewInit, OnInit, OnDestroy

@@ -8,7 +8,7 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { DOMICILIOS_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
-// eslint-disable-next-line sort-imports
+
 import { Domicilios, SolicitudCatologoSelectLista } from '../../models/solicitud.model';
 import { ElementRef } from '@angular/core';
 import { FormBuilder } from '@angular/forms';

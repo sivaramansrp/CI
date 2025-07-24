@@ -16,7 +16,7 @@ import { PAGO_DE_DERECHOS } from '../../constants/pago-de-derechos.enum';
     FormasDinamicasComponent
   ],
   templateUrl: './pago-de-derechos.component.html',
-  styleUrl: './pago-de-derechos.component.scss',
+  
 })
 
 export class PagoDeDerechosComponent {
