@@ -30,7 +30,7 @@ export class CtpatComponent implements OnDestroy, OnInit {
   /** Estado de consulta actual. */
   consultaDatos!: ConsultaioState;
   /** Etiquetas para los campos del formulario. */
-  labelEnum = CtpatLabelEnum;
+  enumEtiquetas = CtpatLabelEnum;
 
   /**
    * Constructor del componente CtpatComponent.

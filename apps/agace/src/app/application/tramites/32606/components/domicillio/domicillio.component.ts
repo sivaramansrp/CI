@@ -71,7 +71,7 @@ export class DomicillioComponent implements OnInit, OnDestroy {
   /** Estado de consulta actual. */
   consultaDatos!: ConsultaioState;
   /** Etiquetas para los campos del formulario. */
-  labelEnum = DomicillioLabelEnum;
+  enumEtiquetas = DomicillioLabelEnum;
 
    /**
    * Constructor del componente DomicillioComponent.

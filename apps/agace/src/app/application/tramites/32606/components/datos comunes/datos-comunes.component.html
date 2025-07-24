@@ -1,6 +1,6 @@
 <form [formGroup]="datosComunesForm">
   <div class="col-md-12">
-    <label class="form-label text-start">{{ labelEnum.SECTOR_PRODUCTIVO_SERVICIO }}</label>
+    <label class="form-label text-start">{{ enumEtiquetas.SECTOR_PRODUCTIVO_SERVICIO }}</label>
   </div>
   <div class="col-md-6">
     <app-catalogo-select [catalogo]="sectorProductivo.catalogos" [label]="'Sector Productivo'" formControlName="sectorProductivo" (change)="setValoresStore( datosComunesForm, 'sectorProductivo', 'setSectorProductivo' )"></app-catalogo-select>
@@ -11,7 +11,7 @@
   <div class="col-md-12 mt-5">
     <div class="alert alert-info">
       <div class="form-check">
-        <b> Nota:</b>{{ labelEnum.NOTA_SECTOR }}
+        <b> Nota:</b>{{ enumEtiquetas.NOTA_SECTOR }}
       </div>
     </div>
   </div>
@@ -20,21 +20,21 @@
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{ labelEnum.OBLIGACIONES_FISCALES }}</label>
+      <span class="required-asterisk">*</span> {{ enumEtiquetas.OBLIGACIONES_FISCALES }}</label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio01" (change)="setValoresStore( datosComunesForm, 'tipoRadio01', 'setTipoRadio01' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{ labelEnum.AUTORIZA_OPINION_SAT }}</label>
+      <span class="required-asterisk">*</span> {{ enumEtiquetas.AUTORIZA_OPINION_SAT }}</label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio02" (change)="setValoresStore( datosComunesForm, 'tipoRadio02', 'setTipoRadio02' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{ labelEnum.EMPLEADOS_PROPIOS }} </label>
+      <span class="required-asterisk">*</span> {{ enumEtiquetas.EMPLEADOS_PROPIOS }} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio03" (change)="setValoresStore( datosComunesForm, 'tipoRadio03', 'setTipoRadio03' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4" *ngIf="datosComunesForm.get('tipoRadio03')?.value === 'si'">
-    <label class="form-label text-start">{{ labelEnum.NUMERO_EMPLEADOS }}</label>
+    <label class="form-label text-start">{{ enumEtiquetas.NUMERO_EMPLEADOS }}</label>
     <div class="col-md-3"></div>
     <div class="col-md-3">
       <label class="form-label">Número de empleados</label>
@@ -50,17 +50,17 @@
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{ labelEnum.ISR_TRABAJADORES }} </label>
+      <span class="required-asterisk">*</span> {{ enumEtiquetas.ISR_TRABAJADORES }} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio04" (change)="setValoresStore( datosComunesForm, 'tipoRadio04', 'setTipoRadio04' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{ labelEnum.CUOTAS_OBRERO_PATRONALES }} </label>
+      <span class="required-asterisk">*</span> {{ enumEtiquetas.CUOTAS_OBRERO_PATRONALES }} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio05" (change)="setValoresStore( datosComunesForm, 'tipoRadio05', 'setTipoRadio05' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{ labelEnum.SUBCONTRATACION }} </label>
+      <span class="required-asterisk">*</span> {{ enumEtiquetas.SUBCONTRATACION }} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio06" (change)="setValoresStore( datosComunesForm, 'tipoRadio06', 'setTipoRadio06' )"></app-input-radio>
   </div>
   <div class="col-md-12">
@@ -68,29 +68,29 @@
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{ labelEnum.LISTADO_ART_69 }} </label>
+      <span class="required-asterisk">*</span> {{ enumEtiquetas.LISTADO_ART_69 }} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" [selectedValue]="valorSeleccionado" (valueChange)="cambiarRadio($event)" formControlName="tipoRadio07" (change)="setValoresStore( datosComunesForm, 'tipoRadio07', 'setTipoRadio07' )"></app-input-radio>
   </div> @if (nuevaNotificacion) { <section>
     <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
   </section> } <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{ labelEnum.LISTADO_ART_69B }} </label>
+      <span class="required-asterisk">*</span> {{ enumEtiquetas.LISTADO_ART_69B }} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio08" (change)="setValoresStore( datosComunesForm, 'tipoRadio08', 'setTipoRadio08' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{ labelEnum.LISTADO_ART_69B_BIS }} </label>
+      <span class="required-asterisk">*</span> {{ enumEtiquetas.LISTADO_ART_69B_BIS }} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio09" (change)="setValoresStore( datosComunesForm, 'tipoRadio09', 'setTipoRadio09' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{ labelEnum.SELLOS_VIGENTES }} </label>
+      <span class="required-asterisk">*</span> {{ enumEtiquetas.SELLOS_VIGENTES }} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" [selectedValue]="valorSeleccionado" (valueChange)="cambiarRadio2($event)" formControlName="tipoRadio10" (change)="setValoresStore( datosComunesForm, 'tipoRadio10', 'setTipoRadio10' )"></app-input-radio>
   </div> @if (nuevaNotificacion) { <section>
     <lib-notificaciones [notificacionInput]="nuevaNotificacion2" (confirmacionModal)="eliminarPedimento2($event)"></lib-notificaciones>
   </section> } <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{ labelEnum.SUPUESTOS_17H_BIS }} </label>
+      <span class="required-asterisk">*</span> {{ enumEtiquetas.SUPUESTOS_17H_BIS }} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" [selectedValue]="valorSeleccionado" (valueChange)="cambiarRadio($event)" formControlName="tipoRadio11" (change)="setValoresStore( datosComunesForm, 'tipoRadio11', 'setTipoRadio11' )"></app-input-radio>
   </div> @if (nuevaNotificacion) { <section>
     <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>

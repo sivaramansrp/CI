@@ -39,7 +39,7 @@ export class TercerosRelacinadosComponent implements OnInit, OnDestroy {
   /** Estado de consulta actual. */
   consultaDatos!: ConsultaioState;
    /** Etiquetas para los campos del formulario. */
-    labelEnum = TercerosLabelEnum;
+    enumEtiquetas = TercerosLabelEnum;
 
     /**
    * Constructor del componente TercerosRelacinadosComponent.

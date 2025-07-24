@@ -4,7 +4,7 @@
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{ labelEnum.QUERELLA_SOCIOS }}</label>
+      <span class="required-asterisk">*</span> {{ enumEtiquetas.QUERELLA_SOCIOS }}</label>
     <app-input-radio [radioOptions]="radioOpcions08" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio18" (change)="setValoresStore( querellaForm, 'tipoRadio18', 'setTipoRadio18' )"></app-input-radio>
   </div>
   <div class="col-md-12">
@@ -12,21 +12,21 @@
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{ labelEnum.SISTEMA_CONTROL_INVENTARIOS }}</label>
+      <span class="required-asterisk">*</span> {{ enumEtiquetas.SISTEMA_CONTROL_INVENTARIOS }}</label>
     <app-input-radio [radioOptions]="radioOpcions08" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio19" (change)="setValoresStore( querellaForm, 'tipoRadio19', 'setTipoRadio19' )"></app-input-radio>
   </div>
   <div class="row mt-12">
     <div class="col-md-6">
-      <label class="form-label">{{ labelEnum.NOMBRE_SISTEMA }}</label>
+      <label class="form-label">{{ enumEtiquetas.NOMBRE_SISTEMA }}</label>
       <input class="form-control" type="text" formControlName="sistemaIdentificacion" (change)="setValoresStore( querellaForm, 'sistemaIdentificacion', 'setSistemaIdentificacion' )"/>
     </div>
     <div class="col-md-6">
-      <label class="form-label">{{ labelEnum.LUGAR_RADICACION }}</label>
+      <label class="form-label">{{ enumEtiquetas.LUGAR_RADICACION }}</label>
       <input class="form-control" type="text" formControlName="lugarRadicacion" (change)="setValoresStore( querellaForm, 'lugarRadicacion', 'setLugarRadicacion' )"/>
     </div>
   </div>
   <div class="col-md-12 mt-4 d-flex align-items-center">
-    <label class="form-label text-start me-2">{{ labelEnum.ANEXO24_CHECK }}</label>
+    <label class="form-label text-start me-2">{{ enumEtiquetas.ANEXO24_CHECK }}</label>
     <lib-input-check [id]="'sistemaControlInventarios'" [label]="''" [required]="false" formControlName="sistemaControlInventarios" (change)="setValoresStore( querellaForm, 'sistemaControlInventarios', 'setSistemaControlInventarios' )"></lib-input-check>
   </div>
   <div class="row mb-5">
@@ -49,12 +49,12 @@
   </div>
   <div class="col-md-12 mt-5">
     <div class="alert alert-info">
-      <div class="form-check"> {{ labelEnum.REPORTE_SALDOS_ALERTA }}</div>
+      <div class="form-check"> {{ enumEtiquetas.REPORTE_SALDOS_ALERTA }}</div>
     </div>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{ labelEnum.INGRESA_CONTABILIDAD }}</label>
+      <span class="required-asterisk">*</span> {{ enumEtiquetas.INGRESA_CONTABILIDAD }}</label>
     <app-input-radio [radioOptions]="radioOpcions08" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio20" (change)="setValoresStore( querellaForm, 'tipoRadio20', 'setTipoRadio20' )"></app-input-radio>
   </div>
 </form>

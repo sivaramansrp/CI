@@ -51,7 +51,7 @@ export class ControladoraComponent implements OnInit, OnDestroy {
   /** Estado de consulta actual. */
   consultaDatos!: ConsultaioState;
   /** Etiquetas para los campos del formulario. */
-  labelEnum = ControladoraLabelEnum;
+  enumEtiquetas = ControladoraLabelEnum;
 
   /** Constructor que inicializa servicios y suscripciones. */
   constructor(private economico: EconomicoService,

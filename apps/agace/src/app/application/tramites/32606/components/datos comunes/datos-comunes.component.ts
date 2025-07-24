@@ -53,7 +53,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   /** Estado de consulta actual. */
   consultaDatos!: ConsultaioState;
   /** Etiquetas para los campos del formulario. */
-  labelEnum = DatosLabelEnum;
+  enumEtiquetas = DatosLabelEnum;
 
     /**
    * Constructor del componente DatosComunesComponent.

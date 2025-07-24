@@ -49,7 +49,7 @@ export class QuerellaComponent implements OnInit, OnDestroy {
   /** Estado de consulta actual. */
   consultaDatos!: ConsultaioState;
    /** Etiquetas para los campos del formulario. */
-    labelEnum = QuerellaLabelEnum;
+    enumEtiquetas = QuerellaLabelEnum;
 
  /**
    * Constructor del componente QuerellaComponent.

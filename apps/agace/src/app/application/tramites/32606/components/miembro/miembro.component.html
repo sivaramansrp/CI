@@ -4,7 +4,7 @@
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{ labelEnum.OBLIGACIONES_FISCALES }} </label>
+      <span class="required-asterisk">*</span> {{ enumEtiquetas.OBLIGACIONES_FISCALES }} </label>
     <app-input-radio [radioOptions]="radioOpcions08" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio14" (change)="setValoresStore( miembroForm, 'tipoRadio14', 'setTipoRadio14' )"></app-input-radio>
   </div>
   <div class="col-md-12">
@@ -61,17 +61,17 @@
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{ labelEnum.VINCULACION_CANCELACION }}</label>
+      <span class="required-asterisk">*</span> {{ enumEtiquetas.VINCULACION_CANCELACION }}</label>
     <app-input-radio [radioOptions]="radioOpcions08" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio15" (change)="setValoresStore( miembroForm, 'tipoRadio15', 'setTipoRadio15' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{ labelEnum.SOLICITUD_INSPECCION }}</label>
+      <span class="required-asterisk">*</span> {{ enumEtiquetas.SOLICITUD_INSPECCION }}</label>
     <app-input-radio [radioOptions]="radioOpcions08" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio16" (change)="setValoresStore( miembroForm, 'tipoRadio16', 'setTipoRadio16' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{ labelEnum.PROTESTA_VERDAD }}</label>
+      <span class="required-asterisk">*</span> {{ enumEtiquetas.PROTESTA_VERDAD }}</label>
     <app-input-radio [radioOptions]="radioOpcions08" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio17" (change)="setValoresStore( miembroForm, 'tipoRadio17', 'setTipoRadio17' )"></app-input-radio>
   </div>
 </form>

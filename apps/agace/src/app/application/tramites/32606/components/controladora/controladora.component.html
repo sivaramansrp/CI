@@ -1,10 +1,10 @@
 <form [formGroup]="controladoraForm">
   <div class="col-md-12">
-    <label class="form-label text-start">{{labelEnum.CONFIRME}}</label>
+    <label class="form-label text-start">{{enumEtiquetas.CONFIRME}}</label>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{labelEnum.OPERACIONES_COMERCIO_EXTERIOR}}</label>
+      <span class="required-asterisk">*</span> {{enumEtiquetas.OPERACIONES_COMERCIO_EXTERIOR}}</label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio21" (change)=" setValoresStore( controladoraForm, 'tipoRadio21', 'setTipoRadio21' ) "></app-input-radio>
   </div>
   <div class="col-md-6">
@@ -12,7 +12,7 @@
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{labelEnum.PAGO_DERECHO}}</label>
+      <span class="required-asterisk">*</span> {{enumEtiquetas.PAGO_DERECHO}}</label>
   </div>
   <div class="col-md-4 mt-4">
     <input-fecha [setFecha]="controladoraForm.get('fechaPago')?.value" [datos]="fechaDePago" (valorCambiado)="cambioFechaPago($event)"></input-fecha>
@@ -29,10 +29,11 @@
     <label class="form-label text-start" for="llaveOEA">Llave de pago :</label>
     <input class="form-control" formControlName="llavePago" type="text" id="llaveOEA" name="llaveOEA" (change)=" setValoresStore( controladoraForm, 'llavePago', 'setLlavePago' ) "/>
   </div>
+  <!-- Transportistas -->
   <div class="col-md-12 mt-5">
     <div class="alert alert-info">
       <span class="required-asterisk">*</span>
-      <b>{{labelEnum.TRANSPORTISTAS}}</b>
+      <b>{{enumEtiquetas.TRANSPORTISTAS}}</b>
     </div>
   </div>
   <div class="col-md-12">
@@ -50,34 +51,34 @@
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{labelEnum.CUENTA_PROGRAMA_IMMEX}} </label>
+      <span class="required-asterisk">*</span> {{enumEtiquetas.CUENTA_PROGRAMA_IMMEX}} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio22" (change)=" setValoresStore( controladoraForm, 'tipoRadio22', 'setTipoRadio22' ) "></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{labelEnum.CUENTA_REGISTRO_IVA_IEPS}} </label>
+      <span class="required-asterisk">*</span> {{enumEtiquetas.CUENTA_REGISTRO_IVA_IEPS}} </label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio23" (change)=" setValoresStore( controladoraForm, 'tipoRadio23', 'setTipoRadio23' ) "></app-input-radio>
   </div>
   <div class="col-md-4 mt-4">
-    <label class="form-label text-start" for="modalidad">{{labelEnum.MODALIDAD_IVA_IEPS}}</label>
+    <label class="form-label text-start" for="modalidad">{{enumEtiquetas.MODALIDAD_IVA_IEPS}}</label>
     <input class="form-control" formControlName="modalidad" type="text" id="modalidad" name="modalidad" (change)=" setValoresStore( controladoraForm, 'modalidad', 'setModalidad' ) "/>
   </div>
   <div class="col-md-4 mt-4">
-    <label class="form-label text-start" for="fechaRegistro">{{labelEnum.FECHA_REGISTRO}}</label>
+    <label class="form-label text-start" for="fechaRegistro">{{enumEtiquetas.FECHA_REGISTRO}}</label>
     <input class="form-control" formControlName="fechaRegistro" type="text" id="fechaRegistro" name="fechaRegistro" (change)=" setValoresStore( controladoraForm, 'fechaRegistro', 'setFechaRegistro' ) "/>
   </div>
   <div class="col-md-4 mt-4">
-    <label class="form-label text-start" for="numeroAutorizacion">{{labelEnum.NUMERO_AUTORIZACION}}</label>
+    <label class="form-label text-start" for="numeroAutorizacion">{{enumEtiquetas.NUMERO_AUTORIZACION}}</label>
     <input class="form-control" formControlName="numeroAutorizacion" type="text" id="numeroAutorizacion" name="numeroAutorizacion" (change)=" setValoresStore( controladoraForm, 'numeroAutorizacion', 'setNumeroAutorizacion' ) "/>
   </div>
   <div class="col-md-12 mt-5">
     <div class="alert alert-info">
-      <b>{{labelEnum.ANEXAR_DOCUMENTO}}</b>
+      <b>{{enumEtiquetas.ANEXAR_DOCUMENTO}}</b>
     </div>
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{labelEnum.RELACION_SOCIEDADES_CONTROLADAS}} </label>
+      <span class="required-asterisk">*</span> {{enumEtiquetas.RELACION_SOCIEDADES_CONTROLADAS}} </label>
   </div>
   <div class="col-md-12">
     <label>Empresas Controladas</label>
@@ -94,30 +95,32 @@
   </div>
   <div class="col-md-12 mt-5">
     <div class="alert alert-info">
-      <b> {{labelEnum.ANEXAR_DOCUMENTO_2}}</b>
+      <b> {{enumEtiquetas.ANEXAR_DOCUMENTO_2}}</b>
     </div>
   </div>
+  <!-- Reconocimiento Mutuo -->
   <div class="col-md-12">
     <ng-titulo titulo="Reconocimiento Mutuo" />
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label text-start">
-      <span class="required-asterisk">*</span> {{labelEnum.RECONOCIMIENTO_MUTUO}} </label>
+      <span class="required-asterisk">*</span> {{enumEtiquetas.RECONOCIMIENTO_MUTUO}} </label>
   </div>
   <div class="col-md-12 mt-4">
-    <label class="form-label text-start">{{labelEnum.ESTRATEGIA}}</label>
+    <label class="form-label text-start">{{enumEtiquetas.ESTRATEGIA}}</label>
   </div>
   <div class="col-md-12 mt-4">
-    <label class="form-label text-start">{{labelEnum.AUTORIZACION}}</label>
+    <label class="form-label text-start">{{enumEtiquetas.AUTORIZACION}}</label>
   </div>
   <div class="col-md-12 mt-4">
     <app-input-radio [radioOptions]="radioAutorizo" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="radioAutorizo" (change)=" setValoresStore( controladoraForm, 'radioAutorizo', 'setRadioAutorizo' ) "></app-input-radio>
   </div>
+  <!-- Clasificación de la Información -->
   <div class="col-md-12">
     <ng-titulo titulo="Clasificación de la Información" />
   </div>
   <div class="col-md-12 mt-4">
-    <label class="form-label text-start">{{labelEnum.CLASIFICACION_INFORMACION}}</label>
+    <label class="form-label text-start">{{enumEtiquetas.CLASIFICACION_INFORMACION}}</label>
     <app-input-radio [radioOptions]="radioClasificacion" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="radioClasificacion" (change)=" setValoresStore( controladoraForm, 'radioClasificacion', 'setRadioClasificacion' ) "></app-input-radio>
   </div>
 </form>

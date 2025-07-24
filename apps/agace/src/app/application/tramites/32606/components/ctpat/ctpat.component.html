@@ -1,30 +1,30 @@
 <form [formGroup]="ctpatForm">
   <div class="col-md-12 mt-4">
-    <label class="form-label text-start">{{ labelEnum.REGLA_ACREDITAR }}</label>
+    <label class="form-label text-start">{{ enumEtiquetas.REGLA_ACREDITAR }}</label>
   </div>
   <div class="col-md-12 mt-5">
     <div class="alert alert-info">
       <div class="row mt-3">
-        <b>{{ labelEnum.INCLUIR_ANEXOS }}</b>
+        <b>{{ enumEtiquetas.INCLUIR_ANEXOS }}</b>
       </div>
       <div class="row mt-3">
-        <b>{{ labelEnum.REPORTE_VALIDACION }}</b>
+        <b>{{ enumEtiquetas.REPORTE_VALIDACION }}</b>
       </div>
       <div class="row mt-3">
-        <b>{{ labelEnum.CARTA_PRESENTACION }}</b>
+        <b>{{ enumEtiquetas.CARTA_PRESENTACION }}</b>
       </div>
     </div>
   </div>
   <div class="col-md-12 mt-4">
-    <label class="form-label text-start">{{ labelEnum.AUTORIZA_COMPARTIR }}</label>
+    <label class="form-label text-start">{{ enumEtiquetas.AUTORIZA_COMPARTIR }}</label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio24" (change)=" setValoresStore( ctpatForm, 'tipoRadio24', 'setTipoRadio24' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
-    <label class="form-label text-start">{{ labelEnum.CUMPLE_ESTANDARES }}</label>
+    <label class="form-label text-start">{{ enumEtiquetas.CUMPLE_ESTANDARES }}</label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio25" (change)=" setValoresStore( ctpatForm, 'tipoRadio25', 'setTipoRadio25' )"></app-input-radio>
   </div>
   <div class="col-md-12 mt-4">
-    <label class="form-label text-start">{{ labelEnum.SUSPENSION_CANCELACION }}</label>
+    <label class="form-label text-start">{{ enumEtiquetas.SUSPENSION_CANCELACION }}</label>
     <app-input-radio [radioOptions]="radioOpcions01" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'" formControlName="tipoRadio26" (change)=" setValoresStore( ctpatForm, 'tipoRadio26', 'setTipoRadio26' )"></app-input-radio>
   </div>
 </form>

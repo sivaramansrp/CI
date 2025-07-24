@@ -46,7 +46,7 @@ export class MiembroComponent implements OnInit, OnDestroy {
   /** Estado de consulta actual. */
   consultaDatos!: ConsultaioState;
   /** Etiquetas para los campos del formulario. */
-  labelEnum = MiembroLabelEnum;
+  enumEtiquetas = MiembroLabelEnum;
 
   /**
  * Constructor del componente MiembroComponent.
