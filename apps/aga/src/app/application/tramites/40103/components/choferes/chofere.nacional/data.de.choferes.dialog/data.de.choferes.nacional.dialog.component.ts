@@ -360,7 +360,6 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    */
   async buscarChoferNacional(curp: string): Promise<void> {
     if (!curp) {
-      //this.showNotification = true;
       this.alertaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: CategoriaMensaje.INFORMACION,
@@ -371,6 +370,7 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
+      this.showNotification = true;
       return;
     }
 
@@ -389,6 +389,7 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
             txtBtnAceptar: 'Aceptar',
             txtBtnCancelar: '',
           };
+          this.showNotification = true;
           return;
         }
         this.updateListsData(response[0]);
@@ -462,6 +463,7 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
+      this.showNotification = true;
     }
   }
 

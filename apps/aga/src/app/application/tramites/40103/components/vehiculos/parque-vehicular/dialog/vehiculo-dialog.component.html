@@ -8,38 +8,27 @@
             <div class="container-fluid">
                 <form [formGroup]="vehiculoForm">
                     <div class="row">
-                        <div class="col-md-12">
-                            <h3>Datos de vehículo</h3>
-                            <hr class="red" />
-                        </div>
-                    </div>
-
-                    <div *ngIf="!vehiculo.numero || !vehiculo.placa || !vehiculo.marca || !vehiculo.modelo || !vehiculo.color"
-                        class="alert alert-danger" role="alert">
-                        Por favor complete todos los campos obligatorios marcados con *
-                    </div>
-
-                    <div class="row">
                         <div class="col-md-4">
-                            <label for="numero" class="form-label">Número de identificación vehicular*:</label>
-                            <input id="numero" type="text" class="form-control" formControlName="numero"
-                                [readonly]="readonly" maxlength="20" />
-                            <div *ngIf="vehiculoForm.get('numero')?.invalid && (vehiculoForm.get('numero')?.dirty || vehiculoForm.get('numero')?.touched)"
-                                class="text-danger"><small>Este campo es obligatorio.</small></div>
+                            <label>Número de identificación vehicular*:</label>
+                            <input type="text" class="form-control" formControlName="numero" [required]="true"
+                                maxlength="20" />
+                            <div *ngIf="vehiculoForm.get('numero')?.invalid && (vehiculoForm.get('numero')?.dirty || vehiculoForm.get('numero')?.touched)" class="text-danger">
+                                <small *ngIf="vehiculoForm.get('numero')?.errors?.['required']">Este campo es obligatorio.</small>
+                                <small *ngIf="vehiculoForm.get('numero')?.errors?.['maxLength']">El número no puede tener más de 20 caracteres.</small>
+                            </div>
                         </div>
                         <div class="col-md-4">
-                            <app-catalogo-select [catalogo]="tipoDeVehiculoCatalogo" [label]="'Tipo de vehiculo'"
-                                [required]="true" id="tipoDeVehiculo"
-                                formControlName="tipoDeVehiculo"></app-catalogo-select>
-                            <div *ngIf="vehiculoForm.get('tipoDeVehiculo')?.invalid && vehiculoForm.get('tipoDeVehiculo')?.touched"
-                                class="text-danger"><small>Este campo es obligatorio.</small></div>
+                            <app-catalogo-select [catalogo]="tipoDeVehiculoCatalogo" [label]="'Tipo de vehiculo'" [required]="true" id="tipoDeVehiculo" formControlName="tipoDeVehiculo"></app-catalogo-select>
+                            <div *ngIf="vehiculoForm.get('tipoDeVehiculo')?.invalid && vehiculoForm.get('tipoDeVehiculo')?.touched" class="text-danger">
+                                <small *ngIf="vehiculoForm.get('tipoDeVehiculo')?.errors?.['required']">Este campo es obligatorio.</small>
+                            </div>
                         </div>
                         <div class="col-md-4">
-                            <label for="idDeVehiculo" class="form-label">ID de vehículo*:</label>
-                            <input id="idDeVehiculo" type="text" class="form-control" formControlName="idDeVehiculo"
-                                [readonly]="readonly" />
-                            <div *ngIf="vehiculoForm.get('idDeVehiculo')?.invalid && (vehiculoForm.get('idDeVehiculo')?.dirty || vehiculoForm.get('idDeVehiculo')?.touched)"
-                                class="text-danger"><small>Este campo es obligatorio.</small></div>
+                            <label>ID de vehículo*:</label>
+                            <input type="text" class="form-control" formControlName="idDeVehiculo" />
+                            <div *ngIf="vehiculoForm.get('idDeVehiculo')?.invalid && (vehiculoForm.get('idDeVehiculo')?.dirty || vehiculoForm.get('idDeVehiculo')?.touched)" class="text-danger">
+                                <small *ngIf="vehiculoForm.get('idDeVehiculo')?.errors?.['required']">Este campo es obligatorio.</small>
+                            </div>
                         </div>
                     </div>
 

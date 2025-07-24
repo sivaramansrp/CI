@@ -16,7 +16,7 @@
             </div>
         </div>
     </div>
-    @if(showUnidadDialog) {
+    <ng-container *ngIf="showUnidadDialog">
       <div class="modal-backdrop fade show"></div>
       <div class="modal d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
         <app-unidad-dialog
@@ -30,5 +30,5 @@
           (cancel)="showUnidadDialog = false">
         </app-unidad-dialog>
       </div>
-    }
+    </ng-container>
 </div>

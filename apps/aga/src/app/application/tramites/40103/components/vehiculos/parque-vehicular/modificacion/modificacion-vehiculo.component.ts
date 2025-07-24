@@ -32,6 +32,8 @@ export class ModificacionVehiculoComponent {
   onVehiculoDialogSave(updatedVehiculo: VehiculoTabla) {
     // Add new vehicle to the table (customize as needed)
     this.vehiculosParque.push(updatedVehiculo);
+    // Automatically select the last row so Eliminar is enabled
+    this.selectedVehiculoIndex = this.vehiculosParque.length - 1;
     this.showVehiculoDialog = false;
   }
 

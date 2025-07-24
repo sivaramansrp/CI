@@ -83,65 +83,29 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   ],
 })
 export class ChoferesComponent {
-  /**
-   * Constante que contiene las configuraciones de páginas para choferes.
-   * 
-   * Proporciona acceso a las definiciones de páginas y configuraciones
-   * relacionadas con la gestión de choferes en el sistema de transportistas terrestres.
-   *
-   * @constant {typeof CHOFERES_PAGE}
-   * @readonly
-   */
   CHOFERES_PAGE = CHOFERES_PAGE;
-
-  /**
-   * Constante que contiene los textos utilizados en la interfaz de choferes.
-   * 
-   * Incluye mensajes, etiquetas y textos descriptivos utilizados en los
-   * componentes de gestión de choferes para mantener consistencia en la interfaz.
-   *
-   * @constant {typeof TEXTOS}
-   * @readonly
-   */
   TEXTOS = TEXTOS;
-
-  /**
-   * Pestaña activa en la interfaz de choferes.
-   * 
-   * Controla qué sección de la interfaz está visible actualmente.
-   * Los valores posibles son:
-   * - 'nacional': Para gestión de choferes nacionales
-   * - 'extranjero': Para gestión de choferes extranjeros
-   *
-   * @property {string} activeTab
-   * @default 'nacional'
-   */
   activeTab: string = 'nacional';
 
-  /**
-   * Establece la pestaña activa en la interfaz de choferes.
-   * 
-   * Cambia la pestaña activa para mostrar la sección correspondiente
-   * de gestión de choferes (nacional o extranjero). Actualiza el estado
-   * del componente para reflejar la nueva selección en la interfaz de usuario.
-   *
-   * @method setActiveTab
-   * @param {string} tab - La pestaña que se establecerá como activa.
-   *                       Valores válidos: 'nacional', 'extranjero'
-   * @returns {void}
-   * 
-   * @example
-   * ```typescript
-   * // Cambiar a la pestaña de choferes nacionales
-   * this.setActiveTab('nacional');
-   * 
-   * // Cambiar a la pestaña de choferes extranjeros
-   * this.setActiveTab('extranjero');
-   * ```
-   *
-   * @since 1.0.0
-   */
+  // Arrays to store choferes data
+  choferesNacionales: any[] = [];
+  choferesExtranjeros: any[] = [];
+
   setActiveTab(tab: string): void {
     this.activeTab = tab;
   }
+
+  // Handler for adding a nacional chofer
+  onAddChoferNacional(chofer: any) {
+    this.choferesNacionales = [...this.choferesNacionales, chofer];
+  }
+
+  // Handler for adding an extranjero chofer
+  onAddChoferExtranjero(chofer: any) {
+    this.choferesExtranjeros = [...this.choferesExtranjeros, chofer];
+  }
+
+  // Optionally handle cancel events (no-op for now)
+  onCancelChoferNacional() {}
+  onCancelChoferExtranjero() {}
 }

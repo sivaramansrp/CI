@@ -1,39 +1,26 @@
 import { UnidadTabla } from '../../../../models/registro-muestras-mercancias.model';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { UNIDAD_TABLA_CONFIG } from '../../../../enum/transportista-terrestre.enum';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-baja-unidad',
   templateUrl: './baja-unidad.component.html',
-  styleUrls: ['./baja-unidad.component.scss'],
+  styleUrls: ['./baja-unidad.component.scss']
 })
-export class BajaUnidadComponent implements OnInit {
-  showInfoAlert = true;
-  ngOnInit(): void {
-    // Optionally, check if catalogs are empty and log a warning
-    if (
-      this.tipoDeUnidadCatalogo.length === 0 ||
-      this.paisEmisorCatalogo.length === 0 ||
-      this.anoCatalogo.length === 0 ||
-      this.tipoArrastre.length === 0
-    ) {
-      console.warn('Some catalog arrays are empty. Ensure parent loads them before opening the modal.');
-    }
-  }
-  @Input() tipoDeUnidadCatalogo: any[] = [];
-  @Input() paisEmisorCatalogo: any[] = [];
-  @Input() anoCatalogo: any[] = [];
-  @Input() tipoArrastre: any[] = [];
-
-  unidadesArrastre: UnidadTabla[] = [];
-  columnasUnidad = UNIDAD_TABLA_CONFIG.encabezadas;
-  tipoSeleccionTabla = TablaSeleccion.RADIO;
-  selectedUnidadIndex: number | null = null;
-  isReadonly = false;
-  unidadesArrastreSelected: UnidadTabla[] = [];
-  showUnidadDialog = false;
-  unidadDialogData: UnidadTabla | {} = {};
+export class BajaUnidadComponent {
+  // Catálogos para los dropdowns del diálogo
+    tipoDeUnidadCatalogo: UnidadTabla[] = [];
+    paisEmisorCatalogo: UnidadTabla[] = [];
+    anoCatalogo: UnidadTabla[] = [];
+    tipoArrastre: UnidadTabla[] = [];
+    unidadesArrastre: UnidadTabla[] = [];
+    columnasUnidad = UNIDAD_TABLA_CONFIG.encabezadas;
+    tipoSeleccionTabla = TablaSeleccion.RADIO;
+    unidadesArrastreSelected: UnidadTabla[] = [];
+    isReadonly = false;
+    showUnidadDialog = false;
+    unidadDialogData: UnidadTabla | {} = {};
 
   onUnidadRowSelected(event: UnidadTabla[]) {
     this.unidadesArrastreSelected = event || [];
@@ -44,25 +31,22 @@ export class BajaUnidadComponent implements OnInit {
       return;
     }
     this.unidadesArrastre = this.unidadesArrastre.filter(
-      unidad => !this.unidadesArrastreSelected.includes(unidad)
+      u => !this.unidadesArrastreSelected.includes(u)
     );
     this.unidadesArrastreSelected = [];
-  }
-
-  // For template compatibility
-  deleteUnidadRow() {
-    this.eliminarUnidad();
   }
 
   // Modal dialog save handler
   onUnidadDialogSave(updatedUnidad: UnidadTabla) {
     // Add new unidad to the table (customize as needed)
     this.unidadesArrastre.push(updatedUnidad);
+    // Automatically select the last row so Eliminar is enabled
+    this.unidadesArrastreSelected = [this.unidadesArrastre[this.unidadesArrastre.length - 1]];
     this.showUnidadDialog = false;
   }
 
-  // Dialog cancel handler
-  onUnidadDialogCancel() {
-    this.showUnidadDialog = false;
+  // For template compatibility
+  deleteUnidadRow() {
+    this.eliminarUnidad();
   }
 }

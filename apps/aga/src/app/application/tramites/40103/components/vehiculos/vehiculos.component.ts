@@ -560,6 +560,9 @@ export class VehiculosComponent implements OnInit {
           ...this.vehiculosTablaConfig.datos,
           vehiculoData,
         ];
+        // Force row selection event to enable Eliminar button
+        const lastIndex = this.vehiculosTablaConfig.datos.length - 1;
+        this.onVehiculoRowSelected([{ index: lastIndex }]);
       }
       this.closeModal.nativeElement.click();
       const lastId = Array.isArray(this.vehiculosTablaConfig?.datos) && this.vehiculosTablaConfig.datos.length > 0

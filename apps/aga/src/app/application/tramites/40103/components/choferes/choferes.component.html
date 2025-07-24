@@ -30,16 +30,23 @@
   <div class="row mt-5">
     <div class="tab-content">
 
+
     @if(activeTab ==='nacional') {
       <ng-titulo [titulo]="CHOFERES_PAGE.CHOFERES_NACIONALES"></ng-titulo>
-      <app-chofere-nacional></app-chofere-nacional>
+      <app-chofere-nacional 
+        (addModalEvent)="onAddChoferNacional($event)" 
+        (cancelEvent)="onCancelChoferNacional()">
+      </app-chofere-nacional>
       <app-chofere-nacional-notification [mensaje]="TEXTOS.MENSAJE_NACIONAL"></app-chofere-nacional-notification>
       <app-chofere-nacional-modificacion></app-chofere-nacional-modificacion>
       <app-chofere-nacional-retirada></app-chofere-nacional-retirada>
     }
     @if(activeTab ==='extranjero') {
       <ng-titulo [titulo]="CHOFERES_PAGE.CHOFERES_EXTRANJEROS"></ng-titulo>
-      <app-chofere-alta-de-extranjeros></app-chofere-alta-de-extranjeros>
+      <app-chofere-alta-de-extranjeros 
+        (addModalEvent)="onAddChoferExtranjero($event)" 
+        (cancelEvent)="onCancelChoferExtranjero()">
+      </app-chofere-alta-de-extranjeros>
       <app-chofere-nacional-notification [mensaje]="TEXTOS.MENSAJE_EXTRANJERO"></app-chofere-nacional-notification>
       <app-chofere-modification-de-choferes></app-chofere-modification-de-choferes>
       <app-chofere-retirada-de-choferes></app-chofere-retirada-de-choferes>
