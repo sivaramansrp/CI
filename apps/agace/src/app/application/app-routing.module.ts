@@ -305,7 +305,6 @@ const ROUTES: Routes = [
         (m) => m.AvisoTesoreriaModule
       ),
   },
-
   {
     path: 'aviso-certificacion',
     loadChildren: () =>
@@ -343,6 +342,11 @@ const ROUTES: Routes = [
       import('./tramites/32610/registro-oae-rfe.module').then(
         (m) => m.RegistroOaeRfeModule
       )
+  },
+  {
+    path: 'economico',
+    loadChildren: () =>
+      import('./tramites/32606/economico.module').then((m) => m.EconomicoModule),
   }
 ];
 
