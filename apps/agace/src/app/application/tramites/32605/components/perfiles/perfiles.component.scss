@@ -42,7 +42,9 @@
     border-radius: 20px;
     cursor: pointer;
   }
-  
+  button.toggle-btn:disabled {
+    cursor: none;
+  }
   .table-container {
     border: 1px solid #ccc;
     padding: 10px;
