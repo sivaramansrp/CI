@@ -518,30 +518,58 @@ export class AutoTransportistaComponent implements OnInit, OnDestroy, AfterViewI
  * Este método coordina la validación de múltiples formularios hijo y se asegura de que
  * toda la información requerida esté correctamente completada.
  */
-// eslint-disable-next-line class-methods-use-this
 validarFormulario(): boolean {
-  // Inicializar variable de validación como verdadera
   let isValid = true;
 
-  // eslint-disable-next-line no-constant-condition, no-self-compare, eqeqeq
-  if(2 == 2) {
-    isValid = true;
+  if (this.autoTransportistaForm.invalid) {
+    this.autoTransportistaForm.markAllAsTouched();
+    isValid = false;
   }
 
-// if(this.autoTransportistaForm.valid) {
-//   isValid = true;
-// }
-// else{
-//   isValid = false;
-// }
+  const FECHA_INICIO = this.autoTransportistaForm.get('fechaInicioComercio')?.value;
+  const TIENE_DOS_ANIOS = this.autoTransportistaForm.get('autotransporteDosAnios')?.value === 1;
+  if (TIENE_DOS_ANIOS && (!FECHA_INICIO || FECHA_INICIO === '')) {
+    this.autoTransportistaForm.get('fechaInicioComercio')?.markAsTouched();
+    isValid = false;
+  }
 
- 
-   
+  const TIENE_RASTREO = this.autoTransportistaForm.get('sistemasRastreo')?.value;
+  if (TIENE_RASTREO === 2) {
+    this.autoTransportistaForm.get('sistemasRastreo')?.markAsTouched();
+    isValid = false;
+  }
 
-  
+  const TIENE_PERFIL = this.autoTransportistaForm.get('seguridadPerfilTransportista')?.value;
+  if (TIENE_PERFIL === 2) {
+    this.autoTransportistaForm.get('seguridadPerfilTransportista')?.markAsTouched();
+    isValid = false;
+  }
+
+  const PAGINA = this.autoTransportistaForm.get('paginaElectronica')?.value;
+  const PAGINA_URL = this.autoTransportistaForm.get('paginaElectronicaURL')?.value;
+  if (PAGINA === 1 && (!PAGINA_URL || PAGINA_URL.trim() === '')) {
+    this.autoTransportistaForm.get('paginaElectronicaURL')?.markAsTouched();
+    isValid = false;
+  }
+
+  const CORREO = this.autoTransportistaForm.get('correoElectronicoContacto')?.value;
+  const CORREO_INPUT = this.autoTransportistaForm.get('correoElectronicoContactoEmail')?.value;
+  if (CORREO === 1 && (!CORREO_INPUT || CORREO_INPUT.trim() === '')) {
+    this.autoTransportistaForm.get('correoElectronicoContactoEmail')?.markAsTouched();
+    isValid = false;
+  }
+
+  const TELEFONO_CONTACTO = this.autoTransportistaForm.get('telefonoContacto')?.value;
+  if (TELEFONO_CONTACTO === 1 && this.cantidadTelefonosValidos < 2) {
+    this.autoTransportistaForm.get('telefonoContacto')?.markAsTouched();
+    ['lada1', 'telefono1', 'lada2', 'telefono2', 'lada3', 'telefono3'].forEach(campo => {
+      this.autoTransportistaForm.get(campo)?.markAsTouched();
+    });
+    isValid = false;
+  }
+
   return isValid;
-} 
-
+}
 
   /**
    * Método llamado al destruir el componente, limpia las suscripciones

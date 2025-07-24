@@ -47,6 +47,50 @@ describe('GenerarDictamenComponent', () => {
         expect(component.dictamenForm).toBeDefined();
         expect(component.dictamenForm.get('cumplimiento')?.value).toBe('1');
         expect(component.dictamenForm.get('mensajeDictamen')?.value).toBe('');
+        expect(component.dictamenForm.get('fechaInicioVigenciaAutorizada')).toBeDefined();
+        expect(component.dictamenForm.get('fechaFinVigenciaAutorizada')).toBeDefined();
+    });
+
+    it('debe mostrar campos de fecha cuando el dictamen es aceptado', () => {
+        component.ngOnInit();
+        expect(component.mostrarCamposFecha).toBe(true);
+        
+        const fechaInicioControl = component.dictamenForm.get('fechaInicioVigenciaAutorizada');
+        const fechaFinControl = component.dictamenForm.get('fechaFinVigenciaAutorizada');
+        expect(fechaInicioControl?.hasError('required')).toBe(true);
+        expect(fechaFinControl?.hasError('required')).toBe(true);
+    });
+
+    it('debe ocultar campos de fecha cuando el dictamen es rechazado', () => {
+        component.ngOnInit();
+        
+        // Cambiar a rechazado
+        component.dictamenForm.get('cumplimiento')?.setValue('2');
+        fixture.detectChanges();
+        
+        expect(component.mostrarCamposFecha).toBe(false);
+        
+        const fechaInicioControl = component.dictamenForm.get('fechaInicioVigenciaAutorizada');
+        const fechaFinControl = component.dictamenForm.get('fechaFinVigenciaAutorizada');
+        expect(fechaInicioControl?.hasError('required')).toBe(false);
+        expect(fechaFinControl?.hasError('required')).toBe(false);
+        expect(fechaInicioControl?.value).toBe('');
+        expect(fechaFinControl?.value).toBe('');
+    });
+
+    it('debe cambiar la visibilidad de los campos al cambiar el sentido del dictamen', () => {
+        component.ngOnInit();
+        
+        // Inicialmente debe mostrar los campos (valor por defecto es '1')
+        expect(component.mostrarCamposFecha).toBe(true);
+        
+        // Cambiar a rechazado
+        component.dictamenForm.get('cumplimiento')?.setValue('2');
+        expect(component.mostrarCamposFecha).toBe(false);
+        
+        // Cambiar de vuelta a aceptado
+        component.dictamenForm.get('cumplimiento')?.setValue('1');
+        expect(component.mostrarCamposFecha).toBe(true);
     });
 
     it('debe emitir el evento de guardar cuando el formulario es válido', () => {
