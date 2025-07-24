@@ -8,6 +8,7 @@ import { ConsultaioStore } from '@ng-mf/data-access-user';
 import { EncabezadoRequerimientoComponent } from '@libs/shared/data-access-user/src/tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
 import { GenerarDictamenComponent } from '@libs/shared/data-access-user/src/tramites/components/generar-dictamen/generar-dictamen.component';
+import { GenerarObservacionComponent } from '@libs/shared/data-access-user/src/tramites/components/generar-observacion/generar-observacion.component';
 import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
 import { OnInit } from "@angular/core";
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
@@ -46,6 +47,7 @@ import { takeUntil } from 'rxjs';
     EncabezadoRequerimientoComponent,
     FormsModule, ReactiveFormsModule,
     GenerarDictamenComponent,
+    GenerarObservacionComponent,
     FirmaElectronicaComponent
   ],
   templateUrl: './autorizar.component.html',
@@ -77,6 +79,11 @@ export class AutorizarComponent implements OnInit, OnDestroy {
    * @description Indica si se debe mostrar la sección de firma electrónica.
    */
   firmar: boolean = false;
+  /**
+   * @property {boolean} mostrarObservacion
+   * @description Indica si se debe mostrar la sección de observaciones.
+   */
+  mostrarObservacion: boolean = false;
   /**
    * @property {Subject<void>} destroyNotifier$
    * @description Subject utilizado para cancelar las suscripciones y evitar fugas de memoria al destruir el componente.
@@ -192,6 +199,30 @@ export class AutorizarComponent implements OnInit, OnDestroy {
         this.guardarFirmar();
         break;
       case 'cancelar':
+        this.mostrarObservacion = true;
+        break;
+      default:
+    }
+  }
+
+  /**
+   * @method enviarEventoObservacion
+   * @description Maneja los eventos de generar y regresar provenientes del componente de observación.
+   * @param {{ events: string, datos: unknown }} e - Objeto con el tipo de evento y los datos asociados.
+   * @returns {void}
+   */
+  enviarEventoObservacion(e: { events: string, datos: unknown }): void {
+    switch (e.events) {
+      case 'generar':
+        // Aquí se procesaría la observación
+        console.log('Generando observación:', e.datos);
+        // Mostrar mensaje de éxito
+        alert('Se ha generado una Observación al Dictamen exitosamente.');
+        // Regresar a la vista principal
+        this.mostrarObservacion = false;
+        break;
+      case 'regresar':
+        this.mostrarObservacion = false;
         break;
       default:
     }
