@@ -350,7 +350,7 @@ export class SolicitudComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * Historial de solicitudes.
    */
-  hSolicitud: string[] = [];
+  solicitudDatos: string[] = [];
 
   /**
    * Datos de las solicitudes.
@@ -620,7 +620,7 @@ ngOnChanges(changes: SimpleChanges): void {
   cargarDatosIniciales(): void {
     this.solicitudService.getData().subscribe({
       next: (data: CargarDatosIniciales) => {
-        this.hSolicitud = data.hSolicitud;
+        this.solicitudDatos = data.solicitudDatos;
         this.dSolicitud = data.dSolicitud;
       },
     });

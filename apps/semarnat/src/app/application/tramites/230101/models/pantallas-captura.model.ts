@@ -218,7 +218,7 @@ export interface CargarDatosIniciales {
   hCarroFerrocarril: string[];
   
   /** Encabezados para solicitudes */
-  hSolicitud: string[];
+  solicitudDatos: string[];
   
   /** Solicitar datos */
   dSolicitud: Solicitud[];
