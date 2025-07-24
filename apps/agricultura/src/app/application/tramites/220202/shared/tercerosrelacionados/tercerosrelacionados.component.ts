@@ -260,7 +260,7 @@ export class TercerosrelacionadosComponent {
    * @method modificarExportador
    */
   modificarExportador(): void {
-    if (this.listaDeFilaSeleccionadaFinal ) {
+    if (this.listaDeFilaSeleccionadaFinal[0] ) {
       this.abrirModalExportador.emit(this.listaDeFilaSeleccionadaFinal[0]);
     }
     else {
@@ -293,20 +293,25 @@ export class TercerosrelacionadosComponent {
    * Agrupa ambas funcionalidades: notificación y emisión del evento.
    */
   emitEliminar(): void {
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: 'Confirmar eliminación',
-      mensaje: 'Está seguro que desea eliminar estos datos?',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
-    };
-    this.eliminarDatosTabla = true;
     this.eliminarSeleccion.emit(this.listaDeFilaSeleccionada); 
   }
+
+  // emitEliminar(): void {
+  //   this.nuevaNotificacion = {
+  //     tipoNotificacion: 'alert',
+  //     categoria: 'danger',
+  //     modo: 'action',
+  //     titulo: 'Confirmar eliminación',
+  //     mensaje: 'Está seguro que desea eliminar estos datos?',
+  //     cerrar: false,
+  //     tiempoDeEspera: 2000,
+  //     txtBtnAceptar: 'Aceptar',
+  //     txtBtnCancelar: 'Cancelar',
+  //   };
+  //   this.eliminarSeleccion.emit(this.listaDeFilaSeleccionada); 
+  //   this.eliminarDatosTabla = true;
+
+  // }
 
   /**
    * Emite el evento para eliminar la selección de destinatarios finales.
@@ -314,20 +319,24 @@ export class TercerosrelacionadosComponent {
    * Agrupa ambas funcionalidades: notificación y emisión del evento.
    */
   emitEliminarFinal(): void {
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: 'Confirmar eliminación',
-      mensaje: 'Está seguro que desea eliminar estos datos?',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
-    };
-    this.eliminarDatoExportador = true;
-    this.eliminarSeleccion.emit(this.listaDeFilaSeleccionada); 
+    this.eliminarSeleccionEstinoTable.emit(this.listaDeFilaSeleccionadaFinal); 
   }
+
+  // emitEliminarFinal(): void {
+  //   this.nuevaNotificacion = {
+  //     tipoNotificacion: 'alert',
+  //     categoria: 'danger',
+  //     modo: 'action',
+  //     titulo: 'Confirmar eliminación',
+  //     mensaje: 'Está seguro que desea eliminar estos datos?',
+  //     cerrar: false,
+  //     tiempoDeEspera: 2000,
+  //     txtBtnAceptar: 'Aceptar',
+  //     txtBtnCancelar: 'Cancelar',
+  //   };
+  //   this.eliminarSeleccionEstinoTable.emit(this.listaDeFilaSeleccionadaFinal); 
+  //   this.eliminarDatoExportador = true;
+  // }
 
   /**
    * Activa la vista de búsqueda avanzada y enfoca el siguiente campo.
@@ -359,6 +368,7 @@ export class TercerosrelacionadosComponent {
     }
 
   }
+
   eliminarExportador(borrar: boolean): void {
     if (borrar) {
       this.eliminarDatoExportador = false;

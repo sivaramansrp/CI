@@ -1,5 +1,5 @@
 import { AnimalesEventos, AnimalesFormularioSolicitud, DatosDeLaSolicitud } from '../../../../shared/models/datos-de-la-solicitue.model';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 
@@ -50,6 +50,8 @@ export class AgregarMercanciaComponent implements OnDestroy{
    * @type {Subject<void>}
    */
   public destroyNotifier$ = new Subject<void>();
+
+  @Output() cerrar = new EventEmitter<void>();
 
   /**
    * Indica si el formulario está en modo solo lectura.

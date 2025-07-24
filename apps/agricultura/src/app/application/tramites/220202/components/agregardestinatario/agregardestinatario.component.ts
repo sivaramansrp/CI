@@ -280,9 +280,17 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
     if (this.destinatarioForm.value.tipoMercancia === 'no') {
       RAZON_SOCIAL_CTRL?.clearValidators();
       RAZON_SOCIAL_CTRL?.updateValueAndValidity();
+      this.destinatarioForm.get('nombre')?.setValidators([Validators.required]);
+      this.destinatarioForm.get('nombre')?.updateValueAndValidity();
+      this.destinatarioForm.get('primerApellido')?.setValidators([Validators.required]);
+      this.destinatarioForm.get('primerApellido')?.updateValueAndValidity();
     } else {
       RAZON_SOCIAL_CTRL?.setValidators([Validators.required]);
       RAZON_SOCIAL_CTRL?.updateValueAndValidity();
+      this.destinatarioForm.get('nombre')?.clearValidators();
+      this.destinatarioForm.get('nombre')?.updateValueAndValidity();
+      this.destinatarioForm.get('primerApellido')?.clearValidators();
+      this.destinatarioForm.get('primerApellido')?.updateValueAndValidity();
     }
   }
 }

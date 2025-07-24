@@ -269,6 +269,18 @@ export class AgregarExportadorComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   /**
+   * Ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones y resetea los datos seleccionados en el store.
+   * @method ngOnDestroy
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+    this.fitosanitarioStore.actualizarSelectedExdora({} as TercerosrelacionadosdestinoTable);
+  }
+
+
+  /**
    * Cambia la validación del campo razonSocial según el valor del radio tipoMercancia.
    * Si tipoMercancia es 'no', elimina los validadores; si es 'yes', agrega el validador requerido.
    * @method enCambioValorRadio
@@ -278,20 +290,17 @@ export class AgregarExportadorComponent implements OnInit, OnDestroy, AfterViewI
     if (this.destinatarioForm.value.tipoMercancia === 'no') {
       RAZON_SOCIAL_CTRL?.clearValidators();
       RAZON_SOCIAL_CTRL?.updateValueAndValidity();
+      this.destinatarioForm.get('nombre')?.setValidators([Validators.required]);
+      this.destinatarioForm.get('nombre')?.updateValueAndValidity();
+      this.destinatarioForm.get('primerApellido')?.setValidators([Validators.required]);
+      this.destinatarioForm.get('primerApellido')?.updateValueAndValidity();
     } else {
       RAZON_SOCIAL_CTRL?.setValidators([Validators.required]);
       RAZON_SOCIAL_CTRL?.updateValueAndValidity();
+      this.destinatarioForm.get('nombre')?.clearValidators();
+      this.destinatarioForm.get('nombre')?.updateValueAndValidity();
+      this.destinatarioForm.get('primerApellido')?.clearValidators();
+      this.destinatarioForm.get('primerApellido')?.updateValueAndValidity();
     }
-  }
-
-  /**
-   * Ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * Limpia las suscripciones y resetea los datos seleccionados en el store.
-   * @method ngOnDestroy
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-    this.fitosanitarioStore.actualizarSelectedExdora({} as TercerosrelacionadosdestinoTable);
   }
 }

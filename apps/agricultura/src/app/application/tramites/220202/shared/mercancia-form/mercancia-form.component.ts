@@ -83,6 +83,8 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    */
   @Input() catalogosDatos: DatosDeLaSolicitud = {} as DatosDeLaSolicitud;
 
+  @Output() cerrar = new EventEmitter<void>();
+
   /**
    * Lista de tipos de requisito disponibles para el selector correspondiente en el formulario.
    * @type {Catalogo[]}
@@ -154,6 +156,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * @type {EventEmitter<AnimalesEventos>}
    */
   @Output() agregarDatosFormulario = new EventEmitter<AnimalesEventos>();
+  
 
   /**
    * Etiquetas para la lista cruzada de normas seleccionadas.
@@ -255,6 +258,12 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
       paisOrigen: ['', Validators.required],
       paisDeProcedencia: ['', Validators.required],
     });
+
+    if (this.formularioSolicitud) {
+      this.mercanciaForm.patchValue({
+        ...this.formularioSolicitud
+      });
+    }
 
     const ID = this.route.snapshot.paramMap.get('id');
     if (ID) {
@@ -401,7 +410,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * Utiliza el servicio de ubicación para retroceder una página.
    */
   cancelar(): void {
-    this.ubicaccion.back();
+    this.cerrar.emit();
   }
 
   /**
@@ -409,12 +418,16 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * Actualmente no implementa ninguna funcionalidad, pero se puede extender en el futuro.
    */
   agregarAnimales(): void {
-    this.agregarDatosFormulario.emit({
-      formulario: this.mercanciaForm.value,
-      tablaDatos: this.sensiblesTablaDatos,
-    });
-    this.ubicaccion.back();
-  }
+
+      this.agregarDatosFormulario.emit(
+        {
+          formulario: this.mercanciaForm.getRawValue(),
+          tablaDatos: this.sensiblesTablaDatos
+        }
+      );
+      this.cerrar.emit();
+
+}
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de destruir el componente.
