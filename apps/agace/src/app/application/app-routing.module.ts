@@ -336,7 +336,13 @@ const ROUTES: Routes = [
     loadChildren: () => 
       import('./tramites/32616/solicitud-de-registro-invocar.module').then(
         (m) => m.SolicitudDeRegistroInvocarModule)
-  }
+  },
+    {
+      path: 'comercializadora-e-importadora',
+    loadChildren: () => 
+      import('./tramites/33304/comercializadora-e-importadora.module').then(
+        (m) => m.ComercializadoraEImportadoraModule)
+  },
 ];
 
 @NgModule({
