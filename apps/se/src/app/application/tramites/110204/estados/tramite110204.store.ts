@@ -177,7 +177,7 @@ export const INITIAL_STATE: TramiteState = {
     bloque: '',
     nombreComercialForm: '',
     registroProductoForm: '',
-    fracciónArancelariaForm: '',
+    fraccionArancelariaForm: '',
     fechaInicioInput: '',
     fechaFinalInput: '',
   },

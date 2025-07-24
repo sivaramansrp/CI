@@ -6,6 +6,7 @@ import { CatalogoSelectComponent} from '@libs/shared/data-access-user/src/tramit
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { Mercancias } from '../../models/plantas-consulta.model';
 import { MercanciasModalComponent } from '../mercancias-modal/mercancias-modal.component';
@@ -217,7 +218,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     public certificadoService: CertificadosOrigenGridService,
     private toastr: ToastrService,
     private seccionQuery: SeccionLibQuery,
-    private seccionStore: SeccionLibStore
+    private seccionStore: SeccionLibStore,
+    public consultaQuery: ConsultaioQuery
   ) {
 
     /**
@@ -264,6 +266,15 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   ngOnInit(): void {
     this.cargarEstados();
     this.cargarBloque();
+
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {          
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
 
   }
 
