@@ -94,6 +94,10 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * @type {InputFecha}
    */
   public fechaInicioInput: InputFecha = FECHA_INICIO;
+  /**
+   * Configuración de la fecha final en el formulario de certificado de origen.
+   * @type {InputFecha}
+   */
   public fechaFinalInput: InputFecha = FECHA_FINAL;
   /**
    * Observable que emite la lista de estados disponibles.
@@ -172,6 +176,10 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
      */
     mercanciasDisponibles: boolean = true;
 
+    /**
+     * @descripcion
+     * Indica si hay mercancías disponibles en la tabla.
+     */
     mercanciasDisponiblesTabla: boolean = true;
 
     /**
@@ -211,6 +219,19 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    */
   datosTabla$: Observable<Mercancia[]> | undefined;
 
+  /**
+   * Constructor del componente CertificadoOrigenComponent.
+   * Inicializa las dependencias necesarias para la gestión de certificados de origen.
+   * 
+   * @param fb FormBuilder para la creación y gestión de formularios reactivos.
+   * @param store Store para manejar el estado del trámite 110204.
+   * @param tramiteQuery Query para consultar el estado del trámite 110204.
+   * @param certificadoService Servicio para la gestión de certificados de origen.
+   * @param toastr Servicio para mostrar notificaciones al usuario.
+   * @param seccionQuery Query para consultar el estado de la sección.
+   * @param seccionStore Store para manejar el estado de la sección.
+   * @param consultaQuery Query para consultar el estado de consulta.
+   */
   constructor(
     private fb: FormBuilder,
     private store: Tramite110204Store,

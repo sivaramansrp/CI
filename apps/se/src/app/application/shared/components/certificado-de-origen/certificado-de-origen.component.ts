@@ -181,6 +181,11 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * @type {InputFecha}
    */
   public fechaInicioInput: InputFecha = FECHA_INICIO;
+
+  /**
+   * Configuración de la fecha final en el formulario de certificado de origen.
+   * @type {InputFecha}
+   */
   public fechaFinalInput: InputFecha = FECHA_FINAL;
 
   /**
@@ -256,11 +261,6 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * @type {Mercancia}
    */
   datosSeleccionados!: Mercancia;
-
-  /**
-   * Propiedad booleana que indica si el formulario está siendo actualizado.
-   * @type {boolean}
-   */
 
   /**
     * Emisor de eventos para indicar si el formulario es válido.

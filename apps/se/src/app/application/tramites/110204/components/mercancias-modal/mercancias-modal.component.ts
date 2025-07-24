@@ -35,15 +35,38 @@ export const FECHA_FINAL = {
 
 export class MercanciasModalComponent implements OnInit, OnDestroy {
 
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * @type {boolean}
+   */
   @Input() esFormularioSoloLectura!: boolean;
 
+  /**
+   * Indica si la alerta debe mostrarse en el modal.
+   * @type {boolean}
+   */
   mostrarAlerta: boolean = false;
   /**
    * @property {string} mensajeDeAlerta - La lista de mercancías mostrada solamente contiene aquellas mercancías que tienen un registro de productos vigente para el tratado/acuerdo-país/bloque y cuya fracción arancelaria no está asociada a un cupo.
    */
   mensajeDeAlerta: string = 'La lista de mercancías mostrada solamente contiene aquellas mercancías que tienen un registro de productos vigente para el tratado/acuerdo-país/bloque y cuya fracción arancelaria no está asociada a un cupo.';
+  
+    /**
+   * @property {FormGroup} mercanciaForm
+   * @description Formulario reactivo que captura los datos de la mercancía en el modal.
+   */
   mercanciaForm!: FormGroup;
+
+  /**
+   * @property {EventEmitter<any>} guardarClicado
+   * @description Evento emitido cuando el usuario hace clic en guardar en el modal de mercancías.
+   */
   @Output() guardarClicado = new EventEmitter();
+
+  /**
+   * @property {EventEmitter<any>} cerrarClicado
+   * @description Evento emitido cuando el usuario hace clic en cerrar el modal de mercancías.
+   */
   @Output() cerrarClicado = new EventEmitter();
 
 
@@ -59,6 +82,10 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * @property {Observable<Catalogo[]>} umcs$
+   * @description Observable que emite la lista de UMCs disponibles.
+   */
   public fechaFinalInput: InputFecha = FECHA_FINAL;
 
 
@@ -72,10 +99,24 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
 * @type {Observable<Catalogo[]>}
 */
   facturas$!: Observable<Catalogo[]>;
+  /**
+   * Propiedad booleana que indica si hay mercancías disponibles.
+   */
   private actualizandoFormulario = false;
 
-  constructor(private fb: FormBuilder, public store: Tramite110204Store,
-    public tramiteQuery: Tramite110204Query, public certificadoService: CertificadosOrigenGridService,
+  /**
+   * Constructor del componente MercanciasModalComponent.
+   * 
+   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
+   * @param {Tramite110204Store} store - Store para manejar el estado del formulario de mercancía.
+   * @param {Tramite110204Query} tramiteQuery - Query para obtener datos reactivos del estado.
+   * @param {CertificadosOrigenGridService} certificadoService - Servicio para obtener catálogos de facturas y UMC.
+   */
+  constructor(
+    private fb: FormBuilder,
+    public store: Tramite110204Store,
+    public tramiteQuery: Tramite110204Query,
+    public certificadoService: CertificadosOrigenGridService,
   ) {
 
     this.tramiteQuery?.formMercancia$?.pipe(
@@ -93,6 +134,10 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
 
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Inicializa el formulario reactivo de mercancías y configura las suscripciones necesarias.
+   */
   ngOnInit(): void {
     this.mercanciaForm = this.fb.group({
       fraccionNaladi: [{ value: '', disabled: true }],
