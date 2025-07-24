@@ -1,3 +1,10 @@
+/**
+ * Componente de diálogo para la gestión de vehículos en el trámite 40103.
+ *
+ * Permite crear, editar y validar la información de un vehículo, así como mostrar notificaciones y manejar catálogos relacionados.
+ *
+ * @module VehiculoDialogComponent
+ */
 import { Component, Input, Output, EventEmitter, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -12,29 +19,116 @@ import { takeUntil, Subject } from 'rxjs';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, NotificacionesComponent],
 })
+/**
+ * Componente de diálogo para agregar o editar información de vehículos.
+ *
+ * @class
+ * @implements {OnInit}
+ */
 export class VehiculoDialogComponent implements OnInit {
+  /**
+   * Vehículo a editar (si aplica).
+   * @type {*}
+   * @memberof VehiculoDialogComponent
+   */
   @Input() vehiculo: any;
+
+  /**
+   * Lista de vehículos existentes.
+   * @type {any[]}
+   */
   @Input() vehiculos: any[] = [];
+
+  /**
+   * Indica si el formulario es de solo lectura.
+   * @type {boolean}
+   */
   @Input() readonly = false;
+
+  /**
+   * Catálogo de tipos de vehículo.
+   * @type {any[]}
+   */
   @Input() tipoDeVehiculoCatalogo: any[] = [];
+
+  /**
+   * Catálogo de países emisores.
+   * @type {any[]}
+   */
   @Input() paisEmisorCatalogo: any[] = [];
+
+  /**
+   * Catálogo de años.
+   * @type {any[]}
+   */
   @Input() anoCatalogo: any[] = [];
+
+  /**
+   * Catálogo de tipos de arrastre.
+   * @type {any[]}
+   */
   @Input() tipoArrastre: any[] = [];
+
+  /**
+   * Evento emitido al guardar el vehículo.
+   * @type {EventEmitter<any>}
+   */
   @Output() save = new EventEmitter<any>();
+
+  /**
+   * Evento emitido al cancelar la operación.
+   * @type {EventEmitter<void>}
+   */
   @Output() cancel = new EventEmitter<void>();
 
+  /**
+   * Formulario reactivo para el vehículo.
+   * @type {FormGroup}
+   */
   vehiculoForm!: FormGroup;
+
+  /**
+   * Indica si se debe mostrar la notificación.
+   * @type {boolean}
+   */
   showNotification: boolean = false;
+
+  /**
+   * Objeto de notificación para alertas.
+   * @type {Notificacion}
+   */
   alertaNotificacion!: Notificacion;
 
+  /**
+   * Referencia a la plantilla del modal.
+   * @type {TemplateRef<unknown>}
+   */
   @ViewChild('vehiculoDialogModal') vehiculoDialogModal!: TemplateRef<unknown>;
-  modalRef?: any; // Replace with BsModalRef if using ngx-bootstrap
 
+  /**
+   * Referencia al modal (si se usa un servicio de modal).
+   * @type {*}
+   */
+  modalRef?: any; 
+
+  /**
+   * Notificador para destruir suscripciones.
+   * @type {Subject<void>}
+   */
   public destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Constructor del componente.
+   * @param {FormBuilder} fb
+   * @param {modificarTerrestreService} modificarTerrestreService
+   */
   constructor(private fb: FormBuilder, private modificarTerrestreService: modificarTerrestreService) {}
 
+  /**
+   * Inicializa el componente, catálogos y formulario.
+   * @returns {void}
+   */
   ngOnInit() {
-    // Fetch catalogs if not provided
     if (!this.tipoDeVehiculoCatalogo || this.tipoDeVehiculoCatalogo.length === 0) {
       this.modificarTerrestreService.obtenerTipoDeVehiculo()
         .pipe(takeUntil(this.destroyNotifier$))
@@ -64,7 +158,6 @@ export class VehiculoDialogComponent implements OnInit {
         });
     }
 
-    // Calculate nextId logic (if not editing)
     let nextId = 1;
     if (Array.isArray(this.vehiculos) && this.vehiculos.length > 0) {
       const maxId = Math.max(...this.vehiculos.map(v => Number(v.idDeVehiculo) || 0));
@@ -100,17 +193,26 @@ export class VehiculoDialogComponent implements OnInit {
     });
   }
 
+  /**
+   * Abre el modal de diálogo (si se implementa con un servicio de modal).
+   * @returns {void}
+   */
   openModal(): void {
-    // Implement modal open logic if using a modal service
-    // this.modalRef = this.modalService.show(this.vehiculoDialogModal, { class: 'modal-xl' });
-  }
+    // Este método debería abrir el diálogo modal.
+}
 
+  /**
+   * Cierra el modal de diálogo y emite el evento de cancelación.
+   * @returns {void}
+   */
   closeModal(): void {
-    // Implement modal close logic if using a modal service
-    // this.modalRef?.hide();
     this.cancel.emit();
   }
 
+  /**
+   * Limpia los datos del formulario de vehículo, manteniendo el id.
+   * @returns {void}
+   */
   limpiarVehiculoData(): void {
     if (!this.vehiculoForm) return;
     const idValue = this.vehiculoForm.get('idDeVehiculo')?.value;
@@ -120,6 +222,11 @@ export class VehiculoDialogComponent implements OnInit {
     this.vehiculoForm.get('descripcion')?.disable();
   }
 
+  /**
+   * Guarda los datos del vehículo si el formulario es válido, emite el evento y cierra el modal.
+   * Si el formulario es inválido, muestra una notificación de alerta.
+   * @returns {void}
+   */
   guardarVehiculoData(): void {
     this.vehiculoForm.markAllAsTouched();
     this.vehiculoForm.updateValueAndValidity();
@@ -144,11 +251,21 @@ export class VehiculoDialogComponent implements OnInit {
     }
   }
 
+  /**
+   * Verifica si un control del formulario es inválido y ha sido tocado.
+   * @param {string} controlName - Nombre del control a verificar.
+   * @returns {boolean | null} True si es inválido y tocado, null si no existe.
+   */
   isInvalid(controlName: string): boolean | null {
     const control = this.vehiculoForm.get(controlName);
     return control ? control.invalid && control.touched : null;
   }
 
+  /**
+   * Obtiene los controles del formulario de vehículo.
+   * @readonly
+   * @type {{ [key: string]: AbstractControl }}
+   */
   get getFormValues(): { [key: string]: AbstractControl } {
     return this.vehiculoForm.controls;
   }

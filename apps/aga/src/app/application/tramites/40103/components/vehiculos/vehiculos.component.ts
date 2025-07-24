@@ -53,106 +53,117 @@ import { modificarTerrestreService } from '../services/modificacar-terrestre.ser
 })
 export class VehiculosComponent implements OnInit {
   /**
-   * Almacena la lista de vehículos.
+   * @property {VehiculoTabla[]}
+   * Lista de vehículos.
    */
   VehiculoTabla: VehiculoTabla[] = [];
 
   /**
+   * @property {ElementRef}
    * Referencia al modal de vehículo.
    */
   @ViewChild('vehiculoModal') vehiculoModal!: ElementRef;
 
   /**
+   * @property {ElementRef}
    * Referencia al modal de unidad de arrastre.
    */
   @ViewChild('unidadModal') unidadModal!: ElementRef;
 
   /**
+   * @property {FormGroup}
    * Formulario reactivo para vehículos.
    */
   vehiculoFormulario!: FormGroup;
 
   /**
+   * @property {FormGroup}
    * Formulario reactivo para unidades de arrastre.
    */
   unidadFormulario!: FormGroup;
 
   /**
+   * @property {Subject<void>}
    * Sujeto para destruir las suscripciones.
    */
   public destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * @property {Catalogo[]}
    * Catálogo de tipos de vehículo.
    */
   tipoDeVehiculoCatalogo: Catalogo[] = [];
 
   /**
-   * Catálogo de Arrastre.
-   * @property {Catalogo[]} tipoArrastre - Catálogo de tipos de unidad de arrastre disponibles.
+   * @property {Catalogo[]}
+   * Catálogo de tipos de arrastre.
    */
   tipoArrastre: Catalogo[] = [];
 
   /**
-   * Catálogo de ano.
-   * @property {Catalogo[]} anoCatalogo - Catálogo de años disponibles para selección.
+   * @property {Catalogo[]}
+   * Catálogo de años.
    */
   anoCatalogo: Catalogo[] = [];
 
-
   /**
+   * @property {Catalogo[]}
    * Catálogo de países emisores.
-   * @property {Catalogo[]} paisEmisorCatalogo - Catálogo de países emisores de placas o documentos.
    */
   paisEmisorCatalogo: Catalogo[] = [];
 
   /**
+   * @property {Notificacion}
    * Notificación actual.
    */
   public nuevaNotificacion!: Notificacion;
 
   /**
+   * @property {string}
    * Nombre de la pestaña seleccionada.
    */
   selectedTab: string = 'Parque vehicular';
 
   /**
+   * @property {string}
    * Nombre de la pestaña activa.
    */
   activeTab: string = 'parquevehicular';
 
   /**
+   * @property {TablaSeleccion}
    * Tipo de selección de la tabla.
    */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
   /**
+   * @property {Tramite40103State}
    * Estado actual del trámite.
    */
   public tramiteState!: Tramite40103State;
 
   /**
+   * @property {ElementRef}
    * Referencia al botón de cierre del modal de vehículo.
    */
   @ViewChild('closeModal') public closeModal!: ElementRef;
 
   /**
+   * @property {ElementRef}
    * Referencia al botón de cierre del modal de unidad de arrastre.
    */
   @ViewChild('closeUnidadModal') public closeUnidadModal!: ElementRef;
 
-/**
- * Indica si el formulario o componente está en modo solo lectura.
- * Cuando es `true`, los campos no pueden ser editados por el usuario.
- * @property {boolean} isReadonly - Indica si el formulario o componente está en modo solo lectura. Si es `true`, los campos no pueden ser editados por el usuario.
- */
+  /**
+   * @property {boolean}
+   * Indica si el formulario o componente está en modo solo lectura.
+   */
   isReadonly: boolean = false;
 
-/**
- * Almacena el estado de consulta actual.
- * Contiene información relevante para determinar el modo de solo lectura y otros datos de consulta.
- * @property {ConsultaioState} datosConsulta - Almacena el estado de consulta actual, utilizado para determinar el modo de solo lectura y otros datos relevantes de consulta.
- */
+  /**
+   * @property {ConsultaioState}
+   * Almacena el estado de consulta actual.
+   */
   datosConsulta!: ConsultaioState;
 
 /**
@@ -560,7 +571,6 @@ export class VehiculosComponent implements OnInit {
           ...this.vehiculosTablaConfig.datos,
           vehiculoData,
         ];
-        // Force row selection event to enable Eliminar button
         const lastIndex = this.vehiculosTablaConfig.datos.length - 1;
         this.onVehiculoRowSelected([{ index: lastIndex }]);
       }

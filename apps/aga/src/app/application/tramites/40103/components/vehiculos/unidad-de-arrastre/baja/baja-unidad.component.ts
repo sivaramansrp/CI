@@ -1,3 +1,10 @@
+/**
+ * Componente para la baja de unidades de arrastre en el trámite 40103.
+ *
+ * Permite seleccionar, eliminar y gestionar unidades de arrastre.
+ *
+ * @module BajaUnidadComponent
+ */
 import { UnidadTabla } from '../../../../models/registro-muestras-mercancias.model';
 import { Component } from '@angular/core';
 import { UNIDAD_TABLA_CONFIG } from '../../../../enum/transportista-terrestre.enum';
@@ -8,24 +15,91 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
   templateUrl: './baja-unidad.component.html',
   styleUrls: ['./baja-unidad.component.scss']
 })
+/**
+ * Componente para gestionar la baja de unidades de arrastre.
+ *
+ * @class
+ */
 export class BajaUnidadComponent {
-  // Catálogos para los dropdowns del diálogo
-    tipoDeUnidadCatalogo: UnidadTabla[] = [];
-    paisEmisorCatalogo: UnidadTabla[] = [];
-    anoCatalogo: UnidadTabla[] = [];
-    tipoArrastre: UnidadTabla[] = [];
-    unidadesArrastre: UnidadTabla[] = [];
-    columnasUnidad = UNIDAD_TABLA_CONFIG.encabezadas;
-    tipoSeleccionTabla = TablaSeleccion.RADIO;
-    unidadesArrastreSelected: UnidadTabla[] = [];
-    isReadonly = false;
-    showUnidadDialog = false;
-    unidadDialogData: UnidadTabla | {} = {};
+  /**
+   * Catálogo de tipos de unidad de arrastre.
+   * @type {UnidadTabla[]}
+   */
+  tipoDeUnidadCatalogo: UnidadTabla[] = [];
 
+  /**
+   * Catálogo de países emisores.
+   * @type {UnidadTabla[]}
+   */
+  paisEmisorCatalogo: UnidadTabla[] = [];
+
+  /**
+   * Catálogo de años.
+   * @type {UnidadTabla[]}
+   */
+  anoCatalogo: UnidadTabla[] = [];
+
+  /**
+   * Catálogo de tipos de arrastre.
+   * @type {UnidadTabla[]}
+   */
+  tipoArrastre: UnidadTabla[] = [];
+
+  /**
+   * Lista de unidades de arrastre.
+   * @type {UnidadTabla[]}
+   */
+  unidadesArrastre: UnidadTabla[] = [];
+
+  /**
+   * Configuración de columnas para la tabla de unidades.
+   * @type {*}
+   */
+  columnasUnidad = UNIDAD_TABLA_CONFIG.encabezadas;
+
+  /**
+   * Tipo de selección de la tabla (radio, checkbox, etc).
+   * @type {TablaSeleccion}
+   */
+  tipoSeleccionTabla = TablaSeleccion.RADIO;
+
+  /**
+   * Unidades de arrastre seleccionadas en la tabla.
+   * @type {UnidadTabla[]}
+   */
+  unidadesArrastreSelected: UnidadTabla[] = [];
+
+  /**
+   * Indica si la vista es de solo lectura.
+   * @type {boolean}
+   */
+  isReadonly = false;
+
+  /**
+   * Indica si se muestra el diálogo de unidad.
+   * @type {boolean}
+   */
+  showUnidadDialog = false;
+
+  /**
+   * Datos para el diálogo de unidad.
+   * @type {UnidadTabla | {}}
+   */
+  unidadDialogData: UnidadTabla | {} = {};
+
+  /**
+   * Maneja la selección de filas en la tabla de unidades de arrastre.
+   * @param {UnidadTabla[]} event - Unidades seleccionadas.
+   * @returns {void}
+   */
   onUnidadRowSelected(event: UnidadTabla[]) {
     this.unidadesArrastreSelected = event || [];
   }
 
+  /**
+   * Elimina las unidades seleccionadas del listado.
+   * @returns {void}
+   */
   eliminarUnidad() {
     if (this.unidadesArrastreSelected.length === 0) {
       return;
@@ -36,16 +110,21 @@ export class BajaUnidadComponent {
     this.unidadesArrastreSelected = [];
   }
 
-  // Modal dialog save handler
+  /**
+   * Agrega una unidad actualizada desde el diálogo y la selecciona.
+   * @param {UnidadTabla} updatedUnidad - Unidad actualizada.
+   * @returns {void}
+   */
   onUnidadDialogSave(updatedUnidad: UnidadTabla) {
-    // Add new unidad to the table (customize as needed)
     this.unidadesArrastre.push(updatedUnidad);
-    // Automatically select the last row so Eliminar is enabled
     this.unidadesArrastreSelected = [this.unidadesArrastre[this.unidadesArrastre.length - 1]];
     this.showUnidadDialog = false;
   }
 
-  // For template compatibility
+  /**
+   * Elimina la fila de unidad seleccionada.
+   * @returns {void}
+   */
   deleteUnidadRow() {
     this.eliminarUnidad();
   }
