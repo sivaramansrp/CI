@@ -267,6 +267,13 @@ const ROUTES: Routes = [
       import('./tramites/30505/aviso-de-modificacion.module').then(
         (m) => m.AvisoDeModificacionModule)
   },
+  {
+        path: 'esquema-de-certificacion',
+    loadChildren: () =>
+      import('./tramites/32612/esquema-de-certificacion/esquema-de-certificacion.module').then(
+        (m) => m.EsquemaDeCertificacionModule
+      )
+  },
    {
       path: 'aviso-modification-certificacion',
     loadChildren: () => 
@@ -325,7 +332,13 @@ const ROUTES: Routes = [
       import('./tramites/32613/rubro-transporte-ferroviario.module').then((m) => m.RubroTransporteFerroviarioModule)
   },
   {
-      path: 'sce-socio-almacenamiento',
+      path: 'solicitud-de-registro',
+    loadChildren: () => 
+      import('./tramites/32616/solicitud-de-registro-invocar.module').then(
+        (m) => m.SolicitudDeRegistroInvocarModule)
+  },
+  {
+     path: 'sce-socio-almacenamiento',
     loadChildren: () => 
       import('./tramites/32618/sce-socio-almacen.module').then(
         (m) => m.SceSocioAlmacenModule)

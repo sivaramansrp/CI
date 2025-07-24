@@ -120,6 +120,10 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+    if(this.esFormularioSoloLectura) {
+      this.datosMercanica.disable();
+    }
   }
 
   /**
