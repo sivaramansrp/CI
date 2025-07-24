@@ -2,19 +2,18 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { AgregarEnlaceOperativoComponent } from './agregar-enlace-operativo.component';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { SolicitudService } from '../../services/solicitud.service';
+
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { SolicitudService } from '../../../32605/services/solicitud.service';
 
 describe('AgregarEnlaceOperativoComponent', () => {
   let component: AgregarEnlaceOperativoComponent;
   let fixture: ComponentFixture<AgregarEnlaceOperativoComponent>;
   let solicitudServiceMock: any;
-  let solicitud32605QueryMock: any;
-  let solicitud32605StoreMock: any;
+  let solicitud32618QueryMock: any;
+  let solicitud32618StoreMock: any;
 
   beforeEach(async () => {
     solicitudServiceMock = {
@@ -30,7 +29,7 @@ describe('AgregarEnlaceOperativoComponent', () => {
       ),
     };
 
-    solicitud32605QueryMock = {
+    solicitud32618QueryMock = {
       selectSolicitud$: of({
         rfcTercero: 'RFC123',
         rfc: 'RFC456',
@@ -45,7 +44,7 @@ describe('AgregarEnlaceOperativoComponent', () => {
       }),
     };
 
-    solicitud32605StoreMock = {
+    solicitud32618StoreMock = {
       actualizarEnlaceRfc: jest.fn(() => of('RFC123')),
       actualizarEnlaceNombre: jest.fn(() => of('John')),
       actualizarEnlaceApellidoPaterno: jest.fn(() => of('Doe')),
@@ -72,8 +71,8 @@ describe('AgregarEnlaceOperativoComponent', () => {
       declarations: [],
       providers: [
         { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: Solicitud32605Query, useValue: solicitud32605QueryMock },
-        { provide: Solicitud32605Store, useValue: solicitud32605StoreMock },
+        { provide: solicitud32618QueryMock, useValue: solicitud32618QueryMock },
+        { provide: solicitud32618StoreMock, useValue: solicitud32618StoreMock },
       ],
     }).compileComponents();
 
@@ -162,31 +161,31 @@ describe('AgregarEnlaceOperativoComponent', () => {
   it('should call actualizarRfcTercero on store when actualizarRfcTercero is called', () => {
     const mockEvent = { target: { value: 'RFC789' } } as unknown as Event;
     component.actualizarRfcTercero(mockEvent);
-    expect(solicitud32605StoreMock.actualizarRfcTercero).toHaveBeenCalledWith('RFC789');
+    expect(solicitud32618StoreMock.actualizarRfcTercero).toHaveBeenCalledWith('RFC789');
   });
 
   it('should call actualizarTelefono on store when actualizarTelefono is called', () => {
     const mockEvent = { target: { value: '5551234567' } } as unknown as Event;
     component.actualizarTelefono(mockEvent);
-    expect(solicitud32605StoreMock.actualizarTelefono).toHaveBeenCalledWith('5551234567');
+    expect(solicitud32618StoreMock.actualizarTelefono).toHaveBeenCalledWith('5551234567');
   });
 
   it('should call actualizarCorreoElectronico on store when actualizarCorreoElectronico is called', () => {
     const mockEvent = { target: { value: 'test@email.com' } } as unknown as Event;
     component.actualizarCorreoElectronico(mockEvent);
-    expect(solicitud32605StoreMock.actualizarCorreoElectronico).toHaveBeenCalledWith('test@email.com');
+    expect(solicitud32618StoreMock.actualizarCorreoElectronico).toHaveBeenCalledWith('test@email.com');
   });
 
   it('should call actualizarEnlaceCargo on store when agregarEnlaceCargo is called', () => {
     const mockEvent = { target: { value: 'Director' } } as unknown as Event;
     component.agregarEnlaceCargo(mockEvent);
-    expect(solicitud32605StoreMock.actualizarEnlaceCargo).toHaveBeenCalledWith('Director');
+    expect(solicitud32618StoreMock.actualizarEnlaceCargo).toHaveBeenCalledWith('Director');
   });
 
   it('should call actualizarEnlaceSuplente on store when actualizarEnlaceSuplente is called', () => {
     const mockEvent = { target: { checked: true } } as unknown as Event;
     component.actualizarEnlaceSuplente(mockEvent);
-    expect(solicitud32605StoreMock.actualizarEnlaceSuplente).toHaveBeenCalledWith(true);
+    expect(solicitud32618StoreMock.actualizarEnlaceSuplente).toHaveBeenCalledWith(true);
   });
 
 

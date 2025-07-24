@@ -1,26 +1,32 @@
-import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+
+
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { NumeroDeEmpleados, SeccionSubcontratados } from '../../models/solicitud.model';
+import { NumeroDeEmpleados } from '../../models/solicitud.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SolicitudQuery } from '../../estados/solicitud.query';
-import { SolicitudState, SolicitudStore } from '../../estados/solicitud.store';
+import { SeccionSubcontratados } from '../../models/solicitud.model';
 import { SolicitudCatologoSelectLista } from '../../models/solicitud.model';
-
+import { SolicitudQuery } from '../../estados/solicitud.query';
+import { SolicitudState } from '../../estados/solicitud.store';
+import { SolicitudStore } from '../../estados/solicitud.store';   
+import { SolicitudeService } from '../../services/solicitude.service';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { SolicitudeService } from '../../services/solicitude.service';
 
 /** Selector del componente, utilizado para integrarlo en el HTML
  *  Indica que este componente es independiente (standalone) y no depende de un módulo Angular específico

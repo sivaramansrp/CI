@@ -1,8 +1,10 @@
+import { HttpClient } from '@angular/common/http';
+// eslint-disable-next-line sort-imports
+import { EnlaceOperativo, Inventarios, RecibirNotificaciones, RepresentanteLegal, SeccionSubcontratados, SolicitudCatologoSelectLista, SolicitudRadioLista } from '../models/solicitud.model';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { EnlaceOperativo, Inventarios, RecibirNotificaciones, RepresentanteLegal, SeccionSubcontratados, SolicitudCatologoSelectLista, SolicitudRadioLista } from '../models/solicitud.model';
-import { HttpClient } from '@angular/common/http';
 import { SolicitudStore } from '../estados/solicitud.store';
+
 
 @Injectable({
   providedIn: 'root'

@@ -1,3 +1,5 @@
+import { INFORMACION_GENERAL, OEA_TEMPLATE_ARRAY, OTROS_PROGRAMAS_TEMPLATE_ARRAY, PERFILES_ACCORDION_SECCIONES, PIP_TEMPLATE_ARRAY } from '../../constants/constantes32618.enum';
+
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -5,15 +7,16 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { INFORMACION_GENERAL, OEA_TEMPLATE_ARRAY, OTROS_PROGRAMAS_TEMPLATE_ARRAY, PERFILES_ACCORDION_SECCIONES, PIP_TEMPLATE_ARRAY, TEMPLATE_1_ARRAY, TEMPLATE_2_ARRAY } from '../../constants/constantes32618.enum';
+
 import { RowTypeFormInput } from '../../../../shared/models/row-type-form-input.model';
 import { RowTypeFormInputComponent } from '../../../../shared/components/row-type-form-input/row-type-form-input.component';
-import { RubroTransporteFerrovario32618State, Tramite32618Store } from '../../estados/tramite32618.store';
+import { RubroTransporteFerrovario32618State } from '../../estados/tramite32618.store';
 import { SeccionDinamica } from '@libs/shared/data-access-user/src/core/models/shared/seccion-dinamica.model';
 import { SeccionDinamicaComponent } from '../../../../shared/components/seccion-dinamica/seccion-dinamica.component';
+
+import { TEMPLATE_1_ARRAY, TEMPLATE_2_ARRAY} from '../../constants/constantes32618.enum';
 import { Tramite32618Query } from '../../estados/tramite32618query';
-
-
+import { Tramite32618Store } from '../../estados/tramite32618.store';
 /** Componente para gestionar el formulario dinámico de perfiles ferroviarios en el trámite 32618. */
 @Component({
   selector: 'perfiles-ferrovario',

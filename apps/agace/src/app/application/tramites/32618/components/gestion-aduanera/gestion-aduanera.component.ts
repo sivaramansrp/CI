@@ -1,25 +1,43 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { GESTION_ADUANERA } from '../../constants/constantes32618.enum';
-import { RubroTransporteFerrovario32618State, Tramite32618Store } from '../../estados/tramite32618.store';
-import { map, Subject, takeUntil } from 'rxjs';
-import { ConsultaioQuery, ConsultaioState, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite32618Query } from '../../estados/tramite32618query';
+import {
+  RubroTransporteFerrovario32618State,
+  Tramite32618Store,
+} from '../../estados/tramite32618.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
+
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { GESTION_ADUANERA } from '../../constants/constantes32618.enum';
+
+import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { Tramite32618Query } from '../../estados/tramite32618query';
 @Component({
   selector: 'app-gestion-aduanera',
   standalone: true,
-  imports: [  
+  imports: [
     CommonModule,
     ReactiveFormsModule,
     FormasDinamicasComponent,
-    TituloComponent],
+    TituloComponent,
+  ],
   templateUrl: './gestion-aduanera.component.html',
   styleUrl: './gestion-aduanera.component.scss',
 })
-export class GestionAduaneraComponent implements AfterViewInit, OnInit, OnDestroy{
-    /** Referencia a la plantilla personalizada customTemplate1 utilizada en el componente. */
+export class GestionAduaneraComponent
+  implements AfterViewInit, OnInit, OnDestroy
+{
+  /** Referencia a la plantilla personalizada customTemplate1 utilizada en el componente. */
   @ViewChild('customTemplate1') customTemplate1!: TemplateRef<unknown>;
 
   /** Inicializa el formulario principal y el grupo anidado para la gestión aduanera. */
@@ -29,7 +47,9 @@ export class GestionAduaneraComponent implements AfterViewInit, OnInit, OnDestro
 
   /** Este getter devuelve el grupo de formularios anidado llamado `obligacionesAduanerasFormGroup`*/
   get obligacionesAduanerasFormGroup(): FormGroup {
-    return this.gestionAduaneraForm.get('obligacionesAduanerasFormGroup') as FormGroup;
+    return this.gestionAduaneraForm.get(
+      'obligacionesAduanerasFormGroup'
+    ) as FormGroup;
   }
 
   /** Arreglo con la configuración dinámica de los campos para el formulario de gestión aduanera. */
@@ -40,7 +60,7 @@ export class GestionAduaneraComponent implements AfterViewInit, OnInit, OnDestro
 
   /** Estado de la solicitud de la tramite 32613.*/
   public rubroTransporteFerrovariostate!: RubroTransporteFerrovario32618State;
-  
+
   /** Subject para notificar la destrucción del componente.*/
   private destroyNotifier$: Subject<void> = new Subject();
 
@@ -51,7 +71,7 @@ export class GestionAduaneraComponent implements AfterViewInit, OnInit, OnDestro
   constructor(
     private tramite32618Store: Tramite32618Store,
     private tramite32618Query: Tramite32618Query,
-    private consultaQuery: ConsultaioQuery,
+    private consultaQuery: ConsultaioQuery
   ) {
     //
   }
@@ -81,14 +101,17 @@ export class GestionAduaneraComponent implements AfterViewInit, OnInit, OnDestro
   ngAfterViewInit(): void {
     Promise.resolve().then(() => {
       this.templateMap = {
-        customSection1: this.customTemplate1
+        customSection1: this.customTemplate1,
       };
     });
   }
 
   /** Actualiza el valor dinámico de un campo en el store cuando ocurre un cambio en el formulario. */
-  establecerCambioDeValor(event: {campo: string, valor: string | number | object}): void {
-     if (event) {
+  establecerCambioDeValor(event: {
+    campo: string;
+    valor: string | number | object;
+  }): void {
+    if (event) {
       this.tramite32618Store.setDynamicFieldValue(event.campo, event.valor);
     }
   }

@@ -1,21 +1,22 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ConsultaioQuery, ConsultaioState, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { map, Subject, takeUntil } from 'rxjs';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CAPACITACION_EN_SEGURIDAD } from '../../constants/constantes32618.enum';
 import { RubroTransporteFerrovario32618State, Tramite32618Store } from '../../estados/tramite32618.store';
-import { Tramite32618Query } from '../../estados/tramite32618query';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CAPACITACION_EN_SEGURIDAD } from '../../constants/constantes32618.enum';
+import { CAPACITACION_EN_SEGURIDAD_CAONCIENTIZACION} from '../../constants/constantes32618.enum';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-
+import { Tramite32618Query } from '../../estados/tramite32618query';
 @Component({
   selector: 'app-capacitacion-en-seguridad',
   standalone: true,
-  imports: [  CommonModule,
+  imports: [  
+      CommonModule,
       ReactiveFormsModule,
       FormasDinamicasComponent,
-      TituloComponent,
-      InputRadioComponent],
+    ],
   templateUrl: './capacitacion-en-seguridad.component.html',
   styleUrl: './capacitacion-en-seguridad.component.scss',
 })
@@ -23,17 +24,21 @@ export class CapacitacionEnSeguridadComponent implements OnInit, OnDestroy {
   
   /** Arreglo con la configuración dinámica de los campos para el formulario de capacitación en seguridad. */
   public capacitacionEnSeguridadFormData = CAPACITACION_EN_SEGURIDAD;
-
+public capacitacionEnCaoncientizacionFormData = CAPACITACION_EN_SEGURIDAD_CAONCIENTIZACION;
   /** Inicializa el formulario principal y el grupo anidado para la capacitación en seguridad.*/
   public capacitacionEnSeguridadForm: FormGroup = new FormGroup({
-      capacitacionEnSeguridadFormGroup: new FormGroup({})
+      capacitacionEnSeguridadFormGroup: new FormGroup({}),
+      capacitacionEnCaoncientizacionFormGroup : new FormGroup({})
   });
+
 
   /** Este getter devuelve el grupo de formularios anidado llamado `capacitacionEnSeguridadFormGroup`*/
   get capacitacionEnSeguridadFormGroup(): FormGroup {
     return this.capacitacionEnSeguridadForm.get('capacitacionEnSeguridadFormGroup') as FormGroup;
   }
-
+get capacitacionEnCaoncientizacionFormGroup(): FormGroup {
+  return this.capacitacionEnSeguridadForm.get('capacitacionEnCaoncientizacionFormGroup') as FormGroup;
+    }
   /** Estado de la solicitud de la tramite 32613.*/
   public rubroTransporteFerrovariostate!: RubroTransporteFerrovario32618State;
   

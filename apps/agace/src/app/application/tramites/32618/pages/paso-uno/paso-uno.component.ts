@@ -1,6 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { DatosComunesTresService } from '../../../../shared/services/datos-comunes-tres.service';
 import { Subject, map, takeUntil } from 'rxjs';
+import { SolicitanteComponent} from '@libs/shared/data-access-user/src';
+
+import { TercerosRelacionadosService } from '../../../../shared/services/terceros-relacionados.service';
+
+import { RubroTransporteFerrovarioService } from '../../services/sce-socio-almacen.service';
 
 @Component({
   selector: 'app-paso-uno',
@@ -25,7 +31,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
     /** Estado de la consulta que se obtiene del store. */
     public consultaState!: ConsultaioState;
   
-    constructor(private consultaQuery: ConsultaioQuery) {
+    constructor(private consultaQuery: ConsultaioQuery,
+       private rubroTransporteFerrovarioService: RubroTransporteFerrovarioService,
+          private datosComunesTresService: DatosComunesTresService,
+          private tercerosRelacionadosSvc: TercerosRelacionadosService,
+    ) {
       // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
     }
   
@@ -52,17 +62,42 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
      * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
      * Luego reinicializa el formulario con los valores actualizados desde el store.
      */
-    // guardarDatosFormulario(): void {
-    //   this.solicitudService
-    //     .guardarDatosFormulario()
-    //     .pipe(takeUntil(this.destroyNotifier$))
-    //     .subscribe((resp: GuardarDatosFormulario) => {
-    //       if (resp) {
-    //         this.esDatosRespuesta = true;
-    //         this.solicitudService.actualizarEstadoFormulario(resp);
-    //       }
-    //     });
-    // }
+  guardarDatosFormulario(): void {
+      this.datosComunesTresService
+        .getDatosComunesTresData().pipe(
+          takeUntil(this.destroyNotifier$)
+        )
+        .subscribe((resp) => {
+          if (resp) {
+            Object.entries(resp).forEach(([key, value]) => {
+              this.datosComunesTresService.actualizarEstadoFormulario(key, value);
+            });
+          }
+        });
+  
+      this.tercerosRelacionadosSvc.getConsultaDatos().pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe((resp) => {
+        if (resp) {
+          Object.entries(resp).forEach(([key, value]) => {
+            this.tercerosRelacionadosSvc.actualizarEstadoFormulario(key, value);
+          });
+        }
+      });
+  
+      this.rubroTransporteFerrovarioService
+        .getrubroTransporteFerrovarioData().pipe(
+          takeUntil(this.destroyNotifier$)
+        )
+        .subscribe((resp) => {
+          if (resp) {
+            this.esDatosRespuesta = true;
+            Object.entries(resp).forEach(([key, value]) => {
+              this.rubroTransporteFerrovarioService.actualizarEstadoFormulario(key, value);
+            });
+          }
+        });
+    }
   
     /**
      * Cambia la pestaña activa según el índice proporcionado.

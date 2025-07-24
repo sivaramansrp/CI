@@ -2,9 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { SeccionSubcontratadosComponent } from './seccion-subcontratados.component';
-import { SolicitudService } from '../../services/solicitud.service';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { SolicitudeService } from '../../services/solicitude.service';
+import { SolicitudStore } from '../../estados/solicitud.store';
+import { SolicitudQuery } from '../../estados/solicitud.query';
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -61,9 +61,9 @@ describe('SeccionSubcontratadosComponent', () => {
       declarations: [],
       providers: [
         FormBuilder,
-        { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: Solicitud32605Store, useValue: solicitud32605StoreMock },
-        { provide: Solicitud32605Query, useValue: solicitud32605QueryMock },
+        { provide: SolicitudeService, useValue: solicitudServiceMock },
+        { provide: SolicitudStore, useValue: solicitud32605StoreMock },
+        { provide: SolicitudQuery, useValue: solicitud32605QueryMock },
       ],
     }).compileComponents();
   });

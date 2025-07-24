@@ -1,7 +1,7 @@
 
+import { RubroTransporteFerrovario32618State, Tramite32618Store } from '../estados/tramite32618.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RubroTransporteFerrovario32618State, Tramite32618Store } from '../estados/tramite32618.store';
 import { Observable } from 'rxjs';
 
 /** Decorador que marca el servicio como disponible en la raíz de la aplicación. */

@@ -1,13 +1,13 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { INVESTIGACION_ANALISIS, REPORTE_DE_ANOMALIAS } from '../../constants/constantes32618.enum';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { INVESTIGACION_ANALISIS, REPORTE_DE_ANOMALIAS } from '../../constants/constantes32618.enum';
 import { RubroTransporteFerrovario32618State, Tramite32618Store } from '../../estados/tramite32618.store';
-import { map, Subject, takeUntil } from 'rxjs';
-import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
-import { Tramite32618Query } from '../../estados/tramite32618query';
+import { Subject,map,takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-
+import { Tramite32618Query } from '../../estados/tramite32618query';
 @Component({
   selector: 'app-manejo-e-investigacion',
   standalone: true,

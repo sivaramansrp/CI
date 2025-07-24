@@ -1,16 +1,15 @@
-
+import { ACCESO_EN_PUERTAS, ALUMBRADO, APARATOS, BARDAS_PERIMETRALES, CONTROL_DE_LLAVES, ESTACIONAMIENTOS, INSTALACIONES, SISTEMAS_DE_ALARMA } from '../../constants/constantes32618.enum';
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { RubroTransporteFerrovario32618State } from '../../estados/tramite32618.store';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { RubroTransporteFerrovario32618State, Tramite32618Store } from '../../estados/tramite32618.store';
 import { Tramite32618Query } from '../../estados/tramite32618query';
-import { ACCESO_EN_PUERTAS, ALUMBRADO, APARATOS, BARDAS_PERIMETRALES, CONTROL_DE_LLAVES, ESTACIONAMIENTOS, INSTALACIONES, SISTEMAS_DE_ALARMA } from '../../constants/constantes32618.enum';
+import { Tramite32618Store } from '../../estados/tramite32618.store';
 
 
 /**

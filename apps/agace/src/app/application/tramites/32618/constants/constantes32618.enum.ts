@@ -1,18 +1,18 @@
 
 
+import { CapacitacionEnSeguridadComponent } from "../components/capacitacion-en-segurida/capacitacion-en-seguridad.component"
+import { ControlesDeAccesoFisicaComponent } from "../components/controles-de-acceso-fisica/controles-de-acceso-fisica.component"
 import { GestionAduaneraComponent } from "../components/gestion-aduanera/gestion-aduanera.component"
 import { ManejoEInvestigacionComponent } from "../components/manejo-e-investigacion/manejo-e-investigacion.component"
 import { PlaneacionDeLaSeguridadComponent } from "../components/planeacion-de-la-seguridad/planeacion-de-la-seguridad.component"
-
+import { RowTypeFormInput } from "../../../shared/models/row-type-form-input.model"
 import { SeguridadDeLaInformacionComponent } from "../components/seguridad-de-la-informacion/seguridad-de-la-informacion.component"
 import { SeguridadDeLosEquiposComponent } from "../components/seguridad-de-los-equipos/seguridad-de-los-equipos.component"
 import { SeguridadDeProcesosComponent } from "../components/seguridad-de-procesos/seguridad-de-procesos.component"
 import { SeguridadDelPersonalComponent } from "../components/seguridad-del-personal/seguridad-del-personal.component"
 import { SeguridadFisicaComponent } from "../components/seguridad-fisica/seguridad-fisica.component"
 import { SociosComercialsComponent } from "../components/socios-comercials/socios-comercials.component"
-import { CapacitacionEnSeguridadComponent } from "../components/capacitacion-en-segurida/capacitacion-en-seguridad.component"
-import { ControlesDeAccesoFisicaComponent } from "../components/controles-de-acceso-fisica/controles-de-acceso-fisica.component"
-import { RowTypeFormInput } from "../models/row-type-form-input.model"
+
 
 /** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const TRANSPORTE_FERROVARIO = [
@@ -2174,7 +2174,7 @@ export const PERSONAL_DE_SEGURIDAD = [
   },
   {
     id: 'indiqueElNumeroDePersonal',
-    labelNombre: 'Indique el número de personal de seguridad que labora en la empresa.',
+    labelNombre: 'Indique el número de personal de seguridad que labora en el almacén general de depósito.',
     campo: 'indiqueElNumeroDePersonal',
     clase: 'col-md-12',
     tipoInput: 'number',
@@ -2200,7 +2200,7 @@ export const PERSONAL_DE_SEGURIDAD = [
   },
   {
     id: 'enCasoDeContratarse',
-    labelNombre: 'En caso de contratarse un servicio externo,especificar número de personal empleado, detalles de operación, registros, reportes, etc.',
+    labelNombre: ' En caso de contratarse un servicio externo, proporcionar los datos generales de la empresa (RFC, razón social, domicilio), y especificar número de personal empleado, detalles de operación, registros y reportes que utilizan para desempeñar sus funciones, etcétera.LOAS!',
     campo: 'enCasoDeContratarse',
     clase: 'col-md-12',
     tipoInput: 'textarea',
@@ -2223,8 +2223,37 @@ export const PERSONAL_DE_SEGURIDAD = [
     valorPredeterminado: '',
     marcadorDePosicion: '',
     marginTop: 3,
-  },
+  }, 
 ]
+
+ export const IDENTIFICACION_DE_LOS_EMPLEADOS_FORM_DATA = [
+  {
+    id: 'describaVisitantesYProveedores',
+    labelNombre: 'Describa el procedimiento para el control de acceso de los visitantes y proveedores.',
+    campo: 'describaVisitantesYProveedores',
+    clase: 'col-md-12',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{tipo: 'required'}],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 3,
+  },
+  {
+    id: 'senaleBitacoras',
+    labelNombre: 'Señale qué registros se llevan a cabo. (Formatos personales por cada visita, bitácoras).',
+    campo: 'senaleBitacoras',
+    clase: 'col-md-12',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{tipo: 'required'}],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 3,
+  }
+ ]
 
 /** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const IDENTIFICACION_DE_LOS_EMPLEADOS = [
@@ -2243,7 +2272,7 @@ export const IDENTIFICACION_DE_LOS_EMPLEADOS = [
   },
   {
     id: 'indiqueLosMecanismos',
-    labelNombre: 'Indique los mecanismos de identificación (credencial con foto, uniforme, etcétera).',
+    labelNombre: 'Indique los mecanismos de identificación (gafete y/o credencial con foto, control de acceso, biométricos, tarjetas de proximidad, etcétera).',
     campo: 'indiqueLosMecanismos',
     clase: 'col-md-12',
     tipoInput: 'textarea',
@@ -2269,7 +2298,7 @@ export const IDENTIFICACION_DE_LOS_EMPLEADOS = [
   },
   {
     id: 'indiqueComoSeIdentifica',
-    labelNombre: 'Indique cómo se identifica al personal contratado por un socio comercial, que labore dentro de las instalaciones. (Contratistas, Sub-contratados, etc.).',
+    labelNombre: 'Indique cómo se identifica al personal contratado por un socio comercial, que labore dentro de las instalaciones (contratistas, sub-contratados, servicios in house sub-maquila, etcétera).',
     campo: 'indiqueComoSeIdentifica',
     clase: 'col-md-12',
     tipoInput: 'textarea',
@@ -2306,86 +2335,7 @@ export const IDENTIFICACION_DE_LOS_EMPLEADOS = [
     marcadorDePosicion: '',
     marginTop: 3,
   },
-  {
-    id: 'describaVisitantesYProveedores',
-    labelNombre: 'Describa el procedimiento para el control de acceso de los visitantes y proveedores.',
-    campo: 'describaVisitantesYProveedores',
-    clase: 'col-md-12',
-    tipoInput: 'textarea',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [{tipo: 'required'}],
-    valorPredeterminado: '',
-    marcadorDePosicion: '',
-    marginTop: 3,
-  },
-  {
-    id: 'senaleBitacoras',
-    labelNombre: 'Señale qué registros se llevan a cabo. (Formatos personales por cada visita, bitácoras).',
-    campo: 'senaleBitacoras',
-    clase: 'col-md-12',
-    tipoInput: 'textarea',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [{tipo: 'required'}],
-    valorPredeterminado: '',
-    marcadorDePosicion: '',
-    marginTop: 3,
-  },
-  {
-    id: 'indiqueComoAsegura',
-    labelNombre: 'Indique cómo asegura que el acceso a las áreas sensibles este restringido según la descripción del trabajo o las tareas asignadas (incluya el tipo de registros y controles que utiliza',
-    campo: 'indiqueComoAsegura',
-    clase: 'col-md-12',
-    tipoInput: 'textarea',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [{tipo: 'required'}],
-    valorPredeterminado: '',
-    marcadorDePosicion: '',
-    marginTop: 3,
-  },
-  {
-    id: 'customSection1_identificacion',
-    labelNombre: '',
-    campo: '',
-    clase: 'col-md-12',
-    tipoInput: 'custom-html',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
-    templateKey: 'customSection1',
-  },
-  {
-    id: 'senaleQuienIngreso',
-    labelNombre: 'Señale quién es la persona responsable de acompañar al visitante y/o proveedor y si existen áreas restringidas para su ingreso.',
-    campo: 'senaleQuienIngreso',
-    clase: 'col-md-12',
-    tipoInput: 'textarea',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [{tipo: 'required'}],
-    valorPredeterminado: '',
-    marcadorDePosicion: '',
-    marginTop: 3,
-  },
-  {
-    id: 'customSection2_identificacion',
-    labelNombre: '',
-    campo: '',
-    clase: 'col-md-12',
-    tipoInput: 'custom-html',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 5,
-    templateKey: 'customSection2',
-  },
+ 
 ]
 
 export const ENTREGAS_DE_MENSAJERIA = [
@@ -2402,19 +2352,7 @@ export const ENTREGAS_DE_MENSAJERIA = [
     marcadorDePosicion: '',
     marginTop: 3,
   },
-  {
-    id: 'senaleAlPersonalEncargado',
-    labelNombre: 'Señale al personal encargado de llevar a cabo el procedimiento.',
-    campo: 'senaleAlPersonalEncargado',
-    clase: 'col-md-12',
-    tipoInput: 'textarea',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [{tipo: 'required'}],
-    valorPredeterminado: '',
-    marcadorDePosicion: '',
-    marginTop: 3,
-  },
+ 
   {
     id: 'indiqueComoSeIdentificaEntregas',
     labelNombre: 'Indique cómo se identifica al proveedor del servicio. (Señale si requiere de procedimiento adicional al de acceso a proveedores).',
@@ -2428,9 +2366,22 @@ export const ENTREGAS_DE_MENSAJERIA = [
     marcadorDePosicion: '',
     marginTop: 3,
   },
+   {
+    id: 'indiqueIncidentesDetectados',
+    labelNombre: 'Señale cómo se lleva a cabo el registro de la inspección y en su caso de los incidentes detectados.',
+    campo: 'indiqueIncidentesDetectados',
+    clase: 'col-md-12',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{tipo: 'required'}],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 3,
+  },
   {
     id: 'senaleDeQueForma',
-    labelNombre: 'Señale de qué forma se revisan los paquetes y/o que mecanismo utiliza, así como los registros que se llevan a cabo y, en su caso, los incidentes detectados.',
+    labelNombre: 'Describa las características o elementos para determinar qué mensajería y/o paquetería es sospechosa.',
     campo: 'senaleDeQueFormaEntregas',
     clase: 'col-md-12',
     tipoInput: 'textarea',
@@ -2454,19 +2405,7 @@ export const ENTREGAS_DE_MENSAJERIA = [
     marcadorDePosicion: '',
     marginTop: 3,
   },
-  {
-    id: 'indiqueIncidentesDetectados',
-    labelNombre: 'Indique cómo se lleva a cabo el registro de la inspección y en su caso de los incidentes detectados.',
-    campo: 'indiqueIncidentesDetectados',
-    clase: 'col-md-12',
-    tipoInput: 'textarea',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [{tipo: 'required'}],
-    valorPredeterminado: '',
-    marcadorDePosicion: '',
-    marginTop: 3,
-  },
+ 
 ]
 
 /** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
@@ -2600,6 +2539,19 @@ export const REVISIONS_OF_COMMERCIAL_PARTNERS = [
     id: 'indiqueElRegistroOReporte',
     labelNombre: 'Indique el registro o reporte de la verificación, y en su caso del seguimiento correspondiente.',
     campo: 'indiqueElRegistroOReporte',
+    clase: 'col-md-12',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{tipo: 'required'}],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 3,
+  },
+   {
+    id: 'describaElProgramaOCalendario',
+    labelNombre: 'Describa el programa o calendario para la ejecución de las revisiones de seguridad',
+    campo: 'describaElProgramaOCalendario',
     clase: 'col-md-12',
     tipoInput: 'textarea',
     desactivado: false,
@@ -4204,7 +4156,7 @@ export const SEGURIDAD_DE_LA_TECNOLOGIA = [
 export const CAPACITACION_EN_SEGURIDAD = [ 
   {
     id: 'laEmpresaTransporte',
-    labelNombre: 'La empresa concesionaria de transporte ferroviario debe contar con un programa de capacitación y concientización de las políticas de seguridad en la cadena de suministro dirigido a todos sus empleados (operativos y administrativos) y, adicionalmente, poner a su disposición material informativo respecto de los procedimientos establecidos en la compañía para considerar una situación que amenace su seguridad y saber cómo denunciarla.',
+    labelNombre: 'El almacén general de depósito debe contar con un programa de capacitación y concientización de las políticas de seguridad en la cadena de suministros dirigido a todos sus empleados (operativos y administrativos) y, adicionalmente, poner a su disposición material informativo respecto de los procedimientos establecidos en la compañía para considerar una situación que amenace su seguridad y saber cómo denunciarla.',
     campo: '',
     clase: 'col-md-12',
     tipoInput: 'label-only',
@@ -4217,7 +4169,7 @@ export const CAPACITACION_EN_SEGURIDAD = [
   },
   {
     id: 'deIgualForma',
-    labelNombre: 'De igual forma, se debe ofrecer capacitación específica conforme a sus funciones para ayudar a los empleados a mantener la integridad de los equipos tractivos y de arrastre con fines agrícolas y de seguridad, manejo de incidentes, recepción y revisión de mensajería y paquetería, prevención de operaciones con recursos de procedencia ilícita (lavado dinero, financiamiento al terrorismo, etcétera), cómo reconocer y cómo reportar conspiraciones internas, proteger los controles de acceso, así como capacitación referente a contrabando, robo de mercancía, colocación de sellos y candados de alta seguridad (método de inspección VVTT), prevención sobre contaminación visible de plagas, etcétera. Estos temas deben establecerse como parte de la inducción de nuevos empleados y mantener periódicamente programas de actualización. La capacitación de actualización debe realizarse periódicamente, después de un incidente de seguridad y cuando haya cambios en los procedimientos de la empresa.',
+    labelNombre: 'De igual forma, se debe ofrecer capacitación específica conforme a sus funciones para ayudar a los empleados a mantener la integridad de la mercancía destinada al régimen de depósito fiscal durante su recepción, manejo, almacenaje, guardia, custodia y salida del almacén, realizar la revisión de los medios de transporte, contenedores, carros de tren, remolques y/o semirremolques con fines agrícolas y de seguridad, recepción y revisión de mensajería y paquetería, prevención de operaciones con recursos de procedencia ilícita (lavado de dinero, financiamiento al terrorismo, etcétera), cómo reconocer y cómo reportar conspiraciones internas, proteger los controles de acceso, así como capacitación referente a contrabando, robo de mercancía, colocación de sellos y candados de alta seguridad (método de inspección VVTT), prevención sobre contaminación visible de plagas, etcétera. Estos temas deben establecerse como parte de la inducción de nuevos empleados y mantener periódicamente programas de actualización. La capacitación de actualización debe realizarse periódicamente, después de un incidente de seguridad y cuando haya cambios en los procedimientos del almacén general de depósito.',
     campo: '',
     clase: 'col-md-12',
     tipoInput: 'label-only',
@@ -4230,7 +4182,7 @@ export const CAPACITACION_EN_SEGURIDAD = [
   },
   {
     id: 'aunado',
-    labelNombre: 'Aunado a los programas de capacitación en seguridad, se debe incluir un programa de concientización sobre consumo de alcohol y drogas. También, difundir y capacitar al personal sobre las políticas, procedimientos y normas de ciberseguridad de la empresa (robo, fuga, hackeo y/o secuestro de información), incluyendo el acceso al equipo de cómputo y sistemas mediante contraseñas o frases. El personal que opera y administra los sistemas de tecnología de seguridad debe recibir capacitación relacionada a su operación y mantenimiento, incluyendo autoformación a través de manuales operativos y otros métodos. Estos temas deben establecerse como parte de la inducción de nuevos empleados y mantener periódicamente programas de actualización.',
+    labelNombre: 'Aunado a los programas de capacitación en seguridad, se debe incluir un programa de concientización sobre consumo de alcohol y drogas. También, difundir y capacitar al personal sobre las políticas, procedimientos y normas de ciberseguridad de almacén general de depósito (robo, fuga, hackeo, y/o secuestro de la información), incluyendo el acceso al equipo de cómputo y sistemas mediante contraseñas o frases. El personal que opera y administra los sistemas de tecnología de seguridad debe recibir capacitación relacionada a su operación y mantenimiento, incluyendo autoformación a través de manuales operativos y otros métodos. Estos temas deben establecerse como parte de la inducción de nuevos empleados y mantener periódicamente programas de actualización.',
     campo: '',
     clase: 'col-md-12',
     tipoInput: 'label-only',
@@ -4347,6 +4299,86 @@ export const CAPACITACION_EN_SEGURIDAD = [
   },
 ]
 
+export const CAPACITACION_EN_SEGURIDAD_CAONCIENTIZACION =[
+ {
+    id: 'elAlmacenGeneral',
+    labelNombre: 'El almacén general de depósito debe dar a conocer a los operadores de los medios de transporte que utiliza para el traslado y traspaso de las mercancías destinada al régimen de depósito fiscal, las políticas de seguridad respecto de procedimientos de inspección agrícola y de seguridad de medios de transporte, de carga y descarga, manejo de incidentes de seguridad, reemplazo de sellos y/o candados en caso de inspección por otras autoridades, entre otros, que se tengan implementados. Los operadores y el personal que realiza inspecciones agrícolas y de seguridad de medios de transporte, deben estar capacitados para inspeccionar los vehículos de carga con dichos fines.',
+    campo: 'elAlmacenGeneral',
+    clase: 'col-md-12',
+    tipoInput: 'label-only',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+  {
+    id: 'enCasoDeQueElServicio',
+    labelNombre: 'En caso de que el servicio de transporte sea proporcionado por su socio comercial, deberá asegurarse de que los operadores y/o choferes que transportan las mercancías conozcan todas las políticas de seguridad y procedimientos establecidos por el almacén general de depósito. * Describa el programa de difusión en materia de seguridad en la cadena de suministros enfocada a los operadores de los medios de transporte. * Indique cómo se lleva a cabo esta difusión.',
+    campo: 'enCasoDeQueElServicio',
+    clase: 'col-md-12',
+    tipoInput: 'label-only',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+  {
+    id: 'exPliqueBrevemente',
+    labelNombre: ' Describa el programa de difusión en materia de seguridad en la cadena de suministros enfocada a los operadores de los medios de transporte',
+    campo: 'exPliqueBrevemente',
+    clase: 'col-md-12',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{tipo: 'required'}],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 3,
+  },
+  {
+    id: 'indiqueSonLos',
+    labelNombre: 'Indique cómo se lleva a cabo esta difusión.',
+    campo: 'indiqueSonLos',
+    clase: 'col-md-12',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{tipo: 'required'}],
+    valorPredeterminado: '',
+    marcadorDePosicion: '',
+    marginTop: 3,
+  },
+  {
+    id: 'enCasoDeQue',
+    labelNombre: ' En el caso de que el servicio de transporte sea proporcionado por un socio comercial, mencione cómo se asegura que los operadores y/o choferes conocen todas las políticas de seguridad y procedimientos establecidos de la empresa.',
+    campo: 'enCasoDeQue',
+    clase: 'col-md-12',
+    tipoInput: 'label-only',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+   {
+    id: 'losTemasQueDeberaIncluir',
+    labelNombre: 'Los temas que deberán incluir, de manera enunciativa mas no limitativa, son: Los temas que deberán incluir, de manera enunciativa mas no limitativa, son:',
+    campo: 'losTemasQueDeberaIncluir',
+    clase: 'col-md-12',
+    tipoInput: 'label-only',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+]
 /** Campos y secciones dinámicas para el formulario de transporte ferroviario en el trámite 32613 */
 export const REPORTE_DE_ANOMALIAS = [
    {
@@ -4403,7 +4435,7 @@ export const REPORTE_DE_ANOMALIAS = [
   },
   {
     id: 'mencioneSiLlevaRegistro',
-    labelNombre: 'Mencione si lleva un registro del reporte de estas actividades y/o sospechas y describa brevemente.',
+    labelNombre: ' Señale el tipo de registro para el reporte de anomalías y/o actividades sospechas y describa brevemente en que consiste.',
     campo: 'mencioneSiLlevaRegistro',
     clase: 'col-md-12',
     tipoInput: 'textarea',
@@ -4420,7 +4452,7 @@ export const REPORTE_DE_ANOMALIAS = [
 export const INVESTIGACION_ANALISIS = [
   {
     id: 'debenExistirProcedimientosEscritos',
-    labelNombre: 'Deben existir procedimientos escritos para denunciar o reportar anomalías y/o actividades sospechosas, así como para el análisis e investigación de incidentes de seguridad en la cadena de suministros para determinar su causa, además de las acciones correctivas para evitar que vuelvan a ocurrir, mismas que deben implementarse lo más pronto posible. La información derivada de esta investigación deberá documentarse y estar disponible en todo momento para las autoridades que así lo requieran.',
+    labelNombre: 'El almacén general de depósito debe tener procedimientos escritos para denunciar o reportar anomalías y/o actividades sospechosas, así como el análisis e investigación de incidentes de seguridad en la cadena de suministros y poder determinar su causa, además de las acciones correctivas para evitar que vuelvan a ocurrir, mismas que deben implementarse lo más pronto posible. La información derivada de esta investigación deberá documentarse, estar integrada un expediente (físico y/o electrónico) y estar disponible en todo momento para las autoridades que así lo requieran.',
     campo: '',
     clase: 'col-md-12',
     tipoInput: 'label-only',
@@ -4433,7 +4465,7 @@ export const INVESTIGACION_ANALISIS = [
   },
   {
     id: 'estaInformacionDeberaIncluir',
-    labelNombre: 'Esta información deberá incluir la documentación generada para llevar a cabo la operación de comercio exterior de las mercancías afectadas que permita identificar cada uno de los procesos por los que atravesó la mercancía, hasta el punto en que se detectó la incidencia y que permita reconocer la vulnerabilidad de la cadena.',
+    labelNombre: 'Esta información y documentación generada deberá incluirse en un expediente con la finalidad de permitir identificar cada uno de los procesos por los que atravesó dicha operación hasta el punto en que se detectó el incidente de seguridad, permitiendo reconocer cuál fue la vulnerabilidad de la cadena de suministros.',
     campo: '',
     clase: 'col-md-12',
     tipoInput: 'label-only',

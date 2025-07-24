@@ -6,9 +6,9 @@ import {
 } from '@angular/core/testing';
 import { DatosComunesComponent } from './datos-comunes.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { SolicitudService } from '../../services/solicitud.service';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { SolicitudStore} from '../../estados/solicitud.store';
+import { SolicitudeService } from '../../services/solicitude.service';
+import { SolicitudQuery } from '../../estados/solicitud.query';
 import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
@@ -35,9 +35,9 @@ import {
 describe('DatosComunesComponent', () => {
   let component: DatosComunesComponent;
   let fixture: ComponentFixture<DatosComunesComponent>;
-  let solicitudServiceMock: jest.Mocked<SolicitudService>;
-  let solicitud32605StoreMock: jest.Mocked<Solicitud32605Store>;
-  let solicitud32605QueryMock: jest.Mocked<Solicitud32605Query>;
+  let solicitudServiceMock: jest.Mocked<SolicitudeService>;
+  let solicitud32605StoreMock: jest.Mocked<SolicitudStore>;
+  let solicitud32605QueryMock: jest.Mocked<SolicitudQuery>;
 
   beforeEach(async () => {
     solicitudServiceMock = {
@@ -217,7 +217,7 @@ describe('DatosComunesComponent', () => {
           },
         ])
       ),
-    } as unknown as jest.Mocked<SolicitudService>;
+    } as unknown as jest.Mocked<SolicitudeService>;
 
     solicitud32605StoreMock = {
       actualizarListaSeccionSociosIC: jest.fn(() => of([])),
@@ -254,7 +254,7 @@ describe('DatosComunesComponent', () => {
       actualizarCheckbox3: jest.fn(() => of(true)),
       actualizarActualmente2: jest.fn(() => of('test')),
       actualizarActualmente1: jest.fn(() => of('test')),
-    } as unknown as jest.Mocked<Solicitud32605Store>;
+    } as unknown as jest.Mocked<SolicitudStore>;
 
     solicitud32605QueryMock = {
       selectSolicitud$: of({
@@ -369,7 +369,7 @@ describe('DatosComunesComponent', () => {
         listaSeccionSociosIC: [] as SeccionSociosIC[],
         enlaceOperativosLista: [] as EnlaceOperativo[],
       }),
-    } as jest.Mocked<Solicitud32605Query>;
+    } as jest.Mocked<SolicitudQuery>;
 
     await TestBed.configureTestingModule({
       imports: [
@@ -391,9 +391,9 @@ describe('DatosComunesComponent', () => {
       declarations: [],
       providers: [
         FormBuilder,
-        { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: Solicitud32605Store, useValue: solicitud32605StoreMock },
-        { provide: Solicitud32605Query, useValue: solicitud32605QueryMock },
+        { provide: SolicitudeService, useValue: solicitudServiceMock },
+        { provide: SolicitudStore, useValue: solicitud32605StoreMock },
+        { provide: SolicitudQuery, useValue: solicitud32605QueryMock },
       ],
     }).compileComponents();
   });

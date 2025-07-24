@@ -3,7 +3,7 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -15,17 +15,18 @@ import { Output } from '@angular/core';
 import { RadioOptions } from '../../models/solicitud.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SeccionSociosIC } from '../../models/solicitud.model';
-import { SolicitudQuery } from '../../estados/solicitud.query';
-import { SolicitudState, SolicitudStore } from '../../estados/solicitud.store';
-
 import { SolicitudCatologoSelectLista } from '../../models/solicitud.model';
+import { SolicitudQuery } from '../../estados/solicitud.query';
 import { SolicitudRadioLista } from '../../models/solicitud.model';
+import { SolicitudState } from '../../estados/solicitud.store';
+import { SolicitudStore} from '../../estados/solicitud.store';
+import { SolicitudeService } from '../../services/solicitude.service';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { SolicitudeService } from '../../services/solicitude.service';
+
 
 /** Componente que representa un miembro de la empresa */
 @Component({

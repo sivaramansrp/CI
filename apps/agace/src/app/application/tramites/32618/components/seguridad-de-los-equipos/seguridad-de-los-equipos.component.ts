@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+// eslint-disable-next-line sort-imports
 import { ALMACENAJE_DEL_EQUIPO, INSPECCION_DE_LOS_EQUIPOS, SEGURIDAD_EN_VIAS_FERREAS, USO_DE_SELLADOS_Y_O_CANDADOS } from '../../constants/constantes32618.enum';
 import { RubroTransporteFerrovario32618State, Tramite32618Store } from '../../estados/tramite32618.store';
 import { Tramite32618Query } from '../../estados/tramite32618query';

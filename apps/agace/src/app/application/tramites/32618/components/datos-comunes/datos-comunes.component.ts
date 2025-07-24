@@ -1,24 +1,43 @@
-import { Catalogo, NotificacionesComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionAporteColumna } from '@libs/shared/data-access-user/src';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+import { DOMICILIOS_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
+// eslint-disable-next-line sort-imports
+import { Domicilios, SolicitudCatologoSelectLista } from '../../models/solicitud.model';
 import { ElementRef } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { INVENTARIOS_CONFIGURACION } from '../../constants/solicitud.enum';
+import { InputRadio } from '../../models/solicitud.model';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { InstalacionesPrincipalesComponent } from '../instalaciones-principales/instalaciones-principales.component';
+import { Inventarios } from '../../models/solicitud.model';
+import { MiembroDeLaEmpresaComponent } from '../miembro-de-la-empresa/miembro-de-la-empresa.component';
 import { Modal } from 'bootstrap';
+import { NUMERO_DE_EMPLEADOS_CONFIGURACION } from '../../constants/solicitud.enum';
 import { Notificacion } from '@libs/shared/data-access-user/src';
-
+import { NumeroDeEmpleados } from '../../models/solicitud.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Pedimento } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
+
+
+import { SeccionSociosIC } from '../../models/solicitud.model';
+import { SeccionSubcontratadosComponent } from '../seccion-subcontratados/seccion-subcontratados.component';
 
 import { SolicitudQuery } from '../../estados/solicitud.query';
+import { SolicitudRadioLista } from '../../models/solicitud.model';
+import { SolicitudState } from '../../estados/solicitud.store';
+import { SolicitudStore} from '../../estados/solicitud.store';
+import { SolicitudeService } from '../../services/solicitude.service';
 
 import { Subject } from 'rxjs';
 import { TablaConEntradaComponent } from '@libs/shared/data-access-user/src';
@@ -29,22 +48,6 @@ import { ToastrModule } from 'ngx-toastr';
 import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { Domicilios } from '../../models/solicitud.model';
-import { InputRadio } from '../../models/solicitud.model';
-import { Inventarios } from '../../models/solicitud.model';
-import { NUMERO_DE_EMPLEADOS_CONFIGURACION } from '../../constants/solicitud.enum';
-import { NumeroDeEmpleados } from '../../models/solicitud.model';
-import { SeccionSociosIC } from '../../models/solicitud.model';
-import { SolicitudState, SolicitudStore } from '../../estados/solicitud.store';
-import { SolicitudCatologoSelectLista } from '../../models/solicitud.model';
-import { DOMICILIOS_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
-import { SolicitudRadioLista } from '../../models/solicitud.model';
-import { SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
-import { INVENTARIOS_CONFIGURACION } from '../../constants/solicitud.enum';
-import { SolicitudeService } from '../../services/solicitude.service';
-import { MiembroDeLaEmpresaComponent } from '../miembro-de-la-empresa/miembro-de-la-empresa.component';
-import { SeccionSubcontratadosComponent } from '../seccion-subcontratados/seccion-subcontratados.component';
-import { InstalacionesPrincipalesComponent } from '../instalaciones-principales/instalaciones-principales.component';
 
 /**
  * Componente principal para la gestión de datos comunes de la solicitud.

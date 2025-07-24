@@ -1,5 +1,9 @@
-import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import {ConsultaioQuery} from '@ng-mf/data-access-user';
+import {map} from 'rxjs'; 
+// eslint-disable-next-line sort-imports
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -9,22 +13,22 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputRadio } from '../../models/solicitud.model';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SolicitudQuery } from '../../estados/solicitud.query';
-
-import { SolicitudState, SolicitudStore } from '../../estados/solicitud.store';
-
 import { SolicitudCatologoSelectLista } from '../../models/solicitud.model';
+import { SolicitudQuery } from '../../estados/solicitud.query';
 import { SolicitudRadioLista } from '../../models/solicitud.model';
+// eslint-disable-next-line sort-imports
+import { SolicitudState, SolicitudStore } from '../../estados/solicitud.store';
+import { SolicitudeService } from '../../services/solicitude.service';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { SolicitudeService } from '../../services/solicitude.service';
+
 
 /**
  * Componente para manejar las instalaciones principales.

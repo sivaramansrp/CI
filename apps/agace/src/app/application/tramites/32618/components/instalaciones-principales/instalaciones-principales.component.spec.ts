@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { InstalacionesPrincipalesComponent } from './instalaciones-principales.component';
-import { SolicitudService } from '../../services/solicitud.service';
-import { SolicitudStore } from '../../estados/solicitudstore';
+import { SolicitudState, SolicitudStore } from '../../estados/solicitud.store';
+import { SolicitudeService } from '../../services/solicitude.service';
 import { SolicitudQuery } from '../../estados/solicitud.query';
 import { Domicilios } from '../../models/solicitud.model';
 import { CommonModule } from '@angular/common';
@@ -92,7 +92,7 @@ describe('InstalacionesPrincipalesComponent', () => {
         HttpClientTestingModule,
       ],
       providers: [
-        { provide: SolicitudService, useValue: solicitudServiceMock },
+        { provide: SolicitudeService, useValue: solicitudServiceMock },
         { provide: SolicitudStore, useValue: SolicitudStoreMock },
         { provide: SolicitudQuery, useValue: SolicitudQueryMock },
       ],

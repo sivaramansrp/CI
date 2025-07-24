@@ -1,3 +1,4 @@
+
 import {
   AlertComponent,
   AnexarDocumentosComponent,
@@ -7,6 +8,7 @@ import {
   TituloComponent,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
+
 import { CommonModule } from '@angular/common';
 import { DatosComunesComponent } from './components/datos-comunes/datos-comunes.component';
 import { DatosComunesTresComponent } from '../../shared/components/datos-comunes-tres/datos-comunes-tres.component';
@@ -18,7 +20,7 @@ import { PerfilesFerrovarioComponent } from './components/perfiles-ferrovario/pe
 import { SceSocioAlmacenRoutingModule } from './sce-socio-almacen-routing.module';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
-import { AlmacenGeneralComponent } from './components/almacen-general/almacen-general.component';
+import { TransporteFerroviarioComponent } from './components/transporte-ferroviario/transporte-ferroviario.component';
 
 
 @NgModule({
@@ -40,11 +42,11 @@ import { AlmacenGeneralComponent } from './components/almacen-general/almacen-ge
     SolicitanteComponent,
     BtnContinuarComponent,
     WizardComponent,
-    AlmacenGeneralComponent,
     PerfilesFerrovarioComponent,
     TituloComponent,
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
+    TransporteFerroviarioComponent
   ],
 })
 export class SceSocioAlmacenModule {}

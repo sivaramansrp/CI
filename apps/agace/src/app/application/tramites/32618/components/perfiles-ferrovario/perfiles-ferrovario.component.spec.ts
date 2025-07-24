@@ -1,15 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PerfilesFerrovarioComponent } from './perfiles-ferrovario.component';
-import { Tramite32613Query } from '../../../../estados/queries/tramite32613.query';
-import { Tramite32613Store } from '../../../../estados/tramites/tramite32613.store';
+import { Tramite32618Query } from '../../estados/tramite32618query';
+import { Tramite32618Store } from '../../estados/tramite32618.store';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 
 describe('PerfilesFerrovarioComponent', () => {
   let component: PerfilesFerrovarioComponent;
   let fixture: ComponentFixture<PerfilesFerrovarioComponent>;
-  let mockTramiteQuery: Partial<Tramite32613Query>;
-  let mockStore: Partial<Tramite32613Store>;
+  let mockTramiteQuery: Partial<Tramite32618Query>;
+  let mockStore: Partial<Tramite32618Store>;
   let mockConsultaQuery: Partial<ConsultaioQuery>;
   
   beforeEach(async () => {
@@ -48,8 +48,8 @@ describe('PerfilesFerrovarioComponent', () => {
     await TestBed.configureTestingModule({
       imports: [PerfilesFerrovarioComponent],
       providers: [
-        { provide: Tramite32613Query, useValue: mockTramiteQuery },
-        { provide: Tramite32613Store, useValue: mockStore },
+        { provide: Tramite32618Query, useValue: mockTramiteQuery },
+        { provide: Tramite32618Store, useValue: mockStore },
         { provide: ConsultaioQuery, useValue: mockConsultaQuery },
       ],
     }).compileComponents();

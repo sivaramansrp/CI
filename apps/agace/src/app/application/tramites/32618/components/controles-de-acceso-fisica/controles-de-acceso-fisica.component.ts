@@ -1,15 +1,17 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ENTREGAS_DE_MENSAJERIA, IDENTIFICACION_DE_LOS_EMPLEADOS, IDENTIFICACION_DE_LOS_EMPLEADOS_FORM_DATA} from '../../constants/constantes32618.enum';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { RubroTransporteFerrovario32618State, Tramite32618Store } from '../../estados/tramite32618.store';
+import { PERSONAL_DE_SEGURIDAD} from '../../constants/constantes32618.enum';
+import { RubroTransporteFerrovario32618State } from '../../estados/tramite32618.store';
+import { SI_NO_OPCIONES } from '../../constants/constantes32618.enum';
 import { Tramite32618Query } from '../../estados/tramite32618query';
-import { ENTREGAS_DE_MENSAJERIA, IDENTIFICACION_DE_LOS_EMPLEADOS, PERSONAL_DE_SEGURIDAD, SI_NO_OPCIONES } from '../../constants/constantes32618.enum';
+import { Tramite32618Store } from '../../estados/tramite32618.store';
 
 
 /** Componente para gestionar el formulario dinámico de controles de acceso físico en el trámite 32613. */
@@ -41,6 +43,8 @@ export class ControlesDeAccesoFisicaComponent implements AfterViewInit, OnInit, 
   /** Arreglo con la configuración dinámica de los campos para el formulario de identificación de los empleados. */
   public identificacionDeLosEmpleadosFormData = IDENTIFICACION_DE_LOS_EMPLEADOS;
 
+  public identificacionDeLosProveedoresFormData = IDENTIFICACION_DE_LOS_EMPLEADOS_FORM_DATA;
+
   /** Arreglo con la configuración dinámica de los campos para el formulario de entregas de mensajería. */
   public entregasDeMensajeriaFormData = ENTREGAS_DE_MENSAJERIA;
 
@@ -48,6 +52,7 @@ export class ControlesDeAccesoFisicaComponent implements AfterViewInit, OnInit, 
   public controlesDeAccesoFormGroup: FormGroup = new FormGroup({
     personalDeSeguridadFormGroup: new FormGroup({}),
     identificacionDeLosEmpleadosFormGroup: new FormGroup({}),
+    identificacionDeLosProveedoresFormGroup:new FormGroup({}),
     elRegistroDeVisitantes: new FormControl(''),
     entregasDeMensajeriaFormGroup: new FormGroup({}),
   })
@@ -62,6 +67,9 @@ export class ControlesDeAccesoFisicaComponent implements AfterViewInit, OnInit, 
     return this.controlesDeAccesoFormGroup.get('identificacionDeLosEmpleadosFormGroup') as FormGroup;
   }
 
+  get identificacionDeLosProveedoresFormGroup():FormGroup{
+    return this.controlesDeAccesoFormGroup.get('identificacionDeLosProveedoresFormGroup') as FormGroup;
+  }
   /** Este getter devuelve el grupo de formularios anidado llamado `entregasDeMensajeriaFormGroup`*/
   get entregasDeMensajeriaFormGroup(): FormGroup {
     return this.controlesDeAccesoFormGroup.get('entregasDeMensajeriaFormGroup') as FormGroup;

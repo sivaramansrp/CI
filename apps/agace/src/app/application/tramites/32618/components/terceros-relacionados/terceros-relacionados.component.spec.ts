@@ -3,9 +3,10 @@ import { TercerosRelacionadosComponent } from './terceros-relacionados.component
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { of } from 'rxjs';
-import { SolicitudService } from '../../services/solicitud.service';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { SolicitudeService } from '../../services/solicitude.service';
+import { SolicitudQuery } from '../../estados/solicitud.query';
+
+import { SolicitudStore } from '../../estados/solicitud.store';
 import { CommonModule } from '@angular/common';
 import {
   NotificacionesComponent,
@@ -24,9 +25,9 @@ import {
 describe('TercerosRelacionadosComponent', () => {
   let component: TercerosRelacionadosComponent;
   let fixture: ComponentFixture<TercerosRelacionadosComponent>;
-  let solicitudServiceMock: jest.Mocked<SolicitudService>;
-  let solicitud32605StoreMock: jest.Mocked<Solicitud32605Store>;
-  let solicitud32605QueryMock: jest.Mocked<Solicitud32605Query>;
+  let solicitudServiceMock: jest.Mocked<SolicitudeService>;
+  let solicitud32605StoreMock: jest.Mocked<SolicitudStore>;
+  let solicitud32605QueryMock: jest.Mocked<SolicitudQuery>;
 
   beforeEach(async () => {
     solicitudServiceMock = {
@@ -82,7 +83,7 @@ describe('TercerosRelacionadosComponent', () => {
           correoElectronico: 'vucem2.5@hotmail.com',
         })
       ),
-    } as unknown as jest.Mocked<SolicitudService>;
+    } as unknown as jest.Mocked<SolicitudeService>;
 
     solicitud32605StoreMock = {
       actualizarRfc: jest.fn(() => of('ZURC721023D12')),
@@ -93,7 +94,7 @@ describe('TercerosRelacionadosComponent', () => {
       actualizarCorreoElectronico: jest.fn(() => of('vucem2.5@hotmail.com')),
       actualizarRfcTercero: jest.fn(() => of('ZURC721023D12')),
       actualizarEnlaceOperativosLista: jest.fn(() => of('test')),
-    } as unknown as jest.Mocked<Solicitud32605Store>;
+    } as unknown as jest.Mocked<SolicitudStore>;
 
     solicitud32605QueryMock = {
       selectSolicitud$: of({
@@ -208,7 +209,7 @@ describe('TercerosRelacionadosComponent', () => {
         listaSeccionSociosIC: [] as SeccionSociosIC[],
         enlaceOperativosLista: [] as EnlaceOperativo[],
       }),
-    } as unknown as jest.Mocked<Solicitud32605Query>;
+    } as unknown as jest.Mocked<SolicitudQuery>;
 
     await TestBed.configureTestingModule({
       imports: [
@@ -225,9 +226,9 @@ describe('TercerosRelacionadosComponent', () => {
       ],
       declarations: [],
       providers: [
-        { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: Solicitud32605Store, useValue: solicitud32605StoreMock },
-        { provide: Solicitud32605Query, useValue: solicitud32605QueryMock },
+        { provide: SolicitudeService, useValue: solicitudServiceMock },
+        { provide: SolicitudStore, useValue: solicitud32605StoreMock },
+        { provide: SolicitudQuery, useValue: solicitud32605QueryMock },
       ],
     }).compileComponents();
 
