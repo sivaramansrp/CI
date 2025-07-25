@@ -51,14 +51,19 @@ export class DatosAnexosComponent implements OnInit, OnDestroy {
   datosAnexo: Anexo[] = [];
 
   /**
-   * Datos de los anexos de importación obtenidos desde el servicio.
-   * @type {Anexo[]}
+   * Lista de anexos relacionados con la importación.
+   * 
+   * Esta propiedad almacena un arreglo de objetos de tipo `Anexo` que contienen
+   * la información relevante sobre los documentos o archivos anexados para el proceso de importación.
    */
   datosImportacion: Anexo[] = [];
 
   /**
-   * Datos de los anexos de importación obtenidos desde el servicio.
-   * @type {Anexo[]}
+   * Lista de anexos que contienen datos sensibles.
+   * 
+   * @remarks
+   * Esta propiedad almacena los objetos de tipo `Anexo` que han sido identificados como sensibles.
+   * Se utiliza para gestionar y mostrar información que requiere un tratamiento especial debido a su naturaleza confidencial.
    */
   datosSensibles: Anexo[] = []; 
 
