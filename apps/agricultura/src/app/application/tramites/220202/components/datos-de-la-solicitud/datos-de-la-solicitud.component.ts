@@ -4,11 +4,14 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
+  Notificacion,
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   DatosDeFila,
   DatosForma,
@@ -23,11 +26,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { AgregarMercanciaComponent } from '../agregar-mercancia/agregar-mercancia.component';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 
 /**
  * @description Constructor del componente.
@@ -50,6 +54,8 @@ import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.en
     TablaDinamicaComponent,
     CatalogoSelectComponent,
     CommonModule,
+    NotificacionesComponent,
+    ModalComponent,
   ],
 })
 
@@ -86,6 +92,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Cada elemento del array representa una columna y contiene la información para mostrar en la cabecera y las celdas de la tabla.
    */
   mesaColumnas: string[] = [];
+
+  @ViewChild('modalRef') modalRef!: ModalComponent;
 
   /**
    * @description Rango de días seleccionados.
@@ -200,6 +208,28 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @type {TablaSeleccion}
    */
   tipoSeleccionsoliMercancias: TablaSeleccion = TablaSeleccion.CHECKBOX;
+
+  /**
+   * @property moduloEmergente
+   * @description Indica si el módulo emergente está activo.
+   * @type {boolean}
+   * @default false
+   */
+  public moduloEmergente: boolean = false;
+
+  /**
+   * @property moduloEmergente
+   * @description Indica si el módulo emergente está activo.
+   * @type {boolean}
+   * @default false
+   */
+  public eliminarDatosTabla: boolean = false;
+
+    /**
+   * Representa una nueva notificación que será utilizada en el componente.
+   * @type {Notificacion}
+   */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * @description Configuración de las columnas de la tabla de solicitudes.
@@ -347,6 +377,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   ];
 
   /**
+   * Estado de la consulta actual, contiene la información relevante del solicitante.
+   * @type {ConsultaioState}
+   */
+  public consultaState!: ConsultaioState;
+
+  /**
    * @description Indica si se debe mostrar la notificación de verificación.
    * Esta propiedad se utiliza para controlar la visibilidad de una notificación en la interfaz de usuario.
    *
@@ -359,7 +395,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Esta propiedad se utiliza para controlar la visibilidad de la tabla de solicitudes en la interfaz de usuario.
    * @type {boolean}
    */
-  public mostrarSolicitudTabla: boolean = false;
+  public mostrarSolicitudTabla: boolean = true;
 
   /**
    * Arreglo que contiene las filas de la tabla de solicitudes.
@@ -424,9 +460,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
+          this.consultaState = seccionState;
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.mostrarSolicitudTabla = !seccionState.readonly;
-          this.mostrarSolicitudTabla = !seccionState.update;
+          if (
+            seccionState.parameter ===
+            'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO'
+          ) {
+            this.mostrarSolicitudTabla = false;
+          }
           this.inicializarEstadoFormulario();
         })
       )
@@ -772,9 +813,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   agregarMercancia(): void {
     this.seleccionTabla([]);
-    this.router.navigate(['../mercancia-form'], {
-      relativeTo: this.activatedRoute,
-    });
+    this.modalRef.abrir(AgregarMercanciaComponent);
   }
 
   /**
@@ -806,31 +845,32 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       // Si no hay registros seleccionados, no realizar ninguna acción
       return;
     }
-    // Si hay datos seleccionados, navegar a la página de modificación
-    const ID = SELECTED_DATA[0].noPartida || 1; // Usar ID del primer registro seleccionado
-    this.router.navigate(['../mercancia-form', ID], {
-      relativeTo: this.activatedRoute,
-    });
+    // Si hay datos seleccionados, abrir el modal con el componente de agregar/modificar mercancía
+    this.modalRef.abrir(AgregarMercanciaComponent);
   }
 
   /**
-   * @description Método que se ejecuta cuando el componente es destruido.
-   * Utiliza un Subject para notificar a las suscripciones que deben ser destruidas, evitando fugas de memoria.
-   * @method ngOnDestroy
+   * @description Elimina mercancía seleccionada directamente sin confirmación.
+   * @method eliminarMercancia
    * @returns {void}
    */
   eliminarMercancia(): void {
-    const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
-    if (VALOR && VALOR.length === 0) {
-      return;
-    }
-    const FILTERED_VALOR = VALOR.filter(
-      (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
-    );
-    this.fitosanitarioStore.update((state) => ({
-      ...state,
-      tablaDatos: FILTERED_VALOR,
-    }));
+      const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
+      if (VALOR.length === 0) {
+        return;
+      }
+      const FILTERED_VALOR = VALOR.filter(
+        (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
+      );
+      this.fitosanitarioStore.update(
+        (state) => ({
+          ...state,
+          tablaDatos: FILTERED_VALOR
+        })
+      );
+      
+      // Limpiar selección después de eliminar
+      this.seleccionTabla([]);
   }
 
   /**
@@ -841,5 +881,43 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+    /**
+   * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
+   * @method eliminarPedimento
+   * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
+   */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.moduloEmergente = false;
+    }
+  }
+
+  /**
+  * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
+  * @method eliminarPedimento
+  * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
+  */
+  eliminarPedimentoDatos(borrar: boolean): void {
+    if (borrar) {
+      this.eliminarDatosTabla = false;
+      const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
+      if (VALOR.length === 0) {
+        return;
+      }
+      const FILTERED_VALOR = VALOR.filter(
+        (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
+      );
+      this.fitosanitarioStore.update(
+        (state) => ({
+          ...state,
+          tablaDatos: FILTERED_VALOR
+        })
+      );
+    }
+    else {
+      this.eliminarDatosTabla = false;
+    }
   }
 }

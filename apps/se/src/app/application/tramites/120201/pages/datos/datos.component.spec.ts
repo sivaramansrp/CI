@@ -86,4 +86,23 @@ describe('DatosComponent', () => {
     component.seleccionaTab(1);
     expect(component.indice).toBe(1);
   });
+
+  it('should emit mostrarErrorDirecto when mostrarErrorEvent is called', () => {
+    const spy = jest.spyOn(component.mostrarErrorDirecto, 'emit');
+    component.mostrarErrorEvent(true);
+    expect(spy).toHaveBeenCalledWith(true);
+  });
+
+  it('should emit mostrarNumFolioAsignacionErrorDirecto with event object', () => {
+    const event = { mostrarError: true, valor: '123XYZ' };
+    const spy = jest.spyOn(component.mostrarNumFolioAsignacionErrorDirecto, 'emit');
+    component.mostrarNumFolioAsignacionErrorEvent(event);
+    expect(spy).toHaveBeenCalledWith(event);
+  });
+
+  it('should emit mostrarAgregarErrorDirecto with boolean value', () => {
+    const spy = jest.spyOn(component.mostrarAgregarErrorDirecto, 'emit');
+    component.mostrarAgregarErrorEvento(false);
+    expect(spy).toHaveBeenCalledWith(false);
+  });
 });

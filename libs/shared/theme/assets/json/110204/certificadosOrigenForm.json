@@ -1,5 +1,5 @@
 {
-    "altaPlanta": [],
+  "altaPlanta": [],
   "paisBloques": [],
   "estado": {
     "id": -1,
@@ -10,20 +10,21 @@
   "factura":[],
   "formaValida": {},
   "formCertificado": {
-    "entidadFederativa": "illenar",
+    "si": false,
+    "entidadFederativa": "1",
     "tercerOperador": true,
-    "bloque": "illenar",
+    "bloque": "1",
     "nombreComercialForm": "illenar",
     "registroProductoForm": "illenar",
-    "fracciónArancelariaForm": "illenar",
-    "fechaInicioInput":"illenar",
-    "fechaFinalInput":"illenar"
+    "fraccionArancelariaForm": "illenar",
+    "fechaInicioInput":"06/07/2025",
+    "fechaFinalInput":"20/07/2025"
   },
   "formDatosCertificado": {
     "observacionesDates": "illenar",
-    "idiomaDates": "illenar",
-    "EntidadFederativaDates": "illenar",
-    "representacionFederalDates": "illenar"
+    "idiomaDates": "1",
+    "EntidadFederativaDates": "1",
+    "representacionFederalDates": "1"
   },
   "mercanciaForm":{
     "fraccionNaladi":"illenar",
@@ -47,7 +48,17 @@
     "id": -1,
     "descripcion": "illenar"
   },
-  "buscarMercancia": [],
+  "buscarMercancia": [
+    {
+      "id": 1,
+      "fraccionNaladi": "",
+      "fraccionNaladiSa93": "04021000",
+      "fraccionNaladiSa96": "",
+      "fraccionNaladiSa02": "03074100",
+      "nombreTecnico": "De hierro o acero, cobrizados, de doble pared soldados por fusion (proceso brazing) con o sin recubrimiento anticorrosivo.",
+      "nombreComercial": "xxx"
+    }
+  ],
   "paisBloque": {
     "id": -1,
     "descripcion": "illenar"

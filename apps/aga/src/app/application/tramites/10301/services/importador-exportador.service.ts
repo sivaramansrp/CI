@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Tramite10301Store } from '../../10301/estados/tramite10301.store';
+import { RespuestaMercancia } from '../models/importador-exportador.model';
 
 /**
  * Servicio para obtener datos relacionados con importadores y exportadores.
@@ -66,9 +67,17 @@ export class ImportadorExportadorService {
    * @returns Observable con la respuesta del catálogo de países.
    */
   getPais(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/10301/pais.json').pipe(
-      tap(response => this.store.setPais(response.data))
-    );
+    return this.http.get<RespuestaCatalogos>('assets/json/10301/pais.json');
+  }
+
+  /**
+   * Obtiene el catálogo de fines de la mercancía.
+   * Realiza una petición HTTP para obtener los fines posibles que puede tener la mercancía en el trámite.
+   * 
+   * @returns Observable con la respuesta del catálogo de fines de mercancía.
+   */
+  getFinesDeMercancia(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/10301/fines.json');
   }
 
   /**
@@ -85,19 +94,6 @@ export class ImportadorExportadorService {
   }
 
   /**
-   * Obtiene el catálogo de fechas seleccionadas para uso en el trámite.
-   * Actualiza el estado con los datos obtenidos.
-   * @returns Observable con la respuesta del catálogo de fechas seleccionadas.
-   */
-  getFechasSeleccionadas(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>(
-      'assets/json/10301/fechasSeleccionadas.json'
-    ).pipe(
-      tap(response => this.store.setFechasSeleccionadas(response.data))
-    );
-  }
-
-  /**
    * Obtiene el catálogo de documentos relacionados con el trámite.
    * Actualiza el estado con los datos obtenidos.
    * @returns Observable con la respuesta del catálogo de documentos.
@@ -109,4 +105,9 @@ export class ImportadorExportadorService {
       tap(response => this.store.setDocumentos(response.data))
     );
   }
+
+  agregarMercancia(): Observable<RespuestaMercancia> {
+    return this.http.get<RespuestaMercancia>(`assets/json/10301/mercancia-table.json`);
+  }
+
 }

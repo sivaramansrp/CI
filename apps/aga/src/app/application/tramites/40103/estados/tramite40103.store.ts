@@ -63,6 +63,13 @@ export function createInitialState(): Tramite40103State {
 })
 @StoreConfig({ name: 'tramite40103', resettable: true })
 export class Tramite40103Store extends Store<Tramite40103State> {
+/**
+ * Indica si el trámite está en modo solo lectura (readonly), útil para flujos de consulta.
+ *
+ * @property {boolean} [readonly] - Si es `true`, el trámite y sus formularios asociados estarán en modo solo lectura, impidiendo la edición de datos.
+ */
+  readonly?: boolean;
+  
   /**
    * Inicializa la store con el estado inicial.
    */

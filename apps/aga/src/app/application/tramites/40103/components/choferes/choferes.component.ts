@@ -84,64 +84,66 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 })
 export class ChoferesComponent {
   /**
-   * Constante que contiene las configuraciones de páginas para choferes.
-   * 
-   * Proporciona acceso a las definiciones de páginas y configuraciones
-   * relacionadas con la gestión de choferes en el sistema de transportistas terrestres.
-   *
-   * @constant {typeof CHOFERES_PAGE}
-   * @readonly
+   * Constante con las páginas de choferes.
+   * @type {typeof CHOFERES_PAGE}
    */
   CHOFERES_PAGE = CHOFERES_PAGE;
 
   /**
-   * Constante que contiene los textos utilizados en la interfaz de choferes.
-   * 
-   * Incluye mensajes, etiquetas y textos descriptivos utilizados en los
-   * componentes de gestión de choferes para mantener consistencia en la interfaz.
-   *
-   * @constant {typeof TEXTOS}
-   * @readonly
+   * Constante con los textos utilizados en el componente.
+   * @type {typeof TEXTOS}
    */
   TEXTOS = TEXTOS;
 
   /**
-   * Pestaña activa en la interfaz de choferes.
-   * 
-   * Controla qué sección de la interfaz está visible actualmente.
-   * Los valores posibles son:
-   * - 'nacional': Para gestión de choferes nacionales
-   * - 'extranjero': Para gestión de choferes extranjeros
-   *
-   * @property {string} activeTab
-   * @default 'nacional'
+   * Pestaña activa en la interfaz de choferes ('nacional' o 'extranjero').
+   * @type {string}
    */
   activeTab: string = 'nacional';
 
   /**
-   * Establece la pestaña activa en la interfaz de choferes.
-   * 
-   * Cambia la pestaña activa para mostrar la sección correspondiente
-   * de gestión de choferes (nacional o extranjero). Actualiza el estado
-   * del componente para reflejar la nueva selección en la interfaz de usuario.
-   *
-   * @method setActiveTab
-   * @param {string} tab - La pestaña que se establecerá como activa.
-   *                       Valores válidos: 'nacional', 'extranjero'
-   * @returns {void}
-   * 
-   * @example
-   * ```typescript
-   * // Cambiar a la pestaña de choferes nacionales
-   * this.setActiveTab('nacional');
-   * 
-   * // Cambiar a la pestaña de choferes extranjeros
-   * this.setActiveTab('extranjero');
-   * ```
-   *
-   * @since 1.0.0
+   * Lista de choferes nacionales registrados.
+   * @type {any[]}
+   */
+  choferesNacionales: any[] = [];
+
+  /**
+   * Lista de choferes extranjeros registrados.
+   * @type {any[]}
+   */
+  choferesExtranjeros: any[] = [];
+
+  /**
+   * Cambia la pestaña activa entre choferes nacionales y extranjeros.
+   * @param {string} tab - Nombre de la pestaña a activar ('nacional' o 'extranjero').
    */
   setActiveTab(tab: string): void {
     this.activeTab = tab;
   }
+
+  /**
+   * Agrega un chofer nacional a la lista de choferes nacionales.
+   * @param {any} chofer - Objeto con los datos del chofer nacional.
+   */
+  onAgregarChoferNacional(chofer: any) {
+    this.choferesNacionales = [...this.choferesNacionales, chofer];
+  }
+
+  /**
+   * Agrega un chofer extranjero a la lista de choferes extranjeros.
+   * @param {any} chofer - Objeto con los datos del chofer extranjero.
+   */
+  onAgregarChoferExtranjero(chofer: any) {
+    this.choferesExtranjeros = [...this.choferesExtranjeros, chofer];
+  }
+
+  /**
+   * Cancela la operación de alta o edición de chofer nacional.
+   */
+  onCancelarChoferNacional() {}
+
+  /**
+   * Cancela la operación de alta o edición de chofer extranjero.
+   */
+  onCancelarChoferExtranjero() {}
 }
