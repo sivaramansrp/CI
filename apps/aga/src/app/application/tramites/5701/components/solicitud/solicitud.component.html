@@ -735,12 +735,6 @@
             "
           ></textarea>
           <div
-            *ngIf="isRequired(mercancia, 'descripcionGenerica')"
-            class="mensaje-error"
-          >
-            Este campo es obligatorio.
-          </div>
-          <div
             *ngIf="isErrorWhitespace(mercancia, 'descripcionGenerica')"
             class="mensaje-error"
           >
@@ -763,12 +757,6 @@
               setValoresStore(mercancia, 'justificacion', 'setJustificacion')
             "
           ></textarea>
-          <div
-            *ngIf="isRequired(mercancia, 'justificacion')"
-            class="mensaje-error"
-          >
-            Este campo es obligatorio.
-          </div>
           <div
             *ngIf="isErrorWhitespace(mercancia, 'justificacion')"
             class="mensaje-error"
