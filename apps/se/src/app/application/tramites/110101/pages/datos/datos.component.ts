@@ -73,7 +73,7 @@ export class DatosComponent implements OnInit, OnDestroy {
    * 4 desactivadas.
    */
   private checkParameterAndEnableTabs(): void {
-    if (this.consultaState.parameter === undefined && this.consultaState.readonly === false && this.consultaState.tipoDeTramite === 'Consulta de Proceso'
+    if (this.consultaState.parameter === undefined && this.consultaState.update === true && this.consultaState.tipoDeTramite === 'Consulta de Proceso'
     ) {
       this.bandejaSolicitud = true;
     }
