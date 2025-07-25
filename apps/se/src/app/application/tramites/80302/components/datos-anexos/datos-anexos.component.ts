@@ -67,6 +67,12 @@ export class DatosAnexosComponent implements OnInit, OnDestroy {
    */
   datosSensibles: Anexo[] = []; 
 
+  /**
+   * Constructor de la clase DatosAnexosComponent.
+   * 
+   * @param solicitudService Servicio para gestionar las solicitudes.
+   * @param toastr Servicio para mostrar notificaciones al usuario.
+   */
   constructor(
     public solicitudService: SolicitudService,
     private toastr: ToastrService 
@@ -74,6 +80,10 @@ export class DatosAnexosComponent implements OnInit, OnDestroy {
    
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Llama a `obteneComplimentaria()` para cargar los anexos complementarios al iniciar el componente.
+   */
   ngOnInit(): void {
      this.obteneComplimentaria(); // Carga los anexos complementarios.
   }
