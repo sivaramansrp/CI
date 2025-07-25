@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 
 import { Observable, catchError, map, throwError } from 'rxjs';
 
-import { API_GET_CERTIFICADO_ANTIGUEDAD, API_POST_SOLICITUD } from '../../../constantes/130118/api-constants';
+import { API_GET_CERTIFICADO_ANTIGUEDAD, API_GET_MOLINOS_ACERO_HABILITAR, API_POST_SOLICITUD, CVEFRACCION } from '../../../constantes/130118/api-constants';
 import { GuadarSolicitudRequest } from '../../models/request/guardar-solicitud-request.model';
 
 @Injectable({
@@ -67,5 +67,26 @@ export class GuardarService {
     );
   }
 
+  /**
+   * Obtiene los molinos habilitados para una fracción arancelaria específica.
+   * @param cveFraccion Clave de la fracción arancelaria.
+   * @returns Observable con la respuesta del servidor que indica si los molinos están habilitados.
+   */
+  getMolinosHabilitar(cveFraccion: string): Observable<BaseResponse<boolean>> {
+    const ENDPOINT =
+      `${this.host}` +
+      API_GET_MOLINOS_ACERO_HABILITAR.replace(CVEFRACCION, cveFraccion);
 
+    return this.http.get<BaseResponse<boolean>>(ENDPOINT).pipe(
+      map((response) => {
+        return response;
+      }),
+      catchError(() => {
+        const ERROR = new Error(
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );
+  }
 }
