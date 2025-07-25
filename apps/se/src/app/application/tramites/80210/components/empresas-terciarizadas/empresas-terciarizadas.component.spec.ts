@@ -170,15 +170,12 @@ describe('EmpresasTerciarizadasComponent', () => {
   });
 
   it('debería agregar plantas NO seleccionadas a plantasSeleccionadas', () => {
-    // Setup: Two plants available, one selected
-    componente.plantasDisponibles = [DATOS_MOCK[0], DATOS_MOCK[1]];  // Both plants available
-    componente.listaFilaDisponibles = [DATOS_MOCK[0]];               // First plant is checked (stays in disponibles)
-    componente.plantasSeleccionadas = [];                            // Start with empty selected list
+    componente.plantasDisponibles = [DATOS_MOCK[0], DATOS_MOCK[1]]; 
+    componente.listaFilaDisponibles = [DATOS_MOCK[0]];
+    componente.plantasSeleccionadas = [];
 
     componente.agregarPlantas();
 
-    // Verify: DATOS_MOCK[1] (non-selected) moves to plantasSeleccionadas
-    // DATOS_MOCK[0] (selected) stays in plantasDisponibles
     expect(componente.plantasSeleccionadas).toEqual([DATOS_MOCK[1]]);
     expect(componente.plantasDisponibles).toEqual([DATOS_MOCK[0]]);
     
@@ -189,19 +186,14 @@ describe('EmpresasTerciarizadasComponent', () => {
   });
 
   it('debería eliminar plantas seleccionadas y moverlas a disponibles', () => {
-    // Setup initial state
-    componente.listaFilaSeleccionada = [DATOS_MOCK[1]];             // Select second plant for moving
-    componente.plantasSeleccionadas = [...DATOS_MOCK];              // Both plants in selected
-    componente.plantasDisponibles = [];                             // Start with empty disponibles
-
-    // Execute
+    componente.listaFilaSeleccionada = [DATOS_MOCK[1]];
+    componente.plantasSeleccionadas = [...DATOS_MOCK];
+    componente.plantasDisponibles = [];
     componente.eliminarPlantas();
 
-    // Verify results
-    expect(componente.plantasSeleccionadas).toEqual([DATOS_MOCK[0]]); // First plant remains in selected
-    expect(componente.plantasDisponibles).toEqual([DATOS_MOCK[1]]);   // Second plant moved to disponibles
+    expect(componente.plantasSeleccionadas).toEqual([DATOS_MOCK[0]]);
+    expect(componente.plantasDisponibles).toEqual([DATOS_MOCK[1]]);
     
-    // Verify store update was called with both arrays
     expect(tramite80210StoreMock.establecerDatos).toHaveBeenCalledWith({
       plantasDisponibles: [DATOS_MOCK[1]],
       plantasSeleccionadas: [DATOS_MOCK[0]]
