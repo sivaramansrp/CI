@@ -80,7 +80,6 @@ describe('CertificadoOrigenComponent', () => {
     component.validarFormulario = jest.fn();
     component.inicializarEstadoFormulario = jest.fn();
 
-    // Call ngOnInit after setting up spies
     component.ngOnInit();
 
     expect(component.cargarEstados).toHaveBeenCalled();
