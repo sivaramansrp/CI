@@ -1,4 +1,4 @@
-import { DatosDelContenedor, GridContenedores } from "@libs/shared/data-access-user/src/core/models/11202/datos-tramite.model";
+import { DatosDelContenedor, GridContenedores } from "apps/aga/src/app/application/tramites/11202/models/datos-tramite.model";
 import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
 
 /**

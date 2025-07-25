@@ -1,9 +1,9 @@
 import { Observable, of } from 'rxjs';
-import { Catalogo } from '../../models/shared/catalogos.model';
+import { Catalogo } from '../../../../../../../../libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestaConsulta } from '../../models/11202/datos-tramite.model';
+import { RespuestaConsulta } from '../models/datos-tramite.model';
 
 @Injectable({
   providedIn: 'root',

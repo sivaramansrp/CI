@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Contenedor11202State, Contenedor11202Store } from '../../../../core/estados/tramites/contenedor11202.store';
-import { DatosDelContenedor, GridContenedores } from '@libs/shared/data-access-user/src/core/models/11202/datos-tramite.model';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Contenedor11202State, Contenedor11202Store } from '../../estados/contenedor11202.store';
+import { DatosDelContenedor, GridContenedores } from '../../models/datos-tramite.model';
 import { ENCABEZADO_DE_TABLA, GRID_CONTENEDORES, TEXTOS_REQUISITOS } from '../../../../constantes/11202/retorno-contenedores.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
-import { Contenedor11202Query } from '../../../../core/queries/contenedor11202.query';
-import { DatosTramiteService } from '@libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
+import { Contenedor11202Query } from '../../estados/contenedor11202.query';
+import { DatosTramiteService } from '../../services/datos-tramite.service';
 import preOperativo from '@libs/shared/theme/assets/json/11202/preOperativo.json';
 
 /**
@@ -47,16 +47,17 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   options!: Catalogo[];
 
-
   /**
   * Define los datos que se mostrarán en la tabla dinámica.
   */
   datosTabla: any[] = [];
+
   /**
  * @property {any} radioOptions
  * Options for the radio buttons.
  */
   radioOptions = preOperativo;
+
   /**
    * @property {Subscription} private subscription
    * Subscription to handle the component's lifecycle.
@@ -195,6 +196,21 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   soloLectura: boolean = false;
 
+  /**
+   * Evento para continuar.
+   */
+  @Output() continuarEvento = new EventEmitter<string>();
+
+  /**
+  * Configuración de las columnas de la tabla.
+  */
+  public encabezadoDeTabla: ConfiguracionColumna<DatosDelContenedor>[] = ENCABEZADO_DE_TABLA;
+
+  /**
+   * Configuración de las columnas de la tabla.
+   */
+  public gridContenedores: ConfiguracionColumna<GridContenedores>[] = GRID_CONTENEDORES;
+
   constructor(
     private fb: FormBuilder,
     private datosTramiteService: DatosTramiteService,
@@ -202,14 +218,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     private contenedorQuery: Contenedor11202Query,
     private consultaioQuery: ConsultaioQuery,
   ) { }
-
-  /**
-   * Método de destrucción del componente.
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
 
   /**
    * Método de ciclo de vida de Angular que se llama cuando el componente se inicializa.
@@ -523,6 +531,28 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Emitir evento de continuar.
+   * Este método emite un evento para continuar con el proceso.
+   */
+  continuar(): void {
+    this.continuarEvento.emit('');
+  }
+
+  /**
+   * cancelar del formulario.
+   */
+  cancelar(): void {
+    this.solicitudForm.reset();
+    this.seccionAduanaaFechaVisible = false;
+    this.seccionContenedor = false;
+    this.seccionExcelVisible = false;
+    this.cargarArchivoVisible = false;
+    this.cargarArchivo = false;
+    // this.solicitudForm.get('archivoSeleccionado')?.disable();
+  }
+
+
+  /**
    * Obtiene el formulario de datos generales.
    */
   get datosGenerales(): FormGroup {
@@ -537,12 +567,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Configuración de las columnas de la tabla.
-  */
-  public encabezadoDeTabla: ConfiguracionColumna<DatosDelContenedor>[] = ENCABEZADO_DE_TABLA;
-
-  /**
-   * Configuración de las columnas de la tabla.
+   * Método de destrucción del componente.
    */
-  public gridContenedores: ConfiguracionColumna<GridContenedores>[] = GRID_CONTENEDORES;
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }

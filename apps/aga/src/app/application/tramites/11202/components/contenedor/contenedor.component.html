@@ -14,10 +14,8 @@
     <div class="col-md-12">
       <br /><br />
       <div class="col-md-4">
-        <app-input-radio [radioOptions]="radioOptions" [isRequired]="true" [layout]="'horizontal'" [gap]="'493px'"
-          [isBold]="true" [labelMargin]="'0px'" formControlName="tipoBusqueda" (change)="
-            setValoresStore(solicitudForm, 'tipoBusqueda', 'setTipoBusqueda')
-          "></app-input-radio>
+        <app-input-radio [radioOptions]="radioOptions" [isRequired]="true" [layout]="'horizontal'"
+          formControlName="tipoBusqueda" (change)="setValoresStore(solicitudForm, 'tipoBusqueda', 'setTipoBusqueda')"></app-input-radio>
       </div>
     </div>
   </div>
@@ -122,7 +120,7 @@
       </nav>
     </div>
 
-    <div *ngIf="exceptionCaught && consultaDatos.create">
+    <!-- <div *ngIf="exceptionCaught && consultaDatos.create">
       <div class="row" style="margin-top: 30px">
         <div class="form-group">
           <div class="col-md-12">
@@ -152,8 +150,8 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </div> 
+    </div> -->
   </div>
 
   <div id="seccionExcel" *ngIf="seccionExcelVisible">
@@ -212,4 +210,48 @@
     </div>
     <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
   </div>
+
+  @if (consultaDatos.create) {
+            <div class="row" style="margin-top: 30px;margin-bottom: 30px;">
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <div class="pull-left text-muted text-vertical-align-button" id="lblCamposObligatorios">
+                            * Campos obligatorios
+                        </div>
+                        <div class="pull-right row">
+                            <div class="col-md-5">
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalCancelar">
+                                    Cancelar
+                                </button>
+                            </div>
+                            <div class="col-md-5" id="botonGuardar">
+                                <button type="submit" class="btn btn-primary" (click)="continuar()">
+                                    Continuar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        
 </form>
+
+<div class="modal fade" id="modalCancelar" tabindex="-1" role="dialog"
+        aria-labelledby="modalCancelar" aria-hidden="true" #modalCancelar>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cancelar</h4>
+                </div>
+                <div class="modal-body">
+                    <p>¿Está seguro que desea cancelar?. Se borrarán los datos capturados.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" (click)="cancelar()"
+                        data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>

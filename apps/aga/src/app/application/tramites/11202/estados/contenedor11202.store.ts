@@ -1,5 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
-import { GridContenedores } from '@libs/shared/data-access-user/src/core/models/11202/datos-tramite.model';
+import { GridContenedores } from 'apps/aga/src/app/application/tramites/11202/models/datos-tramite.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -153,5 +153,12 @@ export class Contenedor11202Store extends Store<Contenedor11202State> {
       ...state,
       contenedores,
     }));
+  }
+
+  /**
+   * Limpia los datos de la solicitud.
+   */
+  public limpiarSolicitud(): void {
+    this.reset();
   }
 }
