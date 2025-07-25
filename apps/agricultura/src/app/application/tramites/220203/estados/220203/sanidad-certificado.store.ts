@@ -208,7 +208,7 @@ export class AcuiculturaStore extends Store<Acuicultura> {
   public actualizarSelectedTerceros(datosParaMovilizacionNacional: TercerosrelacionadosdestinoTable): void {
     this.update(state => ({
       ...state,
-      seletedTerceros: datosParaMovilizacionNacional
+      selectedTerceros: datosParaMovilizacionNacional
     }));
   }
 

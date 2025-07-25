@@ -82,7 +82,7 @@ export class AcuiculturaQuery extends Query<Acuicultura> {
    * @type {Observable<TercerosrelacionadosdestinoTable>}
    * @memberof AcuiculturaQuery
    */
-  seleccionarTerceros$ = this.select(estado => estado.seletedTerceros);
+  seleccionarTerceros$ = this.select(estado => estado.selectedTerceros);
 
 
 

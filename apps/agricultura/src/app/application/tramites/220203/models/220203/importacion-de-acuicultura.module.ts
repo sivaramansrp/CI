@@ -217,7 +217,7 @@ export interface Consulta {
  * @property {PagoDeDerechos} pagoDeDerechos - Información de pago de derechos
  * @property {Fila} selectedmercanciaGroupDatos - Datos de la fila de mercancía seleccionada
  * @property {DestinatarioForm[]} datosForma - Lista de formularios de destinatarios
- * @property {TercerosrelacionadosdestinoTable} seletedTerceros - Tercero relacionado actualmente seleccionado
+ * @property {TercerosrelacionadosdestinoTable} selectedTerceros - Tercero relacionado actualmente seleccionado
  * @property {DestinatarioForm} seletedExdora - Destinatario exportador seleccionado
  */
 export interface Acuicultura {
@@ -228,7 +228,7 @@ export interface Acuicultura {
     pagoDeDerechos:PagoDeDerechos;
     selectedmercanciaGroupDatos:Fila;
     datosForma: DestinatarioForm[];
-  seletedTerceros: TercerosrelacionadosdestinoTable;
+  selectedTerceros: TercerosrelacionadosdestinoTable;
   seletedExdora: DestinatarioForm;
 }
 
@@ -271,7 +271,7 @@ export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura
         selectedmercanciaGroupDatos: params?.selectedmercanciaGroupDatos || {} as Fila,
         tercerosRelacionados: params.tercerosRelacionados || [],
         datosForma: params.datosForma || [] as DestinatarioForm[],
-        seletedTerceros: params.seletedTerceros || {} as TercerosrelacionadosdestinoTable,
+        selectedTerceros: params.selectedTerceros || {} as TercerosrelacionadosdestinoTable,
         seletedExdora: params.seletedExdora || {} as DestinatarioForm
     };
 }

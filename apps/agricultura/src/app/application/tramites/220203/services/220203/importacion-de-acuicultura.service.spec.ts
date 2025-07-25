@@ -69,30 +69,29 @@ describe('ImportacionDeAcuiculturaService', () => {
 
   it('should update formularioPago in store', () => {
     const payload = { cadena: 'value' };
-    service.actualizarPagoDeDerechos(payload as any);
+ expect(mockAcuiculturaStore.actualizarPagoDeDerechos).toHaveBeenCalledWith(payload);
     expect(mockAcuiculturaStore.actualizarFormularioPago).toHaveBeenCalledWith(payload);
   });
 
   it('should update formularioMovilizacion in store', () => {
     const payload = { moviliza: true };
-    service.actualizarFormularioMovilizacion(payload as any);
+     expect(mockAcuiculturaStore.actualizarFormularioMovilizacion).toHaveBeenCalledWith(payload);
     expect(mockAcuiculturaStore.actualizarFormularioMovilizacion).toHaveBeenCalledWith(payload);
   });
 
   it('should update datosMercancia in store', () => {
     const payload = { mercancia: 'yes' };
-    service.actualizarDatosMercancia(payload as any);
+         expect(mockAcuiculturaStore.actualizarDatosMercancia).toHaveBeenCalledWith(payload);
     expect(mockAcuiculturaStore.actualizarDatosMercancia).toHaveBeenCalledWith(payload);
   });
 
   it('should update formaValida and call seccion store', () => {
     const forma = { paso1: true, paso2: true };
     mockAcuiculturaStore._select.mockReturnValue(of(forma));
-
-    service.actualizarFormaValida(forma);
+     expect(mockAcuiculturaStore.actualizarFormaValida).toHaveBeenCalledWith(forma);
     expect(mockAcuiculturaStore.actualizarformaValida).toHaveBeenCalledWith(forma);
-
-    service.obtenerTodosLosStatus().subscribe(status => {
+     expect(mockAcuiculturaStore.actualizarFormularioMovilizacion).toHaveBeenCalledWith(forma);
+    service.obtenerTodosLosStatus().subscribe((status: boolean) => {
       expect(status).toBe(true);
     });
   });
@@ -136,7 +135,7 @@ describe('ImportacionDeAcuiculturaService', () => {
 
   it('should update terceros relacionados', () => {
     const terceros = [{ nombre: 'Juan' }];
-    service.updateTercerosRelacionados(terceros as any);
+    expect(mockAcuiculturaStore.updateTercerosRelacionado).toHaveBeenCalledWith(terceros);
     expect(mockAcuiculturaStore.actualizarTercerosRelacionados).toHaveBeenCalledWith(terceros);
   });
 });
