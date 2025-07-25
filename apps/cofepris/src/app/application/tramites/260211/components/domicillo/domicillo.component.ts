@@ -109,6 +109,10 @@ export class DomicilloComponent implements OnInit,OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
  public esFormularioSoloLectura: boolean = false; 
+ /**
+ * Indica si ningún elemento ha sido seleccionado.
+ * Se utiliza para controlar el estado de selección.
+ */
   public noSeleccionado: boolean = true; 
  
   /**

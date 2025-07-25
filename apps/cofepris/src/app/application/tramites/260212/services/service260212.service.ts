@@ -81,6 +81,11 @@ export class Service260212Service {
     this.tramite260212Store.setAvisoclave(DATOS.avisoclave);
   this.tramite260212Store.setNoLicenciaSanitaria(DATOS.noLicenciaSanitaria);
   }
+  /**
+ * Actualiza el estado del formulario de terceros.
+ * Asigna los valores recibidos desde el modelo de datos al store correspondiente.
+ * Se utiliza para poblar los datos del formulario desde un origen externo.
+ */
    actualizarEstadoTercerosFormulario(DATOS: Terceros260211State): void {
   this.terceros260211Store.setTercerosNacionalidad(DATOS.tercerosNacionalidad);
   this.terceros260211Store.setTipoPersona(DATOS.tipoPersona);
@@ -118,6 +123,11 @@ export class Service260212Service {
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite260212State> {
     return this.http.get<Tramite260212State>('assets/json/260212/consulta.json');
   }
+  /**
+ * Obtiene los datos de terceros desde un archivo JSON local.
+ * Retorna un observable con el estado de los datos del formulario.
+ * Se usa para inicializar el formulario con datos precargados.
+ */
  getTercerosData(): Observable<Terceros260211State> {
     return this.http.get<Terceros260211State>('assets/json/260212/tercerosdata.json');
   }

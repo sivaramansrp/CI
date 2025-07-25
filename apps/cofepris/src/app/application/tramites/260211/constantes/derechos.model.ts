@@ -11,7 +11,11 @@ export const FECHA_DE_PAGO = {
   required: false,
   habilitado: true,
 };
-
+/**
+ * Lista de bancos disponibles para selección.
+ * Contiene identificador y descripción de cada banco.
+ * Utilizado para formularios o catálogos desplegables.
+ */
 export const BANCOS_DATA = [
   {
     id: 1,

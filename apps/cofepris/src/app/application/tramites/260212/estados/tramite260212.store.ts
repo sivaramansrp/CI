@@ -392,46 +392,82 @@ export class Tramite260212Store extends Store<Tramite260212State> {
       importeDePago,
     }));
   }
-   public setLosDatos(losDatos: string): void {
-    this.update((state) => ({
-      ...state,
-      losDatos,
-    }));
-  }
+ /**
+ * Establece los datos generales del formulario.
+ * Se actualiza el campo 'losDatos' en el store.
+ * Útil para datos agrupados del tercero.
+ */
+public setLosDatos(losDatos: string): void {
+  this.update((state) => ({
+    ...state,
+    losDatos,
+  }));
+}
 
-  public setRfc(rfc: string): void {
-    this.update((state) => ({
-      ...state,
-      rfc,
-    }));
-  }
+/**
+ * Establece el RFC del tercero.
+ * Se actualiza el campo 'rfc' en el store.
+ * Necesario para identificación fiscal.
+ */
+public setRfc(rfc: string): void {
+  this.update((state) => ({
+    ...state,
+    rfc,
+  }));
+}
 
-  public setNombre(nombre: string): void {
-    this.update((state) => ({
-      ...state,
-      nombre,
-    }));
-  }
+/**
+ * Establece el nombre del tercero.
+ * Se actualiza el campo 'nombre' en el store.
+ * Aplica a personas físicas o morales.
+ */
+public setNombre(nombre: string): void {
+  this.update((state) => ({
+    ...state,
+    nombre,
+  }));
+}
 
-  public setPrimerApellido(primerApellido: string): void {
-    this.update((state) => ({
-      ...state,
-      primerApellido,
-    }));
-  }
+/**
+ * Establece el primer apellido del tercero.
+ * Se actualiza el campo 'primerApellido' en el store.
+ * Solo aplica para personas físicas.
+ */
+public setPrimerApellido(primerApellido: string): void {
+  this.update((state) => ({
+    ...state,
+    primerApellido,
+  }));
+}
 
-  public setSegundoApellido(segundoApellido: string): void {
-    this.update((state) => ({
-      ...state,
-      segundoApellido,
-    }));
-  }
+/**
+ * Establece el segundo apellido del tercero.
+ * Se actualiza el campo 'segundoApellido' en el store.
+ * Solo aplica para personas físicas.
+ */
+public setSegundoApellido(segundoApellido: string): void {
+  this.update((state) => ({
+    ...state,
+    segundoApellido,
+  }));
+}
 
-  public setAvisoclave(avisoclave: string): void {
-    this.update(state => ({ ...state, avisoclave }));
-  }
+/**
+ * Establece la clave del aviso sanitario.
+ * Se actualiza el campo 'avisoclave' en el store.
+ * Utilizado en trámites sanitarios.
+ */
+public setAvisoclave(avisoclave: string): void {
+  this.update(state => ({ ...state, avisoclave }));
+}
 
-  public setNoLicenciaSanitaria(noLicenciaSanitaria: string): void {
-    this.update(state => ({ ...state, noLicenciaSanitaria }));
-  }
+/**
+ * Establece el número de licencia sanitaria.
+ * Se actualiza el campo 'noLicenciaSanitaria' en el store.
+ * Aplica para fabricantes o proveedores con regulación sanitaria.
+ */
+public setNoLicenciaSanitaria(noLicenciaSanitaria: string): void {
+  this.update(state => ({ ...state, noLicenciaSanitaria }));
+}
+
 }

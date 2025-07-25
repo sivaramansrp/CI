@@ -68,12 +68,22 @@ export const PERSONA_OPCIONES_DE_BOTON_DE_RADIO = [
       hint: 'Una persona moral es entendida como una empresa con una actividad específica.'
   }
 ];
+/**
+ * Catálogo de estados utilizado para llenar opciones en formularios.
+ * Cada estado contiene un `id` único y su `descripción` correspondiente.
+ * Usado comúnmente para selecciones de ubicación o entidad federativa.
+ */
 export const ESTADOS_DATA = [
   { id: 1, descripcion: "AGUASCALIENTES" },
   { id: 2, descripcion: "BAJA CALIFORNIA" },
   { id: 3, descripcion: "BAJA CALIFORNIA SUR" },
   { id: 4, descripcion: "CAMPECHE" }
 ];
+/**
+ * Catálogo de aduanas disponibles para selección en formularios.
+ * Cada entrada contiene un `id` único y una `descripción` del nombre de la aduana.
+ * Utilizado en módulos relacionados con trámites aduaneros o logística.
+ */
 export const ADUANAS_DATA = [
   { id: 1, descripcion: "SINALOA" },
   { id: 2, descripcion: "Aduana 2" },

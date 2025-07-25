@@ -36,6 +36,11 @@ export class SanitarioService {
    getSolicitudData(): Observable<Solicitud260211State> {
     return this.http.get<Solicitud260211State>('assets/json/260211/solicitude_data.json');
   }
+  /**
+ * Obtiene los datos de terceros desde un archivo JSON local.
+ * Retorna un observable con el estado Terceros260211State.
+ * Utilizado para precargar datos del formulario.
+ */
    getTercerosData(): Observable<Terceros260211State> {
     return this.http.get<Terceros260211State>('assets/json/260211/tercerosdata.json');
   }
@@ -181,6 +186,11 @@ actualizarEstadoFormulario(DATOS: Solicitud260211State ): void {
     this.tramite260211Store.settipoFetch(DATOS.deFetch);
     this.tramite260211Store.setimporte(DATOS.importe);   
   }
+  /**
+ * Actualiza el estado del store con los datos del formulario de terceros.
+ * Sincroniza cada propiedad individual del estado usando los setters correspondientes.
+ * Recibe un objeto completo de tipo Terceros260211State.
+ */
   actualizarEstadoTercerosFormulario(DATOS: Terceros260211State): void {
   this.terceros260211Store.setTercerosNacionalidad(DATOS.tercerosNacionalidad);
   this.terceros260211Store.setTipoPersona(DATOS.tipoPersona);

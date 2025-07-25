@@ -29,12 +29,10 @@ import tipoPersonaoptions from '@libs/shared/theme/assets/json/260211/tipoPerson
 
 import {Subject, map,takeUntil } from 'rxjs';
 
-import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA, MUNICIPIOSELECTDATA, PAISSELECTDATA, TERCEROS_DATAS, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '@libs/shared/data-access-user/src/core/enums/260906/permiso.enum';
-
+import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA, MUNICIPIOSELECTDATA, PAISSELECTDATA, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '@libs/shared/data-access-user/src/core/enums/260906/permiso.enum';
+import { TERCEROS_DATAS } from '../../models/permiso-sanitario.enum';
 import { Terceros260211Query } from '../../../../estados/queries/terceros260211.query';
 import { Terceros260211State } from '../../../../estados/tramites/terceros260211.store';
-
-
  
 const TERCEROS_TEXTO_DE_ALERTA =
   'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';

@@ -882,7 +882,11 @@ export class Tramite260211Store extends Store<Solicitud260211State> {
       apellidoMaterno,
     }));
   }
-   public setMensaje(mensaje: boolean) {
+  /**
+ * Establece el estado del mensaje.
+ * Puede activar o desactivar la visibilidad de mensajes.
+ */
+   public setMensaje(mensaje: boolean):void {
     this.update((state) => ({
       ...state,
       mensaje,

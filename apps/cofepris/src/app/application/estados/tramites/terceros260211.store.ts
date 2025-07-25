@@ -91,13 +91,21 @@ export class Terceros260211Store extends Store<Terceros260211State> {
     super(createInitialState());
 
   }
-  public setEstado(estado: string): void {
+ /**
+ * Actualiza el estado con el valor proporcionado.
+ * Se utiliza para definir la entidad estatal seleccionada.
+ */
+public setEstado(estado: string): void {
   this.update(state => ({
     ...state,
     estado,
   }));
 }
 
+/**
+ * Establece la entidad federativa en el estado.
+ * Representa una división política del país.
+ */
 public setEntidadFederativa(entidadFederativa: string): void {
   this.update(state => ({
     ...state,
@@ -105,13 +113,21 @@ public setEntidadFederativa(entidadFederativa: string): void {
   }));
 }
 
-  public setTercerosNacionalidad(tercerosNacionalidad: string): void {
+/**
+ * Define la nacionalidad del tercero.
+ * Puede ser nacional o extranjero.
+ */
+public setTercerosNacionalidad(tercerosNacionalidad: string): void {
   this.update(state => ({
     ...state,
     tercerosNacionalidad,
   }));
 }
 
+/**
+ * Establece el tipo de persona (física o moral).
+ * Afecta los campos visibles del formulario.
+ */
 public setTipoPersona(tipoPersona: string): void {
   this.update(state => ({
     ...state,
@@ -119,6 +135,10 @@ public setTipoPersona(tipoPersona: string): void {
   }));
 }
 
+/**
+ * Asigna el RFC del tercero al estado.
+ * Campo obligatorio para identificar la entidad.
+ */
 public setRfc(rfc: string): void {
   this.update(state => ({
     ...state,
@@ -126,6 +146,10 @@ public setRfc(rfc: string): void {
   }));
 }
 
+/**
+ * Actualiza el nombre del tercero en el estado.
+ * Solo aplica para personas físicas.
+ */
 public setNombre(nombre: string): void {
   this.update(state => ({
     ...state,
@@ -133,6 +157,10 @@ public setNombre(nombre: string): void {
   }));
 }
 
+/**
+ * Define el primer apellido del tercero.
+ * Campo requerido para personas físicas.
+ */
 public setPrimerApellido(primerApellido: string): void {
   this.update(state => ({
     ...state,
@@ -140,6 +168,10 @@ public setPrimerApellido(primerApellido: string): void {
   }));
 }
 
+/**
+ * Define el segundo apellido del tercero.
+ * Es un campo opcional para personas físicas.
+ */
 public setSegundoApellido(segundoApellido: string): void {
   this.update(state => ({
     ...state,
@@ -147,6 +179,10 @@ public setSegundoApellido(segundoApellido: string): void {
   }));
 }
 
+/**
+ * Establece el CURP del tercero.
+ * Útil para validar identidad en México.
+ */
 public setCurp(curp: string): void {
   this.update(state => ({
     ...state,
@@ -154,6 +190,10 @@ public setCurp(curp: string): void {
   }));
 }
 
+/**
+ * Asigna la razón social o denominación.
+ * Campo obligatorio para personas morales.
+ */
 public setDenominacionRazonSocial(denominacionRazonSocial: string): void {
   this.update(state => ({
     ...state,
@@ -161,6 +201,10 @@ public setDenominacionRazonSocial(denominacionRazonSocial: string): void {
   }));
 }
 
+/**
+ * Establece el país seleccionado.
+ * Se utiliza para clasificar la ubicación del tercero.
+ */
 public setPais(pais: string): void {
   this.update(state => ({
     ...state,
@@ -168,6 +212,10 @@ public setPais(pais: string): void {
   }));
 }
 
+/**
+ * Define el estado o provincia local.
+ * Aplica a ubicaciones detalladas dentro del país.
+ */
 public setEstadoLocalidad(estadoLocalidad: string): void {
   this.update(state => ({
     ...state,
@@ -175,6 +223,10 @@ public setEstadoLocalidad(estadoLocalidad: string): void {
   }));
 }
 
+/**
+ * Establece el municipio o alcaldía.
+ * Campo requerido para la dirección completa.
+ */
 public setMunicipioAlcaldia(municipioAlcaldia: string): void {
   this.update(state => ({
     ...state,
@@ -182,6 +234,11 @@ public setMunicipioAlcaldia(municipioAlcaldia: string): void {
   }));
 }
 
+
+/**
+ * Establece la localidad del tercero.
+ * Forma parte de la dirección completa.
+ */
 public setLocalidad(localidad: string): void {
   this.update(state => ({
     ...state,
@@ -189,6 +246,10 @@ public setLocalidad(localidad: string): void {
   }));
 }
 
+/**
+ * Asigna el código postal o equivalente.
+ * Puede ser nacional o internacional.
+ */
 public setCodigoPostaloEquivalente(codigoPostaloEquivalente: string): void {
   this.update(state => ({
     ...state,
@@ -196,6 +257,10 @@ public setCodigoPostaloEquivalente(codigoPostaloEquivalente: string): void {
   }));
 }
 
+/**
+ * Establece la colonia del tercero.
+ * Campo relevante para direcciones mexicanas.
+ */
 public setColonia(colonia: string): void {
   this.update(state => ({
     ...state,
@@ -203,6 +268,10 @@ public setColonia(colonia: string): void {
   }));
 }
 
+/**
+ * Define el estado extranjero si aplica.
+ * Usado solo cuando el país no es México.
+ */
 public setExtranjeroEstado(extranjeroEstado: string): void {
   this.update(state => ({
     ...state,
@@ -210,6 +279,10 @@ public setExtranjeroEstado(extranjeroEstado: string): void {
   }));
 }
 
+/**
+ * Establece el código postal extranjero.
+ * Campo requerido para direcciones internacionales.
+ */
 public setExtranjeroCodigo(extranjeroCodigo: string): void {
   this.update(state => ({
     ...state,
@@ -217,6 +290,10 @@ public setExtranjeroCodigo(extranjeroCodigo: string): void {
   }));
 }
 
+/**
+ * Asigna la colonia extranjera del tercero.
+ * Aplica solo para domicilios fuera de México.
+ */
 public setExtranjeroColonia(extranjeroColonia: string): void {
   this.update(state => ({
     ...state,
@@ -224,6 +301,10 @@ public setExtranjeroColonia(extranjeroColonia: string): void {
   }));
 }
 
+/**
+ * Establece el nombre de la calle.
+ * Parte esencial de la dirección.
+ */
 public setCalle(calle: string): void {
   this.update(state => ({
     ...state,
@@ -231,6 +312,10 @@ public setCalle(calle: string): void {
   }));
 }
 
+/**
+ * Asigna el número exterior del domicilio.
+ * Campo obligatorio en direcciones postales.
+ */
 public setNumeroExterior(numeroExterior: string): void {
   this.update(state => ({
     ...state,
@@ -238,13 +323,20 @@ public setNumeroExterior(numeroExterior: string): void {
   }));
 }
 
+/**
+ * Establece el número interior del domicilio.
+ * Campo opcional para edificios o unidades.
+ */
 public setNumeroInterior(numeroInterior: string): void {
   this.update(state => ({
     ...state,
     numeroInterior,
   }));
 }
-
+/**
+ * Establece la lada telefónica del tercero.
+ * Normalmente corresponde a la región del país.
+ */
 public setLada(lada: string): void {
   this.update(state => ({
     ...state,
@@ -252,6 +344,10 @@ public setLada(lada: string): void {
   }));
 }
 
+/**
+ * Asigna el número telefónico del tercero.
+ * Se utiliza para contacto directo.
+ */
 public setTelefono(telefono: string): void {
   this.update(state => ({
     ...state,
@@ -259,6 +355,10 @@ public setTelefono(telefono: string): void {
   }));
 }
 
+/**
+ * Establece el correo electrónico del tercero.
+ * Es usado para notificaciones o contacto.
+ */
 public setCorreoElectronico(correoElectronico: string): void {
   this.update(state => ({
     ...state,
@@ -266,6 +366,10 @@ public setCorreoElectronico(correoElectronico: string): void {
   }));
 }
 
+/**
+ * Define la colonia o equivalente del domicilio.
+ * Utilizado cuando no se puede usar una colonia estándar.
+ */
 public setColoniaoEquivalente(coloniaoEquivalente: string): void {
   this.update(state => ({
     ...state,
@@ -273,6 +377,10 @@ public setColoniaoEquivalente(coloniaoEquivalente: string): void {
   }));
 }
 
+/**
+ * Establece la etiqueta legible de la colonia equivalente.
+ * Aparece en visualizaciones o reportes.
+ */
 public setColoniaoEquivalenteLabel(coloniaoEquivalenteLabel: string): void {
   this.update(state => ({
     ...state,
@@ -280,6 +388,10 @@ public setColoniaoEquivalenteLabel(coloniaoEquivalenteLabel: string): void {
   }));
 }
 
+/**
+ * Asigna el código postal alternativo o equivalente.
+ * Aplica en contextos especiales o internacionales.
+ */
 public setCodigoPostaloEquivalentes(codigoPostaloEquivalentes: string): void {
   this.update(state => ({
     ...state,
