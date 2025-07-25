@@ -1,10 +1,10 @@
-import { AlertComponent, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -27,7 +27,6 @@ import { takeUntil } from 'rxjs';
   selector: 'app-datos-del-generador-de-residuos',
   standalone: true,
   imports: [ CommonModule,
-      AlertComponent,
       CatalogoSelectComponent,
       TituloComponent,
       ReactiveFormsModule
