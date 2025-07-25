@@ -176,6 +176,12 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy, OnCha
       });
   }
 
+  /**
+   * Método que se ejecuta al cambiar la entidad federaliva en el formulario.
+   * Obtiene las instalaciones asociadas a la entidad seleccionada.
+   * 
+   * @param _event Evento de cambio de selección de entidad federaliva.
+   */
   alCambiarEntidadFederaliva(_event: Event): void {
    this.solicitudService.getInstalacionesDatos().pipe(
       takeUntil(this.destroyed$)

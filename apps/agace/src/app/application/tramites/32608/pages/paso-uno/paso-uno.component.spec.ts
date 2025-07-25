@@ -28,7 +28,7 @@ describe('PasoUnoComponent', () => {
       mockConsultaQuery
     );
     component.consultaQuery = mockConsultaQuery;
-    // If PasoUnoComponent expects solicitudService as a separate dependency, mock and inject accordingly.
+    // Si PasoUnoComponent espera que solicitudService sea una dependencia separada, simula e inyecta según corresponda.
   });
 
   it('debe inicializar indice en 1', () => {
@@ -73,18 +73,18 @@ describe('PasoUnoComponent', () => {
 it('guardarDatosFormulario debe establecer esDatosRespuesta en true y llamar actualizarEstado si resp existe', (done) => {
   const respMock = { data: 'mock' };
   
-  // Mock the solicitudService methods
+  // Simula los métodos de solicitudService
   mockRegistroService.solicitudService.obtenerDatos.mockReturnValue(of(respMock));
   mockRegistroService.solicitudService.actualizarEstado = jest.fn();
   
-  // Ensure solicitudService is properly available on the component
+  // Asegúrate de que solicitudService esté disponible correctamente en el componente
   component.solicitudService = mockRegistroService.solicitudService;
   
   expect(component.esDatosRespuesta).toBe(false);
   
   component.guardarDatosFormulario();
   
-  // Use setTimeout to allow the observable to complete
+  // Usa setTimeout para permitir que el observable se complete
   setTimeout(() => {
     expect(mockRegistroService.solicitudService.actualizarEstado).toHaveBeenCalledWith(respMock);
     expect(component.esDatosRespuesta).toBe(true);

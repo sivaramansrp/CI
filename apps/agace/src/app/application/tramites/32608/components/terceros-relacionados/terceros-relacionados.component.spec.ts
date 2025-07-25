@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { TercerosRelacionadosComponent } from './terceros-relacionados.component';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 
-// Mock: RepresentanteLegalComponent
+// Mock: ComponenteRepresentanteLegal
 @Component({
   selector: 'app-representante-legal',
   template: ''
@@ -53,7 +53,7 @@ describe('TercerosRelacionadosComponent', () => {
     fixture = TestBed.createComponent(TercerosRelacionadosComponent);
     component = fixture.componentInstance;
 
-    // Access child components
+    // Acceder a los componentes hijos
     const representanteDebug = fixture.debugElement.children.find(c => c.name === 'app-representante-legal');
     component.representanteLegalComponent = representanteDebug?.componentInstance;
 
@@ -67,7 +67,7 @@ describe('TercerosRelacionadosComponent', () => {
     jest.spyOn(component.representanteLegalComponent, 'validarFormularioRepresentante').mockReturnValue(true);
     jest.spyOn(component.enlaceOperativoComponent, 'validarEnlaceOperativo').mockReturnValue(true);
     
-    // Properly set form value and make it valid
+    // Establecer correctamente el valor del formulario y hacerlo válido
     component.enlaceOperativoComponent.enlaceOperativoDataForm.patchValue({ name: 'Test' });
     component.enlaceOperativoComponent.enlaceOperativoDataForm.updateValueAndValidity();
 
@@ -104,7 +104,7 @@ describe('TercerosRelacionadosComponent', () => {
     jest.spyOn(component.representanteLegalComponent, 'validarFormularioRepresentante').mockReturnValue(true);
     jest.spyOn(component.enlaceOperativoComponent, 'validarEnlaceOperativo').mockReturnValue(true);
     
-    // Set invalid form value
+    // Establecer valor de formulario inválido
     component.enlaceOperativoComponent.enlaceOperativoDataForm.patchValue({ name: '' });
     component.enlaceOperativoComponent.enlaceOperativoDataForm.updateValueAndValidity();
 

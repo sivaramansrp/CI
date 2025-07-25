@@ -62,7 +62,7 @@ export interface DomiciliosRfcSolicitanteTabla {
   tipoInstalacion: string;
   entidadFederativa: string;
   municipioAlcaldia: string;
-  coloniaCalleNumero: string; // This was mislabeled as codigoPostal in the table config
+  coloniaCalleNumero: string; // Esto estaba mal etiquetado como codigoPostal en la configuración de la tabla
   codigoPostal: string;
   registroSESAT: string;
   procesoProductivo: string;
@@ -72,13 +72,20 @@ export interface DomiciliosRfcSolicitanteTabla {
   perfilEmpresa: string;
 }
 
-
+/**
+ * Interface para los datos de control de inventarios.
+ * Contiene información sobre el sistema, lugar de radicación y cumplimiento del Anexo 24.
+ */
 export interface ControlInventariosTabla {
   id:number;
   nombreSistema:string;
   lugarRadicacion:string;
   cumpleAnexo24: boolean;
 }
+/**
+ * Interface para los datos de la empresa del grupo.
+ * Contiene información sobre el RFC, denominación social, domicilio y fecha de la última operación.
+ */
 
 export interface AgregarMiembroEmpresaTabla {
   id:number;
@@ -124,13 +131,12 @@ export interface TransportistasTable {
   domicilio: string;
   ccat: string;
 }
-
 /**
- * Represents the operational link's RFC information.
+ * Representa la información del RFC del enlace operativo.
  *
- * @property enlaceOperativorfc - The RFC (Registro Federal de Contribuyentes) of the operational link.
- * @property denominacionRazonsocial - The business name or legal denomination of the operational link.
- * @property domicilio - The address of the operational link.
+ * @property enlaceOperativorfc - El RFC (Registro Federal de Contribuyentes) del enlace operativo.
+ * @property denominacionRazonsocial - La denominación o razón social del enlace operativo.
+ * @property domicilio - El domicilio del enlace operativo.
  */
 export interface RFCEnlaceOperativo {
   enlaceOperativorfc: string;
@@ -154,11 +160,11 @@ export interface TransportistasListaInterface {
 }
 
 /**
- * Represents the response structure for the OEA textile registration process.
+ * Representa la estructura de respuesta para el proceso de registro OEA textil.
  *
- * @property rubroCertificacion - Certification code for the textile sector.
- * @property fechaFinVigenciaRubro - End date of the certification validity.
- * @property numeroOficio - Official document number associated with the certification.
+ * @property rubroCertificacion - Código de certificación para el sector textil.
+ * @property fechaFinVigenciaRubro - Fecha de finalización de la vigencia de la certificación.
+ * @property numeroOficio - Número de oficio oficial asociado con la certificación.
  */export interface RubroTextil {
   rubroCertificacion: string;
   fechaFinVigenciaRubro: string;
