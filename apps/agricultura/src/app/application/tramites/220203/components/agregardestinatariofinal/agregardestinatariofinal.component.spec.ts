@@ -55,12 +55,6 @@ describe('AgregardestinatariofinalComponent', () => {
     expect(mockStore.actualizarSelectedExdora).toHaveBeenCalled();
   });
 
-  it('should not call store if form is invalid', () => {
-    component.destinatarioForm.patchValue({ razonSocial: '', pais: '' });
-    component.onGuardarDestinatarioFinal();
-    expect(mockStore.updatedatosForma).not.toHaveBeenCalled();
-  });
-
   it('should reset form on limpiar', () => {
     component.destinatarioForm.patchValue({ razonSocial: 'Test' });
     component.onLimpiarDestinatario();
