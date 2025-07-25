@@ -27,7 +27,7 @@ import { TablePaginationComponent } from '../table-pagination/table-pagination.c
 export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
 
   /** Modo de paginación: 'client' o 'server' */
-  @Input() mode: string = PAGINATION_MODE.CLIENT;
+  @Input() mode: string = PAGINATION_MODE.SERVER;
 
   /**
    * indice el tipo de selección para la tabla.
