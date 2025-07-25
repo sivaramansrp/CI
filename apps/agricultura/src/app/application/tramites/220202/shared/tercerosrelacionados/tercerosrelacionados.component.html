@@ -104,42 +104,20 @@
       ></app-tabla-dinamica>
     </div>
 
-    @if(cuerpoTablaExportador.length === 0){
-    <div class="col-md-12 d-flex justify-content-end">
-      <button
-        class="btn btn-primary me-3"
-        [disabled]="esFormularioSoloLectura"
-        (click)="goToAgregarExportador()"
-      >
-        Agregar
-      </button>
-      <button class="btn btn-default" [disabled]="esFormularioSoloLectura">
-        Buscar
-      </button>
+     <div class="col-md-12 d-flex justify-content-end" *ngIf="cuerpoTablaExportador.length === 0">
+        <button class="btn btn-primary me-3" [disabled]="esFormularioSoloLectura"
+            (click)="goToAgregarExportador()">Agregar</button>
+        <button class="btn btn-default" [disabled]="esFormularioSoloLectura"
+            (click)="buscarDestinatario()">Buscar</button>
     </div>
-
-    } @else if (cuerpoTablaExportador.length === 1) {
-    <div class="col-md-12 d-flex justify-content-end">
-      <button
-        class="btn btn-primary me-3"
-        [disabled]="
-          esFormularioSoloLectura || listaDeFilaSeleccionadaFinal.length === 0
-        "
-        (click)="modificarExportador()"
-      >
-        Modificar
-      </button>
-      <button
-        class="btn btn-default"
-        [disabled]="
-          esFormularioSoloLectura || listaDeFilaSeleccionadaFinal.length === 0
-        "
-        (click)="emitEliminarFinal()"
-      >
-        Eliminar
-      </button>
+    <div class="col-md-12 d-flex justify-content-end" *ngIf="cuerpoTablaExportador.length === 1">
+        <button class="btn btn-primary me-3"
+            [disabled]="esFormularioSoloLectura || listaDeFilaSeleccionadaFinal.length === 0"
+            (click)="modificarExportador()">Modificar</button>
+        <button class="btn btn-default"
+            [disabled]="esFormularioSoloLectura || listaDeFilaSeleccionadaFinal.length === 0"
+            (click)="emitEliminarFinal()">Eliminar</button>
     </div>
-    }
 
     <div class="row">
       <div class="col-md-12">
@@ -196,3 +174,16 @@
     </div>
   </div>
 </div>
+
+@if(eliminarDatosTabla){
+<lib-notificaciones
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="eliminarPedimentoDatos($event)"
+></lib-notificaciones>
+
+} @if(eliminarDatoExportador){
+<lib-notificaciones
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="eliminarExportador($event)"
+></lib-notificaciones>
+}

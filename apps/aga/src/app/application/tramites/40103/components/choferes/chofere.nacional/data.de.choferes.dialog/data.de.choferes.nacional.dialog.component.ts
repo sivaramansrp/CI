@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { Catalogo, CategoriaMensaje, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
+import { Catalogo, CategoriaMensaje, Notificacion, NotificacionesComponent, REGEX_CURP, REGEX_RFC, REGEX_SOLO_DIGITOS, TipoNotificacionEnum } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent, SharedModule, TituloComponent } from "@libs/shared/data-access-user/src";
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
 import { Subject, firstValueFrom, takeUntil } from "rxjs";
@@ -96,13 +96,13 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    * Evento emitido al cancelar el modal.
    * @type {EventEmitter<void>}
    */
-  @Output() cancelEvent = new EventEmitter<void>();
+  @Output() cancelarEvento = new EventEmitter<void>();
 
   /**
    * Evento emitido al agregar o editar un chofer nacional.
    * @type {EventEmitter<DatosDelChoferNacional>}
    */
-  @Output() addModalEvent = new EventEmitter<DatosDelChoferNacional>();
+  @Output() agregarEventoModal = new EventEmitter<DatosDelChoferNacional>();
 
   /**
    * Alerta de notificación para mostrar mensajes al usuario.
@@ -123,6 +123,7 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
     private modalService: BsModalService,
     private chofer40103Service: Chofer40103Service,
   ) {
+    // Lógica constructora
   }
 
   /**
@@ -139,29 +140,29 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
       [
         Validators.required,
         Validators.maxLength(18),
-        Validators.pattern(/^[A-Z]{4}\d{6}[HM]{1}[A-Z]{5}[0-9A-Z]{2}$/), // CURP regex
+        Validators.pattern(REGEX_CURP),
       ]],
 
-      rfc: [{ value: this.datosDeChofere?.rfc, disabled: false }, Validators.required],
-      nombre: [{ value: this.datosDeChofere?.nombre, disabled: true }],
-      primerApellido: [{ value: this.datosDeChofere?.primerApellido, disabled: true }],
-      segundoApellido: [{ value: this.datosDeChofere?.segundoApellido, disabled: true }],
-      numeroDeGafete: [{ value: this.datosDeChofere?.numeroDeGafete, disabled: true }],
-      vigenciaGafete: [{ value: this.datosDeChofere?.vigenciaGafete, disabled: true }],
+      rfc: [{ value: this.datosDeChofere?.rfc, disabled: false }, [Validators.required, Validators.pattern(REGEX_RFC)]],
+      nombre: [{ value: this.datosDeChofere?.nombre, disabled: true }, Validators.required],
+      primerApellido: [{ value: this.datosDeChofere?.primerApellido, disabled: true }, Validators.required],
+      segundoApellido: [{ value: this.datosDeChofere?.segundoApellido, disabled: true }, Validators.required],
+      numeroDeGafete: [{ value: this.datosDeChofere?.numeroDeGafete, disabled: true }, Validators.required],
+      vigenciaGafete: [{ value: this.datosDeChofere?.vigenciaGafete, disabled: true }, Validators.required],
 
-      calle: [{ value: this.datosDeChofere?.calle, disabled: this.readonly }],
-      numeroExterior: [{ value: this.datosDeChofere?.numeroExterior, disabled: this.readonly }],
-      numeroInterior: [{ value: this.datosDeChofere?.numeroInterior, disabled: this.readonly }],
+      calle: [{ value: this.datosDeChofere?.calle, disabled: this.readonly }, Validators.required],
+      numeroExterior: [{ value: this.datosDeChofere?.numeroExterior, disabled: this.readonly }, Validators.required],
+      numeroInterior: [{ value: this.datosDeChofere?.numeroInterior, disabled: this.readonly }, Validators.required],
       pais: [{ value: 1, disabled: true }],
-      estado: [{ value: this.datosDeChofere?.estado, disabled: this.readonly }],
-      municipioAlcaldia: [{ value: this.datosDeChofere?.municipioAlcaldia, disabled: this.readonly }],
-      colonia: [{ value: this.datosDeChofere?.colonia, disabled: this.readonly }],
-      paisDeResidencia: [{ value: this.datosDeChofere?.paisDeResidencia, disabled: this.readonly }],
-      ciudad: [{ value: this.datosDeChofere?.ciudad, disabled: this.readonly }],
-      localidad: [{ value: this.datosDeChofere?.localidad, disabled: this.readonly }],
-      codigoPostal: [{ value: this.datosDeChofere?.codigoPostal, disabled: this.readonly }],
-      correoElectronico: [{ value: this.datosDeChofere?.correoElectronico, disabled: this.readonly }],
-      telefono: [{ value: this.datosDeChofere?.telefono, disabled: this.readonly }],
+      estado: [{ value: this.datosDeChofere?.estado, disabled: this.readonly }, Validators.required],
+      municipioAlcaldia: [{ value: this.datosDeChofere?.municipioAlcaldia, disabled: this.readonly }, Validators.required],
+      colonia: [{ value: this.datosDeChofere?.colonia, disabled: this.readonly }, Validators.required],
+      paisDeResidencia: [{ value: this.datosDeChofere?.paisDeResidencia, disabled: this.readonly }, Validators.required],
+      ciudad: [{ value: this.datosDeChofere?.ciudad, disabled: this.readonly }, Validators.required],
+      localidad: [{ value: this.datosDeChofere?.localidad, disabled: this.readonly }, Validators.required],
+      codigoPostal: [{ value: this.datosDeChofere?.codigoPostal, disabled: this.readonly }, Validators.required],
+      correoElectronico: [{ value: this.datosDeChofere?.correoElectronico, disabled: this.readonly }, [Validators.email]],
+      telefono: [{ value: this.datosDeChofere?.telefono, disabled: this.readonly }, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
     });
 
     await this.paisListData();
@@ -304,9 +305,11 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    * Cierra el modal de choferes y emite el evento de cancelación.
    * @returns {void}
    */
-  closeModal(): void {
-    this.modalRef?.hide();
-    this.cancelEvent.emit();
+  cerrarModal(): void {
+    if (this.modalRef) {
+      this.modalRef.hide();
+    }
+    this.cancelarEvento.emit();
   }
 
   /**
@@ -315,7 +318,7 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    * Este método reinicia todos los campos del formulario `formChoferes` con valores vacíos o por defecto,
    * permitiendo limpiar el formulario para una nueva entrada de datos.
    */
-  resetForm(): void {
+  restablecerFormulario(): void {
     this.formChoferes.reset({
       curp: '',
       rfc: '',
@@ -331,14 +334,14 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
       estado: '',
       municipioAlcaldia: '',
       colonia: '',
-      paisDeResidencia: '1',
+      paisDeResidencia: '',
       ciudad: '',
       localidad: '',
       codigoPostal: '',
       correoElectronico: '',
       telefono: ''
     });
-    
+
   }
 
   /**
@@ -359,7 +362,6 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    */
   async buscarChoferNacional(curp: string): Promise<void> {
     if (!curp) {
-      //this.showNotification = true;
       this.alertaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: CategoriaMensaje.INFORMACION,
@@ -370,30 +372,32 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
+      this.showNotification = true;
       return;
     }
 
-        await this.chofer40103Service
-          .obtenerTablaDatos<DatosDelChoferNacional>('mock-data-choferes-nacionales.json')
-          .pipe(takeUntil(this.destroyed$))
-          .subscribe( (response) => {
-            if(response?.length === 0) {
-              this.alertaNotificacion = {
-                tipoNotificacion: TipoNotificacionEnum.ALERTA,
-                categoria: CategoriaMensaje.INFORMACION,
-                modo: 'action',
-                titulo: 'Alert',
-                mensaje: 'No se encontró información para el CURP o RFC proporcionado.',
-                cerrar: true,
-                txtBtnAceptar: 'Aceptar',
-                txtBtnCancelar: '',
-              };
-              return;
-            }
-            this.updateListsData(response[0]);
-            // Rellenar el formulario
-            this.formChoferes.patchValue(response[0]);
-          });
+    await this.chofer40103Service
+      .obtenerTablaDatos<DatosDelChoferNacional>('mock-data-choferes-nacionales.json')
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((response) => {
+        if (response?.length === 0) {
+          this.alertaNotificacion = {
+            tipoNotificacion: TipoNotificacionEnum.ALERTA,
+            categoria: CategoriaMensaje.INFORMACION,
+            modo: 'action',
+            titulo: 'Alert',
+            mensaje: 'No se encontró información para el CURP o RFC proporcionado.',
+            cerrar: true,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+          };
+          this.showNotification = true;
+          return;
+        }
+        this.updateListsData(response[0]);
+        // Rellenar el formulario
+        this.formChoferes.patchValue(response[0]);
+      });
   }
 
   /**
@@ -429,15 +433,15 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
   limpiarFormulario(): void {
     this.formChoferes.reset();
   }
-  
+
   /**
    * Guarda los datos editados del chofer nacional si el formulario es válido, emite el evento y cierra el modal.
    * Si el formulario es inválido, muestra una notificación de alerta.
    * @returns {void}
    */
   guardarFilaEditada(): void {
-      this.formChoferes.markAllAsTouched();
-      this.formChoferes.updateValueAndValidity();
+    this.formChoferes.markAllAsTouched();
+    this.formChoferes.updateValueAndValidity();
 
     if (this.formChoferes.valid) {
       const DATA = this.formChoferes.getRawValue() as DatosDelChoferNacional;
@@ -448,19 +452,20 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
       DATA.paisDeResidencia = this.paisList.find(p => p.id === Number(DATA.paisDeResidencia))?.descripcion || '';
 
       // Aquí puedes realizar la lógica para guardar los datos del chofer
-      this.addModalEvent.emit(DATA);
-      this.closeModal();
+      this.agregarEventoModal.emit(DATA);
+      this.cerrarModal();
     } else {
-        this.alertaNotificacion = {
-          tipoNotificacion: TipoNotificacionEnum.ALERTA,
-          categoria: CategoriaMensaje.INFORMACION,
-          modo: 'action',
-          titulo: 'Alert',
-          mensaje: 'Formulario inválido, por favor verifica los campos.',
-          cerrar: true,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        };
+      this.alertaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.INFORMACION,
+        modo: 'action',
+        titulo: 'Alert',
+        mensaje: 'Formulario inválido, por favor verifica los campos.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.showNotification = true;
     }
   }
 

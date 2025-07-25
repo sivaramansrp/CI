@@ -27,3 +27,11 @@ export enum TablaAcciones {
    /** Eliminar el elemento */
   ELIMINAR = 'ELIMINAR',
 }
+
+/**
+ * Modos de paginación disponibles para la tabla: CLIENT para paginación local y SERVER para paginación desde el servidor.
+ */
+export const PAGINATION_MODE = {
+  CLIENT: 'client',
+  SERVER: 'server'
+};

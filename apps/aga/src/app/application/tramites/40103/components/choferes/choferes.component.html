@@ -10,7 +10,7 @@
           href="#subtabs-1"
           role="tab"
         >
-          Registro de Chofer Nacional
+          Registro de chofer nacional
         </a>
       </li>
       <li class="nav-item">
@@ -22,7 +22,7 @@
           href="#subtabs-2"
           role="tab"
         >
-          Registro de Chofer Extranjero
+          Registro de chofer extranjero
         </a>
       </li>
     </ul>
@@ -30,16 +30,23 @@
   <div class="row mt-5">
     <div class="tab-content">
 
+
     @if(activeTab ==='nacional') {
       <ng-titulo [titulo]="CHOFERES_PAGE.CHOFERES_NACIONALES"></ng-titulo>
-      <app-chofere-nacional></app-chofere-nacional>
+      <app-chofere-nacional 
+        (addModalEvent)="onAgregarChoferNacional($event)" 
+        (cancelEvent)="onCancelarChoferNacional()">
+      </app-chofere-nacional>
       <app-chofere-nacional-notification [mensaje]="TEXTOS.MENSAJE_NACIONAL"></app-chofere-nacional-notification>
       <app-chofere-nacional-modificacion></app-chofere-nacional-modificacion>
       <app-chofere-nacional-retirada></app-chofere-nacional-retirada>
     }
     @if(activeTab ==='extranjero') {
       <ng-titulo [titulo]="CHOFERES_PAGE.CHOFERES_EXTRANJEROS"></ng-titulo>
-      <app-chofere-alta-de-extranjeros></app-chofere-alta-de-extranjeros>
+      <app-chofere-alta-de-extranjeros 
+        (addModalEvent)="onAgregarChoferExtranjero($event)" 
+        (cancelEvent)="onCancelarChoferExtranjero()">
+      </app-chofere-alta-de-extranjeros>
       <app-chofere-nacional-notification [mensaje]="TEXTOS.MENSAJE_EXTRANJERO"></app-chofere-nacional-notification>
       <app-chofere-modification-de-choferes></app-chofere-modification-de-choferes>
       <app-chofere-retirada-de-choferes></app-chofere-retirada-de-choferes>

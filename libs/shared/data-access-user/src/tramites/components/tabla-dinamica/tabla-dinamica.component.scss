@@ -41,3 +41,16 @@ input[type="radio"] {
 .cursor-pointer {
   cursor: pointer;
 }
+
+.sort-down {
+  font-size: 1.2rem;
+  margin-top: -8px;
+  color: #d3d3d3 !important;
+  border: none !important;
+}
+
+.sort-up {
+  font-size: 1.2rem;
+  color: #d3d3d3 !important;
+  border: none !important;
+}
