@@ -353,7 +353,15 @@ const ROUTES: Routes = [
     path: 'economico',
     loadChildren: () =>
       import('./tramites/32606/economico.module').then((m) => m.EconomicoModule),
-  }
+  },
+    {
+    path: 'seciit-oea-registration',
+    loadChildren: () =>
+      import('./tramites/32608/seciit-oea-registration.module').then(
+        (m) => m.SeciitOeaRegistrationModule
+      ),
+  },
+
 ];
 
 @NgModule({
