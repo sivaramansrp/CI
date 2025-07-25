@@ -1,4 +1,4 @@
-import { CONFIGURACION_ANEXOS_IMPORTACION, CONFIGURACION_ANEXOS_TABLA } from '../../../80308/constantes/modificacion.enum';
+import { CONFIGURACION_ANEXOS_IMPORTACION, CONFIGURACION_ANEXOS_SENSIBLES, CONFIGURACION_ANEXOS_TABLA } from '../../constantes/modificacion.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
@@ -37,6 +37,13 @@ export class DatosAnexosComponent implements OnInit, OnDestroy {
   configuracionTablaImportacion: ConfiguracionColumna<Anexo>[] =
     CONFIGURACION_ANEXOS_IMPORTACION;
 
+    /**
+   * Configuración de las columnas de la tabla para los anexos de importación.
+   * @type {ConfiguracionColumna<Anexo>[]}
+   */
+  configuracionTablaSensibles: ConfiguracionColumna<Anexo>[] =
+    CONFIGURACION_ANEXOS_SENSIBLES;
+
   /**
    * Datos de los anexos obtenidos desde el servicio.
    * @type {Anexo[]}
@@ -48,6 +55,12 @@ export class DatosAnexosComponent implements OnInit, OnDestroy {
    * @type {Anexo[]}
    */
   datosImportacion: Anexo[] = [];
+
+  /**
+   * Datos de los anexos de importación obtenidos desde el servicio.
+   * @type {Anexo[]}
+   */
+  datosSensibles: Anexo[] = [];
 
   constructor(
     public solicitudService: SolicitudService,
@@ -72,6 +85,7 @@ export class DatosAnexosComponent implements OnInit, OnDestroy {
         (data: Anexo[]) => {
           this.datosAnexo = [...data]; // Almacena los datos de anexos complementarios.
           this.datosImportacion = [...data]; // Almacena los datos de anexos de importación.
+          this.datosSensibles = [...data]; // Almacena los datos de anexos sensibles.
         },
         () => {
           this.toastr.error('Error al cargar los anexos'); // Manejo de errores.

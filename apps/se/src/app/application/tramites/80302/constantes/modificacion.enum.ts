@@ -206,19 +206,9 @@ export const CONFIGURACION_MODIFICACION = [
       clave: (ele: DatosDelModificacion):string | undefined => ele.pais, 
       orden: 9 },
     {
-      encabezado: 'Registro Federal de Contribuyentes',
-      clave: (ele: DatosDelModificacion):string | undefined => ele.rfc,
+      encabezado: 'Telefono',
+      clave: (ele: DatosDelModificacion):string | undefined => ele.telefono,
       orden: 10,
-    },
-    {
-      encabezado: 'Domicilio fiscal del solicitante',
-      clave: (ele: DatosDelModificacion):string | undefined => ele.domicilioFiscal,
-      orden: 11,
-    },
-    {
-      encabezado: 'Razón Social',
-      clave: (ele: DatosDelModificacion):string | undefined => ele.razonSocial,
-      orden: 12,
     },
     {
       encabezado: 'Estatus',
@@ -484,6 +474,29 @@ export const CONFIGURACION_ANEXOS_IMPORTACION = [
   {
     encabezado: 'Tipo Fracción',
     clave: (ele: Anexo) : string | undefined => ele.tipoFraccion,
+    orden: 3,
+  },
+];
+
+export const CONFIGURACION_ANEXOS_SENSIBLES = [
+  {
+    encabezado: 'Fracción arancelaria de la mercancía de importación',
+    clave: (ele: Anexo): number | undefined => ele.fraccionArancelariaDeLaMercanciaDeImportacion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Cantidad',
+    clave: (ele: Anexo): number | undefined => ele.cantidad,
+    orden: 1,
+  },
+  {
+    encabezado: 'Valor',
+    clave: (ele: Anexo): number | undefined => ele.valor,
+    orden: 2,
+  },
+  {
+    encabezado: 'Unidad de medida tarifaria',
+    clave: (ele: Anexo) : string | undefined => ele.unidadMedida,
     orden: 3,
   },
 ];
