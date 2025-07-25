@@ -1,24 +1,13 @@
+import { Catalogo, CatalogoLista } from '../../models/certificado-origen.model';
+import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Catalogo } from '../../models/certificado-origen.model';
-import { CatalogoLista } from '../../models/certificado-origen.model';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite110216State, Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
 import { CertificadosOrigenService } from '../../services/certificado-origen.service';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
-import { Tramite110216State } from '../../../../estados/tramites/tramite110216.store';
-import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
 
 /**
  * Componente para gestionar los datos del certificado.
@@ -82,6 +71,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * @param {CertificadosOrigenService} certificadosOrigenService - Servicio para obtener datos relacionados con el certificado.
    * @param {Tramite110216Store} store - Store para gestionar el estado del trámite.
    * @param {Tramite110216Query} tramiteQuery - Query para obtener el estado del trámite.
+   * @param {ConsultaioQuery} consultaioQuery - Query para obtener el estado de la consulta.
    */
   constructor(
     private fb: FormBuilder,
