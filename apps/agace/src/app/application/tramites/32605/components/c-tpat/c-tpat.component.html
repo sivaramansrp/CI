@@ -3,18 +3,16 @@
     <div class="row">
       <div class="col-md-12">
         <label class="form-label text-start" for=""
-          >El sistema señala que Conforme a la regla 7.1.4. tercer párrafo y a
-          la 7.1.5., fracción I, segundo párrafo, el solicitante Tablero de debe
-          acreditar lo siguiente:</label
+          >El sistema señala que Conforme a la regla 7.1.4. tercer párrafo y a la 7.1.5., fracción I, segundo párrafo, el solicitante debe acreditar lo siguiente:</label
         >
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start" for=""
+        <label class="form-label text-start estructura-accionaria-corporativa" for=""
           >Incluir en sección de anexos:</label
         >
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start" for=""
+        <label class="form-label text-start estructura-accionaria-corporativa" for=""
           >El reporte de validación emitido en un periodo no mayor a 3 años a la
           fecha que se presente la solicitud, a través del cual acredite a la
           solicitante como socio del programa CBP (C-TPAT), con estatus
@@ -24,7 +22,7 @@
         >
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start" for=""
+        <label class="form-label text-start estructura-accionaria-corporativa" for=""
           >Carta de presentación (Cover Letter) original y traducción simple al
           español</label
         >
@@ -36,13 +34,15 @@
           dicho país haya definido.</label
         >
         <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
+          [radioOptions]="opcionDeBotonDeRadio"
+          [isRequired]="true"
           [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="2089"
-          (valueChange)="actualizar2089($event)"
+          formControlName="autorizacionCBP"
+          (change)="setValoresStore(ctpatForm, 'autorizacionCBP')"
         ></app-input-radio>
+         <div *ngIf="esInvalido('autorizacionCBP')" class="text-danger mt-3">
+            <b *ngIf="ctpatForm.controls['autorizacionCBP'].hasError('required')">Respuesta Obligatoria</b>
+        </div>
       </div>
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
@@ -53,13 +53,16 @@
           estándares mínimos en materia de seguridad</label
         >
         <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
+          [radioOptions]="opcionDeBotonDeRadio"
+          [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'50px'"
-          formControlName="2090"
-          (valueChange)="actualizar2090($event)"
+          formControlName="instalacionesCertificadasCBP"
+          (change)="setValoresStore(ctpatForm, 'instalacionesCertificadasCBP')"
         ></app-input-radio>
+        <div *ngIf="esInvalido('instalacionesCertificadasCBP')" class="text-danger mt-3">
+            <b *ngIf="ctpatForm.controls['instalacionesCertificadasCBP'].hasError('required')">Respuesta Obligatoria</b>
+        </div>
       </div>
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
@@ -68,14 +71,38 @@
           (C-TPAT)</label
         >
         <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
+          [radioOptions]="opcionDeBotonDeRadio"
+          [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'50px'"
-          formControlName="2091"
-          (valueChange)="actualizar2091($event)"
+          formControlName="suspensionCancelacionCBP"
+          (change)="setValoresStore(ctpatForm, 'suspensionCancelacionCBP');manejarCambioSuspensionCancelacion($event)"
         ></app-input-radio>
+         <div *ngIf="esInvalido('suspensionCancelacionCBP')" class="text-danger mt-3">
+            <b *ngIf="ctpatForm.controls['suspensionCancelacionCBP'].hasError('required')">Respuesta Obligatoria</b>
+        </div>
       </div>
     </div>
   </form>
 </div>
+
+
+<ng-template #template>
+  <div class="modal-header">
+    <h6 class="modal-title text-danger">Mensaje</h6>
+  </div>
+  <div class="modal-body">
+    <p class="mb-0">
+      Este requisito es necesario para hacer válido el reconocimiento mutuo como socio del programa CBP (CTPAT), de conformidad con las RGCE.
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="cerrarModal()"
+    >
+      Aceptar
+    </button>
+  </div>
+</ng-template>

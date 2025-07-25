@@ -34,7 +34,7 @@ export class FitosanitarioQuery extends Query<ListaDeDatosFinal> {
    * @memberof FitosanitarioQuery
    */
   seleccionarTercerosRelacionados$ = this.select(
-    (estado) => estado.tercerosRelacionados
+    (estado) => estado.seletedTerceros
   );
 
   /**
@@ -91,4 +91,16 @@ export class FitosanitarioQuery extends Query<ListaDeDatosFinal> {
    * @type {Observable<string[]>}
    */
   public getNormaDatos$ = this.select((state) => state.usoCrossListDatos);
+
+
+  seleccionarDestinatarios$ = this.select(estado => estado.seletedTerceros);
+
+  /**
+   * Selector para obtener el exportador seleccionado.
+   * 
+   * @readonly
+   * @type {Observable<TercerosrelacionadosdestinoTable>}
+   * @memberof FitosanitarioQuery
+   */
+  seleccionarExportador$ = this.select(estado => estado.seletedExdora);
 }

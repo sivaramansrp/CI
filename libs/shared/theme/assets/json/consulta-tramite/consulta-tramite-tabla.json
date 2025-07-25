@@ -3214,6 +3214,37 @@
         "numeroDeProcedimiento": "32616"  
     },
     {
+        "id":"32610",
+        "folioTramite": "3170001000320251005000002",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32610",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+         "id": "32606",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32606" ,
+        "origin": "READ_PROCEDURE"
+    },
+    {
+         "id": "32605",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32605" ,
+        "origin": "READ_PROCEDURE"
+    },
+    {
         "id":"32615",
         "folioTramite": "3170001000320251005000002",
         "tipoDeTramite": "Datos generales del trámite",
