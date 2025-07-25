@@ -33,3 +33,22 @@ export const API_POST_FIRMA = `sat-t130118/solicitud/${IDSOLICITUD}/firmar`;
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/certificado-antiguedad-maxima
  */
 export const API_GET_CERTIFICADO_ANTIGUEDAD = `sat-t130118/certificado/antiguedad-maxima`;
+
+
+/**
+ * Constante para la clave de fracción arancelaria.
+ * Debe ser reemplazada por la clave real de la fracción arancelaria.
+ */
+export const CVEFRACCION = '{cveFraccion}';
+
+/**
+ * API para obtener los molinos de acero habilitados.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/habilitar-molino-acero
+ */ 
+export const API_GET_MOLINOS_ACERO_HABILITAR = `sat-t130118/fraccion-arancelaria/${CVEFRACCION}/molinos-acero/habilitar`;
+
+/**
+ * API para obtener los molinos de acero activos.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-molinos-acero
+ */
+export const API_GET_MOLINO_ACTIVOS = `sat-t130118/catalogo/molinos-acero`;
