@@ -1,4 +1,5 @@
 {
+    
     "tableHeader": [
         "RFC",
         "Nombre",
@@ -11,6 +12,19 @@
         "Suplente"
     ],
     "tableBody": [
-
+        {
+            "tbodyData":[
+                "XAXX010101000",
+                "Empresa de Seguridad S.A.",
+                "Pérez",
+                "Gómez",
+                "Ciudad de México",
+                "Gerente de Seguridad",
+                "555-1234",
+                "contacto@empresa.com",
+                "Juan Pérez"
+            ]
+        }
     ]
+
 }

@@ -2989,6 +2989,15 @@
     "numeroDeProcedimiento": "32613"
   },
   {
+    "id": 32615,
+    "tipoDeTramite": "Antecesor",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32615"
+  },
+  {
     "id": 32610,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2025-10-07",
