@@ -110,14 +110,14 @@
                 <div class="col-md-12">
                     <label>Número de empleados que le proveen en el último bimestre anterior a su solicitud</label>
                     <app-tabla-dinamica [configuracionTabla]="mercanciasTabla"
-                    [datos]="mercanciasTablaDatos" [tipoSeleccionTabla]="tablaSeleccionCheckbox"></app-tabla-dinamica>
+                    [datos]="mercanciasTablaDatos" [tipoSeleccionTabla]="tablaSeleccionCheckbox" (listaDeFilaSeleccionada)="seleccionarMercanciasTabla($event)"></app-tabla-dinamica>
                 </div>
             </div>
             <div class="row w-100">
                 <div class="col-12 d-flex justify-content-end mt-3 mb-4">
                     <button class="btn btn-primary me-2" (click)="openTablaModal()" [disabled]="esFormularioSoloLectura ? true : false">Agregar</button>
                     <button class="btn btn-primary me-2" (click)="openTablaModal()" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
-                    <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
+                    <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false" (click)="eliminarMercanciasTabla()">Eliminar</button>
                 </div>
             </div>
         }
@@ -170,14 +170,14 @@
         <div class="row mt-5">
             <div class="col-md-12">
                 <app-tabla-dinamica [configuracionTabla]="instalacionesPrincipalesTabla"
-                [datos]="instalacionesPrincipalesTablaDatos" [tipoSeleccionTabla]="tablaSeleccionCheckbox"></app-tabla-dinamica>
+                [datos]="instalacionesPrincipalesTablaDatos" [tipoSeleccionTabla]="tablaSeleccionCheckbox" (listaDeFilaSeleccionada)="seleccionarInstalacionesPrincipalesTabla($event)"></app-tabla-dinamica>
             </div>
         </div>
         <div class="row w-100">
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
                 <button class="btn btn-primary me-2" (click)="openTablaDosModal()" [disabled]="esFormularioSoloLectura ? true : false">Agregar</button>
                 <button class="btn btn-primary me-2" (click)="openTablaDosModal()" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
-                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false" (click)="eliminarInstalacionesPrincipales()">Eliminar</button>
             </div>
         </div>
         <div class="row mt-5">
@@ -284,13 +284,13 @@
             <div class="col-md-12">
                 <label>Control inventarios</label>
                 <app-tabla-dinamica [configuracionTabla]="inventariosTabla"
-                [datos]="inventariosTablaDatos" [tipoSeleccionTabla]="tablaSeleccionCheckbox"></app-tabla-dinamica>
+                [datos]="inventariosTablaDatos" [tipoSeleccionTabla]="tablaSeleccionCheckbox" (listaDeFilaSeleccionada)="seleccionarInventariosTabla($event)"></app-tabla-dinamica>
             </div>
         </div>
         <div class="row w-100">
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
                 <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura ? true : false" (click)="openMiembroDeLaEmpresaModal()">Modificar</button>
-                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false" (click)="openMiembroDeLaEmpresaModal()">Eliminar</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false" (click)="eliminarInventariosTabla()">Eliminar</button>
             </div>
         </div>
         <div class="row mt-5">

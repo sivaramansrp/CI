@@ -157,10 +157,18 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   public mercanciasTablaDatos: MercanciasInfo[] = [];
 
+   /** Lista de empleados seleccionados en la tabla */
+  public seleccionarMercanciasTablaDatos: MercanciasInfo[] =
+    [] as MercanciasInfo[];
+
   /**
    * Configuración de columnas para la tabla de instalaciones principales
    */
   public instalacionesPrincipalesTabla: ConfiguracionColumna<InstalacionesPrincipalesTablaInfo>[] = INSTALACIONES_PRINCIPALES_TABLA;
+
+  /** Lista de empleados seleccionados en la tabla */
+  public seleccionarInstalacionesPrincipalesTablaDatos: InstalacionesPrincipalesTablaInfo[] =
+    [] as InstalacionesPrincipalesTablaInfo[];
 
   /**
    * Configuración de columnas para la tabla de inventarios
@@ -171,6 +179,10 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
    * Datos para la tabla de inventarios
    */
   public inventariosTablaDatos: InventariosInfo[] = [];
+
+  /** Lista de empleados seleccionados en la tabla */
+  public seleccionarInventariosTablaDatos: InventariosInfo[] =
+    [] as InventariosInfo[];
 
   /**
    * Datos para la tabla de instalaciones principales
@@ -359,7 +371,15 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
    * Crea los datos para la tabla de mercancías
    */
   public crearTablaDatos(): void {
-    this.obtenerTablaDatos();
+    //this.obtenerTablaDatos();
+    const VALUE = this.tablaModalForma.value;
+    const MERCANCIA: MercanciasInfo = {
+      numero_de_empleados: VALUE.numeroDeEmpleadosForma,
+      rfc: VALUE.rfc,
+      denominacion_social: VALUE.registroFederalDeContribuyentes,
+      bimestre: VALUE.bimestreForma,
+    }
+    this.mercanciasTablaDatos.push(MERCANCIA)
     this.closeTablaModal();
   }
 
@@ -367,7 +387,28 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
    * Crea los datos para la tabla de instalaciones principales
    */
   public crearTablaDosDatos(): void {
-    this.obtenerInstalacionesPrincipalesTablaDatos();
+    const VALUE = this.tablaDosModalForma.value;
+    const INSTALACION: InstalacionesPrincipalesTablaInfo = {
+      instalaciones_principales: VALUE.instalacionesPrincipales,
+      tipo_de_instalacion: VALUE.tipoDeInstalcion,
+      entidad_federativa: VALUE.entidadFederativa,
+      colonia: VALUE.colonia,
+      codigo_postal: VALUE.codigoPostal,
+      registro_ante_se_sat: VALUE.registroAnte,
+      proceso_productivo: VALUE.procesoProductivo,
+      acredita_el_uso_y_goce_del_inmueble: '',
+      realiza_operaciones_de_comercio_exterior: '',
+      reconocimiento_mutuo_instalacion_c_tpat: '',
+      perfil_de_la_empresa: '',
+      perfil_del_recinto_fiscalizado_estrategico: '',
+      perfil_del_auto_transportista_terrestre: '',
+      perfil_del_transportista_ferroviario: '',
+      perfil_del_recinto_fiscalizado: '',
+      perfil_de_mensajeria_y_paqueteria: '',
+      perfil_almacen_general: '',
+      municipio_o_delegacion: ''
+    }
+    this.instalacionesPrincipalesTablaDatos.push(INSTALACION)
     this.closeTablaDosModal();
   }
 
@@ -532,6 +573,76 @@ export class DatosComunesComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
     (this.tramite32615Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+    /**
+   * Guarda la selección de Mercancias datos hecha por el usuario.
+   */
+  seleccionarMercanciasTabla(evento: MercanciasInfo[]): void {
+    this.seleccionarMercanciasTablaDatos = evento;
+  }
+
+    /**
+   * Guarda la selección de Mercancias datos hecha por el usuario.
+   */
+  seleccionarInstalacionesPrincipalesTabla(evento: InstalacionesPrincipalesTablaInfo[]): void {
+    this.seleccionarInstalacionesPrincipalesTablaDatos = evento;
+  }
+
+    /**
+   * Guarda la selección de Mercancias datos hecha por el usuario.
+   */
+  seleccionarInventariosTabla(evento: InventariosInfo[]): void {
+    this.seleccionarInventariosTablaDatos = evento;
+  }
+
+  /**
+   * Elimina los registros de Mercancias seleccionados.
+   */
+  eliminarMercanciasTabla(): void {
+    if (this.seleccionarMercanciasTablaDatos.length > 0) {
+      this.seleccionarMercanciasTablaDatos.forEach((elemento) => {
+        const INDICE = this.mercanciasTablaDatos.findIndex(
+          (inv) => inv.numero_de_empleados === elemento.numero_de_empleados
+        );
+        if (INDICE !== -1) {
+          this.mercanciasTablaDatos.splice(INDICE, 1);
+        }
+      });
+    }
+  }
+
+    /**
+   * Elimina los registros de Mercancias seleccionados.
+   */
+  eliminarInstalacionesPrincipales(): void {
+    if (this.seleccionarInstalacionesPrincipalesTablaDatos.length > 0) {
+      this.seleccionarInstalacionesPrincipalesTablaDatos.forEach((elemento) => {
+        const INDICE = this.instalacionesPrincipalesTablaDatos.findIndex(
+          (inv) => inv.tipo_de_instalacion === elemento.tipo_de_instalacion
+        );
+        if (INDICE !== -1) {
+          this.instalacionesPrincipalesTablaDatos.splice(INDICE, 1);
+        }
+      });
+    }
+  }
+
+  
+    /**
+   * Elimina los registros de Mercancias seleccionados.
+   */
+  eliminarInventariosTabla(): void {
+    if (this.seleccionarInventariosTablaDatos.length > 0) {
+      this.seleccionarInventariosTablaDatos.forEach((elemento) => {
+        const INDICE = this.inventariosTablaDatos.findIndex(
+          (inv) => inv.nombre === elemento.nombre
+        );
+        if (INDICE !== -1) {
+          this.inventariosTablaDatos.splice(INDICE, 1);
+        }
+      });
+    }
   }
 
   /**
