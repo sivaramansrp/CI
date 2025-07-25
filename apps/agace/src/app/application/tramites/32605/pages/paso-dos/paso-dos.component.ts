@@ -1,16 +1,11 @@
-import { AlertComponent } from '@libs/shared/data-access-user/src';
-import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
 import { CATALOGOS_ID } from '@libs/shared/data-access-user/src';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogosService } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TEXTOS } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -18,14 +13,6 @@ import { takeUntil } from 'rxjs';
  */
 @Component({
   selector: 'app-paso-dos',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    TituloComponent,
-    AlertComponent,
-    AnexarDocumentosComponent,
-  ],
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })

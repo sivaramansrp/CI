@@ -3233,5 +3233,15 @@
         "departamento": "AGACE",
         "numeroDeProcedimiento": "32606" ,
         "origin": "READ_PROCEDURE"
+    },
+    {
+         "id": "32605",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32605" ,
+        "origin": "READ_PROCEDURE"
     }
 ]
