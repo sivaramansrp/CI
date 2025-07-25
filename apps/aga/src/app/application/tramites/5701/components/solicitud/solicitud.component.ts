@@ -866,6 +866,22 @@ export class SolicitudComponent
   }
 
   /**
+   * Error whitespace
+   * @returns {boolean} - Retorna `true` si el campo tiene un error de whitespace, de lo contrario `false`.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  isErrorWhitespace(form: FormGroup, field: string): boolean {
+    const CONTROL = form.get(field) as FormControl;
+
+    if (CONTROL) {
+      const ERROR_WHITESPACE = CONTROL.hasError('whitespace');
+      return ERROR_WHITESPACE && CONTROL.touched;
+    }
+
+    return false;
+  }
+
+  /**
    * Verifica si el control 'idSocioComercial' tiene el validador 'Validators.required'.
    *
    * @returns {boolean} `true` si el control es obligatorio, de lo contrario `false`.
@@ -1171,11 +1187,11 @@ export class SolicitudComponent
         ],
         descripcionGenerica: [
           this.solicitudState?.descripcionGenerica,
-          [Validators.required, Validators.maxLength(500)],
+          [Validators.required, Validators.maxLength(500), ValidacionesFormularioService.noWhitespaceValidator],
         ],
         justificacion: [
           this.solicitudState?.justificacion,
-          [Validators.required, Validators.maxLength(1000)],
+          [Validators.required, Validators.maxLength(1000), ValidacionesFormularioService.noWhitespaceValidator],
         ],
       }),
 
