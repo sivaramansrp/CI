@@ -61,7 +61,7 @@
     <ng-titulo titulo="Obligaciones fiscales" />
     <div class="row">
       <div class="col-md-4">
-        <label for="Opinion">Opinión positiva del SAT</label>
+        <label for="Opinion">Opinión positiva del SAT*:</label>
         <input
           type="text"
           id="Opinion"
@@ -83,15 +83,12 @@
           <label>
             <input
               id="filaSeleccion"
-              class="cursor-pointer"
+              class="cursor-pointer custom-checkbox"
               type="checkbox"
               aria-label="Seleccionar"
               formControlName="aceptarObligacionFiscal"
               class="mr-3"
-            />* Compromiso de vantas anuales por un valor superior a 500.000
-            dólares de los Estados Unidos de América, o su equivalente en moneda
-            nacional, o bien facturar exportaciones, cuanda menos por el 10% de
-            su facturación total.
+            />* Compromiso de ventas anuales por un valor superios a 500,000 dólares de los Estados Unidos de América, o su equivalente en moneda nacional, o bien facturar exportaciones, cuando menos por el 10% de su facturación total.
           </label>
         </div>
       </div>
@@ -107,7 +104,7 @@
       <div class="col-12">
         <div class="col-12 mb-4">
           <label for="Nombre"
-            >Nombre del federatario que expide el documento</label
+            >Nombre del federatario que expide el documento*:</label
           >
           <input
             type="text"
@@ -119,7 +116,7 @@
         </div>
         <div class="row">
           <div class="col-md-4 mb-4 mt-3">
-            <label for="Numero"> Número de Notario</label>
+            <label for="Numero"> Número de notaria*:</label>
             <input
               type="text"
               id="Numero"
@@ -136,13 +133,14 @@
               name="estado"
               formControlName="estado"
               [isDisabled]="formularioDeshabilitado"
+              [placeholder]="'Seleccione un valor'"
             ></app-catalogo-select>
           </div>
         </div>
 
         <div class="row mb-4">
           <div class="col-md-4">
-            <label for="acta"> Número de acta:</label>
+            <label for="acta"> Número de acta*:</label>
             <input
               type="text"
               id="acta"
@@ -153,7 +151,7 @@
           </div>
 
           <div class="col-md-4">
-            <label for="emision"> fecha de emision del acta:</label>
+            <label for="emision"> Fecha de emisión del acta*:</label>
             <input
               type="text"
               id="emision"
@@ -165,19 +163,31 @@
         </div>
         <div class="row mb-4">
           <div class="col-md-4">
-            <label for="rfc"> RFC del representante legal</label>
+            <label for="rfc"> RFC del Representante Legal*:</label>
             <input
               type="text"
               id="rfc"
               name="rfc"
               class="form-control"
               formControlName="rfc"
+              maxlength="13"
+              [class.is-invalid]="formaComplimentos.get('formaModificaciones')?.get('rfc')?.invalid && formaComplimentos.get('formaModificaciones')?.get('rfc')?.touched"
             />
+            @if (formaComplimentos.get('formaModificaciones')?.get('rfc')?.invalid && formaComplimentos.get('formaModificaciones')?.get('rfc')?.touched) {
+              <div class="invalid-feedback">
+                @if (formaComplimentos.get('formaModificaciones')?.get('rfc')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                }
+                @if (formaComplimentos.get('formaModificaciones')?.get('rfc')?.errors?.['maxlength']) {
+                  <small>El RFC no puede exceder los 13 caracteres.</small>
+                }
+              </div>
+            }
           </div>
         </div>
         <div class="row mb-4">
           <div class="col-md-10">
-            <label for="representante"> Nombre del representante legal</label>
+            <label for="representante"> Nombre del Representante Legal*:</label>
             <input
               type="text"
               id="representante"
@@ -321,7 +331,19 @@
             [type]="item.tipo_input"
             id="{{ item.campo }}"
             [formControlName]="item.campo"
+            [maxlength]="item.campo === 'rfc' ? 13 : null"
+            [class.is-invalid]="formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.invalid && formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.touched"
           />
+          @if (formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.invalid && formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.touched) {
+            <div class="invalid-feedback">
+              @if (formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.errors?.['required']) {
+                <small>Este campo es obligatorio.</small>
+              }
+              @if (formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.errors?.['maxlength']) {
+                <small>El RFC no puede exceder los 13 caracteres.</small>
+              }
+            </div>
+          }
         </div>
 
         } }

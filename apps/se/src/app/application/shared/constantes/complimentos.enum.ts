@@ -26,7 +26,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     required: true,
     opciones: [],
     orden: 3,
-  },
+    },
   {
     labelNombre: 'Código postal',
     campo: 'codigoPostal',
@@ -39,7 +39,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     labelNombre: 'Estado',
     campo: 'estado',
     class: 'col-md-6 col-10  mt-1',
-    tipo_input: 'select-catalog',
+    tipo_input: 'text',
     required: true,
     opciones: [],
     orden: 5,

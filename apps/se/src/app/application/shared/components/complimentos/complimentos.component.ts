@@ -304,8 +304,8 @@ this.formaComplimentos.disable();
         estado: ['', Validators.required],
         nombreDeActa: ['', Validators.required],
         fechaDeActa: ['', Validators.required],
-        rfc: ['', Validators.required],
-        nombreDeRepresentante: ['', Validators.required],
+        rfc: ['', [Validators.required, Validators.maxLength(13)]],
+        nombreDeRepresentante: [{ value: '', disabled: true }],
       }),
       formaCertificacion: this.fb.group({
         certificada: [{ value: '', disabled: true }],
@@ -381,7 +381,7 @@ this.formaComplimentos.disable();
         });
       case TIPO_FORMA.NATIONALIDAD_MEXICANA:
         return this.fb.group({
-          rfc: ['', Validators.required],
+          rfc: ['', [Validators.required, Validators.maxLength(13)]],
         });
 
       default:
