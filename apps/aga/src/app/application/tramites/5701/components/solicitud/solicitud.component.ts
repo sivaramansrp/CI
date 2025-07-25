@@ -3164,7 +3164,7 @@ export class SolicitudComponent
       txtBtnAceptar: TEXTO_ACEPTAR,
       txtBtnCancelar: TEXTO_CANCELAR,
     };
-
+    this.datosTablaPagos = []
     this.procesoModal = 'linea_captura';
   }
 
