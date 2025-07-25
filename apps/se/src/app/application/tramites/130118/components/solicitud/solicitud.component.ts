@@ -333,7 +333,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         nombre: [{ value: this.solicitudState?.nombre ?? '', disabled: true }, [Validators.required, Validators.maxLength(200)]],
         apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno ?? '', disabled: true }, [Validators.required, Validators.maxLength(200)]],
         apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno ?? '', disabled: true }, [Validators.maxLength(200)]],
-        razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: this.esFormularioSoloLectura }, [Validators.required, Validators.maxLength(250)]],
+        razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: true }, [Validators.required, Validators.maxLength(250)]],
         domicilio: [this.solicitudState?.domicilio, [Validators.maxLength(1000), Validators.required]]
       }),
       registroFederal: this.fb.group({
@@ -564,14 +564,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.isVisibleFisica = false;
     this.isVisibleMoral = true;
 
-    // Restablecer los valores y desactivar campos para "Persona Moral"
+    // Limpiar campos de persona física y desactivarlos
     this.FormSolicitud.get('datosProducto.nombre')?.setValue('');
     this.FormSolicitud.get('datosProducto.apellidoPaterno')?.setValue('');
     this.FormSolicitud.get('datosProducto.apellidoMaterno')?.setValue('');
 
+    // Limpiar nombre completo en Akita
+    this.tramite130118Store.setNombre('');
+    this.tramite130118Store.setApellidoPaterno('');
+    this.tramite130118Store.setApellidoMaterno('');
+
+    // Habilitar campo de razón social si no es solo lectura
     if (!this.esFormularioSoloLectura) {
       this.FormSolicitud.get('datosProducto.razonSocial')?.enable();
     }
+
+    // Desactivar campos de persona física
     this.FormSolicitud.get('datosProducto.nombre')?.disable();
     this.FormSolicitud.get('datosProducto.apellidoPaterno')?.disable();
     this.FormSolicitud.get('datosProducto.apellidoMaterno')?.disable();
@@ -585,8 +593,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.isVisibleFisica = true;
     this.isVisibleMoral = false;
 
-    // Restablecer los valores y habilitar campos para "Persona Física"
+    // Limpiar campo de razón social y desactivarlo
+    this.FormSolicitud.get('datosProducto.razonSocial')?.setValue('');
     this.FormSolicitud.get('datosProducto.razonSocial')?.disable();
+
+    // Limpiar razón social en Akita
+    this.tramite130118Store.setRazonSocial('');
+
+    // Habilitar campos de persona física
     this.FormSolicitud.get('datosProducto.nombre')?.enable();
     this.FormSolicitud.get('datosProducto.apellidoPaterno')?.enable();
     this.FormSolicitud.get('datosProducto.apellidoMaterno')?.enable();
@@ -826,6 +840,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             this.FormSolicitud.get('datosProducto.nombre')?.setValue(null);
             this.FormSolicitud.get('datosProducto.apellidoPaterno')?.setValue(null);
             this.FormSolicitud.get('datosProducto.apellidoMaterno')?.setValue(null);
+            this.FormSolicitud.get('datosProducto.tipoPersona')?.setValue('');
+            this.tramite130118Store.setTipoPersona('');
+
 
             // Limpiar store (akita)
             this.tramite130118Store.setNombre('');
@@ -850,19 +867,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           } else {
 
             this.mostrarComboMolinos = false;
-            if (this.solicitudState?.tipoPersona === 'pfisica') {
-              this.isVisibleFisica = true;
-            }else if(this.solicitudState?.tipoPersona === 'pmoral') {
-              this.isVisibleMoral = true;
-            }
+
 
             this.FormSolicitud.get('datosProducto.nombre')?.enable();
             this.FormSolicitud.get('datosProducto.apellidoPaterno')?.enable();
             this.FormSolicitud.get('datosProducto.apellidoMaterno')?.enable();
-            this.FormSolicitud.get('datosProducto.razonSocial')?.disable();
-            this.FormSolicitud.get('datosProducto.razonSocial')?.setValue('');
-            this.tramite130118Store.setRazonSocial('');
-            
+
+
+
           }
         },
         error: (err) => {
