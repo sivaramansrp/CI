@@ -55,9 +55,6 @@ describe('PasoDosComponent', () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
     component.obtieneFirma({});
-    // expect(component.tramiteFolioService.obtenerTramite).toHaveBeenCalled();
-    // expect(component.tramiteStore.establecerTramite).toHaveBeenCalled();
-    // expect(component.router.navigate).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -65,8 +62,6 @@ describe('PasoDosComponent', () => {
     component.destruirNotificador$.next = jest.fn();
     component.destruirNotificador$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destruirNotificador$.next).toHaveBeenCalled();
-    // expect(component.destruirNotificador$.complete).toHaveBeenCalled();
   });
 
 });
