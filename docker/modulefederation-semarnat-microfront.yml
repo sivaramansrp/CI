@@ -1,12 +1,13 @@
 services:
 #----------------------------------------------------------------
   modulefederation-semarnat-microfront:
-    image: ghcr.io/vucem30/dockerized-modulefederation-semarnat-microfront:1.0.3
+    image: ghcr.io/vucem30/dockerized-modulefederation-semarnat-microfront:1.0.4
     build: 
       context: ./../
       dockerfile: apps/semarnat/Dockerfile.dev
       args:
         - NODE_ENV=production
+        - IMAGE_TAG_ID=${IMAGE_TAG_ID:-1.0.4}
     container_name: modulefederation-semarnat-microfront
     restart: unless-stopped
     expose:

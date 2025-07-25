@@ -1,41 +1,48 @@
-import { AlertComponent, REGEX_PATRON_DECIMAL_2 } from "@libs/shared/data-access-user/src";
-import { ConsultaioQuery, ConsultaioState } from "@ng-mf/data-access-user";
-import { DISPONIBLES_ENCABEZADOS, FECHAFACTURA, SELECCIONADAS_ENCABEZADOS } from '../../constants/inicialmente-certificado-origen.enum';
-import { Catalogo } from "../../models/certificado-origen.model.js";
-import { CatalogoLista, } from "../../models/certificado-origen.model.js";
-import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src";
+import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  ConfiguracionColumna,
+  InputFecha,
+  InputFechaComponent,
+  REGEX_PATRON_DECIMAL_2,
+  REGEX_SOLO_DIGITOS,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+  ValidacionesFormularioService
+} from "@libs/shared/data-access-user/src";
+import {
+  Catalogo,
+  CatalogoLista,
+  DisponiblesTabla,
+  SeleccionadasTabla
+} from "../../models/certificado-origen.model.js";
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import {
+  ConsultaioQuery,
+  ConsultaioState
+} from "@ng-mf/data-access-user";
+import {
+  DISPONIBLES_ENCABEZADOS,
+  FECHAFACTURA,
+  FECHAFINAL,
+  FECHAINICIAL,
+  SELECCIONADAS_ENCABEZADOS,
+  TERCEROS_TEXTO_DE_ALERTA
+} from '../../constants/inicialmente-certificado-origen.enum';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Subject, map, takeUntil } from "rxjs";
+import {
+  Tramite110216State,
+  Tramite110216Store
+} from "../../../../estados/tramites/tramite110216.store";
 import { CertificadosOrigenService } from "../../services/certificado-origen.service";
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
-import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
-import { DisponiblesTabla } from "../../models/certificado-origen.model.js";
-import { ElementRef } from "@angular/core";
-import { FECHAFINAL } from '../../constants/inicialmente-certificado-origen.enum';
-import { FECHAINICIAL } from '../../constants/inicialmente-certificado-origen.enum';
-import { FormBuilder } from "@angular/forms";
-import { FormGroup } from "@angular/forms";
-import { InputFecha } from "@libs/shared/data-access-user/src";
-import { InputFechaComponent } from "@libs/shared/data-access-user/src";
 import { Modal } from 'bootstrap';
-import { OnDestroy } from "@angular/core";
-import { OnInit } from "@angular/core";
-import { REGEX_SOLO_DIGITOS } from "@libs/shared/data-access-user/src";
-import { ReactiveFormsModule } from "@angular/forms";
-import { SeleccionadasTabla } from "../../models/certificado-origen.model.js";
-import { Subject } from "rxjs";
-import { TERCEROS_TEXTO_DE_ALERTA } from '../../constants/inicialmente-certificado-origen.enum';
-import { TablaDinamicaComponent } from "@libs/shared/data-access-user/src";
-import { TablaSeleccion } from "@libs/shared/data-access-user/src";
-import { TituloComponent } from "@libs/shared/data-access-user/src";
 import { ToastrService } from "ngx-toastr";
-import { Tramite110216Query } from "../../../../estados/queries/tramite110216.query";
-import { Tramite110216State } from "../../../../estados/tramites/tramite110216.store";
-import { Tramite110216Store } from "../../../../estados/tramites/tramite110216.store";
-import { ValidacionesFormularioService } from "@libs/shared/data-access-user/src";
-import { Validators } from "@angular/forms";
-import { ViewChild } from "@angular/core";
-import { map } from "rxjs";
-import { takeUntil } from "rxjs";
+import {
+  Tramite110216Query
+} from "../../../../estados/queries/tramite110216.query";
 
 /**
  * Componente para gestionar el Certificado de Origen.
@@ -164,6 +171,12 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   @ViewChild('modalBuscar') modalBuscar!: ElementRef;
 
   /**
+   * Referencia al elemento del modal de modificación.
+   * 
+   * Se utiliza para abrir o cerrar el modal de modificación de mercancías.
+   */
+  modalInstances: Modal | null = null;
+  /**
    * Referencia al botón para cerrar el modal.
    * 
    * Se utiliza para cerrar el modal de manera programada.
@@ -253,6 +266,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * @param {Tramite110216Store} store - Store para gestionar el estado del trámite 110216.
    * @param {Tramite110216Query} tramiteQuery - Query para consultar el estado del trámite 110216.
    * @param {ValidacionesFormularioService} validacionesService - Servicio para realizar validaciones personalizadas en los formularios.
+   * @param {ConsultaioQuery} consultaioQuery - Query para consultar el estado del trámite 110216.
    */
   constructor(
     public fb: FormBuilder,
@@ -347,11 +361,11 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     this.formularioCertificado = this.fb.group({
       tercerOperador: [this.solicitudState?.tercerOperador],
       grupoOperador: this.fb.group({
-        nombre: [this.solicitudState?.grupoOperador?.nombre, []],
-        apellidoPrimer: [this.solicitudState?.grupoOperador?.apellidoPrimer, []],
-        apellidoSegundo: [this.solicitudState?.grupoOperador?.apellidoSegundo, []],
+        nombre: [this.solicitudState?.grupoOperador?.nombre, [Validators.maxLength(25)]],
+        apellidoPrimer: [this.solicitudState?.grupoOperador?.apellidoPrimer, [Validators.maxLength(15)]],
+        apellidoSegundo: [this.solicitudState?.grupoOperador?.apellidoSegundo, [Validators.maxLength(15)]],
         numeroFiscal: [this.solicitudState?.grupoOperador?.numeroFiscal, [Validators.required]],
-        razonSocial: [this.solicitudState?.grupoOperador?.razonSocial, []],
+        razonSocial: [{ value: this.solicitudState?.grupoOperador?.razonSocial, disabled: true }],
       }),
       grupoDeDomicilio: this.fb.group({
         pais: [this.solicitudState?.grupoDeDomicilio?.pais, []],
@@ -376,6 +390,51 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
   }
 
+/**
+ * Actualiza el estado habilitado o deshabilitado de los controles del formulario dentro del FormGroup 'grupoOperador'
+ * según los valores actuales de 'razonSocial', 'nombre', 'apellidoPrimer' y 'apellidoSegundo'.
+ *
+ * - Si 'razonSocial' tiene un valor no vacío, deshabilita 'nombre', 'apellidoPrimer' y 'apellidoSegundo',
+ *   y habilita 'razonSocial'.
+ * - Si alguno de 'nombre', 'apellidoPrimer' o 'apellidoSegundo' tiene un valor no vacío, deshabilita 'razonSocial'
+ *   y habilita los otros tres campos.
+ * - Si todos los campos están vacíos, habilita todos los campos.
+ *
+ * Se suscribe a los cambios de valor en el FormGroup 'grupoOperador' para actualizar automáticamente el estado
+ * cada vez que cambie alguno de los campos relevantes.
+ */
+actualizarEstadoCampos(): void {
+    const GRUPO_OPERADOR_GROUP = this.formularioCertificado.get('grupoOperador') as FormGroup;
+
+    const ACTUALIZAR_ESTADO_CAMPOS = (): void => {
+      const RAZON_SOCIAL = GRUPO_OPERADOR_GROUP.get('razonSocial')?.value?.trim();
+      const NOMBRE = GRUPO_OPERADOR_GROUP.get('nombre')?.value?.trim();
+      const APELLIDO_PRIMER = GRUPO_OPERADOR_GROUP.get('apellidoPrimer')?.value?.trim();
+      const APELLIDO_SEGUNDO = GRUPO_OPERADOR_GROUP.get('apellidoSegundo')?.value?.trim();
+
+      if (RAZON_SOCIAL) {
+        GRUPO_OPERADOR_GROUP.get('nombre')?.disable({ emitEvent: false });
+        GRUPO_OPERADOR_GROUP.get('apellidoPrimer')?.disable({ emitEvent: false });
+        GRUPO_OPERADOR_GROUP.get('apellidoSegundo')?.disable({ emitEvent: false });
+        GRUPO_OPERADOR_GROUP.get('razonSocial')?.enable({ emitEvent: false });
+      } else if (NOMBRE || APELLIDO_PRIMER || APELLIDO_SEGUNDO) {
+        GRUPO_OPERADOR_GROUP.get('razonSocial')?.disable({ emitEvent: false });
+        GRUPO_OPERADOR_GROUP.get('nombre')?.enable({ emitEvent: false });
+        GRUPO_OPERADOR_GROUP.get('apellidoPrimer')?.enable({ emitEvent: false });
+        GRUPO_OPERADOR_GROUP.get('apellidoSegundo')?.enable({ emitEvent: false });
+      } else {
+        GRUPO_OPERADOR_GROUP.get('razonSocial')?.enable({ emitEvent: false });
+        GRUPO_OPERADOR_GROUP.get('nombre')?.enable({ emitEvent: false });
+        GRUPO_OPERADOR_GROUP.get('apellidoPrimer')?.enable({ emitEvent: false });
+        GRUPO_OPERADOR_GROUP.get('apellidoSegundo')?.enable({ emitEvent: false });
+      }
+    };
+
+    GRUPO_OPERADOR_GROUP.valueChanges.subscribe(() => {
+      ACTUALIZAR_ESTADO_CAMPOS();
+    });
+  }
+
   /**
    * Inicializa el formulario relacionado con las mercancías.
    * 
@@ -383,6 +442,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    */
   inicializarFormularioMercancia(): void {
     this.formularioMercancia = this.fb.group({
+      id:[''],
       fraccionMercanciaArancelaria: [this.solicitudState?.formularioMercancia?.fraccionMercanciaArancelaria, []],
       nombreComercialDelaMercancia: [this.solicitudState?.formularioMercancia?.nombreComercialDelaMercancia, []],
       nombreTecnico: [this.solicitudState?.formularioMercancia?.nombreTecnico, []],
@@ -500,6 +560,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(respuesta => {
         this.mercanciaDisponsiblesTablaDatos = respuesta;
+        this.store.setMercanciaDisponsiblesTablaDatos(this.mercanciaDisponsiblesTablaDatos);
       });
   }
 
@@ -524,14 +585,100 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * @param {DisponiblesTabla} evento - La fila seleccionada en la tabla de mercancías disponibles.
    */
   disponiblesSeleccionDeFilas(evento: DisponiblesTabla): void {
-    if (!this.soloLectura) {
+    if (!this.soloLectura) {      
       this.disponiblesSeleccionadasFila = evento;
       if (this.modalBuscar) {
-        const MODAL_INSTANCE = new Modal(this.modalBuscar.nativeElement);
-        MODAL_INSTANCE.show();
+        if (!this.modalInstances) {
+          this.modalInstances = new Modal(this.modalBuscar.nativeElement);
+        }
+        this.formularioMercancia.reset()
+        this.formularioMercancia.patchValue({
+          id: this.disponiblesSeleccionadasFila.id,
+          fraccionMercanciaArancelaria: this.disponiblesSeleccionadasFila.fraccionArancelaria,
+          nombreComercialDelaMercancia: this.disponiblesSeleccionadasFila.nombreComercial,
+          nombreTecnico: this.disponiblesSeleccionadasFila.nombreTecnico,
+        });
+        this.modalInstances?.show();
       }
     }
   }
+
+/**
+ * Actualiza la fila de mercancía seleccionada y muestra el modal para editar.
+ * 
+ * Este método asigna los datos de la mercancía seleccionada, inicializa y muestra el modal
+ * si aún no está abierto, y actualiza el formulario con los valores de la mercancía seleccionada.
+ *
+ * @param mercanciaSeleccionadasTablaDatos - Los datos de la mercancía seleccionada de la tabla.
+ */
+modificarMercanciaSeleccionada(mercanciaSeleccionadasTablaDatos: SeleccionadasTabla): void {
+  this.mercanciaSeleccionadasFila = mercanciaSeleccionadasTablaDatos;
+  const FORM_VALUES = mercanciaSeleccionadasTablaDatos;
+     if (this.modalBuscar) {
+        if (!this.modalInstances) {
+          this.modalInstances = new Modal(this.modalBuscar.nativeElement);
+        }
+      }
+      this.modalInstances?.show();
+    this.formularioMercancia.patchValue({
+      id: FORM_VALUES.id,
+      fraccionArancelaria: FORM_VALUES.fraccionArancelaria,
+      cantidad: FORM_VALUES.cantidad,
+      unidadMedida: FORM_VALUES.unidadMedida,
+      valorMercancia: FORM_VALUES.valorMercancia,
+      tipoFactura: FORM_VALUES.tipoFactura,
+      numFactura: FORM_VALUES.numFactura,
+      complementoDescripcion: FORM_VALUES.complementoDescripcion,
+      fechaFactura: FORM_VALUES.fechaFactura,
+    });
+}
+
+/**
+ * Maneja la activación del modal para agregar o editar una mercancía.
+ * 
+ * Extrae los valores del formulario `formularioMercancia`, construye un nuevo
+ * objeto `SeleccionadasTabla` y actualiza el arreglo `mercanciaSeleccionadasTablaDatos`.
+ * Si ya existe un elemento con el mismo ID, lo actualiza; de lo contrario, agrega el nuevo elemento.
+ * El arreglo actualizado se almacena usando `store.setMercanciaTablaDatos`.
+ * Finalmente, cierra el modal si está abierto.
+ *
+ * @param formularioMercancia - El formulario reactivo que contiene los datos de la mercancía.
+ */
+activarModal(formularioMercancia: FormGroup): void {
+  const FORM_VALUES = formularioMercancia.value;
+
+  const NUEVA_MERCANCIA: SeleccionadasTabla = {
+    id: FORM_VALUES.id || this.mercanciaSeleccionadasTablaDatos.length + 1,
+    fraccionArancelaria: FORM_VALUES.fraccionMercanciaArancelaria,
+    cantidad: FORM_VALUES.cantidad,
+    unidadMedida: FORM_VALUES.pais,
+    valorMercancia: FORM_VALUES.valorDelaMercancia,
+    tipoFactura: FORM_VALUES.tipoFactura,
+    numFactura: FORM_VALUES.numeroFactura,
+    complementoDescripcion: FORM_VALUES.complementoDelaDescripcion,
+    fechaFactura: FORM_VALUES.fecha,
+  };
+
+  const INDEX = this.mercanciaSeleccionadasTablaDatos.findIndex(
+    item => item.id === NUEVA_MERCANCIA.id
+  );
+
+  if (INDEX !== -1) {
+    this.mercanciaSeleccionadasTablaDatos[INDEX] = NUEVA_MERCANCIA;
+  } else {
+    this.mercanciaSeleccionadasTablaDatos = [
+      ...this.mercanciaSeleccionadasTablaDatos,
+      NUEVA_MERCANCIA
+    ];
+  }
+  this.store.setMercanciaTablaDatos(this.mercanciaSeleccionadasTablaDatos);
+
+  if (this.modalInstances) {
+    this.modalInstances.hide();
+  }
+}
+
+
   /**
    * Maneja la selección de filas en la tabla de mercancías seleccionadas.
    * 
@@ -552,6 +699,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     if (this.mercanciaSeleccionadasFila) {
       this.mercanciaSeleccionadasTablaDatos = this.mercanciaSeleccionadasTablaDatos.filter(elementos => this.mercanciaSeleccionadasFila?.id !== elementos.id);
       this.mercanciaSeleccionadasFila = null;
+         this.store.setMercanciaTablaDatos(this.mercanciaSeleccionadasTablaDatos);
     }
   }
 
