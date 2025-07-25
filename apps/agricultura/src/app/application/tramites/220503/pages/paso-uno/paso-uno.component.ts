@@ -58,6 +58,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
 
   ngOnInit(): void {
+      this.guardarDatosFormulario();
     /**
      * Se suscribe al estado de la consulta utilizando un observable.
      * Al recibir un nuevo estado, lo asigna a la propiedad `consultaState`.
