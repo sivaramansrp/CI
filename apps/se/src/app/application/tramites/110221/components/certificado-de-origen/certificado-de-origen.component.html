@@ -42,6 +42,7 @@
               [catalogo]="optionsTratado"
               [label]="'Tratado/Acuerdo'"
               [required]="true"
+              placeholder="Selecciona un valor"
               id="tratado"
               formControlName="tratado"
               (change)="
@@ -55,6 +56,7 @@
               [catalogo]="optionsPais"
               [label]="'País / Bloque'"
               [required]="true"
+              placeholder="Selecciona un valor"
               id="pais"
               formControlName="pais"
               (change)="setValoresStore(validacionForm, 'pais', 'setPais')"
@@ -66,8 +68,9 @@
           <div class="col-md-4">
             <label>Fracción arancelaria:</label>
             <input
-              type="number"
+              type="text"
               required="true"
+              maxlength="8"
               class="form-control"
               id="fraccionArancelaria"
               formControlName="fraccionArancelaria"

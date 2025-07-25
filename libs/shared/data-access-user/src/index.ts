@@ -1,5 +1,3 @@
-
-
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
 export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
 export { LibBandejaComponent } from './tramites/components/lib-bandeja/lib-bandeja.component';
@@ -199,7 +197,6 @@ export * from './core/enums/crosslist.enums';
 export * from './core/services/shared/desplazarse-hacia-arriba/desplazarse-hacia-arriba.service';
 export * from './core/enums/tipoIdentificacion.enum';
 
-
 export * from './core/enums/mensajes-modal-comunes.enum';
 export * from './tramites/directives/alfanumerico/alfanumerico-formato.directive';
 export * from './tramites/components/pie-pagina-informacion/pie-pagina-informacion.component';
@@ -209,3 +206,4 @@ export * from './tramites/components/paginador-tabla/paginador-tabla.component';
 export * from './core/interceptor/http.interceptor';
 
 export * from './tramites/directives/solo-alfabetos/solo-alfabetos.directive';
+export * from './tramites/constantes/regex.constants';

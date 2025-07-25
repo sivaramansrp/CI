@@ -1,8 +1,37 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, InputFecha, REGEX_PATRON_DECIMAL_2, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { ColumnasTabla, FECHA_FACTURA, FECHA_FINAL, FECHA_INICIAL, HEADERS, HEADERS_DATA, SeleccionadasTabla } from '../../models/registro.model';
+import {
+  AlertComponent,
+  Catalogo,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  InputFecha,
+  REGEX_PATRON_DECIMAL_2,
+  REGEX_SOLO_DIGITOS,
+  REG_X,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TableBodyData,
+  TableComponent,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
+import {
+  ColumnasTabla,
+  FECHA_FACTURA,
+  FECHA_FINAL,
+  FECHA_INICIAL,
+  HEADERS,
+  HEADERS_DATA,
+  SeleccionadasTabla,
+} from '../../models/registro.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
@@ -14,7 +43,8 @@ import mercanciaDisponsibleTable from '@libs/shared/theme/assets/json/110221/mer
 import mercanciaSeleccionadasTable from '@libs/shared/theme/assets/json/110221/mercancias-seleccionadas.json';
 import mercanciaTable from '@libs/shared/theme/assets/json/110221/mercancia.json';
 
-const TERCEROS_TEXTO_DE_ALERTA = 'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
+const TERCEROS_TEXTO_DE_ALERTA =
+  'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
 
 /**
  * Componente que representa el formulario de certificado de origen en el trámite.
@@ -607,7 +637,10 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         pais: [this.solicitudState?.pais, [Validators.required]],
         fraccionArancelaria: [
           this.solicitudState?.fraccionArancelaria,
-          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
+          [
+            Validators.required,
+            Validators.pattern(REG_X.REGEX_FRACCION_ARANCELARIA),
+          ],
         ],
         numeroRegistro: [
           this.solicitudState?.numeroRegistro,
@@ -627,11 +660,26 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     });
     this.mercanciaForm = this.fb.group({
       validacionMercanciaForm: this.fb.group({
-        fraccionMercanciaArancelaria: [this.solicitudState?.fraccionMercanciaArancelaria, [Validators.required]],
-        nombreTecnico: [this.solicitudState?.nombreTecnico, [Validators.required]],
-        nombreComercialDelaMercancia: [this.solicitudState?.nombreComercialDelaMercancia, [Validators.required]],
-        criterioParaConferir: [this.solicitudState?.criterioParaConferir, [Validators.required]],
-        nombreEnIngles: [this.solicitudState?.nombreEnIngles, [Validators.required]],
+        fraccionMercanciaArancelaria: [
+          this.solicitudState?.fraccionMercanciaArancelaria,
+          [Validators.required],
+        ],
+        nombreTecnico: [
+          this.solicitudState?.nombreTecnico,
+          [Validators.required],
+        ],
+        nombreComercialDelaMercancia: [
+          this.solicitudState?.nombreComercialDelaMercancia,
+          [Validators.required],
+        ],
+        criterioParaConferir: [
+          this.solicitudState?.criterioParaConferir,
+          [Validators.required],
+        ],
+        nombreEnIngles: [
+          this.solicitudState?.nombreEnIngles,
+          [Validators.required],
+        ],
         cantidad: [
           this.solicitudState?.cantidad,
           [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
