@@ -3,12 +3,17 @@
         <div class="col-md-12">
             <h3>Solicitud expedición de certificado de asignación directa persona moral.</h3>
         </div>
+
+        @if(mostrarError) {
+        <ng-alert [CONTENIDO]="ALERTA_BUSCAR_ERROR" [CUSTOMECLASS]="infoError"></ng-alert>
+        }
+
         <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
     </div>
     <div class="row">
         @switch (indice) {
         @case (1) {
-        <app-datos></app-datos>
+        <app-datos (mostrarErrorDirecto)="mostrarErrorDirectoEvento($event)"></app-datos>
         } @case (2) {
         <app-paso-dos></app-paso-dos>
         }
