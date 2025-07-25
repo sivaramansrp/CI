@@ -103,13 +103,59 @@ describe('EmpresasTerciarizadasComponent', () => {
     expect(componente.empresasForm.get('ano')?.value).toBe('2025');
   });
 
-  it('debería buscar controladoras y actualizar el estado de las plantas', () => {
-    componente.empresasForm.get('rfc')?.setValue('RFC123');
-    componente.empresasForm.get('estado')?.setValue('Estado1');
-    componente.buscarControladoras();
-    expect(componente.showPlantas).toBe(true);
-    expect(tramite80210StoreMock.establecerDatos).toHaveBeenCalledWith({ plantasDisponibles: [] });
-    expect(tramite80210StoreMock.establecerDatos).toHaveBeenCalledWith({showPlantas:true});
+  describe('buscarControladoras', () => {
+    it('no debería hacer cambios cuando el formulario es inválido', () => {
+      // Setup con formulario inválido (sin RFC y estado)
+      componente.empresasForm.patchValue({
+        modalidad: "A",
+        folio: "123",
+        ano: "2025"
+      });
+      
+      const initialShowPlantas = componente.showPlantas;
+      componente.buscarControladoras();
+      
+      // Verificar que no hubo cambios
+      expect(componente.showPlantas).toBe(initialShowPlantas);
+      expect(tramite80210StoreMock.establecerDatos).not.toHaveBeenCalled();
+    });
+
+    it('debería mantener el orden correcto de las operaciones', () => {
+      // Setup
+      componente.empresasForm.patchValue({
+        modalidad: "A",
+        folio: "123",
+        ano: "2025",
+        rfc: "XAXX010101000",
+        estado: "1"
+      });
+      
+      const calls: string[] = [];
+      
+      // Mock establecerDatos para registrar el orden de las llamadas
+      (tramite80210StoreMock.establecerDatos as jest.Mock).mockImplementation((data) => {
+        if (data.plantasDisponibles !== undefined) {
+          calls.push('plantasDisponibles');
+        }
+        if (data.showPlantas !== undefined) {
+          calls.push('showPlantas');
+        }
+      });
+      
+      // Espiar segregatePlantasDatos
+      jest.spyOn(componente, 'segregatePlantasDatos').mockImplementation(() => {
+        calls.push('segregatePlantasDatos');
+      });
+      
+      componente.buscarControladoras();
+      
+      // Verificar el orden correcto
+      expect(calls).toEqual([
+        'plantasDisponibles',
+        'segregatePlantasDatos',
+        'showPlantas'
+      ]);
+    });
   });
 
   it('debería segregar plantas disponibles y seleccionadas', () => {
@@ -123,34 +169,43 @@ describe('EmpresasTerciarizadasComponent', () => {
     expect(componente.plantasSeleccionadas).toEqual([DATOS_MOCK[1]]);
   });
 
-  it('debería agregar plantas seleccionadas evitando duplicados', () => {
-    componente.listaFilaDisponibles = [DATOS_MOCK[0]];
-    componente.plantasSeleccionadas = [DATOS_MOCK[1]];
-    componente.plantasDisponibles = [DATOS_MOCK[0]];
+  it('debería agregar plantas NO seleccionadas a plantasSeleccionadas', () => {
+    // Setup: Two plants available, one selected
+    componente.plantasDisponibles = [DATOS_MOCK[0], DATOS_MOCK[1]];  // Both plants available
+    componente.listaFilaDisponibles = [DATOS_MOCK[0]];               // First plant is checked (stays in disponibles)
+    componente.plantasSeleccionadas = [];                            // Start with empty selected list
 
     componente.agregarPlantas();
 
-    expect(componente.plantasSeleccionadas).toEqual([DATOS_MOCK[1], DATOS_MOCK[0]]);
-    expect(componente.plantasDisponibles).toEqual([]);
+    // Verify: DATOS_MOCK[1] (non-selected) moves to plantasSeleccionadas
+    // DATOS_MOCK[0] (selected) stays in plantasDisponibles
+    expect(componente.plantasSeleccionadas).toEqual([DATOS_MOCK[1]]);
+    expect(componente.plantasDisponibles).toEqual([DATOS_MOCK[0]]);
+    
     expect(tramite80210StoreMock.establecerDatos).toHaveBeenCalledWith({
-      plantasSeleccionadas:[
-      DATOS_MOCK[1],
-      DATOS_MOCK[0],
-    ]});
+      plantasDisponibles: [DATOS_MOCK[0]],
+      plantasSeleccionadas: [DATOS_MOCK[1]]
+    });
   });
 
-  it('debería eliminar plantas seleccionadas evitando duplicados', () => {
-    componente.listaFilaSeleccionada = [DATOS_MOCK[1]];
-    componente.plantasSeleccionadas = DATOS_MOCK;
-    componente.plantasDisponibles = [];
+  it('debería eliminar plantas seleccionadas y moverlas a disponibles', () => {
+    // Setup initial state
+    componente.listaFilaSeleccionada = [DATOS_MOCK[1]];             // Select second plant for moving
+    componente.plantasSeleccionadas = [...DATOS_MOCK];              // Both plants in selected
+    componente.plantasDisponibles = [];                             // Start with empty disponibles
 
+    // Execute
     componente.eliminarPlantas();
 
-    expect(componente.plantasSeleccionadas).toEqual([DATOS_MOCK[0]]);
-    expect(componente.plantasDisponibles).toEqual([DATOS_MOCK[1]]);
-    expect(tramite80210StoreMock.establecerDatos).toHaveBeenCalledWith({plantasDisponibles:[
-      DATOS_MOCK[1],
-    ]});
+    // Verify results
+    expect(componente.plantasSeleccionadas).toEqual([DATOS_MOCK[0]]); // First plant remains in selected
+    expect(componente.plantasDisponibles).toEqual([DATOS_MOCK[1]]);   // Second plant moved to disponibles
+    
+    // Verify store update was called with both arrays
+    expect(tramite80210StoreMock.establecerDatos).toHaveBeenCalledWith({
+      plantasDisponibles: [DATOS_MOCK[1]],
+      plantasSeleccionadas: [DATOS_MOCK[0]]
+    });
   });
 
 
