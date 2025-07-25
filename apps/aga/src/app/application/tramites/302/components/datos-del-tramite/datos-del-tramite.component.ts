@@ -3,28 +3,25 @@ import {
   DATOS_ALERT,
   DATOS_DEL_DONANTE,
   DATOS_DEL_PRODUCTO,
+  DATOS_DEL_TRAMITE,
   DOMICILIO_FISCAL,
   MERCANCIAS,
   PRODUCTOS,
 } from '../../constantes/datos-del-tramite.enum';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CertiRegistro302State } from '../../../../../application/core/estados/tramites/tramite302.store';
 import { CommonModule } from '@angular/common';
 import { DetallesDelProducto } from '../../models/certi-registro.model';
-import { FormularioDinamico } from '@libs/shared/data-access-user/src';
-import { FormulariosDeCertiRegistroComponent } from '../formularios-de-certi-registro/formularios-de-certi-registro.component';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { Solicitud302Service } from '../../services/service302.service';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite302Query } from '../../../../../application/core/queries/tramite302.query';
 import { Tramite302Store } from '../../../../../application/core/estados/tramites/tramite302.store';
-import aduanas from '@libs/shared/theme/assets/json/302/lista-de-oficinas-de-aduanas.json';
-import importaciónTemporal from '@libs/shared/theme/assets/json/302/list-importacion-temporal.json';
-import unidadDeMedida from '@libs/shared/theme/assets/json/302/lista-unidad-de-medida.json';
 
 /**
  * Componente Angular encargado de gestionar los datos del trámite 302.
@@ -58,7 +55,7 @@ import unidadDeMedida from '@libs/shared/theme/assets/json/302/lista-unidad-de-m
     TituloComponent,
     TablaDinamicaComponent,
     AlertComponent,
-    FormulariosDeCertiRegistroComponent,
+    FormasDinamicasComponent
   ],
   templateUrl: './datos-del-tramite.component.html',
   styleUrl: './datos-del-tramite.component.scss',
@@ -88,7 +85,12 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /** Asigna la constante MERCANCIAS a la propiedad mercancia para su uso en el componente. 
    * @memberof DatosDelTramiteComponent
   */
-  public mercancia = MERCANCIAS;
+  public datosDelTramite = DATOS_DEL_TRAMITE;
+
+  /** Asigna la constante MERCANCIAS a la propiedad mercancia para su uso en el componente. 
+   * @memberof DatosDelTramiteComponent
+  */
+  public mercancias = MERCANCIAS;
 
   /**Asigna la constante PRODUCTOS a la propiedad productos para su uso en el componente. 
    * @memberof DatosDelTramiteComponent
@@ -106,30 +108,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @memberof DatosDelTramiteComponent
    */
   public domicilioFiscal = DOMICILIO_FISCAL;
-  
-  /**
-   * Lista de oficinas de aduanas disponibles para selección.
-   * Cada elemento contiene un identificador único y una descripción.
-   * @type {Catalogo[]}
-   * @memberof DatosDelTramiteComponent
-   */
-  public listaDeOficinasDeAduanas: Catalogo[] = aduanas as Catalogo[];
-
-  /**
-   * Lista de opciones para el año de importación temporal.
-   * Cada elemento contiene un identificador único y una descripción.
-   * @type {Catalogo[]}
-   * @memberof DatosDelTramiteComponent
-   */
-  public listImportacionTemporal: Catalogo[] = importaciónTemporal as Catalogo[];
-
-  /**
-   * List of options for the unit of measurement.
-   * Each element contains a unique identifier and a description.
-   * @type {Catalogo[]}
-   * @memberof DatosDelTramiteComponent
-   */
-  public listaUnidadDeMedida: Catalogo[] = unidadDeMedida as Catalogo[];
 
   /**
    * Array que contiene los datos de las personas cargadas desde el archivo JSON.
@@ -170,6 +148,15 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @memberof DatosDelTramiteComponent
    */
   public formAgregarProductos: FormGroup = this.fb.group({});
+
+  /**
+   * Formulario reactivo para capturar los datos del donante.
+   * Este formulario se inicializa vacío y se configura dinámicamente
+   * con los campos necesarios para capturar la información del donante.
+   * @type {FormGroup}
+   * @memberof DatosDelTramiteComponent
+   */
+  public formDatosMercancias: FormGroup = this.fb.group({});
 
   /**
    * Formulario reactivo para capturar los datos del donante.
@@ -256,85 +243,80 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @memberof DatosDelTramiteComponent
    */
   ngOnInit(): void {
-
-      this.tramite302Query.selectRegistro$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.certiRegistroState = seccionState;
-          })
-        )
-        .subscribe()
+  this.tramite302Query.selectRegistro$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.certiRegistroState = seccionState;
+      })
+    )
+    .subscribe();
 
     this.getProductosSeleccionados();
-    this.inicializarFormGroup(this.form, MERCANCIAS);
-    this.inicializarFormGroup(this.formAgregarProductos, PRODUCTOS);
-    this.inicializarFormGroup(this.formDatosDelDonante, DATOS_DEL_DONANTE);
-    this.inicializarFormGroup(this.formDomicilioFiscal, DOMICILIO_FISCAL);
     this.detallesDelProducto = this.certiRegistroState['detallesDelProducto'] || [];
-
+    this.obtenerAduanaOpciones();
+    this.obtenerUnidadDeMedidaOpciones();
+    this.obtenerImportacionTemporalOpciones();
   }
 
-  /** * compo doc
-   * @method inicializarFormGroup
-   * @description Esta función inicializa un FormGroup agregando FormControls basados 
-   * en la configuración proporcionada en `formularioDatos`. 
-   * Además, asigna listas desplegables a campos específicos como 
-   * 'unidadDeMedida' y 'anoDeImportacionTemporal'.
-   * 
-   * @param nombreDelFormulario - El FormGroup que será inicializado.
-   * @param formularioDatos - La configuración de los campos que se agregarán al FormGroup.
-   */
-  public inicializarFormGroup(nombreDelFormulario: FormGroup, formularioDatos: FormularioDinamico[]): void {
-    if (nombreDelFormulario) {
-      formularioDatos?.forEach((campo: FormularioDinamico) => {
-        const VALIDADORES = DatosDelTramiteComponent.mapValidadores(campo?.validators);
-        nombreDelFormulario?.addControl(
-          campo.campo,
-          new FormControl({ value: this.certiRegistroState[campo.campo], disabled: campo.disabled }, VALIDADORES)
-        );
+  /** Obtiene y asigna las opciones de aduana al campo correspondiente en el formulario de productos. */
+  obtenerAduanaOpciones(): void {
+    this.service
+      .getAduanaData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        const ADUANA_FIELD = this.datosDelTramite.find(
+          (datos: ModeloDeFormaDinamica) => datos.campo === 'aduana'
+        ) as ModeloDeFormaDinamica;
 
-        if (campo.campo === 'unidadDeMedida') {
-          campo.listaDesplegable = this.listaUnidadDeMedida;
-        } else if (campo.campo === 'anoDeImportacionTemporal') {
-          campo.listaDesplegable = this.listImportacionTemporal;
+        if (ADUANA_FIELD) {
+          const ADUANA_ARRAY = Array.isArray(resp) ? resp : [resp];
+          ADUANA_FIELD.opciones = ADUANA_ARRAY.map((item: { id: number; descripcion: string }) => ({
+            descripcion: item.descripcion,
+            id: item.id,
+          }));
         }
       });
-      if(this.soloLectura){
-        nombreDelFormulario.disable();
-      }
-    }
   }
 
-  /**
-   * compo doc
-   * @method mapValidadores
-   * @description
-   * Convierte una lista de nombres de validadores en funciones de validación.
-   * Este método toma un arreglo de cadenas que representan los nombres de los validadores
-   * y devuelve un arreglo de funciones de validación correspondientes.
-   *
-   * @param validadores Lista de nombres de validadores como cadenas.
-   * @returns Arreglo de funciones de validación (`ValidatorFn[]`).
-   */
-  private static mapValidadores(validadores: string[]): ValidatorFn[] {
-    const VALIDADORES_DE_FORMULARIO: ValidatorFn[] = [];
-    if (validadores?.includes('required')) {
-      VALIDADORES_DE_FORMULARIO?.push(Validators.required);
-    }
-    return VALIDADORES_DE_FORMULARIO;
+  /** Obtiene y asigna las opciones de aduana al campo correspondiente en el formulario de productos. */
+  obtenerUnidadDeMedidaOpciones(): void {
+    this.service
+    .getUnidadDeMedidaData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        const UNIDAD_FIELD = this.productos.find(
+          (datos: ModeloDeFormaDinamica) => datos.campo === 'unidadDeMedida'
+        ) as ModeloDeFormaDinamica;
+
+        if (UNIDAD_FIELD) {
+          const UNIDAD_ARRAY = Array.isArray(resp) ? resp : [resp];
+          UNIDAD_FIELD.opciones = UNIDAD_ARRAY.map((item: { id: number; descripcion: string }) => ({
+            descripcion: item.descripcion,
+            id: item.id,
+          }));
+        }
+      });
   }
 
-  /** 
-   * compo doc
-   * @method docSeleccionado
-   * @description
-   * Asigna la descripción del catálogo seleccionado al control del formulario.
-   **/
-  public static docSeleccionado(event: Catalogo, forma: FormGroup, controlDeFormulario: string): void {
-    if (event) {
-      forma?.get(controlDeFormulario)?.setValue(event?.descripcion);
-    }
+  /** Obtiene y asigna las opciones de aduana al campo correspondiente en el formulario de productos. */
+  obtenerImportacionTemporalOpciones(): void {
+    this.service
+    .getImportacionTemporalData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        const IMPORTACION_TEMPORAL_FIELD = this.productos.find(
+          (datos: ModeloDeFormaDinamica) => datos.campo === 'anoDeImportacionTemporal'
+        ) as ModeloDeFormaDinamica;
+
+        if (IMPORTACION_TEMPORAL_FIELD) {
+          const IMPORTACION_TEMPORAL_ARRAY = Array.isArray(resp) ? resp : [resp];
+          IMPORTACION_TEMPORAL_FIELD.opciones = IMPORTACION_TEMPORAL_ARRAY.map((item: { id: number; descripcion: string }) => ({
+            descripcion: item.descripcion,
+            id: item.id,
+          }));
+        }
+      });
   }
 
   /**
@@ -376,6 +358,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       this.formAgregarProductos.reset();
       this.cerrarModal();
       this.modalConfirmacion = 'show';
+    } else {
+      this.formAgregarProductos.markAllAsTouched();
     }
   }
 
@@ -438,6 +422,13 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Actualiza el valor dinámico de un campo en el store cuando ocurre un cambio en el formulario. */
+  establecerCambioDeValor(event: {campo: string, valor: string | number | object}): void {
+     if (event) {
+      this.tramite302Store.setDynamicFieldValue(event.campo, event.valor);
+    }
+  }
+
   /**
    * compo doc
    * @method setValoresStore
@@ -450,19 +441,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   public setValoresStore(event: {campo: string, forma: FormGroup}): void {
     const VALOR = event.forma.get(event.campo)?.value;
     this.tramite302Store.setDynamicFieldValue(event.campo, VALOR);
-    if (event.campo === 'unidadDeMedida') {
-      const VALOR_UNIDAD = this.listaUnidadDeMedida.find(
-        (unidad: Catalogo) => unidad.id === VALOR
-      )?.descripcion || '';
-      this.tramite302Store.setDynamicFieldValue('unidadDeMedidaDesc', VALOR_UNIDAD);
-    }
-    if (event.campo === 'anoDeImportacionTemporal') {
-      const DATOS = this.listImportacionTemporal.find(
-        (importaciónTemporal: Catalogo) => importaciónTemporal.id === VALOR
-      )?.descripcion || '';
-      this.tramite302Store.setDynamicFieldValue('anoDeImportacionTemporalDesc', DATOS);
-    }
-
   }
 
    /**
@@ -519,5 +497,12 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       this.selectedProducto = [];
       this.cerrarModal();
     }
+  }
+
+  /**
+ * Limpia el formulario de productos, restableciendo todos sus campos a su estado inicial.
+ */
+  limpiarProductos(): void {
+    this.formAgregarProductos.reset();
   }
 }
