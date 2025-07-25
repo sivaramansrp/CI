@@ -102,12 +102,10 @@ export class GestionAduaneraComponent implements OnInit, OnDestroy {
 
     const PERFILES = this.solicitudState.perfiles;
     
-    // Update form controls with current state values
     Object.keys(this.gestionAduanera.controls).forEach(fieldName => {
       const CONTROL = this.gestionAduanera.get(fieldName);
       const STATE_VALUE = PERFILES[fieldName as keyof typeof PERFILES];
       
-      // Update control if state has a value and it's different from current form value
       if (CONTROL && STATE_VALUE !== undefined && STATE_VALUE !== null && STATE_VALUE !== '') {
         if (CONTROL.value !== STATE_VALUE) {
           CONTROL.setValue(STATE_VALUE, { emitEvent: false });
