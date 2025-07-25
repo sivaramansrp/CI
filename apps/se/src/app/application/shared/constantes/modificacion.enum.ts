@@ -207,3 +207,53 @@ export const CAMPO_DE_DESTINATARIO = [110222]
  */
 export const TEXTOS_REQUISITOS =
   'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
+
+
+/**
+ * @constant CONFIGURACION_MERCANCIA_TABLA
+ *
+ * @description
+ * Configuración de columnas para la tabla de mercancías, incluyendo fracciones NALADI y nombres técnicos/comerciales.
+ * Cada objeto define el encabezado, la función para obtener el valor de la columna desde un objeto Mercancia y el orden de visualización.
+ *
+ * @property {string} encabezado - Título de la columna que se mostrará en la interfaz.
+ * @property {(ele: Mercancia) => string | undefined} clave - Función que recibe un objeto de tipo `Mercancia` y devuelve el valor correspondiente a la columna.
+ * @property {number} orden - Orden en el que se mostrará la columna en la tabla.
+ *
+ * @example
+ * CONFIGURACION_MERCANCIA_TABLA.forEach(col => {
+ *   console.log(col.encabezado, col.orden);
+ * });
+ */
+export const CONFIGURACION_MERCANCIA_TABLA = [
+  {
+    encabezado: 'Fracción NALADI', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.fraccionNaladi, // Función que devuelve la fracción Naladi
+    orden: 1, // Orden en que se mostrará la columna
+  },
+  {
+    encabezado: 'Fracción NALADISA93', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.fraccionNaladiSa93, // Función que devuelve la fracción Naladi SA93
+    orden: 2, // Orden en que se mostrará la columna
+  },
+  {
+    encabezado: 'Fracción NALADISA96', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.fraccionNaladiSa96, // Función que devuelve la fracción Naladi SA96
+    orden: 3, // Orden en que se mostrará la columna
+  },
+  {
+    encabezado: 'Fracción NALADISA02', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.fraccionNaladiSa02, // Función que devuelve la fracción Naladi SA02
+    orden: 4, // Orden en que se mostrará la columna
+  },
+  {
+    encabezado: 'Nombre técnico', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.nombreTecnico, // Función que devuelve el nombre técnico de la mercancía
+    orden: 5, // Orden en que se mostrará la columna
+  },
+  {
+    encabezado: 'Nombre comercial', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.nombreComercial, // Función que devuelve el nombre comercial de la mercancía
+    orden: 5, // Orden en que se mostrará la columna
+  }
+];

@@ -1,7 +1,7 @@
 /**
  * Interfaz que representa la información detallada de una mercancía.
  */
-export interface Mercancia {
+export interface Mercancias {
   /** 
    * Fracción arancelaria Naladi asignada a la mercancía.
    */
