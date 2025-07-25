@@ -208,8 +208,8 @@
           ></textarea>
 
           <div *ngIf="esInvalido('motivoRenunciaDeDerechos')" class="text-danger">
-            <small *ngIf="formulario.controls['motivoRenunciaDeDerechos'].hasError('required')">Motivo de renuncia de derechos es obligatoria.</small>
-            <small *ngIf="formulario.controls['motivoRenunciaDeDerechos'].hasError('maxlength')">Máximo 255 caracteres.</small>
+            <small *ngIf="formulario.controls['motivoRenunciaDeDerechos'].hasError('required')">Este campo es obligatorio</small>
+            <small *ngIf="formulario.controls['motivoRenunciaDeDerechos'].hasError('maxlength')">No puede escribir más de 255 caracteres</small>
         </div>
         </div>
       </div>
@@ -220,6 +220,9 @@
         <ng-titulo titulo="Manifiesto bajo protesta" />
         <div class="form-check bg-light p-0">
 
+          <div *ngIf="esInvalido('mercacniaSolicitudControlar')" class="text-danger">
+            <small *ngIf="formulario.controls['mercacniaSolicitudControlar'].hasError('required')">Favor de seleccionar el Manifiesto</small>
+        </div>
             <div class="alert alert-info content-with-checkbox">
               <input class="form-check-input" formControlName="mercacniaSolicitudControlar" [ngClass]="{'is-invalid': esInvalido('mercacniaSolicitudControlar')}" type="checkbox" id="manifiesto"
               (change)="setValoresStore(formulario, 'mercacniaSolicitudControlar')">
