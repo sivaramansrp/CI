@@ -64,6 +64,11 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
    */
   soloLectura: boolean = false;
 
+  /**
+   * @property {boolean} mostrarError
+   * @description Indica si se debe mostrar el mensaje de error cuando el campo claveFolioCAAT está vacío.
+   * @default false
+   */
   mostrarError: boolean = false;
 
   /**
