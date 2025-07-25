@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CatalogoResponse, CatalogoSelectComponent, } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
+
 import { Tramite260212State, Tramite260212Store } from '../../estados/tramite260212.store';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';

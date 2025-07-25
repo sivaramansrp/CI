@@ -1,25 +1,19 @@
 /**
  * Importaciones necesarias para el funcionamiento del componente.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
 import { CatalogoResponse, CatalogoSelectComponent, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
-
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-
-import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite260212State, Tramite260212Store } from '../../estados/tramite260212.store';
 
-import { ESTADOS_DATA, FECHA_DE_PAGO } from '../../constantes/permiso-maquila.enum';
-
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
-import { Observable, Subject, map, takeUntil } from 'rxjs';
-
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ESTADOS_DATA, FECHA_DE_PAGO } from '../../constantes/permiso-maquila.enum';
 /**
  * Componente que gestiona el pago de derechos.
  * Utiliza un formulario reactivos para recopilar datos del usuario.

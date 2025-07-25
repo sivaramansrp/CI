@@ -42,13 +42,12 @@ import {
 } from '../../../../estados/tramites/tramite260211.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enums/260211/domicilo.enum';
+
+import { BANCOS_DATA } from '../../constantes/derechos.model';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
-
 import { SanitarioService } from '../../services/sanitario.service';
-import { BANCOS_DATA } from '../../constantes/derechos.model';
-
+import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
  
 /**
  * Interfaz para la respuesta de la tabla de NICO.
@@ -148,7 +147,7 @@ export class DomicilloComponent implements OnInit,OnDestroy {
   * Maneja el evento de cambio de selección en la tabla de NICO.
   * @param selected Lista de filas seleccionadas.
   */
-onSeleccionChangeEvent(selected: any[]) {
+onSeleccionChangeEvent(selected: any[]) :void{
   this.selectedRowsEvent = selected;
   if (this.selectedRowsEvent.length === 1) {
     this.noSeleccionado = false;
@@ -160,13 +159,13 @@ onSeleccionChangeEvent(selected: any[]) {
 /** 
  Recibe los seleccionados del componente tabla
 */
-onSeleccionChange(selected: any[]) {
+onSeleccionChange(selected: any[]):void {
   this.selectedRows = selected;
 }
  /**
   *  Elimina las filas seleccionadas
   *  */
-eliminarSeleccionados() {
+eliminarSeleccionados():void {
   this.nicoTablaDatos = this.nicoTablaDatos.filter(
     (row) => !this.selectedRows.includes(row)
   );
@@ -176,7 +175,7 @@ eliminarSeleccionados() {
  /**
   * Elimina las filas seleccionadas
   */
-eliminarMercanciaSeleccionados() {
+eliminarMercanciaSeleccionados() :void{
   this.mercanciasTablaDatos = this.mercanciasTablaDatos.filter(
     (row) => !this.selectedRowsEvent.includes(row)
   );
@@ -350,7 +349,7 @@ ngOnInit(): void {
  * Modifica una fila de la tabla NICO con los datos del formulario de agente.
  * Si hay una fila seleccionada, actualiza el índice de edición y carga los datos en el formulario.
  */
-modificarMercancia() {
+modificarMercancia():void {
   if (this.selectedRowsEvent && this.selectedRowsEvent.length === 1) {
     const ROW = this.selectedRowsEvent[0];
     this.editMercanciaIndex = this.mercanciasTablaDatos.findIndex(
@@ -572,13 +571,13 @@ obtenerMercanciasDatos(): void {
 /*
   * Limpia el formulario de domicilio.
   */
- limpiarFormAgente() {
+ limpiarFormAgente():void {
   this.formAgente.reset();
 }
 /**
  * Limpia el formulario de mercancías.
  */
-limpiarForm(){
+limpiarForm():void{
   this.formMercancias.reset();
 }
 /**

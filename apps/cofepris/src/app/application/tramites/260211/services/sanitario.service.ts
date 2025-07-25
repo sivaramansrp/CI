@@ -8,11 +8,9 @@ import { HttpClient } from '@angular/common/http';
 
 import { MercanciasTabla, RespuestaTabla } from '../components/domicillo/domicillo.component';
 import { Solicitud260211State, Tramite260211Store } from '../../../estados/tramites/tramite260211.store';
-import { ProductoResponse } from '../models/permiso-sanitario.enum';
 import { Terceros260211State, Terceros260211Store } from '../../../estados/tramites/terceros260211.store';
+import { ProductoResponse } from '../models/permiso-sanitario.enum';
 
-
- 
 /**
  * Servicio para gestionar funcionalidades relacionadas con el ámbito sanitario.
  *

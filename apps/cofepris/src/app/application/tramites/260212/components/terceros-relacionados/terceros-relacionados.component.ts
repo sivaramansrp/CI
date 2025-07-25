@@ -38,9 +38,9 @@ import {
   TablaDatos,
 } from '../../models/permiso-maquila.models';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Tramite260212Store } from '../../../../estados/tramites/tramite260212.store';
-import { Terceros260211State } from '../../../../estados/tramites/terceros260211.store';
 import { Terceros260211Query } from '../../../../estados/queries/terceros260211.query';
+import { Terceros260211State } from '../../../../estados/tramites/terceros260211.store';
+import { Tramite260212Store } from '../../../../estados/tramites/tramite260212.store';
 
 /**
  * Texto de alerta para los terceros relacionados.
@@ -379,8 +379,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.solicitudStates = seccionState;
-          console.log('Solicitud States:', this.solicitudStates);
+          this.solicitudStates = seccionState;         
         })
       )
       .subscribe();
@@ -429,74 +428,74 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Segundo Apellido del tercero.
        */
-      segundoApellido: new FormControl({value: '', disabled: true}, [Validators.required]),
+      segundoApellido: new FormControl({value:  this.solicitudStates.segundoApellido, disabled: true}, [Validators.required]),
       /**
        * Denominación o razón social del tercero.
        */
-      denominacionRazonSocial: new FormControl({value: '', disabled: true}, [Validators.required]),
+      denominacionRazonSocial: new FormControl({value:  this.solicitudStates.denominacionRazonSocial, disabled: true}, [Validators.required]),
       /**
        * País del tercero.
        * Requiere validación adicional mediante `requiredPaisValidator`.
        */
-      pais: new FormControl({value: 1, disabled: true}, [
+      pais: new FormControl({value:this.solicitudStates.pais, disabled: true}, [
         Validators.required,
         this.requiredPaisValidator,
       ]),
 
-      extranjeroEstado: new FormControl({value: '', disabled: true}, [Validators.required]),
+      extranjeroEstado: new FormControl({value:  this.solicitudStates.extranjeroEstado, disabled: true}, [Validators.required]),
       /**
        * Estado o localidad del tercero.
        */
-      estadoLocalidad: new FormControl({value: '', disabled: true}, [Validators.required]),
+      estadoLocalidad: new FormControl({value:  this.solicitudStates.estadoLocalidad, disabled: true}, [Validators.required]),
       /**
        * Municipio o alcaldía del tercero.
        */
-      municipioAlcaldia: new FormControl({value: '', disabled: true}, [Validators.required]),
+      municipioAlcaldia: new FormControl({value:  this.solicitudStates.municipioAlcaldia, disabled: true}, [Validators.required]),
       /**
        * Localidad del tercero.
        */
-      localidad: new FormControl({value: '', disabled: true}),
+      localidad: new FormControl({value:  this.solicitudStates.localidad, disabled: true}),
       /**
        * Entidad federativa del tercero.
        */
-      entidadFederativa: new FormControl({value: '', disabled: true}, [Validators.required]),
+      entidadFederativa: new FormControl({value:  this.solicitudStates.entidadFederativa, disabled: true}, [Validators.required]),
       /**
        * Código postal del tercero.
        */
-      codigoPostaloEquivalente: new FormControl({value: '', disabled: true}, [Validators.required]),
+      codigoPostaloEquivalente: new FormControl({value:  this.solicitudStates.codigoPostaloEquivalente, disabled: true}, [Validators.required]),
       /**
        * Colonia del tercero.
        */
-      colonia: new FormControl({value: '', disabled: true}),
+      colonia: new FormControl({value: this.solicitudStates.colonia, disabled: true}),
       /**
        * Colonia equivalente del tercero.
        */
-      coloniaoEquivalente: new FormControl({value: '', disabled: true}),
+      coloniaoEquivalente: new FormControl({value: this.solicitudStates.coloniaoEquivalente, disabled: true}),
       /**
        * Calle del tercero.
        */
-      calle: new FormControl({value: '', disabled: true}, [Validators.required]),
+      calle: new FormControl({value:  this.solicitudStates.calle, disabled: true}, [Validators.required]),
       /**
        * Número exterior del tercero.
        */
-      numeroExterior: new FormControl({value: '', disabled: true}, [Validators.required]),
+      numeroExterior: new FormControl({value:  this.solicitudStates.numeroExterior, disabled: true}, [Validators.required]),
       /**
        * Número interior del tercero.
        */
-      numeroInterior: new FormControl({value: '', disabled: true}),
+      numeroInterior: new FormControl({value:  this.solicitudStates.numeroInterior, disabled: true}),
       /**
        * Lada del tercero.
        */
-      lada: new FormControl({value: '', disabled: true}),
+      lada: new FormControl({value:  this.solicitudStates.lada, disabled: true}),
       /**
        * Teléfono del tercero.
        * Requiere validación adicional mediante `telefonoValidator`.
        */
-      telefono: new FormControl({value: '', disabled: true}, [this.telefonoValidator]),
+      telefono: new FormControl({value:  this.solicitudStates.telefono, disabled: true}, [this.telefonoValidator]),
       /**
        * Correo electrónico del tercero.
        */
-      correoElectronico: new FormControl({value: '', disabled: true}),
+      correoElectronico: new FormControl({value:  this.solicitudStates.correoElectronico, disabled: true}),
     });
   }
 
@@ -513,87 +512,87 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Tipo de persona (física o moral).
        */
-      tipoPersona: new FormControl('', [Validators.required]),
+      tipoPersona: new FormControl( this.solicitudStates.tipoPersona, [Validators.required]),
       /**
        * RFC del destinatario.
        */
-      rfc: new FormControl({value: '', disabled: true}, [Validators.required]),
+      rfc: new FormControl({value:  this.solicitudStates.rfc, disabled: true}, [Validators.required]),
       /**
        * CURP del destinatario.
        */
-      curp: new FormControl('', [Validators.required]),
+      curp: new FormControl( this.solicitudStates.curp, [Validators.required]),
       /**
        * Denominación o razón social del destinatario.
        */
-      denominacionRazonSocial: new FormControl({value: '', disabled: true}, [Validators.required]),
+      denominacionRazonSocial: new FormControl({value:  this.solicitudStates.denominacionRazonSocial, disabled: true}, [Validators.required]),
        /**
        * Nombre del tercero.
        */
-      nombre: new FormControl({value: '', disabled: true}, [Validators.required]),
+      nombre: new FormControl({value:  this.solicitudStates.nombre, disabled: true}, [Validators.required]),
       /**
        *Primer Apellido del tercero.
        */
-      primerApellido: new FormControl({value: '', disabled: true}, [Validators.required]),
+      primerApellido: new FormControl({value:  this.solicitudStates.primerApellido, disabled: true}, [Validators.required]),
       /**
        * Segundo Apellido del tercero.
        */
-      segundoApellido: new FormControl({value: '', disabled: true}, [Validators.required]),
+      segundoApellido: new FormControl({value: this.solicitudStates.segundoApellido, disabled: true}, [Validators.required]),
       /**
        * País del destinatario.
        */
-      pais: new FormControl({disabled: true}, [Validators.required]),
+      pais: new FormControl({value: this.solicitudStates.pais, disabled: true}, [Validators.required]),
       /**
        * Estado o localidad del destinatario.
        */
-      estadoLocalidad: new FormControl({value: '', disabled: true}, [Validators.required]),
+      estadoLocalidad: new FormControl({value: this.solicitudStates.estadoLocalidad, disabled: true}, [Validators.required]),
       /**
        * Municipio o alcaldía del destinatario.
        */
-      municipioAlcaldia: new FormControl({value: '', disabled: true}, [Validators.required]),
+      municipioAlcaldia: new FormControl({value: this.solicitudStates.municipioAlcaldia, disabled: true}, [Validators.required]),
       /**
        * Localidad del destinatario.
        */
-      localidad: new FormControl({value: '', disabled: true}),
+      localidad: new FormControl({value: this.solicitudStates.localidad, disabled: true}),
       /**
        * Entidad federativa del destinatario.
        */
-      entidadFederativa: new FormControl({value: '', disabled: true}, [Validators.required]),
+      entidadFederativa: new FormControl({value: this.solicitudStates.entidadFederativa, disabled: true}, [Validators.required]),
       /**
        * Código postal del destinatario.
        */
-      codigoPostaloEquivalente: new FormControl({value: '', disabled: true}, [Validators.required]),
+      codigoPostaloEquivalente: new FormControl({value: this.solicitudStates.codigoPostaloEquivalente, disabled: true}, [Validators.required]),
       /**
        * Colonia del destinatario.
        */
-      colonia: new FormControl({value: '', disabled: true}),
+      colonia: new FormControl({value: this.solicitudStates.colonia, disabled: true}),
       /**
        * Colonia equivalente del destinatario.
        */
-      coloniaoEquivalente: new FormControl({value: '', disabled: true}),
+      coloniaoEquivalente: new FormControl({value:this.solicitudStates.coloniaoEquivalente, disabled: true}),
       /**
        * Calle del destinatario.
        */
-      calle: new FormControl({value: '', disabled: true}, [Validators.required]),
+      calle: new FormControl({value: this.solicitudStates.calle, disabled: true}, [Validators.required]),
       /**
        * Número exterior del destinatario.
        */
-      numeroExterior: new FormControl({value: '', disabled: true}, [Validators.required]),
+      numeroExterior: new FormControl({value: this.solicitudStates.numeroExterior, disabled: true}, [Validators.required]),
       /**
        * Número interior del destinatario.
        */
-      numeroInterior: new FormControl({value: '', disabled: true}),
+      numeroInterior: new FormControl({value: this.solicitudStates.numeroExterior, disabled: true}),
       /**
        * Lada del destinatario.
        */
-      lada: new FormControl({value: '', disabled: true}),
+      lada: new FormControl({value: this.solicitudStates.lada, disabled: true}),
       /**
        * Teléfono del destinatario.
        */
-      telefono: new FormControl({value: '', disabled: true}),
+      telefono: new FormControl({value: this.solicitudStates.telefono, disabled: true}),
       /**
        * Correo electrónico del destinatario.
        */
-      correoElectronico: new FormControl({value: '', disabled: true}),
+      correoElectronico: new FormControl({value: this.solicitudStates.correoElectronico, disabled: true}),
     });
   }
 
@@ -610,63 +609,63 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Tipo de persona (física o moral).
        */
-      tipoPersona: new FormControl('', [Validators.required]),
+      tipoPersona: new FormControl(this.solicitudStates.tipoPersona, [Validators.required]),
       /**
        * Nombre del proveedor.
        */
-      nombre: new FormControl({value: '', disabled: true}, [Validators.required]),
+      nombre: new FormControl({value: this.solicitudStates.nombre, disabled: true}, [Validators.required]),
       /**
        * Primer apellido del proveedor.
        */
-      primerApellido: new FormControl({value: '', disabled: true}, [Validators.required]),
+      primerApellido: new FormControl({value: this.solicitudStates.primerApellido, disabled: true}, [Validators.required]),
       /**
        * Denominación o razón social del proveedor.
        */
-      denominacionRazonSocial: new FormControl({value: '', disabled: true}, [Validators.required]),
+      denominacionRazonSocial: new FormControl({value: this.solicitudStates.denominacionRazonSocial, disabled: true}, [Validators.required]),
       /**
        * Segundo apellido del proveedor (opcional).
        */
-      segundoApellido: new FormControl({value: '', disabled: true}),
+      segundoApellido: new FormControl({value: this.solicitudStates.segundoApellido, disabled: true}),
       /**
        * País del proveedor.
        */
-      pais: new FormControl({disabled: true}, [Validators.required]),
+      pais: new FormControl({value: this.solicitudStates.pais,disabled: true}, [Validators.required]),
       /**
        * Estado del proveedor.
        */
-      estado: new FormControl({value: '', disabled: true}, [Validators.required]),
+      estado: new FormControl({value: this.solicitudStates.estado, disabled: true}, [Validators.required]),
       /**
        * Código postal del proveedor (opcional).
        */
-      codigoPostaloEquivalente: new FormControl({value: '', disabled: true}),
+      codigoPostaloEquivalente: new FormControl({value: this.solicitudStates.codigoPostaloEquivalente, disabled: true}),
       /**
        * Colonia equivalente del proveedor (opcional).
        */
-      coloniaoEquivalente: new FormControl({value: '', disabled: true}),
+      coloniaoEquivalente: new FormControl({value: this.solicitudStates.coloniaoEquivalente, disabled: true}),
       /**
        * Calle del proveedor.
        */
-      calle: new FormControl({value: '', disabled: true}, [Validators.required]),
+      calle: new FormControl({value: this.solicitudStates.calle, disabled: true}, [Validators.required]),
       /**
        * Número exterior del proveedor.
        */
-      numeroExterior: new FormControl({value: '', disabled: true}, [Validators.required]),
+      numeroExterior: new FormControl({value: this.solicitudStates.numeroExterior, disabled: true}, [Validators.required]),
       /**
        * Número interior del proveedor (opcional).
        */
-      numeroInterior: new FormControl({value: '', disabled: true}),
+      numeroInterior: new FormControl({value: this.solicitudStates.numeroInterior, disabled: true}),
       /**
        * Lada del proveedor (opcional).
        */
-      lada: new FormControl({value: '', disabled: true}),
+      lada: new FormControl({value: this.solicitudStates.lada, disabled: true}),
       /**
        * Teléfono del proveedor (opcional).
        */
-      telefono: new FormControl({value: '', disabled: true}),
+      telefono: new FormControl({value: this.solicitudStates.telefono, disabled: true}),
       /**
        * Correo electrónico del proveedor (opcional).
        */
-      correoElectronico: new FormControl({value: '', disabled: true}),
+      correoElectronico: new FormControl({value: this.solicitudStates.correoElectronico, disabled: true}),
     });
   }
 
@@ -683,67 +682,67 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Tipo de persona (física o moral).
        */
-      tipoPersona: new FormControl('', [Validators.required]),
+      tipoPersona: new FormControl(this.solicitudStates.tipoPersona, [Validators.required]),
       /**
        * Nombre del facturador.
        */
-      nombre: new FormControl({value: '', disabled: true}, [Validators.required]),
+      nombre: new FormControl({value: this.solicitudStates.nombre, disabled: true}, [Validators.required]),
       /**
        * Primer apellido del facturador.
        */
-      primerApellido: new FormControl({value: '', disabled: true}, [Validators.required]),
+      primerApellido: new FormControl({value: this.solicitudStates.primerApellido, disabled: true}, [Validators.required]),
       /**
        * Denominación o razón social del facturador.
        */
-      denominacionRazonSocial: new FormControl({value: '', disabled: true}, [Validators.required]),
+      denominacionRazonSocial: new FormControl({value: this.solicitudStates.denominacionRazonSocial, disabled: true}, [Validators.required]),
       /**
        * Segundo apellido del facturador (opcional).
        */
-      segundoApellido: new FormControl({value: '', disabled: true}),
+      segundoApellido: new FormControl({value: this.solicitudStates.segundoApellido, disabled: true}),
       /**
        * País del facturador.
        * Requiere validación adicional mediante `requiredPaisValidator`.
        */
-      pais: new FormControl({ disabled: true}, [
+      pais: new FormControl({ value: this.solicitudStates.pais,disabled: true}, [
         Validators.required,
         this.requiredPaisValidator,
       ]),
       /**
        * Estado del facturador.
        */
-      estado: new FormControl({value: '', disabled: true}, [Validators.required]),
+      estado: new FormControl({value: this.solicitudStates.estado, disabled: true}, [Validators.required]),
       /**
        * Código postal del facturador (opcional).
        */
-      codigoPostaloEquivalente: new FormControl({value: '', disabled: true}),
+      codigoPostaloEquivalente: new FormControl({value: this.solicitudStates.codigoPostaloEquivalente, disabled: true}),
       /**
        * Colonia equivalente del facturador (opcional).
        */
-      coloniaoEquivalente: new FormControl({value: '', disabled: true}),
+      coloniaoEquivalente: new FormControl({value: this.solicitudStates.coloniaoEquivalente, disabled: true}),
       /**
        * Calle del facturador.
        */
-      calle: new FormControl({value: '', disabled: true}, [Validators.required]),
+      calle: new FormControl({value: this.solicitudStates.calle, disabled: true}, [Validators.required]),
       /**
        * Número exterior del facturador.
        */
-      numeroExterior: new FormControl({value: '', disabled: true}, [Validators.required]),
+      numeroExterior: new FormControl({value: this.solicitudStates.numeroExterior, disabled: true}, [Validators.required]),
       /**
        * Número interior del facturador (opcional).
        */
-      numeroInterior: new FormControl({value: '', disabled: true}),
+      numeroInterior: new FormControl({value: this.solicitudStates.numeroInterior, disabled: true}),
       /**
        * Lada del facturador (opcional).
        */
-      lada: new FormControl({value: '', disabled: true}),
+      lada: new FormControl({value: this.solicitudStates.lada, disabled: true}),
       /**
        * Teléfono del facturador (opcional).
        */
-      telefono: new FormControl({value: '', disabled: true}),
+      telefono: new FormControl({value: this.solicitudStates.telefono, disabled: true}),
       /**
        * Correo electrónico del facturador (opcional).
        */
-      correoElectronico: new FormControl({value: '', disabled: true}),
+      correoElectronico: new FormControl({value: this.solicitudStates.correoElectronico, disabled: true}),
     });
   }
 

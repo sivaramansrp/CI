@@ -12,8 +12,9 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { map, takeUntil } from 'rxjs';
 import { Subject } from 'rxjs';
-import { Tramite260212State } from '../../estados/tramite260212.store';
 import { Tramite260212Query } from '../../estados/tramite260212.query';
+import { Tramite260212State } from '../../estados/tramite260212.store';
+
 
 
 /**

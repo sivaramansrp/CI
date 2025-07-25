@@ -1,9 +1,9 @@
+import { Terceros260211State, Terceros260211Store } from '../../../estados/tramites/terceros260211.store';
 import { Tramite260212State, Tramite260212Store } from '../estados/tramite260212.store';
 import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Terceros260211State, Terceros260211Store } from '../../../estados/tramites/terceros260211.store';
 
 /**
  * Servicio encargado de manejar la lógica y comunicación relacionada con el trámite 260212.
@@ -111,7 +111,6 @@ export class Service260212Service {
   this.terceros260211Store.setEstado(DATOS.estado);
   this.terceros260211Store.setEntidadFederativa(DATOS.entidadFederativa);
 }
-
   /**
    * Obtiene los datos de consulta para el registro de toma de muestras de mercancías.
    * @returns Observable con el estado del trámite 260212.
@@ -120,6 +119,6 @@ export class Service260212Service {
     return this.http.get<Tramite260212State>('assets/json/260212/consulta.json');
   }
  getTercerosData(): Observable<Terceros260211State> {
-    return this.http.get<Terceros260211State>('assets/json/260211/tercerosdata.json');
+    return this.http.get<Terceros260211State>('assets/json/260212/tercerosdata.json');
   }
 }

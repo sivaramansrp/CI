@@ -31,8 +31,8 @@ import {Subject, map,takeUntil } from 'rxjs';
 
 import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA, MUNICIPIOSELECTDATA, PAISSELECTDATA, TERCEROS_DATAS, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '@libs/shared/data-access-user/src/core/enums/260906/permiso.enum';
 
-import { Terceros260211State, Terceros260211Store } from '../../../../estados/tramites/terceros260211.store';
 import { Terceros260211Query } from '../../../../estados/queries/terceros260211.query';
+import { Terceros260211State } from '../../../../estados/tramites/terceros260211.store';
 
 
  
@@ -481,7 +481,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    * Inicializa el formulario para agregar un destinatario.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarDestinatarioFormGroup() {
+  initializeAgregarDestinatarioFormGroup() :void{
     /**
      * Crea el formulario reactivos para agregar un destinatario.
      * Cada campo tiene sus propias validaciones.
@@ -584,7 +584,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    * Inicializa el formulario para agregar un proveedor.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarProveedorFormGroup() {
+  initializeAgregarProveedorFormGroup():void{
     /**
      * Crea el formulario reactivos para agregar un proveedor.
      * Cada campo tiene sus propias validaciones.
@@ -675,7 +675,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    * Inicializa el formulario para agregar un facturador.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarFacturadorFormGroup() {
+  initializeAgregarFacturadorFormGroup():void {
     /**
      * Crea el formulario reactivos para agregar un facturador.
      * Cada campo tiene sus propias validaciones.
@@ -944,7 +944,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    *
    * @param checkBoxName Nombre del checkbox seleccionado (fisica o moral).
    */
-  public inputChecked(checkBoxName: string) {
+  public inputChecked(checkBoxName: string) : void {
     if (checkBoxName === 'fisica') {
       this.fisica = true;
       this.moral = false;
@@ -957,7 +957,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
  *    
  * @param checkBoxName 
  */
-  public tercerosInputChecked(checkBoxName: string) {
+  public tercerosInputChecked(checkBoxName: string):void {
     if (checkBoxName === 'nacional') {
       this.nacional = true;
       this.extranjero = false;
@@ -971,7 +971,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    * Cambia la visibilidad del formulario de Fabricante.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivFabricante() {
+  toggleDivFabricante() :void{
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -982,7 +982,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    * Cambia la visibilidad del formulario de Destinatario.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivDestinatario() {
+  toggleDivDestinatario() :void{
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -993,7 +993,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    * Cambia la visibilidad del formulario de Proveedor.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivProveedor() {
+  toggleDivProveedor():void {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -1004,7 +1004,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    * Cambia la visibilidad del formulario de Facturador.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivFacturador() {
+  toggleDivFacturador() :void{
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -1023,7 +1023,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    *
    * @description Este método es llamado al enviar el formulario de agregar un fabricante.
    */
-  submitFabricanteForm() {
+  submitFabricanteForm() :void{
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1176,7 +1176,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    *
    * @description Este método es llamado al enviar el formulario de agregar un destinatario.
    */
-  submitDestinatarioForm() {
+  submitDestinatarioForm():void {
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1329,7 +1329,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    *
    * @description Este método es llamado al enviar el formulario de agregar un proveedor.
    */
-  submitProveedorForm() {
+  submitProveedorForm() :void{
     /**
      * Crea una nueva fila para la tabla con los datos del formulario.
      */
@@ -1379,7 +1379,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    *
    * @description Este método es llamado al enviar el formulario de agregar un facturador.
    */
-  submitFacturadorForm() {
+  submitFacturadorForm() :void{
     /**
      * Crea una nueva fila para la tabla con los datos del formulario.
      */
@@ -1457,7 +1457,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    *
    * @param value Valor seleccionado del radio button.
    */
-   cambiarRadio(value: string | number) {
+   cambiarRadio(value: string | number):void {
     const VALOR_SELECCIONADO = value as string;
     this.tercerosInputChecked(VALOR_SELECCIONADO);
   }
@@ -1467,7 +1467,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    *
    * @param value Valor seleccionado del radio button.
    */
-   cambiarRadioFisica(value: string | number) {
+   cambiarRadioFisica(value: string | number):void {
     const VALOR_SELECCIONADO = value as string;
     this.inputChecked(VALOR_SELECCIONADO);
   }
