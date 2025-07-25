@@ -1,0 +1,40 @@
+<div>
+    @if(showInfoAlert) {
+      <div class="alert alert-info alert-dismissible fade show" role="alert" style="margin-bottom: 1rem;">
+        Seleccione un vehículo para modificar o eliminar. Use el botón "Buscar" para agregar nuevos vehículos.
+        <button type="button" class="close btn-close" aria-label="Close" (click)="showInfoAlert = false"></button>
+      </div>
+    }
+    <h5>Modificación de vehículos</h5>
+    <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="columnasVehiculo"
+        [datos]="vehiculosParque" (listaDeFilaSeleccionada)="onVehiculoRowSelected($event)">
+    </app-tabla-dinamica>
+    <div class="row mt-3">
+        <div class="col-md-12 text-end">
+            <div class="btn-group">
+                <button class="btn btn-default" type="button" (click)="deleteVehiculoRow()"
+                    [disabled]="isReadonly || selectedVehiculoIndex === null">
+                    Eliminar
+                </button>
+                <button class="btn btn-primary ms-2" type="button" (click)="showVehiculoDialog = true" [disabled]="isReadonly">
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+    @if(showVehiculoDialog) {
+      <div class="modal-backdrop fade show"></div>
+      <div class="modal d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+        <app-vehiculo-dialog
+          [vehiculo]="vehiculoDialogData"
+          [readonly]="isReadonly"
+          [tipoDeVehiculoCatalogo]="tipoDeVehiculoCatalogo"
+          [paisEmisorCatalogo]="paisEmisorCatalogo"
+          [anoCatalogo]="anoCatalogo"
+          [tipoArrastre]="tipoArrastre"
+          (save)="onVehiculoDialogSave($event)"
+          (cancel)="showVehiculoDialog = false">
+        </app-vehiculo-dialog>
+      </div>
+    }
+</div>

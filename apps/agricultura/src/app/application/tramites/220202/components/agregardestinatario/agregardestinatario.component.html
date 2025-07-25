@@ -24,7 +24,7 @@
         <div class="col-md-12">
           <ng-titulo titulo="Datos personales" />
         </div>
-        <div class="row">
+        <div class="row" *ngIf="destinatarioForm.value.tipoMercancia === 'yes'">
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="nombre">Nombre(s)*:</label>
@@ -113,7 +113,7 @@
             </div>
           </div>
         </div>
-        <div class="row" *ngIf="destinatarioForm.value.tipoMercancia === 'yes'">
+        <div class="row" *ngIf="destinatarioForm.value.tipoMercancia === 'no'">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" for="razonSocial"

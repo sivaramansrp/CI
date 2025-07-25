@@ -1,3 +1,4 @@
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import {
   AnimalesEventos,
   AnimalesFormularioSolicitud,
@@ -22,12 +23,7 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+
 import { Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
@@ -52,6 +48,7 @@ import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
   templateUrl: './mercancia-form.component.html',
 })
 export class MercanciaFormComponent implements OnInit, OnDestroy {
+
   /**
    * Representa el formulario reactivo utilizado para gestionar los datos de la mercancía
    * en el componente de detalles de animales vivos.
@@ -82,6 +79,8 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * @type {DatosDeLaSolicitud}
    */
   @Input() catalogosDatos: DatosDeLaSolicitud = {} as DatosDeLaSolicitud;
+
+  @Output() cerrar = new EventEmitter<void>();
 
   /**
    * Lista de tipos de requisito disponibles para el selector correspondiente en el formulario.
@@ -214,7 +213,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private readonly agriculturaApiService: AgriculturaApiService,
     private readonly fitosanitarioQuery: FitosanitarioQuery
-  ) {}
+  ) { }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -245,9 +244,9 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
         '',
         [Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)],
       ],
-      cantidadUMT: ['', [Validators.minLength(3), Validators.maxLength(12)]],
+      cantidadUMT: ['', [Validators.required, MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
       umt: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMC: ['', [Validators.minLength(3), Validators.maxLength(12)]],
+      cantidadUMC: ['', [Validators.required, MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
       umc: ['', Validators.required],
       uso: ['', Validators.required],
       tipoProducto: ['', Validators.required],
@@ -255,6 +254,12 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
       paisOrigen: ['', Validators.required],
       paisDeProcedencia: ['', Validators.required],
     });
+
+    if (this.formularioSolicitud) {
+      this.mercanciaForm.patchValue({
+        ...this.formularioSolicitud
+      });
+    }
 
     const ID = this.route.snapshot.paramMap.get('id');
     if (ID) {
@@ -401,7 +406,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * Utiliza el servicio de ubicación para retroceder una página.
    */
   cancelar(): void {
-    this.ubicaccion.back();
+    this.cerrar.emit();
   }
 
   /**
@@ -409,11 +414,55 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * Actualmente no implementa ninguna funcionalidad, pero se puede extender en el futuro.
    */
   agregarAnimales(): void {
-    this.agregarDatosFormulario.emit({
-      formulario: this.mercanciaForm.value,
-      tablaDatos: this.sensiblesTablaDatos,
-    });
-    this.ubicaccion.back();
+    this.agregarDatosFormulario.emit(
+      {
+        formulario: this.mercanciaForm.getRawValue(),
+        tablaDatos: this.sensiblesTablaDatos
+      }
+    );
+    this.cerrar.emit();
+  }
+
+  /**
+   * Validador personalizado para verificar si el número tiene más de 3 decimales
+   * @param control - Control del formulario a validar
+   * @returns ValidationErrors si tiene más de 3 decimales, null si es válido
+   */
+  static maxDecimalsValidator(control: AbstractControl): ValidationErrors | null {
+    const VALUE = control.value;
+    if (!VALUE) {
+      return null;
+    }
+
+    const STRING_VALUE = VALUE.toString();
+    const DECIMAL_PART = STRING_VALUE.split('.')[1];
+
+    if (DECIMAL_PART && DECIMAL_PART.length > 3) {
+      return { maxDecimals: true };
+    }
+
+    return null;
+  }
+
+  /**
+   * Validador personalizado para verificar si el número tiene más de 12 números enteros
+   * @param control - Control del formulario a validar  
+   * @returns ValidationErrors si tiene más de 12 números enteros, null si es válido
+   */
+  static maxWholeNumbersValidator(control: AbstractControl): ValidationErrors | null {
+    const VALUE = control.value;
+    if (!VALUE) {
+      return null;
+    }
+
+    const STRING_VALUE = VALUE.toString();
+    const WHOLE_PART = STRING_VALUE.split('.')[0];
+
+    if (WHOLE_PART.length > 12) {
+      return { maxWholeNumbers: true };
+    }
+
+    return null;
   }
 
   /**

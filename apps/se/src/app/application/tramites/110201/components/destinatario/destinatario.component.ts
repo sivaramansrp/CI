@@ -6,7 +6,7 @@ import {
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -22,7 +22,6 @@ import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/s
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
-
 /**
  * Componente que representa el formulario de destinatario en el trámite.
  */
@@ -82,14 +81,18 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Indica si el formulario está vacío.
    */
   estaVacio: boolean = false;
-/**
- * Opciones del catálogo.
- * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
- * Estas opciones se utilizan para poblar los selectores en el formulario.
- */
-options!: Catalogo[];
-
-option!: Catalogo[];
+  /**
+   * Opciones del catálogo.
+   * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
+   * Estas opciones se utilizan para poblar los selectores en el formulario.
+   */
+  options!: Catalogo[];
+  /**
+   * Opciones del catálogo de transporte.
+   * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
+   * Estas opciones se utilizan para poblar los selectores en el formulario.
+   */
+  option!: Catalogo[];
 
 /**
  * Notificador para destruir observables al destruir el componente.
@@ -182,7 +185,6 @@ option!: Catalogo[];
       this.donanteDomicilio();
     }
   }
-
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
@@ -291,7 +293,7 @@ option!: Catalogo[];
    * Cancela todas las suscripciones activas.
    */
   ngOnDestroy(): void {
-   
+
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

@@ -185,6 +185,11 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @property {Catalogo[]} aduanaDeIngreso
    */
   aduanaDeIngreso!: Catalogo[];
+  /**
+   * Valor predeterminado para la selección de aduanas.
+   * @property {number} predeterminado
+   */
+  predeterminado=-1;
 
   /**
    * Datos del cuerpo de autorizados.
@@ -540,20 +545,30 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
+ /**
    * Agrega servicios a la ampliación.
    * @method agregarServiciosAmpliacion
    */
+
   agregarServiciosAmpliacion(): void {
+    const descripcion = this.recibioDatos[0]?.descripcion;
+    const tipode = this.recibioDatos[0]?.tipode;
+  
+    if (!descripcion || !tipode || descripcion === '-1' || tipode === '-1') {
+      return;
+    }
+  
     const CUERPODATOS = {
-      descripiónDelServicio: this.recibioDatos[0].descripcion,
-      tipode: this.recibioDatos[0].tipode,
+      descripiónDelServicio: descripcion,
+      tipode: tipode,
     };
+  
     this.ampliacionServiciosStore.setDatosImmex([
       ...this.datosImmex,
       CUERPODATOS,
     ]);
   }
+  
 
   /**
    * Elimina empresas nacionales.
@@ -577,27 +592,14 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @method actualizaGridEmpresasNacionales
    */
   actualizaGridEmpresasNacionales(): void {
-    /**
-     * @constant {Object} CUERPODATOS
-     * @description
-     * Objeto que contiene los datos necesarios para representar una empresa nacional en el sistema.
-     * Este objeto se utiliza para agregar información al grid de empresas nacionales.
-     *
-     * @property {string} Servicio - Nombre del servicio asociado, en este caso, "Auditoría de sistemas de seguridad".
-     * @property {string} RegistroContribuyentes - RFC de la empresa, obtenido de la propiedad `rfcEmpresa`.
-     * @property {string} DenominaciónSocial - Denominación o razón social de la empresa, en este caso, "AAL970927390".
-     * @property {string} NumeroIMMEX - Número del programa IMMEX, obtenido de la propiedad `numeroPrograma`.
-     * @property {string} AñoIMMEX - Año del programa IMMEX, obtenido de la propiedad `tiempoPrograma`.
-     *
-     * @example
-     * const CUERPODATOS = {
-     *   Servicio: 'Auditoría de sistemas de seguridad',
-     *   RegistroContribuyentes: this.rfcEmpresa,
-     *   DenominaciónSocial: 'AAL970927390',
-     *   NumeroIMMEX: this.numeroPrograma,
-     *   AñoIMMEX: this.tiempoPrograma,
-     * };
-     */
+    if (
+      !this.rfcEmpresa?.trim() ||
+      !this.numeroPrograma?.trim() ||
+      !this.tiempoPrograma?.trim()
+    ) {
+      return; 
+    }
+  
     const CUERPODATOS = {
       Servicio: 'Auditoría de sistemas de seguridad',
       RegistroContribuyentes: this.rfcEmpresa,
@@ -605,41 +607,21 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
       NumeroIMMEX: this.numeroPrograma,
       AñoIMMEX: this.tiempoPrograma,
     };
-
-    /**
-     * @constant {ServicioInmex[]} DATOSACTUALIZADOS
-     * @description
-     * Crea un nuevo arreglo que combina los datos existentes con un nuevo objeto `CUERPODATOS`.
-     * Este arreglo actualizado se utiliza para representar las empresas nacionales en el sistema.
-     *
-     * @remarks
-     * - Se actualiza el estado global del store `ampliacionServiciosStore` con los datos actualizados.
-     * - Los campos `rfcEmpresa`, `numeroPrograma` y `tiempoPrograma` se reinician a valores vacíos.
-     * - Se actualizan los campos de la empresa en el store mediante el método `setCamposEmpresa`.
-     *
-     * @example
-     * const DATOSACTUALIZADOS = [...this.datos, CUERPODATOS];
-     * this.ampliacionServiciosStore.setDatos(DATOSACTUALIZADOS);
-     * this.rfcEmpresa = '';
-     * this.numeroPrograma = '';
-     * this.tiempoPrograma = '';
-     * this.ampliacionServiciosStore.setCamposEmpresa(
-     *   this.rfcEmpresa,
-     *   this.numeroPrograma,
-     *   this.tiempoPrograma
-     * );
-     */
+  
     const DATOSACTUALIZADOS = [...this.datos, CUERPODATOS];
     this.ampliacionServiciosStore.setDatos(DATOSACTUALIZADOS);
+
     this.rfcEmpresa = '';
     this.numeroPrograma = '';
     this.tiempoPrograma = '';
+  
     this.ampliacionServiciosStore.setCamposEmpresa(
       this.rfcEmpresa,
       this.numeroPrograma,
       this.tiempoPrograma
     );
   }
+  
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
@@ -656,7 +638,9 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @param {any} data - Datos recibidos.
    */
   procesarDatosDelHijo(): void {
+    const SELECTED_DATOS= this.aduanaDeIngreso.find(item => item.id == this.formulario.value.entidadFederativa);
     const DATOS={id: this.formulario.value.entidadFederativa,descripcion:"abcd"};
+    this.recibioDatos= [{ descripcion:SELECTED_DATOS?.descripcion, tipode:"Servicio" }];
     this.ampliacionServiciosStore.setAduanaDeIngresoSeleccion(DATOS as Catalogo);
   }
 

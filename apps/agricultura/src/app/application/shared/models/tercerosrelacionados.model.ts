@@ -121,3 +121,18 @@ export interface DatosDeLaSolicitud {
    */
   estados: Catalogo[];
 }
+/**
+ * Modelo de datos para los catálogos de la solicitud.
+ * Incluye los catálogos de países y estados.
+ * @interface
+ */
+export interface PagoDeDerecho {
+  /**
+   * Catálogo de países.
+   */
+  bancoSelector: Catalogo[];
+  /**
+   * Catálogo de estados.
+   */
+  justificacionSelector: Catalogo[];
+}

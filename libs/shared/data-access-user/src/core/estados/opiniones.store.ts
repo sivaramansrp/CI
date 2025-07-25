@@ -1,11 +1,12 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from "@angular/core";
+import { ListaOpiniones } from '../models/lista-opiniones.model';
 
 export interface SolicitudOpinionesState {
     /**
      * Parametro de la lista de opiniones seleccionados
      */
-    listaOpciones: { dependencia: string; justificacion: string }[];
+    listaOpciones: ListaOpiniones[];
     /**
      * Parametro para el desplegable de opiniones
      */
@@ -34,14 +35,14 @@ export class OpinionesStates extends Store<SolicitudOpinionesState> {
     /**
      * Resetear valores
      */
-    resetStore():void {
+    resetStore(): void {
         this.reset();
     }
     /**
      * Guarda la lista de opiniones requeridos
      * @param opinionesSeleccionados 
      */
-    setSolicitudOpiniones(listaOpciones: { dependencia: string; justificacion: string }[]) :void {
+    setSolicitudOpiniones(listaOpciones: ListaOpiniones[]): void {
         this.update(state => ({ ...state, listaOpciones }));
     }
     /**

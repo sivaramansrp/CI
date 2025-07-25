@@ -119,6 +119,10 @@ export class DatosExportadorComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe();
+
+    if(this.esFormularioSoloLectura) {
+      this.datosExportador.disable();
+    }
   }
 
   /**
