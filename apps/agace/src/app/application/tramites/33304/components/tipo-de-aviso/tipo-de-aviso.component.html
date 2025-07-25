@@ -1,0 +1,13 @@
+<div class="container">
+  <ng-titulo titulo="Ampliación de Vigencia"></ng-titulo>
+  <form [formGroup]="formularioAvisoDeExtension">
+    <div class="row mt-5">
+      <div class="alert alert-info" style="text-align: justify;">
+        <label style="font-weight: normal">
+          <input type="checkbox" formControlName="BAJO_MANIFIESTO" (change)="setValoresStore(formularioAvisoDeExtension, 'BAJO_MANIFIESTO')">
+          <span class="col-md-12 manifesto">{{ solicitudEnum.BAJO_MANIFIESTO }}</span>
+        </label>
+      </div>
+    </div>
+  </form>
+</div>

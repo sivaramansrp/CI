@@ -355,10 +355,10 @@ const ROUTES: Routes = [
       import('./tramites/32606/economico.module').then((m) => m.EconomicoModule),
   },
   {
-      path: 'comercializadora-e-importadora',
+      path: 'aviso-comercializadora-modification',
     loadChildren: () => 
-      import('./tramites/33304/comercializadora-e-importadora.module').then(
-        (m) => m.ComercializadoraEImportadoraModule)
+      import('./tramites/33304/Aviso-De-Ampliacion.module').then(
+        (m) => m.AvisoDeAmpliacionModule)
   }
 ];
 
