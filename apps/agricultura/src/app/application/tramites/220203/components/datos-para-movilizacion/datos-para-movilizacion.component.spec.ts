@@ -95,17 +95,25 @@ describe('DatosParaMovilizacionComponent', () => {
   });
 
   it('should clean up on destroy', () => {
-    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    const completeSpy = jest.spyOn((component as any).DESTROY_NOTIFIER$, 'complete');
     component.ngOnDestroy();
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should subscribe to form changes and handle error', () => {
-    const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    const formChanges = component.formularioMovilizacion.valueChanges as Subject<any>;
-    formChanges.error('Test error');
-    expect(spy).toHaveBeenCalledWith('Error en cambios de formulario:', 'Test error');
-    spy.mockRestore();
+  it('should validate form correctly', () => {
+    // Test valid form
+    component.formularioMovilizacion.patchValue({
+      medioDeTransporte: 'Camión',
+      nombreEmpresaTransportista: 'Empresa Test'
+    });
+    expect(component.validarFormulario()).toBe(true);
+
+    // Test invalid form
+    component.formularioMovilizacion.patchValue({
+      medioDeTransporte: '',
+      nombreEmpresaTransportista: ''
+    });
+    expect(component.validarFormulario()).toBe(false);
   });
 
 });
