@@ -126,7 +126,6 @@ export class PasoUnoComponent implements OnDestroy {
    * @memberof PasoUnoComponent
    */
   constructor(private importacionDeAcuiculturaService: ImportacionDeAcuiculturaService, private consultaQuery: ConsultaioQuery) {
- this.guardarDatosFormulario();
     this.consultaQuery.selectConsultaioState$
     .pipe(takeUntil(this.DESTROY_NOTIFIER$))
     .subscribe((seccionState) => {
