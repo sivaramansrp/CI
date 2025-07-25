@@ -251,7 +251,7 @@ export const META_INFO_40301 = {
    * @property {string} titulo
    * Título principal del trámite mostrado en la interfaz de usuario.
    */
-  titulo: 'Registro CAAT Naviero',
+  titulo: 'CAAT Naviero',
 
   /**
    * @property {string} tipoAgenteLabel
