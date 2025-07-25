@@ -10,13 +10,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AfterViewInit, Component, Input, OnInit, Output } from '@angular/core';
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ListaDeDatosFinal, RadioOpcion } from '../../models/220202/fitosanitario.model';
 import { Subject, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { CommonModule } from '@angular/common';
 import { EventEmitter } from '@angular/core';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { OPCION_DE_BOTON_DE_RADIO } from '../../../../shared/constantes/tercerosrelacionados.enum';
-import { RadioOpcion } from '../../models/220202/fitosanitario.model';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
 import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 
@@ -53,6 +53,12 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @type {EventEmitter<TercerosrelacionadosdestinoTable>}
    */
   @Output() guardarDestinatario = new EventEmitter<TercerosrelacionadosdestinoTable>();
+
+  /**
+   * Opciones para el botón de radio.
+   * @type {EventEmitter[]}
+   */
+  @Output() cerrar = new EventEmitter<void>();
 
   /**
    * Opciones para el botón de radio.
@@ -113,7 +119,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
     private readonly agriculturaApiService: AgriculturaApiService,
     private readonly fitosanitarioQuery: FitosanitarioQuery,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   /**
    * Inicializa el formulario y carga datos si existe un destinatario seleccionado.
@@ -125,7 +131,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       nombre: ['', Validators.required],
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
-      razonSocial: ['', Validators.required],
+      razonSocial: [''],
       pais: ['1', Validators.required],
       codigoPostal: ['', [Validators.minLength(5), Validators.maxLength(5)]],
       estado: ['', Validators.required],
@@ -138,34 +144,33 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       telefono: [''],
       correo: ['']
     });
-    const ID = this.route.snapshot.paramMap.get('id');
-    if (ID) {
-      this.fitosanitarioQuery.seleccionarTercerosRelacionados$
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((data: TercerosrelacionadosdestinoTable[]) => {
-          const DESTINATARIO = data[0];
-          if (DESTINATARIO) {
-            this.destinatarioForm.patchValue({
-              tipoMercancia: DESTINATARIO.tipoMercancia || 'yes',
-              nombre: DESTINATARIO.nombre || '',
-              primerApellido: DESTINATARIO.primerApellido || '',
-              segundoApellido: DESTINATARIO.segundoApellido || '',
-              razonSocial: DESTINATARIO.razonSocial || '',
-              pais: DESTINATARIO.pais || '1',
-              codigoPostal: DESTINATARIO.codigoPostal || '',
-              estado: DESTINATARIO.estado || '',
-              municipio: DESTINATARIO.municipio || '',
-              colonia: DESTINATARIO.colonia || '',
-              calle: DESTINATARIO.calle || '',
-              numeroExterior: DESTINATARIO.numeroExterior || '',
-              numeroInterior: DESTINATARIO.numeroInterior || '',
-              lada: DESTINATARIO.lada || '',
-              telefono: DESTINATARIO.telefono || '',
-              correo: DESTINATARIO.correo || ''
-            });
-          }
-        });
-    }
+
+    this.agriculturaApiService.getAllDatosForma()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: ListaDeDatosFinal) => {
+        const DESTINATARIO = data.seletedTerceros;
+        if (DESTINATARIO) {
+          this.destinatarioForm.patchValue({
+            tipoMercancia: DESTINATARIO.tipoMercancia || 'yes',
+            nombre: DESTINATARIO.nombre || '',
+            primerApellido: DESTINATARIO.primerApellido || '',
+            segundoApellido: DESTINATARIO.segundoApellido || '',
+            razonSocial: DESTINATARIO.razonSocial || '',
+            pais: DESTINATARIO.pais || '1',
+            codigoPostal: DESTINATARIO.codigoPostal || '',
+            estado: DESTINATARIO.estado || '',
+            municipio: DESTINATARIO.municipio || '',
+            colonia: DESTINATARIO.colonia || '',
+            calle: DESTINATARIO.calle || '',
+            numeroExterior: DESTINATARIO.numeroExterior || '',
+            numeroInterior: DESTINATARIO.numeroInterior || '',
+            lada: DESTINATARIO.lada || '',
+            telefono: DESTINATARIO.telefono || '',
+            correo: DESTINATARIO.correo || ''
+          });
+        }
+      });
+
   }
 
   /**
@@ -237,7 +242,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       const LISTA_DINAMICA: TercerosrelacionadosdestinoTable[] = [];
       LISTA_DINAMICA.push(this.destinatarioForm.value as TercerosrelacionadosdestinoTable);
       this.agriculturaApiService.updateTercerosRelacionado(LISTA_DINAMICA as TercerosrelacionadosdestinoTable[]);
-      this.router.navigate(['/pago/certificado-fitosanitario/agricultura']);
+      this.cerrar.emit();
     } else {
       this.destinatarioForm.markAllAsTouched();
     }
@@ -262,7 +267,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method onCancelarDestinatario
    */
   onCancelarDestinatario(): void {
-    this.router.navigate(['/pago/certificado-fitosanitario/agricultura']);
+    this.cerrar.emit();
   }
 
   /**
@@ -272,11 +277,31 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    */
   enCambioValorRadio(): void {
     const RAZON_SOCIAL_CTRL = this.destinatarioForm.get('razonSocial');
+    const NOMBRE_CTRL = this.destinatarioForm.get('nombre');
+    const PRIMER_APELLIDO_CTRL = this.destinatarioForm.get('primerApellido');
+
     if (this.destinatarioForm.value.tipoMercancia === 'no') {
-      RAZON_SOCIAL_CTRL?.clearValidators();
-      RAZON_SOCIAL_CTRL?.updateValueAndValidity();
-    } else {
+      // Moral: Razón social es requerida, nombre y apellidos no
       RAZON_SOCIAL_CTRL?.setValidators([Validators.required]);
+      RAZON_SOCIAL_CTRL?.updateValueAndValidity();
+      
+      NOMBRE_CTRL?.clearValidators();
+      NOMBRE_CTRL?.setValue('');
+      NOMBRE_CTRL?.updateValueAndValidity();
+      
+      PRIMER_APELLIDO_CTRL?.clearValidators();
+      PRIMER_APELLIDO_CTRL?.setValue('');
+      PRIMER_APELLIDO_CTRL?.updateValueAndValidity();
+    } else {
+      // Física: Nombre y apellidos son requeridos, razón social no
+      NOMBRE_CTRL?.setValidators([Validators.required]);
+      NOMBRE_CTRL?.updateValueAndValidity();
+      
+      PRIMER_APELLIDO_CTRL?.setValidators([Validators.required]);
+      PRIMER_APELLIDO_CTRL?.updateValueAndValidity();
+      
+      RAZON_SOCIAL_CTRL?.clearValidators();
+      RAZON_SOCIAL_CTRL?.setValue('');
       RAZON_SOCIAL_CTRL?.updateValueAndValidity();
     }
   }

@@ -171,6 +171,9 @@ export interface ListaDeDatosFinal {
      * @type {string[]}
      */
     usoCrossListDatos: string[];
+
+      seletedTerceros: TercerosrelacionadosdestinoTable;
+      seletedExdora: TercerosrelacionadosdestinoTable;
 }
 
 /**
@@ -640,6 +643,8 @@ export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): Lista
         tercerosRelacionados: params.tercerosRelacionados || [],
         datosForma: params.datosForma || [],
         usoCrossListDatos: CROSLISTA_DE_DATOS,
+        seletedTerceros: params.seletedTerceros || {} as TercerosrelacionadosdestinoTable,
+        seletedExdora: params.seletedExdora || {} as TercerosrelacionadosdestinoTable
     };
 }
 

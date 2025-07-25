@@ -119,6 +119,9 @@ export class Tramite110204Query extends Query<TramiteState> {
     return state.representacionFederalDatos;
   });
 
+  selectmercanciaTabla$ = this.select((state) => {
+    return state.mercanciaTabla;
+  });
   /**
    * Constructor del servicio TramiteQuery.
    * 

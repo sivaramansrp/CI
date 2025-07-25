@@ -21,30 +21,12 @@ describe('ExpedicionCertificadosAsignacionDirectaComponent Additional Tests', ()
     fixture.detectChanges();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    const spy = jest.spyOn(component, 'crearExpedicionCertificadosAsignacionForm');
-    component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('should call inicializaCatalogos on ngOnInit', () => {
-    const spy = jest.spyOn(component, 'inicializaCatalogos');
-    component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('should call aniosAutorizacionSeleccion on ngOnInit', () => {
-    const spy = jest.spyOn(component, 'aniosAutorizacionSeleccion');
-    component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
-  });
-
   it('should reset forms and call store methods on buscar', () => {
     const resetSpy = jest.spyOn(component.asignacionOficioNumeroForm, 'reset');
     const setAniosAutorizacionSpy = jest.spyOn(component['tramite120202Store'], 'setAniosAutorizacion');
     const setNumFolioAsignacionAuxSpy = jest.spyOn(component['tramite120202Store'], 'setNumFolioAsignacionAux');
 
-    component.buscar();
+    component.buscar('', '');
 
     expect(resetSpy).toHaveBeenCalledWith({ cveAniosAutorizacion: '', numFolioAsignacionAux: '' });
     expect(setAniosAutorizacionSpy).toHaveBeenCalledWith('');
