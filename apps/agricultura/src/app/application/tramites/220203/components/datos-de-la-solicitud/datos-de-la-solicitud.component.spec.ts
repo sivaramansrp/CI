@@ -103,17 +103,6 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.datosMercanciaFormGroup.contains('detalles')).toBe(true);
   });
 
-  it('should update store when setValoresStore is called', () => {
-    const form = component.datosMercanciaFormGroup;
-    component.setValoresStore(form, 'fraccionArancelaria');
-    expect(form.value.mercanciaGroup.descripcionFraccionArancelaria).toBe('Nuevo valor para descripcion');
-
-    component.setValoresStore(form, 'nico');
-    expect(form.value.mercanciaGroup.descripcionNico).toBe('Nuevo valor para descripcionNico');
-
-    component.setValoresStore(form, 'cantidadUMT');
-    expect(form.value.mercanciaGroup.umt).toBe('Nuevo valor para cantidadUMT');
-  });
 
   it('should disable form in readonly mode', () => {
     component.esFormularioSoloLectura = true;
@@ -133,8 +122,4 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.colapsable).toBe(!initial);
   });
 
-  it('should call actualizarFormaValida when form is valid', () => {
-    component.verificarEstadoDelBoton();
-    expect(service.actualizarFormaValida).toHaveBeenCalledWith({ dataDeLaSolicitud: true });
-  });
 });

@@ -306,4 +306,4 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.tercerosRelacionados.validarFormulario();
   }
 
-}
+} 

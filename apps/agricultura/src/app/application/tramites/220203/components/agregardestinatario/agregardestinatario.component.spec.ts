@@ -5,8 +5,9 @@ import { of } from 'rxjs';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
-import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
+import { AcuiculturaQuery } from '../../estados/sanidad-certificado.query';
+
 
 describe('AgregardestinatarioComponent', () => {
   let component: AgregardestinatarioComponent;
@@ -44,8 +45,8 @@ describe('AgregardestinatarioComponent', () => {
         FormBuilder,
         { provide: Router, useValue: ROUTER_MOCK },
         { provide: ActivatedRoute, useValue: ROUTE_MOCK },
-        { provide: CertificadoZoosanitarioServiceService, useValue: SERVICE_MOCK },
-        { provide: ZoosanitarioQuery, useValue: QUERY_MOCK },
+        { provide: ImportacionDeAcuiculturaService, useValue: SERVICE_MOCK },
+        { provide: AcuiculturaQuery, useValue: QUERY_MOCK },
         {
           provide: TercerosrelacionadosService,
           useValue: {

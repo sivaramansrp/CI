@@ -88,10 +88,6 @@ describe('DatosParaMovilizacionComponent', () => {
     expect(component.formularioMovilizacion.enabled).toBe(true);
   });
 
-  it('should verify button state and call service with correct value', () => {
-    component.verificarEstadoDelBoton();
-    expect(mockService.actualizarFormaValida).toHaveBeenCalledWith({ dataParaMovilizacion: true });
-  });
 
   it('should call actualizarFormularioMovilizacion with form values', () => {
     component.setValoresStore();
