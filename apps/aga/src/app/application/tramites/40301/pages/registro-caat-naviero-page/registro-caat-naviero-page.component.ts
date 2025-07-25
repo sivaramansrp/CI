@@ -405,8 +405,8 @@ export class RegistroCaatNavieroPageComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.asignarSecciones();
-    const secciones = Object.values(SECCIONES_TRAMITE_40301.PASO_1);
-    this.seccionStore.establecerFormaValida(secciones.map(() => true));
+    const SECCIONES = Object.values(SECCIONES_TRAMITE_40301.PASO_1);
+    this.seccionStore.establecerFormaValida(SECCIONES.map(() => true));
   }
 
   /**
