@@ -1,6 +1,6 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-
+import { ALERTA_BUSCAR_ERROR } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
 import { EXPEDICION_CERTIFICADO_ASIGNACION_PASOS } from '../../constantes/expedicion-certificados-asignacion-constantes.enum';
 
@@ -46,6 +46,27 @@ export class PantallasComponent {
   TEXTOS = AVISO.Aviso;
 
   /**
+   * Indica si se debe mostrar un mensaje de error.
+   * @type {boolean}
+   */
+  mostrarError: boolean = false;
+
+  /**
+   * Mensaje de error a mostrar.
+   */
+  esValido = true;
+
+  /**
+   * Asigna el mensaje de error al atributo `ALERTA_BUSCAR_ERROR`.
+   */
+  ALERTA_BUSCAR_ERROR = ALERTA_BUSCAR_ERROR;
+
+  /**
+   * Una cadena que representa la clase CSS para una alerta de error.
+   */
+  infoError = 'alert-danger';
+  
+  /**
    * Datos utilizados para el control del wizard.
    * @type {DatosPasos}
    */
@@ -73,5 +94,16 @@ export class PantallasComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+   * Maneja el evento de error al mostrar un mensaje de error.
+   *
+   * @param {boolean} event - Indica si se debe mostrar el mensaje de error.
+   * @returns {void}
+   */
+  public mostrarErrorDirectoEvento(event: boolean): void {
+    this.esValido = true;
+    this.mostrarError = event;
   }
 }

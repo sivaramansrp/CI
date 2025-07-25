@@ -90,14 +90,12 @@
             </div>
          </div>
       </div>
-      @if(!esFormularioSoloLectura){
       <div class="row mt-3">
          <div class="col-md-12 text-right">
             <div class="form-group">
-               <button type="button" class="btn btn-danger" (click)="onBorrar()">Borrar datos del pago</button>
+               <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura" (click)="onBorrar()">Borrar datos del pago</button>
             </div>
          </div>
       </div>
-      }
    </form>
 </div>

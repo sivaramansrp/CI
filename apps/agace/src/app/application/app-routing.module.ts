@@ -305,7 +305,6 @@ const ROUTES: Routes = [
         (m) => m.AvisoTesoreriaModule
       ),
   },
-
   {
     path: 'aviso-certificacion',
     loadChildren: () =>
@@ -337,12 +336,24 @@ const ROUTES: Routes = [
       import('./tramites/32616/solicitud-de-registro-invocar.module').then(
         (m) => m.SolicitudDeRegistroInvocarModule)
   },
-    {
+  {
+    path: 'registro-oae-rfe',
+    loadChildren: () =>
+      import('./tramites/32610/registro-oae-rfe.module').then(
+        (m) => m.RegistroOaeRfeModule
+      )
+  },
+  {
+    path: 'economico',
+    loadChildren: () =>
+      import('./tramites/32606/economico.module').then((m) => m.EconomicoModule),
+  },
+  {
       path: 'comercializadora-e-importadora',
     loadChildren: () => 
       import('./tramites/33304/comercializadora-e-importadora.module').then(
         (m) => m.ComercializadoraEImportadoraModule)
-  },
+  }
 ];
 
 @NgModule({

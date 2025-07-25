@@ -1074,3 +1074,16 @@ export interface GuardarDatosFormulario {
    */
   enlaceOperativosLista: EnlaceOperativo[];
 }
+
+export interface RFCEnlaceOperativo {
+  enlaceOperativorfc: string;
+  denominacionRazonsocial: string;
+  domicilio: string;
+  
+}
+export interface TransportistasListaInterface {
+  enlaceOperativorfc: string;
+  denominacionRazonsocial: string;
+  domicilio: string;
+  ccat: string;
+}
