@@ -60,7 +60,7 @@ export class DatosAnexosComponent implements OnInit, OnDestroy {
    * Datos de los anexos de importación obtenidos desde el servicio.
    * @type {Anexo[]}
    */
-  datosSensibles: Anexo[] = [];
+  datosSensibles: Anexo[] = []; 
 
   constructor(
     public solicitudService: SolicitudService,
