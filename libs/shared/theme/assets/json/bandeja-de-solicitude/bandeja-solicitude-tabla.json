@@ -3023,6 +3023,15 @@
     "diasTranscurridos": "4",
     "departamento": "AGACE",
     "numeroDeProcedimiento": "32605"
+  },
+    {
+     "id": 40301,
+    "tipoDeTramite": "Registro del código",
+    "fecha": "2025-07-25",
+    "fechaActualizacion": "2025-07-30",
+    "diasTranscurridos": "10",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "40301"
   }
 
 ]
