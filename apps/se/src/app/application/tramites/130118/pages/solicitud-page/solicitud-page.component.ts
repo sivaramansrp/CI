@@ -375,9 +375,9 @@ export class SolicitudPageComponent implements OnInit {
 
       productor: {
         tipo_persona: DATOS_PRODUCTO.tipoPersona === 'pmoral',
-        nombre: DATOS_PRODUCTO.nombre,
-        apellido_paterno: DATOS_PRODUCTO.apellidoPaterno,
-        apellido_materno: DATOS_PRODUCTO.apellidoMaterno,
+        nombre: DATOS_PRODUCTO.nombre || null,
+        apellido_paterno: DATOS_PRODUCTO.apellidoPaterno || null,
+        apellido_materno: DATOS_PRODUCTO.apellidoMaterno || null,
         razon_social: DATOS_PRODUCTO.razonSocial ?? '',
         descripcion_ubicacion: DATOS_PRODUCTO.domicilio,
         rfc: 'AAL0409235E6',
@@ -386,8 +386,8 @@ export class SolicitudPageComponent implements OnInit {
 
       solicitante: {
         rfc: 'AAL0409235E6',
-        nombre: DATOS_PRODUCTO.nombre,
-        es_persona_moral: DATOS_PRODUCTO.tipoPersona === 'pmoral',
+        nombre: 'IGNACIO EDUARDO',
+        es_persona_moral: true,
         certificado_serial_number: '3082054030820428a00302010'
       },
 

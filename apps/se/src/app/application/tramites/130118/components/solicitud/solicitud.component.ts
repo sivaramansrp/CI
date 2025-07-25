@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 
 import { CATALOGOS_ID, Catalogo, Catalogos, CategoriaMensaje, ConsultaioQuery, ConsultaioState, EntidadesFederativasService, FECHA_SALIDA, FraccionArancelariaService, InputFecha, Notificacion, PaisesService, REGEX_ONCE_ENTEROS_DOS_DECIMALES, REGEX_ONCE_ENTEROS_TRES_DECIMALES, RegimenService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
@@ -8,6 +9,8 @@ import { PeximService } from '../../service/pexim.service';
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 
 import { GuardarService } from '../../../../core/services/130118/guardar.service';
+
+import { CatMolinoService } from '../../../../core/services/130118/catalogos/cat-molino.service';
 
 /**
  * Componente para la vista de la solicitud de la sección de "130118".
@@ -40,6 +43,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Lista de catálogos de NICO.
    */
   nico!: Catalogos[];
+
+  /**
+   * Indica si se deben mostrar los molinos de acero.
+   */
+  mostrarComboMolinos = false;
+
+  /**
+   * Lista de catálogos de molinos de acero.
+   */
+  molinos!: Catalogos[];
 
   /**
    * Lista de catálogos de país de origen.
@@ -150,7 +163,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private paisesService: PaisesService,
     private fraccionArancelariaService: FraccionArancelariaService,
     private guardarService: GuardarService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private catMolinoService: CatMolinoService
   ) { }
 
   /**
@@ -704,40 +718,40 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   // eslint-disable-next-line class-methods-use-this
- changeRegimen(): void {
-  const SELECTED_REGIMEN = this.datosRegimen.get('regimenMercancia')?.value;
-  this.tramite130118Store.setRegimenMercancia(SELECTED_REGIMEN);
+  changeRegimen(): void {
+    const SELECTED_REGIMEN = this.datosRegimen.get('regimenMercancia')?.value;
+    this.tramite130118Store.setRegimenMercancia(SELECTED_REGIMEN);
 
-  const CLASIFI_CONTROL = this.datosRegimen.get('clasifiRegimen');
+    const CLASIFI_CONTROL = this.datosRegimen.get('clasifiRegimen');
 
-  if (SELECTED_REGIMEN !== null) {
-    this.regimenService.getRegimenesCve(SELECTED_REGIMEN).subscribe({
-      next: (response) => {
-        this.clasifiRegimen = response.datos || [];
+    if (SELECTED_REGIMEN !== null) {
+      this.regimenService.getRegimenesCve(SELECTED_REGIMEN).subscribe({
+        next: (response) => {
+          this.clasifiRegimen = response.datos || [];
 
-        if (this.clasifiRegimen.length > 0) {
-          CLASIFI_CONTROL?.enable();
-        } else {
+          if (this.clasifiRegimen.length > 0) {
+            CLASIFI_CONTROL?.enable();
+          } else {
+            CLASIFI_CONTROL?.disable();
+          }
+
+          const CLASIFI_GUARDADO = this.solicitudState?.clasifiRegimen || null;
+          CLASIFI_CONTROL?.setValue(CLASIFI_GUARDADO);
+        },
+        error: (error) => {
+          console.error('Error al obtener clasificación de régimen:', error);
+          this.clasifiRegimen = [];
           CLASIFI_CONTROL?.disable();
+          const CLASIFI_GUARDADO = this.solicitudState?.clasifiRegimen || null;
+          CLASIFI_CONTROL?.setValue(CLASIFI_GUARDADO);
         }
-
-        const CLASIFI_GUARDADO = this.solicitudState?.clasifiRegimen || null;
-        CLASIFI_CONTROL?.setValue(CLASIFI_GUARDADO);
-      },
-      error: (error) => {
-        console.error('Error al obtener clasificación de régimen:', error);
-        this.clasifiRegimen = [];
-        CLASIFI_CONTROL?.disable();
-        const CLASIFI_GUARDADO = this.solicitudState?.clasifiRegimen || null;
-        CLASIFI_CONTROL?.setValue(CLASIFI_GUARDADO);
-      }
-    });
-  } else {
-    this.clasifiRegimen = [];
-    CLASIFI_CONTROL?.disable();
-    CLASIFI_CONTROL?.setValue(null); // <- aquí también ajustas
+      });
+    } else {
+      this.clasifiRegimen = [];
+      CLASIFI_CONTROL?.disable();
+      CLASIFI_CONTROL?.setValue(null); // <- aquí también ajustas
+    }
   }
-}
 
 
 
@@ -797,62 +811,119 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     const UMT_CONTROL = this.datosMercancia.get('unidadMedidaTarifaria');
 
     if (SELECTED_FRACCION && SELECTED_FRACCION !== null) {
-      // Llamada 1: obtener Nico
-      this.fraccionArancelariaService.getNico(SELECTED_FRACCION).subscribe({
+      // 1. Verificar si se debe habilitar el combo de molinos
+      this.guardarService.getMolinosHabilitar(SELECTED_FRACCION).subscribe({
         next: (response) => {
-          this.nico = response.datos || [];
+          const DEBE_HABILITAR_MOLINOS = response.datos === true;
+          this.mostrarComboMolinos = DEBE_HABILITAR_MOLINOS;
 
-          if (this.nico.length > 0) {
-            NICO_CONTROL?.enable();
+          if (DEBE_HABILITAR_MOLINOS) {
+            // Desactivar nombre completo
+            this.FormSolicitud.get('datosProducto.nombre')?.disable();
+            this.FormSolicitud.get('datosProducto.apellidoPaterno')?.disable();
+            this.FormSolicitud.get('datosProducto.apellidoMaterno')?.disable();
+
+            this.FormSolicitud.get('datosProducto.nombre')?.setValue(null);
+            this.FormSolicitud.get('datosProducto.apellidoPaterno')?.setValue(null);
+            this.FormSolicitud.get('datosProducto.apellidoMaterno')?.setValue(null);
+
+            // Limpiar store (akita)
+            this.tramite130118Store.setNombre('');
+            this.tramite130118Store.setApellidoPaterno('');
+            this.tramite130118Store.setApellidoMaterno('');
+
+            // Activar razón social
+            this.FormSolicitud.get('datosProducto.razonSocial')?.enable();
+
+            this.isVisibleFisica = false;
+            this.isVisibleMoral = false;
+            // 2. Obtener lista de molinos activos
+            this.catMolinoService.getMolinosActivos().subscribe({
+              next: (molinosResponse) => {
+                this.molinos = molinosResponse.datos || [];
+              },
+              error: (err) => {
+                console.error('Error al obtener molinos activos:', err);
+                this.molinos = [];
+              }
+            });
           } else {
-            NICO_CONTROL?.disable();
-          }
 
-          const NICO_GUARDADO = this.solicitudState?.nico || null;
-          NICO_CONTROL?.setValue(NICO_GUARDADO);
+            this.mostrarComboMolinos = false;
+            if (this.solicitudState?.tipoPersona === 'pfisica') {
+              this.isVisibleFisica = true;
+            }else if(this.solicitudState?.tipoPersona === 'pmoral') {
+              this.isVisibleMoral = true;
+            }
+
+            this.FormSolicitud.get('datosProducto.nombre')?.enable();
+            this.FormSolicitud.get('datosProducto.apellidoPaterno')?.enable();
+            this.FormSolicitud.get('datosProducto.apellidoMaterno')?.enable();
+            this.FormSolicitud.get('datosProducto.razonSocial')?.disable();
+            this.FormSolicitud.get('datosProducto.razonSocial')?.setValue('');
+            this.tramite130118Store.setRazonSocial('');
+            
+          }
         },
-        error: (error) => {
-          console.error('Error al obtener Nico:', error);
-          this.nico = [];
-          const NICO_GUARDADO = this.solicitudState?.nico || null;
-          NICO_CONTROL?.setValue(NICO_GUARDADO);
-          NICO_CONTROL?.disable();
+        error: (err) => {
+          console.error('Error al verificar habilitación de molinos:', err);
+          this.mostrarComboMolinos = false;
         }
       });
 
-      // Llamada 2: obtener unidad de medida tarifaria
+      // 3. Obtener Nico
+      this.fraccionArancelariaService.getNico(SELECTED_FRACCION).subscribe({
+        next: (response) => {
+          this.nico = response.datos || [];
+          this.toggleControl(NICO_CONTROL, this.nico.length > 0, this.solicitudState?.nico || null);
+        },
+        error: (error) => {
+          console.error('Error al obtener Nico:', error);
+          this.toggleControl(NICO_CONTROL, false, this.solicitudState?.nico || null);
+        }
+      });
+
+      // 4. Obtener unidad medida tarifaria
       this.fraccionArancelariaService.getFraccionesCve(SELECTED_FRACCION).subscribe({
         next: (response) => {
           this.unidadMedidaTarifaria = response.datos || [];
-
-          if (this.unidadMedidaTarifaria.length > 0) {
-            UMT_CONTROL?.enable();
-          } else {
-            UMT_CONTROL?.disable();
-          }
-
-          const UMT_GUARDADO = this.solicitudState?.unidadMedidaTarifaria || null;
-          UMT_CONTROL?.setValue(UMT_GUARDADO);
+          this.toggleControl(UMT_CONTROL, this.unidadMedidaTarifaria.length > 0, this.solicitudState?.unidadMedidaTarifaria || null);
         },
         error: (error) => {
-          console.error('Error al obtener unidad de medida tarifaria:', error);
-          this.unidadMedidaTarifaria = [];
-          const UMT_GUARDADO = this.solicitudState?.unidadMedidaTarifaria || null;
-          UMT_CONTROL?.setValue(UMT_GUARDADO);
-          UMT_CONTROL?.disable();
+          console.error('Error al obtener unidad medida:', error);
+          this.toggleControl(UMT_CONTROL, false, this.solicitudState?.unidadMedidaTarifaria || null);
         }
       });
 
     } else {
-      // Si seleccionan "Selecciona una opción..."
+      // Si no hay fracción seleccionada
       this.nico = [];
       this.unidadMedidaTarifaria = [];
-      NICO_CONTROL?.setValue(null);
-      NICO_CONTROL?.disable();
-      UMT_CONTROL?.setValue(null);
-      UMT_CONTROL?.disable();
+      this.resetControl(NICO_CONTROL);
+      this.resetControl(UMT_CONTROL);
+      this.mostrarComboMolinos = false;
     }
   }
+
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+  toggleControl(control: AbstractControl | null, enable: boolean, value: any): void {
+    if (!control) { return; }
+    if (enable) {
+      control.enable();
+      control.setValue(value);
+    } else {
+      control.disable();
+      control.setValue(null);
+    }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  resetControl(control: AbstractControl | null): void {
+    if (!control) { return; }
+    control.setValue(null);
+    control.disable();
+  }
+
 
   /**
    * Se ejecuta al destruir el componente.

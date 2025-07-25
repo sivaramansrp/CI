@@ -76,11 +76,11 @@
               {{ fraccion.descripcion }}
             </option>
           </select>
-         <div
-              *ngIf="datosMercancia.get('fraccionArancelaria')?.errors?.['required'] && datosMercancia.get('fraccionArancelaria')?.touched"
-              class="mensaje-error">
-              Este campo es obligatorio.
-            </div>
+          <div
+            *ngIf="datosMercancia.get('fraccionArancelaria')?.errors?.['required'] && datosMercancia.get('fraccionArancelaria')?.touched"
+            class="mensaje-error">
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
       <div class="row mb-3">
@@ -94,8 +94,7 @@
               {{ n.descripcion }}
             </option>
           </select>
-           <div
-            *ngIf="datosMercancia.get('nico')?.errors?.['required'] && datosMercancia.get('nico')?.touched"
+          <div *ngIf="datosMercancia.get('nico')?.errors?.['required'] && datosMercancia.get('nico')?.touched"
             class="mensaje-error">
             Este campo es obligatorio.
           </div>
@@ -114,7 +113,7 @@
               {{ unidad.descripcion }}
             </option>
           </select>
-         <div
+          <div
             *ngIf="datosMercancia.get('unidadMedidaTarifaria')?.errors?.['required'] && datosMercancia.get('unidadMedidaTarifaria')?.touched"
             class="mensaje-error">
             Este campo es obligatorio.
@@ -236,7 +235,7 @@
     <!--Datos Productor-->
     <ng-titulo titulo="Datos del productor" />
     <ng-container formGroupName="datosProducto">
-      <div class="row mb-3" id="tipoPer">
+      <div class="row mb-3" id="tipoPer" *ngIf="!mostrarComboMolinos">
         <div class="col-md-4">
           <div class="form-group">
             <label for="tipoPersona" class="form-label">Tipo de persona * :</label>
@@ -258,6 +257,24 @@
           </div>
         </div>
       </div>
+
+      <div class="row mb-3" *ngIf="mostrarComboMolinos">
+        <div class="col-md-8">
+          <label for="molino" class="form-label">Molino*:</label>
+          <select class="form-control form-select" formControlName="razonSocial" (change)="setValoresStore(datosProducto,'razonSocial', 'setRazonSocial')">
+            <option [ngValue]="null">Selecciona una opción</option>
+            <option *ngFor="let molino of molinos" [value]="molino.clave">
+              {{ molino.descripcion }}
+            </option>
+          </select>
+           <div *ngIf="datosProducto.get('razonSocial')?.errors?.['required'] && datosProducto.get('razonSocial')?.touched"
+              class="mensaje-error">
+              Este campo es obligatorio.
+            </div>
+        </div>
+      </div>
+
+     
       <div class="row mb-3">
         <br>
       </div> @if(isVisibleFisica){ <div class="row mb-3">
@@ -335,11 +352,10 @@
                 {{ estado.descripcion }}
               </option>
             </select>
-             <div
-            *ngIf="registroFederal.get('estado')?.errors?.['required'] && registroFederal.get('estado')?.touched"
-            class="mensaje-error">
-            Este campo es obligatorio.
-          </div>
+            <div *ngIf="registroFederal.get('estado')?.errors?.['required'] && registroFederal.get('estado')?.touched"
+              class="mensaje-error">
+              Este campo es obligatorio.
+            </div>
           </div>
         </div>
         <div class="col-md-4">
@@ -354,11 +370,11 @@
                 {{ federal.descripcion }}
               </option>
             </select>
-             <div
-            *ngIf="registroFederal.get('representacionFederal')?.errors?.['required'] && registroFederal.get('representacionFederal')?.touched"
-            class="mensaje-error">
-            Este campo es obligatorio.
-          </div>
+            <div
+              *ngIf="registroFederal.get('representacionFederal')?.errors?.['required'] && registroFederal.get('representacionFederal')?.touched"
+              class="mensaje-error">
+              Este campo es obligatorio.
+            </div>
           </div>
         </div>
       </div>
