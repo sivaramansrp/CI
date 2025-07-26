@@ -1,7 +1,8 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
-import { Mercancia } from '../models/plantas-consulta.model';
+import { Mercancia } from '../../../shared/models/modificacion.enum';
+import { Mercancias } from '../models/plantas-consulta.model';
 
 /**
  * Interfaz que representa la estructura del estado de un trámite 110204.
@@ -60,13 +61,15 @@ export interface TramiteState {
   mercanciaForm: { [key: string]: undefined | boolean | string | number | object };
 
   /** Lista de mercancías encontradas o buscadas. */
-  buscarMercancia: Mercancia[];
+  buscarMercancia: Mercancias[];
 
   /**
    * Objeto que representa la validez de los formularios,
    * donde cada clave es un identificador de formulario y el valor un booleano indicando si es válido.
    */
   formaValida: { [key: string]: boolean };
+
+  mercanciaTabla: Mercancia[];
 }
 
 
@@ -174,7 +177,7 @@ export const INITIAL_STATE: TramiteState = {
     bloque: '',
     nombreComercialForm: '',
     registroProductoForm: '',
-    fracciónArancelariaForm: '',
+    fraccionArancelariaForm: '',
     fechaInicioInput: '',
     fechaFinalInput: '',
   },
@@ -208,6 +211,7 @@ export const INITIAL_STATE: TramiteState = {
   idiomaDatos: [],
   entidadFederativaDatos: [],
   representacionFederalDatos: [],
+  mercanciaTabla: [],
 };
 
 /**
@@ -318,7 +322,7 @@ export class Tramite110204Store extends Store<TramiteState> {
    * Establece los resultados de mercancía obtenidos por búsqueda.
    * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
    */
-  setbuscarMercancia(buscarMercancia: Mercancia[]): void {
+  setbuscarMercancia(buscarMercancia: Mercancias[]): void {
     this.update((state) => ({ ...state, buscarMercancia }));
   }
 

@@ -4,3 +4,8 @@
   .cuerpo-de-mesa {
     text-align: center;
   }
+
+// Si la notificación tiene una clase específica, también podemos usar:
+::ng-deep lib-notificaciones .modal-title {
+  font-size: 19px !important;
+}

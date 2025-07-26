@@ -866,6 +866,22 @@ export class SolicitudComponent
   }
 
   /**
+   * Error whitespace
+   * @returns {boolean} - Retorna `true` si el campo tiene un error de whitespace, de lo contrario `false`.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  isErrorWhitespace(form: FormGroup, field: string): boolean {
+    const CONTROL = form.get(field) as FormControl;
+
+    if (CONTROL) {
+      const ERROR_WHITESPACE = CONTROL.hasError('whitespace');
+      return ERROR_WHITESPACE && CONTROL.touched;
+    }
+
+    return false;
+  }
+
+  /**
    * Verifica si el control 'idSocioComercial' tiene el validador 'Validators.required'.
    *
    * @returns {boolean} `true` si el control es obligatorio, de lo contrario `false`.
@@ -1171,11 +1187,11 @@ export class SolicitudComponent
         ],
         descripcionGenerica: [
           this.solicitudState?.descripcionGenerica,
-          [Validators.required, Validators.maxLength(500)],
+          [Validators.required, Validators.maxLength(500), ValidacionesFormularioService.noWhitespaceValidator],
         ],
         justificacion: [
           this.solicitudState?.justificacion,
-          [Validators.required, Validators.maxLength(1000)],
+          [Validators.required, Validators.maxLength(1000), ValidacionesFormularioService.noWhitespaceValidator],
         ],
       }),
 
@@ -1610,12 +1626,12 @@ export class SolicitudComponent
    * @param controlName - El nombre del control del formulario que cambió
    */
   onTipoEmpresaChange(value: string, controlName: string): void {
-    const isChecked = this.datosImportadorExportador.get(controlName)?.value;
+    const IS_CHECKED = this.datosImportadorExportador.get(controlName)?.value;
     
-    if (isChecked) {
+    if (IS_CHECKED) {
       // Si se selecciona uno, deseleccionar los otros y deshabilitarlos
-      const controls = ['tipoEmpresaCertificadaA', 'tipoEmpresaCertificadaAA', 'tipoEmpresaCertificadaAAA'];
-      controls.forEach(ctrl => {
+      const CONTROLS = ['tipoEmpresaCertificadaA', 'tipoEmpresaCertificadaAA', 'tipoEmpresaCertificadaAAA'];
+      CONTROLS.forEach(ctrl => {
         if (ctrl !== controlName) {
           this.datosImportadorExportador.get(ctrl)?.setValue(false);
         }
@@ -1635,7 +1651,7 @@ export class SolicitudComponent
       this.tipoEmpresaCertificadaAAADisabled = false;
       
       // Limpiar el valor en el store
-      this.tramite5701Store.setTipoEmpresaCertificada(null);
+      this.tramite5701Store.setTipoEmpresaCertificada('');
     }
   }
 
@@ -1644,13 +1660,13 @@ export class SolicitudComponent
    * basándose en el valor actual del store.
    */
   initializeTipoEmpresaCertificadaStates(): void {
-    const currentValue = this.solicitudState?.tipoEmpresaCertificada;
+    const CURRENT_VALUE = this.solicitudState?.tipoEmpresaCertificada;
     
-    if (currentValue) {
+    if (CURRENT_VALUE) {
       // Si hay un valor seleccionado, deshabilitar los otros
-      this.tipoEmpresaCertificadaADisabled = currentValue !== 'a';
-      this.tipoEmpresaCertificadaAADisabled = currentValue !== 'aa';
-      this.tipoEmpresaCertificadaAAADisabled = currentValue !== 'aaa';
+      this.tipoEmpresaCertificadaADisabled = CURRENT_VALUE !== 'a';
+      this.tipoEmpresaCertificadaAADisabled = CURRENT_VALUE !== 'aa';
+      this.tipoEmpresaCertificadaAAADisabled = CURRENT_VALUE !== 'aaa';
     } else {
       // Si no hay valor seleccionado, habilitar todos
       this.tipoEmpresaCertificadaADisabled = false;
@@ -3223,7 +3239,7 @@ export class SolicitudComponent
       txtBtnAceptar: TEXTO_ACEPTAR,
       txtBtnCancelar: TEXTO_CANCELAR,
     };
-
+    this.datosTablaPagos = []
     this.procesoModal = 'linea_captura';
   }
 

@@ -7,7 +7,8 @@
             </li>
             <li [ngClass]="indice === 2 ? 'active' : ''">
                 <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
-                    (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Expedición certificados asignación directa</a>
+                    (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Expedición certificados asignación
+                    directa</a>
             </li>
         </ul>
 
@@ -18,7 +19,8 @@
             }
             @case (2) {
             @if (esDatosRespuesta) {
-            <app-expedicion-certificados-asignacion-directa [tabindex]="2"></app-expedicion-certificados-asignacion-directa>
+            <app-expedicion-certificados-asignacion-directa [tabindex]="2"
+                (mostrarError)="mostrarErrorEvent($event)"></app-expedicion-certificados-asignacion-directa>
             }
             }
             }

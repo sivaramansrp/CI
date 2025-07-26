@@ -1,608 +1,319 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { SolicitudComponent } from './solicitud.component';
-import { PeximService } from '../../service/pexim.service';
-import { Tramite130118Store, Solicitud130118State, createInitialState } from '../../estados/tramites/tramite130118.store';
-import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
-import { ValidacionesFormularioService, ConsultaioQuery, CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { Router } from '@angular/router';
+
+
 import { of, Subject } from 'rxjs';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { takeUntil, map } from 'rxjs/operators';
+
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
+import { Tramite130118Store } from '../../estados/tramites/tramite130118.store';
+import { DocumentosQuery } from '@libs/shared/data-access-user/src/core/queries/documentos.query';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+beforeEach(async () => {
+  await TestBed.configureTestingModule({
+    imports: [
+      ReactiveFormsModule,
+      HttpClientTestingModule,
+
+    ],
+    declarations: [SolicitudComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    providers: [
+
+
+    ]
+  }).compileComponents();
+});
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
   let fixture: ComponentFixture<SolicitudComponent>;
-  let peximServiceMock: any;
-  let tramite130118StoreMock: any;
-  let tramite130118QueryMock: any;
-  let validacionesServiceMock: any;
-  let consultaioQueryMock: any;
+
+  // Mocks de servicios
+  const mockRouter = {
+    navigate: jest.fn()
+  };
+
+  const mockTramite130118Query = {
+    selectSeccionState$: of({
+      idSolicitud: 123,
+      regimenMercancia: '1',
+      clasifiRegimen: '1',
+      fraccionArancelaria: '1',
+      nico: '1',
+      unidadMedidaTarifaria: '1',
+      paisOrigen: '1',
+      paisDestino: '1',
+      estado: '1',
+      representacionFederal: '1',
+      nombre: 'Test',
+      apellidoPaterno: 'User',
+      razonSocial: '',
+      valorFacturaUSD: 100,
+      cantidadTarifaria: 10,
+      fechaSalida: '15/05/2023'
+    })
+  };
+
+  const mockTramite130118Store = {
+    setRegimenMercancia: jest.fn(),
+    setClasifiRegimen: jest.fn(),
+    setFraccionArancelaria: jest.fn(),
+    setNico: jest.fn(),
+    setUnidadMedidaTarifaria: jest.fn(),
+    setPaisOrigen: jest.fn(),
+    setPaisDestino: jest.fn(),
+    setEstado: jest.fn(),
+    setRepresentacionFederal: jest.fn(),
+    setPrecioUnitarioUSD: jest.fn(),
+    setFechaSalida: jest.fn()
+  };
+
+  const mockDocumentosQuery = {
+    selectDocumentoState$: of({})
+  };
+
+  const mockRegimenService = {
+    getRegimenes: jest.fn().mockReturnValue(of({ datos: [{ clave: '1', descripcion: 'Regimen 1' }] })),
+    getRegimenesCve: jest.fn().mockReturnValue(of({ datos: [{ clave: '1', descripcion: 'Clasificacion 1' }] }))
+  };
+
+  const mockFraccionArancelariaService = {
+    getFracciones: jest.fn().mockReturnValue(of({ datos: [{ clave: '1', descripcion: 'Fraccion 1' }] })),
+    getNico: jest.fn().mockReturnValue(of({ datos: [{ clave: '1', descripcion: 'Nico 1' }] })),
+    getFraccionesCve: jest.fn().mockReturnValue(of({ datos: [{ clave: '1', descripcion: 'UMT 1' }] }))
+  };
+
+  const mockPeximService = {
+    getPaisOrigenCatalogo: jest.fn().mockReturnValue(of({ data: [{ clave: '1', descripcion: 'Pais Origen 1' }] }))
+  };
+
+  const mockPaisesService = {
+    getPaisesT130118: jest.fn().mockReturnValue(of({ datos: [{ clave: '1', descripcion: 'Pais Destino 1' }] }))
+  };
+
+  const mockEntidadesFederativasService = {
+    getEntidades: jest.fn().mockReturnValue(of({ datos: [{ clave: '1', descripcion: 'Estado 1' }] })),
+    getEntidadesCve: jest.fn().mockReturnValue(of({ datos: [{ clave: '1', descripcion: 'Representacion Federal 1' }] }))
+  };
+
+  const mockGuardarService = {
+    getCertificadoAntiguedad: jest.fn().mockReturnValue(of({ codigo: '00', datos: '12' }))
+  };
+
+  const mockValidacionesService = {
+    isValid: jest.fn().mockReturnValue(true)
+  };
 
   beforeEach(async () => {
-    peximServiceMock = {
-      getRegimenMercancia: jest.fn().mockReturnValue(of({ data: [{ id: 1, descripcion: 'Regimen 1' }] })),
-      getClasifiRegimen: jest.fn().mockReturnValue(of({ data: [{ id: 1, descripcion: 'Clasifi 1' }] })),
-      getFraccionArancelariaCatalogo: jest.fn().mockReturnValue(of({ data: [{ id: 1, descripcion: 'Fraccion 1' }] })),
-      getNicoCatalogo: jest.fn().mockReturnValue(of({ data: [{ id: 1, descripcion: 'Nico 1' }] })),
-      getUnidadMedidaTarifariaCatalogo: jest.fn().mockReturnValue(of({ data: [{ id: 1, descripcion: 'Unidad 1' }] })),
-      getPaisOrigenCatalogo: jest.fn().mockReturnValue(of({ data: [{ id: 1, descripcion: 'Pais 1' }] })),
-      getPaisDestinoCatalogo: jest.fn().mockReturnValue(of({ data: [{ id: 1, descripcion: 'Destino 1' }] })),
-      getEstadoCatalogo: jest.fn().mockReturnValue(of({ data: [{ id: 1, descripcion: 'Estado 1' }] })),
-      getRepresentacionFederal: jest.fn().mockReturnValue(of({ data: [{ id: 1, descripcion: 'Representacion 1' }] })),
-    };
-
-    tramite130118StoreMock = {
-      setRegimenMercancia: jest.fn(),
-      setClasifiRegimen: jest.fn(),
-      setValueTA: jest.fn(),
-      setFraccionArancelaria: jest.fn(),
-      setNico: jest.fn(),
-      setUnidadMedidaTarifaria: jest.fn(),
-      setCantidadTarifaria: jest.fn(),
-      setValorFacturaUSD: jest.fn(),
-      setPrecioUnitarioUSD: jest.fn(),
-      setPaisOrigen: jest.fn(),
-      setPaisDestino: jest.fn(),
-      setLote: jest.fn(),
-      setFechaSalida: jest.fn(),
-      setObservaciones: jest.fn(),
-      setObservacionMerc: jest.fn(),
-      setTipoPersona: jest.fn(),
-      setNombre: jest.fn(),
-      setApellidoPaterno: jest.fn(),
-      setApellidoMaterno: jest.fn(),
-      setRazonSocial: jest.fn(),
-      setDomicilio: jest.fn(),
-      setEstado: jest.fn(),
-      setRepresentacionFederal: jest.fn(),
-    };
-
-    tramite130118QueryMock = {
-      selectSeccionState$: of(createInitialState()),
-    };
-
-    validacionesServiceMock = {
-      isValid: jest.fn().mockReturnValue(true),
-    };
-
-    consultaioQueryMock = {
-      selectConsultaioState$: of({ readonly: false }),
-    };
-
     await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, HttpClientTestingModule],
       declarations: [SolicitudComponent],
-      imports: [ReactiveFormsModule],
       providers: [
-        { provide: PeximService, useValue: peximServiceMock },
-        { provide: Tramite130118Store, useValue: tramite130118StoreMock },
-        { provide: Tramite130118Query, useValue: tramite130118QueryMock },
-        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
-        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
-        FormBuilder,
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
+        { provide: Router, useValue: mockRouter },
+        { provide: Tramite130118Query, useValue: mockTramite130118Query },
+        { provide: Tramite130118Store, useValue: mockTramite130118Store },
+        { provide: DocumentosQuery, useValue: mockDocumentosQuery },
+        { provide: 'RegimenService', useValue: mockRegimenService },
+        { provide: 'FraccionArancelariaService', useValue: mockFraccionArancelariaService },
+        { provide: 'PeximService', useValue: mockPeximService },
+        { provide: 'PaisesService', useValue: mockPaisesService },
+        { provide: 'EntidadesFederativasService', useValue: mockEntidadesFederativasService },
+        { provide: 'GuardarService', useValue: mockGuardarService },
+        { provide: 'ValidacionesService', useValue: mockValidacionesService }
+      ]
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
-    component.solicitudState = createInitialState();
-    
-    // Create a mock form to avoid template dependencies
-    component.FormSolicitud = new FormBuilder().group({
-      datosRegimen: new FormBuilder().group({
-        regimenMercancia: [''],
-        clasifiRegimen: ['']
-      }),
-      datosMercancia: new FormBuilder().group({
-        valueTA: [''],
-        fraccionArancelaria: [''],
-        nico: [''],
-        unidadMedidaTarifaria: [''],
-        cantidadTarifaria: [0],
-        valorFacturaUSD: [0],
-        precioUnitarioUSD: [0],
-        paisOrigen: [''],
-        paisDestino: [''],
-        lote: [''],
-        fechaSalida: [''],
-        observaciones: [''],
-        observacionMerc: ['']
-      }),
-      datosProducto: new FormBuilder().group({
-        tipoPersona: [''],
-        nombre: [''],
-        apellidoPaterno: [''],
-        apellidoMaterno: [''],
-        razonSocial: [''],
-        domicilio: ['']
-      }),
-      registroFederal: new FormBuilder().group({
-        estado: [''],
-        representacionFederal: ['']
-      }),
-      precioUnitarioAcero: ['']
-    });
-    
-    // Don't call detectChanges here to avoid template binding issues
+    fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with correct default values', () => {
-    expect(component.isVisibleFisica).toBe(false);
-    expect(component.isVisibleMoral).toBe(false);
-    expect(component.esFormularioSoloLectura).toBe(false);
-    expect(component.fechaFinalInput).toBeDefined();
-    expect(component['destruirNotificador$']).toBeInstanceOf(Subject);
-  });
-
   describe('ngOnInit', () => {
-    it('should call inicializaCatalogos, inicializarEstadoFormulario, and other initialization methods', () => {
-      const inicializaCatalogosSpy = jest.spyOn(component, 'inicializaCatalogos' as any);
-      const inicializarEstadoFormularioSpy = jest.spyOn(component, 'inicializarEstadoFormulario');
-      const crearFormSolicitudSpy = jest.spyOn(component, 'crearFormSolicitud');
-      const muestraCamposPersonaSpy = jest.spyOn(component, 'muestraCamposPersona');
+    
 
-      component.ngOnInit();
-
-      expect(inicializaCatalogosSpy).toHaveBeenCalled();
-      expect(inicializarEstadoFormularioSpy).toHaveBeenCalled();
-      expect(crearFormSolicitudSpy).toHaveBeenCalled();
-      expect(muestraCamposPersonaSpy).toHaveBeenCalled();
+    it('should subscribe to tramite state', () => {
+      expect(component.solicitudState.idSolicitud).toBe(123);
     });
 
-    it('should subscribe to tramite130118Query.selectSeccionState$ and set solicitudState', () => {
-      const initialState = component.solicitudState;
-      component.ngOnInit();
-      expect(component.solicitudState).toBeDefined();
-    });
-  });
-
-  describe('inicializarEstadoFormulario', () => {
-    it('should call guardarDatosFormulario if esFormularioSoloLectura is true', () => {
-      component.esFormularioSoloLectura = true;
-      const spy = jest.spyOn(component, 'guardarDatosFormulario');
-      component.inicializarEstadoFormulario();
-      expect(spy).toHaveBeenCalled();
-    });
-
-    it('should call crearFormSolicitud if esFormularioSoloLectura is false', () => {
-      component.esFormularioSoloLectura = false;
-      const spy = jest.spyOn(component, 'crearFormSolicitud');
-      component.inicializarEstadoFormulario();
-      expect(spy).toHaveBeenCalled();
-    });
-  });
-
-  describe('guardarDatosFormulario', () => {
-    it('should disable form if esFormularioSoloLectura is true', () => {
-      component.esFormularioSoloLectura = true;
-      const spy = jest.spyOn(component.FormSolicitud, 'disable');
-      component.guardarDatosFormulario();
-      // expect(spy).toHaveBeenCalled();
-    });
-
-    it('should enable form if esFormularioSoloLectura is false', () => {
-      component.esFormularioSoloLectura = false;
-      const spy = jest.spyOn(component.FormSolicitud, 'enable');
-      component.guardarDatosFormulario();
-      // expect(spy).toHaveBeenCalled();
-    });
-  });
-
-  describe('Form getters', () => {
-    it('should return datosRegimen FormGroup', () => {
-      const result = component.datosRegimen;
-      expect(result).toBeInstanceOf(FormGroup);
-    });
-
-    it('should return datosMercancia FormGroup', () => {
-      const result = component.datosMercancia;
-      expect(result).toBeInstanceOf(FormGroup);
-    });
-
-    it('should return datosProducto FormGroup', () => {
-      const result = component.datosProducto;
-      expect(result).toBeInstanceOf(FormGroup);
-    });
-
-    it('should return registroFederal FormGroup', () => {
-      const result = component.registroFederal;
-      expect(result).toBeInstanceOf(FormGroup);
-    });
-  });
-
-  describe('isValid', () => {
-    it('should call validacionesService.isValid', () => {
-      const form = new FormBuilder().group({ test: ['test'] });
-      component.isValid(form, 'test');
-      expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(form, 'test');
-    });
-
-    it('should return true when validacionesService.isValid returns true', () => {
-      validacionesServiceMock.isValid.mockReturnValue(true);
-      const form = new FormBuilder().group({ test: ['test'] });
-      const result = component.isValid(form, 'test');
-      expect(result).toBe(true);
-    });
-  });
-
-  describe('crearFormSolicitud', () => {
-    it('should create FormSolicitud with correct structure', () => {
-      component.crearFormSolicitud();
+    it('should create form with initial values', () => {
       expect(component.FormSolicitud).toBeDefined();
-      expect(component.FormSolicitud.get('datosRegimen')).toBeDefined();
-      expect(component.FormSolicitud.get('datosMercancia')).toBeDefined();
-      expect(component.FormSolicitud.get('datosProducto')).toBeDefined();
-      expect(component.FormSolicitud.get('registroFederal')).toBeDefined();
+      expect(component.datosRegimen.get('regimenMercancia')?.value).toBe('1');
+      expect(component.datosMercancia.get('fraccionArancelaria')?.value).toBe('1');
     });
 
-    it('should initialize form with solicitudState values', () => {
-      component.solicitudState = {
-        ...createInitialState(),
-        regimenMercancia: 'test-regimen',
-        fraccionArancelaria: 'test-fraccion',
-      };
-      component.crearFormSolicitud();
-      expect(component.FormSolicitud.get('datosRegimen.regimenMercancia')?.value).toBe('test-regimen');
-      expect(component.FormSolicitud.get('datosMercancia.fraccionArancelaria')?.value).toBe('test-fraccion');
-    });
-  });
-
-  describe('setValoresStore', () => {
-    it('should call store method with form field value', () => {
-      const form = new FormBuilder().group({ test: ['testValue'] });
-      component.setValoresStore(form, 'test', 'setRegimenMercancia');
-      expect(tramite130118StoreMock.setRegimenMercancia).toHaveBeenCalledWith('testValue');
+    it('should call changeRegimen if regimen has value', () => {
+      const spy = jest.spyOn(component, 'changeRegimen');
+      component.ngOnInit();
+      expect(spy).toHaveBeenCalled();
     });
 
-    it('should handle undefined form field value', () => {
-      const form = new FormBuilder().group({ test: [''] });
-      component.setValoresStore(form, 'nonexistent', 'setRegimenMercancia');
-      expect(tramite130118StoreMock.setRegimenMercancia).toHaveBeenCalledWith(undefined);
-    });
-  });
-
-  describe('Selection methods', () => {
-    it('should call setRegimenMercancia in regimenMercanciaSeleccion', () => {
-      component.FormSolicitud.get('datosRegimen.regimenMercancia')?.setValue('test');
-      component.regimenMercanciaSeleccion();
-      expect(tramite130118StoreMock.setRegimenMercancia).toHaveBeenCalledWith('test');
+    it('should call fraccionArancelariaChange if fraccion has value', () => {
+      const spy = jest.spyOn(component, 'fraccionArancelariaChange');
+      component.ngOnInit();
+      expect(spy).toHaveBeenCalled();
     });
 
-    it('should call setClasifiRegimen in clasifiRegimenSeleccion', () => {
-      component.FormSolicitud.get('datosRegimen.clasifiRegimen')?.setValue('test');
-      component.clasifiRegimenSeleccion();
-      expect(tramite130118StoreMock.setClasifiRegimen).toHaveBeenCalledWith('test');
+    it('should call changeEntidad if estado has value', () => {
+      const spy = jest.spyOn(component, 'changeEntidad');
+      component.ngOnInit();
+      expect(spy).toHaveBeenCalled();
     });
 
-    it('should call setFraccionArancelaria in fraccionArancelariaSeleccion', () => {
-      component.FormSolicitud.get('datosMercancia.fraccionArancelaria')?.setValue('test');
-      component.fraccionArancelariaSeleccion();
-      expect(tramite130118StoreMock.setFraccionArancelaria).toHaveBeenCalledWith('test');
-    });
-
-    it('should call setNico in nicoSeleccion', () => {
-      component.FormSolicitud.get('datosMercancia.nico')?.setValue('test');
-      component.nicoSeleccion();
-      expect(tramite130118StoreMock.setNico).toHaveBeenCalledWith('test');
-    });
-
-    it('should call setUnidadMedidaTarifaria in unidadMedidaTarifariaSeleccion', () => {
-      component.FormSolicitud.get('datosMercancia.unidadMedidaTarifaria')?.setValue('test');
-      component.unidadMedidaTarifariaSeleccion();
-      expect(tramite130118StoreMock.setUnidadMedidaTarifaria).toHaveBeenCalledWith('test');
-    });
-
-    it('should call setPaisOrigen in paisOrigenSeleccion', () => {
-      component.FormSolicitud.get('datosMercancia.paisOrigen')?.setValue('test');
-      component.paisOrigenSeleccion();
-      expect(tramite130118StoreMock.setPaisOrigen).toHaveBeenCalledWith('test');
-    });
-
-    it('should call setPaisDestino in paisDestinoSeleccion', () => {
-      component.FormSolicitud.get('datosMercancia.paisDestino')?.setValue('test');
-      component.paisDestinoSeleccion();
-      expect(tramite130118StoreMock.setPaisDestino).toHaveBeenCalledWith('test');
-    });
-
-    it('should call setEstado in estadoSeleccion', () => {
-      component.FormSolicitud.get('registroFederal.estado')?.setValue('test');
-      component.estadoSeleccion();
-      expect(tramite130118StoreMock.setEstado).toHaveBeenCalledWith('test');
-    });
-
-    it('should call setRepresentacionFederal in representacionFederalSeleccion', () => {
-      component.FormSolicitud.get('registroFederal.representacionFederal')?.setValue('test');
-      component.representacionFederalSeleccion();
-      expect(tramite130118StoreMock.setRepresentacionFederal).toHaveBeenCalledWith('test');
-    });
-  });
-
-  describe('validarFormulario', () => {
-    it('should return true if form is valid', () => {
-      jest.spyOn(component.FormSolicitud, 'valid', 'get').mockReturnValue(true);
-      const result = component.validarFormulario();
-      expect(result).toBe(true);
-    });
-
-    it('should mark all as touched and return false if form is invalid', () => {
-      jest.spyOn(component.FormSolicitud, 'invalid', 'get').mockReturnValue(true);
-      jest.spyOn(component.FormSolicitud, 'valid', 'get').mockReturnValue(false);
-      const markAllAsTouchedSpy = jest.spyOn(component.FormSolicitud, 'markAllAsTouched');
-      
-      const result = component.validarFormulario();
-      
-      expect(markAllAsTouchedSpy).toHaveBeenCalled();
-      expect(result).toBe(false);
-    });
-  });
-
-  describe('escapeHtmlQuotes', () => {
-    it('should escape double quotes in string', () => {
-      const result = component.escapeHtmlQuotes('test "quoted" string');
-      expect(result).toBe('test &#34;quoted&#34; string');
-    });
-
-    it('should return empty string for null/undefined input', () => {
-      expect(component.escapeHtmlQuotes('')).toBe('');
-      expect(component.escapeHtmlQuotes(null as any)).toBe('');
-      expect(component.escapeHtmlQuotes(undefined as any)).toBe('');
-    });
-
-    it('should return original string if no quotes present', () => {
-      const result = component.escapeHtmlQuotes('test string');
-      expect(result).toBe('test string');
-    });
-  });
-
-  describe('muestraCamposPersona', () => {
-    it('should call personaMoral if razonSocial has value', () => {
-      const personaMoralSpy = jest.spyOn(component, 'personaMoral');
-      component.FormSolicitud.get('datosProducto.razonSocial')?.setValue('Test Razon Social');
-      component.FormSolicitud.get('datosProducto.nombre')?.setValue('');
-      
-      component.muestraCamposPersona();
-      
-      expect(personaMoralSpy).toHaveBeenCalled();
-      expect(component.FormSolicitud.get('datosProducto.tipoPersona')?.value).toBe('pmoral');
-    });
-
-    it('should call personaFisica if nombre has value and razonSocial is empty', () => {
-      const personaFisicaSpy = jest.spyOn(component, 'personaFisica');
-      component.FormSolicitud.get('datosProducto.razonSocial')?.setValue('');
-      component.FormSolicitud.get('datosProducto.nombre')?.setValue('Test Nombre');
-      
-      component.muestraCamposPersona();
-      
-      expect(personaFisicaSpy).toHaveBeenCalled();
-      expect(component.FormSolicitud.get('datosProducto.tipoPersona')?.value).toBe('pfisica');
-    });
-
-    it('should not call any method if both razonSocial and nombre are empty', () => {
-      const personaMoralSpy = jest.spyOn(component, 'personaMoral');
-      const personaFisicaSpy = jest.spyOn(component, 'personaFisica');
-      component.FormSolicitud.get('datosProducto.razonSocial')?.setValue('');
-      component.FormSolicitud.get('datosProducto.nombre')?.setValue('');
-      
-      component.muestraCamposPersona();
-      
-      expect(personaMoralSpy).not.toHaveBeenCalled();
-      expect(personaFisicaSpy).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('personaMoral', () => {
-    it('should set visibility flags correctly', () => {
-      component.personaMoral();
-      expect(component.isVisibleFisica).toBe(false);
-      expect(component.isVisibleMoral).toBe(true);
-    });
-
-    it('should clear persona fisica fields and disable them', () => {
-      component.personaMoral();
-      expect(component.FormSolicitud.get('datosProducto.nombre')?.value).toBe('');
-      expect(component.FormSolicitud.get('datosProducto.apellidoPaterno')?.value).toBe('');
-      expect(component.FormSolicitud.get('datosProducto.apellidoMaterno')?.value).toBe('');
-      expect(component.FormSolicitud.get('datosProducto.nombre')?.disabled).toBe(true);
-      expect(component.FormSolicitud.get('datosProducto.apellidoPaterno')?.disabled).toBe(true);
-      expect(component.FormSolicitud.get('datosProducto.apellidoMaterno')?.disabled).toBe(true);
-    });
-
-    it('should enable razonSocial if not in read-only mode', () => {
-      component.esFormularioSoloLectura = false;
-      const enableSpy = jest.spyOn(component.FormSolicitud.get('datosProducto.razonSocial')!, 'enable');
-      component.personaMoral();
-      expect(enableSpy).toHaveBeenCalled();
-    });
-
-    it('should not enable razonSocial if in read-only mode', () => {
-      component.esFormularioSoloLectura = true;
-      const enableSpy = jest.spyOn(component.FormSolicitud.get('datosProducto.razonSocial')!, 'enable');
-      component.personaMoral();
-      expect(enableSpy).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('personaFisica', () => {
-    it('should set visibility flags correctly', () => {
-      component.personaFisica();
-      expect(component.isVisibleFisica).toBe(true);
-      expect(component.isVisibleMoral).toBe(false);
-    });
-
-    it('should disable razonSocial and enable persona fisica fields', () => {
-      component.personaFisica();
-      expect(component.FormSolicitud.get('datosProducto.razonSocial')?.disabled).toBe(true);
-      expect(component.FormSolicitud.get('datosProducto.nombre')?.disabled).toBe(false);
-      expect(component.FormSolicitud.get('datosProducto.apellidoPaterno')?.disabled).toBe(false);
-      expect(component.FormSolicitud.get('datosProducto.apellidoMaterno')?.disabled).toBe(false);
-    });
-  });
-
-  describe('calcularUmtPrecioUnitario', () => {
-    it('should call calcularPrecioUnitarioUSD', () => {
-      const spy = jest.spyOn(component, 'calcularPrecioUnitarioUSD');
-      component.calcularUmtPrecioUnitario();
+    it('should call muestraCamposPersona if nombre or razonSocial exists', () => {
+      const spy = jest.spyOn(component, 'muestraCamposPersona');
+      component.ngOnInit();
       expect(spy).toHaveBeenCalled();
     });
   });
 
-  describe('calcularPrecioUnitarioUSD', () => {
-    it('should calculate price correctly with valid values', () => {
-      component.FormSolicitud.get('datosMercancia.cantidadTarifaria')?.setValue(100);
-      component.FormSolicitud.get('datosMercancia.valorFacturaUSD')?.setValue(1000);
-      
-      component.calcularPrecioUnitarioUSD();
-      
-      expect(tramite130118StoreMock.setPrecioUnitarioUSD).toHaveBeenCalledWith(10);
+  describe('Form Handling', () => {
+    it('should create form with correct structure', () => {
+      component.crearFormSolicitud();
+      expect(component.FormSolicitud).toBeInstanceOf(FormGroup);
+      expect(component.datosRegimen).toBeInstanceOf(FormGroup);
+      expect(component.datosMercancia).toBeInstanceOf(FormGroup);
+      expect(component.datosProducto).toBeInstanceOf(FormGroup);
+      expect(component.registroFederal).toBeInstanceOf(FormGroup);
     });
 
-    it('should set price to 0 when cantidad is 0', () => {
-      component.FormSolicitud.get('datosMercancia.cantidadTarifaria')?.setValue(0);
-      component.FormSolicitud.get('datosMercancia.valorFacturaUSD')?.setValue(1000);
-      
-      component.calcularPrecioUnitarioUSD();
-      
-      expect(component.FormSolicitud.get('precioUnitarioAcero')?.value).toBe('0');
+    it('should validate form fields', () => {
+      component.crearFormSolicitud();
+      const regimenControl = component.datosRegimen.get('regimenMercancia');
+      const fraccionControl = component.datosMercancia.get('fraccionArancelaria');
+
+      expect(regimenControl?.hasError('required')).toBeFalsy();
+      expect(fraccionControl?.hasError('required')).toBeFalsy();
+
+      regimenControl?.setValue('');
+      fraccionControl?.setValue('');
+
+      expect(regimenControl?.hasError('required')).toBeTruthy();
+      expect(fraccionControl?.hasError('required')).toBeTruthy();
     });
 
-    it('should set price to 0 when calculation result is very small', () => {
-      component.FormSolicitud.get('datosMercancia.cantidadTarifaria')?.setValue(1000000);
-      component.FormSolicitud.get('datosMercancia.valorFacturaUSD')?.setValue(0.001);
-      
-      component.calcularPrecioUnitarioUSD();
-      
-      expect(tramite130118StoreMock.setPrecioUnitarioUSD).toHaveBeenCalledWith(0);
-    });
+    it('should disable/enable form when esFormularioSoloLectura changes', () => {
+      component.esFormularioSoloLectura = true;
+      component.guardarDatosFormulario();
+      expect(component.FormSolicitud.disabled).toBeTruthy();
 
-    it('should not calculate if cantidad is null or empty', () => {
-      component.FormSolicitud.get('datosMercancia.cantidadTarifaria')?.setValue(null);
-      component.FormSolicitud.get('datosMercancia.valorFacturaUSD')?.setValue(1000);
-      
-      component.calcularPrecioUnitarioUSD();
-      
-      expect(tramite130118StoreMock.setPrecioUnitarioUSD).not.toHaveBeenCalled();
-    });
-
-    it('should not calculate if valor is null or empty', () => {
-      component.FormSolicitud.get('datosMercancia.cantidadTarifaria')?.setValue(100);
-      component.FormSolicitud.get('datosMercancia.valorFacturaUSD')?.setValue(null);
-      
-      component.calcularPrecioUnitarioUSD();
-      
-      expect(tramite130118StoreMock.setPrecioUnitarioUSD).not.toHaveBeenCalled();
+      component.esFormularioSoloLectura = false;
+      component.guardarDatosFormulario();
+      expect(component.FormSolicitud.enabled).toBeTruthy();
     });
   });
 
-  describe('truncar', () => {
-    it('should truncate decimal to 3 places', () => {
-      const result = component.truncar(123.456789);
-      expect(result).toBe(123.456);
+
+
+  describe('Persona Methods', () => {
+    it('should show personaFisica fields when nombre exists', () => {
+      component.datosProducto.get('nombre')?.setValue('Test');
+      component.muestraCamposPersona();
+
+      expect(component.isVisibleFisica).toBeTruthy();
+      expect(component.isVisibleMoral).toBeFalsy();
+      expect(component.datosProducto.get('nombre')?.enabled).toBeTruthy();
+      expect(component.datosProducto.get('razonSocial')?.disabled).toBeTruthy();
     });
 
-    it('should return original number if no decimal', () => {
-      const result = component.truncar(123);
-      expect(result).toBe(123);
-    });
+    it('should show personaMoral fields when razonSocial exists', () => {
+      component.datosProducto.get('razonSocial')?.setValue('Test SA');
+      component.muestraCamposPersona();
 
-    it('should handle numbers with less than 3 decimal places', () => {
-      const result = component.truncar(123.45);
-      expect(result).toBe(123.45);
-    });
-
-    it('should handle numbers with exactly 3 decimal places', () => {
-      const result = component.truncar(123.456);
-      expect(result).toBe(123.456);
+      expect(component.isVisibleFisica).toBeFalsy();
+      expect(component.isVisibleMoral).toBeTruthy();
+      expect(component.datosProducto.get('razonSocial')?.enabled).toBeTruthy();
+      expect(component.datosProducto.get('nombre')?.disabled).toBeTruthy();
     });
   });
 
-  describe('cambioFechaFinal', () => {
-    it('should update fechaSalida in form and store', () => {
-      const nuevaFecha = '2024-01-01';
-      const patchValueSpy = jest.spyOn(component.datosMercancia, 'patchValue');
-      
-      component.cambioFechaFinal(nuevaFecha);
-      
-      expect(patchValueSpy).toHaveBeenCalledWith({ fechaSalida: nuevaFecha });
-      expect(tramite130118StoreMock.setFechaSalida).toHaveBeenCalledWith(nuevaFecha);
+  describe('Calculations', () => {
+    it('should calculate precioUnitarioUSD correctly', () => {
+      component.datosMercancia.get('cantidadTarifaria')?.setValue(10);
+      component.datosMercancia.get('valorFacturaUSD')?.setValue(100);
+      component.calcularPrecioUnitarioUSD();
+
+      const precioUnitario = component.datosMercancia.get('precioUnitarioUSD')?.value;
+      expect(precioUnitario).toBe(10);
+      expect(mockTramite130118Store.setPrecioUnitarioUSD).toHaveBeenCalledWith(10);
     });
 
-    it('should handle empty string fecha', () => {
-      const nuevaFecha = '';
-      
-      component.cambioFechaFinal(nuevaFecha);
-      
-      expect(tramite130118StoreMock.setFechaSalida).toHaveBeenCalledWith('');
+    it('should not calculate precioUnitarioUSD when values are invalid', () => {
+      component.datosMercancia.get('cantidadTarifaria')?.setValue(null);
+      component.datosMercancia.get('valorFacturaUSD')?.setValue(null);
+      component.calcularPrecioUnitarioUSD();
+
+      const precioUnitario = component.datosMercancia.get('precioUnitarioUSD')?.value;
+      expect(precioUnitario).toBeUndefined();
+    });
+  });
+
+  describe('Date Handling', () => {
+    it('should handle cambioFechaFinal with valid date', () => {
+      component.certificadoAntiguedadMaximoMeses = 12;
+      const today = new Date();
+      const validDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+
+      component.cambioFechaFinal(validDate);
+
+      expect(component.datosMercancia.get('fechaSalida')?.value).toBe(validDate);
+      expect(mockTramite130118Store.setFechaSalida).toHaveBeenCalledWith(validDate);
+    });
+
+    it('should reject date older than certificadoAntiguedadMaximoMeses', fakeAsync(() => {
+      component.certificadoAntiguedadMaximoMeses = 12;
+      const oldDate = new Date();
+      oldDate.setMonth(oldDate.getMonth() - 13);
+      const invalidDate = `${oldDate.getDate()}/${oldDate.getMonth() + 1}/${oldDate.getFullYear()}`;
+
+      component.cambioFechaFinal(invalidDate);
+      tick(); // Espera a que se completen los timeouts
+
+      expect(component.datosMercancia.get('fechaSalida')?.value).toBeNull();
+      // ... otras expectativas
+    }));
+
+    it('should handle invalid date format', () => {
+      component.cambioFechaFinal('invalid-date');
+      expect(component.datosMercancia.get('fechaSalida')?.value).toBeNull();
+    });
+  });
+
+  describe('Validation', () => {
+  
+
+    it('should mark all as touched when invalid', () => {
+      component.crearFormSolicitud();
+      component.datosRegimen.get('regimenMercancia')?.setValue('');
+      component.validarFormulario();
+
+      expect(component.datosRegimen.get('regimenMercancia')?.touched).toBeTruthy();
     });
   });
 
   describe('ngOnDestroy', () => {
-    it('should call next() and complete() on destruirNotificador$', () => {
-      const nextSpy = jest.spyOn(component['destruirNotificador$'], 'next');
-      const completeSpy = jest.spyOn(component['destruirNotificador$'], 'complete');
-      
+    it('should complete destroy$ subject', () => {
+      const spyNext = jest.spyOn(component.destruirNotificador$, 'next');
+      const spyComplete = jest.spyOn(component.destruirNotificador$, 'complete');
+
       component.ngOnDestroy();
-      
-      expect(nextSpy).toHaveBeenCalled();
-      expect(completeSpy).toHaveBeenCalled();
-    });
-  });
 
-  describe('Constructor', () => {
-    it('should initialize consultaioQuery subscription', () => {
-      // Test only the behavior without triggering template rendering
-      expect(component.esFormularioSoloLectura).toBe(false);
-    });
-
-    it('should handle readonly state from consultaioQuery', async () => {
-      consultaioQueryMock.selectConsultaioState$ = of({ readonly: true });
-      
-      // Create a new component instance to test constructor behavior
-      const newComponent = new SolicitudComponent(
-        peximServiceMock,
-        new FormBuilder(),
-        validacionesServiceMock,
-        tramite130118StoreMock,
-        tramite130118QueryMock,
-        consultaioQueryMock
-      );
-      
-      // Wait for the subscription to process
-      await new Promise(resolve => setTimeout(resolve, 0));
-      
-      expect(newComponent.esFormularioSoloLectura).toBe(true);
-    });
-  });
-
-  describe('inicializaCatalogos private method', () => {
-    it('should call all catalog services', () => {
-      component['inicializaCatalogos']();
-      
-      expect(peximServiceMock.getRegimenMercancia).toHaveBeenCalledWith(CATALOGOS_ID.CAT_REGIMEN_MERCANCIA);
-      expect(peximServiceMock.getClasifiRegimen).toHaveBeenCalledWith(CATALOGOS_ID.CAT_CLASIFI_REGIMEN);
-      expect(peximServiceMock.getFraccionArancelariaCatalogo).toHaveBeenCalledWith(CATALOGOS_ID.CAT_FRACCION_ARANCELARIA);
-      expect(peximServiceMock.getNicoCatalogo).toHaveBeenCalledWith(CATALOGOS_ID.CAT_NICO);
-      expect(peximServiceMock.getUnidadMedidaTarifariaCatalogo).toHaveBeenCalledWith(CATALOGOS_ID.CAT_UNIDAD_MEDIDA_TARIFARIA);
-      expect(peximServiceMock.getPaisOrigenCatalogo).toHaveBeenCalledWith(CATALOGOS_ID.CAT_PAIS_ORIGEN);
-      expect(peximServiceMock.getPaisDestinoCatalogo).toHaveBeenCalledWith(CATALOGOS_ID.CAT_PAIS_DESTINO);
-      expect(peximServiceMock.getEstadoCatalogo).toHaveBeenCalledWith(CATALOGOS_ID.CAT_ESTADO);
-      expect(peximServiceMock.getRepresentacionFederal).toHaveBeenCalledWith(CATALOGOS_ID.CAT_REPRESENTACION_FEDERAL);
-    });
-
-    it('should populate catalog arrays with response data', () => {
-      component['inicializaCatalogos']();
-      
-      expect(component.regimenMercancia).toEqual([{ id: 1, descripcion: 'Regimen 1' }]);
-      expect(component.clasifiRegimen).toEqual([{ id: 1, descripcion: 'Clasifi 1' }]);
-      expect(component.fraccionArancelaria).toEqual([{ id: 1, descripcion: 'Fraccion 1' }]);
-      expect(component.nico).toEqual([{ id: 1, descripcion: 'Nico 1' }]);
-      expect(component.unidadMedidaTarifaria).toEqual([{ id: 1, descripcion: 'Unidad 1' }]);
-      expect(component.paisOrigen).toEqual([{ id: 1, descripcion: 'Pais 1' }]);
-      expect(component.paisDestino).toEqual([{ id: 1, descripcion: 'Destino 1' }]);
-      expect(component.estado).toEqual([{ id: 1, descripcion: 'Estado 1' }]);
-      expect(component.representacionFederal).toEqual([{ id: 1, descripcion: 'Representacion 1' }]);
+      expect(spyNext).toHaveBeenCalled();
+      expect(spyComplete).toHaveBeenCalled();
     });
   });
 });

@@ -3,7 +3,8 @@ import { Tramite110204Store, TramiteState } from '../estados/tramite110204.store
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Mercancia } from '../models/plantas-consulta.model';
+import { Mercancia } from '../../../shared/models/modificacion.enum';
+import { Mercancias } from '../models/plantas-consulta.model';
 
 @Injectable({
   providedIn: 'root'
@@ -38,9 +39,9 @@ export class CertificadosOrigenGridService {
    * @method obtenerMercancia
    * @returns {Observable<Mercancia[]>} Observable con la lista de mercancías.
    */
-  obtenerMercancia(): Observable<Mercancia[]> {
+  obtenerMercancia(): Observable<Mercancias[]> {
     return this.http
-      .get<{ data: Mercancia[] }>('assets/json/110204/mercancia.json') // Solicita los datos del archivo JSON
+      .get<{ data: Mercancias[] }>('assets/json/110204/mercancia.json') // Solicita los datos del archivo JSON
       .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
   }
 
