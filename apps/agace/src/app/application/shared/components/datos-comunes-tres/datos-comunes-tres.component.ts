@@ -776,25 +776,29 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
         );
       });
       
-      // Clear the selection after deletion
-      this.seleccionarNumeroDeEmpleadosLista = [];
-      
-      // Update the store
-      this.datosComunesTresStore.setDynamicFieldValue('numeroDeEmpleadosLista', this.numeroDeEmpleadosLista);
+this.seleccionarNumeroDeEmpleadosLista = [];
+this.datosComunesTresStore.setDynamicFieldValue('numeroDeEmpleadosLista', this.numeroDeEmpleadosLista);
     }
   }
 
   /** Elimina los domicilios seleccionados de la lista.*/
   eliminarDomiciliosDatos(): void {
     if (this.seleccionarDomiciliosDatos.length > 0) {
-      this.seleccionarDomiciliosDatos.forEach((elemento) => {
-        const INDICE = this.domiciliosDatos.findIndex(
-          (inv) => inv.tipoInstalacion === elemento.tipoInstalacion
+      
+      this.domiciliosDatos = this.domiciliosDatos.filter(item => {
+        
+        return !this.seleccionarDomiciliosDatos.some(selectedItem => 
+          selectedItem.cveTipoInstalacion === item.cveTipoInstalacion ||
+          (selectedItem.instalacionPrincipal === item.instalacionPrincipal && 
+           selectedItem.entidadFederativa === item.entidadFederativa &&
+           selectedItem.municipioDelegacion === item.municipioDelegacion)
         );
-        if (INDICE !== -1) {
-          this.domiciliosDatos.splice(INDICE, 1);
-        }
       });
+      
+      // Clear selection after deletion
+      this.seleccionarDomiciliosDatos = [];
+      
+      // Update the store
       this.datosComunesTresStore.setDynamicFieldValue('domiciliosDatos', this.domiciliosDatos);
     }
   }
@@ -802,14 +806,16 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   /** Elimina los inventarios seleccionados de la lista.*/
   eliminarInventariosDatos(): void {
     if (this.seleccionarInventarios.length > 0) {
-      this.seleccionarInventarios.forEach((elemento) => {
-        const INDICE = this.inventariosDatos.findIndex(
-          (inv) => inv.nombre === elemento.nombre
+     
+      this.inventariosDatos = this.inventariosDatos.filter(item => {
+        
+        return !this.seleccionarInventarios.some(selectedItem => 
+          selectedItem.nombre === item.nombre &&
+          selectedItem.lugarRadicacion === item.lugarRadicacion
         );
-        if (INDICE !== -1) {
-          this.inventariosDatos.splice(INDICE, 1);
-        }
       });
+      
+      this.seleccionarInventarios = [];
       this.datosComunesTresStore.setDynamicFieldValue('inventariosDatos', this.inventariosDatos);
     }
   }
@@ -817,15 +823,18 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   /** Elimina los socios seleccionados de la lista.*/
   eliminarlistaSeccionSociosIC(): void {
     if (this.seleccionarListaSeccionSociosIC.length > 0) {
-      this.seleccionarListaSeccionSociosIC.forEach((elemento) => {
-        const INDICE = this.listaSeccionSociosIC.findIndex(
-          (inv) => inv.nombre === elemento.nombre
+      
+      this.listaSeccionSociosIC = this.listaSeccionSociosIC.filter(item => {
+        
+        return !this.seleccionarListaSeccionSociosIC.some(selectedItem => 
+          selectedItem.rfc === item.rfc ||
+          (selectedItem.nombreCompleto === item.nombreCompleto && 
+           selectedItem.caracterDe === item.caracterDe)
         );
-        if (INDICE !== -1) {
-          this.listaSeccionSociosIC.splice(INDICE, 1);
-        }
       });
-      this.datosComunesTresStore.setDynamicFieldValue('listaSeccionSociosIC', this.listaSeccionSociosIC);
+      
+      this.seleccionarListaSeccionSociosIC = [];
+       this.datosComunesTresStore.setDynamicFieldValue('listaSeccionSociosIC', this.listaSeccionSociosIC);
     }
   }
 
