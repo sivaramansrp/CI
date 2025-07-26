@@ -130,7 +130,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   public inventariosConfiguracionColumnas: ConfiguracionAporteColumna<Inventarios>[] = INVENTARIOS_CONFIGURACION;
 
   /** Configuración de columnas para la sección de socios IC */
-  public seccionSociosICConfiguracionColumnas: ConfiguracionColumna<SeccionSociosIC>[] = SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS;
+  public seccionSociosICConfiguracionColumnas: ConfiguracionAporteColumna<SeccionSociosIC>[] = SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS as ConfiguracionAporteColumna<SeccionSociosIC>[];
 
    /** Configuración de columnas para la sección de socios IC */
   public instalacionesConfiguracionColumnas: ConfiguracionColumna<PrincipalesInstalaciones>[] = PRINCIPALES_INSTALACIONES_COLUMNA;
@@ -765,14 +765,21 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   /** Elimina los registros de número de empleados seleccionados.*/
   eliminarNumeroDeEmpleadosDato(): void {
     if (this.seleccionarNumeroDeEmpleadosLista.length > 0) {
-      this.seleccionarNumeroDeEmpleadosLista.forEach((elemento) => {
-        const INDICE = this.numeroDeEmpleadosLista.findIndex(
-          (inv) => inv.numeroDeEmpleados === elemento.numeroDeEmpleados
+      // Use filter method for more reliable deletion
+      this.numeroDeEmpleadosLista = this.numeroDeEmpleadosLista.filter(item => {
+        // Check if the current item should be kept (not in the selected list)
+        return !this.seleccionarNumeroDeEmpleadosLista.some(selectedItem => 
+          selectedItem.RFC === item.RFC && 
+          selectedItem.denominacion === item.denominacion &&
+          selectedItem.numeroDeEmpleados === item.numeroDeEmpleados &&
+          selectedItem.bimestre === item.bimestre
         );
-        if (INDICE !== -1) {
-          this.numeroDeEmpleadosLista.splice(INDICE, 1);
-        }
       });
+      
+      // Clear the selection after deletion
+      this.seleccionarNumeroDeEmpleadosLista = [];
+      
+      // Update the store
       this.datosComunesTresStore.setDynamicFieldValue('numeroDeEmpleadosLista', this.numeroDeEmpleadosLista);
     }
   }
@@ -852,7 +859,8 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   /** Guarda o actualiza el registro de número de empleados en la lista y muestra el modal de confirmación. */
   aceptarModalUno(): void {
     if (!this.seleccionarNumeroDeEmpleadosLista.length) {
-        this.numeroDeEmpleadosLista.push({
+      // Add new record
+      this.numeroDeEmpleadosLista.push({
         denominacion: this.ninoFormGroupmodal1.get('subcontrataRazonSocial')?.value,
         RFC: this.ninoFormGroupmodal1.get('subcontrataRFCBusqueda')?.value,
         numeroDeEmpleados: this.ninoFormGroupmodal1.get('subcontrataEmpleados')?.value,
@@ -862,6 +870,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
       this.modalInstance.hide();
       this.mostrarGuardadosCorrectamenteModal();
     } else {
+      // Update existing record
       const INDICE = this.numeroDeEmpleadosLista.findIndex((item)=> item.RFC === this.seleccionarNumeroDeEmpleadosLista?.[0]?.RFC);
       this.numeroDeEmpleadosLista[INDICE].RFC = this.ninoFormGroupmodal1.get('subcontrataRFCBusqueda')?.value;
       this.numeroDeEmpleadosLista[INDICE].bimestre = DatosComunesTresComponent.obtenerDescripcion(this.bimestreOpciones, this.ninoFormGroupmodal1.get('subcontrataBimestre')?.value);
