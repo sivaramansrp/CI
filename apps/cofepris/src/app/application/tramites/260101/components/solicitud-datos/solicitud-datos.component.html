@@ -54,6 +54,7 @@
         <button
           class="btn btn-primary ms-2"
           [disabled]="esFormularioSoloLectura"
+          (click)="openSeleccionarEstablecimiento()"
           type="button"
         >
           Seleccionar establecimiento
@@ -115,8 +116,8 @@
         [placeholder]="estadoCatalogo.primerOpcion"
         [required]="estadoCatalogo.required"
         formControlName="estado"
-        (selectionChange)="setEstado($event)"
         [isDisabled]="esFormularioSoloLectura"
+        (selectionChange)="setEstado($event)"
       >
       </app-catalogo-select>
     </div>
@@ -213,7 +214,6 @@
         <input
           class="form-check-input"
           type="checkbox"
-          [disabled]="esFormularioSoloLectura"
           id="avisoDeFuncionamiento"
           formControlName="avisoDeFuncionamiento"
           (change)="setAvisoDeFuncionamiento($event)"
@@ -241,7 +241,6 @@
         type="text"
         formControlName="licenciaSanitaria"
         (change)="setLicenciaSanitaria($event)"
-        [disabled]="esFormularioSoloLectura"
       />
     </div>
 
@@ -251,7 +250,6 @@
           class="form-check-input"
           type="checkbox"
           id="flexCheckDefault"
-          [disabled]="esFormularioSoloLectura"
           aria-label="Aviso de funcionamiento"
           formControlName="liveFreshFrozen"
           (change)="setLiveFreshFrozen($event)"
@@ -270,10 +268,10 @@
         [placeholder]="regimenCatalogo.primerOpcion"
         [required]="regimenCatalogo.required"
         formControlName="regimen"
+        [isDisabled]="esFormularioSoloLectura"
         [tooltipQuestionCircle]="true"
         [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
         (selectionChange)="setRegimen($event)"
-        [isDisabled]="esFormularioSoloLectura"
       >
       </app-catalogo-select>
     </div>
@@ -286,8 +284,8 @@
         [placeholder]="aduanaCatalogo.primerOpcion"
         [required]="aduanaCatalogo.required"
         formControlName="aduana"
-        (selectionChange)="setAduana($event)"
         [isDisabled]="esFormularioSoloLectura"
+        (selectionChange)="setAduana($event)"
       >
       </app-catalogo-select>
     </div>
@@ -311,8 +309,6 @@
           type="button"
           class="btn btn-default btn-space"
           [disabled]="esFormularioSoloLectura"
-          data-bs-toggle="modal"
-          data-bs-target="#modalAgregarMercancias"
           (click)="openModificarMercancias()"
         >
           Modificar
@@ -331,8 +327,6 @@
           type="button"
           class="btn btn-primary ms-3"
           [disabled]="esFormularioSoloLectura"
-          data-bs-toggle="modal"
-          data-bs-target="#modalAgregarMercancias"
           (click)="openAgregarMercancias()"
         >
           Agregar
@@ -347,7 +341,6 @@
           <div class="col-md-1 mt-5">
             <input
               type="checkbox"
-              [disabled]="esFormularioSoloLectura"
               class="mt-5"
               formControlName="manifesto"
               (change)="setManifesto($event)"
@@ -380,15 +373,6 @@
         [isRequired]="true"
         (valueChange)="setHacerlos($event)"
       ></app-input-radio>
-      <!-- <app-input-radio
-        [radioOptions]="hacerlosRadioOptions"
-        [selectedValue]="solicitudForm.get('hacerlos')?.value"
-        [isRequired]="true"
-        [layout]="'horizontal'"
-        fromControlName="hacerlos"
-        (valueChange)="setHacerlos($event)"
-      >
-      </app-input-radio> -->
     </div>
 
     <div class="col-md-12">
@@ -402,7 +386,6 @@
         id="rfc"
         placeholder=""
         type="text"
-        [disabled]="esFormularioSoloLectura"
         formControlName="rfc"
         (change)="setRFC($event)"
       />
@@ -459,7 +442,7 @@
 
 <div
   class="modal fade"
-  id="modalAgregarMercancias"
+  #modalAgregarMercancias
   tabindex="-1"
   aria-labelledby="modalAgregarMercanciasLabel"
   aria-hidden="true"
@@ -470,3 +453,13 @@
     </div>
   </div>
 </div>
+
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones
+    [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="eliminarPedimento($event)"
+  >
+  </lib-notificaciones>
+</section>
+}

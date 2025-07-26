@@ -363,7 +363,7 @@ export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
               this.solicitud260101State.tercerosNumeroInterior,
             tercerosLada: this.solicitud260101State.tercerosLada,
             tercerosTelefono: this.solicitud260101State.tercerosTelefono,
-            tercerosCorreoElectronioco:
+            tercerosCorreoElectronico:
               this.solicitud260101State.tercerosCorreoElectronico,
           });
           this.tipoPublicos =
@@ -690,7 +690,7 @@ export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
    * Actualiza el correo electrónico del terceros en el Store.
    * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setTercerosCorreoElectronioco(evento: Event): void {
+  settercerosCorreoElectronico(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud260101Store.setTercerosCorreoElectronico(VALOR);
   }
@@ -731,7 +731,7 @@ export class FabricanteComponent implements OnInit, OnDestroy, AfterViewInit {
       curp: this.fabricanteComponentForm.get('tercerosCurp')?.value,
       telefono: this.fabricanteComponentForm.get('tercerosTelefono')?.value,
       correoElectronico: this.fabricanteComponentForm.get(
-        'tercerosCorreoElectronioco'
+        'tercerosCorreoElectronico'
       )?.value,
       calle: this.fabricanteComponentForm.get('tercerosCalle')?.value,
       numeroExterior: this.fabricanteComponentForm.get('tercerosNumeroExterior')

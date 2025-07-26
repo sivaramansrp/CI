@@ -45,7 +45,6 @@ import { SolicitudDatosService } from '../../services/solicitud-datos.service';
   styleUrl: './modificar-mercancias.component.scss',
   standalone: true,
   imports: [
-    ModificarMercanciasComponent,
     CommonModule,
     ReactiveFormsModule,
     FormsModule,

@@ -5,6 +5,9 @@ import {
   CatalogosSelect,
   ConfiguracionColumna,
   InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
+  Pedimento,
   REGEX_CORREO_ELECTRONICO,
   REGEX_TELEFONO,
   TablaDinamicaComponent,
@@ -67,12 +70,29 @@ import { TEXTOS } from '../../constantes/constantes';
     AlertComponent,
     TituloComponent,
     ModificarMercanciasComponent,
+    NotificacionesComponent
   ],
 })
 /**
  * Componente que representa los datos de la solicitud
  */
 export class SolicitudDatosComponent implements OnInit, OnDestroy {
+  /**
+   * Array con los datos de los pedimentos.
+   * Se utiliza para almacenar los pedimentos ingresados por el usuario.
+   */
+  pedimentos: Array<Pedimento> = [];
+
+  /**
+   * Elemento a eliminar de la tabla de pedimentos.
+   */
+  elementoParaEliminar!: number;
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
   /**
    * Obtiene los datos de enumeración y establece valores de TEXTOS.
    * Esta variable contiene los textos estáticos utilizados en el componente.
@@ -167,7 +187,8 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * Referencia al elemento del modal para agregar mercancías.
    * Utilizado para manipular el modal mediante su elemento HTML.
    */
-  @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
+  @ViewChild('modalAgregarMercancias', { static: false })
+  modalElement!: ElementRef;
 
   /**
    * Opciones de botones de selección por radio.
@@ -841,6 +862,46 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Elimina un elemento de la lista de pedimentos en la posición especificada.
+   *
+   * @param {number} i - El índice del elemento a eliminar.
+   *
+   * @remarks
+   * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
+   * y se abre el modal para mostrar un aviso al usuario.
+   */
+  abrirModal(mensaje: string, i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
+    this.elementoParaEliminar = i;
+  }
+
+  openSeleccionarEstablecimiento(): void {
+    const PEDIMENTO = {
+      patente: 0,
+      pedimento: 0,
+      aduana: 0,
+      idTipoPedimento: 0,
+      descTipoPedimento: 'Por evaluar',
+      numero: '',
+      comprobanteValor: '',
+      pedimentoValidado: false,
+    };
+    this.abrirModal('Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.');
+    this.pedimentos.push(PEDIMENTO);
+  }
+
+  /**
    * Elimina la primera mercancía seleccionada de la lista en el Store.
    */
   eliminarMercancias(): void {
@@ -876,6 +937,17 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   setManifesto(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).checked;
     this.solicitud260101Store.setManifesto(VALOR);
+  }
+
+  /**
+   * Elimina un elemento de la tabla de pedimento, si se confirma la acción.
+   * @param borrar Indica si se debe proceder con la eliminación.
+   * @returns {void}
+   */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
   }
 
   /**

@@ -428,12 +428,12 @@
         maxlength="320"
         size="29"
         type="text"
-        formControlName="tercerosCorreoElectronioco"
-        (change)="setTercerosCorreoElectronioco($event)"
+        formControlName="tercerosCorreoElectronico"
+        (change)="settercerosCorreoElectronico($event)"
       />
       @if
-      (fabricanteComponentForm.get('tercerosCorreoElectronioco')?.hasError('pattern')
-      && fabricanteComponentForm.get('tercerosCorreoElectronioco')?.touched) {
+      (fabricanteComponentForm.get('tercerosCorreoElectronico')?.hasError('pattern')
+      && fabricanteComponentForm.get('tercerosCorreoElectronico')?.touched) {
       <span class="text-danger">
         Por favor, escribe una dirección de correo válida
       </span>

@@ -18,12 +18,14 @@ import {
   Solicitud260101Store,
 } from '../../estados/tramites260101.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Destinatario } from '../../models/destinatario.model';
 import { Fabricante } from '../../models/fabricante.model';
 import { FabricanteComponent } from '../fabricante/fabricante.component';
 import { Modal } from 'bootstrap';
 import { ModificarDestinatarioComponent } from '../modificar-destinatario/modificar-destinatario.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260101Query } from '../../estados/tramites260101.query';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
 import { TEXTOS } from '../../constantes/constantes';
@@ -43,6 +45,8 @@ import { TEXTOS } from '../../constantes/constantes';
     TituloComponent,
     ModificarDestinatarioComponent,
     FabricanteComponent,
+    ReactiveFormsModule,
+    CommonModule
   ],
 })
 export class TercerosRelacionadosComponent
