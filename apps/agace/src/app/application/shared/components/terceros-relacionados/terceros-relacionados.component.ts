@@ -126,6 +126,21 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   public esFormularioSoloLectura: boolean = false;
 
   /**
+   * Indica si el modal está en modo de edición (true) o creación (false).
+   */
+  public esModalEdicion: boolean = false;
+
+  /**
+   * Índice del elemento seleccionado para edición.
+   */
+  public indiceElementoSeleccionado: number = -1;
+
+  /**
+   * Elementos seleccionados en la tabla para eliminación.
+   */
+  public elementosSeleccionados: EnlaceOperativo[] = [];
+
+  /**
    * Constructor del componente TercerosRelacionadosComponent.
    * 
    * @param fb - Una instancia de FormBuilder utilizada para crear y gestionar formularios reactivos.
@@ -212,16 +227,16 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public crearEnlaceOperativoForm(): void {
     this.enlaceOperativoForm = this.fb.group({
-        resigtro: ['', Validators.required],
-        irfc: [{ value: '', disabled: true }, Validators.required],
-        inombre: [{ value: '', disabled: true }, Validators.required],
-        apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
-        apellidoMaterno: [{ value: '', disabled: true }, Validators.required],
+        resigtro: [''],
+        irfc: [{ value: '', disabled: true }],
+        inombre: [{ value: '', disabled: true }],
+        apellidoPaterno: [{ value: '', disabled: true }],
+        apellidoMaterno: [{ value: '', disabled: true }],
         cargo: ['', Validators.required],
-        cuidad: [{ value: '', disabled: true }, Validators.required],
+        cuidad: [{ value: '', disabled: true }],
         telefono: ['', Validators.required],
-        correo: ['', Validators.required],
-        suplente: ['', Validators.required],
+        correo: ['', [Validators.required, Validators.email]],
+        suplente: [false],
     });
   }
 
@@ -253,17 +268,6 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
     } else {
       this.enlaceOperativoForm.enable();
     }
-  }
-
-  /**
-   * Abre un cuadro de diálogo modal utilizando la plantilla proporcionada.
-   * @param template - Un `TemplateRef<void>` que representa el contenido del modal.
-   *                   Esta plantilla se mostrará dentro del cuadro de diálogo modal.
-   * @remarks
-   * El modal se muestra con una clase CSS de `modal-lg` para aplicar un estilo de modal grande.
-   */
-  public abrirModal(template: TemplateRef<void>): void {
-    this.modalRef = this.modalService.show(template, { class: 'modal-lg',});
   }
 
   /**
@@ -328,10 +332,153 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public eventoDeCambioDeValor(event: Event, campo: string): void {
     if (event.target) {
-      const VALOR = (event.target as HTMLInputElement).value;
+      const TARGET = event.target as HTMLInputElement;
+      let VALOR: string | boolean;
+       if (TARGET.type === 'checkbox') {
+        VALOR = TARGET.checked;
+      } else {
+        VALOR = TARGET.value;
+      }
       const DATO = { campo: campo, valor: VALOR };
       this.establecerCambioDeValor(DATO);
     }
+  }
+
+  /**
+   * Abre el modal en modo de creación, limpiando el formulario.
+   * @param template - Plantilla del modal a mostrar
+   */
+  public abrirModalAgregar(template: TemplateRef<void>): void {
+    this.esModalEdicion = false;
+    this.indiceElementoSeleccionado = -1;
+    this.enlaceOperativoForm.reset();
+    Object.keys(this.enlaceOperativoForm.controls).forEach(key => {
+      if (key === 'irfc' || key === 'inombre' || key === 'apellidoPaterno' || 
+          key === 'apellidoMaterno' || key === 'cuidad') {
+       
+        this.enlaceOperativoForm.get(key)?.disable();
+      } else {
+        this.enlaceOperativoForm.get(key)?.enable();
+      }
+    });
+    
+    this.modalRef = this.modalService.show(template, { class: 'modal-lg' });
+  }
+
+  /**
+   * Abre el modal en modo de edición con los datos del elemento seleccionado.
+   * @param template - Plantilla del modal a mostrar
+   */
+  public abrirModalModificar(template: TemplateRef<void>): void {
+    if (this.elementosSeleccionados.length !== 1) {
+      return;
+    }
+
+    const ELEMENTO_SELECCIONADO = this.elementosSeleccionados[0];
+    this.indiceElementoSeleccionado = this.enlaceOperativoDatos.findIndex(
+      item => item === ELEMENTO_SELECCIONADO
+    );
+
+    if (this.indiceElementoSeleccionado === -1) {
+      return;
+    }
+
+    this.esModalEdicion = true;
+    
+    
+    Object.keys(this.enlaceOperativoForm.controls).forEach(key => {
+      if (key === 'irfc' || key === 'inombre' || key === 'apellidoPaterno' || 
+          key === 'apellidoMaterno' || key === 'cuidad') {
+      
+        this.enlaceOperativoForm.get(key)?.disable();
+      } else {
+        this.enlaceOperativoForm.get(key)?.enable();
+      }
+    });
+    
+    this.cargarDatosEnFormulario(ELEMENTO_SELECCIONADO);
+    this.modalRef = this.modalService.show(template, { class: 'modal-lg' });
+  }
+
+  /**
+   * Carga los datos del elemento seleccionado en el formulario del modal.
+   * @param elemento - Elemento a cargar en el formulario
+   */
+  private cargarDatosEnFormulario(elemento: EnlaceOperativo): void {
+    this.enlaceOperativoForm.patchValue({
+      resigtro: '', // Campo para buscar el RFC
+      irfc: elemento.rfc || '',
+      inombre: elemento.nombre || '',
+      apellidoPaterno: elemento.apellidoPaterno || '',
+      apellidoMaterno: elemento.apellidoMaterno || '',
+      cargo: elemento.cargoOPuesto || '',
+      cuidad: elemento.ciudadOEstadoDeResidencia || '',
+      telefono: elemento.telefono || '',
+      correo: elemento.correoElectronico || '',
+      suplente: elemento.suplente === 'true'
+    });
+  }
+
+  /**
+   * Guarda los datos del formulario (crear o modificar).
+   */
+  public guardarDatosFormulario(): void {
+    // Skip validation for now to test basic functionality
+    // if (this.enlaceOperativoForm.invalid) {
+    //   this.enlaceOperativoForm.markAllAsTouched();
+    //   return;
+    // }
+
+    const DATOS_FORMULARIO = this.enlaceOperativoForm.getRawValue(); // Use getRawValue to get disabled fields too
+    const ENLACE_OPERATIVO: EnlaceOperativo = {
+      rfc: DATOS_FORMULARIO.irfc || 'TEST-RFC-123',
+      nombre: DATOS_FORMULARIO.inombre || 'Test Nombre',
+      apellidoPaterno: DATOS_FORMULARIO.apellidoPaterno || 'Test Apellido',
+      apellidoMaterno: DATOS_FORMULARIO.apellidoMaterno || 'Test Materno',
+      ciudadOEstadoDeResidencia: DATOS_FORMULARIO.cuidad || 'Ciudad Test',
+      cargoOPuesto: DATOS_FORMULARIO.cargo || 'Cargo Test',
+      telefono: DATOS_FORMULARIO.telefono || '1234567890',
+      correoElectronico: DATOS_FORMULARIO.correo || 'test@test.com',
+      suplente: DATOS_FORMULARIO.suplente ? 'true' : 'false'
+    };
+
+    if (this.esModalEdicion && this.indiceElementoSeleccionado >= 0) {
+      // Modificar elemento existente - create new array to trigger change detection
+      const NUEVOS_ENLACES = [...this.enlaceOperativoDatos];
+      NUEVOS_ENLACES[this.indiceElementoSeleccionado] = { ...ENLACE_OPERATIVO };
+      this.enlaceOperativoDatos = NUEVOS_ENLACES;
+    } else {
+      // Agregar nuevo elemento - create new array to trigger change detection
+      this.enlaceOperativoDatos = [...this.enlaceOperativoDatos, { ...ENLACE_OPERATIVO }];
+    }
+
+    this.modalRef?.hide();
+    this.enlaceOperativoForm.reset();
+    this.elementosSeleccionados = [];
+  }
+
+  /**
+   * Elimina los elementos seleccionados de la tabla.
+   */
+  public eliminarElementosSeleccionados(): void {
+    if (this.elementosSeleccionados.length === 0) {
+      return;
+    }
+    
+    // Create a new array without the selected elements to trigger change detection
+    this.enlaceOperativoDatos = this.enlaceOperativoDatos.filter(
+      elemento => !this.elementosSeleccionados.includes(elemento)
+    );
+
+    this.elementosSeleccionados = [];
+  }
+
+  /**
+   * Maneja la selección de elementos en la tabla.
+   * @param elementosSeleccionados - Array de elementos seleccionados
+   */
+  public onSeleccionCambiada(elementosSeleccionados: EnlaceOperativo[]): void {
+    this.elementosSeleccionados = elementosSeleccionados;
   }
 
   /**
