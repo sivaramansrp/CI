@@ -27,7 +27,7 @@
         <a
           data-toggle="tab"
           tabindex="0"
-          (keyup)="seleccionaTab(1)"
+          (keyup)="seleccionaTab(3)"
           (click)="seleccionaTab(3)"
           >Histórico productores</a
         >
@@ -35,9 +35,9 @@
       <li [ngClass]="indice === 4 ? 'active' : ''">
         <a
           data-toggle="tab"
-          (click)="seleccionaTab(3)"
-          (keydown.enter)="seleccionaTab(3)"
-          (keydown.space)="seleccionaTab(3)"
+          (click)="seleccionaTab(4)"
+          (keydown.enter)="seleccionaTab(4)"
+          (keydown.space)="seleccionaTab(4)"
           role="button"
           tabindex="3"
           >Destinatario</a
@@ -46,9 +46,9 @@
       <li [ngClass]="indice === 5 ? 'active' : ''">
         <a
           data-toggle="tab"
-          (click)="seleccionaTab(4)"
-          (keydown.enter)="seleccionaTab(4)"
-          (keydown.space)="seleccionaTab(4)"
+          (click)="seleccionaTab(5)"
+          (keydown.enter)="seleccionaTab(5)"
+          (keydown.space)="seleccionaTab(5)"
           role="button"
           tabindex="4"
           >Datos Certificado</a
@@ -62,13 +62,15 @@
       <app-certificado-de-origen [tabIndex]="2"></app-certificado-de-origen>
       } } @case (3){
 
-      <app-historico-de-productores></app-historico-de-productores>
+      <app-historico-de-productores
+        [tabIndex]="3"
+      ></app-historico-de-productores>
 
       } @case (4) { @if(esDatosRespuesta){
-      <app-destinatario [tabIndex]="3"></app-destinatario>
+      <app-destinatario [tabIndex]="4"></app-destinatario>
       } } @case (5) { @if(esDatosRespuesta){
       <app-datos-certificado
-        [tabIndex]="4"
+        [tabIndex]="5"
         [entidadFederativaData]="entidadFederativa"
       ></app-datos-certificado>
       } } }
