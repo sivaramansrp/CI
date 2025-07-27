@@ -3,7 +3,7 @@
     <ng-titulo titulo="Datos del destinatario" />
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label>Nombre(s):</label>
+        <label>Nombre(s)*:</label>
         <input
           type="text"
           class="form-control"
@@ -18,41 +18,6 @@
         </div>
       </div>
       <div class="col-md-4 mb-3">
-        <label>Primer apellido:</label>
-        <input
-          type="text"
-          class="form-control"
-          id="primerApellido"
-          formControlName="apellidoPrimer"
-          (click)="onClick()"
-          (change)="
-            setValoresStore(
-              validacionForm,
-              'apellidoPrimer',
-              'setApellidoPrimer'
-            )
-          "
-        />
-      </div>
-      <div class="col-md-4 mb-3">
-        <label>Segundo apellido:</label>
-        <input
-          type="text"
-          class="form-control"
-          id="segundoApellido"
-          formControlName="apellidoSegundo"
-          (change)="
-            setValoresStore(
-              validacionForm,
-              'apellidoSegundo',
-              'setApellidoSegundo'
-            )
-          "
-        />
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4 mb-3">
         <label>Número de registro fiscal*:</label>
         <input
           type="text"
@@ -63,27 +28,15 @@
             setValoresStore(validacionForm, 'numeroFiscal', 'setNumeroFiscal')
           "
         />
-      </div>
-      <div class="col-md-8 mb-3">
-        <label>Razón social:</label>
-        <input
-          type="text"
-          class="form-control"
-          [ngClass]="{
-            'gray-class':
-              registroForm.get('validacionForm.apellidoPrimer')?.value !== ''
-          }"
-          id="denominacion"
-          [readonly]="
-            registroForm.get('validacionForm.apellidoPrimer')?.value !== ''
-          "
-          formControlName="razonSocial"
-          (change)="
-            setValoresStore(validacionForm, 'razonSocial', 'setRazonSocial')
-          "
-        />
+        <div
+          class="mensaje-error"
+          *ngIf="validacionForm.get('numeroFiscal')?.errors?.['required'] && validacionForm.get('numeroFiscal')?.touched"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
     </div>
+
     <ng-titulo titulo="Domicilio del destinatario" />
     <div class="row">
       <div class="col-md-8 mb-3">
@@ -107,6 +60,12 @@
           formControlName="calle"
           (change)="setValoresStore(validacionForm, 'calle', 'setCalle')"
         />
+        <div
+          class="mensaje-error"
+          *ngIf="validacionForm.get('calle')?.errors?.['required'] && validacionForm.get('calle')?.touched"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
       <div class="col-md-4 mb-3">
         <label>Número y/o letra*:</label>
@@ -119,6 +78,12 @@
             setValoresStore(validacionForm, 'numeroLetra', 'setNumeroLetra')
           "
         />
+        <div
+          class="mensaje-error"
+          *ngIf="validacionForm.get('numeroLetra')?.errors?.['required'] && validacionForm.get('numeroLetra')?.touched"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
       <div class="col-md-1 mb-3">
         <label>Lada:</label>
