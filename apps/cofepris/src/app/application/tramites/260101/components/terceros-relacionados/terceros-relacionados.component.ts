@@ -46,7 +46,7 @@ import { TEXTOS } from '../../constantes/constantes';
     ModificarDestinatarioComponent,
     FabricanteComponent,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
   ],
 })
 export class TercerosRelacionadosComponent
@@ -320,13 +320,20 @@ export class TercerosRelacionadosComponent
   solicitud260101State: Solicitud260101State = {} as Solicitud260101State;
 
   /**
-   * Referencia al elemento del modal para agregar mercancías.
+   * Reference to the modal element used for adding goods (mercancías).
+   * This is used to control or access the modal directly via DOM.
+   *
+   * @type {ElementRef}
    */
   @ViewChild('modalAgregarMercancias', { static: false })
   modalElement!: ElementRef;
 
   /**
-   * Referencia al elemento del modal para agregar mercancías.
+   * Reference to the modal element for adding manufacturers.
+   * Used to interact directly with the modal DOM element.
+   *
+   * @type {ElementRef}
+   * @memberof NombreDelComponente
    */
   @ViewChild('modalFabricante', { static: false })
   modalFabricanteElement!: ElementRef;

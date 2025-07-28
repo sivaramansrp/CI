@@ -70,7 +70,7 @@ import { TEXTOS } from '../../constantes/constantes';
     AlertComponent,
     TituloComponent,
     ModificarMercanciasComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
   ],
 })
 /**
@@ -185,7 +185,9 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
 
   /**
    * Referencia al elemento del modal para agregar mercancías.
-   * Utilizado para manipular el modal mediante su elemento HTML.
+   * Se utiliza para manipular el modal directamente a través del DOM.
+   *
+   * @type {ElementRef}
    */
   @ViewChild('modalAgregarMercancias', { static: false })
   modalElement!: ElementRef;
@@ -897,7 +899,9 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
       comprobanteValor: '',
       pedimentoValidado: false,
     };
-    this.abrirModal('Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.');
+    this.abrirModal(
+      'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.'
+    );
     this.pedimentos.push(PEDIMENTO);
   }
 
