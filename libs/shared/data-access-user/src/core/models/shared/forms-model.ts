@@ -23,7 +23,7 @@ export interface FormularioDinamico {
   disabled: boolean;
   readonly?: boolean;
   validators: string[];
-  tooltip?: string;
+  tooltip?: string | boolean;
   tooltipTxt?: string;
   placeholder?: string;
   AvailableRadioOptions?: string[];
