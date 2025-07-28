@@ -7,7 +7,7 @@ services:
       dockerfile: apps/se/Dockerfile.dev
       args:
         - NODE_ENV=production
-        - IMAGE_TAG_ID=${IMAGE_TAG_ID:-1.0.13}
+        - IMAGE_TAG_ID=${IMAGE_TAG_ID:-1.0.15}
     container_name: modulefederation-se-microfront
     restart: unless-stopped
     expose:
