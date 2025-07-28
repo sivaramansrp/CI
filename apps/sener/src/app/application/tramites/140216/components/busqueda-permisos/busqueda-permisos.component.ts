@@ -1,16 +1,41 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  BusquedaPermisos140216State,
+  Tramite140216Store,
+} from '../../estados/tramites/tramite140216.store';
+import {
+  ConsultaioQuery,
+  ValidacionesFormularioService,
+} from '@ng-mf/data-access-user';
+import {
+  FECHA_SALIDA,
+  PERMISOS_VIGENTES_ENCABEZADO_DE_TABLA,
+} from '../../constantes/suspension-permiso.enum';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  InputFecha,
+  InputFechaComponent,
+  Notificacion,
+  NotificacionesComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import {
+  PermisosVigentes,
+  PermisosVigentesRespuesta,
+} from '../../models/suspension-permiso.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Modal } from 'bootstrap';
-
-import { BusquedaPermisos140216State, Tramite140216Store } from '../../estados/tramites/tramite140216.store';
-import { FECHA_SALIDA, PERMISOS_VIGENTES_ENCABEZADO_DE_TABLA } from '../../constantes/suspension-permiso.enum';
-import { InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { PermisosVigentes, PermisosVigentesRespuesta } from '../../models/suspension-permiso.model';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DetalleDelPermisoComponent } from '../detalle-del-permiso/detalle-del-permiso.component';
 import { DetalleTitularComponent } from '../detalle-titular/detalle-titular.component';
+import { Modal } from 'bootstrap';
 import { PersonasNotificarComponent } from '../personas-notificar/personas-notificar.component';
 import { SuspensionPermisoService } from '../../services/suspension-permiso/suspension-permiso.service';
 import { Tramite140216Query } from '../../estados/queries/tramite140216.query';
@@ -31,12 +56,11 @@ import { Tramite140216Query } from '../../estados/queries/tramite140216.query';
     DetalleDelPermisoComponent,
     DetalleTitularComponent,
     PersonasNotificarComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
   ],
   templateUrl: './busqueda-permisos.component.html',
   styleUrl: './busqueda-permisos.component.scss',
 })
-
 export class BusquedaPermisosComponent implements OnDestroy {
   /**
    * Referencia al formulario reactivo de busquedaPermisos.
@@ -75,19 +99,22 @@ export class BusquedaPermisosComponent implements OnDestroy {
    * Referencia al elemento modal para mostrar detalles del RFC de la facultad.
    * @type {ElementRef}
    */
-  @ViewChild('detalle-rfc-facultad', { static: false }) modalDetalleRfcFacultad!: ElementRef;
+  @ViewChild('detalle-rfc-facultad', { static: false })
+  modalDetalleRfcFacultad!: ElementRef;
 
   /**
    * Referencia al elemento modal para mostrar detalles del permiso.
    * @type {ElementRef}
    */
-  @ViewChild('detalle-del-permiso', { static: false }) modalDetallePermiso!: ElementRef;
+  @ViewChild('detalle-del-permiso', { static: false })
+  modalDetallePermiso!: ElementRef;
 
   /**
    * Referencia al elemento modal para mostrar personas a notificar.
    * @type {ElementRef}
    */
-  @ViewChild('personas-notificar', { static: false }) modalPersonasNotificar!: ElementRef;
+  @ViewChild('personas-notificar', { static: false })
+  modalPersonasNotificar!: ElementRef;
 
   /**
    * Elemento modal para mostrar información adicional.
@@ -133,6 +160,7 @@ export class BusquedaPermisosComponent implements OnDestroy {
    * @param tramite140216Query - Query para obtener datos del store del trámite 140216.
    * @param consultaioQuery - Consulta para obtener el estado de la consulta.
    * @param suspensionPermisoService - Servicio para gestionar permisos de suspensión.
+   * @param validacionesService Servicio para validar formularios.
    */
   constructor(
     private fb: FormBuilder,
@@ -140,6 +168,7 @@ export class BusquedaPermisosComponent implements OnDestroy {
     private tramite140216Query: Tramite140216Query,
     private consultaioQuery: ConsultaioQuery,
     private suspensionPermisoService: SuspensionPermisoService,
+    private validacionesService: ValidacionesFormularioService
   ) {
     this.tramite140216Query.selectSeccionState$
       .pipe(
@@ -150,7 +179,7 @@ export class BusquedaPermisosComponent implements OnDestroy {
         })
       )
       .subscribe();
-    
+
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destruirNotificador$),
@@ -173,26 +202,20 @@ export class BusquedaPermisosComponent implements OnDestroy {
     this.busquedaPermisosForm = this.fb.group({
       folioTramiteBusqueda: [
         this.busquedaPermisosState?.folioTramiteBusqueda,
-        [Validators.required]
+        [Validators.required],
       ],
       motivoSuspension: [
         this.busquedaPermisosState?.motivoSuspension,
-        [
-          Validators.required,
-          Validators.maxLength(5000)
-        ]
+        [Validators.required, Validators.maxLength(5000)],
       ],
       numAutorizacion: [
         this.busquedaPermisosState?.numAutorizacion,
-        [
-          Validators.required,
-          Validators.maxLength(20)
-        ]
+        [Validators.required, Validators.maxLength(20)],
       ],
       fechaSuspension: [
         this.busquedaPermisosState?.fechaSuspension,
-        [Validators.required]
-      ]
+        [Validators.required],
+      ],
     });
 
     this.inicializarEstadoFormulario();
@@ -222,39 +245,47 @@ export class BusquedaPermisosComponent implements OnDestroy {
     if (folioTramiteBusqueda?.length <= 0 || folioTramiteBusqueda === null) {
       this.abrirAlertaFolioModal();
     } else {
-      this.suspensionPermisoService.obtenerPermisosVigentes()
+      this.suspensionPermisoService
+        .obtenerPermisosVigentes()
         .pipe(takeUntil(this.destruirNotificador$))
         .subscribe({
           next: (permisosVigentes: PermisosVigentesRespuesta) => {
             const PERMISOS_FILTRADOS = permisosVigentes.data.filter(
-              (permiso: PermisosVigentes) => permiso.folioTramite === folioTramiteBusqueda
+              (permiso: PermisosVigentes) =>
+                permiso.folioTramite === folioTramiteBusqueda
             );
             if (PERMISOS_FILTRADOS.length === 0) {
               this.permisosVigentesTabla = [];
-              this.tramite140216Store.setPermisosVigentesTabla(this.permisosVigentesTabla);
+              this.tramite140216Store.setPermisosVigentesTabla(
+                this.permisosVigentesTabla
+              );
               this.abrirModalAlertaFolioIncorrecto();
             } else {
-              this.permisosVigentesTabla = permisosVigentes.data.map((permiso: PermisosVigentes) => {
-                return {
-                  numeroResolucion: permiso.numeroResolucion,
-                  tipoSolicitud: permiso.tipoSolicitud,
-                  regimen: permiso.regimen,
-                  clasificacionRegimen: permiso.clasificacionRegimen,
-                  periodoDeVigencia: permiso.periodoDeVigencia,
-                  fraccionArancelaria: permiso.fraccionArancelaria,
-                  unidad: permiso.unidad,
-                  nico: permiso.nico,
-                  nicoDescripcion: permiso.nicoDescripcion,
-                  acotacion: permiso.acotacion,
-                  cantidadAutorizada: permiso.cantidadAutorizada,
-                  valorAutorizado: permiso.valorAutorizado,
-                  fechaInicioVigencia: permiso.fechaInicioVigencia,
-                  fechaFinVigencia: permiso.fechaFinVigencia
-                };
-              });
-              this.tramite140216Store.setPermisosVigentesTabla(this.permisosVigentesTabla);
+              this.permisosVigentesTabla = permisosVigentes.data.map(
+                (permiso: PermisosVigentes) => {
+                  return {
+                    numeroResolucion: permiso.numeroResolucion,
+                    tipoSolicitud: permiso.tipoSolicitud,
+                    regimen: permiso.regimen,
+                    clasificacionRegimen: permiso.clasificacionRegimen,
+                    periodoDeVigencia: permiso.periodoDeVigencia,
+                    fraccionArancelaria: permiso.fraccionArancelaria,
+                    unidad: permiso.unidad,
+                    nico: permiso.nico,
+                    nicoDescripcion: permiso.nicoDescripcion,
+                    acotacion: permiso.acotacion,
+                    cantidadAutorizada: permiso.cantidadAutorizada,
+                    valorAutorizado: permiso.valorAutorizado,
+                    fechaInicioVigencia: permiso.fechaInicioVigencia,
+                    fechaFinVigencia: permiso.fechaFinVigencia,
+                  };
+                }
+              );
+              this.tramite140216Store.setPermisosVigentesTabla(
+                this.permisosVigentesTabla
+              );
             }
-          }
+          },
         });
     }
   }
@@ -265,7 +296,9 @@ export class BusquedaPermisosComponent implements OnDestroy {
    */
   limpiarGrid(): void {
     this.permisosVigentesTabla = [];
-    this.tramite140216Store.setPermisosVigentesTabla(this.permisosVigentesTabla);
+    this.tramite140216Store.setPermisosVigentesTabla(
+      this.permisosVigentesTabla
+    );
     this.tramite140216Store.setFolioTramiteBusqueda('');
     this.tramite140216Store.setMotivoSuspension('');
     this.tramite140216Store.setNumAutorizacion('');
@@ -300,7 +333,7 @@ export class BusquedaPermisosComponent implements OnDestroy {
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
-    }
+    };
   }
 
   /**
@@ -318,7 +351,7 @@ export class BusquedaPermisosComponent implements OnDestroy {
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
-    }
+    };
   }
 
   /**
@@ -331,7 +364,8 @@ export class BusquedaPermisosComponent implements OnDestroy {
       categoria: 'danger',
       modo: 'action',
       titulo: 'Alerta',
-      mensaje: 'El Folio del trámite ingresado no puede ser suspendido.Favor de verificar',
+      mensaje:
+        'El Folio del trámite ingresado no puede ser suspendido.Favor de verificar',
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
@@ -391,6 +425,16 @@ export class BusquedaPermisosComponent implements OnDestroy {
 
   /**
    * Método para validar el formulario.
+   * @param form Formulario a validar.
+   * @param field Campo a validar.
+   * @returns {boolean} Regresa un booleano si el campo es válido o no.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) === true;
+  }
+
+  /**
+   * Método para validar el formulario.
    * @returns boolean
    */
   validarFormulario(): boolean {
@@ -408,7 +452,11 @@ export class BusquedaPermisosComponent implements OnDestroy {
    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
    * @returns {void}
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite140216Store): void {
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite140216Store
+  ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite140216Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
