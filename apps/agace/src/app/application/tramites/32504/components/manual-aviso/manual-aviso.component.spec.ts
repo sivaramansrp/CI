@@ -7,9 +7,7 @@ import { ManualAvisoComponent } from './manual-aviso.component';
 import {
   CatalogosService,
   ConsultaioQuery,
-  InputConfig,
   InputTypes,
-  MenuConfig,
   BotonAccionesTipos,
 } from '@ng-mf/data-access-user';
 import { Tramite32504Store } from '../../estados/tramite32504.store';
@@ -18,10 +16,11 @@ import { ActionType } from '../../enum/aviso.enum';
 describe('ManualAvisoComponent', () => {
   let component: ManualAvisoComponent;
   let fixture: ComponentFixture<ManualAvisoComponent>;
+  let fb: FormBuilder;
 
   // Stubs
   const catalogosServiceStub = {
-    getCatalogo: jest.fn().mockReturnValue(of([{ label: 'opt', value: '1' }])),
+    getCatalogo: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'opt' }])),
   } as Partial<CatalogosService>;
 
   const consultaQueryStub = {
@@ -34,31 +33,47 @@ describe('ManualAvisoComponent', () => {
     setDatosMercanciaSubmanufactura: jest.fn(),
   } as Partial<Tramite32504Store>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, ManualAvisoComponent],
-      providers: [
-        { provide: CatalogosService, useValue: catalogosServiceStub },
-        { provide: ConsultaioQuery, useValue: consultaQueryStub },
-        { provide: Tramite32504Store, useValue: storeStub },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(ManualAvisoComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+beforeEach(async () => {
+  await TestBed.configureTestingModule({
+    imports: [ReactiveFormsModule, ManualAvisoComponent],
+    providers: [
+      { provide: CatalogosService, useValue: catalogosServiceStub },
+      { provide: ConsultaioQuery, useValue: consultaQueryStub },
+      { provide: Tramite32504Store, useValue: storeStub },
+    ],
+    schemas: [NO_ERRORS_SCHEMA],
   });
 
-  it('should create and initialize form with groups', () => {
-    expect(component).toBeTruthy();
-    expect(component.formulario.contains('datosQuienRecibe')).toBeTruthy();
-    expect(component.formulario.contains('datosDomicilioLugar')).toBeTruthy();
-    expect(
-      component.formulario.contains('datosMercanciaSubmanufactura')
-    ).toBeTruthy();
-    expect(component.formulario.contains('manualDatos')).toBeTruthy();
-  });
+  // Add this line here, before compileComponents()
+  TestBed.overrideComponent(ManualAvisoComponent, { set: { template: '' } });
+
+  await TestBed.compileComponents();
+
+  fixture = TestBed.createComponent(ManualAvisoComponent);
+  component = fixture.componentInstance;
+  fb = TestBed.inject(FormBuilder);
+
+  fixture.detectChanges();
+});
+
+it('should create and initialize form with groups and controls', () => {
+  expect(component).toBeTruthy();
+  expect(component.formulario.contains('datosQuienRecibe')).toBeTruthy();
+  expect(component.formulario.contains('datosDomicilioLugar')).toBeTruthy();
+  expect(component.formulario.contains('datosMercanciaSubmanufactura')).toBeTruthy();
+  expect(component.formulario.contains('manualDatos')).toBeTruthy();
+
+  const dq = component.formulario.get('datosQuienRecibe') as FormGroup;
+  const ddl = component.formulario.get('datosDomicilioLugar') as FormGroup;
+  const dm = component.formulario.get('datosMercanciaSubmanufactura') as FormGroup;
+
+  expect(Object.keys(dq.controls).length).toBeGreaterThan(0);
+  expect(Object.keys(ddl.controls).length).toBeGreaterThan(0);
+  // Only check if config expects controls
+  if (component.configuracion.find(g => g.formGroupName === 'datosMercanciaSubmanufactura')?.menu.length) {
+    expect(Object.keys(dm.controls).length).toBeGreaterThan(0);
+  }
+});
 
   it('static obtenerValidadores returns correct validators', () => {
     const vals = ManualAvisoComponent.obtenerValidadores([
@@ -76,24 +91,21 @@ describe('ManualAvisoComponent', () => {
   });
 
   it('seleccionCatalogo updates form control value', () => {
-    const fb = TestBed.inject(FormBuilder);
-    (component.formulario as FormGroup).addControl('test', fb.control(''));
-    const ctrlName = 'test';
-    const event = 'value1' as any;
-    component.seleccionCatalogo(ctrlName, event);
-    expect((component.formulario as FormGroup).get(ctrlName)?.value).toBe(
-      event
-    );
+    const groupName = 'datosDomicilioLugar';
+    const controlName = 'entidadFederativa';
+    const event = { target: { value: 'testValue' } } as any;
+    component.seleccionCatalogo(groupName, controlName, event);
+    expect(component.formulario.get(groupName)?.get(controlName)?.value).toBe('testValue');
   });
 
   it('cambioValorRadio sets radioSelectedValue in config', () => {
     const configIndex = 0;
     const menuIndex = 0;
     const value = 'radioVal';
+    component.configuracion[configIndex].menu[menuIndex].props.radioSelectedValue = '';
     component.cambioValorRadio('ignored', configIndex, menuIndex, value);
     expect(
-      component.configuracion[configIndex].menu[menuIndex].props
-        .radioSelectedValue
+      component.configuracion[configIndex].menu[menuIndex].props.radioSelectedValue
     ).toBe(value);
   });
 
@@ -119,10 +131,95 @@ describe('ManualAvisoComponent', () => {
     expect(spyRender).toHaveBeenCalledWith(component.configuracion_table);
   });
 
+  it('accionesBotones TABLE_ACTION Eliminar emits', () => {
+    const spyEmit = jest.spyOn(component.emitButtonAction, 'emit');
+    component.accionesBotones(
+      'TABLE_ACTION' as ActionType,
+      BotonAccionesTipos.ELIMINAR
+    );
+    expect(spyEmit).toHaveBeenCalledWith(false);
+  });
+
   it('botonDeTablaInfantilAccion CANCELAR sets esAgregarClicked false', () => {
     component.esAgregarClicked = true;
     component.botonDeTablaInfantilAccion(BotonAccionesTipos.CANCELAR);
     expect(component.esAgregarClicked).toBe(false);
+  });
+
+  it('botonDeTablaInfantilAccion AGREGAR sets esAgregarClicked false', () => {
+    component.esAgregarClicked = true;
+    component.botonDeTablaInfantilAccion(BotonAccionesTipos.AGREGAR);
+    expect(component.esAgregarClicked).toBe(false);
+  });
+
+  it('onSubmit calls store setters', () => {
+    component.onSubmit();
+    expect(storeStub.setDatosQuienRecibe).toHaveBeenCalled();
+    expect(storeStub.setDatosDomicilioLugar).toHaveBeenCalled();
+    expect(storeStub.setDatosMercanciaSubmanufactura).toHaveBeenCalled();
+  });
+
+  it('validarYAgregarFila adds row and shows popup if valid', () => {
+    const group = component.formulario.get('datosMercanciaSubmanufactura') as FormGroup;
+    Object.keys(group.controls).forEach(key => group.get(key)?.setValue('test'));
+    group.markAsDirty();
+    component.tableData.data = [];
+    component.validarYAgregarFila();
+    expect(component.tableData.data.length).toBe(1);
+    expect(component.mostrarPopupRegistroAgregado).toBe(true);
+  });
+
+  it('validarYAgregarFila marks controls as touched if invalid', () => {
+  const group = component.formulario.get('datosMercanciaSubmanufactura') as FormGroup;
+  Object.keys(group.controls).forEach(key => group.get(key)?.setValue(''));
+  const firstKey = Object.keys(group.controls)[0];
+  const control = group.get(firstKey);
+  control?.setErrors({ required: true });
+  const spy = control && typeof control.markAsTouched === 'function'
+    ? jest.spyOn(control, 'markAsTouched')
+    : undefined;
+  component.validarYAgregarFila();
+  if (spy) {
+    expect(spy).toHaveBeenCalled();
+  }
+});
+
+  it('validarNewAgregarFila emits agregarFila if valid', () => {
+    const dq = component.formulario.get('datosQuienRecibe') as FormGroup;
+    const ddl = component.formulario.get('datosDomicilioLugar') as FormGroup;
+    Object.keys(dq.controls).forEach(key => dq.get(key)?.setValue('test'));
+    Object.keys(ddl.controls).forEach(key => ddl.get(key)?.setValue('test'));
+    const spy = jest.spyOn(component.agregarFila, 'emit');
+    component.validarNewAgregarFila();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('validarNewAgregarFila marks controls as touched if invalid', () => {
+    const dq = component.formulario.get('datosQuienRecibe') as FormGroup;
+    const ddl = component.formulario.get('datosDomicilioLugar') as FormGroup;
+    Object.keys(dq.controls).forEach(key => dq.get(key)?.setValue(''));
+    Object.keys(ddl.controls).forEach(key => ddl.get(key)?.setValue(''));
+    const spyDQ = jest.spyOn(Object.values(dq.controls)[0], 'markAsTouched');
+    const spyDDL = jest.spyOn(Object.values(ddl.controls)[0], 'markAsTouched');
+    component.validarNewAgregarFila();
+    expect(spyDQ).toHaveBeenCalled();
+    expect(spyDDL).toHaveBeenCalled();
+  });
+
+  it('renderizadoGrupo calls inicializarFormGroup for each config', () => {
+    const spy = jest.spyOn(component, 'inicializarFormGroup');
+    component.renderizadoGrupo(component.configuracion);
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('inicializarFormGroup adds controls and calls obtenerValoresCatalogo for selects except colonias', () => {
+    const group = component.formulario.get('datosDomicilioLugar') as FormGroup;
+    const spy = jest.spyOn(component, 'obtenerValoresCatalogo');
+    const menu = component.configuracion[1].menu;
+    component.inicializarFormGroup(menu, 'datosDomicilioLugar', 1);
+    expect(Object.keys(group.controls).length).toBeGreaterThan(0);
+    // Should call obtenerValoresCatalogo for selects except colonias
+    expect(spy).toHaveBeenCalled();
   });
 
   it('ngOnDestroy completes destroyNotifier$', () => {
