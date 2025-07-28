@@ -15,7 +15,7 @@
     </div>
 </form>
 
-<ng-titulo titulo="Datos de la planta para realizar los procesos de ensamble y fabricación" />
+<ng-titulo titulo="Datos de la planta para realizar los procesos de ensamble y fabricación*" />
 
 <div class="row mb-3">
     <div class="panel-group ficha-collapse" id="accordion">
@@ -65,7 +65,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Agregar</h4>
+                    <h4 class="modal-title">Datos de la planta para realizar los procesos de ensamble y fabricación</h4>
                 </div>
                 <div class="modal-body">
                     <form [formGroup]="formularioDireccion">
@@ -73,21 +73,21 @@
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="calleInput" class="form-label">Calle</label>
+                                    <label for="calleInput" class="form-label">Calle*:</label>
                                     <input type="text" class="form-control" id="calleInput" formControlName="calle"
                                         placeholder="Ingrese Calle" />
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="numeroExteriorInput" class="form-label">Número Exterior</label>
+                                    <label for="numeroExteriorInput" class="form-label">Número Exterior*:</label>
                                     <input type="text" class="form-control" id="numeroExteriorInput"
                                         formControlName="numeroExterior" placeholder="Ingrese Número Exterior" />
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="numeroInteriorInput" class="form-label">Número Interior</label>
+                                    <label for="numeroInteriorInput" class="form-label">Número Interior:</label>
                                     <input type="text" class="form-control" id="numeroInteriorInput"
                                         formControlName="numeroInterior"
                                         placeholder="Ingrese Número Interior (Opcional)" />
@@ -125,7 +125,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[3].catalogos"
-                                        formControlName="colonia" [label]="'Colonia'" [required]="true"  [isDisabled]="consultaState.readonly">
+                                        formControlName="colonia" [label]="'Colonia'" [isDisabled]="consultaState.readonly">
                                     </app-catalogo-select>
                                 </div>
                             </div>
@@ -134,13 +134,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[4].catalogos"
-                                        formControlName="localidad" [label]="'Localidad'" [required]="true"  [isDisabled]="consultaState.readonly">
+                                        formControlName="localidad" [label]="'Localidad'" [isDisabled]="consultaState.readonly">
                                     </app-catalogo-select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="codigoPostalInput" class="form-label">Código Postal</label>
+                                    <label for="codigoPostalInput" class="form-label">Código Postal*:</label>
                                     <input type="text" class="form-control" id="codigoPostalInput"
                                         formControlName="codigoPostal" placeholder="Ingrese Código Postal" />
                                 </div>
