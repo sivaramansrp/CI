@@ -234,6 +234,7 @@
       <app-tabla-dinamica
         [tipoSeleccionTabla]="tipoSeleccionTabla"
         [configuracionTabla]="configuracionTabla"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         (listaDeFilaSeleccionada)="getListaClavesDeLotes($event)"
         [datos]="tipos"
       >
