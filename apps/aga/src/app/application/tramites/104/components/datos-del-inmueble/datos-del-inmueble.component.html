@@ -76,18 +76,24 @@
                                     <label for="calleInput" class="form-label">Calle*:</label>
                                     <input type="text" class="form-control" id="calleInput" formControlName="calle"
                                         placeholder="Ingrese Calle" />
+                                        <div *ngIf="formularioDireccion.get('calle')?.touched && formularioDireccion.get('calle')?.hasError('required')" class="text-danger mt-1 small">
+                                            Este campo es obligatorio
+                                        </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="numeroExteriorInput" class="form-label">Número Exterior*:</label>
+                                    <label for="numeroExteriorInput" class="form-label">Número exterior*:</label>
                                     <input type="text" class="form-control" id="numeroExteriorInput"
                                         formControlName="numeroExterior" placeholder="Ingrese Número Exterior" />
+                                         <div *ngIf="formularioDireccion.get('numeroExterior')?.touched && formularioDireccion.get('numeroExterior')?.hasError('required')" class="text-danger mt-1 small">
+                                            Este campo es obligatorio
+                                        </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="numeroInteriorInput" class="form-label">Número Interior:</label>
+                                    <label for="numeroInteriorInput" class="form-label">Número interior:</label>
                                     <input type="text" class="form-control" id="numeroInteriorInput"
                                         formControlName="numeroInterior"
                                         placeholder="Ingrese Número Interior (Opcional)" />
@@ -99,7 +105,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[0].catalogos"
-                                        formControlName="pais" [label]="'País'" [required]="true"  [isDisabled]="consultaState.readonly">
+                                        formControlName="pais" [label]="'País'" [required]="true" [isDisabled]="consultaState.readonly">
                                     </app-catalogo-select>
                                 </div>
                             </div>
@@ -117,7 +123,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[2].catalogos"
-                                        formControlName="municipioDelegacion" [label]="'Municipio o Delegación'"
+                                        formControlName="municipioDelegacion" [label]="'Municipio o delegación'"
                                         [required]="true"  [isDisabled]="consultaState.readonly">
                                     </app-catalogo-select>
                                 </div>
@@ -140,9 +146,12 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="codigoPostalInput" class="form-label">Código Postal*:</label>
+                                    <label for="codigoPostalInput" class="form-label">Código postal*:</label>
                                     <input type="text" class="form-control" id="codigoPostalInput"
                                         formControlName="codigoPostal" placeholder="Ingrese Código Postal" />
+                                         <div *ngIf="formularioDireccion.get('codigoPostal')?.touched && formularioDireccion.get('codigoPostal')?.hasError('required')" class="text-danger mt-1 small">
+                                            Este campo es obligatorio
+                                        </div>
                                 </div>
                             </div>
                         </div>
@@ -152,7 +161,7 @@
                     <button type="button" class="btn btn-primary"  [disabled]="consultaState.readonly">Agregar</button>
                     <button type="button" class="btn btn-default btn-space"  [disabled]="consultaState.readonly">Limpiar</button>
                     <button type="button" class="btn btn-default" data-bs-dismiss="modal"  [disabled]="consultaState.readonly" #closeModal>
-                        Cerrar
+                        Cancelar
                     </button>
                 </div>
             </div>
