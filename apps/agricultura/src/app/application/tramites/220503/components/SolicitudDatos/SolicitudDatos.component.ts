@@ -71,7 +71,13 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   public destroyed$ = new Subject<void>();
 
-  @ViewChild(DatosDelTramiteARealizarComponent) datosDelTramiteARealizar!: DatosDelTramiteARealizarComponent;
+  @ViewChild('datosDelTramiteARealizarRef') datosDelTramiteARealizar!: DatosDelTramiteARealizarComponent;
+
+  @ViewChild('solicitudDatosTabRef') revisionDocumental!: SolicitudDatosTabComponent;
+
+  @ViewChild('responsableInspeccionEnPuntoRef') responsableInspeccionEnPunto!: ResponsableInspeccionEnPuntoComponent;
+
+  @ViewChild('medioTransporteRef') medioTransporte!: MedioTransporteComponent;
 
   /** Constructor para inyectar dependencias */
   constructor(
@@ -109,6 +115,11 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
       });
   }
 
+  validarFormularios(): boolean {
+   let isValid = true;
+   isValid = this.datosDelTramiteARealizar.validarFormularios() && this.responsableInspeccionEnPunto.validarFormularios() && this.medioTransporte.validarFormularios();
+   return isValid;
+  }
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Desuscribe el componente de todos los observables.

@@ -19,6 +19,7 @@ import { TercerosRelacionadosComponent } from '../../shared/terceros-relacionado
     PagoDeDerechosComponent,
     TituloComponent,
     AlertComponent,
+    
   ],
 })
 export class RevisionDocumentalComponent {

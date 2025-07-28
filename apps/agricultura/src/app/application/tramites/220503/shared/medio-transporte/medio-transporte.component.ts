@@ -153,19 +153,19 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
         this.claveDeControl,
         new FormGroup({
           transporteIdMedio: new FormControl(
-            this.solicitud220502State.transporteIdMedio,
+            this.solicitud220502State.transporteIdMedio || '',
             [Validators.required]
           ),
           identificacionTransporte: new FormControl(
-            this.solicitud220502State.identificacionTransporte,
+            this.solicitud220502State.identificacionTransporte || '',
             [Validators.maxLength(30)]
           ),
           esSolicitudFerros: new FormControl(
-            this.solicitud220502State.esSolicitudFerros,
+            this.solicitud220502State.esSolicitudFerros || '',
             [Validators.required]
           ),
           totalDeGuiasAmparadas: new FormControl(
-            this.solicitud220502State.totalDeGuiasAmparadas,
+            this.solicitud220502State.totalDeGuiasAmparadas || '',
             [Validators.maxLength(50)]
           ),
         })
@@ -182,12 +182,12 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
           ) as FormGroup;
           if (FORM_GROUP) {
             FORM_GROUP.patchValue({
-              transporteIdMedio: this.solicitud220502State.transporteIdMedio,
+              transporteIdMedio: this.solicitud220502State.transporteIdMedio|| '',
               identificacionTransporte:
-                this.solicitud220502State.identificacionTransporte,
-              esSolicitudFerros: this.solicitud220502State.esSolicitudFerros,
+                this.solicitud220502State.identificacionTransporte || '',
+              esSolicitudFerros: this.solicitud220502State.esSolicitudFerros || '',
               totalDeGuiasAmparadas:
-                this.solicitud220502State.totalDeGuiasAmparadas,
+                this.solicitud220502State.totalDeGuiasAmparadas || '',
             });
           }
         })
@@ -293,6 +293,10 @@ if(this.esFormularioSoloLectura){
   setTotalDeGuiasAmparadas(event: Event): void {
     const VALUE = (event.target as HTMLInputElement).value;
     this.solicitud220503Store.setTotalDeGuiasAmparadas(VALUE);
+  }
+    validarFormularios(): boolean {
+    const FORM_GROUP = this.grupoFormularioPadre.get(this.claveDeControl) as FormGroup;
+    return FORM_GROUP ? FORM_GROUP.valid : false;
   }
 
  /**
