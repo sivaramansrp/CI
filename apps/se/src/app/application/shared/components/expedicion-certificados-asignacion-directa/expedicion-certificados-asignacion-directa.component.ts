@@ -187,9 +187,6 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
   inicializarEstadoFormulario(): void {
     if (this.formularioDeshabilitado) {
       this.expedicionCertificadosAsignacionForm?.disable();
-    } else if (!this.formularioDeshabilitado) {
-      this.asignacionOficioNumeroForm?.enable();
-      this.distribucionSaldoForm.get('montoExpedir')?.enable();
     }
   }
 
@@ -457,7 +454,7 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
       this.invalidoFolioAsignacion = true;
       this.mostrarDetalle = false;
       this.tramite120202Store.setMostrarDetalle(this.mostrarDetalle);
-      this.asignacionOficioNumeroForm.get('numFolioAsignacionAux')?.markAsTouched();
+      this.asignacionOficioNumeroForm?.get('numFolioAsignacionAux')?.markAsTouched();
       this.mostrarError.emit(false);
       this.mostrarNumFolioAsignacionError.emit({ mostrarError: true, valor: numFolioAsignacionAux });
       return;
@@ -623,7 +620,7 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
    * @return {boolean} - Retorna true si el campo es inválido y ha sido tocado o modificado, de lo contrario false.
    */
   esInvalido(campo: string): boolean {
-    const CONTROL = this.asignacionOficioNumeroForm.get(campo);
+    const CONTROL = this.asignacionOficioNumeroForm?.get(campo);
     return Boolean(CONTROL && CONTROL.invalid && (CONTROL.touched || CONTROL.dirty));
   }
 
