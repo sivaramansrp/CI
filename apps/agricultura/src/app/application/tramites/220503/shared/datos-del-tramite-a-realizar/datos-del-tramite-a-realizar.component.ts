@@ -13,6 +13,7 @@ import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { PagoDeDerechoComponent } from '../../../../shared/components/pago-de-derecho/pago-de-derecho.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud220503Query } from '../../estados/tramites220503.query';
 import { Solicitud220503State } from '../../estados/tramites220503.store';
@@ -205,10 +206,10 @@ this.datosServicio.disable();
             this.Solicitud220503State.puntoDeInspeccion,
             [Validators.required]
           ),
-          fechaDeInspeccion: new FormControl(
-            this.Solicitud220503State.fechaDeInspeccion,
-            [Validators.required]
-          ),
+            fechaDeInspeccion: new FormControl(
+              this.Solicitud220503State.fechaDeInspeccion|| PagoDeDerechoComponent.formatDate(),
+              [Validators.required]
+            ),
         })
       );
       this.cargarDatosIniciales();

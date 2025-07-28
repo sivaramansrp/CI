@@ -2233,13 +2233,6 @@
     "department": "se"
   },
   {
-    "id": 321,
-    "tramite": 220503,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "agricultura"
-  },
-  {
     "id": 323,
     "tramite": 110205,
     "linkDashboard": "/se/validar-certificado/peru",
