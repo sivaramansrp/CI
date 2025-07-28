@@ -28,15 +28,19 @@ import { ToastrService } from 'ngx-toastr';
 import { VehiculosComponent } from './components/vehiculos/vehiculos.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { forwardRef } from '@angular/core';
+import { ModificacionVehiculoComponent } from './components/vehiculos/parque-vehicular/modificacion/modificacion-vehiculo.component';
+import { BajaVehiculoComponent } from './components/vehiculos/parque-vehicular/baja/baja-vehiculo.component';
+import { ModificacionUnidadComponent } from './components/vehiculos/unidad-de-arrastre/modificacion/modificacion-unidad.component';
+import { BajaUnidadComponent } from './components/vehiculos/unidad-de-arrastre/baja/baja-unidad.component';
+import { VehiculosModule } from './components/vehiculos/vehiculos.module';
 
 @NgModule({
   declarations: [
     SolicitantePageComponent,
     PasoUnoComponent,
     PasoDosComponent,
-    VehiculosComponent,
     DirectorGeneralComponent,
-    SolicitanteComponent,
+    SolicitanteComponent
   ],
   imports: [
     CommonModule,
@@ -59,12 +63,12 @@ import { forwardRef } from '@angular/core';
     forwardRef(() => SelectPaisesComponent),
     forwardRef(() => CatalogoSelectComponent),
     ChoferesComponent,
-    TablaDinamicaComponent
-],
+    TablaDinamicaComponent,
+    VehiculosModule
+  ],
   exports: [
     PasoUnoComponent,
     PasoDosComponent,
-   
   ],
   providers: [ToastrService, CatalogosService, Chofer40103Service],
 })

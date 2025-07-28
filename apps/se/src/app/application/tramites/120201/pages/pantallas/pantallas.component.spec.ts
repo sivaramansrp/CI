@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PantallasComponent } from './pantallas.component';
-import { BtnContinuarComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import {
+  BtnContinuarComponent,
+  WizardComponent,
+} from '@libs/shared/data-access-user/src';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('PantallasComponent', () => {
@@ -10,10 +13,7 @@ describe('PantallasComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PantallasComponent],
-      imports: [
-        WizardComponent,
-        BtnContinuarComponent
-      ],
+      imports: [WizardComponent, BtnContinuarComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
@@ -31,12 +31,13 @@ describe('PantallasComponent', () => {
       siguiente: jest.fn(),
       atras: jest.fn(),
     };
-    component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
+    component.wizardComponent =
+      mockWizardComponent as unknown as WizardComponent;
 
     component.datos = {
       expedicionCertificadosAsignacionDirectaComponent: {
-        validarFormulario: jest.fn().mockReturnValue(true)
-      }
+        validarFormulario: jest.fn().mockReturnValue(true),
+      },
     } as any;
 
     component.esValido = true;
@@ -49,5 +50,33 @@ describe('PantallasComponent', () => {
     component.getValorIndice({ accion: 'back', valor: 1 });
     expect(component.indice).toBe(1);
     expect(mockWizardComponent.atras).toHaveBeenCalled();
+  });
+
+  it('should set esValido to true and mostrarError to event value', () => {
+    component.mostrarErrorDirectoEvento(true);
+    expect(component.esValido).toBe(true);
+    expect(component.mostrarError).toBe(true);
+
+    component.mostrarErrorDirectoEvento(false);
+    expect(component.mostrarError).toBe(false);
+  });
+
+  it('should set esValido to true, mostrarError to false, mostrarNumFolioAsignacionError to event value, and update error message', () => {
+    const event = { mostrarError: true, valor: 'XYZ123' };
+
+    component.mostrarNumFolioAsignacionErrorEvento(event);
+
+    expect(component.esValido).toBe(true);
+    expect(component.mostrarError).toBe(false);
+    expect(component.mostrarNumFolioAsignacionError).toBe(true);
+  });
+
+  it('should set esValido to true and mostrarAgregarError to event value', () => {
+    component.mostrarAgregarErrorEvento(true);
+    expect(component.esValido).toBe(true);
+    expect(component.mostrarAgregarError).toBe(true);
+
+    component.mostrarAgregarErrorEvento(false);
+    expect(component.mostrarAgregarError).toBe(false);
   });
 });

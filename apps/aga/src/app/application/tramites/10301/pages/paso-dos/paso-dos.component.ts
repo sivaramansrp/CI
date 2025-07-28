@@ -244,13 +244,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.donanteDomicilio();
-
-    this.subscriptions.push(
-      this.query.selectFechasSeleccionadas$.subscribe((fechas) => {
-        this.fechasSeleccionadas = fechas ?? [];
-      })
-    );
-
     this.subscriptions.push(
       this.query.selectTipoDocumento$.subscribe((tipoDocumento) => {
         this.tipoDocumento = {

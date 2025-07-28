@@ -225,6 +225,17 @@ it('debe actualizar selectedRows con la selección proporcionada', () => {
 
   expect(component.selectedRows).toEqual(seleccion);
 });
+it('debe establecer noSeleccionado en false cuando hay exactamente un elemento seleccionado', () => {
+  const selected = [{ id: 1 }];
+  component.onSeleccionChangeEvent(selected);
+  expect(component.selectedRowsEvent).toEqual(selected);
+  expect(component.noSeleccionado).toBe(false);
+});
 
-
+it('debe establecer noSeleccionado en true cuando hay cero o más de un elemento seleccionado', () => {
+  const selected = [{ id: 1 }, { id: 2 }];
+  component.onSeleccionChangeEvent(selected);
+  expect(component.selectedRowsEvent).toEqual(selected);
+  expect(component.noSeleccionado).toBe(true);
+});
 });

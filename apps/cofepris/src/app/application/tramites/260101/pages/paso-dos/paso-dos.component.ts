@@ -1,9 +1,5 @@
-import { AlertComponent, AnexarDocumentosComponent, CATALOGOS_ID, TituloComponent } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { TEXTOS } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, CATALOGOS_ID,Catalogo, CatalogosService, TEXTOS, TituloComponent } from '@ng-mf/data-access-user';
+import { Component, OnInit } from '@angular/core';
 
 /**
  * PasoDosComponent.
