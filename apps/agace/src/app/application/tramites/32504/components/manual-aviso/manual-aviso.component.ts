@@ -18,8 +18,18 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite32504Store } from '../../estados/tramite32504.store';
 
+/**
+ * Asigna el catálogo de fracciones arancelarias al primer campo de datos de mercancía.
+ * Asigna el catálogo de unidades de medida al tercer campo de datos de mercancía.
+ */
 DATOS_MERCANCIA_SUBMANUFACTURA[0].catalogos = FRACCION_ARANCELARIA_CONFIG;
 DATOS_MERCANCIA_SUBMANUFACTURA[2].catalogos = UNIDAD_MEDIDA_CONFIG;
+/**
+ * Asigna catálogos de selección a los campos del domicilio:
+ * - Entidades federativas al segundo campo,
+ * - Alcaldías al tercer campo,
+ * - Colonias al cuarto campo.
+ */
 DATOS_DOMICILIO_LUGAR[1].catalogos = ENTIDAD_FEDERATIVA_CONFIG;
 DATOS_DOMICILIO_LUGAR[2].catalogos = ALCALDIA_CONFIG;
 DATOS_DOMICILIO_LUGAR[3].catalogos = COLONIA_CONFIG;
