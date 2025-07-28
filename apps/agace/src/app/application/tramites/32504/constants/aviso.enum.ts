@@ -125,7 +125,7 @@ export const DATOS_DOMICILIO_LUGAR = [
     },
     {
         labelNombre: 'Alcaldía o Municipio',
-        campo: 'alcalida_municipio',
+        campo: 'alcaldiaMunicipio',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [] as Catalogo[],
@@ -135,7 +135,7 @@ export const DATOS_DOMICILIO_LUGAR = [
         campo: 'colonias',
         required: true,
         primerOpcion: 'Selecciona un valor',
-        catalogos: [],
+        catalogos: [] as Catalogo[],
     },
     {
         labelNombre: 'Calle*:',
@@ -317,6 +317,10 @@ export const ANIO_CONFIG: Catalogo[] = [
     { descripcion: '2027', id: 2027 },
 ];
 
+/**
+ * Catálogo de unidades de medida disponibles.
+ * Contiene una lista de objetos con la descripción y el identificador de cada unidad.
+ */
 export const UNIDAD_MEDIDA_CONFIG: Catalogo[] = [
     { descripcion: 'Kilogramo', id: 1 },
     { descripcion: 'Litro', id: 2 },
@@ -325,6 +329,10 @@ export const UNIDAD_MEDIDA_CONFIG: Catalogo[] = [
     { descripcion: 'Caja', id: 5 },
 ];
 
+/**
+ * Catálogo de fracciones arancelarias disponibles.
+ * Contiene una lista de descripciones e identificadores correspondientes a productos específicos para comercio exterior.
+ */
 export const FRACCION_ARANCELARIA_CONFIG: Catalogo[] = [
     { descripcion: '0101.21.01 - Caballos pura sangre para carreras', id: 1012101 },
     { descripcion: '0207.14.01 - Muslos de pollo congelados', id: 2071401 },
@@ -333,6 +341,10 @@ export const FRACCION_ARANCELARIA_CONFIG: Catalogo[] = [
     { descripcion: '8703.21.02 - Vehículos de turismo con motor eléctrico', id: 87032102 },
 ];
 
+/**
+ * Catálogo de entidades federativas de México.
+ * Contiene una lista con la descripción y el identificador de cada estado o entidad.
+ */
 export const ENTIDAD_FEDERATIVA_CONFIG: Catalogo[] = [
     { descripcion: 'Aguascalientes', id: 1 },
     { descripcion: 'Baja California', id: 2 },
@@ -346,6 +358,10 @@ export const ENTIDAD_FEDERATIVA_CONFIG: Catalogo[] = [
     { descripcion: 'Durango', id: 10 },
 ];
 
+/**
+ * Catálogo de alcaldías de la Ciudad de México.
+ * Contiene una lista con la descripción y el identificador de cada alcaldía.
+ */
 export const ALCALDIA_CONFIG: Catalogo[] = [
   { descripcion: 'Álvaro Obregón', id: 1 },
   { descripcion: 'Azcapotzalco', id: 2 },
@@ -363,4 +379,16 @@ export const ALCALDIA_CONFIG: Catalogo[] = [
   { descripcion: 'Tlalpan', id: 14 },
   { descripcion: 'Venustiano Carranza', id: 15 },
   { descripcion: 'Xochimilco', id: 16 },
+];
+
+/**
+ * Catálogo de colonias disponibles.
+ * Lista con la descripción y el identificador de cada colonia.
+ */
+export const COLONIA_CONFIG: Catalogo[] = [
+    { descripcion: 'Colonia 1', id: 1 },
+    { descripcion: 'Colonia 2', id: 2 },
+    { descripcion: 'Colonia 3', id: 3 },
+    { descripcion: 'Colonia 4', id: 4 },
+    { descripcion: 'Colonia 5', id: 5 },
 ];

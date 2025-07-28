@@ -46,8 +46,8 @@ export interface ColumnasTabla {
     rfc: string,
     nombreComercial: string,
     entidadFederativa: string,
-    alcaldioOMuncipio: string,
-    colonia: string,
+    alcaldiaMunicipio: string,
+    colonias: string,
 }
 export interface ColumnsTableMercancia {
   fracArancelaria: string,

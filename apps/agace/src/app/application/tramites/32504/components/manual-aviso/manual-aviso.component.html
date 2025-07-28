@@ -15,8 +15,9 @@
                 [catalogo]="item.props.catalogos"
                 [label]="item.props.labelNombre"
                 [required]="true"
-                name="tipoSolicitud"
-                (change)="seleccionCatalogo(item.props.labelNombre, $event)"
+                formControlName=item.props.campo
+                name="item.props.campo"
+                (change)="seleccionCatalogo(fieldGroup.formGroupName, item.props.campo, $event)"
               ></app-catalogo-select>
               } @case(inputTypes.TEXT) { @if((!item.props.availableRadioOptions) ||
               (item.props.availableRadioOptions &&
@@ -79,7 +80,7 @@
       }
 
       <!-- this section is changed -->
-      <div class="form" formGroupName="manualDatos" [ngClass]="{'d-none' : esAgregarClicked}">
+      <div class="form" [ngClass]="{'d-none' : esAgregarClicked}">
         <ng-titulo titulo="Datos de la mercancía transferida para submanufactura" />
         <div class="row">
           <app-tabla-dinamica 
@@ -108,7 +109,7 @@
               type="button"
               class="btn btn-primary ms-3"
               [disabled]="false"
-              (click)="accionesBotones(actionTypes.TABLE_ACTION, botonAccionesTipos.AGREGAR)"
+              (click)="validarNewAgregarFila()"
             >
               Agregar
             </button>
@@ -131,8 +132,9 @@
                   [catalogo]="item.props.catalogos"
                   [label]="item.props.labelNombre"
                   [required]="true"
-                  name="tipoSolicitud"
-                  (change)="seleccionCatalogo(item.props.labelNombre, $event)"
+                  formControlName=item.props.campo
+                  name="item.props.campo"
+                  (change)="seleccionCatalogo(fieldGroup.formGroupName, item.props.campo, $event)"
                 ></app-catalogo-select>
                 } @case(inputTypes.TEXT) { @if((!item.props.availableRadioOptions) ||
                 (item.props.availableRadioOptions &&
@@ -211,4 +213,24 @@
     }
     </form>
   </div>
-  
+  <div
+  class="modal fade show popup"
+  tabindex="-1"
+  role="dialog"
+  *ngIf="mostrarPopupRegistroAgregado"
+  style="display: block; background: rgba(0,0,0,0.3);"
+>
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header"></div>
+      <div class="modal-body">
+        <p>{{ mensajePopupRegistroAgregado }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="mostrarPopupRegistroAgregado = false">
+          Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

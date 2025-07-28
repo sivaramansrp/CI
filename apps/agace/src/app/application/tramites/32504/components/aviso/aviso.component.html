@@ -50,26 +50,6 @@
               (valorCambiado)="fechaCambiado($event)"
             ></input-fecha>
             } @case (inputTypes.RADIO) {
-            <!-- <div class="tipo-carga">
-            <label class="form-label" [for]="item.props.campo">{{
-              item.props.labelNombre
-            }}</label
-            >@if(item.props.required){<span>*</span>}:
-            <app-input-radio
-              [radioOptions]="item.props.radioOptions"
-              [selectedValue]="item.props.radioSelectedValue"
-              [isRequired]="item.props.required"
-              (valueChange)="
-                cambioValorRadio(
-                  'radio' + groupIndex,
-                  groupIndex,
-                  menuIndex,
-                  $event
-                )
-              "
-              [layout]="'horizontal'"
-            ></app-input-radio>
-            </div> -->
             <div class="tipo-carga">
               <label class="form-label mb-0" [for]="item.props.campo">
                 {{ item.props.labelNombre }}
@@ -139,6 +119,7 @@
     </div>
     } @if (esManualAsivoAgregarClicked) {
     <app-manual-aviso
+      (agregarFila)="agregarFilaTabla($event)"
       (emitButtonAction)="esManualAsivoAgregarClicked = $event"
     ></app-manual-aviso>
     } @if (configuracion[1] && configuracion[1].menu[0] && configuracion[1].menu[0].props && configuracion[1].menu[0].props.radioSelectedValue && configuracion[1].menu[0].props.radioSelectedValue === cargaTipo.CARGA_MASIVA) {
