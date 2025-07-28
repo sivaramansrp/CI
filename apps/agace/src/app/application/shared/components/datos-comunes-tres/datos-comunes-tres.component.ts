@@ -147,6 +147,9 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   /** Bandera para mostrar u ocultar la sección del número de solicitud en el formulario de datos comunes. */
   public mostrarNumeroSolicitudSeccion: boolean = false;
 
+  /** Indica si el modal está en modo de edición (true) o creación (false). */
+  public esModalEdicion: boolean = false;
+
   /** Modelo para la opción de tipo sí/no representado como radio button */
   public sinoOpciones = SI_NO_OPCIONES;
 
@@ -706,6 +709,8 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   */
   agregarSubcontratados(): void {
     if (this.modalSeccionSubcontratadosElement) {
+      this.esModalEdicion = false; // Set mode to "add"
+      this.ninoFormGroupmodal1.reset(); // Clear the form
       this.modalInstance = new Modal(this.modalSeccionSubcontratadosElement.nativeElement);
       this.modalInstance.show();
     }
@@ -713,15 +718,21 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
 
   /** Muestra el modal de subcontratados y carga los datos del primer empleado seleccionado en el formulario modal. */
   modificarSubcontratados(): void {
-    if (this.seleccionarNumeroDeEmpleadosLista.length !== 0) {
-      this.agregarSubcontratados();
+    if (this.seleccionarNumeroDeEmpleadosLista.length !== 0 && this.modalSeccionSubcontratadosElement) {
+      this.esModalEdicion = true; // Set mode to "edit"
+      
+      // Open modal and populate with selected data
+      this.modalInstance = new Modal(this.modalSeccionSubcontratadosElement.nativeElement);
+      this.modalInstance.show();
+      
+      // Populate form with selected employee data
       this.ninoFormGroupmodal1.patchValue({
         subcontrataRFCBusqueda: this.seleccionarNumeroDeEmpleadosLista[0]?.RFC,
         subcontrataRFC: this.seleccionarNumeroDeEmpleadosLista[0]?.RFC,
         subcontrataRazonSocial: this.seleccionarNumeroDeEmpleadosLista[0]?.denominacion,
         subcontrataEmpleados: this.seleccionarNumeroDeEmpleadosLista[0]?.numeroDeEmpleados,
         subcontrataBimestre: this.seleccionarNumeroDeEmpleadosLista[0]?.bimestre
-      })
+      });
     }
   }
 
@@ -765,7 +776,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   /** Elimina los registros de número de empleados seleccionados.*/
   eliminarNumeroDeEmpleadosDato(): void {
     if (this.seleccionarNumeroDeEmpleadosLista.length > 0) {
-      // Use filter method for more reliable deletion
+      // Create new array without selected items to trigger change detection
       this.numeroDeEmpleadosLista = this.numeroDeEmpleadosLista.filter(item => {
         // Check if the current item should be kept (not in the selected list)
         return !this.seleccionarNumeroDeEmpleadosLista.some(selectedItem =>
@@ -867,28 +878,42 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
 
   /** Guarda o actualiza el registro de número de empleados en la lista y muestra el modal de confirmación. */
   aceptarModalUno(): void {
-    if (!this.seleccionarNumeroDeEmpleadosLista.length) {
+    if (!this.esModalEdicion) {
       // Add new record
-      this.numeroDeEmpleadosLista.push({
+      const NUEVO_EMPLEADO = {
         denominacion: this.ninoFormGroupmodal1.get('subcontrataRazonSocial')?.value,
         RFC: this.ninoFormGroupmodal1.get('subcontrataRFCBusqueda')?.value,
         numeroDeEmpleados: this.ninoFormGroupmodal1.get('subcontrataEmpleados')?.value,
         bimestre: DatosComunesTresComponent.obtenerDescripcion(this.bimestreOpciones, this.ninoFormGroupmodal1.get('subcontrataBimestre')?.value)
-      });
+      };
+      
+      // Create new array to trigger change detection
+      this.numeroDeEmpleadosLista = [...this.numeroDeEmpleadosLista, NUEVO_EMPLEADO];
       this.datosComunesTresStore.setDynamicFieldValue('numeroDeEmpleadosLista', this.numeroDeEmpleadosLista);
-      this.modalInstance.hide();
-      this.mostrarGuardadosCorrectamenteModal();
     } else {
-      // Update existing record
+      // Update existing record - modify in place, don't add new record
       const INDICE = this.numeroDeEmpleadosLista.findIndex((item) => item.RFC === this.seleccionarNumeroDeEmpleadosLista?.[0]?.RFC);
-      this.numeroDeEmpleadosLista[INDICE].RFC = this.ninoFormGroupmodal1.get('subcontrataRFCBusqueda')?.value;
-      this.numeroDeEmpleadosLista[INDICE].bimestre = DatosComunesTresComponent.obtenerDescripcion(this.bimestreOpciones, this.ninoFormGroupmodal1.get('subcontrataBimestre')?.value);
-      this.numeroDeEmpleadosLista[INDICE].denominacion = this.ninoFormGroupmodal1.get('subcontrataRazonSocial')?.value;
-      this.numeroDeEmpleadosLista[INDICE].numeroDeEmpleados = this.ninoFormGroupmodal1.get('subcontrataEmpleados')?.value;
-      this.modalInstance.hide();
-      this.datosComunesTresStore.setDynamicFieldValue('numeroDeEmpleadosLista', this.numeroDeEmpleadosLista);
-      this.mostrarGuardadosCorrectamenteModal();
+      if (INDICE >= 0) {
+        // Create new array and update only the specific record
+        this.numeroDeEmpleadosLista = this.numeroDeEmpleadosLista.map((item, index) => {
+          if (index === INDICE) {
+            return {
+              RFC: this.ninoFormGroupmodal1.get('subcontrataRFCBusqueda')?.value,
+              bimestre: DatosComunesTresComponent.obtenerDescripcion(this.bimestreOpciones, this.ninoFormGroupmodal1.get('subcontrataBimestre')?.value),
+              denominacion: this.ninoFormGroupmodal1.get('subcontrataRazonSocial')?.value,
+              numeroDeEmpleados: this.ninoFormGroupmodal1.get('subcontrataEmpleados')?.value
+            };
+          }
+          return item;
+        });
+        this.datosComunesTresStore.setDynamicFieldValue('numeroDeEmpleadosLista', this.numeroDeEmpleadosLista);
+      }
     }
+    
+    // Clear selection and close modal
+    this.seleccionarNumeroDeEmpleadosLista = [];
+    this.modalInstance.hide();
+    this.mostrarGuardadosCorrectamenteModal();
   }
 
   /** Muestra el modal de confirmación de guardado exitoso utilizando la referencia al elemento correspondiente. */
