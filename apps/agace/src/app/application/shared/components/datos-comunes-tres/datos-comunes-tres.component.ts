@@ -773,6 +773,29 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  /**
+   * Muestra el modal para modificar miembros de la empresa y carga los datos del miembro seleccionado.
+   * Se utiliza el elemento del DOM referenciado como modalAgregarMiembrosEmpresa.
+   */
+  modificarMiembrosEmpresa(): void {
+    if (this.seleccionarListaSeccionSociosIC.length !== 0 && this.modalAgregarMiembrosEmpresa) {
+      // Open modal and populate with selected member data
+      this.modalInstance = new Modal(this.modalAgregarMiembrosEmpresa.nativeElement);
+      this.modalInstance.show();
+      
+      // Populate form with selected member data
+      this.ninoFormGroupmodal4.patchValue({
+        miembroTipoPersonaMuestra: this.seleccionarListaSeccionSociosIC[0]?.tipoPersonaMuestra,
+        miembroNombreCompleto: this.seleccionarListaSeccionSociosIC[0]?.nombreCompleto,
+        miembroRfc: this.seleccionarListaSeccionSociosIC[0]?.rfc,
+        miembroCaracterDe: this.seleccionarListaSeccionSociosIC[0]?.caracterDe,
+        miembroNacionalidad: this.seleccionarListaSeccionSociosIC[0]?.nacionalidad,
+        miembroTributarMexico: this.seleccionarListaSeccionSociosIC[0]?.tributarMexico,
+        miembroNombreEmpresa: this.seleccionarListaSeccionSociosIC[0]?.nombreEmpresa
+      });
+    }
+  }
+
   /** Elimina los registros de número de empleados seleccionados.*/
   eliminarNumeroDeEmpleadosDato(): void {
     if (this.seleccionarNumeroDeEmpleadosLista.length > 0) {
@@ -1068,7 +1091,8 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   /** Guarda o actualiza el registro de socios IC en la lista y actualiza el store, luego cierra el modal. */
   aceptarModalCuatro(): void {
     if (!this.seleccionarListaSeccionSociosIC.length) {
-      this.listaSeccionSociosIC.push({
+      // Add new member
+      const NUEVO_MIEMBRO = {
         tipoPersonaMuestra: this.ninoFormGroupmodal4.get('miembroTipoPersonaMuestra')?.value,
         nombreCompleto: this.ninoFormGroupmodal4.get('miembroNombreCompleto')?.value,
         rfc: this.ninoFormGroupmodal4.get('miembroRfc')?.value,
@@ -1076,21 +1100,37 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
         nacionalidad: DatosComunesTresComponent.obtenerDescripcion(this.nacionalidadOpciones, this.ninoFormGroupmodal4.get('miembroNacionalidad')?.value),
         tributarMexico: this.ninoFormGroupmodal4.get('miembroTributarMexico')?.value,
         nombreEmpresa: this.ninoFormGroupmodal4.get('miembroNombreEmpresa')?.value,
-      });
-      this.modalInstance.hide();
+      };
+      
+      // Create new array to trigger change detection
+      this.listaSeccionSociosIC = [...this.listaSeccionSociosIC, NUEVO_MIEMBRO];
       this.datosComunesTresStore.setDynamicFieldValue('seccionSociosIC', this.listaSeccionSociosIC);
     } else {
+      // Update existing member
       const INDICE = this.listaSeccionSociosIC.findIndex((el: SeccionSociosIC) => el.rfc === this.seleccionarListaSeccionSociosIC[0]?.rfc);
-      this.listaSeccionSociosIC[INDICE].tipoPersonaMuestra = this.ninoFormGroupmodal4.get('miembroTipoPersonaMuestra')?.value;
-      this.listaSeccionSociosIC[INDICE].nombreCompleto = this.ninoFormGroupmodal4.get('miembroNombreCompleto')?.value;
-      this.listaSeccionSociosIC[INDICE].rfc = this.ninoFormGroupmodal4.get('miembroRfc')?.value;
-      this.listaSeccionSociosIC[INDICE].caracterDe = DatosComunesTresComponent.obtenerDescripcion(this.enSuCaracterOpciones, this.ninoFormGroupmodal4.get('miembroCaracterDe')?.value);
-      this.listaSeccionSociosIC[INDICE].tributarMexico = this.ninoFormGroupmodal4.get('miembroTributarMexico')?.value;
-      this.listaSeccionSociosIC[INDICE].nombreEmpresa = this.ninoFormGroupmodal4.get('miembroNombreEmpresa')?.value;
-      this.listaSeccionSociosIC[INDICE].nacionalidad = DatosComunesTresComponent.obtenerDescripcion(this.nacionalidadOpciones, this.ninoFormGroupmodal4.get('miembroNacionalidad')?.value);
-      this.datosComunesTresStore.setDynamicFieldValue('seccionSociosIC', this.listaSeccionSociosIC);
-      this.modalInstance.hide();
+      if (INDICE >= 0) {
+        // Create new array and update only the specific record
+        this.listaSeccionSociosIC = this.listaSeccionSociosIC.map((item, index) => {
+          if (index === INDICE) {
+            return {
+              tipoPersonaMuestra: this.ninoFormGroupmodal4.get('miembroTipoPersonaMuestra')?.value,
+              nombreCompleto: this.ninoFormGroupmodal4.get('miembroNombreCompleto')?.value,
+              rfc: this.ninoFormGroupmodal4.get('miembroRfc')?.value,
+              caracterDe: DatosComunesTresComponent.obtenerDescripcion(this.enSuCaracterOpciones, this.ninoFormGroupmodal4.get('miembroCaracterDe')?.value),
+              nacionalidad: DatosComunesTresComponent.obtenerDescripcion(this.nacionalidadOpciones, this.ninoFormGroupmodal4.get('miembroNacionalidad')?.value),
+              tributarMexico: this.ninoFormGroupmodal4.get('miembroTributarMexico')?.value,
+              nombreEmpresa: this.ninoFormGroupmodal4.get('miembroNombreEmpresa')?.value,
+            };
+          }
+          return item;
+        });
+        this.datosComunesTresStore.setDynamicFieldValue('seccionSociosIC', this.listaSeccionSociosIC);
+      }
     }
+    
+    // Clear selection and close modal
+    this.seleccionarListaSeccionSociosIC = [];
+    this.modalInstance.hide();
   }
 
   /** Establece el valor de un campo en el store y muestra el modal de confirmación si corresponde. */
