@@ -58,6 +58,7 @@ export class Datos260212Component implements OnInit, AfterViewInit, OnDestroy {
     })).subscribe();
     if (this.consultaState.update) {
       this.guardarDatosFormulario();
+      this.tercerosDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
     }
@@ -104,9 +105,28 @@ export class Datos260212Component implements OnInit, AfterViewInit, OnDestroy {
         if (resp) {
           this.esDatosRespuesta = true;
           this.service260212Service.actualizarEstadoFormulario(resp);
+          
         }
       });
   }
+  /**
+   * Método que guarda los datos del formulario.
+   * Se suscribe al servicio sanitario para obtener los datos de la solicitud
+   * y actualiza el estado del formulario si hay respuesta.
+   */
+  tercerosDatosFormulario(): void {
+    this.service260212Service
+      .getTercerosData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.service260212Service.actualizarEstadoTercerosFormulario(resp);
+        
+        }
+      });
+    }
   /**
     * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
     * Libera recursos y cancela suscripciones.

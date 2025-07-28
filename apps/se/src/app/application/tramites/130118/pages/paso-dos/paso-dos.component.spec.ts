@@ -1,82 +1,75 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
 import { PasoDosComponent } from './paso-dos.component';
-import { CatalogosService } from '@ng-mf/data-access-user';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+
+import { of, Subject } from 'rxjs';
+import { EventEmitter } from '@angular/core';
+import { DestroyRef } from '@angular/core';
+import { CatalogosService } from '@libs/shared/data-access-user/src';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
-  let fixture: ComponentFixture<PasoDosComponent>;
-  let catalogosServiceMock: any;
-  let importacionPlafestServiceMock: any;
+  let catalogosServiceMock: jest.Mocked<CatalogosService>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     catalogosServiceMock = {
       getCatalogo: jest.fn()
-    };
+    } as any;
 
-    importacionPlafestServiceMock = {
-      obtenerDocumentosSeleccionados: jest.fn()
-    };
-
-    await TestBed.configureTestingModule({
-      declarations: [PasoDosComponent],
-      imports: [
-        HttpClientTestingModule
-      ],
-      providers: [
-        { provide: CatalogosService, useValue: catalogosServiceMock }
-      ],
-      schemas: [NO_ERRORS_SCHEMA]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(PasoDosComponent);
-    component = fixture.componentInstance;
+    component = new PasoDosComponent(catalogosServiceMock);
+    component.cargaArchivosEvento = new EventEmitter<void>();
+    component.regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+    jest.spyOn(component.reenviarEvento, 'emit');
+    jest.spyOn(component.reenviarRegresarSeccion, 'emit');
+    jest.spyOn(component.reenviarCargaRealizada, 'emit');
+    jest.spyOn(component.reenviarEventoCarga, 'emit');
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should initialize properties correctly', () => {
-    expect(component.TEXTOS).toBeDefined();
-    expect(component.infoAlert).toBe('alert-info');
-    expect(component.catalogoDocumentos).toEqual([]);
-    expect(component.documentosSeleccionados).toEqual([]);
-  });
-
-  describe('ngOnInit', () => {
-    it('should call getTiposDocumentos and obtenerDocumentosSeleccionados', () => {
-      const mockCatalogoData = [{ id: 1, descripcion: 'Doc 1' }];
-
-    catalogosServiceMock.getCatalogo.mockReturnValue(of(mockCatalogoData));
-
+  it('debería emitir reenviarEvento al activarse cargaArchivosEvento', () => {
     component.ngOnInit();
+    component.cargaArchivosEvento.emit();
 
-    expect(component.catalogoDocumentos).toEqual(mockCatalogoData);
-    expect(catalogosServiceMock.getCatalogo).toHaveBeenCalledWith(CATALOGOS_ID.CAT_TIPO_DOCUMENTO);
-    });
+    expect(component.reenviarEvento.emit).toHaveBeenCalled();
   });
 
-  describe('getTiposDocumentos', () => {
-    it('should set catalogoDocumentos when service returns data', () => {
-      const mockData = [{ id: 1, descripcion: 'Documento 1' }];
-      catalogosServiceMock.getCatalogo.mockReturnValue(of(mockData));
+  it('debería emitir reenviarRegresarSeccion al activarse regresarSeccionCargarDocumentoEvento', () => {
+    component.ngOnInit();
+    component.regresarSeccionCargarDocumentoEvento.emit();
 
-      component.getTiposDocumentos();
-
-      expect(catalogosServiceMock.getCatalogo).toHaveBeenCalledWith(CATALOGOS_ID.CAT_TIPO_DOCUMENTO);
-      expect(component.catalogoDocumentos).toEqual(mockData);
-    });
-
-    it('should not set catalogoDocumentos if response is empty', () => {
-      catalogosServiceMock.getCatalogo.mockReturnValue(of([]));
-      component.getTiposDocumentos();
-      expect(component.catalogoDocumentos).toEqual([]);
-    });
+    expect(component.reenviarRegresarSeccion.emit).toHaveBeenCalled();
   });
 
- 
+  it('debería llamar getCatalogo y asignar el catálogo', () => {
+    const fakeCatalog = [
+      { id: 1, nombre: 'Doc A', descripcion: 'Descripción A' }
+    ];
+
+    catalogosServiceMock.getCatalogo.mockReturnValue(of(fakeCatalog));
+
+    component.getTiposDocumentos();
+
+    expect(catalogosServiceMock.getCatalogo).toHaveBeenCalled();
+    expect(component.catalogoDocumentos).toEqual(fakeCatalog);
+  });
+
+  it('debería actualizar cargaRealizada y emitir evento en documentosCargados()', () => {
+    component.documentosCargados(true);
+
+    expect(component.cargaRealizada).toBe(true);
+    expect(component.reenviarCargaRealizada.emit).toHaveBeenCalledWith(true);
+  });
+
+  it('debería emitir evento desde manejarEventoCargaDocumento()', () => {
+    component.manejarEventoCargaDocumento(true);
+
+    expect(component.reenviarEventoCarga.emit).toHaveBeenCalledWith(true);
+  });
+
+  it('debería limpiar destroyed$ al destruir el componente', () => {
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+    const nextSpy = jest.spyOn(component['destroyed$'], 'next');
+
+    component.ngOnDestroy();
+
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
 });

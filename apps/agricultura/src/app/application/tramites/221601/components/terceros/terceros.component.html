@@ -1,250 +1,423 @@
-<ng-titulo titulo="Terceros relacionados" />
-<ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
-<div class="row">
-  <h6>Exportador*</h6>
-  <app-tabla-dinamica
-    [configuracionTabla]="configuracionTabla"
-    [datos]="exportador"
-    [tipoSeleccionTabla]="checkbox"
-    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
-  ></app-tabla-dinamica>  
-  <nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-      <li class="page-item"><a class="page-link">1</a></li>
-    </ul>
-  </nav>
-</div>
-<div class="row">
-  <h6>Destinatario (destino final)*</h6>
-  <app-tabla-dinamica
-    [configuracionTabla]="configuracionTablaDatos"
-    [datos]="destinatario"
-    [tipoSeleccionTabla]="checkbox"
-    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
-  ></app-tabla-dinamica>
-  <nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-      <li class="page-item"><a class="page-link">1</a></li>
-    </ul>
-  </nav>
-</div>
-<div class="col-md-12 mt-5 d-flex justify-content-end">
-  <button type="button" class="btn btn-primary ms-3" (click)="tercerosAgregar()" [disabled]="esFormularioSoloLectura">Agregar</button>
-  <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura" [disabled]="esFormularioSoloLectura">Buscar</button>
-</div>
-<app-modal [active]="showtercerosModal">
-<div>
-  <form [formGroup]="tipoPersonaForm" class="form">
-  <ng-titulo titulo="Agregar destinatario (destino final)" />
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <label class="form-label" for="tipoPersona">Tipo persona*:</label>
-    </div>
+<div class="container">
+  <ng-titulo titulo="Terceros relacionados" />
+  <div style="text-align: center;">
+    <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
   </div>
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
-        value="fisica" id="fisica"
-        (change)="setValoresStore(tipoPersonaForm,'tipoPersona', 'setTipoPersona')" />
-      <label for="fisica">Física</label>
-    </div>
-    <div class="col-md-6">
-      <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
-        value="planta" id="planta" (change)="setValoresStore(tipoPersonaForm,'tipoPersona', 'setTipoPersona')" />
-      <label for="planta">Planta TIF</label>
-    </div>
-  </div>
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
-        value="moral" id="moral" (change)="setValoresStore(tipoPersonaForm,'tipoPersona', 'setTipoPersona')" />
-      <label for="moral">Moral</label>
-    </div>
-  </div>
-  </form>
-  <ng-titulo titulo="Datos personales" />
-  <form [formGroup]="datosPersonales">
-  @if (showFisicaRow) {
-  <div class="row" >
-    <div class="col-md-4 mb-3">
-      <div class="form-group">
-      <label class="form-label" for="nombre">Nombre(s)*:</label>
-      <input class="form-control" id="nombre" type="number" formControlName="nombre"        
-        (change)="setValoresStore(datosPersonales,'nombre', 'setNombre')" />
-        </div>
-        @if(datosPersonales.controls['nombre'].invalid && datosPersonales.controls['nombre'].touched) {
-          <div class="d-grid">
-            @if(datosPersonales.controls['nombre'].errors?.['required']) {
-              <span class="mensaje-error">Este campo es obligatorio</span>
-            }
-          </div>
-        }
-    </div>
-    <div class="col-md-4 mb-3">
-      <div class="form-group">
-      <label class="form-label" for="primerApellido">Primer apellido*:</label>
-      <input class="form-control" id="primerApellido" type="text" formControlName="primerApellido"        
-        (change)="setValoresStore(datosPersonales,'primerApellido', 'setPrimerApellido')" />
-        </div>
-        @if(datosPersonales.controls['primerApellido'].invalid && datosPersonales.controls['primerApellido'].touched) {
-          <div class="d-grid">
-            @if(datosPersonales.controls['primerApellido'].errors?.['required']) {
-              <span class="mensaje-error">Este campo es obligatorio</span>
-            }
-          </div>
-        }
-    </div>
-    <div class="col-md-4 mb-3">
-      <div class="form-group">
-      <label class="form-label" for="segundoApellido">Segundo apellido:</label>
-      <input class="form-control" id="segundoApellido" type="text" formControlName="segundoApellido"       
-        (change)="setValoresStore(datosPersonales,'segundoApellido', 'setSegundoApellido')" />
-    </div>
-     </div>
-     </div>
-    }
 
-@if (showPlantaRow) {
-<div class="row" >
-  <div class="col-md-4 mb-3">
-    <label class="form-label" for="tif">Número establecimiento TIF:</label>
-    <input class="form-control" id="tif" type="number" formControlName="tif"      
-      (change)="setValoresStore(datosPersonales,'tif', 'setTif')" />
-  </div>
-</div>
-}
-  @if (showMoralRow) {
-  <div class="row" >
-    <div class="col-md-8">
-      <div class="form-group">
-        <label class="form-label" for="social">Denominación/razón social:*</label>
-        <input class="form-control" id="social" type="text" formControlName="social"         
-          (change)="setValoresStore(datosPersonales,'social', 'setSocial')" />
-      </div>
-      @if(datosPersonales.controls['social'].invalid && datosPersonales.controls['social'].touched) {
-        <div class="d-grid">
-          @if(datosPersonales.controls['social'].errors?.['required']) {
-            <span class="mensaje-error">Este campo es obligatorio</span>
-          }
-        </div>
-      }
-    </div>
-    </div>
-  }   
-    <div class="row">
-    <div class="col-md-4">
-      <div class="form-group"> 
-        <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'País'" [isDisabled]="true" [isDisabled]="esFormularioSoloLectura"
-        [required]="true" name="pais" (change)="setValoresStore(datosPersonales, 'pais', 'setPais')">
-      </app-catalogo-select>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="form-group">
-        <label class="form-label" for="codigo">Código postal</label>
-        <input class="form-control" id="codigo" type="number" formControlName="codigo"           
-          (change)="setValoresStore(datosPersonales,'codigo', 'setCodigo')" />
-      </div>
-         </div>
-    <div class="col-md-4">
-      <div class="form-group"> 
-        <app-catalogo-select [catalogo]="estadoCatalogo" formControlName="estado" [label]="'Estado'" [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura"
-        [required]="true" name="estado" (change)="setValoresStore(datosPersonales, 'estado', 'setEstado')">
-      </app-catalogo-select>
-      </div>
-    </div>
-  </div>
+  <!-- Exportador table -->
   <div class="row">
-    <div class="col-md-4">
-      <div class="form-group">
-        <app-catalogo-select [catalogo]="municipioCatalogo" formControlName="municipio" [label]="'Municipio o Alcaldía'" [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura"
-        [required]="true" name="municipio" (change)="setValoresStore(datosPersonales, 'municipio', 'setMunicipio')">
-      </app-catalogo-select>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="form-group">
-        <app-catalogo-select [catalogo]="coloniaCatalogo" formControlName="colonia" [label]="'Colonia'" [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura"
-        [required]="true" name="colonia" (change)="setValoresStore(datosPersonales, 'colonia', 'setColonia')">
-      </app-catalogo-select>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="form-group">
-        <label class="form-label" for="calle">Calle*:</label>
-        <input class="form-control" id="calle" type="text" formControlName="calle"          
-          (change)="setValoresStore(datosPersonales,'calle', 'setCalle')" />
-      </div>
-      @if(datosPersonales.controls['calle'].invalid && datosPersonales.controls['calle'].touched) {
-        <div class="d-grid">
-          @if(datosPersonales.controls['calle'].errors?.['required']) {
-            <span class="mensaje-error">Este campo es obligatorio</span>
-          }
-        </div>
-      }
-    </div>
+    <h6>Exportador*</h6>
+    <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="exportador"
+      [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+      (listaDeFilaSeleccionada)="onExportadorSeleccionado($event)">
+    </app-tabla-dinamica>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item"><a class="page-link">1</a></li>
+      </ul>
+    </nav>
   </div>
+
+  <!-- Action buttons for Exportador -->
+  <div class="col-md-12 mt-5 d-flex justify-content-end"
+    *ngIf="exportadorSeleccionado?.length && exportadorSeleccionado.length > 0">
+    <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">Modificar</button>
+    <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
+  </div>
+
+  <!-- Destinatario table -->
   <div class="row">
-    <div class="col-md-4">
-      <div class="form-group">
-        <label class="form-label" for="exterior">Número exterior*:</label>
-        <input class="form-control" id="exterior" type="number" formControlName="exterior"          
-          (change)="setValoresStore(datosPersonales,'exterior', 'setExterior')" />
-      </div>
-      @if(datosPersonales.controls['exterior'].invalid && datosPersonales.controls['exterior'].touched) {
-        <div class="d-grid">
-          @if(datosPersonales.controls['exterior'].errors?.['required']) {
-            <span class="mensaje-error">Este campo es obligatorio</span>
-          }
-        </div>
-      }
-    </div>
-    <div class="col-md-4">
-      <div class="form-group">
-        <label class="form-label" for="interior">Número interior:</label>
-        <input class="form-control" id="interior" type="number" formControlName="interior"          
-          (change)="setValoresStore(datosPersonales,'interior', 'setInterior')" />
-      </div>
-     
-    </div>  
+    <h6>Destinatario (destino final)*</h6>
+    <app-tabla-dinamica [configuracionTabla]="configuracionTablaDatos" [datos]="destinatario"
+      [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+    </app-tabla-dinamica>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item"><a class="page-link">1</a></li>
+      </ul>
+    </nav>
   </div>
-  <div class="row">
-    <div class="col-md-1 mb-3">
-      <div class="form-group">
-      <label class="form-label" for="lada">Lada:</label>
-      <input class="form-control" id="lada" type="number" formControlName="lada"        
-        (change)="setValoresStore(datosPersonales,'lada', 'setLada')" />
-    </div>
-  
-  </div>
-    <div class="col-md-3 mb-3">
-      <div class="form-group">
-      <label class="form-label" for="telefono">Teléfono:</label>
-      <input class="form-control" id="telefono" type="number" formControlName="telefono"        
-        (change)="setValoresStore(datosPersonales,'telefono', 'setTelefono')" />
-    </div>
-   
-    </div>
-    <div class="col-md-4 mb-3">
-      <label class="form-label" for="correoElectronico">Correo electrónico*:</label>
-      <div class="input-group">
-       <input class="form-control" id="correoElectronico" type="email" formControlName="correoElectronico"        
-        (change)="setValoresStore(datosPersonales,'correoElectronico', 'setCorreoElectronico')" />
-      </div>
-      @if(datosPersonales.controls['correoElectronico'].invalid && datosPersonales.controls['correoElectronico'].touched) {
-        <div class="d-grid">
-          @if(datosPersonales.controls['correoElectronico'].errors?.['required']) {
-            <span class="mensaje-error">Este campo es obligatorio</span>
-          }
-        </div>
-      }
-    </div>
-  </div>
-  </form>
+
+  <!-- Action buttons -->
   <div class="col-md-12 mt-5 d-flex justify-content-end">
-    <button type="button" class="btn btn-default">Limpiar</button>
-    <button type="button" class="btn btn-danger ms-3"  (click)="cancelarDestinatario()" [disabled]="esFormularioSoloLectura">Cancelar</button>
-    <button type="button" class="btn btn-primary ms-3" (click)="guardarDestinatario()" [disabled]="esFormularioSoloLectura">Guardar</button>
+    <button type="button" class="btn btn-primary ms-3" (click)="tercerosAgregar()"
+      [disabled]="esFormularioSoloLectura">Agregar</button>
+    <button type="button" class="btn btn-default ms-3" (click)="abrirBuscarTercerosModal()">Buscar</button>
   </div>
+
+  <!-- Modal -->
+  <app-modal [active]="showtercerosModal">
+    <div>
+      <form [formGroup]="tipoPersonaForm" class="form">
+        <ng-titulo titulo="Agregar destinatario (destino final)" />
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Tipo persona*:</label>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
+              value="fisica" id="fisica"
+              (change)="setValoresStore(tipoPersonaForm,'tipoPersona', 'setTipoPersona')" />
+            <label for="fisica">Física</label>
+          </div>
+          <div class="col-md-6">
+            <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
+              value="planta" id="planta"
+              (change)="setValoresStore(tipoPersonaForm,'tipoPersona', 'setTipoPersona')" />
+            <label for="planta">Planta TIF</label>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
+              value="moral" id="moral"
+              (change)="setValoresStore(tipoPersonaForm,'tipoPersona', 'setTipoPersona')" />
+            <label for="moral">Moral</label>
+          </div>
+        </div>
+      </form>
+
+      <!-- Planta TIF Search Block -->
+      <div *ngIf="tipoPersonaForm.get('tipoPersona')?.value === 'planta'" class="mb-4 border p-3">
+        <h6 class="fw-bold">Planta TIF</h6>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label" for="nombreTif">Nombre establecimiento TIF:</label>
+            <input class="form-control" id="nombreTif" type="text" [(ngModel)]="nombreEstablecimientoTif"
+              name="nombreTif" />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label" for="numeroTif">Número establecimiento TIF:</label>
+            <input class="form-control" id="numeroTif" type="text" [(ngModel)]="numeroEstablecimientoTif"
+              name="numeroTif" />
+          </div>
+        </div>
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-default me-2" (click)="limpiarBusquedaTif()">Limpiar</button>
+          <button type="button" class="btn btn-primary" >Buscar</button>
+        </div>
+      </div>
+<!-- Datos personales form -->
+      <ng-titulo titulo="Datos personales" />
+      <form [formGroup]="datosPersonales">
+        @if (showFisicaRow) {
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <div class="form-group">
+              <label class="form-label" for="nombre">Nombre(s)*:</label>
+              <input class="form-control" id="nombre" type="number" formControlName="nombre" maxlength="200"
+                (change)="setValoresStore(datosPersonales,'nombre', 'setNombre')" />
+              <div class="d-grid">
+                <div *ngIf="datosPersonales.get('nombre')?.touched">
+                  <small class="mensaje-error" *ngIf="datosPersonales.get('nombre')?.hasError('maxlength')">
+                    El número de guía no puede exceder los 200 caracteres.
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="form-group">
+              <label class="form-label" for="primerApellido">Primer apellido*:</label>
+              <input class="form-control" id="primerApellido" type="text" formControlName="primerApellido"
+                (change)="setValoresStore(datosPersonales,'primerApellido', 'setPrimerApellido')" />
+              <div class="d-grid">
+                <div *ngIf="datosPersonales.get('primerApellido')?.touched">
+                  <small class="mensaje-error" *ngIf="datosPersonales.get('primerApellido')?.hasError('maxlength')">
+                    El número de guía no puede exceder los 200 caracteres.
+                  </small>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="form-group">
+              <label class="form-label" for="segundoApellido">Segundo apellido:</label>
+              <input class="form-control" id="segundoApellido" type="text" formControlName="segundoApellido"
+                (change)="setValoresStore(datosPersonales,'segundoApellido', 'setSegundoApellido')" />
+              <div class="d-grid">
+                <div *ngIf="datosPersonales.get('segundoApellido')?.touched">
+                  <small class="mensaje-error" *ngIf="datosPersonales.get('segundoApellido')?.hasError('maxlength')">
+                    El número de guía no puede exceder los 200 caracteres.
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+
+        @if (showPlantaRow) {
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label class="form-label" for="tif">Número establecimiento TIF:</label>
+            <input class="form-control" id="tif" type="number" formControlName="tif"
+              (change)="setValoresStore(datosPersonales,'tif', 'setTif')" />
+          </div>
+        </div>
+        }
+        @if (showMoralRow) {
+        <div class="row">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label" for="social">Denominación/razón social:*</label>
+              <input class="form-control" id="social" type="text" formControlName="social" maxlength="250" size="29"
+                (change)="setValoresStore(datosPersonales,'social', 'setSocial')" />
+              <div class="d-grid">
+                <div *ngIf="datosPersonales.get('social')?.touched">
+                  <small class="mensaje-error" *ngIf="datosPersonales.get('social')?.hasError('maxlength')">
+                    La denominación/razón social no puede exceder los 250 caracteres.
+                  </small>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        }
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'País'" [isDisabled]="true"
+                [isDisabled]="esFormularioSoloLectura" [required]="true" name="pais"
+                (change)="setValoresStore(datosPersonales, 'pais', 'setPais')">
+              </app-catalogo-select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="codigo">Código postal</label>
+              <input class="form-control" id="codigo" type="text" formControlName="codigo" maxlength="5" size="5"
+                (change)="setValoresStore(datosPersonales,'codigo', 'setCodigo')" />
+            </div>
+
+            <div class="d-grid">
+              <div *ngIf="datosPersonales.get('codigo')?.touched">
+                <small class="mensaje-error" *ngIf="datosPersonales.get('codigo')?.hasError('maxlength')">
+                  El código postal no puede exceder los 5 caracteres.
+                </small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <app-catalogo-select [catalogo]="estadoCatalogo" formControlName="estado" [label]="'Estado'"
+                [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura" [required]="true" name="estado"
+                (change)="setValoresStore(datosPersonales, 'estado', 'setEstado')">
+              </app-catalogo-select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <app-catalogo-select [catalogo]="municipioCatalogo" formControlName="municipio"
+                [label]="'Municipio o Alcaldía'" [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura"
+                [required]="true" name="municipio"
+                (change)="setValoresStore(datosPersonales, 'municipio', 'setMunicipio')">
+              </app-catalogo-select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <app-catalogo-select [catalogo]="coloniaCatalogo" formControlName="colonia" [label]="'Colonia'"
+                [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura" [required]="true" name="colonia"
+                (change)="setValoresStore(datosPersonales, 'colonia', 'setColonia')">
+              </app-catalogo-select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="calle">Calle*:</label>
+              <input class="form-control" id="calle" type="text" formControlName="calle" maxlength="100" size="29"
+                (change)="setValoresStore(datosPersonales,'calle', 'setCalle')" />
+              <div class="d-grid">
+                <div *ngIf="datosPersonales.get('calle')?.touched">
+                  <small class="mensaje-error" *ngIf="datosPersonales.get('calle')?.hasError('maxlength')">
+                    La calle no puede exceder los 100 caracteres.
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="exterior">Número exterior*:</label>
+              <input class="form-control" id="exterior" type="number" formControlName="exterior" maxlength="55"
+                (change)="setValoresStore(datosPersonales,'exterior', 'setExterior')" />
+
+              <div class="d-grid">
+                <div *ngIf="datosPersonales.get('exterior')?.touched">
+                  <small class="mensaje-error" *ngIf="datosPersonales.get('exterior')?.hasError('required')">
+                    Este campo es obligatorio.
+                  </small>
+                  <small class="mensaje-error" *ngIf="datosPersonales.get('exterior')?.hasError('maxlength')">
+                    Existen datos incorrectos que no cumplen con el formato esperado
+                  </small>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="interior">Número interior:</label>
+              <input class="form-control" id="interior" type="number" formControlName="interior" maxlength="55"
+                (change)="setValoresStore(datosPersonales,'interior', 'setInterior')" />
+              <div class="d-grid">
+                <div *ngIf="datosPersonales.get('interior')?.touched">
+                  <small class="mensaje-error" *ngIf="datosPersonales.get('interior')?.hasError('maxlength')">
+                    El número interior no puede exceder los 55 caracteres.
+                  </small>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-1 mb-3">
+            <div class="form-group">
+              <label class="form-label" for="lada">Lada:</label>
+              <input class="form-control" id="lada" type="number" formControlName="lada" maxlength="5" size="5"
+                (change)="setValoresStore(datosPersonales,'lada', 'setLada')" />
+              <div class="d-grid">
+                <div *ngIf="datosPersonales.get('lada')?.touched">
+                  <small class="mensaje-error" *ngIf="datosPersonales.get('lada')?.hasError('maxlength')">
+                    La lada no puede exceder los 5 caracteres.
+                  </small>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="form-group">
+              <label class="form-label" for="telefono">Teléfono:</label>
+              <input class="form-control" id="telefono" type="number" formControlName="telefono" maxlength="30"
+                size="29" (change)="setValoresStore(datosPersonales,'telefono', 'setTelefono')" />
+              <div class="d-grid">
+                <div *ngIf="datosPersonales.get('telefono')?.touched">
+                  <small class="mensaje-error" *ngIf="datosPersonales.get('telefono')?.hasError('maxlength')">
+                    Existen datos incorrectos que no cumplen con el formato esperado
+                  </small>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="form-label" for="correoElectronico">Correo electrónico:<span
+                class="bi bi-question-circle-fill fs-4 m-1" title="ejemplo@dominio.com"
+                ata-bs-toggle="tooltip"></span></label>
+            <div class="input-group">
+              <input class="form-control" id="correoElectronico" type="email" formControlName="correoElectronico"
+                (change)="setValoresStore(datosPersonales,'correoElectronico', 'setCorreoElectronico')" />
+            </div>
+            @if(datosPersonales.controls['correoElectronico'].invalid &&
+            datosPersonales.controls['correoElectronico'].touched) {
+            <div class="d-grid">
+              @if(datosPersonales.controls['correoElectronico'].errors?.['required']) {
+              <span class="mensaje-error">Por favor, escribe una dirección de correo válida</span>
+              }
+            </div>
+            }
+          </div>
+        </div>
+      </form>
+
+      <!-- Modal Footer -->
+      <div class="col-md-12 mt-5 d-flex justify-content-end">
+        <button type="button" class="btn btn-default" (click)="limpiarDatosFormulario()">Limpiar</button>
+        <button type="button" class="btn btn-danger ms-3" (click)="cancelarDestinatario()"
+          [disabled]="esFormularioSoloLectura">Cancelar</button>
+        <button type="button" class="btn btn-primary ms-3" (click)="guardarDestinatario()"
+          [disabled]="esFormularioSoloLectura">Guardar</button>
+      </div>
+    </div>
+  </app-modal>
+
+  <!-- Search Terceros Modal -->
+  <app-modal [active]="showBuscarTercerosModal">
+    <div>
+      <ng-titulo titulo="Terceros relacionados" />
+      
+      <form [formGroup]="buscarTercerosForm" class="form">
+        <!-- Radio buttons for Física and Moral -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <input class="form-check-input me-2" type="radio" name="tipoPersonaBuscar" 
+              formControlName="tipoPersonaBuscar" value="fisica" id="fisicaBuscar" />
+            <label for="fisicaBuscar">Física</label>
+          </div>
+          <div class="col-md-6">
+            <input class="form-check-input me-2" type="radio" name="tipoPersonaBuscar" 
+              formControlName="tipoPersonaBuscar" value="moral" id="moralBuscar" />
+            <label for="moralBuscar">Moral</label>
+          </div>
+        </div>
+
+        <!-- Form fields based on selection -->
+        <!-- Fields for Física -->
+        <div class="row mb-3" *ngIf="buscarTercerosForm.get('tipoPersonaBuscar')?.value === 'fisica'">
+          <div class="col-md-4">
+            <label class="form-label" for="nombreBuscar">Nombre:</label>
+            <input class="form-control" id="nombreBuscar" type="text" formControlName="nombre" />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="apellidoPaternoBuscar">Apellido paterno:</label>
+            <input class="form-control" id="apellidoPaternoBuscar" type="text" formControlName="apellidoPaterno" />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="apellidoMaternoBuscar">Apellido materno:</label>
+            <input class="form-control" id="apellidoMaternoBuscar" type="text" formControlName="apellidoMaterno" />
+          </div>
+        </div>
+
+        <!-- Fields for Moral -->
+        <div class="row mb-3" *ngIf="buscarTercerosForm.get('tipoPersonaBuscar')?.value === 'moral'">
+          <div class="col-md-8">
+            <label class="form-label" for="razonSocialBuscar">Razón social:</label>
+            <input class="form-control" id="razonSocialBuscar" type="text" formControlName="razonSocial" />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label" for="correoElectronicoBuscar">Correo electrónico:</label>
+            <input class="form-control" id="correoElectronicoBuscar" type="email" formControlName="correoElectronico" />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'País'" [isDisabled]="true"
+                [isDisabled]="esFormularioSoloLectura" [required]="true" name="pais"></app-catalogo-select>
+          </div>
+        
+          <div class="col-md-6">
+            <app-catalogo-select [catalogo]="estadoCatalogo" formControlName="entidadFederativa" [label]="'Entidad Federativa'" [isDisabled]="true"
+                [isDisabled]="esFormularioSoloLectura" [required]="true" name="entidadFederativa" [placeholder]="'Selecciona una valor'"></app-catalogo-select>
+          </div>
 </div>
-</app-modal>
+<!-- Action buttons -->
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-primary me-2" (click)="cerrarBuscarTercerosModal()">Cerrar</button>
+          <button type="button" class="btn btn-outline-secondary me-2" (click)="limpiarBuscarTerceros()">Limpiar</button>
+          <button type="button" class="btn btn-primary" >Buscar</button>
+        </div>
+      </form>
+    </div>
+     <div class="row">
+    <h6>Terceros</h6>
+    <app-tabla-dinamica [configuracionTabla]="configuracionTablaDatos" [datos]="destinatario"
+      [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+    </app-tabla-dinamica>
+    </div>
+  </app-modal>
+</div>

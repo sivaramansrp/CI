@@ -25,7 +25,7 @@ export interface FirmarRequest {
   /**
    * Identificador único de la solicitud a firmar.
    */
-  id_solicitud: number;
+  id_solicitud?: number;
 
   /**
    * Cadena original generada a partir de los datos del trámite. Es la base para la firma electrónica.

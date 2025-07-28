@@ -9,9 +9,7 @@
         "municipioOAlcaldia": "Cuauhtémoc",
         "entidadFederativa": "Ciudad de México",
         "pais": "México",
-        "rfc": "ABC123456789",
-        "domicilioFiscal": "Avenida Reforma 123, Centro, CDMX",
-        "razonSocial": "Empresa Ejemplo S.A. de C.V.",
+        "telefono": "555-1234",
         "desEstatus": "Activada"
     },
     {
@@ -24,9 +22,7 @@
         "municipioOAlcaldia": "Benito Juárez",
         "entidadFederativa": "Ciudad de México",
         "pais": "México",
-        "rfc": "DEF987654321",
-        "domicilioFiscal": "Insurgentes Sur 456, Del Valle, CDMX",
-        "razonSocial": "Comercializadora del Centro S.A. de C.V.",
+        "telefono": "555-5678",
         "desEstatus": "Baja"
     },
     {
@@ -39,9 +35,7 @@
         "municipioOAlcaldia": "Miguel Hidalgo",
         "entidadFederativa": "Ciudad de México",
         "pais": "México",
-        "rfc": "GHI456789123",
-        "domicilioFiscal": "Paseo de la Reforma 789, Polanco, CDMX",
-        "razonSocial": "Tecnologías Avanzadas S.A. de C.V.",
+        "telefono": "555-6789",
         "desEstatus": "Activada"
     },
     {
@@ -54,9 +48,7 @@
         "municipioOAlcaldia": "Cuauhtémoc",
         "entidadFederativa": "Ciudad de México",
         "pais": "México",
-        "rfc": "JKL321654987",
-        "domicilioFiscal": "Avenida Juárez 321, Centro Histórico, CDMX",
-        "razonSocial": "Servicios Integrales del Sur S.A. de C.V.",
+        "telefono": "555-1234",
         "desEstatus": "Baja"
     },
     {
@@ -69,9 +61,7 @@
         "municipioOAlcaldia": "Cuauhtémoc",
         "entidadFederativa": "Ciudad de México",
         "pais": "México",
-        "rfc": "MNO789456123",
-        "domicilioFiscal": "Eje Central 987, Doctores, CDMX",
-        "razonSocial": "Consultores Globales S.A. de C.V.",
+        "telefono": "555-9876",
         "desEstatus": "Activada"
     }
 ]
