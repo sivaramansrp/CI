@@ -268,6 +268,12 @@ const ROUTES: Routes = [
         (m) => m.AvisoDeModificacionModule)
   },
   {
+      path: 'recinto-fiscalizado',
+    loadChildren: () => 
+      import('./tramites/32615/recinto-fiscalizado.module').then(
+        (m) => m.RecintoFiscalizadoModule)
+      },
+      {
         path: 'esquema-de-certificacion',
     loadChildren: () =>
       import('./tramites/32612/esquema-de-certificacion/esquema-de-certificacion.module').then(
@@ -353,7 +359,15 @@ const ROUTES: Routes = [
     path: 'economico',
     loadChildren: () =>
       import('./tramites/32606/economico.module').then((m) => m.EconomicoModule),
-  }
+  },
+    {
+    path: 'seciit-oea-registration',
+    loadChildren: () =>
+      import('./tramites/32608/seciit-oea-registration.module').then(
+        (m) => m.SeciitOeaRegistrationModule
+      ),
+  },
+
 ];
 
 @NgModule({

@@ -1,8 +1,6 @@
-
+import { RouterModule, Routes } from '@angular/router';
 import { AcusePageComponent } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { Routes } from '@angular/router';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
 const ROUTES_CONTENEDOR: Routes = [
   {

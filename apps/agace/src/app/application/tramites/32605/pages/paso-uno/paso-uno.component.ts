@@ -1,14 +1,10 @@
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { CTPATComponent } from '../../components/c-tpat/c-tpat.component';
-import { CommonModule } from '@angular/common';
 import { Component} from '@angular/core';
-import { ConsultaioQuery} from '@libs/shared/data-access-user/src';
-import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { DatosComunesComponent } from '../../components/datos-comunes/datos-comunes.component';
-import { GuardarDatosFormulario } from '../../models/solicitud.model';
 import { ImportadorExportadorComponent } from '../../components/importador-exportador/importador-exportador.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
@@ -23,16 +19,6 @@ import { takeUntil } from 'rxjs';
  */
 @Component({
   selector: 'app-paso-uno',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    SolicitanteComponent,
-    ImportadorExportadorComponent,
-    CTPATComponent,
-    TercerosRelacionadosComponent,
-    DatosComunesComponent,
-  ],
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss'],
 })
@@ -44,7 +30,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /**
    * Índice utilizado para identificar la pestaña activa dentro del paso.
-   * @type {number}
    */
   indice: number = 1;
 
@@ -54,6 +39,49 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
+
+  /**
+   * @desc Valor seleccionado para el campo de reconocimiento mutuo en el formulario.
+   * @remarks Utilizado para almacenar la opción elegida por el usuario en el paso uno del trámite.
+   */
+  reconocimientoMutuoValue: string = '';
+
+   /**
+   * Referencia al componente ImportadorExportadorComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de datos de importador/exportador antes de continuar al siguiente paso.
+   */
+  @ViewChild('importadorExportadorRef')importadorExportadorComponent!: ImportadorExportadorComponent;
+
+  /**
+   * Referencia al componente TercerosRelacionadosComponent para acceder a sus métodos de validación.
+   * Permite validar los formularios de terceros relacionados incluyendo representante legal,
+   * enlace operativo y personas de notificaciones.
+   */
+  @ViewChild('tercerosRelacionadosRef') tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+
+    /**
+   * Referencia al componente DatosComunesComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de datos comunes antes de continuar al siguiente paso.
+   */
+  @ViewChild('datosComunesRef') datosComunesComponent!: DatosComunesComponent;
+
+  /**
+   * Referencia al componente CTPATComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de CTPAT antes de continuar al siguiente paso.
+   */
+  @ViewChild('ctpatRef') ctpatComponent!: CTPATComponent;
+    /**
+   * Lista de secciones del formulario.
+   * Lista de pasos dentro del formulario con sus respectivos componentes.
+   */
+  seccionesDeLaSolicitud = [
+    { index: 1, title: 'Solicitante', component: 'solicitante' },
+    { index: 2, title: 'Datos Comunes', component: 'datos-comunes' },
+    { index: 3, title: 'Terceros relacionados', component: 'terceros-relacionados' },
+    { index: 4, title: 'Importador/Exportador', component: 'importador-exportador' },
+    { index: 5, title: 'CTPAT', component: 'c-tpat' },
+    { index: 6, title: 'Perfiles', component: 'perfiles' }
+  ];
 
   constructor(private consultaQuery: ConsultaioQuery, public solicitudService: SolicitudService) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
@@ -84,19 +112,19 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.solicitudService
-      .guardarDatosFormulario()
+      .obtenerDatos()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((resp: GuardarDatosFormulario) => {
+      .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          this.solicitudService.actualizarEstadoFormulario(resp);
+          this.solicitudService.actualizarEstado(resp);
         }
       });
   }
 
   /**
    * Cambia la pestaña activa según el índice proporcionado.
-   * @param i - El índice de la pestaña que se desea activar.
+   * El índice de la pestaña que se desea activar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
@@ -109,4 +137,68 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+  /**
+   * Valida todos los formularios del paso uno.
+   * Retorna true si todos los formularios son válidos, false en caso contrario.
+   */
+ public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+      if (this.datosComunesComponent) {
+    const DATOS_COMUNES_VALID = this.datosComunesComponent.validarFormulario();
+    if (!DATOS_COMUNES_VALID) {
+      isValid = false;
+    }
+  } else {
+    isValid = false;
+  }
+
+    if (this.tercerosRelacionadosComponent) {
+      if (!this.tercerosRelacionadosComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.importadorExportadorComponent) {
+      if (!this.importadorExportadorComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+     if (this.ctpatComponent) {
+      if (!this.ctpatComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    
+
+    return isValid;
+  }
+
+    /**
+   * Maneja el cambio de valor para el reconocimiento mutuo.
+   * Actualiza la propiedad `reconocimientoMutuoValue` con el valor seleccionado.
+   *
+   * El nuevo valor seleccionado para reconocimiento mutuo.
+   */
+  onReconocimientoMutuoChange(value: string) :void {
+    this.reconocimientoMutuoValue = value;
+  }
+  
+
 }

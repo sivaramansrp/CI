@@ -210,9 +210,9 @@
         (click)="modificarMercancia()"
         data-bs-toggle="modal"
         data-bs-target="#modalAddAgentMercancias"
-        [disabled]="esFormularioSoloLectura">Modificar</button>
-            <button class="btn btn-default me-2" (click)="eliminarMercanciaSeleccionados()" [disabled]="esFormularioSoloLectura">Eliminar</button>
-            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"  [disabled]="esFormularioSoloLectura">Agregars</button>
+        [disabled]="esFormularioSoloLectura || noSeleccionado" >Modificar</button>
+            <button class="btn btn-default me-2" (click)="eliminarMercanciaSeleccionados()" [disabled]="esFormularioSoloLectura || noSeleccionado">Eliminar</button>
+            <button class="btn btn-primary me-2"  data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"  [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
     </div>
 
@@ -353,6 +353,7 @@
                             [label]="'UMC'"
                             [required]="true"
                             name="UMC"
+                            [tooltipQuestionCircle]="true"
                              [isDisabled]="esFormularioSoloLectura ? true : false"
                             (change)="setValoresStore(formMercancias,'UMC', 'setUMC')"
                             
@@ -378,7 +379,7 @@
                               (click)="mostrar_colapsable()"
                               tabindex="0"
                             >
-                              <p class="panel-title">País de procedencia</p>
+                              <p class="panel-title">País de orígen</p>
                               <button type="button" class="collpase-button collapsed"></button>
                             </div>
                             @if(colapsable){
@@ -404,7 +405,7 @@
                               (click)="mostrar_colapsableDos()"
                               tabindex="0"
                             >
-                              <p class="panel-title">Uso específico</p>
+                              <p class="panel-title">País de procedencia</p>
                               <button type="button" class="collpase-button collapsed"></button>
                             </div>
                             @if(colapsableDos){
@@ -453,7 +454,7 @@
             <div class="modal-footer custom-footer">
                 <button type="button" class="btn btn-default"(click)="limpiarForm()" >Limpiar</button>
                 <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="agregarFilaMercancia()">Agregar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="agregarFilaMercancia()" [disabled]="formMercancias.invalid">Agregar</button>
             </div>
         </div>
     </div>

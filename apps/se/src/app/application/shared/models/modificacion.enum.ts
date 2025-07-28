@@ -18,6 +18,11 @@ export interface Mercancia {
   unidadMedidaMasaBruta?: string;
   complementoClasificacion?: string;
   complementoDescripcion?: string;
+  fraccionNaladi: string;
+  fraccionNaladiSa93: string;
+  fraccionNaladiSa96: string;
+  fraccionNaladiSa02: string;
+  nalad?: string;
 }
 
 export interface ConfiguracionColumna<T> {
