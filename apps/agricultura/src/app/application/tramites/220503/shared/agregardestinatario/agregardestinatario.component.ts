@@ -197,7 +197,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       telefono: [''],
       correo: ['']
     });
-    this.certificadoZoosanitarioQuery.seleccionarTerceros$
+    this.certificadoZoosanitarioQuery.seletedTerceros$
       .pipe(takeUntil(this.DESTROY_NOTIFIER$))
       .subscribe((data: TercerosrelacionadosdestinoTable) => {
         const DESTINATARIO = data;

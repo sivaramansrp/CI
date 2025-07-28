@@ -21,7 +21,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss'],
   standalone: true,
-  imports:[CommonModule, CatalogoSelectComponent, ReactiveFormsModule, InputRadioComponent,TituloComponent ]
+  imports:[CommonModule, CatalogoSelectComponent, ReactiveFormsModule, InputRadioComponent,TituloComponent,PagoDeDerechoComponent ]
 
 })
 export class PagoDeDerechosComponent implements OnInit , OnDestroy{
@@ -105,7 +105,6 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
          takeUntil(this.DESTROY_NOTIFIER$),
          map((seccionState) => {
            this.esFormularioSoloLectura = seccionState.readonly;
-           this.esFormularioSoloLectura =true
            this.cdr.detectChanges();
          })
        )
