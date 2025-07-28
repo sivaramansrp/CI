@@ -6,14 +6,13 @@
 
   <div class="row">
     <div class="col-md-12">
-      <h3>Ingresar por:</h3>
+      <ng-titulo titulo="Ingresar por:" />
     </div>
   </div>
 
   <div class="row">
     <div class="col-md-12">
-      <br /><br />
-      <div class="col-md-4">
+      <div class="col-md-6">
         <app-input-radio [radioOptions]="radioOptions" [isRequired]="true" [layout]="'horizontal'"
           formControlName="tipoBusqueda" (change)="setValoresStore(solicitudForm, 'tipoBusqueda', 'setTipoBusqueda')"></app-input-radio>
       </div>
@@ -35,12 +34,12 @@
   </div>
 
   <div id="seccionAduanaaFecha" *ngIf="seccionContenedor">
-    <ng-titulo titulo="Datos del equipo" />
+    <ng-titulo titulo="Datos del Contenedor" />
     <ng-container formGroupName="datosContenedor">
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="inicialesContenedor">Iniciales del equipo*:
+            <label class="form-label" for="inicialesContenedor">Iniciales del Contenedor*:
             </label>
             <input type="text" class="form-control" id="inicialesContenedor" required="true"
               formControlName="inicialesContenedor" (change)="
@@ -55,7 +54,7 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="numeroContenedor">Datos del equipo*:</label>
+            <label class="form-label" for="numeroContenedor">Número del Contenedor*:</label>
             <input type="text" class="form-control" id="numeroContenedor" required="true"
               formControlName="numeroContenedor" (change)="
                 setValoresStore(
@@ -76,7 +75,7 @@
                 [disabled]="soloLectura">
                 Limpiar
               </button>
-              <button type="button" name="buscar" id="buscar" class="btn btn-primary mr-3" (click)="datosCaptura()"
+              <button type="button" name="buscar" id="buscar" class="btn btn-primary ms-2" (click)="datosCaptura()"
                 [disabled]="soloLectura">
                 Buscar
               </button>
@@ -84,25 +83,27 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-4">
-          <app-catalogo-select [catalogo]="options" formControlName="tipoContenedor" [label]="'Tipo de Contenedor:'"
-            [required]="true" (change)="
-              setValoresStore(
-                datosContenedor,
-                'tipoContenedor',
-                'setTipoContenedor'
-              )
-            " [isDisabled]="soloLectura"></app-catalogo-select>
+      <div id="mostrarAgregarTipoContenedor" *ngIf="mostrarAgregarTipoContenedor">
+        <div class="row">
+          <div class="col-md-4">
+            <app-catalogo-select [catalogo]="contenedore.catalogos" formControlName="tipoContenedor" [label]="contenedore.labelNombre"
+              [required]="true" (change)="
+                setValoresStore(
+                  datosContenedor,
+                  'tipoContenedor',
+                  'setTipoContenedor'
+                )
+              " [isDisabled]="soloLectura"></app-catalogo-select>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-8">
-          <div class="form-group pull-right">
-            <button type="button" name="agregar" id="agregar" class="btn btn-primary" (click)="agregarAGrid()"
-              [disabled]="soloLectura">
-              Agregar
-            </button>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="form-group pull-right">
+              <button type="button" name="agregar" id="agregar" class="btn btn-primary" (click)="agregarGrid()"
+                [disabled]="soloLectura">
+                Agregar
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -204,8 +205,7 @@
   <div id="seccionContenedor" *ngIf="cargarArchivo">
     <div class="row">
       <div class="col-md-12">
-        <h3>Cargar Archivo</h3>
-        <hr class="red" />
+        <ng-titulo titulo="Cargar Archivo" />
       </div>
     </div>
     <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
@@ -234,7 +234,7 @@
                 </div>
             </div>
         }
-        
+
 </form>
 
 <div class="modal fade" id="modalCancelar" tabindex="-1" role="dialog"

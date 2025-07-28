@@ -211,13 +211,33 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   public gridContenedores: ConfiguracionColumna<GridContenedores>[] = GRID_CONTENEDORES;
 
+  /**
+   * Contenedores.
+   */
+  contenedore: {
+    catalogos: Catalogo[];
+    labelNombre: string;
+    primerOpcion: string;
+  };
+
+  /**
+   * Bandera para mostrar el tipo de contenedor.
+   */
+  mostrarAgregarTipoContenedor: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private datosTramiteService: DatosTramiteService,
     private contenedorStore: Contenedor11202Store,
     private contenedorQuery: Contenedor11202Query,
     private consultaioQuery: ConsultaioQuery,
-  ) { }
+  ) { 
+    this.contenedore = {
+      catalogos: [],
+      labelNombre: 'Tipo de contendedor',
+      primerOpcion: 'Seleccione una opción',
+    };
+  }
 
   /**
    * Método de ciclo de vida de Angular que se llama cuando el componente se inicializa.
@@ -272,8 +292,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.datosTramiteService
       .getContenedores()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data: Catalogo[]) => {
-        this.options = data as Catalogo[];
+      .subscribe((data) => {
+        this.contenedore.catalogos = data;
       });
   }
 
@@ -315,39 +335,42 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Captura los datos del formulario y los envía.
    */
-
   datosCaptura(): void {
     if (this.solicitudForm.valid) {
-      this.datosTramiteService
-        .submitSolicitud(this.solicitudForm.value)
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe(() => {
-          this.exceptionCaught = false;
-        });
+      this.mostrarAgregarTipoContenedor = true;
+      // this.datosTramiteService
+      //   .submitSolicitud(this.solicitudForm.value)
+      //   .pipe(takeUntil(this.destroyNotifier$))
+      //   .subscribe(() => {
+      //     this.exceptionCaught = false;
+      //   });
     }
   }
 
   /**
    * Agrega un nuevo contenedor al grid.
    */
-  agregarAGrid(): void {
-    const NUEVO_CONTENEDOR = {
-      tipoContenedor: this.datosContenedor.get('tipoContenedor')?.value,
-      digito: this.solicitudForm.get('digitoDeControl')?.value,
-      aduana: this.datosGenerales.get('aduana')?.value,
-      inicialesContenedor: this.datosContenedor.get('inicialesContenedor')
-        ?.value,
-      numeroContenedor: this.datosContenedor.get('numeroContenedor')?.value,
-    };
-
-    if (NUEVO_CONTENEDOR.aduana) {
-      this.contenedores = [...this.contenedores, NUEVO_CONTENEDOR];
-      this.solicitudForm.patchValue({
-        contenedores: '',
-        digitoDeControl: '',
-      });
-    } else {
-      this.exceptionCaught = true;
+  agregarGrid(): void {
+    const ADUANA = this.solicitudForm.value.datosGenerales.aduana;
+    const INICIALESCONTENEDOR = this.solicitudForm.value.datosContenedor.inicialesContenedor;
+    const NUMEROCONTENEDOR = this.solicitudForm.value.datosContenedor.numeroContenedor;
+    const TIPOCONTENEDOR = this.solicitudForm.value.datosContenedor.tipoContenedor;
+    const TIPOBUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
+    if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && TIPOCONTENEDOR) {
+      this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+        (respuesta) => {
+          if (respuesta?.success) {
+            respuesta.datos.id = this.contenedores.length + 1;
+            this.contenedores = [...this.contenedores, respuesta.datos];
+            (this.contenedorStore.setContenedores as (valor: GridContenedores[]) => void)(this.contenedores);
+            this.solicitudForm.reset();
+            this.solicitudForm.markAsUntouched();
+            this.solicitudForm.markAsPristine();
+            this.solicitudForm.get('tipoBusqueda')?.setValue(TIPOBUSQUEDA);
+            this.mostrarCampos();
+          }
+        }
+      );
     }
   }
 
@@ -465,11 +488,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.solicitudForm = this.fb.group({
       idSolicitud: [this.contenedorState?.idSolicitud],
       tipoBusqueda: [this.contenedorState?.tipoBusqueda, Validators.required],
-
       datosGenerales: this.fb.group({
         aduana: [this.contenedorState?.aduana],
       }),
-
       datosContenedor: this.fb.group({
         inicialesContenedor: [this.contenedorState?.inicialesContenedor],
         numeroContenedor: [this.contenedorState?.numeroContenedor],
@@ -548,6 +569,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.seccionExcelVisible = false;
     this.cargarArchivoVisible = false;
     this.cargarArchivo = false;
+    this.mostrarAgregarTipoContenedor = false;
     // this.solicitudForm.get('archivoSeleccionado')?.disable();
   }
 

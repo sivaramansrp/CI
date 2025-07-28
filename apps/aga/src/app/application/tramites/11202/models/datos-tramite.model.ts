@@ -91,12 +91,12 @@ export interface GridContenedores {
  * @description Representa la respuesta de una consulta sobre un contenedor.
  * 
  * @property {boolean} success - Indica si la operación fue exitosa.
- * @property {DatosDelContenedor} datos - Datos del contenedor.
+ * @property {GridContenedores} datos - Datos del contenedor.
  * @property {string} message - Mensaje de la respuesta.
  */
 export interface RespuestaContenedor {
   success: boolean;
-  datos: DatosDelContenedor;
+  datos: GridContenedores;
   message: string;
 }
 
