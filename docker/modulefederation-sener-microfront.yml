@@ -1,7 +1,7 @@
 services:
 #----------------------------------------------------------------
   modulefederation-sener-microfront:
-    image: ghcr.io/vucem30/dockerized-modulefederation-sener-microfront:1.0.5
+    image: ghcr.io/vucem30/dockerized-modulefederation-sener-microfront:1.0.6
     build: 
       context: ./../
       dockerfile: apps/sener/Dockerfile.dev
