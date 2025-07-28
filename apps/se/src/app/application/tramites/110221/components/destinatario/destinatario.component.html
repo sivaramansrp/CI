@@ -8,6 +8,7 @@
           type="text"
           class="form-control"
           formControlName="nombre"
+          maxlength="250"
           (change)="setValoresStore(validacionForm, 'nombre', 'setNombre')"
         />
         <div
@@ -24,6 +25,7 @@
           class="form-control"
           id="denominacion"
           formControlName="numeroFiscal"
+          maxlength="30"
           (change)="
             setValoresStore(validacionForm, 'numeroFiscal', 'setNumeroFiscal')
           "
@@ -46,6 +48,7 @@
           type="text"
           class="form-control"
           id="nombre"
+          maxlength="90"
           formControlName="calle"
           (change)="setValoresStore(validacionForm, 'calle', 'setCalle')"
         />
@@ -62,6 +65,7 @@
           type="text"
           class="form-control"
           id="primerApellido"
+          maxlength="30"
           formControlName="numeroLetra"
           (change)="
             setValoresStore(validacionForm, 'numeroLetra', 'setNumeroLetra')
@@ -96,6 +100,7 @@
           class="form-control"
           id="denominacion"
           formControlName="ciudad"
+          maxlength="50"
           (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')"
         />
         <div
@@ -118,6 +123,7 @@
           type="text"
           class="form-control"
           id="primerApellido"
+          maxlength="70"
           formControlName="correoElectronico"
           (change)="
             setValoresStore(
@@ -141,6 +147,7 @@
           class="form-control"
           id="segundoApellido"
           formControlName="lada"
+          maxlength="5"
           (change)="setValoresStore(validacionForm, 'lada', 'setLada')"
         />
       </div>
@@ -150,6 +157,7 @@
           type="text"
           class="form-control"
           id="segundoApellido"
+          maxlength="20"
           formControlName="telefono"
           (change)="setValoresStore(validacionForm, 'telefono', 'setTelefono')"
         />
@@ -163,6 +171,7 @@
           type="text"
           class="form-control"
           id="denominacion"
+          maxlength="70"
           formControlName="ciudad"
           (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')"
         />
@@ -175,6 +184,7 @@
           type="text"
           class="form-control"
           id="denominacion"
+          maxlength="70"
           formControlName="ciudad"
           (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')"
         />
@@ -187,6 +197,7 @@
           type="text"
           class="form-control"
           id="nombre"
+          maxlength="90"
           formControlName="calle"
           (change)="setValoresStore(validacionForm, 'calle', 'setCalle')"
         />
@@ -196,6 +207,7 @@
         <input
           type="text"
           class="form-control"
+          maxlength="70"
           id="primerApellido"
           formControlName="numeroLetra"
           (change)="
@@ -209,6 +221,7 @@
           type="text"
           class="form-control"
           id="segundoApellido"
+          maxlength="5"
           formControlName="lada"
           (change)="setValoresStore(validacionForm, 'lada', 'setLada')"
         />
@@ -217,6 +230,7 @@
         <label>Teléfono*:</label>
         <input
           type="text"
+          maxlength="20"
           class="form-control"
           id="segundoApellido"
           formControlName="telefono"
@@ -231,6 +245,7 @@
           type="text"
           class="form-control"
           id="nombre"
+          maxlength="20"
           formControlName="fax"
           (change)="setValoresStore(validacionForm, 'fax', 'setFax')"
         />
@@ -246,6 +261,7 @@
           type="text"
           class="form-control"
           id="primerApellido"
+          maxlength="70"
           formControlName="correoElectronico"
           (change)="
             setValoresStore(
