@@ -11,7 +11,7 @@
     "segundoapellido": "Segundo_Apellido",
     "mercancia": "Mercancia",
     "tipocontenedor": 1,
-    "transporteIdMedio": 0,
+    "transporteIdMedio": 1,
     "identificacionTransporte": "020202",
     "esSolicitudFerros": 1,
     "totalDeGuiasAmparadas": 1,
