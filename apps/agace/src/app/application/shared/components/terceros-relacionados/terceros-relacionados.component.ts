@@ -44,13 +44,13 @@ import { takeUntil } from 'rxjs';
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
 })
-export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
+export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
 
-/**
-  * @property consultaState
-  * @description
-  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
-  */
+  /**
+    * @property consultaState
+    * @description
+    * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+    */
   @Input() consultaState!: ConsultaioState;
   /**
    * Una instancia de FormGroup que representa la estructura del formulario para "representante legal".
@@ -158,8 +158,8 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
     private tercerosRelacionadosQuery: TercerosRelacionadosQuery,
     private consultaQuery: ConsultaioQuery
   ) {
-      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
-        this.esFormularioSoloLectura = seccionState.readonly;
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
+      this.esFormularioSoloLectura = seccionState.readonly;
     })).subscribe();
   }
 
@@ -173,9 +173,9 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * @returns void
    */
   ngOnInit(): void {
-    this.tercerosRelacionadosQuery.selectImportacion$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
-        this.importacionstate = seccionState;
-      })
+    this.tercerosRelacionadosQuery.selectImportacion$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
+      this.importacionstate = seccionState;
+    })
     ).subscribe();
     this.getEnlaceOperativo();
     this.crearEnlaceOperativoForm();
@@ -184,21 +184,21 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   }
 
 
-    /**
-     * Inicializa el formulario para el componente "Terceros Relacionados".
-     * 
-     * Este método se suscribe al observable `selectImportacion$` de `tercerosRelacionadosQuery`
-     * para actualizar la propiedad `importacionstate` cada vez que cambie el estado de la sección de importación.
-     * La suscripción se cancela automáticamente cuando el `destroyNotifier$` emite un valor.
-     * Después de configurar la suscripción, llama a `crearEnlaceOperativoForm()` para crear el formulario de enlace operativo.
-     */
-    public inicializarFormulario(): void {
-      this.tercerosRelacionadosQuery.selectImportacion$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
-        this.importacionstate = seccionState;
-      })).subscribe();
+  /**
+   * Inicializa el formulario para el componente "Terceros Relacionados".
+   * 
+   * Este método se suscribe al observable `selectImportacion$` de `tercerosRelacionadosQuery`
+   * para actualizar la propiedad `importacionstate` cada vez que cambie el estado de la sección de importación.
+   * La suscripción se cancela automáticamente cuando el `destroyNotifier$` emite un valor.
+   * Después de configurar la suscripción, llama a `crearEnlaceOperativoForm()` para crear el formulario de enlace operativo.
+   */
+  public inicializarFormulario(): void {
+    this.tercerosRelacionadosQuery.selectImportacion$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
+      this.importacionstate = seccionState;
+    })).subscribe();
 
-      this.crearEnlaceOperativoForm();
-    }
+    this.crearEnlaceOperativoForm();
+  }
 
   /**
    * Getter para la propiedad 'represtantanteLegalFormGroup'.
@@ -227,16 +227,16 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public crearEnlaceOperativoForm(): void {
     this.enlaceOperativoForm = this.fb.group({
-        resigtro: [''],
-        irfc: [{ value: '', disabled: true }],
-        inombre: [{ value: '', disabled: true }],
-        apellidoPaterno: [{ value: '', disabled: true }],
-        apellidoMaterno: [{ value: '', disabled: true }],
-        cargo: ['', Validators.required],
-        cuidad: [{ value: '', disabled: true }],
-        telefono: ['', Validators.required],
-        correo: ['', [Validators.required, Validators.email]],
-        suplente: [false],
+      resigtro: [''],
+      irfc: [{ value: '', disabled: true }],
+      inombre: [{ value: '', disabled: true }],
+      apellidoPaterno: [{ value: '', disabled: true }],
+      apellidoMaterno: [{ value: '', disabled: true }],
+      cargo: ['', Validators.required],
+      cuidad: [{ value: '', disabled: true }],
+      telefono: ['', Validators.required],
+      correo: ['', [Validators.required, Validators.email]],
+      suplente: [false],
     });
   }
 
@@ -314,7 +314,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   public establecerCambioDeValor(event: { campo: string; valor: unknown }): void {
     if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
       const VALOR = event.valor.id;
-      this.tercerosRelacionadosStore.setDynamicFieldValue(event.campo, VALOR as string | number | boolean );
+      this.tercerosRelacionadosStore.setDynamicFieldValue(event.campo, VALOR as string | number | boolean);
     } else if (event) {
       this.tercerosRelacionadosStore.setDynamicFieldValue(event.campo, event.valor as string | number | boolean);
     }
@@ -334,7 +334,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
     if (event.target) {
       const TARGET = event.target as HTMLInputElement;
       let VALOR: string | boolean;
-       if (TARGET.type === 'checkbox') {
+      if (TARGET.type === 'checkbox') {
         VALOR = TARGET.checked;
       } else {
         VALOR = TARGET.value;
@@ -353,15 +353,15 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
     this.indiceElementoSeleccionado = -1;
     this.enlaceOperativoForm.reset();
     Object.keys(this.enlaceOperativoForm.controls).forEach(key => {
-      if (key === 'irfc' || key === 'inombre' || key === 'apellidoPaterno' || 
-          key === 'apellidoMaterno' || key === 'cuidad') {
-       
+      if (key === 'irfc' || key === 'inombre' || key === 'apellidoPaterno' ||
+        key === 'apellidoMaterno' || key === 'cuidad') {
+
         this.enlaceOperativoForm.get(key)?.disable();
       } else {
         this.enlaceOperativoForm.get(key)?.enable();
       }
     });
-    
+
     this.modalRef = this.modalService.show(template, { class: 'modal-lg' });
   }
 
@@ -384,18 +384,18 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
     }
 
     this.esModalEdicion = true;
-    
-    
+
+
     Object.keys(this.enlaceOperativoForm.controls).forEach(key => {
-      if (key === 'irfc' || key === 'inombre' || key === 'apellidoPaterno' || 
-          key === 'apellidoMaterno' || key === 'cuidad') {
-      
+      if (key === 'irfc' || key === 'inombre' || key === 'apellidoPaterno' ||
+        key === 'apellidoMaterno' || key === 'cuidad') {
+
         this.enlaceOperativoForm.get(key)?.disable();
       } else {
         this.enlaceOperativoForm.get(key)?.enable();
       }
     });
-    
+
     this.cargarDatosEnFormulario(ELEMENTO_SELECCIONADO);
     this.modalRef = this.modalService.show(template, { class: 'modal-lg' });
   }
@@ -464,7 +464,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
     if (this.elementosSeleccionados.length === 0) {
       return;
     }
-    
+
     // Create a new array without the selected elements to trigger change detection
     this.enlaceOperativoDatos = this.enlaceOperativoDatos.filter(
       elemento => !this.elementosSeleccionados.includes(elemento)

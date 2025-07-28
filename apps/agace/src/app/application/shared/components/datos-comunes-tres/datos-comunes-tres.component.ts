@@ -91,7 +91,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   public formDataModalDuo = PRINCIPALES_INSTALACIONES;
 
   /** Arreglo con la configuración dinámica de los campos para el formulario de control de inventarios. */
-  public formDataModalTres = MODIFICAR_INSTALACIONES; 
+  public formDataModalTres = MODIFICAR_INSTALACIONES;
 
   /** Arreglo con la configuración dinámica de los campos para el formulario de control de inventarios. */
   public formDataModalCuatro = MODAL_MIEMBRO_DE_LA_EMPRESA;
@@ -123,7 +123,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   /** Lista de socios IC seleccionados por el usuario */
   public seleccionarListaInstalaciones: PrincipalesInstalaciones[] = [] as PrincipalesInstalaciones[];
 
-   /** Configuración de columnas para la tabla de domicilios */
+  /** Configuración de columnas para la tabla de domicilios */
   public domiciliosConfiguracionColumnas: ConfiguracionColumna<Domicilios>[] = DOMICILIOS_CONFIGURACION_COLUMNAS;
 
   /** Configuración de columnas para la tabla de inventarios */
@@ -132,7 +132,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   /** Configuración de columnas para la sección de socios IC */
   public seccionSociosICConfiguracionColumnas: ConfiguracionAporteColumna<SeccionSociosIC>[] = SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS as ConfiguracionAporteColumna<SeccionSociosIC>[];
 
-   /** Configuración de columnas para la sección de socios IC */
+  /** Configuración de columnas para la sección de socios IC */
   public instalacionesConfiguracionColumnas: ConfiguracionColumna<PrincipalesInstalaciones>[] = PRINCIPALES_INSTALACIONES_COLUMNA;
 
   /** Lista de socios IC registrados */
@@ -167,7 +167,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
 
   /** Opciones de catálogo para el campo de nacionalidad en el formulario de datos comunes. */
   public nacionalidadOpciones: Catalogo[] = [];
-  
+
   /** Cambia el tipo de intervalId a 'any' para evitar el error de asignación con setInterval en TypeScript. */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private intervalId: any;
@@ -210,9 +210,9 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
                 (item: NumeroDeEmpleados) => item.RFC === dato.RFC
               );
 
-            if (!IS_ALREADY_ADDED) {
-              this.numeroDeEmpleadosLista.push(dato);
-            }
+              if (!IS_ALREADY_ADDED) {
+                this.numeroDeEmpleadosLista.push(dato);
+              }
             });
           }
 
@@ -228,9 +228,9 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
                 (item: Domicilios) => item.instalacionPrincipal === dato.instalacionPrincipal
               );
 
-            if (!IS_ALREADY_ADDED) {
-              this.domiciliosDatos.push(dato);
-            }
+              if (!IS_ALREADY_ADDED) {
+                this.domiciliosDatos.push(dato);
+              }
             });
           }
 
@@ -246,9 +246,9 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
                 (item: Inventarios) => item.nombre === dato.nombre
               );
 
-            if (!IS_ALREADY_ADDED) {
-              this.inventariosDatos.push(dato);
-            }
+              if (!IS_ALREADY_ADDED) {
+                this.inventariosDatos.push(dato);
+              }
             });
           }
 
@@ -264,9 +264,9 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
                 (item: SeccionSociosIC) => item.tipoPersonaMuestra === dato.tipoPersonaMuestra
               );
 
-            if (!IS_ALREADY_ADDED) {
-              this.listaSeccionSociosIC.push(dato);
-            }
+              if (!IS_ALREADY_ADDED) {
+                this.listaSeccionSociosIC.push(dato);
+              }
             });
           }
         })
@@ -619,7 +619,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
             this.changeDetectorRef.detectChanges();
           }
         } else {
-          CONTROL?.setErrors({custom: null});
+          CONTROL?.setErrors({ custom: null });
           this.changeDetectorRef.detectChanges();
         }
       }
@@ -659,11 +659,11 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   establecerCambioDeValorModalDuo(event: { campo: string; valor: object | string }): void {
     if (event) {
       this.datosComunesTresService
-      .getInstalacionesTablaDatos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        this.instalacionesTablaDatos = data;
-      });
+        .getInstalacionesTablaDatos()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((data) => {
+          this.instalacionesTablaDatos = data;
+        });
     }
   }
 
@@ -713,7 +713,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
 
   /** Muestra el modal de subcontratados y carga los datos del primer empleado seleccionado en el formulario modal. */
   modificarSubcontratados(): void {
-    if (this.seleccionarNumeroDeEmpleadosLista.length!==0) {
+    if (this.seleccionarNumeroDeEmpleadosLista.length !== 0) {
       this.agregarSubcontratados();
       this.ninoFormGroupmodal1.patchValue({
         subcontrataRFCBusqueda: this.seleccionarNumeroDeEmpleadosLista[0]?.RFC,
@@ -768,36 +768,36 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
       // Use filter method for more reliable deletion
       this.numeroDeEmpleadosLista = this.numeroDeEmpleadosLista.filter(item => {
         // Check if the current item should be kept (not in the selected list)
-        return !this.seleccionarNumeroDeEmpleadosLista.some(selectedItem => 
-          selectedItem.RFC === item.RFC && 
+        return !this.seleccionarNumeroDeEmpleadosLista.some(selectedItem =>
+          selectedItem.RFC === item.RFC &&
           selectedItem.denominacion === item.denominacion &&
           selectedItem.numeroDeEmpleados === item.numeroDeEmpleados &&
           selectedItem.bimestre === item.bimestre
         );
       });
-      
-this.seleccionarNumeroDeEmpleadosLista = [];
-this.datosComunesTresStore.setDynamicFieldValue('numeroDeEmpleadosLista', this.numeroDeEmpleadosLista);
+
+      this.seleccionarNumeroDeEmpleadosLista = [];
+      this.datosComunesTresStore.setDynamicFieldValue('numeroDeEmpleadosLista', this.numeroDeEmpleadosLista);
     }
   }
 
   /** Elimina los domicilios seleccionados de la lista.*/
   eliminarDomiciliosDatos(): void {
     if (this.seleccionarDomiciliosDatos.length > 0) {
-      
+
       this.domiciliosDatos = this.domiciliosDatos.filter(item => {
-        
-        return !this.seleccionarDomiciliosDatos.some(selectedItem => 
+
+        return !this.seleccionarDomiciliosDatos.some(selectedItem =>
           selectedItem.cveTipoInstalacion === item.cveTipoInstalacion ||
-          (selectedItem.instalacionPrincipal === item.instalacionPrincipal && 
-           selectedItem.entidadFederativa === item.entidadFederativa &&
-           selectedItem.municipioDelegacion === item.municipioDelegacion)
+          (selectedItem.instalacionPrincipal === item.instalacionPrincipal &&
+            selectedItem.entidadFederativa === item.entidadFederativa &&
+            selectedItem.municipioDelegacion === item.municipioDelegacion)
         );
       });
-      
+
       // Clear selection after deletion
       this.seleccionarDomiciliosDatos = [];
-      
+
       // Update the store
       this.datosComunesTresStore.setDynamicFieldValue('domiciliosDatos', this.domiciliosDatos);
     }
@@ -806,15 +806,15 @@ this.datosComunesTresStore.setDynamicFieldValue('numeroDeEmpleadosLista', this.n
   /** Elimina los inventarios seleccionados de la lista.*/
   eliminarInventariosDatos(): void {
     if (this.seleccionarInventarios.length > 0) {
-     
+
       this.inventariosDatos = this.inventariosDatos.filter(item => {
-        
-        return !this.seleccionarInventarios.some(selectedItem => 
+
+        return !this.seleccionarInventarios.some(selectedItem =>
           selectedItem.nombre === item.nombre &&
           selectedItem.lugarRadicacion === item.lugarRadicacion
         );
       });
-      
+
       this.seleccionarInventarios = [];
       this.datosComunesTresStore.setDynamicFieldValue('inventariosDatos', this.inventariosDatos);
     }
@@ -823,18 +823,18 @@ this.datosComunesTresStore.setDynamicFieldValue('numeroDeEmpleadosLista', this.n
   /** Elimina los socios seleccionados de la lista.*/
   eliminarlistaSeccionSociosIC(): void {
     if (this.seleccionarListaSeccionSociosIC.length > 0) {
-      
+
       this.listaSeccionSociosIC = this.listaSeccionSociosIC.filter(item => {
-        
-        return !this.seleccionarListaSeccionSociosIC.some(selectedItem => 
+
+        return !this.seleccionarListaSeccionSociosIC.some(selectedItem =>
           selectedItem.rfc === item.rfc ||
-          (selectedItem.nombreCompleto === item.nombreCompleto && 
-           selectedItem.caracterDe === item.caracterDe)
+          (selectedItem.nombreCompleto === item.nombreCompleto &&
+            selectedItem.caracterDe === item.caracterDe)
         );
       });
-      
+
       this.seleccionarListaSeccionSociosIC = [];
-       this.datosComunesTresStore.setDynamicFieldValue('listaSeccionSociosIC', this.listaSeccionSociosIC);
+      this.datosComunesTresStore.setDynamicFieldValue('listaSeccionSociosIC', this.listaSeccionSociosIC);
     }
   }
 
@@ -880,7 +880,7 @@ this.datosComunesTresStore.setDynamicFieldValue('numeroDeEmpleadosLista', this.n
       this.mostrarGuardadosCorrectamenteModal();
     } else {
       // Update existing record
-      const INDICE = this.numeroDeEmpleadosLista.findIndex((item)=> item.RFC === this.seleccionarNumeroDeEmpleadosLista?.[0]?.RFC);
+      const INDICE = this.numeroDeEmpleadosLista.findIndex((item) => item.RFC === this.seleccionarNumeroDeEmpleadosLista?.[0]?.RFC);
       this.numeroDeEmpleadosLista[INDICE].RFC = this.ninoFormGroupmodal1.get('subcontrataRFCBusqueda')?.value;
       this.numeroDeEmpleadosLista[INDICE].bimestre = DatosComunesTresComponent.obtenerDescripcion(this.bimestreOpciones, this.ninoFormGroupmodal1.get('subcontrataBimestre')?.value);
       this.numeroDeEmpleadosLista[INDICE].denominacion = this.ninoFormGroupmodal1.get('subcontrataRazonSocial')?.value;
@@ -929,7 +929,7 @@ this.datosComunesTresStore.setDynamicFieldValue('numeroDeEmpleadosLista', this.n
       this.domiciliosDatos[INDICE].acreditaInmueble = this.ninoFormGroupmodal3.get('goceDelInmueble')?.value;
       this.domiciliosDatos[INDICE].instalacionPerfil = this.ninoFormGroupmodal3.get('empresa')?.value;
       this.modalInstance.hide();
-    } 
+    }
   }
 
   /**
@@ -967,7 +967,7 @@ this.datosComunesTresStore.setDynamicFieldValue('numeroDeEmpleadosLista', this.n
         this.progresoPercent++;
       } else {
         clearInterval(this.intervalId);
-        if (callback){
+        if (callback) {
           callback();
         }
       }
