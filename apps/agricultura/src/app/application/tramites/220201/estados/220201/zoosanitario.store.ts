@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
-
+import { DestinatarioForm } from '../../../220203/models/220203/importacion-de-acuicultura.module';
+import { Injectable } from '@angular/core';
 import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+
 import {
   CapturarSolicitud,
   DatosDeLaSolicitud,
@@ -12,7 +13,6 @@ import {
   ValidarEnvio,
   createDatosState
 } from '../../models/220201/capturar-solicitud.model';
-import { DestinatarioForm } from '../../../220203/models/220203/importacion-de-acuicultura.module';
 
 
 /**
@@ -182,6 +182,23 @@ export class ZoosanitarioStore extends Store<CapturarSolicitud> {
     this.update(state => ({
       ...state,
       tablaDatos: tercerosRelacionados,
+    }));
+  }
+
+      async actualizarTodoElEstado(datos: CapturarSolicitud): Promise<void> {
+    await this.update(state => ({
+      ...state,
+      datosDeLaSolicitud: datos.datosDeLaSolicitud,
+      datosParaMovilizacionNacional: datos.datosParaMovilizacionNacional,
+      pagoDeDerechos: datos.pagoDeDerechos,
+      tercerosRelacionados: datos.tercerosRelacionados,
+      validarEnvio: datos.validarEnvio,
+      tablaDatos: datos.tablaDatos,
+      selectedDatos: datos.selectedDatos,
+      datos: datos.datos,
+      datosForma: datos.datosForma,
+      seletedTerceros: datos.seletedTerceros,
+      seletedExdora: datos.seletedExdora
     }));
   }
   /**
