@@ -34,6 +34,115 @@
           <label class="form-check-label" for="tercerOperador">Si</label>
         </div>
       </div>
+      <div
+        class="col-md-12"
+        *ngIf="!registroForm.get('validacionForm.tercerOperador')?.value"
+      >
+        <app-input-radio
+          [radioOptions]="opcionDeBotonDeRadio"
+          [layout]="'horizontal'"
+          name="rangoDeFecha"
+          formControlName="rangoDeFecha"
+          (change)="radioBotonSeleccionado($event)"
+        ></app-input-radio>
+      </div>
+      <div
+        class="row"
+        *ngIf="registroForm.get('validacionForm.tercerOperador')?.value"
+      >
+        <div class="row my-4">
+          <div class="col-md-4 form-group">
+            <label class="form-label" for="nombres">Nombre(s)*:</label>
+            <input
+              type="text"
+              id="nombres"
+              class="form-control"
+              formControlName="nombres"
+              (change)="
+                setValoresStore(
+                  validacionForm,
+                  'nombres',
+                  'setFormCertificadoGenric'
+                )
+              "
+            />
+          </div>
+
+          <div class="col-md-4 form-group">
+            <label class="form-label" for="primerApellido"
+              >Primer apellido*:</label
+            >
+            <input
+              type="text"
+              id="primerApellido"
+              class="form-control"
+              formControlName="primerApellido"
+              (change)="
+                setValoresStore(
+                  validacionForm,
+                  'primerApellido',
+                  'setFormCertificadoGenric'
+                )
+              "
+            />
+          </div>
+
+          <div class="col-md-4 form-group">
+            <label class="form-label" for="segundoApellido"
+              >Segundo apellido:</label
+            >
+            <input
+              type="text"
+              id="segundoApellido"
+              class="form-control"
+              formControlName="segundoApellido"
+              (change)="
+                setValoresStore(
+                  validacionForm,
+                  'segundoApellido',
+                  'setFormCertificadoGenric'
+                )
+              "
+            />
+          </div>
+
+          <div class="col-md-4 form-group">
+            <label class="form-label" for="numeroDeRegistroFiscal"
+              >Número de registro fiscal*:</label
+            >
+            <input
+              type="text"
+              id="numeroDeRegistroFiscal"
+              class="form-control"
+              formControlName="numeroDeRegistroFiscal"
+              (change)="
+                setValoresStore(
+                  validacionForm,
+                  'numeroDeRegistroFiscal',
+                  'setFormCertificadoGenric'
+                )
+              "
+            />
+          </div>
+
+          <div class="col-md-8 form-group">
+            <label class="form-label" for="razonSocial">Razón social*:</label>
+            <input
+              type="text"
+              id="razonSocial"
+              class="form-control"
+              formControlName="razonSocial"
+              (change)="
+                setValoresStore(
+                  validacionForm,
+                  'razonSocial',
+                  'setFormCertificadoGenric'
+                )
+              "
+            />
+          </div>
+        </div>
+      </div>
       <ng-titulo *ngIf="!cargarArchivo" titulo="Tratado y país o bloque" />
       <ng-container *ngIf="!cargarArchivo">
         <div class="row">
@@ -90,6 +199,7 @@
               required="true"
               class="form-control"
               id="numeroRegistro"
+              maxlength="12"
               formControlName="numeroRegistro"
               (change)="
                 setValoresStore(
@@ -107,6 +217,7 @@
               required="true"
               class="form-control"
               id="nombreComercial"
+              maxlength="200"
               formControlName="nombreComercial"
               (change)="
                 setValoresStore(

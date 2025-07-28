@@ -64,6 +64,7 @@ export interface Solicitud110221State {
     productorMismoExportador: '';
   };
   agregarDatosProductorFormulario: { [key: string]: unknown };
+  formCertificado: { [key: string]: unknown };
 }
 
 /**
@@ -72,6 +73,21 @@ export interface Solicitud110221State {
  */
 export function createInitialState(): Solicitud110221State {
   return {
+    formCertificado: {
+      si: false,
+      entidadFederativa: '',
+      bloque: '',
+      nombreComercialForm: '',
+      registroProductoForm: '',
+      fraccionArancelariaForm: '',
+      fechaInicioInput: '',
+      fechaFinalInput: '',
+      nombres: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroDeRegistroFiscal: '',
+      razonSocial: '',
+    },
     tercerOperador: false,
     tratado: null,
     pais: null,
@@ -682,6 +698,20 @@ export class Tramite110221Store extends Store<Solicitud110221State> {
     this.update((state) => ({
       formulario: {
         ...state.formulario,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de certificado de manera genérica.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
+   */
+  setFormCertificadoGenric(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formCertificado: {
+        ...state.formCertificado,
         ...values,
       },
     }));
