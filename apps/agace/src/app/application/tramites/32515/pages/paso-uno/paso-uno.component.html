@@ -7,7 +7,6 @@
         <li [ngClass]="indice === 2 ? 'active' : ''">
           <a (click)="seleccionaTab(2)" (keyup.enter)="seleccionaTab(2)" (keydown.space)="seleccionaTab(2)" tabindex="0" data-toggle="tab" >Tipo Aviso</a>
         </li>
-
       </ul>
   
       <ng-container>
@@ -16,10 +15,11 @@
         <solicitante #Solicitante></solicitante>
         }
         @case (2) {
-        <app-information-general-solicitante></app-information-general-solicitante>
+          @if(esDatosRespuesta){
+            <app-information-general-solicitante #informationGeneralRef></app-information-general-solicitante>
+          }
         } 
       }
       </ng-container>
     </div>
-  </div>
-  
+</div>

@@ -11,14 +11,14 @@ export const DATOS_COMUNES_TEXTOS = {
  */
 export const DATOS_COMUNES_TEXTOS_DOS = {
     alerta: `<p><strong>Nota:</strong> En el caso de la Modalidad de IVA e IEPS,
-          tendrá que contar con al meanos 10 trabajadores registrados.</p>`,
+          tendrá que contar con al menos 10 trabajadores registrados.</p>`,
 }
 
 /**
  * Contiene constantes de texto comunes utilizadas en la aplicación.
  */
 export const DATOS_COMUNES_TEXTOS_TRES = {
-    alerta: `<p><strong>Nota:</strong>De contar con un programa IMMEX activo y
+    alerta: `<p><strong>Nota:</strong> De contar con un programa IMMEX activo y
           vigente al momento de ingresar la solicitud, se mostrarán los
           domicilios registrados ante la Secretaría de Economía. Así mismo,
           podrá incluir otros domicilios que se encuentren relacionados con el
@@ -48,22 +48,22 @@ export interface Mencione {
 export const MENCIONE_TABLA = [
     {
         encabezado: 'Denominación Social',
-        clave: (ele: Mencione) => ele.denominacionSocial,
+        clave: (ele: Mencione): string => ele.denominacionSocial,
         orden: 1,
     },
     {
         encabezado: 'RFC',
-        clave: (ele: Mencione) => ele.rfc,
+        clave: (ele: Mencione): string => ele.rfc,
         orden: 2,
     },
     {
         encabezado: 'Número de Empleados',
-        clave: (ele: Mencione) => ele.numeroDeEmpleados,
+        clave: (ele: Mencione): string => ele.numeroDeEmpleados,
         orden: 3,
     },
     {
         encabezado: 'Bimestre',
-        clave: (ele: Mencione) => ele.bimestre,
+        clave: (ele: Mencione): string => ele.bimestre,
         orden: 4,
     },
 ];
@@ -95,24 +95,24 @@ export interface MercanciasInfo {
 export const MERCANCIA_TABLA = [
     {
       encabezado: 'Denominacion Social',
-      clave: (ele: MercanciasInfo) => ele.denominacion_social,
+      clave: (ele: MercanciasInfo): string => ele.denominacion_social,
       orden: 1,
     },
     {
       encabezado: 'RFC',
-      clave: (ele: MercanciasInfo) => ele.rfc,
+      clave: (ele: MercanciasInfo): string => ele.rfc,
       orden: 2,
     },
     {
         
         encabezado: 'Numero de Empleados',
-        clave: (ele: MercanciasInfo) => ele.numero_de_empleados,
+        clave: (ele: MercanciasInfo): string => ele.numero_de_empleados,
         orden: 3,
     },
     {
         
         encabezado: 'Bimestre',
-        clave: (ele: MercanciasInfo) => ele.bimestre,
+        clave: (ele: MercanciasInfo): string => ele.bimestre,
         orden: 4,
     }
 ];
@@ -151,30 +151,30 @@ export interface InstalacionesPrincipalesTablaInfo {
 export const INSTALACIONES_PRINCIPALES_TABLA = [
     {
       encabezado: '*Instalaciones principales',
-      clave: (ele: InstalacionesPrincipalesTablaInfo) => ele.instalacionesPrincipales,
+      clave: (ele: InstalacionesPrincipalesTablaInfo): string => ele.instalacionesPrincipales,
       orden: 1,
     },
     {
       encabezado: '*Tipo de instalación',
-      clave: (ele: InstalacionesPrincipalesTablaInfo) => ele.tipoDeInstalacion,
+      clave: (ele: InstalacionesPrincipalesTablaInfo): string => ele.tipoDeInstalacion,
       orden: 2,
     },
     {
         
         encabezado: 'Entidad federativa',
-        clave: (ele: InstalacionesPrincipalesTablaInfo) => ele.entidadFederativa,
+        clave: (ele: InstalacionesPrincipalesTablaInfo): string => ele.entidadFederativa,
         orden: 3,
     },
     {
         
         encabezado: 'Municipio o delegación',
-        clave: (ele: InstalacionesPrincipalesTablaInfo) => ele.municipioODelegacion,
+        clave: (ele: InstalacionesPrincipalesTablaInfo): string => ele.municipioODelegacion,
         orden: 4,
     },
     {
         
         encabezado: 'Colonia, calle y número',
-        clave: (ele: InstalacionesPrincipalesTablaInfo) => ele.colonia,
+        clave: (ele: InstalacionesPrincipalesTablaInfo): string => ele.colonia,
         orden: 5,
     }
 ];
@@ -215,18 +215,18 @@ export interface ControlInventarios {
 export const CONTROL_INVENTARIOS_TABLA = [
     {
         encabezado: 'Nombre del sistema o datos para su identificación',
-        clave: (ele: ControlInventarios) => ele.nombreSistema,
+        clave: (ele: ControlInventarios): string => ele.nombreSistema,
         orden: 1,
     },
     {
         encabezado: 'Lugar de radicación',
-        clave: (ele: ControlInventarios) => ele.lugarRadicacion,
+        clave: (ele: ControlInventarios): string => ele.lugarRadicacion,
         orden: 2,
     },
     {
         
         encabezado: 'Indique si se trata de un sistema de control de inventarios conforme el anexo 24',
-        clave: (ele: ControlInventarios) => ele.sistemaControlInventarios,
+        clave: (ele: ControlInventarios): string => ele.sistemaControlInventarios,
         orden: 3,
     }
 ];
@@ -259,42 +259,42 @@ export interface Miembro {
 export const AGREGAR_MIEMBRO_TABLA = [
     {
         encabezado: 'Tipo de Persona',
-        clave: (ele: Miembro) => ele.tipoDePersona,
+        clave: (ele: Miembro): string => ele.tipoDePersona,
         orden: 1,
     },
     {
         encabezado: 'Nombre',
-        clave: (ele: Miembro) => ele.nombre,
+        clave: (ele: Miembro): string => ele.nombre,
         orden: 2,
     },
     {
         
         encabezado: 'RFC',
-        clave: (ele: Miembro) => ele.rfc,
+        clave: (ele: Miembro): string => ele.rfc,
         orden: 3,
     },
     {
         
         encabezado: 'En su carácter de',
-        clave: (ele: Miembro) => ele.caracter,
+        clave: (ele: Miembro): string => ele.caracter,
         orden: 4,
     },
     {
         
         encabezado: 'Nacionalidad',
-        clave: (ele: Miembro) => ele.nacionalidad,
+        clave: (ele: Miembro): string => ele.nacionalidad,
         orden: 5,
     },
     {
         
         encabezado: 'Obligado a tributar en México',
-        clave: (ele: Miembro) => ele.obligadoTributar,
+        clave: (ele: Miembro): string => ele.obligadoTributar,
         orden: 6,
     },
     {
         
         encabezado: 'Nombre de la empresa',
-        clave: (ele: Miembro) => ele.nombreEmpresa,
+        clave: (ele: Miembro): string => ele.nombreEmpresa,
         orden: 7,
     }
 ];

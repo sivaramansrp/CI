@@ -1,8 +1,5 @@
 <ng-container *ngIf="!esFormulario">
-  <ng-titulo
-    *ngIf="!cargarArchivo"
-    titulo="Validación inicial del certificado de circulación de mercancías"
-  />
+  <ng-titulo *ngIf="!cargarArchivo" titulo="Validación inicial del certificado de circulación de mercancías" />
   <ng-titulo *ngIf="!cargarArchivo" titulo="Tratado y país o bloque" />
 </ng-container>
 <div class="container" *ngIf="!esFormulario">
@@ -92,14 +89,14 @@
               [setFecha]="
                 registroForm.get('validacionForm.fechaInicial')?.value
               "
-              [datos]="fechaInicialInput"
+              [datos]="fechaInicialInput" 
               (valorCambiado)="cambioFechaInicial($event)"
             ></input-fecha>
           </div>
           <div class="col-md-4">
             <input-fecha
               [setFecha]="registroForm.get('validacionForm.fechaFinal')?.value"
-              [datos]="fechaFinalInput"
+              [datos]="fechaFinalInput" 
               (valorCambiado)="cambioFechaFinal($event)"
             ></input-fecha>
           </div>
@@ -108,7 +105,7 @@
           <button
             type="button"
             class="btn btn-primary ms-3"
-            (click)="buscarMercancias()"
+            (click)="buscarMercancias()" 
           >
             Buscar mercancías
           </button>
@@ -118,19 +115,25 @@
         </div>
         <div class="table-container mt-5" *ngIf="!hayMercanciasDisponibles">
           <app-tabla-dinamica
-            [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
-            [configuracionTabla]="headers"
+            [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED" [datos]="mercanciaDisponsiblesTablaDatos"
+            [configuracionTabla]="headers" [disableSeleccionTablaCheckBox]="soloLectura? true : false"
           ></app-tabla-dinamica>
         </div>
         <div class="table-container mt-5" *ngIf="hayMercanciasDisponibles">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
             [configuracionTabla]="headers"
-            [datos]="mercanciaDisponsiblesTablaDatos"
+            [datos]="mercanciaDisponsiblesTablaDatos" [disableSeleccionTablaCheckBox]="soloLectura? true : false"
             (click)="manejarClic(mercanciaDisponsiblesTablaDatos)"
           ></app-tabla-dinamica>
         </div>
-        <i id="bi-1-square" class="bi bi-1-square" viewBox="0 0 16 16"></i>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination d-flex justify-content-center">
+            <li class="page-item">
+              <a class="page-link">1</a>
+            </li>
+          </ul>
+        </nav>
       </ng-container>
       <ng-titulo titulo="Carga de mercancías por archivo" />
 
@@ -141,7 +144,7 @@
         <button
           type="button"
           class="btn btn-primary ms-3"
-          (click)="cargaArchivo()"
+          (click)="cargaArchivo()" 
         >
           Carga por archivo
         </button>
@@ -153,27 +156,9 @@
               <div>
                 <label class="control-label"> Archivo: </label>
               </div>
-              <input
-                class="visually-hidden-file"
-                type="file"
-                formControlName="archivo"
-                id="archivoAdjuntar"
-                size="60"
-                (change)="alSeleccionarArchivo($event)"
-                (change)="
-                  setValoresStore(validacionForm, 'archivo', 'setArchivo')
-                "
-              />
-              <label
-                class="custome-file-label"
-                for="archivoAdjuntar"
-                value="Seleccionar archivo"
-                style="background-color: lightgrey; font-weight: bold"
-                >Elegir archivo</label
-              >
-              <p style="display: inline-block">
-                {{ nombreArchivo || 'No se eligió ningún archivo' }}
-              </p>
+              <input class="visually-hidden-file" type="file" formControlName="archivo" id="archivoAdjuntar" size="60" (change)="alSeleccionarArchivo($event)" (change)=" setValoresStore(validacionForm, 'archivo', 'setArchivo') " />
+              <label class="custome-file-label" for="archivoAdjuntar" value="Seleccionar archivo" style="background-color: lightgrey; font-weight: bold">Elegir archivo</label>
+              <p style="display: inline-block"> {{ nombreArchivo || 'No se eligió ningún archivo' }} </p>
               <br />
             </div>
           </div>
@@ -188,13 +173,13 @@
             <div class="pull-right">
               <button
                 type="button"
-                class="btn btn-default"
+                class="btn btn-default" 
                 (click)="cerrarAdjuntarArchivoMercancias()"
               >
                 Cerrar
               </button>
               <button
-                type="submit"
+                type="submit" 
                 class="btn btn-primary"
                 (click)="darError()"
               >
@@ -205,30 +190,23 @@
         </div>
       </div>
       <div class="row mt-5">
-        <ng-alert
-          *ngIf="!cargarArchivo"
-          [CONTENIDO]="TEXTO_DE_ALERTA"
-          style="margin-top: 40px"
-        >
-        </ng-alert>
+        <ng-alert *ngIf="!cargarArchivo" [CONTENIDO]="TEXTO_DE_ALERTA" style="margin-top: 40px"></ng-alert>
       </div>
       <ng-container *ngIf="!cargarArchivo">
         <div class="row mt-5">
           <label>Mercancías seleccionadas</label>
         </div>
-
         <div class="table-container mt-5" *ngIf="!esMercanciaEnEdicion">
           <app-tabla-dinamica
-            [tipoSeleccionTabla]="TablaSeleccion.RADIO"
-            [configuracionTabla]="headersData"
+            [tipoSeleccionTabla]="TablaSeleccion.RADIO" [datos]="mercanciaSeleccionadasTablaData"
+            [configuracionTabla]="headersData" [disableSeleccionTablaRadio]="soloLectura? true : false"
           ></app-tabla-dinamica>
         </div>
-
         <div class="table-container mt-5" *ngIf="esMercanciaEnEdicion">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.RADIO"
             [configuracionTabla]="headersData"
-            [datos]="mercanciaSeleccionadasTablaData"
+            [datos]="mercanciaSeleccionadasTablaData" [disableSeleccionTablaRadio]="soloLectura? true : false"
           ></app-tabla-dinamica>
         </div>
         <i
@@ -241,33 +219,24 @@
           class="col-md-12 mt-5 d-flex justify-content-end"
           *ngIf="esMercanciaEnEdicion"
         >
-          <button type="button" class="btn btn-default ms-3">Eliminar</button>
+          <button type="button" class="btn btn-default ms-3" >Eliminar</button>
           <button
             type="button"
             class="btn btn-primary ms-3"
-            (click)="modificar()"
+            (click)="modificar()" 
           >
             Modificar
           </button>
         </div>
         <div class="row mt-5">
-          <div
-            class="alert alert-danger"
-            style="margin-top: 40px"
-            *ngIf="mostrarErrores"
-          >
-            <strong
-              >Existen errores en la carga de mercancías por archivo</strong
-            >
+          <div class="alert alert-danger" style="margin-top: 40px" *ngIf="mostrarErrores">
+            <strong>Existen errores en la carga de mercancías por archivo</strong>
           </div>
         </div>
         <div class="row mt-5">
           <label *ngIf="mostrarErrores">Mercancías*:</label>
         </div>
-        <div
-          class="table-container instance-special mt-5"
-          *ngIf="mostrarErrores"
-        >
+        <div class="table-container instance-special mt-5" *ngIf="mostrarErrores">
           <label style="margin-left: 490px">Error</label>
           <ng-table
             id="myElement "
@@ -275,14 +244,13 @@
             [enableScrollbar]="true"
             [commonTableHeader]="mercanciasHeader"
             [commonTableBody]="mercanciasBody"
-            [enableScrollbar]="true"
+            [enableScrollbar]="true" [disableSeleccionTablaCheckBox]="soloLectura? true : false"
           ></ng-table>
         </div>
       </ng-container>
     </ng-container>
   </form>
 </div>
-
 <div class="container" *ngIf="!esMercanciaEnEdicion && esFormulario">
   <ng-titulo titulo="Datos de la mercancía" />
   <form [formGroup]="mercanciaForm" (ngSubmit)="validarMercanciaForm()">
@@ -294,7 +262,7 @@
             type="text"
             required="true"
             class="form-control grisColor"
-            readonly
+            readonly 
             formControlName="fraccionMercanciaArancelaria"
             (change)="
               setValoresStore(
@@ -312,7 +280,7 @@
           <input
             type="text"
             required="true"
-            class="form-control grisColor"
+            class="form-control grisColor" 
             formControlName="nombreComercialDelaMercancia"
             readonly
             (change)="
@@ -332,7 +300,7 @@
             type="text"
             required="true"
             class="form-control grisColor"
-            formControlName="nombreTecnico"
+            formControlName="nombreTecnico" 
             readonly
             (change)="
               setValoresStore(
@@ -387,7 +355,7 @@
             type="text"
             required="true"
             class="form-control"
-            formControlName="marca"
+            formControlName="marca" 
             (change)="
               setValoresStore(validacionMercanciaForm, 'marca', 'setmarca')
             "
@@ -409,18 +377,8 @@
             "
           />
         </div>
-        <div
-          *ngIf="
-            mercanciaForm.get('validacionMercanciaForm.cantidad')?.invalid &&
-            mercanciaForm.get('validacionMercanciaForm.cantidad')?.touched
-          "
-          class="text-danger"
-        >
-          <small
-            class="text-danger"
-            *ngIf="mercanciaForm.get('validacionMercanciaForm.cantidad')?.errors?.['pattern']"
-            >Este campo es obligatorio.</small
-          >
+        <div *ngIf=" mercanciaForm.get('validacionMercanciaForm.cantidad')?.invalid && mercanciaForm.get('validacionMercanciaForm.cantidad')?.touched " class="text-danger">
+          <small class="text-danger" *ngIf="mercanciaForm.get('validacionMercanciaForm.cantidad')?.errors?.['pattern']">Este campo es obligatorio.</small>
         </div>
       </div>
       <div class="row mt-5">
@@ -442,7 +400,7 @@
           <input
             type="text"
             required="true"
-            class="form-control"
+            class="form-control" 
             formControlName="valorDelaMercancia"
             (change)="
               setValoresStore(
@@ -457,7 +415,7 @@
           <label>Complemento de la descripción*:</label>
           <textarea
             cols="80"
-            rows="3"
+            rows="3" 
             formControlName="complementoDelaDescripcion"
             (change)="
               setValoresStore(
@@ -475,7 +433,7 @@
           <input
             type="text"
             required="true"
-            class="form-control"
+            class="form-control" 
             formControlName="masaBruta"
             (change)="
               setValoresStore(
@@ -491,7 +449,7 @@
             [catalogo]="optionsUnidadMedida"
             [label]="'Unidad de medida de la masa bruta'"
             [required]="true"
-            id="unidadMedida"
+            id="unidadMedida" 
             formControlName="unidadMedida"
             (change)="
               setValoresStore(
@@ -507,7 +465,7 @@
         <div class="col-md-4">
           <input-fecha
             [setFecha]="registroForm.get('fecha')?.value"
-            [datos]="fechaFacturaInput"
+            [datos]="fechaFacturaInput" 
             (valorCambiado)="cambioFechaFactura($event)"
           ></input-fecha>
         </div>
@@ -517,7 +475,7 @@
             type="text"
             required="true"
             class="form-control"
-            formControlName="numeroFactura"
+            formControlName="numeroFactura" 
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
@@ -533,7 +491,7 @@
             [label]="'Tipo de factura'"
             [required]="true"
             id="tipoFactura"
-            formControlName="tipoFactura"
+            formControlName="tipoFactura" 
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
@@ -545,7 +503,7 @@
         </div>
       </div>
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-default ms-3">Cancelar</button>
+        <button type="button" class="btn btn-default ms-3" >Cancelar</button>
         <button type="button" class="btn btn-primary ms-3" (click)="agregar()">
           Agregar
         </button>

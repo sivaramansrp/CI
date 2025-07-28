@@ -7,6 +7,7 @@
       <div class="col-md-4 d-flex justify-content-end">
         <button
           type="button"
+          [disabled]="esFormularioSoloLectura"
           class="btn btn-primary"
           (click)="abrirModal()"
         >
@@ -25,7 +26,6 @@
             id="rfcDel"
             placeholder=""
             type="text"
-            [disabled]="true"
             formControlName="rfcDel"
             (change)="setValoresStore(forma, 'rfcDel', 'setRfcDel')"
           />

@@ -20,10 +20,14 @@
         }
         }
   
-        <btn-continuar
-          [datos]="datosPasos"
-          (continuarEvento)="getValorIndice($event)"
-        ></btn-continuar>
       </div>
+      <btn-continuar
+        [btnGuardar]="true"
+        [datos]="datosPasos"
+        (continuarEvento)="getValorIndice($event)"
+      ></btn-continuar>
+                    <div class="row">
+                      <ng-alert [CONTENIDO]="alertText"></ng-alert>
+                    </div>
     </div>
   </div>

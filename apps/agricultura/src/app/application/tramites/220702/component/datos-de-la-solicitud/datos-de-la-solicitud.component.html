@@ -72,6 +72,7 @@
             [datos]="configuracionFechaFinVigencia"
             (valorCambiado)="cambioFechaInicio($event)"
             [setFecha]="this.tramiteState.fechaDeInspeccion"
+            [isDisabled]="campoDeshabilitar"
           
           ></input-fecha>
         </div>
@@ -94,7 +95,7 @@
               [label]="aduanaDeIngreso.labelNombre"
               [placeholder]="aduanaDeIngreso.primerOpcion"
               formControlName="aduanaDeIngreso"
-              [isDisabled]="false"
+              [isDisabled]="campoDeshabilitar"
               (selectionChange)="cambioAduanaDeIngreso($event)"
             ></app-catalogo-select>
           </div>
@@ -181,7 +182,7 @@
             [placeholder]="tipoContenedor.primerOpcion"
             formControlName="tipoContenedor"
             (selectionChange)="cambioTipoContenedor($event)"
-            [isDisabled]="false"
+            [isDisabled]="campoDeshabilitar"
           ></app-catalogo-select>
         </div>
       </div>
@@ -197,6 +198,7 @@
             [placeholder]="medioDeTransporte.primerOpcion"
             formControlName="medioDeTransporte"
             [isDisabled]="true"
+            
           ></app-catalogo-select>
         </div>
         <div class="col-md-4 form-group">
@@ -221,7 +223,7 @@
               </div>
               <div class="col-md-4">
                   <app-input-radio [radioOptions]="radioOpcions" 
-                  (valueChange)="cambiarRadio($event)" formControlName="esSolicitudFerros"
+                  (valueChange)="cambiarRadio($event)" formControlName="esSolicitudFerros" 
                       [isRequired]="true" [layout]="'vertical'"></app-input-radio>
               </div>
           </div>
@@ -235,6 +237,7 @@
           [tipoSeleccionTabla]="tablaSeleccionCheckbox"
           [configuracionTabla]="exportadorTabla"
           [datos]="mercanciaDatos"
+          [disableSeleccionTablaCheckBox]="campoDeshabilitar"
         ></app-tabla-dinamica>
       </div>
     </div>

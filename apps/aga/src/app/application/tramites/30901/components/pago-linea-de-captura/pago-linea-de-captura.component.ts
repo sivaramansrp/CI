@@ -1,33 +1,16 @@
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { GENERAR_LINEA_CAPTURA_URL } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
-import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { Notificacion } from '@ng-mf/data-access-user';
-import { NotificacionesComponent } from '@ng-mf/data-access-user';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { PagoDerechosLista } from '../../models/registro-muestras-mercancias.model';
-import { REGEX_LINEA_CAPTURA } from '@ng-mf/data-access-user';
-import { REGEX_REEMPLAZAR } from '@ng-mf/data-access-user';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
-import { Solicitud30901Query } from '../../estados/tramites30901.query';
-import { Solicitud30901State } from '../../estados/tramites30901.store';
-import { Solicitud30901Store } from '../../estados/tramites30901.store';
-import { Subject } from 'rxjs';
-import { Subscription } from 'rxjs';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { TableData } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { ToastrService } from 'ngx-toastr';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ConfiguracionColumna, GENERAR_LINEA_CAPTURA_URL, InputFechaComponent, Notificacion, NotificacionesComponent, REGEX_LINEA_CAPTURA, REGEX_REEMPLAZAR, TablaDinamicaComponent, TablaSeleccion, TableData, TITULO_MODAL_AVISO, TituloComponent } from "@libs/shared/data-access-user/src";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { ImportanteCatalogoSeleccion, PagoDerechosLista } from "../../models/registro-muestras-mercancias.model";
+import { Solicitud30901State, Solicitud30901Store } from "../../estados/tramites30901.store";
+import { Subject, Subscription, map, takeUntil } from "rxjs";
+import { BsModalService } from "ngx-bootstrap/modal";
+import { CommonModule } from "@angular/common";
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { RenovacionesMuestrasMercanciasService } from "../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service";
+import { Solicitud30901Query } from "../../estados/tramites30901.query";
+import { ToastrService } from "ngx-toastr";
+
 /**
  * Componente para el manejo del pago de la línea de captura.
  *
@@ -98,7 +81,7 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
    * Configuración de las columnas de la tabla.
    * Define el encabezado, la clave de acceso a los datos y el orden de las columnas.
    */
-  configuracionColumnas = [
+  configuracionColumnas: ConfiguracionColumna<PagoDerechosLista>[] = [
     {
       encabezado: 'Línea de captura', // Título de la columna
       clave: (item: PagoDerechosLista) => item.linea, // Accede a la propiedad 'linea'
@@ -134,20 +117,47 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
    * Esta constante apunta al endpoint definido por GENERAR_LINEA_CAPTURA_URL.
    */
   generarLineaCapturaURL: string = GENERAR_LINEA_CAPTURA_URL;
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
 
   /**
-   * Constructor de la clase PagoLcComponent.
+   * Constructor del componente `DatosProrrogaMuestrasMercanciasComponent`.
    *
-   * @param fb - Instancia de FormBuilder para la creación y manejo de formularios reactivos.
-   * @param renovacionesService - Servicio para manejar las renovaciones de muestras de mercancías.
+   * Este constructor inyecta los servicios y stores necesarios para manejar el formulario de prórroga,
+   * el estado de la solicitud 30901, y la configuración de solo lectura basada en el estado global de consulta.
+   *
+   * @param {FormBuilder} fb - Utilizado para construir y gestionar formularios reactivos.
+   * @param {RenovacionesMuestrasMercanciasService} renovacionesService - Servicio que gestiona la lógica de negocio para renovaciones de muestras de mercancías.
+   * @param {Solicitud30901Store} solicitud30901Store - Store que mantiene el estado centralizado de la solicitud 30901.
+   * @param {Solicitud30901Query} solicitud30901Query - Query que permite observar los cambios en el estado de la solicitud 30901.
+   * @param {ConsultaioQuery} consultaioQuery - Query que proporciona el estado de consulta general, incluyendo si el formulario debe estar en modo solo lectura.
    */
   constructor(
     public fb: FormBuilder,
     private renovacionesService: RenovacionesMuestrasMercanciasService,
     public solicitud30901Store: Solicitud30901Store,
-    public solicitud30901Query: Solicitud30901Query
+    public solicitud30901Query: Solicitud30901Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // Si es necesario, se puede agregar aquí la lógica de inicialización
+    /**
+         * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+         *
+         * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+         * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+         * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+         */
+        this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState)=>{
+            this.esFormularioSoloLectura = seccionState.readonly; 
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe()
   }
 
   /**
@@ -160,6 +170,48 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
    * Además, se llama al método `obtenerDatosIniciales` para cargar los datos necesarios al iniciar el componente.
    */
   ngOnInit(): void {
+       this.inicializarEstadoFormulario();
+  }
+
+   /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+      /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.formPagoLC.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formPagoLC.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+}
+
+
+ /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
     this.formPagoLC = this.fb.group({
       lineaCaptura: [
         this.solicitud30901State.lineaCaptura,
@@ -170,11 +222,10 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
         ],
       ],
       valorPago: [
-        { value: this.solicitud30901State.valorPago, disabled: true },
+        { value: this.solicitud30901State.valorPago, disabled: false },
         [Validators.required, Validators.maxLength(20)],
       ],
     });
-
     this.solicitud30901Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -190,7 +241,6 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
       .subscribe();
     this.obtenerDatosIniciales();
   }
-
   /**
    * Actualiza el valor de la línea de captura en el estado.
    */
@@ -284,7 +334,7 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Avisos',
+        titulo: TITULO_MODAL_AVISO,
         mensaje: 'Selecciona por lo menos un registro',
         cerrar: false,
         txtBtnAceptar: 'Aceptar',

@@ -1,16 +1,17 @@
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Component, Inject, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormGroup } from '@angular/forms';
-import { InputRadio } from '../../models/solicitud.model';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constants/datos-comunes.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud32605Query } from '../../estados/solicitud32605.query';
 import { Solicitud32605State } from '../../estados/solicitud32605.store';
 import { Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { SolicitudRadioLista } from '../../models/solicitud.model';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs';
@@ -23,7 +24,7 @@ import { takeUntil } from 'rxjs';
   selector: 'app-c-tpat',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, InputRadioComponent],
-  providers: [SolicitudService],
+  providers: [SolicitudService,BsModalService],
   templateUrl: './c-tpat.component.html',
   styleUrl: './c-tpat.component.scss',
 })
@@ -36,93 +37,192 @@ export class CTPATComponent implements OnInit, OnDestroy {
   ctpatForm!: FormGroup;
 
   /** Subject utilizado para cancelar las suscripciones activas al destruir el componente */
-  private destroy$: Subject<void> = new Subject<void>();
+  public destroy$: Subject<void> = new Subject<void>();
 
-  /** Objeto que contiene las opciones de respuesta tipo sí/no para los radio buttons */
-  sinoOpcion: InputRadio = {} as InputRadio;
 
   /** Estado actual de la solicitud obtenido desde el store */
   solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+  /**
+   * Referencia al modal de Bootstrap para mostrar mensajes informativos.
+   */
+  modalRef?: BsModalRef;
+    /**
+   * Referencia al template del modal de mensaje.
+   */
+  @ViewChild('template') template!: TemplateRef<void>;
+
+  /**
+   * Opciones disponibles para los botones de radio (Sí/No).
+   * Utiliza las constantes definidas en `OPCIONES_DE_BOTON_DE_RADIO`.
+   */
+  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+
+    /**
+   * Estado actual de la solicitud del trámite 32605.
+   * Contiene toda la información del estado de la aplicación.
+   */
+  solicitudState!: Solicitud32605State;
+
+  /**
    * Constructor del componente. Inyecta dependencias necesarias y carga las opciones del radio button.
-   * @param fb - FormBuilder para crear el formulario reactivo.
-   * @param solicitudService - Servicio que realiza operaciones sobre la solicitud.
-   * @param solicitud32605Store - Store para actualizar el estado de la solicitud.
-   * @param solicitud32605Query - Query para observar cambios en el estado de la solicitud.
    */
   constructor(
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
     public solicitud32605Store: Solicitud32605Store,
-    public solicitud32605Query: Solicitud32605Query
+    public solicitud32605Query: Solicitud32605Query,
+    public consultaioQuery: ConsultaioQuery,
+    @Inject(BsModalService)
+    private modalService: BsModalService,
   ) {
-    this.conseguirOpcionDeRadio();
-  }
-
-  /**
-   * Inicializa el componente, crea el formulario y suscribe a los cambios en el estado de la solicitud.
-   */
-  ngOnInit(): void {
-    this.ctpatForm = this.fb.group({
-      '2089': [this.solicitud32605State[2089]],
-      '2090': [this.solicitud32605State[2090]],
-      '2091': [this.solicitud32605State[2091]],
-    });
-
-    this.solicitud32605Query.selectSolicitud$
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroy$),
-        map((respuesta: Solicitud32605State) => {
-          this.solicitud32605State = respuesta;
-          this.ctpatForm.patchValue({
-            '2089': this.solicitud32605State[2089],
-            '2090': this.solicitud32605State[2090],
-            '2091': this.solicitud32605State[2091],
-          });
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
   }
 
   /**
-   * Llama al servicio para obtener las opciones de tipo sí/no para los radio buttons.
+   * Inicializa el componente, crea el formulario y suscribe a los cambios en el estado de la solicitud.
    */
-  conseguirOpcionDeRadio(): void {
-    this.solicitudService
-      .conseguirOpcionDeRadio()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (respuesta: SolicitudRadioLista) => {
-          this.sinoOpcion = respuesta.requisitos;
-        },
+  ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.ctpatForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.ctpatForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Inicializa el formulario `ctpatForm` con los valores actuales del estado `solicitud32605State`.
+   *
+   * Este método crea un formulario reactivo usando `FormBuilder`, asignando los valores
+   * de los campos `'2089'`, `'2090'` y `'2091'`. Además, se suscribe al observable
+   * `selectSolicitud$` para escuchar actualizaciones del estado y aplicar los valores
+   * actualizados al formulario.
+   *
+   * También gestiona la destrucción de la suscripción usando `takeUntil` con `destroy$`.
+   */
+  inicializarFormulario(): void {
+    this.obtenerEstadoSolicitud();
+    this.ctpatForm = this.fb.group({
+     autorizacionCBP:[this.solicitudState?.autorizacionCBP, Validators.required],
+     instalacionesCertificadasCBP:[this.solicitudState?.instalacionesCertificadasCBP, Validators.required],
+     suspensionCancelacionCBP:[this.solicitudState?.suspensionCancelacionCBP, Validators.required],
+    });
+
+   
+  }
+
+   /**
+   * Obtiene el estado actual de la solicitud desde el store.
+   * Se suscribe a los cambios del estado y actualiza la tabla de datos.
+   * Mantiene sincronizada la información entre el store y el componente.
+   */
+  obtenerEstadoSolicitud(): void {
+    this.solicitud32605Query.selectSolicitud$?.pipe(takeUntil(this.destroy$))
+      .subscribe((data: Solicitud32605State) => {
+        this.solicitudState = data;
       });
   }
-
+  
   /**
-   * Actualiza el valor del campo con ID 2089 en el store.
-   * @param evento - Valor seleccionado en el radio button.
+   * Establece valores en el store desde un control de formulario específico.
+   * Actualiza el estado global con el valor del campo si no es nulo o indefinido.
+   * 
+   * param form - Formulario que contiene el control
+   * param campo - Nombre del campo a actualizar en el store
    */
-  actualizar2089(evento: number | string): void {
-    this.solicitud32605Store.actualizar2089(evento);
+  setValoresStore(form: FormGroup | null, campo: string): void {
+    if (!form) {
+      return;
+    }
+    const CONTROL = form.get(campo);
+    if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
+      this.solicitud32605Store.actualizarEstado({ [campo]: CONTROL.value });
+    }
+  }
+    /**
+   * Maneja el cambio en el campo de suspensión/cancelación CBP.
+   * Si se selecciona "Sí", muestra el modal con el mensaje informativo.
+   * Actualiza el store con el nuevo valor seleccionado.
+   * 
+   * param valor - Valor seleccionado en el radio button ('1' para Sí, '0' para No)
+   */
+ manejarCambioSuspensionCancelacion(event: Event): void {
+  const TARGET = event.target as HTMLInputElement;
+  const VALOR = TARGET.value;
+  
+  this.setValoresStore(this.ctpatForm, 'suspensionCancelacionCBP');
+  
+  // Si se selecciona "Sí" (valor '1'), mostrar el modal
+  if (VALOR === 'on') {
+    this.mostrarModalMensaje();
+  }
+}
+
+    /**
+   * Muestra el modal con el mensaje informativo sobre el requisito CBP.
+   * Configura el modal como no dismissible para asegurar que el usuario lea el mensaje.
+   */
+  mostrarModalMensaje(): void {
+    const CONFIGURACION_MODAL = {
+      animated: true,
+      keyboard: false,
+      backdrop: true,
+      ignoreBackdropClick: true,
+      class: 'modal-md'
+    };
+
+    this.modalRef = this.modalService.show(this.template, CONFIGURACION_MODAL);
   }
 
-  /**
-   * Actualiza el valor del campo con ID 2090 en el store.
-   * @param evento - Valor seleccionado en el radio button.
+    /**
+   * Cierra el modal de mensaje informativo.
+   * Se ejecuta cuando el usuario hace clic en el botón "Aceptar".
    */
-  actualizar2090(evento: number | string): void {
-    this.solicitud32605Store.actualizar2090(evento);
+  cerrarModal(): void {
+    this.modalRef?.hide();
   }
-
-  /**
-   * Actualiza el valor del campo con ID 2091 en el store.
-   * @param evento - Valor seleccionado en el radio button.
-   */
-  actualizar2091(evento: number | string): void {
-    this.solicitud32605Store.actualizar2091(evento);
-  }
-
   /**
    * Cancela todas las suscripciones activas al destruir el componente.
    */
@@ -130,4 +230,34 @@ export class CTPATComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+   /**
+   * @method esInvalido
+   * Verifica si un control del formulario es inválido.
+   * @param {string} nombreControl - Nombre del control a verificar.
+   * @returns {boolean} - `true` si el control es inválido, de lo contrario `false`.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.ctpatForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  /**
+ * Verifica si el formulario `importadorExportadorForm` es válido.
+ * Si el formulario es válido, retorna `true`. 
+ * Si no es válido, marca todos los campos como tocados para mostrar los errores y retorna `false`.
+ */
+ validarFormulario(): boolean {
+  let esValido = true;
+  
+  if (this.ctpatForm.invalid) {
+    this.ctpatForm.markAllAsTouched();
+    esValido = false;
+  }
+ 
+ 
+  return esValido;
+}
 }

@@ -1,8 +1,7 @@
+import { AVISO_PRIVACIDAD, CATALOGO_CLAVE, ENCABEZADOS_SCIAN, ESTADO_CATALOGO, LISTA_CLAVE, MERCANCIAS_DATOS, OPCIONES_RADIO_HACERLOS, RADIO_OPCIONS } from '../../constantes/consulta.enum';
 import {
   Catalogo,
   CatalogoSelectComponent,
-  CatalogosSelect,
-  ConfiguracionColumna,
   InputCheckComponent,
   InputFecha,
   Pedimento,
@@ -12,11 +11,11 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { ColumnasTabla, CrossList, FECHA_FINAL, FECHA_INICIAL, ListaClave, Mercancia } from '../../models/consulta.model';
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { CrosslistComponent, InputFechaComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud260704State, Tramite260704Store } from '../../estados/Tramite260704.store';
-import { AVISO_PRIVACIDAD, CATALOGO_CLAVE, ENCABEZADOS_SCIAN, ESTADO_CATALOGO, LISTA_CLAVE, MERCANCIAS_DATOS, OPCIONES_RADIO_HACERLOS, RADIO_OPCIONS } from '../../constantes/consulta.enum';
 import { CommonModule } from '@angular/common';
 import { ConsultaService } from '../../service/consulta.service';
 import { Modal } from 'bootstrap';
@@ -46,9 +45,21 @@ import { Tramite260704Query } from '../../estados/Tramite260704.query';
   styleUrls: ['./datos-de-la-solicitud.component.css'],
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+  setFecha: string = '';
+  /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
   // Notificación utilizada para mostrar mensajes o alertas en la interfaz.
   public nuevaNotificacion!: Notificacion;
 
+  // Notificación utilizada para mostrar mensajes o alertas en la interfaz.
   public nuevaNotificacion2!: Notificacion;
 
   // Índice del pedimento marcado para eliminación.
@@ -258,14 +269,25 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private query: Tramite260704Query,
     public fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor vacío, no requiere inicialización adicional.
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /**
    * Inicializa el componente, suscribe a estados y carga datos.
    */
   ngOnInit(): void {
+    this.donanteDomicilio();
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -274,14 +296,37 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.donanteDomicilio();
+    
     this.obtenerTablaScian();
     this.obtenerDatosEstado();
     this.obtenerTablaMercancias();
     this.obtenerDatosClave();
     this.obtenerTablaListaClave();
+    this.inicializarEstadoFormulario();
   }
-
+/**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.datosDelEstablecimientoForm.disable();
+    } else {
+      this.datosDelEstablecimientoForm.enable();
+    }
+  }
   /**
    * Obtiene los datos de la tabla SCIAN mediante el servicio de consulta.
    */
@@ -651,59 +696,62 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Inicializa el formulario 'datosDelEstablecimientoForm' con sus grupos y controles.
    */
   donanteDomicilio(): void {
-    this.datosDelEstablecimientoForm = this.fb.group({
-      validacionForm: this.fb.group({
-        tipoOperacion: [this.solicitudState?.tipoOperacion, [Validators.required]],
-        justificacion: [this.solicitudState?.justificacion, [Validators.required]],
-        establecimiento: [this.solicitudState?.establecimiento, [Validators.required]],
-        razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
-        correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required]],
-      }),
-      validacionMercanciaForm: this.fb.group({
-        codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required]],
-        estado: [this.solicitudState?.estado, [Validators.required]],
-        municipio: [this.solicitudState?.municipio, [Validators.required]],
-        localidad: [this.solicitudState?.localidad, [Validators.required]],
-        colonia: [this.solicitudState?.colonia, [Validators.required]],
-        calle: [this.solicitudState?.calle, [Validators.required]],
-        lada: [this.solicitudState?.lada, [Validators.required]],
-        telefono: [this.solicitudState?.telefono, [Validators.required]],
-      }),
-      validacionScionForm: this.fb.group({
-        scian: [this.solicitudState?.scian, [Validators.required]],
-        scianDatos: [this.solicitudState?.scianDatos, [Validators.required]],
-        claveScian: [this.solicitudState?.claveScian, [Validators.required]],
-        descripcionScian: [this.solicitudState?.descripcionScian, [Validators.required]],
-      }),
-      validacionAduanaMercanciaForm: this.fb.group({
-        avisoDeFuncionamiento: [this.solicitudState?.avisoDeFuncionamiento, [Validators.required]],
-        licenciaSanitaria: [this.solicitudState?.licenciaSanitaria, [Validators.required]],
-        regimen: [this.solicitudState?.regimen, [Validators.required]],
-        aduana: [this.solicitudState?.aduana, [Validators.required]],
-        immex: [this.solicitudState?.immex, [Validators.required]],
-        ano: [this.solicitudState?.ano, [Validators.required]],
-      }),
-      validacionDatosMercanciaForm: this.fb.group({
-        clasificacionProducto: [this.solicitudState?.clasificacionProducto, [Validators.required]],
-        especificarClasificacionProducto: [this.solicitudState?.especificarClasificacionProducto, [Validators.required]],
-        denominacionProducto: [this.solicitudState?.denominacionProducto, [Validators.required]],
-        marca: [this.solicitudState?.marca, [Validators.required]],
-        tipoProducto: [this.solicitudState?.tipoProducto, [Validators.required]],
-        especifique: [this.solicitudState?.especifique, [Validators.required]],
-        fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.required]],
-        descripcionFraccionArancelaria: [this.solicitudState?.descripcionFraccionArancelaria, [Validators.required]],
-        cantidadUMT: [this.solicitudState?.cantidadUMT, [Validators.required]],
-        umt: [this.solicitudState?.umt, [Validators.required]],
-        cantidadUMC: [this.solicitudState?.cantidadUMC, [Validators.required]],
-        umc: [this.solicitudState?.umc, [Validators.required]],
-        claveLote: [this.solicitudState?.claveLote, [Validators.required]],
-        listaClave: [this.solicitudState?.listaClave, [Validators.required]],
-      }),
-      manfestosYDeclaraciones: [this.solicitudState?.manfestosYDeclaraciones, [Validators.required]],
-      hacerlosPublicos: [this.solicitudState?.hacerlosPublicos, [Validators.required]],
-      rfc: [this.solicitudState?.rfc, [Validators.required]],
-    });
-  }
+  this.datosDelEstablecimientoForm = this.fb.group({
+    validacionForm: this.fb.group({
+      tipoOperacion: [{ value: this.solicitudState?.tipoOperacion, disabled: this.soloLectura }, [Validators.required]],
+      justificacion: [{ value: this.solicitudState?.justificacion, disabled: this.soloLectura }, [Validators.required]],
+      establecimiento: [{ value: this.solicitudState?.establecimiento, disabled: this.soloLectura }, [Validators.required]],
+      razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: this.soloLectura }, [Validators.required]],
+      correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: this.soloLectura }, [Validators.required]],
+    }),
+    validacionMercanciaForm: this.fb.group({
+      codigoPostal: [{ value: this.solicitudState?.codigoPostal, disabled: this.soloLectura }, [Validators.required]],
+      estado: [{ value: this.solicitudState?.estado, disabled: this.soloLectura }, [Validators.required]],
+      municipio: [{ value: this.solicitudState?.municipio, disabled: this.soloLectura }, [Validators.required]],
+      localidad: [{ value: this.solicitudState?.localidad, disabled: this.soloLectura }, [Validators.required]],
+      colonia: [{ value: this.solicitudState?.colonia, disabled: this.soloLectura }, [Validators.required]],
+      calle: [{ value: this.solicitudState?.calle, disabled: this.soloLectura }, [Validators.required]],
+      lada: [{ value: this.solicitudState?.lada, disabled: this.soloLectura }, [Validators.required]],
+      telefono: [{ value: this.solicitudState?.telefono, disabled: this.soloLectura }, [Validators.required]],
+    }),
+    validacionScionForm: this.fb.group({
+      scian: [{ value: this.solicitudState?.scian, disabled: this.soloLectura }, [Validators.required]],
+      scianDatos: [{ value: this.solicitudState?.scianDatos, disabled: this.soloLectura }, [Validators.required]],
+      claveScian: [{ value: this.solicitudState?.claveScian, disabled: this.soloLectura }, [Validators.required]],
+      descripcionScian: [{ value: this.solicitudState?.descripcionScian, disabled: this.soloLectura }, [Validators.required]],
+    }),
+    validacionAduanaMercanciaForm: this.fb.group({
+      avisoDeFuncionamiento: [{ value: this.solicitudState?.avisoDeFuncionamiento, disabled: this.soloLectura }, [Validators.required]],
+      licenciaSanitaria: [{ value: this.solicitudState?.licenciaSanitaria, disabled: this.soloLectura }, [Validators.required]],
+      regimen: [{ value: this.solicitudState?.regimen, disabled: this.soloLectura }, [Validators.required]],
+      aduana: [{ value: this.solicitudState?.aduana, disabled: this.soloLectura }, [Validators.required]],
+      immex: [{ value: this.solicitudState?.immex, disabled: this.soloLectura }, [Validators.required]],
+      ano: [{ value: this.solicitudState?.ano, disabled: this.soloLectura }, [Validators.required]],
+    }),
+    validacionDatosMercanciaForm: this.fb.group({
+      clasificacionProducto: [{ value: this.solicitudState?.clasificacionProducto, disabled: this.soloLectura }, [Validators.required]],
+      especificarClasificacionProducto: [{ value: this.solicitudState?.especificarClasificacionProducto, disabled: this.soloLectura }, [Validators.required]],
+      denominacionProducto: [{ value: this.solicitudState?.denominacionProducto, disabled: this.soloLectura }, [Validators.required]],
+      marca: [{ value: this.solicitudState?.marca, disabled: this.soloLectura }, [Validators.required]],
+      tipoProducto: [{ value: this.solicitudState?.tipoProducto, disabled: this.soloLectura }, [Validators.required]],
+      especifique: [{ value: this.solicitudState?.especifique, disabled: this.soloLectura }, [Validators.required]],
+      fraccionArancelaria: [{ value: this.solicitudState?.fraccionArancelaria, disabled: this.soloLectura }, [Validators.required]],
+      descripcionFraccionArancelaria: [{ value: this.solicitudState?.descripcionFraccionArancelaria, disabled: this.soloLectura }, [Validators.required]],
+      cantidadUMT: [{ value: this.solicitudState?.cantidadUMT, disabled: this.soloLectura }, [Validators.required]],
+      umt: [{ value: this.solicitudState?.umt, disabled: this.soloLectura }, [Validators.required]],
+      cantidadUMC: [{ value: this.solicitudState?.cantidadUMC, disabled: this.soloLectura }, [Validators.required]],
+      umc: [{ value: this.solicitudState?.umc, disabled: this.soloLectura }, [Validators.required]],
+      claveLote: [{ value: this.solicitudState?.claveLote, disabled: this.soloLectura }, [Validators.required]],
+      listaClave: [{ value: this.solicitudState?.listaClave, disabled: this.soloLectura }, [Validators.required]],
+    }),
+    manfestosYDeclaraciones: [{ value: this.solicitudState?.manfestosYDeclaraciones, disabled: this.soloLectura }, [Validators.required]],
+    hacerlosPublicos: [{ value: this.solicitudState?.hacerlosPublicos, disabled: this.soloLectura }, [Validators.required]],
+    rfc: [{ value: this.solicitudState?.rfc, disabled: this.soloLectura }, [Validators.required]],
+    nombreRazon: [{ value: this.solicitudState?.nombreRazon, disabled: this.soloLectura }, [Validators.required]],
+    apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: this.soloLectura }, [Validators.required]],
+    apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno, disabled: this.soloLectura }, [Validators.required]],
+  });
+}
 
   // Elimina la mercancía marcada si se confirma la acción.
  eliminarPedimentoMercancia(borrar: boolean): void {
@@ -712,7 +760,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   
 
-  if(this.tieneFilaSeleccionadaFabricante  && this.esCheckboxSeleccionado === true) {
+  if(this.tieneFilaSeleccionadaFabricante && this.esCheckboxSeleccionado === true) {
     this.certificadoDisponsiblesTablaDatos.pop();
   }
 }

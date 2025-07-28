@@ -110,13 +110,13 @@
                   <div class="col-md-4">
                       <div class="form-group">
                           <label class="form-label" for="valor">Valor mercancía:</label>
-                          <input class="form-control" id="valor" formControlName="valor" type="number" >
+                          <input class="form-control" id="valor" formControlName="valor" type="number" (blur)="formatDecimal('valor')" >
                       </div>
                   </div>
                   <div class="col-md-4">
                       <div class="form-group">
                           <label class="form-label" for="cantidad">Cantidad:</label>
-                          <input class="form-control" id="cantidad" formControlName="cantidad" type="number" >
+                          <input class="form-control" id="cantidad" formControlName="cantidad" type="number"  (blur)="formatDecimal('cantidad')">
                       </div>
                   </div>
               </div>
@@ -125,21 +125,21 @@
                   <div class="col-md-4">
                       <div class="form-group">
                        
-                          <app-catalogo-select [catalogo]="comercializacion" [label]="'Unidad de medida de comercialización:'"  name="comercializacion"
-                          formControlName="comercializacion">
+                          <app-catalogo-select [catalogo]="comercializacion" [label]="'Unidad de medida de comercialización'"  name="comercializacion"
+                          formControlName="comercializacion" (change)="setValoresStore(mercanciasForm,'comercializacion', 'setComercializacion')">
                       </app-catalogo-select>
                         </div>
                   </div>
                   <div class="col-md-4">
                       <div class="form-group">
                           <label class="form-label" for="bruta">Masa bruta:</label>
-                          <input class="form-control" id="bruta" formControlName="bruta" type="number" >
+                          <input class="form-control" id="bruta" formControlName="bruta" type="number"  (blur)="formatDecimal('bruta')" >
                       </div>
                   </div>
                   <div class="col-md-4">
                       <div class="form-group">
-                            <app-catalogo-select [catalogo]="medida" [label]="'Unidad de medida de la masa bruta:'"  name="medida"
-                          formControlName="medida">
+                            <app-catalogo-select [catalogo]="medida" [label]="'Unidad de medida de la masa bruta'"  name="medida"
+                          formControlName="medida" (change)="setValoresStore(mercanciasForm,'medida', 'setMedida')">
                       </app-catalogo-select>
                       </div>
                   </div>
@@ -155,8 +155,8 @@
                   <div class="col-md-4">
                       <div class="form-group">
                         
-                          <app-catalogo-select [catalogo]="tipoDatos" [label]="'Tipo de factura:'"  name="tipo"
-              formControlName="tipo">
+                          <app-catalogo-select [catalogo]="tipoDatos" [label]="'Tipo de factura'"  name="tipo"
+              formControlName="tipo" (change)="setValoresStore(mercanciasForm,'tipo', 'setTipo')">
           </app-catalogo-select>
        
                       </div>

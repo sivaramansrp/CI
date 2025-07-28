@@ -1,117 +1,48 @@
-// @ts-nocheck
-import { isPlatformBrowser } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { Directive } from '@angular/core';
-import { Injectable } from '@angular/core';
-import { Input } from '@angular/core';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { Output } from '@angular/core';
-import { Pipe } from '@angular/core';
-import { PipeTransform } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudPageComponent } from './solicitud-page.component';
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('SolicitudPageComponent', () => {
-  let fixture: ComponentFixture<SolicitudPageComponent>;
   let component: SolicitudPageComponent;
+  let fixture: ComponentFixture<SolicitudPageComponent>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [
-        SolicitudPageComponent,
-        TranslatePipe,
-        PhoneNumberPipe,
-        SafeHtmlPipe,
-        MyCustomDirective,
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: [],
-    })
-      .overrideComponent(SolicitudPageComponent, {})
-      .compileComponents();
+beforeEach(async () => {
+  await TestBed.configureTestingModule({
+    declarations: [SolicitudPageComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA], 
+  }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudPageComponent);
-    component = fixture.debugElement.componentInstance;
-
-    // ✅ Mock wizardComponent
-    const siguienteSpy = jest.fn();
-    const atrasSpy = jest.fn();
-
+    component = fixture.componentInstance;
+    // Mock wizardComponent with spies for siguiente and atras
     component.wizardComponent = {
-      siguiente: siguienteSpy,
-      atras: atrasSpy,
-    };
-
-    // ✅ Mock getValorIndice
-    component.getValorIndice = function (event: { valor: any; accion: string }) {
-      if (event.accion === 'siguiente') {
-        this.wizardComponent?.siguiente();
-      } else if (event.accion === 'atras') {
-        this.wizardComponent?.atras();
-      }
-    };
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as any;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function () {};
-    fixture.destroy();
+  it('should call siguiente when accion is "cont"', () => {
+    component.getValorIndice({ valor: 2, accion: 'cont' });
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });
 
-  it('should run #constructor()', async () => {
-    expect(component).toBeTruthy();
+  it('should call atras when accion is not "cont"', () => {
+    component.getValorIndice({ valor: 2, accion: 'back' });
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should run #getValorIndice()', async () => {
-    const siguienteSpy = jest.fn();
-    const atrasSpy = jest.fn();
+  it('should not call siguiente or atras if valor is out of range', () => {
+    component.getValorIndice({ valor: 0, accion: 'cont' });
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  });
 
-    component.wizardComponent = {
-      siguiente: siguienteSpy,
-      atras: atrasSpy,
-    };
-
-    component.getValorIndice({
-      valor: {},
-      accion: 'siguiente',
-    });
-    expect(siguienteSpy).toHaveBeenCalled();
-
-    component.getValorIndice({
-      valor: {},
-      accion: 'atras',
-    });
-    expect(atrasSpy).toHaveBeenCalled();
+  it('should return correct title for obtenerNombreDelTítulo', () => {
+    expect(SolicitudPageComponent.obtenerNombreDelTítulo(1)).toBeDefined();
+    expect(SolicitudPageComponent.obtenerNombreDelTítulo(2)).toBe('Anexar requisitos');
+    expect(SolicitudPageComponent.obtenerNombreDelTítulo(3)).toBe('Firmar');
+    expect(SolicitudPageComponent.obtenerNombreDelTítulo(99)).toBeDefined();
   });
 });

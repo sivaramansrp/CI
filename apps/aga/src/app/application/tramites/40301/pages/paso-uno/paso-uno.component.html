@@ -7,7 +7,7 @@
       </li>
       <li [ngClass]="indice === 2 ? 'active' : ''">
         <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
-          (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Datos de la solicitud</a>
+          (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Datos del Trámite</a>
       </li>
     </ul>
 
@@ -17,7 +17,9 @@
       <solicitante [tabindex]="1"></solicitante>
       }
       @case (2) {
+        @if(esDatosRespuesta) {
         <app-capturar></app-capturar>
+        }
       }
       }
     </ng-container>

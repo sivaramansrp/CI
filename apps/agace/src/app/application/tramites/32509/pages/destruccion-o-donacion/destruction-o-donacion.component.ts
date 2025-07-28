@@ -5,6 +5,14 @@ import { PASOS } from '../../constantes/destruccion-o-donacion';
 
 
 
+/**
+ * Componente principal para el flujo de destrucción o donación.
+ * Gestiona los pasos del wizard y la navegación entre ellos.
+ *
+ * @component
+ * @example
+ * <app-destruction-o-donacion></app-destruction-o-donacion>
+ */
 @Component({
   selector: 'app-destruction-o-donacion',
   templateUrl: './destruction-o-donacion.component.html',
@@ -12,24 +20,32 @@ import { PASOS } from '../../constantes/destruccion-o-donacion';
 })
 export class DestructionODonacionComponent {
   /**
-   * @property {Array<LISTAPASOWIZARD>} pasos - Array de pasos del wizard.
+   * Array de pasos del wizard.
+   * @type {Array<LISTAPASOWIZARD>}
    */
   pasos: LISTAPASOWIZARD[] = PASOS;
 
   /**
-   * @property {string | null} tituloMensaje - El título del mensaje.
+   * El título del mensaje.
+   * @type {string | null}
    */
   tituloMensaje: string | null = 'Zoosanitario para importación';
 
+  /**
+   * Referencia al componente Wizard.
+   * @type {WizardComponent}
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-   * @property {number} indice - El índice del paso actual.
+   * El índice del paso actual.
+   * @type {number}
    */
   indice: number = 1;
 
   /**
-   * @property {DatosPasos} datosPasos - Datos de los pasos del wizard.
+   * Datos de los pasos del wizard.
+   * @type {DatosPasos}
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -39,9 +55,9 @@ export class DestructionODonacionComponent {
   };
 
   /**
-   * @method getValorIndice
-   * @description Maneja la acción del botón y determina la navegación (siguiente o anterior).
-   * @param {ACCIONBOTON} e - Objeto de acción que contiene la acción y el valor a manejar.
+   * Maneja la acción del botón y determina la navegación (siguiente o anterior).
+   * @param {ACCIONBOTON} e Objeto de acción que contiene la acción y el valor a manejar.
+   * @returns {void}
    */
   getValorIndice(e: ACCIONBOTON): void {
     if (e.valor > 0 && e.valor < 5) {

@@ -2,15 +2,41 @@ import { TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { AcusePageComponent } from './acuse-page.component';
 import { AcuseComponent } from '@libs/shared/data-access-user/src';
-import { TITULO_ACUSE, ACUSE_SERVICIOS_EXTRAORDINARIOS, TXT_ALERTA_ACUSE } from '@libs/shared/data-access-user/src';
+import {
+  TITULO_ACUSE,
+  ACUSE_SERVICIOS_EXTRAORDINARIOS,
+  TXT_ALERTA_ACUSE,
+} from '@libs/shared/data-access-user/src';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
 
 describe('AcusePageComponent', () => {
   let component: AcusePageComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule, AcuseComponent],
-      declarations: [AcusePageComponent],
+      imports: [
+        CommonModule,
+        AcuseComponent,
+        AcusePageComponent,
+        HttpClientTestingModule,
+      ],
+      declarations: [],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: of({}),
+            queryParams: of({}),
+            snapshot: {
+              paramMap: new Map(),
+              queryParamMap: new Map(),
+              data: {},
+            },
+          },
+        },
+      ],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(AcusePageComponent);
@@ -27,7 +53,9 @@ describe('AcusePageComponent', () => {
   });
 
   it('should set txtAlerta correctly on init', () => {
-    const expectedAlertText = TXT_ALERTA_ACUSE('01010101010101010101010101010101');
+    const expectedAlertText = TXT_ALERTA_ACUSE(
+      '01010101010101010101010101010101'
+    );
     expect(component.txtAlerta).toBe(expectedAlertText);
   });
 

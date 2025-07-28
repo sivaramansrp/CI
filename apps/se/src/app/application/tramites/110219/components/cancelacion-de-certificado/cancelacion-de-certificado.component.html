@@ -38,15 +38,29 @@
         <button type="button" class="btn btn-primary ms-3"> Buscar Certificado </button>
       </div>
     </div>
-    <ng-container *ngIf="estaBuscando">
-      <div class="row mt-5">
-        <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
-      </div>
-      <div class="table-container mt-5">
-        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED" [configuracionTabla]="headers"
+
+    <div class="row mt-5" style="text-align: center;">
+      <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
+    </div>
+    <div class="table-container centered-table-wrapper mt-5">
+      <ng-titulo titulo="Certificados disponibles" />
+      <ng-container *ngIf="!estaBuscando && !mostrarErrores" (dblclick)="onTablaDblClick($event)">
+        <app-tabla-dinamica (dblclick)="onTablaDblClick($event)" [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED" [configuracionTabla]="headers"
           [datos]="certificadoDisponsiblesTablaDatos"></app-tabla-dinamica>
-      </div>
-    </ng-container>
+      </ng-container>
+      <ng-container *ngIf="estaBuscando && mostrarErrores">
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+          [configuracionTabla]="headers"></app-tabla-dinamica>
+      </ng-container>
+      <ng-container *ngIf="!estaBuscando && mostrarErrores">
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+          [configuracionTabla]="headers"></app-tabla-dinamica>
+      </ng-container>
+      <ng-container *ngIf="estaBuscando && !mostrarErrores">
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+          [configuracionTabla]="headers"></app-tabla-dinamica>
+      </ng-container>
+    </div>
   </ng-container>
 </form>
 <btn-continuar [datos]="datosPasos" (click)="emitirEventoClick()"></btn-continuar>

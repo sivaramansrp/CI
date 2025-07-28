@@ -1,11 +1,10 @@
 <div class="container pago-de-derechos-container">
-  <hr />
   <ng-titulo titulo="Pago de derechos" />
 
   <!-- contenedor de formulario -->
   <form [formGroup]="pagoDerechos">
     <div class="row d-flex pago-de-derechos-form-container">
-      <div class="col-md-4 mt-5">
+      <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="claveDeReferncia">Clave de referencia:</label>
           <input class="form-control" type="text" id="claveDeReferncia" formControlName="claveDeReferncia"
@@ -13,7 +12,7 @@
         </div>
       </div>
 
-      <div class="col-md-4 mt-5">
+      <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="cadenaDeLaDependencia">Cadena de la dependencia:</label>
           <input class="form-control" type="text" id="cadenaDeLaDependencia" formControlName="cadenaDeLaDependencia"
@@ -21,16 +20,15 @@
         </div>
       </div>
 
-      <div class="col-md-4 mt-5">
+      <div class="col-md-4">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="dropdownData" [label]="'BANCO'" [required]="true" name="dropdownData"
+          <app-catalogo-select [catalogo]="dropdownData" [label]="'Banco'" name="dropdownData"
             id="banco" formControlName="banco" (change)="obtenerBanco()"
             [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
         </div>
       </div>
       
-      <hr />
-      <div class="col-md-4 mt-5">
+      <div class="col-md-4 mt-3">
         <div class="form-group">
           <label class="form-label" for="llaveDePago">Llave de pago:</label>
           <input class="form-control" type="text" id="llaveDePago" formControlName="llaveDePago"
@@ -38,11 +36,11 @@
         </div>
       </div>
 
-      <div class="col-md-4 mt-5">
+      <div class="col-md-4 mt-3">
         <input-fecha [datos]="fechaInicioInput" [setFecha]="fechaPagoDate" id="fechaDePago" (valorCambiado)="actualizarFechaDePago()"></input-fecha>
       </div>
 
-      <div class="col-md-4 mt-5">
+      <div class="col-md-4 mt-3">
         <div class="form-group">
           <label class="form-label" for="importeDePago">Importe de pago:</label>
           <input class="form-control" type="text" id="importeDePago" formControlName="importeDePago"
@@ -54,6 +52,6 @@
 
   <!-- boton borrar datos -->
   <div class="col-md-12 text-end mt-5">
-    <button class="btn btn-danger">Borrar datos del pago</button>
+    <button class="btn btn-danger" (click)="borrarDatosDelPago()" [disabled]="esFormularioSoloLectura">Borrar datos del pago</button>
   </div>
 </div>

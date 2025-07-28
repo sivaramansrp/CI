@@ -9,13 +9,13 @@
             [datos]="numeroDeEmpleadosDatos">
         </app-tabla-dinamica>
       <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-primary me-2" (click)="abrirModal(template)">
+        <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModal(template)">
             Agregar
         </button>
-      <button class="btn btn-default me-2" type="button">
+      <button class="btn btn-default me-2" type="button" [disabled]="esFormularioSoloLectura">
         Modificar
       </button>
-      <button class="btn btn-default" type="button">Eliminar</button>
+      <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura">Eliminar</button>
       </div>
     </div>
   </div>
@@ -29,7 +29,7 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="rfcInput" class="form-label">RFC</label>
+              <label for="rfcInput" class="form-label"><span class="text-danger">* </span>RFC</label>
               <div class="d-flex">
                 <input
                   type="text"
@@ -53,7 +53,7 @@
           <div class="col-md-6">
             <div class="form-group">
               <label for="registroInput" class="form-label text-left"
-                >Registro Federal de Contribuyentes</label
+                ><span class="text-danger">* </span>Registro Federal de Contribuyentes</label
               >
               <input
                 type="text"
@@ -71,7 +71,7 @@
           <div class="col-md-6">
             <div class="form-group">
               <label for="razonSocialInput" class="form-label"
-                >Razón Social</label
+                ><span class="text-danger">* </span>Razón Social</label
               >
               <input
                 type="text"
@@ -88,7 +88,7 @@
           <div class="col-md-6">
             <div class="form-group">
               <label class="form-label" for="empleados1"
-                >Número de empleados</label
+                ><span class="text-danger">* </span>Número de empleados</label
               >
               <input
                 type="number"
@@ -100,7 +100,7 @@
               <div class="mensaje-error">Este campo es obligatorio.</div>
               }
               <label class="form-label" for="empleados1"
-                >Número de empleados</label
+                ><span class="text-danger">* </span>Número de empleados</label
               >
               <input
                 type="number"
@@ -112,7 +112,7 @@
               <div class="mensaje-error">Este campo es obligatorio.</div>
               }
               <label class="form-label" for="empleados1"
-                >Número de empleados</label
+                ><span class="text-danger">* </span>Número de empleados</label
               >
               <input
                 type="number"
@@ -129,21 +129,21 @@
             <app-catalogo-select
             [catalogo]="bimestreUnoCatalogo"
             formControlName="agregarCatalogoUno"
-            [label]="'Bimestre'"
+            [label]="'1er Bimestre'"
             [required]="true"
           >
           </app-catalogo-select>
           <app-catalogo-select
             [catalogo]="bimestreDosCatalogo"
             formControlName="agregarCatalogoDos"
-            [label]="'Bimestre'"
+            [label]="'2do Bimestre'"
             [required]="true"
           >
           </app-catalogo-select>
           <app-catalogo-select
             [catalogo]="bimestreTresCatalogo"
             formControlName="agregarCatalogoTres"
-            [label]="'Bimestre'"
+            [label]="'3er Bimestre'"
             [required]="true"
           >
           </app-catalogo-select>

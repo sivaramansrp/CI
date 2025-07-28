@@ -5,13 +5,13 @@
         <div class="row mb-3">
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="estado" [label]="'Tratado / Acuerdo'"
-                    [required]="true" name="estado" formControlName="entidadFederativa" (change)="setValoresStore(formCertificado,'entidadFederativa', 'setEntidadFederativa')"
+                    [required]="true" name="estado" formControlName="entidadFederativa" [isDisabled]="esFormularioSoloLectura ? true : false" (change)="setValoresStore(formCertificado,'entidadFederativa', 'setEntidadFederativa')"
                     ></app-catalogo-select>
             </div>
 
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="estado" [label]="'País / Bloque'" [required]="true"
-                    name="estado" formControlName="bloque" (change)="tercerOperador(formCertificado,'bloque', 'setBloque')"
+                    name="estado" formControlName="bloque" [isDisabled]="esFormularioSoloLectura ? true : false" (change)="tercerOperador(formCertificado,'bloque', 'setBloque')"
                     ></app-catalogo-select>
             </div>
         </div>
@@ -33,23 +33,23 @@
         </div>
 
         <div class="row mb-3">
-            <div class="col-md-12 text-center">
+            <div class="col-md-6 text-center">
                 <label for="fracciónArancelaria" class="form-label">Periodo</label>
             </div>
         </div>
 
         <div class="col-md-4 form-field">
             <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicio')?.value"
-            (valorCambiado)="cambioFechaInicio($event,formCertificado,'fechaInicio', 'setFechaInicio')" ></input-fecha>
+            (valorCambiado)="cambioFechaInicio($event,formCertificado,'fechaInicio', 'setFechaInicio')" [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
         </div>
 
         <div class="col-md-4 form-field">
-            <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinal')?.value" (valorCambiado)="cambioFechaFinal($event,formCertificado,'fechaFinal', 'setFechaFinal')"></input-fecha>
+            <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinal')?.value" (valorCambiado)="cambioFechaFinal($event,formCertificado,'fechaFinal', 'setFechaFinal')" [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
         </div>
 
         <div class="row w-100">
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary">Buscar mercancías</button>
+                <button class="btn btn-primary" [disabled]="esFormularioSoloLectura ? true : false">Buscar mercancías</button>
             </div>
         </div>
         @if(mostrarTercerOperador){

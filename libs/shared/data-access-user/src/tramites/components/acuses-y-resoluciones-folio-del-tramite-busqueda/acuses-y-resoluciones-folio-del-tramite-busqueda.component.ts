@@ -1,5 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
 import { AcuseYResolucionesFolioTramite } from '../../../core/models/shared/acuse-y-resoluciones-folio-tramite.model';
@@ -9,6 +15,7 @@ import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-
 import { ConsultaioStore } from '../../../core/estados/consulta.store';
 import { InputFecha } from '../../../core/models/shared/components.model';
 import { InputFechaComponent } from '../input-fecha/input-fecha.component';
+import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
 import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
 import { ToastrService } from 'ngx-toastr';
 import { TramiteDetails } from '../../../core/models/tramiteDetails';
@@ -19,8 +26,8 @@ import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
  */
 export const FECHA_INICIO = {
   labelNombre: 'Fecha inicial',
-  required: true,
   habilitado: true,
+  required: false,
 };
 
 /**
@@ -28,8 +35,8 @@ export const FECHA_INICIO = {
  */
 export const FECHA_FINAL = {
   labelNombre: 'Fecha final',
-  required: true,
   habilitado: true,
+  required: false,
 };
 
 /**
@@ -94,7 +101,8 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
    * Ruta para la navegación.
    */
   public ruta: string = '';
-
+  /* Acciones disponibles en la tabla (editar, etc.) */
+  public tablaAcciones: TablaAcciones[] = [TablaAcciones.EDITAR];
   /**
    * Constructor de la clase.
    * @param formBuilder Servicio para construir formularios reactivos.
@@ -124,14 +132,19 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
   ngOnInit(): void {
     this.getAucesYResolucionesFolioTramiteDatos();
     this.formBusqueda = this.formBuilder.group({
-      solicitante: '',
-      rfc: '',
-      folio: [{ value: '0100001000320251005000002', disabled: false }],
+      solicitante: 'INTEGRADORA DE URBANIZACIONES SIGNUM, S DE RL DE CV',
+      rfc: 'AAL0409235E6',
+      folio: [
+        { value: '', disabled: false },
+        [Validators.maxLength(25), Validators.pattern(/^[0-9]*$/)],
+      ],
       fechaInicial: [{ value: '', disabled: false }],
       fechaFinal: [{ value: '', disabled: false }],
     });
   }
-
+  public get folio(): FormControl {
+    return this.formBusqueda.get('folio') as FormControl;
+  }
   /**
    * Maneja el cambio en el campo de fecha inicial.
    * @param nuevo_valor Nuevo valor para la fecha inicial.
@@ -155,9 +168,14 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
    */
   configuracionTabla: ConfiguracionColumna<AcuseYResolucionesFolioTramite>[] = [
     {
-      encabezado: 'Folio trámite',
+      encabezado: 'Folio',
       clave: (artículo) => artículo.folioTramite,
       orden: 1,
+    },
+    {
+      encabezado: 'Número de procedimiento',
+      clave: (artículo) => artículo.numeroDeProcedimiento,
+      orden: 0,
     },
     {
       encabezado: 'Tipo de trámite',
@@ -201,7 +219,7 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
    * Maneja el evento de clic en una fila de la tabla.
    * Navega a la URL del procedimiento.
    */
-  onFilaClic(event: any): void {
+  onFilaClic(event: AcuseYResolucionesFolioTramite): void {
     const ROW_OBJETO = event;
     const PROCEDURE: unknown | number = Number(
       ROW_OBJETO.numeroDeProcedimiento

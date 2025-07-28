@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ProgramasReporteAnnualComponent } from './programas-reporte-annual.component';
 import { Solicitud150102Store } from '../../estados/solicitud150102.store';
 import { Solicitud150102Query } from '../../estados/solicitud150102.query';
@@ -10,6 +10,9 @@ import {
   ProgramasReporte,
   ReporteFechas,
 } from '../../models/programas-reporte.model';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CommonModule } from '@angular/common';
+import { TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
 describe('ProgramasReporteAnnualComponent', () => {
   let component: ProgramasReporteAnnualComponent;
@@ -20,19 +23,20 @@ describe('ProgramasReporteAnnualComponent', () => {
 
   beforeEach(async () => {
     const solicitudServiceMock: Partial<jest.Mocked<SolicitudService>> = {
-      obtenerReporteFechas: jest.fn(),
-      obtenerProgramasReporte: jest.fn(),
+      obtenerReporteFechas: jest.fn(() => of()),
+      obtenerProgramasReporte: jest.fn(() => of()),
     };
 
-    const solicitud150102StoreMock: Partial<jest.Mocked<Solicitud150102Store>> =
+    const solicitud150102StoreMock =
       {
-        actualizarInicio: jest.fn(),
-        actualizarFin: jest.fn(),
-        actualizarFolioPrograma: jest.fn(),
-        actualizarModalidad: jest.fn(),
-        actualizarTipoPrograma: jest.fn(),
-        actualizarEstatus: jest.fn(),
-      };
+        actualizarInicio: jest.fn(() => of()),
+        actualizarFin: jest.fn(() => of()),
+        actualizarFolioPrograma: jest.fn(() => of()),
+        actualizarModalidad: jest.fn(() => of()),
+        actualizarTipoPrograma: jest.fn(() => of()),
+        actualizarEstatus: jest.fn(() => of()),
+        actualizarIndiceDeRegistroDelPrograma: jest.fn(() => of()),
+      } as unknown as Partial<jest.Mocked<Solicitud150102Store>>;
 
     const solicitud150102QueryMock: Partial<jest.Mocked<Solicitud150102Query>> =
       {
@@ -50,12 +54,21 @@ describe('ProgramasReporteAnnualComponent', () => {
           modalidad: 'modalidad-example',
           tipoPrograma: '',
           estatus: 'active',
+          indiceDeRegistroDelPrograma:-1
         }),
       };
 
     await TestBed.configureTestingModule({
-      declarations: [ProgramasReporteAnnualComponent],
-      imports: [ReactiveFormsModule],
+      declarations: [],
+      imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        TituloComponent,
+        BsDatepickerModule,
+        TablaDinamicaComponent,
+        HttpClientTestingModule,
+        ProgramasReporteAnnualComponent
+      ],
       providers: [
         { provide: SolicitudService, useValue: solicitudServiceMock },
         { provide: Solicitud150102Store, useValue: solicitud150102StoreMock },
@@ -74,6 +87,8 @@ describe('ProgramasReporteAnnualComponent', () => {
     solicitud150102Query = TestBed.inject(
       Solicitud150102Query
     ) as jest.Mocked<Solicitud150102Query>;
+
+    fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -114,8 +129,9 @@ describe('ProgramasReporteAnnualComponent', () => {
       fin: '2023-12-31',
       folioPrograma: '12345',
       modalidad: 'modalidad-example',
-      tipoPrograma: '',
+      tipoPrograma: '12345',
       estatus: 'active',
+      indiceDeRegistroDelPrograma:-1
     };
     solicitud150102Query.seleccionarSolicitud$ = of(state);
     component.ngOnInit();
@@ -149,6 +165,44 @@ describe('ProgramasReporteAnnualComponent', () => {
     expect(solicitud150102Store.actualizarEstatus).toHaveBeenCalledWith(
       programa.estatus
     );
+  });
+
+it('should call guardarDatosFormulario when esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    const guardarDatosFormularioSpy = jest.spyOn(
+      component,
+      'guardarDatosFormulario'
+    );
+    component.inicializarEstadoFormulario();
+    expect(guardarDatosFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario when esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    const inicializarFormularioSpy = jest.spyOn(
+      component,
+      'inicializarFormulario'
+    );
+    component.inicializarEstadoFormulario();
+    expect(inicializarFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should disable formProgrmasReporte when esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    const disableSpy = jest.spyOn(FormGroup.prototype, 'disable');
+    component.guardarDatosFormulario();
+    expect(disableSpy).toHaveBeenCalled();
+    expect(component.formProgrmasReporte.disabled).toBe(true);
+  });
+
+  it('should enable formProgrmasReporte when esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = false;
+
+    const enableSpy = jest.spyOn(FormGroup.prototype, 'enable');
+    component.guardarDatosFormulario();
+
+    expect(enableSpy).toHaveBeenCalled();
+    expect(component.formProgrmasReporte.enabled).toBe(true);
   });
 
   it('should complete destroyed$ subject on ngOnDestroy', () => {

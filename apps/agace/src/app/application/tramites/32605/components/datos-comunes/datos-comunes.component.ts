@@ -1,841 +1,638 @@
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  ConfiguracionAporteColumna,
-  TablaConEntradaComponent,
-} from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CategoriaMensaje, InputRadioComponent, Notificacion, NotificacionesComponent, TipoNotificacionEnum, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { NOTA, OPCIONES_DE_BOTON_DE_RADIO } from '../../constants/oea-textil-registro.enum';
+import { Solicitud32605State, Solicitud32605Store } from '../../estados/solicitud32605.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { AgregarMiembroEmpresaComponent } from '../agregar-miembro-empresa/agregar-miembro-empresa.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { DOMICILIOS_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
-import { Domicilios } from '../../models/solicitud.model';
-import { ElementRef } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { INVENTARIOS_CONFIGURACION } from '../../constants/solicitud.enum';
-import { InputRadio } from '../../models/solicitud.model';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { InstalacionesPrincipalesComponent } from '../instalaciones-principales/instalaciones-principales.component';
-import { Inventarios } from '../../models/solicitud.model';
-import { MiembroDeLaEmpresaComponent } from '../miembro-de-la-empresa/miembro-de-la-empresa.component';
-import { Modal } from 'bootstrap';
-import { NUMERO_DE_EMPLEADOS_CONFIGURACION } from '../../constants/solicitud.enum';
-import { Notificacion } from '@libs/shared/data-access-user/src';
-import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
-import { NumeroDeEmpleados } from '../../models/solicitud.model';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Pedimento } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
-import { SeccionSociosIC } from '../../models/solicitud.model';
-import { SeccionSubcontratadosComponent } from '../seccion-subcontratados/seccion-subcontratados.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ControlInventariosComponent } from '../control-inventarios/control-inventarios.component';
+import { DomiciliosRfcSolicitanteComponent } from '../domicilios-rfc-solicitante/domicilios-rfc-solicitante.component';
+import { NumeroEmpleadosBimestreComponent } from '../numero-empleados-bimestre/numero-empleados-bimestre.component';
 import { Solicitud32605Query } from '../../estados/solicitud32605.query';
-import { Solicitud32605State } from '../../estados/solicitud32605.store';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { SolicitudCatologoSelectLista } from '../../models/solicitud.model';
-import { SolicitudRadioLista } from '../../models/solicitud.model';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { ToastrModule } from 'ngx-toastr';
-import { ToastrService } from 'ngx-toastr';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
- * Componente principal para la gestión de datos comunes de la solicitud.
- * Este componente se encarga de mostrar y gestionar las secciones relacionadas
- * con miembros de la empresa, subcontratados, instalaciones principales y otros
- * datos necesarios en el flujo de la solicitud.
+ * Componente para la gestión de datos comunes del trámite OEA textil.
+ * 
+ * Este componente independiente (`standalone`) se encarga de capturar y validar
+ * los datos comunes requeridos para el registro OEA textil, incluyendo información
+ * del sector productivo, cumplimiento fiscal, empleados y otros datos básicos.
+ * 
+ * @component
+ * @selector app-datos-comunes
+ * @standalone true
+ * @implements {OnInit, OnDestroy}
+ * @author Equipo de desarrollo VUCEM
+ * @version 1.0.0
+ * @since 2024
+ * 
+ * @example
+ * ```html
+ * <app-datos-comunes></app-datos-comunes>
+ * ```
  */
+
 @Component({
   selector: 'app-datos-comunes',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    CatalogoSelectComponent,
-    InputRadioComponent,
-    TituloComponent,
-    TablaDinamicaComponent,
-    MiembroDeLaEmpresaComponent,
-    NotificacionesComponent,
-    SeccionSubcontratadosComponent,
-    InstalacionesPrincipalesComponent,
-    TablaConEntradaComponent,
-    ToastrModule,
-  ],
-  providers: [SolicitudService, ToastrService],
+    imports: [
+      CommonModule,
+      ReactiveFormsModule,
+      CatalogoSelectComponent,
+      InputRadioComponent,
+      NotificacionesComponent,
+      NumeroEmpleadosBimestreComponent,
+      DomiciliosRfcSolicitanteComponent,
+      ControlInventariosComponent,
+      TituloComponent,
+      AgregarMiembroEmpresaComponent,
+      AlertComponent
+    ],
   templateUrl: './datos-comunes.component.html',
   styleUrl: './datos-comunes.component.scss',
 })
-/**
- * Componente principal para la gestión de datos comunes de la solicitud.
- * Este componente se encarga de mostrar y gestionar las secciones relacionadas
- * con miembros de la empresa, subcontratados, instalaciones principales y otros
- * datos necesarios en el flujo de la solicitud.
- */
 export class DatosComunesComponent implements OnInit, OnDestroy {
-  /** Formulario principal que contiene los datos comunes del componente */
-  datosComunesForm!: FormGroup;
-
-  /** Subject para manejar la destrucción del componente y evitar fugas de memoria */
-  private destroy$: Subject<void> = new Subject<void>();
-
-  /** Modelo para la opción de tipo sí/no representado como radio button */
-  sinoOpcion: InputRadio = {} as InputRadio;
-
-  /** Catálogo para el sector productivo */
-  sectorProductivo: CatalogosSelect = {} as CatalogosSelect;
-
-  /** Catálogo para el tipo de servicio */
-  servicio: CatalogosSelect = {} as CatalogosSelect;
-
-  /** Catálogo para seleccionar el bimestre */
-  bimestre: CatalogosSelect = {} as CatalogosSelect;
-
-  /** Catálogo con opción para indicar "todos" */
-  indiqueTodos: CatalogosSelect = {} as CatalogosSelect;
-
-  /** Estado actual del formulario 32605 */
-  solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
-
-  /** Tipo de tabla utilizada para mostrar número de empleados (checkbox) */
-  numeroDeEmpleadosTabla = TablaSeleccion.CHECKBOX;
-
-  /** Configuración de columnas para la tabla de número de empleados */
-  numeroDeEmpleadosConfiguracionColumnas: ConfiguracionColumna<NumeroDeEmpleados>[] =
-    NUMERO_DE_EMPLEADOS_CONFIGURACION;
-
-  /** Lista completa de número de empleados */
-  numeroDeEmpleadosLista: NumeroDeEmpleados[] = [] as NumeroDeEmpleados[];
-
-  /** Lista de empleados seleccionados en la tabla */
-  seleccionarNumeroDeEmpleadosLista: NumeroDeEmpleados[] =
-    [] as NumeroDeEmpleados[];
-
-  /** Configuración de columnas para la tabla de domicilios */
-  domiciliosConfiguracionColumnas: ConfiguracionColumna<Domicilios>[] =
-    DOMICILIOS_CONFIGURACION_COLUMNAS;
-
-  /** Datos de los domicilios disponibles */
-  domiciliosDatos: Domicilios[] = [] as Domicilios[];
-
-  /** Domicilios seleccionados por el usuario */
-  seleccionarDomiciliosDatos: Domicilios[] = [] as Domicilios[];
-
-  /** Configuración de columnas para la tabla de inventarios */
-  inventariosConfiguracionColumnas: ConfiguracionAporteColumna<Inventarios>[] =
-    INVENTARIOS_CONFIGURACION;
-
-  /** Datos de inventarios registrados */
-  inventariosDatos: Inventarios[] = [] as Inventarios[];
-
-  /** Inventarios seleccionados por el usuario */
-  seleccionarInventarios: Inventarios[] = [] as Inventarios[];
-
-  /** Configuración de columnas para la sección de socios IC */
-  seccionSociosICConfiguracionColumnas: ConfiguracionColumna<SeccionSociosIC>[] =
-    SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS;
-
-  /** Lista de socios IC registrados */
-  listaSeccionSociosIC: SeccionSociosIC[] = [] as SeccionSociosIC[];
-
-  /** Lista de socios IC seleccionados por el usuario */
-  seleccionarListaSeccionSociosIC: SeccionSociosIC[] = [] as SeccionSociosIC[];
 
   /**
-   * Referencia al modal para agregar miembros de la empresa.
+   * @property {ControlInventariosComponent} controlInventariosComponent
+   * Referencia al componente hijo de control de inventarios para poder acceder a sus métodos.
    */
-  @ViewChild('modalAgregarMiembrosEmpresa', { static: false })
-  modalElement!: ElementRef;
-
-  /**
-   * Referencia al modal de la sección de subcontratados.
+  @ViewChild('controlInventariosRef') controlInventariosComponent!: ControlInventariosComponent;
+    /**
+   * Referencia al componente DomiciliosRfcSolicitanteComponent para acceder a sus métodos de validación.
    */
-  @ViewChild('modalSeccionSubcontratados', { static: false })
-  modalSeccionSubcontratadosElement!: ElementRef;
+  @ViewChild('domiciliosRfcSolicitanteRef') domiciliosRfcSolicitanteComponent!: DomiciliosRfcSolicitanteComponent;
 
-  /**
-   * Referencia al modal de instalaciones principales.
+    /**
+   * Referencia al componente AgregarMiembroEmpresaComponent para acceder a sus métodos de validación.
    */
-  @ViewChild('modalInstalacionesPrincipales', { static: false })
-  modalInstalacionesPrincipalesElement!: ElementRef;
+  @ViewChild('agregarMiembroEmpresaRef') agregarMiembroEmpresaComponent!: AgregarMiembroEmpresaComponent;
+  /**
+   * Indicates whether the entity is consolidated in ET.
+   *
+   * @type {boolean}
+   * @default false
+   */
+  radioSeleccionado: boolean = false;
+  /**
+   * Expresión regular para validar que el campo solo contenga dígitos.
+   */
+  esTablaVisible:boolean = false;
 
   /**
-   * Notificación utilizada para mostrar mensajes al usuario.
+   * Indica si la sección "Respuesta Obligatoria" debe ser visible.
+   * Se muestra cuando pagoCuotasIMSS es seleccionado como "No" (valor '0').
+   */
+  mostrarRespuestaObligatoria: boolean = false;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+  
+  /**
+   * @property {FormGroup} forma
+   * Formulario reactivo que contiene los controles y validaciones para los datos de las empresas transportistas.
+   */
+  public forma!: FormGroup;
+
+   /**
+   * @property {Solicitud32605State} seccionState
+   * Estado actual del formulario.
+   */
+  public seccionState!: Solicitud32605State;
+
+    /**
+   * Opciones de botón de radio.
+   */
+  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+  /**
+   * Lista de sectores productivos.
+   */
+  sectorProductivoList!: Catalogo[];
+  /**
+   * Lista de sectores de solicitudService.
+   */
+  sectorServicio!: Catalogo[];
+  /**
+   * Lista de bimestres.
+   */
+  bimestreList!: Catalogo[];
+
+  /**
+   * Notificación que se muestra al usuario.
    */
   public nuevaNotificacion!: Notificacion;
 
   /**
-   * Índice o identificador del elemento que se desea eliminar de la tabla de pedimentos.
+   * Mensaje que indica un requisito obligatorio para acceder a la nota.
    */
-  elementoParaEliminar!: number;
+  REQUISITO_OBLIGATORIO = NOTA.REQUISITO_OBLIGATORIO_PARA_ACCEDER_NOTA;
+  EMPLEADO_REQUISITO = NOTA.EMPLEADO_REQUISITO_RGCE;
+
 
   /**
-   * Lista de pedimentos ingresados por el usuario.
+   * Indica si el diálogo de notificación está habilitado.
    */
-  pedimentos: Array<Pedimento> = [];
+  public esHabilitarElDialogo: boolean = false;
 
   /**
-   * Constructor del componente donde se inicializan servicios y se cargan catálogos necesarios.
+   * @property {Subject<void>} destroyed$
+   * Observable utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
    */
-  constructor(
-    public fb: FormBuilder,
-    public solicitudService: SolicitudService,
-    public solicitud32605Store: Solicitud32605Store,
-    public solicitud32605Query: Solicitud32605Query
+  public destroyed$ = new Subject<void>();
+
+  /**
+   * Indica si el formulario ha sido inicializado.
+   * Se utiliza para evitar la recreación del formulario si ya está inicializado.
+   */
+  public esFormularioInicializado: boolean = false;
+
+  
+  /**
+   * Mensaje que indica el sector productivo para mostrar en la nota.
+   * @type {string}
+   */
+  SECTOR_PRODUCTIVO = NOTA.SECTOR_PRODUCTIVO;
+   /**
+   * Evento emitido cuando cambia el valor de reconocimientoMutuoCTPAT.
+   * @type {EventEmitter<string>}
+   */
+  @Output() reconocimientoMutuoCTPATChange = new EventEmitter<string>();
+
+  /**
+   * Constructor del componente DatosComunesComponent.
+   * 
+   * Inicializa las dependencias necesarias y configura las suscripciones
+   * para el estado de solo lectura del formulario.
+   * 
+   * @param {FormBuilder} fb - Servicio para construir formularios reactivos
+   * @param {ConsultaioQuery} consultaioQuery - Query para obtener el estado de consulta
+   * @param {Tramite32609Store} tramite32605Store - Store para gestionar el estado del trámite
+   * @param {Tramite32609Query} tramite32605Query - Query para obtener datos del trámite
+   * @param {OeaTextilRegistroService} solicitudService - Servicio para operaciones del trámite OEA textil
+   */
+
+  constructor(public fb: FormBuilder, 
+    private consultaioQuery: ConsultaioQuery,
+    private solicitudService: SolicitudService,
+    private tramite32605Store: Solicitud32605Store,
+    private tramite32605Query: Solicitud32605Query,
   ) {
-    this.conseguirOpcionDeRadio();
-    this.conseguirSolicitudCatologoSelectLista();
-    this.conseguirInventarios();
+    this.crearForm();
+    this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+           this.esFormularioSoloLectura = seccionState.readonly;
+           if (this.forma && this.esFormularioInicializado) {
+           this.actualizarEstadoCampos();
+         }
+          })
+        )
+        .subscribe();
   }
 
   /**
-   * Método del ciclo de vida que se ejecuta al inicializar el componente.
-   * Inicializa el formulario `datosComunesForm` con valores del estado actual
-   * y suscribe a los cambios del store para mantener los datos sincronizados.
+   * @method ngOnInit
+   * Hook de ciclo de vida para inicializar el componente.
    */
   ngOnInit(): void {
-    this.datosComunesForm = this.fb.group({
-      catseleccionados: [this.solicitud32605State.catseleccionados],
-      servicio: [this.solicitud32605State.servicio],
-      '190': [this.solicitud32605State['190']],
-      '191': [this.solicitud32605State['191']],
-      '199': [this.solicitud32605State['199']],
-      empleados: [this.solicitud32605State.empleados],
-      bimestre: [this.solicitud32605State.bimestre],
-      '2034': [this.solicitud32605State['2034']],
-      '236': [this.solicitud32605State['236']],
-      '237': [this.solicitud32605State['237']],
-      '238': [this.solicitud32605State['238']],
-      '239': [this.solicitud32605State['239']],
-      '240': [this.solicitud32605State['240']],
-      '243': [this.solicitud32605State['243']],
-      '244': [this.solicitud32605State['244']],
-      '245': [this.solicitud32605State['245']],
-      indiqueTodos: [this.solicitud32605State.indiqueTodos],
-      '246': [this.solicitud32605State['246']],
-      file1: [this.solicitud32605State.file1],
-      file2: [this.solicitud32605State.file2],
-      '247': [this.solicitud32605State['247']],
-      '248': [this.solicitud32605State['248']],
-      identificacion: [this.solicitud32605State.identificacion],
-      lugarDeRadicacion: [this.solicitud32605State.lugarDeRadicacion],
-      '249': [this.solicitud32605State['249']],
-      '250': [this.solicitud32605State['250']],
-      '251': [this.solicitud32605State['251']],
-      checkbox1: [this.solicitud32605State.checkbox1],
-      checkbox2: [this.solicitud32605State.checkbox2],
-      checkbox3: [this.solicitud32605State.checkbox3],
-      actualmente2: [this.solicitud32605State.actualmente2],
-      actualmente1: [this.solicitud32605State.actualmente1],
-    });
+    this.obtenerlistadescargable();
+    this.enPatchStoredFormData();
+  }
+
+   /**
+     * @method crearForm
+     * Crea el formulario reactivo con sus controles y validaciones.
+     */
+    crearForm(): void {
+      if (this.esFormularioInicializado && this.forma) {
+    return;
+  }
+      this.forma = this.fb.group({
+          sectorProductivo: [this.seccionState?.sectorProductivo],
+          sectorServicio: [this.seccionState?.sectorServicio],
+          cumplimientoFiscalAduanero: [this.seccionState?.cumplimientoFiscalAduanero, Validators.required],
+          autorizaOpinionSAT: [this.seccionState?.autorizaOpinionSAT, Validators.required],
+          cuentaConEmpleadosPropios: [this.seccionState?.cuentaConEmpleadosPropios, Validators.required],
+          bimestreUltimo: [this.seccionState?.bimestreUltimo, Validators.required],
+          numeroDeEmpleadas: [{value:this.seccionState?.numeroDeEmpleadas, disabled:true}],
+          retencionISRTrabajadores: [this.seccionState?.retencionISRTrabajadores, Validators.required],
+          pagoCuotasIMSS: [this.seccionState?.pagoCuotasIMSS, Validators.required],
+          cuentaConSubcontratacionEspecializada: [this.seccionState?.cuentaConSubcontratacionEspecializada, Validators.required],
+          registroPadronLFT: [this.seccionState?.registroPadronLFT, Validators.required],
+          listadoSATArt69: [this.seccionState?.listadoSATArt69, Validators.required],
+          listadoSATArt69B: [this.seccionState?.listadoSATArt69B, Validators.required],
+          listadoSATArt69BBis: [this.seccionState?.listadoSATArt69BBis, Validators.required],
+          certificadosSellosVigentes: [this.seccionState?.certificadosSellosVigentes, Validators.required],
+          infringioSupuestos17HBis: [this.seccionState?.infringioSupuestos17HBis, Validators.required],
+          mediosContactoActualizadosBuzon: [this.seccionState?.mediosContactoActualizadosBuzon, Validators.required],
+          suspensionPadronImportadoresExportadores: [this.seccionState?.suspensionPadronImportadoresExportadores, Validators.required],
+          archivoNacionales: [this.seccionState?.archivoNacionales || null],
+          proveedores: [this.seccionState?.proveedores || null],
+          querellaSATUltimos3Anios: [this.seccionState?.querellaSATUltimos3Anios, Validators.required],
+          ingresoInfoContableSAT: [this.seccionState?.ingresoInfoContableSAT, Validators.required],
+          manifests: [false, Validators.required],
+          bajoProtesta: [false, Validators.required],
+      }, { validators: alMenosUnSectorValidator });
+
+      this.esFormularioInicializado = true;
+
+    }
+
+/**
+ * @method actualizarFormularioConDatosDelEstado
+ * @description Actualiza los valores del formulario con los datos del estado del trámite sin recrear controles.
+ * 
+ * @private
+ * @memberof DatosComunesComponent
+ * @returns {void}
+ * 
+ * @remarks
+ * - Solo actualiza si el formulario y estado están inicializados
+ * - Excluye controles locales (manifests, bajoProtesta) y archivos
+ * - Utiliza patchValue() para preservar validadores
+ * 
+ * @see {@link enPatchStoredFormData}
+ */
+private actualizarFormularioConDatosDelEstado(): void {
+  if (this.forma && this.seccionState && this.esFormularioInicializado) {
+    this.enCambioDeValor(this.seccionState.cuentaConEmpleadosPropios);
+    this.toggleTablaPorValor(this.seccionState.cuentaConSubcontratacionEspecializada);
+    const STATEVALOR = {
+      sectorProductivo: this.seccionState.sectorProductivo,
+      sectorServicio: this.seccionState.sectorServicio,
+      cumplimientoFiscalAduanero: this.seccionState.cumplimientoFiscalAduanero,
+      autorizaOpinionSAT: this.seccionState.autorizaOpinionSAT,
+      cuentaConEmpleadosPropios: this.seccionState.cuentaConEmpleadosPropios,
+      bimestreUltimo: this.seccionState.bimestreUltimo,
+      numeroDeEmpleadas: this.seccionState.numeroDeEmpleadas,
+      retencionISRTrabajadores: this.seccionState.retencionISRTrabajadores,
+      pagoCuotasIMSS: this.seccionState.pagoCuotasIMSS,
+      cuentaConSubcontratacionEspecializada: this.seccionState.cuentaConSubcontratacionEspecializada,
+      registroPadronLFT: this.seccionState.registroPadronLFT,
+      listadoSATArt69: this.seccionState.listadoSATArt69,
+      listadoSATArt69B: this.seccionState.listadoSATArt69B,
+      listadoSATArt69BBis: this.seccionState.listadoSATArt69BBis,
+      certificadosSellosVigentes: this.seccionState.certificadosSellosVigentes,
+      infringioSupuestos17HBis: this.seccionState.infringioSupuestos17HBis,
+      mediosContactoActualizadosBuzon: this.seccionState.mediosContactoActualizadosBuzon,
+      suspensionPadronImportadoresExportadores: this.seccionState.suspensionPadronImportadoresExportadores,
+      querellaSATUltimos3Anios: this.seccionState.querellaSATUltimos3Anios,
+      ingresoInfoContableSAT: this.seccionState.ingresoInfoContableSAT
+    };
+
+     
+    this.forma.patchValue(STATEVALOR);
+  }
+}
+
+      /**
+     * Método genérico para manejar campos mutuamente excluyentes.
+     * @param campoSeleccionado - El nombre del campo que se está seleccionando
+     * @param campoAResetear - El nombre del campo que se debe resetear
+     * @param valor - El valor seleccionado
+     */
+    manejarCamposMutuamenteExcluyentes(
+      campoSeleccionado: string, 
+      campoAResetear: string, 
+      evento: Event
+    ): void {
+      const VALOR = (evento.target as HTMLSelectElement)?.value;
+      if (VALOR) {
+        // Resetear el campo opuesto
+        this.forma.patchValue({
+          [campoAResetear]: null
+        });
+        this.forma.get(campoAResetear)?.markAsPristine();
+        // Guardar el valor seleccionado en el store
+        this.setValoresStore(this.forma, campoSeleccionado);
+        
+        // Limpiar el valor del campo opuesto en el store
+        this.tramite32605Store.actualizarEstado({ [campoAResetear]: null });
+      }
+    }  
+
+/**
+ * Maneja cambio de radio button y actualiza visibilidad de campos.
+ * @param valor - Valor seleccionado ('0' o '1')
+ */
+  enCambioDeValor(valor: string | number): void {
+    this.radioSeleccionado = valor === '1' ? true : false;
+    
+    // Enable/disable numeroDeEmpleadas and bimestreUltimo based on radio selection
+    const NUMERO_EMPLEADOS_CONTROL = this.forma.get('numeroDeEmpleadas');
+    const BIMESTRE_CONTROL = this.forma.get('bimestreUltimo');
+    
+    if (this.radioSeleccionado && this.esFormularioSoloLectura === false) {
+      // Enable fields when "Sí" is selected
+      NUMERO_EMPLEADOS_CONTROL?.enable();
+      BIMESTRE_CONTROL?.enable();
+    } else {
+      // Disable fields when "No" is selected
+      NUMERO_EMPLEADOS_CONTROL?.disable();
+      BIMESTRE_CONTROL?.disable();
+    }
+  }
 
     /**
-     * Suscripción al estado de solicitud en el store para mantener
-     * sincronizados los datos del formulario con el estado global.
-     */
-    this.solicitud32605Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((respuesta: Solicitud32605State) => {
-          this.solicitud32605State = respuesta;
-          this.datosComunesForm.patchValue({
-            catseleccionados: this.solicitud32605State.catseleccionados,
-            servicio: this.solicitud32605State.servicio,
-            '190': this.solicitud32605State['190'],
-            '191': this.solicitud32605State['191'],
-            '199': this.solicitud32605State['199'],
-            empleados: this.solicitud32605State.empleados,
-            bimestre: this.solicitud32605State.bimestre,
-            '2034': this.solicitud32605State['2034'],
-            '236': this.solicitud32605State['236'],
-            '237': this.solicitud32605State['237'],
-            '238': this.solicitud32605State['238'],
-            '239': this.solicitud32605State['239'],
-            '240': this.solicitud32605State['240'],
-            '243': this.solicitud32605State['243'],
-            '244': this.solicitud32605State['244'],
-            '245': this.solicitud32605State['245'],
-            indiqueTodos: this.solicitud32605State.indiqueTodos,
-            '246': this.solicitud32605State['246'],
-            file1: this.solicitud32605State.file1,
-            file2: this.solicitud32605State.file2,
-            '247': this.solicitud32605State['247'],
-            '248': this.solicitud32605State['248'],
-            identificacion: this.solicitud32605State.identificacion,
-            lugarDeRadicacion: this.solicitud32605State.lugarDeRadicacion,
-            '249': this.solicitud32605State['249'],
-            '250': this.solicitud32605State['250'],
-            '251': this.solicitud32605State['251'],
-            checkbox1: this.solicitud32605State.checkbox1,
-            checkbox2: this.solicitud32605State.checkbox2,
-            checkbox3: this.solicitud32605State.checkbox3,
-            actualmente2: this.solicitud32605State.actualmente2,
-            actualmente1: this.solicitud32605State.actualmente1,
-          });
-          this.numeroDeEmpleadosLista =
-            this.solicitud32605State.numeroDeEmpleadosLista;
-          this.domiciliosDatos = this.solicitud32605State.domiciliosDatos;
-          this.listaSeccionSociosIC =
-            this.solicitud32605State.listaSeccionSociosIC;
-        })
-      )
-      .subscribe();
-  }
-
-  /**
-   * Método para obtener la opción de radio (sí/no) desde el servicio.
-   * Se suscribe al observable y asigna el resultado a `sinoOpcion`.
+   * @method enPatchStoredFormData
+   * Actualiza el formulario con los datos almacenados en el estado.
    */
-  conseguirOpcionDeRadio(): void {
-    this.solicitudService
-      .conseguirOpcionDeRadio()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (respuesta: SolicitudRadioLista) => {
-          this.sinoOpcion = respuesta.requisitos;
-        },
+  public enPatchStoredFormData(): void {
+    this.tramite32605Query.selectSolicitud$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((datos: Solicitud32605State) => {
+        this.seccionState = datos;
+        this.actualizarFormularioConDatosDelEstado();
       });
   }
 
   /**
-   * Método para obtener los catálogos del formulario desde el servicio.
-   * Se asignan los valores correspondientes a sus propiedades.
+   * Método para manejar el cambio de visibilidad de la tabla.
+   * @param valor - Valor seleccionado ('1' para mostrar, '0' para ocultar)
    */
-  conseguirSolicitudCatologoSelectLista(): void {
-    this.solicitudService
-      .conseguirSolicitudCatologoSelectLista()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (respuesta: SolicitudCatologoSelectLista) => {
-          this.sectorProductivo = respuesta.sectorProductivo;
-          this.servicio = respuesta.servicio;
-          this.bimestre = respuesta.bimestre;
-          this.indiqueTodos = respuesta.indiqueTodos;
-        },
-      });
-  }
+  toggleTablaPorValor(valor: string | number): void {
+    this.esTablaVisible = valor === '1' ? true : false;
+  } 
 
   /**
-   * Método para obtener los datos de inventarios desde el servicio.
-   * Los resultados se asignan a la propiedad `inventariosDatos`.
+   * Maneja el cambio de selección para pagoCuotasIMSS y controla la visibilidad de "Respuesta Obligatoria".
+   * @param valor - Valor seleccionado ('0' para No, '1' para Sí)
    */
-  conseguirInventarios(): void {
-    this.solicitudService
-      .conseguirInventarios()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (respuesta: Inventarios[]) => {
-          this.inventariosDatos = respuesta;
-        },
-      });
+  manejarPagoCuotasIMSS(valor: string | number): void {
+    // Mostrar "Respuesta Obligatoria" solo cuando se selecciona "No" (valor '0')
+    this.mostrarRespuestaObligatoria = valor === '0' || valor === 0; 
   }
-
+  
   /**
-   * Muestra el modal para agregar miembros de la empresa.
-   * Se utiliza el elemento del DOM referenciado como modalElement.
+   * @method actualizarValidacionSector
+   * Actualiza la validación del sector marcando el formulario como tocado para que se muestren los errores.
+   * 
+   * @returns {void}
    */
-  agregarMiembrosEmpresa(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
+  public actualizarValidacionSector(): void {
+    if (this.forma) {
+      // Marcar el formulario como tocado para que se muestren los errores de validación
+      this.forma.markAsTouched();
+      // Actualizar la validación
+      this.forma.updateValueAndValidity();
     }
   }
 
   /**
-   * Muestra el modal para agregar subcontratados a la empresa.
-   * Utiliza el elemento referenciado como modalSeccionSubcontratadosElement.
+   * @method tieneSectorValidationError
+   * Verifica si el formulario tiene el error de validación de sector.
+   * 
+   * @returns {boolean} - `true` si hay error de validación de sector, de lo contrario `false`.
    */
-  agregarSubcontratados(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(
-        this.modalSeccionSubcontratadosElement.nativeElement
-      );
-      MODAL_INSTANCE.show();
+  public tieneSectorValidationError(): boolean {
+    return this.forma?.hasError('alMenosUnSector') && this.forma?.touched || false;
+  }
+
+  /**
+   * @method esInvalido
+   * Verifica si un control del formulario es inválido.
+   * @param {string} nombreControl - Nombre del control a verificar.
+   * @returns {boolean} - `true` si el control es inválido, de lo contrario `false`.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.forma.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  /**
+   * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
+   * @param form - El formulario reactivo.
+   * @param campo - El nombre del campo en el formulario.
+   */
+  setValoresStore(form: FormGroup | null, campo: string): void {
+    if (!form) {
+      return;
+    }
+    const CONTROL = form.get(campo);
+    if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
+      this.tramite32605Store.actualizarEstado({ [campo]: CONTROL.value });
+      
+      if (CONTROL.valid && CONTROL.touched) {
+        CONTROL.markAsPristine();
+      }
     }
   }
 
   /**
-   * Muestra el modal para agregar instalaciones principales de la empresa.
-   * Utiliza el elemento referenciado como modalInstalacionesPrincipalesElement.
+   * @method obtenerlistadescargable
+   * Obtiene las listas necesarias para llenar los selectores del formulario.
    */
-  agregarInstalacionesPrincipales(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(
-        this.modalInstalacionesPrincipalesElement.nativeElement
-      );
-      MODAL_INSTANCE.show();
-    }
+  obtenerlistadescargable(): void {
+    this.solicitudService.sectorListaDeSelects()
+      .pipe(takeUntil(this.destroyed$),
+  map((data) => {
+    this.sectorProductivoList = data.sectorProductivoList;
+    this.sectorServicio = data.sectorServicioList;
+    this.bimestreList = data.bimestreList;
+  })
+)
+.subscribe();
   }
 
   /**
-   * Actualiza la lista de miembros de la empresa con un nuevo registro recibido como evento.
-   * También actualiza el store y agrega un objeto pedimento por defecto.
-   * Muestra un modal con mensaje de éxito al usuario.
-   *
-   * @param {SeccionSociosIC} evento - Datos del nuevo miembro de la empresa.
+   * Envía los datos del formulario y muestra el modal de confirmación.
+   * Si el formulario es inválido, marca todos los campos como tocados.
    */
-  eventoActualizarMiembro(evento: SeccionSociosIC): void {
-    this.listaSeccionSociosIC = [...this.listaSeccionSociosIC, evento];
-    this.solicitud32605Store.actualizarListaSeccionSociosIC(
-      this.listaSeccionSociosIC
-    );
-    const PEDIMENTO = {
-      patente: 0,
-      pedimento: 0,
-      aduana: 0,
-      idTipoPedimento: 0,
-      descTipoPedimento: 'Por evaluar',
-      numero: '',
-      comprobanteValor: '',
-      pedimentoValidado: false,
-    };
-    this.abrirModal('Datos guardados correctamente.');
-    this.pedimentos.push(PEDIMENTO);
-  }
-
-  /**
-   * Muestra una notificación en forma de modal con el mensaje proporcionado.
-   * También almacena el índice de un elemento que se desea eliminar.
-   *
-   * @param {string} mensaje - El mensaje a mostrar en el modal.
-   * @param {number} [i=0] - El índice del elemento a eliminar (opcional, por defecto 0).
-   */
-  abrirModal(mensaje: string, i: number = 0): void {
+  enviarDialogData(datos?:string): void {
     this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: mensaje,
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
-
-    this.elementoParaEliminar = i;
-  }
-
-  /**
-   * Agrega un nuevo subcontratado a la lista y actualiza el estado global en el store.
-   *
-   * @param {NumeroDeEmpleados} evento - Datos del subcontratado a agregar.
-   */
-  seccionSubcontratados(evento: NumeroDeEmpleados): void {
-    this.numeroDeEmpleadosLista = [...this.numeroDeEmpleadosLista, evento];
-    this.solicitud32605Store.actualizarNumeroDeEmpleadosLista(
-      this.numeroDeEmpleadosLista
-    );
-  }
-
-  /**
-   * Agrega una nueva instalación principal a la lista y actualiza el store.
-   * También agrega un objeto pedimento por defecto y muestra un mensaje de éxito.
-   *
-   * @param {Domicilios} evento - Datos de la instalación principal a agregar.
-   */
-  instalacionesPrincipales(evento: Domicilios): void {
-    this.domiciliosDatos = [...this.domiciliosDatos, evento];
-    this.solicitud32605Store.actualizarDomiciliosDatos(this.domiciliosDatos);
-    const PEDIMENTO = {
-      patente: 0,
-      pedimento: 0,
-      aduana: 0,
-      idTipoPedimento: 0,
-      descTipoPedimento: 'Por evaluar',
-      numero: '',
-      comprobanteValor: '',
-      pedimentoValidado: false,
-    };
-    this.abrirModal('Datos guardados correctamente.');
-    this.pedimentos.push(PEDIMENTO);
-  }
-  /**
-   * Actualiza el valor del catálogo seleccionado en el estado global.
-   *
-   * @param {Catalogo} valor - Elemento del catálogo seleccionado.
-   */
-  actualizarCatseleccionados(valor: Catalogo): void {
-    this.solicitud32605Store.actualizarCatseleccionados(valor.id);
-  }
-
-  /**
-   * Actualiza el servicio seleccionado en el estado global.
-   *
-   * @param {Catalogo} valor - Elemento del catálogo correspondiente al servicio.
-   */
-  actualizarServicio(valor: Catalogo): void {
-    this.solicitud32605Store.actualizarServicio(valor.id);
-  }
-
-  /**
-   * Actualiza el campo '190' en el estado global.
-   *
-   * @param {string | number} valor - Valor numérico o de texto para el campo 190.
-   */
-  actualizar190(valor: string | number): void {
-    this.solicitud32605Store.actualizar190(valor);
-  }
-
-  /**
-   * Actualiza el campo '191' en el estado global.
-   *
-   * @param {string | number} valor - Valor numérico o de texto para el campo 191.
-   */
-  actualizar191(valor: string | number): void {
-    this.solicitud32605Store.actualizar191(valor);
-  }
-
-  /**
-   * Actualiza el campo '199' en el estado global.
-   *
-   * @param {string | number} valor - Valor numérico o de texto para el campo 199.
-   */
-  actualizar199(valor: string | number): void {
-    this.solicitud32605Store.actualizar199(valor);
-  }
-
-  /**
-   * Actualiza el número de empleados ingresado.
-   *
-   * @param {Event} valor - Evento de entrada del usuario.
-   */
-  actualizarEmpleados(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarEmpleados(VALOR);
-  }
-
-  /**
-   * Actualiza el valor del bimestre seleccionado en el estado global.
-   *
-   * @param {Catalogo} valor - Elemento del catálogo correspondiente al bimestre.
-   */
-  actualizarBimestre(valor: Catalogo): void {
-    this.solicitud32605Store.actualizarBimestre(valor.id);
-  }
-
-  /**
-   * Actualiza el campo '2034' en el estado global.
-   *
-   * @param {string | number} valor - Valor para el campo 2034.
-   */
-  actualizar2034(valor: string | number): void {
-    this.solicitud32605Store.actualizar2034(valor);
-  }
-
-  /**
-   * Actualiza el campo '236' en el estado global.
-   *
-   * @param {string | number} valor - Valor para el campo 236.
-   */
-  actualizar236(valor: string | number): void {
-    this.solicitud32605Store.actualizar236(valor);
-  }
-
-  /**
-   * Actualiza el campo '237' en el estado global.
-   *
-   * @param {string | number} valor - Valor para el campo 237.
-   */
-  actualizar237(valor: string | number): void {
-    this.solicitud32605Store.actualizar237(valor);
-  }
-
-  /**
-   * Actualiza el campo '239' y, si el valor es 1, agrega un pedimento y muestra una advertencia.
-   *
-   * @param {string | number} valor - Valor para el campo 239.
-   */
-  actualizar239(valor: string | number): void {
-    this.solicitud32605Store.actualizar239(valor);
-    if (valor === 1) {
-      const PEDIMENTO = {
-        patente: 0,
-        pedimento: 0,
-        aduana: 0,
-        idTipoPedimento: 0,
-        descTipoPedimento: 'Por evaluar',
-        numero: '',
-        comprobanteValor: '',
-        pedimentoValidado: false,
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: datos ? datos : this.REQUISITO_OBLIGATORIO,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal: 'modal-md',
       };
-      this.abrirModal(
-        'Es un requisito obligatorio para acceder a Registro en el Esquema de Certificacion de Empresas, de conformidad con la regla 7.1.1. de las RGCE.'
-      );
-      this.pedimentos.push(PEDIMENTO);
+  }
+
+
+  /**
+   * Método que se ejecuta cuando se selecciona una opción del botón de radio.
+   * Habilita o deshabilita el diálogo de confirmación según la opción seleccionada.
+   * @param {string, number} evento - El evento del cambio de valor del botón de radio.
+   */
+onSeleccionVerdadera(evento:string | number, nota?:string): void {
+    if (evento && (evento === '1' || evento === 1)) {
+      this.enviarDialogData(nota);
+      this.esHabilitarElDialogo = true;
+    } else {
+      this.esHabilitarElDialogo = false;
     }
+  
   }
 
   /**
-   * Actualiza el campo '240' en el estado global.
+   * Método que se ejecuta cuando se selecciona una opción del botón de radio.
+   * Habilita o deshabilita el diálogo de confirmación según la opción seleccionada.
+   * @param {string, number} evento - El evento del cambio de valor del botón de radio.
+   * @param {string} nota - Nota opcional para enviar al diálogo.
+   */
+  onSeleccionfalsa(evento:string | number, nota?:string): void {
+    if (evento && (evento === '0' || evento === 0)) {
+      this.enviarDialogData(nota);
+      this.esHabilitarElDialogo = true;
+    } else {
+      this.esHabilitarElDialogo = false;
+    }
+  
+  }
+
+   /**
+   * Método para cerrar el modal de confirmación.
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.esHabilitarElDialogo = false;
+  }
+
+  /**
+   * Habilita o deshabilita dinámicamente los campos 'motivoRenunciaDeDerechos' y 'mercacniaSolicitudControlar'
+   * según el estado de solo lectura del formulario.
    *
-   * @param {string | number} valor - Valor para el campo 240.
+   * @returns void
+   * @description Si el formulario está en modo solo lectura, deshabilita ambos campos; de lo contrario, los habilita.
    */
-  actualizar240(valor: string | number): void {
-    this.solicitud32605Store.actualizar240(valor);
-  }
+  actualizarEstadoCampos(): void {
+    if (!this.forma) {
+      return;
+    }
 
-  /**
-   * Actualiza el campo '243' en el estado global.
-   *
-   * @param {string | number} valor - Valor para el campo 243.
-   */
-  actualizar243(valor: string | number): void {
-    this.solicitud32605Store.actualizar243(valor);
-  }
-
-  /**
-   * Actualiza el campo '244' en el estado global.
-   *
-   * @param {string | number} valor - Valor para el campo 244.
-   */
-  actualizar244(valor: string | number): void {
-    this.solicitud32605Store.actualizar244(valor);
-  }
-
-  /**
-   * Actualiza el campo '245' en el estado global.
-   *
-   * @param {string | number} valor - Valor para el campo 245.
-   */
-  actualizar245(valor: string | number): void {
-    this.solicitud32605Store.actualizar245(valor);
-  }
-
-  /**
-   * Actualiza el valor seleccionado en el campo "indique todos" en el estado global.
-   *
-   * @param {Catalogo} valor - Elemento del catálogo correspondiente.
-   */
-  actualizarIndiqueTodos(valor: Catalogo): void {
-    this.solicitud32605Store.actualizarIndiqueTodos(valor.id);
-  }
-
-  /**
-   * Actualiza el campo '246' en el estado global.
-   *
-   * @param {string | number} valor - Valor para el campo 246.
-   */
-  actualizar246(valor: string | number): void {
-    this.solicitud32605Store.actualizar246(valor);
-  }
-
-  /**
-   * Actualiza el valor del archivo 1 desde un input file.
-   *
-   * @param {Event} valor - Evento de cambio del input.
-   */
-  actualizarFile1(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarFile1(VALOR);
-  }
-
-  /**
-   * Actualiza el valor del archivo 2 desde un input file.
-   *
-   * @param {Event} valor - Evento de cambio del input.
-   */
-  actualizarFile2(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarFile2(VALOR);
-  }
-
-  /**
-   * Actualiza el campo '247' en el estado global.
-   */
-  actualizar247(valor: string | number): void {
-    this.solicitud32605Store.actualizar247(valor);
-  }
-
-  /**
-   * Actualiza el campo '248' en el estado global.
-   */
-  actualizar248(valor: string | number): void {
-    this.solicitud32605Store.actualizar248(valor);
-  }
-
-  /**
-   * Actualiza el valor del campo de identificación.
-   */
-  actualizarIdentificacion(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarIdentificacion(VALOR);
-  }
-
-  /**
-   * Actualiza el valor del lugar de radicación.
-   */
-  actualizarLugarDeRadicacion(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarLugarDeRadicacion(VALOR);
-  }
-
-  /**
-   * Actualiza el campo '249' en el estado global.
-   */
-  actualizar249(valor: string | number): void {
-    this.solicitud32605Store.actualizar249(valor);
-  }
-
-  /**
-   * Actualiza el campo '250' en el estado global.
-   */
-  actualizar250(valor: string | number): void {
-    this.solicitud32605Store.actualizar250(valor);
-  }
-
-  /**
-   * Actualiza el campo '251' en el estado global.
-   */
-  actualizar251(valor: string | number): void {
-    this.solicitud32605Store.actualizar251(valor);
-  }
-
-  /**
-   * Actualiza el valor del checkbox 1.
-   */
-  actualizarCheckbox1(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).checked;
-    this.solicitud32605Store.actualizarCheckbox1(VALOR);
-  }
-
-  /**
-   * Actualiza el valor del checkbox 2.
-   */
-  actualizarCheckbox2(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).checked;
-    this.solicitud32605Store.actualizarCheckbox2(VALOR);
-  }
-
-  /**
-   * Actualiza el valor del checkbox 3.
-   */
-  actualizarCheckbox3(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).checked;
-    this.solicitud32605Store.actualizarCheckbox3(VALOR);
-  }
-
-  /**
-   * Actualiza el campo 'Actualmente2' en el estado global.
-   */
-  actualizarActualmente2(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarActualmente2(VALOR);
-  }
-
-  /**
-   * Actualiza el campo 'Actualmente1' en el estado global.
-   */
-  actualizarActualmente1(valor: Event): void {
-    const VALOR = (valor.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarActualmente1(VALOR);
-  }
-
-  /**
-   * Guarda la selección de inventarios hecha por el usuario.
-   */
-  seleccionarInventariosDatos(evento: Inventarios[]): void {
-    this.seleccionarInventarios = evento;
-  }
-
-  /**
-   * Elimina los inventarios seleccionados de la lista.
-   */
-  eliminarInventariosDatos(): void {
-    if (this.seleccionarInventarios.length > 0) {
-      this.seleccionarInventarios.forEach((elemento) => {
-        const INDICE = this.inventariosDatos.findIndex(
-          (inv) => inv.nombre === elemento.nombre
-        );
-        if (INDICE !== -1) {
-          this.inventariosDatos.splice(INDICE, 1);
+    const CAMPOS = [
+  "cumplimientoFiscalAduanero",
+  "autorizaOpinionSAT",
+  "cuentaConEmpleadosPropios",
+  "retencionISRTrabajadores",
+  "numeroDeEmpleadas",
+  "pagoCuotasIMSS",
+  "cuentaConSubcontratacionEspecializada",
+  "registroPadronLFT",
+  "listadoSATArt69",
+  "listadoSATArt69B",
+  "listadoSATArt69BBis",
+  "certificadosSellosVigentes",
+  "infringioSupuestos17HBis",
+  "mediosContactoActualizadosBuzon",
+  "suspensionPadronImportadoresExportadores",
+  "archivoNacionales",
+  "proveedores",
+  "querellaSATUltimos3Anios",
+  "ingresoInfoContableSAT",
+  "manifests",
+  "bajoProtesta"
+];
+    CAMPOS.forEach(campo => {
+      const CONTROL = this.forma.get(campo);
+      if (CONTROL) {
+        if (this.esFormularioSoloLectura) {
+          CONTROL.disable();
+        } else {
+          CONTROL.enable();
         }
-      });
+      }
+    });
+  }
+
+  /**
+  * @method validarFormulario
+  * Valida todos los controles del formulario.
+  * 
+  * Marca todos los controles como tocados y actualiza su estado de validación
+  * para mostrar los errores correspondientes en la interfaz de usuario.
+  * También valida los formularios de los componentes hijo.
+  * 
+  * @returns {void}
+  */
+validarFormulario(): boolean {
+  let isValid = true;
+
+  if (this.forma) {
+    this.forma.markAllAsTouched();
+    this.forma.updateValueAndValidity();
+
+    if (this.forma.invalid) {
+      isValid = false;
+    }
+  } else {
+    isValid = false;
+  }
+
+  if (this.controlInventariosComponent) {
+    const CONTROL_INVENTARIOS_VALID = this.controlInventariosComponent.validarFormularios();
+    if (!CONTROL_INVENTARIOS_VALID) {
+      isValid = false;
     }
   }
 
-  /**
-   * Guarda la selección de socios hecha por el usuario.
-   */
-  seleccionarlistaSeccionSociosIC(evento: SeccionSociosIC[]): void {
-    this.seleccionarListaSeccionSociosIC = evento;
-  }
-
-  /**
-   * Elimina los socios seleccionados de la lista.
-   */
-  eliminarlistaSeccionSociosIC(): void {
-    if (this.seleccionarListaSeccionSociosIC.length > 0) {
-      this.seleccionarListaSeccionSociosIC.forEach((elemento) => {
-        const INDICE = this.listaSeccionSociosIC.findIndex(
-          (inv) => inv.nombre === elemento.nombre
-        );
-        if (INDICE !== -1) {
-          this.listaSeccionSociosIC.splice(INDICE, 1);
-        }
-      });
+  if (this.domiciliosRfcSolicitanteComponent) {
+    const DOMICILIOS_VALID = this.domiciliosRfcSolicitanteComponent.validarDomiciliosRfcSolicitante();
+    if (!DOMICILIOS_VALID) {
+      isValid = false;
     }
   }
 
-  /**
-   * Guarda la selección de domicilios hecha por el usuario.
-   */
-  seleccionarDomiciliosDato(evento: Domicilios[]): void {
-    this.seleccionarDomiciliosDatos = evento;
-  }
-
-  /**
-   * Elimina los domicilios seleccionados de la lista.
-   */
-  eliminarDomiciliosDatos(): void {
-    if (this.seleccionarDomiciliosDatos.length > 0) {
-      this.seleccionarDomiciliosDatos.forEach((elemento) => {
-        const INDICE = this.domiciliosDatos.findIndex(
-          (inv) => inv.tipoInstalacion === elemento.tipoInstalacion
-        );
-        if (INDICE !== -1) {
-          this.domiciliosDatos.splice(INDICE, 1);
-        }
-      });
+  if (this.agregarMiembroEmpresaComponent) {
+    const MIEMBRO_EMPRESA_VALID = this.agregarMiembroEmpresaComponent.validarAgregarMiembroEmpresa();
+    if (!MIEMBRO_EMPRESA_VALID) {
+      isValid = false;
     }
   }
 
-  /**
-   * Guarda la selección de número de empleados hecha por el usuario.
+  return isValid;
+}
+    /**
+   * Maneja el cambio en el reconocimiento mutuo CTPAT y emite el valor seleccionado.
+   *
+   * @param {string} value - El valor seleccionado para reconocimiento mutuo CTPAT.
    */
-  seleccionarNumeroDeEmpleadosDato(evento: NumeroDeEmpleados[]): void {
-    this.seleccionarNumeroDeEmpleadosLista = evento;
+  onReconocimientoMutuoCTPATChanged(value: string): void {
+    this.reconocimientoMutuoCTPATChange.emit(value);
   }
-
+ 
+ 
   /**
-   * Elimina los registros de número de empleados seleccionados.
-   */
-  eliminarNumeroDeEmpleadosDato(): void {
-    if (this.seleccionarNumeroDeEmpleadosLista.length > 0) {
-      this.seleccionarNumeroDeEmpleadosLista.forEach((elemento) => {
-        const INDICE = this.numeroDeEmpleadosLista.findIndex(
-          (inv) => inv.numeroDeEmpleados === elemento.numeroDeEmpleados
-        );
-        if (INDICE !== -1) {
-          this.numeroDeEmpleadosLista.splice(INDICE, 1);
-        }
-      });
-    }
-  }
-
-  /**
-   * Limpia y completa la señal de destrucción para evitar fugas de memoria.
+   * @method ngOnDestroy
+   * Hook de ciclo de vida que se ejecuta al destruir el componente.
+   * Libera recursos y suscripciones.
    */
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
+
+}
+
+/**
+ * Validador personalizado que verifica que al menos uno de los campos sectorProductivo o sectorServicio tenga un valor seleccionado.
+ * 
+ * @param {AbstractControl} control - El control del formulario que contiene los campos a validar
+ * @returns {ValidationErrors | null} - Retorna un objeto de error si la validación falla, null si es válida
+ */
+function alMenosUnSectorValidator(control: AbstractControl): ValidationErrors | null {
+  const SECTOR_PRODUCTIVO = control.get('sectorProductivo')?.value;
+  const SECTOR_SERVICIO = control.get('sectorServicio')?.value;
+  
+  // Si al menos uno de los dos campos tiene un valor válido (no null, undefined, o string vacío)
+  const TIENE_SECTOR_PRODUCTIVO = SECTOR_PRODUCTIVO && SECTOR_PRODUCTIVO !== '' && SECTOR_PRODUCTIVO !== -1;
+  const TIENE_SECTOR_SERVICIO = SECTOR_SERVICIO && SECTOR_SERVICIO !== '' && SECTOR_SERVICIO !== -1;
+  
+  if (!TIENE_SECTOR_PRODUCTIVO && !TIENE_SECTOR_SERVICIO) {
+    return { alMenosUnSector: true };
+  }
+  
+  return null;
 }

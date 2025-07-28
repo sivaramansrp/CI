@@ -8,7 +8,7 @@
           <textarea
             cols="80"
             rows="5"
-            formControlName="observaciones"
+            formControlName="observaciones" 
             (change)="
               setValoresStore(
                 validacionForm,
@@ -28,6 +28,7 @@
           [required]="true"
           id="idioma"
           formControlName="idioma"
+          
           (change)="setValoresStore(validacionForm, 'idioma', 'setIdioma')"
         ></app-catalogo-select>
       </div>
@@ -40,7 +41,7 @@
           <label style="font-weight: bold">
             <input
               type="checkbox"
-              formControlName="casillaVerificacion"
+              formControlName="casillaVerificacion" 
               (change)="
                 setValoresStore(
                   validacionForm,
@@ -60,6 +61,7 @@
                 cols="80"
                 rows="5"
                 formControlName="justificacion"
+                
                 (change)="
                   setValoresStore(
                     validacionForm,
@@ -80,6 +82,7 @@
             [label]="'Entidad federativa'"
             [required]="true"
             formControlName="entidad"
+            
             (change)="setValoresStore(validacionForm, 'entidad', 'setEntidad')"
           ></app-catalogo-select>
         </div>
@@ -90,6 +93,7 @@
             [required]="true"
             id="representacion"
             formControlName="representacion"
+            
             (change)="
               setValoresStore(
                 validacionForm,

@@ -1,9 +1,9 @@
 <div [formGroup]="datosRepLegalRecibirDonacionForm">
     <div class="row">
         <div class="col-md-4">
-            <label class="form-label" for="rfc">R.F.C.* :</label>
+            <label class="form-label" for="rfc">R.F.C.*: 
             <span class="bi bi-question-circle-fill" title="Registro Federal de Contribuyentes"
-                data-bs-toggle="tooltip"></span>
+                data-bs-toggle="tooltip"></span></label>
             <input type="text" class="form-control" id="rfcRepLegalAutorizado" name="rfc" maxlength="13"
                 (blur)="buscarContribuyenteRfc(3, 'rfcRepLegalAutorizado')" formControlName="rfcRepLegalAutorizado"
                 (change)="setValoresStore(datosRepLegalRecibirDonacionForm,'rfcRepLegalAutorizado', 'setRfcRepLegalAutorizado')">
@@ -39,7 +39,7 @@
 
     <div class="row">
         <div class="col-md-4">
-            <app-catalogo-select [catalogo]="pais" [label]="'País'" [isDisabled]="true" name="pais"
+            <app-catalogo-select [catalogo]="pais" [label]="'País'" [isDisabled]="formularioDeshabilitado" name="pais"
                 formControlName="cvePaisRepLegalAutorizado" (change)="paisSeleccion()"></app-catalogo-select>
         </div>
         <div class="col-md-4">

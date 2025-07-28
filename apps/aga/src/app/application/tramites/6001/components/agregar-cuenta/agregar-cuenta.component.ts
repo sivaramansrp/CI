@@ -1,18 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable sort-imports */
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { RegistroCuentasBancariasService } from '../../services/registro-cuentas-bancarias.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { AgregarCuenta6001State, Tramite6001Store } from '../../estados/tramite6001.store';
+import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import { REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { RegistroCuentasBancariasService } from '../../services/registro-cuentas-bancarias.service';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite6001Query } from '../../estados/tramite6001.query';
-import { map, Subject, takeUntil } from 'rxjs';
+import { resetStores } from '@datorama/akita/src/lib/resetStores';
 
 
 /**
@@ -73,6 +70,10 @@ export class AgregarCuentaComponent implements OnInit,OnDestroy {
    * Este estado se utiliza para gestionar los datos y el comportamiento asociado con el proceso de adición de cuentas.
    */
   public agregarCuentaState!: AgregarCuenta6001State;
+  /**
+   * Indica si el formulario "Agregar Cuenta" ha sido enviado.
+   */
+  public tieneAgregarCuentaFormEnviado: boolean = false;
 
   /**
    * Constructor del componente AgregarCuentaComponent.
@@ -124,7 +125,8 @@ export class AgregarCuentaComponent implements OnInit,OnDestroy {
    * @param obj - El objeto que se va a copiar profundamente. Por defecto es un objeto vacío.
    * @returns Una copia profunda del objeto proporcionado.
    */
-  public deepCopy(obj = {}) {
+  /*eslint class-methods-use-this: ["error", { "exceptMethods": ["deepCopy"] }] */
+  public deepCopy(obj = {}): RespuestaCatalogos {
     return JSON.parse(JSON.stringify(obj));
   }
 
@@ -228,7 +230,7 @@ export class AgregarCuentaComponent implements OnInit,OnDestroy {
 
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite6001Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite6001Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite6001Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
@@ -239,6 +241,19 @@ export class AgregarCuentaComponent implements OnInit,OnDestroy {
    * @returns {void}
    */
   public guardar(): void {
+    this.tieneAgregarCuentaFormEnviado = true;
+    if(this.agregarCuentaForm.valid) {
+      this._registroCuentasBancariasSvc.cambiarComponente('DatosGenerales');
+    }
+  }
+
+  /**
+   * Cancela la operación actual de agregar una cuenta bancaria.
+   */
+  public cancelar(): void {
+    this.agregarCuentaForm.reset(this.agregarCuentaForm.value);
+    this.agregarCuentaForm.updateValueAndValidity();
+    resetStores(); 
     this._registroCuentasBancariasSvc.cambiarComponente('DatosGenerales');
   }
 

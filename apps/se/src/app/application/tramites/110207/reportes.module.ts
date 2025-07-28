@@ -1,4 +1,4 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, FirmaElectronicaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NO_ERRORS_SCHEMA, NgModule } from '@angular/core';
 import { CertificadoDeOrigenComponent } from './components/certificado-de-origen/certificado-de-origen.component';
@@ -10,7 +10,6 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReportesRoutingModule } from './reportes-routing.module';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-
 
 @NgModule({
   declarations: [
@@ -31,11 +30,10 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     FirmaElectronicaComponent,
     TituloComponent,
     AlertComponent,
-    AnexarDocumentosComponent,
     WizardComponent,
     BtnContinuarComponent,
     SolicitanteComponent
   ],
-  schemas: [NO_ERRORS_SCHEMA],
+  schemas: [NO_ERRORS_SCHEMA], 
 })
 export class ReportesModule { }

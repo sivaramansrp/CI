@@ -1,5 +1,5 @@
-import { CONFIGURACION_ANEXOS_IMPORTACION, CONFIGURACION_ANEXOS_TABLA } from '../../../80308/constantes/modificacion.enum';
-import { Component, OnDestroy } from '@angular/core';
+import { CONFIGURACION_ANEXOS_IMPORTACION, CONFIGURACION_ANEXOS_SENSIBLES, CONFIGURACION_ANEXOS_TABLA } from '../../constantes/modificacion.enum';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { Anexo } from '../../estados/models/plantas-consulta.model';
@@ -13,9 +13,8 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './datos-anexos.component.scss',
   standalone: true,
   imports: [TablaDinamicaComponent, TituloComponent],
-  providers: [SolicitudService, ToastrService],
 })
-export class DatosAnexosComponent implements OnDestroy {
+export class DatosAnexosComponent implements OnInit, OnDestroy {
   /**
    * Subject utilizado para notificar cuando se debe completar y limpiar las suscripciones activas.
    * Esto evita fugas de memoria al completar las suscripciones al destruir el componente.
@@ -38,6 +37,13 @@ export class DatosAnexosComponent implements OnDestroy {
   configuracionTablaImportacion: ConfiguracionColumna<Anexo>[] =
     CONFIGURACION_ANEXOS_IMPORTACION;
 
+    /**
+   * Configuración de las columnas de la tabla para los anexos de importación.
+   * @type {ConfiguracionColumna<Anexo>[]}
+   */
+  configuracionTablaSensibles: ConfiguracionColumna<Anexo>[] =
+    CONFIGURACION_ANEXOS_SENSIBLES;
+
   /**
    * Datos de los anexos obtenidos desde el servicio.
    * @type {Anexo[]}
@@ -45,16 +51,41 @@ export class DatosAnexosComponent implements OnDestroy {
   datosAnexo: Anexo[] = [];
 
   /**
-   * Datos de los anexos de importación obtenidos desde el servicio.
-   * @type {Anexo[]}
+   * Lista de anexos relacionados con la importación.
+   * 
+   * Esta propiedad almacena un arreglo de objetos de tipo `Anexo` que contienen
+   * la información relevante sobre los documentos o archivos anexados para el proceso de importación.
    */
   datosImportacion: Anexo[] = [];
 
+  /**
+   * Lista de anexos que contienen datos sensibles.
+   * 
+   * @remarks
+   * Esta propiedad almacena los objetos de tipo `Anexo` que han sido identificados como sensibles.
+   * Se utiliza para gestionar y mostrar información que requiere un tratamiento especial debido a su naturaleza confidencial.
+   */
+  datosSensibles: Anexo[] = []; 
+
+  /**
+   * Constructor de la clase DatosAnexosComponent.
+   * 
+   * @param solicitudService Servicio para gestionar las solicitudes.
+   * @param toastr Servicio para mostrar notificaciones al usuario.
+   */
   constructor(
     public solicitudService: SolicitudService,
     private toastr: ToastrService 
   ) {
-    this.obteneComplimentaria(); // Carga los anexos complementarios.
+   
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Llama a `obteneComplimentaria()` para cargar los anexos complementarios al iniciar el componente.
+   */
+  ngOnInit(): void {
+     this.obteneComplimentaria(); // Carga los anexos complementarios.
   }
 
   /**
@@ -69,6 +100,7 @@ export class DatosAnexosComponent implements OnDestroy {
         (data: Anexo[]) => {
           this.datosAnexo = [...data]; // Almacena los datos de anexos complementarios.
           this.datosImportacion = [...data]; // Almacena los datos de anexos de importación.
+          this.datosSensibles = [...data]; // Almacena los datos de anexos sensibles.
         },
         () => {
           this.toastr.error('Error al cargar los anexos'); // Manejo de errores.

@@ -1,13 +1,16 @@
 import {
   AlertComponent,
   AnexarDocumentosComponent,
+  BtnContinuarComponent,
   CatalogoSelectComponent,
   FirmaElectronicaComponent,
+  SharedModule,
   SolicitanteComponent,
   TercerosComponent,
   TituloComponent,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CertificadoDeOrigenComponent } from './components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from './components/datos-certificado/datos_certificado.component';
@@ -17,29 +20,34 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RegistroRoutingModule } from './registro-routing.module';
+import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { ToastrService } from 'ngx-toastr';
 
 @NgModule({
-  declarations: [],
+  declarations: [PasoDosComponent,
+    PasoTresComponent,
+    PasoUnoComponent,
+    SolicitudPageComponent
+  ],
   imports: [
     CommonModule,
+    AnexarDocumentosComponent,
     RegistroRoutingModule,
     CatalogoSelectComponent,
     AlertComponent,
-    AnexarDocumentosComponent,
     TituloComponent,
     FirmaElectronicaComponent,
     SolicitanteComponent,
     TercerosComponent,
     WizardComponent,
-    PasoDosComponent,
-    PasoTresComponent,
-    PasoUnoComponent,
     CertificadoDeOrigenComponent,
     DatosCertificadoComponent,
     DestinatarioComponent,
-    TituloComponent,
+    BtnContinuarComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    SharedModule,
   ],
-  providers:[ToastrService]
+  providers: [ToastrService]
 })
-export class RegistroModule {}
+export class RegistroModule { }

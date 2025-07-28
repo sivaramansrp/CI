@@ -1,6 +1,5 @@
 <div class="container">
   <form [formGroup]="datosEstablecimientoForm">
-    <div *ngIf="!mostrarFormularioMercancias">
       <div class="container mt-4">
         <div class="panel-group ficha-collapse" id="accordion">
           <div class="panel panel-default">
@@ -28,7 +27,7 @@
         </div>
         <ng-titulo titulo="Datos del establecimiento" />
         <div class="d-flex justify-content-end mt-3">
-          <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Seleccionar establecimiento</button>
+          <button class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="seleccionarEstablecimiento()">Seleccionar establecimiento</button>
         </div>
 
         <div class="row">
@@ -49,14 +48,14 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="correoElectronico">Correo electrónico*:
-                <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" data-bs-toggle="tooltip"></span>
+                <span class="bi bi-question-circle-fill fs-4 m-1" title="Correo electrónico" data-bs-toggle="tooltip"></span>
               </label>
               <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico"(input)="updateCorreoElectronico()">
             </div>
           </div>
         </div>
 
-        <ng-titulo titulo="Datos del establecimiento" />
+        <ng-titulo titulo="Domicilio del establecimiento" />
 
         <div class="row">
           <div class="col-md-4">
@@ -96,7 +95,7 @@
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" for="Calle">Calle:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span>
+                  title="Calle" ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" class="form-control" id="Calle" formControlName="calle" (input)="updateCalle()">
             </div>
@@ -107,19 +106,19 @@
         <div class="row mb-5">
           <div class="col-md-2">
             <div class="form-group">
-              <label class="form-label" for="lada">Lada</label>
+              <label class="form-label" for="lada">Lada:</label>
               <input class="form-control" type="text" id="lada" formControlName="lada" (input)="updateLada()">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label class="form-label" for="teléfono">Teléfono</label>
+              <label class="form-label" for="teléfono">Teléfono*:</label>
               <input class="form-control" type="text" id="teléfono" formControlName="telefono" (input)="updateTelefono()">
             </div>
           </div>
         </div>
 
-        <h5 class="fs-4">S.C.I.A.N.*</h5>
+        <h5 class="fs-4">S.C.I.A.N.*:</h5>
         <div class="table-responsive">
           <app-tabla-dinamica [configuracionTabla]="configuracionTablaScian" [datos]="claveScianDatas"
             [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
@@ -128,7 +127,7 @@
 
         <div class="row">
           <div class="col-md-12 d-flex justify-content-end">
-            <button name="eliminarServicio" class="btn btn-danger">
+            <button name="eliminarServicio" class="btn btn-danger" [disabled]="esFormularioSoloLectura">
               Eliminar
             </button>
             <button name="agregarServicio" class="btn btn-primary mx-2" (click)="toggleScianFormulario()" [disabled]="esFormularioSoloLectura">
@@ -138,36 +137,63 @@
         </div>
 
         <app-formulario-operacion-comercial></app-formulario-operacion-comercial>
-
+        <h5>Mercancias*:</h5>
         <app-tabla-dinamica [configuracionTabla]="mercanciasTabla" [datos]="mercanicaData"
           [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
         </app-tabla-dinamica>
+        <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
 
         <div class="d-flex justify-content-end">
-          <button class="btn btn-primary" (click)="openMercanciasForm()" [disabled]="esFormularioSoloLectura">
+          <button class="btn btn-primary me-2" (click)="openMercanciasForm()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
-          <button class="btn btn-default ms-2">Modificar</button>
-          <button class="btn btn-default ms-2">Eliminar</button>
+            <button class="btn btn-secondary me-2" [disabled]="esFormularioSoloLectura">
+            Modificar
+          </button>
+            <button class="btn btn-danger" [disabled]="esFormularioSoloLectura">
+            Eliminar
+          </button>
         </div>
 
       </div>
       <ng-titulo titulo="Manifiestos y declaraciones" />
       <div class="alert alert-info manifest-box">
-        <input class="form-check-input" type="checkbox" id="datosManifiestos">
-        <p>{{ MANIFIESTOS_ALERT.DATOS_MANIFIESTOS }}</p>
+        <label><input class="form-check-input" type="checkbox" id="datosManifiestos" formControlName="datosManifiestos" ><span class="label-asterisk">*</span></label>
+        <p class="manifiest-alert">{{ MANIFIESTOS_ALERT.DATOS_MANIFIESTOS }}</p>
       </div>
 
       <app-representante-legal></app-representante-legal>
-    </div>
   </form>
 </div>
 
-<div *ngIf="mostrarFormularioMercancias">
-  <app-mercancias-table-form (Cancelar)="closeMercanciasForm()"></app-mercancias-table-form>
+<div class="modal fade" tabindex="-1" role="dialog" id="mercanciasModal" #modalMercanciasRef>
+  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <app-mercancias-table-form (agregarDatos)="agregarMercanciasTabla($event)" (Cancelar)="closeMercanciasForm()"></app-mercancias-table-form>
+    </div>
+  </div>
 </div>
 
-<div class="modal fade" tabindex="-1" role="dialog" *ngIf="mostrarFormularioScian" id="myModal"
-  [ngClass]="{ show: mostrarFormularioScian }" aria-hidden="true">
-  <app-clave-scian (cancel)="cerrarScianFormulario()"></app-clave-scian>
+<div class="modal fade" tabindex="-1" role="dialog" id="myModal" #modalScianRef>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <app-clave-scian (agregarDatos)="agregarScian($event)" (cancel)="cerrarScianFormulario()"></app-clave-scian>
+    </div>
+  </div>
+</div>
+
+<div id="modalSeleccionarEstablesmiento" aria-labelledby="modalSeleccionarEstablesmiento" class="modal fade" tabindex="-1" role="dialog" #modalSeleccionarEstablesmiento>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content modalsm">
+      <div class="modal-header">
+        <p></p>
+      </div>
+      <div class="modal-body">
+        <p>Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.</p>
+      </div>
+      <div class="modal-footer" style="justify-content: center">
+        <button type="button" class="btn btn-primary" (click)="aceptar()">Aceptar</button>
+      </div>
+    </div>
+  </div>
 </div>

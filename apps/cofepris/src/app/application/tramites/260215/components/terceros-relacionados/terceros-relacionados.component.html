@@ -4,8 +4,8 @@
     <ng-titulo titulo="Terceros relacionados" />
 
     <!-- alert-box -->
-    <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
-
+    <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA" [CUSTOMECLASS]="'text-center'" />
+    
     <!-- Fabricante table when on display -->
     <div class="mt-5">
       <h5>Fabricante:</h5>
@@ -19,13 +19,14 @@
 
       <div class="d-flex justify-content-end mt-3">
         <div *ngIf="showFabricanteButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
+          <button [disabled]="esFormularioSoloLectura" class="btn btn-danger" type="button">Eliminar</button>
+          <button [disabled]="esFormularioSoloLectura" class="btn btn-default" type="button">Modificar</button>
         </div>
         <button
           type="button"
           class="btn btn-primary"
           (click)="toggleDivFabricante()"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -46,13 +47,14 @@
 
       <div class="d-flex justify-content-end mt-3">
         <div *ngIf="showDestinatarioButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
+          <button [disabled]="esFormularioSoloLectura" class="btn btn-danger" type="button">Eliminar</button>
+          <button [disabled]="esFormularioSoloLectura" class="btn btn-default" type="button">Modificar</button>
         </div>
         <button
           type="button"
           class="btn btn-primary"
           (click)="toggleDivDestinatario()"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -72,13 +74,14 @@
 
       <div class="d-flex justify-content-end mt-3">
         <div *ngIf="showProveedorButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
+          <button [disabled]="esFormularioSoloLectura" class="btn btn-danger" type="button">Eliminar</button>
+          <button [disabled]="esFormularioSoloLectura" class="btn btn-default" type="button">Modificar</button>
         </div>
         <button
           type="button"
           class="btn btn-primary"
           (click)="toggleDivProveedor()"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -98,13 +101,14 @@
 
       <div class="d-flex justify-content-end mt-3">
         <div *ngIf="showFacturadorButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
+          <button [disabled]="esFormularioSoloLectura" class="btn btn-danger" type="button">Eliminar</button>
+          <button [disabled]="esFormularioSoloLectura" class="btn btn-default" type="button">Modificar</button>
         </div>
         <button
           type="button"
           class="btn btn-primary"
           (click)="toggleDivFacturador()"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -150,12 +154,13 @@
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
+                (change)="onTipoPersonaChange(agregarFabricanteFormGroup)"
               ></app-input-radio>
             </div>
           </div>
         </div>
       </div>
-      <hr />
+      <br />
 
       <!-- toggling inputs based on radio button selection -->
 
@@ -181,8 +186,8 @@
             </div>
           </div>
         </div>
-        <hr />
-        <hr />
+        <br />
+        <br />
         <h5>Datos personales</h5>
         <div class="row d-flex datos-personales-form-container">
           <div class="col-md-4">
@@ -216,7 +221,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="segundoApellido"
-                >Segundo apellido*:</label
+                >Segundo apellido:</label
               >
               <input
                 type="text"
@@ -254,8 +259,7 @@
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" for="denominacionRazonSocial"
-                >Denominación/razón social*:</label
-              >
+                >Denominación/razón social*:</label>
               <input
                 type="text"
                 class="form-control"
@@ -317,7 +321,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="segundoApellido"
-                >Segundo apellido*:</label
+                >Segundo apellido:</label
               >
               <input
                 type="text"
@@ -336,7 +340,7 @@
 
         <!-- Domicilio-form-container -->
         <h5>Domicilio</h5>
-        <div class="row d-flex domicilio-form-container">
+        <div class="row">
           @if(nacional){
           <div>
             <div class="col-md-4 mt-2">
@@ -348,6 +352,7 @@
                   for="pais"
                   id="pais"
                   formControlName="pais"
+                  [isDisabled]="desactivarCatalogoSelectEnPopup"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -361,6 +366,7 @@
                   for="estadoLocalidad"
                   id="estadoLocalidad"
                   formControlName="estadoLocalidad"
+                  [isDisabled]="desactivarCatalogoSelectEnPopup"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -374,20 +380,22 @@
                   for="municipioAlcaldia"
                   id="municipioAlcaldia"
                   formControlName="municipioAlcaldia"
+                  [isDisabled]="desactivarCatalogoSelectEnPopup"
                 ></app-catalogo-select>
               </div>
             </div>
-            <hr />
+            <br />
 
             <div class="col-md-4 mt-2">
               <div class="form-group">
                 <app-catalogo-select
                   [catalogo]="localidadDropdownData"
                   [label]="'Localidad'"
-                  [required]="false"
+                  [required]="true"
                   for="localidad"
                   id="localidad"
                   formControlName="localidad"
+                  [isDisabled]="desactivarCatalogoSelectEnPopup"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -397,10 +405,10 @@
                 <app-catalogo-select
                   [catalogo]="codigoPostalDropdownData"
                   [label]="'Código postal o equivalente'"
-                  [required]="true"
                   for="codigoPostaloEquivalente"
                   id="codigoPostaloEquivalente"
                   formControlName="codigoPostaloEquivalente"
+                  [isDisabled]="desactivarCatalogoSelectEnPopup"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -413,6 +421,7 @@
                   for="colonia"
                   id="colonia"
                   formControlName="colonia"
+                  [isDisabled]="desactivarCatalogoSelectEnPopup"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -428,6 +437,7 @@
                   for="pais"
                   id="pais"
                   formControlName="pais"
+                  [isDisabled]="desactivarCatalogoSelectEnPopup"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -575,7 +585,7 @@
               />
             </div>
           </div>
-          <hr />
+          <br />
 
           <!-- campos -->
           <div class="col-md-3 text-muted text-vertical-align-button">
@@ -628,15 +638,15 @@
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
+                (change)="onTipoPersonaChange(agregarDestinatarioFormGroup)"
               ></app-input-radio>
             </div>
           </div>
         </div>
       </div>
-      <hr />
+      <br />
 
       <div class="row">
-        <div>
           <div class="col-md-4">
             <div class="form-group">
               <label for="rfc" class="form-label"
@@ -658,22 +668,49 @@
         </div>
 
         @if (fisica || (!fisica && !moral)){
-        <div class="row">
+        <br />
+        <br />
+        <h5>Datos personales</h5>
+        <div class="row d-flex datos-personales-form-container">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="curp" class="form-label"
-                >C.U.R.P*:<span
-                  class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title"
-                  ata-bs-toggle="tooltip"
-                ></span>
-              </label>
+              <label for="nombre" class="form-label">Nombre(s)*: </label>
               <input
                 type="text"
-                id="curp"
-                formControlName="curp"
+                id="nombre"
+                formControlName="nombre"
+                name="nombre"
                 class="form-control"
-                name="curp"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="primerApellido"
+                >Primer apellido*:</label
+              >
+              <input
+                type="text"
+                id="primerApellido"
+                formControlName="primerApellido"
+                name="primerApellido"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="segundoApellido"
+                >Segundo apellido:</label
+              >
+              <input
+                type="text"
+                id="segundoApellido"
+                formControlName="segundoApellido"
+                name="segundoApellido"
+                class="form-control"
               />
             </div>
           </div>
@@ -697,12 +734,12 @@
         </div>
         }
 
-        <hr />
-        <hr />
+        <br />
+        <br />
 
         <!-- Domicilio-form-container -->
         <h5>Domicilio</h5>
-        <div class="row d-flex domicilio-form-container">
+        <div class="row">
           <div class="col-md-4 mt-5">
             <div class="form-group">
               <app-catalogo-select
@@ -712,6 +749,7 @@
                 for="pais"
                 id="pais"
                 formControlName="pais"
+                [isDisabled]="desactivarCatalogoSelectEnPopup"
               ></app-catalogo-select>
             </div>
           </div>
@@ -720,11 +758,12 @@
             <div class="form-group">
               <app-catalogo-select
                 [catalogo]="dropdownData"
-                [label]="'Estado/localidad*'"
+                [label]="'Estado/localidad'"
                 [required]="true"
                 for="estadoLocalidad"
                 id="estadoLocalidad"
                 formControlName="estadoLocalidad"
+                [isDisabled]="desactivarCatalogoSelectEnPopup"
               ></app-catalogo-select>
             </div>
           </div>
@@ -733,11 +772,12 @@
             <div class="form-group">
               <app-catalogo-select
                 [catalogo]="municipioDropdownData"
-                [label]="'Municipio/alcaldia:'"
+                [label]="'Municipio/alcaldia'"
                 [required]="true"
                 for="municipioAlcaldia"
                 id="municipioAlcaldia"
                 formControlName="municipioAlcaldia"
+                [isDisabled]="desactivarCatalogoSelectEnPopup"
               ></app-catalogo-select>
             </div>
           </div>
@@ -747,10 +787,11 @@
               <app-catalogo-select
                 [catalogo]="localidadDropdownData"
                 [label]="'Localidad'"
-                [required]="false"
+                [required]="true"
                 for="localidad"
                 id="localidad"
                 formControlName="localidad"
+                [isDisabled]="desactivarCatalogoSelectEnPopup"
               ></app-catalogo-select>
             </div>
           </div>
@@ -759,10 +800,11 @@
             <div class="form-group">
               <app-catalogo-select
                 [catalogo]="codigoPostalDropdownData"
-                [label]="'Código postal o equivalente*:'"
+                [label]="'Código postal o equivalente'"
                 for="codigoPostaloEquivalente"
                 id="codigoPostaloEquivalente"
                 formControlName="codigoPostaloEquivalente"
+                [isDisabled]="desactivarCatalogoSelectEnPopup"
               ></app-catalogo-select>
             </div>
           </div>
@@ -771,10 +813,11 @@
             <div class="form-group">
               <app-catalogo-select
                 [catalogo]="coloniaDropdownData"
-                [label]="'Colonia:'"
+                [label]="'Colonia '"
                 for="colonia"
                 id="colonia"
                 formControlName="colonia"
+                [isDisabled]="desactivarCatalogoSelectEnPopup"
               ></app-catalogo-select>
             </div>
           </div>
@@ -875,7 +918,7 @@
               />
             </div>
           </div>
-          <hr />
+          <br />
 
           <!-- campos -->
           <div class="col-md-3 text-muted text-vertical-align-button">
@@ -903,7 +946,6 @@
             </div>
           </div>
         </div>
-      </div>
     </form>
   </div>
 </app-modal>
@@ -927,12 +969,13 @@
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
+                (change)="onTipoPersonaChange(agregarProveedorFormGroup)"
               ></app-input-radio>
             </div>
           </div>
         </div>
       </div>
-      <hr />
+      <br />
 
       @if (fisica || (!fisica && !moral)) {
       <h5>Datos personales</h5>
@@ -968,7 +1011,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="segundoApellido"
-              >Segundo apellido*:</label
+              >Segundo apellid:</label
             >
             <input
               type="text"
@@ -1003,7 +1046,7 @@
       <br />
 
       <h5>Domicilio</h5>
-      <div class="row d-flex domicilio-form-container">
+      <div class="row">
         <div class="col-md-4 mt-5">
           <div class="form-group">
             <app-catalogo-select
@@ -1013,6 +1056,7 @@
               for="pais"
               id="pais"
               formControlName="pais"
+              [isDisabled]="desactivarCatalogoSelectEnPopup"
             ></app-catalogo-select>
           </div>
         </div>
@@ -1033,7 +1077,7 @@
         <div class="col-md-4 mt-5">
           <div class="form-group">
             <label class="form-label" for="codigoPostaloEquivalente"
-              >Código postal o equivalente*:</label
+              >Código postal o equivalente:</label
             >
             <input
               class="form-control"
@@ -1060,8 +1104,8 @@
           </div>
         </div>
 
-        <hr />
-        <hr />
+        <br />
+        <br />
 
         <div class="col-md-8">
           <div class="form-group">
@@ -1156,7 +1200,7 @@
             />
           </div>
         </div>
-        <hr />
+        <br />
 
         <div class="col-md-3 text-muted text-vertical-align-button">
           <span>*Campos obligatorios</span>
@@ -1205,12 +1249,13 @@
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
+                (change)="onTipoPersonaChange(agregarFacturadorFormGroup)"
               ></app-input-radio>
             </div>
           </div>
         </div>
       </div>
-      <hr />
+      <br />
 
       <div>
         @if (fisica || (!fisica && !moral)) {
@@ -1247,7 +1292,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="segundoApellido"
-                >Segundo apellido*:</label
+                >Segundo apellido:</label
               >
               <input
                 type="text"
@@ -1277,11 +1322,11 @@
           </div>
         </div>
         }
-        <hr />
-        <hr />
+        <br />
+        <br />
 
         <h5>Domicilio</h5>
-        <div class="row d-flex domicilio-form-container">
+        <div class="row">
           <div class="col-md-4 mt-5">
             <div class="form-group">
               <app-catalogo-select
@@ -1291,6 +1336,7 @@
                 for="pais"
                 id="pais"
                 formControlName="pais"
+                [isDisabled]="desactivarCatalogoSelectEnPopup"
               ></app-catalogo-select>
             </div>
           </div>
@@ -1311,7 +1357,7 @@
           <div class="col-md-4 mt-5">
             <div class="form-group">
               <label class="form-label" for="codigoPostaloEquivalente"
-                >Código postal o equivalente*:</label
+                >Código postal o equivalente:</label
               >
               <input
                 class="form-control"
@@ -1338,8 +1384,8 @@
             </div>
           </div>
 
-          <hr />
-          <hr />
+          <br />
+          <br />
 
           <div class="col-md-8">
             <div class="form-group">
@@ -1434,7 +1480,7 @@
               />
             </div>
           </div>
-          <hr />
+          <br />
 
           <div class="col-md-3 text-muted text-vertical-align-button">
             <span>*Campos obligatorios</span>

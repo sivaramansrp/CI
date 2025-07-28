@@ -1,21 +1,14 @@
-import { HttpClient } from '@angular/common/http';
-
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputFecha, InputFechaComponent, InputRadioComponent, RespuestaCatalogos, TituloComponent } from '@ng-mf/data-access-user';
-
-import { FECHAPAGODATE,FECHA_DE_PAGO } from '../../constantes/certificado-zoosanitario.enum';
-
-import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
-
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
-
-import {Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Catalogo, ConsultaioQuery, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
+import { PagoDeDerechoComponent } from '../../../../shared/components/pago-de-derecho/pago-de-derecho.component';
+import { PagoDeDerecho } from '../../../../shared/models/tercerosrelacionados.model';
+import { PagoDeDerechos } from '../../models/220201/capturar-solicitud.model';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
-
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 /**
  * @fileoverview Componente para la gestión del formulario de pago de derechos.
  * Este componente maneja la lógica y la presentación del formulario de pago de derechos,
@@ -23,6 +16,11 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
  * @module PagoDeDerechosComponent
  */
 
+/**
+ * Componente para el formulario de pago de derechos.
+ * @class PagoDeDerechosComponent
+ * @implements {OnInit, OnDestroy}
+ */
 @Component({
   selector: 'app-pago-de-derechos',
   templateUrl: './pago-de-derechos.component.html',
@@ -30,140 +28,92 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
   standalone: true,
   imports: [
     CommonModule,
-    TituloComponent,
     ReactiveFormsModule,
-    InputFechaComponent,
-    CatalogoSelectComponent,
-    InputRadioComponent,
-    FormsModule
+    FormsModule,
+    PagoDeDerechoComponent
   ]
 })
-export class PagoDeDerechosComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   /**
-   * Configuración predeterminada para el campo de fecha de pago.
+   * Datos del pago de derechos.
+   * @property {PagoDeDerechos} pagoData
    */
-  fechaInicioInput: InputFecha = FECHA_DE_PAGO;
-
-  /**
-   * Lista de opciones para el selector de justificación.
-   */
-  justificacionSelector: Catalogo[] = [];
-
-  /**
-   * Bandera para determinar si el formulario está en modo solo lectura.
-   */
-  esFormularioSoloLectura: boolean = false;
-
-  /**
-   * Fecha de pago predeterminada que se puede actualizar.
-   */
-  fechaPagoDate: string = FECHAPAGODATE;
-
-  /**
-   * Lista de opciones para el selector de banco.
-   */
-  bancoSelector: Catalogo[] = [];
-
-  /**
-   * Formulario reactivo que gestiona los campos del pago de derechos.
-   */
-  pagoForm: FormGroup = this.fb.group({
-    exentoPago: [{ value: 'si', disabled: false }, Validators.required],
-    justificacion: [{ value: '', disabled: false }, Validators.required],
-    claveReferencia: [{ value: '', disabled: true }],
-    cadenaDependencia: [{ value: '', disabled: true }],
-    banco: [{ value: '', disabled: true }],
-    llavePago: [{ value: '', disabled: true }],
-    importePago: [{ value: '', disabled: true }]
-  });
-
-  /**
-   * Opciones disponibles para el campo de radio sobre la exención de pago.
-   */
-  radioOptions: RadioOpcion[] = [
-    { label: "No", value: "no" },
-    { label: "Sí", value: "si" }
-  ];
+  pagoData: PagoDeDerechos = {} as PagoDeDerechos;
 
   /**
    * Sujeto para manejar la destrucción de observables y evitar fugas de memoria.
+   * @property {Subject<void>} destroyNotifier$
    */
   private destroyNotifier$ = new Subject<void>();
+  /**
+   * Sujeto para manejar la destrucción de observables y evitar fugas de memoria.
+   * @property {Subject<void>} pagoSelect
+   */
+  pagoSelect: PagoDeDerecho = {
+    bancoSelector: [],
+    justificacionSelector: [],
+  };
+
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @remarks
+   * Cuando esta propiedad es `true`, los campos del formulario no serán editables por el usuario.
+   *
+   * @compodoc
+   * @description
+   * Determina si el formulario se presenta únicamente para consulta, deshabilitando la edición de los campos.
+   * @property {boolean} esFormularioSoloLectura
+   */
+  esFormularioSoloLectura: boolean = false;
+  /**
+* @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
+*                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
+* @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+*/
+  @ViewChild('PagoDeDerecho') PagoDeDerechoComponent!: PagoDeDerechoComponent;
 
   /**
    * Constructor del componente. Inyecta los servicios y realiza una carga inicial de catálogos.
-   * @param fb Constructor de formularios reactivos.
-   * @param httpServicios Cliente HTTP para peticiones.
+   * @method constructor
    * @param certificadoZoosanitarioServices Servicio para actualizar datos de pago.
    * @param certificadoZoosanitarioQuery Fuente de datos del estado actual de certificado.
-   * @param consultaQuery Fuente de datos del estado de consulta.
+   * @param consultaioQuery Fuente de datos del estado de consulta.
+   * @param cdr ChangeDetectorRef para detectar cambios en el ciclo de vida.
    */
   constructor(
-    private readonly fb: FormBuilder,
-    private readonly httpServicios: HttpClient,
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
-    private consultaQuery: ConsultaioQuery
+    private readonly consultaioQuery: ConsultaioQuery,
+    private readonly httpServicios: HttpClient,
   ) {
-    this.obtenerDetallesDeListaDeOpciones();
+    this.obtenerBancoSelectorList();
+    this.obtenerListaDeJustificaciones();
   }
 
   /**
    * Ciclo de vida de Angular que se ejecuta al iniciar el componente.
    * Suscribe al estado del formulario para rellenar datos y verificar validez.
+   * @method ngOnInit
    */
   ngOnInit(): void {
     this.certificadoZoosanitarioQuery.seleccionarPagoDerechos$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datosDeLaSolicitud) => {
         if (datosDeLaSolicitud) {
-          this.pagoForm.patchValue(datosDeLaSolicitud);
+          this.pagoData = datosDeLaSolicitud;
         }
       });
-
-    this.pagoForm.valueChanges
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(() => {
-        const FORMA_VALIDA_ACTUALIZADA = {
-          pagoDeformaValida: this.pagoForm.valid
-        };
-        this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
-      });
-  }
-
-  /**
-   * Ciclo de vida que se ejecuta después de renderizar la vista.
-   * Activa el modo solo lectura si el estado lo requiere.
-   */
-  ngAfterViewInit(): void {
-    this.consultaQuery.selectConsultaioState$
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          if (this.esFormularioSoloLectura) {
-            this.pagoForm.disable();
-          }
         })
-      ).subscribe();
-  }
+      )
+      .subscribe();
 
-  /**
-   * Cambia el valor de la fecha de pago dentro del formulario.
-   * @param nuevoValor Nueva fecha seleccionada por el usuario.
-   */
-  cambioFechaFinal(nuevoValor: string): void {
-    this.pagoForm.patchValue({ fechaPago: nuevoValor });
-    this.fechaPagoDate = nuevoValor;
-  }
-
-  /**
-   * Método que agrupa la carga de catálogos: bancos y justificaciones.
-   */
-  obtenerDetallesDeListaDeOpciones(): void {
-    this.obtenerBancoSelectorList();
-    this.obtenerListaDeJustificaciones();
   }
 
   /**
@@ -174,7 +124,7 @@ export class PagoDeDerechosComponent implements OnInit, AfterViewInit, OnDestroy
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
         const DATOS = data?.data;
-        this.bancoSelector = DATOS as Catalogo[];
+        this.pagoSelect.bancoSelector = DATOS;
       });
   }
 
@@ -186,23 +136,41 @@ export class PagoDeDerechosComponent implements OnInit, AfterViewInit, OnDestroy
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
         const DATOS = data?.data;
-        this.justificacionSelector = DATOS as Catalogo[];
+        this.pagoSelect.justificacionSelector = DATOS as Catalogo[];
       });
   }
-
   /**
    * Envía los valores actuales del formulario al store compartido.
+   * @method onPagoChanged
+   * @param {PagoDeDerechos} event - Datos actualizados del pago de derechos.
    */
-  setValoresStore(): void {
-    const VALOR = this.pagoForm.value;
-    this.certificadoZoosanitarioServices.updatePagoDeDerechos(VALOR);
+  onPagoChanged(event: PagoDeDerechos): void {
+    this.certificadoZoosanitarioServices.updatePagoDeDerechos(event as PagoDeDerechos);
   }
-
+  /**
+     * @method validarFormulario
+     * @description
+     * Verifies if the payment form (`pagoForm`) is valid. If the form is valid, returns `true`.
+     * If the form is invalid, marks all form controls as touched to trigger validation messages and returns `false`.
+     *
+     * @returns {boolean} `true` if the form is valid, otherwise `false`.
+     *
+     * @memberof PagoDeDerechoComponent
+     */
+  validarFormulario(): boolean {
+    if (this.PagoDeDerechoComponent) {
+      return this.PagoDeDerechoComponent.validarFormulario();
+    } else {
+      return false;
+    }
+  }
   /**
    * Limpia las suscripciones para evitar fugas de memoria al destruir el componente.
+   * @method ngOnDestroy
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
 }

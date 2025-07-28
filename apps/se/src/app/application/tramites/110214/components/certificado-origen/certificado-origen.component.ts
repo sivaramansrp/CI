@@ -1,4 +1,4 @@
-import { AlertComponent, Notificacion, REGEX_PATRON_DECIMAL_2 } from "@libs/shared/data-access-user/src";
+import { AlertComponent, ConsultaioQuery, ConsultaioState, Notificacion, REGEX_PATRON_DECIMAL_2 } from "@ng-mf/data-access-user";
 import { DISPONIBLES_ENCABEZADOS, FECHAFACTURA, MERCANCIAS_ENCABEZADOS } from '../../constants/validar-inicialmente-certificado.enum';
 import { Catalogo } from "../../models/validar-inicialmente-certificado.model";
 import { CatalogoLista, } from "../../models/validar-inicialmente-certificado.model";
@@ -190,7 +190,17 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * Configuración de una nueva notificación.
    */
   public nuevaNotificacion!: Notificacion;
-
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
   /**
    * Constructor del componente.
    * 
@@ -205,7 +215,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     private validarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
     public store: Tramite110214Store,
     public tramiteQuery: Tramite110214Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery,
   ) { }
   /**
      * Método que se ejecuta al inicializar el componente.
@@ -221,10 +232,21 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+    this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos ?? [];
+    this.mercanciaSeleccionadasTablaDatos = this.solicitudState.mercanciaSeleccionadasTablaDatos ?? [];
     this.inicializarFormularioCertificado();
     this.inicializarFormularioMercancia();
     this.inicializarFormularioArchivo();
-    this.cargarMercanciasSeleccionadas();
     this.cargarTratado();
     this.cargarPais();
   }
@@ -272,6 +294,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         fechaInicial: [this.solicitudState?.grupoTratado?.fechaInicialInput, []],
       }),
     });
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -298,6 +321,32 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       numeroFactura: [this.solicitudState?.formularioMercancia?.numeroFactura, Validators.maxLength(36)],
       tipoFactura: [this.solicitudState?.formularioMercancia?.tipoFactura, []],
     });
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado de los formularios según el modo de solo lectura.
+   * 
+   * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles de los formularios:
+   * - `formularioCertificado`
+   * - `formularioMercancia`
+   * - `formularioArchivo`
+   * 
+   * En caso contrario, habilita todos los controles de los formularios mencionados.
+   * 
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.formularioCertificado?.disable();
+      this.formularioMercancia?.disable();
+      this.formularioArchivo?.disable();
+    } else {
+      this.formularioCertificado?.enable();
+      this.formularioMercancia?.enable();
+      this.formularioArchivo?.enable();
+    }
   }
 
   /**
@@ -401,8 +450,10 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * @param {DisponiblesTabla} evento - La fila seleccionada en la tabla de mercancías disponibles.
    */
   disponiblesSeleccionDeFilas(evento: DisponiblesTabla): void {
-    this.disponiblesSeleccionadasFila = evento;
-    this.abiertoBuscar();
+    if (!this.soloLectura) {
+      this.disponiblesSeleccionadasFila = evento;
+      this.abiertoBuscar();
+    }
   }
 
   /**

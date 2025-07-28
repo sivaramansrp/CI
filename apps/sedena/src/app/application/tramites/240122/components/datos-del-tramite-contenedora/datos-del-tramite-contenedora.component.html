@@ -1,6 +1,9 @@
-<app-datos-del-tramite
-  [datosMercanciaTabla]="datosMercanciaTabla"
+<app-datos-del-tramite [datosMercanciaTabla]="datosMercanciaTabla"
   (updateDatosDelTramiteFormulario)="updateDatosDelTramiteFormulario($event)"
-  [datosDelTramiteFormState]="datosDelTramiteFormState"
-  [idProcedimiento]="idProcedimiento"
+  (modificarMercanciasDatos)="modificarMercanciasDatos($event)"
+  (eliminarMercanciaFinalEvent)="eliminarMercanciasDatos($event)" [datosDelTramiteFormState]="datosDelTramiteFormState"
+  [idProcedimiento]="idProcedimiento" [esFormularioSoloLectura]="esFormularioSoloLectura"
+  (cancelarEventListener)="cerrar.emit()"  (openModal)="openModal($event)"
 ></app-datos-del-tramite>
+
+<div><app-modal #modal></app-modal></div>

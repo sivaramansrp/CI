@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { CertificadosOrigenService } from './certificado-origen.service';
-import { CatalogoLista, DisponiblesTabla, SeleccionadasTabla, ProductorExportador } from '../models/certificado-origen.model';
+import { CatalogoLista, DisponiblesTabla, SeleccionadasTabla, ProductorExportador, RespuestaConsulta } from '../models/certificado-origen.model';
 
 describe('CertificadosOrigenService', () => {
     let service: CertificadosOrigenService;
@@ -162,5 +162,121 @@ describe('CertificadosOrigenService', () => {
         const req = httpMock.expectOne('assets/json/110216/pais.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
+    });
+    it('should fetch data for consulta', () => {
+        const mockResponse: RespuestaConsulta = {
+            "success": true,
+            "message": "",
+            "datos": {
+                "tercerOperador": true,
+                "grupoOperador": {
+                    "nombre": "Nombre",
+                    "apellidoPrimer": "Primer",
+                    "apellidoSegundo": "Segundo",
+                    "numeroFiscal": "fiscal",
+                    "razonSocial": "https://www.google.com"
+                },
+                "grupoTratado": {
+                    "tratado": "0",
+                    "pais": "5",
+                    "fraccionArancelaria": "1",
+                    "numeroRegistro": "producto",
+                    "nombreComercial": "comercial",
+                    "fechaFinalInput": "05/06/2025",
+                    "fechaInicialInput": "05/06/2025"
+                },
+                "grupoDeDomicilio": {
+                    "pais": "4",
+                    "ciudad": "provincia",
+                    "calle": "Calle",
+                    "numeroLetra": "letra",
+                    "lada": "11",
+                    "telefono": "123456789",
+                    "fax": "12345",
+                    "correoElectronico": "test@gmail.com"
+                },
+                "mercanciaSeleccionadasTablaDatos": [
+                    {
+                        "id": 0,
+                        "fraccionArancelaria": "08888888",
+                        "cantidad": "100.00",
+                        "unidadMedida": "Caja",
+                        "valorMercancia": "100.00",
+                        "tipoFactura": "Manual",
+                        "numFactura": "1122232",
+                        "complementoDescripcion": "CAJA ROJA GRANDE",
+                        "fechaFactura": "2015-03-01"
+                    }
+                ],
+                "mercanciaDisponsiblesTablaDatos": [
+                    {
+                        "fraccionArancelaria": "34029002",
+                        "nombreTecnico": "Composiciones constituidas por polialquifenol-formaldehido oxietilado y/o polioxipropileno oxietilado, aunque contengan solventes orgánicos, para la fabricación de de hulsificantes para la industria petrolera.",
+                        "nombreComercial": "PRUEBA DE LA FIRMA DE ORIGEN",
+                        "numeroRegistroProductos": "254023028918",
+                        "fechaVencimiento": "2033-04-26",
+                        "fechaExpedicion": "2033-03-23"
+                    }
+                ],
+                "observaciones": "Observaciones",
+                "idioma": "1",
+                "entidadFederativa": "7",
+                "representacionFederal": "1",
+                "grupoReceptor": {
+                    "nombre": "Nombre",
+                    "apellidoPrimer": "Primer ",
+                    "apellidoSegundo": "Segundo",
+                    "numeroFiscal": "fiscal",
+                    "razonSocial": "https://www.google.com"
+                },
+                "grupoDeDirecciones": {
+                    "ciudad": "provincia",
+                    "calle": "Calle",
+                    "numeroLetra": "letra",
+                    "lada": "11",
+                    "telefono": "123456789",
+                    "fax": "12345",
+                    "correoElectronico": "test@gmail.com"
+                },
+                "grupoRepresentativo": {
+                    "lugar": "Lugar",
+                    "nombreExportador": "exportador",
+                    "empresa": "Empresa",
+                    "cargo": "Cargo",
+                    "lada": "11",
+                    "telefono": "123456789",
+                    "fax": "12345",
+                    "correoElectronico": "test@gmail.com"
+                },
+                "grupoDeTransporte": {
+                    "puertoEmbarque": "Embarque",
+                    "puertoDesembarque": "Desembarque",
+                    "puertoTransito": "Transito",
+                    "nombreEmbarcacion": "Embarcacion",
+                    "numeroVuelo": "Vuelo"
+                },
+                "datosConfidencialesProductor": true,
+                "productorMismoExportador": true,
+                "productoresExportador": [
+                    {
+                        "id": 0,
+                        "nombreProductor": "LAURA CONTRERAS",
+                        "numeroRegistroFiscal": "AEVL621207B95",
+                        "direccion": "SAN GABRIEL 144 DURANGO",
+                        "correoElectronico": "laura2992@hotmail.com",
+                        "telefono": "044-6182999535",
+                        "fax": "6182999535"
+                    }
+                ]
+            }
+        }
+
+        service.getDatosConsulta().subscribe((response) => {
+            expect(response).toEqual(mockResponse);
+        });
+
+        const req = httpMock.expectOne('assets/json/110216/consulta-110216.json');
+        expect(req.request.method).toBe('GET');
+        req.flush(mockResponse); // Simulate the HTTP response
     });
 });

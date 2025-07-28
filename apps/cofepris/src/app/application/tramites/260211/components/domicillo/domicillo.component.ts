@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Catalogo,
-  CatalogoSelectComponent,
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
   InputFecha,
   InputFechaComponent,
-  RespuestaCatalogos,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+
+ import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import {
   Component,
   OnDestroy,
@@ -19,6 +20,9 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { FECHA_DE_PAGO } from '@libs/shared/data-access-user/src/core/enums/260211/manifiestos.enum';
+
 import {
   FormBuilder,
   FormControl,
@@ -38,12 +42,12 @@ import {
 } from '../../../../estados/tramites/tramite260211.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enums/260211/domicilo.enum';
+
+import { BANCOS_DATA } from '../../constantes/derechos.model';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
-import { FECHA_DE_PAGO } from '@libs/shared/data-access-user/src/core/enums/260211/manifiestos.enum';
 import { SanitarioService } from '../../services/sanitario.service';
- 
+import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
  
 /**
  * Interfaz para la respuesta de la tabla de NICO.
@@ -97,9 +101,20 @@ export interface MercanciasTabla {
     InputFechaComponent
   ],
   templateUrl: './domicillo.component.html',
-  styleUrl: './domicillo.component.css',
+  styleUrl: './domicillo.component.scss',
 })
 export class DomicilloComponent implements OnInit,OnDestroy {
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+ public esFormularioSoloLectura: boolean = false; 
+ /**
+ * Indica si ningún elemento ha sido seleccionado.
+ * Se utiliza para controlar el estado de selección.
+ */
+  public noSeleccionado: boolean = true; 
+ 
   /**
    * Lista de componentes Crosslist disponibles en la vista.
    */
@@ -122,7 +137,54 @@ export class DomicilloComponent implements OnInit,OnDestroy {
    * private
    */
   private destroyed$ = new Subject<void>();
- 
+  /**
+   * Lista de filas seleccionadas del componente tabla de NICO.
+   * Se utiliza para manejar la selección de filas en la tabla.
+   */
+  selectedRowsEvent: any[] = []; 
+ /*
+  * Lista de filas seleccionadas del componente tabla de mercancías.
+  * Se utiliza para manejar la selección de filas en la tabla de mercancías.
+  */
+ selectedRows: any[] = []; 
+/*
+  * Maneja el evento de cambio de selección en la tabla de NICO.
+  * @param selected Lista de filas seleccionadas.
+  */
+onSeleccionChangeEvent(selected: any[]) :void{
+  this.selectedRowsEvent = selected;
+  if (this.selectedRowsEvent.length === 1) {
+    this.noSeleccionado = false;
+  }
+  else{
+   this.noSeleccionado = true;
+  }
+}
+/** 
+ Recibe los seleccionados del componente tabla
+*/
+onSeleccionChange(selected: any[]):void {
+  this.selectedRows = selected;
+}
+ /**
+  *  Elimina las filas seleccionadas
+  *  */
+eliminarSeleccionados():void {
+  this.nicoTablaDatos = this.nicoTablaDatos.filter(
+    (row) => !this.selectedRows.includes(row)
+  );
+  this.selectedRows = [];
+}
+
+ /**
+  * Elimina las filas seleccionadas
+  */
+eliminarMercanciaSeleccionados() :void{
+  this.mercanciasTablaDatos = this.mercanciasTablaDatos.filter(
+    (row) => !this.selectedRowsEvent.includes(row)
+  );
+  this.selectedRowsEvent = [];
+}
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios reactivos.
@@ -136,10 +198,31 @@ export class DomicilloComponent implements OnInit,OnDestroy {
     private tramite260211Store: Tramite260211Store,
     private tramite260211Query: Tramite260211Query,
     private service: SanitarioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Dependencia inyectada para uso posterior
+      /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+     
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
   }
- 
+  /**
+   * Índice de la mercancía que se está editando.
+   * Si es `null`, no hay mercancía en edición.
+   */
+editMercanciaIndex: number | null = null;
   /**
    * Grupo de formularios para domicilio.
    */
@@ -168,7 +251,7 @@ export class DomicilloComponent implements OnInit,OnDestroy {
   /**
    * Lista de catálogos de estados.
    */
-  estado: Catalogo[] = [];
+  estado: Catalogo[] = BANCOS_DATA;
  
   /**
    * Lista de países para la selección de origen.
@@ -244,8 +327,8 @@ export class DomicilloComponent implements OnInit,OnDestroy {
    * Etiqueta para el crosslist de país de procedencia.
    */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionados',
+    tituluDeLaIzquierda: 'País de procedencia*',
+    derecha: 'País(es) seleccionados*',
   };
 
   
@@ -259,7 +342,120 @@ public fechaCaducidadInput: InputFecha = FECHA_DE_PAGO;
  * Método que se ejecuta al inicializar el componente.
  */
 ngOnInit(): void {
-  this.tramite260211Query
+    this.inicializarEstadoFormulario();
+  this.obtenerTablaDatos();
+  this.obtenerMercanciasDatos();
+ 
+ 
+}
+
+/**
+ * Modifica una fila de la tabla NICO con los datos del formulario de agente.
+ * Si hay una fila seleccionada, actualiza el índice de edición y carga los datos en el formulario.
+ */
+modificarMercancia():void {
+  if (this.selectedRowsEvent && this.selectedRowsEvent.length === 1) {
+    const ROW = this.selectedRowsEvent[0];
+    this.editMercanciaIndex = this.mercanciasTablaDatos.findIndex(
+      r => r.numeroRegistro === ROW.numeroRegistro // Use a unique property
+    );
+    this.formMercancias.patchValue(ROW);
+
+    // Optionally, open the modal programmatically if not using data-bs-toggle
+    // document.getElementById('modalAddAgentMercancias')?.click();
+  }
+}
+/**
+ * Agrega una nueva fila a la tabla NICO con los datos del formulario de agente.
+ * Si el formulario es válido, crea un nuevo objeto `NicoInfo` con los valores del formulario y lo agrega a la lista `nicoTablaDatos`.
+ */
+ agregarFilaScian():void {
+  if (this.formAgente.valid) {
+
+    const NEWVA_FILA: NicoInfo = {
+      clave_Scian: this.estado.find(item => item.id === Number(this.formAgente.value.claveScianModal))?.descripcion ?? '',
+      descripcion_Scian: this.estado.find(item => item.id === Number(this.formAgente.value.claveDescripcionModal))?.descripcion ?? '',
+    };
+
+ this.nicoTablaDatos.push(NEWVA_FILA);
+    this.formAgente.reset();
+  } 
+}
+/*
+* Método que se ejecuta al inicializar el componente.
+*/
+agregarFilaMercancia():void {
+  if (this.formMercancias.valid) {
+    const MERCANCIA_DATA: MercanciasInfo = {
+      clasificacion: this.estado.find(item => item.id === Number(this.formMercancias.value.clasificacion))?.descripcion ?? '',
+      especificar: this.estado.find(item => item.id === Number(this.formMercancias.value.especificar))?.descripcion ?? '',
+      denominacionEspecifica: this.formMercancias.get('denominacionEspecifica')?.value,
+      denominacionDistintiva: this.formMercancias.get('denominacionDistintiva')?.value,
+      denominacionComun: this.formMercancias.get('denominacionComun')?.value,
+      formaFarmaceutica: this.formMercancias.get('fraccionArancelaria')?.value,
+      estadoFisico:this.estado.find(item => item.id === Number(this.formMercancias.value.estadoFisico))?.descripcion ?? '',
+      fraccionArancelaria: this.formMercancias.get('fraccionArancelaria')?.value,
+      descripcionFraccion: this.formMercancias.get('descripcionFraccion')?.value,
+      cantidadUMC: this.formMercancias.get('cantidadUMC')?.value,
+      unidad: this.estado.find(item => item.id === Number(this.formMercancias.value.UMC))?.descripcion ?? '',
+      cantidadUMT: this.formMercancias.get('cantidadUMT')?.value,
+      unidadUMT: this.formMercancias.get('UMT')?.value,
+      presentacion: this.formMercancias.get('presentacion')?.value,
+      numeroRegistro: this.formMercancias.get('numeroRegistro')?.value,
+      paisDeOrigen: this.formMercancias.get('paisDeOrigen')?.value,
+      paisDeProcedencia: this.formMercancias.get('paisDeProcedencia')?.value,
+      tipoProducto: this.estado.find(item => item.id === Number(this.formMercancias.value.tipoDeProducto))?.descripcion ?? '',
+      usoEspecifico: this.formMercancias.get('usoEspecifico')?.value,
+      fechaCaducidad: this.formMercancias.get('fechaCaducidad')?.value,
+    };
+
+    if (this.editMercanciaIndex !== null && this.editMercanciaIndex > -1) {      
+      const UPDATED = [...this.mercanciasTablaDatos];
+      UPDATED[this.editMercanciaIndex] = MERCANCIA_DATA;
+      this.mercanciasTablaDatos = UPDATED;
+      this.editMercanciaIndex = null;
+      this.selectedRowsEvent = [];
+    } else {
+      this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, MERCANCIA_DATA];
+    }
+    this.formMercancias.reset();
+  }
+}
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+    
+  }
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.domicilio.disable();
+        this.formAgente.disable();
+        this.formMercancias.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.domicilio.enable();
+        this.formAgente.enable();
+        this.formMercancias.enable();
+      } 
+  }
+  /**
+   * Inicializa el formulario con los datos de la solicitud.
+   * Se suscribe al estado de la solicitud para obtener los valores iniciales.
+   * Los campos del formulario se configuran como deshabilitados o requeridos según sea necesario.
+   */
+inicializarFormulario():void{
+this.tramite260211Query
     .selectSolicitud$
     .pipe(
       takeUntil(this.destroyNotifier$),
@@ -268,12 +464,7 @@ ngOnInit(): void {
       })
     )
     .subscribe();
- 
-  this.obtenerEstadoList();
-  this.obtenerTablaDatos();
-  this.obtenerMercanciasDatos();
- 
-  /**
+     /**
    * Inicialización del formulario de domicilio.
    */
   this.domicilio = this.fb.group({
@@ -286,10 +477,11 @@ ngOnInit(): void {
     lada: [this.solicitudState?.lada],
     telefono: [this.solicitudState?.telefono, Validators.required],
     avisoCheckbox: [this.solicitudState?.avisoCheckbox],
-    licenciaSanitaria: [{ value: this.solicitudState?.licenciaSanitaria, disabled: false }],
+    licenciaSanitaria: [this.solicitudState?.licenciaSanitaria,{disabled: false }],
     regimen: [this.solicitudState?.regimen],
     aduanasEntradas: [this.solicitudState?.aduanasEntradas],
     numeroPermiso: [this.solicitudState?.numeroPermiso],
+   
   });
  
   /**
@@ -321,8 +513,13 @@ ngOnInit(): void {
     numeroRegistro: [this.solicitudState?.numeroRegistro, Validators.required],
     fechaCaducidad: [this.solicitudState?.fechaCaducidad],
   });
+
+     if (this.esFormularioSoloLectura) {
+      this.domicilio.disable();
+        this.formAgente.disable();
+        this.formMercancias.disable();
+  }
 }
- 
 /**
  * Botones de acción para gestionar listas de países en la primera sección.
  */
@@ -351,20 +548,7 @@ paisDeProcedenciaBotonsTres = [
   { btnNombre: 'Agregar selección', class: 'btn-default', funcion: ():void => this.crossList.toArray()[2].agregar('') },
   { btnNombre: 'Restar selección', class: 'btn-danger', funcion: ():void => this.crossList.toArray()[2].quitar('') },
   { btnNombre: 'Restar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[2].quitar('t') },
-];
- 
-/**
- * Obtiene la lista de estados desde un archivo JSON.
- */
-obtenerEstadoList(): void {
-  this.service.obtenerEstadoList()
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe((data) => {
-      const DATOS = data?.data;
-      this.estado = DATOS;
-    });
-}
- 
+];  
 /**
  * Obtiene los datos para la tabla de NICO desde un archivo JSON.
  */
@@ -388,7 +572,18 @@ obtenerMercanciasDatos(): void {
     this.mercanciasTablaDatos = DATOS;
   });
 }
- 
+/*
+  * Limpia el formulario de domicilio.
+  */
+ limpiarFormAgente():void {
+  this.formAgente.reset();
+}
+/**
+ * Limpia el formulario de mercancías.
+ */
+limpiarForm():void{
+  this.formMercancias.reset();
+}
 /**
  * Maneja el cambio del checkbox en el formulario y actualiza el estado correspondiente.
  * @param event Evento del checkbox.
@@ -403,14 +598,21 @@ onAvisoCheckboxChange(
   metodoNombre: keyof Tramite260211Store
 ): void {
   const CHECKBOX = event.target as HTMLInputElement;
+
+  const LICENCIASANITARIOCONTROL = this.domicilio.get('licenciaSanitaria');
+
   if (CHECKBOX.checked) {
-    this.domicilio.get('licenciaSanitaria')?.disable();
+    LICENCIASANITARIOCONTROL?.setValue(''); 
+    LICENCIASANITARIOCONTROL?.disable(); 
   } else {
-    this.domicilio.get('licenciaSanitaria')?.enable();
+    LICENCIASANITARIOCONTROL?.enable();
   }
+this.setValoresStore(this.domicilio, 'licenciaSanitaria', 'setLicenciaSanitaria');
+
   const VALOR = form.get(campo)?.value;
   (this.tramite260211Store[metodoNombre] as (value: any) => void)(VALOR);
 }
+
  
 /**
  * Alterna el estado colapsable de la primera sección.

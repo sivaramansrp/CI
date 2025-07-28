@@ -1,5 +1,7 @@
 import { AbstractControl } from '@angular/forms';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { DatosProcedureState } from '../../../estados/tramites/tramites261101.store';
+import { DatosProcedureStore } from '../../../estados/tramites/tramites261101.store';
 import { Domicilio } from '../modelos/domicilio-establecimientos.model';
 import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -28,7 +30,7 @@ export class DatosSolicitudService {
    * 
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private store: DatosProcedureStore) {
     // No se necesita lógica de inicialización adicional.
     
   }
@@ -78,6 +80,15 @@ export class DatosSolicitudService {
    */
   getMercanciasData(): Observable<Mercancias[]> {
     return this.http.get<Mercancias[]>('assets/json/261101/mercancias.json');
+  }
+
+   /**
+   * Obtiene los datos de las aduanas desde un archivo JSON.
+   * 
+   * @returns {Observable<Domicilio[]>} Un observable que emite una lista de objetos `Domicilio` con los datos de las aduanas.
+   */
+   getAduanaData(): Observable<Domicilio[]> {
+    return this.http.get<Domicilio[]>('assets/json/261101/aduana.json');
   }
 
     /**
@@ -130,4 +141,25 @@ export class DatosSolicitudService {
               });
           }
         }
+  /**
+   * Obtiene los datos del registro del paso uno.
+   * @returns {Observable<PasoUno>} : Retorna un observable con los datos del paso uno.
+   */
+  getRegistroPasoUnoData(): Observable<DatosProcedureState> {
+    return this.http.get<DatosProcedureState>('assets/json/261101/tramites-datos.json');
+  }
+  /**
+ * Actualiza el estado del formulario con los datos proporcionados.
+ * 
+ * Este método toma un objeto `DatosProcedureState` y lo utiliza para actualizar
+ * el estado almacenado en el `store`. Es útil para sincronizar los datos del formulario
+ * con el estado global de la aplicación.
+ * 
+ * @param {DatosProcedureState} DATOS - Los datos que se utilizarán para actualizar el estado del formulario.
+ * 
+ * @returns {void}
+ */
+  actualizarEstadoFormulario(DATOS: DatosProcedureState): void {
+    this.store.establecerDatos(DATOS);
+  }
 }

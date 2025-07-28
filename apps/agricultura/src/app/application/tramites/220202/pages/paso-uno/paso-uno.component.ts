@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, PersonaTerceros, } from '@ng-mf/data-access-user';
 import { map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import { ListaDeDatosFinal } from '../../models/220202/fitosanitario.model';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { Subject } from 'rxjs';
 
@@ -37,6 +38,16 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * @default 1
    */
   indice: number = 1;
+
+    /**
+   * @method seleccionaTab
+   * @description Selecciona una pestaña específica estableciendo el índice correspondiente.
+   * @param {number} i - El índice de la pestaña a seleccionar.
+   * @returns {void}
+   */
+  seleccionaTab(i: number): void {
+    this.indice = i;
+  }
 
   /**
    * Indica si existen datos de respuesta para mostrar en el formulario.
@@ -127,9 +138,8 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
         )
         .subscribe((resp) => {
           if(resp){
+          this.agriculturaApiService.actualizarEstadoFormulario(resp as ListaDeDatosFinal);
           this.esDatosRespuesta = true;
-          this.personas = resp.personas;
-          this.agriculturaApiService.actualizarEstadoFormulario(resp);
           }
         });
     }

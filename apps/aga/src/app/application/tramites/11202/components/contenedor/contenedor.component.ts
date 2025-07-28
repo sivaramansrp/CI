@@ -1,13 +1,14 @@
-import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Contenedor11202State, Contenedor11202Store } from '../../../../core/estados/tramites/contenedor11202.store';
-import { DatosDelContenedor, GridContenedores } from 'libs/shared/data-access-user/src/core/models/11202/datos-tramite.model';  
+import { DatosDelContenedor, GridContenedores } from '@libs/shared/data-access-user/src/core/models/11202/datos-tramite.model';
+import { ENCABEZADO_DE_TABLA, GRID_CONTENEDORES, TEXTOS_REQUISITOS } from '../../../../constantes/11202/retorno-contenedores.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { Contenedor11202Query } from '../../../../core/queries/contenedor11202.query';
-import { DatosTramiteService } from 'libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
-import {TEXTOS_REQUISITOS } from '../../../../constantes/11202/retorno-contenedores.enum';
-import preOperativo from 'libs/shared/theme/assets/json/11202/preOperativo.json';
+import { DatosTramiteService } from '@libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
+import preOperativo from '@libs/shared/theme/assets/json/11202/preOperativo.json';
 
 /**
  * @component ContenedorComponent
@@ -27,13 +28,13 @@ import preOperativo from 'libs/shared/theme/assets/json/11202/preOperativo.json'
   selector: 'app-contenedor',
   templateUrl: './contenedor.component.html',
   styleUrl: './contenedor.component.scss',
- 
+
 })
 export class ContenedorComponent implements OnInit, OnDestroy {
-   /**
-   * @property {Contenedor11202State} contenedorState
-   * Stores the state of the container-related data.
-   */
+  /**
+  * @property {Contenedor11202State} contenedorState
+  * Stores the state of the container-related data.
+  */
   public contenedorState!: Contenedor11202State;
 
   /**
@@ -46,22 +47,22 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   options!: Catalogo[];
 
-  
-   /**
-   * Define los datos que se mostrarán en la tabla dinámica.
-   */
-   datosTabla: any[] = [];
-    /**
-   * @property {any} radioOptions
-   * Options for the radio buttons.
-   */
+
+  /**
+  * Define los datos que se mostrarán en la tabla dinámica.
+  */
+  datosTabla: any[] = [];
+  /**
+ * @property {any} radioOptions
+ * Options for the radio buttons.
+ */
   radioOptions = preOperativo;
   /**
    * @property {Subscription} private subscription
    * Subscription to handle the component's lifecycle.
    */
   private subscription: Subscription = new Subscription();
-   
+
   /**
    * @property {Subject<void>} destroyNotifier$
    * Emits a signal to clean up subscriptions when the component is destroyed.
@@ -126,14 +127,14 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * @property {any[]} contenedores
    * Stores the container data
    * */
-  contenedores: any[] = [];
+  contenedores: GridContenedores[] = [];
 
   /**
    * @property {string} archivoSeleccionado
    * Stores the selected file
    */
   archivoSeleccionado: string = '';
- 
+
   /**
    * @property {boolean} cargarArchivoVisible
    * Indicates whether the file upload section is visible.
@@ -143,7 +144,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * @property {boolean} exceptionCaught
    * Indicates whether an exception was caught.
-   */ 
+   */
   exceptionCaught: boolean = false;
 
   /**
@@ -181,13 +182,26 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Indicates whether the selected file table is visible.
    */
   showArchivoSeleccionadoTable: boolean = false;
+  /**
+     * @property {ConsultaioState} consultaDatos
+     * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+     */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private datosTramiteService: DatosTramiteService,
     private contenedorStore: Contenedor11202Store,
-    private contenedorQuery: Contenedor11202Query
-  ) {}
+    private contenedorQuery: Contenedor11202Query,
+    private consultaioQuery: ConsultaioQuery,
+  ) { }
 
   /**
    * Método de destrucción del componente.
@@ -201,19 +215,29 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Método de ciclo de vida de Angular que se llama cuando el componente se inicializa.
    */
   ngOnInit(): void {
-    
-          this.contenedorQuery.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.contenedorState ={
-              ...this.contenedorState,
-              ...seccionState,
-            }
-          })
-        )
-        .subscribe()
-   
+
+    this.contenedorQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.contenedorState = {
+            ...this.contenedorState,
+            ...seccionState,
+          }
+        })
+      )
+      .subscribe()
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+    this.contenedores = this.contenedorState.contenedores;
     this.cargarCatalogAduanas();
     this.crearFormSolicitud();
     this.cargarCatalogContenedores();
@@ -283,19 +307,17 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Captura los datos del formulario y los envía.
    */
-  
+
   datosCaptura(): void {
     if (this.solicitudForm.valid) {
-    this.datosTramiteService
-    .submitSolicitud(this.solicitudForm.value)
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe(() => {
-      this.exceptionCaught=false;
-    });
-}
+      this.datosTramiteService
+        .submitSolicitud(this.solicitudForm.value)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe(() => {
+          this.exceptionCaught = false;
+        });
+    }
   }
-    
- 
 
   /**
    * Agrega un nuevo contenedor al grid.
@@ -311,8 +333,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     };
 
     if (NUEVO_CONTENEDOR.aduana) {
-      this.contenedores.push(NUEVO_CONTENEDOR);
-
+      this.contenedores = [...this.contenedores, NUEVO_CONTENEDOR];
       this.solicitudForm.patchValue({
         contenedores: '',
         digitoDeControl: '',
@@ -449,7 +470,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     });
 
     this.mostrarCampos();
-       this.solicitudForm.get('tipoBusqueda')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
+    this.solicitudForm.get('tipoBusqueda')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
       this.setValoresStore(
         this.solicitudForm,
         'tipoBusqueda',
@@ -457,6 +478,23 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       );
       this.mostrarCampos();
     });
+    this.inicializarEstadoFormulario();
+  }
+  /**
+  * @method inicializarEstadoFormulario
+  * @description Inicializa el estado del formulario según el modo de solo lectura.
+  * 
+  * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+  * En caso contrario, habilita los controles del formulario.
+  * 
+  * @returns {void}
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.solicitudForm?.disable();
+    } else {
+      this.solicitudForm?.enable();
+    }
   }
 
   /**
@@ -464,9 +502,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   loadDatosTablaData(): void {
     this.datosTramiteService.getDatosTableData()
-    .pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
-      this.datosTabla = data;
-    });
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
+        this.datosTabla = data;
+      });
   }
 
   /**
@@ -498,38 +536,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     return this.solicitudForm.get('datosContenedor') as FormGroup;
   }
 
-   /**
-   * Configuración de las columnas de la tabla.
-   */
-   public encabezadoDeTabla: ConfiguracionColumna<DatosDelContenedor>[] = [
-    { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
-    { encabezado: 'Iniciales del equipo', clave: (artículo) => artículo.inicialesEquipo, orden: 1 },
-    { encabezado: 'Número de equipo', clave: (artículo) => artículo.numeroEquipo, orden: 2 },
-    { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digitoVerificador, orden: 3 },
-    { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipoEquipo, orden: 4 },
-    { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 5 },
-    { encabezado: 'Fecha Ingreso', clave: (artículo) => artículo.fechaIngreso, orden: 6 },
-    { encabezado: 'Vigencia', clave: (artículo) => artículo.vigencia, orden: 7 },
-    { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 8 },
-    { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 9 },
-    { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 10 },
-    { encabezado: 'Número manifiesto', clave: (artículo) => artículo.numeroManifiesto, orden: 11 },
-    { encabezado: 'Id solicitud', clave: (artículo) => artículo.idSolicitud, orden: 12 },
-    { encabezado: 'Fecha inicio', clave: (artículo) => artículo.fechaInicio, orden: 13 }
-  ];
+  /**
+  * Configuración de las columnas de la tabla.
+  */
+  public encabezadoDeTabla: ConfiguracionColumna<DatosDelContenedor>[] = ENCABEZADO_DE_TABLA;
 
   /**
    * Configuración de las columnas de la tabla.
    */
-    public gridContenedores: ConfiguracionColumna<GridContenedores>[] = [
-      { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
-      { encabezado: 'Iniciales del equipo', clave: (artículo) => artículo.inicialesContenedor, orden: 1 },
-      { encabezado: 'Número de equipo', clave: (artículo) => artículo.numeroContenedor, orden: 2 },
-      { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digitoVerificador, orden: 3 },
-      { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipoContenedor, orden: 4 },
-      { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 5 },
-        { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 8 },
-      { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 9 },
-      { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 10 },
-    ];
+  public gridContenedores: ConfiguracionColumna<GridContenedores>[] = GRID_CONTENEDORES;
 }

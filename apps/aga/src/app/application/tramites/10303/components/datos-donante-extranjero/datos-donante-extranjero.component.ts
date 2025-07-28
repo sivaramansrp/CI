@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 
-import { CATALOGOS_ID, Catalogo } from '@ng-mf/data-access-user';
 import { RegistroDeDonacion10303State, Tramite10303Store } from '../../estados/tramites/tramite10303.store';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { DATOS_DONAR_EXTRANJERO_LABELS } from '../../constantes/donaciones-extranjeras.enum';
 import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 import { Tramite10303Query } from '../../estados/queries/tramite10303.query';
@@ -48,6 +48,11 @@ export class DatosDonanteExtranjeroComponent implements OnInit, OnDestroy {
   public registroDeDonacionState: RegistroDeDonacion10303State | undefined;
 
   /**
+   * Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado!: boolean;
+
+  /**
    * Constructor del componente.
    * 
    * @param donacionesExtranjerasService Servicio para gestionar las donaciones extranjeras.
@@ -81,6 +86,12 @@ export class DatosDonanteExtranjeroComponent implements OnInit, OnDestroy {
 
     this.paisSeleccion();
     this.documentoResidenciaSeleccion();
+
+    if (this.formularioDeshabilitado) {
+      this.datosDonanteExtranjeroForm.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.datosDonanteExtranjeroForm.enable();
+    }
   }
 
   /**
@@ -108,7 +119,7 @@ export class DatosDonanteExtranjeroComponent implements OnInit, OnDestroy {
    */
   inicializaCatalogos(): void {
     const PAIS$ = this.donacionesExtranjerasService
-      .getPaises(CATALOGOS_ID.CAT_PAIS)
+      .getPaises()
       .pipe(
         map((resp) => {
           this.pais = resp.data;
@@ -116,7 +127,7 @@ export class DatosDonanteExtranjeroComponent implements OnInit, OnDestroy {
       );
 
     const CVE_DOCUMENTO_RESIDENCIA$ = this.donacionesExtranjerasService
-      .getDocumentoResidencia(CATALOGOS_ID.CAT_DOCUMENTO_RESIDENCIA)
+      .getDocumentoResidencia()
       .pipe(
         map((resp) => {
           this.cveDocumentoResidencia = resp.data;

@@ -17,11 +17,11 @@ describe('PasoTresComponent', () => {
       imports: [
         FirmaElectronicaComponent,
         CommonModule,
-        PasoTresComponent,
+        
         HttpClientTestingModule,
         ReactiveFormsModule,
       ],
-      declarations: [],
+      declarations: [PasoTresComponent],
       providers: [
         ToastrService,
         provideToastr({
@@ -36,7 +36,7 @@ describe('PasoTresComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente correctamente', () => {
     expect(component).toBeTruthy();
   });
   it('should navigate to acuse page on valid firma', () => {

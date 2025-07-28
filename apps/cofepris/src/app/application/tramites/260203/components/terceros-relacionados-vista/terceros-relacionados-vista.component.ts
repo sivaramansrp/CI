@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -7,10 +7,10 @@ import {
 } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260203Query } from '../../estados/queries/tramite260203Query.query';
 import { Tramite260203Store } from '../../estados/stores/tramite260203Store.store';
-
 
 
 /**
@@ -27,7 +27,7 @@ import { Tramite260203Store } from '../../estados/stores/tramite260203Store.stor
   templateUrl: './terceros-relacionados-vista.component.html',
   styleUrl: './terceros-relacionados-vista.component.css',
 })
-export class TercerosRelacionadosVistaComponent implements OnInit {
+export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   /**
    * @property {Fabricante[]} fabricanteTablaDatos
    * Datos de la tabla de fabricantes.
@@ -52,12 +52,20 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    */
   facturadorTablaDatos: Facturador[] = [];
 
-    /**
-     * @property {Subject<void>} destroy$
-     * Subject para cancelar suscripciones y evitar fugas de memoria.
-     * @private
-     */
-    private destroy$ = new Subject<void>();
+  /**
+   * @property {Subject<void>} destroy$
+   * Subject para cancelar suscripciones y evitar fugas de memoria.
+   * @private
+   */
+  private destroy$ = new Subject<void>();
+
+  /**
+    * indica si el formulario está en modo solo lectura.
+    * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
+    *
+    * @type { boolean}
+    */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * @constructor
@@ -68,8 +76,15 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    */
   constructor(
     private tramiteStore: Tramite260203Store,
-    private tramiteQuery: Tramite260203Query
-  ) {}
+    private tramiteQuery: Tramite260203Query,
+    private consultaQuery: ConsultaioQuery  
+  ) {
+    this.consultaQuery.selectConsultaioState$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        });
+  }
 
   /**
    * @method ngOnInit
@@ -140,5 +155,17 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    */
   addFacturadores(newFacturadores: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+   * Se utiliza para limpiar las suscripciones activas y evitar fugas de memoria.
+   *
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

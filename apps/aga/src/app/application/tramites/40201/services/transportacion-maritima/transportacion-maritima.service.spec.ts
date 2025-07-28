@@ -27,58 +27,58 @@ describe('TransportacionMaritimaService', () => {
   });
 
   it('should fetch the country catalog (getPaisCatalogo)', () => {
-    const mockResponse: RespuestaCatalogos = { code: 200, data: [{ id: 1, descripcion: 'México' }], message: 'Success' };
+    const MOCK_RESPONSE: RespuestaCatalogos = { code: 200, data: [{ id: 1, descripcion: 'México' }], message: 'Success' };
 
     service.getPaisCatalogo().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/40201/pais-catalogo.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/40201/pais-catalogo.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 
   it('should fetch the state catalog (getEstadoCatalogo)', () => {
-    const mockResponse: RespuestaCatalogos = { code: 200, data: [{ id: 1, descripcion: 'Estado' }], message: 'Success' };
+    const MOCK_RESPONSE: RespuestaCatalogos = { code: 200, data: [{ id: 1, descripcion: 'Estado' }], message: 'Success' };
 
     service.getEstadoCatalogo().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/40201/estado-catalogo.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/40201/estado-catalogo.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 
   it('should fetch the municipality catalog (getMunicipioCatalogo)', () => {
-    const mockResponse: RespuestaCatalogos = { code: 200, data: [{ id: 1, descripcion: 'Municipio' }], message: 'Success' };
+    const MOCK_RESPONSE: RespuestaCatalogos = { code: 200, data: [{ id: 1, descripcion: 'Municipio' }], message: 'Success' };
 
     service.getMunicipioCatalogo().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/40201/municipio-catalogo.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/40201/municipio-catalogo.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 
   it('should fetch the colony catalog (getColoniaCatalogo)', () => {
-    const mockResponse: RespuestaCatalogos = { code: 200, data: [{ id: 1, descripcion: 'Colonia' }], message: 'Success' };
+    const MOCK_RESPONSE: RespuestaCatalogos = { code: 200, data: [{ id: 1, descripcion: 'Colonia' }], message: 'Success' };
 
     service.getColoniaCatalogo().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/40201/colonia-catalogo.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/40201/colonia-catalogo.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 
   it('should fetch the CAAT company catalog (obtenerBuscarEmpresaCaat)', () => {
-    const mockResponse: RespuestaCaatTabla = { 
-      code: 200, 
+    const MOCK_RESPONSE: RespuestaCaatTabla = {
+      code: 200,
       data: [
-        { 
+        {
           rfc: 'RFC123',
           nombreDenominacionRazonSocial: 'Empresa 1',
           caat: 'CAAT123',
@@ -86,17 +86,50 @@ describe('TransportacionMaritimaService', () => {
           inicioVigencia: '2025-01-01',
           finVigencia: '2025-12-31',
           pais: 'México',
-         }
+        }
       ],
       message: 'Success'
     };
 
     service.obtenerBuscarEmpresaCaat().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/40201/buscar-empresa-caat.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/40201/buscar-empresa-caat.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
+  });
+
+  it('should fetch the buscar contribuyente PFN tabla datos (buscarContribuyentePFN)', () => {
+    const MOCK_RESPONSE: RespuestaContribuyenteTabla = {
+      code: 200,
+      data: [
+        {
+          "rfcPFN": "MAVL621207C95",
+          "nombrePFN": "EUROFOODS DE MEXICO",
+          "apellidoPaternoPFN": "GONZALEZ",
+          "apellidoMaternoPFN": "PINAL",
+          "paisPFN": 1,
+          "codigoPostalPFN": "34000",
+          "estadoPFN": 1,
+          "municipioPFN": 1,
+          "localidadPFN": "",
+          "coloniaPFN": 1,
+          "callePFN": "LIBERTAD",
+          "numeroExteriorPFN": "SN",
+          "numeroInteriorPFN": "",
+          "domicilioPFN": ""
+        }
+      ],
+      message: 'Success'
+    };
+
+    service.buscarContribuyentePFN().subscribe((response) => {
+      expect(response).toEqual(MOCK_RESPONSE);
+    });
+
+    const REQ = httpMock.expectOne('assets/json/40201/buscar-contribuyente-pfn-datos.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 });

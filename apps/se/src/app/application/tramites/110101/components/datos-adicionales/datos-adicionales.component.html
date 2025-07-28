@@ -1,34 +1,70 @@
 <div class="container">
-    <ng-titulo titulo="Representación federal" />
     <form [formGroup]="formulario">
+
+    <ng-titulo titulo="Información Opcional para UE y AELC" />
+    <div class="row">
+        <div class="col-md-8">
+            <p><input class="form-check-input me-2" type="checkbox" id="metodoSeparacion" [disabled]="esFormularioSoloLectura" formControlName="metodoSeparacion" 
+                (change)="setValoresStore(formulario, 'metodoSeparacion', 'setMetodoSeparacion')">
+                ¿Desea usar la opción del método de separación contable?
+            </p>
+        </div>
+    </div>
+
+        <div class="row" *ngIf="formulario.get('exportadorAutorizado')?.value">
+        <div class="col-md-12">
+            <div class="alert alert-info manifest-box">
+            <div class="form-check text-center">
+                <span class="form-check-label" for="protesta">
+                    <p class="font-wt-500">Seleccione la condición que le permite usar la opción de exportador autorizado:</p>
+                </span>
+            </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="row">
+        <div class="col-md-8">
+            <p><input class="form-check-input me-2" type="checkbox" id="exportadorAutorizado" [disabled]="esFormularioSoloLectura" formControlName="exportadorAutorizado"
+                (change)="setValoresStore(formulario, 'exportadorAutorizado', 'setExportadorAutorizado')">
+                ¿Desea usar la opción de exportador autorizado?
+            </p>
+        </div>
+    </div>
+    
+        <div class="row p-4" *ngIf="formulario.get('exportadorAutorizado')?.value">
+        <div class="col-md-12">
+             <app-input-radio formControlName="informacionRadios" [radioOptions]="radioOpcions" [layout]="'radio-label-wrap'" (change)="setValoresStore(formulario, 'informacionRadios', 'setInformacionRadios')"></app-input-radio>
+        </div>
+    </div>
+    
+    
+    <ng-titulo titulo="Representación federal" />
         <div class="row mb-3">
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="entidad" 
-                    [label]="'Entidad federativa'" 
-                    [required]="true"
-                    name="entidad" 
-                    formControlName="entidad"
-                    [isDisabled]="esFormularioSoloLectura"
-                    (change)="setValoresStore(formulario, 'entidad', 'setEntidad')" 
-                    >
+                <app-catalogo-select [catalogo]="entidad" [label]="'Entidad federativa'" [required]="true"
+                    name="entidad" formControlName="entidad" [isDisabled]="esFormularioSoloLectura"
+                    (change)="setValoresStore(formulario, 'entidad', 'setEntidad')">
                 </app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="representacion" 
-                    [label]="'Representación federal'" 
-                    [required]="true"
-                    name="representacion" 
-                    formControlName="representacion"
-                    [isDisabled]="esFormularioSoloLectura"
-                    (change)="setValoresStore(formulario, 'representacion', 'setRepresentacion')"
-                    >
+                <app-catalogo-select [catalogo]="representacion" [label]="'Representación federal'" [required]="true"
+                    name="representacion" formControlName="representacion" [isDisabled]="esFormularioSoloLectura"
+                    (change)="setValoresStore(formulario, 'representacion', 'setRepresentacion')">
                 </app-catalogo-select>
             </div>
         </div>
-    </form>
 
     <ng-titulo titulo="Protesto de Decir Verdad" />
-    <div class="form-check bg-light p-3 border rounded">
-        <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="infoAlert"></ng-alert>
+    <div class="alert alert-info manifest-box">
+        <div class="form-check">
+            <input class="form-check-input me-2" type="checkbox" id="protesta" [disabled]="esFormularioSoloLectura"
+                [checked]="esFormularioSoloLectura || actualizacionCounsulta">
+            <span class="form-check-label" for="protesta">
+                {{ TEXTOS.ADJUNTAR }}
+            </span>
+        </div>
     </div>
+    </form>
 </div>

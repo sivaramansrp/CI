@@ -1,5 +1,5 @@
 <div class="container">
-    <ng-titulo titulo="Histórico fabricantes" />
+    <ng-titulo titulo="Histórico productores" />
     <form [formGroup]="formulario">
         <div class="row">
             <div class="col-md-12">
@@ -68,14 +68,21 @@
                 <form [formGroup]="agregarDatosProductorFormulario">
                     <div class="col-md-4">
                         <label class="form-label" for="numeroRegistroFiscal">Número de registro fiscal*:</label>
-                        <input type="text" class="form-control" name="numeroRegistroFiscal" id="numeroRegistroFiscal"
+                        <input type="text" class="form-control" name="numeroRegistroFiscal" id="numeroRegistroFiscal" maxlength="15"
                             (change)="setValoresStore(agregarDatosProductorFormulario,'numeroRegistroFiscal', 'setAgregarDatosProductorNumeroRegistroFiscal')"
                             formControlName="numeroRegistroFiscal"
                             [ngClass]="isValid(agregarDatosProductorFormulario, 'numeroRegistroFiscal') ? 'required' : ''">
+
+                            @if (agregarDatosProductorFormulario.get('numeroRegistroFiscal')?.hasError('required') &&
+                            agregarDatosProductorFormulario.get('numeroRegistroFiscal')?.touched) {
+                            <div class="text-danger">
+                              <small>Este campo es obligatorio.</small>
+                            </div>
+                            }
                     </div>
                     <div class="col-md-4">
                         <label class="form-label" for="fax">Fax:</label>
-                        <input type="text" class="form-control" name="fax" id="fax" formControlName="fax"
+                        <input type="text" class="form-control" name="fax" id="fax" formControlName="fax" maxlength="20"
                             (change)="setValoresStore(agregarDatosProductorFormulario,'fax', 'setAgregarDatosProductorFax')"
                             [ngClass]=" isValid(agregarDatosProductorFormulario, 'fax') ? 'required' : ''">
                     </div>

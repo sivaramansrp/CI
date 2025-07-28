@@ -3,29 +3,26 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { of } from 'rxjs';
-
 import { PersonaComponent } from './persona.component';
-import { ServiciosPantallaService } from '../../../../core/services/31601/servicios-pantalla.service';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 class MockServiciosPantallaService {
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
   getPersonapara() {
-    // Mock data with the correct structure
     return of([
       {
-        RFC: 'AAXX010101HNROZZA',
-        CURP: 'AAXX010101HNROZZA',
-        Nombre: 'John Doe',
-        Apellido_paterno: 'Doe',
-        Apellido_materno: 'Smith',
+        rfc: 'AAXX010101HNROZZA',
+        curp: 'AAXX010101HNROZZA',
+        nombre: 'John Doe',
+        apellidoPaterno: 'Doe',
+        apellidoMaterno: 'Smith',
       },
       {
-        RFC: 'BBYY020202MCLGZZB',
-        CURP: 'BBYY020202MCLGZZB',
-        Nombre: 'Jane Smith',
-        Apellido_paterno: 'Smith',
-        Apellido_materno: 'Johnson',
+        rfc: 'BBYY020202MCLGZZB',
+        curp: 'BBYY020202MCLGZZB',
+        nombre: 'Jane Smith',
+        apellidoPaterno: 'Smith',
+        apellidoMaterno: 'Johnson',
       },
     ]);
   }
@@ -34,7 +31,7 @@ class MockServiciosPantallaService {
 fdescribe('PersonaComponent', () => {
   let component: PersonaComponent;
   let fixture: ComponentFixture<PersonaComponent>;
-  let pantallaSvc: MockServiciosPantallaService;
+  let pantallaSvc: ServiciosPantallaService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -60,34 +57,30 @@ fdescribe('PersonaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the PersonaComponent', () => {
+  it('debe crear el componente PersonaComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize and load personaparas on ngOnInit', () => {
-    // Call ngOnInit directly or via fixture.detectChanges
+  it('debe inicializar y cargar personaparas en ngOnInit', () => {
     component.ngOnInit();
 
-    // Expect the service's response to populate personaparas
-    expect(component.personaparas.length).toBe(2);
-    expect(component.personaparas[0].nombre).toBe('John Doe');
-    expect(component.personaparas[1].nombre).toBe('Jane Smith');
+    expect(component.personaParas.length).toBe(2);
+    expect(component.personaParas[0].nombre).toBe('John Doe');
+    expect(component.personaParas[1].nombre).toBe('Jane Smith');
   });
 
-  it('should toggle showContent', () => {
-    expect(component.showContent).toBeFalse(); // Initially false
+  it('debe alternar showContent', () => {
+    expect(component.showContent).toBeFalsy(); 
     component.toggleContent();
-    expect(component.showContent).toBeTrue(); // After toggle, should be true
+    expect(component.showContent).toBe(true); 
     component.toggleContent();
-    expect(component.showContent).toBeFalse(); // After another toggle, should be false
+    expect(component.showContent).toBeFalsy(); 
   });
 
-  it('should call loadPersonas and update personaparas', () => {
-    // Call loadPersonas manually
+  it('debe llamar a loadPersonas y actualizar personaparas', () => {
     component.loadPersonas();
 
-    // Validate if the service response is correctly assigned to personaparas
-    expect(component.personaparas).toEqual([
+    expect(component.personaParas).toEqual([
       {
         rfc: 'AAXX010101HNROZZA',
         curp: 'AAXX010101HNROZZA',
@@ -105,19 +98,12 @@ fdescribe('PersonaComponent', () => {
     ]);
   });
 
-  it('should call getPersonapara and assign data to personaparas when loadPersonas is called', () => {
-    // Spy on the service method
-    spyOn(pantallaSvc, 'getPersonapara').and.callThrough();
-
-    // Call loadPersonas
-    component.loadPersonas();
-
-    // Ensure the service method is called once
-    expect(pantallaSvc.getPersonapara).toHaveBeenCalledTimes(1);
-
-    // Check if the personaparas data is correctly assigned
-    expect(component.personaparas.length).toBe(2);
-    expect(component.personaparas[0].nombre).toBe('John Doe');
-    expect(component.personaparas[1].nombre).toBe('Jane Smith');
-  });
+it('debe llamar a getPersonapara y asignar datos a personaparas cuando se llama loadPersonas', () => {
+  jest.spyOn(pantallaSvc, 'getPersonapara');
+  component.loadPersonas();
+  expect(pantallaSvc.getPersonapara).toHaveBeenCalledTimes(1);
+  expect(component.personaParas.length).toBe(2);
+  expect(component.personaParas[0].nombre).toBe('John Doe');
+  expect(component.personaParas[1].nombre).toBe('Jane Smith');
+});
 });

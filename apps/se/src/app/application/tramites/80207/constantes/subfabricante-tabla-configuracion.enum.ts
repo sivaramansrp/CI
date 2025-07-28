@@ -1,48 +1,150 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 
-import { SubfabricanteDireccionModelo } from "../modelos/subfabricante.model";
+import {PlantasDireccionModelo, SubfabricanteDireccionModelo } from "../modelos/subfabricante.model";
 /**
+ * Configuración de la tabla para mostrar información de subfabricantes.
+ * @export
  * @const {Array<Object>} SUBFABRICANTE_TABLA_CONFIGURACION
- * @description Configuración de la tabla para mostrar información de subfabricantes.
- * Cada objeto en el arreglo representa una columna de la tabla con su encabezado, 
- * clave para obtener el valor de cada fila y el orden en el que aparece.
- * 
- * @property {string} encabezado - Título de la columna que se muestra en la tabla.
- * @property {Function} clave - Función que toma un objeto de tipo `SubfabricanteDireccionModelo` 
- * y devuelve el valor correspondiente para la columna.
- * @property {number} orden - Posición de la columna en la tabla.
- * 
- * @example
- * // Ejemplo de uso:
- * SUBFABRICANTE_TABLA_CONFIGURACION.forEach(columna => {
- *   console.log(columna.encabezado); // Muestra el encabezado de cada columna
- * });
  */
-export const SUBFABRICANTE_TABLA_CONFIGURACION = 
-    [
-        {
-          encabezado: 'Calle',
-          clave: (ele: SubfabricanteDireccionModelo) => ele.calle ,
-          orden: 1
-        },
-        {
-          encabezado: 'Num.exterior', 
-          clave: (ele: SubfabricanteDireccionModelo) => ele.numExterior, 
-          orden: 2,
-        },
-        {
-          encabezado: 'Num.interior', 
-          clave: (ele: SubfabricanteDireccionModelo) => ele.numInterior, 
-          orden: 3, 
-        },
-        {
-          encabezado: 'Código postal', // Título de la columna
-          clave: (ele: SubfabricanteDireccionModelo) => ele.codigoPostal, // Función que devuelve el valor de la columna para cada fila
-          orden: 4, 
-        },
-        {
-          encabezado: 'Colonia', // Título de la columna
-          clave: (ele: SubfabricanteDireccionModelo) => ele.colonia, // Función que devuelve el valor de la columna para cada fila
-          orden: 5, // Orden de la columna en la tabla
-        },
-      ];
+export const SUBFABRICANTE_TABLA_CONFIGURACION = [
+  {
+    /**
+     * Título de la columna que se muestra en la tabla.
+     * @property {string} encabezado
+     */
+    encabezado: 'Calle',
+
+    /**
+     * Función que toma un objeto de tipo `SubfabricanteDireccionModelo` y devuelve el valor correspondiente para la columna.
+     * @property {(ele: SubfabricanteDireccionModelo) => string} clave
+     */
+    clave: (ele: SubfabricanteDireccionModelo):string => ele.calle,
+
+    /**
+     * Posición de la columna en la tabla.
+     * @property {number} orden
+     */
+    orden: 1,
+  },
+  {
+    encabezado: 'Num.exterior',
+    clave: (ele: SubfabricanteDireccionModelo):number => ele.numExterior,
+    orden: 2,
+  },
+  {
+    encabezado: 'Num.interior',
+    clave: (ele: SubfabricanteDireccionModelo):number => ele.numInterior,
+    orden: 3,
+  },
+  {
+    encabezado: 'Código postal',
+    clave: (ele: SubfabricanteDireccionModelo):number=> ele.codigoPostal,
+    orden: 4,
+  },
+  {
+    encabezado: 'Colonia',
+    clave: (ele: SubfabricanteDireccionModelo):string => ele.colonia,
+    orden: 5,
+  },
+  {
+    encabezado: 'Delegación / Municipio',
+    clave: (ele: SubfabricanteDireccionModelo):string => ele.delegacionMunicipio,
+    orden: 6,
+  },
+  {
+    encabezado: 'Entidad federativa',
+    clave: (ele: SubfabricanteDireccionModelo):string => ele.entidadFederativa,
+    orden: 7,
+  },
+  {
+    encabezado: 'País',
+    clave: (ele: SubfabricanteDireccionModelo):string => ele.pais,
+    orden: 8,
+  },
+  {
+    encabezado: 'Registro federal de contribuyentes',
+    clave: (ele: SubfabricanteDireccionModelo):string => ele.rfc,
+    orden: 9,
+  },
+  {
+    encabezado: 'Domicilio fiscal del solicitante',
+    clave: (ele: SubfabricanteDireccionModelo):string => ele.domicilioFiscalSolicitante,
+    orden: 10,
+  },
+  {
+    encabezado: 'Razón social',
+    clave: (ele: SubfabricanteDireccionModelo):string => ele.razonSocial,
+    orden: 11,
+  }
+];
+
+export const PLANTAS_TABLA_CONFIGURACION = [
+  {
+    /**
+     * Título de la columna que se muestra en la tabla.
+     * @property {string} encabezado
+     */
+    encabezado: 'Calle',
+
+    /**
+     * Función que toma un objeto de tipo `SubfabricanteDireccionModelo` y devuelve el valor correspondiente para la columna.
+     * @property {(ele: PlantasDireccionModelo) => string} clave
+     */
+    clave: (ele: PlantasDireccionModelo):string => ele.calle,
+
+    /**
+     * Posición de la columna en la tabla.
+     * @property {number} orden
+     */
+    orden: 1,
+  },
+  {
+    encabezado: 'Num.exterior',
+    clave: (ele: PlantasDireccionModelo):number => ele.numExterior,
+    orden: 2,
+  },
+  {
+    encabezado: 'Num.interior',
+    clave: (ele: PlantasDireccionModelo):number => ele.numInterior,
+    orden: 3,
+  },
+  {
+    encabezado: 'Código postal',
+    clave: (ele: PlantasDireccionModelo):number=> ele.codigoPostal,
+    orden: 4,
+  },
+  {
+    encabezado: 'Localidad ',
+    clave: (ele: PlantasDireccionModelo):string => ele.localidad,
+    orden: 5,
+  },
+  {
+    encabezado: 'Delegación / Municipio',
+    clave: (ele: PlantasDireccionModelo):string => ele.delegacionMunicipio,
+    orden: 6,
+  },
+  {
+    encabezado: 'Entidad federativa',
+    clave: (ele: PlantasDireccionModelo):string => ele.entidadFederativa,
+    orden: 7,
+  },
+  {
+    encabezado: 'País',
+    clave: (ele: PlantasDireccionModelo):string => ele.pais,
+    orden: 8,
+  },
+  {
+    encabezado: 'Registro federal de contribuyentes',
+    clave: (ele: PlantasDireccionModelo):string => ele.rfc,
+    orden: 9,
+  },
+  {
+    encabezado: 'Domicilio fiscal del solicitante',
+    clave: (ele: PlantasDireccionModelo):string => ele.domicilioFiscalSolicitante,
+    orden: 10,
+  },
+  {
+    encabezado: 'Razón social',
+    clave: (ele: PlantasDireccionModelo):string => ele.razonSocial,
+    orden: 11,
+  }
+];

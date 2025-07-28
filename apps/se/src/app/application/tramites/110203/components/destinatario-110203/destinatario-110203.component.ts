@@ -1,13 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
-import mediocatalogo from '@libs/shared/theme/assets/json/110203/mediocatalogo.json';
-import {Placeholders } from '@libs/shared/data-access-user/src/core/models/110203/tecnicos.model';
 import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
-import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
-
+import { Subject, map, takeUntil } from 'rxjs';
+import { DESTINATARIO_DATOS } from '../../constant/destinatario.enum';
+import {Placeholders } from '@libs/shared/data-access-user/src/core/models/110203/tecnicos.model';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-
+import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
+import mediocatalogo from '@libs/shared/theme/assets/json/110203/mediocatalogo.json';
 /**
  * Componente que gestiona la visualización y actualización de los datos relacionados con el destinatario para el trámite 110203.
  * Este componente permite la edición de los datos personales del destinatario, como nombre, dirección, correo y teléfono,
@@ -30,7 +29,6 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   templateUrl: './destinatario-110203.component.html',
   styleUrl: './destinatario-110203.component.scss'
 })
-
 /**
  * Componente que maneja la visualización y actualización de los datos relacionados con el destinatario
  * para el trámite 110203. Utiliza un formulario reactivo para capturar y persistir la información del destinatario
@@ -73,6 +71,13 @@ export class Destinatario110203Component implements OnInit, OnDestroy {
    * - telefono
    */
   destinatarioForm!: FormGroup;
+/** Indica si los campos de nombre y apellidos están en solo lectura. 
+ * Se activa si el campo "razón social" tiene datos. */
+  camposNombreSoloLectura= false;
+  /**
+ * Establece los valores de los placeholders utilizados en el formulario.
+ * El valor se obtiene desde el catálogo de medios.
+ */
   placeholder :Placeholders=mediocatalogo.placeholder;
   /**
    * Estado de la solicitud 110203, que contiene los valores actuales de los campos relacionados con el destinatario.
@@ -125,11 +130,11 @@ export class Destinatario110203Component implements OnInit, OnDestroy {
 
     // Inicializa el formulario con los valores del destinatario desde el estado de la solicitud
     this.destinatarioForm = this.fb.group({
-      nombre: [this.solicitudState.nombre],
-      primer: [this.solicitudState.primer],
-      segundo: [this.solicitudState.segundo],
-      fiscal: [this.solicitudState.fiscal,Validators.required],
-      razon: [this.solicitudState.razon, Validators.required],
+      nombre: [this.solicitudState.nombre,[Validators.maxLength(30)]],
+      primer: [this.solicitudState.primer,[Validators.maxLength(20)]],
+      segundo: [this.solicitudState.segundo,[Validators.maxLength(20)]],
+      fiscal: [this.solicitudState.fiscal,[Validators.maxLength(30),Validators.required]],
+      razon: [this.solicitudState.razon,[Validators.maxLength(70)]],
       calle: [this.solicitudState.calle, Validators.required],
       letra: [this.solicitudState.letra, Validators.required],
       ciudad: [this.solicitudState.ciudad, Validators.required],
@@ -137,6 +142,26 @@ export class Destinatario110203Component implements OnInit, OnDestroy {
       fax: [this.solicitudState.fax],
       telefono: [this.solicitudState.telefono],
     });
+    this.destinatarioForm.patchValue(DESTINATARIO_DATOS);
+     this.destinatarioForm.get('razon')?.valueChanges.subscribe(value => {
+    if (value && value.trim().length > 0) {
+      // Clear the first 3 fields
+      this.destinatarioForm.get('nombre')?.setValue('');
+      this.destinatarioForm.get('primer')?.setValue('');
+      this.destinatarioForm.get('segundo')?.setValue('');
+
+      // Optionally mark as touched or dirty if needed
+      this.destinatarioForm.get('nombre')?.markAsTouched();
+      this.destinatarioForm.get('primer')?.markAsTouched();
+      this.destinatarioForm.get('segundo')?.markAsTouched();
+
+      // Set a flag so template can bind readonly
+      this.camposNombreSoloLectura = true;
+    } else {
+      this.camposNombreSoloLectura = false;
+    }
+  });
+
   }
 
   /**

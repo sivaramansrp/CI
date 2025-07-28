@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
 import { DestinatarioCatalogos } from '../../models/destinatario.model';
 import { DestinatarioImitar } from '../../models/mercancia.model';
 import { REGEX_CORREO_ELECTRONICO } from '@libs/shared/data-access-user/src';
@@ -22,8 +23,20 @@ import { takeUntil } from 'rxjs';
   selector: 'app-modificar-destinatario',
   templateUrl: './modificar-destinatario.component.html',
   styleUrl: './modificar-destinatario.component.scss',
+  standalone:true,
+  imports:[
+      ModificarDestinatarioComponent,
+      CommonModule,
+      ReactiveFormsModule,
+      CatalogoSelectComponent,
+      FormsModule,
+      InputRadioComponent,
+      TituloComponent
+    ]
 })
-export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
+export class ModificarDestinatarioComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
   /**
    * Formulario reactivo para la modificación de destinatarios.
    * Inicializado posteriormente en el método `ngOnInit`.
@@ -91,19 +104,43 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * Inicializa servicios necesarios y carga datos de catálogos y opciones de destinatarios.
    * @param fb - Servicio para construir formularios reactivos.
    * @param solicitudDatosService - Servicio para manejar datos de la solicitud.
    * @param solicitud260101Store - Almacén que gestiona el estado de la solicitud.
    * @param solicitud260101Query - Consulta que permite observar cambios en el estado de la solicitud.
+   * @param consultaioQuery - Consulta para obtener el estado actual de la consulta.
    */
   constructor(
     public fb: FormBuilder,
     public solicitudDatosService: SolicitudDatosService,
     public solicitud260101Store: Solicitud260101Store,
-    public solicitud260101Query: Solicitud260101Query
+    public solicitud260101Query: Solicitud260101Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.obtenerDestinatarioCatalogos();
     this.obtenerDestinatarioRadio();
     this.obtenerDestinatarioImitar();
@@ -115,6 +152,53 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo y actualiza los valores basados en el estado de la solicitud.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+   *
+   * Llama al método `inicializarEstadoFormulario()` para configurar el estado del formulario
+   * una vez que todos los elementos de la vista están disponibles.
+   */
+  ngAfterViewInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.modificarDestinatarioForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.modificarDestinatarioForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
     this.modificarDestinatarioForm = this.fb.group({
       /** Tipo de persona, requerido. */
       tipoPersona: [

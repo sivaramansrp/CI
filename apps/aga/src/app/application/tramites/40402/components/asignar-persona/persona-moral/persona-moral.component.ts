@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
@@ -13,7 +14,7 @@ import { Tramitenacionales40402State } from '../../../estados/tramite40402.store
 import { TransportacionMaritimaService } from '../../../../40402/services/transportacion-maritima/transportacion-maritima.service';
 
 /**
- * Componente para la captura de datos de persona moral extranjera.
+ * Componente para la gestión de información de personas morales extranjeras.
  */
 @Component({
   selector: 'app-persona-moral',
@@ -31,68 +32,89 @@ import { TransportacionMaritimaService } from '../../../../40402/services/transp
 })
 export class PersonaMoralComponent implements OnInit, OnDestroy {
   /**
-   * Formulario reactivo para la captura de datos de persona moral extranjera.
+   * Formulario reactivo para gestionar la información de personas morales extranjeras.
    */
   personaMoralExtranjeraForm!: FormGroup;
 
   /**
-   * Catálogo de países.
+   * Catálogo de países disponibles.
    * @type {Catalogo[]}
-   * @description Este catálogo se utiliza para seleccionar el país de la persona moral extranjera.
    */
   pais!: Catalogo[];
 
   /**
-   * Configuración para el persona moral extranjera encabezado de la tabla.
+   * Configuración para el encabezado de tabla de personas morales extranjeras.
    */
   configuracionParaPMEEncabezadoDeTabla = CONFIGURACION_PARA_PME_ENCABEZADO_DE_TABLA;
 
   /**
-   * Tabla de datos de persona moral extranjera.
+   * Tabla de datos de personas morales extranjeras.
    * @type {PersonaMoralExtranjeraForm[]}
-   * @description Esta tabla se utiliza para mostrar los datos de las personas morales extranjeras capturadas.
+   * @description Almacena la información de las personas morales extranjeras agregadas.
    */
   personaMoralExtranjeraTabla: PersonaMoralExtranjeraForm[] = [];
 
   /**
-   * Texto de la sección.
+   * Textos estáticos para la interfaz de usuario.
    */
   TEXTOS = TEXTOS;
 
   /**
-   * Referencia al botón de cerrar el modal.
+   * Referencia al botón de cerrar modal.
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
 
   /**
-   * Estado de la solicitud.
+   * Estado actual del trámite de transporte marítimo.
    */
   public transportacionMaritimaState!: Tramitenacionales40402State;
 
   /**
-   * Subject para destruir notificador.
+   * Subject para gestionar la destrucción de suscripciones.
    */
   private destruirNotificador$: Subject<void> = new Subject();
 
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Datos de consulta obtenidos del estado global.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} esDatosRespuesta
+   * @description Indica si los datos son de respuesta y deben mostrarse.
+   */
+  public esDatosRespuesta: boolean = false;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Bandera que indica si el formulario debe estar en modo solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
-   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
-   * @param {Tramite40402Store} tramite40402Store - Store para gestionar el estado del trámite 40402.
-   * @param {Tramite40402Query} tramite40402Query - Query para consultar el estado del trámite 40402.
-   * @param {TransportacionMaritimaService} transportacionMaritimaService - Servicio para obtener datos de transportación marítima.
+   * @param fb Constructor de formularios reactivos
+   * @param tramite40402Store Almacenamiento del estado del trámite
+   * @param tramite40402Query Consulta del estado del trámite
+   * @param transportacionMaritimaService Servicio para transporte marítimo
+   * @param consultaioQuery Consulta de datos globales
    */
   constructor(
     private fb: FormBuilder,
     private tramite40402Store: Tramite40402Store,
     private tramite40402Query: Tramite40402Query,
     private transportacionMaritimaService: TransportacionMaritimaService,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // El constructor se utiliza para la inyección de dependencias
   }
 
   /**
-   * Se ejecuta al inicializar el componente.
-   * Inicializa los catálogos y el formulario.
+   * Método del ciclo de vida OnInit.
+   * @description Inicializa catálogos, formularios y suscripciones.
+   * @returns {void}
    */
   ngOnInit(): void {
     this.inicializaCatalogos();
@@ -107,14 +129,24 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    // Inicializar el formulario principal
     this.crearAgregarPMNForm();
-
     this.paisSeleccion();
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * Inicializa el formulario reactivo para la captura de datos de persona moral extranjera.
+   * Crea el formulario reactivo para personas morales extranjeras.
+   * @description Inicializa el formulario con valores del estado actual.
    * @returns {void}
    */
   crearAgregarPMNForm(): void {
@@ -198,10 +230,12 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
         ]
       ]
     });
+    this.inicializarEstadoFormulario();
   }
 
   /**
-   * Inicializa los catálogos necesarios para el formulario.
+   * Inicializa los catálogos necesarios para el componente.
+   * @returns {void}
    */
   inicializaCatalogos(): void {
     const PAIS$ = this.transportacionMaritimaService
@@ -212,16 +246,14 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
         })
       );
 
-    merge(
-      PAIS$
-    )
+    merge(PAIS$)
       .pipe(takeUntil(this.destruirNotificador$))
       .subscribe();
   }
 
   /**
-   * Se ejecuta cuando se selecciona un país en el formulario.
-   * Establece el país seleccionado en el store.
+   * Maneja la selección de país.
+   * @description Actualiza el store con el país seleccionado.
    * @returns {void}
    */
   paisSeleccion(): void {
@@ -231,10 +263,15 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
 
   /**
    * Agrega una nueva persona moral extranjera a la tabla.
-   * @param personaMoralExtranjeraFormDatos - Datos de la persona moral extranjera.
+   * @param personaMoralExtranjeraFormDatos Datos del formulario
    * @returns {void}
    */
   agregarPME(personaMoralExtranjeraFormDatos: PersonaMoralExtranjeraForm): void {
+    this.personaMoralExtranjeraForm.markAllAsTouched();
+    if (this.personaMoralExtranjeraForm.invalid) {
+      return;
+    }
+
     const PAIS = this.pais?.find((pais) => pais.id === Number(personaMoralExtranjeraFormDatos.paisPME))?.descripcion;
 
     const NUEVO_CUERPO_TABLA = [...this.personaMoralExtranjeraTabla];
@@ -248,6 +285,7 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
       nombreDG: `${personaMoralExtranjeraFormDatos.nombreDG} ${personaMoralExtranjeraFormDatos.apellidoPaternoDG} ${personaMoralExtranjeraFormDatos.apellidoMaternoDG}`.trim(),
       domicilioPME: `${personaMoralExtranjeraFormDatos.callePME} ${personaMoralExtranjeraFormDatos.numeroExteriorPME} ${personaMoralExtranjeraFormDatos.estadoPME} ${PAIS} ${personaMoralExtranjeraFormDatos.codigoPostalPME}`.trim(),
     });
+    
     this.personaMoralExtranjeraTabla = NUEVO_CUERPO_TABLA;
     this.tramite40402Store.setPersonaMoralExtranjeraTabla(this.personaMoralExtranjeraTabla);
     this.limpiarDatosPME();
@@ -255,7 +293,7 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Actualiza el estado del formulario y los valores en el store.
+   * Actualiza el estado global con los valores del formulario.
    * @returns {void}
    */
   actualizarFormularioState(): void {
@@ -274,7 +312,7 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Limpia los datos del formulario de persona moral extranjera.
+   * Limpia los datos del formulario.
    * @returns {void}
    */
   limpiarDatosPME(): void {
@@ -283,8 +321,7 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cierra el modal.
-   * 
+   * Cierra el modal mediante programación.
    * @returns {void}
    */
   cerrarModal(): void {
@@ -294,11 +331,10 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Establece los valores en el store de tramite40402.
-   *
-   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
-   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
-   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+   * Establece valores en el store del trámite.
+   * @param form Grupo de formulario
+   * @param campo Nombre del campo
+   * @param metodoNombre Método del store a invocar
    * @returns {void}
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite40402Store): void {
@@ -307,11 +343,42 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Se ejecuta al destruir el componente.
-   * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
+   * Método del ciclo de vida OnDestroy.
+   * @description Cancela todas las suscripciones activas.
+   * @returns {void}
    */
   ngOnDestroy(): void {
     this.destruirNotificador$.next();
     this.destruirNotificador$.complete();
+  }
+
+  /**
+   * Inicializa el estado de habilitación del formulario.
+   * @description Habilita/deshabilita según el modo solo lectura.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.personaMoralExtranjeraForm?.disable();
+    } else {
+      this.personaMoralExtranjeraForm?.enable();
+    }
+  }
+
+  /**
+   * Verifica si el control 'idSocioComercial' tiene el validador 'Validators.required'.
+   *
+   * @returns {boolean} `true` si el control es obligatorio, de lo contrario `false`.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  isRequired(form: FormGroup, field: string): boolean | null {
+    const CONTROL = form.get(field) as FormControl;
+
+    if (CONTROL) {
+      const ERROR_PATTERN = CONTROL.hasError('required');
+      return ERROR_PATTERN && CONTROL.touched;
+    }
+
+    return false;
   }
 }

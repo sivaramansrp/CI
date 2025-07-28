@@ -1,5 +1,5 @@
 import { By } from '@angular/platform-browser';
-import { Catalogo} from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
@@ -10,9 +10,17 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ResponsableInspeccionEnPuntoComponent } from './responsable-inspeccion-en-punto.component';
 import { TestBed } from '@angular/core/testing';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @Component({
   selector: 'app-test-host',
+  standalone: true,
+  imports: [
+    ResponsableInspeccionEnPuntoComponent,
+    ReactiveFormsModule,
+    CommonModule,
+  ],
   template: `<form [formGroup]="form">
     <app-responsable-inspeccion-en-punto
       [claveDeControl]="'testControl'"
@@ -33,12 +41,14 @@ describe('ResponsableInspeccionEnPuntoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TestHostComponent],
+      declarations: [],
       imports: [
+        TestHostComponent,
         ReactiveFormsModule,
         ResponsableInspeccionEnPuntoComponent,
         TituloComponent,
         CatalogoSelectComponent,
+        HttpClientTestingModule,
       ],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
@@ -96,8 +106,6 @@ describe('ResponsableInspeccionEnPuntoComponent', () => {
     const CATALOGO: Catalogo = {
       id: 1,
       descripcion: 'Tipo contenedor 1',
-      tam: 'Tipo contenedor 1',
-      dpi: 'Tipo contenedor 1',
     };
     component.tipoContenedorSeleccion(CATALOGO);
     const FORMGROUP = component.grupoFormularioPadre.get(
@@ -106,32 +114,10 @@ describe('ResponsableInspeccionEnPuntoComponent', () => {
     expect(FORMGROUP.get('tipocontenedor')?.value).toBe('Tipo contenedor 1');
   });
 
-  it('should load initial catalog data correctly', () => {
-    component.cargarDatosIniciales();
-    expect(component.tipoContenedor).toEqual({
-      labelNombre: 'Tipo contenedor',
-      required: false,
-      primerOpcion: 'Selecciona un valor',
-      catalogos: [
-        {
-          id: 1,
-          descripcion: 'Tipo contenedor 1',
-          tam: 'Tipo contenedor 1',
-          dpi: 'Tipo contenedor 1',
-        },
-        {
-          id: 2,
-          descripcion: 'Tipo contenedor 2',
-          tam: 'Tipo contenedor 2',
-          dpi: 'Tipo contenedor 2',
-        },
-        {
-          id: 3,
-          descripcion: 'Tipo contenedor 3',
-          tam: 'Tipo contenedor 3',
-          dpi: 'Tipo contenedor 3',
-        },
-      ],
-    });
+  it('should call cargarDatosIniciales on inicializarFormulario', () => {
+    const spy = jest.spyOn(component, 'cargarDatosIniciales');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
   });
-});
+ });

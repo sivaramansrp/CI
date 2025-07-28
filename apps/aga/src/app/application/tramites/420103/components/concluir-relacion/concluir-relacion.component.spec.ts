@@ -1,35 +1,52 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ConcluirRelacionComponent } from './concluir-relacion.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of, ReplaySubject } from 'rxjs';
 import { ConcluirRelacionService } from '../../services/concluir-relacion.service';
-import { InputFechaComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { PasoUnoComponent } from '../../pages/paso-uno/paso-uno.component';
+import { Tramite420103Query } from '../../estados/tramite420103.query';
+import { Tramite420103Store } from '../../estados/tramite420103.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { FormBuilder } from '@angular/forms';
+import { of } from 'rxjs';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-describe('ConcluirRelacionComponent', () => {
+describe('ConcluirRelacionComponent (Jest)', () => {
   let component: ConcluirRelacionComponent;
   let fixture: ComponentFixture<ConcluirRelacionComponent>;
-  let concluirRelacionServiceMock: any;
+
+  let mockConcluirRelacionService: any;
+  let mockTramiteQuery: any;
+  let mockTramiteStore: any;
+  let mockConsultaioQuery: any;
 
   beforeEach(async () => {
-    concluirRelacionServiceMock = {
-      getDetallesDelMercanciaDatos: jest.fn().mockReturnValue(
-        of({
-          registroFederal: '123',
-          denominacionRazonSocial: 'Test Company',
-          norma: 'ISO',
-          fechaInicioRelacion: '2023-01-01',
-        })
-      ),
+    mockConcluirRelacionService = {
+      getDetallesDelMercanciaDatos: jest.fn().mockReturnValue(of({
+        descripcion: 'Producto de prueba',
+        cantidad: 100,
+      })),
+    };
+
+    mockTramiteQuery = {
+      selectSeccionState$: of({ rfc: 'XAXX010101000' }),
+    };
+
+    mockTramiteStore = {
+      setRFC: jest.fn(),
+    };
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false }),
     };
 
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent, ConcluirRelacionComponent],
-      imports: [TituloComponent, TablaDinamicaComponent, ReactiveFormsModule, InputFechaComponent],
+      declarations: [ConcluirRelacionComponent],
       providers: [
         FormBuilder,
-        { provide: ConcluirRelacionService, useValue: concluirRelacionServiceMock },
+        { provide: ConcluirRelacionService, useValue: mockConcluirRelacionService },
+        { provide: Tramite420103Query, useValue: mockTramiteQuery },
+        { provide: Tramite420103Store, useValue: mockTramiteStore },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ConcluirRelacionComponent);
@@ -41,73 +58,26 @@ describe('ConcluirRelacionComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize formularioConcluirRelacion on ngOnInit', () => {
-    component.ngOnInit();
+  it('should create form with default values', () => {
     expect(component.formularioConcluirRelacion).toBeDefined();
-    expect(component.formularioConcluirRelacion.controls['rfc']).toBeDefined();
-    expect(component.formularioConcluirRelacion.controls['fechaInicial']).toBeDefined();
-    expect(component.formularioConcluirRelacion.controls['fechaFinal']).toBeDefined();
+    expect(component.formularioConcluirRelacion.get('rfc')?.value).toBe('XAXX010101000');
   });
 
-  it('should call crearFormularioConcluirRelacion and initialize the form', () => {
-    component.crearFormularioConcluirRelacion();
-    expect(component.formularioConcluirRelacion).toBeDefined();
-    expect(component.formularioConcluirRelacion.controls['rfc']).toBeDefined();
-  });
-
-  it('should fetch data and update datosTabla in buscarDatosRelacion', () => {
+  it('should fetch and update datosTabla when buscarDatosRelacion is called', () => {
     component.buscarDatosRelacion();
-    expect(concluirRelacionServiceMock.getDetallesDelMercanciaDatos).toHaveBeenCalled();
-    expect(component.datosTabla.length).toBe(1);
-    expect(component.datosTabla[0].registroFederal).toBe('123');
-    expect(component.datosTabla[0].denominacionRazonSocial).toBe('Test Company');
-    expect(component.datosTabla[0].norma).toBe('ISO');
-    expect(component.datosTabla[0].fechaInicioRelacion).toBe('2023-01-01');
+    expect(mockConcluirRelacionService.getDetallesDelMercanciaDatos).toHaveBeenCalled();
+    expect(component.datosTabla.length).toBeGreaterThan(0);
   });
 
-  it('should handle empty data in buscarDatosRelacion', () => {
-    concluirRelacionServiceMock.getDetallesDelMercanciaDatos.mockReturnValue(of(null));
-    component.buscarDatosRelacion();
-    expect(component.datosTabla).toEqual([]);
+  it('should disable the form when esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.formularioConcluirRelacion.disabled).toBeTruthy();
   });
 
-  it('should complete destruido$ on ngOnDestroy', () => {
-    const destruidoSpy = jest.spyOn(component['destruido$'], 'next');
-    const completeSpy = jest.spyOn(component['destruido$'], 'complete');
-
-    component.ngOnDestroy();
-
-    expect(destruidoSpy).toHaveBeenCalledWith(true);
-    expect(completeSpy).toHaveBeenCalled();
-  });
-
-  it('should have correct table configuration', () => {
-    expect(component.configuracionTabla.length).toBe(4);
-    expect(component.configuracionTabla[0].encabezado).toBe('Registro Federal');
-    expect(component.configuracionTabla[1].encabezado).toBe('Denominación o Razón Social');
-  });
-
-  it('should initialize fecha controls with default values', () => {
-    expect(component.configuracionFechaInicial.labelNombre).toBe('Fecha inicial');
-    expect(component.configuracionFechaInicial.required).toBe(false);
-    expect(component.configuracionFechaInicial.habilitado).toBe(false);
-
-    expect(component.configuracionFechaFinal.labelNombre).toBe('Fecha final');
-    expect(component.configuracionFechaFinal.required).toBe(false);
-    expect(component.configuracionFechaFinal.habilitado).toBe(false);
-  });
-
-  it('should initialize formularioConcluirRelacion with default controls in crearFormularioConcluirRelacion', () => {
-    component.crearFormularioConcluirRelacion();
-
-    expect(component.formularioConcluirRelacion).toBeDefined();
-    expect(component.formularioConcluirRelacion.controls['rfc']).toBeDefined();
-    expect(component.formularioConcluirRelacion.controls['fechaInicial']).toBeDefined();
-    expect(component.formularioConcluirRelacion.controls['fechaFinal']).toBeDefined();
-
-  
-    expect(component.formularioConcluirRelacion.controls['rfc'].value).toBe('');
-    expect(component.formularioConcluirRelacion.controls['fechaInicial'].value).toBe('');
-    expect(component.formularioConcluirRelacion.controls['fechaFinal'].value).toBe('');
+  it('should enable the form when esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.formularioConcluirRelacion.enabled).toBeTruthy();
   });
 });

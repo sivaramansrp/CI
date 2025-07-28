@@ -1,5 +1,5 @@
 import { API_GET_INDUSTRIA_AUTOMOTRIZ, RFC_QUERY } from '../../../constantes/5701/api-constants';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { IndustriaAutomotrizResponse } from '../../models/5701/certificacion-automotriz.model';

@@ -28,7 +28,7 @@ export const PERMISO_MAQUILA = [
  * Contiene información sobre el comportamiento al dar doble clic en una solicitud.
  */
 export const DATOS_ALERT = {
-  DATOS_SOLICITUD: `<p>Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.<p>`,
+  DATOS_SOLICITUD: `<p class="text-center">Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.<p>`,
 };
 
 /**
@@ -40,9 +40,9 @@ export const MANIFIESTOS_ALERT = {
 };
 
 export const FECHA_DE_PAGO = {
-  labelNombre: 'Fecha de pago',
-  required: true,
-  habilitado: false,
+  labelNombre: 'Fecha de pago:',
+  required: false,
+  habilitado: true,
 };
 
 export const NACIONALIDAD_OPCIONES_DE_BOTON_DE_RADIO = [
@@ -60,9 +60,32 @@ export const PERSONA_OPCIONES_DE_BOTON_DE_RADIO = [
   {
       label: 'Física',
       value: '1',
+      hint: 'Una persona física es entendida como toda persona con una actividad específica.'
   },
   {
       label: 'Moral',
       value: '0',
+      hint: 'Una persona moral es entendida como una empresa con una actividad específica.'
   }
+];
+/**
+ * Catálogo de estados utilizado para llenar opciones en formularios.
+ * Cada estado contiene un `id` único y su `descripción` correspondiente.
+ * Usado comúnmente para selecciones de ubicación o entidad federativa.
+ */
+export const ESTADOS_DATA = [
+  { id: 1, descripcion: "AGUASCALIENTES" },
+  { id: 2, descripcion: "BAJA CALIFORNIA" },
+  { id: 3, descripcion: "BAJA CALIFORNIA SUR" },
+  { id: 4, descripcion: "CAMPECHE" }
+];
+/**
+ * Catálogo de aduanas disponibles para selección en formularios.
+ * Cada entrada contiene un `id` único y una `descripción` del nombre de la aduana.
+ * Utilizado en módulos relacionados con trámites aduaneros o logística.
+ */
+export const ADUANAS_DATA = [
+  { id: 1, descripcion: "SINALOA" },
+  { id: 2, descripcion: "Aduana 2" },
+  { id: 3, descripcion: "Aduana 3" }
 ];

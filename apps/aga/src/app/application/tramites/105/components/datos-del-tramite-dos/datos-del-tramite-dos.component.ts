@@ -1,6 +1,9 @@
+import { Agentes_DATOS, AgentestableDatos, MERCANCIA_TABLEDOS_TABLE_BODY_DATA } from '../../constantes/datos-del-tramite.enum';
 import {
-  CatalogoSelectComponent,
-  CatalogosSelect,
+  Catalogo,
+  ConsultaioQuery,
+  TablaDinamicaComponent,
+  TablaSeleccion,
   TableComponent,
   TituloComponent
 } from '@ng-mf/data-access-user';
@@ -13,10 +16,11 @@ import {
 } from '@angular/forms';
 import { Solicitud105State, Tramite105Store } from '../../estados/tramite105.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { InvoCarService } from '../../services/invocar.service';
 import { Tramite105Query } from '../../estados/tramite105.query';
-import mercanciaTable from 'libs/shared/theme/assets/json/105/mercancia-table.json';
+import mercanciaTable from '@libs/shared/theme/assets/json/105/mercancia-table.json';
 
 /**
  * Interfaz que representa los datos del cuerpo de la tabla de mercancías.
@@ -58,7 +62,7 @@ interface TableBodyData {
 @Component({
   selector: 'app-datos-del-tramite-dos',
   standalone: true,
-  imports: [CommonModule, TituloComponent, CatalogoSelectComponent, TableComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, CatalogoSelectComponent, TableComponent, ReactiveFormsModule,TablaDinamicaComponent],
   templateUrl: './datos-del-tramite-dos.component.html',
   styleUrl: './datos-del-tramite-dos.component.scss',
 })
@@ -127,6 +131,8 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    * @memberof DatosDelTramiteDosComponent
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
+  
+
 
   /**
    * Catálogo de operaciones.
@@ -134,7 +140,7 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    * @type {CatalogosSelect}
    * @memberof DatosDelTramiteDosComponent
    */
-  operacione!: CatalogosSelect;
+  operaciones: Catalogo[] = []
 
 
 
@@ -171,13 +177,64 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    * @param {InvoCarService} invoCarService - Servicio para obtener datos de catálogos.
    * @memberof DatosDelTramiteDosComponent
    */
+
+
+
+/**
+     * Configuración de la tabla utilizada en el componente para mostrar los datos del acuse.
+     * 
+     * @remarks
+     * Esta propiedad almacena la configuración de columnas, formato y otros parámetros
+     * necesarios para renderizar la tabla de datos del acuse en la interfaz de usuario.
+     * 
+     * @see ACUSE_DATOS para la definición de la configuración.
+     */
+  public configuracionTabla = Agentes_DATOS;
+
+  /**
+   * Un arreglo de objetos `AcuseTablaDatos` que contiene los datos para la tabla.
+   * Estos datos se inicializan a partir de la constante `TablaDatos`.
+   */
+  public mercanciTablaDatos: AgentestableDatos[] = [];
+
+
+  /**
+   * Representa el tipo de selección de checkbox utilizado en el componente.
+   * Esto se establece al valor de `TablaSeleccion.CHECKBOX`.
+   */
+  public checkbox = TablaSeleccion.CHECKBOX;
+
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private store: Tramite105Store,
     private query: Tramite105Query,
-    private invoCarService: InvoCarService
+    private invoCarService: InvoCarService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // // Se puede agregar lógica de inicialización aquí si es necesario
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          if (seccionState.update) {
+            this.fetchTableDummyJson();
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -191,45 +248,98 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
-          this.obtenerOperacionesDeLaTienda()
         })
-       
+
       )
       .subscribe();
 
     this.getOperaciones();
     this.obtenerMercancia();
     this.crearFormularios()
-    
+    this.inicializarEstadoFormulario();
+  }
+  /**
+     * Evalúa si se debe inicializar o cargar datos en el formulario.  
+     * Además, obtiene la información del catálogo de mercancía.
+     */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
   }
 
-  obtenerOperacionesDeLaTienda(): void {
-    this.query.selectOperaciones$.subscribe((operacione) => {
-      this.operacione = {
-        labelNombre: 'Operaciones',
-        required: false,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: operacione ?? [],
-      };
-    })
+  /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe()
+    this.crearFormularios();
   }
 
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.datosDelTramiteDos.disable();
+      this.agenteForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.datosDelTramiteDos.enable();
+      this.agenteForm.enable();
+    }
+  }
+
+  /**
+ * Método para obtener datos de ejemplo para la tabla.
+ * Retorna un arreglo vacío de tipo TablaDatos.
+ *
+ * @returns Un arreglo vacío de TablaDatos.
+ */
+  fetchTableDummyJson(): void {
+    this.mercanciaBodyData.push(MERCANCIA_TABLEDOS_TABLE_BODY_DATA);
+  }
+
+  /**
+   * Inicializa y crea los formularios reactivos utilizados en el componente.
+   * 
+   * Este método configura dos formularios:
+   * - `datosDelTramiteDos`: Contiene los campos relacionados con el trámite, 
+   *   inicializados con valores provenientes del estado de la solicitud y con validadores requeridos.
+   * - `agenteForm`: Contiene los campos para los datos del agente, todos con validadores requeridos.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   crearFormularios(): void {
     this.datosDelTramiteDos = this.fb.group({
-      procedimientoCargaDescarga: [this.solicitudState?.procedimientoCargaDescarga, Validators.required],
-      sistemasMedicionUbicacion: [this.solicitudState?.sistemasMedicionUbicacion, Validators.required],
-      motivoNoDespachoAduana: [this.solicitudState?.motivoNoDespachoAduana, Validators.required],
-      operaciones: [{ value: this.solicitudState?.operaciones }, Validators.required],
+      procedimientoCargaDescarga: [this.solicitudState?.procedimientoCargaDescarga, [Validators.required, Validators.maxLength(200)]],
+      sistemasMedicionUbicacion: [this.solicitudState?.sistemasMedicionUbicacion, [Validators.required, Validators.maxLength(200)]],
+      motivoNoDespachoAduana: [this.solicitudState?.motivoNoDespachoAduana, [Validators.required, Validators.maxLength(200)]],
+      operaciones: [this.solicitudState?.operaciones, Validators.required],
     });
 
     this.agenteForm = this.fb.group({
-      nombres: ['', Validators.required],
-      primerApellido: ['', Validators.required],
-      segundoApellido: ['', Validators.required],
-      numeroPatente: ['', Validators.required],
+      nombres: ['', [Validators.required, Validators.maxLength(200)]],
+      primerApellido: ['', [Validators.required, Validators.maxLength(200)]],
+      segundoApellido: ['', [Validators.required, Validators.maxLength(200)]],
+      numeroPatente: ['', [Validators.required, Validators.maxLength(4)]],
     });
 
-   }
+  }
   /**
    * Cierra el modal.
    * 
@@ -248,7 +358,6 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    */
   public obtenerMercancia(): void {
     this.mercanciaHeaderData = this.getMercanciaTableData.mercanciaTabledos.tableHeader;
-    this.mercanciaBodyData = this.getMercanciaTableData.mercanciaTabledos.tableBody;
   }
 
   /**
@@ -277,16 +386,18 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
     this.modal = 'show';
   }
 
+
+  
   /**
    * Obtiene las operaciones desde el servicio.
    * 
    * @memberof DatosDelTramiteDosComponent
    */
   getOperaciones(): void {
-   this.invoCarService.getPais().pipe( takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+    this.invoCarService.getPais().pipe(takeUntil(this.destroyNotifier$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
-        this.store.setOperaciones(RESPONSE);
+        this.operaciones = RESPONSE;
       }
     });
   }
@@ -298,10 +409,11 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    */
   agregarMercancias(): void {
     if (!this.agenteForm.valid) {
+      this.agenteForm.markAllAsTouched();
       return;
     }
     const MERCANCIA = this.agenteForm.value;
-    this.getMercanciaTableData.mercanciaTabledos.tableBody.push(MERCANCIA);
+   this.mercanciTablaDatos.push(MERCANCIA as AgentestableDatos);
     this.agenteForm.reset();
     this.cerrarModal();
   }

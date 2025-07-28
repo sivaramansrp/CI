@@ -1,7 +1,4 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
-import { SharedModule } from '@libs/shared/data-access-user/src';
 
 /**
  * @class PasoDosComponent
@@ -10,12 +7,6 @@ import { SharedModule } from '@libs/shared/data-access-user/src';
  */
 @Component({
   selector: 'app-paso-dos',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FirmaElectronicaComponent,
-    SharedModule,
-  ],
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })

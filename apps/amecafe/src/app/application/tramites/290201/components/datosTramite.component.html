@@ -1,4 +1,4 @@
-<app-datos-de-la-solicitud></app-datos-de-la-solicitud>
+<app-datos-de-la-solicitud (filaSeleccionada)="onRowSelected($event)"></app-datos-de-la-solicitud>
 <div class="container">
   <form [formGroup]="informationCafeForm">
     <ng-titulo titulo="Informacion del Cafe" />
@@ -14,6 +14,7 @@
           [placeholder]="formasdelcafeData.primerOpcion"
           [required]="true"
           (change)="setValoresStore(datosDelTramiteRealizar,'formasdelcafe', 'setFormasDelCafe')"
+          [disabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
         </div>
       </div>
@@ -27,7 +28,7 @@
         [placeholder]="tiposData.primerOpcion"
         [required]="true"
         (change)="setValoresStore(datosDelTramiteRealizar,'tipos', 'setTipos')"
-       
+        [disabled]="esFormularioSoloLectura"
       ></app-catalogo-select>
         </div>
       </div>
@@ -41,6 +42,7 @@
         [placeholder]="calidadData.primerOpcion"
         [required]="true"
         (change)="setValoresStore(datosDelTramiteRealizar,'calidad', 'setCalidad')"
+        [disabled]="esFormularioSoloLectura"
       ></app-catalogo-select>
         </div>
       </div>
@@ -56,6 +58,7 @@
         [placeholder]="procesosData.primerOpcion"
         [required]="true"
         (change)="setValoresStore(datosDelTramiteRealizar,'procesos', 'setProcesos')"
+        [disabled]="esFormularioSoloLectura"
       ></app-catalogo-select>
         </div>
       </div>
@@ -64,11 +67,12 @@
         <app-catalogo-select
         id="certificationsData"
         formControlName="certifications"
-        [catalogo]="certificationsData.catalogos"
+        [catalogo]="certificacionsData.catalogos"
         [label]="'Cerficaciones'"
         [placeholder]="certificationsData.primerOpcion"
         [required]="true"
         (change)="setValoresStore(datosDelTramiteRealizar,'certifications', 'setCertifications')"
+        [disabled]="esFormularioSoloLectura"
       ></app-catalogo-select>
         </div>
       </div>
@@ -80,10 +84,11 @@
       id="adunadesalidaData"
       formControlName="adunadesalida"
       [catalogo]="adunadesalidaData.catalogos"
-      [label]="'Aduna de salida'"
+      [label]="'Aduana de salida'"
       [placeholder]="adunadesalidaData.primerOpcion"
       [required]="true"
       (change)="setValoresStore(datosDelTramiteRealizar,'adunadesalida', 'setAdunadesalida')"
+      [disabled]="esFormularioSoloLectura"
     ></app-catalogo-select>
       </div>
     </div>
@@ -97,6 +102,7 @@
       [placeholder]="paisdestinoData.primerOpcion"
       [required]="true"
       (change)="setValoresStore(datosDelTramiteRealizar,'paisdestino', 'setPaisdestino')"
+      [disabled]="esFormularioSoloLectura"
     ></app-catalogo-select>
       </div>
     </div>
@@ -113,6 +119,7 @@
       [placeholder]="entidaddeprocedenciaData.primerOpcion"
       [required]="true"
       (change)="setValoresStore(datosDelTramiteRealizar,'entidaddeprocedencia', 'setEntidaddeprocedencia')"
+      [disabled]="esFormularioSoloLectura"
     ></app-catalogo-select>
       </div>
     </div>
@@ -129,6 +136,7 @@
       [placeholder]="ciclocafetaleroData.primerOpcion"
       [required]="true"
       (change)="setValoresStore(datosDelTramiteRealizar,'ciclocafetalero', 'setCiclocafetalero')"
+      [disabled]="esFormularioSoloLectura"
     ></app-catalogo-select>
       </div>
       </div>

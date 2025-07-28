@@ -6,7 +6,7 @@
           <label for="adace" class="form-label">ADACE:</label>
           <input class="form-control" [ngClass]="isValid(adaceFormulario, 'adace') ? 'required' : ''" type="text"
             formControlName="adace" name="adace" id="adace"
-            (change)="setValoresStore(avisoFormulario, 'adace', 'setAvisoFormularioAdace')" />
+            (change)="setValoresStore(avisoFormulario, 'adace', 'setAvisoFormularioAdace')" readonly/>
         </div>
       </div>
     </ng-container>
@@ -24,7 +24,7 @@
     <input id="valorProgramaImmex" name="valorProgramaImmex" class="form-control"
       [ngClass]="isValid(datosEmpresa, 'valorProgramaImmex') ? 'required' : ''" type="text" maxlength="9"
       formControlName="valorProgramaImmex"
-      (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorProgramaImmex',$event)"
+      (keyup)="avisoComponent.sanitizeAlphanumeric(datosEmpresa,'valorProgramaImmex',$event)"
       (change)="setValoresStore(datosEmpresa, 'valorProgramaImmex', 'setAvisoFormularioValorProgramaImmex')" />
   </div>
 </div>
@@ -38,7 +38,7 @@
     <input id="valorAnioProgramaImmex" name="valorAnioProgramaImmex" class="form-control" type="text"
       maxlength="4" formControlName="valorAnioProgramaImmex"
       [ngClass]="isValid(datosEmpresa, 'valorAnioProgramaImmex') ? 'required' : ''"
-      (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorAnioProgramaImmex',$event)"
+      (keyup)="avisoComponent.sanitizeAlphanumeric(datosEmpresa,'valorAnioProgramaImmex',$event)"
       (change)="setValoresStore(datosEmpresa, 'valorAnioProgramaImmex', 'setAvisoFormularioValorAnioProgramaImmex')" />
   </div>
 </div>
@@ -62,7 +62,7 @@
         <div class="col-md-12">
           <div class="col-md-4">
             <app-catalogo-select [catalogo]="optoinAdace" [label]="'ADACE que levanta el acta'" [required]="true"
-              id="levantaActa" formControlName="levantaActa"
+              id="levantaActa" formControlName="levantaActa" [isDisabled]="soloLectura"
               [ngClass]="isValid(datosAdace,'levantaActa') ? 'required' : ''"
               (change)="setValoresStore(datosAdace, 'levantaActa', 'setAvisoFormularioLevantaActa')"></app-catalogo-select>
           </div>
@@ -76,10 +76,10 @@
         [datos]="tablaDeDatos.datos" (listaDeFilaSeleccionada)="filaSeleccionada($event)"></app-tabla-dinamica>
       <div class="d-flex justify-content-end">
 
-        <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()">
+        <button type="button" class="btn btn-primary ms-3"  (click)="datosDelAviso()" [disabled]="soloLectura">
           Agregar
         </button>
-        <button type="button" class="btn btn-danger ms-3" [disabled]="false" (click)="eliminarDomicilio()">
+        <button type="button" class="btn btn-danger ms-3"  (click)="eliminarDomicilio()" [disabled]="soloLectura">
           Eliminar
         </button>
       </div>
@@ -118,7 +118,7 @@
 
                 <div class="col-md-4 ">
                   <app-catalogo-select class="unidadMedida" [label]="'Unidad de medida'" [catalogo]="unidadMedida"
-                    [required]="true" id="unidadMedida" formControlName="unidadMedida"
+                    [required]="true" id="unidadMedida" formControlName="unidadMedida" [isDisabled]="soloLectura"
                     [ngClass]="isValid(adaceForm,'unidadMedida') ? 'required' : ''"
                     (change)="setValoresStore(adaceForm, 'cilindros', 'setAvisoFormularioUnidadMedida')">
                   </app-catalogo-select>
@@ -139,8 +139,8 @@
               </div>
             </div>
             <div class="modal-footer custom-footer mt-4 justify-content-end">
-              <button type="submit" class="btn btn-primary" (click)="agregarMercancia()"> Agregar </button>
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeMercancia> Cancelar </button>
+              <button type="submit" class="btn btn-primary" (click)="agregarMercancia()" [disabled]="soloLectura"> Agregar </button>
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeMercancia [disabled]="soloLectura"> Cancelar </button>
             </div>
           </div>
 

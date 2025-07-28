@@ -7,12 +7,9 @@ import { AvisodematerialesRoutingModule } from './aviso-de-materiales-routing.mo
 import { DatosComponent } from './pages/datos/datos.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
 
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, CatalogoSelectComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { DatosDeLosResiduosComponent } from './components/datos-de-los-residuos/datos-de-los-residuos.component';
 import { DatosDelGeneradorDeResiduosComponent } from './components/datos-del-generador-de-residuos/datos-del-generador-de-residuos.component';
 

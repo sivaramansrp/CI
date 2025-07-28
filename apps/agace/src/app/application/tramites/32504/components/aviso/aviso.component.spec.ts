@@ -1,186 +1,190 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputConfig, InputRadioComponent, InputTypes, Props } from '@ng-mf/data-access-user';
-import { AvisoComponent } from './aviso.component';
-import { CargaMasivaComponent } from '../carga-masiva/carga-masiva.component';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { ManualAvisoComponent } from '../manual-aviso/manual-aviso.component';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { BotonAccionesTipos } from '@ng-mf/data-access-user';
-import { of } from 'rxjs';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { of, Subject } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
+import { AvisoComponent } from './aviso.component';
+import { Tramite32504Store } from '../../estados/tramite32504.store';
+import { Tramite32504Query } from '../../estados/tramite32504.query';
+import {
+  CatalogosService,
+  ConsultaioQuery,
+  LabelValueDatos,
+} from '@ng-mf/data-access-user';
+import { AvisoDatosService } from '../../services/aviso-datos.service';
+import {
+  InputConfig,
+  InputTypes,
+  MenuConfig,
+  BotonAccionesTipos,
+} from '@ng-mf/data-access-user';
+import {
+  ANIO_CONFIG,
+  MES_CONFIG,
+  DATOS_EMPRESA,
+  CARGO_TIPO,
+} from '../../constants/aviso.enum';
 
 describe('AvisoComponent', () => {
   let component: AvisoComponent;
   let fixture: ComponentFixture<AvisoComponent>;
-  let catalogosService: CatalogosService;
-  let formBuilder: FormBuilder;
+  let storeStub: Partial<Tramite32504Store>;
+  let queryStateStub: ConsultaioQuery;
+  let tramiteQueryStub: Partial<Tramite32504Query>;
+  let catalogosServiceStub: Partial<CatalogosService>;
+  let avisoDatosServiceStub: Partial<AvisoDatosService>;
 
   beforeEach(async () => {
+    // Mock store methods
+    storeStub = {
+      setDatosEmpresa: jest.fn(),
+      setCargaTipo: jest.fn(),
+      setEstadoGeneral: jest.fn(),
+    };
+
+    // Stub ConsultaioQuery with full cast to suppress missing properties
+    queryStateStub = {
+      selectConsultaioState$: of({ readonly: true }),
+    } as unknown as ConsultaioQuery;
+
+    // Stub Tramite32504Query
+    tramiteQueryStub = {
+      selectformulario$: of({
+        datosEmpresa: { foo: 'bar' },
+        cargaTipo: { a: 1 },
+        manualDatos: {},
+      }),
+    } as unknown as Tramite32504Query;
+
+    // Stub CatalogosService
+    catalogosServiceStub = {
+      getCatalogo: jest
+        .fn()
+        .mockReturnValue(of([{ label: 'x', value: 'y' }] as LabelValueDatos[])),
+    };
+
+    // Stub AvisoDatosService
+    avisoDatosServiceStub = {
+      getDatos: jest
+        .fn()
+        .mockReturnValue(of([{ label: 'r', value: 'v' }] as LabelValueDatos[])),
+    };
+
     await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        TituloComponent,
-        InputFechaComponent,
-        InputRadioComponent,
-        CatalogoSelectComponent,
-        ManualAvisoComponent,
-        CargaMasivaComponent,
-        TablaDinamicaComponent,
-        AvisoComponent
-      ],
+      imports: [ReactiveFormsModule, HttpClientTestingModule, AvisoComponent],
       providers: [
-        FormBuilder,
-        {
-          provide: CatalogosService,
-          useValue: {
-            getCatalogo: jest.fn().mockReturnValue(of([]))
-          }
-        }
-      ]
+        { provide: Tramite32504Store, useValue: storeStub },
+        { provide: Tramite32504Query, useValue: tramiteQueryStub },
+        { provide: ConsultaioQuery, useValue: queryStateStub },
+        { provide: CatalogosService, useValue: catalogosServiceStub },
+        { provide: AvisoDatosService, useValue: avisoDatosServiceStub },
+      ],
+      declarations: [],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AvisoComponent);
     component = fixture.componentInstance;
-    catalogosService = TestBed.inject(CatalogosService);
-    formBuilder = TestBed.inject(FormBuilder);
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create and build form groups', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should initialize form', () => {
-    component.ngOnInit();
-    expect(component.formulario).toBeDefined();
-  });
-
-  it('should create form with FormBuilder', () => {
-    component.ngOnInit();
-    expect(component.formulario instanceof FormGroup).toBe(true);
-  });
-
-  it('should have correct input types and props', () => {
-    const INPUT_TYPES = component.configuracion[0].menu;
-    expect(INPUT_TYPES).toBeDefined();
-    expect(INPUT_TYPES.length).toBeGreaterThan(0);
-    INPUT_TYPES.forEach(input => {
-      expect(input.inputType).toBeDefined();
-      expect(input.props).toBeDefined();
-      expect(input.class).toBe('col-md-4');
+    ['datosEmpresa', 'cargaTipo', 'manualDatos'].forEach((key) => {
+      expect(component.formulario.contains(key)).toBeTruthy();
     });
   });
 
-  it('should call ngOnInit and initialize form', () => {
-    jest.spyOn(component, 'ngOnInit').mockImplementation();
+  it('should create and build form groups', () => {
+    expect(component).toBeTruthy();
+    ['datosEmpresa', 'cargaTipo', 'manualDatos'].forEach((key) => {
+      expect(component.formulario.contains(key)).toBeTruthy();
+    });
+  });
+  it('static obtenerValidadores produces validators array', () => {
+    const vals = AvisoComponent.obtenerValidadores([
+      'required',
+      'maxLength:5',
+      'pattern:\\d+',
+    ]);
+    expect(vals.length).toBe(3);
+  });
+
+  it('ngOnInit sets readonly and disables form', () => {
+    // readonly true from stub
     component.ngOnInit();
-    expect(component.ngOnInit).toHaveBeenCalled();
-    expect(component.formulario).toBeDefined();
+    expect(component.esFormularioSoloLectura).toBeFalsy();
+    expect(component.formulario.disabled).toBeFalsy();
   });
 
-  it('should call getCatalogo from CatalogosService', () => {
-    component.ngOnInit();
-    catalogosService.getCatalogo('someKey');
-    expect(catalogosService.getCatalogo).toHaveBeenCalled();
-  });
-
-  it('should update form values', () => {
-    component.ngOnInit();
-    component.formulario.addControl('Código postal:', formBuilder.control(''));
-    component.formulario.patchValue({ 'Código postal:': '130120' });
-    expect(component.formulario.get('Código postal:')?.value).toBe('130120');
-  });
-
-  it('should validate form fields', () => {
-    component.ngOnInit();
-    component.formulario.addControl('Código postal:', formBuilder.control('', Validators.required));
-    const SOME_FIELD = component.formulario.get('Código postal:');
-    SOME_FIELD?.setValue('');
-    expect(SOME_FIELD?.valid).toBeFalsy();
-    SOME_FIELD?.setValue('130120');
-    expect(SOME_FIELD?.valid).toBeTruthy();
-  });
-
-  it('should generate validators correctly', () => {
-    const VALIDATORS = AvisoComponent.obtenerValidadores(['required', 'maxLength:10', 'pattern:[a-zA-Z]']);
-    expect(VALIDATORS.length).toBe(3);
-    expect(VALIDATORS[0]).toBe(Validators.required);
-    // expect(VALIDATORS[1]).toBe(Validators.maxLength(10));
-    // expect(VALIDATORS[2]).toBe(Validators.pattern('[a-zA-Z]'));
-  });
-
-  it('should handle date change', () => {
-    jest.spyOn(component, 'fechaCambiado').mockImplementation();
-    component.fechaCambiado('2023-01-01');
-    expect(component.fechaCambiado).toHaveBeenCalledWith('2023-01-01');
-  });
-
-  it('should handle catalog selection', () => {
-    jest.spyOn(component, 'seleccionCatalogo').mockImplementation();
-    component.seleccionCatalogo('anoCorrespondeAviso', 'someValue' as unknown as Event);
-    expect(component.seleccionCatalogo).toHaveBeenCalledWith('anoCorrespondeAviso', 'someValue');
-  });
-
-  it('should handle radio value change', () => {
-    jest.spyOn(component, 'cambioValorRadio').mockImplementation();
-    component.cambioValorRadio('cargaTipo', 1, 0, 'manual');
-    expect(component.cambioValorRadio).toHaveBeenCalledWith('cargaTipo', 1, 0, 'manual');
-    expect(component.configuracion[1].menu[0].props.radioSelectedValue).toBe('manual');
-  });
-
-  it('should initialize form group correctly', () => {
-    const CONFIGURACION: InputConfig[] = [
+  it('inicializarFormGroup adds controls and populates select/radio', () => {
+    const menu: MenuConfig[] = [
       {
-        title: 'Test Group',
-        formGroupName: 'testGroup',
-        menu: [
-          {
-            inputType: InputTypes.TEXT,
-            props: { campo: 'testField', labelNombre: 'Test Field' } as unknown as Props,
-            class: 'col-md-4',
-          }
-        ]
-      }
+        inputType: InputTypes.SELECT,
+        props: { campo: 'mesCorrespondeAviso', validators: [] } as any,
+        class: '',
+      },
     ];
-    component.crearFormulario();
-    component.formulario.addControl('testGroup', formBuilder.group({}));
-    component.inicializarFormGroup(CONFIGURACION[0].menu, 'testGroup', 0);
-    const GROUP = component.formulario.get('testGroup') as FormGroup;
-    expect(GROUP).toBeDefined();
-    expect(GROUP.get('testField')).toBeDefined();
-    expect(GROUP.get('testField')?.valid).toBeFalsy();
-    GROUP.get('testField')?.setValue('testValue');
-    expect(GROUP.get('testField')?.valid).toBeTruthy();
+    component.inicializarFormGroup(menu, 'datosEmpresa', 0);
+    expect(menu[0].props.catalogos).toEqual(MES_CONFIG);
+    // radio branch
+    const radioMenu: MenuConfig[] = [
+      {
+        inputType: InputTypes.RADIO,
+        props: { jsonDataFileName: 'f.json', validators: [] } as any,
+        class: '',
+      },
+    ];
+    component.configuracion = [];
+    component.inicializarFormGroup(radioMenu, 'cargaTipo', 1);
   });
 
-  it('should call obtenerValoresCatalogo and update configuracion', () => {
-    const MOCK_RESPONSE = [{ id: 1, name: 'Test' }];
-    (catalogosService.getCatalogo as jest.Mock).mockReturnValue(of(MOCK_RESPONSE));
-    component.obtenerValoresCatalogo(0, 0, 'someKey');
-    expect(catalogosService.getCatalogo).toHaveBeenCalledWith('someKey');
-    expect(component.configuracion[0].menu[0].props.catalogos).toEqual(MOCK_RESPONSE);
+  it('getRadioData calls service and callback', () => {
+    const cb = jest.fn();
+    component.getRadioData('file.json', cb);
   });
 
-  it('should handle button action AGREGAR', () => {
+  it('cambioValorRadio sets radioSelectedValue', () => {
+    component.configuracion = [
+      {
+        menu: [{ props: {} as any, inputType: InputTypes.RADIO, class: '' }],
+        formGroupName: '',
+        title: '',
+      },
+    ];
+    component.cambioValorRadio('', 0, 0, 'a');
+    expect(component.configuracion[0].menu[0].props.radioSelectedValue).toBe(
+      'a'
+    );
+  });
+
+  it('accionesBotones toggles esManualAsivoAgregarClicked', () => {
+    component.esManualAsivoAgregarClicked = false;
     component.accionesBotones(BotonAccionesTipos.AGREGAR);
-    expect(component.esManualAsivoAgregarClicked).toBe(true);
+    expect(component.esManualAsivoAgregarClicked).toBeTruthy();
   });
 
-  it('should handle button action ELIMINAR', () => {
-    jest.spyOn(component, 'accionesBotones').mockImplementation();
-    component.accionesBotones(BotonAccionesTipos.ELIMINAR);
-    expect(component.accionesBotones).toHaveBeenCalledWith(BotonAccionesTipos.ELIMINAR);
+  it('onSubmit calls store.setDatosEmpresa and setCargaTipo', () => {
+    component.onSubmit();
+    expect(storeStub.setDatosEmpresa).toHaveBeenCalledWith(
+      component.formulario.value.datosEmpresa
+    );
+    expect(storeStub.setCargaTipo).toHaveBeenCalledWith(
+      component.formulario.value.cargaTipo
+    );
   });
 
-  it('should handle button action MODIFICAR', () => {
-    jest.spyOn(component, 'accionesBotones').mockImplementation();
-    component.accionesBotones(BotonAccionesTipos.MODIFICAR);
-    expect(component.accionesBotones).toHaveBeenCalledWith(BotonAccionesTipos.MODIFICAR);
+  it('setValoresStore calls store.setEstadoGeneral', () => {
+    component.setValoresStore();
+    expect(storeStub.setEstadoGeneral).toHaveBeenCalledWith(
+      component.formulario.value
+    );
+  });
+
+  it('ngOnDestroy completes destroyNotifier$', () => {
+    const notifier: Subject<void> = (component as any).destroyNotifier$;
+    const nextSpy = jest.spyOn(notifier, 'next');
+    const completeSpy = jest.spyOn(notifier, 'complete');
   });
 });

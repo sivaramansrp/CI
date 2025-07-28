@@ -57,6 +57,14 @@ export interface DatosModificacion {
   programa: string;
 }
 
+export interface DatosDelServicios {
+  id?: number;
+  desEstatus?: string;
+  descripcion?: string;
+  tipoDeServicio?: string;
+  testado?: string;
+}
+
 export interface DatosDelModificacion {
   id?: number;
   calle?: string;
@@ -67,8 +75,13 @@ export interface DatosDelModificacion {
   municipioOAlcaldia?: string;
   entidadFederativa?: string;
   pais?: string;
-  rfc?: string;
-  domicilioFiscal?: string;
-  razonSocial?: string;
+  telefono?: string;
   desEstatus?: string;
+}
+
+export interface DatosDelModificaciondos {
+  id?: number;
+  desEstatus?: string;
+  descripcion?: string;
+  tipoDeServicio?: string;
 }

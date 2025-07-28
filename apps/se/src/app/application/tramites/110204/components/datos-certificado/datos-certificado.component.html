@@ -11,7 +11,11 @@
         <div class="col-md-6">
           <app-catalogo-select [label]="'Idioma'" [catalogo]="(idioma$ | async) || []" 
           [required]="true" name="estado" formControlName="idiomaDates"
+          [isDisabled]="esFormularioSoloLectura"
           (selectionChange)="idiomaSeleccion($event)"></app-catalogo-select>
+          <div *ngIf="formDatosCertificado.get('idiomaDates')?.touched && formDatosCertificado.get('idiomaDates')?.invalid">
+          <small *ngIf="formDatosCertificado.get('idiomaDates')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+        </div>
         </div>
       </div>
       <div class="row">
@@ -19,12 +23,20 @@
         <div class="col-md-6">
           <app-catalogo-select [label]="'Entidad federativa'" [catalogo]="(entidadFederativas$ | async) || []" 
           [required]="true" name="estado"formControlName="EntidadFederativaDates"
+          [isDisabled]="esFormularioSoloLectura"
           (selectionChange)="entidadFederativaSeleccion($event)"></app-catalogo-select>
+          <div *ngIf="formDatosCertificado.get('EntidadFederativaDates')?.touched && formDatosCertificado.get('EntidadFederativaDates')?.invalid">
+          <small *ngIf="formDatosCertificado.get('EntidadFederativaDates')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+        </div>
         </div>
         <div class="col-md-6">
           <app-catalogo-select [label]="'Representación federal'"  [catalogo]="(representacionFederal$ | async) || []" 
           [required]="true" name="estado" formControlName="representacionFederalDates"
+          [isDisabled]="esFormularioSoloLectura"
           (selectionChange)="representacionFederalSeleccion($event)"></app-catalogo-select>
+          <div *ngIf="formDatosCertificado.get('representacionFederalDates')?.touched && formDatosCertificado.get('representacionFederalDates')?.invalid">
+          <small *ngIf="formDatosCertificado.get('representacionFederalDates')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+        </div>
         </div>
       </div>
     </div>

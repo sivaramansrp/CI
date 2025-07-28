@@ -8,11 +8,17 @@
      (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
      >
 </app-tabla-dinamica>
+<div class="col-md-12 d-flex justify-content-end mt-3">
     <div class="btn-group">
-      <button class="btn btn-danger" type="button" [disabled]="!selectedRow" (click)="enModificar()">Modificar</button>
-      <button class="btn btn-danger" type="button" [disabled]="!selectedRow" (click)=" onDeleteSelectedRows()">Eliminar</button>
-      <button class="btn btn-primary me-2" type="button">Continuar</button>
+            <button class="btn btn-primary me-3" type="button" (click)="onAgregar()">Agregar</button>
+            @if(selectedRow){
+              <button class="btn btn-primary me-3" type="button" style="background-color: grey; color: white;" onmouseover="this.style.backgroundColor='grey'" 
+     [disabled]="!selectedRow" (click)="enModificar()">Modificar</button>
+      <button  class="btn btn-danger me-3" type="button" [disabled]="!selectedRow" (click)="onDeleteSelectedRows()">Eliminar</button>
+            }
+      
     </div>
+</div>
 </div>
 
 <div class="container"  *ngIf="esFormularioVisible">
@@ -23,37 +29,109 @@
               <div class="col-md-12">
                 <label class="form-label" for="tipoPersona">Tipo persona*:</label>
               </div>
-              <div class="col-md-12">
-                <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                  id="fisica" value="fisica"
-                  (change)="setValoresStore(datosDelTramiteRealizar,'tipoPersona', 'setTipoPersona')"/>
-                <label for="fisica">Física</label>
-              </div>
-              <div class="col-md-12">
-                <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona" 
-               id="moral" value="moral"
-                (change)="setValoresStore(datosDelTramiteRealizar,'tipoPersona', 'setTipoPersona')"/>
-                <label for="moral">Moral</label>
-              </div>
+            <div class="col-md-6">
+              <app-input-radio 
+                [radioOptions]="tipoPersonaRadioOptions" 
+                [selectedValue]="tipoDePublicos" 
+                [isRequired]="true" 
+                (valueChange)="setTipoPersona($event)" 
+                formControlName="tipoPersona" 
+                (change)="setValoresStore(datosDelTramiteRealizar,'tipoPersona', 'setTipoPersona')"
+                [disabled]="esFormularioSoloLectura">
+              </app-input-radio>
+                 </div>
+                 <div *ngIf="datosDelTramiteRealizar.get('tipoPersona')?.touched && datosDelTramiteRealizar.get('tipoPersona')?.invalid" class="text-danger">
+                  Este campo es obligatorio.
+                </div>
             </div>
-            <div class="row">
-              <div class="col-md-8 mb-3">
+            @if (tipoPersonaSeleccionada === 'moral') {
+              <div class="row">
+                <div class="col-md-8 mb-3">
                 <label class="form-label" for="denominación">Denominación/razón social*:</label>
                 <input class="form-control" id="denominacion" type="text" formControlName="denominacion"
-                (change)="setValoresStore(datosDelTramiteRealizar,'denominacion', 'setDenominacion')"/>
+                (change)="setValoresStore(datosDelTramiteRealizar,'denominacion', 'setDenominacion')"
+                [disabled]="esFormularioSoloLectura"
+                [ngClass]="{'is-invalid': destinatarioForm.get('datosDelTramiteRealizar.denominacion')?.touched && destinatarioForm.get('datosDelTramiteRealizar.denominacion')?.invalid}"
+                />
+                
+               <div *ngIf="datosDelTramiteRealizar.get('denominacion')?.touched && datosDelTramiteRealizar.get('denominacion')?.invalid" class="text-danger">
+                Este campo es obligatorio.
+           </div>
+
               </div>
             </div>
+            }
+            @if (tipoPersonaSeleccionada === 'fisica') {
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="nombre">Nombre(s)*:</label>
+                    <input type="text" 
+                    class="form-control" 
+                    id="nombre"
+                    formControlName="nombre"
+                    (change)="
+                    setValoresStore(
+                      datosDelTramiteRealizar,
+                    'nombre',
+                    'setNombre'
+                    )"
+                    >
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="primerApellido">Primer apellido*:</label>
+                  <input type="text" 
+                  class="form-control" 
+                  id="primerApellido"
+                  formControlName="primerApellido"
+                  (change)="
+                  setValoresStore(
+                    datosDelTramiteRealizar,
+                  'primerApellido',
+                  'setPrimerApellido'
+                  )"
+                  >
+              </div>
+              </div>
+              <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
+                <input type="text" 
+                value=""
+                class="form-control" 
+                id="segundoApellido"
+                formControlName="segundoApellido"
+                (change)="
+                setValoresStore(
+                  datosDelTramiteRealizar,
+                'segundoApellido',
+                'setSegundoApellido'
+                )"
+                >
+                </div>
+              </div>
+            </div>
+          }
+    
             <div class="row">
             <div class="col-md-8">
               <div class="form-group">
-                <label class="form-label" for="domicilio">Domicilio</label>
+                <label class="form-label" for="domicilio">Domicilio*:</label>
                 <textarea class="form-control" id="domicilio" rows="2" height="50"
-                placeholder="tenayuca 107" style="height: 100px" formControlName="domicilio"
-                (change)="setValoresStore(datosDelTramiteRealizar,'domicilio', 'setDomicilio')" ></textarea>
+               style="height: 100px" formControlName="domicilio"
+                (change)="setValoresStore(datosDelTramiteRealizar,'domicilio', 'setDomicilio')" 
+                [disabled]="esFormularioSoloLectura"
+                [ngClass]="{'is-invalid': destinatarioForm.get('datosDelTramiteRealizar.domicilio')?.touched && destinatarioForm.get('datosDelTramiteRealizar.domicilio')?.invalid}"
+                ></textarea>
+                <div *ngIf="datosDelTramiteRealizar.get('domicilio')?.touched && datosDelTramiteRealizar.get('domicilio')?.invalid" class="text-danger">
+                  Este campo es obligatorio.
+                </div>
               </div>
             </div>
             </div>
-           <div class="row">
+          <div class="row">
             <div class="col-md-4">
               <div class="form-group">
                 <app-catalogo-select
@@ -62,29 +140,75 @@
                 [catalogo]="paisData.catalogos"
                 [label]="'Pais'"
                 [placeholder]="paisData.primerOpcion"
-                [required]="true"
                 (change)="setValoresStore(datosDelTramiteRealizar,'pais', 'setPais')"
+                [disabled]="esFormularioSoloLectura"
               ></app-catalogo-select>
+              @if(isPaisRequired){
+                <small class="text-danger">
+                  Por favor, selecciona una opción.
+                </small>
+              }
+             @if(isPaisInvalid){
+              <small class="text-danger">
+                Este campo es obligatorio.
+              </small>
+             }
+              
              </div>
            </div>
-            </div>
-             <div class="row">
+          </div>
+            <div class="row">
               <div class="col-md-4 mb-3">
+                <div class="form-group">
                 <label class="form-label" for="codigopostal">Codigo postal:</label>
                 <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"
-                (change)="setValoresStore(datosDelTramiteRealizar,'codigopostal', 'setCodigopostal')"/>
+                (change)="setValoresStore(datosDelTramiteRealizar,'codigopostal', 'setCodigopostal')"
+                [disabled]="esFormularioSoloLectura"
+                [ngClass]="{
+                  'is-invalid': isCodigoPostalMaxLengthExceeded
+                }"
+                />
+                @if(isCodigoPostalMaxLengthExceeded){
+                  <small class="text-danger">
+                    Por favor, no escribas más de 5 caracteres.
+                  </small>
+                }
+                
               </div>
             </div>
+          </div>
+          
             <div class="row">
               <div class="col-md-4 mb-3">
                 <label class="form-label" for="telefono">Telefono:</label>
                 <input class="form-control" id="telefono" type="text" formControlName="telefono"
-                (change)="setValoresStore(datosDelTramiteRealizar,'telefono','setTelefono')"/>
+                (change)="setValoresStore(datosDelTramiteRealizar,'telefono','setTelefono')"
+                [disabled]="esFormularioSoloLectura"
+                [ngClass]="{
+                  'is-invalid': isTelefonoPatternInvalid
+                }"
+                />
+                @if(isTelefonoPatternInvalid){
+                  <small class="text-danger">
+                    Por favor, sólo escribe dígitos.
+                  </small>
+                }
+ 
               </div>
                 <div class="col-md-4 mb-3">
                   <label class="form-label" for="correoelectronico">Correo electronico:</label>
                   <input class="form-control" id="correoelectronico" type="text" formControlName="correoelectronico"
-                  (change)="setValoresStore(datosDelTramiteRealizar,'correoelectronico','setCorreoelectronico')"/>
+                  (change)="setValoresStore(datosDelTramiteRealizar,'correoelectronico','setCorreoelectronico')"
+                  [disabled]="esFormularioSoloLectura"
+                  [ngClass]="{
+                    'is-invalid': isCorreoElectronicoInvalid
+                  }"/>
+                  @if(isCorreoElectronicoInvalid){
+                    <small class="text-danger">
+                      Por favor, escribe una dirección de correo válida.
+                    </small>
+                  }
+
                 </div>
             </div>
 
@@ -96,7 +220,7 @@
                   <button class="btn btn-primary me-2"
                   type="button"(click)="onLimpiar()">Limpiar</button>
                   <button class="btn btn-primary me-2"
-                  type="button" (click)="enEnviar()">Guardar</button>
+                  type="submit">Guardar</button>
               </div>
             
           </div>

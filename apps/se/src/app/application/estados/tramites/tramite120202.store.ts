@@ -1,6 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
-import { Injectable } from '@angular/core';
 import { ExpedirMonto } from '../../tramites/120202/models/expedicion-certificados-asignacion.model';
+import { Injectable } from '@angular/core';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 120202
@@ -528,5 +528,13 @@ export class Tramite120202Store extends Store<ExpedicionCertificadosAsignacion12
             ...state,
             mostrarDetalle,
         }));
+    }
+
+    /**
+     * Actualiza el estado de la consulta de persona física.
+     * @param nuevoDatos - Nuevo estado de la consulta de persona física.
+     */
+    public setConsultaPersonaFisicaState(nuevoDatos: ExpedicionCertificadosAsignacion120202State): void {
+        this.update(nuevoDatos);
     }
 }

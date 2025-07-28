@@ -1,5 +1,5 @@
 import { AlertComponent, TituloComponent } from "@libs/shared/data-access-user/src";
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
@@ -39,14 +39,24 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 
   /** Observable para manejar la destrucción de suscripciones */
   private destroy$: Subject<void> = new Subject<void>();
-
+  /**
+   * Propaga al componente <anexar-documentos> el evento para disparar el metodo confirmUpload en <anexar-documentos>.
+   */
+  @Output() reenviarEvento = new EventEmitter<void>();
+  /**
+ * Evento para regresar a la sección de carga de documentos.
+ * 
+ * Este evento se emite cuando se requiere regresar a la sección de carga de documentos.
+ * Es utilizado para notificar a componentes padres sobre esta acción.
+ */
+  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
   /**
    * Constructor del componente.
    * @param catalogosServices Servicio para obtener los catálogos
    */
   constructor(
-   public catalogosServices: CatalogosService,
-  ) { 
+    public catalogosServices: CatalogosService,
+  ) {
     // Constructor vacío
   }
 
@@ -75,13 +85,13 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * @returns void
    */
   getTiposDocumentos(): void {
-      this.catalogosServices
-        .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(
-          (resp: Catalogo[]) => {
-            this.catalogoDocumentos = resp;
-          }
-        );
-    }
+    this.catalogosServices
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (resp: Catalogo[]) => {
+          this.catalogoDocumentos = resp;
+        }
+      );
+  }
 }

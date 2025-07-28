@@ -14,9 +14,9 @@ export interface Catalogo {
  */
 export interface Solicitud110207State {
   /** Lista de tratados disponibles. */
-  tratado: Catalogo[] | null;
+  tratado: Catalogo[]
   /** Lista de países disponibles. */
-  pais: Catalogo[] | null;
+  pais: Catalogo[]
   /** Fracción arancelaria seleccionada. */
   fraccionArancelaria: string;
   /** Número de registro del producto. */
@@ -36,11 +36,11 @@ export interface Solicitud110207State {
   /** Valor de presenta. */
   presenta: string;
   /** Lista de idiomas disponibles. */
-  idioma: Catalogo[] | null;
+  idioma: Catalogo[]
   /** Lista de entidades disponibles. */
-  entidad: Catalogo[] | null;
+  entidad: Catalogo[] 
   /** Lista de representaciones disponibles. */
-  representacion: Catalogo[] | null;
+  representacion: Catalogo[] 
   /** Nombre del solicitante. */
   nombre: string;
   /** Primer apellido del solicitante. */
@@ -66,9 +66,9 @@ export interface Solicitud110207State {
   /** Correo electrónico del solicitante. */
   correoElectronico: string;
   /** Lista de naciones disponibles. */
-  nacion: Catalogo[] | null;
+  nacion: Catalogo[]
   /** Lista de transportes disponibles. */
-  transporte: Catalogo[] | null;
+  transporte: Catalogo[] 
   /** Fracción arancelaria de la mercancía. */
   fraccionMercanciaArancelaria: string;
   /** Nombre técnico de la mercancía. */
@@ -82,7 +82,7 @@ export interface Solicitud110207State {
   /** Cantidad de la mercancía. */
   cantidad: string;
   /** Lista de unidades de medida comercial (UMC). */
-  umc: Catalogo[] | null;
+  umc: Catalogo[] 
   /** Valor de la mercancía. */
   valorDelaMercancia: string;
   /** Complemento de la descripción de la mercancía. */
@@ -92,9 +92,9 @@ export interface Solicitud110207State {
   /** Nombre comercial de la mercancía. */
   nombreComercialDelaMercancia: string;
   /** Lista de unidades de medida disponibles. */
-  unidadMedida: Catalogo[] | null;
+  unidadMedida: Catalogo[] 
   /** Lista de tipos de factura disponibles. */
-  tipoFactura: Catalogo[] | null;
+  tipoFactura: Catalogo[] 
   /** Fecha de la factura. */
   fecha: string;
   /** Número de la factura. */
@@ -118,8 +118,8 @@ export interface Solicitud110207State {
  */
 export function createInitialState(): Solicitud110207State {
   return {
-    tratado: null,
-    pais: null,
+    tratado: [],
+    pais: [],
     fraccionArancelaria: '',
     numeroRegistro: '',
     nombreComercial: '',
@@ -129,9 +129,9 @@ export function createInitialState(): Solicitud110207State {
     observaciones: '',
     presica: '',
     presenta: '',
-    idioma: null,
-    entidad: null,
-    representacion: null,
+    idioma: [],
+    entidad: [],
+    representacion: [],
     nombre: '',
     apellidoPrimer: '',
     apellidoSegundo: '',
@@ -144,21 +144,21 @@ export function createInitialState(): Solicitud110207State {
     telefono: '',
     fax: '',
     correoElectronico: '',
-    nacion: null,
-    transporte: null,
+    nacion: [],
+    transporte: [],
     fraccionMercanciaArancelaria: '',
     nombreTecnico: '',
     nombreEnIngles: '',
     criterioParaConferir: '',
     marca: '',
     cantidad: '',
-    umc: null,
+    umc: [],
     valorDelaMercancia: '',
     complementoDelaDescripcion: '',
     masaBruta: '',
     nombreComercialDelaMercancia: '',
-    unidadMedida: null,
-    tipoFactura: null,
+    unidadMedida: [],
+    tipoFactura: [],
     fecha: '',
     numeroFactura: '',
     justificacion: '',
@@ -192,7 +192,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el catálogo de tratados.
    * @param tratado Lista de objetos de tipo `Catalogo`.
    */
-  public setTratado(tratado: Catalogo[]) {
+  public setTratado(tratado: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       tratado,
@@ -202,7 +202,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el catálogo de países.
    * @param pais Lista de objetos de tipo `Catalogo`.
    */
-  public setPais(pais: Catalogo[]) {
+  public setPais(pais: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       pais,
@@ -212,7 +212,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece la fracción arancelaria.
    * @param fraccionArancelaria Cadena que representa la fracción arancelaria.
    */
-  public setFraccionArancelaria(fraccionArancelaria: string) {
+  public setFraccionArancelaria(fraccionArancelaria: string): void {
     this.update((state) => ({
       ...state,
       fraccionArancelaria,
@@ -222,7 +222,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece la fracción arancelaria de la mercancía.
    * @param fraccionMercanciaArancelaria Cadena que representa la fracción arancelaria de la mercancía.
    */
-  public setfraccionMercanArancelaria(fraccionMercanciaArancelaria: string) {
+  public setfraccionMercanArancelaria(fraccionMercanciaArancelaria: string): void {
     this.update((state) => ({
       ...state,
       fraccionMercanciaArancelaria,
@@ -232,7 +232,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el nombre técnico de la mercancía.
    * @param nombreTecnico Cadena que representa el nombre técnico.
    */
-  public setnombretecnico(nombreTecnico: string) {
+  public setnombretecnico(nombreTecnico: string): void {
     this.update((state) => ({
       ...state,
       nombreTecnico,
@@ -242,7 +242,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el nombre en inglés de la mercancía.
    * @param nombreEnIngles Cadena que representa el nombre en inglés.
    */
-  public setnomreeningles(nombreEnIngles: string) {
+  public setnomreeningles(nombreEnIngles: string): void {
     this.update((state) => ({
       ...state,
       nombreEnIngles,
@@ -252,7 +252,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el criterio para conferir origen.
    * @param criterioParaConferir Cadena que representa el criterio para conferir origen.
    */
-  public setcriterioparaconferir(criterioParaConferir: string) {
+  public setcriterioparaconferir(criterioParaConferir: string): void {
     this.update((state) => ({
       ...state,
       criterioParaConferir,
@@ -262,7 +262,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece la marca de la mercancía.
    * @param marca Cadena que representa la marca.
    */
-  public setmarca(marca: string) {
+  public setmarca(marca: string): void {
     this.update((state) => ({
       ...state,
       marca,
@@ -272,7 +272,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece la cantidad de la mercancía.
    * @param cantidad Cadena que representa la cantidad.
    */
-  public setcantidad(cantidad: string) {
+  public setcantidad(cantidad: string): void {
     this.update((state) => ({
       ...state,
       cantidad,
@@ -282,7 +282,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el catálogo de unidades de medida comercial (UMC).
    * @param umc Lista de objetos de tipo `Catalogo`.
    */
-  public setUMC(umc: Catalogo[]) {
+  public setUMC(umc: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       umc,
@@ -292,7 +292,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el catálogo de unidades de medida.
    * @param unidadMedida Lista de objetos de tipo `Catalogo`.
    */
-  public setUnidadMedida(unidadMedida: Catalogo[]) {
+  public setUnidadMedida(unidadMedida: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       unidadMedida,
@@ -302,7 +302,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el catálogo de tipos de factura.
    * @param tipoFactura Lista de objetos de tipo `Catalogo`.
    */
-  public setTipoFactura(tipoFactura: Catalogo[]) {
+  public setTipoFactura(tipoFactura: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       tipoFactura,
@@ -312,7 +312,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece la fecha de la factura.
    * @param fecha Cadena que representa la fecha.
    */
-  public setFecha(fecha: string) {
+  public setFecha(fecha: string): void {
     this.update((state) => ({
       ...state,
       fecha,
@@ -322,7 +322,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el número de factura.
    * @param numeroFactura Cadena que representa el número de factura.
    */
-  public setNFactura(numeroFactura: string) {
+  public setNFactura(numeroFactura: string): void {
     this.update((state) => ({
       ...state,
       numeroFactura,
@@ -332,7 +332,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece la justificación.
    * @param justificacion Cadena que representa la justificación.
    */
-  public setJustificacion(justificacion: string) {
+  public setJustificacion(justificacion: string): void {
     this.update((state) => ({
       ...state,
       justificacion,
@@ -342,7 +342,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el catálogo de transporte.
    * @param valorDelaMercancia Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setvalordelamercancia(valorDelaMercancia: string) {
+  public setvalordelamercancia(valorDelaMercancia: string): void {
     this.update((state) => ({
       ...state,
       valorDelaMercancia,
@@ -352,7 +352,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el valor de la casilla de verificación.
    * @param complementoDelaDescripcion Cadena que representa el valor de la casilla.
    */
-  public setcomplementodeladescripcion(complementoDelaDescripcion: string) {
+  public setcomplementodeladescripcion(complementoDelaDescripcion: string): void {
     this.update((state) => ({
       ...state,
       complementoDelaDescripcion,
@@ -362,7 +362,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el valor de la masa bruta de la mercancía.
    * @param masaBruta Cadena que representa la masa bruta.
    */
-  public setmasabruta(masaBruta: string) {
+  public setmasabruta(masaBruta: string): void {
     this.update((state) => ({
       ...state,
       masaBruta,
@@ -372,7 +372,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el nombre comercial de la mercancía.
    * @param nombreComercialDelaMercancia Cadena que representa el nombre comercial de la mercancía.
    */
-  public setnombrecomercialdelamercancia(nombreComercialDelaMercancia: string) {
+  public setnombrecomercialdelamercancia(nombreComercialDelaMercancia: string): void {
     this.update((state) => ({
       ...state,
       nombreComercialDelaMercancia,
@@ -382,7 +382,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el número de registro.
    * @param numeroRegistro Cadena que representa el número de registro.
    */
-  public setNumRegistro(numeroRegistro: string) {
+  public setNumRegistro(numeroRegistro: string): void {
     this.update((state) => ({
       ...state,
       numeroRegistro,
@@ -392,7 +392,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el nombre comercial.
    * @param nombreComercial Cadena que representa el nombre comercial.
    */
-  public setNomComercial(nombreComercial: string) {
+  public setNomComercial(nombreComercial: string): void {
     this.update((state) => ({
       ...state,
       nombreComercial,
@@ -402,7 +402,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece la fecha de inicio del bloque.
    * @param fechaInicial Cadena que representa la fecha de inicio del bloque.
    */
-  public setFechInicioB(fechaInicial: string) {
+  public setFechInicioB(fechaInicial: string): void {
     this.update((state) => ({
       ...state,
       fechaInicial,
@@ -412,7 +412,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece la fecha de fin del bloque.
    * @param fechaFinal Cadena que representa la fecha de fin del bloque.
    */
-  public setFechFinB(fechaFinal: string) {
+  public setFechFinB(fechaFinal: string): void {
     this.update((state) => ({
       ...state,
       fechaFinal,
@@ -422,7 +422,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el archivo adjunto.
    * @param archivo Cadena que representa el archivo adjunto.
    */
-  public setArchivo(archivo: string) {
+  public setArchivo(archivo: string): void {
     this.update((state) => ({
       ...state,
       archivo,
@@ -432,7 +432,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece las observaciones.
    * @param observaciones Cadena que representa las observaciones.
    */
-  public setObservaciones(observaciones: string) {
+  public setObservaciones(observaciones: string): void {
     this.update((state) => ({
       ...state,
       observaciones,
@@ -442,7 +442,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el valor de presica.
    * @param presica Cadena que representa el valor de presica.
    */
-  public setPresica(presica: string) {
+  public setPresica(presica: string): void {
     this.update((state) => ({
       ...state,
       presica,
@@ -452,7 +452,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el valor de presenta.
    * @param presenta Cadena que representa el valor de presenta.
    */
-  public setPresenta(presenta: string) {
+  public setPresenta(presenta: string): void {
     this.update((state) => ({
       ...state,
       presenta,
@@ -462,7 +462,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el catálogo de idiomas.
    * @param idioma Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setIdioma(idioma: Catalogo[] | null) {
+  public setIdioma(idioma: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       idioma,
@@ -472,7 +472,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el catálogo de entidades.
    * @param entidad Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setEntidad(entidad: Catalogo[] | null) {
+  public setEntidad(entidad: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       entidad,
@@ -482,7 +482,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el catálogo de representaciones.
    * @param representacion Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setRepresentacion(representacion: Catalogo[] | null) {
+  public setRepresentacion(representacion: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       representacion,
@@ -492,7 +492,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el nombre del solicitante.
    * @param nombre Cadena que representa el nombre del solicitante.
    */
-  public setNombre(nombre: string) {
+  public setNombre(nombre: string): void {
     this.update((state) => ({
       ...state,
       nombre,
@@ -502,7 +502,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el primer apellido del solicitante.
    * @param apellidoPrimer Cadena que representa el primer apellido del solicitante.
    */
-  public setApellidoPrimer(apellidoPrimer: string) {
+  public setApellidoPrimer(apellidoPrimer: string): void {
     this.update((state) => ({
       ...state,
       apellidoPrimer,
@@ -512,7 +512,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el segundo apellido del solicitante.
    * @param apellidoSegundo Cadena que representa el segundo apellido del solicitante.
    */
-  public setApellidoSegundo(apellidoSegundo: string) {
+  public setApellidoSegundo(apellidoSegundo: string): void {
     this.update((state) => ({
       ...state,
       apellidoSegundo,
@@ -522,7 +522,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el número fiscal del solicitante.
    * @param numeroFiscal Cadena que representa el número fiscal del solicitante.
    */
-  public setNumeroFiscal(numeroFiscal: string) {
+  public setNumeroFiscal(numeroFiscal: string): void {
     this.update((state) => ({
       ...state,
       numeroFiscal,
@@ -532,7 +532,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece la razón social.
    * @param razonSocial Cadena que representa la razón social.
    */
-  public setRazonSocial(razonSocial: string) {
+  public setRazonSocial(razonSocial: string): void {
     this.update((state) => ({
       ...state,
       razonSocial,
@@ -542,7 +542,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece la ciudad del solicitante.
    * @param ciudad Cadena que representa la ciudad del solicitante.
    */
-  public setCiudad(ciudad: string) {
+  public setCiudad(ciudad: string): void {
     this.update((state) => ({
       ...state,
       ciudad,
@@ -552,7 +552,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece la calle del solicitante.
    * @param calle Cadena que representa la calle del solicitante.
    */
-  public setCalle(calle: string) {
+  public setCalle(calle: string): void {
     this.update((state) => ({
       ...state,
       calle,
@@ -562,7 +562,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el número o letra de la dirección del solicitante.
    * @param numeroLetra Cadena que representa el número o letra de la dirección.
    */
-  public setNumeroLetra(numeroLetra: string) {
+  public setNumeroLetra(numeroLetra: string):void {
     this.update((state) => ({
       ...state,
       numeroLetra,
@@ -572,7 +572,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece la lada del número telefónico.
    * @param lada Cadena que representa la lada.
    */
-  public setLada(lada: string) {
+  public setLada(lada: string): void {
     this.update((state) => ({
       ...state,
       lada,
@@ -582,7 +582,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el número telefónico.
    * @param telefono Cadena que representa el número telefónico.
    */
-  public setTelefono(telefono: string) {
+  public setTelefono(telefono: string): void {
     this.update((state) => ({
       ...state,
       telefono,
@@ -592,7 +592,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el número de fax.
    * @param fax Cadena que representa el número de fax.
    */
-  public setFax(fax: string) {
+  public setFax(fax: string): void {
     this.update((state) => ({
       ...state,
       fax,
@@ -602,7 +602,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el correo electrónico.
    * @param correoElectronico Cadena que representa el correo electrónico.
    */
-  public setCorreoElectronico(correoElectronico: string) {
+  public setCorreoElectronico(correoElectronico: string): void {
     this.update((state) => ({
       ...state,
       correoElectronico,
@@ -612,7 +612,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el catálogo de naciones.
    * @param nacion Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setNacion(nacion: Catalogo[] | null) {
+  public setNacion(nacion: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       nacion,
@@ -622,7 +622,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el catálogo de transportes.
    * @param transporte Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setTransporte(transporte: Catalogo[] | null) {
+  public setTransporte(transporte: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       transporte,
@@ -632,7 +632,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el valor de la casilla de verificación.
    * @param casillaVerificacion Cadena que representa el valor de la casilla.
    */
-  public setCheckbox(casillaVerificacion: string) {
+  public setCheckbox(casillaVerificacion: string): void {
     this.update((state) => ({
       ...state,
       casillaVerificacion,
@@ -642,8 +642,8 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece la ruta completa del trámite.
    * @param rutaCompleta Cadena que representa la ruta completa.
    */
-  public setRutaCompleta(rutaCompleta: string) {
-    this.update((state) => ({
+  public setRutaCompleta(rutaCompleta: string): void {
+    this.update((_state) => ({
       ...this.getValue(),
       rutaCompleta,
     }));
@@ -652,7 +652,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
   * Establece el puerto de embarque.
   * @param puertoEmbarque Cadena que representa el puerto de embarque.
   */
-  public setPuertoEmbarque(puertoEmbarque: string) {
+  public setPuertoEmbarque(puertoEmbarque: string): void {
     this.update((state) => ({
       ...state,
       puertoEmbarque,
@@ -662,7 +662,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
      * Establece el puerto de desembarque.
      * @param puertoDesembarque Cadena que representa el puerto de desembarque.
      */
-  public setPuertoDesembarque(puertoDesembarque: string) {
+  public setPuertoDesembarque(puertoDesembarque: string):void {
     this.update((state) => ({
       ...state,
       puertoDesembarque,
@@ -672,7 +672,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
   /**
    * Limpia los datos de la solicitud
    */
-  public limpiarSolicitud() {
+  public limpiarSolicitud():void {
     this.reset();
   }
 }

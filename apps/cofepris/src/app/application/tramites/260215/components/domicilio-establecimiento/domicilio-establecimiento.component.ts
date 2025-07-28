@@ -39,9 +39,9 @@ import {
 } from '../../estados/tramites/tramite260215.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
-
 export interface RespuestaTabla {
   code: number;
   data: NicoInfo[];
@@ -55,7 +55,22 @@ export interface MercanciasTabla {
 }
 
 /**
- * Componente para el domicilio del establecimiento.
+ * Componente Angular para la gestión del domicilio del establecimiento en el trámite sanitario.
+ *
+ * Este componente permite capturar, editar y visualizar la información del domicilio del establecimiento,
+ * así como la gestión de mercancías y agentes aduanales asociados. Utiliza formularios reactivos,
+ * tablas dinámicas y listas cruzadas para la selección de países y mercancías.
+ *
+ * Funcionalidades principales:
+ * - Manejo de formularios reactivos para domicilio, agente y mercancías.
+ * - Integración con servicios para la obtención y persistencia de datos.
+ * - Alternancia de secciones colapsables para una mejor experiencia de usuario.
+ * - Soporte para modo solo lectura y actualización automática según el estado del trámite.
+ * - Gestión de listas cruzadas y tablas dinámicas para la selección de países y mercancías.
+ *
+ * Uso:
+ * Este componente se utiliza dentro del flujo de captura de información de un trámite sanitario,
+ * permitiendo al usuario ingresar y consultar los datos del domicilio del establecimiento y sus mercancías.
  */
 @Component({
   selector: 'app-domicillo',
@@ -75,155 +90,108 @@ export interface MercanciasTabla {
 export class DomicilioComponent implements OnInit, OnDestroy {
   /**
    * Referencia a los componentes de la lista de fechas.
+   * Permite manipular las listas cruzadas de países y mercancías.
    */
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
   /**
    * Estado de la solicitud.
+   * Almacena el estado actual de la solicitud para el trámite 260215.
    */
   public solicitudState!: Solicitud260215State;
 
   /**
-   * Notificador para destruir observables.
+   * Notificador para destruir observables y evitar fugas de memoria.
+   * Se utiliza en combinación con takeUntil en las suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Constante para el mensaje de alerta.
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
    */
-  INPUT_FECHA_CADUCIDAD_CONFIG = INPUT_FECHA_CADUCIDAD_CONFIG;
+  public esFormularioSoloLectura: boolean = false;
+
   /**
-   * Constructor del componente.
-   * @param fb
-   * @param tramite260215Store
-   * @param tramite260215Query
-   * @param service
+   * Constante para la configuración del input de fecha de caducidad.
+   * Proporciona la configuración necesaria para el componente de fecha.
+   */
+  public INPUT_FECHA_CADUCIDAD_CONFIG = INPUT_FECHA_CADUCIDAD_CONFIG;
+  /**
+   * Constructor del componente DomicilioComponent.
+   *
+   * @param fb Instancia de FormBuilder para la creación y gestión de formularios reactivos.
+   * @param tramite260215Store Store para el manejo del estado relacionado al trámite 260215.
+   * @param tramite260215Query Query para consultar el estado del trámite 260215.
+   * @param service Servicio para operaciones relacionadas con permisos sanitarios.
+   * @param consultaioQuery Query para consultar el estado de la sección de Consultaio.
+   *
+   * Suscribe al estado de `Consultaio` para obtener información actualizada sobre el estado del formulario.
+   * Asigna el valor de solo lectura a la propiedad `esFormularioSoloLectura` y llama a `inicializarEstadoFormulario()`
+   * cada vez que el estado cambia. La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
    */
   constructor(
     private readonly fb: FormBuilder,
     private tramite260215Store: Tramite260215Store,
     private tramite260215Query: Tramite260215Query,
-    private service: ServiciosPermisoSanitarioService
+    private service: ServiciosPermisoSanitarioService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // constructor
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * Grupo de formularios principal.
-   * @property {FormGroup} domicilio
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   * Si el formulario está en modo solo lectura, lo deshabilita; de lo contrario, lo habilita.
    */
-  domicilio!: FormGroup;
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.domicilio.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.domicilio.enable();
+    }
+  }
 
   /**
-   * Grupo de formularios para el agente aduanal.
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Si está en modo solo lectura, carga los datos y deshabilita el formulario.
+   * Si no, inicializa el formulario para edición.
    */
-  formAgente!: FormGroup;
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
 
   /**
-   * Grupo de formularios para las mercancias.
+   * Inicializa los formularios reactivos utilizados en el componente, así como la obtención de datos necesarios para su funcionamiento.
+   *
+   * - Suscribe al observable `selectSolicitud$` para obtener y asignar el estado de la solicitud actual.
+   * - Llama a los métodos para obtener la lista de estados, la tabla de datos y los datos de mercancías.
+   * - Configura los formularios `domicilio`, `formAgente` y `formMercancias` con sus respectivos controles y validadores.
+   *
+   * @remarks
+   * Este método debe ser llamado durante la inicialización del componente para asegurar que los formularios y datos requeridos estén disponibles.
    */
-  formMercancias!: FormGroup;
-
-  /**
-   * Control de formulario para la aduanasDeEntradaFecha.
-   */
-  aduanasDeEntradaFecha: FormControl = new FormControl('');
-
-  /**
-   * Control de formulario para la fecha aduanasDeEntradaFechaSeleccionada.
-   */
-  aduanasDeEntradaFechaSeleccionada: FormControl = new FormControl('');
-
-  /**
-   * Control de formulario para la aduanasDeEntradaFechaSeleccionada.
-   */
-  estado: Catalogo[] = [];
-
-  /**
-   * Lista de paises.
-   */
-  public crosListaDePaises = CROSLISTA_DE_PAISES;
-
-  /**
-   * Tabla de selección de checkbox.
-   */
-  tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
-
-  /**
-   * Tabla de selección de radio.
-   */
-  nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
-
-  /**
-   * Datos de la tabla de selección de radio.
-   */
-  nicoTablaDatos: NicoInfo[] = [];
-
-  /**
-   * Tabla de selección de checkbox.
-   */
-  mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
-
-  /**
-   * Datos de la tabla de selección de checkbox.
-   */
-  mercanciasTablaDatos: MercanciasInfo[] = [];
-
-  /**
-   * Lista de aduanas de entrada seleccionadas.
-   */
-  aduanasDeEntradaSeleccionadas: string[] = [];
-
-  /**
-   * Lista de aduanas de entrada seleccionadas.
-   */
-  aduanasDeEntradaDatos: string[] = [];
-
-  /**
-   * Indica si la sección es colapsable.
-   * @property {boolean} colapsable
-   */
-  colapsable: boolean = false;
-
-  /**
-   * Indica si la sección es colapsableDuos.
-   * @property {boolean} colapsableDuos
-   */
-  colapsableDuos: boolean = false;
-
-  /**
-   * Indica si la sección es colapsableTres.
-   * @property {boolean} colapsableTres
-   */
-  colapsableTres: boolean = false;
-
-  /**
-   * Lista de rangos de días seleccionarOrigenDelPais.
-   */
-  seleccionarOrigenDelPais: string[] = this.crosListaDePaises;
-
-  /**
-   * Lista de rangos de días seleccionarOrigenDelPaisDuos.
-   */
-  seleccionarOrigenDelPaisDuos: string[] = this.crosListaDePaises;
-
-  /**
-   * Lista de rangos de días seleccionarOrigenDelPaisTres.
-   */
-  seleccionarOrigenDelPaisTres: string[] = this.crosListaDePaises;
-
-  /**
-   * Etiqueta de la lista de fechas.
-   * */
-  public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionados',
-  };
-
-  /**
-   * Etiqueta de la lista de fechas.
-   * */
-  ngOnInit() {
+  inicializarFormulario(): void {
     this.tramite260215Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -250,7 +218,6 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       ],
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas],
-      numeroPermiso: [this.solicitudState?.numeroPermiso],
     });
 
     this.formAgente = this.fb.group({
@@ -279,7 +246,134 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Botones de acción disponibles para gestionar las listas de fechas.
+   * Grupo de formularios principal.
+   * Contiene los controles reactivos del formulario de domicilio del establecimiento.
+   */
+  public domicilio!: FormGroup;
+
+  /**
+   * Grupo de formularios para el agente aduanal.
+   * Contiene los controles reactivos del formulario de agente aduanal.
+   */
+  public formAgente!: FormGroup;
+
+  /**
+   * Grupo de formularios para las mercancías.
+   * Contiene los controles reactivos del formulario de mercancías.
+   */
+  public formMercancias!: FormGroup;
+
+  /**
+   * Control de formulario para la aduanasDeEntradaFecha.
+   * Permite gestionar la fecha de entrada de aduanas.
+   */
+  public aduanasDeEntradaFecha: FormControl = new FormControl('');
+
+  /**
+   * Control de formulario para la fecha aduanasDeEntradaFechaSeleccionada.
+   * Permite gestionar la fecha seleccionada de entrada de aduanas.
+   */
+  public aduanasDeEntradaFechaSeleccionada: FormControl = new FormControl('');
+
+  /**
+   * Lista de estados obtenida del servicio.
+   * Se utiliza para poblar el catálogo de estados en el formulario.
+   */
+  public estado: Catalogo[] = [];
+
+  /**
+   * Lista de países utilizada en las listas cruzadas.
+   */
+  public crosListaDePaises = CROSLISTA_DE_PAISES;
+
+  /**
+   * Tabla de selección de checkbox para mercancías.
+   */
+  public tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Tabla de selección de radio para NICO.
+   */
+  public nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
+
+  /**
+   * Datos de la tabla de selección de radio para NICO.
+   */
+  public nicoTablaDatos: NicoInfo[] = [];
+
+  /**
+   * Tabla de selección de checkbox para mercancías.
+   */
+  public mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
+
+  /**
+   * Datos de la tabla de selección de checkbox para mercancías.
+   */
+  public mercanciasTablaDatos: MercanciasInfo[] = [];
+
+  /**
+   * Lista de aduanas de entrada seleccionadas.
+   */
+  public aduanasDeEntradaSeleccionadas: string[] = [];
+
+  /**
+   * Lista de aduanas de entrada datos.
+   */
+  public aduanasDeEntradaDatos: string[] = [];
+
+  /**
+   * Indica si la sección es colapsable.
+   * Permite alternar la visualización de la sección principal del formulario.
+   */
+  public colapsable: boolean = false;
+
+  /**
+   * Indica si la sección es colapsableDuos.
+   * Permite alternar la visualización de la segunda sección colapsable.
+   */
+  public colapsableDuos: boolean = false;
+
+  /**
+   * Indica si la sección es colapsableTres.
+   * Permite alternar la visualización de la tercera sección colapsable.
+   */
+  public colapsableTres: boolean = false;
+
+  /**
+   * Lista de rangos de días para seleccionar el origen del país.
+   */
+  public seleccionarOrigenDelPais: string[] = this.crosListaDePaises;
+
+  /**
+   * Lista de rangos de días para seleccionar el origen del país (segunda lista).
+   */
+  public seleccionarOrigenDelPaisDuos: string[] = this.crosListaDePaises;
+
+  /**
+   * Lista de rangos de días para seleccionar el origen del país (tercera lista).
+   */
+  public seleccionarOrigenDelPaisTres: string[] = this.crosListaDePaises;
+
+  /**
+   * Etiqueta de la lista de fechas para países de procedencia.
+   * Define los textos de los lados izquierdo y derecho de la lista cruzada.
+   */
+  public paisDeProcedenciaLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de procedencia',
+    derecha: 'País(es) seleccionados',
+  };
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Llama a la función `inicializarEstadoFormulario` para configurar el estado inicial del formulario.
+   */
+  ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Botones de acción disponibles para gestionar las listas de fechas (primer grupo).
+   * Permiten agregar o quitar países de la lista cruzada principal.
    */
   readonly paisDeProcedenciaBotones = [
     {
@@ -309,7 +403,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   ];
 
   /**
-   * Botones de acción disponibles para gestionar las listas de fechas.
+   * Botones de acción disponibles para gestionar las listas de fechas (segundo grupo).
+   * Permiten agregar o quitar países de la segunda lista cruzada.
    */
   readonly paisDeProcedenciaBotonesDuos = [
     {
@@ -339,7 +434,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   ];
 
   /**
-   * Botones de acción disponibles para gestionar las listas de fechas.
+   * Botones de acción disponibles para gestionar las listas de fechas (tercer grupo).
+   * Permiten agregar o quitar países de la tercera lista cruzada.
    */
   readonly paisDeProcedenciaBotonesTres = [
     {
@@ -369,8 +465,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   ];
 
   /**
-   * Método para obtener el valor de la fecha seleccionada.
-   * @param event
+   * Método para obtener la lista de estados desde el servicio y asignarla al catálogo de estados.
    */
   obtenerEstadoList(): void {
     this.service
@@ -382,7 +477,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método para obtener el valor de la fecha seleccionada.
+   * Método para obtener los datos de la tabla NICO desde el servicio y asignarlos a la tabla correspondiente.
    */
   obtenerTablaDatos(): void {
     this.service
@@ -394,7 +489,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método para obtener el valor de la fecha seleccionada.
+   * Método para obtener los datos de la tabla de mercancías desde el servicio y asignarlos a la tabla correspondiente.
    */
   obtenerMercanciasDatos(): void {
     this.service
@@ -406,8 +501,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método para obtener el valor de la fecha seleccionada.
-   * @param event
+   * Método para manejar el cambio del checkbox de aviso y habilitar/deshabilitar el campo de licencia sanitaria.
+   * @param event Evento de cambio del checkbox.
    */
   onAvisoCheckboxChange(event: Event): void {
     const CHECKBOX = event.target as HTMLInputElement;
@@ -419,26 +514,26 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Alterna el estado colapsable de la sección del formulario.
-   * @method mostrar_colapsable
+   * Alterna el estado colapsable de la sección principal del formulario.
+   * Permite mostrar u ocultar la sección principal.
    */
-  mostrar_colapsable() {
+  mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
   /**
-   * Alterna el estado colapsable de la sección del formulario.
-   * @method mostrar_colapsableDuos
+   * Alterna el estado colapsable de la segunda sección del formulario.
+   * Permite mostrar u ocultar la segunda sección.
    */
-  mostrar_colapsableDuos() {
+  mostrar_colapsableDuos(): void {
     this.colapsableDuos = !this.colapsableDuos;
   }
 
   /**
-   * Alterna el estado colapsable de la sección del formulario.
-   * @method mostrar_colapsableTres
+   * Alterna el estado colapsable de la tercera sección del formulario.
+   * Permite mostrar u ocultar la tercera sección.
    */
-  mostrar_colapsableTres() {
+  mostrar_colapsableTres(): void {
     this.colapsableTres = !this.colapsableTres;
   }
   /**
@@ -462,7 +557,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
-   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   * Libera recursos y cancela suscripciones para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

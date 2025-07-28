@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261101.store';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
@@ -11,6 +12,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-manifiestos',
@@ -77,12 +79,17 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
     { label: 'Si', value: 'Si' },
   ];
 
+ 
   /**
-   * Subject para limpiar subscripciones y prevenir memory leaks.
-   * @private
+   * Subject para notificar la destrucción del componente.
    */
-  private destroy$ = new Subject<void>();
+  private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    * @param fb FormBuilder para construir formularios reactivos.
@@ -92,9 +99,17 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private store: DatosProcedureStore,
-    private query: DatosProcedureQuery
+    private query: DatosProcedureQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor del componente
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState: { readonly: boolean }) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -118,23 +133,36 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
  * 
  * @returns {void}
  */
-  public mercanciasData(): void {
-    this.Aduana = this.fb.group({
-      aduanas: [
-        {
-          value: this.seccionState?.aduanas || '',
-          disabled: false,
-        },
-      ],
-      informacionConfidencial: [
-        {
-          value: this.seccionState?.informacionConfidencial || '',
-          disabled: false,
-        },
-      ],
-      Si: [{ value: '', disabled: false }],
-    });
+public mercanciasData(): void {
+  this.query.selectProrroga$
+  .pipe(
+    takeUntil(this.destroyNotifier$),
+    map((seccionState) => {
+      this.seccionState = seccionState;
+    })
+  )
+  .subscribe()
+  this.Aduana = this.fb.group({
+    aduanas: [
+      {
+        value: this.seccionState?.aduanas || '',
+        disabled: false,
+      },
+    ],
+    informacionConfidencial: [
+      {
+        value: this.seccionState?.informacionConfidencial || '',
+        disabled: false,
+      },
+    ],
+    Si: [{ value: '', disabled: false }],
+  });
+  if (this.esFormularioSoloLectura) {
+    this.Aduana.disable();
+  } else {
+    this.Aduana.enable();
   }
+}
 
   /**
    * Establece un valor en la tienda a partir de un campo del formulario.
@@ -145,16 +173,6 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
   public setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
     this.store.establecerDatos({ [campo]: VALOR });
-  }
-
-  /**
-   * Hook de destrucción del componente.
-   * Finaliza las subscripciones.
-   * @public
-   */
-  public ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
 /**
@@ -172,11 +190,49 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
  */
   obtenerDatosFormulario(): void {
     this.query.selectProrroga$
-      ?.pipe(takeUntil(this.destroy$))
+      ?.pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: DatosProcedureState) => {
         this.seccionState = data;
         this.declaracionEstaMarcado = Boolean(this.seccionState?.aduanas);
         this.mercanciasData();
       });
+  }
+
+  /**
+ * Inicializa el estado del formulario.
+ * 
+ * Este método realiza las siguientes acciones:
+ * 
+ * 1. Llama al método `obtenerDatosFormulario` para cargar los datos del estado actual.
+ * 2. Si el formulario está en modo solo lectura (`esFormularioSoloLectura`):
+ *    - Deshabilita el formulario reactivo `Aduana` utilizando el método `disable`.
+ * 3. Si el formulario no está en modo solo lectura:
+ *    - Habilita el formulario reactivo `Aduana` utilizando el método `enable`.
+ *    - Llama nuevamente al método `obtenerDatosFormulario` para asegurarse de que los datos estén actualizados.
+ *    - Llama al método `mercanciasData` para cargar los datos relacionados con las mercancías.
+ * 
+ * Este método es útil para configurar el estado inicial del formulario y sincronizarlo
+ * con los datos del estado global de la aplicación.
+ * 
+ * @returns {void}
+ */
+  inicializarEstadoFormulario(): void {
+    this.obtenerDatosFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.Aduana.disable();
+    } else {
+      this.Aduana.enable();
+      this.obtenerDatosFormulario();
+      this.mercanciasData();
+    }
+  }
+  /**
+   * Hook de destrucción del componente.
+   * Finaliza las subscripciones.
+   * @public
+   */
+  public ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

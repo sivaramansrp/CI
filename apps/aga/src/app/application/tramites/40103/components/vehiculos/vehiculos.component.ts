@@ -1,829 +1,768 @@
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { Catalogo, TablaSeleccion } from '@ng-mf/data-access-user';
-import { PagoDerechosLista, Vehiculo } from '../../../40103/models/registro-muestras-mercancias.model';
-import { Chofer40103Query } from '../../estados/chofer40103.query';
-import { Chofer40103Service } from '../../estados/chofer40103.service';
-import { Chofer40103Store } from '../../estados/chofer40103.store';
-import { DatosDelVehículoPaisEmisor } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Modal } from 'bootstrap';
-import { Observable } from 'rxjs/internal/Observable';
-import { ReplaySubject } from 'rxjs';
-import { Subject } from 'rxjs';
-import { Subscription } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
-import { VEHICULO_PAGE } from '../../enum/transportista-terrestre.enum';
-import { Validators } from '@angular/forms';
-import { of } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 
+import {
+  Catalogo,
+  Notificacion,
+  TablaSeleccion,
+  ValidacionesFormularioService,
+  ConsultaioQuery,
+  ConsultaioState
+} from '@ng-mf/data-access-user';
+
+import {
+  UNIDAD_TABLA_CONFIG,
+  VEHICULOS_TABLA_CONFIG
+} from '../../enum/transportista-terrestre.enum';
+
+import {
+  CatalogoLista,
+  UnidadTabla,
+  VehiculoTabla,
+  VehiculoTablaDatos
+} from '../../models/registro-muestras-mercancias.model';
+
+import {
+  Tramite40103State,
+  Tramite40103Store
+} from '../../estados/tramite40103.store';
+
+import { Tramite40103Query } from '../../estados/tramite40103.query';
+import { modificarTerrestreService } from '../services/modificacar-terrestre.service';
+/**
+ * @component VehiculosComponent
+ * @description
+ * Componente responsable de la gestión de vehículos y unidades de arrastre en el trámite 40103.
+ * Permite agregar, editar, eliminar y mostrar información de vehículos y unidades de arrastre,
+ * así como gestionar los formularios reactivos, la interacción con tablas dinámicas y la visualización de modales.
+ *
+ * También se encarga de la comunicación con servicios para obtener catálogos y datos, y de la sincronización con el store de estado.
+ *
+ * @selector app-vehiculos
+ * @templateUrl ./vehiculos.component.html
+ * @styleUrl ./vehiculos.component.scss
+ *
+ * @implements OnInit
+ */
 @Component({
   selector: 'app-vehiculos',
   templateUrl: './vehiculos.component.html',
   styleUrl: './vehiculos.component.scss',
 })
-export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
+export class VehiculosComponent implements OnInit {
   /**
-   * Referencia al elemento modal en la plantilla.
+   * @property {VehiculoTabla[]}
+   * Lista de vehículos.
    */
-  @ViewChild('exampleModal', { static: false }) modalElement!: ElementRef;
+  VehiculoTabla: VehiculoTabla[] = [];
 
   /**
-   * Referencia a la tabla de datos en la plantilla.
+   * @property {ElementRef}
+   * Referencia al modal de vehículo.
    */
-  @ViewChild('dataTable', { static: false }) dataTable!: ElementRef;
+  @ViewChild('vehiculoModal') vehiculoModal!: ElementRef;
 
   /**
-   * Catálogo de datos del vehículo y país emisor.
+   * @property {ElementRef}
+   * Referencia al modal de unidad de arrastre.
    */
-  @Input() catalogo: DatosDelVehículoPaisEmisor[] = [];
+  @ViewChild('unidadModal') unidadModal!: ElementRef;
 
   /**
-   * Tipo de selección de la tabla (CHECKBOX).
+   * @property {FormGroup}
+   * Formulario reactivo para vehículos.
    */
-  tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
+  vehiculoFormulario!: FormGroup;
 
   /**
-   * Sujeto utilizado para limpiar las suscripciones al destruir el componente.
+   * @property {FormGroup}
+   * Formulario reactivo para unidades de arrastre.
    */
-  private destroy$ = new Subject<void>();
+  unidadFormulario!: FormGroup;
 
   /**
-   * Sujeto utilizado para notificar cuando se destruye el componente.
+   * @property {Subject<void>}
+   * Sujeto para destruir las suscripciones.
    */
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Lista de pagos de derechos.
+   * @property {Catalogo[]}
+   * Catálogo de tipos de vehículo.
    */
-  pagoDerechosLista: PagoDerechosLista[] = [] as PagoDerechosLista[];
+  tipoDeVehiculoCatalogo: Catalogo[] = [];
 
   /**
-   * Catálogo de tipos de vehículos de arrastre.
+   * @property {Catalogo[]}
+   * Catálogo de tipos de arrastre.
    */
-  public tipoVehiculoArrastreAGA!: Catalogo[];
+  tipoArrastre: Catalogo[] = [];
 
   /**
+   * @property {Catalogo[]}
+   * Catálogo de años.
+   */
+  anoCatalogo: Catalogo[] = [];
+
+  /**
+   * @property {Catalogo[]}
    * Catálogo de países emisores.
    */
-  public paisEmisor!: Catalogo[];
+  paisEmisorCatalogo: Catalogo[] = [];
 
   /**
-   * Catálogo de colores de vehículos.
+   * @property {Notificacion}
+   * Notificación actual.
    */
-  public colorAGA!: Catalogo[];
+  public nuevaNotificacion!: Notificacion;
 
   /**
-   * Catálogo de países emisores para la segunda placa.
-   */
-  public paisEmisor2daPlaca!: Catalogo[];
-
-  /**
-   * Catálogo de colores de vehículos para la solicitud.
-   */
-  public solicitudVehiculoColor!: Catalogo[];
-
-  /**
-   * Instancia del modal de Bootstrap.
-   */
-  private modalInstance!: Modal;
-
-  /**
-   * Formulario reactivo para los datos del vehículo.
-   */
-  formVehiculo!: FormGroup;
-
-  /**
-   * Observable que contiene la lista de vehículos.
-   */
-  vehiculosList$: Observable<unknown[]> = new Observable();
-  private subscriptions: Subscription = new Subscription();
-  /**
-   * Lista de unidades de arrastre.
-   */
-  unidadesdearrastre: unknown[] = [];
-
-  /**
-   * Observable que contiene la lista de unidades de arrastre.
-   */
-  unidadesdearrastreList$: Observable<unknown[]> = new Observable();
-
-  /**
-   * Pestaña seleccionada actualmente.
+   * @property {string}
+   * Nombre de la pestaña seleccionada.
    */
   selectedTab: string = 'Parque vehicular';
 
   /**
+   * @property {string}
    * Nombre de la pestaña activa.
    */
   activeTab: string = 'parquevehicular';
 
   /**
-   * Lista de vehículos con arrastre.
+   * @property {TablaSeleccion}
+   * Tipo de selección de la tabla.
    */
-  vehiculoArrastr: unknown[] = [];
+  tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
   /**
-   * Catálogo de vehículos.
+   * @property {Tramite40103State}
+   * Estado actual del trámite.
    */
-  vehiculosA: Catalogo[] = [];
+  public tramiteState!: Tramite40103State;
 
   /**
-   * Catálogo de vehículos para la vista.
+   * @property {ElementRef}
+   * Referencia al botón de cierre del modal de vehículo.
    */
-  VehiculoVEH: Catalogo[] = [];
+  @ViewChild('closeModal') public closeModal!: ElementRef;
 
   /**
-   * Catálogo de colores de vehículos.
+   * @property {ElementRef}
+   * Referencia al botón de cierre del modal de unidad de arrastre.
    */
-  VehiculoColors: Catalogo[] = [];
+  @ViewChild('closeUnidadModal') public closeUnidadModal!: ElementRef;
 
   /**
-   * Lista de vehículos.
+   * @property {boolean}
+   * Indica si el formulario o componente está en modo solo lectura.
    */
-  vehiculos: Vehiculo[] = [];
+  isReadonly: boolean = false;
 
   /**
-   * Lista de países emisores para la segunda placa.
+   * @property {ConsultaioState}
+   * Almacena el estado de consulta actual.
    */
-  PaisEmisor2daPlaca: DatosDelVehículoPaisEmisor[] = [];
+  datosConsulta!: ConsultaioState;
+
+/**
+ * Constructor del componente `VehiculosComponent`.
+ *
+ * - Inicializa los servicios y dependencias necesarias para la gestión de vehículos y unidades de arrastre.
+ * - Permite la inyección de servicios para formularios reactivos, gestión de estado, validaciones y consultas.
+ *
+ * @constructor
+ * @param {FormBuilder} fb - Servicio para la creación y gestión de formularios reactivos.
+ * @param {Tramite40103Store} store - Store del trámite 40103 para la gestión del estado global.
+ * @param {Tramite40103Query} tramiteQuery - Query para consultar el estado del trámite 40103.
+ * @param {modificarTerrestreService} modificarTerrestreService - Servicio para modificar y obtener datos terrestres.
+ * @param {ValidacionesFormularioService} validacionesService - Servicio para validaciones personalizadas de formularios.
+ * @param {ConsultaioQuery} consultaioQuery - Servicio para consultar el estado de consulta y determinar el modo de solo lectura.
+ */
+  constructor(
+    public fb: FormBuilder,
+    public store: Tramite40103Store,
+    public tramiteQuery: Tramite40103Query,
+    public modificarTerrestreService: modificarTerrestreService,
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
+  ) { 
+    // Lógica constructora
+  }
 
   /**
-   * Etiqueta para el tipo de vehículo en la solicitud.
+   * Método de ciclo de vida de Angular que se llama cuando el componente se inicializa.
    */
-  labelSolicitudVehiculoTipoVehiculo =
-    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_TIPO_VEHICULO;
+  ngOnInit(): void {
+    this.tramiteQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.tramiteState = seccionState;
+        })
+      )
+      .subscribe();
 
+/**
+ * Suscribe al estado de consulta para determinar si el formulario debe estar en modo solo lectura.
+ * Si el estado indica `readonly`, actualiza las propiedades `datosConsulta` e `isReadonly` del componente.
+ *
+ * @observable selectConsultaioState$
+ * @effect Actualiza el modo de solo lectura del formulario según el estado de consulta.
+ */
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          if (seccionState.readonly) {
+            this.datosConsulta = seccionState;
+            this.isReadonly = this.datosConsulta.readonly;
+          }
+        })
+      ).subscribe();
   /**
-   * Título de los datos del vehículo en la solicitud.
-   */
-  solicitudTituloDatosVehiculo: string =
-    VEHICULO_PAGE.SOLICITUD_TITULO_DATOS_VEHICULO;
+ * Inicializa la pestaña activa, los formularios y carga los catálogos necesarios al iniciar el componente.
+ *
+ * - Selecciona la pestaña "Parque vehicular" como activa.
+ * - Inicializa los formularios reactivos de vehículo y unidad de arrastre.
+ * - Carga los catálogos de tipos de vehículo, arrastre, año y país emisor.
+ */
+    this.selectTab('parquevehicular');
+    this.inicializarFormulario();
+    this.cargarTipoDeVehiculo();
 
-  /**
-   * Etiqueta para el VIN del vehículo en la solicitud.
-   */
-  labelSolicitudVehiculoVin: string =
-    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_VIN;
+/**
+ * Deshabilita inicialmente el campo 'descripcion' en ambos formularios y gestiona su habilitación dinámica.
+ *
+ * - El campo 'descripcion' de `vehiculoFormulario` y `unidadFormulario` se deshabilita por defecto.
+ * - Si el usuario selecciona un tipo de vehículo o unidad de arrastre con ID igual a 1,
+ *   el campo 'descripcion' correspondiente se habilita; en caso contrario, se deshabilita.
+ *
+ * Esto permite mostrar u ocultar el campo de descripción según la selección del usuario.
+ */
+    this.vehiculoFormulario.get('descripcion')?.disable();
+    this.unidadFormulario.get('descripcion')?.disable();
 
-  /**
-   * Etiqueta para los puntos en la solicitud.
-   */
-  labelPuntos: string = VEHICULO_PAGE.LABEL_PUNTOS;
+    this.vehiculoFormulario.get('tipoDeVehiculo')?.valueChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((selectedValue) => {
+        const id = Number(selectedValue);
+        if (id === 1) {
+          this.vehiculoFormulario.get('descripcion')?.enable();
+        } else {
+          this.vehiculoFormulario.get('descripcion')?.disable();
+        }
+      });
 
-  /**
-   * Texto de selección no disponible para el tipo de vehículo.
-   */
-  nonSelectionTextTipoVehiculo: string =
-    VEHICULO_PAGE.NON_SELECTION_TEXT_TIPO_VEHICULO;
+    this.unidadFormulario.get('tipoDeUnidadArrastre')?.valueChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((selectedValue) => {
+        const id = Number(selectedValue);
+        if (id === 1) {
+          this.unidadFormulario.get('descripcion')?.enable();
+        } else {
+          this.unidadFormulario.get('descripcion')?.disable();
+        }
+      });
+  }
 
-  /**
-   * Texto de selección no disponible para el país emisor.
-   */
-  nonSelectionTextPaisEmisor: string =
-    VEHICULO_PAGE.NON_SELECTION_TEXT_PAIS_EMISOR;
+/**
+ * Configuración de la tabla de vehículos.
+ *
+ * Define las columnas (encabezadas) y los datos que se mostrarán en la tabla de vehículos.
+ * La primera columna corresponde al ID del vehículo, seguida de las columnas definidas en `VEHICULOS_TABLA_CONFIG`.
+ *
+ * @property {Object} vehiculosTablaConfig
+ * @property {Array<Object>} vehiculosTablaConfig.encabezadas - Arreglo de objetos que define los encabezados de la tabla.
+ * @property {string} vehiculosTablaConfig.encabezadas[].encabezado - Nombre del encabezado.
+ * @property {function} vehiculosTablaConfig.encabezadas[].clave - Función que retorna el valor de la columna para un vehículo.
+ * @property {number} vehiculosTablaConfig.encabezadas[].orden - Orden de la columna en la tabla.
+ * @property {VehiculoTabla[]} vehiculosTablaConfig.datos - Datos de los vehículos a mostrar en la tabla.
+ */
+  vehiculosTablaConfig: {
+    encabezadas: {
+      encabezado: string;
+      clave: (item: VehiculoTabla) => string;
+      orden: number;
+    }[];
+    datos: VehiculoTabla[];
+  } = {
+      ...VEHICULOS_TABLA_CONFIG,
+      encabezadas: [
+        {
+          encabezado: 'ID',
+          clave: (item: VehiculoTabla) => String(item.idDeVehiculo),
+          orden: 0,
+        },
+        ...VEHICULOS_TABLA_CONFIG.encabezadas.map((col, idx) => ({ ...col, orden: idx + 1 }))
+      ]
+    };
 
-  /**
-   * Texto de selección no disponible para el color del vehículo.
-   */
-  nonSelectionTextColorAGA: string = VEHICULO_PAGE.NON_SELECTION_TEXT_COLOR_AGA;
+/**
+ * Configuración de la tabla de unidades de arrastre.
+ *
+ * Define las columnas (encabezadas) y los datos que se mostrarán en la tabla de unidades de arrastre,
+ * utilizando la configuración base proporcionada por `UNIDAD_TABLA_CONFIG`.
+ *
+ * @property {Object} unidadesTablaConfig
+ * @property {Array<Object>} unidadesTablaConfig.encabezadas - Arreglo de objetos que define los encabezados de la tabla.
+ * @property {string} unidadesTablaConfig.encabezadas[].encabezado - Nombre del encabezado.
+ * @property {function} unidadesTablaConfig.encabezadas[].clave - Función que retorna el valor de la columna para una unidad.
+ * @property {number} unidadesTablaConfig.encabezadas[].orden - Orden de la columna en la tabla.
+ * @property {UnidadTabla[]} unidadesTablaConfig.datos - Datos de las unidades de arrastre a mostrar en la tabla.
+ */
+  unidadesTablaConfig: {
+    encabezadas: {
+      encabezado: string;
+      clave: (item: UnidadTabla) => string;
+      orden: number;
+    }[];
+    datos: UnidadTabla[];
+  } = UNIDAD_TABLA_CONFIG;
 
-  /**
-   * Texto de selección no disponible para los años.
-   */
-  nonSelectionTextAnios: string = VEHICULO_PAGE.NON_SELECTION_TEXT_ANIOS;
-
-  /**
-   * Etiqueta para el ID del vehículo en la solicitud.
-   */
-  labelSolicitudVehiculoIdDeVehiculo: string =
-    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_ID_DEVEHICULO;
-
-  /**
-   * Etiqueta para el número de placas en la solicitud.
-   */
-  labelSolicitudVehiculoNumeroPlacas: string =
-    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_NUMEROPLACAS;
-
-  /**
-   * Etiqueta para el país emisor en la solicitud.
-   */
-  labelSolicitudVehiculoPaisEmisor: string =
-    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_PAIS_EMISOR;
-
-  /**
-   * Etiqueta para el estado o provincia en la solicitud.
-   */
-  labelSolicitudDomicilioEstado: string =
-    VEHICULO_PAGE.LABEL_SOLICITUD_DOMICILIO_ESTADO;
-
-  /**
-   * Etiqueta para la marca del vehículo en la solicitud.
-   */
-  labelSolicitudVehiculoMarca: string =
-    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_MARCA;
-
-  /**
-   * Etiqueta para el modelo del vehículo en la solicitud.
-   */
-  labelSolicitudVehiculoModelo: string =
-    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_MODELO;
-
-  /**
-   * Etiqueta para el año del vehículo en la solicitud.
-   */
-  labelAnioVEH: string = VEHICULO_PAGE.LABEL_ANIO_VEH;
-
-  /**
-   * Etiqueta para el transponder del vehículo en la solicitud.
-   */
-  labelSolicitudVehiculoTransponder: string =
-    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_TRANSPONDER;
-
-  /**
-   * Etiqueta para el color del vehículo en la solicitud.
-   */
-  labelSolicitudVehiculoColor: string =
-    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_COLOR;
-
-  /**
-   * Etiqueta para el número económico del vehículo en la solicitud.
-   */
-  labelSolicitudVehiculoNumeroEconomico: string =
-    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_NUMERO_ECONOMICO;
-
-  /**
-   * Etiqueta para el número de la segunda placa en la solicitud.
-   */
-  labelSolicitudVehiculoNumero2daPlaca: string =
-    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_NUMERO_2DAPLACA;
-
-  /**
-   * Etiqueta para el emisor de la segunda placa en la solicitud.
-   */
-  labelSolicitudVehiculoEmisor2daPlaca: string =
-    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_EMISOR_2DAPLACA;
-
-  /**
-   * Etiqueta para el país emisor de la segunda placa en la solicitud.
-   */
-  labelSolicitudVehiculoPaisEmisor2daPlaca: string =
-    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_PAIS_EMISOR_2DAPLACA;
-
-  /**
-   * Etiqueta para la descripción del vehículo en la solicitud.
-   */
-  labelDescripcionVehiculo: string = VEHICULO_PAGE.LABEL_DESCRIPCION_VEHICULO;
-
-  /**
-   * Texto del botón para limpiar el formulario.
-   */
-  botonLimpiar: string = VEHICULO_PAGE.BOTON_LIMPIAR;
-
-  /**
-   * Texto del botón para cancelar la operación.
-   */
-  botonCancelar: string = VEHICULO_PAGE.BOTON_CANCELAR;
-
-  /**
-   * Texto del botón para guardar los datos.
-   */
-  botonGuardar: string = VEHICULO_PAGE.BOTON_GUARDAR;
-  /**
-   * Selecciona una pestaña.
-   * @param tabName El nombre de la pestaña a seleccionar.
-   */
-  selectTab(tabName: string): void {
+/**
+ * Cambia la pestaña seleccionada y activa en el componente.
+ *
+ * Asigna el nombre de la pestaña visible (`selectedTab`) y el identificador de la pestaña activa (`activeTab`)
+ * según el valor recibido. Si el valor es 'parquevehicular', selecciona 'Parque vehicular', de lo contrario selecciona 'Unidad de arrastre'.
+ *
+ * @param {string} tabName - Identificador de la pestaña a seleccionar ('parquevehicular' o 'unidaddearrastre').
+ * @returns {string} El identificador de la pestaña activa.
+ */
+  selectTab(tabName: string): string {
     this.selectedTab =
       tabName === 'parquevehicular' ? 'Parque vehicular' : 'Unidad de arrastre';
     this.activeTab = tabName;
+    return this.activeTab;
   }
-  /**
-   * Representa una lista de configuraciones para el parque vehicular, donde cada elemento
-   * define las propiedades de un vehículo y su mapeo correspondiente a los datos de origen.
-   *
-   * Cada objeto en la lista contiene:
-   * - `encabezado`: El nombre de la columna que se mostrará en la interfaz de usuario.
-   * - `clave`: Una función que toma un objeto de tipo `PagoDerechosLista` y devuelve el valor correspondiente.
-   * - `orden`: El orden en el que se deben mostrar las columnas.
-   *
-   * @type {Array<{ encabezado: string; clave: (item: PagoDerechosLista) => unknown; orden: number }>}
-   */
-  ParqueVehicular = [
-    {
-      encabezado: 'Número de identificación vehicular',
-      clave: (item: PagoDerechosLista): string | undefined => item.número,
-      orden: 1,
-    },
-    {
-      encabezado: 'Tipo de vehículo',
-      clave: (item: PagoDerechosLista): string | undefined => item.calle,
-      orden: 2,
-    },
-    {
-      encabezado: 'ID de vehículo',
-      clave: (item: PagoDerechosLista): string | undefined => item.estado,
-      orden: 3,
-    },
-    {
-      encabezado: 'Número de Placas',
-      clave: (item: PagoDerechosLista): string | undefined => item.pais,
-      orden: 4,
-    },
-    {
-      encabezado: 'País Emisor',
-      clave: (item: PagoDerechosLista): string | undefined =>
-        item.apellidoPaterno,
-      orden: 5,
-    },
-    {
-      encabezado: 'Estado o provincia',
-      clave: (item: PagoDerechosLista): string | undefined =>
-        item.apellidoMaterno,
-      orden: 6,
-    },
-    {
-      encabezado: 'Marca',
-      clave: (item: PagoDerechosLista): string | undefined => item.rfc,
-      orden: 7,
-    },
-    {
-      encabezado: 'Modelo',
-      clave: (item: PagoDerechosLista): string | undefined => item.gafete,
-      orden: 8,
-    },
-    {
-      encabezado: 'Año',
-      clave: (item: PagoDerechosLista): string | undefined =>
-        item.vigenciaGafete,
-      orden: 9,
-    },
-    {
-      encabezado: 'Transponder',
-      clave: (item: PagoDerechosLista): string | undefined => item.municipio,
-      orden: 10,
-    },
-    {
-      encabezado: 'Color',
-      clave: (item: PagoDerechosLista): string | undefined => item.colonia,
-      orden: 11,
-    },
-    {
-      encabezado: 'Número económico',
-      clave: (item: PagoDerechosLista): string | undefined => item.paisOrigen,
-      orden: 12,
-    },
-    {
-      encabezado: 'Número 2da Placa',
-      clave: (item: PagoDerechosLista): string | undefined => item.ciudad,
-      orden: 13,
-    },
-    {
-      encabezado: 'País Emisor 2da Placa',
-      clave: (item: PagoDerechosLista): string | undefined => item.paisOrigen,
-      orden: 14,
-    },
-    {
-      encabezado: 'País Emisor 2da Placa',
-      clave: (item: PagoDerechosLista): string | undefined => item.ciudad,
-      orden: 15,
-    },
-    {
-      encabezado: 'Descripción',
-      clave: (item: PagoDerechosLista): string | undefined => item.ciudad,
-      orden: 16,
-    },
-  ];
 
-  /**
-   * Lista de objetos que representan las unidades de arrastre con sus respectivas propiedades.
-   * Cada objeto contiene información sobre el encabezado, la clave para acceder a los datos
-   * y el orden en el que deben aparecer.
-   *
-   * Propiedades:
-   * - `encabezado`: Título que describe la columna correspondiente.
-   * - `clave`: Función que toma un objeto de tipo `PagoDerechosLista` y devuelve el valor asociado a la clave.
-   * - `orden`: Número que indica el orden en el que se deben mostrar las columnas.
-   *
-   * Ejemplo de columnas:
-   * 1. VIN del vehículo
-   * 2. Tipo de unidad de arrastre
-   * 3. Número económico
-   * 4. Número de Placas
-   * 5. País Emisor
-   * 6. Estado o provincia
-   */
-  unidadesDeArrastre = [
-    {
-      encabezado: 'VIN del vehículo',
-      clave: (item: PagoDerechosLista): string | undefined => item.número,
-      orden: 1,
-    },
-    {
-      encabezado: 'Tipo de unidad de arrastre',
-      clave: (item: PagoDerechosLista): string | undefined => item.calle,
-      orden: 2,
-    },
-    {
-      encabezado: 'Número económico',
-      clave: (item: PagoDerechosLista): string | undefined => item.estado,
-      orden: 3,
-    },
-    {
-      encabezado: 'Número de Placas',
-      clave: (item: PagoDerechosLista): string | undefined => item.pais,
-      orden: 4,
-    },
-    {
-      encabezado: 'País Emisor',
-      clave: (item: PagoDerechosLista): string | undefined => item.apellidoPaterno,
-      orden: 5,
-    },
-    {
-      encabezado: 'Estado o provincia',
-      clave: (item: PagoDerechosLista): string | undefined => item.apellidoMaterno,
-      orden: 6,
-    },
-  ];
+/**
+ * Elimina todos los registros de la tabla de vehículos y restablece el formulario.
+ *
+ * - Limpia el arreglo de datos de la tabla de vehículos.
+ * - Reinicia el índice de edición.
+ * - Restablece el formulario de vehículo a su estado inicial.
+ */
+  eliminarPedimento(): void {
+    this.vehiculosTablaConfig.datos = [];
+    this.editIndex = null;
+    this.vehiculoFormulario.reset();
+  }
 
-  constructor(
-    private fb: FormBuilder,
-    private toastr: ToastrService,
-    private chofer40103Store: Chofer40103Store,
-    private chofer40103Service: Chofer40103Service,
-    private chofer40103Query: Chofer40103Query
-  ) {
-    //
+/**
+ * Elimina todos los registros de la tabla de unidades de arrastre y restablece el formulario.
+ *
+ * - Limpia el arreglo de datos de la tabla de unidades de arrastre.
+ * - Reinicia el índice de edición de unidad.
+ * - Restablece el formulario de unidad de arrastre a su estado inicial.
+ */
+  eliminarUnidadPedimento(): void {
+    this.unidadesTablaConfig.datos = [];
+    this.editUnidadIndex = null;
+    this.unidadFormulario.reset();
+  }
+
+/**
+ * Abre el modal para agregar o editar un vehículo.
+ *
+ * Muestra el modal asociado al formulario de vehículos si la referencia existe.
+ */
+  abiertoPedimento(): void {
+    if (this.vehiculoModal) {
+      const MODAL_INSTANCE = new Modal(this.vehiculoModal.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
+/**
+ * Abre el modal para agregar o editar una unidad de arrastre.
+ *
+ * Muestra el modal asociado al formulario de unidades de arrastre si la referencia existe.
+ */
+  abiertoPedimentoUnidad(): void {
+    if (this.unidadModal) {
+      const MODAL_INSTANCE = new Modal(this.unidadModal.nativeElement);
+      MODAL_INSTANCE.show();
+    }
   }
 
   /**
-   * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
+   * Actualiza el valor de un campo en el store.
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo.
+   * @param metodoNombre Nombre del método en el store.
    */
-  ngOnInit(): void {
-    this.formVehiculo = this.fb.group({
-      solicitudVehiculoVin2: [
-        '',
-        [Validators.required, Validators.pattern('^[0-9]{1,17}$')],
-      ],
-      solicitudVehiculoTipoVehiculo: ['', Validators.required],
-      solicitudVehiculoIdDeVehiculo: [
-        { value: '', disabled: true },
-        [Validators.required, Validators.maxLength(10)],
-      ],
-      solicitudVehiculoNumeroPlacas: [
-        '',
-        [Validators.required, Validators.pattern('^[A-Za-z0-9]{1,8}$')],
-      ],
-      solicitudVehiculoPaisEmisor: [''],
-      solicitudDomicilioEstado: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(20),
-          Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$'),
-        ],
-      ],
-      solicitudVehiculoMarca: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(100),
-          Validators.pattern('^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\-\\s]+$'),
-        ],
-      ],
-      solicitudVehiculoModelo: [
-        '',
-        [Validators.required, Validators.maxLength(20)],
-      ],
-      anioVehiculoVEH: ['', Validators.required],
-      solicitudVehiculoTransponder: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(10),
-          Validators.pattern('^[a-zA-Z0-9]*$'),
-        ],
-      ],
-      solicitudVehiculoColor: ['', Validators.required],
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite40103Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
 
-      solicitudVehiculoNumeroEconomico: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(17),
-          Validators.pattern('^[a-zA-Z0-9]*$'),
-        ],
-      ],
-      solicitudVehiculoNumero2daPlaca: [''],
+/**
+ * Inicializa los formularios reactivos de vehículo y unidad de arrastre.
+ *
+ * - Calcula el siguiente ID disponible para el vehículo.
+ * - Crea el formulario reactivo `vehiculoFormulario` con los valores y validaciones requeridas,
+ *   utilizando los datos actuales del estado del trámite.
+ * - Crea el formulario reactivo `unidadFormulario` para las unidades de arrastre,
+ *   también con los valores y validaciones requeridas.
+ *
+ * Este método prepara ambos formularios para la captura o edición de datos, asegurando que los campos
+ * estén correctamente inicializados y validados.
+ */
+  inicializarFormulario(): void {
+    const lastId = Array.isArray(this.vehiculosTablaConfig?.datos) && this.vehiculosTablaConfig.datos.length > 0
+      ? Math.max(...this.vehiculosTablaConfig.datos.map(v => Number(v.idDeVehiculo) || 0))
+      : 0;
+    const nextId = lastId + 1;
 
-      solicitudVehiculoEmisor2daPlaca: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(20),
-          Validators.pattern('^[a-zA-Z0-9]*$'),
-        ],
+    this.vehiculoFormulario = this.fb.group({
+      numero: [this.tramiteState.datosVehiculo.numero, [Validators.required]],
+      tipoDeVehiculo: [
+        this.tramiteState.datosVehiculo.tipoDeVehiculo,
+        [Validators.required],
       ],
-      solicitudVehiculoPaisEmisorSegundaPlaca: [''],
-      solicitudVehiculoDesc: [''],
-
-      vin2: ['', [Validators.required, Validators.minLength(5)]],
-      tipoVehiculoArrastreAGA: ['', Validators.required],
-      idDeVehiculo: '',
-      numeroPlacas: '',
-      paisEmisor: '',
-      estado2: '',
-      colorAGA: '',
-      numeroEconomico: '',
-      numero2daPlaca: '',
-      emisor2daPlaca: '',
-      paisEmisor2daPlaca: '',
-      desc: '',
+      idDeVehiculo: [{ value: nextId, disabled: true }, [Validators.required]],
+      numeroPlaca: [
+        this.tramiteState.datosVehiculo.numeroPlaca,
+        [Validators.required],
+      ],
+      paisEmisor: [
+        this.tramiteState.datosVehiculo.paisEmisor,
+        [Validators.required],
+      ],
+      estado: [this.tramiteState.datosVehiculo.estado, [Validators.required]],
+      marca: [this.tramiteState.datosVehiculo.marca, [Validators.required]],
+      modelo: [this.tramiteState.datosVehiculo.modelo, [Validators.required]],
+      ano: [this.tramiteState.datosVehiculo.ano, [Validators.required]],
+      transponder: [
+        this.tramiteState.datosVehiculo.transponder,
+        [Validators.required],
+      ],
+      colorVehiculo: [
+        this.tramiteState.datosVehiculo.colorVehiculo,
+        [Validators.required],
+      ],
+      numuroEconomico: [
+        this.tramiteState.datosVehiculo.numuroEconomico,
+        [Validators.required],
+      ],
+      numero2daPlaca: [
+        this.tramiteState.datosVehiculo.numero2daPlaca,
+        [Validators.required],
+      ],
+      estado2daPlaca: [
+        this.tramiteState.datosVehiculo.estado2daPlaca,
+        [Validators.required],
+      ],
+      paisEmisor2daPlaca: [
+        this.tramiteState.datosVehiculo.paisEmisor2daPlaca,
+        [Validators.required],
+      ],
+      descripcion: [
+        this.tramiteState.datosVehiculo.descripcion,
+        [Validators.required],
+      ],
     });
 
-    this.vehiculosList$ = this.chofer40103Query.getvehiculos$;
-    this.subscriptions.add(
-      this.chofer40103Query.getvehiculos$.subscribe((vehiculos) => {
-        this.vehiculos = vehiculos.map((vehiculo) => JSON.parse(vehiculo) as Vehiculo);
-      })
-    );
-    this.unidadesdearrastreList$ = this.chofer40103Query.getUnidadesdeArrastre$;
-    this.unidadesDearrastre();
-    this.subscriptions.add(
-      this.chofer40103Query.getUnidadesdeArrastre$.subscribe(
-        (unidadesdearrastre: unknown[]) => {
-          this.unidadesdearrastre = unidadesdearrastre;
-        }
-      )
-    );
-    this.conVehiculoArrastre();
-    this.anioVehiculoveh();
-    this.tipoVehiculoArrastreAGAData();
-    this.paisEmisorData();
-    this.colorAGAData();
-    this.paisEmisor2DaPlacaData();
-    this.solicitudVehiculoColorData();
+    this.unidadFormulario = this.fb.group({
+      vinVehiculo: [
+        this.tramiteState.datosUnidad.vinVehiculo,
+        [Validators.required],
+      ],
+      tipoDeUnidadArrastre: [
+        this.tramiteState.datosUnidad.tipoDeUnidadArrastre,
+        [Validators.required],
+      ],
+      idDeVehiculo: [
+        this.tramiteState.datosUnidad.idDeVehiculo,
+        [Validators.required],
+      ],
+      numeroEconomico: [
+        this.tramiteState.datosUnidad.numeroEconomico,
+        [Validators.required],
+      ],
+      numeroPlaca: [
+        this.tramiteState.datosUnidad.numeroPlaca,
+        [Validators.required],
+      ],
+      paisEmisor: [
+        this.tramiteState.datosUnidad.paisEmisor,
+        [Validators.required],
+      ],
+      estado: [this.tramiteState.datosUnidad.estado, [Validators.required]],
+      colorVehiculo: [
+        this.tramiteState.datosUnidad.colorVehiculo,
+        [Validators.required],
+      ],
+      numero2daPlaca: [
+        this.tramiteState.datosUnidad.numero2daPlaca,
+        [Validators.required],
+      ],
+      estado2daPlaca: [
+        this.tramiteState.datosUnidad.estado2daPlaca,
+        [Validators.required],
+      ],
+      paisEmisor2daPlaca: [
+        this.tramiteState.datosUnidad.paisEmisor2daPlaca,
+        [Validators.required],
+      ],
+      descripcion: [
+        this.tramiteState.datosUnidad.descripcion,
+        [Validators.required],
+      ],
+    });
   }
 
   /**
-   * Maneja el envío del formulario.
+   * Valida si un campo del formulario es válido.
+   * @param form Formulario reactivo.
+   * @param field Nombre del campo.
+   * @returns true si es válido, false en caso contrario.
    */
-  onSubmit(): void {
-    if (this.modalInstance) {
-      this.modalInstance.hide();
+  isValid(form: FormGroup, field: string): boolean | null {
+    return this.validacionesService.isValid(form, field);
+  }
+
+  /**
+   * Índice de edición para la tabla de vehículos.
+   */
+  editIndex: number | null = null;
+
+  /**
+   * Inicia la edición de un vehículo.
+   * @param index Índice del vehículo a editar.
+   */
+  startEditVehiculo(index: number): void {
+    this.editIndex = index;
+    const VEHICULO = this.vehiculosTablaConfig.datos[index];
+    this.vehiculoFormulario.patchValue(VEHICULO);
+    this.abiertoPedimento();
+  }
+
+/**
+ * - Agrega o actualiza un vehículo en la tabla de vehículos.
+ *
+ * - Si el formulario es válido y se está editando un vehículo existente (`editIndex` no es null),
+ * - actualiza el registro correspondiente en la tabla.
+ * - Si se trata de un nuevo vehículo, lo agrega al arreglo de datos.
+ * - Cierra el modal de vehículo, reinicia el formulario y actualiza el siguiente ID disponible.
+ * - Si el formulario no es válido, marca todos los campos como tocados para mostrar las validaciones.
+ * - Reinicia el formulario de vehículo y actualiza el campo 'idDeVehiculo' con el siguiente ID disponible.
+ * - Calcula el último ID utilizado en la tabla de vehículos.
+ * - Determina el siguiente ID incrementando en uno el valor máximo encontrado.
+ * - Restablece el formulario de vehículo a su estado inicial.
+ * - Asigna el nuevo ID al campo 'idDeVehiculo' y lo deshabilita para evitar su edición manual.
+ */
+  agregarVahiculodata(): void {
+    if (this.vehiculoFormulario.valid) {
+      const vehiculoData = {
+        ...this.vehiculoFormulario.getRawValue()
+      };
+      if (this.editIndex !== null) {
+        this.vehiculosTablaConfig.datos[this.editIndex] = vehiculoData;
+        this.editIndex = null;
+      } else {
+        this.vehiculosTablaConfig.datos = [
+          ...this.vehiculosTablaConfig.datos,
+          vehiculoData,
+        ];
+        const lastIndex = this.vehiculosTablaConfig.datos.length - 1;
+        this.onVehiculoRowSelected([{ index: lastIndex }]);
+      }
+      this.closeModal.nativeElement.click();
+      const lastId = Array.isArray(this.vehiculosTablaConfig?.datos) && this.vehiculosTablaConfig.datos.length > 0
+        ? Math.max(...this.vehiculosTablaConfig.datos.map(v => Number(v.idDeVehiculo) || 0))
+        : 0;
+      const nextId = lastId + 1;
+      this.vehiculoFormulario.reset();
+      this.vehiculoFormulario.get('idDeVehiculo')?.setValue(nextId);
+      this.vehiculoFormulario.get('idDeVehiculo')?.disable();
+    } else {
+      this.vehiculoFormulario.markAllAsTouched();
     }
-    const NEW_VEHICULO: Vehiculo = {
-      id: (this.vehiculos?.length || 0) + 1,
-      solicitudVehiculoVin2:
-        this.formVehiculo.value.solicitudVehiculoVin2?.trim(),
-      solicitudVehiculoTipoVehiculo:
-        this.formVehiculo.value.solicitudVehiculoTipoVehiculo?.trim(),
-      solicitudVehiculoNumeroEconomico:
-        this.formVehiculo.value.solicitudVehiculoNumeroEconomico?.trim(),
-      solicitudVehiculoNumeroPlacas:
-        this.formVehiculo.value.solicitudVehiculoNumeroPlacas?.trim(),
-      solicitudVehiculoPaisEmisor:
-        this.formVehiculo.value.solicitudVehiculoPaisEmisor?.trim(),
-      solicitudDomicilioEstado:
-        this.formVehiculo.value.solicitudDomicilioEstado?.trim(),
-      solicitudVehiculoMarca:
-        this.formVehiculo.value.solicitudVehiculoMarca?.trim(),
-      solicitudVehiculoModelo:
-        this.formVehiculo.value.solicitudVehiculoModelo?.trim(),
-      anioVehiculoVEH: this.formVehiculo.value.anioVehiculoVEH?.trim(),
-      solicitudVehiculoTransponder:
-        this.formVehiculo.value.solicitudVehiculoTransponder?.trim(),
-      solicitudVehiculoColor:
-        this.formVehiculo.value.solicitudVehiculoColor?.trim(),
-      solicitudVehiculoNumero2daPlaca:
-        this.formVehiculo.value.solicitudVehiculoNumero2daPlaca?.trim(),
-      solicitudVehiculoEmisor2daPlaca:
-        this.formVehiculo.value.solicitudVehiculoEmisor2daPlaca?.trim(),
-      solicitudVehiculoPaisEmisorSegundaPlaca:
-        this.formVehiculo.value.solicitudVehiculoPaisEmisorSegundaPlaca?.trim(),
-      solicitudVehiculoDesc:
-        this.formVehiculo.value.solicitudVehiculoDesc?.trim(),
+  }
+
+  /**
+   * Índice de edición para la tabla de unidades de arrastre.
+   */
+  editUnidadIndex: number | null = null;
+
+  /**
+   * Inicia la edición de una unidad de arrastre.
+   * @param index Índice de la unidad a editar.
+   */
+  startEditUnidad(index: number): void {
+    this.editUnidadIndex = index;
+    const UNIDAD = this.unidadesTablaConfig.datos[index];
+    this.unidadFormulario.patchValue(UNIDAD);
+    this.abiertoPedimentoUnidad();
+  }
+
+  /**
+   * Agrega o actualiza una unidad de arrastre en la tabla.
+   */
+  agregarUnidadData(): void {
+    if (this.unidadFormulario.valid) {
+      if (this.editUnidadIndex !== null) {
+        this.unidadesTablaConfig.datos[this.editUnidadIndex] =
+          this.unidadFormulario.value;
+        this.editUnidadIndex = null;
+      } else {
+        this.unidadesTablaConfig.datos = [
+          ...this.unidadesTablaConfig.datos,
+          this.unidadFormulario.value,
+        ];
+      }
+      this.closeUnidadModal.nativeElement.click();
+      this.unidadFormulario.reset();
+    } else {
+      this.unidadFormulario.markAllAsTouched();
+    }
+  }
+
+  /**
+   * Carga los datos del pedimento en la tabla de vehículos.
+   */
+  public cargarPedimentoTabla(): void {
+    this.modificarTerrestreService
+      .obtenerPedimentoTabla()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: VehiculoTablaDatos) => {
+        this.vehiculosTablaConfig.datos = datos.datos;
+      });
+  }
+
+/**
+ * Limpia el formulario de vehículo y restablece campos clave a su estado adecuado.
+ *
+ * - Obtiene el valor actual del campo 'idDeVehiculo' antes de limpiar.
+ * - Restablece el formulario de vehículo a su estado inicial.
+ * - Restaura el valor de 'idDeVehiculo' y lo deshabilita para evitar su edición.
+ * - Deshabilita el campo 'descripcion' tanto en el formulario de vehículo como en el de unidad de arrastre.
+ */
+  limpiarVahiculodata(): void {
+    const idValue = this.vehiculoFormulario.get('idDeVehiculo')?.value;
+    this.vehiculoFormulario.reset();
+    this.vehiculoFormulario.get('idDeVehiculo')?.setValue(idValue);
+    this.vehiculoFormulario.get('idDeVehiculo')?.disable();
+    this.vehiculoFormulario.get('descripcion')?.disable();
+    this.unidadFormulario.get('descripcion')?.disable();
+  }
+
+/**
+ * Limpia el formulario de unidad de arrastre y deshabilita campos de descripción.
+ *
+ * - Restablece el formulario de unidad de arrastre a su estado inicial.
+ * - Deshabilita el campo 'descripcion' tanto en el formulario de unidad de arrastre como en el de vehículo.
+ */
+  limpiarUnidaddata(): void {
+    this.unidadFormulario.reset();
+    this.unidadFormulario.get('descripcion')?.disable();
+    this.vehiculoFormulario.get('descripcion')?.disable();
+  }
+
+/**
+ * Abre una notificación modal con los parámetros predefinidos.
+ *
+ * - Inicializa el objeto `nuevaNotificacion` con los valores necesarios para mostrar una alerta modal.
+ * - La notificación es de tipo "alert" y categoría "danger", con un mensaje de confirmación de registro exitoso.
+ * - El botón de aceptación se muestra con el texto "Aceptar" y la notificación se cierra automáticamente después de 2 segundos.
+ *
+ * @method abrirModal
+ * @public
+ * @returns {void}
+ */
+  public abrirModal(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'El registro fue agregado correctamente.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
     };
-
-    // Comprueba si el VIN ya existe en el estado de Akita
-    const VIN_EXISTS = this.vehiculos?.some(
-      (item: Vehiculo) =>
-        item.solicitudVehiculoVin2 === NEW_VEHICULO.solicitudVehiculoVin2
-    );
-
-    if (VIN_EXISTS) {
-      this.toastr.error('¡Este VIN ya existe!');
-      return;
-    }
-
-    // Asegúrese de que `this.vehiculos` sea una matriz antes de agregar nuevos datos
-    if (!Array.isArray(this.vehiculos)) {
-      this.vehiculos = [];
-    }
-
-    // Actualizar el estado de Akita
-    this.chofer40103Store.setVehiculos([
-      ...(this.vehiculos as unknown as string[]),
-      JSON.stringify(NEW_VEHICULO),
-    ]);
-    this.formVehiculo.reset();
-    this.toastr.success('¡Vehículo añadido exitosamente!');
-    this.closeModal();
   }
 
-  /**
-   * Maneja la lógica para agregar unidades de arrastre.
-   */
-  unidadesDearrastre(): void {
-    if (this.formVehiculo.valid) {
-      const NUEVA_UNIDAD = this.formVehiculo.value;
-      const DATOS_ACTUALES = this.chofer40103Query.getunidadesdearrastre();
-      this.chofer40103Store.setUnidadesdeArrastre([
-        ...DATOS_ACTUALES,
-        NUEVA_UNIDAD,
-      ]);
+/**
+ * Carga el catálogo de tipos de vehículo.
+ *
+ * - Realiza una llamada al servicio `modificarTerrestreService` para obtener el catálogo de tipos de vehículo.
+ * - Asigna los datos recibidos a la propiedad `tipoDeVehiculoCatalogo` del componente.
+ * - Utiliza `takeUntil(this.destroyNotifier$)` para limpiar la suscripción al destruir el componente.
+ *
+ * @method cargarTipoDeVehiculo
+ * @public
+ * @returns {void}
+ */
+  public cargarTipoDeVehiculo(): void {
+    this.modificarTerrestreService
+      .obtenerTipoDeVehiculo()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: CatalogoLista) => {
+        this.tipoDeVehiculoCatalogo = datos.datos;
+      });
+/**
+ * Carga los catálogos de tipo de arrastre, año y país emisor.
+ *
+ * - Realiza llamadas a los servicios correspondientes para obtener los catálogos requeridos.
+ * - Asigna los datos recibidos a las propiedades del componente (`tipoArrastre`, `anoCatalogo`, `paisEmisorCatalogo`).
+ * - Utiliza `takeUntil(this.destroyNotifier$)` para limpiar las suscripciones al destruir el componente.
+ *
+ * @effect Actualiza los catálogos utilizados en los formularios de vehículos y unidades de arrastre.
+ */
+    this.modificarTerrestreService
+      .obtenerTipoArrastre()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: CatalogoLista) => {
+        this.tipoArrastre = datos.datos as Catalogo[];
+      });
 
-      // Use takeUntil to ensure subscription is cleaned up
-      this.chofer40103Query.getUnidadesdeArrastre$
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((data) => {
-          this.unidadesdearrastreList$ = of(data);
-        });
-    }
+    this.modificarTerrestreService
+      .obtenerAno()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: CatalogoLista) => {
+        this.anoCatalogo = datos.datos as Catalogo[];
+      });
 
-    this.formVehiculo = this.fb.group({
-      solicitudVehiculoVin2:
-        this.formVehiculo.value.solicitudVehiculoVin2?.trim(),
-      solicitudVehiculoTipoVehiculo:
-        this.formVehiculo.value.solicitudVehiculoTipoVehiculo?.trim(),
-      solicitudVehiculoNumeroEconomico:
-        this.formVehiculo.value.solicitudVehiculoNumeroEconomico?.trim(),
-      solicitudVehiculoNumeroPlacas:
-        this.formVehiculo.value.solicitudVehiculoNumeroPlacas?.trim(),
-      solicitudVehiculoPaisEmisor:
-        this.formVehiculo.value.solicitudVehiculoPaisEmisor?.trim(),
-      solicitudDomicilioEstado:
-        this.formVehiculo.value.solicitudDomicilioEstado?.trim(),
-      solicitudVehiculoMarca:
-        this.formVehiculo.value.solicitudVehiculoMarca?.trim(),
-      solicitudVehiculoModelo:
-        this.formVehiculo.value.solicitudVehiculoModelo?.trim(),
-      anioVehiculoVEH: this.formVehiculo.value.anioVehiculoVEH?.trim(),
-      solicitudVehiculoTransponder:
-        this.formVehiculo.value.solicitudVehiculoTransponder?.trim(),
-      solicitudVehiculoColor:
-        this.formVehiculo.value.solicitudVehiculoColor?.trim(),
-      solicitudVehiculoNumero2daPlaca:
-        this.formVehiculo.value.solicitudVehiculoNumero2daPlaca?.trim(),
-      solicitudVehiculoEmisor2daPlaca:
-        this.formVehiculo.value.solicitudVehiculoEmisor2daPlaca?.trim(),
-      solicitudVehiculoPaisEmisorSegundaPlaca:
-        this.formVehiculo.value.solicitudVehiculoPaisEmisorSegundaPlaca?.trim(),
-      solicitudVehiculoDesc:
-        this.formVehiculo.value.solicitudVehiculoDesc?.trim(),
-      vin2: ['', [Validators.required, Validators.maxLength(17)]],
-      tipoVehiculoArrastreAGA: ['', Validators.required],
-      idDeVehiculo: [{ value: '2', disabled: true }, Validators.required],
-      numeroPlacas: ['', [Validators.required, Validators.maxLength(8)]],
-      paisEmisor: ['', Validators.required],
-      estado2: ['', [Validators.required, Validators.maxLength(20)]],
-      colorAGA: ['', Validators.required],
-      numeroEconomico: ['', [Validators.required, Validators.maxLength(17)]],
-      numero2daPlaca: ['', Validators.maxLength(8)],
-      emisor2daPlaca: ['', Validators.maxLength(20)],
-      paisEmisor2daPlaca: [''],
-      desc: ['', [Validators.maxLength(200)]],
-    });
-  }
-  /**
-   * Obtiene los valores del formulario.
-   */
-  get getFormValues(): { [key: string]: AbstractControl } {
-    return this.formVehiculo.controls;
+    this.modificarTerrestreService
+      .obtenerPaisEmisor()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: CatalogoLista) => {
+        this.paisEmisorCatalogo = datos.datos as Catalogo[];
+      });
   }
 
-  /**
-   * Método del ciclo de vida de Angular que se llama después de que la vista del componente ha sido completamente inicializada.
-   */
-  ngAfterViewInit(): void {
-    if (this.modalElement) {
-      this.modalInstance = new Modal(this.modalElement.nativeElement);
+  selectedVehiculoIndex: number | null = null;
+  selectedUnidadIndex: number | null = null;
+
+  onVehiculoRowSelected(event: any) {
+    this.selectedVehiculoIndex = event && event.length > 0 ? event[0].index : null;
+  }
+
+  onUnidadRowSelected(event: any) {
+    this.selectedUnidadIndex = event && event.length > 0 ? event[0].index : null;
+  }
+
+  eliminarVehiculoRow() {
+    if (this.selectedVehiculoIndex !== null) {
+      this.vehiculosTablaConfig.datos.splice(this.selectedVehiculoIndex, 1);
+      this.selectedVehiculoIndex = null;
     }
   }
 
-  /**
-   * Abre el diálogo de captura para validación de persona física.
-   */
-  openDialogCapturaSPFisicaValidacion(): void {
-    if (this.modalInstance) {
-      this.modalInstance.show();
+  eliminarUnidadRow() {
+    if (this.selectedUnidadIndex !== null) {
+      this.unidadesTablaConfig.datos.splice(this.selectedUnidadIndex, 1);
+      this.selectedUnidadIndex = null;
     }
-  }
-
-  /**
-   * Abre el diálogo de captura para validación de persona moral.
-   */
-  openDialogCapturaSPMoralValidacion(): void {
-    if (this.modalInstance) {
-      this.modalInstance.show();
-    }
-  }
-
-  /**
-   * Maneja la lógica para vehículos con arrastre.
-   */
-  conVehiculoArrastre(): void {
-    const SOLICITUD_VEHICULOTIPOVEHICULO = this.formVehiculo.get(
-      'solicitudVehiculoTipoVehiculo'
-    )?.value;
-    this.chofer40103Store.setsolicitudVehiculoTipoVehiculo(
-      SOLICITUD_VEHICULOTIPOVEHICULO
-    );
-  }
-
-  /**
-   * Maneja la lógica para el año del vehículo.
-   */
-  anioVehiculoveh(): void {
-    const ANIO_VEHICULOVEH = this.formVehiculo.get('anioVehiculoVEH')?.value;
-    this.chofer40103Store.setanioVehiculoVEH(ANIO_VEHICULOVEH);
-  }
-
-  /**
-   * Carga los datos del catálogo de tipo de vehículo de arrastre.
-   */
-  tipoVehiculoArrastreAGAData(): void {
-    this.chofer40103Service.getTipoVehiculoArrastreAGA().subscribe((data) => {
-      this.tipoVehiculoArrastreAGA = data;
-    });
-  }
-
-  /**
-   * Carga los datos del catálogo de país emisor.
-   */
-  paisEmisorData(): void {
-    this.chofer40103Service.getPaisEmisor().subscribe((data) => {
-      this.paisEmisor = data;
-    });
-  }
-
-  /**
-   * Carga los datos del catálogo de color del vehículo.
-   */
-  colorAGAData(): void {
-    this.chofer40103Service.getcolorAGA().subscribe((data) => {
-      this.colorAGA = data;
-    });
-  }
-
-  /**
-   * Carga los datos del catálogo de país emisor de la segunda placa.
-   */
-  paisEmisor2DaPlacaData(): void {
-    this.chofer40103Service.getpaisEmisor2DaPlacaData().subscribe((data) => {
-      this.paisEmisor2daPlaca = data;
-    });
-  }
-
-  /**
-   * Carga los datos del catálogo de color del vehículo para la solicitud.
-   */
-  solicitudVehiculoColorData(): void {
-    this.chofer40103Service.getsolicitudVehiculoColor().subscribe((data) => {
-      this.solicitudVehiculoColor = data;
-    });
-  }
-
-  /**
-   * Cierra el modal.
-   */
-  closeModal(): void {
-    if (this.modalInstance) {
-      this.modalInstance.hide();
-    }
-  }
-
-  /**
-   * Limpia los datos del formulario de vehículos.
-   */
-  limpiarDatosVEHARR(): void {
-    this.formVehiculo.reset();
-  }
-
-  /**
-   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
-   * Libera las suscripciones.
-   */
-  ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
   }
 }
+

@@ -55,7 +55,7 @@ import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaScianConfig } from '../../models/datos-solicitud.model';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
@@ -68,6 +68,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
     ReactiveFormsModule,
     FormsModule,
     NotificacionesComponent,
+    TooltipModule,
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
@@ -118,6 +119,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @decorador @Input
    */
   @Input() public idProcedimiento!: number;
+
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
 
   /**
    * @event opcionSeleccionado
@@ -420,7 +426,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
-    }
+    };
   }
 
   /**
@@ -493,6 +499,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260103
         ? 'Municipio y alcaldía'
         : 'Municipio o alcaldía';
+
+    if (this.formularioDeshabilitado) {
+      this.datosSolicitudForm.disable();
+    }
   }
 
   /**
@@ -507,15 +517,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.datosSolicitudForm = this.fb.group({
       rfcSanitario: [
         this.datosSolicitudFormState.rfcSanitario,
-        [Validators.minLength(2), Validators.maxLength(120), Validators.pattern(REGEX_RFC)],
+        [
+          Validators.minLength(2),
+          Validators.maxLength(120),
+          Validators.pattern(REGEX_RFC),
+        ],
       ],
       denominacionRazon: [
         this.datosSolicitudFormState.denominacionRazon,
         [Validators.minLength(2), Validators.maxLength(120)],
       ],
-    correoElectronico: [
+      correoElectronico: [
         this.datosSolicitudFormState.correoElectronico,
-        [Validators.minLength(2), Validators.maxLength(120)],
+        [Validators.minLength(2), Validators.maxLength(120), Validators.email],
       ],
       codigoPostal: [
         this.datosSolicitudFormState.codigoPostal,
@@ -528,10 +542,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ],
       estado: [
         this.datosSolicitudFormState.estado,
-        [
-          Validators.required,
-          Validators.minLength(2),
-        ],
+        [Validators.required, Validators.minLength(2)],
       ],
       municipioAlcaldia: [
         {
@@ -554,13 +565,28 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         [Validators.required],
       ],
       calle: [this.datosSolicitudFormState.calle, [Validators.required]],
-      lada: [this.datosSolicitudFormState.lada, [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
-      telefono: [this.datosSolicitudFormState.telefono, [Validators.required, Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      lada: [
+        this.datosSolicitudFormState.lada,
+        [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)],
+      ],
+      telefono: [
+        this.datosSolicitudFormState.telefono,
+        [
+          Validators.required,
+          Validators.maxLength(5),
+          Validators.pattern(REGEX_SOLO_DIGITOS),
+        ],
+      ],
       aviso: [this.datosSolicitudFormState.aviso],
-      licenciaSanitaria: [this.datosSolicitudFormState.licenciaSanitaria,[Validators.required]],
+      licenciaSanitaria: [
+        this.datosSolicitudFormState.licenciaSanitaria,
+        [Validators.required],
+      ],
       regimen: [this.datosSolicitudFormState.regimen, [Validators.required]],
       adunasDeEntradas: [
-        this.datosSolicitudFormState.adunasDeEntradas,
+        this.datosSolicitudFormState.adunasDeEntradas
+          ? this.datosSolicitudFormState.adunasDeEntradas
+          : '103',
         [Validators.required],
       ],
       aeropuerto: [
@@ -623,7 +649,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.elementosRequeridos?.forEach((campo) => {
       const CONTROL = this.datosSolicitudForm.get(campo);
       if (CONTROL) {
-        CONTROL.setValidators(Validators.required);
+        const EXISTING = CONTROL.validator
+          ? Array.isArray(CONTROL.validator)
+            ? CONTROL.validator
+            : [CONTROL.validator]
+          : [];
+        const MERGED = [...EXISTING, Validators.required];
+        CONTROL.setValidators(MERGED);
         CONTROL.updateValueAndValidity();
       }
     });
@@ -839,9 +871,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param {string} campo - Nombre del campo a verificar.
    * @returns {boolean} Retorna `true` si el campo es requerido, `false` en caso contrario.
    */
-esCampoRequerido(campo: string): boolean {
- return this.elementosRequeridos?.includes(campo) ?? false;
-}
+  esCampoRequerido(campo: string): boolean {
+    return this.elementosRequeridos?.includes(campo) ?? false;
+  }
 
   /**
    * Verifica si un campo adicional debe mostrarse según la configuración de procedimientos.
@@ -863,16 +895,17 @@ esCampoRequerido(campo: string): boolean {
    **/
   cambioAviso(event: Event): void {
     const CHECKED = (event.target as HTMLInputElement).checked;
-const LICENCIA_SANITARIA_CONTROL = this.datosSolicitudForm.get('licenciaSanitaria');
-if (CHECKED && LICENCIA_SANITARIA_CONTROL) {
-  LICENCIA_SANITARIA_CONTROL?.clearValidators();
-  LICENCIA_SANITARIA_CONTROL?.updateValueAndValidity();
-  LICENCIA_SANITARIA_CONTROL?.disable();
-} else {
-  LICENCIA_SANITARIA_CONTROL?.enable();
-  LICENCIA_SANITARIA_CONTROL?.setValidators([Validators.required]);
-  LICENCIA_SANITARIA_CONTROL?.updateValueAndValidity();
-}
+    const LICENCIA_SANITARIA_CONTROL =
+      this.datosSolicitudForm.get('licenciaSanitaria');
+    if (CHECKED && LICENCIA_SANITARIA_CONTROL) {
+      LICENCIA_SANITARIA_CONTROL?.clearValidators();
+      LICENCIA_SANITARIA_CONTROL?.updateValueAndValidity();
+      LICENCIA_SANITARIA_CONTROL?.disable();
+    } else {
+      LICENCIA_SANITARIA_CONTROL?.enable();
+      LICENCIA_SANITARIA_CONTROL?.setValidators([Validators.required]);
+      LICENCIA_SANITARIA_CONTROL?.updateValueAndValidity();
+    }
   }
 
   /**
@@ -903,8 +936,6 @@ if (CHECKED && LICENCIA_SANITARIA_CONTROL) {
     }
   }
 
-
-
   /**
    * Método que se llama cuando se envía el formulario.
    * Se utiliza para establecer los valores en el store de DatosDomicilioLegal.
@@ -926,17 +957,17 @@ if (CHECKED && LICENCIA_SANITARIA_CONTROL) {
 
     this.elementoParaEliminar = i;
   }
-  
+
   /**
    * Método que maneja la lógica para mostrar un modal de confirmación
    * antes de eliminar registros marcados. Si no hay elementos en la lista
    * `scianLista`, muestra una alerta y detiene la ejecución.
-   * 
+   *
    * @remarks
    * Este método configura una notificación de tipo alerta con un mensaje
    * de confirmación para la eliminación de registros. La notificación incluye
    * opciones para aceptar o cancelar la acción.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   eliminarModal(): void {
@@ -949,8 +980,7 @@ if (CHECKED && LICENCIA_SANITARIA_CONTROL) {
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje:
-        '¿Estás seguro que deseas eliminar los registros marcados?',
+      mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
       cerrar: true,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',

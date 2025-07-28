@@ -12,20 +12,19 @@
       [configuracionTabla]="destinoFinalTablaConfiguracion.configuracionTabla"
       [datos]="destinatarioFinalTablaDatos"
       (listaDeFilaSeleccionada)="destinarioTablaSeleccionada = $event"
-      
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        <!-- @if((!ocultarBotones&&!ocultarBotonModificar)||(ocultarBotonModificar&& destinarioTablaSeleccionada.length!==0)){ -->
          @if(destinarioTablaSeleccionada.length > 0 && destinatarioFinalTablaDatos.length > 0) {
           <button
             type="button"
             name="modificarMercancias"
             class="btn btn-default"
             (click)="modificarDestinatario()"
-            [disabled]="destinarioTablaSeleccionada.length !== 1" 
+            [disabled]="destinarioTablaSeleccionada.length !== 1 || esFormularioSoloLectura" 
           >
             Modificar
           </button>
@@ -34,17 +33,17 @@
             name="eliminarMercancias"
             class="btn btn-danger ms-2"
             (click)="eliminarDestinatarioFinal()"
-            [disabled]="destinarioTablaSeleccionada.length !== 1" 
+            [disabled]="destinarioTablaSeleccionada.length !== 1 || esFormularioSoloLectura" 
           >
             Eliminar
           </button>
       }
-        <!-- } -->
         <button
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
-          (click)="irAAcciones('../agregar-destino-final')"
+          [disabled]="esFormularioSoloLectura"
+          (click)="irAAcciones('agregar-destino-final')"
         >
           Agregar
         </button>
@@ -60,19 +59,19 @@
       [configuracionTabla]="dproveedorTablaConfiguracion.configuracionTabla"
       [datos]="proveedorTablaDatos"
       (listaDeFilaSeleccionada)="proveedorTablaSeleccionada = $event"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-       <!-- @if((!ocultarBotones&&!ocultarBotonModificar)||(ocultarBotonModificar&& proveedorTablaSeleccionada.length!==0)){ -->
          @if(proveedorTablaSeleccionada.length > 0 && proveedorTablaDatos.length > 0) {
 
         <button
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
-          [disabled]="proveedorTablaSeleccionada.length !== 1"
+          [disabled]="proveedorTablaSeleccionada.length !== 1 || esFormularioSoloLectura"
           (click)="modificarProveedor()"
         >
           Modificar
@@ -82,18 +81,18 @@
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
           (click)="eliminarProveedorFinal()"
-          [disabled]="proveedorTablaSeleccionada.length !== 1"
+          [disabled]="proveedorTablaSeleccionada.length !== 1 || esFormularioSoloLectura"
         >
           Eliminar
         </button>
       }
-    <!-- } -->
       @if(!tercerosNacionalidad){
         <button
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
-          (click)="irAAcciones('../agregar-proveedor')"
+          [disabled]="esFormularioSoloLectura"
+          (click)="irAAcciones('agregar-proveedor')"
         >
           Agregar
         </button>

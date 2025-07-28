@@ -1,9 +1,10 @@
+import { AlertComponent, Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260912Store, Tramites260912State } from '../../estados/tramite-260912.store';
 import { ALERT } from '../../enums/datos-de-la-solicitud.enum';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
@@ -42,11 +43,20 @@ import { Validators } from '@angular/forms';
     InputRadioComponent,
     ReactiveFormsModule,
     TituloComponent,
+    NotificacionesComponent,
   ],
   templateUrl: './datos-empresa.component.html',
   styleUrls: ['./datos-empresa.component.scss'],
 })
 export class DatosEmpresaComponent implements OnInit, OnDestroy {
+
+  
+  /** Estado actual de la solicitud proveniente del store */
+  public solicitudState!: Tramites260912State;
+
+  /** Indica si el formulario está en modo solo lectura */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Indica si el formulario es colapsable.
    */
@@ -78,6 +88,13 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   datosDelEstablecimiento!: FormGroup;
 
   /**
+   * @description
+   * Objeto que representa una nueva notificación.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
    * Subject para manejar la destrucción del componente y evitar fugas de memoria.
    */
   public destroyed$ = new Subject<void>();
@@ -88,21 +105,58 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
    * @param fb FormBuilder para crear formularios.
    * @param Tramite260912Query Consulta de datos del trámite.
    * @param Tramite260912Store Almacenamiento de datos del trámite.
+   * @param consultaioQuery Consulta de estado de solo lectura.
    */
   constructor(
     private fb: FormBuilder,
- private tramite260912Query: Tramite260912Query,
-    private tramite260912Store: Tramite260912Store
+    private tramite260912Query: Tramite260912Query,
+    private tramite260912Store: Tramite260912Store,
+    public consultaioQuery: ConsultaioQuery,
   ) {
-    // Constructor
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
+  /**
+   * Inicializa el formulario dependiendo del modo (solo lectura o editable).
+   * Si está en solo lectura, carga y bloquea el formulario.
+   * Si no, crea un formulario editable.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormulario();
+    }
+  }
+
+  /**
+   * Crea el formulario y, si está en modo solo lectura, lo deshabilita.
+   * De lo contrario, lo habilita para edición.
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.form.disable();
+      this.datosDelEstablecimiento.disable();
+    } else {
+      this.form.enable();
+      this.datosDelEstablecimiento.enable();
+    }
+  }
+
 
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.crearFormulario();
-    this.getValorStore();
+     this.inicializarEstadoFormulario();
        }
 
   /**
@@ -116,15 +170,23 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
    * Método para crear el formulario.
    */
   crearFormulario(): void {
+     this.tramite260912Query.selectTramite260912$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.form = this.fb.group({
-      btonDeRadio: ['', [Validators.required]],
-      justificacion: ['', [Validators.required]],
+      btonDeRadio: [this.solicitudState?.btonDeRadio, [Validators.required]],
+      justificacion: [this.solicitudState?.justificacion, [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
     });
 
     this.datosDelEstablecimiento = this.fb.group({
-      rfcDel: ['', Validators.required],
-      denominacion: ['', Validators.required],
-      correo: ['', Validators.required],
+      rfcDel: [this.solicitudState?.rfcDel, Validators.required],
+      denominacion: [this.solicitudState?.denominacion, Validators.required],
+      correo: [this.solicitudState?.correo, Validators.required],
     });
   }
 
@@ -132,6 +194,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
    * Método para habilitar los controles del formulario.
    */
   toggleFormControls(): void {
+    this.abrirModal();
     Object.keys(this.datosDelEstablecimiento.controls).forEach(
       (controlName) => {
         const CONTROL = this.datosDelEstablecimiento.get(controlName);
@@ -157,17 +220,36 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene el estado actual del trámite desde el store.
+   * @description Verifica si un control del formulario es inválido.
+   * @param nombreControl El nombre del control a verificar.
+   * @returns Verdadero si el control es inválido y está tocado o modificado, de lo contrario, falso.
    */
-  getValorStore(): void {
-    this.tramite260912Query.selectTramite260912$.pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data) => {
-        this.estadoSeleccionado = data;
-      }
-    );
+  esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.form.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
   }
+
+  /**
+   * Método que se llama cuando se envía el formulario.
+   * Se utiliza para establecer los valores en el store de DatosDomicilioLegal.
+   */
+  abrirModal(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }  
+
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */

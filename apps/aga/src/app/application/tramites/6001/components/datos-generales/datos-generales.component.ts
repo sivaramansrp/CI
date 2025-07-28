@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RegistroCuentasBancariasService } from '../../services/registro-cuentas-bancarias.service';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Notificacion, NotificacionesComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RegistroDeSolicitudesTabla, Sociedad } from '../../models/registro-cuentas-bancarias.model';
 
@@ -21,7 +21,7 @@ import { RegistroDeSolicitudesTabla, Sociedad } from '../../models/registro-cuen
 @Component({
     selector: 'app-datos-generales',
     standalone: true,
-    imports: [CommonModule, TituloComponent, TablaDinamicaComponent, ReactiveFormsModule],
+    imports: [CommonModule, TituloComponent, TablaDinamicaComponent, ReactiveFormsModule,NotificacionesComponent],
     templateUrl: './datos-generales.component.html',
     styleUrl: './datos-generales.component.scss',
 })
@@ -39,6 +39,9 @@ export class DatosGeneralesComponent implements OnInit {
      */
     public registroDeSolicitudesTablaDatos: RegistroDeSolicitudesTabla[] = [];
 
+    /**
+     * Almacena la lista de entidades Sociedad que contienen datos generales relacionados con la aplicación.
+     */
     public sociedadDatos: Array<Sociedad> = [];
 
     /** Configuración de la tabla de sectores */
@@ -55,6 +58,21 @@ export class DatosGeneralesComponent implements OnInit {
         { encabezado: 'Estado', clave: (item: RegistroDeSolicitudesTabla) => item.estado, orden: 10 },
         { encabezado: 'Domicilio extranjero', clave: (item: RegistroDeSolicitudesTabla) => item.domicilio, orden: 11 }
     ];
+
+ /**
+   * Representa una confirmar instancia de notificación asociada con el componente.
+   * Esta propiedad se utiliza para gestionar y almacenar datos de notificaciones.
+   */
+    public confirmarNotificacion!: Notificacion;
+    /**
+     * Representa la entidad de notificación asociada con la sociedad.
+     * Esta propiedad almacena los detalles de la notificación relevantes para el contexto actual.
+     */
+    public sociedadNotificacion!: Notificacion;
+    /**
+     * Almacena el índice de la fila actualmente seleccionada en una lista o tabla.
+     */
+    public selectedRowIndex: number | null = null;
 
 
     /**
@@ -184,6 +202,17 @@ export class DatosGeneralesComponent implements OnInit {
      * @returns {void}
      */
     public altaDeCuenta(): void {
+        this.sociedadNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: 'Error',
+            mensaje: 'Seleccione una sociedad.',
+            cerrar: false,
+            tiempoDeEspera: 2000,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+        };
         this._registroCuentasBancariasSvc.cambiarComponente('AgregarCuenta');
     }
 
@@ -201,5 +230,67 @@ export class DatosGeneralesComponent implements OnInit {
             const API_RESPONSE = this.deepCopy(response);
             this.sociedadDatos = API_RESPONSE.data;
         });
+    }
+
+    /**
+     * Muestra una notificación de alerta al intentar eliminar un registro de solicitud sin haber seleccionado uno.
+     * 
+     * Asigna a la propiedad `confirmarNotificacion` una notificación de tipo alerta con categoría 'danger',
+     * informando al usuario que debe seleccionar una solicitud. La notificación incluye un título, mensaje,
+     * y un botón 'Aceptar', y se cerrará automáticamente después de 2000 milisegundos.
+     */
+    public eliminarRegistroSolicitud(): void {
+        this.confirmarNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: 'Aviso',
+            mensaje: 'Seleccione una solicitud.',
+            cerrar: false,
+            tiempoDeEspera: 2000,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+        };
+    }
+
+    /**
+     * Muestra una notificación de alerta al intentar editar un registro de solicitud sin haber seleccionado uno.
+     * 
+     * Asigna a la propiedad `confirmarNotificacion` una notificación de tipo alerta con categoría 'danger',
+     * informando al usuario que debe seleccionar una solicitud. La notificación requiere acción del usuario y se cerrará automáticamente después de 2000 milisegundos.
+     */
+    public editarRegistroSolicitud(): void {
+        this.confirmarNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: 'Mensaje',
+            mensaje: 'Seleccione una solicitud.',
+            cerrar: false,
+            tiempoDeEspera: 2000,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+        };
+    }
+
+    /**
+     * Muestra una notificación de alerta indicando que se debe seleccionar un renglón.
+     * 
+     * Este método asigna a la propiedad `sociedadNotificacion` una configuración de notificación
+     * de error, solicitando al usuario que seleccione un renglón. La notificación se muestra como
+     * una alerta de tipo peligro, incluye un botón "Aceptar" y se cierra automáticamente después de 2 segundos.
+     */
+    public bajaDeCuentas(): void {
+        this.sociedadNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: 'Error',
+            mensaje: 'Seleccione un renglón.',
+            cerrar: false,
+            tiempoDeEspera: 2000,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+        };
     }
 }

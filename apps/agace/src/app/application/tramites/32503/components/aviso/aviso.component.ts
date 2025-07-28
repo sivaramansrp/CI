@@ -1,23 +1,24 @@
-import { 
-AlertComponent,
-CatalogoSelectComponent,
-InputFecha,
-InputFechaComponent,
-InputRadioComponent,
-REGEX_ALFANUMERICO_CON_ESPACIOS,
-REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
-REGEX_IMPORTE_PAGO,
-REGEX_NUMEROS,
-REGEX_NUMEROS_USD,
-REGEX_REEMPLAZAR,
-REGEX_SOLO_NUMEROS,
-TablaDinamicaComponent,
-TablaSeleccion,
-TituloComponent,
-ValidacionesFormularioService
- } from "@libs/shared/data-access-user/src";
+import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  InputFecha,
+  InputFechaComponent,
+  InputRadioComponent,
+  REGEX_ALFANUMERICO_CON_ESPACIOS,
+  REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
+  REGEX_IMPORTE_PAGO,
+  REGEX_NUMEROS,
+  REGEX_NUMEROS_USD,
+  REGEX_REEMPLAZAR,
+  REGEX_SOLO_NUMEROS,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+  ValidacionesFormularioService
+} from "@libs/shared/data-access-user/src";
 import { AvisoTabla, AvisoTablaDatos, Catalogo, CatalogoLista, MercanciaTabla, MercanciaTablaDatos } from "../../models/aviso-traslado.model";
-import { FECHA_INGRESO, TEXTOS, TIPACA, TIPAVI } from "../../constants/aviso-traslado.enum";
+import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
+import { ENCABEZADAS_TABLA, FECHA_INGRESO, TABLA_DE_MERCANCIA, TEXTOS, TIPACA, TIPAVI } from "../../constants/aviso-traslado.enum";
 import { AvisoTrasladoService } from "../../services/aviso-traslado.service";
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
@@ -110,29 +111,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }[],
     datos: AvisoTabla[],
   } = {
-      encabezadas: [
-        { encabezado: 'RFC', clave: (ele: AvisoTabla) => ele.rfc, orden: 1 },
-        {
-          encabezado: 'Nombre comercial',
-          clave: (ele: AvisoTabla) => ele.nombreComercial,
-          orden: 2,
-        },
-        {
-          encabezado: 'Entidad federativa',
-          clave: (ele: AvisoTabla) => ele.entidadFederativa,
-          orden: 3,
-        },
-        {
-          encabezado: 'Alcaldía o Municipio',
-          clave: (ele: AvisoTabla) => ele.alcaldioOMuncipio,
-          orden: 4,
-        },
-        {
-          encabezado: 'Colonia',
-          clave: (ele: AvisoTabla) => ele.colonia,
-          orden: 5,
-        },
-      ],
+      encabezadas: ENCABEZADAS_TABLA,
       datos: []
     };
   /**
@@ -184,48 +163,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }[],
     datos: MercanciaTabla[],
   } = {
-      encabezadas: [
-        { encabezado: 'Fracción arancelaria', clave: (ele: MercanciaTabla) => ele.claveFraccionArancelaria, orden: 1 },
-        {
-          encabezado: 'NICO',
-          clave: (ele: MercanciaTabla) => ele.nico,
-          orden: 2,
-        },
-        {
-          encabezado: 'Unidad de medida',
-          clave: (ele: MercanciaTabla) => ele.claveUnidadMedida,
-          orden: 3,
-        },
-        {
-          encabezado: 'Cantidad',
-          clave: (ele: MercanciaTabla) => ele.cantidad,
-          orden: 4,
-        },
-        {
-          encabezado: 'Valor USD',
-          clave: (ele: MercanciaTabla) => ele.valorUSD,
-          orden: 5,
-        },
-        {
-          encabezado: 'Descripción de la Mercancía',
-          clave: (ele: MercanciaTabla) => ele.descripcionMercancia,
-          orden: 6,
-        },
-        {
-          encabezado: 'Proceso llevará',
-          clave: (ele: MercanciaTabla) => ele.descripcionProceso,
-          orden: 6,
-        }, {
-          encabezado: 'Número de exportación',
-          clave: (ele: MercanciaTabla) => ele.numPedimentoExportacion,
-          orden: 6,
-        },
-        {
-          encabezado: 'Número de importación',
-          clave: (ele: MercanciaTabla) => ele.numPedimentoImportacion,
-          orden: 6,
-        }
-      ],
+      encabezadas: TABLA_DE_MERCANCIA,
       datos: []
     };
   /**
@@ -271,7 +209,34 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * Esta propiedad se utiliza para gestionar y almacenar datos de notificaciones.
    */
   public nuevaNotificacion!: Notificacion;
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  /**
+ * Expresiones regulares utilizadas para validaciones y reemplazos.
+ * 
+ * Estas propiedades contienen las expresiones regulares que se utilizan en la clase
+ * para realizar validaciones o reemplazos en los formularios.
+ */
+  REGEX_REEMPLAZAR = REGEX_REEMPLAZAR;
 
+  /**
+   * Expresión regular para validar y reemplazar caracteres alfanuméricos con espacios.
+   */
+  REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR;
+
+  /**
+   * Expresión regular para validar y reemplazar números.
+   */
+  REGEX_NUMEROS = REGEX_NUMEROS;
+  consultaDatos!: ConsultaioState;
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
   /**
    * Constructor del componente.
    * 
@@ -287,6 +252,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     public tramiteQuery: Tramite32503Query,
     public avisoTrasladoService: AvisoTrasladoService,
     private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -304,7 +270,17 @@ export class AvisoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.inicializarFormulario();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+    this.tablaDeDatos.datos = this.tramiteState.tablaDeDatos ?? [];
     this.inicializarDomicilioFormulario();
     this.cargarFederativa();
     this.cargarMunicipio();
@@ -312,6 +288,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.inicializarMercanciaFormulario();
     this.cargarFraccionArancelaria();
     this.cargarUnidadMedida();
+    this.inicializarFormulario();
   }
   /**
    * @method setValoresStore
@@ -468,7 +445,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
         tipoAviso: [this.tramiteState?.avisoFormulario?.tipoAviso, [Validators.required]],
         idTransaccion: [this.tramiteState?.avisoFormulario?.idTransaccion, [Validators.maxLength(25), Validators.pattern(REGEX_IMPORTE_PAGO)]],
         motivoProrroga: [this.tramiteState?.avisoFormulario?.motivoProrroga, [Validators.required, Validators.maxLength(250)]],
-        fechaTranslado: [{ value: this.tramiteState?.avisoFormulario?.fechaTranslado, disabled: true }, Validators.required],
+        fechaTranslado: [this.tramiteState?.avisoFormulario?.fechaTranslado, [Validators.required]],
       }),
       direccionOrigen: this.fb.group({
         nombreComercial: [this.tramiteState?.avisoFormulario?.nombreComercial, [Validators.maxLength(250)]],
@@ -485,6 +462,24 @@ export class AvisoComponent implements OnInit, OnDestroy {
 
     });
     this.verificaTipoAviso();
+    this.inicializarEstadoFormulario();
+  }
+  /**
+   * Inicializa el estado de los formularios según el modo de solo lectura.
+   * 
+   * Este método habilita o deshabilita los formularios dependiendo del valor de la propiedad `soloLectura`.
+   * Si `soloLectura` es `true`, los formularios se deshabilitan; de lo contrario, se habilitan.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.avisoFormulario?.disable();
+      this.domicilioFormulario?.disable();
+      this.mercanciaFormulario?.disable();
+    } else {
+      this.avisoFormulario?.enable();
+      this.domicilioFormulario?.enable();
+      this.mercanciaFormulario?.enable();
+    }
   }
   /**
    * @method adaceFormulario
@@ -729,7 +724,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   sanitizeAlphanumeric(form: FormGroup, control: string, event: Event): void {
     const INPUT = event?.target as HTMLInputElement;
-    const REEMPLAZAR = INPUT?.value.replace(REGEX_REEMPLAZAR, '');
+    const REEMPLAZAR = INPUT?.value.replace(this.REGEX_REEMPLAZAR, '');
     form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
   }
   /**
@@ -745,7 +740,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   sanitizeAlphanumericWithSpace(form: FormGroup, control: string, event: Event): void {
     const INPUT = event?.target as HTMLInputElement;
-    const REEMPLAZAR = INPUT?.value.replace(REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR, '');
+    const REEMPLAZAR = INPUT?.value.replace(this.REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR, '');
     form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
   }
   /**
@@ -761,7 +756,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   sanitizeNumeric(form: FormGroup, control: string, event: Event): void {
     const INPUT = event?.target as HTMLInputElement;
-    const REEMPLAZAR = INPUT?.value.replace(REGEX_NUMEROS, '');
+    const REEMPLAZAR = INPUT?.value.replace(this.REGEX_NUMEROS, '');
     form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
   }
   /**

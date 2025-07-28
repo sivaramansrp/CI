@@ -1,13 +1,9 @@
 <div class="container">
-  <div>
-    <ng-titulo
-      titulo="Administrar residuos y/o materia prima a importar"
-    ></ng-titulo>
-
     <div>
       <h6>Licitaciones disponibles</h6>
       <app-tabla-dinamica [configuracionTabla]="configTableArray"
-      [datos] = "datos" (filaClic)="abrirModificarModal($event)"></app-tabla-dinamica>
+      [datos] = "datos" (filaClic)="abrirModificarModal($event)"
+      ></app-tabla-dinamica>
 
       <div class="container" *ngIf="showRepresentacionFederal">
       <!-- Representación federal  -->
@@ -16,12 +12,19 @@
         <form [formGroup]="formulario">
           <div class="row">
             <div class="col-md-4">
-              <app-catalogo-select [catalogo]="entidadFederativaOptions" formControlName="entidadFederativa" [label]="'Entidad federativa'"
-                [required]="true" name="federalent" (change)="onChangeEntiadFederative()"></app-catalogo-select>
+              <app-catalogo-select 
+              [catalogo]="entidadFederativaOptions" 
+              formControlName="entidadFederativa" 
+              [label]="'Entidad federativa'"
+              [required]="true" 
+              [isDisabled]="esFormularioSoloLectura" 
+              name="federalent" 
+              (change)="setValoresStore(formulario, 'entidadFederativa')"></app-catalogo-select>
             </div>
             <div class="col-md-4">
               <app-catalogo-select [catalogo]="representacionFederalOptions" formControlName="representacionFederal" [label]="'Representación federal'"
-                [required]="true" name="representfederal" (change)="onChangeRepresentacionFederal()"></app-catalogo-select>
+                [required]="true" [isDisabled]="esFormularioSoloLectura" name="representfederal" 
+                (change)="setValoresStore(formulario, 'representacionFederal')"></app-catalogo-select>
             </div>
           </div>
           </form>
@@ -34,7 +37,7 @@
           <div class="row">
               <div class="col-md-4">
                   <label class="form-label" for="numeraDelicitacion">Número de licitación:</label>
-                  <input type="text" class="form-control" id="numeraDelicitacion" formControlName="numeraDelicitacion" size="30" readonly>
+                  <input type="text" class="form-control" id="numeraDelicitacion" formControlName="numeraDelicitacion" size="30">
               </div>
       
               <div class="col-md-4">
@@ -104,24 +107,24 @@
           <div class="row">
             <div class="col-md-4">
               <label class="form-label" for="rfc">RFC*:</label>
-              <input type="text" class="form-control" id="rfc" formControlName="rfc" readonly>
+              <input type="text" class="form-control" id="rfc" formControlName="rfc">
             </div>
             <div class="col-md-4">
               <label class="form-label" for="adquirienteMontoDisponible">Monto disponible:</label>
-              <input type="text" class="form-control" id="adquirienteMontoDisponible" formControlName="adquirienteMontoDisponible" readonly>
+              <input type="text" class="form-control" id="adquirienteMontoDisponible" formControlName="adquirienteMontoDisponible">
             </div>
             <div class="col-md-4">
-              <button type="button" class="btn btn-primary col-auto pull-right float-end mt-3" (click)="seleccionarParticipante()">
+              <button type="button"  [disabled]="esFormularioSoloLectura" class="btn btn-primary col-auto pull-right float-end mt-3" (click)="seleccionarParticipante()">
                 Seleccionar participante 
             </button>
             </div>
             <div class="row rfc1" *ngIf="showSeleccionarParticipante">
               <div class="col-md-4">
                 <label class="form-label" for="rfc1">RFC:</label>
-                <input type="text" class="form-control bg-white" id="rfc1" formControlName="rfc1">
+                <input type="text" class="form-control" id="rfc1" formControlName="rfc1">
               </div>
               <div class="col-md-4 mt-5">
-                <button type="button" class="btn btn-primary ms-3" (click)="agregarRFC1()">Agregar</button>
+                <button  type="button"  [disabled]="esFormularioSoloLectura" class="btn btn-primary ms-3" (click)="agregarRFC1()">Agregar</button>
               </div>
              <div class="row d-flex justify-content-center mt-5">
               <div class="col-md-4">
@@ -134,8 +137,8 @@
              
             <div class="col-md-4">
               <label class="form-label" for="montoRecibir">Monto a recibir*:</label>
-              <input type="text" class="form-control bg-white" id="montoRecibir" formControlName="montoRecibir" [ngClass]="isInvalid('montoRecibir') ? 'required' : ''"
-              (change)="montoRecibirValue()">
+              <input type="text" class="form-control" id="montoRecibir" formControlName="montoRecibir" [ngClass]="isInvalid('montoRecibir') ? 'required' : ''"
+              (change)="setValoresStore(adquiriente, 'montoRecibir')">
               <div *ngIf="isInvalid('montoRecibir')" class="text-danger">
                 Este campo es obligatorio
             </div>
@@ -149,5 +152,5 @@
       <ng-alert [CONTENIDO]="texto"></ng-alert>
   </div>
    </div>
-  </div>
+
 </div>

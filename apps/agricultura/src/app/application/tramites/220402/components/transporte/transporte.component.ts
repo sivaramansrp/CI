@@ -1,90 +1,149 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { CatalogosSelect, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
-import { CatalogosSelect } from '@ng-mf/data-access-user';
-import { HttpCoreService } from '@ng-mf/data-access-user';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-
 import { Catalogo } from '@ng-mf/data-access-user';
 import { MediodetransporteService } from '../../services/medio-de-transporte.service';
-import { Solicitud220402State, Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
 import { Solicitud220402Query } from '../../estados/queries/tramites220402.query';
+import { Solicitud220402State } from '../../estados/tramites/tramites220402.store';
+import { Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
+import { Subject } from 'rxjs';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
 @Component({
   selector: 'app-transporte',
   templateUrl: './transporte.component.html',
   styleUrl: './transporte.component.scss',
 })
 export class TransporteComponent implements OnDestroy, OnInit {
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
-     * Estado de la transporte.
-     */
+  * @property {Solicitud220402State} transporteState
+  * @description Estado actual del transporte, que contiene información relacionada con el trámite y el transporte.
+  */
   public transporteState!: Solicitud220402State;
 
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * @description Subject utilizado para notificar y completar las suscripciones activas al destruir el componente, evitando fugas de memoria.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * @property {FormGroup} transporteForm
+   * @description Formulario principal que contiene los datos del transporte.
+   */
   transporteForm!: FormGroup;
+
+  /**
+   * @property {CatalogosSelect} tiposDocumentos
+   * @description Catálogo que contiene información sobre los medios de transporte disponibles.
+   */
   public tiposDocumentos: CatalogosSelect = {
     labelNombre: 'Medio de transporte',
     required: true,
     primerOpcion: 'Selecciona un medio de transporte',
     catalogos: [],
   };
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
 
   /**
-   * constructor de la clase
-   * Fetch the fetchTiposDocumentos datos
-   * Crea el formulario
-   * @param fb: constructor de formularios
-   * @param validacionesService: Validaciones comunes del formulario.
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
+
+  /**
+   * Constructor de la clase TransporteComponent.
+   *
+   * @param {FormBuilder} fb - Constructor de formularios para crear y gestionar el FormGroup principal.
+   * @param {ValidacionesFormularioService} validacionesService - Servicio para validaciones comunes del formulario.
+   * @param {MediodetransporteService} mediodetransporteService - Servicio para obtener los medios de transporte.
+   * @param {Solicitud220402Store} solicitud220402Store - Store para gestionar el estado del trámite 220402.
+   * @param {Solicitud220402Query} solicitud220402Query - Query para consultar el estado del trámite 220402.
+   * @param {ConsultaioQuery} consultaioQuery - Query para consultar el estado de la consulta actual.
+   * @param {ChangeDetectorRef} cdr - Servicio para detectar y aplicar cambios manualmente en la vista.
+   *
+   * @memberof TransporteComponent
    */
   constructor(
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-    private httpCoreService: HttpCoreService,
     private mediodetransporteService: MediodetransporteService,
     private solicitud220402Store: Solicitud220402Store,
-    private solicitud220402Query: Solicitud220402Query
+    private solicitud220402Query: Solicitud220402Query,
+    private consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
   ) {
     this.fetchTiposDocumentos();
   }
 
-   /**
-     * Método que se ejecuta al inicializar el componente.
-     * 
-     * Este método realiza las siguientes acciones:
-     * 1. Inicializa los catálogos necesarios para el formulario.
-     * 
-     * @returns {void}
-     */
-    ngOnInit(): void {
-      this.solicitud220402Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.transporteState = seccionState;
-          })
-        )
-        .subscribe();
-  
-        // Inicializar el formulario principal
-      this.crearFormTransporte();
-      
-    }
+  /**
+    * Método que se ejecuta al inicializar el componente.
+    * 
+    * Este método realiza las siguientes acciones:
+    * 1. Inicializa los catálogos necesarios para el formulario.
+    * 
+    * @returns {void}
+    */
+  ngOnInit(): void {
+    this.solicitud220402Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.transporteState = seccionState;
+        })
+      )
+      .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+    // Inicializar el formulario principal
+    this.crearFormTransporte();
+
+  }
 
   /**
-   * Este método se utiliza para crear la forma del transporte. - 220401
+   * Este método se utiliza para crear la forma del transporte. - 220402
    */
   crearFormTransporte(): void {
     this.transporteForm = this.fb.group({
       mediodeTransporte: [this.transporteState?.mediodeTransporte, [Validators.required]],
-      identificacionDelTransporte: [this.transporteState?.identificacionDelTransporte]
+      identificacionDelTransporte: [this.transporteState?.identificacionDelTransporte, [Validators.maxLength(50)]]
     });
+    this.inicializarEstadoFormulario();
   }
-
   /**
-   * Este método se utiliza para validar la forma del transporte. - 220401
+   * @method inicializarEstadoFormulario
+   * @description Configura el estado del formulario `transporteForm` según el modo de solo lectura.
+   * 
+   * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+   * En caso contrario, habilita los controles del formulario.
+   * 
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.transporteForm?.disable();
+    } else {
+      this.transporteForm?.enable();
+    }
+  }
+  /**
+   * Este método se utiliza para validar la forma del transporte. - 220402
    * @param form: Forma del transporte
    * @param field: campo del formulario
    * @returns Validaciones del formulario
@@ -94,7 +153,7 @@ export class TransporteComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Este método se utiliza para marcar los controles del formulario como tocados. - 220401
+   * Este método se utiliza para marcar los controles del formulario como tocados. - 220402
    */
   validarTransporteFormulario(): void {
     if (this.transporteForm.invalid) {
@@ -107,7 +166,7 @@ export class TransporteComponent implements OnDestroy, OnInit {
   fetchTiposDocumentos(): void {
     this.mediodetransporteService
       .getMedioDeTransporte()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
         this.tiposDocumentos.catalogos = data as Catalogo[];
       });
@@ -121,17 +180,28 @@ export class TransporteComponent implements OnDestroy, OnInit {
      * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
      * @returns {void}
      */
-    setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud220402Store): void {
-      const VALOR = form.get(campo)?.value;
-      (this.solicitud220402Store[metodoNombre] as (value: any) => void)(VALOR);
-    }
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud220402Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.solicitud220402Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
 
   /**
    * Este método se utiliza para destruir la suscripción.
-   * @returns destroyed$
+   * @returns destroyNotifier$
    */
   ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
-} // Initialize any properties or start any processes here
+
+  /**
+   * Este método se utiliza para mostrar los errores del formulario.
+   * Marca todos los controles del formulario como tocados para que se muestren los errores de validación.
+   * 
+   * @returns {void}
+   */
+  public mostrarErrores() {
+    this.transporteForm?.markAllAsTouched?.();
+    this.cdr.detectChanges();
+  }
+}

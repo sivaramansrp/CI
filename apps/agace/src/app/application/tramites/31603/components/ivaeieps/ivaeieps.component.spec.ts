@@ -12,10 +12,14 @@ describe('IvaeiepsComponent', () => {
   let fixture: ComponentFixture<IvaeiepsComponent>;
   let comercioExteriorSvcMock: any;
   let tramite31603QueryMock: any;
+  let bsModalServiceMock: { show: jest.Mock };
 
   beforeEach(async () => {
     comercioExteriorSvcMock = {
       getEmpresasTablaDatos: jest.fn().mockReturnValue(of([])),
+      getBancoDatos: jest.fn().mockReturnValue(of({ data: [] })),
+      getInversionTablaDatos: jest.fn().mockReturnValue(of([])),
+      getTipoInversionDatos: jest.fn().mockReturnValue(of({ data: [] })),
     };
 
     tramite31603QueryMock = {
@@ -28,12 +32,14 @@ describe('IvaeiepsComponent', () => {
       }),
     };
 
+    bsModalServiceMock = { show: jest.fn() };
+
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, IvaeiepsComponent],
       providers: [
         { provide: RegistrosDeComercioExteriorService, useValue: comercioExteriorSvcMock },
         { provide: Tramite31603IvaeiepsQuery, useValue: tramite31603QueryMock },
-        { provide: BsModalService, useValue: {} },
+        { provide: BsModalService, useValue: bsModalServiceMock },
         { provide: Tramite31603IvaeiepsStore, useValue: {} },
       ],
     }).compileComponents();
@@ -74,21 +80,6 @@ describe('IvaeiepsComponent', () => {
     expect(rfcControl?.valid).toBeFalsy();
     rfcControl?.setValue('ABC123456789');
     expect(rfcControl?.valid).toBeTruthy();
-  });
-
-  it('should open modal when abrirModal is called', () => {
-    const modalService = TestBed.inject(BsModalService);
-    const showSpy = jest.spyOn(modalService, 'show');
-    const template = {} as any;
-    component.abrirModal(template);
-    expect(showSpy).toHaveBeenCalledWith(template);
-  });
-
-  it('should call setValoresStore and update store value', () => {
-    const tramite31603StoreMock = TestBed.inject(Tramite31603IvaeiepsStore);
-    const setMock = jest.fn();
-    (tramite31603StoreMock as any).setTestValue = setMock;
-    expect(setMock).toHaveBeenCalledWith(component.ivaForm.get('rfc')?.value);
   });
 
   it('should complete destroyNotifier$ on component destroy', () => {

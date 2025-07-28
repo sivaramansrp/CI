@@ -8,10 +8,17 @@
             [label]="'Entidad Federativa'"
             [required]="true"
             name="entidad"
+            [isDisabled]="esFormularioSoloLectura" 
+            [required]="true"
             formControlName="entidad"
-            (selectionChange)="getEntidad($event)"
+            (selectionChange)="setValorStore(representacionForm, 'entidad')"
             >
           </app-catalogo-select>
+          <div *ngIf="esInvalido('entidad')" class="text-danger">
+              <small *ngIf="representacionForm.get('entidad')?.errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+          </div>
         </div>
         <div class="col-md-4">
           <app-catalogo-select
@@ -19,10 +26,17 @@
             [label]="'Representación federal'"
             [required]="true"
             name="representacion"
+            [isDisabled]="esFormularioSoloLectura" 
+            [required]="true"
             formControlName="representacion"
-           (selectionChange)="getRepresentacion($event)"
+           (selectionChange)="setValorStore(representacionForm, 'representacion')"
            >
           </app-catalogo-select>
+          <div *ngIf="esInvalido('representacion')" class="text-danger">
+              <small *ngIf="representacionForm.get('representacion')?.errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+          </div>
         </div>
       </div>
     </form>

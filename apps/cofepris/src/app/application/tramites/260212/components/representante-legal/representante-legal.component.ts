@@ -12,6 +12,9 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { map, takeUntil } from 'rxjs';
 import { Subject } from 'rxjs';
+import { Tramite260212Query } from '../../estados/tramite260212.query';
+import { Tramite260212State } from '../../estados/tramite260212.store';
+
 
 
 /**
@@ -38,11 +41,18 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * Cuando es verdadero, el usuario no puede editar los campos del formulario.
    */
   public esFormularioSoloLectura: boolean = true;
+    /**
+   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
  * Subject para limpiar recursos y cancelar suscripciones al destruir el componente.
  */
   private destroy$ = new Subject<void>();
-
+   /**
+   * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
+   */
+  public solicitudState!: Tramite260212State;
   /**
    * Formulario reactivo para los datos del representante legal.
    */
@@ -68,7 +78,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   constructor(private http: HttpClient,
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService, private solicitudService: SolicitudService,
-    private consultaioQuery: ConsultaioQuery) {
+    private consultaioQuery: ConsultaioQuery,private tramite260212Query: Tramite260212Query,) {
 
   }
 
@@ -121,12 +131,21 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   actualizarEstado(): void {
+    this.tramite260212Query.selectSolicitud$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.solicitudState = seccionState as Tramite260212State;
+            })
+          )
+          .subscribe()
+
     this.personaForm = this.fb.group({
-      losDatos: ['', Validators.required],
-      rfc: ['', Validators.required],
-      nombre: [{ value: '', disabled: true }],
-      primerApellido: [{ value: '', disabled: true }],
-      segundoApellido: [{ value: '', disabled: true }],
+      losDatos: [ this.solicitudState.losDatos, Validators.required],
+      rfc: [ this.solicitudState.rfc, Validators.required],
+      nombre: [{ value:  this.solicitudState.nombre, disabled: true }],
+      primerApellido: [{ value:this.solicitudState.primerApellido, disabled: true }],
+      segundoApellido: [{ value:  this.solicitudState.segundoApellido, disabled: true }],
     });
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -157,6 +176,36 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       this.losDatos = data;
     });
   }
+
+  /**
+   * @method buscar
+   * @description
+   * Busca los datos del representante legal utilizando el RFC proporcionado en el formulario.
+   * Si el campo RFC está vacío, marca el campo como tocado para mostrar la validación.
+   * Si el RFC está presente, realiza una solicitud al servicio para obtener los datos del representante
+   * y actualiza los campos del formulario con la respuesta recibida.
+   *
+   * @example
+   * this.buscar();
+   * // Si el RFC es válido, llena los campos de nombre y apellidos con los datos obtenidos.
+   */
+  buscar(): void {
+    if (!this.personaForm.get('rfc')?.value) {
+      this.personaForm.get('rfc')?.markAllAsTouched();
+    } else {
+      this.solicitudService.ObtenerReprestantanteData()
+      .pipe(
+        takeUntil(this.destroy$)
+      ).subscribe((response) => {
+        this.personaForm.patchValue({
+          nombre: response.nombre,
+          primerApellido: response.apellidoPaterno,
+          segundoApellido: response.apellidoMaterno
+        });
+      });
+    }
+  }
+
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Libera recursos y cancela suscripciones.

@@ -1,16 +1,14 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite110216State, Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
 import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
+import { CertificadosOrigenService } from '../../services/certificado-origen.service';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
 import { HistoricoProductoresComponent } from '../../components/historico-productores/historico-productores.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { Subject } from 'rxjs';
 import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
-import { Tramite110216State } from '../../../../estados/tramites/tramite110216.store';
-import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar el paso uno del trámite.
@@ -56,7 +54,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * el componente se destruye.
    */
   destroyNotifier$: Subject<void> = new Subject();
-
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
   /**
    * Constructor del componente.
    * 
@@ -65,7 +69,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   constructor(
     public store: Tramite110216Store,
-    public tramiteQuery: Tramite110216Query
+    public tramiteQuery: Tramite110216Query,
+    private consultaioQuery: ConsultaioQuery,
+    private certificadosOrigenService: CertificadosOrigenService,
   ) { }
 
   /**
@@ -84,6 +90,19 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.indice = this.tramiteState.pestanaActiva;
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaDatos.update) {
+      this.fetchGetDatosConsulta();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
 
   /**
@@ -98,7 +117,39 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.indice = i;
     this.store.setPestanaActiva(this.indice);
   }
-
+  /**
+   * Obtiene los datos de consulta desde el servicio y actualiza el estado del store.
+   * 
+   * Este método realiza una solicitud al servicio `CertificadosOrigenService` para obtener
+   * los datos de consulta relacionados con el trámite. Si la respuesta es exitosa, actualiza
+   * múltiples propiedades en el store con los datos obtenidos.
+   */
+  public fetchGetDatosConsulta(): void {
+    this.certificadosOrigenService
+      .getDatosConsulta()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
+        if (respuesta.success) {
+          this.esDatosRespuesta = true;
+          this.store.setObservaciones(respuesta.datos.observaciones);
+          this.store.setIdioma(respuesta.datos.idioma);
+          this.store.setEntidadFederativa(respuesta.datos.entidadFederativa);
+          this.store.setRepresentacionFederal(respuesta.datos.representacionFederal);
+          this.store.setGrupoReceptor(respuesta.datos.grupoReceptor);
+          this.store.setGrupoDeDirecciones(respuesta.datos.grupoDeDirecciones);
+          this.store.setGrupoRepresentativo(respuesta.datos.grupoRepresentativo);
+          this.store.setGrupoDeTransporte(respuesta.datos.grupoDeTransporte);
+          this.store.setTercerOperador(respuesta.datos.tercerOperador);
+          this.store.setGrupoOperador(respuesta.datos.grupoOperador);
+          this.store.setGrupoTratado(respuesta.datos.grupoTratado);
+          this.store.setGrupoDeDomicilio(respuesta.datos.grupoDeDomicilio);
+          this.store.setMercanciaTablaDatos(respuesta.datos.mercanciaSeleccionadasTablaDatos);
+          this.store.setMercanciaDisponsiblesTablaDatos(respuesta.datos.mercanciaDisponsiblesTablaDatos);
+          this.store.setDatosConfidencialesProductor(respuesta.datos.datosConfidencialesProductor);
+          this.store.setProductorMismoExportador(respuesta.datos.productorMismoExportador);
+          this.store.setProductoresExportador(respuesta.datos.productoresExportador);
+        }
+      });
+  }
   /**
    * Método que se ejecuta al destruir el componente.
    * 

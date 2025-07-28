@@ -8,7 +8,7 @@
                             <app-catalogo-select [catalogo]="operacionData" [label]="'Tipo de operacíon'"
                                 [required]="true" for="tipoDeOperacion" id="tipoDeOperacion"
                                 formControlName="tipoDeOperacion"
-                                (change)="setValoresStore(solicitudFormGroup,'tipoDeOperacion','settipoDeOperacion')"></app-catalogo-select>
+                                (change)="setValoresStore(solicitudFormGroup,'tipoDeOperacion','settipoDeOperacion')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                         </div>
                     </div>
                     <div class="col-md-4 ms-5">
@@ -16,7 +16,7 @@
                             <app-catalogo-select [catalogo]="movimientoData" [label]="'Tipo de movimiento'"
                                 [required]="true" for="tipoDeMovimiento" id="tipoDeMovimiento"
                                 formControlName="tipoDeMovimiento"
-                                (change)="setValoresStore(solicitudFormGroup,'tipoDeMovimiento','settipoDeMovimiento')"></app-catalogo-select>
+                                (change)="setValoresStore(solicitudFormGroup,'tipoDeMovimiento','settipoDeMovimiento')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                         </div>
                     </div>
                 </div>
@@ -26,13 +26,13 @@
                     <label class="form-label" for="obraDeArteInformacion">Informacion obra de arte*:</label>
                     <div class="table-responsive">
                         <ng-table [commonTableHeader]="tablaObraDeArteData"
-                            [commonTableBody]="obraDeArteRowData"></ng-table>
+                            [commonTableBody]="obraDeArteRowData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
                     </div>
                 </div>
 
                 <div class="col-md-12 mt-5 d-flex justify-content-end">
-                    <button type="button" class="btn btn-danger">Eliminar</button>
-                    <button type="button" class="btn btn-primary ms-3" (click)="toggleObraDeArte()">Agregar</button>
+                    <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura">Eliminar</button>
+                    <button type="button" class="btn btn-primary ms-3" (click)="toggleObraDeArte()" [disabled]="esFormularioSoloLectura">Agregar</button>
                 </div>
             </div>
 
@@ -42,7 +42,7 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="motivoData" [label]="'Motivo'" [required]="true" for="motivo"
                             id="motivo" formControlName="motivo"
-                            (change)="setValoresStore(solicitudFormGroup,'motivo','setmotivo')"></app-catalogo-select>
+                            (change)="setValoresStore(solicitudFormGroup,'motivo','setmotivo')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                     </div>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="paisData" [label]="'País'" [required]="true" for="pais"
                                 id="pais" formControlName="pais"
-                                (change)="setValoresStore(solicitudFormGroup,'pais','setpais')"></app-catalogo-select>
+                                (change)="setValoresStore(solicitudFormGroup,'pais','setpais')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                         </div>
                     </div>
 
@@ -83,7 +83,7 @@
                             <app-catalogo-select [catalogo]="transporteData" [label]="'Medio de transporte'"
                                 [required]="true" for="medioTransporte" id="medioTransporte"
                                 formControlName="medioTransporte"
-                                (change)="setValoresStore(solicitudFormGroup,'medioTransporte','setmedioTransporte')"></app-catalogo-select>
+                                (change)="setValoresStore(solicitudFormGroup,'medioTransporte','setmedioTransporte')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                         </div>
 
                     </div>
@@ -113,7 +113,7 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="aduanaData" [label]="'Ubicacion final'" [required]="true"
                             for="destinofinal" id="destinofinal" formControlName="destinofinal"
-                            (change)="setValoresStore(solicitudFormGroup,'destinofinal','setdestinofinal')"></app-catalogo-select>
+                            (change)="setValoresStore(solicitudFormGroup,'destinofinal','setdestinofinal')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                     </div>
                 </div>
             </div>
@@ -126,7 +126,7 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="aduanaData" [label]="'Periodo'" [required]="true"
                             for="periodoEstancia" id="destinofinal" formControlName="periodoEstancia"
-                            (change)="setValoresStore(solicitudFormGroup,'periodoEstancia','setperiodoEstancia')"></app-catalogo-select>
+                            (change)="setValoresStore(solicitudFormGroup,'periodoEstancia','setperiodoEstancia')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                     </div>
                 </div>
             </div>
@@ -139,7 +139,7 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="aduanaData" [label]="'Aduana de entrada'" [required]="true"
                             for="aduanaEntrada" id="destinofinal" formControlName="aduanaEntrada"
-                            (change)="setValoresStore(solicitudFormGroup,'aduanaEntrada','setaduanaEntrada')"></app-catalogo-select>
+                            (change)="setValoresStore(solicitudFormGroup,'aduanaEntrada','setaduanaEntrada')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                     </div>
                 </div>
             </div>

@@ -112,6 +112,35 @@ export interface Solicitud230101State {
    * Importe del pago realizado.
    */
   impPago: string;
+/**
+ * Rango de días seleccionado.
+ */
+seleccionarsRangoDias: string,
+
+/**
+ * País de origen seleccionado.
+ */
+seleccionePaisOrigen: string,
+
+/**
+ * Destino seleccionado.
+ */
+seleccionarsDestino: string,
+
+/**
+ * Rango de días seleccionado para las aduanas.
+ */
+seleccionarsRangoDiasAduanas: string,
+
+/**
+ * Rango de días seleccionado para el país de origen.
+ */
+seleccionarsRangoDiasPaisOrigen: string,
+
+/**
+ * Rango de días seleccionado para el destino.
+ */
+seleccionarsRangoDiasDestino: string,
 }
 
 /**
@@ -120,27 +149,140 @@ export interface Solicitud230101State {
  */
 export function createInitialSolicitudState(): Solicitud230101State {
   return {
-    regimen: '',
-    tipoProducto: '',
-    paisProcedencia: '',
-    selectedOptions: [false, false, false],
-    clasificacionMercancia: '',
-    fraccionArancelaria: '',
-    descFraccionArancelaria: '',
-    cantidad: '',
-    cantidadLetra: '',
-    genero: '',
-    especie: '',
-    nombreComun: '',
-    descripcionProducto: '',
-    cantidadUMC: '',
-    manifiestosYdesc: false,
-    claveDeReferencia: '',
-    cadenaPagoDependencia: '',
-    banco: '',
-    llaveDePago: '',
-    fecPago: '',
-    impPago: ''
+   /**
+ * Régimen del trámite.
+ */
+regimen: '',
+
+/**
+ * Tipo de producto relacionado con el trámite.
+ */
+tipoProducto: '',
+
+/**
+ * País de procedencia del producto.
+ */
+paisProcedencia: '',
+
+/**
+ * Opciones seleccionadas en el trámite.
+ */
+selectedOptions: [false, false, false],
+
+/**
+ * Clasificación de las mercancías.
+ */
+clasificacionMercancia: '',
+
+/**
+ * Fracción arancelaria del producto.
+ */
+fraccionArancelaria: '',
+
+/**
+ * Descripción de la fracción arancelaria.
+ */
+descFraccionArancelaria: '',
+
+/**
+ * Cantidad del producto.
+ */
+cantidad: '',
+
+/**
+ * Cantidad del producto en letras.
+ */
+cantidadLetra: '',
+
+/**
+ * Género del producto.
+ */
+genero: '',
+
+/**
+ * Especie del producto.
+ */
+especie: '',
+
+/**
+ * Nombre común del producto.
+ */
+nombreComun: '',
+
+/**
+ * Descripción del producto.
+ */
+descripcionProducto: '',
+
+/**
+ * Unidad de medida del producto.
+ */
+cantidadUMC: '',
+
+/**
+ * Indica si hay manifiestos y descripción.
+ */
+manifiestosYdesc: false,
+
+/**
+ * Clave de referencia del trámite.
+ */
+claveDeReferencia: '',
+
+/**
+ * Cadena de dependencia asociada al trámite.
+ */
+cadenaPagoDependencia: '',
+
+/**
+ * Banco relacionado con el trámite.
+ */
+banco: '',
+
+/**
+ * Llave de pago del trámite.
+ */
+llaveDePago: '',
+
+/**
+ * Fecha de pago del trámite.
+ */
+fecPago: '',
+
+/**
+ * Importe del pago realizado.
+ */
+impPago: '',
+/**
+ * Rango de días seleccionado.
+ */
+seleccionarsRangoDias: '',
+
+/**
+ * País de origen seleccionado.
+ */
+seleccionePaisOrigen: '',
+
+/**
+ * Destino seleccionado.
+ */
+seleccionarsDestino: '',
+
+/**
+ * Rango de días seleccionado para las aduanas.
+ */
+seleccionarsRangoDiasAduanas: '',
+
+/**
+ * Rango de días seleccionado para el país de origen.
+ */
+seleccionarsRangoDiasPaisOrigen: '',
+
+/**
+ * Rango de días seleccionado para el destino.
+ */
+seleccionarsRangoDiasDestino: ''
+
   };
 }
 
@@ -386,4 +528,70 @@ export class Solicitud230101Store extends Store<Solicitud230101State> {
       impPago
     }));
   }
+ /**
+ * Actualiza el rango de días seleccionado.
+ * @param {string} seleccionarsRangoDias - Nuevo rango de días seleccionado.
+ */
+public setseleccionarsRangoDias(seleccionarsRangoDias: string): void {
+  this.update((state) => ({
+    ...state,
+    seleccionarsRangoDias
+  }));
+}
+
+/**
+ * Actualiza el país de origen seleccionado.
+ * @param {string} seleccionePaisOrigen - Nuevo país de origen seleccionado.
+ */
+public setseleccionePaisOrigen(seleccionePaisOrigen: string): void {
+  this.update((state) => ({
+    ...state,
+    seleccionePaisOrigen
+  }));
+}
+
+/**
+ * Actualiza el destino seleccionado.
+ * @param {string} seleccionarsDestino - Nuevo destino seleccionado.
+ */
+public setseleccionarsDestino(seleccionarsDestino: string): void {
+  this.update((state) => ({
+    ...state,
+    seleccionarsDestino
+  }));
+}
+
+/**
+ * Actualiza el rango de días seleccionado para las aduanas.
+ * @param {string} seleccionarsRangoDiasAduanas - Nuevo rango de días seleccionado para las aduanas.
+ */
+public setseleccionarsRangoDiasAduanas(seleccionarsRangoDiasAduanas: string): void {
+  this.update((state) => ({
+    ...state,
+    seleccionarsRangoDiasAduanas
+  }));
+}
+
+/**
+ * Actualiza el rango de días seleccionado para el país de origen.
+ * @param {string} seleccionarsRangoDiasPaisOrigen - Nuevo rango de días seleccionado para el país de origen.
+ */
+public setseleccionarsRangoDiasPaisOrigen(seleccionarsRangoDiasPaisOrigen: string): void {
+  this.update((state) => ({
+    ...state,
+    seleccionarsRangoDiasPaisOrigen
+  }));
+}
+
+/**
+ * Actualiza el rango de días seleccionado para el destino.
+ * @param {string} seleccionarsRangoDiasDestino - Nuevo rango de días seleccionado para el destino.
+ */
+public setseleccionarsRangoDiasDestino(seleccionarsRangoDiasDestino: string): void {
+  this.update((state) => ({
+    ...state,
+    seleccionarsRangoDiasDestino
+  }));
+}
+
 }

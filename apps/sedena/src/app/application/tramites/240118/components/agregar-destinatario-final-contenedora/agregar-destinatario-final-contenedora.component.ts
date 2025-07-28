@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { AgregarDestinatarioCustomComponent } from "../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  DestinoFinal,
+  Proveedor,
+} from '../../../../shared/models/terceros-relacionados.model';
+import { AgregarDestinatarioCustomComponent } from '../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component';
 import { CommonModule } from '@angular/common';
 import { ID_PROCEDIMIENTO } from '../../constants/solicitud-permiso-extraordinario-exportacion';
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
 import { Tramite240118Query } from '../../estados/tramite240118Query.query';
 import { Tramite240118Store } from '../../estados/tramite240118Store.store';
 
@@ -22,6 +25,13 @@ import { Tramite240118Store } from '../../estados/tramite240118Store.store';
 })
 export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
   /**
+   * Evento que se emite cuando se cierra el componente.
+   * Permite a los componentes padres reaccionar al cierre del modal.
+   *
+   * @type {EventEmitter<void>}
+   */
+  @Output() cerrar = new EventEmitter<void>();
+  /**
    * @property terechosDatos$
    * @type {Observable<DestinoFinal | Proveedor | null | undefined>}
    * @description Observable que emite datos relacionados con el destino final o proveedor.
@@ -30,10 +40,10 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
    */
   terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
   /**
-* @property {boolean} estaOculto - Indica si el elemento está oculto o visible.
-* @remarks Este valor determina la visibilidad del componente en la interfaz de usuario.
-* @command Cambiar el valor de esta propiedad para alternar la visibilidad.
-*/
+   * @property {boolean} estaOculto - Indica si el elemento está oculto o visible.
+   * @remarks Este valor determina la visibilidad del componente en la interfaz de usuario.
+   * @command Cambiar el valor de esta propiedad para alternar la visibilidad.
+   */
   public readonly idProcedimiento: number = ID_PROCEDIMIENTO;
 
   /**
@@ -41,9 +51,13 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
    *
    * @method constructor
    * @param {Tramite240118Store} tramiteStore - Store que administra el estado del trámite.
+   * @param {Tramite240118Query} tramiteQuery - Consulta que proporciona acceso a los datos del trámite.
    * @returns {void}
    */
-  constructor(public tramiteStore: Tramite240118Store, public tramiteQuery: Tramite240118Query) {
+  constructor(
+    public tramiteStore: Tramite240118Store,
+    public tramiteQuery: Tramite240118Query
+  ) {
     this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
   }
 

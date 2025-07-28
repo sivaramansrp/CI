@@ -21,6 +21,7 @@
                 [label]="'Estado'"
                 [required]="true"
                 name="estado"
+                 [isDisabled]="esFormularioSoloLectura ? true : false"
                 (change)="setValoresStore(domicilio,'estado', 'setEstado')"
             ></app-catalogo-select>
         </div>
@@ -70,7 +71,9 @@
     <div class="row">
         <div class="col-md-8">
             <div class="form-group">
-                <label class="form-label" for="calle">Calle*:</label>
+                <label class="form-label" for="calle">Calle*: 
+                      <span class="bi bi-question-circle-fill fs-4 m-1" title="Calle" data-bs-toggle="tooltip"></span>
+                </label>
                 <input
                     class="form-control"
                     id="calle"
@@ -118,11 +121,11 @@
         </div>
     </div>
     <div class="row">
-        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
-        [datos]="nicoTablaDatos"></app-tabla-dinamica>
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"   [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
+        [datos]="nicoTablaDatos"  (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
         <div class="container text-end mt-5">
-            <button class="btn btn-default me-2">Eliminar</button>
-            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent">Agregar</button>
+            <button class="btn btn-default me-2"  (click)="eliminarSeleccionados()" [disabled]="selectedRows.length === 0">Eliminar</button>
+            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent"  [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
     </div>
     <div class="row align-item-center">
@@ -130,7 +133,7 @@
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="avisoCheckbox" formControlName="avisoCheckbox" (change)="onAvisoCheckboxChange($event,domicilio,'avisoCheckbox', 'setAvisoCheckbox')">
                 <label class="form-check-label" for="avisoCheckbox">
-                    <span>Aviso de funcionamiento:</span>
+                    <span>Aviso de funcionamiento:  <span class="bi bi-question-circle-fill fs-4 m-1" title="Aviso de funcionamiento" data-bs-toggle="tooltip"></span></span>
                 </label>
             </div>
         </div>
@@ -157,7 +160,9 @@
                 [label]="'Régimen'"
                 [required]="true"
                 name="regimen"
+                 [isDisabled]="esFormularioSoloLectura ? true : false"
                 (change)="setValoresStore(domicilio,'regimen', 'setRegimen')"
+                [tooltipQuestionCircle]="true"
             ></app-catalogo-select>
         </div>
         <div class="col-md-8">
@@ -167,6 +172,7 @@
                 [label]="'Aduanas de entradas'"
                 [required]="true"
                 name="aduanasEntradas"
+                 [isDisabled]="esFormularioSoloLectura ? true : false"
                 (change)="setValoresStore(domicilio,'aduanasEntradas', 'setAduanasEntradas')"
             ></app-catalogo-select>
         </div>
@@ -175,7 +181,9 @@
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-                <label class="form-label text-start" for="numeroPermiso">Número de Permiso de Importación expedido por la CNSNS:</label>
+                <label class="form-label text-start" for="numeroPermiso">Número de Permiso de Importación expedido por la CNSNS:
+                      <span class="bi bi-question-circle-fill fs-4 m-1" title="Número de Permiso de Importación expedido por la CNSNS" data-bs-toggle="tooltip"></span>
+                </label>
                 <input
                     class="form-control"
                     id="numeroPermiso"
@@ -194,12 +202,17 @@
         </div>
     </div>
     <div class="row mt-5">
-        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
-        [datos]="mercanciasTablaDatos"></app-tabla-dinamica>
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla" (listaDeFilaSeleccionada)="onSeleccionChangeEvent($event)"
+        [datos]="mercanciasTablaDatos"   [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></app-tabla-dinamica>
         <div class="container text-end mt-5">
-            <button class="btn btn-default me-2">Modificar</button>
-            <button class="btn btn-default me-2">Eliminar</button>
-            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias">Agregar</button>
+            <button class="btn btn-default me-2"  
+      
+        (click)="modificarMercancia()"
+        data-bs-toggle="modal"
+        data-bs-target="#modalAddAgentMercancias"
+        [disabled]="esFormularioSoloLectura || noSeleccionado" >Modificar</button>
+            <button class="btn btn-default me-2" (click)="eliminarMercanciaSeleccionados()" [disabled]="esFormularioSoloLectura || noSeleccionado">Eliminar</button>
+            <button class="btn btn-primary me-2"  data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"  [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
     </div>
 
@@ -221,6 +234,7 @@
                             [required]="true"
                             name="claveScianModal"
                             (change)="setValoresStore(formAgente,'claveScianModal', 'setClaveScianModal')"
+                             [isDisabled]="esFormularioSoloLectura ? true : false"
                         ></app-catalogo-select>
                     </div>
                     <div class="form-group">
@@ -230,15 +244,16 @@
                             [label]="'Descripción del S.C.I.A.N.'"
                             [required]="false"
                             name="claveDescripcionModal"
+                             [isDisabled]="esFormularioSoloLectura ? true : false"
                             (change)="setValoresStore(formAgente,'claveDescripcionModal', 'setClaveDescripcionModal')"
                         ></app-catalogo-select>
                     </div>
                 </form>
             </div>
             <div class="modal-footer custom-footer">
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Limpiar</button>
+                <button type="button" class="btn btn-default"  (click)="limpiarFormAgente()">Limpiar</button>
                 <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Agregar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="agregarFilaScian()" >Agregar</button>
             </div>
         </div>
     </div>
@@ -259,6 +274,7 @@
                             [label]="'Clasificación del producto'"
                             [required]="true"
                             name="clasificacion"
+                             [isDisabled]="esFormularioSoloLectura ? true : false"
                             (change)="setValoresStore(formMercancias,'clasificacion', 'setClasificacion')"
                         ></app-catalogo-select>
                     </div>
@@ -269,6 +285,7 @@
                             [label]="'Especificar clasificación del producto'"
                             [required]="true"
                             name="especificarClasificacionProducto"
+                             [isDisabled]="esFormularioSoloLectura ? true : false"
                             (change)="setValoresStore(formMercancias,'especificarClasificacionProducto', 'setEspecificarClasificacionProducto')"
                         ></app-catalogo-select>
                     </div>
@@ -281,7 +298,7 @@
                         <input type="text" id="denominacionDistintiva" formControlName="denominacionDistintiva" class="form-control" (change)="setValoresStore(formMercancias,'denominacionDistintiva', 'setDenominacionDistintiva')">
                     </div>
                     <div class="form-group">
-                        <label for="denominacionComun">Denominación común, nombre común o nombre científico*:</label>
+                        <label for="denominacionComun">Denominación o nombre científico*:</label>
                         <input type="text" id="denominacionComun" formControlName="denominacionComun" class="form-control" (change)="setValoresStore(formMercancias,'denominacionComun', 'setDenominacionComun')">
                     </div>
                     <div class="form-group">
@@ -291,6 +308,7 @@
                             [label]="'Tipo de producto'"
                             [required]="true"
                             name="tipoDeProducto"
+                             [isDisabled]="esFormularioSoloLectura ? true : false"
                             (change)="setValoresStore(formMercancias,'tipoDeProducto', 'setTipoDeProducto')"
                         ></app-catalogo-select>
                     </div>
@@ -301,15 +319,18 @@
                             [label]="'Estado físico'"
                             [required]="true"
                             name="estadoFisico"
+                             [isDisabled]="esFormularioSoloLectura ? true : false"
                             (change)="setValoresStore(formMercancias,'estadoFisico', 'setEstadoFisico')"
                         ></app-catalogo-select>
                     </div>
                     <div class="form-group">
                         <label for="fraccionArancelaria">Fracción arancelaria*:</label>
+                        <span class="bi bi-question-circle-fill fs-4 m-1" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
                         <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control" (change)="setValoresStore(formMercancias,'fraccionArancelaria', 'setFraccionArancelaria')">
                     </div>
                     <div class="form-group">
-                        <label for="descripcionFraccion">Descripción de la fracción*:</label>
+                        <label for="descripcionFraccion">Descripción de la fracción arancelaria*:</label>
+                        <span class="bi bi-question-circle-fill fs-4 m-1" title="Descripción de la fracción arancelaria" data-bs-toggle="tooltip"></span>
                         <input type="text" id="descripcionFraccion" formControlName="descripcionFraccion" class="form-control" (change)="setValoresStore(formMercancias,'descripcionFraccion', 'setDescripcionFraccion')">
                     </div>
                     <div class="form-group">
@@ -318,6 +339,7 @@
                     </div>
                     <div class="form-group">
                         <label for="UMT">UMT*:</label>
+                        <span class="bi bi-question-circle-fill fs-4 m-1" title="UMT" data-bs-toggle="tooltip"></span>
                         <input type="text" id="UMT" formControlName="UMT" class="form-control" (change)="setValoresStore(formMercancias,'UMT', 'setUMT')">
                     </div>
                     <div class="form-group">
@@ -331,7 +353,10 @@
                             [label]="'UMC'"
                             [required]="true"
                             name="UMC"
+                            [tooltipQuestionCircle]="true"
+                             [isDisabled]="esFormularioSoloLectura ? true : false"
                             (change)="setValoresStore(formMercancias,'UMC', 'setUMC')"
+                            
                         ></app-catalogo-select>
                     </div>
                     <div class="form-group">
@@ -406,7 +431,7 @@
                               (click)="mostrar_colapsableTres()"
                               tabindex="0"
                             >
-                              <p class="panel-title">Uso específico</p>
+                              <p class="panel-title">Uso específico *</p>
                               <button type="button" class="collpase-button collapsed"></button>
                             </div>
                             @if(colapsableTres){
@@ -427,9 +452,9 @@
                 </form>
             </div>
             <div class="modal-footer custom-footer">
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Limpiar</button>
+                <button type="button" class="btn btn-default"(click)="limpiarForm()" >Limpiar</button>
                 <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Agregar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="agregarFilaMercancia()" [disabled]="formMercancias.invalid">Agregar</button>
             </div>
         </div>
     </div>

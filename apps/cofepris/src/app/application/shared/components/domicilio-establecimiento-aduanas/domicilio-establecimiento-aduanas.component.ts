@@ -7,8 +7,12 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators, }
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
+import { DatosDomicilioService } from '../../../tramites/260512/services/datos-domicilio.service'
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
+import { Modal } from 'bootstrap';
+
 /**
  * Representa la estructura de la respuesta de una tabla.
  */
@@ -74,6 +78,9 @@ export interface MercanciasTabla {
   styleUrls: ['./domicilio-establecimiento-aduanas.component.css'],
 })
 export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestroy {
+
+
+  
   /**
    * Referencia a los componentes de la lista de fechas.
    */
@@ -93,6 +100,12 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * Constante para el mensaje de alerta.
    */
   INPUT_FECHA_CADUCIDAD_CONFIG = INPUT_FECHA_CADUCIDAD_CONFIG;
+  
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    * @param fb
@@ -104,7 +117,9 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     public readonly fb: FormBuilder,
     private avisocalidadStore: AvisocalidadStore,
     private avisocalidadQuery: AvisocalidadQuery,
-    private service: DatosDomicilioLegalService
+    private service: DatosDomicilioLegalService,
+    private consultaioQuery: ConsultaioQuery,
+    private datosDomicilioService: DatosDomicilioService
   ) {
     // Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -114,6 +129,13 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * @property {FormGroup} domicilio
    */
   domicilio!: FormGroup;
+
+  /**
+   * Instancia del Modal de Bootstrap utilizada para controlar la visualización y el comportamiento del cuadro de diálogo modal
+   * dentro del componente DomicilioEstablecimientoComponent.
+   *
+   * */
+  modalInstance!: Modal; /**
 
   /**
    * Grupo de formularios para el agente aduanal.
@@ -222,8 +244,8 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * Etiqueta de la lista de fechas.
    * */
   public aduanasDeLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Aduanas de entrada disponibles:',
-    derecha: 'Aduanas de entrada seleccionadas*:',
+    tituluDeLaIzquierda: 'Aduanas de entrada disponibles',
+    derecha: 'Aduanas de entrada seleccionadas*',
   };
 
   /**
@@ -242,21 +264,39 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     derecha: 'País(es) seleccionado(s)*:',
   };
 
-
+ /**
+   * Catálogo de fracciones arancelarias y sus descripciones.
+   * @property {Array<{ fraccion: string, descripcion: string }>} fraccionesCatalogo
+   */
+  fraccionesCatalogo = [
+    { fraccion: '0101.21.01', descripcion: 'Caballos de carrera' },
+    { fraccion: '0201.30.00', descripcion: 'Carne de bovino congelada' },
+    { fraccion: '0402.10.01', descripcion: 'Leche en polvo, sin azúcar' },
+    { fraccion: '1006.30.99', descripcion: 'Arroz semiblanqueado' }
+  ];
   /**
    * Etiqueta de la lista de fechas.
    * */
   ngOnInit(): void {
-    this.avisocalidadQuery.selectSolicitud$
+
+     /**
+    * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+    *
+    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+    * - Llama a `configurarGrupoForm()` para aplicar configuraciones basadas en el estado recibido.
+    * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+    */
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.solicitudState = seccionState;
+          this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
-      .subscribe();
+      .subscribe()
+
     this.obtenerEstadoList();
-    this.obtenerTablaDatos();
+    // this.obtenerTablaDatos();
     this.obtenerMercanciasDatos();
     this.configurarGrupoForm(); // Configura el grupo de formularios con los valores iniciales.
 
@@ -273,13 +313,25 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * @memberof DatosDelEstablecimientoRfcComponent
    */
   configurarGrupoForm(): void {
+     this.avisocalidadQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
+    /* 
+    * Inicializa el grupo de formularios con los valores del estado de la solicitud.
+    */
     this.domicilio = this.fb.group({
       codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12)]],
       estado: [this.solicitudState?.estado, Validators.required],
-      muncipio: [this.solicitudState?.muncipio, Validators.required],
+      muncipio: [this.solicitudState?.muncipio, Validators.required , Validators.maxLength(120)],
       localidad: [this.solicitudState?.localidad],
       colonia: [this.solicitudState?.colonia],
-      calle: [this.solicitudState?.calle, [Validators.required]],
+      calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
       lada: [this.solicitudState?.lada],
       telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30)]],
       avisoCheckbox: [this.solicitudState?.avisoCheckbox, Validators.required],
@@ -287,28 +339,51 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
         { value: this.solicitudState?.licenciaSanitaria, disabled: false }, [Validators.required]],
     });
 
+    /** 
+     *Inicializa el grupo de formularios para el agente aduanal y las mercancías.
+     */
     this.formAgente = this.fb.group({
-      claveScianModal: ['', Validators.required],
-      claveDescripcionModal: [''],
+      claveScianModal: [this.solicitudState?.claveScianModal, Validators.required],
+      claveDescripcionModal: [this.solicitudState?.claveDescripcionModal],
     });
+
+    /** 
+     * Inicializa el grupo de formularios para las mercancías con los valores del estado de la solicitud.
+     */ 
     this.formMercancias = this.fb.group({
-      nombreComercial: ['', Validators.required],
-      nombreComun: ['', Validators.required],
-      nombreCientifico: ['', Validators.required],
-      usoEspecifico: ['', Validators.required],
-      estadofisico: ['', Validators.required],
-      fraccionArancelaria: ['', Validators.required],
-      descripcionFraccion: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMT: ['', Validators.required],
-      UMT: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMC: ['', Validators.required],
-      UMC: ['', Validators.required],
-      numerocas: ['', Validators.required],
-      porcentajeConcentracion: ['', Validators.required],
-      numeroRegistro: ['', Validators.required],
-      clasificacionToxicologica: ['', Validators.required],
-      objetoImportacion: ['', Validators.required],
+      nombreComercial: [this.solicitudState?.nombreComercial, Validators.required],
+      nombreComun: [this.solicitudState?.nombreComun, Validators.required],
+      nombreCientifico: [this.solicitudState?.nombreCientifico, Validators.required],
+      usoEspecifico: [this.solicitudState?.usoEspecifico, Validators.required],
+      estadofisico: [this.solicitudState?.estadoFisico, Validators.required],
+      fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, Validators.required],
+      descripcionFraccion: [{ value: this.solicitudState?.descripcionFraccion, disabled: true }, Validators.required],
+      cantidadUMT: [this.solicitudState?.cantidadUMT, Validators.required],
+      UMT: [{ value: this.solicitudState?.UMT, disabled: true }, Validators.required],
+      cantidadUMC: [this.solicitudState?.cantidadUMC, Validators.required],
+      UMC: [this.solicitudState?.UMC, Validators.required],
+      numerocas: [this.solicitudState?.numeroCas, Validators.required],
+      porcentajeConcentracion: [this.solicitudState?.porcentajeConcentracion, Validators.required],
+      clasificacionToxicologica: [this.solicitudState?.clasificacionToxicologica, Validators.required],
+      objetoImportacion: [this.solicitudState?.objetoImportacion, Validators.required],
     });
+
+     /*
+     * Si el formulario está en modo solo lectura, deshabilita todos los campos.
+     * En caso contrario, habilita los campos para permitir la edición.
+     * Esto asegura que el formulario refleje correctamente el estado de solo lectura.
+     */
+    if (this.esFormularioSoloLectura && this.domicilio && this.formAgente && this.formMercancias) {
+      this.domicilio.disable();
+      this.formAgente.disable();
+      this.formMercancias.disable();
+
+    } else {
+      this.domicilio.enable();
+      this.formAgente.enable();
+      this.formMercancias.enable();
+    }
+
   }
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
@@ -336,7 +411,6 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     },
   ];
 
-
   /**
    * Método para obtener el valor de la fecha seleccionada.
    * @param event
@@ -354,7 +428,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * Método para obtener el valor de la fecha seleccionada.
    */
   obtenerTablaDatos(): void {
-    this.service
+    this.datosDomicilioService
       .getObtenerTablaDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
@@ -366,7 +440,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * Método para obtener el valor de la fecha seleccionada.
    */
   obtenerMercanciasDatos(): void {
-    this.service
+    this.datosDomicilioService
       .getObtenerMercanciasDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
@@ -390,6 +464,73 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     this.colapsableTres = !this.colapsableTres;
   }
 
+  /**
+   * @method onClaveScianChange
+   * @description Maneja el evento de cambio del dropdown y actualiza el campo de descripción.
+   * @param {Event} event - Evento de cambio del dropdown.
+   */
+  onClaveScianChange(event: Event): void {
+    const SELECTED_VALUE = (event.target as HTMLSelectElement).value;
+    const SELECTED_OPTION = this.estado.find((item) => item.id === Number(SELECTED_VALUE));
+
+    if (SELECTED_OPTION) {
+      this.formAgente.patchValue({
+        claveDescripcionModal: SELECTED_OPTION.descripcion,
+      });
+    }
+  }
+
+   /**
+   * @method limpiarScianForm
+   * @description Limpia y reinicia el formulario asociado al agente SCian.
+   * @returns {void}
+   * 
+   * @memberof DomicilioEstablecimientoComponent
+   */
+  limpiarScianForm(): void {
+    this.formAgente.reset();
+  }
+
+/**
+   * Guarda los datos del formulario del agente SCIAN en la tabla Nico.
+   * 
+   * Si el formulario `formAgente` es válido, crea un nuevo objeto `NicoInfo` con los valores
+   * de los campos `claveScianModal` y `claveDescripcionModal`, lo agrega al arreglo `nicoTablaDatos`,
+   * limpia el formulario y cierra el modal correspondiente.
+   *
+   * @returns {void}
+   * @memberof DomicilioComponent
+   */
+  guardarScian(): void {
+    if (this.formAgente.valid) {
+      const NUEVO_DATO: NicoInfo = {
+        clave_Scian: this.formAgente.get('claveScianModal')?.value,
+        descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
+      };
+this.nicoTablaDatos.push(NUEVO_DATO);
+  this.formAgente.reset();
+   this.cerrarModalScian();
+}
+  
+this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe((valor: string) => {
+      const MATCHED = this.fraccionesCatalogo.find(item =>
+        item.fraccion.startsWith(valor)
+      );
+      const DESCRIPCION = MATCHED ? MATCHED.descripcion : '';
+      this.formMercancias.get('descripcionFraccion')?.setValue(DESCRIPCION);
+    });
+  }
+
+ /**
+   * @method cerrarModalScian
+   * @description Oculta el modal relacionado con el catálogo SCIAN.
+   * @returns {void}
+   *
+   * @memberof DomicilioEstablecimientoComponent
+   */
+  cerrarModalScian(): void {
+    this.modalInstance.hide();
+  }
   /**
  * @description
  * Método que actualiza el estado del store con los valores del formulario.

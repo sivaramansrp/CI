@@ -67,14 +67,14 @@ import {
   PropietarioTipoPersona,
   ScianModel,
 } from '../../models/datos-de-la-solicitud.model';
-import { Subject, takeUntil } from 'rxjs';
-import { ScianData } from '../../../shared/models/datos-modificacion.model';
+import { Subject ,map, takeUntil } from 'rxjs';
 
-import { SCIAN_DATA } from '../../constantes/datos-scian.enum';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { EstablecimientoService } from '../../services/establecimiento.service';
 import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';
-import { NUEVA_NOTIFICACION, PAIS_DE_PROCEDENCIA_LABEL } from '../../constantes/datos-domicilio-legal.enum';
+
+import { NUEVA_NOTIFICACION, PAIS_DE_ORIGEN_LABEL, PAIS_DE_PROCEDENCIA_LABEL, USO_ESPECIFICO_LABEL } from '../../constantes/datos-domicilio-legal.enum';
 /*
  ** component
  */
@@ -104,6 +104,11 @@ import { NUEVA_NOTIFICACION, PAIS_DE_PROCEDENCIA_LABEL } from '../../constantes/
 export class DatosDelSolicitudModificacionComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
+/**
+ * @description
+ * Componente que gestiona la modificación de datos relacionados con una solicitud.
+ */
+  public DatosDelSolicitudModificacionComponent = DatosDelSolicitudModificacionComponent;
 
   /**
  * @input mostrarScianBotones
@@ -143,7 +148,7 @@ export class DatosDelSolicitudModificacionComponent
    * Esta propiedad almacena los datos de la notificación que se mostrará al usuario.
    * Se utiliza para configurar el tipo, categoría, mensaje y otros detalles de la notificación.
    */
-  public nuevaNotificacion: Notificacion = NUEVA_NOTIFICACION;
+  public nuevaNotificacion!: Notificacion ;
 
   /**
    * Índice del elemento que se desea eliminar.
@@ -170,6 +175,17 @@ export class DatosDelSolicitudModificacionComponent
    * @param i - Índice del pedimento que se desea eliminar. Por defecto, es 0.
    */
   abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: 'Cancelar',
+  };
     this.elementoParaEliminar = i;
   }
 
@@ -349,6 +365,20 @@ export class DatosDelSolicitudModificacionComponent
    * Etiqueta para el crosslist de país de procedencia.
    */
   public paisDeProcedenciaLabel = PAIS_DE_PROCEDENCIA_LABEL;
+
+  /**
+   * Etiqueta para el campo de uso específico.
+   * 
+   * Esta propiedad almacena la etiqueta que se utiliza para mostrar el campo "Uso Específico"
+   * en los formularios o tablas del componente.
+   */
+  public usoEspecificoLabel = USO_ESPECIFICO_LABEL;
+  /**
+   * Etiqueta para el país de origen.
+   * @type {CrossListLable}
+   */
+  public paisDeOrigenLabel = PAIS_DE_ORIGEN_LABEL;
+  
   /**
    * Lista de países para la selección de origen.
    */
@@ -493,6 +523,16 @@ export class DatosDelSolicitudModificacionComponent
    * Datos de la tabla de mercancías.
    */
   mercanciasTablaDatos: MercanciasInfo[] = [];
+  /**
+   * Datos de la tabla mercancías.
+   */
+  public seleccionados: MercanciasInfo[] = [];
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los formularios estarán deshabilitados y no se podrán editar.
+   * Cuando es `false`, los formularios estarán habilitados para edición.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -505,9 +545,17 @@ export class DatosDelSolicitudModificacionComponent
     private fb: FormBuilder,
     private establecimientoService: EstablecimientoService,
     private domicilioEstablecimientoStore: DatosDelSolicituteSeccionStateStore,
-    private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery
+    private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery,
+     private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -525,7 +573,53 @@ export class DatosDelSolicitudModificacionComponent
       this.eliminarNumeroYFechaControls();
     }
     this.obtenerScianTablaDatos();
+    this.cargarDatosDesdeApi()
+    if (this.esFormularioSoloLectura) {
+      this.domicilioEstablecimiento.disable();
+      this.solicitudEstablecimientoForm.disable();
+    }
   }
+
+  /**
+   * @method cargarDatosDesdeApi
+   * @description
+   * Este método obtiene los datos de mercancías desde el servicio `EstablecimientoService`
+   * y los agrega al arreglo `mercanciasTablaDatos`.
+   */
+  cargarDatosDesdeApi() {
+    this.establecimientoService.getMercancias().pipe(takeUntil(this.destroy$))
+      .subscribe((response: MercanciasInfo[]) => {
+        response?.forEach((resp: MercanciasInfo) => {
+          this.mercanciasTablaDatos.push(resp)
+        })
+      });
+  }
+  /**
+   * @method loadScian
+   * @description
+   * Método que carga los datos SCIAN desde el servicio `EstablecimientoService`
+   * y los asigna al formulario `scianForm`.
+   */
+
+onSeleccionChange(event: MercanciasInfo[]): void {
+  this.seleccionados = event;
+}
+/**
+ * @method loadScian
+ * @description 
+ * Carga los datos SCIAN desde el servicio `EstablecimientoService`
+ * y los asigna al formulario `scianForm`.
+ */
+eliminarSeleccionados(): void {
+  this.seleccionados.forEach(row => {
+    const INDEX = this.mercanciasTablaDatos.indexOf(row);
+    if (INDEX > -1) {
+      this.mercanciasTablaDatos.splice(INDEX, 1);
+    }
+  });
+  this.seleccionados = [];
+}
+
 
   /**
   * @method obtenerScianTablaDatos
@@ -596,9 +690,9 @@ export class DatosDelSolicitudModificacionComponent
    */
   crearAgregarFormulario(): void {
     this.domicilioEstablecimiento = this.fb.group({
-      ideGenerica1: ['', Validators.required],
+      ideGenerica: ['', Validators.required],
       observaciones: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(2000)]],
-      establecimientoRFCResponsableSanitario: ['', [Validators.required,Validators.pattern(REGEX_RFC_FISICA)]],
+      establecimientoRFCResponsableSanitario: ['', [Validators.required,Validators.pattern(REGEX_RFC_FISICA), Validators.maxLength(13)]],
       establecimientoRazonSocial:['', Validators.required],
       establecimientoCorreoElectronico :['', [Validators.required, Validators.email]],
       establecimientoEstados :['', Validators.required],
@@ -607,9 +701,8 @@ export class DatosDelSolicitudModificacionComponent
       establishomentoColonias: [''],
       calle: ['', Validators.required],
       lada: ['', [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
-      telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],Validators.maxLength(30)],
-      establecimientoDomicilioCodigoPostal :['', [Validators.required,Validators.maxLength(12)]],
-      scian: this.fb.array([]),
+      telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30)]],
+      establecimientoDomicilioCodigoPostal :['', [Validators.required,Validators.maxLength(12)]]
     });
     this.scianForm = this.fb.group({
       scian: ['', Validators.required],
@@ -628,7 +721,6 @@ export class DatosDelSolicitudModificacionComponent
       clasificacion: ['', Validators.required],
       especificarClasificacionProducto: ['', Validators.required],
       denominacionEspecifica: ['', Validators.required],
-      denominacionDistintiva: ['', Validators.required],
       denominacionComun: ['', Validators.required],
       tipoDeProducto: ['', Validators.required],
       estadoFisico: ['', Validators.required],
@@ -641,13 +733,14 @@ export class DatosDelSolicitudModificacionComponent
       UMC: ['', Validators.required],
       presentacion: ['', Validators.required],
     });
+
   }
   /**
    * Deshabilita el campo "observaciones" del formulario de domicilio
    */
   establecerDeshabilitado(): void {
     this.domicilioEstablecimiento
-      .get('ideGenerica1')
+      .get('ideGenerica')
       ?.valueChanges.subscribe((value) => {
         if (value === 'modificacion') {
           this.domicilioEstablecimiento.get('observaciones')?.enable();
@@ -775,6 +868,10 @@ export class DatosDelSolicitudModificacionComponent
    * Guarda un nuevo dato SCIAN y lo agrega a la tabla.
    */
   guardarScian(): void {
+     if (this.scianForm.invalid) {
+    this.scianForm.markAllAsTouched();
+    return;
+  }
     if (this.scianForm.valid) {
       const SCIAN_DATA: ScianModel = {
         claveScian: this.scianForm.get('scian')?.value,
@@ -809,7 +906,7 @@ export class DatosDelSolicitudModificacionComponent
         denominacionEspecifica: this.formMercancias.get(
           'denominacionEspecifica'
         )?.value,
-        denominacionDistintiva: this.formMercancias.get(
+        denominacionDistintiva: this.formMercancias?.get(
           'denominacionDistintiva'
         )?.value,
         denominacionComun: this.formMercancias.get('denominacionComun')?.value,
@@ -841,6 +938,11 @@ export class DatosDelSolicitudModificacionComponent
       this.cerrarModalMercancía();
     }
   }
+
+  limpiarMercancia(): void { 
+  this.abrirModalMercancia();
+  this.formMercancias.reset();
+}
   /* *
    * Método para eliminar un elemento de la tabla de mercancías.
    * @param index Índice del elemento a eliminar.
@@ -908,7 +1010,7 @@ export class DatosDelSolicitudModificacionComponent
   /**
    * Método para crear el formulario.
    */
-  hasError(form: FormGroup, controlName: string, error: string) {
+  static hasError(form: FormGroup, controlName: string, error: string): boolean | undefined {
     return (
       form.get(controlName)?.touched && form.get(controlName)?.hasError(error)
     );

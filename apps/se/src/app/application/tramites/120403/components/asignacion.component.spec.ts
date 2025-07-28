@@ -1,57 +1,64 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { AsignacionComponent } from './asignacion.component';
 import { CuposService } from '../services/cupos.service';
 import { Tramite120403Store } from '../state/Tramite120403.store';
 import { Tramite120403Query } from '../state/Tramite120403.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { of } from 'rxjs';
+import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
+import { of, ReplaySubject } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 
 describe('AsignacionComponent', () => {
   let component: AsignacionComponent;
   let fixture: ComponentFixture<AsignacionComponent>;
   let cuposServiceMock: any;
-  let tramiteStoreMock: any;
-  let tramiteQueryMock: any;
+  let storeMock: any;
+  let queryMock: any;
   let validacionesServiceMock: any;
+  let consultaioQueryMock: any;
+  let destroyed$: ReplaySubject<boolean>;
 
   beforeEach(async () => {
-    cuposServiceMock = {
-      obtenerDatosAno: jest.fn().mockReturnValue(of([{ id: 1, descripcion: '2023' }])),
-    };
+    destroyed$ = new ReplaySubject(1);
 
-    tramiteStoreMock = {
+    cuposServiceMock = {
+      obtenerDatosAno: jest.fn().mockReturnValue(of([{ id: 1, descripcion: '2024' }])),
+    };
+    storeMock = {
       setAsignacionRadio: jest.fn(),
       setAsignacionsolitud: jest.fn(),
       setNumTramite: jest.fn(),
       setFechaFin: jest.fn(),
       setAmpliar: jest.fn(),
     };
-
-    tramiteQueryMock = {
+    queryMock = {
       selectSolicitud$: of({
         asignacionRadio: 'vigencia',
-        asignacionsolitud: '2023',
-        numTramite: '12345',
-        fechaFin: '2023-12-31',
-        ampliar: '100',
+        asignacionsolitud: 'solicitud',
+        numTramite: '123',
+        fechaFin: '2024-12-31',
+        ampliar: '1000',
+        valorSeleccionado: null,
       }),
     };
-
     validacionesServiceMock = {
       isValid: jest.fn().mockReturnValue(true),
     };
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,AsignacionComponent],
-      declarations: [],
+      imports: [ReactiveFormsModule, CommonModule, AsignacionComponent],
       providers: [
         FormBuilder,
         { provide: CuposService, useValue: cuposServiceMock },
-        { provide: Tramite120403Store, useValue: tramiteStoreMock },
-        { provide: Tramite120403Query, useValue: tramiteQueryMock },
+        { provide: Tramite120403Store, useValue: storeMock },
+        { provide: Tramite120403Query, useValue: queryMock },
         { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
-      ],
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AsignacionComponent);
@@ -59,88 +66,112 @@ describe('AsignacionComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form and fetch data on ngOnInit', () => {
+  it('should initialize solicitudState and call donanteDomicilio, obtenerDatosEstado, inicializarEstadoFormulario on ngOnInit', () => {
     jest.spyOn(component, 'donanteDomicilio');
     jest.spyOn(component, 'obtenerDatosEstado');
-
+    jest.spyOn(component, 'inicializarEstadoFormulario');
     component.ngOnInit();
-
+    expect(component.solicitudState).toBeDefined();
     expect(component.donanteDomicilio).toHaveBeenCalled();
     expect(component.obtenerDatosEstado).toHaveBeenCalled();
-    expect(component.asignacionForm).toBeDefined();
+    expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
   });
 
-  it('should fetch data for año catalogo', () => {
-    component.obtenerDatosEstado();
-    expect(cuposServiceMock.obtenerDatosAno).toHaveBeenCalled();
-    expect(component.anoCatalogo.catalogos).toEqual([{ id: 1, descripcion: '2023' }]);
+  it('should call guardarDatosFormulario if soloLectura in inicializarEstadoFormulario', () => {
+    component.soloLectura = true;
+    jest.spyOn(component, 'guardarDatosFormulario');
+    component.inicializarEstadoFormulario();
+    expect(component.guardarDatosFormulario).toHaveBeenCalled();
   });
 
-  it('should handle buscar for "vigencia"', () => {
-    component.asignacionForm.patchValue({ asignacionRadio: 'vigencia' });
+  it('should call donanteDomicilio if not soloLectura in inicializarEstadoFormulario', () => {
+    component.soloLectura = false;
+    jest.spyOn(component, 'donanteDomicilio');
+    component.inicializarEstadoFormulario();
+    expect(component.donanteDomicilio).toHaveBeenCalled();
+  });
+
+  it('should set mostrarVigencia and mostrarMonto in buscar', () => {
+    component.asignacionForm = new FormBuilder().group({
+      asignacionRadio: ['vigencia'],
+    });
     component.buscar();
-
     expect(component.mostrarVigencia).toBe(true);
     expect(component.mostrarMonto).toBe(false);
-  });
 
-  it('should handle buscar for "monto"', () => {
-    component.asignacionForm.patchValue({ asignacionRadio: 'monto' });
+    component.asignacionForm.get('asignacionRadio')?.setValue('monto');
     component.buscar();
-
     expect(component.mostrarVigencia).toBe(false);
     expect(component.mostrarMonto).toBe(true);
   });
 
-  it('should update fechaFin on cambioFechaPago', () => {
-    const nuevoFechaPago = '2023-12-31';
-    component.cambioFechaPago(nuevoFechaPago);
-
-    expect(component.asignacionForm.get('fechaFin')?.value).toBe(nuevoFechaPago);
-    expect(tramiteStoreMock.setFechaFin).toHaveBeenCalledWith(nuevoFechaPago);
+  it('should patch fechaFin and call setValoresStore in cambioFechaPago', () => {
+    component.asignacionForm = new FormBuilder().group({
+      fechaFin: [''],
+    });
+    jest.spyOn(component, 'setValoresStore');
+    component.cambioFechaPago('2024-12-31');
+    expect(component.asignacionForm.get('fechaFin')?.value).toBe('2024-12-31');
+    expect(component.setValoresStore).toHaveBeenCalledWith(component.asignacionForm, 'fechaFin', 'setFechaFin');
   });
 
-  it('should validate the form and mark all fields as touched if invalid', () => {
+  it('should fetch ano catalogo in obtenerDatosEstado', () => {
+    component.anoCatalogo = { catalogos: [] } as any;
+    component.obtenerDatosEstado();
+    expect(cuposServiceMock.obtenerDatosAno).toHaveBeenCalled();
+    expect(component.anoCatalogo.catalogos).toEqual([{ id: 1, descripcion: '2024' }]);
+  });
+
+  it('should mark all as touched if form is invalid in validarDestinatarioFormulario', () => {
+    component.asignacionForm = new FormBuilder().group({
+      asignacionsolitud: ['', Validators.required],
+    });
     jest.spyOn(component.asignacionForm, 'markAllAsTouched');
-    component.asignacionForm.patchValue({ asignacionsolitud: '', numTramite: '' });
-
+    component.asignacionForm.get('asignacionsolitud')?.setValue('');
     component.validarDestinatarioFormulario();
-
     expect(component.asignacionForm.markAllAsTouched).toHaveBeenCalled();
   });
 
-  it('should check if a form field is valid using esValido', () => {
-    const result = component.esValido(component.asignacionForm, 'asignacionsolitud');
-    expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(component.asignacionForm, 'asignacionsolitud');
-    expect(result).toBe(true);
+  it('should call validacionesService.isValid in esValido', () => {
+    const form = new FormBuilder().group({ campo: [''] });
+    expect(component.esValido(form, 'campo')).toBe(true);
+    expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(form, 'campo');
   });
 
-  it('should update store values using setValoresStore', () => {
-    component.setValoresStore(component.asignacionForm, 'asignacionsolitud', 'setAsignacionsolitud');
-    expect(tramiteStoreMock.setAsignacionsolitud).toHaveBeenCalledWith(component.asignacionForm.get('asignacionsolitud')?.value);
+  it('should call store method in setValoresStore', () => {
+    const form = new FormBuilder().group({ numTramite: ['123'] });
+    component.setValoresStore(form, 'numTramite', 'setNumTramite');
+    expect(storeMock.setNumTramite).toHaveBeenCalledWith('123');
   });
 
-  it('should initialize the form with state values in donanteDomicilio', () => {
+  it('should initialize asignacionForm in donanteDomicilio', () => {
+    component.solicitudState = {
+      asignacionRadio: 'vigencia',
+      asignacionsolitud: 'solicitud',
+      numTramite: '123',
+      fechaFin: '2024-12-31',
+      ampliar: '1000',
+      valorSeleccionado: null,
+    };
     component.donanteDomicilio();
-
-    expect(component.asignacionForm.get('asignacionRadio')?.value).toBe('vigencia');
-    expect(component.asignacionForm.get('asignacionsolitud')?.value).toBe('2023');
-    expect(component.asignacionForm.get('numTramite')?.value).toBe('12345');
-    expect(component.asignacionForm.get('fechaFin')?.value).toBe('2023-12-31');
-    expect(component.asignacionForm.get('ampliar')?.value).toBe('100');
+    expect(component.asignacionForm.value).toEqual({
+      asignacionRadio: 'vigencia',
+      asignacionsolitud: 'solicitud',
+      numTramite: '123',
+      fechaFin: '2024-12-31',
+      ampliar: '1000',
+    });
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
+  it('should complete destroyed$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroyed$'], 'next');
     const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
-
     component.ngOnDestroy();
-
-    expect(destroyedSpy).toHaveBeenCalledWith(true);
+    expect(nextSpy).toHaveBeenCalledWith(true);
     expect(completeSpy).toHaveBeenCalled();
   });
 });

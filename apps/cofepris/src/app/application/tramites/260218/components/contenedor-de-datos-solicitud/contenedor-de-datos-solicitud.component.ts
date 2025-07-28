@@ -1,12 +1,50 @@
+/**
+ * @fileoverview
+ * El `ContenedorDeDatosSolicitudComponent` es un componente de Angular diseñado para gestionar y mostrar los datos de la solicitud
+ * en el flujo del trámite 260218. Este componente permite la configuración y selección de datos en tablas como opciones, SCIAN y mercancías.
+ * También interactúa con el store `Tramite260218Store` para actualizar el estado del trámite.
+ * 
+ * @module ContenedorDeDatosSolicitudComponent
+ * @description
+ * Este componente actúa como un contenedor para gestionar y actualizar los datos de la solicitud, incluyendo las tablas de opciones,
+ * SCIAN y mercancías, en el flujo del trámite 260218.
+ */
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DatosDeTablaSeleccionados, DatosSolicitudFormState, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig, TablaSeleccion } from '../../../../shared/models/datos-solicitud.model';
 import { OPCION_TABLA, PRODUCTO_TABLA, SCIAN_TABLA } from '../../../../shared/constantes/datos-solicitud.enum';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260218State, Tramite260218Store } from '../../estados/tramite260218Store.store';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ID_PROCEDIMIENTO } from '../../constants/pasos.enum';
 import { Tramite260218Query } from '../../estados/tramite260218Query.query';
+
+/**
+ * @component
+ * @name ContenedorDeDatosSolicitudComponent
+ * @description
+ * Componente que gestiona y muestra los datos de la solicitud en el flujo del trámite 260218.
+ * Permite la configuración y selección de datos en tablas como opciones, SCIAN y mercancías.
+ * También interactúa con el store `Tramite260218Store` para actualizar el estado del trámite.
+ *
+ * @selector app-contenedor-de-datos-solicitud
+ * Define el selector del componente que se utiliza en las plantillas HTML para instanciar este componente.
+ *
+ * @standalone true
+ * Indica que este componente es independiente y no requiere un módulo Angular para ser utilizado.
+ *
+ * @templateUrl ./contenedor-de-datos-solicitud.component.html
+ * Especifica la ubicación del archivo de plantilla HTML asociado con este componente.
+ *
+ * @styleUrl ./contenedor-de-datos-solicitud.component.scss
+ * Especifica la ubicación del archivo de estilos CSS asociado con este componente.
+ *
+ * @imports
+ * - CommonModule: Proporciona directivas comunes de Angular como `ngIf` y `ngFor`.
+ * - DatosDeLaSolicitudComponent: Componente compartido para gestionar los datos de la solicitud.
+ */
 @Component({
   selector: 'app-contenedor-de-datos-solicitud',
   standalone: true,
@@ -15,117 +53,162 @@ import { Tramite260218Query } from '../../estados/tramite260218Query.query';
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
-  // Notificador para destruir el componente y limpiar observables.
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * @description
+   * Sujeto utilizado para manejar la destrucción de observables y evitar fugas de memoria.
+   * @private
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  // Estado de la solicitud del trámite 260218
+  /**
+   * @property {Tramite260218State} tramiteState
+   * @description
+   * Estado actual del trámite 260218.
+   */
   public tramiteState!: Tramite260218State;
 
-  // Configuración de la tabla de opciones (opciones seleccionables por el usuario)
+  /**
+   * @property {boolean} esFormularioSoloLectura
+   * @description
+   * Indica si el formulario está en modo solo lectura. Cuando es `true`, los campos no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @property {number} idProcedimiento
+   * @description
+   * Identificador del procedimiento actual.
+   */
+  idProcedimiento: number = ID_PROCEDIMIENTO;
+
+  /**
+   * @property {object} opcionConfig
+   * @description
+   * Configuración de la tabla de opciones seleccionables por el usuario.
+   */
   public opcionConfig = {
     tipoSeleccionTabla: undefined,
     configuracionTabla: OPCION_TABLA,
-    datos: [] as TablaOpcionConfig[], // Datos de las opciones de la tabla
-  }
+    datos: [] as TablaOpcionConfig[],
+  };
 
-  // Configuración de la tabla SCIAN (código de actividades económicas)
+  /**
+   * @property {object} scianConfig
+   * @description
+   * Configuración de la tabla SCIAN (código de actividades económicas).
+   */
   public scianConfig = {
-    tipoSeleccionTabla: TablaSeleccion.CHECKBOX, // Tipo de selección: checkbox
+    tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
     configuracionTabla: SCIAN_TABLA,
-    datos: [] as TablaScianConfig[], // Datos de la configuración de la tabla SCIAN
-  }
+    datos: [] as TablaScianConfig[],
+  };
 
-  // Configuración de la tabla de mercancías (productos)
+  /**
+   * @property {object} tablaMercanciasConfig
+   * @description
+   * Configuración de la tabla de mercancías (productos).
+   */
   public tablaMercanciasConfig = {
-    tipoSeleccionTabla: TablaSeleccion.CHECKBOX, // Tipo de selección: checkbox
+    tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
     configuracionTabla: PRODUCTO_TABLA,
-    datos: [] as TablaMercanciasDatos[], // Datos de la configuración de la tabla de mercancías
-  }
+    datos: [] as TablaMercanciasDatos[],
+  };
 
-  // Datos de la tabla SCIAN seleccionados
-  public scianConfigDatos: TablaScianConfig[] = [];
-
-  // Datos de la tabla de mercancías seleccionados
-  public tablaMercanciasConfigDatos: TablaMercanciasDatos[] = [];
-
-  // Opciones seleccionadas de la tabla de opciones
-  public seleccionadoopcionDatos: TablaOpcionConfig[] = [];
-
-  // Datos seleccionados de la tabla SCIAN
-  public seleccionadoScianDatos: TablaScianConfig[] = [];
-
-  // Datos seleccionados de la tabla de mercancías
-  public seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[] = [];
-  idProcedimiento: number = ID_PROCEDIMIENTO // Indica si la sección está oculta o visible
+  /**
+   * @constructor
+   * @description
+   * Constructor que inyecta las dependencias necesarias para manejar el estado del trámite y los datos de usuario.
+   * 
+   * @param {Tramite260218Query} tramite260218Query - Servicio de consulta para obtener el estado del trámite 260218.
+   * @param {Tramite260218Store} tramite260218Store - Store para manejar el estado del trámite 260218.
+   * @param {ConsultaioQuery} consultaQuery - Servicio de consulta para obtener datos de usuario.
+   */
   constructor(
     private tramite260218Query: Tramite260218Query,
-    private tramite260218Store: Tramite260218Store
-  ) { 
-        // no realizar ninguna acción
+    private tramite260218Store: Tramite260218Store,
+    private consultaQuery: ConsultaioQuery
+  ) {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * Método del ciclo de vida de Angular, se ejecuta al iniciar el componente.
-   * Obtiene el estado del trámite 260218 desde el `tramite260218Query` y 
-   * actualiza las configuraciones de las tablas (opciones, SCIAN, mercancías).
+   * @method ngOnInit
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Obtiene el estado del trámite 260218 y actualiza las configuraciones de las tablas.
    */
   ngOnInit(): void {
     this.tramite260218Query.selectTramiteState$
       .pipe(
-        takeUntil(this.destroyNotifier$), // Se desuscribe cuando se destruye el componente
+        takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.tramiteState = seccionState;
-          // Actualiza las configuraciones de las tablas con los datos del estado
           this.opcionConfig.datos = this.tramiteState.opcionConfigDatos;
           this.scianConfig.datos = this.tramiteState.scianConfigDatos;
           this.tablaMercanciasConfig.datos = this.tramiteState.tablaMercanciasConfigDatos;
         })
-      ).subscribe();
+      )
+      .subscribe();
   }
 
   /**
+   * @method opcionSeleccionado
+   * @description
    * Maneja el evento cuando se selecciona una opción en la tabla.
-   * Actualiza la configuración de datos en el store `tramite260218Store` con las opciones seleccionadas.
    * 
-   * @param event - Arreglo de configuraciones de opciones de la tabla seleccionadas.
+   * @param {TablaOpcionConfig[]} event - Opciones seleccionadas en la tabla.
    */
   opcionSeleccionado(event: TablaOpcionConfig[]): void {
-    this.tramite260218Store.updateOpcionConfigDatos(event); // Actualiza las opciones seleccionadas en el store
+    this.tramite260218Store.updateOpcionConfigDatos(event);
   }
 
   /**
+   * @method scianSeleccionado
+   * @description
    * Maneja el evento cuando se selecciona un elemento en la tabla SCIAN.
-   * Actualiza los datos de configuración SCIAN en el estado del trámite 260218.
    * 
-   * @param event - Arreglo de configuraciones seleccionadas de la tabla SCIAN.
+   * @param {TablaScianConfig[]} event - Elementos seleccionados en la tabla SCIAN.
    */
   scianSeleccionado(event: TablaScianConfig[]): void {
-    this.tramite260218Store.updateScianConfigDatos(event); // Actualiza los datos seleccionados en el store
+    this.tramite260218Store.updateScianConfigDatos(event);
   }
 
   /**
+   * @method mercanciasSeleccionado
+   * @description
    * Maneja el evento cuando se seleccionan mercancías en la tabla de mercancías.
-   * Actualiza los datos de mercancías seleccionadas en el estado del trámite.
    * 
-   * @param event - Arreglo de objetos de tipo `TablaMercanciasDatos` con las mercancías seleccionadas.
+   * @param {TablaMercanciasDatos[]} event - Mercancías seleccionadas en la tabla.
    */
   mercanciasSeleccionado(event: TablaMercanciasDatos[]): void {
-    this.tramite260218Store.updateTablaMercanciasConfigDatos(event); // Actualiza las mercancías seleccionadas en el store
+    this.tramite260218Store.updateTablaMercanciasConfigDatos(event);
   }
 
   /**
+   * @method datasolicituActualizar
+   * @description
    * Actualiza el estado del formulario de datos de la solicitud en el store.
    * 
-   * @param event - El nuevo estado del formulario de datos de la solicitud de tipo `DatosSolicitudFormState`.
+   * @param {DatosSolicitudFormState} event - Nuevo estado del formulario de datos de la solicitud.
    */
   datasolicituActualizar(event: DatosSolicitudFormState): void {
-    this.tramite260218Store.updateDatosSolicitudFormState(event); // Actualiza el estado del formulario de solicitud
+    this.tramite260218Store.updateDatosSolicitudFormState(event);
   }
 
   /**
+   * @method datosDeTablaSeleccionados
+   * @description
    * Actualiza el estado del store con los datos seleccionados de las tablas.
    * 
-   * @param event - Objeto con los datos seleccionados de la tabla (opciones, SCIAN, mercancías).
+   * @param {DatosDeTablaSeleccionados} event - Datos seleccionados de las tablas.
    */
   datosDeTablaSeleccionados(event: DatosDeTablaSeleccionados): void {
     this.tramite260218Store.update((state) => ({
@@ -133,16 +216,18 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       seleccionadoopcionDatos: event.opcionSeleccionados,
       seleccionadoScianDatos: event.scianSeleccionados,
       seleccionadoTablaMercanciasDatos: event.mercanciasSeleccionados,
-      opcionesColapsableState: event.opcionesColapsableState
-    })); // Actualiza el estado del store con los datos seleccionados
+      opcionesColapsableState: event.opcionesColapsableState,
+    }));
   }
 
   /**
-   * Método del ciclo de vida de Angular, se llama justo antes de que el componente sea destruido.
-   * Emite un valor a través de `destroyNotifier$` para notificar a los suscriptores que el componente se va a destruir.
+   * @method ngOnDestroy
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta antes de destruir el componente.
+   * Emite un valor para notificar a los observables que deben finalizar.
    */
   ngOnDestroy(): void {
-    this.destroyNotifier$.next(); // Emite una notificación de destrucción
-    this.destroyNotifier$.complete(); // Completa el observable para liberar recursos
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -1,22 +1,51 @@
-import { Component, OnInit } from '@angular/core';
+/**
+ * @fileoverview
+ * El `TercerosRelacionadosVistaComponent` es un componente de Angular diseñado para mostrar las tablas de terceros relacionados
+ * (fabricantes, destinatarios finales, proveedores y facturadores) en modo de solo lectura.
+ * Este componente consume observables del store `Tramite260218Store` para renderizar los datos en la vista mediante el componente `TercerosRelacionadosComponent`.
+ * 
+ * @module TercerosRelacionadosVistaComponent
+ * @description
+ * Este componente actúa como una vista de solo lectura para mostrar los datos de terceros relacionados en el trámite 260218.
+ */
+
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
   Facturador,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
-import { Tramite260218Query } from '../../estados/tramite260218Query.query'; 
+import { Tramite260218Query } from '../../estados/tramite260218Query.query';
 import { Tramite260218Store } from '../../estados/tramite260218Store.store';
 
 /**
- * @component TercerosRelacionadosVistaComponent
- * @description Componente de solo lectura que muestra las tablas de terceros relacionados
+ * @component
+ * @name TercerosRelacionadosVistaComponent
+ * @description
+ * Componente de solo lectura que muestra las tablas de terceros relacionados
  * (fabricantes, destinatarios finales, proveedores y facturadores).
- * Consume observables del store para renderizar los datos en la vista mediante el componente
- * `TercerosRelacionadosComponent`.
+ * Consume observables del store para renderizar los datos en la vista mediante el componente `TercerosRelacionadosComponent`.
+ *
+ * @selector app-terceros-relacionados-vista
+ * Define el selector del componente que se utiliza en las plantillas HTML para instanciar este componente.
+ *
+ * @standalone true
+ * Indica que este componente es independiente y no requiere un módulo Angular para ser utilizado.
+ *
+ * @templateUrl ./terceros-relacionados-vista.component.html
+ * Especifica la ubicación del archivo de plantilla HTML asociado con este componente.
+ *
+ * @styleUrl ./terceros-relacionados-vista.component.scss
+ * Especifica la ubicación del archivo de estilos CSS asociado con este componente.
+ *
+ * @imports
+ * - CommonModule: Proporciona directivas comunes de Angular como `ngIf` y `ngFor`.
+ * - TercerosRelacionadosComponent: Componente compartido para mostrar los datos de terceros relacionados.
  */
 @Component({
   selector: 'app-terceros-relacionados-vista',
@@ -25,68 +54,87 @@ import { Tramite260218Store } from '../../estados/tramite260218Store.store';
   templateUrl: './terceros-relacionados-vista.component.html',
   styleUrl: './terceros-relacionados-vista.component.scss',
 })
-export class TercerosRelacionadosVistaComponent implements OnInit {
-   /**
+export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
+  /**
    * @property {Fabricante[]} fabricanteTablaDatos
+   * @description
    * Datos de la tabla de fabricantes.
    */
-   fabricanteTablaDatos: Fabricante[] = [];
+  fabricanteTablaDatos: Fabricante[] = [];
 
-   /**
-    * @property {Destinatario[]} destinatarioFinalTablaDatos
-    * Datos de la tabla de destinatarios finales.
-    */
-   destinatarioFinalTablaDatos: Destinatario[] = [];
- 
-   /**
-    * @property {Proveedor[]} proveedorTablaDatos
-    * Datos de la tabla de proveedores.
-    */
-   proveedorTablaDatos: Proveedor[] = [];
- 
-   /**
-    * @property {Facturador[]} facturadorTablaDatos
-    * Datos de la tabla de facturadores.
-    */
-   facturadorTablaDatos: Facturador[] = [];
- 
+  /**
+   * @property {Destinatario[]} destinatarioFinalTablaDatos
+   * @description
+   * Datos de la tabla de destinatarios finales.
+   */
+  destinatarioFinalTablaDatos: Destinatario[] = [];
+
+  /**
+   * @property {Proveedor[]} proveedorTablaDatos
+   * @description
+   * Datos de la tabla de proveedores.
+   */
+  proveedorTablaDatos: Proveedor[] = [];
+
+  /**
+   * @property {Facturador[]} facturadorTablaDatos
+   * @description
+   * Datos de la tabla de facturadores.
+   */
+  facturadorTablaDatos: Facturador[] = [];
+
   /**
    * @property {boolean} estaOculto
+   * @description
    * Variable booleana que controla si el componente debe estar oculto o no.
    */
   estaOculto: boolean = true;
 
- /**
-   * Subject para gestionar el ciclo de vida del componente.
-   * @type {Subject<void>}
+  /**
+   * @property {boolean} esFormularioSoloLectura
+   * @description
+   * Indica si el formulario está en modo solo lectura. Cuando es `true`, los campos del formulario no se pueden editar.
    */
-  destroyNotifier$: Subject<void> = new Subject();
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * @description
+   * Subject para gestionar el ciclo de vida del componente y evitar fugas de memoria.
+   * @private
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @constructor
-   * Inyecta los servicios necesarios para consultar y actualizar el estado del trámite.
+   * @description
+   * Constructor que inyecta los servicios necesarios para consultar y actualizar el estado del trámite.
    *
-   * @param tramiteStore - Store que gestiona el estado de los datos del trámite.
-   * @param tramiteQuery - Servicio de consulta que expone observables para leer los datos del store.
+   * @param {Tramite260218Store} tramiteStore - Store que gestiona el estado de los datos del trámite.
+   * @param {Tramite260218Query} tramiteQuery - Servicio de consulta que expone observables para leer los datos del store.
+   * @param {ConsultaioQuery} consultaQuery - Servicio de consulta para acceder al estado de la consulta.
    */
   constructor(
     private tramiteStore: Tramite260218Store,
-    private tramiteQuery: Tramite260218Query
+    private tramiteQuery: Tramite260218Query,
+    private consultaQuery: ConsultaioQuery
   ) {
-    // no realizar ninguna acción
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
-
 
   /**
    * @method ngOnInit
-   * @description Este método se ejecuta al inicializar el componente. 
-   * Suscribe a varios observables para obtener datos relacionados con 
-   * fabricantes, destinatarios finales, proveedores y facturadores, 
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe a varios observables para obtener datos relacionados con fabricantes, destinatarios finales, proveedores y facturadores,
    * y los asigna a las propiedades correspondientes del componente.
-   * 
-   * @remarks
-   * Utiliza el operador `takeUntil` para gestionar la suscripción y 
-   * evitar fugas de memoria al destruir el componente.
    */
   ngOnInit(): void {
     this.tramiteQuery.getFabricanteTablaDatos$
@@ -116,12 +164,10 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
 
   /**
    * @method addFabricantes
-   * @description Agrega nuevos fabricantes a la tabla de datos del trámite.
-   * 
-   * Este método llama al store para actualizar los datos de la tabla de fabricantes
-   * con la lista de nuevos fabricantes proporcionados.
+   * @description
+   * Agrega nuevos fabricantes a la tabla de datos del trámite.
    *
-   * @param newFabricantes - Lista de objetos `Fabricante` a agregar.
+   * @param {Fabricante[]} newFabricantes - Lista de objetos `Fabricante` a agregar.
    */
   addFabricantes(newFabricantes: Fabricante[]): void {
     this.tramiteStore.updateFabricanteTablaDatos(newFabricantes);
@@ -129,12 +175,10 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
 
   /**
    * @method addDestinatarios
-   * @description Agrega nuevos destinatarios a la tabla de datos del destinatario final.
-   * 
-   * Este método llama al store para actualizar los datos de la tabla de destinatarios
-   * con la lista de nuevos destinatarios proporcionados.
+   * @description
+   * Agrega nuevos destinatarios a la tabla de datos del destinatario final.
    *
-   * @param newDestinatarios - Lista de objetos `Destinatario` a agregar.
+   * @param {Destinatario[]} newDestinatarios - Lista de objetos `Destinatario` a agregar.
    */
   addDestinatarios(newDestinatarios: Destinatario[]): void {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(newDestinatarios);
@@ -142,12 +186,10 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
 
   /**
    * @method addProveedores
-   * @description Agrega nuevos proveedores a la tabla de datos del trámite.
-   * 
-   * Este método llama al store para actualizar los datos de la tabla de proveedores
-   * con la lista de nuevos proveedores proporcionados.
+   * @description
+   * Agrega nuevos proveedores a la tabla de datos del trámite.
    *
-   * @param newProveedores - Lista de objetos `Proveedor` a agregar.
+   * @param {Proveedor[]} newProveedores - Lista de objetos `Proveedor` a agregar.
    */
   addProveedores(newProveedores: Proveedor[]): void {
     this.tramiteStore.updateProveedorTablaDatos(newProveedores);
@@ -155,14 +197,24 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
 
   /**
    * @method addFacturadores
-   * @description Agrega nuevos facturadores a la tabla de datos del trámite.
-   * 
-   * Este método llama al store para actualizar los datos de la tabla de facturadores
-   * con la lista de nuevos facturadores proporcionados.
+   * @description
+   * Agrega nuevos facturadores a la tabla de datos del trámite.
    *
-   * @param newFacturadores - Lista de objetos `Facturador` a agregar.
+   * @param {Facturador[]} newFacturadores - Lista de objetos `Facturador` a agregar.
    */
   addFacturadores(newFacturadores: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta antes de destruir el componente.
+   * Emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

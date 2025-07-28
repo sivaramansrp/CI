@@ -9,12 +9,12 @@
                         value="inicial" checked (change)="setValoresStore(formulario,'solicitud', 'setSolicitud')"> Inicial
                 </div>
             </div>
-            <div class="col-md-6">
-                <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="regimen"
+            <div class="col-md-8">
+                <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="regimen" [isDisabled]="esFormularioSoloLectura"
                     [label]="'Régimen al que se destinará la mercancía'" [required]="true"
                     name="Régimen al que se destinará la mercancía" (change)="setValoresStore(formulario,'regimen', 'setRegimen')"></app-catalogo-select>
                 <br>
-                <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="clasificacion"
+                <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="clasificacion" [isDisabled]="esFormularioSoloLectura"
                     [label]="'Clasificación del régimen'" [required]="true"
                     name="Clasificación del régimen" (change)="setValoresStore(formulario,'clasificacion', 'setClasificacion')"></app-catalogo-select>
             </div>
@@ -29,7 +29,7 @@
                      [layout]="'vertical'" formControlName="producto"
                      (change)="setValoresStore(formulario, 'producto', 'setProducto')" ></app-input-radio>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <label for="descripcion">Descripción de la mercancía*:</label>
                 <textarea id="descripcion" name="descripcion" class="form-control" rows="4"
                     formControlName="solicitudDescripcion" style="height: 90px;" (change)="setValoresStore(formulario,'solicitudDescripcion', 'setSolicitudDescripcion')"></textarea>

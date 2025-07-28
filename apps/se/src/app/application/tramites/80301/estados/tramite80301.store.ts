@@ -1,407 +1,512 @@
-
-/** Importa las funcionalidades básicas del store de Akita */
-import { Store, StoreConfig } from '@datorama/akita';
-
-/** Importa el decorador Injectable de Angular */
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { DatosSolicitante } from '../../80301/models/datos-tramite.model';
 import { Injectable } from '@angular/core';
+import { Store, } from '@datorama/akita';
+import { StoreConfig } from '@datorama/akita';
 
-/** Interfaz que representa un catálogo con id y descripción */
-export interface Catalogo {
-  /** Identificador único del elemento del catálogo */
-  id: number;
-
-  /** Descripción del elemento del catálogo */
-  descripcion: string;
-}
-/** Interfaz que representa un catálogo con id y descripción */
+/**
+ * Interface que representa los datos generales de una modificación del programa IMMEX.
+ */
 export interface DatosModificacion {
-  /** Identificador único del elemento del catálogo */
+  /** Registro Federal de Contribuyentes del solicitante */
   rfc: string;
 
-  /** Descripción del elemento del catálogo */
+  /** Representación federal del solicitante (por ejemplo, nombre de la delegación o dependencia) */
   federal: string;
 
-  /** Descripción del elemento del catálogo */
+  /** Tipo de trámite o modificación (por ejemplo: alta, baja, cambio) */
   tipo: string;
 
-  
-  /** Descripción del elemento del catálogo */
+  /** Programa IMMEX relacionado con la solicitud */
   programa: string;
 }
 
+/**
+ * Interface que encapsula el estado completo de la solicitud 80301.
+ */
+export interface Solicitud80301StateObj {
+  /** Objeto que contiene los datos generales de la modificación */
+  datosModificacion: Solicitud80301State;
+}
 
-
-/** Interfaz que define el estado completo del trámite 80301 */
+  
+/**
+ * Representa el estado de la solicitud 80301.
+ */
 export interface Solicitud80301State {
-    datosModificacion:DatosModificacion | null;
- 
-    /** Número de manifiesto de la solicitud */
-    manifesto: string;
-  
-    /** Identificador único de la solicitud */
-    idSolicitud: string;
-  
-    /** Tipo de solicitud realizada */
-    tipoSolicitud: string;
-  
-    /** Lista de aduanas disponibles o seleccionadas */
-    aduana: Catalogo[] | null;
-  
-    /** Lista de años disponibles o seleccionados */
-    ano: Catalogo[] | null;
-  
-    /** Lista de países disponibles o seleccionados */
-    pais: Catalogo[] | null;
-  
-    /** Lista de condiciones disponibles o seleccionadas */
-    condicion: Catalogo[] | null;
-  
-    /** Lista de tipos de documento disponibles o seleccionados */
-    tipoDocumento: Catalogo[] | null;
-  
-    /** Fechas que el usuario ha seleccionado */
-    fechasSeleccionadas: Catalogo[] | null;
-  
-    /** Lista de fines seleccionados para la solicitud */
-    finesElegidos: string[];
-  
-    /** Elementos elegidos por el usuario */
-    elegidosSeleccionados: string[];
-  
-    /** Rango de días seleccionado por el usuario */
-    selectRangoDias: string[];
-  
-    /** Fechas que forman parte de los datos ingresados */
-    fechasDatos: string[];
-  
-    /** Fecha asignada a la solicitud */
-    fecha: string | null;
-  
-    /** Fecha seleccionada actualmente por el usuario */
-    fechaSeleccionada: string | null;
-  
-    /** Indica si la tabla de datos debe mostrarse */
-    showTabla: boolean;
-  
-    /** Indica si el popup está abierto */
-    isPopupOpen: boolean;
-  
-    /** Indica si el popup está cerrado */
-    isPopupClose: boolean;
-  
-    /** Valor seleccionado en una lista desplegable u otro componente */
-    valorSeleccionado: string | null;
-  
-    /** Nombre del solicitante */
-    nombre: string;
-  
-    /** Tipo de mercancía incluida en la solicitud */
-    tipoMercancia: string;
-  
-    /** Uso específico que se le dará a la mercancía */
-    usoEspecifico: string;
-  
-    /** Marca de la mercancía */
-    marca: string;
-  
-    /** Modelo de la mercancía */
-    modelo: string;
-  
-    /** Número de serie de la mercancía */
-    serie: string;
-  
-    /** Calle del domicilio del solicitante */
-    calle: string;
-  
-    /** Número exterior del domicilio */
-    numeroExterior: number;
-  
-    /** Número interior del domicilio */
-    numeroInterior: number;
-  
-    /** Número de teléfono de contacto */
-    telefono: number;
-  
-    /** Correo electrónico del solicitante */
-    correoElectronico: string;
-  
-    /** Código postal del domicilio */
-    codigoPostal: number;
-  
-    /** Identificador del estado (entidad federativa) */
-    estado: number;
-  
-    /** Identificador de la colonia */
-    colonia: number;
-  
-    /** Opción seleccionada para un campo específico */
-    opcion: string;
-  
-    /** Documentos adjuntos o seleccionados para la solicitud */
-    documentos: Catalogo[] | null;
-  
-    /** Valor que indica el estado del checkbox de la tabla */
-    tableCheck: string;
-  
-    /** Indica si la solicitud es para donación */
-    donacion: string;
-  
-    /** Tipo de persona (física o moral) que realiza la solicitud */
-    persona: string;
-  
-    /** Campo para especificar otra opción no listada */
-    otro: string;
-  }
-  
 
-/** Función que devuelve el estado inicial del trámite 80301 */
+  /**
+   * Menú desplegable seleccionado.
+   */
+  menuDesplegable:string;
+
+  /**
+   * Datos del solicitante.
+   */
+  datosSolicitante: DatosSolicitante;
+
+  /**
+   * Información relacionada con la modificación.
+   */
+  datosModificacion: DatosModificacion ;
+
+  /**
+   * Lista de datos del contenedor.
+   */
+  datosDelContenedor: [];
+
+  /**
+   * Tipo de búsqueda seleccionada.
+   */
+  tipoBusqueda: string;
+
+  /**
+   * Aduana seleccionada.
+   */
+  aduana: string;
+
+  /**
+   * Fecha de ingreso.
+   */
+  fechaIngreso: string;
+
+  /**
+   * Iniciales del contenedor.
+   */
+  inicialesContenedor: string;
+
+  /**
+   * Número del contenedor.
+   */
+  numeroContenedor: string;
+
+  /**
+   * Dígito de control del contenedor.
+   */
+  digitoDeControl: string;
+
+  /**
+   * Contenedores asociados.
+   */
+  contenedores: string;
+
+  /**
+   * Menú desplegable de aduanas.
+   */
+  aduanaMenuDesplegable: string;
+
+  /**
+   * Estado de las casillas de verificación individuales.
+   */
+  casillaDeVerificacionindividual: boolean[];
+
+  /**
+   * Número del manifiesto.
+   */
+  numeroManifiesta: number;
+
+  /**
+   * Fecha de ingreso del manifiesto.
+   */
+  fechaDeIngreso: string;
+
+  /**
+   * Archivo seleccionado.
+   */
+  archivoSeleccionado: string;
+
+ /** linea
+ * @type {string}
+ */
+  linea: string;
+
+  /**
+* linea checkbox
+* @type {string}
+*/
+  lineaCheckbox: string;
+
+  monto: string;
+}
+
+/**
+ * Crea y retorna el objeto de estado inicial para la funcionalidad Solicitud80301.
+ *
+ * @returns {Solicitud80301State} El estado inicial por defecto, incluyendo valores predeterminados para
+ *   selecciones de menú, datos del solicitante, datos de modificación, datos del contenedor, tipos de búsqueda,
+ *   información de aduana, detalles del contenedor, casillas de verificación, número de manifiesto,
+ *   fechas de ingreso, archivos seleccionados, información de línea y monto.
+ */
 export function createInitialState(): Solicitud80301State {
   return {
-    datosModificacion: null,
-    manifesto: '',
-    idSolicitud: '',
-    tipoSolicitud: '',
-    aduana: null,
-    ano: null,
-    condicion: null,
-    pais: null,
-    tipoDocumento: null,
-    fechasSeleccionadas: null,
-    finesElegidos: [],
-    elegidosSeleccionados: [],
-    selectRangoDias: [],
-    fechasDatos: [],
-    fecha: null,
-    fechaSeleccionada: null,
-    showTabla: true,
-    isPopupOpen: false,
-    isPopupClose: true,
-    valorSeleccionado: null,
-    documentos: null,
-    nombre: '',
-    tipoMercancia: '',
-    usoEspecifico: '',
-    marca: '',
-    modelo: '',
-    serie: '',
-    calle: '',
-    numeroExterior: 0,
-    numeroInterior: 0,
-    telefono: 0,
-    correoElectronico: '',
-    codigoPostal: 0,
-    estado: 0,
-    colonia: 0,
-    opcion: '',
-    tableCheck: '',
-    donacion: '',
-    persona: '',
-    otro: '',
+    menuDesplegable: '',
+    datosSolicitante: {
+      rfc: "",
+      denominacion: "",
+      actividadEconomica: "",
+      correoElectronico: ""
+    },
+    datosModificacion: {
+      rfc: "",
+      federal: "",
+      tipo: "",
+      programa: ""
+    },   
+    datosDelContenedor: [],
+    tipoBusqueda: '',
+    aduana: '',
+    inicialesContenedor: '',
+    numeroContenedor: '',
+    digitoDeControl: '',
+    contenedores: '',
+    fechaIngreso: '',
+    aduanaMenuDesplegable: '',
+    casillaDeVerificacionindividual: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+    numeroManifiesta: 0,
+    fechaDeIngreso: '',
+    archivoSeleccionado: '',
+    linea: '',
+    lineaCheckbox: '',
+    monto: '',
+
   };
 }
 
-/** Decorador que indica que esta clase es inyectable y estará disponible en la raíz */
 @Injectable({
   providedIn: 'root',
 })
-
-/** Decorador de configuración para el store, con nombre e indicación de que es reseteable */
-@StoreConfig({ name: 'tramite10301', resettable: true })
-
-/** Clase que extiende Store y maneja el estado de Solicitud80301 */
+@StoreConfig({ name: 'tramite80301', resettable: true })
 export class Tramite80301Store extends Store<Solicitud80301State> {
-
-  /** Constructor que inicializa el store con el estado inicial */
   constructor() {
     super(createInitialState());
   }
-
-  /** Establece el valor del campo tableCheck */
-  public setTableCheck(tableCheck: string): void {
-    this.update(state => ({ ...state, tableCheck }));
-  }
-
-  /** Establece el valor del campo donacion */
-  public setDonacion(donacion: string): void {
-    this.update(state => ({ ...state, donacion }));
-  }
-
-  /** Establece el valor del campo persona */
-  public setPersona(persona: string): void {
-    this.update(state => ({ ...state, persona }));
-  }
-
-  /** Establece el valor del campo otro */
-  public setOtro(otro: string): void {
-    this.update(state => ({ ...state, otro }));
-  }
-
-  /** Establece el valor del campo manifesto */
-  public setManifesto(manifesto: string): void {
-    this.update(state => ({ ...state, manifesto }));
-  }
-
-  /** Establece el catálogo de aduanas */
-  public setAduana(aduana: Catalogo[]): void {
-    this.update(state => ({ ...state, aduana }));
-  }
-
-  /** Establece el catálogo de documentos */
-  public setDocumentos(documentos: Catalogo[]): void {
-    this.update(state => ({ ...state, documentos }));
-  }
-
-  /** Establece el valor del campo nombre */
-  public setNombre(nombre: string): void {
-    this.update(state => ({ ...state, nombre }));
-  }
-
-  /** Establece el catálogo de años */
-  public setAno(ano: Catalogo[]): void {
-    this.update(state => ({ ...state, ano }));
-  }
-
-  /** Establece el catálogo de condiciones */
-  public setCondicion(condicion: Catalogo[]): void {
-    this.update(state => ({ ...state, condicion }));
-  }
-
-  /** Establece el catálogo de países */
-  public setPais(pais: Catalogo[]): void {
-    this.update(state => ({ ...state, pais }));
-  }
-
-  /** Establece el catálogo de tipo de documento */
+    /**
+   * Actualiza el tipo de documento seleccionado.
+   * 
+   * @param {string} tipoDocumento - El tipo de documento seleccionado.
+   */
   public setTipoDocumento(tipoDocumento: Catalogo[]): void {
-    this.update(state => ({ ...state, tipoDocumento }));
+    this.update((state) => ({
+      ...state,
+      tipoDocumento,
+    }));
   }
-
-  /** Establece el catálogo de fechas seleccionadas */
+  
+  /**
+   * Guarda el rango de fechas en el estado.
+   *
+   * @param rangoFechas - El valor booleano que indica si es un rango de fechas o no.
+   */
   public setFechasSeleccionadas(fechasSeleccionadas: Catalogo[]): void {
-    this.update(state => ({ ...state, fechasSeleccionadas }));
+    this.update((state) => ({
+      ...state,
+      fechasSeleccionadas,
+    }));
+  }
+  /**
+   * Actualiza el país en el estado.
+   * @param {string} pais - País del domicilio.
+   */
+  public setPais(pais: Catalogo[]): void {
+    this.update((state) => ({ ...state, pais }));
   }
 
-  /** Establece los fines elegidos */
-  public setFinesElegidos(finesElegidos: string[]): void {
-    this.update(state => ({ ...state, finesElegidos }));
+    /**
+     * Actualiza el estado de la tienda con el arreglo proporcionado de `Catalogo` como la nueva `condicion`.
+     *
+     * @param condicion - Un arreglo de objetos `Catalogo` para establecer como la condición actual en el estado.
+     */
+    public setCondicion(condicion: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      condicion,
+    }));
   }
 
-  /** Establece los elementos seleccionados */
-  public setElegidosSeleccionados(elegidosSeleccionados: string[]): void {
-    this.update(state => ({ ...state, elegidosSeleccionados }));
+  
+  /**
+   * Actualiza el año en el estado.
+   * @param {string} ano - Año relacionado.
+   */
+  public setAno(ano: string): void {
+    this.update((state) => ({ ...state, ano }));
+  }
+  /**
+   * Establece el RFC en el estado de la tienda.
+   *
+   * @param rfc - El RFC que se desea asignar.
+   */
+  public setRfc(rfc: string): void {
+    this.update((state) => ({
+      ...state,
+      rfc
+    }));
   }
 
-  /** Establece el rango de días seleccionados */
-  public setSelectRangoDias(selectRangoDias: string[]): void {
-    this.update(state => ({ ...state, selectRangoDias }));
+  /**
+   * Establece el valor federal en el estado de la tienda.
+   *
+   * @param federal - El valor federal que se desea asignar.
+   */
+  public setFederal(federal: string): void {
+    this.update((state) => ({
+      ...state,
+      federal
+    }));
   }
 
-  /** Establece los datos de fechas */
-  public setFechasDatos(fechasDatos: string[]): void {
-    this.update(state => ({ ...state, fechasDatos }));
+  /**
+   * Establece el tipo en el estado de la tienda.
+   *
+   * @param tipo - El tipo que se desea asignar.
+   */
+  public setTipo(tipo: string): void {
+    this.update((state) => ({
+      ...state,
+      tipo
+    }));
   }
 
-  /** Establece la fecha */
-  public setFecha(fecha: string): void {
-    this.update(state => ({ ...state, fecha }));
+  /**
+   * Establece el programa en el estado de la tienda.
+   *
+   * @param programa - El programa que se desea asignar.
+   */
+  public setPrograma(programa: string): void {
+    this.update((state) => ({
+      ...state,
+      programa
+    }));
   }
 
-  /** Establece la fecha seleccionada */
-  public setFechaSeleccionada(fechaSeleccionada: string): void {
-    this.update(state => ({ ...state, fechaSeleccionada }));
+
+  /**
+   * Guarda el tipo de solicitud en el estado.
+   *
+   * @param casillaDeVerificacionindividual - El tipo de solicitud que se va a guardar.
+   */
+  public setCasillaDeVerificacionindividual(casillaDeVerificacionindividual: []): void {
+    this.update((state) => ({
+      ...state,
+      casillaDeVerificacionindividual,
+    }));
   }
 
-  /** Establece si se debe mostrar la tabla */
-  public setShowTabla(showTabla: boolean): void {
-    this.update(state => ({ ...state, showTabla }));
+  /**
+   * Establece el número de manifiesta en el estado de la tienda.
+   *
+   * @param numeroManifiesta - El número de manifiesta que se desea asignar.
+   */
+  public setNumeroManifiesta(numeroManifiesta: number): void {
+    this.update((state) => ({
+      ...state,
+      numeroManifiesta,
+    }));
   }
 
-  /** Establece si el popup está abierto */
-  public setIsPopupOpen(isPopupOpen: boolean): void {
-    this.update(state => ({ ...state, isPopupOpen }));
+
+  /**
+   * Establece la fecha de ingreso en el estado de la tienda.
+   *
+   * @param fechaDeIngreso - La nueva fecha de ingreso que se debe establecer en el estado.
+   *                          Debe ser una cadena en formato válido.
+   */
+  public setFechaDeIngreso(fechaDeIngreso: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaDeIngreso,
+    }));
   }
 
-  /** Establece si el popup está cerrado */
-  public setIsPopupClose(isPopupClose: boolean): void {
-    this.update(state => ({ ...state, isPopupClose }));
+
+  /**
+   * Establece los datos del solicitante en el estado de la tienda.
+   *
+   * @param datosSolicitante - Objeto que contiene la información del solicitante.
+   */
+  public setDatosSolicitante(datosSolicitante: DatosSolicitante): void {
+    this.update((state) => ({
+      ...state,
+      datosSolicitante
+    }));
   }
 
-  /** Establece el valor seleccionado */
-  public setValorSeleccionado(valorSeleccionado: string): void {
-    this.update(state => ({ ...state, valorSeleccionado }));
+  /**
+   * Establece los datos de modificación en el estado de la tienda.
+   *
+   * @param datosModificacion - Objeto que contiene los datos de modificación que se deben actualizar en el estado.
+   */
+  public setDatosModificacion(datosModificacion: DatosModificacion): void {
+    this.update((state) => ({
+      ...state,
+      datosModificacion
+    }));
+  }
+  
+  /**
+   * Establece los datos del contenedor en el estado de la tienda.
+   *
+   * @param datosDelContenedor - Un arreglo que contiene los datos del contenedor a establecer.
+   * 
+   * @remarks
+   * Este método actualiza el estado de la tienda con los datos proporcionados para el contenedor.
+   */
+  public setDelContenedor(datosDelContenedor: []): void {
+    this.update((state) => ({
+      ...state,
+      datosDelContenedor
+    }));
   }
 
-  /** Establece el tipo de mercancía */
-  public setTipoMercancia(tipoMercancia: string): void {
-    this.update(state => ({ ...state, tipoMercancia }));
+  /**
+   * Establece el tipo de búsqueda en el estado de la tienda.
+   *
+   * @param tipoBusqueda - El tipo de búsqueda que se desea establecer.
+   */
+  public setTipoBusqueda(tipoBusqueda: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoBusqueda
+    }));
   }
 
-  /** Establece el uso específico */
-  public setUsoEspecifico(usoEspecifico: string): void {
-    this.update(state => ({ ...state, usoEspecifico }));
+  /**
+   * Establece el valor de la propiedad "aduana" en el estado.
+   *
+   * @param aduana - El nuevo valor para la propiedad "aduana".
+   */
+  public setAduana(aduana: string): void {
+    this.update((state) => ({
+      ...state,
+      aduana
+    }));
   }
 
-  /** Establece la marca */
-  public setMarca(marca: string): void {
-    this.update(state => ({ ...state, marca }));
+    /**
+     * Actualiza el estado de la tienda con una nueva lista de documentos.
+     *
+     * @param documentos - Un arreglo de objetos `Catalogo` para establecer como los documentos actuales en el estado.
+     */
+    public setDocumentos(documentos: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      documentos,
+    }));
+  }
+  
+  public setFechaIngreso(fechaIngreso: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaIngreso
+    }));
   }
 
-  /** Establece el modelo */
-  public setModelo(modelo: string): void {
-    this.update(state => ({ ...state, modelo }));
+  
+  /**
+   * Establece las iniciales del contenedor en el estado de la tienda.
+   *
+   * @param inicialesContenedor - Las iniciales del contenedor que se deben establecer.
+   */
+  public setInicialesContenedor(inicialesContenedor: string): void {
+    this.update((state) => ({
+      ...state,
+      inicialesContenedor
+    }));
   }
 
-  /** Establece la serie */
-  public setSerie(serie: string): void {
-    this.update(state => ({ ...state, serie }));
+
+  /**
+   * Establece el número de contenedor en el estado de la tienda.
+   *
+   * @param numeroContenedor - El número de contenedor que se va a asignar.
+   * @returns void
+   */
+  public setNumeroContenedor(numeroContenedor: string): void {
+    this.update((state) => ({
+      ...state,
+      numeroContenedor
+    }));
   }
 
-  /** Establece la calle */
-  public setCalle(calle: string): void {
-    this.update(state => ({ ...state, calle }));
+  
+  /**
+   * Establece el valor del dígito de control en el estado de la tienda.
+   *
+   * @param digitoDeControl - El nuevo valor del dígito de control que se debe establecer.
+   */
+  public setDigitoDeControl(digitoDeControl: string): void {
+    this.update((state) => ({
+      ...state,
+      digitoDeControl
+    }));
   }
 
-  /** Establece el número exterior */
-  public setNumeroExterior(numeroExterior: number): void {
-    this.update(state => ({ ...state, numeroExterior }));
+
+  /**
+   * Establece el valor de los contenedores en el estado de la tienda.
+   *
+   * @param contenedores - Una cadena que representa los contenedores a establecer en el estado.
+   */
+  public setContenedores(contenedores: string): void {
+    this.update((state) => ({
+      ...state,
+      contenedores
+    }));
   }
 
-  /** Establece el número interior */
-  public setNumeroInterior(numeroInterior: number): void {
-    this.update(state => ({ ...state, numeroInterior }));
+
+  /**
+   * Establece el archivo seleccionado en el estado de la tienda.
+   *
+   * @param archivoSeleccionado - El nombre o identificador del archivo que se seleccionará.
+   */
+  public setArchivoSeleccionado(archivoSeleccionado: string): void {
+    this.update((state) => ({
+      ...state,
+      archivoSeleccionado
+    }));
   }
 
-  /** Establece el teléfono */
-  public setTelefono(telefono: number): void {
-    this.update(state => ({ ...state, telefono }));
+  /**
+   * Establece el valor de la propiedad `linea` en el estado actual.
+   *
+   * @param linea - El nuevo valor para la propiedad `linea`.
+   */
+  public setLinea(linea: string): void {
+    this.update((state) => ({
+      ...state,
+      linea,
+    }));
   }
 
-  /** Establece el correo electrónico */
-  public setCorreoElectronico(correoElectronico: string): void {
-    this.update(state => ({ ...state, correoElectronico }));
+
+  /**
+   * Establece el valor de la propiedad `lineaCheckbox` en el estado.
+   *
+   * @param lineaCheckbox - El nuevo valor para la propiedad `lineaCheckbox`.
+   */
+  public setLineaCheckbox(lineaCheckbox: string): void {
+    this.update((state) => ({
+      ...state,
+      lineaCheckbox,
+    }));
   }
 
-  /** Establece el código postal */
-  public setCodigoPostal(codigoPostal: number): void {
-    this.update(state => ({ ...state, codigoPostal }));
+  /**
+   * Establece el valor de "monto" en el estado.
+   *
+   * @param monto - El nuevo valor de "monto" que se asignará al estado.
+   */
+  public setMonto(monto: string): void {
+    this.update((state) => ({
+      ...state,
+      monto,
+    }));
   }
 
-  /** Establece el estado */
-  public setEstado(estado: number): void {
-    this.update(state => ({ ...state, estado }));
-  }
-
-  /** Establece la colonia */
-  public setColonia(colonia: number): void {
-    this.update(state => ({ ...state, colonia }));
-  }
-
-  /** Establece la opción seleccionada */
-  public setOpcion(opcion: string): void {
-    this.update(state => ({ ...state, opcion }));
-  }
-
-  /** Reinicia el estado del store a su estado inicial */
+  /**
+   * Limpia los datos de la solicitud
+   */
   public limpiarSolicitud(): void {
     this.reset();
   }

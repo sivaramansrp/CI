@@ -1,6 +1,6 @@
 import { FilaData, FilaData2, FilaTablaData } from '../models/fila-modal';
-
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { MercanciasInfo } from '../models/mercancia.model';
 import { TramitesAsociados } from '../models/destinatario.model';
 
 /**
@@ -105,6 +105,7 @@ export const DESTINATARIO_CONFIGURACION_TABLA: ConfiguracionColumna<FilaTablaDat
   },
 ];
 
+
 /**
  * Configuración de las columnas para solicitudes.
  */
@@ -112,13 +113,13 @@ export const CONFIGURACION_COLUMNAS_SOLI: ConfiguracionColumna<FilaData>[] = [
   {
     /** Configuración de la columna para la clave S.C.I.A.N. */
     encabezado: 'Clave S.C.I.A.N.',
-    clave: (fila) => fila.claveScian,
+    clave: (fila) => fila.claveScianG.claveScian,
     orden: 1,
   },
   {
     /** Configuración de la columna para la descripción del S.C.I.A.N. */
     encabezado: 'Description del S.C.I.A.N',
-    clave: (fila) => fila.descripcionDelScian,
+    clave: (fila) => fila.claveScianG.descripcionDelScian,
     orden: 2,
   },
 ];
@@ -126,7 +127,7 @@ export const CONFIGURACION_COLUMNAS_SOLI: ConfiguracionColumna<FilaData>[] = [
 /**
  * Configuración de las columnas para mercancías.
  */
-export const CONFIGURACION_COLUMNAS_MERCANCIAS: ConfiguracionColumna<FilaData2>[] = [
+export const CONFIGURACION_COLUMNAS_MERCANCIAS: ConfiguracionColumna<MercanciasInfo>[] = [
   {
     /** Configuración de la columna para la clasificación del producto */
     encabezado: 'Clasificación del producto',
@@ -205,6 +206,7 @@ export const CONFIGURACION_COLUMNAS_MERCANCIAS: ConfiguracionColumna<FilaData2>[
     clave: (fila) => fila.cantidadUMT,
     orden: 13,
   },
+  
   {
     /** Configuración de la columna para la presentación farmacéutica o tipo de envase */
     encabezado: 'presentacion',

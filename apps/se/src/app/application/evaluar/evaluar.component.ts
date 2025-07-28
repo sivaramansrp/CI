@@ -14,6 +14,7 @@ import { OnInit } from "@angular/core";
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
 import { Router } from '@angular/router';
 import { SolicitarDocumentosEvaluacionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
+import { SolicitarOpinionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-opinion/solicitar-opinion.component';
 import { SolicitudRequerimientoQuery } from '@libs/shared/data-access-user/src/core/queries/requerimientos.query';
 import { SolicitudRequerimientosState } from '@libs/shared/data-access-user/src/core/estados/requerimientos.store';
 import { Subject } from 'rxjs';
@@ -54,7 +55,8 @@ import { takeUntil } from 'rxjs';
     GenerarDictamenComponent,
     FirmaElectronicaComponent,
     CapturarRequerimientoComponent,
-    SolicitarDocumentosEvaluacionComponent
+    SolicitarDocumentosEvaluacionComponent,
+    SolicitarOpinionComponent
   ],
   templateUrl: './evaluar.component.html',
   styleUrl: './evaluar.component.scss',
@@ -112,6 +114,10 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   public requerimientoState!: SolicitudRequerimientosState;
   /**
+   * Variable para deshabilitar pestaña documento
+   */
+  deshabilitarSolicitarDocumentos: boolean = false;
+  /**
  * @constructor
  * @description Constructor del componente. Inicializa los servicios y suscripciones necesarias para la evaluación del trámite.
  * 
@@ -130,6 +136,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery,
     private solicitudRequerimientoQuery: SolicitudRequerimientoQuery,
   ) {
+
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -143,6 +150,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.requerimientoState = seccionState;
+          this.deshabilitarSolicitarDocumentos = !seccionState.activarTabSolicitarDocumentos;
         })
       )
       .subscribe();
@@ -273,6 +281,20 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     if (FIRMA) {
       this.router.navigate(['bandeja-de-tareas-pendientes']);
     }
+  }
+  /**
+   * @method cancelar
+   * @description Método para restablecer los índices de las pestañas principales y de dictamen.
+   * 
+   * Este método se utiliza para reiniciar el flujo de navegación en el componente:
+   * - Establece el índice de la pestaña principal (`indice`) en 0.
+   * - Establece el índice de la pestaña de dictamen (`indiceDictamen`) en 1.
+   * 
+   * @returns {void}
+   */
+  cancelar(): void {
+    this.indice = 0;
+    this.indiceDictamen = 1;
   }
   /**
    * @method ngOnDestroy

@@ -1,23 +1,16 @@
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
-import { InputFecha } from '@libs/shared/data-access-user/src';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
-import { Solicitud30901Query } from '../../estados/tramites30901.query';
-import { Solicitud30901State } from '../../estados/tramites30901.store';
-import { Solicitud30901Store } from '../../estados/tramites30901.store';
-import { Subject } from 'rxjs';
-import { Subscription } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { InputFecha, InputFechaComponent } from "@libs/shared/data-access-user/src";
+import { Solicitud30901State, Solicitud30901Store } from "../../estados/tramites30901.store";
+import { Subject, Subscription, map, takeUntil } from "rxjs";
+import { BsModalService } from "ngx-bootstrap/modal";
+import { CommonModule } from "@angular/common";
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ImportanteCatalogoSeleccion } from "../../models/registro-muestras-mercancias.model";
+import { RenovacionesMuestrasMercanciasService } from "../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service";
+import { Solicitud30901Query } from "../../estados/tramites30901.query";
+import { ToastrService } from "ngx-toastr";
+
 /**
  * Componente para gestionar los datos de prórroga de muestras de mercancías.
  *
@@ -85,7 +78,7 @@ export class DatosProrrogaMuestrasMercanciasComponent
   configuracionFechaFinVigencia: InputFecha = {
     labelNombre: 'Fecha de inicio de vigencia',
     required: false,
-    habilitado: false,
+    habilitado: true,
   };
 
   /**
@@ -98,7 +91,7 @@ export class DatosProrrogaMuestrasMercanciasComponent
   configuracionFechaInicioVigencia: InputFecha = {
     labelNombre: 'Fecha de fin de vigencia',
     required: false,
-    habilitado: false,
+    habilitado: true,
   };
 
   /**
@@ -124,18 +117,46 @@ export class DatosProrrogaMuestrasMercanciasComponent
    */
   solicitud30901State: Solicitud30901State = {} as Solicitud30901State;
 
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
   /**
-   * Constructor de la clase DatosProrrogaMuestrasMercanciasComponent.
+   * Constructor del componente `DatosProrrogaMuestrasMercanciasComponent`.
    *
-   * @param {FormBuilder} fb - Instancia de FormBuilder para crear y gestionar formularios reactivos.
+   * Se encarga de inyectar las dependencias necesarias para la creación del formulario,
+   * la gestión del estado del trámite, la consulta de información, y el servicio de renovaciones.
+   *
+   * @param {FormBuilder} fb - Utilizado para crear formularios reactivos.
+   * @param {RenovacionesMuestrasMercanciasService} renovacionesMuestrasMercanciasService - Servicio encargado de gestionar las renovaciones de muestras de mercancías.
+   * @param {Solicitud30901Store} solicitud30901Store - Store del estado de la solicitud 30901.
+   * @param {Solicitud30901Query} solicitud30901Query - Query para observar los cambios en el estado de la solicitud 30901.
+   * @param {ConsultaioQuery} consultaioQuery - Query para observar el estado de consulta general (readonly, etc.).
    */
   constructor(
     public fb: FormBuilder,
     public renovacionesMuestrasMercanciasService: RenovacionesMuestrasMercanciasService,
     public solicitud30901Store: Solicitud30901Store,
-    public solicitud30901Query: Solicitud30901Query
+    public solicitud30901Query: Solicitud30901Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // Si es necesario, se puede agregar aquí la lógica de inicialización
+     /**
+         * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+         *
+         * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+         * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+         * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+         */
+        this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState)=>{
+            this.esFormularioSoloLectura = seccionState.readonly;
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe()
   }
 
   /**
@@ -146,33 +167,38 @@ export class DatosProrrogaMuestrasMercanciasComponent
    * @returns {void}
    */
   ngOnInit(): void {
-    this.formDatosProrroga = this.fb.group({
-      fechaInicioVigencia: [
-        { value: this.solicitud30901State.fechaInicioVigencia, disabled: true },
-      ],
-      fechaFinVigencia: [
-        { value: this.solicitud30901State.fechaFinVigencia, disabled: true },
-      ],
-    });
-
-    /**
-     * Observable que obtiene las fechas de inicio y fin de vigencia.
-     */
-    this.solicitud30901Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((datos: Solicitud30901State) => {
-          this.solicitud30901State = datos;
-          this.formDatosProrroga.patchValue({
-            fechaInicioVigencia: this.solicitud30901State.fechaInicioVigencia,
-            fechaFinVigencia: this.solicitud30901State.fechaFinVigencia,
-          });
-        })
-      )
-      .subscribe();
-
-    this.getvalidezDeLaAutorizacionDatos();
+    this.inicializarEstadoFormulario();
   }
+
+   /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.formDatosProrroga.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formDatosProrroga.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+}
+
 
   /**
    * Obtiene los datos de validez de la autorización desde el servicio y actualiza el estado.
@@ -192,6 +218,43 @@ export class DatosProrrogaMuestrasMercanciasComponent
           );
         },
       });
+  }
+
+   /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
+    this.formDatosProrroga = this.fb.group({
+      fechaInicioVigencia: [
+        { value: this.solicitud30901State.fechaInicioVigencia },
+      ],
+      fechaFinVigencia: [
+        { value: this.solicitud30901State.fechaFinVigencia },
+      ],
+    });
+
+    /**
+     * Observable que obtiene las fechas de inicio y fin de vigencia.
+     */
+    this.solicitud30901Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((datos: Solicitud30901State) => {
+          this.solicitud30901State = datos;
+          this.formDatosProrroga.patchValue({
+            fechaInicioVigencia: datos.fechaInicioVigencia,
+            fechaFinVigencia: datos.fechaFinVigencia,
+          });
+        })
+      )
+      .subscribe();
+
+    this.getvalidezDeLaAutorizacionDatos();
+
   }
 
   /**
@@ -219,7 +282,10 @@ export class DatosProrrogaMuestrasMercanciasComponent
     this.formDatosProrroga.patchValue({
       fechaFinVigencia: date,
     });
+    
   }
+
+  
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

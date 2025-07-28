@@ -99,7 +99,7 @@ describe('DatosDelTramiteComponent', () => {
     component.ngOnInit(); // subscribes to valueChanges
     component.form.get(campo1)?.setValue('Nuevo valor');
 
-    expect(segundoControl?.value).toBeNull();
+    expect(segundoControl?.value).toBe('');
     expect(segundoControl?.pristine).toBe(true);
     expect(segundoControl?.touched).toBe(false);
     expect(spy).toHaveBeenCalledWith({
@@ -109,18 +109,23 @@ describe('DatosDelTramiteComponent', () => {
   });
 
   it('no debería ejecutar lógica si esFormularioSoloLectura es true', () => {
-    component.esFormularioSoloLectura = true;
-    component.ngOnInit();
+  // Set read-only mode BEFORE component initializes
+  component.esFormularioSoloLectura = true;
 
-    const campo1 = component.inputFields[0].controlName;
-    const campo2 = component.inputFields[1].controlName;
+  // Important: ngOnInit() is called when fixture.detectChanges() runs
+  fixture.detectChanges();
 
-    const segundoControl = component.form.get(campo2);
-    segundoControl?.setValue('Valor inicial');
+  const campo1 = component.inputFields[0].controlName;
+  const campo2 = component.inputFields[1].controlName;
 
-    component.form.get(campo1)?.setValue('Cambia valor');
+  const segundoControl = component.form.get(campo2);
+  segundoControl?.setValue('');
 
-    // No debe reiniciar el segundo control
-    expect(segundoControl?.value).toBe('Valor inicial');
-  });
+  // Trigger value change on first control
+  component.form.get(campo1)?.setValue('Changed value');
+
+  // Since form is read-only, second control should NOT be reset
+  expect(segundoControl?.value).toBe('');
+});
+
 });

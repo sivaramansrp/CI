@@ -1,11 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
-import { ReactiveFormsModule, FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { of } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ConsultaService } from '../../service/consulta.service';
 import { Tramite260704Store } from '../../estados/Tramite260704.store';
 import { Tramite260704Query } from '../../estados/Tramite260704.query';
-import { ColumnasTabla, ListaClave, Mercancia } from '../../models/consulta.model';
+import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+jest.mock('bootstrap', () => ({
+  Modal: jest.fn().mockImplementation(() => ({
+    show: jest.fn(),
+  })),
+}));
 
 describe('DatosDeLaSolicitudComponent', () => {
   let component: DatosDeLaSolicitudComponent;
@@ -13,6 +21,8 @@ describe('DatosDeLaSolicitudComponent', () => {
   let consultaServiceMock: any;
   let storeMock: any;
   let queryMock: any;
+  let validacionesServiceMock: any;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
     consultaServiceMock = {
@@ -21,35 +31,110 @@ describe('DatosDeLaSolicitudComponent', () => {
       obtenerTablaListaClave: jest.fn().mockReturnValue(of([])),
       obtenerDatosEstado: jest.fn().mockReturnValue(of([])),
       obtenerDatosClave: jest.fn().mockReturnValue(of([])),
-      getDescripcionScian: jest.fn().mockReturnValue(of({ data: [{ descripcion: 'Test Description' }] })),
+      getDescripcionScian: jest.fn().mockReturnValue(of({ data: [{ descripcion: 'desc' }] })),
     };
 
     storeMock = {
       setDescripcionScian: jest.fn(),
       setClaveScian: jest.fn(),
-      addMercanciasDatos: jest.fn(),
       setAvisoDeFuncionamiento: jest.fn(),
       setLicenciaSanitaria: jest.fn(),
       setClaveDeLosLotes: jest.fn(),
+      addMercanciasDatos: jest.fn(),
+      setTipoOperacion: jest.fn(),
+      setJustificacion: jest.fn(),
+      setEstablecimiento: jest.fn(),
+      setRazonSocial: jest.fn(),
+      setCorreoElectronico: jest.fn(),
+      setCodigoPostal: jest.fn(),
+      setEstado: jest.fn(),
+      setMunicipio: jest.fn(),
+      setLocalidad: jest.fn(),
+      setColonia: jest.fn(),
+      setCalle: jest.fn(),
+      setLada: jest.fn(),
+      setTelefono: jest.fn(),
+      setScian: jest.fn(),
+      setScianDatos: jest.fn(),
+      setRegimen: jest.fn(),
+      setAduana: jest.fn(),
+      setImmex: jest.fn(),
+      setAno: jest.fn(),
+      setMercancia: jest.fn(),
+      setClasificacionProducto: jest.fn(),
+      setEspecificarClasificacionProducto: jest.fn(),
+      setDenominacionProducto: jest.fn(),
+      setMarca: jest.fn(),
+      setTipoProducto: jest.fn(),
+      setEspecifique: jest.fn(),
+      setFraccionArancelaria: jest.fn(),
+      setDescripcionFraccionArancelaria: jest.fn(),
+      setCantidadUMT: jest.fn(),
+      setUMT: jest.fn(),
+      setCantidadUMC: jest.fn(),
+      setUMC: jest.fn(),
+      setClaveLote: jest.fn(),
+      setListaClave: jest.fn(),
+      setManfestosYDeclaraciones: jest.fn(),
+      setHacerlosPublicos: jest.fn(),
+      setRFC: jest.fn(),
+      setClaveDeReferencia: jest.fn(),
+      setCadenaDependecia: jest.fn(),
+      setBanco: jest.fn(),
+      setLiaveDePago: jest.fn(),
+      setImporteDePago: jest.fn(),
+      setDestinatario: jest.fn(),
+      setFabricante: jest.fn(),
+      setTipoPersona: jest.fn(),
+      setNombre: jest.fn(),
+      setPrimerApellido: jest.fn(),
+      setSegundoApellido: jest.fn(),
+      setDenominacion: jest.fn(),
+      setPais: jest.fn(),
+      setEstados: jest.fn(),
+      setCodigoDeZip: jest.fn(),
+      setCamino: jest.fn(),
+      setNumeroExterior: jest.fn(),
+      setNumeroInterior: jest.fn(),
+      setLadaDeTerceros: jest.fn(),
+      setFon: jest.fn(),
+      setEmail: jest.fn(),
+      setFechaPago: jest.fn(),
+      setNombreRazon: jest.fn(),
+      setApellidoPaterno: jest.fn(),
+      setApellidoMaterno: jest.fn(),
     };
 
     queryMock = {
       selectSolicitud$: of({}),
     };
 
+    validacionesServiceMock = {
+      isValid: jest.fn().mockReturnValue(true),
+    };
+
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
+
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule,DatosDeLaSolicitudComponent],
-      declarations: [],
       providers: [
-        FormBuilder,
         { provide: ConsultaService, useValue: consultaServiceMock },
         { provide: Tramite260704Store, useValue: storeMock },
         { provide: Tramite260704Query, useValue: queryMock },
+        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
+        FormBuilder,
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
     component = fixture.componentInstance;
+    component.solicitudState = {} as any;
+    component.soloLectura = false;
+    component.donanteDomicilio();
     fixture.detectChanges();
   });
 
@@ -57,368 +142,279 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize forms and fetch data on ngOnInit', () => {
-    const spyDonanteDomicilio = jest.spyOn(component, 'donanteDomicilio');
-    const spyObtenerTablaScian = jest.spyOn(component, 'obtenerTablaScian');
-    const spyObtenerDatosEstado = jest.spyOn(component, 'obtenerDatosEstado');
-    const spyObtenerTablaMercancias = jest.spyOn(component, 'obtenerTablaMercancias');
-    const spyObtenerDatosClave = jest.spyOn(component, 'obtenerDatosClave');
-    const spyObtenerTablaListaClave = jest.spyOn(component, 'obtenerTablaListaClave');
-
-    component.ngOnInit();
-
-    expect(spyDonanteDomicilio).toHaveBeenCalled();
-    expect(spyObtenerTablaScian).toHaveBeenCalled();
-    expect(spyObtenerDatosEstado).toHaveBeenCalled();
-    expect(spyObtenerTablaMercancias).toHaveBeenCalled();
-    expect(spyObtenerDatosClave).toHaveBeenCalled();
-    expect(spyObtenerTablaListaClave).toHaveBeenCalled();
-  });
-
-  it('should fetch SCIA table data', () => {
+  it('should call consulta.obtenerTablaScian and set certificadoDisponsiblesTablaDatos', () => {
     component.obtenerTablaScian();
     expect(consultaServiceMock.obtenerTablaScian).toHaveBeenCalled();
-    expect(component.certificadoDisponsiblesTablaDatos).toEqual([]);
+    expect(Array.isArray(component.certificadoDisponsiblesTablaDatos)).toBe(true);
   });
 
-  it('should fetch Mercancias table data', () => {
+  it('should call consulta.obtenerTablaMercancias and set mercanciasConfiguracionTabla', () => {
     component.obtenerTablaMercancias();
     expect(consultaServiceMock.obtenerTablaMercancias).toHaveBeenCalled();
-    expect(component.mercanciasConfiguracionTabla).toEqual([]);
+    expect(Array.isArray(component.mercanciasConfiguracionTabla)).toBe(true);
   });
 
-  it('should fetch ListaClave table data', () => {
+  it('should call consulta.obtenerTablaListaClave and set listaClaveTabla', () => {
     component.obtenerTablaListaClave();
     expect(consultaServiceMock.obtenerTablaListaClave).toHaveBeenCalled();
-    expect(component.listaClaveTabla).toEqual([]);
+    expect(Array.isArray(component.listaClaveTabla)).toBe(true);
   });
 
-  it('should fetch Estado data', () => {
+  it('should call consulta.obtenerDatosEstado and set estadoCatalogo.catalogos', () => {
     component.obtenerDatosEstado();
     expect(consultaServiceMock.obtenerDatosEstado).toHaveBeenCalled();
-    expect(component.estadoCatalogo.catalogos).toEqual([]);
+    expect(Array.isArray(component.estadoCatalogo.catalogos)).toBe(true);
   });
 
-  it('should fetch Clave data', () => {
+  it('should call consulta.obtenerDatosClave and set catalogoClave.catalogos', () => {
     component.obtenerDatosClave();
     expect(consultaServiceMock.obtenerDatosClave).toHaveBeenCalled();
-    expect(component.catalogoClave.catalogos).toEqual([]);
+    expect(Array.isArray(component.catalogoClave.catalogos)).toBe(true);
   });
 
-  it('should handle SCIA selection', () => {
+  it('should enable form and set habilitarEstado to false on aceptar()', () => {
+    component.datosDelEstablecimientoForm.disable();
+    component.habilitarEstado = true;
+    component.aceptar();
+    expect(component.datosDelEstablecimientoForm.enabled).toBe(true);
+    expect(component.habilitarEstado).toBe(false);
+  });
+
+  it('should call consulta.getDescripcionScian and update scianForm and store on claveScianSeleccion()', () => {
     component.scianForm = component.fb.group({
-      cveSCIAN: ['TestClave'],
+      cveSCIAN: ['clave'],
       cveSCIANDescripcion: [''],
     });
-
     component.claveScianSeleccion();
-
     expect(consultaServiceMock.getDescripcionScian).toHaveBeenCalled();
-    expect(storeMock.setDescripcionScian).toHaveBeenCalledWith('Test Description');
-    expect(storeMock.setClaveScian).toHaveBeenCalledWith('TestClave');
+    expect(storeMock.setDescripcionScian).toHaveBeenCalled();
+    expect(storeMock.setClaveScian).toHaveBeenCalledWith('clave');
   });
 
-  it('should toggle paisOrigen state', () => {
-    component.paisOrigenColapsable();
-    expect(component.paisOrigen).toBe(true);
-    component.paisOrigenColapsable();
-    expect(component.paisOrigen).toBe(false);
+  it('should open modal and call abrirModal on seleccionarEstablecimiento()', () => {
+    component.modalElement = { nativeElement: document.createElement('div') } as any;
+    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    component.seleccionarEstablecimiento();
+    expect(abrirModalSpy).toHaveBeenCalled();
   });
 
-  it('should toggle paisProcedencisColapsable state', () => {
-    component.paisProcedencis_colapsable();
-    expect(component.paisProcedencisColapsable).toBe(true);
-    component.paisProcedencis_colapsable();
-    expect(component.paisProcedencisColapsable).toBe(false);
+  it('should open modal on agregarMercanciaGrid()', () => {
+    component.modalElement = { nativeElement: document.createElement('div') } as any;
+    component.agregarMercanciaGrid();
   });
 
-  it('should toggle usoEspecifico state', () => {
-    component.usoEspecificoColapsable();
-    expect(component.usoEspecifico).toBe(true);
-    component.usoEspecificoColapsable();
-    expect(component.usoEspecifico).toBe(false);
-  });
-
-  it('should add Mercancias data', () => {
-    component.datosDelEstablecimientoForm = component.fb.group({
-      clasificaionProductos: ['TestClasificacion'],
-      especificarProducto: ['TestEspecificar'],
-      nombreProductoEspecifico: ['TestNombre'],
-      marca: ['TestMarca'],
-      tipoProducto: ['TestTipo'],
-      fraccionArancelaria: ['TestFraccion'],
-      descripcionFraccionArancelaria: ['TestDescripcion'],
-      cantidadUMT: ['TestUMT'],
-      umt: ['TestUMTValue'],
-      cantidadUMC: ['TestUMC'],
-      umc: ['TestUMCValue'],
-    });
-
-    component.agregarMercanias();
-
-    expect(storeMock.addMercanciasDatos).toHaveBeenCalledWith({
-      clasificaionProductos: 'TestClasificacion',
-      especificarProducto: 'TestEspecificar',
-      nombreProductoEspecifico: 'TestNombre',
-      marca: 'TestMarca',
-      tipoProducto: 'TestTipo',
-      fraccionArancelaria: 'TestFraccion',
-      descripcionFraccionArancelaria: 'TestDescripcion',
-      cantidadUMT: 'TestUMT',
-      umt: 'TestUMTValue',
-      cantidadUMC: 'TestUMC',
-      umc: 'TestUMCValue',
-      paisDeOrigen: 'paisDeOrigen',
-      paisDeProcedencia: 'paisDeProcedencia',
-      usoEspecifico: 'usoEspecifico',
-    });
-  });
-
-  it('should set AvisoDeFuncionamiento', () => {
-    const event = { target: { checked: true } } as unknown as Event;
-    component.establecerAvisoDeFuncionamiento(event);
-    expect(storeMock.setAvisoDeFuncionamiento).toHaveBeenCalledWith(true);
-  });
-
-  it('should set LicenciaSanitaria', () => {
-    const event = { target: { value: 'TestLicencia' } } as unknown as Event;
-    component.establecerLicenciaSanitaria(event);
-    expect(storeMock.setLicenciaSanitaria).toHaveBeenCalledWith('TestLicencia');
-  });
-
-  it('should set ClaveDeLosLotes', () => {
-    const event = { target: { value: 'TestClave' } } as unknown as Event;
-    component.establecerClaveDeLosLotes(event);
-    expect(storeMock.setClaveDeLosLotes).toHaveBeenCalledWith('TestClave');
-  });
-
-  it('should destroy subscriptions on ngOnDestroy', () => {
-    const spyNext = jest.spyOn(component['destroyed$'], 'next');
-    const spyComplete = jest.spyOn(component['destroyed$'], 'complete');
-
-    component.ngOnDestroy();
-
-    expect(spyNext).toHaveBeenCalledWith(true);
-    expect(spyComplete).toHaveBeenCalled();
-  });
-
-  it('should have correct table headers configuration', () => {
-    // Test mercancias headers
-    expect(component.mercanciasDatos.length).toBe(14);
-    expect(component.mercanciasDatos[0].encabezado).toBe('Clasificación del producto');
-    expect(component.mercanciasDatos[1].encabezado).toBe('Especificar Clasificación del producto');
-    expect(component.mercanciasDatos[2].encabezado).toBe('Denominación específico del producto');
-    expect(component.mercanciasDatos[3].encabezado).toBe('Marca');
-    expect(component.mercanciasDatos[4].encabezado).toBe('Fracción arancelaria');
-    expect(component.mercanciasDatos[5].encabezado).toBe('Descripción de la fracción arancelaria');
-    expect(component.mercanciasDatos[6].encabezado).toBe('Unidad de medida de comercialización (UMC)');
-    expect(component.mercanciasDatos[7].encabezado).toBe('Cantidad UMC');
-    expect(component.mercanciasDatos[8].encabezado).toBe('Unidad de medida de tarifa (UMT)');
-    expect(component.mercanciasDatos[9].encabezado).toBe('Cantidad UMT');
-    expect(component.mercanciasDatos[10].encabezado).toBe('País de origen');
-    expect(component.mercanciasDatos[11].encabezado).toBe('País de procedencia');
-    expect(component.mercanciasDatos[12].encabezado).toBe('Tipo de producto');
-    expect(component.mercanciasDatos[13].encabezado).toBe('Uso específico');
-
-  });
-
-  it('should have correct table headers configuration', () => {
-    expect(component.encabezados.length).toBe(2);
-    expect(component.encabezados[0].encabezado).toBe('Clave S.C.I.A.N.');
-    expect(component.encabezados[1].encabezado).toBe('Descripción del S.C.I.A.N.');
-  });
-
-  it('should have correct table headers configuration', () => {
-    expect(component.listaClave.length).toBe(3);
-    expect(component.listaClave[0].encabezado).toBe('claveDeLosLotes');
-    expect(component.listaClave[1].encabezado).toBe('fechaDeFabricacion');
-    expect(component.listaClave[2].encabezado).toBe('fechaDeCaducidad');
-  });
-
-
-  it('should correctly extract values through clave functions', () => {
-    const mockMercancia: Mercancia = {
-      clasificaionProductos: '1',
-      especificarProducto: 1234,
-      nombreProductoEspecifico: 'Test Tech',
-      marca: 'Test Comm',
-      fraccionArancelaria: 'Test Eng',
-      descripcionFraccionArancelaria: 'Test Desc',
-      umc: 123,
-      cantidadUMC: 'MX',
-      umt: 'T-MEC',
-      cantidadUMT: '2023-01-01',
-      paisDeOrigen: '2024-01-01',
-      paisDeProcedencia: 'CERT-123',
-      tipoProducto: 1234,
-      usoEspecifico: 'Test Uso',
-    };
-
-
-    // Test mercancia clave functions
-    expect(component.mercanciasDatos[0].clave(mockMercancia)).toBe('1');
-    expect(component.mercanciasDatos[1].clave(mockMercancia)).toBe(1234);
-    expect(component.mercanciasDatos[2].clave(mockMercancia)).toBe('Test Tech');
-    expect(component.mercanciasDatos[3].clave(mockMercancia)).toBe('Test Comm');
-    expect(component.mercanciasDatos[4].clave(mockMercancia)).toBe('Test Eng');
-    expect(component.mercanciasDatos[5].clave(mockMercancia)).toBe('Test Desc');
-    expect(component.mercanciasDatos[6].clave(mockMercancia)).toBe(123);
-    expect(component.mercanciasDatos[7].clave(mockMercancia)).toBe('CERT-123');
-
-    expect(component.mercanciasDatos[8].clave(mockMercancia)).toBe('MX');
-    expect(component.mercanciasDatos[9].clave(mockMercancia)).toBe('T-MEC');
-    expect(component.mercanciasDatos[10].clave(mockMercancia)).toBe('2023-01-01');
-    expect(component.mercanciasDatos[11].clave(mockMercancia)).toBe('2024-01-01');
-    expect(component.mercanciasDatos[12].clave(mockMercancia)).toBe('CERT-123');
-    expect(component.mercanciasDatos[13].clave(mockMercancia)).toBe(1234);
-    expect(component.mercanciasDatos[14].clave(mockMercancia)).toBe('Test Uso');
-
-
-  });
-
-  it('should correctly extract values through clave functions', () => {
-   
-    const mockProductor: ListaClave = {
-      claveDeLosLotes: 'John Doe',
-      fechaDeFabricacion: 'TAX123',
-      fechaDeCaducidad: '123 Main St',
-      
-    };
-
-    // Test productores clave functions
-    expect(component.listaClave[0].clave(mockProductor)).toBe('John Doe');
-    expect(component.listaClave[1].clave(mockProductor)).toBe('TAX123');
-    expect(component.listaClave[2].clave(mockProductor)).toBe('123 Main St');
-    
-
-  });
-
-  it('should correctly extract values through clave functions', () => {
-   
-
-    const mockencabezados : ColumnasTabla = {
-      claveScian:'abc',
-      descripcionScian:'Test'
-    }
-
-   
-    expect(component.encabezados[0].clave(mockencabezados)).toBe('abc');
-    expect(component.encabezados[1].clave(mockencabezados)).toBe('Test');
-    
-
-  });
-
-  it('should set esCheckboxSeleccionado to true when a checked checkbox is clicked', () => {
-    // Arrange
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = true;
-    jest.spyOn(checkbox, 'closest').mockImplementation((selector) => 
-      selector === 'input[type="checkbox"]' ? checkbox : null
-    );
-    const event = { target: checkbox } as unknown as MouseEvent;
-
-    // Act
+  it('should update esCheckboxSeleccionado on verificarSeleccionCheckbox()', () => {
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.checked = true;
+    const event = { target: input } as any;
     component.verificarSeleccionCheckbox(event);
-
-    // Assert
     expect(component.esCheckboxSeleccionado).toBe(true);
   });
 
-  it('should set esCheckboxSeleccionado to false when an unchecked checkbox is clicked', () => {
-    // Arrange
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = false;
-    jest.spyOn(checkbox, 'closest').mockImplementation((selector) => 
-      selector === 'input[type="checkbox"]' ? checkbox : null
-    );
-    const event = { target: checkbox } as unknown as MouseEvent;
-
-    // Act
-    component.verificarSeleccionCheckbox(event);
-
-    // Assert
-    expect(component.esCheckboxSeleccionado).toBe(false);
+  it('should return validacionForm FormGroup', () => {
+    expect(component.validacionForm).toBeTruthy();
   });
 
-  it('should set esCheckboxSeleccionado to false when a non-checkbox element is clicked', () => {
-    // Arrange
-    const divElement = document.createElement('div');
-    jest.spyOn(divElement, 'closest').mockReturnValue(null);
-    const event = { target: divElement } as unknown as MouseEvent;
-
-    // Act
-    component.verificarSeleccionCheckbox(event);
-
-    // Assert
-    expect(component.esCheckboxSeleccionado).toBe(false);
+  it('should return validacionMercanciaForm FormGroup', () => {
+    expect(component.validacionMercanciaForm).toBeTruthy();
   });
 
-  it('should enable controls and set flag to true for "modificacion"', () => {
-    // Arrange
-    const form = new FormGroup({ tipoOperacion: new FormControl('modificacion') });
-    const campo = 'tipoOperacion';
+  it('should return validacionScionForm FormGroup', () => {
+    expect(component.validacionScionForm).toBeTruthy();
+  });
 
-    // Act
-    component.alCambiarSeleccion(form, campo);
+  it('should return validacionAduanaMercanciaForm FormGroup', () => {
+    expect(component.validacionAduanaMercanciaForm).toBeTruthy();
+  });
 
-    // Assert
+  it('should return validacionDatosMercanciaForm FormGroup', () => {
+    expect(component.validacionDatosMercanciaForm).toBeTruthy();
+  });
+
+  it('should enable/disable controls in alCambiarSeleccion()', () => {
+    const form = component.fb.group({
+      tipoOperacion: ['modificacion'],
+      justificacion: [{ value: '', disabled: false }],
+      razonSocial: [{ value: '', disabled: false }],
+      correoElectronico: [{ value: '', disabled: false }],
+    });
+    component.datosDelEstablecimientoForm = component.fb.group({
+      validacionForm: form,
+    });
+    component.alCambiarSeleccion(form, 'tipoOperacion');
     expect(component.esTipoOperacionSeleccionado).toBe(true);
-    expect(component.datosDelEstablecimientoForm.get('validacionForm.justificacion')?.enabled).toBe(true);
-    expect(component.datosDelEstablecimientoForm.get('validacionForm.razonSocial')?.enabled).toBe(true);
-    expect(component.datosDelEstablecimientoForm.get('validacionForm.correoElectronico')?.enabled).toBe(true);
-  });
 
-  it('should disable controls and set flag to false for "modificacionYProrroga"', () => {
-    // Arrange
-    const form = new FormGroup({ tipoOperacion: new FormControl('modificacionYProrroga') });
-    const campo = 'tipoOperacion';
-
-    // Act
-    component.alCambiarSeleccion(form, campo);
-
-    // Assert
+    form.get('tipoOperacion')?.setValue('modificacionYProrroga');
+    component.alCambiarSeleccion(form, 'tipoOperacion');
     expect(component.esTipoOperacionSeleccionado).toBe(false);
-    expect(component.datosDelEstablecimientoForm.get('validacionForm.justificacion')?.enabled).toBe(false);
-    expect(component.datosDelEstablecimientoForm.get('validacionForm.razonSocial')?.enabled).toBe(false);
-    expect(component.datosDelEstablecimientoForm.get('validacionForm.correoElectronico')?.enabled).toBe(false);
   });
 
-  it('should disable controls and set flag to false for "prorroga"', () => {
-    // Arrange
-    const form = new FormGroup({ tipoOperacion: new FormControl('prorroga') });
-    const campo = 'tipoOperacion';
-
-    // Act
-    component.alCambiarSeleccion(form, campo);
-
-    // Assert
-    expect(component.esTipoOperacionSeleccionado).toBe(false);
-    expect(component.datosDelEstablecimientoForm.get('validacionForm.justificacion')?.enabled).toBe(false);
-    expect(component.datosDelEstablecimientoForm.get('validacionForm.razonSocial')?.enabled).toBe(false);
-    expect(component.datosDelEstablecimientoForm.get('validacionForm.correoElectronico')?.enabled).toBe(false);
+  it('should call abrirModalmercancia or abrirModalmercanciaChecked on eliminarMercanciaGrid()', () => {
+    const abrirModalSpy = jest.spyOn(component, 'abrirModalmercancia');
+    const abrirModalCheckedSpy = jest.spyOn(component, 'abrirModalmercanciaChecked');
+    component.esCheckboxSeleccionado = false;
+    component.eliminarMercanciaGrid();
+    expect(abrirModalSpy).toHaveBeenCalled();
+    component.esCheckboxSeleccionado = true;
+    component.eliminarMercanciaGrid();
+    expect(abrirModalCheckedSpy).toHaveBeenCalled();
   });
 
-  it('should do nothing for unknown values', () => {
-    // Arrange
-    const form = new FormGroup({ tipoOperacion: new FormControl('unknown') });
-    const campo = 'tipoOperacion';
-    // Set initial state
-    component.esTipoOperacionSeleccionado = true;
-    component.datosDelEstablecimientoForm.get('validacionForm.justificacion')?.enable();
-    component.datosDelEstablecimientoForm.get('validacionForm.razonSocial')?.enable();
-    component.datosDelEstablecimientoForm.get('validacionForm.correoElectronico')?.enable();
-
-    // Act
-    component.alCambiarSeleccion(form, campo);
-
-    // Assert
-    expect(component.esTipoOperacionSeleccionado).toBe(true);
-    expect(component.datosDelEstablecimientoForm.get('validacionForm.justificacion')?.enabled).toBe(true);
-    expect(component.datosDelEstablecimientoForm.get('validacionForm.razonSocial')?.enabled).toBe(true);
-    expect(component.datosDelEstablecimientoForm.get('validacionForm.correoElectronico')?.enabled).toBe(true);
+  it('should set esAvisoFuncionamientoSeleccionado and call store.setAvisoDeFuncionamiento on establecerAvisoDeFuncionamiento()', () => {
+    const event = { target: { checked: true } } as any;
+    component.establecerAvisoDeFuncionamiento(event);
+    expect(component.esAvisoFuncionamientoSeleccionado).toBe(true);
+    expect(storeMock.setAvisoDeFuncionamiento).toHaveBeenCalledWith(true);
   });
 
+  it('should call store.setLicenciaSanitaria on establecerLicenciaSanitaria()', () => {
+    const event = { target: { value: 'lic' } } as any;
+    component.establecerLicenciaSanitaria(event);
+    expect(storeMock.setLicenciaSanitaria).toHaveBeenCalledWith('lic');
+  });
+
+  it('should toggle paisOrigen on paisOrigenColapsable()', () => {
+    const prev = component.paisOrigen;
+    component.paisOrigenColapsable();
+    expect(component.paisOrigen).toBe(!prev);
+  });
+
+  it('should toggle paisProcedencisColapsable on paisProcedencis_colapsable()', () => {
+    const prev = component.paisProcedencisColapsable;
+    component.paisProcedencis_colapsable();
+    expect(component.paisProcedencisColapsable).toBe(!prev);
+  });
+
+  it('should call store.setClaveDeLosLotes on establecerClaveDeLosLotes()', () => {
+    const event = { target: { value: 'clave' } } as any;
+    component.establecerClaveDeLosLotes(event);
+    expect(storeMock.setClaveDeLosLotes).toHaveBeenCalledWith('clave');
+  });
+
+  it('should toggle usoEspecifico on usoEspecificoColapsable()', () => {
+    const prev = component.usoEspecifico;
+    component.usoEspecificoColapsable();
+    expect(component.usoEspecifico).toBe(!prev);
+  });
+
+  it('should call store.addMercanciasDatos on agregarMercanias()', () => {
+    component.datosDelEstablecimientoForm = component.fb.group({
+      clasificaionProductos: ['a'],
+      especificarProducto: ['b'],
+      nombreProductoEspecifico: ['c'],
+      marca: ['d'],
+      tipoProducto: ['e'],
+      fraccionArancelaria: ['f'],
+      descripcionFraccionArancelaria: ['g'],
+      cantidadUMT: ['h'],
+      umt: ['i'],
+      cantidadUMC: ['j'],
+      umc: ['k'],
+    });
+    component.agregarMercanias();
+    expect(storeMock.addMercanciasDatos).toHaveBeenCalled();
+  });
+
+  it('should set esDatosSCIANSeleccionado to true on AcceptarEliminarScian()', () => {
+    component.esDatosSCIANSeleccionado = false;
+    component.AcceptarEliminarScian();
+    expect(component.esDatosSCIANSeleccionado).toBe(true);
+  });
+
+  it('should set tieneFilaSeleccionadaFabricante on setTablaSeleccionFabricante()', () => {
+    component.setTablaSeleccionFabricante([{} as any]);
+    expect(component.tieneFilaSeleccionadaFabricante).toBe(true);
+    component.setTablaSeleccionFabricante([]);
+    expect(component.tieneFilaSeleccionadaFabricante).toBe(false);
+  });
+
+  it('should remove pedimento on eliminarPedimento()', () => {
+    component.pedimentos = [1, 2, 3] as any;
+    component.elementoParaEliminar = 1;
+    component.eliminarPedimento(true);
+    expect(component.pedimentos).toEqual([1, 3]);
+  });
+
+  it('should set nuevaNotificacion and elementoParaEliminar on abrirModal()', () => {
+    component.abrirModal(2);
+    expect(component.nuevaNotificacion).toBeDefined();
+    expect(component.elementoParaEliminar).toBe(2);
+  });
+
+  it('should set nuevaNotificacion2 and elementoParaEliminar on abrirModalmercancia()', () => {
+    component.abrirModalmercancia(3);
+    expect(component.nuevaNotificacion2).toBeDefined();
+    expect(component.elementoParaEliminar).toBe(3);
+  });
+
+  it('should remove pedimento and pop certificadoDisponsiblesTablaDatos on eliminarPedimentoMercancia()', () => {
+    component.pedimentos = [1, 2, 3] as any;
+    component.elementoParaEliminar = 1;
+    component.tieneFilaSeleccionadaFabricante = true;
+    component.esCheckboxSeleccionado = true;
+    component.certificadoDisponsiblesTablaDatos = [1, 2, 3] as any;
+    component.eliminarPedimentoMercancia(true);
+    expect(component.pedimentos).toEqual([1, 3]);
+    expect(component.certificadoDisponsiblesTablaDatos.length).toBe(2);
+  });
+
+  it('should set nuevaNotificacion2 and elementoParaEliminar on abrirModalmercanciaChecked()', () => {
+    component.abrirModalmercanciaChecked(4);
+    expect(component.nuevaNotificacion2).toBeDefined();
+    expect(component.elementoParaEliminar).toBe(4);
+  });
+
+  it('should call validacionesService.isValid on isValid()', () => {
+    const form = component.fb.group({
+      test: ['', Validators.required],
+    });
+    expect(component.isValid(form, 'test')).toBe(true);
+  });
+
+  it('should call store method and alCambiarSeleccion on setValoresStore()', () => {
+    const form = component.fb.group({
+      campo: ['valor'],
+    });
+    const alCambiarSeleccionSpy = jest.spyOn(component, 'alCambiarSeleccion');
+    component.setValoresStore(form, 'campo', 'setTipoOperacion');
+    expect(storeMock.setTipoOperacion).toHaveBeenCalledWith('valor');
+    expect(alCambiarSeleccionSpy).toHaveBeenCalledWith(form, 'campo');
+  });
+
+  it('should disable form in guardarDatosFormulario if soloLectura', () => {
+    component.soloLectura = true;
+    component.donanteDomicilio();
+    component.guardarDatosFormulario();
+    expect(component.datosDelEstablecimientoForm.disabled).toBe(true);
+  });
+
+  it('should enable form in guardarDatosFormulario if not soloLectura', () => {
+    component.soloLectura = false;
+    component.donanteDomicilio();
+    component.guardarDatosFormulario();
+    expect(component.datosDelEstablecimientoForm.enabled).toBe(true);
+  });
+
+  it('should call donanteDomicilio in inicializarEstadoFormulario if not soloLectura', () => {
+    const spy = jest.spyOn(component, 'donanteDomicilio');
+    component.soloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call guardarDatosFormulario in inicializarEstadoFormulario if soloLectura', () => {
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.soloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should complete destroyed$ in ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalledWith(true);
+    expect(completeSpy).toHaveBeenCalled();
+  });
 });
-

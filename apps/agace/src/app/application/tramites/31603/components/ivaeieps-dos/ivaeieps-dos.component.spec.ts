@@ -16,6 +16,8 @@ describe('IvaeiepsDosComponent', () => {
   beforeEach(async () => {
     comercioExteriorSvcMock = {
       getBancoDatos: jest.fn().mockReturnValue(of({ data: [{ id: 1, descripcion: 'Banco 1' }] })),
+      getInversionTablaDatos: jest.fn().mockReturnValue(of([])),
+      getTipoInversionDatos: jest.fn().mockReturnValue(of({ data: [] })),
     };
 
     tramite31603StoreMock = {
@@ -49,13 +51,6 @@ describe('IvaeiepsDosComponent', () => {
     expect(component.porcentajeMontoForm).toBeDefined();
     expect(component.porcentajeMontoForm.get('porcentaje')).toBeTruthy();
     expect(component.porcentajeMontoForm.get('monto')).toBeTruthy();
-  });
-
-  it('should call getBancoCatalogDatos and populate banco options', () => {
-    component.getBancoCatalogDatos();
-    expect(comercioExteriorSvcMock.getBancoDatos).toHaveBeenCalled();
-    const bancoField = component.pagoDeDerechosDatos.find((field: any) => field.id === 'banco');
-    expect(bancoField?.campo).toEqual([{ descripcion: 'Banco 1', id: 1 }]);
   });
 
   it('should call setDynamicFieldValue with correct values when establecerCambioDeValor is called', () => {

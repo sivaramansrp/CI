@@ -2,6 +2,8 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   CatalogosSelect,
+  ConsultaioQuery,
+  ConsultaioState,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
@@ -12,11 +14,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import {
   Solicitud110201State,
   Tramite110201Store,
 } from '../../state/Tramite110201.store';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
@@ -37,7 +39,15 @@ import { Tramite110201Query } from '../../state/Tramite110201.query';
   styleUrl: './datos_certificado.component.css',
 })
 export class DatosCertificadoComponent implements OnInit, OnDestroy {
- 
+ /**
+    * Subject para destruir notificador.
+    */
+   consultaDatos!: ConsultaioState;
+    /**
+    * Indica si el formulario está en modo solo lectura.
+    * Cuando es `true`, los campos del formulario no se pueden editar.
+    */
+   soloLectura: boolean = false;
   /**
    * Formulario reactivo para los datos del certificado.
    */
@@ -71,7 +81,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Datos de la entidad federativa proporcionados como entrada.
    */
-  @Input() entidadFederativaData: any;
+  @Input() entidadFederativaData: unknown;
 
   /**
    * Indica si se requiere justificación.
@@ -117,11 +127,21 @@ optionsRepresentacion!: Catalogo[];
   constructor(
     private registroService: RegistroService,
     public fb: FormBuilder,
-    private store: Tramite110201Store,
+    public store: Tramite110201Store,
     private query: Tramite110201Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+   this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -142,6 +162,7 @@ optionsRepresentacion!: Catalogo[];
     this.getIdioma();
     this.getEntidad();
     this.getRepresentacion();
+    this.inicializarEstadoFormulario();
 
     this.query.selectSolicitud$
       .pipe(
@@ -164,7 +185,30 @@ optionsRepresentacion!: Catalogo[];
 
    
   }
+/**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
 
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.registroForm.disable();
+    } else {
+      this.registroForm.enable();
+    }
+  }
   /**
    * Obtiene el catálogo de idiomas desde el servicio.
    */
@@ -201,7 +245,7 @@ optionsRepresentacion!: Catalogo[];
       .getRepresentacion().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         if (resp.code === 200) {
-          this.optionsRepresentacion = resp.data= resp.data as Catalogo [];
+          this.optionsRepresentacion = resp.data as Catalogo [];
         }
       });
   }
@@ -230,7 +274,7 @@ optionsRepresentacion!: Catalogo[];
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
 
-    if (VALOR == 8 && metodoNombre == 'setEntidad' && this.entidadFederativaData === 'DURANGO'
+    if (VALOR === 8 && metodoNombre === 'setEntidad' && this.entidadFederativaData === 'DURANGO'
     ) {
       this.isJustificacion = true;
     } else {
@@ -250,33 +294,20 @@ optionsRepresentacion!: Catalogo[];
   /**
    * Configura el formulario reactivo con los valores iniciales del estado.
    */
-  donanteDomicilio(): void {
-    this.registroForm = this.fb.group({
-      validacionForm: this.fb.group({
-        observaciones: [
-          this.solicitudState?.observaciones,
-          [Validators.required],
-        ],
-        presica: [this.solicitudState?.presica, [Validators.required]],
-        presenta: [this.solicitudState?.presenta, [Validators.required]],
-        idioma: [this.solicitudState?.idioma, [Validators.required]],
-        entidad: [this.solicitudState?.entidad, [Validators.required]],
-        representacion: [
-          this.solicitudState?.representacion,
-          [Validators.required],
-        ],
-        casillaVerificacion: [
-          this.solicitudState?.casillaVerificacion,
-          [Validators.requiredTrue],
-        ],
-        justificacion: [
-          this.solicitudState?.justificacion,
-          [Validators.required],
-        ],
-      }),
-    });
-  }
-
+ donanteDomicilio(): void {
+  this.registroForm = this.fb.group({
+    validacionForm: this.fb.group({
+      observaciones: [{ value: this.solicitudState?.observaciones, disabled: this.soloLectura }, [Validators.required]],
+      presica: [{ value: this.solicitudState?.presica, disabled: this.soloLectura }, [Validators.required]],
+      presenta: [{ value: this.solicitudState?.presenta, disabled: this.soloLectura }, [Validators.required]],
+      idioma: [{ value: this.solicitudState?.idioma, disabled: this.soloLectura }, [Validators.required]],
+      entidad: [{ value: this.solicitudState?.entidad, disabled: this.soloLectura }, [Validators.required]],
+      representacion: [{ value: this.solicitudState?.representacion, disabled: this.soloLectura }, [Validators.required]],
+      casillaVerificacion: [{ value: this.solicitudState?.casillaVerificacion, disabled: this.soloLectura }, [Validators.requiredTrue]],
+      justificacion: [{ value: this.solicitudState?.justificacion, disabled: this.soloLectura }, [Validators.required]],
+    }),
+  });
+}
   /**
    * Método que se ejecuta al destruir el componente.
    * Cancela todas las suscripciones activas.

@@ -1,7 +1,12 @@
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+} from '@libs/shared/data-access-user/src';
+import { Subject, map} from 'rxjs';
 import { Component } from '@angular/core';
+import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
 import { Tramite240118Query } from '../../estados/tramite240118Query.query';
 import { Tramite240118Store } from '../../estados/tramite240118Store.store';
 import { takeUntil } from 'rxjs';
@@ -17,6 +22,16 @@ import { takeUntil } from 'rxjs';
   styleUrl: './paso-uno.component.scss',
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
+  /**
+   * @description Constructor del componente.
+   * Inicializa el componente y establece el índice de la pestaña seleccionada.
+   */
+  formularioDeshabilitado: boolean = false;
+  /**
+   * @property {ConsultaioState} consultaState - Estado actual relacionado con la consulta.
+   */
+  public consultaState!: ConsultaioState;
+  /**
   /**
    * @property indice
    * @description Indicates the index of the selected tab within the form step.
@@ -37,10 +52,16 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    *
    * @param Tramite240118Query Query to access procedure state.
    * @param tramite240118Store Store to update procedure state.
+   *  @param consultaQuery Query to access consultation state.
+   *  @param datosSolicitudService Service to fetch and manage request data.
+   * @description
+   *  This constructor injects the necessary services to manage the state of the procedure and consultation.
    */
   constructor(
     private tramite240118Query: Tramite240118Query,
-    private tramite240118Store: Tramite240118Store 
+    private tramite240118Store: Tramite240118Store,
+    private consultaQuery: ConsultaioQuery,
+    private datosSolicitudService: DatosSolicitudService
   ) {
     // No hacer nada
   }
@@ -56,6 +77,32 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((tab) => {
         this.indice = tab;
+      });
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+          if (this.consultaState.update) {
+            this.guardarDatosFormulario();
+            this.formularioDeshabilitado = false;
+          } else if (this.consultaState.readonly) {
+            this.formularioDeshabilitado = true;
+          }
+        })
+      )
+      .subscribe();
+  }
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.More actions
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.datosSolicitudService
+      .obtenerRegistroTomarMuestrasDatos240118()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        this.tramite240118Store.setState(datos);
       });
   }
 

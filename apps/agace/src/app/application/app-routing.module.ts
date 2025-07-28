@@ -56,7 +56,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'registro-solicitud',
+    path: 'registro',
     loadChildren: () =>
       import('./tramites/31803/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
@@ -240,6 +240,128 @@ const ROUTES: Routes = [
         (m) => m.ProcesoRequerimientoComponent
       ),
   },
+  {
+    path: 'verificar-dictamen',
+    loadComponent: () =>
+      import('./verificar-dictamen/verificar-dictamen.component').then(
+        (m) => m.VerificarDictamenComponent
+      ),
+  },
+  {
+    path: 'detalle-v-dictamen',
+    loadComponent: () =>
+      import('./detalle-v-dictamen/detalle-v-dictamen.component').then(
+        (m) => m.DetalleVDictamenComponent
+      ),
+  },
+  {
+    path: 'datos-generales-tramite',
+    loadComponent: () =>
+      import(
+        './datos-generales-tramite/datos-generales-tramite.component'
+      ).then((m) => m.DatosGeneralesTramiteComponent),
+  },
+  {
+    path: 'aviso-de-modificacion',
+    loadChildren: () =>
+      import('./tramites/30505/aviso-de-modificacion.module').then(
+        (m) => m.AvisoDeModificacionModule)
+  },
+  {
+      path: 'recinto-fiscalizado',
+    loadChildren: () => 
+      import('./tramites/32615/recinto-fiscalizado.module').then(
+        (m) => m.RecintoFiscalizadoModule)
+      },
+      {
+        path: 'esquema-de-certificacion',
+    loadChildren: () =>
+      import('./tramites/32612/esquema-de-certificacion/esquema-de-certificacion.module').then(
+        (m) => m.EsquemaDeCertificacionModule
+      )
+  },
+   {
+      path: 'aviso-modification-certificacion',
+    loadChildren: () => 
+      import('./tramites/33303/aviso-modification-certificacion.module').then(
+        (m) => m.AvisoModificacionCertificacionModule)
+  },
+  {
+    path: 'registros',
+    loadChildren: () =>
+      import('./tramites/30506/registro.module').then(
+        (m) => m.RegistroModule
+      ),
+  },
+  {
+      path: 'aviso-destruccion-mercancias',
+    loadChildren: () => 
+      import('./tramites/32512/aviso-destruccion-mercancias.module').then(
+        (m) => m.AvisoDestruccionMercanciasModule)
+  },
+  {
+    path: 'avisos-agace',
+    loadChildren: () =>
+      import('./tramites/32511/avisos.module').then((m) => m.AvisosModule),
+  },  
+  {
+    path: 'aviso-tesoreria',
+    loadChildren: () =>
+      import('./tramites/32513/aviso-tesoreria.module').then(
+        (m) => m.AvisoTesoreriaModule
+      ),
+  },
+  {
+    path: 'aviso-certificacion',
+    loadChildren: () =>
+      import('./tramites/33302/aviso-certificacion.module').then(
+        (m) => m.AvisoCertificacionModule
+      ),
+  },
+  {
+    path: 'aeronaves',
+    loadChildren: () =>
+      import('./tramites/32607/aeronaves.module').then(
+        (m) => m.AeronavesModule
+      ),
+  },
+  {
+    path: 'empresas-comercializadoras',
+    loadChildren: () => 
+      import('./tramites/32604/empresas-comercializadoras.module').then(
+        (m) => m.EmpresasComercializadorasModule)
+  },
+  {
+    path: 'rubro-transporte-ferroviario',
+    loadChildren: () => 
+      import('./tramites/32613/rubro-transporte-ferroviario.module').then((m) => m.RubroTransporteFerroviarioModule)
+  },
+  {
+      path: 'solicitud-de-registro',
+    loadChildren: () => 
+      import('./tramites/32616/solicitud-de-registro-invocar.module').then(
+        (m) => m.SolicitudDeRegistroInvocarModule)
+  },
+  {
+    path: 'registro-oae-rfe',
+    loadChildren: () =>
+      import('./tramites/32610/registro-oae-rfe.module').then(
+        (m) => m.RegistroOaeRfeModule
+      )
+  },
+  {
+    path: 'economico',
+    loadChildren: () =>
+      import('./tramites/32606/economico.module').then((m) => m.EconomicoModule),
+  },
+    {
+    path: 'seciit-oea-registration',
+    loadChildren: () =>
+      import('./tramites/32608/seciit-oea-registration.module').then(
+        (m) => m.SeciitOeaRegistrationModule
+      ),
+  },
+
 ];
 
 @NgModule({

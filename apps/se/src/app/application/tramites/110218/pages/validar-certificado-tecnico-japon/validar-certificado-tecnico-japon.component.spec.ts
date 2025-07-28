@@ -1,58 +1,82 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ValidarCertificadoTecnicoJaponComponent } from './validar-certificado-tecnico-japon.component';
-import { WizardComponent } from '@libs/shared/data-access-user/src';
+import { Component } from '@angular/core';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('ValidarCertificadoTecnicoJaponComponent', () => {
   let component: ValidarCertificadoTecnicoJaponComponent;
   let fixture: ComponentFixture<ValidarCertificadoTecnicoJaponComponent>;
 
+  // Mock WizardComponent for ViewChild
+  @Component({selector: 'app-wizard', template: ''})
+  class MockWizardComponent {
+    siguiente = jest.fn();
+    atras = jest.fn();
+  }
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ValidarCertificadoTecnicoJaponComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA], // Avoid errors due to missing imports for WizardComponent
+      declarations: [ValidarCertificadoTecnicoJaponComponent, MockWizardComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      // Provide the selector used in ViewChild if different
     }).compileComponents();
 
     fixture = TestBed.createComponent(ValidarCertificadoTecnicoJaponComponent);
     component = fixture.componentInstance;
+    // Attach the mock wizard component to the ViewChild
+    component.wizardComponent = new MockWizardComponent() as any;
+    fixture.detectChanges();
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with correct default values', () => {
-    expect(component.indice).toBe(1);
+  it('should initialize pasosSolicitar and datosPasos', () => {
+    expect(Array.isArray(component.pasosSolicitar)).toBe(true);
     expect(component.datosPasos.nroPasos).toBe(component.pasosSolicitar.length);
-    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
-    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
+    expect(component.datosPasos.indice).toBe(component.indice);
   });
 
-  it('should update indice and call wizard.siguiente() when action is "cont"', () => {
-    component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() } as unknown as WizardComponent;
-
+  it('should call wizardComponent.siguiente and update indice on getValorIndice with accion "cont"', () => {
+    // Ensure wizardComponent is properly mocked for this test
+    component.wizardComponent = new MockWizardComponent() as any;
+    const spy = jest.spyOn(component.wizardComponent, 'siguiente');
     component.getValorIndice({ accion: 'cont', valor: 2 });
-
     expect(component.indice).toBe(2);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should update indice and call wizard.atras() when action is not "cont"', () => {
-    component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() } as unknown as WizardComponent;
-
+  it('should call wizardComponent.atras and update indice on getValorIndice with accion not "cont"', () => {
+    // Ensure wizardComponent is properly mocked for this test
+    component.wizardComponent = new MockWizardComponent() as any;
+    const spy = jest.spyOn(component.wizardComponent, 'atras');
     component.getValorIndice({ accion: 'ant', valor: 3 });
-
     expect(component.indice).toBe(3);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should not update indice if value is out of bounds', () => {
-    const initialIndice = component.indice;
+  it('should not change indice or call wizard methods if valor is out of range', () => {
+    // Ensure wizardComponent is properly mocked for this test
+    component.wizardComponent = new MockWizardComponent() as any;
+    const spySiguiente = jest.spyOn(component.wizardComponent, 'siguiente');
+    const spyAtras = jest.spyOn(component.wizardComponent, 'atras');
+    component.indice = 1;
+    component.getValorIndice({ accion: 'cont', valor: 0 });
+    expect(component.indice).toBe(1);
+    expect(spySiguiente).not.toHaveBeenCalled();
+    expect(spyAtras).not.toHaveBeenCalled();
+    component.getValorIndice({ accion: 'cont', valor: 5 });
+    expect(component.indice).toBe(1);
+    expect(spySiguiente).not.toHaveBeenCalled();
+    expect(spyAtras).not.toHaveBeenCalled();
+  });
 
-    component.getValorIndice({ accion: 'cont', valor: 0 }); // Invalid value
-    expect(component.indice).toBe(initialIndice);
-
-    component.getValorIndice({ accion: 'cont', valor: 5 }); // Out of range
-    expect(component.indice).toBe(initialIndice);
+  it('should update showMercanciaForm and capturarTapIndice on isModificar', () => {
+    component.showMercanciaForm = false;
+    component.capturarTapIndice = 1;
+    component.isModificar(true, 4);
+    expect(component.showMercanciaForm).toBe(true);
+    expect(component.capturarTapIndice).toBe(4);
   });
 });

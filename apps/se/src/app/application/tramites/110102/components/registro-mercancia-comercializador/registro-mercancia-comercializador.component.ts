@@ -6,7 +6,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { TituloComponent } from "@ng-mf/data-access-user";
 
@@ -41,36 +41,6 @@ private destroyed$ = new Subject<void>();
  */
 mostrarDatosMercanciaProductor: boolean = false;
 
-/**
- * Indica si se debe mostrar el nombre en inglés de la mercancía.
- */
-mostrarNombreIngles: boolean = false;
-
-/**
- * Indica si se debe mostrar la clasificación Naladi de la mercancía.
- */
-mostrarClasificacionNaladi: boolean = false;
-
-/**
- * Indica si se debe mostrar la clasificación Naladisa93 de la mercancía.
- */
-mostrarClasificacionNaladisa93: boolean = false;
-
-/**
- * Indica si se debe mostrar la clasificación Naladisa96 de la mercancía.
- */
-mostrarClasificacionNaladisa96: boolean = false;
-
-/**
- * Indica si se debe mostrar la clasificación Naladisa02 de la mercancía.
- */
-mostrarClasificacionNaladisa02: boolean = false;
-
-/**
- * Indica si se deben mostrar los datos de juegos surtidos de la mercancía.
- */
-mostrarJuegosSurtidos: boolean = false;
-
   /**
    * Constructor del componente.
    * Servicio para la creación de formularios reactivos y para obtener datos de la mercancía asociada.
@@ -80,29 +50,11 @@ mostrarJuegosSurtidos: boolean = false;
   constructor(private fb: FormBuilder, private service: MercanciaasociadaService) {
     this.registroMercanciaComercializadorFrom = this.fb.group({
       nombreComercial: [{ value: '', disabled: true }],
-      nombreIngles: [{ value: '', disabled: true }],
       nombreTecnico: [{ value: '', disabled: true }],
       fraccionArancelaria: this.fb.group({
         clave: [{ value: '', disabled: true }],
         descripcion: [{ value: '', disabled: true }]
       }),
-      fraccionNALADI: this.fb.group({
-        clave: [{ value: '', disabled: true }],
-        descripcion: [{ value: '', disabled: true }]
-      }),
-      fraccionNALADISA93: this.fb.group({
-        clave: [{ value: '', disabled: true }],
-        descripcion: [{ value: '', disabled: true }]
-      }),
-      fraccionNALADISA96: this.fb.group({
-        clave: [{ value: '', disabled: true }],
-        descripcion: [{ value: '', disabled: true }]
-      }),
-      fraccionNALADISA02: this.fb.group({
-        clave: [{ value: '', disabled: true }],
-        descripcion: [{ value: '', disabled: true }]
-      }),
-      descripcionJuego: [{ value: '', disabled: true }, Validators.maxLength(256)],
       unidadAdministrativaRepresentacionFederal: this.fb.group({
         clave: ['']
       })
@@ -136,29 +88,11 @@ mostrarJuegosSurtidos: boolean = false;
       (data: any) => {
         this.registroMercanciaComercializadorFrom.patchValue({
           nombreComercial: data.Formdata.nombreComercial,
-          nombreIngles: data.Formdata.nombreIngles,
           nombreTecnico: data.Formdata.nombreTecnico,
           fraccionArancelaria: {
             clave: data.Formdata.fraccionArancelaria.clave,
             descripcion: data.Formdata.fraccionArancelaria.descripcion
           },
-          fraccionNALADI: {
-            clave: data.Formdata.fraccionNALADI.clave,
-            descripcion: data.Formdata.fraccionNALADI.descripcion
-          },
-          fraccionNALADISA93: {
-            clave: data.Formdata.fraccionNALADISA93.clave,
-            descripcion: data.Formdata.fraccionNALADISA93.descripcion
-          },
-          fraccionNALADISA96: {
-            clave: data.Formdata.fraccionNALADISA96.clave,
-            descripcion: data.Formdata.fraccionNALADISA96.descripcion
-          },
-          fraccionNALADISA02: {
-            clave: data.Formdata.fraccionNALADISA02.clave,
-            descripcion: data.Formdata.fraccionNALADISA02.descripcion
-          },
-          descripcionJuego: data.Formdata.descripcionJuego,
           unidadAdministrativaRepresentacionFederal: {
             clave: data.Formdata.unidadAdministrativaRepresentacionFederal.clave
           }
@@ -174,11 +108,5 @@ mostrarJuegosSurtidos: boolean = false;
    */
   private configurarVisibilidadCampos(data: any): void {
     this.mostrarDatosMercanciaProductor = data.mostrarDatosMercanciaProductor;
-    this.mostrarNombreIngles = data.mostrarNombreIngles;
-    this.mostrarClasificacionNaladi = data.mostrarClasificacionNaladi;
-    this.mostrarClasificacionNaladisa93 = data.mostrarClasificacionNaladisa93;
-    this.mostrarClasificacionNaladisa96 = data.mostrarClasificacionNaladisa96;
-    this.mostrarClasificacionNaladisa02 = data.mostrarClasificacionNaladisa02;
-    this.mostrarJuegosSurtidos = data.mostrarJuegosSurtidos;
   }
 }

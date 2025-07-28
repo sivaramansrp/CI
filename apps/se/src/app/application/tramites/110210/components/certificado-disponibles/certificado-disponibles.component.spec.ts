@@ -8,13 +8,13 @@ import { CertificadoDisponiblesService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 
 describe('CertificadoDisponiblesComponent', () => {
-  let component: CertificadoDisponiblesComponent;
-  let fixture: ComponentFixture<CertificadoDisponiblesComponent>;
+  let component: CertificadoDisponiblesComponent<any>;
+  let fixture: ComponentFixture<CertificadoDisponiblesComponent<any>>;
   let service: CertificadoDisponiblesService;
 
   beforeEach(async () => {
     const SERVICE_MOCK = {
-      getData: jest.fn().mockReturnValue(of({ key: 'value' })),
+      getData: jest.fn().mockReturnValue(of([{ key: 'value' }])),
     };
 
     await TestBed.configureTestingModule({
@@ -31,22 +31,22 @@ describe('CertificadoDisponiblesComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with default values', () => {
+  it('debe inicializarse con los valores por defecto', () => {
     expect(component.configuracionTabla).toEqual(CERTIFICADO_DISPONIBLES_COLUMNAS);
     expect(component.seleccionTabla).toEqual(TablaSeleccion.UNDEFINED);
   });
 
-  it('should fetch data on init', () => {
+  it('debe obtener datos al inicializar', () => {
     component.ngOnInit();
     expect(service.getData).toHaveBeenCalled();
-    expect(component.datosTabla).toEqual({ key: 'value' });
+    expect(component.datosTabla).toEqual([{ key: 'value' }]);
   });
 
-  it('should complete destroyed$ subject on destroy', () => {
+  it('debe completar el subject destroyed$ al destruir el componente', () => {
     const NEXT_SPY = jest.spyOn(component['destroyed$'], 'next');
     const COMPLETE_SPY = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();

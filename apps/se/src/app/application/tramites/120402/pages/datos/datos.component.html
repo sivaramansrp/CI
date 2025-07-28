@@ -7,17 +7,19 @@
             <li [ngClass]="indice === 2 ? 'active' : ''">
                 <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(2)">Asignación</a>
             </li>
-          
+
         </ul>
         <ng-container>
             @switch (indice) {
             @case (1) {
-                <solicitante></solicitante>
+            <solicitante #solicitanteRef></solicitante>
             }
             @case (2) {
-           <app-asignacion></app-asignacion>
+            @if(esDatosRespuesta){
+            <app-asignacion #asignacionRef></app-asignacion>
             }
-          
+            }
+
             }
         </ng-container>
     </div>

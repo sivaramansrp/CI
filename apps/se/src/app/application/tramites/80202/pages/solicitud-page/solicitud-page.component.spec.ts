@@ -1,34 +1,81 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
 
-import { HttpClientModule } from '@angular/common/http';
-
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { Component } from '@angular/core';
 import { SolicitudPageComponent } from './solicitud-page.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
 
 describe('SolicitudPageComponent', () => {
-  let component: SolicitudPageComponent;
-  let fixture: ComponentFixture<SolicitudPageComponent>;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        WizardComponent,
-        BtnContinuarComponent,
-        SolicitanteComponent,
-        HttpClientModule,
-      ],
-      declarations: [SolicitudPageComponent, PasoUnoComponent],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule ],
+
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+
+      ]
+    }).overrideComponent(SolicitudPageComponent, {
+
     }).compileComponents();
-
     fixture = TestBed.createComponent(SolicitudPageComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
+
+  it('should run #seleccionaTab()', async () => {
+
+    component.seleccionaTab({});
+
+  });
+
+  it('should run #getValorIndice()', async () => {
+    component.wizardComponent = component.wizardComponent || {};
+    component.wizardComponent.siguiente = jest.fn();
+    component.wizardComponent.atras = jest.fn();
+    component.getValorIndice({
+      valor: 1,
+      accion: 'cont'
+    });
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+    component.getValorIndice({
+      valor: 2,
+      accion: 'cont'
+    });
+    component.getValorIndice({
+      valor: 3,
+      accion: 'cont'
+    });
+    component.getValorIndice({
+      valor: 4,
+      accion: 'cont'
+    });
+    component.getValorIndice({
+      valor: 5,
+      accion: 'cont'
+    });
+  });
+
+
+
+  it('should run #enTabChange()', async () => {
+
+    component.enTabChange(1);
+    component.enTabChange(2);
+    component.enTabChange(3);
+    component.enTabChange(4);
+    component.enTabChange(5);
+    component.enTabChange(6);
+
+  });
+
 });

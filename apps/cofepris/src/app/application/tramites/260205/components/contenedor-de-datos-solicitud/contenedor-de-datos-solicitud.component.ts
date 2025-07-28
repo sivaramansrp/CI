@@ -18,10 +18,49 @@ import {
 } from '../../estados/stores/tramite260205.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { Subject } from 'rxjs';
 import { Tramite260205Query } from '../../estados/queries/tramite260205.query';
 
+
+/**
+ * @component
+ * 
+ * Este componente representa el contenedor de datos de la solicitud para el trámite 260205.
+ * Es un componente independiente que utiliza `CommonModule` y `DatosDeLaSolicitudComponent` como dependencias.
+ * 
+ * @selector `app-contenedor-de-datos-solicitud`
+ * 
+ * @templateUrl `./contenedor-de-datos-solicitud.component.html`
+ * 
+ * @styleUrl `./contenedor-de-datos-solicitud.component.scss`
+ * 
+ * Este componente tiene las siguientes responsabilidades:
+ * - Gestionar el estado del trámite 260205.
+ * - Configurar y manejar las tablas de opciones, SCIAN y mercancías.
+ * - Determinar si el formulario está en modo solo lectura.
+ * - Actualizar el estado del store `Tramite260205Store` con los datos seleccionados en las tablas.
+ * - Evitar fugas de memoria mediante la destrucción de observables al destruir el componente.
+ * 
+ * @implements `OnInit`, `OnDestroy`
+ * 
+ * Métodos principales:
+ * - `ngOnInit`: Inicializa el estado del trámite y configura las tablas con los datos correspondientes.
+ * - `ngOnDestroy`: Libera recursos y notifica a los observables que el componente está siendo destruido.
+ * - Métodos para manejar eventos de selección en las tablas (`opcionSeleccionado`, `scianSeleccionado`, `mercanciasSeleccionado`).
+ * - Métodos para actualizar el estado del formulario y los datos seleccionados en el store (`datasolicituActualizar`, `datosDeTablaSeleccionados`).
+ * 
+ * Propiedades principales:
+ * - `tramiteState`: Estado del trámite 260205.
+ * - `opcionConfig`, `scianConfig`, `tablaMercanciasConfig`: Configuración de las tablas.
+ * - `esFormularioSoloLectura`: Indica si el formulario está en modo solo lectura.
+ * 
+ * Constructor:
+ * - Inicializa el estado del trámite y determina si el formulario es de solo lectura utilizando el estado de la sección de consulta.
+ * 
+ * Este componente es esencial para la gestión de datos y la interacción del usuario en el trámite 260205.
+ */
 @Component({
   selector: 'app-contenedor-de-datos-solicitud',
   standalone: true,
@@ -30,18 +69,47 @@ import { Tramite260205Query } from '../../estados/queries/tramite260205.query';
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
+
   /**
-   * Notificador para destruir observables y evitar fugas de memoria.
+   * @private
+   * Un sujeto utilizado como notificador para la destrucción de componentes.
+   * 
+   * Este `Subject<void>` actúa como un mecanismo para emitir un evento cuando el componente se destruye,
+   * permitiendo la limpieza de suscripciones y otros recursos para evitar fugas de memoria.
+   * 
+   * Se utiliza comúnmente en combinación con operadores como `takeUntil` en observables para gestionar
+   * la vida útil de las suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+
   /**
-   * Estado del trámite para el proceso 260205.
+   * Representa el estado actual del trámite en el componente.
+   * 
+   * Esta propiedad almacena una instancia de `Tramite260205State`, que contiene 
+   * toda la información relevante sobre el estado del trámite en curso. 
+   * Es utilizada para gestionar y visualizar los datos relacionados con el trámite 
+   * dentro del componente.
+   * 
+   * @type {Tramite260205State}
    */
   public tramiteState!: Tramite260205State;
 
+
   /**
-   * Configuración de la tabla de opciones.
+   * Configuración de opciones para la tabla en el componente.
+   * 
+   * Esta propiedad define la configuración utilizada para manejar las opciones 
+   * de la tabla dentro del componente. Incluye el tipo de selección de la tabla, 
+   * la configuración específica de la tabla y los datos asociados.
+   * 
+   * Propiedades:
+   * - `tipoSeleccionTabla`: Define el tipo de selección que se aplicará a la tabla. 
+   *   Puede ser indefinido si no se especifica.
+   * - `configuracionTabla`: Contiene la configuración predeterminada de la tabla, 
+   *   basada en la constante `OPCION_TABLA`.
+   * - `datos`: Es un arreglo que contiene los datos configurados para la tabla, 
+   *   utilizando el tipo `TablaOpcionConfig`.
    */
   public opcionConfig = {
     tipoSeleccionTabla: undefined,
@@ -49,8 +117,20 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     datos: [] as TablaOpcionConfig[],
   };
 
+
   /**
-   * Configuración de la tabla SCIAN.
+   * Configuración para la tabla SCIAN utilizada en el componente.
+   * 
+   * Esta propiedad define la configuración de la tabla SCIAN, incluyendo el tipo de selección,
+   * la configuración específica de la tabla y los datos que se mostrarán en ella.
+   * 
+   * Propiedades:
+   * - `tipoSeleccionTabla`: Define el tipo de selección que se utilizará en la tabla. 
+   *   En este caso, se utiliza la selección de tipo CHECKBOX.
+   * - `configuracionTabla`: Contiene la configuración específica de la tabla SCIAN, 
+   *   definida por la constante `SCIAN_TABLA`.
+   * - `datos`: Representa los datos que se mostrarán en la tabla. Inicialmente, es un arreglo vacío 
+   *   de tipo `TablaScianConfig[]`.
    */
   public scianConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
@@ -58,8 +138,29 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     datos: [] as TablaScianConfig[],
   };
 
+
   /**
-   * Configuración de la tabla de mercancías.
+   * Configuración de la tabla de mercancías utilizada en el componente.
+   * 
+   * Esta propiedad define la configuración y los datos necesarios para 
+   * mostrar y gestionar una tabla de mercancías en el componente. 
+   * Incluye el tipo de selección de la tabla, la configuración específica 
+   * de la tabla y los datos que se mostrarán.
+   * 
+   * Propiedades:
+   * - `tipoSeleccionTabla`: Define el tipo de selección que se puede realizar 
+   *   en la tabla. En este caso, se utiliza la selección de tipo CHECKBOX 
+   *   proporcionada por `TablaSeleccion`.
+   * - `configuracionTabla`: Contiene la configuración específica de la tabla, 
+   *   que se define en la constante `PRODUCTO_TABLA`.
+   * - `datos`: Es un arreglo de objetos de tipo `TablaMercanciasDatos` que 
+   *   representa los datos que se mostrarán en la tabla. Inicialmente, este 
+   *   arreglo está vacío.
+   * 
+   * Uso:
+   * Esta configuración se utiliza para inicializar y gestionar la tabla de 
+   * mercancías en el componente, permitiendo la interacción del usuario con 
+   * los datos mostrados.
    */
   public tablaMercanciasConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
@@ -67,36 +168,191 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     datos: [] as TablaMercanciasDatos[],
   };
 
+
   /**
-   * Datos de configuración de SCIAN.
+   * Configuración de datos para la tabla SCIAN.
+   * 
+   * Esta propiedad almacena un arreglo de objetos de tipo `TablaScianConfig`,
+   * que se utiliza para configurar y gestionar los datos relacionados con la
+   * tabla SCIAN en el componente. La tabla SCIAN es una herramienta que permite
+   * clasificar actividades económicas de acuerdo con el Sistema de Clasificación
+   * Industrial de América del Norte (SCIAN).
+   * 
+   * Uso:
+   * - Se inicializa como un arreglo vacío y se puede llenar con datos específicos
+   *   según las necesidades del componente.
+   * - Los datos configurados en esta propiedad son utilizados para mostrar y
+   *   manipular información en la interfaz de usuario.
+   * 
+   * Ejemplo de estructura de `TablaScianConfig`:
+   * ```typescript
+   * {
+   *   codigo: '123456',
+   *   descripcion: 'Fabricación de productos metálicos',
+   *   categoria: 'Industria manufacturera'
+   * }
+   * ```
+   * 
+   * @type {TablaScianConfig[]} Un arreglo de objetos que define la configuración
+   * de la tabla SCIAN.
    */
   public scianConfigDatos: TablaScianConfig[] = [];
 
+
   /**
-   * Datos de configuración de la tabla de mercancías.
+   * Representa la configuración de datos para la tabla de mercancías.
+   * 
+   * Esta propiedad almacena un arreglo de objetos del tipo `TablaMercanciasDatos`,
+   * que contienen la información necesaria para mostrar y gestionar los datos
+   * relacionados con las mercancías en la tabla correspondiente.
+   * 
+   * Uso:
+   * - Se utiliza para inicializar y manipular los datos de la tabla de mercancías
+   *   dentro del componente.
+   * - Puede ser modificado dinámicamente según las necesidades del usuario o 
+   *   los cambios en el estado de la aplicación.
+   * 
+   * Ejemplo:
+   * ```typescript
+   * this.tablaMercanciasConfigDatos = [
+   *   { id: 1, nombre: 'Producto A', cantidad: 10 },
+   *   { id: 2, nombre: 'Producto B', cantidad: 20 }
+   * ];
+   * ```
+   * 
+   * @type {TablaMercanciasDatos[]} Un arreglo de objetos que define los datos de la tabla.
    */
   public tablaMercanciasConfigDatos: TablaMercanciasDatos[] = [];
 
+
   /**
-   * Datos seleccionados de la tabla de opciones.
+   * Propiedad que almacena una lista de configuraciones de opciones para una tabla.
+   * 
+   * Esta lista se utiliza para gestionar las opciones seleccionadas en el componente
+   * de datos de solicitud. Cada elemento de la lista representa una configuración
+   * específica que puede ser seleccionada por el usuario.
+   * 
+   * @type {TablaOpcionConfig[]} - Arreglo de configuraciones de opciones para la tabla.
    */
   public seleccionadoopcionDatos: TablaOpcionConfig[] = [];
 
+
   /**
-   * Datos seleccionados de la tabla SCIAN.
+   * Propiedad que almacena una lista de configuraciones de la tabla SCIAN seleccionadas.
+   * 
+   * Esta propiedad se utiliza para gestionar los datos seleccionados en la tabla SCIAN 
+   * dentro del componente. Cada elemento de la lista representa una configuración específica 
+   * de la tabla SCIAN, que puede incluir información como identificadores, nombres y otros 
+   * atributos relevantes.
+   * 
+   * @type {TablaScianConfig[]} - Arreglo de objetos de tipo `TablaScianConfig`.
+   * 
+   * Ejemplo de uso:
+   * ```typescript
+   * this.seleccionadoScianDatos.push({
+   *   id: 1,
+   *   nombre: 'Sector Industrial',
+   *   descripcion: 'Descripción del sector'
+   * });
+   * ```
+   * 
+   * @remarks
+   * - Esta propiedad se inicializa como un arreglo vacío.
+   * - Se puede modificar dinámicamente para reflejar los datos seleccionados por el usuario.
+   * 
+   * @see TablaScianConfig - Definición de la estructura de configuración de la tabla SCIAN.
    */
   public seleccionadoScianDatos: TablaScianConfig[] = [];
 
+
   /**
-   * Datos seleccionados de la tabla de mercancías.
+   * Una propiedad pública que almacena una lista de objetos de tipo `TablaMercanciasDatos`.
+   * 
+   * Esta propiedad se utiliza para gestionar los datos seleccionados en una tabla de mercancías.
+   * Cada elemento en la lista representa un conjunto de datos relacionados con una mercancía específica.
+   * 
+   * @type {TablaMercanciasDatos[]}
+   * @remarks
+   * - La lista puede estar vacía si no se ha seleccionado ninguna mercancía.
+   * - Los datos almacenados en esta propiedad son utilizados para realizar operaciones específicas
+   *   como la visualización, edición o eliminación de mercancías seleccionadas.
+   * 
+   * @example
+   * ```typescript
+   * // Ejemplo de uso:
+   * componente.seleccionadoTablaMercanciasDatos = [
+   *   { id: 1, nombre: 'Producto A', cantidad: 10 },
+   *   { id: 2, nombre: 'Producto B', cantidad: 5 }
+   * ];
+   * ```
    */
   public seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[] = [];
 
+  /**
+   * que indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
+   *
+   * @type {boolean}
+   */
+  esFormularioSoloLectura!: boolean;
+
+
+  /**
+   * Constructor de la clase `ContenedorDeDatosSolicitudComponent`.
+   * 
+   * Este constructor inicializa las dependencias necesarias para el componente y configura
+   * una suscripción al estado de consulta utilizando `consultaQuery.selectConsultaioState$`.
+   * 
+   * @param Tramite260205Query - Servicio para realizar consultas relacionadas con el trámite 260205.
+   * @param Tramite260205Store - Almacén de estado para gestionar datos relacionados con el trámite 260205.
+   * @param consultaQuery - Servicio para realizar consultas relacionadas con el estado de la solicitud.
+   * 
+   * La suscripción al estado de consulta verifica si el estado actual no está en modo de creación 
+   * (`!seccionState.create`) y si el `procedureId` corresponde al trámite 260205. En caso de cumplir 
+   * estas condiciones, se actualiza la propiedad `esFormularioSoloLectura` con el valor de 
+   * `seccionState.readonly`, indicando si el formulario debe ser de solo lectura.
+   */
   constructor(
     private Tramite260205Query: Tramite260205Query,
-    private Tramite260205Store: Tramite260205Store
-  ) {}
+    private Tramite260205Store: Tramite260205Store,
+    private consultaQuery: ConsultaioQuery
+  ) {
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    .subscribe((seccionState) => {
+      if(!seccionState.create && seccionState.procedureId === '260205') {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      } 
+    });
+  }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * 
+   * Este método suscribe al observable `selectTramiteState$` del servicio `Tramite260205Query`
+   * para obtener el estado actual del trámite y actualizar las configuraciones de datos
+   * correspondientes en el componente. Utiliza operadores de RxJS como `takeUntil` para
+   * gestionar la suscripción y evitar fugas de memoria.
+   * 
+   * - `selectTramiteState$`: Observable que emite el estado actual del trámite.
+   * - `takeUntil(this.destroyNotifier$)`: Operador que cancela la suscripción cuando el
+   *   componente se destruye.
+   * - `map`: Transforma el estado emitido por el observable para actualizar las propiedades
+   *   locales del componente.
+   * 
+   * Actualizaciones realizadas:
+   * - `this.tramiteState`: Se asigna el estado actual del trámite.
+   * - `this.opcionConfig.datos`: Se actualiza con los datos de configuración de opciones
+   *   del estado del trámite.
+   * - `this.scianConfig.datos`: Se actualiza con los datos de configuración de SCIAN
+   *   del estado del trámite.
+   * - `this.tablaMercanciasConfig.datos`: Se actualiza con los datos de configuración
+   *   de la tabla de mercancías del estado del trámite.
+   * 
+   * @returns void
+   */
   ngOnInit(): void {
     this.Tramite260205Query.selectTramiteState$
       .pipe(

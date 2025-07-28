@@ -7,8 +7,10 @@
       [formControl]="gafeteRespoDespacho"
       placeholder=""
       type="text"
+      maxlength="30"
       [ngClass]="gafeteIsValid ? 'required' : ''"
       libUppercase
+      soloLetrasNumeros
     />
   </div>
   <div class="col-md-4 d-flex align-items-end">
@@ -37,7 +39,8 @@
         placeholder=""
         type="text"
         formControlName="nombreRespoDespacho"
-        [ngClass]="isValid('nombreRespoDespacho') ? 'required' : ''"
+        maxlength="30"
+        [ngClass]="isValid('nombreRespoDespacho') || claseFormaNovalida ? 'required' : ''"
       />
     </div>
     <div class="col-md-4 form-group">
@@ -50,7 +53,8 @@
         placeholder=""
         type="text"
         formControlName="paternoRespoDespacho"
-        [ngClass]="isValid('paternoRespoDespacho') ? 'required' : ''"
+        maxlength="30"
+        [ngClass]="isValid('paternoRespoDespacho') || claseFormaNovalida ? 'required' : ''"
       />
     </div>
     <div class="col-md-4 form-group">
@@ -63,7 +67,8 @@
         placeholder=""
         type="text"
         formControlName="maternoRespoDespacho"
-        [ngClass]="isValid('maternoRespoDespacho') ? 'required' : ''"
+        maxlength="30"
+        [ngClass]="isValid('maternoRespoDespacho') || claseFormaNovalida ? 'required' : ''"
       />
     </div>
   </div>

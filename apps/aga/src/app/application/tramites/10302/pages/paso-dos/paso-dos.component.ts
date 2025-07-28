@@ -1,4 +1,3 @@
-import { Component, OnInit } from '@angular/core';
 import {
   AlertComponent,
   AnexarDocumentosComponent,
@@ -8,8 +7,8 @@ import {
   TEXTOS,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import documentList from '@libs/shared/theme/assets/json/10302/document-list.json';
 
 /**
  * Componente que representa el paso dos del trámite.
@@ -21,7 +20,7 @@ import documentList from '@libs/shared/theme/assets/json/10302/document-list.jso
   standalone: true,
   imports: [AnexarDocumentosComponent, AlertComponent, TituloComponent],
 })
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * Constante que contiene los textos utilizados en el componente.
    * @type {any}
@@ -46,11 +45,11 @@ export class PasoDosComponent implements OnInit {
    */
   catalogoDocumentos: Catalogo[] = [];
 
-  /** Lista de documentos preseleccionados, cargados desde un archivo JSON */
-  documentosSeleccionados = documentList.documentosSeleccionados;
-
   /** Observable para manejar la destrucción de suscripciones */
-  private destroy$: Subject<void> = new Subject<void>();
+  private destroy$: Subject<void> = new Subject();
+
+  @Output() reenviarEvento = new EventEmitter<void>();
+  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>()
 
   /**
    * Constructor del componente.

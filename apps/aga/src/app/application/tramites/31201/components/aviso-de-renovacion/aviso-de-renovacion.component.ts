@@ -1,6 +1,7 @@
 import { AvisoValor, FECHA_DE_PAGO } from '../../models/aviso.model';
 import { Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { map, takeUntil } from 'rxjs';
 import { AvisoUnicoService } from '../../services/aviso-unico.service';
@@ -13,7 +14,7 @@ import { UnicoState } from '../../estados/renovacion.store';
 import { UnicoStore } from '../../estados/renovacion.store';
 
 /**
- * @component
+ * @componente
  * @name AvisoDeRenovacionComponent
  * @description
  * Componente que representa el aviso de renovación.
@@ -70,18 +71,30 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
   public solicitudState!: UnicoState;
 
   /**
+   * Estado actual de la consulta obtenido desde el servicio.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * Indica si el formulario está en modo de solo lectura.
+   */
+  soloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * Inicializa las dependencias necesarias, como el servicio, el almacén y la consulta de estado.
-   * @param fb Constructor de formularios reactivos.
-   * @param service Servicio para obtener datos relacionados con el aviso único.
-   * @param unicoStore Almacén para manejar el estado de la aplicación.
-   * @param unicoQuery Consultas para obtener el estado actual de la aplicación.
+   * @param {FormBuilder} fb Constructor de formularios reactivos.
+   * @param {AvisoUnicoService} service Servicio para obtener datos relacionados con el aviso único.
+   * @param {UnicoStore} unicoStore Almacén para manejar el estado de la aplicación.
+   * @param {UnicoQuery} unicoQuery Consultas para obtener el estado actual de la aplicación.
+   * @param {ConsultaioQuery} consultaioQuery Consulta para obtener el estado de la consulta.
    */
   constructor(
     private fb: FormBuilder,
     private service: AvisoUnicoService,
     private unicoStore: UnicoStore,
-    private unicoQuery: UnicoQuery
+    private unicoQuery: UnicoQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Constructor del componente: inicializa las dependencias.
   }
@@ -104,10 +117,21 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
     this.loadLocalidad();
     this.loadAsignacionData();
     this.cargarRadio();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
    * Inicializa el formulario reactivo con valores predeterminados basados en el estado actual de la solicitud.
+   * @private
    */
   private initializeForm(): void {
     this.avisoForm = this.fb.group({
@@ -123,6 +147,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
       fechaPago: [this.solicitudState?.fechaPago],
       importePago: [{ value: '', disabled: true }],
     });
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -164,7 +189,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
 
   /**
    * Maneja el cambio de valor en el campo de fecha de pago.
-   * @param nuevo_valor Nuevo valor de la fecha.
+   * @param {string} nuevo_valor Nuevo valor de la fecha.
    */
   public onFechaCambiada(nuevo_valor: string): void {
     this.avisoForm.get('fechaPago')?.setValue(nuevo_valor);
@@ -186,9 +211,9 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
 
   /**
    * Establece valores en el almacén desde el formulario.
-   * @param form Formulario reactivo.
-   * @param campo Nombre del campo en el formulario.
-   * @param metodoNombre Nombre del método en el almacén.
+   * @param {FormGroup} form Formulario reactivo.
+   * @param {string} campo Nombre del campo en el formulario.
+   * @param {keyof UnicoStore} metodoNombre Nombre del método en el almacén.
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof UnicoStore): void {
     const VALOR = form.get(campo)?.value;
@@ -202,5 +227,17 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
+  }
+
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * @private
+   */
+  private inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.avisoForm?.disable();
+    } else {
+      this.avisoForm?.enable();
+    }
   }
 }

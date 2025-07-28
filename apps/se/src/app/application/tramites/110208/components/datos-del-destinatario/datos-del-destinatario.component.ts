@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 
@@ -26,6 +27,10 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
    * @type {Solicitud110208State}
    */
   public solicitudState!: Solicitud110208State;
+  /**
+   * Determina si el formulario debe estar en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Notificador para destruir observables activos y evitar pérdidas de memoria.
@@ -49,9 +54,18 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite110208Store: Tramite110208Store,
-    private tramite110208Query: Tramite110208Query
+    private tramite110208Query: Tramite110208Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // Dependencia inyectada para uso posterior
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -59,6 +73,17 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
    * Configura el formulario y sus valores iniciales.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+    this.desactivarRazonSocial();
+    this.desactivarNombre();
+  }
+
+  /**
+   * Inicializa el formulario con datos del store y aplica validaciones.
+   * También aplica configuración de solo lectura si es necesario.
+   * @method inicializarEstadoFormulario
+   */
+  inicializarEstadoFormulario(): void {
     this.tramite110208Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -75,6 +100,16 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
       numeroFiscal: [this.solicitudState?.numeroFiscal, Validators.required],
       razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: true }]
     });
+
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.datosDestinatario.controls).forEach((key) => {
+        this.datosDestinatario.get(key)?.disable();
+      });
+    } else {
+      Object.keys(this.datosDestinatario.controls).forEach((key) => {
+        this.datosDestinatario.get(key)?.enable();
+      });
+    }
   }
 
   /**
@@ -90,6 +125,33 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite110208Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Desactiva el campo 'razonSocial' si el campo 'nombres' tiene valor,
+   * de lo contrario lo activa.
+  */
+  desactivarRazonSocial(): void {
+    if (this.datosDestinatario.get('nombres')?.value) {
+      this.datosDestinatario.get('razonSocial')?.disable();
+    } else {
+      this.datosDestinatario.get('razonSocial')?.enable();
+    }
+  }
+  /**
+   * Desactiva los campos de nombre completo (nombres, apellidos) 
+   * si el campo 'razonSocial' tiene valor, de lo contrario los activa.
+  */
+  desactivarNombre(): void {
+    if (this.datosDestinatario.get('razonSocial')?.value) {
+      this.datosDestinatario.get('nombres')?.disable();
+      this.datosDestinatario.get('primerApellido')?.disable();
+      this.datosDestinatario.get('segundoApellido')?.disable();
+    } else {
+      this.datosDestinatario.get('nombres')?.enable();
+      this.datosDestinatario.get('primerApellido')?.enable();
+      this.datosDestinatario.get('segundoApellido')?.enable();
+    }
   }
 
   /**

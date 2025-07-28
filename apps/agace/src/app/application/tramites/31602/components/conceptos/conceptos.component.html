@@ -20,6 +20,12 @@
                       (change)="setValoresStore(conceptosForm,'transferencias', 'setTransferencias')"
                       placeholder=""
                     />
+                    @if(
+                      conceptosForm.get('transferencias')?.invalid &&
+                      conceptosForm.get('transferenciasVir')?.touched
+                    ) {
+                      <div class="mensaje-error">campo requerido</div>
+                      }
                   </td>
                   <td>
                     <input
@@ -29,6 +35,12 @@
                       (change)="setValoresStore(conceptosForm,'transferenciasVir', 'setTransferenciasVir')"
                       placeholder=""
                     />
+                    @if(
+                      conceptosForm.get('transferenciasVir')?.invalid &&
+                      conceptosForm.get('transferencias')?.touched
+                      ) {
+                        <div class="mensaje-error">campo requerido</div>
+                      }
                   </td>
                 </tr>
                 <tr>
@@ -41,6 +53,12 @@
                       class="form-control"
                       placeholder=""
                     />
+                    @if(
+                      conceptosForm.get('retornos')?.invalid &&
+                      conceptosForm.get('retornosSe')?.touched
+                    ) {
+                      <div class="mensaje-error">campo requerido</div>
+                      }
                   </td>
                   <td>
                     <input
@@ -50,6 +68,12 @@
                       class="form-control"
                       placeholder=""
                     />
+                    @if(
+                      conceptosForm.get('retornosSe')?.invalid &&
+                      conceptosForm.get('retornos')?.touched
+                    ) {
+                      <div class="mensaje-error">campo requerido</div>
+                      }
                   </td>
                 </tr>
                 <tr>
@@ -62,6 +86,12 @@
                       class="form-control"
                       placeholder="10"
                     />
+                    @if(
+                      conceptosForm.get('constancias')?.invalid &&
+                      conceptosForm.get('constanciasDe')?.touched
+                    ) {
+                      <div class="mensaje-error">campo requerido</div>
+                      }
                   </td>
                   <td>
                     <input
@@ -71,6 +101,12 @@
                       class="form-control"
                       placeholder="10"
                     />
+                    @if(
+                      conceptosForm.get('constanciasDe')?.invalid &&
+                      conceptosForm.get('constancias')?.touched
+                    ) {
+                      <div class="mensaje-error">campo requerido</div>
+                      }
                   </td>
                 </tr>
                 <tr>
@@ -81,7 +117,8 @@
                       formControlName="total"
                       (change)="setValoresStore(conceptosForm,'total', 'setTotal')"
                       class="form-control"
-                      placeholder="100"
+                      placeholder="0"
+                      readonly
                     />
                   </td>
                   <td>
@@ -90,7 +127,8 @@
                       formControlName="totalDos"
                       (change)="setValoresStore(conceptosForm,'totalDos', 'setTotalDos')"
                       class="form-control"
-                      placeholder="100"
+                      placeholder="0"
+                      readonly
                     />
                   </td>
                 </tr>
@@ -159,6 +197,7 @@
                     formControlName="comboBimestresUno"
                     [label]="'Bimestre'"
                     [required]="true"
+                    [isDisabled]="esFormularioSoloLectura"
                     (change)="setValoresStore(conceptosForm,'comboBimestresUno', 'setComboBimestresUno')"
                   >
                   </app-catalogo-select>
@@ -167,6 +206,7 @@
                     formControlName="comboBimestresDos"
                     [label]="'Bimestre'"
                     [required]="true"
+                    [isDisabled]="esFormularioSoloLectura"
                     (change)="setValoresStore(conceptosForm,'comboBimestresDos', 'setComboBimestresDos')"
                   >
                   </app-catalogo-select>
@@ -175,10 +215,29 @@
                     formControlName="comboBimestresTres"
                     [label]="'Bimestre'"
                     [required]="true"
+                    [isDisabled]="esFormularioSoloLectura"
                     (change)="setValoresStore(conceptosForm,'comboBimestresTres', 'setComboBimestresTres')"
                   >
                   </app-catalogo-select>
                 </div>
+                @if(
+                  (conceptosForm.get('numeroEmpleados')?.invalid ||
+                   conceptosForm.get('numeroEmpleadosDos')?.invalid ||
+                   conceptosForm.get('numeroEmpleadosTres')?.invalid ||
+                   conceptosForm.get('comboBimestresUno')?.invalid ||
+                   conceptosForm.get('comboBimestresDos')?.invalid ||
+                   conceptosForm.get('comboBimestresTres')?.invalid) &&
+                  (conceptosForm.get('numeroEmpleados')?.touched ||
+                   conceptosForm.get('numeroEmpleadosDos')?.touched ||
+                   conceptosForm.get('numeroEmpleadosTres')?.touched ||
+                   conceptosForm.get('comboBimestresUno')?.touched ||
+                   conceptosForm.get('comboBimestresDos')?.touched ||
+                   conceptosForm.get('comboBimestresTres')?.touched)
+                ) {
+                  <div class="mensaje-error">
+                    <b>Se debe agragar los datos del número de empleados de los últimos tres bimestres</b>
+                  </div>
+                }
               </div>
           }
           <div class="col-md-12 mt-3">
@@ -197,23 +256,8 @@
                 </app-input-radio>
           </div>
           @if(conEmpleadosSeleccionado === 'Si') {
-            <numero-de-empleados></numero-de-empleados>
+            <numero-de-empleados [esFormularioSoloLectura]="esFormularioSoloLectura"></numero-de-empleados>
           }
-          <div class="col-md-12 mt-3">
-            <p class="fw-bold">
-                ¿Cuenta con empleados subcontratados?
-              </p>
-              <app-input-radio
-                    [radioOptions]="radioOpcions"
-                    [selectedValue]="valorSeleccionado"
-                    (valueChange)="onConEmpleados($event)"
-                    id="conEmpleados-si"
-                    [isRequired]="true"
-                    formControlName="conEmpleados"
-                    (change)="setValoresStore(conceptosForm,'conEmpleados', 'setConEmpleados')"
-                    [layout]="'horizontal'">
-                </app-input-radio>
-          </div>
           <div class="col-md-12 mt-3">
             <p class="fw-bold">
                 Indique si los socios y accionistas, representante legal, administrador único o miembros del consejo de administración de la empresa declararon ingresos acumulables en la declaración anual de los dos ejercicios previos ante la autoridad fiscal para los fines del ISR
@@ -221,7 +265,6 @@
               <app-input-radio
                     [radioOptions]="radioOpcions"
                     [selectedValue]="valorSeleccionado"
-                    (valueChange)="onConEmpleados($event)"
                     id="conEmpleados-si"
                     [isRequired]="true"
                     formControlName="indiqueSiLosSocios"

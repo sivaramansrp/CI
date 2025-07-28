@@ -1,6 +1,4 @@
 [
-  { "clave": "CAAT01", "descripcion": "Aerolíneas Americanas (IATA)" },
-  { "clave": "CAAT02", "descripcion": "Emiratos" },
-  { "clave": "CAAT03", "descripcion": "Aerolíneas de Catar" },
-  { "clave": "CAAT04", "descripcion": "Aerolíneas Británicas" }
+  { "id": 1, "clave": "CAAT01", "descripcion": "IATA" },
+  { "id": 2, "clave": "CAAT02", "descripcion": "ICAO" }
 ]

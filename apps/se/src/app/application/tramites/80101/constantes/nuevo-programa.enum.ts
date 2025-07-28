@@ -6,14 +6,24 @@ import {
 } from '../models/nuevo-programa-industrial.model';
 
 /**
- * @const PASOS
- * @description Representa los pasos de un proceso en una solicitud.
- * Cada paso contiene información sobre su índice, título, estado de actividad y si ha sido completado.
- * 
- * @property {number} indice - El índice del paso dentro del proceso.
+ * Representa los pasos necesarios para completar un proceso en el sistema.
+ * Cada paso incluye información sobre su índice, título, estado de actividad y estado de completado.
+ *
+ * @constant
+ * @type {Array<{indice: number, titulo: string, activo: boolean, completado: boolean}>}
+ *
+ * @property {number} indice - El número de orden del paso dentro del proceso.
  * @property {string} titulo - El título descriptivo del paso.
- * @property {boolean} activo - Indica si el paso está activo actualmente.
+ * @property {boolean} activo - Indica si el paso está actualmente activo.
  * @property {boolean} completado - Indica si el paso ha sido completado.
+ *
+ * @example
+ * // Ejemplo de uso:
+ * console.log(PASOS[0].titulo); // Salida: 'Capturar solicitud'
+ *
+ * @remarks
+ * Este arreglo es útil para representar el flujo de trabajo en una interfaz de usuario,
+ * donde cada paso puede ser mostrado y actualizado según el estado del proceso.
  */
 export const PASOS = [
   {
@@ -237,7 +247,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
 
 
 /**
- * Constante que define las secciones y pasos de un trámite específico (230401).
+ * Constante que define las secciones y pasos de un trámite específico (80101).
  * 
  * Contiene la configuración de validación para cada paso y sección del trámite.
  * 
@@ -248,11 +258,11 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
  * Esta constante es útil para gestionar el flujo y las validaciones necesarias
  * en los diferentes pasos de un trámite.
  */
-export const SECCIONES_TRAMITE_230401 = {
+export const SECCIONES_TRAMITE_80101 = {
     PASO_1: {
       VALIDACION_SECCION_1: false,
-      VALIDACION_SECCION_2: true,
-      VALIDACION_SECCION_3: true,
+      VALIDACION_SECCION_2: false,
+      VALIDACION_SECCION_3: false,
     },
     PASO_2: {
       VALIDACION_SECCION: true,
@@ -283,37 +293,41 @@ export const TEXTOS_REQUISITOS = {
 };
 
 /**
- * @constant
- * @description Constante que representa un catálogo de datos para complementar fracciones.
- * Contiene un arreglo de objetos con propiedades `id` y `descripcion`.
+ * Representa un catálogo de datos complementarios para fracciones.
  * 
- * @type {Array<{ id: number; descripcion: string }>}
- * @example
- * // Ejemplo de uso:
- * console.log(COMPLEMENTAR_FRACCION_CATALOGO_DATOS);
- * // Salida: [{ id: 0, descripcion: '' }]
+ * Este objeto contiene una lista de elementos con identificadores y descripciones
+ * que pueden ser utilizados para complementar información relacionada con fracciones.
+ * 
+ * Propiedades:
+ * - `id`: Identificador único del elemento en el catálogo. Por defecto, es `0`.
+ * - `descripcion`: Descripción del elemento en el catálogo. Por defecto, es una cadena vacía.
+ * 
+ * Uso:
+ * Este catálogo puede ser utilizado para inicializar o proporcionar valores predeterminados
+ * en formularios o procesos relacionados con fracciones.
  */
 export const COMPLEMENTAR_FRACCION_CATALOGO_DATOS = [{
   id: 0,
   descripcion: ''
 }];
 
+
 /**
- * @constant
-* @description Objeto que representa los datos complementarios de una fracción arancelaria.
- * Contiene información como la fracción arancelaria, anexos, tipo, unidad de medida, categoría,
- * descripción, y valores relacionados con moneda nacional y volumen.
+ * Representa un objeto que contiene información complementaria sobre una fracción arancelaria.
+ * Este objeto incluye detalles como la fracción arancelaria, anexos, tipo, unidad de medida, categoría,
+ * descripción, y valores relacionados con moneda nacional y volumen en diferentes periodos.
  * 
- * @property {string} fraccionArancelaria - Código de la fracción arancelaria.
- * @property {string} anexoDos - Información adicional del anexo dos.
- * @property {string} tipo - Tipo de fracción o categoría.
- * @property {string} umt - Unidad de medida utilizada.
- * @property {string} catagoria - Categoría a la que pertenece la fracción.
- * @property {string} descripcion - Descripción detallada de la fracción.
- * @property {number} monedaNacionalMensual - Valor mensual en moneda nacional.
- * @property {number} monedaNacionalDeDosPeriodos - Valor acumulado de dos periodos en moneda nacional.
- * @property {number} volumenMensual - Volumen mensual asociado.
- * @property {number} twoPeriodVolume - Volumen acumulado de dos periodos.
+ * Propiedades:
+ * - `fraccionArancelaria`: Cadena que representa la fracción arancelaria.
+ * - `anexoDos`: Cadena que contiene información del anexo dos relacionado.
+ * - `tipo`: Cadena que indica el tipo de fracción arancelaria.
+ * - `umt`: Cadena que representa la unidad de medida utilizada.
+ * - `catagoria`: Cadena que describe la categoría de la fracción arancelaria.
+ * - `descripcion`: Cadena que proporciona una descripción detallada de la fracción arancelaria.
+ * - `monedaNacionalMensual`: Número que indica el valor mensual en moneda nacional.
+ * - `monedaNacionalDeDosPeriodos`: Número que representa el valor acumulado en moneda nacional de dos periodos.
+ * - `volumenMensual`: Número que indica el volumen mensual.
+ * - `twoPeriodVolume`: Número que representa el volumen acumulado de dos periodos.
  */
 export const COMPLEMENTAR_FRACCION_DATOS = {
   fraccionArancelaria: '',
@@ -356,12 +370,17 @@ export const PROYECTO_DATOS = {
 }
 
 /**
- * @constant DOCUMENTO_CATALOGO_DATOS
- * @description Representa un catálogo de documentos con sus respectivos identificadores y descripciones.
- * Contiene una lista de objetos que describen los documentos disponibles.
+ * DOCUMENTO_CATALOGO_DATOS es una constante que representa un catálogo de datos de documentos.
  * 
- * @property {number} id - Identificador único del documento.
- * @property {string} descripcion - Descripción del documento.
+ * Cada elemento del catálogo contiene las siguientes propiedades:
+ * - `id`: Identificador único del documento (tipo numérico).
+ * - `descripcion`: Descripción del documento (tipo cadena de texto).
+ * 
+ * En este caso, el catálogo incluye un único elemento con los siguientes valores:
+ * - `id`: 0
+ * - `descripcion`: 'Cantrado De Maqula'
+ * 
+ * Esta constante puede ser utilizada para gestionar y mostrar información relacionada con documentos en el sistema.
  */
 export const DOCUMENTO_CATALOGO_DATOS = [
   {

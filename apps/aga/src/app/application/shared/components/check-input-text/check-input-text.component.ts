@@ -76,6 +76,11 @@ export class CheckInputTextComponent implements OnChanges {
   @Input() textoValor!: string;
   @Input() labelText!: string;
 
+  /**
+   * Indica si el checkbox debe estar deshabilitado.
+   */
+  @Input() isDisabled: boolean = false;
+
   @Output() checkboxChange = new EventEmitter<DatosCheckInputText>();
 
 
@@ -89,6 +94,7 @@ export class CheckInputTextComponent implements OnChanges {
     this.forma = this.fb.group({
       checkbox: [false],
       texto: [{ value: '', disabled: true }],
+      disabled:true
     });
   }
 
@@ -113,13 +119,23 @@ export class CheckInputTextComponent implements OnChanges {
     }
 
     if (changes['checkboxValor'] && changes['checkboxValor'].currentValue) {
-      console.log('checkboxValor', changes['checkboxValor'].currentValue);
       
       this.checkboxValor = changes['checkboxValor'].currentValue;
       this.forma.get('checkbox')?.setValue(this.checkboxValor);
       this.textoValor = changes['textoValor'].currentValue;
       this.forma.get('texto')?.enable();
       this.forma.get('texto')?.setValue(this.textoValor);
+      this.forma.get('texto')?.disable();
+    }
+    
+    // Handle disabled state separately
+    if (changes['isDisabled']) {
+      this.isDisabled = changes['isDisabled'].currentValue;
+      if (this.isDisabled) {
+        this.forma.get('checkbox')?.disable();
+      } else {
+        this.forma.get('checkbox')?.enable();
+      }
     }
   }
 
@@ -179,9 +195,11 @@ export class CheckInputTextComponent implements OnChanges {
   enviarValoresCheckboxInput(): void {
     const CHECKBOX = this.forma.get('checkbox')?.value;
     const TEXTO = this.forma.get('texto')?.value;
+    const DISABLED = this.forma.get('disabled')?.disabled
     const DATOS: DatosCheckInputText = {
       checkbox: CHECKBOX,   
       texto: TEXTO,
+      disabled: DISABLED,
     };
 
     this.checkboxChange.emit(DATOS)

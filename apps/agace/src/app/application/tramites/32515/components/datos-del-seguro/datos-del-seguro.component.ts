@@ -3,6 +3,7 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InformationGeneralSolicitanteState, Tramite32515Store } from '../../estados/tramite32515.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DATOS_DEL_SEGURO } from '../../constantes/modificacion-aviso-seguro-global.enum';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { Tramite32515Query } from '../../estados/tramite32515.query';
@@ -47,6 +48,11 @@ export class DatosDelSeguroComponent implements OnInit, OnDestroy {
 
   /** Subject utilizado para destruir el observable al destruir el componente */
   private destroy$ = new Subject<void>();
+     /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
 
   /** Formulario principal del componente */
   public forma: FormGroup = new FormGroup({
@@ -58,10 +64,12 @@ export class DatosDelSeguroComponent implements OnInit, OnDestroy {
    * Constructor: inyecta el store y el query del trámite 32515
    * @param tramiteStore32515 Store para actualizar datos del formulario
    * @param tramiteQuery32515 Query para suscribirse a los datos del estado
+   * @param consultaQuery Query para obtener el estado de la consulta
    */
   constructor(
     public tramiteStore32515: Tramite32515Store,
-    private tramiteQuery32515: Tramite32515Query
+    private tramiteQuery32515: Tramite32515Query,
+    public consultaQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -76,19 +84,13 @@ export class DatosDelSeguroComponent implements OnInit, OnDestroy {
    * Método que se ejecuta cuando hay un cambio de valor en un campo del formulario
    * @param event Objeto con el nombre del campo y el nuevo valor
    */
-  establecerCambioDeValor(event: { campo: string; valor: string }): void {
-    if (event) {
-      this.cambioEnValoresStore(event.campo, event.valor);
+     establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
+    if (typeof $event.valor === 'object' && $event.valor !== null && 'id' in $event.valor) {
+      this.tramiteStore32515.setTramite32515State($event.campo, String(($event.valor as { id: unknown }).id));
+    } else {
+      this.tramiteStore32515.setTramite32515State($event.campo, $event.valor);
     }
-  }
-
-  /**
-   * Actualiza el store con los nuevos valores del formulario
-   * @param campo Nombre del campo que ha cambiado
-   * @param value Nuevo valor del campo
-   */
-  public cambioEnValoresStore(campo: string, value: unknown): void {
-    this.tramiteStore32515.establecerDatos(campo, value);
+   
   }
 
   /**
@@ -101,6 +103,14 @@ export class DatosDelSeguroComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         map((seccionState) => {
           this.informationGeneralState = seccionState as InformationGeneralSolicitanteState;
+        })
+      )
+      .subscribe();
+        this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {          
+          this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
       .subscribe();

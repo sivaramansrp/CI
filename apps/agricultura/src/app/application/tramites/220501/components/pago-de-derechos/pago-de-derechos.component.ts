@@ -1,10 +1,10 @@
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, InputRadioComponent} from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -24,13 +24,13 @@ import { Solicitud220501Store } from '../../estados/tramites220501.store';
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss'],
   standalone: true,
-  imports: [InputRadioComponent,TituloComponent,ReactiveFormsModule,CatalogoSelectComponent],
+  imports: [InputRadioComponent, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent],
 })
 
 /**
  * Componente que permite gestionar el pago de derechos en una solicitud.
  */
-export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+export class PagoDeDerechosComponent implements OnDestroy {
   /**
    * Indica si el formulario está deshabilitado.
    * @type {boolean}
@@ -97,6 +97,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
+   * Indica si el formulario está deshabilitado.
+   */
+  formularioDeshabilitado: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param {FormBuilder} fb - El servicio FormBuilder de Angular para crear formularios.
    * @param {RevisionService} revisionService - El servicio de revisión para obtener datos relacionados con el pago.
@@ -105,16 +110,42 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     revisionService: RevisionService,
     public solicitud220501Store: Solicitud220501Store,
-    public solicitud220501Query: Solicitud220501Query
+    public solicitud220501Query: Solicitud220501Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.revisionService = revisionService;
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          if(seccionState.readonly || seccionState.update){
+             this.inicializarEstadoFormulario();
+
+          }          
+        })
+      )
+      .subscribe();
+
+    this.inicializarFormulario();
   }
 
   /**
-   * Inicializa el componente y configura el formulario de pago.
-   * @returns {void}
+   * Determina si se debe cargar un formulario nuevo o uno existente.
+   * Ejecuta la lógica correspondiente según el estado del componente.
    */
-  ngOnInit(): void {
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.pagoForm?.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.pagoForm?.enable();
+    }
+  }
+
+  /**
+   * Inicializa el formulario con los valores del estado de la solicitud 220501.
+   */
+  inicializarFormulario(): void {
     this.pagoForm = this.fb.group({
       exentoPagoNo: [{ value: this.solicitud220501State.exentoPagoNo }],
       justificacion: [{ value: this.solicitud220501State.justificacion, disabled: true }],
@@ -148,6 +179,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.getJustificacion();
     this.getBanco();
     this.getPagoDeDerechos();
+
+    this.inicializarEstadoFormulario();
   }
 
   /** 

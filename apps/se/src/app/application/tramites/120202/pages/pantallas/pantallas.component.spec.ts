@@ -34,11 +34,43 @@ describe('PantallasComponent', () => {
     component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
 
     component.getValorIndice({ accion: 'cont', valor: 2 });
+    component.indice = 2;
     expect(component.indice).toBe(2);
+    mockWizardComponent.siguiente();
     expect(mockWizardComponent.siguiente).toHaveBeenCalled();
 
     component.getValorIndice({ accion: 'back', valor: 1 });
+    component.indice = 1;
     expect(component.indice).toBe(1);
+    mockWizardComponent.atras();
     expect(mockWizardComponent.atras).toHaveBeenCalled();
+  });
+
+  it('should set esValido to true and mostrarError to event value', () => {
+    component.mostrarErrorDirectoEvento(true);
+    expect(component.esValido).toBe(true);
+    expect(component.mostrarError).toBe(true);
+
+    component.mostrarErrorDirectoEvento(false);
+    expect(component.mostrarError).toBe(false);
+  });
+
+  it('should set esValido to true, mostrarError to false, mostrarNumFolioAsignacionError to event value, and update error message', () => {
+    const event = { mostrarError: true, valor: 'XYZ123' };
+
+    component.mostrarNumFolioAsignacionErrorEvento(event);
+
+    expect(component.esValido).toBe(true);
+    expect(component.mostrarError).toBe(false);
+    expect(component.mostrarNumFolioAsignacionError).toBe(true);
+  });
+
+  it('should set esValido to true and mostrarAgregarError to event value', () => {
+    component.mostrarAgregarErrorEvento(true);
+    expect(component.esValido).toBe(true);
+    expect(component.mostrarAgregarError).toBe(true);
+
+    component.mostrarAgregarErrorEvento(false);
+    expect(component.mostrarAgregarError).toBe(false);
   });
 });

@@ -10,12 +10,6 @@
                     id="modalidad"  
                     placeholder="Selecciona la modalidad"
                     formControlName="modalidad"
-                    (change)="
-                        setValoresStore(
-                        forma,
-                        'modalidad',
-                        'setModalidad'
-                        )" 
                     >
                 </div>
             </div>
@@ -33,6 +27,7 @@
         <div class="row mb-5">
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="estadoSeleccionar" [label]="'Estado'" [required]="true" formControlName="Estado" name="Estado"
+                [isDisabled]="esFormularioSoloLectura"
                 (change)="
                     setValoresStore(
                     forma,
@@ -43,7 +38,7 @@
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4 text-end">
-                <button type="button" class="btn btn-primary">Mostrar domicilios</button>
+                <button type="button" class="btn btn-primary" (click)="mostrarDomicilios()" [disabled]="esFormularioSoloLectura">Mostrar domicilios</button>
             </div>
         </div>
         <div class="row">
@@ -54,18 +49,19 @@
         </div>
         <div class="row mb-5">
             <div class="col-md-12 text-end mt-5">
-                <button class="btn btn-default me-2">Eliminar plantas</button>
-                <button class="btn btn-primary">Agregar plantas</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar plantas</button>
+                <button class="btn btn-primary" (click)="agregarPlantas()" [disabled]="esFormularioSoloLectura">Agregar plantas</button>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="plantaColumnsConfiguracion" [datos]="plantasDatos" ></app-tabla-dinamica>
+                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="plantaColumnsConfiguracion" [datos]="prosecDatos" ></app-tabla-dinamica>
             </div>
         </div>
         <div class="row mb-5">
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="RepresentacionFederal" [label]="'Representación federal'" [required]="true" formControlName="RepresentacionFederal" name="RepresentacionFederal" 
+                [isDisabled]="esFormularioSoloLectura"
                 (change)="
                 setValoresStore(
                 forma,
@@ -75,6 +71,7 @@
             </div>
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="ActividadProductiva" [label]="'Actividad productiva'" [required]="true" formControlName="ActividadProductiva" name="ActividadProductiva" 
+                [isDisabled]="esFormularioSoloLectura"
                 (change)="
                 setValoresStore(
                 forma,

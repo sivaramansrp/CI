@@ -2,6 +2,7 @@ import { Solicitud31601State, Tramite31601Store } from '../../../estados/tramite
 import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MencioneConfiguracionItem } from '../enum/mencione-tabla.enum';
 import { Observable } from 'rxjs';
 
 /**
@@ -125,6 +126,51 @@ export class Solocitud31601Service {
     this.tramite31601Store.setDescripcion(DATOS.descripcion);
     this.tramite31601Store.setHaContado(DATOS.haContado);
     this.tramite31601Store.setEnCasoIva(DATOS.enCasoIva);
+    this.tramite31601Store.setEnlaceTablaDatos([{
+        id: '1',
+        rfc: DATOS.rfcReprestantante || '',
+        nombre: DATOS.nombreReprestante || '',
+        apellidoPaterno: DATOS.apellidoPaterno || '',
+        apellidoMaterno: DATOS.apellidoMaterno || '',
+        cargo: DATOS.cargo || '',
+        telefono: DATOS.telefonoReprestantante || '',
+        correo: DATOS.correoReprestantante || '',
+        suplente: DATOS.suplente || '',
+        estadoResidencia: DATOS.estadoResidencia || '',
+        registroFederal : DATOS.registroFederaldeContribuyentes || '',
+    }]);
+    this.tramite31601Store.setEstadoResidencia(DATOS.estadoResidencia);
+this.tramite31601Store.setCancelacionProcedimiento(DATOS.cancelacionProcedimiento);
+this.tramite31601Store.setCumpleLineamientos(DATOS.cumpleLineamientos);
+this.tramite31601Store.setNombre(DATOS.nombre);
+this.tramite31601Store.setRfcDatos(DATOS.rfcDatos);
+this.tramite31601Store.setIndiques(DATOS.indiques);
+this.tramite31601Store.setCuenta(DATOS.cuenta);
+this.tramite31601Store.setMismo(DATOS.mismo);
+this.tramite31601Store.setEmpresa(DATOS.empresa);
+this.tramite31601Store.setPropios(DATOS.propios);
+this.tramite31601Store.setEmpleadoss(DATOS.empleadoss);
+this.tramite31601Store.setSocios(DATOS.socios);
+this.tramite31601Store.setEncuentras(DATOS.encuentras);
+this.tramite31601Store.setCumplido(DATOS.cumplido);
+this.tramite31601Store.setProcedimiento(DATOS.procedimiento);
+this.tramite31601Store.setDeterminan(DATOS.determinan);
+this.tramite31601Store.setTransferenciasDatos(DATOS.transferenciasDatos);
+this.tramite31601Store.setTransferenciasdos(DATOS.transferenciasdos);
+this.tramite31601Store.setRetornosDatos(DATOS.retornosDatos);
+this.tramite31601Store.setRetornosdos(DATOS.retornosdos);
+this.tramite31601Store.setConstanciasDatos(DATOS.constanciasDatos);
+this.tramite31601Store.setConstanciasdos(DATOS.constanciasdos);
+this.tramite31601Store.setMonedaTotal(DATOS.monedaTotal);
+this.tramite31601Store.setPorcentajeTotal(DATOS.porcentajeTotal);
+this.tramite31601Store.setCapture(DATOS.capture);
+this.tramite31601Store.setDeEmpleados(DATOS.deEmpleados);
+this.tramite31601Store.setBimestreDatos(DATOS.bimestreDatos);
+this.tramite31601Store.setNumeroDeEmpleados(DATOS.numeroDeEmpleados);
+this.tramite31601Store.setBimestredos(DATOS.bimestredos);
+this.tramite31601Store.setNumeroDatos(DATOS.numeroDatos);
+this.tramite31601Store.setBimestres(DATOS.bimestres);
+
   }
 
   /**
@@ -135,5 +181,13 @@ export class Solocitud31601Service {
    */
   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud31601State> {
     return this.http.get<Solicitud31601State>('assets/json/31601/registro_toma_muestras_mercancias.json');
+  }
+
+  /**
+   * Obtiene los datos de configuración de menciones desde un archivo JSON.
+   * Este archivo contiene una lista de menciones que se pueden utilizar en el trámite 31601.
+   * */
+  getMencioneDatos(): Observable<MencioneConfiguracionItem[]> {
+    return this.http.get<MencioneConfiguracionItem[]>('assets/json/31601/mencione.json');
   }
 }

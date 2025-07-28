@@ -1,107 +1,95 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Observable, of as observableOf, Subject } from 'rxjs';
-
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MercanciasDestruidasFormaComponent } from './mercancias-destruidas-forma.component';
-import { FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CatalogosService } from '../../servicios/catalogo.service';
-
-@Injectable()
-class MockRouter {
-  navigate() {}
-}
-
-@Injectable()
-class MockCatalogosService {
-  obtenerUnidadDesplegable = jest.fn().mockReturnValue(
-    observableOf([
-      { id: 1, descripcion: 'Kilogramos' },
-      { id: 2, descripcion: 'Litros' },
-    ])
-  );
-}
-
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
+import { TramiteStoreQuery } from '../../estados/tramite32516Query.query';
+import { TramiteStore } from '../../estados/tramite32516Store.store';
+import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { Router } from '@angular/router';
+import { of, Subject } from 'rxjs';
 
 describe('MercanciasDestruidasFormaComponent', () => {
   let component: MercanciasDestruidasFormaComponent;
   let fixture: ComponentFixture<MercanciasDestruidasFormaComponent>;
   let mockCatalogosService: any;
+  let mockTramiteStoreQuery: any;
+  let mockTramiteStore: any;
+  let mockSeccionQuery: any;
+  let mockConsultaioQuery: any;
+  let mockRouter: any;
 
-  beforeEach(() => {
-    // Mock del servicio CatalogosService
+  beforeEach(async () => {
     mockCatalogosService = {
-      obtenerUnidadDesplegable: jest.fn().mockReturnValue(
-        observableOf([
-          { id: 1, descripcion: 'Kilogramos' },
-          { id: 2, descripcion: 'Litros' },
-        ])
-      ),
+      obtenerUnidadDesplegable: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Unidad' }])),
+    };
+    mockTramiteStoreQuery = {
+      selectSolicitudTramite$: of({ MercanciaState: {} }),
+    };
+    mockTramiteStore = {
+      setMercanciaTramite: jest.fn(),
+    };
+    mockSeccionQuery = {
+      selectSeccionState$: of({}),
+    };
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
+    mockRouter = {
+      url: '/agace/acta-de-hechos',
+      navigate: jest.fn(),
     };
 
-    TestBed.configureTestingModule({
-      declarations: [TranslatePipe, PhoneNumberPipe, SafeHtmlPipe],
-      imports: [MercanciasDestruidasFormaComponent, FormsModule, ReactiveFormsModule],
+    await TestBed.configureTestingModule({
+      imports: [MercanciasDestruidasFormaComponent, ReactiveFormsModule],
       providers: [
-        { provide: CatalogosService, useValue: mockCatalogosService }, // Proveer el servicio mock
-        { provide: Router, useClass: MockRouter },
+        FormBuilder,
+        { provide: CatalogosService, useValue: mockCatalogosService },
+        { provide: TramiteStoreQuery, useValue: mockTramiteStoreQuery },
+        { provide: TramiteStore, useValue: mockTramiteStore },
+        { provide: SeccionLibQuery, useValue: mockSeccionQuery },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+        { provide: Router, useValue: mockRouter },
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MercanciasDestruidasFormaComponent);
     component = fixture.componentInstance;
+    // Patch destroyNotifier$ for ngOnDestroy
+    (component as any).destroyNotifier$ = new Subject<void>();
+    fixture.detectChanges();
   });
 
-  it('debería crear el componente', () => {
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    (component as any).destroyNotifier$.complete();
+    fixture.destroy();
   });
 
-  it('debería llamar a obtenerUnidadDesplegable en obtenerUnidadMedidaSelectList', () => {
-    // Llamar al método
-    component.obtenerUnidadMedidaSelectList();
+  describe('#guardarDatosFormulario', () => {
+    it('should disable form if esFormularioSoloLectura is true', () => {
+      component.mercanciaForm = new FormBuilder().group({
+        consecutivo: [''],
+        descripcion: [''],
+        cantidad: [''],
+        unidadMedida: [''],
+        peso: [''],
+      });
+      component.esFormularioSoloLectura = true;
+      component.guardarDatosFormulario();
+      expect(component.mercanciaForm.disabled).toBe(true);
+    });
 
-    // Verificar que el método mock haya sido llamado con el argumento correcto
-    expect(mockCatalogosService.obtenerUnidadDesplegable).toHaveBeenCalledWith('unidad-de-medida.json');
-
-    // Verificar que la propiedad unidadMedida del componente se actualice con los datos mock
-    expect(component.unidadMedida).toEqual([
-      { id: 1, descripcion: 'Kilogramos' },
-      { id: 2, descripcion: 'Litros' },
-    ]);
-  });
-
-  it('debería manejar la limpieza en ngOnDestroy', () => {
-    // Acceder a la propiedad privada unsubscribe$ usando notación de corchetes
-    (component as any).unsubscribe$ = new Subject<void>();
-    jest.spyOn((component as any).unsubscribe$, 'next');
-    jest.spyOn((component as any).unsubscribe$, 'complete');
-
-    component.ngOnDestroy();
-
-    expect((component as any).unsubscribe$.next).toHaveBeenCalled();
-    expect((component as any).unsubscribe$.complete).toHaveBeenCalled();
+    it('should enable form if esFormularioSoloLectura is false', () => {
+      component.mercanciaForm = new FormBuilder().group({
+        consecutivo: [''],
+        descripcion: [''],
+        cantidad: [''],
+        unidadMedida: [''],
+        peso: [''],
+      });
+      component.esFormularioSoloLectura = false;
+      component.guardarDatosFormulario();
+      expect(component.mercanciaForm.enabled).toBe(true);
+    });
   });
 });

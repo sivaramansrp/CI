@@ -83,6 +83,90 @@ export interface Solicitud {
   
   /** Proveedor de la mercancia */
   proovedor: string;
+/**
+ * Régimen del trámite.
+ */
+regimen: string;
+
+/**
+ * Tipo de producto relacionado con el trámite.
+ */
+tipoProducto: string;
+
+/**
+ * País de procedencia del producto.
+ */
+paisProcedencia: string;
+
+/**
+ * Clasificación de las mercancías.
+ */
+clasificacionMercancia: string;
+
+/**
+ * Fracción arancelaria del producto.
+ */
+fraccionArancelaria: string;
+
+/**
+ * Descripción de la fracción arancelaria.
+ */
+descFraccionArancelaria: string;
+
+/**
+ * Cantidad del producto en letras.
+ */
+cantidadLetra: string;
+
+/**
+ * Género del producto.
+ */
+genero: string;
+
+/**
+ * Especie del producto.
+ */
+especie: string;
+
+/**
+ * Nombre común del producto.
+ */
+nombreComun: string;
+
+/**
+ * Descripción del producto.
+ */
+descripcionProducto: string;
+
+/**
+ * Unidad de medida del producto.
+ */
+cantidadUMC: string;
+
+/**
+ * Indica si hay manifiestos y descripción.
+ */
+manifiestosYdesc: boolean;
+
+/**
+ * Rango de días seleccionado.
+ */
+seleccionarsRangoDias: string;
+
+/**
+ * Rango de días seleccionado para las aduanas.
+ */
+seleccionarsRangoDiasAduanas: string;
+
+/**
+ * Rango de días seleccionado para el país de origen.
+ */
+seleccionarsRangoDiasPaisOrigen: string;
+
+/**
+ * Rango de días seleccionado para el destino.
+ */
+seleccionarsRangoDiasDestino: string;
 }
 
 /** 
@@ -134,7 +218,7 @@ export interface CargarDatosIniciales {
   hCarroFerrocarril: string[];
   
   /** Encabezados para solicitudes */
-  hSolicitud: string[];
+  solicitudDatos: string[];
   
   /** Solicitar datos */
   dSolicitud: Solicitud[];

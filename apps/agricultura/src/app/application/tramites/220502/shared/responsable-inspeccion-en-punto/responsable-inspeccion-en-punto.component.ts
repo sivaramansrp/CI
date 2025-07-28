@@ -1,5 +1,5 @@
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -9,6 +9,7 @@ import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { REG_X } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Solicitud220502Query } from '../../estados/tramites220502.query';
@@ -75,6 +76,11 @@ export class ResponsableInspeccionEnPuntoComponent
  */
 solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
 
+  /**
+   * Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado!: boolean;
+
   constructor(
     private solicitud220502Store: Solicitud220502Store,
     private solicitud220502Query: Solicitud220502Query,
@@ -98,7 +104,7 @@ solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
           ]),
           primerapellido: new FormControl(this.solicitud220502State.primerapellido, [Validators.maxLength(80)]),
           segundoapellido: new FormControl(this.solicitud220502State.segundoapellido, [Validators.maxLength(80)]),
-          mercancia: new FormControl(this.solicitud220502State.mercancia, [Validators.required]),
+          mercancia: new FormControl(this.solicitud220502State.mercancia, [Validators.required, Validators.maxLength(3), Validators.pattern(REG_X.SOLO_NUMEROS)]),
           tipocontenedor: new FormControl(this.solicitud220502State.tipocontenedor, []),
         })
       );
@@ -126,6 +132,12 @@ solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
       )
       .subscribe();
     this.cargarDatosIniciales(); // Cargar datos del catálogo inicial
+
+    if (this.formularioDeshabilitado) {
+      this.grupoFormularioPadre?.disable();
+    } else {
+      this.grupoFormularioPadre?.enable();
+    }
   }
   /**
    * Maneja la selección de un artículo del catálogo.

@@ -1,26 +1,29 @@
 <div class="container">
     <form [formGroup]="form">
+        @if(esSolicitud){
         <!--Solicitud Tabla-->
         <app-solicitud-datos [tablaHeadData]="hSolicitud" [tablaFilaDatos]="dSolicitud"></app-solicitud-datos>
-
+        }
         <!--Datos del tramite a realizar-->
-        <app-datos-del-tramite-a-realizar claveDeControl="datoseDelTramiteRealizar"></app-datos-del-tramite-a-realizar>
+        <app-datos-del-tramite-a-realizar claveDeControl="datoseDelTramiteRealizar" [procedimiento]="220501"
+            [formularioDeshabilitado]="formularioDeshabilitado"></app-datos-del-tramite-a-realizar>
 
         <!--Responsable inspeccion en punto-->
-        <app-responsable-inspeccion-en-punto
-        claveDeControl="responsableInspeccionEnPunto"></app-responsable-inspeccion-en-punto>
+        <app-responsable-inspeccion-en-punto claveDeControl="responsableInspeccionEnPunto"
+            [formularioDeshabilitado]="formularioDeshabilitado"></app-responsable-inspeccion-en-punto>
 
         <!--Medio de transporte-->
         <app-medio-transporte (transporteSeleccionado)="onTransporteSeleccionado($event)"></app-medio-transporte>
 
         @if (mostrarSeccion) {
         <!--Cantidad de carros de ferrocarril 2-->
-        <app-carros-de-ferrocarril [tablaHeadData]="hCarroFerrocarril" 
-            [tablaFilaDatos]="dCarrosDeFerrocarril"></app-carros-de-ferrocarril>
+        <app-carros-de-ferrocarril [tablaHeadData]="hCarroFerrocarril" [tablaFilaDatos]="dCarrosDeFerrocarril"
+            [formularioDeshabilitado]="formularioDeshabilitado"></app-carros-de-ferrocarril>
 
         <!-- Historial inspeccion fisica -->
         <app-historial-inspeccion-fisica [tablaHeadData]="hHistorialinspeccion"
-            [tablaFilaDatos]="dHistorialInspecciones"></app-historial-inspeccion-fisica>
+            [tablaFilaDatos]="dHistorialInspecciones"
+            [formularioDeshabilitado]="formularioDeshabilitado"></app-historial-inspeccion-fisica>
         }
     </form>
 </div>

@@ -8,6 +8,12 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConcluirRelacionService } from '../../services/concluir-relacion.service';
+
+@Injectable()
+class MockConcluirRelacionService {}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -35,14 +41,17 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, PasoUnoComponent ],
+      imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
+        PasoUnoComponent,
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-
+        SeccionLibStore,
+        ConsultaioQuery,
+        { provide: ConcluirRelacionService, useClass: MockConcluirRelacionService }
       ]
     }).overrideComponent(PasoUnoComponent, {
 
@@ -55,8 +64,28 @@ describe('PasoUnoComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should run #guardarDatosFormulario()', async () => {
+    component.concluirRelacionService = component.concluirRelacionService || {};
+    component.concluirRelacionService.getRegistroTomaMuestrasMercanciasData = jest.fn().mockReturnValue(observableOf({}));
+    component.concluirRelacionService.actualizarEstadoFormulario = jest.fn();
+    component.guardarDatosFormulario();
+    expect(component.concluirRelacionService.getRegistroTomaMuestrasMercanciasData).toHaveBeenCalled();
+    expect(component.concluirRelacionService.actualizarEstadoFormulario).toHaveBeenCalled();
+  });
+
   it('should run #seleccionaTab()', async () => {
+
     component.seleccionaTab({});
+
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.ngOnDestroy();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });

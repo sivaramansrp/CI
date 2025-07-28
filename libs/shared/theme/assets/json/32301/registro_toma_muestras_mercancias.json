@@ -1,0 +1,83 @@
+{
+  "tipoDevAviso": {
+    "modalidadCertificacion": "Certificación Inicial",
+    "foreignClientsSuppliers": true,
+    "nationalSuppliers": true,
+    "modificationsMembers": true,
+    "changesToLegalDocuments": true,
+    "mergerOrSplitNotice": true,
+    "additionFractions": true,
+    "acepto253": true
+  },
+  "proveedorExtranjero": {
+    "archivoExtranjero": "documento_proveedor_extranjero.pdf",
+    "registrosProveedoresExtranjeros": "REG-EXT-2025-0001"
+  },
+  "modificacionSocios": {
+    "ensucarácterde": 1,
+    "obligadoaTributarenMéxico": true,
+    "nacionalidad": 1,
+    "registroFederaldeContribuyentes": "ABC123456T12",
+    "rfc": "ABC123456T12",
+    "nombreCompleto": "Juan Pérez Rodríguez"
+  },
+  "modificacionGoceInmueble": {
+    "idAviInmueble": "INM-2025-0002",
+    "direccion": "Av. Reforma 123, Col. Centro",
+    "codigoPostal": "06000",
+    "cveEntidad": "1",
+    "cveMunicipio": "1",
+    "cveTipoDoc": "1",
+    "fechaInicioAnterior": "2024-01-01",
+    "fechaFinAnterior": "2024-12-31",
+    "fechaInicioActual": "2025-01-01",
+    "fechaFinActual": "2025-12-31",
+    "rfcPartesC": "RFC987654321",
+    "rfcPartesCons": "RFC123456789",
+    "nombrePartesCons": "Empresa XYZ S.A. de C.V.",
+    "caracterDeCons": "Arrendador",
+    "observaciones": "Renovación del contrato de arrendamiento"
+  },
+  "personaFusionEscisionDTO": {
+    "rfc": "RFCMERGE001",
+    "razonSocial": "Empresa Fusionada S.A. de C.V.",
+    "numFolioTramite": "TRM-2025-0045",
+    "fechaInicioVigencia": "2025-01-15",
+    "fechaFinVigencia": "2025-12-31"
+  },
+  "fechasSeleccionadas": {
+    "fechasSeleccionadas": ["2025-01-01", "2025-06-30", "2025-12-31"]
+  },
+  "datosEmpresa": {
+    "numeroPrograma": "PROG2025-001",
+    "anoPrograma": "2025",
+    "mesCorrespondeAviso": "07",
+    "anoCorrespondeAviso": "2025"
+  },
+  "cargaTipo": {
+    "cargaTipo": "Completa"
+  },
+  "datosQuienRecibe": {
+    "rfc": "REC123456AA1",
+    "numberProgramaQr": "QR2025-9988",
+    "anoProgramaQr": "2025"
+  },
+  "datosDomicilioLugar": {
+    "nombreComercial": "Sucursal Reforma",
+    "entidadFederativa": "Ciudad de México",
+    "alcaldiaMunicipio": "Cuauhtémoc",
+    "colonias": "Centro Histórico",
+    "calle": "Av. Reforma",
+    "numeroExterior": "123",
+    "numeroInterior": "4B",
+    "codigoPostal": "06000"
+  },
+  "datosMercanciaSubmanufactura": {
+    "fracArancelaria": "85044019",
+    "nico": "01",
+    "unidadMedida": "Pieza",
+    "cantidad": "100",
+    "valorUsd": "5000",
+    "descripcionMercancia": "Transformadores eléctricos para uso industrial"
+  }
+}

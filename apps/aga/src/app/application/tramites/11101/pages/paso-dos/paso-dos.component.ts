@@ -1,9 +1,11 @@
+import {
+  CATALOGOS_ID,
+  Catalogo,
+  CatalogosService,
+  TEXTOS
+} from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
-import { DocumentosSeleccionados } from '../../constants/mercancia.enum';
-import { TEXTOS } from '@ng-mf/data-access-user';
+import { DOCUMENTOS_SELECCIONADOS } from '../../constants/mercancia.enum';
 
 /**
  * Componente para gestionar el paso dos del trámite.
@@ -58,7 +60,7 @@ export class PasoDosComponent implements OnInit {
    */
   ngOnInit(): void {
     this.getTiposDocumentos();
-    this.documentosSeleccionados =DocumentosSeleccionados
+    this.documentosSeleccionados =DOCUMENTOS_SELECCIONADOS
   }
 
   /**

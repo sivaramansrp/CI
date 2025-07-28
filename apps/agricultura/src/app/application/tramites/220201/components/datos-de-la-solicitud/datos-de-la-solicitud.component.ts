@@ -1,21 +1,26 @@
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-import { TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
+import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, CrosslistComponent, InputRadioComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { HttpClient } from '@angular/common/http';
 
-import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
+import { DatosForma, RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
-import {Subject, map, skip, takeUntil } from 'rxjs';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
-import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Subject, debounceTime, map, takeUntil } from 'rxjs';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
+import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solicitud.model';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
-
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { AnimalesVivoContenedoraComponent } from '../animales-vivo-contenedora/animales-vivo-contenedora.component';
+import { SubProductosContenedoraComponent } from '../sub-productos-contenedora/sub-productos-contenedora.component';
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos de la solicitud.
@@ -27,23 +32,26 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 /**
  * Componente para el formulario de datos de la solicitud.
  * @class DatosDeLaSolicitudComponent --220201
- * @implements {OnInit}
+ * @implements {OnInit, OnDestroy, AfterViewInit}
  */
 @Component({
   selector: 'app-datos-de-la-solicitud',
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.scss'],
   standalone: true,
-  imports:[SharedModule,
-          CommonModule, TituloComponent,
-              ReactiveFormsModule,
-              CatalogoSelectComponent,
-            CrosslistComponent,
-          InputRadioComponent,
-             AlertComponent,
-        TablaDinamicaComponent]
+  imports: [SharedModule,
+    CommonModule,
+    TituloComponent,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    InputRadioComponent,
+    AlertComponent,
+    TablaDinamicaComponent,
+    NotificacionesComponent,
+    ModalComponent]
 })
-export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy,AfterViewInit {
+export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('modalRef') modalRef!: ModalComponent;
   /**
    * Constantes de texto.
    * @property {string} TEXTOS
@@ -55,12 +63,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy,AfterViewI
    * @property {FormGroup} forma
    */
   forma!: FormGroup;
-
-  /**
-   * Rango de días para el select.
-   * @property {string[]} selectRangoDias
-   */
-  selectRangoDias: string[] = [];
 
   /**
    * Indica si la sección es colapsable.
@@ -76,31 +78,31 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy,AfterViewI
 
   /**
    * Configuración para el select de aduana de ingreso. --220201
-   * @property {Catalogo} aduanaDeIngreso
+   * @property {Catalogo[]} aduanaDeIngreso
    */
   aduanaDeIngreso: Catalogo[] = [];
 
   /**
    * Configuración para el select de sanidad agropecuaria. --220201
-   * @property {CatalogosSelect} sanidadAgropecuaria
+   * @property {Catalogo[]} sanidadAgropecuaria
    */
   sanidadAgropecuaria: Catalogo[] = [];
 
   /**
    * Configuración para el select de punto de inspección.--220201
-   * @property {CatalogosSelect} puntoInspeccion
+   * @property {Catalogo[]} puntoInspeccion
    */
   puntoInspeccion: Catalogo[] = [];
 
   /**
    * Configuración para el select de establecimiento TIF.--220201
-   * @property {CatalogosSelect} establecimientoTIF
+   * @property {Catalogo[]} establecimientoTIF
    */
   establecimientoTIF: Catalogo[] = [];
 
   /**
    * Configuración para el select de veterinario.--220201
-   * @property {CatalogosSelect} veterinario
+   * @property {Catalogo[]} veterinario
    */
   veterinario: Catalogo[] = [];
   id?: number;
@@ -110,10 +112,29 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy,AfterViewI
 
   /**
    * Configuración para el select de régimen.--220201
-   * @property {CatalogosSelect} regimen
+   * @property {Catalogo[]} regimen
    */
   regimen: Catalogo[] = [];
 
+  /**
+   * @property moduloEmergente
+   * @description Indica si el módulo emergente está activo.
+   * @type {boolean}
+   * @default false
+   */
+  public moduloEmergente: boolean = false;
+  /**
+ * @property moduloEmergente
+ * @description Indica si el módulo emergente está activo.
+ * @type {boolean}
+ * @default false
+ */
+  public eliminarDatosTabla: boolean = false;
+
+  /**
+   * Opciones para el botón de radio.
+   * @property {RadioOpcion[]} opcionDeBotonDeRadio
+   */
   opcionDeBotonDeRadio: RadioOpcion[] = [
     {
       "label": "Animales Vivos",
@@ -123,45 +144,54 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy,AfterViewI
       "label": "Productos Subproductos",
       "value": "no"
     },
-  ]
+  ];
+  /**
+   * @description Almacena los datos del formulario principal.
+   * @type {DatosForma}
+   */
+  formulariodataStore: DatosForma = {} as DatosForma;
   /**
    * @desc Arreglo que contiene las filas de la solicitud.
    * @type {FilaSolicitud[]}
    * @remarks
    * Cada elemento representa una fila con los datos específicos de la solicitud.
-   * 
    * @see FilaSolicitud
    */
-   cuerpoTabla: FilaSolicitud[] = [];
+  cuerpoTabla: FilaSolicitud[] = [];
 
   /**
    * @description
    * Arreglo que almacena los elementos del cuerpo de la mesa.
-   *
    * @type {string[]}
    */
   mesaCuerpo: string[] = [];
+
   /**
    * @description
    * Tipo de selección para la solicitud.
    * Utiliza la enumeración TablaSeleccion para definir el tipo de selección.
-   *
    * @type {TablaSeleccion}
    */
-tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
+  tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.CHECKBOX;
+
   /**
    * @description
    * Tipo de selección para la solicitud de mercancías.
    * Utiliza la enumeración TablaSeleccion para definir el tipo de selección.
-   *
    * @type {TablaSeleccion}
    */
   tipoSeleccionsoliMercancias: TablaSeleccion = TablaSeleccion.CHECKBOX;
+
   /**
    * @description
    * Configuración de las columnas para la tabla de solicitudes.
    * Utiliza la interfaz ConfiguracionColumna para definir las columnas.
-   *
+   * @type {ConfiguracionColumna<FilaSolicitud>[]}
+   */
+  /**
+   * @description
+   * Configuración de las columnas para la tabla de solicitudes.
+   * Utiliza la interfaz ConfiguracionColumna para definir las columnas.
    * @type {ConfiguracionColumna<FilaSolicitud>[]}
    */
   configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
@@ -172,7 +202,24 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
     { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
     { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
     { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
+    { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8 },
+    { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
+    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 10 },
+    { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
+    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
+    { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
+    { encabezado: 'Especie', clave: (fila) => fila.especie, orden: 14 },
+    { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 15 },
+    { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
+    { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
+    { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 }
   ];
+
+  /**
+   * Representa una nueva notificación que será utilizada en el componente.
+   * @type {Notificacion}
+   */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * Notificador para destruir el componente.
@@ -184,21 +231,99 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * Indica si el formulario es de solo lectura.
    * @property {boolean} esFormularioSoloLectura
    */
-  esFormularioSoloLectura:boolean = false;
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Valor seleccionado.
+   * @property {string} seleccionado
+   */
+  seleccionado: string = SELECCIONADO;
+
+  /**
+   * @description Indica si la notificación ha sido verificada o marcada.
+   * @type {boolean}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  notificationCheck: boolean = false;
+  listSelectedView: FilaSolicitud[] = [];
+
+  /**
+   * @description
+   * Configuración de las columnas para la tabla de solicitudes de datos.
+   * Utiliza la interfaz ConfiguracionColumna para definir las columnas.
+   * @type {ConfiguracionColumna<SolicitudData>[]}
+   */
+  configuracionColumnasSolicitud: ConfiguracionColumna<SolicitudData>[] = [
+    { encabezado: 'Fecha Creación', clave: (fila) => fila.fechaCreacion, orden: 1 },
+    { encabezado: 'Mercancía', clave: (fila) => fila.mercancia, orden: 2 },
+    { encabezado: 'Cantidad', clave: (fila) => fila.cantidad, orden: 3 },
+    { encabezado: 'Proovedor', clave: (fila) => fila.proovedor, orden: 4 },
+  ];
+
+  /**
+   * @description
+   * Cuerpo de la tabla de solicitudes con datos de ejemplo.
+   * Este arreglo contiene objetos que representan las filas de la tabla.
+   * @type {SolicitudData[]}
+   */
+  cuerpoTablaSolicitud: SolicitudData[] = [
+    {
+      fechaCreacion: '2025-06-17 10:30:00',
+      mercancia: 'Laptop HP',
+      cantidad: 5,
+      proovedor: 'Tech Solutions Inc.'
+    },
+    {
+      fechaCreacion: '2025-06-16 14:15:30',
+      mercancia: 'Monitor Dell 27"',
+      cantidad: 10,
+      proovedor: 'Global Electronics'
+    },
+    {
+      fechaCreacion: '2025-06-15 09:00:00',
+      mercancia: 'Teclado Mecánico RGB',
+      cantidad: 8,
+      proovedor: 'Peripherals World'
+    },
+    {
+      fechaCreacion: '2025-06-14 17:45:10',
+      mercancia: 'Mouse Inalámbrico Logitech',
+      cantidad: 12,
+      proovedor: 'Tech Accessories Co.'
+    },
+    {
+      fechaCreacion: '2025-06-13 11:20:05',
+      mercancia: 'Impresora Epson EcoTank',
+      cantidad: 3,
+      proovedor: 'Print Masters'
+    }
+  ];
+  /**
+   * Mensaje de error para mostrar en caso de que no se encuentre información.
+   * @property {string} messageDeError
+   */
+  messageDeError: string = '';
+
   /**
    * Constructor del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
    * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.--220201
+   * @param {CertificadoZoosanitarioServiceService} certificadoZoosanitarioServices - Servicio para lógica de certificado zoosanitario.
+   * @param {ZoosanitarioQuery} certificadoZoosanitarioQuery - Consulta para acceder al estado del certificado zoosanitario.
+   * @param {ConsultaioQuery} consultaQuery - Consulta para determinar si el formulario es de solo lectura.
    */
-  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient,
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly httpServicios: HttpClient,
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
-    private readonly certificadoZoosanitarioQuery:ZoosanitarioQuery,
-      private consultaQuery: ConsultaioQuery
+    private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
+    private consultaQuery: ConsultaioQuery,
+    public fitosanitarioStore: ZoosanitarioStore,
+    public router: Router,
+    public activatedRoute: ActivatedRoute
   ) {
-     this.obtenerListasDesplegables();
-
-       
+    this.obtenerListasDesplegables();
   }
 
   /**
@@ -216,55 +341,87 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * @method ngOnInit
    */
   ngOnInit(): void {
-        this.crearFormulario();
+    this.certificadoZoosanitarioServices.getAllDatosForma()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        this.formulariodataStore = datos.datos;
+        this.cuerpoTabla = datos.tablaDatos;
+      });
+    this.crearFormulario();
     this.initActionFormBuild();
- 
 
-
+    this.nuevaNotificacion = {} as Notificacion;
   }
 
-   ngAfterViewInit(): void {
-       this.datosDelaSolicitud.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
-      const FORMA_VALIDA_ACTUALIZADA = {
-        dataDeLaSolicitud: false, 
-      };
-      if (this.datosDelaSolicitud.valid) {
-        FORMA_VALIDA_ACTUALIZADA.dataDeLaSolicitud = true;
-      }
-      this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
-    });
-     this.consultaQuery.selectConsultaioState$
+  ngAfterViewInit(): void {
+    this.radioBotonSeleccionado();
+    this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-      if(this.esFormularioSoloLectura){
-    this.datosDelaSolicitud.disable();
-      }
+          if (this.esFormularioSoloLectura) {
+            this.datosDelaSolicitud.disable();
+          }
         })
       )
       .subscribe();
+    this.datosDelaSolicitud.get('claveUCON')?.valueChanges
+      .pipe(debounceTime(300))
+      .subscribe(value => {
+        if (value.length < 5) {
+          this.moduloEmergente = false;
+        } else {
+          const PATTERN = /^UCON[a-zA-Z0-9]{4,10}$/;
+          this.moduloEmergente = !PATTERN.test(value);
+          this.messageDeError = `No existe información para la clave UCON: ${this.datosDelaSolicitud.get('claveUCON')?.value} y RFC: LEQI8101314S7 proporcionados. Favor de verificar.`;
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: '',
+            mensaje: this.messageDeError,
+            cerrar: false,
+            tiempoDeEspera: 2000,
+            txtBtnAceptar: 'OK',
+            txtBtnCancelar: '',
+          };
+        }
+      });
   }
+
   /**
    * Inicializa el grupo de formularios anidado para los datos de la solicitud.
    * @method initActionFormBuild
    */
-  initActionFormBuild() { 
+  initActionFormBuild(): void {
     this.datosDelaSolicitud = this.fb.group({
-      tipoMercancia: ['no', Validators.required],
+      tipoMercancia: ['yes', Validators.required],
       aduanaIngreso: ['', Validators.required],
       oficinaInspeccion: ['', Validators.required],
       puntoInspeccion: ['', Validators.required],
       claveUCON: [''],
-      establecimientoTIFs: [''],
+      establecimientoTIF: [''],
       nombreVeterinario: [''],
       numeroGuia: [''],
       certficacion: [''],
       regimen: ['', Validators.required],
     });
-        this.certificadoZoosanitarioQuery.seleccionarDatosSolicitud$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
+    this.certificadoZoosanitarioQuery.seleccionarDatosSolicitud$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
       if (datosDeLaSolicitud) {
-        this.datosDelaSolicitud.patchValue(datosDeLaSolicitud);
+        this.datosDelaSolicitud.patchValue({
+          tipoMercancia: datosDeLaSolicitud.tipoMercancia || 'yes',
+          aduanaIngreso: datosDeLaSolicitud.aduanaIngreso || '',
+          oficinaInspeccion: datosDeLaSolicitud.oficinaInspeccion || '',
+          puntoInspeccion: datosDeLaSolicitud.puntoInspeccion || '',
+          claveUCON: datosDeLaSolicitud.claveUCON || '',
+          establecimientoTIF: datosDeLaSolicitud.establecimientoTIF || '',
+          nombreVeterinario: datosDeLaSolicitud.nombreVeterinario || '',
+          numeroGuia: datosDeLaSolicitud.numeroGuia || '',
+          certificacion: datosDeLaSolicitud.certificacion || '',
+          regimen: datosDeLaSolicitud.regimen || ''
+        })
+        this.notificationCheck = true;
       }
     });
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
@@ -274,7 +431,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsable
    */
-  mostrar_colapsable() {
+  mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
@@ -282,7 +439,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * Obtiene las listas desplegables.
    * @method obtenerListasDesplegables
    */
-  obtenerListasDesplegables() {
+  obtenerListasDesplegables(): void {
     this.obtenerIngresoSelectList();
     this.obtenerSanidadAgropecuariaList();
     this.obtenerPuntoInspeccionList();
@@ -295,7 +452,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * Obtiene la lista para el select de aduana de ingreso.
    * @method obtenerIngresoSelectList
    */
-  obtenerIngresoSelectList() {
+  obtenerIngresoSelectList(): void {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/aduana_de_ingreso.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.aduanaDeIngreso = DATOS;
@@ -306,7 +463,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * Obtiene la lista para el select de sanidad agropecuaria.
    * @method obtenerSanidadAgropecuariaList
    */
-  obtenerSanidadAgropecuariaList() {
+  obtenerSanidadAgropecuariaList(): void {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/oficina_de_inspeccion.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.sanidadAgropecuaria = DATOS;
@@ -317,7 +474,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * Obtiene la lista para el select de punto de inspección.
    * @method obtenerPuntoInspeccionList
    */
-  obtenerPuntoInspeccionList() {
+  obtenerPuntoInspeccionList(): void {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.puntoInspeccion = DATOS;
@@ -328,7 +485,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * Obtiene la lista para el select de establecimiento.
    * @method obtenerEstablecimientoList
    */
-  obtenerEstablecimientoList() {
+  obtenerEstablecimientoList(): void {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/establecimiento.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.establecimientoTIF = DATOS;
@@ -339,8 +496,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * Obtiene la lista para el select de veterinario.
    * @method obtenerVeterinarioList
    */
-
-  obtenerVeterinarioList() {
+  obtenerVeterinarioList(): void {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.veterinario = DATOS;
@@ -351,25 +507,207 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * Obtiene la lista para el select de régimen.
    * @method obtenerRegimenList
    */
-  obtenerRegimenList() {
+  obtenerRegimenList(): void {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/regimen.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       const DATOS = data?.data;
       this.regimen = DATOS;
     });
   }
-  
-    /**
-     * @description Actualiza los datos almacenados en el store.
-     * @method setValoresStore
-     * @param {FormGroup} form - El formulario a obtener los valores.
-     * @param {string} campo - El nombre del campo del formulario a obtener.
-     */
-    setValoresStore(
-    ): void {
-      const VALOR = this.datosDelaSolicitud.value;
-      this.certificadoZoosanitarioServices.updateDatosDeLaSolicitud(VALOR);
+
+  /**
+   * Actualiza los datos almacenados en el store.
+   * @method setValoresStore
+   */
+  setValoresStore(): void {
+    const VALOR = this.datosDelaSolicitud.value;
+    this.certificadoZoosanitarioServices.updateDatosDeLaSolicitud(VALOR);
+  }
+
+  /**
+   * Maneja la selección del botón de radio y actualiza el store.
+   * @method radioBotonSeleccionado
+   */
+  radioBotonSeleccionado(): void {
+    const VALOR = this.datosDelaSolicitud.value.tipoMercancia;
+    if (VALOR !== '' && VALOR !== null && VALOR !== undefined) {
+      this.notificationCheck = true;
+    } else {
+      this.notificationCheck = false;
+    }
+    if (VALOR === 'yes') {
+      this.configuracionColumnasoli = [
+        { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
+        { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
+        { encabezado: 'Requisito', clave: (fila) => fila.requisito, orden: 3 },
+        { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional, orden: 4 },
+        { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
+        { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
+        { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
+        { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8 },
+        { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
+        { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 10 },
+        { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
+        { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
+        { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
+        { encabezado: 'Especie', clave: (fila) => fila.especie, orden: 14 },
+        { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 15 },
+        { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
+        { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
+        { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 }
+      ];
+    }
+    else {
+      this.configuracionColumnasoli = [
+        { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
+        { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
+        { encabezado: 'Requisito', clave: (fila) => fila.requisito, orden: 3 },
+        { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional, orden: 4 },
+        { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
+        { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
+        { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
+        { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8 },
+        { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
+        { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 10 },
+        { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
+        { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
+        { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
+        { encabezado: 'Especie', clave: (fila) => fila.especie, orden: 14 },
+        { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 15 },
+        { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
+        { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
+        { encabezado: 'Tipo de presentación', clave: (fila) => fila.tipoDeProducto, orden: 18 },
+        { encabezado: 'Tipo planta', clave: (fila) => fila.tipoPlanta, orden: 18 },
+        { encabezado: 'Planta autorizada de origen', clave: (fila) => fila.plantaAutorizadaOrigen, orden: 18 },
+        { encabezado: 'Certificado Internacional Electrónico', clave: (fila: FilaSolicitud): string => fila.certificadoInternacionalElectronico, orden: 19 }
+      ];
+    }
+    this.setValoresStore();
+  }
+
+  /**
+   * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
+   * @method eliminarPedimento
+   * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
+   */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.moduloEmergente = false;
+    }
+  }
+  /**
+  * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
+  * @method eliminarPedimento
+  * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
+  */
+  eliminarPedimentoDatos(borrar: boolean): void {
+    if (borrar) {
+      this.eliminarDatosTabla = false;
+      const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
+      if (VALOR.length === 0) {
+        return;
+      }
+      const FILTERED_VALOR = VALOR.filter(
+        (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
+      );
+      this.fitosanitarioStore.update(
+        (state) => ({
+          ...state,
+          tablaDatos: FILTERED_VALOR
+        })
+      );
+    }
+    else {
+      this.eliminarDatosTabla = false;
+    }
+  }
+
+  /**
+   * @description Navega a la página de agregar mercancía.
+   * Este método redirige al usuario a la ruta relativa '../animales-vivo' para agregar una nueva mercancía.
+   * @method agregarMercancia
+   * @returns {void}
+   */
+  modificarMercancia(): void {
+    const VALOR = this.datosDelaSolicitud.value.tipoMercancia;
+    if (VALOR === 'yes') {
+      this.modalRef.abrir(AnimalesVivoContenedoraComponent);
+    }
+    else if (VALOR === 'no') {
+      this.modalRef.abrir(SubProductosContenedoraComponent);
+    }
+  }
+  /**
+ * @description Selecciona una fila de la tabla de solicitudes y actualiza el estado del store.
+ * Este método se llama cuando se selecciona una fila en la tabla de solicitudes.
+ * Actualiza el estado del store con los datos de la fila seleccionada.
+ * @method seleccionTabla
+ * @param {FilaSolicitud} event - Datos de la fila seleccionada.
+ */
+  seleccionTabla(event: FilaSolicitud[]): void {
+    this.listSelectedView = event;
+    this.fitosanitarioStore.update(
+      (state) => ({
+        ...state,
+        selectedDatos: event
+      })
+    )
+  }
+  /**
+  * @description Método que se ejecuta cuando el componente es destruido.
+  * Utiliza un Subject para notificar a las suscripciones que deben ser destruidas, evitando fugas de memoria.
+  * @method ngOnDestroy
+  * @returns {void}
+  */
+  eliminarMercancia(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Está seguro que desea eliminar estos datos?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+    this.eliminarDatosTabla = true;
+  }
+  /**
+  * @description Navega a la página de modificar mercancía.
+  * Este método redirige al usuario a la ruta relativa '../animales-vivo' para modificar una mercancía existente.
+  * @method agregarMercancia
+  * @returns {void}
+  */
+  agregarMercancia(): void {
+    if (this.datosDelaSolicitud.value.tipoMercancia === 'no') {
+      this.modalRef.abrir(SubProductosContenedoraComponent);
+    }
+    else if (this.datosDelaSolicitud.value.tipoMercancia === 'yes') {
+      this.modalRef.abrir(AnimalesVivoContenedoraComponent);
     }
 
+  }
+  /**
+  * @description Navega a la página de modificar mercancía.
+  * Este método redirige al usuario a la ruta relativa '../animales-vivo' para modificar una mercancía existente.
+  * @method validarFormulario
+  * @returns {boolean}
+  */
+  validarFormulario(): boolean {
+    if (this.forma.valid) {
+      return true;
+    }
+    else {
+      this.forma.markAllAsTouched();
+      return false
+    }
+  }
+  /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   * Se utiliza para emitir una notificación y completar el observable `destroyNotifier$`, 
+   * permitiendo limpiar suscripciones y evitar fugas de memoria.
+   * @method ngOnDestroy
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

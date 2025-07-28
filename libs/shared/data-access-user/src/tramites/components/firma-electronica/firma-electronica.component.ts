@@ -1,8 +1,9 @@
-import * as forge from 'node-forge';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FileType, OperationType } from '../../../core/enums/firma-electronica.enum';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LOGIN, PADDING } from '../../constantes/constantes';
 import { CommonModule } from '@angular/common';
+import { FirmaElectronicaService } from '../../../core/services/shared/firma-electronica/firma-electronica.service';
+import { LOGIN } from '../../constantes/constantes';
 import { ToastrService } from 'ngx-toastr';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
@@ -10,20 +11,92 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
   selector: 'firma-electronica',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
+  providers: [ToastrService],
   templateUrl: './firma-electronica.component.html',
   styleUrl: './firma-electronica.component.scss',
 })
 export class FirmaElectronicaComponent {
+  /**
+  * Tipo de firma que se va a utilizar en el componente.
+  * Este valor es obligatorio y se utiliza para definir el comportamiento o formato
+  */
   @Input({ required: true }) tipo: string = '';
+
+  /**
+   * Cadena original que será firmada por el componente.
+   * Esta cadena puede contener datos en texto plano o en formato específico que se firmarán electrónicamente.
+   */
+  @Input() cadenaOriginal?: string;
+
+  /**
+   * Evento que emite un valor booleano indicando si el formulario o el proceso de firma es válido.
+   * 
+   * true  -> La firma es válida y completa.  
+   * false -> Hay errores o el proceso de firma no es válido.
+   */
   @Output() valido = new EventEmitter<boolean>();
+
+  /**
+   * Evento que emite el valor de la firma electrónica generada (en formato base64).
+   * Este valor puede ser enviado al backend o utilizado en otros componentes.
+   */
   @Output() firma = new EventEmitter<string>();
 
-  certFile: string = '';
-  keyFile: string = '';
-  datosBinarios!: ArrayBuffer;
-  mensajeValidacion: string = '';
-  contrasenia: string = '';
+  /**
+   * Evento que emite un objeto con los datos completos de la firma electrónica:
+   * - firma: Cadena de la firma generada (en base64).
+   * - certSerialNumber: Número de serie del certificado digital.
+   * - rfc: RFC extraído del certificado.
+   * - fechaFin: Fecha de vencimiento del certificado.
+   */
+  @Output() datosFirma = new EventEmitter<{
+    firma: string;
+    certSerialNumber: string;
+    rfc: string;
+    fechaFin: string;
+  }>();
 
+  /**
+   * Archivo de certificado (.cer) cargado por el usuario.
+   * Este archivo contiene el certificado digital público que se usará para la firma.
+   */
+  certFileObj?: File;
+
+  /**
+   * Archivo de llave privada (.key) cargado por el usuario.
+   * Este archivo contiene la clave privada asociada al certificado, necesaria para generar la firma.
+   */
+  keyFileObj?: File;
+
+  /**
+   * Bandera que indica si el componente se encuentra en un estado de carga o procesamiento.
+   * Se puede usar para mostrar un spinner o deshabilitar botones mientras se realiza la firma.
+   */
+  isLoading = false;
+
+  /**
+   * Referencia al elemento del DOM del input de tipo archivo para el certificado (.cer).
+   * Se puede usar para acceder directamente al control desde el código (por ejemplo, para limpiar o validar).
+   */
+  cerInputElement?: HTMLInputElement;
+
+  /**
+   * Referencia al elemento del DOM del input de tipo archivo para la llave privada (.key).
+   * Permite manipular el input directamente, como reiniciarlo o validar su estado.
+   */
+  keyInputElement?: HTMLInputElement;
+
+  /**
+   * Referencia al elemento del DOM del input para la contraseña de la llave privada.
+   * La contraseña es requerida para desbloquear la llave y poder firmar.
+   */
+  passwordInputElement?: HTMLInputElement;
+
+  certFileError: string = '';
+
+  keyFileError: string = '';
+
+  /** Formulario reactivo */
   FormCertificado = this.fb.group({
     password: ['', [Validators.required]],
   });
@@ -31,10 +104,9 @@ export class FirmaElectronicaComponent {
   constructor(
     private fb: FormBuilder,
     private toastrService: ToastrService,
-    private formValidator: ValidacionesFormularioService
-  ) { 
-    // Lógica de inicialización si es necesario
-  }
+    private formValidator: ValidacionesFormularioService,
+    private firmaService: FirmaElectronicaService
+  ) { }
 
   /**
    * Getter para saber si el componente esta siendo usado para hacer 'login'
@@ -54,111 +126,119 @@ export class FirmaElectronicaComponent {
   }
 
   /**
-   * Lee el archivo seleccionado y lo convierte a un ArrayBuffer.
-   * @param type El tipo de archivo que se esta leyendo .cer o .key.
-   * @param event El evento de cambio que se dispara cuando se selecciona un archivo.
-   * @returns {void} No devuelve valor alguno.
+   * Metodo para saber si el campo del formulario es invalido.
+   * @param field El nombre del campo del formulario que se va a validar.
+   * @returns {boolean | null} : Regresa un booleano si el campo es invalido o no o puede regresar null si no se ha tocado el campo.
    */
   handleFile(type: string, event: Event): void {
     const INPUT = event.target as HTMLInputElement;
-    if (INPUT.files) {
-      const ARCHIVO_ORIGINAL = INPUT.files[0];
-      const READER = new FileReader();
-      READER.onload = async (e: ProgressEvent<FileReader>): Promise<void> => {
-        if (e.target && e.target.result) {
-          if (type === 'cer') {
-            const RESULT = (await e.target.result) as ArrayBuffer;
-            const DER = new Uint8Array(RESULT);
-            const BUFF = forge.util.createBuffer(DER);
-            const ASN1 = forge.asn1.fromDer(BUFF);
-            const CERT = forge.pki.certificateFromAsn1(ASN1);
-            const PEM = forge.pki.certificateToPem(CERT);
-            this.certFile = PEM;
-          }
-          if (type === 'key') {
-            this.datosBinarios = (await e.target.result) as ArrayBuffer;
-          }
+    if (INPUT.files?.length) {
+      const FILE = INPUT.files[0];
+
+      // Resetear errores previos
+      this.certFileError = '';
+      this.keyFileError = '';
+
+      // Validar extensión y tipo MIME
+      if (type === FileType.CERTIFICATE) {
+        if (!FILE.name.endsWith('.cer') && !FILE.type.includes('application/x-x509-ca-cert')) {
+          this.certFileError = 'Por favor, escriba un valor con una extensión aceptada (.cer)';
+          INPUT.value = ''; // limpiar input
+          return;
         }
-      };
-      READER.readAsArrayBuffer(ARCHIVO_ORIGINAL);
+        this.certFileObj = FILE;
+        this.cerInputElement = INPUT;
+      } else if (type === FileType.PRIVATE_KEY) {
+        if (!FILE.name.endsWith('.key') && !FILE.type.includes('application/x-pem-file')) {
+          this.keyFileError = 'Por favor, escriba un valor con una extensión aceptada (.key)';
+          INPUT.value = ''; // limpiar input
+          return;
+        }
+        this.keyFileObj = FILE;
+        this.keyInputElement = INPUT;
+      }
     }
   }
 
   /**
-   * Metodo que se ejecuta al dar click en el boton de 'Firmar'.
-   * @returns {void} No regresa valor alguno.
+   * Método para manejar el evento de cambio en el campo de contraseña.
+   * @param event El evento del input de contraseña.
    */
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
+    this.passwordInputElement = document.getElementById('password') as HTMLInputElement;
+
     if (this.FormCertificado.invalid) {
       this.FormCertificado.markAllAsTouched();
+      this.toastrService.error('Se produjo un error al firmar la cadena: Escriba la contraseña');
       return;
     }
 
-    const PASSWORD = this.FormCertificado.get('password')?.value;
-    this.contrasenia =
-      PASSWORD !== undefined && PASSWORD !== null ? PASSWORD : '';
+    if (!this.cerInputElement || !this.keyInputElement || !this.passwordInputElement) {
+      this.toastrService.error('Por favor complete todos los campos');
+      return;
+    }
 
-    this.validateFilesBase(this.certFile, this.datosBinarios, this.contrasenia);
-  }
+    this.isLoading = true;
 
-  /**
-   * Valida si el certificado y la llave privada coinciden.
-   * @param certFile Datos del certificado en el formato pem (.cer).
-   * @param binaryData Datos en binario de la llave privada (.key).
-   * @param password contraseña de la llave privada.
-   * @returns {void} No regresa valor alguno.
-   */
-  validateFilesBase(
-    certeile: string,
-    binaryData: ArrayBuffer,
-    password: string
-  ): void {
     try {
-      const CERT = forge.pki.certificateFromPem(this.certFile);
-      const CERT_PUBLIC_KEY = CERT.publicKey as forge.pki.rsa.PublicKey;
+      const ESLOGIN = this.tipo === OperationType.LOGIN;
 
-      const PADDING_START = PADDING.INICIO;
-      const PADDING_END = PADDING.FIN;
-      const DER = new Uint8Array(binaryData);
-      const BINARY_STRING = String.fromCharCode(...DER);
-      const CONTENT = PADDING_START + btoa(BINARY_STRING) + PADDING_END; // añadir paddings al string del certificado, para poder desencriptarlo.
-      const PRIVATE_KEY = forge.pki.decryptRsaPrivateKey(CONTENT, password);
+      // Verifica si se está en un escenario de prueba (dummy) o si es un login
+      const ESCENARIO_DUMMY = !ESLOGIN && !this.cadenaOriginal;
 
-      const VALIDACIONES =
-        PRIVATE_KEY &&
-        CERT_PUBLIC_KEY &&
-        CERT_PUBLIC_KEY.n.t === PRIVATE_KEY.n.t &&
-        CERT_PUBLIC_KEY.e.t === PRIVATE_KEY.e.t;
-
-      if (VALIDACIONES) {
-        this.toastrService.success(
-          '¡Certificado válido y llave privada coinciden!'
-        );
-        this.valido.emit(true);
-        if (!this.login) {
-          const FIRMA = FirmaElectronicaComponent.firmar('hola', PRIVATE_KEY);
-          this.firma.emit(FIRMA);
-        }
-      } else {
-        this.valido.emit(false);
-        this.toastrService.error(
-          'La llave privada no coincide con el certificado o la contraseña es incorrecta.'
-        );
+      // Si es un escenario de prueba (dummy), emite una firma ficticia
+      if (ESCENARIO_DUMMY) {
+        this.firma.emit('firma-dummy-30901');
+        this.isLoading = false;
+        return;
       }
-    } catch (ERROR) {
-      this.toastrService.error('Error en la validación');
+
+      const RESULTADO = await this.firmaService.firmarCadena(
+        this.cerInputElement,
+        this.keyInputElement,
+        this.passwordInputElement,
+        ESLOGIN ? undefined : this.cadenaOriginal,
+        ESLOGIN
+      );
+
+      if (ESLOGIN) {
+        // Caso login: solo validación
+        this.valido.emit(true);
+      } else {
+        // Caso firma: emitir datos completos
+        if (!RESULTADO.firma) {
+          throw new Error('No se generó la firma electrónica');
+        }
+
+        this.valido.emit(true);
+        this.datosFirma.emit({
+          firma: RESULTADO.firma,
+          certSerialNumber: RESULTADO.certificado,
+          rfc: RESULTADO.rfc,
+          fechaFin: RESULTADO.fechaFin,
+        });
+        this.toastrService.success('Firma electrónica generada correctamente');
+      }
+
+    } catch (error) {
+      console.error('Error al firmar:', error);
+      this.valido.emit(false);
+
+      let mensaje = 'Error al validar la firma';
+
+      if (error instanceof Error) {
+        if (error.message.includes('La contrasena no es valida')) {
+          mensaje = 'Se produjo un error al firmar la cadena: La contraseña no es válida';
+        } else {
+          mensaje = `Se produjo un error al firmar la cadena: ${error.message}`;
+        }
+      }
+
+      this.toastrService.error(mensaje);
+    }
+    finally {
+      this.isLoading = false;
     }
   }
-
-  /**
-   * Encripta una cadena de texto, usando la libreria forge.
-   * @param cadena cadena a encriptar.
-   * @param privateKey Llave privada en formato RSA.
-   * @returns {string} Regresa la cadena encriptada.
-   */
-  static firmar(cadena: string, privateKey: forge.pki.rsa.PrivateKey): string {
-    const MD = forge.md.sha256.create();
-    MD.update(cadena, 'utf8');
-    return forge.util.encode64(privateKey.sign(MD));
-  }
 }
+

@@ -12,27 +12,66 @@ import { Tramite220403Store } from './tramite220403.store';
  */
 @Injectable({ providedIn: 'root' })
 export class Tramite220403Query extends Query<FormularioGrupo> {
+    /**
+   * @property {Observable<any>} setDatosRealizar$
+   * @description
+   * Observable que emite los datos relacionados con la sección "Realizar" del formulario.
+   */
   setDatosRealizar$ = this.select((state) => {
     return state.datosRealizar;
   });
 
+  /**
+   * @property {Observable<any>} setCombinacionRequerida$
+   * @description
+   * Observable que emite la información sobre la combinación requerida en el trámite.
+   */
   setCombinacionRequerida$ = this.select((state) => {
     return state.combinacionRequerida;
   });
 
+  /**
+   * @property {Observable<any>} setTransporte$
+   * @description
+   * Observable que emite los datos relacionados con el transporte en el trámite.
+   */
   setTransporte$ = this.select((state) => {
    return state.transporte;
   })
 
+  /**
+   * @property {Observable<any>} setPagoDerechos$
+   * @description
+   * Observable que emite la información sobre el pago de derechos en el trámite.
+   */
   setPagoDerechos$ = this.select((state) => {
     return state.pagoDerechos;
   });
 
+  /**
+   * @property {Observable<FormularioGrupo>} selectTramite$
+   * @description
+   * Observable que emite el estado completo del trámite.
+   */
   selectTramite$ = this.select((state) => {
         return state;
       });
 
+  /**
+   * @property {Observable<any>} seleccionarTercerosRelacionados$
+   * @description
+   * Observable que emite los terceros relacionados al trámite.
+   */
+  seleccionarTercerosRelacionados$ = this.select(estado => estado.tercerosRelacionados);
+
+  /**
+   * @constructor
+   * @description
+   * Inicializa la query con el store correspondiente.
+   * @param store {Tramite220403Store} - Instancia del store asociado.
+   */
   constructor(protected override store: Tramite220403Store) {
     super(store);
   }
+  
 }

@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 
 /**
- * @descripcion
+ * @description
  * Interfaz que define el estado del certificado CAM.
  */
 /**
@@ -79,14 +79,16 @@ export interface CamState {
   correo: string;
   formaValida: { [key: string]: boolean };
   formDestinatario: { [key: string]: unknown};
+  calle:string;
 }
 
 /**
- * @descripcion
  * Función que crea el estado inicial del certificado CAM.
+ * @method createInitialState
  */
 export function createInitialState(): CamState {
   return {
+    calle:'',
     formCertificado: {
       si: false,
       entidadFederativa: '',
@@ -169,7 +171,7 @@ export function createInitialState(): CamState {
     formDestinatario: {
       paisDestin: '',
       ciudad: '',
-      celle: '',
+      calle: '',
       numeroLetra: '',
       lada: '',
       telefono: '',
@@ -189,8 +191,8 @@ export function createInitialState(): CamState {
 @StoreConfig({ name: 'camstore', resettable: true })
 export class camCertificadoStore extends Store<CamState> {
   /**
-   * @descripcion
    * Constructor que inicializa el almacén con el estado inicial.
+   * @method constructor
    */
   constructor() {
     super(createInitialState());
@@ -594,5 +596,15 @@ export class camCertificadoStore extends Store<CamState> {
           },
         }));
       }
-      // Additional methods follow the same pattern with appropriate comments...
+   /**
+ * @descripcion
+ * Actualiza completamente el estado con los valores proporcionados.
+ * @param values - Objeto que contiene uno o más campos del estado a actualizar.
+ */
+setEstadoCompleto(values:CamState): void {
+  this.update((state) => ({
+    ...state,
+    ...values,
+  }));
+}
 }

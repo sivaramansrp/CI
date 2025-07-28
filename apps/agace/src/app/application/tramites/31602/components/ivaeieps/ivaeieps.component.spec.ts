@@ -15,9 +15,12 @@ describe('IvaeiepsComponent', () => {
   let tramiteQueryMock: Partial<Tramite31602IvaeiepsQuery>;
 
   beforeEach(async () => {
-    comercioExteriorServiceMock = {
-      getEmpresasTablaDatos: jest.fn().mockReturnValue(of([])),
-    };
+  comercioExteriorServiceMock = {
+  getEmpresasTablaDatos: jest.fn().mockReturnValue(of([])),
+  getBancoDatos: jest.fn().mockReturnValue(of({ data: [] })),
+  getInversionTablaDatos: jest.fn().mockReturnValue(of([])),
+  getTipoInversionDatos: jest.fn().mockReturnValue(of({ data: [] })),
+};
 
     tramiteStoreMock = {
       setIndiqueIva: jest.fn(),

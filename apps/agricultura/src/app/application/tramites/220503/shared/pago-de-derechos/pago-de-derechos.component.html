@@ -2,7 +2,7 @@
   <form [formGroup]="pagoForm">
     <div class="row">
       <ng-titulo titulo="Pago de derechos" />
-      <div class="row mt-2">
+      <div class="row mt-2 d-none">
         <div class="col-md-12">
           <label for="certficacion_a">Exento de pago</label>
         </div>
@@ -14,9 +14,10 @@
         [layout]="'vertical'"
         formControlName="exentoPagoNo"
         (valueChange)="setExentoPagoNo($event)"
+    
       ></app-input-radio>
       </div>
-      <div class="row">
+      <div class="row d-none">
         <div class="col-md-8">
           <app-catalogo-select
             [catalogo]="justificacion.catalogos"

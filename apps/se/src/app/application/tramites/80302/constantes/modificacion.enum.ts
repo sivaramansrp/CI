@@ -1,6 +1,19 @@
 import { Anexo, Bitacora, Complimentaria, DomicilioInfo, Federetarios, Operacions } from "../estados/models/plantas-consulta.model";
-import { DatosDelModificacion } from "../estados/models/datos-tramite.model";
+import { DatosDelModificacion, DatosDelServicios } from "../estados/models/datos-tramite.model";
 
+/**
+ * Constantes y configuraciones para el trámite 80302 - Modificación programa IMMEX
+ * 
+ * Este archivo contiene las configuraciones necesarias para:
+ * - Pasos del proceso de solicitud
+ * - Configuraciones de tablas para mostrar información de empresas, plantas, servicios, etc.
+ * - Títulos y mensajes del sistema
+ */
+
+/**
+ * PASOS - Define los pasos del proceso de solicitud de modificación
+ * Cada paso contiene: índice, título, estado activo y estado completado
+ */
 export const PASOS = [
   {
     indice: 1,
@@ -22,66 +35,226 @@ export const PASOS = [
   },
 ];
 
+/**
+ * CONFIGURACION_EMPRESAS - Configuración de columnas para la tabla de empresas
+ * Define los encabezados, funciones para obtener valores y orden de las columnas
+ * que se muestran en la información de empresas del programa IMMEX
+ */
+export const CONFIGURACION_EMPRESAS = [
+  {
+    encabezado: 'Registro Federal de Contribuyente',
+    clave: (ele: Operacions) : string | undefined => ele.rfc,
+    orden: 1,
+  },
+  {
+    encabezado: 'Razón social',
+    clave: (ele: Operacions) : string | undefined => ele.razonSocial,
+    orden: 2,
+  },
+  {
+    encabezado: 'Calle',
+    clave: (ele: Operacions) : string | undefined => ele.calle,
+    orden: 3,
+  },
+  {
+    encabezado: 'Número Interior',
+    clave: (ele: Operacions) : string | undefined => ele.numeroInterior,
+    orden: 4,
+  },
+  {
+    encabezado: 'Número Exterior',
+    clave: (ele: Operacions) : string | undefined => ele.numeroExterior,
+    orden: 5,
+  },
+  {
+    encabezado: 'Código Postal',
+    clave: (ele: Operacions) : string | undefined => ele.codigoPostal,
+    orden: 6,
+  },
+  {
+    encabezado: 'Municipio o Delegación',
+    clave: (ele: Operacions) : string | undefined => ele.municipioDelegacion,
+    orden: 7,
+  },
+  {
+    encabezado: 'Estado o Distrito Federal',
+    clave: (ele: Operacions) : string | undefined => ele.estado,
+    orden: 8,
+  },
+  {
+    encabezado: 'País',
+    clave: (ele: Operacions) : string | undefined => ele.pais,
+    orden: 9,
+  },
+  {
+    encabezado: 'Estatus',
+    clave: (ele: Operacions) : string | undefined => (ele.estatus ? 'Activada' : 'Baja'),
+    orden: 13,
+  },
+];
+
+/**
+ * CONFIGURACION_PLANTA - Configuración de columnas para la tabla de plantas
+ * Define la estructura de información que se muestra para las plantas, bodegas o almacenes
+ * incluyendo datos de ubicación, RFC, razón social y estatus
+ */
+export const CONFIGURACION_PLANTA = [
+  {
+    encabezado: 'Calle',
+    clave: (ele: Operacions) : string | undefined => ele.calle,
+    orden: 1,
+  },
+  {
+    encabezado: 'Número Exterior',
+    clave: (ele: Operacions) : string | undefined => ele.numeroExterior,
+    orden: 2,
+  },
+  {
+    encabezado: 'Número Interior',
+    clave: (ele: Operacions) : string | undefined => ele.numeroInterior,
+    orden: 3,
+  },
+  {
+    encabezado: 'Código Postal',
+    clave: (ele: Operacions) : string | undefined => ele.codigoPostal,
+    orden: 4,
+  },
+  {
+    encabezado: 'Colonia',
+    clave: (ele: Operacions) : string | undefined => ele.colonia,
+    orden: 5,
+  },
+  {
+    encabezado: 'Localidad',
+    clave: (ele: Operacions) : string | undefined => ele.localidad,
+    orden: 6,
+  },
+  {
+    encabezado: 'Municipio o Delegación',
+    clave: (ele: Operacions) : string | undefined => ele.municipioDelegacion,
+    orden: 7,
+  },
+  {
+    encabezado: 'Estado o Distrito Federal',
+    clave: (ele: Operacions) : string | undefined => ele.estado,
+    orden: 8,
+  },
+  {
+    encabezado: 'País',
+    clave: (ele: Operacions) : string | undefined => ele.pais,
+    orden: 9,
+  },
+  {
+    encabezado: 'Registro Federal de Contribuyente(RFC)',
+    clave: (ele: Operacions) : string | undefined => ele.rfc,
+    orden: 10,
+  },
+  {
+    encabezado: 'Domicilio fiscal del solicitante',
+    clave: (ele: Operacions) : string | undefined => ele.fiscalSolicitante,
+    orden: 11,
+  },
+  {
+    encabezado: 'Denominación o razón social',
+    clave: (ele: Operacions) : string | undefined => ele.razonSocial,
+    orden: 12,
+  },
+
+  {
+    encabezado: 'Estatus',
+    clave: (ele: Operacions) : string | undefined => (ele.estatus ? 'Activada' : 'Baja'),
+    orden: 13,
+  },
+];
+
+/**
+ * CONFIGURACION_SERVICIOS - Configuración de columnas para la tabla de servicios
+ * Muestra información sobre los servicios relacionados con el trámite,
+ * incluyendo descripción, tipo, estatus y si está testado
+ */
+export const CONFIGURACION_SERVICIOS = [
+    {
+      encabezado: 'Estatus',
+      clave: (ele: DatosDelServicios):string | undefined => ele.desEstatus,
+      orden: 4,
+    },
+    {
+      encabezado: 'Testado',
+      clave: (ele: DatosDelServicios):string | undefined => ele.testado,
+      orden: 3,
+    },
+    {
+      encabezado: 'Descripción del servicio',
+      clave: (ele: DatosDelServicios):string | undefined => ele.descripcion,
+      orden: 1,
+    },
+    {
+      encabezado: 'Tipo de servicio',
+      clave: (ele: DatosDelServicios):string | undefined => ele.tipoDeServicio,
+      orden: 2,
+    }
+];
+
+/**
+ * CONFIGURACION_MODIFICACION - Configuración de columnas para la tabla de modificaciones
+ * Define la estructura para mostrar los datos de modificación de domicilio,
+ * incluyendo información completa de la dirección y datos de contacto
+ */
 export const CONFIGURACION_MODIFICACION = [
     { encabezado: 'Id', 
-      clave: (ele: DatosDelModificacion) => ele.id, 
+      clave: (ele: DatosDelModificacion):number | undefined => ele.id, 
       orden: 0 },
     { encabezado: 'Calle', 
-      clave: (ele: DatosDelModificacion) => ele.calle, 
+      clave: (ele: DatosDelModificacion):string | undefined => ele.calle, 
       orden: 2 },
     {
       encabezado: 'Número Exterior',
-      clave: (ele: DatosDelModificacion) => ele.numeroExterior,
+      clave: (ele: DatosDelModificacion):number | undefined => ele.numeroExterior,
       orden: 3,
     },
     {
       encabezado: 'Número Interior',
-      clave: (ele: DatosDelModificacion) => ele.numeroInterior,
+      clave: (ele: DatosDelModificacion):number | undefined => ele.numeroInterior,
       orden: 4,
     },
     {
       encabezado: 'Código Postal',
-      clave: (ele: DatosDelModificacion) => ele.codigoPosta,
+      clave: (ele: DatosDelModificacion):number | undefined => ele.codigoPosta,
       orden: 5,
     },
     { encabezado: 'Colonia', 
-      clave: (ele: DatosDelModificacion) => ele.colonia, 
+      clave: (ele: DatosDelModificacion):string | undefined => ele.colonia, 
       orden: 6 },
     {
       encabezado: 'Municipio o alcaldía',
-      clave: (ele: DatosDelModificacion) => ele.municipioOAlcaldia,
+      clave: (ele: DatosDelModificacion):string | undefined => ele.municipioOAlcaldia,
       orden: 7,
     },
     {
       encabezado: 'Entidad Federativa',
-      clave: (ele: DatosDelModificacion) => ele.entidadFederativa,
+      clave: (ele: DatosDelModificacion):string | undefined => ele.entidadFederativa,
       orden: 8,
     },
     { encabezado: 'País', 
-      clave: (ele: DatosDelModificacion) => ele.pais, 
+      clave: (ele: DatosDelModificacion):string | undefined => ele.pais, 
       orden: 9 },
     {
-      encabezado: 'Registro Federal de Contribuyentes',
-      clave: (ele: DatosDelModificacion) => ele.rfc,
+      encabezado: 'Telefono',
+      clave: (ele: DatosDelModificacion):string | undefined => ele.telefono,
       orden: 10,
     },
     {
-      encabezado: 'Domicilio fiscal del solicitante',
-      clave: (ele: DatosDelModificacion) => ele.domicilioFiscal,
-      orden: 11,
-    },
-    {
-      encabezado: 'Razón Social',
-      clave: (ele: DatosDelModificacion) => ele.razonSocial,
-      orden: 12,
-    },
-    {
       encabezado: 'Estatus',
-      clave: (ele: DatosDelModificacion) => ele.desEstatus,
+      clave: (ele: DatosDelModificacion):string | undefined => ele.desEstatus,
       orden: 1,
     },
 ];
 
+/**
+ * CONFIGURACION_DOMICILIOS - Configuración de columnas para la tabla de domicilios
+ * Muestra información detallada de domicilios incluyendo dirección completa,
+ * RFC y razón social de la empresa
+ */
 export const CONFIGURACION_DOMICILIOS = [
   {
     encabezado: 'Calle',
@@ -144,6 +317,11 @@ export const CONFIGURACION_DOMICILIOS = [
  
 ];
 
+/**
+ * CONFIGURACION_ACCIONISTAS - Configuración de columnas para la tabla de accionistas
+ * Define la estructura para mostrar información de los accionistas de la empresa,
+ * incluyendo RFC, nombre completo (nombres y apellidos)
+ */
 export const CONFIGURACION_ACCIONISTAS = [
   {
     encabezado: 'Registro Federal de Contribuyente(RFC)',
@@ -167,6 +345,11 @@ export const CONFIGURACION_ACCIONISTAS = [
   },
 ];
 
+/**
+ * CONFIGURACION_FEDERETARIOS - Configuración de columnas para la tabla de federetarios
+ * Muestra información de los representantes legales incluyendo datos personales,
+ * información del acta notarial y ubicación de la notaría
+ */
 export const CONFIGURACION_FEDERETARIOS = [
   {
     encabezado: 'Nombre',
@@ -210,6 +393,11 @@ export const CONFIGURACION_FEDERETARIOS = [
   },
 ];
 
+/**
+ * CONFIGURACION_OPERACIONES - Configuración de columnas para la tabla de operaciones
+ * Define la estructura completa de información de operaciones incluyendo
+ * domicilio, RFC, razón social y estatus de la operación
+ */
 export const CONFIGURACION_OPERACIONES = [
   {
     encabezado: 'Calle',
@@ -279,6 +467,11 @@ export const CONFIGURACION_OPERACIONES = [
   },
 ];
 
+/**
+ * CONFIGURACION_BITACORA_TABLA - Configuración de columnas para la tabla de bitácora
+ * Registra el historial de modificaciones mostrando el tipo de modificación,
+ * fecha, valores anteriores y nuevos valores
+ */
 export const CONFIGURACION_BITACORA_TABLA = [
   {
     encabezado: 'Tipo modificación',
@@ -302,6 +495,11 @@ export const CONFIGURACION_BITACORA_TABLA = [
   },
 ];
 
+/**
+ * CONFIGURACION_ANEXOS_TABLA - Configuración de columnas para la tabla de anexos
+ * Muestra información de productos de exportación incluyendo fracción arancelaria,
+ * descripción y tipo de fracción
+ */
 export const CONFIGURACION_ANEXOS_TABLA = [
   {
     encabezado: 'Fracción arancelaria del producto de exportación',
@@ -320,6 +518,11 @@ export const CONFIGURACION_ANEXOS_TABLA = [
   },
 ];
 
+/**
+ * CONFIGURACION_ANEXOS_IMPORTACION - Configuración de columnas para anexos de importación
+ * Incluye tanto fracciones arancelarias de exportación como de importación,
+ * junto con descripción y tipo de fracción
+ */
 export const CONFIGURACION_ANEXOS_IMPORTACION = [
   {
     encabezado: 'Fracción arancelaria del producto de exportación',
@@ -343,7 +546,44 @@ export const CONFIGURACION_ANEXOS_IMPORTACION = [
   },
 ];
 
+/**
+ * CONFIGURACION_ANEXOS_SENSIBLES - Configuración para anexos de mercancías sensibles
+ * Maneja información específica de importación incluyendo cantidades,
+ * valores y unidades de medida tarifaria
+ */
+export const CONFIGURACION_ANEXOS_SENSIBLES = [
+  {
+    encabezado: 'Fracción arancelaria de la mercancía de importación',
+    clave: (ele: Anexo): number | undefined => ele.fraccionArancelariaDeLaMercanciaDeImportacion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Cantidad',
+    clave: (ele: Anexo): number | undefined => ele.cantidad,
+    orden: 1,
+  },
+  {
+    encabezado: 'Valor',
+    clave: (ele: Anexo): number | undefined => ele.valor,
+    orden: 2,
+  },
+  {
+    encabezado: 'Unidad de medida tarifaria',
+    clave: (ele: Anexo) : string | undefined => ele.unidadMedida,
+    orden: 3,
+  },
+];
+
+/**
+ * TITULOMENSAJE - Título principal del trámite
+ * Describe el tipo específico de modificación: Alta a domicilio de planta, bodega o almacén
+ */
 export const TITULOMENSAJE =
   'Registro de solicitud de modificación programa IMMEX (Modificación Alta a domicilio de una planta, bodega o almacén)';
+
+/**
+ * TEXTOS_REQUISITOS - Mensaje informativo sobre el registro de la solicitud
+ * Explica al usuario sobre el número temporal asignado y el proceso de foliado oficial
+ */
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';

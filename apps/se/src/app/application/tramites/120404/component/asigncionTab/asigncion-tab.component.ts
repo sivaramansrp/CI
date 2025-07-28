@@ -6,24 +6,18 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
+import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { SolicitantetabComponent } from '../solicitantetab/solicitantetab.component';
-
-import { InputRadioComponent } from '@ng-mf/data-access-user';
-
 import { Subject, map, takeUntil } from 'rxjs';
-
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { SolicitanteasigncionserviceService } from '@libs/shared/data-access-user/src';
-
+import { Tramite120404State, Tramite120404Store } from '../../estados/store/tramite120404.store';
 import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
+import { SolicitanteasigncionserviceService } from '@libs/shared/data-access-user/src';
+import { SolicitantetabComponent } from '../solicitantetab/solicitantetab.component';
 import { Tramite120404Query } from '../../estados/queries/tramite120404.query';
-import { Tramite120404Store } from '../../estados/store/tramite120404.store';
+
 
 
 /**
@@ -44,9 +38,8 @@ import { Tramite120404Store } from '../../estados/store/tramite120404.store';
 export class AsignciontabComponent implements OnInit, OnDestroy {
   /**
    * Sujeto para manejar la destrucción del componente.
-   * @private
    */
-  private destroyed$ = new Subject<void>();
+  public destroyed$ = new Subject<void>();
 
   /**
    * Formulario de asignación.
@@ -61,74 +54,116 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
   /**
    * Valor seleccionado para el componente de radio.
    */
-  selectedValue: string = 'no';
+  selectedValue: string | number = 'no';
 
   /**
    * Opciones de radio para la asignación.
    */
    asignacionRadio = [
     {
-      label: 'Amplicacion de monto',
-      value: 'yes'
+      label: 'Ampliación de vigencia',
+      value: 'vigencia'
     },
+    {
+      label: 'Amplicacion de monto',
+      value: 'monto'
+    }
   ];
 
   /**
+   * Estado de la solicitud.
+   * Este estado se obtiene del store `Tramite120404Query`.
+   */
+  public solicitudState!: Tramite120404State;
+  /**
    * Lista de asignaciones.
    */
-  public solicitanteList!: Catalogo[];
+  public solicitanteList: Catalogo[] =[];
+  /**
+   * Indica si el formulario es de solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
+  
+  /**
+   * Indica si se está ejecutando una búsqueda de datos.
+   * Se establece en true cuando se inicia el proceso de búsqueda
+   * y se puede usar para mostrar indicadores de carga o deshabilitar controles.
+   */
+  buscarDatos: boolean = false;
 
   /**
    * Constructor del componente.
-   * @param fb FormBuilder para la creación del formulario.
-   * @param service Servicio para obtener los datos de asignación.
+   *  FormBuilder para la creación del formulario.
+   *  Servicio para obtener los datos de asignación.
    */
-  // eslint-disable-next-line no-empty-function
-  constructor(private fb: FormBuilder, private service: SolicitanteasigncionserviceService, private tramite120404Store:Tramite120404Store,private tramite120404Query:Tramite120404Query) {}
+  constructor(private fb: FormBuilder, private service: SolicitanteasigncionserviceService, private tramite120404Store:Tramite120404Store,private tramite120404Query:Tramite120404Query, private consultaioQuery: ConsultaioQuery) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.initForm();
+    this.inicializarEstadoFormulario();
     this.loadComboUnidadMedida();
-    this.enPatchFormData();
   }
 
   /**
    * Inicializa el formulario de asignación.
    */
   initForm(): void {
-    this.asignacionForm = this.fb.group({
-      datosRegimen: this.fb.group({
-        asignacionsolitud: ['', Validators.required],
-        numTramite: ['', Validators.required],
-        asignacionRadio: [false, Validators.requiredTrue]
-      })
+     this.obtenerEstadoSolicitud();
+      this.asignacionForm = this.fb.group({
+      asignacionRadio: [this.solicitudState?.asignacionRadio || ''],
+      asignacionsolitud: [this.solicitudState?.asignacionsolitud || '', Validators.required],
+      numTramite: [this.solicitudState?.numTramite || '', [Validators.required, Validators.maxLength(30)]],
     });
   }
-
+  
+/**
+ * @method obtenerEstadoSolicitud
+ * @description
+ * Método que obtiene el estado actual de la solicitud almacenado en la tienda `Tramite120404Query`.
+ * Se suscribe al observable `selectTramite120404$` para recibir actualizaciones en tiempo real.
+ * La suscripción se gestiona con `takeUntil(this.destroyed$)` para evitar fugas de memoria.
+ *
+ * @returns {void}
+ * No retorna ningún valor, pero actualiza la variable `solicitudState` con los datos obtenidos.
+ */
+   obtenerEstadoSolicitud(): void {
+    this.tramite120404Query.selectTramite120404$?.pipe(takeUntil(this.destroyed$))
+      .subscribe((data: Tramite120404State) => {
+        this.solicitudState = data;
+      });
+  }
   /**
-   * Método para manejar el envío del formulario.
-   */
-  buscar(): void {
-    // eslint-disable-next-line no-empty
-    if (this.asignacionForm.valid) {
-      
-    } 
-    // eslint-disable-next-line no-empty
-    else {
-      
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.initForm();
     }
   }
 
+
   /**
    * Verifica si un control del formulario es inválido.
-   * @param id Identificador del control.
-   * @returns true si el control es inválido, false en caso contrario.
+   * Identificador del control.
+   * true si el control es inválido, false en caso contrario.
    */
   isInvalid(id: string): boolean | null {
-    const CONTROL = this.asignacionForm.get('datosRegimen')?.get(id);
+    const CONTROL = this.asignacionForm.get(id);
     return CONTROL ? CONTROL.invalid && CONTROL.touched : null;
   }
 
@@ -139,36 +174,43 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
     this.service.getAsigncion().pipe(
       takeUntil(this.destroyed$)
     ).subscribe((data) => {
-      this.solicitanteList = data as Catalogo[];
+      this.solicitanteList = data ;
     });
   }
-
+ /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.initForm();
+    if (this.esFormularioSoloLectura) {
+      this.asignacionForm.disable();
+    } else { 
+      this.asignacionForm.enable();
+    } 
+}
   /**
   * Obtiene el valor de un control en el formulario y lo pasa a un método del store para actualizar el estado.
   */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite120404Store): void {
-    const VALOR = form.get('datosRegimen')?.get(campo)?.value;
-    (this.tramite120404Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  setValoresStore(form: FormGroup, campo: string): void {
+    const VALOR = form.get(campo)?.value;
+    this.tramite120404Store.establecerDatos({ [campo]: VALOR });
   }
 
   /**
-  * Actualiza el formulario con datos del store
-  */
-  enPatchFormData(): void {
-    this.tramite120404Query.selectTramite120404$
-        .pipe(
-          takeUntil(this.destroyed$),
-          map((seccionState) => {
-            this.asignacionForm.get('datosRegimen')?.patchValue(
-              {
-                  numTramite:seccionState.numTramite,
-                  asignacionsolitud: seccionState.asignacionsolitud,
-                  asignacionRadio: seccionState.asignacionRadio
-              } 
-              )
-          })
-        )
-        .subscribe();
+   * Inicia el proceso de búsqueda de datos.
+   * Establece la bandera `buscarDatos` en true para indicar que se está ejecutando una búsqueda.
+   * Este método se ejecuta cuando el usuario hace clic en el botón "Buscar" del formulario.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+  buscar(): void {
+ if (this.asignacionForm.valid) {
+    this.buscarDatos = true;
+  } else {
+    this.asignacionForm.markAllAsTouched();
+    this.buscarDatos = false;
+  }
   }
 
   /**

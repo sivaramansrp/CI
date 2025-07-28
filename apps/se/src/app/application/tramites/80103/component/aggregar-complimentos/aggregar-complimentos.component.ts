@@ -20,10 +20,10 @@
  * @templateUrl ./aggregar-complimentos.component.html
  * @styleUrl ./aggregar-complimentos.component.scss
  */
-
-import { Observable, Subject, takeUntil } from 'rxjs';
+import {Observable,Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplimentosComponent } from '../../../../shared/components/complimentos/complimentos.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { Component, OnDestroy } from '@angular/core';
 import { DatosComplimentos } from '../../../../shared/models/complimentos.model';
@@ -39,7 +39,6 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
   * @export
   * @class AggregarComplimentosComponent
   */
-
 @Component({
   selector: 'app-aggregar-complimentos',
   standalone: true,
@@ -47,6 +46,8 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
   templateUrl: './aggregar-complimentos.component.html',
   styleUrl: './aggregar-complimentos.component.scss',
 })
+/** Componente encargado de agregar datos de complementos en el formulario.  
+ * Administra el estado y limpieza de recursos al destruirse. */
 export class AggregarComplimentosComponent implements OnDestroy {
   /**
    * Almacena los datos de los cumplimentos.
@@ -76,17 +77,31 @@ export class AggregarComplimentosComponent implements OnDestroy {
     * @memberof AggregarComplimentosComponent
     */
   tablaDatosComplimentosExtranjera$: Observable<SociaoAccionistas[]>;
+   /** Indica si el formulario debe mostrarse en modo solo lectura.  
+ *  Controla la habilitación o deshabilitación de los campos. */
+  esFormularioSoloLectura: boolean = false;
   /*
   * Constructor del componente.
   * 
   * @param {Tramite80101Store} store - Almacén de estado para gestionar los datos de los cumplimentos.
   * @param {Tramite80101Query} tramiteQuery - Consulta para obtener los datos de los cumplimentos.
   */
-
 constructor(
     private store: Tramite80101Store,
     private tramiteQuery: Tramite80101Query,
-  ) {
+ private consultaioQuery: ConsultaioQuery,  
+  ) { 
+       this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        
+                  })
+      )
+      .subscribe();
+    // Observables que exponen los datos de las tablas de complementos y complementos extranjeros.  
+    // Se obtienen desde el store a través del query para su uso reactivo en la vista.
     this.tablaDatosComplimentos$ =
       this.tramiteQuery.selectTablaDatosComplimentos$;
     this.tablaDatosComplimentosExtranjera$ =
@@ -144,6 +159,11 @@ constructor(
   accionistasExtranjerosEliminado(datos: SociaoAccionistas[]): void {
     this.store.eliminarTablaDatosComplimentosExtranjera(datos);
   }
+   /**
+   * Método que se ejecuta cuando el componente es destruido.
+   * 
+   * Libera los recursos y completa la notificación de destrucción del componente.
+   */
   ngOnDestroy(): void {
   this.destroyNotifier$.next();
   this.destroyNotifier$.complete();

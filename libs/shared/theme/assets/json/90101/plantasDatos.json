@@ -1,12 +1,10 @@
-{
-    "plantasDatos": [
-      {
-        "calle": "CALLE 5",
-        "numeroExterior": "S/N",
-        "numeroInterior": "",
-        "codigoPostal": 81124,
-        "colonia": "OTRA NO ESPECIFICADA EN EL CATÁLOGO",
-        "municipioOAlcaldia": "GUASAVE"
-      }
-    ]
-  }
+[
+  {
+  "calle": "CALLE 5",
+  "numeroExterior": "S/N",
+  "numeroInterior": "",
+  "codigoPostal": 81124,
+  "colonia": "OTRA NO ESPECIFICADA EN EL CATÁLOGO",
+  "municipioOAlcaldia": "GUASAVE"
+}
+]

@@ -1,10 +1,12 @@
-import { Catalogo,CatalogoSelectComponent,TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo,CatalogoSelectComponent,TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component,OnDestroy,OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Solicitud221601State,Tramite221601Store } from '../../../../estados/tramites/tramite221601.store';
 import { Subject,map,takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite221601Query } from '../../../../estados/queries/tramite221601.query';
 import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
+
 /**
  * Componente encargado de la gestión de la movilización de mercancías, permitiendo seleccionar el medio de transporte, 
  * verificación, y empresa relacionada con la solicitud 221601.
@@ -86,7 +88,9 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
    * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
+/** Indica si el formulario debe mostrarse en modo solo lectura.  
+ *  Controla la habilitación o deshabilitación de los campos. */
+   esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente. Inicializa las dependencias necesarias y prepara el formulario reactivo.
    * 
@@ -97,9 +101,21 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite221601Store: Tramite221601Store,
-    private tramite221601Query: Tramite221601Query
+    private tramite221601Query: Tramite221601Query,
+    private consultaioQuery: ConsultaioQuery,
+    private validacionesService: ValidacionesFormularioService, 
   ) { 
     // Constructor que inyecta las dependencias necesarias
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          
+        this.inicializarCertificadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -109,16 +125,25 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
   
-    this.inicializarFormulario();
+    this.inicializarCertificadoFormulario();
   }
 
-  /**
-   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+   /**
+   * Método para inicializar el formulario reactivo con los datos de la solicitud.
    * 
-   * Configura el formulario para gestionar los campos relacionados con la movilización, como medio, transporte,
-   * verificación y empresa. También asigna valores predeterminados a algunos campos.
+   * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
+   * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
    */
-  private inicializarFormulario(): void {
+  inicializarCertificadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.inicializarFormulario()
+    }  
+  }
+  /** Inicializa los datos del formulario suscribiéndose al estado del trámite.  
+ *  Asigna el estado actual al modelo local del componente. */
+   inicializarFormulario(): void {
     this.tramite221601Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -140,6 +165,24 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
     this.MedioForm.get('transporte')?.setValue(realizar.formData.transporte);
     this.updateStoreWithFormData();
   }
+      /**
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.MedioForm.disable();
+      } else {
+        this.MedioForm.enable();
+      } 
+  }
+ 
   /**
  * Actualiza el estado del store `tramite221601Store` con los datos del formulario `MedioForm`.
  *

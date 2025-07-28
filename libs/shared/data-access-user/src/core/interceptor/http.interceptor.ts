@@ -1,0 +1,68 @@
+import {
+  EnvironmentInjector,
+  inject,
+  runInInjectionContext
+} from '@angular/core';
+import { catchError, throwError } from 'rxjs';
+import { HttpInterceptorFn } from '@angular/common/http';
+import { NotificacionesService } from '../services/shared/notificaciones.service';
+
+/**
+ * Interceptor HTTP que añade un token de autorización a todas las solicitudes salientes
+ * y maneja errores que puedan ocurrir durante la comunicación HTTP.
+ *
+ * @param req - La solicitud HTTP original.
+ * @param next - El siguiente manejador en la cadena de interceptores.
+ * @returns Una solicitud HTTP modificada con el encabezado de autorización y manejo de errores.
+ */
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const httpInterceptorFn: HttpInterceptorFn = (req, next) => {
+
+  /**
+   * Injector de entorno utilizado para crear un nuevo contexto de inyección
+   * fuera del ciclo de vida típico de un componente o servicio.
+   */
+  const INJECTOR = inject(EnvironmentInjector);
+
+  /**
+   * Ejecuta una función dentro del contexto de inyección proporcionado por `INJECTOR`.
+   * Esto permite inyectar dependencias como servicios, incluso fuera del contexto típico de Angular.
+   */
+  return runInInjectionContext(INJECTOR, () => {
+    /**
+     * Servicio responsable de mostrar notificaciones en la aplicación.
+     * Puede utilizarse para mostrar mensajes tras interceptar una solicitud.
+     */
+    const NOTIF = inject(NotificacionesService);
+
+    /**
+     * Clona la solicitud HTTP original y le agrega un encabezado `Authorization`
+     * con un token de autenticación. El token puede obtenerse desde localStorage o sessionStorage.
+     */
+    const REQ = req.clone({
+      setHeaders: {
+        Authorization: 'Bearer dummy-token' // El token se obtiene desde localStorage o sessionStorage.
+      }
+    });
+  
+    return next(REQ).pipe(
+      catchError((error) => {
+       // Note : reemplazar con el objeto necesario para modificar el cuadro de diálogo de mensaje de error
+        NOTIF.showNotification({
+          tipoNotificacion: 'toastr',
+          categoria: 'danger',
+          mensaje: '"Ocurrió un error."',
+          titulo: 'Error',
+          modo: '',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: 'Cancelar',
+        });
+  
+        // Re-lanza el error para que otras partes de la aplicación también puedan manejarlo
+        return throwError(() => error);
+      })
+    );
+  });
+ 
+};

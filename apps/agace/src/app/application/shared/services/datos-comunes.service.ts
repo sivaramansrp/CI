@@ -1,3 +1,4 @@
+import { DatosComunesState, DatosComunesStore } from '../estados/stores/datos-comunes.store';
 import { Observable,catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -13,7 +14,10 @@ export class DatosComunesService {
    * 
    * @param http - La instancia de `HttpClient` utilizada para realizar solicitudes HTTP.
    */
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private datosComunes: DatosComunesStore
+  ) {
     // Constructor de la clase DatosComunesService
    }
 
@@ -129,5 +133,69 @@ export class DatosComunesService {
       })
     );
   }
+
+    /**
+     * Recupera los datos comunes para consulta desde un archivo JSON local.
+     *
+     * @returns Un `Observable` que emite el `DatosComunesState` cargado desde el archivo JSON.
+     * @throws Emite un observable de error si la solicitud HTTP falla.
+     */
+    getConsultaDatosComunes(): Observable<DatosComunesState> {
+    return this.http.get<DatosComunesState>('./assets/json/31602/datos-commune-consulta.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * Actualiza el estado del formulario estableciendo varias propiedades en el servicio `datosComunes`
+   * basándose en el objeto proporcionado `DatosComunesState`.
+   *
+   * @param DATOS - Un objeto que contiene los nuevos valores de estado para los campos del formulario.
+   */
+   actualizarEstadoFormulario(DATOS: DatosComunesState): void {
+      this.datosComunes.setAutorizacionIVAIEPS(DATOS.autorizacionIVAIEPS);
+      this.datosComunes.setRegimenUno(DATOS.regimenUno);
+      this.datosComunes.setRegimenDos(DATOS.regimenDos);
+      this.datosComunes.setRegimenTres(DATOS.regimenTres);
+      this.datosComunes.setRegimenCuatro(DATOS.regimenCuatro);
+      this.datosComunes.setSectorProductivo(DATOS.sectorProductivo);
+      this.datosComunes.setServicio(DATOS.servicio);
+      this.datosComunes.setPreOperativo(DATOS.preOperativo);
+      this.datosComunes.setIndiqueSi(DATOS.indiqueSi);
+      this.datosComunes.setSenale(DATOS.senale);
+      this.datosComunes.setEmpPropios(DATOS.empPropios);
+      this.datosComunes.setBimestre(DATOS.bimestre);
+      this.datosComunes.setSenaleSi(DATOS.senaleSi);
+      this.datosComunes.setSeMomento(DATOS.seMomento);
+      this.datosComunes.setEncuentra(DATOS.encuentra);
+      this.datosComunes.setDelMismo(DATOS.delMismo);
+      this.datosComunes.setSenaleMomento(DATOS.senaleMomento);
+      this.datosComunes.setEnCaso(DATOS.enCaso);
+      this.datosComunes.setComboBimestresIDCSeleccione(DATOS.comboBimestresIDCSeleccione);
+      this.datosComunes.setIngresar(DATOS.ingresar);
+      this.datosComunes.setEncuentraSus(DATOS.encuentraSus);
+      this.datosComunes.setRegistrosQue(DATOS.registrosQue);
+      this.datosComunes.setRegistrosQue2(DATOS.registrosQue2);
+      this.datosComunes.setMomentoIngresar(DATOS.momentoIngresar);
+      this.datosComunes.setIndiqueCuenta(DATOS.indiqueCuenta);
+      this.datosComunes.setIndiqueCheck(DATOS.indiqueCheck);
+      this.datosComunes.setNombreDel(DATOS.nombreDel);
+      this.datosComunes.setLugarDeRadicacion(DATOS.lugarDeRadicacion);
+      this.datosComunes.setContabilidad(DATOS.contabilidad);
+      this.datosComunes.setRmfRadio(DATOS.rmfRadio);
+      this.datosComunes.setVinculacionRegistroCancelado(DATOS.vinculacionRegistroCancelado);
+      this.datosComunes.setProveedoresListadoSAT(DATOS.proveedoresListadoSAT);
+      this.datosComunes.setCumpleCon(DATOS.cumpleCon);
+      this.datosComunes.setAcreditaRealizar(DATOS.acreditaRealizar);
+      this.datosComunes.setCumpleConDos(DATOS.cumpleConDos);
+      this.datosComunes.setEnsucaso(DATOS.ensucaso);
+      this.datosComunes.setAlMomento(DATOS.alMomento);
+      this.datosComunes.setDelMismomodo(DATOS.delMismomodo);
+      this.datosComunes.setSusCertificados(DATOS.susCertificados);
+      this.datosComunes.setAfirmativo(DATOS.afirmativo);
+      this.datosComunes.setActualizado(DATOS.actualizado);
+   }
 
 }

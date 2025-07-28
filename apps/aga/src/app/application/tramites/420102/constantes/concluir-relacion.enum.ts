@@ -37,22 +37,22 @@ export const PASOS = [
 export const DOMICILIO_TABLA_COLUMNAS = [
   {
     encabezado: 'Registro Federal de Contribuyentes',
-    clave: (ele: DatosDelContenedorTabla) => ele.rfc,
+    clave: (ele: DatosDelContenedorTabla):string => ele.rfc,
     orden: 1,
   },
   {
     encabezado: 'Denominación o razón social',
-    clave: (ele: DatosDelContenedorTabla) => ele.denominacionORazonSocial,
+    clave: (ele: DatosDelContenedorTabla): string => ele.denominacionORazonSocial,
     orden: 2,
   },
   {
     encabezado: 'Norma',
-    clave: (ele: DatosDelContenedorTabla) => ele.norma,
+    clave: (ele: DatosDelContenedorTabla):string => ele.norma,
     orden: 3,
   },
   {
     encabezado: 'Fecha inicio relación',
-    clave: (ele: DatosDelContenedorTabla) => ele.fechainciorelacion,
+    clave: (ele: DatosDelContenedorTabla):string => ele.fechainciorelacion,
     orden: 4,
   },
 ];
@@ -72,7 +72,19 @@ export const URL = '../../../../../assets/json/420102/';
  * @property {boolean} habilitado - Indica si el campo está habilitado.
  */
 export const FECHA_INGRESO = {
-  labelNombre: 'Fecha de ingreso',
-  required: true,
+  labelNombre: 'Fecha inicial',
+  required: false,
+  habilitado: true,
+};
+/**
+ * Constante que representa la configuración para el campo "Fecha final".
+ * @const FECHA_FINAL
+ * @property {string} labelNombre - Etiqueta que se muestra para el campo.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo está habilitado.
+ */
+export const FECHA_FINAL = {
+  labelNombre: 'Fecha final',
+  required: false,
   habilitado: true,
 };

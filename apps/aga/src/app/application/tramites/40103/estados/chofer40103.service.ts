@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable } from 'rxjs'; 
+import { ChoferesExtranjeros, DatosDelChoferNacional, DirectorGeneralData } from '../models/registro-muestras-mercancias.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
-import { Chofer } from '../models/registro-muestras-mercancias.model';
 import { Chofer40103Store } from './chofer40103.store';
 import { DatosDelVehículo } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { HttpClient } from '@angular/common/http';
@@ -48,41 +48,6 @@ export class Chofer40103Service {
     const STORE_DATA = localStorage.getItem('choferesList');
     if (STORE_DATA) {
       this.choferesListSubject.next(JSON.parse(STORE_DATA));
-    }
-  }
-
-  /**
-   * Agrega un nuevo chofer a la lista.
-   * 
-   * @param nuevoMiembro El nuevo chofer a agregar.
-   * @param isExtranjero Indica si el chofer es extranjero. Por defecto es `false`.
-   */
-  addChofer(
-    nuevoMiembro: Chofer,
-    isExtranjero: boolean = false
-  ): void {
-    if (!nuevoMiembro) {
-      return;
-    }
-    const STORAGE_KEY = isExtranjero
-      ? 'choferesextranjeroList'
-      : 'choferesList';
-    const STORE_DATA = localStorage.getItem(STORAGE_KEY);
-    const CHOFER_ARRAY: Chofer[] = STORE_DATA ? JSON.parse(STORE_DATA) : [];
-    CHOFER_ARRAY.push(nuevoMiembro);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(CHOFER_ARRAY));
-
-    // Actualizar tienda Akita
-    this.chofer40103Store.update((state) => ({
-      ...state,
-      choferesExtranjero: isExtranjero
-        ? CHOFER_ARRAY
-        : state.choferesExtranjero,
-      choferes: !isExtranjero ? CHOFER_ARRAY : state.choferes,
-    }));
-
-    if (isExtranjero) {
-      this.choferesListSubject.next(CHOFER_ARRAY);
     }
   }
 
@@ -211,6 +176,35 @@ export class Chofer40103Service {
   }
 
   /**
+   * Obtiene la lista de estados desde un archivo JSON local.
+   *
+   * @returns {Observable<Catalogo[]>} Un observable que emite la lista de estados.
+   */
+  getEstadosPorPais(_id: number): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/40103/estado.json');
+  }
+
+  getMunicipiosPorEstado(
+    _claveEstado: number
+  ): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(`/assets/json/40103/municipio.json`);
+  }
+  /**
+   * Obtiene la lista de colonias de un municipio específico.
+   * 
+   * @param claveMunicipio La clave del municipio.
+   * @returns Un observable con la lista de colonias.
+   */
+  getColoniasPorMunicipio(
+        _municipiosId: number
+  ): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(
+      `/assets/json/40103/colonia.json`
+    );
+  }
+
+
+  /**
    * Obtiene el catálogo de colonias.
    * 
    * @returns Un observable con el catálogo de colonias.
@@ -247,5 +241,75 @@ export class Chofer40103Service {
   obtenerTablaDatos<T>(fileName: string): Observable<T[]> {
     const JSONURL = this.url + fileName;
     return this.http.get<T[]>(JSONURL);
+  }
+
+  /**
+   * Recupera datos simulados para el Director General.
+   *
+   * Envía una solicitud HTTP GET para obtener los datos del Director General desde un archivo JSON simulado.
+   *
+   * @returns Un Observable que emite el objeto DirectorGeneralData.
+   */
+  getDirectorGeneralData(): Observable<DirectorGeneralData> {
+    return this.http.get<DirectorGeneralData>(`${this.url}director-general-mockdata.json`);
+  }
+
+  /**
+   * Actualiza la propiedad `directorGeneral` en la tienda con los datos proporcionados.
+   *
+   * @param data - El nuevo objeto `DirectorGeneralData` que se establecerá como la información del director general.
+   */
+  updateStateDirectorGeneralData(data: DirectorGeneralData): void {
+    this.chofer40103Store.update((state) => ({
+      ...state,
+      //directorGeneral: data,
+      nombre: data.nombre,
+      primerApellido: data.primerApellido,
+      segundoApellido: data.segundoApellido,
+      apellidoPaterno: data.primerApellido,
+      apellidoMaternoCHN: data.apellidoMaternoCHN,
+    }));
+  }
+
+  updateDatosDelChoferNacional(data: DatosDelChoferNacional[]): void {
+    this.chofer40103Store.update((state) => ({
+      ...state,
+      datosDelChoferNacionalAlta: data
+    }));
+  }
+
+  updateDatosDelChoferNacionalModification(data: DatosDelChoferNacional[]): void {
+    this.chofer40103Store.update((state) => ({
+      ...state,
+      datosDelChoferNacionalModification: data
+    }));
+  }
+
+  updateDatosDelChoferNacionalRetirada(data: DatosDelChoferNacional[]): void {
+    this.chofer40103Store.update((state) => ({
+      ...state,
+      datosDelChoferNacionalRetirada: data
+    }));
+  }
+
+  updateDatosDelChoferExtranjero(data: ChoferesExtranjeros[]): void {
+    this.chofer40103Store.update((state) => ({
+      ...state,
+      datosDelChoferExtranjerosAlta: data
+    }));
+  }
+
+  updateDatosDelChoferExtranjeroModification(data: ChoferesExtranjeros[]): void {
+    this.chofer40103Store.update((state) => ({
+      ...state,
+      datosDelChoferExtranjerosModification: data
+    }));
+  }
+
+  updateDatosDelChoferExtranjeroRetirada(data: ChoferesExtranjeros[]): void {
+    this.chofer40103Store.update((state) => ({
+      ...state,
+      datosDelChoferExtranjerosRetirada: data
+    }));
   }
 }

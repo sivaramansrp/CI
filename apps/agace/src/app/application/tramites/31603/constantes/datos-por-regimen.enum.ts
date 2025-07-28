@@ -257,7 +257,7 @@ export const RECINTO_FISCALIZADO = [
   },
   {
     id: 'cumplimientoLineamientos',
-    labelNombre: 'Indique si cumple con los lineamientos que determinan las autoridades aduaneras para el control, vigilancia y seguridad del recinto y de las mercancías del comercio exterior.',
+    labelNombre: 'Indique si cumple con los lineamientos que determinen las autoridades aduaneras para el control, vigilancia y seguridad del recinto y de las mercancías del comercio exterior.',
     campo: 'cumplimientoLineamientos',
     clase: 'col-md-12',
     tipoInput: 'radio',
@@ -308,10 +308,10 @@ export const RECINTO_FISCALIZADO = [
  * @property {string} [valorPredeterminado] - Valor inicial del campo (aplicable solo a ciertos tipos de entrada).
  */
 export const IMPORTACION_TEMPORAL = [
-  {
-    id: 'indique',
-    labelNombre: 'Indique si durante los últimos doce meses, el valor de la mercancía transformada y retornada, retornada en su mismo estado, o a la que se le prestó un servicio, durante dicho periodo representa al menos el 80% del valor de las importaciones temporales de insumos durante el mismo periodo. (Declare solo aquellos conceptos que le apliquen).',
-    campo: 'indique',
+   {
+    id: 'indiqueCuenta',
+    labelNombre: 'Indique si cuenta con infraestructura necesaria para realizar la operación del programa IMMEX al proceso industrial o de servicio de conformidad con la modalidad de su programa',
+    campo: 'indiqueCuenta',
     clase: 'col-md-12',
     tipoInput: 'radio',
     desactivado: false,
@@ -321,7 +321,7 @@ export const IMPORTACION_TEMPORAL = [
     ],
     layout: 'horizontal',
     marcadorDePosicion: '',
-    marginTop: 5,
+    marginTop: 3,
     opciones: [
         {
         "label": "Si",
@@ -334,9 +334,9 @@ export const IMPORTACION_TEMPORAL = [
     ]
   },
   {
-    id: 'empresaSolicitante',
-    labelNombre: '¿La empresa solicitante ha realizado operaciones al amparo del Programa IMMEX en al menos los 12 meses previos a la solicitud?',
-    campo: 'empresaSolicitante',
+    id: 'indique',
+    labelNombre: 'Indique si durante los últimos doce meses, el valor de la mercancía transformada y retornada, retornada en su mismo estado, o a la que se le prestó un servicio, durante dicho periodo representa al menos el 80% del valor de las importaciones temporales de insumos durante el mismo periodo. (Declare solo aquellos conceptos que le apliquen).',
+    campo: 'indique',
     clase: 'col-md-12',
     tipoInput: 'radio',
     desactivado: false,
@@ -368,6 +368,6 @@ export const IMPORTACION_TEMPORAL = [
     soloLectura: false,
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 0
+    marginTop: 5
   }
 ];

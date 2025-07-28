@@ -1,4 +1,4 @@
-import { Catalogo, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -15,10 +15,10 @@ import unidadOptions from '@libs/shared/theme/assets/json/130111/unidad_da.json'
 import { ImportacionDeVehiculosService } from '../../services/importacion-de-vehiculos.service';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 
+import { Tramite130111State, Tramite130111Store } from '../../../../estados/tramites/tramites130111.store';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
-import { Tramite130111Store } from '../../../../estados/tramites/tramites130111.store';
-
 import { Tramite130111Query } from '../../../../estados/queries/tramite130111.query';
+
 
 /**
  * jest.spyOnComponente para gestionar la solicitud de mercancías.
@@ -158,7 +158,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnObjeto o constante que contiene los textos utilizados en la aplicación.
    */
   TEXTOS = TEXTOS;
-
+  /**
+     * Indica si el formulario está en modo solo lectura.
+     * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false;
+   /**
+    * Estado interno de la sección actual del trámite 130110.
+    * Utilizado para gestionar y almacenar la información relacionada con esta sección.
+    * Propiedad privada.
+   */
+    private seccionState!: Tramite130111State;
   /**
    * Constructor del componente.
    */
@@ -167,15 +177,24 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private tramite130111Store: Tramite130111Store,
     private tramite130111Query: Tramite130111Query,
-    private importaciondeVehiculosService: ImportacionDeVehiculosService
+    private importaciondeVehiculosService: ImportacionDeVehiculosService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    //constructor
+    this.inicializarFormularios();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState)=>{
+          this.esFormularioSoloLectura = seccionState.readonly; 
+          
+        })
+      )
+      .subscribe()
   }
   /**
    * jest.spyOnCiclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
    */
   ngOnInit(): void {
-    this.inicializarFormularios();
     this.configuracionFormularioSuscripciones();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
@@ -191,19 +210,50 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
   }
  
+   /**
+     * Evalúa si se debe inicializar o cargar datos en el formulario.
+     */
+    inicializarEstadoFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+        this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+      } else {
+        this.inicializarFormularios();
+      }
+    }
+
+     /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+    guardarDatosFormulario(): void {
+      this.inicializarFormularios();
+    }
+
+/**
+ * Se suscribe a los cambios del estado de la solicitud en el store de Tramite130111.
+ * Cada vez que el estado cambia, actualiza la propiedad interna `seccionState` con los nuevos datos.
+ * Esta suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
+ */
+  suscribirseAEstadoDeSolicitud(): void {
+      this.tramite130111Query.selectSolicitud$?.pipe(takeUntil(this.destroyed$))
+      .subscribe((data: Tramite130111State) => {
+        this.seccionState = data;
+      });
+  }
   /**
    * jest.spyOnInicializa los formularios reactivos `formDelTramite` y `mercanciaForm`.
    */
   
-     inicializarFormularios(): void {
+  inicializarFormularios(): void {
+    this.suscribirseAEstadoDeSolicitud();
     this.formDelTramite = this.fb.group({
       solicitud: ['', Validators.required],
-      regimen: ['', Validators.required],
-      clasificacion: ['', Validators.required],
+      regimen: [{value:this.seccionState?.regimen,disabled: true}, Validators.required],
+      clasificacion: [{value:this.seccionState?.clasificacion,disabled: true}, Validators.required],
     });
  
     this.mercanciaForm = this.fb.group({
-      producto: ['Nuevo'],
+      producto: [],
       descripcion: [
         '',
         [
@@ -340,10 +390,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.opcionesSolicitud = data.options;
-          this.tramite130111Store.actualizarEstado({
-            solicitud: data.options[0]?.value || '',
-            defaultSelect: data.defaultSelect || 'Inicial',
-          });
         },
         error: (error) =>
           console.error('Error loading solicitude options:', error),
@@ -372,7 +418,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ? filasSeleccionadas
       : [];
     if (this.filaSeleccionada) {
-      this.tramite130111Store.storeTableValues(this.filaSeleccionada);
+      this.tramite130111Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
     }
   }
 /**
@@ -404,7 +450,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.partidasDelaMercanciaForm.markAllAsTouched();
     } else {
       this.mostrarTabla = true;
-      this.tramite130111Store.setMostrarTabla(true);
+      this.tramite130111Store.actualizarEstado({mostrarTabla:true});
 
     }
   }
@@ -415,8 +461,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   navegarParaModificarPartida(): void {
     if (this.filaSeleccionada) {
-      this.tramite130111Store.setMostrarTabla(true);
-      this.tramite130111Store.storeTableValues(this.filaSeleccionada);
+      this.tramite130111Store.actualizarEstado({mostrarTabla:true});
+      this.tramite130111Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
     }
   }
 /**

@@ -1,26 +1,38 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ReplaySubject,map,takeUntil } from 'rxjs';
+
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FilaData2 } from '../../models/fila-model';
+
+import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
 
 import {
   Catalogo,
   CatalogosSelect,
-  ConfiguracionColumna,
+  ConsultaioQuery,
+  ConsultaioState,
+  InputRadioComponent,
+  REGEX_SOLO_DIGITOS,
   TablaSeleccion,
   TableComponent,
 } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { RegistrarSolicitudService } from '../../services/registrar-solicitud.service';
 import { Solicitud290201Query } from '../../../../estados/queries/tramites290201.query';
+
 import {
   Solicitud290201State,
   Solicitud290201Store,
 } from '../../../../estados/tramites/tramites290201.store';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { FilaData, FilaData2 } from '../../models/fila-model';
+
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+
+import { Modal } from 'bootstrap';
+
+import { CONFIGURACION_COLUMNAS_SOLI_2 } from '../../constants/tabla-enum';
+import { TIPO_PERSONA_RADIO_OPTIONS } from '../../constants/octova-tempora.enum';
 /**
  * Componente: TercerosRelacionadosComponent
  * Descripción: Componente para gestionar los datos de terceros relacionados en el trámite 290201.
@@ -35,20 +47,16 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
     ReactiveFormsModule,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
+    InputRadioComponent
   ],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.css',
 })
-export class TercerosRelacionadosComponent implements OnInit {
+export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   /**
    * Observable para manejar la destrucción del componente.
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-
-  /**
-   * Notificador para limpiar suscripciones.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Formulario reactivo para capturar los datos del destinatario.
@@ -58,13 +66,12 @@ export class TercerosRelacionadosComponent implements OnInit {
   /**
    * Fila seleccionada en la tabla.
    */
-  selectedRow: any = null;
+  selectedRow: FilaData2 | null = null;
 
   /**
    * Bandera para mostrar u ocultar el formulario.
    */
-  esFormularioVisible = true;
-
+  esFormularioVisible = false; 
   /**
    * Estado actual del trámite obtenido del store.
    */
@@ -74,26 +81,29 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Datos de la tabla, incluyendo encabezados y cuerpo.
    */
   tableData: FilaData2[] = [];
-
   /**
    * Datos del catálogo de países.
    */
   public paisData: CatalogosSelect = {
     labelNombre: 'País',
     required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
+    primerOpcion: 'Seleccione una opción',
     catalogos: [],
   };
-
   /**
    * Tipo de persona seleccionada.
    */
-  tipoPersona: any;
+  tipoPersona: string | null = null; // Replace 'string | null' with the appropriate type if known
 
   /**
    * Método para manejar el cambio de selección de tipo de persona.
    */
   selectedRows: Set<number> = new Set();
+
+  /**
+   * Estado para verificar si los datos de respuesta están disponibles.
+   */
+  public esDatosRespuesta: boolean = false;
 
   /**
    * Método para manejar el cambio de selección de tipo de persona.
@@ -103,7 +113,80 @@ export class TercerosRelacionadosComponent implements OnInit {
   /**
    * Lista que almacena los datos de los destinatarios registrados.
    */
-  newDestinatarioData: Array<any> = [];
+  newDestinatarioData: Array<FilaData2> = [];
+
+  /**
+   * Estado de consulta de datos.
+   */
+   consultaDatos!: ConsultaioState;
+    
+      /**
+       * @property {boolean} soloLectura
+       * @description Indica si el formulario o los campos están en modo de solo lectura.
+       * @default false
+       */
+      esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Opciones de radio para seleccionar el tipo de persona.
+   */
+  tipoPersonaRadioOptions = TIPO_PERSONA_RADIO_OPTIONS;
+
+  /**
+ * @property {string} tipoPersonaSeleccionada
+ * @description Almacena el tipo de persona seleccionado en el formulario.
+ * Este valor se utiliza para determinar la lógica de visualización y validación.
+ * @default ''
+ */
+tipoPersonaSeleccionada: string = '';
+  /**
+   * Variable para almacenar el tipo de público.
+   */
+  tipoDePublicos: string = '';
+      
+  /**
+ * @propiedad {CatalogosSelect} entidadFederativaData
+ * @descripción
+ * Datos del catálogo para la selección de la entidad federativa.
+ * Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+ */
+public entidadFederativaData: CatalogosSelect = {
+  labelNombre: 'Entidad federativa',
+  required: true,
+  primerOpcion: 'Seleccione una opción',
+  catalogos: [],
+};
+
+/**
+* @propiedad {CatalogosSelect} alcaldiaMunicipoData
+* @descripción
+* Datos del catálogo para la selección de la alcaldía o municipio.
+* Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+*/
+public alcaldiaMunicipoData: CatalogosSelect = {
+  labelNombre: 'Alcaldía o Municipio',
+  required: true,
+  primerOpcion: 'Seleccione una opción',
+  catalogos: [],
+};
+
+/**
+* @propiedad {CatalogosSelect} coloniaData
+* @descripción
+* Datos del catálogo para la selección de la colonia.
+* Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+*/
+public coloniaData: CatalogosSelect = {
+  labelNombre: 'Colonia',
+  required: true,
+  primerOpcion: 'Seleccione una opción',
+  catalogos: [],
+};
+
+ /**
+   * Bandera para verificar si los datos del catálogo de países están cargados.
+   */
+ isPaisdatoscargados = false;
 
   /**
    * Constructor del componente.
@@ -118,51 +201,19 @@ export class TercerosRelacionadosComponent implements OnInit {
     private fb: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
     private solicitud290201Store: Solicitud290201Store,
-    private solicitud290201Query: Solicitud290201Query
+    private solicitud290201Query: Solicitud290201Query,
+    private consultaioQuery: ConsultaioQuery,
+    
   ) {
     this.getPaisData();
+
   }
 
   /**
    * Configuración de la tabla para mostrar los datos de los destinatarios.
    */
-  configuracionColumnasoli: ConfiguracionColumna<FilaData2>[] = [
-    {
-      encabezado: 'Tipo persona',
-      clave: (fila) => fila.datosDelTramiteRealizar.tipoPersona,
-      orden: 1,
-    },
-    {
-      encabezado: 'Denominación/razón social',
-      clave: (fila) => fila.datosDelTramiteRealizar.denominacion,
-      orden: 2,
-    },
-    {
-      encabezado: 'Domicilio',
-      clave: (fila) => fila.datosDelTramiteRealizar.domicilio,
-      orden: 3,
-    },
-    {
-      encabezado: 'País',
-      clave: (fila) => fila.datosDelTramiteRealizar.pais,
-      orden: 4,
-    },
-    {
-      encabezado: 'Código postal',
-      clave: (fila) => fila.datosDelTramiteRealizar.codigopostal,
-      orden: 5,
-    },
-    {
-      encabezado: 'Teléfono',
-      clave: (fila) => fila.datosDelTramiteRealizar.telefono,
-      orden: 6,
-    },
-    {
-      encabezado: 'Correo electrónico',
-      clave: (fila) => fila.datosDelTramiteRealizar.correoelectronico,
-      orden: 7,
-    },
-  ];
+  configuracionColumnasoli = CONFIGURACION_COLUMNAS_SOLI_2;
+
 
   /**
    * Método de inicialización del componente.
@@ -170,61 +221,129 @@ export class TercerosRelacionadosComponent implements OnInit {
   ngOnInit(): void {
     this.solicitud290201Query.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
           this.destinatarioState = seccionState;
         })
       )
       .subscribe();
-
+     
+      this.getDestinatarioData();
     this.createForm();
-  }
+    this.getEntidadFederativaData();
+    this.getAlcaldiaMunicipo();
+    this.getColonia();
 
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        this.consultaDatos = seccionState;
+        this.esFormularioSoloLectura = this.consultaDatos.readonly;
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
+    this.inicializarEstadoFormulario();
+  }
+ 
   /**
    * Método para crear el formulario reactivo.
    */
-  createForm() {
+  createForm(): void {
     this.destinatarioForm = this.fb.group({
       datosDelTramiteRealizar: this.fb.group({
-        tipoPersona: [
-          this.destinatarioState?.tipoPersona,
-          [Validators.required],
-        ],
-        denominacion: [
-          this.destinatarioState?.denominacion,
-          [Validators.required],
-        ],
+        tipoPersona: [ this.destinatarioState?.tipoPersona,[Validators.required]],
+        denominacion: [ this.destinatarioState?.denominacion, [Validators.required]],
+        nombre: [ this.destinatarioState?.denominacion, [Validators.required]],
+        primerApellido: [this.destinatarioState?.denominacion,[Validators.required]],
+           
+       segundoApellido: [ this.destinatarioState?.denominacion,[Validators.required] ],
         domicilio: [this.destinatarioState?.domicilio, [Validators.required]],
         pais: [this.destinatarioState?.pais, [Validators.required]],
         codigopostal: [
           this.destinatarioState?.codigopostal,
-          [Validators.required],
-        ],
-        telefono: [this.destinatarioState?.telefono, [Validators.required]],
+          [Validators.required, Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
+        telefono: [this.destinatarioState?.telefono, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
         correoelectronico: [
           this.destinatarioState?.correoelectronico,
-          [Validators.required],
-        ],
+          [Validators.required, Validators.email]],
+        
       }),
     });
-  }
 
-  /**
+  }
+/**
    * Getter para obtener el tipo de persona seleccionado.
    */
-  get selectedTipoPersona() {
-    return this.destinatarioForm.get('tipoPersona')?.value;
+get selectedTipoPersona(): string | undefined {
+  return this.destinatarioForm.get('tipoPersona')?.value;
+}
+
+  /**
+   * Establece el tipo de persona seleccionado.
+   * @param value Valor seleccionado (cadena o número).
+   */
+  setTipoPersona(value: string | number): void {
+    this.tipoPersonaSeleccionada = value.toString();
+  }
+  /**
+ * @method getEntidadFederativaData
+ * @descripcion
+ * Este método obtiene los datos del catálogo de entidades federativas desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `entidadFederativaData`.
+ * @returns {void}
+ */
+  getEntidadFederativaData(): void {
+    this.registrarsolicitud
+      .getEntidadFederativaData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.entidadFederativaData.catalogos = data as Catalogo[];
+      });
   }
 
   /**
-   * Bandera para verificar si los datos del catálogo de países están cargados.
-   */
-  isPaisdatoscargados = false;
+ * @method getAlcaldiaMunicipo
+ * @descripcion
+ * Este método obtiene los datos del catálogo de alcaldías o municipios desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `alcaldiaMunicipoData`.
+ * @returns {void}
+ */
+  getAlcaldiaMunicipo(): void {
+    this.registrarsolicitud
+      .getAlcaldiaMunicipo()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.alcaldiaMunicipoData.catalogos = data as Catalogo[];
+      });
+  }
+
+  /**
+ * @method getColonia
+ * @descripcion
+ * Este método obtiene los datos del catálogo de colonias desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `coloniaData`.
+ * @returns {void}
+ */
+  getColonia(): void {
+    this.registrarsolicitud
+      .getColonia()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.coloniaData.catalogos = data as Catalogo[];
+      });
+  }
+  
+ 
 
   /**
    * Método para obtener los datos del catálogo de países.
    */
-  getPaisData() {
+  getPaisData(): void {
     this.registrarsolicitud
       .getPaisData()
       .pipe(takeUntil(this.destroyed$))
@@ -233,88 +352,125 @@ export class TercerosRelacionadosComponent implements OnInit {
         this.isPaisdatoscargados = true;
       });
   }
+  /**
+   * Método para obtener los datos del destinatario.
+   * Utiliza el servicio `registrarsolicitud` para obtener los datos y los asigna a `tableData`.
+   */
+  getDestinatarioData(): void {
+    this.registrarsolicitud
+      .getDestinatarioData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.tableData = data as unknown as FilaData2[];
+      });
+  }
 
   /**
    * Método para manejar el envío del formulario.
    */
-  enEnviar() {
-    const formData = this.destinatarioForm.value;
-
-    if (!formData || Object.keys(formData).length === 0) {
-      console.error('Los datos del formulario son nulos o están vacíos');
+  enEnviar(): void {
+    const FORM_DATA = this.destinatarioForm.value;
+   if (!this.destinatarioForm.valid) {
+    this.destinatarioForm.markAllAsTouched();
+    return;
+  }
+    if (!FORM_DATA || Object.keys(FORM_DATA).length === 0) {
       return;
     }
-
-    const paisDataValue = this.paisData.catalogos.find(
+  
+    const PAIS_DATA_VALUE = this.paisData.catalogos.find(
       (item: Catalogo) =>
-        String(item.id) === String(formData.datosDelTramiteRealizar.pais)
+        String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.pais).trim()
     )?.descripcion;
-
-    formData.datosDelTramiteRealizar.pais = paisDataValue;
-
+  
+    FORM_DATA.datosDelTramiteRealizar.pais = PAIS_DATA_VALUE;
+  
     if (this.selectedRow) {
-      const index = this.newDestinatarioData.indexOf(this.selectedRow);
-      if (index !== -1) {
-        this.newDestinatarioData[index] = { ...formData };
+      const INDEX = this.tableData.indexOf(this.selectedRow);
+      if (INDEX !== -1) {
+        this.tableData[INDEX] = { ...FORM_DATA, id: this.selectedRow.id }; 
       }
     } else {
-      this.newDestinatarioData.push({ ...formData });
+      const NEW_ID = this.tableData.length > 0
+        ? Math.max(...this.tableData.map((row) => row.id || 0)) + 1
+        : 1;
+      this.tableData.push({ ...FORM_DATA, id: NEW_ID }); 
     }
-    this.tableData = [...this.newDestinatarioData];
+
+    this.tableData = [...this.tableData]; 
     this.changeDetectorRef.markForCheck();
     this.destinatarioForm.reset();
     this.esFormularioVisible = false;
     this.selectedRow = null;
   }
+ 
+ /**
+ * Método para limpiar el formulario.
+ */
+onLimpiar(): void {
+  this.destinatarioForm.reset();
+  this.destinatarioForm.patchValue({
+    datosDelTramiteRealizar: {
+      pais: '',
+    },
+  });
 
   /**
-   * Método para limpiar el formulario.
-   */
-  onLimpiar() {
-    this.destinatarioForm.reset();
-    this.destinatarioForm.patchValue({
-      datosDelTramiteRealizar: {
-        pais: 'Selecciona un medio de transporte',
-      },
-    });
-  }
+ * Recorre todos los controles del formulario `destinatarioForm` y marca cada uno como "tocado".
+ * Si el control es un `FormGroup`, también recorre sus controles secundarios y los marca como "tocados".
+ * Esto asegura que todos los campos del formulario muestren mensajes de validación si no son válidos.
+ */
+  Object.keys(this.destinatarioForm.controls).forEach((key) => {
+    const CONTROL = this.destinatarioForm.get(key);
+    if (CONTROL instanceof FormGroup) {
+      Object.keys(CONTROL.controls).forEach((subKey) => {
+        CONTROL.get(subKey)?.markAsTouched();
+      });
+    } else {
+      CONTROL?.markAsTouched();
+    }
+  });
+  this.destinatarioForm.get('datosDelTramiteRealizar.pais')?.markAsTouched();
+
+}
   /**
    * Método para seleccionar una fila de la tabla.
    * @param item Fila seleccionada.
    * @param event Evento del checkbox.
    */
-
-  onSelectedRowsChange(selectedRows: FilaData2[]): void {
-    this.selectedRows = new Set(selectedRows.map((row) => row.id)); // Update selected rows
-    this.esFormularioVisible = false;
-  }
-
+ onSelectedRowsChange(selectedRows: FilaData2[]): void {
+     
+     this.selectedRows = new Set(selectedRows.map((row) => row.id)); 
+     this.esFormularioVisible = false; 
+   
+   }
   /**
    * Método para modificar los datos de una fila seleccionada.
    */
-  enModificar() {
+  enModificar(): void {
+       const MODAL_ELEMENT = document.getElementById('destinatarioModalLabel');
+       if (MODAL_ELEMENT) {
+         const MODAL_INSTANCE = new Modal(MODAL_ELEMENT); 
+         MODAL_INSTANCE.show();
+       }
+       
     if (!this.isPaisdatoscargados) {
-      console.warn('Los datos del catálogo de países aún no están cargados');
       return;
     }
-    /**
-     * Método para modificar los datos de una fila seleccionada.
-     * @param item Fila seleccionada.
-     * @param event Evento del checkbox.
-     * @returns void
-     */
-
     if (this.selectedRow) {
-      const paisId = this.paisData.catalogos.find(
+      const PAIS_ID = this.paisData.catalogos.find(
         (item: Catalogo) =>
-          item.descripcion === this.selectedRow.datosDelTramiteRealizar.pais
+          item.descripcion === this.selectedRow?.datosDelTramiteRealizar?.pais ||
+          String(item.id) === String(this.selectedRow?.datosDelTramiteRealizar?.pais)
       )?.id;
+
+
       this.destinatarioForm.patchValue({
         datosDelTramiteRealizar: {
           tipoPersona: this.selectedRow.datosDelTramiteRealizar.tipoPersona,
           denominacion: this.selectedRow.datosDelTramiteRealizar.denominacion,
           domicilio: this.selectedRow.datosDelTramiteRealizar.domicilio,
-          pais: paisId || '', // Use the `paisId` or an empty string if not found
+          pais: PAIS_ID || '', 
           codigopostal: this.selectedRow.datosDelTramiteRealizar.codigopostal,
           telefono: this.selectedRow.datosDelTramiteRealizar.telefono,
           correoelectronico:
@@ -324,26 +480,31 @@ export class TercerosRelacionadosComponent implements OnInit {
 
       this.esFormularioVisible = true;
     }
+  
   }
 
   /**
    * Método para eliminar una fila seleccionada.
    */
-  onDeleteSelectedRows(): void {
-    if (this.selectedRows && this.selectedRows.size > 0) {
-      this.tableData = this.tableData.filter(
-        (row: { id: number }) => !this.selectedRows.has(row.id)
-      );
-      this.selectedRows.clear();
-      this.destinatarioForm.reset();
-      this.esFormularioVisible = false;
-    }
+ /**
+ * Método para eliminar una fila seleccionada.
+ */
+ onDeleteSelectedRows(): void {
+  if (this.selectedRows.size > 0) {
+
+       this.tableData = this.tableData.filter(
+      (row: { id: number }) => !this.selectedRows.has(row.id)
+    );
+    this.selectedRows.clear();
+    this.destinatarioForm.reset();
+    this.esFormularioVisible = false;
   }
+}
   /**
    * Método para manejar el clic en una fila de la tabla.
    * @param rowData Fila seleccionada.
    */
-  onRowClick(rowData: any) {
+  onRowClick(rowData: FilaData2): void {
     this.destinatarioForm.patchValue({
       datosDelTramiteRealizar: {
         tipoPersona: rowData.datosDelTramiteRealizar.tipoPersona,
@@ -371,6 +532,70 @@ export class TercerosRelacionadosComponent implements OnInit {
   }
 
   /**
+   * Método para inicializar el estado del formulario según si es de solo lectura o no.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.destinatarioForm?.disable();
+    }
+    else {
+      this.destinatarioForm?.enable();
+    }
+}
+/**
+ * Getter to check if the 'pais' field is required.
+ * 
+ * @returns {boolean} Returns `true` if the 'pais' field has a 'required' error, otherwise `false`.
+ */
+get isPaisRequired(): boolean {
+  return this.destinatarioForm.get('pais')?.errors?.['required'] ?? false;
+}
+
+/**
+ * Getter to check if the 'codigopostal' field has a 'maxlength' error.
+ * 
+ * @returns {boolean} Returns `true` if the 'codigopostal' field has a 'maxlength' error, otherwise `false`.
+ */
+get isCodigoPostalMaxLengthExceeded(): boolean {
+  return this.destinatarioForm.get('datosDelTramiteRealizar.codigopostal')?.errors?.['maxlength'] ?? false;
+}
+/**
+ * Getter to check if the 'telefono' field has a 'pattern' error.
+ * 
+ * @returns {boolean} Returns `true` if the 'telefono' field has a 'pattern' error, otherwise `false`.
+ */
+get isTelefonoPatternInvalid(): boolean {
+  return this.destinatarioForm.get('datosDelTramiteRealizar.telefono')?.errors?.['pattern'] ?? false;
+}
+/**
+ * Getter to check if the 'correoelectronico' field has an 'email' error.
+ * 
+ * @returns {boolean} Returns `true` if the 'correoelectronico' field has an 'email' error, otherwise `false`.
+ */
+get isCorreoElectronicoInvalid(): boolean {
+  return this.destinatarioForm.get('datosDelTramiteRealizar.correoelectronico')?.errors?.['email'] ?? false;
+}
+/**
+ * Getter to check if the 'pais' field is touched and invalid.
+ * 
+ * @returns {boolean} Returns `true` if the 'pais' field is touched and invalid, otherwise `false`.
+ */
+get isPaisInvalid(): boolean {
+  return (
+    (this.destinatarioForm.get('datosDelTramiteRealizar.pais')?.touched ?? false)&&
+    (this.destinatarioForm.get('datosDelTramiteRealizar.pais')?.invalid ?? false)
+  );
+}
+/**
+ * Método para mostrar el formulario de destinatarios.
+ * 
+ * Este método establece la bandera `esFormularioVisible` en `true`,
+ * lo que permite que el formulario sea visible en la interfaz de usuario.
+ */
+onAgregar(): void {
+  this.esFormularioVisible = true; 
+}
+  /**
    * Método para establecer valores en el store.
    * @param form Formulario reactivo.
    * @param campo Campo del formulario.
@@ -382,7 +607,7 @@ export class TercerosRelacionadosComponent implements OnInit {
     metodoNombre: keyof Solicitud290201Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.solicitud290201Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.solicitud290201Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

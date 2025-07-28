@@ -90,7 +90,7 @@ export interface DatosDelContenedor {
  * Interfaz que representa los datos de un csv.
  * Utilizamos esta interfaz para definir la estructura de los datos detallados de un contenedor.
  */
-export interface datosDelCsvArchivo {
+export interface DatosDelCsvArchivo {
   /**
    * Identificador del contenedor.
    */
@@ -220,4 +220,162 @@ export interface RespuestaAduanas {
    * Mensaje de la respuesta.
    */
   message: string;
+}
+
+/**
+ * Interfaz que representa la respuesta de una consulta.
+ * Utilizada para definir la estructura de la respuesta al consultar datos generales del trámite.
+ */
+export interface RespuestaConsulta {
+  /**
+   * Indica si la operación fue exitosa.
+   */
+  success: boolean;
+
+  /**
+   * Datos generales obtenidos de la consulta.
+   */
+  datos: ConsultaDatos;
+
+  /**
+   * Mensaje de la respuesta.
+   */
+  message: string;
+}
+
+/**
+ * Interfaz que representa los datos generales obtenidos de una consulta.
+ * Incluye información relevante del trámite y los contenedores asociados.
+ */
+export interface ConsultaDatos {
+  /**
+   * Tipo de búsqueda realizada.
+   */
+  tipoBusqueda: string;
+
+  /**
+   * Aduana relacionada con la consulta.
+   */
+  aduana: string;
+
+  /**
+   * Fecha de ingreso registrada.
+   */
+  fechaIngreso: string;
+
+  /**
+   * Vigencia del trámite o contenedor.
+   */
+  vigencia: string;
+
+  /**
+   * Iniciales del contenedor.
+   */
+  inicialesContenedor: string;
+
+  /**
+   * Número del contenedor.
+   */
+  numeroContenedor: string;
+
+  /**
+   * Dígito de control del contenedor.
+   */
+  digitoDeControl: string;
+
+  /**
+   * Contenedores asociados.
+   */
+  contenedores: string;
+
+  /**
+   * Menú desplegable de aduanas.
+   */
+  aduanaMenuDesplegable: string;
+
+  /**
+   * Estado actual del trámite o contenedor.
+   */
+  estado: string;
+
+  /**
+   * Indica si existe en el sistema.
+   */
+  existe: string;
+
+  /**
+   * Detalle de los datos de los contenedores.
+   */
+  datosDelContenedor: DatosDelContenedor[];
+}
+
+/**
+ * Interfaz que representa la respuesta de un catálogo.
+ * Utilizada para definir la estructura de la respuesta al consultar catálogos relacionados con el trámite.
+ */
+export interface RespuestaCatalog {
+  /**
+   * Indica si la operación fue exitosa.
+   */
+  success: boolean;
+
+  /**
+   * Mensaje de la respuesta.
+   */
+  message: string;
+
+  /**
+   * Datos generales del catálogo consultado.
+   */
+  datos: {
+    /**
+     * Tipo de búsqueda realizada.
+     */
+    tipoBusqueda: string;
+
+    /**
+     * Aduana relacionada con la consulta.
+     */
+    aduana: number;
+
+    /**
+     * Fecha de ingreso registrada.
+     */
+    fechaIngreso: string;
+
+    /**
+     * Vigencia del trámite o contenedor.
+     */
+    vigencia: string;
+
+    /**
+     * Iniciales del contenedor.
+     */
+    inicialesContenedor: string;
+
+    /**
+     * Número del contenedor.
+     */
+    numeroContenedor: number;
+
+    /**
+     * Dígito de control del contenedor.
+     */
+    digitoDeControl: number;
+
+    /**
+     * Estado de la constancia.
+     */
+    estadoConstancia: string;
+
+    /**
+     * Indica si existe en VUCEM.
+     */
+    existeEnVUCEM: string;
+
+    /**
+     * Detalle de los datos de los contenedores asociados.
+     */
+    datosDelContenedor: DatosDelContenedor[];
+  };
 }

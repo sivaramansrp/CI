@@ -32,8 +32,7 @@ describe('CertificadoOrigenComponent', () => {
       setGrupoTratadoFechaFinalInput: jest.fn(),
       setFecha: jest.fn(),
       setGrupoTratadoFechaInicialInput: jest.fn(),
-
-
+      setMercanciaTablaDatos: jest.fn(),
     };
     tramiteQueryMock = {
       selectSolicitud$: of({
@@ -192,5 +191,78 @@ describe('CertificadoOrigenComponent', () => {
     component.ngOnDestroy();
     expect(spyDestroyNotifier).toHaveBeenCalled();
     expect(spyDestroyComplete).toHaveBeenCalled();
+  });
+
+  it('should disable all forms when soloLectura is true', () => {
+    component.soloLectura = true;
+    component.inicializarEstadoFormulario();
+    component.actualizarEstadoCampos();
+    expect(component.formularioCertificado.disabled).toBe(true);
+    expect(component.formularioMercancia.disabled).toBe(true);
+    expect(component.formularioArchivo.disabled).toBe(true);
+  });
+
+  it('should enable all forms when soloLectura is false', () => {
+    component.soloLectura = false;
+    component.inicializarEstadoFormulario();
+    component.actualizarEstadoCampos();
+    expect(component.formularioCertificado.enabled).toBe(true);
+    expect(component.formularioMercancia.enabled).toBe(true);
+    expect(component.formularioArchivo.enabled).toBe(true);
+  });
+  it('should set estaDeshabilitado to true when onClick is called', () => {
+    component.estaDeshabilitado = false;
+    component.onClick();
+    expect(component.estaDeshabilitado).toBe(true);
+  });
+  it('should call cerrarModal and cargarMercanciasSeleccionadas when enviar is called', () => {
+    const cerrarModalSpy = jest.spyOn(component, 'cerrarModal');
+    const cargarMercanciasSeleccionadasSpy = jest.spyOn(component, 'cargarMercanciasSeleccionadas');
+
+    component.enviar();
+
+    expect(cerrarModalSpy).toHaveBeenCalled();
+    expect(cargarMercanciasSeleccionadasSpy).toHaveBeenCalled();
+  });
+
+  describe('eliminar', () => {
+    it('should remove the selected row from mercanciaSeleccionadasTablaDatos and call setMercanciaTablaDatos', () => {
+      const mockRow = { id: 1, nombre: 'Mercancía Seleccionada' } as any;
+      const anotherRow = { id: 2, nombre: 'Otra Mercancía' } as any;
+      component.mercanciaSeleccionadasTablaDatos = [mockRow, anotherRow];
+      component.mercanciaSeleccionadasFila = mockRow;
+      component.store.setMercanciaTablaDatos = jest.fn();
+
+      component.eliminar();
+
+      expect(component.mercanciaSeleccionadasTablaDatos).toEqual([anotherRow]);
+      expect(component.mercanciaSeleccionadasFila).toBeNull();
+      expect(component.store.setMercanciaTablaDatos).toHaveBeenCalledWith([anotherRow]);
+    });
+
+    it('should do nothing if mercanciaSeleccionadasFila is null', () => {
+      component.mercanciaSeleccionadasTablaDatos = [{ id: 1, nombre: 'Mercancía Seleccionada' } as any];
+      component.mercanciaSeleccionadasFila = null;
+      const original = [...component.mercanciaSeleccionadasTablaDatos];
+      component.store.setMercanciaTablaDatos = jest.fn();
+
+      component.eliminar();
+
+      expect(component.mercanciaSeleccionadasTablaDatos).toEqual(original);
+      expect(component.store.setMercanciaTablaDatos).not.toHaveBeenCalled();
+    });
+
+    it('should remove the only item if it matches mercanciaSeleccionadasFila', () => {
+      const mockRow = { id: 1, nombre: 'Mercancía Seleccionada' } as any;
+      component.mercanciaSeleccionadasTablaDatos = [mockRow];
+      component.mercanciaSeleccionadasFila = mockRow;
+      component.store.setMercanciaTablaDatos = jest.fn();
+
+      component.eliminar();
+
+      expect(component.mercanciaSeleccionadasTablaDatos).toEqual([]);
+      expect(component.mercanciaSeleccionadasFila).toBeNull();
+      expect(component.store.setMercanciaTablaDatos).toHaveBeenCalledWith([]);
+    });
   });
 });

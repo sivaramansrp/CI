@@ -1,60 +1,67 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component } from '@angular/core';
+import { By } from '@angular/platform-browser';
 import { PasoUnoComponent } from './paso-uno.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import {
+  PERSONA_MORAL_NACIONAL,
+  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
+  TIPO_PERSONA,
+  SolicitanteComponent
+} from '@ng-mf/data-access-user';
+
+@Component({
+  selector: 'solicitante',
+  template: ''
+})
+class MockSolicitanteComponent {
+  OBTENER_TIPO_PERSONA = jest.fn();
+
+  // Optionally, add any other methods or properties needed for the mock
+}
 
 describe('PasoUnoComponent', () => {
-  let component: PasoUnoComponent;
-  let fixture: ComponentFixture<PasoUnoComponent>;
+  let COMPONENT: PasoUnoComponent;
+  let FIXTURE: ComponentFixture<PasoUnoComponent>;
+  let MOCK_SOLICITANTE: MockSolicitanteComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent],
+      declarations: [PasoUnoComponent, MockSolicitanteComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.componentInstance;
+    FIXTURE = TestBed.createComponent(PasoUnoComponent);
+    COMPONENT = FIXTURE.componentInstance;
 
-    // Mock the SolicitanteComponent
-    component.solicitante = {
-      obtenerTipoPersona: jest.fn(),
-    } as unknown as SolicitanteComponent;
+    // Consultar y asignar manualmente el mock del hijo antes de la detección de cambios
+    FIXTURE.detectChanges(); // Renderizar DOM
 
-    fixture.detectChanges();
+    const SOLICITANTE_DEBUG_EL = FIXTURE.debugElement.query(
+      By.directive(MockSolicitanteComponent)
+    );
+    MOCK_SOLICITANTE = SOLICITANTE_DEBUG_EL.componentInstance;
+    COMPONENT['solicitante'] = MOCK_SOLICITANTE as unknown as SolicitanteComponent;
+
+    MOCK_SOLICITANTE.OBTENER_TIPO_PERSONA(TIPO_PERSONA.MORAL_NACIONAL);
+    COMPONENT.ngAfterViewInit();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('debe crear el componente', () => {
+    expect(COMPONENT).toBeTruthy();
   });
 
-  it('should initialize persona with PERSONA_MORAL_NACIONAL after view initialization', () => {
-    component.ngAfterViewInit();
-    expect(component.persona).toEqual(PERSONA_MORAL_NACIONAL);
+  it('debe llamar obtenerTipoPersona y establecer persona y domicilioFiscal en ngAfterViewInit', () => {
+    expect(COMPONENT.persona).toEqual(PERSONA_MORAL_NACIONAL);
+    expect(COMPONENT.domicilioFiscal).toEqual(DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL);
+    expect(MOCK_SOLICITANTE.OBTENER_TIPO_PERSONA).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
   });
 
-  it('should initialize domicilioFiscal with DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL after view initialization', () => {
-    component.ngAfterViewInit();
-    expect(component.domicilioFiscal).toEqual(DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL);
-  });
+  it('debe actualizar el índice cuando se llama seleccionaTab', () => {
+    COMPONENT.seleccionaTab(2);
+    expect(COMPONENT.indice).toBe(2);
 
-  it('should call solicitante.obtenerTipoPersona with TIPO_PERSONA.MORAL_NACIONAL after view initialization', () => {
-    component.ngAfterViewInit();
-    expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
-  });
-
-  it('should update the indice when seleccionaTab is called', () => {
-    component.seleccionaTab(3);
-    expect(component.indice).toBe(3);
-  });
-
-  it('should have default indice value as 1', () => {
-    expect(component.indice).toBe(1);
-  });
-
-  it('should initialize persona and domicilioFiscal as empty arrays by default', () => {
-    expect(component.persona).toEqual([]);
-    expect(component.domicilioFiscal).toEqual([]);
+    COMPONENT.seleccionaTab(0);
+    expect(COMPONENT.indice).toBe(0);
   });
 });

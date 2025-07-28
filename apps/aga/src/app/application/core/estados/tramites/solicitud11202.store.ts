@@ -1,4 +1,3 @@
-import { Personas } from '@ng-mf/data-access-user';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -58,105 +57,105 @@ export class Solicitud11202Store extends Store<Solicitud11202State> {
    *
    * @param rfc - El tipo de solicitud que se va a guardar.
    */
-  public setRfc(rfc: string) {
+  public setRfc(rfc: string): void {
     this.update((state) => ({
       ...state,
       rfc,
     }));
   }
 
-  public setDenominacion(denominacion: string) {
+  public setDenominacion(denominacion: string): void {
     this.update((state) => ({
       ...state,
       denominacion,
     }));
   }
 
-  public setActividadEconomica(actividadEconomica: string) {
+  public setActividadEconomica(actividadEconomica: string): void {
     this.update((state) => ({
       ...state,
       actividadEconomica,
     }));
   }
 
-  public setCorreoElectronico(correoElectronico: string) {
+  public setCorreoElectronico(correoElectronico: string): void {
     this.update((state) => ({
       ...state,
       correoElectronico,
     }));
   }
 
-  public setPais(pais: string) {
+  public setPais(pais: string): void {
     this.update((state) => ({
       ...state,
       pais,
     }));
   }
 
-  public setCodigoPostal(codigoPostal: number) {
+  public setCodigoPostal(codigoPostal: number): void {
     this.update((state) => ({
       ...state,
       codigoPostal,
     }));
   }
 
-  public setEstado(estado: string) {
+  public setEstado(estado: string): void {
     this.update((state) => ({
       ...state,
       estado,
     }));
   }
 
-  public setMunicipioAlcaldia(municipioAlcaldia: string) {
+  public setMunicipioAlcaldia(municipioAlcaldia: string): void {
     this.update((state) => ({
       ...state,
       municipioAlcaldia,
     }));
   }
 
-  public setLocalidad(localidad: string) {
+  public setLocalidad(localidad: string): void {
     this.update((state) => ({
       ...state,
       localidad,
     }));
   }
 
-  public setColonia(colonia: string) {
+  public setColonia(colonia: string): void {
     this.update((state) => ({
       ...state,
       colonia,
     }));
   }
 
-  public setCalle(calle: string) {
+  public setCalle(calle: string): void {
     this.update((state) => ({
       ...state,
       calle,
     }));
   }
 
-  public setNumeroExterior(numeroExterior: string) {
+  public setNumeroExterior(numeroExterior: string): void {
     this.update((state) => ({
       ...state,
       numeroExterior,
     }));
   }
   
-  public setnumeroInterior(numeroInterior: string) {
+  public setnumeroInterior(numeroInterior: string): void {
     this.update((state) => ({
       ...state,
       numeroInterior,
     }));
   }
 
-  public setLada(lada: string) {
+  public setLada(lada: string): void {
     this.update((state) => ({
       ...state,
       lada,
     }));
   }
 
-  public setTelefono(telefono: number) {
+  public setTelefono(telefono: number): void {
     this.update((state) => ({
       ...state,
       telefono,
@@ -166,7 +165,7 @@ export class Solicitud11202Store extends Store<Solicitud11202State> {
   /**
    * Limpia los datos de la solicitud
    */
-  public limpiarSolicitud() {
+  public limpiarSolicitud(): void {
     this.reset();
   }
 }

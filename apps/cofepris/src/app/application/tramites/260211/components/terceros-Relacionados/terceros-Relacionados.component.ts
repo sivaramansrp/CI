@@ -1,13 +1,12 @@
-import { Component } from '@angular/core';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
-import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Catalogo } from '@libs/shared/data-access-user/src';
-
-import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA,MUNICIPIOSELECTDATA,PAISSELECTDATA,
-  TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '../../../../../../../../../libs/shared/data-access-user/src/core/enums/260211/permiso.enum';
 import { SanitarioService } from '../../services/sanitario.service';
+
 import { TablaDatos } from '@libs/shared/data-access-user/src/core/models/260211/detos.model';
 
 import { AlertComponent } from '@libs/shared/data-access-user/src';
@@ -17,16 +16,23 @@ import { Sanitario260215Store } from '../../../../estados/tramites/sanitario.sto
 
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 
-// eslint-disable-next-line sort-imports
-import { TituloComponent , InputRadioComponent} from '@libs/shared/data-access-user/src';
+
+import {InputRadioComponent , TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { TableComponent } from '@ng-mf/data-access-user';
 
 import { ModalComponent } from '../model/modal.component';
-import nacionalidadRedio from 'libs/shared/theme/assets/json/260211/nacionalidadRedio.json';
-import tipoPersonaoptions from 'libs/shared/theme/assets/json/260211/tipoPersonaoptions.json';
 
+import nacionalidadRedio from '@libs/shared/theme/assets/json/260211/nacionalidadRedio.json';
 
+import tipoPersonaoptions from '@libs/shared/theme/assets/json/260211/tipoPersonaoptions.json';
+
+import {Subject, map,takeUntil } from 'rxjs';
+
+import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA, MUNICIPIOSELECTDATA, PAISSELECTDATA, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '@libs/shared/data-access-user/src/core/enums/260906/permiso.enum';
+import { TERCEROS_DATAS } from '../../models/permiso-sanitario.enum';
+import { Terceros260211Query } from '../../../../estados/queries/terceros260211.query';
+import { Terceros260211State } from '../../../../estados/tramites/terceros260211.store';
  
 const TERCEROS_TEXTO_DE_ALERTA =
   'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
@@ -39,8 +45,23 @@ const TERCEROS_TEXTO_DE_ALERTA =
   styleUrl: './terceros-Relacionados.component.scss',
  
 })
-export class TercerosRelacionadoesComponent {
+export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
 
+    /**
+     * Estado de la solicitud obtenido desde el store.
+     */
+    public solicitudStates!: Terceros260211State;
+    /**
+     * Notificador para destruir observables y evitar memory leaks.
+     * @private
+     * @type {Subject<void>}
+     */
+    private destroyNotifier$: Subject<void> = new Subject();
+/**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+ public esFormularioSoloLectura: boolean = false; 
   /**
    * Indicador de visibilidad para la sección de la tabla.
    * Inicialmente visible (`true`).
@@ -124,7 +145,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este arreglo almacena los datos generales para los selectores.
    */
-  dropdownData: Catalogo[] = [];
+  dropdownData: Catalogo[] = TERCEROS_DATAS;
 
   /**
    * Datos para el dropdown de países.
@@ -220,9 +241,27 @@ export class TercerosRelacionadoesComponent {
   constructor(
     private fb: FormBuilder,
     private Sanitario260215Store:Sanitario260215Store,
-    private service: SanitarioService
+    private service: SanitarioService,
+     private consultaioQuery: ConsultaioQuery,     
+     private terceros260211Query: Terceros260211Query,
   ) {
-    // Inicializa el store del trámite 260215.
+     /**
+         * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+         *
+         * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+         * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+         * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+         */
+        this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState)=>{
+            this.esFormularioSoloLectura = seccionState.readonly; 
+           
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe();
   }
 
   /**
@@ -230,13 +269,7 @@ export class TercerosRelacionadoesComponent {
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
   ngOnInit(): void {
-    /**
-     * Obtiene los datos para los selectores desde el servicio de terceros.
-     * Actualiza la propiedad `dropdownData` con los datos obtenidos.
-     */
-    this.service.getData().subscribe((data) => {
-      this.dropdownData = data;
-    });
+    this.inicializarEstadoFormulario();
 
     /**
      * Inicializa los formularios reactivos para agregar terceros.
@@ -246,12 +279,60 @@ export class TercerosRelacionadoesComponent {
     this.initializeAgregarProveedorFormGroup();
     this.initializeAgregarFacturadorFormGroup();
   }
+/**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+    
+  }
+/**
+ * Inicializa el formulario con los grupos de formularios para agregar fabricantes, destinatarios, proveedores y facturadores.
+ */
+ inicializarFormulario(): void {
+     this.terceros260211Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudStates = seccionState;
+        })
+      )
+      .subscribe();
+    this.initializeAgregarFabricanteFormGroup();
+    this.initializeAgregarDestinatarioFormGroup();
+    this.initializeAgregarProveedorFormGroup();
+    this.initializeAgregarFacturadorFormGroup();
+ 
+}
 
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+     this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.agregarFacturadorFormGroup.disable();
+      this.agregarFabricanteFormGroup.disable();
+      this.agregarDestinatarioFormGroup.disable();
+      this.agregarFacturadorFormGroup.disable();
+      } else if (!this.esFormularioSoloLectura) {
+       this.agregarFacturadorFormGroup.enable();
+      this.agregarFabricanteFormGroup.enable();
+      this.agregarDestinatarioFormGroup.enable();
+      this.agregarFacturadorFormGroup.enable();
+      } 
+  }
   /**
    * Inicializa el formulario para agregar un fabricante.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarFabricanteFormGroup() {
+  initializeAgregarFabricanteFormGroup() :void{
     /**
      * Crea el formulario reactivos para agregar un fabricante.
      * Cada campo tiene sus propias validaciones.
@@ -260,16 +341,16 @@ export class TercerosRelacionadoesComponent {
       /**
        * Nacionalidad del tercero.
        */
-      tercerosNacionalidad: new FormControl('', [Validators.required]),
+      tercerosNacionalidad: new FormControl(this.solicitudStates.tercerosNacionalidad, [Validators.required]),
       /**
        * Tipo de persona (física o moral).
        */
-      tipoPersona: new FormControl('', [Validators.required]),
+      tipoPersona: new FormControl(this.solicitudStates.tipoPersona, [Validators.required]),
       /**
        * RFC del tercero.
        * Requiere validación adicional mediante `rfcValidator`.
        */
-      rfc: new FormControl('', [
+      rfc: new FormControl(this.solicitudStates.rfc, [
         Validators.required,
         TercerosRelacionadoesComponent.rfcValidator,
       ]),
@@ -277,7 +358,7 @@ export class TercerosRelacionadoesComponent {
        * CURP del tercero.
        * Requiere validación adicional mediante `curpValidator`.
        */
-      curp: new FormControl('', [
+      curp: new FormControl(this.solicitudStates.curp, [
         Validators.required,
         TercerosRelacionadoesComponent.curpValidator,
       ]),
@@ -285,96 +366,96 @@ export class TercerosRelacionadoesComponent {
        * Control del formulario para el nombre del usuario.
        * Este campo es obligatorio.
        */
-      nombre: new FormControl('', [Validators.required]),
+      nombre: new FormControl(this.solicitudStates.nombre, [Validators.required]),
       /**
        * Control del formulario para el primer apellido del usuario.
        * Este campo es obligatorio.
        */
-      primerApellido: new FormControl('', [Validators.required]),
+      primerApellido: new FormControl(this.solicitudStates.primerApellido, [Validators.required]),
       /**
        * Control del formulario para el segundo apellido del usuario.
        * Este campo es obligatorio.
        */
-      segundoApellido: new FormControl('', [Validators.required]),
+      segundoApellido: new FormControl(this.solicitudStates.segundoApellido, [Validators.required]),
       /**
        * Denominación o razón social del tercero.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl(this.solicitudStates.denominacionRazonSocial, [Validators.required]),
       /**
        * País del tercero.
        * Requiere validación adicional mediante `requiredPaisValidator`.
        */
-      pais: new FormControl('', [
+      pais: new FormControl(this.solicitudStates.pais, [
         Validators.required,
         TercerosRelacionadoesComponent.requiredPaisValidator,
       ]),
       /**
        * Estado o localidad del tercero.
        */
-      estadoLocalidad: new FormControl('', [Validators.required]),
+      estadoLocalidad: new FormControl(this.solicitudStates.estadoLocalidad, [Validators.required]),
       /**
        * Municipio o alcaldía del tercero.
        */
-      municipioAlcaldia: new FormControl('', [Validators.required]),
+      municipioAlcaldia: new FormControl(this.solicitudStates.municipioAlcaldia, [Validators.required]),
       /**
        * Localidad del tercero.
        */
-      localidad: new FormControl(''),
+      localidad: new FormControl(this.solicitudStates.localidad),
       /**
        * Entidad federativa del tercero.
        */
-      entidadFederativa: new FormControl('', [Validators.required]),
+      entidadFederativa: new FormControl(this.solicitudStates.entidadFederativa, [Validators.required]),
       /**
        * Código postal del tercero.
        */
-      codigoPostaloEquivalente: new FormControl('', [Validators.required]),
+      codigoPostaloEquivalente: new FormControl(this.solicitudStates.codigoPostaloEquivalente, [Validators.required]),
       /**
        * Colonia del tercero.
        */
-      colonia: new FormControl(''),
+      colonia: new FormControl(this.solicitudStates.colonia),
       /**
        * Colonia equivalente del tercero.
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl(this.solicitudStates.coloniaoEquivalente),
       /**
        * Calle del tercero.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl(this.solicitudStates.calle, [Validators.required]),
       /**
        * Número exterior del tercero.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl(this.solicitudStates.numeroExterior, [Validators.required]),
       /**
        * Número interior del tercero.
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl(this.solicitudStates.numeroInterior),
       /**
        * Lada del tercero.
        */
-      lada: new FormControl(''),
+      lada: new FormControl(this.solicitudStates.lada),
       /**
        * Teléfono del tercero.
        * Requiere validación adicional mediante `telefonoValidator`.
        */
-      telefono: new FormControl('', [
+      telefono: new FormControl(this.solicitudStates.telefono, [
         TercerosRelacionadoesComponent.telefonoValidator,
       ]),
       /**
        * Correo electrónico del tercero.
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl(this.solicitudStates.correoElectronico),
       /**
        * Código del extranjero.
        */
-      extranjeroCodigo: new FormControl('', [Validators.required]),
+      extranjeroCodigo: new FormControl(this.solicitudStates.extranjeroCodigo, [Validators.required]),
       /**
        * Estado del extranjero.
        */
-      extranjeroEstado: new FormControl('', [Validators.required]),
+      extranjeroEstado: new FormControl(this.solicitudStates.extranjeroEstado, [Validators.required]),
       /**
        * Colonia del extranjero.
        */
-      extranjeroColonia: new FormControl('', [Validators.required]),
+      extranjeroColonia: new FormControl(this.solicitudStates.extranjeroColonia, [Validators.required]),
     });
 
     // Deshabilita campos hasta que se seleccione el tipo de persona
@@ -398,7 +479,7 @@ export class TercerosRelacionadoesComponent {
    * Inicializa el formulario para agregar un destinatario.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarDestinatarioFormGroup() {
+  initializeAgregarDestinatarioFormGroup() :void{
     /**
      * Crea el formulario reactivos para agregar un destinatario.
      * Cada campo tiene sus propias validaciones.
@@ -407,77 +488,77 @@ export class TercerosRelacionadoesComponent {
       /**
        * Tipo de persona (física o moral).
        */
-      tipoPersona: new FormControl('', [Validators.required]),
+      tipoPersona: new FormControl(this.solicitudStates.tipoPersona, [Validators.required]),
       /**
        * RFC del destinatario.
        */
-      rfc: new FormControl('', [Validators.required]),
+      rfc: new FormControl(this.solicitudStates.rfc, [Validators.required]),
       /**
        * CURP del destinatario.
        */
-      curp: new FormControl('', [Validators.required]),
+      curp: new FormControl(this.solicitudStates.curp, [Validators.required]),
       /**
        * Denominación o razón social del destinatario.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl(this.solicitudStates.denominacionRazonSocial, [Validators.required]),
       /**
        * País del destinatario.
        */
-      pais: new FormControl('', [Validators.required]),
+      pais: new FormControl(this.solicitudStates.pais, [Validators.required]),
       /**
        * Estado o localidad del destinatario.
        */
-      estadoLocalidad: new FormControl('', [Validators.required]),
+      estadoLocalidad: new FormControl(this.solicitudStates.estadoLocalidad, [Validators.required]),
       /**
        * Municipio o alcaldía del destinatario.
        */
-      municipioAlcaldia: new FormControl('', [Validators.required]),
+      municipioAlcaldia: new FormControl(this.solicitudStates.municipioAlcaldia, [Validators.required]),
       /**
        * Localidad del destinatario.
        */
-      localidad: new FormControl(''),
+      localidad: new FormControl(this.solicitudStates.localidad),
       /**
        * Entidad federativa del destinatario.
        */
-      entidadFederativa: new FormControl('', [Validators.required]),
+      entidadFederativa: new FormControl(this.solicitudStates.entidadFederativa, [Validators.required]),
       /**
        * Código postal del destinatario.
        */
-      codigoPostaloEquivalente: new FormControl('', [Validators.required]),
+      codigoPostaloEquivalente: new FormControl(this.solicitudStates.codigoPostaloEquivalente, [Validators.required]),
       /**
        * Colonia del destinatario.
        */
-      colonia: new FormControl(''),
+      colonia: new FormControl(this.solicitudStates.colonia),
       /**
        * Colonia equivalente del destinatario.
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl(this.solicitudStates.coloniaoEquivalente),
       /**
        * Calle del destinatario.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl(this.solicitudStates.calle, [Validators.required]),
       /**
        * Número exterior del destinatario.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl(this.solicitudStates.numeroExterior, [Validators.required]),
       /**
        * Número interior del destinatario.
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl(this.solicitudStates.numeroInterior),
       /**
        * Lada del destinatario.
        */
-      lada: new FormControl(''),
+      lada: new FormControl(this.solicitudStates.lada),
       /**
        * Teléfono del destinatario.
        */
-      telefono: new FormControl('', [
+      telefono: new FormControl(this.solicitudStates.telefono, [
         TercerosRelacionadoesComponent.telefonoValidator,
       ]),
       /**
        * Correo electrónico del destinatario.
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl(this.solicitudStates.correoElectronico),
     });
 
     // Deshabilita campos hasta que se seleccione el tipo de persona
@@ -501,7 +582,7 @@ export class TercerosRelacionadoesComponent {
    * Inicializa el formulario para agregar un proveedor.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarProveedorFormGroup() {
+  initializeAgregarProveedorFormGroup():void{
     /**
      * Crea el formulario reactivos para agregar un proveedor.
      * Cada campo tiene sus propias validaciones.
@@ -510,65 +591,65 @@ export class TercerosRelacionadoesComponent {
       /**
        * Tipo de persona (física o moral).
        */
-      tipoPersona: new FormControl('', [Validators.required]),
+      tipoPersona: new FormControl(this.solicitudStates.tipoPersona, [Validators.required]),
       /**
        * Nombre del proveedor.
        */
-      nombre: new FormControl('', [Validators.required]),
+      nombre: new FormControl(this.solicitudStates.nombre, [Validators.required]),
       /**
        * Primer apellido del proveedor.
        */
-      primerApellido: new FormControl('', [Validators.required]),
+      primerApellido: new FormControl(this.solicitudStates.primerApellido, [Validators.required]),
       /**
        * Denominación o razón social del proveedor.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl(this.solicitudStates.denominacionRazonSocial, [Validators.required]),
       /**
        * Segundo apellido del proveedor (opcional).
        */
-      segundoApellido: new FormControl(''),
+      segundoApellido: new FormControl(this.solicitudStates.segundoApellido),
       /**
        * País del proveedor.
        */
-      pais: new FormControl('', [Validators.required]),
+      pais: new FormControl(this.solicitudStates.pais, [Validators.required]),
       /**
        * Estado del proveedor.
        */
-      estado: new FormControl('', [Validators.required]),
+      estado: new FormControl(this.solicitudStates.estado, [Validators.required]),
       /**
        * Código postal del proveedor (opcional).
        */
-      codigoPostaloEquivalente: new FormControl(''),
+      codigoPostaloEquivalente: new FormControl(this.solicitudStates.codigoPostaloEquivalente),
       /**
        * Colonia equivalente del proveedor (opcional).
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl(this.solicitudStates.coloniaoEquivalente),
       /**
        * Calle del proveedor.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl(this.solicitudStates.calle, [Validators.required]),
       /**
        * Número exterior del proveedor.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl(this.solicitudStates.numeroExterior, [Validators.required]),
       /**
        * Número interior del proveedor (opcional).
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl(this.solicitudStates.numeroInterior),
       /**
        * Lada del proveedor (opcional).
        */
-      lada: new FormControl(''),
+      lada: new FormControl(this.solicitudStates.lada),
       /**
        * Teléfono del proveedor (opcional).
        */
-      telefono: new FormControl('', [
+      telefono: new FormControl(this.solicitudStates.telefono, [
         TercerosRelacionadoesComponent.telefonoValidator,
       ]),
       /**
        * Correo electrónico del proveedor (opcional).
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl(this.solicitudStates.correoElectronico),
     });
 
     // Deshabilita campos hasta que se seleccione el tipo de persona
@@ -592,7 +673,7 @@ export class TercerosRelacionadoesComponent {
    * Inicializa el formulario para agregar un facturador.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarFacturadorFormGroup() {
+  initializeAgregarFacturadorFormGroup():void {
     /**
      * Crea el formulario reactivos para agregar un facturador.
      * Cada campo tiene sus propias validaciones.
@@ -601,69 +682,69 @@ export class TercerosRelacionadoesComponent {
       /**
        * Tipo de persona (física o moral).
        */
-      tipoPersona: new FormControl('', [Validators.required]),
+      tipoPersona: new FormControl(this.solicitudStates.tipoPersona, [Validators.required]),
       /**
        * Nombre del facturador.
        */
-      nombre: new FormControl('', [Validators.required]),
+      nombre: new FormControl(this.solicitudStates.nombre, [Validators.required]),
       /**
        * Primer apellido del facturador.
        */
-      primerApellido: new FormControl('', [Validators.required]),
+      primerApellido: new FormControl(this.solicitudStates.primerApellido, [Validators.required]),
       /**
        * Denominación o razón social del facturador.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl(this.solicitudStates.denominacionRazonSocial, [Validators.required]),
       /**
        * Segundo apellido del facturador (opcional).
        */
-      segundoApellido: new FormControl(''),
+      segundoApellido: new FormControl(this.solicitudStates.segundoApellido),
       /**
        * País del facturador.
        * Requiere validación adicional mediante `requiredPaisValidator`.
        */
-      pais: new FormControl('', [
+      pais: new FormControl(this.solicitudStates.pais, [
         Validators.required,
         TercerosRelacionadoesComponent.requiredPaisValidator,
       ]),
       /**
        * Estado del facturador.
        */
-      estado: new FormControl('', [Validators.required]),
+      estado: new FormControl(this.solicitudStates.estado, [Validators.required]),
       /**
        * Código postal del facturador (opcional).
        */
-      codigoPostaloEquivalente: new FormControl(''),
+      codigoPostaloEquivalente: new FormControl(this.solicitudStates.codigoPostaloEquivalente),
       /**
        * Colonia equivalente del facturador (opcional).
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl(this.solicitudStates.coloniaoEquivalente),
       /**
        * Calle del facturador.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl(this.solicitudStates.calle, [Validators.required]),
       /**
        * Número exterior del facturador.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl(this.solicitudStates.numeroExterior, [Validators.required]),
       /**
        * Número interior del facturador (opcional).
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl(this.solicitudStates.numeroInterior),
       /**
        * Lada del facturador (opcional).
        */
-      lada: new FormControl(''),
+      lada: new FormControl(this.solicitudStates.lada),
       /**
        * Teléfono del facturador (opcional).
        */
-      telefono: new FormControl('', [
+      telefono: new FormControl(this.solicitudStates.telefono, [
         TercerosRelacionadoesComponent.telefonoValidator,
       ]),
       /**
        * Correo electrónico del facturador (opcional).
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl(this.solicitudStates.correoElectronico),
     });
 
     // Deshabilita campos hasta que se seleccione el tipo de persona
@@ -716,9 +797,14 @@ export class TercerosRelacionadoesComponent {
    * @description Estos encabezados definen las columnas que se mostrarán en la tabla de facturadores.
    */
   facturadorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
-
+/**
+   * Indicador para determinar si se ha seleccionado una persona nacional.
+   * Inicialmente establecido en `false`.
+   */
   public nacional = false;
-
+/**
+ * Indicador para determinar si se ha seleccionado una persona extranjera.
+ */
   public extranjero = false;
 
   /**
@@ -743,7 +829,29 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de fabricantes.
    */
-  fabricanteRowData: TablaDatos[] = [];
+  fabricanteRowData: TablaDatos[] = [
+  {
+    tbodyData: [
+      'Laboratorios S.A.',
+      'LAB123456789',
+      'CURP123456HDFRRL01',
+      '55-12345678',
+      'contacto@laboratorios.com',
+      'Calle 1',
+      '100',
+      '2',
+      'México',
+      'Centro',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      '06000'
+    ]
+  }
+  
+];
 
   /**
    * Datos de las filas para la tabla de destinatarios.
@@ -751,7 +859,26 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de destinatarios.
    */
-  destinatarioRowData: TablaDatos[] = [];
+  destinatarioRowData: TablaDatos[] = [ {
+    tbodyData: [
+      'Empresa Destino S.A.',
+      'DES123456789',
+      'CURPDESTINO01',
+      '55-98765432',
+      'contacto@destino.com',
+      'Calle Destino',
+      '500',
+      '10',
+      'México',
+      'Colonia Centro',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      '07000'
+      ]
+  }];
 
   /**
    * Datos de las filas para la tabla de proveedores.
@@ -759,7 +886,26 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de proveedores.
    */
-  proveedorRowData: TablaDatos[] = [];
+  proveedorRowData: TablaDatos[] = [ {
+    tbodyData: [
+      'Proveedor Global S.A.',
+      'PRO123456789',
+      'CURPPROV001',
+      '55-11223344',
+      'contacto@proveedor.com',
+      'Av. Comercio',
+      '150',
+      '10',
+      'México',
+      'Colonia Industrial',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      '06500'
+      ]
+  }];
 
   /**
    * Datos de las filas para la tabla de facturadores.
@@ -767,7 +913,28 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de facturadores.
    */
-  facturadorRowData: TablaDatos[] = [];
+  facturadorRowData: TablaDatos[] = [
+     {
+    tbodyData: [
+      'Facturador Uno S.A.',
+      'FAC123456789',
+      'CURPFACT001',
+      '55-99887766',
+      'facturas@uno.com',
+      'Calle Factura',
+      '400',
+      '12',
+      'México',
+      'Colonia Centro',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      '08000'
+      ]
+  },
+  ];
 
   /**
    * Maneja el cambio en los checkboxes para seleccionar el tipo de persona.
@@ -775,7 +942,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @param checkBoxName Nombre del checkbox seleccionado (fisica o moral).
    */
-  public inputChecked(checkBoxName: string) {
+  public inputChecked(checkBoxName: string) : void {
     if (checkBoxName === 'fisica') {
       this.fisica = true;
       this.moral = false;
@@ -784,8 +951,11 @@ export class TercerosRelacionadoesComponent {
       this.moral = true;
     }
   }
-
-  public tercerosInputChecked(checkBoxName: string) {
+/**
+ *    
+ * @param checkBoxName 
+ */
+  public tercerosInputChecked(checkBoxName: string):void {
     if (checkBoxName === 'nacional') {
       this.nacional = true;
       this.extranjero = false;
@@ -799,7 +969,7 @@ export class TercerosRelacionadoesComponent {
    * Cambia la visibilidad del formulario de Fabricante.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivFabricante() {
+  toggleDivFabricante() :void{
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -810,7 +980,7 @@ export class TercerosRelacionadoesComponent {
    * Cambia la visibilidad del formulario de Destinatario.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivDestinatario() {
+  toggleDivDestinatario() :void{
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -821,7 +991,7 @@ export class TercerosRelacionadoesComponent {
    * Cambia la visibilidad del formulario de Proveedor.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivProveedor() {
+  toggleDivProveedor():void {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -832,7 +1002,7 @@ export class TercerosRelacionadoesComponent {
    * Cambia la visibilidad del formulario de Facturador.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivFacturador() {
+  toggleDivFacturador() :void{
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -851,7 +1021,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este método es llamado al enviar el formulario de agregar un fabricante.
    */
-  submitFabricanteForm() {
+  submitFabricanteForm() :void{
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1004,7 +1174,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este método es llamado al enviar el formulario de agregar un destinatario.
    */
-  submitDestinatarioForm() {
+  submitDestinatarioForm():void {
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1157,7 +1327,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este método es llamado al enviar el formulario de agregar un proveedor.
    */
-  submitProveedorForm() {
+  submitProveedorForm() :void{
     /**
      * Crea una nueva fila para la tabla con los datos del formulario.
      */
@@ -1207,7 +1377,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este método es llamado al enviar el formulario de agregar un facturador.
    */
-  submitFacturadorForm() {
+  submitFacturadorForm() :void{
     /**
      * Crea una nueva fila para la tabla con los datos del formulario.
      */
@@ -1285,7 +1455,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @param value Valor seleccionado del radio button.
    */
-   cambiarRadio(value: string | number) {
+   cambiarRadio(value: string | number):void {
     const VALOR_SELECCIONADO = value as string;
     this.tercerosInputChecked(VALOR_SELECCIONADO);
   }
@@ -1295,7 +1465,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @param value Valor seleccionado del radio button.
    */
-   cambiarRadioFisica(value: string | number) {
+   cambiarRadioFisica(value: string | number):void {
     const VALOR_SELECCIONADO = value as string;
     this.inputChecked(VALOR_SELECCIONADO);
   }
@@ -1322,6 +1492,15 @@ export class TercerosRelacionadoesComponent {
   static telefonoValidator(control: AbstractControl): ValidationErrors | null {
     const PATTERN = /^([0-9A-Za-z\-() ])*$/;
     return PATTERN.test(control.value) ? null : { invalidTelefono: true };
+  }
+  /**
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Este método completa el observable `destroyNotifier$` para cancelar las suscripciones activas.
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
 

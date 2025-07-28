@@ -15,6 +15,7 @@
               [required]="true"
               (change)="aduanaSeleccion()"
               name="aduana"
+              [isDisabled]="esFormularioSoloLectura"
             >
             </app-catalogo-select>
           </div>
@@ -26,6 +27,7 @@
               [required]="true"
               formControlName="organismoPublico"
               (change)="organismoPublico()"
+              [isDisabled]="esFormularioSoloLectura"
             ></lib-input-check>
           </div>
         </div>
@@ -50,6 +52,7 @@
                     'setUsoEspecifico')"
                 cols="110"
                 rows="4"
+                [disabled]="esFormularioSoloLectura"
               ></textarea>
             </div>
           </div>
@@ -58,16 +61,18 @@
               [commonTableHeader]="mercanciaHeaderData"
               [commonTableBody]="mercanciaBodyData"
             ></ng-table>
+            <div *ngIf="esFormularioSoloLectura" class="disable-overlay"></div>
           </div>
           <div class="col-md-12 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-default">Modificar</button>
-            <button type="button" class="btn btn-default ms-3">Eliminar</button>
+            <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
+            <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
             <button
               type="button"
               class="btn btn-primary ms-3"
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarMercancias"
               (click)="abrirDialogoMercancias()"
+              [disabled]="esFormularioSoloLectura"
             >
               Agregar
             </button>
@@ -91,6 +96,7 @@
                 maxlength="13"
                 class="form-control"
                 (change)="setValoresStore(exencionImpuestos, 'rfc', 'setRfc')"
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
           </div>
@@ -113,6 +119,7 @@
                     exencionImpuestos,
                     'numeroProgramaImmex',
                     'setNumeroProgramaImmex')"
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
           </div>
@@ -273,6 +280,7 @@
                     exencionImpuestos,
                     'correoElectronicoOpcional',
                     'setCorreoElectronicoOpcional')"
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
           </div>
@@ -290,6 +298,7 @@
                     exencionImpuestos,
                     'telefonoOpcional',
                     'setTelefonoOpcional')"
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
           </div>
@@ -477,7 +486,7 @@
   aria-hidden="true"
   #confirmarModal
 >
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content modalsm">
       <div class="modal-body">
         <label>La mercancía fue <br />agregada correctamente.</label>

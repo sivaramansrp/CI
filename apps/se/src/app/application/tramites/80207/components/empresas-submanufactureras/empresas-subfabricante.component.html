@@ -4,7 +4,7 @@
     <div class="col-md-4">
       <div class="form-group">
         <label for="modalidad" class="form-label text-nowrap"
-          >Selecciona la modalidad</label
+          >Selecciona la modalidad:</label
         >
         <input
           type="text"
@@ -20,7 +20,7 @@
 
     <div class="col-md-4">
       <div class="form-group">
-        <label for="folio" class="form-label">Folio</label>
+        <label for="folio" class="form-label">Folio:</label>
         <input
           type="text"
           id="folio"
@@ -35,7 +35,7 @@
 
     <div class="col-md-4">
       <div class="form-group">
-        <label for="ano" class="form-label">Año</label>
+        <label for="ano" class="form-label">Año:</label>
         <input
           type="text"
           id="ano"
@@ -62,7 +62,7 @@
           class="form-label text-nowrap text-truncate-ellipsis"
           [title]="'Registro federal de contribuyentes'"
           for="rfc"
-          >Registro federal de contribuyentes
+          >Registro federal de contribuyentes:
           <span class="require">*</span>
         </label>
         <input
@@ -74,11 +74,21 @@
           size="30"
           maxlength="13"
           (change)="obtenerRFC()"
+          [class.is-invalid]="
+          formularioDatosSubcontratista.get('rfc')?.touched &&
+          formularioDatosSubcontratista.get('rfc')?.invalid
+        "
         />
-        <div *ngIf="esInvalido('rfc')" class="text-danger">
-          <small *ngIf="formularioDatosSubcontratista.controls['rfc'].errors?.['required']">
-            Este campo es obligatorio.
-          </small>
+        <div
+            class="invalid-feedback"
+            *ngIf="
+              formularioDatosSubcontratista.get('rfc')?.touched &&
+              formularioDatosSubcontratista.get('rfc')?.invalid
+            "
+          >
+            <span *ngIf="formularioDatosSubcontratista.get('rfc')?.hasError('required')"
+              >Este campo es obligatorio.</span
+            >
           </div>
       </div>
     </div>
@@ -89,10 +99,13 @@
           [catalogo]="estadoCatalogo"
           [label]="'Estado'"
           [required]="true"
-          [isDisabled]="false"
-          name="estado"
+           id="estado"
+           [primerOptionValue]="SIN"
+           [hiddenPrimerOption]="false"
+           [disabledPrimerOption]="false"
+          [isDisabled]="esFormularioSoloLectura"
           formControlName="estado"
-          (selectionChange)="enEstadoSeleccionado($event)"
+          (change)="enEstadoSeleccionado()"
         ></app-catalogo-select>
         <div *ngIf="esInvalido('estado')" class="text-danger">
           <small *ngIf="formularioDatosSubcontratista.controls['estado'].errors?.['required']">
@@ -108,14 +121,15 @@
 <div class="row justify-content-end">
   <button
     type="button"
-    class="btn btn-primary col-auto pull-right float-end mt-3"
+    class="btn btn-primary col-auto pull-right float-end mt-3 me-5"
     (click)="realizarBusqueda()"
+    [disabled]="esFormularioSoloLectura"
   >
     Buscar plantas
   </button>
 </div>
 
-<div *ngIf="mostrarTablaSubfabricantesDisponibles$ | async" class="row mt-5">
+<div  class="row mt-5">
   <div class="col-md-12">
     <label for="submanufacturerasdisponibles"
       >Submanufactureras disponibles:</label
@@ -127,6 +141,7 @@
       [configuracionTabla]="configuracionTabla"
       [datos]="datosTablaSubfabricantesDisponibles"
       (listaDeFilaSeleccionada)="obtenerRegistroSeleccionado($event)"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
 
@@ -138,12 +153,13 @@
     type="button"
     class="btn btn-primary col-auto pull-right float-end mt-3"
     (click)="agregarPlantas()"
+    [disabled]="esFormularioSoloLectura"
   >
     Agregar plantas
   </button>
 </div>
 </div>
-<div *ngIf="mostrarTablaSubfabricantesSeleccionadas" class="row mt-5">
+<div  class="row mt-5">
   <div class="col-md-12">
     <label for="submanufacturerasdisponibles"
       >Plantas submanufactureras seleccionadas:</label
@@ -152,9 +168,10 @@
   <div class="col-md-12">
     <app-tabla-dinamica
       [tipoSeleccionTabla]="tablaSeleccion"
-      [configuracionTabla]="configuracionTabla"
-      [datos]="datosSubfabricanteParaSerAgregados"
+      [configuracionTabla]="configuracionTablaPlantas"
+      [datos]="datosPlantasParaSerAgregados"
       (listaDeFilaSeleccionada)="datosDelSubfabricantePorEliminar($event)"
+     [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
 
@@ -162,8 +179,8 @@
     <button
       type="button"
       class="btn btn-danger col-auto pull-right float-end mt-3"
-      [disabled]="listaDeSubfabricantesPorEliminar.length === 0"
       (click)="eliminarPlantas()"
+      [disabled]="esFormularioSoloLectura"
     >
       Eliminar plantas
     </button>

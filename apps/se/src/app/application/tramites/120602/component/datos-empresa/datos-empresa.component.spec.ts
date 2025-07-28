@@ -1,191 +1,205 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { DatosEmpresaComponent } from './datos-empresa.component';
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 import { Tramite120602Store } from '../../../../estados/tramites/tramite120602.store';
 import { Tramite120602Query } from '../../../../estados/queries/tramite120602.query';
-import { of, Subject } from 'rxjs';
-
-jest.mock('libs/shared/theme/assets/json/120602/drop-down.json', () => ({
-  __esModule: true,
-  default: {
-    listaDesplegable: [
-      { id: 1, descripcion: 'CHIHUAHUA' },
-      { id: 2, descripcion: 'CIUDAD JUAREZ' },
-    ],
-  },
-}));
-
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('DatosEmpresaComponent', () => {
   let component: DatosEmpresaComponent;
   let fixture: ComponentFixture<DatosEmpresaComponent>;
-  let tramiteStoreMock: Partial<Tramite120602Store>;
-  let tramiteQueryMock: Partial<Tramite120602Query>;
-  let consultaioQueryMock: Partial<ConsultaioQuery>;
+  let mockTramite120602Store: any;
+  let mockTramite120602Query: any;
+  let mockConsultaioQuery: any;
 
   beforeEach(async () => {
-    tramiteStoreMock = {
+    mockTramite120602Store = {
       setTipoEmpresa: jest.fn(),
       setRepresentacionFederal: jest.fn(),
-      // add other store methods used in tests if needed
     };
-
-    tramiteQueryMock = {
+    mockTramite120602Query = {
       selectSolicitud$: of({
-        estado: 'Estado1',
-        representacionFederal: 'Federal1',
-        tipoEmpresa: 'Empresa1',
-        especifique: 'Especifique1',
-        actividadEconomicaPreponderante: 'Actividad1',
-        descripcion: 'Descripcion1',
-        pais: 'Pais1',
+        estado: 'CDMX',
+        representacionFederal: 'Federal',
+        tipoEmpresa: 'SA',
+        especifique: 'Especifique',
+        actividadEconomicaPreponderante: 'Comercio',
+        descripcion: 'Desc',
+        pais: 'MX',
         codigoPostal: '12345',
-        estadoDomicilio: 'EstadoDomicilio1',
-        municipioAlcaldia: 'Municipio1',
-        localidad: 'Localidad1',
-        colonia: 'Colonia1',
-        calle: 'Calle1',
-        numeroExterior: '1',
-        numeroInterior: '2',
-        lada: '123',
-        telefono: '4567890',
+        estadoDomicilio: 'CDMX',
+        municipioAlcaldia: 'Benito Juarez',
+        localidad: 'Centro',
+        colonia: 'Roma',
+        calle: 'Insurgentes',
+        numeroExterior: '100',
+        numeroInterior: '10',
+        lada: '55',
+        telefono: '12345678',
         nacionalidad: 'Mexicana',
-        tipoDePersona: 'Fisica',
-        taxId: 'Tax123',
-        denominacion: 'Denominacion1',
-        datosPais: 'PaisDatos',
-        datosCodigoPostal: '54321',
-        datosEstado: 'EstadoDatos',
-        correoElectronico: 'email@test.com'
+        tipoDePersona: 'Moral',
+        taxId: 'TAX123',
+        denominacion: 'Empresa SA',
+        datosPais: 'MX',
+        datosCodigoPostal: '12345',
+        datosEstado: 'CDMX',
+        correoElectronico: 'test@mail.com'
       })
     };
-
-  consultaioQueryMock = {
-    selectConsultaioState$: of({
-      procedureId: '',
-      parameter: '',
-      department: '',
-      folioTramite: '',
-      tipoDeTramite: '',
-      estadoDeTramite: '',
-      readonly: false,
-      create: false,
-      update: false,
-      consultaioSolicitante: null
-    })
-  };
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false })
+    };
 
     await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        CatalogoSelectComponent,
-        TituloComponent,
-        AlertComponent,
-        InputRadioComponent,
-        TablaDinamicaComponent,
-        BtnContinuarComponent,
-        DatosEmpresaComponent
-      ],
-      declarations: [],
+      imports: [ReactiveFormsModule, DatosEmpresaComponent],
       providers: [
         FormBuilder,
-        { provide: Tramite120602Store, useValue: tramiteStoreMock },
-        { provide: Tramite120602Query, useValue: tramiteQueryMock },
-        { provide: ConsultaioQuery, useValue: consultaioQueryMock }
+        { provide: Tramite120602Store, useValue: mockTramite120602Store },
+        { provide: Tramite120602Query, useValue: mockTramite120602Query },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
       ]
-    })
-      .compileComponents();
-  });
+    }).compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(DatosEmpresaComponent);
     component = fixture.componentInstance;
+    component.datosTablaExtranjeros = [];
+    component.datosGenerales = [];
+    component.tablaDatosSucursal = [];
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize formularioEmpresa form on init', () => {
-    expect(component.formularioEmpresa).toBeDefined();
-    expect(component.formularioEmpresa.get('estado')).toBeDefined();
-    expect(component.formularioEmpresa.get('representacionFederal')).toBeDefined();
-  });
-
-  it('should fill default values in the form', () => {
-    expect(component.formularioEmpresa.get('pais')?.value).toBe('ESTADOS UNIDOS MEXICANOS');
-    expect(component.formularioEmpresa.get('codigoPostal')?.value).toBe('32679');
-    expect(component.formularioEmpresa.get('estado')?.value).toBe('CHIHUAHUA');
-  });
-
-  it('should set federalEstatal catalog options', () => {
-    component.obtenerFederalEstatal();
-    expect(component.federalEstatal.length).toBeGreaterThan(0);
-  });
-
-
-  it('should have table configurations defined', () => {
-    expect(component.configuracionTabla.length).toBeGreaterThan(0);
-    expect(component.tableHeader.length).toBeGreaterThan(0);
-    expect(component.tableHeaderExtranjeros.length).toBeGreaterThan(0);
-  });
-
-  it('should have default data for tables', () => {
-    expect(component.datosTablaExtranjeros).toBeDefined();
-    expect(component.datosGenerales).toBeDefined();
-    expect(component.tablaDatosSucursal).toBeDefined();
-  });
-
-  it('should initialize formularioEmpresa with values from tramiteQuery', done => {
-    setTimeout(() => {
-      expect(component.formularioEmpresa).toBeDefined();
-      expect(component.formularioEmpresa.get('estado')?.value).toBe('Estado1');
-      expect(component.formularioEmpresa.get('representacionFederal')?.value).toBe('Federal1');
-      done();
-    }, 10);
-  });
-
-   it('should disable all form controls when esFormularioSoloLectura is true', done => {
-    consultaioQueryMock.selectConsultaioState$ = of({
-      procedureId: '',
-      parameter: '',
-      department: '',
-      folioTramite: '',
-      tipoDeTramite: '',
-      estadoDeTramite: '',
-      readonly: true,
-      create: false,
-      update: false,
-      consultaioSolicitante: null
+  it('debe inicializar formularioEmpresa con los valores correctos', () => {
+    expect(component.formularioEmpresa.getRawValue()).toMatchObject({
+      estado: 'CDMX',
+      representacionFederal: 'Federal',
+      tipoEmpresa: 'SA',
+      especifique: 'Especifique',
+      actividadEconomicaPreponderante: 'Comercio',
+      descripcion: 'Desc',
+      pais: 'MX',
+      codigoPostal: '12345',
+      estadoDomicilio: 'CDMX',
+      municipioAlcaldia: 'Benito Juarez',
+      localidad: 'Centro',
+      colonia: 'Roma',
+      calle: 'Insurgentes',
+      numeroExterior: '100',
+      numeroInterior: '10',
+      lada: '55',
+      telefono: '12345678',
+      nacionalidad: 'Mexicana',
+      tipoDePersona: 'Moral',
+      taxId: 'TAX123',
+      denominacion: 'Empresa SA',
+      datosPais: 'MX',
+      datosCodigoPostal: '12345',
+      datosEstado: 'CDMX',
+      correoElectronico: 'test@mail.com'
     });
-    component['destroyNotifier$'] = new Subject<void>();
-
-    component.ngOnInit();
-    setTimeout(() => {
-      expect(component.esFormularioSoloLectura).toBe(true);
-      const allDisabled = Object.keys(component.formularioEmpresa.controls).every(control =>
-        component.formularioEmpresa.get(control)?.disabled
-      );
-      expect(allDisabled).toBe(true);
-      done();
-    }, 10);
   });
 
-  it('should unsubscribe from observables on ngOnDestroy', () => {
-    const spyNext = jest.spyOn(component['destroyNotifier$'], 'next');
-    const spyComplete = jest.spyOn(component['destroyNotifier$'], 'complete');
-    component.ngOnDestroy();
-    expect(spyNext).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
+  it('debe llamar a setValoresStore y actualizar el store en cambioDeRadio', () => {
+    const spy = jest.spyOn(component, 'setValoresStore');
+    component.cambioDeRadio('Moral', 'tipoEmpresa', 'setTipoEmpresa');
+    expect(component.formularioEmpresa.get('tipoEmpresa')?.value).toBe('Moral');
+    expect(spy).toHaveBeenCalledWith(component.formularioEmpresa, 'tipoEmpresa', 'setTipoEmpresa');
+    expect(mockTramite120602Store.setTipoEmpresa).toHaveBeenCalledWith('Moral');
   });
 
-  it('should set federalEstatal on obtenerFederalEstatal call', () => {
+  it('debe establecer federalEstatal cuando dropDown.listaDesplegable existe', () => {
+    const mockLista = [{ id: 1, nombre: 'Federal' }, { id: 2, nombre: 'Estatal' }];
+    (component as any).dropDown = { listaDesplegable: mockLista };
     component.obtenerFederalEstatal();
-    expect(component.federalEstatal).toBeDefined();
-    expect(component.federalEstatal.length).toBeGreaterThan(0);
+    expect(component.federalEstatal).toEqual(mockLista);
+  });
+
+  it('no debe establecer federalEstatal si dropDown es undefined', () => {
+    (component as any).dropDown = undefined;
+    component.federalEstatal = [{ id: 0, descripcion: 'debe permanecer igual' }];
+    component.obtenerFederalEstatal();
+    expect(component.federalEstatal).toEqual([{ id: 0, descripcion: 'debe permanecer igual' }]);
+  });
+
+  it('no debe establecer federalEstatal si dropDown.listaDesplegable no existe', () => {
+    (component as any).dropDown = {};
+    component.federalEstatal = [{ id: 0, descripcion: 'debe permanecer igual' }];
+    component.obtenerFederalEstatal();
+    expect(component.federalEstatal).toEqual([{ id: 0, descripcion: 'debe permanecer igual' }]);
+  });
+
+  it('no debe establecer federalEstatal si dropDown es null', () => {
+    (component as any).dropDown = null;
+    component.federalEstatal = [{ id: 0, descripcion: 'debe permanecer igual' }];
+    component.obtenerFederalEstatal();
+    expect(component.federalEstatal).toEqual([{ id: 0, descripcion: 'debe permanecer igual' }]);
+  });
+
+  it('debe deshabilitar todos los controles si esFormularioSoloLectura es true', () => {
+    component.esFormularioSoloLectura = true;
+    component['solicitudState'] = {
+      estado: 'CDMX',
+      representacionFederal: 'Federal',
+      tipoEmpresa: 'SA',
+      especifique: 'Especifique',
+      actividadEconomicaPreponderante: 'Comercio',
+      descripcion: 'Desc',
+      pais: 'MX',
+      codigoPostal: '12345',
+      estadoDomicilio: 'CDMX',
+      municipioAlcaldia: 'Benito Juarez',
+      localidad: 'Centro',
+      colonia: 'Roma',
+      calle: 'Insurgentes',
+      numeroExterior: '100',
+      numeroInterior: '10',
+      lada: '55',
+      telefono: '12345678',
+      nacionalidad: 'Mexicana',
+      tipoDePersona: 'Moral',
+      taxId: 'TAX123',
+      denominacion: 'Empresa SA',
+      datosPais: 'MX',
+      datosCodigoPostal: '12345',
+      datosEstado: 'CDMX',
+      correoElectronico: 'test@mail.com'
+    };
+    component['inicializarFormulario']();
+    const allDisabled = Object.values(component.formularioEmpresa.controls).every(ctrl => ctrl.disabled);
+    expect(allDisabled).toBe(true);
+  });
+
+  it('no debe llamar al método del store si el control no existe en setValoresStore', () => {
+    const fakeForm: any = { get: () => undefined };
+    component.setValoresStore(fakeForm, 'notExist', 'setTipoEmpresa');
+    expect(mockTramite120602Store.setTipoEmpresa).not.toHaveBeenCalled();
+  });
+
+  it('no debe lanzar error si setValoresStore es llamado con control que retorna undefined', () => {
+    const fakeForm: any = { get: () => ({ value: undefined }) };
+    expect(() => component.setValoresStore(fakeForm, 'tipoEmpresa', 'setTipoEmpresa')).not.toThrow();
+  });
+
+  it('no debe lanzar error si cambioDeRadio es llamado con control inexistente', () => {
+    expect(() => component.cambioDeRadio('value', 'notExist', 'setTipoEmpresa')).not.toThrow();
+  });
+
+  it('debe limpiar las suscripciones al destruir el componente', () => {
+    (component as any).dropDown = { listaDesplegable: [] };
+    const nextSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('no debe lanzar error si ngOnDestroy se llama varias veces', () => {
+    (component as any).dropDown = { listaDesplegable: [] };
+    component.ngOnDestroy();
+    expect(() => component.ngOnDestroy()).not.toThrow();
   });
 });

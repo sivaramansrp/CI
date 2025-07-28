@@ -12,10 +12,26 @@ describe('DomiciliosDePlantasComponent', () => {
 
     fixture = TestBed.createComponent(DomiciliosDePlantasComponent);
     component = fixture.componentInstance;
+    component.domiciliosTabla = [
+      {
+        calle: '',
+        numero: '',
+        interior: '',
+        postal: '',
+        colonia: '',
+        municipio: '',
+        estado: '',
+        pais: '',
+        registro: '',
+        registroFederalDeContribuyentes: '',
+        razonSocial: '',
+        domicilioFiscalDelSolicitante: '',
+      }
+    ];
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 });

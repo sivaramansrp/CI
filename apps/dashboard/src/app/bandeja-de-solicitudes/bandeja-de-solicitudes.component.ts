@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { BandejaDeSolicitudeService } from '../services/bandeja-de-solicitude.service';
 import { CommonModule } from '@angular/common';
+import { SeleccionadoDepartamento } from '@libs/shared/data-access-user/src/core/models/shared/bandeja-de-tareas-pendientes.model';
 /* 
   Componente bandeja-de-solicitudes:
   - selector: etiqueta HTML del componente.
@@ -33,6 +34,27 @@ export class BandejaDeSolicitudesComponent implements OnInit,OnDestroy {
    * Datos que se mostrarán en la tabla de solicitudes.
    */
   public bandejaTablaDatos: BandejaDeSolicitudes[] = [];
+
+  /**
+   * Almacena una copia de los datos mostrados en la tabla "Bandeja de Solicitudes".
+   * Este arreglo se utiliza para mantener una versión sin modificar de los datos originales,
+   * lo cual puede ser útil para operaciones como filtrado, búsqueda o restablecimiento
+   * de la tabla a su estado inicial.
+   */
+  public copiarBandejaTablaDatos: BandejaDeSolicitudes[] = [];
+
+    /**
+     * Representa el objeto del departamento actualmente seleccionado.
+     * 
+     * @property {boolean} tieneDepartamento - Indica si un departamento está seleccionado.
+     * @property {string} numeroDeProcedimiento - El número de procedimiento asociado al departamento.
+     * @property {string} nombreDelDepartamento - El nombre del departamento seleccionado.
+     */
+    public selectedDepartamentoObj: SeleccionadoDepartamento = {
+      tieneDepartamento: false,
+      numeroDeProcedimiento: '',
+      nombreDelDepartamento: '',
+    };
   /*
    * Configuración de las columnas que se visualizarán en la tabla de solicitudes.
    */
@@ -98,7 +120,17 @@ export class BandejaDeSolicitudesComponent implements OnInit,OnDestroy {
   public getSolicitudeTablaDatos(): void {
     this.bandejaSvc.getSolicitudeTablaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       this.bandejaTablaDatos = JSON.parse(JSON.stringify(response));
+      this.copiarBandejaTablaDatos = this.bandejaTablaDatos;
     });
+  }
+
+  /**
+   * Actualiza la propiedad `numeroDeProcedimiento` del objeto de departamento seleccionado
+   * con el valor proporcionado en el evento.
+   */
+  public procedureNumero(evento: { campo: string; valor: string }): void {
+    const NUMERO_DE_PROCEDIMIENTO = evento.valor;
+    this.selectedDepartamentoObj.numeroDeProcedimiento = NUMERO_DE_PROCEDIMIENTO;
   }
  /*
    * Hook de destrucción del componente.

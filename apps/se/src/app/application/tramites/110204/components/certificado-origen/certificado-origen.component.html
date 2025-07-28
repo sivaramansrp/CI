@@ -1,85 +1,24 @@
-<div>
-    <form [formGroup]="formCertificado">
-        <div>
-            <ng-titulo titulo="Validación inicial del certificado de circulación de mercancías" />
-
-            <div class="row">
-                <div class="col-md-12">
-                    <label class="form-check-label text-justify" for="tercerOperador">
-                        ¿La operación se realizó con un tercer operador?
-                    </label>
-                </div>
-                <div class="col-md-12">
-                    <input class="form-check-input" type="checkbox" id="tercerOperador"
-                        formControlName="tercerOperador" /> &nbsp;si
-                </div>
-            </div>
-        </div>
-        <ng-titulo titulo="Tratado y país o bloque" />
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <app-catalogo-select [catalogo]="(estados$ | async) || []" [label]="'Tratado / Acuerdo'"
-                    [required]="true" name="estado" formControlName="entidadFederativa"
-                    (selectionChange)="tipoEstadoSeleccion($event)"></app-catalogo-select>
-            </div>
-
-            <div class="col-md-6">
-                <app-catalogo-select [catalogo]="(pais$ | async) || []" [label]="'País / Bloque'" [required]="true"
-                    name="estado" formControlName="bloque"
-                    (selectionChange)="tipoSeleccion($event)"></app-catalogo-select>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <label for="fracciónArancelaria" class="form-label">Fracción arancelaria:</label>
-                <input type="text" class="form-control" formControlName="fracciónArancelariaForm"
-                    id="fracciónArancelaria">
-            </div>
-
-            <div class="col-md-4">
-                <label for="registroProducto" class="form-label"># Registro producto:</label>
-                <input type="text" class="form-control" formControlName="registroProductoForm" id="registroProducto">
-            </div>
-            <div class="col-md-4">
-                <label for="nombreComercial" class="form-label">Nombre comercial:</label>
-                <input type="text" class="form-control" formControlName="nombreComercialForm" id="nombreComercial">
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-12  text-center">
-                <label for="fracciónArancelaria" class="form-label">Periodo</label>
-            </div>
-        </div>
-
-        <div class="col-md-4 form-field">
-            <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicio')?.value"
-            (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
-        </div>
-        <div class="col-md-4 form-field">
-            <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinal')?.value" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
-        </div>
-
-        <div class="row w-100">
-            <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary" [disabled]="formCertificado.invalid" (click)="buscarrMercancia()">Mercancías Disponibles</button>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <ng-titulo titulo="Mercancías disponibles" />
-
-            </div>
-        </div>
-        <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="(datos1$ | async) || []"
-            [tipoSeleccionTabla]="seleccionTabla" (filaClic)="abrirModificarModal($event)"></app-tabla-dinamica>
-
-    </form>
-
-</div>
+<app-certificado-de-origen 
+    [operador]="operador"
+    [tratadoAcuerdo]="(estados$ | async) || []"
+    [paisBloqu]="(pais$ | async) || []"
+    (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)"
+    (paisBloquEvent)="tipoSeleccion($event)"
+    (setbuscarMercanciaEvent)="buscarrMercancia()"
+    [tableData]="(datos1 | async) ||  []"
+    (filaClics)="abrirModificarModal($event)"
+    [tablaSeleccionEvent]="tablaSeleccionEvent"
+    [guardarClicado]="(datosTabla$ | async) ||  []"
+    (formaValida)="setFormValida($event)"
+    [datosForm]="formCertificado"
+    [cargoDeMercancias]="cargoDeMercancias"
+    [mercanciasDisponibles]="mercanciasDisponibles"
+    [mercanciasDisponiblesTabla]="mercanciasDisponiblesTabla"
+    [esFormularioSoloLectura]="esFormularioSoloLectura"
+    (formCertificadoEvent)="setValoresStore($event)" >
+</app-certificado-de-origen>
 
 <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
-    <app-mercancias-modal  [datosSeleccionados]="datosSeleccionados" (guardarClicado)="abrirModificarModal($event)"
+    <app-mercancias-modal [esFormularioSoloLectura]="esFormularioSoloLectura" [datosSeleccionados]="datosSeleccionados" (guardarClicado)="abrirModificarModal($event)"
         (cerrarClicado)="cerrarModificarModal()"></app-mercancias-modal>
 </div>

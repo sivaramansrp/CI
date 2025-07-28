@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, NicoInfo } from '@libs/shared/data-access-user/src/core/models/260906/domicilo.model';
 import { Solicitud260906State, Tramite260906Store } from '../../../../estados/tramites/tramite260906.store';
@@ -7,53 +7,32 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enums/260906/domicilo.enum';
 import { CommonModule } from '@angular/common';
 import { FECHA_DE_PAGO } from '@libs/shared/data-access-user/src/core/enums/260906/manifiestos.enum';
-import { HttpClient } from '@angular/common/http';
 import { SanitarioService } from '../../services/sanitario.service';
 import { Tramite260906Query } from '../../../../estados/queries/tramite260906.query';
 
-/**
- * Interfaz para la respuesta de la tabla de NICO.
- */
+/** Interfaz para la respuesta de la tabla de NICO */
 export interface RespuestaTabla {
-  /**
-   * Codigo de respuesta.
-   */
+  /** Código de respuesta */
   codigo: number;
-  /**
-   * Datos de la tabla NICO.
-   */
+  /** Datos de la tabla NICO */
   datos: NicoInfo[];
-  /**
-   * Mensaje de la respuesta.
-   */
+  /** Mensaje de la respuesta */
   mensaje: string;
 }
 
-/**
- * Interfaz para la respuesta de la tabla de mercancías.
- */
+/** Interfaz para la respuesta de la tabla de mercancías */
 export interface MercanciasTabla {
-  /**
-   * Codigo de respuesta.
-   */
+  /** Código de respuesta */
   codigo: number;
-  /**
-   * Datos de la tabla de mercancías.
-   */
+  /** Datos de la tabla de mercancías */
   datos: MercanciasInfo[];
-  /**
-   * Mensaje de la respuesta.
-   */
+  /** Mensaje de la respuesta */
   mensaje: string;
 }
 
 /**
- * @component
- * @name DomicilloComponent
- * @description
  * Componente principal para gestionar el formulario de domicilio.
- * Este componente incluye funcionalidades para manejar datos de domicilio,
- * mercancías, agentes y tablas dinámicas.
+ * Incluye funcionalidades para manejar datos de domicilio, mercancías, agentes y tablas dinámicas.
  */
 @Component({
   selector: 'app-domicillo',
@@ -72,171 +51,123 @@ export interface MercanciasTabla {
   styleUrl: './domicillo.component.css',
 })
 export class DomicilloComponent implements OnInit, OnDestroy {
-  /**
-   * Indica si un campo es requerido o no.
-   * @type {boolean}
-   * @default false
-   */
+  /** Indica si el componente está en modo solo lectura */
+  @Input() soloLectura: boolean = false;
+  
+  /** Indica si un campo es requerido o no */
   noRequerido: boolean = false;
-  /**
-   * Lista de componentes Crosslist disponibles en la vista.
-   */
+  
+  /** Lista de componentes Crosslist disponibles */
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
-  /**
-   * Estado actual de la solicitud.
-   */
+  /** Estado actual de la solicitud */
   public solicitudState!: Solicitud260906State;
 
-  /**
-   * Notificador para destruir los observables al finalizar.
-   */
+  /** Notificador para gestionar la destrucción de suscripciones */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  /**
-   * Constructor del componente.
-   * @param fb FormBuilder para crear formularios reactivos.
-   * @param httpServicios Cliente HTTP para servicios API.
-   * @param tramite260906Store Almacén del trámite 260906.
-   * @param tramite260906Query Consulta del trámite 260906.
-   */
-  constructor(
-    private readonly fb: FormBuilder,
-    private readonly httpServicios: HttpClient,
-    private tramite260906Store: Tramite260906Store,
-    private tramite260906Query: Tramite260906Query,
-    private service: SanitarioService,
-  ) {
-    // Dependencia inyectada para uso posterior
-  }
-
-  /**
-   * Grupo de formularios para domicilio.
-   */
+  /** Grupo de formularios para domicilio */
   domicilio!: FormGroup;
-
-  /**
-   * Grupo de formularios para agente.
-   */
+  
+  /** Grupo de formularios para agente */
   formAgente!: FormGroup;
-
-  /**
-   * Grupo de formularios para mercancías.
-   */
+  
+  /** Grupo de formularios para mercancías */
   formMercancias!: FormGroup;
-
-  /**
-   * Control para la fecha de aduanas de entrada.
-   */
+  
+  /** Control para fecha de aduanas de entrada */
   aduanasDeEntradaFecha: FormControl = new FormControl('');
-
-  /**
-   * Control para la fecha seleccionada de aduanas de entrada.
-   */
+  
+  /** Control para fecha seleccionada de aduanas de entrada */
   aduanasDeEntradaFechaSeleccionada: FormControl = new FormControl('');
-  /**
-   * Lista de catálogos de formaFarmaceutica.
-   */
+  
+  /** Lista de catálogos de formas farmacéuticas */
   formaFarmaceutica: Catalogo[] = [];
-  /**
-   * Lista de catálogos de estados.
-   */
+  
+  /** Lista de catálogos de estados */
   estado: Catalogo[] = [];
-
-  /**
-   * Lista de países para la selección de origen.
-   */
+  
+  /** Lista de países para selección de origen */
   public crosListaDePaises = CROSLISTA_DE_PAISES;
-
-  /**
-   * Configuración de tabla para selección de tipo checkbox.
-   */
+  
+  /** Configuración de tabla para selección tipo checkbox */
   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
-
-  /**
-   * Configuración de columnas para la tabla NICO.
-   */
+  
+  /** Configuración de columnas para tabla NICO */
   nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
-
-  /**
-   * Datos cargados para la tabla NICO.
-   */
+  
+  /** Datos cargados para tabla NICO */
   nicoTablaDatos: NicoInfo[] = [];
-
-  /**
-   * Configuración de columnas para la tabla de mercancías.
-   */
+  
+  /** Configuración de columnas para tabla de mercancías */
   mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
-
-  /**
-   * Datos cargados para la tabla de mercancías.
-   */
+  
+  /** Datos cargados para tabla de mercancías */
   mercanciasTablaDatos: MercanciasInfo[] = [];
-
-  /**
-   * Lista de aduanas seleccionadas.
-   */
+  
+  /** Lista de aduanas seleccionadas */
   aduanasDeEntradaSeleccionadas: string[] = [];
-
-  /**
-   * Lista de datos de aduanas de entrada.
-   */
+  
+  /** Lista de datos de aduanas de entrada */
   aduanasDeEntradaDatos: string[] = [];
-
-  /**
-   * Indica si la sección es colapsable.
-   */
+  
+  /** Indica si la sección es colapsable */
   colapsable: boolean = false;
-
-  /**
-   * Indica si la sección "Duo" es colapsable.
-   */
+  
+  /** Indica si la sección "Duo" es colapsable */
   colapsableDos: boolean = false;
-
-  /**
-   * Indica si la sección "Tres" es colapsable.
-   */
+  
+  /** Indica si la sección "Tres" es colapsable */
   colapsableTres: boolean = false;
-
-  /**
-   * Lista de países para seleccionar el origen de la primera sección.
-   */
+  
+  /** Lista de países para seleccionar origen (primera sección) */
   seleccionarOrigenDelPais: string[] = this.crosListaDePaises;
-
-  /**
-   * Lista de países para seleccionar el origen de la segunda sección.
-   */
+  
+  /** Lista de países para seleccionar origen (segunda sección) */
   seleccionarOrigenDelPaisDos: string[] = this.crosListaDePaises;
-
-  /**
-   * Lista de países para seleccionar el origen de la tercera sección.
-   */
+  
+  /** Lista de países para seleccionar origen (tercera sección) */
   seleccionarOrigenDelPaisTres: string[] = this.crosListaDePaises;
-
-  /**
-   * Etiqueta para el crosslist de país de procedencia.
-   */
+  
+  /** Etiqueta para crosslist de país de procedencia */
   public paisDeProcedenciaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de procedencia',
     derecha: 'País(es) seleccionados',
   };
-
-  /**
-   * Configuración de las fechas de inicio y fin.
-   * @type {InputFecha}
-   */
+  
+  /** Configuración de fechas de inicio y fin */
   public fechaCaducidadInput: InputFecha = FECHA_DE_PAGO;
 
+  /** Lista de pedimentos asociados */
   pedimentos: Array<Pedimento> = [];
+  
+  /** Índice del elemento a eliminar */
   elementoParaEliminar!: number;
+  
+  /** Configuración para nueva notificación */
   public nuevaNotificacion!: Notificacion;
 
   /**
-   * Método que se ejecuta al inicializar el componente.
+   * Constructor del componente
+   * 
+   * @param fb FormBuilder para crear formularios
+   * @param tramite260906Store Store para gestionar estado del trámite
+   * @param tramite260906Query Query para obtener estado de la solicitud
+   * @param service Servicio para obtener datos sanitarios
+   */
+  constructor(
+    private readonly fb: FormBuilder,
+    private tramite260906Store: Tramite260906Store,
+    private tramite260906Query: Tramite260906Query,
+    private service: SanitarioService,
+  ) { }
+
+  /**
+   * Método de inicialización del componente
+   * Configura formularios, suscripciones y carga datos iniciales
    */
   ngOnInit(): void {
-    this.tramite260906Query
-      .selectSolicitud$
+    this.tramite260906Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -244,17 +175,38 @@ export class DomicilloComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    
+    this.cargarDatosIniciales();
+    this.inicializarFormularios();
+  }
+
+  /**
+   * Carga datos iniciales desde servicios
+   * @private
+   */
+  private cargarDatosIniciales(): void {
     this.obtenerFormaFarmaceuticaList();
     this.obtenerEstadoList();
     this.obtenerTablaDatos();
     this.obtenerMercanciasDatos();
-    this.inicializarFormGroup();
   }
 
-  inicializarFormGroup(): void {
-    /**
- * Inicialización del formulario de domicilio.
- */
+  /**
+   * Inicializa los grupos de formularios
+   * @private
+   */
+  private inicializarFormularios(): void {
+    this.inicializarFormularioDomicilio();
+    this.inicializarFormularioAgente();
+    this.inicializarFormularioMercancias();
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Inicializa el formulario de domicilio
+   * @private
+   */
+  private inicializarFormularioDomicilio(): void {
     this.domicilio = this.fb.group({
       codigoPostal: [this.solicitudState?.codigoPostal, Validators.required],
       formaFarmaceutica: [this.solicitudState?.formaFarmaceutica, Validators.required],
@@ -266,79 +218,175 @@ export class DomicilloComponent implements OnInit, OnDestroy {
       lada: [this.solicitudState?.lada],
       telefono: [this.solicitudState?.telefono, Validators.required],
       avisoCheckbox: [this.solicitudState?.avisoCheckbox],
-      licenciaSanitaria: [{ value: this.solicitudState?.licenciaSanitaria, disabled: false }],
+      licenciaSanitaria: [
+        { value: this.solicitudState?.licenciaSanitaria, disabled: false }
+      ],
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas],
       numeroPermiso: [this.solicitudState?.numeroPermiso],
       tiempoPrograma: [this.solicitudState?.tiempoPrograma]
     });
+  }
 
-    /**
-     * Inicialización del formulario de agente.
-     */
+  /**
+   * Inicializa el formulario de agente
+   * @private
+   */
+  private inicializarFormularioAgente(): void {
     this.formAgente = this.fb.group({
       claveScianModal: [this.solicitudState?.claveScianModal, Validators.required],
       claveDescripcionModal: [this.solicitudState?.claveDescripcionModal],
     });
+  }
 
-    /**
-     * Inicialización del formulario de mercancías.
-     */
+  /**
+   * Inicializa el formulario de mercancías
+   * @private
+   */
+  private inicializarFormularioMercancias(): void {
     this.formMercancias = this.fb.group({
       clasificacion: [this.solicitudState?.clasificacion, Validators.required],
-      especificarClasificacionProducto: [this.solicitudState?.especificarClasificacionProducto, Validators.required],
-      denominacionEspecifica: [this.solicitudState?.denominacionEspecifica, Validators.required],
-      denominacionDistintiva: [this.solicitudState?.denominacionDistintiva, Validators.required],
-      denominacionComun: [this.solicitudState?.denominacionComun, Validators.required],
-      tipoDeProducto: [this.solicitudState?.tipoDeProducto, Validators.required],
-      formaFarmaceutica: [this.solicitudState?.formaFarmaceutica, Validators.required],
-      estadoFisico: [this.solicitudState?.estadoFisico, Validators.required],
-      fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, Validators.required],
-      descripcionFraccion: [{ value: this.solicitudState?.descripcionFraccion, disabled: true }, Validators.required],
-      cantidadUMT: [this.solicitudState?.cantidadUMT, Validators.required],
-      UMT: [{ value: this.solicitudState?.UMT, disabled: true }, Validators.required],
-      cantidadUMC: [this.solicitudState?.cantidadUMC, Validators.required],
-      UMC: [this.solicitudState?.UMC, Validators.required],
-      presentacion: [this.solicitudState?.presentacion, Validators.required],
-      numeroRegistro: [this.solicitudState?.numeroRegistro, Validators.required],
+      especificarClasificacionProducto: [
+        this.solicitudState?.especificarClasificacionProducto, 
+        Validators.required
+      ],
+      denominacionEspecifica: [
+        this.solicitudState?.denominacionEspecifica, 
+        Validators.required
+      ],
+      denominacionDistintiva: [
+        this.solicitudState?.denominacionDistintiva, 
+        Validators.required
+      ],
+      denominacionComun: [
+        this.solicitudState?.denominacionComun, 
+        Validators.required
+      ],
+      tipoDeProducto: [
+        this.solicitudState?.tipoDeProducto, 
+        Validators.required
+      ],
+      formaFarmaceutica: [
+        this.solicitudState?.formaFarmaceutica, 
+        Validators.required
+      ],
+      estadoFisico: [
+        this.solicitudState?.estadoFisico, 
+        Validators.required
+      ],
+      fraccionArancelaria: [
+        this.solicitudState?.fraccionArancelaria, 
+        Validators.required
+      ],
+      descripcionFraccion: [
+        { value: this.solicitudState?.descripcionFraccion, disabled: true }, 
+        Validators.required
+      ],
+      cantidadUMT: [
+        this.solicitudState?.cantidadUMT, 
+        Validators.required
+      ],
+      UMT: [
+        { value: this.solicitudState?.UMT, disabled: true }, 
+        Validators.required
+      ],
+      cantidadUMC: [
+        this.solicitudState?.cantidadUMC, 
+        Validators.required
+      ],
+      UMC: [
+        this.solicitudState?.UMC, 
+        Validators.required
+      ],
+      presentacion: [
+        this.solicitudState?.presentacion, 
+        Validators.required
+      ],
+      numeroRegistro: [
+        this.solicitudState?.numeroRegistro, 
+        Validators.required
+      ],
       fechaCaducidad: [this.solicitudState?.fechaCaducidad],
     });
   }
 
-  /**
-   * Botones de acción para gestionar listas de países en la primera sección.
-   */
+  /** Botones de acción para gestionar listas de países (primera sección) */
   paisDeProcedenciaBotons = [
-    { btnNombre: 'Agregar todos', class: 'btn-primary', funcion: (): void => this.crossList.toArray()[0].agregar('t') },
-    { btnNombre: 'Agregar selección', class: 'btn-default', funcion: (): void => this.crossList.toArray()[0].agregar('') },
-    { btnNombre: 'Restar selección', class: 'btn-danger', funcion: (): void => this.crossList.toArray()[0].quitar('') },
-    { btnNombre: 'Restar todos', class: 'btn-default', funcion: (): void => this.crossList.toArray()[0].quitar('t') },
+    { 
+      btnNombre: 'Agregar todos', 
+      class: 'btn-primary', 
+      funcion: (): void => this.crossList.toArray()[0].agregar('t') 
+    },
+    { 
+      btnNombre: 'Agregar selección', 
+      class: 'btn-default', 
+      funcion: (): void => this.crossList.toArray()[0].agregar('') 
+    },
+    { 
+      btnNombre: 'Restar selección', 
+      class: 'btn-danger', 
+      funcion: (): void => this.crossList.toArray()[0].quitar('') 
+    },
+    { 
+      btnNombre: 'Restar todos', 
+      class: 'btn-default', 
+      funcion: (): void => this.crossList.toArray()[0].quitar('t') 
+    },
   ];
 
-  /**
-   * Botones de acción para gestionar listas de países en la segunda sección.
-   */
+  /** Botones de acción para gestionar listas de países (segunda sección) */
   paisDeProcedenciaBotonsDos = [
-    { btnNombre: 'Agregar todos', class: 'btn-primary', funcion: (): void => this.crossList.toArray()[1].agregar('t') },
-    { btnNombre: 'Agregar selección', class: 'btn-default', funcion: (): void => this.crossList.toArray()[1].agregar('') },
-    { btnNombre: 'Restar selección', class: 'btn-danger', funcion: (): void => this.crossList.toArray()[1].quitar('') },
-    { btnNombre: 'Restar todos', class: 'btn-default', funcion: (): void => this.crossList.toArray()[1].quitar('t') },
+    { 
+      btnNombre: 'Agregar todos', 
+      class: 'btn-primary', 
+      funcion: (): void => this.crossList.toArray()[1].agregar('t') 
+    },
+    { 
+      btnNombre: 'Agregar selección', 
+      class: 'btn-default', 
+      funcion: (): void => this.crossList.toArray()[1].agregar('') 
+    },
+    { 
+      btnNombre: 'Restar selección', 
+      class: 'btn-danger', 
+      funcion: (): void => this.crossList.toArray()[1].quitar('') 
+    },
+    { 
+      btnNombre: 'Restar todos', 
+      class: 'btn-default', 
+      funcion: (): void => this.crossList.toArray()[1].quitar('t') 
+    },
   ];
 
-  /**
-   * Botones de acción para gestionar listas de países en la tercera sección.
-   */
+  /** Botones de acción para gestionar listas de países (tercera sección) */
   paisDeProcedenciaBotonsTres = [
-    { btnNombre: 'Agregar todos', class: 'btn-primary', funcion: (): void => this.crossList.toArray()[2].agregar('t') },
-    { btnNombre: 'Agregar selección', class: 'btn-default', funcion: (): void => this.crossList.toArray()[2].agregar('') },
-    { btnNombre: 'Restar selección', class: 'btn-danger', funcion: (): void => this.crossList.toArray()[2].quitar('') },
-    { btnNombre: 'Restar todos', class: 'btn-default', funcion: (): void => this.crossList.toArray()[2].quitar('t') },
+    { 
+      btnNombre: 'Agregar todos', 
+      class: 'btn-primary', 
+      funcion: (): void => this.crossList.toArray()[2].agregar('t') 
+    },
+    { 
+      btnNombre: 'Agregar selección', 
+      class: 'btn-default', 
+      funcion: (): void => this.crossList.toArray()[2].agregar('') 
+    },
+    { 
+      btnNombre: 'Restar selección', 
+      class: 'btn-danger', 
+      funcion: (): void => this.crossList.toArray()[2].quitar('') 
+    },
+    { 
+      btnNombre: 'Restar todos', 
+      class: 'btn-default', 
+      funcion: (): void => this.crossList.toArray()[2].quitar('t') 
+    },
   ];
 
   /**
-   * Obtiene la lista de estados desde un archivo JSON.
+   * Obtiene lista de formas farmacéuticas desde servicio
+   * @private
    */
-  obtenerFormaFarmaceuticaList(): void {
+  private obtenerFormaFarmaceuticaList(): void {
     this.service.obtenerFormaFarmaceuticaList()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -346,10 +394,12 @@ export class DomicilloComponent implements OnInit, OnDestroy {
         this.formaFarmaceutica = DATOS;
       });
   }
+
   /**
-   * Obtiene la lista de estados desde un archivo JSON.
+   * Obtiene lista de estados desde servicio
+   * @private
    */
-  obtenerEstadoList(): void {
+  private obtenerEstadoList(): void {
     this.service.obtenerEstadoList()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -359,9 +409,10 @@ export class DomicilloComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene los datos para la tabla de NICO desde un archivo JSON.
+   * Obtiene datos para tabla NICO desde servicio
+   * @private
    */
-  obtenerTablaDatos(): void {
+  private obtenerTablaDatos(): void {
     this.service.obtenerTablaDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -371,9 +422,10 @@ export class DomicilloComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene los datos de la tabla de mercancías desde un archivo JSON.
+   * Obtiene datos para tabla de mercancías desde servicio
+   * @private
    */
-  obtenerMercanciasDatos(): void {
+  private obtenerMercanciasDatos(): void {
     this.service.obtenerMercanciasDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -383,11 +435,12 @@ export class DomicilloComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja el cambio del checkbox en el formulario y actualiza el estado correspondiente.
-   * @param event Evento del checkbox.
-   * @param form Formulario en el que se realiza el cambio.
-   * @param campo Nombre del campo afectado.
-   * @param metodoNombre Método correspondiente del store para actualizar el valor.
+   * Maneja cambio en checkbox y actualiza estado
+   * 
+   * @param event Evento del checkbox
+   * @param form Formulario que contiene el campo
+   * @param campo Nombre del campo afectado
+   * @param metodoNombre Método del store para actualizar valor
    */
   onAvisoCheckboxChange(
     event: Event,
@@ -405,59 +458,56 @@ export class DomicilloComponent implements OnInit, OnDestroy {
     (this.tramite260906Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-  /**
-   * Alterna el estado colapsable de la primera sección.
-   */
+  /** Alterna estado colapsable de primera sección */
   mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
-  /**
-   * Alterna el estado colapsable de la segunda sección.
-   */
+  /** Alterna estado colapsable de segunda sección */
   mostrar_colapsableDos(): void {
     this.colapsableDos = !this.colapsableDos;
   }
 
-  /**
-   * Alterna el estado colapsable de la tercera sección.
-   */
+  /** Alterna estado colapsable de tercera sección */
   mostrar_colapsableTres(): void {
     this.colapsableTres = !this.colapsableTres;
   }
 
   /**
-   * Establece el valor de un campo en el store de Tramite31601.
-   * @param form - El grupo de formularios que contiene el campo.
-   * @param campo - El nombre del campo cuyo valor se va a establecer.
-   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+   * Establece valores en el store desde el formulario
+   * 
+   * @param form Grupo de formulario que contiene el campo
+   * @param campo Nombre del campo a actualizar
+   * @param metodoNombre Nombre del método en el store que actualiza el valor
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260906Store): void {
+  setValoresStore(
+    form: FormGroup, 
+    campo: string, 
+    metodoNombre: keyof Tramite260906Store
+  ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite260906Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
-   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
-   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   * Método de limpieza al destruir el componente
+   * Libera las suscripciones activas
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
 
-
   /**
-   * Cambia el valor de la fecha final en el formulario.
-   * @param nuevo_valor Nuevo valor de la fecha final.
+   * Actualiza valor de fecha en formulario de mercancías
+   * @param nuevo_valor Nueva fecha seleccionada
    */
   public cambioFechaFinal(nuevo_valor: string): void {
-
     this.formMercancias.get('fechaCaducidad')?.setValue(nuevo_valor);
     this.formMercancias.get('fechaCaducidad')?.markAsUntouched();
   }
 
-  /**
+    /**
   * Habilita todos los controles del formulario si están deshabilitados.
   * @returns {void}
   */
@@ -474,14 +524,10 @@ export class DomicilloComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Elimina un elemento de la lista de pedimentos en la posición especificada.
- * 
- * @param {number} i - El índice del elemento a eliminar.
- * 
- * @remarks
- * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
- * y se abre el modal para mostrar un aviso al usuario.
- */
+   * Muestra modal de confirmación para eliminar registros
+   * @param mensaje Mensaje a mostrar en el modal
+   * @param cancelar Indica si debe mostrar botón cancelar
+   */
   abrirModal(mensaje: string, cancelar: boolean): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -493,8 +539,21 @@ export class DomicilloComponent implements OnInit, OnDestroy {
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: cancelar ? 'Cancelar' : '',
-    }
+    };
   }
 
-
+  /**
+   * Inicializa el estado del formulario según modo solo lectura
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.domicilio?.disable();
+      this.formAgente?.disable();
+      this.formMercancias?.disable();
+    } else {
+      this.domicilio?.enable();
+      this.formAgente?.enable();
+      this.formMercancias?.enable();
+    }
+  }
 }

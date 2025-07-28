@@ -1,35 +1,72 @@
 /**
  * @Injectable
- * @description Servicio para obtener los datos del permiso IMMEX.
+ * @description Servicio para obtener y gestionar los datos del permiso IMMEX.
+ * Proporciona métodos para consultar datos desde archivos JSON y actualizar el estado del registro IMMEX en el store.
+ *
+ * - Permite obtener los datos del permiso IMMEX desde archivos locales.
+ * - Actualiza el estado del formulario en el store de Akita.
+ * - Expone métodos para la integración con componentes y otros servicios.
+ *
+ * @example
+ * // Inyección en un componente
+ * constructor(private permisoImmexDatosService: PermisoImmexDatosService) {}
  */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import {
+  ImmexRegistroState,
+  ImmexRegistroStore,
+} from '../../estados/tramites/tramite80203.store';
+import { immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
+
+
 @Injectable({
   providedIn: 'root'
 })
+
+/**
+ * Servicio para obtener y gestionar los datos del permiso IMMEX.
+ * Permite consultar datos desde archivos JSON y actualizar el estado del registro IMMEX en el store.
+ */
 export class PermisoImmexDatosService {
   /**
-   * @property {string} jsonUrl
-   * @description URL del archivo JSON que contiene los datos del permiso IMMEX.
+   * Ruta al archivo JSON con los datos de la tabla IMMEX.
+   * @type {string}
    */
   private jsonUrl = '/assets/json/80203/immex-table.json';
 
   /**
    * @constructor
-   * @description Constructor que inicializa el cliente HTTP para realizar solicitudes.
+   * @description Constructor que inicializa el cliente HTTP y el store para el registro IMMEX.
    * @param {HttpClient} httpClient - Cliente HTTP para realizar solicitudes.
+   * @param {ImmexRegistroStore} tramite80203Store - Store para manejar el estado del registro IMMEX.
    */
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient, private readonly tramite80203Store: ImmexRegistroStore) {}
 
-  /**
-   * @method getDatos
-   * @description Obtiene los datos del permiso IMMEX desde el archivo JSON.
-   * @returns {Observable<any[]>} Observable que emite los datos del permiso IMMEX.
+    /**
+   * Obtiene los datos de la tabla IMMEX desde un archivo JSON local.
+   * @returns {Observable<unknown[]>} Observable con los datos de la tabla IMMEX.
    */
-  getDatos(): Observable<any> {
-    return this.httpClient.get<any[]>(this.jsonUrl).pipe(
-    );
-  }  
+  getDatos(): Observable<unknown[]> {
+    return this.httpClient.get<unknown[]>(this.jsonUrl);
+  }
+
+    /**
+   * Obtiene los datos del registro de toma de muestras y mercancías desde un archivo JSON local.
+   * @returns {Observable<ImmexRegistroState>} Observable con el estado del registro IMMEX.
+   */
+  getRegistroTomaMuestrasMercanciasData(): Observable<ImmexRegistroState> {
+    return this.httpClient.get<ImmexRegistroState>('assets/json/80203/immexRegistro.json');
+  }
+
+    /**
+   * Actualiza el estado del formulario en el store de Akita con los datos proporcionados.
+   * @param {immexRegistroform} DATOS - Datos del formulario de registro IMMEX.
+   * @returns {void}
+   */
+  actualizarEstadoFormulario(DATOS: immexRegistroform): void {
+    this.tramite80203Store.setImmexRegistro(DATOS);
+  }
 }

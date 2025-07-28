@@ -1,37 +1,24 @@
+import { Catalogo, CatalogoLista, SolicitudTabla, SolicitudTablaDatos } from "../../models/retorno-de-partes.model";
 import {
-  AlertComponent,
   CatalogoSelectComponent,
   InputFecha,
   InputFechaComponent,
-  InputHoraComponent,
-  InputRadioComponent,
+  Notificacion,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
   ValidacionesFormularioService
 } from "@libs/shared/data-access-user/src";
-import { Catalogo, CatalogoLista, SolicitudTabla, SolicitudTablaDatos } from "../../models/retorno-de-partes.model";
+import { Component, ElementRef, OnDestroy, OnInit,ViewChild} from "@angular/core";
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FECHA_CARTAPORTE, FECHA_DESTINO, FECHA_IMPORTACION, FECHA_VENCIMIENTO, TABLA_DE_DATOS, TEXTOS } from "../../constants/retorno-de-partes.enum";
+import { FormBuilder,FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import { ReplaySubject, map, takeUntil } from "rxjs";
+import { Tramite6403State,Tramite6403Store } from "../../estados/tramite6403.store";
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
-import { ElementRef } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
-import { FormGroup } from "@angular/forms";
 import { Modal } from 'bootstrap';
-import { Notificacion } from '@libs/shared/data-access-user/src';
-import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from "@angular/core";
-import { OnInit } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
 import { RetornoDePartesService } from "../../services/retorno-de-partes.service";
-import { Subject } from "rxjs";
 import { Tramite6403Query } from "../../estados/tramite6403.query";
-import { Tramite6403State } from "../../estados/tramite6403.store";
-import { Tramite6403Store } from "../../estados/tramite6403.store";
-import { Validators } from "@angular/forms";
-import { ViewChild } from "@angular/core";
-import { map } from "rxjs";
-import { takeUntil } from "rxjs";
 /**
  * Componente para gestionar el aviso de traslado.
  * 
@@ -43,13 +30,20 @@ import { takeUntil } from "rxjs";
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent, InputHoraComponent,
-    CatalogoSelectComponent, TablaDinamicaComponent, AlertComponent, NotificacionesComponent,
-    InputRadioComponent
-  ],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent, 
+    CatalogoSelectComponent, TablaDinamicaComponent],
   standalone: true,
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
+   /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
   /**
    * @property {FormGroup} solicitudFormulario
    * @description Formulario reactivo que contiene los datos del solicitudFormulario en el trámite.
@@ -68,11 +62,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   public nuevaNotificacion!: Notificacion;
 
-  /**
-   * @property {Subject<void>} destroyNotifier$
-   * @description Sujeto utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
-  */
-  public destroyNotifier$: Subject<void> = new Subject();
+   /**
+   * Subject para manejar la destrucción del componente y evitar fugas de memoria.
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
    * @property {Tramite6403State} tramiteState
    * @description Estado actual del trámite 6403, que contiene toda la información relevante del proceso.
@@ -215,8 +208,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     public tramiteQuery: Tramite6403Query,
     public retornoDePartesService: RetornoDePartesService,
     private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+   this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -226,7 +229,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.tramiteQuery.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
           this.tramiteState = seccionState;
         })
@@ -241,6 +244,33 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.cargarMedioDeTransporte();
     this.cargarPaisDeProcedencia();
     this.inicializarMercanciaFormulario();
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.soloLectura) {
+  this.solicitudFormulario.disable();
+  this.mercanciaFormulario.disable();
+} else {
+  this.solicitudFormulario.enable();
+  this.mercanciaFormulario.enable();
+}
   }
 
   /**
@@ -334,7 +364,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   public cargarAduaneras(): void {
     this.retornoDePartesService
       .obtenerAduaneras()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (datos: CatalogoLista) => {
           this.aduaneras = datos.datos;
@@ -353,7 +383,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   public cargarAduanas(): void {
     this.retornoDePartesService
       .obtenerAduanas()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (datos: CatalogoLista) => {
           this.aduanas = datos.datos;
@@ -371,7 +401,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   public cargarRecintoFiscalizado(): void {
     this.retornoDePartesService
       .obtenerRecintoFiscalizado()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (datos: CatalogoLista) => {
           this.recintoFiscalizado = datos.datos;
@@ -389,7 +419,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   public cargarTipoDeDocumento(): void {
     this.retornoDePartesService
       .obtenerTipoDeDocumento()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (datos: CatalogoLista) => {
           this.tipoDeDocumento = datos.datos;
@@ -408,7 +438,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   public cargarMedioDeTransporte(): void {
     this.retornoDePartesService
       .obtenerMedioDeTransporte()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (datos: CatalogoLista) => {
           this.medioDeTransporte = datos.datos;
@@ -431,7 +461,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   public cargarPaisDeProcedencia(): void {
     this.retornoDePartesService
       .obtenerPaisDeProcedencia()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (datos: CatalogoLista) => {
           this.paisDeProcedencia = datos.datos;
@@ -450,7 +480,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   public cargarFederativa(): void {
     this.retornoDePartesService
       .obtenerFederativa()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (datos: CatalogoLista) => {
           this.entidadFederativa = datos.datos;
@@ -468,65 +498,65 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   inicializarFormulario(): void {
-    this.solicitudFormulario = this.fb.group({
-      datosAduana: this.fb.group({
-        cveAduana: [this.tramiteState?.solicitudFormulario?.cveAduana, [Validators.required]],
-        cveSeccionAduanal: [this.tramiteState?.solicitudFormulario?.cveSeccionAduanal, [Validators.required]],
-        cveRecintoFiscalizado: [this.tramiteState?.solicitudFormulario?.cveRecintoFiscalizado, [Validators.required]],
-      }),
-      datosPedimento: this.fb.group({
-        cveTipoDocumento: [this.tramiteState?.solicitudFormulario?.cveTipoDocumento, [Validators.required]],
-        estadoTipoDocumento: [{ value: this.tramiteState?.solicitudFormulario?.estadoTipoDocumento, disabled: true }],
-        aduana: [this.tramiteState?.solicitudFormulario?.aduana, [Validators.required]],
-        patente: [this.tramiteState?.solicitudFormulario?.patente, [Validators.required]],
-        pedimento: [this.tramiteState?.solicitudFormulario?.pedimento, [Validators.required]],
-        folioImportacionTemporal: [this.tramiteState?.solicitudFormulario?.folioImportacionTemporal, [Validators.required]],
-        folioFormatoOficial: [this.tramiteState?.solicitudFormulario?.folioFormatoOficial, [Validators.required]],
-        checkProrroga: [this.tramiteState?.solicitudFormulario?.checkProrroga, [Validators.required]],
-        folioOficialProrroga: [{ value: this.tramiteState?.solicitudFormulario?.folioOficialProrroga, disabled: true}, [Validators.required]],
-        fechaImportacionTemporal: [this.tramiteState?.solicitudFormulario?.fechaImportacionTemporal, [Validators.required]],
-        fechaVencimiento: [this.tramiteState?.solicitudFormulario?.fechaVencimiento, [Validators.required]],
-        descMercancia: [this.tramiteState?.solicitudFormulario?.descMercancia, [Validators.required]],
-        marca: [this.tramiteState?.solicitudFormulario?.marca, [Validators.required]],
-        modelo: [this.tramiteState?.solicitudFormulario?.modelo, [Validators.required]],
-        numeroSerie: [this.tramiteState?.solicitudFormulario?.numeroSerie, [Validators.required]],
-        tipo: [this.tramiteState?.solicitudFormulario?.tipo, [Validators.required]],
-      }),
-      datosMedioTransporte: this.fb.group({
-        cveMedioTrasporte: [this.tramiteState?.solicitudFormulario?.cveMedioTrasporte, [Validators.required]],
-        guiaMaster: [this.tramiteState?.solicitudFormulario?.guiaMaster, [Validators.required]],
-        guiaBl: [this.tramiteState?.solicitudFormulario?.guiaBl, [Validators.required]],
-        numeroBl: [this.tramiteState?.solicitudFormulario?.numeroBl, [Validators.required]],
-        rfcEmpresaTransportista: [this.tramiteState?.solicitudFormulario?.rfcEmpresaTransportista],
-        estadoMedioTransporte: [{ value: this.tramiteState?.solicitudFormulario?.estadoMedioTransporte, disabled: true }],
-        cartaPorte: [this.tramiteState?.solicitudFormulario?.cartaPorte, [Validators.required]],
-        cvePaisProcedencia: [this.tramiteState?.solicitudFormulario?.cvePaisProcedencia, [Validators.required]],
-        guiaHouse: [this.tramiteState?.solicitudFormulario?.guiaHouse],
-        numeroBuque: [this.tramiteState?.solicitudFormulario?.numeroBuque],
-        numeroEquipo: [this.tramiteState?.solicitudFormulario?.numeroEquipo],
-        fechaCartaPorte: [this.tramiteState?.solicitudFormulario?.fechaCartaPorte, [Validators.required]],
-        tipContenedor: [this.tramiteState?.solicitudFormulario?.tipContenedor, [Validators.required]],
-        tranporteMarca: [this.tramiteState?.solicitudFormulario?.tranporteMarca, [Validators.required]],
-        tranporteModelo: [this.tramiteState?.solicitudFormulario?.tranporteModelo, [Validators.required]],
-        tranportePlaca: [this.tramiteState?.solicitudFormulario?.tranportePlaca, [Validators.required]],
-        observaciones: [this.tramiteState?.solicitudFormulario?.observaciones, [Validators.required]],
-      }),
-      datosDestinoMercancia: this.fb.group({
-        conDestino: [this.tramiteState?.solicitudFormulario?.conDestino, [Validators.required]],
-        cveTipoDestino: [this.tramiteState?.solicitudFormulario?.cveTipoDestino, [Validators.required]],
-        cveTipoDocumentoReemplazada: [this.tramiteState?.solicitudFormulario?.cveTipoDocumentoReemplazada, [Validators.required]],
-        numeroActaDescruccion: [this.tramiteState?.solicitudFormulario?.numeroActaDescruccion, [Validators.required]],
-        cveAduanaDestino: [this.tramiteState?.solicitudFormulario?.cveAduanaDestino, [Validators.required]],
-        cvePatenteDestino: [this.tramiteState?.solicitudFormulario?.cvePatenteDestino, [Validators.required]],
-        cvePedimentoDestino: [this.tramiteState?.solicitudFormulario?.cvePedimentoDestino, [Validators.required]],
-        folioVucemRetorno: [this.tramiteState?.solicitudFormulario?.folioVucemRetorno, [Validators.required]],
-        folioFormatoOficialDestino: [this.tramiteState?.solicitudFormulario?.folioFormatoOficialDestino, [Validators.required]],
-        fechaDescruccionDestino: [this.tramiteState?.solicitudFormulario?.fechaDescruccionDestino, [Validators.required]],
-        estadoTipoDocumentoDestino: [this.tramiteState?.solicitudFormulario?.estadoTipoDocumentoDestino, [Validators.required]],
-        autoridadPresentoAvisoDestruccion: [this.tramiteState?.solicitudFormulario?.autoridadPresentoAvisoDestruccion, [Validators.required]],
-      }),
-    });
-  }
+  this.solicitudFormulario = this.fb.group({
+    datosAduana: this.fb.group({
+      cveAduana: [{ value: this.tramiteState?.solicitudFormulario?.cveAduana, disabled: this.soloLectura }, [Validators.required]],
+      cveSeccionAduanal: [{ value: this.tramiteState?.solicitudFormulario?.cveSeccionAduanal, disabled: this.soloLectura }, [Validators.required]],
+      cveRecintoFiscalizado: [{ value: this.tramiteState?.solicitudFormulario?.cveRecintoFiscalizado, disabled: this.soloLectura }, [Validators.required]],
+    }),
+    datosPedimento: this.fb.group({
+      cveTipoDocumento: [{ value: this.tramiteState?.solicitudFormulario?.cveTipoDocumento, disabled: this.soloLectura }, [Validators.required]],
+      estadoTipoDocumento: [{ value: this.tramiteState?.solicitudFormulario?.estadoTipoDocumento, disabled: true }],
+      aduana: [{ value: this.tramiteState?.solicitudFormulario?.aduana, disabled: this.soloLectura }, [Validators.required]],
+      patente: [{ value: this.tramiteState?.solicitudFormulario?.patente, disabled: this.soloLectura }, [Validators.required]],
+      pedimento: [{ value: this.tramiteState?.solicitudFormulario?.pedimento, disabled: this.soloLectura }, [Validators.required]],
+      folioImportacionTemporal: [{ value: this.tramiteState?.solicitudFormulario?.folioImportacionTemporal, disabled: this.soloLectura }, [Validators.required]],
+      folioFormatoOficial: [{ value: this.tramiteState?.solicitudFormulario?.folioFormatoOficial, disabled: this.soloLectura }, [Validators.required]],
+      checkProrroga: [{ value: this.tramiteState?.solicitudFormulario?.checkProrroga, disabled: this.soloLectura }, [Validators.required]],
+      folioOficialProrroga: [{ value: this.tramiteState?.solicitudFormulario?.folioOficialProrroga, disabled: true }, [Validators.required]],
+      fechaImportacionTemporal: [{ value: this.tramiteState?.solicitudFormulario?.fechaImportacionTemporal, disabled: this.soloLectura }, [Validators.required]],
+      fechaVencimiento: [{ value: this.tramiteState?.solicitudFormulario?.fechaVencimiento, disabled: this.soloLectura }, [Validators.required]],
+      descMercancia: [{ value: this.tramiteState?.solicitudFormulario?.descMercancia, disabled: this.soloLectura }, [Validators.required]],
+      marca: [{ value: this.tramiteState?.solicitudFormulario?.marca, disabled: this.soloLectura }, [Validators.required]],
+      modelo: [{ value: this.tramiteState?.solicitudFormulario?.modelo, disabled: this.soloLectura }, [Validators.required]],
+      numeroSerie: [{ value: this.tramiteState?.solicitudFormulario?.numeroSerie, disabled: this.soloLectura }, [Validators.required]],
+      tipo: [{ value: this.tramiteState?.solicitudFormulario?.tipo, disabled: this.soloLectura }, [Validators.required]],
+    }),
+    datosMedioTransporte: this.fb.group({
+      cveMedioTrasporte: [{ value: this.tramiteState?.solicitudFormulario?.cveMedioTrasporte, disabled: this.soloLectura }, [Validators.required]],
+      guiaMaster: [{ value: this.tramiteState?.solicitudFormulario?.guiaMaster, disabled: this.soloLectura }, [Validators.required]],
+      guiaBl: [{ value: this.tramiteState?.solicitudFormulario?.guiaBl, disabled: this.soloLectura }, [Validators.required]],
+      numeroBl: [{ value: this.tramiteState?.solicitudFormulario?.numeroBl, disabled: this.soloLectura }, [Validators.required]],
+      rfcEmpresaTransportista: [{ value: this.tramiteState?.solicitudFormulario?.rfcEmpresaTransportista, disabled: this.soloLectura }],
+      estadoMedioTransporte: [{ value: this.tramiteState?.solicitudFormulario?.estadoMedioTransporte, disabled: true }],
+      cartaPorte: [{ value: this.tramiteState?.solicitudFormulario?.cartaPorte, disabled: this.soloLectura }, [Validators.required]],
+      cvePaisProcedencia: [{ value: this.tramiteState?.solicitudFormulario?.cvePaisProcedencia, disabled: this.soloLectura }, [Validators.required]],
+      guiaHouse: [{ value: this.tramiteState?.solicitudFormulario?.guiaHouse, disabled: this.soloLectura }],
+      numeroBuque: [{ value: this.tramiteState?.solicitudFormulario?.numeroBuque, disabled: this.soloLectura }],
+      numeroEquipo: [{ value: this.tramiteState?.solicitudFormulario?.numeroEquipo, disabled: this.soloLectura }],
+      fechaCartaPorte: [{ value: this.tramiteState?.solicitudFormulario?.fechaCartaPorte, disabled: this.soloLectura }, [Validators.required]],
+      tipContenedor: [{ value: this.tramiteState?.solicitudFormulario?.tipContenedor, disabled: this.soloLectura }, [Validators.required]],
+      tranporteMarca: [{ value: this.tramiteState?.solicitudFormulario?.tranporteMarca, disabled: this.soloLectura }, [Validators.required]],
+      tranporteModelo: [{ value: this.tramiteState?.solicitudFormulario?.tranporteModelo, disabled: this.soloLectura }, [Validators.required]],
+      tranportePlaca: [{ value: this.tramiteState?.solicitudFormulario?.tranportePlaca, disabled: this.soloLectura }, [Validators.required]],
+      observaciones: [{ value: this.tramiteState?.solicitudFormulario?.observaciones, disabled: this.soloLectura }, [Validators.required]],
+    }),
+    datosDestinoMercancia: this.fb.group({
+      conDestino: [{ value: this.tramiteState?.solicitudFormulario?.conDestino, disabled: this.soloLectura }, [Validators.required]],
+      cveTipoDestino: [{ value: this.tramiteState?.solicitudFormulario?.cveTipoDestino, disabled: this.soloLectura }, [Validators.required]],
+      cveTipoDocumentoReemplazada: [{ value: this.tramiteState?.solicitudFormulario?.cveTipoDocumentoReemplazada, disabled: this.soloLectura }, [Validators.required]],
+      numeroActaDescruccion: [{ value: this.tramiteState?.solicitudFormulario?.numeroActaDescruccion, disabled: this.soloLectura }, [Validators.required]],
+      cveAduanaDestino: [{ value: this.tramiteState?.solicitudFormulario?.cveAduanaDestino, disabled: this.soloLectura }, [Validators.required]],
+      cvePatenteDestino: [{ value: this.tramiteState?.solicitudFormulario?.cvePatenteDestino, disabled: this.soloLectura }, [Validators.required]],
+      cvePedimentoDestino: [{ value: this.tramiteState?.solicitudFormulario?.cvePedimentoDestino, disabled: this.soloLectura }, [Validators.required]],
+      folioVucemRetorno: [{ value: this.tramiteState?.solicitudFormulario?.folioVucemRetorno, disabled: this.soloLectura }, [Validators.required]],
+      folioFormatoOficialDestino: [{ value: this.tramiteState?.solicitudFormulario?.folioFormatoOficialDestino, disabled: this.soloLectura }, [Validators.required]],
+      fechaDescruccionDestino: [{ value: this.tramiteState?.solicitudFormulario?.fechaDescruccionDestino, disabled: this.soloLectura }, [Validators.required]],
+      estadoTipoDocumentoDestino: [{ value: this.tramiteState?.solicitudFormulario?.estadoTipoDocumentoDestino, disabled: this.soloLectura }, [Validators.required]],
+      autoridadPresentoAvisoDestruccion: [{ value: this.tramiteState?.solicitudFormulario?.autoridadPresentoAvisoDestruccion, disabled: this.soloLectura }, [Validators.required]],
+    }),
+  });
+}
 
   /**
    * @method inicializarMercanciaFormulario
@@ -655,7 +685,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   public cargarMercanciaTabla(): void {
     this.retornoDePartesService
       .obtenerSolicitudTabla()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (datos: SolicitudTablaDatos) => {
           this.tablaDeDatos.datos = datos.datos;
@@ -768,12 +798,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @method ngOnDestroy
    * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * 
-   * - Completa el `Subject` `destroyNotifier$` para cancelar todas las suscripciones activas y evitar fugas de memoria.
+   * - Completa el `Subject` `destroyed$` para cancelar todas las suscripciones activas y evitar fugas de memoria.
    *
    * @returns {void}
    */
   ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+   
   }
 }

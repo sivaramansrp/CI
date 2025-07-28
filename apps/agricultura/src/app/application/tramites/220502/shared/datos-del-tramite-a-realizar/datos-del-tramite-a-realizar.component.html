@@ -9,21 +9,38 @@
           [label]="certificadosAutorizados.labelNombre"
           [placeholder]="certificadosAutorizados.primerOpcion"
           [required]="certificadosAutorizados.required"
-          [isDisabled]="false"
           formControlName="certificadosAutorizados"
+          [isDisabled]="formularioDeshabilitado"
           (selectionChange)="setCertificadosAutorizados($event)"
         ></app-catalogo-select>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="form-field">
-        <input-fecha
-          [datos]="configuracionFechaFinVigencia"
-          (valorCambiado)="cambioFechaInicio($event)"
-          [setFecha]="this.solicitud220502State.fechaDeInspeccion"
-        ></input-fecha>
+    @if (procedimiento === 220502) {
+      <div class="col-md-4">
+        <div class="form-field">
+          <input-fecha
+            formControlName="fechaDeInspeccion"
+            [datos]="configuracionFechaFinVigencia"
+            (valorCambiado)="cambioFechaInicio($event)"
+            [isDisabled]="formularioDeshabilitado"
+            [setFecha]="solicitud220502State.fechaDeInspeccion"
+          ></input-fecha>
+        </div>
       </div>
-    </div>
+    }
+    @if (procedimiento === 220501) {
+      <div class="col-md-4">
+        <div class="form-field">
+          <input-fecha
+            formControlName="fechaInspeccion"
+            [datos]="configuracionFechaInspeccion"
+            (valorCambiado)="cambioFechaInspeccion($event)"
+            [isDisabled]="formularioDeshabilitado"
+            [setFecha]="solicitud220502State.fechaInspeccion"
+          ></input-fecha>
+        </div>
+      </div>
+    }
     <div class="col-md-4">
       <div class="form-field">
         <app-catalogo-select
@@ -33,7 +50,7 @@
           [placeholder]="horaDeInspeccion.primerOpcion"
           [required]="horaDeInspeccion.required"
           formControlName="horaDeInspeccion"
-          [isDisabled]="false"
+          [isDisabled]="formularioDeshabilitado"
           (selectionChange)="setHoraDeInspeccion($event)"
         ></app-catalogo-select>
       </div>
@@ -47,7 +64,7 @@
           [placeholder]="aduanaDeIngreso.primerOpcion"
           [required]="aduanaDeIngreso.required"
           formControlName="aduanaDeIngreso"
-          [isDisabled]="false"
+          [isDisabled]="formularioDeshabilitado"
           (selectionChange)="setAduanaDeIngreso($event)"
         ></app-catalogo-select>
       </div>
@@ -61,7 +78,7 @@
           [placeholder]="sanidadAgropecuaria.primerOpcion"
           [required]="sanidadAgropecuaria.required"
           formControlName="sanidadAgropecuaria"
-          [isDisabled]="false"
+          [isDisabled]="formularioDeshabilitado"
           (selectionChange)="setSanidadAgropecuaria($event)"
         ></app-catalogo-select>
       </div>
@@ -75,7 +92,7 @@
           [placeholder]="puntoDeInspeccion.primerOpcion"
           [required]="puntoDeInspeccion.required"
           formControlName="puntoDeInspeccion"
-          [isDisabled]="false"
+          [isDisabled]="formularioDeshabilitado"
           (selectionChange)="setPuntoDeInspeccion($event)"
         ></app-catalogo-select>
       </div>

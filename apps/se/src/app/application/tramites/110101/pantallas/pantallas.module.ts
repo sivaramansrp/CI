@@ -1,21 +1,19 @@
-/* eslint-disable sort-imports */
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import { PantallasRoutingModule } from './pantallas-routing.module';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { NavComponent } from '@ng-mf/data-access-user';
-import { PantallasComponent } from '../pages/pantallas/pantallas.component';
-import { DatosComponent } from '../pages/datos/datos.component';
-import { SolicitanteComponent } from '../components/solicitante/solicitante.component';
-import { DatosMercanciaComponent } from '../components/datos-mercancia/datos-mercancia.component';
-import { DatosAdicionalesComponent } from '../components/datos-adicionales/datos-adicionales.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TratadosComponent } from '../components/tratados/tratados.component';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { FirmarSolicitudComponent } from '../pages/firmar-solicitud/firmar-solicitud.component';
+import { CommonModule } from '@angular/common';
+import { DatosAdicionalesComponent } from '../components/datos-adicionales/datos-adicionales.component';
+import { DatosComponent } from '../pages/datos/datos.component';
+import { DatosMercanciaComponent } from '../components/datos-mercancia/datos-mercancia.component';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-
+import { FirmarSolicitudComponent } from '../pages/firmar-solicitud/firmar-solicitud.component';
+import { NavComponent } from '@ng-mf/data-access-user';
+import { NgModule } from '@angular/core';
+import { PantallasComponent } from '../pages/pantallas/pantallas.component';
+import { PantallasRoutingModule } from './pantallas-routing.module';
+import { ProtestoDecirVerdadComponent } from '../components/protesto-decir-verdad/protesto-decir-verdad.component';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { TratadosComponent } from '../components/tratados/tratados.component';
+import { WizardComponent } from '@ng-mf/data-access-user';
 @NgModule({
   declarations: [
     DatosComponent,
@@ -34,7 +32,8 @@ import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
     DatosAdicionalesComponent,
     TratadosComponent,
     BtnContinuarComponent,
-    FirmaElectronicaComponent
+    FirmaElectronicaComponent,
+    ProtestoDecirVerdadComponent
   ]
 })
 

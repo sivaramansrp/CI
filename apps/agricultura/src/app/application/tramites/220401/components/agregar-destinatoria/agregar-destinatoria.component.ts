@@ -1,31 +1,33 @@
-/* eslint-disable sort-imports */
-import { Component, OnInit } from '@angular/core';
-import { CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Component,EventEmitter,OnInit,Output } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
-
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import { TituloComponent } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-agregar-destinatoria',
   templateUrl: './agregar-destinatoria.component.html',
   styleUrl: './agregar-destinatoria.component.scss',
   standalone: true,
-  imports: [TituloComponent, CatalogoSelectComponent],
+  imports: [TituloComponent, CatalogoSelectComponent,FormsModule,ReactiveFormsModule,CommonModule]
 })
 export class AgregarDestinatoriaComponent implements OnInit {
 
+
+  destinatarioForm!: FormGroup;
   /**
    * @property pais
    * @type {Catalogo[]}
    * @description Arreglo que almacena los datos de los países.
    */
   public pais!: Catalogo[];
-  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   /**
    * @property fisica
    * @type {boolean}
    * @description Indica si la persona es física.
    */
   public fisica: boolean = true;
-  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+
   /**
    * @property moral
    * @type {boolean}
@@ -33,12 +35,18 @@ export class AgregarDestinatoriaComponent implements OnInit {
    */
   public moral: boolean = false;
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function, no-empty-function
+  /** 
+   * Evento que se emite para cerrar el componente.
+   */
+  @Output() cerrar = new EventEmitter<void>();
+
   /**
    * @constructor
    * @description Constructor de la clase AgregarDestinatoriaComponent.
    */
-  constructor() { }
+  constructor(private fb: FormBuilder) { 
+    //
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -46,6 +54,18 @@ export class AgregarDestinatoriaComponent implements OnInit {
    */
   ngOnInit(): void {
     this.getPais();
+      this.destinatarioForm = this.fb.group({
+      tipoPersona: ['fisica'],
+      nombre: [''],
+      primerApellido: [''],
+      segundoApellido: [''],
+      denominacion: [''],
+      pais: [''],
+      domicilio: [''],
+        lada: ['', [Validators.pattern('^[0-9]{4}$'), Validators.maxLength(4)]],
+      telefono: [''],
+      correoElectronico: ['', [Validators.email]],
+    });
   }
 
   /**
@@ -68,18 +88,13 @@ export class AgregarDestinatoriaComponent implements OnInit {
     ];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function, no-empty-function, @typescript-eslint/no-unused-vars, class-methods-use-this
-  /**
-   * @descripcion Método que se ejecuta cuando se selecciona un documento.
-   */
-  docSeleccionado(): void { }
 
   /**
    * 
    * @param  checkBoxName, que acepta datos de tipo cadena
    * @description inputChecked se utiliza para verificar si el checkbox está seleccionado
    */
-  public inputChecked(checkBoxName: string): void {
+  public entradaSeleccionada(checkBoxName: string): void {
     if (checkBoxName === 'fisica') {
       this.fisica = true;
       this.moral = false;
@@ -89,4 +104,10 @@ export class AgregarDestinatoriaComponent implements OnInit {
     }
   }
 
+  /**
+   * Cierra el modal emitiendo el evento `cerrar`.
+   */
+  public cerrarModal(): void {
+    this.cerrar.emit();
+  }
 }

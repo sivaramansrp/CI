@@ -9,11 +9,30 @@ import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/c
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { INPUT_FECHA_CONFIG } from '../../enum/permiso.enum';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
+
+/**
+ * Componente Angular para la gestión del pago de derechos en el trámite sanitario.
+ *
+ * Este componente permite capturar, editar y visualizar la información relacionada con el pago de derechos,
+ * incluyendo datos bancarios, fecha e importe de pago, y otros campos relevantes del importador o exportador.
+ * Utiliza formularios reactivos y catálogos dinámicos para la selección de bancos.
+ *
+ * Funcionalidades principales:
+ * - Manejo de formulario reactivo para los datos de pago de derechos.
+ * - Integración con servicios y store para la obtención y persistencia de datos.
+ * - Soporte para modo solo lectura y actualización automática según el estado del trámite.
+ * - Carga dinámica de catálogos de bancos y configuración de campos de fecha.
+ *
+ * Uso:
+ * Este componente se utiliza dentro del flujo de captura de información de un trámite sanitario,
+ * permitiendo al usuario ingresar y consultar los datos de pago de derechos requeridos.
+ */
 
 /**
  * Componente para la sección de pago de derechos.
@@ -34,52 +53,104 @@ import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Formulario de la solicitud.
+   * Contiene los controles reactivos para la captura de datos de pago de derechos.
    */
-  formSolicitud!: FormGroup;
+  public formSolicitud!: FormGroup;
 
   /**
    * Estado de la solicitud de la sección 301.
+   * Almacena el estado actual de la solicitud para el trámite 260215.
    */
   public solicitudState!: Solicitud260215State;
 
   /**
-   * Subject para notificar la destrucción del componente.
+   * Subject para notificar la destrucción del componente y evitar fugas de memoria.
+   * Se utiliza en combinación con takeUntil en las suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Constante para configurar el input de fecha.
+   * Proporciona la configuración necesaria para el componente de fecha.
    */
-  INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
+  public INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
+
   /**
-   * Constructor del componente.
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Constructor del componente PagoDeDerechosComponent.
+   *
+   * @param fb Instancia de FormBuilder para la creación y gestión de formularios reactivos.
+   * @param tramite260215Store Store para el manejo del estado relacionado al trámite 260215.
+   * @param tramite260215Query Query para consultar el estado del trámite 260215.
+   * @param serviciosPermisoSanitarioService Servicio inyectado para operaciones relacionadas con permisos sanitarios.
+   * @param consultaioQuery Query para consultar el estado de la sección de consulta IO.
+   *
+   * Al inicializar el componente, se obtienen los datos bancarios y se suscribe al estado de consulta IO
+   * para actualizar el modo de solo lectura y reinicializar el estado del formulario cuando sea necesario.
    */
   constructor(
     private fb: FormBuilder,
-    private tramite301Store: Tramite260215Store,
-    private tramite301Query: Tramite260215Query,
+    private tramite260215Store: Tramite260215Store,
+    private tramite260215Query: Tramite260215Query,
     @Inject(ServiciosPermisoSanitarioService)
-    private serviciosPermisoSanitarioService: ServiciosPermisoSanitarioService
+    private serviciosPermisoSanitarioService: ServiciosPermisoSanitarioService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     this.fetchBancoData();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * Catálogo de bancos.
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   * Si el formulario está en modo solo lectura, lo deshabilita; de lo contrario, lo habilita.
    */
-  public bancoCatalogo: CatalogosSelect = {
-    labelNombre: 'Banco',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [],
-  };
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.formSolicitud.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formSolicitud.enable();
+    }
+  }
 
   /**
-   * Método para actualizar el banco seleccionado.
-   * @param e {Catalogo} Banco seleccionado.
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Si está en modo solo lectura, carga los datos y deshabilita el formulario.
+   * Si no, inicializa el formulario para edición.
    */
-  ngOnInit(): void {
-    this.tramite301Query.selectSolicitud$
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Inicializa el formulario de solicitud para el trámite 260215.
+   *
+   * Este método suscribe al observable `selectSolicitud$` para obtener el estado actual de la solicitud
+   * y asignarlo a la propiedad `solicitudState`. Posteriormente, crea el formulario reactivo `formSolicitud`
+   * utilizando los valores obtenidos de `solicitudState`, agrupando los campos relacionados con los datos
+   * del importador o exportador.
+   *
+   * El método utiliza `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
+   */
+  inicializarFormulario(): void {
+    this.tramite260215Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -98,6 +169,24 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         importePago: [this.solicitudState?.importePago],
       }),
     });
+  }
+  /**
+   * Catálogo de bancos utilizado en el formulario.
+   * Contiene la configuración para el campo de selección de banco.
+   */
+  public bancoCatalogo: CatalogosSelect = {
+    labelNombre: 'Banco',
+    required: true,
+    primerOpcion: 'Selecciona un valor',
+    catalogos: [],
+  };
+
+  /**
+   * Método para actualizar el banco seleccionado.
+   * @param e {Catalogo} Banco seleccionado.
+   */
+  ngOnInit(): void {
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -124,15 +213,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (
-      this.tramite301Store[metodoNombre] as (
+      this.tramite260215Store[metodoNombre] as (
         value: string | number | null
       ) => void
     )(VALOR);
   }
 
   /**
-   * Método para actualizar el banco seleccionado.
-   * @param e {Catalogo} Banco seleccionado.
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera recursos y cancela suscripciones para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
@@ -140,8 +229,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método para actualizar el banco seleccionado.
-   * @param e {Catalogo} Banco seleccionado.
+   * Getter para acceder al grupo de datos del importador o exportador dentro del formulario principal.
+   * Facilita el acceso a los controles de datos de pago de derechos.
    */
   get datosImportadorExportador(): FormGroup {
     return this.formSolicitud.get('datosImportadorExportador') as FormGroup;

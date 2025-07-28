@@ -13,12 +13,19 @@
                     <input type="text" id="rfc" formControlName="rfc" class="form-control font-weight-titulo text-title"
                         placeholder="Registro Federal de Contribuyentes"
                         (change)="setValoresStore(FormNotificaciones,'rfc', 'setValorRFC')" />
+                    <div *ngIf="FormNotificaciones.get('rfc')?.hasError('rfcInvalido') && FormNotificaciones.get('rfc')?.touched"
+                        class="text-danger">
+                        El RFC debe tener entre 12 y 13 caracteres, y no debe contener espacios.
+                    </div>
                 </div>
             </div>
         </form>
         <div class="row">
             <div class="d-flex justify-content-lg-end h1">
-                <button type="submit" class="btn btn-primary me-2" (click)="agregarPersonas()">Agregar</button>
+                <button class="btn btn-primary ms-2" type="button" [disabled]="FormNotificaciones.invalid"
+                    (click)="agregarPersonas()">
+                    Agregar
+                </button>
             </div>
         </div>
         <div class="row mt-4">
@@ -29,7 +36,7 @@
                 </app-tabla-dinamica>
             </div>
         </div>
-        <div *ngIf="visualizarTabla" class="row">
+        <div *ngIf="botonEliminar" class="row">
             <div class="d-flex justify-content-lg-end h1">
                 <button class="btn btn-primary ms-2" type="button" (click)="enviarFirma()">Firmar</button>
                 <button class="btn btn-default ms-2" type="button" (click)="eliminarSeleccionados()">Eliminar</button>
@@ -37,3 +44,9 @@
         </div>
     </div>
 </div>
+@if (nuevaNotificacion) {
+<section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+</section>
+}

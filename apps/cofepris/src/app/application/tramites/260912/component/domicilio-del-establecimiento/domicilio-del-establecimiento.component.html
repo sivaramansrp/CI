@@ -16,8 +16,18 @@
               (change)="setValorStore(form, 'codigoPostal')"
             />
             <div *ngIf="form.get('codigoPostal')?.touched && form.get('codigoPostal')?.hasError('required')" class="text-danger">
-              Por favor, corrija la codigoPostal.
+              Este campo es obligatorio
             </div>
+            <small
+            *ngIf="form.get('codigoPostal')?.errors?.['maxlength']" class="text-danger"
+            >
+              La Código postal no debe exceder los 12 caracteres.
+            </small>
+            <small
+              *ngIf="form.get('codigopostal')?.errors?.['pattern']" class="text-danger"
+            >
+              Por favor, escribe un número entero válido.
+            </small>
           </div>
         </div>
 
@@ -25,10 +35,11 @@
           <div class="form-group">
             <app-catalogo-select
               [catalogo]="estado"
-              [label]="'Estado*'"
+              [label]="'Estado'"
               name="estado"
               [required]="true"
               formControlName="estado"
+              [isDisabled]="esFormularioSoloLectura" 
               (change)="setValorStore(form, 'estado')"
             >
             </app-catalogo-select>
@@ -53,8 +64,13 @@
               (change)="setValorStore(form, 'municipioOAlcaldia')"
             />
             <div *ngIf="form.get('municipioOAlcaldia')?.touched && form.get('municipioOAlcaldia')?.hasError('required')" class="text-danger">
-              Por favor, corrija el municipio.
+              Este campo es obligatorio
             </div>
+            <small
+              *ngIf="form.get('municipioOAlcaldia')?.errors?.['maxlength']" class="text-danger"
+            >
+              La Municipio o alcaldía no debe exceder los 120 caracteres.
+            </small>
           </div>
         </div>
       </div>
@@ -82,12 +98,22 @@
             <div *ngIf="form.get('localidad')?.touched && form.get('localidad')?.hasError('required')" class="text-danger">
               Por favor, corrija el localidad.
             </div>
+            <small
+              *ngIf="form.get('localidad')?.errors?.['required']" class="text-danger"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              *ngIf="form.get('localidad')?.errors?.['maxlength']" class="text-danger"
+            >
+              La localidad no debe exceder los 120 caracteres.
+            </small>
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="colonias">Colonias:</label>
+            <label class="form-label" for="colonias">Colonia:</label>
             <input
               class="form-control"
               type="text"
@@ -100,6 +126,18 @@
             <div *ngIf="form.get('colonias')?.touched && form.get('colonias')?.hasError('required')" class="text-danger">
               Por favor, corrija la colonias.
             </div>
+            <small
+              *ngIf="form.get('colonias')?.errors?.['required']"
+              class="text-danger"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              *ngIf="form.get('colonias')?.errors?.['maxlength']"
+              class="text-danger"
+            >
+              La colonia no debe exceder los 120 caracteres.
+            </small>
           </div>
         </div>
       </div>
@@ -108,6 +146,11 @@
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" for="calle">Calle*:</label>
+            <span
+            class="bi bi-question-circle-fill"
+            title="Domicilio, calle, numero interior, numero exterior, lote"
+            data-bs-toggle="tooltip"
+            ></span>
             <input
               class="form-control"
               type="text"
@@ -118,8 +161,13 @@
               (change)="setValorStore(form, 'calle')"
             />
             <div *ngIf="form.get('calle')?.touched && form.get('calle')?.hasError('required')" class="text-danger">
-              Por favor, corrija la calle.
+              Este campo es obligatorio
             </div>
+            <small
+              *ngIf="form.get('calle')?.errors?.['maxlength']" class="text-danger"
+            >
+              La Calle no debe exceder los 120 caracteres.
+            </small>
           </div>
         </div>
       </div>
@@ -140,6 +188,21 @@
             <div *ngIf="form.get('lada')?.touched && form.get('lada')?.hasError('required')" class="text-danger">
               Por favor, corrija la lada.
             </div>
+            <small
+              *ngIf="form.get('lada')?.errors?.['required']" class="text-danger"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              *ngIf="form.get('lada')?.errors?.['minlength'] || form.get('lada')?.errors?.['maxlength']" class="text-danger"
+            >
+              La lada debe tener exactamente 5 números.
+            </small>
+            <small
+              *ngIf="form.get('lada')?.errors?.['pattern']" class="text-danger"
+            >
+              Por favor, ingresa solo números.
+            </small>
           </div>
         </div>
         <div class="col-md-3">
@@ -156,12 +219,21 @@
             />
           
             <div *ngIf="form.get('telefono')?.touched && form.get('telefono')?.invalid" class="text-danger">
-              <div *ngIf="form.get('telefono')?.errors?.['required']">
-                El teléfono es obligatorio.
-              </div>
-              <div *ngIf="form.get('telefono')?.errors?.['pattern']">
-                El teléfono debe contener exactamente 10 dígitos numéricos.
-              </div>
+              <small
+                *ngIf="form.get('telefono')?.errors?.['required']"
+              >
+                Este campo es obligatorio.
+              </small>
+              <small
+                *ngIf="form.get('telefono')?.errors?.['maxlength']"
+              >
+                El teléfono no debe exceder los 30 números.
+              </small>
+              <small
+                *ngIf="form.get('telefono')?.errors?.['pattern']"
+              >
+                Por favor, ingresa solo números.
+              </small>
             </div>
           </div>
           
@@ -178,13 +250,15 @@
       [tipoSeleccionTabla]="tablaSeleccionCheckbox"
       [configuracionTabla]="nicoTabla"
       [datos]="nicoTablaDatos"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
     <div class="container text-end mt-5">
-      <button class="btn btn-default me-2">Eliminar</button>
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
       <button
         class="btn btn-primary me-2"
         data-bs-toggle="modal"
         data-bs-target="#modalAddAgent"
+        [disabled]="esFormularioSoloLectura"
       >
         Agregar
       </button>
@@ -198,6 +272,7 @@
           [label]="'Aviso de funcionamiento'"
           [required]="true"
           formControlName="avisoCheckbox"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValorStore(domicilio, 'avisoCheckbox')"
       ></lib-input-check>
 
@@ -230,6 +305,7 @@
           formControlName="regimen"
           [label]="'Régimen'"
           [required]="true"
+          [isDisabled]="esFormularioSoloLectura"
           name="regimen"
           [tooltipQuestionCircle]="true"
           (change)="setValorStore(domicilio, 'regimen')"
@@ -244,6 +320,7 @@
           formControlName="aduanasEntradas"
           [label]="'Aduanas de entradas'"
           [required]="true"
+          [isDisabled]="esFormularioSoloLectura"
           name="aduanasEntradas"
           (change)="setValorStore(domicilio, 'aduanasEntradas')"
         ></app-catalogo-select>
@@ -262,6 +339,7 @@
           [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA).'"
           [required]="true"
           formControlName="aifaCheckbox"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValorStore(domicilio, 'aifaCheckbox')"
       ></lib-input-check>
       </div>
@@ -278,14 +356,16 @@
           [tipoSeleccionTabla]="tablaSeleccionCheckbox"
           [configuracionTabla]="mercanciasTabla"
           [datos]="mercanciasTablaDatos"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         ></app-tabla-dinamica>
         <div class="container text-end mt-5">
-          <button class="btn btn-default me-2">Modificar</button>
-          <button class="btn btn-default me-2">Eliminar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
           <button
             class="btn btn-primary me-2"
             data-bs-toggle="modal"
             data-bs-target="#modalAddAgentMercancias"
+            [disabled]="esFormularioSoloLectura"
           >
             Agregar
           </button>
@@ -303,6 +383,7 @@
           [label]="''"
           [required]="true"
           formControlName="manifests"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValorStore(domicilio, 'manifests')"
       ></lib-input-check>
             <span class="fw-bold align-middle"> *</span>
@@ -346,7 +427,7 @@
           </div>
         </div>
         <div class="col-md-3 mt-5">
-          <button class="btn btn-default me-2">Modificar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
         </div>
       </div>
 

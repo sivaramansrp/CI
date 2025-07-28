@@ -1,16 +1,35 @@
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { ENLACE_TABLA, EnlaceOperativo, PERSONAS_PARA,Personas } from '../../models/terceros-relacionados.model';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject,map,takeUntil } from 'rxjs';
-import { TercerosRelacionadosState, TercerosRelacionadosStore } from '../../estados/stores/terceros-relacionados.store';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
+import { ENLACE_TABLA } from '../../models/terceros-relacionados.model';
+import { EnlaceOperativo } from '../../models/terceros-relacionados.model';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { Inject } from '@angular/core';
+import { Input } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { PERSONAS_PARA } from '../../models/terceros-relacionados.model';
+import { Personas } from '../../models/terceros-relacionados.model';
 import { REPRESENTANTE_LEGAL } from '../../constants/terceros-relacionados.enum';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { TemplateRef } from '@angular/core';
 import { TercerosRelacionadosQuery } from '../../estados/queries/terceros-relacionados.query';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
+import { TercerosRelacionadosState } from '../../estados/stores/terceros-relacionados.store';
+import { TercerosRelacionadosStore } from '../../estados/stores/terceros-relacionados.store';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente que representa la funcionalidad de "Terceros Relacionados".
@@ -20,12 +39,19 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
 @Component({
   selector: 'shared-terceros-relacionados',
   standalone: true,
+  providers: [BsModalService],
   imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent, TablaDinamicaComponent, TituloComponent],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
 })
 export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
 
+/**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
   /**
    * Una instancia de FormGroup que representa la estructura del formulario para "representante legal".
    * Contiene un FormGroup anidado llamado `represtantanteLegalFormGroup` para gestionar
@@ -93,6 +119,11 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * Esta propiedad se utiliza para gestionar y rastrear el estado de los datos relacionados con terceros.
    */
   public importacionstate!: TercerosRelacionadosState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando se establece en `true`, los campos del formulario no son editables por el usuario.
+   */
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente TercerosRelacionadosComponent.
@@ -105,12 +136,16 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
+    @Inject(BsModalService)
     private modalService: BsModalService,
     private tercerosRelacionadosSvc: TercerosRelacionadosService,
     private tercerosRelacionadosStore: TercerosRelacionadosStore,
-    private tercerosRelacionadosQuery: TercerosRelacionadosQuery
+    private tercerosRelacionadosQuery: TercerosRelacionadosQuery,
+    private consultaQuery: ConsultaioQuery
   ) {
-    //
+      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+    })).subscribe();
   }
 
   /**
@@ -130,7 +165,25 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
     this.getEnlaceOperativo();
     this.crearEnlaceOperativoForm();
     this.getPersonas();
+    this.inicializarEstadoFormulario();
   }
+
+
+    /**
+     * Inicializa el formulario para el componente "Terceros Relacionados".
+     * 
+     * Este método se suscribe al observable `selectImportacion$` de `tercerosRelacionadosQuery`
+     * para actualizar la propiedad `importacionstate` cada vez que cambie el estado de la sección de importación.
+     * La suscripción se cancela automáticamente cuando el `destroyNotifier$` emite un valor.
+     * Después de configurar la suscripción, llama a `crearEnlaceOperativoForm()` para crear el formulario de enlace operativo.
+     */
+    public inicializarFormulario(): void {
+      this.tercerosRelacionadosQuery.selectImportacion$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+        this.importacionstate = seccionState;
+      })).subscribe();
+
+      this.crearEnlaceOperativoForm();
+    }
 
   /**
    * Getter para la propiedad 'represtantanteLegalFormGroup'.
@@ -160,16 +213,46 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   public crearEnlaceOperativoForm(): void {
     this.enlaceOperativoForm = this.fb.group({
         resigtro: ['', Validators.required],
-        irfc: ['', Validators.required],
-        inombre: ['', Validators.required],
-        apellidoPaterno: ['', Validators.required],
-        apellidoMaterno: ['', Validators.required],
+        irfc: [{ value: '', disabled: true }, Validators.required],
+        inombre: [{ value: '', disabled: true }, Validators.required],
+        apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
+        apellidoMaterno: [{ value: '', disabled: true }, Validators.required],
         cargo: ['', Validators.required],
-        cuidad: ['', Validators.required],
+        cuidad: [{ value: '', disabled: true }, Validators.required],
         telefono: ['', Validators.required],
         correo: ['', Validators.required],
         suplente: ['', Validators.required],
     });
+  }
+
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * 
+   * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), guarda el formulario llamando a `guardarFormulario()`.
+   * - De lo contrario, inicializa el formulario llamando a `inicializarFormulario()`.
+   */
+  public inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Inicializa el formulario y establece su estado habilitado o deshabilitado según la bandera de solo lectura.
+   * 
+   * - Llama a `inicializarFormulario()` para reiniciar o inicializar el formulario.
+   * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es true), deshabilita los controles del formulario.
+   * - De lo contrario, habilita los controles del formulario para la interacción del usuario.
+   */
+  public guardarFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.enlaceOperativoForm.disable();
+    } else {
+      this.enlaceOperativoForm.enable();
+    }
   }
 
   /**
@@ -224,12 +307,12 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * Si el `valor` es un objeto con una propiedad `id`, se extrae el `id` y se utiliza para actualizar el store.
    * De lo contrario, se utiliza el `valor` en sí mismo para actualizar el store.
    */
-  public establecerCambioDeValor(event: { campo: string; valor: any }): void {
+  public establecerCambioDeValor(event: { campo: string; valor: unknown }): void {
     if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
       const VALOR = event.valor.id;
-      this.tercerosRelacionadosStore.setDynamicFieldValue(event.campo, VALOR);
+      this.tercerosRelacionadosStore.setDynamicFieldValue(event.campo, VALOR as string | number | boolean );
     } else if (event) {
-      this.tercerosRelacionadosStore.setDynamicFieldValue(event.campo, event.valor);
+      this.tercerosRelacionadosStore.setDynamicFieldValue(event.campo, event.valor as string | number | boolean);
     }
   }
 

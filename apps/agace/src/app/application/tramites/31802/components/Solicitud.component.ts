@@ -1,11 +1,11 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  CatalogoSelectComponent,
+  ConsultaioState,
   InputFecha,
   InputFechaComponent,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FECHA_FINAL, FECHA_INICIAL, FECHA_PAGO } from '../model/registro.model';
 import {
   FormBuilder,
@@ -13,12 +13,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import {
   Solicitud31802State,
   Tramite31802Store,
 } from '../state/Tramite31802.store';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { RegistroSolicitudService } from './../services/registro-solicitud-service.service';
 import { Solicitud31802Enum } from '../constants/solicitud31802.enum';
 import { Tramite31802Query } from '../state/Tramite31802.query';
@@ -34,9 +35,8 @@ import { Tramite31802Query } from '../state/Tramite31802.query';
     CommonModule,
     TituloComponent,
     InputFechaComponent,
-    CatalogoSelectComponent,
-    ReactiveFormsModule,
-  ],
+    ReactiveFormsModule
+],
   providers: [RegistroSolicitudService],
   templateUrl: './Solicitud.component.html',
   styleUrl: './Solicitud.component.css',
@@ -78,31 +78,55 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   registroForm!: FormGroup;
 
-   /**
-   * Constructor del componente.
-   * Se utiliza para la inyección de dependencias.
-   *
-   * @param registroSolicitud Servicio para obtener datos relacionados con la solicitud.
-   * @param fb Constructor de formularios reactivos.
-   * @param store Almacén global para gestionar el estado del trámite.
-   * @param query Consulta para obtener el estado actual del trámite.
-   * @param validacionesService Servicio para validar campos del formulario.
+
+  esFormularioSoloLectura: boolean = false;
+
+
+  private destroyNotifier$: Subject<void> = new Subject();
+  /**
+    * Subject para destruir notificador.
+    */
+  consultaDatos!: ConsultaioState;
+  /**
+   * Notificador para cancelar suscripciones activas.
+   * Se utiliza para evitar fugas de memoria al destruir el componente.
    */
+
+  /**
+  * Constructor del componente.
+  * Se utiliza para la inyección de dependencias.
+  *
+  * @param registroSolicitud Servicio para obtener datos relacionados con la solicitud.
+  * @param fb Constructor de formularios reactivos.
+  * @param store Almacén global para gestionar el estado del trámite.
+  * @param query Consulta para obtener el estado actual del trámite.
+  * @param validacionesService Servicio para validar campos del formulario.
+  */
   constructor(
+    private consultaioQuery: ConsultaioQuery,
     public fb: FormBuilder,
     public store: Tramite31802Store,
     private query: Tramite31802Query,
     public validacionesService: ValidacionesFormularioService
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
-  }
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
+    }
+
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Configura el formulario, obtiene datos iniciales y suscribe al estado global.
    */
   ngOnInit(): void {
-
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -111,9 +135,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.donanteDomicilio();
+    this.donanteDomicilio()
   }
 
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosDelFormulario();
+    } else {
+      this.datosDeAvisoForm()
+    }
+  }
   /**
    * Actualiza el campo de fecha de pago en el formulario y en el estado global.
    *
@@ -133,7 +164,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   enviarFormulario(): void {
     if (this.registroForm.valid) {
       // Aquí se implementará la lógica para manejar el envío del formulario.
-    }else {
+    } else {
       this.validarDestinatarioFormulario();
     }
   }
@@ -155,6 +186,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   validarDestinatarioFormulario(): void {
     if (this.registroForm.invalid) {
       this.registroForm.markAllAsTouched();
+    }
+  }
+
+
+  guardarDatosDelFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.registroForm.disable();
+    } else {
+      this.registroForm.enable();
     }
   }
 
@@ -183,12 +223,27 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       manifiesto1: [this.solicitudState?.manifiesto1, [Validators.required]],
       manifiesto2: [this.solicitudState?.manifiesto2, [Validators.required]],
       manifiesto3: [this.solicitudState?.manifiesto3, [Validators.required]],
-      numeroOperacion: [this.solicitudState?.numeroOperacion, [Validators.required],],
+      numeroOperacion: [this.solicitudState?.numeroOperacion, [Validators.required]],
       fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
       monedaNacional: [this.solicitudState?.monedaNacional, [Validators.required]],
     });
+
+    this.inicializarEstadoFormulario();
   }
 
+  /**
+ * datosDeltrimiteForm los campos del formulario si es de solo lectura.
+ * Si el formulario es de solo lectura, deshabilita los campos del formulario de importador/exportador.
+ */
+
+  datosDeAvisoForm(): void {
+    if (this.esFormularioSoloLectura) {
+      this.registroForm.get('llave')?.disable();
+      this.registroForm.get('numeroOperacion')?.disable();
+      this.registroForm.get('fechaPago')?.disable();
+      this.registroForm.get('monedaNacional')?.disable();
+    }
+  }
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Cancela todas las suscripciones activas.

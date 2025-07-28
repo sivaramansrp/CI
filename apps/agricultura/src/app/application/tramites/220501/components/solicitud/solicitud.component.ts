@@ -1,17 +1,19 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import {Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { CargarDatosIniciales } from '../../../220502/models/solicitud-pantallas.model';
 import { CarrosDeFerrocarril } from '../../../220502/models/solicitud-pantallas.model';
 import { CarrosDeFerrocarrilComponent } from '../../../220502/shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelTramiteARealizarComponent } from '../../../220502/shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 import { HistorialInspeccionFisica } from '../../../220502/models/solicitud-pantallas.model';
 import { HistorialInspeccionFisicaComponent } from '../../../220502/shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
 import { MedioTransporteComponent } from '../medio-transporte/medio-transporte.component';
 import { ResponsableInspeccionEnPuntoComponent } from '../../../220502/shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
 import { Solicitud } from '../../../220502/models/solicitud-pantallas.model'
+import { Solicitud220501Store } from '../../estados/tramites220501.store';
 import { SolicitudDatosComponent } from '../../../220502/shared/solicitud-datos/solicitud-datos.component';
 import { SolicitudPantallasService } from '../../../220502/services/solicitud-pantallas.service';
 import { TEXTOS } from '../../constantes/texto-enum';
@@ -23,11 +25,11 @@ import { TEXTOS } from '../../constantes/texto-enum';
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
   standalone: true,
-  imports: [ReactiveFormsModule,CommonModule,SolicitudDatosComponent, DatosDelTramiteARealizarComponent,ResponsableInspeccionEnPuntoComponent,
-    MedioTransporteComponent, CarrosDeFerrocarrilComponent,HistorialInspeccionFisicaComponent
+  imports: [ReactiveFormsModule, CommonModule, SolicitudDatosComponent, DatosDelTramiteARealizarComponent, ResponsableInspeccionEnPuntoComponent,
+    MedioTransporteComponent, CarrosDeFerrocarrilComponent, HistorialInspeccionFisicaComponent
   ],
 })
-export class SolicitudComponent implements OnInit, OnDestroy {
+export class SolicitudComponent implements OnDestroy {
   /**
    * Constantes de texto.
    */
@@ -89,6 +91,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   mostrarSeccion: boolean = true;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  formularioDeshabilitado: boolean = false;
+
+  /**
+   * Bandera que indica si la solicitud está en modo solo lectura.
+   * @type {boolean}
+   */
+  esSolicitud: boolean = false;
+
+  /**
    * Subject para desuscribirse de los observables.
    * @type {Subject<void>}
    */
@@ -101,16 +115,38 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private solicitudService: SolicitudPantallasService
+    private solicitudService: SolicitudPantallasService,
+    private consultaioQuery: ConsultaioQuery,
+    private solicitud220501Store: Solicitud220501Store
   ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          this.esSolicitud = seccionState.create;
+          if(seccionState.readonly || seccionState.update){
+             this.inicializarEstadoFormulario();
+          }
+        })
+      )
+      .subscribe();
+
     this.crearFormulario();
+    this.cargarDatosIniciales();
   }
 
   /**
-   * Método que se ejecuta al inicializar el componente.
+   * Método para inicializar el estado del formulario.
+   * Si `formularioDeshabilitado` es `true`, deshabilita el formulario,
+   * de lo contrario, lo habilita.
    */
-  ngOnInit(): void {
-    this.cargarDatosIniciales();
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.form?.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.form?.enable();
+    }
   }
 
   /**
@@ -144,6 +180,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   onTransporteSeleccionado(value: boolean): void {
     this.mostrarSeccion = value;
+    this.solicitud220501Store.setMostrarSeccion(value);
   }
 
   /**

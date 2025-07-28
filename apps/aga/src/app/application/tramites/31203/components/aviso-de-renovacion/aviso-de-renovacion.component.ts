@@ -1,22 +1,11 @@
+import { AvisoValor, FECHA_DE_PAGO,PreOperativo } from '../../models/aviso.model';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConsultaioQuery, ConsultaioState, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-
-import { Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-
-import {AvisoValor, FECHA_DE_PAGO } from '../../models/aviso.model';
-
+import { FormBuilder, FormGroup,ReactiveFormsModule } from '@angular/forms';
+import { Subject, map,takeUntil } from 'rxjs';
+import { UnicoState,UnicoStore } from '../../estados/renovacion.store';
 import { AvisoUnicoService } from '../../services/aviso-unico.service';
-
-import { map, takeUntil } from 'rxjs';
-import { Subject } from 'rxjs';
-
-import { PreOperativo } from '../../models/aviso.model';
-
-import { UnicoState } from '../../estados/renovacion.store';
-import { UnicoStore } from '../../estados/renovacion.store';
-
+import { CommonModule } from '@angular/common';
 import { UnicoQuery } from '../../estados/queries/unico.query';
 
 /**
@@ -26,11 +15,16 @@ import { UnicoQuery } from '../../estados/queries/unico.query';
 @Component({
   selector: 'app-aviso-de-renovacion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent, CatalogoSelectComponent, InputRadioComponent,InputCheckComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent, CatalogoSelectComponent, InputRadioComponent, InputCheckComponent],
   templateUrl: './aviso-de-renovacion.component.html',
   styleUrls: ['./aviso-de-renovacion.component.scss'],
 })
 export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si el formulario es de solo lectura.
+   * Si es verdadero, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Fecha inicial para el campo de fecha.
    */
@@ -62,6 +56,26 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
   public solicitudState!: UnicoState;
 
   /**
+ * Notificador para destruir observables.
+ */
+  public destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+  * Subject para destruir notificador.
+  */
+  consultaDatos!: ConsultaioState;
+
+  /**
+* Configuración para el catálogo de bancos.
+*/
+  public bancoCatalogo: CatalogosSelect = {
+    labelNombre: 'Banco',
+    required: false,
+    primerOpcion: 'Selecciona un valor',
+    catalogos: [],
+  };
+
+  /**
    * Constructor del componente.
    * @param fb Constructor de formularios reactivos.
    * @param service Servicio para obtener datos relacionados con el aviso único.
@@ -70,11 +84,21 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
+    private consultaioQuery: ConsultaioQuery,
     private service: AvisoUnicoService,
     private unicoStore: UnicoStore,
     private unicoQuery: UnicoQuery
   ) {
-    // Inicializa el formulario reactivo y el estado de la solicitud.
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -90,17 +114,28 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.initializeForm();
+    this.donanteDomicilio()
     this.loadLocalidad();
     this.loadAsignacionData();
     this.cargarRadio();
   }
 
   /**
+ * Inicializa el estado del formulario según si es de solo lectura o no.
+ * Si es de solo lectura, guarda los datos del formulario; de lo contrario, inicializa el formulario con los datos del donante y domicilio.
+ */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosDelFormulario();
+    } else {
+      this.datosDeAvisoForm()
+    }
+  }
+
+  /**
    * Inicializa el formulario reactivo con valores predeterminados.
    */
-  private initializeForm(): void {
+  private donanteDomicilio(): void {
     this.avisoForm = this.fb.group({
       mapTipoTramite: [this.solicitudState?.mapTipoTramite],
       mapDeclaracionSolicitud: [this.solicitudState?.mapDeclaracionSolicitud],
@@ -114,6 +149,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
       fechaPago: [this.solicitudState?.fechaPago],
       importePago: [{ value: '', disabled: true }],
     });
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -124,11 +160,11 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data: AvisoValor) => {
         this.avisoForm.patchValue({
-            claveReferencia: data.claveReferencia,
-            cadenaDependencia: data.cadenaDependencia,
-            importePago: data.importePago,
-          });
-        
+          claveReferencia: data.claveReferencia,
+          cadenaDependencia: data.cadenaDependencia,
+          importePago: data.importePago,
+        });
+
       });
   }
 
@@ -176,6 +212,21 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
     });
   }
 
+/**
+ * Habilita o deshabilita el formulario según el modo de solo lectura.
+ * 
+ * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), 
+ * deshabilita todos los controles del formulario para evitar modificaciones.
+ * Si no está en modo solo lectura, habilita todos los controles del formulario para permitir la edición.
+ */
+guardarDatosDelFormulario(): void {
+  if (this.esFormularioSoloLectura) {
+    this.avisoForm.disable();
+  } else {
+    this.avisoForm.enable();
+  }
+}
+
   /**
    * Establece valores en el almacén desde el formulario.
    * @param form Formulario reactivo.
@@ -186,7 +237,32 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.unicoStore[metodoNombre] as (value: string) => void)(VALOR);
   }
- 
+
+
+
+  /**
+   * datosDeltrimiteForm los campos del formulario si es de solo lectura.
+   * Si el formulario es de solo lectura, deshabilita los campos del formulario de importador/exportador.
+   */
+  datosDeAvisoForm(): void {
+    if (this.esFormularioSoloLectura && this.avisoForm) {
+      this.avisoForm.get('mapTipoTramite')?.disable();
+      this.avisoForm.get('cadenaDependencia');
+      this.avisoForm.get('mapDeclaracionSolicitud')?.disable();
+      this.avisoForm.get('envioAviso')?.disable();
+      this.avisoForm.get('numeroAviso')?.disable();
+      this.avisoForm.get('claveReferencia')?.disable();
+      this.avisoForm.get('numeroOperacion')?.disable();
+      this.avisoForm.get('correoEledctronico')?.disable();
+      this.avisoForm.get('banco')?.disable();
+      this.avisoForm.get('llavePago')?.disable();
+      this.avisoForm.get('fechaPago')?.disable();
+      this.avisoForm.get('importePago')?.disable();
+    }
+
+  }
+
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Libera recursos y cancela suscripciones.

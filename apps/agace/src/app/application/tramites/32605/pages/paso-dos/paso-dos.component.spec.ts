@@ -1,103 +1,91 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { TestBed } from '@angular/core/testing';
 import { PasoDosComponent } from './paso-dos.component';
 import {
   AlertComponent,
   AnexarDocumentosComponent,
   CatalogosService,
   TituloComponent,
-} from '@ng-mf/data-access-user';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+} from '@libs/shared/data-access-user/src';
+import { of, Subject } from 'rxjs';
+import { CATALOGOS_ID } from '@libs/shared/data-access-user/src';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
-  let fixture: ComponentFixture<PasoDosComponent>;
-  let catalogosServiceMock: any;
+  let fixture: any;
+  let catalogosServiceMock: jest.Mocked<CatalogosService>;
 
   beforeEach(async () => {
     catalogosServiceMock = {
       getCatalogo: jest.fn(() => of([])),
-    };
+    } as any;
 
     await TestBed.configureTestingModule({
-      declarations: [],
+      declarations: [PasoDosComponent],
       imports: [
-        PasoDosComponent,
+        
+        HttpClientTestingModule,
         CommonModule,
         ReactiveFormsModule,
         TituloComponent,
         AlertComponent,
         AnexarDocumentosComponent,
-        HttpClientTestingModule,
-        ToastrModule.forRoot(),
       ],
       providers: [
-        ToastrService,
         { provide: CatalogosService, useValue: catalogosServiceMock },
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
-
-  it('should create', () => {
+  it('debe crear el componente correctamente', () => {
     expect(component).toBeTruthy();
   });
 
-
-  it('should handle error when getting tipos de documentos', () => {
-    catalogosServiceMock.getCatalogo.mockReturnValue(
-      throwError(() => new Error('API Error'))
-    );
-    component.getTiposDocumentos();
-    expect(catalogosServiceMock.getCatalogo).toHaveBeenCalledWith(
-      CATALOGOS_ID.CAT_TIPO_DOCUMENTO
-    );
-    expect(component.catalogoDocumentos).toEqual([]);
-  });
-
   it('should call getTiposDocumentos on ngOnInit', () => {
-    const getTiposDocumentosSpy = jest.spyOn(component, 'getTiposDocumentos');
+    const spy = jest.spyOn(component, 'getTiposDocumentos');
     component.ngOnInit();
-    expect(getTiposDocumentosSpy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 
+  it('should assign catalogoDocumentos when getTiposDocumentos returns data', () => {
+    const mockDocs: Catalogo[] = [{ id: 1, descripcion: 'Doc1' } as Catalogo];
+    catalogosServiceMock.getCatalogo.mockReturnValue(of(mockDocs));
 
-  it('should assign data to catalogoDocumentos when getTiposDocumentos is successful', () => {
-    const mockResponse: Catalogo[] = [{ id: 1, descripcion: 'Documento 1' }];
-    catalogosServiceMock.getCatalogo.mockReturnValue(of(mockResponse));
     component.getTiposDocumentos();
+
     expect(catalogosServiceMock.getCatalogo).toHaveBeenCalledWith(
       CATALOGOS_ID.CAT_TIPO_DOCUMENTO
     );
-    expect(component.catalogoDocumentos).toEqual(mockResponse);
+    expect(component.catalogoDocumentos).toEqual(mockDocs);
   });
 
+  it('should not assign catalogoDocumentos when getTiposDocumentos returns empty array', () => {
+    catalogosServiceMock.getCatalogo.mockReturnValue(of([]));
+    component.catalogoDocumentos = [{ id: 1, descripcion: 'Doc1' } as Catalogo];
+
+    component.getTiposDocumentos();
+
+    expect(component.catalogoDocumentos).toEqual([
+      { id: 1, descripcion: 'Doc1' } as Catalogo,
+    ]);
+  });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const destroyNotifierSpy = jest.spyOn(
-      component['destroyNotifier$'],
-      'next'
-    );
-    const destroyNotifierCompleteSpy = jest.spyOn(
-      component['destroyNotifier$'],
+    const completeSpy = jest.spyOn(
+      (component as any).destroyNotifier$,
       'complete'
     );
-    component.ngOnDestroy();
-    expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
-  });
+    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
 
+    component.ngOnDestroy();
+
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
 });

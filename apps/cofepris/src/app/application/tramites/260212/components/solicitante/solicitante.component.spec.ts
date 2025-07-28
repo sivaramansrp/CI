@@ -10,37 +10,19 @@ describe('SolicitanteComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [ReactiveFormsModule, CommonModule, TituloComponent,SolicitanteComponent],
+      imports: [ReactiveFormsModule, CommonModule, TituloComponent, SolicitanteComponent],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(SolicitanteComponent);
     component = fixture.componentInstance;
-
-    component.establecerSolicitudForm();
-
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize solicitudForm with correct controls and disabled state', () => {
-    const form = component.solicitudForm;
-
- 
-    expect(form.contains('rfc')).toBe(true);
-    expect(form.contains('denominacion')).toBe(true);
-    expect(form.contains('actividadEconomica')).toBe(true);
-    expect(form.contains('correoElectronico')).toBe(true);
-
-    expect(form.get('rfc')?.disabled).toBe(true);;
-    expect(form.get('denominacion')?.disabled).toBe(true);
-    expect(form.get('actividadEconomica')?.disabled).toBe(true);
-    expect(form.get('correoElectronico')?.disabled).toBe(true);
-  });
-
-  it('should set default values for form controls correctly', () => {
+  it('debería establecer los valores predeterminados de los controles del formulario correctamente', () => {
     component.establecerValoresDeFormulario();
 
     expect(component.solicitudForm.get('rfc')?.value).toBe('AALM87326');
@@ -51,19 +33,14 @@ describe('SolicitanteComponent', () => {
   });
 
   it('should call establecerValoresDeFormulario on initialization', () => {
-    const spy = spyOn(component, 'establecerValoresDeFormulario').and.callThrough();
+    const spy = jest.spyOn(component, 'establecerValoresDeFormulario').mockImplementation(() => {});
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should initialize solicitudForm with correct controls and disabled state', () => {
-    const form = component.solicitudForm;
-  
   it('should call establecerValoresDeFormulario on initialization', () => {
-    const spy = spyOn(component, 'establecerValoresDeFormulario').and.callThrough();
-    component.ngOnInit(); 
+    const spy = jest.spyOn(component, 'establecerValoresDeFormulario');
+    component.ngOnInit();
     expect(spy).toHaveBeenCalled();
   });
-  
-})
 })

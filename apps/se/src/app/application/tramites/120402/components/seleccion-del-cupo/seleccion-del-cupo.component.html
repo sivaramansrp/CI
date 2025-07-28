@@ -3,44 +3,26 @@
     <ng-titulo titulo="Selección del cupo"></ng-titulo>
     <div class="row mb-3">
       <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="regimen"
-          [label]="'Régimen aduanero'"
-          name="regimen"
-          formControlName="regimen"
-          (change)="getRegimen()"
-          [required]="true"
-        >
+        <app-catalogo-select [catalogo]="regimen" [label]="'Régimen aduanero'" name="regimen"
+          [isDisabled]="esFormularioSoloLectura" formControlName="regimen" (change)="setValorStore(seleccionForm,'regimen')"
+          [required]="true">
         </app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="tratado"
-          [label]="'Tratado o bloque comercial'"
-          name="tratado"
-          formControlName="tratado"
-          (change)="getTratado()"
-        >
+        <app-catalogo-select [catalogo]="tratado" [label]="'Tratado o bloque comercial'" name="tratado"
+          [isDisabled]="esFormularioSoloLectura" formControlName="tratado" (change)="setValorStore(seleccionForm,'tratado')">
         </app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="producto"
-          [label]="'Nombre de producto'"
-          name="producto"
-          formControlName="producto"
-          (change)="obtenerValorProducto()"
-        >
+        <app-catalogo-select [catalogo]="producto" [label]="'Nombre de producto'" name="producto"
+          [isDisabled]="esFormularioSoloLectura" formControlName="producto"
+          (change)="setValorStore(seleccionForm,'producto')">
         </app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="subproducto"
-          [label]="'Nombre del subproducto'"
-          name="subproducto"
-          formControlName="subproducto"
-          (change)="getSubproducto()"
-        >
+        <app-catalogo-select [catalogo]="subproducto" [label]="'Nombre del subproducto'" name="subproducto"
+          [isDisabled]="esFormularioSoloLectura" formControlName="subproducto"
+          (change)="setValorStore(seleccionForm,'subproducto')">
         </app-catalogo-select>
       </div>
     </div>
@@ -49,41 +31,30 @@
       <div class="col-md-8"></div>
       <div class="col-md-4 text-end">
         <div class="btn-group">
-          <button
-            class="btn btn-primary me-2"
-            type="button"
-            (click)="manejarBuscar()"
-          >
+          <button class="btn btn-primary me-2" type="button"  [disabled]="esFormularioSoloLectura" (click)="manejarBuscar()">
             Buscar
           </button>
         </div>
       </div>
     </div>
   </form>
- 
+
   <div>
     <ng-alert [CONTENIDO]="tituloAlerta" [CUSTOMECLASS]="infoAlerta"></ng-alert>
-    <app-tabla-dinamica
-      [configuracionTabla]="configuracionColumnasCupo"
-      [datos]="datosTablaCupo"
-      [acciones]="[accionesEnum.EDITAR]"
-      (alternarValor)="onAccionCupo($event)"
-    ></app-tabla-dinamica>
-  </div>
+    <h5 class="mb-3">Cupos disponibles*:</h5>
+    <app-tabla-dinamica [configuracionTabla]="configuracionColumnasCupo" [datos]="datosTablaCupo" [ngClass]="{'tabla-danger' : datosTablaCupo.length === 0 && esTocado}"
+      [acciones]="esFormularioSoloLectura ? [] : [accionesEnum.EDITAR]" (alternarValor)="onAccionCupo($event)"></app-tabla-dinamica>
+      <div class="text-danger">
+        <small *ngIf="datosTablaCupo.length === 0 && esTocado">
+          Este campo es obligatorio.
+        </small>
+      </div>
+    </div>
   <div>
-    <lib-notificaciones
-      *ngIf="modalAbierto"
-      [notificacionInput]="nuevaNotificacion"
-      (confirmacionModal)="cerrarModal()"
-    >
+    <lib-notificaciones *ngIf="modalAbierto" [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="cerrarModal()">
     </lib-notificaciones>
   </div>
-  <app-descripcion-del-cupo
-    *ngIf="mostrarDescripcionCupo"
-  ></app-descripcion-del-cupo>
-  <app-cantidad-solicitada
-    *ngIf="mostrarDescripcionCupo"
-  ></app-cantidad-solicitada>
+  <app-descripcion-del-cupo *ngIf="mostrarDescripcionCupo"></app-descripcion-del-cupo>
+  <app-cantidad-solicitada *ngIf="mostrarDescripcionCupo"></app-cantidad-solicitada>
 </div>
- 
- 

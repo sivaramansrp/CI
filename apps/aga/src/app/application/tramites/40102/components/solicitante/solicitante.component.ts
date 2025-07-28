@@ -1,6 +1,6 @@
+import * as mockData from '@libs/shared/theme/assets/json/40102/solicitante-mockdata.json';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import mockData from 'libs/shared/theme/assets/json/40102/solicitante-mockdata.json';
 
 /**
  * Componente para gestionar el formulario del solicitante.
@@ -16,11 +16,13 @@ export class SolicitanteComponent implements OnInit {
    */
   solicitudForm!: FormGroup;
 
+  /** Datos del solicitante */
+  solicitudData = mockData;
+  
   /**
    * Constructor para inyectar las dependencias necesarias.
    * @param fb - Servicio FormBuilder para crear formularios reactivos.
    */
-  // eslint-deshabilitar-la-siguiente-línea-sin-función-vacía
   constructor(private fb: FormBuilder) { }
 
   /**
@@ -62,20 +64,20 @@ export class SolicitanteComponent implements OnInit {
    * Este método asume que `mockData` contiene los campos necesarios
    * y que `solicitudForm` está correctamente inicializado.
    */
-  setFormValues() {
-    this.solicitudForm.get('rfc')?.setValue(mockData.rfc);
-    this.solicitudForm.get('denominacion')?.setValue(mockData.denominacion);
-    this.solicitudForm.get('actividadEconomica')?.setValue(mockData.actividadEconomica);
-    this.solicitudForm.get('correoElectronico')?.setValue(mockData.correoElectronico);
-    this.solicitudForm.get('pais')?.setValue(mockData.rfc);
-    this.solicitudForm.get('codigoPostal')?.setValue(mockData.denominacion);
-    this.solicitudForm.get('estado')?.setValue(mockData.actividadEconomica);
-    this.solicitudForm.get('municipioOAlcadia')?.setValue(mockData.correoElectronico);
-    this.solicitudForm.get('localidad')?.setValue(mockData.rfc);
-    this.solicitudForm.get('colonia')?.setValue(mockData.denominacion);
-    this.solicitudForm.get('calle')?.setValue(mockData.actividadEconomica);
-    this.solicitudForm.get('numeroExterior')?.setValue(mockData.correoElectronico);
-    this.solicitudForm.get('numeroInterior')?.setValue(mockData.rfc);
-    this.solicitudForm.get('telefono')?.setValue(mockData.denominacion);
+  setFormValues(): void {
+    this.solicitudForm.get('rfc')?.setValue(this.solicitudData.rfc);
+    this.solicitudForm.get('denominacion')?.setValue(this.solicitudData.denominacion);
+    this.solicitudForm.get('actividadEconomica')?.setValue(this.solicitudData.actividadEconomica);
+    this.solicitudForm.get('correoElectronico')?.setValue(this.solicitudData.correoElectronico);
+    this.solicitudForm.get('pais')?.setValue(this.solicitudData.pais);
+    this.solicitudForm.get('codigoPostal')?.setValue(this.solicitudData.codigoPostal);
+    this.solicitudForm.get('estado')?.setValue(this.solicitudData.estado);
+    this.solicitudForm.get('municipioOAlcadia')?.setValue(this.solicitudData.municipioOAlcadia);
+    this.solicitudForm.get('localidad')?.setValue(this.solicitudData.localidad);
+    this.solicitudForm.get('colonia')?.setValue(this.solicitudData.colonia);
+    this.solicitudForm.get('calle')?.setValue(this.solicitudData.calle);
+    this.solicitudForm.get('numeroExterior')?.setValue(this.solicitudData.numeroExterior);
+    this.solicitudForm.get('numeroInterior')?.setValue(this.solicitudData.numeroInterior);
+    this.solicitudForm.get('telefono')?.setValue(this.solicitudData.telefono);
   }
 }

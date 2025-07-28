@@ -1,13 +1,7 @@
-import {
-  AlertComponent,
-  AnexarDocumentosComponent,
-  CATALOGOS_ID,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
 import { Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subject, Subscription, takeUntil } from 'rxjs';
+import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 
 /**
  * Componente que representa el segundo paso del trámite.
@@ -17,13 +11,7 @@ import { Subscription } from 'rxjs';
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
-  standalone: true,
-  imports: [
-    CommonModule,
-    TituloComponent,
-    AlertComponent,
-    AnexarDocumentosComponent,
-  ],
+
 })
 export class PasoDosComponent implements OnInit,OnDestroy {
   /**
@@ -31,6 +19,8 @@ export class PasoDosComponent implements OnInit,OnDestroy {
    */
   TEXTOS = TEXTOS;
 
+  @Output() reenviarEvento = new EventEmitter<void>();
+  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
   /**
    * Lista de tipos de documentos disponibles para el trámite.
    */
@@ -53,6 +43,10 @@ export class PasoDosComponent implements OnInit,OnDestroy {
    * Constructor del componente.
    * @param catalogosServices Servicio para obtener los catálogos necesarios para el trámite.
    */
+
+    private destroy$: Subject<void> = new Subject<void>();
+
+
   constructor(private catalogosServices: CatalogosService) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -71,6 +65,7 @@ export class PasoDosComponent implements OnInit,OnDestroy {
   getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (resp): void => {
           if (resp.length > 0) {
@@ -86,9 +81,8 @@ export class PasoDosComponent implements OnInit,OnDestroy {
    * Método de limpieza que se ejecuta cuando el componente se destruye.
    */
   ngOnDestroy(): void {
-    if (this.getTiposDocumentosSubscription) {
-      this.getTiposDocumentosSubscription.unsubscribe();
-    }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }

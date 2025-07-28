@@ -56,6 +56,7 @@
             maxlength="2000"
             readonly
             [disabled]="true"
+            (change)="setValoresStore(frmMercanciaAnimal,'tratamiento','setTratamiento')"
           />
         </div>
       </div>
@@ -73,6 +74,7 @@
             formControlName="presentacion"
             readonly
             [disabled]="true"
+            (change)="setValoresStore(frmMercanciaAnimal,'presentacion','setPresentacion')"
           />
         </div>
       </div>
@@ -87,6 +89,8 @@
             maxlength="30"
             readonly
             [disabled]="true"
+            (change)="setValoresStore(frmMercanciaAnimal,'marcaEmbarque','setMarcaEmbarque')"
+
           />
           <div
             *ngIf="
@@ -318,20 +322,23 @@
             type="button"
             class="btn btn-default btn-space"
             (click)="limpiarDatosCapturaMercancia()"
+            [disabled]="esFormularioSoloLectura? true : false"
           >
             Limpiar
           </button>
           <button
             type="button"
-            class="btn btn-default btn-space"
-            
+            class="btn btn-danger btn-space"
+            (click)="onCancelar()"
+            [disabled]="esFormularioSoloLectura? true : false"
           >
-            Modificar
+            Cancelar
           </button>
           <button
             type="button"
             class="btn btn-primary btn-space"
-           
+            (click)="onCancelar()"
+           [disabled]="esFormularioSoloLectura? true : false"
           >
             Agregar
           </button>

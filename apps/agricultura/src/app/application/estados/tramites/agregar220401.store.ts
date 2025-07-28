@@ -4,8 +4,8 @@
  */
 
 import { Store, StoreConfig } from '@datorama/akita';
-import { Injectable } from '@angular/core';
 import { CatalogoResponse } from '@libs/shared/data-access-user/src';
+import { Injectable } from '@angular/core';
 
 /**
  * @interface solicitud220401State
@@ -16,7 +16,9 @@ import { CatalogoResponse } from '@libs/shared/data-access-user/src';
  * Interfaz que define el estado de la solicitud 220401.
  */
 
-export interface solicitud220401State {
+export interface Solicitud220401State {
+  /** Tipo de producto asociado a la solicitud. */
+  tipoProducto: string;
   /** Certificación asociada a la solicitud. */
   certificada: string;
 
@@ -101,143 +103,170 @@ export interface solicitud220401State {
   /** Fecha en la que se realizó el pago. */
   fechaPago: string;
 
-  Banco:string;
-  especie:string;
-  funcionZootecnica:string;
-  mercancia:string;
-  paisDestino:string;
-  nombreEstablecimiento:string;
-  tipoActividad:string;
-  aduanaSalida:string;
-  oisaSalida:string;
-  regimenMercancia:string;
-  paisOrigen:string;
-  exentoPago:string;
-  
+  Banco: string;
+  especie: string;
+  funcionZootecnica: string;
+  mercancia: string;
+  paisDestino: string;
+  nombreEstablecimiento: string;
+  tipoActividad: string;
+  aduanaSalida: string;
+  oisaSalida: string;
+  regimenMercancia: string;
+  paisOrigen: string;
+  exentoPago: string;
+  presentacion: string;
+  marcaEmbarque: string;
+
   /** Tipo de transporte utilizado para la mercancía o animales. */
   tipoDeTransporte: string;
+  tratamiento: string;
+  uso: string;
+  radioBotonAnimal: string;
+  radioBotonQFBA: string;
+  radioBotonProducto: string;
 }
 
 /**
  * @function createInitialState
  * @description Función que crea el estado inicial para la solicitud 220401.
- * @returns {solicitud220401State} El estado inicial.
+ * @returns {Solicitud220401State} El estado inicial.
  */
-export function createInitialState(): solicitud220401State {
+export function createInitialState(): Solicitud220401State {
   return {
-  
-   /** Certificación asociada a la solicitud. */
+    /** Tipo de producto asociado a la solicitud. */
+    tipoProducto: '',
+    /** Certificación asociada a la solicitud. */
     certificada: '',
 
     /** Identificación del medio de transporte. */
     identificationDelTransporte: '',
-  
+
     /** Estado seleccionado, obtenido de un catálogo de respuestas. */
     selectedEstado: null,
-  
+
     /** Número de contenedor para el transporte de la mercancía. */
     numerodeContenedor: '',
-  
+
     /** Fecha de embarque de la mercancía. */
     fechdeEmbarque: '',
-  
+
     /** Número de flejes de seguridad. */
     numerodeFlejes: '',
-  
+
     /** Datos del certificado asociado a la solicitud. */
     datoscertificado: '',
-  
+
     /** Fracción arancelaria correspondiente a la mercancía. */
     fraccionArancelaria: '',
-  
+
     /** Fecha de caducidad de la mercancía o certificado. */
     fechaCaducidad: '',
-  
+
     /** Nombre o identificación del animal o producto. */
     nombreIdentificacion: '',
-  
+
     /** Raza del animal, en caso de aplicar. */
     raza: '',
-  
+
     /** Edad del animal, si corresponde. */
     edadAnimal: '',
-  
+
     /** Color del animal o producto, si aplica. */
     color: '',
-  
+
     /** Número de autorización CITES, si es necesario. */
     numeroAutorizacionCITES: '',
-  
+
     /** Aduana de ingreso o salida de la mercancía. */
     aduana: '',
-  
+
     /** Código OSIA asociado a la solicitud. */
     osia: '',
-  
+
     /** Sexo del animal, si aplica. */
     sexo: '',
-  
+
     /** Otro dato relevante, si no existe un campo específico. */
     otro: '',
-  
+
     /** Punto de ingreso al país o región. */
     puntoIngreso: '',
-  
+
     /** Nombre del establecimiento donde se realiza la verificación. */
     nombreEstablecimientoCheck: '',
-  
+
     /** Número de autorización del establecimiento. */
     numeroAutorizacionCheck: '',
-  
+
     /** Tipo de actividad realizada en el establecimiento. */
     tipoActividadCheck: '',
-  
+
     /** Otro dato relevante para la verificación. */
     otroCheck: '',
-  
+
     /** Fecha estimada de arribo de la mercancía o animales. */
     fechaArribo: '',
-  
+
     /** Justificación de la solicitud, si es necesaria. */
     Justificacion: '',
-  
+
     /** Indica si la solicitud está exenta de pago. */
     exentoDePago: '',
-  
+
     /** Llave o referencia del pago realizado. */
     llaveDePago: '',
-  
+
     /** Fecha en la que se realizó el pago. */
     fechaPago: '',
-    Banco:'',
-    especie:'',
-    funcionZootecnica:'',
-    mercancia:'',
-    paisDestino:'',
-    nombreEstablecimiento:'',
-    tipoActividad:'',
-    aduanaSalida:'',
-    oisaSalida:'',
-    regimenMercancia:'',
-    paisOrigen:'',
-    exentoPago:'',
-    tipoDeTransporte:''
+    Banco: '',
+    especie: '',
+    funcionZootecnica: '',
+    mercancia: '',
+    paisDestino: '',
+    nombreEstablecimiento: '',
+    tipoActividad: '',
+    aduanaSalida: '',
+    oisaSalida: '',
+    regimenMercancia: '',
+    paisOrigen: '',
+    exentoPago: '',
+    tipoDeTransporte: '',
+    tratamiento: '',
+    presentacion: '',
+    marcaEmbarque: '',
+    uso: '',
+    radioBotonAnimal: '',
+    radioBotonQFBA: '',
+    radioBotonProducto: ''
   };
-  
+
 }
 
 /**
  * @class Agregar220401Store
- * @extends {Store<solicitud220401State>}
+ * @extends {Store<Solicitud220401State>}
  * @description Clase que maneja el estado y las acciones para la solicitud 220401.
  */
 @Injectable({
   providedIn: 'root'
 })
 @StoreConfig({ name: 'agregar220401', resettable: true })
-export class Agregar220401Store extends Store<solicitud220401State> {
+export class Agregar220401Store extends Store<Solicitud220401State> {
   constructor() {
     super(createInitialState());
+  }
+
+  /**
+   * @method settipoProducto
+   * @description Establece el valor de 'tipoProducto'.
+   * @param {string} tipoProducto - El valor de 'tipoProducto'.
+   */
+  public settipoProducto(tipoProducto: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoProducto,
+    }));
   }
 
   /**
@@ -245,7 +274,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'certificada'.
    * @param {string} certificada - El valor de 'certificada'.
    */
-  public setCertificada(certificada: string) {
+  public setCertificada(certificada: string): void {
     this.update((state) => ({
       ...state,
       certificada,
@@ -257,7 +286,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'identificationDelTransporte'.
    * @param {string} identificationDelTransporte - El valor de 'identificationDelTransporte'.
    */
-  public setidentificationDelTransporte(identificationDelTransporte: string) {
+  public setidentificationDelTransporte(identificationDelTransporte: string): void {
     this.update((state) => ({
       ...state,
       identificationDelTransporte,
@@ -269,7 +298,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'selectedEstado'.
    * @param {CatalogoResponse} selectedEstado - El valor de 'selectedEstado'.
    */
-  public setJustification(selectedEstado: CatalogoResponse) {
+  public setJustification(selectedEstado: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       selectedEstado,
@@ -281,10 +310,10 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'numerodeContenedor'.
    * @param {string} numerodeContenedor - El valor de 'numerodeContenedor'.
    */
-  public setnumerodeContenedor(numerodeContenedor: string) {
+  public setnumerodeContenedor(numerodeContenedor: string): void {
     this.update((state) => ({
       ...state,
-      
+
       numerodeContenedor,
     }));
   }
@@ -294,7 +323,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'fechdeEmbarque'.
    * @param {string} fechdeEmbarque - El valor de 'fechdeEmbarque'.
    */
-  public setfetchdeEmbarque(fechdeEmbarque: string) {
+  public setfetchdeEmbarque(fechdeEmbarque: string): void {
     this.update((state) => ({
       ...state,
       fechdeEmbarque,
@@ -306,7 +335,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'numerodeFlejes'.
    * @param {string} numerodeFlejes - El valor de 'numerodeFlejes'.
    */
-  public setnumerodeFlejes(numerodeFlejes: string) {
+  public setnumerodeFlejes(numerodeFlejes: string): void {
     this.update((state) => ({
       ...state,
       numerodeFlejes,
@@ -318,7 +347,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'datoscertificado'.
    * @param {string} datoscertificado - El valor de 'datoscertificado'.
    */
-  public setdatoscertificado(datoscertificado: string) {
+  public setdatoscertificado(datoscertificado: string): void {
     this.update((state) => ({
       ...state,
       datoscertificado,
@@ -330,7 +359,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'fraccionArancelaria'.
    * @param {string} fraccionArancelaria - El valor de 'fraccionArancelaria'.
    */
-  public setfraccionArancelaria(fraccionArancelaria: string) {
+  public setfraccionArancelaria(fraccionArancelaria: string): void {
     this.update((state) => ({
       ...state,
       fraccionArancelaria,
@@ -342,7 +371,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'fechaCaducidad'.
    * @param {string} fechaCaducidad - El valor de 'fechaCaducidad'.
    */
-  public setfechaCaducidad(fechaCaducidad: string) {
+  public setfechaCaducidad(fechaCaducidad: string): void {
     this.update((state) => ({
       ...state,
       fechaCaducidad,
@@ -354,7 +383,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'nombreIdentificacion'.
    * @param {string} nombreIdentificacion - El valor de 'nombreIdentificacion'.
    */
-  public setnombreIdentificacion(nombreIdentificacion: string) {
+  public setnombreIdentificacion(nombreIdentificacion: string): void {
     this.update((state) => ({
       ...state,
       nombreIdentificacion,
@@ -366,7 +395,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'raza'.
    * @param {string} raza - El valor de 'raza'.
    */
-  public setraza(raza: string) {
+  public setraza(raza: string): void {
     this.update((state) => ({
       ...state,
       raza,
@@ -378,7 +407,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'edadAnimal'.
    * @param {string} edadAnimal - El valor de 'edadAnimal'.
    */
-  public setedadAnimal(edadAnimal: string) {
+  public setedadAnimal(edadAnimal: string): void {
     this.update((state) => ({
       ...state,
       edadAnimal,
@@ -390,7 +419,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'color'.
    * @param {string} color - El valor de 'color'.
    */
-  public setcolor(color: string) {
+  public setcolor(color: string): void {
     this.update((state) => ({
       ...state,
       color,
@@ -402,7 +431,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'numeroAutorizacionCITES'.
    * @param {string} numeroAutorizacionCITES - El valor de 'numeroAutorizacionCITES'.
    */
-  public setnumeroAutorizacionCITES(numeroAutorizacionCITES: string) {
+  public setnumeroAutorizacionCITES(numeroAutorizacionCITES: string): void {
     this.update((state) => ({
       ...state,
       numeroAutorizacionCITES,
@@ -414,7 +443,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'aduana'.
    * @param {string} aduana - El valor de 'aduana'.
    */
-  public setaduana(aduana: string) {
+  public setaduana(aduana: string): void {
     this.update((state) => ({
       ...state,
       aduana,
@@ -426,7 +455,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'osia'.
    * @param {string} osia - El valor de 'osia'.
    */
-  public setosia(osia: string) {
+  public setosia(osia: string): void {
     this.update((state) => ({
       ...state,
       osia,
@@ -438,7 +467,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'sexo'.
    * @param {string} sexo - El valor de 'sexo'.
    */
-  public setsexo(sexo: string) {
+  public setsexo(sexo: string): void {
     this.update((state) => ({
       ...state,
       sexo,
@@ -450,7 +479,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'otro'.
    * @param {string} otro - El valor de 'otro'.
    */
-  public setotro(otro: string) {
+  public setotro(otro: string): void {
     this.update((state) => ({
       ...state,
       otro,
@@ -462,7 +491,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'puntoIngreso'.
    * @param {string} puntoIngreso - El valor de 'puntoIngreso'.
    */
-  public setpuntoIngreso(puntoIngreso: string) {
+  public setpuntoIngreso(puntoIngreso: string): void {
     this.update((state) => ({
       ...state,
       puntoIngreso,
@@ -474,7 +503,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'nombreEstablecimientoCheck'.
    * @param {string} nombreEstablecimientoCheck - El valor de 'nombreEstablecimientoCheck'.
    */
-  public setnombreEstablecimientoCheck(nombreEstablecimientoCheck: string) {
+  public setnombreEstablecimientoCheck(nombreEstablecimientoCheck: string): void {
     this.update((state) => ({
       ...state,
       nombreEstablecimientoCheck,
@@ -486,7 +515,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'numeroAutorizacionCheck'.
    * @param {string} numeroAutorizacionCheck - El valor de 'numeroAutorizacionCheck'.
    */
-  public setnumeroAutorizacionCheck(numeroAutorizacionCheck: string) {
+  public setnumeroAutorizacionCheck(numeroAutorizacionCheck: string): void {
     this.update((state) => ({
       ...state,
       numeroAutorizacionCheck,
@@ -498,7 +527,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'tipoActividadCheck'.
    * @param {string} tipoActividadCheck - El valor de 'tipoActividadCheck'.
    */
-  public settipoActividadCheck(tipoActividadCheck: string) {
+  public settipoActividadCheck(tipoActividadCheck: string): void {
     this.update((state) => ({
       ...state,
       tipoActividadCheck,
@@ -510,7 +539,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'otroCheck'.
    * @param {string} otroCheck - El valor de 'otroCheck'.
    */
-  public setotroCheck(otroCheck: string) {
+  public setotroCheck(otroCheck: string): void {
     this.update((state) => ({
       ...state,
       otroCheck,
@@ -522,7 +551,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'fechaArribo'.
    * @param {string} fechaArribo - El valor de 'fechaArribo'.
    */
-  public setfechaArribo(fechaArribo: string) {
+  public setfechaArribo(fechaArribo: string): void {
     this.update((state) => ({
       ...state,
       fechaArribo,
@@ -534,7 +563,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'Justificacion'.
    * @param {string} Justificacion - El valor de 'Justificacion'.
    */
-  public setJustificacion(Justificacion: string) {
+  public setJustificacion(Justificacion: string): void {
     this.update((state) => ({
       ...state,
       Justificacion,
@@ -546,7 +575,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'exentoDePago'.
    * @param {string} exentoDePago - El valor de 'exentoDePago'.
    */
-  public setexentoDePago(exentoDePago: string) {
+  public setexentoDePago(exentoDePago: string): void {
     this.update((state) => ({
       ...state,
       exentoDePago,
@@ -558,7 +587,7 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'llaveDePago'.
    * @param {string} llaveDePago - El valor de 'llaveDePago'.
    */
-  public setllaveDePago(llaveDePago: string) {
+  public setllaveDePago(llaveDePago: string): void {
     this.update((state) => ({
       ...state,
       llaveDePago,
@@ -570,97 +599,237 @@ export class Agregar220401Store extends Store<solicitud220401State> {
    * @description Establece el valor de 'fechaPago'.
    * @param {string} fechaPago - El valor de 'fechaPago'.
    */
-  public setfechaPago(fechaPago: string) {
+  public setfechaPago(fechaPago: string): void {
     this.update((state) => ({
       ...state,
       fechaPago,
     }));
   }
-  public setBanco(Banco: string) {
+  /**
+   * @method setBanco
+   * @description Establece el valor de 'Banco'.
+   * @param {string} Banco - El valor de 'Banco'.
+   */
+  public setBanco(Banco: string): void {
     this.update((state) => ({
       ...state,
       Banco,
     }));
   }
+  /**
+   * @method setespecie
+   * @description Establece el valor de 'especie'.
+   * @param {string} especie - El valor de 'especie'.
+   */
 
-  
-
-  public setespecie(especie: string) {
+  public setespecie(especie: string): void {
     this.update((state) => ({
       ...state,
       especie,
     }));
   }
-public setfuncionZootecnica(funcionZootecnica: string) {
+  /**
+   * @method setfuncionZootecnica
+   * @description Establece el valor de 'funcionZootecnica'.
+   * @param {string} funcionZootecnica - El valor de 'funcionZootecnica'.
+   */
+  public setfuncionZootecnica(funcionZootecnica: string): void {
     this.update((state) => ({
       ...state,
       funcionZootecnica,
     }));
   }
 
-  public setmercancia(mercancia: string) {
+  /**
+   * @method setmercancia
+   * @description Establece el valor de 'mercancia'.
+   * @param {string} mercancia - El valor de 'mercancia'.
+   */
+  public setmercancia(mercancia: string): void {
     this.update((state) => ({
       ...state,
       mercancia,
     }));
   }
 
-  public setpaisDestino(paisDestino: string) {
+  /**
+   * @method setpaisDestino
+   * @description Establece el valor de 'paisDestino'.
+   * @param {string} paisDestino - El valor de 'paisDestino'.
+   */
+  public setpaisDestino(paisDestino: string): void {
     this.update((state) => ({
       ...state,
       paisDestino,
     }));
   }
 
-  public setnombreEstablecimiento(nombreEstablecimiento: string) {
+  /**
+   * @method setnombreEstablecimiento
+   * @description Establece el valor de 'nombreEstablecimiento'.
+   * @param {string} nombreEstablecimiento - El valor de 'nombreEstablecimiento'.
+   */
+  public setnombreEstablecimiento(nombreEstablecimiento: string): void {
     this.update((state) => ({
       ...state,
       nombreEstablecimiento,
     }));
   }
 
-  public settipoActividad(tipoActividad: string) {
+  /**
+   * @method settipoActividad
+   * @description Establece el valor de 'tipoActividad'.
+   * @param {string} tipoActividad - El valor de 'tipoActividad'.
+   */
+
+  public settipoActividad(tipoActividad: string): void {
     this.update((state) => ({
       ...state,
       tipoActividad,
     }));
   }
 
-  public setaduanaSalida(aduanaSalida: string) {
+  /**
+   * @method setaduanaSalida
+   * @description Establece el valor de 'aduanaSalida'.
+   * @param {string} aduanaSalida - El valor de 'aduanaSalida'.
+   */
+  public setaduanaSalida(aduanaSalida: string): void {
     this.update((state) => ({
       ...state,
       aduanaSalida,
     }));
   }
-  public setoisaSalida(oisaSalida: string) {
+  /**
+   * @method setoisaSalida
+   * @description Establece el valor de 'oisaSalida'.
+   * @param {string} oisaSalida - El valor de 'oisaSalida'.
+   */
+  public setoisaSalida(oisaSalida: string): void {
     this.update((state) => ({
       ...state,
       oisaSalida,
     }));
   }
 
-  public setregimenMercancia(regimenMercancia: string) {
+  /**
+   * @method setregimenMercancia
+   * @description Establece el valor de 'regimenMercancia'.
+   * @param {string} regimenMercancia - El valor de 'regimenMercancia'.
+   */
+  public setregimenMercancia(regimenMercancia: string): void {
     this.update((state) => ({
       ...state,
       regimenMercancia,
     }));
   }
-  public setpaisOrigen(paisOrigen: string) {
+  /**
+   * @method setpaisOrigen
+   * @description Establece el valor de 'paisOrigen'.
+   * @param {string} paisOrigen - El valor de 'paisOrigen'.
+   */
+  public setpaisOrigen(paisOrigen: string): void {
     this.update((state) => ({
       ...state,
       paisOrigen,
     }));
   }
-  public setexentoPago(exentoPago: string) {
+  /**
+   * @method setexentoPago
+   * @description Establece el valor de 'exentoPago'.
+   * @param {string} exentoPago - El valor de 'exentoPago'.
+   */
+  public setexentoPago(exentoPago: string): void {
     this.update((state) => ({
       ...state,
       exentoPago,
     }));
   }
-  public settipoDeTransporte(tipoDeTransporte:string) {
+  /**
+   * Actualiza el estado con el valor proporcionado para el tipo de transporte.
+   *
+   * @param tipoDeTransporte - El nuevo valor de tipo de transporte a establecer en el estado.
+   */
+  public settipoDeTransporte(tipoDeTransporte: string): void {
     this.update((state) => ({
       ...state,
       tipoDeTransporte,
     }));
   }
+  /**
+   * Actualiza el estado con el valor proporcionado para el tratamiento.
+   *
+   * @param tratamiento - El nuevo valor de tratamiento a establecer en el estado.
+   */
+  public setTratamiento(tratamiento: string): void {
+    this.update((state) => ({
+      ...state,
+      tratamiento,
+    }));
+  }
+  /**
+   * Actualiza el estado con el valor proporcionado para la presentación.
+   * @param presentacion - El nuevo valor de presentación a establecer en el estado.
+   * */
+  public setPresentacion(presentacion: string): void {
+    this.update((state) => ({
+      ...state,
+      presentacion,
+    }))
+  }
+  /**
+   * Actualiza el estado con el valor proporcionado para la marca de embarque.
+   * @param marcaEmbarque - El nuevo valor de marca de embarque a establecer en el estado.
+   * */
+
+  public setMarcaEmbarque(marcaEmbarque: string): void {
+    this.update((state) => ({
+      ...state,
+      marcaEmbarque
+    }))
+  }
+
+  /** * Actualiza el estado con el valor proporcionado para el uso.
+   * @param uso - El nuevo valor de uso a establecer en el estado.  
+   * */
+  public setUso(uso: string): void {
+    this.update((state) => ({
+      ...state,
+      uso
+    }))
+  }
+
+  /**
+   * Actualiza el estado con el valor proporcionado para el radio botón de producto.
+   * @param radioBotonProducto - El nuevo valor del radio botón de producto a establecer en el estado.
+   */
+
+  public setradioBotonProducto(radioBotonProducto: string): void {
+    this.update((state) => ({
+      ...state,
+      radioBotonProducto,
+    }));
+  }
+
+  /**
+   * Actualiza el estado con el valor proporcionado para el radio botón de animal.
+   * @param radioBotonAnimal - El nuevo valor del radio botón de animal a establecer en el estado.
+   */
+  public setradioBotonAnimal(radioBotonAnimal: string): void {
+    this.update((state) => ({
+      ...state,
+      radioBotonAnimal,
+    }));
+  }
+  /**
+   * Actualiza el estado con el valor proporcionado para el radio botón QFBA.
+   * @param radioBotonQFBA - El nuevo valor del radio botón QFBA a establecer en el estado.
+   */
+  public setradioBotonQFBA(radioBotonQFBA: string): void {
+    this.update((state) => ({
+      ...state,
+      radioBotonQFBA,
+    }));
+  }
+
 }

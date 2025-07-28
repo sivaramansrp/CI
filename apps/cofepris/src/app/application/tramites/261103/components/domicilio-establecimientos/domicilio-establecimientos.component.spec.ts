@@ -1,17 +1,23 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { DomicilioEstablecimientosComponent } from './domicilio-establecimientos.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
 import { of } from 'rxjs';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('DomicilioEstablecimientosComponent', () => {
-  let componente: DomicilioEstablecimientosComponent;
+  let component: DomicilioEstablecimientosComponent;
   let fixture: ComponentFixture<DomicilioEstablecimientosComponent>;
+  let mockStore: any;
+  let mockQuery: any;
+  let mockService: any;
+  let mockConsultaioQuery: any;
 
   beforeEach(async () => {
-    const MOCK_QUERY = {
+    mockQuery = {
       selectProrroga$: of({
         codigo: '001',
         estado: 'Estado',
@@ -29,63 +35,82 @@ describe('DomicilioEstablecimientosComponent', () => {
       }),
     };
 
-    const MOCK_STORE = {
+    mockStore = {
       establecerDatos: jest.fn(),
     };
 
-    const MOCK_SERVICE = {
-      getDomicilioData: jest.fn().mockReturnValue(of([])),
+    mockService = {
+      obternerDatosData: jest.fn().mockReturnValue(of([])),
+    };
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false })
     };
 
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, DomicilioEstablecimientosComponent],
       providers: [
-        { provide: DatosProcedureQuery, useValue: MOCK_QUERY },
-        { provide: DatosProcedureStore, useValue: MOCK_STORE },
-        { provide: ModificacionPermisoImportacionMedicamentosService, useValue: MOCK_SERVICE },
+        { provide: DatosProcedureQuery, useValue: mockQuery },
+        { provide: DatosProcedureStore, useValue: mockStore },
+        { provide: ModificacionPermisoImportacionMedicamentosService, useValue: mockService },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DomicilioEstablecimientosComponent);
-    componente = fixture.componentInstance;
+    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('debería crear el componente', () => {
-    expect(componente).toBeTruthy();
+    expect(component).toBeTruthy();
   });
 
   it('debería inicializar los formularios en ngOnInit', () => {
-    expect(componente.domicilioEstablecimiento).toBeTruthy();
-    expect(componente.AvisodeFuncionamiento).toBeTruthy();
-
-    expect(componente.domicilioEstablecimiento.get('estado')?.value).toBe('Estado');
-    expect(componente.AvisodeFuncionamiento.get('funcionamiento')?.value).toBe('Operando');
+    expect(component.domicilioEstablecimiento).toBeDefined();
+    expect(component.AvisodeFuncionamiento).toBeDefined();
+    expect(component.domicilioEstablecimiento.get('estado')?.value).toBe('Estado');
+    expect(component.AvisodeFuncionamiento.get('funcionamiento')?.value).toBe('Operando');
   });
 
-  it('debería llamar a ModificacionPermisoImportacionMedicamentosService.getDomicilioData y asignar Domicilios', () => {
-    componente.ngOnInit();
+  it('debería cargar los datos SCIAN correctamente', () => {
+    component.loadScian();
+    expect(mockService.obternerDatosData).toHaveBeenCalled();
+    expect(component.datosData).toEqual([]);
   });
 
-  it('debería establecer valores en el formulario usando establecerValoresDeFormulario', () => {
-    componente.domicilioEstablecimiento.addControl('Codigo', componente.domicilioEstablecimiento.get('estado')!);
-    componente.domicilioEstablecimiento.addControl('codigoPostal', componente.domicilioEstablecimiento.get('estado')!);
-    componente.domicilioEstablecimiento.addControl('Municipio', componente.domicilioEstablecimiento.get('estado')!);
-    componente.domicilioEstablecimiento.addControl('numeroExterior', componente.domicilioEstablecimiento.get('estado')!);
-    expect(componente.domicilioEstablecimiento.get('Codigo')?.value).toBe('');
-    expect(componente.domicilioEstablecimiento.get('codigoPostal')?.value).toBe('');
-    expect(componente.domicilioEstablecimiento.get('Municipio')?.value).toBe('');
-  });
-
-  it('debería establecer valores en el store usando setValoresStore', () => {
-    componente.setValoresStore(componente.domicilioEstablecimiento, 'estado');
+  it('debería establecer valores en el store', () => {
+    component.setValoresStore(component.domicilioEstablecimiento, 'estado');
+    expect(mockStore.establecerDatos).toHaveBeenCalledWith({ estado: 'Estado' });
   });
 
   it('debería limpiar las suscripciones en ngOnDestroy', () => {
-    const NEXT_SPY = jest.spyOn(componente['destroy$'], 'next');
-    const COMPLETE_SPY = jest.spyOn(componente['destroy$'], 'complete');
-    componente.ngOnDestroy();
-    expect(NEXT_SPY).toHaveBeenCalled();
-    expect(COMPLETE_SPY).toHaveBeenCalled();
+    const nextSpy = jest.spyOn(component['destroy$'], 'next');
+    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('debería contener la configuración de tabla correcta', () => {
+    expect(component.configuracionTabla.length).toBeGreaterThan(0);
+  });
+
+  it('debería tener el tipo de selección de tabla correcto', () => {
+    expect(component.TablaSeleccion).toBe(TablaSeleccion.CHECKBOX);
+  });
+
+  it('debería ejecutar guardarDatosFormulario y cargar datos correctamente', () => {
+    const spyScian = jest.spyOn(component, 'loadScian');
+    component.guardarDatosFormulario();
+    expect(spyScian).toHaveBeenCalled();
+  });
+
+  it('debería deshabilitar los formularios si es solo lectura', () => {
+    component.esFormularioSoloLectura = true;
+    component.establecerdomicilioEstablecimiento();
+    component.avisodeFuncionamientomiento();
+    expect(component.domicilioEstablecimiento.disabled).toBe(true);
+    expect(component.AvisodeFuncionamiento.disabled).toBe(true);
   });
 });

@@ -12,7 +12,7 @@
             [label]="opcionDeImportador.labelNombre"
             [required]="opcionDeImportador.required"
             name="opcionDeImportador"
-            [isDisabled]="false"
+            [isDisabled]="esFormularioSoloLectura"
             (selectionChange)="mostrarOcultarPanelTramite($event)"
           ></app-catalogo-select>
         </div>
@@ -21,7 +21,7 @@
     @if (panelDespachoOrMercancia) {
     <div class="row">
       <div class="col-md-12 mt-3">
-        <ng-titulo [titulo]="'Oficina de muestra'" />
+        <ng-titulo [titulo]="'Información de la muestra en despacho'" />
       </div>
       <div class="col-md-8">
         <div class="form-group text-left">
@@ -32,7 +32,7 @@
             [label]="tomaMuestraDespacho.labelNombre"
             [required]="tomaMuestraDespacho.required"
             name="tomaMuestraDespacho"
-            [isDisabled]="true"
+            [isDisabled]="esFormularioSoloLectura"
             (selectionChange)="cambiaEstadoMotivo($event)"
           ></app-catalogo-select>
         </div>
@@ -45,7 +45,6 @@
             formControlName="descMotivoFaltaMuestra"
             id="textMotivoFaltaMuestra"
             class="form-control"
-            [readonly]="true"
             (change)="setDescMotivoFaltaMuestra()"
           />
         </div>
@@ -66,6 +65,7 @@
             [required]="fraccionArancelariaAga.required"
             name="comboFraccionConcatenada"
             (selectionChange)="mostrarDescFraccArancelaria($event)"
+            [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
         </div>
       </div>
@@ -80,7 +80,6 @@
             id="fracciondescripcion"
             formControlName="fracciondescripcion"
             style="height: 80px"
-            readonly
             (change)="setFracciondescripcion()"
           ></textarea>
         </div>
@@ -94,6 +93,7 @@
             [label]="nico.labelNombre"
             [required]="nico.required"
             name="comboNicos"
+            [isDisabled]="esFormularioSoloLectura"
             (selectionChange)="setNino($event)"
           ></app-catalogo-select>
         </div>
@@ -120,7 +120,6 @@
             rows="1"
             id="textNombreQuimico"
             formControlName="nombreQuimico"
-            readonly
             (change)="setNombreQuimico()"
           ></textarea>
         </div>
@@ -135,7 +134,6 @@
             rows="1"
             id="textNombreComercial"
             formControlName="nombreComercial"
-            readonly
           ></textarea>
         </div>
       </div>
@@ -149,7 +147,6 @@
             rows="1"
             id="textNumeroCas"
             formControlName="numeroCAS"
-            readonly
             (change)="setNombreComercial()"
           ></textarea>
         </div>
@@ -162,16 +159,14 @@
             [required]="ideGenerica.required"
             name="ideGenerica1"
             formControlName="ideGenerica"
-            [isDisabled]="true"
+            [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
         </div>
       </div>
-      <div class="col-md-12 mt-4">
+      <div class="col-md-8 mt-4">
         <div class="form-group">
           <label for="textDescClobGenerica1" class="form-label text-left"
-            >Indique el acondicionamiento con el que se presenta la mercancía al
-            momento del despacho aduanero (sacos, totes, pipas, carro tranque,
-            iso tanque, etc)* :</label
+            >Descripción del recipiente para su transporte y conservación*:</label
           >
           <textarea
             class="form-control"
@@ -179,10 +174,10 @@
             id="textDescClobGenerica1"
             formControlName="descClobGenerica"
             style="height: 80px"
-            readonly
           ></textarea>
         </div>
       </div>
+      <div class="col-md-4 mt-4"></div>
     </div>
     }
   </form>

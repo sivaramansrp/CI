@@ -3,9 +3,12 @@ import { TipoDeAvisoComponent } from './tipo-de-aviso.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { DestruccionStore } from '../../estados/Tramite32509.store';
 import { DestruccionQuery } from '../../estados/Tramite32509.query';
-import { SeccionLibStore, SeccionLibQuery, TituloComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { SeccionLibStore, SeccionLibQuery, TituloComponent, InputRadioComponent, InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { of, Subject } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { AlertComponent } from 'ngx-bootstrap/alert';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('TipoDeAvisoComponent', () => {
   let component: TipoDeAvisoComponent;
@@ -63,15 +66,16 @@ describe('TipoDeAvisoComponent', () => {
     };
     mockSeccionLibQuery = {
       selectSeccionState$: of({
-        seccion: [true, false], // Adjusted to match the expected boolean[] type
-        formaValida: [true], // Adjusted to match the expected boolean[] type
+        seccion: [true, false], 
+        formaValida: [true], 
       }),
     };
 
     await TestBed.configureTestingModule({
-      declarations: [TipoDeAvisoComponent],
-      imports: [ReactiveFormsModule, TituloComponent, InputRadioComponent],
+      declarations: [],
+      imports: [ReactiveFormsModule, AlertComponent, InputFechaComponent, TituloComponent, InputRadioComponent, CommonModule, TipoDeAvisoComponent],
       providers: [
+        provideHttpClient(),
         FormBuilder,
         { provide: DestruccionStore, useValue: mockDestruccionStore },
         { provide: DestruccionQuery, useValue: mockDestruccionQuery },

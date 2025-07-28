@@ -1,11 +1,12 @@
 import { ALERTA_PARA, FECHA_DE_FACTURA } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, TablaDinamicaComponent, TituloComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MERCANCIA_TABLA, MercanciasFormInfo, MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/110208/certificado.model';
 import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
@@ -32,7 +33,15 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para gestionar los datos de mercancías.
    */
-  formMercancia!: FormGroup;
+  formMercancia!: FormGroup; 
+  /**
+   * Tipo de selección de tabla (RADIO).
+   */
+  tipoSeleccionTabla = TablaSeleccion.RADIO;
+  /**
+   * Determina si el formulario debe estar en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Estado de la solicitud obtenido desde el store.
@@ -95,27 +104,45 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private service: ValidarInicalmenteService,
     public tramite110208Store: Tramite110208Store,
-    private tramite110208Query: Tramite110208Query
-  ) {}
+    private tramite110208Query: Tramite110208Query,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
    */
-  ngOnInit(): void {
-    this.tramite110208Query
-      .selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
-
+  ngOnInit(): void { 
+    this.inicializarEstadoFormulario();
     this.obtenerTablaDatos();
     this.obtenerEstadoList();
-    this.obtenerFormDatos();
+    this.obtenerFormDatos();    
+  }
 
+  /**
+   * Inicializa el formulario con datos del store y aplica validaciones.
+   * También aplica configuración de solo lectura si es necesario.
+   * @method inicializarEstadoFormulario
+   */
+  inicializarEstadoFormulario(): void {
+    this.tramite110208Query
+    .selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.solicitudState = seccionState;
+      })
+    )
+    .subscribe();
     this.formMercancia = this.fb.group({
       fraccionArancelaria: [{ value: '', disabled: true }],
       nombreComercial: [{ value: '', disabled: true }],
@@ -131,6 +158,15 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
       tipoDeFactura: [this.solicitudState?.tipoDeFactura],
       fechaFactura: [this.solicitudState?.fechaFactura],
     });
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.formMercancia.controls).forEach((key) => {
+        this.formMercancia.get(key)?.disable();
+      });
+    } else {
+      Object.keys(this.formMercancia.controls).forEach((key) => {
+        this.formMercancia.get(key)?.enable();
+      });
+    }
   }
 
   /**

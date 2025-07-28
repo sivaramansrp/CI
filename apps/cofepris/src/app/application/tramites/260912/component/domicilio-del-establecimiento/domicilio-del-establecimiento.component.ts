@@ -1,15 +1,17 @@
-import { AlertComponent, InputCheckComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, InputCheckComponent, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260912Store, Tramites260912State } from '../../estados/tramite-260912.store';
 import { ALERT } from '../../enums/domicilio-del-establecimiento.enum';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DomicilioDelEstablecimientoService } from '../../services/domicilio-del-establecimiento.service';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { MERCANCIAS_DATA } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { MercanciasInfo } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
@@ -22,11 +24,15 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260912Query } from '../../estados/tramite-260912.query';
+
 import { Validators } from '@angular/forms';
+
 
 /**
  * Componente para gestionar el domicilio del establecimiento.
- * 
+ * Permite la visualización y edición de los datos del domicilio, así como la gestión de tablas y catálogos asociados.
+ * Incluye lógica para modo solo lectura y edición, integración con el store y servicios para obtener datos.
+ *
  * @selector app-domicilio-del-establecimiento
  * @standalone true
  * @imports [
@@ -36,14 +42,18 @@ import { Validators } from '@angular/forms';
  *   CatalogoSelectComponent,
  *   AlertComponent,
  *   TablaDinamicaComponent,
- *   InputRadioComponent
+ *   InputRadioComponent,
+ *   InputCheckComponent
  * ]
  * @templateUrl ./domicilio-del-establecimiento.component.html
  * @styleUrl ./domicilio-del-establecimiento.component.scss
  */
 @Component({
+  /** @description Selector CSS para el componente */
   selector: 'app-domicilio-del-establecimiento',
+  /** @description Componente standalone que no requiere módulo padre */
   standalone: true,
+  /** @description Módulos y componentes importados para uso en el template */
   imports: [
     CommonModule,
     TituloComponent,
@@ -54,215 +64,265 @@ import { Validators } from '@angular/forms';
     InputRadioComponent,
     InputCheckComponent
   ],
+  /** @description Servicios específicos provistos por este componente */
   providers: [DomicilioDelEstablecimientoService],
+  /** @description Ruta del archivo de template HTML */
   templateUrl: './domicilio-del-establecimiento.component.html',
+  /** @description Ruta del archivo de estilos SCSS */
   styleUrl: './domicilio-del-establecimiento.component.scss',
 })
 export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
+  
+
+  /** Estado actual de la solicitud proveniente del store */
+  public solicitudState!: Tramites260912State;
+
+  /** Indica si el formulario está en modo solo lectura */
+  esFormularioSoloLectura: boolean = false;
+
   /**
-   * Formulario principal.
+   * Formulario principal reactivo para los datos del domicilio.
    */
   form!: FormGroup;
 
   /**
-   * Subject para manejar la destrucción del componente y evitar fugas de memoria.
-   */
-  public destroyed$ = new Subject<void>();
-
-   /**
-       * Estado seleccionado del trámite 260912.
-       */
-      estadoSeleccionado!: Tramites260912State;
-
-  /**
-   * Lista de estados.
+   * Lista de estados obtenida del catálogo.
    */
   estado: Catalogo[] = [];
 
   /**
-   * Textos de alerta.
+   * Textos de alerta utilizados en el componente.
    */
   TEXTOS = ALERT;
 
   /**
-   * Clase de alerta.
+   * Clase CSS para el tipo de alerta.
    */
   class = 'alert-warning';
 
   /**
-   * Configuración de selección de tabla.
+   * Configuración para la selección de filas en la tabla (checkbox).
    */
   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
-   * Configuración de columnas de la tabla NICO.
+   * Configuración de columnas para la tabla NICO.
    */
   nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
 
   /**
-   * Datos de la tabla NICO.
+   * Datos cargados para la tabla NICO.
    */
   nicoTablaDatos: NicoInfo[] = [];
 
   /**
-   * Formulario de domicilio.
+   * Formulario reactivo para los datos del domicilio.
    */
   domicilio!: FormGroup;
 
   /**
-   * Configuración de columnas de la tabla de mercancías.
+   * Configuración de columnas para la tabla de mercancías.
    */
   mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
 
   /**
-   * Datos de la tabla de mercancías.
+   * Datos cargados para la tabla de mercancías.
    */
   mercanciasTablaDatos: MercanciasInfo[] = [];
 
   /**
-   * Manifiestos de alerta.
+   * Manifiestos de alerta utilizados en el componente.
    */
   manifests = ALERT.MANIFESTS;
 
   /**
-   * Opciones de botón de radio.
+   * Opciones para el botón de radio.
    */
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
-   * Formulario de representante legal.
+   * Formulario reactivo para los datos del representante legal.
    */
   representanteLegal!: FormGroup;
 
-  
+  /**
+   * Subject para controlar la destrucción de suscripciones y evitar fugas de memoria.
+   * @private
+   */
+  private destroy$ = new Subject<void>();
+
+  /**
+   * Estado seleccionado del trámite 260911.
+   */
+  estadoSeleccionado!: Tramites260912State;
+
   /**
    * Constructor del componente.
-   * 
-   * @param fb FormBuilder para crear formularios.
-   * @param domicilioService Servicio HTTP para realizar peticiones.
-   * @param Tramite260912Query Consulta de datos del trámite.
-   * @param Tramite260912Store Almacenamiento de datos del trámite.
+   *
+   * @param fb FormBuilder para crear formularios reactivos.
+   * @param httpServicios Servicio HTTP para realizar peticiones.
+   * @param tramite260912Query Consulta de datos del trámite.
+   * @param tramite260912Store Almacenamiento de datos del trámite.
+   * @param domicilioDelEstablecimientoService Servicio para obtener datos relacionados con el domicilio.
+   * @param consultaioQuery Consulta de estado de solo lectura.
    */
   constructor(
     private fb: FormBuilder,
-    private tramites260912Query: Tramite260912Query,
-    private tramites260912Store: Tramite260912Store,
-    private domicilioService:DomicilioDelEstablecimientoService
+    private httpServicios: HttpClient,
+    private tramite260912Query: Tramite260912Query,
+    private tramite260912Store: Tramite260912Store,
+    private domicilioDelEstablecimientoService: DomicilioDelEstablecimientoService,
+    public consultaioQuery: ConsultaioQuery,
   ) {
-    // Constructor
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * Método de inicialización del componente.
+   * Inicializa el formulario dependiendo del modo (solo lectura o editable).
+   * Si está en solo lectura, carga y bloquea el formulario.
+   * Si no, crea un formulario editable.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormulario();
+    }
+  }
+
+  /**
+   * Crea el formulario y, si está en modo solo lectura, lo deshabilita.
+   * De lo contrario, lo habilita para edición.
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.form.disable();
+      this.domicilio.disable();
+      this.representanteLegal.disable();
+    } else {
+      this.form.enable();
+      this.domicilio.enable();
+      this.representanteLegal.enable();
+    }
+  }
+
+  /**
+   * Método de inicialización del ciclo de vida del componente.
+   * Inicializa el formulario y carga los datos necesarios para las tablas y catálogos.
    */
   ngOnInit(): void {
-    this.crearFormulario();
-    this.getValorStore();
+    this.inicializarEstadoFormulario();
     this.obtenerTablaDatos();
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
- 
-}
+  }
 
   /**
-   * Método para crear el formulario.
+   * Método de destrucción del ciclo de vida del componente.
+   * Libera recursos y cancela suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /**
+   * Crea los formularios reactivos principales del componente usando los datos del store.
+   * Incluye el formulario principal, el de domicilio y el de representante legal.
    */
   crearFormulario(): void {
+    this.tramite260912Query.selectTramite260912$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.form = this.fb.group({
-      codigoPostal: ['', [Validators.required]],
-      estado: ['', [Validators.required]],
-      municipioOAlcaldia: ['', [Validators.required]],
-      localidad: [''],
-      colonias: [''],
-      calle: ['', [Validators.required]],
-      lada: ['', [Validators.required]],
-      telefono: ['', [Validators.required]],
+      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12), Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      estado: [this.solicitudState?.estado],
+      municipioOAlcaldia: [this.solicitudState?.municipioOAlcaldia, [Validators.required, Validators.maxLength(120)]],
+      localidad: [this.solicitudState?.localidad, [Validators.maxLength(120)]],
+      colonias: [this.solicitudState?.colonias, [Validators.maxLength(120)]],
+      calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
+      lada: [this.solicitudState?.lada, [Validators.minLength(5), Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      telefono: [this.solicitudState.telefono, [Validators.required, Validators.maxLength(30), Validators.pattern(REGEX_SOLO_DIGITOS)]],
     });
 
     this.domicilio = this.fb.group({
       avisoCheckbox: [true],
-      licenciaSanitaria: [{ value: '', disabled: true }],
-      regimen: [],
-      aduanasEntradas: [],
+      licenciaSanitaria: [{ value: this.solicitudState?.licenciaSanitaria, disabled: true }],
+      regimen: [this.solicitudState?.regimen],
+      aduanasEntradas: [this.solicitudState?.aduanasEntradas],
       aifaCheckbox: [true],
       manifests: [true],
     });
 
     this.representanteLegal = this.fb.group({
-      acuerdoPublico: [],
-      rfc: ['', [Validators.required]],
-      nombre: [{ value: 'LUIS AMBROSIO', disabled: true }, [Validators.required]],
-      apellidoPaterno: [{ value: 'MARTINEZ', disabled: true }, [Validators.required]],
-      apellidoMaterno: [{ value: 'VALENZUELA', disabled: true }, [Validators.required]],
+      acuerdoPublico: [this.solicitudState?.acuerdoPublico],
+      rfc: [this.solicitudState?.rfc, [Validators.required]],
+      nombre: [{ value: this.solicitudState?.nombre, disabled: true }, [Validators.required]],
+      apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, [Validators.required]],
+      apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno, disabled: true }, [Validators.required]],
     });
   }
 
+  /**
+   * Obtiene los datos de la tabla NICO desde el servicio y los asigna a la propiedad correspondiente.
+   */
   obtenerTablaDatos(): void {
-    this.domicilioService
+    this.domicilioDelEstablecimientoService
       .obtenerTablaDatos()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.nicoTablaDatos = data?.data;
       });
   }
- 
+
   /**
-   * Método para obtener la lista de estados.
+   * Obtiene la lista de estados desde el servicio y la asigna a la propiedad correspondiente.
    */
   obtenerEstadoList(): void {
-    this.domicilioService
+    this.domicilioDelEstablecimientoService
       .obtenerEstadoList()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.estado = data?.data || [];
       });
   }
- 
+
   /**
-   * Método para obtener los datos de mercancías.
+   * Obtiene los datos de mercancías desde el servicio y los asigna a la propiedad correspondiente.
    */
   obtenerMercanciasDatos(): void {
-    this.domicilioService
+    this.domicilioDelEstablecimientoService
       .obtenerMercanciasDatos()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.mercanciasTablaDatos = data?.data || [];
       });
   }
 
-  
-
   /**
-   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
-   */
-
-   /**
    * Actualiza un valor específico en el store del trámite.
-   * 
-   * @param FormGroup - Formulario reactivo.
-   * @param control - Nombre del control cuyo valor se actualizará en el store.
+   *
+   * @param FormGroup Formulario reactivo del cual se obtiene el valor.
+   * @param control Nombre del control cuyo valor se actualizará en el store.
    */
-   setValorStore(FormGroup: FormGroup, control: string): void {
+  setValorStore(FormGroup: FormGroup, control: string): void {
     const VALOR = FormGroup.get(control)?.value;
-    this.tramites260912Store.setTramite260912State({
+    this.tramite260912Store.setTramite260912State({
       [control]: VALOR
     });
-  }
-
-  /**
-   * Obtiene el estado actual del trámite desde el store.
-   */
-  getValorStore(): void {
-    this.tramites260912Query.selectTramite260912$.pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data) => {
-        this.estadoSeleccionado = data;
-      }
-    );
-  }
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
   }
 }

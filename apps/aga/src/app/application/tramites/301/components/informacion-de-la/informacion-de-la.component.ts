@@ -1,12 +1,9 @@
-/* eslint-disable no-empty-function */
 /* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * @module InformacionDeLaComponent
  * @description Este módulo define el componente `InformacionDeLaComponent` que maneja la información de la mercancía.
 */
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -17,18 +14,30 @@ import {
   Solicitud301State,
   Tramite301Store,
 } from '../../../../core/estados/tramites/tramite301.store';
-import { Subject, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Subject } from 'rxjs';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 import estadofisico from 'libs/shared/theme/assets/json/130102/entidad_federativa.json';
 import franccionArancelaria from 'libs/shared/theme/assets/json/301/fraccion-arancelaria-options.json';
 import nico from 'libs/shared/theme/assets/json/301/nico-options.json';
 
+/**
+ * Componente que gestiona la información de la mercancía para el trámite 301.
+ *
+ * Este componente permite capturar, mostrar y validar los datos relacionados con la fracción arancelaria,
+ * NICO, estado físico y otros campos requeridos para la solicitud. Integra formularios reactivos,
+ * catálogos y controles de visualización para campos dependientes.
+ *
+ * @component
+ * @example
+ * <app-informacion-de-la></app-informacion-de-la>
+ */
 @Component({
   selector: 'app-informacion-de-la',
   templateUrl: './informacion-de-la.component.html',
@@ -42,6 +51,7 @@ import nico from 'libs/shared/theme/assets/json/301/nico-options.json';
   ],
   standalone: true,
 })
+
 export class InformacionDeLaComponent implements OnInit, OnDestroy {
 
   /**
@@ -68,19 +78,6 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
    * @property {number} indice - Índice del paso actual.
    */
   indice: number = 1;
-
-  /**
-   * @property {any} datosPasos - Datos de los pasos del formulario.
-   */
-  datosPasos: any = {
-    indice: this.indice,
-    txtBtnSig: 'Continuar',
-  };
-
-  /**
-   * Suscripción a los cambios en el formulario reactivo.
-   */
-  private subscription: Subscription = new Subscription();
 
   /**
    * Estado de la solicitud de la sección 301.
@@ -154,35 +151,29 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
    */
 
   inicializarFormulario(): void {
-    this.subscription.add(
-      this.tramite301Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe()
-    );
+    this.tramite301Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
 
     this.informacionDeLaform = this.formbuilt.group({
       fraccionArancelaria: [
         this.solicitudState?.fraccionArancelaria,
         Validators.required,
       ],
-      descripcionFraccion: [
-        { value: this.solicitudState?.descripcionFraccion, disabled: true },
-      ],
+      descripcionFraccion: [{value: this.solicitudState?.descripcionFraccion, disabled: true}],
       nico: [this.solicitudState?.nico, Validators.required],
-      descripcionNico: [
-        { value: this.solicitudState?.descripcionNico, disabled: true },
-      ],
-      nombreQuimico: [this.solicitudState?.nombreQuimico, Validators.required],
+      descripcionNico: [{value: this.solicitudState?.descripcionNico, disabled: true}],
+      nombreQuimico: [this.solicitudState?.nombreQuimico, [Validators.required, Validators.maxLength(256)]],
       nombreComercial: [
         this.solicitudState?.nombreComercial,
-        Validators.required,
+        [Validators.required, Validators.maxLength(256)]
       ],
-      numeroCAS: [this.solicitudState?.numeroCAS, Validators.required],
+      numeroCAS: [this.solicitudState?.numeroCAS, [Validators.required, Validators.maxLength(120)]],
       estadoFisico: [this.solicitudState?.estadoFisico, Validators.required],
       acondicionamiento: [
         this.solicitudState?.acondicionamiento,
@@ -217,9 +208,23 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
   valorSeleccionadoFraccion(): void {
     if (this.informacionDeLaform.get('fraccionArancelaria')?.value) {
       this.informacionDeLaform.get('descripcionFraccion')?.enable();
+      const VALOR = InformacionDeLaComponent.obtenerDescripcion(this.fraccionArancelariaOptions, this.informacionDeLaform.get('fraccionArancelaria')?.value);
+      this.informacionDeLaform.get('descripcionFraccion')?.setValue(VALOR);
     } else {
       this.informacionDeLaform.get('descripcionFraccion')?.disable();
+      this.informacionDeLaform.get('descripcionFraccion')?.setValue('');
     }
+  }
+
+  /**
+ * @method obtenerDescripcion
+ * @description
+ * Obtiene la descripción de la fracción arancelaria seleccionada en el formulario dinámico.
+ * @returns {string} Descripción de la fracción arancelaria seleccionada o una cadena vacía si no existe.
+ */
+  public static obtenerDescripcion(array: Catalogo[], id: string): string {
+    const DESCRIPCION = array.find((ele: Catalogo) => Number(ele.id) === Number(id))?.descripcion;
+    return DESCRIPCION ?? '';
   }
 
   /**
@@ -231,8 +236,11 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
   valorSeleccionadoNico(): void {
     if (this.informacionDeLaform.get('nico')?.value) {
       this.informacionDeLaform.get('descripcionNico')?.enable();
+      const VALOR = InformacionDeLaComponent.obtenerDescripcion(this.nicoOptions, this.informacionDeLaform.get('nico')?.value);
+      this.informacionDeLaform.get('descripcionNico')?.setValue(VALOR);
     } else {
       this.informacionDeLaform.get('descripcionNico')?.disable();
+      this.informacionDeLaform.get('descripcionNico')?.setValue('');
     }
   }
 
@@ -247,7 +255,16 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite301Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite301Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @returns {boolean | null} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  esInvalido(campo: string): boolean | null {
+    const CAMPO = this.informacionDeLaform.get(campo);
+    return CAMPO ? CAMPO.invalid && CAMPO.touched : null;
   }
 
   /**
@@ -256,7 +273,6 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
    * @memberof InformacionDeLaComponent
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

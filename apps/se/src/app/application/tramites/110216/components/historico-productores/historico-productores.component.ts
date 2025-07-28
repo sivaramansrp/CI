@@ -1,25 +1,37 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  ConfiguracionColumna,
+  REGEX_SOLO_DIGITOS,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+  ValidacionesFormularioService
+} from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import {
+  Tramite110216State,
+  Tramite110216Store
+} from '../../../../estados/tramites/tramite110216.store';
 import { CertificadosOrigenService } from '../../services/certificado-origen.service';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
 import { HistoricoColumnas } from '../../models/certificado-origen.model';
 import { Modal } from 'bootstrap';
-import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { TABLE_COLUMNS } from '../../constants/inicialmente-certificado-origen.enum';
 import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
-import { Tramite110216State } from '../../../../estados/tramites/tramite110216.store';
-import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar el histórico de productores.
@@ -54,38 +66,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla dinámica.
    */
-  tableColumns: ConfiguracionColumna<HistoricoColumnas>[] = [
-    {
-      encabezado: 'Nombre del productor',
-      clave: (elementos) => elementos.nombreProductor,
-      orden: 1
-    },
-    {
-      encabezado: 'Número de registro fiscal',
-      clave: (elementos) => elementos.numeroRegistroFiscal,
-      orden: 2,
-    },
-    {
-      encabezado: 'Dirección',
-      clave: (elementos) => elementos.direccion,
-      orden: 3,
-    },
-    {
-      encabezado: 'Correo Electrónico',
-      clave: (elementos) => elementos.correoElectronico,
-      orden: 4,
-    },
-    {
-      encabezado: 'Teléfono',
-      clave: (elementos) => elementos.telefono,
-      orden: 5,
-    },
-    {
-      encabezado: 'Fax',
-      clave: (elementos) => elementos.fax,
-      orden: 6,
-    },
-  ];
+  tableColumns: ConfiguracionColumna<HistoricoColumnas>[] = TABLE_COLUMNS;
 
   /**
    * Lista de productores disponibles para el exportador.
@@ -131,7 +112,17 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Formulario para agregar datos del productor.
    */
   agregarDatosProductorFormulario!: FormGroup;
-
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
   /**
    * Constructor del componente.
    * 
@@ -146,7 +137,8 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     private certificadosOrigenService: CertificadosOrigenService,
     public store: Tramite110216Store,
     public tramiteQuery: Tramite110216Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery,
   ) { }
 
   /**
@@ -155,7 +147,6 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Carga los datos iniciales, configura los formularios y suscribe al estado del trámite.
    */
   ngOnInit(): void {
-    this.cargarProductorPorExportador();
     this.tramiteQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -164,6 +155,17 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+    this.productoresExportador = this.tramiteState.productoresExportador ?? [];
     this.initFormulario();
     this.initAgregarDatosProductorFormulario();
   }
@@ -176,6 +178,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       datosConfidencialesProductor: [this.tramiteState?.datosConfidencialesProductor, []],
       productorMismoExportador: [this.tramiteState?.productorMismoExportador, []],
     });
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -186,6 +189,22 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       numeroRegistroFiscal: [this.tramiteState?.agregarDatosProductorFormulario?.numeroRegistroFiscal, [Validators.required]],
       fax: [this.tramiteState?.agregarDatosProductorFormulario?.fax, [Validators.pattern(REGEX_SOLO_DIGITOS)]]
     });
+    this.inicializarEstadoFormulario();
+  }
+  /**
+   * Inicializa el estado de los formularios según el modo de solo lectura.
+   * 
+   * Este método habilita o deshabilita los formularios dependiendo del valor de la propiedad `soloLectura`.
+   * Si `soloLectura` es `true`, los formularios se deshabilitan; de lo contrario, se habilitan.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.formulario?.disable();
+      this.agregarDatosProductorFormulario?.disable();
+    } else {
+      this.formulario?.enable();
+      this.agregarDatosProductorFormulario?.enable();
+    }
   }
 
   /**
@@ -257,12 +276,15 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   /**
    * Agrega un productor si el formulario es válido.
    */
-  agregarExportador(): void {
-    this.agregarDatosProductorFormulario.markAllAsTouched();
-    if (this.agregarDatosProductorFormulario.valid) {
-      this.cerrarModal();
-    }
-  }
+agregarExportador(): void {
+  this.agregarDatosProductorFormulario.markAllAsTouched();
+  if (this.agregarDatosProductorFormulario.valid) {
+    const NUEVO_PRODUCTOR: HistoricoColumnas = this.agregarDatosProductorFormulario.value;
+    this.productoresExportador = [...this.productoresExportador, NUEVO_PRODUCTOR];
+    this.cerrarModal();
+  } 
+}
+
 
   /**
    * Valida un campo del formulario.

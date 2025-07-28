@@ -1,46 +1,43 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-
 import { PasoTresComponent } from './paso-tres.component';
-import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
+import { Router } from '@angular/router';
+import { FirmaElectronicaComponent, TramiteFolioService } from '@ng-mf/data-access-user';
 import { TramiteStore } from '../../../../estados/tramite.store';
+import { of, throwError } from 'rxjs';
+import { InjectionToken } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
   let fixture: ComponentFixture<PasoTresComponent>;
-  let mockRouter: any;
-  let mockServiciosExtraordinariosService: any;
-  let mockTramiteStore: any;
-
+  let routerMock: any;
+  let tramiteFolioServiceMock: any;
+  let tramiteStoreMock: any;
+  const toastrServiceMock = {
+  success: jest.fn(),
+  error: jest.fn(),
+  warning: jest.fn(),
+  info: jest.fn(),
+};
   beforeEach(async () => {
-    mockRouter = {
-      navigate: jest.fn(),
+    routerMock = { navigate: jest.fn() };
+    tramiteFolioServiceMock = {
+      obtenerTramite: jest.fn().mockReturnValue(of({ data: { folio: '123' } }))
     };
-
-    mockServiciosExtraordinariosService = {
-      obtenerTramite: jest.fn(),
-    };
-
-    mockTramiteStore = {
-      establecerTramite: jest.fn(),
+    tramiteStoreMock = {
+      establecerTramite: jest.fn()
     };
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, PasoTresComponent],
+      declarations: [PasoTresComponent],
+      imports: [FirmaElectronicaComponent,HttpClientTestingModule],
       providers: [
-        { provide: Router, useValue: mockRouter },
-        {
-          provide: ServiciosExtraordinariosService,
-          useValue: mockServiciosExtraordinariosService,
-        },
-        { provide: TramiteStore, useValue: mockTramiteStore },
-        ToastrService,
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+        { provide: Router, useValue: routerMock },
+        { provide: TramiteFolioService, useValue: tramiteFolioServiceMock },
+        { provide: TramiteStore, useValue: tramiteStoreMock },
+         { provide: ToastrService, useValue: toastrServiceMock }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
@@ -48,59 +45,41 @@ describe('PasoTresComponent', () => {
     fixture.detectChanges();
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('obtieneFirma', () => {
-    it('should call `obtenerTramite` and navigate to "servicios-extraordinarios/acuse" when FIRMA is valid', () => {
-      const mockTramite = { data: { id: 1, name: 'Test Tramite' } };
-      mockServiciosExtraordinariosService.obtenerTramite.mockReturnValue(
-        of(mockTramite)
-      );
+  it('should set tipoPersona in obtenerTipoPersona', () => {
+    component.obtenerTipoPersona(2);
+    expect(component.tipoPersona).toBe(2);
+  });
 
-      const firma = 'mockFirma';
-      component.obtieneFirma(firma);
+  it('should call TramiteFolioService, TramiteStore, and Router in obtieneFirma when FIRMA is present', () => {
+    const spyObtenerTramite = jest.spyOn(tramiteFolioServiceMock, 'obtenerTramite');
+    const spyEstablecerTramite = jest.spyOn(tramiteStoreMock, 'establecerTramite');
+    const spyNavigate = jest.spyOn(routerMock, 'navigate');
+    component.obtieneFirma('firma123');
+    expect(spyObtenerTramite).toHaveBeenCalledWith(19);
+    expect(spyEstablecerTramite).toHaveBeenCalledWith({ folio: '123' }, 'firma123');
+    expect(spyNavigate).toHaveBeenCalledWith(['pago/reportes/acuse']);
+  });
 
-      expect(
-        mockServiciosExtraordinariosService.obtenerTramite
-      ).toHaveBeenCalledWith(19);
-      expect(mockTramiteStore.establecerTramite).toHaveBeenCalledWith(
-        mockTramite.data,
-        firma
-      );
-      expect(mockRouter.navigate).toHaveBeenCalledWith([
-        'servicios-extraordinarios/acuse',
-      ]);
-    });
+  it('should not call TramiteFolioService if FIRMA is empty', () => {
+    const spyObtenerTramite = jest.spyOn(tramiteFolioServiceMock, 'obtenerTramite');
+    component.obtieneFirma('');
+    expect(spyObtenerTramite).not.toHaveBeenCalled();
+  });
 
-    it('should handle errors when `obtenerTramite` fails', () => {
-      const errorSpy = jest.spyOn(console, 'error').mockImplementation();
-      mockServiciosExtraordinariosService.obtenerTramite.mockReturnValue(
-        throwError(() => new Error('Service Error'))
-      );
+  it('should handle error in obtieneFirma observable', () => {
+    tramiteFolioServiceMock.obtenerTramite.mockReturnValueOnce(throwError(() => new Error('fail')));
+    expect(() => component.obtieneFirma('firma123')).not.toThrow();
+  });
 
-      const firma = 'mockFirma';
-      component.obtieneFirma(firma);
-
-      expect(
-        mockServiciosExtraordinariosService.obtenerTramite
-      ).toHaveBeenCalledWith(19);
-      expect(errorSpy).toHaveBeenCalledWith(expect.any(Error));
-    });
-
-    it('should not call `obtenerTramite` if FIRMA is empty', () => {
-      const firma = '';
-      component.obtieneFirma(firma);
-
-      expect(
-        mockServiciosExtraordinariosService.obtenerTramite
-      ).not.toHaveBeenCalled();
-      expect(mockRouter.navigate).not.toHaveBeenCalled();
-    });
+  it('should complete destroyed$ in ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalledWith(true);
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

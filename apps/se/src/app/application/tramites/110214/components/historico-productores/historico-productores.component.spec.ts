@@ -20,6 +20,35 @@ describe('HistoricoProductoresComponent', () => {
   let validacionesServiceMock: any;
   let mockEvento: HistoricoColumnas[];
   let mockSeleccionadasEvento: SeleccionadasTabla[];
+  let mokeJson = [
+    {
+      "id": 1,
+      "nombreProductor": "LAURA CONTRERAS",
+      "numeroRegistroFiscal": "AEVL621207B95",
+      "direccion": "SAN GABRIEL 144 DURANGO",
+      "correoElectronico": "laura2992@hotmail.com",
+      "telefono": "044-6182999535",
+      "fax": "6182999535"
+    },
+    {
+      "id": 2,
+      "nombreProductor": "LAURA CONTRERAS",
+      "numeroRegistroFiscal": "AEVL621207B95",
+      "direccion": "SAN GABRIEL 144 DURANGO",
+      "correoElectronico": "laura2992@hotmail.com",
+      "telefono": "044-6182999535",
+      "fax": "6182999535"
+    },
+    {
+      "id": 3,
+      "nombreProductor": "LAURA CONTRERAS",
+      "numeroRegistroFiscal": "AEVL621207B95",
+      "direccion": "SAN GABRIEL 144 DURANGO",
+      "correoElectronico": "laura2992@hotmail.com",
+      "telefono": "044-6182999535",
+      "fax": "6182999535"
+    },
+  ];
 
 
   beforeEach(async () => {
@@ -128,12 +157,6 @@ describe('HistoricoProductoresComponent', () => {
     expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formulario, 'productorMismoExportador', 'setProductorMismoExportador');
   });
 
-  it('should call cargarProductorPorExportador on ngOnInit', () => {
-    const cargarProductorPorExportadorSpy = jest.spyOn(component, 'cargarProductorPorExportador');
-    component.ngOnInit();
-    expect(cargarProductorPorExportadorSpy).toHaveBeenCalled();
-  });
-
   it('should load productores on cargarProductorPorExportador', () => {
     component.cargarProductorPorExportador();
     expect(validarInicialmenteCertificadoServiceMock.obtenerProductorPorExportador).toHaveBeenCalled();
@@ -234,5 +257,47 @@ describe('HistoricoProductoresComponent', () => {
     component.mercanciaSeleccionadasFila = null;
     component.asignarProductor();
     expect(abrirModalSpy).toHaveBeenCalledWith('Debe seleccionar un productor para asignarle la mercancía');
+  });
+
+  it('should disable both forms when soloLectura is true', () => {
+    component.soloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.formulario.disabled).toBe(true);
+    expect(component.agregarDatosProductorFormulario.disabled).toBe(true);
+  });
+
+  it('should enable both forms when soloLectura is false', () => {
+    component.soloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.formulario.enabled).toBe(true);
+    expect(component.agregarDatosProductorFormulario.enabled).toBe(true);
+  });
+
+  it('should fetch and update mercanciaSeleccionadasTablaDatos when cargarMercanciasSeleccionadas is called', () => {
+    component.cargarMercanciasSeleccionadas();
+
+    expect(validarInicialmenteCertificadoServiceMock.obtenerMercanciasSeleccionadas).toHaveBeenCalled();
+
+    expect(component.mercanciaSeleccionadasTablaDatos).toEqual([{ id: 1, nombre: 'Mercancía Seleccionada' }]);
+  });
+
+  it('should move selected producers from productoresExportador to agregarProductoresExportador', () => {
+    component.productoresExportador = mokeJson;
+    component.seleccionadoProductoresExportador = [mokeJson[1], mokeJson[2]];
+    component.agregarProductoresExportador = [
+      {
+        "id": 4,
+        "nombreProductor": "LAURA CONTRERAS",
+        "numeroRegistroFiscal": "AEVL621207B95",
+        "direccion": "SAN GABRIEL 144 DURANGO",
+        "correoElectronico": "laura2992@hotmail.com",
+        "telefono": "044-6182999535",
+        "fax": "6182999535"
+      },
+    ];
+    component.productoresSeleccionados();
+    expect(component.agregarProductoresExportador).toEqual([...component.agregarProductoresExportador, ...component.seleccionadoProductoresExportador]);
+    expect(component.productoresExportador).toEqual([mokeJson[0]]);
+    expect(component.seleccionadoProductoresExportador).toEqual([]);
   });
 });

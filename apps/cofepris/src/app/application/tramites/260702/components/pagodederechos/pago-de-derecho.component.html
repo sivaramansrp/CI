@@ -19,8 +19,8 @@
                   formControlName="banco"
                   [catalogo]="bancoData.catalogos" 
                   [label]="'Banco'" 
-                  [required]="true"
                   [placeholder]="bancoData.primerOpcion"
+                   [isDisabled]="esFormularioSoloLectura"
                   (change)="setValoresStore(pagoDeDerechos,'banco', 'setBanco')"
                   >
                 </app-catalogo-select>

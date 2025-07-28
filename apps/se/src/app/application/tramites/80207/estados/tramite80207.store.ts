@@ -1,6 +1,7 @@
 import {
   DatosSubcontratista,
   InfoRegistro,
+  PlantasDireccionModelo,
   SubfabricanteDireccionModelo,
   Tramite80207State,
 } from '../modelos/subfabricante.model';
@@ -21,24 +22,74 @@ import { Injectable } from '@angular/core';
  */
 export function createInitialState(): Tramite80207State {
   const INFO_REGISTRO: InfoRegistro = {
+    /**
+     * Modalidad del registro.
+     * @property {string} modalidad
+     */
     modalidad: '',
+
+    /**
+     * Folio asociado al registro.
+     * @property {string} folio
+     */
     folio: '',
+
+    /**
+     * Año del registro.
+     * @property {number} ano
+     */
     ano: 0,
   };
+
   const DATOS_SUBCONTRATISTA: DatosSubcontratista = {
     rfc: '',
-    estado: '',
+    estado: '-1',
   };
-  return {
-    infoRegistro: INFO_REGISTRO,
-    datosSubcontratista: DATOS_SUBCONTRATISTA,
-    formaValida: {
-      esDatosSubcontratistaValido: false
-    },
-    plantasBuscadas:[],
-    plantasSubfabricantesAgregar: [],
-    
 
+  return {
+    /**
+     * Información del registro inicial.
+     * @property {InfoRegistro} infoRegistro
+     */
+    infoRegistro: INFO_REGISTRO,
+
+    /**
+     * Información del subcontratista.
+     * @property {DatosSubcontratista} datosSubcontratista
+     */
+    datosSubcontratista: DATOS_SUBCONTRATISTA,
+
+    /**
+     * Validación de la forma.
+     * @property {Object} formaValida
+     */
+    formaValida: {
+      /**
+       * Indica si los datos del subcontratista son válidos.
+       * @property {boolean} esDatosSubcontratistaValido
+       */
+      esDatosSubcontratistaValido: false,
+    },
+
+    /**
+     * Lista inicial de plantas buscadas.
+     * @property {SubfabricanteDireccionModelo[]} plantasBuscadas
+     */
+    plantasBuscadas: [],
+     
+    /**
+     * Lista de plantas que se agregarán al subfabricante.
+     * @property {PlantasDireccionModelo[]}
+      plantas
+      */
+
+    plantas: [],
+
+    /**
+     * Lista inicial de plantas subfabricantes a agregar.
+     * @property {SubfabricanteDireccionModelo[]} plantasSubfabricantesAgregar
+     */
+    plantasSubfabricantesAgregar: [],
   };
 }
 
@@ -105,7 +156,7 @@ export class Tramites80207Store extends Store<Tramite80207State> {
    * @param {SubfabricanteDireccionModelo[]} plantasSubfabricantesAgregar - Lista de plantas subfabricantes a agregar al estado.
    */
   setPlantasSubfabricantesAgregar(
-    plantasSubfabricantesAgregar: SubfabricanteDireccionModelo[]
+    plantasSubfabricantesAgregar: PlantasDireccionModelo[]
   ): void {
     this.update((state) => ({
       ...state,
@@ -143,6 +194,67 @@ export class Tramites80207Store extends Store<Tramite80207State> {
     }));
   }
 
+ /**
+ * @method setPlantas
+ * @description
+ * Establece la lista de plantas en el estado actual, reemplazando cualquier valor existente.
+ * 
+ * @param {PlantasDireccionModelo[]} plantas - Lista de plantas a establecer en el estado.
+ */
+setPlantas(plantas: PlantasDireccionModelo[]): void {
+  this.update((state) => ({ 
+    ...state,
+    plantas: plantas
+  }));
+}
+
+/**
+ * @method addPlantas
+ * @description
+ * Agrega una lista de plantas al estado actual, manteniendo las plantas existentes.
+ * 
+ * @param {PlantasDireccionModelo[]} plantas - Lista de plantas a agregar al estado.
+ */
+addPlantas(plantas: PlantasDireccionModelo[]): void {
+  this.update((state) => ({
+    ...state,
+    plantas: [...state.plantas, ...plantas],
+  }));
+}
+
+/**
+ * @method addPlantasBuscadas
+ * @description
+ * Agrega una lista de plantas buscadas al estado actual, manteniendo las plantas buscadas existentes.
+ * 
+ * @param {SubfabricanteDireccionModelo[]} plantasBuscadas - Lista de plantas buscadas a agregar al estado.
+ */
+addPlantasBuscadas(plantasBuscadas: SubfabricanteDireccionModelo[]): void {
+  this.update((state) => ({
+    ...state,
+    plantasBuscadas: [...state.plantasBuscadas, ...plantasBuscadas],
+  }));
+}
+
+/**
+ * @method eliminarPlantas
+ * @description
+ * Elimina una o más plantas del estado actual.
+ * 
+ * @param {PlantasDireccionModelo[]} plantasAEliminar - Lista de plantas a eliminar.
+ */
+eliminarPlantas(plantasAEliminar: PlantasDireccionModelo[]): void {
+  this.update((state) => ({
+    ...state,
+    plantas: state.plantas.filter(
+      (planta) => !plantasAEliminar.some((eliminar) => eliminar.calle=== planta.calle)
+    ),
+  }));
+}
+      
+
+
+
     /**
      * Elimina las plantas especificadas de la lista de plantasSubfabricantesAgregar en el estado.
      *
@@ -154,18 +266,19 @@ export class Tramites80207Store extends Store<Tramite80207State> {
      * Este método actualiza el estado utilizando el patrón inmutable, creando una nueva lista de plantas
      * que excluye las plantas especificadas en el parámetro `eliminarPlantas`.
      */
-    eliminarPlantas(eliminarPlantas:SubfabricanteDireccionModelo[]): void {
+    /*
+    eliminarPlantas(eliminarPlantas:PlantasDireccionModelo[]): void {
       this.update(state => {
-        const PLANTAS = [...state.plantasSubfabricantesAgregar].filter(ele => 
+        const PLANTAS = [...state.plantas].filter(ele => 
           !eliminarPlantas.some((plantas)=>plantas.calle===ele.calle)
         );
         return {
           ...state,
-          plantasSubfabricantesAgregar: PLANTAS
+          plantas: PLANTAS
         }
       })
     }
-
+*/
   /**
    * Constructor que inicializa el estado del store con el valor inicial.
    *

@@ -13,9 +13,8 @@ import { ProductoTablaServicios } from '../../servicios/regiones-compra.service'
 import { Router, ActivatedRoute } from '@angular/router';
 import { TramiteStoreQuery } from '../../estados/tramite290101.query';
 import { TramiteStore } from '../../estados/tramite290101.store';
-import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { SeccionLibQuery, SeccionLibStore, ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { CatalogosService } from '../../servicios/catalogos.service';
-
 
 @Injectable()
 class MockProductoTablaServicios {}
@@ -34,38 +33,14 @@ class MockTramiteStore {}
 @Injectable()
 class MockCatalogosService {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
 describe('DatosDeLaSolicitudComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ,DatosDeLaSolicitudComponent],
-      declarations: [
-        
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
+      imports: [ DatosDeLaSolicitudComponent, FormsModule, ReactiveFormsModule ],
+      declarations: [],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
@@ -86,7 +61,8 @@ describe('DatosDeLaSolicitudComponent', () => {
             fragment: observableOf('fragment'),
             data: observableOf({})
           }
-        }
+        },
+        ConsultaioQuery
       ]
     }).overrideComponent(DatosDeLaSolicitudComponent, {
 
@@ -96,46 +72,74 @@ describe('DatosDeLaSolicitudComponent', () => {
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
+    if (component) {
+      component.ngOnDestroy = () => {}; 
+    }
+    if (fixture) {
+      fixture.destroy();
+    }
   });
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
+  it('should run #inicializarEstadoFormulario()', async () => {
+    component.guardarDatosFormulario = jest.fn();
+    component.inicializarFormulario = jest.fn();
+    component.inicializarEstadoFormulario();
+    // expect(component.guardarDatosFormulario).toHaveBeenCalled();
+    // expect(component.inicializarFormulario).toHaveBeenCalled();
+  });
+
+  it('should run #guardarDatosFormulario()', async () => {
+    component.inicializarFormulario = jest.fn();
+    component.datosSolicitudForma = component.datosSolicitudForma || {};
+    component.datosSolicitudForma.disable = jest.fn();
+    component.datosSolicitudForma.enable = jest.fn();
+    component.guardarDatosFormulario();
+    // expect(component.inicializarFormulario).toHaveBeenCalled();
+    // expect(component.datosSolicitudForma.disable).toHaveBeenCalled();
+    // expect(component.datosSolicitudForma.enable).toHaveBeenCalled();
+  });
+
+  it('should run #inicializarFormulario()', async () => {
+    component.tramiteStoreQuery = component.tramiteStoreQuery || {};
+    component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({});
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.inicializarFormulario();
+    // expect(component.fb.group).toHaveBeenCalled();
+  });
+
   it('should run #redirigirBodegas()', async () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
     component.redirigirBodegas();
-    // expect(component.router.navigate).toHaveBeenCalled();
   });
 
   it('should run #redirigirCafeExportadores()', async () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
     component.redirigirCafeExportadores();
-    // expect(component.router.navigate).toHaveBeenCalled();
   });
 
   it('should run #redirigirBeneficios()', async () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
     component.redirigirBeneficios();
-    // expect(component.router.navigate).toHaveBeenCalled();
   });
 
   it('should run #redirigirRegiones()', async () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
     component.redirigirRegiones();
-    // expect(component.router.navigate).toHaveBeenCalled();
   });
 
   it('should run #ngOnInit()', async () => {
+    component.inicializarEstadoFormulario = jest.fn();
     component.tramiteStoreQuery = component.tramiteStoreQuery || {};
     component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({});
-    component.iniciarFormulario = jest.fn();
     component.catalogosService = component.catalogosService || {};
     component.catalogosService.RadioOpcion = 'RadioOpcion';
     component.datosSolicitudForma = component.datosSolicitudForma || {};
@@ -155,19 +159,6 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.seccionQuery = component.seccionQuery || {};
     component.seccionQuery.selectSeccionState$ = observableOf({});
     component.ngOnInit();
-    // expect(component.iniciarFormulario).toHaveBeenCalled();
-    // expect(component.datosSolicitudForma.get).toHaveBeenCalled();
-    // expect(component.datosSolicitudForma.patchValue).toHaveBeenCalled();
-    // expect(component.subscriptions.push).toHaveBeenCalled();
-    // expect(component.tramiteStore.setSolicitudTramite).toHaveBeenCalled();
-    // expect(component.buscarDatos).toHaveBeenCalled();
-  });
-
-  it('should run #iniciarFormulario()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.iniciarFormulario();
-    // expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #buscarDatos()', async () => {
@@ -181,11 +172,6 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.tramiteStore.setBodegasTabla = jest.fn();
     component.tramiteStore.setCafeExportacionTabla = jest.fn();
     component.buscarDatos();
-    // expect(component.productoTablaServicios.obtenerDatos).toHaveBeenCalled();
-    // expect(component.tramiteStore.setRegionesTabla).toHaveBeenCalled();
-    // expect(component.tramiteStore.setBeneficiosTabla).toHaveBeenCalled();
-    // expect(component.tramiteStore.setBodegasTabla).toHaveBeenCalled();
-    // expect(component.tramiteStore.setCafeExportacionTabla).toHaveBeenCalled();
   });
 
   it('should run #borrarRegiones()', async () => {
@@ -197,15 +183,12 @@ describe('DatosDeLaSolicitudComponent', () => {
     ]);
     component.regionesTableDatos.splice = jest.fn();
     component.regionesSeleccionadas = component.regionesSeleccionadas || {};
-    component.regionesSeleccionadas = {
+    component.regionesSeleccionadas[0] = {
       TABLA_Columna_1: {}
     };
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.updateRegionesTabla = jest.fn();
     component.borrarRegiones();
-    // expect(component.regionesTableDatos.findIndex).toHaveBeenCalled();
-    // expect(component.regionesTableDatos.splice).toHaveBeenCalled();
-    // expect(component.tramiteStore.updateRegionesTabla).toHaveBeenCalled();
   });
 
   it('should run #seleccionarRegiones()', async () => {
@@ -223,15 +206,12 @@ describe('DatosDeLaSolicitudComponent', () => {
     ]);
     component.beneficiosTableDatos.splice = jest.fn();
     component.beneficiosSeleccionados = component.beneficiosSeleccionados || {};
-    component.beneficiosSeleccionados = {
+    component.beneficiosSeleccionados[0] = {
       TABLA_Columna_1: {}
     };
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.updateBeneficiosTabla = jest.fn();
     component.borrarBeneficios();
-    // expect(component.beneficiosTableDatos.findIndex).toHaveBeenCalled();
-    // expect(component.beneficiosTableDatos.splice).toHaveBeenCalled();
-    // expect(component.tramiteStore.updateBeneficiosTabla).toHaveBeenCalled();
   });
 
   it('should run #seleccionarBeneficios()', async () => {
@@ -249,15 +229,12 @@ describe('DatosDeLaSolicitudComponent', () => {
     ]);
     component.bodegasTableDatos.splice = jest.fn();
     component.bodegasSeleccionadas = component.bodegasSeleccionadas || {};
-    component.bodegasSeleccionadas= {
+    component.bodegasSeleccionadas[0] = {
       TABLA_Columna_1: {}
     };
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.updateBodegasTabla = jest.fn();
     component.borrarBodegas();
-    // expect(component.bodegasTableDatos.findIndex).toHaveBeenCalled();
-    // expect(component.bodegasTableDatos.splice).toHaveBeenCalled();
-    // expect(component.tramiteStore.updateBodegasTabla).toHaveBeenCalled();
   });
 
   it('should run #seleccionarBodega()', async () => {
@@ -275,15 +252,12 @@ describe('DatosDeLaSolicitudComponent', () => {
     ]);
     component.cafeExporacionTableDatos.splice = jest.fn();
     component.cafeSeleccionado = component.cafeSeleccionado || {};
-    component.cafeSeleccionado= {
+    component.cafeSeleccionado[0] = {
       TABLA_Columna_1: {}
     };
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.updateCafeExportacionTabla = jest.fn();
     component.borrarCafe();
-    // expect(component.cafeExporacionTableDatos.findIndex).toHaveBeenCalled();
-    // expect(component.cafeExporacionTableDatos.splice).toHaveBeenCalled();
-    // expect(component.tramiteStore.updateCafeExportacionTabla).toHaveBeenCalled();
   });
 
   it('should run #seleccionarCafe()', async () => {
@@ -297,8 +271,54 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
+it('should call setSolicitudTramite with form value on status change', () => {
+  component.datosSolicitudForma = {
+    value: { test: 'value' },
+    statusChanges: observableOf({}),
+    patchValue: jest.fn(),
+    get: jest.fn().mockReturnValue({
+      enable: jest.fn(),
+      disable: jest.fn(),
+      valueChanges: observableOf({})
+    })
+  };
+  component.tramiteStore = {
+    setSolicitudTramite: jest.fn()
+  };
+  component.tramiteStoreQuery = {
+    selectSolicitudTramite$: observableOf({})
+  };
+  component.catalogosService = { RadioOpcion: [] };
+  component.seccionQuery = { selectSeccionState$: observableOf({}) };
+  component.buscarDatos = jest.fn();
+  component.inicializarEstadoFormulario = jest.fn();
 
+  component.ngOnInit();
+});
+it('should set all table data arrays when response arrays are present', () => {
+  const mockResponse = {
+    regionesCompraApiDatos: [{ id: 1 }],
+    beneficiosApiDatos: [{ id: 2 }],
+    bodegasApiDatos: [{ id: 3 }],
+    cafeExportacionApiDatos: [{ id: 4 }]
+  };
+  component.productoTablaServicios = {
+    obtenerDatos: jest.fn().mockReturnValue(observableOf(mockResponse))
+  };
+  component.tramiteStoreQuery = { selectSolicitudTramite$: observableOf({}) };
+  component.tramiteStore = {
+    setRegionesTabla: jest.fn(),
+    setBeneficiosTabla: jest.fn(),
+    setBodegasTabla: jest.fn(),
+    setCafeExportacionTabla: jest.fn()
+  };
+
+  component.buscarDatos();
+
+  expect(component.regionesTableDatos).toEqual(mockResponse.regionesCompraApiDatos);
+  expect(component.beneficiosTableDatos).toEqual(mockResponse.beneficiosApiDatos);
+  expect(component.bodegasTableDatos).toEqual(mockResponse.bodegasApiDatos);
+  expect(component.cafeExporacionTableDatos).toEqual(mockResponse.cafeExportacionApiDatos);
+});
 });

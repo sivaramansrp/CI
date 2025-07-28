@@ -1,20 +1,28 @@
 <div class="container">
     <form [formGroup]="sectoresYMercancias">
-        <div class="form-group">
-            <div class="col-md-4">
-                <app-catalogo-select [catalogo]="sector" [label]="'Sector'" [required]="true" formControlName="sector" name="sector" 
-                (change)="
-                setValoresStore(
-                sectoresYMercancias,
-                'sector',
-                'setSector'
-                )"></app-catalogo-select>
+        <div class="row">
+            <div class="col-md-12">
+                <ng-titulo titulo="Datos de la solicitud"></ng-titulo>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <div class="col-md-4">
+                    <app-catalogo-select [catalogo]="sector" [label]="'Sector'" [required]="true" formControlName="sector" name="sector" 
+                    [isDisabled]="esFormularioSoloLectura"
+                    (change)="
+                    setValoresStore(
+                    sectoresYMercancias,
+                    'sector',
+                    'setSector'
+                    )"></app-catalogo-select>
+                </div>
             </div>
         </div>
         <div class="row">
             <div class=" text-end mt-5">
-                <button class="btn btn-default me-2">Eliminar sector</button>
-                <button class="btn btn-primary">Agregar sector</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar sector</button>
+                <button class="btn btn-primary" (click)="agregarSector()" [disabled]="esFormularioSoloLectura">Agregar sector</button>
             </div>
         </div>
         <div class="row">
@@ -44,14 +52,20 @@
                   'Fraccion_arancelaria',
                   'setFraccionArancelaria'
                 )"
+                maxlength="8"
+                libSoloNumeros
                 >
             </div>
         </div>
         <div class="row mb-5">
             <div class=" text-end mt-5">
-                <button class="btn btn-default me-2">Eliminar</button>
-                <button class="btn btn-primary">Agregar</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+                <button class="btn btn-primary" (click)="agregarProducir()" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
+        </div>
+        <div class="row">
+            <h6>Solicitud PROSEC sector plural:</h6>
+            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [configuracionTabla]="producirColumnConfiguracion" [datos]="producir" ></app-tabla-dinamica>
         </div>
     </form>
 </div>

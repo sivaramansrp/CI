@@ -3,10 +3,10 @@ import {
   DatosPasos, SeccionLibQuery, SeccionLibState,
   SeccionLibStore,
 } from '@ng-mf/data-access-user';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+
 import { OCTA_TEMPO } from '../../constants/octova-tempora.enum';
 
 interface AccionBoton {
@@ -67,7 +67,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Suscribe al estado de la sección y actualiza la propiedad `seccion`.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyed$),
@@ -91,7 +91,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
    * 
    * @param e Objeto que contiene la acción ('cont' para continuar o 'atras' para retroceder) y el valor del índice.
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

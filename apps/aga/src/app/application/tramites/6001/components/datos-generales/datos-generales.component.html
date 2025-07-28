@@ -52,9 +52,10 @@
                 </thead>
                 <tbody>
                     @for (datos of sociedadDatos; let i = $index; track i) {
-                    <tr>
+                    <tr [ngClass]="{'selected-row': selectedRowIndex === i}" (click)="selectedRowIndex = i">
                         <td>{{datos?.id}}</td>
                         <td>{{datos?.descripcion}}</td>
+
                     </tr>
                     }
                 </tbody>
@@ -80,12 +81,28 @@
     <div class="row mb-3">
         <div class="col-md-4">
             <button class="btn btn-primary" (click)="altaDeCuenta()">Alta de cuenta</button>
-            <button class="btn btn-danger">Baja de cuentas</button>
+            <button class="btn btn-danger" (click)="bajaDeCuentas()">Baja de cuentas</button>
         </div>
         <div class="col-md-8">
             <h5 class="text-center">Acciones en la solicitud</h5>
-            <button class="btn btn-danger me-2">Eliminar registro de solicitud</button>
-            <button class="btn btn-default">Editar registro de solicitud</button>
+            <button class="btn btn-danger me-2" (click)="eliminarRegistroSolicitud()">Eliminar registro de solicitud</button>
+            <button class="btn btn-default" (click)="editarRegistroSolicitud()">Editar registro de solicitud</button>
         </div>
     </div>
 </div>
+
+@if (confirmarNotificacion) {
+  <section>
+      <lib-notificaciones 
+          [notificacionInput]="confirmarNotificacion" >
+      </lib-notificaciones>
+  </section>
+}
+
+@if(sociedadNotificacion) {
+    <section>
+        <lib-notificaciones 
+            [notificacionInput]="sociedadNotificacion" >
+        </lib-notificaciones>
+    </section>
+}

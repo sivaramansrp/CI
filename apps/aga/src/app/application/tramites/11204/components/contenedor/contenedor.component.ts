@@ -1,21 +1,18 @@
-import moment from 'moment';
-import { Modal } from 'bootstrap';
-import { map, takeUntil } from 'rxjs';
-import { Subject } from 'rxjs';
-
-import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Aduanas, DatosDelContenedor, DatosDelCsvArchivo, RespuestaCatalog } from '../../models/datos-tramite.model';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-
-import { Aduanas, DatosDelContenedor, datosDelCsvArchivo } from '../../models/datos-tramite.model';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, REGEX_NUMEROS, REGEX_REEMPLAZAR, TEXTOS, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { FECHA_INGRESO, VIGENCIA } from '../../enums/datos-tramite.enum';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
+import { Modal } from 'bootstrap';
 import { Solicitud11204State } from '../../estados/tramite11204.store';
 import { Tramite11204Query } from '../../estados/tramite11204.query';
 import { Tramite11204Store } from '../../estados/tramite11204.store';
-
-import { REGEX_REEMPLAZAR, REGEX_NUMEROS, TEXTOS, AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
-import { FECHA_INGRESO, VIGENCIA } from '../../enums/datos-tramite.enum';
+import moment from 'moment';
 
 /**
  * Componente para gestionar la solicitud de contenedores.
@@ -31,7 +28,6 @@ import { FECHA_INGRESO, VIGENCIA } from '../../enums/datos-tramite.enum';
     CommonModule,
     TituloComponent,
     CatalogoSelectComponent,
-    AlertComponent,
     TablaDinamicaComponent,
     InputFechaComponent
   ],
@@ -145,7 +141,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * @type {InputFecha}
    * @default VIGENCIA
    */
-  public Vigencia: InputFecha = VIGENCIA;
+  public vigencia: InputFecha = VIGENCIA;
 
   /** 
    * Desactiva el radio de "Contenedor" cuando se selecciona "Archivo CSV"
@@ -176,7 +172,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla.
    */
-  public csvTabla: ConfiguracionColumna<datosDelCsvArchivo>[] = [
+  public csvTabla: ConfiguracionColumna<DatosDelCsvArchivo>[] = [
     { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
     { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.inicialesEquipo, orden: 1 },
     { encabezado: 'Número de equipo', clave: (articulo) => articulo.numeroEquipo, orden: 2 },
@@ -197,7 +193,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
  /**
    * Datos del contenedor.
    */
- public datosDelCsvArchivo: datosDelCsvArchivo[] = [];
+ public datosDelCsvArchivo: DatosDelCsvArchivo[] = [];
 
   /**
    * Referencia al modal.
@@ -215,6 +211,25 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   @Output() continuarEvento = new EventEmitter<string>();
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param fb Constructor de formularios.
    * @param datosTramiteService Servicio de datos del trámite.
@@ -230,6 +245,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     public Tramite11204Store: Tramite11204Store,
     private Tramite11204Query: Tramite11204Query,
     private modalService: BsModalService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     this.aduana = {
       catalogos: [],
@@ -260,11 +276,25 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+        })
+      )
+      .subscribe();
     this.inicializarFormulario();
     this.tabSeleccionado();
+    this.solicitudForm.get('fechaIngreso')?.valueChanges.subscribe(() => {
+      this.validateFechas();
+    });
+    this.solicitudForm.get('vigencia')?.valueChanges.subscribe(() => {
+      this.validateFechas();
+    });
     this.cargarCatalogos();
     this.fetchgetaduanaLista();
-    this.loadDatosTablaData();
   }
 
   /**
@@ -284,7 +314,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       aduana: [this.solicitud11204State?.aduana, Validators.required],
       fechaIngreso: [this.solicitud11204State?.fechaIngreso, Validators.required],
       vigencia: [this.solicitud11204State?.vigencia, Validators.required],
-      inicialesContenedor: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(REGEX_REEMPLAZAR)]],
+      inicialesContenedor: [this.solicitud11204State?.inicialesContenedor, [Validators.required, Validators.maxLength(10), Validators.pattern(REGEX_REEMPLAZAR)]],
       numeroContenedor: [this.solicitud11204State?.numeroContenedor, [Validators.required,Validators.minLength(6), Validators.maxLength(15), Validators.pattern(REGEX_REEMPLAZAR)]],
       digitoDeControl: [this.solicitud11204State?.digitoDeControl, [Validators.maxLength(1), Validators.pattern(REGEX_NUMEROS)]],
       contenedores: [this.solicitud11204State?.contenedores, Validators.required],
@@ -295,32 +325,69 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       archivoSeleccionado: [this.solicitud11204State?.archivoSeleccionado, Validators.required]
     });
     this.mostrarCampos();
+    if (this.soloLectura) {
+      this.solicitudForm?.disable();
+      this.loadDatosTablaData();
+    } else {
+      this.solicitudForm?.enable();
+    }
   }
 
-  onChange(controlName: string, event: any): void {
-    const value = event.target.value;
+  validateFechas(): void {
+    const FECHA_INGRESO = this.solicitudForm.get('fechaIngreso')?.value;
+    const VIGENCIA = this.solicitudForm.get('vigencia')?.value;
+
+    if (!FECHA_INGRESO || !VIGENCIA) {
+      this.solicitudForm.get('vigencia')?.setErrors(null);
+      return;
+    }
+    const PARSEDINGRESO = ContenedorComponent.parseDDMMYYYY(FECHA_INGRESO);
+    const PARSEDVIGENCIA = ContenedorComponent.parseDDMMYYYY(VIGENCIA);
+
+    if (PARSEDINGRESO && PARSEDVIGENCIA && PARSEDVIGENCIA < PARSEDINGRESO) {
+      this.solicitudForm.get('vigencia')?.setErrors({ fechaInvalida: true });
+    } else {
+      this.solicitudForm.get('vigencia')?.setErrors(null);
+    }
+  }
+
+  static parseDDMMYYYY(dateStr: string): Date | null {
+    if (!dateStr) { return null; }
+
+    const [DAY, MONTH, YEAR] = dateStr.split('/');
+    if (!DAY || !MONTH || !YEAR) { return null; }
+
+    return new Date(Number(YEAR), Number(MONTH) - 1, Number(DAY));
+  }
+
+  onChange(controlName: string, event: Event): void {
+    const TARGET = event.target as HTMLInputElement | null;    
+    if (!TARGET) {
+      return;
+    }
+    const VALUE = TARGET.value;
    
     if (controlName === 'inicialesContenedor') {
-      const sanitized = value.replace(REGEX_REEMPLAZAR,'').toUpperCase();
-      this.solicitudForm.get(controlName)?.setValue(sanitized);
+      const SANITIZED = VALUE.replace(REGEX_REEMPLAZAR,'').toUpperCase();
+      this.solicitudForm.get(controlName)?.setValue(SANITIZED);
       this.setValoresStore(this.solicitudForm, controlName, 'setInicialesContenedor');
     } else if (controlName === 'numeroContenedor') {
-      const sanitized = value.replace(REGEX_REEMPLAZAR, '');
-      this.solicitudForm.get(controlName)?.setValue(sanitized);
+      const SANITIZED = VALUE.replace(REGEX_REEMPLAZAR, '');
+      this.solicitudForm.get(controlName)?.setValue(SANITIZED);
       this.setValoresStore(this.solicitudForm, controlName, 'setNumeroContenedor');
     } else if (controlName === 'digitoDeControl') {
-      const sanitized = value.replace(REGEX_NUMEROS, '');
-      this.solicitudForm.get(controlName)?.setValue(sanitized);
+      const SANITIZED = VALUE.replace(REGEX_NUMEROS, '');
+      this.solicitudForm.get(controlName)?.setValue(SANITIZED);
       this.setValoresStore(this.solicitudForm, controlName, 'setDigitoDeControl');
     } else if (controlName === 'tipoBusqueda') {
       this.setValoresStore(this.solicitudForm, controlName, 'setTipoBusqueda');
       this.mostrarCampos();
     } else if (controlName === 'aduana') {
       this.setValoresStore(this.solicitudForm, controlName, 'setAduana');
-      const currentDate = moment().format('YYYY-MM-DD');
-      this.solicitudForm.get('fechaIngreso')?.setValue(currentDate);
+      const CURRENT_DATE = moment().format('YYYY-MM-DD');
+      this.solicitudForm.get('fechaIngreso')?.setValue(CURRENT_DATE);
       this.setValoresStore(this.solicitudForm, 'fechaIngreso', 'setFechaIngreso');
-      this.solicitudForm.get('vigencia')?.setValue(currentDate);
+      this.solicitudForm.get('vigencia')?.setValue(CURRENT_DATE);
       this.setValoresStore(this.solicitudForm, 'vigencia', 'setVigencia');
     }
   }
@@ -329,14 +396,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Cargar datos de la tabla.
    */
   loadDatosTablaData(): void {
-    this.datosTramiteService.getDatosTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe(
-      (data) => {
-        this.contenedores.catalogos = data.data.map((contenedor: any) => ({
-          id: contenedor.id,
-          descripcion: contenedor.descripcion || ''
-        }));
-      },
-    );
+    this.datosTramiteService
+      .getDatosTableData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: RespuestaCatalog[]) => {
+        this.datosDelContenedor = data as unknown as DatosDelContenedor[];
+      });
   }
 
   /**
@@ -387,6 +452,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   limpiarCampos(): void {
     this.solicitudForm.reset();
+  }
+
+  /**
+   * cancelar del formulario.
+   */
+  cancelar(): void {
+    this.solicitudForm.reset();
     this.radioContenedor = false;
     this.radioArchivoCsv = false;
     this.mostrarSeccionArchivoCsv = false;
@@ -401,6 +473,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Mostrar tipo de contenedor.
    */
   mostrarTipoContenedor(): void {
+    this.mostrarButtons = false;
     this.mostrarAgregarTipoContenedor = true;
   }
 
@@ -412,21 +485,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       if (this.modalElement) {
         const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
         MODAL_INSTANCE.show();
-        this.mostrarButtons = false;
-        this.solicitudForm.reset();
       }
     } else {
       this.solicitudForm.markAllAsTouched();
     }
-  }
-
-  /** 
-  * Cierra el modal manualmente desde el componente
-  */
-  hideModal(): void {
-    const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-    MODAL_INSTANCE.hide();
-    this.mostrarButtons = true;
   }
 
   /**
@@ -445,11 +507,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Verifica si el control del formulario es inválido y ha sido tocado.
    * @param {string} id El nombre del control del formulario.
-   * @returns {boolean | undefined} `true` si el control es inválido y tocado, `null` si no existe el control.
+   * @returns {boolean} `true` si el control es inválido y tocado, `null` si no existe el control.
    */
-  isInvalid(id: string): boolean | undefined {
+  isInvalid(id: string): boolean {
     const CONTROL = this.solicitudForm.get(id);
-    return CONTROL ? CONTROL.invalid && CONTROL.touched : undefined;
+    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
   }
 
   /**
@@ -490,7 +552,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         if (respuesta?.success) {
           respuesta.datos.id = this.datosDelCsvArchivo.length + 1;
           this.datosDelCsvArchivo.push(respuesta.datos);
-          (this.Tramite11204Store.setDelCsv as (valor: datosDelCsvArchivo[]) => void)(this.datosDelCsvArchivo);
+          (this.Tramite11204Store.setDelCsv as (valor: DatosDelCsvArchivo[]) => void)(this.datosDelCsvArchivo);
         }
       }
     );
@@ -544,15 +606,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           respuesta.datos.id = this.datosDelContenedor.length + 1;
           this.datosDelContenedor.push(respuesta.datos);
           (this.Tramite11204Store.setDelContenedor as (valor: DatosDelContenedor[]) => void)(this.datosDelContenedor);
-          this.solicitudForm.patchValue({
-            aduana: '',
-            fechaIngreso: '',
-            vigencia: '',
-            digitoDeControl: '',
-            inicialesContenedor: '',
-            numeroContenedor: '',
-            contenedores: ''
-          });
           this.solicitudForm.reset();
           this.solicitudForm.markAsUntouched();
           this.solicitudForm.markAsPristine();

@@ -1,13 +1,25 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DatosDeTablaSeleccionados, DatosSolicitudFormState, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig, TablaSeleccion } from '../../../../shared/models/datos-solicitud.model';
 import { OPCION_TABLA, PRODUCTO_TABLA, SCIAN_TABLA } from '../../../../shared/constantes/datos-solicitud.enum';
+import { Observable, map, takeUntil } from 'rxjs';
 import { Tramite260204State, Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
-import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { Subject } from 'rxjs';
 import { Tramite260204Query } from '../../estados/queries/tramite260204Query.query';
 
+/**
+ * Decorador de componente de Angular que define las propiedades y configuraciones del componente `ContenedorDeDatosSolicitudComponent`.
+ * 
+ * Este componente es independiente (`standalone`) y utiliza los módulos `CommonModule` y `DatosDeLaSolicitudComponent` como dependencias.
+ * 
+ * @selector `app-contenedor-de-datos-solicitud` - Selector utilizado para instanciar este componente en una plantilla HTML.
+ * @standalone `true` - Indica que este componente es independiente y no requiere un módulo específico para ser utilizado.
+ * @imports `[CommonModule, DatosDeLaSolicitudComponent]` - Lista de módulos y componentes importados que se utilizan dentro de este componente.
+ * @templateUrl `./contenedor-de-datos-solicitud.component.html` - Ruta del archivo HTML que define la estructura visual del componente.
+ * @styleUrl `./contenedor-de-datos-solicitud.component.scss` - Ruta del archivo SCSS que contiene los estilos específicos del componente.
+ */
 @Component({
   selector: 'app-contenedor-de-datos-solicitud',
   standalone: true,
@@ -99,6 +111,15 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
    * relacionados con la tabla SCIAN en el componente.
    */
   public seleccionadoScianDatos: TablaScianConfig[] = [];
+
+  /**
+   * Observable que indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
+   *
+   * @type {Observable<boolean>}
+   */
+  esFormularioSoloLectura!: Observable<boolean>;
+
   /**
    * Arreglo que almacena los datos seleccionados de la tabla de mercancías.
    * 
@@ -107,10 +128,39 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
    * gestionar y manipular los datos seleccionados en el contexto de la solicitud.
    */
   public seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[] = [];
-  constructor(private tramite260204Query: Tramite260204Query,
-    private tramite260204Store: Tramite260204Store
+
+
+  /**
+   * Constructor de la clase ContenedorDeDatosSolicitudComponent.
+   * 
+   * Este constructor inicializa las dependencias necesarias para el componente.
+   * 
+   * @param tramite260204Query - Servicio para realizar consultas relacionadas con el trámite 260204.
+   * @param tramite260204Store - Almacén para gestionar el estado del trámite 260204.
+   * @param consultaQuery - Servicio para realizar consultas adicionales relacionadas con la aplicación.
+   */
+  constructor(public tramite260204Query: Tramite260204Query,
+    public tramite260204Store: Tramite260204Store,
+    public consultaQuery: ConsultaioQuery
   ) { }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * 
+   * Este método realiza las siguientes acciones:
+   * 
+   * 1. Suscribe al estado del trámite (`tramite260204Query.selectTramiteState$`) y actualiza las configuraciones
+   *    de datos del componente (`opcionConfig`, `scianConfig`, `tablaMercanciasConfig`) basándose en el estado
+   *    del trámite recibido. La suscripción se completa automáticamente cuando el observable `destroyNotifier$` emite un valor.
+   * 
+   * 2. Configura la propiedad `esFormularioSoloLectura` como un observable que determina si el formulario debe
+   *    estar en modo solo lectura. Esto se basa en el estado de consulta (`consultaQuery.selectConsultaioState$`),
+   *    verificando si el trámite no está en modo creación (`create`) y si el `procedureId` corresponde a '260204'.
+   *    En caso de cumplir estas condiciones, se asigna el valor de `readonly` del estado de consulta; de lo contrario,
+   *    se asigna `false`.
+   * 
+   * @returns void
+   */
   ngOnInit(): void {
     this.tramite260204Query.selectTramiteState$
     .pipe(
@@ -122,6 +172,16 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
         this.tablaMercanciasConfig.datos = this.tramiteState.tablaMercanciasConfigDatos;
       })
     ).subscribe();
+    
+    this.esFormularioSoloLectura = this.consultaQuery.selectConsultaioState$
+    .pipe(
+      map((seccionState) => {
+        if(!seccionState.create && seccionState.procedureId === '260204') {
+          return seccionState.readonly;
+        } 
+        return false;
+      })
+    );
   }
 
   /**

@@ -6,9 +6,9 @@ import { Injectable } from '@angular/core';
 
 import { Solicitud130102State, Tramite130102Store } from '../../../estados/tramites/tramite130102.store';
 
+import { FraccionArancelariaProsec, OctavaTemporal } from '../models/octava-temporal.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { FraccionArancelariaProsec, OctavaTemporal } from '../models/octava-temporal.model';
 /**
  * Servicio inyectable disponible en toda la aplicación.
  */
@@ -136,6 +136,8 @@ getFraccionesUsoEspecifico(): Observable<FraccionArancelariaProsec[]> {
     this.tramite130102store.setObservaciones(DATOS.observaciones);
     this.tramite130102store.setProducto(DATOS.productos);
     this.tramite130102store.setSolicitude(DATOS.solicitud);
+    this.tramite130102store.setcantidadTotal(DATOS.cantidadTotal);
+    this.tramite130102store.setvalorTotalUSD(DATOS.valorTotalUSD);
 
    
   }

@@ -39,11 +39,11 @@
         </label>
 
         <app-input-radio [radioOptions]="genericOptions" [isRequired]="true" [layout]="'horizontal'"
-          formControlName="ideGenerica1" (change)="
-            enCambioDeControl('domicilioEstablecimiento', 'ideGenerica1')
+          formControlName="ideGenerica" (change)="
+            enCambioDeControl('domicilioEstablecimiento', 'ideGenerica')
           "></app-input-radio>
         <div
-          *ngIf="domicilioEstablecimiento.get('ideGenerica1')?.touched && domicilioEstablecimiento.get('ideGenerica1')?.errors?.['required']"
+          *ngIf="domicilioEstablecimiento.get('ideGenerica')?.touched && domicilioEstablecimiento.get('ideGenerica')?.errors?.['required']"
           class="text-danger">
           Seleccione el tipo de operación.
         </div>
@@ -52,7 +52,7 @@
       <div class="row mt-5">
         <div class="col-md-12">
           <div>
-            <label for="observaciones"> Justificacion*:</label>
+            <label for="observaciones"> Justificación*:</label>
           </div>
           <div>
             <textarea cols="70" rows="5" id="observacionesId" class="form-control" formControlName="observaciones"
@@ -129,7 +129,7 @@
       <div class="row">
         <div class="col-md-8"></div>
         <div class="col-md-4 d-flex justify-content-end">
-          <button type="button" class="btn btn-primary" (click)="abrirModal()">
+          <button type="button" class="btn btn-primary" (click)="abrirModal()" [disabled]="esFormularioSoloLectura ? true : false">
             Seleccionar establecimiento
           </button>
         </div>
@@ -139,7 +139,7 @@
           <div class="form-group">
             <label class="form-label" for="establecimientoRFCResponsableSanitario">RFC del responsable
               sanitario*:</label>
-            <input class="form-control" id="establecimientoRFCResponsableSanitarioId" placeholder="" type="text"
+            <input class="form-control" id="establecimientoRFCResponsableSanitarioId" placeholder="" type="text" maxlength="13"
               formControlName="establecimientoRFCResponsableSanitario" (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
@@ -245,6 +245,7 @@
               [label]="'Estado'"
               name="estado"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               formControlName="establecimientoEstados"
               (change)="
                 enCambioDeControl(
@@ -303,7 +304,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="establishomentoColonias"
-              >Colonia:</label
+              >Colonias:</label
             >
             <input
               class="form-control"
@@ -344,7 +345,7 @@
         <div class="col-md-1">
           <div class="form-group">
             <label class="form-label" for="lada">Lada:</label>
-            <input class="form-control" type="text" id="lada" appUppercase formControlName="lada"
+            <input class="form-control" type="text" id="lada" appUppercase formControlName="lada" maxlength="5" 
               (change)="enCambioDeControl('domicilioEstablecimiento', 'lada')" />
           </div>
           <div *ngIf="domicilioEstablecimiento.get('lada')?.touched">
@@ -385,10 +386,10 @@
     <div class="row" class="mt-5">
       <div class="form-group">
         <label class="form-label" for="scian">S.C.I.A.N.*:</label>
-        <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="personaparas"
-          [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" formcontrolname="scian">
+        <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="personaparas" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+          [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" >
         </app-tabla-dinamica>
-        <div *ngIf="hasError(scianForm, 'scian', 'required')" class="text-danger mt-1">
+        <div *ngIf="DatosDelSolicitudModificacionComponent.hasError(scianForm, 'scian', 'required')" class="text-danger mt-1">
           La clave S.C.I.A.N. es obligatoria.
         </div>
       </div>
@@ -400,11 +401,11 @@
 
     @if (mostrarScianBotones) {
       <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-default btn-space me-2">
+      <button type="button" class="btn btn-default btn-space me-2" [disabled]="esFormularioSoloLectura ? true : false">
         Eliminar
       </button>
       <button type="button" class="btn btn-primary btn-space" data-bs-toggle="modal" data-bs-target="#modalClave"
-        (click)="mostrarModeloClave()">
+        (click)="mostrarModeloClave()" [disabled]="esFormularioSoloLectura ? true : false">
         Agregar
       </button>
     </div>
@@ -419,6 +420,7 @@
           [id]="'avisoCheckbox'"
           [required]="true"
           formControlName="avisoCheckbox"
+          [isDisabled]="true"
           (change)="
             toggleNoLicenciaSanitaria($event);
             enCambioDeControl('solicitudEstablecimientoForm', 'avisoCheckbox')
@@ -429,7 +431,7 @@
           <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria:
             <span class="bi bi-question-circle-fill" title="No. de licencia sanitaria"
               data-bs-toggle="tooltip"></span></label>
-          <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
+          <input class="form-control" id="licenciaSanitaria" placeholder="" type="text" maxlength="20"
             formControlName="noLicenciaSanitaria" (change)="
               enCambioDeControl(
                 'solicitudEstablecimientoForm',
@@ -449,7 +451,7 @@
 
     <div class="row">
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="estado" [label]="'Régimen'" [required]="true" name="regimen"
+        <app-catalogo-select [catalogo]="estado" [label]="'Régimen'" [required]="true" name="regimen" [isDisabled]="esFormularioSoloLectura"
           [tooltipQuestionCircle]="true" formControlName="regimen" (change)="
             enCambioDeControl('solicitudEstablecimientoForm', 'regimen')
           "></app-catalogo-select>
@@ -460,7 +462,7 @@
         </div>
       </div>
       <div class="col-md-8">
-        <app-catalogo-select [catalogo]="estado" [label]="'Aduanas de entradas'" [required]="true"
+        <app-catalogo-select [catalogo]="estado" [label]="'Aduanas de entradas'" [required]="true" [isDisabled]="esFormularioSoloLectura"
           name="aduanasEntradas" formControlName="aduanasEntradas" (change)="
             enCambioDeControl('solicitudEstablecimientoForm', 'aduanasEntradas')
           "></app-catalogo-select>
@@ -479,6 +481,7 @@
           [id]="'aifaCheckbox'"
           [required]="true"
           formControlName="aifaCheckbox"
+          [isDisabled]="true"
           (change)="
             enCambioDeControl('solicitudEstablecimientoForm', 'aifaCheckbox')
           "
@@ -497,12 +500,13 @@
       </div>
     </div>
     <div class="row mt-5">
-      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
-        [datos]="mercanciasTablaDatos"></app-tabla-dinamica>
-      <div class="container text-end mt-5">
-        <button class="btn btn-default me-2">Eliminar</button>
-        <button class="btn btn-default me-2">Modificar</button>
-        <button class="btn btn-primary me-2" data-bs-toggle="modal" (click)="abrirModalMercancia()">
+      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+        [datos]="mercanciasTablaDatos" (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
+      
+        <div class="container text-end mt-5">
+        <button class="btn btn-danger me-2" (click)="eliminarSeleccionados()" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
+        <button class="btn btn-default me-2" data-bs-toggle="modal" (click)="abrirModalMercancia()" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
+        <button class="btn btn-primary me-2" data-bs-toggle="modal" (click)="abrirModalMercancia()" [disabled]="esFormularioSoloLectura ? true : false">
           Agregar
         </button>
       </div>
@@ -511,13 +515,14 @@
     <app-manifiestos-representante-seccion
       [showRepresentanteLegal]="hideRepresentanteLegal"></app-manifiestos-representante-seccion>
   </form>
-</div>
-@if (nuevaNotificacion) {
+  @if (nuevaNotificacion) {
 <section>
   <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
   </lib-notificaciones>
 </section>
 }
+</div>
+
 
 <div class="modal fade" #establecimientoModal tabindex="-1" aria-labelledby="establecimientoModalLabel"
   aria-hidden="true">
@@ -599,14 +604,6 @@
               class="form-control" />
             <div class="text-danger" *ngIf="getErrorMessage('denominacionEspecifica')">
               {{ getErrorMessage('denominacionEspecifica') }}
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="denominacionDistintiva">Denominación distintiva*:</label>
-            <input type="text" id="denominacionDistintiva" formControlName="denominacionDistintiva"
-              class="form-control" />
-            <div class="text-danger" *ngIf="getErrorMessage('denominacionDistintiva')">
-              {{ getErrorMessage('denominacionDistintiva') }}
             </div>
           </div>
           <div class="form-group">
@@ -735,7 +732,8 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="cantidadUMC">Cantidad UMC*:</label>
+                <label for="cantidadUMC">Cantidad UMC*:<span class="bi bi-question-circle-fill"
+                data-bs-toggle="tooltip"></span></label>
                 <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control" />
                 <div class="text-danger" *ngIf="getErrorMessage('cantidadUMC')">
                   {{ getErrorMessage('cantidadUMC') }}
@@ -796,7 +794,7 @@
                 @if(colapsable){
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPais" [label]="paisDeProcedenciaLabel"
+                    <crosslist [fechas]="seleccionarOrigenDelPais" [label]="paisDeOrigenLabel"
                       [botones]="paisDeProcedenciaBotons"></crosslist>
                   </div>
                 </div>
@@ -834,7 +832,7 @@
                 @if(colapsableTres){
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="paisDeProcedenciaLabel"
+                    <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="usoEspecificoLabel"
                       [botones]="paisDeProcedenciaBotonsTres"></crosslist>
                   </div>
                 </div>
@@ -845,7 +843,7 @@
         </form>
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-default" (click)="limpiarMercancia()">
           Limpiar
         </button>
         <button type="button" class="btn btn-default" data-bs-dismiss="modal">

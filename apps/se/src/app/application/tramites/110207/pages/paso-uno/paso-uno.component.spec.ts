@@ -1,32 +1,40 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { RegistroService } from '../../services/registro.service';
-import { of } from 'rxjs';
-import { SharedModule, SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { PERSONA_MORAL_NACIONAL, DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { TIPO_PERSONA } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ConsultaioQuery, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { of, ReplaySubject } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
-  let mockRegistroService: jest.Mocked<RegistroService>;
+  let registroServiceMock: any;
+  let consultaQueryMock: any;
 
   beforeEach(async () => {
-    mockRegistroService = {
-      getCatalogoById: jest.fn().mockReturnValue(of({ data: JSON.stringify({ domicilioFiscal: { entidadFederativa: 'Test Entidad Federativa' } }) })),
-    } as unknown as jest.Mocked<RegistroService>;
+    registroServiceMock = {
+      getCatalogoById: jest.fn().mockReturnValue(of({ data: JSON.stringify({ domicilioFiscal: { entidadFederativa: { id: 1, descripcion: 'Entidad' } } }) })),
+      getRegistroTomaMuestrasMercanciasData: jest.fn().mockReturnValue(of({})),
+      actualizarEstadoFormulario: jest.fn(),
+    };
+    consultaQueryMock = {
+      selectConsultaioState$: of({ update: false }),
+    };
 
     await TestBed.configureTestingModule({
       declarations: [PasoUnoComponent],
-      imports: [SolicitanteComponent, CommonModule, SharedModule],
-      providers: [{ provide: RegistroService, useValue: mockRegistroService }],
-      schemas: [NO_ERRORS_SCHEMA],
+      imports: [SolicitanteComponent,HttpClientTestingModule],
+      providers: [
+        { provide: RegistroService, useValue: registroServiceMock },
+        { provide: ConsultaioQuery, useValue: consultaQueryMock },
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
+    component.consultaState = { update: false } as any;
     fixture.detectChanges();
   });
 
@@ -34,27 +42,36 @@ describe('PasoUnoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should fetch and process entidad federativa on ngOnInit', () => {
+  it('should set consultaState and esDatosRespuesta in ngOnInit when update is false', () => {
+    component.consultaState = { update: false } as any;
     component.ngOnInit();
-    expect(mockRegistroService.getCatalogoById).toHaveBeenCalledWith(21);
-    expect(component.entidadFederativa).toBe('Test Entidad Federativa');
+    expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should initialize persona and domicilioFiscal on ngAfterViewInit', () => {
-    const mockSolicitanteComponent = {
-      obtenerTipoPersona: jest.fn(),
-    } as unknown as SolicitanteComponent;
-
-    component.solicitante = mockSolicitanteComponent;
-    component.ngAfterViewInit();
-
-    expect(component.persona).toBe(PERSONA_MORAL_NACIONAL);
-    expect(component.domicilioFiscal).toBe(DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL);
-    expect(mockSolicitanteComponent.obtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
+  it('should call registro.getCatalogoById and set entidadFederativa in ngOnInit', () => {
+    component.consultaState = { update: false } as any;
+    component.ngOnInit();
+    expect(registroServiceMock.getCatalogoById).toHaveBeenCalledWith(21);
+    expect(component.entidadFederativa).toEqual({ id: 1, descripcion: 'Entidad' });
   });
 
-  it('should update indice when seleccionaTab is called', () => {
-    component.seleccionaTab(2);
-    expect(component.indice).toBe(2);
+  it('should call actualizarEstadoFormulario and set esDatosRespuesta in guardarDatosFormularios', () => {
+    component.esDatosRespuesta = false;
+    component.guardarDatosFormularios();
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(registroServiceMock.actualizarEstadoFormulario).toHaveBeenCalled();
+  });
+
+   it('should set indice in seleccionaTab', () => {
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
+  });
+
+  it('should complete destroyed$ in ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalledWith(true);
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

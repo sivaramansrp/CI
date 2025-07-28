@@ -129,6 +129,7 @@ export interface GrupoTratado {
  * Representa los datos de la tabla de mercancías disponibles.
  */
 export interface DisponiblesTabla {
+  id?: number;
   fraccionArancelaria: string;
   nombreTecnico: string;
   nombreComercial: string;
@@ -167,4 +168,131 @@ export interface FormularioMercancia {
   tipoFactura: string;
   fecha: string;
   numeroFactura: string;
+}
+/**
+ * Representa la respuesta de una consulta.
+ * 
+ * Contiene información sobre el éxito de la operación, los datos obtenidos y un mensaje relacionado.
+ */
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+/**
+ * Representa los datos obtenidos de una consulta.
+ * 
+ * Contiene información detallada sobre operadores, tratados, domicilios, mercancías, y otros datos relacionados.
+ */
+export interface ConsultaDatos {
+  tercerOperador: boolean;
+  grupoOperador: GrupoOperador;
+  grupoTratado: GrupoTratado;
+  grupoDeDomicilio: GrupoDeDomicilio;
+  mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]
+  mercanciaDisponsiblesTablaDatos: DisponiblesTabla[];
+  observaciones: string;
+  idioma: string;
+  entidadFederativa: string;
+  representacionFederal: string;
+  grupoReceptor: GrupoReceptor;
+  grupoDeDirecciones: GrupoDeDirecciones;
+  grupoRepresentativo: GrupoRepresentativo;
+  grupoDeTransporte: GrupoDeTransporte;
+  datosConfidencialesProductor: boolean;
+  productorMismoExportador: boolean;
+  productoresExportador: HistoricoColumnas[];
+}/**
+ * Interfaz que representa la información detallada de una mercancía.
+ */
+export interface Mercancia {
+  /** 
+   * Fracción arancelaria Naladi asignada a la mercancía.
+   */
+  fraccionNaladi: string;
+
+  /**
+   * Fracción arancelaria Naladi SA 93 correspondiente.
+   */
+  fraccionNaladiSa93: string;
+
+  /**
+   * Fracción arancelaria Naladi SA 96 correspondiente.
+   */
+  fraccionNaladiSa96: string;
+
+  /**
+   * Fracción arancelaria Naladi SA 02 correspondiente.
+   */
+  fraccionNaladiSa02: string;
+
+  /**
+   * Nombre técnico descriptivo de la mercancía.
+   */
+  nombreTecnico: string;
+
+  /**
+   * Nombre comercial utilizado para la mercancía.
+   */
+  nombreComercial: string;
+
+  /**
+   * Norma de origen aplicable a la mercancía.
+   * @optional
+   */
+  normaOrigen?: string;
+
+  /**
+   * Identificador único de la mercancía.
+   * @optional
+   */
+  id?: string;
+
+  /**
+   * Cantidad total de la mercancía.
+   * @optional
+   */
+  cantidad?: string;
+
+  /**
+   * Unidad de medida comercial para la cantidad.
+   * @optional
+   */
+  umc?: string;
+
+  /**
+   * Tipo de factura asociada a la mercancía.
+   * @optional
+   */
+  tipoFactura?: string;
+
+  /**
+   * Valor económico total de la mercancía.
+   * @optional
+   */
+  valorMercancia?: string;
+
+  /**
+   * Fecha final relacionada con la entrada o registro de la mercancía.
+   * @optional
+   */
+  fechaFinalInput?: string;
+
+  /**
+   * Número de la factura asociada.
+   * @optional
+   */
+  numeroFactura?: string;
+
+  /**
+   * Código Nalad relacionado con la mercancía.
+   * @optional
+   */
+  nalad?: string;
+
+  /**
+   * Complemento adicional para la clasificación arancelaria.
+   * @optional
+   */
+  complementoClasificacion?: string;
 }

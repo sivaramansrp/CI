@@ -2,87 +2,179 @@
  * Interfaz que representa la configuración de una columna en una tabla.
  * 
  * @template T - Tipo de los datos de la fila.
- * 
- * @property {string} encabezado - Título de la columna.
- * @property {(ele: T) => string | number | undefined | boolean} clave - Función que devuelve el valor de la columna para cada fila.
- * @property {number} orden - Orden de la columna en la tabla.
  */
 export interface ConfiguracionColumna<T> {
-    encabezado: string; // Título de la columna
-    clave: (ele: T) => string | number | undefined | boolean; // Función que devuelve el valor de la columna para cada fila
-    orden: number; // Orden de la columna en la tabla
-  }
+  /**
+   * Título de la columna que se muestra en el encabezado de la tabla.
+   */
+  encabezado: string;
 
   /**
+   * Función que recibe un elemento de tipo T (fila) y retorna el valor
+   * que será mostrado en la celda correspondiente a esta columna.
+   * Puede devolver un string, número, booleano o undefined.
+   */
+  clave: (ele: T) => string | number | undefined | boolean;
+
+  /**
+   * Número que indica el orden en que se mostrará la columna en la tabla.
+   * Las columnas con valores de orden menores se muestran antes.
+   */
+  orden: number;
+}
+
+/**
  * Interfaz que representa los datos de la mercancía.
- * 
- * @property {string} descripcion - Descripción de la mercancía.
- * @property {string} marca - Marca de la mercancía.
- * @property {string} tipoEntrada - Tipo de entrada de la mercancía.
- * @property {string} fraccion - Fracción arancelaria de la mercancía.
- * @property {string} nico - NICO (Número de Identificación Comercial).
- * @property {string} umt - Unidad de medida tarifaria.
- * @property {string} facturaNumero - Número de la factura.
- * @property {string} facturaFecha - Fecha de la factura.
- * @property {string} umc - Unidad de medida comercial.
- * @property {string} otroUmc - Otro tipo de unidad de medida comercial (si aplica).
- * @property {string} cantidadUmc - Cantidad en unidades comerciales.
- * @property {string} factorConversion - Factor de conversión entre unidades.
- * @property {string} cantidadUmt - Cantidad en unidades de medida tarifarias.
- * @property {string} valorFactura - Valor total de la factura.
- * @property {string} monedaComercializacion - Moneda de comercialización de la mercancía.
- * @property {string} valorFacturaUsd - Valor total de la factura en USD.
- * @property {string} precioUnitarioUsd - Precio unitario en USD.
- * @property {string} paisExportador - País exportador de la mercancía.
- * @property {string} paisOrigen - País de origen de la mercancía.
- * @property {string} valorTotalFactura - Valor total de la factura (en moneda local).
- * @property {string} valorTotalFacturaUsd - Valor total de la factura en USD.
  */
 export interface DatosMercancia {
-    descripcion: string; // Descripción de la mercancía.
-    marca: string; // Marca de la mercancía.
-    tipoEntrada: string; // Tipo de entrada de la mercancía.
-    fraccion: string; // Fracción arancelaria de la mercancía.
-    nico: string; // NICO (Número de Identificación Comercial).
-    umt: string; // Unidad de medida tarifaria.
-    facturaNumero: string; // Número de la factura.
-    facturaFecha: string; // Fecha de la factura.
-    umc: string; // Unidad de medida comercial.
-    otroUmc: string; // Otro tipo de unidad de medida comercial (si aplica).
-    cantidadUmc: string; // Cantidad en unidades comerciales.
-    factorConversion: string; // Factor de conversión entre unidades.
-    cantidadUmt: string; // Cantidad en unidades de medida tarifarias.
-    valorFactura: string; // Valor total de la factura.
-    monedaComercializacion: string; // Moneda de comercialización de la mercancía.
-    valorFacturaUsd: string; // Valor total de la factura en USD.
-    precioUnitarioUsd: string; // Precio unitario en USD.
-    paisExportador: string; // País exportador de la mercancía.
-    paisOrigen: string; // País de origen de la mercancía.
-    valorTotalFactura: string; // Valor total de la factura (en moneda local).
-    valorTotalFacturaUsd: string; // Valor total de la factura en USD.
-  }
-  
-  export interface Mercancia {
-    fraccionArancelaria: string;
-    numeroDeRegistrodeProductos: string;
-    fechaExpedicion: string;
-    fechaVencimiento: string;
-    nombreTecnico: string;
-    nombreComercial:string;
-    normaOrigen?:string;
-    id?:string;
-    cantidad?:string;
-    umc?:string;
-    tipoFactura?:string;
-    valorMercancia?:string;
-    fechaFinalInput?:string;
-    numeroFactura?:string;
-    nalad?:string;
-    nombreIngles?:string;
-    criterioClasificacion?:string;
-    marca?:string;
-    masaBruta?:string;
-    unidadMedidaMasaBruta?:string;
-    complementoClasificacion?:string;
-  }
+  /** Descripción detallada de la mercancía. */
+  descripcion: string;
 
+  /** Marca de la mercancía. */
+  marca: string;
+
+  /** Tipo de entrada de la mercancía. */
+  tipoEntrada: string;
+
+  /** Fracción arancelaria asociada a la mercancía. */
+  fraccion: string;
+
+  /** Número de Identificación Comercial (NICO). */
+  nico: string;
+
+  /** Unidad de medida tarifaria (UMT). */
+  umt: string;
+
+  /** Número de la factura asociada. */
+  facturaNumero: string;
+
+  /** Fecha en que fue emitida la factura. */
+  facturaFecha: string;
+
+  /** Unidad de medida comercial (UMC). */
+  umc: string;
+
+  /** Otro tipo de unidad de medida comercial, si aplica. */
+  otroUmc: string;
+
+  /** Cantidad en unidades comerciales (UMC). */
+  cantidadUmc: string;
+
+  /** Factor de conversión entre unidades comerciales y tarifarias. */
+  factorConversion: string;
+
+  /** Cantidad en unidades tarifarias (UMT). */
+  cantidadUmt: string;
+
+  /** Valor total de la factura. */
+  valorFactura: string;
+
+  /** Moneda en la que se comercializa la mercancía. */
+  monedaComercializacion: string;
+
+  /** Valor total de la factura expresado en dólares estadounidenses (USD). */
+  valorFacturaUsd: string;
+
+  /** Precio unitario en dólares estadounidenses (USD). */
+  precioUnitarioUsd: string;
+
+  /** País exportador de la mercancía. */
+  paisExportador: string;
+
+  /** País de origen de la mercancía. */
+  paisOrigen: string;
+
+  /** Valor total de la factura en moneda local. */
+  valorTotalFactura: string;
+
+  /** Valor total de la factura en dólares estadounidenses (USD). */
+  valorTotalFacturaUsd: string;
+
+    /** Fracción Naladi vigente. */
+  fraccionNaladi: string;
+
+  /** Fracción Naladi versión SA 1993. */
+  fraccionNaladiSa93: string;
+
+  /** Fracción Naladi versión SA 1996. */
+  fraccionNaladiSa96: string;
+
+  /** Fracción Naladi versión SA 2002. */
+  fraccionNaladiSa02: string;
+
+  /** Código Nalad asociado a la mercancía (opcional). */
+  nalad?: string;
+}
+
+/**
+ * Interfaz que representa la información de una mercancía.
+ */
+export interface Mercancia {
+  /** Fracción arancelaria de la mercancía. */
+  fraccionArancelaria: string;
+
+  /** Número de registro de productos asociado. */
+  numeroDeRegistrodeProductos: string;
+
+  /** Fecha de expedición del registro o documento relacionado. */
+  fechaExpedicion: string;
+
+  /** Fecha de vencimiento del registro o documento relacionado. */
+  fechaVencimiento: string;
+
+  /** Nombre técnico de la mercancía. */
+  nombreTecnico: string;
+
+  /** Nombre comercial de la mercancía. */
+  nombreComercial: string;
+
+  /** Norma de origen de la mercancía (opcional). */
+  normaOrigen?: string;
+
+  /** Identificador único de la mercancía (opcional). */
+  id?: string;
+
+  /** Cantidad de mercancía (opcional). */
+  cantidad?: string;
+
+  /** Unidad de medida comercial (opcional). */
+  umc?: string;
+
+  /** Tipo de factura asociado (opcional). */
+  tipoFactura?: string;
+
+  /** Valor total de la mercancía (opcional). */
+  valorMercancia?: string;
+
+  /** Fecha final de entrada o registro (opcional). */
+  fechaFinalInput?: string;
+
+  /** Número de factura (opcional). */
+  numeroFactura?: string;
+
+  /** Código Nalad (opcional). */
+  nalad?: string;
+
+  /** Nombre en inglés de la mercancía (opcional). */
+  nombreIngles?: string;
+
+  /** Criterio de clasificación aplicable (opcional). */
+  criterioClasificacion?: string;
+
+  /** Marca de la mercancía (opcional). */
+  marca?: string;
+
+  /** Masa bruta de la mercancía (opcional). */
+  masaBruta?: string;
+
+  /** Unidad de medida para la masa bruta (opcional). */
+  unidadMedidaMasaBruta?: string;
+
+  /** Complemento para la clasificación arancelaria (opcional). */
+  complementoClasificacion?: string;
+
+  fraccionNaladi: string;
+  fraccionNaladiSa93: string;
+  fraccionNaladiSa96: string;
+  fraccionNaladiSa02: string;
+}

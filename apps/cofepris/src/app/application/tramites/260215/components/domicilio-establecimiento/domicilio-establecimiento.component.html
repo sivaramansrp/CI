@@ -22,6 +22,7 @@
         formControlName="estado"
         [label]="'Estado'"
         [required]="true"
+        [isDisabled]="esFormularioSoloLectura"
         name="estado"
         (change)="setValoresStore(domicilio, 'estado', 'setEstado')"
       ></app-catalogo-select>
@@ -71,7 +72,12 @@
   <div class="row">
     <div class="col-md-8">
       <div class="form-group">
-        <label class="form-label" for="calle">Calle*:</label>
+        <label class="form-label" for="calle">Calle*:<span
+                    class="bi bi-question-circle-fill fs-4 m-1"
+                    title="Title"
+                    ata-bs-toggle="tooltip"
+                  ></span
+                ></label>
         <input
           class="form-control"
           id="calle"
@@ -113,7 +119,7 @@
   </div>
   <div class="row">
     <div class="col-md-12 mt-5">
-      <h4>S.C.I.A.N.*:</h4>
+      <h4>S.C.I.A.N.:</h4>
     </div>
   </div>
   <div class="row">
@@ -123,11 +129,12 @@
       [datos]="nicoTablaDatos"
     ></app-tabla-dinamica>
     <div class="container text-end mt-5">
-      <button class="btn btn-default me-2">Eliminar</button>
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
       <button
         class="btn btn-primary me-2"
         data-bs-toggle="modal"
         data-bs-target="#modalAddAgent"
+        [disabled]="esFormularioSoloLectura"
       >
         Agregar
       </button>
@@ -154,8 +161,12 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="licenciaSanitaria"
-          >No. de licencia sanitaria:</label
-        >
+          >No. de licencia sanitaria:<span
+                    class="bi bi-question-circle-fill fs-4 m-1"
+                    title="Title"
+                    ata-bs-toggle="tooltip"
+                  ></span>
+                </label>
         <input
           class="form-control"
           id="licenciaSanitaria"
@@ -181,6 +192,9 @@
         formControlName="regimen"
         [label]="'Régimen'"
         [required]="true"
+        [tooltipQuestionCircle]="true"
+        [tooltipQuestionCircleText]="'Régimen'"
+        [isDisabled]="esFormularioSoloLectura"
         name="regimen"
         (change)="setValoresStore(domicilio, 'regimen', 'setRegimen')"
       ></app-catalogo-select>
@@ -191,31 +205,12 @@
         formControlName="aduanasEntradas"
         [label]="'Aduanas de entradas'"
         [required]="true"
+        [isDisabled]="esFormularioSoloLectura"
         name="aduanasEntradas"
         (change)="
           setValoresStore(domicilio, 'aduanasEntradas', 'setAduanasEntradas')
         "
       ></app-catalogo-select>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-4">
-      <div class="form-group">
-        <label class="form-label text-start" for="numeroPermiso"
-          >Número de Permiso de Importación expedido por la CNSNS:</label
-        >
-        <input
-          class="form-control"
-          id="numeroPermiso"
-          placeholder=""
-          type="number"
-          formControlName="numeroPermiso"
-          (change)="
-            setValoresStore(domicilio, 'numeroPermiso', 'setNumeroPermiso')
-          "
-        />
-      </div>
     </div>
   </div>
 
@@ -235,14 +230,16 @@
         class="btn btn-default me-2"
         data-bs-toggle="modal"
         data-bs-target="#modalAddAgentMercancias"
+        [disabled]="esFormularioSoloLectura"
       >
         Modificar
       </button>
-      <button class="btn btn-default me-2">Eliminar</button>
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
       <button
         class="btn btn-primary me-2"
         data-bs-toggle="modal"
         data-bs-target="#modalAddAgentMercancias"
+        [disabled]="esFormularioSoloLectura"
       >
         Agregar
       </button>
@@ -270,6 +267,7 @@
               formControlName="claveScianModal"
               [label]="'Clave S.C.I.A.N.'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="claveScianModal"
               (change)="
                 setValoresStore(
@@ -286,6 +284,7 @@
               formControlName="claveDescripcionModal"
               [label]="'Descripción del S.C.I.A.N.'"
               [required]="false"
+              [isDisabled]="esFormularioSoloLectura"
               name="claveDescripcionModal"
               (change)="
                 setValoresStore(
@@ -299,13 +298,13 @@
         </form>
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button [disabled]="esFormularioSoloLectura" type="button" class="btn btn-default" data-bs-dismiss="modal">
           Limpiar
         </button>
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button [disabled]="esFormularioSoloLectura" type="button" class="btn btn-default" data-bs-dismiss="modal">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+        <button  [disabled]="esFormularioSoloLectura" type="button" class="btn btn-primary" data-bs-dismiss="modal">
           Agregar
         </button>
       </div>
@@ -333,6 +332,7 @@
               formControlName="clasificacion"
               [label]="'Clasificación del producto'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="clasificacion"
               (change)="
                 setValoresStore(
@@ -349,6 +349,7 @@
               formControlName="especificar"
               [label]="'Especificar clasificación del producto'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="especificar"
               (change)="
                 setValoresStore(formMercancias, 'especificar', 'setEspecificar')
@@ -393,8 +394,12 @@
           </div>
           <div class="form-group">
             <label for="denominacionComun"
-              >Denominación común, nombre común o nombre científico*:</label
-            >
+              >Denominación o nombre científico*: <span
+                    class="bi bi-question-circle-fill fs-4 m-1"
+                    title="Title"
+                    ata-bs-toggle="tooltip"
+                  ></span
+                ></label>
             <input
               type="text"
               id="denominacionComun"
@@ -415,6 +420,7 @@
               formControlName="tipoDeProducto"
               [label]="'Tipo de producto'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="tipoDeProducto"
               (change)="
                 setValoresStore(
@@ -431,6 +437,7 @@
               formControlName="estadoFisico"
               [label]="'Estado físico'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="estadoFisico"
               (change)="
                 setValoresStore(
@@ -442,7 +449,10 @@
             ></app-catalogo-select>
           </div>
           <div class="form-group">
-            <label for="fraccionArancelaria">Fracción arancelaria*:</label>
+            <label for="fraccionArancelaria">Fracción arancelaria*:<span
+                    class="bi bi-question-circle-fill fs-4 m-1"
+                    title="Title"
+                    ata-bs-toggle="tooltip"></span></label>
             <input
               type="text"
               id="fraccionArancelaria"
@@ -459,7 +469,7 @@
           </div>
           <div class="form-group">
             <label for="descripcionFraccion"
-              >Descripción de la fracción*:</label
+              >Descripción de la fracción arancelaria*:</label
             >
             <input
               type="text"
@@ -515,6 +525,7 @@
               formControlName="UMC"
               [label]="'UMC'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="UMC"
               (change)="setValoresStore(formMercancias, 'UMC', 'setUMC')"
             ></app-catalogo-select>
@@ -655,13 +666,13 @@
         </form>
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button [disabled]="esFormularioSoloLectura" type="button" class="btn btn-default" data-bs-dismiss="modal">
           Limpiar
         </button>
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button [disabled]="esFormularioSoloLectura" type="button" class="btn btn-default" data-bs-dismiss="modal">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+        <button [disabled]="esFormularioSoloLectura" type="button" class="btn btn-primary" data-bs-dismiss="modal">
           Agregar
         </button>
       </div>

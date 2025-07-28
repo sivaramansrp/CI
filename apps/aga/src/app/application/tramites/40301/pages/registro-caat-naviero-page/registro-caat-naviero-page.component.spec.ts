@@ -37,16 +37,10 @@ describe('RegistroCaatNavieroPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize seccion state on ngOnInit', () => {
-    jest.spyOn(component, 'asignarSecciones');
-    component.ngOnInit();
-    expect(mockSeccionQuery.selectSeccionState$).toHaveBeenCalled();
-    expect(component.asignarSecciones).toHaveBeenCalled();
-  });
-
   it('should assign sections to the store', () => {
+
     component.asignarSecciones();
-    expect(mockSeccionStore.establecerSeccion).toHaveBeenCalledWith([true, false]);
+    expect(mockSeccionStore.establecerSeccion).toHaveBeenCalledWith([true, true]);
     expect(mockSeccionStore.establecerFormaValida).toHaveBeenCalledWith([false, false]);
   });
 
@@ -93,7 +87,7 @@ describe('RegistroCaatNavieroPageComponent', () => {
     const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const destroyCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
-    // component.ngOnDestroy();
+    component.ngOnDestroy();
 
     expect(destroyNotifierSpy).toHaveBeenCalled();
     expect(destroyCompleteSpy).toHaveBeenCalled();

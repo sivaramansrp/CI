@@ -1,0 +1,393 @@
+<div class="modal-dialog modal-dialog-centered modal-fullscreen">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h5 class="modal-title">Datos de Choferes</h5>
+      <button type="button" class="btn-close" (click)="cerrarModal()"></button>
+    </div>
+    <div class="modal-body ">
+      <div class="container-fluid">
+        <form [formGroup]="formChoferes">
+          <div class="row">
+            <div class="col-md-12">
+              <h3>Datos del chofer Extranjero</h3>
+              <hr class="red" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div>
+                <label for="numero">Nombre(s):*</label>
+              </div>
+              <div>
+                <input type="text" class="form-control" formControlName="numero" size="30" id="numeroCHN"
+                  maxlength="200" />
+              </div>
+              @if(getFormValues['numero'].invalid && (getFormValues['numero'].dirty || getFormValues['numero'].touched))
+              {
+              <div class="text-danger">
+                @if(getFormValues['numero'].errors?.['required']) {
+                <small>Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['numero'].errors?.['maxLength']) {
+                <small>El número no puede tener más de 200 caracteres.</small>
+                }
+              </div>
+              }
+            </div>
+
+            <div class="col-md-4">
+              <div>
+                <label for="primerApellido">Primer apellido:</label>
+                <span class="require">*</span>
+              </div>
+              <div>
+                <input type="text" class="form-control" formControlName="primerApellido" maxlength="200" />
+              </div>
+              @if(isInvalid('primerApellido')) {
+              <div class="text-danger">
+                @if(getFormValues['primerApellido'].errors?.['required']) {
+                <small>Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['primerApellido'].errors?.['maxLength']) {
+                <small>El nombre no puede tener más de 200 caracteres.</small>
+                }
+              </div>
+              }
+            </div>
+            <div class="col-md-4">
+              <div>
+                <label for="apellidoMaterno">Segundo apellido:</label>
+              </div>
+              <div>
+                <input type="text" class="form-control" formControlName="segundoApellido" maxlength="200" />
+              </div>
+              @if(isInvalid('segundoApellido')) {
+              <div class="text-danger">
+                @if(getFormValues['segundoApellido'].errors?.['required']) {
+                <small>Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['segundoApellido'].errors?.['maxLength']) {
+                <small>El nombre no puede tener más de 200 caracteres.</small>
+                }
+              </div>
+              }
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <div>
+                <app-catalogo-select class="nacionalidad" [catalogo]="paisList" [placeholder]="'Seleccione un valor'"
+                  formControlName="nacionalidad" [isDisabled]="readonly" name="nacionalidad" [label]="'Nacionalidad'"
+                  [required]="true" (selectionChange)="onPaisChange($event)"></app-catalogo-select>
+              </div>
+              @if(formChoferes.get('nacionalidad')?.invalid && (formChoferes.get('nacionalidad')?.dirty ||
+              formChoferes.get('nacionalidad')?.touched)) {
+              <div class="text-danger">
+                @if(formChoferes.get('nacionalidad')?.errors?.['required']) {
+                <small>Este campo es obligatorio.</small>
+                }
+              </div>
+              }
+            </div>
+
+            <div class="col-md-4">
+              <div>
+                <label for="numeroDeGafete">Número de gafete del chofer:</label>
+              </div>
+              <div>
+                <input type="text" class="form-control" formControlName="numeroDeGafete" maxlength="24" />
+              </div>
+              @if(isInvalid('numeroDeGafete')) {
+              <div class="text-danger">
+                @if(getFormValues['numeroDeGafete'].errors?.['required']) {
+                <small>Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['numeroDeGafete'].errors?.['maxLength']) {
+                <small>El gafete no puede tener más de 24 caracteres.</small>
+                }
+              </div>
+              }
+            </div>
+            <div class="col-md-4">
+              <div>
+                <label for="vigenciaGafete">Vigencia del gafete:</label>
+              </div>
+              <div>
+                <input type="text" class="form-control" formControlName="vigenciaGafete" maxlength="15" />
+              </div>
+              @if(isInvalid('vigenciaGafete')) {
+              <div class="text-danger">
+                @if(getFormValues['vigenciaGafete'].errors?.['required']) {
+                <small>Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['vigenciaGafete'].errors?.['maxLength']) {
+                <small>La vigencia del gafete no puede tener más de 15 caracteres.</small>
+                }
+              </div>
+              }
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <div>
+                <label for="numberDelSocial">Número de segur social*:</label>
+              </div>
+              <div>
+                <input type="text" class="form-control" formControlName="numeroDelSeguroSocial" maxlength="18"
+                  (input)="enInputDigitsOnly($event)" />
+              </div>
+              @if(isInvalid('numeroDelSeguroSocial') || showDigitsOnlyError) {
+              <div class="text-danger">
+                @if(getFormValues['numeroDelSeguroSocial'].errors?.['required']) {
+                <small>Este campo es obligatorio.</small><br />
+                }
+                @if(getFormValues['numeroDelSeguroSocial'].errors?.['maxLength']) {
+                <small>El número de seguridad social no puede tener más de 18 caracteres.</small><br />
+                }
+                @if(getFormValues['numeroDelSeguroSocial'].errors?.['pattern'] || showDigitsOnlyError) {
+                <small>Por favor, sólo escribe dígitos.</small>
+                }
+              </div>
+              }
+            </div>
+            <div class="col-md-4">
+              <div>
+                <label for="numberDeIdeFiscal">Número de identificación fiscal*:</label>
+                <span class="bi bi-question-circle-fill fs-4 m-1"
+                  title="Número de identificación fiscal en el de país residencia" ata-bs-toggle="tooltip">
+                </span>
+              </div>
+              <div>
+                <input type="text" class="form-control" formControlName="numberDeIdeFiscal" maxlength="18" />
+              </div>
+              @if(isInvalid('numberDeIdeFiscal')) {
+              <div class="text-danger">
+                @if(getFormValues['numberDeIdeFiscal'].errors?.['required']) {
+                <small>Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['numberDeIdeFiscal'].errors?.['maxLength']) {
+                <small>El nombre no puede tener más de 18 caracteres.</small>
+                }
+              </div>
+              }
+            </div>
+            <div class="col-md-4 mt-3">
+              <div class="pull-right justify-content-end">
+                <button type="button" class="btn btn-primary mt-5" (click)="
+                      buscarChoferNacional(formChoferes.get('numeroDelSeguroSocial')?.value)
+                    ">
+                  Buscar
+                </button>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <ng-titulo titulo="Domicilio Fiscal"></ng-titulo>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div>
+                <app-catalogo-select class="paisChn" [catalogo]="paisList" placeholder="Seleccione un país"
+                  formControlName="pais" [required]="true" [isDisabled]="readonly" name="pais" label="País"
+                  (selectionChange)="onPaisChange($event)"></app-catalogo-select>
+              </div>
+              @if(formChoferes.get('pais')?.invalid && (formChoferes.get('pais')?.dirty ||
+              formChoferes.get('pais')?.touched)) {
+              <div class="text-danger">
+                @if(formChoferes.get('pais')?.errors?.['required']) {
+                <small>Este campo es obligatorio.</small>
+                }
+              </div>
+              }
+            </div>
+            <div class="col-md-4 mb-3">
+              <div>
+                <label for="codigoPostal">Código postal:</label>
+                <span class="require">*</span>
+              </div>
+              <div>
+                <input type="text" class="form-control" formControlName="codigoPostal" maxlength="12" />
+              </div>
+              @if(isInvalid('codigoPostal')) {
+              <div class="text-danger">
+                @if(getFormValues['codigoPostal'].errors?.['required']) {
+                <small>Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['codigoPostal'].errors?.['maxLength']) {
+                <small>codigoPostal no puede tener más de 12 caracteres.</small>
+                }
+              </div>
+              }
+            </div>
+
+            <div class="col-md-4">
+              <div>
+                <label for="numberDelSocial">Estado:</label>
+                <span class="require">*</span>
+              </div>
+              <div>
+                <input type="text" class="form-control" formControlName="estado" maxlength="11" />
+              </div>
+              @if(isInvalid('estado')) {
+              <div class="text-danger">
+                @if(getFormValues['estado'].errors?.['required']) {
+                <small>Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['estado'].errors?.['maxLength']) {
+                <small>El estado no puede tener más de 11 caracteres.</small>
+                }
+                @if(getFormValues['estado'].errors?.['pattern']) {
+                <small>El estado debe tener 11 dígitos.</small>
+                }
+              </div>
+              }
+            </div>
+          </div>
+
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <div>
+                <label for="calle">Calle:</label>
+                <span class="require">*</span>
+              </div>
+              <div>
+                <input type="text" class="form-control" formControlName="calle" maxlength="100" />
+              </div>
+              @if(isInvalid('calle')) {
+              <div class="text-danger">
+                @if(getFormValues['calle'].errors?.['required']) {
+                <small>Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['calle'].errors?.['maxLength']) {
+                <small>calle no puede tener más de 100 caracteres.</small>
+                }
+              </div>
+              }
+            </div>
+            <div class="col-md-4">
+              <div>
+                <label for="Número exterior">Número exterior:</label>
+                <span class="require">*</span>
+              </div>
+              <div>
+                <input type="text" class="form-control" formControlName="numeroExterior" maxlength="10" />
+              </div>
+              @if(isInvalid('numeroExterior')) {
+              <div class="text-danger">
+                @if(getFormValues['numeroExterior'].errors?.['required']) {
+                <small>Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['numeroExterior'].errors?.['maxLength']) {
+                <small>Numero Exterior no puede tener más de 10 caracteres.</small>
+                }
+              </div>
+              }
+            </div>
+            <div class="col-md-4">
+              <div>
+                <label for="Número Interior">Número interior:</label>
+              </div>
+              <div>
+                <input type="text" class="form-control" formControlName="numeroInterior" />
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <div>
+                <app-catalogo-select class="paisDeResidencia" [catalogo]="paisList" formControlName="paisDeResidencia"
+                  placeholder="Seleccione un valor" [required]="true" [isDisabled]="readonly" name="paisDeResidencia"
+                  label="País de residencia"></app-catalogo-select>
+              </div>
+              @if(formChoferes.get('paisDeResidencia')?.invalid && (formChoferes.get('paisDeResidencia')?.dirty ||
+              formChoferes.get('paisDeResidencia')?.touched)) {
+              <div class="text-danger">
+                @if(formChoferes.get('paisDeResidencia')?.errors?.['required']) {
+                <small>Este campo es obligatorio.</small>
+                }
+              </div>
+              }
+            </div>
+
+            <div class="col-md-4">
+              <div>
+                <label for="ciudad">Ciudad:</label>
+                <span class="require">*</span>
+              </div>
+              <div>
+                <input type="text" class="form-control" formControlName="ciudad" maxlength="10" />
+              </div>
+              @if(getFormValues['ciudad'].invalid && (getFormValues['ciudad'].dirty || getFormValues['ciudad'].touched))
+              {
+              <div class="text-danger">
+                @if(getFormValues['ciudad'].errors?.['required']) {
+                <small>Este campo es obligatorio.</small>
+                }
+                @if(getFormValues['ciudad'].errors?.['maxLength']) {
+                <small>ciudad no puede tener más de 10 caracteres.</small>
+                }
+              </div>
+              }
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-8">
+              <div>
+                <label for="solicitud.correo">Correo electrónico:</label>
+              </div>
+              <div>
+                <input type="email" class="form-control" formControlName="correoElectronico" maxlength="100" />
+              </div>
+              @if(formChoferes.get('correoElectronico')?.errors?.['email']) {
+              <div class="text-danger">
+                <small>Por favor, escribe una dirección de correo válida.</small>
+              </div>
+              }
+            </div>
+            <div class="col-md-4">
+              <div>
+                <label for="solicitud.telefono">Teléfono</label>
+              </div>
+              <div>
+                <input type="tel" class="form-control" formControlName="telefono" maxlength="14" />
+              </div>
+              @if(formChoferes.get('telefono')?.errors?.['pattern']) {
+              <div class="text-danger">
+                <small>Teléfono debe contener solo dígitos.</small>
+              </div>
+              }
+            </div>
+          </div>
+
+
+        </form>
+        <div class="row mt-3 mb-3">
+          <div class="col-md-12">
+            <div class="pull-right justify-content-end">
+              <button type="button" class="btn btn-default ms-2" (click)="restablecerFormulario()">Limpiar</button>
+              <button type="button" class="btn btn-danger ms-2" (click)="cerrarModal()">Cancelar</button>
+              <button type="button" class="btn btn-primary ms-2" (click)="guardarFilaEditada()">Guardar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if(alertaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="alertaNotificacion"></lib-notificaciones>
+</section>
+}

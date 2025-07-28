@@ -3,6 +3,7 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   CatalogosSelect,
+  ConsultaioQuery,
   InputCheckComponent,
   InputFecha,
   REGEX_PATRON_DECIMAL_2,
@@ -37,6 +38,7 @@ import {
   Tramite110207Store,
 } from '../../state/Tramite110207.store';
 import { CommonModule } from '@angular/common';
+import {ConsultaioState} from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { Modal } from 'bootstrap';
 import { RegistroService } from '../../services/registro.service';
@@ -69,6 +71,15 @@ const TERCEROS_TEXTO_DE_ALERTA =
   styleUrl: './certificado-de-origen.component.css',
 })
 export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
+  /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
   /**
    * Texto de alerta mostrado en el componente.
    */
@@ -263,20 +274,32 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   constructor(
     private registroService: RegistroService,
     public fb: FormBuilder,
-    private store: Tramite110207Store,
+    public store: Tramite110207Store,
     private query: Tramite110207Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
   /**
    * Maneja el evento de clic para habilitar el formulario de edición.
    * @param row Fila seleccionada.
    */
-  manejarClic(row: unknown) {
+  manejarClic(_row: unknown):void {
     this.esFormulario = true;
-    const MODALEI = document.getElementById('datosMercancia')!;
-    new Modal(MODALEI).show();
+    const MODALEI = document.getElementById('datosMercancia');
+    if (MODALEI) {
+      new Modal(MODALEI).show();
+    }
   }
 
   /**
@@ -317,6 +340,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.getUnidadMedida();
     this.getTipoFactura();
     this.getSolicitudesTabla();
+    this.inicializarEstadoFormulario();
 
     this.query.selectSolicitud$
       .pipe(
@@ -327,6 +351,32 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.donanteDomicilio();
+
+    
+  }
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.registroForm.disable();
+    } else {
+      this.registroForm.enable();
+    }
   }
   /**
    * Actualiza la fecha inicial en el formulario reactivo y en el estado de la tienda.
@@ -369,7 +419,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Si el valor está presente, establece `hayMercanciasDisponibles` en `true`; de lo contrario, lo establece en `false`.
    * Además, actualiza los catálogos necesarios llamando a los métodos `getTratado`, `getPais`, `getUMC`, `getUnidadMedida` y `getTipoFactura`.
    */
-  buscarMercancias() {
+  buscarMercancias():void {
     if (this.registroForm.get('validacionForm.tratado')?.value === 0) {
       this.hayMercanciasDisponibles = false;
     } else {
@@ -384,7 +434,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Agrega una mercancía al formulario.
    */
-  agregar() {
+  agregar():void {
     this.getTratado();
     this.getPais();
     this.getUMC();
@@ -408,7 +458,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Modifica una mercancía existente.
    */
-  modificar() {
+  modificar():void {
     this.esMercanciaEnEdicion = false;
 
     this.getTratado();
@@ -422,14 +472,14 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Activa el formulario para cargar un archivo.
    * Cambia el estado de la variable `cargarArchivo` a `true` para mostrar el formulario de carga de archivos.
    */
-  cargaArchivo() {
+  cargaArchivo():void {
     this.cargarArchivo = true;
   }
   /**
    * Muestra errores en el formulario y desactiva la carga de archivos.
    * Cambia el estado de las variables `mostrarErrores` a `true` y `cargarArchivo` a `false`.
    */
-  darError() {
+  darError():void {
     this.mostrarErrores = true;
     this.cargarArchivo = false;
   }
@@ -506,7 +556,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Si no se selecciona ningún archivo, asigna el mensaje "No se eligió ningún archivo".
    * @param event Evento que contiene la información del archivo seleccionado.
    */
-  alSeleccionarArchivo(event: Event) {
+  alSeleccionarArchivo(event: Event):void {
     const FILE = (event.target as HTMLInputElement).files?.[0];
     this.nombreArchivo = FILE ? FILE.name : 'No se eligió ningún archivo';
   }
@@ -552,40 +602,40 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Configura el formulario reactivo con los valores iniciales del estado.
    */
-  donanteDomicilio(): void {
-    this.registroForm = this.fb.group({
-      validacionForm: this.fb.group({
-        tratado: [this.solicitudState?.tratado, [Validators.required]],
-        pais: [this.solicitudState?.pais, [Validators.required]],
-        fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],],
-        numeroRegistro: [this.solicitudState?.numeroRegistro, [Validators.required],],
-        nombreComercial: [this.solicitudState?.nombreComercial, [Validators.required],],
-        fechaInicial: [this.solicitudState?.fechaInicial, [Validators.required],],
-        fechaFinal: [this.solicitudState?.fechaFinal, [Validators.required]],
-        archivo: [this.solicitudState?.archivo, [Validators.required]],
-        siCasilla: [this.solicitudState?.siCasilla, [Validators.required]],
-      }),
-    });
-    this.mercanciaForm = this.fb.group({
-      validacionMercanciaForm: this.fb.group({
-        fraccionMercanciaArancelaria: ['', [Validators.required]],
-        nombreTecnico: ['', [Validators.required]],
-        nombreComercialDelaMercancia: ['', [Validators.required]],
-        criterioParaConferir: ['', [Validators.required]],
-        nombreEnIngles: ['', [Validators.required]],
-        marca: [this.solicitudState?.marca, [Validators.required]],
-        cantidad: [this.solicitudState?.cantidad,[Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],],
-        umc: [this.solicitudState?.umc, [Validators.required]],
-        valorDelaMercancia: [this.solicitudState?.valorDelaMercancia,[Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],],
-        complementoDelaDescripcion: [this.solicitudState?.complementoDelaDescripcion,[Validators.required],],
-        masaBruta: [this.solicitudState?.masaBruta,[Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],],
-        unidadMedida: [this.solicitudState?.unidadMedida,[Validators.required],],
-        tipoFactura: [this.solicitudState?.tipoFactura, [Validators.required]],
-        fecha: [this.solicitudState?.fecha, [Validators.required]],
-        numeroFactura: [this.solicitudState?.numeroFactura,[Validators.required],],
-      }),
-    });
-  }
+ donanteDomicilio(): void {
+  this.registroForm = this.fb.group({
+    validacionForm: this.fb.group({
+      tratado: [{ value: this.solicitudState?.tratado, disabled: this.soloLectura }, [Validators.required]],
+      pais: [{ value: this.solicitudState?.pais, disabled: this.soloLectura }, [Validators.required]],
+      fraccionArancelaria: [{ value: this.solicitudState?.fraccionArancelaria, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      numeroRegistro: [{ value: this.solicitudState?.numeroRegistro, disabled: this.soloLectura }, [Validators.required]],
+      nombreComercial: [{ value: this.solicitudState?.nombreComercial, disabled: this.soloLectura }, [Validators.required]],
+      fechaInicial: [{ value: this.solicitudState?.fechaInicial, disabled: this.soloLectura }, [Validators.required]],
+      fechaFinal: [{ value: this.solicitudState?.fechaFinal, disabled: this.soloLectura }, [Validators.required]],
+      archivo: [{ value: this.solicitudState?.archivo, disabled: this.soloLectura }, [Validators.required]],
+      siCasilla: [{ value: this.solicitudState?.siCasilla, disabled: this.soloLectura }, [Validators.required]],
+    }),
+  });
+  this.mercanciaForm = this.fb.group({
+    validacionMercanciaForm: this.fb.group({
+      fraccionMercanciaArancelaria: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
+      nombreTecnico: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
+      nombreComercialDelaMercancia: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
+      criterioParaConferir: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
+      nombreEnIngles: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
+      marca: [{ value: this.solicitudState?.marca, disabled: this.soloLectura }, [Validators.required]],
+      cantidad: [{ value: this.solicitudState?.cantidad, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      umc: [{ value: this.solicitudState?.umc, disabled: this.soloLectura }, [Validators.required]],
+      valorDelaMercancia: [{ value: this.solicitudState?.valorDelaMercancia, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)]],
+      complementoDelaDescripcion: [{ value: this.solicitudState?.complementoDelaDescripcion, disabled: this.soloLectura }, [Validators.required]],
+      masaBruta: [{ value: this.solicitudState?.masaBruta, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)]],
+      unidadMedida: [{ value: this.solicitudState?.unidadMedida, disabled: this.soloLectura }, [Validators.required]],
+      tipoFactura: [{ value: this.solicitudState?.tipoFactura, disabled: this.soloLectura }, [Validators.required]],
+      fecha: [{ value: this.solicitudState?.fecha, disabled: this.soloLectura }, [Validators.required]],
+      numeroFactura: [{ value: this.solicitudState?.numeroFactura, disabled: this.soloLectura }, [Validators.required]],
+    }),
+  });
+}
   /**
    * Obtiene los datos de la tabla de mercancías disponibles desde el servicio.
    * Realiza una suscripción al método `getSolicitudesTabla` del servicio `RegistroService`

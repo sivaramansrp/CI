@@ -1,8 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Solicitud260104State, Tramite260104Store } from '../../../../estados/tramites/tramite260104.store';
+import { Solicitud260104State, Tramite260104StoreDos } from '../../../../estados/tramites/tramite260104.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260104Query } from '../../../../estados/queries/tramite260104.query';
 import { VALOR_FORMULARIO } from '@libs/shared/data-access-user/src/core/enums/260104/domicilo.enum';
@@ -22,12 +23,17 @@ import { VALOR_FORMULARIO } from '@libs/shared/data-access-user/src/core/enums/2
   templateUrl: './representante-legal.component.html',
   styleUrl: './representante-legal.component.scss',
 })
-export class RepresentanteLegalComponent implements OnInit, OnDestroy {
+export class RepresentanteLegalComponent implements OnDestroy {
   /**
    * Estado de la solicitud obtenido desde el store.
    * Contiene la información actual del trámite.
    */
   public solicitudState!: Solicitud260104State;
+
+  /**
+   * Determina si el formulario debe estar en modo solo lectura.
+   */
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Notificador para destruir observables activos y evitar pérdidas de memoria.
@@ -49,15 +55,27 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    */
   constructor(
     private readonly fb: FormBuilder,
-    private tramite260104Store: Tramite260104Store,
-    private tramite260104Query: Tramite260104Query
-  ) {}
+    private tramite260104Store: Tramite260104StoreDos,
+    private tramite260104Query: Tramite260104Query,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
 
   /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Obtiene el estado de la solicitud y crea el formulario del representante legal.
+   * Inicializa el formulario con datos del store y aplica validaciones.
+   * También aplica configuración de solo lectura si es necesario.
+   * @method inicializarEstadoFormulario
    */
-  ngOnInit(): void {
+  inicializarEstadoFormulario(): void {
     this.tramite260104Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -67,6 +85,15 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.crearFormulario();
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.representante.controls).forEach((key) => {
+        this.representante.get(key)?.disable();
+      });
+    } else {
+      Object.keys(this.representante.controls).forEach((key) => {
+        this.representante.get(key)?.enable();
+      });
+    }
   }
 
   /**
@@ -103,7 +130,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   setValoresStore(
     form: FormGroup,
     campo: string,
-    metodoNombre: keyof Tramite260104Store
+    metodoNombre: keyof Tramite260104StoreDos
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite260104Store[metodoNombre] as (value: unknown) => void)(VALOR);

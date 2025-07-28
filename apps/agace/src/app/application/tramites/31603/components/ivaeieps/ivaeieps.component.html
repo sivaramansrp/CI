@@ -1,8 +1,8 @@
 <div class="conatainer">
     <form [formGroup]="ivaEiepsFormGroup">
-        <div class="row mt-3 ms-0">
+        <div class="row mt-3">
             <label class="fw-bold">
-                <span>* </span>
+                <span class="text-danger">* </span>
                 Indique si para efectos del presente trámite se acredita como parte de un mismo grupo de conformidad con la regla 7.1.7.
             </label>
             <div class="col-md-12 ps-3">
@@ -57,11 +57,11 @@
                       </div>
                   
                       <div class="d-flex justify-content-end">
-                        <button class="btn btn-primary" (click)="abrirModal(template)">
+                        <button class="btn btn-primary" (click)="abrirModal(template)" [disabled]="esFormularioSoloLectura">
                           Agregar
                         </button>
-                        <button class="btn btn-default ms-2">Modificar</button>
-                        <button class="btn btn-default ms-2">Eliminar</button>
+                        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+                        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
                       </div>
                       <section class="fw-medium mt-3">
                         <span class="text-danger">*</span> Señale, en su caso, el tipo de
@@ -75,6 +75,7 @@
                           formControlName="empleados"
                           [label]="'Empleados'" 
                           [required]="false"
+                          [isDisabled]="esFormularioSoloLectura"
                           (change)="setValoresStore(ivaEiepsFormGroup,'empleados', 'setEmpleados')">
                         </lib-input-check>
 
@@ -83,6 +84,7 @@
                           formControlName="infraestructura"
                           [label]="'Infraestructura'" 
                           [required]="false"
+                          [isDisabled]="esFormularioSoloLectura"
                           (change)="setValoresStore(ivaEiepsFormGroup,'infraestructura', 'setInfraestructura')">
                         </lib-input-check>
 
@@ -91,6 +93,7 @@
                           formControlName="monto"
                           [label]="'Monto de Inversión'" 
                           [required]="false"
+                          [isDisabled]="esFormularioSoloLectura"
                           (change)="setValoresStore(ivaEiepsFormGroup,'monto', 'setMonto')">
                         </lib-input-check>
 
@@ -99,6 +102,7 @@
                           formControlName="antiguedad"
                           [label]="'Antigüedad (Únicamente tratándose de las empresas que se mencionan en el apartado B, regla 7.1.2)'" 
                           [required]="false"
+                          [isDisabled]="esFormularioSoloLectura"
                           (change)="setValoresStore(ivaEiepsFormGroup,'antiguedad', 'setAntiguedad')">
                         </lib-input-check>
                       </div>
@@ -106,17 +110,8 @@
             }
           </div>
     </form>
-    <form [formGroup]="forma">
-        <div class="row mb-3">
-            <formas-dinamicas 
-                [forma]="ninoFormGroup" 
-                [formularioDatos]="permisoDesistirFormDatos"
-                >
-            </formas-dinamicas>
-        </div>
-    </form>
     <div class="mb-3">
-        <app-ivaeieps-dos></app-ivaeieps-dos>
+        <app-ivaeieps-dos [esFormularioSoloLectura]="esFormularioSoloLectura"></app-ivaeieps-dos>
     </div>
 </div>
 
@@ -175,10 +170,10 @@
           </form>
     </div>
     <div class="modal-footer d-flex justify-content-end">
-        <button class="btn btn-default">Limpiar</button>
-        <button class="btn btn-primary me-2" (click)="modalRef?.hide()">
-            Aceptar
-        </button>
+      <button class="btn btn-primary me-2" (click)="modalRef?.hide()">
+        Aceptar
+      </button>
+      <button class="btn btn-default">Limpiar</button>
         <button class="btn btn-danger">
             Cancelar
         </button>

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -6,8 +6,9 @@ import { Modal } from 'bootstrap';
 
 import { BusquedaPermisos140216State, Tramite140216Store } from '../../estados/tramites/tramite140216.store';
 import { FECHA_SALIDA, PERMISOS_VIGENTES_ENCABEZADO_DE_TABLA } from '../../constantes/suspension-permiso.enum';
-import { InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { PermisosVigentes, PermisosVigentesRespuesta } from '../../models/suspension-permiso.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DetalleDelPermisoComponent } from '../detalle-del-permiso/detalle-del-permiso.component';
 import { DetalleTitularComponent } from '../detalle-titular/detalle-titular.component';
 import { PersonasNotificarComponent } from '../personas-notificar/personas-notificar.component';
@@ -29,13 +30,14 @@ import { Tramite140216Query } from '../../estados/queries/tramite140216.query';
     InputFechaComponent,
     DetalleDelPermisoComponent,
     DetalleTitularComponent,
-    PersonasNotificarComponent
+    PersonasNotificarComponent,
+    NotificacionesComponent
   ],
   templateUrl: './busqueda-permisos.component.html',
   styleUrl: './busqueda-permisos.component.scss',
 })
 
-export class BusquedaPermisosComponent implements OnInit, OnDestroy {
+export class BusquedaPermisosComponent implements OnDestroy {
   /**
    * Referencia al formulario reactivo de busquedaPermisos.
    * @type {FormGroup}
@@ -93,6 +95,33 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
   modalElemento!: HTMLElement | null;
 
   /**
+   * Indica si una fila está seleccionada.
+   */
+  esSeleccionado: boolean = false;
+
+  /**
+   * Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaAlertaNotificacion!: Notificacion;
+
+  /**
+   * Configuración de notificación para mostrar mensajes al usuario.
+   */
+  public alertaFolioNotificacion!: Notificacion;
+
+  /**
+   * Notificación para mostrar mensajes al usuario cuando el folio es incorrecto.
+   * @type {Notificacion}
+   */
+  public alertaFolioIncorrectoNotificacion!: Notificacion;
+
+  /**
+   * @property {boolean} formularioDeshabilitado
+   * @description Indica si el formulario está deshabilitado (solo lectura).
+   */
+  formularioDeshabilitado: boolean = false;
+
+  /**
    * Subject para destruir notificador.
    */
   private destruirNotificador$: Subject<void> = new Subject();
@@ -102,28 +131,32 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
    * @param fb - FormBuilder para crear formularios reactivos.
    * @param tramite140216Store - Store para gestionar el estado del trámite 140216.
    * @param tramite140216Query - Query para obtener datos del store del trámite 140216.
+   * @param consultaioQuery - Consulta para obtener el estado de la consulta.
    * @param suspensionPermisoService - Servicio para gestionar permisos de suspensión.
    */
   constructor(
     private fb: FormBuilder,
     private tramite140216Store: Tramite140216Store,
     private tramite140216Query: Tramite140216Query,
+    private consultaioQuery: ConsultaioQuery,
     private suspensionPermisoService: SuspensionPermisoService,
   ) {
-    // El constructor se utiliza para la inyección de dependencias
-  }
-
-  /**
-   * Inicializa el componente.
-   * Suscribe a los cambios en el estado de la sección y crea el formulario reactivo.
-   */
-  ngOnInit(): void {
     this.tramite140216Query.selectSeccionState$
       .pipe(
         takeUntil(this.destruirNotificador$),
         map((seccionState) => {
           this.busquedaPermisosState = seccionState;
           this.permisosVigentesTabla = seccionState.permisosVigentesTabla || [];
+        })
+      )
+      .subscribe();
+    
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
@@ -144,17 +177,40 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
       ],
       motivoSuspension: [
         this.busquedaPermisosState?.motivoSuspension,
-        [Validators.required]
+        [
+          Validators.required,
+          Validators.maxLength(5000)
+        ]
       ],
       numAutorizacion: [
         this.busquedaPermisosState?.numAutorizacion,
-        [Validators.required]
+        [
+          Validators.required,
+          Validators.maxLength(20)
+        ]
       ],
       fechaSuspension: [
         this.busquedaPermisosState?.fechaSuspension,
         [Validators.required]
       ]
     });
+
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario `busquedaPermisosForm` basado en si el formulario está deshabilitado o no.
+   * Si el formulario está deshabilitado, se deshabilita el campo `busquedaPermisosForm`.
+   * Si no está deshabilitado, se habilita el campo `busquedaPermisosForm`.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.busquedaPermisosForm?.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.busquedaPermisosForm?.enable();
+    }
   }
 
   /**
@@ -162,32 +218,45 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
    * Actualiza los valores en el store y llama al servicio para buscar permisos vigentes.
    * @returns {void}
    */
-  relanzarGrid(): void {
-    this.suspensionPermisoService.obtenerPermisosVigentes()
-      .pipe(takeUntil(this.destruirNotificador$))
-      .subscribe({
-        next: (permisosVigentes: PermisosVigentesRespuesta) => {
-          this.permisosVigentesTabla = permisosVigentes.data.map((permiso: PermisosVigentes) => {
-            return {
-              numeroResolucion: permiso.numeroResolucion,
-              tipoSolicitud: permiso.tipoSolicitud,
-              regimen: permiso.regimen,
-              clasificacionRegimen: permiso.clasificacionRegimen,
-              periodoDeVigencia: permiso.periodoDeVigencia,
-              fraccionArancelaria: permiso.fraccionArancelaria,
-              unidad: permiso.unidad,
-              nico: permiso.nico,
-              nicoDescripcion: permiso.nicoDescripcion,
-              acotacion: permiso.acotacion,
-              cantidadAutorizada: permiso.cantidadAutorizada,
-              valorAutorizada: permiso.valorAutorizada,
-              fechaInicioVigencia: permiso.fechaInicioVigencia,
-              fechaFinVigencia: permiso.fechaFinVigencia
-            };
-          });
-          this.tramite140216Store.setPermisosVigentesTabla(this.permisosVigentesTabla);
-        }
-      });
+  relanzarGrid(folioTramiteBusqueda: string): void {
+    if (folioTramiteBusqueda?.length <= 0 || folioTramiteBusqueda === null) {
+      this.abrirAlertaFolioModal();
+    } else {
+      this.suspensionPermisoService.obtenerPermisosVigentes()
+        .pipe(takeUntil(this.destruirNotificador$))
+        .subscribe({
+          next: (permisosVigentes: PermisosVigentesRespuesta) => {
+            const PERMISOS_FILTRADOS = permisosVigentes.data.filter(
+              (permiso: PermisosVigentes) => permiso.folioTramite === folioTramiteBusqueda
+            );
+            if (PERMISOS_FILTRADOS.length === 0) {
+              this.permisosVigentesTabla = [];
+              this.tramite140216Store.setPermisosVigentesTabla(this.permisosVigentesTabla);
+              this.abrirModalAlertaFolioIncorrecto();
+            } else {
+              this.permisosVigentesTabla = permisosVigentes.data.map((permiso: PermisosVigentes) => {
+                return {
+                  numeroResolucion: permiso.numeroResolucion,
+                  tipoSolicitud: permiso.tipoSolicitud,
+                  regimen: permiso.regimen,
+                  clasificacionRegimen: permiso.clasificacionRegimen,
+                  periodoDeVigencia: permiso.periodoDeVigencia,
+                  fraccionArancelaria: permiso.fraccionArancelaria,
+                  unidad: permiso.unidad,
+                  nico: permiso.nico,
+                  nicoDescripcion: permiso.nicoDescripcion,
+                  acotacion: permiso.acotacion,
+                  cantidadAutorizada: permiso.cantidadAutorizada,
+                  valorAutorizado: permiso.valorAutorizado,
+                  fechaInicioVigencia: permiso.fechaInicioVigencia,
+                  fechaFinVigencia: permiso.fechaFinVigencia
+                };
+              });
+              this.tramite140216Store.setPermisosVigentesTabla(this.permisosVigentesTabla);
+            }
+          }
+        });
+    }
   }
 
   /**
@@ -209,7 +278,65 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerDetallePermiso(): void {
-    this.mostrarModal('detalle-del-permiso');
+    if (this.esSeleccionado) {
+      this.mostrarModal('detalle-del-permiso');
+    } else {
+      this.abrirAlertaModal();
+    }
+  }
+
+  /**
+   * Abre un modal de alerta si no se ha seleccionado ningún elemento.
+   * @returns {void}
+   */
+  abrirAlertaModal(): void {
+    this.nuevaAlertaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Alerta',
+      mensaje: 'Debe seleccionar un elemento',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
+  }
+
+  /**
+   * Abre un modal de alerta si el campo "Folio trámites" está vacío.
+   * @returns {void}
+   */
+  abrirAlertaFolioModal(): void {
+    this.alertaFolioNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Alerta',
+      mensaje: 'Folio trámites es un campo obligatorio.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
+  }
+
+  /**
+   * Abre un modal de alerta si el folio del trámite ingresado es incorrecto.
+   * @returns {void}
+   */
+  abrirModalAlertaFolioIncorrecto(): void {
+    this.alertaFolioIncorrectoNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Alerta',
+      mensaje: 'El Folio del trámite ingresado no puede ser suspendido.Favor de verificar',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**
@@ -217,7 +344,11 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerDetalleTitular(): void {
-    this.mostrarModal('detalle-rfc-facultad');
+    if (this.esSeleccionado) {
+      this.mostrarModal('detalle-rfc-facultad');
+    } else {
+      this.abrirAlertaModal();
+    }
   }
 
   /**
@@ -225,7 +356,11 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerPersonasNotificacion(): void {
-    this.mostrarModal('personas-notificar');
+    if (this.esSeleccionado) {
+      this.mostrarModal('personas-notificar');
+    } else {
+      this.abrirAlertaModal();
+    }
   }
 
   /**
@@ -252,6 +387,17 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
       const MODAL = Modal.getOrCreateInstance(this.modalElemento);
       MODAL.show();
     }
+  }
+
+  /**
+   * Método para validar el formulario.
+   * @returns boolean
+   */
+  validarFormulario(): boolean {
+    if (this.busquedaPermisosForm.invalid) {
+      this.busquedaPermisosForm.markAllAsTouched();
+    }
+    return this.busquedaPermisosForm.valid;
   }
 
   /**

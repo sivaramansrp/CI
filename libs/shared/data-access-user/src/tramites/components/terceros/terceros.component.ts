@@ -16,7 +16,6 @@ import {
 } from '@angular/forms';
 import {
   MSG_CAMPOS_VACIOS,
-  MSG_ELIMINA_PERSONA,
   MSG_SELECCIONA_REGISTRO,
   MSG_SUCCESS,
   MSG_TERCERO_EXISTE,
@@ -41,6 +40,8 @@ import { TercerosQuery } from '../../../core/queries/terceros.query';
 import { TituloComponent } from '../titulo/titulo.component';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+
+import { MSG_ELIMINA_ELEMENTO, TEXTO_CERRAR } from '../../../core/enums/mensajes-modal-comunes.enum';
 
 @Component({
   selector: 'lib-terceros',
@@ -279,7 +280,7 @@ export class TercerosComponent implements OnInit, OnDestroy, AfterViewInit {
         titulo: TITULO_MODAL_AVISO,
         mensaje: MSG_SELECCIONA_REGISTRO,
         cerrar: false,
-        txtBtnAceptar: 'Cerrar',
+        txtBtnAceptar: TEXTO_CERRAR,
         txtBtnCancelar: '',
       };
     }
@@ -290,6 +291,17 @@ export class TercerosComponent implements OnInit, OnDestroy, AfterViewInit {
           (seleccionado) => seleccionado.correo === persona.correo
         )
     );
+
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: TITULO_MODAL_AVISO,
+      mensaje: MSG_ELIMINA_ELEMENTO,
+      cerrar: false,
+      txtBtnAceptar: TEXTO_CERRAR,
+      txtBtnCancelar: '',
+    }
     this.personasChange.emit(this.personas);
     this.tercerosStore.setTerceros(this.personas);
   }

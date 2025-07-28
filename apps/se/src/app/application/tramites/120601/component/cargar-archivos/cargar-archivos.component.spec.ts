@@ -12,8 +12,7 @@ describe('CargarArchivosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule, AlertComponent, TituloComponent],
-      declarations: [CargarArchivosComponent],
+      imports: [CommonModule, AlertComponent, TituloComponent, CargarArchivosComponent],
     }).compileComponents();
   });
 
@@ -23,11 +22,11 @@ describe('CargarArchivosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have the correct initial message', () => {
+  it('debe tener el mensaje inicial correcto', () => {
     const EXPECTED_MESSAGE =
       'La solicitud ha quedado registrada con el número temporal 202759017. Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
     

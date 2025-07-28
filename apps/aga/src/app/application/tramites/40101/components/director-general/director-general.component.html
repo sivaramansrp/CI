@@ -8,8 +8,12 @@
           type="text"
           class="form-control"
           id="nombre"
-          formControlName="nombre"     
+          formControlName="nombre"
+          (change)="setValoresStore(directorGeneralForm,'nombre', 'setNombres')"
         />
+        <div *ngIf="directorGeneralForm.get('nombre')?.invalid && (directorGeneralForm.get('nombre')?.touched || directorGeneralForm.get('nombre')?.dirty)" class="text-danger">
+          <small *ngIf="directorGeneralForm.get('nombre')?.errors?.['required']">Este campo es obligatorio.</small>
+        </div>
       </div>
       <div class="col-md-4 mb-3">
         <label class="form-label" for="primerApellido">Primer apellido*:</label>
@@ -18,7 +22,11 @@
           class="form-control"
           id="primerApellido"
           formControlName="primerApellido"
+          (change)="setValoresStore(directorGeneralForm,'primerApellido', 'setPrimerApellido')"
         />
+        <div *ngIf="directorGeneralForm.get('primerApellido')?.invalid && (directorGeneralForm.get('primerApellido')?.touched || directorGeneralForm.get('primerApellido')?.dirty)" class="text-danger">
+          <small *ngIf="directorGeneralForm.get('primerApellido')?.errors?.['required']">Este campo es obligatorio.</small>
+        </div>
       </div>
       <div class="col-md-4 mb-3">
         <label class="form-label" for="segundoApellido"
@@ -29,7 +37,11 @@
           class="form-control"
           id="segundoApellido"
           formControlName="segundoApellido"
+          (change)="setValoresStore(directorGeneralForm,'segundoApellido', 'setSegundoApellido')"
         />
+        <div *ngIf="directorGeneralForm.get('segundoApellido')?.invalid && (directorGeneralForm.get('segundoApellido')?.touched || directorGeneralForm.get('segundoApellido')?.dirty)" class="text-danger">
+          <small *ngIf="directorGeneralForm.get('segundoApellido')?.errors?.['required']">Este campo es obligatorio.</small>
+        </div>
       </div>
     </div>
   </form>

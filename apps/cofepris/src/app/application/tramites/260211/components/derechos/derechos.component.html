@@ -23,9 +23,9 @@
                 <div class="form-group">
                   <app-catalogo-select
                     [catalogo]="derechosList"
-                   
-                    [label]="'banco'"
-                    [placeholder]="'Seleccione una aduana'"
+                    [isDisabled]="esFormularioSoloLectura ? true : false"
+                    [label]="'Banco'"
+                    [placeholder]="'Seleccione una opción'"
                     formControlName="banco"
                     (change)="setValoresStore(derechosForm,'banco', 'setbanco')"></app-catalogo-select>
                 </div>
@@ -42,10 +42,14 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="tipoFetch">Fetch de page</label>
-                  <input class="form-control" id="tipoFetch" placeholder="" type="date"
-                    formControlName="deFetch" (change)="setValoresStore(derechosForm,'tipoFetch', 'settipoFetch')">
-                </div>
+                   <input-fecha [datos]="fechaInicioInput"
+         name="deFetch"
+        (valorCambiado)="onFechaCambiada($event)"
+        [setFecha]="derechosForm.get('deFetch')?.value"
+         (change)="setValoresStore(derechosForm,'deFetch', 'settipoFetch')" 
+             [isDisabled]="esFormularioSoloLectura ? true : false"
+        ></input-fecha>
+                  </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
@@ -55,15 +59,17 @@
                 </div>
               </div>
           </div>
-          <div class="row mt-5 mb-2">
-            <div class="col-md-8">
-            </div>
-            <div class="col-md-4">
-              <div class="btn-group">
-                <button type="button" class="btn btn-primary">Borrar datos del pago</button>
-              </div>
-            </div>
-          </div>   
+          
+          <div class="row mt-5">
+      <div class="col-md-12">
+        <div class="pull-right">
+          <button type="button" name="agregarMercancias" class="btn btn-primary ms-2"
+            [disabled]="esFormularioSoloLectura ? true : false">
+            Borrar datos del pago
+          </button>
+        </div>
+      </div>
+    </div>
       </form>
   </div>
   

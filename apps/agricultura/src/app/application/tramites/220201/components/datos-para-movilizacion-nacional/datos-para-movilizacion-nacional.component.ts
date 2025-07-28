@@ -1,19 +1,19 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
-  ConsultaioQuery,
   RespuestaCatalogos,
   SharedModule,
   TituloComponent
-} from '@ng-mf/data-access-user';
+} from '@libs/shared/data-access-user/src';
 
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos para la movilización nacional.
@@ -44,41 +44,49 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
 
   /**
    * Grupo de controles del formulario para la movilización nacional.
+   * @type {FormGroup}
    */
   movilizacionForm: FormGroup;
 
   /**
    * Lista de medios de transporte disponibles.
+   * @type {Catalogo[]}
    */
   medioTransporteList: Catalogo[] = [];
 
   /**
    * Lista de identificaciones de transporte.
+   * @type {Catalogo[]}
    */
   identificacionTransporteList: Catalogo[] = [];
 
   /**
    * Lista de nombres de empresas transportistas.
+   * @type {Catalogo[]}
    */
   nombreDeLaEmpresaTransportista: Catalogo[] = [];
 
   /**
    * Lista de puntos de verificación federal.
+   * @type {Catalogo[]}
    */
   puntoDeVerificacionFederal: Catalogo[] = [];
 
   /**
    * Indica si el formulario se encuentra en modo solo lectura.
+   * @type {boolean}
    */
   esFormularioSoloLectura: boolean = false;
 
   /**
    * Notificador para cancelar todas las suscripciones activas al destruir el componente.
+   * @type {Subject<void>}
    */
   private destroyNotifier$ = new Subject<void>();
 
   /**
    * Constructor del componente.
+   * @method constructor
    * @param fb Constructor de formularios reactivos.
    * @param httpServicios Cliente HTTP para llamadas a servicios.
    * @param certificadoZoosanitarioServices Servicio que gestiona la lógica del certificado zoosanitario.
@@ -103,6 +111,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
 
   /**
    * Ciclo de vida de Angular que se ejecuta al iniciar el componente.
+   * @method ngOnInit
    */
   ngOnInit(): void {
     this.certificadoZoosanitarioQuery.seleccionarMovilizacionNacional$
@@ -118,17 +127,9 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
 
   /**
    * Ciclo de vida que se ejecuta después de que la vista ha sido inicializada.
+   * @method ngAfterViewInit
    */
   ngAfterViewInit(): void {
-    this.movilizacionForm.valueChanges
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(() => {
-        const FORMA_VALIDA_ACTUALIZADA = {
-          dataParaMovilizacion: this.movilizacionForm.valid
-        };
-        this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
-      });
-
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -144,6 +145,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
 
   /**
    * Obtiene todas las listas desplegables requeridas en el formulario.
+   * @method obtenerListasDesplegables
    */
   obtenerListasDesplegables(): void {
     this.obtenerTransporteListList();
@@ -154,6 +156,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
 
   /**
    * Obtiene la lista de medios de transporte desde un archivo JSON.
+   * @method obtenerTransporteListList
    */
   obtenerTransporteListList(): void {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/transporte.json')
@@ -165,6 +168,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
 
   /**
    * Obtiene la lista de nombres de las empresas transportistas desde un archivo JSON.
+   * @method obtenernombreDeLaEmpresaTransportistaList
    */
   obtenernombreDeLaEmpresaTransportistaList(): void {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json')
@@ -176,6 +180,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
 
   /**
    * Obtiene la lista de puntos de verificación federal desde un archivo JSON.
+   * @method obtenerPuntoDeVerificaciónList
    */
   obtenerPuntoDeVerificaciónList(): void {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json')
@@ -187,6 +192,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
 
   /**
    * Obtiene la lista de identificaciones del transporte desde un archivo JSON.
+   * @method obtenerIdentificacionTransporteList
    */
   obtenerIdentificacionTransporteList(): void {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json')
@@ -198,6 +204,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
 
   /**
    * Envía los valores actuales del formulario al store del servicio para actualizar el estado global.
+   * @method setValoresStore
    */
   setValoresStore(): void {
     const VALOR = this.movilizacionForm.value;
@@ -205,7 +212,24 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
   }
 
   /**
+   * @description
+   * Valida el formulario de movilización. Si el formulario es válido, retorna `true`.
+   * Si no es válido, marca todos los campos como tocados para mostrar los errores y retorna `false`.
+   *
+   * @returns {boolean} `true` si el formulario es válido, de lo contrario `false`.
+   */
+  validarFormulario(): boolean {
+    if (this.movilizacionForm.valid) {
+      return true;
+    }
+    else {
+      this.movilizacionForm.markAllAsTouched();
+      return false;
+    }
+  }
+  /**
    * Ciclo de vida que se ejecuta al destruir el componente. Libera recursos y cancela las suscripciones.
+   * @method ngOnDestroy
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

@@ -1,70 +1,175 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
-import { Mercancia } from '../models/plantas-consulta.model';
+import { Mercancia } from '../../../shared/models/modificacion.enum';
+import { Mercancias } from '../models/plantas-consulta.model';
 
-// Interfaz que define el estado del trámite.
+/**
+ * Interfaz que representa la estructura del estado de un trámite 110204.
+ * Este estado contiene formularios, catálogos, listas, valores seleccionados y otros datos requeridos.
+ */
 export interface TramiteState {
+  /** Lista de catálogos que representan los idiomas disponibles. */
   idiomaDatos: Catalogo[];
+
+  /** Lista de catálogos que representan las entidades federativas disponibles. */
   entidadFederativaDatos: Catalogo[];
+
+  /** Lista de catálogos que representan las representaciones federales disponibles. */
   representacionFederalDatos: Catalogo[];
+
+  /** Lista de catálogos para la alta de planta. */
   altaPlanta: Catalogo[];
+
+  /** Catálogo que representa el estado actual. */
   estado: Catalogo;
-  factura:Catalogo[];
-  facturas:Catalogo,
-  umc:Catalogo;
-  umcs:Catalogo[],
+
+  /** Lista de catálogos que representan facturas disponibles. */
+  factura: Catalogo[];
+
+  /** Catálogo que representa facturas. */
+  facturas: Catalogo;
+
+  /** Catálogo que representa la unidad de medida comercial (UMC). */
+  umc: Catalogo;
+
+  /** Lista de catálogos que representan unidades de medida comercial (UMCs). */
+  umcs: Catalogo[];
+
+  /** Lista de catálogos que representan países bloqueados. */
   paisBloques: Catalogo[];
+
+  /** Catálogo que representa un país bloqueado seleccionado. */
   paisBloque: Catalogo;
+
+  /**
+   * Objeto que contiene datos del formulario del certificado.
+   * Las claves pueden contener valores de tipo undefined, boolean, string, number u objeto.
+   */
   formCertificado: { [key: string]: undefined | boolean | string | number | object };
+
+  /**
+   * Objeto que contiene datos del formulario de datos del certificado.
+   * Las claves pueden contener valores de tipo undefined, boolean, string, number u objeto.
+   */
   formDatosCertificado: { [key: string]: undefined | boolean | string | number | object };
-  mercanciaForm:{ [key: string]: undefined | boolean | string | number | object}
-  buscarMercancia: Mercancia[];
+
+  /**
+   * Objeto que contiene datos del formulario de mercancía.
+   * Las claves pueden contener valores de tipo undefined, boolean, string, number u objeto.
+   */
+  mercanciaForm: { [key: string]: undefined | boolean | string | number | object };
+
+  /** Lista de mercancías encontradas o buscadas. */
+  buscarMercancia: Mercancias[];
+
+  /**
+   * Objeto que representa la validez de los formularios,
+   * donde cada clave es un identificador de formulario y el valor un booleano indicando si es válido.
+   */
   formaValida: { [key: string]: boolean };
+
+  mercanciaTabla: Mercancia[];
 }
 
-// Interfaz que define el estado de la solicitud 110204.
+
+
+/**
+ * Interfaz que representa el estado de una solicitud tipo 110204.
+ */
 export interface Solicitud110204State {
+  /** Régimen de la mercancía. */
   regimenMercancia: string;
+
+  /** Clasificación del régimen. */
   clasifiRegimen: string;
+
+  /** Valor TA asociado. */
   valueTA: string;
+
+  /** Fracción arancelaria de la mercancía. */
   fraccionArancelaria: string;
+
+  /** Número de Identificación Comercial (NICO). */
   nico: string;
+
+  /** Unidad de medida tarifaria. */
   unidadMedidaTarifaria: string;
+
+  /** Cantidad tarifaria. */
   cantidadTarifaria: number;
+
+  /** Valor de la factura en dólares estadounidenses. */
   valorFacturaUSD: number;
+
+  /** Precio unitario en dólares estadounidenses. */
   precioUnitarioUSD: string;
+
+  /** País de origen de la mercancía. */
   paisOrigen: string;
+
+  /** País destino de la mercancía. */
   paisDestino: string;
+
+  /** Lote asociado a la mercancía. */
   lote: string;
+
+  /** Fecha de salida de la mercancía. */
   fechaSalida: string;
+
+  /** Observaciones generales. */
   observaciones: string;
+
+  /** Observaciones específicas sobre la mercancía. */
   observacionMerc: string;
+
+  /** Tipo de persona (física, moral, etc.). */
   tipoPersona: string;
+
+  /** Nombre del solicitante o persona responsable. */
   nombre: string;
+
+  /** Apellido paterno del solicitante o persona responsable. */
   apellidoPaterno: string;
+
+  /** Apellido materno del solicitante o persona responsable. */
   apellidoMaterno: string;
+
+  /** Razón social (en caso de persona moral). */
   razonSocial: string;
+
+  /** Molino asociado (si aplica). */
   molino: string;
+
+  /** Domicilio del solicitante o entidad. */
   domicilio: string;
+
+  /** Estado del domicilio. */
   estado: string;
+
+  /** País bloque (si aplica). */
   paisBloque: string;
-  factura:string;
-  umc:string;
+
+  /** Número o referencia de factura. */
+  factura: string;
+
+  /** Unidad de medida comercial. */
+  umc: string;
+
+  /** Representación federal (si aplica). */
   representacionFederal: string;
 }
 
-// Estado inicial para el trámite.
+/**
+ * Estado inicial que se utiliza para crear el store con valores por defecto.
+ */
 export const INITIAL_STATE: TramiteState = {
   altaPlanta: [],
   paisBloques: [],
-  estado: {
-    id: -1,
-    descripcion: '',
-  },
-  umc:{id:-1,descripcion:''},
-  umcs:[],
-  factura:[],
+  estado: { id: -1, descripcion: '' },
+  umc: { id: -1, descripcion: '' },
+  umcs: [],
+  factura: [],
   formaValida: {},
   formCertificado: {
     entidadFederativa: '',
@@ -72,9 +177,9 @@ export const INITIAL_STATE: TramiteState = {
     bloque: '',
     nombreComercialForm: '',
     registroProductoForm: '',
-    fracciónArancelariaForm: '',
-    fechaInicioInput:'',
-    fechaFinalInput:'',
+    fraccionArancelariaForm: '',
+    fechaInicioInput: '',
+    fechaFinalInput: '',
   },
   formDatosCertificado: {
     observacionesDates: '',
@@ -82,144 +187,101 @@ export const INITIAL_STATE: TramiteState = {
     EntidadFederativaDates: '',
     representacionFederalDates: '',
   },
-  mercanciaForm:{
-    fraccionNaladi:'',
+  mercanciaForm: {
+    fraccionNaladi: '',
     fraccionNaladiSa93: '',
     fraccionNaladiSa96: '',
     fraccionNaladiSa02: '',
     nombreTecnico: '',
-    nombreComercial:'',
-    normaOrigen:'',
-    id:'',
-    cantidad:'',
-    umc:'',
-    tipoFactura:'',
-    valorMercancia:'',
-    fechaFinalInput:'',
-    numeroFactura:'',
-    nalad:'',
-    complementoClasificacion:''
+    nombreComercial: '',
+    normaOrigen: '',
+    id: '',
+    cantidad: '',
+    umc: '',
+    tipoFactura: '',
+    valorMercancia: '',
+    fechaFinalInput: '',
+    numeroFactura: '',
+    nalad: '',
+    complementoClasificacion: '',
   },
-  facturas:{
-    id: -1,
-    descripcion: '',
-  },
+  facturas: { id: -1, descripcion: '' },
   buscarMercancia: [],
-  paisBloque: {
-    id: -1,
-    descripcion: '',
-  },
+  paisBloque: { id: -1, descripcion: '' },
   idiomaDatos: [],
   entidadFederativaDatos: [],
   representacionFederalDatos: [],
+  mercanciaTabla: [],
 };
 
 /**
- * Store de la entidad Tramite.
+ * @class Tramite110204Store
+ * @description
+ * Store que administra el estado global del trámite 110204 utilizando Akita.
+ * Este store encapsula todos los datos y formularios necesarios para la gestión
+ * de un trámite, tales como catálogos, formularios, validaciones y mercancías.
  * 
- * Este store se utiliza para gestionar el estado relacionado con el trámite,
- * actualizando los valores del estado mediante las funciones proporcionadas.
- * 
- * @export
- * @class TramiteStore
- * @extends {Store<TramiteState>}
+ * Cada método `set` permite actualizar secciones específicas del estado de forma inmutable.
  */
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'tramite-110204', resettable: true })
 export class Tramite110204Store extends Store<TramiteState> {
-  
   constructor() {
     super(INITIAL_STATE);
   }
 
   /**
-   * Establece el estado en el almacén.
-   * 
-   * @param {Catalogo} estado - El estado que se va a establecer en el almacén.
-   * 
-   * @returns {void} - No devuelve ningún valor.
+   * Actualiza el estado seleccionado.
+   * @param estado Objeto de tipo `Catalogo` representando un estado.
    */
   setEstado(estado: Catalogo): void {
-    this.update((state) => ({
-      ...state,
-      estado,
-    }));
+    this.update((state) => ({ ...state, estado }));
   }
 
   /**
-   * Establece la lista de facturas en el estado.
-   * 
-   * @param factura - Lista de objetos de tipo Catalogo que representan las facturas.
+   * Actualiza la lista de facturas.
+   * @param factura Arreglo de objetos `Catalogo`.
    */
-  setFactura(factura: Catalogo[]): void {    
-    this.update((state) => ({
-      ...state,
-      factura,
-    }));
+  setFactura(factura: Catalogo[]): void {
+    this.update((state) => ({ ...state, factura }));
   }
 
   /**
-   * Establece el catálogo de UMCs en el estado de la tienda.
-   *
-   * @param umcs - Una lista de objetos de tipo `Catalogo` que representan las UMCs a establecer.
+   * Actualiza la lista de UMCs disponibles.
+   * @param umcs Lista de catálogos con unidades de medida.
    */
-  setUmc(umcs: Catalogo[]): void {    
-    this.update((state) => ({
-      ...state,
-      umcs,
-    }));
+  setUmc(umcs: Catalogo[]): void {
+    this.update((state) => ({ ...state, umcs }));
   }
+
   /**
-   * Establece los bloques de países en el almacén.
-   * 
-   * @param {Catalogo[]} paisBloques - Un array de objetos `Catalogo` que representa los bloques de países.
-   * 
-   * @returns {void} - No devuelve ningún valor.
+   * Establece los bloques de países disponibles.
+   * @param paisBloques Lista de catálogos de países por bloque.
    */
   setBloque(paisBloques: Catalogo[]): void {
-    this.update((state) => ({
-      ...state,
-      paisBloques,
-    }));
+    this.update((state) => ({ ...state, paisBloques }));
   }
 
   /**
-   * Establece las plantas a dar de alta en el almacén.
-   * 
-   * @param {Catalogo[]} altaPlanta - Un array de objetos `Catalogo` que representa las plantas a dar de alta.
-   * 
-   * @returns {void} - No devuelve ningún valor.
+   * Establece las plantas disponibles para alta.
+   * @param altaPlanta Lista de plantas.
    */
   setaltaPlanta(altaPlanta: Catalogo[]): void {
-    this.update((state) => ({
-      ...state,
-      altaPlanta,
-    }));
+    this.update((state) => ({ ...state, altaPlanta }));
   }
 
   /**
-   * Establece el estado de validación del formulario en el almacén.
-   * 
-   * @param {Object} formaValida - Un objeto donde las claves son los nombres de los campos del formulario y los valores son booleanos que indican si el campo es válido o no.
-   * 
-   * @returns {void} - No devuelve ningún valor.
+   * Actualiza el estado de validación de uno o varios campos del formulario.
+   * @param formaValida Objeto con clave/valor booleano que indica si cada campo es válido.
    */
   setFormValida(formaValida: { [key: string]: boolean }): void {
-    this.update((state) => {
-      const IS_VALID = { ...state.formaValida, ...formaValida };
-      return {
-        ...state,
-        formaValida: IS_VALID,
-      };
-    });
+    const IS_VALID = { ...this.getValue().formaValida, ...formaValida };
+    this.update({ formaValida: IS_VALID });
   }
 
   /**
-   * Establece los valores del formulario de fechas del certificado en el almacén.
-   * 
-   * @param {Object} values - Un objeto con las claves y valores para actualizar las fechas del certificado.
-   * 
-   * @returns {void} - No devuelve ningún valor.
+   * Actualiza los valores del formulario de datos del certificado.
+   * @param values Clave/valor con campos del formulario a actualizar.
    */
   setFormDatosCertificado(values: { [key: string]: undefined | boolean | string | number | object }): void {
     this.update((state) => ({
@@ -231,11 +293,8 @@ export class Tramite110204Store extends Store<TramiteState> {
   }
 
   /**
-   * Establece los valores del formulario del certificado en el almacén.
-   * 
-   * @param {Object} values - Un objeto con las claves y valores para actualizar el formulario del certificado.
-   * 
-   * @returns {void} - No devuelve ningún valor.
+   * Actualiza los valores del formulario principal del certificado.
+   * @param values Clave/valor con campos del formulario.
    */
   setFormCertificado(values: { [key: string]: undefined | boolean | string | number | object }): void {
     this.update((state) => ({
@@ -247,11 +306,8 @@ export class Tramite110204Store extends Store<TramiteState> {
   }
 
   /**
-   * Establece los valores del formulario del certificado en el almacén.
-   * 
-   * @param {Object} values - Un objeto con las claves y valores para actualizar el formulario del certificado.
-   * 
-   * @returns {void} - No devuelve ningún valor.
+   * Actualiza los valores del formulario de mercancía.
+   * @param values Clave/valor con información sobre la mercancía.
    */
   setFormMercancia(values: { [key: string]: undefined | boolean | string | number | object }): void {
     this.update((state) => ({
@@ -261,185 +317,62 @@ export class Tramite110204Store extends Store<TramiteState> {
       },
     }));
   }
-  /**
-   * Establece los datos de la mercancía a buscar en el almacén.
-   * 
-   * @param {Mercancia[]} buscarMercancia - Un array de objetos `Mercancia` con la información de la mercancía a buscar.
-   * 
-   * @returns {void} - No devuelve ningún valor.
-   */
-  setbuscarMercancia(buscarMercancia: Mercancia[]): void {
-    this.update((state) => ({
-      ...state,
-      buscarMercancia,
-    }));
-  }
 
   /**
-   * Establece el régimen de la mercancía en el almacén.
-   * 
-   * @param {string} regimenMercancia - El régimen de la mercancía a establecer.
-   * 
-   * @returns {void} - No devuelve ningún valor.
+   * Establece los resultados de mercancía obtenidos por búsqueda.
+   * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
    */
+  setbuscarMercancia(buscarMercancia: Mercancias[]): void {
+    this.update((state) => ({ ...state, buscarMercancia }));
+  }
+
+  /** Métodos individuales para establecer propiedades específicas de la solicitud **/
+
   public setRegimenMercancia(regimenMercancia: string): void {
-    this.update((state) => ({
-      ...state,
-      regimenMercancia,
-    }));
+    this.update((state) => ({ ...state, regimenMercancia }));
   }
 
-  /**
-   * Establece la clasificación del régimen en el almacén.
-   * 
-   * @param {string} clasifiRegimen - La clasificación del régimen a establecer.
-   * 
-   * @returns {void} - No devuelve ningún valor.
-   */
   public setClasifiRegimen(clasifiRegimen: string): void {
-    this.update((state) => ({
-      ...state,
-      clasifiRegimen,
-    }));
+    this.update((state) => ({ ...state, clasifiRegimen }));
   }
 
-  /**
-   * Establece la fracción arancelaria en el almacén.
-   * 
-   * @param {string} fraccionArancelaria - La fracción arancelaria a establecer.
-   * 
-   * @returns {void} - No devuelve ningún valor.
-   */
   public setFraccionArancelaria(fraccionArancelaria: string): void {
-    this.update((state) => ({
-      ...state,
-      fraccionArancelaria,
-    }));
+    this.update((state) => ({ ...state, fraccionArancelaria }));
   }
 
-  /**
-   * Establece el NICO en el almacén.
-   * 
-   * @param {string} nico - El NICO (número de identificación comercial).
-   * 
-   * @returns {void} - No devuelve ningún valor.
-   */
   public setNico(nico: string): void {
-    this.update((state) => ({
-      ...state,
-      nico,
-    }));
+    this.update((state) => ({ ...state, nico }));
   }
 
-  /**
-   * Establece la unidad de medida tarifaria en el almacén.
-   * 
-   * @param {string} unidadMedidaTarifaria - La unidad de medida tarifaria a establecer.
-   * 
-   * @returns {void} - No devuelve ningún valor.
-   */
   public setUnidadMedidaTarifaria(unidadMedidaTarifaria: string): void {
-    this.update((state) => ({
-      ...state,
-      unidadMedidaTarifaria,
-    }));
+    this.update((state) => ({ ...state, unidadMedidaTarifaria }));
   }
 
-  /**
-   * Establece el país de origen en el almacén.
-   * 
-   * @param {string} paisOrigen - El país de origen a establecer.
-   * 
-   * @returns {void} - No devuelve ningún valor.
-   */
   public setPaisOrigen(paisOrigen: string): void {
-    this.update((state) => ({
-      ...state,
-      paisOrigen,
-    }));
+    this.update((state) => ({ ...state, paisOrigen }));
   }
 
-  /**
-   * Establece el país de destino en el almacén.
-   * 
-   * @param {string} paisDestino - El país de destino a establecer.
-   * 
-   * @returns {void} - No devuelve ningún valor.
-   */
   public setPaisDestino(paisDestino: string): void {
-    this.update((state) => ({
-      ...state,
-      paisDestino,
-    }));
+    this.update((state) => ({ ...state, paisDestino }));
   }
 
-  /**
-   * Establece el molino en el almacén.
-   * 
-   * @param {string} molino - El molino a establecer.
-   * 
-   * @returns {void} - No devuelve ningún valor.
-   */
   public setMolino(molino: string): void {
-    this.update((state) => ({
-      ...state,
-      molino,
-    }));
+    this.update((state) => ({ ...state, molino }));
   }
 
-  /**
-   * Establece la representación federal en el almacén.
-   * 
-   * @param {string} representacionFederal - La representación federal a establecer.
-   * 
-   * @returns {void} - No devuelve ningún valor.
-   */
   public setRepresentacionFederal(representacionFederal: string): void {
-    this.update((state) => ({
-      ...state,
-      representacionFederal,
-    }));
+    this.update((state) => ({ ...state, representacionFederal }));
   }
 
-  /**
-   * Establece los datos de la representación federal en el almacén.
-   * 
-   * @param {Catalogo[]} representacionFederalDatos - Un array de objetos `Catalogo` con los datos de la representación federal.
-   * 
-   * @returns {void} - No devuelve ningún valor.
-   */
-  setRepresentacionFederalDatos(representacionFederalDatos: Catalogo[]): void {
-    this.update((state) => ({
-      ...state,
-      representacionFederalDatos,
-    }));
+  public setRepresentacionFederalDatos(representacionFederalDatos: Catalogo[]): void {
+    this.update((state) => ({ ...state, representacionFederalDatos }));
   }
 
-  /**
-   * Establece los datos de la entidad federativa en el almacén.
-   * 
-   * @param {Catalogo[]} entidadFederativaDatos - Un array de objetos `Catalogo` con los datos de la entidad federativa.
-   * 
-   * @returns {void} - No devuelve ningún valor.
-   */
-  setEntidadFederativaDatos(entidadFederativaDatos: Catalogo[]): void {
-    this.update((state) => ({
-      ...state,
-      entidadFederativaDatos,
-    }));
+  public setEntidadFederativaDatos(entidadFederativaDatos: Catalogo[]): void {
+    this.update((state) => ({ ...state, entidadFederativaDatos }));
   }
 
-  /**
-   * Establece los datos del idioma en el almacén.
-   * 
-   * @param {Catalogo[]} idiomaDatos - Un array de objetos `Catalogo` con los datos del idioma.
-   * 
-   * @returns {void} - No devuelve ningún valor.
-   */
   public setIdiomaDatos(idiomaDatos: Catalogo[]): void {
-    this.update((state) => ({
-      ...state,
-      idiomaDatos,
-    }));
+    this.update((state) => ({ ...state, idiomaDatos }));
   }
 }

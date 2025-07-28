@@ -1,8 +1,7 @@
-import { AfterViewInit, Component, EventEmitter, Output, ViewChild } from '@angular/core';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user';
+import { ReplaySubject, map,takeUntil } from 'rxjs';
 import { CuposService } from '../../services/cupos.service';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -12,16 +11,19 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
   templateUrl: './paso-uno.component.html',
   styles: ``,
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements OnDestroy, OnInit {
+  /**
+   * Indica si los datos de respuesta están disponibles.
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+   /**
+     * Estado de la consulta, utilizado para manejar el estado de la aplicación.
+     */
+  public consultaState!: ConsultaioState;
   /**
    * Catálogo de entidades federativas.
    */
   entidadFederativa!: unknown;
-
-  /**
-   * Referencia al componente de solicitante.
-   */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
   /**
    * Tipo de persona seleccionada.
@@ -48,15 +50,51 @@ export class PasoUnoComponent implements AfterViewInit {
   */
   @Output() dataEmitter = new EventEmitter<number>();
   /**
-   * Método que se ejecuta después de que las vistas del componente han sido inicializadas.
-   * Configura los formularios dinámicos y obtiene el tipo de persona.
+   * Indica si existen datos de respuesta del servidor para actualizar el formulario.
    */
-  ngAfterViewInit(): void {
-    this.persona = PERSONA_MORAL_NACIONAL;
-    this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+   public esDatosRespuesta: boolean = false;
+  /**
+   * Constructor del componente.
+   * Inicializa el componente y puede ser utilizado para inyecciones de dependencias si es necesario.
+   */
+  constructor(private consultaioQuery: ConsultaioQuery,
+    private cupos: CuposService ){
+    } 
+    /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al estado de consulta y carga datos si es necesario.
+   */
+  ngOnInit(): void {
+     this.consultaioQuery.selectConsultaioState$.pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+      })
+    ).subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormularios();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
 
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormularios(): void {
+    this.cupos
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.cupos.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+  
   /**
    * Selecciona una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.
@@ -65,5 +103,14 @@ export class PasoUnoComponent implements AfterViewInit {
     this.indice = i;
     this.dataEmitter.emit(this.indice);
 
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+   * Aquí se pueden realizar tareas de limpieza, pero en este caso lanza un error indicando que no está implementado.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

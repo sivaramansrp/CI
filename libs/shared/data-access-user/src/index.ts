@@ -1,10 +1,8 @@
-import exp from 'constants';
+
 
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
 export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
 export { LibBandejaComponent } from './tramites/components/lib-bandeja/lib-bandeja.component';
-export { DatosGeneralesTramiteComponent } from './tramites/components/datos-generales-tramite/datos-generales-tramite.component';
-export { DatosComponent } from './tramites/components/datos/datos.component';
 export { ConsultaTramiteComponent } from './tramites/components/consulta-tramite/consulta-tramite.component';
 export { ReviewersTabsComponent } from './tramites/components/reviewers-tabs/reviewers-tabs.component';
 export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
@@ -25,6 +23,7 @@ export { PASOS as PASOS_CUATRO_STEPS } from './tramites/constantes/paso-cuatro-s
 export { PASOS as PASOS_TRES_STEPS } from './tramites/constantes/paso-tres-steps.enum';
 export { RespuestaCatalogos } from './core/models/shared/catalogos.model';
 export { BandejaDeSolicitudes } from './core/models/shared/lib-bandeja.model';
+export { ConsultaTramite } from './core/models/shared/consulta-tramite.model';
 export { BandejaDeTareasPendientes } from './core/models/shared/bandeja-de-tareas-pendientes.model';
 export { SolicitanteasigncionserviceService } from './core/services/120404/solicitanteasigncionservice.service';
 export { TablaConEntradaComponent } from './tramites/components/tabla-con-entrada/tabla-con-entrada.component';
@@ -35,13 +34,13 @@ export { TablePaginationComponent } from './tramites/components/table-pagination
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
 export { TituloComponent } from './tramites/components/titulo/titulo.component';
 export { TramiteDetails } from './core/models/tramiteDetails';
-export { TramiteFolioQueries } from './core/queries/tramiteFolio.queries';
-export {
-  TramiteFolioState,
-  TramiteFolioStore,
-} from './core/estados/tramiteFolio.store';
+export { MenuItemComponent } from './tramites/components/menu-item/menu-item.component';
+export * from './core/queries/tramiteFolio.query';
+export * from './core/estados/tramiteFolio.store';
 export { TramiteStore } from './core/estados/tramite.store';
-export { ValidacionesFormularioService } from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
+export * from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
+export { PANTA_PASOS } from './core/enums/120404/pantallas260514.enum';
+export { AccionBoton } from './core/models/260514/aviso-pantallas.model';
 export * from './core/ambientes';
 export * from './core/constants/api-constants';
 export * from './core/constants/constantes-generales';
@@ -86,17 +85,12 @@ export * from './core/services/110102/representacion-federal/representacionFeder
 export * from './core/services/110210/buscar-certificado-de-origen/buscarCertificadoDeOrigen.service';
 export * from './core/services/110210/certificado-disponibles/certificadoDisponibles.service';
 export * from './core/services/110210/domicilio-tabla/domicilioTabla.service';
-export * from './core/services/110218/validar-certificado-tecnico.enum';
 export * from './core/services/120402/asignacion-directa-de-cupo.enum';
 export * from './core/services/120402/descripcion-del-cupo/descripcionDelCupo.service';
 export * from './core/services/120402/representacionFederal/representacion-federal.service';
 export * from './core/services/120402/seleccion-del-cupo/seleccion-del-cupo.service';
-export * from './core/services/120501/licitacionesDisponibles.service';
 export * from './core/services/120602/empresa-frontera-solicitud.enum';
-export * from './core/services/130118/pexim/pexim.service';
 export * from './core/services/220471/servicios-pantallas.service';
-export * from './core/services/231001/administrar-residuos.service';
-export * from './core/services/231001/materia-prima-formservice.service';
 export * from './core/services/shared/catalogos/aduana.service';
 export * from './core/services/shared/catalogos/catalogos.service';
 export * from './core/services/shared/catalogos/recinto.service';
@@ -170,8 +164,6 @@ export * from './tramites/shared.module';
 export * from './core/models/shared/datos-generales.model';
 export * from './core/enums/constantes-alertas.enum';
 export * from './tramites/directives/solo-numeros/solo-numeros.directive';
-export * from './core/services/231001/materia-prima-formservice.service';
-export * from './core/services/231001/administrar-residuos.service';
 export * from './core/services/shared/tramite-folio/tramite-folio.service';
 export * from './core/models/260303/certificados-licencias-permisos.model';
 export * from './core/models/260701/certificados-licencias.model';
@@ -194,9 +186,7 @@ export * from './core/services/shared/catalogos/tipo-despacho.service';
 export * from './core/services/shared/catalogos/tipo-pedimento.service';
 export * from './core/services/shared/catalogos/paises.service';
 
-
-export * from './tramites/constantes/120501/participantes.enum'
-
+export * from './tramites/constantes/120501/participantes.enum';
 
 export * from './core/services/shared/subsecuentes/subsecuentes.service';
 export * from './core/models/shared/subsecuentes.model';
@@ -204,3 +194,21 @@ export * from './core/utils/utilerias';
 
 export * from './tramites/components/transporte/transporte.component';
 export * from './tramites/components/agregar-transporte/agregar-transporte.component';
+export * from './core/models/shared/tramite-folio.model';
+export * from './core/enums/crosslist.enums';
+export * from './core/services/shared/desplazarse-hacia-arriba/desplazarse-hacia-arriba.service';
+export * from './core/enums/tipoIdentificacion.enum';
+
+
+export * from './core/enums/mensajes-modal-comunes.enum';
+export * from './tramites/directives/alfanumerico/alfanumerico-formato.directive';
+export * from './tramites/components/pie-pagina-informacion/pie-pagina-informacion.component';
+export * from './core/services/shared/cadena-original/cadena-original.service';
+
+export * from './core/services/shared/catalogos/entidades-federativas.service';
+export * from './core/services/shared/catalogos/regimen.service';
+export * from './core/services/shared/catalogos/fraccion-arancelaria.service';
+export * from './tramites/components/paginador-tabla/paginador-tabla.component';
+export * from './core/interceptor/http.interceptor';
+
+export * from './tramites/directives/solo-alfabetos/solo-alfabetos.directive';

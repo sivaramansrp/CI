@@ -1,7 +1,7 @@
 
 <ng-titulo titulo="Oficio" />
 <div>
-<form [formGroup]="OficioForm" >
+<form [formGroup]="oficioForm" >
     <div formGroupName="oficioData">
 
 <div class="row"  style="padding-bottom: 20px;" >
@@ -38,7 +38,7 @@
 
       <div class="row" style="padding-bottom: 20px;text-align: right;">
         <div>
-            <button type="button" class="btn btn-primary btn-space" >Seleccionar</button>
+            <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura">Seleccionar</button>
             
         </div>
     </div>
@@ -57,8 +57,8 @@
 </nav>
       <div class="row" style="padding-bottom: 20px;text-align: right;">
         <div>
-            <button type="button" class="btn btn-danger btn-space" >Eliminar seleccionado</button>
-            <button type="button" class="btn btn-primary btn-space">Devolver facturas</button>
+            <button type="button" class="btn btn-danger btn-space" [disabled]="esFormularioSoloLectura">Eliminar seleccionado</button>
+            <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura">Devolver facturas</button>
             
         </div>
     </div>
@@ -66,7 +66,7 @@
         <div class="row"  style="padding-bottom: 20px;" >
           <div class="col-md-12">
               <div class="form-group">
-                <label class="form-label" for="observaciones"> Motivo de la cancelación:</label>
+                <label class="form-label" for="observaciones"> Motivo de la cancelación*:</label>
                 <textarea class="form-control" id="observaciones"  style="height: 120px;" disabled>Cancelación a solicitud de la empresa</textarea>
               
               </div>
@@ -85,43 +85,10 @@
                 </div>
                 <div class="row" style="padding-bottom: 20px;text-align: right;">
                 <div>
-                <button type="button" class="btn btn-default me-2 btn-space">Agregar</button>
-                <button type="button" class="btn btn-primary me-2">Cerrar</button>
+                <button type="button" class="btn btn-default me-2 btn-space" [disabled]="esFormularioSoloLectura">Agregar</button>
+                <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura">Cancelar</button>
               </div>
-            </div>
-
-            <h6>Certificados a cancelar</h6>
-            <app-tabla-dinamica 
-
-            [configuracionTabla]="configuracionTabla"
-            [datos]="filteredData"
-            [tipoSeleccionTabla]="TablaSeleccion"
-            >
-          </app-tabla-dinamica>
-        <nav aria-label="Page navigation example">
-          <ul class="pagination justify-content-center">     
-            <li class="page-item"><a class="page-link" href="#">1</a></li>    
-          </ul>
-        </nav>
-              <div class="row" style="padding-bottom: 20px;text-align: right;">
-                <div>
-                    <button type="button" class="btn btn-danger  btn-space" >Eliminar seleccionado</button>
-                    <button type="button" class="btn btn-primary  btn-space" >Devolver facturas</button>
-                    
-                </div>
-            </div>
-
-                <div class="row"  style="padding-bottom: 20px;" >
-                  <div class="col-md-12">
-                      <div class="form-group">
-                        <label class="form-label" for="observaciones"> Motivo de la cancelación:</label>
-                        <textarea class="form-control" id="observaciones"  style="height: 120px;" disabled>Cancelación a solicitud de la empresa</textarea>
-                      
-                      </div>
-                    </div>
-                    </div> 
-      
-       
+            </div>     
       </div>
       </form>
     </div>

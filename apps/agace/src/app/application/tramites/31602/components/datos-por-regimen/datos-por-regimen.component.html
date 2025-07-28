@@ -1,4 +1,5 @@
 <div class="container mt-4">
+    @if (mostrarSoloImportaciones){
     <form [formGroup]="importacionesForm">
         <div class="row mb-3">
             <p class="fw-bold">
@@ -20,6 +21,7 @@
               </div>
         </div>
     </form>
+    }
     @if(valorSeleccionado === 'Si') {
         <form [formGroup]="indiqueSiForma">
             <div class="row mb-3">  
@@ -28,6 +30,7 @@
                     [forma]="importacionTemporalFormGroup" 
                     [formularioDatos]="importacionTemporalDatos"
                     [estado]="solicitudState"
+                    [soloLectura]="consultaState.readonly"
                     (emitirCambioDeValor)="establecerCambioDeValor($event)"
                     >
                 </formas-dinamicas>
@@ -35,6 +38,7 @@
         </form>
         <app-conceptos></app-conceptos>
     }
+    @if (mostrarSoloDepositoFiscal) {
     <form [formGroup]="depositoFiscalForma">
         <div class="row mb-3">  
             <formas-dinamicas 
@@ -43,11 +47,14 @@
                 [forma]="depositoFiscalFormGroup" 
                 [formularioDatos]="depositoFiscalDatos"
                 [estado]="solicitudState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
     </form>
+    }
+    @if (mostrarSoloElaboracion) {
     <form [formGroup]="elaboracionForma">
         <div class="row mb-3">  
             <formas-dinamicas 
@@ -56,11 +63,14 @@
                 [forma]="elaboracionFormGroup" 
                 [formularioDatos]="elaboracionDatos"
                 [estado]="solicitudState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
     </form>
+    }
+    @if (mostrarSoloRecinto) {
     <form [formGroup]="recintoForma">
         <div class="row mb-3">  
             <formas-dinamicas 
@@ -69,9 +79,11 @@
                 [forma]="recintoFiscalizadoFormGroup" 
                 [formularioDatos]="recintoFiscalizadoDatos"
                 [estado]="solicitudState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
     </form>
+    }
 </div>

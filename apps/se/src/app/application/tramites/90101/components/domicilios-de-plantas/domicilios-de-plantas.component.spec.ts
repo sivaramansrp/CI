@@ -1,88 +1,130 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DomiciliosDePlantasComponent } from './domicilios-de-plantas.component';
-import { of } from 'rxjs';
+import { FormBuilder } from '@angular/forms';
 import { ProsecService } from '../../services/prosec.service';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { ReactiveFormsModule } from '@angular/forms';
+import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
+import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
+import { SeccionLibStore } from '@ng-mf/data-access-user';
+import { SeccionLibQuery } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { of, throwError } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+// Mock Data
+const mockCatalogos = [{ id: 1, nombre: 'Mock' }];
+
+// Mocks
+const mockProsecService = {
+  obtenerMenuDesplegable: jest.fn(),
+  obtenerTablaDatos: jest.fn(),
+  formValida: jest.fn(),
+};
+
+const mockAutorizacionProsecStore = {
+  setDomiciliosFormaValida: jest.fn(),
+  setEstado: jest.fn(),
+  setRepresentacionFederal: jest.fn(),
+  setActividadProductiva: jest.fn(),
+};
+
+const mockSeccionLibStore = {
+  establecerFormaValida: jest.fn(),
+};
+
+const mockAUtorizacionProsecQuery = {
+  selectProsec$: of<ProsecState>({
+    modalidad: 'Importación',
+    Estado: [
+      { id: 1, descripcion: 'Jalisco', clave: 'JAL' }
+    ],
+    RepresentacionFederal: [
+      { id: 10, descripcion: 'SAT', clave: 'SAT' }
+    ],
+    ActividadProductiva: [
+      { id: 100, descripcion: 'Manufactura', clave: 'MAN' }
+    ],
+    Sector: [],
+    Fraccion_arancelaria: '',
+    contribuyentes: '',
+    domiciliosFormaValida: false,
+    productorFromValida: false,
+    sectoresFromValida: false,
+    sectorDatos: [],
+    producirDatos: [],
+    plantasDatos: [],
+    productorDatos: []
+  })
+};
+
+const mockSeccionLibQuery = {
+  selectSeccionState$: of({})
+};
+
+const mockConsultaioQuery = {};
 
 describe('DomiciliosDePlantasComponent', () => {
   let component: DomiciliosDePlantasComponent;
   let fixture: ComponentFixture<DomiciliosDePlantasComponent>;
-  let prosecServiceMock: any;
 
   beforeEach(async () => {
-    prosecServiceMock = {
-      obtenerMenuDesplegable: jest.fn().mockReturnValue(of([]))
-    };
-
     await TestBed.configureTestingModule({
-      declarations: [DomiciliosDePlantasComponent], // Declare only the main component
-      imports: [ReactiveFormsModule, TituloComponent, CatalogoSelectComponent], // Import the custom component
+      imports: [DomiciliosDePlantasComponent],
       providers: [
-        { provide: ProsecService, useValue: prosecServiceMock }
+        FormBuilder,
+        { provide: ProsecService, useValue: mockProsecService },
+        { provide: AutorizacionProsecStore, useValue: mockAutorizacionProsecStore },
+        { provide: AUtorizacionProsecQuery, useValue: mockAUtorizacionProsecQuery },
+        { provide: SeccionLibStore, useValue: mockSeccionLibStore },
+        { provide: SeccionLibQuery, useValue: mockSeccionLibQuery }
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA] // Add this to allow any custom elements
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(DomiciliosDePlantasComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form on ngOnInit', () => {
+  it('should initialize form and subscriptions on ngOnInit', fakeAsync(() => {
+    mockProsecService.obtenerMenuDesplegable.mockReturnValue(of(mockCatalogos));
+    mockProsecService.obtenerTablaDatos.mockReturnValue(of([]));
+    mockProsecService.formValida.mockReturnValue(true);
+    component.formularioDeshabilitado = false;
     component.ngOnInit();
-    expect(component.forma).toBeDefined();
-    expect(component.forma.controls['modalidad']).toBeDefined();
-    expect(component.forma.controls['Estado']).toBeDefined();
-    expect(component.forma.controls['RepresentacionFederal']).toBeDefined();
-    expect(component.forma.controls['ActividadProductiva']).toBeDefined();
-  });
+    component.forma.patchValue({
+      modalidad: 'A',
+      Estado: 'B',
+      RepresentacionFederal: 'C',
+      ActividadProductiva: 'D'
+    });
+    component.forma.updateValueAndValidity();
+    tick(20);
+    expect(component.seccionState).toBeDefined();
+    expect(component.domiciliosState).toBeDefined();
+    expect(mockSeccionLibStore.establecerFormaValida).toHaveBeenCalledWith([false]);
+    expect(mockAutorizacionProsecStore.setDomiciliosFormaValida).toHaveBeenCalled();
+    expect(mockProsecService.formValida).toHaveBeenCalled();
+  }));
 
-  it('should call obtenserListaEstado and set estadoSeleccionar', () => {
-    const MOCKDATA = [{ id: 1, nombre: 'Estado 1' }];
-    prosecServiceMock.obtenerMenuDesplegable.mockReturnValue(of(MOCKDATA));
-
+  it('should handle error in obtenerListaEstado', () => {
+    mockProsecService.obtenerMenuDesplegable.mockReturnValueOnce(throwError(() => new Error('fail')));
     component.obtenerListaEstado();
-
-    expect(prosecServiceMock.obtenerMenuDesplegable).toHaveBeenCalledWith('estado.json');
-    expect(component.estadoSeleccionar).toEqual(MOCKDATA);
+    expect(component.estadoSeleccionar).toEqual([]);
   });
 
-  it('should call obtenserListaFederal and set RepresentacionFederal', () => {
-    const MOCKDATA = [{ id: 1, nombre: 'Federal 1' }];
-    prosecServiceMock.obtenerMenuDesplegable.mockReturnValue(of(MOCKDATA));
-
+  it('should handle error in obtenerListaFederal', () => {
+    mockProsecService.obtenerMenuDesplegable.mockReturnValueOnce(throwError(() => new Error('fail')));
     component.obtenerListaFederal();
-
-    expect(prosecServiceMock.obtenerMenuDesplegable).toHaveBeenCalledWith('federal.json');
-    expect(component.RepresentacionFederal).toEqual(MOCKDATA);
+    expect(component.RepresentacionFederal).toEqual([]);
   });
 
-  it('should call obtenserListaActividad and set ActividadProductiva', () => {
-    const MOCKDATA = [{ id: 1, nombre: 'Actividad 1' }];
-    prosecServiceMock.obtenerMenuDesplegable.mockReturnValue(of(MOCKDATA));
-
+  it('should handle error in obtenerListaActividad', () => {
+    mockProsecService.obtenerMenuDesplegable.mockReturnValueOnce(throwError(() => new Error('fail')));
     component.obtenerListaActividad();
-
-    expect(prosecServiceMock.obtenerMenuDesplegable).toHaveBeenCalledWith('actividad_productiva.json');
-    expect(component.ActividadProductiva).toEqual(MOCKDATA);
-  });
-
-  it('should call obtenerLista and call obtenserListaFederal and obtenserListaActividad', () => {
-    jest.spyOn(component, 'obtenerListaFederal');
-    jest.spyOn(component, 'obtenerListaActividad');
-
-    component.obtenerLista();
-
-    expect(component.obtenerListaFederal).toHaveBeenCalled();
-    expect(component.obtenerListaActividad).toHaveBeenCalled();
+    expect(component.ActividadProductiva).toEqual([]);
   });
 });

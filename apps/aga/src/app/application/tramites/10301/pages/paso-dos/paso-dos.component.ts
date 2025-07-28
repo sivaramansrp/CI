@@ -193,12 +193,19 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Resoluciones de los archivos.
    */
   resoluciones: string[] = new Array(this.tiposDeDocumentos.length).fill('');
-  documentosSeleccionados: any;
+  documentosSeleccionados: Catalogo[] = [];
 
   /**
    * Constructor que se utiliza para la inyección de dependencias.
    * @param catalogosServices Servicio de catálogos.
    * @param importarExportar Servicio de importador/exportador.
+   * @param store Store del trámite 10301.
+   * @param query Consulta del trámite 10301.
+   * @param fb FormBuilder para crear formularios reactivos.
+   * @param validacionesService Servicio de validaciones de formularios.
+ *  @remarks
+ *  Este componente se encarga de manejar el paso dos del trámite 10301, que
+ *  incluye la gestión de documentos y la validación de formularios.
    */
   constructor(
     public catalogosServices: CatalogosService,
@@ -237,13 +244,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.donanteDomicilio();
-
-    this.subscriptions.push(
-      this.query.selectFechasSeleccionadas$.subscribe((fechas) => {
-        this.fechasSeleccionadas = fechas ?? [];
-      })
-    );
-
     this.subscriptions.push(
       this.query.selectTipoDocumento$.subscribe((tipoDocumento) => {
         this.tipoDocumento = {
@@ -276,11 +276,18 @@ export class PasoDosComponent implements OnInit, OnDestroy {
         next: (resp): void => {
           if (resp.length > 0) {
             this.catalogoDocumentos = resp;
+            this.documentosSeleccionados = resp;
+          } else {
+            this.catalogoDocumentos = [];
+            this.documentosSeleccionados = [];
           }
         },
+        error: () => {
+          this.catalogoDocumentos = [];
+          this.documentosSeleccionados = [];
+        }
       });
   }
-
   /**
    * Obtiene el tipo de documento.
    */
@@ -332,13 +339,13 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * @param event Evento de cambio de archivo.
    * @param index Índice del archivo.
    */
-  cambioArchivo(event: any, index: number): void {
-    const FILE = event.target.files[0];
+  cambioArchivo(event: Event, index: number): void {
+    const INPUT = event.target as HTMLInputElement;
+    const FILE = INPUT.files && INPUT.files[0];
     if (FILE) {
       const SIZE_MB = FILE.size / (1024 * 1024);
       if (SIZE_MB > 3) {
-        alert('File size must be less than 3 MB');
-        event.target.value = '';
+        INPUT.value = '';
         this.tamanosDeArchivos[index] = null;
         this.resoluciones[index] = '';
         this.nombresArchivosSubidos[index] = '';
@@ -348,15 +355,17 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       this.nombresArchivosSubidos[index] = FILE.name;
 
       const READER = new FileReader();
-      READER.onload = (e: any) => {
+      READER.onload = (e: ProgressEvent<FileReader>): void => {
         const IMG = new Image();
-        IMG.onload = () => {
+        IMG.onload = (): void => {
           this.resoluciones[index] = `${IMG.width}x${IMG.height}`;
         };
-        IMG.onerror = () => {
+        IMG.onerror = (): void => {
           this.resoluciones[index] = 'N/A';
         };
-        IMG.src = e.target.result;
+        if (e.target && typeof e.target.result === 'string') {
+          IMG.src = e.target.result;
+        }
       };
       READER.readAsDataURL(FILE);
     }
@@ -415,7 +424,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite10301Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
   /**
    * Obtiene el grupo de formulario de importador/exportador.

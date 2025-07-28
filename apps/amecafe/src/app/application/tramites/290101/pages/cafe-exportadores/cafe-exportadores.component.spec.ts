@@ -9,26 +9,6 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { CafeExportadoresComponent } from './cafe-exportadores.component';
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
 describe('CafeExportadoresComponent', () => {
   let fixture;
   let component;
@@ -36,11 +16,7 @@ describe('CafeExportadoresComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule ],
-      declarations: [
-        CafeExportadoresComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
+      declarations: [ CafeExportadoresComponent],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
 
@@ -53,8 +29,12 @@ describe('CafeExportadoresComponent', () => {
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
+    if (component) {
+      component.ngOnDestroy = () => {}; 
+    }
+    if (fixture) {
+      fixture.destroy();
+    }
   });
 
   it('should run #constructor()', async () => {
@@ -69,7 +49,31 @@ describe('CafeExportadoresComponent', () => {
       valor: {},
       accion: {}
     });
-    
   });
+it('should call wizardComponent.siguiente when accion is "cont" and valor in range', () => {
+  component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() };
+  component.indice = 0;
+  component.getValorIndice({ valor: 2, accion: 'cont' });
+  expect(component.indice).toBe(2);
+  expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+  expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+});
 
+it('should call wizardComponent.atras when accion is not "cont" and valor in range', () => {
+  component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() };
+  component.indice = 0;
+  component.getValorIndice({ valor: 3, accion: 'back' });
+  expect(component.indice).toBe(3);
+  expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  expect(component.wizardComponent.atras).toHaveBeenCalled();
+});
+
+it('should not call wizardComponent methods when valor is out of range', () => {
+  component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() };
+  component.indice = 0;
+  component.getValorIndice({ valor: 0, accion: 'cont' });
+  expect(component.indice).toBe(0);
+  expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+});
 });

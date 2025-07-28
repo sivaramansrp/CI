@@ -1,171 +1,220 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CertificadoDeOrigenComponent } from './certificado-de-origen.component';
 import { CertificadoService } from '../../services/certificado.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Tramite110219Store } from '../../estados/Tramite110219.store';
 import { Tramite110219Query } from '../../estados/Tramite110219.query';
-
-@Injectable()
-class MockCertificadoService {}
-
-@Injectable()
-class MockTramite110219Store {}
-
-@Injectable()
-class MockTramite110219Query {}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { of, ReplaySubject } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
 describe('CertificadoDeOrigenComponent', () => {
-  let fixture;
-  let component;
+  let component: CertificadoDeOrigenComponent;
+  let fixture: ComponentFixture<CertificadoDeOrigenComponent>;
+  let certificadoServiceMock: any;
+  let tramiteStoreMock: any;
+  let tramiteQueryMock: any;
+  let validacionesServiceMock: any;
+  let consultaioQueryMock: any;
+   const toastrServiceMock = {
+  success: jest.fn(),
+  error: jest.fn(),
+  warning: jest.fn(),
+  info: jest.fn(),
+};
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ,CertificadoDeOrigenComponent],
-      declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  beforeEach(async () => {
+    certificadoServiceMock = {
+      getMercanciaCertificadoTabla: jest.fn().mockReturnValue(of([])),
+    };
+    tramiteStoreMock = {
+      setFraccionArancelaria: jest.fn(),
+      setFraccionRegla: jest.fn(),
+    };
+    tramiteQueryMock = {
+      selectSolicitud$: of({}),
+    };
+    validacionesServiceMock = {
+      isValid: jest.fn().mockReturnValue(true),
+    };
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
+    
+    await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, CertificadoDeOrigenComponent],
       providers: [
-        { provide: CertificadoService, useClass: MockCertificadoService },
         FormBuilder,
-        ValidacionesFormularioService,
-        { provide: Tramite110219Store, useClass: MockTramite110219Store },
-        { provide: Tramite110219Query, useClass: MockTramite110219Query }
-      ]
-    }).overrideComponent(CertificadoDeOrigenComponent, {
-
+        { provide: CertificadoService, useValue: certificadoServiceMock },
+        { provide: Tramite110219Store, useValue: tramiteStoreMock },
+        { provide: Tramite110219Query, useValue: tramiteQueryMock },
+        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
+        { provide: ToastrService, useValue: toastrServiceMock }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
+
     fixture = TestBed.createComponent(CertificadoDeOrigenComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    component.solicitudState = {
+      motivoCancelacion: 'motivo',
+      fechaExpedicion: '2024-01-01',
+      fechaVencimiento: '2025-01-01',
+      certificadoDeOrigen: 'cert',
+      bloque: 'bloque',
+      acuerdo: 'acuerdo',
+      observaciones: 'obs',
+      nombre: 'nombre',
+      primerApellido: 'apellido1',
+      segundoApellido: 'apellido2',
+      registroFiscal: 'regFiscal',
+      razonSocial: 'razon',
+      calle: 'calle',
+      numeroLetra: '123',
+      telefono: 1234567890,
+      ciudad: 1,
+      fax: 1234567890,
+      correoElectronico: 'test@mail.com',
+      catalogos: [],
+      mercancias: [],
+      productores: [],
+      pasoActual: 1,
+      numeroCertificado: '',
+      pais: [],
+      tratado: [],
+      fechaInicial: '',
+      fechaFinal: ''
+    };
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run GetterDeclaration #validacionForm', async () => {
-    component.cancelacionForm = component.cancelacionForm || {};
-    component.cancelacionForm.get = jest.fn();
-    const validacionForm = component.validacionForm;
-    expect(component.cancelacionForm.get).toHaveBeenCalled();
-  });
-
-  it('should run #ngOnInit()', async () => {
-    component.getMercanciaCertificadoTabla = jest.fn();
-    component.query = component.query || {};
-    component.query.selectSolicitud$ = observableOf({});
-    component.donanteDomicilio = jest.fn();
+  it('should initialize form and call data methods on ngOnInit', () => {
+    jest.spyOn(component, 'getMercanciaCertificadoTabla');
+    jest.spyOn(component, 'inicializarEstadoFormulario');
+    jest.spyOn(component, 'donanteDomicilio');
     component.ngOnInit();
     expect(component.getMercanciaCertificadoTabla).toHaveBeenCalled();
+    expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
     expect(component.donanteDomicilio).toHaveBeenCalled();
   });
 
-  it('should run #validarDestinatarioFormulario()', async () => {
-    component.cancelacionForm = component.cancelacionForm || {};
-    component.cancelacionForm.invalid = 'invalid';
-    component.cancelacionForm.markAllAsTouched = jest.fn();
+  it('should call guardarDatosFormulario if soloLectura in inicializarEstadoFormulario', () => {
+    component.soloLectura = true;
+    jest.spyOn(component, 'guardarDatosFormulario');
+    component.inicializarEstadoFormulario();
+    expect(component.guardarDatosFormulario).toHaveBeenCalled();
+  });
+
+  it('should call donanteDomicilio if not soloLectura in inicializarEstadoFormulario', () => {
+    component.soloLectura = false;
+    jest.spyOn(component, 'donanteDomicilio');
+    component.inicializarEstadoFormulario();
+    expect(component.donanteDomicilio).toHaveBeenCalled();
+  });
+
+  it('should call donanteDomicilio and enable/disable form in guardarDatosFormulario', () => {
+    component.cancelacionForm = new FormBuilder().group({
+      motivoCancelacion: ['', Validators.required]
+    });
+    component.soloLectura = true;
+    jest.spyOn(component.cancelacionForm, 'disable');
+    jest.spyOn(component, 'donanteDomicilio');
+    component.guardarDatosFormulario();
+    expect(component.donanteDomicilio).toHaveBeenCalled();
+
+    component.soloLectura = false;
+    jest.spyOn(component.cancelacionForm, 'enable');
+    component.guardarDatosFormulario();
+  });
+
+  it('should mark all as touched if cancelacionForm is invalid in validarDestinatarioFormulario', () => {
+    component.cancelacionForm = new FormBuilder().group({
+      motivoCancelacion: ['', Validators.required]
+    });
+    jest.spyOn(component.cancelacionForm, 'markAllAsTouched');
+    component.cancelacionForm.setErrors({ invalid: true });
     component.validarDestinatarioFormulario();
     expect(component.cancelacionForm.markAllAsTouched).toHaveBeenCalled();
   });
 
-  it('should run #getMercanciaCertificadoTabla()', async () => {
-    component.certificadoService = component.certificadoService || {};
-    component.certificadoService.getMercanciaCertificadoTabla = jest.fn().mockReturnValue(observableOf({}));
+  it('should call certificadoService.getMercanciaCertificadoTabla and set mercanciaCertificadoTablaDatos in getMercanciaCertificadoTabla', () => {
     component.getMercanciaCertificadoTabla();
-    expect(component.certificadoService.getMercanciaCertificadoTabla).toHaveBeenCalled();
+    expect(certificadoServiceMock.getMercanciaCertificadoTabla).toHaveBeenCalled();
+    expect(component.mercanciaCertificadoTablaDatos).toBeDefined();
   });
 
-  it('should run #isValid()', async () => {
-    component.validacionesService = component.validacionesService || {};
-    component.validacionesService.isValid = jest.fn();
-    component.isValid({}, {});
-    expect(component.validacionesService.isValid).toHaveBeenCalled();
+  it('should call validacionesService.isValid in isValid', () => {
+    const form = new FormBuilder().group({ campo: [''] });
+    expect(component.isValid(form, 'campo')).toBe(true);
+    expect(validacionesServiceMock.isValid).toHaveBeenCalled();
   });
 
-  it('should run #donanteDomicilio()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn().mockReturnValue({
-      markAsDirty: function() {},
-      markAllAsTouched: function() {},
-      invalid: {}
+ it('should call store method in setValoresStore', () => {
+  const storeMethod = jest.fn();
+  component.store = { setNumeroCertificado: storeMethod } as any;
+  const form = new FormBuilder().group({ numeroCertificado: ['valor'] });
+  component.setValoresStore(form, 'numeroCertificado', 'setNumeroCertificado');
+  expect(storeMethod).toHaveBeenCalledWith('valor');
+});
+
+
+  it('should return validacionForm', () => {
+    component.cancelacionForm = new FormBuilder().group({
+      validacionForm: new FormBuilder().group({})
     });
-    component.solicitudState = component.solicitudState || {};
-    component.solicitudState.motivoCancelacion = 'motivoCancelacion';
-    component.solicitudState.fechaExpedicion = 'fechaExpedicion';
-    component.solicitudState.fechaVencimiento = 'fechaVencimiento';
+    expect(component.validacionForm).toBeTruthy();
+  });
+
+  it('should set up forms in donanteDomicilio', () => {
+    component.solicitudState = {
+      motivoCancelacion: 'motivo',
+      fechaExpedicion: '2024-01-01',
+      fechaVencimiento: '2025-01-01',
+      certificadoDeOrigen: 'cert',
+      bloque: 'bloque',
+      acuerdo: 'acuerdo',
+      observaciones: 'obs',
+      nombre: 'nombre',
+      primerApellido: 'apellido1',
+      segundoApellido: 'apellido2',
+      registroFiscal: 'regFiscal',
+      razonSocial: 'razon',
+      calle: 'calle',
+      numeroLetra: '123',
+      telefono: 1234567890,
+      ciudad: 1,
+      fax: 1234567890,
+      correoElectronico: 'test@mail.com',
+      catalogos: [],
+      mercancias: [],
+      productores: [],
+      pasoActual: 1,
+      numeroCertificado: '',
+      pais: [],
+      tratado: [],
+      fechaInicial: '',
+      fechaFinal: ''
+    };
     component.donanteDomicilio();
-    expect(component.fb.group).toHaveBeenCalled();
+    expect(component.cancelacionForm).toBeTruthy();
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyed$ = component.destroyed$ || {};
-    component.destroyed$.next = jest.fn();
-    component.destroyed$.complete = jest.fn();
+  it('should complete destroyed$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
-    expect(component.destroyed$.next).toHaveBeenCalled();
-    expect(component.destroyed$.complete).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalledWith(true);
+    expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should run #setValoresStore()', () => {
-    component.Tramite110219Store = component.Tramite110219Store || {};
-    component.Tramite110219Store.setFraccionArancelaria = jest.fn();
-    component.Tramite110219Store.setFraccionRegla = jest.fn();
-    component.setValoresStore({
-      get: function () {
-        return {
-          value: {}
-        };
-      }
-    }, 'fraccionArancelaria', 'setFraccionArancelaria');
-    component.Tramite110219Store.setFraccionArancelaria()
-    expect(component.tramite32502Store.setFraccionArancelaria).toHaveBeenCalled();
-    component.setValoresStore({
-      get: function () {
-        return {
-          value: {}
-        };
-      }
-    }, 'fraccionRegla', 'setFraccionRegla');
-    component.Tramite110219Store.setFraccionRegla()
-    expect(component.Tramite110219Store.setFraccionRegla).toHaveBeenCalled();
-  });
   it('should have correct table headers configuration', () => {
-    // Test mercancias headers
     expect(component.encabezadosMercancias.length).toBe(11);
     expect(component.encabezadosMercancias[0].encabezado).toBe('Número de Orden');
     expect(component.encabezadosMercancias[1].encabezado).toBe('Fracción Arancelaria');
@@ -178,22 +227,18 @@ describe('CertificadoDeOrigenComponent', () => {
     expect(component.encabezadosMercancias[8].encabezado).toBe('Tratado/Acuerdo');
     expect(component.encabezadosMercancias[9].encabezado).toBe('Fecha expedición');
     expect(component.encabezadosMercancias[10].encabezado).toBe('Fecha vencimíento');
-   
-    
-    // Test productores headers
+
     expect(component.encabezadosProductores.length).toBe(6);
     expect(component.encabezadosProductores[0].encabezado).toBe('Nombre del productor');
     expect(component.encabezadosProductores[1].encabezado).toBe('Número de registro fiscal');
-
     expect(component.encabezadosProductores[2].encabezado).toBe('Dirección');
     expect(component.encabezadosProductores[3].encabezado).toBe('Correo Electrónico');
     expect(component.encabezadosProductores[4].encabezado).toBe('Teléfono');
     expect(component.encabezadosProductores[5].encabezado).toBe('Razón Social');
-
   });
 
   it('should correctly extract values through clave functions', () => {
-    const mockMercancia: MercanciaCertificado = {
+    const mockMercancia: any = {
       numeroOrden: '1',
       fraccionArancelaria: '1234',
       nombreTecnico: 'Test Tech',
@@ -207,7 +252,7 @@ describe('CertificadoDeOrigenComponent', () => {
       fechaVencimiento: '2024-01-01'
     };
 
-    const mockProductor: ProductoresAsociados = {
+    const mockProductor: any = {
       nombreProductor: 'John Doe',
       numeroRegistroFiscal: 'TAX123',
       direccion: '123 Main St',
@@ -216,22 +261,18 @@ describe('CertificadoDeOrigenComponent', () => {
       razonSocial: 'Test Corp'
     };
 
-    // Test mercancia clave functions
     expect(component.encabezadosMercancias[0].clave(mockMercancia)).toBe('1');
-    expect(component.encabezadosMercancias[6].clave(mockMercancia)).toBe('CERT-123');
     expect(component.encabezadosMercancias[1].clave(mockMercancia)).toBe('1234');
     expect(component.encabezadosMercancias[2].clave(mockMercancia)).toBe('Test Tech');
     expect(component.encabezadosMercancias[3].clave(mockMercancia)).toBe('Test Comm');
     expect(component.encabezadosMercancias[4].clave(mockMercancia)).toBe('Test Eng');
     expect(component.encabezadosMercancias[5].clave(mockMercancia)).toBe('Test Desc');
-    expect(component.encabezadosMercancias[7].clave(mockMercancia)).toBe('CERT-123');
+    expect(component.encabezadosMercancias[6].clave(mockMercancia)).toBe('CERT-123');
+    expect(component.encabezadosMercancias[7].clave(mockMercancia)).toBe('MX');
+    expect(component.encabezadosMercancias[8].clave(mockMercancia)).toBe('T-MEC');
+    expect(component.encabezadosMercancias[9].clave(mockMercancia)).toBe('2023-01-01');
+    expect(component.encabezadosMercancias[10].clave(mockMercancia)).toBe('2024-01-01');
 
-    expect(component.encabezadosMercancias[8].clave(mockMercancia)).toBe('MX');
-    expect(component.encabezadosMercancias[9].clave(mockMercancia)).toBe('T-MEC');
-    expect(component.encabezadosMercancias[10].clave(mockMercancia)).toBe('2023-01-01');
-    expect(component.encabezadosMercancias[11].clave(mockMercancia)).toBe('2024-01-01');
-    
-    // Test productores clave functions
     expect(component.encabezadosProductores[0].clave(mockProductor)).toBe('John Doe');
     expect(component.encabezadosProductores[1].clave(mockProductor)).toBe('TAX123');
     expect(component.encabezadosProductores[2].clave(mockProductor)).toBe('123 Main St');
@@ -239,6 +280,4 @@ describe('CertificadoDeOrigenComponent', () => {
     expect(component.encabezadosProductores[4].clave(mockProductor)).toBe('555-1234');
     expect(component.encabezadosProductores[5].clave(mockProductor)).toBe('Test Corp');
   });
-
-
 });

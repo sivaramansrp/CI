@@ -1,8 +1,10 @@
-import { AfterViewInit, ChangeDetectorRef, Component,EventEmitter,Output, ViewChild} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { CancelacionDeCertificadoComponent } from '../../components/cancelacion-de-certificado/cancelacion-de-certificado.component';
-import { CertificadoDeOrigenComponent } from '../../components/certificado-de origen/certificado-de-origen.component';
+import { CertificadoDeOrigenComponent } from "../../components/certificado-de origen/certificado-de-origen.component";
+import { CertificadoService } from '../../services/certificado.service';
 import { CommonModule } from '@angular/common';
 
 /**
@@ -15,7 +17,18 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, SolicitanteComponent, CancelacionDeCertificadoComponent, CertificadoDeOrigenComponent],
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
+
+  /**
+   * Indica si el número de certificado es válido.
+   */
+  isNumeroDe!: boolean;
+
+  /**
+   * Indica si el patrón del número de certificado es válido.
+   */
+  isNumeroDePattern!: boolean;
+
   /**
    * Evento para emitir el índice de la pestaña seleccionada al componente padre.
    */
@@ -47,18 +60,105 @@ export class PasoUnoComponent implements AfterViewInit {
   indice: number = 1;
 
   /**
+   * Indica si los datos están disponibles.
+   */
+  isDatos!: boolean;
+
+  /**
+   * Indica si el certificado está habilitado.
+   */
+  isCertificado!: boolean;
+
+  /**
+   * Sujeto para manejar la destrucción del componente y evitar fugas de memoria.
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+  /**
    * Evento para emitir datos al componente padre.
    */
   @Output() eventoDatosHijo: EventEmitter<number> = new EventEmitter<number>();
+
+  /**
+   * Evento para emitir si el número de certificado es válido.
+   */
+  @Output() eventoNumeroDe: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  /**
+   * Evento para emitir si el patrón del número de certificado es válido.
+   */
+  @Output() eventoNumeroDePattern: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  /**
+   * Evento para emitir datos del certificado al componente padre.
+   */
+  @Output() eventoDatosHijoCertificado: EventEmitter<number> = new EventEmitter<number>();
+
+  /**
+   * Evento para emitir si los datos del número son válidos.
+   */
+  @Output() isDatosNumero: EventEmitter<boolean> = new EventEmitter<boolean>(false);
+
+  /**
+   * Estado de la consulta, utilizado para manejar el estado de la aplicación.
+   */
+  public consultaState!: ConsultaioState;
+
+  /**
+   * Indica si los datos de respuesta están disponibles.
+   * Se utiliza para determinar si se deben mostrar los datos del formulario o no.
+   */
+  public esDatosRespuesta: boolean = false;
 
   /**
    * Constructor del componente.
    * Se utiliza para la inyección de dependencias.
    * 
    * @param cdr Servicio para detectar cambios manualmente.
+   * @param consultaQuery Servicio para consultar el estado de la sección.
+   * @param certificadoService Servicio para gestionar certificados.
    */
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private consultaQuery: ConsultaioQuery,
+    private certificadoService: CertificadoService
+  ) {
     // El constructor se utiliza para la inyección de dependencias.
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al estado de consulta y determina si se deben cargar los datos del formulario.
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+      })
+    ).subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormularios();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormularios(): void {
+    this.certificadoService
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.certificadoService.actualizarEstadoFormulario(resp);
+        }
+      });
   }
 
   /**
@@ -94,5 +194,58 @@ export class PasoUnoComponent implements AfterViewInit {
     this.eventoDatosHijo.emit(data);
     this.indice = 3;
     this.seleccionaTab(this.indice);
+  }
+
+  /**
+   * Actualiza el estado de validez del número de certificado y emite el evento correspondiente.
+   * @param event Valor booleano que indica si el número es válido.
+   */
+  isNumero(event: boolean):void {
+    this.isNumeroDe = event;
+    this.eventoNumeroDe.emit(this.isNumeroDe);
+  }
+
+  /**
+   * Actualiza el estado de validez del patrón del número de certificado y emite el evento correspondiente.
+   * @param event Valor booleano que indica si el patrón es válido.
+   */
+  isNumeroPattern(event: boolean): void {
+    this.isNumeroDePattern = event;
+    this.eventoNumeroDePattern.emit(this.isNumeroDePattern);
+  }
+
+  /**
+   * Emite datos del certificado al componente padre y cambia la pestaña activa.
+   * @param data Datos del certificado.
+   */
+  numeroData(data: number): void {
+    this.eventoDatosHijoCertificado.emit(data);
+    this.indice = 3;
+    this.seleccionaTab(this.indice);
+  }
+
+  /**
+   * Emite si los datos del número son válidos.
+   * @param data Valor booleano que indica si los datos del número son válidos.
+   */
+  isNumeroData(data: boolean): void {
+    this.isDatosNumero.emit(data);
+  }
+
+  /**
+   * Actualiza el estado de habilitación del certificado.
+   * @param event Valor booleano que indica si el certificado está habilitado.
+   */
+  certificadoEnable(event: boolean):void {
+    this.isCertificado = event;
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+   * Libera los recursos y completa el observable destroyed$.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

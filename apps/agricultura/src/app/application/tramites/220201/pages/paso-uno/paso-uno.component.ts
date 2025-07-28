@@ -1,19 +1,20 @@
-import { HttpClient } from '@angular/common/http';
-
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-
-import { ConsultaioQuery, SeccionLibStore, SolicitanteComponent } from '@ng-mf/data-access-user';
-
-import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
-
-import { ApiSolicitud, DatosDeLaSolicitud, PagoDeDerechos, ValidarEnvio } from '../../models/220201/capturar-solicitud.model';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ConsultaioQuery, SeccionLibStore, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosParaMovilizacionNacionalComponent } from '../../components/datos-para-movilizacion-nacional/datos-para-movilizacion-nacional.component';
 import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
 import { TercerospageComponent } from '../../components/tercerospage/tercerospage.component';
+import { CapturarSolicitud } from '../../models/220201/capturar-solicitud.model';
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+
+/**
+ * @fileoverview Componente para el asistente de solicitud.
+ * Este componente gestiona la navegación entre los pasos del formulario de solicitud,
+ * así como la carga y almacenamiento de datos de la solicitud.
+ * @module PasoUnoComponent
+ */
 
 /**
  * Componente para el asistente de solicitud.
@@ -28,11 +29,16 @@ import { TercerospageComponent } from '../../components/tercerospage/tercerospag
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss'],
   standalone: true,
-  imports:[SolicitanteComponent,DatosDeLaSolicitudComponent,
-      DatosParaMovilizacionNacionalComponent,PagoDeDerechosComponent,TercerospageComponent,CommonModule]
+  imports: [SolicitanteComponent, DatosDeLaSolicitudComponent,
+    DatosParaMovilizacionNacionalComponent, PagoDeDerechosComponent, TercerospageComponent, CommonModule]
 })
-export class PasoUnoComponent implements OnInit,OnDestroy {
-    private destroyNotifier$ = new Subject<void>();
+export class PasoUnoComponent implements OnInit, OnDestroy {
+  /**
+   * Subject utilizado para destruir suscripciones y evitar fugas de memoria.
+   * @property {Subject<void>} destroyNotifier$
+   */
+  private destroyNotifier$ = new Subject<void>();
+
   /**
    * Índice de la pestaña seleccionada.
    * @property {number} indice - Índice de la pestaña actualmente seleccionada.
@@ -52,33 +58,81 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     { index: 4, title: 'Terceros relacionados', component: 'terceror-relacionados' },
     { index: 5, title: 'Pago de derechos', component: 'pago-de-derechos' }
   ];
+  /**
+ * @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
+ *                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
+ * @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+ */
+  @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
+
+  /**
+* @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
+*                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
+* @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+*/
+  @ViewChild('datosDeLaSolicitudRef') datosDelaSolicitu!: DatosDeLaSolicitudComponent;
+  /**
+* @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
+*                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
+* @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+*/
+  @ViewChild('datosParaMovilizacionNacionalRef') datosParaMovilizacionNacional!: DatosParaMovilizacionNacionalComponent;
+  /**
+* @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
+*                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
+* @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+*/
+  @ViewChild('padoDeRef') pagoDeDerechosComponent!: PagoDeDerechosComponent;
 
 
-  constructor(private readonly seccionStore: SeccionLibStore,private readonly httpServicios: HttpClient,private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
+  /**
+   * Constructor del componente.
+   * Inicializa los stores y servicios necesarios para el manejo de la solicitud.
+   * @method constructor
+   * @param seccionStore Store para el manejo de la validez y estado de las secciones.
+   * @param certificadoZoosanitarioServices Servicio para la gestión de la solicitud.
+   * @param consultaQuery Consulta para el estado de la sección.
+   */
+  constructor(
+    private readonly seccionStore: SeccionLibStore,
+    private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private consultaQuery: ConsultaioQuery
   ) {
-    this.seccionStore.establecerFormaValida([false]);
-    this.seccionStore.establecerSeccion([true])
+
   }
-ngOnInit(): void {
-  this.consultaQuery.selectConsultaioState$
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe((seccionState) => {
-if(seccionState.update){
-        this.guardarDatosFormulario();
-}
-      
-    });
-}
+
+
+  /**
+   * Ciclo de vida de Angular que se ejecuta al iniciar el componente.
+   * Suscribe al estado de la consulta y guarda los datos del formulario si es necesario.
+   * @method ngOnInit
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((seccionState) => {
+        if (seccionState.update) {
+          this.guardarDatosFormulario();
+        }
+      });
+  }
+
+  /**
+   * Guarda los datos del formulario llamando al servicio correspondiente.
+   * @method guardarDatosFormulario
+   */
   guardarDatosFormulario(): void {
-     this.certificadoZoosanitarioServices.guardarDatosFormulario()
-          .pipe(takeUntil(this.destroyNotifier$))
-          .subscribe((data) => {
-   this.certificadoZoosanitarioServices.storeDatosFormulario(data as ApiSolicitud);
-          }, (error) => {
-            console.error(error);
-          });
+    this.certificadoZoosanitarioServices.guardarDatosFormulario()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.certificadoZoosanitarioServices.storeDatosFormulario(data as CapturarSolicitud);
+        this.seccionStore.establecerFormaValida([true]);
+        this.seccionStore.establecerSeccion([true]);
+      }, (error) => {
+        console.error(error);
+      });
   }
+
   /**
    * Evento emitido al cambiar de pestaña.
    * @event tabChanged
@@ -87,15 +141,73 @@ if(seccionState.update){
   @Output() tabChanged = new EventEmitter<number>();
 
   /**
-   * Cambia el índice de la pestaña seleccionada.
+   * Cambia el índice de la pestaña seleccionada y emite el evento correspondiente.
    * @method seleccionaTab
    * @param {number} i - El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
-    this.tabChanged.emit(i);
   }
-   ngOnDestroy(): void {
+  /**
+   * @description
+   * Valida los formularios de los diferentes componentes hijos del paso uno del trámite.
+   * 
+   * Este método verifica si los formularios de los componentes `solicitante`, `datosDelaSolicitu`,
+   * `datosParaMovilizacionNacional` y `pagoDeDerechosComponent` son válidos. Si alguno de ellos es inválido
+   * o no está presente, el método retorna `false`. Además, marca todos los campos del formulario de solicitante
+   * como tocados si es inválido para mostrar los errores de validación.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos y existen, `false` en caso contrario.
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.datosDelaSolicitu) {
+      if (!this.datosDelaSolicitu.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.datosParaMovilizacionNacional) {
+      if (!this.datosParaMovilizacionNacional.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.pagoDeDerechosComponent) {
+      if (!this.pagoDeDerechosComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+
+
+
+
+  /**
+   * Ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera recursos y cancela las suscripciones.
+   * @method ngOnDestroy
+   */
+  ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

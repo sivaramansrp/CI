@@ -1,6 +1,7 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
+  ConsultaioQuery,
   REGEX_SOLO_DIGITOS,
   TituloComponent,
   ValidacionesFormularioService,
@@ -12,13 +13,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import {
   Solicitud110207State,
   Tramite110207Store,
 } from '../../state/Tramite110207.store';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
+import {ConsultaioState} from '@ng-mf/data-access-user';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110207Query } from '../../state/Tramite110207.query';
 
@@ -38,6 +40,15 @@ import { Tramite110207Query } from '../../state/Tramite110207.query';
   styleUrl: './destinatario.component.css',
 })
 export class DestinatarioComponent implements OnInit, OnDestroy {
+  /**
+     * Subject para destruir notificador.
+     */
+    consultaDatos!: ConsultaioState;
+     /**
+     * Indica si el formulario está en modo solo lectura.
+     * Cuando es `true`, los campos del formulario no se pueden editar.
+     */
+    soloLectura: boolean = false;
   /**
    * Formulario reactivo para el destinatario.
    */
@@ -91,11 +102,21 @@ options!: Catalogo[];
   constructor(
     private registroService: RegistroService,
     public fb: FormBuilder,
-    private store: Tramite110207Store,
+    public store: Tramite110207Store,
     private query: Tramite110207Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -122,6 +143,7 @@ options!: Catalogo[];
   ngOnInit(): void {
     this.getPaisDestino();
     this.getTransporte();
+    this.inicializarEstadoFormulario();
 
     this.query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$),
@@ -131,9 +153,33 @@ options!: Catalogo[];
       )
       .subscribe();
     this.donanteDomicilio();
-
+    
+ 
+  }
+/**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
   }
 
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.registroForm.disable();
+    } else {
+      this.registroForm.enable();
+    }
+  }
   /**
    * Obtiene el catálogo de países de destino desde el servicio.
    */
@@ -202,29 +248,29 @@ options!: Catalogo[];
   /**
    * Configura el formulario reactivo con los valores iniciales del estado.
    */
-  donanteDomicilio(): void {
-    this.registroForm = this.fb.group({
-      validacionForm: this.fb.group({
-        nacion: [this.solicitudState?.nacion, [Validators.required]],
-        transporte: [this.solicitudState?.transporte, [Validators.required]],
-        nombre: [this.solicitudState?.nombre, [Validators.required]],
-        apellidoPrimer: [this.solicitudState?.apellidoPrimer,[Validators.required],],
-        apellidoSegundo: [this.solicitudState?.apellidoSegundo,[Validators.required], ],
-        numeroFiscal: [this.solicitudState?.numeroFiscal,[Validators.required],],
-        razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
-        ciudad: [this.solicitudState?.ciudad, [Validators.required]],
-        calle: [this.solicitudState?.calle, [Validators.required]],
-        numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
-        lada: [this.solicitudState?.lada, [Validators.required]],
-        telefono: [this.solicitudState?.telefono, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],],
-        fax: [this.solicitudState?.fax, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
-        correoElectronico: [this.solicitudState?.correoElectronico,[Validators.required, Validators.email],],
-        rutaCompleta: [this.solicitudState?.rutaCompleta,Validators.required, ],
-        puertoEmbarque: [ this.solicitudState?.puertoEmbarque,Validators.required, ],
-        puertoDesembarque: [this.solicitudState?.puertoDesembarque,Validators.required, ],
-      }),
-    });
-  }
+donanteDomicilio(): void {
+  this.registroForm = this.fb.group({
+    validacionForm: this.fb.group({
+      nacion: [{ value: this.solicitudState?.nacion, disabled: this.soloLectura }, [Validators.required]],
+      transporte: [{ value: this.solicitudState?.transporte, disabled: this.soloLectura }, [Validators.required]],
+      nombre: [{ value: this.solicitudState?.nombre, disabled: this.soloLectura }, [Validators.required]],
+      apellidoPrimer: [{ value: this.solicitudState?.apellidoPrimer, disabled: this.soloLectura }, [Validators.required]],
+      apellidoSegundo: [{ value: this.solicitudState?.apellidoSegundo, disabled: this.soloLectura }, [Validators.required]],
+      numeroFiscal: [{ value: this.solicitudState?.numeroFiscal, disabled: this.soloLectura }, [Validators.required]],
+      razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: this.soloLectura }, [Validators.required]],
+      ciudad: [{ value: this.solicitudState?.ciudad, disabled: this.soloLectura }, [Validators.required]],
+      calle: [{ value: this.solicitudState?.calle, disabled: this.soloLectura }, [Validators.required]],
+      numeroLetra: [{ value: this.solicitudState?.numeroLetra, disabled: this.soloLectura }, [Validators.required]],
+      lada: [{ value: this.solicitudState?.lada, disabled: this.soloLectura }, [Validators.required]],
+      telefono: [{ value: this.solicitudState?.telefono, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      fax: [{ value: this.solicitudState?.fax, disabled: this.soloLectura }, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: this.soloLectura }, [Validators.required, Validators.email]],
+      rutaCompleta: [{ value: this.solicitudState?.rutaCompleta, disabled: this.soloLectura }, Validators.required],
+      puertoEmbarque: [{ value: this.solicitudState?.puertoEmbarque, disabled: this.soloLectura }, Validators.required],
+      puertoDesembarque: [{ value: this.solicitudState?.puertoDesembarque, disabled: this.soloLectura }, Validators.required],
+    }),
+  });
+}
 
   /**
    * Método que se ejecuta al destruir el componente.

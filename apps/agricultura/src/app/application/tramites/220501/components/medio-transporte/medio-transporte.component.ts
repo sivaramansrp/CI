@@ -1,4 +1,5 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, ConsultaioQuery, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -6,7 +7,6 @@ import { EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Validators } from '@angular/forms';
@@ -42,7 +42,7 @@ import mercanciaTable from '@libs/shared/theme/assets/json/220501/mercancia-tabl
  * 
  * @class MedioTransporteComponent
  */
-export class MedioTransporteComponent implements OnInit, OnDestroy {
+export class MedioTransporteComponent implements OnDestroy {
   /**
    * Evento emitido cuando se selecciona un medio de transporte.
    */
@@ -121,6 +121,11 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
+   * Indica si el formulario está deshabilitado.
+   */
+  formularioDeshabilitado: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
    * @param sagarpaService Servicio para obtener datos de SAGARPA.
@@ -130,9 +135,34 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private sagarpaService: SagarpaService,
     public solicitud220501Store: Solicitud220501Store,
-    public solicitud220501Query: Solicitud220501Query
+    public solicitud220501Query: Solicitud220501Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor vacío
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          if(seccionState.readonly || seccionState.update){
+             this.inicializarEstadoFormulario();
+          }
+        })
+      )
+      .subscribe();
+
+    this.inicializarFormulario();
+  }
+
+  /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.medioTransporteForm?.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.medioTransporteForm?.enable();
+    }
   }
 
   /**
@@ -145,7 +175,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-  ngOnInit(): void {
+  inicializarFormulario(): void {
     this.crearFormulario();
     this.solicitud220501Query.selectSolicitud$
       .pipe(
@@ -163,10 +193,6 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
               tbodyData: this.solicitud220501State.mercanciaTablaDatos,
             }
           ]
-          if (this.solicitud220501State.esSolicitudFerros === '1') {
-            this.esSolicitudFerrosValor = '1';
-            this.mostrarAgregarMercancia = this.solicitud220501State.mostrarAgregarMercancia;
-          }
         })
       )
       .subscribe();
@@ -184,6 +210,8 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
       esSolicitudFerros: new FormControl(this.solicitud220501State.esSolicitudFerros, [Validators.required]),
       totalGuias: new FormControl(this.solicitud220501State.totalGuias, [Validators.maxLength(50)]),
     });
+
+    this.inicializarEstadoFormulario();    
   }
 
   /**
@@ -235,6 +263,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
     ];
     this.solicitud220501Store.setMercanciaTablaDatos(this.mercanciaBodyData[0].tbodyData);
     this.mostrarAgregarMercancia = false;
+    this.solicitud220501Store.setMostrarAgregarMercancia(this.mostrarAgregarMercancia);
   }
 
   /**

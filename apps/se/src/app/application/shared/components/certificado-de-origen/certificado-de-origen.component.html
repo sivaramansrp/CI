@@ -18,6 +18,7 @@
                             'formCertificado',
                         'si',
                         'setFormCertificadoGenric')"
+                          [isDisabled]="esFormularioSoloLectura"
                           ></lib-input-check>
                         </div>
                     </div>
@@ -77,10 +78,11 @@
 
         <ng-titulo titulo="Tratado y país o bloque" />
         <div class="row mb-3">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <app-catalogo-select [catalogo]="tratadoAcuerdo || []" [label]="'Tratado / Acuerdo'"
                     [required]="true" name="estado" formControlName="entidadFederativa"
                     (selectionChange)="tipoEstadoSeleccion($event)"
+                    [isDisabled]="esFormularioSoloLectura"
                     (change)="setValoresStore(
                         'formCertificado',
                       'entidadFederativa',
@@ -88,10 +90,11 @@
                     ></app-catalogo-select>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <app-catalogo-select [catalogo]="paisBloqu || []" [label]="'País / Bloque'" [required]="true"
                     name="estado" formControlName="bloque"
                     (selectionChange)="tipoSeleccion($event)"
+                    [isDisabled]="esFormularioSoloLectura"
                     (change)="setValoresStore(
                     'formCertificado',
                   'bloque',
@@ -133,21 +136,21 @@
         </div>
 
         <div class="col-md-4 form-field">
-            <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicioInput')?.value"
+            <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicioInput')?.value" [isDisabled]="esFormularioSoloLectura"
             (valorCambiado)="cambioFechaInicio($event)" (change)="setValoresStore('formCertificado','fechaInicioInput','setFormCertificadoGenric')"></input-fecha>
         </div>
         <div class="col-md-4 form-field">
-            <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinalInput')?.value" (valorCambiado)="cambioFechaFinal($event)"
+            <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinalInput')?.value" (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="esFormularioSoloLectura"
              (change)="setValoresStore('formCertificado','fechaFinalInput','setFormCertificadoGenric')"></input-fecha>
         </div>
 
         @if(mercanciasDisponibles){
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary" [disabled]="formCertificado.invalid" (click)="buscarMercancia()">Buscar mercancías</button>
+                <button class="btn btn-primary" [disabled]="(formCertificado.invalid || esFormularioSoloLectura)" (click)="buscarMercancia()">Buscar mercancías</button>
             </div>
         } @else {
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary" [disabled]="formCertificado.invalid" (click)="buscarMercancia()">Mercancías Disponibles</button>
+                <button class="btn btn-primary" [disabled]="(formCertificado.invalid || esFormularioSoloLectura)" (click)="buscarMercancia()">Mercancías Disponibles</button>
             </div>
         }
 
@@ -166,8 +169,17 @@
             </div>
           }
 
+           
+        @if(mercanciasDisponiblesTabla){
+            <div class="row">
+                <app-tabla-dinamica [tipoSeleccionTabla]="seleccionTabla"  [configuracionTabla]="configuracionTablaMercanciaDisponible"
+                [datos]="tableData || []" (filaClic)="abrirModificarModal($event)"  ></app-tabla-dinamica>
+            </div>
+        }
+        @else{
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="tableData || []"
             [tipoSeleccionTabla]="seleccionTabla" (filaClic)="abrirModificarModal($event)"></app-tabla-dinamica>
+        }
 
             @if (cargoDeMercancias) {
                 <div class="row">
@@ -178,7 +190,7 @@
 
                 <div class="row d-flex justify-content-end">
                     <div class="col-12 container text-end">
-                      <button class="btn btn-primary my-5">Carga por archivo</button>
+                      <button class="btn btn-primary my-5" [disabled]="esFormularioSoloLectura" >Carga por archivo</button>
                     </div>
                 </div>
 

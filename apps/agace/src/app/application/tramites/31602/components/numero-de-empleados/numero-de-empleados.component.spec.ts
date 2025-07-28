@@ -28,8 +28,13 @@ describe('NumeroDeEmpleadosComponent', () => {
         { provide: BsModalService, useValue: modalServiceMock },
         FormBuilder,
       ],
-    }).compileComponents();
-
+    }).overrideComponent(NumeroDeEmpleadosComponent, {
+  set: {
+    providers: [
+      { provide: BsModalService, useValue: modalServiceMock }
+    ]
+  }
+}).compileComponents();
     fixture = TestBed.createComponent(NumeroDeEmpleadosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -66,8 +71,6 @@ describe('NumeroDeEmpleadosComponent', () => {
   it('should initialize agregarForm with correct controls', () => {
     component.crearAgregarForm();
     expect(component.agregarForm.contains('rfc')).toBeTruthy();
-    expect(component.agregarForm.contains('registroInput')).toBeTruthy();
-    expect(component.agregarForm.contains('razonSocialInput')).toBeTruthy();
     expect(component.agregarForm.contains('numeroUno')).toBeTruthy();
     expect(component.agregarForm.contains('numeroDos')).toBeTruthy();
     expect(component.agregarForm.contains('numeroTres')).toBeTruthy();

@@ -11,7 +11,6 @@
           <label style="font-weight: normal">
             <input
               type="checkbox"
-              style="margin-left: -245px"
               formControlName="manifesto"
               id="manifesto"
               (change)="
@@ -21,6 +20,7 @@
                   'setManifesto'
                 )
               "
+              [disabled]="esFormularioSoloLectura"
             />
             *Manifesto bajo protesta de decir verdad que el donante de la
             mercancía es extranjero
@@ -38,6 +38,7 @@
               (change)="
                 setValoresStore(importadorExportador, 'aduana', 'setAduana')
               "
+               [isDisabled] ="esFormularioSoloLectura"
             >
             </app-catalogo-select>
           </div>
@@ -48,34 +49,53 @@
         <div class="col-md-6">
           <label for="mercancia">Mercancías*:</label>
         </div>
-        <div class="table-container">
-          <ng-table [commonTableHeader]="encabezadosTabla"> </ng-table>
-        </div>
+          <app-tabla-dinamica
+            [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+            [configuracionTabla]="encabezadoDeTabla"
+            [datos]="mercanciaDatos"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+            (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
+          ></app-tabla-dinamica>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-default">Modificar</button>
-          <button type="button" class="btn btn-default ms-3">Eliminar</button>
+          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura"
+            data-bs-toggle="modal" data-bs-target="#modalAgregarMercancias">Modificar</button>
+          <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura" (click)="eliminar()">Eliminar</button>
           <button
             type="button"
             class="btn btn-primary ms-3"
-            (click)="nextTabla()"
+            data-bs-toggle="modal"
+            data-bs-target="#modalAgregarMercancias"
+            [disabled]="esFormularioSoloLectura"
           >
             Agregar
           </button>
         </div>
       </div>
 
-      <ng-container *ngIf="!showTabla && isPopupClose">
-        <div class="row mt-5">
+<div
+  class="modal fade"
+  id="modalAgregarMercancias"
+  tabindex="-1"
+  aria-labelledby="modalAgregarMercanciasLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <form [formGroup]="agregarMercanciasForm">
+        <div class="row">
           <ng-alert [CONTENIDO]="TEXTO_DE_ADJUNTAR"></ng-alert>
         </div>
         <ng-titulo titulo="Datos de la mercancía" />
+        <label class="mb-5">Fines a los que se destinará la mercancía*:</label>
         <crosslist
           [fechas]="selectRangoDias"
-          [showSearchInput1]="true"
-          [showSearchInput2]="true"
-          [botonField]="botonField"
+          [botones]="finesDeMercanciaBotons"
+          [fechasSeleccionadas]="solicitudState.fechasSeleccionadas"
+          [isDisabled]="esFormularioSoloLectura"
+          (fechasSeleccionadasChange)="changeCrosslist($event)"
         ></crosslist>
-        <ng-container formGroupName="importadorExportador">
+        <ng-container formGroupName="datosMercancia">
         <div class="row mt-5">
           <div class="col-md-12">
             <label>Tipo de mercancía*:</label>
@@ -87,20 +107,21 @@
               id="tipoMercancia"
               formControlName="tipoMercancia"
               [ngClass]="
-                isValid(importadorExportador, 'tipoMercancia') ? 'required' : ''
+                isValid(datosMercancia, 'tipoMercancia') ? 'required' : ''
               "
               (change)="
                 setValoresStore(
-                  importadorExportador,
+                  datosMercancia,
                   'tipoMercancia',
                   'setTipoMercancia'
                 )
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
         </div>
         </ng-container>
-        <ng-container formGroupName="importadorExportador">
+        <ng-container formGroupName="datosMercancia">
           <div class="row mt-3">
             <div class="col-md-4">
               <label>Uso específico de la mercancía*:</label>
@@ -111,17 +132,18 @@
                 id="usoEspecifico"
                 formControlName="usoEspecifico"
                 [ngClass]="
-                  isValid(importadorExportador, 'usoEspecifico')
+                  isValid(datosMercancia, 'usoEspecifico')
                     ? 'required'
                     : ''
                 "
                 (change)="
                   setValoresStore(
-                    importadorExportador,
+                    datosMercancia,
                     'usoEspecifico',
                     'setUsoEspecifico'
                   )
                 "
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
             <div class="col-md-4">
@@ -134,11 +156,12 @@
                 formControlName="condicion"
                 (change)="
                   setValoresStore(
-                    importadorExportador,
+                    datosMercancia,
                     'condicion',
                     'setCondicion'
                   )
                 "
+                [isDisabled]="esFormularioSoloLectura"
               ></app-catalogo-select>
             </div>
             <div class="col-md-4">
@@ -149,11 +172,12 @@
                 id="marca"
                 formControlName="marca"
                 [ngClass]="
-                  isValid(importadorExportador, 'marca') ? 'required' : ''
+                  isValid(datosMercancia, 'marca') ? 'required' : ''
                 "
                 (change)="
-                  setValoresStore(importadorExportador, 'marca', 'setMarca')
+                  setValoresStore(datosMercancia, 'marca', 'setMarca')
                 "
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
           </div>
@@ -167,8 +191,9 @@
                 id="ano"
                 formControlName="ano"
                 (change)="
-                  setValoresStore(importadorExportador, 'ano', 'setAno')
+                  setValoresStore(datosMercancia, 'ano', 'setAno')
                 "
+                [isDisabled]="esFormularioSoloLectura"
               ></app-catalogo-select>
             </div>
             <div class="col-md-4">
@@ -179,11 +204,12 @@
                 id="modelo"
                 formControlName="modelo"
                 [ngClass]="
-                  isValid(importadorExportador, 'modelo') ? 'required' : ''
+                  isValid(datosMercancia, 'modelo') ? 'required' : ''
                 "
                 (change)="
-                  setValoresStore(importadorExportador, 'modelo', 'setModelo')
+                  setValoresStore(datosMercancia, 'modelo', 'setModelo')
                 "
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
             <div class="col-md-4">
@@ -194,60 +220,40 @@
                 id="serie"
                 formControlName="serie"
                 [ngClass]="
-                  isValid(importadorExportador, 'serie') ? 'required' : ''
+                  isValid(datosMercancia, 'serie') ? 'required' : ''
                 "
                 (change)="
-                  setValoresStore(importadorExportador, 'serie', 'setSerie')
+                  setValoresStore(datosMercancia, 'serie', 'setSerie')
                 "
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
           </div>
         </ng-container>
 
-        <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-default">Limpiar</button>
-          <button type="button" class="btn btn-default ms-3">Cancelar</button>
+        <div class="col-md-12 mt-5 mb-5 d-flex justify-content-end">
+          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura"
+            (click)="limpiarMercancias()">Limpiar</button>
+          <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura" 
+            data-bs-dismiss="modal" #closeModal>Cancelar</button>
           <button
             type="button"
             class="btn btn-primary ms-3"
-            (click)="openPopup()"
+            data-bs-toggle="modal"
+            data-bs-target="#modalConfirmacion"
+            [disabled]="esFormularioSoloLectura"
+            (click)="agregarMercancia()"
           >
             Agregar
           </button>
         </div>
-        <div
-          class="modal"
-          tabindex="-1"
-          role="dialog"
-          [ngClass]="{ show: isPopupOpen }"
-          [ngStyle]="{ display: isPopupOpen ? 'block' : 'none' }"
-        >
-          <div class="modal-dialog" role="document">
-            <div
-              class="modal-content"
-              style="width: fit-content; margin-left: 115px"
-            >
-              <div style="background-color: black; height: 55px"></div>
-              <div class="modal-body">
-                <p>La mercancía fue <br />agregada correctamente.</p>
-              </div>
-              <div class="modal-footer" style="justify-content: center">
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  (click)="closePopup()"
-                >
-                  Acceptar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <div class="modal-backdrop fade show" *ngIf="isPopupOpen"></div>
-      </ng-container>
-
-      <ng-titulo titulo="Datos del donante extrajero" />
+      <ng-titulo titulo="Datos del donante extranjero" />
       <ng-container formGroupName="importadorExportador">
         <div class="row">
           <div class="col-md-8">
@@ -264,6 +270,7 @@
               (change)="
                 setValoresStore(importadorExportador, 'nombre', 'setNombre')
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
         </div>
@@ -283,12 +290,13 @@
               (change)="
                 setValoresStore(importadorExportador, 'calle', 'setCalle')
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
           <div class="col-md-4">
             <label>Número exterior*:</label>
             <input
-              type="number"
+              type="text"
               required="true"
               maxlength="55"
               class="form-control"
@@ -306,6 +314,7 @@
                   'setNumeroExterior'
                 )
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
         </div>
@@ -313,7 +322,7 @@
           <div class="col-md-4">
             <label>Número interior:</label>
             <input
-              type="number"
+              type="text"
               class="form-control"
               maxlength="55"
               id="numeroInterior"
@@ -330,13 +339,14 @@
                   'setNumeroInterior'
                 )
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
 
           <div class="col-md-4">
             <label>Teléfono:</label>
             <input
-              type="number"
+              type="text"
               class="form-control"
               id="telefono"
               formControlName="telefono"
@@ -347,6 +357,7 @@
               (change)="
                 setValoresStore(importadorExportador, 'telefono', 'setTelefono')
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
           <div class="col-md-4">
@@ -369,6 +380,7 @@
                   'setCorreoElectronico'
                 )
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
         </div>
@@ -381,15 +393,14 @@
               [required]="true"
               id="pais"
               formControlName="pais"
-              (change)="
-                setValoresStore(importadorExportador, 'pais', 'setPais')
-              "
+              (change)="setValoresStore(importadorExportador, 'pais', 'setPais')"
+              [isDisabled]="esFormularioSoloLectura"
             ></app-catalogo-select>
           </div>
           <div class="col-md-4">
             <label>Código postal*:</label>
             <input
-              type="number"
+              type="text"
               required="true"
               class="form-control"
               id="codigoPostal"
@@ -404,12 +415,13 @@
                   'setCodigoPostal'
                 )
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
           <div class="col-md-4">
             <label>Estado*:</label>
             <input
-              type="number"
+              type="text"
               required="true"
               class="form-control"
               id="estado"
@@ -420,6 +432,7 @@
               (change)="
                 setValoresStore(importadorExportador, 'estado', 'setEstado')
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
         </div>
@@ -427,7 +440,7 @@
           <div class="col-md-4">
             <label>Colonia*:</label>
             <input
-              type="number"
+              type="text"
               required="true"
               class="form-control"
               id="colonia"
@@ -438,6 +451,7 @@
               (change)="
                 setValoresStore(importadorExportador, 'colonia', 'setColonia')
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
         </div>
@@ -453,13 +467,39 @@
             (valueChange)="cambiarRadio($event)"
             id="opcion"
             formControlName="opcion"
-            (change)="
-              setValoresStore(importadorExportador, 'opcion', 'setOpcion')
-            "
-          >
+            (change)="setValoresStore(importadorExportador, 'opcion', 'setOpcion')"
+            [disabled]="esFormularioSoloLectura"
+            >
           </app-input-radio>
         </div>
       </ng-container>
     </div>
   </form>
+</div>
+
+<div
+  id="modalConfirmacion"
+  aria-labelledby="modalConfirmacionLabel"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  #modalConfirmacion
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content modalsm">
+      <div class="modal-body">
+        <p>La mercancía fue <br />agregada correctamente.</p>
+      </div>
+      <div class="modal-footer" style="justify-content: center">
+        <button
+          type="button"
+          class="btn btn-primary"
+          #closeModalConfirmacion
+          data-bs-dismiss="modal"
+        >
+          Acceptar
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

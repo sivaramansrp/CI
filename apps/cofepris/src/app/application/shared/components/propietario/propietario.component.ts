@@ -24,7 +24,7 @@ import {
 } from '@angular/forms';
 import { Modal } from 'bootstrap';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
 
 import {
   ConfiguracionColumna,
@@ -46,7 +46,7 @@ import { EstablecimientoService } from '../../services/establecimiento.service';
 
 import { ESTABLECIMIENTO_TABLE_CONFIG } from '../../constantes/aviso-de-funcionamiento.enum';
 
-
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /*
 * @description
 */ 
@@ -127,6 +127,23 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
   showValue: string = '';
 
   /**
+   * Indica el valor actual para mostrar información relacionada con terceros.
+   * 
+   * @remarks
+   * Esta propiedad se utiliza para controlar la visualización de secciones o componentes
+   * relacionados con terceros dentro del componente propietario.
+   * 
+   * @defaultValue ''
+   */
+  mostrarTerceros: string = '';
+
+/**
+ * Indica si el formulario debe mostrarse en modo solo lectura.
+ * Cuando es verdadero, los campos del formulario no pueden ser editados por el usuario.
+ */
+ esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para inicializar formularios reactivos.
    * @param propietarioStore Store para gestionar el estado del propietario.
@@ -136,8 +153,19 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
     private fb: FormBuilder,
     private propietarioStore: DatosDelSolicituteSeccionStateStore,
     private propietarioQuery: DatosDelSolicituteSeccionQuery,
-    private establecimientoService : EstablecimientoService
-  ) {}
+    private establecimientoService : EstablecimientoService,
+    private consultaQuery: ConsultaioQuery
+  ) {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
+  }
 
   /**
    * Ciclo de vida `AfterViewInit`.
@@ -188,29 +216,60 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
       tercerosPrimerApellido: ['', Validators.required],
     });
 
-    // Suscribirse al store para obtener los datos del propietario
-    this.propietarioQuery
+     this.establecimientoService.getPropietario()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response: PropietarioModel[]) => {
+        this.propietarioData= response;
+     });
+
+     this.inicializarFormulario();
+  }
+
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    }
+  }
+
+    /**
+     * Guarda los datos del formulario y ajusta el estado de solo lectura.
+     */
+    guardarDatosFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+        this.propietarioradioForm?.disable();
+      } else {
+        this.propietarioradioForm.enable();
+      } 
+    }
+
+    /**
+     * Inicializa los formularios y carga los datos iniciales de propietario, tipo de persona y radio.
+     */
+    inicializarFormulario() {
+      this.propietarioQuery
       .select('propietarioData')
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.propietarioData = data;
       });
+
       this.establecimientoService
       .getPropietarioRadioData()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: PropietarioRadio[]) => {
-        this.propietarioRadioData = data; // Bind the fetched data
-        
+        this.propietarioRadioData = data; // Asigna los datos obtenidos
       });
 
       this.establecimientoService
       .getPropietarioTipoPersonaData()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: PropietarioTipoPersona[]) => {
-        this.propietarioTipoPersonaData = data; // Bind the fetched data
-       
+        this.propietarioTipoPersonaData = data; // Asigna los datos obtenidos
       });
-  }
+    }
 
   /**
    * Configuración de columnas de la tabla.
@@ -223,7 +282,7 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
   guardarPropietario(): void {
     const PROPIETARIO: PropietarioModel = {
       NombredenominacionORazonSocial:
-        this.formTercerosDatos.get('tercerosDenominacionRazonSocial')?.value,
+        this.formTercerosDatos?.get('tercerosDenominacionRazonSocial')?.value,
       rfc: this.propietarioradioForm.get('tercerosRfc')?.value,
       curp: this.propietarioradioForm.get('tercerosCurp')?.value,
       telefono: this.formTercerosDatos.get('tercerosTelefono')?.value,
@@ -274,6 +333,8 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
       this.modalInstance.show();
     }
     this.formTercerosDatos.disable();
+     this.propietarioradioForm.get('tercerosCurp')?.disable();
+     this.propietarioradioForm.get('tercerosRfc')?.disable();
   }
 
   /**
@@ -285,6 +346,7 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
+
   /**
    * Maneja el cambio de selección en el formulario.
    * @param value Valor seleccionado.
@@ -292,11 +354,16 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
   onSelectionChange(value: string): void {
     this.showBuscarButton = value !== '';
     this.showValue = value;
+     this.propietarioradioForm.get('tercerosRfc')?.enable();
 
     if (this.showBuscarButton) {
       this.propietarioradioForm.get('tercerosCurp')?.disable();
     } else {
       this.propietarioradioForm.get('tercerosCurp')?.enable();
+    }
+
+     if (this.mostrarTerceros === 'Extranjero' && this.showValue === 'Física') {
+      this.formTercerosDatos.enable();
     }
   }
 
@@ -304,14 +371,17 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
    * Maneja el cambio de radio en el formulario.
    * @param value Valor seleccionado.
    */
-  onRadioChange(value: string | number): void {
+  onRadioChange(value: string|number ): void {
     this.showDatosPersonales = value === 'Nacional';
+    this.mostrarTerceros = String(value);
+
   }
 
   /**
    * Limpia todos los campos del formulario.
    */
   limpiarFormulario(): void {
+    this.propietarioradioForm.reset();
     this.formTercerosDatos.reset();
   }
 

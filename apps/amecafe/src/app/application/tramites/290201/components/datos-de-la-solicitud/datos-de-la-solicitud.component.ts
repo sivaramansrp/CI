@@ -1,10 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
+
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+
+import { ReplaySubject, takeUntil } from 'rxjs';
 
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { RegistrarSolicitudService } from '../../services/registrar-solicitud.service';
 import { Solicitud } from '../../models/tabla-model';
+
 import { SOLICITUD_HEADER, TEXTOS_SOLICITUD } from '../../constants/tabla-enum';
 
 /**
@@ -46,6 +49,25 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   @Input() tablaFilaDatos: Solicitud[] = [];
 
   /**
+ * Evento que emite la fila seleccionada de la tabla.
+ */
+@Output() filaSeleccionada: EventEmitter<Solicitud> = new EventEmitter<Solicitud>();
+
+/**
+ * Datos de ejemplo para una solicitud (MOCK).
+ */
+MOCK_SOLICITUD: Solicitud = {
+  formasdelcafe: '1',
+  tipos: '2',
+  calidad: '3',
+  procesos: '2',
+  certifications: '1',
+  adunadesalida: '2',
+  paisdestino: '1',
+  entidaddeprocedencia: '1',
+  ciclocafetalero: '1',
+};
+  /**
    * Constructor del componente.
    * @param registrarsolicitud Servicio para gestionar las solicitudes.
    */
@@ -55,10 +77,17 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Llama al método `getSolicitudData()` para obtener los datos de la solicitud.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.getSolicitudData();
   }
 
+ /**
+ * Método que se ejecuta al hacer clic en una fila de la tabla.
+ * Emite el evento `filaSeleccionada` con los datos de la solicitud seleccionada.
+ */
+onRowClick(): void {
+    this.filaSeleccionada.emit(this.MOCK_SOLICITUD);
+}
   /**
    * Alterna el estado del panel plegable (expandir/contraer).
    */
@@ -70,7 +99,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
    * Obtiene los datos de la solicitud desde el servicio `RegistrarSolicitudService`
    * y los asigna a la propiedad `tablaFilaDatos`.
    */
-  getSolicitudData() {
+  getSolicitudData(): void {
     this.registrarsolicitud
       .getSolicitudData()
       .pipe(takeUntil(this.destroyed$))

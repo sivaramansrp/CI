@@ -1,85 +1,121 @@
-import { PersonaTerceros } from "@libs/shared/data-access-user/src";
+import { CROSLISTA_DE_DATOS } from '../../constantes/220202/fitosanitario.enums';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { PersonaTerceros } from '@libs/shared/data-access-user/src';
+import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+
 /**
- * @interface ListaPasosWizard
- * @description 
- * Interfaz que define la estructura de los pasos en un componente tipo wizard.
- * 
- * @property {number} indice - Índice del paso.
- * @property {string} titulo - Título del paso.
- * @property {boolean} activo - Indica si el paso está activo.
- * @property {boolean} completado - Indica si el paso ha sido completado.
+ * Representa una lista de pasos en un asistente (wizard).
  */
 export interface ListaPasosWizard {
+    /**
+     * Índice del paso dentro del asistente.
+     * Este valor indica la posición del paso en la secuencia.
+     */
     indice: number;
+
+    /**
+     * Título descriptivo del paso.
+     * Este texto se utiliza para mostrar el nombre o descripción del paso en la interfaz de usuario.
+     */
     titulo: string;
+
+    /**
+     * Indica si el paso está activo.
+     * Un paso activo es el que actualmente está seleccionado o en progreso.
+     */
     activo: boolean;
+
+    /**
+     * Indica si el paso ha sido completado.
+     * Un paso completado es aquel que ya ha sido finalizado por el usuario.
+     */
     completado: boolean;
 }
 
 /**
- * @interface AccionBoton
- * @description 
- * Interfaz que define la estructura de las acciones de los botones en un formulario wizard.
- * 
- * @property {string} accion - Acción del botón (ej: 'siguiente', 'anterior').
- * @property {number} valor - Valor asociado a la acción (ej: índice del paso).
+ * Representa una acción asociada a un botón en la interfaz de usuario.
  */
 export interface AccionBoton {
+    /**
+     * Especifica el tipo de acción que se realizará al interactuar con el botón.
+     * @example "guardar", "eliminar", "editar"
+     */
     accion: string;
+
+    /**
+     * Representa un valor numérico asociado a la acción del botón.
+     * Este valor puede ser utilizado para identificar o parametrizar la acción.
+     * @example 1, 2, 3
+     */
     valor: number;
 }
 
 /**
- * @interface DatosDeTabla
- * @description 
  * Interfaz que define la estructura de los datos para una tabla.
- * 
- * @property {number} code - Código de respuesta.
- * @property {DatosDeFila[]} data - Array de datos de las filas de la tabla.
- * @property {string} message - Mensaje de respuesta.
  */
 export interface DatosDeTabla {
+    /** Código de respuesta. */
     code: number;
+
+    /** Array de datos de las filas de la tabla. */
     data: DatosDeFila[];
+
+    /** Mensaje de respuesta. */
     message: string;
 }
 
 /**
- * @interface DatosDeFila
- * @description 
- * Interfaz que define la estructura de los datos de una fila en la tabla.
- * 
- * @property {string} fechaCreacion - Fecha en la que se creó el registro.
- * @property {string} mercancia - Nombre de la mercancía.
- * @property {number} cantidad - Cantidad de la mercancía.
- * @property {string} proveedor - Nombre del proveedor de la mercancía.
+ * Representa los datos de una fila en el modelo fitosanitario.
  */
 export interface DatosDeFila {
+    /**
+     * Fecha de creación de la fila.
+     * Representada como una cadena en formato ISO 8601.
+     */
     fechaCreacion: string;
+
+    /**
+     * Nombre de la mercancía asociada a la fila.
+     */
     mercancia: string;
+
+    /**
+     * Cantidad de la mercancía especificada.
+     * Representada como un número.
+     */
     cantidad: number;
+
+    /**
+     * Nombre del proveedor de la mercancía.
+     */
     proveedor: string;
 }
+
 /**
- * @interface FinalEnviar
- * @description 
- * Interfaz que agrupa los estados de validación de las diferentes secciones del formulario antes de enviar la información final.
- * 
- * @property {boolean} datosFormaValidacion - Indica si la validación de los datos del formulario principal fue exitosa.
- * @property {boolean} movilizacionValidacion - Indica si la validación de la sección de movilización fue exitosa.
- * @property {boolean} validaciondeFormulariodePago - Indica si la validación del formulario de pago fue exitosa.
+ * Interfaz que representa los datos finales necesarios para el envío de información.
  */
 export interface FinalEnviar {
+    /**
+     * Indica si los datos del formulario han sido validados correctamente.
+     */
     datosFormaValidacion: boolean;
+
+    /**
+     * Indica si la validación de la movilización ha sido realizada correctamente.
+     */
     movilizacionValidacion: boolean;
+
+    /**
+     * Indica si el formulario de pago ha sido validado correctamente.
+     */
     validaciondeFormulariodePago: boolean;
 }
 
 /**
  * @interface ListaDeDatosFinal
- * @description 
+ * @description
  * Interfaz que agrupa los datos principales, información de movilización y pago.
- * 
+ *
  * @property {DatosForma} datos - Información de los productos y mercancías.
  * @property {Movilizacion} movilizacion - Datos relacionados con el transporte.
  * @property {PagoForm} pago - Datos de pago asociados a la transacción.
@@ -98,7 +134,7 @@ export interface ListaDeDatosFinal {
     /**
      * Información del formulario de pago.
      */
-    pago: PagoForm;
+    pago: PagoDeDerechos;
 
     /**
      * Datos finales preparados para enviar.
@@ -111,221 +147,471 @@ export interface ListaDeDatosFinal {
     tablaDatos: FilaSolicitud[];
 
     /**
+     * Fila de solicitud seleccionada actualmente.
+     */
+    selectedDatos: FilaSolicitud[];
+
+    /**
      * Arreglo de personas terceros asociadas.
      */
     personas: PersonaTerceros[];
+
+    /**
+     * Lista de terceros relacionados con la solicitud.
+     */
+    tercerosRelacionados: TercerosrelacionadosdestinoTable[];
+
+    /**
+     * Datos de la forma relacionados con terceros.
+     */
+    datosForma: TercerosrelacionadosdestinoTable[];
+
+    /**
+     * que deben ser considerados para operaciones de uso compartido o validaciones cruzadas.
+     * @type {string[]}
+     */
+    usoCrossListDatos: string[];
+
+      seletedTerceros: TercerosrelacionadosdestinoTable;
+      seletedExdora: TercerosrelacionadosdestinoTable;
 }
 
 /**
- * @interface Movilizacion
- * @description 
- * Interfaz que define la información de movilización de los productos.
- * 
- * @property {string} transporte - Tipo de transporte utilizado.
- * @property {string} guiaIdentificacion - Número de guía de identificación del producto.
- * @property {string} empresaTransportista - Nombre de la empresa transportista.
- * @property {string} punto - Punto de origen o destino del transporte.
+ * Representa la información relacionada con la movilización de bienes o productos.
  */
 export interface Movilizacion {
+    /**
+     * El tipo de transporte utilizado para la movilización.
+     * Puede ser terrestre, marítimo, aéreo, entre otros.
+     */
     transporte: string;
+
+    /**
+     * Identificación única de la guía asociada a la movilización.
+     * Este valor es utilizado para rastrear y verificar el transporte.
+     */
     guiaIdentificacion: string;
+
+    /**
+     * Nombre de la empresa encargada del transporte.
+     * Representa la entidad responsable de la movilización.
+     */
     empresaTransportista: string;
+
+    /**
+     * Medio específico de transporte utilizado.
+     * Ejemplo: camión, barco, avión, etc.
+     */
     medioTransporte: string;
 }
 
 /**
- * @interface PagoForm
- * @description 
- * Interfaz que define los datos de pago.
- * 
- * @property {string} exentoPago - Indica si el pago está exento.
- * @property {string} justificacion - Justificación para la exención del pago.
- * @property {string} claveReferencia - Clave de referencia del pago.
- * @property {string} cadenaDependencia - Información de la dependencia relacionada con el pago.
- * @property {string} banco - Banco en el que se realiza el pago.
- * @property {string} llavePago - Clave única de pago.
- * @property {string} importePago - Monto del pago.
- * @property {string} fechaDePago - Fecha en la que se realizó el pago.
+ * Representa la información relacionada con un pago realizado en el sistema.
  */
 export interface PagoForm {
+    /** Indica si el pago está exento. */
     exentoPago: string;
+
+    /** Justificación para la exención o detalles adicionales del pago. */
     justificacion: string;
+
+    /** Clave de referencia asociada al pago. */
     claveReferencia: string;
+
+    /** Cadena que identifica la dependencia relacionada con el pago. */
     cadenaDependencia: string;
+
+    /** Nombre del banco donde se realizó el pago. */
     banco: string;
+
+    /** Llave única que identifica el pago. */
     llavePago: string;
+
+    /** Monto total pagado. */
     importePago: string;
+
+    /** Fecha en la que se realizó el pago. */
     fechaDePago: string;
+
+    /** Fecha de inicio ingresada para el pago. */
     fechaInicioInput: string;
+
+    /** Fecha efectiva del pago. */
     fechaPago: string;
 }
 
 /**
- * @interface Mercancia
- * @description 
- * Interfaz que define la estructura de una mercancía dentro del formulario.
- * 
- * @property {string} seleccionado - Estado de selección de la mercancía.
- * @property {string} noPartida - Número de partida arancelaria.
- * @property {string} tipoRequisito - Tipo de requisito del producto.
- * @property {string} requisito - Requisito específico del producto.
- * @property {string} numCertificadoInternacional - Número del certificado internacional, si aplica.
- * @property {string} fraccionArancelaria - Fracción arancelaria aplicable.
- * @property {string} descFraccion - Descripción de la fracción arancelaria.
- * @property {string} nico - Código NICO de la mercancía.
+ * Representa la información de una mercancía en el sistema.
  */
 export interface Mercancia {
+    /**
+     * Indica si la mercancía está seleccionada.
+     * @example "true" o "false"
+     */
     seleccionado: string;
+
+    /**
+     * Número de partida de la mercancía.
+     * @example "123456"
+     */
     noPartida: string;
+
+    /**
+     * Tipo de requisito asociado a la mercancía.
+     * @example "Sanitario", "Fitosanitario"
+     */
     tipoRequisito: string;
+
+    /**
+     * Descripción del requisito asociado a la mercancía.
+     * @example "Certificado de inspección"
+     */
     requisito: string;
+
+    /**
+     * Número del certificado internacional relacionado con la mercancía.
+     * @example "INT-2023-001"
+     */
     numCertificadoInternacional: string;
+
+    /**
+     * Fracción arancelaria de la mercancía.
+     * @example "0101.21.00"
+     */
     fraccionArancelaria: string;
+
+    /**
+     * Descripción de la fracción arancelaria.
+     * @example "Caballos pura sangre para reproducción"
+     */
     descFraccion: string;
+
+    /**
+     * Número de Identificación Comercial (NICO) de la mercancía.
+     * @example "NICO-12345"
+     */
     nico: string;
 }
 
 /**
- * @interface DatosForma
- * @description 
- * Interfaz que define la estructura de los datos generales del formulario.
- * 
- * @property {string} aduana - Aduana de entrada o salida del producto.
- * @property {string} agropecuaria - Información agropecuaria relacionada con la mercancía.
- * @property {string} punto - Punto de control.
- * @property {string} guia - Número de guía de transporte.
- * @property {string} regimen - Régimen aduanero aplicable.
- * @property {string} ferrocarril - Datos de transporte ferroviario.
- * @property {Mercancia[]} mercancias - Listado de mercancías relacionadas.
- * @property {string} aduanaMercancia - Código de aduana para la mercancía.
- * @property {string} requisito - Requisito del producto.
- * @property {string} numCertificadoInternacional - Número del certificado internacional.
- * @property {string} arancelaria - Código arancelario.
- * @property {string} descFraccionArancelaria - Descripción de la fracción arancelaria.
- * @property {string} nico - Código NICO.
- * @property {string} descNico - Descripción del NICO.
- * @property {string} descripcion - Descripción del producto.
- * @property {string} cantidadUMT - Cantidad en unidad de medida de transporte.
- * @property {string} umt - Unidad de medida de transporte.
- * @property {string} cantidadUMC - Cantidad en unidad de medida comercial.
- * @property {string} umc - Unidad de medida comercial.
- * @property {string} uso - Uso previsto del producto.
- * @property {string} producto - Nombre del producto.
- */
-// customs-form.interface.ts
-
-/**
- * Interface representing the data structure for a customs import form
+ * Representa los datos de un formulario fitosanitario.
  */
 export interface DatosForma {
-    aduanaDeIngreso: string;
+    /**
+     * Aduana de ingreso donde se realizará el trámite.
+     */
+    aduanaDeIngreso?: string;
+
+    /**
+     * Oficina de inspección asignada para la revisión.
+     */
     oficinaDeInspeccion: string;
+
+    /**
+     * Punto de inspección donde se llevará a cabo la verificación.
+     */
     puntoDeInspeccion: string;
+
+    /**
+     * Número de guía asociado al trámite (opcional).
+     */
     numeroDeGuia?: string;
+
+    /**
+     * Régimen aduanero aplicable al trámite.
+     */
     regimen: string;
+
+    /**
+     * Número del carro utilizado para el transporte (opcional).
+     */
     numeroDeCarro?: string;
-    tipoDeRequisito: string;
-    requisito?: string;
-    numeroCertificadoInternacional?: string;
-    fraccionArancelaria: string;
-    descripcionFraccion?: string;
-    nico: string;
-    descripcionNico?: string;
-    descripcion?: string;
-    cantidadUMT: string | number;
-    umt: string;
-    cantidadUMC: string | number;
-    umc: string;
-    uso: string;
-    tipoDeProducto: string;
+
+    /**
+     * Tipo de mercancía relacionada con el trámite (opcional).
+     */
+    tipoMercancia?: string;
 }
+
 /**
- * @interface FilaSolicitud
- * @description 
- * Interfaz que representa una fila de la tabla de solicitudes.
+ * Representa una fila de solicitud en el modelo fitosanitario.
  */
 export interface FilaSolicitud {
+
+    /**
+     * ID de la fila, puede ser un número o un booleano para indicar si es nuevo
+     */
+    id: number | boolean;
+
+    /**
+     * Número de partida asociado a la solicitud.
+     */
     noPartida: string;
-    tipoRequisito: string;
+
+    /**
+     * Tipo de requisito relacionado con la solicitud.
+     */
+    tipoRequisito?: string;
+
+    /**
+     * Descripción del requisito solicitado.
+     */
     requisito: string;
+
+    /**
+     * Número del certificado internacional asociado.
+     */
     numeroCertificadoInternacional: string;
+
+    /**
+     * Fracción arancelaria correspondiente al producto.
+     */
     fraccionArancelaria: string;
+
+    /**
+     * Descripción de la fracción arancelaria.
+     */
     descripcionFraccion: string;
+
+    /**
+     * Número de Identificación Comercial (NICO) del producto.
+     */
     nico: string;
+
+    /**
+     * Descripción del Número de Identificación Comercial (NICO).
+     */
+    descripcionNico: string;
+
+    /**
+     * Descripción general del producto.
+     */
+    descripcion: string;
+
+    /**
+     * Unidad de medida de transporte (UMT) utilizada.
+     */
+    umt: string;
+
+    /**
+     * Cantidad en la unidad de medida de transporte (UMT).
+     */
+    cantidadUMT: string | number;
+
+    /**
+     * Unidad de medida de comercialización (UMC) utilizada.
+     */
+    umc: string;
+
+    /**
+     * Cantidad en la unidad de medida de comercialización (UMC).
+     */
+    cantidadUMC: string | number;
+
+    /**
+     * Uso previsto del producto.
+     */
+    uso: string;
+
+    /**
+     * Tipo de producto especificado en la solicitud.
+     */
+    tipoDeProducto: string;
+
+    /**
+     * Número de lote asociado al producto.
+     */
+    numeroDeLote: string;
+
+    /**
+     * País de origen del producto.
+     */
+    paisDeOrigen: string;
+
+    /**
+     * País de procedencia del producto.
+     */
+    paisDeProcedencia: string;
+
+    /**
+     * Certificado internacional electrónico asociado al producto.
+     */
+    certificadoInternacionalElectronico: string;
 }
 
 /**
- * @interface ConsultaioSolicitante
- * @description 
- * Interfaz que representa los datos de consulta de un solicitante.
+ * Representa la información relacionada con el pago de derechos.
+ */
+export interface PagoDeDerechos {
+    /**
+     * Indica si el pago está exento.
+     * @example "true" o "false"
+     */
+    exentoPago: string;
+
+    /**
+     * Justificación para la exención del pago.
+     * @example "Exención por convenio especial"
+     */
+    justificacion: string;
+
+    /**
+     * Clave de referencia asociada al pago.
+     * @example "REF123456789"
+     */
+    claveReferencia: string;
+
+    /**
+     * Cadena que identifica a la dependencia relacionada con el pago.
+     * @example "Dependencia XYZ"
+     */
+    cadenaDependencia: string;
+
+    /**
+     * Nombre del banco donde se realizó el pago.
+     * @example "Banco Nacional"
+     */
+    banco: string;
+
+    /**
+     * Llave única que identifica el pago.
+     * @example "LLAVE123456"
+     */
+    llavePago: string;
+
+    /**
+     * Importe total del pago realizado.
+     * @example "1500.00"
+     */
+    importePago: string;
+
+    /**
+     * Fecha en la que se realizó el pago.
+     * @example "2023-10-05"
+     */
+    fechaPago: string;
+}
+
+/**
+ * Representa una fila de la tabla de solicitudes en el sistema.
+ */
+export interface SolicitudFilaTabla {
+    /**
+     * Fecha de creación de la solicitud.
+     * Formato esperado: cadena de texto que representa una fecha.
+     */
+    fechaCreacion: string;
+
+    /**
+     * Nombre de la mercancía asociada a la solicitud.
+     */
+    mercancia: string;
+
+    /**
+     * Cantidad de mercancía solicitada.
+     * Representada como un número.
+     */
+    cantidad: number;
+
+    /**
+     * Nombre del proveedor de la mercancía.
+     */
+    proveedor: string;
+}
+
+/**
+ * Representa la información del solicitante para la consulta de un trámite fitosanitario.
  */
 export interface ConsultaioSolicitante {
-  folioDelTramite: string;
-  fechaDeInicio: string;
-  estadoDelTramite: string;
+    /**
+     * El folio único que identifica el trámite.
+     * @example "FT-123456789"
+     */
+    folioDelTramite: string;
+
+    /**
+     * La fecha en la que se inició el trámite.
+     * Formato esperado: "YYYY-MM-DD".
+     * @example "2023-01-15"
+     */
+    fechaDeInicio: string;
+
+    /**
+     * El estado actual del trámite.
+     * Puede representar estados como "En Proceso", "Completado", "Cancelado", etc.
+     * @example "En Proceso"
+     */
+    estadoDelTramite: string;
 }
 
 /**
- * @function getDefaultValue
- * @description Función auxiliar para retornar el valor por defecto de cada propiedad.
- * 
- * @param {any} value - El valor a verificar.
- * @param {any} defaultValue - El valor por defecto a retornar si `value` es undefined o null.
- * @returns {any} - El valor o el valor por defecto.
+ * Devuelve el valor proporcionado si no es `undefined` ni `null`; de lo contrario, retorna el valor por defecto especificado.
+ *
+ * @param value - El valor que se desea comprobar.
+ * @param defaultValue - El valor por defecto que se retornará si `value` es `undefined` o `null`.
+ * @returns El valor original si está definido, o el valor por defecto en caso contrario.
  */
-function getDefaultValue(value: string | undefined, defaultValue: string): string {
+export function getDefaultValue(
+    value: string | undefined,
+    defaultValue: string
+): string {
     return value !== undefined && value !== null ? value : defaultValue;
 }
 
 /**
- * @function finalEnviar
- * @description Función auxiliar para la propiedad `finalEnviar`.
- * 
- * @param {boolean} value - El valor a verificar para `finalEnviar`.
- * @param {boolean} defaultValue - El valor por defecto para `finalEnviar` si `value` es undefined o null.
- * @returns {boolean} - El valor o el valor por defecto.
+ * Devuelve el valor proporcionado si no es `undefined` ni `null`, de lo contrario retorna el valor por defecto.
+ *
+ * @param value - El valor a evaluar.
+ * @param defaultValue - El valor por defecto a retornar si `value` es `undefined` o `null`.
+ * @returns El valor de `value` si está definido y no es nulo, de lo contrario `defaultValue`.
  */
-function finalEnviar(value: boolean, defaultValue: boolean): boolean {
+export function finalEnviar(value: boolean, defaultValue: boolean): boolean {
     return value !== undefined && value !== null ? value : defaultValue;
 }
 
 /**
- * @function createDatosState
- * @description 
- * Función que crea un estado inicial por defecto para `ListaDeDatosFinal`.
- * 
- * @param {Partial<ListaDeDatosFinal>} params - Parámetros opcionales para inicializar el estado.
- * @returns {ListaDeDatosFinal} - Objeto con los datos iniciales.
+ * Crea y retorna un objeto de estado `ListaDeDatosFinal` con valores predeterminados,
+ * permitiendo la inicialización parcial a través del parámetro `params`.
+ *
+ * @param params - Objeto parcial de tipo `ListaDeDatosFinal` que permite sobreescribir los valores predeterminados.
+ *                 Si no se proporciona, se utilizarán los valores por defecto para todas las propiedades.
+ *
+ * @returns Un objeto completamente inicializado de tipo `ListaDeDatosFinal`, donde cada campo se establece
+ *          con el valor proporcionado en `params` o, en su defecto, con un valor predeterminado.
+ *
+ * @remarks
+ * - Utiliza la función `getDefaultValue` para asignar valores por defecto a los campos de tipo string.
+ * - Utiliza la función `finalEnviar` para asignar valores por defecto a los campos booleanos de validación.
+ * - Los campos `tablaDatos` y `personas` se inicializan como arreglos vacíos si no se proporcionan.
+ * - Esta función es útil para asegurar que el estado de los datos siempre tenga una estructura completa y consistente.
  */
 export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): ListaDeDatosFinal {
     return {
         datos: {
             aduanaDeIngreso: getDefaultValue(params.datos?.aduanaDeIngreso, ''),
-            oficinaDeInspeccion: getDefaultValue(params.datos?.oficinaDeInspeccion, ''),
+            oficinaDeInspeccion: getDefaultValue(
+                params.datos?.oficinaDeInspeccion,
+                ''
+            ),
             puntoDeInspeccion: getDefaultValue(params.datos?.puntoDeInspeccion, ''),
             numeroDeGuia: getDefaultValue(params.datos?.numeroDeGuia, ''),
             regimen: getDefaultValue(params.datos?.regimen, ''),
             numeroDeCarro: getDefaultValue(params.datos?.numeroDeCarro, ''),
-            tipoDeRequisito: getDefaultValue(params.datos?.tipoDeRequisito, ''),
-            requisito: getDefaultValue(params.datos?.requisito, ''),
-            numeroCertificadoInternacional: getDefaultValue(params.datos?.numeroCertificadoInternacional, ''),
-            fraccionArancelaria: getDefaultValue(params.datos?.fraccionArancelaria, ''),
-            descripcionFraccion: getDefaultValue(params.datos?.descripcionFraccion, ''),
-            nico: getDefaultValue(params.datos?.nico, ''),
-            descripcionNico: getDefaultValue(params.datos?.descripcion, ''),
-            descripcion: getDefaultValue(params.datos?.descripcion, ''),
-            cantidadUMT: getDefaultValue(params.datos?.cantidadUMT as string, ''),
-            umt: getDefaultValue(params.datos?.umt, ''),
-            cantidadUMC: getDefaultValue(params.datos?.cantidadUMC as string, ''),
-            umc: getDefaultValue(params.datos?.umc, ''),
-            uso: getDefaultValue(params.datos?.uso, ''),
-            tipoDeProducto: getDefaultValue(params.datos?.tipoDeProducto, ''),
         },
         movilizacion: {
             transporte: getDefaultValue(params.movilizacion?.transporte, ''),
-            guiaIdentificacion: getDefaultValue(params.movilizacion?.guiaIdentificacion, ''),
-            empresaTransportista: getDefaultValue(params.movilizacion?.empresaTransportista, ''),
-            medioTransporte: getDefaultValue(params.movilizacion?.medioTransporte, ''),
+            guiaIdentificacion: getDefaultValue(
+                params.movilizacion?.guiaIdentificacion,
+                ''
+            ),
+            empresaTransportista: getDefaultValue(
+                params.movilizacion?.empresaTransportista,
+                ''
+            ),
+            medioTransporte: getDefaultValue(
+                params.movilizacion?.medioTransporte,
+                ''
+            ),
         },
         pago: {
             exentoPago: getDefaultValue(params.pago?.exentoPago, ''),
@@ -335,16 +621,95 @@ export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): Lista
             banco: getDefaultValue(params.pago?.banco, ''),
             llavePago: getDefaultValue(params.pago?.llavePago, ''),
             importePago: getDefaultValue(params.pago?.importePago, ''),
-            fechaDePago: getDefaultValue(params.pago?.fechaDePago, ''),
-            fechaInicioInput: getDefaultValue(params.pago?.fechaInicioInput, ''),
-            fechaPago: getDefaultValue(params.pago?.fechaPago, '')
+            fechaPago: getDefaultValue(params.pago?.fechaPago, ''),
         },
         finalEnviar: {
-            datosFormaValidacion: finalEnviar(params.finalEnviar?.datosFormaValidacion as boolean, false),
-            movilizacionValidacion: finalEnviar(params.finalEnviar?.movilizacionValidacion as boolean, false),
-            validaciondeFormulariodePago: finalEnviar(params.finalEnviar?.validaciondeFormulariodePago as boolean, false)
+            datosFormaValidacion: finalEnviar(
+                params.finalEnviar?.datosFormaValidacion as boolean,
+                false
+            ),
+            movilizacionValidacion: finalEnviar(
+                params.finalEnviar?.movilizacionValidacion as boolean,
+                false
+            ),
+            validaciondeFormulariodePago: finalEnviar(
+                params.finalEnviar?.validaciondeFormulariodePago as boolean,
+                false
+            ),
         },
         tablaDatos: params.tablaDatos || [],
-        personas: params.personas || []
-    }
+        selectedDatos: params.selectedDatos || [],
+        personas: params.personas || [],
+        tercerosRelacionados: params.tercerosRelacionados || [],
+        datosForma: params.datosForma || [],
+        usoCrossListDatos: CROSLISTA_DE_DATOS,
+        seletedTerceros: params.seletedTerceros || {} as TercerosrelacionadosdestinoTable,
+        seletedExdora: params.seletedExdora || {} as TercerosrelacionadosdestinoTable
+    };
+}
+
+/**
+ * Interfaz que define una opción para un control de selección tipo radio button.
+ * @interface RadioOpcion
+ * @property {string} label - Etiqueta visible para el usuario.
+ * @property {string} value - Valor interno asignado a la opción seleccionada.
+ */
+export interface RadioOpcion {
+    /**
+     * Etiqueta visible para el usuario.
+     */
+    label: string;
+    /**
+     * Valor interno asignado a la opción seleccionada.
+     */
+    value: string;
+}
+
+/**
+ * Modelo de datos para un exportador relacionado.
+ * @interface
+ */
+export interface TercerosrelacionadosTable {
+    /**
+     * Nombre, denominación o razón social del exportador.
+     */
+    exportadorNombre: string;
+    /**
+     * Teléfono del exportador.
+     */
+    exportadorTelefono: string;
+    /**
+     * Correo electrónico del exportador.
+     */
+    exportadorCorreo: string;
+    /**
+     * Domicilio del exportador.
+     */
+    exportadorDomicilio: string;
+    /**
+     * País del exportador.
+     */
+    exportadorPais: string;
+}
+
+export interface DatosDeLaSolicitud {
+    /**
+     * Catálogo de países.
+     */
+    paises: Catalogo[];
+    /**
+     * Catálogo de estados.
+     */
+    estados: Catalogo[];
+}
+
+/**
+ * Interfaz que define la estructura de etiquetas cruzadas para elementos de interfaz.
+ * @interface CrossListEtiqueta
+ */
+export interface CrossListEtiqueta {
+    /** Título que se muestra en la parte izquierda */
+    tituluDeLaIzquierda: string;
+    /** Contenido que se muestra en la parte derecha */
+    derecha: string;
 }

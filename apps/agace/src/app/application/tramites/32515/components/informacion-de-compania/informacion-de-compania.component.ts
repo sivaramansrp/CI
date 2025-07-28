@@ -4,6 +4,7 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InformationGeneralSolicitanteState, Tramite32515Store } from '../../estados/tramite32515.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { INFORMACION_DE_COMPANIA } from '../../constantes/modificacion-aviso-seguro-global.enum';
 import { InformationGeneralSolicitanteService } from '../../services/information-general-solicitante.service';
@@ -42,6 +43,11 @@ export class InformacionDeCompaniaComponent implements OnInit, OnDestroy {
 
   /** Subject utilizado para destruir suscripciones activas al destruir el componente */
   private destroy$ = new Subject<void>();
+/**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
 
   /** Formulario principal que contiene subformularios */
   public forma: FormGroup = new FormGroup({
@@ -54,11 +60,13 @@ export class InformacionDeCompaniaComponent implements OnInit, OnDestroy {
    * @param informationGeneralService Servicio para obtener catálogos de dirección
    * @param tramiteStore32515 Store para actualizar datos del estado
    * @param tramiteQuery32515 Query para acceder al estado actual
+   * @param consultaQuery Query para acceder al estado de consulta
    */
   constructor(
     private informationGeneralService: InformationGeneralSolicitanteService,
     public tramiteStore32515: Tramite32515Store,
-    public tramiteQuery32515: Tramite32515Query
+    public tramiteQuery32515: Tramite32515Query,
+    public consultaQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -98,6 +106,14 @@ export class InformacionDeCompaniaComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         map((seccionState) => {
           this.informationGeneralState = seccionState as InformationGeneralSolicitanteState;
+        })
+      )
+      .subscribe();
+        this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {          
+          this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
       .subscribe();

@@ -1,14 +1,33 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h2>Solicitud expedición de certificado asignación directa persona moral.</h2>
+            <h3>Solicitud expedición de certificado de asignación directa persona moral.</h3>
         </div>
+
+        @if(mostrarError) {
+        <ng-alert [CONTENIDO]="ALERTA" [CUSTOMECLASS]="infoError"></ng-alert>
+        }
+
+        @if(mostrarNumFolioAsignacionError) {
+        <ng-alert [CONTENIDO]="ALERTA_NUM_FOLIO_ASIGNACION_ERROR" [CUSTOMECLASS]="infoError"></ng-alert>
+        }
+
+        @if(mostrarAgregarError) {
+        <ng-alert [CONTENIDO]="ALERTA_AGREGAR_ERROR" [CUSTOMECLASS]="infoError"></ng-alert>
+        }
+
+        @if(!esValido) {
+        <ng-alert [CONTENIDO]="ALERTA_BUSCAR_ERROR" [CUSTOMECLASS]="infoError"></ng-alert>
+        }
+
         <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
     </div>
     <div class="row">
         @switch (indice) {
         @case (1) {
-        <app-datos></app-datos>
+        <app-datos #datos (mostrarErrorDirecto)="mostrarErrorDirectoEvento($event)"
+            (mostrarNumFolioAsignacionErrorDirecto)="mostrarNumFolioAsignacionErrorEvento($event)"
+            (mostrarAgregarErrorDirecto)="mostrarAgregarErrorEvento($event)"></app-datos>
         } @case (2) {
         <app-paso-dos></app-paso-dos>
         }

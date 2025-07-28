@@ -1,5 +1,5 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { Tramite240305Store } from '../../estados/tramite240305Store.store';
@@ -18,6 +18,15 @@ import { Tramite240305Store } from '../../estados/tramite240305Store.store';
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
 export class DatosMercanciaContenedoraComponent {
+/**
+ * Evento de salida que emite una señal para cerrar el componente actual.
+ * Se emite sin valor (`void`), indicando que no se necesita información adicional.
+ *
+ * @type {EventEmitter<void>}
+ * @memberof NombreDelComponente
+ */
+
+   @Output() cerrar = new EventEmitter<void>();
   /**
    * Constructor del componente.
    *
@@ -38,5 +47,6 @@ export class DatosMercanciaContenedoraComponent {
    */
   updateMercanciaDetalle(event: MercanciaDetalle[]): void {
     this.tramite240305Store.updateMercanciaTablaDatos(event);
+     this.cerrar.emit();
   }
 }

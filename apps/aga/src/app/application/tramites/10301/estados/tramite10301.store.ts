@@ -1,56 +1,144 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { DatosMercancia } from '../models/importador-exportador.model';
 import { Injectable } from '@angular/core';
 
+/**
+ * Representa un catálogo general con un identificador único y una descripción.
+ * 
+ * Esta interfaz se utiliza comúnmente para poblar listas desplegables (selects) 
+ * dentro de formularios, como por ejemplo: aduanas, países, años, condiciones, etc.
+ */
 export interface Catalogo {
+  /**
+   * Identificador numérico único del elemento del catálogo.
+   * Suele utilizarse como valor (value) en controles de formulario.
+   */
   id: number;
+
+  /**
+   * Descripción legible del elemento del catálogo.
+   * Suele mostrarse como texto visible en listas o combos.
+   */
   descripcion: string;
 }
+
 /**
- * Creacion del estado inicial para la interfaz de tramite 10301
- * @returns Solicitud10301
+ * Define la estructura del estado del formulario del trámite 10301.
+ * Contiene todos los campos requeridos para su llenado, validación y control de UI.
  */
 export interface Solicitud10301State {
+  /** Identificador del manifiesto asociado al trámite. */
   manifesto: string;
+
+  /** Identificador único de la solicitud. */
   idSolicitud: string;
+
+  /** Tipo de solicitud del trámite (por ejemplo, modificación, alta, etc.). */
   tipoSolicitud: string;
+
+  /** Lista de aduanas disponibles para seleccionar. */
   aduana: Catalogo[] | null;
+
+  /** Lista de años disponibles en el catálogo. */
   ano: Catalogo[] | null;
+
+  /** Lista de países disponibles en el catálogo. */
   pais: Catalogo[] | null;
+
+  /** Lista de condiciones de la mercancía (nueva, usada, etc.). */
   condicion: Catalogo[] | null;
+
+  /** Lista de tipos de documento disponibles. */
   tipoDocumento: Catalogo[] | null;
-  fechasSeleccionadas: Catalogo[] | null;
+
+  /** Fechas disponibles para seleccionar dentro del trámite. */
+  fechasSeleccionadas: string[];
+
+  /** Fines o propósitos seleccionados por el usuario. */
   finesElegidos: string[];
-  elegidosSeleccionados: string[];
+
+  /** Rango de días seleccionado por el usuario. */
   selectRangoDias: string[];
+
+  /** Lista de fechas utilizadas o seleccionadas en el trámite. */
   fechasDatos: string[];
+
+  /** Fecha actual o predeterminada del trámite. */
   fecha: string | null;
+
+  /** Fecha que fue seleccionada específicamente por el usuario. */
   fechaSeleccionada: string | null;
-  showTabla: boolean;
-  isPopupOpen: boolean;
-  isPopupClose: boolean;
+
+  /** Valor actualmente seleccionado en algún campo dinámico. */
   valorSeleccionado: string | null;
+
+  /** Nombre de la empresa o persona que realiza la solicitud. */
   nombre: string;
+
+  /** Tipo de mercancía involucrada en la solicitud. */
   tipoMercancia: string;
+
+  /** Uso específico declarado para la mercancía. */
   usoEspecifico: string;
+
+  /** Marca del artículo o producto. */
   marca: string;
+
+  /** Modelo del artículo o producto. */
   modelo: string;
+
+  /** Número de serie del artículo o producto. */
   serie: string;
+
+  /** Nombre de la calle del domicilio fiscal u operativo. */
   calle: string;
+
+  /** Número exterior del domicilio. */
   numeroExterior: number;
+
+  /** Número interior del domicilio. */
   numeroInterior: number;
+
+  /** Número telefónico de contacto principal. */
   telefono: number;
+
+  /** Correo electrónico principal de contacto. */
   correoElectronico: string;
+
+  /** Código postal del domicilio declarado. */
   codigoPostal: number;
+
+  /** Identificador del estado o entidad federativa del domicilio. */
   estado: number;
+
+  /** Identificador de la colonia del domicilio. */
   colonia: number;
+
+  /** Opción seleccionada por el usuario (casilla, alternativa, etc.). */
   opcion: string;
+
+  /** Lista de documentos requeridos o anexados. */
   documentos: Catalogo[] | null;
+
+  /** Identificador del checkbox o selección en la tabla. */
   tableCheck: string;
+
+  /** Indica si el trámite está relacionado con una donación. */
   donacion: string;
+
+  /** Nombre de la persona que realiza o representa la solicitud. */
   persona: string;
+
+  /** Campo para especificar un valor adicional no contemplado (por ejemplo, "otro"). */
   otro: string;
 }
 
+
+/**
+ * Retorna el estado inicial del formulario con valores predeterminados.
+ * Se usa para inicializar el store o restablecer su estado.
+ * @returns Estado inicial de tipo `Solicitud10301State`
+ */
 export function createInitialState(): Solicitud10301State {
   return {
     manifesto: '',
@@ -61,19 +149,14 @@ export function createInitialState(): Solicitud10301State {
     condicion: null,
     pais: null,
     tipoDocumento: null,
-    fechasSeleccionadas: null,
+    fechasSeleccionadas: [],
     finesElegidos: [],
-    elegidosSeleccionados: [],
     selectRangoDias: [],
     fechasDatos: [],
     fecha: null,
     fechaSeleccionada: null,
-    showTabla: true,
-    isPopupOpen: false,
-    isPopupClose: true,
     valorSeleccionado: null,
     documentos: null,
-
     nombre: '',
     tipoMercancia: '',
     usoEspecifico: '',
@@ -96,6 +179,10 @@ export function createInitialState(): Solicitud10301State {
   };
 }
 
+/**
+ * Store de Akita para manejar el estado del formulario del trámite 10301.
+ * Permite modificar partes del estado de manera centralizada.
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -105,269 +192,194 @@ export class Tramite10301Store extends Store<Solicitud10301State> {
     super(createInitialState());
   }
 
-  public setTableCheck(tableCheck: string) {
-    this.update((state) => ({
-      ...state,
-      tableCheck,
-    }));
+  // Métodos para actualizar campos individuales del estado
+
+  /** Actualiza el campo `tableCheck` del estado. */
+  public setTableCheck(tableCheck: string): void {
+    this.update((state) => ({ ...state, tableCheck }));
   }
 
-  public setDonacion(donacion: string) {
-    this.update((state) => ({
-      ...state,
-      donacion,
-    }));
+  /** Actualiza el campo `donacion` del estado. */
+  public setDonacion(donacion: string): void {
+    this.update((state) => ({ ...state, donacion }));
   }
 
-  public setPersona(persona: string) {
-    this.update((state) => ({
-      ...state,
-      persona,
-    }));
+  /** Actualiza el campo `persona` del estado. */
+  public setPersona(persona: string): void {
+    this.update((state) => ({ ...state, persona }));
   }
 
-  public setOtro(otro: string) {
-    this.update((state) => ({
-      ...state,
-      otro,
-    }));
+  /** Actualiza el campo `otro` del estado. */
+  public setOtro(otro: string): void {
+    this.update((state) => ({ ...state, otro }));
   }
 
-  public setManifesto(manifesto: string) {
-    this.update((state) => ({
-      ...state,
-      manifesto,
-    }));
+  /** Actualiza el campo `manifesto` del estado. */
+  public setManifesto(manifesto: string): void {
+    this.update((state) => ({ ...state, manifesto }));
   }
 
-  public setAduana(aduana: Catalogo[]) {
-    this.update((state) => ({
-      ...state,
-      aduana,
-    }));
+  /** Actualiza la lista de aduanas disponibles. */
+  public setAduana(aduana: Catalogo[]): void {
+    this.update((state) => ({ ...state, aduana }));
   }
 
-  public setDocumentos(documentos: Catalogo[]) {
-    this.update((state) => ({
-      ...state,
-      documentos,
-    }));
+  /** Actualiza el catálogo de documentos. */
+  public setDocumentos(documentos: Catalogo[]): void {
+    this.update((state) => ({ ...state, documentos }));
   }
 
-  public setNombre(nombre: string) {
-    this.update((state) => ({
-      ...state,
-      nombre,
-    }));
+  /** Actualiza el nombre del solicitante. */
+  public setNombre(nombre: string): void {
+    this.update((state) => ({ ...state, nombre }));
   }
 
-  public setAno(ano: Catalogo[]) {
-    this.update((state) => ({
-      ...state,
-      ano,
-    }));
+  /** Actualiza el catálogo de años. */
+  public setAno(ano: Catalogo[]): void {
+    this.update((state) => ({ ...state, ano }));
   }
 
-  public setCondicion(condicion: Catalogo[]) {
-    this.update((state) => ({
-      ...state,
-      condicion,
-    }));
+  /** Actualiza el catálogo de condiciones. */
+  public setCondicion(condicion: Catalogo[]): void {
+    this.update((state) => ({ ...state, condicion }));
   }
 
-  public setPais(pais: Catalogo[]) {
-    this.update((state) => ({
-      ...state,
-      pais,
-    }));
+  /** Actualiza el catálogo de países. */
+  public setPais(pais: Catalogo[]): void {
+    this.update((state) => ({ ...state, pais }));
   }
 
-  public setTipoDocumento(tipoDocumento: Catalogo[]) {
-    this.update((state) => ({
-      ...state,
-      tipoDocumento,
-    }));
+  /** Actualiza el catálogo de tipos de documentos. */
+  public setTipoDocumento(tipoDocumento: Catalogo[]): void {
+    this.update((state) => ({ ...state, tipoDocumento }));
   }
 
-  public setFechasSeleccionadas(fechasSeleccionadas: Catalogo[]) {
-    this.update((state) => ({
-      ...state,
-      fechasSeleccionadas,
-    }));
+  /** Actualiza las fechas seleccionadas del formulario. */
+  public setFechasSeleccionadas(fechasSeleccionadas: string[]): void {
+    this.update((state) => ({ ...state, fechasSeleccionadas }));
   }
 
-  public setFinesElegidos(finesElegidos: string[]) {
-    this.update((state) => ({
-      ...state,
-      finesElegidos,
-    }));
+  /** Actualiza los fines seleccionados. */
+  public setFinesElegidos(finesElegidos: string[]): void {
+    this.update((state) => ({ ...state, finesElegidos }));
   }
 
-  public setElegidosSeleccionados(elegidosSeleccionados: string[]) {
-    this.update((state) => ({
-      ...state,
-      elegidosSeleccionados,
-    }));
+  /** Actualiza los elementos seleccionados por el usuario. */
+  public setElegidosSeleccionados(elegidosSeleccionados: string[]): void {
+    this.update((state) => ({ ...state, elegidosSeleccionados }));
   }
 
-  public setSelectRangoDias(selectRangoDias: string[]) {
-    this.update((state) => ({
-      ...state,
-      selectRangoDias,
-    }));
+  /** Actualiza el rango de días seleccionados. */
+  public setSelectRangoDias(selectRangoDias: string[]): void {
+    this.update((state) => ({ ...state, selectRangoDias }));
   }
 
-  public setFechasDatos(fechasDatos: string[]) {
-    this.update((state) => ({
-      ...state,
-      fechasDatos,
-    }));
+  /** Actualiza los datos relacionados con fechas múltiples. */
+  public setFechasDatos(fechasDatos: string[]): void {
+    this.update((state) => ({ ...state, fechasDatos }));
   }
 
-  public setFecha(fecha: string) {
-    this.update((state) => ({
-      ...state,
-      fecha,
-    }));
+  /** Establece la fecha seleccionada. */
+  public setFecha(fecha: string): void {
+    this.update((state) => ({ ...state, fecha }));
   }
 
-  public setFechaSeleccionada(fechaSeleccionada: string) {
-    this.update((state) => ({
-      ...state,
-      fechaSeleccionada,
-    }));
+  /** Establece una fecha específica como seleccionada. */
+  public setFechaSeleccionada(fechaSeleccionada: string): void {
+    this.update((state) => ({ ...state, fechaSeleccionada }));
   }
 
-  public setShowTabla(showTabla: boolean) {
-    this.update((state) => ({
-      ...state,
-      showTabla,
-    }));
+  /** Actualiza el valor actualmente seleccionado. */
+  public setValorSeleccionado(valorSeleccionado: string): void {
+    this.update((state) => ({ ...state, valorSeleccionado }));
   }
 
-  public setIsPopupOpen(isPopupOpen: boolean) {
-    this.update((state) => ({
-      ...state,
-      isPopupOpen,
-    }));
+  /** Establece el tipo de mercancía del formulario. */
+  public setTipoMercancia(tipoMercancia: string): void {
+    this.update((state) => ({ ...state, tipoMercancia }));
   }
 
-  public setIsPopupClose(isPopupClose: boolean) {
-    this.update((state) => ({
-      ...state,
-      isPopupClose,
-    }));
+  /** Establece el uso específico de la mercancía. */
+  public setUsoEspecifico(usoEspecifico: string): void {
+    this.update((state) => ({ ...state, usoEspecifico }));
   }
 
-  public setValorSeleccionado(valorSeleccionado: string) {
-    this.update((state) => ({
-      ...state,
-      valorSeleccionado,
-    }));
+  /** Establece la marca de la mercancía. */
+  public setMarca(marca: string): void {
+    this.update((state) => ({ ...state, marca }));
   }
 
-  public setTipoMercancia(tipoMercancia: string) {
-    this.update((state) => ({
-      ...state,
-      tipoMercancia,
-    }));
+  /** Establece el modelo de la mercancía. */
+  public setModelo(modelo: string): void {
+    this.update((state) => ({ ...state, modelo }));
   }
 
-  public setUsoEspecifico(usoEspecifico: string) {
-    this.update((state) => ({
-      ...state,
-      usoEspecifico,
-    }));
+  /** Establece el número de serie de la mercancía. */
+  public setSerie(serie: string): void {
+    this.update((state) => ({ ...state, serie }));
   }
 
-  public setMarca(marca: string) {
-    this.update((state) => ({
-      ...state,
-      marca,
-    }));
+  /** Establece la calle del domicilio. */
+  public setCalle(calle: string): void {
+    this.update((state) => ({ ...state, calle }));
   }
 
-  public setModelo(modelo: string) {
-    this.update((state) => ({
-      ...state,
-      modelo,
-    }));
+  /** Establece el número exterior del domicilio. */
+  public setNumeroExterior(numeroExterior: number): void {
+    this.update((state) => ({ ...state, numeroExterior }));
   }
 
-  public setSerie(serie: string) {
-    this.update((state) => ({
-      ...state,
-      serie,
-    }));
+  /** Establece el número interior del domicilio. */
+  public setNumeroInterior(numeroInterior: number): void {
+    this.update((state) => ({ ...state, numeroInterior }));
   }
 
-  public setCalle(calle: string) {
-    this.update((state) => ({
-      ...state,
-      calle,
-    }));
+  /** Establece el teléfono de contacto. */
+  public setTelefono(telefono: number): void {
+    this.update((state) => ({ ...state, telefono }));
   }
 
-  public setNumeroExterior(numeroExterior: number) {
-    this.update((state) => ({
-      ...state,
-      numeroExterior,
-    }));
+  /** Establece el correo electrónico del solicitante. */
+  public setCorreoElectronico(correoElectronico: string): void {
+    this.update((state) => ({ ...state, correoElectronico }));
   }
 
-  public setNumeroInterior(numeroInterior: number) {
-    this.update((state) => ({
-      ...state,
-      numeroInterior,
-    }));
+  /** Establece el código postal del domicilio. */
+  public setCodigoPostal(codigoPostal: number): void {
+    this.update((state) => ({ ...state, codigoPostal }));
   }
 
-  public setTelefono(telefono: number) {
-    this.update((state) => ({
-      ...state,
-      telefono,
-    }));
+  /** Establece el estado (entidad federativa) del domicilio. */
+  public setEstado(estado: number): void {
+    this.update((state) => ({ ...state, estado }));
   }
 
-  public setCorreoElectronico(correoElectronico: string) {
-    this.update((state) => ({
-      ...state,
-      correoElectronico,
-    }));
+  /** Establece la colonia del domicilio. */
+  public setColonia(colonia: number): void {
+    this.update((state) => ({ ...state, colonia }));
   }
 
-  public setCodigoPostal(codigoPostal: number) {
-    this.update((state) => ({
-      ...state,
-      codigoPostal,
-    }));
+  /** Establece la opción seleccionada (checkbox u otra opción). */
+  public setOpcion(opcion: string): void {
+    this.update((state) => ({ ...state, opcion }));
   }
 
-  public setEstado(estado: number) {
+  /**
+   * Actualiza los datos de la solicitud en el estado.
+   * @param {DatosMercancia[]} mercanciaDatos - Lista de datos de la solicitud.
+   */
+  public setDatosMercancia(mercanciaDatos: DatosMercancia[]): void {
     this.update((state) => ({
       ...state,
-      estado,
-    }));
-  }
-
-  public setColonia(colonia: number) {
-    this.update((state) => ({
-      ...state,
-      colonia,
-    }));
-  }
-
-  public setOpcion(opcion: string) {
-    this.update((state) => ({
-      ...state,
-      opcion,
+      mercanciaDatos,
     }));
   }
 
   /**
-   * Limpia los datos de la solicitud
+   * Reinicia el estado del formulario al estado inicial.
+   * Útil para limpiar el formulario tras enviar o cancelar.
    */
-  public limpiarSolicitud() {
+  public limpiarSolicitud(): void {
     this.reset();
   }
 }

@@ -5,18 +5,18 @@
       <div class="row">
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="aduanas" [label]="'Aduana'" [required]="true" id="cveAduana"
-            formControlName="cveAduana" [ngClass]="isValid(datosAduana,'cveAduana') ? 'required' : ''"
+            formControlName="cveAduana" [ngClass]="isValid(datosAduana,'cveAduana') ? 'required' : ''" 
             (change)="setValoresStore(datosAduana, 'cveAduana', 'setCveAduana')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="aduaneras" [label]="'Sección aduanera'" [required]="true"
-            id="cveSeccionAduanal" formControlName="cveSeccionAduanal"
+          <app-catalogo-select [catalogo]="aduaneras" [label]="'Sección aduanera'" [required]="true" 
+            id="cveSeccionAduanal" formControlName="cveSeccionAduanal" 
             [ngClass]="isValid(datosAduana,'cveSeccionAduanal') ? 'required' : ''"
             (change)="setValoresStore(datosAduana, 'cveSeccionAduanal', 'setCveSeccionAduanal')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="recintoFiscalizado" [label]="'Recinto fiscalizado'" [required]="true"
-            id="cveRecintoFiscalizado" formControlName="cveRecintoFiscalizado"
+            id="cveRecintoFiscalizado" formControlName="cveRecintoFiscalizado" 
             [ngClass]="isValid(datosAduana,'cveRecintoFiscalizado') ? 'required' : ''"
             (change)="setValoresStore(datosAduana, 'cveRecintoFiscalizado', 'setCveRecintoFiscalizado')"></app-catalogo-select>
         </div>
@@ -28,7 +28,7 @@
       <div class="row">
         <div class="col-md-5">
           <app-catalogo-select [catalogo]="tipoDeDocumento" [label]="'Tipo de documento'" [required]="true"
-            id="cveTipoDocumento" formControlName="cveTipoDocumento"
+            id="cveTipoDocumento" formControlName="cveTipoDocumento" 
             [ngClass]="isValid(datosPedimento,'cveTipoDocumento') ? 'required' : ''"
             (change)="cambiarTipoDocumento();setValoresStore(datosPedimento, 'cveTipoDocumento', 'setCveTipoDocumento')"></app-catalogo-select>
         </div>
@@ -42,7 +42,7 @@
           </div>
           <div>
             <input id="estadoTipoDocumento" name="estadoTipoDocumento" type="text" class="form-control"
-              formControlName="estadoTipoDocumento"
+              formControlName="estadoTipoDocumento" 
               [ngClass]="isValid(datosPedimento,'estadoTipoDocumento') ? 'required' : ''"
               (change)="setValoresStore(datosPedimento, 'estadoTipoDocumento', 'setEstadoTipoDocumento')"
               placeholder="No Validado" />
@@ -61,7 +61,7 @@
               <label class="form-label" for="aduana">:</label>
             </div>
             <div>
-              <input id="aduana" name="aduana" type="text" class="form-control" formControlName="aduana"
+              <input id="aduana" name="aduana" type="text" class="form-control" formControlName="aduana" 
                 [ngClass]="isValid(datosPedimento,'aduana') ? 'required' : ''"
                 (change)="setValoresStore(datosPedimento, 'aduana', 'setAduana')" />
             </div>
@@ -73,7 +73,7 @@
               <label class="form-label" for="patente">:</label>
             </div>
             <div>
-              <input id="patente" name="patente" type="patente" class="form-control" formControlName="patente"
+              <input id="patente" name="patente" type="text" class="form-control" formControlName="patente" 
                 [ngClass]="isValid(datosPedimento,'patente') ? 'required' : ''"
                 (change)="setValoresStore(datosPedimento, 'patente', 'setPatente')" />
             </div>
@@ -85,7 +85,7 @@
               <label class="form-label" for="pedimento">:</label>
             </div>
             <div>
-              <input id="pedimento" name="pedimento" type="text" class="form-control" formControlName="pedimento"
+              <input id="pedimento" name="pedimento" type="text" class="form-control" formControlName="pedimento" 
                 [ngClass]="isValid(datosPedimento,'pedimento') ? 'required' : ''"
                 (change)="setValoresStore(datosPedimento, 'pedimento', 'setPedimento')" />
             </div>
@@ -119,7 +119,7 @@
         </div>
         <div class="col-md-2">
           @if (this.datosPedimento.get('cveTipoDocumento')?.value !== 'Formato oficial') {
-          <button type="button" class="btn btn-primary ms-3" [disabled]="false">
+          <button type="button" class="btn btn-primary ms-3" >
             Validor
           </button>
           }
@@ -128,7 +128,7 @@
           <div class="col-md-5">
             <div class="form-check mt-5">
               <input class="form-check-input" type="checkbox" id="checkProrroga" formControlName="checkProrroga"
-                [ngClass]="isValid(datosPedimento,'checkProrroga') ? 'required' : ''"
+                [ngClass]="isValid(datosPedimento,'checkProrroga') ? 'required' : ''" 
                 (change)="cambiarCheckProrroga();setValoresStore(datosPedimento, 'checkProrroga', 'setCheckProrroga')">
               <label class="form-check-label" for="checkProrroga">Con prórroga</label>
             </div>
@@ -139,7 +139,7 @@
             </div>
             <div>
               <input id="folioOficialProrroga" name="folioOficialProrroga" type="text" class="form-control"
-                formControlName="folioOficialProrroga"
+                formControlName="folioOficialProrroga" 
                 [ngClass]="isValid(datosPedimento,'folioOficialProrroga') ? 'required' : ''"
                 (change)="setValoresStore(datosPedimento, 'folioOficialProrroga', 'setFolioOficialProrroga')" />
             </div>
@@ -152,14 +152,14 @@
         <div class="col-md-5">
           <div class="form-group datepicker-group">
             <input-fecha [datos]="fechaImportacion" [setFecha]="datosPedimento.get('fechaImportacionTemporal')?.value"
-              (valorCambiado)="cambioImportacionTemporal($event)"></input-fecha>
+              (valorCambiado)="cambioImportacionTemporal($event)" ></input-fecha>
           </div>
         </div>
         <div class="col-md-2"></div>
         <div class="col-md-5">
           <div class="form-group datepicker-group">
             <input-fecha [datos]="fechaVencimiento" [setFecha]="datosPedimento.get('fechaVencimiento')?.value"
-              (valorCambiado)="cambioVencimiento($event)"></input-fecha>
+              (valorCambiado)="cambioVencimiento($event)" ></input-fecha>
           </div>
         </div>
       </div>
@@ -169,7 +169,7 @@
           <div class="form-group">
             <label for="descMercancia" class="form-label">Descripción de la mercancía</label>
             <label for="descMercancia">:</label>
-            <textarea id="descMercancia" name="descMercancia" rows="5" class="form-control textarea"
+            <textarea id="descMercancia" name="descMercancia" rows="5" class="form-control textarea" 
               formControlName="descMercancia" [ngClass]="isValid(datosPedimento,'descMercancia') ? 'required' : ''"
               (change)="setValoresStore(datosPedimento, 'descMercancia', 'setDescMercancia')"></textarea>
           </div>
@@ -182,7 +182,7 @@
             <label class="form-label" for="marca">Marca</label>
           </div>
           <div>
-            <input id="marca" name="marca" type="text" class="form-control"
+            <input id="marca" name="marca" type="text" class="form-control" 
               [ngClass]="isValid(datosPedimento,'marca') ? 'required' : ''"
               (change)="setValoresStore(datosPedimento, 'marca', 'setMarca')" />
           </div>
@@ -192,7 +192,7 @@
             <label class="form-label" for="modelo">Modelo</label>
           </div>
           <div>
-            <input id="modelo" name="modelo" type="text" class="form-control" formControlName="modelo"
+            <input id="modelo" name="modelo" type="text" class="form-control" formControlName="modelo" 
               [ngClass]="isValid(datosPedimento,'modelo') ? 'required' : ''"
               (change)="setValoresStore(datosPedimento, 'modelo', 'setModelo')" />
           </div>
@@ -205,7 +205,7 @@
             <label class="form-label" for="numeroSerie">Número de serie</label>
           </div>
           <div>
-            <input id="numeroSerie" name="numeroSerie" type="text" class="form-control" formControlName="numeroSerie"
+            <input id="numeroSerie" name="numeroSerie" type="text" class="form-control" formControlName="numeroSerie" 
               [ngClass]="isValid(datosPedimento,'numeroSerie') ? 'required' : ''"
               (change)="setValoresStore(datosPedimento, 'numeroSerie', 'setNumeroSerie')" />
           </div>
@@ -215,7 +215,7 @@
             <label class="form-label" for="tipo">Tipo</label>
           </div>
           <div>
-            <input id="tipo" name="tipo" type="text" class="form-control" formControlName="tipo"
+            <input id="tipo" name="tipo" type="text" class="form-control" formControlName="tipo" 
               [ngClass]="isValid(datosPedimento,'tipo') ? 'required' : ''"
               (change)="setValoresStore(datosPedimento, 'tipo', 'setTipo')" />
           </div>
@@ -226,18 +226,18 @@
     <ng-titulo titulo="Partes o refacciones reemplazadas." />
     <div class="row">
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatos.encabezadas"
-        [datos]="tablaDeDatos.datos" (listaDeFilaSeleccionada)="filaSeleccionada($event)"></app-tabla-dinamica>
+        [datos]="tablaDeDatos.datos" (listaDeFilaSeleccionada)="filaSeleccionada($event)" [disableSeleccionTablaCheckBox]="soloLectura? true : false"></app-tabla-dinamica>
       <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="abiertoMercancia()">
+        <button type="button" class="btn btn-primary ms-3"  (click)="abiertoMercancia()">
           Agregar
         </button>
-        <button type="button" class="btn btn-primary ms-3" [disabled]="false">
+        <button type="button" class="btn btn-primary ms-3" >
           Modificar
         </button>
-        <button type="button" class="btn btn-danger ms-3" [disabled]="false">
+        <button type="button" class="btn btn-danger ms-3" >
           Consultar
         </button>
-        <button type="button" class="btn btn-danger ms-3" [disabled]="false" (click)="eliminarMercancia()">
+        <button type="button" class="btn btn-danger ms-3"  (click)="eliminarMercancia()">
           Eliminar
         </button>
       </div>
@@ -247,7 +247,7 @@
       <div class="row">
         <div class="col-md-3">
           <app-catalogo-select [catalogo]="medioDeTransporte" [label]="'Medio de transporte'" [required]="true"
-            id="cveMedioTrasporte" formControlName="cveMedioTrasporte"
+            id="cveMedioTrasporte" formControlName="cveMedioTrasporte" 
             [ngClass]="isValid(datosMedioTransporte,'cveMedioTrasporte') ? 'required' : ''"
             (change)="setValoresStore(datosMedioTransporte, 'cveMedioTrasporte', 'setCveMedioTrasporte')"></app-catalogo-select>
         </div>
@@ -261,7 +261,7 @@
             <label class="form-label" for="guiaMaster">:</label>
           </div>
           <div>
-            <input id="guiaMaster" name="guiaMaster" type="text" class="form-control" formControlName="guiaMaster"
+            <input id="guiaMaster" name="guiaMaster" type="text" class="form-control" formControlName="guiaMaster" 
               [ngClass]="isValid(datosMedioTransporte,'guiaMaster') ? 'required' : ''"
               (change)="setValoresStore(datosMedioTransporte, 'guiaMaster', 'setGuiaMaster')" />
           </div>
@@ -274,7 +274,7 @@
             <label class="form-label" for="guiaBl">:</label>
           </div>
           <div>
-            <input id="guiaBl" name="guiaBl" type="text" class="form-control" formControlName="guiaBl"
+            <input id="guiaBl" name="guiaBl" type="text" class="form-control" formControlName="guiaBl" 
               [ngClass]="isValid(datosMedioTransporte,'guiaBl') ? 'required' : ''"
               (change)="setValoresStore(datosMedioTransporte, 'guiaBl', 'setGuiaBl')" />
           </div>
@@ -287,7 +287,7 @@
             <label class="form-label" for="numeroBl">:</label>
           </div>
           <div>
-            <input id="numeroBl" name="numeroBl" type="text" class="form-control" formControlName="numeroBl"
+            <input id="numeroBl" name="numeroBl" type="text" class="form-control" formControlName="numeroBl" 
               [ngClass]="isValid(datosMedioTransporte,'numeroBl') ? 'required' : ''"
               (change)="setValoresStore(datosMedioTransporte, 'numeroBl', 'setNumeroBl')" />
           </div>
@@ -299,7 +299,7 @@
             <label class="form-label" for="rfcEmpresaTransportista">:</label>
           </div>
           <div>
-            <input id="rfcEmpresaTransportista" name="rfcEmpresaTransportista" type="text" class="form-control"
+            <input id="rfcEmpresaTransportista" name="rfcEmpresaTransportista" type="text" class="form-control" 
               formControlName="rfcEmpresaTransportista"
               [ngClass]="isValid(datosMedioTransporte,'rfcEmpresaTransportista') ? 'required' : ''"
               (change)="setValoresStore(datosMedioTransporte, 'rfcEmpresaTransportista', 'setRfcEmpresaTransportista')" />
@@ -311,7 +311,7 @@
             <label class="form-label" for="cartaPorte">:</label>
           </div>
           <div>
-            <input id="cartaPorte" name="cartaPorte" type="text" class="form-control" formControlName="cartaPorte"
+            <input id="cartaPorte" name="cartaPorte" type="text" class="form-control" formControlName="cartaPorte" 
               [ngClass]="isValid(datosMedioTransporte,'cartaPorte') ? 'required' : ''"
               (change)="setValoresStore(datosMedioTransporte, 'cartaPorte', 'setCartaPorte')" />
           </div>
@@ -320,7 +320,7 @@
         @if(datosMedioTransporte.get('cveMedioTrasporte')?.value !== 'Carretero'){
         <div class="col-md-2 mt-5">
 
-          <button type="button" class="btn btn-primary ms-3" [disabled]="false">
+          <button type="button" class="btn btn-primary ms-3" >
             Validor
           </button>
 
@@ -332,7 +332,7 @@
           </div>
           <div>
             <input id="estadoMedioTransporte" name="estadoMedioTransporte" type="text" class="form-control"
-              formControlName="estadoMedioTransporte"
+              formControlName="estadoMedioTransporte" 
               [ngClass]="isValid(datosMedioTransporte,'estadoMedioTransporte') ? 'required' : ''"
               (change)="setValoresStore(datosMedioTransporte, 'estadoMedioTransporte', 'setEstadoMedioTransporte')"
               placeholder="No Validado" />
@@ -344,7 +344,7 @@
       <div class="row">
         <div class="col-md-3">
           <app-catalogo-select [catalogo]="paisDeProcedencia" [label]="'País de procedencia'" [required]="false"
-            id="cvePaisProcedencia" formControlName="cvePaisProcedencia"
+            id="cvePaisProcedencia" formControlName="cvePaisProcedencia" 
             [ngClass]="isValid(datosMedioTransporte,'cvePaisProcedencia') ? 'required' : ''"
             (change)="setValoresStore(datosMedioTransporte, 'cvePaisProcedencia', 'setCvePaisProcedencia')"></app-catalogo-select>
         </div>
@@ -357,7 +357,7 @@
           </div>
           <div>
             <input id="guiaHouse" name="guiaHouse" type="text" class="form-control" formControlName="guiaHouse"
-              [ngClass]="isValid(datosMedioTransporte,'guiaHouse') ? 'required' : ''"
+              [ngClass]="isValid(datosMedioTransporte,'guiaHouse') ? 'required' : ''" 
               (change)="setValoresStore(datosMedioTransporte, 'guiaHouse', 'setGuiaHouse')" />
           </div>
           } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value === 'Marítimo'){
@@ -367,7 +367,7 @@
           </div>
           <div>
             <input id="numeroBuque" name="numeroBuque" type="text" class="form-control" formControlName="numeroBuque"
-              [ngClass]="isValid(datosMedioTransporte,'numeroBuque') ? 'required' : ''"
+              [ngClass]="isValid(datosMedioTransporte,'numeroBuque') ? 'required' : ''" 
               (change)="setValoresStore(datosMedioTransporte, 'numeroBuque', 'setNumeroBuque')" />
           </div>
           } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value === 'Ferroviario'){
@@ -377,13 +377,13 @@
           </div>
           <div>
             <input id="numeroEquipo" name="numeroEquipo" type="text" class="form-control" formControlName="numeroEquipo"
-              [ngClass]="isValid(datosMedioTransporte,'numeroEquipo') ? 'required' : ''"
+              [ngClass]="isValid(datosMedioTransporte,'numeroEquipo') ? 'required' : ''" 
               (change)="setValoresStore(datosMedioTransporte, 'numeroEquipo', 'setNumeroEquipo')" />
           </div>
           } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value === 'Carretero'){
           <div class="form-group datepicker-group">
             <input-fecha [datos]="fechaCartaPorte" [setFecha]="datosMedioTransporte.get('fechaCartaPorte')?.value"
-              (valorCambiado)="cambioFechaCartaPorte($event)"></input-fecha>
+              (valorCambiado)="cambioFechaCartaPorte($event)" ></input-fecha>
           </div>
           }
         </div>
@@ -396,7 +396,7 @@
           </div>
           <div>
             <input id="tipContenedor" name="tipContenedor" type="text" class="form-control"
-              formControlName="tipContenedor"
+              formControlName="tipContenedor" 
               [ngClass]="isValid(datosMedioTransporte,'tipContenedor') ? 'required' : ''"
               (change)="setValoresStore(datosMedioTransporte, 'tipContenedor', 'setTipContenedor')" />
           </div>
@@ -413,7 +413,7 @@
           </div>
           <div>
             <input id="tranporteMarca" name="tranporteMarca" type="text" class="form-control"
-              formControlName="tranporteMarca"
+              formControlName="tranporteMarca" 
               [ngClass]="isValid(datosMedioTransporte,'tranporteMarca') ? 'required' : ''"
               (change)="setValoresStore(datosMedioTransporte, 'tranporteMarca', 'setTranporteMarca')" />
           </div>
@@ -426,7 +426,7 @@
           </div>
           <div>
             <input id="tranporteModelo" name="tranporteModelo" type="text" class="form-control"
-              formControlName="tranporteModelo"
+              formControlName="tranporteModelo" 
               [ngClass]="isValid(datosMedioTransporte,'tranporteModelo') ? 'required' : ''"
               (change)="setValoresStore(datosMedioTransporte, 'tranporteModelo', 'setTranporteModelo')" />
           </div>
@@ -439,7 +439,7 @@
           </div>
           <div>
             <input id="tranportePlaca" name="tranportePlaca" type="text" class="form-control"
-              formControlName="tranportePlaca"
+              formControlName="tranportePlaca" 
               [ngClass]="isValid(datosMedioTransporte,'tranportePlaca') ? 'required' : ''"
               (change)="setValoresStore(datosMedioTransporte, 'tranportePlaca', 'setTranportePlaca')" />
           </div>
@@ -452,7 +452,7 @@
             <label for="observaciones" class="form-label">Observaciones</label>
             <label for="observaciones">:</label>
             <textarea id="observaciones" name="observaciones" rows="5" class="form-control textarea"
-              [ngClass]="isValid(datosMedioTransporte,'observaciones') ? 'required' : ''"
+              [ngClass]="isValid(datosMedioTransporte,'observaciones') ? 'required' : ''" 
               (change)="setValoresStore(datosMedioTransporte, 'observaciones', 'setObservaciones')"></textarea>
           </div>
         </div>
@@ -477,7 +477,7 @@
                   <label for="modalDescMercancia" class="form-label">Descripción de la mercancía</label>
                   <label for="modalDescMercancia">:</label>
                   <textarea id="modalDescMercancia" name="modalDescMercancia" rows="5" class="form-control textarea"
-                    formControlName="modalDescMercancia"
+                    formControlName="modalDescMercancia" 
                     [ngClass]="isValid(mercanciaFormulario,'modalDescMercancia') ? 'required' : ''"
                     (change)="setValoresStore(mercanciaFormulario, 'modalDescMercancia', 'setModalDescMercancia')"></textarea>
                 </div>
@@ -488,7 +488,7 @@
                     comercial</label>
                   <label for="espeMercancia">:</label>
                   <textarea id="espeMercancia" name="espeMercancia" rows="5" class="form-control textarea"
-                    formControlName="espeMercancia"
+                    formControlName="espeMercancia" 
                     [ngClass]="isValid(mercanciaFormulario,'espeMercancia') ? 'required' : ''"
                     (change)="setValoresStore(mercanciaFormulario, 'espeMercancia', 'setEspeMercancia')"></textarea>
                 </div>
@@ -502,7 +502,7 @@
                 </div>
                 <div>
                   <input id="marcaMercancia" name="marcaMercancia" type="text" class="form-control" maxlength="250"
-                    formControlName="marcaMercancia"
+                    formControlName="marcaMercancia" 
                     [ngClass]="isValid(mercanciaFormulario,'marcaMercancia') ? 'required' : ''"
                     (change)="setValoresStore(mercanciaFormulario, 'marcaMercancia', 'setMarcaMercancia')" />
                 </div>
@@ -513,7 +513,7 @@
                 </div>
                 <div>
                   <input id="modeloMercancia" name="modeloMercancia" type="text" class="form-control" maxlength="250"
-                    formControlName="modeloMercancia"
+                    formControlName="modeloMercancia" 
                     [ngClass]="isValid(mercanciaFormulario,'modeloMercancia') ? 'required' : ''"
                     (change)="setValoresStore(mercanciaFormulario, 'modeloMercancia', 'setModeloMercancia')" />
                 </div>
@@ -527,7 +527,7 @@
                 </div>
                 <div>
                   <input id="numSerieMercancia" name="numSerieMercancia" type="text" class="form-control"
-                    maxlength="250" formControlName="numSerieMercancia"
+                    maxlength="250" formControlName="numSerieMercancia" 
                     [ngClass]="isValid(mercanciaFormulario,'numSerieMercancia') ? 'required' : ''"
                     (change)="setValoresStore(mercanciaFormulario, 'numSerieMercancia', 'setNumSerieMercancia')" />
                 </div>
@@ -538,7 +538,7 @@
                 </div>
                 <div>
                   <input id="numParteMercancia" name="numParteMercancia" type="text" class="form-control"
-                    maxlength="250" formControlName="numParteMercancia"
+                    maxlength="250" formControlName="numParteMercancia" 
                     [ngClass]="isValid(mercanciaFormulario,'numParteMercancia') ? 'required' : ''"
                     (change)="setValoresStore(mercanciaFormulario, 'numParteMercancia', 'setNumParteMercancia')" />
                 </div>
@@ -551,7 +551,7 @@
                 </div>
                 <div>
                   <input id="tipoMercancia" name="tipoMercancia" type="text" class="form-control" maxlength="250"
-                    formControlName="tipoMercancia"
+                    formControlName="tipoMercancia" 
                     [ngClass]="isValid(mercanciaFormulario,'tipoMercancia') ? 'required' : ''"
                     (change)="setValoresStore(mercanciaFormulario, 'tipoMercancia', 'setTipoMercancia')" />
                 </div>
@@ -563,8 +563,8 @@
 
       </div>
       <div class="modal-footer custom-footer mt-4 justify-content-end">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeMercancia> Cancelar </button>
-        <button type="submit" class="btn btn-primary" (click)="agregarMercancia()"> Agregar </button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeMercancia > Cancelar </button>
+        <button type="submit" class="btn btn-primary"  (click)="agregarMercancia()"> Agregar </button>
       </div>
     </div>
   </div>

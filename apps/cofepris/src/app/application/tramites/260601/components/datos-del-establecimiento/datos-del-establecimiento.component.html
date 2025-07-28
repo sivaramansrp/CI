@@ -125,7 +125,7 @@
             <div class="btn-group">
                 <button class="btn btn-default me-1" type="button" id="btnScianEliminar">Eliminar</button>
                 <button type="button" class="btn btn-primary ms-2" id="btnScianAgregar" data-bs-toggle="modal"
-                    data-bs-target="#modalAddSCIAN" (click)="abrirDialogoAgregarDatosSCIAN()">
+                    data-bs-target="#modalAddSCIAN">
                     Agregar
                 </button>
             </div>
@@ -144,13 +144,13 @@
                             <div class="col-md-6">
                                 <app-catalogo-select [catalogo]="claveScian" formControlName="cveSCIAN"
                                     [label]="'Clave S.C.I.A.N.'" [required]="true" name="cveSCIAN"
-                                    (change)="claveScianSeleccion()"></app-catalogo-select>
+                                    (change)="claveScianSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <app-catalogo-select [catalogo]="descripcionScian" formControlName="cveSCIANDescripcion" class="seleccion-solo-lectura"
-                                    [label]="'Descripción del S.C.I.A.N.'" name="cveSCIANDescripcion"></app-catalogo-select>
+                                    [label]="'Descripción del S.C.I.A.N.'" name="cveSCIANDescripcion" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                             </div>
                         </div>
                     </form>
@@ -164,11 +164,11 @@
                                     Cancelar
                                 </button>
                                 <button type="button" name="limpiarSCIAN" class="btn btn-danger ms-2"
-                                    (click)="limpiarDatosSCIAN()">
+                                    >
                                     Limpiar
                                 </button>
                                 <button type="button" name="agregar" class="btn btn-primary ms-2"
-                                    (click)="agregarDatosSCIAN()">
+                                    >
                                     Agregar
                                 </button>
                             </div>
@@ -191,11 +191,11 @@
         <div class="col-md-4">
             <app-catalogo-select [catalogo]="regimenes" formControlName="cveRegimenes"
                 [label]="'Régimen al que se destinará'" [required]="true" name="cveRegimenes"
-                (change)="regimenesSeleccion()"></app-catalogo-select>
+                (change)="regimenesSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-8">
             <app-catalogo-select [catalogo]="aduanas" formControlName="cveAduanas" [label]="'Aduana'" [required]="true"
-                name="cveAduanas" (change)="aduanaSeleccion()"></app-catalogo-select>
+                name="cveAduanas" (change)="aduanaSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
         </div>
     </div>
 
@@ -271,7 +271,7 @@
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="informacionConfidencial"
                 (change)="setValoresStore(manifiestosForm,'informacionConfidencial', 'setInformacionConfidencial')"
-                (valueChange)="enCambioDeValor()"></app-input-radio>
+                ></app-input-radio>
         </div>
     </div>
 </ng-container>

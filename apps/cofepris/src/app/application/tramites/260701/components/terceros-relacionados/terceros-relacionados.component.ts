@@ -1,10 +1,11 @@
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, Destinatario, Fabricante260701,Notificacion,NotificacionesComponent,Pedimento,TERCEROS, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Subject, takeUntil } from 'rxjs';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ConfiguracionColumna, Destinatario, Fabricante260701,Notificacion,NotificacionesComponent,Pedimento,TERCEROS, TablaDinamicaComponent, TablaSeleccion, TITULO_MODAL_AVISO } from '@libs/shared/data-access-user/src';
+import { Subject,map, takeUntil } from 'rxjs';
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosModalComponent } from '../terceros-relacionados-modal/terceros-relacionados-modal.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
@@ -23,6 +24,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,
+  providers: [BsModalService],
   imports: [CommonModule, TituloComponent, TablaDinamicaComponent, AlertComponent,NotificacionesComponent],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
@@ -130,6 +132,11 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * Esta propiedad se utiliza para rastrear el estado de selección en la interfaz de usuario.
    */
   public tieneFilaSeleccionadaFabricante: boolean = false;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+    public esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente TercerosRelacionadosComponent.
@@ -138,9 +145,14 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   constructor(
       private certificadosLicenciasSvc: CertificadosLicenciasService,
-      private modalService: BsModalService
+      private consultaioQuery: ConsultaioQuery,
+      @Inject(BsModalService)
+    public modalService: BsModalService,
   ) {
-    // Dependencia inyectada para uso posterior
+      this.consultaioQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+            this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      ).subscribe();
   }
 
   /**
@@ -210,7 +222,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Avisos',
+        titulo: TITULO_MODAL_AVISO,
         mensaje: '¿Confirma la eliminación?',
         cerrar: false,
         tiempoDeEspera: 2000,

@@ -1,13 +1,14 @@
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Notificacion, NotificacionesComponent, REGEX_RFC_FISICA, REGEX_RFC_MORAL, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { RegistroStates, RegistroStore } from '../../../estados/registro.store';
-import { Subject, map, takeUntil } from 'rxjs';
-import { TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Subject, catchError, map, of, takeUntil } from 'rxjs';
 import { BusquedaRFCQuery } from '../../../queries/registro.query';
 import { CONFIGURACION_ENCABEZADO_NOTIFICADORES } from '../../core/constantes/notificadores.enum';
 import { CommonModule } from '@angular/common';
-import { ConsultaRegistro } from '../../core/models/consuta-registro.model';
+import { ConsultaRegistro } from '../../core/models/consulta-registro.model';
 import { Router } from '@angular/router';
+import { UsuariosService } from '../../core/service/usuarios.service';
 
 /**
  * Componente para el registro de personas que recibirán notificaciones.
@@ -16,7 +17,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-registro-persona-notificaciones',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, TablaDinamicaComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TablaDinamicaComponent, NotificacionesComponent],
   templateUrl: './registro-persona-notificaciones.component.html',
   styleUrl: './registro-persona-notificaciones.component.scss',
 })
@@ -62,6 +63,12 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
    * Lista de notificadores seleccionados para eliminar.
    */
   notificadoresSeleccionados: ConsultaRegistro[] = [];
+  /** Modelo que contiene los datos del notificador consultado.*/
+  public modelNotificador?: ConsultaRegistro;
+  /** Notificación para mostrar mensajes al usuario.*/
+  public nuevaNotificacion!: Notificacion;
+  /** variable para visualizar el botón eliminar notificadores */
+  public botonEliminar: boolean = false;
 
   /**
    * Constructor del componente.
@@ -75,7 +82,8 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
     private fb: FormBuilder,
     private registroStore: RegistroStates,
     private registroQuery: BusquedaRFCQuery,
-    private router: Router
+    private router: Router,
+    private usuariosService: UsuariosService
   ) { }
 
   /**
@@ -92,13 +100,14 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
       )
       .subscribe();
     this.confirmarDatos();
-    this.personasNotificaciones= this.registroState.personasNotificaciones;
+    this.personasNotificaciones = this.registroState.personasNotificaciones;
+    this.botonEliminar = this.registroState.eliminar;
   }
 
   /**
   * Se ejecuta al destruir el componente, limpiando las suscripciones.
   */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
@@ -107,14 +116,15 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
    * Confirma y actualiza los datos de las personas notificadoras en el estado.
    * Si no existen personas, inicializa la lista y actualiza la visualización de la tabla.
    */
-  confirmarDatos() {
-    this.personasNotificaciones = this.registroState.personasNotificaciones;
+  confirmarDatos(): void {
     if (this.registroState.registrarDatos) {
-      if (this.personasNotificaciones.length === 0) {
-        this.personasNotificaciones = [];
-        this.registroStore.setValorVisualizarTabla(this.visualizarTabla = true);
-      }
+      this.registroStore.setValorVisualizarTabla(this.visualizarTabla = true);
       this.visualizarTabla = this.registroState.visualizarTabla;
+      if (this.registroState.personasNotificaciones.length === 0) {
+        this.personasNotificaciones = [];
+        this.registroStore.setListaNotificadores(this.personasNotificaciones);
+      }
+      this.personasNotificaciones = this.registroState.personasNotificaciones;
       this.personasNotificaciones.push(this.registroState.personaNotifcador);
       this.registroStore.setListaNotificadores(this.personasNotificaciones);
     }
@@ -123,17 +133,61 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
   /**
    * Crea el formulario reactivo para capturar el RFC.
    */
-  crearFormConsulta() {
+  crearFormConsulta(): void {
     this.FormNotificaciones = this.fb.group({
-      rfc: ['']
+      rfc: ['', [Validators.required, RegistroPersonaNotificacionesComponent.validadorRFC]]
     });
+  }
+
+  /**
+   * Valida el RFC ingresado en el formulario.
+   * Utiliza expresiones regulares para verificar si es un RFC válido.
+   * 
+   * @returns Un objeto de error si el RFC es inválido, o null si es válido.
+   */
+  static validadorRFC(control: AbstractControl): ValidationErrors | null {
+    const VALUE = control.value;
+    if (!VALUE) {
+      return null;
+    }
+    const ES_VALIDO = REGEX_RFC_FISICA.test(VALUE) || REGEX_RFC_MORAL.test(VALUE);
+    return ES_VALIDO ? null : { rfcInvalido: true };
   }
 
   /**
    * Navega a la pantalla para agregar una persona para oír/recibir notificaciones.
    */
-  agregarPersonas() {
-    this.router.navigate(['login/consulta-registro-notificador']);
+  agregarPersonas(): void {
+    const RFC = this.FormNotificaciones.get('rfc')?.value;
+    this.usuariosService.consultaNotificadores(RFC)
+      .pipe(
+        map((data) => {
+          if (data) {
+            this.modelNotificador = data;
+            this.registroStore.setModeloNotificador(data);
+            this.router.navigate(['login/consulta-registro-notificador']);
+          } else {
+            this.modelNotificador = undefined;
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: 'Alerta',
+              mensaje: 'No se encuentra este registro.',
+              cerrar: false,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+          }
+        }),
+        catchError((error) => {
+          console.error('Error al consultar notificador:', error);
+          return of(undefined);
+        }),
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe();
   }
 
   /**
@@ -150,7 +204,7 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
   /**
    * Elimina las personas seleccionadas de la lista de notificaciones y actualiza el store.
    */
-  eliminarSeleccionados() {
+  eliminarSeleccionados(): void {
     this.personasNotificaciones = this.personasNotificaciones.filter(
       (notificador) =>
         !this.notificadoresSeleccionados.some(
@@ -163,7 +217,21 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
   /**
    * Navega a la pantalla de firma electrónica.
    */
-  enviarFirma() {
-    this.router.navigate(['login/firma-electronica']);
+  enviarFirma(): void {
+    if (this.personasNotificaciones.length > 0) {
+      this.router.navigate(['login/firma-electronica']);
+    } else {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Alerta',
+        mensaje: 'No hay notificadores para enviar a firmar.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
   }
 }

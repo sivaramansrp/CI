@@ -70,10 +70,10 @@ describe('DatosGeneralesComponent', () => {
 
   it('should initialize the form on component creation', () => {
     expect(component.formDatosGenerales).toBeDefined();
-    expect(component.formDatosGenerales.get('aduanaAdicional')?.value).toBe('');
-    expect(component.formDatosGenerales.get('nombre')?.value).toBe('');
-    expect(component.formDatosGenerales.get('federalDeContribuyentes')?.value).toBe('');
-    expect(component.formDatosGenerales.get('tipoDePersona')?.value).toBe('');
+    expect(component.formDatosGenerales.get('aduanaAdicional')?.value).toBe('Aduana Test');
+    expect(component.formDatosGenerales.get('nombre')?.value).toBe('Nombre Test');
+    expect(component.formDatosGenerales.get('federalDeContribuyentes')?.value).toBe('RFC123456');
+    expect(component.formDatosGenerales.get('tipoDePersona')?.value).toBe('Física');
   });
 
   it('should call getSolicitudesTabla and set registroDeSolicitudesTablaDatos', () => {
@@ -127,5 +127,98 @@ describe('DatosGeneralesComponent', () => {
     expect(component.isValidArray([])).toBe(false);
     expect(component.isValidArray(null)).toBe(false);
     expect(component.isValidArray('string')).toBe(false);
+  });
+
+  it('should set confirmarNotificacion when eliminarRegistroSolicitud is called', () => {
+    component.eliminarRegistroSolicitud();
+    expect(component.confirmarNotificacion).toEqual({
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Aviso',
+      mensaje: 'Seleccione una solicitud.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    });
+  });
+
+  it('should set confirmarNotificacion when editarRegistroSolicitud is called', () => {
+    component.editarRegistroSolicitud();
+    expect(component.confirmarNotificacion).toEqual({
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Mensaje',
+      mensaje: 'Seleccione una solicitud.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    });
+  });
+
+  it('should set sociedadNotificacion when bajaDeCuentas is called', () => {
+    component.bajaDeCuentas();
+    expect(component.sociedadNotificacion).toEqual({
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Error',
+      mensaje: 'Seleccione un renglón.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    });
+  });
+
+  it('should set sociedadNotificacion and call cambiarComponente when altaDeCuenta is called', () => {
+    component.altaDeCuenta();
+    expect(component.sociedadNotificacion).toEqual({
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Error',
+      mensaje: 'Seleccione una sociedad.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    });
+    expect(registroCuentasBancariasService.cambiarComponente).toHaveBeenCalledWith('AgregarCuenta');
+  });
+
+  it('should initialize configuracionTabla with correct headers and order', () => {
+    expect(component.configuracionTabla.length).toBe(11);
+    expect(component.configuracionTabla[0].encabezado).toBe('Tipo movimiento');
+    expect(component.configuracionTabla[10].encabezado).toBe('Domicilio extranjero');
+    expect(component.configuracionTabla[0].orden).toBe(1);
+    expect(component.configuracionTabla[10].orden).toBe(11);
+  });
+
+  it('should initialize selectedRowIndex as null', () => {
+    expect(component.selectedRowIndex).toBeNull();
+  });
+
+  it('should create formDatosGenerales with disabled controls', () => {
+    component.crearFormDatosGenerales();
+    expect(component.formDatosGenerales.get('aduanaAdicional')?.disabled).toBe(true);
+    expect(component.formDatosGenerales.get('nombre')?.disabled).toBe(true);
+    expect(component.formDatosGenerales.get('federalDeContribuyentes')?.disabled).toBe(true);
+    expect(component.formDatosGenerales.get('tipoDePersona')?.disabled).toBe(true);
+  });
+
+  it('should call all initialization methods in ngOnInit', () => {
+    const crearFormSpy = jest.spyOn(component, 'crearFormDatosGenerales');
+    const getSolicitudesSpy = jest.spyOn(component, 'getSolicitudesTabla');
+    const getSociedadSpy = jest.spyOn(component, 'getSociedadTabla');
+    const obtenerFormSpy = jest.spyOn(component, 'obtenerFormDatosGeneralesDatos');
+    component.ngOnInit();
+    expect(crearFormSpy).toHaveBeenCalled();
+    expect(getSolicitudesSpy).toHaveBeenCalled();
+    expect(getSociedadSpy).toHaveBeenCalled();
+    expect(obtenerFormSpy).toHaveBeenCalled();
   });
 });

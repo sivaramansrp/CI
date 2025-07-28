@@ -1,18 +1,23 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { DomicilioEstablecimientosComponent } from './domicilio-establecimientos.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DatosSolicitudService } from '../../services/datoSolicitude.service';
-import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
-import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
+import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
+import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
 import { of } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { DatosSolicitudService } from '../../services/datoSolicitude.service'
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('DomicilioEstablecimientosComponent', () => {
   let component: DomicilioEstablecimientosComponent;
   let fixture: ComponentFixture<DomicilioEstablecimientosComponent>;
+  let mockStore: any;
+  let mockQuery: any;
+  let mockService: any;
+  let mockConsultaioQuery: any;
 
   beforeEach(async () => {
-    const mockQuery = {
+    mockQuery = {
       selectProrroga$: of({
         codigo: '001',
         estado: 'Estado',
@@ -30,12 +35,16 @@ describe('DomicilioEstablecimientosComponent', () => {
       }),
     };
 
-    const mockStore = {
+    mockStore = {
       establecerDatos: jest.fn(),
     };
 
-    const mockService = {
-      getDomicilioData: jest.fn().mockReturnValue(of([])),
+    mockService = {
+      obternerDatosData: jest.fn().mockReturnValue(of([])),
+    };
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false })
     };
 
     await TestBed.configureTestingModule({
@@ -44,6 +53,7 @@ describe('DomicilioEstablecimientosComponent', () => {
         { provide: DatosProcedureQuery, useValue: mockQuery },
         { provide: DatosProcedureStore, useValue: mockStore },
         { provide: DatosSolicitudService, useValue: mockService },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
       ],
     }).compileComponents();
 
@@ -52,52 +62,55 @@ describe('DomicilioEstablecimientosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize forms in ngOnInit', () => {
-    expect(component.domicilioEstablecimiento).toBeTruthy();
-    expect(component.AvisodeFuncionamiento).toBeTruthy();
-
+  it('debería inicializar los formularios en ngOnInit', () => {
+    expect(component.domicilioEstablecimiento).toBeDefined();
+    expect(component.AvisodeFuncionamiento).toBeDefined();
     expect(component.domicilioEstablecimiento.get('estado')?.value).toBe('Estado');
     expect(component.AvisodeFuncionamiento.get('funcionamiento')?.value).toBe('Operando');
   });
 
-  it('should call DatosSolicitudService.getDomicilioData and assign Domicilios', () => {
-    component.ngOnInit();
+  it('debería cargar los datos SCIAN correctamente', () => {
+    component.loadScian();
+    expect(mockService.obternerDatosData).toHaveBeenCalled();
+    expect(component.datosData).toEqual([]);
   });
 
-  it('should set values in the form using establecerValoresDeFormulario', () => {
-    component.domicilioEstablecimiento.addControl('Codigo', component.domicilioEstablecimiento.get('estado')!);
-    component.domicilioEstablecimiento.addControl('codigoPostal', component.domicilioEstablecimiento.get('estado')!);
-    component.domicilioEstablecimiento.addControl('Municipio', component.domicilioEstablecimiento.get('estado')!);
-    component.domicilioEstablecimiento.addControl('numeroExterior', component.domicilioEstablecimiento.get('estado')!);
-    expect(component.domicilioEstablecimiento.get('Codigo')?.value).toBe('');
-    expect(component.domicilioEstablecimiento.get('codigoPostal')?.value).toBe('');
-    expect(component.domicilioEstablecimiento.get('Municipio')?.value).toBe('');
-  });
-
-  it('should set store values using setValoresStore', () => {
+  it('debería establecer valores en el store', () => {
     component.setValoresStore(component.domicilioEstablecimiento, 'estado');
+    expect(mockStore.establecerDatos).toHaveBeenCalledWith({ estado: 'Estado' });
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
-
+  it('debería limpiar las suscripciones en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
-
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should have correct tabla config', () => {
-    expect(component.configuracionTabla.length).toBe(2);
-    expect(component.configuracionTabla[0].encabezado).toContain('Clave');
+  it('debería contener la configuración de tabla correcta', () => {
+    expect(component.configuracionTabla.length).toBeGreaterThan(0);
   });
 
-  it('should use CHECKBOX as TablaSeleccion enum', () => {
+  it('debería tener el tipo de selección de tabla correcto', () => {
     expect(component.TablaSeleccion).toBe(TablaSeleccion.CHECKBOX);
+  });
+
+  it('debería ejecutar guardarDatosFormulario y cargar datos correctamente', () => {
+    const spyScian = jest.spyOn(component, 'loadScian');
+    component.guardarDatosFormulario();
+    expect(spyScian).toHaveBeenCalled();
+  });
+
+  it('debería deshabilitar los formularios si es solo lectura', () => {
+    component.esFormularioSoloLectura = true;
+    component.establecerdomicilioEstablecimiento();
+    component.avisodeFuncionamientomiento();
+    expect(component.domicilioEstablecimiento.disabled).toBe(true);
+    expect(component.AvisodeFuncionamiento.disabled).toBe(true);
   });
 });

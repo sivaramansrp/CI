@@ -1,12 +1,12 @@
 import {
   Catalogo,
-  CatalogoSelectComponent,
   InputFecha,
   InputFechaComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component'; 
 import { CommonModule } from '@angular/common';
 import { FECHA } from '../../constantes/pago-de-derechos.enum';
 
@@ -27,7 +27,7 @@ import { FECHA } from '../../constantes/pago-de-derechos.enum';
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.scss',
 })
-export class PagoDeDerechosComponent {
+export class PagoDeDerechosComponent implements OnChanges {
   /**
    * Formulario reactivo que captura los datos del pago de derechos.
    */
@@ -37,6 +37,18 @@ export class PagoDeDerechosComponent {
    * Lista de bancos disponibles para seleccionar.
    */
   @Input() banco!: Catalogo[];
+
+  /**
+   * Fecha de pago seleccionada o ingresada.
+   */
+  @Input() fecPago!: Date | string;
+  
+  /**
+   * Indica si el formulario está deshabilitado.
+   * Si es true, el formulario no se puede editar.
+   */
+
+  @Input() isDisabled: boolean = false;
 
   /**
    * Configuración de la fecha final para el campo "Fecha de Pago".
@@ -57,6 +69,17 @@ export class PagoDeDerechosComponent {
    */
   constructor() {
     //
+  }
+
+ 
+  ngOnChanges(changes: SimpleChanges): void {
+   if (changes['isDisabled']) {
+    if (this.isDisabled) {
+      this.formularioPagoDerechos.disable();
+    } else {
+      this.formularioPagoDerechos.enable();
+    }
+  }
   }
 
   /**
@@ -86,4 +109,29 @@ export class PagoDeDerechosComponent {
       campo
     });
   }
+
+  /**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param {string} nombreControl - Nombre del control a verificar.
+   * @returns {boolean} - True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.formularioPagoDerechos.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  
+  /**
+   * Método para validar cambios en un campo de formulario relacionado con fechas futuras.
+   * Monitorea los cambios de valor del campo especificado y actualiza su estado de validación sin emitir eventos adicionales.
+   * Utiliza operadores de RxJS como distinctUntilChanged y takeUntil para manejar suscripciones de forma eficiente y evitar fugas de memoria.
+   *
+   * @param {string} fecPago - El nombre del campo de formulario que se validará.
+   */
+  public validarFechaFutura(fecPago:string): void {
+    this.formularioPagoDerechos.get(fecPago)?.updateValueAndValidity({ emitEvent: false });
+  }
+
 }

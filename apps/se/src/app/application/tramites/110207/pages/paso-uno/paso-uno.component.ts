@@ -1,12 +1,7 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import {
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
-  PERSONA_MORAL_NACIONAL,
-} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { RegistroService } from '../../services/registro.service';
-import { SolicitanteComponent} from '@libs/shared/data-access-user/src';
-import { ReplaySubject, takeUntil } from 'rxjs';
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -17,42 +12,26 @@ import { ReplaySubject, takeUntil } from 'rxjs';
   styles: ``,
   standalone: false,
 })
-export class PasoUnoComponent implements AfterViewInit, OnInit,OnDestroy {
+export class PasoUnoComponent implements OnInit,OnDestroy {
   /**
    * Catálogo de entidades federativas.
    */
-  entidadFederativa!: any;
+  entidadFederativa!: { data: string } | null;
  /**
  * Notificador para destruir observables al destruir el componente.
  * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
  */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
-   * Constructor del componente.
-   * @param registro Servicio para obtener datos de catálogos.
+   * Estado de la consulta obtenido desde el store.
    */
-  constructor(private registro: RegistroService) {
-    // El constructor se utiliza para la inyección de dependencias.
-  }
+  public consultaState!: ConsultaioState;
 
   /**
-   * Método que se ejecuta al inicializar el componente.
-   * Obtiene el catálogo de entidades federativas y lo procesa.
+   * Indica si existen datos de respuesta del servidor para actualizar el formulario.
    */
-  ngOnInit(): void {
-    this.registro.getCatalogoById(21).pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
-      this.entidadFederativa = resp;
-      const DATA = JSON.parse(this.entidadFederativa.data);
-      this.entidadFederativa = DATA?.domicilioFiscal?.entidadFederativa;
-     
-    });
-  }
-
-  /**
-   * Referencia al componente de solicitante.
-   */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
-
+  public esDatosRespuesta: boolean = false;
+  
   /**
    * Tipo de persona seleccionada.
    */
@@ -72,18 +51,54 @@ export class PasoUnoComponent implements AfterViewInit, OnInit,OnDestroy {
    * Índice del paso actual.
    */
   indice: number = 1;
-
   /**
-   * Método que se ejecuta después de que las vistas del componente han sido inicializadas.
-   * Configura los formularios dinámicos y obtiene el tipo de persona.
+   * Constructor del componente.
+   * @param registro Servicio para obtener datos de catálogos.
    */
-  ngAfterViewInit(): void {
-    this.persona = PERSONA_MORAL_NACIONAL;
-    this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+  constructor(private registro: RegistroService,private consultaQuery: ConsultaioQuery) {
+    // El constructor se utiliza para la inyección de dependencias.
   }
 
   /**
+   * Método que se ejecuta al inicializar el componente.
+   * Obtiene el catálogo de entidades federativas y lo procesa.
+   */
+  ngOnInit(): void {
+ this.consultaQuery.selectConsultaioState$.pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+      })
+    ).subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormularios();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+
+    this.registro.getCatalogoById(21).pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
+      this.entidadFederativa = resp;
+      const DATA = JSON.parse(this.entidadFederativa.data);
+      this.entidadFederativa = DATA?.domicilioFiscal?.entidadFederativa;
+    });
+  }
+/**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormularios(): void {
+    this.registro
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.registro.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+   /**
    * Selecciona una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.
    */

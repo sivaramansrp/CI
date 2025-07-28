@@ -1,26 +1,27 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
+  ConsultaioQuery,
+  ConsultaioState,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
-  Validators,
+  Validators
 } from '@angular/forms';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import {
   Solicitud110201State,
   Tramite110201Store,
 } from '../../state/Tramite110201.store';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
-
 /**
  * Componente que representa el formulario de destinatario en el trámite.
  */
@@ -31,12 +32,21 @@ import { Tramite110201Query } from '../../state/Tramite110201.query';
     CommonModule,
     TituloComponent,
     CatalogoSelectComponent,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.css',
 })
 export class DestinatarioComponent implements OnInit, OnDestroy {
+  /**
+     * Subject para destruir notificador.
+     */
+    consultaDatos!: ConsultaioState;
+     /**
+     * Indica si el formulario está en modo solo lectura.
+     * Cuando es `true`, los campos del formulario no se pueden editar.
+     */
+    soloLectura: boolean = false;
   /**
    * Formulario reactivo para el destinatario.
    */
@@ -71,12 +81,18 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Indica si el formulario está vacío.
    */
   estaVacio: boolean = false;
-/**
- * Opciones del catálogo.
- * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
- * Estas opciones se utilizan para poblar los selectores en el formulario.
- */
-options!: Catalogo[];
+  /**
+   * Opciones del catálogo.
+   * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
+   * Estas opciones se utilizan para poblar los selectores en el formulario.
+   */
+  options!: Catalogo[];
+  /**
+   * Opciones del catálogo de transporte.
+   * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
+   * Estas opciones se utilizan para poblar los selectores en el formulario.
+   */
+  option!: Catalogo[];
 
 /**
  * Notificador para destruir observables al destruir el componente.
@@ -93,13 +109,23 @@ options!: Catalogo[];
    * @param validacionesService Servicio para validar formularios.
    */
   constructor(
-    private registroService: RegistroService,
+    public registroService: RegistroService,
     public fb: FormBuilder,
-    private store: Tramite110201Store,
+    public store: Tramite110201Store,
     private query: Tramite110201Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -124,8 +150,18 @@ options!: Catalogo[];
    * Obtiene los catálogos de países de destino y medios de transporte.
    */
   ngOnInit(): void {
+    this.registroService
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.registroService.actualizarEstadoFormulario(resp);
+        }
+      });
     this.getPaisDestino();
     this.getTransporte();
+    this.inicializarEstadoFormulario();
 
     this.query.selectSolicitud$
       .pipe(
@@ -138,7 +174,29 @@ options!: Catalogo[];
     this.donanteDomicilio();
 
   }
-
+/**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.registroForm.disable();
+    } else {
+      this.registroForm.enable();
+    }
+  }
   /**
    * Obtiene el catálogo de países de destino desde el servicio.
    */
@@ -146,7 +204,7 @@ options!: Catalogo[];
     this.registroService
       .getPaisDestino().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
-        if (resp.code === 200) {
+       if (resp.code === 200) {
           this.options = resp.data as Catalogo[];
         }
       });
@@ -160,7 +218,7 @@ options!: Catalogo[];
       .getTransporte().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         if (resp.code === 200) {
-          this.options = resp.data as Catalogo[];
+          this.option = resp.data as Catalogo[];
         }
       });
   }
@@ -209,48 +267,33 @@ options!: Catalogo[];
   /**
    * Configura el formulario reactivo con los valores iniciales del estado.
    */
-  donanteDomicilio(): void {
-    this.registroForm = this.fb.group({
-      validacionForm: this.fb.group({
-        nacion: [this.solicitudState?.nacion, [Validators.required]],
-        transporte: [this.solicitudState?.transporte, [Validators.required]],
-        nombre: [this.solicitudState?.nombre, [Validators.required]],
-        apellidoPrimer: [
-          this.solicitudState?.apellidoPrimer,
-          [Validators.required],
-        ],
-        apellidoSegundo: [
-          this.solicitudState?.apellidoSegundo,
-          [Validators.required],
-        ],
-        numeroFiscal: [
-          this.solicitudState?.numeroFiscal,
-          [Validators.required],
-        ],
-        razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
-        ciudad: [this.solicitudState?.ciudad, [Validators.required]],
-        calle: [this.solicitudState?.calle, [Validators.required]],
-        numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
-        lada: [this.solicitudState?.lada, [Validators.required]],
-        telefono: [
-          this.solicitudState?.telefono,
-          [Validators.required, Validators.pattern(/^\d+$/)],
-        ],
-        fax: [this.solicitudState?.fax, [Validators.pattern(/^\d+$/)]],
-        correoElectronico: [
-          this.solicitudState?.correoElectronico,
-          [Validators.required, Validators.email],
-        ],
-      }),
-    });
-  }
+ donanteDomicilio(): void {
+  this.registroForm = this.fb.group({
+    validacionForm: this.fb.group({
+      nacion: [{ value: this.solicitudState?.nacion, disabled: this.soloLectura }],
+      transporte: [{ value: this.solicitudState?.transporte, disabled: this.soloLectura }, [Validators.required]],
+      nombre: [{ value: this.solicitudState?.nombre, disabled: this.soloLectura }, [Validators.required]],
+      apellidoPrimer: [{ value: this.solicitudState?.apellidoPrimer, disabled: this.soloLectura }, [Validators.required]],
+      apellidoSegundo: [{ value: this.solicitudState?.apellidoSegundo, disabled: this.soloLectura }, [Validators.required]],
+      numeroFiscal: [{ value: this.solicitudState?.numeroFiscal, disabled: this.soloLectura }, [Validators.required]],
+      razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: this.soloLectura }, [Validators.required]],
+      ciudad: [{ value: this.solicitudState?.ciudad, disabled: this.soloLectura }, [Validators.required]],
+      calle: [{ value: this.solicitudState?.calle, disabled: this.soloLectura }, [Validators.required]],
+      numeroLetra: [{ value: this.solicitudState?.numeroLetra, disabled: this.soloLectura }, [Validators.required]],
+      lada: [{ value: this.solicitudState?.lada, disabled: this.soloLectura }, [Validators.required]],
+      telefono: [{ value: this.solicitudState?.telefono, disabled: this.soloLectura }, [Validators.required, Validators.pattern(/^\d+$/)]],
+      fax: [{ value: this.solicitudState?.fax, disabled: this.soloLectura }, [Validators.pattern(/^\d+$/)]],
+      correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: this.soloLectura }, [Validators.required, Validators.email]],
+    }),
+  });
+}
 
   /**
    * Método que se ejecuta al destruir el componente.
    * Cancela todas las suscripciones activas.
    */
   ngOnDestroy(): void {
-   
+
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
