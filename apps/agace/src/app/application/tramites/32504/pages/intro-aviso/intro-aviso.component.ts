@@ -1,6 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { AVISO } from '@ng-mf/data-access-user';
 import { AccionBoton } from '@ng-mf/data-access-user';
+import { AlertComponent } from "@libs/shared/data-access-user/src";
 import { BtnContinuarComponent } from "@ng-mf/data-access-user";
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
@@ -13,7 +15,8 @@ import { WizardComponent } from "@ng-mf/data-access-user";
   selector: 'app-intro-aviso',
   templateUrl: './intro-aviso.component.html',
   styleUrl: './intro-aviso.component.scss',
-  imports: [WizardComponent, PasoUnoComponent, PasoDosComponent, PasoTresComponent, BtnContinuarComponent, ToastrModule],
+  imports: [WizardComponent, PasoUnoComponent, PasoDosComponent, PasoTresComponent, BtnContinuarComponent, ToastrModule, AlertComponent
+],
   providers: [ToastrService],
   standalone: true,
 })
@@ -21,6 +24,7 @@ export class IntroAvisoComponent {
 
   indice = 1;
   pasos: ListaPasosWizard[] = PASOS_TRES_STEPS;
+  AVISO = AVISO;
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,

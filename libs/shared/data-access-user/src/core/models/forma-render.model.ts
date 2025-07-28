@@ -131,4 +131,6 @@ export interface Props extends FormaTextProp, CatalogoSelectProp, RadioProps, Fe
   campo: string;
   /** Nombre de la función de almacenamiento asociada (opcional) */
   storeFunction?: string;
+   /** Longitud máxima permitida para el campo (opcional) */
+  maxlength?: number;
 }

@@ -43,7 +43,7 @@ import { takeUntil } from 'rxjs';
     ReactiveFormsModule,
     TituloComponent,
     CatalogoSelectComponent,
-    InputRadioComponent,
+    
   ],
 })
 export class DatosGeneralesComponent implements OnInit, OnDestroy {

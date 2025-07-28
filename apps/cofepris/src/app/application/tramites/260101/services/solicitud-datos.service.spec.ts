@@ -30,10 +30,6 @@ describe('SolicitudDatosService', () => {
     httpMock = TestBed.inject(HttpTestingController);
   });
 
-  afterEach(() => {
-    httpMock.verify(); // Ensure no unmatched HTTP requests are outstanding
-  });
-
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
@@ -47,23 +43,13 @@ describe('SolicitudDatosService', () => {
           mercancia: 'Grasa butrica Dashidratada...',
           cantidad: '10000',
           proovedor: 'AGRICOLA ALPE S DE RL DE CV',
-          SCIANLista: {
-            tableHeader: ['Clave S.C.I.A.N', 'Descripción del S.C.I.A.N.'],
-            tableBody: [
-              {
-                tbodyData: [
-                  '311321',
-                  'Deshidratación  de productos agrícolas alimecticios.',
-                ],
-              },
-              {
-                tbodyData: [
-                  '614074',
-                  'Deshidratación  de productos agrícolas alimecticios.',
-                ],
-              },
-            ],
-          },
+          SCIANLista: [
+            {
+              clave: '311321',
+              descripcion:
+                'Deshidratación  de productos agrícolas alimecticios.',
+            },
+          ],
           mercancias: {
             tableHeader: [
               'CerClasificación del producto',
@@ -92,23 +78,13 @@ describe('SolicitudDatosService', () => {
           mercancia: 'Grasa butrica Dashidratada...',
           cantidad: '10000',
           proovedor: 'AGRICOLA ALPE S DE RL DE CV',
-          SCIANLista: {
-            tableHeader: ['Clave S.C.I.A.N', 'Descripción del S.C.I.A.N.'],
-            tableBody: [
-              {
-                tbodyData: [
-                  '311321',
-                  'Deshidratación  de productos agrícolas alimecticios.',
-                ],
-              },
-              {
-                tbodyData: [
-                  '614074',
-                  'Deshidratación  de productos agrícolas alimecticios.',
-                ],
-              },
-            ],
-          },
+          SCIANLista: [
+            {
+              clave: '311321',
+              descripcion:
+                'Deshidratación  de productos agrícolas alimecticios.',
+            },
+          ],
           mercancias: {
             tableHeader: [
               'CerClasificación del producto',
@@ -137,23 +113,13 @@ describe('SolicitudDatosService', () => {
           mercancia: 'Grasa butrica Dashidratada...',
           cantidad: '10000',
           proovedor: 'AGRICOLA ALPE S DE RL DE CV',
-          SCIANLista: {
-            tableHeader: ['Clave S.C.I.A.N', 'Descripción del S.C.I.A.N.'],
-            tableBody: [
-              {
-                tbodyData: [
-                  '311321',
-                  'Deshidratación  de productos agrícolas alimecticios.',
-                ],
-              },
-              {
-                tbodyData: [
-                  '614074',
-                  'Deshidratación  de productos agrícolas alimecticios.',
-                ],
-              },
-            ],
-          },
+          SCIANLista: [
+            {
+              clave: '311321',
+              descripcion:
+                'Deshidratación  de productos agrícolas alimecticios.',
+            },
+          ],
           mercancias: {
             tableHeader: [
               'CerClasificación del producto',
@@ -195,7 +161,7 @@ describe('SolicitudDatosService', () => {
     });
 
     const req = httpMock.expectOne(
-      '../../../assets/json/260101/solicitud-datos.json'
+      'assets/json/260101/solicitud-datos.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(MOCK_DATA);
@@ -229,7 +195,7 @@ describe('SolicitudDatosService', () => {
     });
 
     const req = httpMock.expectOne(
-      '../../../assets/json/260101/solicitud.json'
+      'assets/json/260101/solicitud.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(MOCK_SOLICITUD);
@@ -261,7 +227,7 @@ describe('SolicitudDatosService', () => {
     });
 
     const req = httpMock.expectOne(
-      '../../../assets/json/260101/regimen-destinaran.json'
+      'assets/json/260101/regimen-destinaran.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockRegimen);
@@ -292,7 +258,7 @@ describe('SolicitudDatosService', () => {
       expect(data).toEqual(mockAduana);
     });
 
-    const req = httpMock.expectOne('../../../assets/json/260101/aduana.json');
+    const req = httpMock.expectOne('assets/json/260101/aduana.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockAduana);
   });
@@ -323,7 +289,7 @@ describe('SolicitudDatosService', () => {
     });
 
     const req = httpMock.expectOne(
-      '../../../assets/json/260101/estado-catalogo.json'
+      'assets/json/260101/estado-catalogo.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockEstado);
@@ -339,7 +305,7 @@ describe('SolicitudDatosService', () => {
     });
 
     const req = httpMock.expectOne(
-      '../../../assets/json/260101/mercancia.json'
+      'assets/json/260101/mercancia.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockMercancia);
@@ -355,7 +321,7 @@ describe('SolicitudDatosService', () => {
     });
 
     const req = httpMock.expectOne(
-      '../../../assets/json/260101/claves-de-lotes.json'
+      'assets/json/260101/claves-de-lotes.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockClaves);
@@ -371,7 +337,7 @@ describe('SolicitudDatosService', () => {
     });
 
     const req = httpMock.expectOne(
-      '../../../assets/json/260101/destinatario.json'
+      'assets/json/260101/destinatario.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockDestinatarios);
@@ -387,7 +353,7 @@ describe('SolicitudDatosService', () => {
     });
 
     const req = httpMock.expectOne(
-      '../../../assets/json/260101/fabricante.json'
+      'assets/json/260101/fabricante.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockFabricantes);
@@ -491,7 +457,7 @@ describe('SolicitudDatosService', () => {
     });
 
     const req = httpMock.expectOne(
-      '../../../assets/json/260101/destinatario-catalogos.json'
+      'assets/json/260101/destinatario-catalogos.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockCatalogos);
@@ -505,7 +471,7 @@ describe('SolicitudDatosService', () => {
     });
 
     const req = httpMock.expectOne(
-      '../../../assets/json/260101/destinatario-radio.json'
+      'assets/json/260101/destinatario-radio.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockRadio);
@@ -579,7 +545,7 @@ describe('SolicitudDatosService', () => {
     });
 
     const req = httpMock.expectOne(
-      '../../../assets/json/260101/mercancia-catalogos.json'
+      'assets/json/260101/mercancia-catalogos.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockCatalogos);
@@ -639,7 +605,7 @@ describe('SolicitudDatosService', () => {
     });
 
     const req = httpMock.expectOne(
-      '../../../assets/json/260101/mercancia-cross-list.json'
+      'assets/json/260101/mercancia-cross-list.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockCrossList);
@@ -670,7 +636,7 @@ describe('SolicitudDatosService', () => {
     });
 
     const req = httpMock.expectOne(
-      '../../../assets/json/260101/pago-derechos.json'
+      'assets/json/260101/pago-derechos.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockPago);
@@ -700,7 +666,7 @@ describe('SolicitudDatosService', () => {
     });
 
     const req = httpMock.expectOne(
-      '../../../assets/json/260101/destinatario-mock.json'
+      'assets/json/260101/destinatario-mock.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockImitar);

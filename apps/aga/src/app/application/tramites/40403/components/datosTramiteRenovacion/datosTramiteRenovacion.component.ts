@@ -7,6 +7,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 
 import { AtencionRenovacion40403State, Tramite40403Store } from '../../estados/tramite40403.store';
 import { CAAT } from '../../models/atencion-de-renovacion.model';
+import { CommonModule } from '@angular/common';
 import { Tramite40403Query } from '../../estados/tramite40403.query';
 import { Tramite40403Service } from '../../estados/tramite40403.service';
 
@@ -17,6 +18,7 @@ import { Tramite40403Service } from '../../estados/tramite40403.service';
   selector: 'app-datos-tramite-renovacion',
   standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     CatalogoSelectComponent
   ],
@@ -61,7 +63,13 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
    * @default false
    */
   soloLectura: boolean = false;
-  
+
+  /**
+   * @property {boolean} mostrarError
+   * @description Indica si se debe mostrar el mensaje de error cuando el campo claveFolioCAAT está vacío.
+   * @default false
+   */
+  mostrarError: boolean = false;
 
   /**
    * Constructor del componente.
@@ -135,7 +143,8 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
         this.atencionRenovacionState?.claveFolioCAAT,
         [
           Validators.required,
-          Validators.maxLength(4)
+          Validators.maxLength(4),
+          Validators.pattern('^[a-zA-Z0-9]*$')
         ]
       ],
       cveFolioCaat: [
@@ -171,6 +180,12 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
    * Busca una solicitud utilizando el valor de `claveFolioCAAT` proporcionado en el formulario.
    */
   buscarSolicitudPorCAAT(): void {
+    const CLAVECAAT = this.formulario.get('claveFolioCAAT')?.value;
+    if(!CLAVECAAT) {
+      this.mostrarError = true;
+    }
+    else{
+      this.mostrarError = false;
     this.tramite40403Service
       .buscarSolicitudPorCAATe()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -178,7 +193,6 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
         if (respuesta) {
           const CAAT_DATOS = respuesta.data[0];
           this.formulario.patchValue({
-            claveFolioCAAT: CAAT_DATOS.claveFolioCAAT || '',
             cveFolioCaat: CAAT_DATOS.cveFolioCaat || '',
             descripcionTipoCaat: CAAT_DATOS.descripcionTipoCaat || '',
             tipoDeCaatAerea: CAAT_DATOS.tipoDeCaatAerea || '',
@@ -188,6 +202,7 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
           this.establecerCampoValor(CAAT_DATOS);
         }
       });
+    }
   }
 
   /**

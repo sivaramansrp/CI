@@ -124,7 +124,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="R.F.C"
+              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Registro Federal de Contribuyente"
                   ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="{ 'required': esInvalido(agregarFabricanteFormGroup, 'rfc') }"/>
@@ -174,7 +174,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="R.F.C" ata-bs-toggle="tooltip"></span>
+                  title="Registro Federal de Contribuyente" ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="{ 'required': esInvalido(agregarFabricanteFormGroup, 'rfc') }"/>
               @if (agregarFabricanteFormGroup.get('rfc')?.hasError('required') && agregarFabricanteFormGroup.get('rfc')?.touched) {
@@ -290,7 +290,7 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <app-catalogo-select [catalogo]="codigoPostalDropdownData" [label]="'Código postal o equivalente'"
-                      [required]="true" for="codigoPostaloEquivalente" id="codigoPostaloEquivalente"
+                       for="codigoPostaloEquivalente" id="codigoPostaloEquivalente"
                       formControlName="codigoPostaloEquivalente"></app-catalogo-select>
                   </div>
                 </div>
@@ -347,7 +347,7 @@
               <div class="col-md-8">
                 <div class="form-group">
                   <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                      title="Calle" ata-bs-toggle="tooltip"></span></label>
+                      title="Domicilio, calle, número interior, número exterior, lote" ata-bs-toggle="tooltip"></span></label>
                   <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" [ngClass]="{ 'required': esInvalido(agregarFabricanteFormGroup, 'calle') }"/>
                     @if (agregarFabricanteFormGroup.get('calle')?.hasError('required') && agregarFabricanteFormGroup.get('calle')?.touched) {
                       <div class="mensaje-error">Este campo es obligatorio.</div>
@@ -394,7 +394,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                      class="bi bi-question-circle-fill fs-4 m-1" title="Correo electrónico" ata-bs-toggle="tooltip"></span></label>
+                      class="bi bi-question-circle-fill fs-4 m-1" title="ejemplo@dominio.com" ata-bs-toggle="tooltip"></span></label>
                   <input class="form-control" type="text" id="correoElectronico" formControlName="correoElectronico"
                     name="correoElectronico" />
                 </div>
@@ -413,7 +413,7 @@
                     Cancelar
                   </button>
                   <button type="button" class="btn btn-default ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                    aria-controls="offcanvasRight">
+                    aria-controls="offcanvasRight" (click)="limpiarFabricanteForm()">
                     Limpiar
                   </button>
                   <button type="button" class="btn btn-primary ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
@@ -456,7 +456,7 @@
         @if (fisica || (!fisica && !moral)) {
           <div class="col-md-4 p-2">
             <div class="form-group">
-              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="R.F.C"
+              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Registro Federal de Contribuyente"
                   ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="{ 'required': esInvalido(agregarDestinatarioFormGroup, 'rfc') }"/>
@@ -507,7 +507,7 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="R.F.C"
+                  <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Registro Federal de Contribuyente"
                       ata-bs-toggle="tooltip"></span>
                   </label>
                   <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="{ 'required': esInvalido(agregarDestinatarioFormGroup, 'rfc') }"/>
@@ -567,7 +567,7 @@
 
             <div class="col-md-4">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="codigoPostalDropdownData" [label]="'Código postal o equivalente'" [required]="true"
+                <app-catalogo-select [catalogo]="codigoPostalDropdownData" [label]="'Código postal o equivalente'" 
                   for="codigoPostaloEquivalente" id="codigoPostaloEquivalente" formControlName="codigoPostaloEquivalente"
                   name="codigoPostaloEquivalente" [isDisabled]="desactivarCampos"></app-catalogo-select>
               </div>
@@ -583,7 +583,7 @@
             <div class="col-md-8">
               <div class="form-group">
                 <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                    title="Calle" ata-bs-toggle="tooltip"></span></label>
+                    title="Domicilio, calle, número interior, número exterior, lote" ata-bs-toggle="tooltip"></span></label>
                 <input type="text" id="calle" formControlName="calle" class="form-control" name="calle" [ngClass]="{ 'required': esInvalido(agregarDestinatarioFormGroup, 'calle') }"/>
                 @if (agregarDestinatarioFormGroup.get('rfc')?.hasError('required') && agregarDestinatarioFormGroup.get('rfc')?.touched) {
                   <div class="mensaje-error">Este campo es obligatorio.</div>
@@ -628,7 +628,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                    class="bi bi-question-circle-fill fs-4 m-1" title="Correo electrónico" ata-bs-toggle="tooltip"></span></label>
+                    class="bi bi-question-circle-fill fs-4 m-1" title="ejemplo@dominio.com" ata-bs-toggle="tooltip"></span></label>
                 <input type="text" id="correoElectronico" formControlName="correoElectronico" class="form-control"
                   name="correoElectronico" />
               </div>
@@ -646,7 +646,7 @@
                     Cancelar
                   </button>
                   <button type="button" class="btn btn-default ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                    aria-controls="offcanvasRight">
+                    aria-controls="offcanvasRight" (click)="limpiarDestinatarioForm()">
                     Limpiar
                   </button>
                   <button type="button" class="btn btn-primary ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
@@ -786,7 +786,7 @@
 
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="codigoPostaloEquivalente">Código postal o equivalente*:</label>
+              <label class="form-label" for="codigoPostaloEquivalente">Código postal o equivalente:</label>
               <input class="form-control" type="text" id="codigoPostaloEquivalente"
                 formControlName="codigoPostaloEquivalente" name="codigoPostaloEquivalente" [ngClass]="{ 'required': esInvalido(agregarProveedorFormGroup, 'codigoPostaloEquivalente') }"/>
                 @if (agregarProveedorFormGroup.get('codigoPostaloEquivalente')?.hasError('required') && agregarProveedorFormGroup.get('codigoPostaloEquivalente')?.touched) {
@@ -807,7 +807,7 @@
         <div class="row d-flex">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+              <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Domicilio, calle, número interior, número exterior, lote"
                   ata-bs-toggle="tooltip"></span></label>
               <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" [ngClass]="{ 'required': esInvalido(agregarProveedorFormGroup, 'calle') }"/>
                @if (agregarProveedorFormGroup.get('calle')?.hasError('required') && agregarProveedorFormGroup.get('calle')?.touched) {
@@ -854,7 +854,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                  class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span></label>
+                  class="bi bi-question-circle-fill fs-4 m-1" title="ejemplo@dominio.com" ata-bs-toggle="tooltip"></span></label>
               <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico"
                 name="correoElectronico" />
             </div>
@@ -873,7 +873,7 @@
                 Cancelar
               </button>
               <button type="button" class="btn btn-default ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                aria-controls="offcanvasRight">
+                aria-controls="offcanvasRight" (click)="limpiarProveedorForm()">
                 Limpiar
               </button>
               <button type="button" class="btn btn-primary ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
@@ -978,7 +978,7 @@
 
               <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="codigoPostaloEquivalente">Código postal o equivalente*:</label>
+                  <label class="form-label" for="codigoPostaloEquivalente">Código postal o equivalente:</label>
                   <input class="form-control" type="text" id="codigoPostaloEquivalente"
                     formControlName="codigoPostaloEquivalente" name="codigoPostaloEquivalente" [ngClass]="{ 'required': esInvalido(agregarFacturadorFormGroup, 'codigoPostaloEquivalente') }"/>
                     @if (agregarFacturadorFormGroup.get('codigoPostaloEquivalente')?.hasError('required') && agregarFacturadorFormGroup.get('codigoPostaloEquivalente')?.touched) {
@@ -1000,7 +1000,7 @@
               <div class="col-md-8">
                 <div class="form-group">
                   <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                      title="Calle" ata-bs-toggle="tooltip"></span></label>
+                      title="Domicilio, calle, número interior, número exterior, lote" ata-bs-toggle="tooltip"></span></label>
                   <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" [ngClass]="{ 'required': esInvalido(agregarFacturadorFormGroup, 'calle') }"/>
                   @if (agregarFacturadorFormGroup.get('calle')?.hasError('required') && agregarFacturadorFormGroup.get('calle')?.touched) {
                   <div class="mensaje-error">Este campo es obligatorio.</div>
@@ -1046,7 +1046,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                    class="bi bi-question-circle-fill fs-4 m-1" title="Correo electrónico" ata-bs-toggle="tooltip"></span></label>
+                    class="bi bi-question-circle-fill fs-4 m-1" title="ejemplo@dominio.com" ata-bs-toggle="tooltip"></span></label>
                 <input class="form-control" type="text" id="correoElectronico" formControlName="correoElectronico"
                   name="correoElectronico" [ngClass]="{ 'required': esInvalido(agregarFacturadorFormGroup, 'correoElectronico') }"/>
               </div>
@@ -1065,7 +1065,7 @@
                 Cancelar
               </button>
               <button type="button" class="btn btn-default ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                aria-controls="offcanvasRight">
+                aria-controls="offcanvasRight" (click)="limpiarFacturadorForm()">
                 Limpiar
               </button>
               <button type="button" class="btn btn-primary ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
