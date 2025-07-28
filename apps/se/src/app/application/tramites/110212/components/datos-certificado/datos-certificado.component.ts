@@ -1,39 +1,48 @@
-import { CatalogoSelectComponent, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Catalogo } from '../../models/validacion-posteriori.model';
-import { CatalogoLista } from '../../models/validacion-posteriori.model';
+import { Catalogo, CatalogoLista } from '../../models/validacion-posteriori.model';
+import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { Tramite110212State, Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
-import { Tramite110212State } from '../../../../estados/tramites/tramite110212.store';
-import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
 import { ValidacionPosterioriService } from '../../service/validacion-posteriori.service';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
 
 /**
  * Componente para gestionar los datos del certificado.
- * 
+ *
  * Este componente permite al usuario ingresar y gestionar información relacionada con el certificado,
  * como observaciones, idioma, entidad federativa y representación federal.
  */
 @Component({
   selector: 'app-datos-certificado',
-  imports: [TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, CommonModule],
+  imports: [
+    TituloComponent,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    CommonModule,
+  ],
   templateUrl: './datos-certificado.component.html',
   styleUrl: './datos-certificado.component.scss',
-  standalone: true
+  standalone: true,
 })
 export class DatosCertificadoComponent implements OnInit, OnDestroy {
+  /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
 
+  /**
+   * ReplaySubject para manejar la destrucción del componente.
+   * Se utiliza para cancelar las suscripciones activas y evitar fugas de memoria.
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
    * Formulario reactivo para los datos del certificado.
    */
@@ -63,22 +72,12 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Estado actual del trámite.
    */
   public tramiteState!: Tramite110212State;
-  /**
-   * @property {ConsultaioState} consultaDatos
-   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
-   */
-  consultaDatos!: ConsultaioState;
-  /**
-   * @property {boolean} soloLectura
-   * @description Indica si el formulario o los campos están en modo de solo lectura.
-   * @default false
-   */
-  soloLectura: boolean = false;
+
   /**
    * Constructor del componente.
-   * 
+   *
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
-   * @param {CertificadosOrigenService} validacionPosterioriService - Servicio para obtener datos relacionados con el certificado.
+   * @param {validacionPosterioriService} validacionPosterioriService - Servicio para obtener datos relacionados con el certificado.
    * @param {Tramite110212Store} store - Store para gestionar el estado del trámite.
    * @param {Tramite110212Query} tramiteQuery - Query para obtener el estado del trámite.
    */
@@ -87,12 +86,13 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     private validacionPosterioriService: ValidacionPosterioriService,
     public store: Tramite110212Store,
     public tramiteQuery: Tramite110212Query,
-    private consultaioQuery: ConsultaioQuery,
-  ) { }
+    private consultaioQuery: ConsultaioQuery
+  ) // eslint-disable-next-line no-empty-function
+  {}
 
   /**
    * Método que se ejecuta al inicializar el componente.
-   * 
+   *
    * Carga los datos iniciales, configura el formulario y suscribe al estado del trámite.
    */
   ngOnInit(): void {
@@ -107,22 +107,36 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.inicializarFormulario();
+   
     this.consultaioQuery.selectConsultaioState$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.soloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario();
+          this.certificadoFormulario();
         })
       )
       .subscribe();
-    this.inicializarFormulario();
+  }
+  /**
+   * Configura el formulario de certificado según el modo de solo lectura.
+   *
+   * Si `soloLectura` es `true`, deshabilita el formulario para que no se pueda editar.
+   * Si es `false`, habilita el formulario para permitir la edición.
+   */
+  certificadoFormulario(): void {
+    if (this.soloLectura) {
+      this.formDatosCertificado.disable();
+    } else {
+      this.formDatosCertificado.enable();
+    }
   }
 
   /**
    * Método que se ejecuta al destruir el componente.
-   * 
+   *
    * Libera los recursos y cancela las suscripciones activas.
    */
   ngOnDestroy(): void {
@@ -136,29 +150,23 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   inicializarFormulario(): void {
     this.formDatosCertificado = this.fb.group({
       observaciones: [this.tramiteState?.observaciones],
-      idioma: [this.tramiteState?.idioma, [Validators.required, Validators.min(0)]],
-      entidadFederativa: [this.tramiteState?.entidadFederativa, [Validators.required, Validators.min(0)]],
-      representacionFederal: [this.tramiteState?.representacionFederal, [Validators.required, Validators.min(0)]],
+      idioma: [
+        this.tramiteState?.idioma,
+        [Validators.required, Validators.min(0)],
+      ],
+      entidadFederativa: [
+        this.tramiteState?.entidadFederativa,
+        [Validators.required, Validators.min(0)],
+      ],
+      representacionFederal: [
+        this.tramiteState?.representacionFederal,
+        [Validators.required, Validators.min(0)],
+      ],
     });
     this.formDatosCertificado.markAllAsTouched();
-    this.inicializarEstadoFormulario()
+    this.certificadoFormulario();
   }
-  /**
-   * @method inicializarEstadoFormulario
-   * @description Inicializa el estado del formulario según el modo de solo lectura.
-   * 
-   * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
-   * En caso contrario, habilita los controles del formulario.
-   * 
-   * @returns {void}
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.soloLectura) {
-      this.formDatosCertificado?.disable();
-    } else {
-      this.formDatosCertificado?.enable();
-    }
-  }
+
   /**
    * Carga la lista de idiomas disponibles desde el servicio.
    */
@@ -166,11 +174,9 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     this.validacionPosterioriService
       .obtenerIdioma()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (datos: CatalogoLista) => {
-          this.idiomas = datos.datos;
-        }
-      );
+      .subscribe((datos: CatalogoLista) => {
+        this.idiomas = datos.datos;
+      });
   }
 
   /**
@@ -187,18 +193,20 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     this.validacionPosterioriService
       .obtenerEntidadFederativa()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (datos: CatalogoLista) => {
-          this.entidadFederativas = datos.datos;
-        }
-      );
+      .subscribe((datos: CatalogoLista) => {
+        this.entidadFederativas = datos.datos;
+      });
   }
 
   /**
    * Maneja la selección de una entidad federativa y actualiza el estado del store.
    */
   entidadFederativaSeleccion(): void {
-    this.setValoresStore(this.formDatosCertificado, 'entidadFederativa', 'setEntidadFederativa');
+    this.setValoresStore(
+      this.formDatosCertificado,
+      'entidadFederativa',
+      'setEntidadFederativa'
+    );
   }
 
   /**
@@ -208,28 +216,34 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     this.validacionPosterioriService
       .obtenerRepresentacionFederal()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        (datos: CatalogoLista) => {
-          this.representacionFederal = datos.datos;
-        }
-      );
+      .subscribe((datos: CatalogoLista) => {
+        this.representacionFederal = datos.datos;
+      });
   }
 
   /**
    * Maneja la selección de una representación federal y actualiza el estado del store.
    */
   representacionFederalSeleccion(): void {
-    this.setValoresStore(this.formDatosCertificado, 'representacionFederal', 'setRepresentacionFederal');
+    this.setValoresStore(
+      this.formDatosCertificado,
+      'representacionFederal',
+      'setRepresentacionFederal'
+    );
   }
 
   /**
    * Actualiza el estado del store con el valor seleccionado en el formulario.
-   * 
+   *
    * @param {FormGroup} form - El formulario reactivo.
    * @param {string} campo - El nombre del campo en el formulario.
    * @param {keyof Tramite110212Store} metodoNombre - El nombre del método en el store para actualizar el estado.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110212Store): void {
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite110212Store
+  ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
