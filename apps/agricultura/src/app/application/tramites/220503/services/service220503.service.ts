@@ -6,12 +6,20 @@ import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PagoDeDerechos } from '../models/pago-de-derechos.model';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { TercerosrelacionadosdestinoTable } from '../../../shared/models/tercerosrelacionados.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Solocitud220503Service {
+    /**
+   * URL base para los archivos JSON de catálogos.
+   * @property {string}
+   */
+  url: string = 'assets/json/220503/';
+
   /**
    * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
    */
@@ -116,4 +124,23 @@ export class Solocitud220503Service {
             getAllDatosForma(): Observable<Solicitud220503State> {
               return this.solicitud220503Store._select(state => state); // Select the entire state
             }
+              /**
+               * Actualizar el formulario de pago en el store.
+               * @method actualizarFormularioPago
+               * @param formularioPago Datos del formulario de pago.
+               * @returns {void}
+               */
+              public actualizarPagoDeDerechos(pagoDeDerechos: PagoDeDerechos): void {
+                this.solicitud220503Store.actualizarPagoDeDerechos(pagoDeDerechos);
+              }
+              /**
+               * Obtiene los detalles de un catálogo desde un archivo JSON.
+               * @method obtenerDetallesDelCatalogo
+               * @param nombreDelArchivo Nombre del archivo JSON del catálogo.
+               * @returns {Observable<RespuestaCatalogos>} Observable con la respuesta del catálogo.
+               */
+              obtenerDetallesDelCatalogo(nombreDelArchivo: string): Observable<RespuestaCatalogos> {
+                const BASEURL: string = this.url + nombreDelArchivo;
+                return this.http.get<RespuestaCatalogos>(BASEURL);
+              }
 }

@@ -1,5 +1,6 @@
 import { DestinatarioForm } from '../../220203/models/220203/importacion-de-acuicultura.module';
 import { Injectable } from '@angular/core';
+import { PagoDeDerechos } from '../models/pago-de-derechos.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 import { TercerosrelacionadosdestinoTable } from '../../../shared/models/tercerosrelacionados.model';
@@ -47,6 +48,7 @@ export interface Solicitud220503State {
     datosForma: DestinatarioForm[];
     seletedTerceros: TercerosrelacionadosdestinoTable;
     seletedExdora: DestinatarioForm;
+        pagoDeDerechos:PagoDeDerechos;
 }
 
 /**
@@ -92,9 +94,10 @@ export function crearEstadoInicial(): Solicitud220503State {
     llavePago: '',
     importePago: '',
     datosForma: [],
-        tercerosRelacionados: [],
+    tercerosRelacionados: [],
     seletedTerceros:{} as TercerosrelacionadosdestinoTable,
-    seletedExdora: {} as DestinatarioForm
+    seletedExdora: {} as DestinatarioForm,
+    pagoDeDerechos: {} as PagoDeDerechos
   };
 }
 
@@ -599,6 +602,23 @@ export class Solicitud220503Store extends Store<Solicitud220503State> {
       selectedTerceros: datosParaMovilizacionNacional
     }));
   }
+    /**
+       * Método para actualizar el estado con la información del pago de derechos.
+       * Actualiza la sección de pago de derechos en el estado global del store.
+       * Utilizado cuando el usuario completa o modifica la información de pago.
+       * 
+       * @public
+       * @method actualizarPagoDeDerechos
+       * @param {PagoDeDerechos} pagoDeDerechos - Datos completos del formulario de pago de derechos
+       * @memberof AcuiculturaStore
+       * @returns {void}
+       */
+      public actualizarPagoDeDerechos(pagoDeDerechos: PagoDeDerechos): void {
+          this.update(state => ({
+              ...state,
+              pagoDeDerechos: pagoDeDerechos,
+          }));
+      }
   /**
    * Restaura el estado al valor inicial.
    */
