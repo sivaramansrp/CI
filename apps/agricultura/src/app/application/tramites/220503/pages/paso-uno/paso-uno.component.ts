@@ -134,6 +134,14 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
 else{
   isValid=false;
 }
+if(this.revisionDocumental){
+  if(!this.revisionDocumental.validarFormularios()){
+    isValid = false;
+  }
+}
+else{
+  isValid = false;
+}
 
     return isValid;
   }
