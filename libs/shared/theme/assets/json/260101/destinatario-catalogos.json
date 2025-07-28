@@ -6,11 +6,11 @@
       "catalogos": [
         {
           "id": 1,
-          "descripcion": "Test 1"
+          "descripcion": "AFGANISTAN (EMIRATO ISLAMICO DE)"
         },
         {
-          "id": 1,
-          "descripcion": "Test 2"
+          "id": 2,
+          "descripcion": "ALBANIA (REPUBLICA DE)"
         }
       ]
     },
@@ -21,11 +21,11 @@
       "catalogos": [
         {
           "id": 1,
-          "descripcion": "Test 1"
+          "descripcion": "BAJA CALIFORNIA"
         },
         {
-          "id": 1,
-          "descripcion": "Test 2"
+          "id": 2,
+          "descripcion": "BAJA CALIFORNIA SUR"
         }
       ]
     },
@@ -36,11 +36,11 @@
       "catalogos": [
         {
           "id": 1,
-          "descripcion": "Test 1"
+          "descripcion": "ABASOLO"
         },
         {
-          "id": 1,
-          "descripcion": "Test 2"
+          "id": 2,
+          "descripcion": "ACAMBARO"
         }
       ]
     },
@@ -51,11 +51,11 @@
       "catalogos": [
         {
           "id": 1,
-          "descripcion": "Test 1"
+          "descripcion": "CERRITO ALTO"
         },
         {
-          "id": 1,
-          "descripcion": "Test 2"
+          "id": 2,
+          "descripcion": "CERRITO ALTO NUEVO"
         }
       ]
     },
@@ -66,11 +66,11 @@
       "catalogos": [
         {
           "id": 1,
-          "descripcion": "Test 1"
+          "descripcion": "36990"
         },
         {
-          "id": 1,
-          "descripcion": "Test 2"
+          "id": 2,
+          "descripcion": "36991"
         }
       ]
     },
@@ -81,11 +81,11 @@
       "catalogos": [
         {
           "id": 1,
-          "descripcion": "Test 1"
+          "descripcion": "ARBOLEDAS"
         },
         {
-          "id": 1,
-          "descripcion": "Test 2"
+          "id": 2,
+          "descripcion": "CENTRO"
         }
       ]
     }
