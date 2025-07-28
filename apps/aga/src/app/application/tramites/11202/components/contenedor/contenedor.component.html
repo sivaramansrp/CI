@@ -18,6 +18,7 @@
       </div>
     </div>
   </div>
+  <br />
 
   <div id="seccionAduanaaFecha" *ngIf="seccionAduanaaFechaVisible">
     <ng-titulo titulo="Datos generales" />
@@ -39,9 +40,9 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="inicialesContenedor">Iniciales del Contenedor*:
+            <label class="form-label" for="inicialesContenedor">Iniciales del Contenedor:
             </label>
-            <input type="text" class="form-control" id="inicialesContenedor" required="true"
+            <input type="text" class="form-control" id="inicialesContenedor"
               formControlName="inicialesContenedor" (change)="
                 setValoresStore(
                   datosContenedor,
@@ -54,8 +55,8 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="numeroContenedor">Número del Contenedor*:</label>
-            <input type="text" class="form-control" id="numeroContenedor" required="true"
+            <label class="form-label" for="numeroContenedor">Número del Contenedor:</label>
+            <input type="text" class="form-control" id="numeroContenedor"
               formControlName="numeroContenedor" (change)="
                 setValoresStore(
                   datosContenedor,
@@ -108,7 +109,8 @@
         </div>
       </div>
     </ng-container>
-    <div class="col-md-12 mt-5" id="idGridContenedoresRC">
+  </div>
+  <div class="col-md-12 mt-5" id="idGridContenedoresRC" *ngIf="!solicitudForm.get('tipoBusqueda')?.value || solicitudForm.get('tipoBusqueda')?.value === 'Contenedor'">
       <div class="table-responsive">
         <div class="innercontainer">
           <app-tabla-dinamica [configuracionTabla]="gridContenedores" [datos]="contenedores"></app-tabla-dinamica>
@@ -121,41 +123,27 @@
       </nav>
     </div>
 
-    <!-- <div *ngIf="exceptionCaught && consultaDatos.create">
-      <div class="row" style="margin-top: 30px">
-        <div class="form-group">
-          <div class="col-md-12">
-            <div class="pull-left text-muted text-vertical-align-button" id="lblCamposObligatorios">
-              Faltan campos por capturar.
-            </div>
-            <br /><br />
-            <div style="margin-top: -50px" class="pull-right">
-              <div class="col-md-3">
-                <button type="button" name="cancelarTramite" id="cancelarTramite" class="btn btn-danger"
-                  (click)="openModalCancelarTramite()">
-                  Cancelar
-                </button>
+    <div class="row align-items-cente">
+      <div class="col-md-8">
+          <ng-titulo titulo="Adjuntar archivo" />
+          <div class="d-flex align-items-center">
+              <div class="col-md-4">
+                  <label for="archivoSeleccionado" class="form-label">Archivo seleccionado*:</label>
               </div>
-              <div class="col-md-3">
-                <button *ngIf="actionBean.requiereGuardadoParcial" type="button" name="guardarParcial"
-                  id="guardarSolicitudParcial" class="btn btn-default" (click)="tabSeleccionado()">
-                  Guardar
-                </button>
+              <div class="col-md-8">
+                  <input class="form-control" type="text" name="archivoSeleccionado" id="archivoSeleccionado"
+                      disabled>
               </div>
-              <div class="col-md-3">
-                <button type="submit" name="guardar" id="guardarSolicitud" class="btn btn-primary">
-                  Continuar
-                </button>
-                <input type="hidden" formControlName="idSolicitud" id="idSolicitud" />
-              </div>
-            </div>
           </div>
-        </div>
-      </div> 
-    </div> -->
+      </div>
   </div>
-
-  <div id="seccionExcel" *ngIf="seccionExcelVisible">
+  <div class="row">
+      <div class="col-md-4 d-flex justify-content-end cargarbtn">
+          <button type="button" class="btn btn-default" data-bs-toggle="modal" 
+              data-bs-target="#modalArchivoCsv" [disabled]="soloLectura">Cargar archivo</button>
+      </div>
+  </div>
+  <!-- <div id="seccionExcel" *ngIf="seccionExcelVisible">
     <div class="row mb-3">
       <div class="col-md-4">
         <ng-titulo titulo="Adjuntar archivo" />
@@ -186,7 +174,7 @@
         <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla" [datos]="datosTabla"></app-tabla-dinamica>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <div id="cargarArchivos" *ngIf="cargarArchivoVisible">
     <ng-titulo titulo="Cargar Archivos" />
@@ -202,14 +190,14 @@
     </ng-container>
   </div>
 
-  <div id="seccionContenedor" *ngIf="cargarArchivo">
+  <!-- <div id="seccionContenedor" *ngIf="cargarArchivo">
     <div class="row">
       <div class="col-md-12">
         <ng-titulo titulo="Cargar Archivo" />
       </div>
     </div>
     <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
-  </div>
+  </div> -->
 
   @if (consultaDatos.create) {
             <div class="row" style="margin-top: 30px;margin-bottom: 30px;">

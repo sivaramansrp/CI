@@ -89,12 +89,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   seccionAduanaaFechaVisible: boolean = false;
 
   /**
-   * @property {boolean} seccionContenedorVisible
-   * Indicates whether the container section is visible.
-   */
-  seccionContenedorVisible: boolean = false;
-
-  /**
    * @property {boolean} agregarTipoContenedorVisible
    * Indicates whether the add container type section is visible.
    */
@@ -243,7 +237,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Método de ciclo de vida de Angular que se llama cuando el componente se inicializa.
    */
   ngOnInit(): void {
-
     this.contenedorQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -268,6 +261,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.contenedores = this.contenedorState.contenedores;
     this.cargarCatalogAduanas();
     this.crearFormSolicitud();
+    this.solicitudForm.get('tipoBusqueda')?.valueChanges
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(value => {
+      if (value) {
+        this.solicitudForm.get('tipoBusqueda')?.disable();
+      }
+    });
     this.cargarCatalogContenedores();
     this.tabSeleccionado();
     this.loadDatosTablaData();
@@ -303,7 +303,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   mostrarCampos(): void {
     const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
     if (TIPO_BUSQUEDA === 'Contenedor') {
-      this.seccionContenedorVisible = false;
       this.seccionContenedor = true;
       this.seccionAduanaaFechaVisible = true;
       this.cargarArchivoVisible = false;
@@ -312,12 +311,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     } else if (TIPO_BUSQUEDA === 'Archivo CSV') {
       this.seccionExcelVisible = true;
       this.seccionAduanaaFechaVisible = true;
-      this.seccionContenedorVisible = true;
       this.seccionContenedor = false;
       this.cargarArchivo = true;
     } else {
       this.seccionAduanaaFechaVisible = false;
-      this.seccionContenedorVisible = false;
       this.seccionExcelVisible = false;
     }
   }
@@ -338,12 +335,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   datosCaptura(): void {
     if (this.solicitudForm.valid) {
       this.mostrarAgregarTipoContenedor = true;
-      // this.datosTramiteService
-      //   .submitSolicitud(this.solicitudForm.value)
-      //   .pipe(takeUntil(this.destroyNotifier$))
-      //   .subscribe(() => {
-      //     this.exceptionCaught = false;
-      //   });
     }
   }
 
@@ -352,11 +343,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   agregarGrid(): void {
     const ADUANA = this.solicitudForm.value.datosGenerales.aduana;
-    const INICIALESCONTENEDOR = this.solicitudForm.value.datosContenedor.inicialesContenedor;
-    const NUMEROCONTENEDOR = this.solicitudForm.value.datosContenedor.numeroContenedor;
     const TIPOCONTENEDOR = this.solicitudForm.value.datosContenedor.tipoContenedor;
     const TIPOBUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
-    if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && TIPOCONTENEDOR) {
+    if (ADUANA && TIPOCONTENEDOR) {
       this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
         (respuesta) => {
           if (respuesta?.success) {
@@ -467,21 +456,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cancela la selección del radio button.
-   */
-  cancelarRadioButton(): void {
-    this.solicitudForm.get('tipoBusqueda')?.setValue('');
-    this.mostrarCampos();
-  }
-
-  /**
-   * Muestra el campo para agregar tipo de contenedor.
-   */
-  mostrarTIpoContenedor(): void {
-    this.agregarTipoContenedorVisible = true;
-  }
-
-  /**
    * Crea el formulario de solicitud.
    */
   crearFormSolicitud(): void {
@@ -492,8 +466,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         aduana: [this.contenedorState?.aduana],
       }),
       datosContenedor: this.fb.group({
-        inicialesContenedor: [this.contenedorState?.inicialesContenedor],
-        numeroContenedor: [this.contenedorState?.numeroContenedor],
+        inicialesContenedor: [{ value: this.contenedorState?.inicialesContenedor, disabled: true }],
+        numeroContenedor: [{ value: this.contenedorState?.numeroContenedor, disabled: true }],
         tipoContenedor: [this.contenedorState?.tipoContenedor],
       }),
     });
@@ -523,6 +497,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       this.solicitudForm?.disable();
     } else {
       this.solicitudForm?.enable();
+      this.solicitudForm.get('datosContenedor.inicialesContenedor')?.disable();
+      this.solicitudForm.get('datosContenedor.numeroContenedor')?.disable();
     }
   }
 
@@ -570,7 +546,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.cargarArchivoVisible = false;
     this.cargarArchivo = false;
     this.mostrarAgregarTipoContenedor = false;
-    // this.solicitudForm.get('archivoSeleccionado')?.disable();
+    this.solicitudForm.get('tipoBusqueda')?.enable();
   }
 
 
