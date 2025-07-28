@@ -7,7 +7,7 @@ services:
       dockerfile: apps/agricultura/Dockerfile.dev
       args:
         - NODE_ENV=production
-        - IMAGE_TAG_ID=${IMAGE_TAG_ID:-1.0.12}
+        - IMAGE_TAG_ID=${IMAGE_TAG_ID:-1.0.13}
     container_name: modulefederation-agricultura-microfront
     restart: unless-stopped
     expose:
