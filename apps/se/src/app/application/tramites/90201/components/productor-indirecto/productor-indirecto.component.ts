@@ -143,6 +143,53 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
     this.inicializarFormulario();
   }
 
+  public seleccionados: ProductorIndirectoTabla[] = [];
+
+onSeleccionChange(event: ProductorIndirectoTabla[]): void {
+  this.seleccionados = event;
+}
+
+eliminarSeleccionados(): void {
+debugger;
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: this.seleccionados.length >= 1 ? 
+      '¿Está seguro que desea eliminar el productor seleccionado?' : 
+      'Seleccione el productor indirecto que desea eliminar.',
+    cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
+if(this.seleccionados.length>=1) {
+  this.seleccionados.forEach(row => {
+    const INDEX = this.tablaDatos.indexOf(row);
+    if (INDEX > -1) {
+      this.tablaDatos.splice(INDEX, 1);
+    }
+  });
+  this.seleccionados = [];
+}
+}
+
+AgregarProductor(): void {
+  debugger;
+  const rfcValue = this.formProductorIndirecto.get('rfc')?.value;
+  if (this.formProductorIndirecto.valid && rfcValue) {
+    const nuevoProductor: ProductorIndirectoTabla = {
+      registro: rfcValue,
+      denominacion: 'Denominación',
+      correo: 'correo@dummy.com'
+    };
+
+    this.tablaDatos = [...this.tablaDatos, nuevoProductor];
+    this.formProductorIndirecto.reset();
+  }
+}
   /**
    * Inicializa el formulario del componente.
    * 
@@ -205,13 +252,13 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    * @param agregar - Si es `true`, muestra un mensaje indicando que solo se pueden agregar personas morales.
    *                  Si es `false`, solicita al usuario seleccionar el productor indirecto que desea eliminar.
    */
-  public productor(agregar: boolean): void {
+  public productor(): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: agregar ? 'Sólo puede ingresar personas morales' : 'Seleccione el productor indirecto que desea eliminar.',
+      mensaje : 'Sólo puede ingresar personas morales',
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
