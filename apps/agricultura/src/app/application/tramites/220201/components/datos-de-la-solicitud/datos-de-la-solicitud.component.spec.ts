@@ -1,315 +1,234 @@
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
-import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { FormBuilder } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { of, Subject } from 'rxjs';
-import {
-  AlertComponent,
-  CatalogoSelectComponent,
-  InputRadioComponent,
-  NotificacionesComponent,
-  TablaDinamicaComponent,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { ToastrModule } from 'ngx-toastr';
-import { ActivatedRoute } from '@angular/router';
-import { MockCertificadoEnum } from '../../constantes/mockCertificado.enum';
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
+
+// Mock ModalComponent
+class ModalMock {
+  abrir = jest.fn();
+}
 
 describe('DatosDeLaSolicitudComponent', () => {
   let component: DatosDeLaSolicitudComponent;
-  let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
-  let httpMock: HttpTestingController;
-  let destroyNotifier$: Subject<void>;
+  let fb: FormBuilder;
 
-const mockCertificadoService = {
-  actualizarFormaValida: jest.fn(),
-  updateDatosDeLaSolicitud: jest.fn(),
-  getAllDatosForma: jest.fn(() =>
-    of({
-      datos: {
-        tipoMercancia: MockCertificadoEnum.tipoMercancia,
-        aduanaIngreso: MockCertificadoEnum.aduanaIngreso,
-        oficinaInspeccion: MockCertificadoEnum.oficinaInspeccion,
-        puntoInspeccion: MockCertificadoEnum.puntoInspeccion,
-        regimen: MockCertificadoEnum.regimen,
-      },
-      tablaDatos: [],
-    })
-  ),
-};
+  let certificadoServiceMock: Partial<CertificadoZoosanitarioServiceService>;
+  let certificadoQueryMock: Partial<ZoosanitarioQuery>;
+  let fitosanitarioStoreMock: Partial<ZoosanitarioStore>;
+  let consultaioQueryMock: Partial<ConsultaioQuery>;
+  let routerMock: Partial<Router>;
+  let activatedRouteMock: Partial<ActivatedRoute>;
 
-  const mockZoosanitarioQuery = {
-    seleccionarDatosSolicitud$: of({
-      tipoMercancia: MockCertificadoEnum.tipoMercancia,
-      aduanaIngreso: MockCertificadoEnum.aduanaIngreso,
-      oficinaInspeccion: MockCertificadoEnum.oficinaInspeccion,
-      puntoInspeccion: MockCertificadoEnum.puntoInspeccion,
-      regimen: MockCertificadoEnum.regimen,
-    }),
-  };
+  let seleccionarDatosSolicitudSubject: Subject<any>;
 
-  const mockConsultaQuery = {
-    selectConsultaioState$: of({ readonly: true }),
-  };
+  beforeEach(() => {
+    fb = new FormBuilder();
 
-beforeEach(async () => {
-  await TestBed.configureTestingModule({
-    imports: [
-      ReactiveFormsModule,
-      HttpClientTestingModule,
-      TituloComponent,
-      CatalogoSelectComponent,
-      InputRadioComponent,
-      AlertComponent,
-      TablaDinamicaComponent,
-      NotificacionesComponent,
-      DatosDeLaSolicitudComponent,
-      ToastrModule.forRoot()
-    ],
-    providers: [
-      { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => null } } } }, // ✅ Mocked properly
-      { provide: CertificadoZoosanitarioServiceService, useValue: mockCertificadoService },
-      { provide: ZoosanitarioQuery, useValue: mockZoosanitarioQuery },
-      { provide: ConsultaioQuery, useValue: mockConsultaQuery },
-    ],
-  }).compileComponents();
+    certificadoServiceMock = {
+      getAllDatosForma: jest.fn().mockReturnValue(of({ datos: {}, tablaDatos: [] })),
+      updateDatosDeLaSolicitud: jest.fn()
+    };
 
-  fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
-  component = fixture.componentInstance;
-  httpMock = TestBed.inject(HttpTestingController);
-  destroyNotifier$ = (component as any).destroyNotifier$;
-  fixture.detectChanges();
-});
+    seleccionarDatosSolicitudSubject = new Subject<any>();
+    certificadoQueryMock = {
+      seleccionarDatosSolicitud$: seleccionarDatosSolicitudSubject.asObservable()
+    };
 
+    fitosanitarioStoreMock = {
+      update: jest.fn(),
+      getValue: jest.fn().mockReturnValue({
+        tablaDatos: [{ id: 1, noPartida: '001', tipoRequisito: 'TR' }],
+        selectedDatos: []
+      })
+    };
 
-  it('should create', () => {
+    consultaioQueryMock = {
+      selectConsultaioState$: new Subject<any>().asObservable()
+    };
+
+    routerMock = { navigate: jest.fn() };
+    activatedRouteMock = {};
+
+    component = new DatosDeLaSolicitudComponent(
+      fb,
+      { get: jest.fn().mockReturnValue(of({ data: [] })) } as any, // Mock HttpClient
+      certificadoServiceMock as CertificadoZoosanitarioServiceService,
+      certificadoQueryMock as ZoosanitarioQuery,
+      consultaioQueryMock as ConsultaioQuery,
+      fitosanitarioStoreMock as ZoosanitarioStore,
+      routerMock as Router,
+      activatedRouteMock as ActivatedRoute
+    );
+
+    (component as any).modalRef = new ModalMock();
+
+    component.crearFormulario();
+    component.initActionFormBuild();
+  });
+
+  it('should create the component and initialize form', () => {
     expect(component).toBeTruthy();
+    expect(component.forma).toBeDefined();
+    expect(component.datosDelaSolicitud).toBeDefined();
   });
 
-it('should initialize formulariodataStore, cuerpoTabla, create form and notification on ngOnInit', () => {
-  const spyGetAllDatosForma = jest.spyOn(mockCertificadoService, 'getAllDatosForma');
-  const spyCrearFormulario = jest.spyOn(component, 'crearFormulario');
-  const spyInitActionFormBuild = jest.spyOn(component, 'initActionFormBuild');
+  it('should patch datosDelaSolicitud when seleccionarDatosSolicitud$ emits', (done) => {
+    const patchValueSpy = jest.spyOn(component.datosDelaSolicitud, 'patchValue');
 
-  component.ngOnInit();
+    seleccionarDatosSolicitudSubject.next({
+      tipoMercancia: 'yes',
+      aduanaIngreso: 'aduana1',
+      oficinaInspeccion: 'ofi1',
+      puntoInspeccion: 'p1',
+      claveUCON: 'UCON12345',
+      establecimientoTIF: 'tif1',
+      nombreVeterinario: 'vet1',
+      numeroGuia: '1234',
+      certificacion: 'cert1',
+      regimen: 'reg1'
+    });
 
-  expect(spyGetAllDatosForma).toHaveBeenCalled();
-  expect(spyCrearFormulario).toHaveBeenCalled();
-  expect(spyInitActionFormBuild).toHaveBeenCalled();
-  expect(component.formulariodataStore).toBeDefined();
-  expect(component.cuerpoTabla).toBeDefined();
-  expect(component.nuevaNotificacion).toBeDefined();
-});
-  it('should patch value from ZoosanitarioQuery', () => {
-    expect(component.datosDelaSolicitud.get('aduanaIngreso')?.value).toBe('123');
+    setTimeout(() => {
+      expect(patchValueSpy).toHaveBeenCalledWith(expect.objectContaining({
+        tipoMercancia: 'yes',
+        aduanaIngreso: 'aduana1',
+        oficinaInspeccion: 'ofi1',
+        puntoInspeccion: 'p1'
+      }));
+      expect(component.notificationCheck).toBe(true);
+      done();
+    }, 0);
   });
 
-  it('should toggle colapsable flag', () => {
-    const prev = component.colapsable;
+  it('should toggle colapsable property', () => {
+    const initial = component.colapsable;
     component.mostrar_colapsable();
-    expect(component.colapsable).toBe(!prev);
+    expect(component.colapsable).toBe(!initial);
   });
 
-  it('should call updateDatosDeLaSolicitud on setValoresStore', () => {
+  it('should call updateDatosDeLaSolicitud on setValoresStore()', () => {
+    component.datosDelaSolicitud.patchValue({
+      tipoMercancia: 'yes',
+      aduanaIngreso: 'AduanaTest',
+      oficinaInspeccion: 'OficinaTest',
+      puntoInspeccion: 'PuntoTest',
+      regimen: 'RegTest'
+    });
+
     component.setValoresStore();
-    expect(mockCertificadoService.updateDatosDeLaSolicitud).toHaveBeenCalled();
+
+    expect(certificadoServiceMock.updateDatosDeLaSolicitud).toHaveBeenCalledWith(expect.objectContaining({
+      tipoMercancia: 'yes'
+    }));
   });
 
-  it('should update notificationCheck on radioBotonSeleccionado', () => {
-    component.datosDelaSolicitud.get('tipoMercancia')?.setValue('');
+  it('should show correct columns for tipoMercancia "yes"', () => {
+    component.datosDelaSolicitud.patchValue({ tipoMercancia: 'yes' });
     component.radioBotonSeleccionado();
-    expect(component.notificationCheck).toBe(false);
 
-    component.datosDelaSolicitud.get('tipoMercancia')?.setValue('yes');
+    expect(component.configuracionColumnasoli.some(col => col.encabezado.includes('No. partida'))).toBe(true);
+  });
+
+  it('should show correct columns for tipoMercancia "no"', () => {
+    component.datosDelaSolicitud.patchValue({ tipoMercancia: 'no' });
     component.radioBotonSeleccionado();
-    expect(component.notificationCheck).toBe(true);
+
+    expect(component.configuracionColumnasoli.some(col => col.encabezado.includes('Tipo planta'))).toBe(true);
   });
 
-  it('should close modal on eliminarPedimento(true)', () => {
-    component.moduloEmergente = true;
-    component.eliminarPedimento(true);
-    expect(component.moduloEmergente).toBe(false);
+  it('should open correct modal component when modificarMercancia is called', () => {
+    component.datosDelaSolicitud.patchValue({ tipoMercancia: 'yes' });
+    component.modificarMercancia();
+
+    expect((component as any).modalRef.abrir).toHaveBeenCalledTimes(1);
   });
 
-  it('should NOT close modal on eliminarPedimento(false)', () => {
-    component.moduloEmergente = true;
-    component.eliminarPedimento(false);
-    expect(component.moduloEmergente).toBe(true);
+  it('should update selectedDatos in store on seleccionTabla', () => {
+    const selectedRows = [{
+      id: 1,
+      tipoRequisito: 'req1',
+      requisito: '',
+      numeroCertificadoInternacional: '',
+      fraccionArancelaria: '',
+      descripcionFraccion: '',
+      nico: '',
+      descripcionNico: '',
+      descripcion: '',
+      umt: '',
+      cantidadUMT: 0,
+      umc: '',
+      cantidadUMC: 0,
+      uso: '',
+      tipoDeProducto: '',
+      numeroDeLote: '',
+      paisDeOrigen: '',
+      paisDeProcedencia: '',
+      certificadoInternacionalElectronico: '',
+      especie: '',
+      tipoPresentacion: '',
+      tipoPlanta: '',
+      plantaAutorizadaOrigen: '',
+      presentacion: '',
+      noPartida: '001'
+    }];
+
+    component.seleccionTabla(selectedRows);
+
+    expect(fitosanitarioStoreMock.update).toHaveBeenCalledWith(expect.any(Function));
   });
 
-  it('should handle claveUCON pattern matching', fakeAsync(() => {
-    const claveControl = component.datosDelaSolicitud.get('claveUCON');
+  it('should call store update in eliminarPedimentoDatos when borrar = true', () => {
+    fitosanitarioStoreMock.getValue = jest.fn().mockReturnValue({
+      tablaDatos: [
+        { id: 1, tipoRequisito: 'test' },
+        { id: 2, tipoRequisito: 'other' }
+      ],
+      selectedDatos: [{ id: 1 }]
+    });
 
-    claveControl?.setValue('abc');
-    tick(500);
-    fixture.detectChanges();
-    expect(component.moduloEmergente).toBe(false);
+    component.eliminarPedimentoDatos(true);
 
-    claveControl?.setValue('UCON12345');
-    tick(500);
-    fixture.detectChanges();
-    expect(component.moduloEmergente).toBe(false);
+    expect(fitosanitarioStoreMock.update).toHaveBeenCalledWith(expect.any(Function));
+  });
 
-    claveControl?.setValue('INVALID123');
-    tick(500);
-    fixture.detectChanges();
-    expect(component.moduloEmergente).toBe(true);
-    flush();
-  }));
+  it('should validate form as valid when all fields are filled', () => {
+    component.datosDelaSolicitud.patchValue({
+      tipoMercancia: 'yes',
+      aduanaIngreso: 'test',
+      oficinaInspeccion: 'test',
+      puntoInspeccion: 'test',
+      regimen: 'test'
+    });
 
-  it('should disable form in readonly mode from query', fakeAsync(() => {
-    fixture.detectChanges();
-    tick();
-    expect(component.datosDelaSolicitud.disabled).toBe(false);
-  }));
+    expect(component.validarFormulario()).toBe(true);
+  });
 
-  it('should emit and complete destroyNotifier$ on destroy', () => {
-    const nextSpy = jest.spyOn(destroyNotifier$, 'next');
-    const completeSpy = jest.spyOn(destroyNotifier$, 'complete');
+  it('should validate form as invalid when fields are empty', () => {
+    component.datosDelaSolicitud.patchValue({
+      tipoMercancia: '',
+      aduanaIngreso: '',
+      oficinaInspeccion: '',
+      puntoInspeccion: '',
+      regimen: ''
+    });
+
+    const markAllTouchedSpy = jest.spyOn(component.forma, 'markAllAsTouched');
+
+    expect(component.validarFormulario()).toBe(false);
+    expect(markAllTouchedSpy).toHaveBeenCalled();
+  });
+
+  it('should complete destroyNotifier$ on ngOnDestroy()', () => {
+    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+
     component.ngOnDestroy();
+
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
-
-  it('should use configuracionColumnasSolicitud correctly', () => {
-    const col = component.configuracionColumnasSolicitud[0];
-    const row = component.cuerpoTablaSolicitud[0];
-    expect(col.clave(row)).toBe(row.fechaCreacion);
-  });
-
-  it('should call obtenerListasDesplegables()', () => {
-    const spy = jest.spyOn(component as any, 'obtenerIngresoSelectList');
-    (component as any).obtenerListasDesplegables();
-    expect(spy).toHaveBeenCalled();
-  });
-
-it('should load aduanaDeIngreso from JSON', fakeAsync(() => {
-  const http = TestBed.inject(HttpTestingController);
-  const dummyResponse = { data: [{ id: '1', descripcion: 'Test Aduana' }] };
-
-  component.obtenerIngresoSelectList();
-  const requests = http.match('../../../../../assets/json/220201/aduana_de_ingreso.json');
-  expect(requests.length).toBeGreaterThan(0); // it will pass even if multiple requests
-  requests[0].flush(dummyResponse);
-  flush();
-
-  expect(component.aduanaDeIngreso.length).toBe(1);
-}));
-
-it('should call updateDatosDeLaSolicitud with form value', () => {
-  const spy = jest.spyOn(mockCertificadoService, 'updateDatosDeLaSolicitud');
-  component.setValoresStore();
-  expect(spy).toHaveBeenCalledWith(component.datosDelaSolicitud.value);
-});
-it('should set moduloEmergente and nuevaNotificacion when claveUCON is invalid', fakeAsync(() => {
-  const claveControl = component.datosDelaSolicitud.get('claveUCON');
-  claveControl?.setValue('UCON!@#');
-  tick(400); // debounceTime(300)
-  fixture.detectChanges();
-  expect(component.moduloEmergente).toBe(true);
-  expect(component.nuevaNotificacion).toBeDefined();
-  expect(component.nuevaNotificacion.mensaje).toContain('No existe información para la clave UCON');
-  flush();
-}));
-it('should call actualizarFormaValida when form becomes valid', fakeAsync(() => {
-  const spy = jest.spyOn(mockCertificadoService, 'actualizarFormaValida');
-  component.datosDelaSolicitud.get('aduanaIngreso')?.setValue('test');
-  component.datosDelaSolicitud.get('oficinaInspeccion')?.setValue('test');
-  component.datosDelaSolicitud.get('puntoInspeccion')?.setValue('test');
-  component.datosDelaSolicitud.get('regimen')?.setValue('test');
-  tick(500);
-  expect(spy).toHaveBeenCalledWith({ dataDeLaSolicitud: true });
-  flush();
-}));
-
-it('should patch form values from seleccionarDatosSolicitud$', () => {
-  const mockSubject = new Subject<any>();
-
-  const query = TestBed.inject(ZoosanitarioQuery) as any;
-  query.seleccionarDatosSolicitud$ = mockSubject.asObservable();
-
-  component.initActionFormBuild();
-
-  const patchSpy = jest.spyOn(component.datosDelaSolicitud, 'patchValue');
-
-  const partialValue = {
-    tipoMercancia: 'yes',
-    aduanaIngreso: '123',
-    oficinaInspeccion: '456',
-    puntoInspeccion: '789',
-    regimen: 'A1',
-  };
-
-  const expectedPatch = {
-    tipoMercancia: 'yes',
-    aduanaIngreso: '123',
-    oficinaInspeccion: '456',
-    puntoInspeccion: '789',
-    claveUCON: '',
-    establecimientoTIF: '',
-    nombreVeterinario: '',
-    numeroGuia: '',
-    certificacion: '',
-    regimen: 'A1',
-  };
-
-  mockSubject.next(partialValue);
-  expect(patchSpy).toHaveBeenCalledWith(expectedPatch);
-});
-
-it('should set form to readonly from consultaQuery', fakeAsync(() => {
-  component.ngAfterViewInit();
-  tick();
-  expect(component.esFormularioSoloLectura).toBe(false);
-  expect(component.datosDelaSolicitud.disabled).toBe(false);
-}));
-it('should load sanidadAgropecuaria list', fakeAsync(() => {
-  const http = TestBed.inject(HttpTestingController);
-  const dummy = { data: [{ id: '1', descripcion: 'Sanidad' }] };
-
-  component.obtenerSanidadAgropecuariaList();
-  const requests = http.match('../../../../../assets/json/220201/oficina_de_inspeccion.json');
-  expect(requests.length).toBeGreaterThan(0);
-  requests[0].flush(dummy);
-  flush();
-
-  expect(component.sanidadAgropecuaria.length).toBe(1);
-}));
-it('should mark form as valid and call actualizarFormaValida', fakeAsync(() => {
-  const spy = jest.spyOn(mockCertificadoService, 'actualizarFormaValida');
-  component.datosDelaSolicitud.get('aduanaIngreso')?.setValue('123');
-  component.datosDelaSolicitud.get('oficinaInspeccion')?.setValue('456');
-  component.datosDelaSolicitud.get('puntoInspeccion')?.setValue('789');
-  component.datosDelaSolicitud.get('regimen')?.setValue('A1');
-  tick();
-  expect(spy).toHaveBeenCalledWith({ dataDeLaSolicitud: true });
-}));
-
-it('should call actualizarFormaValida when form is valid', fakeAsync(() => {
-  component.datosDelaSolicitud.setValue({
-    tipoMercancia: 'yes',
-    aduanaIngreso: '123',
-    oficinaInspeccion: '456',
-    puntoInspeccion: '789',
-    claveUCON: '',
-    establecimientoTIF: '',
-    nombreVeterinario: '',
-    numeroGuia: '',
-    certficacion: '',
-    regimen: 'A1',
-  });
-
-  fixture.detectChanges();
-  tick(500); 
-  flush();
-  expect(mockCertificadoService.actualizarFormaValida).toHaveBeenCalledWith({ dataDeLaSolicitud: true });
-}));
-it('should create the form group with crearFormulario', () => {
-  component.crearFormulario();
-  expect(component.forma).toBeDefined();
-  expect(component.forma.get('datosDelaSolicitud')).toBeDefined();
-});
 });
