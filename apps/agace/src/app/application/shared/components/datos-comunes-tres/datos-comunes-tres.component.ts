@@ -689,6 +689,12 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
     this.seleccionarDomiciliosDatos = evento;
   }
 
+  /** Guarda los datos de domicilios actuales en el store. */
+  guardarDomiciliosDatos(): void {
+    this.datosComunesTresStore.setDynamicFieldValue('domiciliosDatos', this.domiciliosDatos);
+    this.mostrarGuardadosCorrectamenteModal();
+  }
+
   /**  Guarda la selección de inventarios hecha por el usuario.*/
   seleccionarInventariosDatos(evento: Inventarios[]): void {
     this.seleccionarInventarios = evento;
@@ -725,8 +731,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
       this.modalInstance = new Modal(this.modalSeccionSubcontratadosElement.nativeElement);
       this.modalInstance.show();
       
-      // Populate form with selected employee data
-      this.ninoFormGroupmodal1.patchValue({
+     this.ninoFormGroupmodal1.patchValue({
         subcontrataRFCBusqueda: this.seleccionarNumeroDeEmpleadosLista[0]?.RFC,
         subcontrataRFC: this.seleccionarNumeroDeEmpleadosLista[0]?.RFC,
         subcontrataRazonSocial: this.seleccionarNumeroDeEmpleadosLista[0]?.denominacion,
@@ -779,11 +784,11 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
    */
   modificarMiembrosEmpresa(): void {
     if (this.seleccionarListaSeccionSociosIC.length !== 0 && this.modalAgregarMiembrosEmpresa) {
-      // Open modal and populate with selected member data
+      
       this.modalInstance = new Modal(this.modalAgregarMiembrosEmpresa.nativeElement);
       this.modalInstance.show();
       
-      // Populate form with selected member data
+      
       this.ninoFormGroupmodal4.patchValue({
         miembroTipoPersonaMuestra: this.seleccionarListaSeccionSociosIC[0]?.tipoPersonaMuestra,
         miembroNombreCompleto: this.seleccionarListaSeccionSociosIC[0]?.nombreCompleto,
@@ -799,9 +804,9 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   /** Elimina los registros de número de empleados seleccionados.*/
   eliminarNumeroDeEmpleadosDato(): void {
     if (this.seleccionarNumeroDeEmpleadosLista.length > 0) {
-      // Create new array without selected items to trigger change detection
+    
       this.numeroDeEmpleadosLista = this.numeroDeEmpleadosLista.filter(item => {
-        // Check if the current item should be kept (not in the selected list)
+        
         return !this.seleccionarNumeroDeEmpleadosLista.some(selectedItem =>
           selectedItem.RFC === item.RFC &&
           selectedItem.denominacion === item.denominacion &&
@@ -829,10 +834,10 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
         );
       });
 
-      // Clear selection after deletion
+      
       this.seleccionarDomiciliosDatos = [];
 
-      // Update the store
+      
       this.datosComunesTresStore.setDynamicFieldValue('domiciliosDatos', this.domiciliosDatos);
     }
   }
@@ -910,14 +915,14 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
         bimestre: DatosComunesTresComponent.obtenerDescripcion(this.bimestreOpciones, this.ninoFormGroupmodal1.get('subcontrataBimestre')?.value)
       };
       
-      // Create new array to trigger change detection
+      
       this.numeroDeEmpleadosLista = [...this.numeroDeEmpleadosLista, NUEVO_EMPLEADO];
       this.datosComunesTresStore.setDynamicFieldValue('numeroDeEmpleadosLista', this.numeroDeEmpleadosLista);
     } else {
-      // Update existing record - modify in place, don't add new record
+      
       const INDICE = this.numeroDeEmpleadosLista.findIndex((item) => item.RFC === this.seleccionarNumeroDeEmpleadosLista?.[0]?.RFC);
       if (INDICE >= 0) {
-        // Create new array and update only the specific record
+       
         this.numeroDeEmpleadosLista = this.numeroDeEmpleadosLista.map((item, index) => {
           if (index === INDICE) {
             return {
@@ -933,7 +938,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
       }
     }
     
-    // Clear selection and close modal
+    
     this.seleccionarNumeroDeEmpleadosLista = [];
     this.modalInstance.hide();
     this.mostrarGuardadosCorrectamenteModal();
@@ -950,33 +955,69 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestr
   /** Guarda el domicilio seleccionado en la lista y actualiza el store, luego cierra el modal. */
   aceptarModalDuo(): void {
     if (this.seleccionarListaInstalaciones.length) {
-      this.domiciliosDatos.push({
+      const NUEVO_DOMICILIO = {
         entidadFederativa: this.seleccionarListaInstalaciones[0].entidadFederativa ?? '',
         municipioDelegacion: this.seleccionarListaInstalaciones[0].municipioDelegacion ?? '',
         codigoPostal: this.seleccionarListaInstalaciones[0].codigoPostal ?? '',
         direccion: this.seleccionarListaInstalaciones[0].colonio,
         registroSESAT: this.seleccionarListaInstalaciones[0].registro
-      })
+      };
+      
+      
+      this.domiciliosDatos = [...this.domiciliosDatos, NUEVO_DOMICILIO];
+      
+      
+      this.seleccionarListaInstalaciones = [];
     }
-    this.modalInstance.hide();
+    
+    
     this.datosComunesTresStore.setDynamicFieldValue('domiciliosDatos', this.domiciliosDatos);
+    
+    
+    this.modalInstance.hide();
+    
+    
+    this.mostrarGuardadosCorrectamenteModal();
   }
 
   /** Actualiza los datos del domicilio seleccionado en el formulario modal y cierra el modal. */
   aceptarModalTres(): void {
     if (this.ninoFormGroupmodal3.valid && this.seleccionarDomiciliosDatos.length) {
       const INDICE = this.domiciliosDatos.findIndex((item) => item.cveTipoInstalacion === this.seleccionarDomiciliosDatos[0].cveTipoInstalacion);
-      this.domiciliosDatos[INDICE].instalacionPrincipal = this.ninoFormGroupmodal3.get('principales')?.value;
-      this.domiciliosDatos[INDICE].municipioDelegacion = this.ninoFormGroupmodal3.get('municipio')?.value;
-      this.domiciliosDatos[INDICE].tipoInstalacion = this.ninoFormGroupmodal3.get('tipoDeInstalacion')?.value;
-      this.domiciliosDatos[INDICE].entidadFederativa = this.ninoFormGroupmodal3.get('entidadFederativa')?.value;
-      this.domiciliosDatos[INDICE].codigoPostal = this.ninoFormGroupmodal3.get('modificarCodigoPostal')?.value;
-      this.domiciliosDatos[INDICE].direccion = this.ninoFormGroupmodal3.get('coloniaDescripcion')?.value;
-      this.domiciliosDatos[INDICE].registroSESAT = this.ninoFormGroupmodal3.get('registroSESAT')?.value;
-      this.domiciliosDatos[INDICE].procesoProductivo = this.ninoFormGroupmodal3.get('procesoProductivo')?.value;
-      this.domiciliosDatos[INDICE].acreditaInmueble = this.ninoFormGroupmodal3.get('goceDelInmueble')?.value;
-      this.domiciliosDatos[INDICE].instalacionPerfil = this.ninoFormGroupmodal3.get('empresa')?.value;
+      
+      if (INDICE >= 0) {
+        // Create new array to trigger change detection
+        this.domiciliosDatos = this.domiciliosDatos.map((item, index) => {
+          if (index === INDICE) {
+            return {
+              ...item,
+              instalacionPrincipal: this.ninoFormGroupmodal3.get('principales')?.value,
+              municipioDelegacion: this.ninoFormGroupmodal3.get('municipio')?.value,
+              tipoInstalacion: this.ninoFormGroupmodal3.get('tipoDeInstalacion')?.value,
+              entidadFederativa: this.ninoFormGroupmodal3.get('entidadFederativa')?.value,
+              codigoPostal: this.ninoFormGroupmodal3.get('modificarCodigoPostal')?.value,
+              direccion: this.ninoFormGroupmodal3.get('coloniaDescripcion')?.value,
+              registroSESAT: this.ninoFormGroupmodal3.get('registroSESAT')?.value,
+              procesoProductivo: this.ninoFormGroupmodal3.get('procesoProductivo')?.value,
+              acreditaInmueble: this.ninoFormGroupmodal3.get('goceDelInmueble')?.value,
+              instalacionPerfil: this.ninoFormGroupmodal3.get('empresa')?.value
+            };
+          }
+          return item;
+        });
+        
+        // Update store
+        this.datosComunesTresStore.setDynamicFieldValue('domiciliosDatos', this.domiciliosDatos);
+        
+        // Clear selection
+        this.seleccionarDomiciliosDatos = [];
+      }
+      
+      // Close modal
       this.modalInstance.hide();
+      
+      // Show success message
+      this.mostrarGuardadosCorrectamenteModal();
     }
   }
 

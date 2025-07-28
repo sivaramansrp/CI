@@ -297,9 +297,10 @@
     </div>
     <div class="col-md-12 mt-5">
       <div class="d-flex justify-content-end mt-4">
-        <button type="button" id="modificar" class="btn btn-default" (click)="modificarInstalacionesPrincipales()" [disabled]="consultaState.readonly">Modificar</button>
-        <button type="button" id="eliminar" class="btn btn-danger ms-3" (click)="eliminarDomiciliosDatos()" [disabled]="consultaState.readonly">Eliminar</button>
+        <button type="button" id="modificar" class="btn btn-default" (click)="modificarInstalacionesPrincipales()" [disabled]="consultaState.readonly || seleccionarDomiciliosDatos.length !== 1">Modificar</button>
+        <button type="button" id="eliminar" class="btn btn-danger ms-3" (click)="eliminarDomiciliosDatos()" [disabled]="consultaState.readonly || seleccionarDomiciliosDatos.length === 0">Eliminar</button>
         <button type="button" id="agregar" class="btn btn-primary ms-3" (click)="agregarInstalacionesPrincipales()" [disabled]="consultaState.readonly">Agregar</button>
+      
       </div>
     </div>
 </ng-template>
