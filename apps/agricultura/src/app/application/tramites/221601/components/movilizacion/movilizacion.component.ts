@@ -7,6 +7,8 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite221601Query } from '../../../../estados/queries/tramite221601.query';
 import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
 
+import { CommonModule } from '@angular/common';
+
 /**
  * Componente encargado de la gestión de la movilización de mercancías, permitiendo seleccionar el medio de transporte, 
  * verificación, y empresa relacionada con la solicitud 221601.
@@ -32,7 +34,8 @@ import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
     TituloComponent,
     FormsModule,
     ReactiveFormsModule,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,
+    CommonModule
   ],
   templateUrl: './movilizacion.component.html',
   styleUrls: ['./movilizacion.component.scss']
@@ -155,10 +158,10 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
 
     this.MedioForm = this.fb.group({
       medio: [this.solicitudState.medio, Validators.required],
-      transporte: [this.solicitudState.transporte],
+      transporte: [this.solicitudState.transporte,[Validators.maxLength(30)]],
       verificacion: [this.solicitudState.verificacion, Validators.required],
-      empresa: [this.solicitudState.empresa, Validators.required],
-      coordenadas:[this.solicitudState.coordenadas]
+      empresa: [this.solicitudState.empresa, [Validators.required ,Validators.maxLength(80)]],
+      coordenadas:[this.solicitudState.coordenadas, [ Validators.maxLength(80)]]
     });
 
     this.MedioForm.get('empresa')?.setValue(realizar.formData.empresa);

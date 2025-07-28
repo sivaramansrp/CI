@@ -86,33 +86,40 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="clave">Clave UCON*:</label>
-          <input class="form-control" id="clave" formControlName="clave" type="number"
+          <label class="form-label" for="clave">Clave UCON: <span class="bi bi-question-circle-fill fs-4 m-1"
+                    title="Sólo para usuarios que cuenten con la contraseña UCON e importen productos cárnicos" ata-bs-toggle="tooltip"></span></label>
+          <input class="form-control" id="clave" formControlName="clave" type="text" maxlength="15" size="29"
             (change)="setValoresStore(datosSolicitudForm, 'clave', 'setClave')" />
-        </div>
-        @if(datosSolicitudForm.controls['clave'].invalid && datosSolicitudForm.controls['clave'].touched) {
           <div class="d-grid">
-            @if(datosSolicitudForm.controls['clave'].errors?.['required']) {
-              <span class="mensaje-error">Este campo es obligatorio</span>
-            }
-          </div>
-        }
+            <div *ngIf="datosSolicitudForm.get('clave')?.touched">
+              <small class="mensaje-error" *ngIf="datosSolicitudForm.get('clave')?.hasError('required')">
+                Este campo es obligatorio.
+              </small>
+              <small class="mensaje-error" *ngIf="datosSolicitudForm.get('clave')?.hasError('maxlength')">
+                La clave UCON no puede exceder los 15 caracteres.
+              </small>
+        </div>
+       
       </div>
+        </div>
+        </div>
+
 
       <div class="col-md-4">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="establecimiento" [label]="'Establecimiento TIF'" [required]="false"
+          <app-catalogo-select [catalogo]="establecimiento" [label]="'Establecimiento TIF'" [placeholder]="'Seleccione un valor'" [required]="false" 
             name="establecimiento" formControlName="establecimiento" [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(datosSolicitudForm, 'establecimiento', 'setEstablecimiento')"
             data-bs-toggle="modal"
                     data-bs-target="#modalAgregarMercancias">
           </app-catalogo-select>
+          
         </div>
       </div>
 
       <div class="col-md-8">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="veterinario" [label]="'Nombre del médico veterinario'" [required]="true"
+          <app-catalogo-select [catalogo]="veterinario" [label]="'Nombre del médico veterinario'" [placeholder]="'Seleccione un valor'" [isDisabled]="esFormularioSoloLectura"
             name="veterinario" formControlName="veterinario" [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(datosSolicitudForm, 'veterinario', 'setVeterinario')">
           </app-catalogo-select>
@@ -124,23 +131,35 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="guia">Número de guía:</label>
-          <input class="form-control" id="guia" formControlName="guia" type="number"
+          <input class="form-control" id="guia" formControlName="guia" type="text" maxlength="80" size="29"
             (change)="setValoresStore(datosSolicitudForm, 'guia', 'setGuia')" />
-        </div>
+            <div class="d-grid">
+            <div *ngIf="datosSolicitudForm.get('guia')?.touched">
+              <small class="mensaje-error" *ngIf="datosSolicitudForm.get('guia')?.hasError('maxlength')">
+                El número de guía no puede exceder los 80 caracteres.
+              </small>
+       </div>
+      </div>
+      </div>
       </div>
 
       <div class="col-md-4">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="regimen" [label]="'Régimen'" [required]="true" name="regimen" [isDisabled]="esFormularioSoloLectura"
-            formControlName="regimen" (change)="setValoresStore(datosSolicitudForm, 'regimen', 'setRegimen')">
+          <app-catalogo-select [catalogo]="regimen" [label]="'Régimen'" [required]="true" name="regimen" [isDisabled]="esFormularioSoloLectura" [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'" [tooltipQuestionCircle]="true"
+            formControlName="regimen" (change)="setValoresStore(datosSolicitudForm, 'regimen', 'setRegimen')" [placeholder]="'Seleccione un valor'">
           </app-catalogo-select>
+           <div class="d-grid">
+            @if(datosSolicitudForm.controls['regimen'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+            }
+          </div>
         </div>
       </div>
     </div>
-    
+   
     <div class="row m-0">
-      <ng-titulo titulo="Tipo de mercancía*:" />
-      <p class="fw-medium">Captura de datos de mercancía*:</p>
+      <ng-titulo titulo="Tipo de mercancía" />
+      <p class="fw-bold">Captura de datos de mercancía*:</p>
       <app-input-radio
       id="capturaMercancia"
       formControlName="capturaMercancia"
@@ -150,12 +169,12 @@
       (valueChange)="cambioValorRadio('exentoPago', $event.toString())"
     >
     </app-input-radio>
-
-    <ng-alert [CONTENIDO]="MERCANCIA"></ng-alert>
-    </div>
-
-    <div class="row m-0">
-      <h6>Mercancías</h6>
+    <div style="text-align: center;">
+  <ng-alert [CONTENIDO]="MERCANCIA"></ng-alert>
+</div>
+</div>
+<div class="row m-0">
+      <h6 class="fw-bold">Mercancías</h6>
       <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="mercancias" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
         [tipoSeleccionTabla]="checkbox"></app-tabla-dinamica>
 
@@ -170,9 +189,203 @@
     <div class="col-md-12 mt-5 d-flex justify-content-end">
       <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
       <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
-      <button type="button" class="btn btn-primary ms-3"[disabled]="esFormularioSoloLectura">Agregar</button>
+      <button type="button" class="btn btn-primary ms-3"[disabled]="esFormularioSoloLectura" (click)="tercerosAgregar()">Agregar</button>
     </div>
   </div>
+  <app-modal [active]="showtercerosModal">
+
+    <form [formGroup]="mercanciaForm">
+    <ng-titulo titulo="Datos Generales de la Mercancía Animal" />
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+      
+        <app-catalogo-select
+          formControlName="paisOrigen"
+          [catalogo]="veterinario"
+          [label]="'Tipo requisito*'">
+        </app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Requisito*:</label>
+        <input class="form-control" formControlName="regulacion" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label custum-numero">Número de certificado internacional*:</label>
+        <input class="form-control" formControlName="nombreProducto" />
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <app-catalogo-select
+          formControlName="fracciónArancelaria"
+          [catalogo]="veterinario"
+          [label]="'Fracción arancelaria*:'">
+        </app-catalogo-select>
+      </div>
+      <div class="col-md-8">
+        <label class="form-label">Descripción de la fracción arancelaria*:<span
+                class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+                ata-bs-toggle="tooltip"></span></label>
+        <input class="form-control" formControlName="unidad2" />
+      </div>
+      </div>
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <app-catalogo-select
+          formControlName="nico"
+          [catalogo]="veterinario"
+          [label]="'Nico*:'">
+        </app-catalogo-select>
+      </div>
+      <div class="col-md-8">
+        <label class="form-label">Descripción Nico:<span
+                class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+                ata-bs-toggle="tooltip"></span></label>
+        <input class="form-control" formControlName="unidad1" />
+      </div>
+    </div>
+ 
+    <div class="row mb-3">
+      <label class="form-label d-flex" >Descripción*:</label>
+      <textarea class="form-control custom-textarea" formControlName="observaciones" rows="3"></textarea>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label class="form-label">Cantidad UMT*:</label>
+        <input class="form-control" formControlName="cantidadUmt" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">UMT*:<span
+                class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+                ata-bs-toggle="tooltip"></span></label>
+        <input class="form-control" formControlName="umt" />
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label class="form-label">Cantidad UMC*:</label>
+        <input class="form-control" formControlName="cantidadUmc" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">UMC*:<span
+                class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+                ata-bs-toggle="tooltip"></span></label>
+        <input class="form-control" formControlName="umc" />
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-4">
+      <app-catalogo-select
+          formControlName="especie"
+          [catalogo]="veterinario"
+          [label]="'Especie*'">
+        </app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          formControlName="edadAnimal"
+          [catalogo]="veterinario"
+          [label]="'Uso*'">
+        </app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          formControlName="paisOrigen1"
+          [catalogo]="veterinario"
+          [label]="'País de origen*'">
+        </app-catalogo-select>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <app-catalogo-select
+          formControlName="paisdeprocedencia"
+          [catalogo]="veterinario"
+          [label]="'País de procedencia*:'">
+        </app-catalogo-select>
+      </div>
+  </div>
+<ng-titulo titulo="Detalle" />
+<div class="row mb-3">
+      <div class="col-md-3">
+        <label class="form-label">Número de lote:</label>
+        <input class="form-control" formControlName="nombreLote" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Color/Pelaje:</label>
+        <input class="form-control" formControlName="codigoArancelario" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Edad del animal:</label>
+        <input class="form-control" formControlName="edadAnimal1" />
+      </div>
+    </div>
+   <div class="row mb-3">
+      <div class="col-md-3">
+        <label class="form-label">Fase de desarrollo:</label>
+        <input class="form-control" formControlName="fasedeDesarrollo" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Función zootécnica:</label>
+        <input class="form-control" formControlName="funciónZootecnica" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Nombre de la mercancía:</label>
+        <input class="form-control" formControlName="nombredela" />
+      </div>
+   </div>
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <label class="form-label custom-identificacion">Número de identificación:</label>
+        <input class="form-control" formControlName="numerodeIdentificacion" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Raza:</label>
+        <input class="form-control" formControlName="raza" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Nombre científico:</label>
+        <input class="form-control" formControlName="nombreCientifico" />
+      </div>
+   </div>
+   <div class="row mb-3">
+      <div class="col-md-3">
+        <app-catalogo-select
+          formControlName="sexo"
+          [catalogo]="veterinario"
+          [label]="'Sexo'">
+        </app-catalogo-select>
+        </div>
+        </div>
+ 
+    <div class="col-md-12 mt-4 d-flex justify-content-end">
+      <button class="btn btn-primary" type="button" (click)="cerrarModal()">Eliminar detalle</button>
+      <button class="btn btn-primary ms-3" type="submit" (click)="guardarMercancia()">Agregar detalle</button>
+      <button class="btn btn-primary ms-3" type="submit">Carga por archivo</button>
+    </div>
+    </form>
+  <form>
+    <div class="row">
+      <h6 class="fw-bold">Detalle</h6>
+      <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="mercancias" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
+        [tipoSeleccionTabla]="checkbox"></app-tabla-dinamica>
+
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item"><a class="page-link">1</a></li>
+        </ul>
+      </nav>
+    </div>
+  <div class="col-md-12 mt-5 d-flex justify-content-end">
+      <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
+      <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura" (click)="cerrarModal()">Eliminar</button>
+      <button type="button" class="btn btn-primary ms-3"[disabled]="esFormularioSoloLectura">Agregar</button>
+    </div>
+    </form>
+  </app-modal>
 </div>
 
 <div class="modal fade" id="modalAgregarMercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel"
@@ -194,7 +407,7 @@
                 type="button" [disabled]="esFormularioSoloLectura"
                 class="btn btn-primary" data-bs-dismiss="modal" #closeModal
               >
-                Agregar
+                Aceptar
               </button>
             </div>
         </div>
