@@ -4,7 +4,7 @@ import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONA
 import { OnDestroy, OnInit } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
-import { SolicitudService } from '../../services/Solicitud.service';
+import { SolicitudService } from '../../services/solicitud.service';
 
 @Component({
   selector: 'paso-uno',
@@ -99,7 +99,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   guardarDatosFormulario(): void {
     this.solicitudService
-      .getTipoDeAviso()
+      .obtenerDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         this.esDatosRespuesta = true;

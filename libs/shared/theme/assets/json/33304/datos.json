@@ -1,0 +1,20 @@
+{
+  "cambioDocumentoUsoGoce": true,
+  "fusionEscisionEmpresas": true,
+  "reestructuracion": true,
+  "transportistas": true,
+  "BAJO_MANIFIESTO": true,
+  "fusionOEscision": true,
+  "fusionConEmpresasNoCertificadas": true,
+  "empresaSubsistente": true,
+  "transportistasLista": [
+    {
+      "id": 1,
+      "rfc":"MAVL621207CSS",
+      "denominacion": "EUROFOODS DE MEXICO",
+      "domicilio": "LIBERTAD SN 34000 VICTORIA DE DURANGO VICTORIA DE DURANGO CENTRO DURANGO DURANGO ESTADOS UNIDOS MEXICANOS",
+      "registroCaat": "BLEV",
+      "estatus": "Activo"
+    }
+  ]
+}
