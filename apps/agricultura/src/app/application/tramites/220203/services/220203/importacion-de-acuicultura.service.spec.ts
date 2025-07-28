@@ -1,142 +1,128 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { ImportacionDeAcuiculturaService } from './importacion-de-acuicultura.service';
-import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
+// importacion-de-acuicultura.service.spec.ts
+import { HttpClient } from '@angular/common/http';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
+import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
+import { ImportacionDeAcuiculturaService } from './importacion-de-acuicultura.service';
 
 describe('ImportacionDeAcuiculturaService', () => {
   let service: ImportacionDeAcuiculturaService;
-  let httpMock: HttpTestingController;
-  let mockAcuiculturaStore: any;
-  let mockSeccionStore: any;
+  let httpClientMock: Partial<HttpClient>;
+  let acuiculturaStoreMock: Partial<AcuiculturaStore>;
+  let seccionStoreMock: Partial<SeccionLibStore>;
 
   beforeEach(() => {
-    mockAcuiculturaStore = {
+    httpClientMock = {
+      get: jest.fn()
+    };
+
+    acuiculturaStoreMock = {
       _select: jest.fn(),
-      actualizarFormularioPago: jest.fn(),
+      actualizarPagoDeDerechos: jest.fn(),
       actualizarFormularioMovilizacion: jest.fn(),
       actualizarDatosMercancia: jest.fn(),
-      actualizarformaValida: jest.fn(),
       limpiarFormulario: jest.fn(),
-      actualizarTercerosRelacionados: jest.fn()
+      actualizarTodoElEstado: jest.fn(),
+      actualizarSoloRealizarGroup: jest.fn(),
+      updateTercerosRelacionados: jest.fn(),
     };
 
-    mockSeccionStore = {
-      establecerSeccion: jest.fn(),
-      establecerFormaValida: jest.fn()
+    seccionStoreMock = {
+      // mock any needed methods here (currently none called)
     };
 
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
-        { provide: AcuiculturaStore, useValue: mockAcuiculturaStore },
-        { provide: SeccionLibStore, useValue: mockSeccionStore }
-      ]
-    });
-
-    service = TestBed.inject(ImportacionDeAcuiculturaService);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
-
-  afterEach(() => {
-    httpMock.verify(); // Ensure no open HTTP calls
+    service = new ImportacionDeAcuiculturaService(
+      httpClientMock as HttpClient,
+      acuiculturaStoreMock as AcuiculturaStore,
+      seccionStoreMock as SeccionLibStore
+    );
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch catalog details', () => {
-    const mockResponse = { data: [{ id: 1, descripcion: 'Banco1' }] };
-    service.obtenerDetallesDelCatalogo('banco.json').subscribe((res) => {
-      expect(res).toEqual(mockResponse);
+  it('obtenerDetallesDelCatalogo should call http.get with correct url', () => {
+    const file = 'catalogo.json';
+    const mockResponse = { data: 'test' };
+    (httpClientMock.get as jest.Mock).mockReturnValue(of(mockResponse));
+
+    service.obtenerDetallesDelCatalogo(file).subscribe(response => {
+      expect(response).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('assets/json/220203/banco.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/220203/' + file);
   });
 
-  it('should get acuicultura data from store', () => {
-    const mockState = { formularioPago: {}, formaValida: {} };
-    mockAcuiculturaStore._select.mockReturnValue(of(mockState));
+  it('obtenerDatos should return observable from store', () => {
+    const mockData = { some: 'state' };
+    (acuiculturaStoreMock._select as jest.Mock).mockReturnValue(of(mockData));
 
-    service.obtenerDatos().subscribe(data => {
-      expect(data).toEqual(mockState);
-    });
-  });
-
-  it('should update formularioPago in store', () => {
-    const payload = { cadena: 'value' };
-    service.actualizarFormularioPago(payload as any);
-    expect(mockAcuiculturaStore.actualizarFormularioPago).toHaveBeenCalledWith(payload);
-  });
-
-  it('should update formularioMovilizacion in store', () => {
-    const payload = { moviliza: true };
-    service.actualizarFormularioMovilizacion(payload as any);
-    expect(mockAcuiculturaStore.actualizarFormularioMovilizacion).toHaveBeenCalledWith(payload);
-  });
-
-  it('should update datosMercancia in store', () => {
-    const payload = { mercancia: 'yes' };
-    service.actualizarDatosMercancia(payload as any);
-    expect(mockAcuiculturaStore.actualizarDatosMercancia).toHaveBeenCalledWith(payload);
-  });
-
-  it('should update formaValida and call seccion store', () => {
-    const forma = { paso1: true, paso2: true };
-    mockAcuiculturaStore._select.mockReturnValue(of(forma));
-
-    service.actualizarFormaValida(forma);
-    expect(mockAcuiculturaStore.actualizarformaValida).toHaveBeenCalledWith(forma);
-
-    service.obtenerTodosLosStatus().subscribe(status => {
-      expect(status).toBe(true);
-    });
-  });
-
-  it('should set false on formaValida if any value is false', () => {
-    const forma = { paso1: true, paso2: false };
-    mockAcuiculturaStore._select.mockReturnValue(of(forma));
-
-    service.obtenerTodosLosStatus().subscribe(status => {
-      expect(status).toBe(false);
-    });
-  });
-
-  it('should reset form using limpiarFormulario', () => {
-    service.limpiarFormulario();
-    expect(mockAcuiculturaStore.limpiarFormulario).toHaveBeenCalled();
-  });
-
-  it('should fetch acuicultura JSON data', () => {
-    const mockData = { formularioPago: {}, datosMercancia: {} };
-    service.getAcuiculturaData().subscribe(data => {
+    const obs$ = service.obtenerDatos();
+    obs$.subscribe(data => {
       expect(data).toEqual(mockData);
     });
 
-    const req = httpMock.expectOne('assets/json/220203/acuicultura_forma.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
+    expect(acuiculturaStoreMock._select).toHaveBeenCalled();
   });
 
-  it('should update all form state parts', () => {
-    const datos = {
-      formularioPago: { pago: true },
-      formularioMovilizacion: { movil: true },
-      datosMercancia: { merc: true }
-    };
-    service.actualizarEstadoFormulario(datos as any);
-    expect(mockAcuiculturaStore.actualizarFormularioPago).toHaveBeenCalledWith(datos.formularioPago);
-    expect(mockAcuiculturaStore.actualizarFormularioMovilizacion).toHaveBeenCalledWith(datos.formularioMovilizacion);
-    expect(mockAcuiculturaStore.actualizarDatosMercancia).toHaveBeenCalledWith(datos.datosMercancia);
+  it('actualizarPagoDeDerechos should call store method', () => {
+    const pago = { monto: 1000 };
+    service.actualizarPagoDeDerechos(pago as any);
+    expect(acuiculturaStoreMock.actualizarPagoDeDerechos).toHaveBeenCalledWith(pago);
   });
 
-  it('should update terceros relacionados', () => {
-    const terceros = [{ nombre: 'Juan' }];
-    service.updateTercerosRelacionados(terceros as any);
-    expect(mockAcuiculturaStore.actualizarTercerosRelacionados).toHaveBeenCalledWith(terceros);
+  it('actualizarFormularioMovilizacion should call store method', () => {
+    const movilizacion = { campo: 'valor' };
+    service.actualizarFormularioMovilizacion(movilizacion as any);
+    expect(acuiculturaStoreMock.actualizarFormularioMovilizacion).toHaveBeenCalledWith(movilizacion);
+  });
+
+  it('actualizarDatosMercancia should call store method', () => {
+    const grupo = { grupo: 'datos' };
+    service.actualizarDatosMercancia(grupo as any);
+    expect(acuiculturaStoreMock.actualizarDatosMercancia).toHaveBeenCalledWith(grupo);
+  });
+
+  it('limpiarFormulario should call store limpiarFormulario', () => {
+    service.limpiarFormulario();
+    expect(acuiculturaStoreMock.limpiarFormulario).toHaveBeenCalled();
+  });
+
+  it('getAcuiculturaData should call http.get with correct url', () => {
+    const mockResponse = { data: 'mock' };
+    (httpClientMock.get as jest.Mock).mockReturnValue(of(mockResponse));
+    service.getAcuiculturaData().subscribe(data => {
+      expect(data).toEqual(mockResponse);
+    });
+    expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/220203/acuicultura_forma.json');
+  });
+
+  it('actualizarEstadoFormulario should await store actualizarTodoElEstado', async () => {
+    (acuiculturaStoreMock.actualizarTodoElEstado as jest.Mock).mockResolvedValue(undefined);
+
+    await service.actualizarEstadoFormulario({} as any);
+    expect(acuiculturaStoreMock.actualizarTodoElEstado).toHaveBeenCalledWith({});
+  });
+
+  it('actualizarSoloRealizarGroup should call store actualizarSoloRealizarGroup', () => {
+    const grupo = { grupo: 'realizar' };
+    service.actualizarSoloRealizarGroup(grupo as any);
+    expect(acuiculturaStoreMock.actualizarSoloRealizarGroup).toHaveBeenCalledWith(grupo);
+  });
+
+  it('updateTercerosRelacionado should call store updateTercerosRelacionados', () => {
+    const terceros = [{ id: 1 }, { id: 2 }];
+    service.updateTercerosRelacionado(terceros as any);
+    expect(acuiculturaStoreMock.updateTercerosRelacionados).toHaveBeenCalledWith(terceros);
+  });
+
+  it('getAllDatosForma should return observable from store', () => {
+    const mockState = { stateKey: 'value' };
+    (acuiculturaStoreMock._select as jest.Mock).mockReturnValue(of(mockState));
+    service.getAllDatosForma().subscribe(res => {
+      expect(res).toEqual(mockState);
+    });
+    expect(acuiculturaStoreMock._select).toHaveBeenCalled();
   });
 });

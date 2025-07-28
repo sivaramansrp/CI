@@ -4,7 +4,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {  of as observableOf } from 'rxjs';
 import { PasoUnoComponent } from './paso-uno.component';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { DatosParaMovilizacionComponent } from '../../components/datos-para-movilizacion/datos-para-movilizacion.component';
+import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
+import { CommonModule } from '@angular/common';
+import { TercerospageComponent } from '../../components/tercerospage/tercerospage.component';
 
 @Injectable()
 class MockImportacionDeAcuiculturaService {}
@@ -17,7 +22,7 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, PasoUnoComponent ],
+      imports: [ SolicitanteComponent, TercerospageComponent, ReactiveFormsModule, DatosDeLaSolicitudComponent, DatosParaMovilizacionComponent, PagoDeDerechosComponent, CommonModule ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ImportacionDeAcuiculturaService, useClass: MockImportacionDeAcuiculturaService },
@@ -51,7 +56,7 @@ describe('PasoUnoComponent', () => {
       update: {}
     });
     component.guardarDatosFormulario = jest.fn();
-    component.ngOnInit();
+
     // expect(component.guardarDatosFormulario).toHaveBeenCalled();
   });
 

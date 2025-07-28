@@ -1,11 +1,10 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AgregardestinatariofinalComponent } from './agregardestinatariofinal.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
-
-import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
-import { AgregardestinatariofinalComponent } from './agregardestinatariofinal.component';
+import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
+import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
 
 describe('AgregardestinatariofinalComponent', () => {
   let component: AgregardestinatariofinalComponent;
@@ -25,8 +24,8 @@ describe('AgregardestinatariofinalComponent', () => {
       imports: [AgregardestinatariofinalComponent, HttpClientTestingModule],
       providers: [
         provideRouter([]),
-        { provide: CertificadoZoosanitarioServiceService, useValue: mockCertificadoService },
-        { provide: ZoosanitarioStore, useValue: mockStore }
+        { provide: ImportacionDeAcuiculturaService, useValue: mockCertificadoService },
+        { provide: AcuiculturaStore, useValue: mockStore }
       ]
     }).compileComponents();
 

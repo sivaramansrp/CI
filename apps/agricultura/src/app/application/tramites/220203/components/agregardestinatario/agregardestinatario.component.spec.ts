@@ -2,15 +2,15 @@
 import { FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
-import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { AcuiculturaQuery } from '../../estados/sanidad-certificado.query';
+import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { AgregardestinatarioComponent } from './agregardestinatario.component';
 
 describe('AgregardestinatarioComponent', () => {
   let component: AgregardestinatarioComponent;
   let tercerosService: Partial<TercerosrelacionadosService>;
-  let importacionService: Partial<CertificadoZoosanitarioServiceService>;
-  let acuiculturaQuery: Partial<ZoosanitarioQuery>;
+  let importacionService: Partial<ImportacionDeAcuiculturaService>;
+  let acuiculturaQuery: Partial<AcuiculturaQuery>;
 
   beforeEach(() => {
     // Mock services
@@ -31,8 +31,8 @@ describe('AgregardestinatarioComponent', () => {
       new FormBuilder(),
       tercerosService as TercerosrelacionadosService,
       {} as any, // Router not used directly in tested methods
-      importacionService as CertificadoZoosanitarioServiceService,
-      acuiculturaQuery as ZoosanitarioQuery,
+      importacionService as ImportacionDeAcuiculturaService,
+      acuiculturaQuery as AcuiculturaQuery,
       {} as any // ActivatedRoute not used here
     );
 
