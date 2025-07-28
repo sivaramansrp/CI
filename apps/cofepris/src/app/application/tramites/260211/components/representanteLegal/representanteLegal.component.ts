@@ -141,7 +141,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     /**
      * Inicialización del formulario de representante legal.
      */
-this.representante = this.fb.group({
+    this.representante = this.fb.group({  
       rfc: [this.solicitudState?.rfc, Validators.required],
       nombre: [{ value: this.solicitudState?.nombre, disabled: true }, Validators.required],
       apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, Validators.required],

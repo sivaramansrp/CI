@@ -43,6 +43,7 @@ export class DatosComponent implements OnInit, OnDestroy {
         this.consultaState = seccionState;
         if (this.consultaState.update) {
           this.guardarDatosFormulario();
+           this.tercerosDatosFormulario();
         } else {
           this.esDatosRespuesta = true;
         }
@@ -64,6 +65,25 @@ export class DatosComponent implements OnInit, OnDestroy {
         if(resp){
         this.esDatosRespuesta = true;
         this.sanitarioService.actualizarEstadoFormulario(resp);
+        
+        }
+      });
+  }
+  /**
+   * Método que guarda los datos del formulario.
+   * Se suscribe al servicio sanitario para obtener los datos de la solicitud
+   * y actualiza el estado del formulario si hay respuesta.
+   */
+  tercerosDatosFormulario(): void {
+    this.sanitarioService
+      .getTercerosData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.sanitarioService.actualizarEstadoTercerosFormulario(resp);
+        
         }
       });
   }

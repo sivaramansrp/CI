@@ -165,6 +165,7 @@ inicializarFormulario(): void {
      */
     this.manifiestos = this.fb.group({
       cumplimiento: [this.solicitudState?.cumplimiento, Validators.required],
+      mensaje: [this.solicitudState?.mensaje],
     });
 
    if (this.esFormularioSoloLectura) {

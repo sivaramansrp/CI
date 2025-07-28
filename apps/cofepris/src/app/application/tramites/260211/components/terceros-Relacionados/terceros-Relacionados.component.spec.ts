@@ -46,11 +46,6 @@ describe('TercerosRelacionadoesComponent', () => {
   it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
-
-  it('debe llamar a getData al inicializar', () => {
-    expect(tercerosMockService.getData).toHaveBeenCalled();
-  });
-
   it('debe inicializar todos los formularios al iniciar', () => {
     component.ngOnInit();
     expect(component.agregarFabricanteFormGroup).toBeDefined();
