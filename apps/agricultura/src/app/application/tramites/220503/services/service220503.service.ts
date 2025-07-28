@@ -6,6 +6,7 @@ import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { TercerosrelacionadosdestinoTable } from '../../../shared/models/tercerosrelacionados.model';
 
 @Injectable({
   providedIn: 'root',
@@ -98,4 +99,21 @@ export class Solocitud220503Service {
       'assets/json/220503/registro_toma_muestras_mercancias.json'
     );
   }
+
+     /**
+     * Actualiza la lista de terceros relacionados con la solicitud.
+     * @method updateTercerosRelacionados
+     * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de terceros.
+     * @memberof CertificadoZoosanitarioServiceService
+     */
+      updateTercerosRelacionado(tercerosRelacionados: TercerosrelacionadosdestinoTable[]): void {
+        this.solicitud220503Store.updateTercerosRelacionados(tercerosRelacionados);
+      }
+           /**
+            * @description Obtiene todos los datos del formulario como observable.
+            * @returns {Observable<ListaDeDatosFinal>} Observable con todos los datos del formulario.
+            */
+            getAllDatosForma(): Observable<Solicitud220503State> {
+              return this.solicitud220503Store._select(state => state); // Select the entire state
+            }
 }
