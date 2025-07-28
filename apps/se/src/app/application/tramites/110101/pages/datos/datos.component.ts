@@ -39,6 +39,7 @@ export class DatosComponent implements OnInit, OnDestroy {
   */
   public desactivado: boolean = true;
 
+  public bandejaSolicitud = false;
   /**
    * Inicializa una nueva instancia del componente.
    */
@@ -62,6 +63,19 @@ export class DatosComponent implements OnInit, OnDestroy {
     })).subscribe();
     if (this.consultaState.update) {
       this.guardarDatosFormulario();
+    }
+    this.checkParameterAndEnableTabs();
+  }
+  /**
+   * Este método se utiliza para verificar si el parámetro existe y habilitar las pestañas
+   * - Si el parámetro existe y no es undefined, habilita las pestañas 3 y 4.
+   * - Si el parámetro no existe o es undefined, mantiene las pestañas 3 y
+   * 4 desactivadas.
+   */
+  private checkParameterAndEnableTabs(): void {
+    if (this.consultaState.parameter === undefined && this.consultaState.update === true && this.consultaState.tipoDeTramite === 'Consulta de Proceso'
+    ) {
+      this.bandejaSolicitud = true;
     }
   }
   /**

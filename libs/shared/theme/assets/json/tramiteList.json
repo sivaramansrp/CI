@@ -4283,5 +4283,19 @@
     "linkDashboard": "/agace/economico/solicitud",
     "linkDepartment": "/pago/economico/solicitud",
     "department": "agace"
+  },
+  {
+    "id": 613,
+    "tramite": 32615,
+    "linkDashboard": "/agace/recinto-fiscalizado/solicitud",
+    "linkDepartment": "/pago/recinto-fiscalizado/solicitud",
+    "department": "agace"
+    },
+    {
+    "id": 614,
+    "tramite": 32608,
+    "linkDashboard": "/agace/seciit-oea-registration/solicitud",
+    "linkDepartment": "/pago/seciit-oea-registration/solicitud",
+    "department": "agace"
   }
 ]

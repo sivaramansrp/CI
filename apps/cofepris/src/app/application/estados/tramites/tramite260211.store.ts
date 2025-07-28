@@ -197,6 +197,10 @@ export interface Solicitud260211State {
    * El valor de apellidoMaterno.
    */
   apellidoMaterno: string;
+  /**
+   * El valor de apellidoMaterno.
+   */
+  mensaje: boolean;
 }
 /**
  * Función para crear el estado inicial de Solicitud260211State.
@@ -396,7 +400,11 @@ export function createInitialState(): Solicitud260211State {
      * El valor de apellidoMaterno.
      */
     apellidoMaterno: '',
-  };
+     /**
+     * El valor de apellidoMaterno.
+     */
+    mensaje: false, // Nuevo campo agregado para el mensaje
+     };
 }
 
 /**
@@ -642,7 +650,7 @@ export class Tramite260211Store extends Store<Solicitud260211State> {
       regimen,
     }));
   }
-  /**
+      /**
    * Establece el estado de aduanasEntradas.
    * @param aduanasEntradas - El valor de aduanasEntradas.
    */
@@ -872,6 +880,16 @@ export class Tramite260211Store extends Store<Solicitud260211State> {
     this.update((state) => ({
       ...state,
       apellidoMaterno,
+    }));
+  }
+  /**
+ * Establece el estado del mensaje.
+ * Puede activar o desactivar la visibilidad de mensajes.
+ */
+   public setMensaje(mensaje: boolean):void {
+    this.update((state) => ({
+      ...state,
+      mensaje,
     }));
   }
 }

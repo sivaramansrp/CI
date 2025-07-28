@@ -1,11 +1,16 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 
-import { CATALOGOS_ID, Catalogo, ConsultaioQuery, ConsultaioState, FECHA_SALIDA, InputFecha, REGEX_ONCE_ENTEROS_DOS_DECIMALES, REGEX_ONCE_ENTEROS_TRES_DECIMALES, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID, Catalogo, Catalogos, CategoriaMensaje, ConsultaioQuery, ConsultaioState, EntidadesFederativasService, FECHA_SALIDA, FraccionArancelariaService, InputFecha, Notificacion, PaisesService, REGEX_ONCE_ENTEROS_DOS_DECIMALES, REGEX_ONCE_ENTEROS_TRES_DECIMALES, RegimenService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
 import { PeximService } from '../../service/pexim.service';
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
+
+import { GuardarService } from '../../../../core/services/130118/guardar.service';
+
+import { CatMolinoService } from '../../../../core/services/130118/catalogos/cat-molino.service';
 
 /**
  * Componente para la vista de la solicitud de la sección de "130118".
@@ -22,22 +27,32 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Lista de catálogos de régimen de mercancía.
    */
-  regimenMercancia!: Catalogo[];
+  regimenMercancia!: Catalogos[];
 
   /**
    * Lista de catálogos de clasificación de régimen.
    */
-  clasifiRegimen!: Catalogo[];
+  clasifiRegimen!: Catalogos[];
 
   /**
    * Lista de catálogos de fracción arancelaria.
    */
-  fraccionArancelaria!: Catalogo[];
+  fraccionArancelaria!: Catalogos[];
 
   /**
    * Lista de catálogos de NICO.
    */
-  nico!: Catalogo[];
+  nico!: Catalogos[];
+
+  /**
+   * Indica si se deben mostrar los molinos de acero.
+   */
+  mostrarComboMolinos = false;
+
+  /**
+   * Lista de catálogos de molinos de acero.
+   */
+  molinos!: Catalogos[];
 
   /**
    * Lista de catálogos de país de origen.
@@ -47,22 +62,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Lista de catálogos de país de destino.
    */
-  paisDestino!: Catalogo[];
+  paisDestino!: Catalogos[];
 
   /**
    * Lista de catálogos de estado.
    */
-  estado!: Catalogo[];
+  estado!: Catalogos[];
 
   /**
    * Lista de catálogos de unidad de medida tarifaria.
    */
-  unidadMedidaTarifaria!: Catalogo[];
+  unidadMedidaTarifaria!: Catalogos[];
 
   /**
    * Lista de catálogos de representación federal.
    */
-  representacionFederal!: Catalogo[];
+  representacionFederal!: Catalogos[];
 
   /**
    * Estado de la solicitud.
@@ -98,10 +113,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Estado de la consulta.
    */
   consultaDatos!: ConsultaioState;
+
+  /**
+    * Notificación que se muestra al usuario en caso de error o éxito en el proceso de firma.
+    * Incluye información sobre el tipo de notificación, categoría, título y mensaje.
+    */
+  nuevaNotificacion!: Notificacion;
+
   /**
    * Subject para destruir notificador y cancelar suscripciones.
    */
-  private destruirNotificador$: Subject<void> = new Subject();
+  destruirNotificador$: Subject<void> = new Subject();
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -110,13 +132,24 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Máximo número de meses para el certificado de antigüedad.
+   */
+  certificadoAntiguedadMaximoMeses: number = 0;
+
+
+  /**
    * Constructor del componente.
    * @param peximService Servicio para obtener datos de PEXIM.
-   * @param fb FormBuilder para crear formularios.
-   * @param validacionesService Servicio para validaciones de formularios.
-   * @param tramite130118Store Almacén de estado para el trámite 130118.
-   * @param tramite130118Query Consulta de almacén para el procedimiento 130118.
-   * @param consultaioQuery Consulta para obtener el estado de consulta.
+   * @param fb FormBuilder para crear formularios reactivos.
+   * @param validacionesService Servicio para validar formularios.
+   * @param tramite130118Store Store para manejar el estado del trámite 130118.
+   * @param tramite130118Query Query para consultar el estado del trámite 130118.
+   * @param consultaioQuery Query para consultar datos de la consulta.
+   * @param regimenService Servicio para obtener datos de régimen.
+   * @param entidadesFederativasService Servicio para obtener datos de entidades federativas.
+   * @param paisesService Servicio para obtener datos de países.
+   * @param fraccionArancelariaService Servicio para obtener datos de fracción arancelaria.
+   * @param guardarService Servicio para guardar datos del formulario.
    */
   constructor(
     private peximService: PeximService,
@@ -124,19 +157,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private tramite130118Store: Tramite130118Store,
     private tramite130118Query: Tramite130118Query,
-    private consultaioQuery: ConsultaioQuery
-  ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destruirNotificador$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-          this.esFormularioSoloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe()
-  }
+    private consultaioQuery: ConsultaioQuery,
+    private regimenService: RegimenService,
+    private entidadesFederativasService: EntidadesFederativasService,
+    private paisesService: PaisesService,
+    private fraccionArancelariaService: FraccionArancelariaService,
+    private guardarService: GuardarService,
+    private cdr: ChangeDetectorRef,
+    private catMolinoService: CatMolinoService
+  ) { }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -144,7 +173,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializaCatalogos();
-    this.inicializarEstadoFormulario();
 
     this.tramite130118Query.selectSeccionState$
       .pipe(
@@ -155,8 +183,27 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ).subscribe();
 
     this.crearFormSolicitud();
+
+    const REGIMEN_VALUE = this.datosRegimen.get('regimenMercancia')?.value;
+    if (REGIMEN_VALUE && REGIMEN_VALUE !== '-1') {
+      this.changeRegimen();
+    }
+
+    const FRACCION_GUARDADA = this.solicitudState?.fraccionArancelaria;
+    if (FRACCION_GUARDADA && FRACCION_GUARDADA !== '-1') {
+      this.datosMercancia.get('fraccionArancelaria')?.setValue(FRACCION_GUARDADA);
+      this.fraccionArancelariaChange();
+    }
+
+    const ESTADO_GUARDADO = this.solicitudState?.estado;
+    if (ESTADO_GUARDADO && ESTADO_GUARDADO !== '-1') {
+      this.registroFederal.get('estado')?.setValue(ESTADO_GUARDADO);
+      this.changeEntidad();
+    }
+
     this.regimenMercanciaSeleccion();
     this.clasifiRegimenSeleccion();
+    this.obtenerAntiguedadMaxima();
     this.fraccionArancelariaSeleccion();
     this.nicoSeleccion();
     this.paisOrigenSeleccion();
@@ -164,7 +211,29 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.estadoSeleccion();
     this.unidadMedidaTarifariaSeleccion();
     this.representacionFederalSeleccion();
-    this.muestraCamposPersona();
+    if (this.solicitudState?.nombre || this.solicitudState?.razonSocial) {
+      this.muestraCamposPersona();
+    }
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Limpia las suscripciones y el estado del store.
+   */
+  obtenerAntiguedadMaxima(): void {
+    this.guardarService.getCertificadoAntiguedad().subscribe({
+      next: (response) => {
+        if (response.codigo === '00') {
+          this.certificadoAntiguedadMaximoMeses = Number(response.datos); // ← convierte el string a número
+        } else {
+          // Manejo si viene código distinto a "00"
+          console.error('Error al obtener antigüedad:', response.mensaje);
+        }
+      },
+      error: (error) => {
+        console.error('Error en la petición:', error);
+      }
+    });
   }
 
   /**
@@ -238,84 +307,70 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Método para crear el formulario principal de la solicitud.
    */
   crearFormSolicitud(): void {
+
     this.FormSolicitud = this.fb.group({
       datosRegimen: this.fb.group({
-        regimenMercancia: [this.solicitudState?.regimenMercancia],
-        clasifiRegimen: [{ value: this.solicitudState?.clasifiRegimen, disabled: true }]
+        regimenMercancia: [this.solicitudState?.regimenMercancia || null, Validators.required],
+        clasifiRegimen: [{ value: this.solicitudState?.clasifiRegimen || null, disabled: true }, Validators.required]
       }),
       datosMercancia: this.fb.group({
-        valueTA: [{ value:this.solicitudState?.valueTA, disabled : this.esFormularioSoloLectura},[Validators.maxLength(1000), Validators.pattern(/^[^~`^]*$/)]],
-        fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, Validators.required],
-        nico: [this.solicitudState?.nico, Validators.required],
-        unidadMedidaTarifaria: [this.solicitudState?.unidadMedidaTarifaria, Validators.required],
-        cantidadTarifaria: [{value:this.solicitudState?.cantidadTarifaria, disabled : this.esFormularioSoloLectura}, [Validators.min(0), Validators.max(999999999.99), Validators.pattern(REGEX_ONCE_ENTEROS_DOS_DECIMALES)]],
-        valorFacturaUSD: [{value:this.solicitudState?.valorFacturaUSD,disabled : this.esFormularioSoloLectura}, [Validators.min(0), Validators.max(999999999.999), Validators.pattern(REGEX_ONCE_ENTEROS_TRES_DECIMALES)]],
+        valueTA: [this.solicitudState?.valueTA, [Validators.maxLength(1000), Validators.required, Validators.pattern(/^[^~`^]*$/)]],
+        fraccionArancelaria: [this.solicitudState?.fraccionArancelaria || null, Validators.required],
+        nico: [{ value: this.solicitudState?.nico || null, disabled: true }, Validators.required],
+        unidadMedidaTarifaria: [{ value: this.solicitudState?.unidadMedidaTarifaria || null, disabled: true }, Validators.required],
+        cantidadTarifaria: [this.solicitudState?.cantidadTarifaria, [Validators.min(0), Validators.required, Validators.max(999999999.99), Validators.pattern(REGEX_ONCE_ENTEROS_DOS_DECIMALES)]],
+        valorFacturaUSD: [this.solicitudState?.valorFacturaUSD, [Validators.min(0), Validators.max(999999999.999), Validators.pattern(REGEX_ONCE_ENTEROS_TRES_DECIMALES), Validators.required]],
         precioUnitarioUSD: [{ value: this.solicitudState?.precioUnitarioUSD, disabled: true }],
-        paisOrigen: [this.solicitudState?.paisOrigen, Validators.required],
-        paisDestino: [this.solicitudState?.paisDestino, Validators.required],
-        lote: [{value:this.solicitudState?.lote,disabled : this.esFormularioSoloLectura}, [Validators.maxLength(60)]],
-        fechaSalida: [{value:this.solicitudState?.fechaSalida,disabled : this.esFormularioSoloLectura}, [Validators.required]],
-        observaciones: [{value:this.solicitudState?.observaciones,disabled : this.esFormularioSoloLectura}, [Validators.maxLength(250)]],
+        paisOrigen: [this.solicitudState?.paisOrigen || null, Validators.required],
+        paisDestino: [this.solicitudState?.paisDestino || null, Validators.required],
+        lote: [this.solicitudState?.lote, [Validators.maxLength(60), Validators.required]],
+        fechaSalida: [this.solicitudState?.fechaSalida, [Validators.required]],
+        observaciones: [this.solicitudState?.observaciones, [Validators.maxLength(250)]],
         observacionMerc: this.solicitudState?.observacionMerc
       }),
       datosProducto: this.fb.group({
-        tipoPersona: [{value:this.solicitudState?.tipoPersona,disabled : this.esFormularioSoloLectura}],
-        nombre: [{value: this.solicitudState?.nombre}, [Validators.required, Validators.maxLength(200)]],
-        apellidoPaterno: [{value: this.solicitudState?.apellidoPaterno}, [Validators.required, Validators.maxLength(200)]],
-        apellidoMaterno: [{value: this.solicitudState?.apellidoMaterno}, [Validators.maxLength(200)]],
-        razonSocial: [{value:this.solicitudState?.razonSocial,disabled : this.esFormularioSoloLectura} , [Validators.required,Validators.maxLength(250)]],
-        domicilio: [{value:this.solicitudState?.domicilio,disabled : this.esFormularioSoloLectura}, [Validators.maxLength(1000)]]
+        tipoPersona: [this.solicitudState?.tipoPersona ?? null],
+        nombre: [{ value: this.solicitudState?.nombre ?? '', disabled: true }, [Validators.required, Validators.maxLength(200)]],
+        apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno ?? '', disabled: true }, [Validators.required, Validators.maxLength(200)]],
+        apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno ?? '', disabled: true }, [Validators.maxLength(200)]],
+        razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: true }, [Validators.required, Validators.maxLength(250)]],
+        domicilio: [this.solicitudState?.domicilio, [Validators.maxLength(1000), Validators.required]]
       }),
       registroFederal: this.fb.group({
-        estado: [this.solicitudState?.estado, Validators.required],
-        representacionFederal: [this.solicitudState?.representacionFederal, Validators.required]
+        estado: [this.solicitudState?.estado || null, Validators.required],
+        representacionFederal: [{ value: this.solicitudState?.representacionFederal || null, disabled: true }, Validators.required]
       })
     });
+  }
+
+  /**
+   * Obtiene el formulario principal de la solicitud.
+   * @returns {FormGroup} El formulario principal de la solicitud.
+   */
+  get form(): FormGroup {
+    return this.FormSolicitud;
   }
 
   /**
    * Inicializa los catálogos necesarios para el formulario.
    */
   private inicializaCatalogos(): void {
-    const REGIMEN_MERCANCIA$ = this.peximService
-      .getRegimenMercancia(CATALOGOS_ID.CAT_REGIMEN_MERCANCIA)
+    const REGIMEN_MERCANCIA$ = this.regimenService
+      .getRegimenes()
       .pipe(
         map((resp) => {
-          this.regimenMercancia = resp.data;
+          this.regimenMercancia = resp.datos;
         })
       );
 
-    const CLASIFI_REGIMEN$ = this.peximService
-      .getClasifiRegimen(CATALOGOS_ID.CAT_CLASIFI_REGIMEN)
+    const FRACCION_ARANCELARIA$ = this.fraccionArancelariaService
+      .getFracciones()
       .pipe(
         map((resp) => {
-          this.clasifiRegimen = resp.data;
+          this.fraccionArancelaria = resp.datos;
         })
       );
 
-    const FRACCION_ARANCELARIA$ = this.peximService
-      .getFraccionArancelariaCatalogo(CATALOGOS_ID.CAT_FRACCION_ARANCELARIA)
-      .pipe(
-        map((resp) => {
-          this.fraccionArancelaria = resp.data;
-        })
-      );
-
-    const NICO$ = this.peximService
-      .getNicoCatalogo(CATALOGOS_ID.CAT_NICO)
-      .pipe(
-        map((resp) => {
-          this.nico = resp.data;
-        })
-      );
-
-    const UNIDAD_MEDIDA_TARIFARIA$ = this.peximService
-      .getUnidadMedidaTarifariaCatalogo(CATALOGOS_ID.CAT_UNIDAD_MEDIDA_TARIFARIA)
-      .pipe(
-        map((resp) => {
-          this.unidadMedidaTarifaria = resp.data;
-        })
-      );
 
     const PAIS_ORIGEN$ = this.peximService
       .getPaisOrigenCatalogo(CATALOGOS_ID.CAT_PAIS_ORIGEN)
@@ -325,40 +380,28 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       );
 
-    const PAIS_DESTINO$ = this.peximService
-      .getPaisDestinoCatalogo(CATALOGOS_ID.CAT_PAIS_DESTINO)
+    const PAIS_DESTINO$ = this.paisesService
+      .getPaisesT130118()
       .pipe(
         map((resp) => {
-          this.paisDestino = resp.data;
+          this.paisDestino = resp.datos;
         })
       );
 
-    const ESTADO$ = this.peximService
-      .getEstadoCatalogo(CATALOGOS_ID.CAT_ESTADO)
+    const ESTADO$ = this.entidadesFederativasService
+      .getEntidades()
       .pipe(
         map((resp) => {
-          this.estado = resp.data;
-        })
-      );
-
-    const REPRESENTACION_FEDERAL$ = this.peximService
-      .getRepresentacionFederal(CATALOGOS_ID.CAT_REPRESENTACION_FEDERAL)
-      .pipe(
-        map((resp) => {
-          this.representacionFederal = resp.data;
+          this.estado = resp.datos;
         })
       );
 
     merge(
       REGIMEN_MERCANCIA$,
-      CLASIFI_REGIMEN$,
       FRACCION_ARANCELARIA$,
-      NICO$,
-      UNIDAD_MEDIDA_TARIFARIA$,
       PAIS_ORIGEN$,
       PAIS_DESTINO$,
       ESTADO$,
-      REPRESENTACION_FEDERAL$
     )
       .pipe(takeUntil(this.destruirNotificador$))
       .subscribe();
@@ -454,10 +497,36 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns boolean
    */
   validarFormulario(): boolean {
-    if (this.FormSolicitud.invalid) {
-      this.FormSolicitud.markAllAsTouched();
-    }
+    this.marcarFormularioComoTocado(this.FormSolicitud);
+    this.cdr.detectChanges();
     return this.FormSolicitud.valid;
+  }
+
+  /**
+   * Marca todos los controles del formulario como tocados y actualiza su validez.
+   * Recorre recursivamente todos los controles, incluidos FormGroups y FormArrays.
+   * @param formGroup El FormGroup a marcar como tocado.
+   */
+  private marcarFormularioComoTocado(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach((key) => {
+      const CONTROL = formGroup.get(key);
+
+      if (CONTROL instanceof FormControl) {
+        CONTROL.markAsTouched();
+        CONTROL.updateValueAndValidity();
+      } else if (CONTROL instanceof FormGroup) {
+        this.marcarFormularioComoTocado(CONTROL);
+      } else if (CONTROL instanceof FormArray) {
+        CONTROL.controls.forEach((c) => {
+          if (c instanceof FormGroup) {
+            this.marcarFormularioComoTocado(c);
+          } else {
+            c.markAsTouched();
+            c.updateValueAndValidity();
+          }
+        });
+      }
+    });
   }
 
   /**
@@ -495,14 +564,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.isVisibleFisica = false;
     this.isVisibleMoral = true;
 
-    // Restablecer los valores y desactivar campos para "Persona Moral"
+    // Limpiar campos de persona física y desactivarlos
     this.FormSolicitud.get('datosProducto.nombre')?.setValue('');
     this.FormSolicitud.get('datosProducto.apellidoPaterno')?.setValue('');
     this.FormSolicitud.get('datosProducto.apellidoMaterno')?.setValue('');
-    
-      if (!this.esFormularioSoloLectura) {
-    this.FormSolicitud.get('datosProducto.razonSocial')?.enable();
-  }
+
+    // Limpiar nombre completo en Akita
+    this.tramite130118Store.setNombre('');
+    this.tramite130118Store.setApellidoPaterno('');
+    this.tramite130118Store.setApellidoMaterno('');
+
+    // Habilitar campo de razón social si no es solo lectura
+    if (!this.esFormularioSoloLectura) {
+      this.FormSolicitud.get('datosProducto.razonSocial')?.enable();
+    }
+
+    // Desactivar campos de persona física
     this.FormSolicitud.get('datosProducto.nombre')?.disable();
     this.FormSolicitud.get('datosProducto.apellidoPaterno')?.disable();
     this.FormSolicitud.get('datosProducto.apellidoMaterno')?.disable();
@@ -516,8 +593,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.isVisibleFisica = true;
     this.isVisibleMoral = false;
 
-    // Restablecer los valores y habilitar campos para "Persona Física"
+    // Limpiar campo de razón social y desactivarlo
+    this.FormSolicitud.get('datosProducto.razonSocial')?.setValue('');
     this.FormSolicitud.get('datosProducto.razonSocial')?.disable();
+
+    // Limpiar razón social en Akita
+    this.tramite130118Store.setRazonSocial('');
+
+    // Habilitar campos de persona física
     this.FormSolicitud.get('datosProducto.nombre')?.enable();
     this.FormSolicitud.get('datosProducto.apellidoPaterno')?.enable();
     this.FormSolicitud.get('datosProducto.apellidoMaterno')?.enable();
@@ -584,11 +667,275 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param nuevo_valor Nuevo valor de la fecha final.
    */
   cambioFechaFinal(nuevo_valor: string): void {
-    this.datosMercancia.patchValue({
-      fechaSalida: nuevo_valor,
-    });
+    const PARTES = nuevo_valor.split('/');
+    if (PARTES.length !== 3) {
+      this.datosMercancia.patchValue({ fechaSalida: null });
+      return;
+    }
+
+    const DIA = parseInt(PARTES[0], 10);
+    const MES = parseInt(PARTES[1], 10) - 1;
+    const ANIO = parseInt(PARTES[2], 10);
+
+    const FECHASALIDA = new Date(ANIO, MES, DIA);
+
+    if (isNaN(FECHASALIDA.getTime())) {
+      this.datosMercancia.patchValue({ fechaSalida: null });
+      return;
+    }
+
+    const MESESANTIGUEDAD = this.certificadoAntiguedadMaximoMeses;
+
+    const FECHALIMITE = new Date();
+    FECHALIMITE.setMonth(FECHALIMITE.getMonth() - MESESANTIGUEDAD);
+
+
+    if (FECHASALIDA < FECHALIMITE) {
+
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'toastr',
+        categoria: CategoriaMensaje.ERROR,
+        modo: 'action',
+        titulo: '',
+        mensaje: `La fecha no puede tener más de ${MESESANTIGUEDAD} meses de antigüedad.`,
+        cerrar: false,
+        txtBtnAceptar: '',
+        txtBtnCancelar: '',
+      };
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+      this.datosMercancia.patchValue({ fechaSalida: 'valor_temporal' });
+
+      setTimeout(() => {
+        this.datosMercancia.patchValue({ fechaSalida: null });
+      }, 0);
+
+      return;
+    }
+
+    this.datosMercancia.patchValue({ fechaSalida: nuevo_valor });
     this.tramite130118Store.setFechaSalida(nuevo_valor);
   }
+
+
+
+
+  // eslint-disable-next-line class-methods-use-this
+  isErrorNoMenosUno(form: FormGroup, field: string): boolean {
+    const CONTROL = form.get(field) as FormControl;
+
+    if (CONTROL) {
+      const ERROR_NO_MENOS_UNO = CONTROL.hasError('noMenosUno');
+      return ERROR_NO_MENOS_UNO && CONTROL.touched;
+    }
+
+    return false;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  changeRegimen(): void {
+    const SELECTED_REGIMEN = this.datosRegimen.get('regimenMercancia')?.value;
+    this.tramite130118Store.setRegimenMercancia(SELECTED_REGIMEN);
+
+    const CLASIFI_CONTROL = this.datosRegimen.get('clasifiRegimen');
+
+    if (SELECTED_REGIMEN !== null) {
+      this.regimenService.getRegimenesCve(SELECTED_REGIMEN).subscribe({
+        next: (response) => {
+          this.clasifiRegimen = response.datos || [];
+
+          if (this.clasifiRegimen.length > 0) {
+            CLASIFI_CONTROL?.enable();
+          } else {
+            CLASIFI_CONTROL?.disable();
+          }
+
+          const CLASIFI_GUARDADO = this.solicitudState?.clasifiRegimen || null;
+          CLASIFI_CONTROL?.setValue(CLASIFI_GUARDADO);
+        },
+        error: (error) => {
+          console.error('Error al obtener clasificación de régimen:', error);
+          this.clasifiRegimen = [];
+          CLASIFI_CONTROL?.disable();
+          const CLASIFI_GUARDADO = this.solicitudState?.clasifiRegimen || null;
+          CLASIFI_CONTROL?.setValue(CLASIFI_GUARDADO);
+        }
+      });
+    } else {
+      this.clasifiRegimen = [];
+      CLASIFI_CONTROL?.disable();
+      CLASIFI_CONTROL?.setValue(null); // <- aquí también ajustas
+    }
+  }
+
+
+
+  // eslint-disable-next-line class-methods-use-this
+  changeEntidad(): void {
+    const SELECTED_ESTADO = this.registroFederal.get('estado')?.value;
+
+    // Guarda el estado seleccionado en el store
+    this.tramite130118Store.setEstado(SELECTED_ESTADO);
+
+    const FEDERAL_CONTROL = this.registroFederal.get('representacionFederal');
+
+    if (SELECTED_ESTADO && SELECTED_ESTADO !== null) {
+      this.entidadesFederativasService.getEntidadesCve(SELECTED_ESTADO).subscribe({
+        next: (response) => {
+          this.representacionFederal = response.datos || [];
+
+          if (this.representacionFederal.length > 0) {
+            FEDERAL_CONTROL?.enable();
+          } else {
+            FEDERAL_CONTROL?.disable();
+          }
+
+          // Obtener valor guardado (si existe)
+          const REPRESENTACION_GUARDADA = this.solicitudState?.representacionFederal;
+
+          // Si hay una representación federal guardada, la establece; de lo contrario, la deshabilita
+          if (REPRESENTACION_GUARDADA && REPRESENTACION_GUARDADA !== null) {
+            FEDERAL_CONTROL?.setValue(REPRESENTACION_GUARDADA);
+          } else {
+            FEDERAL_CONTROL?.setValue(null);
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener representación federal:', error);
+          this.representacionFederal = [];
+          FEDERAL_CONTROL?.setValue('-1');
+          FEDERAL_CONTROL?.disable();
+        }
+      });
+    } else {
+      this.representacionFederal = [];
+      FEDERAL_CONTROL?.setValue(null);
+      FEDERAL_CONTROL?.disable();
+    }
+  }
+
+
+  // eslint-disable-next-line class-methods-use-this
+  fraccionArancelariaChange(): void {
+    const SELECTED_FRACCION = this.datosMercancia.get('fraccionArancelaria')?.value;
+
+    // Guardar en el store
+    this.tramite130118Store.setFraccionArancelaria(SELECTED_FRACCION);
+
+    const NICO_CONTROL = this.datosMercancia.get('nico');
+    const UMT_CONTROL = this.datosMercancia.get('unidadMedidaTarifaria');
+
+    if (SELECTED_FRACCION && SELECTED_FRACCION !== null) {
+      // 1. Verificar si se debe habilitar el combo de molinos
+      this.guardarService.getMolinosHabilitar(SELECTED_FRACCION).subscribe({
+        next: (response) => {
+          const DEBE_HABILITAR_MOLINOS = response.datos === true;
+          this.mostrarComboMolinos = DEBE_HABILITAR_MOLINOS;
+
+          if (DEBE_HABILITAR_MOLINOS) {
+            // Desactivar nombre completo
+            this.FormSolicitud.get('datosProducto.nombre')?.disable();
+            this.FormSolicitud.get('datosProducto.apellidoPaterno')?.disable();
+            this.FormSolicitud.get('datosProducto.apellidoMaterno')?.disable();
+
+            this.FormSolicitud.get('datosProducto.nombre')?.setValue(null);
+            this.FormSolicitud.get('datosProducto.apellidoPaterno')?.setValue(null);
+            this.FormSolicitud.get('datosProducto.apellidoMaterno')?.setValue(null);
+            this.FormSolicitud.get('datosProducto.tipoPersona')?.setValue('');
+            this.tramite130118Store.setTipoPersona('');
+
+
+            // Limpiar store (akita)
+            this.tramite130118Store.setNombre('');
+            this.tramite130118Store.setApellidoPaterno('');
+            this.tramite130118Store.setApellidoMaterno('');
+
+            // Activar razón social
+            this.FormSolicitud.get('datosProducto.razonSocial')?.enable();
+
+            this.isVisibleFisica = false;
+            this.isVisibleMoral = false;
+            // 2. Obtener lista de molinos activos
+            this.catMolinoService.getMolinosActivos().subscribe({
+              next: (molinosResponse) => {
+                this.molinos = molinosResponse.datos || [];
+              },
+              error: (err) => {
+                console.error('Error al obtener molinos activos:', err);
+                this.molinos = [];
+              }
+            });
+          } else {
+
+            this.mostrarComboMolinos = false;
+
+
+            this.FormSolicitud.get('datosProducto.nombre')?.enable();
+            this.FormSolicitud.get('datosProducto.apellidoPaterno')?.enable();
+            this.FormSolicitud.get('datosProducto.apellidoMaterno')?.enable();
+
+
+
+          }
+        },
+        error: (err) => {
+          console.error('Error al verificar habilitación de molinos:', err);
+          this.mostrarComboMolinos = false;
+        }
+      });
+
+      // 3. Obtener Nico
+      this.fraccionArancelariaService.getNico(SELECTED_FRACCION).subscribe({
+        next: (response) => {
+          this.nico = response.datos || [];
+          this.toggleControl(NICO_CONTROL, this.nico.length > 0, this.solicitudState?.nico || null);
+        },
+        error: (error) => {
+          console.error('Error al obtener Nico:', error);
+          this.toggleControl(NICO_CONTROL, false, this.solicitudState?.nico || null);
+        }
+      });
+
+      // 4. Obtener unidad medida tarifaria
+      this.fraccionArancelariaService.getFraccionesCve(SELECTED_FRACCION).subscribe({
+        next: (response) => {
+          this.unidadMedidaTarifaria = response.datos || [];
+          this.toggleControl(UMT_CONTROL, this.unidadMedidaTarifaria.length > 0, this.solicitudState?.unidadMedidaTarifaria || null);
+        },
+        error: (error) => {
+          console.error('Error al obtener unidad medida:', error);
+          this.toggleControl(UMT_CONTROL, false, this.solicitudState?.unidadMedidaTarifaria || null);
+        }
+      });
+
+    } else {
+      // Si no hay fracción seleccionada
+      this.nico = [];
+      this.unidadMedidaTarifaria = [];
+      this.resetControl(NICO_CONTROL);
+      this.resetControl(UMT_CONTROL);
+      this.mostrarComboMolinos = false;
+    }
+  }
+
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+  toggleControl(control: AbstractControl | null, enable: boolean, value: any): void {
+    if (!control) { return; }
+    if (enable) {
+      control.enable();
+      control.setValue(value);
+    } else {
+      control.disable();
+      control.setValue(null);
+    }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  resetControl(control: AbstractControl | null): void {
+    if (!control) { return; }
+    control.setValue(null);
+    control.disable();
+  }
+
 
   /**
    * Se ejecuta al destruir el componente.
