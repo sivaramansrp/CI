@@ -1,36 +1,10 @@
+import { BusquedaPermisos140216State, Tramite140216Store } from '../../estados/tramites/tramite140216.store';
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import {
-  BusquedaPermisos140216State,
-  Tramite140216Store,
-} from '../../estados/tramites/tramite140216.store';
-import {
-  ConsultaioQuery,
-  ValidacionesFormularioService,
-} from '@ng-mf/data-access-user';
-import {
-  FECHA_SALIDA,
-  PERMISOS_VIGENTES_ENCABEZADO_DE_TABLA,
-} from '../../constantes/suspension-permiso.enum';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  InputFecha,
-  InputFechaComponent,
-  Notificacion,
-  NotificacionesComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-import {
-  PermisosVigentes,
-  PermisosVigentesRespuesta,
-} from '../../models/suspension-permiso.model';
+import { ConsultaioQuery, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { FECHA_SALIDA, PERMISOS_VIGENTES_ENCABEZADO_DE_TABLA } from '../../constantes/suspension-permiso.enum';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { PermisosVigentes, PermisosVigentesRespuesta } from '../../models/suspension-permiso.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DetalleDelPermisoComponent } from '../detalle-del-permiso/detalle-del-permiso.component';
@@ -86,6 +60,12 @@ export class BusquedaPermisosComponent implements OnDestroy {
   permisosVigentesTabla: PermisosVigentes[] = [];
 
   /**
+   * Referencia a la lista de permisos vigentes seleccionados en la tabla.
+   * @type {PermisosVigentes[]}
+   */
+  seleccionadaPermisosVigentesTabla: PermisosVigentes[] = [];
+
+  /**
    * Configuración de tabla para selección de tipo checkbox.
    */
   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
@@ -120,11 +100,6 @@ export class BusquedaPermisosComponent implements OnDestroy {
    * Elemento modal para mostrar información adicional.
    */
   modalElemento!: HTMLElement | null;
-
-  /**
-   * Indica si una fila está seleccionada.
-   */
-  esSeleccionado: boolean = false;
 
   /**
    * Notificación para mostrar mensajes al usuario.
@@ -291,6 +266,16 @@ export class BusquedaPermisosComponent implements OnDestroy {
   }
 
   /**
+   * Método que se ejecuta al seleccionar una fila en la tabla de permisos vigentes.
+   * Actualiza la lista de permisos vigentes seleccionados.
+   * @param {PermisosVigentes[]} event - Lista de permisos vigentes seleccionados.
+   * @returns {void}
+   */
+  listaDeFilaSeleccionada(event: PermisosVigentes[]): void {
+    this.seleccionadaPermisosVigentesTabla = event;
+  }
+
+  /**
    * Método que se ejecuta al hacer clic en el botón "Limpiar".
    * @returns {void}
    */
@@ -311,7 +296,7 @@ export class BusquedaPermisosComponent implements OnDestroy {
    * @returns {void}
    */
   obtenerDetallePermiso(): void {
-    if (this.esSeleccionado) {
+    if (this.seleccionadaPermisosVigentesTabla.length > 0) {
       this.mostrarModal('detalle-del-permiso');
     } else {
       this.abrirAlertaModal();
@@ -378,7 +363,7 @@ export class BusquedaPermisosComponent implements OnDestroy {
    * @returns {void}
    */
   obtenerDetalleTitular(): void {
-    if (this.esSeleccionado) {
+    if (this.seleccionadaPermisosVigentesTabla.length > 0) {
       this.mostrarModal('detalle-rfc-facultad');
     } else {
       this.abrirAlertaModal();
@@ -390,7 +375,7 @@ export class BusquedaPermisosComponent implements OnDestroy {
    * @returns {void}
    */
   obtenerPersonasNotificacion(): void {
-    if (this.esSeleccionado) {
+    if (this.seleccionadaPermisosVigentesTabla.length > 0) {
       this.mostrarModal('personas-notificar');
     } else {
       this.abrirAlertaModal();

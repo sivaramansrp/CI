@@ -76,6 +76,7 @@
         [tipoSeleccionTabla]="tablaSeleccionCheckbox"
         [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
         [configuracionTabla]="permisosVigentesEncabezadoDeTabla"
+        (listaDeFilaSeleccionada)="listaDeFilaSeleccionada($event)"
         [datos]="permisosVigentesTabla"
       >
       </app-tabla-dinamica>
