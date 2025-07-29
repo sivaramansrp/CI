@@ -51,6 +51,10 @@ export class RequirementoComponent implements OnDestroy {
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
 
+  /**
+   * Indicador booleano que determina si el botón del contenedor debe mostrarse.
+   * `true` para mostrar el botón, `false` para ocultarlo.
+   */
   containerbtn: boolean = true;
 
   /**
@@ -71,9 +75,12 @@ export class RequirementoComponent implements OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
-          if(this.consultaState?.tipoDeTramite === 'Registro de solicitud de servicio'){
+          if (
+            this.consultaState?.tipoDeTramite ===
+            'Registro de solicitud de servicio'
+          ) {
             this.containerbtn = false;
-          }else{
+          } else {
             this.containerbtn = true;
           }
         })
