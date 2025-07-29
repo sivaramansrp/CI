@@ -68,6 +68,11 @@ export const DOMICILIOS_PLANTAS: ConfiguracionColumna<DomiciliosDePlantasTabla>[
     },
   ];
 
+  /**
+   * Arreglo de configuración para las columnas de la tabla de mercancías.
+   * Cada objeto define una columna con su encabezado, la clave para extraer el valor
+   * del objeto `MercanciasTabla` y el orden en el que debe aparecer la columna.
+   */
     export const FRACCION_TABLA: ConfiguracionColumna<MercanciasTabla>[] = [
     {
       encabezado: 'Fracción arancelaria',
