@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Contenedor11202State, Contenedor11202Store } from '../../estados/contenedor11202.store';
 import { DatosDelContenedor, GridContenedores } from '../../models/datos-tramite.model';
 import { ENCABEZADO_DE_TABLA, GRID_CONTENEDORES, TEXTOS_REQUISITOS } from '../../../../constantes/11202/retorno-contenedores.enum';
@@ -9,6 +9,7 @@ import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { Contenedor11202Query } from '../../estados/contenedor11202.query';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import preOperativo from '@libs/shared/theme/assets/json/11202/preOperativo.json';
+import { Modal } from 'bootstrap';
 
 /**
  * @component ContenedorComponent
@@ -57,12 +58,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
  * Options for the radio buttons.
  */
   radioOptions = preOperativo;
-
-  /**
-   * @property {Subscription} private subscription
-   * Subscription to handle the component's lifecycle.
-   */
-  private subscription: Subscription = new Subscription();
 
   /**
    * @property {Subject<void>} destroyNotifier$
@@ -206,6 +201,16 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   public gridContenedores: ConfiguracionColumna<GridContenedores>[] = GRID_CONTENEDORES;
 
   /**
+   * Bandera para mostrar los botones de búsqueda.
+   */
+  mostrarBotonesBuscar: boolean = true;
+
+  /**
+   * Referencia al elemento del modal.
+   */
+  @ViewChild('modalAgregarConstanciaTransferencia') modalElement!: ElementRef;
+
+  /**
    * Contenedores.
    */
   contenedore: {
@@ -323,19 +328,35 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Limpia los campos del formulario.
    */
   limpiarCampos(): void {
+    const TIPOBUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
     this.solicitudForm.reset();
+    this.solicitudForm.get('tipoBusqueda')?.setValue(TIPOBUSQUEDA);
+    this.mostrarCampos();
     this.contenedores = [];
     this.archivoSeleccionado = '';
     this.exceptionCaught = false;
   }
 
   /**
+   * Inicializa el modal.
+   */
+  encontradaModal(): void {
+    if (this.solicitudForm.valid) {
+      if (this.modalElement) {
+        const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+        MODAL_INSTANCE.show();
+      }
+    } else {
+      this.solicitudForm.markAllAsTouched();
+    }
+  }
+
+  /**
    * Captura los datos del formulario y los envía.
    */
   datosCaptura(): void {
-    if (this.solicitudForm.valid) {
-      this.mostrarAgregarTipoContenedor = true;
-    }
+    this.mostrarAgregarTipoContenedor = true;
+    this.mostrarBotonesBuscar = false;
   }
 
   /**
@@ -434,15 +455,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       };
       READER.readAsText(FILE);
     }
-  }
-  /**
-   * Abre el modal para cancelar el trámite.
-   */
-  openModalCancelarTramite(): void {
-    this.solicitudForm.reset();
-    this.contenedores = [];
-    this.archivoSeleccionado = '';
-    this.exceptionCaught = false;
   }
 
   /**
