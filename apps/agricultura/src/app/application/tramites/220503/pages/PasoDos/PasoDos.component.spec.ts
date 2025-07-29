@@ -7,9 +7,10 @@ import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
-import { PasoDosComponent } from './paso-dos.component';
+
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { HttpClientModule } from '@angular/common/http';
+import { PasoDosComponent } from './PasoDos.component';
 
 describe('PasoDosComponent', () => {
   let fixture;
@@ -17,9 +18,8 @@ describe('PasoDosComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, HttpClientModule ],
+      imports: [ FormsModule, ReactiveFormsModule, HttpClientModule,PasoDosComponent ],
       declarations: [
-        PasoDosComponent,
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
