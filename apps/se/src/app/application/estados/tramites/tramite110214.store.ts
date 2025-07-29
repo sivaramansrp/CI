@@ -964,43 +964,75 @@ export class Tramite110214Store extends Store<Tramite110214State> {
       ...state,
       historicoMercanciaSeleccionadasTablaDatos,
     }));
-  }
-  public setNombreTercerOperador(nombreTercerOperador: string): void {
-    this.update((state) => ({
-      ...state,
-      nombreTercerOperador,
-    }));
-  }
- public setPrimerApellidoTercerOperador(primerApellidoTercerOperador: string): void {
-    this.update((state) => ({
-      ...state,
-      primerApellidoTercerOperador,
-    }));
-  }
- public setSegundoApellidoTercerOperador(segundoApellidoTercerOperador: string): void {
-    this.update((state) => ({
-      ...state,
-      segundoApellidoTercerOperador,
-    }));
-  }
- public setRegistroFiscalTercerOperador(registroFiscalTercerOperador: string): void {
-    this.update((state) => ({
-      ...state,
-      registroFiscalTercerOperador,
-    }));
-  }
- public setRazonSocialTercerOperador(razonSocialTercerOperador: string): void {
-    this.update((state) => ({
-      ...state,
-      razonSocialTercerOperador,
-    }));
-  }
+  }/**
+ * Actualiza el nombre del tercer operador.
+ * 
+ * @param {string} nombreTercerOperador - Nombre del tercer operador.
+ */
+public setNombreTercerOperador(nombreTercerOperador: string): void {
+  this.update((state) => ({
+    ...state,
+    nombreTercerOperador,
+  }));
+}
 
- public setGrupoOperador(grupoOperador: GrupoOperador): void {
-    this.update((state) => ({
-      ...state,
-      grupoOperador,
-    }));
-  }
-  
+/**
+* Actualiza el primer apellido del tercer operador.
+* 
+* @param {string} primerApellidoTercerOperador - Primer apellido del tercer operador.
+*/
+public setPrimerApellidoTercerOperador(primerApellidoTercerOperador: string): void {
+  this.update((state) => ({
+    ...state,
+    primerApellidoTercerOperador,
+  }));
+}
+
+/**
+* Actualiza el segundo apellido del tercer operador.
+* 
+* @param {string} segundoApellidoTercerOperador - Segundo apellido del tercer operador.
+*/
+public setSegundoApellidoTercerOperador(segundoApellidoTercerOperador: string): void {
+  this.update((state) => ({
+    ...state,
+    segundoApellidoTercerOperador,
+  }));
+}
+
+/**
+* Actualiza el registro fiscal del tercer operador.
+* 
+* @param {string} registroFiscalTercerOperador - Registro fiscal del tercer operador.
+*/
+public setRegistroFiscalTercerOperador(registroFiscalTercerOperador: string): void {
+  this.update((state) => ({
+    ...state,
+    registroFiscalTercerOperador,
+  }));
+}
+
+/**
+* Actualiza la razón social del tercer operador.
+* 
+* @param {string} razonSocialTercerOperador - Razón social del tercer operador.
+*/
+public setRazonSocialTercerOperador(razonSocialTercerOperador: string): void {
+  this.update((state) => ({
+    ...state,
+    razonSocialTercerOperador,
+  }));
+}
+
+/**
+* Actualiza el grupo operador completo.
+* 
+* @param {GrupoOperador} grupoOperador - Objeto que contiene la información del grupo operador.
+*/
+public setGrupoOperador(grupoOperador: GrupoOperador): void {
+  this.update((state) => ({
+    ...state,
+    grupoOperador,
+  }));
+}
 }

@@ -2,6 +2,8 @@ import { AlertComponent, ConsultaioQuery, ConsultaioState, Notificacion, Pedimen
 import { DISPONIBLES_ENCABEZADOS, FECHAFACTURA, MERCANCIAS_ENCABEZADOS } from '../../constants/validar-inicialmente-certificado.enum';
 
 import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn } from "@angular/forms";
+import { FormGroup,ReactiveFormsModule } from "@angular/forms";
+
 import { Catalogo } from "../../models/validar-inicialmente-certificado.model";
 import { CatalogoLista, } from "../../models/validar-inicialmente-certificado.model";
 import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src";
@@ -12,15 +14,13 @@ import { DisponiblesTabla } from "../../models/validar-inicialmente-certificado.
 import { ElementRef } from "@angular/core";
 import { FECHAFINAL } from '../../constants/validar-inicialmente-certificado.enum';
 import { FECHAINICIAL } from '../../constants/validar-inicialmente-certificado.enum';
-import { FormGroup } from "@angular/forms";
 import { InputFecha } from "@libs/shared/data-access-user/src";
 import { InputFechaComponent } from "@libs/shared/data-access-user/src";
 import { Modal } from 'bootstrap';
 import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from "@angular/core";
 import { OnInit } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
-import { SeleccionadasTabla } from "../../models/validar-inicialmente-certificado.model.js";
+import { SeleccionadasTabla } from "../../models/validar-inicialmente-certificado.model";
 import { Subject } from "rxjs";
 import { TERCEROS_TEXTO_DE_ALERTA } from '../../constants/validar-inicialmente-certificado.enum';
 import { TablaDinamicaComponent } from "@libs/shared/data-access-user/src";
@@ -431,17 +431,27 @@ pedimentos: Array<Pedimento> = [];
   
     this.inicializarEstadoFormulario();
   }
-  static restrictFutureDates(): ValidatorFn {
-    return (control: AbstractControl) => {
-      const INPUT_DATE = new Date(control.value);
-      const CURRENT_DATE = new Date();
-  
+  /**
+ * Validador para restringir fechas futuras.
+ * 
+ * Este método valida que la fecha ingresada no sea una fecha futura.
+ * Si la fecha es mayor a la fecha actual, retorna un error `{ futureDate: true }`.
+ * En caso contrario, retorna `null`, indicando que la fecha es válida.
+ * 
+ * @returns {ValidatorFn} Función de validación para fechas.
+ */
+static restrictFutureDates(): ValidatorFn {
+  return (control: AbstractControl) => {
+      const INPUT_DATE = new Date(control.value); // Fecha ingresada
+      const CURRENT_DATE = new Date(); // Fecha actual
+
+      // Verifica si la fecha ingresada es futura
       if (control.value && INPUT_DATE > CURRENT_DATE) {
-        return { futureDate: true }; // Return error if the date is in the future
+          return { futureDate: true }; // Retorna error si la fecha es futura
       }
-      return null; // Valid date
-    };
-  }
+      return null; // Fecha válida
+  };
+}
   /**
    * @method inicializarEstadoFormulario
    * @description Inicializa el estado de los formularios según el modo de solo lectura.
