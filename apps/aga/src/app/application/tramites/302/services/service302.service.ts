@@ -1,4 +1,5 @@
 import { CertiRegistro302State, Tramite302Store } from '../../../core/estados/tramites/tramite302.store';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { DetallesDelProducto } from '../models/certi-registro.model';
 import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -80,6 +81,36 @@ export class Solicitud302Service {
    */
    getProductos(): Observable<DetallesDelProducto> {
     return this.http.get<DetallesDelProducto>('assets/json/302/producto.json');
+  }
+
+  /**
+ * @method getUnidadDeMedidaData
+ * @description
+ * Obtiene los datos del catálogo de unidades de medida desde un archivo JSON local.
+ * @returns {Observable<Catalogo>} Observable con los datos del catálogo de unidades de medida.
+ */
+  getUnidadDeMedidaData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/302/lista-unidad-de-medida.json');
+  }
+
+   /**
+ * @method getImportacionTemporalData
+ * @description
+ * Obtiene los datos del catálogo de importación temporal desde un archivo JSON local.
+ * @returns {Observable<Catalogo>} Observable con los datos del catálogo de importación temporal.
+ */
+  getImportacionTemporalData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/302/list-importacion-temporal.json');
+  }
+
+  /**
+ * @method getAduanaData
+ * @description
+ * Obtiene los datos del catálogo de aduanas desde un archivo JSON local.
+ * @returns {Observable<Catalogo>} Observable con los datos del catálogo de aduanas.
+ */
+  getAduanaData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/302/lista-de-oficinas-de-aduanas.json');
   }
 
 }
