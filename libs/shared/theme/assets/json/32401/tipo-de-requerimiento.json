@@ -14,6 +14,6 @@
         }
     ],
     "required": false,
-    "labelNombre": "Tipo de trámite",
+    "labelNombre": "Tipo de requerimiento",
     "primerOpcion": "Seleccione un valor"
 }

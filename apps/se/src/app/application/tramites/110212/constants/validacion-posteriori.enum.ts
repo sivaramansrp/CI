@@ -48,7 +48,7 @@ export const TERCEROS_TEXTO_DE_ALERTA = 'Para continuar con el trámite, debes a
  * Define las propiedades de la fecha inicial, como el nombre de la etiqueta, si es requerida y si está habilitada.
  */
 export const FECHAINICIAL = {
-  labelNombre: 'Fecha inicio',
+  labelNombre: 'Fecha inicio:',
   required: false,
   habilitado: true,
 };
@@ -59,7 +59,7 @@ export const FECHAINICIAL = {
  * Define las propiedades de la fecha final, como el nombre de la etiqueta, si es requerida y si está habilitada.
  */
 export const FECHAFINAL = {
-  labelNombre: 'Fecha fin',
+  labelNombre: 'Fecha fin:',
   required: false,
   habilitado: true,
 };
@@ -70,7 +70,7 @@ export const FECHAFINAL = {
  * Define las propiedades de la fecha de factura, como el nombre de la etiqueta, si es requerida y si está habilitada.
  */
 export const FECHAFACTURA = {
-  labelNombre: 'Fecha de factura',
+  labelNombre: 'Fecha de factura*:',
   required: false,
   habilitado: true,
 };
