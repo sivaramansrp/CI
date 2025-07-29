@@ -110,7 +110,7 @@
     "exportador": false
   },
   "formDestinatario": {
-    "paisDestin": "Principal",
+    "paisDestin": "1",
     "ciudad": "Los Angeles",
     "calle": "Sunset Blvd",
     "numeroLetra": "123-B",
