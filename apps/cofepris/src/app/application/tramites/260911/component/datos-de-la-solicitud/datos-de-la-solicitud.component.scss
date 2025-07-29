@@ -39,3 +39,46 @@
 .accordion-bar{
   margin-left: -0.5rem;
 }
+
+// Styles for disabled sections - only affect form controls, not labels
+.disabled-section {
+  position: relative;
+}
+
+// Keep labels fully visible and readable
+.disabled-section label {
+  color: inherit !important;
+  opacity: 1 !important;
+}
+
+// Only disable and fade form controls
+.disabled-section .form-control {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f8f9fa;
+  border-color: #dee2e6;
+}
+
+.disabled-section .btn {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+// Disable pointer events only on form controls
+.disabled-section .form-control,
+.disabled-section .btn {
+  pointer-events: none;
+}
+
+// Optional: Add a subtle visual indicator that the section is disabled
+.disabled-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 49%, rgba(0,0,0,0.05) 50%, transparent 51%);
+  pointer-events: none;
+  z-index: 1;
+}
