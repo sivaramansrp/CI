@@ -2,6 +2,7 @@ import { AfterViewInit, Component , OnDestroy,OnInit ,ViewChild} from '@angular/
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import {Subject, map, takeUntil } from 'rxjs';
+
 import {SolicitudDeRegistroInvocarService} from '../../services/solicitudDeRegistroInvocar/solicitud-de-registro-invocar.service';
 /**
  * Componente correspondiente al primer paso del flujo del trámite.
