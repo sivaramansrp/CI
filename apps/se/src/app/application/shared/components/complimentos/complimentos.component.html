@@ -1,6 +1,6 @@
 <form class="complimentos-container container" [formGroup]="formaComplimentos">
   <div class="row">
-    <ng-titulo titulo="Datos de la solicitude" />
+    <ng-titulo titulo="Datos de la solicitud" />
 
     <div class="row">
       <div class="col-md-4">
@@ -35,7 +35,7 @@
     <ng-titulo titulo="Datos generales" />
     <div class="row col-12">
       <div class="col-md-8 mb-4">
-        <label for="pagina">Página web</label>
+        <label for="pagina">Página web*:</label>
         <input
           type="text"
           id="pagina"
@@ -45,7 +45,7 @@
         />
       </div>
       <div class="col-md-8">
-        <label for="localizacion">localización</label>
+        <label for="localizacion">Localización*:</label>
         <input
           type="text"
           id="localizacion"
@@ -71,12 +71,11 @@
         />
       </div>
       <div class="col-md-4">
-        <label for="expedicion">Fecha de expedición</label>
-        <input
-          type="date"
-          class="form-control"
-          formControlName="fechaExpedicion"
-        />
+      <input-fecha
+                [datos]="INPUT_FECHA_CONFIG"
+                [setFecha]="formaComplimentos.get('fechaExpedicion')?.value"
+               (valorCambiado)="cambioFechaFinal($event)">
+              </input-fecha> 
       </div>
       <div class="col-12 mt-5">
         <div class="alert alert-info text-start">

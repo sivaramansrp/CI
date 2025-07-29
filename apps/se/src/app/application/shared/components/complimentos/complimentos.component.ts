@@ -6,6 +6,7 @@ import {
   CATALOGOS_ID,
   Catalogo,
   CatalogosService,
+  InputFechaComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -44,8 +45,10 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CommonModule } from '@angular/common';
 import { ComplimentosService } from '../../services/complimentos.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { DatosCatalago } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
+
+import { DatosCatalago, INPUT_FECHA_CONFIG } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
 import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
+import { TramiteStore } from '../../../estados/tramite.store';
 
 /**
  * Componente Complimentos.
@@ -63,6 +66,7 @@ import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramite
     TituloComponent,
     CatalogoSelectComponent,
     SelectPaisesComponent,
+    InputFechaComponent
   ],
   templateUrl: './complimentos.component.html',
   styleUrl: './complimentos.component.scss',
@@ -83,6 +87,18 @@ export class ComplimentosComponent implements OnInit, OnDestroy {
    * @description Grupo de formularios para los complementos.
    */
   formaComplimentos!: FormGroup;
+
+  /**
+   * @type {FormGroup}
+   * @description Grupo de formularios para las obligaciones fiscales.
+   */
+  obligacionesFiscales!: FormGroup;
+
+   /**
+   * Constante para configurar el input de fecha.
+   * Define las propiedades del campo de entrada de fecha.
+   */
+    INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
 
   /**
    * @type {Catalogo[]}
@@ -232,6 +248,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy {
     private catalogosServices: CatalogosService,
     private complimentosService: ComplimentosService,
      private consultaioQuery: ConsultaioQuery,
+     private tramiteStore: TramiteStore
   ) {
     
        this.consultaioQuery.selectConsultaioState$
@@ -295,7 +312,7 @@ this.formaComplimentos.disable();
       }),
       obligacionesFiscales: this.fb.group({
         opinionPositiva: [{ value: '', disabled: true }],
-        fechaExpedicion: [{ value: '', disabled: true }],
+        fechaExpedicion: ['', Validators.required],
         aceptarObligacionFiscal: [''],
       }),
       formaModificaciones: this.fb.group({
@@ -531,6 +548,17 @@ this.formaComplimentos.disable();
         );
       }
     }
+  }
+
+  /**
+   * Maneja los cambios en el campo "Fecha de Pago".
+   * Actualiza el estado del almacén con la fecha de pago proporcionada.  
+   */
+   cambioFechaFinal(nuevo_valor: string): void {
+    this.formaComplimentos.patchValue({
+      fechaExpedicion: nuevo_valor,
+    });
+    this.tramiteStore.setfechaExpedicion(nuevo_valor);
   }
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
