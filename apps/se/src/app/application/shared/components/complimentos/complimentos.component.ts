@@ -113,6 +113,11 @@ export class ComplimentosComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
 
   /**
+   * Storage for form data to preserve across radio button changes
+   */
+  private PRESERVED_FORM_DATA: { [key: string]: string | number | boolean } = {};
+
+  /**
    * @type {DatosCatalago[]}
    * @description Campos del formulario por defecto para los socios accionistas.
    */
@@ -431,25 +436,39 @@ this.formaComplimentos.disable();
     // Save current form data before removing the control
     const CURRENT_FORM_DATA = CONTROL.get('formaDatos')?.value || {};
     
+    // Store ALL current form data in persistent storage
+    Object.keys(CURRENT_FORM_DATA).forEach(key => {
+      const VALUE = CURRENT_FORM_DATA[key];
+      if (VALUE !== undefined && VALUE !== null && VALUE !== '') {
+        this.PRESERVED_FORM_DATA[key] = VALUE;
+      }
+    });
+    
     CONTROL.removeControl('formaDatos', { emitEvent: false });
     this.camposFormulario = [...camposDelFormulario];
+    
     setTimeout(() => {
       const NEW_FORM_CONTROL = this.obtainerFormaDatos(tipoForma);
       CONTROL.setControl('formaDatos', NEW_FORM_CONTROL, {
         emitEvent: false,
       });
       
-      // Restore data for fields that exist in the new form structure
-      const NEW_FORM_DATA: { [key: string]: string } = {};
-      camposDelFormulario.forEach(campo => {
-        if (CURRENT_FORM_DATA[campo.campo] !== undefined && CURRENT_FORM_DATA[campo.campo] !== null) {
-          NEW_FORM_DATA[campo.campo] = CURRENT_FORM_DATA[campo.campo];
+      // Restore data from persistent storage
+      const DATA_TO_RESTORE: { [key: string]: string | number | boolean } = {};
+      
+      // Get all control names from the new form
+      const NEW_FORM_CONTROLS = Object.keys(NEW_FORM_CONTROL.controls);
+      
+      // Restore data for controls that exist in the new form
+      NEW_FORM_CONTROLS.forEach(controlName => {
+        if (this.PRESERVED_FORM_DATA[controlName] !== undefined) {
+          DATA_TO_RESTORE[controlName] = this.PRESERVED_FORM_DATA[controlName];
         }
       });
       
-      // Patch the saved values to the new form structure
-      if (Object.keys(NEW_FORM_DATA).length > 0) {
-        NEW_FORM_CONTROL.patchValue(NEW_FORM_DATA, { emitEvent: false });
+      // Apply the restored data
+      if (Object.keys(DATA_TO_RESTORE).length > 0) {
+        NEW_FORM_CONTROL.patchValue(DATA_TO_RESTORE, { emitEvent: false });
       }
     }, 10);
   }
@@ -547,25 +566,52 @@ this.formaComplimentos.disable();
    * @returns {void}
    */
   handleModificarForma(): void {
-    const VALUE = this.formaComplimentos.value;
-    if (VALUE.formaSocioAccionistas.nationalidadMaxicana === 'true') {
-      this.modificarFormulario(
-        TIPO_FORMA.NATIONALIDAD_MEXICANA,
-        this.camposFormularioNationalidad
-      );
-    } else {
-      if (VALUE.formaSocioAccionistas.tipoDePersona === 'true') {
+    // First, save current form data immediately
+    const CONTROL = this.formaComplimentos.get('formaSocioAccionistas') as FormGroup;
+    const CURRENT_DATA = CONTROL.get('formaDatos')?.value || {};
+    
+    // Explicitly preserve the three critical fields
+    if (CURRENT_DATA['apellidoPaterno']) {
+      this.PRESERVED_FORM_DATA['apellidoPaterno'] = CURRENT_DATA['apellidoPaterno'];
+    }
+    if (CURRENT_DATA['nombre']) {
+      this.PRESERVED_FORM_DATA['nombre'] = CURRENT_DATA['nombre'];
+    }
+    if (CURRENT_DATA['razonSocial']) {
+      this.PRESERVED_FORM_DATA['razonSocial'] = CURRENT_DATA['razonSocial'];
+    }
+    
+    // Preserve all other fields as well
+    Object.keys(CURRENT_DATA).forEach(key => {
+      const VALUE = CURRENT_DATA[key];
+      if (VALUE !== undefined && VALUE !== null && VALUE !== '') {
+        this.PRESERVED_FORM_DATA[key] = VALUE;
+      }
+    });
+    
+    // Add a small delay to ensure radio button values are properly updated
+    setTimeout(() => {
+      const VALUE = this.formaComplimentos.value;
+      
+      if (VALUE.formaSocioAccionistas.nationalidadMaxicana === 'true') {
         this.modificarFormulario(
-          TIPO_FORMA.TIPO_PERSONA,
-          this.camposFormularioTipoPersona
+          TIPO_FORMA.NATIONALIDAD_MEXICANA,
+          this.camposFormularioNationalidad
         );
       } else {
-        this.modificarFormulario(
-          TIPO_FORMA.DEFAULT,
-          this.camposFormularioDefault
-        );
+        if (VALUE.formaSocioAccionistas.tipoDePersona === 'true') {
+          this.modificarFormulario(
+            TIPO_FORMA.TIPO_PERSONA,
+            this.camposFormularioTipoPersona
+          );
+        } else {
+          this.modificarFormulario(
+            TIPO_FORMA.DEFAULT,
+            this.camposFormularioDefault
+          );
+        }
       }
-    }
+    }, 50);
   }
 
   /**
@@ -578,6 +624,14 @@ this.formaComplimentos.disable();
     });
     this.tramiteStore.setfechaExpedicion(nuevo_valor);
   }
+
+  /**
+   * Clears all preserved form data
+   */
+  private clearPreservedData(): void {
+    this.PRESERVED_FORM_DATA = {};
+  }
+
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
@@ -586,5 +640,6 @@ this.formaComplimentos.disable();
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+    this.clearPreservedData();
   }
 }

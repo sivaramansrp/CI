@@ -4,7 +4,7 @@
 
     <div class="row">
       <div class="col-md-4">
-        <label for="modalidad">Modalidad</label>
+        <label for="modalidad">Modalidad:</label>
         <input
           type="text"
           id="modalidad"
@@ -208,7 +208,7 @@
         <div class="row">
           <div class="col-md-12">
             <label class="control-label" for="buscar">
-              Nacionalidad maxicana</label
+              Nacionalidad Mexicana</label
             >
           </div>
           <div class="col-md-6">
@@ -261,7 +261,7 @@
                   id="tipoDePersona"
                   (change)="handleModificarForma()"
                 />
-                Persona fisica</label
+                Persona física</label
               >
             </div>
           </div>
@@ -276,7 +276,7 @@
                   value="false"
                   (change)="handleModificarForma()"
                 />
-                Persona Moral</label
+               Persona moral</label
               >
             </div>
           </div>
@@ -363,8 +363,8 @@
     </div>
 
     <div class="col-12">
-      <label> Socios y accionistas </label>
-      <label class="my-3 col-12">Datos de los Socios y/o accionistas </label>
+      <label> Socios y Accionistas</label>
+      <label class="my-3 col-12">Datos de los socios y/o accionistas:</label>
 
       <app-tabla-dinamica
         [configuracionTabla]="tablaSociaAccionistas"
@@ -388,7 +388,8 @@
     </div>
 
     <div class="col-12">
-      <label> Socios y accionistas Extranjeros </label>
+      <label> Socios y Accionistas Extranjeros </label>
+      <label class="my-3 col-12">Datos de los socios y/o accionistas:</label>
       <app-tabla-dinamica
         [configuracionTabla]="tablaSociaAccionistasExtranjeros"
         [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"

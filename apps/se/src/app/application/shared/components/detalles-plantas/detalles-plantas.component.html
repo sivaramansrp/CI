@@ -1,15 +1,16 @@
 <form [formGroup]="formularioDatosPlantas">
-  <ng-titulo titulo="Datos de la empresas-submanufacturera" />
+  <ng-titulo titulo="Datos de la empresa submanufacturera" />
   <div class="row">
     <div class="col-md-6">
       <div class="form-group">
         <app-catalogo-select
           [catalogo]="catalogoSiNo"
-          [label]="'Permanecerá mercancía importada al amparo del Programa:'"
+          [label]="'Permanecerá mercancía importada al amparo del Programa'"
           [required]="true"
           [isDisabled]="false"
           name="permaneceMercancia"
           formControlName="permaneceMercancia"
+          [placeholder]="'Seleccione una opción'"
         ></app-catalogo-select>
       </div>
     </div>
@@ -20,12 +21,13 @@
         <app-catalogo-select
           [catalogo]="catalogoSiNo"
           [label]="
-            'Que se trate de personas morales que tributen conforme al Título II o de personas físicas que tributen conforme al Título IV, Capítulo II, Secciones I o II, de la Ley del Impuesto sobre la Renta:'
+            'Que se trate de personas morales que tributen conforme al Título II o de personas físicas que tributen conforme al Título IV, Capítulo II, Secciones I o II, de la Ley del Impuesto sobre la Renta'
           "
           [required]="true"
           [isDisabled]="false"
           name="tipoContribuyente"
           formControlName="tipoContribuyente"
+           [placeholder]="'Seleccione una opción'"
         ></app-catalogo-select>
       </div>
     </div>
@@ -37,12 +39,13 @@
         <app-catalogo-select
           [catalogo]="catalogoSiNo"
           [label]="
-            'Opinión positiva vigente expedida por el SAT sobre el cumplimiento de obligaciones fiscales del solicitante en términos de lo dispuesto en el artículo 32-D del Código Fiscal de la Federación:'
+            'Opinión positiva vigente expedida por el SAT sobre el cumplimiento de obligaciones fiscales del solicitante en términos de lo dispuesto en el artículo 32-D del Código Fiscal de la Federación'
           "
           [required]="true"
           [isDisabled]="true"
           name="opinionSAT"
           formControlName="opinionSAT"
+           [placeholder]="'Seleccione una opción'"
         ></app-catalogo-select>
       </div>
     </div>
