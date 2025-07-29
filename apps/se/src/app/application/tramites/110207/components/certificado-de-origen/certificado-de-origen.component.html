@@ -89,12 +89,16 @@
         <div class="row mt-5">
           <label>Mercancías seleccionadas</label>
         </div>
-        <div class="mt-5" *ngIf="!esMercanciaEnEdicion">
+        @if (!esMercanciaEnEdicion) {
+        <div class="mt-5">
           <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.RADIO"  [disableSeleccionTablaRadio]="soloLectura ? true : false" [configuracionTabla]="headersData"></app-tabla-dinamica>
         </div>
-        <div class="mt-5" *ngIf="esMercanciaEnEdicion">
+        }
+        @if (esMercanciaEnEdicion) {
+        <div class="mt-5">
           <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.RADIO" [disableSeleccionTablaRadio]="soloLectura ? true : false" [configuracionTabla]="headersData" [datos]="mercanciaSeleccionadasTablaData"></app-tabla-dinamica>
         </div>
+        }
         <i *ngIf="esMercanciaEnEdicion" id="bi-1-square" class="bi bi-1-square" viewBox="0 0 16 16"></i>
         <div class="col-md-12 mt-5 d-flex justify-content-end" *ngIf="esMercanciaEnEdicion">
           <button type="button" class="btn btn-default ms-3">Eliminar</button>
