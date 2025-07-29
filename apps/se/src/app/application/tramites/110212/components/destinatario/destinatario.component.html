@@ -22,7 +22,7 @@
       <div class="col-md-4 mb-3">
         <label>Número de registro fiscal*:</label>
         <input type="text" class="form-control" id="numeroFiscal" formControlName="numeroFiscal" maxlength="30"
-          [ngClass]="isValid(grupoReceptor,'numeroFiscal') ? 'required' : ''"
+          [ngClass]="grupoReceptor.get('numeroFiscal')?.invalid && grupoReceptor.get('numeroFiscal')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoReceptor, 'numeroFiscal', 'setGrupoReceptorNumeroFiscal')" />
           @if (grupoReceptor.get('numeroFiscal')?.hasError('required') &&
             grupoReceptor.get('numeroFiscal')?.touched) {
@@ -48,7 +48,7 @@
       <div class="col-md-8 mb-3">
         <label>Ciudad (población, estado o provincia)*:</label>
         <input type="text" class="form-control" id="ciudad" formControlName="ciudad" maxlength="50"
-          [ngClass]="isValid(grupoDeDirecciones,'ciudad') ? 'required' : ''"
+          [ngClass]="grupoDeDirecciones.get('ciudad')?.invalid && grupoDeDirecciones.get('ciudad')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoDeDirecciones, 'ciudad','setGrupoDeDireccionesCiudad')" />
 
           @if (grupoDeDirecciones.get('ciudad')?.hasError('required') &&
@@ -63,7 +63,7 @@
       <div class="col-md-4 mb-3">
         <label>Calle*:</label>
         <input type="text" class="form-control" id="nombre" formControlName="calle" maxlength="90"
-          [ngClass]="isValid(grupoDeDirecciones,'calle') ? 'required' : ''"
+          [ngClass]="grupoDeDirecciones.get('calle')?.invalid && grupoDeDirecciones.get('calle')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoDeDirecciones, 'calle', 'setGrupoDeDireccionesCalle')" />
 
             @if (grupoDeDirecciones.get('calle')?.hasError('required') &&
@@ -76,7 +76,7 @@
       <div class="col-md-4 mb-3">
         <label>Número y/o letra*:</label>
         <input type="text" class="form-control" id="numeroLetra" formControlName="numeroLetra" maxlength="30"
-          [ngClass]="isValid(grupoDeDirecciones,'numeroLetra') ? 'required' : ''"
+          [ngClass]="grupoDeDirecciones.get('numeroLetra')?.invalid && grupoDeDirecciones.get('numeroLetra')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoDeDirecciones, 'numeroLetra', 'setGrupoDeDireccionesNumeroLetra')" />
 
             @if (grupoDeDirecciones.get('numeroLetra')?.hasError('required') &&
@@ -118,7 +118,7 @@
         <div class="col-md-4 mb-3">
           <label>Correo electrónico*:</label><span class="bi bi-question-circle-fill mx-2" tooltip="ejemplo@dominio.com" placement="top"></span>
           <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico" maxlength="70"
-            [ngClass]="isValid(grupoDeDirecciones,'correoElectronico') ? 'required' : ''"
+            [ngClass]="grupoDeDirecciones.get('correoElectronico')?.invalid && grupoDeDirecciones.get('correoElectronico')?.touched ? 'required' : ''"
             (change)="setValoresStore(grupoDeDirecciones,'correoElectronico','setGrupoDeDireccionesCorreoElectronico')" />
             @if (grupoDeDirecciones.get('correoElectronico')?.hasError('required') &&
               grupoDeDirecciones.get('correoElectronico')?.touched) {
@@ -142,7 +142,7 @@
       <div class="col-md-8 mb-3">
         <label>Lugar*:</label>
         <input type="text" class="form-control" id="lugar" formControlName="lugar" maxlength="70"
-          [ngClass]="isValid(grupoRepresentativo,'lugar') ? 'required' : ''"
+          [ngClass]="grupoRepresentativo.get('lugar')?.invalid && grupoRepresentativo.get('lugar')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoRepresentativo, 'lugar', 'setGrupoRepresentativoLugar')" />
           @if (grupoRepresentativo.get('lugar')?.hasError('required') &&
           grupoRepresentativo.get('lugar')?.touched) {
@@ -156,7 +156,7 @@
       <div class="col-md-8 mb-3">
         <label>Nombre del representante legal del exportador*:</label>
         <input type="text" class="form-control" id="nombreExportador" formControlName="nombreExportador" maxlength="70"
-          [ngClass]="isValid(grupoRepresentativo,'nombreExportador') ? 'required' : ''"
+          [ngClass]="grupoRepresentativo.get('nombreExportador')?.invalid && grupoRepresentativo.get('nombreExportador')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoRepresentativo, 'nombreExportador', 'setGrupoRepresentativoNombreExportador')" />
           @if (grupoRepresentativo.get('nombreExportador')?.hasError('required') &&
           grupoRepresentativo.get('nombreExportador')?.touched) {
@@ -170,7 +170,7 @@
       <div class="col-md-4 mb-3">
         <label>Empresa*:</label>
         <input type="text" class="form-control" id="empresa" formControlName="empresa" maxlength="90"
-          [ngClass]="isValid(grupoRepresentativo,'empresa') ? 'required' : ''"
+          [ngClass]="grupoRepresentativo.get('empresa')?.invalid && grupoRepresentativo.get('empresa')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoRepresentativo, 'empresa', 'setGrupoRepresentativoEmpresa')" />
             @if (grupoRepresentativo.get('empresa')?.hasError('required') &&
             grupoRepresentativo.get('empresa')?.touched) {
@@ -182,7 +182,7 @@
       <div class="col-md-4 mb-3">
         <label>Cargo*:</label>
         <input type="text" class="form-control" id="cargo" formControlName="cargo" maxlength="70"
-          [ngClass]="isValid(grupoRepresentativo,'cargo') ? 'required' : ''"
+          [ngClass]="grupoRepresentativo.get('cargo')?.invalid && grupoRepresentativo.get('cargo')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoRepresentativo, 'cargo', 'setGrupoRepresentativoCargo')" />
           @if (grupoRepresentativo.get('cargo')?.hasError('required') &&
           grupoRepresentativo.get('cargo')?.touched) {
@@ -199,7 +199,7 @@
       <div class="col-md-3 mb-3">
         <label>Teléfono*:</label>
         <input type="text" class="form-control" id="telefono" formControlName="telefono" maxlength="20"
-          [ngClass]="isValid(grupoRepresentativo,'telefono') ? 'required' : ''"
+          [ngClass]="grupoRepresentativo.get('telefono')?.invalid && grupoRepresentativo.get('telefono')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoRepresentativo, 'telefono', 'setGrupoRepresentativoTelefono')" />
           @if (grupoRepresentativo.get('telefono')?.hasError('required') &&
           grupoRepresentativo.get('telefono')?.touched) {
@@ -213,7 +213,7 @@
         <div class="col-md-4 mb-3">
           <label>Fax*:</label>
           <input type="text" class="form-control" id="fax" formControlName="fax" maxlength="20"
-            [ngClass]="isValid(grupoRepresentativo,'fax') ? 'required' : ''"
+            [ngClass]="grupoRepresentativo.get('fax')?.invalid && grupoRepresentativo.get('fax')?.touched ? 'required' : ''"
             (change)="setValoresStore(grupoRepresentativo, 'fax', 'setGrupoRepresentativoFax')" />
             @if (grupoRepresentativo.get('fax')?.hasError('required') &&
             grupoRepresentativo.get('fax')?.touched) {
@@ -225,7 +225,7 @@
         <div class="col-md-4 mb-3">
           <label>Correo electrónico*:</label><span class="bi bi-question-circle-fill mx-2" tooltip="ejemplo@dominio.com" placement="top"></span>
           <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico" maxlength="20"
-            [ngClass]="isValid(grupoRepresentativo,'correoElectronico') ? 'required' : ''"
+            [ngClass]="grupoRepresentativo.get('correoElectronico')?.invalid && grupoRepresentativo.get('correoElectronico')?.touched ? 'required' : ''"
             (change)="setValoresStore( grupoRepresentativo,'correoElectronico','setGrupoRepresentativoCorreoElectronico')" />
              @if (grupoRepresentativo.get('correoElectronico')?.hasError('required') &&
               grupoRepresentativo.get('correoElectronico')?.touched) {

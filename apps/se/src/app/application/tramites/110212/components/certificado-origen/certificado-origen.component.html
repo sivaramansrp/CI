@@ -42,11 +42,10 @@
           <div class="col-md-4 mb-3">
             <label>Número de registro fiscal*:</label>
             <input type="text" class="form-control" id="numeroFiscal" formControlName="numeroFiscal" maxlength="70"
-              [ngClass]="isValid(grupoOperador,'numeroFiscal') ? 'required' : ''"
+              [ngClass]="grupoOperador.get('numeroFiscal')?.invalid && grupoOperador.get('numeroFiscal')?.touched ? 'required' : ''"
               (change)="setValoresStore(grupoOperador, 'numeroFiscal', 'setGrupoOperadorNumeroFiscal')" />
-
-               @if (formularioMercancia.get('grupoOperador.numeroFiscal')?.hasError('required') &&
-                formularioMercancia.get('grupoOperador.numeroFiscal')?.touched) {
+              @if (grupoOperador.get('numeroFiscal')?.hasError('required') &&
+                grupoOperador.get('numeroFiscal')?.touched) {
                 <div class="text-danger">
                   <small>Este campo es obligatorio</small>
                 </div>
