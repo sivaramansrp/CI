@@ -54,6 +54,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  * Contiene los valores actuales del trámite, como renovación, homologación, y otros datos relevantes.
  */
   public solicitudState!: Solicitud31802State;
+  
+  esFormularioSoloLectura: boolean = false;
 /**
  * Constructor del componente PasoUnoComponent.
  * 
@@ -86,6 +88,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+      this.donanteDomicilio();
+
     // Inicializa el formulario con los valores actuales del estado
     if (this.consultaState?.update) {
       this.guardarDatosFormulario();

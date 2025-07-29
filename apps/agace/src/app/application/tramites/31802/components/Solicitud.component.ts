@@ -219,13 +219,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
+      numeroOficio: [this.solicitudState?.numeroOficio, [Validators.required]],
       llave: [this.solicitudState?.llave, [Validators.required]],
       manifiesto1: [this.solicitudState?.manifiesto1, [Validators.required]],
       manifiesto2: [this.solicitudState?.manifiesto2, [Validators.required]],
       manifiesto3: [this.solicitudState?.manifiesto3, [Validators.required]],
       numeroOperacion: [this.solicitudState?.numeroOperacion, [Validators.required]],
-      fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
+      fechaPago: [{value : this.solicitudState?.fechaPago,disabled :this.esFormularioSoloLectura}, [Validators.required]],
       monedaNacional: [this.solicitudState?.monedaNacional, [Validators.required]],
+      fechaInicio:[ this.solicitudState?.fechaInicio, [Validators.required]],
+      fechaFinal: [this.solicitudState?.fechaFinal, [Validators.required]],
     });
 
     this.inicializarEstadoFormulario();
@@ -242,6 +245,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.registroForm.get('numeroOperacion')?.disable();
       this.registroForm.get('fechaPago')?.disable();
       this.registroForm.get('monedaNacional')?.disable();
+      this.registroForm.get('fechaInicio')?.disable();
+      this.registroForm.get('fechaFinal')?.disable();
+      this.registroForm.get('numeroOficio')?.disable();
+      this.registroForm.get('manifiesto1')?.disable();
+      this.registroForm.get('manifiesto2')?.disable();
+      this.registroForm.get('manifiesto3')?.disable();
     }
   }
   /**

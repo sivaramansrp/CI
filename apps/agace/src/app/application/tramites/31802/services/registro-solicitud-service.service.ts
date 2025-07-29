@@ -28,6 +28,7 @@ export class RegistroSolicitudService {
    */
 
   public actualizarEstadoFormulario(DATOS: Solicitud31802State): void {
+    this.tramite31802Store.setNumeroOficio(DATOS.numeroOficio);
     this.tramite31802Store.setNumeroOperacion(DATOS.numeroOperacion);
     this.tramite31802Store.setLlave(DATOS.llave);
     this.tramite31802Store.setManifiesto1(DATOS.manifiesto1);

@@ -1,8 +1,14 @@
 {
-  "numeroOperacion": 123456,
-  "llave": "ABC123XYZ",
+  "renovacion": true,
+  "homologacion": false,
+  "numeroOficio": "OFICIO-123",
+  "fechaInicio": "2025-06-01",
+  "fechaFinal": "2025-06-30",
   "fechaPago": "2025-06-09",
   "monedaNacional": "EUR",
-  "renovacion": false,
-  "homologacion": false
+  "numeroOperacion": 123456,
+  "llave": "ABC123XYZ",
+  "manifiesto1": true,
+  "manifiesto2": true,
+  "manifiesto3": true
 }
