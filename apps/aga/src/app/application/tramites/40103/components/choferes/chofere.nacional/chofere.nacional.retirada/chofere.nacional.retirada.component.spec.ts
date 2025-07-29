@@ -99,13 +99,13 @@ describe('ChofereNacionalRetiradaComponent', () => {
       expect(component.ConfiguracionColumna).toBe(CHOFERES_NACIONALES_ALTA);
       expect(component.datosDelChoferNacional).toEqual([]);
       expect(component.datosDelChoferNacionalSelected).toEqual([]);
-      expect(component.isReadonly).toBe(false);
+      expect(component.esSoloLectura).toBe(false);
       expect(component.datosChofere).toEqual({});
     });
 
-    it('should set isReadonly to true on init', () => {
+    it('should set esSoloLectura to true on init', () => {
       component.ngOnInit();
-      expect(component.isReadonly).toBe(true);
+      expect(component.esSoloLectura).toBe(true);
     });
   });
 
@@ -131,7 +131,7 @@ describe('ChofereNacionalRetiradaComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.isReadonly).toBe(true);
+      expect(component.esSoloLectura).toBe(true);
     });
   });
 
@@ -158,7 +158,7 @@ describe('ChofereNacionalRetiradaComponent', () => {
       const mockTemplate = {} as TemplateRef<unknown>;
       jest.spyOn(component, 'openModal');
 
-      component.addNewRow(mockTemplate);
+      component.agregarNuevaFila(mockTemplate);
 
       expect(component.datosChofere).toEqual({});
       expect(component.openModal).toHaveBeenCalledWith(mockTemplate);
@@ -202,7 +202,7 @@ describe('ChofereNacionalRetiradaComponent', () => {
       component.datosDelChoferNacional = [...mockDatosDelChoferNacional];
       component.datosDelChoferNacionalSelected = [mockDatosDelChoferNacional[0]];
 
-      component.deleteSelectedRow();
+      component.eliminarFilaSeleccionada();
 
       expect(component.datosDelChoferNacional).toEqual([]);
       expect(component.datosDelChoferNacionalSelected).toEqual([]);
@@ -211,7 +211,7 @@ describe('ChofereNacionalRetiradaComponent', () => {
     it('should show warning when no rows are selected for deletion', () => {
       component.datosDelChoferNacionalSelected = [];
 
-      component.deleteSelectedRow();
+      component.eliminarFilaSeleccionada();
 
       expect(console.warn).toHaveBeenCalledWith('No rows selected for deletion.');
     });
@@ -221,7 +221,7 @@ describe('ChofereNacionalRetiradaComponent', () => {
       component.datosDelChoferNacional = [mockDatosDelChoferNacional[0], additionalChofer];
       component.datosDelChoferNacionalSelected = [mockDatosDelChoferNacional[0]];
 
-      component.deleteSelectedRow();
+      component.eliminarFilaSeleccionada();
 
       expect(component.datosDelChoferNacional).toEqual([additionalChofer]);
       expect(component.datosDelChoferNacionalSelected).toEqual([]);
@@ -233,16 +233,16 @@ describe('ChofereNacionalRetiradaComponent', () => {
     it('should close modal and clear reference', () => {
       component.modalRef = mockModalRef;
 
-      component.cancelModal();
+      component.cancelarModal();
 
       expect(mockModalRef.hide).toHaveBeenCalled();
       expect(component.modalRef).toBeNull();
     });
 
-    it('should handle cancelModal when modalRef is null', () => {
+    it('should handle cancelarModal when modalRef is null', () => {
       component.modalRef = null;
 
-      expect(() => component.cancelModal()).not.toThrow();
+      expect(() => component.cancelarModal()).not.toThrow();
       expect(component.modalRef).toBeNull();
     });
   });
@@ -250,7 +250,7 @@ describe('ChofereNacionalRetiradaComponent', () => {
   describe('Add Modal', () => {
     beforeEach(() => {
       component.modalComponent = {} as DatosDeChoferesNacionalDialogComponent;
-      jest.spyOn(component, 'cancelModal');
+      jest.spyOn(component, 'cancelarModal');
     });
 
     it('should add data to datosDelChoferNacional when modalComponent exists', () => {
@@ -263,17 +263,17 @@ describe('ChofereNacionalRetiradaComponent', () => {
       expect(component.datosDelChoferNacional).toContain(newChofer);
       expect(component.datosDelChoferNacionalSelected).toEqual([]);
       expect(mockChofer40103Service.updateDatosDelChoferNacionalRetirada).toHaveBeenCalledWith([newChofer]);
-      expect(component.cancelModal).toHaveBeenCalled();
+      expect(component.cancelarModal).toHaveBeenCalled();
     });
 
-    it('should only call cancelModal when modalComponent does not exist', () => {
+    it('should only call cancelarModal when modalComponent does not exist', () => {
       component.modalComponent = undefined as any;
       const newChofer = mockDatosDelChoferNacional[0];
 
       component.addModal(newChofer);
 
       expect(mockChofer40103Service.updateDatosDelChoferNacionalRetirada).not.toHaveBeenCalled();
-      expect(component.cancelModal).toHaveBeenCalled();
+      expect(component.cancelarModal).toHaveBeenCalled();
     });
 
     it('should maintain existing data when adding new chofer', () => {
@@ -311,7 +311,7 @@ describe('ChofereNacionalRetiradaComponent', () => {
       const mockTemplate = {} as TemplateRef<unknown>;
       component.modalComponent = {} as DatosDeChoferesNacionalDialogComponent;
 
-      component.addNewRow(mockTemplate);
+      component.agregarNuevaFila(mockTemplate);
       component.addModal(mockDatosDelChoferNacional[0]);
 
       expect(component.datosDelChoferNacional).toContain(mockDatosDelChoferNacional[0]);
@@ -321,7 +321,7 @@ describe('ChofereNacionalRetiradaComponent', () => {
       component.editSelectedRow(mockTemplate);
       expect(component.datosChofere).toEqual(mockDatosDelChoferNacional[0]);
 
-      component.deleteSelectedRow();
+      component.eliminarFilaSeleccionada();
       expect(component.datosDelChoferNacional).toEqual([]);
       expect(component.datosDelChoferNacionalSelected).toEqual([]);
     });

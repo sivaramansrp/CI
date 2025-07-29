@@ -2,7 +2,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12">
-          <h1>Permiso Automático de importación</h1>
+          <h1>Aviso de transferencia de mercancías de empresas con programa IMMEX a terceros registrados para operar en su programa, para llevar a cabo procesos de submanufactura (Regla 4.3.7.)</h1>
         </div>
   
         <app-wizard [listaPasos]="pasos"></app-wizard>
@@ -23,6 +23,9 @@
           [datos]="datosPasos"
           (continuarEvento)="getValorIndice($event)"
         ></btn-continuar>
+          @if(indice ===1){
+            <ng-alert [CONTENIDO]="AVISO.Aviso"></ng-alert>
+          }
       </div>
     </div>
   </div>

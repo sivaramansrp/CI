@@ -15,6 +15,7 @@ import {
   Tramites80210State,
 } from '../../estados/tramites80210.store';
 import { CONFIGURACION_TABLA_PLANTAS } from '../../enums/registro-solicitud-immex.enum';
+import { REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { Tramite80210Query } from '../../estados/tramites80210.query';
 import { registroSolicitudImmexService } from '../../services/registro-solicitud-immex.service';
 
@@ -193,8 +194,8 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
       modalidad: [{ value: '', disabled: true }],
       folio: [{ value: '', disabled: true }],
       ano: [{ value: '', disabled: true }],
-      rfc: ['', [Validators.required]],
-      estado: ['-1', [Validators.required]],
+      rfc: ['', [Validators.required, Validators.pattern(REGEX_RFC)]],
+      estado: ['', [Validators.required]],
     });
   }
 
@@ -219,7 +220,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
       this.segregatePlantasDatos();
       this.tramite80210Store.establecerDatos({showPlantas:this.showPlantas});
       this.empresasForm.get('rfc')?.reset();
-      this.empresasForm.get('estado')?.reset("-1");
+      this.empresasForm.get('estado')?.reset();
     }
   }
 
@@ -229,7 +230,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
    * @returns {boolean} Retorna `true` si el formulario es válido y el campo 'estado' tiene un valor distinto de '-1'; de lo contrario, retorna `false`.
    */
   esFormularioValido(): boolean {
-    return this.empresasForm.valid && this.empresasForm.get('estado')?.value !== '-1';
+    return this.empresasForm.valid && this.empresasForm.get('estado')?.value;
   }
 
   /**
@@ -296,45 +297,44 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
  * Agrega plantas seleccionadas a la lista de seleccionadas, evitando duplicados.
  */
 agregarPlantas(): void {
-  if (this.listaFilaDisponibles?.length === 0) {
+  if (!this.listaFilaDisponibles?.length) {
     return;
   }
 
-  // Filtrar las plantas que no están ya en plantasSeleccionadas
-  const NUEVASPLANTAS = this.listaFilaDisponibles.filter(
-    (plantaDisponible) =>
-      !this.plantasSeleccionadas.some(
-        (plantaSeleccionada) => plantaSeleccionada.id === plantaDisponible.id
-      )
+  const PLANTAS_A_MOVER = this.plantasDisponibles.filter(planta =>
+    !this.listaFilaDisponibles.some(selectedPlanta => 
+      selectedPlanta.id === planta.id
+    )
   );
 
-  // Agregar solo las nuevas plantas a plantasSeleccionadas
-  this.plantasSeleccionadas.push(...NUEVASPLANTAS);
+  const PLANTAS_SELECCIONADAS_ACTUALIZADAS = [...this.plantasSeleccionadas];
+  PLANTAS_A_MOVER.forEach(planta => {
+    const EXISTS = PLANTAS_SELECCIONADAS_ACTUALIZADAS.some(
+      plantaSeleccionada => plantaSeleccionada.id === planta.id
+    );
+    if (!EXISTS) {
+      PLANTAS_SELECCIONADAS_ACTUALIZADAS.push(planta);
+    }
+  });
 
-  // Remover las plantas movidas de plantasDisponibles
-  this.plantasDisponibles = this.plantasDisponibles.filter(
-    (planta) => !this.listaFilaDisponibles.includes(planta)
-  );
+  this.plantasSeleccionadas = PLANTAS_SELECCIONADAS_ACTUALIZADAS;
 
-  // Actualizar el estado global
+  this.plantasDisponibles = [...this.listaFilaDisponibles];
   this.updateStoreForPlantas();
 
-  // Limpiar la lista temporal de filas seleccionadas
   this.listaFilaDisponibles = [];
 }
   /**
    * Actualiza el estado global con las plantas disponibles y seleccionadas.
    */
   public updateStoreForPlantas(): void {
-    const DISPONIBLES_PLANTAS_ID = this.plantasDisponibles.map(
-      (planta) => planta
-    );
-    this.tramite80210Store.establecerDatos({plantasDisponibles:DISPONIBLES_PLANTAS_ID});
-    const SELECCIONADA_PLANTAS_ID = this.plantasSeleccionadas.map(
-      (planta) => planta
-    );
-    this.tramite80210Store.establecerDatos({plantasSeleccionadas:SELECCIONADA_PLANTAS_ID});
+    this.tramite80210Store.establecerDatos({
+      plantasDisponibles: [...this.plantasDisponibles],
+      plantasSeleccionadas: [...this.plantasSeleccionadas]
+    });
 
+    this.plantasDisponibles = [...this.plantasDisponibles];
+    this.plantasSeleccionadas = [...this.plantasSeleccionadas];
   }
 
   /**

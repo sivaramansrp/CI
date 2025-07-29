@@ -1,3 +1,4 @@
+import { Terceros260211State, Terceros260211Store } from '../../../estados/tramites/terceros260211.store';
 import { Tramite260212State, Tramite260212Store } from '../estados/tramite260212.store';
 import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -26,7 +27,7 @@ export class Service260212Service {
    * @param http Cliente HTTP para realizar peticiones.
    * @param tramite260212Store Almacén de estado para el trámite 260212.
    */
-  constructor(private http: HttpClient, private tramite260212Store: Tramite260212Store,) {
+  constructor(private http: HttpClient, private tramite260212Store: Tramite260212Store,private terceros260211Store: Terceros260211Store) {
     // Lógica de inicialización si es necesario
   }
 
@@ -71,8 +72,50 @@ export class Service260212Service {
    this.tramite260212Store.setLlaveDePago(DATOS.llaveDePago);
    this.tramite260212Store.setFechaDePago(DATOS.setFechaDePago);
     this.tramite260212Store.setImporteDePago(DATOS.importeDePago);
+    
+  this.tramite260212Store.setLosDatos(DATOS.losDatos);
+  this.tramite260212Store.setRfc(DATOS.rfc);
+  this.tramite260212Store.setNombre(DATOS.nombre);
+  this.tramite260212Store.setPrimerApellido(DATOS.primerApellido);
+  this.tramite260212Store.setSegundoApellido(DATOS.segundoApellido);
+    this.tramite260212Store.setAvisoclave(DATOS.avisoclave);
+  this.tramite260212Store.setNoLicenciaSanitaria(DATOS.noLicenciaSanitaria);
   }
-
+  /**
+ * Actualiza el estado del formulario de terceros.
+ * Asigna los valores recibidos desde el modelo de datos al store correspondiente.
+ * Se utiliza para poblar los datos del formulario desde un origen externo.
+ */
+   actualizarEstadoTercerosFormulario(DATOS: Terceros260211State): void {
+  this.terceros260211Store.setTercerosNacionalidad(DATOS.tercerosNacionalidad);
+  this.terceros260211Store.setTipoPersona(DATOS.tipoPersona);
+  this.terceros260211Store.setRfc(DATOS.rfc);
+  this.terceros260211Store.setNombre(DATOS.nombre);
+  this.terceros260211Store.setPrimerApellido(DATOS.primerApellido);
+  this.terceros260211Store.setSegundoApellido(DATOS.segundoApellido);
+  this.terceros260211Store.setCurp(DATOS.curp);
+  this.terceros260211Store.setDenominacionRazonSocial(DATOS.denominacionRazonSocial);
+  this.terceros260211Store.setPais(DATOS.pais);
+  this.terceros260211Store.setEstadoLocalidad(DATOS.estadoLocalidad);
+  this.terceros260211Store.setMunicipioAlcaldia(DATOS.municipioAlcaldia);
+  this.terceros260211Store.setLocalidad(DATOS.localidad);
+  this.terceros260211Store.setCodigoPostaloEquivalente(DATOS.codigoPostaloEquivalente);
+  this.terceros260211Store.setColonia(DATOS.colonia);
+  this.terceros260211Store.setExtranjeroEstado(DATOS.extranjeroEstado);
+  this.terceros260211Store.setExtranjeroCodigo(DATOS.extranjeroCodigo);
+  this.terceros260211Store.setExtranjeroColonia(DATOS.extranjeroColonia);
+  this.terceros260211Store.setCalle(DATOS.calle);
+  this.terceros260211Store.setNumeroExterior(DATOS.numeroExterior);
+  this.terceros260211Store.setNumeroInterior(DATOS.numeroInterior);
+  this.terceros260211Store.setLada(DATOS.lada);
+  this.terceros260211Store.setTelefono(DATOS.telefono);
+  this.terceros260211Store.setCorreoElectronico(DATOS.correoElectronico);
+  this.terceros260211Store.setColoniaoEquivalente(DATOS.coloniaoEquivalente);
+  this.terceros260211Store.setColoniaoEquivalenteLabel(DATOS.coloniaoEquivalenteLabel);
+  this.terceros260211Store.setCodigoPostaloEquivalentes(DATOS.codigoPostaloEquivalentes);
+  this.terceros260211Store.setEstado(DATOS.estado);
+  this.terceros260211Store.setEntidadFederativa(DATOS.entidadFederativa);
+}
   /**
    * Obtiene los datos de consulta para el registro de toma de muestras de mercancías.
    * @returns Observable con el estado del trámite 260212.
@@ -80,5 +123,12 @@ export class Service260212Service {
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite260212State> {
     return this.http.get<Tramite260212State>('assets/json/260212/consulta.json');
   }
-
+  /**
+ * Obtiene los datos de terceros desde un archivo JSON local.
+ * Retorna un observable con el estado de los datos del formulario.
+ * Se usa para inicializar el formulario con datos precargados.
+ */
+ getTercerosData(): Observable<Terceros260211State> {
+    return this.http.get<Terceros260211State>('assets/json/260212/tercerosdata.json');
+  }
 }
