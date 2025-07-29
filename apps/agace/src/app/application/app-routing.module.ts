@@ -343,6 +343,12 @@ const ROUTES: Routes = [
         (m) => m.SolicitudDeRegistroInvocarModule)
   },
   {
+     path: 'sce-socio-almacenamiento',
+    loadChildren: () => 
+      import('./tramites/32618/sce-socio-almacen.module').then(
+        (m) => m.SceSocioAlmacenModule)
+      },
+  {
     path: 'registro-oae-rfe',
     loadChildren: () =>
       import('./tramites/32610/registro-oae-rfe.module').then(

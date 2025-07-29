@@ -90,7 +90,7 @@
   <div class="row">
     <div id="establecimientoDomicilioCalle" class="col-md-8">
       <label for="establecimientoDomicilioCalle"
-        >Calle <span class="bi bi-question-circle-fill require" data-bs-toggle="tooltip">*</span>:</label
+        >Calle <span>*</span>: <span class="bi bi-question-circle-fill require" data-bs-toggle="tooltip"></span></label
       >
       <div>
         <input
@@ -152,7 +152,7 @@
     >
     </app-tabla-dinamica>
     <div class="col-md-12 mt-5 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary" [disabled]="formularioDeshabilitado ? true : false">Eliminar</button>
+      <button type="button" class="btn btn-danger" [disabled]="formularioDeshabilitado ? true : false">Eliminar</button>
       <button
         type="button"
         class="btn btn-primary ms-3"
@@ -212,7 +212,7 @@
       </div>
     </div>
     <div class="col-md-4">
-      <label for="noDeLicenciaSanitaria"> No.de licencia sanitaria :</label>
+      <label for="noDeLicenciaSanitaria"> No.de licencia sanitaria : <span class="bi bi-question-circle-fill require" data-bs-toggle="tooltip"></span></label>
 
       <div class="d-flex flex-column align-items-end">
         <input
@@ -296,7 +296,7 @@
           <div class="row">
             <div class="col-md-8">
               <app-catalogo-select
-                [catalogo]="scianJson"
+                [catalogo]="descripcionScianJson"
                 [label]="'Descripción del S.C.I.A.N.*'"
                 [placeholder]="'Seleccione una valor'"
                 formControlName="descripcionScian"

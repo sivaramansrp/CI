@@ -1,6 +1,5 @@
 import {
   Catalogo,
-  CatalogoSelectComponent,
   CatalogosSelect,
   ConsultaioQuery,
   TituloComponent,
@@ -18,6 +17,7 @@ import {
   Solicitud110207State,
   Tramite110207Store,
 } from '../../state/Tramite110207.store';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import {ConsultaioState} from '@ng-mf/data-access-user';
 import { RegistroService } from '../../services/registro.service';
