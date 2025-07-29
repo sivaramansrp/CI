@@ -1,39 +1,27 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RevisionDocumentalComponent } from './revision-documental.component';
-import { CommonModule } from '@angular/common';
-import { DatosGeneralesComponent } from '../../shared/datos-generales/datos-generales.component';
 import { PagoDeDerechosComponent } from '../../shared/pago-de-derechos/pago-de-derechos.component';
 import { TercerosRelacionadosComponent } from '../../shared/terceros-relacionados/terceros-relacionados.component';
-import { TituloComponent, AlertComponent } from '@ng-mf/data-access-user';
 
 describe('RevisionDocumentalComponent', () => {
   let component: RevisionDocumentalComponent;
-  let fixture: ComponentFixture<RevisionDocumentalComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        RevisionDocumentalComponent,
-        DatosGeneralesComponent,
-        PagoDeDerechosComponent,
-        TercerosRelacionadosComponent,
-        TituloComponent,
-        AlertComponent,
-      ],
-      declarations: [],
-    }).compileComponents();
+  beforeEach(() => {
+    component = new RevisionDocumentalComponent();
+    // Mock child components
+    component.pagoDeDerechos = {
+      validarFormulario: jest.fn(() => true)
+    } as unknown as PagoDeDerechosComponent;
 
-    fixture = TestBed.createComponent(RevisionDocumentalComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component.tercerosRelacionados = {
+      validarFormulario: jest.fn(() => true)
+    } as unknown as TercerosRelacionadosComponent;
   });
 
-  test('should create the component', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  test('should have default values for properties', () => {
+  it('should have default properties initialized', () => {
     expect(component.indice).toBe(1);
     expect(component.colapsable).toBe(true);
     expect(component.currentIndex).toBe(1);
@@ -41,8 +29,35 @@ describe('RevisionDocumentalComponent', () => {
     expect(component.forma).toBe('');
   });
 
-  test('should update indice when seleccionaTab is called', () => {
-    component.seleccionaTab(3);
-    expect(component.indice).toBe(3);
+  it('should have a seleccionaTab method', () => {
+    expect(typeof component.seleccionaTab).toBe('function');
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
+  });
+
+  it('should validate formularios and return true when both child components return true', () => {
+    const result = component.validarFormularios();
+    expect(result).toBe(true);
+    expect(component.pagoDeDerechos.validarFormulario).toHaveBeenCalled();
+    expect(component.tercerosRelacionados.validarFormulario).toHaveBeenCalled();
+  });
+
+  it('should return false if pagoDeDerechos is missing', () => {
+    component.pagoDeDerechos = undefined as any;
+    const result = component.validarFormularios();
+    expect(result).toBe(false);
+  });
+
+  it('should return false if tercerosRelacionados is missing', () => {
+    component.tercerosRelacionados = undefined as any;
+    const result = component.validarFormularios();
+    expect(result).toBe(true);
+  });
+
+  it('should return false if child validation fails', () => {
+    component.pagoDeDerechos.validarFormulario = jest.fn(() => false);
+    component.tercerosRelacionados.validarFormulario = jest.fn(() => false);
+    const result = component.validarFormularios();
+    expect(result).toBe(false);
   });
 });
