@@ -34,6 +34,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
+import { ESTADO_CATALOGOS } from '../../constantes/pago-banco.enum';
 /**
  * @component PagoDeDerechosComponent
  * @description Componente responsable de capturar y gestionar la información relacionada
@@ -114,7 +115,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @property {Catalogo[]} estadosDatos
    * Lista de estados obtenida desde el servicio de catálogos.
    */
-  estadosDatos!: Catalogo[];
+  public estadosDatos: Catalogo[]=ESTADO_CATALOGOS;
 
   /**
    * Arreglo que contiene los datos del catálogo.
@@ -155,7 +156,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private pagoDerechosQuery: PagoDerechosQuery,
     private consultaioQuery: ConsultaioQuery
   ) {
-    this.cargarDatos();
+    
     this.getBancoDatos();
 
     // Inicializa el formulario.
@@ -221,7 +222,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     if (this.formularioDeshabilitado) {
       this.pagoDerechosForm.disable();
     }
-    console.log(this.pagoDerechoFormState);
+  
     this.pagoDerechosForm.patchValue(this.pagoDerechoFormState);
   }
 
@@ -235,7 +236,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .obtenerListaEstados()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        this.estadosDatos = data;
+        this.estadosDatos = data;    
         this.pagoDerechosForm.patchValue({
           estado: this.pagoDerechoFormState?.estado || '',
         });
@@ -253,6 +254,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.bancoDatos = data;
+        console.log('Banco Datos:', this.bancoDatos);
         this.pagoDerechosForm.patchValue({
           banco: this.solicitudState?.banco || '',
           estado: this.solicitudState?.estado || '',

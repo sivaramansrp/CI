@@ -118,7 +118,7 @@ export const SCIAN_TABLA_DATA: TablaScianConfig[] = [
  * Esta constante puede ser utilizada en componentes o vistas donde se requiera
  * mostrar esta alerta como parte de un flujo de trabajo relacionado con solicitudes.
  */
-export const ALERTA_OPCIONS = `<p>Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.</p>`;
+export const ALERTA_OPCIONS = `<p style="text-align: center;">Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.</p>`;
 
 /**
  * @const ALERTA_DE_MANIFESTO_Y_DECLARACIONES
