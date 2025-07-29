@@ -4214,6 +4214,13 @@
     "linkDepartment": "/pago/cancelaciones-certificado/solicitud",
     "department": "se"
   },
+    {
+    "id": 606,
+    "tramite": 32614,
+    "linkDashboard": "/agace/importador-y-o-exportador2/solicitud",
+    "linkDepartment": "/pago/importador-y-o-exportador2/solicitud",
+    "department": "agace"
+  },
   {
     "id": 606,
     "tramite": 32616,
@@ -4284,6 +4291,13 @@
     "linkDepartment": "/pago/economico/solicitud",
     "department": "agace"
   },
+  {
+     "id": 613,
+    "tramite": 32618,
+    "linkDashboard": "/agace/sce-socio-almacenamiento/solicitud",
+    "linkDepartment": "/pago/sce-socio-almacenamiento/solicitud",
+     "department": "agace"
+    },
   {
     "id": 613,
     "tramite": 32615,
