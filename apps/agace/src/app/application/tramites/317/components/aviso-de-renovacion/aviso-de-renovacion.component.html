@@ -22,7 +22,7 @@
         <div class="mt-3">
             <lib-input-check [label]="'* Con el envío del presente aviso, me doy por enterado que en caso de que se presente fuera de los
             plazos legales señalados en la normatividad vigente, se tendrá por no presentado sin que medie
-            declaración, notificación o requerimiento por parte de la autoridad..'" [id]="'envioAviso'"
+            declaración, notificación o requerimiento por parte de la autoridad.'" [id]="'envioAviso'"
                 [required]="true" formControlName="envioAviso" [isDisabled]="esFormularioSoloLectura ? true : false"
                 (change)="setValoresStore(avisoForm,'envioAviso', 'setenvioAviso')"></lib-input-check>
         </div>
