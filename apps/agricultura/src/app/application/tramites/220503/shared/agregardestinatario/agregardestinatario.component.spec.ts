@@ -2,15 +2,15 @@
 import { FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
-import { AcuiculturaQuery } from '../../estados/sanidad-certificado.query';
-import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { AgregardestinatarioComponent } from './agregardestinatario.component';
+import { Solocitud220503Service } from '../../services/service220503.service';
+import { Solicitud220503Query } from '../../estados/tramites220503.query';
 
 describe('AgregardestinatarioComponent', () => {
   let component: AgregardestinatarioComponent;
   let tercerosService: Partial<TercerosrelacionadosService>;
-  let importacionService: Partial<ImportacionDeAcuiculturaService>;
-  let acuiculturaQuery: Partial<AcuiculturaQuery>;
+  let importacionService: Partial<Solocitud220503Service>;
+  let acuiculturaQuery: Partial<Solicitud220503Query>;
 
   beforeEach(() => {
     // Mock services
@@ -24,15 +24,15 @@ describe('AgregardestinatarioComponent', () => {
 
     const seleccionarTerceros$ = new Subject<any>();
     acuiculturaQuery = {
-      seleccionarTerceros$: seleccionarTerceros$.asObservable()
+      seletedTerceros$: seleccionarTerceros$.asObservable()
     };
 
     component = new AgregardestinatarioComponent(
       new FormBuilder(),
       tercerosService as TercerosrelacionadosService,
       {} as any, // Router not used directly in tested methods
-      importacionService as ImportacionDeAcuiculturaService,
-      acuiculturaQuery as AcuiculturaQuery,
+      importacionService as Solocitud220503Service,
+      acuiculturaQuery as Solicitud220503Query,
       {} as any // ActivatedRoute not used here
     );
 

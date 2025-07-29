@@ -3,8 +3,9 @@ import { AgregardestinatariofinalComponent } from './agregardestinatariofinal.co
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
-import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
-import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
+import { Solocitud220503Service } from '../../services/service220503.service';
+import { Solicitud220503Store } from '../../estados/tramites220503.store';
+
 
 describe('AgregardestinatariofinalComponent', () => {
   let component: AgregardestinatariofinalComponent;
@@ -24,8 +25,8 @@ describe('AgregardestinatariofinalComponent', () => {
       imports: [AgregardestinatariofinalComponent, HttpClientTestingModule],
       providers: [
         provideRouter([]),
-        { provide: ImportacionDeAcuiculturaService, useValue: mockCertificadoService },
-        { provide: AcuiculturaStore, useValue: mockStore }
+        { provide: Solocitud220503Service, useValue: mockCertificadoService },
+        { provide: Solicitud220503Store, useValue: mockStore }
       ]
     }).compileComponents();
 
