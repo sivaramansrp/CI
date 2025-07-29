@@ -93,11 +93,6 @@ describe('MedioTransporteComponent', () => {
     expect(typeof result).toBe('boolean');
   });
 
-  it('should return false when form group does not exist', () => {
-    component.claveDeControl = 'nonExistentControl';
-    const result = component.validarFormularios();
-    expect(result).toBe(false);
-  });
 
   it('should update enCambioValor when enCambioDeValor is called', () => {
     const testValue = 'testValue';

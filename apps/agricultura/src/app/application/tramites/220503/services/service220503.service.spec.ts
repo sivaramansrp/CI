@@ -2,6 +2,10 @@ import { Solocitud220503Service } from './service220503.service';
 import { Solicitud220503Store, Solicitud220503State } from '../estados/tramites220503.store';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
+import { PagoDeDerechos } from '../models/pago-de-derechos.model';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { TercerosrelacionadosdestinoTable } from '../../../shared/models/tercerosrelacionados.model';
+import { DestinatarioForm } from '../../220203/models/220203/importacion-de-acuicultura.module';
 
 describe('Solocitud220503Service', () => {
   let service: Solocitud220503Service;
@@ -48,6 +52,9 @@ describe('Solocitud220503Service', () => {
       setBanco: jest.fn(),
       setIlavePago: jest.fn(),
       setImportePago: jest.fn(),
+      updateTercerosRelacionados: jest.fn(),
+      _select: jest.fn(),
+      actualizarPagoDeDerechos: jest.fn()
     } as any;
 
     service = new Solocitud220503Service(httpMock, storeMock);
@@ -84,7 +91,7 @@ describe('Solocitud220503Service', () => {
       regimen: 1,
       movilizacion: 123,
       transporte: 'transporte',
-      nombreEmpresa: 123, // Use a number instead of a string
+      nombreEmpresa: 123, 
       punto: 2,
       exentoPagoNo: 0,
       justificacion: 'justificacion',
@@ -93,7 +100,12 @@ describe('Solocitud220503Service', () => {
       banco: 1,
       llavePago: 'llave',
       importePago: '1000',
-      fetchapago: '', // Added missing property, set to empty string or appropriate value
+      fetchapago: '', 
+          datosForma: [] ,
+          tercerosRelacionados: [],
+          selectedTerceros:{} as TercerosrelacionadosdestinoTable,
+          seletedExdora: {} as DestinatarioForm,
+          pagoDeDerechos: {} as PagoDeDerechos
     };
 
     service.actualizarEstadoFormulario(datos);
@@ -152,5 +164,68 @@ describe('Solocitud220503Service', () => {
   it('should have urlServer and urlServerCatalogos from ENVIRONMENT', () => {
     expect(service.urlServer).toBeDefined();
     expect(service.urlServerCatalogos).toBeDefined();
+  });
+
+  it('should call updateTercerosRelacionados on store in updateTercerosRelacionado', () => {
+    const mockTerceros: TercerosrelacionadosdestinoTable[] = [
+      { id: 1, nombre: 'Tercero 1' } as any
+    ];
+
+    service.updateTercerosRelacionado(mockTerceros);
+
+    expect(storeMock.updateTercerosRelacionados).toHaveBeenCalledWith(mockTerceros);
+  });
+
+  it('should return observable from store._select in getAllDatosForma', () => {
+    const mockState: Solicitud220503State = {
+      certificadosAutorizados: 1,
+      mercancia: 'test'
+    } as any;
+    
+    storeMock._select.mockReturnValue(of(mockState));
+
+    const result$ = service.getAllDatosForma();
+
+    expect(storeMock._select).toHaveBeenCalledWith(expect.any(Function));
+    result$.subscribe(data => {
+      expect(data).toEqual(mockState);
+    });
+  });
+
+  it('should call actualizarPagoDeDerechos on store in actualizarPagoDeDerechos', () => {
+    const mockPago: PagoDeDerechos = {
+      exentoPago: 'SI',
+      justificacion: 'Test justification',
+      claveReferencia: 'REF123',
+      cadenaDependencia: 'DEP456',
+      banco: 'BANCO_TEST',
+      llavePago: 'test123',
+      importePago: '1000',
+      fechaPago: '2024-01-01'
+    };
+
+    service.actualizarPagoDeDerechos(mockPago);
+
+    expect(storeMock.actualizarPagoDeDerechos).toHaveBeenCalledWith(mockPago);
+  });
+
+  it('should call http.get with correct URL in obtenerDetallesDelCatalogo', () => {
+    const nombreArchivo = 'test-catalog.json';
+    const mockResponse: RespuestaCatalogos = {
+      code: 200,
+      message: 'Success',
+      data: [
+        { id: 1, descripcion: 'Test Item 1' },
+        { id: 2, descripcion: 'Test Item 2' }
+      ]
+    };
+    httpMock.get.mockReturnValue(of(mockResponse));
+
+    const result$ = service.obtenerDetallesDelCatalogo(nombreArchivo);
+
+    expect(httpMock.get).toHaveBeenCalledWith(`assets/json/220503/${nombreArchivo}`);
+    result$.subscribe(data => {
+      expect(data).toEqual(mockResponse);
+    });
   });
 });
