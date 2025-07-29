@@ -87,7 +87,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     public store: Tramite110212Store,
     public tramiteQuery: Tramite110212Query,
     private consultaioQuery: ConsultaioQuery
-  ) // eslint-disable-next-line no-empty-function
+  ) 
   {}
 
   /**

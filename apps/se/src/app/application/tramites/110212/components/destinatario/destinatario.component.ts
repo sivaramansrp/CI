@@ -296,7 +296,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     const INPUT = event.target as HTMLInputElement;
     if (INPUT.value.length > maxLength) {
       INPUT.value = INPUT.value.slice(0, maxLength);
-      // Update the form control value
+      // Actualizar el valor del control del formulario
       const CONTROL = this.registroFormulario.get('grupoDeDirecciones.fax');
       if (CONTROL) {
         CONTROL.setValue(INPUT.value);

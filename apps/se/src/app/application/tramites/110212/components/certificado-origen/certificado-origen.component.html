@@ -44,14 +44,14 @@
             <input type="text" class="form-control" id="numeroFiscal" formControlName="numeroFiscal" maxlength="70"
               [ngClass]="grupoOperador.get('numeroFiscal')?.invalid && grupoOperador.get('numeroFiscal')?.touched ? 'required' : ''"
               (change)="setValoresStore(grupoOperador, 'numeroFiscal', 'setGrupoOperadorNumeroFiscal')" />
-              @if (grupoOperador.get('numeroFiscal')?.hasError('required') &&
-                grupoOperador.get('numeroFiscal')?.touched) {
-                <div class="text-danger">
-                  <small>Este campo es obligatorio</small>
-                </div>
-                }
+            @if (grupoOperador.get('numeroFiscal')?.hasError('required') &&
+            grupoOperador.get('numeroFiscal')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            }
           </div>
-           <div class="col-md-8 mb-3">
+          <div class="col-md-8 mb-3">
             <label>Razón social:</label>
             <input type="text" class="form-control"
               [ngClass]="{'gray-glass': grupoOperador.get('nombre')?.value !== '' || grupoOperador.get('apellidoPrimer')?.value !== '' || grupoOperador.get('apellidoSegundo')?.value !== ''}"
@@ -239,14 +239,16 @@
                 <input type="number" class="form-control" formControlName="cantidad"
                   [ngClass]="isValid(formularioMercancia,'cantidad') ? 'required' : ''"
                   (change)=" setValoresStore( formularioMercancia, 'cantidad', 'setCantidad' ) " />
-                <div *ngIf="formularioMercancia.get('cantidad')?.invalid && formularioMercancia.get('cantidad')?.touched" class="text-danger">
-                  <small *ngIf="formularioMercancia.get('cantidad')?.errors?.['required']">
-                    Este campo es obligatorio.
-                  </small>
-                  <small *ngIf="formularioMercancia.get('cantidad')?.errors?.['pattern']">
-                    El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales.
-                  </small>
+                @if (formularioMercancia.get('cantidad')?.invalid && formularioMercancia.get('cantidad')?.touched) {
+                <div class="text-danger">
+                  @if (formularioMercancia.get('cantidad')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                  }
+                  @if (formularioMercancia.get('cantidad')?.errors?.['pattern']) {
+                  <small>El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales.</small>
+                  }
                 </div>
+                }
               </div>
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="optionsPais" [label]="'UMC'" [required]="true" id="pais"
@@ -262,28 +264,34 @@
                 <input type="text" required="true" class="form-control" formControlName="valorDelaMercancia"
                   [ngClass]="isValid(formularioMercancia,'valorDelaMercancia') ? 'required' : ''"
                   (change)=" setValoresStore( formularioMercancia, 'valorDelaMercancia', 'setValorDelaMercancia' ) " />
-                <div *ngIf="formularioMercancia.get('valorDelaMercancia')?.invalid && formularioMercancia.get('valorDelaMercancia')?.touched" class="text-danger">
-                  <small *ngIf="formularioMercancia.get('valorDelaMercancia')?.errors?.['required']">
-                    Este campo es obligatorio.
-                  </small>
-                  <small *ngIf="formularioMercancia.get('valorDelaMercancia')?.errors?.['pattern']">
-                    El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales.
-                  </small>
+                @if (formularioMercancia.get('valorDelaMercancia')?.invalid &&
+                formularioMercancia.get('valorDelaMercancia')?.touched) {
+                <div class="text-danger">
+                  @if (formularioMercancia.get('valorDelaMercancia')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                  }
+                  @if (formularioMercancia.get('valorDelaMercancia')?.errors?.['pattern']) {
+                  <small>El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales.</small>
+                  }
                 </div>
+                }
               </div>
               <div class="col-md-8">
                 <label>Complemento de la descripción*:</label>
                 <textarea rows="3" class="w-100" formControlName="complementoDelaDescripcion" maxlength="200"
                   [ngClass]="isValid(formularioMercancia,'complementoDelaDescripcion') ? 'required' : ''"
                   (change)=" setValoresStore( formularioMercancia, 'complementoDelaDescripcion', 'setComplementoDelaDescripcion' ) "></textarea>
-                <div *ngIf="formularioMercancia.get('complementoDelaDescripcion')?.invalid && formularioMercancia.get('complementoDelaDescripcion')?.touched" class="text-danger">
-                  <small *ngIf="formularioMercancia.get('complementoDelaDescripcion')?.errors?.['required']">
-                    Este campo es obligatorio
-                  </small>
-                  <small *ngIf="formularioMercancia.get('complementoDelaDescripcion')?.errors?.['maxlength']">
-                    Por favor, no escribas más de 200 caracteres
-                  </small>
+                @if (formularioMercancia.get('complementoDelaDescripcion')?.invalid &&
+                formularioMercancia.get('complementoDelaDescripcion')?.touched) {
+                <div class="text-danger">
+                  @if (formularioMercancia.get('complementoDelaDescripcion')?.errors?.['required']) {
+                  <small>Este campo es obligatorio</small>
+                  }
+                  @if (formularioMercancia.get('complementoDelaDescripcion')?.errors?.['maxlength']) {
+                  <small>Por favor, no escribas más de 200 caracteres</small>
+                  }
                 </div>
+                }
               </div>
             </div>
 
