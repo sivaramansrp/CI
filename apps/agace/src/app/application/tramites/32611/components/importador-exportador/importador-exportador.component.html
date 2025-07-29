@@ -39,15 +39,15 @@
       <div class="col-md-6 mt-4">
         <input-fecha
           [datos]="fechaDeFinDeVigencia"
-          [setFecha]="importadorExportadorForm.get('fechaInicioComercio')?.value"
-          (valorCambiado)="actualizarFechaInicioComercio($event);setValoresStore(importadorExportadorForm, 'fechaInicioComercio')"
+          [setFecha]="importadorExportadorForm.get('fechaInicio')?.value"
+          (valorCambiado)="actualizarfechaInicio($event);setValoresStore(importadorExportadorForm, 'fechaInicio')"
           [isDisabled]="esFormularioSoloLectura"
           >
         </input-fecha>
         <div
           *ngIf="
-            importadorExportadorForm.get('fechaInicioComercio')?.invalid &&
-            importadorExportadorForm.get('fechaInicioComercio')?.touched
+            importadorExportadorForm.get('fechaInicio')?.invalid &&
+            importadorExportadorForm.get('fechaInicio')?.touched
           "
           class="text-danger mt-3"
         >

@@ -353,7 +353,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     this.importadorExportadorForm = this.fb.group({
       comercioExteriorRealizado : [this.solicitudState?.comercioExteriorRealizado, Validators.required],
       fechaDePago: [this.solicitudState?.fechaDePago, Validators.required],
-      fechaInicioComercio: [this.solicitudState?.fechaInicioComercio],
+      fechaInicio: [this.solicitudState?.fechaInicio],
       esParteGrupoComercioExterior: [this.solicitudState?.esParteGrupoComercioExterior],
       fusionEscisionConOperacionExterior: [this.solicitudState?.fusionEscisionConOperacionExterior],
       empresaExtranjeraIMMEX: [this.solicitudState?.empresaExtranjeraIMMEX],
@@ -402,9 +402,9 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    * 
    * param nuevo_valor - Nuevo valor de la fecha en formato string
    */
-  actualizarFechaInicioComercio(nuevo_valor: string): void {
-    this.importadorExportadorForm.get('fechaInicioComercio')?.setValue(nuevo_valor);
-    this.importadorExportadorForm.get('fechaInicioComercio')?.markAsUntouched();
+  actualizarfechaInicio(nuevo_valor: string): void {
+    this.importadorExportadorForm.get('fechaInicio')?.setValue(nuevo_valor);
+    this.importadorExportadorForm.get('fechaInicio')?.markAsUntouched();
   }
 
   /**
@@ -1214,19 +1214,19 @@ configurarValidacionDinamica(): void {
  * Actualiza la validación del formulario basada en el valor de comercioExteriorRealizado
  */
 actualizarValidacionBasadaEnComercioExterior(value: string): void {
-  const FECHA_INICIO_CONTROL = this.importadorExportadorForm.get('fechaInicioComercio');
+  const FECHA_INICIO_CONTROL = this.importadorExportadorForm.get('fechaInicio');
   const ES_PARTE_GRUPO_CONTROL = this.importadorExportadorForm.get('esParteGrupoComercioExterior');
   const FUSION_ESCISION_CONTROL = this.importadorExportadorForm.get('fusionEscisionConOperacionExterior');
   const EMPRESA_EXTRANJERA_CONTROL = this.importadorExportadorForm.get('empresaExtranjeraIMMEX');
   
   if (value === '1') {
-    // Si = Yes: fechaInicioComercio is required, others are not
+    // Si = Yes: fechaInicio is required, others are not
     FECHA_INICIO_CONTROL?.setValidators([Validators.required]);
     ES_PARTE_GRUPO_CONTROL?.clearValidators();
     FUSION_ESCISION_CONTROL?.clearValidators();
     EMPRESA_EXTRANJERA_CONTROL?.clearValidators();
   } else if (value === '0') {
-    // No: fechaInicioComercio is not required, others are required
+    // No: fechaInicio is not required, others are required
     FECHA_INICIO_CONTROL?.clearValidators();
     ES_PARTE_GRUPO_CONTROL?.setValidators([Validators.required]);
     FUSION_ESCISION_CONTROL?.setValidators([Validators.required]);

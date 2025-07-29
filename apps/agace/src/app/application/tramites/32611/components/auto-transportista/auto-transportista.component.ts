@@ -224,7 +224,7 @@ export class AutoTransportistaComponent implements OnInit, OnDestroy, AfterViewI
    * Este formulario recopila información relacionada con operaciones de importación y exportación,
    *
    * Detalles del formulario:
-   * - Algunos campos como `fechaInicioComercio` se inician deshabilitados y con validaciones (`Validators.required`).
+   * - Algunos campos como `fechaInicio` se inician deshabilitados y con validaciones (`Validators.required`).
    * - Otros campos tienen validaciones específicas como `Validators.maxLength`.
    *
    * El método también se suscribe al observable `selectSolicitud$` para actualizar el formulario cuando
@@ -239,8 +239,8 @@ export class AutoTransportistaComponent implements OnInit, OnDestroy, AfterViewI
       numeroRegistroCAAT: [this.solicitud32611State.numeroRegistroCAAT],
       numeroUnidadesPropias: [this.solicitud32611State.numeroUnidadesPropias],
       numeroUnidadesArrendadas: [this.solicitud32611State.numeroUnidadesArrendadas],
-      fechaInicioComercio: [
-        { value: this.solicitud32611State.fechaInicioComercio, disabled: true },
+      fechaInicio: [
+        { value: this.solicitud32611State.fechaInicio, disabled: true },
         Validators.required,
       ],
       fechaPago: [this.solicitud32611State.fechaPago],
@@ -289,7 +289,7 @@ export class AutoTransportistaComponent implements OnInit, OnDestroy, AfterViewI
             permisoVigenteSCT: this.solicitud32611State.permisoVigenteSCT,
             numeroUnidadesPropias: this.solicitud32611State.numeroUnidadesPropias,
             numeroUnidadesArrendadas: this.solicitud32611State.numeroUnidadesArrendadas,
-            fechaInicioComercio: this.solicitud32611State.fechaInicioComercio,
+            fechaInicio: this.solicitud32611State.fechaInicio,
             fechaPago: this.solicitud32611State.fechaPago,
             fechaVigencia: this.solicitud32611State.fechaVigencia,
             sistemasRastreo: this.solicitud32611State.sistemasRastreo,
@@ -383,8 +383,8 @@ export class AutoTransportistaComponent implements OnInit, OnDestroy, AfterViewI
       this.enviarDialogData(nota);
       this.esHabilitarElDialogo = true;
       // this.openConfirmModal();
-      this.autoTransportistaForm.get('fechaInicioComercio')?.reset();
-      this.solicitud32611Store.actualizarEstado({ fechaInicioComercio: this.autoTransportistaForm.get('fechaInicioComercio')?.value });
+      this.autoTransportistaForm.get('fechaInicio')?.reset();
+      this.solicitud32611Store.actualizarEstado({ fechaInicio: this.autoTransportistaForm.get('fechaInicio')?.value });
     }
     else if (campo === 'permisoVigenteSCT' && parseInt(valor as string, 10) === 2) {
       this.autoTransportistaForm.get('numeroUnidadesPropias')?.reset();
@@ -526,10 +526,10 @@ validarFormulario(): boolean {
     isValid = false;
   }
 
-  const FECHA_INICIO = this.autoTransportistaForm.get('fechaInicioComercio')?.value;
+  const FECHA_INICIO = this.autoTransportistaForm.get('fechaInicio')?.value;
   const TIENE_DOS_ANIOS = this.autoTransportistaForm.get('autotransporteDosAnios')?.value === 1;
   if (TIENE_DOS_ANIOS && (!FECHA_INICIO || FECHA_INICIO === '')) {
-    this.autoTransportistaForm.get('fechaInicioComercio')?.markAsTouched();
+    this.autoTransportistaForm.get('fechaInicio')?.markAsTouched();
     isValid = false;
   }
 

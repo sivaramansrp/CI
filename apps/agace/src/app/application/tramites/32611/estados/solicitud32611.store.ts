@@ -182,7 +182,7 @@ export interface Solicitud32611State {
      * Fecha de inicio de las operaciones de comercio exterior de la empresa.
      * Formato esperado: DD/MM/YYYY.
      */
-    fechaInicioComercio: string;
+    fechaInicio: string;
     fechaPago: string;
     fechaVigencia: string;
     sistemasRastreo: string;
@@ -398,7 +398,7 @@ export function createInitialSolicitudState(): Solicitud32611State {
      * Fecha de inicio de las operaciones de comercio exterior de la empresa.
      * Formato esperado: DD/MM/YYYY.
      */
-    fechaInicioComercio: '',
+    fechaInicio: '',
     fechaPago: '07/05/2026',
     fechaVigencia: '',
     sistemasRastreo: '',
@@ -414,8 +414,8 @@ export function createInitialSolicitudState(): Solicitud32611State {
     telefonoContacto: '',
     clasificacionInformacionEmpresa: '',
     llave: '',
-    claveReferencia: '',
-    cadenaDependencia: '',
+    claveReferencia: '284000255',
+    cadenaDependencia: '0111514EC40501',
     lada1: '',
     lada2: '',
     lada3: '',

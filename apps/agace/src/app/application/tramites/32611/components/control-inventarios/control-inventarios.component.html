@@ -5,7 +5,7 @@
    <form [formGroup]="registroControlInventariosForm">
       <div class="row mb-3">
          <div class="col-md-12">
-            <label class="form-label text-left">"Mencione el nombre, RFC y número de empleados que le proveen las empresas que le prestan el servicio de subcontratación*:</label>
+            <label class="form-label text-left">Mencione el nombre, RFC y número de empleados que le proveen las empresas que le prestan el servicio de subcontratación*:</label>
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
             formControlName="sistemaControlInventariosArt59" (valueChange)="onSeleccionfalsa($event)"
             (change)="setValoresStore(registroControlInventariosForm,'sistemaControlInventariosArt59')"></app-input-radio>

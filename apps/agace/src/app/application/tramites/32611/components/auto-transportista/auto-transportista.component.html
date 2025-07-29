@@ -13,7 +13,7 @@
       </div>
       <div *ngIf="autoTransportistaForm.get('autotransporteDosAnios')?.value === 1">
         <div class="col-md-12 text-danger ml-4"
-          *ngIf="autoTransportistaForm.get('fechaInicioComercio')?.value === '' || autoTransportistaForm.get('fechaInicioComercio')?.value === null">
+          *ngIf="autoTransportistaForm.get('fechaInicio')?.value === '' || autoTransportistaForm.get('fechaInicio')?.value === null">
           <b>Debe contar con al menos 2 años de experiencia</b>
         </div>
         <div class="col-md-12">
@@ -21,8 +21,8 @@
         </div>
         <div class="col-md-6">
           <input-fecha [datos]="fechaDeFinDeVigencia" [isDisabled]="esFormularioSoloLectura"
-            [setFecha]="autoTransportistaForm.get('fechaInicioComercio')?.value"
-            (valorCambiado)="actualizar($event,'fechaInicioComercio')">
+            [setFecha]="autoTransportistaForm.get('fechaInicio')?.value"
+            (valorCambiado)="actualizar($event,'fechaInicio')">
           </input-fecha>
         </div>
       </div>
