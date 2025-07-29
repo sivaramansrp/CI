@@ -398,7 +398,7 @@ export class TercerosrelacionadosComponent {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'info',
-        titulo: 'Error',
+        titulo: 'Selección requerida',
         mensaje: 'Debe seleccionar al menos un exportador para continuar.',
         cerrar: true,
         tiempoDeEspera: 2000,
