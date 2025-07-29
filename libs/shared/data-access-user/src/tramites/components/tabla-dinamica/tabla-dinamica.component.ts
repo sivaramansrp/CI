@@ -255,6 +255,7 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
         this.filtrarDatosLocal(SEARCH_VALOR);
       }
     });
+    this.getUpdatePagination();
   }
 
   /**

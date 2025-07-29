@@ -56,7 +56,7 @@ export interface Solicitud260303State {
     /**
      * El valor de claveDescripcionModal.
     */
-    clave: string;
+    claveScian: string;
     /**
      * El valor de descripcion.
     */
@@ -101,6 +101,10 @@ export interface Solicitud260303State {
      * El valor de clasificacion.
     */
     clasificacion:string;
+    /**
+     * El valor de clasificacion.
+    */
+    clave:string;
     /**
      * El valor de especificarClasificacionProducto.
     */
@@ -355,7 +359,7 @@ export function createInitialState(): Solicitud260303State {
         telefono: '',
         claveScianModal: '',
         avisoDeFuncionamiento: '',
-        clave: '',
+        claveScian: '',
         descripcion: '',
         avisoCheckbox: false,
         licenciaSanitaria: '',
@@ -367,6 +371,7 @@ export function createInitialState(): Solicitud260303State {
         losDatosYes: '',
         nombreORazon: '',
         clasificacion: '',
+        clave: '',
         especificarClasificacionProducto: '',
         denominacionEspecifica: '',
         denominacionDistintiva: '',
@@ -569,6 +574,16 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
         this.update((state) => ({
             ...state,
             claveScianModal,
+        }));
+    }
+    /**
+     * Establece el estado de claveScianModal.
+     * @param claveScianModal - El valor de claveScianModal.
+     */
+    public setClaveMercancias(claveMercancias: string): void {
+        this.update((state) => ({
+            ...state,
+            claveMercancias,
         }));
     }
     /**

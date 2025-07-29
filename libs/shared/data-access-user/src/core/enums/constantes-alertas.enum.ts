@@ -230,11 +230,15 @@ export const TODOS_PASOS = {
 };
 
 export const MANIFIESTOS = {
-  Importante: `<div class="form-check d-flex">
-   <input class="form-check-input" type="checkbox" id="manifiestos">* 
-  <label class="form-check-label" for="manifiestos">
-    Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.
-  </label>
+  Importante: `<div class="row form-check d-flex justify-content-between">
+    <div class="col-md-1 mt-5">
+      <input class="form-check-input" type="checkbox" id="manifiestos">*
+    </div>
+    <div class="col-md-11">
+      <label class="form-check-label" for="manifiestos">
+        Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.
+      </label>
+    </div>
   </div>`
 };
 

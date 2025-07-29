@@ -1,7 +1,7 @@
 <div class="container">
     <ng-titulo titulo="Datos del establecimiento"></ng-titulo>
     <div class="d-flex justify-content-end">
-        <button class="btn btn-primary" type="button" (click)="seleccionar(template)">Seleccionar establecimiento</button>
+        <button class="btn btn-primary" type="button" (click)="seleccionar(template)" tooltip="Selecciona para habilitar los campos del establecimiento" placement="left">Seleccionar establecimiento</button>
     </div>
     <div class="row mb-3">
         <div class="col-md-8">
@@ -143,29 +143,29 @@
                     </div>
                 }
             </div>
-            <div class="col-md-4">
-                <div class="d-flex">
-                    <div class="form-group">
-                        <label for="lada" class="form-label">Lada:</label>
-                        <input type="text" id="lada" class="form-control lada" 
-                            formControlName="lada"
-                            (change)="setValoresStore(domicilioDeElstablecimientoForm,'lada', 'setLada')">
-                    </div>
-                    <div class="form-group">
-                        <label for="telefono" class="form-label">Teléfono*:</label>
-                        <input type="text" id="telefono" 
-                            formControlName="telefono" 
-                            class="form-control"
-                            (change)="setValoresStore(domicilioDeElstablecimientoForm,'lada', 'setTelefono')">
-                    </div>
-                    @if(domicilioDeElstablecimientoForm.controls['telefono'].invalid && domicilioDeElstablecimientoForm.controls['telefono'].touched) {
-                        <div class="d-block">
-                            @if(domicilioDeElstablecimientoForm.controls['telefono'].errors?.['required']) {
-                                <span class="mensaje-error">Este campo es obligatorio</span>
-                            }
-                        </div>
-                    }
+            <div class="col-md-1">
+                <div class="form-group">
+                    <label for="lada" class="form-label">Lada:</label>
+                    <input type="text" id="lada" class="form-control" 
+                        formControlName="lada"
+                        (change)="setValoresStore(domicilioDeElstablecimientoForm,'lada', 'setLada')">
                 </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="telefono" class="form-label">Teléfono*:</label>
+                    <input type="text" id="telefono" 
+                        formControlName="telefono" 
+                        class="form-control"
+                        (change)="setValoresStore(domicilioDeElstablecimientoForm,'lada', 'setTelefono')">
+                </div>
+                @if(domicilioDeElstablecimientoForm.controls['telefono'].invalid && domicilioDeElstablecimientoForm.controls['telefono'].touched) {
+                    <div class="d-block">
+                        @if(domicilioDeElstablecimientoForm.controls['telefono'].errors?.['required']) {
+                            <span class="mensaje-error">Este campo es obligatorio</span>
+                        }
+                    </div>
+                }
             </div>
         </div>
     <div class="row mb-3 mt-5">
@@ -186,7 +186,7 @@
         <div class="col-md-4">
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" 
-                        formControlName="avisoDeFuncionamiento" 
+                        formControlName="avisoCheckbox" 
                         (change)="onFuncionamientoCheckboxCambiar($event)"
                         id="aviso">
                 <label class="form-check-label fw-normal" for="aviso">
@@ -216,9 +216,9 @@
             </app-catalogo-select>
         </div>
     </div>
-    <div class="row mb-3">
+    <div class="row mb-3 mt-5">
         <h5 class="mt-3 mb-3">Mercancías*:</h5>
-        <p class="fw-bold">Mercancías</p>
+        <p class="mt-5 fw-bold fs-4">Mercancías</p>
         <div class="col-md-12">
             <app-tabla-dinamica
                 [configuracionTabla]="configuracionMercancias"
@@ -227,8 +227,7 @@
 >
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-3">
-                <button class="btn btn-default me-3">Modificar</button>
-                <button class="btn btn-danger" (click)="seleccionarAgregar(mercancias)">Eliminar</button>
+                <button class="btn btn-primary" (click)="seleccionarAgregar(mercancias)">Agregar</button>
             </div>
         </div>
     </div>
@@ -294,7 +293,7 @@
                 }
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-primary mt-5">Bucar</button>
+                <button type="button" class="btn btn-primary mt-5">Buscar</button>
             </div>
           </div>
           <div class="row mb-2">
@@ -379,13 +378,13 @@
                         [catalogo]="claveCatalogo" 
                         [label]="'Clave S.C.I.A.N'"
                         [required]="true"
-                        formControlName="clave"
-                        (change)="setValoresStore(scianForm,'clave', 'setClave')"
-                        name="clave">
+                        formControlName="claveScian"
+                        (change)="setValoresStore(scianForm,'claveScian', 'setClave')"
+                        name="claveScian">
                     </app-catalogo-select>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col-md-8">
                     <app-catalogo-select 
                         [catalogo]="estadoCatalogo" 
@@ -402,7 +401,7 @@
     <div class="modal-footer justify-content-end mt-3">
         <button type="button" class="btn btn-default me-3">Cancelar</button>
         <button type="button" class="btn btn-default me-3">Limpiar</button>
-        <button type="button" class="btn btn-primary" (click)="modalRef?.hide()">Agregar</button>
+        <button type="button" class="btn btn-primary" (click)="scianAgregar()">Agregar</button>
     </div>
 </ng-template>
 
@@ -420,7 +419,7 @@
                         [label]="'Clasificación del producto'"
                         [required]="true"
                         formControlName="clave"
-                        (change)="setValoresStore(mercanciasForm,'clave', 'setClave')"
+                        (change)="setValoresStore(mercanciasForm,'clave', 'setClaveMercancias')"
                         name="clave">
                     </app-catalogo-select>
                 </div>
@@ -480,7 +479,7 @@
                               (click)="mostrarColapsable('forma')"
                             >
                               <p class="panel-title fw-bold">Forma farmacéutica</p>
-                              <button type="button" class="collpase-button collapsed"></button>
+                              <button type="button" class="collpase-button" [ngClass]="colapsableObj.formaFarmaceuticaColapsable ? '' : 'collapsed'"></button>
                             </div>
                             @if(colapsableObj.formaFarmaceuticaColapsable){
                             <div class="panel-collapse collapse in" id="panel-01">
@@ -607,7 +606,7 @@
                               (click)="mostrarColapsable('PaisDeOrigen')"
                             >
                               <p class="panel-title fw-bold">Pais de origen</p>
-                              <button type="button" class="collpase-button collapsed"></button>
+                              <button type="button" class="collpase-button" [ngClass]="colapsableObj.paisDeOrigenColapsable ? '' : 'collapsed'"></button>
                             </div>
                             @if(colapsableObj.paisDeOrigenColapsable){
                             <div class="panel-collapse collapse in" id="panel-01">
@@ -647,7 +646,7 @@
                               (click)="mostrarColapsable('usoEspecifico')"
                             >
                               <p class="panel-title fw-bold">Uso específico</p>
-                              <button type="button" class="collpase-button collapsed"></button>
+                              <button type="button" class="collpase-button" [ngClass]="colapsableObj.usoEspecificoColapsable ? '' : 'collapsed'"></button>
                             </div>
                             @if(colapsableObj.usoEspecificoColapsable){
                             <div class="panel-collapse collapse in" id="panel-01">

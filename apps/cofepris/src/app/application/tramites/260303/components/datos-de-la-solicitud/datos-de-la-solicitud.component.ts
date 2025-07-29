@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioState } from '@ng-mf/data-access-user';
 import { EstadoCatalogResponse } from '../../models/certificados-licencias-permisos.model';
 import PAISES_DE_ORIGEN from '@libs/shared/theme/assets/json/260303/paises_de_origen.json';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
 import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico.json';
 /**
@@ -25,7 +26,8 @@ import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico
     ReactiveFormsModule,
     CatalogoSelectComponent,
     CrosslistComponent,
-    AlertComponent
+    AlertComponent,
+    TooltipModule
   ],
   providers:[BsModalService],
   templateUrl: './datos-de-la-solicitud.component.html',
@@ -338,7 +340,7 @@ ngOnInit(): void {
 public inicializarTablaYCatalogoDatos(): void {
   this.getDenominacionForm();
   this.getEstadoCatalogDatos();
-  this.getscianTabla();
+  // this.getscianTabla();
   this.getClaveCatalogDatos();
   this.getRegimenCatalogDatos();
   this.getMercanciasTabla();
@@ -398,18 +400,22 @@ public static deepCopy<T>(obj: T): T {
    * Se aplican validadores para asegurar que los campos requeridos se completen adecuadamente.
    */
   public crearElstablecimientoForm(): void {
+    const AVISO_VALOR = this.solicitudState.licenciaSanitaria === ''
+    ? true
+    : this.solicitudState.avisoCheckbox;
+
     this.domicilioDeElstablecimientoForm = this.fb.group({
-      codigoPostal: [this.solicitudState.codigoPostal,Validators.required],
-      estado: [this.solicitudState.estado,Validators.required],
-      municipio: [this.solicitudState.municipio,Validators.required],
-      localidad: [this.solicitudState.localidad,Validators.required],  
-      colonia: [this.solicitudState.colonia,Validators.required],
-      calleYNumero: [this.solicitudState.calleYNumero,Validators.required],
-      correoElecronico: [this.solicitudState.correoElecronico,Validators.required],
-      rfc: [this.solicitudState.rfc,Validators.required],
-      lada: [this.solicitudState.lada],
-      telefono: [this.solicitudState.telefono,Validators.required],
-      avisoDeFuncionamiento: [this.solicitudState.avisoDeFuncionamiento],
+      codigoPostal: [{value: this.solicitudState.codigoPostal, disabled: true},Validators.required],
+      estado: [{value: this.solicitudState.estado, disabled: false},Validators.required],
+      municipio: [{value: this.solicitudState.municipio, disabled: true},Validators.required],
+      localidad: [{value: this.solicitudState.localidad, disabled: true},Validators.required],  
+      colonia: [{value: this.solicitudState.colonia, disabled: true},Validators.required],
+      calleYNumero: [{value: this.solicitudState.calleYNumero, disabled: true},Validators.required],
+      correoElecronico: [{value: this.solicitudState.correoElecronico, disabled: true},Validators.required],
+      rfc: [{value: this.solicitudState.rfc, disabled: true},Validators.required],
+      lada: [{value: this.solicitudState.lada, disabled: true}],
+      telefono: [{value: this.solicitudState.telefono, disabled: true},Validators.required],
+      avisoCheckbox: [{value: AVISO_VALOR, disabled: false}],
       licenciaSanitaria: [{ value: this.solicitudState.licenciaSanitaria, disabled: false }],
       regimenDestinara: [this.solicitudState.regimenDestinara],
       aduana: [this.solicitudState.aduana],
@@ -449,7 +455,7 @@ public static deepCopy<T>(obj: T): T {
    */
   public cerrarSCIANForm(): void {
     this.scianForm = this.fb.group({
-      clave: [this.solicitudState.clave],
+      claveScian: [this.solicitudState.claveScian],
       descripcion: [this.solicitudState.descripcion]
     });
   }
@@ -532,7 +538,8 @@ public static deepCopy<T>(obj: T): T {
    */
   public cerrar():void {
     this.modalRef?.hide();
-    this.denominacionForm.get('denominacionRazon')?.enable();   
+    this.denominacionForm.get('denominacionRazon')?.enable();
+    this.domicilioDeElstablecimientoForm?.enable();
   }
 
   /**
@@ -619,6 +626,30 @@ public static deepCopy<T>(obj: T): T {
    */
   public seleccionarAgregar(template: TemplateRef<void>): void {
     this.modalRef = this.modalService.show(template, { class: 'modal-lg' });
+  }
+
+  /** Lógica para agregar un nuevo elemento a la tabla de SCIAN */
+  public scianAgregar(): void {
+    if (this.scianForm.valid) {
+      const DATO = {
+        clave: DatosDeLaSolicitudComponent.obtenerDescripcion(this.claveCatalogo, this.scianForm.get('claveScian')?.value),
+        descripcion: DatosDeLaSolicitudComponent.obtenerDescripcion(this.estadoCatalogo, this.scianForm.get('descripcion')?.value),
+      };
+
+      this.scianTablaDatos = [...this.scianTablaDatos, DATO];
+      this.modalRef?.hide();
+    }
+  }
+
+  /**
+ * @method obtenerDescripcion
+ * @description
+ * Obtiene la descripción de la fracción arancelaria seleccionada en el formulario dinámico.
+ * @returns {string} Descripción de la fracción arancelaria seleccionada o una cadena vacía si no existe.
+ */
+  public static obtenerDescripcion(array: Catalogo[], id: string): string {
+    const DESCRIPCION = array.find((ele: Catalogo) => Number(ele.id) === Number(id))?.descripcion;
+    return DESCRIPCION ?? '';
   }
 
   /**
@@ -721,6 +752,7 @@ public static deepCopy<T>(obj: T): T {
     } else {
         this.domicilioDeElstablecimientoForm.get('licenciaSanitaria')?.enable();
     }
+    (this.tramite260211Store['setAvisoCheckbox'] as (value: unknown) => void)(VALOR.checked);
   }
 
   /**
@@ -730,6 +762,9 @@ public static deepCopy<T>(obj: T): T {
    * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260303Store): void {
+      if (campo === 'claveScian') {
+        form.get('descripcion')?.setValue('1');
+      }
       const VALOR = form.get(campo)?.value;
       (this.tramite260211Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
@@ -741,19 +776,11 @@ public static deepCopy<T>(obj: T): T {
      */
     deshabilitarFormularios(): void {
       if (this.consultaState?.readonly) {
-        // Deshabilita todos los formularios en modo solo lectura
         this.denominacionForm.disable();
         this.domicilioDeElstablecimientoForm.disable();
         this.representanteLegalForm.disable();
         this.scianForm.disable();
         this.mercanciasForm.disable();
-      } else {
-        // Habilita todos los formularios para edición
-        this.denominacionForm.enable();
-        this.domicilioDeElstablecimientoForm.enable();
-        this.representanteLegalForm.enable();
-        this.scianForm.enable();
-        this.mercanciasForm.enable();
       }
     }
 
