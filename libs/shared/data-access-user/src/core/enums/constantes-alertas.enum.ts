@@ -363,3 +363,22 @@ export const FECHA_FINAL_VIGENCIA_DEL_CUPO = {
   required: false,
   habilitado: false,
 };
+
+/**
+ * Constante que contiene los textos de instrucciones para la sección de selección de documentos.
+ *
+ * @constant
+ * @type {{ INSTRUCCIONES: string }}
+ *
+ * @property {string} INSTRUCCIONES - Texto HTML que contiene las instrucciones para solicitar o eliminar documentos adicionales.
+ *
+ * Ejemplo de uso:
+ * ```
+ * const instrucciones = SELECCIONAR_DOCUMENTOS.INSTRUCCIONES;
+ * ```
+ */
+export const SELECCIONAR_DOCUMENTOS = {
+  INSTRUCCIONES: `<h6>Instrucciones:</h6>
+  <p>-Para solicitar documentos adicionales, selecciona el documento y presiona "Agregar nuevo".</p>
+  <p>-En caso de que no requieras algún documento, selecciónalo y elimínalo.</p>`,
+};
