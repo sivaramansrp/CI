@@ -496,7 +496,7 @@ export const INFORMACION_DE_COMPANIA = [
     valorPredeterminado: '',
     marginTop: 0,
     habilitado: true,
-    validadores: [{ tipo: 'required' },
+    validadores: [
       {
         tipo: 'maxlength',
         varlor: 50
