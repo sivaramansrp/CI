@@ -79,7 +79,13 @@ export class RegistroSolicitudService {
    */
 
   public actualizarEstadoFormulario(DATOS: Solicitud31803State): void {
-    this.tramite31803Store.setBanco(DATOS.banco ?? []);
+    this.tramite31803Store.setNumeroOficio(DATOS.numeroOficio);
+    this.tramite31803Store.setCadenaDependencia(DATOS.cadenaDependencia);
+    this.tramite31803Store.setImportePago(DATOS.importePago);
+    this.tramite31803Store.setFechaInicial(DATOS.fechaInicial);
+    this.tramite31803Store.setFechaFinal(DATOS.fechaFinal);
+    this.tramite31803Store.setClaveReferencia(DATOS.claveReferencia);
+    this.tramite31803Store.setBanco(DATOS.banco);
     this.tramite31803Store.setNumeroOperacion(DATOS.numeroOperacion);
     this.tramite31803Store.setLlave(DATOS.llave);
     this.tramite31803Store.setManifiesto1(DATOS.manifiesto1);
@@ -104,7 +110,7 @@ export class RegistroSolicitudService {
  *
  * @returns Un observable que emite una lista de objetos de tipo `Catalogo`.
  */
-getSolicitudDatos(): Observable<SolicitudDatosResponse> {
-  return this.http.get<SolicitudDatosResponse>('assets/json/31803/solicitud-banco.json');
-}
+getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud31803State> {
+    return this.http.get<Solicitud31803State>('assets/json/31803/solicitud-banco.json');
+  }
 }
