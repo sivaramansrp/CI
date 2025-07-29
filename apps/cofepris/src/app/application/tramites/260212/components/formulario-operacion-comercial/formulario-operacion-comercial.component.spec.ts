@@ -11,6 +11,7 @@ class MockSolicitudService {
     return of([{ id: 1, descripcion: 'Mock Clave' }]);
   }
 }
+
 class MockTramite260212Store {
   setRegimen = jest.fn();
   setEntradas = jest.fn();
@@ -18,6 +19,12 @@ class MockTramite260212Store {
 class MockTramite260212Query {
   selectedRegimen$ = of('mockRegimen');
   selectedEntradas$ = of('mockEntradas');
+  selectSolicitud$ = of({
+    avisoclave: 'av001',
+    noLicenciaSanitaria: 'LS001',
+    regimen: 'mockRegimen',
+    entradas: 'mockEntradas',
+  }); // ✅ this is missing
 }
 class MockConsultaioQuery {
   selectConsultaioState$ = of({ readonly: true });
@@ -36,6 +43,7 @@ describe('FormularioOperacionComercialComponent', () => {
         { provide: 'Tramite260212Store', useClass: MockTramite260212Store },
         { provide: 'Tramite260212Query', useClass: MockTramite260212Query },
         { provide: 'ConsultaioQuery', useClass: MockConsultaioQuery },
+         
         // Angular DI tokens for constructor injection
         { provide: require('../../estados/tramite260212.store').Tramite260212Store, useClass: MockTramite260212Store },
         { provide: require('../../estados/tramite260212.query').Tramite260212Query, useClass: MockTramite260212Query },

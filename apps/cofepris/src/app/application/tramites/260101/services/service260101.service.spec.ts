@@ -1,6 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { Service260101Service } from './service260101.service';
-import { Solicitud260101Store, Solicitud260101State } from '../estados/tramites260101.store';
+import {
+  Solicitud260101Store,
+  Solicitud260101State,
+} from '../estados/tramites260101.store';
 import { HttpClient } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 
@@ -18,60 +21,81 @@ describe('Service260101Service', () => {
   let storeMock: jest.Mocked<Solicitud260101Store>;
 
   const mockState: Solicitud260101State = {
-    razonSocial: 'Empresa S.A.',
-    correoElectronico: 'test@email.com',
-    codigoPostal: '12345',
-    fraccionArancelaria: '010101',
-    estado: 1,
-    municipio: 'Benito Juárez',
-    localidad: 'Centro',
-    colonia: 'Roma',
-    calle: 'Insurgentes',
-    lada: 55,
-    telefono: 12345678,
-    avisoDeFuncionamiento: true,
-    licenciaSanitaria: 'LS123',
-    liveFreshFrozen: true,
-    regimen: 1,
-    aduana: 1,
-    hacerlos: 'Hacer',
-    rfc: 'RFC123',
-    legalRazonSocial: 'Legal S.A.',
-    apellidoPaterno: 'Pérez',
-    apellidoMeterno: 'Gómez',
+    razonSocial: '',
+    correoElectronico: '',
+    codigoPostal: '',
+    estado: 0,
+    municipio: '',
+    localidad: '',
+    colonia: '',
+    calle: '',
+    lada: 0,
+    telefono: 0,
+    avisoDeFuncionamiento: false,
+    licenciaSanitaria: '',
+    liveFreshFrozen: false,
+    regimen: 0,
+    aduana: 0,
+    hacerlos: '',
+    rfc: '',
+    legalRazonSocial: '',
+    apellidoPaterno: '',
+    apellidoMeterno: '',
     mercanciasDatos: [],
-    clasificaionProductos: 'Clasificación',
-    tipoPersona: 'Moral',
-    especificarProducto: 1,
-    nombreProductoEspecifico: 'ProductoX',
-    marca: 'MarcaX',
-    tipoProducto: 1,
-    descripcionFraccionArancelaria: 'Descripción',
-    cantidadUMT: '10',
-    umt: 'kg',
-    cantidadUMC: '5',
-    umc: 1,
-    clavesDeLotes: [
-      { clave: 'CL123', lotes: 'Lote1', fabricacion: '2024-01-01', caducidad: '2025-01-01' } as ClavesDeLotes,
-      { clave: 'CL124', lotes: 'Lote2', fabricacion: '2024-02-01', caducidad: '2025-02-01' } as ClavesDeLotes
-    ],
-    claveDeLosLotes: 'CL123',
-    fechaFabricacion: '2024-01-01',
-    fechaCaducidad: '2025-01-01',
     manifesto: false,
+    clasificaionProductos: '',
+    especificarProducto: 0,
+    nombreProductoEspecifico: '',
+    marca: '',
+    tipoProducto: 0,
+    fraccionArancelaria: '',
+    descripcionFraccionArancelaria: '',
+    cantidadUMT: '',
+    umt: '',
+    cantidadUMC: '',
+    umc: 0,
+    claveDeLosLotes: '',
+    fechaFabricacion: '',
+    fechaCaducidad: '',
+    clavesDeLotes: [],
+    tipoPersona: '',
+    modificarRFC: '',
     denominacion: '',
-    modificarRFC: 'false',
-    domicilioPais: 0,
-    domicilioEstado: 0,
-    domicilioMunicipio: 0,
-    domicilioLocalidad: 0,
-    domicilioColonia: 0,
+    denominacionNombre: '',
+    denominacionApellidoPaterno: '',
+    denominacionApellidoMaterno: '',
+    domicilioPais: '',
+    domicilioEstado: '',
+    domicilioMunicipio: '',
+    domicilioLocalidad: '',
+    domicilioCodigo: '',
+    domicilioColonia: '',
     domiciliCalle: '',
     domiciliNumeroExterior: '',
     domiciliNumeroInterior: '',
     domiciliLada: '',
     domiciliTelefono: '',
     domiciliCorreoElectronioco: '',
+    tercerosNacionalidad: 0,
+    tercerosTipoPersona: 0,
+    tercerosRFC: '',
+    tercerosCurp: '',
+    tercerosDenominacion: '',
+    tercerosDenominacionNombre: '',
+    tercerosApellidoPaterno: '',
+    tercerosApellidoMaterno: '',
+    tercerosPais: '',
+    tercerosEstado: '',
+    tercerosMunicipio: '',
+    tercerosLocalidad: '',
+    tercerosCodigo: '',
+    tercerosColonia: '',
+    tercerosCalle: '',
+    tercerosNumeroExterior: '',
+    tercerosNumeroInterior: '',
+    tercerosLada: '',
+    tercerosTelefono: '',
+    tercerosCorreoElectronico: '',
     destinatarioDatos: [],
     claveDeReferencia: '',
     cadenaDeDependencia: '',
@@ -79,59 +103,110 @@ describe('Service260101Service', () => {
     liaveDePago: '',
     fechaDePago: '',
     importeDePago: '',
-    domicilioCodigo: 0
+    modificarDestinatario: false,
+    modificarFabricante: false,
+    scianSeleccionados: [],
+    mercanciasSeleccionados: [],
   };
 
   beforeEach(() => {
+    jest.clearAllMocks();
     httpClientMock = {
-      get: jest.fn()
+      get: jest.fn(() => of()),
     } as any;
 
     storeMock = {
-      setRazonSocial: jest.fn(),
-      setCorreoElectronico: jest.fn(),
-      setCodigoPostal: jest.fn(),
-      setFraccionArancelaria: jest.fn(),
-      setEstado: jest.fn(),
-      setMunicipio: jest.fn(),
-      setLocalidad: jest.fn(),
-      setColonia: jest.fn(),
-      setCalle: jest.fn(),
-      setLada: jest.fn(),
-      setTelefono: jest.fn(),
-      setAvisoDeFuncionamiento: jest.fn(),
-      setLicenciaSanitaria: jest.fn(),
-      setLiveFreshFrozen: jest.fn(),
-      setRegimen: jest.fn(),
-      setAduana: jest.fn(),
-      setHacerlos: jest.fn(),
-      setRfc: jest.fn(),
-      setLegalRazonSocial: jest.fn(),
-      setApellidoPaterno: jest.fn(),
-      setMercanciasDatos: jest.fn(),
-      setClasificacionProductos: jest.fn(),
-      setTipoPersona: jest.fn(),
-      setEspecificarProducto: jest.fn(),
-      setNombreProductoEspecifico: jest.fn(),
-      setMarca: jest.fn(),
-      setTipoProducto: jest.fn(),
-      setDescripcionFraccionArancelaria: jest.fn(),
-      setCantidadUMT: jest.fn(),
-      setUmt: jest.fn(),
-      setCantidadUMC: jest.fn(),
-      setUmc: jest.fn(),
-      setClaveDeLosLotes: jest.fn(),
-      setFechaFabricacion: jest.fn(),
-      setFechaCaducidad: jest.fn(),
-      setClavesDeLotes: jest.fn()
+      setRazonSocial: jest.fn(() => of()),
+      setCorreoElectronico: jest.fn(() => of()),
+      setCodigoPostal: jest.fn(() => of()),
+      setFraccionArancelaria: jest.fn(() => of()),
+      setEstado: jest.fn(() => of()),
+      setMunicipio: jest.fn(() => of()),
+      setLocalidad: jest.fn(() => of()),
+      setColonia: jest.fn(() => of()),
+      setCalle: jest.fn(() => of()),
+      setLada: jest.fn(() => of()),
+      setTelefono: jest.fn(() => of()),
+      setAvisoDeFuncionamiento: jest.fn(() => of()),
+      setLicenciaSanitaria: jest.fn(() => of()),
+      setLiveFreshFrozen: jest.fn(() => of()),
+      setRegimen: jest.fn(() => of()),
+      setAduana: jest.fn(() => of()),
+      setHacerlos: jest.fn(() => of()),
+      setRfc: jest.fn(() => of()),
+      setLegalRazonSocial: jest.fn(() => of()),
+      setApellidoPaterno: jest.fn(() => of()),
+      setMercanciasDatos: jest.fn(() => of()),
+      setClasificacionProductos: jest.fn(() => of()),
+      setTipoPersona: jest.fn(() => of()),
+      setEspecificarProducto: jest.fn(() => of()),
+      setNombreProductoEspecifico: jest.fn(() => of()),
+      setMarca: jest.fn(() => of()),
+      setTipoProducto: jest.fn(() => of()),
+      setDescripcionFraccionArancelaria: jest.fn(() => of()),
+      setCantidadUMT: jest.fn(() => of()),
+      setUmt: jest.fn(() => of()),
+      setApellidoMeterno: jest.fn(() => of()),
+      setCantidadUMC: jest.fn(() => of()),
+      setUmc: jest.fn(() => of()),
+      setClaveDeLosLotes: jest.fn(() => of()),
+      setFechaFabricacion: jest.fn(() => of()),
+      setFechaCaducidad: jest.fn(() => of()),
+      setClavesDeLotes: jest.fn(() => of()),
+      setDenominacion: jest.fn(() => of()),
+      setDenominacionNombre: jest.fn(() => of()),
+      setDenominacionApellidoPaterno: jest.fn(() => of()),
+      setDenominacionApellidoMaterno: jest.fn(() => of()),
+      setModificarRFC: jest.fn(() => of()),
+      setManifesto: jest.fn(() => of()),
+      setClaveDeReferencia: jest.fn(() => of()),
+      setCadenaDeDependencia: jest.fn(() => of()),
+      setBanco: jest.fn(() => of()),
+      setLiaveDePago: jest.fn(() => of()),
+      setFechaDePago: jest.fn(() => of()),
+      setImporteDePago: jest.fn(() => of()),
+      setModificarDestinatario: jest.fn(() => of()),
+      setModificarFabricante: jest.fn(() => of()),
+      setScianSeleccionados: jest.fn(() => of()),
+      setMercanciasSeleccionados: jest.fn(() => of()),
+      setDomicilioPais: jest.fn(() => of()),
+      setDomicilioEstado: jest.fn(() => of()),
+      setDomicilioMunicipio: jest.fn(() => of()),
+      setDomicilioLocalidad: jest.fn(() => of()),
+      setDomicilioCodigoPostal: jest.fn(() => of()),
+      setDomicilioColonia: jest.fn(() => of()),
+      setDomicilioCalle: jest.fn(() => of()),
+      setDomicilioNumeroExterior: jest.fn(() => of()),
+      setDomicilioNumeroInterior: jest.fn(() => of()),
+      setDomicilioLada: jest.fn(() => of()),
+      setDomicilioTelefono: jest.fn(() => of()),
+      setDomicilioCorreoElectronico: jest.fn(() => of()),
+      setTercerosTipoPersona: jest.fn(() => of()),
+      setTercerosRFC: jest.fn(() => of()),
+      setTercerosCurp: jest.fn(() => of()),
+      setTercerosDenominacion: jest.fn(() => of()),
+      setTercerosDenominacionNombre: jest.fn(() => of()),
+      setTercerosApellidoPaterno: jest.fn(() => of()),
+      setTercerosApellidoMaterno: jest.fn(() => of()),
+      setTercerosPais: jest.fn(() => of()),
+      setTercerosEstado: jest.fn(() => of()),
+      setTercerosMunicipio: jest.fn(() => of()),
+      setTercerosLocalidad: jest.fn(() => of()),
+      setTercerosColonia: jest.fn(() => of()),
+      setTercerosCalle: jest.fn(() => of()),
+      setTercerosNumeroExterior: jest.fn(() => of()),
+      setTercerosNumeroInterior: jest.fn(() => of()),
+      setTercerosLada: jest.fn(() => of()),
+      setTercerosTelefono: jest.fn(() => of()),
+      setTercerosCorreoElectronico: jest.fn(() => of()),
     } as any;
 
     TestBed.configureTestingModule({
       providers: [
         Service260101Service,
         { provide: HttpClient, useValue: httpClientMock },
-        { provide: Solicitud260101Store, useValue: storeMock }
-      ]
+        { provide: Solicitud260101Store, useValue: storeMock },
+      ],
     });
     service = TestBed.inject(Service260101Service);
   });
@@ -143,49 +218,196 @@ describe('Service260101Service', () => {
   it('should call all store setters with correct values in actualizarEstadoFormulario', () => {
     service.actualizarEstadoFormulario(mockState);
 
-    expect(storeMock.setRazonSocial).toHaveBeenCalledWith(mockState.razonSocial);
-    expect(storeMock.setCorreoElectronico).toHaveBeenCalledWith(mockState.correoElectronico);
-    expect(storeMock.setCodigoPostal).toHaveBeenCalledWith(mockState.codigoPostal);
-    expect(storeMock.setFraccionArancelaria).toHaveBeenCalledWith(mockState.fraccionArancelaria);
+    expect(storeMock.setDenominacion).toHaveBeenCalledWith(
+      mockState.denominacion
+    );
+    expect(storeMock.setDenominacionNombre).toHaveBeenCalledWith(
+      mockState.denominacionNombre
+    );
+    expect(storeMock.setDenominacionApellidoPaterno).toHaveBeenCalledWith(
+      mockState.denominacionApellidoPaterno
+    );
+    expect(storeMock.setDenominacionApellidoMaterno).toHaveBeenCalledWith(
+      mockState.denominacionApellidoMaterno
+    );
+    expect(storeMock.setModificarRFC).toHaveBeenCalledWith(
+      mockState.modificarRFC
+    );
+    expect(storeMock.setClaveDeReferencia).toHaveBeenCalledWith(
+      mockState.claveDeReferencia
+    );
+    expect(storeMock.setCadenaDeDependencia).toHaveBeenCalledWith(
+      mockState.cadenaDeDependencia
+    );
+    expect(storeMock.setBanco).toHaveBeenCalledWith(mockState.banco);
+    expect(storeMock.setLiaveDePago).toHaveBeenCalledWith(
+      mockState.liaveDePago
+    );
+    expect(storeMock.setFechaDePago).toHaveBeenCalledWith(
+      mockState.fechaDePago
+    );
+    expect(storeMock.setImporteDePago).toHaveBeenCalledWith(
+      mockState.importeDePago
+    );
+    expect(storeMock.setModificarDestinatario).toHaveBeenCalledWith(
+      mockState.modificarDestinatario
+    );
+    expect(storeMock.setModificarFabricante).toHaveBeenCalledWith(
+      mockState.modificarFabricante
+    );
+    expect(storeMock.setDomicilioPais).toHaveBeenCalledWith(
+      mockState.domicilioPais
+    );
+    expect(storeMock.setDomicilioEstado).toHaveBeenCalledWith(
+      mockState.domicilioEstado
+    );
+    expect(storeMock.setDomicilioMunicipio).toHaveBeenCalledWith(
+      mockState.domicilioMunicipio
+    );
+    expect(storeMock.setDomicilioLocalidad).toHaveBeenCalledWith(
+      mockState.domicilioLocalidad
+    );
+    expect(storeMock.setDomicilioColonia).toHaveBeenCalledWith(
+      mockState.domicilioColonia
+    );
+    expect(storeMock.setTercerosTipoPersona).toHaveBeenCalledWith(
+      mockState.tercerosTipoPersona
+    );
+    expect(storeMock.setTercerosRFC).toHaveBeenCalledWith(
+      mockState.tercerosRFC
+    );
+    expect(storeMock.setTercerosCurp).toHaveBeenCalledWith(
+      mockState.tercerosCurp
+    );
+    expect(storeMock.setTercerosDenominacion).toHaveBeenCalledWith(
+      mockState.tercerosDenominacion
+    );
+    expect(storeMock.setTercerosDenominacionNombre).toHaveBeenCalledWith(
+      mockState.tercerosDenominacionNombre
+    );
+    expect(storeMock.setTercerosApellidoPaterno).toHaveBeenCalledWith(
+      mockState.tercerosApellidoPaterno
+    );
+    expect(storeMock.setTercerosApellidoMaterno).toHaveBeenCalledWith(
+      mockState.tercerosApellidoMaterno
+    );
+    expect(storeMock.setTercerosPais).toHaveBeenCalledWith(
+      mockState.tercerosPais
+    );
+    expect(storeMock.setTercerosEstado).toHaveBeenCalledWith(
+      mockState.tercerosEstado
+    );
+    expect(storeMock.setTercerosMunicipio).toHaveBeenCalledWith(
+      mockState.tercerosMunicipio
+    );
+    expect(storeMock.setTercerosLocalidad).toHaveBeenCalledWith(
+      mockState.tercerosLocalidad
+    );
+    expect(storeMock.setTercerosColonia).toHaveBeenCalledWith(
+      mockState.tercerosColonia
+    );
+    expect(storeMock.setTercerosCalle).toHaveBeenCalledWith(
+      mockState.tercerosCalle
+    );
+    expect(storeMock.setScianSeleccionados).toHaveBeenCalledWith(
+      mockState.scianSeleccionados
+    );
+    expect(storeMock.setMercanciasSeleccionados).toHaveBeenCalledWith(
+      mockState.mercanciasSeleccionados
+    );
+    expect(storeMock.setManifesto).toHaveBeenCalledWith(mockState.manifesto);
+
+    expect(storeMock.setRazonSocial).toHaveBeenCalledWith(
+      mockState.razonSocial
+    );
+    expect(storeMock.setCorreoElectronico).toHaveBeenCalledWith(
+      mockState.correoElectronico
+    );
+    expect(storeMock.setCodigoPostal).toHaveBeenCalledWith(
+      mockState.codigoPostal
+    );
+    expect(storeMock.setFraccionArancelaria).toHaveBeenCalledWith(
+      mockState.fraccionArancelaria
+    );
     expect(storeMock.setEstado).toHaveBeenCalledWith(mockState.estado);
     expect(storeMock.setMunicipio).toHaveBeenCalledWith(mockState.municipio);
     expect(storeMock.setLocalidad).toHaveBeenCalledWith(mockState.localidad);
     expect(storeMock.setColonia).toHaveBeenCalledWith(mockState.colonia);
     expect(storeMock.setCalle).toHaveBeenCalledWith(mockState.calle);
     expect(storeMock.setLada).toHaveBeenCalledWith(mockState.lada);
+    expect(storeMock.setApellidoMeterno).toHaveBeenCalledWith(
+      mockState.apellidoMeterno
+    );
     expect(storeMock.setTelefono).toHaveBeenCalledWith(mockState.telefono);
-    expect(storeMock.setAvisoDeFuncionamiento).toHaveBeenCalledWith(mockState.avisoDeFuncionamiento);
-    expect(storeMock.setLicenciaSanitaria).toHaveBeenCalledWith(mockState.licenciaSanitaria);
-    expect(storeMock.setLiveFreshFrozen).toHaveBeenCalledWith(mockState.liveFreshFrozen);
+    expect(storeMock.setAvisoDeFuncionamiento).toHaveBeenCalledWith(
+      mockState.avisoDeFuncionamiento
+    );
+    expect(storeMock.setLicenciaSanitaria).toHaveBeenCalledWith(
+      mockState.licenciaSanitaria
+    );
+    expect(storeMock.setLiveFreshFrozen).toHaveBeenCalledWith(
+      mockState.liveFreshFrozen
+    );
     expect(storeMock.setRegimen).toHaveBeenCalledWith(mockState.regimen);
     expect(storeMock.setAduana).toHaveBeenCalledWith(mockState.aduana);
     expect(storeMock.setHacerlos).toHaveBeenCalledWith(mockState.hacerlos);
     expect(storeMock.setRfc).toHaveBeenCalledWith(mockState.rfc);
-    expect(storeMock.setLegalRazonSocial).toHaveBeenCalledWith(mockState.legalRazonSocial);
-    expect(storeMock.setApellidoPaterno).toHaveBeenCalledWith(mockState.apellidoPaterno);
-    expect(storeMock.setMercanciasDatos).toHaveBeenCalledWith(mockState.mercanciasDatos);
-    expect(storeMock.setClasificacionProductos).toHaveBeenCalledWith(mockState.clasificaionProductos);
-    expect(storeMock.setTipoPersona).toHaveBeenCalledWith(mockState.tipoPersona);
-    expect(storeMock.setEspecificarProducto).toHaveBeenCalledWith(mockState.especificarProducto);
-    expect(storeMock.setNombreProductoEspecifico).toHaveBeenCalledWith(mockState.nombreProductoEspecifico);
+    expect(storeMock.setLegalRazonSocial).toHaveBeenCalledWith(
+      mockState.legalRazonSocial
+    );
+    expect(storeMock.setApellidoPaterno).toHaveBeenCalledWith(
+      mockState.apellidoPaterno
+    );
+    expect(storeMock.setMercanciasDatos).toHaveBeenCalledWith(
+      mockState.mercanciasDatos
+    );
+    expect(storeMock.setClasificacionProductos).toHaveBeenCalledWith(
+      mockState.clasificaionProductos
+    );
+    expect(storeMock.setTipoPersona).toHaveBeenCalledWith(
+      mockState.tipoPersona
+    );
+    expect(storeMock.setEspecificarProducto).toHaveBeenCalledWith(
+      mockState.especificarProducto
+    );
+    expect(storeMock.setNombreProductoEspecifico).toHaveBeenCalledWith(
+      mockState.nombreProductoEspecifico
+    );
     expect(storeMock.setMarca).toHaveBeenCalledWith(mockState.marca);
-    expect(storeMock.setTipoProducto).toHaveBeenCalledWith(mockState.tipoProducto);
-    expect(storeMock.setDescripcionFraccionArancelaria).toHaveBeenCalledWith(mockState.descripcionFraccionArancelaria);
-    expect(storeMock.setCantidadUMT).toHaveBeenCalledWith(mockState.cantidadUMT);
+    expect(storeMock.setTipoProducto).toHaveBeenCalledWith(
+      mockState.tipoProducto
+    );
+    expect(storeMock.setDescripcionFraccionArancelaria).toHaveBeenCalledWith(
+      mockState.descripcionFraccionArancelaria
+    );
+    expect(storeMock.setCantidadUMT).toHaveBeenCalledWith(
+      mockState.cantidadUMT
+    );
     expect(storeMock.setUmt).toHaveBeenCalledWith(mockState.umt);
-    expect(storeMock.setCantidadUMC).toHaveBeenCalledWith(mockState.cantidadUMC);
+    expect(storeMock.setCantidadUMC).toHaveBeenCalledWith(
+      mockState.cantidadUMC
+    );
     expect(storeMock.setUmc).toHaveBeenCalledWith(mockState.umc);
-    expect(storeMock.setClaveDeLosLotes).toHaveBeenCalledWith(mockState.claveDeLosLotes);
-    expect(storeMock.setFechaFabricacion).toHaveBeenCalledWith(mockState.fechaFabricacion);
-    expect(storeMock.setFechaCaducidad).toHaveBeenCalledWith(mockState.fechaCaducidad);
-    expect(storeMock.setClavesDeLotes).toHaveBeenCalledWith(mockState.clavesDeLotes);
+    expect(storeMock.setClaveDeLosLotes).toHaveBeenCalledWith(
+      mockState.claveDeLosLotes
+    );
+    expect(storeMock.setFechaFabricacion).toHaveBeenCalledWith(
+      mockState.fechaFabricacion
+    );
+    expect(storeMock.setFechaCaducidad).toHaveBeenCalledWith(
+      mockState.fechaCaducidad
+    );
+    expect(storeMock.setClavesDeLotes).toHaveBeenCalledWith(
+      mockState.clavesDeLotes
+    );
   });
 
-  it('should call http.get with correct URL in getRegistroTomaMuestrasMercanciasData', done => {
-    const expectedUrl = 'assets/json/260101/registro_toma_muestras_mercancias.json';
+  it('should call http.get with correct URL in getRegistroTomaMuestrasMercanciasData', (done) => {
+    const expectedUrl =
+      'assets/json/260101/registro_toma_muestras_mercancias.json';
     httpClientMock.get.mockReturnValue(of(mockState));
 
-    service.getRegistroTomaMuestrasMercanciasData().subscribe(data => {
+    service.getRegistroTomaMuestrasMercanciasData().subscribe((data) => {
       expect(data).toEqual(mockState);
       expect(httpClientMock.get).toHaveBeenCalledWith(expectedUrl);
       done();
@@ -194,76 +416,102 @@ describe('Service260101Service', () => {
 
   it('should handle empty state in actualizarEstadoFormulario', () => {
     const emptyState: Solicitud260101State = {
-     razonSocial : "",
-     correoElectronico : "",
-     codigoPostal : "",
-     estado : 0,
-     municipio : "",
-     localidad : "",
-     colonia : "",
-    calle: "",
-    lada:0,
-    telefono : 0,
-    avisoDeFuncionamiento : false,
-    licenciaSanitaria : "",
-    liveFreshFrozen : false,
-    regimen : 0,
-    aduana : 0,
-    hacerlos : "",
-    rfc : "",
-    legalRazonSocial : "",
-    apellidoPaterno : "",
-    apellidoMeterno: "",
-    mercanciasDatos : [],
-    manifesto : false,
-    clasificaionProductos : "",
-    especificarProducto : 0,
-    nombreProductoEspecifico : "",
-    marca : "",
-    tipoProducto : 0,
-    fraccionArancelaria : "",
-    descripcionFraccionArancelaria : "",
-    cantidadUMT : "",
-    umt : "",
-    cantidadUMC : "",
-    umc : 0,
-    claveDeLosLotes : "",
-    fechaFabricacion : "",
-    fechaCaducidad : "",
-    clavesDeLotes : [],
-    tipoPersona : "",
-    modificarRFC : "",
-    denominacion : "",
-    domicilioPais : 0,
-    domicilioEstado : 0,
-    domicilioMunicipio : 0,
-    domicilioLocalidad : 0,
-    domicilioCodigo : 0,
-    domicilioColonia : 0,
-    domiciliCalle: "",
-    domiciliNumeroExterior : "",
-    domiciliNumeroInterior : "",
-    domiciliLada : "",
-    domiciliTelefono : "",
-    domiciliCorreoElectronioco : "",
-    destinatarioDatos : [],
-    claveDeReferencia : "",
-    cadenaDeDependencia : "",
-    banco : 0,
-    liaveDePago : "",
-    fechaDePago : "",
-    importeDePago : ""
+      razonSocial: '',
+      correoElectronico: '',
+      codigoPostal: '',
+      estado: 0,
+      municipio: '',
+      localidad: '',
+      colonia: '',
+      calle: '',
+      lada: 0,
+      telefono: 0,
+      avisoDeFuncionamiento: false,
+      licenciaSanitaria: '',
+      liveFreshFrozen: false,
+      regimen: 0,
+      aduana: 0,
+      hacerlos: '',
+      rfc: '',
+      legalRazonSocial: '',
+      apellidoPaterno: '',
+      apellidoMeterno: '',
+      mercanciasDatos: [],
+      manifesto: false,
+      clasificaionProductos: '',
+      especificarProducto: 0,
+      nombreProductoEspecifico: '',
+      marca: '',
+      tipoProducto: 0,
+      fraccionArancelaria: '',
+      descripcionFraccionArancelaria: '',
+      cantidadUMT: '',
+      umt: '',
+      cantidadUMC: '',
+      umc: 0,
+      claveDeLosLotes: '',
+      fechaFabricacion: '',
+      fechaCaducidad: '',
+      clavesDeLotes: [],
+      tipoPersona: '',
+      modificarRFC: '',
+      denominacion: '',
+      denominacionNombre: '',
+      denominacionApellidoPaterno: '',
+      denominacionApellidoMaterno: '',
+      domicilioPais: '',
+      domicilioEstado: '',
+      domicilioMunicipio: '',
+      domicilioLocalidad: '',
+      domicilioCodigo: '',
+      domicilioColonia: '',
+      domiciliCalle: '',
+      domiciliNumeroExterior: '',
+      domiciliNumeroInterior: '',
+      domiciliLada: '',
+      domiciliTelefono: '',
+      domiciliCorreoElectronioco: '',
+      tercerosNacionalidad: 0,
+      tercerosTipoPersona: 0,
+      tercerosRFC: '',
+      tercerosCurp: '',
+      tercerosDenominacion: '',
+      tercerosDenominacionNombre: '',
+      tercerosApellidoPaterno: '',
+      tercerosApellidoMaterno: '',
+      tercerosPais: '',
+      tercerosEstado: '',
+      tercerosMunicipio: '',
+      tercerosLocalidad: '',
+      tercerosCodigo: '',
+      tercerosColonia: '',
+      tercerosCalle: '',
+      tercerosNumeroExterior: '',
+      tercerosNumeroInterior: '',
+      tercerosLada: '',
+      tercerosTelefono: '',
+      tercerosCorreoElectronico: '',
+      destinatarioDatos: [],
+      claveDeReferencia: '',
+      cadenaDeDependencia: '',
+      banco: 0,
+      liaveDePago: '',
+      fechaDePago: '',
+      importeDePago: '',
+      modificarDestinatario: false,
+      modificarFabricante: false,
+      scianSeleccionados: [],
+      mercanciasSeleccionados: [],
     };
-
     service.actualizarEstadoFormulario(emptyState);
 
     expect(storeMock.setRazonSocial).toHaveBeenCalledWith('');
     expect(storeMock.setCorreoElectronico).toHaveBeenCalledWith('');
-    expect(storeMock.setCantidadUMT).toHaveBeenCalledWith(0);
+    expect(storeMock.setCantidadUMT).toHaveBeenCalledWith('');
     expect(storeMock.setClavesDeLotes).toHaveBeenCalledWith([]);
   });
 
-  it('should propagate errors from http.get in getRegistroTomaMuestrasMercanciasData', done => {
+  it('should propagate errors from http.get in getRegistroTomaMuestrasMercanciasData', (done) => {
     const errorResponse = new Error('Network error');
     httpClientMock.get.mockReturnValue(throwError(() => errorResponse));
 
@@ -272,7 +520,7 @@ describe('Service260101Service', () => {
       error: (err) => {
         expect(err).toBe(errorResponse);
         done();
-      }
+      },
     });
   });
 });

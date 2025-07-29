@@ -343,6 +343,12 @@ const ROUTES: Routes = [
         (m) => m.SolicitudDeRegistroInvocarModule)
   },
   {
+     path: 'sce-socio-almacenamiento',
+    loadChildren: () => 
+      import('./tramites/32618/sce-socio-almacen.module').then(
+        (m) => m.SceSocioAlmacenModule)
+      },
+  {
     path: 'registro-oae-rfe',
     loadChildren: () =>
       import('./tramites/32610/registro-oae-rfe.module').then(
@@ -354,12 +360,20 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/32606/economico.module').then((m) => m.EconomicoModule),
   },
+    {
+    path: 'seciit-oea-registration',
+    loadChildren: () =>
+      import('./tramites/32608/seciit-oea-registration.module').then(
+        (m) => m.SeciitOeaRegistrationModule
+      ),
+  },
   {
       path: 'aviso-comercializadora-modification',
     loadChildren: () => 
       import('./tramites/33304/Aviso-De-Ampliacion.module').then(
         (m) => m.AvisoDeAmpliacionModule)
   }
+
 ];
 
 @NgModule({
