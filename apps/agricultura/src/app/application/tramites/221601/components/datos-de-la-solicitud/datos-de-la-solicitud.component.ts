@@ -14,6 +14,8 @@ import { Modal } from 'bootstrap';
 import { Tramite221601Query } from '../../../../estados/queries/tramite221601.query';
 import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
 
+import { ModalComponent } from '../modal/modal.component';
+
 
 /**
  * Componente que gestiona la visualización y el manejo de los datos de la solicitud 221601, incluyendo 
@@ -48,7 +50,8 @@ import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
     CatalogoSelectComponent,
     AlertComponent,
     CommonModule,
-    InputRadioComponent
+    InputRadioComponent,
+    ModalComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.scss']
@@ -82,7 +85,12 @@ import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
  * @method setValoresStore() - Actualiza el store del trámite con el valor de un campo específico del formulario.
  * @method ngOnDestroy() - Se ejecuta cuando el componente es destruido. Limpia los recursos y previene memory leaks.
  */
+
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+  /** Modal para mostrar la información de terceros */
+  
+   showtercerosModal = false;
+
 /** Indica si el formulario debe mostrarse en modo solo lectura.  
  *  Controla la habilitación o deshabilitación de los campos. */
  esFormularioSoloLectura: boolean = false;
@@ -224,6 +232,39 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    this.inicializarCombinacionFormulario();
   }
 
+  showMercanciaModal = false;
+
+mercanciaForm = this.fb.group({
+  paisOrigen: ['', Validators.required],
+  regulacion: ['', Validators.required],
+  nombreProducto: ['', Validators.required],
+  fracciónArancelaria: ['', Validators.required],
+  unidad2: ['', Validators.required, { disabled: true }],
+  nico: ['', Validators.required],
+  unidad1: ['',{ disabled: true }],
+  observaciones: [''],
+  cantidadUmt: ['', Validators.required],
+  umt: ['', Validators.required,{disabled:true}],
+  cantidadUmc: ['', Validators.required],
+  umc: ['', Validators.required],
+  especie: ['', Validators.required],
+  edadAnimal: ['', Validators.required],
+  paisOrigen1: ['', Validators.required],
+  paisdeprocedencia: ['', Validators.required],
+  nombreLote: [''],
+  codigoArancelario: [''],
+  edadAnimal1: [''],
+  fasedeDesarrollo: [''],
+  funciónZootecnica: [''],
+  nombredela: [''],
+  numerodeIdentificacion: [''],
+  raza: [''],
+  nombreCientifico: [''],
+  sexo: [''],
+  tipoEspecie: [''], 
+});
+
+
   /**
    * Método para inicializar el formulario reactivo con los datos de la solicitud.
    * 
@@ -254,8 +295,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       aduana: [this.solicitudState.aduana],
       oficina: [this.solicitudState.oficina],
       punto: [this.solicitudState.punto],
-      guia: [this.solicitudState.guia],
-      clave: [this.solicitudState.clave,Validators.required],
+      guia: [this.solicitudState.guia,[Validators.maxLength(80)]],
+      clave: [this.solicitudState.clave,[Validators.required, Validators.maxLength(15)]],
       establecimiento: [this.solicitudState.establecimiento, Validators.required],
       regimen: [this.solicitudState.regimen, Validators.required],
       veterinario: [this.solicitudState.veterinario, Validators.required],
@@ -321,9 +362,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.tramite221601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
-
-  
-  /**
+/**
  * Método para abrir dialogo mercancías.
  * 
  * @returns {void}
@@ -346,13 +385,59 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
     this.valorSeleccionado = valor;
   }
-
   /**
+   * Método que se ejecuta cuando se selecciona un exportador en la tabla.
+   * 
+   * @param filas - Filas seleccionadas del exportador.
+   */
+ cancelarDestinatario(): void {
+    this.showtercerosModal = !this.showtercerosModal;
+  }
+
+/**
+   * Toggles the visibility of the "terceros" modal.
+   *
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  tercerosAgregar(): void {
+    this.showtercerosModal = !this.showtercerosModal;
+  }
+
+
+/**
+ * Saves the merchandise information if the form is valid.
+ *
+ * This method checks the validity of the `mercanciaForm` and, if valid,
+ * maps all required properties of the merchandise using the form values
+ * and default values as needed.
+ *
+ * @returns {void}
+ *
+ * @memberof DatosDeLaSolicitudComponent
+ */
+guardarMercancia():void {
+  if (this.mercanciaForm.valid) {
+    // Map all required Mercancias properties here, using FORM_VALUE and defaults as needed
+}
+}
+  /**
+   * Closes the modal for adding merchandise.
+   *
+   * This method hides the modal by toggling the `showtercerosModal` property.
+   *
+   * @returns {void}
+   *
+   * @memberof DatosDeLaSolicitudComponent
+   */
+cerrarModal(): void {
+  this.showtercerosModal = false;
+}
+/**
    * Método que se ejecuta cuando el componente es destruido. Limpia los recursos y previene memory leaks.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }

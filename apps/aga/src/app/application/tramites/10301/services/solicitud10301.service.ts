@@ -3,6 +3,7 @@ import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { RespuestaConsulta } from '../models/importador-exportador.model';
 
 /**
  * Servicio encargado de gestionar los datos del trámite 10301.
@@ -59,8 +60,8 @@ export class Solicitud10301Service {
    * Este método permite inicializar o cargar los datos previamente almacenados.
    * @returns Observable que emite un objeto de tipo Solicitud10301State con los datos del trámite.
    */
-  public getDatosDeTrtamitelDoc(): Observable<Solicitud10301State> {
-    return this.http.get<Solicitud10301State>(
+  public getDatosDeTrtamitelDoc(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>(
       'assets/json/10301/datos-del-tramite.json'
     );
   }

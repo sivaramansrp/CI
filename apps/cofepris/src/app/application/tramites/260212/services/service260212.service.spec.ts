@@ -32,7 +32,14 @@ describe('Service260212Service', () => {
       setCadenaDeLaDependencia: jest.fn(),
       setLlaveDePago: jest.fn(),
       setFechaDePago: jest.fn(),
-      setImporteDePago: jest.fn()
+      setImporteDePago: jest.fn(),
+      setLosDatos :jest.fn(),
+      setRfc : jest.fn(),
+      setNombre : jest.fn(),
+      setPrimerApellido : jest.fn(),
+      setSegundoApellido :jest.fn(),
+      setAvisoclave :jest.fn(),
+      setNoLicenciaSanitaria : jest.fn(),
     } as any;
 
     TestBed.configureTestingModule({

@@ -9,7 +9,11 @@
       "fraccionArancelariaExportacion": "123.45",
       "fraccionArancelariaImportacion": "678.90",
       "descripcion": "Descripción del producto A",
-      "valoresAnteriores": "Valor anterior 1"
+      "valoresAnteriores": "Valor anterior 1",
+      "fraccionArancelariaDeLaMercanciaDeImportacion": 72000000,
+      "cantidad": 1000,
+      "valor": 1000,
+      "unidadMedida": "Kilogramo"
     },
     {
       "rfc": "XYZ987654P45",
@@ -20,7 +24,11 @@
       "fraccionArancelariaExportacion": "223.55",
       "fraccionArancelariaImportacion": "789.01",
       "descripcion": "Descripción del producto B",
-      "valoresAnteriores": "Valor anterior 2"
+      "valoresAnteriores": "Valor anterior 2",
+      "fraccionArancelariaDeLaMercanciaDeImportacion": 72015002,
+      "cantidad": 2000,
+      "valor": 2000,
+      "unidadMedida": "Kilogramo"
     },
     {
       "rfc": "DEF112233S78",
@@ -31,7 +39,11 @@
       "fraccionArancelariaExportacion": "323.65",
       "fraccionArancelariaImportacion": "890.12",
       "descripcion": "Descripción del producto C",
-      "valoresAnteriores": "Valor anterior 3"
+      "valoresAnteriores": "Valor anterior 3",
+      "fraccionArancelariaDeLaMercanciaDeImportacion": 61179001,
+      "cantidad": 4000,
+      "valor": 3000,
+      "unidadMedida": "Pieza"
     }
   ]
 }

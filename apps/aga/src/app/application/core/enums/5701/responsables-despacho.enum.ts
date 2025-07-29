@@ -29,24 +29,24 @@ export const CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO: Configuracion
 
     /**
      * Encabezado de la columna que muestra el apellido paterno de la persona responsable del despacho.
-     * - Encabezado: "Apellido Paterno".
+     * - Encabezado: "Apellido paterno".
      * - Clave: Obtiene el valor de `primerApellido` de la fila.
      * - Orden: 3.
      */
     {
-      encabezado: 'Apellido Paterno',
+      encabezado: 'Apellido paterno',
       clave: (fila) => fila.primerApellido,
       orden: 3,
     },
 
     /**
      * Encabezado de la columna que muestra el apellido materno de la persona responsable del despacho.
-     * - Encabezado: "Apellido Materno".
+     * - Encabezado: "Apellido materno".
      * - Clave: Obtiene el valor de `segundoApellido` de la fila.
      * - Orden: 4.
      */
     {
-      encabezado: 'Apellido Materno',
+      encabezado: 'Apellido materno',
       clave: (fila) => fila.segundoApellido,
       orden: 4,
     },

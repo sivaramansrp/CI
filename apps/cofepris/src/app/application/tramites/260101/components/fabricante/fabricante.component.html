@@ -1,0 +1,469 @@
+<form [formGroup]="fabricanteComponentForm">
+  <div class="row mt-5">
+    <div class="col-md-12">
+      @if(modificarFabricante) {
+      <ng-titulo titulo="Modificar fabricante" />
+      }@else {
+      <ng-titulo titulo="Agregar fabricante" />
+      }
+    </div>
+
+    <div class="col-md-12">
+      <label class="form-label" for="">Datos generales</label>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label" for=""
+        >Terceros nacionalidad<span
+          class="require"
+          [ngClass]="{
+            'text-danger':
+              fabricanteComponentForm.get('tercerosNacionalidad')?.invalid &&
+              fabricanteComponentForm.get('tercerosNacionalidad')?.touched
+          }"
+          >*</span
+        >:</label
+      >
+      <app-input-radio
+        [radioOptions]="tercerosNacionalidadRadioOptions"
+        [selectedValue]="
+          fabricanteComponentForm.get('tercerosNacionalidad')?.value
+        "
+        [isRequired]="true"
+        [showTooltip]="true"
+        formControlName="tercerosNacionalidad"
+        [layout]="'vertical'"
+        (valueChange)="setTercerosNacionalidad($event)"
+      >
+      </app-input-radio>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label" for=""
+        >Tipo persona<span
+          class="require"
+          [ngClass]="{
+            'text-danger':
+              fabricanteComponentForm.get('tercerosTipoPersona')?.invalid &&
+              fabricanteComponentForm.get('tercerosTipoPersona')?.touched
+          }"
+          >*</span
+        >:</label
+      >
+      <app-input-radio
+        [radioOptions]="tipoPersonaRadioOptions"
+        [selectedValue]="
+          fabricanteComponentForm.get('tercerosTipoPersona')?.value
+        "
+        [isRequired]="true"
+        [showTooltip]="true"
+        formControlName="tercerosTipoPersona"
+        [layout]="'vertical'"
+        (valueChange)="setTipoPersona($event)"
+      >
+      </app-input-radio>
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="rfc"
+        >R.F.C.<span
+          class="require"
+          [ngClass]="{
+            'text-danger':
+              fabricanteComponentForm.get('tercerosRFC')?.invalid &&
+              fabricanteComponentForm.get('tercerosRFC')?.touched
+          }"
+          >*</span
+        >:
+        <span
+          class="bi bi-question-circle-fill"
+          title="Registro Federal de Contribuyente"
+          data-bs-toggle="tooltip"
+        ></span>
+      </label>
+      <input
+        class="form-control"
+        id="rfc"
+        placeholder=""
+        maxlength="15"
+        size="29"
+        type="text"
+        formControlName="tercerosRFC"
+        (change)="setTercerosRFC($event)"
+      />
+      @if (fabricanteComponentForm.get('tercerosRFC')?.hasError('required') &&
+      fabricanteComponentForm.get('tercerosRFC')?.touched) {
+      <span class="text-danger"> Este campo es obligatorio </span>
+      }
+    </div>
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="curp"
+        >C.U.R.P.<span
+          class="require"
+          [ngClass]="{
+            'text-danger':
+              fabricanteComponentForm.get('tercerosCurp')?.invalid &&
+              fabricanteComponentForm.get('tercerosCurp')?.touched
+          }"
+          >*</span
+        >:</label
+      >
+      <input
+        class="form-control"
+        id="terceros_curp"
+        placeholder=""
+        maxlength="18"
+        size="29"
+        type="text"
+        formControlName="tercerosCurp"
+        (change)="setCurp($event)"
+      />
+      @if (fabricanteComponentForm.get('tercerosCurp')?.hasError('required') &&
+      fabricanteComponentForm.get('tercerosCurp')?.touched) {
+      <span class="text-danger"> Este campo es obligatorio </span>
+      }
+    </div>
+    <div class="col-md-4"></div>
+    @if (tipoPublicos === 1) {
+    <div class="col-md-8 mt-4">
+      <label class="form-label" for="denominacion"
+        >Denominación/razón social<span
+          class="require"
+          [ngClass]="{
+            'text-danger':
+              fabricanteComponentForm.get('tercerosDenominacion')?.invalid &&
+              fabricanteComponentForm.get('tercerosDenominacion')?.touched
+          }"
+          >*</span
+        >:</label
+      >
+      <input
+        class="form-control"
+        id="denominacion"
+        placeholder=""
+        maxlength="254"
+        size="75"
+        type="text"
+        formControlName="tercerosDenominacion"
+        (change)="setTercerosDenominacion($event)"
+      />
+      @if
+      (fabricanteComponentForm.get('tercerosDenominacion')?.hasError('required')
+      && fabricanteComponentForm.get('tercerosDenominacion')?.touched) {
+      <span class="text-danger"> Este campo es obligatorio </span>
+      }
+    </div>
+    <div class="col-md-4 mt-4"></div>
+    } @if (tipoPublicos === 2) {
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="nombre"
+        >Nombre(s)
+        <span
+          class="require"
+          [ngClass]="{
+            'text-danger':
+              fabricanteComponentForm.get('tercerosDenominacionNombre')
+                ?.invalid &&
+              fabricanteComponentForm.get('tercerosDenominacionNombre')?.touched
+          }"
+          >*</span
+        >:</label
+      >
+      <input
+        class="form-control"
+        id="terceros_nombre"
+        placeholder=""
+        type="text"
+        maxlength="200"
+        size="20"
+        formControlName="tercerosDenominacionNombre"
+        (change)="setTercerosDenominacionNombre($event)"
+      />
+      @if
+      (fabricanteComponentForm.get('tercerosDenominacionNombre')?.hasError('required')
+      && fabricanteComponentForm.get('tercerosDenominacionNombre')?.touched) {
+      <span class="text-danger"> Este campo es obligatorio </span>
+      }
+    </div>
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="apellidoPaterno"
+        >Primer apellido
+        <span
+          class="require"
+          [ngClass]="{
+            'text-danger':
+              fabricanteComponentForm.get('tercerosApellidoPaterno')?.invalid &&
+              fabricanteComponentForm.get('tercerosApellidoPaterno')?.touched
+          }"
+          >*</span
+        >:</label
+      >
+      <input
+        class="form-control"
+        id="terceros_apellidoPaterno"
+        placeholder=""
+        maxlength="200"
+        size="29"
+        type="text"
+        formControlName="tercerosApellidoPaterno"
+        (change)="setTercerosApellidoPaterno($event)"
+      />
+      @if
+      (fabricanteComponentForm.get('tercerosApellidoPaterno')?.hasError('required')
+      && fabricanteComponentForm.get('tercerosApellidoPaterno')?.touched) {
+      <span class="text-danger"> Este campo es obligatorio </span>
+      }
+    </div>
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="denominacion">Segundo apellido:</label>
+      <input
+        class="form-control"
+        id="terceros_apellidoMaterno"
+        placeholder=""
+        type="text"
+        formControlName="tercerosApellidoMaterno"
+        (change)="setTercerosApellidoMaterno($event)"
+      />
+    </div>
+    }
+
+    <div class="col-md-12 mt-5">
+      <label class="form-label" for="domicilio">Domicilio:</label>
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <app-catalogo-select
+        [id]="'productos'"
+        [catalogo]="paisCatalogo.catalogos"
+        [label]="paisCatalogo.labelNombre"
+        [placeholder]="paisCatalogo.primerOpcion"
+        [required]="paisCatalogo.required"
+        [isDisabled]="true"
+        formControlName="tercerosPais"
+        (selectionChange)="seleccionaPais($event)"
+      >
+      </app-catalogo-select>
+    </div>
+    <div class="col-md-4 mt-4">
+      <app-catalogo-select
+        [id]="'productos'"
+        [catalogo]="estadoCatalogo.catalogos"
+        [label]="estadoCatalogo.labelNombre"
+        [placeholder]="estadoCatalogo.primerOpcion"
+        [required]="estadoCatalogo.required"
+        formControlName="tercerosEstado"
+        (selectionChange)="seleccionaEstado($event)"
+        [isDisabled]="esFormularioSoloLectura"
+      >
+      </app-catalogo-select>
+    </div>
+    <div class="col-md-4 mt-4">
+      <app-catalogo-select
+        [id]="'productos'"
+        [catalogo]="municipioCatalogo.catalogos"
+        [label]="municipioCatalogo.labelNombre"
+        [placeholder]="municipioCatalogo.primerOpcion"
+        [required]="municipioCatalogo.required"
+        formControlName="tercerosMunicipio"
+        (selectionChange)="seleccionaMunicipio($event)"
+        [isDisabled]="esFormularioSoloLectura"
+      >
+      </app-catalogo-select>
+    </div>
+    <div class="col-md-4 mt-4">
+      <app-catalogo-select
+        [id]="'productos'"
+        [catalogo]="localidadCatalogo.catalogos"
+        [label]="localidadCatalogo.labelNombre"
+        [placeholder]="localidadCatalogo.primerOpcion"
+        [required]="localidadCatalogo.required"
+        formControlName="tercerosLocalidad"
+        (selectionChange)="seleccionaLocalidad($event)"
+        [isDisabled]="esFormularioSoloLectura"
+      >
+      </app-catalogo-select>
+    </div>
+    <div class="col-md-4 mt-4">
+      <app-catalogo-select
+        [id]="'productos'"
+        [catalogo]="codigoCatalogo.catalogos"
+        [label]="codigoCatalogo.labelNombre"
+        [placeholder]="codigoCatalogo.primerOpcion"
+        [required]="codigoCatalogo.required"
+        formControlName="tercerosCodigo"
+        (selectionChange)="seleccionaCodigo($event)"
+        [isDisabled]="esFormularioSoloLectura"
+      >
+      </app-catalogo-select>
+    </div>
+    <div class="col-md-4 mt-4">
+      <app-catalogo-select
+        [id]="'productos'"
+        [catalogo]="coloniaCatalogo.catalogos"
+        [label]="coloniaCatalogo.labelNombre"
+        [placeholder]="coloniaCatalogo.primerOpcion"
+        [required]="coloniaCatalogo.required"
+        formControlName="tercerosColonia"
+        (selectionChange)="seleccionaColonia($event)"
+        [isDisabled]="esFormularioSoloLectura"
+      >
+      </app-catalogo-select>
+    </div>
+    <div class="col-md-8 mt-4">
+      <label class="form-label" for="calle"
+        >Calle
+        <span
+          class="require"
+          [ngClass]="{
+            'text-danger':
+              fabricanteComponentForm.get('tercerosCalle')?.invalid &&
+              fabricanteComponentForm.get('tercerosCalle')?.touched
+          }"
+          >*</span
+        >:<span
+          class="bi bi-question-circle-fill"
+          title="Domicilio, calle, número interior, número exterior, lote"
+          data-bs-toggle="tooltip"
+        ></span
+      ></label>
+      <input
+        class="form-control"
+        id="tercerosCalle"
+        placeholder=""
+        type="text"
+        formControlName="tercerosCalle"
+        (change)="setTercerosCalle($event)"
+      />
+      @if (fabricanteComponentForm.get('tercerosCalle')?.hasError('required') &&
+      fabricanteComponentForm.get('tercerosCalle')?.touched) {
+      <span class="text-danger"> Este campo es obligatorio </span>
+      }
+    </div>
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="numeroExterior"
+        >Número exterior
+        <span
+          class="require"
+          [ngClass]="{
+            'text-danger':
+              fabricanteComponentForm.get('tercerosNumeroExterior')?.invalid &&
+              fabricanteComponentForm.get('tercerosNumeroExterior')?.touched
+          }"
+          >*</span
+        >:</label
+      >
+      <input
+        class="form-control"
+        id="numeroExterior"
+        placeholder=""
+        maxlength="300"
+        type="text"
+        formControlName="tercerosNumeroExterior"
+        (change)="setTercerosNumeroExterior($event)"
+      />
+      @if
+      (fabricanteComponentForm.get('tercerosNumeroExterior')?.hasError('required')
+      && fabricanteComponentForm.get('tercerosNumeroExterior')?.touched) {
+      <span class="text-danger"> Este campo es obligatorio </span>
+      }
+    </div>
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="numeroInterior">Número interior:</label>
+      <input
+        class="form-control"
+        id="numeroInterior"
+        placeholder=""
+        maxlength="55"
+        type="text"
+        formControlName="tercerosNumeroInterior"
+        (change)="setTercerosNumeroInterior($event)"
+      />
+    </div>
+
+    <div class="col-md-1 mt-4">
+      <label class="form-label" for="lada">Lada:</label>
+      <input
+        class="form-control"
+        id="lada"
+        placeholder=""
+        maxlength="3"
+        size="4"
+        type="text"
+        fomrControlName="tercerosLada"
+        (change)="setTercerosLada($event)"
+      />
+    </div>
+
+    <div class="col-md-3 mt-4">
+      <label class="form-label" for="telefono">Teléfono:</label>
+      <input
+        class="form-control"
+        id="telefono"
+        placeholder=""
+        maxlength="30"
+        size="29"
+        type="text"
+        formControlName="tercerosTelefono"
+        (change)="setTercerosTelefono($event)"
+      />
+      @if (fabricanteComponentForm.get('tercerosTelefono')?.hasError('pattern')
+      && fabricanteComponentForm.get('tercerosTelefono')?.touched) {
+      <span class="text-danger">
+        Existen datos incorrectos que no cumplen con el formato esperado.
+      </span>
+      }
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="correoElectronioco"
+        >Correo electrónico:
+        <span
+          class="bi bi-question-circle-fill"
+          title="ejemplo@dominio.com"
+          data-bs-toggle="tooltip"
+        ></span
+      ></label>
+      <input
+        class="form-control"
+        id="correoElectronioco"
+        placeholder=""
+        maxlength="320"
+        size="29"
+        type="text"
+        formControlName="tercerosCorreoElectronico"
+        (change)="settercerosCorreoElectronico($event)"
+      />
+      @if
+      (fabricanteComponentForm.get('tercerosCorreoElectronico')?.hasError('pattern')
+      && fabricanteComponentForm.get('tercerosCorreoElectronico')?.touched) {
+      <span class="text-danger">
+        Por favor, escribe una dirección de correo válida
+      </span>
+      }
+    </div>
+  </div>
+
+  <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
+    <div class="btn-group">
+      <button
+        type="button"
+        class="btn btn-default btn-space"
+        data-bs-dismiss="modal"
+      >
+        Cancelar
+      </button>
+      <button
+        class="btn btn-default ms-3"
+        type="button"
+        (click)="limpiarDestinatario()"
+      >
+        Limpiar
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary ms-3"
+        (click)="guardarDestinatario()"
+      >
+        Guardar
+      </button>
+    </div>
+  </div>
+</form>

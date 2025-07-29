@@ -130,23 +130,38 @@ export interface Solicitud260101State {
   /** Denominación social del solicitante. */
   denominacion: string;
 
+  /**
+   * Nombre propio de la persona física (denominación por nombre).
+   */
+  denominacionNombre: string;
+
+  /**
+   * Apellido paterno de la persona física.
+   */
+  denominacionApellidoPaterno: string;
+
+  /**
+   * Apellido materno de la persona física.
+   */
+  denominacionApellidoMaterno: string;
+
   /** Identificador del país asociado al domicilio del solicitante. */
-  domicilioPais: number;
+  domicilioPais: number | string;
 
   /** Identificador del estado asociado al domicilio del solicitante. */
-  domicilioEstado: number;
+  domicilioEstado: number | string;
 
   /** Identificador del municipio asociado al domicilio del solicitante. */
-  domicilioMunicipio: number;
+  domicilioMunicipio: number | string;
 
   /** Identificador de la localidad asociada al domicilio del solicitante. */
-  domicilioLocalidad: number;
+  domicilioLocalidad: number | string;
 
   /** Código postal asociado al domicilio del solicitante. */
-  domicilioCodigo: number;
+  domicilioCodigo: number | string;
 
   /** Identificador de la colonia asociada al domicilio del solicitante. */
-  domicilioColonia: number;
+  domicilioColonia: number | string;
 
   /** Calle asociada al domicilio del solicitante. */
   domiciliCalle: string;
@@ -165,6 +180,106 @@ export interface Solicitud260101State {
 
   /** Correo electrónico asociado al domicilio del solicitante. */
   domiciliCorreoElectronioco: string;
+
+  /**
+   * Nacionalidad del tercero (puede ser un identificador numérico o descripción).
+   */
+  tercerosNacionalidad: string | number;
+
+  /**
+   * Tipo de persona del tercero (1: Moral, 2: Física, etc.).
+   */
+  tercerosTipoPersona: string | number;
+
+  /**
+   * RFC del tercero. Requerido para identificación fiscal en México.
+   */
+  tercerosRFC: string;
+
+  /**
+   * CURP del tercero. Relevante para personas físicas.
+   */
+  tercerosCurp: string;
+
+  /**
+   * Razón social o denominación del tercero (persona moral).
+   */
+  tercerosDenominacion: string;
+
+  /**
+   * Nombre del tercero (persona física).
+   */
+  tercerosDenominacionNombre: string;
+
+  /**
+   * Apellido paterno del tercero (persona física).
+   */
+  tercerosApellidoPaterno: string;
+
+  /**
+   * Apellido materno del tercero (persona física).
+   */
+  tercerosApellidoMaterno: string;
+
+  /**
+   * País de residencia del tercero.
+   */
+  tercerosPais: string | number;
+
+  /**
+   * Estado de residencia del tercero.
+   */
+  tercerosEstado: string | number;
+
+  /**
+   * Municipio de residencia del tercero.
+   */
+  tercerosMunicipio: string | number;
+
+  /**
+   * Localidad del tercero.
+   */
+  tercerosLocalidad: string | number;
+
+  /**
+   * Código postal del tercero.
+   */
+  tercerosCodigo: string | number;
+
+  /**
+   * Colonia o asentamiento del tercero.
+   */
+  tercerosColonia: string | number;
+
+  /**
+   * Calle del domicilio del tercero.
+   */
+  tercerosCalle: string;
+
+  /**
+   * Número exterior del domicilio.
+   */
+  tercerosNumeroExterior: string | number;
+
+  /**
+   * Número interior del domicilio (si aplica).
+   */
+  tercerosNumeroInterior: string | number;
+
+  /**
+   * Lada telefónica (clave de larga distancia).
+   */
+  tercerosLada: string | number;
+
+  /**
+   * Número de teléfono del tercero.
+   */
+  tercerosTelefono: string | number;
+
+  /**
+   * Correo electrónico del tercero.
+   */
+  tercerosCorreoElectronico: string;
 
   /** Lista de destinatarios relacionados con la solicitud. */
   destinatarioDatos: Destinatario[];
@@ -186,6 +301,30 @@ export interface Solicitud260101State {
 
   /** Importe del pago realizado para la solicitud. */
   importeDePago: string;
+
+  /**
+   * Indica si se está en modo de modificación para el destinatario.
+   * Se utiliza para mostrar o preparar el formulario de edición.
+   */
+  modificarDestinatario: boolean;
+
+  /**
+   * Indica si se está en modo de modificación para el fabricante.
+   * Se utiliza para mostrar o preparar el formulario de edición.
+   */
+  modificarFabricante: boolean;
+
+  /**
+   * Lista de identificadores seleccionados del catálogo SCIAN.
+   * Usada para representar actividades económicas seleccionadas por el usuario.
+   */
+  scianSeleccionados: number[];
+
+  /**
+   * Lista de identificadores de mercancías seleccionadas.
+   * Representa los productos o bienes que el usuario ha marcado para incluir.
+   */
+  mercanciasSeleccionados: number[];
 }
 
 /**
@@ -315,23 +454,37 @@ export function createInitialState(): Solicitud260101State {
     /** Denominación social del solicitante. */
     denominacion: '',
 
+    /**
+     * Nombre de la persona física. Solo se aplica si el tipo de persona es física.
+     */
+    denominacionNombre: '',
+    /**
+     * Apellido paterno de la persona física. Solo se aplica si el tipo de persona es física.
+     */
+    denominacionApellidoPaterno: '',
+
+    /**
+     * Apellido materno de la persona física. Solo se aplica si el tipo de persona es física.
+     */
+    denominacionApellidoMaterno: '',
+
     /** Identificador del país asociado al domicilio del solicitante. */
-    domicilioPais: 0,
+    domicilioPais: '',
 
     /** Identificador del estado asociado al domicilio del solicitante. */
-    domicilioEstado: 0,
+    domicilioEstado: '',
 
     /** Identificador del municipio asociado al domicilio del solicitante. */
-    domicilioMunicipio: 0,
+    domicilioMunicipio: '',
 
     /** Identificador de la localidad asociada al domicilio del solicitante. */
-    domicilioLocalidad: 0,
+    domicilioLocalidad: '',
 
     /** Código postal asociado al domicilio del solicitante. */
-    domicilioCodigo: 0,
+    domicilioCodigo: '',
 
     /** Identificador de la colonia asociada al domicilio del solicitante. */
-    domicilioColonia: 0,
+    domicilioColonia: '',
 
     /** Calle del domicilio del solicitante. */
     domiciliCalle: '',
@@ -350,6 +503,65 @@ export function createInitialState(): Solicitud260101State {
 
     /** Correo electrónico del domicilio del solicitante. */
     domiciliCorreoElectronioco: '',
+
+    /**
+     * Nacionalidad del tercero (ID del catálogo correspondiente).
+     */
+    tercerosNacionalidad: 0,
+    /** Tipo de persona (física o moral) del tercero. */
+    tercerosTipoPersona: 0,
+    /** RFC del tercero. */
+    tercerosRFC: '',
+    /** CURP del tercero. */
+    tercerosCurp: '',
+    /** Denominación del tercero. */
+    tercerosDenominacion: '',
+    /** Nombre del tercero. */
+    tercerosDenominacionNombre: '',
+    /**
+     * Apellido paterno del tercero.
+     */
+    tercerosApellidoPaterno: '',
+    /**
+     * Apellido materno del tercero.
+     */
+    tercerosApellidoMaterno: '',
+    /**
+     * País del tercero.
+     */
+    tercerosPais: '',
+    /**
+     * Estado del tercero.
+     */
+    tercerosEstado: '',
+    /**
+     * Municipio del tercero.
+     */
+    tercerosMunicipio: '',
+    /**
+     * Localidad del tercero.
+     */
+    tercerosLocalidad: '',
+    /**
+     * Código postal del tercero.
+     */
+    tercerosCodigo: '',
+    /**
+     * Colonia del tercero.
+     */
+    tercerosColonia: '',
+    /** Calle del domicilio del tercero. */
+    tercerosCalle: '',
+    /** Número exterior del domicilio del tercero. */
+    tercerosNumeroExterior: '',
+    /** Número interior del domicilio del tercero. */
+    tercerosNumeroInterior: '',
+    /** Código LADA del teléfono del tercero. */
+    tercerosLada: '',
+    /** Número telefónico del tercero. */
+    tercerosTelefono: '',
+    /** Correo electrónico del tercero. */
+    tercerosCorreoElectronico: '',
 
     /** Lista de destinatarios relacionados con la solicitud. */
     destinatarioDatos: [],
@@ -371,6 +583,18 @@ export function createInitialState(): Solicitud260101State {
 
     /** Importe del pago realizado. */
     importeDePago: '',
+
+    /** Indicador para modificar destinatario. */
+    modificarDestinatario: false,
+
+    /** Indicador para modificar fabricante. */
+    modificarFabricante: false,
+
+    /** Lista de identificadores seleccionados del catálogo SCIAN. */
+    scianSeleccionados: [],
+
+    /** Lista de identificadores seleccionados del catálogo de mercancías. */
+    mercanciasSeleccionados: [],
   };
 }
 
@@ -879,11 +1103,36 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
     }));
   }
 
+  public setDenominacionNombre(denominacionNombre: string): void {
+    this.update((state) => ({
+      ...state,
+      denominacionNombre,
+    }));
+  }
+
+  public setDenominacionApellidoPaterno(
+    denominacionApellidoPaterno: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      denominacionApellidoPaterno,
+    }));
+  }
+
+  public setDenominacionApellidoMaterno(
+    denominacionApellidoMaterno: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      denominacionApellidoMaterno,
+    }));
+  }
+
   /**
    * Actualiza el país del domicilio en el estado.
    * @param domicilioPais - Nuevo identificador para el país.
    */
-  public setDomicilioPais(domicilioPais: number): void {
+  public setDomicilioPais(domicilioPais: number | string): void {
     this.update((state) => ({
       ...state,
       domicilioPais,
@@ -894,7 +1143,7 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
    * Actualiza el estado asociado al domicilio en el estado.
    * @param domicilioEstado - Nuevo identificador para el estado.
    */
-  public setDomicilioEstado(domicilioEstado: number): void {
+  public setDomicilioEstado(domicilioEstado: number | string): void {
     this.update((state) => ({
       ...state,
       domicilioEstado,
@@ -905,7 +1154,7 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
    * Actualiza el municipio asociado al domicilio en el estado.
    * @param domicilioMunicipio - Nuevo identificador para el municipio.
    */
-  public setDomicilioMunicipio(domicilioMunicipio: number): void {
+  public setDomicilioMunicipio(domicilioMunicipio: number | string): void {
     this.update((state) => ({
       ...state,
       domicilioMunicipio,
@@ -916,7 +1165,7 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
    * Actualiza la localidad asociada al domicilio en el estado.
    * @param domicilioLocalidad - Nuevo identificador para la localidad.
    */
-  public setDomicilioLocalidad(domicilioLocalidad: number): void {
+  public setDomicilioLocalidad(domicilioLocalidad: number | string): void {
     this.update((state) => ({
       ...state,
       domicilioLocalidad,
@@ -927,7 +1176,7 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
    * Actualiza el código postal asociado al domicilio en el estado.
    * @param domicilioCodigo - Nuevo identificador para el código postal.
    */
-  public setDomicilioCodigo(domicilioCodigo: number): void {
+  public setDomicilioCodigo(domicilioCodigo: number | string): void {
     this.update((state) => ({
       ...state,
       domicilioCodigo,
@@ -938,7 +1187,7 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
    * Actualiza la colonia asociada al domicilio en el estado.
    * @param domicilioColonia - Nuevo identificador para la colonia.
    */
-  public setDomicilioColonia(domicilioColonia: number): void {
+  public setDomicilioColonia(domicilioColonia: number | string): void {
     this.update((state) => ({
       ...state,
       domicilioColonia,
@@ -1014,6 +1263,232 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
   }
 
   /**
+   * Actualiza la nacionalidad del tercero en el estado.
+   * @param tercerosNacionalidad - Nuevo identificador para la nacionalidad.
+   */
+  public setTercerosNacionalidad(tercerosNacionalidad: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosNacionalidad,
+    }));
+  }
+
+  /**
+   * Actualiza el tipo de persona del tercero en el estado.
+   * @param tercerosTipoPersona - Nuevo valor para el tipo de persona (cadena o número).
+   */
+  public setTercerosTipoPersona(tercerosTipoPersona: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosTipoPersona,
+    }));
+  }
+
+  /**
+   * Actualiza el RFC del tercero en el estado.
+   * @param tercerosRFC - Nuevo valor para el RFC del tercero.
+   */
+  public setTercerosRFC(tercerosRFC: string): void {
+    this.update((state) => ({
+      ...state,
+      tercerosRFC,
+    }));
+  }
+
+  /**
+   * Actualiza el CURP del tercero en el estado.
+   * @param tercerosCurp - Nuevo valor para el CURP del tercero.
+   */
+  public setTercerosCurp(tercerosCurp: string): void {
+    this.update((state) => ({
+      ...state,
+      tercerosCurp,
+    }));
+  }
+
+  /**
+   * Actualiza la denominación del tercero en el estado.
+   * @param tercerosDenominacion - Nuevo valor para la denominación del tercero.
+   */
+  public setTercerosDenominacion(tercerosDenominacion: string): void {
+    this.update((state) => ({
+      ...state,
+      tercerosDenominacion,
+    }));
+  }
+
+  /**
+   * Actualiza el nombre del tercero en el estado.
+   * @param tercerosDenominacionNombre - Nuevo valor para el nombre del tercero.
+   */
+  public setTercerosDenominacionNombre(
+    tercerosDenominacionNombre: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      tercerosDenominacionNombre,
+    }));
+  }
+
+  /**
+   * Actualiza el apellido paterno del tercero en el estado.
+   * @param tercerosApellidoPaterno - Nuevo valor para el apellido paterno del tercero.
+   */
+  public setTercerosApellidoPaterno(tercerosApellidoPaterno: string): void {
+    this.update((state) => ({
+      ...state,
+      tercerosApellidoPaterno,
+    }));
+  }
+
+  /**
+   * Actualiza el apellido materno del tercero en el estado.
+   * @param tercerosApellidoMaterno - Nuevo valor para el apellido materno del tercero.
+   */
+  public setTercerosApellidoMaterno(tercerosApellidoMaterno: string): void {
+    this.update((state) => ({
+      ...state,
+      tercerosApellidoMaterno,
+    }));
+  }
+
+  /**
+   * Actualiza el país del tercero en el estado.
+   * @param tercerosPais - Nuevo identificador para el país del tercero.
+   */
+  public setTercerosPais(tercerosPais: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosPais,
+    }));
+  }
+
+  /**
+   * Actualiza el estado del tercero en el estado.
+   * @param tercerosEstado - Nuevo identificador para el estado del tercero.
+   */
+  public setTercerosEstado(tercerosEstado: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosEstado,
+    }));
+  }
+
+  /**
+   * Actualiza el municipio del tercero en el estado.
+   * @param tercerosMunicipio - Nuevo identificador para el municipio del tercero.
+   */
+  public setTercerosMunicipio(tercerosMunicipio: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosMunicipio,
+    }));
+  }
+
+  /**
+   * Actualiza la localidad del tercero en el estado.
+   * @param tercerosLocalidad - Nuevo identificador para la localidad del tercero.
+   */
+  public setTercerosLocalidad(tercerosLocalidad: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosLocalidad,
+    }));
+  }
+
+  /**
+   * Actualiza el código postal del tercero en el estado.
+   * @param tercerosCodigo - Nuevo identificador para el código postal del tercero.
+   */
+  public setTercerosCodigo(tercerosCodigo: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosCodigo,
+    }));
+  }
+
+  /**
+   * Actualiza la colonia del tercero en el estado.
+   * @param tercerosColonia - Nuevo identificador para la colonia del tercero.
+   */
+  public setTercerosColonia(tercerosColonia: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosColonia,
+    }));
+  }
+
+  /**
+   * Actualiza la calle del tercero en el estado.
+   * @param tercerosCalle - Nuevo valor para la calle del tercero.
+   */
+  public setTercerosCalle(tercerosCalle: string): void {
+    this.update((state) => ({
+      ...state,
+      tercerosCalle,
+    }));
+  }
+
+  /**
+   * Actualiza el número exterior del tercero en el estado.
+   * @param tercerosNumeroExterior - Nuevo valor para el número exterior del tercero.
+   */
+  public setTercerosNumeroExterior(
+    tercerosNumeroExterior: string | number
+  ): void {
+    this.update((state) => ({
+      ...state,
+      tercerosNumeroExterior,
+    }));
+  }
+
+  /**
+   * Actualiza el número interior del tercero en el estado.
+   * @param tercerosNumeroInterior - Nuevo valor para el número interior del tercero.
+   */
+  public setTercerosNumeroInterior(
+    tercerosNumeroInterior: string | number
+  ): void {
+    this.update((state) => ({
+      ...state,
+      tercerosNumeroInterior,
+    }));
+  }
+
+  /**
+   * Actualiza el código LADA del tercero en el estado.
+   * @param tercerosLada - Nuevo valor para el código LADA del tercero.
+   */
+  public setTercerosLada(tercerosLada: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosLada,
+    }));
+  }
+
+  /**
+   * Actualiza el teléfono del tercero en el estado.
+   * @param tercerosTelefono - Nuevo valor para el teléfono del tercero.
+   */
+  public setTercerosTelefono(tercerosTelefono: string | number): void {
+    this.update((state) => ({
+      ...state,
+      tercerosTelefono,
+    }));
+  }
+
+  /**
+   * Actualiza el correo electrónico del tercero en el estado.
+   * @param tercerosCorreoElectronico - Nuevo valor para el correo electrónico del tercero.
+   */
+  public setTercerosCorreoElectronico(tercerosCorreoElectronico: string): void {
+    this.update((state) => ({
+      ...state,
+      tercerosCorreoElectronico,
+    }));
+  }
+
+  /**
    * Actualiza los datos de destinatarios en el estado.
    * @param destinatarioDatos - Nuevo arreglo con los datos de destinatarios.
    */
@@ -1033,7 +1508,7 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
       ...state,
       destinatarioDatos: state.destinatarioDatos.filter(
         (destinatario) => destinatario.rfc !== destinatarioToRemove.rfc
-      ),
+      )
     }));
   }
 
@@ -1122,6 +1597,50 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
     this.update((state) => ({
       ...state,
       manifesto,
+    }));
+  }
+
+  /**
+   * Actualiza si se debe modificar el destinatario en el estado.
+   * @param modificarDestinatario - Nuevo valor para la opción de modificar destinatario.
+   */
+  public setModificarDestinatario(modificarDestinatario: boolean): void {
+    this.update((state) => ({
+      ...state,
+      modificarDestinatario,
+    }));
+  }
+
+  /**
+   * Actualiza si se debe modificar el fabricante en el estado.
+   * @param modificarFabricante - Nuevo valor para la opción de modificar fabricante.
+   */
+  public setModificarFabricante(modificarFabricante: boolean): void {
+    this.update((state) => ({
+      ...state,
+      modificarFabricante,
+    }));
+  }
+
+  /**
+   * Actualiza los códigos SCIAN seleccionados en el estado.
+   * @param scianSeleccionados - Nuevo arreglo de códigos SCIAN seleccionados.
+   */
+  public setScianSeleccionados(scianSeleccionados: number[]): void {
+    this.update((state) => ({
+      ...state,
+      scianSeleccionados: [...scianSeleccionados],
+    }));
+  }
+
+  /**
+   * Actualiza las mercancías seleccionadas en el estado.
+   * @param mercanciasSeleccionados - Nuevo arreglo de identificadores de mercancías seleccionadas.
+   */
+  public setMercanciasSeleccionados(mercanciasSeleccionados: number[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciasSeleccionados: [...mercanciasSeleccionados],
     }));
   }
 

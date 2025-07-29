@@ -123,7 +123,6 @@ export class DatosGeneralesSociosComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyed$),
       map((seccionState) => {
        this.esFormularioSoloLectura = seccionState.readonly;
-       this.inicializarEstadoFormulario()
       })
     )
     .subscribe()
@@ -351,7 +350,9 @@ actualizarEstadoFormulario(): void {
    */
   enCambioNacionalidad(nacionalidad:string): void {
       const PERSONA_VALUE = this.FormSolicitud.get(['datosGeneralesSocios','persona'])?.value;
-      this.actualizarBanderasCamposEntrada(nacionalidad,PERSONA_VALUE);
+      setTimeout(()=>{
+        this.actualizarBanderasCamposEntrada(nacionalidad,PERSONA_VALUE);
+      }, 300);
       const NACIONALIDAD_VALUE = this.FormSolicitud.get(['datosGeneralesSocios', 'nacionalidad'])?.value;
       this.store.setNacionalidad(NACIONALIDAD_VALUE);
   }
@@ -363,7 +364,9 @@ actualizarEstadoFormulario(): void {
   enCambioPersona(tipoPersona:string): void {
       const PERSONA_VALUE = this.FormSolicitud.get(['datosGeneralesSocios','persona'])?.value;
       this.store.setPersona(PERSONA_VALUE);
-      this.actualizarBanderasCamposEntrada(this.FormSolicitud.get(['datosGeneralesSocios','nacionalidad'])?.value, tipoPersona);
+      setTimeout(()=>{
+        this.actualizarBanderasCamposEntrada(this.FormSolicitud.get(['datosGeneralesSocios','nacionalidad'])?.value, tipoPersona);
+      }, 300);
   }
 
    /**

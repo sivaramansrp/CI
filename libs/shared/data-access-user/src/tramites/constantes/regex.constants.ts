@@ -4,7 +4,8 @@ export const REG_X = {
   REGEX_FRACCION_ARANCELARIA: /^\d{4}\.\d{2}\.\d{2}$/, //Expresión regular para validar una fracción arancelaria con el formato ####.##.##.
   ENTERO_12_DECIMAL_2: /^\d{1,12}(\.\d{0,2})?$/, // Hasta 12 enteros y 2 decimales
   SOLO_NUMEROS_Y_PUNTO: /^[0-9.]+$/, // Permite solo números y puntos
-  NUMERO_DECIMAL_OPCIONAL: /^[0-9]+(\.[0-9]*)?$/ // Permite números enteros o decimales (decimales opcionales, sin límite de decimales)
+  NUMERO_DECIMAL_OPCIONAL: /^[0-9]+(\.[0-9]*)?$/, // Permite números enteros o decimales (decimales opcionales, sin límite de decimales)
+  RFC_13_ALFANUM: /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/ // de 13 caracteres alfanuméricos
 };
 
 /**
@@ -779,3 +780,15 @@ export const REGEX_CORREO_ELECTRONICO_EXPORTADOR = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-
  * - "abc" (no es un número)
  */
 export const REGEX_7_ENTEROS_3_DECIMALES = /^\d{1,7}(\.\d{1,3})?$/;
+
+/**
+ * Expresión regular para validar números de teléfono opcionales.
+ * Permite hasta 30 caracteres, incluyendo dígitos, espacios, paréntesis, signos más y guiones.
+ */
+export const REGEX_TELEFONO_OPCIONAL = /^[0-9\s()+-]{0,30}$/;
+
+/**
+ * Expresión regular para validar que la cadena no contenga solo números.
+ * Requiere al menos una letra y permite letras, números, espacios y algunos signos de puntuación.
+ */
+export const REGEX_NO_SOLO_NUMEROS = /^(?=.*\D).*$/;
