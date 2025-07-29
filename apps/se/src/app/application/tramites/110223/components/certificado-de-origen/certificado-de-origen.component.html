@@ -469,20 +469,28 @@
               )
             "
           />
-        </div>
-        <div
-          *ngIf="
-            mercanciaForm.get('validacionMercanciaForm.cantidad')?.invalid &&
-            mercanciaForm.get('validacionMercanciaForm.cantidad')?.touched
-          "
-          class="text-danger"
-        >
-          <small
-            class="text-danger"
-            *ngIf="mercanciaForm.get('validacionMercanciaForm.cantidad')?.errors?.['pattern']"
-            >Este campo es obligatorio.</small
+          <div
+            class="mensaje-error"
+            *ngIf="validacionMercanciaForm.get('cantidad')?.hasError('pattern')"
           >
+            El valor debe ser un número con hasta 15 dígitos enteros y hasta 4
+            dígitos decimales
+          </div>
+          <div
+            class="mensaje-error"
+            *ngIf="validacionMercanciaForm.get('cantidad')?.errors?.['required'] && validacionMercanciaForm.get('cantidad')?.touched"
+          >
+            Este campo es obligatorio.
+          </div>
+          <div
+            class="mensaje-error"
+            *ngIf="validacionMercanciaForm.get('cantidad')?.errors?.['maxlength'] && validacionMercanciaForm.get('cantidad')?.touched"
+          >
+            El valor debe ser un número con hasta 15 dígitos enteros y hasta 4
+            dígitos decimales
+          </div>
         </div>
+
         <div class="col-md-4">
           <app-catalogo-select
             [catalogo]="optionsUMC"
@@ -511,6 +519,30 @@
               )
             "
           />
+          <div
+            class="mensaje-error"
+            *ngIf="
+              validacionMercanciaForm
+                .get('valorDelaMercancia')
+                ?.hasError('pattern')
+            "
+          >
+            El valor debe ser un número con hasta 15 dígitos enteros y hasta 4
+            dígitos decimales
+          </div>
+          <div
+            class="mensaje-error"
+            *ngIf="validacionMercanciaForm.get('valorDelaMercancia')?.errors?.['required'] && validacionMercanciaForm.get('valorDelaMercancia')?.touched"
+          >
+            Este campo es obligatorio.
+          </div>
+          <div
+            class="mensaje-error"
+            *ngIf="validacionMercanciaForm.get('valorDelaMercancia')?.errors?.['maxlength'] && validacionMercanciaForm.get('valorDelaMercancia')?.touched"
+          >
+            El valor debe ser un número con hasta 15 dígitos enteros y hasta 4
+            dígitos decimales
+          </div>
         </div>
       </div>
       <div class="row mt-5">
@@ -528,6 +560,16 @@
               )
             "
           ></textarea>
+          <div
+            class="mensaje-error"
+            *ngIf="
+              validacionMercanciaForm
+                .get('complementoDelaDescripcion')
+                ?.hasError('maxlength')
+            "
+          >
+            Por favor, no escribas más de 200 caracteres
+          </div>
         </div>
       </div>
       <div class="row mt-5">
@@ -538,6 +580,12 @@
             (valorCambiado)="cambioFechaFactura($event)"
             [isDisabled]="soloLectura"
           ></input-fecha>
+          <div
+            class="mensaje-error"
+            *ngIf="validacionMercanciaForm.get('fecha')?.errors?.['required'] && validacionMercanciaForm.get('fecha')?.touched"
+          >
+            Este campo es obligatorio.
+          </div>
         </div>
         <div class="col-md-4">
           <label>N° factura / Referencia*:</label>
