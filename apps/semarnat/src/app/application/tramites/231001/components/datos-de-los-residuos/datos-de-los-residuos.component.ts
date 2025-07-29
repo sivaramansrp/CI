@@ -2,11 +2,11 @@
  * @module DatosDeLosResiduosComponent
  * Este módulo define el componente `DatosDeLosResiduosComponent` que maneja la información de los residuos.
  */
-import { BtnContinuarComponent, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -38,7 +38,6 @@ import { takeUntil } from 'rxjs';
     CatalogoSelectComponent,
     CommonModule,
     TituloComponent,
-    BtnContinuarComponent,
   ],
 })
 export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {

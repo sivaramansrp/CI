@@ -39,7 +39,11 @@ interface AccionBoton {
   
 })
 export class DatosComponent {
-
+    /**
+   *  texto
+   *  Texto del aviso de privacidad.
+   */
+  texto: string = 'Aviso de Privacidad simplificado';
   /**
    * @property pasos
    * @type {ListaPasosWizard[]}

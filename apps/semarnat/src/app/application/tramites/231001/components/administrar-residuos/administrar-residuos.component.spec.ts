@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { AdministrarResiduosService } from '../../services/administrar-residuos.service';
 import { of, Subject } from 'rxjs';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AdministrarResiduosComponent', () => {
   let component: AdministrarResiduosComponent;
@@ -22,9 +23,8 @@ describe('AdministrarResiduosComponent', () => {
     mockQuery = {
       selectConsultaioState$: of({ readonly: true })
     };
-
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,AdministrarResiduosComponent],
+      imports: [ReactiveFormsModule, AdministrarResiduosComponent, HttpClientTestingModule],
       declarations: [],
       providers: [
         FormBuilder,
