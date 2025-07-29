@@ -427,12 +427,30 @@ this.formaComplimentos.disable();
     const CONTROL = this.formaComplimentos.get(
       'formaSocioAccionistas'
     ) as FormGroup;
+    
+    // Save current form data before removing the control
+    const CURRENT_FORM_DATA = CONTROL.get('formaDatos')?.value || {};
+    
     CONTROL.removeControl('formaDatos', { emitEvent: false });
     this.camposFormulario = [...camposDelFormulario];
     setTimeout(() => {
-      CONTROL.setControl('formaDatos', this.obtainerFormaDatos(tipoForma), {
+      const NEW_FORM_CONTROL = this.obtainerFormaDatos(tipoForma);
+      CONTROL.setControl('formaDatos', NEW_FORM_CONTROL, {
         emitEvent: false,
       });
+      
+      // Restore data for fields that exist in the new form structure
+      const NEW_FORM_DATA: { [key: string]: string } = {};
+      camposDelFormulario.forEach(campo => {
+        if (CURRENT_FORM_DATA[campo.campo] !== undefined && CURRENT_FORM_DATA[campo.campo] !== null) {
+          NEW_FORM_DATA[campo.campo] = CURRENT_FORM_DATA[campo.campo];
+        }
+      });
+      
+      // Patch the saved values to the new form structure
+      if (Object.keys(NEW_FORM_DATA).length > 0) {
+        NEW_FORM_CONTROL.patchValue(NEW_FORM_DATA, { emitEvent: false });
+      }
     }, 10);
   }
 
