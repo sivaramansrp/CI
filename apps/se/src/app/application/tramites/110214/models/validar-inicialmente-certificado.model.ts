@@ -207,6 +207,14 @@ export interface GrupoTratado {
   fechaFinalInput: string;
   fechaInicialInput: string;
 }
+
+export interface GrupoOperador {
+  nombreTercerOperador: string;
+  primerApellidoTercerOperador: string;
+  segundoApellidoTercerOperador: string;
+  registroFiscalTercerOperador: string;
+  razonSocialTercerOperador: string;
+}
 /**
  * Interfaz que define los datos de un acuse en la lista.
  * 
@@ -217,16 +225,6 @@ export interface AcuseLista {
   id: number;
   documento: string;
   descargar: string;
-}
-/**
- * Representa los datos del grupo operador.
- */
-export interface GrupoOperador {
-  nombre: string;
-  apellidoPrimer: string;
-  apellidoSegundo: string;
-  numeroFiscal: string;
-  razonSocial: string;
 }
 /**
  * @interface RespuestaConsulta
@@ -281,4 +279,9 @@ export interface ConsultaDatos {
   productorMismoExportador: boolean;
   productoresExportador: HistoricoColumnas[];
   historicoMercanciaSeleccionadasTablaDatos: SeleccionadasTabla[];
+  nombreTercerOperador : string,
+  primerApellidoTercerOperador : string,
+  segundoApellidoTercerOperador : string,
+  registroFiscalTercerOperador : string,
+  razonSocialTercerOperador : string,
 }

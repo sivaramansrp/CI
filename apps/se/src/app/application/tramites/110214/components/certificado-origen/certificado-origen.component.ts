@@ -1,5 +1,7 @@
-import { AlertComponent, ConsultaioQuery, ConsultaioState, Notificacion, REGEX_PATRON_DECIMAL_2 } from "@ng-mf/data-access-user";
+import { AlertComponent, ConsultaioQuery, ConsultaioState, Notificacion, Pedimento, REGEX_PATRON_DECIMAL_2 } from "@ng-mf/data-access-user";
 import { DISPONIBLES_ENCABEZADOS, FECHAFACTURA, MERCANCIAS_ENCABEZADOS } from '../../constants/validar-inicialmente-certificado.enum';
+
+import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { Catalogo } from "../../models/validar-inicialmente-certificado.model";
 import { CatalogoLista, } from "../../models/validar-inicialmente-certificado.model";
 import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src";
@@ -10,7 +12,6 @@ import { DisponiblesTabla } from "../../models/validar-inicialmente-certificado.
 import { ElementRef } from "@angular/core";
 import { FECHAFINAL } from '../../constants/validar-inicialmente-certificado.enum';
 import { FECHAINICIAL } from '../../constants/validar-inicialmente-certificado.enum';
-import { FormBuilder } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
 import { InputFecha } from "@libs/shared/data-access-user/src";
 import { InputFechaComponent } from "@libs/shared/data-access-user/src";
@@ -18,7 +19,6 @@ import { Modal } from 'bootstrap';
 import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from "@angular/core";
 import { OnInit } from "@angular/core";
-import { REGEX_SOLO_DIGITOS } from "@libs/shared/data-access-user/src";
 import { ReactiveFormsModule } from "@angular/forms";
 import { SeleccionadasTabla } from "../../models/validar-inicialmente-certificado.model.js";
 import { Subject } from "rxjs";
@@ -185,11 +185,30 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * Opciones de tipos de factura disponibles.
    */
   optionsTipoFactura!: Catalogo[];
+/**
+ * @property {boolean} mostrarCamposTercerOperador
+ * @description Indica si se deben mostrar los campos relacionados con el tercer operador.
+ * @default false
+ */
+mostrarCamposTercerOperador: boolean = false;
+
+/**
+ * @property {number} elementoParaEliminar
+ * @description Almacena el índice del elemento que se desea eliminar.
+ */
+elementoParaEliminar!: number;
+
+/**
+ * @property {Array<Pedimento>} pedimentos
+ * @description Lista de pedimentos asociados al trámite.
+ */
+pedimentos: Array<Pedimento> = [];
+
 
   /**
    * Configuración de una nueva notificación.
    */
-  public nuevaNotificacion!: Notificacion;
+  public nuevaNotificacion: Notificacion | null = null;
   /**
    * @property {ConsultaioState} consultaDatos
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
@@ -201,6 +220,48 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * @default false
    */
   soloLectura: boolean = false;
+/**
+ * Validador de rango de fechas.
+ * 
+ * Este método valida que la fecha de inicio sea menor o igual a la fecha de fin.
+ * Si la fecha de inicio es mayor a la fecha de fin, se genera una notificación de error.
+ * 
+ * @param {CertificadoOrigenComponent} component - Instancia del componente para acceder a sus propiedades.
+ * @returns {ValidatorFn} Función de validación que retorna un error si las fechas no son válidas.
+ */
+  static dateRangeValidator(component: CertificadoOrigenComponent): ValidatorFn {
+    return (formGroup: AbstractControl): ValidationErrors | null => {
+      const START_DATE = formGroup.get('fechaInicial')?.value;
+      const END_DATE = formGroup.get('fechaFinal')?.value;
+  
+      if (START_DATE && END_DATE) {
+        const [START_DAY, START_MONTH, START_YEAR] = START_DATE.split('/').map(Number);
+        const [END_DAY, END_MONTH, END_YEAR] = END_DATE.split('/').map(Number);
+  
+        const PARSED_START_DATE = new Date(START_YEAR, START_MONTH - 1, START_DAY);
+        const PARSE_END_DATE = new Date(END_YEAR, END_MONTH - 1, END_DAY);
+  
+        if (PARSED_START_DATE > PARSE_END_DATE) {
+          
+          component.nuevaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: 'Error de Validación',
+            mensaje: 'La fecha de inicio debe ser menor a la fecha fin.',
+            cerrar: true,
+            tiempoDeEspera: 5000,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+          };
+  
+          return { dateRangeInvalid: true };
+        }
+      }
+  
+      return null;
+    };
+  }
   /**
    * Constructor del componente.
    * 
@@ -237,11 +298,21 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaDatos = seccionState;
-          this.soloLectura = this.consultaDatos.readonly;
+          this.soloLectura = this.consultaDatos.readonly;   
+         
           this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
+      
+     
+      this.validarInicialmenteCertificadoService.obtenerMercanciasDisponibles()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((respuesta) => {
+      this.mercanciaDisponsiblesTablaDatos = respuesta;
+      this.inicializarFormularioMercancia(); 
+    });
+
     this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos ?? [];
     this.mercanciaSeleccionadasTablaDatos = this.solicitudState.mercanciaSeleccionadasTablaDatos ?? [];
     this.inicializarFormularioCertificado();
@@ -284,15 +355,24 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     this.formularioCertificado = this.fb.group({
       tercerOperador: [this.solicitudState?.tercerOperador],
       blnPeriodo: [this.solicitudState?.blnPeriodo, [Validators.required]],
+      grupoOperador: this.fb.group({
+      nombreTercerOperador:  [this.solicitudState?.grupoOperador?.nombreTercerOperador, [Validators.required]],
+      primerApellidoTercerOperador:  [this.solicitudState?.grupoOperador?.primerApellidoTercerOperador, [Validators.required]],
+      segundoApellidoTercerOperador:  [this.solicitudState?.grupoOperador?.segundoApellidoTercerOperador, [Validators.required]],
+      registroFiscalTercerOperador:  [this.solicitudState?.grupoOperador?.registroFiscalTercerOperador, [Validators.required]],
+      razonSocialTercerOperador:  [this.solicitudState?.grupoOperador?.razonSocialTercerOperador, [Validators.required]],
+      }),
       grupoTratado: this.fb.group({
         tratado: [this.solicitudState?.grupoTratado?.tratado, [Validators.required]],
         pais: [this.solicitudState?.grupoTratado?.pais, [Validators.required]],
         fraccionArancelaria: [this.solicitudState?.grupoTratado?.fraccionArancelaria, []],
-        numeroRegistro: [this.solicitudState?.grupoTratado?.numeroRegistro, []],
+        numeroRegistro: [this.solicitudState?.grupoTratado?.numeroRegistro, [Validators.required,Validators.maxLength(12)]],
         nombreComercial: [this.solicitudState?.grupoTratado?.nombreComercial, []],
         fechaFinal: [this.solicitudState?.grupoTratado?.fechaFinalInput, []],
         fechaInicial: [this.solicitudState?.grupoTratado?.fechaInicialInput, []],
-      }),
+      },
+      { validators: CertificadoOrigenComponent.dateRangeValidator(this) } 
+    ),
     });
     this.inicializarEstadoFormulario();
   }
@@ -304,26 +384,64 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * como fracción arancelaria, nombres, cantidad, país y otros detalles.
    */
   inicializarFormularioMercancia(): void {
+    const MERCANCIA_DISPONIBLE = this.mercanciaDisponsiblesTablaDatos[0]; // Assuming the first item is used
+  
     this.formularioMercancia = this.fb.group({
-      fraccionMercanciaArancelaria: [this.solicitudState?.formularioMercancia?.fraccionMercanciaArancelaria, []],
-      nombreComercialDelaMercancia: [this.solicitudState?.formularioMercancia?.nombreComercialDelaMercancia, []],
-      nombreTecnico: [this.solicitudState?.formularioMercancia?.nombreTecnico, []],
-      nombreEnIngles: [this.solicitudState?.formularioMercancia?.nombreEnIngles, []],
-      criterioTratoPreferencial: [''],
+      fraccionMercanciaArancelaria: [
+        { value: MERCANCIA_DISPONIBLE?.fraccionArancelaria || '', disabled: true },
+        [Validators.required, Validators.maxLength(8)]
+      ],
+      nombreTecnico: [
+        { value: MERCANCIA_DISPONIBLE?.nombreTecnico || '', disabled: true },
+        []
+      ],
+      nombreEnIngles:['',Validators.required],
+      nombreComercialDelaMercancia: [
+        { value: MERCANCIA_DISPONIBLE?.nombreComercial || '', disabled: true },
+        [Validators.required, Validators.maxLength(200)]
+      ],
+      criterioTratoPreferencial: [
+        { value: 'E', disabled: true },
+        []
+      ],
       valorContenidoRegional: [''],
-      otrasInstancias: [this.solicitudState?.formularioMercancia?.otrasInstancias, []],
-      cantidad: [this.solicitudState?.formularioMercancia?.cantidad, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      otrasInstancias: ['', []],
+      cantidad: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^\d{1,16}(\.\d{1,4})?$/), 
+          Validators.maxLength(22)
+        ]
+      ],
       pais: ['', [Validators.required]],
-      valorDelaMercancia: [this.solicitudState?.formularioMercancia?.valorDelaMercancia, [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)]],
-      complementoDelaDescripcion: [this.solicitudState?.formularioMercancia?.complementoDelaDescripcion, [Validators.required]],
+      valorDelaMercancia: ['', [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)]],
+      complementoDelaDescripcion: ['', [Validators.required]],
       numeroSerie: ['', Validators.maxLength(17)],
-      fecha: [this.solicitudState?.formularioMercancia?.fecha, []],
-      numeroFactura: [this.solicitudState?.formularioMercancia?.numeroFactura, Validators.maxLength(36)],
-      tipoFactura: [this.solicitudState?.formularioMercancia?.tipoFactura, []],
+      fecha: [
+        '',
+        [
+          Validators.required,
+          CertificadoOrigenComponent.restrictFutureDates() 
+        ]
+      ],
+      numeroFactura: ['', [Validators.required, Validators.maxLength(36)]],
+      tipoFactura: ['', [Validators.required]],
     });
+  
     this.inicializarEstadoFormulario();
   }
-
+  static restrictFutureDates(): ValidatorFn {
+    return (control: AbstractControl) => {
+      const INPUT_DATE = new Date(control.value);
+      const CURRENT_DATE = new Date();
+  
+      if (control.value && INPUT_DATE > CURRENT_DATE) {
+        return { futureDate: true }; // Return error if the date is in the future
+      }
+      return null; // Valid date
+    };
+  }
   /**
    * @method inicializarEstadoFormulario
    * @description Inicializa el estado de los formularios según el modo de solo lectura.
@@ -421,10 +539,20 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * Este método obtiene los datos de mercancías disponibles y los asigna a la propiedad `mercanciaDisponsiblesTablaDatos`.
    */
   cargarMercanciasDisponibles(): void {
+    const NUEVA_MERCANCIA: DisponiblesTabla = {
+      fraccionArancelaria: this.formularioCertificado.get('grupoTratado.fraccionArancelaria')?.value || '',
+      numeroRegistroProductos: this.formularioCertificado.get('grupoTratado.numeroRegistro')?.value || '',
+      nombreComercial: this.formularioCertificado.get('grupoTratado.nombreComercial')?.value || '',
+      nombreTecnico: '', 
+      fechaExpedicion: this.formularioCertificado.get('grupoTratado.fechaInicial')?.value || '',
+      fechaVencimiento: this.formularioCertificado.get('grupoTratado.fechaFinal')?.value || '', 
+    };
+  
     this.validarInicialmenteCertificadoService.obtenerMercanciasDisponibles()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(respuesta => {
-        this.mercanciaDisponsiblesTablaDatos = respuesta;
+       
+        this.mercanciaDisponsiblesTablaDatos = [...respuesta, NUEVA_MERCANCIA];
       });
   }
 
@@ -452,10 +580,26 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   disponiblesSeleccionDeFilas(evento: DisponiblesTabla): void {
     if (!this.soloLectura) {
       this.disponiblesSeleccionadasFila = evento;
+        this.formularioMercancia.patchValue({
+        fraccionMercanciaArancelaria: evento.fraccionArancelaria, 
+        nombreTecnico: evento.nombreTecnico, 
+        nombreComercialDelaMercancia: evento.nombreComercial, 
+        criterioTratoPreferencial: 'E', 
+        valorContenidoRegional: '',
+        otrasInstancias: '',
+        cantidad: '',
+        pais: '',
+        valorDelaMercancia: '',
+        complementoDelaDescripcion: '',
+        numeroSerie: '',
+        fecha: '',
+        numeroFactura: '',
+        tipoFactura: '',
+      });
+  
       this.abiertoBuscar();
     }
   }
-
   /**
    * Abre el modal de búsqueda de mercancías.
    * 
@@ -536,6 +680,20 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       this.closeModal.nativeElement.click();
     }
   }
+  /**
+ * Elimina un pedimento de la lista.
+ * 
+ * Este método elimina un pedimento de la lista de pedimentos si se confirma la acción.
+ * Además, restablece la notificación a `null` después de completar la acción.
+ * 
+ * @param {boolean} borrar - Indica si se debe proceder con la eliminación del pedimento.
+ */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+    this.nuevaNotificacion = null;
+  }
 
   /**
    * Maneja el cambio de la fecha inicial en el formulario.
@@ -570,7 +728,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     });
     this.setValoresStore(this.grupoTratado, 'fechaFinal', 'setGrupoTratadoFechaInicialInput');
   }
-
+  
   /**
    * Maneja el cambio de la fecha de la factura en el formulario.
    * 
@@ -580,10 +738,28 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * @param {string} nuevo_fechaFin - Nueva fecha de la factura seleccionada.
    */
   cambioFechaFactura(nuevo_fechaFin: string): void {
-    this.formularioMercancia.patchValue({ fecha: nuevo_fechaFin });
-    this.setValoresStore(this.formularioMercancia, 'fecha', 'setFecha');
+    let inputDate: Date | null = null;
+      if (nuevo_fechaFin.includes('-')) {
+      inputDate = new Date(nuevo_fechaFin);
+    } else if (nuevo_fechaFin.includes('/')) {
+      const [DAY, MONTH, YEAR] = nuevo_fechaFin.split('/').map(Number);
+      inputDate = new Date(YEAR, MONTH - 1, DAY);
+    } else {
+      inputDate = new Date(Date.parse(nuevo_fechaFin));
+    }
+  
+    const CURRENT_DATE = new Date();
+  
+    if (!inputDate || isNaN(inputDate.getTime())) {
+      this.formularioMercancia.get('fecha')?.setErrors({ invalidDate: true }); 
+    } else if (inputDate > CURRENT_DATE) {
+      this.formularioMercancia.get('fecha')?.setErrors({ futureDate: true }); 
+    } else {
+      this.formularioMercancia.patchValue({ fecha: nuevo_fechaFin }); 
+      this.formularioMercancia.get('fecha')?.setErrors(null);
+      this.setValoresStore(this.formularioMercancia, 'fecha', 'setFecha');
+    }
   }
-
   /**
    * Abre un modal con una notificación de alerta.
    * 
@@ -602,6 +778,18 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
+  }
+/**
+ * Maneja el cambio del checkbox para el tercer operador.
+ * 
+ * Este método actualiza la propiedad `mostrarCamposTercerOperador` según el estado del checkbox.
+ * Si el checkbox está marcado, se mostrarán los campos relacionados con el tercer operador.
+ * 
+ * @param {Event} event - Evento generado al cambiar el estado del checkbox.
+ */
+  onTercerOperadorChange(event: Event): void {
+    const CHECKBOX = event.target as HTMLInputElement;
+    this.mostrarCamposTercerOperador = CHECKBOX.checked;
   }
 
   /**
