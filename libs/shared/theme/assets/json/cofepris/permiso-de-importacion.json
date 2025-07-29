@@ -16,7 +16,7 @@
       "cadenaDependencia": "Dependencia XYZ",
       "banco": "1",
       "llavePago": "LLAVE123456",
-      "fechaPago": "2024-06-01",
+      "fechaPago": "12/11/2024",
       "importePago": "1000.00",
       "claveScianModal": "1",
       "claveDescripcionModal": "1",
@@ -34,12 +34,13 @@
       "numerocas": "123-45-6",
       "porcentajeConcentracion": "10",
       "clasificacionToxicologica": "1",
-      "objetoImportacion": "1"
+      "objetoImportacion": "1",
+      "mensaje": true
  },
      "datosDomicilioLegalState": {
       "cumplimiento": "No",
       "rfc": "RFC987654321",
-      "nombre": "Juan",
+      "nombre": 3424563243,
       "apellidoPaterno": "Pérez",
       "apellidoMaterno": "García"
      }
