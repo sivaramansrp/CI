@@ -16,10 +16,7 @@ import { TercerosRelacionadosComponent } from '../../shared/terceros-relacionado
     CommonModule,
     DatosGeneralesComponent,
     TercerosRelacionadosComponent,
-    PagoDeDerechosComponent,
-    TituloComponent,
-    AlertComponent,
-    
+    PagoDeDerechosComponent
   ],
 })
 export class RevisionDocumentalComponent {

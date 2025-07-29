@@ -44,11 +44,11 @@ export interface Solicitud220503State {
   banco: number;
   llavePago: string;
   importePago: string;
-    tercerosRelacionados: TercerosrelacionadosdestinoTable[]; 
-    datosForma: DestinatarioForm[];
-    seletedTerceros: TercerosrelacionadosdestinoTable;
-    seletedExdora: DestinatarioForm;
-        pagoDeDerechos:PagoDeDerechos;
+  tercerosRelacionados: TercerosrelacionadosdestinoTable[]; 
+  datosForma: DestinatarioForm[];
+  selectedTerceros: TercerosrelacionadosdestinoTable;
+  seletedExdora: DestinatarioForm;
+  pagoDeDerechos:PagoDeDerechos;
 }
 
 /**
@@ -95,7 +95,7 @@ export function crearEstadoInicial(): Solicitud220503State {
     importePago: '',
     datosForma: [],
     tercerosRelacionados: [],
-    seletedTerceros:{} as TercerosrelacionadosdestinoTable,
+    selectedTerceros:{} as TercerosrelacionadosdestinoTable,
     seletedExdora: {} as DestinatarioForm,
     pagoDeDerechos: {} as PagoDeDerechos
   };
@@ -599,7 +599,7 @@ export class Solicitud220503Store extends Store<Solicitud220503State> {
   public actualizarSelectedTerceros(datosParaMovilizacionNacional: TercerosrelacionadosdestinoTable): void {
     this.update(state => ({
       ...state,
-      selectedTerceros: datosParaMovilizacionNacional
+      selectedTerceros: datosParaMovilizacionNacional as TercerosrelacionadosdestinoTable
     }));
   }
     /**

@@ -37,5 +37,5 @@ export class Solicitud220503Query extends Query<Solicitud220503State> {
    * @type {Observable<TercerosrelacionadosdestinoTable>}
    * @memberof AcuiculturaQuery
    */
-seletedTerceros$ = this.select(estado => estado.seletedTerceros);
+seletedTerceros$ = this.select(estado => estado.selectedTerceros);
 }
