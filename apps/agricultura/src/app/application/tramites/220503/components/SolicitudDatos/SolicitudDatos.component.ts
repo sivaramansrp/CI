@@ -116,9 +116,32 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   }
 
   validarFormularios(): boolean {
-   let isValid = true;
-   isValid = this.datosDelTramiteARealizar.validarFormularios() && this.responsableInspeccionEnPunto.validarFormularios() && this.medioTransporte.validarFormularios();
-   return isValid;
+    let isValid = true;
+
+    if (this.datosDelTramiteARealizar) {
+      if (!this.datosDelTramiteARealizar.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.responsableInspeccionEnPunto) {
+      if (!this.responsableInspeccionEnPunto.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.medioTransporte) {
+      if (!this.medioTransporte.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
   }
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

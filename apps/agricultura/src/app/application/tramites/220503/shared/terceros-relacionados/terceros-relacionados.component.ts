@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AlertComponent, ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitud, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { Subject, takeUntil } from 'rxjs';
 import { AgregardestinatarioComponent } from '../agregardestinatario/agregardestinatario.component';
 import { AgregardestinatariofinalComponent } from '../agregardestinatariofinal/agregardestinatariofinal.component';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DestinatarioForm } from '../../../220203/models/220203/importacion-de-acuicultura.module';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { Solicitud220503Store } from '../../estados/tramites220503.store';
@@ -17,7 +17,9 @@ import { TercerosrelacionadosService } from '../../../../shared/components/servi
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
   standalone: true,
-  imports: [CommonModule, AlertComponent, TituloComponent,ModalComponent,TercerosrelacionadosComponent], // Importa los módulos necesarios aquí
+  imports: [ CommonModule,
+     TercerosrelacionadosComponent,
+     ModalComponent], // Importa los módulos necesarios aquí
 })
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy,AfterViewInit {
   /**

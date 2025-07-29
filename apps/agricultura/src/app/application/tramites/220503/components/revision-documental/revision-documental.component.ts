@@ -70,6 +70,7 @@ if(!this.tercerosRelacionados.validarFormulario()){
   isValid = false;
 }
   }
+  console.log(isValid,'revision-documental');
 return isValid
 }
 }

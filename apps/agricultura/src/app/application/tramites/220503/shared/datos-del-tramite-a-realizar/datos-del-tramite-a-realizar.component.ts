@@ -196,19 +196,17 @@ this.datosServicio.disable();
           ),
           aduanaDeIngreso: new FormControl(
             this.Solicitud220503State.aduanaDeIngreso || '',
-            [Validators.required]
+       
           ),
           sanidadAgropecuaria: new FormControl(
             this.Solicitud220503State.sanidadAgropecuaria || '',
-            [Validators.required]
           ),
           puntoDeInspeccion: new FormControl(
             this.Solicitud220503State.puntoDeInspeccion || '',
-            [Validators.required]
+
           ),
           fechaDeInspeccion: new FormControl(
             this.Solicitud220503State.fechaDeInspeccion || PagoDeDerechoComponent.formatDate(),
-            [Validators.required]
             ),
         })
       );

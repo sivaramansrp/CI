@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { DestinatarioForm } from '../../../tramites/220203/models/220203/importacion-de-acuicultura.module';
 import { ModalComponent } from '../modal/modal.component';
 import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
+// import { ToastrModule } from 'ngx-toastr'; // Removed unused import
 
 /**
  * Componente para la gestión de terceros relacionados.
@@ -34,7 +35,7 @@ import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-
     ReactiveFormsModule,
     InputRadioComponent,
     CatalogoSelectComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
   ],
   templateUrl: './tercerosrelacionados.component.html',
 })
@@ -160,15 +161,13 @@ export class TercerosrelacionadosComponent {
     { encabezado: 'País', clave: (fila) => fila.pais, orden: 5 },
   ];
   /**
-    * Evento emitido para abrir el modal de exportador.
-    * @type {abrirModalDestinatario}
-    */
-  @Output() abrirModalDestinatario = new EventEmitter<TercerosrelacionadosdestinoTable>();
+   * Evento emitido para abrir el modal de destinatario.
+   */
+  @Output() abrirModalDestinatario: EventEmitter<TercerosrelacionadosdestinoTable> = new EventEmitter<TercerosrelacionadosdestinoTable>();
   /**
    * Evento emitido para abrir el modal de exportador.
-   * @type {EventEmitter<TercerosrelacionadosdestinoTable>}
    */
-  @Output() abrirModalExportador = new EventEmitter<DestinatarioForm>();
+  @Output() abrirModalExportador: EventEmitter<DestinatarioForm> = new EventEmitter<DestinatarioForm>();
 
   /**
    * Configuración de las columnas para la tabla de destinatarios.

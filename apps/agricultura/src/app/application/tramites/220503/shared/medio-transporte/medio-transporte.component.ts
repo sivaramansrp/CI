@@ -157,16 +157,14 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
             [Validators.required]
           ),
           identificacionTransporte: new FormControl(
-            this.solicitud220502State.identificacionTransporte || '',
-            [Validators.maxLength(30)]
+            this.solicitud220502State.identificacionTransporte || ''
           ),
           esSolicitudFerros: new FormControl(
             this.solicitud220502State.esSolicitudFerros || '',
             [Validators.required]
           ),
           totalDeGuiasAmparadas: new FormControl(
-            this.solicitud220502State.totalDeGuiasAmparadas || '',
-            [Validators.maxLength(50)]
+            this.solicitud220502State.totalDeGuiasAmparadas || ''
           ),
         })
       );
@@ -296,6 +294,10 @@ if(this.esFormularioSoloLectura){
   }
     validarFormularios(): boolean {
     const FORM_GROUP = this.grupoFormularioPadre.get(this.claveDeControl) as FormGroup;
+    if(FORM_GROUP.invalid){
+      FORM_GROUP.markAllAsTouched();
+      return false;
+    }
     return FORM_GROUP ? FORM_GROUP.valid : false;
   }
 

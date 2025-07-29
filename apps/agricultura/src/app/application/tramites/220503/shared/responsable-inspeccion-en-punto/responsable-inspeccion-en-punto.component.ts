@@ -162,16 +162,12 @@ export class ResponsableInspeccionEnPuntoComponent
             Validators.maxLength(150),
           ]),
           primerapellido: new FormControl(
-            this.Solicitud220503State.primerapellido || '',
-            [Validators.maxLength(80)]
+            this.Solicitud220503State.primerapellido || ''
           ),
           segundoapellido: new FormControl(
-            this.Solicitud220503State.segundoapellido || '',
-            [Validators.maxLength(80)]
+            this.Solicitud220503State.segundoapellido || ''
           ),
-          mercancia: new FormControl(this.Solicitud220503State.mercancia || '', [
-            Validators.required,
-          ]),
+          mercancia: new FormControl(this.Solicitud220503State.mercancia || ''),
           tipocontenedor: new FormControl(
             this.Solicitud220503State.tipocontenedor || '',
             []

@@ -16,8 +16,8 @@ describe('PasoTresComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoTresComponent],
-      imports: [FirmaElectronicaComponent, ToastrModule.forRoot(), HttpClientTestingModule],
+      declarations: [],
+      imports: [FirmaElectronicaComponent, ToastrModule.forRoot(), HttpClientTestingModule,PasoTresComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
