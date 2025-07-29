@@ -12,10 +12,10 @@
       <ng-container> @switch (indice) { @case (1) { <solicitante [tabindex]="1"></solicitante>
         <ng-titulo titulo="Aviso de renovación u homologación" />
         <div class="row">
-          <lib-input-check [id]="'renovacion'" [label]="'Renovación'" [required]="false" [disabled]="esFormularioSoloLectura" formControlName="renovacion" (change)="establecerRenovacion($event)"></lib-input-check>
+          <lib-input-check [id]="'renovacion'" [label]="'Renovación'" [required]="false" formControlName="renovacion" (change)="establecerRenovacion($event)"></lib-input-check>
         </div>
         <div class="row">
-          <lib-input-check [id]="'homologacion'" [label]="'Homologación de vigencias'" [required]="false" [disabled]="esFormularioSoloLectura" formControlName="homologacion" (change)="establecerHomologacion($event)"></lib-input-check>
+          <lib-input-check [id]="'homologacion'" [label]="'Homologación de vigencias'" [required]="false" formControlName="homologacion" (change)="establecerHomologacion($event)"></lib-input-check>
         </div> }
          @case (2) { <app-solicitud [tabIndex]="2"></app-solicitud> } }
       </ng-container>

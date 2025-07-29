@@ -38,6 +38,8 @@ export class RegistroSolicitudService {
     this.tramite31802Store.setRenovacion(DATOS.renovacion);
     this.tramite31802Store.setHomologacion(DATOS.homologacion);
     this.tramite31802Store.setMonedaNacional(DATOS.monedaNacional);
+    this.tramite31802Store.setFechaInicio(DATOS.fechaInicio);
+    this.tramite31802Store.setFechaFinal(DATOS.fechaFinal);
   }
 
     /**

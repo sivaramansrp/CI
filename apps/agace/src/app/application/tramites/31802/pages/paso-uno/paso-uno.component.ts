@@ -56,6 +56,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud31802State;
   
   esFormularioSoloLectura: boolean = false;
+  /**
+    * Subject para destruir notificador.
+    */
+  consultaDatos!: ConsultaioState;
 /**
  * Constructor del componente PasoUnoComponent.
  * 
@@ -72,7 +76,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private solicitud31802Service:RegistroSolicitudService, // Servicio para manejar el estado de la solicitud 31802
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+     this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
  
   /**
@@ -98,6 +111,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
   }
 
+
+   inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosDelFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
   /**
  * Obtiene los datos del aviso de renovación desde el servicio y actualiza el estado global del formulario.
  * 
@@ -144,6 +165,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+
+   guardarDatosDelFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.registroForm.disable();
+    } else {
+      this.registroForm.enable();
+    }
+  }
   /**
      * Verifica si un campo del formulario es válido.
      *
@@ -185,8 +214,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
-      renovacion: [this.solicitudState?.renovacion, [Validators.required]],
-      homologacion: [this.solicitudState?.homologacion, [Validators.required]],
+      renovacion: [{ value: this.solicitudState?.renovacion, disabled: this.esFormularioSoloLectura }, [Validators.required]],
+      homologacion: [{ value: this.solicitudState?.homologacion, disabled: this.esFormularioSoloLectura }, [Validators.required]],
     });
   }
     /**

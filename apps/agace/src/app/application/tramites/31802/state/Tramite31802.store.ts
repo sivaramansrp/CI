@@ -55,10 +55,10 @@ export function createInitialState(): Solicitud31802State {
     manifiesto3: false,
     fechaPago: '',
     monedaNacional: '',
-    renovacion: false,
+    renovacion: true,
     homologacion: false,
-    fechaInicio: '2025-06-01',
-    fechaFinal: '2025-06-30'
+    fechaInicio: '',
+    fechaFinal: ''
   };
 }
 
