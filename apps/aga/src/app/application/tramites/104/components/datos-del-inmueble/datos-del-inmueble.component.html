@@ -74,8 +74,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="calleInput" class="form-label">Calle*:</label>
-                                    <input type="text" class="form-control" id="calleInput" formControlName="calle"
-                                        placeholder="Ingrese Calle" />
+                                    <input type="text" class="form-control" id="calleInput" formControlName="calle" />
                                         <div *ngIf="formularioDireccion.get('calle')?.touched && formularioDireccion.get('calle')?.hasError('required')" class="text-danger mt-1 small">
                                             Este campo es obligatorio
                                         </div>
@@ -85,7 +84,7 @@
                                 <div class="form-group">
                                     <label for="numeroExteriorInput" class="form-label">Número exterior*:</label>
                                     <input type="text" class="form-control" id="numeroExteriorInput"
-                                        formControlName="numeroExterior" placeholder="Ingrese Número Exterior" />
+                                        formControlName="numeroExterior" />
                                          <div *ngIf="formularioDireccion.get('numeroExterior')?.touched && formularioDireccion.get('numeroExterior')?.hasError('required')" class="text-danger mt-1 small">
                                             Este campo es obligatorio
                                         </div>
@@ -95,8 +94,7 @@
                                 <div class="form-group">
                                     <label for="numeroInteriorInput" class="form-label">Número interior:</label>
                                     <input type="text" class="form-control" id="numeroInteriorInput"
-                                        formControlName="numeroInterior"
-                                        placeholder="Ingrese Número Interior (Opcional)" />
+                                        formControlName="numeroInterior" />
                                 </div>
                             </div>
                         </div>
@@ -148,7 +146,7 @@
                                 <div class="form-group">
                                     <label for="codigoPostalInput" class="form-label">Código postal*:</label>
                                     <input type="text" class="form-control" id="codigoPostalInput"
-                                        formControlName="codigoPostal" placeholder="Ingrese Código Postal" />
+                                        formControlName="codigoPostal" />
                                          <div *ngIf="formularioDireccion.get('codigoPostal')?.touched && formularioDireccion.get('codigoPostal')?.hasError('required')" class="text-danger mt-1 small">
                                             Este campo es obligatorio
                                         </div>
