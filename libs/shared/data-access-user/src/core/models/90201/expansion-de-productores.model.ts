@@ -24,3 +24,8 @@ export interface SectoresTabla {
   sectores: string;
   claveDel: string;
 }
+
+export interface MercanciasTabla {
+  fraccion: string;
+  claveDel: string;
+}

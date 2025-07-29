@@ -1,4 +1,4 @@
-import { AcuseTablaDatos, DomiciliosDePlantasTabla, ProductorIndirectoTabla, SectoresTabla } from "../../models/90201/expansion-de-productores.model";
+import { AcuseTablaDatos, DomiciliosDePlantasTabla, MercanciasTabla, ProductorIndirectoTabla, SectoresTabla } from "../../models/90201/expansion-de-productores.model";
 import { ConfiguracionColumna } from "../../models/shared/configuracion-columna.model";
 
 /**
@@ -68,15 +68,15 @@ export const DOMICILIOS_PLANTAS: ConfiguracionColumna<DomiciliosDePlantasTabla>[
     },
   ];
 
-    export const FRACCION_TABLA: ConfiguracionColumna<SectoresTabla>[] = [
+    export const FRACCION_TABLA: ConfiguracionColumna<MercanciasTabla>[] = [
     {
       encabezado: 'Fracción arancelaria',
-      clave: (item: SectoresTabla) => item.sectores,
+      clave: (item: MercanciasTabla) => item.fraccion,
       orden: 1,
     },
     {
       encabezado: 'Clave del sector',
-      clave: (item: SectoresTabla) => item.claveDel,
+      clave: (item: MercanciasTabla) => item.claveDel,
       orden: 2,
     },
   ];
