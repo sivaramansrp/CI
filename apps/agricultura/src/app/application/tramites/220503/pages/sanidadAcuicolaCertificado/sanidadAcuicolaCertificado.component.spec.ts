@@ -2,8 +2,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Directive, Input, NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { SanidadAcuicolaCertificadoComponent } from './sanidad-acuicola-certificado.component';
+import { SanidadAcuicolaCertificadoComponent } from './sanidadAcuicolaCertificado.component';
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -31,9 +30,8 @@ describe('SanidadAcuicolaCertificadoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
+      imports: [FormsModule, ReactiveFormsModule, SanidadAcuicolaCertificadoComponent],
       declarations: [
-        SanidadAcuicolaCertificadoComponent,
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
