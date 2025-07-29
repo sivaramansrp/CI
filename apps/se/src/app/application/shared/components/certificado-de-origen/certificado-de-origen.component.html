@@ -57,7 +57,8 @@
                         (change)="setValoresStore('formCertificado','razonSocial','setFormCertificadoGenric')" />
                 </div>
             </div>
-            <div class="my-4">
+            @if(domicilio){
+            <div class="my-4" >
                 <ng-titulo titulo="Domicilio del tercer operador" />
                 <div class="row">
                     <div class="col-md-4 form-group">
@@ -73,6 +74,7 @@
                     </div>
                 </div>
             </div>
+        }
         </div>
 
         <ng-titulo titulo="Tratado y país o bloque" />
@@ -85,6 +87,7 @@
                         'formCertificado',
                       'entidadFederativa',
                       'setFormCertificadoGenric')"
+                      [isDisabled]="esFormularioSoloLectura"
                     ></app-catalogo-select>
             </div>
 
@@ -96,7 +99,7 @@
                     'formCertificado',
                   'bloque',
                   'setFormCertificadoGenric')"
-                    ></app-catalogo-select>
+                   [isDisabled]="esFormularioSoloLectura" ></app-catalogo-select>
             </div>
         </div>
         <div class="row mb-3">
@@ -143,11 +146,11 @@
 
         @if(mercanciasDisponibles){
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary" [disabled]="formCertificado.invalid" (click)="buscarMercancia()">Buscar mercancías</button>
+                <button class="btn btn-primary"  (click)="buscarMercancia()" [disabled]="esFormularioSoloLectura">Buscar mercancías</button>
             </div>
         } @else {
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary" [disabled]="formCertificado.invalid" (click)="buscarMercancia()">Mercancías Disponibles</button>
+                <button class="btn btn-primary" [disabled]="formCertificado.invalid || esFormularioSoloLectura" (click)="buscarMercancia()">Mercancías Disponibles</button>
             </div>
         }
 
