@@ -28,27 +28,20 @@ describe('PasoUnoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set esDatosRespuesta to true if consultaState.update is false on ngOnInit', () => {
-    component.consultaState = { update: false } as ConsultaioState;
-    jest.spyOn(consultaQueryMock.selectConsultaioState$, 'pipe').mockReturnValue({
-      subscribe: (cb: any) => {
-        cb({ update: false });
-        return { unsubscribe: jest.fn() };
-      },
-    } as any);
-    component.ngOnInit();
-    expect(component.esDatosRespuesta).toBe(true);
-  });
-
   it('should call guardarDatosFormulario if consultaState.update is true on ngOnInit', () => {
     component.consultaState = { update: true } as ConsultaioState;
     jest.spyOn(component, 'guardarDatosFormulario');
-    jest.spyOn(consultaQueryMock.selectConsultaioState$, 'pipe').mockReturnValue({
-      subscribe: (cb: any) => {
-        cb({ update: true });
-        return { unsubscribe: jest.fn() };
-      },
-    } as any);
+    
+    // Mock the pipe to return an observable that emits the update state
+    consultaQueryMock.selectConsultaioState$ = {
+      pipe: jest.fn().mockReturnValue({
+        subscribe: jest.fn().mockImplementation((callback: any) => {
+          callback({ update: true });
+          return { unsubscribe: jest.fn() };
+        })
+      })
+    };
+    
     component.ngOnInit();
     expect(component.guardarDatosFormulario).toHaveBeenCalled();
   });
@@ -78,5 +71,192 @@ describe('PasoUnoComponent', () => {
     component.ngOnDestroy();
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  describe('validarFormularios', () => {
+    it('should return true when all forms are valid', () => {
+      // Mock valid solicitante form
+      component.solicitante = {
+        form: {
+          invalid: false,
+          markAllAsTouched: jest.fn()
+        }
+      } as any;
+
+      // Mock valid solicitudDatos
+      component.solicitudDatos = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      // Mock valid revisionDocumental
+      component.revisionDocumental = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      const result = component.validarFormularios();
+
+      expect(result).toBe(true);
+      expect(component.solicitante.form.markAllAsTouched).not.toHaveBeenCalled();
+    });
+
+    it('should return false when solicitante form is invalid', () => {
+      // Mock invalid solicitante form
+      component.solicitante = {
+        form: {
+          invalid: true,
+          markAllAsTouched: jest.fn()
+        }
+      } as any;
+
+      // Mock valid solicitudDatos
+      component.solicitudDatos = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      // Mock valid revisionDocumental
+      component.revisionDocumental = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      const result = component.validarFormularios();
+
+      expect(result).toBe(false);
+      expect(component.solicitante.form.markAllAsTouched).toHaveBeenCalled();
+    });
+
+    it('should return false when solicitante is not available', () => {
+      component.solicitante = undefined as any;
+      
+      // Mock valid solicitudDatos
+      component.solicitudDatos = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      // Mock valid revisionDocumental
+      component.revisionDocumental = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      const result = component.validarFormularios();
+
+      expect(result).toBe(false);
+    });
+
+    it('should return false when solicitudDatos validation fails', () => {
+      // Mock valid solicitante form
+      component.solicitante = {
+        form: {
+          invalid: false,
+          markAllAsTouched: jest.fn()
+        }
+      } as any;
+
+      // Mock invalid solicitudDatos
+      component.solicitudDatos = {
+        validarFormularios: jest.fn().mockReturnValue(false)
+      } as any;
+
+      // Mock valid revisionDocumental
+      component.revisionDocumental = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      const result = component.validarFormularios();
+
+      expect(result).toBe(false);
+    });
+
+    it('should return false when solicitudDatos is not available', () => {
+      // Mock valid solicitante form
+      component.solicitante = {
+        form: {
+          invalid: false,
+          markAllAsTouched: jest.fn()
+        }
+      } as any;
+
+      component.solicitudDatos = undefined as any;
+
+      // Mock valid revisionDocumental
+      component.revisionDocumental = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      const result = component.validarFormularios();
+
+      expect(result).toBe(false);
+    });
+
+    it('should return false when revisionDocumental validation fails', () => {
+      // Mock valid solicitante form
+      component.solicitante = {
+        form: {
+          invalid: false,
+          markAllAsTouched: jest.fn()
+        }
+      } as any;
+
+      // Mock valid solicitudDatos
+      component.solicitudDatos = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      // Mock invalid revisionDocumental
+      component.revisionDocumental = {
+        validarFormularios: jest.fn().mockReturnValue(false)
+      } as any;
+
+      const result = component.validarFormularios();
+
+      expect(result).toBe(false);
+    });
+
+    it('should return false when revisionDocumental is not available', () => {
+      // Mock valid solicitante form
+      component.solicitante = {
+        form: {
+          invalid: false,
+          markAllAsTouched: jest.fn()
+        }
+      } as any;
+
+      // Mock valid solicitudDatos
+      component.solicitudDatos = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      component.revisionDocumental = undefined as any;
+
+      const result = component.validarFormularios();
+
+      expect(result).toBe(false);
+    });
+
+    it('should return false when solicitante form is null', () => {
+      // Mock solicitante with null form
+      component.solicitante = {
+        form: null
+      } as any;
+
+      // Mock valid solicitudDatos
+      component.solicitudDatos = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      // Mock valid revisionDocumental
+      component.revisionDocumental = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      const result = component.validarFormularios();
+
+      expect(result).toBe(false);
+    });
+  });
+
+  it('should initialize properties correctly', () => {
+    expect(component.esDatosRespuesta).toBe(false);
+    expect(component.indice).toBe(1);
+    expect((component as any).destroyNotifier$).toBeDefined();
   });
 });

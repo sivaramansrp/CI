@@ -7,6 +7,8 @@ import { PasoTresComponent } from '../PasoTres/PasoTres.component';
 import { PasoDosComponent } from '../PasoDos/PasoDos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ActivatedRoute, Router } from '@angular/router';
+import { of } from 'rxjs';
 
 describe('SanidadAcuicolaCertificadoComponent', () => {
   let component: SanidadAcuicolaCertificadoComponent;
@@ -19,16 +21,35 @@ describe('SanidadAcuicolaCertificadoComponent', () => {
       atras: jest.fn(),
     } as any;
 
+    const activatedRouteMock = {
+      params: of({}),
+      queryParams: of({}),
+      snapshot: {
+        params: {},
+        queryParams: {}
+      }
+    };
+
+    const routerMock = {
+      navigate: jest.fn(),
+      url: '/test'
+    };
+
     await TestBed.configureTestingModule({
-      imports: [SanidadAcuicolaCertificadoComponent,
+      imports: [
+        SanidadAcuicolaCertificadoComponent,
         CommonModule,
-          WizardComponent,
-          BtnContinuarComponent,
-          PasoTresComponent,
-          PasoDosComponent,
-          PasoUnoComponent,
-          HttpClientTestingModule
-        ],
+        WizardComponent,
+        BtnContinuarComponent,
+        PasoTresComponent,
+        PasoDosComponent,
+        PasoUnoComponent,
+        HttpClientTestingModule
+      ],
+      providers: [
+        { provide: ActivatedRoute, useValue: activatedRouteMock },
+        { provide: Router, useValue: routerMock }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SanidadAcuicolaCertificadoComponent);
@@ -95,5 +116,68 @@ describe('SanidadAcuicolaCertificadoComponent', () => {
     component.getValorIndice({ valor: 3, accion: 'ant' } as any);
     expect(component.indice).toBe(3);
     expect(wizardComponentMock.atras).toHaveBeenCalledTimes(1);
+  });
+
+  it('should initialize esFormaValido as false', () => {
+    expect(component.esFormaValido).toBe(false);
+  });
+
+  it('should initialize formErrorAlert with ERROR_FORMA_ALERT', () => {
+    expect(component.formErrorAlert).toBeDefined();
+  });
+
+  it('should set esFormaValido to false at the beginning of getValorIndice', () => {
+    component.esFormaValido = true;
+    component.getValorIndice({ valor: 2, accion: 'cont' } as any);
+    expect(component.esFormaValido).toBe(false);
+  });
+
+  it('should validate forms on step 1 when action is cont', () => {
+    component.indice = 1;
+    const mockPasoUno = {
+      validarFormularios: jest.fn().mockReturnValue(true)
+    };
+    component.pasoUnoComponent = mockPasoUno as any;
+
+    component.getValorIndice({ valor: 1, accion: 'cont' } as any);
+    
+    expect(mockPasoUno.validarFormularios).toHaveBeenCalled();
+    expect(component.indice).toBe(2);
+  });
+
+  it('should set esFormaValido to true and return early when form validation fails', () => {
+    component.indice = 1;
+    const mockPasoUno = {
+      validarFormularios: jest.fn().mockReturnValue(false)
+    };
+    component.pasoUnoComponent = mockPasoUno as any;
+
+    component.getValorIndice({ valor: 1, accion: 'cont' } as any);
+    
+    expect(mockPasoUno.validarFormularios).toHaveBeenCalled();
+    expect(component.esFormaValido).toBe(true);
+    expect(component.indice).toBe(1); // Should not change
+    expect(wizardComponentMock.siguiente).not.toHaveBeenCalled();
+  });
+
+  it('should return true when pasoUnoComponent is not available', () => {
+    component.pasoUnoComponent = undefined as any;
+    component.indice = 1;
+
+    component.getValorIndice({ valor: 1, accion: 'cont' } as any);
+    
+    expect(component.indice).toBe(2); // Should proceed normally
+  });
+
+  it('should update datosPasos.indice when indice changes', () => {
+    component.getValorIndice({ valor: 2, accion: 'cont' } as any);
+    expect(component.datosPasos.indice).toBe(2);
+  });
+
+  it('should handle "ant" action correctly', () => {
+    component.indice = 2;
+    component.getValorIndice({ valor: 2, accion: 'ant' } as any);
+    expect(component.indice).toBe(1);
+    expect(wizardComponentMock.atras).toHaveBeenCalled();
   });
 });
