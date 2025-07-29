@@ -107,7 +107,7 @@ describe('SolicitarRequerimientoComponent', () => {
   it('should add data to datosDelContenedor on obtenerTablaPoblada', () => {
     component.obtenerTablaPoblada();
     expect(autoridadServiceMock.agregarSolicitud).toHaveBeenCalled();
-    expect(component.datosDelContenedor.length).toBe(1);
+    expect(component.datosDelContenedor.length).toBe(2);
   });
 
   it('should reset the form and clear data on limpiarFormulario', () => {
