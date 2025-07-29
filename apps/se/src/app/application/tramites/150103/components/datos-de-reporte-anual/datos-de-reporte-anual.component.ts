@@ -187,10 +187,10 @@ consultaDatos!: ConsultaioState;
  */
 inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.formReporteAnnual?.disable();
+      this.formReporteAnnual?.enable();
     }
     else {
-      this.formReporteAnnual?.enable();
+      this.formReporteAnnual?.disable();
     }
 }
   /**

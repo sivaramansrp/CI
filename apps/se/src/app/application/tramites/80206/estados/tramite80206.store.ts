@@ -52,13 +52,13 @@ export interface AmpliacionServiciosState {
    * Aduana de ingreso seleccionada.
    * @property {Catalogo} aduanaDeIngresoSelecion
    */
-  aduanaDeIngresoSelecion: Catalogo;
+  aduanaDeIngresoSelecion: string;
 
   /**
    * Sector seleccionado.
    * @property {Catalogo} sectorSelecion
    */
-  sectorSelecion: Catalogo;
+  sectorSelecion: string;
 
   /**
    * Validez del formulario.
@@ -153,14 +153,8 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
   datosImportacion: [],
   datosSector: [],
   datos: [],
-  aduanaDeIngresoSelecion: {
-    id: -1,
-    descripcion: '',
-  },
-  sectorSelecion: {
-    id: -1,
-    descripcion: '',
-  },
+  aduanaDeIngresoSelecion: "",
+  sectorSelecion: "",
   formaValida: {
     seleccionarRegla: true,
   },
@@ -265,7 +259,7 @@ export class Tramite80206Store extends Store<AmpliacionServiciosState> {
    * @method setAduanaDeIngresoSeleccion
    * @param {Catalogo} aduanaDeIngresoSelecion - Aduana seleccionada.
    */
-  setAduanaDeIngresoSeleccion(aduanaDeIngresoSelecion: Catalogo): void {
+  setAduanaDeIngresoSeleccion(aduanaDeIngresoSelecion: string): void {
     this.update((state) => ({
       ...state,
       aduanaDeIngresoSelecion,
@@ -277,9 +271,9 @@ export class Tramite80206Store extends Store<AmpliacionServiciosState> {
    * @method setSectorSeleccion
    * @param {Catalogo} sectorSelecion - Sector seleccionado.
    */
-  setSectorSeleccion(sectorSelecion: Catalogo): void {
+  setSectorSeleccion(sectorSelecion: string): void {
     this.update((state) => ({
-      ...state,
+      ...state ,
       sectorSelecion,
     }));
   }

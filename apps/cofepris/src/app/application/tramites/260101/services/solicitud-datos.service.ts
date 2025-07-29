@@ -1,9 +1,15 @@
+import {
+  DatosDeSolicitud,
+  RadioOptions,
+} from '../models/solicitud-datos.model';
+import {
+  DestinatarioImitar,
+  TercerosDestinatarioImitar,
+} from '../models/mercancia.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { ClavesDeLotes } from '../models/claves-de-lotes.model';
-import { DatosDeSolicitud } from '../models/solicitud-datos.model';
 import { Destinatario } from '../models/destinatario.model';
 import { DestinatarioCatalogos } from '../models/destinatario.model';
-import { DestinatarioImitar } from '../models/mercancia.model';
 import { Fabricante } from '../models/fabricante.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -35,7 +41,7 @@ export class SolicitudDatosService {
    */
   obtenerDatosDeSolicitud(): Observable<DatosDeSolicitud> {
     return this.http
-      .get<DatosDeSolicitud>('../../../assets/json/260101/solicitud-datos.json')
+      .get<DatosDeSolicitud>('assets/json/260101/solicitud-datos.json')
       .pipe();
   }
 
@@ -44,9 +50,7 @@ export class SolicitudDatosService {
    * @returns Observable con la solicitud.
    */
   obtenerSolicitud(): Observable<Solicitud> {
-    return this.http
-      .get<Solicitud>('../../../assets/json/260101/solicitud.json')
-      .pipe();
+    return this.http.get<Solicitud>('assets/json/260101/solicitud.json').pipe();
   }
 
   /**
@@ -55,9 +59,7 @@ export class SolicitudDatosService {
    */
   obtenerRegimenDestinaraListo(): Observable<CatalogosSelect> {
     return this.http
-      .get<CatalogosSelect>(
-        '../../../assets/json/260101/regimen-destinaran.json'
-      )
+      .get<CatalogosSelect>('assets/json/260101/regimen-destinaran.json')
       .pipe();
   }
 
@@ -67,7 +69,7 @@ export class SolicitudDatosService {
    */
   obtenerAduanaListo(): Observable<CatalogosSelect> {
     return this.http
-      .get<CatalogosSelect>('../../../assets/json/260101/aduana.json')
+      .get<CatalogosSelect>('assets/json/260101/aduana.json')
       .pipe();
   }
 
@@ -77,7 +79,7 @@ export class SolicitudDatosService {
    */
   obtenerEstadoCatalogo(): Observable<CatalogosSelect> {
     return this.http
-      .get<CatalogosSelect>('../../../assets/json/260101/estado-catalogo.json')
+      .get<CatalogosSelect>('assets/json/260101/estado-catalogo.json')
       .pipe();
   }
 
@@ -87,7 +89,7 @@ export class SolicitudDatosService {
    */
   obtenerMercanciaListo(): Observable<Mercancia[]> {
     return this.http
-      .get<Mercancia[]>('../../../assets/json/260101/mercancia.json')
+      .get<Mercancia[]>('assets/json/260101/mercancia.json')
       .pipe();
   }
 
@@ -97,7 +99,7 @@ export class SolicitudDatosService {
    */
   obtenerClavesDeLotesListo(): Observable<ClavesDeLotes[]> {
     return this.http
-      .get<ClavesDeLotes[]>('../../../assets/json/260101/claves-de-lotes.json')
+      .get<ClavesDeLotes[]>('assets/json/260101/claves-de-lotes.json')
       .pipe();
   }
 
@@ -107,7 +109,7 @@ export class SolicitudDatosService {
    */
   obtenerDestinatarioListo(): Observable<Destinatario[]> {
     return this.http
-      .get<Destinatario[]>('../../../assets/json/260101/destinatario.json')
+      .get<Destinatario[]>('assets/json/260101/destinatario.json')
       .pipe();
   }
 
@@ -117,7 +119,7 @@ export class SolicitudDatosService {
    */
   obtenerFabricanteListo(): Observable<Fabricante[]> {
     return this.http
-      .get<Fabricante[]>('../../../assets/json/260101/fabricante.json')
+      .get<Fabricante[]>('assets/json/260101/fabricante.json')
       .pipe();
   }
 
@@ -128,7 +130,7 @@ export class SolicitudDatosService {
   obtenerDestinatarioCatalogos(): Observable<DestinatarioCatalogos> {
     return this.http
       .get<DestinatarioCatalogos>(
-        '../../../assets/json/260101/destinatario-catalogos.json'
+        'assets/json/260101/destinatario-catalogos.json'
       )
       .pipe();
   }
@@ -137,12 +139,31 @@ export class SolicitudDatosService {
    * Obtiene las opciones de selección de tipo de persona (radio).
    * @returns Observable con las opciones de tipo de persona.
    */
-  obtenerDestinatarioRadio(): Observable<
-    { label: string; value: string | number }[]
-  > {
+  obtenerDestinatarioRadio(): Observable<RadioOptions[]> {
     return this.http
-      .get<{ label: string; value: string | number }[]>(
-        '../../../assets/json/260101/destinatario-radio.json'
+      .get<RadioOptions[]>('assets/json/260101/destinatario-radio.json')
+      .pipe();
+  }
+
+  /**
+   * Obtiene las opciones de selección de fabricante (radio).
+   * @param {string} tipo - Tipo de fabricante (nacional o extranjero).
+   * @returns Observable con las opciones de fabricante.
+   * */
+  obtenerFabricanteRadio(): Observable<RadioOptions[]> {
+    return this.http
+      .get<RadioOptions[]>('assets/json/260101/fabricante-radio.json')
+      .pipe();
+  }
+
+  /**
+   * Obtiene las opciones de selección de tipo de persona (radio).
+   * @returns Observable con las opciones de tipo de persona.
+   */
+  obtenerTercerosNacionalidadRadioOptions(): Observable<RadioOptions[]> {
+    return this.http
+      .get<RadioOptions[]>(
+        'assets/json/260101/terceros-nacionalidad-radio.json'
       )
       .pipe();
   }
@@ -153,9 +174,7 @@ export class SolicitudDatosService {
    */
   obtenerMercanciaCatalogos(): Observable<MercanciaCatalogos> {
     return this.http
-      .get<MercanciaCatalogos>(
-        '../../../assets/json/260101/mercancia-catalogos.json'
-      )
+      .get<MercanciaCatalogos>('assets/json/260101/mercancia-catalogos.json')
       .pipe();
   }
 
@@ -165,9 +184,7 @@ export class SolicitudDatosService {
    */
   obtenerCrosslisto(): Observable<MercanciaCrossList> {
     return this.http
-      .get<MercanciaCrossList>(
-        '../../../assets/json/260101/mercancia-cross-list.json'
-      )
+      .get<MercanciaCrossList>('assets/json/260101/mercancia-cross-list.json')
       .pipe();
   }
 
@@ -177,7 +194,7 @@ export class SolicitudDatosService {
    */
   obtenerPagoDerechos(): Observable<CatalogosSelect> {
     return this.http
-      .get<CatalogosSelect>('../../../assets/json/260101/pago-derechos.json')
+      .get<CatalogosSelect>('assets/json/260101/pago-derechos.json')
       .pipe();
   }
 
@@ -187,8 +204,17 @@ export class SolicitudDatosService {
    */
   obtenerDestinatarioImitar(): Observable<DestinatarioImitar> {
     return this.http
-      .get<DestinatarioImitar>(
-        '../../../assets/json/260101/destinatario-mock.json'
+      .get<DestinatarioImitar>('assets/json/260101/destinatario-mock.json')
+      .pipe();
+  }
+
+  /**
+   * @returns Observable con un destinatario de terceros de ejemplo.
+   */
+  obtenerTercerosDestinatarioImitar(): Observable<TercerosDestinatarioImitar> {
+    return this.http
+      .get<TercerosDestinatarioImitar>(
+        'assets/json/260101/terceros-destinatario-mock.json'
       )
       .pipe();
   }

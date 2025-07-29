@@ -8,6 +8,7 @@ import { InputFecha } from '../../../../../src/core/models/shared/components.mod
 import { InputFechaComponent } from '../../input-fecha/input-fecha.component';
 import { InputRadioComponent } from '../../input-radio/input-radio.component';
 import { TituloComponent } from '../../titulo/titulo.component';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 import { ValidadoresDeFormulariosComponent } from '../../validadores-de-formularios/validadores-de-formularios/validadores-de-formularios.component';
 
@@ -44,7 +45,8 @@ import { ValidadoresDeFormulariosComponent } from '../../validadores-de-formular
     InputRadioComponent,
     TituloComponent,
     InputFechaComponent,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    TooltipModule
   ],
   templateUrl: './formas-dinamicas.component.html',
   styleUrl: './formas-dinamicas.component.scss',

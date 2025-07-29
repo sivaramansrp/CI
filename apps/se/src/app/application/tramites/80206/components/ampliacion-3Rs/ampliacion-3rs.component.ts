@@ -160,9 +160,9 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
           this.ampliacionServiciosService.enviarDeberiaMostrar(this.isSelectedRegla);
 
           this.formularioInfoRegistro.patchValue({
-            seleccionaLaModalidad: this.tramiteState.seleccionaLaModalidad,
-            seleccionarRegla: this.tramiteState.aduanaDeIngresoSelecion.id,
-            sector: this.tramiteState.sectorSelecion.id,
+            seleccionaLaModalidad: this.tramiteState.seleccionaLaModalidad || '',
+            seleccionarRegla: this.tramiteState.aduanaDeIngresoSelecion || '',
+            sector: this.tramiteState.sectorSelecion || '',
           });
         })
       )
@@ -175,9 +175,9 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    */
   inicializarFormularioInfoRegistro(): void {
     this.formularioInfoRegistro = this.fb.group({
-      seleccionaLaModalidad: [{ value: '', disabled: true }],
-      seleccionarRegla: [{ value: '', disabled: false }],
-      sector: [{ value: '', disabled: false }],
+      seleccionaLaModalidad: [''],
+      seleccionarRegla: [''],
+      sector: [''],
     });
   }
 
@@ -265,11 +265,11 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    * @method procesarDatosDelHijo
    * @param {Catalogo | Catalogo[]} data - Datos recibidos.
    */
-  procesarDatosDelHijo(data: Catalogo | Catalogo[]): void {
+  procesarDatosDelHijo(data: Catalogo): void {
     this.isSelectedRegla = true;
     this.ampliacionServiciosService.enviarDeberiaMostrar(this.isSelectedRegla);
     this.tramite80206Store.setIsSelectedRegla(this.isSelectedRegla);
-    this.tramite80206Store.setAduanaDeIngresoSeleccion(data as Catalogo);
+    this.tramite80206Store.setAduanaDeIngresoSeleccion(data.id.toString() || '');
   }
 
   /**
@@ -277,9 +277,9 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    * @method cambioDeSector
    * @param {Catalogo | Catalogo[]} data - Datos del sector seleccionado.
    */
-  cambioDeSector(data: Catalogo | Catalogo[]): void {
+  cambioDeSector(data: Catalogo): void {
     this.recibioSector = Array.isArray(data) ? data : [data];
-    this.tramite80206Store.setSectorSeleccion(data as Catalogo);
+    this.tramite80206Store.setSectorSeleccion(data?.id.toString() || '');
   }
 
   /**
