@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -22,6 +22,7 @@ import { TablePaginationComponent } from '../table-pagination/table-pagination.c
   standalone: true,
   imports: [CommonModule, FormsModule, TablePaginationComponent],
   host: {},
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
