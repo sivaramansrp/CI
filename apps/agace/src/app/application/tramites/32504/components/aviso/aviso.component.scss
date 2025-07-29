@@ -1,0 +1,28 @@
+.tipo-carga{
+  display: flex;
+  align-items: center;
+  gap: 25%; 
+}
+
+.form-label {
+  margin-bottom: 0; 
+  white-space: nowrap;
+  display: flex;
+  align-items: center; 
+  height: 100%; 
+}
+
+.tipo-carga app-input-radio,
+.tipo-carga app-input-radio > * {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  align-items: center;
+  display: flex;
+  position: relative;
+  top: 1px; 
+}
+
+.popup{
+  display: block;
+  background: rgba(0,0,0,0.3)
+}

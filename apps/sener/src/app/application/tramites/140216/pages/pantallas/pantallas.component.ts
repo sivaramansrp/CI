@@ -1,8 +1,7 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-
-import { ALERTA } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 import { DatosComponent } from '../datos/datos.component';
+import { ERROR_ALERTA } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 
 /**
  * Componente principal para la gestión de pantallas en el wizard de cupos.
@@ -50,9 +49,9 @@ export class PantallasComponent {
   infoError = 'alert-danger';
 
   /**
-   * Asigna el mensaje de error a mostrar al atributo `ALERTA`.
+   * Asigna el mensaje de error a mostrar al atributo `ERROR_ALERTA`.
    */
-  ALERTA = ALERTA;
+  ALERTA = ERROR_ALERTA;
 
   /**
    * Datos utilizados para el control del wizard.

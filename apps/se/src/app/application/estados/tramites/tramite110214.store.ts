@@ -1,4 +1,4 @@
-import { AgregarDatosProductorFormulario, DisponiblesTabla, FormularioMercancia, GrupoTratado, HistoricoColumnas, SeleccionadasTabla } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
+import { AgregarDatosProductorFormulario, DisponiblesTabla, FormularioMercancia, GrupoOperador, GrupoTratado, HistoricoColumnas, SeleccionadasTabla } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
 import { GrupoDeDirecciones } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
 import { GrupoReceptor } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
 import { GrupoRepresentativo } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
@@ -103,6 +103,11 @@ export interface Tramite110214State {
    * Información del grupo tratado.
    */
   grupoTratado: GrupoTratado;
+
+  /**
+     * Información del operador.
+     */
+    grupoOperador: GrupoOperador;
   /**
    * @property {SeleccionadasTabla[]} mercanciaSeleccionadasTablaDatos
    * @description Lista de mercancías seleccionadas para ser mostradas en la tabla de datos.
@@ -127,6 +132,8 @@ export interface Tramite110214State {
    * @description Historial de mercancías seleccionadas en la tabla de datos.
    */
   historicoMercanciaSeleccionadasTablaDatos: SeleccionadasTabla[];
+
+
 }
 
 /**
@@ -200,11 +207,20 @@ export function createInitialState(): Tramite110214State {
       fechaFinalInput: '',
       fechaInicialInput: '',
     },
+     grupoOperador: {
+       nombreTercerOperador: '',
+       primerApellidoTercerOperador: '',
+       segundoApellidoTercerOperador: '',
+       registroFiscalTercerOperador: '',
+       razonSocialTercerOperador: '',
+     },
     mercanciaSeleccionadasTablaDatos: [],
     mercanciaDisponsiblesTablaDatos: [],
     productoresExportador: [],
     historicoMercanciaSeleccionadasTablaDatos: [],
+  
   };
+ 
 }
 /**
  * Servicio para validar inicialmente los datos del certificado en el trámite 110214.
@@ -948,5 +964,75 @@ export class Tramite110214Store extends Store<Tramite110214State> {
       ...state,
       historicoMercanciaSeleccionadasTablaDatos,
     }));
-  }
+  }/**
+ * Actualiza el nombre del tercer operador.
+ * 
+ * @param {string} nombreTercerOperador - Nombre del tercer operador.
+ */
+public setNombreTercerOperador(nombreTercerOperador: string): void {
+  this.update((state) => ({
+    ...state,
+    nombreTercerOperador,
+  }));
+}
+
+/**
+* Actualiza el primer apellido del tercer operador.
+* 
+* @param {string} primerApellidoTercerOperador - Primer apellido del tercer operador.
+*/
+public setPrimerApellidoTercerOperador(primerApellidoTercerOperador: string): void {
+  this.update((state) => ({
+    ...state,
+    primerApellidoTercerOperador,
+  }));
+}
+
+/**
+* Actualiza el segundo apellido del tercer operador.
+* 
+* @param {string} segundoApellidoTercerOperador - Segundo apellido del tercer operador.
+*/
+public setSegundoApellidoTercerOperador(segundoApellidoTercerOperador: string): void {
+  this.update((state) => ({
+    ...state,
+    segundoApellidoTercerOperador,
+  }));
+}
+
+/**
+* Actualiza el registro fiscal del tercer operador.
+* 
+* @param {string} registroFiscalTercerOperador - Registro fiscal del tercer operador.
+*/
+public setRegistroFiscalTercerOperador(registroFiscalTercerOperador: string): void {
+  this.update((state) => ({
+    ...state,
+    registroFiscalTercerOperador,
+  }));
+}
+
+/**
+* Actualiza la razón social del tercer operador.
+* 
+* @param {string} razonSocialTercerOperador - Razón social del tercer operador.
+*/
+public setRazonSocialTercerOperador(razonSocialTercerOperador: string): void {
+  this.update((state) => ({
+    ...state,
+    razonSocialTercerOperador,
+  }));
+}
+
+/**
+* Actualiza el grupo operador completo.
+* 
+* @param {GrupoOperador} grupoOperador - Objeto que contiene la información del grupo operador.
+*/
+public setGrupoOperador(grupoOperador: GrupoOperador): void {
+  this.update((state) => ({
+    ...state,
+    grupoOperador,
+  }));
+}
 }

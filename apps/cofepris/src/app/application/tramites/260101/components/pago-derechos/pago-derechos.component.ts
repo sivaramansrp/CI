@@ -1,17 +1,12 @@
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect,InputFecha,InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { Solicitud260101State, Solicitud260101Store } from '../../estados/tramites260101.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { InputFecha } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Solicitud260101Query } from '../../estados/tramites260101.query';
-import { Solicitud260101State } from '../../estados/tramites260101.store';
-import { Solicitud260101Store } from '../../estados/tramites260101.store';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
 
 /**
  * Componente PagoDerechosComponent.

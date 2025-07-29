@@ -193,7 +193,9 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
         })
       )
       .subscribe();
-
+if(this.esFormularioSoloLectura){
+  (this.grupoFormularioPadre.get(this.claveDeControl) as FormGroup).disable();
+}
   }
 
    /**
@@ -213,8 +215,10 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-   
+    
+ 
+  this.inicializarFormulario();
+
   }
 
 

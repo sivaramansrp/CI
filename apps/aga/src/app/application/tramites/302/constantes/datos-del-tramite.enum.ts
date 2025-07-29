@@ -1,9 +1,51 @@
-import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
+import { ConfiguracionColumna, REGEX_CORREO_ELECTRONICO_EXPORTADOR, REGEX_DESCRIPCION_ESPECIALES, REGEX_NO_SOLO_NUMEROS, REGEX_RFC, REGEX_TELEFONO_OPCIONAL, REG_X } from "@libs/shared/data-access-user/src";
 import { DetallesDelProducto } from "../models/certi-registro.model";
 
 /**
+ * DATOS_DEL_TRAMITE:
+ * Contiene la configuración de los campos relacionados con los datos del trámite.
+ * Cada objeto dentro del arreglo representa un campo con las siguientes propiedades:
+ * 
+ * - labelNombre: Etiqueta que describe el campo.
+ * - campo: Nombre del campo utilizado para identificarlo.
+ * - class: Clase CSS que define el tamaño y diseño del campo.
+ * - tipo_input: Tipo de entrada del campo (ej. select-catalogos, checkbox, textarea, etc.).
+ * - disabled: Indica si el campo está deshabilitado (true o false).
+ * - validators: Validaciones aplicadas al campo (ej. 'required').
+ * - placeholder: Texto de marcador de posición para el campo.
+ * - tooltip: Información adicional que se muestra como un tooltip (opcional).
+ */
+export const DATOS_DEL_TRAMITE = [
+  {
+    id: 'aduana',
+    labelNombre: 'Aduana por la que ingresará la mercancía',
+    campo: 'aduana',
+    clase: 'col-md-8',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    opciones: [],
+    marginTop: 3,
+  },
+  {
+    id: 'organismoPublico',
+    labelNombre: 'Organismo público',
+    campo: 'organismoPublico',
+    clase: 'col-md-4',
+    tipoInput: 'checkbox',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    marginTop: 5,
+  }
+];
+
+  /**
  * MERCANCIAS:
- * Contiene la configuración de los campos relacionados con las mercancías.
+ * Contiene la configuración de los campos relacionados con los datos del trámite.
  * Cada objeto dentro del arreglo representa un campo con las siguientes propiedades:
  * 
  * - labelNombre: Etiqueta que describe el campo.
@@ -16,35 +58,18 @@ import { DetallesDelProducto } from "../models/certi-registro.model";
  * - tooltip: Información adicional que se muestra como un tooltip (opcional).
  */
 export const MERCANCIAS = [
-    {
-      labelNombre: 'Aduana por la que ingresará la mercancía',
-      campo: 'aduana',
-      class: 'col-md-8',
-      tipo_input: 'select-catalogos',
-      disabled: false,
-      validators: ['required'],
-      placeholder: '---Selecciona---',
-    },
-    {
-      labelNombre: 'Organismo público',
-      campo: 'organisamoPublico',
-      class: 'col-md-4',
-      tipo_input: 'checkbox',
-      disabled: false,
-      validators: ['required'],
-      placeholder: '',
-    },
-    {
-      labelNombre: 'Fin al cual se destinará la mercancía',
-      campo: 'finAlDestinara',
-      class: 'col-md-12',
-      tipo_input: 'textarea',
-      disabled: false,
-      tooltip: '',
-      validators: ['required'],
-      placeholder: '',
-    }
-  ];
+  {
+    id: 'finAlDestinara',
+    labelNombre: 'Fin al cual se destinará la mercancía',
+    campo: 'finAlDestinara',
+    clase: 'col-md-12',
+    tipoInput: 'textarea',
+    desactivado: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    marginTop: 0,
+  }
+]
 
   /**
  * PRODUCTOS:
@@ -62,113 +87,162 @@ export const MERCANCIAS = [
  */
   export const PRODUCTOS = [
     {
+      id: 'tipoDeMercancia',
       labelNombre: 'Tipo de mercancía',
       campo: 'tipoDeMercancia',
-      class: 'col-md-4',
-      tipo_input: 'text',
-      disabled: false,
-      validators: ['required'],
-      placeholder: '',
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        { tipo: 'required' },
+        {
+          tipo: 'maxlength',
+          valor: 200
+        },
+        {
+          tipo: 'pattern',
+          valor: REGEX_DESCRIPCION_ESPECIALES,
+          mensaje: 'Ingresa datos validos',
+        },
+      ],
+      marcadorDePosicion: '',
+      marginTop: 0,
     },
     {
-      labelNombre: 'Condición de la mercancía',
-      campo: 'condicionDeLaMercancia',
-      class: 'col-md-8',
-      tipo_input: 'text',
-      disabled: true,
-      validators: [''],
-      placeholder: '',
-    },
-    {
+    id: 'condicionDeLaMercancia',
+    labelNombre: 'Condición de la mercancía',
+    campo: 'condicionDeLaMercancia',
+    clase: 'col-md-8',
+    tipoInput: 'select-catalogos',
+    desactivado: true,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '1',
+    opciones: [
+      {
+        id: 1,
+        descripcion: 'Usados',
+      },
+    ],
+    marginTop: 0,
+  },
+  {
+      id: 'cantidad',
       labelNombre: 'Cantidad',
       campo: 'cantidad',
-      class: 'col-md-8',
-      tipo_input: 'text',
-      disabled: false,
-      tooltip: '',
-      validators: ['required'],
-      placeholder: '',
+      clase: 'col-md-8',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        { tipo: 'required' },
+        {
+          tipo: 'pattern',
+          valor: REG_X.DECIMALES_DOS_LUGARES,
+          mensaje: 'Por favor, escribe un número válido',
+        },
+      ],
+      marcadorDePosicion: '',
+      marginTop: 5,
     },
     {
-      labelNombre: 'Unidad de medida',
-      campo: 'unidadDeMedida',
-      class: 'col-md-4',
-      tipo_input: 'select-catalogos',
-      disabled: false,
-      tooltip: '',
-      validators: ['required'],
-      placeholder: '',
+    id: 'unidadDeMedida',
+    labelNombre: 'Unidad de medida',
+    campo: 'unidadDeMedida',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    opciones: [],
+    marginTop: 5,
+  },
+   {
+    id: 'enSuCaso',
+    labelNombre: 'En su caso (maquinaria y equipo obsoleto)',
+    campo: '',
+    clase: 'col-md-12',
+    tipoInput: 'label-only',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 5,
+  },
+  {
+      id: 'marca',
+      labelNombre: 'Marca',
+      campo: 'marca',
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'pattern',
+          valor: REGEX_DESCRIPCION_ESPECIALES,
+          mensaje: 'Ingresa datos validos',
+        },
+        {
+          tipo: 'maxlength',
+          valor: 100
+        },
+      ],
+      marcadorDePosicion: '',
+      marginTop: 5,
     },
     {
-      labelNombre: 'En su caso (maquinaria y equipo obsoleto)',
-      campo: 'enSuCaso',
-      class: 'col-md-12',
-      tipo_input: '',
-      disabled: false,
-      tooltip: '',
-      validators: [''],
-      placeholder: '',
+      id: 'anoDeImportacionTemporal',
+      labelNombre: 'Año de importación temporal',
+      campo: 'anoDeImportacionTemporal',
+      clase: 'col-md-4',
+      tipoInput: 'select-catalogos',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [],
+      marcadorDePosicion: '',
+      opciones: [],
+      marginTop: 5,
     },
     {
-        labelNombre: 'Marca',
-        campo: 'marca',
-        class: 'col-md-4',
-        tipo_input: 'text',
-        disabled: false,
-        tooltip: '',
-        validators: [''],
-        placeholder: '',
-      },
-      {
-        labelNombre: 'Año de importación temporal',
-        campo: 'anoDeImportacionTemporal',
-        class: 'col-md-4',
-        tipo_input: 'select-catalogos',
-        disabled: false,
-        tooltip: '',
-        validators: [''],
-        placeholder: '',
-      },
-      {
-        labelNombre: 'Modelo',
-        campo: 'modelo',
-        class: 'col-md-4',
-        tipo_input: 'text',
-        disabled: false,
-        tooltip: '',
-        validators: [''],
-        placeholder: '',
-      },
-      {
-        labelNombre: 'Número de serie',
-        campo: 'numeroDeSerie',
-        class: 'col-md-8',
-        tipo_input: 'text',
-        disabled: false,
-        tooltip: '',
-        validators: [''],
-        placeholder: '',
-      },
-      {
-        labelNombre: 'Año de importación temporal',
-        campo: 'anoDeImportacionTemporalDesc',
-        class: 'col-md-4',
-        tipo_input: 'hidden',
-        disabled: false,
-        tooltip: '',
-        validators: [''],
-        placeholder: '',
-      },
-      {
-        labelNombre: 'Unidad de medida',
-        campo: 'unidadDeMedidaDesc',
-        class: 'col-md-4',
-        tipo_input: 'hidden',
-        disabled: false,
-        tooltip: '',
-        validators: [''],
-        placeholder: '',
-      },
+      id: 'modelo',
+      labelNombre: 'Modelo',
+      campo: 'modelo',
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'maxlength',
+          valor: 50
+        },
+      ],
+      marcadorDePosicion: '',
+      marginTop: 5,
+    },
+    {
+      id: 'numeroDeSerie',
+      labelNombre: 'Número de serie',
+      campo: 'numeroDeSerie',
+      clase: 'col-md-8',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'pattern',
+          valor: REGEX_DESCRIPCION_ESPECIALES,
+          mensaje: 'Ingresa datos validos',
+        },
+      ],
+      marcadorDePosicion: '',
+      marginTop: 5,
+    },
   ];
 
   /**
@@ -187,33 +261,70 @@ export const MERCANCIAS = [
  */
   export const DATOS_DEL_DONANTE = [
     {
+      id: 'rfc',
       labelNombre: 'RFC',
       campo: 'rfc',
-      class: 'col-md-4',
-      tipo_input: 'text',
-      disabled: false,
-      validators: ['required'],
-      placeholder: '',
-      tooltip: ''
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required',
+        },
+        {
+          tipo: 'maxlength',
+          valor: 13
+        },
+        {
+          tipo: 'pattern',
+          valor: REGEX_RFC,
+          mensaje: 'Ingresa un RFC válido',
+        }
+      ],
+      marcadorDePosicion: '',
+      marginTop: 0,
+      tooltipQuestionCircle: true,
+      tooltipTxt: 'Registro Federal de Contribuyentes'
     },
     {
+      id: 'programaImmex',
       labelNombre: 'Número de programa Immex',
       campo: 'programaImmex',
-      class: 'col-md-8',
-      tipo_input: 'text',
-      disabled: true,
-      validators: ['required'],
-      placeholder: '',
+      clase: 'col-md-8',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required',
+        },
+        {
+          tipo: 'pattern',
+          valor: REGEX_NO_SOLO_NUMEROS,
+          mensaje: 'El dato debe de ser conforme el formato indicado',
+        }
+      ],
+      marcadorDePosicion: '',
+      marginTop: 0,
+      tooltipQuestionCircle: true,
+      tooltipTxt: 'Mínimo 1 dígito para programa / 4 dígitos para año'
     },
     {
+      id: 'nombreRazonSocial',
       labelNombre: 'Razón / Razon Social',
       campo: 'nombreRazonSocial',
-      class: 'col-md-8',
-      tipo_input: 'text',
-      disabled: false,
-      tooltip: '',
-      validators: ['required'],
-      placeholder: '',
+      clase: 'col-md-8',
+      tipoInput: 'text',
+      desactivado: true,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required',
+        }
+      ],
+      marcadorDePosicion: '',
+      marginTop: 3
     }
   ];
 
@@ -233,113 +344,176 @@ export const MERCANCIAS = [
  */
   export const DOMICILIO_FISCAL = [
     {
+      id: 'pais',
       labelNombre: 'País',
       campo: 'pais',
-      class: 'col-md-4',
-      tipo_input: 'text',
-      disabled: true,
-      validators: ['required'],
-      placeholder: '',
-      tooltip: ''
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: true,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required',
+        }
+      ],
+      marcadorDePosicion: '',
+      marginTop: 0,
     },
     {
+      id: 'zonaPostal',
       labelNombre: 'C.P o zona postal',
       campo: 'zonaPostal',
-      class: 'col-md-4',
-      tipo_input: 'text',
-      disabled: true,
-      validators: ['required'],
-      placeholder: '',
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: true,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required',
+        }
+      ],
+      marcadorDePosicion: '',
+      marginTop: 0,
     },
     {
+      id: 'estado',
       labelNombre: 'Estado',
       campo: 'estado',
-      class: 'col-md-4',
-      tipo_input: 'text',
-      disabled: true,
-      tooltip: '',
-      validators: ['required'],
-      placeholder: '',
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: true,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required',
+        }
+      ],
+      marcadorDePosicion: '',
+      marginTop: 3,
     },
     {
+      id: 'colonia',
       labelNombre: 'Colonia',
       campo: 'colonia',
-      class: 'col-md-4',
-      tipo_input: 'text',
-      disabled: true,
-      tooltip: '',
-      validators: ['required'],
-      placeholder: '',
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: true,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required',
+        }
+      ],
+      marcadorDePosicion: '',
+      marginTop: 3,
     },
     {
+      id: 'calle',
       labelNombre: 'Calle',
       campo: 'calle',
-      class: 'col-md-8',
-      tipo_input: 'text',
-      disabled: true,
-      tooltip: '',
-      validators: ['required'],
-      placeholder: '',
+      clase: 'col-md-8',
+      tipoInput: 'text',
+      desactivado: true,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required',
+        }
+      ],
+      marcadorDePosicion: '',
+      marginTop: 3,
     },
     {
+      id: 'numeroExterior',
       labelNombre: 'Número y/o letra exterior',
       campo: 'numeroExterior',
-      class: 'col-md-4',
-      tipo_input: 'text',
-      disabled: true,
-      tooltip: '',
-      validators: ['required'],
-      placeholder: '',
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: true,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required',
+        }
+      ],
+      marcadorDePosicion: '',
+      marginTop: 3,
     },
     {
+      id: 'numeroInterior',
       labelNombre: 'Número y/o letra interior',
       campo: 'numeroInterior',
-      class: 'col-md-4',
-      tipo_input: 'text',
-      disabled: true,
-      tooltip: '',
-      validators: [''],
-      placeholder: '',
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: true,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required',
+        }
+      ],
+      marcadorDePosicion: '',
+      marginTop: 3,
     },
     {
+      id: 'correoElectronico',
       labelNombre: 'Correo electrónico',
       campo: 'correoElectronico',
-      class: 'col-md-8',
-      tipo_input: 'text',
-      disabled: true,
-      tooltip: '',
-      validators: [''],
-      placeholder: '',
+      clase: 'col-md-8',
+      tipoInput: 'text',
+      desactivado: true,
+      soloLectura: false,
+      validadores: [],
+      marcadorDePosicion: '',
+      marginTop: 3,
     },
     {
+      id: 'telephono',
       labelNombre: 'Teléfono',
       campo: 'telephono',
-      class: 'col-md-4',
-      tipo_input: 'text',
-      disabled: true,
-      tooltip: '',
-      validators: [''],
-      placeholder: '',
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: true,
+      soloLectura: false,
+      validadores: [],
+      marcadorDePosicion: '',
+      marginTop: 3,
     },
     {
+      id: 'correoElectronicoOpcional',
       labelNombre: 'Correo electrónico (opcional)',
       campo: 'correoElectronicoOpcional',
-      class: 'col-md-8',
-      tipo_input: 'text',
-      disabled: false,
-      tooltip: '',
-      validators: [''],
-      placeholder: '',
+      clase: 'col-md-8',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'pattern',
+          valor: REGEX_CORREO_ELECTRONICO_EXPORTADOR,
+          mensaje: 'El dato no esta conforme al formato esperado',
+        },
+      ],
+      marcadorDePosicion: '',
+      marginTop: 3,
     },
     {
+      id: 'telephonoOpcional',
       labelNombre: 'Teléfono (opcional)',
       campo: 'telephonoOpcional',
-      class: 'col-md-4',
-      tipo_input: 'text',
-      disabled: false,
-      tooltip: '',
-      validators: [''],
-      placeholder: '',
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'pattern',
+          valor: REGEX_TELEFONO_OPCIONAL,
+          mensaje: 'El dato no esta conforme al formato esperado',
+        },
+      ],
+      marcadorDePosicion: '',
+      marginTop: 3,
     }
   ];
 
@@ -351,7 +525,11 @@ export const MERCANCIAS = [
  *   la descripción de la mercancía en los mismos términos de la carta de donación.
  */
 export const DATOS_ALERT = {
-  message: `<p>Debes capturar la descripción de la mercancía en los mismos términos de la carta de donación.</p>`,
+  message: `
+  <div class="text-center">
+    <p>Debes capturar la descripción de la mercancía en los mismos términos de la carta de donación.</p>
+  </div>
+  `,
 };
 
 /**
@@ -402,5 +580,10 @@ export const DATOS_DEL_PRODUCTO : ConfiguracionColumna<DetallesDelProducto>[] = 
         encabezado: 'Número de serie',
         clave: (item: DetallesDelProducto) => item.numeroDeSerie,
         orden: 7,
+      },
+      {
+        encabezado: 'Condición de la mercancía',
+        clave: (item: DetallesDelProducto) => item.condicionDeLaMercancia,
+        orden: 8,
       },
     ];
