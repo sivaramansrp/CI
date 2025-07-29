@@ -109,8 +109,6 @@ export class AgregarTransportistasComponent implements OnInit, OnDestroy {
       this.transportistaCertificacionForm.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.transportistaCertificacionForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
     }
   }
 

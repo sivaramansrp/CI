@@ -136,8 +136,6 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       this.miembroEmpresaForm.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.miembroEmpresaForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
     }
   }
 

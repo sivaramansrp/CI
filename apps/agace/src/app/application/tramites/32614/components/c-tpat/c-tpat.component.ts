@@ -112,8 +112,6 @@ export class CTPATComponent implements OnInit, OnDestroy {
       this.ctpatForm.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.ctpatForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
     }
   }
 
