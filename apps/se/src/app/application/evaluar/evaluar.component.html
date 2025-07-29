@@ -16,16 +16,18 @@
             </div>
             <div class="row margin-top">
                 <ul class="nav nav-tabs justify-content-center">
-                    <li [ngClass]="indice === 1 ? 'active' : ''">
+                    <li *ngIf="tieneOpcion('GENERAR_DICTAMEN')" [ngClass]="indice === 1 ? 'active' : ''">
                         <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
                             (keydown.space)="seleccionaTab(1)" role="button" tabindex="0">Dictamen</a>
                     </li>
-                    <li [ngClass]="indice === 2 ? 'active' : ''">
+
+                    <li *ngIf="tieneOpcion('GENERAR_REQUERIMIENTO')" [ngClass]="indice === 2 ? 'active' : ''">
                         <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
                             (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Requerimiento de
                             información</a>
                     </li>
-                    <li [ngClass]="indice === 3 ? 'active' : ''">
+
+                    <li *ngIf="tieneOpcion('SOLICITAR_OPINION')" [ngClass]="indice === 3 ? 'active' : ''">
                         <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
                             (keydown.space)="seleccionaTab(3)" role="button" tabindex="3">Solicitar opinión</a>
                     </li>
@@ -33,7 +35,7 @@
                 <ng-container>
                     @switch (indice) {
                     @case (1) {
-                    <app-generar-dictamen botonDeCancelar="Cancelar" botonGuardar="Guardar y Firmar"
+                    <app-generar-dictamen [isAntecedentes]="false" [conformidad]="conformidadDictamen"
                         (enviarEvento)="enviarEvento($event)"></app-generar-dictamen>
                     }
                     @case (2) {

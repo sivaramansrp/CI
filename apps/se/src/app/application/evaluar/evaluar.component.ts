@@ -1,26 +1,26 @@
-import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
-import { Component, OnDestroy } from "@angular/core";
-import { ConsultaioQuery, FECHA_DE_INICIO } from '@ng-mf/data-access-user';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CapturarRequerimientoComponent } from '@libs/shared/data-access-user/src/tramites/components/capturar-requerimiento/capturar-requerimiento.component';
 import { CommonModule } from "@angular/common";
-import { ConsultaioState } from '@ng-mf/data-access-user';
-import { ConsultaioStore } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit, Type } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { SolicitudRequerimientosState } from '@libs/shared/data-access-user/src/core/estados/requerimientos.store';
+import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
+import { SolicitudRequerimientoQuery } from '@libs/shared/data-access-user/src/core/queries/requerimientos.query';
+import { CapturarRequerimientoComponent } from '@libs/shared/data-access-user/src/tramites/components/capturar-requerimiento/capturar-requerimiento.component';
 import { EncabezadoRequerimientoComponent } from '@libs/shared/data-access-user/src/tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
 import { GenerarDictamenComponent } from '@libs/shared/data-access-user/src/tramites/components/generar-dictamen/generar-dictamen.component';
-import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
-import { OnInit } from "@angular/core";
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
-import { Router } from '@angular/router';
 import { SolicitarDocumentosEvaluacionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
 import { SolicitarOpinionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-opinion/solicitar-opinion.component';
-import { SolicitudRequerimientoQuery } from '@libs/shared/data-access-user/src/core/queries/requerimientos.query';
-import { SolicitudRequerimientosState } from '@libs/shared/data-access-user/src/core/estados/requerimientos.store';
-import { Subject } from 'rxjs';
-import { Type } from "@angular/core";
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import { ConsultaioQuery, ConsultaioState, ConsultaioStore, FECHA_DE_INICIO } from '@ng-mf/data-access-user';
+import { map, Subject, takeUntil } from 'rxjs';
+import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
+
+import { GuardarDictamenRequest } from '../core/models/request/guardar-dictamen-request.model';
+import { OpcionesEvaluacionRequest } from '../core/models/request/opciones-evaluacion.model';
+import { EvaluarSolicitudService } from '../core/services/evaluar-tramite/evaluar-solicitud.service';
+import { GuardarDictamenService } from '../core/services/evaluar-tramite/guardar-dictamen.service';
+import { IniciarService } from '../core/services/evaluar-tramite/iniciar.service';
 
 /**
  * @component
@@ -117,6 +117,20 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * Variable para deshabilitar pestaña documento
    */
   deshabilitarSolicitarDocumentos: boolean = false;
+
+  /**
+   * @property {string[]} opcionesDisponibles
+   * @description Lista de opciones disponibles para la evaluación del trámite.
+   */
+  opcionesDisponibles: string[] = [];
+
+  /**
+   * @property {string} conformidadDictamen
+   * @description Texto que representa la conformidad del dictamen, utilizado en el formulario de generación de dictamen.
+   */
+  conformidadDictamen: string = '';
+
+
   /**
  * @constructor
  * @description Constructor del componente. Inicializa los servicios y suscripciones necesarias para la evaluación del trámite.
@@ -135,6 +149,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     private consultaioStore: ConsultaioStore,
     private consultaioQuery: ConsultaioQuery,
     private solicitudRequerimientoQuery: SolicitudRequerimientoQuery,
+    private evaluarSolicitudService: EvaluarSolicitudService,
+    private iniciarService: IniciarService,
+    private guardarService: GuardarDictamenService
   ) {
 
     this.consultaioQuery.selectConsultaioState$
@@ -178,7 +195,54 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigate([`/${this.guardarDatos?.department.toLowerCase()}/seleccion-tramite`]);
     }
+
+    this.opcionesEvaluacion();
   }
+
+  /**
+   * @method evaluarSolicitud
+   * @description Método para enviar las opciones de evaluación del trámite 130118.
+   * 
+   * Envía una solicitud al servicio `EvaluarSolicitudService` con el número de folio del trámite y los datos de las opciones de evaluación.
+   * Actualiza la lista de opciones disponibles si la respuesta es exitosa, o muestra un error en caso contrario.
+   * 
+   * @returns {void}
+   */
+  opcionesEvaluacion(): void {
+
+    const FOLIOTRAMITE = '0201300101820251118000019';
+
+    const PAYLOAD: OpcionesEvaluacionRequest = {
+      cve_rol_capturista: 'ROL123',
+      considera_capturista: true
+    };
+
+    this.evaluarSolicitudService.postOpcionesEvaluacion(FOLIOTRAMITE, PAYLOAD)
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === '00') {
+            this.opcionesDisponibles = response.datos ?? [];
+          } else {
+            console.error('Error en respuesta:', response.mensaje);
+          }
+        },
+        error: (error) => {
+          console.error('Error al llamar el servicio:', error);
+        }
+      });
+  }
+
+  /**
+   * @method tieneOpcion
+   * @description Verifica si una opción específica está disponible en la lista de opciones.
+   * 
+   * @param {string} opcion - Opción a verificar.
+   * @returns {boolean} Retorna true si la opción está disponible, false en caso contrario.
+   */
+  tieneOpcion(opcion: string): boolean {
+    return this.opcionesDisponibles.includes(opcion);
+  }
+
   /**
    * @method loadComponent
    * @description Carga dinámicamente un componente hijo según la ruta especificada en el objeto recibido.
@@ -221,7 +285,49 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+
+    if (i === 1) {
+      this.iniciarDictamen();
+    }
   }
+
+  /**
+   * @method iniciarDictamen
+   * @description Inicia el dictamen del trámite 130118.
+   * 
+   * Llama al servicio `IniciarService` para iniciar el dictamen con un número de folio predefinido.
+   * Muestra un mensaje en la consola si el dictamen se inicia correctamente o si ocurre un error.
+   * 
+   * @returns {void}
+   */
+  iniciarDictamen(): void {
+    const FOLIOTRAMITE = '0201300101820251118000019';
+
+    this.iniciarService.getIniciarDictamen(FOLIOTRAMITE).subscribe({
+      next: () => {
+        this.obtenerCriterios();
+
+      },
+      error: (err) => {
+        console.error('Error al iniciar dictamen:', err);
+      }
+    });
+  }
+
+  obtenerCriterios(): void {
+
+    const IDSOLICITUD = '202744892';
+
+    this.guardarService.getCriterios(IDSOLICITUD).subscribe({
+      next: (resp) => {
+        this.conformidadDictamen = resp.datos ?? '';
+      },
+      error: (err) => {
+        console.error('Error al obtener criterios:', err);
+      }
+    });
+  }
+
   /**
    * @method seleccionaTabRequerimiento
    * @description Cambia la pestaña de dictamen seleccionada.
@@ -231,14 +337,38 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   seleccionaTabRequerimiento(i: number): void {
     this.indiceDictamen = i;
   }
+
   /**
    * @method guardarFirmar
    * @description Activa la sección de firma electrónica.
    * @returns {void}
    */
-  guardarFirmar(): void {
-    this.firmar = true;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  guardarFirmar(datosDictamen?: any): void {
+    const FOLIOTRAMITE = '0201300101820251118000019';
+
+    if (!datosDictamen) {
+      console.error('No se recibieron datos del dictamen.');
+      return;
+    }
+
+    const PAYLOAD: GuardarDictamenRequest = {
+      ide_sentido_dictamen: datosDictamen.cumplimiento,
+      justificacion_dictamen: datosDictamen.mensajeDictamen
+    };
+
+    this.guardarService.postGuadarDictamen(FOLIOTRAMITE, PAYLOAD)
+      .subscribe({
+        next: (resp) => {
+          this.firmar = true;
+        },
+        error: (err) => {
+          console.error('Error al guardar el dictamen', err);
+          // Mostrar mensaje de error si aplica
+        }
+      });
   }
+
   /**
    * @method enviarEvento
    * @description Maneja los eventos de guardar y cancelar provenientes de componentes hijos.
@@ -248,7 +378,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   enviarEvento(e: { events: string, datos: unknown }): void {
     switch (e.events) {
       case 'guardar':
-        this.guardarFirmar();
+        this.guardarFirmar(e.datos);
         break;
       case 'cancelar':
         this.indice = 0;
