@@ -7,7 +7,6 @@ services:
       dockerfile: apps/aga/Dockerfile.dev
       args:
         - NODE_ENV=production
-        - IMAGE_TAG_ID=${IMAGE_TAG_ID:-1.0.9}
     container_name: modulefederation-aga-microfront
     restart: unless-stopped
     expose:
