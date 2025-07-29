@@ -75,10 +75,10 @@
         </div>
         <div class="col-md-12 d-flex justify-content-end" *ngIf="cuerpoTablaExportador.length === 1">
             <button class="btn btn-primary me-3"
-                [disabled]="esFormularioSoloLectura || listaDeFilaSeleccionadaFinal.length === 0"
+                [disabled]="esFormularioSoloLectura"
                 (click)="modificarDestinatarioFinal()">Modificar</button>
             <button class="btn btn-default"
-                [disabled]="esFormularioSoloLectura || listaDeFilaSeleccionadaFinal.length === 0"
+                [disabled]="esFormularioSoloLectura"
                 (click)="emitEliminarFinal()">Eliminar</button>
         </div>
         <div class="row">
@@ -103,10 +103,10 @@
             </div>
             <div class="col-md-12 d-flex justify-content-end" *ngIf="cuerpoTablaDestino.length === 1">
                 <button class="btn btn-primary me-3"
-                    [disabled]="esFormularioSoloLectura || listaDeFilaSeleccionada.length === 0"
+                    [disabled]="esFormularioSoloLectura"
                     (click)="modificarDestinatario()">Modificar</button>
                 <button class="btn btn-default"
-                    [disabled]="esFormularioSoloLectura || listaDeFilaSeleccionada.length === 0"
+                    [disabled]="esFormularioSoloLectura "
                     (click)="emitEliminar()">Eliminar</button>
             </div>
         </div>
@@ -118,4 +118,8 @@
     @if(eliminarDatoExportador){
     <lib-notificaciones [notificacionInput]="nuevaNotificacion"
         (confirmacionModal)="eliminarExportador($event)"></lib-notificaciones>
+    }
+    @if(mostrarMensajeError){
+            <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+        (confirmacionModal)="eliminarErrorMessage()"></lib-notificaciones>
     }
