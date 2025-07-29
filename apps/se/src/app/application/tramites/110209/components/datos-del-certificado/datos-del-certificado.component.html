@@ -3,10 +3,11 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label for="observaciones" class="form-label">Observaciones :</label>
+                    <label for="observaciones" class="form-label">Observaciones:</label>
                     <textarea class="form-control" id="observaciones" formControlName="observaciones"
-                        placeholder="pruebas"
-                        (change)="setValoresStore(datosDelCertificadoForm,'observaciones')"></textarea>
+                        
+                        (change)="setValoresStore(datosDelCertificadoForm,'observaciones')"
+                        rows="6"></textarea>
                         <div *ngIf="datosDelCertificadoForm.get('observaciones')?.touched && datosDelCertificadoForm.get('observaciones')?.invalid">
                             <small *ngIf="datosDelCertificadoForm.get('observaciones')?.errors?.['pattern']" class="text-danger">Por favor, corrija la observaciones.</small>
                           </div>
@@ -28,4 +29,25 @@
         </div>
 
     </div>
+</div>
+
+<div class="modal fade custom-backdrop" id="registrodeMercancia" tabindex="-1"
+  aria-labelledby="registrodeMercanciaLabel" data-bs-backdrop="static"
+  #registrodeMercancia>
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title mt-0">Modificar</h4>
+      </div>
+ 
+      <div class="modal-body">
+       <app-registro-de-mercancia></app-registro-de-mercancia>
+ 
+        <footer class="footer d-flex py-5 gap-3 justify-content-end">
+          <button type="button" class="btn btn-primary" (click)="modalCancelar()">Cancelar</button>
+          <button type="button" class="btn btn-primary">Modificar</button>
+        </footer>
+      </div>
+    </div>
+  </div>
 </div>
