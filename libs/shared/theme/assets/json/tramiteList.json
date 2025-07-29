@@ -2233,13 +2233,6 @@
     "department": "se"
   },
   {
-    "id": 321,
-    "tramite": 220503,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "agricultura"
-  },
-  {
     "id": 323,
     "tramite": 110205,
     "linkDashboard": "/se/validar-certificado/peru",
@@ -4292,10 +4285,24 @@
     "department": "agace"
   },
   {
+     "id": 613,
+    "tramite": 32618,
+    "linkDashboard": "/agace/sce-socio-almacenamiento/solicitud",
+    "linkDepartment": "/pago/sce-socio-almacenamiento/solicitud",
+     "department": "agace"
+    },
+  {
     "id": 613,
     "tramite": 32615,
     "linkDashboard": "/agace/recinto-fiscalizado/solicitud",
     "linkDepartment": "/pago/recinto-fiscalizado/solicitud",
     "department": "agace"
-    }
+    },
+    {
+    "id": 614,
+    "tramite": 32608,
+    "linkDashboard": "/agace/seciit-oea-registration/solicitud",
+    "linkDepartment": "/pago/seciit-oea-registration/solicitud",
+    "department": "agace"
+  }
 ]

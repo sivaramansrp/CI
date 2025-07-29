@@ -1,12 +1,12 @@
+import { ALCALDIA_CONFIG, COLONIA_CONFIG, DATOS_DOMICILIO_LUGAR, DATOS_MERCANCIA_SUBMANUFACTURA, DATOS_QUIEN_RECIBE, ENTIDAD_FEDERATIVA_CONFIG, FRACCION_ARANCELARIA_CONFIG, UNIDAD_MEDIDA_CONFIG } from '../../constants/aviso.enum';
 import { BotonAccionesTipos, ConsultaioQuery, FormaValidators, InputTypes, Props } from '@ng-mf/data-access-user';
+import { ColumnasTabla, ColumnsTableMercancia } from '../../models/aviso.model';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { DATOS_DOMICILIO_LUGAR, DATOS_MERCANCIA_SUBMANUFACTURA, DATOS_QUIEN_RECIBE } from '../../constants/aviso.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ActionType } from '../../enum/aviso.enum';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
-import { ColumnasTabla } from '../../models/aviso.model';
 import { CommonModule } from '@angular/common';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { InputConfig } from '@ng-mf/data-access-user';
@@ -18,6 +18,22 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite32504Store } from '../../estados/tramite32504.store';
 
+/**
+ * Asigna el catálogo de fracciones arancelarias al primer campo de datos de mercancía.
+ * Asigna el catálogo de unidades de medida al tercer campo de datos de mercancía.
+ */
+DATOS_MERCANCIA_SUBMANUFACTURA[0].catalogos = FRACCION_ARANCELARIA_CONFIG;
+DATOS_MERCANCIA_SUBMANUFACTURA[2].catalogos = UNIDAD_MEDIDA_CONFIG;
+/**
+ * Asigna catálogos de selección a los campos del domicilio:
+ * - Entidades federativas al segundo campo,
+ * - Alcaldías al tercer campo,
+ * - Colonias al cuarto campo.
+ */
+DATOS_DOMICILIO_LUGAR[1].catalogos = ENTIDAD_FEDERATIVA_CONFIG;
+DATOS_DOMICILIO_LUGAR[2].catalogos = ALCALDIA_CONFIG;
+DATOS_DOMICILIO_LUGAR[3].catalogos = COLONIA_CONFIG;
+
 @Component({
   selector: 'app-manual-aviso',
   templateUrl: './manual-aviso.component.html',
@@ -26,7 +42,11 @@ import { Tramite32504Store } from '../../estados/tramite32504.store';
   standalone: true,
 })
 export class ManualAvisoComponent implements OnInit, OnDestroy {
-
+  /**
+ * Evento que se emite cuando se desea agregar una nueva fila a la tabla.
+ * Emite un objeto de tipo ColumnasTabla hacia el componente padre.
+ */
+  @Output() agregarFila = new EventEmitter<ColumnasTabla>();
   /**
    * Evento que emite acciones de los botones principales del formulario.
    * @type {EventEmitter<boolean>}
@@ -46,12 +66,24 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+  * Indica si se debe mostrar el popup que confirma que un registro fue agregado.
+  * Valor booleano que controla la visibilidad del mensaje emergente de confirmación.
+  */
+  public mostrarPopupRegistroAgregado = false;
+
+  /**
+  * Mensaje que se muestra en el popup al agregar un registro exitosamente.
+  * Informa al usuario que la operación se realizó correctamente.
+  */
+  public mensajePopupRegistroAgregado = 'El registro fue agregado correctamente.';
+
+  /**
    * Configuración de los grupos y campos del formulario dinámico principal.
    * @type {InputConfig[]}
    */
   configuracion: InputConfig[] = [
     {
-      title: 'Datos de quien recibe las mercancías(tercero submanufacturero autoriado)',
+      title: 'Datos de quien recibe las mercancías (tercero submanufacturero autorizado)',
       formGroupName: 'datosQuienRecibe',
       menu: [
         {
@@ -156,7 +188,7 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
         {
           inputType: InputTypes.TEXT,
           props: DATOS_MERCANCIA_SUBMANUFACTURA[5] as unknown as Props,
-          class: 'col-md-4',
+          class: 'col-md-12',
         },
       ],
     },
@@ -181,31 +213,45 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
   tableData: {
     headers: {
       encabezado: string,
-      clave: (ele: ColumnasTabla) => string,
+      clave: (ele: ColumnsTableMercancia) => string,
       orden: number
     }[],
-    data: [],
+    data: ColumnsTableMercancia[],
   } = {
       headers: [
-        { encabezado: 'RFC', clave: (ele: ColumnasTabla) => ele.rfc, orden: 1 },
+        { encabezado: 'Fracción arancelaria', 
+          clave: (ele: ColumnsTableMercancia): string => {
+            const VALOR = FRACCION_ARANCELARIA_CONFIG.find(c => c.id === Number(ele.fracArancelaria));
+            return VALOR ? VALOR.descripcion : ele.fracArancelaria;
+          },
+          orden: 1 
+        },
         {
-          encabezado: 'Nombre comercial',
-          clave: (ele: ColumnasTabla) => ele.nombreComercial,
+          encabezado: 'NICO',
+          clave: (ele: ColumnsTableMercancia) => ele.nico,
           orden: 2,
         },
         {
-          encabezado: 'Entidad federativa',
-          clave: (ele: ColumnasTabla) => ele.entidadFederativa,
+          encabezado: 'Unidad de medida',
+          clave: (ele: ColumnsTableMercancia): string => {
+            const VALOR = UNIDAD_MEDIDA_CONFIG.find(c => c.id === Number(ele.unidadMedida));
+            return VALOR ? VALOR.descripcion : ele.unidadMedida;
+          },
           orden: 3,
         },
         {
-          encabezado: 'Alcaldía o Municipio',
-          clave: (ele: ColumnasTabla) => ele.alcaldioOMuncipio,
+          encabezado: 'Cantidad',
+          clave: (ele: ColumnsTableMercancia) => ele.cantidad,
           orden: 4,
         },
         {
-          encabezado: 'Colonia',
-          clave: (ele: ColumnasTabla) => ele.colonia,
+          encabezado: 'Valor USD',
+          clave: (ele: ColumnsTableMercancia) => ele.valorUsd,
+          orden: 5,
+        },
+        {
+          encabezado: 'Descripción de la mercancía',
+          clave: (ele: ColumnsTableMercancia) => ele.descripcionMercancia,
           orden: 5,
         },
       ],
@@ -328,8 +374,9 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
         CONTROL_NAME,
         this.fb.control({ value: '', disabled: campo.props.disabled }, VALIDATORS)
       );
-      if (campo.inputType === InputTypes.SELECT) {
-        this.obtenerValoresCatalogo(indiceGrupo, menuIndex, CONTROL_NAME);
+      if (campo.inputType === InputTypes.SELECT &&
+          campo.props.campo !== 'colonias') {
+          this.obtenerValoresCatalogo(indiceGrupo, menuIndex, CONTROL_NAME);
       }
     });
   }
@@ -400,13 +447,12 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
   }
   
   /**
-   * Maneja el evento de selección para un catálogo y actualiza el valor del control correspondiente.
-   * @param {string} nombreControlFormulario - Nombre del control del formulario a actualizar.
-   * @param {Event} evento - Valor seleccionado del catálogo.
-   * @returns {void}
-   */
-  seleccionCatalogo(nombreControlFormulario: string, evento: Event): void {
-    this.formulario.get(nombreControlFormulario)?.setValue(evento);
+ * Asigna el valor seleccionado de un catálogo al formulario.
+ * Obtiene el valor del evento y lo establece en el control correspondiente del formulario.
+ */
+  seleccionCatalogo(formGroupName: string, formControlName: string, evento: Event ): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.formulario.get(formGroupName)?.get(formControlName)?.setValue(VALOR);
   }
   
   /**
@@ -490,6 +536,53 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
     this.store.setDatosDomicilioLugar(this.formulario.get('datosDomicilioLugar')?.value);
     this.store.setDatosMercanciaSubmanufactura(this.formulario.get('datosMercanciaSubmanufactura')?.value);
   }
+
+  /**
+ * Valida el formulario y agrega una nueva fila a la tabla si los datos son válidos.
+ * Si el formulario es inválido, marca los controles como tocados; de lo contrario,
+ * agrega la fila, reinicia el formulario y ejecuta una acción asociada al botón.
+ */
+  validarYAgregarFila(): void {
+  const GRUPO_MERCANCIA = this.formulario.get('datosMercanciaSubmanufactura') as FormGroup;
+  if (GRUPO_MERCANCIA.invalid) {
+    Object.values(GRUPO_MERCANCIA.controls).forEach(control => control.markAsTouched());
+    return; 
+  }
+    const NEW_ROW = GRUPO_MERCANCIA.value;
+    this.tableData.data = [...this.tableData.data, NEW_ROW];
+
+    GRUPO_MERCANCIA.reset();
+
+    this.botonDeTablaInfantilAccion(this.botonAccionesTipos.AGREGAR);
+
+    this.mostrarPopupRegistroAgregado = true;
+}
+
+/**
+ * Valida los grupos de formulario "datosQuienRecibe" y "datosDomicilioLugar", y si son válidos, emite una nueva fila.
+ * Si hay errores, marca los controles como tocados; si no, combina los datos y emite el evento de agregar fila.
+ */
+validarNewAgregarFila():void{
+  const GROUPO_QUIEN_RECIBE = this.formulario.get('datosQuienRecibe') as FormGroup;
+  const GROUPO_DOMICILIO_LUGAR = this.formulario.get('datosDomicilioLugar') as FormGroup;
+
+  if (GROUPO_QUIEN_RECIBE.get("rfc")?.invalid || (GROUPO_DOMICILIO_LUGAR.get("nombreComercial")?.invalid && GROUPO_DOMICILIO_LUGAR.get("entidadFederativa")?.invalid) && GROUPO_DOMICILIO_LUGAR.get("alcalida_municipio")?.invalid && GROUPO_DOMICILIO_LUGAR.get("colonias")?.invalid) {
+    Object.values(GROUPO_QUIEN_RECIBE.controls).forEach(control => control.markAsTouched());
+    Object.values(GROUPO_DOMICILIO_LUGAR.controls).forEach(control => control.markAsTouched());
+    return;
+  }
+
+  const NEW_ROW = {
+    ...GROUPO_QUIEN_RECIBE.value,
+    ...GROUPO_DOMICILIO_LUGAR.value
+  };
+  this.agregarFila.emit(NEW_ROW);
+
+  GROUPO_QUIEN_RECIBE.reset();
+  GROUPO_DOMICILIO_LUGAR.reset();
+
+  this.accionesBotones(this.actionTypes.TABLE_ACTION, this.botonAccionesTipos.AGREGAR);
+}
 
   /**
    * Libera los recursos y destruye las suscripciones activas al destruir el componente.

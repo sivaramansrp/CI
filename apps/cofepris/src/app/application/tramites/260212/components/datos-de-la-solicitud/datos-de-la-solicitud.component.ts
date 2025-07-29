@@ -9,7 +9,7 @@ import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { ClaveModel, MercanciaModel, SolicitudModel } from '../../models/permiso-maquila.models';
 import { SolicitudService } from '../../services/solicitud.service';
 
-import { DATOS_ALERT, MANIFIESTOS_ALERT } from '../../constantes/permiso-maquila.enum';
+import { ADUANAS_DATA, DATOS_ALERT, MANIFIESTOS_ALERT } from '../../constantes/permiso-maquila.enum';
 import { ClaveScianComponent } from '../clave-scian/clave-scian.component';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
@@ -122,7 +122,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Arreglo que almacena los estados obtenidos del catálogo.
    * Este arreglo es utilizado en el componente para gestionar la información de estados.
    */
-  estado: CatalogoResponse[] = []
+  estado: CatalogoResponse[] =ADUANAS_DATA;
 
   /**
    * Arreglo que almacena los datos relacionados con las claves S.C.I.A.N.

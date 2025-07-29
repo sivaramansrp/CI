@@ -236,7 +236,7 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
       calle: ['', [Validators.required, Validators.maxLength(100)]],
       numeroExterior: ['', [Validators.required, Validators.maxLength(10)]],
       numeroInterior: ['', [Validators.maxLength(10)]],
-      pais: ['', Validators.required],
+      pais: [{ value: 'MEXICO (ESTADOS UNIDOS MEXICANOS)', disabled: true }, Validators.required],
       entidadFederativa: ['', Validators.required],
       municipioDelegacion: ['', Validators.required],
       colonia: ['', Validators.required],

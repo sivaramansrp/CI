@@ -3,5 +3,11 @@
 
   <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
 
-  <anexar-documentos [catalogoDocumentos]='catalogoDocumentos'></anexar-documentos>
+    <carga-documento
+      [idTipoTRamite]="'130118'"
+      [cargaArchivosEvento]="reenviarEvento"
+      [regresarSeccionCargarDocumentoEvento]="reenviarRegresarSeccion"
+      (cargaRealizada)="documentosCargados($event)"
+      (activarBotonCargaArchivos)="manejarEventoCargaDocumento($event)"
+    ></carga-documento>
 </div>

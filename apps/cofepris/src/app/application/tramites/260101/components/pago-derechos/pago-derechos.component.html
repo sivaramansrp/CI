@@ -41,7 +41,7 @@
         formControlName="banco"
         [required]="bancoCatalogo.required"
         (selectionChange)="setBanco($event)"
-         [isDisabled]="esFormularioSoloLectura"
+        [isDisabled]="esFormularioSoloLectura"
       >
       </app-catalogo-select>
     </div>
@@ -61,6 +61,7 @@
     <div class="col-md-4 mt-3">
       <input-fecha
         [datos]="fechaPago"
+        [isDisabled]="esFormularioSoloLectura"
         [setFecha]="pagoDeDerechosForm.get('fechaDePago')?.value"
         (valorCambiado)="seleccionarFechaInicio($event)"
       ></input-fecha>
@@ -79,7 +80,11 @@
     </div>
 
     <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
-      <button class="btn btn-default" type="button">
+      <button
+        class="btn btn-default"
+        [disabled]="esFormularioSoloLectura"
+        type="button"
+      >
         Borrar datos del pago
       </button>
     </div>

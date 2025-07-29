@@ -6,7 +6,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { DatosDeLaProductoModel, PropietarioModel } from '../../models/datos-de-la-solicitud.model';
+import { DatosDeLaProductoModel, PropietarioModel, ScianModel } from '../../models/datos-de-la-solicitud.model';
 import { Store, StoreConfig } from '@datorama/akita';
 
 /**
@@ -212,7 +212,8 @@ export interface DatosDelSolicituteSeccionState {
   noDeLicenciaSanitariaObservaciones:string;
   regimenAlQueSeDestinaraLaMercancía:string;
   aduanaDeSalida:string;
-  manifests:string
+  manifests:string,
+  personaparas: ScianModel[]
   
 }
 
@@ -241,6 +242,7 @@ export function createInitialState(): DatosDelSolicituteSeccionState {
     nombreDelProfesionalResponsable: '',
     informacionConfidencialRadio: '',
     propietarioData: [],
+    personaparas: [],
     establecimientoData: [],
      scian: '',
           descripcionScian: '',

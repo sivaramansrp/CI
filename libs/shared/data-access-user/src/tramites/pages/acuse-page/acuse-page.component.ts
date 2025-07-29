@@ -68,7 +68,7 @@ export class AcusePageComponent implements OnInit {
    */
   ngOnInit(): void {
     const URL_ACTUAL = this.router.url;
-    this.url = URL_ACTUAL.split('/')[1];
+    this.url = URL_ACTUAL.split('/')[2];
 
     this.folio = this.tramiteQueries.getTramite();
     this.txtAlerta = TXT_ALERTA_ACUSE(this.folio);

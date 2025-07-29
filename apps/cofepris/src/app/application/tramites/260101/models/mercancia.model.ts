@@ -149,3 +149,55 @@ export interface DestinatarioImitar {
   /** Correo electrónico del destinatario. */
   domiciliCorreoElectronioco: string;
 }
+
+/**
+ * Interfaz que representa los datos de un destinatario.
+ */
+export interface TercerosDestinatarioImitar {
+  tercerosNacionalidad: string;
+
+  /** Tipo de persona (física o moral). */
+  tercerosTipoPersona: string;
+
+  /** Indicación para modificar el RFC del destinatario. */
+  tercerosRFC: string;
+
+  /** Denominación social del destinatario. */
+  tercerosDenominacion: string;
+
+  /** Identificador del país asociado al terceros. */
+  tercerosPais: number;
+
+  /** Estado asociado al terceros del destinatario. */
+  tercerosEstado: string;
+
+  /** Municipio asociado al terceros del destinatario. */
+  tercerosMunicipio: string;
+
+  /** Localidad asociada al terceros del destinatario. */
+  tercerosLocalidad: string;
+
+  /** Código postal del terceros del destinatario. */
+  tercerosCodigo: string;
+
+  /** Colonia asociada al terceros del destinatario. */
+  tercerosColonia: string;
+
+  /** Calle del terceros del destinatario. */
+  tercerosCalle: string;
+
+  /** Número exterior del terceros. */
+  tercerosNumeroExterior: string;
+
+  /** Número interior del terceros. */
+  tercerosNumeroInterior: string;
+
+  /** Código LADA asociado al teléfono del destinatario. */
+  tercerosLada: string;
+
+  /** Número telefónico del destinatario. */
+  tercerosTelefono: string;
+
+  /** Correo electrónico del destinatario. */
+  tercerosCorreoElectronico: string;
+}
