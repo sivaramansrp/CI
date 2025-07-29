@@ -1,8 +1,5 @@
 <form [formGroup]="solicitudForm" id="formSolicitud">
   <input type="hidden" formControlName="idSolicitud" id="idSolicitud" />
-  <div id="tabs">
-    <div id="adjuntarArchivo" *ngIf="isAdjuntarArchivoVisible"></div>
-  </div>
 
   <div class="row">
     <div class="col-md-12">
@@ -26,21 +23,24 @@
       <div class="row">
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="options" formControlName="aduana" [label]="'Aduana/sección aduanera'"
-            [placeholder]="'Seleccione una opción'" [required]="true"
+            [placeholder]="'Selecciona un valor'" [required]="true"
             (change)="setValoresStore(datosGenerales, 'aduana', 'setAduana')"
             [isDisabled]="soloLectura"></app-catalogo-select>
+          <div *ngIf="isInvalid('datosGenerales.aduana') && solicitudForm.get('datosGenerales.aduana')?.errors?.['required']" class="mensaje-error">
+              Este campo es obligatorio.
+          </div>
         </div>
       </div>
     </ng-container>
   </div>
 
   <div id="seccionAduanaaFecha" *ngIf="seccionContenedor">
-    <ng-titulo titulo="Datos del Contenedor" />
+    <ng-titulo titulo="Datos del equipo" />
     <ng-container formGroupName="datosContenedor">
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="inicialesContenedor">Iniciales del Contenedor:
+            <label class="form-label" for="inicialesContenedor">Iniciales del equipo*:
             </label>
             <input type="text" class="form-control" id="inicialesContenedor"
               formControlName="inicialesContenedor" (change)="
@@ -50,12 +50,15 @@
                   'setInicialesContenedor'
                 )
               " />
+              <div *ngIf="isInvalid('datosContenedor.inicialesContenedor') && solicitudForm.get('datosContenedor.inicialesContenedor')?.errors?.['required']" class="mensaje-error">
+                Este campo es obligatorio.
+              </div>
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="numeroContenedor">Número del Contenedor:</label>
+            <label class="form-label" for="numeroContenedor">Número del equipo*:</label>
             <input type="text" class="form-control" id="numeroContenedor"
               formControlName="numeroContenedor" (change)="
                 setValoresStore(
@@ -64,6 +67,12 @@
                   'setNumeroContenedor'
                 )
               " />
+              <div *ngIf="isInvalid('datosContenedor.numeroContenedor') && solicitudForm.get('datosContenedor.numeroContenedor')?.errors?.['required']" class="mensaje-error">
+                  Este campo es obligatorio.
+              </div>
+              <div *ngIf="solicitudForm.get('datosContenedor.numeroContenedor')?.touched && solicitudForm.get('datosContenedor.numeroContenedor')?.errors?.['minlength']" class="mensaje-error">
+                  Por favor, no escribas menos de 6 caracteres
+              </div>
           </div>
         </div>
       </div>
@@ -96,8 +105,19 @@
                 )
               " [isDisabled]="soloLectura"></app-catalogo-select>
           </div>
+          <div class="col-md-4">
+              <div class="form-group">
+                  <label for="digitoDeControl">Dígito verificador:</label>
+                  <input type="text" formControlName="digitoDeControl" id="digitoDeControl" maxlength="1"
+                      pattern="[0-9]" inputmode="numeric" autocomplete="off"
+                      class="form-control" (change)="setValoresStore(
+                        datosContenedor,
+                        'digitoDeControl',
+                        'setDigitoDeControl')" [disabled]="soloLectura">
+              </div>
+          </div>
         </div>
-        <div class="row">
+        <div class="row mt-3">
           <div class="col-md-8">
             <div class="form-group pull-right">
               <button type="button" name="agregar" id="agregar" class="btn btn-primary" (click)="agregarGrid()"
@@ -123,83 +143,34 @@
       </nav>
     </div>
 
-    <!-- <div class="row align-items-cente">
-      <div class="col-md-8">
-          <ng-titulo titulo="Adjuntar archivo" />
-          <div class="d-flex align-items-center">
-              <div class="col-md-4">
-                  <label for="archivoSeleccionado" class="form-label">Archivo seleccionado*:</label>
-              </div>
-              <div class="col-md-8">
-                  <input class="form-control" type="text" name="archivoSeleccionado" id="archivoSeleccionado"
-                      disabled>
-              </div>
-          </div>
-      </div>
-    </div>
-  <div class="row">
-      <div class="col-md-4 d-flex justify-content-end cargarbtn">
-          <button type="button" class="btn btn-default" data-bs-toggle="modal" 
-              data-bs-target="#modalArchivoCsv" [disabled]="soloLectura">Cargar archivo</button>
-      </div>
-  </div> -->
-
-
-  <!-- <div id="seccionExcel" *ngIf="seccionExcelVisible">
-    <div class="row mb-3">
-      <div class="col-md-4">
-        <ng-titulo titulo="Adjuntar archivo" />
-        <label for="archivoSeleccionado" class="form-label">Archivo Seleccionado*:</label>
-        <input class="form-control" type="file" name="archivoSeleccionado" id="archivoSeleccionado" required
-          [disabled]="soloLectura" />
-      </div>
-      <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
-        <button type="button" class="btn btn-default" (click)="adjuntarArchivo()" [disabled]="soloLectura">
-          Cargar Archivo
-        </button>
-      </div>
-      <div *ngIf="showArchivoSeleccionadoTable">
-        <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla" [datos]="datosTabla"></app-tabla-dinamica>
-      </div>
-      <div class="col-md-4">
-        <ng-titulo titulo="Cargar Archivo" />
-        <label for="cargarArchivo" class="form-label">Archivo Seleccionado*:</label>
-        <input class="form-control" type="file" name="cargarArchivo" id="cargarArchivo" required
-          [disabled]="soloLectura" />
-      </div>
-      <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
-        <button type="button" class="btn btn-default" (click)="Archivo()" [disabled]="soloLectura">
-          Enviar
-        </button>
-      </div>
-      <div *ngIf="showCargarArchivoTable">
-        <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla" [datos]="datosTabla"></app-tabla-dinamica>
-      </div>
-    </div>
-  </div> -->
-
-  <div id="cargarArchivos" *ngIf="cargarArchivoVisible">
-    <ng-titulo titulo="Cargar Archivos" />
-    <ng-container formGroupName="datosContenedor">
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="archivo">Archivo:</label>
-            <input type="file" class="form-control" id="archivo" formControlName="archivo" />
-          </div>
+    <ng-container *ngIf="mostrarSeccionArchivoCsv">
+      <div class="row align-items-cente">
+        <div class="col-md-8">
+            <ng-titulo titulo="Adjuntar archivo" />
+            <div class="d-flex align-items-center">
+                <div class="col-md-4">
+                    <label for="archivoSeleccionado" class="form-label">Archivo seleccionado*:</label>
+                </div>
+                <div class="col-md-8">
+                    <input class="form-control" type="text" name="archivoSeleccionado" id="archivoSeleccionado"
+                        disabled>
+                </div>
+            </div>
         </div>
       </div>
-    </ng-container>
-  </div>
-
-  <!-- <div id="seccionContenedor" *ngIf="cargarArchivo">
-    <div class="row">
-      <div class="col-md-12">
-        <ng-titulo titulo="Cargar Archivo" />
+      <div class="row mb-3">
+          <div class="col-md-12 d-flex justify-content-end cargarbtn">
+              <button type="button" class="btn btn-default" data-bs-toggle="modal" 
+                  data-bs-target="#modalArchivoCsv" [disabled]="soloLectura">Cargar archivo</button>
+          </div>
       </div>
+    <div class="row mt-5">
+        <div class="table-container">
+            <app-tabla-dinamica [configuracionTabla]="csvTabla"
+                [datos]="datosDelCsvArchivo"></app-tabla-dinamica>
+        </div>
     </div>
-    <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
-  </div> -->
+  </ng-container>
 
   @if (consultaDatos.create) {
             <div class="row" style="margin-top: 30px;margin-bottom: 30px;">
@@ -260,6 +231,23 @@
                     <button type="button" class="btn btn-primary" (click)="datosCaptura()"
                         data-bs-dismiss="modal">Si</button>
                     <button type="button" class="btn btn-default" data-bs-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalArchivoCsv" tabindex="-1" role="dialog"
+        aria-labelledby="modalArchivoCsv" aria-hidden="true" #modalArchivoCsv>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <ng-titulo titulo="Cargar archivo" />
+                <div class="modal-body justify-content-start mb-5">
+                    <label for="archivoSeleccionado" class="form-label">Archivo:</label>   
+                    <input class="form-control" type="file" name="archivoSeleccionado" id="archivoSeleccionado">
+                </div>
+                <div class="modal-footer justify-content-end">
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Regresar</button>
+                    <button type="button" class="btn btn-primary" (click)="adjuntarArchivo()" data-bs-dismiss="modal">Enviar</button>
                 </div>
             </div>
         </div>

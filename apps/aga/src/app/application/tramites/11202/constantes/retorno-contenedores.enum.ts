@@ -1,4 +1,4 @@
-import { DatosDelContenedor, GridContenedores } from "apps/aga/src/app/application/tramites/11202/models/datos-tramite.model";
+import { DatosDelCsvArchivo, GridContenedores } from "apps/aga/src/app/application/tramites/11202/models/datos-tramite.model";
 import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
 
 /**
@@ -46,32 +46,6 @@ export const TEXTOS_REQUISITOS = {
 };
 
 /**
- * @constant ENCABEZADO_DE_TABLA
- * @description Configuración de las columnas de la tabla para mostrar información detallada de los contenedores.
- * 
- * Cada columna contiene un encabezado, una clave para acceder a los datos y un orden de visualización.
- * 
- * @property {string} encabezado - Título de la columna.
- * @property {function} clave - Función para acceder al valor de la columna.
- * @property {number} orden - Orden de visualización de la columna.
- */
-export const ENCABEZADO_DE_TABLA: ConfiguracionColumna<DatosDelContenedor>[] = [
-  { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
-  { encabezado: 'Iniciales del equipo', clave: (artículo) => artículo.inicialesEquipo, orden: 1 },
-  { encabezado: 'Número de equipo', clave: (artículo) => artículo.numeroEquipo, orden: 2 },
-  { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digitoVerificador, orden: 3 },
-  { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipoEquipo, orden: 4 },
-  { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 5 },
-  { encabezado: 'Fecha Ingreso', clave: (artículo) => artículo.fechaIngreso, orden: 6 },
-  { encabezado: 'Vigencia', clave: (artículo) => artículo.vigencia, orden: 7 },
-  { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 8 },
-  { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 9 },
-  { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 10 },
-  { encabezado: 'Número manifiesto', clave: (artículo) => artículo.numeroManifiesto, orden: 11 },
-  { encabezado: 'Id solicitud', clave: (artículo) => artículo.idSolicitud, orden: 12 },
-  { encabezado: 'Fecha inicio', clave: (artículo) => artículo.fechaInicio, orden: 13 }
-];
-/**
  * @constant GRID_CONTENEDORES
  * @description Configuración de las columnas de la tabla para mostrar información de los contenedores en formato de grid.
  * 
@@ -88,7 +62,30 @@ export const GRID_CONTENEDORES: ConfiguracionColumna<GridContenedores>[] = [
   { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digitoVerificador, orden: 3 },
   { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipoContenedor, orden: 4 },
   { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 5 },
-  { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 8 },
-  { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 9 },
-  { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 10 },
+  { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 6 },
+  { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 7 },
+  { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 8 },
+];
+
+/**
+ * @constant PASOS
+ * @description Representa los pasos del trámite 11202.
+ * 
+ * Cada paso contiene información sobre su índice, título, estado de actividad y estado de completado.
+ * 
+ * @property {number} indice - Índice del paso.
+ * @property {string} titulo - Título del paso.
+ * @property {boolean} activo - Indica si el paso está activo.
+ * @property {boolean} completado - Indica si el paso está completado.
+ */
+export const CSV_DE_TABLA: ConfiguracionColumna<DatosDelCsvArchivo>[] = [
+  { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
+  { encabezado: 'Iniciales del equipo', clave: (artículo) => artículo.inicialesContenedor, orden: 1 },
+  { encabezado: 'Número de equipo', clave: (artículo) => artículo.numeroContenedor, orden: 2 },
+  { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digitoVerificador, orden: 3 },
+  { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipoContenedor, orden: 4 },
+  { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 5 },
+  { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 6 },
+  { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 7 },
+  { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 8 },
 ];

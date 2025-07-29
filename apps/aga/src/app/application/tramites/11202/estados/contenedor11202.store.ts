@@ -21,7 +21,9 @@ export interface Contenedor11202State {
   aduana: string;
   numeroContenedor: string;
   tipoContenedor: string;
+  digitoDeControl?: string;
   contenedores: GridContenedores[];
+  datosDelCsvArchivo: [];
 }
 
 /**
@@ -38,7 +40,9 @@ export function createInitialState(): Contenedor11202State {
     aduana: '',
     numeroContenedor: '',
     tipoContenedor: '',
+    digitoDeControl: '',
     contenedores: [],
+    datosDelCsvArchivo: []
   };
 }
 
@@ -142,6 +146,20 @@ export class Contenedor11202Store extends Store<Contenedor11202State> {
   }
 
   /**
+   * @method setDigitoDeControl
+   * @description Guarda el dígito de control del contenedor en el estado.
+   * 
+   * @param {string} digitoDeControl - El dígito de control que se va a guardar.
+   * @returns {void}
+   */
+  public setDigitoDeControl(digitoDeControl: string): void {
+    this.update((state) => ({
+      ...state,
+      digitoDeControl,
+    }));
+  }
+
+  /**
    * @method setContenedores
    * @description Guarda la lista de contenedores en el estado.
    * 
@@ -152,6 +170,18 @@ export class Contenedor11202Store extends Store<Contenedor11202State> {
     this.update((state) => ({
       ...state,
       contenedores,
+    }));
+  }
+
+  /**
+   * Establece los datos del contenedor.
+   * @param datosDelCsvArchivo Datos del contenedor.
+   */
+  public setDelCsv(datosDelCsvArchivo: []): void {
+    console.log('Estableciendo datos del CSV:', datosDelCsvArchivo);
+    this.update((state) => ({
+      ...state,
+      datosDelCsvArchivo,
     }));
   }
 

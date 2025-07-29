@@ -77,7 +77,6 @@ Obtenga una lista ficticia de Contenedores
    * @returns Un observable con la respuesta del contenedor.
    */
   agregarSolicitud(): Observable<RespuestaContenedor> {
-    console.log('Agregando solicitud...',this.http.get<RespuestaContenedor>(`assets/json/11202/contenedorLista.json`));
     return this.http.get<RespuestaContenedor>(`assets/json/11202/contenedorLista.json`);
   }
   

@@ -2,14 +2,14 @@
 import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Contenedor11202State, Contenedor11202Store } from '../../estados/contenedor11202.store';
-import { DatosDelContenedor, GridContenedores } from '../../models/datos-tramite.model';
-import { ENCABEZADO_DE_TABLA, GRID_CONTENEDORES, TEXTOS_REQUISITOS } from '../../../../constantes/11202/retorno-contenedores.enum';
+import { CSV_DE_TABLA, GRID_CONTENEDORES, TEXTOS_REQUISITOS } from '../../constantes/retorno-contenedores.enum';
+import { DatosDelCsvArchivo, GridContenedores } from '../../models/datos-tramite.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Contenedor11202Query } from '../../estados/contenedor11202.query';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
-import preOperativo from '@libs/shared/theme/assets/json/11202/preOperativo.json';
 import { Modal } from 'bootstrap';
+import preOperativo from '@libs/shared/theme/assets/json/11202/preOperativo.json';
 
 /**
  * @component ContenedorComponent
@@ -72,12 +72,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   solicitudForm!: FormGroup;
 
   /**
-   * @property {boolean} seccionAdjuntarArchivoVisible
-   * Indicates whether the file upload section is visible.
-   */
-  isAdjuntarArchivoVisible: boolean = false;
-
-  /**
    * @property {boolean} seccionAduanaaFechaVisible
    * Indicates whether the customs and date section is visible.
    */
@@ -90,28 +84,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   seccionContenedor: boolean = false;
 
   /**
-   * @property {boolean} seccionExcelVisible
-   * Indicates whether the Excel section is visible.
-   */
-  agregarTipoContenedorVisible: boolean = false;
-
-  /**
-   * @property {boolean} cargarArchivoVisible
-   * Indicates whether the file upload section is visible.
-   */
-  seccionExcelVisible: boolean = false;
-
-  /**
    * @property {Catalogo[]} catalogAduanas
    * Stores the customs catalog
    * */
   catalogAduanas: Catalogo[] = [];
-
-  /**
-   * @property {Catalogo[]} catalogContenedores
-   * Stores the container catalog
-   * */
-  catalogContenedores: string[] = [];
 
   /**
    * @property {any[]} contenedores
@@ -126,34 +102,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   archivoSeleccionado: string = '';
 
   /**
-   * @property {boolean} cargarArchivoVisible
-   * Indicates whether the file upload section is visible.
-   */
-  cargarArchivoVisible: boolean = false;
-
-  /**
-   * @property {boolean} exceptionCaught
-   * Indicates whether an exception was caught.
-   */
-  exceptionCaught: boolean = false;
-
-  /**
    * @property {boolean} showCargarArchivoTable
    * Indicates whether the file upload table is visible.
    */
   actionBean = { requiereGuardadoParcial: false };
-
-  /**
-   * @property {boolean} showArchivoSeleccionadoTable
-   * Indicates whether the selected file table is visible.
-   */
-  nonSelectionTextTipoContendor: string = 'Selecciona un valor';
-
-  /**
-   * @property {number} currentIdx
-   * Stores the current index of the tab.
-   */
-  cargarArchivo: boolean = false;
 
   /**
    * @property {number} currentIdx
@@ -191,14 +143,14 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   @Output() continuarEvento = new EventEmitter<string>();
 
   /**
-  * Configuración de las columnas de la tabla.
-  */
-  public encabezadoDeTabla: ConfiguracionColumna<DatosDelContenedor>[] = ENCABEZADO_DE_TABLA;
+   * Configuración de las columnas de la tabla.
+   */
+  public gridContenedores: ConfiguracionColumna<GridContenedores>[] = GRID_CONTENEDORES;
 
   /**
    * Configuración de las columnas de la tabla.
    */
-  public gridContenedores: ConfiguracionColumna<GridContenedores>[] = GRID_CONTENEDORES;
+  public csvTabla: ConfiguracionColumna<DatosDelCsvArchivo>[] = CSV_DE_TABLA;
 
   /**
    * Bandera para mostrar los botones de búsqueda.
@@ -224,6 +176,16 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   mostrarAgregarTipoContenedor: boolean = false;
 
+  /**
+   * Bandera para mostrar la sección de adjuntar archivo.
+   */
+  mostrarSeccionArchivoCsv: boolean = false;
+
+  /**
+   * Datos del contenedor.
+   */
+ public datosDelCsvArchivo: DatosDelCsvArchivo[] = [];
+
   constructor(
     private fb: FormBuilder,
     private datosTramiteService: DatosTramiteService,
@@ -233,7 +195,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   ) { 
     this.contenedore = {
       catalogos: [],
-      labelNombre: 'Tipo de contendedor',
+      labelNombre: 'Tipo de contenedor',
       primerOpcion: 'Seleccione una opción',
     };
   }
@@ -310,17 +272,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     if (TIPO_BUSQUEDA === 'Contenedor') {
       this.seccionContenedor = true;
       this.seccionAduanaaFechaVisible = true;
-      this.cargarArchivoVisible = false;
-      this.seccionExcelVisible = false;
-      this.cargarArchivo = true;
+      this.mostrarBotonesBuscar = true;
+      this.mostrarSeccionArchivoCsv = false;
     } else if (TIPO_BUSQUEDA === 'Archivo CSV') {
-      this.seccionExcelVisible = true;
       this.seccionAduanaaFechaVisible = true;
       this.seccionContenedor = false;
-      this.cargarArchivo = true;
+      this.mostrarSeccionArchivoCsv = true;
     } else {
       this.seccionAduanaaFechaVisible = false;
-      this.seccionExcelVisible = false;
+      this.mostrarSeccionArchivoCsv = false;
     }
   }
 
@@ -334,14 +294,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.mostrarCampos();
     this.contenedores = [];
     this.archivoSeleccionado = '';
-    this.exceptionCaught = false;
   }
 
   /**
    * Inicializa el modal.
    */
   encontradaModal(): void {
+    console.log('Modal encontrado', this.solicitudForm.valid);
     if (this.solicitudForm.valid) {
+      console.log(this.solicitudForm.value);
       if (this.modalElement) {
         const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
         MODAL_INSTANCE.show();
@@ -363,10 +324,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Agrega un nuevo contenedor al grid.
    */
   agregarGrid(): void {
+    const INICIALESCONTENEDOR = this.solicitudForm.value.datosContenedor.inicialesContenedor;
+    const NUMEROCONTENEDOR = this.solicitudForm.value.datosContenedor.numeroContenedor;
     const ADUANA = this.solicitudForm.value.datosGenerales.aduana;
     const TIPOCONTENEDOR = this.solicitudForm.value.datosContenedor.tipoContenedor;
     const TIPOBUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
-    if (ADUANA && TIPOCONTENEDOR) {
+    if ( INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && TIPOCONTENEDOR ) {
       this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
         (respuesta) => {
           if (respuesta?.success) {
@@ -401,6 +364,16 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       };
       READER.readAsText(FILE);
     }
+    this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+      (respuesta) => {
+        if (respuesta?.success) {
+          respuesta.datos.id = this.datosDelCsvArchivo.length + 1;
+          this.datosDelCsvArchivo = [...this.datosDelCsvArchivo, respuesta.datos];
+          console.log('Datos del CSV:', this.datosDelCsvArchivo);
+          (this.contenedorStore.setDelCsv as (valor: DatosDelCsvArchivo[]) => void)(this.datosDelCsvArchivo);
+        }
+      }
+    );
   }
 
   /**
@@ -419,10 +392,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       'Vigencia': 'vigencia',
       'Estado de constancia': 'estadoConstancia',
       'Existe en VUCEM': 'existeEnVUCEM',
-      'Id constancia': 'idConstancia',
-      'Número manifiesto': 'numeroManifiesto',
-      'Id solicitud': 'idSolicitud',
-      'Fecha inicio': 'fechaInicio'
+      'Id constancia': 'idConstancia'
     };
     const DATA = LINES.slice(1)
       .map((line) => {
@@ -478,12 +448,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         aduana: [this.contenedorState?.aduana],
       }),
       datosContenedor: this.fb.group({
-        inicialesContenedor: [{ value: this.contenedorState?.inicialesContenedor, disabled: true }],
-        numeroContenedor: [{ value: this.contenedorState?.numeroContenedor, disabled: true }],
+        inicialesContenedor: [ this.contenedorState?.inicialesContenedor, [Validators.required, Validators.maxLength(10)]],
+        numeroContenedor: [ this.contenedorState?.numeroContenedor, [Validators.required, Validators.minLength(6), Validators.maxLength(15)]],
         tipoContenedor: [this.contenedorState?.tipoContenedor],
+        digitoDeControl: [this.contenedorState?.digitoDeControl, [Validators.minLength(1), Validators.maxLength(1)]],
       }),
     });
-
     this.mostrarCampos();
     this.solicitudForm.get('tipoBusqueda')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
       this.setValoresStore(
@@ -509,8 +479,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       this.solicitudForm?.disable();
     } else {
       this.solicitudForm?.enable();
-      this.solicitudForm.get('datosContenedor.inicialesContenedor')?.disable();
-      this.solicitudForm.get('datosContenedor.numeroContenedor')?.disable();
     }
   }
 
@@ -554,9 +522,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.solicitudForm.reset();
     this.seccionAduanaaFechaVisible = false;
     this.seccionContenedor = false;
-    this.seccionExcelVisible = false;
-    this.cargarArchivoVisible = false;
-    this.cargarArchivo = false;
     this.mostrarAgregarTipoContenedor = false;
     this.solicitudForm.get('tipoBusqueda')?.enable();
   }
@@ -574,6 +539,16 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   get datosContenedor(): FormGroup {
     return this.solicitudForm.get('datosContenedor') as FormGroup;
+  }
+
+  /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @param {string} id El nombre del control del formulario.
+   * @returns {boolean} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  isInvalid(id: string): boolean {
+    const CONTROL = this.solicitudForm.get(id);
+    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
   }
 
   /**
