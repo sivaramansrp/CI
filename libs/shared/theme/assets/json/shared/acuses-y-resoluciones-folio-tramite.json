@@ -975,5 +975,13 @@
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "AGACE",
     "numeroDeProcedimiento": "33303"
+  },
+  {
+    "folioTramite": "010000100032025100500000332301",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "AGACE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32618"
   }
 ]
