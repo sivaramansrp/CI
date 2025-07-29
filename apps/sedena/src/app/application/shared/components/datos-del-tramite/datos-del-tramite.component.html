@@ -46,7 +46,7 @@
       [fechas]="seleccionarAduanasDisponibles"
       [label]="aduanasDisponiblesLabel"
       [fechasSeleccionadas]="seleccionarAduanasDisponiblesDatos"
-      [botones]="aduanasBotones"
+      [botones]="usarBotonesPersonalizados ? aduanasEntradaBotons : aduanasBotones"
       (fechasSeleccionadasChange)="
         aduanasDisponiblesSeleccionadasChange($event)
       "

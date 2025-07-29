@@ -10564,7 +10564,7 @@
   {
     "folioTramite": "07440025780842380388259713",
     "tipoDeTramite": "Solicitud de Proceso Interno",
-    "nombreDeLaTarea": "Atender requerimiento",
+    "nombreDeLaTarea": "Authorizar solicitud",
     "fechaDeAsignacion": "2023-10-03",
     "estadoDeTramite": "Completado",
     "departamento": "sedena",
@@ -10590,6 +10590,16 @@
     "departamento": "sedena",
     "numeroDeProcedimiento": "240111",
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
+  },
+  {
+    "folioTramite": "04530673095962921812220102",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Generar opinión",
+    "fechaDeAsignacion": "2023-10-07",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "sedena",
+    "numeroDeProcedimiento": "240111",
+    "origin": "FLUJO_FUNCIONARIO_GENERAR_OPINION"
   },
   {
     "folioTramite": "1122334455667788990011223",
