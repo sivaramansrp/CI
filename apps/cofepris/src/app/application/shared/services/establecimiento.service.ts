@@ -54,6 +54,15 @@ export class EstablecimientoService {
   }
 
   /**
+   * Recupera los datos del catálogo de descripciones SCIAN desde un archivo JSON local.
+   *
+   * @returns Un Observable que emite un arreglo de objetos `Catalogo` que representan las descripciones SCIAN.
+   */
+  getDescripcionScianData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/260401/descripcion-scian.json');
+  }
+
+  /**
    * Obtiene los datos del catálogo de régimen.
    * @returns {Observable<Catalogo[]>} Un observable con los datos del catálogo de régimen.
    */
