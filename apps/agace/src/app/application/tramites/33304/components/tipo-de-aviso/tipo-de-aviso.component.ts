@@ -1,5 +1,5 @@
-import {AbstractControl, FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,ValidationErrors,ValidatorFn} from '@angular/forms';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { Solicitud33304State, Solicitud33304Store } from '../../estados/solicitud33304Store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -22,7 +22,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * Representa el formulario reactivo utilizado para gestionar los datos
    * relacionados con el aviso de extensión en el componente de solicitud.
    */
-  formularioAvisoDeExtension!: FormGroup;
+  formularioTipoDeAviso!: FormGroup;
 
   /**
    * Enumeración que representa los valores posibles para la solicitud en el contexto del trámite 33304.
@@ -112,14 +112,14 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
-      this.formularioAvisoDeExtension.disable();
+      this.formularioTipoDeAviso.disable();
     } else {
-      this.formularioAvisoDeExtension.enable();
+      this.formularioTipoDeAviso.enable();
     }
   }
 
   /**
-   * Inicializa el formulario formularioAvisoDeExtension con un conjunto de controles reactivos.
+   * Inicializa el formulario formularioTipoDeAviso con un conjunto de controles reactivos.
    * Cada control está asociado a una propiedad del estado solicitudState y requiere que su valor sea verdadero.
    * Aplica el validador personalizado para que todos los checkboxes deban estar seleccionados.
    */
@@ -132,8 +132,12 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.formularioAvisoDeExtension = this.fb.group(
+      this.formularioTipoDeAviso = this.fb.group(
       {
+        cambioDocumentoUsoGoce: [this.solicitudState?.cambioDocumentoUsoGoce || false],
+        fusionEscisionEmpresas: [this.solicitudState?.fusionEscisionEmpresas || false],
+        reestructuracion: [this.solicitudState?.reestructuracion || false], 
+        transportistas: [this.solicitudState?.transportistas || false],
         BAJO_MANIFIESTO: [this.solicitudState?.BAJO_MANIFIESTO || false]
       }
     );

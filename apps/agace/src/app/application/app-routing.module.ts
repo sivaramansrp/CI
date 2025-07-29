@@ -367,13 +367,12 @@ const ROUTES: Routes = [
         (m) => m.SeciitOeaRegistrationModule
       ),
   },
-  {
-      path: 'aviso-comercializadora-modification',
+ {
+      path: 'aviso-Comercializadora-modification-importadora',
     loadChildren: () => 
       import('./tramites/33304/Aviso-De-Ampliacion.module').then(
         (m) => m.AvisoDeAmpliacionModule)
   }
-
 ];
 
 @NgModule({

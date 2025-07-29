@@ -1,1 +1,30 @@
-<p>aviso-por-fusion works!</p>
+<div class="container">
+  <ng-titulo titulo="Aviso de fusión o escisión"></ng-titulo>
+   <form [formGroup]="formularioAvisoFusion">
+     <div class="row">
+      <label style="font-weight: normal">
+        <input type="radio" formControlName="fusionOEscision" id="fusionOEscision"
+          (change)="setValoresStore(formularioAvisoFusion, 'fusionOEscision')" />
+          <b>Aviso de fusión o escisión de dos o más personas morales que se encuentren registradas en el Esquema de </b> 
+           <b>Certificación de Empresas, en cualquiera de sus modalidades y subsista una de ellas</b>
+           <b>Aviso de fusión o escisión de empresas que cuenten con el Registro en el Esquema de Certificación de</b>
+      </label>
+    </div>
+    <div class="row">
+      <label style="font-weight: normal">
+        <input type="radio" formControlName="fusionConEmpresasNoCertificadas" id="fusionConEmpresasNoCertificadas"
+          (change)="setValoresStore(formularioAvisoFusion, 'fusionConEmpresasNoCertificadas')" />
+          <b>Empresas, cuando resulte una nueva sociedad o extinguiéndose una o más empresas con Registro.</b>
+          <b>Aviso de fusión de una empresa que se encuentre registrada en el Esquema de Certificación de Empresas</b>
+         <b>con una o más empresas que no cuenten con el Registro en el Esquema de Certificación de Empresas y</b>
+      </label>
+    </div>
+    <div class="row">
+      <label style="font-weight: normal">
+        <input type="radio" formControlName="empresaSubsistente" id="empresaSubsistente"
+          (change)="setValoresStore(formularioAvisoFusion, 'empresaSubsistente')" />
+       <b>subsista la que cuenta con dicho Registro</b>
+      </label>
+    </div>
+   </form>
+</div>
