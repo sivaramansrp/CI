@@ -1,33 +1,16 @@
-import { ActivatedRoute } from '@angular/router';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AlertComponent, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, InputRadioComponent, TEXTOS, TablaDinamicaComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { DatosDeLaTabla, Requerimiento, RequerimientoOpcions } from '../../models/datos-tramite.model';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { map, takeUntil } from 'rxjs/operators';
 import { AutoridadService } from '../../services/autoridad.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { DatosDeLaTabla } from '../../models/datos-tramite.model';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Requerimiento } from '../../models/datos-tramite.model';
-import { RequerimientoOpcions } from '../../models/datos-tramite.model';
-import { Router } from '@angular/router';
 import { Solicitud32401State } from '../../estados/tramite32401.store';
 import { Subject } from 'rxjs';
-import { TEXTOS } from '@libs/shared/data-access-user/src';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { Tramite32401Query } from '../../estados/tramite32401.query';
 import { Tramite32401Store } from '../../estados/tramite32401.store';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs/operators';
-import { takeUntil } from 'rxjs/operators';
 /**
  * Componente que gestiona la solicitud de requerimientos.
  * Incluye lógica para inicialización de formularios, manejo de estados,
@@ -90,27 +73,27 @@ export class SolicitarRequerimientoComponent implements OnInit, OnDestroy {
 
   /** Configuración de las columnas de la tabla dinámica */
   public encabezadoDeTabla: ConfiguracionColumna<DatosDeLaTabla>[] = [
-    { encabezado: '', clave: (artículo) => artículo.id, orden: 0 },
+    { encabezado: '', clave: (articulo) => articulo.id, orden: 0 },
     {
       encabezado: 'Folio trámite: ',
-      clave: (artículo) => artículo.folioTramite,
+      clave: (articulo) => articulo.folioTramite,
       orden: 1,
       hiperenlace: true,
     },
     {
       encabezado: 'Tipo trámite',
-      clave: (artículo) => artículo.tipoTramite,
+      clave: (articulo) => articulo.tipoTramite,
       orden: 2,
     },
-    { encabezado: 'RFC', clave: (artículo) => artículo.rfc, orden: 3 },
+    { encabezado: 'RFC', clave: (articulo) => articulo.rfc, orden: 3 },
     {
       encabezado: 'Razón social',
-      clave: (artículo) => artículo.razonSocial,
+      clave: (articulo) => articulo.razonSocial,
       orden: 4,
     },
     {
       encabezado: 'Estado del trámite',
-      clave: (artículo) => artículo.estadoDelTramite,
+      clave: (articulo) => articulo.estadoDelTramite,
       orden: 5,
     },
   ];
@@ -142,6 +125,7 @@ export class SolicitarRequerimientoComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute
   ) {
     // Constructor vacío
+    this.obtenerTablaPoblada();
   }
 
   /**
