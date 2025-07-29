@@ -1,8 +1,7 @@
 import { AlertComponent, ConsultaioQuery, ConsultaioState, Notificacion, Pedimento, REGEX_PATRON_DECIMAL_2 } from "@ng-mf/data-access-user";
 import { DISPONIBLES_ENCABEZADOS, FECHAFACTURA, MERCANCIAS_ENCABEZADOS } from '../../constants/validar-inicialmente-certificado.enum';
 
-import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn } from "@angular/forms";
-import { FormGroup,ReactiveFormsModule } from "@angular/forms";
+import { AbstractControl, FormBuilder,FormGroup,ReactiveFormsModule,ValidationErrors, ValidatorFn } from "@angular/forms";
 
 import { Catalogo } from "../../models/validar-inicialmente-certificado.model";
 import { CatalogoLista, } from "../../models/validar-inicialmente-certificado.model";
