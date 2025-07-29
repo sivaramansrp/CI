@@ -8,22 +8,10 @@
             data-bs-target="#modalAlerta" (click)="seleccionarEstablecimiento()">Seleccionar establecimiento</button>
     </div>
 
-    <div class="modal fade" id="modalAlerta" tabindex="-1" aria-labelledby="modalAlertaLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                </div>
-                <div class="modal-body">
-                    <p>Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su
-                        establecimiento.</p>
-                </div>
-                <div class="modal-footer custom-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal
-                        (click)="aceptar()">Aceptar</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    @if(modalAlerta) {
+        <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+        (confirmacionModal)="aceptar()"></lib-notificaciones>
+    }
 
     <div class="row">
         <div class="col-md-4">
