@@ -51,11 +51,11 @@ describe('SanidadAcuicolaCertificadoComponent', () => {
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
+  it('debe crear el componente', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #getValorIndice()', async () => {
+  it('debe ejecutar getValorIndice()', async () => {
     component.validarTodosFormulariosPasoUno = jest.fn();
     component.pasos = component.pasos || {};
     component.datosPasos = component.datosPasos || {};
@@ -67,16 +67,12 @@ describe('SanidadAcuicolaCertificadoComponent', () => {
       accion: {},
       valor: {}
     });
-    // expect(component.validarTodosFormulariosPasoUno).toHaveBeenCalled();
-    // expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    // expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should run #validarTodosFormulariosPasoUno()', async () => {
+  it('debe ejecutar validarTodosFormulariosPasoUno()', async () => {
     component.pasoUnoComponent = component.pasoUnoComponent || {};
     component.pasoUnoComponent.validarFormularios = jest.fn();
     component.validarTodosFormulariosPasoUno();
-    // expect(component.pasoUnoComponent.validarFormularios).toHaveBeenCalled();
   });
 
 });

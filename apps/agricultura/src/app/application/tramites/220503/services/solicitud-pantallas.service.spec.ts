@@ -24,11 +24,11 @@ describe('SolicitudPantallasService', () => {
     service = TestBed.inject(SolicitudPantallasService);
   });
 
-  it('should be created', () => {
+  it('debe crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call http.get with correct URL in getData', () => {
+  it('debe llamar a http.get con la URL correcta en getData', () => {
     const mockResponse = { test: 'data' } as any;
     httpClientMock.get.mockReturnValue(of(mockResponse));
 
@@ -40,7 +40,7 @@ describe('SolicitudPantallasService', () => {
     });
   });
 
-  it('should call http.get with correct URL in getDataDatosDelTramite', () => {
+  it('debe llamar a http.get con la URL correcta en getDataDatosDelTramite', () => {
     const mockResponse = { test: 'data' } as any;
     httpClientMock.get.mockReturnValue(of(mockResponse));
 
@@ -52,7 +52,7 @@ describe('SolicitudPantallasService', () => {
     });
   });
 
-  it('should call http.get with correct URL in getDataResponsableInspeccion', () => {
+  it('debe llamar a http.get con la URL correcta en getDataResponsableInspeccion', () => {
     const mockResponse = { test: 'data' } as any;
     httpClientMock.get.mockReturnValue(of(mockResponse));
 
@@ -64,32 +64,28 @@ describe('SolicitudPantallasService', () => {
     });
   });
 
-  it('should call getData in constructor', () => {
-    // The constructor calls getData, so we verify it was called during service creation
+  it('debe llamar a getData en el constructor', () => {
     expect(httpClientMock.get).toHaveBeenCalled();
   });
 
-  it('should have correct dataUrl property', () => {
+  it('debe tener la propiedad dataUrl correcta', () => {
     expect(service['dataUrl']).toBe('../../../assets/json/220503/solicitud-pantallas-mock-data.json');
   });
 
-  it('should return observable from getData method', () => {
+  it('debe retornar un observable desde el método getData', () => {
     const result = service.getData();
-    
     expect(result).toBeDefined();
     expect(typeof result.subscribe).toBe('function');
   });
 
-  it('should return observable from getDataDatosDelTramite method', () => {
+  it('debe retornar un observable desde el método getDataDatosDelTramite', () => {
     const result = service.getDataDatosDelTramite();
-    
     expect(result).toBeDefined();
     expect(typeof result.subscribe).toBe('function');
   });
 
-  it('should return observable from getDataResponsableInspeccion method', () => {
+  it('debe retornar un observable desde el método getDataResponsableInspeccion', () => {
     const result = service.getDataResponsableInspeccion();
-    
     expect(result).toBeDefined();
     expect(typeof result.subscribe).toBe('function');
   });

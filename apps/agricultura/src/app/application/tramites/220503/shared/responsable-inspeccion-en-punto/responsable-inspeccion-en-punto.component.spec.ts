@@ -67,27 +67,27 @@ describe('ResponsableInspeccionEnPuntoComponent', () => {
     component.claveDeControl = 'testControl';
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have claveDeControl input', () => {
+  it('debe tener el input claveDeControl', () => {
     expect(component.claveDeControl).toBe('testControl');
   });
 
-  it('should have grupoFormularioPadre defined', () => {
+  it('debe tener grupoFormularioPadre definido', () => {
     expect(component.grupoFormularioPadre).toBeDefined();
     expect(component.grupoFormularioPadre).toBe(mockParentFormGroup);
   });
 
-  it('should add form group to parent form on init', () => {
+  it('debe agregar el grupo de formulario al formulario padre al inicializar', () => {
     component.inicializarFormulario();
     const formGroup = component.grupoFormularioPadre.get('testControl');
     expect(formGroup).toBeDefined();
     expect(formGroup instanceof FormGroup).toBe(true);
   });
 
-  it('should have default values in form group after init', () => {
+  it('debe tener valores por defecto en el grupo de formulario después de inicializar', () => {
     component.inicializarFormulario();
     const formGroup = component.grupoFormularioPadre.get('testControl') as FormGroup;
     expect(formGroup.value.nombre).toBe('');
@@ -97,13 +97,13 @@ describe('ResponsableInspeccionEnPuntoComponent', () => {
     expect(formGroup.value.tipocontenedor).toBe('');
   });
 
-  it('should validate form correctly', () => {
+  it('debe validar el formulario correctamente', () => {
     component.inicializarFormulario();
     const result = component.validarFormularios();
     expect(typeof result).toBe('boolean');
   });
 
-  it('should return false when form group does not exist', () => {
+  it('debe regresar falso cuando el grupo de formulario no existe', () => {
     component.claveDeControl = 'nonExistentControl';
     const result = component.validarFormularios();
     expect(result).toBe(false);

@@ -9,18 +9,18 @@ describe('SolicitudDatosTabComponent', () => {
     component = new SolicitudDatosTabComponent();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have default values', () => {
+  it('debe tener valores por defecto', () => {
     expect(component.colapsable).toBe(true);
     expect(component.tablaHeadData).toEqual([]);
     expect(component.tablaFilaDatos).toEqual([]);
     expect(component.TEXTOS).toBe(TEXTOS);
   });
 
-  it('should toggle colapsable value on mostrarColapsable', () => {
+  it('debe alternar el valor de colapsable al llamar mostrarColapsable', () => {
     expect(component.colapsable).toBe(true);
     component.mostrarColapsable();
     expect(component.colapsable).toBe(false);
@@ -28,7 +28,7 @@ describe('SolicitudDatosTabComponent', () => {
     expect(component.colapsable).toBe(true);
   });
 
-  it('should accept input for tablaHeadData and tablaFilaDatos', () => {
+  it('debe aceptar datos de entrada para tablaHeadData y tablaFilaDatos', () => {
     const dummyHead = ['Col1', 'Col2'];
     const dummyRows: Solicitud[] = [{
       fechaCreacion: '2024-06-01',

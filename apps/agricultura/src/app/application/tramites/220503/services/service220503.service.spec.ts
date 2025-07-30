@@ -60,19 +60,19 @@ describe('Solocitud220503Service', () => {
     service = new Solocitud220503Service(httpMock, storeMock);
   });
 
-  it('should be created', () => {
+  it('debe crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call all store setters with correct values in actualizarEstadoFormulario', () => {
+  it('debe llamar todos los setters del store con los valores correctos en actualizarEstadoFormulario', () => {
     const datos: Solicitud220503State = {
       certificadosAutorizados: 1,
       mercancia: 'mercancia',
       horaDeInspeccion: 1000,
-      aduanaDeIngreso: 123, // Use a number instead of a string
+      aduanaDeIngreso: 123,
       sanidadAgropecuaria: 1,
       puntoInspeccion: 1,
-      puntoDeInspeccion: 1, // Added missing property
+      puntoDeInspeccion: 1,
       fechaDeInspeccion: '2024-01-01',
       nombre: 'Juan',
       primerapellido: 'Perez',
@@ -101,11 +101,11 @@ describe('Solocitud220503Service', () => {
       llavePago: 'llave',
       importePago: '1000',
       fetchapago: '', 
-          datosForma: [] ,
-          tercerosRelacionados: [],
-          selectedTerceros:{} as TercerosrelacionadosdestinoTable,
-          seletedExdora: {} as DestinatarioForm,
-          pagoDeDerechos: {} as PagoDeDerechos
+      datosForma: [] ,
+      tercerosRelacionados: [],
+      selectedTerceros:{} as TercerosrelacionadosdestinoTable,
+      seletedExdora: {} as DestinatarioForm,
+      pagoDeDerechos: {} as PagoDeDerechos
     };
 
     service.actualizarEstadoFormulario(datos);
@@ -146,7 +146,7 @@ describe('Solocitud220503Service', () => {
     expect(storeMock.setImportePago).toHaveBeenCalledWith(datos.importePago);
   });
 
-  it('should call http.get with correct URL in getRegistroTomaMuestrasMercanciasData', () => {
+  it('debe llamar http.get con la URL correcta en getRegistroTomaMuestrasMercanciasData', () => {
     const mockResponse = { some: 'data' } as any;
     httpMock.get.mockReturnValue(of(mockResponse));
 
@@ -161,12 +161,12 @@ describe('Solocitud220503Service', () => {
     });
   });
 
-  it('should have urlServer and urlServerCatalogos from ENVIRONMENT', () => {
+  it('debe tener urlServer y urlServerCatalogos desde ENVIRONMENT', () => {
     expect(service.urlServer).toBeDefined();
     expect(service.urlServerCatalogos).toBeDefined();
   });
 
-  it('should call updateTercerosRelacionados on store in updateTercerosRelacionado', () => {
+  it('debe llamar updateTercerosRelacionados en el store en updateTercerosRelacionado', () => {
     const mockTerceros: TercerosrelacionadosdestinoTable[] = [
       { id: 1, nombre: 'Tercero 1' } as any
     ];
@@ -176,7 +176,7 @@ describe('Solocitud220503Service', () => {
     expect(storeMock.updateTercerosRelacionados).toHaveBeenCalledWith(mockTerceros);
   });
 
-  it('should return observable from store._select in getAllDatosForma', () => {
+  it('debe retornar un observable desde store._select en getAllDatosForma', () => {
     const mockState: Solicitud220503State = {
       certificadosAutorizados: 1,
       mercancia: 'test'
@@ -192,7 +192,7 @@ describe('Solocitud220503Service', () => {
     });
   });
 
-  it('should call actualizarPagoDeDerechos on store in actualizarPagoDeDerechos', () => {
+  it('debe llamar actualizarPagoDeDerechos en el store en actualizarPagoDeDerechos', () => {
     const mockPago: PagoDeDerechos = {
       exentoPago: 'SI',
       justificacion: 'Test justification',
@@ -209,7 +209,7 @@ describe('Solocitud220503Service', () => {
     expect(storeMock.actualizarPagoDeDerechos).toHaveBeenCalledWith(mockPago);
   });
 
-  it('should call http.get with correct URL in obtenerDetallesDelCatalogo', () => {
+  it('debe llamar http.get con la URL correcta en obtenerDetallesDelCatalogo', () => {
     const nombreArchivo = 'test-catalog.json';
     const mockResponse: RespuestaCatalogos = {
       code: 200,

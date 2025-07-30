@@ -65,7 +65,8 @@ describe('PagoDeDerechosComponent', () => {
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
   });
-  it('should create the component', () => {
+
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 });

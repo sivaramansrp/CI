@@ -9,39 +9,38 @@ describe('TercerosRelacionadosComponent', () => {
   let mockCertificadoZoosanitarioStore: any;
 
   beforeEach(() => {
-    // Mock services and observables
     mockConsultaQuery = {
       selectConsultaioState$: of({ readonly: true })
     };
     mockCertificadoZoosanitarioServices = {
       getAllDatosForma: jest.fn().mockReturnValue(of({
-      tercerosRelacionados: [
-        {
-        tipoMercancia: 'yes',
-        nombre: 'Carlos',
-        primerApellido: 'Ramírez',
-        segundoApellido: 'Santos',
-        razonSocial: 'ExportMex S.A.',
-        pais: 'México',
-        domicilio: 'Av. Reforma 123, CDMX',
-        lada: '55',
-        telefono: '5551234567',
-        correo: 'carlos.ramirez@exportmex.com'
-        },
-        {
-        tipoMercancia: 'no',
-        nombre: 'Lucía',
-        primerApellido: 'Fernández',
-        segundoApellido: 'Gómez',
-        razonSocial: 'AgroSur S.A.',
-        pais: 'México',
-        domicilio: 'Calle Sur 456, Monterrey',
-        lada: '81',
-        telefono: '8187654321',
-        correo: 'lucia.fernandez@agrosur.com'
-        }
-      ],
-      datosForma: [{ id: 2 }]
+        tercerosRelacionados: [
+          {
+            tipoMercancia: 'yes',
+            nombre: 'Carlos',
+            primerApellido: 'Ramírez',
+            segundoApellido: 'Santos',
+            razonSocial: 'ExportMex S.A.',
+            pais: 'México',
+            domicilio: 'Av. Reforma 123, CDMX',
+            lada: '55',
+            telefono: '5551234567',
+            correo: 'carlos.ramirez@exportmex.com'
+          },
+          {
+            tipoMercancia: 'no',
+            nombre: 'Lucía',
+            primerApellido: 'Fernández',
+            segundoApellido: 'Gómez',
+            razonSocial: 'AgroSur S.A.',
+            pais: 'México',
+            domicilio: 'Calle Sur 456, Monterrey',
+            lada: '81',
+            telefono: '8187654321',
+            correo: 'lucia.fernandez@agrosur.com'
+          }
+        ],
+        datosForma: [{ id: 2 }]
       })),
       updateTercerosRelacionado: jest.fn()
     };
@@ -54,7 +53,6 @@ describe('TercerosRelacionadosComponent', () => {
       actualizarSelectedExdora: jest.fn()
     };
 
-    // Create instance
     component = new TercerosRelacionadosComponent(
       mockConsultaQuery,
       mockCertificadoZoosanitarioServices,
@@ -62,29 +60,28 @@ describe('TercerosRelacionadosComponent', () => {
       mockCertificadoZoosanitarioStore
     );
 
-    // Mock modal and child component
     component.modalRef = { abrir: jest.fn() } as any;
     component.tercerosRelacionados = { validarFormulario: jest.fn(() => true) } as any;
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize values and fetch data in ngOnInit', () => {
+  it('debe inicializar valores y obtener datos en ngOnInit', () => {
     component.ngOnInit();
     expect(component.esFormularioSoloLectura).toBe(true);
     expect(component.personas.length).toBe(2);
     expect(component.datosForma.length).toBe(1);
   });
 
-  it('should call pairsCatalogChange and estadoCatalogChange in ngAfterViewInit', () => {
+  it('debe llamar pairsCatalogChange y estadoCatalogChange en ngAfterViewInit', () => {
     component.ngAfterViewInit();
     expect(mockTercerosrelacionadosService.obtenerSelectorList).toHaveBeenCalledWith('paisprocedencia.json');
     expect(mockTercerosrelacionadosService.obtenerSelectorList).toHaveBeenCalledWith('estados.json');
   });
 
-  it('should clear personas and call updateTercerosRelacionado on handleEliminar', () => {
+  it('debe limpiar personas y llamar updateTercerosRelacionado en handleEliminar', () => {
     component.personas = [{
       tipoMercancia: 'Física',
       nombre: 'Juan',
@@ -108,7 +105,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(mockCertificadoZoosanitarioServices.updateTercerosRelacionado).toHaveBeenCalledWith([]);
   });
 
-  it('should clear datosForma and call updatedatosForma on handleEliminarExportador', () => {
+  it('debe limpiar datosForma y llamar updatedatosForma en handleEliminarExportador', () => {
     component.datosForma = [{
       tipoMercancia: 'yes',
       nombre: 'Ana',
@@ -126,27 +123,27 @@ describe('TercerosRelacionadosComponent', () => {
     expect(mockCertificadoZoosanitarioStore.updatedatosForma).toHaveBeenCalledWith([]);
   });
 
-  it('should open modal for destinatario with data', () => {
+  it('debe abrir el modal para destinatario con datos', () => {
     const data = { id: 10 };
     component.abrirModalDestinatario(data as any);
     expect(mockCertificadoZoosanitarioStore.actualizarSelectedTerceros).toHaveBeenCalledWith(data);
     expect(component.modalRef.abrir).toHaveBeenCalled();
   });
 
-  it('should open modal for exportador with data', () => {
+  it('debe abrir el modal para exportador con datos', () => {
     const data = { id: 20 };
     component.abrirModalExportador(data as any);
     expect(mockCertificadoZoosanitarioStore.actualizarSelectedExdora).toHaveBeenCalledWith(data);
     expect(component.modalRef.abrir).toHaveBeenCalled();
   });
 
-  it('should call validarFormulario and return true', () => {
+  it('debe llamar validarFormulario y retornar true', () => {
     const result = component.validarFormulario();
     expect(result).toBe(true);
     expect(component.tercerosRelacionados.validarFormulario).toHaveBeenCalled();
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
     const completeSpy = jest.spyOn(component['DESTROY_NOTIFIER$'], 'complete');
     const nextSpy = jest.spyOn(component['DESTROY_NOTIFIER$'], 'next');
     component.ngOnDestroy();

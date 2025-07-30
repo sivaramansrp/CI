@@ -5,9 +5,8 @@ import { AlertComponent, AnexarDocumentosComponent, FirmaElectronicaComponent, T
 import { ToastrModule } from 'ngx-toastr';
 import { PasoTresComponent } from './PasoTres.component';
 
-
 describe('PasoTresComponent', () => {
-  let COMPONENT: PasoTresComponent;
+  let COMPONENTE: PasoTresComponent;
   let FIXTURE: ComponentFixture<PasoTresComponent>;
 
   beforeEach(async () => {
@@ -18,11 +17,11 @@ describe('PasoTresComponent', () => {
       .compileComponents();
 
     FIXTURE = TestBed.createComponent(PasoTresComponent);
-    COMPONENT = FIXTURE.componentInstance;
+    COMPONENTE = FIXTURE.componentInstance;
     FIXTURE.detectChanges();
   });
 
-  it('should create', () => {
-    expect(COMPONENT).toBeTruthy();
+  it('debe crear el componente', () => {
+    expect(COMPONENTE).toBeTruthy();
   });
 });

@@ -7,7 +7,6 @@ describe('RevisionDocumentalComponent', () => {
 
   beforeEach(() => {
     component = new RevisionDocumentalComponent();
-    // Mock child components
     component.pagoDeDerechos = {
       validarFormulario: jest.fn(() => true)
     } as unknown as PagoDeDerechosComponent;
@@ -17,11 +16,11 @@ describe('RevisionDocumentalComponent', () => {
     } as unknown as TercerosRelacionadosComponent;
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have default properties initialized', () => {
+  it('debe tener las propiedades por defecto inicializadas', () => {
     expect(component.indice).toBe(1);
     expect(component.colapsable).toBe(true);
     expect(component.currentIndex).toBe(1);
@@ -29,32 +28,32 @@ describe('RevisionDocumentalComponent', () => {
     expect(component.forma).toBe('');
   });
 
-  it('should have a seleccionaTab method', () => {
+  it('debe tener el método seleccionaTab', () => {
     expect(typeof component.seleccionaTab).toBe('function');
     component.seleccionaTab(2);
     expect(component.indice).toBe(2);
   });
 
-  it('should validate formularios and return true when both child components return true', () => {
+  it('debe validar los formularios y retornar true cuando ambos componentes hijos retornan true', () => {
     const result = component.validarFormularios();
     expect(result).toBe(true);
     expect(component.pagoDeDerechos.validarFormulario).toHaveBeenCalled();
     expect(component.tercerosRelacionados.validarFormulario).toHaveBeenCalled();
   });
 
-  it('should return false if pagoDeDerechos is missing', () => {
+  it('debe retornar false si pagoDeDerechos no existe', () => {
     component.pagoDeDerechos = undefined as any;
     const result = component.validarFormularios();
     expect(result).toBe(false);
   });
 
-  it('should return false if tercerosRelacionados is missing', () => {
+  it('debe retornar true si tercerosRelacionados no existe', () => {
     component.tercerosRelacionados = undefined as any;
     const result = component.validarFormularios();
     expect(result).toBe(true);
   });
 
-  it('should return false if child validation fails', () => {
+  it('debe retornar false si la validación de los hijos falla', () => {
     component.pagoDeDerechos.validarFormulario = jest.fn(() => false);
     component.tercerosRelacionados.validarFormulario = jest.fn(() => false);
     const result = component.validarFormularios();

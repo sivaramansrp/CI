@@ -5,7 +5,6 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 
-// Mock services
 class MockRevisionService {
   getAduanaIngreso = jest.fn().mockReturnValue(of({ code: 200, data: [] }));
   getOficianaInspeccion = jest.fn().mockReturnValue(of({ code: 200, data: [] }));
@@ -66,41 +65,39 @@ describe('DatosGeneralesComponent', () => {
 
     fixture = TestBed.createComponent(DatosGeneralesComponent);
     component = fixture.componentInstance;
-    
-    // Mock form to prevent errors
     component.forma = new FormBuilder().group({
       test: ['']
     });
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have default properties', () => {
+  it('debe tener propiedades por defecto', () => {
     expect(component.colapsable).toBe(false);
     expect(component.currentIndex).toBe(0);
     expect(component.esFormularioSoloLectura).toBe(false);
     expect(component.rows).toBeDefined();
   });
 
-  it('should toggle colapsable', () => {
+  it('debe alternar colapsable', () => {
     component.mostrar_colapsable();
     expect(component.colapsable).toBe(true);
   });
 
-  it('should rotate row', () => {
-    const initialIndex = component.currentIndex;
+  it('debe rotar fila', () => {
+    const indiceInicial = component.currentIndex;
     component.rotateRow(1);
-    expect(component.currentIndex).not.toBe(initialIndex);
+    expect(component.currentIndex).not.toBe(indiceInicial);
   });
 
-  it('should validate form', () => {
-    const result = component.isValid(component.forma, 'test');
-    expect(result).toBe(false);
+  it('debe validar el formulario', () => {
+    const resultado = component.isValid(component.forma, 'test');
+    expect(resultado).toBe(false);
   });
 
-  it('should call service methods', () => {
+  it('debe llamar métodos de servicio', () => {
     component.getAduanaIngreso();
     component.getOficianaInspeccion();
     component.getPuntoInspeccion();
@@ -110,10 +107,10 @@ describe('DatosGeneralesComponent', () => {
     component.getPuntoVerificacion();
     component.getEmpresaTransportista();
     component.actualizarDatosDelaSolicitud();
-    expect(true).toBe(true); // Services are called
+    expect(true).toBe(true);
   });
 
-  it('should call selector methods', () => {
+  it('debe llamar métodos de selección', () => {
     const catalogo = { id: 1, descripcion: 'Test' } as any;
     component.seleccionarAduanaIngreso(catalogo);
     component.seleccionarOficianaInspeccion(catalogo);
@@ -121,14 +118,14 @@ describe('DatosGeneralesComponent', () => {
     component.seleccionarRegimen(catalogo);
     component.seleccionarMovilizacionNacional(catalogo);
     component.seleccionarPuntoVerificacion(catalogo);
-    expect(true).toBe(true); // Methods are called
+    expect(true).toBe(true);
   });
 
-  it('should initialize and destroy', () => {
+  it('debe inicializar y destruir', () => {
     component.inicializarFormulario();
     component.inicializarEstadoFormulario();
     component.guardarDatosFormulario();
     component.ngOnDestroy();
-    expect(true).toBe(true); // Lifecycle methods work
+    expect(true).toBe(true);
   });
 });

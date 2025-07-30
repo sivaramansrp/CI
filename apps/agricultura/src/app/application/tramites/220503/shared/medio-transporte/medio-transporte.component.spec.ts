@@ -56,18 +56,18 @@ describe('MedioTransporteComponent', () => {
     component.claveDeControl = 'transporteForm';
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have input properties defined', () => {
+  it('debe tener las propiedades de entrada definidas', () => {
     expect(component.claveDeControl).toBeDefined();
     expect(component.hMercanciaTabla).toBeDefined();
     expect(component.dMercanciaBody).toBeDefined();
     expect(component.mediodetransporte).toBeDefined();
   });
 
-  it('should have default property values', () => {
+  it('debe tener valores por defecto en las propiedades', () => {
     expect(component.claveDeControl).toBe('transporteForm');
     expect(component.hMercanciaTabla).toEqual([]);
     expect(component.dMercanciaBody).toEqual([]);
@@ -75,26 +75,25 @@ describe('MedioTransporteComponent', () => {
     expect(component.enCambioValor).toBe(0);
   });
 
-  it('should have grupoFormularioPadre defined', () => {
+  it('debe tener grupoFormularioPadre definido', () => {
     expect(component.grupoFormularioPadre).toBeDefined();
     expect(component.grupoFormularioPadre).toBe(mockParentFormGroup);
   });
 
-  it('should initialize form group when inicializarFormulario is called', () => {
+  it('debe inicializar el grupo de formulario al llamar inicializarFormulario', () => {
     component.inicializarFormulario();
     const formGroup = component.grupoFormularioPadre.get('transporteForm');
     expect(formGroup).toBeDefined();
     expect(formGroup).toBeInstanceOf(FormGroup);
   });
 
-  it('should validate form correctly', () => {
+  it('debe validar el formulario correctamente', () => {
     component.inicializarFormulario();
     const result = component.validarFormularios();
     expect(typeof result).toBe('boolean');
   });
 
-
-  it('should update enCambioValor when enCambioDeValor is called', () => {
+  it('debe actualizar enCambioValor al llamar enCambioDeValor', () => {
     const testValue = 'testValue';
     component.enCambioDeValor(testValue);
     expect(component.enCambioValor).toBe(testValue);

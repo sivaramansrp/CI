@@ -22,12 +22,11 @@ describe('PasoUnoComponent', () => {
     );
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-
-  it('should set esDatosRespuesta to true and call actualizarEstadoFormulario on guardarDatosFormulario', () => {
+  it('debe establecer esDatosRespuesta en true y llamar actualizarEstadoFormulario en guardarDatosFormulario', () => {
     const resp = { some: 'data' };
     solocitud220503ServiceMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(resp));
     component.guardarDatosFormulario();
@@ -35,18 +34,18 @@ describe('PasoUnoComponent', () => {
     expect(solocitud220503ServiceMock.actualizarEstadoFormulario).toHaveBeenCalledWith(resp);
   });
 
-  it('should not call actualizarEstadoFormulario if response is falsy in guardarDatosFormulario', () => {
+  it('no debe llamar actualizarEstadoFormulario si la respuesta es falsy en guardarDatosFormulario', () => {
     solocitud220503ServiceMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(null));
     component.guardarDatosFormulario();
     expect(solocitud220503ServiceMock.actualizarEstadoFormulario).not.toHaveBeenCalled();
   });
 
-  it('should update indice when seleccionaTab is called', () => {
+  it('debe actualizar indice cuando se llama seleccionaTab', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
   });
 
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+  it('debe completar destroyNotifier$ en ngOnDestroy', () => {
     const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
     const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();
@@ -55,8 +54,7 @@ describe('PasoUnoComponent', () => {
   });
 
   describe('validarFormularios', () => {
-    it('should return true when all forms are valid', () => {
-      // Mock valid solicitante form
+    it('debe retornar true cuando todos los formularios son válidos', () => {
       component.solicitante = {
         form: {
           invalid: false,
@@ -64,12 +62,10 @@ describe('PasoUnoComponent', () => {
         }
       } as any;
 
-      // Mock valid solicitudDatos
       component.solicitudDatos = {
         validarFormularios: jest.fn().mockReturnValue(true)
       } as any;
 
-      // Mock valid revisionDocumental
       component.revisionDocumental = {
         validarFormularios: jest.fn().mockReturnValue(true)
       } as any;
@@ -80,8 +76,7 @@ describe('PasoUnoComponent', () => {
       expect(component.solicitante.form.markAllAsTouched).not.toHaveBeenCalled();
     });
 
-    it('should return false when solicitante form is invalid', () => {
-      // Mock invalid solicitante form
+    it('debe retornar false cuando el formulario solicitante es inválido', () => {
       component.solicitante = {
         form: {
           invalid: true,
@@ -89,12 +84,10 @@ describe('PasoUnoComponent', () => {
         }
       } as any;
 
-      // Mock valid solicitudDatos
       component.solicitudDatos = {
         validarFormularios: jest.fn().mockReturnValue(true)
       } as any;
 
-      // Mock valid revisionDocumental
       component.revisionDocumental = {
         validarFormularios: jest.fn().mockReturnValue(true)
       } as any;
@@ -105,15 +98,13 @@ describe('PasoUnoComponent', () => {
       expect(component.solicitante.form.markAllAsTouched).toHaveBeenCalled();
     });
 
-    it('should return false when solicitante is not available', () => {
+    it('debe retornar false cuando solicitante no está disponible', () => {
       component.solicitante = undefined as any;
 
-      // Mock valid solicitudDatos
       component.solicitudDatos = {
         validarFormularios: jest.fn().mockReturnValue(true)
       } as any;
 
-      // Mock valid revisionDocumental
       component.revisionDocumental = {
         validarFormularios: jest.fn().mockReturnValue(true)
       } as any;
@@ -123,8 +114,7 @@ describe('PasoUnoComponent', () => {
       expect(result).toBe(false);
     });
 
-    it('should return false when solicitudDatos validation fails', () => {
-      // Mock valid solicitante form
+    it('debe retornar false cuando la validación de solicitudDatos falla', () => {
       component.solicitante = {
         form: {
           invalid: false,
@@ -132,12 +122,10 @@ describe('PasoUnoComponent', () => {
         }
       } as any;
 
-      // Mock invalid solicitudDatos
       component.solicitudDatos = {
         validarFormularios: jest.fn().mockReturnValue(false)
       } as any;
 
-      // Mock valid revisionDocumental
       component.revisionDocumental = {
         validarFormularios: jest.fn().mockReturnValue(true)
       } as any;
@@ -147,8 +135,7 @@ describe('PasoUnoComponent', () => {
       expect(result).toBe(false);
     });
 
-    it('should return false when solicitudDatos is not available', () => {
-      // Mock valid solicitante form
+    it('debe retornar false cuando solicitudDatos no está disponible', () => {
       component.solicitante = {
         form: {
           invalid: false,
@@ -158,7 +145,6 @@ describe('PasoUnoComponent', () => {
 
       component.solicitudDatos = undefined as any;
 
-      // Mock valid revisionDocumental
       component.revisionDocumental = {
         validarFormularios: jest.fn().mockReturnValue(true)
       } as any;
@@ -168,8 +154,7 @@ describe('PasoUnoComponent', () => {
       expect(result).toBe(false);
     });
 
-    it('should return false when revisionDocumental validation fails', () => {
-      // Mock valid solicitante form
+    it('debe retornar false cuando la validación de revisionDocumental falla', () => {
       component.solicitante = {
         form: {
           invalid: false,
@@ -177,12 +162,10 @@ describe('PasoUnoComponent', () => {
         }
       } as any;
 
-      // Mock valid solicitudDatos
       component.solicitudDatos = {
         validarFormularios: jest.fn().mockReturnValue(true)
       } as any;
 
-      // Mock invalid revisionDocumental
       component.revisionDocumental = {
         validarFormularios: jest.fn().mockReturnValue(false)
       } as any;
@@ -192,8 +175,7 @@ describe('PasoUnoComponent', () => {
       expect(result).toBe(false);
     });
 
-    it('should return false when revisionDocumental is not available', () => {
-      // Mock valid solicitante form
+    it('debe retornar false cuando revisionDocumental no está disponible', () => {
       component.solicitante = {
         form: {
           invalid: false,
@@ -201,7 +183,6 @@ describe('PasoUnoComponent', () => {
         }
       } as any;
 
-      // Mock valid solicitudDatos
       component.solicitudDatos = {
         validarFormularios: jest.fn().mockReturnValue(true)
       } as any;
@@ -213,18 +194,15 @@ describe('PasoUnoComponent', () => {
       expect(result).toBe(false);
     });
 
-    it('should return false when solicitante form is null', () => {
-      // Mock solicitante with null form
+    it('debe retornar false cuando el formulario solicitante es null', () => {
       component.solicitante = {
         form: null
       } as any;
 
-      // Mock valid solicitudDatos
       component.solicitudDatos = {
         validarFormularios: jest.fn().mockReturnValue(true)
       } as any;
 
-      // Mock valid revisionDocumental
       component.revisionDocumental = {
         validarFormularios: jest.fn().mockReturnValue(true)
       } as any;
@@ -235,7 +213,7 @@ describe('PasoUnoComponent', () => {
     });
   });
 
-  it('should initialize properties correctly', () => {
+  it('debe inicializar las propiedades correctamente', () => {
     expect(component.esDatosRespuesta).toBe(false);
     expect(component.indice).toBe(1);
     expect((component as any).destroyNotifier$).toBeDefined();

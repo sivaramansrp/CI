@@ -8,7 +8,6 @@ describe('SolicitudDatosComponent', () => {
   let mockService: Partial<SolicitudPantallasService>;
 
   beforeEach(() => {
-    // Mock service response
     mockService = {
       getData: jest.fn().mockReturnValue(
         of({
@@ -27,7 +26,6 @@ describe('SolicitudDatosComponent', () => {
 
     component = new SolicitudDatosComponent(new FormBuilder(), mockService as SolicitudPantallasService);
 
-    // Mock child component methods
     component.datosDelTramiteARealizar = {
       validarFormularios: jest.fn(() => true)
     } as any;
@@ -41,11 +39,11 @@ describe('SolicitudDatosComponent', () => {
     } as any;
   });
 
-  it('should create component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have default values', () => {
+  it('debe tener valores por defecto', () => {
     expect(component.form).toBeTruthy();
     expect(component.hMercanciaTabla).toEqual([]);
     expect(component.dMercanciaBody).toEqual([]);
@@ -58,7 +56,7 @@ describe('SolicitudDatosComponent', () => {
     expect(component.tableData).toEqual({ tableBody: [], tableHeader: [] });
   });
 
-  it('should call validarFormularios and return true if all children return true', () => {
+  it('debe llamar validarFormularios y retornar true si todos los hijos retornan true', () => {
     const result = component.validarFormularios();
     expect(result).toBe(true);
     expect(component.datosDelTramiteARealizar.validarFormularios).toHaveBeenCalled();
@@ -66,13 +64,13 @@ describe('SolicitudDatosComponent', () => {
     expect(component.medioTransporte.validarFormularios).toHaveBeenCalled();
   });
 
-  it('should return false if any child validation fails', () => {
+  it('debe retornar false si alguna validación de hijo falla', () => {
     component.medioTransporte.validarFormularios = jest.fn(() => false);
     const result = component.validarFormularios();
     expect(result).toBe(false);
   });
 
-  it('should load initial data on ngOnInit', () => {
+  it('debe cargar los datos iniciales en ngOnInit', () => {
     component.ngOnInit();
 
     expect(component.hHistorialinspeccion.length).toBeGreaterThan(0);
@@ -86,7 +84,7 @@ describe('SolicitudDatosComponent', () => {
     expect(component.mediodetransporte).toBeDefined();
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component.destroyed$, 'next');
     const completeSpy = jest.spyOn(component.destroyed$, 'complete');
 

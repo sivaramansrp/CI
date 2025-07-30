@@ -1,24 +1,19 @@
-// @ts-nocheck
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PasoDosComponent } from './PasoDos.component';
 
-
 describe('PasoDosComponent', () => {
-  let fixture;
-  let component;
+  let fixture:any;
+  let component:any;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule, PasoDosComponent],
-      declarations: [
-      ],
+      declarations: [],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: [
-
-      ]
+      providers: []
     }).overrideComponent(PasoDosComponent, {
 
     }).compileComponents();
@@ -31,7 +26,7 @@ describe('PasoDosComponent', () => {
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
+  it('debe crear el componente', async () => {
     expect(component).toBeTruthy();
   });
 
