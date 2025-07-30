@@ -4,38 +4,38 @@ import { provideHttpClient } from '@angular/common/http';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { of } from 'rxjs';
 
-// Mock service
-const mockService = {
+// Servicio simulado
+const servicioSimulado = {
   obtenerDetallesDelCatalogo: jest.fn(() => of({ data: [] })),
   obtenerDatos: jest.fn(() => of({ selectedmercanciaGroupDatos: {} })),
 };
 
 describe('MercanciaSolicitudComponent', () => {
-  let component: MercanciaSolicitudComponent;
+  let componente: MercanciaSolicitudComponent;
   let fixture: ComponentFixture<MercanciaSolicitudComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MercanciaSolicitudComponent], // ✅ import standalone component here
+      imports: [MercanciaSolicitudComponent], // ✅ importar componente independiente aquí
       providers: [
-        { provide: ImportacionDeAcuiculturaService, useValue: mockService },
-        provideHttpClient(), // ✅ optional if component uses HttpClient directly
+        { provide: ImportacionDeAcuiculturaService, useValue: servicioSimulado },
+        provideHttpClient(), // ✅ opcional si el componente usa HttpClient directamente
       ],
     }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MercanciaSolicitudComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should initialize the mercanciaGroup form with required controls', () => {
-    expect(component.mercanciaGroup.contains('tipoRequisito')).toBeTruthy();
-    expect(component.mercanciaGroup.contains('requisito')).toBeTruthy();
+  it('debería inicializar el formulario mercanciaGroup con los controles requeridos', () => {
+    expect(componente.mercanciaGroup.contains('tipoRequisito')).toBeTruthy();
+    expect(componente.mercanciaGroup.contains('requisito')).toBeTruthy();
   });
 });

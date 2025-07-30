@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
 import {
@@ -15,13 +15,13 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
 import { CommonModule } from '@angular/common';
 
 describe('PagoDeDerechosComponent', () => {
-  let component: PagoDeDerechosComponent;
+  let componente: PagoDeDerechosComponent;
   let fixture: ComponentFixture<PagoDeDerechosComponent>;
-  let mockService: any;
-  let mockQuery: any;
+  let servicioMock: any;
+  let consultaioMock: any;
 
-  const mockCatalogo = [{ id: 1, descripcion: 'Banco1' }];
-  const mockFormularioPago = {
+  const catalogoMock = [{ id: 1, descripcion: 'Banco1' }];
+  const formularioPagoMock = {
     exentoPago: 'Si',
     justificacion: '',
     claveReferencia: '',
@@ -33,14 +33,14 @@ describe('PagoDeDerechosComponent', () => {
   };
 
   beforeEach(async () => {
-    mockService = {
-      obtenerDatos: jest.fn().mockReturnValue(of({ formularioPago: mockFormularioPago })),
-      obtenerDetallesDelCatalogo: jest.fn().mockReturnValue(of({ data: mockCatalogo })),
+    servicioMock = {
+      obtenerDatos: jest.fn().mockReturnValue(of({ formularioPago: formularioPagoMock })),
+      obtenerDetallesDelCatalogo: jest.fn().mockReturnValue(of({ data: catalogoMock })),
       actualizarFormaValida: jest.fn(),
       actualizarFormularioPago: jest.fn()
     };
 
-    mockQuery = {
+    consultaioMock = {
       selectConsultaioState$: of({ readonly: false })
     };
 
@@ -57,15 +57,16 @@ describe('PagoDeDerechosComponent', () => {
         CommonModule
       ],
       providers: [
-        { provide: ImportacionDeAcuiculturaService, useValue: mockService },
-        { provide: ConsultaioQuery, useValue: mockQuery }
+        { provide: ImportacionDeAcuiculturaService, useValue: servicioMock },
+        { provide: ConsultaioQuery, useValue: consultaioMock }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
   });
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+
+  it('debe crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 });

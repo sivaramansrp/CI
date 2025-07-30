@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosParaMovilizacionComponent } from './datos-para-movilizacion.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of, Subject, throwError } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { CatalogoSelectComponent, TituloComponent, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { CommonModule } from '@angular/common';
 
 describe('DatosParaMovilizacionComponent', () => {
-  let component: DatosParaMovilizacionComponent;
+  let componente: DatosParaMovilizacionComponent;
   let fixture: ComponentFixture<DatosParaMovilizacionComponent>;
 
-  let mockService: any;
-  let mockQuery: any;
+  let servicioMock: any;
+  let consultaMock: any;
 
-  const fakeCatalogos = [{ id: 1, descripcion: 'Camión' }];
-  const fakeFormulario = {
+  const catalogosFalsos = [{ id: 1, descripcion: 'Camión' }];
+  const formularioFalso = {
     medioDeTransporte: 'Camión',
     identificacionTransporte: '123',
     puntoVerificacion: 'Punto1',
@@ -22,16 +22,16 @@ describe('DatosParaMovilizacionComponent', () => {
   };
 
   beforeEach(async () => {
-    mockService = {
-      obtenerDatos: jest.fn().mockReturnValue(of({ formularioMovilizacion: fakeFormulario })),
-      obtenerDetallesDelCatalogo: jest.fn().mockImplementation((file: string) => {
-        return of({ data: fakeCatalogos });
+    servicioMock = {
+      obtenerDatos: jest.fn().mockReturnValue(of({ formularioMovilizacion: formularioFalso })),
+      obtenerDetallesDelCatalogo: jest.fn().mockImplementation((archivo: string) => {
+        return of({ data: catalogosFalsos });
       }),
       actualizarFormaValida: jest.fn(),
       actualizarFormularioMovilizacion: jest.fn()
     };
 
-    mockQuery = {
+    consultaMock = {
       selectConsultaioState$: of({ readonly: true })
     };
 
@@ -45,75 +45,75 @@ describe('DatosParaMovilizacionComponent', () => {
       ],
       providers: [
         FormBuilder,
-        { provide: ImportacionDeAcuiculturaService, useValue: mockService },
-        { provide: ConsultaioQuery, useValue: mockQuery }
+        { provide: ImportacionDeAcuiculturaService, useValue: servicioMock },
+        { provide: ConsultaioQuery, useValue: consultaMock }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosParaMovilizacionComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create component and initialize form with values', () => {
-    expect(component).toBeTruthy();
-    expect(component.formularioMovilizacion.value.nombreEmpresaTransportista).toBe('Empresa X');
+  it('debe crear el componente e inicializar el formulario con valores', () => {
+    expect(componente).toBeTruthy();
+    expect(componente.formularioMovilizacion.value.nombreEmpresaTransportista).toBe('Empresa X');
   });
 
-  it('should fetch transport and verification point catalogs', () => {
-    component.obtenerCatalogosTransporte();
-    component.obtenerCatalogosPuntos();
+  it('debe obtener los catálogos de transporte y punto de verificación', () => {
+    componente.obtenerCatalogosTransporte();
+    componente.obtenerCatalogosPuntos();
 
-    expect(mockService.obtenerDetallesDelCatalogo).toHaveBeenCalledWith('transporte.json');
-    expect(mockService.obtenerDetallesDelCatalogo).toHaveBeenCalledWith('punto.json');
+    expect(servicioMock.obtenerDetallesDelCatalogo).toHaveBeenCalledWith('transporte.json');
+    expect(servicioMock.obtenerDetallesDelCatalogo).toHaveBeenCalledWith('punto.json');
   });
 
-  it('should handle catalog error gracefully', () => {
-    mockService.obtenerDetallesDelCatalogo.mockReturnValueOnce(throwError(() => new Error('fail')));
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    component.obtenerCatalogosTransporte();
-    expect(consoleSpy).toHaveBeenCalledWith('Error al obtener datos de transporte:', expect.any(Error));
-    consoleSpy.mockRestore();
+  it('debe manejar el error de catálogo correctamente', () => {
+    servicioMock.obtenerDetallesDelCatalogo.mockReturnValueOnce(throwError(() => new Error('fallo')));
+    const consolaSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    componente.obtenerCatalogosTransporte();
+    expect(consolaSpy).toHaveBeenCalledWith('Error al obtener datos de transporte:', expect.any(Error));
+    consolaSpy.mockRestore();
   });
 
-  it('should disable form if readonly', () => {
-    component.esFormularioSoloLectura = true;
-    component.inicializarEstadoFormulario();
-    expect(component.formularioMovilizacion.disabled).toBe(true);
+  it('debe deshabilitar el formulario si es solo lectura', () => {
+    componente.esFormularioSoloLectura = true;
+    componente.inicializarEstadoFormulario();
+    expect(componente.formularioMovilizacion.disabled).toBe(true);
   });
 
-  it('should enable form if not readonly', () => {
-    component.esFormularioSoloLectura = false;
-    component.inicializarEstadoFormulario();
-    expect(component.formularioMovilizacion.enabled).toBe(true);
+  it('debe habilitar el formulario si no es solo lectura', () => {
+    componente.esFormularioSoloLectura = false;
+    componente.inicializarEstadoFormulario();
+    expect(componente.formularioMovilizacion.enabled).toBe(true);
   });
 
 
-  it('should call actualizarFormularioMovilizacion with form values', () => {
-    component.setValoresStore();
-    expect(mockService.actualizarFormularioMovilizacion).toHaveBeenCalledWith(fakeFormulario);
+  it('debe llamar a actualizarFormularioMovilizacion con los valores del formulario', () => {
+    componente.setValoresStore();
+    expect(servicioMock.actualizarFormularioMovilizacion).toHaveBeenCalledWith(formularioFalso);
   });
 
-  it('should clean up on destroy', () => {
-    const completeSpy = jest.spyOn((component as any).DESTROY_NOTIFIER$, 'complete');
-    component.ngOnDestroy();
-    expect(completeSpy).toHaveBeenCalled();
+  it('debe limpiar al destruir el componente', () => {
+    const completarSpy = jest.spyOn((componente as any).DESTROY_NOTIFIER$, 'complete');
+    componente.ngOnDestroy();
+    expect(completarSpy).toHaveBeenCalled();
   });
 
-  it('should validate form correctly', () => {
-    // Test valid form
-    component.formularioMovilizacion.patchValue({
+  it('debe validar el formulario correctamente', () => {
+    // Prueba formulario válido
+    componente.formularioMovilizacion.patchValue({
       medioDeTransporte: 'Camión',
       nombreEmpresaTransportista: 'Empresa Test'
     });
-    expect(component.validarFormulario()).toBe(true);
+    expect(componente.validarFormulario()).toBe(true);
 
-    // Test invalid form
-    component.formularioMovilizacion.patchValue({
+    // Prueba formulario inválido
+    componente.formularioMovilizacion.patchValue({
       medioDeTransporte: '',
       nombreEmpresaTransportista: ''
     });
-    expect(component.validarFormulario()).toBe(false);
+    expect(componente.validarFormulario()).toBe(false);
   });
 
 });

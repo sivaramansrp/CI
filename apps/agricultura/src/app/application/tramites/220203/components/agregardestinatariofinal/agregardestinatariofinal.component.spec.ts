@@ -7,7 +7,7 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
 import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
 
 describe('AgregardestinatariofinalComponent', () => {
-  let component: AgregardestinatariofinalComponent;
+  let componente: AgregardestinatariofinalComponent;
   let fixture: ComponentFixture<AgregardestinatariofinalComponent>;
 
   const mockCertificadoService = {
@@ -30,46 +30,46 @@ describe('AgregardestinatariofinalComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(AgregardestinatariofinalComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create component', () => {
-    expect(component).toBeTruthy();
+  it('debe crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should initialize form with default values', () => {
-    expect(component.destinatarioForm).toBeDefined();
-    expect(component.destinatarioForm.value.tipoMercancia).toBe('yes');
+  it('debe inicializar el formulario con valores por defecto', () => {
+    expect(componente.destinatarioForm).toBeDefined();
+    expect(componente.destinatarioForm.value.tipoMercancia).toBe('yes');
   });
 
-  it('should call store methods when form is valid on save', () => {
-    component.destinatarioForm.patchValue({
+  it('debe llamar los métodos del store cuando el formulario es válido al guardar', () => {
+    componente.destinatarioForm.patchValue({
       tipoMercancia: 'yes',
       razonSocial: 'Empresa',
       pais: 'MX',
       domicilio: 'Calle 1',
     });
-    component.onGuardarDestinatarioFinal();
+    componente.onGuardarDestinatarioFinal();
     expect(mockStore.updatedatosForma).toHaveBeenCalled();
     expect(mockStore.actualizarSelectedExdora).toHaveBeenCalled();
   });
 
-  it('should reset form on limpiar', () => {
-    component.destinatarioForm.patchValue({ razonSocial: 'Test' });
-    component.onLimpiarDestinatario();
-    expect(component.destinatarioForm.value.tipoMercancia).toBe('yes');
+  it('debe reiniciar el formulario al limpiar', () => {
+    componente.destinatarioForm.patchValue({ razonSocial: 'Test' });
+    componente.onLimpiarDestinatario();
+    expect(componente.destinatarioForm.value.tipoMercancia).toBe('yes');
   });
 
-  it('should emit cerrar on cancel', () => {
-    jest.spyOn(component.cerrar, 'emit');
-    component.onCancelarDestinatario();
-    expect(component.cerrar.emit).toHaveBeenCalled();
+  it('debe emitir cerrar al cancelar', () => {
+    jest.spyOn(componente.cerrar, 'emit');
+    componente.onCancelarDestinatario();
+    expect(componente.cerrar.emit).toHaveBeenCalled();
   });
 
-  it('should update validators on enCambioValorRadio', () => {
-    component.destinatarioForm.patchValue({ tipoMercancia: 'no' });
-    component.enCambioValorRadio();
-    expect(component.destinatarioForm.get('nombre')?.validator).toBeTruthy();
+  it('debe actualizar los validadores en enCambioValorRadio', () => {
+    componente.destinatarioForm.patchValue({ tipoMercancia: 'no' });
+    componente.enCambioValorRadio();
+    expect(componente.destinatarioForm.get('nombre')?.validator).toBeTruthy();
   });
 });
