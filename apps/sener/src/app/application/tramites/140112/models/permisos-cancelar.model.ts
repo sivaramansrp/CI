@@ -61,4 +61,9 @@ export interface PermisosCancelar {
     * Descripción genérica del permiso, almacenada como CLOB.
     */
     descripcionClobGenerica1?: string;
+
+    /**
+     * Indica si se ha marcado la declaración de veracidad.
+     */
+    declaracionBoolean?: boolean;
 }

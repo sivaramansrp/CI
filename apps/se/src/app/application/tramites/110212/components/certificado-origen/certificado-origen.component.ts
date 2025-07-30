@@ -1,4 +1,4 @@
-import { AlertComponent, ConsultaioQuery, ConsultaioState, REGEX_PATRON_DECIMAL_2 } from '@libs/shared/data-access-user/src';
+import { AlertComponent, ConsultaioQuery, ConsultaioState, REGEX_PATRON_DECIMAL_15_4 } from '@libs/shared/data-access-user/src';
 import { COLUMNAS_DSPONIBLES, COLUMNAS_SELECCIONADAS, FECHAFACTURA } from '../../constants/validacion-posteriori.enum';
 import { Catalogo } from '../../models/validacion-posteriori.model';
 import { CatalogoLista } from '../../models/validacion-posteriori.model';
@@ -415,21 +415,21 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       ],
       cantidad: [
         this.solicitudState?.formularioMercancia?.cantidad,
-        [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
+        [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_15_4)],
       ],
       pais: ['', [Validators.required]],
       valorDelaMercancia: [
         this.solicitudState?.formularioMercancia?.valorDelaMercancia,
-        [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],
+        [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_15_4)],
       ],
       complementoDelaDescripcion: [
         this.solicitudState?.formularioMercancia?.complementoDelaDescripcion,
-        [Validators.required],
+        [Validators.required, Validators.maxLength(200)],
       ],
       fecha: [this.solicitudState?.formularioMercancia?.fecha, []],
       numeroFactura: [
         this.solicitudState?.formularioMercancia?.numeroFactura,
-        [],
+        [Validators.required],
       ],
       tipoFactura: [this.solicitudState?.formularioMercancia?.tipoFactura, []],
     });

@@ -112,7 +112,7 @@ export interface NicoInfo {
       orden: 4,
     },
     {
-      encabezado: 'Denominación común, nombre común o nombre científico',
+      encabezado: 'Denominación o nombre científico',
       clave: (ele: MercanciasInfo) => ele.denominacionComun,
       orden: 5,
     },
@@ -132,7 +132,7 @@ export interface NicoInfo {
       orden: 8,
     },
     {
-      encabezado: 'Descripción de la fracción',
+      encabezado: 'Descripción de la fracción arancelaria',
       clave: (ele: MercanciasInfo) => ele.descripcionFraccion,
       orden: 9,
     },
