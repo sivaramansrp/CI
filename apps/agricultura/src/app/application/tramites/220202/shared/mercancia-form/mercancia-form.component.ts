@@ -34,6 +34,7 @@ import {
 } from '../../models/220202/fitosanitario.model';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @Component({
   selector: 'app-mercancia-form',
@@ -44,6 +45,7 @@ import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
     TituloComponent,
     ReactiveFormsModule,
     CrosslistComponent,
+    TooltipModule
   ],
   templateUrl: './mercancia-form.component.html',
 })
@@ -232,20 +234,20 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
     this.mercanciaForm = this.fb.group({
       tipoRequisito: ['', Validators.required],
       requisito: ['', Validators.required],
-      numeroCertificado: [
+      numeroCertificadoInternacional: [
         '',
-        [Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)],
+        [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)],
       ],
       fraccionArancelaria: ['', Validators.required],
-      descripcionFraccion: [''],
+      descripcionFraccion: [{ value: '', disabled: true }],
       nico: ['', Validators.required],
-      descripcionNico: [''],
+      descripcionNico: [{ value: '', disabled: true }],
       descripcion: [
         '',
-        [Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)],
+        [Validators.required, Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)],
       ],
       cantidadUMT: ['', [Validators.required, MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
-      umt: [{ value: '', disabled: true }, Validators.required],
+      umt: [{ value: '', disabled: true }],
       cantidadUMC: ['', [Validators.required, MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
       umc: ['', Validators.required],
       uso: ['', Validators.required],
@@ -271,7 +273,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
             this.mercanciaForm.patchValue({
               tipoRequisito: FOUND.tipoRequisito || '1',
               requisito: FOUND.requisito || '',
-              numeroCertificado: FOUND.numeroCertificadoInternacional || '',
+              numeroCertificadoInternacional: FOUND.numeroCertificadoInternacional || '',
               fraccionArancelaria: FOUND.fraccionArancelaria || '',
               descripcionFraccion: FOUND.descripcionFraccion || '',
               nico: FOUND.nico || '',
@@ -289,6 +291,21 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
             });
           }
         });
+    }
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Aquí se completa el sujeto de destrucción para evitar fugas de memoria.
+   */
+  tipoSelecionada(event: Catalogo): void {
+    const FRACCION_SELECCIONADA = this.fraccionArancelariaList.find((fraccion) => fraccion.id === event.id);
+    if (FRACCION_SELECCIONADA) {
+      this.mercanciaForm.patchValue({
+        descripcionFraccion: FRACCION_SELECCIONADA.descripcion,
+        descripcionNico: FRACCION_SELECCIONADA.descripcion,
+        umt: FRACCION_SELECCIONADA.descripcion
+      });
     }
   }
 
