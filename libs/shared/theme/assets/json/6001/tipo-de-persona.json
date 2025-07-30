@@ -2,8 +2,8 @@
 {
     "code": 200,
     "data": [
-    { "id": 1, "descripcion": "Moral" },
-    { "id": 2, "descripcion": "Física" }
+    { "id": "Moral", "descripcion": "Moral" },
+    { "id": "Física", "descripcion": "Física" }
   ],
     "message": "Consulta exitosa"
 }
