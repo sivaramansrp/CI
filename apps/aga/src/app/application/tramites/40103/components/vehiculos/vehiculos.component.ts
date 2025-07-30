@@ -1,15 +1,15 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Modal } from 'bootstrap';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 
 import {
   Catalogo,
+  ConsultaioQuery,
+  ConsultaioState,
   Notificacion,
   TablaSeleccion,
-  ValidacionesFormularioService,
-  ConsultaioQuery,
-  ConsultaioState
+  ValidacionesFormularioService
 } from '@ng-mf/data-access-user';
 
 import {

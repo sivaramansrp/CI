@@ -11,12 +11,12 @@
  * @implements {OnInit}
  */
 
-import { Component, Input, Output, EventEmitter, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CatalogoSelectComponent, NotificacionesComponent, Notificacion, TipoNotificacionEnum, CategoriaMensaje } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, CategoriaMensaje, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
 import { modificarTerrestreService } from '../../../services/modificacar-terrestre.service';
-import { takeUntil, Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-unidad-dialog',
@@ -165,7 +165,7 @@ export class UnidadDialogComponent implements OnInit {
       const maxId = Math.max(...this.unidades.map(u => Number(u.idDeUnidad) || 0));
       nextId = maxId + 1;
     }
-    const isEdit = !!(this.unidad && this.unidad.idDeUnidad);
+    const isEdit = Boolean(this.unidad && this.unidad.idDeUnidad);
     this.unidadForm = this.fb.group({
       numero: [this.unidad?.numero || '', [Validators.required, Validators.maxLength(20)]],
       tipoDeUnidad: [this.unidad?.tipoDeUnidad || '', Validators.required],
@@ -214,7 +214,7 @@ export class UnidadDialogComponent implements OnInit {
    * Limpia los datos del formulario de unidad, manteniendo el idDeUnidad y deshabilitando los campos necesarios.
    */
   limpiarUnidadData(): void {
-    if (!this.unidadForm) return;
+    if (!this.unidadForm) {return;}
     const idValue = this.unidadForm.get('idDeUnidad')?.value;
     this.unidadForm.reset();
     this.unidadForm.get('idDeUnidad')?.setValue(idValue);

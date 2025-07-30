@@ -147,7 +147,6 @@ import {
   CONFIRMAR_ELIMINAR_SOLICITUD,
   MSG_ADUANA_PEDIMENTO,
   MSG_BORRAR_CAMPOS_RECINTOS,
-  MSG_ERROR_NO_INFORMACION,
   MSG_ERROR_RFC_NO_ENCONTRADO,
   MSG_ERROR_SELECCIONE_REGISTRO,
   MSG_MONTO_PAGADO_CUBIERTO,
@@ -1367,6 +1366,9 @@ export class SolicitudComponent
     }
 
     if (RFC_IMP_EXP && this.datosImportadorExportador.get('RFCImpExp')?.valid) {
+      // Clear previous RFC data before loading new data
+      this.limpiarDatosPreviosRFC();
+      
       this.validaRfcService
         .getValidacionRfc(RFC_IMP_EXP)
         .pipe(
@@ -3538,6 +3540,47 @@ export class SolicitudComponent
   }
 
   /**
+   * @description Limpia los datos previos del RFC antes de cargar nueva información.
+   * Este método se asegura de que no persistan datos del RFC anterior.
+   * @returns {void} No retorna ningún valor.
+   */
+  private limpiarDatosPreviosRFC(): void {
+    // Clear only the certification-related fields but keep the RFC and name
+    const EMPTY_CHECKBOX_DATA: DatosCheckInputText = {
+      checkbox: false,
+      texto: '',
+      disabled: true,
+    };
+
+    // Reset checkbox components without clearing RFC and name
+    this.checkPrograma(EMPTY_CHECKBOX_DATA);
+    this.checkImmex(EMPTY_CHECKBOX_DATA);
+    this.checkAutomotriz(EMPTY_CHECKBOX_DATA);
+
+    // Clear certification flags in the form
+    this.datosImportadorExportador.patchValue({
+      tipoEmpresaCertificadaA: false,
+      tipoEmpresaCertificadaAA: false,
+      tipoEmpresaCertificadaAAA: false,
+      certificacionOEA: false,
+      revision: false,
+    });
+
+    // Clear certification flags in the store
+    this.tramite5701Store.update({
+      tipoEmpresaCertificada: '',
+      certificacionOEA: false,
+      revision: false,
+      checkIMMEX: false,
+      descripcionImmex: '',
+      programa: false,
+      descripcionProgramaFomento: '',
+      industriaAutomotriz: false,
+      descripcionIndustrialAutomotriz: '',
+    });
+  }
+
+  /**
    * @description Desactiva los campos de certificaciones y limpia los valores del store.
    * @returns {void} No retorna ningún valor.
    */
@@ -3550,6 +3593,13 @@ export class SolicitudComponent
       tipoEmpresaCertificadaAAA: false,
       certificacionOEA: false,
       revision: false,
+      // Clear checkbox fields and their descriptions
+      programa: false,
+      desProgramaFomento: '',
+      checkIMMEX: false,
+      desImmex: '',
+      industriaAutomotriz: false,
+      desIndustrialAutomotriz: '',
     });
 
     /** Limpia store */
@@ -3569,6 +3619,18 @@ export class SolicitudComponent
       industriaAutomotriz: false,
       descripcionIndustrialAutomotriz: '',
     });
+
+    // Reset checkbox components with proper data structure
+    const EMPTY_CHECKBOX_DATA: DatosCheckInputText = {
+      checkbox: false,
+      texto: '',
+      disabled: true,
+    };
+
+    // Reset each checkbox component programmatically
+    this.checkPrograma(EMPTY_CHECKBOX_DATA);
+    this.checkImmex(EMPTY_CHECKBOX_DATA);
+    this.checkAutomotriz(EMPTY_CHECKBOX_DATA);
 
     // Deshabilitar todos los checkboxes de tipo empresa certificada
     this.tipoEmpresaCertificadaADisabled = true;

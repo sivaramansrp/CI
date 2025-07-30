@@ -11,13 +11,13 @@ import { Modal } from 'bootstrap';
 import {
   AlertComponent,
   CatalogoSelectComponent,
-  InputCheckComponent, REGEX_POSTAL,
-  REGEX_TELEFONO_DIGITOS,
-  TableBodyData, TableComponent,
+  ConfiguracionColumna, InputCheckComponent,
+  REGEX_POSTAL,
+  REGEX_TELEFONO_DIGITOS, TablaDinamicaComponent,
+  TableBodyData,
+  TableComponent,
   TituloComponent,
-  ValidacionesFormularioService,
-  TablaDinamicaComponent,
-  ConfiguracionColumna
+  ValidacionesFormularioService
 } from '@libs/shared/data-access-user/src';
 
 import {
@@ -25,9 +25,9 @@ import {
   Solicitud103State,
   Tramite103Store
 } from '../estados/tramite103.store';
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { takeUntil, map, merge } from 'rxjs';
+import { map, merge, takeUntil } from 'rxjs';
 import { Tramite103Query } from '../estados/tramite103.query';
 
 /**
@@ -56,8 +56,8 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    * Helper to get description from catalog by id or description value.
    */
   obtenerDescripcion(catalog: Catalogo[] | undefined, value: any): string {
-    if (!catalog) return value;
-    let found = catalog.find(item => item.id === value || item.id === Number(value) || item.descripcion === value);
+    if (!catalog) {return value;}
+    const found = catalog.find(item => item.id === value || item.id === Number(value) || item.descripcion === value);
     return found ? found.descripcion : value;
   }
 
@@ -105,7 +105,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   agregarMercanciasConfirm(): void {
     this.envioIntentado = true;
     const datos = this.agregarMercanciasForm.get('datosMercancia');
-    if (!datos) return;
+    if (!datos) {return;}
     const vehiculoSeleccionado = datos.get('vehiculo')?.value;
     // Campos principales requeridos
     const camposPrincipales = [
@@ -115,7 +115,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
       'condicionMercancia',
       'unidadMedida'
     ];
-    let camposValidos = camposPrincipales.every(campo => {
+    const camposValidos = camposPrincipales.every(campo => {
       const ctrl = datos.get(campo);
       return ctrl && ctrl.value !== null && ctrl.value !== '';
     });
@@ -209,7 +209,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   eliminarFila(index: number | null): void {
-    if (index === null || index === undefined) return;
+    if (index === null || index === undefined) {return;}
     this.mercanciaBodyData.splice(index, 1);
     this.getMercanciaTableData.mercanciaTable.tableBody.splice(index, 1);
     this.mercanciaBodyData = [...this.mercanciaBodyData];
@@ -828,7 +828,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    */
   agregarMercancias(): void {
     const datos = this.agregarMercanciasForm.get('datosMercancia');
-    if (!datos) return;
+    if (!datos) {return;}
     const vehiculoSeleccionado = datos.get('vehiculo')?.value;
     // Campos principales requeridos
     const camposPrincipales = [
@@ -838,7 +838,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
       'condicionMercancia',
       'unidadMedida'
     ];
-    let camposValidos = camposPrincipales.every(campo => {
+    const camposValidos = camposPrincipales.every(campo => {
       const ctrl = datos.get(campo);
       return ctrl && ctrl.value !== null && ctrl.value !== '';
     });
@@ -849,15 +849,15 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
       const DATOS = {
         tbodyData: [
           valores.tipoDeMercancia ?? '', // 0: Tipo de mercancía
-          valores.cantidad ?? '',        // 1: Cantidad
-          valores.unidadMedida ?? '',    // 2: Unidad de medida de Comercialización
-          valores.ano ?? '',             // 3: Año
-          valores.modelo ?? '',          // 4: Modelo
-          valores.marca ?? '',           // 5: Marca
-          valores.serie ?? '',           // 6: Numero de serie
-          valores.usoEspecifico ?? '',   // 7: Uso específico (NEW)
+          valores.cantidad ?? '', // 1: Cantidad
+          valores.unidadMedida ?? '', // 2: Unidad de medida de Comercialización
+          valores.ano ?? '', // 3: Año
+          valores.modelo ?? '', // 4: Modelo
+          valores.marca ?? '', // 5: Marca
+          valores.serie ?? '', // 6: Numero de serie
+          valores.usoEspecifico ?? '', // 7: Uso específico (NEW)
           valores.condicionMercancia ?? '', // 8: Condición de la mercancía
-          vehiculoValue                  // 9: Vehículo
+          vehiculoValue // 9: Vehículo
         ]
       };
       if (this.filaEditando !== null) {
@@ -890,15 +890,15 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
       const DATOS = {
         tbodyData: [
           valores.tipoDeMercancia ?? '', // 0: Tipo de mercancía
-          valores.cantidad ?? '',        // 1: Cantidad
-          valores.unidadMedida ?? '',    // 2: Unidad de medida de Comercialización
-          valores.ano ?? '',             // 3: Año
-          valores.modelo ?? '',          // 4: Modelo
-          valores.marca ?? '',           // 5: Marca
-          valores.serie ?? '',           // 6: Numero de serie
-          valores.usoEspecifico ?? '',   // 7: Uso específico (NEW)
+          valores.cantidad ?? '', // 1: Cantidad
+          valores.unidadMedida ?? '', // 2: Unidad de medida de Comercialización
+          valores.ano ?? '', // 3: Año
+          valores.modelo ?? '', // 4: Modelo
+          valores.marca ?? '', // 5: Marca
+          valores.serie ?? '', // 6: Numero de serie
+          valores.usoEspecifico ?? '', // 7: Uso específico (NEW)
           valores.condicionMercancia ?? '', // 8: Condición de la mercancía
-          vehiculoValue                  // 9: Vehículo
+          vehiculoValue // 9: Vehículo
         ]
       };
       if (this.filaEditando !== null) {

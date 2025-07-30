@@ -364,7 +364,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       'archivoMedicamentos'
     ) as HTMLInputElement;
     const FILE = FILE_INPUT.files?.[0];
-    if (!FILE) return;
+    if (!FILE) {return;}
 
     const isCsv = FILE.type === 'text/csv' || FILE.name.toLowerCase().endsWith('.csv');
     if (isCsv) {
