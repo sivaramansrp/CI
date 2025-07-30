@@ -14,8 +14,8 @@
   
       <ng-container>
         <solicitante [hidden]="indice !== 1" #solicitanteRef></solicitante>
-        <app-solicitud-datos *ngIf="esDatosRespuesta" [hidden]="indice !== 2"></app-solicitud-datos>
-        <app-revision-documental *ngIf="esDatosRespuesta" [hidden]="indice !== 3"></app-revision-documental>
+        <app-solicitud-datos *ngIf="esDatosRespuesta" [hidden]="indice !== 2" #solicitudDatosRef></app-solicitud-datos>
+        <app-revision-documental *ngIf="esDatosRespuesta" [hidden]="indice !== 3" #revisionDocumentalRef></app-revision-documental>
       </ng-container>
     </div>
   </div>
