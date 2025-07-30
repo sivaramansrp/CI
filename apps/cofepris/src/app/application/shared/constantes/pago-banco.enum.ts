@@ -5,7 +5,7 @@
  * - habilitado: Indica si el campo está habilitado para edición.
  */
 export const INPUT_FECHA_CONFIG = {
-  labelNombre: 'Fecha de pago',
+  labelNombre: 'Fecha de pago:',
   required: false,
   habilitado: true,
 };
