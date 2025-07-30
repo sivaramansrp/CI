@@ -1,18 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PasoTresComponent } from './paso-tres.component';
-import { HttpClient } from '@angular/common/http';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { FirmaElectronicaComponent, } from '@ng-mf/data-access-user';
-
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { ToastrModule } from 'ngx-toastr';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoTresComponent', () => {
-  let component: PasoTresComponent;
+  let componente: PasoTresComponent;
   let fixture: ComponentFixture<PasoTresComponent>;
-  let httpClient: HttpClient;
-  let httpTestingController: HttpTestingController;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -21,11 +15,11 @@ describe('PasoTresComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('debe crearse', () => {
+    expect(componente).toBeTruthy();
   });
 });

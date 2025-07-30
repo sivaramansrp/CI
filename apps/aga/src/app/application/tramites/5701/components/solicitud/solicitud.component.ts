@@ -2701,7 +2701,7 @@ export class SolicitudComponent
               txtBtnAceptar: TEXTO_ACEPTAR,
               txtBtnCancelar: CAMPO_VACIO,
             };
-            this.datosTablaPagos.push(PAGO);
+            this.datosTablaPagos = [...this.datosTablaPagos, PAGO];
           } else {
             this.nuevaNotificacion = {
               tipoNotificacion: 'alert',

@@ -67,6 +67,8 @@ export interface Tramite260911State {
   apellidoPaterno: string;
   /** Apellido materno del representante legal */
   apellidoMaterno: string;
+  /** Número de permiso de importación CNSNS */
+  importPermitNumberCNSNS?: string;
 }
 
 /**
@@ -105,6 +107,7 @@ export function createInitialState(): Tramite260911State {
     nombre: '',
     apellidoPaterno: '',
     apellidoMaterno: '',
+    importPermitNumberCNSNS: undefined,
   };
 }
 
