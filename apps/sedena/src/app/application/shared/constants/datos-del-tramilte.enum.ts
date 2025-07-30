@@ -28,7 +28,7 @@ export const CROSLISTA_ADUANAS_DISPONIBLES: string[] = [
  * @description Representa códigos específicos utilizados en el sistema para identificar tipos de permisos definitivos.
  */
 export const PERMISO_DEFINITIVO_TITULO = [
-  240119, 240120, 240118, 240107, 240106, 240108, 240308, 240117, 240121, 240405, 240111, 240305, 240311, 240411, 240122, 240407, 240123, 240321, 240112
+  240119, 240120, 240118, 240107, 240106, 240108, 240308, 240117, 240121, 240405, 240111, 240305, 240311, 240411, 240122, 240407, 240123, 240321, 240112,240105
 ];
 
 /**
@@ -82,6 +82,7 @@ export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<
   [240411, 'paise destino'],
   [240407, 'País destino'],
   [240102, 'País destino'],
+  [240105, 'País destino'],
 ]);
 
 /**
@@ -91,7 +92,7 @@ export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<
  * @type {number[]}
  * @description Contiene un arreglo de identificadores numéricos que representan mercancías específicas para las cuales se permite mostrar la lista cruzada.
  */
-export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107, 240117, 240121, 240111, 240311, 240122];
+export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107, 240117, 240121, 240111, 240311, 240122,240105];
 
 /**
  * Período del semestre habilitado.
@@ -101,7 +102,7 @@ export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107, 240
  * @description Contiene un arreglo de números que identifican el semestre habilitado. Este valor puede ser utilizado para validar o configurar funcionalidades relacionadas con el período académico activo.
  */
 export const PERIODO_SEMESTRE_HABILITADO = [
-  240119, 240108, 240107, 240114, 240106, 240308, 240117, 240121, 240405, 240111, 240305, 240311, 240411, 240407, 240321
+  240119, 240108, 240107, 240114, 240106, 240308, 240117, 240121, 240405, 240111, 240305, 240311, 240411, 240407, 240321,240105
 ];
 
 /**
@@ -160,6 +161,10 @@ export const PERIODO_UNO_SEMESTRE = [
   {
     label: '1° semestre',
     value: 'unoSemestre',
+  },
+    {
+    label: '2° semestre',
+    value: 'dosSemestre',
   },
 ];
 

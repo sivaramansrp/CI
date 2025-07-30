@@ -38,6 +38,12 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   @Output() cerrar = new EventEmitter<void>();
 
   /**
+   * @description Indica si se deben usar botones personalizados en el formulario.
+   * @default true
+   * @type {boolean}
+   */
+  usarBotonesPersonalizados: boolean = true;
+  /**
    * @description Referencia al componente ModalComponent dentro de la plantilla.
    * Utiliza el decorador ViewChild para acceder a la instancia del modal y manipularlo desde el código TypeScript.
    * @example

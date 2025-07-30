@@ -257,13 +257,14 @@
         <app-input-radio
           [radioOptions]="periodoUnoSemestreOpciones"
           [isRequired]="true"
-          [layout]="'vertical'"
+          [layout]="'horizontal'"
+          [gap]="'10px'"
           formControlName="unoSemestre"
           (valueChange)="actualizarUnoSemestre($event)"
           [disabled]="esFormularioSoloLectura"
         ></app-input-radio>
       </div>
-      <div class="col-md-4">
+      <!-- <div class="col-md-4">
         <app-input-radio
           [radioOptions]="periodoUnoSemestreRadioOpciones"
           [isRequired]="true"
@@ -272,7 +273,7 @@
           (valueChange)="actualizarDosSemestre($event)"
           [disabled]="esFormularioSoloLectura"
         ></app-input-radio>
-      </div>
+      </div> -->
     </div>
 
     <div class="row">
