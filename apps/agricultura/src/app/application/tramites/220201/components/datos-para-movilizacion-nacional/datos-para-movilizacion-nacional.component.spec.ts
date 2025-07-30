@@ -6,7 +6,7 @@ import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-acce
 import { ReactiveFormsModule } from '@angular/forms';
 
 describe('DatosParaMovilizacionNacionalComponent', () => {
-  let COMPONENT: DatosParaMovilizacionNacionalComponent;
+  let COMPONENTE: DatosParaMovilizacionNacionalComponent;
   let FIXTURE: ComponentFixture<DatosParaMovilizacionNacionalComponent>;
 
   beforeEach(async () => {
@@ -17,11 +17,11 @@ describe('DatosParaMovilizacionNacionalComponent', () => {
       .compileComponents();
 
     FIXTURE = TestBed.createComponent(DatosParaMovilizacionNacionalComponent);
-    COMPONENT = FIXTURE.componentInstance;
+    COMPONENTE = FIXTURE.componentInstance;
     FIXTURE.detectChanges();
   });
 
-  it('should create', () => {
-    expect(COMPONENT).toBeTruthy();
+  it('debe crear el componente', () => {
+    expect(COMPONENTE).toBeTruthy();
   });
 });
