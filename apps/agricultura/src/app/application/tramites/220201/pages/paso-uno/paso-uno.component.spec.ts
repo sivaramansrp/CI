@@ -1,5 +1,3 @@
-// paso-uno.component.spec.ts
-
 import { Subject, of, throwError } from 'rxjs';
 import { PasoUnoComponent } from './paso-uno.component';
 
@@ -9,33 +7,32 @@ describe('PasoUnoComponent', () => {
   let seccionStoreMock: any;
   let certificadoServiceMock: any;
   let consultaQueryMock: any;
+  let certificadoZoosanitarioStoreMock: any;
 
   beforeEach(() => {
-    // Mocks for injected dependencies
     seccionStoreMock = {
       establecerFormaValida: jest.fn(),
       establecerSeccion: jest.fn(),
     };
 
-    // Mock guardarDatosFormulario to return an Observable to avoid .pipe() error
     certificadoServiceMock = {
       guardarDatosFormulario: jest.fn().mockReturnValue(of({})),
       storeDatosFormulario: jest.fn(),
     };
 
-    // Subject to simulate consultaQuery observable
     consultaQueryMock = {
       selectConsultaioState$: new Subject<any>(),
     };
 
-    // Instantiate component with mocks
+    certificadoZoosanitarioStoreMock = {};
+
     component = new PasoUnoComponent(
       seccionStoreMock,
       certificadoServiceMock,
-      consultaQueryMock
+      consultaQueryMock,
+      certificadoZoosanitarioStoreMock
     );
 
-    // Mock child components with necessary properties/methods
     component.solicitante = {
       form: {
         invalid: false,
@@ -60,17 +57,15 @@ describe('PasoUnoComponent', () => {
     jest.clearAllMocks();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should subscribe and call guardarDatosFormulario on update=true', (done) => {
-    // Spy on guardarDatosFormulario
+  it('debe suscribirse y llamar guardarDatosFormulario cuando update=true', (done) => {
     const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
 
     component.ngOnInit();
 
-    // Emit update=true to simulate observable emission
     (consultaQueryMock.selectConsultaioState$ as Subject<any>).next({ update: true });
 
     setTimeout(() => {
@@ -79,7 +74,7 @@ describe('PasoUnoComponent', () => {
     }, 0);
   });
 
-  it('should call service methods correctly on guardarDatosFormulario success', (done) => {
+  it('debe llamar los métodos del servicio correctamente al guardarDatosFormulario exitoso', (done) => {
     const fakeData = { foo: 'bar' };
     certificadoServiceMock.guardarDatosFormulario.mockReturnValue(of(fakeData));
 
@@ -94,7 +89,7 @@ describe('PasoUnoComponent', () => {
     }, 0);
   });
 
-  it('should handle error in guardarDatosFormulario', (done) => {
+  it('debe manejar el error en guardarDatosFormulario', (done) => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
     certificadoServiceMock.guardarDatosFormulario.mockReturnValue(throwError(() => new Error('API error')));
 
@@ -111,37 +106,33 @@ describe('PasoUnoComponent', () => {
 
   describe('validarFormularios', () => {
 
-    it('should return false if any child component is missing or invalid', () => {
-      // No solicitante component
+    it('debe regresar falso si falta algún componente hijo o es inválido', () => {
       component.solicitante = undefined as any;
       expect(component.validarFormularios()).toBe(false);
 
       component.solicitante = {
         form: { invalid: false, markAllAsTouched: jest.fn() }
       } as any;
-      // datosDelaSolicitu missing
       component.datosDelaSolicitu = undefined as any;
       expect(component.validarFormularios()).toBe(false);
 
-      // datosParaMovilizacionNacional missing
       component.datosDelaSolicitu = { validarFormulario: () => true } as any;
       component.datosParaMovilizacionNacional = undefined as any;
       expect(component.validarFormularios()).toBe(false);
 
-      // pagoDeDerechosComponent missing
       component.datosParaMovilizacionNacional = { validarFormulario: () => true } as any;
       component.pagoDeDerechosComponent = undefined as any;
       expect(component.validarFormularios()).toBe(false);
     });
   });
 
-  it('should update indice on seleccionaTab', () => {
+  it('debe actualizar el índice al seleccionar una pestaña', () => {
     expect(component.indice).toBe(1);
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
   });
 
-  it('should call destroyNotifier$ next and complete on ngOnDestroy', () => {
+  it('debe llamar next y complete en destroyNotifier$ al ejecutar ngOnDestroy', () => {
     const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
     const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
 

@@ -1,4 +1,3 @@
-// agregardestinatario.component.spec.ts
 import { FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
@@ -13,7 +12,6 @@ describe('AgregardestinatarioComponent', () => {
   let consultaAcuicultura: Partial<AcuiculturaQuery>;
 
   beforeEach(() => {
-    // Servicios simulados
     servicioTerceros = {
       obtenerSelectorList: jest.fn().mockReturnValue(of([]))
     };
@@ -30,13 +28,13 @@ describe('AgregardestinatarioComponent', () => {
     componente = new AgregardestinatarioComponent(
       new FormBuilder(),
       servicioTerceros as TercerosrelacionadosService,
-      {} as any, // Router no usado directamente en los métodos probados
+      {} as any,
       servicioImportacion as ImportacionDeAcuiculturaService,
       consultaAcuicultura as AcuiculturaQuery,
-      {} as any // ActivatedRoute no usado aquí
+      {} as any
     );
 
-    componente.ngOnInit(); // Inicializar formulario
+    componente.ngOnInit();
   });
 
   it('debe crear el formulario con valores predeterminados y validadores', () => {
@@ -90,7 +88,7 @@ describe('AgregardestinatarioComponent', () => {
       estado: '01',
       calle: 'Calle 1',
       numeroExterior: '123'
-    }); // datos mínimos válidos
+    });
 
     const espiaActualizar = jest.spyOn(servicioImportacion, 'updateTercerosRelacionado');
     const espiaCerrar = jest.spyOn(componente.cerrar, 'emit');
@@ -112,7 +110,7 @@ describe('AgregardestinatarioComponent', () => {
       estado: '',
       calle: '',
       numeroExterior: ''
-    }); // formulario inválido
+    });
 
     const espiaMarcarTocado = jest.spyOn(componente.destinatarioForm, 'markAllAsTouched');
     componente.onGuardarDestinatario();

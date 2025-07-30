@@ -1,4 +1,3 @@
-// agricultura-api.service.spec.ts
 import { HttpClient } from '@angular/common/http';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
@@ -13,7 +12,7 @@ describe('AgriculturaApiService', () => {
     httpClientMock = {
       get: jest.fn()
     };
-    seccionStoreMock = {}; // No methods used directly in this service for tests
+    seccionStoreMock = {};
 
     service = new AgriculturaApiService(
       httpClientMock as HttpClient,
@@ -21,11 +20,11 @@ describe('AgriculturaApiService', () => {
     );
   });
 
-  it('should be created', () => {
+  it('debe crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('obtenerSelectorList should call http.get with correct url and map response data', (done) => {
+  it('obtenerSelectorList debe llamar a http.get con la url correcta y mapear la respuesta', (done) => {
     const fileName = 'catalogo.json';
     const mockResponse = { data: [{ id: 1, nombre: 'Catalogo1' }] };
 
@@ -38,7 +37,7 @@ describe('AgriculturaApiService', () => {
     });
   });
 
-  it('obtenerRespuestaPorUrl should call http.get with correct url', (done) => {
+  it('obtenerRespuestaPorUrl debe llamar a http.get con la url correcta', (done) => {
     const url = 'datos-solicitud.json';
     const mockData = { id: 123, nombre: 'Solicitud' };
 
@@ -51,7 +50,7 @@ describe('AgriculturaApiService', () => {
     });
   });
 
-  it('obtenerProductoRespuestaPorUrl should call http.get with correct url', (done) => {
+  it('obtenerProductoRespuestaPorUrl debe llamar a http.get con la url correcta', (done) => {
     const url = 'productos-catalogo.json';
     const mockData = { productos: ['producto1', 'producto2'] };
 

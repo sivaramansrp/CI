@@ -35,16 +35,16 @@ describe('AgregardestinatariofinalComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with default values', () => {
+  it('debe inicializar el formulario con valores por defecto', () => {
     expect(component.destinatarioForm).toBeDefined();
     expect(component.destinatarioForm.value.tipoMercancia).toBe('yes');
   });
 
-  it('should call store methods when form is valid on save', () => {
+  it('debe llamar métodos del store al guardar si el formulario es válido', () => {
     component.destinatarioForm.patchValue({
       tipoMercancia: 'yes',
       razonSocial: 'Empresa',
@@ -56,19 +56,19 @@ describe('AgregardestinatariofinalComponent', () => {
     expect(mockStore.actualizarSelectedExdora).toHaveBeenCalled();
   });
 
-  it('should reset form on limpiar', () => {
+  it('debe limpiar el formulario al llamar limpiar', () => {
     component.destinatarioForm.patchValue({ razonSocial: 'Test' });
     component.onLimpiarDestinatario();
     expect(component.destinatarioForm.value.tipoMercancia).toBe('yes');
   });
 
-  it('should emit cerrar on cancel', () => {
+  it('debe emitir cerrar al cancelar', () => {
     jest.spyOn(component.cerrar, 'emit');
     component.onCancelarDestinatario();
     expect(component.cerrar.emit).toHaveBeenCalled();
   });
 
-  it('should update validators on enCambioValorRadio', () => {
+  it('debe actualizar validadores al cambiar el valor del radio', () => {
     component.destinatarioForm.patchValue({ tipoMercancia: 'no' });
     component.enCambioValorRadio();
     expect(component.destinatarioForm.get('nombre')?.validator).toBeTruthy();
