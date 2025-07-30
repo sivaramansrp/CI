@@ -158,6 +158,11 @@ export class SolicitudPageComponent implements OnInit {
    */
   public folioTemporal: number = 0;
 
+  /**
+   * Indica si hay archivos seleccionados.
+   */
+  public hayArchivosSeleccionados: boolean = false;
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -744,5 +749,20 @@ export class SolicitudPageComponent implements OnInit {
    */
   cargaRealizada(cargaRealizada: boolean): void {
     this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+   * Método para verificar si hay archivos seleccionados
+   * Este método debería ser llamado desde el componente hijo cuando se seleccionen archivos
+   */
+  onArchivosSeleccionados(hayArchivos: boolean): void {
+    this.hayArchivosSeleccionados = hayArchivos;
+  }
+
+  /**
+   * Método para resetear el estado cuando se cambie de paso
+   */
+  resetearEstadoArchivos(): void {
+    this.hayArchivosSeleccionados = false;
   }
 }

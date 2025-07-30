@@ -11,3 +11,29 @@
 .align-center {
     text-align: center !important;
 }
+
+.custom-banner-azul {
+  background-color: #b3d9ff !important; /* Azul claro */
+  border-color: #87ceeb !important;
+  color: #004080 !important; /* Texto azul oscuro para contraste */
+  
+  .alert-link {
+    color: #003366 !important;
+  }
+  
+  /* Ocultar el botón de cerrar */
+  .close, .btn-close {
+    display: none !important;
+  }
+}
+
+/* Alternativa global si necesitas aplicarlo a todos los banners */
+::ng-deep .custom-banner-azul {
+  background-color: #b3d9ff !important;
+  border-color: #87ceeb !important;
+  color: #004080 !important;
+  
+  .close, .btn-close {
+    display: none !important;
+  }
+}
