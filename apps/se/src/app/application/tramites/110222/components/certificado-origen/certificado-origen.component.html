@@ -18,7 +18,9 @@
     [tramiteState]="formCertificadoValues"
     [elementosRequeridos]="elementosRequeridos"
     [esFormularioSoloLectura]="esFormularioSoloLectura"
-    (formCertificadoEvent)="setValoresStore($event)" >
+    (formCertificadoEvent)="setValoresStore($event)"
+    [domicilio]="domicilio"
+    >
 </app-certificado-de-origen>
 
 <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">

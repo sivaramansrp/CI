@@ -1,16 +1,10 @@
-
-{
-  "code": 200,
-  "data": [
-    {
-      "id": 0,
-      "descripcion": "Manual"
-    },
-    {
-      "id": 1,
-      "descripcion": "Electrónica"
-    }
-    
-  ],
-  "message": "Success"
-}
+[
+  {
+    "id": 0,
+    "descripcion": "Manual"
+  },
+  {
+    "id": 1,
+    "descripcion": "Electrónica"
+  }
+]

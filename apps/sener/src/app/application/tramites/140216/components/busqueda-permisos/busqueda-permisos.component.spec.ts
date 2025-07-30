@@ -150,21 +150,66 @@ describe('BusquedaPermisosComponent', () => {
 
   it('should call mostrarModal with correct id for obtenerDetallePermiso', () => {
     const mostrarModalSpy = jest.spyOn(component, 'mostrarModal');
-    component.esSeleccionado = true;
+    component.seleccionadaPermisosVigentesTabla = [{
+      numeroResolucion: '123',
+      tipoSolicitud: 'Solicitud 1',
+      regimen: 'Regimen 1',
+      clasificacionRegimen: 'Clasificacion 1',
+      periodoDeVigencia: '2023',
+      fraccionArancelaria: '1234',
+      unidad: 'Unidad 1',
+      nico: 'Nico 1',
+      nicoDescripcion: 'Descripcion Nico',
+      acotacion: 'Acotacion 1',
+      cantidadAutorizada: '100',
+      valorAutorizado: '200',
+      fechaInicioVigencia: '2023-01-01',
+      fechaFinVigencia: '2023-12-31'
+    }];
     component.obtenerDetallePermiso();
     expect(mostrarModalSpy).toHaveBeenCalledWith('detalle-del-permiso');
   });
 
   it('should call mostrarModal with correct id for obtenerDetalleTitular', () => {
     const mostrarModalSpy = jest.spyOn(component, 'mostrarModal');
-    component.esSeleccionado = true;
+    component.seleccionadaPermisosVigentesTabla = [{
+      numeroResolucion: '123',
+      tipoSolicitud: 'Solicitud 1',
+      regimen: 'Regimen 1',
+      clasificacionRegimen: 'Clasificacion 1',
+      periodoDeVigencia: '2023',
+      fraccionArancelaria: '1234',
+      unidad: 'Unidad 1',
+      nico: 'Nico 1',
+      nicoDescripcion: 'Descripcion Nico',
+      acotacion: 'Acotacion 1',
+      cantidadAutorizada: '100',
+      valorAutorizado: '200',
+      fechaInicioVigencia: '2023-01-01',
+      fechaFinVigencia: '2023-12-31'
+    }];
     component.obtenerDetalleTitular();
     expect(mostrarModalSpy).toHaveBeenCalledWith('detalle-rfc-facultad');
   });
 
   it('should call mostrarModal with correct id for obtenerPersonasNotificacion', () => {
     const mostrarModalSpy = jest.spyOn(component, 'mostrarModal');
-    component.esSeleccionado = true;
+    component.seleccionadaPermisosVigentesTabla = [{
+      numeroResolucion: '123',
+      tipoSolicitud: 'Solicitud 1',
+      regimen: 'Regimen 1',
+      clasificacionRegimen: 'Clasificacion 1',
+      periodoDeVigencia: '2023',
+      fraccionArancelaria: '1234',
+      unidad: 'Unidad 1',
+      nico: 'Nico 1',
+      nicoDescripcion: 'Descripcion Nico',
+      acotacion: 'Acotacion 1',
+      cantidadAutorizada: '100',
+      valorAutorizado: '200',
+      fechaInicioVigencia: '2023-01-01',
+      fechaFinVigencia: '2023-12-31'
+    }];
     component.obtenerPersonasNotificacion();
     expect(mostrarModalSpy).toHaveBeenCalledWith('personas-notificar');
   });

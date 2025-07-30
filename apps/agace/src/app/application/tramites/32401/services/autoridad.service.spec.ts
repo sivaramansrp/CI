@@ -6,6 +6,7 @@ import {
 import { AutoridadService } from './autoridad.service';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CapturarElTextoLibre, RequerimientoOpcions, RespuestaContenedor } from '../models/datos-tramite.model';
+import { of } from 'rxjs';
 
 describe('AutoridadService', () => {
   let service: AutoridadService;
@@ -170,6 +171,73 @@ describe('AutoridadService', () => {
     const req = httpMock.expectOne(
       'assets/json/32401/requerimiento-opcions.json'
     );
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
+
+  it('should fetch requerimiento data', (done) => {
+    const mockResponse = {
+      motivoCancelacion: 'Motivo de prueba',
+      tipoDeRequerimiento: 'Tipo de requerimiento de prueba',
+      tipoDeDocumento: 'Tipo de documento de prueba',
+      documentoAdicional: 'Documento adicional de prueba',
+    };
+
+    service.agregarRequerimiento().subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+      done();
+    });
+
+    const req = httpMock.expectOne('assets/json/32401/requerimiento.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
+
+  it('should update store state when actualizarEstadoFormulario is called', () => {
+    const tramite32401StoreMock = {
+      setMotivoCancelacion: jest.fn(()=> of()),
+      setTipoDeRequerimiento: jest.fn(()=> of()),
+      setTipoDeDocumento: jest.fn(()=> of()),
+      setDocumentoAdicional: jest.fn(()=> of()),
+    };
+    
+    const testService = new AutoridadService(
+      TestBed.inject(HttpClientTestingModule as any),
+      tramite32401StoreMock as any
+    );
+
+    const mockValor = {
+      motivoCancelacion: 'Motivo',
+      tipoDeRequerimiento: 'Tipo',
+      tipoDeDocumento: 'Documento',
+      documentoAdicional: 'Adicional',
+    };
+
+    testService.actualizarEstadoFormulario(mockValor as any);
+
+    expect(tramite32401StoreMock.setMotivoCancelacion).toHaveBeenCalledWith('Motivo');
+    expect(tramite32401StoreMock.setTipoDeRequerimiento).toHaveBeenCalledWith('Tipo');
+    expect(tramite32401StoreMock.setTipoDeDocumento).toHaveBeenCalledWith('Documento');
+    expect(tramite32401StoreMock.setDocumentoAdicional).toHaveBeenCalledWith('Adicional');
+  });
+
+  it('should fetch tipos de documentos', (done) => {
+    const mockResponse: CatalogosSelect = {
+      catalogos: [
+        { id: 1, descripcion: 'Documento 1' },
+        { id: 2, descripcion: 'Documento 2' },
+      ],
+      required: true,
+      labelNombre: 'Tipo de documento',
+      primerOpcion: 'Seleccione un documento',
+    };
+
+    service.getTiposDocumentos().subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+      done();
+    });
+
+    const req = httpMock.expectOne('assets/json/32401/tipos-documentos.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });

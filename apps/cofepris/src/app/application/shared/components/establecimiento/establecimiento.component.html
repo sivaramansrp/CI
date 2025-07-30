@@ -13,8 +13,12 @@
   <div class="row">
     <div class="col-md-12 d-flex justify-content-end mt-5">
       <div class="btn-group">
-        <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
-        <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
+        @if(establecimientoData.length !== 0) {
+            <button class="btn btn-danger" type="button" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
+        }
+        @if(establecimientoData.length !== 0) {
+            <button class="btn btn-default ms-2" type="button" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
+        }
         <button
           type="button"
           class="btn btn-primary ms-2"
@@ -217,7 +221,7 @@
                     (click)="mostrar_colapsable_pais()"
                   >
                     <h4 class="panel-title">
-                      <a> País de origen </a>
+                      <a> País de Destino </a>
                     </h4>
                     <button
                       type="button"
@@ -244,47 +248,6 @@
               </div>
             </div>
           </div>
-          <div class="row mt-2">
-            <div class="col-md-10">
-              <div
-                class="panel-group ficha-collapse"
-                id="accordionPaisProcedencia"
-              >
-                <div class="panel panel-default">
-                  <div
-                    class="panel-heading"
-                    (click)="mostrar_colapsable_pais_procedencia()"
-                  >
-                    <h4 class="panel-title">
-                      <a> País de procedencia </a>
-                    </h4>
-                    <button
-                      type="button"
-                      title="Mostrar"
-                      class="collpase-button collapsed"
-                    ></button>
-                  </div>
-                  @if(colapsable_procedencia){
-                  <div class="panel-collapse collapse in" id="panel-02">
-                    <div class="panel-body">
-                      <crosslist
-                        [fechas]="paisDeProcedenciaDatos"
-                        [label]="paisDeProcedenciaLabel"
-                        [fechasSeleccionadas]="
-                          seleccionadasPaisDeProcedenciaDatos
-                        "
-                        [botones]="paisDeProcedenciaBotons"
-                        (fechasSeleccionadasChange)="
-                          paisDeProcedenciaSeleccionadasChange($event)
-                        "
-                      ></crosslist>
-                    </div>
-                  </div>
-                  }
-                </div>
-              </div>
-            </div>
-          </div>
           <div class="row">
             <div class="col-md-10">
               <app-catalogo-select
@@ -299,12 +262,12 @@
         <div class="modal-footer mt-5">
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-default"
             (click)="limpiarFormulario()"
           >
             Limpiar
           </button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          <button type="button" class="btn btn-default" data-bs-dismiss="modal">
             Cancelar
           </button>
           <button

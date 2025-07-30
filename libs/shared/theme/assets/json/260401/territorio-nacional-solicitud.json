@@ -19,5 +19,6 @@
 "aduanaDeSalida":"1",
 "regimenAlQueSeDestinaraLaMercancía":"1",
 "noDeLicenciaSanitariaObservaciones":"Observaciones por defecto",
-"noDeLicenciaSanitaria":"0000000000"
+"noDeLicenciaSanitaria":"0000000000",
+"fechaPago": "10/10/2023"
 }
