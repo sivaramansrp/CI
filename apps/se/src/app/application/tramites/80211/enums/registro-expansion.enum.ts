@@ -28,7 +28,7 @@ export const CONFIGURACION_TABLA_PLANTAS: ConfiguracionColumna<Plantas>[] = [
 {encabezado:'Municipio o delegación', clave: (item: Plantas):string=>item.municipio, orden:6 },
 {encabezado:'Entidad federativa', clave: (item: Plantas):string=>item.entidadFederativa, orden:7 },
 {encabezado:'País', clave: (item: Plantas):string=>item.pais, orden:8 },
-{encabezado:'Registro federal de contribuyen', clave: (item: Plantas):string=>item.registroFederal, orden:9 },
+{encabezado:'Registro federal de contribuyentes', clave: (item: Plantas):string=>item.registroFederal, orden:9 },
 {encabezado:'Domicilio fiscal del solicitante', clave: (item: Plantas):string=>item.domicilio, orden:10 },
 {encabezado:'Razón social', clave: (item: Plantas):string=>item.razon, orden:11 }
 ]
