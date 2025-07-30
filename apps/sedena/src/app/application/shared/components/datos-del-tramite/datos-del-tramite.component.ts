@@ -99,7 +99,17 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy ,OnChanges{
    */
   @Input() public idProcedimiento!: number;
 
+  /**
+   * Indica si se deben usar botones personalizados en el componente.
+   * Cuando es `true`, se aplicarán plantillas o lógica de botones personalizados en lugar de los botones predeterminados.
+   */
   @Input() public usarBotonesPersonalizados!: boolean;
+
+  /**
+   * Indica si se deben mostrar las etiquetas de tipo de aduanas disponibles.
+   * Cuando es `true`, se mostrarán etiquetas específicas para los tipos de aduanas disponibles.
+   */
+  @Input() public aduanasDisponiblesLabelTipo!: boolean;
 
   /**
    * Indica si el elemento está ocultarBotones o visible.
@@ -240,6 +250,17 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy ,OnChanges{
     derecha: 'Aduanas seleccionadas',
     showUnoTitulo: true,
     showDosTitulo: true,
+  };
+
+   /**
+   * Etiquetas que se utilizan en el componente Crosslist para mostrar los títulos de los listados.
+   * @property {CrossListLable} aduanasDisponiblesLabelRequired
+   */
+  public aduanasDisponiblesLabelRequired: CrossListLable = {
+    tituluDeLaIzquierda: 'Aduanas disponibles:',
+    derecha: 'Aduanas seleccionadas*:',
+    showUnoTitulo: false,
+    showDosTitulo: false,
   };
 
   /**

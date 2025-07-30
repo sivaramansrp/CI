@@ -44,7 +44,7 @@
   <div class="row mt-3">
     <crosslist
       [fechas]="seleccionarAduanasDisponibles"
-      [label]="aduanasDisponiblesLabel"
+      [label]="aduanasDisponiblesLabelTipo? aduanasDisponiblesLabelRequired : aduanasDisponiblesLabel"
       [fechasSeleccionadas]="seleccionarAduanasDisponiblesDatos"
       [botones]="usarBotonesPersonalizados ? aduanasEntradaBotons : aduanasBotones"
       (fechasSeleccionadasChange)="
@@ -235,7 +235,7 @@
         <button
           type="button"
           name="agregarClave"
-          class="btn btn-primary ms-2"
+          class="btn btn-primary m-2"
           [disabled]="esFormularioSoloLectura"
           (click)="irAAcciones()"
         >
