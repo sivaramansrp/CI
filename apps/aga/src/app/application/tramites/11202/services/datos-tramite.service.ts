@@ -1,9 +1,9 @@
+import { RespuestaConsulta, RespuestaContenedor } from '../models/datos-tramite.model';
 import { Observable, of } from 'rxjs';
-import { Catalogo } from '../../models/shared/catalogos.model';
+import { Catalogo } from '../../../../../../../../libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestaConsulta } from '../../models/11202/datos-tramite.model';
 
 @Injectable({
   providedIn: 'root',
@@ -71,4 +71,13 @@ Obtenga una lista ficticia de Contenedores
   getDatosConsulta(): Observable<RespuestaConsulta> {
     return this.http.get<RespuestaConsulta>(`assets/json/11202/consulta_11202.json`);
   }
+
+  /**
+   * Agrega una solicitud.
+   * @returns Un observable con la respuesta del contenedor.
+   */
+  agregarSolicitud(): Observable<RespuestaContenedor> {
+    return this.http.get<RespuestaContenedor>(`assets/json/11202/contenedorLista.json`);
+  }
+  
 }
