@@ -38,7 +38,7 @@ ENV NX_VERBOSE_LOGGING=true
 ARG NODE_ENV
 RUN echo "Building agace image for environment: $NODE_ENV"
 # Build the agace application using Nx.
-RUN npx nx build agace --configuration=$NODE_ENV --base-href=/agace/ --skip-nx-cache --verbose
+RUN set NODE_OPTIONS=--max-old-space-size=4096 && npx nx build agace --configuration=$NODE_ENV --base-href=/agace/ --skip-nx-cache --verbose
 # Optional: Verify build output (disabled)
 # RUN pwd && ls -a /app/dist/apps/agace
 

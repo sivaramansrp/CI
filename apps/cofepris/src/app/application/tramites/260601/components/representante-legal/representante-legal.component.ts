@@ -4,19 +4,21 @@ import {
 } from '../../../../estados/tramites/tramite260601.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  ConsultaioQuery,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-import {
   FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import {
+  Notificacion,
+  NotificacionesComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user'
 import { MSG_ERROR_REPRESENTANTE_LEGAL } from '../../constantes/aviso-enum';
 import { RepresentanteLegalRespuesta } from '../../models/aviso-model';
 import { ToastrService } from 'ngx-toastr';
@@ -28,7 +30,7 @@ import { Tramite260601Query } from '../../../../estados/queries/tramite260601.qu
 @Component({
   selector: 'app-representante-legal',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TituloComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TituloComponent, NotificacionesComponent],
   templateUrl: './representante-legal.component.html',
   styleUrl: './representante-legal.component.css',
 })
@@ -53,6 +55,18 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @property {boolean} modalAlerta
+   * @description Indica si el modal de alerta está visible. Se utiliza para mostrar mensajes de advertencia al usuario.
+   */
+  modalAlerta: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacion
+   * @description Objeto que contiene la información de la notificación a mostrar en el componente de notificaciones.
+   */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * Constructor del componente.
@@ -97,6 +111,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
+    this.nuevaNotificacion = {} as Notificacion;
   }
 
   /**
@@ -181,6 +196,18 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     ) {
       this.toastr.error(MSG_ERROR_REPRESENTANTE_LEGAL);
       this.representanteLegalForm.reset();
+      this.modalAlerta = true;
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: '',
+            modo: 'action',
+            titulo: '',
+            mensaje: MSG_ERROR_REPRESENTANTE_LEGAL,
+            cerrar: false,
+            tiempoDeEspera: 2000,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+          };
     } else {
       this.avisoSanitarioService
         .buscarRfc()
@@ -197,6 +224,15 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
           },
         });
     }
+  }
+
+  /**
+   * Maneja la acción de aceptar en el modal de alerta.
+   * Cierra el modal y reinicia el formulario del representante legal.
+   */
+  aceptar(): void {
+    this.modalAlerta = false;
+    this.representanteLegalForm.reset();
   }
 
   /**
