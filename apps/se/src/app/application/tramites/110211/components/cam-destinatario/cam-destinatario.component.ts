@@ -3,9 +3,7 @@ import { CamState, camCertificadoStore } from '../../estados/cam-certificado.sto
 import { ConsultaioQuery, SeccionLibQuery, SeccionLibState, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
-import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
 import { DatosDelDestinatarioComponent } from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
 import { DestinatarioComponent } from '../../../../shared/components/destinatario/destinatario.component';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
@@ -75,8 +73,6 @@ interface FormValues {
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    CertificadoDeOrigenComponent,
-    DatosCertificadoDeComponent,
     DatosDelDestinatarioComponent,
     TituloComponent,
     DestinatarioComponent
