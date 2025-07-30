@@ -92,6 +92,15 @@ export class Solocitud220503Service {
     this.solicitud220503Store.setBanco(DATOS.banco);
     this.solicitud220503Store.setIlavePago(DATOS.llavePago);
     this.solicitud220503Store.setImportePago(DATOS.importePago);
+    this.solicitud220503Store.updateTercerosRelacionados(DATOS.tercerosRelacionados);
+    this.solicitud220503Store.updatedatosForma(DATOS.datosForma); 
+    this.solicitud220503Store.actualizarSelectedTerceros(
+      DATOS.selectedTerceros
+    );
+    this.solicitud220503Store.actualizarSelectedExdora(
+      DATOS.seletedExdora
+    );
+    this.solicitud220503Store.actualizarPagoDeDerechos(DATOS.pagoDeDerechos);
   }
 
   /**
