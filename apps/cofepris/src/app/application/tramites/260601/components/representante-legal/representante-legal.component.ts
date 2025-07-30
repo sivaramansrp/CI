@@ -4,21 +4,21 @@ import {
 } from '../../../../estados/tramites/tramite260601.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  ConsultaioQuery,
-  Notificacion,
-  NotificacionesComponent,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-import {
   FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import {
+  Notificacion,
+  NotificacionesComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user'
 import { MSG_ERROR_REPRESENTANTE_LEGAL } from '../../constantes/aviso-enum';
 import { RepresentanteLegalRespuesta } from '../../models/aviso-model';
 import { ToastrService } from 'ngx-toastr';
