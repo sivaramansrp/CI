@@ -2,7 +2,7 @@
 <div>
   <form [formGroup]="oficioForm">
     <div formGroupName="oficioData">
-      <div class="row" style="padding-bottom: 20px;">
+      <div class="row row-spacing">
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="asignado"> Monto asignado:</label>
@@ -25,7 +25,7 @@
           <li class="page-item"><a class="page-link" href="#">1</a></li>
         </ul>
       </nav>
-      <div class="row" style="padding-bottom: 20px;text-align: right;">
+      <div class="row row-spacing text-right">
         <div>
           <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura"
             (click)="onSeleccionarClick()">Seleccionar</button>
@@ -40,7 +40,7 @@
           <li class="page-item"><a class="page-link" href="#">1</a></li>
         </ul>
       </nav>
-      <div class="row" style="padding-bottom: 20px;text-align: right;">
+      <div class="row row-spacing text-right">
         <div>
           <button type="button" class="btn btn-danger btn-space" [disabled]="esFormularioSoloLectura">Eliminar
             seleccionado</button>
@@ -52,7 +52,7 @@
       <app-modal [active]="showDevolverModal">
         <app-devolver [(showDevolverModal)]="showDevolverModal"></app-devolver>
       </app-modal>
-      <div class="row" style="padding-bottom: 20px;">
+      <div class="row row-spacing">
         <div class="col-md-12">
           <div class="form-group">
             <label class="form-label" for="observaciones"> Motivo de la cancelación*:</label>
@@ -64,7 +64,7 @@
       <app-modal [active]="showCapturaMontoModal">
         <div style="padding: 2rem;">
           <ng-titulo titulo=" Captura monto a favor del certificado" />
-          <div class="row" style="padding-bottom: 20px;">
+          <div class="row row-spacing">
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="cancelar"> *Monto a cancelar (en unidades primarias)</label>
@@ -72,7 +72,7 @@
               </div>
             </div>
           </div>
-          <div class="row" style="padding-bottom: 20px;text-align: right;">
+          <div class="row row-spacing text-right">
             <div>
               <button type="button" class="btn btn-default me-2 btn-space"
                 [disabled]="esFormularioSoloLectura">Agregar</button>
