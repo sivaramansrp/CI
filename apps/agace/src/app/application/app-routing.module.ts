@@ -343,6 +343,12 @@ const ROUTES: Routes = [
         (m) => m.SolicitudDeRegistroInvocarModule)
   },
   {
+     path: 'sce-socio-almacenamiento',
+    loadChildren: () => 
+      import('./tramites/32618/sce-socio-almacen.module').then(
+        (m) => m.SceSocioAlmacenModule)
+      },
+  {
     path: 'registro-oae-rfe',
     loadChildren: () =>
       import('./tramites/32610/registro-oae-rfe.module').then(
@@ -353,6 +359,13 @@ const ROUTES: Routes = [
     path: 'economico',
     loadChildren: () =>
       import('./tramites/32606/economico.module').then((m) => m.EconomicoModule),
+  },
+    {
+    path: 'importador-y-o-exportador2',
+    loadChildren: () =>
+      import('./tramites/32614/importador-y-o-exportador.module').then(
+        (m) => m.ImportadorYOExportadorModule
+      ),
   },
     {
     path: 'seciit-oea-registration',

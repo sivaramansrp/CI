@@ -4,7 +4,15 @@
     "datos": {
         "tercerOperador": true,
         "blnPeriodo": "0",
+      "grupoOperador": {
+        "nombreTercerOperador" : "Valor fictio",
+        "primerApellidoTercerOperador" : "Valor fictio",
+        "segundoApellidoTercerOperador" : "Valor fictio",
+        "registroFiscalTercerOperador" : "Valor fictio",
+        "razonSocialTercerOperador" : "Valor fictio"
+        },
         "grupoTratado": {
+           
             "tratado": "0",
             "pais": "5",
             "fraccionArancelaria": "1",
