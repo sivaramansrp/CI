@@ -89,3 +89,15 @@ export const CSV_DE_TABLA: ConfiguracionColumna<DatosDelCsvArchivo>[] = [
   { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 7 },
   { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 8 },
 ];
+
+/**
+ * Enumeración que contiene los textos utilizados en el trámite 32201.
+ * Estos textos son utilizados para mostrar mensajes o descripciones específicas en el formulario.
+ */
+export const SOLICITUD_11202_ENUM = {
+
+  /**
+   * Texto de button.
+   */
+  ELGIR_DE_ARCHIVO: 'No se eligió ningún archivo'
+};

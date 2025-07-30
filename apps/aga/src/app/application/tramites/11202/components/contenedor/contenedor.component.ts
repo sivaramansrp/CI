@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Contenedor11202State, Contenedor11202Store } from '../../estados/contenedor11202.store';
-import { CSV_DE_TABLA, GRID_CONTENEDORES, TEXTOS_REQUISITOS } from '../../constantes/retorno-contenedores.enum';
+import { CSV_DE_TABLA, GRID_CONTENEDORES, SOLICITUD_11202_ENUM } from '../../constantes/retorno-contenedores.enum';
 import { DatosDelCsvArchivo, GridContenedores } from '../../models/datos-tramite.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -38,11 +37,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   */
   public contenedorState!: Contenedor11202State;
 
-  /**
-   * @property {string} TEXTOS
-   * Stores the text constants for the component.
-   */
-  TEXTOS = TEXTOS_REQUISITOS;
   /**
    * Lista de catálogos de Seleccione una opción.
    */
@@ -186,6 +180,28 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
  public datosDelCsvArchivo: DatosDelCsvArchivo[] = [];
 
+ /**
+   * Etiqueta del archivo seleccionado.
+   */
+  elgirDeArchivo: string = SOLICITUD_11202_ENUM.ELGIR_DE_ARCHIVO;
+
+  /**
+   * Elemento de entrada de archivo HTML.
+   *
+   * @type {HTMLInputElement}
+   */
+  elgirArchivo!: HTMLInputElement;
+
+  /**
+   * Archivo de medicamentos seleccionado.
+   */
+  archivoMedicamentos: File | null = null;
+
+  /**
+   * Bandera para indicar si el archivo adjunto no un CSV.
+   */
+  archivoNoCsv: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private datosTramiteService: DatosTramiteService,
@@ -236,7 +252,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       }
     });
     this.cargarCatalogContenedores();
-    this.tabSeleccionado();
     this.loadDatosTablaData();
   }
 
@@ -341,6 +356,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             this.solicitudForm.markAsPristine();
             this.solicitudForm.get('tipoBusqueda')?.setValue(TIPOBUSQUEDA);
             this.mostrarCampos();
+            this.mostrarBotonesBuscar = false;
           }
         }
       );
@@ -352,10 +368,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   adjuntarArchivo(): void {
     const FILE_INPUT = document.getElementById(
-      'archivoSeleccionado'
+      'archivoMedicamentos'
     ) as HTMLInputElement;
     const FILE = FILE_INPUT.files?.[0];
-    if (FILE) {
+    if (!FILE) return;
+
+    const isCsv = FILE.type === 'text/csv' || FILE.name.toLowerCase().endsWith('.csv');
+    if (isCsv) {
       const READER = new FileReader();
       READER.onload = (e): void => {
         const TEXT = e.target?.result as string;
@@ -363,17 +382,18 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         this.showArchivoSeleccionadoTable = true;
       };
       READER.readAsText(FILE);
-    }
-    this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
-      (respuesta) => {
-        if (respuesta?.success) {
-          respuesta.datos.id = this.datosDelCsvArchivo.length + 1;
-          this.datosDelCsvArchivo = [...this.datosDelCsvArchivo, respuesta.datos];
-          console.log('Datos del CSV:', this.datosDelCsvArchivo);
-          (this.contenedorStore.setDelCsv as (valor: DatosDelCsvArchivo[]) => void)(this.datosDelCsvArchivo);
+    
+      this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+        (respuesta) => {
+          if (respuesta?.success) {
+            respuesta.datos.id = this.datosDelCsvArchivo.length + 1;
+            this.datosDelCsvArchivo = [...this.datosDelCsvArchivo, respuesta.datos];
+            console.log('Datos del CSV:', this.datosDelCsvArchivo);
+            (this.contenedorStore.setDelCsv as (valor: DatosDelCsvArchivo[]) => void)(this.datosDelCsvArchivo);
+          }
         }
-      }
-    );
+      );
+    } 
   }
 
   /**
@@ -409,31 +429,33 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cargar archivo CSV y parsear su contenido.
+   * Activa la selección del archivo de medicamentos.
+   * @returns {void}
    */
-  Archivo(): void {
-    const FILE_INPUT = document.getElementById(
-      'cargarArchivo'
+  activarSeleccionArchivo(): void {
+    this.elgirArchivo = document.getElementById(
+      'archivoMedicamentos'
     ) as HTMLInputElement;
-    const FILE = FILE_INPUT.files?.[0];
-    if (FILE) {
-      const READER = new FileReader();
-      READER.onload = (e): void => {
-        const TEXT = e.target?.result as string;
-        this.parseCSV(TEXT);
-        this.showCargarArchivoTable = true;
-      };
-      READER.readAsText(FILE);
+    if (this.elgirArchivo) {
+      this.elgirArchivo.click();
     }
   }
 
   /**
-   * Selecciona la pestaña activa basada en el índice almacenado en localStorage.
+   * Maneja el cambio de archivo en el input de archivo.
+   *
+   * @param event Evento de cambio de archivo.
+   *
+   * @returns {void}
    */
-  tabSeleccionado(): void {
-    const CURRENT_IDX = localStorage.getItem('currentIdx');
-    if (CURRENT_IDX !== null) {
-      this.currentIdx = Number(CURRENT_IDX ?? 0);
+  onCambioDeArchivo(event: Event): void {
+    const TARGET = event.target as HTMLInputElement;
+
+    if (TARGET.files && TARGET.files.length > 0) {
+      this.archivoMedicamentos = TARGET.files[0];
+      this.elgirDeArchivo = this.archivoMedicamentos.name;
+    } else {
+      this.elgirDeArchivo = this.elgirArchivo?.value;
     }
   }
 

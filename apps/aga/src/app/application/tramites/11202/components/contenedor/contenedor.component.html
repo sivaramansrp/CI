@@ -105,7 +105,7 @@
                 )
               " [isDisabled]="soloLectura"></app-catalogo-select>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-4 mt-3">
               <div class="form-group">
                   <label for="digitoDeControl">Dígito verificador:</label>
                   <input type="text" formControlName="digitoDeControl" id="digitoDeControl" maxlength="1"
@@ -240,10 +240,20 @@
         aria-labelledby="modalArchivoCsv" aria-hidden="true" #modalArchivoCsv>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <ng-titulo titulo="Cargar archivo" />
+                <div class="modal-header">
+                    <h4 class="modal-title">Cargar archivo</h4>
+                </div>
                 <div class="modal-body justify-content-start mb-5">
                     <label for="archivoSeleccionado" class="form-label">Archivo:</label>   
-                    <input class="form-control" type="file" name="archivoSeleccionado" id="archivoSeleccionado">
+                    <div class="mt-2">
+                        <button type="button" for="archivoMedicamentos" class="file-upload" (click)="activarSeleccionArchivo()"
+                          [disabled]="soloLectura">
+                          Elgir archivo
+                        </button>
+                        <span class="ml-2">{{ elgirDeArchivo }}</span>
+                        <input type="file" id="archivoMedicamentos" (change)="onCambioDeArchivo($event)" class="file-upload"
+                          style="display: none" />
+                    </div>
                 </div>
                 <div class="modal-footer justify-content-end">
                     <button type="button" class="btn btn-default" data-bs-dismiss="modal">Regresar</button>
