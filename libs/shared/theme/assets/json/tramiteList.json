@@ -4311,5 +4311,12 @@
     "linkDashboard": "/agace/seciit-oea-registration/solicitud",
     "linkDepartment": "/pago/seciit-oea-registration/solicitud",
     "department": "agace"
-  }
+  },
+   {
+    "id": 615,
+    "tramite": 32611,
+    "linkDashboard": "/agace/auto-transportista/solicitud",
+    "linkDepartment": "/pago/auto-transportista/solicitud",
+    "department": "agace"
+   }
 ]
