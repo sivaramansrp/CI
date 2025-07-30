@@ -41,12 +41,12 @@ export const AQUANDAS_CROSSLIST_LABEL = {
   /**
    * Título para las aduanas disponibles.
    */
-  tituluDeLaIzquierda: 'Aduanas disponibles',
+  tituluDeLaIzquierda: 'Aduanas disponibles:',
 
   /**
    * Título para las aduanas seleccionadas.
    */
-  derecha: 'Aduanas seleccionadas',
+  derecha: 'Aduanas seleccionadas*:',
 };
 
 /**
