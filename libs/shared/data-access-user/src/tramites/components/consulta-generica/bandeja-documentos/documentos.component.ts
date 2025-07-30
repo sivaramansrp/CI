@@ -1,9 +1,10 @@
 import { BodyTablaDocumentos, HeaderTablaDocumentos } from '../../../../core/models/shared/consulta-generica.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 import { CONSULTA_DOCUMENTOS } from '../../../../core/enums/consulta-generica.enum';
 import { CommonModule } from '@angular/common';
 import { DocumentosService } from '../../../../core/services/consultagenerica/bandeja-documentos-service';
+import { DocumentoSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model';
 
 @Component({
   selector: 'lib-documentos',
@@ -18,6 +19,12 @@ export class DocumentosComponent implements OnInit, OnDestroy {
    * @type {Subject<void>}
    */
   public unsubscribe$ = new Subject<void>();
+
+  /**
+   * @property {DocumentoSolicitud[]} documentos
+   * @description Documentos de solicitud.
+   */
+  @Input() documentos: DocumentoSolicitud[] = [];
 
   /**
    * Encabezado de la tabla de documentos.
@@ -86,12 +93,13 @@ export class DocumentosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getDocumentos(): void {
-    this.documentosService
-      .getDocumentos()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.datosTablaDocumentos = data;
-      });
+     this.datosTablaDocumentos = this.documentos.map((doc) => ({
+      tipoDocumento: doc.documento.nombre,
+      estatus: doc.estado_documento_solicitud,
+      fechaAdjunto: doc.fecha_asociacion,
+      nombreArchivo: doc.documento.nombre,
+      urlPdf: doc.documento_uuid
+    }));
   }
 
   /**

@@ -9,6 +9,7 @@ import { OpinionComponent } from "../consulta-generica/consulta-opinion/opinione
 import { Tabulaciones } from "../../../core/models/lista-trimites.model";
 import { TareasTramiteComponent } from "../consulta-generica/bandeja-tareas-tramite/tareas-tramite.component";
 import tramiteDetailsData from '@libs/shared/theme/assets/json/shared/lista-trimites-tabs.json';
+import { DocumentoSolicitud } from "../../../core/models/130118/consulta-documentos-response.model";
 
 /**
  * @component
@@ -52,6 +53,13 @@ export class ReviewersTabsComponent implements OnChanges, OnInit {
    * @description Referencia al componente hijo que se debe mostrar en la pestaña activa.
    */
   @Input() viewChild!: Type<unknown>;
+
+  /**
+   * @property {DocumentoSolicitud[]} documentos
+   * @description Documentos de solicitud.
+   */
+  @Input() documentos: DocumentoSolicitud[] = [];
+
   /**
    * @property {EventEmitter<Tabulaciones>} viewChildcambioDePestana
    * @description Evento emitido cuando se cambia de pestaña, enviando el objeto de tabulación seleccionado.
