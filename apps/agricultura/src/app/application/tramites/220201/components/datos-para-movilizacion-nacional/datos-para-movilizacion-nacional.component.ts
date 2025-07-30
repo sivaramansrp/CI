@@ -6,14 +6,14 @@ import {
   TituloComponent
 } from '@libs/shared/data-access-user/src';
 
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
-import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { HttpClient } from '@angular/common/http';
+import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos para la movilización nacional.
@@ -222,10 +222,8 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
     if (this.movilizacionForm.valid) {
       return true;
     }
-    else {
-      this.movilizacionForm.markAllAsTouched();
-      return false;
-    }
+    this.movilizacionForm.markAllAsTouched();
+    return false;
   }
   /**
    * Ciclo de vida que se ejecuta al destruir el componente. Libera recursos y cancela las suscripciones.

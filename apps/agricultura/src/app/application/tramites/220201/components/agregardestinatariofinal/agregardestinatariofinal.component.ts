@@ -6,19 +6,20 @@
  * @module AgregardestinatarioComponent
  */
 
-import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
+import { CapturarSolicitud } from '../../models/220201/capturar-solicitud.model';
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { CommonModule } from '@angular/common';
+import { DestinatarioForm } from '../../../220203/models/220203/importacion-de-acuicultura.module';
 import { OPCION_DE_BOTON_DE_RADIO } from '../../../../shared/constantes/tercerosrelacionados.enum';
+import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
+import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
 import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
-import { CapturarSolicitud } from '../../models/220201/capturar-solicitud.model';
-import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 @Component({
   selector: 'app-agregardestinatariofinal',
   standalone: true,
@@ -117,22 +118,16 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
    */
   ngOnInit(): void {
     this.destinatarioForm = this.fb.group({
-      tipoMercancia: ['yes', Validators.required],
-      nombre: ['', Validators.required],
-      primerApellido: ['', Validators.required],
+       tipoMercancia: ['yes', Validators.required], 
+      nombre: ['', []],
+      primerApellido: ['', []], 
       segundoApellido: [''],
-      razonSocial: [''],
-      pais: ['1', Validators.required],
-      codigoPostal: ['', Validators.required],
-      estado: ['', Validators.required],
-      municipio: [''],
-      colonia: [''],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: [''],
-      telefono: [''],
-      correo: ['']
+      razonSocial: ['', []], 
+      pais: ['', Validators.required],
+      domicilio: ['', Validators.required],
+      lada: ['', [Validators.maxLength(5)]],
+      telefono: ['', [Validators.maxLength(30)]],
+      correo: ['', [Validators.maxLength(320), Validators.email]],
     });
 
     this.certificadoZoosanitarioServices.getAllDatosForma()
@@ -141,22 +136,16 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
         const DESTINATARIO = data.seletedExdora;
         if (DESTINATARIO) {
           this.destinatarioForm.patchValue({
-            tipoMercancia: DESTINATARIO.tipoMercancia || 'yes',
+         tipoMercancia: DESTINATARIO.tipoMercancia || 'yes',
             nombre: DESTINATARIO.nombre || '',
             primerApellido: DESTINATARIO.primerApellido || '',
             segundoApellido: DESTINATARIO.segundoApellido || '',
             razonSocial: DESTINATARIO.razonSocial || '',
             pais: DESTINATARIO.pais || '1',
-            codigoPostal: DESTINATARIO.codigoPostal || '',
-            estado: DESTINATARIO.estado || '',
-            municipio: DESTINATARIO.municipio || '',
-            colonia: DESTINATARIO.colonia || '',
-            calle: DESTINATARIO.calle || '',
-            numeroExterior: DESTINATARIO.numeroExterior || '',
-            numeroInterior: DESTINATARIO.numeroInterior || '',
             lada: DESTINATARIO.lada || '',
             telefono: DESTINATARIO.telefono || '',
-            correo: DESTINATARIO.correo || ''
+            correo: DESTINATARIO.correo || '',
+            domicilio: DESTINATARIO.domicilio || '',
           });
         }
       });
@@ -229,9 +218,11 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
    */
   onGuardarDestinatarioFinal(): void {
     if (this.destinatarioForm.valid) {
-      const LISTA_DINAMICA: TercerosrelacionadosdestinoTable[] = [];
-      LISTA_DINAMICA.push(this.destinatarioForm.value as TercerosrelacionadosdestinoTable);
-      this.zoosanitarioStore.updatedatosForma(LISTA_DINAMICA as TercerosrelacionadosdestinoTable[]);
+      const LISTA_DINAMICA: DestinatarioForm[] = [];
+      LISTA_DINAMICA.push(this.destinatarioForm.value as DestinatarioForm);
+      this.zoosanitarioStore.updatedatosForma(LISTA_DINAMICA as DestinatarioForm[]);
+      this.zoosanitarioStore.actualizarSelectedExdora({} as DestinatarioForm);
+      this.destinatarioForm.reset();
       this.cerrar.emit();
     } else {
       this.destinatarioForm.markAllAsTouched();
@@ -248,7 +239,6 @@ export class AgregardestinatariofinalComponent implements OnInit, AfterViewInit 
     this.destinatarioForm.markAsUntouched();
     this.destinatarioForm.patchValue({
       tipoMercancia: 'yes',
-      pais: '1',
     });
   }
 

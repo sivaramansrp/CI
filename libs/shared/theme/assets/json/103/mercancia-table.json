@@ -6,22 +6,15 @@
             "Unidad de medida de Comercialización",
             "Año",
             "Modelo",
-            "Marco",
+            "Marca",
             "Numero de serie",
-            "Condición de la mercancía"
+            "Uso específico de la mercancía",
+            "Condición de la mercancía",
+            "Vehículo"
         ],
         "tableBody": [
             {
-                "tbodyData": [
-                    "Componentes electrónicos",
-                    "120",
-                    "Cajas",
-                    "2023",
-                    "ET-5000",
-                    "ElectroTech",
-                    "ET5000-112233",
-                    "Usada"
-                ]
+                "tbodyData": []
             }
         ]
     }

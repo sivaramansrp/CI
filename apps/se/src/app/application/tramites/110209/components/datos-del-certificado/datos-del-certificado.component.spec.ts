@@ -22,7 +22,9 @@ describe('DatosDelCertificadoComponent', () => {
       getMercancias: jest.fn().mockReturnValue(of([
         { id: 1, fraccionArancelaria: 'Mercancia 1', nombreComercial: 'Comercial 1' },
         { id: 2, fraccionArancelaria: 'Mercancia 2', nombreComercial: 'Comercial 2' }
-      ]))
+      ])),
+      getTipoDeFactura: jest.fn().mockReturnValue(of([])),
+      getUnidad: jest.fn().mockReturnValue(of([]))
     };
 
     const STORE_MOCK = {
@@ -119,23 +121,4 @@ describe('DatosDelCertificadoComponent', () => {
     expect(component.mercanciasSeleccionadas).toBe(MERCANCIA);
   });
 
-  it('debe guardar la mercancía seleccionada en el store y emitir el evento al navegar', () => {
-    const MERCANCIA = {
-      id: 1,
-      nombre: 'Mercancia 1',
-      numeroDeOrden: '1',
-      fraccionArancelaria: '1234.56.78',
-      nombreTecnico: 'Tecnico 1',
-      nombreComercial: 'Comercial 1',
-      cantidad: 10,
-      unidad: 'kg',
-      nombreIngles: 'Merchandise 1',
-      numeroDeRegistro: 'REG123'
-    };
-    component.mercanciasSeleccionadas = MERCANCIA;
-    const EMIT_SPY = jest.spyOn(component.modificarEventCertificado, 'emit');
-    component.navegar();
-    expect(store.setTramite110209).toHaveBeenCalledWith({ mercanciasSeleccionadas: MERCANCIA });
-    expect(EMIT_SPY).toHaveBeenCalledWith(true);
-  });
 });

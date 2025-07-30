@@ -1,9 +1,10 @@
-import { Acuicultura, DatosMercancia220203, EnviarDatos, FormularioMovilizacion, FormularioPago } from '../../models/220203/importacion-de-acuicultura.module';
-import { Observable, map } from 'rxjs';
-import { PersonaTerceros, RespuestaCatalogos, SeccionLibStore } from '@ng-mf/data-access-user';
+import { Acuicultura,FormularioMovilizacion, PagoDeDerechos, RealizarGroup } from '../../models/220203/importacion-de-acuicultura.module';
+import { RespuestaCatalogos, SeccionLibStore } from '@ng-mf/data-access-user';
 import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 
 /**
  * @fileoverview
@@ -64,15 +65,18 @@ export class ImportacionDeAcuiculturaService {
     return this.acuiculturaStore._select(state => state);
   }
 
+
+  
   /**
    * Actualizar el formulario de pago en el store.
    * @method actualizarFormularioPago
    * @param formularioPago Datos del formulario de pago.
    * @returns {void}
    */
-  public actualizarFormularioPago(formularioPago: FormularioPago): void {
-    this.acuiculturaStore.actualizarFormularioPago(formularioPago);
+  public actualizarPagoDeDerechos(pagoDeDerechos: PagoDeDerechos): void {
+    this.acuiculturaStore.actualizarPagoDeDerechos(pagoDeDerechos);
   }
+
 
   /**
    * Actualizar el formulario de movilización en el store.
@@ -90,46 +94,11 @@ export class ImportacionDeAcuiculturaService {
    * @param datosMercancia Datos de mercancía.
    * @returns {void}
    */
-  public actualizarDatosMercancia(datosMercancia: DatosMercancia220203): void {
-    this.acuiculturaStore.actualizarDatosMercancia(datosMercancia);
+  public actualizarDatosMercancia(realizarGroup: RealizarGroup): void {
+    this.acuiculturaStore.actualizarDatosMercancia(realizarGroup);
   }
 
-  /**
-   * Actualiza el campo 'formaValida' en el store de acuicultura.
-   * Además, actualiza el estado de la sección y la validez global según el resultado.
-   * @method actualizarFormaValida
-   * @param updatedFormaValida Los valores booleanos actualizados para 'formaValida'.
-   * @returns {void}
-   * @description Esta función actualiza el estado de 'formaValida' en el store de acuicultura y,
-   * dependiendo del valor de todos los estados, actualiza las secciones y forma válida en el store.
-   */
-  public actualizarFormaValida(updatedFormaValida: { [key: string]: boolean }): void {
-    this.acuiculturaStore.actualizarformaValida(updatedFormaValida);
-    this.obtenerTodosLosStatus().subscribe((result: boolean) => {
-      if (result) {
-        this.seccionStore.establecerSeccion([true]);
-        this.seccionStore.establecerFormaValida([true]);
-      } else {
-        this.seccionStore.establecerSeccion([true]);
-        this.seccionStore.establecerFormaValida([false]);
-      }
-    });
-  }
 
-  /**
-   * Obtiene el estado actualizado de la forma válida.
-   * @method obtenerTodosLosStatus
-   * @returns {Observable<boolean>} Devuelve un observable con el valor booleano que indica si todos los valores de 'formaValida' son verdaderos.
-   * @description Esta función obtiene los valores actuales de 'formaValida' del store de acuicultura
-   * y verifica si todos los valores son verdaderos.
-   */
-  public obtenerTodosLosStatus(): Observable<boolean> {
-    return this.acuiculturaStore._select(state => state.formaValida).pipe(
-      map((formaValida: EnviarDatos) => {
-        return Object.values(formaValida).every(value => value === true);
-      })
-    );
-  }
 
   /**
    * Restablecer el formulario a su estado inicial.
@@ -155,19 +124,36 @@ export class ImportacionDeAcuiculturaService {
    * @param DATOS Objeto de tipo Acuicultura con los datos a actualizar.
    * @returns {void}
    */
-  public actualizarEstadoFormulario(DATOS: Acuicultura): void {
-    this.actualizarFormularioPago(DATOS.formularioPago);
-    this.actualizarFormularioMovilizacion(DATOS.formularioMovilizacion);
-    this.actualizarDatosMercancia(DATOS.datosMercancia);
+  public async actualizarEstadoFormulario(DATOS: Acuicultura): Promise<void> {
+   await this.acuiculturaStore.actualizarTodoElEstado(DATOS);
   }
 
-  /**
+
+    /**
    * Actualiza la lista de terceros relacionados en el store de acuicultura.
    * @method updateTercerosRelacionados
    * @param tercerosRelacionados Arreglo de objetos PersonaTerceros que representan los terceros relacionados.
    * @returns {void}
    */
-  public updateTercerosRelacionados(tercerosRelacionados: PersonaTerceros[]): void {
-    this.acuiculturaStore.actualizarTercerosRelacionados(tercerosRelacionados);
+  public actualizarSoloRealizarGroup(realizarGroup: RealizarGroup): void {
+    this.acuiculturaStore.actualizarSoloRealizarGroup(realizarGroup);
   }
+   /**
+   * Actualiza la lista de terceros relacionados con la solicitud.
+   * @method updateTercerosRelacionados
+   * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de terceros.
+   * @memberof CertificadoZoosanitarioServiceService
+   */
+    updateTercerosRelacionado(tercerosRelacionados: TercerosrelacionadosdestinoTable[]): void {
+      this.acuiculturaStore.updateTercerosRelacionados(tercerosRelacionados);
+    }
+      /**
+      * @description Obtiene todos los datos del formulario como observable.
+      * @returns {Observable<ListaDeDatosFinal>} Observable con todos los datos del formulario.
+      */
+      getAllDatosForma(): Observable<Acuicultura> {
+        return this.acuiculturaStore._select(state => state); // Select the entire state
+      }
+    
+  
 }

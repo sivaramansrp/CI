@@ -374,6 +374,13 @@ const ROUTES: Routes = [
         (m) => m.SeciitOeaRegistrationModule
       ),
   },
+   {
+    path: 'auto-transportista',
+    loadChildren: () =>
+      import('./tramites/32611/auto-transportista.module').then(
+        (m) => m.AutoTransportistaModule
+      ),
+  }
 
 ];
 
