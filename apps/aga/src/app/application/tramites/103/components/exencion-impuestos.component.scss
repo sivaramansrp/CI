@@ -1,3 +1,14 @@
+/* Overlay to block interaction with radio group when disabled */
+.radio-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.5);
+  z-index: 2;
+  cursor: not-allowed;
+}
 .alert {
   text-align: left !important;
 }
@@ -23,11 +34,11 @@
 }
 
 .modal-body {
-  margin: 25px 25px 0px 25px;
+  margin: 25px;
 }
 
 .modal-footer {
-  margin: 0px 25px 25px 0px;
+  margin: 0px 25px 25px 25px;
 }
 
 textarea.form-control {
@@ -38,4 +49,15 @@ textarea.form-control {
   width: fit-content;
   margin-left: 115px;
   align-items: center;
+}
+.custom-checkbox-label{
+    text-align: justify;
+    margin: -25px 0 0 25px !important;
+}
+::ng-deep #modalAgregarMercancias .require {
+  display: none !important;
+}
+.modal-cancelar{
+  position: relative;
+    top: 15%;
 }
