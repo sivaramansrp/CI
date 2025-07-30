@@ -21,6 +21,8 @@ import { OpcionesEvaluacionRequest } from '../core/models/request/opciones-evalu
 import { EvaluarSolicitudService } from '../core/services/evaluar-tramite/evaluar-solicitud.service';
 import { GuardarDictamenService } from '../core/services/evaluar-tramite/guardar-dictamen.service';
 import { IniciarService } from '../core/services/evaluar-tramite/iniciar.service';
+import { TabsSolicitudServiceTsService } from "../core/services/evaluar-tramite/tabs-solicitud.service.ts.service";
+import { DocumentoSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model";
 
 /**
  * @component
@@ -130,6 +132,11 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   conformidadDictamen: string = '';
 
+  /**
+   * @property {DocumentoSolicitud[]} documentos
+   * @description Documentos de solicitud.
+   */
+  documentosSolicitud: DocumentoSolicitud[] = [];
 
   /**
  * @constructor
@@ -150,6 +157,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery,
     private solicitudRequerimientoQuery: SolicitudRequerimientoQuery,
     private evaluarSolicitudService: EvaluarSolicitudService,
+    private tabsSolicitudServiceTsService: TabsSolicitudServiceTsService,
     private iniciarService: IniciarService,
     private guardarService: GuardarDictamenService
   ) {
@@ -195,8 +203,35 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigate([`/${this.guardarDatos?.department.toLowerCase()}/seleccion-tramite`]);
     }
-
+    this.getDocumentosSolicitud();
     this.opcionesEvaluacion();
+  }
+
+  /**
+   * @method getDocumentosSolicitud
+   * @description Método para obtener los documentos asociados a una solicitud.
+   * 
+   * Realiza una petición al servicio tabsSolicitudServiceTsService para recuperar los documentos
+   * vinculados al ID de solicitud proporcionado. Asigna los documentos a la variable documentosSolicitud
+   * si la respuesta es exitosa (código '00'), o muestra un error en caso contrario.
+   * 
+   * @returns {void}
+ */
+  getDocumentosSolicitud(): void {
+    const IDSOLICITUD = '202734811'
+    this.tabsSolicitudServiceTsService.getDocumentosSolicitud(IDSOLICITUD)
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === '00') {
+            this.documentosSolicitud = response.datos ?? [];
+          } else {
+            console.error('Error en respuesta:', response.mensaje);
+          }
+        },
+        error: (error) => {
+          console.error('Error al llamar el servicio:', error);
+        }
+      });
   }
 
   /**
