@@ -79,6 +79,7 @@ export interface DatosCatalago {
   opciones?: CatalogoPaises[]
   opcionesCatalogo?: Catalogo[];
   orden: number;
+  maxlength?: number;
 }
 
 /**

@@ -331,7 +331,7 @@
             [type]="item.tipo_input"
             id="{{ item.campo }}"
             [formControlName]="item.campo"
-            [maxlength]="item.campo === 'rfc' ? 13 : null"
+            [maxlength]="item.maxlength || (item.campo === 'rfc' ? 13 : null)"
             [class.is-invalid]="formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.invalid && formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.touched"
           />
           @if (formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.invalid && formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.touched) {
@@ -340,7 +340,37 @@
                 <small>Este campo es obligatorio.</small>
               }
               @if (formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.errors?.['maxlength']) {
-                <small>El RFC no puede exceder los 13 caracteres.</small>
+                <small>
+                  @switch (item.campo) {
+                    @case ('nombre') {
+                      El nombre no puede exceder los 200 caracteres.
+                    }
+                    @case ('apellidoPaterno') {
+                      El apellido paterno no puede exceder los 200 caracteres.
+                    }
+                    @case ('codigoPostal') {
+                      El código postal no puede exceder los 12 caracteres.
+                    }
+                    @case ('estado') {
+                      El estado no puede exceder los 250 caracteres.
+                    }
+                    @case ('correoElectronico') {
+                      El correo electrónico no puede exceder los 200 caracteres.
+                    }
+                    @case ('taxId') {
+                      El Tax ID no puede exceder los 12 caracteres.
+                    }
+                    @case ('razonSocial') {
+                      La razón social no puede exceder los 200 caracteres.
+                    }
+                    @case ('rfc') {
+                      El RFC no puede exceder los 13 caracteres.
+                    }
+                    @default {
+                      Este campo excede la longitud máxima permitida.
+                    }
+                  }
+                </small>
               }
             </div>
           }

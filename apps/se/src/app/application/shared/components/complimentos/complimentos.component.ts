@@ -558,20 +558,20 @@ this.formaComplimentos.disable();
           taxId: ['', Validators.required],
           razonSocial: ['', Validators.required],
           pais: ['', Validators.required],
-          codigoPostal: ['', Validators.required],
+          codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
           estado: ['', Validators.required],
-          correoElectronico: ['', Validators.required],
+          correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
         });
 
       case TIPO_FORMA.TIPO_PERSONA:
         return this.fb.group({
-          taxId: ['', Validators.required],
-          nombre: ['', Validators.required],
+          taxId: ['', [Validators.required, Validators.maxLength(12)]],
+          nombre: ['', [Validators.required, Validators.maxLength(200)]],
           pais: ['', Validators.required],
-          codigoPostal: ['', Validators.required],
-          estado: ['', Validators.required],
-          correoElectronico: ['', Validators.required],
-          apellidoPaterno: ['', Validators.required],
+          codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
+          estado: ['', [Validators.required, Validators.maxLength(250)]],
+          correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
+          apellidoPaterno: ['', [Validators.required, Validators.maxLength(200)]],
         });
       case TIPO_FORMA.NATIONALIDAD_MEXICANA:
         return this.fb.group({
@@ -583,9 +583,9 @@ this.formaComplimentos.disable();
           taxId: ['', Validators.required],
           razonSocial: ['', Validators.required],
           pais: ['', Validators.required],
-          codigoPostal: ['', Validators.required],
+          codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
           estado: ['', Validators.required],
-          correoElectronico: ['', Validators.required],
+          correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
         });
         break;
     }
