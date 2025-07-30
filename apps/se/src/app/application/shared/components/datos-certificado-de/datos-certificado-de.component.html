@@ -25,12 +25,12 @@
         <div class="row">
           <ng-titulo titulo="Representación federal" />
           <div class="col-md-6">
-            <app-catalogo-select [label]="'Entidad federativa'" [catalogo]="entidadFederativaDatos || []" 
-            [required]="true" name="estado"formControlName="EntidadFederativaDates"
+            <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [label]="'Entidad federativa'" [catalogo]="entidadFederativaDatos || []" 
+            [required]="true" name="estado" formControlName="EntidadFederativaDates"
             (selectionChange)="entidadFederativaSeleccion($event)"  (change)="setValoresStore('formDatosCertificado','EntidadFederativaDates','setFormDatosCertificado')"></app-catalogo-select>
           </div>
           <div class="col-md-6">
-            <app-catalogo-select [label]="'Representación federal'"  [catalogo]="representacionFederalDatos || []" 
+            <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [label]="'Representación federal'"  [catalogo]="representacionFederalDatos || []" 
             [required]="true" name="estado" formControlName="representacionFederalDates"
             (selectionChange)="representacionFederalSeleccion($event)"  (change)="setValoresStore('formDatosCertificado','EntidadFederativaDates','setFormDatosCertificado')"></app-catalogo-select>
           </div>

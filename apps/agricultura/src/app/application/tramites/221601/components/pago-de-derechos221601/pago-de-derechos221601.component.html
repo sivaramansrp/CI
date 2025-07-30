@@ -40,7 +40,7 @@
           
           <div class="col-md-4">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="bancocatalogo" formControlName="banco" [label]="'Banco'" [isDisabled]="esFormularioSoloLectura"
+              <app-catalogo-select [catalogo]="bancocatalogo" formControlName="banco" [label]="'Banco'" [isDisabled]="esFormularioSoloLectura" [placeholder]="'Seleccione un valor'"
                 [required]="true" name="banco" (change)="setValoresStore(pagoDerechosForm, 'banco', 'setBanco')">
               </app-catalogo-select>
             </div>
@@ -50,7 +50,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="llave">Llave de pago*:</label>
-              <input class="form-control" id="llave" type="text"
+              <input class="form-control" id="llave" type="text" [maxlength]="50"
                 formControlName="llave" (change)="setValoresStore(pagoDerechosForm, 'llave', 'setLlave')" />
             </div>
             @if(pagoDerechosForm.controls['llave'].invalid && pagoDerechosForm.controls['llave'].touched) {
@@ -59,7 +59,7 @@
                   <span class="mensaje-error">Este campo es obligatorio</span>
                 }
                 @if(pagoDerechosForm.controls['llave'].errors?.['maxlength']) {
-                  <span class="mensaje-error">La llave no puede ser mayor a 10 caracteres</span>
+                  <span class="mensaje-error">La llave no puede ser mayor a 50 caracteres</span>
                 }
               </div>
             }
@@ -69,17 +69,13 @@
               <input-fecha
                 [datos]="INPUT_FECHA_CONFIG"
                 [setFecha]="pagoDerechosForm.get('fecha')?.value"
-                [isDisabled]="true"
+                
                 (valorCambiado)="cambioFechaFinal($event)">
               </input-fecha>                       
-              </div>
-            @if(pagoDerechosForm.controls['fecha'].invalid && pagoDerechosForm.controls['fecha'].touched) {
-              <div class="d-grid">
-                @if(pagoDerechosForm.controls['fecha'].errors?.['required']) {
-                  <span class="mensaje-error">Este campo es obligatorio</span>
-                }                         
-              </div>
-            }
+               </div>
+          <div *ngIf="fechaFuturaSeleccionada" class="text-danger mt-1">
+            La fecha de pago debe ser menor o igual a la fecha actual.
+          </div>
           </div>          
           <div class="col-md-4">
             <div class="form-group">
@@ -100,6 +96,16 @@
           </div>
         </div>        
       </div>
+       <div class="row mt-5">
+      <div class="col-md-12">
+        <div class="pull-right">
+          <button type="button" class="btn btn-primary ms-2" 
+            [disabled]="esFormularioSoloLectura ? true : false">
+            Borrar datos del pago
+          </button>
+        </div>
+      </div>
+    </div>
     </form>
   </div>
   

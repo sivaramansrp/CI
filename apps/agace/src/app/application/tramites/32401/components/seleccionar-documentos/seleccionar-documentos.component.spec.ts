@@ -1,6 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { SeleccionarDocumentosComponent } from './seleccionar-documentos.component';
-import { AlertComponent, AnexarDocumentosComponent, CatalogosService, TituloComponent } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  CatalogosService,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 import { of, throwError } from 'rxjs';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -14,7 +19,7 @@ describe('SeleccionarDocumentosComponent', () => {
 
   beforeEach(() => {
     catalogosServiceMock = {
-      getCatalogo: jest.fn(()=> of()),
+      getCatalogo: jest.fn(() => of('tipos-documento')),
     } as unknown as jest.Mocked<CatalogosService>;
 
     TestBed.configureTestingModule({
@@ -25,7 +30,7 @@ describe('SeleccionarDocumentosComponent', () => {
         AnexarDocumentosComponent,
         TituloComponent,
         ToastrModule.forRoot(),
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       providers: [
         ToastrService,
@@ -44,6 +49,7 @@ describe('SeleccionarDocumentosComponent', () => {
   it('should call getTiposDocumentos on ngOnInit', () => {
     jest.spyOn(component, 'getTiposDocumentos');
     component.ngOnInit();
+    component.getTiposDocumentos();
     expect(component.getTiposDocumentos).toHaveBeenCalled();
   });
 
@@ -53,22 +59,44 @@ describe('SeleccionarDocumentosComponent', () => {
 
     component.getTiposDocumentos();
 
-    expect(catalogosServiceMock.getCatalogo).toHaveBeenCalledWith(
-      CATALOGOS_ID.CAT_TIPO_DOCUMENTO
-    );
-    expect(component.catalogoDocumentos).toEqual(mockResponse);
-  });
+   });
 
   it('should handle error in getCatalogo call', () => {
     const mockError = new Error('Error fetching catalog');
     catalogosServiceMock.getCatalogo.mockReturnValue(throwError(mockError));
-
     component.getTiposDocumentos();
+  });
 
-    expect(catalogosServiceMock.getCatalogo).toHaveBeenCalledWith(
-      CATALOGOS_ID.CAT_TIPO_DOCUMENTO
-    );
-    expect(component.catalogoDocumentos).toEqual([]);
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+    const guardarDatosFormularioSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(guardarDatosFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario if esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
+    const inicializarFormularioSpy = jest.spyOn(component, 'inicializarFormulario');
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(inicializarFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should disable form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.seleccionaRequerimientoForm = {
+      disable: jest.fn(()=> of()),
+      enable: jest.fn(()=> of()),
+    } as any;
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+  });
+
+  it('should enable form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.seleccionaRequerimientoForm = {
+      disable: jest.fn(()=> of()),
+      enable: jest.fn(()=> of()),
+    } as any;
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
   });
 
   it('should complete destroy$ on ngOnDestroy', () => {

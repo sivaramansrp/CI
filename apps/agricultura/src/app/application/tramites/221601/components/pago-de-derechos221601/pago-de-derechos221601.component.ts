@@ -8,6 +8,8 @@ import { INPUT_FECHA_CONFIG } from '@libs/shared/data-access-user/src/core/enums
 import { Tramite221601Query } from '../../../../estados/queries/tramite221601.query';
 import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
 
+import { CommonModule } from '@angular/common';
+
 
 /**
  * Componente encargado de gestionar el pago de derechos dentro del trámite 221601.
@@ -35,7 +37,7 @@ import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
     TituloComponent,
     FormsModule,
     ReactiveFormsModule,
-    CatalogoSelectComponent,InputFechaComponent
+    CatalogoSelectComponent,InputFechaComponent,CommonModule
   ],
   templateUrl: './pago-de-derechos221601.component.html',
   styleUrls: ['./pago-de-derechos221601.component.scss']
@@ -224,21 +226,47 @@ export class PagoDeDerechos221601Component implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.tramite221601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
-   /**
-   * Maneja los cambios en el campo "Fecha de Pago".
-   * Actualiza el estado del almacén con la fecha de pago proporcionada.  
-   */
-   cambioFechaFinal(nuevo_valor: string): void {
-    this.pagoDerechosForm.patchValue({
-      fecha: nuevo_valor,
-    });
-    this.tramite221601Store.setFecha(nuevo_valor);
-  }
-    /**
+ /**
    * Constante para configurar el input de fecha.
    * Define las propiedades del campo de entrada de fecha.
    */
     INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
+
+    /**
+
+ * Método para cambiar la fecha final.
+
+ * @param nuevo_valor Nuevo valor de la fecha final.
+
+ */
+fechaFuturaSeleccionada = false;
+  cambioFechaFinal(nuevo_valor: string): void {
+    this.pagoDerechosForm.patchValue({
+      fecha: nuevo_valor,
+    });
+   this.tramite221601Store.setFecha(nuevo_valor);
+  this.pagoDerechosForm.get('fecha')?.setValue(nuevo_valor);
+
+  let seleccionada: Date | null = null;
+  if (nuevo_valor && nuevo_valor.includes('/')) {
+    const [DAY, MONTH, YEAR] = nuevo_valor.split('/').map(Number);
+    seleccionada = new Date(YEAR, MONTH - 1, DAY);
+  } else {
+    seleccionada = new Date(nuevo_valor); 
+  }
+
+  const HOY = new Date();
+  HOY.setHours(0, 0, 0, 0);
+
+  if (seleccionada && seleccionada > HOY) {
+    this.fechaFuturaSeleccionada = true;
+    this.pagoDerechosForm.get('fecha')?.setErrors({ futureDate: true });
+  } else {
+    this.fechaFuturaSeleccionada = false;
+    this.pagoDerechosForm.get('fecha')?.setErrors(null);
+  }
+  }
+
   /**
    * Método que se ejecuta cuando el componente es destruido.
    * 
@@ -248,6 +276,4 @@ export class PagoDeDerechos221601Component implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }
-

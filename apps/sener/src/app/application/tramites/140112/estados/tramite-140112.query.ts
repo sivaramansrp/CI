@@ -12,7 +12,7 @@ export class Tramite140112Query extends Query<Tramites140112State> {
    * Observable to select the desistimiento property from the state.
    */
   selectDesistimiento$ = this.select((state) => {
-    return state.permisoCancelar.desistimiento;
+    return state;
   }); 
 
   

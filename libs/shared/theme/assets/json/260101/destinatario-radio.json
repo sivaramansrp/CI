@@ -1,10 +1,12 @@
 [
     {
         "label": "Fisica",
-        "value": "fisica"
+        "value": 1,
+        "hint":"Una persona física es entendida como toda persona con una actividad específica"
     },
     {
         "label": "Moral",
-        "value": "moral"
+        "value": 2,
+        "hint":"Una persona moral es entendida como una empresa con una actividad específica"
     }
 ]

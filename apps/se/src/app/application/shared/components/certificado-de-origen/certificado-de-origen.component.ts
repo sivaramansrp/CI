@@ -187,6 +187,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * @type {InputFecha}
    */
   public fechaFinalInput: InputFecha = FECHA_FINAL;
+  
+  /**
+   * Indicates whether the domicile information should be displayed.
+   * Set to `true` to show domicile details; otherwise, set to `false`.
+   */
+  @Input() public domicilio: boolean = true
 
   /**
   * Texto que contiene los requisitos y mensajes informativos.
