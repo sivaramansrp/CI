@@ -65,7 +65,8 @@
             (click)="
               onClickCargaArchivos() 
             "
-            [disabled]="!manejaEventoCargaDocumentos"
+            [disabled]="!regresarSeccionCargarDocumentoEvento "
+            *ngIf="seccionCargarDocumentos"
           >
             Cargar archivos
           </button>

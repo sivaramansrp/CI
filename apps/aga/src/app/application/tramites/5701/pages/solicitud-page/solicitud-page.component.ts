@@ -257,7 +257,7 @@ export class SolicitudPageComponent implements OnInit {
                 categoria: 'success',
                 modo: 'action',
                 titulo: '',
-                mensaje: MSG_REGISTRO_EXITOSO(this.folioTemporal.toString()),
+                mensaje: MSG_REGISTRO_EXITOSO(String(this.folioTemporal)),
                 cerrar: true,
                 txtBtnAceptar: '',
                 txtBtnCancelar: '',
@@ -695,8 +695,8 @@ export class SolicitudPageComponent implements OnInit {
    * {void} No retorna ningún valor.
    */
   onClickCargaArchivos(): void {
-    this.cargarArchivosEvento.emit();
-  }
+      this.cargarArchivosEvento.emit();
+    }
 
   /**
    * Método para navegar a la sección anterior del wizard.
@@ -738,7 +738,6 @@ export class SolicitudPageComponent implements OnInit {
    */
   anteriorSeccionCargarDocumento(): void {
     this.regresarSeccionCargarDocumentoEvento.emit();
-    this.seccionCargarDocumentos = true;
   }
 
   /**
