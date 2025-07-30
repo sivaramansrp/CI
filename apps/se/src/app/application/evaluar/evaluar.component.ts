@@ -1,28 +1,32 @@
 import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
 import { Component, OnDestroy, OnInit, Type } from "@angular/core";
 import { CapturarRequerimientoComponent } from '@libs/shared/data-access-user/src/tramites/components/capturar-requerimiento/capturar-requerimiento.component';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from "@angular/common";
 import { Router } from '@angular/router';
 import { SolicitudRequerimientosState } from '@libs/shared/data-access-user/src/core/estados/requerimientos.store';
+
 import { SolicitudRequerimientoQuery } from '@libs/shared/data-access-user/src/core/queries/requerimientos.query';
+
 import { EncabezadoRequerimientoComponent } from '@libs/shared/data-access-user/src/tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
 import { GenerarDictamenComponent } from '@libs/shared/data-access-user/src/tramites/components/generar-dictamen/generar-dictamen.component';
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
 import { SolicitarDocumentosEvaluacionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
 import { SolicitarOpinionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-opinion/solicitar-opinion.component';
+
 import { ConsultaioQuery, ConsultaioState, ConsultaioStore, FECHA_DE_INICIO } from '@ng-mf/data-access-user';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
 
-import { GuardarDictamenRequest } from '../core/models/request/guardar-dictamen-request.model';
-import { OpcionesEvaluacionRequest } from '../core/models/request/opciones-evaluacion.model';
+import { DocumentoSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model";
 import { EvaluarSolicitudService } from '../core/services/evaluar-tramite/evaluar-solicitud.service';
+import { GuardarDictamenRequest } from '../core/models/request/guardar-dictamen-request.model';
 import { GuardarDictamenService } from '../core/services/evaluar-tramite/guardar-dictamen.service';
 import { IniciarService } from '../core/services/evaluar-tramite/iniciar.service';
+import { OpcionesEvaluacionRequest } from '../core/models/request/opciones-evaluacion.model';
 import { TabsSolicitudServiceTsService } from "../core/services/evaluar-tramite/tabs-solicitud.service.ts.service";
-import { DocumentoSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model";
 import { TareasSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model";
 
 /**
