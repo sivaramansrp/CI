@@ -25,7 +25,7 @@
           <div class="form-group">
              <app-catalogo-select
               [catalogo]="estado"
-              [label]="'Estado*'"
+              [label]="'Estado'"
               name="estado"
               [required]="true"
               [isDisabled]="esFormularioSoloLectura" 
@@ -88,7 +88,7 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="colonias">Colonias:</label>
+            <label class="form-label" for="colonias">Colonia:</label>
             <input
               class="form-control"
               type="text"
@@ -108,7 +108,13 @@
       <div class="row">
         <div class="col-md-8">
           <div class="form-group">
-            <label class="form-label" for="calle">Calle*:</label>
+            <label class="form-label" for="calle">Calle*:
+              <span 
+              class="bi bi-question-circle-fill" 
+              title="Domicilio, calle, número, interior, número exterior, lote"
+              data-bs-toggle="tooltip"
+              ></span>
+            </label>
             <input
               class="form-control"
               type="text"
@@ -197,7 +203,7 @@
       <div class="col-md-4 mt-5">
         <lib-input-check 
           [id]="'avisoCheckbox'" 
-          [label]="'Aviso de funcionamiento'" 
+          [label]="'Aviso de funcionamiento:'" 
           [required]="true"
           formControlName="avisoCheckbox" 
           [isDisabled]="esFormularioSoloLectura"
@@ -256,6 +262,24 @@
         </div>
       </div>
     </div>
+     <div class="col-md-4 mt-2">
+        <div class="form-group">
+          <label class="form-label" for="importPermitNumberCNSNS"
+          >Número de Permiso de Importación expedido por la CNSNS:
+            <span 
+              class="bi bi-question-circle-fill" 
+              title="No. de licencia sanitaria"
+              data-bs-toggle="tooltip"
+              ></span
+            ></label>
+          <input 
+            class="form-control" 
+            id="importPermitNumberCNSNS" 
+            placeholder="" 
+            type="text"
+            formControlName="importPermitNumberCNSNS" />
+        </div>
+      </div>
     <div class="row mt-5">
       <div class="col-md-4"></div>
       <div class="col-md-4"></div>
@@ -302,7 +326,7 @@
 
     <div class="row mt-2">
       <div class="col-md-12">
-        <ng-titulo titulo="Manifiesto bajo protesta" />
+        <ng-titulo titulo="Manifiestos y declaraciones" />
         <div class="form-check bg-light p-0">
           <div class="alert alert-info content-with-checkbox py-6">
             <lib-input-check 
@@ -352,7 +376,7 @@
           </div>
         </div>
         <div class="col-md-3 mt-5">
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Buscar</button>
         </div>
       </div>
 
