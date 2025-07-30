@@ -6,7 +6,6 @@ import {
   CatalogoSelectComponent,
   CatalogosSelect,
   ConsultaioQuery,
-  InputRadioComponent,
   TituloComponent,
   
 } from '@ng-mf/data-access-user';

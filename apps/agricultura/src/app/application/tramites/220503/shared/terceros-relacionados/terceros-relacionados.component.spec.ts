@@ -1,5 +1,5 @@
 import { TercerosRelacionadosComponent } from './terceros-relacionados.component';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 
 describe('TercerosRelacionadosComponent', () => {
   let component: TercerosRelacionadosComponent;

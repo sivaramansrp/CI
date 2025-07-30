@@ -6,7 +6,6 @@
  * @module AgregardestinatarioComponent
  */
 
-import { ActivatedRoute, Router } from "@angular/router";
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from "@libs/shared/data-access-user/src";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
@@ -162,10 +161,8 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
   constructor(
     public fb: FormBuilder,
     public tercerosrelacionadosService: TercerosrelacionadosService,
-    private router: Router,
     private readonly certificadoZoosanitarioServices: Solocitud220503Service,
     private readonly certificadoZoosanitarioQuery: Solicitud220503Query,
-    private route: ActivatedRoute
   ) { }
 
   /**

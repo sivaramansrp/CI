@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -21,7 +21,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss'],
   standalone: true,
-  imports:[CommonModule, CatalogoSelectComponent, ReactiveFormsModule, InputRadioComponent,TituloComponent,PagoDeDerechoComponent ]
+  imports:[CommonModule, ReactiveFormsModule,PagoDeDerechoComponent ]
 
 })
 export class PagoDeDerechosComponent implements OnInit , OnDestroy{
