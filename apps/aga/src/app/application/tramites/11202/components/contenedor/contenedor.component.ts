@@ -16,14 +16,7 @@ import preOperativo from '@libs/shared/theme/assets/json/11202/preOperativo.json
  * This component is responsible for managing the container-related operations in the application.
  * It provides functionality for handling forms, displaying dynamic tables, managing file uploads,
  * and interacting with services to fetch and submit data.
- *
- * @selector app-contenedor
- * @templateUrl ./contenedor.component.html
- * @styleUrl ./contenedor.component.scss
- *
- * @implements OnInit, OnDestroy
  */
-
 @Component({
   selector: 'app-contenedor',
   templateUrl: './contenedor.component.html',
