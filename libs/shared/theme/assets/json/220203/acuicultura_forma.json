@@ -61,7 +61,7 @@
     }
   ],
   "pagoDeDerechos": {
-    "exentoPago": "No",
+    "exentoPago": "no",
     "justificacion": "1",
     "claveReferencia": "REF1234567890",
     "cadenaDependencia": "CAD-DEP-0001",
