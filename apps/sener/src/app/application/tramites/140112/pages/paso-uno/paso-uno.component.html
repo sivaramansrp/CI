@@ -14,7 +14,9 @@
             <solicitante></solicitante>
         } 
         @case (2) {
-            <app-desistimiento-solicitud-permiso></app-desistimiento-solicitud-permiso>      
+           @if(esDatosRespuesta){
+            <app-desistimiento-solicitud-permiso></app-desistimiento-solicitud-permiso>
+           }    
         } 
     }
       </ng-container>
