@@ -1,7 +1,6 @@
+import { ALERTA, ALERTA_BUSCAR_ERROR, ERROR_ALERTA, getAlertaNumFolioAsignacionError } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-
-import { ALERTA_BUSCAR_ERROR, ERROR_ALERTA } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
 import { CUPOS_PASOS } from '../../constantes/cupos-constantes.enum';
 import { DatosComponent } from '../datos/datos.component';
@@ -80,15 +79,37 @@ export class PantallasComponent {
   ALERTA = ERROR_ALERTA;
 
   /**
+   * Asigna el mensaje de error al atributo `ALERTA_AGREGAR_ERROR`.
+   */
+  ALERTA_AGREGAR_ERROR = ALERTA;
+
+  /**
    * Asigna el mensaje de error al atributo `ALERTA_BUSCAR_ERROR`.
    */
   ALERTA_BUSCAR_ERROR = ALERTA_BUSCAR_ERROR;
+
+  /**
+   * Asigna el mensaje de error al atributo `ALERTA_NUM_FOLIO_ASIGNACION_ERROR`.
+   */
+  ALERTA_NUM_FOLIO_ASIGNACION_ERROR!: string;
 
   /**
    * Indica si se debe mostrar un mensaje de error.
    * @type {boolean}
    */
   mostrarError: boolean = false;
+
+  /**
+   * Indica si se debe mostrar un mensaje de error al agregar.
+   * @type {boolean}
+   */
+  mostrarNumFolioAsignacionError: boolean = false;
+
+  /**
+   * Indica si se debe mostrar un mensaje de error al agregar.
+   * @type {boolean}
+   */
+  mostrarAgregarError: boolean = false;
 
   /**
    * Actualiza el índice del paso y maneja la navegación hacia adelante o atrás.
@@ -100,6 +121,8 @@ export class PantallasComponent {
     if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
       if (this.indice === 1) {
         this.mostrarError = false;
+        this.mostrarAgregarError = false;
+        this.mostrarNumFolioAsignacionError = false;
         const EXPEDICION_CERTIFICADOS_ASIGNACION = this.datos?.expedicionCertificadosAsignacionDirectaComponent;
         this.esValido = EXPEDICION_CERTIFICADOS_ASIGNACION?.validarFormulario() ?? false;
       }
@@ -129,5 +152,29 @@ export class PantallasComponent {
   public mostrarErrorDirectoEvento(event: boolean): void {
     this.esValido = true;
     this.mostrarError = event;
+  }
+
+  /**
+   * Maneja el evento de error al mostrar un mensaje de error en el número de folio de asignación.
+   *
+   * @param {mostrarError: boolean, valor: string} event - Indica si se debe mostrar el mensaje de error en el número de folio de asignación.
+   * @returns {void}
+   */
+  mostrarNumFolioAsignacionErrorEvento(event: {mostrarError: boolean, valor: string}): void {
+    this.esValido = true;    
+    this.mostrarError = false;
+    this.mostrarNumFolioAsignacionError = event.mostrarError;
+    this.ALERTA_NUM_FOLIO_ASIGNACION_ERROR = getAlertaNumFolioAsignacionError(event.valor);
+  }
+
+  /**
+   * Maneja el evento de error al agregar un elemento.
+   *
+   * @param {boolean} event - Indica si se debe mostrar el mensaje de error al agregar.
+   * @returns {void}
+   */
+  public mostrarAgregarErrorEvento(event: boolean): void {
+    this.esValido = true;
+    this.mostrarAgregarError = event;
   }
 }

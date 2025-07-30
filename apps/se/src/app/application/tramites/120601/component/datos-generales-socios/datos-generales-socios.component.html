@@ -6,7 +6,7 @@
         <div class="row">
           <div class="col-md-6">
             <label for="nacionalidadMexicana">Nacionalidad mexicana:</label>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-md-6">
                 <input
                   type="radio"
@@ -34,7 +34,7 @@
 
           <div class="col-md-6">
             <label for="tipoDePersona">Tipo de persona:</label>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-md-6">
                 <input
                   type="radio"
@@ -58,7 +58,7 @@
                 <label for="personaYes">Persona moral</label>
               </div>
             </div>
-          </div>
+          </div> 
         </div>
 
         <div class="row" *ngIf="camposEntradaRegulares">
@@ -179,7 +179,7 @@
               <div class="form-group">
                 <app-catalogo-select
                   [catalogo]="catalogoPaises"
-                  [label]="'País*'"
+                  [label]="'País'"
                   [isDisabled]="esFormularioSoloLectura"
                   name="pais"
                   formControlName="pais"
@@ -308,9 +308,9 @@
                     Este campo es obligatorio.
                   </small>
                   <small
-                    *ngIf="FormSolicitud.get(['datosGeneralesSocios','correoElectronico'])?.errors?.['email']"
+                    *ngIf="FormSolicitud.get(['datosGeneralesSocios','correoElectronico'])?.errors?.['pattern']"
                   >
-                    Ingrese un correo electrónico válido.
+                    El correo no cumple con el formato requerido.
                   </small>
                 </div>
               </div>
@@ -423,7 +423,7 @@
               <div class="form-group">
                 <app-catalogo-select
                   [catalogo]="catalogoPaises"
-                  [label]="'País*'"
+                  [label]="'País'"
                   [isDisabled]="esFormularioSoloLectura"
                   name="pais"
                   formControlName="pais"
@@ -570,7 +570,7 @@
             <div class="col-md-6 col-sm-6 text-end">
               <div class="btn-group">
                 <button
-                  class="btn btn-primary ms-2 d-flex"
+                  class="btn btn-primary ms-2 d-flex mt-5"
                   type="button"
                   [disabled]="esFormularioSoloLectura"
                   (click)="agregarSocio()"

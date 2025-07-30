@@ -150,6 +150,18 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
   }
 
   /**
+   * Actualiza el store con los datos de pago de derechos.
+   * @method actualizarPagoDeDerechos
+   * @param {PagoDeDerechos} pagoDeDerechos Datos del pago de derechos.
+   */
+  public actualizarPagoDeDerechos(pagoDeDerechos: PagoDeDerechos): void {
+    this.update(state => ({
+      ...state,
+      pagoDeDerechos: pagoDeDerechos,
+    }));
+  }
+
+  /**
    * Actualiza el store con la lista de terceros relacionados.
    * @method updateTercerosRelacionados
    * @param {TercerosrelacionadosTable[]} tercerosRelacionados Lista de personas terceros relacionadas.
@@ -160,6 +172,30 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
     this.update((state) => ({
       ...state,
       datosForma: tercerosRelacionados,
+    }));
+  }
+  
+  /**
+  * Actualiza el store con los datos de movilización nacional.
+  * @method actualizarDatosParaMovilizacionNacional
+  * @param {DatosParaMovilizacionNacional} datosParaMovilizacionNacional Datos de movilización nacional.
+  */
+  public actualizarSelectedExdora(datosParaMovilizacionNacional: TercerosrelacionadosdestinoTable): void {
+    this.update(state => ({
+      ...state,
+      seletedExdora: datosParaMovilizacionNacional
+    }));
+  }
+
+/**
+ * Actualiza el store con los datos de movilización nacional.
+ * @method actualizarDatosParaMovilizacionNacional
+ * @param {DatosParaMovilizacionNacional} datosParaMovilizacionNacional Datos de movilización nacional.
+ */
+  public actualizarSelectedTerceros(datosParaMovilizacionNacional: TercerosrelacionadosdestinoTable): void {
+    this.update(state => ({
+      ...state,
+      seletedTerceros: datosParaMovilizacionNacional
     }));
   }
 }

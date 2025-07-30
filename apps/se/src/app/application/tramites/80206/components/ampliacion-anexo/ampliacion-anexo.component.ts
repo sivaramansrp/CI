@@ -465,9 +465,9 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
    * @method procesarDatosDelHijo
    * @param {Catalogo | Catalogo[]} data - Datos recibidos.
    */
-  procesarDatosDelHijo(data: Catalogo | Catalogo[]): void {
+  procesarDatosDelHijo(data: Catalogo): void { 
     
-    this.tramite80206Store.setAduanaDeIngresoSeleccion(data as Catalogo);
+    this.tramite80206Store.setAduanaDeIngresoSeleccion(data?.id.toString() || '');
   }
   
 

@@ -50,6 +50,7 @@
         [layout]="'vertical'"
         formControlName="esSolicitudFerros"
         (valueChange)="enCambioDeValor($event)"
+        
       ></app-input-radio>
     </div>
     @if(enCambioValor === '1') {
@@ -68,6 +69,8 @@
       <ng-table
         [commonTableHeader]="tableData.tableHeader"
         [commonTableBody]="tableData.tableBody"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+ 
       ></ng-table>
     </div>
   </div>

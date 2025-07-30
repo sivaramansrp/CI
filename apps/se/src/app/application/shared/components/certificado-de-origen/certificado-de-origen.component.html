@@ -18,7 +18,7 @@
                             'formCertificado',
                         'si',
                         'setFormCertificadoGenric')"
-                          ></lib-input-check>
+                          [isDisabled]="esFormularioSoloLectura"></lib-input-check>
                         </div>
                     </div>
                 </div>
@@ -57,7 +57,8 @@
                         (change)="setValoresStore('formCertificado','razonSocial','setFormCertificadoGenric')" />
                 </div>
             </div>
-            <div class="my-4">
+            @if(domicilio){
+            <div class="my-4" >
                 <ng-titulo titulo="Domicilio del tercer operador" />
                 <div class="row">
                     <div class="col-md-4 form-group">
@@ -73,30 +74,34 @@
                     </div>
                 </div>
             </div>
+        }
         </div>
 
         <ng-titulo titulo="Tratado y país o bloque" />
         <div class="row mb-3">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <app-catalogo-select [catalogo]="tratadoAcuerdo || []" [label]="'Tratado / Acuerdo'"
                     [required]="true" name="estado" formControlName="entidadFederativa"
                     (selectionChange)="tipoEstadoSeleccion($event)"
+                    [isDisabled]="esFormularioSoloLectura"
                     (change)="setValoresStore(
                         'formCertificado',
                       'entidadFederativa',
                       'setFormCertificadoGenric')"
+                      [isDisabled]="esFormularioSoloLectura"
                     ></app-catalogo-select>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <app-catalogo-select [catalogo]="paisBloqu || []" [label]="'País / Bloque'" [required]="true"
                     name="estado" formControlName="bloque"
                     (selectionChange)="tipoSeleccion($event)"
+                    [isDisabled]="esFormularioSoloLectura"
                     (change)="setValoresStore(
                     'formCertificado',
                   'bloque',
                   'setFormCertificadoGenric')"
-                    ></app-catalogo-select>
+                   [isDisabled]="esFormularioSoloLectura" ></app-catalogo-select>
             </div>
         </div>
         <div class="row mb-3">
@@ -133,21 +138,21 @@
         </div>
 
         <div class="col-md-4 form-field">
-            <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicioInput')?.value"
+            <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicioInput')?.value" [isDisabled]="esFormularioSoloLectura"
             (valorCambiado)="cambioFechaInicio($event)" (change)="setValoresStore('formCertificado','fechaInicioInput','setFormCertificadoGenric')"></input-fecha>
         </div>
         <div class="col-md-4 form-field">
-            <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinalInput')?.value" (valorCambiado)="cambioFechaFinal($event)"
+            <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinalInput')?.value" (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="esFormularioSoloLectura"
              (change)="setValoresStore('formCertificado','fechaFinalInput','setFormCertificadoGenric')"></input-fecha>
         </div>
 
         @if(mercanciasDisponibles){
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary" [disabled]="formCertificado.invalid" (click)="buscarMercancia()">Buscar mercancías</button>
+                <button class="btn btn-primary"  (click)="buscarMercancia()" [disabled]="esFormularioSoloLectura">Buscar mercancías</button>
             </div>
         } @else {
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary" [disabled]="formCertificado.invalid" (click)="buscarMercancia()">Mercancías Disponibles</button>
+                <button class="btn btn-primary" [disabled]="formCertificado.invalid || esFormularioSoloLectura" (click)="buscarMercancia()" >Mercancías Disponibles</button>
             </div>
         }
 
@@ -166,8 +171,17 @@
             </div>
           }
 
+           
+        @if(mercanciasDisponiblesTabla){
+            <div class="row">
+                <app-tabla-dinamica [tipoSeleccionTabla]="seleccionTabla"  [configuracionTabla]="configuracionTablaMercanciaDisponible"
+                [datos]="tableData || []" (filaClic)="abrirModificarModal($event)"  ></app-tabla-dinamica>
+            </div>
+        }
+        @else{
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="tableData || []"
             [tipoSeleccionTabla]="seleccionTabla" (filaClic)="abrirModificarModal($event)"></app-tabla-dinamica>
+        }
 
             @if (cargoDeMercancias) {
                 <div class="row">
@@ -178,7 +192,7 @@
 
                 <div class="row d-flex justify-content-end">
                     <div class="col-12 container text-end">
-                      <button class="btn btn-primary my-5">Carga por archivo</button>
+                      <button class="btn btn-primary my-5" [disabled]="esFormularioSoloLectura">Carga por archivo</button>
                     </div>
                 </div>
 
@@ -211,8 +225,8 @@
            
               <div class="row d-flex  mt-3 mb-4 justify-content-end">
                   <div class="col-12 container text-end mt-5">
-                    <button class="btn btn-default me-2" (click)="eliminarSeleccionados()">Eliminar</button>
-                    <button class="btn btn-primary"  (click)="abrirModal(tableData[0])">Modificar</button>
+                    <button class="btn btn-default me-2" (click)="eliminarSeleccionados()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+                    <button class="btn btn-primary"  (click)="abrirModal(tableData[0])" [disabled]="esFormularioSoloLectura">Modificar</button>
                   </div>
               </div>
 

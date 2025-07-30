@@ -11,8 +11,8 @@ export interface Catalogo {
  * Estado inicial para la interfaz del trámite 110201.
  */
 export interface Solicitud110201State {
-  tratado: Catalogo[];
-  pais: Catalogo[];
+  tratado: string;
+  pais: string;
   fraccionArancelaria: string;
   numeroRegistro: string;
   nombreComercial: string;
@@ -22,9 +22,9 @@ export interface Solicitud110201State {
   observaciones: string;
   presica: string;
   presenta: string;
-  idioma: Catalogo[] | null;
-  entidad: Catalogo[] | null;
-  representacion: Catalogo[] | null;
+  idioma: string;
+  entidad: string;
+  representacion: string;
   nombre: string;
   apellidoPrimer: string;
   apellidoSegundo: string;
@@ -37,21 +37,21 @@ export interface Solicitud110201State {
   telefono: string;
   fax: string;
   correoElectronico: string;
-  nacion: Catalogo[] | null;
-  transporte: Catalogo[] | null;
+  nacion: string;
+  transporte: string;
   fraccionMercanciaArancelaria: string;
   nombreTecnico: string;
   nombreEnIngles: string;
   criterioParaConferir: string;
   marca: string;
   cantidad: string;
-  umc: Catalogo[];
+  umc: string;
   valorDelaMercancia: string;
   complementoDelaDescripcion: string;
   masaBruta: string;
   nombreComercialDelaMercancia: string;
-  unidadMedida: Catalogo[];
-  tipoFactura: Catalogo[];
+  unidadMedida: string;
+  tipoFactura: string;
   fecha: string;
   numeroFactura: string;
   justificacion: string;
@@ -63,8 +63,8 @@ export interface Solicitud110201State {
  */
 export function createInitialState(): Solicitud110201State {
   return {
-    tratado: [],
-    pais: [],
+    tratado: ' ',
+    pais: ' ',
     fraccionArancelaria: '',
     numeroRegistro: '',
     nombreComercial: '',
@@ -74,9 +74,9 @@ export function createInitialState(): Solicitud110201State {
     observaciones: '',
     presica: '',
     presenta: '',
-    idioma: [],
-    entidad: [],
-    representacion: [],
+    idioma: ' ',
+    entidad: ' ',
+    representacion: ' ',
     nombre: '',
     apellidoPrimer: '',
     apellidoSegundo: '',
@@ -89,21 +89,21 @@ export function createInitialState(): Solicitud110201State {
     telefono: '',
     fax: '',
     correoElectronico: '',
-    nacion: [],
-    transporte: [],
+    nacion: ' ',
+    transporte: ' ',
     fraccionMercanciaArancelaria: '',
     nombreTecnico: '',
     nombreEnIngles: '',
     criterioParaConferir: '',
     marca: '',
     cantidad: '',
-    umc: [],
+    umc: ' ',
     valorDelaMercancia: '',
     complementoDelaDescripcion: '',
     masaBruta: '',
     nombreComercialDelaMercancia: '',
-    unidadMedida: [],
-    tipoFactura: [],
+    unidadMedida: ' ',
+    tipoFactura: ' ',
     fecha: '',
     numeroFactura: '',
     justificacion: '',
@@ -123,7 +123,7 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
    * Establece el catálogo de tratados.
    * @param tratado Lista de objetos de tipo `Catalogo`.
    */
-  public setTratado(tratado: Catalogo[]):void {
+  public setTratado(tratado: string):void {
     this.update((state) => ({
       ...state,
       tratado,
@@ -133,7 +133,7 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
    * Establece el catálogo de países.
    * @param pais Lista de objetos de tipo `Catalogo`.
    */
-  public setPais(pais: Catalogo[]):void {
+  public setPais(pais: string):void {
     this.update((state) => ({
       ...state,
       pais,
@@ -213,7 +213,7 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
    * Establece el catálogo de unidades de medida comercial (UMC).
    * @param umc Lista de objetos de tipo `Catalogo`.
    */
-  public setUMC(umc: Catalogo[]):void {
+  public setUMC(umc: string):void {
     this.update((state) => ({
       ...state,
       umc,
@@ -223,7 +223,7 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
    * Establece el catálogo de unidades de medida.
    * @param unidadMedida Lista de objetos de tipo `Catalogo`.
    */
-  public setUnidadMedida(unidadMedida: Catalogo[]):void {
+  public setUnidadMedida(unidadMedida: string):void {
     this.update((state) => ({
       ...state,
       unidadMedida,
@@ -233,7 +233,7 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
    * Establece el catálogo de tipos de factura.
    * @param tipoFactura Lista de objetos de tipo `Catalogo`.
    */
-  public setTipoFactura(tipoFactura: Catalogo[]):void {
+  public setTipoFactura(tipoFactura: string):void {
     this.update((state) => ({
       ...state,
       tipoFactura,
@@ -393,7 +393,7 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
    * Establece el catálogo de idiomas.
    * @param idioma Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setIdioma(idioma: Catalogo[] | null):void {
+  public setIdioma(idioma: string):void {
     this.update((state) => ({
       ...state,
       idioma,
@@ -403,7 +403,7 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
    * Establece el catálogo de entidades.
    * @param entidad Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setEntidad(entidad: Catalogo[] | null):void {
+  public setEntidad(entidad: string):void {
     this.update((state) => ({
       ...state,
       entidad,
@@ -413,7 +413,7 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
    * Establece el catálogo de representaciones.
    * @param representacion Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setRepresentacion(representacion: Catalogo[] | null):void {
+  public setRepresentacion(representacion: string):void {
     this.update((state) => ({
       ...state,
       representacion,
@@ -543,7 +543,7 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
    * Establece el catálogo de naciones.
    * @param nacion Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setNacion(nacion: Catalogo[] | null):void {
+  public setNacion(nacion: string):void {
     this.update((state) => ({
       ...state,
       nacion,
@@ -553,7 +553,7 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
    * Establece el catálogo de transportes.
    * @param transporte Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setTransporte(transporte: Catalogo[] | null):void {
+  public setTransporte(transporte: string):void {
     this.update((state) => ({
       ...state,
       transporte,

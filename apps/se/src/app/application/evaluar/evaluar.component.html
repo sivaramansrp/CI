@@ -45,7 +45,7 @@
                                 (keydown.space)="seleccionaTabRequerimiento(1)" role="button" tabindex="0">Capturar
                                 requerimiento</a>
                         </li>
-                        <li [ngClass]="indiceDictamen === 2 ? 'active' : ''">
+                        <li [ngClass]="{'active': indiceDictamen === 2,'disabled': deshabilitarSolicitarDocumentos}">
                             <a data-toggle="tab" (click)="seleccionaTabRequerimiento(2)"
                                 (keydown.enter)="seleccionaTabRequerimiento(2)"
                                 (keydown.space)="seleccionaTabRequerimiento(2)" role="button" tabindex="2">Solicitar

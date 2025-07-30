@@ -56,7 +56,7 @@ h2 {
 }
 
 .bi {
-  font-size: small;
+  font-size: large;
 }
 
 .izquierda {
@@ -132,4 +132,10 @@ select {
 .disabled-div {
   pointer-events: none;
   opacity: 0.6;
+}
+
+.day.disabled {
+  pointer-events: none;
+  opacity: 0.4;
+  cursor: not-allowed;
 }

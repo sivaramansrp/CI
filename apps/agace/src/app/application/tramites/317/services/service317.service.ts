@@ -50,6 +50,15 @@ export class Service317Service {
     if (DATOS.mapTipoTramite) {
       this.unicoStore.setmapTipoTramite(DATOS.mapTipoTramite);
     }
+    if (DATOS.mapDeclaracionSolicitud) {
+      this.unicoStore.setmapDeclaracionSolicitud(DATOS.mapDeclaracionSolicitud);
+    }
+    if (DATOS.envioAviso) {
+      this.unicoStore.setenvioAviso(DATOS.envioAviso);
+    }
+    if (DATOS.numeroAviso) {
+      this.unicoStore.setnumeroAviso(DATOS.numeroAviso);
+    }
   }
 
   /**
