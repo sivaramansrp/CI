@@ -41,7 +41,7 @@
               >Correo electrónico*:</label
             >
             <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico" (change)="setValoresStore('formDestinatario','correoElectronico','setFormDestinatario')" />
-          </div>
+              </div>
           <div class="col-md-4 form-group">
             <label class="form-label" for="telefono">Teléfono:</label>
             <input type="text" id="telefono" class="form-control" formControlName="telefono" (change)="setValoresStore('formDestinatario','telefono','setFormDestinatario')" />
@@ -95,8 +95,13 @@
           <label class="form-label" for="correoElectronico"
             >Correo electrónico*:</label
           >
+            <span
+          class="bi bi-question-circle-fill"
+          title="Una persona física es entendida como toda persona con una actividad específica"
+          data-bs-toggle="tooltip"
+        ></span>
           <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico" (change)="setValoresStore('formDestinatario','correoElectronico','setFormDestinatario')" />
-        </div>
+                  </div>
 
         @if(paisDestino){
         <div class="col-md-8 form-group">

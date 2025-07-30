@@ -19,7 +19,7 @@ import { Subject } from 'rxjs';
  * @property {boolean} habilitado - Indica si el campo de fecha de inicio está habilitado.
  */
 export const FECHA_INICIO = {
-  labelNombre: 'Fecha inicio',
+  labelNombre: 'Fecha inicio:',
   required: false,
   habilitado: true,
 };
@@ -34,7 +34,7 @@ export const FECHA_INICIO = {
  * @property {boolean} habilitado - Indica si el campo de fecha final está habilitado.
  */
 export const FECHA_FINAL = {
-  labelNombre: 'Fecha final',
+  labelNombre: 'Fecha final:',
   required: false,
   habilitado: true,
 };

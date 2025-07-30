@@ -152,7 +152,7 @@
             </div>
         } @else {
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary" [disabled]="formCertificado.invalid || esFormularioSoloLectura" (click)="buscarMercancia()" >Mercancías Disponibles</button>
+                <button class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="buscarMercancia()" >Mercancías Disponibles</button>
             </div>
         }
 
