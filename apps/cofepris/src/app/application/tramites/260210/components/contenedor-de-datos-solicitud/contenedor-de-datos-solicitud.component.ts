@@ -221,7 +221,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * utilizando el evento proporcionado.
    */
   scianSeleccionado(event: TablaScianConfig[]): void {
-    // this.tramite260214Store.updateScianConfigDatos(event);
+    this.tramite260214Store.updateScianConfigDatos(event);
   }
   /**
    * Maneja el evento de selección de mercancías en la tabla.
