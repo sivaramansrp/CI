@@ -23,7 +23,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * @descripcion
    * Indica si el idioma predeterminado está seleccionado.
    */
-  idioma: boolean = true;
+  idioma: boolean = false;
 
   /**
    * @descripcion
