@@ -318,7 +318,13 @@ const ROUTES: Routes = [
     loadChildren: () => 
       import('./tramites/32604/empresas-comercializadoras.module').then(
         (m) => m.EmpresasComercializadorasModule)
-  }
+  },
+  {
+      path: 'certificacion-empresas-modalidad',
+    loadChildren: () => 
+      import('./tramites/32617/oea-tercerizacion-logistica-registro.module').then(
+        (m) => m.OeaTercerizacionLogisticaRegistroModule)
+  },
 ];
 
 @NgModule({
