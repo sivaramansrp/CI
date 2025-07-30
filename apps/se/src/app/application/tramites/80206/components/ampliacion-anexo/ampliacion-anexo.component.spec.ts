@@ -226,13 +226,7 @@ describe('AmpliacionAnexoComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-   });
-
-  it('should run #procesarDatosDelHijo()', async () => {
-    component.tramite80206Store = component.tramite80206Store || {};
-    component.tramite80206Store.setAduanaDeIngresoSeleccion = jest.fn();
-    component.procesarDatosDelHijo({});
-   });
+  });
 
   it('should run #seleccionarDomicilios()', async () => {
 

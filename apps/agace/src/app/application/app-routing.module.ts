@@ -374,12 +374,19 @@ const ROUTES: Routes = [
         (m) => m.SeciitOeaRegistrationModule
       ),
   },
+   {
+    path: 'auto-transportista',
+    loadChildren: () =>
+      import('./tramites/32611/auto-transportista.module').then(
+        (m) => m.AutoTransportistaModule
+      ),
+  },
   {
     path: 'certificacion-empresas-modalidad',
     loadChildren: () => 
       import('./tramites/32617/oea-tercerizacion-logistica-registro.module').then(
         (m) => m.OeaTercerizacionLogisticaRegistroModule)
-  },
+  }
 ];
 
 @NgModule({

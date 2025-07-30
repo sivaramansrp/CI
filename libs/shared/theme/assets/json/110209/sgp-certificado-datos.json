@@ -15,9 +15,10 @@
   "descripcion": "Tableta electrónica de última generación",
   "marca": "TechBrand",
   "valorMercancia": "1500",
-  "unidadMedida": "Pieza",
+  "unidadMedida": "1",
   "numeroFactura": "FAC-2024-789",
-  "tipoFactura": "Original",
+  "tipoFactura": "1",
+  "fechaFactura": "10/02/2024",
   "nombre": "Juan",
   "primerApellido": "Pérez",
   "segundoApellido": "García",
@@ -28,5 +29,7 @@
   "ciudad": "Ciudad de México",
   "correoElectronico": "juan.perez@techbrand.com",
   "fax": 5551234567,
-  "telefono": 5559876543
+  "telefono": 5559876543,
+  "fechaDeExpedicion":"10/02/2024",
+  "fechaDeVencimiento": "10/03/2025"
 }

@@ -404,7 +404,7 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
   /**
    * Inicializa los catálogos necesarios para el formulario.
    */
-  private inicializaCatalogos(): void {
+  public inicializaCatalogos(): void {
     const PAIS$: Observable<void> = this.avisoSanitarioService
       .getProductoClasificacion(CATALOGOS_ID.CAT_PAIS)
       .pipe(

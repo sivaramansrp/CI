@@ -1,6 +1,6 @@
-import {AccionBoton, AlertComponent,BtnContinuarComponent, DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, ViewChild } from '@angular/core';
+import { AccionBoton, AlertComponent, BtnContinuarComponent, DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT } from '../../../220201/constantes/certificado-zoosanitario.enum';
 import { PASOS } from '../../constantes/importador-exportador.enum';
 import { PasoDosComponent } from '../PasoDos/PasoDos.component';
@@ -18,34 +18,34 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
     PasoDosComponent,
     PasoUnoComponent,
     AlertComponent
-],
+  ],
   templateUrl: './sanidadAcuicolaCertificado.component.html',
 })
 export class SanidadAcuicolaCertificadoComponent {
 
-    /**
-   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
-   * const isValid = this.pasoUnoComponent.validateForms();
-   * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
-   */
-    @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+  /**
+ * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+ * const isValid = this.pasoUnoComponent.validateForms();
+ * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
+ */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
   /** Lista de pasos para el wizard */
   pasos: ListaPasosWizard[] = PASOS;
 
   /** Índice actual del paso que se está visualizando */
   indice: number = 1;
 
-    /**
-     * @description Indicates whether the form is valid.
-     * @type {boolean}
-     * @memberof SanidadAcuicolaCertificadoComponent
-     * @see https://compodoc.app/
-     */
-    esFormaValido: boolean = false;
-    /**
-   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+  /**
+   * @description Indicates whether the form is valid.
+   * @type {boolean}
+   * @memberof SanidadAcuicolaCertificadoComponent
+   * @see https://compodoc.app/
    */
-    public formErrorAlert = ERROR_FORMA_ALERT;
+  esFormaValido: boolean = false;
+  /**
+ * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+ */
+  public formErrorAlert = ERROR_FORMA_ALERT;
 
   /**
    * Objeto `datosPasos` que almacena información sobre los pasos del proceso.
@@ -117,9 +117,9 @@ export class SanidadAcuicolaCertificadoComponent {
     }
   }
 
-    /**
- * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
- */
+  /**
+* Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
+*/
   private validarTodosFormulariosPasoUno(): boolean {
     if (!this.pasoUnoComponent) {
       return true;

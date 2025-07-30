@@ -3,7 +3,6 @@ import { AlertComponent } from '@ng-mf/data-access-user';
 import { Solicitud } from '../../models/solicitud-pantallas.model';
 import { Subject } from 'rxjs';
 import { TEXTOS } from '../../enums/texto-enum';
-import { TituloComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente que representa los datos de la solicitud.
@@ -11,7 +10,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-tab-solicitud-datos',
   standalone: true,
-  imports: [TituloComponent, AlertComponent],
+  imports: [ AlertComponent],
   templateUrl: './solicitud-datos.component.html',
   styleUrl: './solicitud-datos.component.scss',
 })

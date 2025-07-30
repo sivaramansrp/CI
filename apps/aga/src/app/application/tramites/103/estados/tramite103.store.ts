@@ -134,19 +134,19 @@ export interface Solicitud103State {
    * Número exterior del domicilio.
    * @type {number}
    */
-  numeroExterior: number;
+  numeroExterior: string | number | null;
 
   /**
    * Número interior del domicilio.
    * @type {number}
    */
-  numeroInterior: number;
+  numeroInterior: string | number | null;
 
   /**
    * Teléfono de contacto.
    * @type {number}
    */
-  telefono: number;
+  telefono: string | number | null;
 
   /**
    * Correo electrónico de contacto.
@@ -164,19 +164,19 @@ export interface Solicitud103State {
    * Código postal.
    * @type {number}
    */
-  codigoPostal: number;
+  codigoPostal: string | number | null;
 
   /**
    * Estado del domicilio.
    * @type {number}
    */
-  estado: number;
+  estado: string | number | null;
 
   /**
    * Colonia del domicilio.
    * @type {number}
    */
-  colonia: number;
+  colonia: string | number | null;
 
   /**
    * Opción adicional.
@@ -189,6 +189,12 @@ export interface Solicitud103State {
    * @type {string | null}
    */
   valorSeleccionado: string | null;
+
+  /**
+   * Persona moral relacionada.
+   * @type {string}
+   */
+  personaMoral: string;
 }
 
 /**
@@ -215,16 +221,17 @@ export function createInitialState(): Solicitud103State {
     datosDelMercancia: [],
     nombre: '',
     calle: '',
-    numeroExterior: 0,
-    numeroInterior: 0,
-    telefono: 0,
+    numeroExterior: null,
+    numeroInterior: '',
+    telefono: null,
     correoElectronico: '',
     pais: null,
-    codigoPostal: 0,
-    estado: 0,
-    colonia: 0,
+    codigoPostal: null,
+    estado: null,
+    colonia: null,
     opcion: '',
-    valorSeleccionado: null
+    valorSeleccionado: null,
+    personaMoral: '',
   };
 }
 
@@ -257,7 +264,13 @@ export class Tramite103Store extends Store<Solicitud103State> {
   public setOrganismoPublico(organismoPublico: string): void {
     this.update((state) => ({ ...state, organismoPublico }));
   }
-
+  /**
+   * Actualiza el organismo público en el estado.
+   * @param {string} organismoPublico - Nombre del organismo público.
+   */
+  public setPersonaMoral(organismoPublico: string): void {
+    this.update((state) => ({ ...state, personaMoral: organismoPublico }));
+  }
   /**
    * Actualiza la aduana en el estado.
    * @param {string} aduana - Código de aduana.
