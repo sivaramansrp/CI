@@ -10,7 +10,6 @@ import { TercerosRelacionadosComponent } from './terceros-relacionados.component
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-// Add missing service and mock declarations or imports
 class AvisoSanitarioService {}
 class MockAvisoSanitarioService {}
 
@@ -50,8 +49,6 @@ describe('TercerosRelacionadosComponent', () => {
     component.consultaioQuery = component.consultaioQuery || {};
     component.consultaioQuery.selectConsultaioState$ = observableOf({});
     component.ngOnInit();
-    // expect(component.obtenerProveedor).toHaveBeenCalled();
-    // expect(component.obtenerFabricante).toHaveBeenCalled();
   });
 
   it('should run #obtenerProveedor()', async () => {

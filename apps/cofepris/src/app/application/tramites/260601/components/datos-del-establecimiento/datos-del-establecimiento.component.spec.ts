@@ -64,21 +64,17 @@ describe('DatosDelEstablecimientoComponent', () => {
     component.manifiestosForm = component.manifiestosForm || {};
     component.manifiestosForm.get = jest.fn();
     const seleccionadaManifiesto = component.seleccionadaManifiesto;
-    // expect(component.manifiestosForm.get).toHaveBeenCalled();
   });
 
   it('should run #ngOnInit()', async () => {
     component.inicializarEstadoFormulario = jest.fn();
     component.ngOnInit();
-    // expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
   });
 
   it('should run #inicializarEstadoFormulario()', async () => {
     component.guardarDatosFormulario = jest.fn();
     component.inicializarFormulario = jest.fn();
     component.inicializarEstadoFormulario();
-    // expect(component.guardarDatosFormulario).toHaveBeenCalled();
-    // expect(component.inicializarFormulario).toHaveBeenCalled();
   });
 
   it('should run #inicializarFormulario()', async () => {
@@ -94,15 +90,6 @@ describe('DatosDelEstablecimientoComponent', () => {
     component.regimenesSeleccion = jest.fn();
     component.aduanaSeleccion = jest.fn();
     component.inicializarFormulario();
-    // expect(component.inicializaCatalogos).toHaveBeenCalled();
-    // expect(component.obtenerManifiestos).toHaveBeenCalled();
-    // expect(component.crearFormulario).toHaveBeenCalled();
-    // expect(component.obtenerSCIAN).toHaveBeenCalled();
-    // expect(component.obtenerProducto).toHaveBeenCalled();
-    // expect(component.estadoSeleccion).toHaveBeenCalled();
-    // expect(component.claveScianSeleccion).toHaveBeenCalled();
-    // expect(component.regimenesSeleccion).toHaveBeenCalled();
-    // expect(component.aduanaSeleccion).toHaveBeenCalled();
   });
 
   it('should run #guardarDatosFormulario()', async () => {
@@ -120,15 +107,6 @@ describe('DatosDelEstablecimientoComponent', () => {
     component.manifiestosForm.disable = jest.fn();
     component.manifiestosForm.enable = jest.fn();
     component.guardarDatosFormulario();
-    // expect(component.inicializarFormulario).toHaveBeenCalled();
-    // expect(component.datosDelEstablecimientoForm.disable).toHaveBeenCalled();
-    // expect(component.datosDelEstablecimientoForm.enable).toHaveBeenCalled();
-    // expect(component.domicilloDelEstablecimientoForm.disable).toHaveBeenCalled();
-    // expect(component.domicilloDelEstablecimientoForm.enable).toHaveBeenCalled();
-    // expect(component.scianForm.disable).toHaveBeenCalled();
-    // expect(component.scianForm.enable).toHaveBeenCalled();
-    // expect(component.manifiestosForm.disable).toHaveBeenCalled();
-    // expect(component.manifiestosForm.enable).toHaveBeenCalled();
   });
 
   it('should run #crearFormulario()', async () => {
@@ -155,8 +133,6 @@ describe('DatosDelEstablecimientoComponent', () => {
     component.avisoSanitarioState.seleccionadaManifiesto = 'seleccionadaManifiesto';
     component.avisoSanitarioState.informacionConfidencial = 'informacionConfidencial';
     component.crearFormulario();
-    // expect(component.fb.group).toHaveBeenCalled();
-    // expect(component.fb.array).toHaveBeenCalled();
   });
 
   it('should run #inicializaCatalogos()', async () => {
@@ -227,11 +203,6 @@ describe('DatosDelEstablecimientoComponent', () => {
       7: "$"
     }));
     component.inicializaCatalogos();
-    // expect(component.avisoSanitarioService.getEstado).toHaveBeenCalled();
-    // expect(component.avisoSanitarioService.getClaveScian).toHaveBeenCalled();
-    // expect(component.avisoSanitarioService.getDescripcionScian).toHaveBeenCalled();
-    // expect(component.avisoSanitarioService.getRegimenes).toHaveBeenCalled();
-    // expect(component.avisoSanitarioService.getAduanas).toHaveBeenCalled();
   });
 
   it('should run #estadoSeleccion()', async () => {
@@ -242,8 +213,6 @@ describe('DatosDelEstablecimientoComponent', () => {
     component.tramite260601Store = component.tramite260601Store || {};
     component.tramite260601Store.setEstado = jest.fn();
     component.estadoSeleccion();
-    // expect(component.domicilloDelEstablecimientoForm.get).toHaveBeenCalled();
-    // expect(component.tramite260601Store.setEstado).toHaveBeenCalled();
   });
 
   it('should run #claveScianSeleccion()', async () => {
@@ -258,10 +227,6 @@ describe('DatosDelEstablecimientoComponent', () => {
     component.tramite260601Store.setDescripcionScian = jest.fn();
     component.tramite260601Store.setClaveScian = jest.fn();
     component.claveScianSeleccion();
-    // expect(component.scianForm.get).toHaveBeenCalled();
-    // expect(component.avisoSanitarioService.getDescripcionScian).toHaveBeenCalled();
-    // expect(component.tramite260601Store.setDescripcionScian).toHaveBeenCalled();
-    // expect(component.tramite260601Store.setClaveScian).toHaveBeenCalled();
   });
 
   it('should run #descripcionScianSeleccion()', async () => {
@@ -272,8 +237,6 @@ describe('DatosDelEstablecimientoComponent', () => {
     component.tramite260601Store = component.tramite260601Store || {};
     component.tramite260601Store.setDescripcionScian = jest.fn();
     component.descripcionScianSeleccion();
-    // expect(component.scianForm.get).toHaveBeenCalled();
-    // expect(component.tramite260601Store.setDescripcionScian).toHaveBeenCalled();
   });
 
   it('should run #regimenesSeleccion()', async () => {
@@ -284,8 +247,6 @@ describe('DatosDelEstablecimientoComponent', () => {
     component.tramite260601Store = component.tramite260601Store || {};
     component.tramite260601Store.setCveRegimenes = jest.fn();
     component.regimenesSeleccion();
-    // expect(component.domicilloDelEstablecimientoForm.get).toHaveBeenCalled();
-    // expect(component.tramite260601Store.setCveRegimenes).toHaveBeenCalled();
   });
 
   it('should run #aduanaSeleccion()', async () => {
@@ -296,8 +257,6 @@ describe('DatosDelEstablecimientoComponent', () => {
     component.tramite260601Store = component.tramite260601Store || {};
     component.tramite260601Store.setCveAduanas = jest.fn();
     component.aduanaSeleccion();
-    // expect(component.domicilloDelEstablecimientoForm.get).toHaveBeenCalled();
-    // expect(component.tramite260601Store.setCveAduanas).toHaveBeenCalled();
   });
 
   it('should run #obtenerSCIAN()', async () => {
@@ -328,15 +287,12 @@ describe('DatosDelEstablecimientoComponent', () => {
     component.domicilloDelEstablecimientoForm = component.domicilloDelEstablecimientoForm || {};
     component.domicilloDelEstablecimientoForm.enable = jest.fn();
     component.aceptar();
-    // expect(component.datosDelEstablecimientoForm.enable).toHaveBeenCalled();
-    // expect(component.domicilloDelEstablecimientoForm.enable).toHaveBeenCalled();
   });
 
   it('should run #obtenerManifiestos()', async () => {
     component.avisoSanitarioService = component.avisoSanitarioService || {};
     component.avisoSanitarioService.getManifiestos = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerManifiestos();
-    // expect(component.avisoSanitarioService.getManifiestos).toHaveBeenCalled();
   });
 
   it('should run #cerrarModal()', async () => {
@@ -353,8 +309,6 @@ describe('DatosDelEstablecimientoComponent', () => {
     component.destruirNotificador$.next = jest.fn();
     component.destruirNotificador$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destruirNotificador$.next).toHaveBeenCalled();
-    // expect(component.destruirNotificador$.complete).toHaveBeenCalled();
   });
 
 });

@@ -48,22 +48,18 @@ describe('PasoDosComponent', () => {
     component.getTiposDocumentos = jest.fn();
     component.obtenerDocumentosSeleccionados = jest.fn();
     component.ngOnInit();
-    // expect(component.getTiposDocumentos).toHaveBeenCalled();
-    // expect(component.obtenerDocumentosSeleccionados).toHaveBeenCalled();
   });
 
   it('should run #getTiposDocumentos()', async () => {
     component.catalogosServices = component.catalogosServices || {};
     component.catalogosServices.getCatalogo = jest.fn().mockReturnValue(observableOf({}));
     component.getTiposDocumentos();
-    // expect(component.catalogosServices.getCatalogo).toHaveBeenCalled();
   });
 
   it('should run #obtenerDocumentosSeleccionados()', async () => {
     component.avisoSanitarioService = component.avisoSanitarioService || {};
     component.avisoSanitarioService.obtenerDocumentosSeleccionados = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerDocumentosSeleccionados();
-    // expect(component.avisoSanitarioService.obtenerDocumentosSeleccionados).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -71,8 +67,6 @@ describe('PasoDosComponent', () => {
     component.destruirNotificador$.next = jest.fn();
     component.destruirNotificador$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destruirNotificador$.next).toHaveBeenCalled();
-    // expect(component.destruirNotificador$.complete).toHaveBeenCalled();
   });
 
 });

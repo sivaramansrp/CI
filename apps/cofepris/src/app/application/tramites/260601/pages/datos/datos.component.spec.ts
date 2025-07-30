@@ -49,7 +49,6 @@ describe('DatosComponent', () => {
     component.consultaQuery.selectConsultaioState$ = observableOf({});
     component.guardarDatosFormulario = jest.fn();
     component.ngOnInit();
-    // expect(component.guardarDatosFormulario).toHaveBeenCalled();
   });
 
   it('should run #guardarDatosFormulario()', async () => {
@@ -57,8 +56,6 @@ describe('DatosComponent', () => {
     component.service260601Service.getRegistroTomaMuestrasMercanciasData = jest.fn().mockReturnValue(observableOf({}));
     component.service260601Service.actualizarEstadoFormulario = jest.fn();
     component.guardarDatosFormulario();
-    // expect(component.service260601Service.getRegistroTomaMuestrasMercanciasData).toHaveBeenCalled();
-    // expect(component.service260601Service.actualizarEstadoFormulario).toHaveBeenCalled();
   });
 
   it('should run #ngAfterViewInit()', async () => {
@@ -67,8 +64,6 @@ describe('DatosComponent', () => {
     component.cdr = component.cdr || {};
     component.cdr.detectChanges = jest.fn();
     component.ngAfterViewInit();
-    // expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalled();
-    // expect(component.cdr.detectChanges).toHaveBeenCalled();
   });
 
   it('should run #seleccionaTab()', async () => {
@@ -82,8 +77,6 @@ describe('DatosComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });
