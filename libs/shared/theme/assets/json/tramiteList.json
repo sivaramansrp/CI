@@ -4318,5 +4318,12 @@
     "linkDashboard": "/agace/auto-transportista/solicitud",
     "linkDepartment": "/pago/auto-transportista/solicitud",
     "department": "agace"
-   }
+   },
+   {
+    "id": 32617,
+    "tramite": 32617,
+    "linkDashboard": "/agace/certificacion-empresas-modalidad/oea-tercerizacion-logistica",
+    "linkDepartment": "/pago/certificacion-empresas-modalidad/oea-tercerizacion-logistica",
+    "department": "agace"
+  }
 ]
