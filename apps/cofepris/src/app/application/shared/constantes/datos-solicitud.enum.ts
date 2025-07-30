@@ -60,7 +60,7 @@ export const SCIAN_TABLA = [
     orden: 1,
   },
   {
-    encabezado: 'Descripcion del S.C.I.A.N.',
+    encabezado: 'Descripción del S.C.I.A.N.',
     clave: (ele: TablaScianConfig): string => ele.descripcion,
     orden: 1,
   },

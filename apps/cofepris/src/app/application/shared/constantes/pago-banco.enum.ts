@@ -1,9 +1,19 @@
+/**
+ * Configuración para el campo de entrada de fecha.
+ * - labelNombre: Etiqueta que se muestra junto al campo.
+ * - required: Indica si el campo es obligatorio.
+ * - habilitado: Indica si el campo está habilitado para edición.
+ */
 export const INPUT_FECHA_CONFIG = {
   labelNombre: 'Fecha de pago',
   required: false,
   habilitado: true,
 };
-
+/**
+ * Lista de catálogos de bancos disponibles.
+ * Cada banco tiene un identificador único (id) y una descripción.
+ * Esta lista se utiliza para poblar selectores de bancos en formularios.
+ */
 export const BANCO_CATALOGOS = [
         {
             "id": 1,
@@ -14,7 +24,12 @@ export const BANCO_CATALOGOS = [
             "descripcion": "Banco del Pueblo"
         }
 
-    ]
+    ];
+    /**
+ * Catálogo de estados de la República Mexicana.
+ * Cada objeto contiene un identificador único (id) y el nombre del estado (descripcion).
+ * Se utiliza generalmente para llenar campos de selección de estado en formularios.
+ */
 export const ESTADO_CATALOGOS = 
     [
     {

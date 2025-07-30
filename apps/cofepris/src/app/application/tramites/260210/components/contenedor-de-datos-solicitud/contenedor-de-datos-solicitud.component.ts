@@ -211,6 +211,18 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   opcionSeleccionado(event: TablaOpcionConfig[]): void {
     this.tramite260214Store.updateOpcionConfigDatos(event);
   }
+
+  /**
+   * Maneja el evento cuando se selecciona un elemento en la tabla SCIAN.
+   *
+   * @param event - Arreglo de configuraciones seleccionadas de la tabla SCIAN.
+   *
+   * Este método actualiza los datos de configuración SCIAN en el estado del trámite 260214
+   * utilizando el evento proporcionado.
+   */
+  scianSeleccionado(event: TablaScianConfig[]): void {
+    // this.tramite260214Store.updateScianConfigDatos(event);
+  }
   /**
    * Maneja el evento de selección de mercancías en la tabla.
    *
