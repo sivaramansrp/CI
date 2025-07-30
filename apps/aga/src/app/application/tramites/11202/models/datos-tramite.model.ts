@@ -13,9 +13,6 @@ export interface Aduanas {
 /**
  * @interface Contenedores
  * @description Representa la información de un contenedor.
- * 
- * @property {string} tipo - Tipo de contenedor.
- * @property {string} id - Identificador único del contenedor.
  */
 export interface Contenedores {
   tipo: string;
@@ -26,20 +23,6 @@ export interface Contenedores {
  * @interface DatosDelContenedor
  * @description Representa los datos detallados de un contenedor.
  * 
- * @property {number} id - Identificador único del contenedor.
- * @property {string} inicialesEquipo - Iniciales del equipo.
- * @property {number} numeroEquipo - Número del equipo.
- * @property {number} digitoVerificador - Dígito verificador del equipo.
- * @property {string} tipoEquipo - Tipo de equipo.
- * @property {number} aduana - Identificador de la aduana asociada.
- * @property {string} fechaIngreso - Fecha de ingreso del contenedor.
- * @property {string} vigencia - Vigencia del contenedor.
- * @property {string} estadoConstancia - Estado de la constancia.
- * @property {string} existeEnVUCEM - Indica si existe en VUCEM.
- * @property {string} idConstancia - Identificador de la constancia.
- * @property {string} numeroManifiesto - Número del manifiesto.
- * @property {string} idSolicitud - Identificador de la solicitud.
- * @property {string} fechaInicio - Fecha de inicio.
  */
 export interface DatosDelContenedor {
   id: number;
@@ -62,16 +45,6 @@ export interface DatosDelContenedor {
  * @interface GridContenedores
  * @description Representa los datos de un contenedor en formato de tabla.
  * 
- * @property {number} id - Identificador único del contenedor.
- * @property {string} inicialesContenedor - Iniciales del contenedor.
- * @property {number} numeroContenedor - Número del contenedor.
- * @property {string} digitoVerificador - Dígito verificador del contenedor.
- * @property {number} digito - Dígito asociado al contenedor.
- * @property {string} tipoContenedor - Tipo del contenedor.
- * @property {string} estadoConstancia - Estado de la constancia del contenedor.
- * @property {number} aduana - Identificador de la aduana asociada.
- * @property {string} existeEnVUCEM - Indica si el contenedor existe en VUCEM.
- * @property {string} idConstancia - Identificador de la constancia.
  */
 export interface GridContenedores {
   id?: number;
@@ -91,12 +64,12 @@ export interface GridContenedores {
  * @description Representa la respuesta de una consulta sobre un contenedor.
  * 
  * @property {boolean} success - Indica si la operación fue exitosa.
- * @property {DatosDelContenedor} datos - Datos del contenedor.
+ * @property {GridContenedores} datos - Datos del contenedor.
  * @property {string} message - Mensaje de la respuesta.
  */
 export interface RespuestaContenedor {
   success: boolean;
-  datos: DatosDelContenedor;
+  datos: GridContenedores;
   message: string;
 }
 
@@ -190,4 +163,21 @@ export interface ConsultaDatos {
   numeroContenedor: string;
   tipoContenedor: string;
   datosDelContenedor: GridContenedores[];
+}
+
+/**
+ * Interfaz que representa los datos de un csv.
+ * Utilizamos esta interfaz para definir la estructura de los datos detallados de un contenedor.
+ */
+export interface DatosDelCsvArchivo {
+  id?: number;
+  inicialesContenedor: string;
+  numeroContenedor: number;
+  digitoVerificador?: string;
+  digito: number;
+  tipoContenedor: string;
+  estadoConstancia?: string;
+  aduana: number;
+  existeEnVUCEM?: string;
+  idConstancia?: string;
 }
