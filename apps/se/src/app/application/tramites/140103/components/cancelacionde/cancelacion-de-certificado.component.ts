@@ -403,8 +403,5 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
   buscarCupos(): void {
     this.submitted = true;
     this.buscarIntento.emit({submitted: this.submitted, invalid: this.cancelacionForm.invalid});
-    if (this.cancelacionForm.invalid) {
-      // Opcionalmente, desplazar hasta el primer error o enfocarlo
-     }
-  }
+   }
 }
