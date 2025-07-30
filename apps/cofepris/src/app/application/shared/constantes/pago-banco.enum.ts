@@ -3,6 +3,18 @@ export const INPUT_FECHA_CONFIG = {
   required: false,
   habilitado: true,
 };
+
+export const BANCO_CATALOGOS = [
+        {
+            "id": 1,
+            "descripcion": "Banco Central"
+        },
+        {
+            "id": 2,
+            "descripcion": "Banco del Pueblo"
+        }
+
+    ]
 export const ESTADO_CATALOGOS = 
     [
     {
