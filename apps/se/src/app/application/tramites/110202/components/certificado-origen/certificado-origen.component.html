@@ -1,4 +1,4 @@
-<app-certificado-de-origen  (formCertificadoEvent)="setValoresStore($event)"
+<app-certificado-de-origen  (formCertificadoEvent)="setValoresStore($event)"  title="Validación a posteriori del certificado de circulación de mercancías"
     (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)" (paisBloquEvent)="tipoSeleccion($event)"
     (setbuscarMercanciaEvent)="buscarrMercancia()" [tratadoAcuerdo]="(estados$ | async ) || []"
     [paisBloqu]="(pais$ | async) || []" [tableData]="(datos1$ | async) || []" (filaClics)="abrirModificarModal($event)"

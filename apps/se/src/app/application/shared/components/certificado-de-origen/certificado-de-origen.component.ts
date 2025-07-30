@@ -58,6 +58,13 @@ export const FECHA_FINAL = {
 
 export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
   /**
+ * Título mostrado en el componente.  
+ * Puede ser personalizado desde el componente padre mediante [title].  
+ * Si no se proporciona, se mostrará el valor por defecto: "Validación inicial del certificado de circulación de mercancías".
+ */
+    @Input() title: string = 'Validación inicial del certificado de circulación de mercancías';
+    
+  /**
    * Propiedad de entrada que recibe un arreglo de menús desplegables.
    * @type {MenusDesplegables[]}
    */
