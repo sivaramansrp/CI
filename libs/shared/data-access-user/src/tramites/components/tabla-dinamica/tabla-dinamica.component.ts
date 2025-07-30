@@ -218,6 +218,9 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
   /** Indica si se muestra la opción de búsqueda en la tabla. */
   @Input() showSearch: boolean = false;
 
+  /** Indica si se muestra la paginación en la tabla dinámica. */
+  @Input() showPagination: boolean = false;
+
   /** Evento que se emite cuando el usuario cambia de página en la tabla. */
   @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
 
@@ -426,14 +429,17 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
   getUpdatePagination(): void {
     const SOURCE = this.datosFiltrados.length ? this.datosFiltrados : this.datos;
     this.paginatedDatos = [];
-    if (this.mode !== PAGINATION_MODE.CLIENT) {
+    if (this.showPagination) {
+      if (this.mode !== PAGINATION_MODE.CLIENT) {
       this.paginatedDatos = [...SOURCE];
-      return;
+      } else {
+        const STARTINDEX = (this.currentPage - 1) * this.itemsPerPage;
+        this.paginatedDatos = SOURCE.slice(STARTINDEX, STARTINDEX + this.itemsPerPage);
+        this.originalDatos = SOURCE.slice(STARTINDEX, STARTINDEX + this.itemsPerPage);
+      }
+    } else {
+      this.paginatedDatos = [...SOURCE];
     }
-
-    const STARTINDEX = (this.currentPage - 1) * this.itemsPerPage;
-    this.paginatedDatos = SOURCE.slice(STARTINDEX, STARTINDEX + this.itemsPerPage);
-    this.originalDatos = SOURCE.slice(STARTINDEX, STARTINDEX + this.itemsPerPage);
   }
 
 

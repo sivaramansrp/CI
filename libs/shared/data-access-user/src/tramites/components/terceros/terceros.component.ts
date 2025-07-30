@@ -232,8 +232,7 @@ export class TercerosComponent implements OnInit, OnDestroy, AfterViewInit {
     };
 
     if (!EXISTE_TERCERO) {
-      this.personas = [...this.personas, DATOS]
-      // this.personas.push(DATOS);
+      this.personas = [...this.personas, DATOS];
       this.personasChange.emit(this.personas);
       this.tercerosStore.setTerceros(this.personas);
       this.FormPersona.reset();
