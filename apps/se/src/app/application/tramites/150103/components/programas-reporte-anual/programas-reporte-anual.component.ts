@@ -195,9 +195,9 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
  */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.formProgrmasReporte?.disable();
-    }else {
       this.formProgrmasReporte?.enable();
+    }else {
+      this.formProgrmasReporte?.disable();
     }
   }
   /**

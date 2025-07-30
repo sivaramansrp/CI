@@ -1,6 +1,4 @@
-{
-  "code": 200,
-  "data": [
+[
     {
       "id": 0,
       "descripcion": "AGUASCALIENTES"
@@ -41,6 +39,4 @@
       "id": 9,
       "descripcion": "GUANAJUATO"
     }
-  ],
-  "message": "SUCCESS"
-}
+  ]

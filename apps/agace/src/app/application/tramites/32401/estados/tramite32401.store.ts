@@ -1,4 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { DocumentoAdicional } from '../models/datos-tramite.model';
 import { Injectable } from '@angular/core';
 /**
  * Interfaz que representa el estado de la solicitud 32401.
@@ -23,8 +24,18 @@ export interface Solicitud32401State {
   /** Datos del contenedor relacionados con el trámite. */
   datosDelContenedor: [];
 
+  /**
+   * Lista de documentos adicionales asociados.
+   */
+  documentoAdicional: DocumentoAdicional[];
+
   /** Motivo opcional de cancelación del trámite. */
   motivoCancelacion?: string;
+
+  /**
+   * Representa el tipo de documento actualmente seleccionado.
+   */
+  tipoDeDocumento: number | null;
 }
 
 /**
@@ -51,8 +62,18 @@ export function createInitialState(): Solicitud32401State {
     /** Datos del contenedor inicial como una lista vacía. */
     datosDelContenedor: [],
 
+    /**
+     * Lista de documentos adicionales asociados.
+     */
+    documentoAdicional: [],
+
     /** Motivo de cancelación inicial vacío. */
     motivoCancelacion: '',
+
+    /**
+     * Representa el tipo de documento actualmente seleccionado.
+     */
+    tipoDeDocumento: null,
   };
 }
 
@@ -150,6 +171,20 @@ export class Tramite32401Store extends Store<Solicitud32401State> {
   }
 
   /**
+   * Establece los datos del contenedor en el estado de la tienda.
+   *
+   * @param documentoAdicional - Un arreglo que contiene los datos del contenedor a establecer.
+   *
+   * Este método actualiza el estado de la tienda con los datos proporcionados.
+   */
+  public setDocumentoAdicional(documentoAdicional: DocumentoAdicional[]): void {
+    this.update((state) => ({
+      ...state,
+      documentoAdicional,
+    }));
+  }
+
+  /**
    * Establece el motivo de cancelación en el estado de la tienda.
    *
    * @param motivoCancelacion - El motivo de cancelación que se desea establecer.
@@ -158,6 +193,20 @@ export class Tramite32401Store extends Store<Solicitud32401State> {
     this.update((state) => ({
       ...state,
       motivoCancelacion,
+    }));
+  }
+
+  /**
+   * Establece el tipo de documento en el estado.
+   *
+   * Actualiza el estado del store con el valor proporcionado para `tipoDeDocumento`.
+   *
+   * @param {number | null} tipoDeDocumento - El identificador del tipo de documento. Puede ser `null` si no se ha seleccionado ninguno.
+   */
+  setTipoDeDocumento(tipoDeDocumento: number | null): void {
+    this.update((state) => ({
+      ...state,
+      tipoDeDocumento: tipoDeDocumento,
     }));
   }
 

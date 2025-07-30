@@ -5,6 +5,8 @@
   
   .custom-textarea {
     height: 120px;
+     resize: none; 
+    overflow-y: auto;
   }
   
   ::ng-deep table th {
@@ -42,5 +44,13 @@
     color: white;
     height: 40px;
     align-items: center;
+  }
+
+  .custum-numero {
+   margin: -22px;
+  }
+
+  .custom-identificacion{
+    margin: -18px;
   }
   

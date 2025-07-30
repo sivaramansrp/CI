@@ -230,9 +230,9 @@
                             </div>
                             @if(registroDeDonacionState.seleccionadaTipoDeMercancia !== 1) {
                             <div class="col-md-4">
-                                <label class="form-label" for="cantidadUMC">Cantidad de UMC <span
+                                <label class="form-label" for="cantidadUMC">Cantidad de UMC*: <span
                                         class="bi bi-question-circle-fill" title="Unidad de Medida Comercial"
-                                        data-bs-toggle="tooltip"></span>*:</label>
+                                        data-bs-toggle="tooltip"></span></label>
                                 <input type="text" class="form-control" name="cantidadUMC" id="cantidadUMC"
                                     formControlName="cantidadUMC"
                                     (change)="setValoresStore(agregarMercanciasForm,'datosMercancia.cantidadUMC', 'setCantidadUMC')">
@@ -245,9 +245,9 @@
                                 }
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label" for="cantidadUMT">Cantidad de UMT <span
+                                <label class="form-label" for="cantidadUMT">Cantidad de UMT*: <span
                                         class="bi bi-question-circle-fill" title="Unidad de Medida de la Tarifa"
-                                        data-bs-toggle="tooltip"></span>*:</label>
+                                        data-bs-toggle="tooltip"></span></label>
                                 <input type="text" class="form-control" name="cantidadUMT" id="cantidadUMT"
                                     formControlName="cantidadUMT"
                                     (change)="setValoresStore(agregarMercanciasForm,'datosMercancia.cantidadUMT', 'setCantidadUMT')">
@@ -262,9 +262,9 @@
                             }
                             @if (registroDeDonacionState.seleccionadaTipoDeMercancia === 1) {
                             <div class="col-md-4">
-                                <label class="form-label" for="cantidadUMC">Cantidad de UMC <span
+                                <label class="form-label" for="cantidadUMC">Cantidad de UMC*: <span
                                         class="bi bi-question-circle-fill" title="Unidad de Medida Comercial"
-                                        data-bs-toggle="tooltip"></span>*:</label>
+                                        data-bs-toggle="tooltip"></span></label>
                                 <input type="text" class="form-control" name="cantidadUMCVehiculo"
                                     id="cantidadUMCVehiculo" formControlName="cantidadUMCVehiculo"
                                     (change)="setValoresStore(agregarMercanciasForm,'datosMercancia.cantidadUMCVehiculo', 'setCantidadUMCVehiculo')">
@@ -277,9 +277,9 @@
                                 }
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label" for="cantidadUMTVehiculo">Cantidad de UMT <span
+                                <label class="form-label" for="cantidadUMTVehiculo">Cantidad de UMT*: <span
                                         class="bi bi-question-circle-fill" title="Unidad de Medida de la Tarifa"
-                                        data-bs-toggle="tooltip"></span>*:</label>
+                                        data-bs-toggle="tooltip"></span></label>
                                 <input type="text" class="form-control" name="cantidadUMTVehiculo"
                                     id="cantidadUMTVehiculo" formControlName="cantidadUMTVehiculo"
                                     (change)="setValoresStore(agregarMercanciasForm,'datosMercancia.cantidadUMTVehiculo', 'setCantidadUMTVehiculo')">

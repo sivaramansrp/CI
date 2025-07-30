@@ -1,13 +1,7 @@
-import { Component } from '@angular/core';
-import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
+import { Component, OnDestroy } from '@angular/core';
+import { FirmaElectronicaComponent, TramiteFolioService, TramiteStore } from '@libs/shared/data-access-user/src';
+import { ReplaySubject, catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
-import { TramiteFolioService } from '@libs/shared/data-access-user/src';
-import { TramiteStore } from '@libs/shared/data-access-user/src';
-import { catchError } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente responsable de gestionar la firma electrónica
