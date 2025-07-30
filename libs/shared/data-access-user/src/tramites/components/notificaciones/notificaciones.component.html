@@ -15,7 +15,7 @@
     [ngClass]="
       notificacionInput.tamanioModal
         ? notificacionInput.tamanioModal
-        : 'modal-sm'
+        : 'modal-md'
     "
     role="document"
   >
@@ -25,18 +25,19 @@
           {{ notificacionInput.titulo }}
         </h4>
       </div>
-      <div class="modal-body">
+      <div class="modal-body texto-bien-formateado texto-reducida">
         @if(notificacionInput.modo) {
         <div
           [innerHTML]="notificacionInput.mensaje"
           [ngClass]="
             notificacionInput.alineacionTexto
               ? notificacionInput.alineacionTexto
-              : 'center'
+              : 'text-left-formatted'
           "
+          class="contenido-mensaje"
         ></div>
         }@else {
-        <p class="align-center">{{ notificacionInput.mensaje }}</p>
+        <p class="text-left-formatted contenido-mensaje">{{ notificacionInput.mensaje }}</p>
         }
       </div>
       <div
@@ -76,7 +77,7 @@
       class="custom-banner-azul"
       (onClose)="verBanner = false"
     >
-      <span [innerHTML]="notificacionInput.mensaje"></span>
+      <span [innerHTML]="notificacionInput.mensaje" class="contenido-mensaje"></span>
     </alert>
   </div>
 </div>
