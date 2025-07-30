@@ -40,18 +40,18 @@
   margin-left: -0.5rem;
 }
 
-// Styles for disabled sections - only affect form controls, not labels
+// Estilos para secciones deshabilitadas - solo afectan controles de formulario, no etiquetas
 .disabled-section {
   position: relative;
 }
 
-// Keep labels fully visible and readable
+// Mantener las etiquetas completamente visibles y legibles
 .disabled-section label {
   color: inherit !important;
   opacity: 1 !important;
 }
 
-// Only disable and fade form controls
+// Solo deshabilitar y atenuar los controles de formulario
 .disabled-section .form-control {
   opacity: 0.5;
   cursor: not-allowed;
@@ -64,13 +64,13 @@
   cursor: not-allowed;
 }
 
-// Disable pointer events only on form controls
+// Deshabilitar eventos de puntero solo en los controles de formulario
 .disabled-section .form-control,
 .disabled-section .btn {
   pointer-events: none;
 }
 
-// Optional: Add a subtle visual indicator that the section is disabled
+
 .disabled-section::after {
   content: '';
   position: absolute;
