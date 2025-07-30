@@ -11,6 +11,7 @@ import { Tramite32502Query } from '../../../../estados/queries/tramite32502.quer
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 
+
 /**
  * Componente para la vista de la solicitud de la sección de "32502".
  */
@@ -28,7 +29,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
     public fechaInicioInput: InputFecha = {
       labelNombre: 'Fecha Aproximada Importacion',
-      required: false,
+      required: true,
       habilitado: true,
     };
 
@@ -171,6 +172,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   isValid(form: FormGroup, field: string): boolean | null {
     return this.validacionesService.isValid(form, field);
   }
+ /*
+  * Método para permitir solo números en un campo de entrada.
+  * @param event Evento de teclado que se dispara al presionar una tecla.
+  * @return {void}
+  * Este método previene la entrada de cualquier carácter que no sea un dígito del 0 al 9.
+  * Se utiliza una expresión regular para verificar si el carácter ingresado es un número.
+  * Si el carácter no es un número, se previene la acción predeterminada del evento.
+  * @param {KeyboardEvent} event - Evento de teclado que se dispara al presionar una tecla.
+  * @return {void}
+  */
+  allowOnlyNumbers(event: KeyboardEvent): void {
+    const charCode = event.key;
+    if (!/^\d$/.test(charCode)) {
+      event.preventDefault();
+    }
+  }
 
   /**
    * Método para crear el formulario principal de la solicitud.
@@ -273,10 +290,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ],
       codigoPostal: [
         this.seccionState?.codigoPostal,
-        [
-        Validators.required,
-        Validators.maxLength(5)
-        ]
+        [ Validators.required,
+          Validators.maxLength(5),
+          Validators.pattern(/^\d{1,5}$/)]
       ]
       }),
       pedimentoST: this.fb.group({

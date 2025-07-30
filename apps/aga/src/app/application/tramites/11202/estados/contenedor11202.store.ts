@@ -1,5 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
-import { GridContenedores } from '@libs/shared/data-access-user/src/core/models/11202/datos-tramite.model';
+import { GridContenedores } from 'apps/aga/src/app/application/tramites/11202/models/datos-tramite.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -21,7 +21,9 @@ export interface Contenedor11202State {
   aduana: string;
   numeroContenedor: string;
   tipoContenedor: string;
+  digitoDeControl?: string;
   contenedores: GridContenedores[];
+  datosDelCsvArchivo: [];
 }
 
 /**
@@ -38,7 +40,9 @@ export function createInitialState(): Contenedor11202State {
     aduana: '',
     numeroContenedor: '',
     tipoContenedor: '',
+    digitoDeControl: '',
     contenedores: [],
+    datosDelCsvArchivo: []
   };
 }
 
@@ -142,6 +146,20 @@ export class Contenedor11202Store extends Store<Contenedor11202State> {
   }
 
   /**
+   * @method setDigitoDeControl
+   * @description Guarda el dígito de control del contenedor en el estado.
+   * 
+   * @param {string} digitoDeControl - El dígito de control que se va a guardar.
+   * @returns {void}
+   */
+  public setDigitoDeControl(digitoDeControl: string): void {
+    this.update((state) => ({
+      ...state,
+      digitoDeControl,
+    }));
+  }
+
+  /**
    * @method setContenedores
    * @description Guarda la lista de contenedores en el estado.
    * 
@@ -153,5 +171,24 @@ export class Contenedor11202Store extends Store<Contenedor11202State> {
       ...state,
       contenedores,
     }));
+  }
+
+  /**
+   * Establece los datos del contenedor.
+   * @param datosDelCsvArchivo Datos del contenedor.
+   */
+  public setDelCsv(datosDelCsvArchivo: []): void {
+    console.log('Estableciendo datos del CSV:', datosDelCsvArchivo);
+    this.update((state) => ({
+      ...state,
+      datosDelCsvArchivo,
+    }));
+  }
+
+  /**
+   * Limpia los datos de la solicitud.
+   */
+  public limpiarSolicitud(): void {
+    this.reset();
   }
 }

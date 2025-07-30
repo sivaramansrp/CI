@@ -1,4 +1,3 @@
-// agregardestinatario.component.spec.ts
 import { FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
@@ -7,80 +6,79 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
 import { AgregardestinatarioComponent } from './agregardestinatario.component';
 
 describe('AgregardestinatarioComponent', () => {
-  let component: AgregardestinatarioComponent;
-  let tercerosService: Partial<TercerosrelacionadosService>;
-  let importacionService: Partial<ImportacionDeAcuiculturaService>;
-  let acuiculturaQuery: Partial<AcuiculturaQuery>;
+  let componente: AgregardestinatarioComponent;
+  let servicioTerceros: Partial<TercerosrelacionadosService>;
+  let servicioImportacion: Partial<ImportacionDeAcuiculturaService>;
+  let consultaAcuicultura: Partial<AcuiculturaQuery>;
 
   beforeEach(() => {
-    // Mock services
-    tercerosService = {
+    servicioTerceros = {
       obtenerSelectorList: jest.fn().mockReturnValue(of([]))
     };
 
-    importacionService = {
+    servicioImportacion = {
       updateTercerosRelacionado: jest.fn()
     };
 
     const seleccionarTerceros$ = new Subject<any>();
-    acuiculturaQuery = {
+    consultaAcuicultura = {
       seleccionarTerceros$: seleccionarTerceros$.asObservable()
     };
 
-    component = new AgregardestinatarioComponent(
+    componente = new AgregardestinatarioComponent(
       new FormBuilder(),
-      tercerosService as TercerosrelacionadosService,
-      {} as any, // Router not used directly in tested methods
-      importacionService as ImportacionDeAcuiculturaService,
-      acuiculturaQuery as AcuiculturaQuery,
-      {} as any // ActivatedRoute not used here
+      servicioTerceros as TercerosrelacionadosService,
+      {} as any,
+      servicioImportacion as ImportacionDeAcuiculturaService,
+      consultaAcuicultura as AcuiculturaQuery,
+      {} as any
     );
 
-    component.ngOnInit(); // Initialize form
+    componente.ngOnInit();
   });
 
-  it('should create form with default values and validators', () => {
-    expect(component.destinatarioForm).toBeDefined();
-    expect(component.destinatarioForm.controls['tipoMercancia'].value).toBe('yes');
-    expect(component.destinatarioForm.controls['nombre'].valid).toBe(false);
-    expect(component.destinatarioForm.controls['razonSocial'].valid).toBe(false);
+  it('debe crear el formulario con valores predeterminados y validadores', () => {
+    expect(componente.destinatarioForm).toBeDefined();
+    expect(componente.destinatarioForm.controls['tipoMercancia'].value).toBe('yes');
+    expect(componente.destinatarioForm.controls['nombre'].valid).toBe(false);
+    expect(componente.destinatarioForm.controls['razonSocial'].valid).toBe(false);
   });
 
-  it('should load catalogs on ngAfterViewInit', () => {
-    component.ngAfterViewInit();
-    expect(tercerosService.obtenerSelectorList).toHaveBeenCalledTimes(4);
-    expect(component.pairsCatalog).toEqual([]);
-    expect(component.estadoCatalog).toEqual([]);
-    expect(component.municipioCatalog).toEqual([]);
-    expect(component.coloniaCatalog).toEqual([]);
+  it('debe cargar los catálogos en ngAfterViewInit', () => {
+    componente.ngAfterViewInit();
+    expect(servicioTerceros.obtenerSelectorList).toHaveBeenCalledTimes(4);
+    expect(componente.pairsCatalog).toEqual([]);
+    expect(componente.estadoCatalog).toEqual([]);
+    expect(componente.municipioCatalog).toEqual([]);
+    expect(componente.coloniaCatalog).toEqual([]);
   });
 
-  it('should require razonSocial when tipoMercancia is "yes"', () => {
-    component.destinatarioForm.patchValue({ tipoMercancia: 'yes' });
-    component.enCambioValorRadio();
-    const ctrl = component.destinatarioForm.get('razonSocial');
+  it('debe requerir razonSocial cuando tipoMercancia es "yes"', () => {
+    componente.destinatarioForm.patchValue({ tipoMercancia: 'yes' });
+    componente.enCambioValorRadio();
+    const ctrl = componente.destinatarioForm.get('razonSocial');
     ctrl?.setValue('');
     expect(ctrl?.valid).toBe(false);
-    ctrl?.setValue('Some Social Reason');
+    ctrl?.setValue('Alguna Razón Social');
     expect(ctrl?.valid).toBe(true);
   });
 
-  it('should clear validators from razonSocial when tipoMercancia is "no"', () => {
-    component.destinatarioForm.patchValue({ tipoMercancia: 'no' });
-    component.enCambioValorRadio();
-    const ctrl = component.destinatarioForm.get('razonSocial');
+  it('debe limpiar los validadores de razonSocial cuando tipoMercancia es "no"', () => {
+    componente.destinatarioForm.patchValue({ tipoMercancia: 'no' });
+    componente.enCambioValorRadio();
+    const ctrl = componente.destinatarioForm.get('razonSocial');
     ctrl?.setValue('');
     expect(ctrl?.valid).toBe(true);
   });
 
-  it('should emit cerrar event on onCancelarDestinatario', () => {
-    const spyCerrar = jest.spyOn(component.cerrar, 'emit');
-    component.onCancelarDestinatario();
-    expect(spyCerrar).toHaveBeenCalled();
+  it('debe emitir el evento cerrar en onCancelarDestinatario', () => {
+    const espiaCerrar = jest.spyOn(componente.cerrar, 'emit');
+    componente.onCancelarDestinatario();
+    expect(espiaCerrar).toHaveBeenCalled();
   });
 
-  it('should call update service and emit cerrar when form is valid onGuardarDestinatario', () => {
-    component.destinatarioForm.patchValue({
+  it('debe llamar al servicio de actualización y emitir cerrar cuando el formulario es válido en onGuardarDestinatario', () => {
+    componente.destinatarioForm.patchValue({
       tipoMercancia: 'yes',
       nombre: 'Juan',
       primerApellido: 'Perez',
@@ -90,19 +88,19 @@ describe('AgregardestinatarioComponent', () => {
       estado: '01',
       calle: 'Calle 1',
       numeroExterior: '123'
-    }); // minimal valid data
+    });
 
-    const spyUpdate = jest.spyOn(importacionService, 'updateTercerosRelacionado');
-    const spyCerrar = jest.spyOn(component.cerrar, 'emit');
+    const espiaActualizar = jest.spyOn(servicioImportacion, 'updateTercerosRelacionado');
+    const espiaCerrar = jest.spyOn(componente.cerrar, 'emit');
 
-    component.onGuardarDestinatario();
+    componente.onGuardarDestinatario();
 
-    expect(spyUpdate).toHaveBeenCalled();
-    expect(spyCerrar).toHaveBeenCalled();
+    expect(espiaActualizar).toHaveBeenCalled();
+    expect(espiaCerrar).toHaveBeenCalled();
   });
 
-  it('should mark form as touched if form invalid on onGuardarDestinatario', () => {
-    component.destinatarioForm.patchValue({
+  it('debe marcar el formulario como tocado si es inválido en onGuardarDestinatario', () => {
+    componente.destinatarioForm.patchValue({
       tipoMercancia: 'yes',
       nombre: '',
       primerApellido: '',
@@ -112,10 +110,10 @@ describe('AgregardestinatarioComponent', () => {
       estado: '',
       calle: '',
       numeroExterior: ''
-    }); // invalid form
+    });
 
-    const markAllAsTouchedSpy = jest.spyOn(component.destinatarioForm, 'markAllAsTouched');
-    component.onGuardarDestinatario();
-    expect(markAllAsTouchedSpy).toHaveBeenCalled();
+    const espiaMarcarTocado = jest.spyOn(componente.destinatarioForm, 'markAllAsTouched');
+    componente.onGuardarDestinatario();
+    expect(espiaMarcarTocado).toHaveBeenCalled();
   });
 });

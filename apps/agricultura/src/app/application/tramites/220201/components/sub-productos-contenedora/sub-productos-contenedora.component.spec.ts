@@ -49,7 +49,6 @@ describe('SubProductosContenedoraComponent', () => {
       })
     };
 
-
     mockStore = {
       update: jest.fn()
     };
@@ -68,27 +67,26 @@ describe('SubProductosContenedoraComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should fetch catalog data on init', () => {
+  it('debe obtener datos del catálogo al inicializar', () => {
     expect(mockApiService.obtenerProductoRespuestaPorUrl).toHaveBeenCalledWith('productos.json');
   });
 
-  it('should update store when agregarDatosFormulario is called', () => {
-    const sampleEvent: any = {
+  it('debe actualizar el store cuando se llama agregarDatosFormulario', () => {
+    const eventoEjemplo: any = {
       formulario: {
         id: 123,
         tipoRequisito: 'req',
         requisito: 'test',
         cantidadUMT: '5',
         cantidadUMC: '10'
-        // ... add other required fields as needed
       }
     };
 
-    component.agregarDatosFormulario(sampleEvent);
+    component.agregarDatosFormulario(eventoEjemplo);
 
     expect(mockStore.update).toHaveBeenCalledWith(expect.any(Function));
   });

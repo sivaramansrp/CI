@@ -1,32 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  AlertComponent,
-  CatalogoSelectComponent,
-  TablaDinamicaComponent,
-  TableComponent,
-  TituloComponent,
-  NotificacionesComponent
-} from '@ng-mf/data-access-user';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 describe('DatosDeLaSolicitudComponent', () => {
-  let component: DatosDeLaSolicitudComponent;
+  let componente: DatosDeLaSolicitudComponent;
   let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
-  let mockImportacionService: any;
-  let mockConsultaQuery: any;
-  let mockAcuiculturaStore: any;
+  let servicioMock: any;
+  let consultaMock: any;
+  let storeMock: any;
 
   beforeEach(async () => {
-    // Create mock services
-    mockImportacionService = {
+    servicioMock = {
       obtenerDatos: jest.fn().mockReturnValue(
         of({
           realizarGroup: {
@@ -44,11 +35,11 @@ describe('DatosDeLaSolicitudComponent', () => {
       actualizarDatosMercancia: jest.fn()
     };
 
-    mockConsultaQuery = {
+    consultaMock = {
       selectConsultaioState$: of({ readonly: false })
     };
 
-    mockAcuiculturaStore = {
+    storeMock = {
       update: jest.fn(),
       getValue: jest.fn().mockReturnValue({}),
       remove: jest.fn()
@@ -65,85 +56,80 @@ describe('DatosDeLaSolicitudComponent', () => {
         FormBuilder,
         {
           provide: ImportacionDeAcuiculturaService,
-          useValue: mockImportacionService
+          useValue: servicioMock
         },
         {
           provide: ConsultaioQuery,
-          useValue: mockConsultaQuery
+          useValue: consultaMock
         },
         {
           provide: AcuiculturaStore,
-          useValue: mockAcuiculturaStore
+          useValue: storeMock
         }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
-    component = fixture.componentInstance;
-    
-    // Initialize all required arrays to prevent undefined errors in template
-    component.cuerpoTablaFila = [];
-    component.cuerpoTablasoli = [];
-    component.cuerpoTablaSolicitud = [];
-    component.listSelectedView = [];
-    
-    // Initialize all catalog arrays
-    component.aduanaDeIngresoList = [];
-    component.oficinaInspeccionList = [];
-    component.puntoInspeccionList = [];
-    component.tipoRequisitoList = [];
-    component.arancelariaList = [];
-    component.regimenList = [];
-    component.nicoList = [];
-    component.umcList = [];
-    component.usoList = [];
-    component.paisDeOrigenList = [];
-    component.paisDeProcedenciaList = [];
+    componente = fixture.componentInstance;
 
-    // Initialize form to prevent template errors
-    component.createFromGroup();
+    componente.cuerpoTablaFila = [];
+    componente.cuerpoTablasoli = [];
+    componente.cuerpoTablaSolicitud = [];
+    componente.listSelectedView = [];
+    componente.aduanaDeIngresoList = [];
+    componente.oficinaInspeccionList = [];
+    componente.puntoInspeccionList = [];
+    componente.tipoRequisitoList = [];
+    componente.arancelariaList = [];
+    componente.regimenList = [];
+    componente.nicoList = [];
+    componente.umcList = [];
+    componente.usoList = [];
+    componente.paisDeOrigenList = [];
+    componente.paisDeProcedenciaList = [];
+    componente.createFromGroup();
   });
 
   afterEach(() => {
     fixture?.destroy();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('crea componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should initialize form group with controls on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.datosMercanciaFormGroup).toBeDefined();
-    expect(component.datosMercanciaFormGroup.get('realizarGroup')).toBeTruthy();
+  it('inicializa formulario en ngOnInit', () => {
+    componente.ngOnInit();
+    expect(componente.datosMercanciaFormGroup).toBeDefined();
+    expect(componente.datosMercanciaFormGroup.get('realizarGroup')).toBeTruthy();
   });
 
-  it('should disable form in readonly mode', () => {
-    component.esFormularioSoloLectura = true;
-    component.inicializarEstadoFormulario();
-    expect(component.datosMercanciaFormGroup.disabled).toBe(true);
+  it('deshabilita formulario solo lectura', () => {
+    componente.esFormularioSoloLectura = true;
+    componente.inicializarEstadoFormulario();
+    expect(componente.datosMercanciaFormGroup.disabled).toBe(true);
   });
 
-  it('should enable form in editable mode', () => {
-    component.esFormularioSoloLectura = false;
-    component.inicializarEstadoFormulario();
-    expect(component.datosMercanciaFormGroup.enabled).toBe(true);
+  it('habilita formulario editable', () => {
+    componente.esFormularioSoloLectura = false;
+    componente.inicializarEstadoFormulario();
+    expect(componente.datosMercanciaFormGroup.enabled).toBe(true);
   });
 
-  it('should toggle colapsable flag', () => {
-    const initial = component.colapsable;
-    component.mostrar_colapsable();
-    expect(component.colapsable).toBe(!initial);
+  it('toggle colapsable', () => {
+    const inicial = componente.colapsable;
+    componente.mostrar_colapsable();
+    expect(componente.colapsable).toBe(!inicial);
   });
 
-  it('should create form group with proper structure', () => {
-    expect(component.datosMercanciaFormGroup).toBeDefined();
-    expect(component.datosMercanciaFormGroup.get('realizarGroup')).toBeTruthy();
+  it('estructura formulario', () => {
+    expect(componente.datosMercanciaFormGroup).toBeDefined();
+    expect(componente.datosMercanciaFormGroup.get('realizarGroup')).toBeTruthy();
   });
 
-  it('should create realizarGroup with required validators', () => {
-    const realizarGroup = component.createRealizarGroup();
+  it('realizarGroup con validadores', () => {
+    const realizarGroup = componente.createRealizarGroup();
     expect(realizarGroup.get('aduanaIngreso')).toBeTruthy();
     expect(realizarGroup.get('oficinaInspeccion')).toBeTruthy();
     expect(realizarGroup.get('puntoInspeccion')).toBeTruthy();
@@ -151,14 +137,13 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(realizarGroup.get('regimen')).toBeTruthy();
   });
 
-  it('should load catalogs on initialization', () => {
-    component.ngOnInit();
-    expect(mockImportacionService.obtenerDetallesDelCatalogo).toHaveBeenCalled();
+  it('carga catalogos', () => {
+    componente.ngOnInit();
+    expect(servicioMock.obtenerDetallesDelCatalogo).toHaveBeenCalled();
   });
 
-  it('should update form values from store data', () => {
-    // Set up test data
-    const testStoreData = {
+  it('actualiza valores formulario', () => {
+    const datosPrueba = {
       aduanaIngreso: 'test-aduana',
       oficinaInspeccion: 'test-oficina',
       puntoInspeccion: 'test-punto',
@@ -166,23 +151,19 @@ describe('DatosDeLaSolicitudComponent', () => {
       regimen: 'test-regimen'
     };
 
-    // Mock the service to return specific test data
-    mockImportacionService.obtenerDatos.mockReturnValue(
+    servicioMock.obtenerDatos.mockReturnValue(
       of({
-        realizarGroup: testStoreData,
+        realizarGroup: datosPrueba,
         mercanciaGroup: []
       })
     );
-    
-    // Set the store data directly (simulating the service response)
-    component.datosMercanciaStore = testStoreData;
-    
-    // Manually patch the form as the component does
-    component.datosMercanciaFormGroup.patchValue({
-      realizarGroup: component.datosMercanciaStore
+
+    componente.datosMercanciaStore = datosPrueba;
+    componente.datosMercanciaFormGroup.patchValue({
+      realizarGroup: componente.datosMercanciaStore
     });
-    
-    const realizarGroup = component.datosMercanciaFormGroup.get('realizarGroup');
+
+    const realizarGroup = componente.datosMercanciaFormGroup.get('realizarGroup');
     expect(realizarGroup?.get('aduanaIngreso')?.value).toBe('test-aduana');
     expect(realizarGroup?.get('oficinaInspeccion')?.value).toBe('test-oficina');
     expect(realizarGroup?.get('puntoInspeccion')?.value).toBe('test-punto');
@@ -190,8 +171,8 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(realizarGroup?.get('regimen')?.value).toBe('test-regimen');
   });
 
-  it('should assign store data from service response', () => {
-    const testData = {
+  it('asigna datos store', () => {
+    const datos = {
       aduanaIngreso: 'store-aduana',
       oficinaInspeccion: 'store-oficina',
       puntoInspeccion: 'store-punto',
@@ -199,25 +180,24 @@ describe('DatosDeLaSolicitudComponent', () => {
       regimen: 'store-regimen'
     };
 
-    mockImportacionService.obtenerDatos.mockReturnValue(
+    servicioMock.obtenerDatos.mockReturnValue(
       of({
-        realizarGroup: testData,
+        realizarGroup: datos,
         mercanciaGroup: []
       })
     );
-    
-    component.ngOnInit();
-    
-    expect(component.datosMercanciaStore).toEqual(testData);
+
+    componente.ngOnInit();
+    expect(componente.datosMercanciaStore).toEqual(datos);
   });
 
-  it('should update table data from service response', () => {
-    const testMercanciaData = [
+  it('actualiza datos tabla', () => {
+    const mercancia = [
       { id: 1, descripcion: 'Test mercancia 1' },
       { id: 2, descripcion: 'Test mercancia 2' }
     ];
 
-    mockImportacionService.obtenerDatos.mockReturnValue(
+    servicioMock.obtenerDatos.mockReturnValue(
       of({
         realizarGroup: {
           aduanaIngreso: 'aduana',
@@ -226,48 +206,47 @@ describe('DatosDeLaSolicitudComponent', () => {
           numeroGuia: '12345',
           regimen: 'general'
         },
-        mercanciaGroup: testMercanciaData
+        mercanciaGroup: mercancia
       })
     );
-    
-    component.ngOnInit();
-    
-    expect(component.cuerpoTablaFila).toEqual(testMercanciaData);
+
+    componente.ngOnInit();
+    expect(componente.cuerpoTablaFila).toEqual(mercancia);
   });
 
-  it('should validate form correctly', () => {
-    const isValid = component.validarFormulario();
-    expect(typeof isValid).toBe('boolean');
+  it('valida formulario', () => {
+    const valido = componente.validarFormulario();
+    expect(typeof valido).toBe('boolean');
   });
 
-  it('should have initialized table data arrays', () => {
-    expect(Array.isArray(component.cuerpoTablaFila)).toBe(true);
-    expect(Array.isArray(component.cuerpoTablasoli)).toBe(true);
-    expect(Array.isArray(component.cuerpoTablaSolicitud)).toBe(true);
-    expect(Array.isArray(component.listSelectedView)).toBe(true);
+  it('arreglos tabla inicializados', () => {
+    expect(Array.isArray(componente.cuerpoTablaFila)).toBe(true);
+    expect(Array.isArray(componente.cuerpoTablasoli)).toBe(true);
+    expect(Array.isArray(componente.cuerpoTablaSolicitud)).toBe(true);
+    expect(Array.isArray(componente.listSelectedView)).toBe(true);
   });
 
-  it('should have initialized catalog arrays', () => {
-    expect(Array.isArray(component.aduanaDeIngresoList)).toBe(true);
-    expect(Array.isArray(component.oficinaInspeccionList)).toBe(true);
-    expect(Array.isArray(component.tipoRequisitoList)).toBe(true);
-    expect(Array.isArray(component.arancelariaList)).toBe(true);
-    expect(Array.isArray(component.regimenList)).toBe(true);
+  it('arreglos catalogos inicializados', () => {
+    expect(Array.isArray(componente.aduanaDeIngresoList)).toBe(true);
+    expect(Array.isArray(componente.oficinaInspeccionList)).toBe(true);
+    expect(Array.isArray(componente.tipoRequisitoList)).toBe(true);
+    expect(Array.isArray(componente.arancelariaList)).toBe(true);
+    expect(Array.isArray(componente.regimenList)).toBe(true);
   });
 
-  it('should have proper table configuration', () => {
-    expect(component.configuracionColumnas).toBeDefined();
-    expect(Array.isArray(component.configuracionColumnas)).toBe(true);
-    expect(component.configuracionColumnas.length).toBeGreaterThan(0);
+  it('configuracion columnas tabla', () => {
+    expect(componente.configuracionColumnas).toBeDefined();
+    expect(Array.isArray(componente.configuracionColumnas)).toBe(true);
+    expect(componente.configuracionColumnas.length).toBeGreaterThan(0);
   });
 
-  it('should have proper table selection types', () => {
-    expect(component.tipoSeleccion).toBeDefined();
-    expect(component.tipoSeleccionsoli).toBeDefined();
+  it('tipos seleccion tabla', () => {
+    expect(componente.tipoSeleccion).toBeDefined();
+    expect(componente.tipoSeleccionsoli).toBeDefined();
   });
 
-  it('should have default table data', () => {
-    expect(Array.isArray(component.cuerpoTabla)).toBe(true);
-    expect(component.cuerpoTabla.length).toBeGreaterThan(0);
+  it('datos tabla por defecto', () => {
+    expect(Array.isArray(componente.cuerpoTabla)).toBe(true);
+    expect(componente.cuerpoTabla.length).toBeGreaterThan(0);
   });
 });

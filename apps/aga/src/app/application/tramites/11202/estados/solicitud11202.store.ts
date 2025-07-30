@@ -23,6 +23,11 @@ export interface Solicitud11202State {
   telefono: number;
 }
 
+/**
+ * @function createInitialState
+ * @description Crea el estado inicial para la solicitud del trámite 11202.
+ * @returns {Solicitud11202State} Estado inicial con valores vacíos o por defecto.
+ */
 export function createInitialState(): Solicitud11202State {
   return {
     rfc: '',
@@ -43,19 +48,25 @@ export function createInitialState(): Solicitud11202State {
   };
 }
 
+/**
+ * @class Solicitud11202Store
+ * @description Store de Akita para gestionar el estado de la solicitud del trámite 11202.
+ */
 @Injectable({
   providedIn: 'root',
 })
 @StoreConfig({ name: 'solicitud11202', resettable: true })
 export class Solicitud11202Store extends Store<Solicitud11202State> {
+  /**
+   * Constructor del store. Inicializa el estado con los valores por defecto.
+   */
   constructor() {
     super(createInitialState());
   }
 
   /**
-   * Guarda el tipo de solicitud en el estado.
-   *
-   * @param rfc - El tipo de solicitud que se va a guardar.
+   * Guarda el RFC en el estado.
+   * @param rfc - RFC a guardar.
    */
   public setRfc(rfc: string): void {
     this.update((state) => ({
@@ -64,6 +75,10 @@ export class Solicitud11202Store extends Store<Solicitud11202State> {
     }));
   }
 
+  /**
+   * Guarda la denominación en el estado.
+   * @param denominacion - Denominación o razón social a guardar.
+   */
   public setDenominacion(denominacion: string): void {
     this.update((state) => ({
       ...state,
@@ -71,6 +86,10 @@ export class Solicitud11202Store extends Store<Solicitud11202State> {
     }));
   }
 
+  /**
+   * Guarda la actividad económica en el estado.
+   * @param actividadEconomica - Actividad económica a guardar.
+   */
   public setActividadEconomica(actividadEconomica: string): void {
     this.update((state) => ({
       ...state,
@@ -78,6 +97,10 @@ export class Solicitud11202Store extends Store<Solicitud11202State> {
     }));
   }
 
+  /**
+   * Guarda el correo electrónico en el estado.
+   * @param correoElectronico - Correo electrónico a guardar.
+   */
   public setCorreoElectronico(correoElectronico: string): void {
     this.update((state) => ({
       ...state,
@@ -85,6 +108,10 @@ export class Solicitud11202Store extends Store<Solicitud11202State> {
     }));
   }
 
+  /**
+   * Guarda el país en el estado.
+   * @param pais - País a guardar.
+   */
   public setPais(pais: string): void {
     this.update((state) => ({
       ...state,
@@ -92,6 +119,10 @@ export class Solicitud11202Store extends Store<Solicitud11202State> {
     }));
   }
 
+  /**
+   * Guarda el código postal en el estado.
+   * @param codigoPostal - Código postal a guardar.
+   */
   public setCodigoPostal(codigoPostal: number): void {
     this.update((state) => ({
       ...state,
@@ -99,6 +130,10 @@ export class Solicitud11202Store extends Store<Solicitud11202State> {
     }));
   }
 
+  /**
+   * Guarda el estado o entidad federativa en el estado.
+   * @param estado - Estado o entidad federativa a guardar.
+   */
   public setEstado(estado: string): void {
     this.update((state) => ({
       ...state,
@@ -106,6 +141,10 @@ export class Solicitud11202Store extends Store<Solicitud11202State> {
     }));
   }
 
+  /**
+   * Guarda el municipio o alcaldía en el estado.
+   * @param municipioAlcaldia - Municipio o alcaldía a guardar.
+   */
   public setMunicipioAlcaldia(municipioAlcaldia: string): void {
     this.update((state) => ({
       ...state,
@@ -113,6 +152,10 @@ export class Solicitud11202Store extends Store<Solicitud11202State> {
     }));
   }
 
+  /**
+   * Guarda la localidad en el estado.
+   * @param localidad - Localidad a guardar.
+   */
   public setLocalidad(localidad: string): void {
     this.update((state) => ({
       ...state,
@@ -120,6 +163,10 @@ export class Solicitud11202Store extends Store<Solicitud11202State> {
     }));
   }
 
+  /**
+   * Guarda la colonia en el estado.
+   * @param colonia - Colonia a guardar.
+   */
   public setColonia(colonia: string): void {
     this.update((state) => ({
       ...state,
@@ -127,6 +174,10 @@ export class Solicitud11202Store extends Store<Solicitud11202State> {
     }));
   }
 
+  /**
+   * Guarda la calle en el estado.
+   * @param calle - Calle a guardar.
+   */
   public setCalle(calle: string): void {
     this.update((state) => ({
       ...state,
@@ -134,13 +185,21 @@ export class Solicitud11202Store extends Store<Solicitud11202State> {
     }));
   }
 
+  /**
+   * Guarda el número exterior en el estado.
+   * @param numeroExterior - Número exterior a guardar.
+   */
   public setNumeroExterior(numeroExterior: string): void {
     this.update((state) => ({
       ...state,
       numeroExterior,
     }));
   }
-  
+
+  /**
+   * Guarda el número interior en el estado.
+   * @param numeroInterior - Número interior a guardar.
+   */
   public setnumeroInterior(numeroInterior: string): void {
     this.update((state) => ({
       ...state,
@@ -148,6 +207,10 @@ export class Solicitud11202Store extends Store<Solicitud11202State> {
     }));
   }
 
+  /**
+   * Guarda la lada telefónica en el estado.
+   * @param lada - Lada a guardar.
+   */
   public setLada(lada: string): void {
     this.update((state) => ({
       ...state,
@@ -155,6 +218,10 @@ export class Solicitud11202Store extends Store<Solicitud11202State> {
     }));
   }
 
+  /**
+   * Guarda el número telefónico en el estado.
+   * @param telefono - Teléfono a guardar.
+   */
   public setTelefono(telefono: number): void {
     this.update((state) => ({
       ...state,
@@ -163,7 +230,7 @@ export class Solicitud11202Store extends Store<Solicitud11202State> {
   }
 
   /**
-   * Limpia los datos de la solicitud
+   * Limpia todos los datos de la solicitud, restableciendo el estado inicial.
    */
   public limpiarSolicitud(): void {
     this.reset();

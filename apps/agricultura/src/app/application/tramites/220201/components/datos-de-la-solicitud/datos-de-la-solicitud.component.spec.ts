@@ -7,7 +7,6 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 
-// Mock ModalComponent
 class ModalMock {
   abrir = jest.fn();
 }
@@ -55,7 +54,7 @@ describe('DatosDeLaSolicitudComponent', () => {
 
     component = new DatosDeLaSolicitudComponent(
       fb,
-      { get: jest.fn().mockReturnValue(of({ data: [] })) } as any, // Mock HttpClient
+      { get: jest.fn().mockReturnValue(of({ data: [] })) } as any,
       certificadoServiceMock as CertificadoZoosanitarioServiceService,
       certificadoQueryMock as ZoosanitarioQuery,
       consultaioQueryMock as ConsultaioQuery,
@@ -70,13 +69,13 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.initActionFormBuild();
   });
 
-  it('should create the component and initialize form', () => {
+  it('debe crear el componente y inicializar el formulario', () => {
     expect(component).toBeTruthy();
     expect(component.forma).toBeDefined();
     expect(component.datosDelaSolicitud).toBeDefined();
   });
 
-  it('should patch datosDelaSolicitud when seleccionarDatosSolicitud$ emits', (done) => {
+  it('debe actualizar datosDelaSolicitud cuando seleccionarDatosSolicitud$ emite', (done) => {
     const patchValueSpy = jest.spyOn(component.datosDelaSolicitud, 'patchValue');
 
     seleccionarDatosSolicitudSubject.next({
@@ -104,13 +103,13 @@ describe('DatosDeLaSolicitudComponent', () => {
     }, 0);
   });
 
-  it('should toggle colapsable property', () => {
+  it('debe alternar la propiedad colapsable', () => {
     const initial = component.colapsable;
     component.mostrar_colapsable();
     expect(component.colapsable).toBe(!initial);
   });
 
-  it('should call updateDatosDeLaSolicitud on setValoresStore()', () => {
+  it('debe llamar updateDatosDeLaSolicitud en setValoresStore()', () => {
     component.datosDelaSolicitud.patchValue({
       tipoMercancia: 'yes',
       aduanaIngreso: 'AduanaTest',
@@ -126,28 +125,28 @@ describe('DatosDeLaSolicitudComponent', () => {
     }));
   });
 
-  it('should show correct columns for tipoMercancia "yes"', () => {
+  it('debe mostrar las columnas correctas para tipoMercancia "yes"', () => {
     component.datosDelaSolicitud.patchValue({ tipoMercancia: 'yes' });
     component.radioBotonSeleccionado();
 
     expect(component.configuracionColumnasoli.some(col => col.encabezado.includes('No. partida'))).toBe(true);
   });
 
-  it('should show correct columns for tipoMercancia "no"', () => {
+  it('debe mostrar las columnas correctas para tipoMercancia "no"', () => {
     component.datosDelaSolicitud.patchValue({ tipoMercancia: 'no' });
     component.radioBotonSeleccionado();
 
     expect(component.configuracionColumnasoli.some(col => col.encabezado.includes('Tipo planta'))).toBe(true);
   });
 
-  it('should open correct modal component when modificarMercancia is called', () => {
+  it('debe abrir el componente modal correcto al llamar modificarMercancia', () => {
     component.datosDelaSolicitud.patchValue({ tipoMercancia: 'yes' });
     component.modificarMercancia();
 
     expect((component as any).modalRef.abrir).toHaveBeenCalledTimes(1);
   });
 
-  it('should update selectedDatos in store on seleccionTabla', () => {
+  it('debe actualizar selectedDatos en el store al llamar seleccionTabla', () => {
     const selectedRows = [{
       id: 1,
       tipoRequisito: 'req1',
@@ -181,7 +180,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(fitosanitarioStoreMock.update).toHaveBeenCalledWith(expect.any(Function));
   });
 
-  it('should call store update in eliminarPedimentoDatos when borrar = true', () => {
+  it('debe llamar update en el store en eliminarPedimentoDatos cuando borrar = true', () => {
     fitosanitarioStoreMock.getValue = jest.fn().mockReturnValue({
       tablaDatos: [
         { id: 1, tipoRequisito: 'test' },
@@ -195,7 +194,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(fitosanitarioStoreMock.update).toHaveBeenCalledWith(expect.any(Function));
   });
 
-  it('should validate form as valid when all fields are filled', () => {
+  it('debe validar el formulario como válido cuando todos los campos están llenos', () => {
     component.datosDelaSolicitud.patchValue({
       tipoMercancia: 'yes',
       aduanaIngreso: 'test',
@@ -207,7 +206,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.validarFormulario()).toBe(true);
   });
 
-  it('should validate form as invalid when fields are empty', () => {
+  it('debe validar el formulario como inválido cuando los campos están vacíos', () => {
     component.datosDelaSolicitud.patchValue({
       tipoMercancia: '',
       aduanaIngreso: '',
@@ -222,7 +221,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(markAllTouchedSpy).toHaveBeenCalled();
   });
 
-  it('should complete destroyNotifier$ on ngOnDestroy()', () => {
+  it('debe completar destroyNotifier$ en ngOnDestroy()', () => {
     const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
     const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
 

@@ -10,12 +10,10 @@ import { AnimalesVivoContenedoraComponent } from './animales-vivo-contenedora.co
 describe('AnimalesVivoContenedoraComponent', () => {
   let component: AnimalesVivoContenedoraComponent;
 
-  // Mocks
   let certificadoServiceMock: Partial<CertificadoZoosanitarioServiceService>;
   let zoosanitarioQueryMock: Partial<ZoosanitarioQuery>;
   let zoosanitarioStoreMock: Partial<ZoosanitarioStore>;
 
-  // Declare subject for pushing values
   let seleccionarStateSubject: Subject<any>;
 
   beforeEach(() => {
@@ -150,7 +148,7 @@ describe('AnimalesVivoContenedoraComponent', () => {
     );
   });
 
-  it('should create component and load initial catalogosDatos', async () => {
+  it('debe crear el componente y cargar los catalogosDatos iniciales', async () => {
     expect(component).toBeTruthy();
 
     await Promise.resolve();
@@ -159,7 +157,7 @@ describe('AnimalesVivoContenedoraComponent', () => {
     expect(component.catalogosDatos.tipoRequisitoList).toContain('tipo1');
   });
 
-  it('should subscribe to seleccionarState$ and update formularioSolicitud and cuerpoTabla', async () => {
+  it('debe suscribirse a seleccionarState$ y actualizar formularioSolicitud y cuerpoTabla', async () => {
     const mockState = {
       tablaDatos: [{ id: 123, requisito: 'reqMock' }],
       selectedDatos: [{
@@ -193,15 +191,15 @@ describe('AnimalesVivoContenedoraComponent', () => {
     expect(component.cuerpoTabla).toEqual(mockState.tablaDatos);
     expect(component.formularioSolicitud.id).toBe(999);
     expect(component.formularioSolicitud.tipoRequisito).toBe('TR1');
-    expect(component.formularioSolicitud.cantidadUMT).toBe('10'); // converted to string
+    expect(component.formularioSolicitud.cantidadUMT).toBe('10');
   });
 
-  it('should update datos in store on agregarDatosFormulario with existing id', () => {
+  it('debe actualizar los datos en el store al llamar agregarDatosFormulario con id existente', () => {
     const formEventMock = {
       formulario: {
         id: 1,
-        tipoRequisito: 'TR-Updated',
-        requisito: 'REQ-Updated',
+        tipoRequisito: 'TR-Actualizado',
+        requisito: 'REQ-Actualizado',
         numeroCertificadoInternacional: '123',
         fraccionArancelaria: 'FA',
         descripcionFraccion: 'descFA',
@@ -231,15 +229,15 @@ describe('AnimalesVivoContenedoraComponent', () => {
     const newState = updaterFn(prevState);
 
     expect(newState.tablaDatos.length).toBe(1);
-    expect(newState.tablaDatos[0].tipoRequisito).toBe('TR-Updated');
+    expect(newState.tablaDatos[0].tipoRequisito).toBe('TR-Actualizado');
   });
 
-  it('should add new datos in store on agregarDatosFormulario with new id', () => {
+  it('debe agregar nuevos datos en el store al llamar agregarDatosFormulario con id nuevo', () => {
     const formEventMock = {
       formulario: {
         id: 2,
-        tipoRequisito: 'TR-New',
-        requisito: 'REQ-New',
+        tipoRequisito: 'TR-Nuevo',
+        requisito: 'REQ-Nuevo',
         numeroCertificadoInternacional: '',
         fraccionArancelaria: '',
         descripcionFraccion: '',
@@ -268,10 +266,10 @@ describe('AnimalesVivoContenedoraComponent', () => {
     const newState = updaterFn(prevState);
 
     expect(newState.tablaDatos.length).toBe(2);
-    expect(newState.tablaDatos.find((item: any) => item.id === 2)?.tipoRequisito).toBe('TR-New');
+    expect(newState.tablaDatos.find((item: any) => item.id === 2)?.tipoRequisito).toBe('TR-Nuevo');
   });
 
-  it('should call next and complete on destroyNotifier$ in ngOnDestroy', () => {
+  it('debe llamar next y complete en destroyNotifier$ en ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
     const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
 

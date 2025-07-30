@@ -1,18 +1,16 @@
 // importacion-de-acuicultura.service.spec.ts
-import { HttpClient } from '@angular/common/http';
-import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
 import { ImportacionDeAcuiculturaService } from './importacion-de-acuicultura.service';
 
 describe('ImportacionDeAcuiculturaService', () => {
-  let service: ImportacionDeAcuiculturaService;
-  let httpClientMock: Partial<HttpClient>;
-  let acuiculturaStoreMock: Partial<AcuiculturaStore>;
-  let seccionStoreMock: Partial<SeccionLibStore>;
+  let servicio: ImportacionDeAcuiculturaService;
+  let httpClienteMock: any;
+  let acuiculturaStoreMock: any;
+  let seccionStoreMock: any;
 
   beforeEach(() => {
-    httpClientMock = {
+    httpClienteMock = {
       get: jest.fn()
     };
 
@@ -28,100 +26,100 @@ describe('ImportacionDeAcuiculturaService', () => {
     };
 
     seccionStoreMock = {
-      // mock any needed methods here (currently none called)
+      // simular métodos necesarios aquí (actualmente ninguno llamado)
     };
 
-    service = new ImportacionDeAcuiculturaService(
-      httpClientMock as HttpClient,
-      acuiculturaStoreMock as AcuiculturaStore,
-      seccionStoreMock as SeccionLibStore
+    servicio = new ImportacionDeAcuiculturaService(
+      httpClienteMock,
+      acuiculturaStoreMock,
+      seccionStoreMock
     );
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('debería crearse', () => {
+    expect(servicio).toBeTruthy();
   });
 
-  it('obtenerDetallesDelCatalogo should call http.get with correct url', () => {
-    const file = 'catalogo.json';
-    const mockResponse = { data: 'test' };
-    (httpClientMock.get as jest.Mock).mockReturnValue(of(mockResponse));
+  it('obtenerDetallesDelCatalogo debe llamar a http.get con la url correcta', () => {
+    const archivo = 'catalogo.json';
+    const respuestaMock = { datos: 'prueba' };
+    httpClienteMock.get.mockReturnValue(of(respuestaMock));
 
-    service.obtenerDetallesDelCatalogo(file).subscribe(response => {
-      expect(response).toEqual(mockResponse);
+    servicio.obtenerDetallesDelCatalogo(archivo).subscribe(respuesta => {
+      expect(respuesta).toEqual(respuestaMock);
     });
 
-    expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/220203/' + file);
+    expect(httpClienteMock.get).toHaveBeenCalledWith('assets/json/220203/' + archivo);
   });
 
-  it('obtenerDatos should return observable from store', () => {
-    const mockData = { some: 'state' };
-    (acuiculturaStoreMock._select as jest.Mock).mockReturnValue(of(mockData));
+  it('obtenerDatos debe retornar observable del store', () => {
+    const datosMock = { algo: 'estado' };
+    acuiculturaStoreMock._select.mockReturnValue(of(datosMock));
 
-    const obs$ = service.obtenerDatos();
-    obs$.subscribe(data => {
-      expect(data).toEqual(mockData);
+    const obs$ = servicio.obtenerDatos();
+    obs$.subscribe(datos => {
+      expect(datos).toEqual(datosMock);
     });
 
     expect(acuiculturaStoreMock._select).toHaveBeenCalled();
   });
 
-  it('actualizarPagoDeDerechos should call store method', () => {
+  it('actualizarPagoDeDerechos debe llamar al método del store', () => {
     const pago = { monto: 1000 };
-    service.actualizarPagoDeDerechos(pago as any);
+    servicio.actualizarPagoDeDerechos(pago as any);
     expect(acuiculturaStoreMock.actualizarPagoDeDerechos).toHaveBeenCalledWith(pago);
   });
 
-  it('actualizarFormularioMovilizacion should call store method', () => {
+  it('actualizarFormularioMovilizacion debe llamar al método del store', () => {
     const movilizacion = { campo: 'valor' };
-    service.actualizarFormularioMovilizacion(movilizacion as any);
+    servicio.actualizarFormularioMovilizacion(movilizacion as any);
     expect(acuiculturaStoreMock.actualizarFormularioMovilizacion).toHaveBeenCalledWith(movilizacion);
   });
 
-  it('actualizarDatosMercancia should call store method', () => {
+  it('actualizarDatosMercancia debe llamar al método del store', () => {
     const grupo = { grupo: 'datos' };
-    service.actualizarDatosMercancia(grupo as any);
+    servicio.actualizarDatosMercancia(grupo as any);
     expect(acuiculturaStoreMock.actualizarDatosMercancia).toHaveBeenCalledWith(grupo);
   });
 
-  it('limpiarFormulario should call store limpiarFormulario', () => {
-    service.limpiarFormulario();
+  it('limpiarFormulario debe llamar a limpiarFormulario del store', () => {
+    servicio.limpiarFormulario();
     expect(acuiculturaStoreMock.limpiarFormulario).toHaveBeenCalled();
   });
 
-  it('getAcuiculturaData should call http.get with correct url', () => {
-    const mockResponse = { data: 'mock' };
-    (httpClientMock.get as jest.Mock).mockReturnValue(of(mockResponse));
-    service.getAcuiculturaData().subscribe(data => {
-      expect(data).toEqual(mockResponse);
+  it('getAcuiculturaData debe llamar a http.get con la url correcta', () => {
+    const respuestaMock = { datos: 'mock' };
+    httpClienteMock.get.mockReturnValue(of(respuestaMock));
+    servicio.getAcuiculturaData().subscribe(datos => {
+      expect(datos).toEqual(respuestaMock);
     });
-    expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/220203/acuicultura_forma.json');
+    expect(httpClienteMock.get).toHaveBeenCalledWith('assets/json/220203/acuicultura_forma.json');
   });
 
-  it('actualizarEstadoFormulario should await store actualizarTodoElEstado', async () => {
-    (acuiculturaStoreMock.actualizarTodoElEstado as jest.Mock).mockResolvedValue(undefined);
+  it('actualizarEstadoFormulario debe esperar a actualizarTodoElEstado del store', async () => {
+    acuiculturaStoreMock.actualizarTodoElEstado.mockResolvedValue(undefined);
 
-    await service.actualizarEstadoFormulario({} as any);
+    await servicio.actualizarEstadoFormulario({} as any);
     expect(acuiculturaStoreMock.actualizarTodoElEstado).toHaveBeenCalledWith({});
   });
 
-  it('actualizarSoloRealizarGroup should call store actualizarSoloRealizarGroup', () => {
+  it('actualizarSoloRealizarGroup debe llamar a actualizarSoloRealizarGroup del store', () => {
     const grupo = { grupo: 'realizar' };
-    service.actualizarSoloRealizarGroup(grupo as any);
+    servicio.actualizarSoloRealizarGroup(grupo as any);
     expect(acuiculturaStoreMock.actualizarSoloRealizarGroup).toHaveBeenCalledWith(grupo);
   });
 
-  it('updateTercerosRelacionado should call store updateTercerosRelacionados', () => {
+  it('updateTercerosRelacionado debe llamar a updateTercerosRelacionados del store', () => {
     const terceros = [{ id: 1 }, { id: 2 }];
-    service.updateTercerosRelacionado(terceros as any);
+    servicio.updateTercerosRelacionado(terceros as any);
     expect(acuiculturaStoreMock.updateTercerosRelacionados).toHaveBeenCalledWith(terceros);
   });
 
-  it('getAllDatosForma should return observable from store', () => {
-    const mockState = { stateKey: 'value' };
-    (acuiculturaStoreMock._select as jest.Mock).mockReturnValue(of(mockState));
-    service.getAllDatosForma().subscribe(res => {
-      expect(res).toEqual(mockState);
+  it('getAllDatosForma debe retornar observable del store', () => {
+    const estadoMock = { claveEstado: 'valor' };
+    acuiculturaStoreMock._select.mockReturnValue(of(estadoMock));
+    servicio.getAllDatosForma().subscribe(res => {
+      expect(res).toEqual(estadoMock);
     });
     expect(acuiculturaStoreMock._select).toHaveBeenCalled();
   });
