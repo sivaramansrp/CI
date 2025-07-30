@@ -6,11 +6,11 @@
  * Contiene información básica sobre los vehículos, como marca, modelo y VIN.
  */
 export interface NumeroEmpleadosTabla {
-  id: number; // Identificador único del vehículo.
-  denominacionSocial: string; // Denominación social del vehículo.
-  rfc: string; // Modelo del vehículo.
-  numeroDeEmpleados: number; // Número de empleados del vehículo.
-  bimestre:string; // Bimestre al que corresponde el registro.
+  id: number; 
+  denominacionSocial: string; 
+  rfc: string; 
+  numeroDeEmpleados: number; 
+  bimestre:string; 
 }
 
 /**
@@ -18,7 +18,7 @@ export interface NumeroEmpleadosTabla {
  */
 export interface BuscarRfcResponse {
   code: number;
-  data: Partial<NumeroEmpleadosTabla>; // Datos de RFC obtenidos.
+  data: Partial<NumeroEmpleadosTabla>; 
   message: string;
 }
 
@@ -62,7 +62,7 @@ export interface DomiciliosRfcSolicitanteTabla {
   tipoInstalacion: string;
   entidadFederativa: string;
   municipioAlcaldia: string;
-  coloniaCalleNumero: string; // This was mislabeled as codigoPostal in the table config
+  coloniaCalleNumero: string; 
   codigoPostal: string;
   registroSESAT: string;
   procesoProductivo: string;

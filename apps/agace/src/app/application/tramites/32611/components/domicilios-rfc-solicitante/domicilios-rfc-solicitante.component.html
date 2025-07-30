@@ -19,14 +19,12 @@
   </div>
 </div>
 
-<!-- Show if missing main installation -->
 <div *ngIf="mostrarErroresValidacion && DomiciliosRfcSolicitanteList.length > 0 && !tieneInstalacionPrincipal()" class="mt-3">
   <div class="col-md-12 text-danger mb-3">
     <b>Se debe agregar por lo menos una instalación principal</b>
   </div>
 </div>
 
-<!-- Show if missing foreign trade operation -->
 <div *ngIf="mostrarErroresValidacion && DomiciliosRfcSolicitanteList.length > 0 && !tieneOperacionesComercioExterior()" class="mt-3">
   <div class="col-md-12 text-danger mb-3">
     <b>Se debe agregar por lo menos una instalación que realice operaciones de comercio exterior</b>
@@ -41,7 +39,6 @@
  
     <div class="d-flex justify-content-end">
       <div class="d-flex flex-row flex-wrap gap-3">
-        <!-- <button class="btn btn-primary" (click)="cargaArchivo()" [disabled]="esFormularioSoloLectura">Carga por archivo</button> -->
         <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
           (click)="confirmEliminarEmpleadoItem()" [disabled]="esFormularioSoloLectura">Eliminar</button>
         <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}"

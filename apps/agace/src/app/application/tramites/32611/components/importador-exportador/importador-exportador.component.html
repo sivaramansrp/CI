@@ -269,7 +269,6 @@
 
       <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
-          <!-- First row: Fecha de pago -->
           <div class="row">
             <div class="col-md-12 mt-4">
               <div class="row align-items-center">
@@ -291,7 +290,6 @@
             </div>
           </div>
 
-          <!-- Second row: Monto -->
           <div class="row">
             <div class="col-md-12 mt-4">
               <div class="row align-items-center">
@@ -318,7 +316,6 @@
             </div>
           </div>
 
-          <!-- Third row: Número de Operación Bancaria -->
           <div class="d-flex align-items-center mt-4">
             <label
               class="form-label mb-0 me-3 text-nowrap numerooperacionbancaria"
@@ -340,7 +337,6 @@
             />
           </div>
 
-          <!-- Fourth row: Llave de pago -->
           <div class="row">
             <div class="col-md-12 mt-4">
               <div class="row align-items-center">
@@ -370,7 +366,6 @@
           
         </div>
       </div>
-      <!-- Error message row -->
           <div class="row" *ngIf="mostrarError">
             <div class="col-md-12 text-danger mt-3">
                 <b>Es requisito obligatorio efectuar el pago de derechos</b>
@@ -469,7 +464,6 @@
   </form>
 </div>
 
-<!-- Modal -->
 <ng-template #template>
   <div class="modal-header">
     <h4 class="modal-title">
@@ -577,7 +571,6 @@
   </div>
 </ng-template>
 
-<!-- Modal de validación de fecha -->
 <ng-template #templateFechaInvalida>
   <div class="modal-header">
     <h4 class="modal-title text-danger"></h4>
@@ -598,7 +591,6 @@
   </div>
 </ng-template>
 
-<!-- Modal de éxito -->
 <ng-template #templateExito>
   <div class="modal-header">
     <h4 class="modal-title text-success"></h4>
@@ -613,7 +605,6 @@
   </div>
 </ng-template>
 
-<!-- Modal de RFC duplicado -->
 <ng-template #templateRFCDuplicado>
   <div class="modal-header">
     <h4 class="modal-title text-warning"></h4>
@@ -632,7 +623,6 @@
   </div>
 </ng-template>
 
-<!-- Modal de datos obligatorios -->
 <ng-template #templateDatosObligatorios>
   <div class="modal-header">
     <h4 class="modal-title text-warning"></h4>
@@ -653,7 +643,6 @@
   </div>
 </ng-template>
 
-<!-- Add the confirmation modal template -->
 <ng-template #templateConfirmacionEliminacion>
   <div class="modal-header">
     <h4 class="modal-title text-danger"></h4>
@@ -679,7 +668,6 @@
   </div>
 </ng-template>
 
-<!-- Add selection required modal template -->
 <ng-template #templateSeleccionRequerida>
   <div class="modal-header">
     <h4 class="modal-title text-warning"></h4>
