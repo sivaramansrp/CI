@@ -357,17 +357,17 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   /**
    * Opciones disponibles para el grupo de radio.
    */
-  radioOpcions: any;
+  radioOpcions: RadioOpcion[] = [];
 
   /**
    * Estado actual de la consulta relacionada con el trámite.
    */
-  consultaDatos: any;
+  consultaDatos: ConsultaDatos = { readonly: false };
 
   /**
    * Datos de la tabla de mercancías obtenidos desde un archivo JSON.
    */
-  public getMercanciaTableData: any;
+  public getMercanciaTableData: MercanciaTableData = { mercanciaTable: { tableHeader: [], tableBody: [] } };
 
   /**
    * Indica si el formulario está en modo de solo lectura.
@@ -420,7 +420,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState: any) => {
+        map((seccionState: ConsultaDatos) => {
           this.consultaDatos = seccionState;
           this.soloLectura = this.consultaDatos.readonly;
           this.inicializarEstadoFormulario();
@@ -432,7 +432,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
     this.obtenerEstadoSolicitud();
     this.donanteDomicilio();
     // Configura los encabezados de la tabla para que siempre se muestren las columnas, aunque no haya datos
-    this.mercanciaTableService.getTable().subscribe((data) => {
+    this.mercanciaTableService.getTable().subscribe((data: MercanciaTableData) => {
       this.getMercanciaTableData = data;
       this.obtenerMercancia();
     });
@@ -1003,7 +1003,39 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 }
 
-// Add this interface above the component definition
+/**
+ * Interfaz que representa una fila de la tabla de mercancías.
+ * Extiende TableBodyData y agrega el campo opcional usoEspecifico.
+ */
 interface MercanciaRow extends TableBodyData {
+  /**
+   * Uso específico de la mercancía (opcional).
+   */
   usoEspecifico?: string;
+}
+
+/**
+ * Interface para representar el estado de la consulta relacionada con el trámite.
+ */
+interface ConsultaDatos {
+  readonly: boolean;
+  // Agregar otras propiedades según sea necesario para tu caso de uso
+}
+
+/**
+ * Interface para las opciones de radio.
+ */
+interface RadioOpcion {
+  label: string;
+  value: string | number;
+}
+
+/**
+ * Interface para la tabla de mercancía.
+ */
+interface MercanciaTableData {
+  mercanciaTable: {
+    tableHeader: string[];
+    tableBody: TableBodyData[];
+  };
 }

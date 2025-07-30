@@ -17,6 +17,10 @@ export class MercanciaTableService {
    */
   private readonly jsonUrl = '/assets/json/103/mercancia-table.json';
 
+  /**
+   * Constructor del servicio MercanciaTableService.
+   * @param http Cliente HTTP para realizar solicitudes al archivo JSON.
+   */
   constructor(private http: HttpClient) {}
 
   /**
