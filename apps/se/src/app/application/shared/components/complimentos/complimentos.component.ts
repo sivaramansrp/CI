@@ -15,6 +15,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
@@ -75,7 +76,7 @@ import { TramiteStore } from '../../../estados/tramite.store';
  * Clase ComplimentosComponent.
  * Gestiona la lógica del componente Complimentos, incluyendo inicialización y limpieza.
  */
-export class ComplimentosComponent implements OnInit, OnDestroy {
+export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
   /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
@@ -340,9 +341,165 @@ this.formaComplimentos.disable();
         formaDatos: this.obtainerFormaDatos(TIPO_FORMA.DEFAULT),
       }),
     });
+
+    // Apply initial data if available
     if (this.datosFormaComplimentos) {
-      this.formaComplimentos.patchValue(this.datosFormaComplimentos);
+      // Use immediate execution for better user experience
+      setTimeout(() => {
+        this.aplicarDatosFormulario();
+      }, 0);
     }
+  }
+
+  /**
+   * Aplica los datos del complemento al formulario, transformando los valores según sea necesario.
+   */
+  private aplicarDatosFormulario(): void {
+    if (!this.datosFormaComplimentos || !this.formaComplimentos) {
+      return;
+    }
+
+    // Create a copy of the data for transformation
+    const DATOS_TRANSFORMADOS = JSON.parse(JSON.stringify(this.datosFormaComplimentos));
+
+    // Transform radio button values
+    ComplimentosComponent.transformarValoresRadio(DATOS_TRANSFORMADOS);
+    
+    // Transform checkbox values
+    const PROGRAMA_PREOPERATIVO_VALUE = ComplimentosComponent.transformarCheckboxValue(DATOS_TRANSFORMADOS.programaPreOperativo);
+
+    // First apply the basic form data without triggering form modifications
+    this.formaComplimentos.patchValue(DATOS_TRANSFORMADOS, { emitEvent: false });
+    this.formaComplimentos.get('programaPreOperativo')?.setValue(PROGRAMA_PREOPERATIVO_VALUE, { emitEvent: false });
+
+    // Now handle the dynamic form data
+    if (DATOS_TRANSFORMADOS.formaSocioAccionistas) {
+      this.aplicarDatosDinamicos(DATOS_TRANSFORMADOS);
+    }
+  }
+
+  /**
+   * Transforms radio button values to the expected format
+   */
+  private static transformarValoresRadio(datos: DatosComplimentos): void {
+    if (!datos.formaSocioAccionistas) {
+      return;
+    }
+
+    // Transform nacionalidad values
+    if (datos.formaSocioAccionistas.nationalidadMaxicana === 'Sí' || 
+        datos.formaSocioAccionistas.nationalidadMaxicana === 'Si') {
+      datos.formaSocioAccionistas.nationalidadMaxicana = 'true';
+    } else if (datos.formaSocioAccionistas.nationalidadMaxicana === 'No') {
+      datos.formaSocioAccionistas.nationalidadMaxicana = 'false';
+    }
+
+    // Transform tipo de persona values
+    if (datos.formaSocioAccionistas.tipoDePersona === 'Física' || 
+        datos.formaSocioAccionistas.tipoDePersona === 'Persona Física') {
+      datos.formaSocioAccionistas.tipoDePersona = 'true';
+    } else if (datos.formaSocioAccionistas.tipoDePersona === 'Moral' || 
+               datos.formaSocioAccionistas.tipoDePersona === 'Persona Moral') {
+      datos.formaSocioAccionistas.tipoDePersona = 'false';
+    }
+  }
+
+  /**
+   * Transforms formaDatos structure to match form expectations
+   */
+  private transformarFormaDatos(datos: DatosComplimentos): void {
+    if (!datos.formaSocioAccionistas) {
+      return;
+    }
+
+    // Check if we have tablaDatosComplimentos data to populate the dynamic form
+    if (this.datosSocioAccionistas && this.datosSocioAccionistas.length > 0) {
+      const PRIMER_REGISTRO = this.datosSocioAccionistas[0];
+      datos.formaSocioAccionistas.formaDatos = {
+        taxId: PRIMER_REGISTRO.taxId || '',
+        razonSocial: PRIMER_REGISTRO.razonSocial || '',
+        pais: PRIMER_REGISTRO.pais || '',
+        codigoPostal: PRIMER_REGISTRO.codigoPostal || '',
+        estado: PRIMER_REGISTRO.estado || '',
+        correoElectronico: PRIMER_REGISTRO.correoElectronico || '',
+        nombre: PRIMER_REGISTRO.nombre || '',
+        apellidoPaterno: PRIMER_REGISTRO.apellidoPaterno || '',
+        apellidoMaterno: PRIMER_REGISTRO.apellidoMaterno || '',
+        rfc: PRIMER_REGISTRO.rfc || ''
+      };
+    } else if (ComplimentosComponent.esEstructuraFormaDatosInvalida(datos.formaSocioAccionistas.formaDatos)) {
+      datos.formaSocioAccionistas.formaDatos = ComplimentosComponent.crearFormaDatosVacio();
+    }
+  }
+
+  /**
+   * Applies dynamic form data with single form modification
+   */
+  private aplicarDatosDinamicos(datos: DatosComplimentos): void {
+    // Prepare the form data first
+    this.transformarFormaDatos(datos);
+    
+    // Store the form data that we want to apply
+    const FORM_DATA_TO_APPLY = datos.formaSocioAccionistas.formaDatos;
+    
+    // Store it in preserved data to avoid losing it during form modification
+    if (FORM_DATA_TO_APPLY) {
+      Object.keys(FORM_DATA_TO_APPLY).forEach(key => {
+        this.PRESERVED_FORM_DATA[key] = FORM_DATA_TO_APPLY[key];
+      });
+    }
+
+    // Determine the correct form type based on radio values
+    const NACIONALIDAD_MEXICANA = datos.formaSocioAccionistas.nationalidadMaxicana === 'true';
+    const PERSONA_FISICA = datos.formaSocioAccionistas.tipoDePersona === 'true';
+
+    // Apply the appropriate form modification once
+    if (NACIONALIDAD_MEXICANA) {
+      this.modificarFormulario(TIPO_FORMA.NATIONALIDAD_MEXICANA, this.camposFormularioNationalidad);
+    } else if (PERSONA_FISICA) {
+      this.modificarFormulario(TIPO_FORMA.TIPO_PERSONA, this.camposFormularioTipoPersona);
+    } else {
+      this.modificarFormulario(TIPO_FORMA.DEFAULT, this.camposFormularioDefault);
+    }
+  }
+
+  /**
+   * Checks if formaDatos structure is invalid
+   */
+  private static esEstructuraFormaDatosInvalida(formaDatos: { [key: string]: string }): boolean {
+    return !formaDatos || 
+           typeof formaDatos !== 'object' ||
+           Object.keys(formaDatos).some(key => key.startsWith('socio'));
+  }
+
+  /**
+   * Creates empty formaDatos structure
+   */
+  private static crearFormaDatosVacio(): { [key: string]: string } {
+    return {
+      taxId: '',
+      razonSocial: '',
+      pais: '',
+      codigoPostal: '',
+      estado: '',
+      correoElectronico: '',
+      nombre: '',
+      apellidoPaterno: '',
+      apellidoMaterno: '',
+      rfc: ''
+    };
+  }
+
+  /**
+   * Transforms checkbox values
+   */
+  private static transformarCheckboxValue(valor: string): boolean | string {
+    if (valor === 'Sí' || valor === 'Si') {
+      return true;
+    } else if (valor === 'No') {
+      return false;
+    }
+    return valor;
   }
 
   /**
@@ -364,12 +521,27 @@ this.formaComplimentos.disable();
         this.formaValida.emit(this.formaComplimentos.valid);
       });
 
+    // Apply data after catalogs are loaded and form is ready
     if (this.datosFormaComplimentos) {
-      this.formaComplimentos.patchValue(this.datosFormaComplimentos);
+      // Use immediate application for better performance
+      setTimeout(() => {
+        this.aplicarDatosFormulario();
+      }, 100);
     }
 
     if(this.formularioDeshabilitado ) {
       this.formaComplimentos.disable();
+    }
+  }
+
+  /**
+   * Lifecycle hook that is called when any data-bound property changes.
+   * Handles changes to input properties.
+   */
+  ngOnChanges(): void {
+    if (this.formaComplimentos && this.datosFormaComplimentos) {
+      // Apply immediately for better user experience
+      this.aplicarDatosFormulario();
     }
   }
 
@@ -444,33 +616,26 @@ this.formaComplimentos.disable();
       }
     });
     
+    // Update form structure synchronously
     CONTROL.removeControl('formaDatos', { emitEvent: false });
     this.camposFormulario = [...camposDelFormulario];
+    const NEW_FORM_CONTROL = this.obtainerFormaDatos(tipoForma);
+    CONTROL.setControl('formaDatos', NEW_FORM_CONTROL, {
+      emitEvent: false,
+    });
     
-    setTimeout(() => {
-      const NEW_FORM_CONTROL = this.obtainerFormaDatos(tipoForma);
-      CONTROL.setControl('formaDatos', NEW_FORM_CONTROL, {
-        emitEvent: false,
-      });
-      
-      // Restore data from persistent storage
-      const DATA_TO_RESTORE: { [key: string]: string | number | boolean } = {};
-      
-      // Get all control names from the new form
-      const NEW_FORM_CONTROLS = Object.keys(NEW_FORM_CONTROL.controls);
-      
-      // Restore data for controls that exist in the new form
-      NEW_FORM_CONTROLS.forEach(controlName => {
-        if (this.PRESERVED_FORM_DATA[controlName] !== undefined) {
-          DATA_TO_RESTORE[controlName] = this.PRESERVED_FORM_DATA[controlName];
-        }
-      });
-      
-      // Apply the restored data
-      if (Object.keys(DATA_TO_RESTORE).length > 0) {
-        NEW_FORM_CONTROL.patchValue(DATA_TO_RESTORE, { emitEvent: false });
+   const DATA_TO_RESTORE: { [key: string]: string | number | boolean } = {};
+  const NEW_FORM_CONTROLS = Object.keys(NEW_FORM_CONTROL.controls);
+    
+   NEW_FORM_CONTROLS.forEach(controlName => {
+      if (this.PRESERVED_FORM_DATA[controlName] !== undefined) {
+        DATA_TO_RESTORE[controlName] = this.PRESERVED_FORM_DATA[controlName];
       }
-    }, 10);
+    });
+    if (Object.keys(DATA_TO_RESTORE).length > 0) {
+      NEW_FORM_CONTROL.patchValue(DATA_TO_RESTORE, { emitEvent: false });
+    }
+  this.tipoFormulario = tipoForma;
   }
 
   /**
@@ -570,18 +735,17 @@ this.formaComplimentos.disable();
     const CONTROL = this.formaComplimentos.get('formaSocioAccionistas') as FormGroup;
     const CURRENT_DATA = CONTROL.get('formaDatos')?.value || {};
     
-    // Explicitly preserve the three critical fields
-    if (CURRENT_DATA['apellidoPaterno']) {
-      this.PRESERVED_FORM_DATA['apellidoPaterno'] = CURRENT_DATA['apellidoPaterno'];
-    }
-    if (CURRENT_DATA['nombre']) {
-      this.PRESERVED_FORM_DATA['nombre'] = CURRENT_DATA['nombre'];
-    }
-    if (CURRENT_DATA['razonSocial']) {
-      this.PRESERVED_FORM_DATA['razonSocial'] = CURRENT_DATA['razonSocial'];
+    // Store initial data from datosFormaComplimentos if available
+    if (this.datosFormaComplimentos?.formaSocioAccionistas?.formaDatos) {
+      Object.keys(this.datosFormaComplimentos.formaSocioAccionistas.formaDatos).forEach(key => {
+        const VALUE = this.datosFormaComplimentos?.formaSocioAccionistas?.formaDatos?.[key];
+        if (VALUE !== undefined && VALUE !== null && VALUE !== '') {
+          this.PRESERVED_FORM_DATA[key] = VALUE;
+        }
+      });
     }
     
-    // Preserve all other fields as well
+    // Preserve all current fields
     Object.keys(CURRENT_DATA).forEach(key => {
       const VALUE = CURRENT_DATA[key];
       if (VALUE !== undefined && VALUE !== null && VALUE !== '') {
@@ -589,29 +753,27 @@ this.formaComplimentos.disable();
       }
     });
     
-    // Add a small delay to ensure radio button values are properly updated
-    setTimeout(() => {
-      const VALUE = this.formaComplimentos.value;
-      
-      if (VALUE.formaSocioAccionistas.nationalidadMaxicana === 'true') {
+    // Execute form modification immediately without timeout
+    const VALUE = this.formaComplimentos.value;
+    
+    if (VALUE.formaSocioAccionistas.nationalidadMaxicana === 'true') {
+      this.modificarFormulario(
+        TIPO_FORMA.NATIONALIDAD_MEXICANA,
+        this.camposFormularioNationalidad
+      );
+    } else {
+      if (VALUE.formaSocioAccionistas.tipoDePersona === 'true') {
         this.modificarFormulario(
-          TIPO_FORMA.NATIONALIDAD_MEXICANA,
-          this.camposFormularioNationalidad
+          TIPO_FORMA.TIPO_PERSONA,
+          this.camposFormularioTipoPersona
         );
       } else {
-        if (VALUE.formaSocioAccionistas.tipoDePersona === 'true') {
-          this.modificarFormulario(
-            TIPO_FORMA.TIPO_PERSONA,
-            this.camposFormularioTipoPersona
-          );
-        } else {
-          this.modificarFormulario(
-            TIPO_FORMA.DEFAULT,
-            this.camposFormularioDefault
-          );
-        }
+        this.modificarFormulario(
+          TIPO_FORMA.DEFAULT,
+          this.camposFormularioDefault
+        );
       }
-    }, 50);
+    }
   }
 
   /**

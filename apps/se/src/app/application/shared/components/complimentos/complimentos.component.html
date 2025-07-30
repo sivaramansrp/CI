@@ -96,7 +96,7 @@
 
   <div class="row" formGroupName="formaModificaciones">
     <ng-titulo
-      titulo="Datos federatario(s) constitución y modificaciones de la sociedad"
+      titulo="Datos federatario(s) Constitución y modificaciones de la sociedad"
     />
 
     <div class="row">
@@ -111,11 +111,12 @@
             name="Nombre"
             class="form-control"
             formControlName="nombreDelFederatario"
+           
           />
         </div>
         <div class="row">
           <div class="col-md-4 mb-4 mt-3">
-            <label for="Numero"> Número de notaria*:</label>
+            <label for="Numero"> Número de Notaria*:</label>
             <input
               type="text"
               id="Numero"
@@ -128,7 +129,7 @@
             <app-catalogo-select
               [catalogo]="estados || []"
               [label]="'Estado'"
-              [required]="true"
+              [required]="false"
               name="estado"
               formControlName="estado"
               [isDisabled]="formularioDeshabilitado"
@@ -139,7 +140,7 @@
 
         <div class="row mb-4">
           <div class="col-md-4">
-            <label for="acta"> Número de acta*:</label>
+            <label for="acta"> Número de acta*</label>
             <input
               type="text"
               id="acta"
@@ -150,7 +151,7 @@
           </div>
 
           <div class="col-md-4">
-            <label for="emision"> Fecha de emisión del acta*:</label>
+            <label for="emision"> Fecha de emisión del acta*</label>
             <input
               type="text"
               id="emision"
