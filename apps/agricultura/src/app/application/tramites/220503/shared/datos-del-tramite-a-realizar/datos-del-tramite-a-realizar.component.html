@@ -26,7 +26,7 @@
         <input-fecha
           [datos]="configuracionFechaFinVigencia"
           (valorCambiado)="cambioFechaInicio($event)"
-    
+          [setFecha]="grupoFormularioPadre.get(claveDeControl)?.get('fechaDeInspeccion')?.value"
         ></input-fecha>
       </div>
     </div>
