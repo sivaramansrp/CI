@@ -24,7 +24,7 @@ jest.mock('bootstrap', () => {
   };
 });
 
-describe('DomiciliosRfcSolicitanteComponent', () => {
+describe('DomiciliosRfcSolicitanteComponent - Pruebas unitarias', () => {
   let component: DomiciliosRfcSolicitanteComponent;
   let fixture: ComponentFixture<DomiciliosRfcSolicitanteComponent>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
@@ -523,7 +523,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       expect(formValue.coloniaCalleNumero).toBe('');
       expect(component.datosTablaModalSeleccionados).toEqual([]);
       
-      // Wait for the timeout to complete
+      // Esperar a que el timeout se complete
       await new Promise(resolve => setTimeout(resolve, 100));
       expect(component.resetChildTableSelection).toBe(false);
     });
@@ -569,7 +569,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     it('debería manejar datosTablaModalSeleccionados undefined', () => {
       component.datosTablaModalSeleccionados = [];
       
-      // This should show the selection message
+      // Esto debería mostrar el mensaje de selección
       component.enviarDialogData();
       
       expect(component.esHabilitarElDialogo).toBe(true);
@@ -597,7 +597,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería manejar instalaciones undefined o null', () => {
-      // Test with empty array instead of undefined/null
+      // Probar con array vacío en lugar de undefined/null
       expect(() => {
         component.instalacionesSeleccionadas([]);
       }).not.toThrow();
@@ -644,13 +644,13 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería actualizar registro existente correctamente', () => {
-      // Setup existing data
+      // Configurar datos existentes
       component.DomiciliosRfcSolicitanteList = [
         { ...mockDomicilioData, id: 1 },
         { ...mockDomicilioData, id: 2 }
       ];
       
-      // Set form data for modification
+      // Establecer datos del formulario para modificación
       component.registroDomiciliosRfcSolicitanteForm.patchValue({
         id: 1,
         InstalacionesPrincipales: '1',
@@ -779,7 +779,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería mostrar popup cuando se intenta modificar sin selección', () => {
-      component.DomiciliosRfcSolicitanteList = [mockDomicilioData]; // Add data to pass first check
+      component.DomiciliosRfcSolicitanteList = [mockDomicilioData]; // Agregar datos para pasar la primera verificación
       component.listaFilaSeleccionadaEmpleado = [];
       component.abrirMultipleSeleccionPopup = jest.fn();
       
@@ -789,7 +789,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería mostrar popup cuando se seleccionan múltiples elementos para modificar', () => {
-      component.DomiciliosRfcSolicitanteList = [mockDomicilioData]; // Add data to pass first check
+      component.DomiciliosRfcSolicitanteList = [mockDomicilioData]; // Agregar datos para pasar la primera verificación
       component.listaFilaSeleccionadaEmpleado = [mockDomicilioData, mockDomicilioData];
       component.abrirMultipleSeleccionPopup = jest.fn();
       
@@ -800,7 +800,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería procesar modificación correctamente con un elemento seleccionado', () => {
-      component.DomiciliosRfcSolicitanteList = [mockDomicilioData]; // Add data to pass first check
+      component.DomiciliosRfcSolicitanteList = [mockDomicilioData]; // Agregar datos para pasar la primera verificación
       component.listaFilaSeleccionadaEmpleado = [mockDomicilioData];
       component.filaSeleccionadaDomiciliosRfcSolicitante = mockDomicilioData;
       component.actualizarFilaSeleccionada = jest.fn();
@@ -832,9 +832,9 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       
       const formValues = component.registroDomiciliosRfcSolicitanteForm.value;
       expect(formValues.id).toBe(1);
-      expect(formValues.InstalacionesPrincipales).toBe('1'); // Converted from 'Sí'
+      expect(formValues.InstalacionesPrincipales).toBe('1'); // Convertido de 'Sí'
       expect(formValues.coloniaCalleNumero).toBe(datosPrueba.coloniaCalleNumero);
-      expect(formValues.procesoProductivo).toBe('0'); // Converted from 'No'
+      expect(formValues.procesoProductivo).toBe('0'); // Convertido de 'No'
     });
   });
 
@@ -966,7 +966,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       
       component.setValoresStore(form, 'domiciliosRegistrados');
       
-      // Should not call establecerDatos for null values
+      // No debería llamar establecerDatos para valores null
       expect(mockTramite32617Store.establecerDatos).not.toHaveBeenCalled();
     });
 
@@ -988,7 +988,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
 
   describe('🔄 Métodos de utilidad estáticos', () => {
     it('debería convertir valor de radio a texto correctamente', () => {
-      // Access private static method for testing
+      // Acceder al método estático privado para pruebas
       const convertir = (DomiciliosRfcSolicitanteComponent as any).convertirValorRadioATexto;
       
       expect(convertir('1')).toBe('Sí');
@@ -999,7 +999,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería convertir texto a valor de radio correctamente', () => {
-      // Access private static method for testing
+      // Acceder al método estático privado para pruebas
       const convertir = (DomiciliosRfcSolicitanteComponent as any).convertirTextoAValorRadio;
       
       expect(convertir('Sí')).toBe('1');
@@ -1017,7 +1017,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería mostrar mensaje cuando no hay elementos seleccionados para eliminar', () => {
-      component.DomiciliosRfcSolicitanteList = [mockDomicilioData]; // Add data to pass first check
+      component.DomiciliosRfcSolicitanteList = [mockDomicilioData]; // Agregar datos para pasar la primera verificación
       component.listaFilaSeleccionadaEmpleado = [];
       component.abrirMultipleSeleccionPopup = jest.fn();
       
@@ -1030,7 +1030,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería abrir popup de confirmación cuando hay elementos seleccionados', () => {
-      component.DomiciliosRfcSolicitanteList = [mockDomicilioData]; // Add data to pass first check
+      component.DomiciliosRfcSolicitanteList = [mockDomicilioData]; // Agregar datos para pasar la primera verificación
       component.listaFilaSeleccionadaEmpleado = [mockDomicilioData];
       component.abrirElimninarConfirmationopup = jest.fn();
       

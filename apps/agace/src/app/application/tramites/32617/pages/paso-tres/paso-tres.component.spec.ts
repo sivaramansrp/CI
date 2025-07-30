@@ -36,17 +36,17 @@ describe('PasoTresComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crearse correctamente', () => {
     expect(component).toBeTruthy();
   });
-  it('should navigate to acuse page on valid firma', () => {
+  it('debe navegar a la página de acuse con una firma válida', () => {
     const navigateSpy = jest.spyOn(router, 'navigate');
     const firma = 'valid-firma';
     component.obtieneFirma(firma);
     expect(navigateSpy).toHaveBeenCalledWith(['temporal-contenedores/acuse']);
   });
 
-  it('should not navigate to acuse page on invalid firma', () => {
+  it('no debe navegar a la página de acuse con una firma inválida', () => {
     const navigateSpy = jest.spyOn(router, 'navigate');
     const firma = '';
     component.obtieneFirma(firma);

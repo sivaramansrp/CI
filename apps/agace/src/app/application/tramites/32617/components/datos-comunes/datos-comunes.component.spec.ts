@@ -7,7 +7,7 @@ import { Tramite32617Store } from '../../estados/tramites32617.store';
 import { Tramite32617Query } from '../../estados/tramites32617.query';
 import { OeaTercerizacionLogisticaRegistroService } from '../../services/oea-tercerizacion-logistica-registro.service';
 
-describe('DatosComunesComponent', () => {
+describe('DatosComunesComponent - Pruebas unitarias', () => {
   let component: DatosComunesComponent;
   let fixture: ComponentFixture<DatosComunesComponent>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
@@ -260,11 +260,11 @@ describe('DatosComunesComponent', () => {
     });
 
     it('debería validar correctamente los sectores en tieneSectorValidationError', () => {
-      // Test when form is not touched - should return false
+      // Probar cuando el formulario no está tocado - debería retornar false
       component.forma.markAsUntouched();
       expect(component.tieneSectorValidationError()).toBe(false);
       
-      // Test when form is touched but no sectors selected - should return true
+      // Probar cuando el formulario está tocado pero no hay sectores seleccionados - debería retornar true
       component.forma.markAsTouched();
       component.forma.patchValue({
         sectorProductivo: null,
@@ -272,21 +272,21 @@ describe('DatosComunesComponent', () => {
       });
       expect(component.tieneSectorValidationError()).toBe(true);
       
-      // Test when form is touched and sector productivo is selected - should return false
+      // Probar cuando el formulario está tocado y sector productivo está seleccionado - debería retornar false
       component.forma.patchValue({
         sectorProductivo: '1',
         sectorServicio: null
       });
       expect(component.tieneSectorValidationError()).toBe(false);
       
-      // Test when form is touched and sector servicio is selected - should return false
+      // Probar cuando el formulario está tocado y sector servicio está seleccionado - debería retornar false
       component.forma.patchValue({
         sectorProductivo: null,
         sectorServicio: '2'
       });
       expect(component.tieneSectorValidationError()).toBe(false);
       
-      // Test when form is touched and both sectors are selected - should return false
+      // Probar cuando el formulario está tocado y ambos sectores están seleccionados - debería retornar false
       component.forma.patchValue({
         sectorProductivo: '1',
         sectorServicio: '2'
@@ -297,14 +297,14 @@ describe('DatosComunesComponent', () => {
     it('debería manejar valores inválidos en tieneSectorValidationError', () => {
       component.forma.markAsTouched();
       
-      // Test with empty strings
+      // Probar con cadenas vacías
       component.forma.patchValue({
         sectorProductivo: '',
         sectorServicio: ''
       });
       expect(component.tieneSectorValidationError()).toBe(true);
       
-      // Test with -1 values (invalid selections)
+      // Probar con valores -1 (selecciones inválidas)
       component.forma.patchValue({
         sectorProductivo: -1,
         sectorServicio: -1
@@ -377,10 +377,10 @@ describe('DatosComunesComponent', () => {
       component.enCambioDeValor('1');
       expect(component.radioSeleccionado).toBe(true);
       
-      // Number 1 should not work because the method uses strict comparison with '1'
-      component.radioSeleccionado = false; // Reset
+      // El número 1 no debería funcionar porque el método usa comparación estricta con '1'
+      component.radioSeleccionado = false; // Resetear
       component.enCambioDeValor(1);
-      expect(component.radioSeleccionado).toBe(false); // Will remain false because 1 !== '1'
+      expect(component.radioSeleccionado).toBe(false); // Permanecerá false porque 1 !== '1'
     });
 
     it('debería actualizar radioSeleccionado cuando se selecciona "No"', () => {
@@ -417,10 +417,10 @@ describe('DatosComunesComponent', () => {
       component.toggleTablaPorValor('1');
       expect(component.esTablaVisible).toBe(true);
       
-      // Number 1 should not work because the method uses strict comparison with '1'
-      component.esTablaVisible = false; // Reset
+      // El número 1 no debería funcionar porque el método usa comparación estricta con '1'
+      component.esTablaVisible = false; // Resetear
       component.toggleTablaPorValor(1);
-      expect(component.esTablaVisible).toBe(false); // Will remain false because 1 !== '1'
+      expect(component.esTablaVisible).toBe(false); // Permanecerá false porque 1 !== '1'
     });
 
     it('debería ocultar tabla cuando valor es "0"', () => {
@@ -569,7 +569,7 @@ describe('DatosComunesComponent', () => {
     });
 
     it('debería limpiar suscripciones al destruir el componente', () => {
-      // Test without spies to avoid interference
+      // Probar sin espías para evitar interferencias
       const originalNext = component.destroyed$.next.bind(component.destroyed$);
       const originalComplete = component.destroyed$.complete.bind(component.destroyed$);
       
@@ -588,11 +588,11 @@ describe('DatosComunesComponent', () => {
       
       component.ngOnDestroy();
       
-      // Check that the methods were called
+      // Verificar que los métodos fueron llamados
       expect(nextCalled).toBe(true);
       expect(completeCalled).toBe(true);
       
-      // Test the actual behavior: new subscriptions to a completed Subject should complete immediately
+      // Probar el comportamiento real: nuevas suscripciones a un Subject completado deberían completarse inmediatamente
       let immediateComplete = false;
       component.destroyed$.subscribe({
         complete: () => immediateComplete = true
@@ -644,7 +644,7 @@ describe('DatosComunesComponent', () => {
       
       component.seccionState = mockState;
       
-      // Access private method using bracket notation
+      // Acceder al método privado usando notación de corchetes
       (component as any).actualizarFormularioConDatosDelEstado();
       
       expect(component.forma.get('cumplimientoFiscalAduanero')?.value).toBe('1');
@@ -661,7 +661,7 @@ describe('DatosComunesComponent', () => {
       
       component.seccionState = mockState;
       
-      // Access private method using bracket notation
+      // Acceder al método privado usando notación de corchetes
       (component as any).actualizarFormularioConDatosDelEstado();
       
       expect(enCambioDeValorSpy).toHaveBeenCalledWith('1');
@@ -681,7 +681,7 @@ describe('DatosComunesComponent', () => {
       
       component.enPatchStoredFormData();
       
-      // The subscription should call the update method
+      // La suscripción debería llamar al método de actualización
       expect(actualizarSpy).toHaveBeenCalled();
     });
   });
@@ -696,7 +696,7 @@ describe('DatosComunesComponent', () => {
       component.esFormularioSoloLectura = true;
       component.actualizarEstadoCampos();
       
-      // Check specific controls including the new ones
+      // Verificar controles específicos incluyendo los nuevos
       expect(component.forma.get('manifests')?.disabled).toBe(true);
       expect(component.forma.get('bajoProtesta')?.disabled).toBe(true);
       expect(component.forma.get('cumplimientoFiscalAduanero')?.disabled).toBe(true);
@@ -708,7 +708,7 @@ describe('DatosComunesComponent', () => {
       component.esFormularioSoloLectura = false;
       component.actualizarEstadoCampos();
       
-      // Check specific controls including the new ones
+      // Verificar controles específicos incluyendo los nuevos
       expect(component.forma.get('manifests')?.enabled).toBe(true);
       expect(component.forma.get('bajoProtesta')?.enabled).toBe(true);
       expect(component.forma.get('cumplimientoFiscalAduanero')?.enabled).toBe(true);
@@ -717,7 +717,7 @@ describe('DatosComunesComponent', () => {
     });
 
     it('debería manejar controles faltantes sin errores', () => {
-      // Remove a control to test error handling
+      // Remover un control para probar el manejo de errores
       component.forma.removeControl('manifests');
       
       expect(() => {

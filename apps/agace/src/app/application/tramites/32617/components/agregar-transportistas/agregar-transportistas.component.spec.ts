@@ -179,10 +179,10 @@ describe('AgregarTransportistasComponent', () => {
     });
 
     it('debería obtener el estado de la solicitud y actualizar transportistasLista', () => {
-      // Set up the method to be called and then check the subscription effect
+      // Configurar el método para ser llamado y luego verificar el efecto de la suscripción
       component.obtenerEstadoSolicitud();
       
-      // Since we have an observable mock, the subscription should have been triggered
+      // Dado que tenemos un mock observable, la suscripción debería haberse activado
       expect(component.solicitudState).toEqual(mockSolicitudState);
       expect(component.transportistasLista).toEqual(mockTransportistasLista);
     });

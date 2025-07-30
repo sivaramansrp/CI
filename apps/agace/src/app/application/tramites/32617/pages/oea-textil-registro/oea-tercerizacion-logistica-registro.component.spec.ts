@@ -68,7 +68,7 @@ describe('OeaTercerizacionLogisticaRegistroComponent', () => {
     const mockPasoUnoComponent = new MockPasoUnoComponent();
     component.pasoUnoComponent = mockPasoUnoComponent as any;
     
-    // Reset default mock behavior
+    // Restablecer comportamiento predeterminado de los mocks
     jest.clearAllMocks();
   });
 
@@ -106,7 +106,7 @@ describe('OeaTercerizacionLogisticaRegistroComponent', () => {
       const valorInicial = 1;
       const evento = { accion: 'cont', valor: valorInicial };
       
-      // Mock validation to return true for step 1
+      // Simular validación para retornar true en paso 1
       jest.spyOn(component.pasoUnoComponent, 'validarFormularios').mockReturnValue(true);
       
       component.getValorIndice(evento);
@@ -135,7 +135,7 @@ describe('OeaTercerizacionLogisticaRegistroComponent', () => {
     it('debería llamar método siguiente() cuando accion es "cont"', () => {
       const evento = { accion: 'cont', valor: 1 };
       
-      // Mock validation to return true for step 1
+      // Simular validación para retornar true en paso 1
       jest.spyOn(component.pasoUnoComponent, 'validarFormularios').mockReturnValue(true);
       
       component.getValorIndice(evento);
@@ -171,7 +171,7 @@ describe('OeaTercerizacionLogisticaRegistroComponent', () => {
       const nuevoValor = 1;
       const evento = { accion: 'cont', valor: nuevoValor };
       
-      // Mock validation to return true for step 1
+      // Simular validación para retornar true en paso 1
       jest.spyOn(component.pasoUnoComponent, 'validarFormularios').mockReturnValue(true);
       
       component.getValorIndice(evento);
@@ -251,7 +251,7 @@ describe('OeaTercerizacionLogisticaRegistroComponent', () => {
       const spySiguiente = jest.spyOn(component.wizardComponent, 'siguiente');
       const spyAtras = jest.spyOn(component.wizardComponent, 'atras');
       
-      // Mock validation to return true for step 1
+      // Simular validación para retornar true en paso 1
       jest.spyOn(component.pasoUnoComponent, 'validarFormularios').mockReturnValue(true);
       
       component.getValorIndice({ accion: 'cont', valor: 1 });
@@ -476,7 +476,7 @@ describe('OeaTercerizacionLogisticaRegistroComponent', () => {
         
         expect(component.pasoUnoComponent.validarFormularios).not.toHaveBeenCalled();
         expect(component.indice).toBe(1); // No changes as it would go to 0
-        expect(component.wizardComponent.atras).not.toHaveBeenCalled(); // Won't be called due to boundary check
+        expect(component.wizardComponent.atras).not.toHaveBeenCalled(); // No será llamado debido a la verificación de límites
       });
     });
 
@@ -507,7 +507,7 @@ describe('OeaTercerizacionLogisticaRegistroComponent', () => {
         const valorValido = 1;
         const evento = { accion: 'cont', valor: valorValido };
         
-        // Mock validation to return true for step 1
+        // Simular validación para retornar true en paso 1
         jest.spyOn(component.pasoUnoComponent, 'validarFormularios').mockReturnValue(true);
         
         component.getValorIndice(evento);
@@ -518,9 +518,9 @@ describe('OeaTercerizacionLogisticaRegistroComponent', () => {
       });
 
       it('debería manejar el valor límite superior válido', () => {
-        // Set component index to 2 to avoid step 1 validation logic
+        // Establecer el índice del componente en 2 para evitar la lógica de validación del paso 1
         component.indice = 2;
-        // For a 3-step process, the maximum valid value is 2 (so valor + 1 = 3)
+        // Para un proceso de 3 pasos, el valor máximo válido es 2 (entonces valor + 1 = 3)
         const valorLimite = 2;
         const evento = { accion: 'cont', valor: valorLimite };
         
@@ -544,7 +544,7 @@ describe('OeaTercerizacionLogisticaRegistroComponent', () => {
       it('debería sincronizar datosPasos.indice con component.indice', () => {
         const evento = { accion: 'cont', valor: 1 };
         
-        // Mock validation to return true for step 1
+        // Simular validación para retornar true en paso 1
         jest.spyOn(component.pasoUnoComponent, 'validarFormularios').mockReturnValue(true);
         
         component.getValorIndice(evento);
@@ -568,7 +568,7 @@ describe('OeaTercerizacionLogisticaRegistroComponent', () => {
     describe('Flag esFormaValido', () => {
       it('debería resetear esFormaValido al inicio de cada llamada', () => {
         component.esFormaValido = true;
-        const evento = { accion: 'ant', valor: 2 }; // Use 'ant' action to avoid validation logic
+        const evento = { accion: 'ant', valor: 2 }; // Usar acción 'ant' para evitar la lógica de validación
         
         component.getValorIndice(evento);
         

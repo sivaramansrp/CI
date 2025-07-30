@@ -669,7 +669,7 @@ describe('NumeroEmpleadosBimestreComponent - Pruebas unitarias', () => {
       component.ngOnInit();
       mockOeaTercerizacionLogisticaRegistroService.getRFCDetails.mockReturnValue(of({
         code: 200,
-        message: 'Success',
+        message: 'Éxito',
         data: {
           rfc: 'ETE123456789',
           denominacionSocial: 'Empresa Test Completa S.A. de C.V.'
@@ -716,7 +716,7 @@ describe('NumeroEmpleadosBimestreComponent - Pruebas unitarias', () => {
       component.rfcForm.patchValue({ rfcInput: 'ETE123456789' });
       mockOeaTercerizacionLogisticaRegistroService.getRFCDetails.mockReturnValue(of({
         code: 200,
-        message: 'Success',
+        message: 'Éxito',
         data: {}
       } as BuscarRfcResponse));
       

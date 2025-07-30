@@ -6,7 +6,7 @@ import { Tramite32617Query } from '../../estados/tramites32617.query';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 
-describe('EnlaceOperativoComponent', () => {
+describe('EnlaceOperativoComponent - Pruebas unitarias', () => {
   let component: EnlaceOperativoComponent;
   let fixture: ComponentFixture<EnlaceOperativoComponent>;
   let tramiteStoreSpy: any;
@@ -44,12 +44,12 @@ describe('EnlaceOperativoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debe crear el componente', () => {
+  it('✅ debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
 
-  it('debería invalidar el formulario si "registro" está vacío o con formato incorrecto', () => {
+  it('✅ debería invalidar el formulario si "registro" está vacío o con formato incorrecto', () => {
     const control = component.enlaceOperativoForm.get('registro');
 
     control?.setValue('');
@@ -62,21 +62,21 @@ describe('EnlaceOperativoComponent', () => {
     expect(control?.valid).toBeTruthy();
   });
 
-  it('debería mostrar notificación de formato incorrecto cuando "registro" es inválido', () => {
+  it('✅ debería mostrar notificación de formato incorrecto cuando "registro" es inválido', () => {
     const spyMostrarNotificacion = jest.spyOn(component, 'mostrarNotificacionDeBusqueda');
     component.enlaceOperativoForm.get('registro')?.setValue('123'); 
     component.botonBuscar();
     expect(spyMostrarNotificacion).toHaveBeenCalledWith('', 'Ha proporcionado información con un formato incorrecto');
   });
 
-  it('debería mostrar notificación cuando "registro" está vacío', () => {
+  it('✅ debería mostrar notificación cuando "registro" está vacío', () => {
     const spyMostrarNotificacion = jest.spyOn(component, 'mostrarNotificacionDeBusqueda');
     component.enlaceOperativoForm.get('registro')?.setValue(''); 
     component.botonBuscar();
     expect(spyMostrarNotificacion).toHaveBeenCalledWith('', 'No se ha proporcionado información que es requerida');
   });
 
-  it('debería cargar datos mock y mostrar notificación de búsqueda', () => {
+  it('✅ debería cargar datos mock y mostrar notificación de búsqueda', () => {
     const spyMostrarNotificacion = jest.spyOn(component, 'mostrarNotificacionDeBusqueda');
     component.enlaceOperativoForm.get('registro')?.setValue('XAXX010101000');
     component.botonBuscar();
@@ -85,14 +85,14 @@ describe('EnlaceOperativoComponent', () => {
     expect(component.enlaceOperativoForm.get('nombre')?.value).toBe('EUROFOODS DE MEXICO');
   });
 
-  it('no debería enviar datos si el formulario es inválido', () => {
+  it('✅ no debería enviar datos si el formulario es inválido', () => {
     const spyEnlaceInfoDatos = jest.spyOn(component, 'enlaceInfoDatos');
     component.enlaceOperativoForm.get('registro')?.setValue('');
     component.enviarDialogData();
     expect(spyEnlaceInfoDatos).not.toHaveBeenCalled();
   });
 
-  it('debería enviar datos y limpiar formulario si es válido', () => {
+  it('✅ debería enviar datos y limpiar formulario si es válido', () => {
     component.enlaceOperativoForm.get('registro')?.setValue('XAXX010101000');
     component.enlaceOperativoForm.get('rfc')?.enable();
     component.enlaceOperativoForm.get('rfc')?.setValue('XAXX010101000');
@@ -108,7 +108,7 @@ describe('EnlaceOperativoComponent', () => {
     expect(spyCambiarEstadoModal).toHaveBeenCalled();
   });
 
-  it('debería agregar un nuevo ítem y actualizar el estado del store', () => {
+  it('✅ debería agregar un nuevo ítem y actualizar el estado del store', () => {
     component.modoEdicion = false;
     component.enlaceOperativoForm.get('registro')?.setValue('XAXX010101000');
     component.enlaceOperativoForm.get('rfc')?.enable();
@@ -122,7 +122,7 @@ describe('EnlaceOperativoComponent', () => {
     expect(component.enlaceOperativoData.length).toBeGreaterThan(0);
   });
 
-  it('debería eliminar ítems seleccionados y actualizar el store', () => {
+  it('✅ debería eliminar ítems seleccionados y actualizar el store', () => {
     component.enlaceOperativoData = [
       { id: 1, registro: 'XAXX010101000' } as any,
       { id: 2, registro: 'XEXX010101000' } as any,
@@ -135,7 +135,7 @@ describe('EnlaceOperativoComponent', () => {
     expect(tramiteStoreSpy.establecerDatos).toHaveBeenCalled();
   });
 
-  it('debería mostrar notificación si se intenta modificar sin seleccionar fila', () => {
+  it('✅ debería mostrar notificación si se intenta modificar sin seleccionar fila', () => {
     component.listaFilaSeleccionadaEnlace = [];
 
     component.modificarItemEnlace();
@@ -144,8 +144,8 @@ describe('EnlaceOperativoComponent', () => {
     expect(component.nuevaNotificacion.mensaje).toContain('No se encontró información');
   });
 
-  it('debería habilitar modo edición y abrir modal con datos al modificar un ítem seleccionado', () => {
-    // Setup both the selected row list and the data array
+  it('✅ debería habilitar modo edición y abrir modal con datos al modificar un ítem seleccionado', () => {
+    // Configurar tanto la lista de filas seleccionadas como el array de datos
     component.enlaceOperativoData = [
       {
         id: 1,
@@ -185,7 +185,7 @@ describe('EnlaceOperativoComponent', () => {
     expect(spyAgregarDialogo).toHaveBeenCalled();
   });
 
-  it('debería manejar selección de filas vacía correctamente', () => {
+  it('✅ debería manejar selección de filas vacía correctamente', () => {
     component.manejarFilaSeleccionada([]);
 
     expect(component.listaFilaSeleccionadaEnlace).toEqual([]);
@@ -194,7 +194,7 @@ describe('EnlaceOperativoComponent', () => {
     expect(component.enableEliminarBoton).toBe(false);
   });
 
-  it('debería manejar selección de una fila correctamente', () => {
+  it('✅ debería manejar selección de una fila correctamente', () => {
     const filaTest = {
       id: 1,
       registro: 'XAXX010101000',
@@ -215,7 +215,7 @@ describe('EnlaceOperativoComponent', () => {
     expect(component.filaSeleccionadaEnlaceOperativo).toEqual(filaTest);
   });
 
-  it('debería seleccionar la última fila cuando se pasan múltiples filas', () => {
+  it('✅ debería seleccionar la última fila cuando se pasan múltiples filas', () => {
     const fila1 = {
       id: 1,
       registro: 'XAXX010101000',

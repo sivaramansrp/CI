@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { Subject, of, throwError } from 'rxjs';
 
-// Mock components for ViewChild references
+// Componentes mock para referencias ViewChild
 class MockFormComponent {
   form = {
     invalid: false,
@@ -96,10 +96,10 @@ describe('PasoUnoComponent', () => {
     expect(mockRegistroService.actualizarEstadoFormulario).not.toHaveBeenCalled();
   });
 
-  // Comprehensive tests for validarFormularios method
+  // Pruebas exhaustivas para el método validarFormularios
   describe('validarFormularios', () => {
     beforeEach(() => {
-      // Set up mock components for ViewChild references
+      // Configurar componentes mock para las referencias ViewChild
       component.solicitante = {
         form: {
           invalid: false,
@@ -209,7 +209,7 @@ describe('PasoUnoComponent', () => {
     });
   });
 
-  // Tests for onReconocimientoMutuoChange method
+  // Pruebas para el método onReconocimientoMutuoChange
   describe('onReconocimientoMutuoChange', () => {
     it('debe actualizar reconocimientoMutuoValue con el valor proporcionado', () => {
       const testValue: [string, string] = ['valor1', 'valor2'];
@@ -235,7 +235,7 @@ describe('PasoUnoComponent', () => {
     });
   });
 
-  // Additional coverage tests
+  // Pruebas adicionales de cobertura
   describe('Propiedades y inicialización', () => {
     it('debe tener las propiedades inicializadas correctamente', () => {
       expect(component.indice).toBe(1);
@@ -265,7 +265,7 @@ describe('PasoUnoComponent', () => {
     });
   });
 
-  // Edge cases and error handling
+  // Casos límite y manejo de errores
   describe('Casos edge y manejo de errores', () => {
     it('debe manejar errores en guardarDatosFormulario', () => {
       mockRegistroService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(
@@ -285,7 +285,7 @@ describe('PasoUnoComponent', () => {
     });
 
     it('debe manejar consultaState undefined en ngOnInit', () => {
-      // Mock the service method to return an observable
+      // Simular el método del servicio para retornar un observable
       const testRespMock = { data: 'test' };
       mockRegistroService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(testRespMock));
       
@@ -310,7 +310,7 @@ describe('PasoUnoComponent', () => {
     });
   });
 
-  // Integration-like tests
+  // Pruebas tipo integración
   describe('Flujos integrados', () => {
     it('debe completar el flujo completo de ngOnInit con update true', () => {
       const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario').mockImplementation(() => {
@@ -327,35 +327,35 @@ describe('PasoUnoComponent', () => {
       expect(guardarSpy).toHaveBeenCalled();
     });
 
-    it('debe completar el flujo completo de ngOnInit con update false', () => {
-      const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
-      
-      component.consultaQuery = {
-        selectConsultaioState$: of({ update: false }),
-      } as any;
-      
-      component.ngOnInit();
-      
-      expect(component.consultaState).toEqual({ update: false });
-      expect(component.esDatosRespuesta).toBe(true);
-      expect(guardarSpy).not.toHaveBeenCalled();
-    });
+  it('debe completar el flujo completo de ngOnInit con update false', () => {
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    
+    component.consultaQuery = {
+      selectConsultaioState$: of({ update: false }),
+    } as any;
+    
+    component.ngOnInit();
+    
+    expect(component.consultaState).toEqual({ update: false });
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(guardarSpy).not.toHaveBeenCalled();
+  });
 
-    it('debe limpiar correctamente en ngOnDestroy después de suscripción', () => {
-      // Mock the service method to return an observable for ngOnInit
-      const testRespMock = { data: 'test' };
-      mockRegistroService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(testRespMock));
-      
-      // Simulate a subscription
-      component.ngOnInit();
-      
-      const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
-      const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
-      
-      component.ngOnDestroy();
-      
-      expect(nextSpy).toHaveBeenCalled();
-      expect(completeSpy).toHaveBeenCalled();
-    });
+  it('debe limpiar correctamente en ngOnDestroy después de suscripción', () => {
+    // Mock del método de servicio para retornar un observable para ngOnInit
+    const testRespMock = { data: 'test' };
+    mockRegistroService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(testRespMock));
+    
+    // Simular una suscripción
+    component.ngOnInit();
+    
+    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
+    
+    component.ngOnDestroy();
+    
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
   });
 });

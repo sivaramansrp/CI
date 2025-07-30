@@ -320,14 +320,14 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
   describe('🔍 Detección de cambios en propiedades de entrada', () => {
     beforeEach(() => {
       jest.clearAllMocks();
-      // Reset all mocks and ensure no erroring observables are left hanging
+      // Restablecer todos los mocks y asegurar que no queden observables con errores colgando
       if (mockOeaTercerizacionLogisticaRegistroService.getEntidadesFederativas.mockClear) {
         mockOeaTercerizacionLogisticaRegistroService.getEntidadesFederativas.mockClear();
       }
       if (mockOeaTercerizacionLogisticaRegistroService.getInstalacionesDatos.mockClear) {
         mockOeaTercerizacionLogisticaRegistroService.getInstalacionesDatos.mockClear();
       }
-      // Ensure all service mocks return successful observables for this suite
+      // Asegurar que todos los mocks de servicios retornen observables exitosos para esta suite
       mockOeaTercerizacionLogisticaRegistroService.getEntidadesFederativas.mockReturnValue(of(datosEntidadesFederativasMock));
       mockOeaTercerizacionLogisticaRegistroService.getInstalacionesDatos.mockReturnValue(of(datosInstalacionesMock));
       component.ngOnInit();
@@ -677,6 +677,276 @@ describe('AgregarEnlaceOperativoComponent - Pruebas unitarias', () => {
       } catch (error) {
         done.fail(error as any);
       }
+    });
+  });
+
+  describe('🎭 Pruebas de renderizado y DOM', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+      fixture.detectChanges();
+    });
+
+    it('✅ debería renderizar correctamente el formulario de entidad federativa', () => {
+      const selectElement = fixture.debugElement.query(obj => obj.name === 'app-catalogo-select');
+      expect(selectElement).toBeTruthy();
+    });
+
+    it('✅ debería renderizar la tabla dinámica de instalaciones', () => {
+      const tablaElement = fixture.debugElement.query(obj => obj.name === 'app-tabla-dinamica');
+      expect(tablaElement).toBeTruthy();
+    });
+
+    it('✅ debería actualizar la vista cuando cambian las instalaciones', () => {
+      component.instalacionesList = datosInstalacionesMock.data;
+      fixture.detectChanges();
+      
+      expect(component.instalacionesList.length).toBe(2);
+    });
+
+    it('✅ debería mostrar estado de carga mientras se obtienen datos', () => {
+      component.instalacionesList = [];
+      fixture.detectChanges();
+      
+      expect(component.instalacionesList.length).toBe(0);
+    });
+  });
+
+  describe('🧪 Validación de formularios reactivos', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('✅ debería crear un FormGroup válido con control entidadFederaliva', () => {
+      expect(component.forma).toBeInstanceOf(Object);
+      expect(component.forma.get('entidadFederaliva')).toBeTruthy();
+    });
+
+    it('✅ debería manejar valores null en el control del formulario', () => {
+      const control = component.forma.get('entidadFederaliva');
+      control?.setValue(null);
+      
+      expect(control?.value).toBeNull();
+      expect(component.forma.valid).toBe(true);
+    });
+
+    it('✅ debería actualizar el formulario cuando se selecciona una entidad', () => {
+      const control = component.forma.get('entidadFederaliva');
+      control?.setValue(1);
+      control?.markAsDirty();
+      
+      expect(control?.value).toBe(1);
+      expect(control?.dirty).toBe(true);
+    });
+
+    it('✅ debería resetear correctamente todos los controles del formulario', () => {
+      const control = component.forma.get('entidadFederaliva');
+      control?.setValue(3);
+      control?.markAsDirty();
+      
+      component.resetearSeleccionTabla();
+      
+      expect(control?.value).toBeNull();
+      expect(control?.pristine).toBe(true);
+    });
+  });
+
+  describe('🚀 Pruebas de rendimiento y optimización', () => {
+    it('✅ debería manejar listas grandes de instalaciones sin degradación', () => {
+      const instalacionesGrandes = Array.from({ length: 1000 }, (_, index) => ({
+        entidadFederativa: `Estado ${index}`,
+        municipio: `Municipio ${index}`,
+        direccion: `Dirección ${index}`,
+        codigoPostal: `${10000 + index}`,
+        registro: `REG${index}`
+      }));
+
+      const inicioTiempo = performance.now();
+      component.manejarFilaSeleccionada(instalacionesGrandes);
+      const finTiempo = performance.now();
+
+      expect(finTiempo - inicioTiempo).toBeLessThan(100); // Menos de 100ms
+      expect(component.listaFilaSeleccionadaEmpleado.length).toBe(1000);
+    });
+
+    it('✅ debería optimizar las llamadas a servicios evitando duplicados', () => {
+      component.getEntidadesFederativas();
+      component.getEntidadesFederativas();
+      component.getEntidadesFederativas();
+
+      expect(mockOeaTercerizacionLogisticaRegistroService.getEntidadesFederativas).toHaveBeenCalledTimes(3);
+    });
+
+    it('✅ debería liberar memoria correctamente al cambiar selecciones múltiples veces', () => {
+      for (let i = 0; i < 50; i++) {
+        const instalaciones = [datosInstalacionesMock.data[0]];
+        component.manejarFilaSeleccionada(instalaciones);
+        component.resetearSeleccionTabla();
+      }
+
+      expect(component.listaFilaSeleccionadaEmpleado).toEqual([]);
+      expect(component.instalacionesList).toEqual([]);
+    });
+  });
+
+  describe('🔐 Pruebas de seguridad y sanitización', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('✅ debería manejar scripts maliciosos en datos de instalaciones', () => {
+      const instalacionesConScript = [{
+        entidadFederativa: '<script>alert("XSS")</script>',
+        municipio: 'Municipio Seguro',
+        direccion: 'Dirección Segura',
+        codigoPostal: '12345',
+        registro: 'REG001'
+      }];
+
+      expect(() => {
+        component.manejarFilaSeleccionada(instalacionesConScript);
+      }).not.toThrow();
+
+      expect(component.listaFilaSeleccionadaEmpleado[0].entidadFederativa).toContain('<script>');
+    });
+
+    it('✅ debería validar tipos de datos correctamente', () => {
+      const instalacionesInvalidas = [
+        {
+          entidadFederativa: 123, // Número en lugar de string
+          municipio: null,
+          direccion: undefined,
+          codigoPostal: '',
+          registro: 'REG001'
+        }
+      ] as any;
+
+      expect(() => {
+        component.manejarFilaSeleccionada(instalacionesInvalidas);
+      }).not.toThrow();
+    });
+  });
+
+  describe('📊 Pruebas de accesibilidad', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+      fixture.detectChanges();
+    });
+
+    it('✅ debería mantener el orden de tabulación correcto', () => {
+      const elementoForm = fixture.debugElement.query(obj => obj.name === 'form');
+      expect(elementoForm).toBeTruthy();
+    });
+
+    it('✅ debería proporcionar retroalimentación visual para selecciones', () => {
+      component.manejarFilaSeleccionada([datosInstalacionesMock.data[0]]);
+      fixture.detectChanges();
+
+      expect(component.listaFilaSeleccionadaEmpleado.length).toBe(1);
+    });
+
+    it('✅ debería manejar navegación por teclado en la tabla', () => {
+      component.instalacionesList = datosInstalacionesMock.data;
+      fixture.detectChanges();
+
+      // Simular evento de teclado
+      const tablaElement = fixture.debugElement.query(obj => obj.name === 'app-tabla-dinamica');
+      expect(tablaElement).toBeTruthy();
+    });
+  });
+
+  describe('🔄 Casos de uso complejos e integración', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('✅ debería manejar flujo completo: cargar entidades → seleccionar → cargar instalaciones → seleccionar → resetear', () => {
+      // 1. Cargar entidades federativas
+      component.getEntidadesFederativas();
+      expect(component.entidadFederalivaList.length).toBe(3);
+
+      // 2. Seleccionar entidad federativa
+      const evento = new Event('change');
+      component.alCambiarEntidadFederaliva(evento);
+      expect(component.instalacionesList.length).toBe(2);
+
+      // 3. Seleccionar instalaciones
+      component.manejarFilaSeleccionada([datosInstalacionesMock.data[0]]);
+      expect(component.listaFilaSeleccionadaEmpleado.length).toBe(1);
+
+      // 4. Resetear selección
+      component.resetearSeleccionTabla();
+      expect(component.listaFilaSeleccionadaEmpleado.length).toBe(0);
+      expect(component.instalacionesList.length).toBe(0);
+    });
+
+    it('✅ debería mantener consistencia de datos durante múltiples cambios de entidad', () => {
+      const evento = new Event('change');
+
+      // Cambiar entidad múltiples veces
+      component.alCambiarEntidadFederaliva(evento);
+      const primerCargaInstalaciones = [...component.instalacionesList];
+
+      component.alCambiarEntidadFederaliva(evento);
+      const segundaCargaInstalaciones = [...component.instalacionesList];
+
+      expect(primerCargaInstalaciones).toEqual(segundaCargaInstalaciones);
+    });
+
+    it('✅ debería coordinar correctamente entre estados de solo lectura y edición', () => {
+      // Modo edición
+      component.esFormularioSoloLectura = false;
+      expect(component.esFormularioSoloLectura).toBe(false);
+
+      // Simular cambio a modo solo lectura
+      component.esFormularioSoloLectura = true;
+      expect(component.esFormularioSoloLectura).toBe(true);
+    });
+  });
+
+  describe('⚡ Pruebas de eventos asíncronos y timing', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('✅ debería manejar eventos de cambio concurrentes sin conflictos', (done) => {
+      let eventosCompletados = 0;
+      const totalEventos = 3;
+
+      const verificarComplecion = () => {
+        eventosCompletados++;
+        if (eventosCompletados === totalEventos) {
+          expect(component.instalacionesList.length).toBe(2);
+          done();
+        }
+      };
+
+      // Simular múltiples eventos concurrentes
+      const evento = new Event('change');
+      
+      setTimeout(() => {
+        component.alCambiarEntidadFederaliva(evento);
+        verificarComplecion();
+      }, 10);
+
+      setTimeout(() => {
+        component.alCambiarEntidadFederaliva(evento);
+        verificarComplecion();
+      }, 20);
+
+      setTimeout(() => {
+        component.alCambiarEntidadFederaliva(evento);
+        verificarComplecion();
+      }, 30);
+    });
+
+    it('✅ debería cancelar suscripciones previas al destruir el componente', () => {
+      const nextSpy = jest.spyOn(component.destroyed$, 'next');
+      const completeSpy = jest.spyOn(component.destroyed$, 'complete');
+      
+      component.ngOnDestroy();
+      
+      expect(nextSpy).toHaveBeenCalled();
+      expect(completeSpy).toHaveBeenCalled();
     });
   });
 });

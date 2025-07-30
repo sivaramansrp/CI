@@ -43,17 +43,17 @@ describe('PasoDosComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
+  it('debe crearse correctamente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call getTiposDocumentos on ngOnInit', () => {
+  it('debe llamar getTiposDocumentos en ngOnInit', () => {
     const spy = jest.spyOn(component, 'getTiposDocumentos');
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should assign catalogoDocumentos when getTiposDocumentos returns data', () => {
+  it('debe asignar catalogoDocumentos cuando getTiposDocumentos retorna datos', () => {
     const mockDocs: Catalogo[] = [{ id: 1, descripcion: 'Doc1' } as Catalogo];
     catalogosServiceMock.getCatalogo.mockReturnValue(of(mockDocs));
 
@@ -65,7 +65,7 @@ describe('PasoDosComponent', () => {
     expect(component.catalogoDocumentos).toEqual(mockDocs);
   });
 
-  it('should not assign catalogoDocumentos when getTiposDocumentos returns empty array', () => {
+  it('no debe asignar catalogoDocumentos cuando getTiposDocumentos retorna un array vacío', () => {
     catalogosServiceMock.getCatalogo.mockReturnValue(of([]));
     component.catalogoDocumentos = [{ id: 1, descripcion: 'Doc1' } as Catalogo];
 
@@ -76,7 +76,7 @@ describe('PasoDosComponent', () => {
     ]);
   });
 
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+  it('debe completar destroyNotifier$ en ngOnDestroy', () => {
     const completeSpy = jest.spyOn(
       (component as any).destroyNotifier$,
       'complete'

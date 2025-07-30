@@ -150,7 +150,7 @@ describe('ImportadorExportadorComponent', () => {
     .overrideComponent(ImportadorExportadorComponent, {
       remove: { 
         imports: [AgregarTransportistasComponent],
-        providers: [BsModalService] // Remove the component's own BsModalService provider
+        providers: [BsModalService] // Remover el proveedor BsModalService del componente
       },
       add: { 
         imports: [MockAgregarTransportistasComponent] 
@@ -1124,7 +1124,7 @@ describe('ImportadorExportadorComponent', () => {
 
 
     it('debería renderizar la tabla dinámica', () => {
-      // Test that verifies the component is properly configured for dynamic table rendering
+      // Prueba que verifica que el componente está configurado correctamente para renderizar tabla dinámica
       
       component.tablaDatos = mockEmpresasDelGrupo;
       component.ngOnInit();
@@ -1150,49 +1150,49 @@ describe('ImportadorExportadorComponent', () => {
 
 
     it('debería mostrar título correcto en modal según modo de edición', () => {
-      // Test that verifies the modal logic and isEditMode functionality
+      // Prueba que verifica la lógica del modal y funcionalidad de isEditMode
       
-      // Reset the mock for clean testing
+      // Limpiar mock para prueba limpia
       mockBsModalService.show.mockClear();
       
       // Configurar datos de prueba necesarios
       component.tablaDatos = mockEmpresasDelGrupo;
       component.selectedEmpresa = mockEmpresasDelGrupo[0];
       
-      // Mock the template ViewChild
+      // Simular el ViewChild del template
       component.template = { 
         createEmbeddedView: jest.fn(),
         elementRef: {} as any
       } as any;
       
-      // Test abrirModal directly first to ensure mocking works
+      // Probar abrirModal directamente primero para asegurar que el mock funciona
       component.abrirModal(component.template);
       expect(mockBsModalService.show).toHaveBeenCalledWith(component.template, { class: 'modal-lg'});
       
-      // Reset for actual test
+      // Resetear para la prueba real
       mockBsModalService.show.mockClear();
       
-      // Spy on the method that shows selection required modal
+      // Espiar el método que muestra el modal de selección requerida
       const mostrarModalSeleccionRequeridaSpy = jest.spyOn(component, 'mostrarModalSeleccionRequerida');
       
-      // Test: Verify modification mode sets isEditMode to true and opens modal
-      expect(component.isEditMode).toBe(false); // Initially false
+      // Prueba: Verificar que el modo modificación establece isEditMode a true y abre modal
+      expect(component.isEditMode).toBe(false); // Inicialmente false
       
       component.modificarEmpresa();
       
-      // Verify the selection required modal was NOT called
+      // Verificar que el modal de selección requerida NO fue llamado
       expect(mostrarModalSeleccionRequeridaSpy).not.toHaveBeenCalled();
       
       expect(component.isEditMode).toBe(true);
       expect(mockBsModalService.show).toHaveBeenCalledWith(component.template, { class: 'modal-lg'});
       
-      // Test: Verify form is populated with selected empresa data
+      // Prueba: Verificar que el formulario se llena con los datos de la empresa seleccionada
       expect(component.agregarEnlaceOperativoForm.get('enlaceOperativorfc')?.value)
         .toBe(mockEmpresasDelGrupo[0].rfcEnclaveOperativo);
       expect(component.agregarEnlaceOperativoForm.get('denominacionRazonsocial')?.value)
         .toBe(mockEmpresasDelGrupo[0].denominacionRazonsocial);
       
-      // Test: Verify limpiarFormulario resets isEditMode
+      // Prueba: Verificar que limpiarFormulario resetea isEditMode
       component.limpiarFormulario();
       expect(component.isEditMode).toBe(false);
     });

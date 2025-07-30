@@ -49,7 +49,6 @@
 
   <div class="d-flex justify-content-end">
     <div class="d-flex flex-row flex-wrap gap-3">
-        <!-- <button class="btn btn-primary" (click)="cargaArchivo()" [disabled]="esFormularioSoloLectura">Carga por archivo</button> -->
         <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
         (click)="confirmEliminarEmpleadoItem()" [disabled]="esFormularioSoloLectura">Eliminar</button>
         <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}" (click)="modificarItemEmpleado()" [disabled]="esFormularioSoloLectura">Modificar</button>

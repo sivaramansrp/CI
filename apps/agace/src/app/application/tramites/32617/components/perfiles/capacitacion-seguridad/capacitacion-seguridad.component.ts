@@ -106,12 +106,12 @@ export class CapacitacionSeguridadComponent implements OnInit, OnDestroy {
 
     const PERFILES = this.solicitudState.perfiles;
     
-    // Update form controls with current state values
+    // Actualiza los controles del formulario con los valores actuales del estado
     Object.keys(this.capacitacion.controls).forEach(fieldName => {
       const CONTROL = this.capacitacion.get(fieldName);
       const STATE_VALUE = PERFILES[fieldName as keyof typeof PERFILES];
       
-      // Update control if state has a value and it's different from current form value
+      // Actualiza el control si el estado tiene un valor y es diferente al valor actual del formulario
       if (CONTROL && STATE_VALUE !== undefined && STATE_VALUE !== null && STATE_VALUE !== '') {
         if (CONTROL.value !== STATE_VALUE) {
           CONTROL.setValue(STATE_VALUE, { emitEvent: false });

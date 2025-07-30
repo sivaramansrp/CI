@@ -1,4 +1,4 @@
-// Mock Bootstrap Modal antes de cualquier import
+// Simular Bootstrap Modal antes de cualquier import
 const mockModalInstance = { show: jest.fn(), hide: jest.fn() };
 const MockedModal = jest.fn(() => mockModalInstance);
 (MockedModal as any).getInstance = jest.fn(() => mockModalInstance);
@@ -480,7 +480,7 @@ describe('AgregarMiembroEmpresaComponent - Pruebas unitarias', () => {
       const nuevoFixture = TestBed.createComponent(AgregarMiembroEmpresaComponent);
       const nuevoComponente = nuevoFixture.componentInstance;
       
-      // Mock elementos del DOM
+      // Simular elementos del DOM manualmente
       nuevoComponente.registroDeAgregarMiembroEmpresaElemento = {
         nativeElement: document.createElement('div')
       } as ElementRef;
@@ -489,10 +489,10 @@ describe('AgregarMiembroEmpresaComponent - Pruebas unitarias', () => {
         nativeElement: document.createElement('div')
       } as ElementRef;
       
-      // Manually set the readonly state since the constructor subscription might not work in tests
+      // Establecer manualmente el estado de solo lectura ya que la suscripción del constructor podría no funcionar en las pruebas
       nuevoComponente.esFormularioSoloLectura = true;
       
-      // Initialize the component
+      // Inicializar el componente
       nuevoComponente.ngOnInit();
       nuevoFixture.detectChanges();
       await nuevoFixture.whenStable();
