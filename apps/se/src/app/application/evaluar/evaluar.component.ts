@@ -1,11 +1,11 @@
-import { CommonModule } from "@angular/common";
+import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
 import { Component, OnDestroy, OnInit, Type } from "@angular/core";
+import { CapturarRequerimientoComponent } from '@libs/shared/data-access-user/src/tramites/components/capturar-requerimiento/capturar-requerimiento.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from "@angular/common";
 import { Router } from '@angular/router';
 import { SolicitudRequerimientosState } from '@libs/shared/data-access-user/src/core/estados/requerimientos.store';
-import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
 import { SolicitudRequerimientoQuery } from '@libs/shared/data-access-user/src/core/queries/requerimientos.query';
-import { CapturarRequerimientoComponent } from '@libs/shared/data-access-user/src/tramites/components/capturar-requerimiento/capturar-requerimiento.component';
 import { EncabezadoRequerimientoComponent } from '@libs/shared/data-access-user/src/tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
 import { GenerarDictamenComponent } from '@libs/shared/data-access-user/src/tramites/components/generar-dictamen/generar-dictamen.component';
@@ -23,6 +23,7 @@ import { GuardarDictamenService } from '../core/services/evaluar-tramite/guardar
 import { IniciarService } from '../core/services/evaluar-tramite/iniciar.service';
 import { TabsSolicitudServiceTsService } from "../core/services/evaluar-tramite/tabs-solicitud.service.ts.service";
 import { DocumentoSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model";
+import { TareasSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model";
 
 /**
  * @component
@@ -139,6 +140,12 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   documentosSolicitud: DocumentoSolicitud[] = [];
 
   /**
+   * @property {TareasSolicitud[]} tareasSolicitud
+   * @description Tareas de solicitud.
+   */
+  tareasSolicitud: TareasSolicitud[] = [];
+
+  /**
  * @constructor
  * @description Constructor del componente. Inicializa los servicios y suscripciones necesarias para la evaluación del trámite.
  * 
@@ -204,6 +211,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       this.router.navigate([`/${this.guardarDatos?.department.toLowerCase()}/seleccion-tramite`]);
     }
     this.getDocumentosSolicitud();
+    this.getTareasSolicitud();
     this.opcionesEvaluacion();
   }
 
@@ -224,6 +232,33 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         next: (response) => {
           if (response.codigo === '00') {
             this.documentosSolicitud = response.datos ?? [];
+          } else {
+            console.error('Error en respuesta:', response.mensaje);
+          }
+        },
+        error: (error) => {
+          console.error('Error al llamar el servicio:', error);
+        }
+      });
+  }
+
+  /**
+   * @method TareasSolicitud
+   * @description Método para obtener las tareas asociadas a una solicitud.
+   * 
+   * Realiza una petición al servicio tabsSolicitudServiceTsService para recuperar las tareas
+   * vinculados al ID de solicitud proporcionado. Asigna las tareas a la variable tareasSolicitud
+   * si la respuesta es exitosa (código '00'), o muestra un error en caso contrario.
+   * 
+   * @returns {void}
+ */
+  getTareasSolicitud(): void {
+    const NUMFOLIOTRAMITE = '0201100100120242540000372'
+    this.tabsSolicitudServiceTsService.getTareasSolicitud(NUMFOLIOTRAMITE)
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === '00') {
+            this.tareasSolicitud = response.datos ?? [];
           } else {
             console.error('Error en respuesta:', response.mensaje);
           }

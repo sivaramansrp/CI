@@ -2,12 +2,14 @@ import {
   BodyTablaTareasTramite,
   HeaderTablaTareasTramite,
 } from '../../../../core/models/shared/consulta-generica.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CONSULTA_TAREASTRAMITE } from '../../../../core/enums/consulta-generica.enum';
 import { CommonModule } from '@angular/common';
 import { FolioQuery } from '../../../../core/queries/folio.query';
+import { TareasSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model';
 import { TareasTramiteService } from '../../../../core/services/consultagenerica/tareas-tramite-service';
+
 
 @Component({
   selector: 'lib-tareas-tramite',
@@ -40,6 +42,12 @@ export class TareasTramiteComponent implements OnInit, OnDestroy {
    * @type {BodyTablaTareasTramite[]}
    */
   datosTablaTareasTramite: BodyTablaTareasTramite[] = [];
+
+  /**
+   * @property {TareasSolicitud[]} tareasSolicitud
+   * @description Tareas de solicitud.
+  */
+  @Input() tareasSolicitud: TareasSolicitud[] = [];
 
   /**
    * Constructor para la bandeja de tareas de trámite.
@@ -77,12 +85,14 @@ export class TareasTramiteComponent implements OnInit, OnDestroy {
    * suscribe - Se suscribe al observable del servicio para obtener los datos.
    */
   getTareas(): void {
-    this.tareasTramiteService
-      .getTareasTramite()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.datosTablaTareasTramite = data;
-      });
+    this.datosTablaTareasTramite = this.tareasSolicitud.map((doc => ({
+      id: doc.id_bitacora,
+      nombreTarea: doc.tarea,
+      nombreUsuarioAsignado: doc.nombre_usuario,
+      claveUsuarioAsignado: doc.id_usuario,
+      fechaAsignacion: doc.fecha_evento_inicio,
+      fechaAtencion: doc.fecha_evento_fin
+    })));
   }
   /**
    * Método `ngOnDestroy()`.

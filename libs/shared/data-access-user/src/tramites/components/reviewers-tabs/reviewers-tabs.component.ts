@@ -3,13 +3,14 @@ import { AcusesResolucionesComponent } from "../consulta-generica/bandeja-acuses
 import { CommonModule } from "@angular/common";
 import { ConsultarequerimientosComponent } from "../consulta-generica/consulta-requerimientos/consulta-requerimientos.component";
 import { DictamenesComponent } from "../consulta-generica/bandeja-dictamenes/dictamenes.component";
+import { DocumentoSolicitud } from "../../../core/models/130118/consulta-documentos-response.model";
 import { DocumentosComponent } from "../consulta-generica/bandeja-documentos/documentos.component";
 import { EnvioDigitalComponent } from "../consulta-generica/consulta-envio-digital/envio-digital.component";
 import { OpinionComponent } from "../consulta-generica/consulta-opinion/opiniones.component";
 import { Tabulaciones } from "../../../core/models/lista-trimites.model";
+import { TareasSolicitud } from "../../../core/models/130118/consulta-tareas-response.model";
 import { TareasTramiteComponent } from "../consulta-generica/bandeja-tareas-tramite/tareas-tramite.component";
 import tramiteDetailsData from '@libs/shared/theme/assets/json/shared/lista-trimites-tabs.json';
-import { DocumentoSolicitud } from "../../../core/models/130118/consulta-documentos-response.model";
 
 /**
  * @component
@@ -59,6 +60,12 @@ export class ReviewersTabsComponent implements OnChanges, OnInit {
    * @description Documentos de solicitud.
    */
   @Input() documentos: DocumentoSolicitud[] = [];
+
+  /**
+   * @property {TareasSolicitud[]} tareasSolicitud
+   * @description Tareas de solicitud.
+   */
+  @Input() tareasSolicitud: TareasSolicitud[] = [];
 
   /**
    * @property {EventEmitter<Tabulaciones>} viewChildcambioDePestana
