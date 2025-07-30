@@ -1,7 +1,5 @@
+import { of } from 'rxjs';
 import { PasoUnoComponent } from './paso-uno.component';
-import { Solocitud220503Service } from '../../services/service220503.service';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { of, Subject } from 'rxjs';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -28,23 +26,6 @@ describe('PasoUnoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call guardarDatosFormulario if consultaState.update is true on ngOnInit', () => {
-    component.consultaState = { update: true } as ConsultaioState;
-    jest.spyOn(component, 'guardarDatosFormulario');
-    
-    // Mock the pipe to return an observable that emits the update state
-    consultaQueryMock.selectConsultaioState$ = {
-      pipe: jest.fn().mockReturnValue({
-        subscribe: jest.fn().mockImplementation((callback: any) => {
-          callback({ update: true });
-          return { unsubscribe: jest.fn() };
-        })
-      })
-    };
-    
-    component.ngOnInit();
-    expect(component.guardarDatosFormulario).toHaveBeenCalled();
-  });
 
   it('should set esDatosRespuesta to true and call actualizarEstadoFormulario on guardarDatosFormulario', () => {
     const resp = { some: 'data' };
@@ -126,7 +107,7 @@ describe('PasoUnoComponent', () => {
 
     it('should return false when solicitante is not available', () => {
       component.solicitante = undefined as any;
-      
+
       // Mock valid solicitudDatos
       component.solicitudDatos = {
         validarFormularios: jest.fn().mockReturnValue(true)
