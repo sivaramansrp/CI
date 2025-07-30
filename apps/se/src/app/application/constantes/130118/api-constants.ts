@@ -95,3 +95,9 @@ export const API_POST_GUARDAR_DICTAMEN = `sat-t130118/tramite/${NUMFOLIOTRAMITE}
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes/consulta-documentos-solicitud
  */
 export const API_GET_SOLICITUD_DOCUMENTOS = `sat-t130118/solicitud/${IDSOLICITUD}/documentos`;
+
+/**
+ * API para Consultar tareas de solicitud del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes/get-tareas-tramite 
+ */
+export const API_GET_TAREAS_DOCUMENTOS = `sat-t130118/tramite/${NUMFOLIOTRAMITE}/bitacora`;
