@@ -2,11 +2,11 @@
  *  Este servicio proporciona métodos para obtener datos relacionados con tratados y acuerdos.
  */
 
+import { DomicilioTabla, HttpCoreService } from '@libs/shared/data-access-user/src';
+import { Tramite110210State, Tramite110210Store } from '../../estados/store/tramite110210.store';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { DomicilioTabla } from '../../../../tramites/constantes/110210/domicilio-tabla.enum';
-import { HttpCoreService } from '../../shared/http/http.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class DomicilioTablaService {
   /**
    * {HttpCoreService} http - Servicio HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpCoreService) { }
+  constructor(private http: HttpCoreService, private store: Tramite110210Store) { }
 
   /**
    * @method getData
@@ -25,5 +25,14 @@ export class DomicilioTablaService {
    */
   getData(): Observable<DomicilioTabla[]> {
     return this.http.get('./assets/json/110210/domicilio-tabla-data.json');
+  }
+  getDatosStore(): Observable<Tramite110210State> {
+    return this.http.get<Tramite110210State>('./assets/json/110210/datos.json');
+  }
+   /**
+   * Actualiza el estado global del formulario en el store con los datos proporcionados.
+   */
+  actualizarEstadoFormulario(DATOS: Tramite110210State): void {
+    this.store.actualizarEstado(DATOS);
   }
 }

@@ -82,9 +82,6 @@ export * from './core/services/110102/datos-tratados-acuerdos/datosTratadosacuer
 export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
 export * from './core/services/110102/mercancia-asociada/mercanciaAsociada.service';
 export * from './core/services/110102/representacion-federal/representacionFederal.service';
-export * from './core/services/110210/buscar-certificado-de-origen/buscarCertificadoDeOrigen.service';
-export * from './core/services/110210/certificado-disponibles/certificadoDisponibles.service';
-export * from './core/services/110210/domicilio-tabla/domicilioTabla.service';
 export * from './core/services/120402/asignacion-directa-de-cupo.enum';
 export * from './core/services/120402/descripcion-del-cupo/descripcionDelCupo.service';
 export * from './core/services/120402/representacionFederal/representacion-federal.service';

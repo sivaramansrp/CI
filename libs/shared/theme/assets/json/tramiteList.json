@@ -1102,7 +1102,7 @@
     "id": 158,
     "tramite": 110210,
     "linkDashboard": "/se/tramites-disponibles/solicitud",
-    "linkDepartment": "/se/tramites-disponibles/solicitud",
+    "linkDepartment": "/pago/tramites-disponibles/solicitud",
     "department": "se"
   },
   {

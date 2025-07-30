@@ -2,11 +2,10 @@
  *  Este servicio proporciona métodos para obtener datos relacionados con tratados y acuerdos.
  */
 
+import { CertificadoDisponibles, HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { CertificadoDisponibles } from '../../../../tramites/constantes/110210/certificado-disponibles.enum';
-import { HttpCoreService } from '../../shared/http/http.service';
 
 @Injectable({
   providedIn: 'root'

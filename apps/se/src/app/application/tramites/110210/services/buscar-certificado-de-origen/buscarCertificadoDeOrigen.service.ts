@@ -2,11 +2,10 @@
  *  Este servicio proporciona métodos para buscar certificados de origen.
  */
 
+import { Catalogo, HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Catalogo } from '../../../models/shared/catalogos.model';
-import { HttpCoreService } from '../../shared/http/http.service';
 
 @Injectable({
   providedIn: 'root'
