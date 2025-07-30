@@ -4,13 +4,15 @@
  */
 
 import { CONFIGURACION_MERCANCIAS, Mercancias } from '../../constantes/certificado-sgp.enum';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsultaioQuery, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MercanciasService } from '../../services/mercancias/mercancias.service';
+import { Modal } from 'bootstrap';
 import { REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL } from '@ng-mf/data-access-user';
+import { RegistroDeMercanciaComponent } from '../registro-de-mercancia/registro-de-mercancia.component';
 import { Router } from '@angular/router';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from "@ng-mf/data-access-user";
@@ -25,7 +27,7 @@ import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 @Component({
   selector: 'app-datos-del-certificado',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent,RegistroDeMercanciaComponent],
   templateUrl: './datos-del-certificado.component.html',
   styleUrl: './datos-del-certificado.component.scss',
 })
@@ -47,7 +49,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    * Datos que se mostrarán en la tabla.
    * @type {any}
    */
-  datosTabla!: Mercancias[];
+  datosTabla: Mercancias[] = [];
 
   /**
    * Subject que emite un evento cuando el componente es destruido,
@@ -79,6 +81,12 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Referencia al elemento del modal de registro de mercancía.
+   * Se utiliza para controlar la apertura y cierre del modal desde el componente.
+   */
+  @ViewChild('registrodeMercancia') registrodeMercanciaElemento!: ElementRef;
 
   /**
    * Constructor del componente.
@@ -154,7 +162,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyed$)
     ).subscribe(
       (data:Mercancias[]) => {
-        this.datosTabla = data;
+        this.datosTabla = Array.isArray(data) ? data : [];
       }
     );
   }
@@ -202,13 +210,29 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    * 1. Establece las mercancías seleccionadas en el store `tramite110209Store`.
    * 2. Emite un evento `modificarEventCertificado` con el valor `false`.
    * 
-   * @returns {void}
    */
-  navegar(): void {
-    this.tramite110209Store.setTramite110209({ ['mercanciasSeleccionadas']: this.mercanciasSeleccionadas });
-    this.modificarEventCertificado.emit(true);
+    navegar(): void {
+      if (this.registrodeMercanciaElemento) {
+        const MODAL_INSTANCIA = new Modal(
+          this.registrodeMercanciaElemento?.nativeElement,
+          { backdrop: false }
+        );
+        MODAL_INSTANCIA.show();
+    }
   }
-
+  /**
+   * [ES] Cierra el modal asociado al elemento de registro de mercancía, si existe una instancia activa.
+   * Utiliza la instancia del modal obtenida a través del elemento nativo y llama al método `hide()` para ocultarlo.
+   */
+  modalCancelar(): void {
+  const ELEMENTO_MODAL = this.registrodeMercanciaElemento;
+  if (ELEMENTO_MODAL) {
+    const MODAL_INSTANCIA = Modal.getInstance(ELEMENTO_MODAL.nativeElement);
+    if (MODAL_INSTANCIA) {
+      MODAL_INSTANCIA.hide();
+    }
+  }
+}
 
   /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.
