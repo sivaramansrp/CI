@@ -101,3 +101,9 @@ export const API_GET_SOLICITUD_DOCUMENTOS = `sat-t130118/solicitud/${IDSOLICITUD
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes/get-tareas-tramite 
  */
 export const API_GET_TAREAS_DOCUMENTOS = `sat-t130118/tramite/${NUMFOLIOTRAMITE}/bitacora`;
+
+/**
+ * API para Consultar acuses de resolución del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Acuse/consulta-acuse-resoluciones-funcionario
+ */
+export const API_GET_ACUSES_RESOLUCION = `sat-t130118/tramite/${NUMFOLIOTRAMITE}/funcionario/acuses-resoluciones`;
