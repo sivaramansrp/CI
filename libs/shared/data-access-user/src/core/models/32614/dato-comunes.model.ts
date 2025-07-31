@@ -171,3 +171,18 @@ export interface PersonaRespuestaTabla {
      */
     message: string;
 }
+
+/**
+ * Interfaz que representa información de terceros.
+ */
+export interface TercerosTablaInfo {
+    rfc: string;
+    nombre: string;
+    apellidoPaterno: string;
+    apellidoMaterno: string;
+    ciudadOEstadoDeResidencia: string;
+    cargoOPuesto: string;
+    telefono: string;
+    correoElectronico: string;
+    suplente: string;
+}
