@@ -117,20 +117,18 @@ ngOnInit(): void {
     }
 }
 
-/**
+  /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
     this.registroService
-      .getRegistroTomaMuestrasMercanciasData().pipe(
-        map((resp: StoreResponse) => resp),
-        takeUntil(this.destroyNotifier$)
-      )
+      .obtenerDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
-        if (resp && resp.data) {
+        if (resp) {
           this.esDatosRespuesta = true;
-          this.registroService.actualizarEstadoFormulario(resp.data);
+          this.registroService.actualizarEstado(resp);
         } else {
           this.esDatosRespuesta = false;
         }
