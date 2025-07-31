@@ -1,7 +1,7 @@
 import { AccionBoton, ConsultaioState, DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subject,map, takeUntil } from 'rxjs';
-import { AvisoDeReciclajeServiceService } from '../../Services/aviso-de-reciclaje-service.service';
+import { AvisoDeReciclajeServiceService } from '../../services/aviso-de-reciclaje-service.service';
 import { ConsultaioQuery} from '@ng-mf/data-access-user'
 import { PASOS } from '../../constantes/aviso-de-reciclaje.enum';
 /**
