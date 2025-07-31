@@ -59,6 +59,12 @@ export interface Solicitud110221State {
   numeroFactura: string;
   justificacion: string;
   casillaVerificacion: string;
+  formulario: {
+    datosConfidencialesProductor: '';
+    productorMismoExportador: '';
+  };
+  agregarDatosProductorFormulario: { [key: string]: unknown };
+  formCertificado: { [key: string]: unknown };
 }
 
 /**
@@ -67,6 +73,21 @@ export interface Solicitud110221State {
  */
 export function createInitialState(): Solicitud110221State {
   return {
+    formCertificado: {
+      si: false,
+      entidadFederativa: '',
+      bloque: '',
+      nombreComercialForm: '',
+      registroProductoForm: '',
+      fraccionArancelariaForm: '',
+      fechaInicioInput: '',
+      fechaFinalInput: '',
+      nombres: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroDeRegistroFiscal: '',
+      razonSocial: '',
+    },
     tercerOperador: false,
     tratado: null,
     pais: null,
@@ -113,6 +134,11 @@ export function createInitialState(): Solicitud110221State {
     numeroFactura: '',
     justificacion: '',
     casillaVerificacion: '',
+    formulario: {
+      datosConfidencialesProductor: '',
+      productorMismoExportador: '',
+    },
+    agregarDatosProductorFormulario: {},
   };
 }
 
@@ -179,7 +205,9 @@ export class Tramite110221Store extends Store<Solicitud110221State> {
    * Establece la fracción arancelaria de la mercancía.
    * @param fraccionMercanciaArancelaria Cadena que representa la fracción arancelaria de la mercancía.
    */
-  public setfraccionMercanArancelaria(fraccionMercanciaArancelaria: string): void {
+  public setfraccionMercanArancelaria(
+    fraccionMercanciaArancelaria: string
+  ): void {
     this.update((state) => ({
       ...state,
       fraccionMercanciaArancelaria,
@@ -322,7 +350,9 @@ export class Tramite110221Store extends Store<Solicitud110221State> {
    * Establece el complemento de la descripción.
    * @param complementoDelaDescripcion Complemento de la descripción.
    */
-  public setcomplementodeladescripcion(complementoDelaDescripcion: string): void {
+  public setcomplementodeladescripcion(
+    complementoDelaDescripcion: string
+  ): void {
     this.update((state) => ({
       ...state,
       complementoDelaDescripcion,
@@ -344,7 +374,9 @@ export class Tramite110221Store extends Store<Solicitud110221State> {
    * Establece el nombre comercial de la mercancía.
    * @param nombreComercialDelaMercancia Cadena que representa el nombre comercial de la mercancía.
    */
-  public setnombrecomercialdelamercancia(nombreComercialDelaMercancia: string): void {
+  public setnombrecomercialdelamercancia(
+    nombreComercialDelaMercancia: string
+  ): void {
     this.update((state) => ({
       ...state,
       nombreComercialDelaMercancia,
@@ -642,5 +674,46 @@ export class Tramite110221Store extends Store<Solicitud110221State> {
    */
   public limpiarSolicitud(): void {
     this.reset();
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de productor.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setAgregarFormDatosProductor(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      agregarDatosProductorFormulario: {
+        ...state.agregarDatosProductorFormulario,
+        ...values,
+      },
+    }));
+  }
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario histórico.
+   * @param values - Valores a actualizar en el formulario.
+   */
+  setFormHistorico(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formulario: {
+        ...state.formulario,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de certificado de manera genérica.
+   * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
+   */
+  setFormCertificadoGenric(values: { [key: string]: unknown }): void {
+    this.update((state) => ({
+      formCertificado: {
+        ...state.formCertificado,
+        ...values,
+      },
+    }));
   }
 }
