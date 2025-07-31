@@ -245,7 +245,7 @@
           <ng-titulo titulo="Datos mercancía"></ng-titulo>
           <ng-titulo titulo="Identificación del producto"></ng-titulo>
           <div class="form-group">
-            <label for="nombreComercial">Nombre comercial *:</label>
+            <label for="nombreComercial">Nombre comercial*:</label>
             <input type="text" id="nombreComercial" formControlName="nombreComercial" class="form-control" (change)="
                 setValoresStore(
                   formMercancias,
@@ -353,7 +353,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="descripcionFraccion">Descripción de la fracción arancelaria:</label>
+            <label for="descripcionFraccion">Descripción de la fracción arancelaria*:</label>
             <input type="text" id="descripcionFraccion" formControlName="descripcionFraccion" class="form-control"
               (change)="
                 setValoresStore(
@@ -393,7 +393,7 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label for="UMT">UMT*:</label>
+                <label for="UMT">UMT:</label>
                 <span class="bi bi-question-circle-fill fs-4 m-1" [title]="'UMT'" ata-bs-toggle="tooltip">
                 </span>
                 <input type="text" id="UMT" formControlName="UMT" class="form-control"
@@ -534,7 +534,7 @@
                 @if (colapsableDuos) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPaisDuos" [label]="paisDeProcedenciaLabel"
+                    <crosslist [fechas]="seleccionarOrigenDelPaisDuos" [label]="paisDondeSeElabora"
                       [botones]="paisDeProcedenciaBotonesDuos" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>
@@ -553,7 +553,7 @@
                 @if (colapsableTres) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="paisDeProcedenciaLabel"
+                    <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="paisDeOrigen"
                       [botones]="paisDeProcedenciaBotonesTres" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>
@@ -574,7 +574,7 @@
                 @if (colapsableTres) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPaisCuatro" [label]="paisDeProcedenciaLabel"
+                    <crosslist [fechas]="seleccionarOrigenDelPaisCuatro" [label]="paisDeProcedencia"
                       [botones]="paisDeProcedenciaBotonesCuatro" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>

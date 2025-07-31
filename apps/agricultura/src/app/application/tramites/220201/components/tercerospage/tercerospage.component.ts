@@ -7,19 +7,20 @@
  * @module TercerospageComponent
  */
 
-import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DatosDeLaSolicitud, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { Subject, takeUntil } from 'rxjs';
-import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
-import { TercerosrelacionadosComponent } from '../../../../shared/components/tercerosrelacionados/tercerosrelacionados.component';
-import { DatosDeLaSolicitud, TercerosrelacionadosTable, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
-
-import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { AgregardestinatarioComponent } from '../agregardestinatario/agregardestinatario.component';
 import { AgregardestinatariofinalComponent } from '../agregardestinatariofinal/agregardestinatariofinal.component';
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DestinatarioForm } from '../../../220203/models/220203/importacion-de-acuicultura.module';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { TercerosrelacionadosComponent } from '../../../../shared/components/tercerosrelacionados/tercerosrelacionados.component';
+import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
+import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
+
 
 /**
  * Componente para la gestión de terceros relacionados en el trámite.
@@ -83,7 +84,7 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    * @type {TercerosrelacionadosTable[]}
    */
 
-  datosForma: TercerosrelacionadosdestinoTable[] = [];
+  datosForma: DestinatarioForm[] = [];
 
   /**
    * Constructor del componente.
@@ -169,7 +170,7 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   */
   handleEliminarExportador(): void {
     this.personas = [];
-    this.certificadoZoosanitarioStore.updatedatosForma([] as TercerosrelacionadosdestinoTable[]);
+    this.certificadoZoosanitarioStore.updatedatosForma([] as DestinatarioForm[]);
   }
 
 
@@ -183,13 +184,13 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.destroyNotifier$.complete();
   }
 
-  abrirModalDestinatario(data?: any): void {
+  abrirModalDestinatario(data?: TercerosrelacionadosdestinoTable): void {
     if (data) {
       this.certificadoZoosanitarioStore.actualizarSelectedTerceros(data);
     }
     this.modalRef.abrir(AgregardestinatarioComponent);
   }
-  abrirModalExportador(data: any): void {
+  abrirModalExportador(data: DestinatarioForm): void {
     if (data) {
       this.certificadoZoosanitarioStore.actualizarSelectedExdora(data);
     }

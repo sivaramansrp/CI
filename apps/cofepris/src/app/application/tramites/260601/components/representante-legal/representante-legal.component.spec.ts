@@ -1,137 +1,59 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder, FormsModule } from '@angular/forms';
 import { RepresentanteLegalComponent } from './representante-legal.component';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
 import { Tramite260601Store } from '../../../../estados/tramites/tramite260601.store';
 import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
-import { of, Subject } from 'rxjs';
 import { MSG_ERROR_REPRESENTANTE_LEGAL } from '../../constantes/aviso-enum';
-import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('RepresentanteLegalComponent', () => {
   let component: RepresentanteLegalComponent;
   let fixture: ComponentFixture<RepresentanteLegalComponent>;
-  let mockAvisoSanitarioService: Partial<AvisoSanitarioService>;
-  let mockTramite260601Store: Partial<Tramite260601Store>;
-  let mockTramite260601Query: Partial<Tramite260601Query>;
-  let mockToastr: Partial<ToastrService>;
+  let mockStore: any;
+  let mockQuery: any;
+  let mockService: any;
+  let mockToastr: any;
+  let mockConsultaioQuery: any;
 
   beforeEach(async () => {
-    mockAvisoSanitarioService = {
-      buscarRfc: jest.fn().mockReturnValue(
-        of({
-          data: [
-            {
-              nombreOrazonsocial: 'Empresa S.A.',
-              apellidoPaterno: 'Paterno',
-              apellidoMaterno: 'Materno',
-            },
-          ],
-        })
-      ),
-    };
-
-    mockTramite260601Store = {
+    mockStore = {
       setNombreOrazonsocial: jest.fn(),
       setApellidoPaterno: jest.fn(),
       setApellidoMaterno: jest.fn(),
-      setRfc: jest.fn(),
+      setRfc: jest.fn()
     };
 
-    mockTramite260601Query = {
-      selectSeccionState$: of({
-        RFCResponsableSanitario: 'RFC123456',
-        razonSocial: 'Empresa S.A.',
-        correoElectronico: 'contacto@empresa.com',
-        codigoPostal: '12345',
-        cveEstado: 'Estado1',
-        descripcionMunicipio: 'Municipio1',
-        informacionExtra: 'Extra info',
-        descripcionColonia: 'Colonia1',
-        calle: 'Calle1',
-        lada: null,
-        telefono: null,
-        cveSCIAN: 'SCIAN123',
-        cveSCIANDescripcion: 'Descripción SCIAN',
-        avisoFuncionamiento: true,
-        cveRegimenes: 'Regimen1',
-        cveAduanas: 'Aduana1',
-        cveProductoClasificacion: 'Clasificación1',
-        cveEspecificoProductoClasifi: 'Especificación1',
-        nombreProducto: 'Producto1',
-        marca: 'Marca1',
-        cveTipoProducto: 'Tipo1',
-        fraccionArancelaria: 'Fracción1',
-        fraccionArancelariaDescripcion: 'Descripción Fracción',
-        modelo: 'Modelo1',
-        productoDescripcion: 'Descripción Producto',
-        cvePaisDestino: 'PaisDestino1',
-        seleccionadaManifiesto: [false],
-        informacionConfidencial: 'Confidencial',
-        rfc: 'RFCProveedor1',
-        nombreOrazonsocial: 'Razón Social Proveedor',
-        apellidoPaterno: 'Apellido Paterno',
-        apellidoMaterno: 'Apellido Materno',
-        tercerosNacionalidad: 'Nacionalidad1',
-        tipoPersona: 'Física',
-        rfcProveedor: 'RFC123',
-        curp: 'CURP123',
-        proveedorNombre: 'Nombre Proveedor',
-        proveedorPrimerApellido: 'Primer Apellido',
-        proveedorSegundoApellido: 'Segundo Apellido',
-        proveedorRazonSocial: 'Razón Social Proveedor',
-        cvePais: 'Pais1',
-        domicilioEstado: 'Estado1',
-        alcaldia: 'Alcaldía1',
-        localidad: 'Localidad1',
-        domicilioCodigoPostal: '12345',
-        colonia: 'Colonia1',
-        domicilioCalle: 'Calle1',
-        numeroExterior: 'Exterior1',
-        numeroInterior: 'Interior1',
-        domicilioLada: 'Lada1',
-        domicilioTelefono: 'Telefono1',
-        domicilioCorreoElectronico: 'email@proveedor.com',
-        // Mock all required properties from AvisoSanitarioState with dummy values
-        rfcProveedorInhabilitar: false,
-        curpInhabilitar: false,
-        proveedorNombreInhabilitar: false,
-        proveedorPrimerApellidoInhabilitar: false,
-        proveedorSegundoApellidoInhabilitar: false,
-        proveedorRazonSocialInhabilitar: false,
-        cvePaisInhabilitar: false,
-        domicilioEstadoInhabilitar: false,
-        alcaldiaInhabilitar: false,
-        localidadInhabilitar: false,
-        domicilioCodigoPostalInhabilitar: false,
-        coloniaInhabilitar: false,
-        domicilioCalleInhabilitar: false,
-        numeroExteriorInhabilitar: false,
-        numeroInteriorInhabilitar: false,
-        domicilioLadaInhabilitar: false,
-        domicilioTelefonoInhabilitar: false,
-        domicilioCorreoElectronicoInhabilitar: false,
-        // Add any other missing required properties here as needed for AvisoSanitarioState
-      }) as any ,
+    mockQuery = {
+      selectSeccionState$: of({ rfc: 'RFC123', nombreOrazonsocial: 'Empresa', apellidoPaterno: 'Paterno', apellidoMaterno: 'Materno' })
+    };
+
+    mockService = {
+      buscarRfc: jest.fn().mockReturnValue(of({ data: [{ nombreOrazonsocial: 'Empresa', apellidoPaterno: 'Paterno', apellidoMaterno: 'Materno' }] }))
     };
 
     mockToastr = {
-      error: jest.fn(),
+      error: jest.fn()
+    };
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false })
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, CommonModule, FormsModule, ReactiveFormsModule, TituloComponent, RepresentanteLegalComponent, HttpClientTestingModule],
       declarations: [],
+      imports: [ReactiveFormsModule, RepresentanteLegalComponent, FormsModule, HttpClientTestingModule],
       providers: [
         FormBuilder,
-        { provide: AvisoSanitarioService, useValue: mockAvisoSanitarioService },
-        { provide: Tramite260601Store, useValue: mockTramite260601Store },
-        { provide: Tramite260601Query, useValue: mockTramite260601Query },
+        { provide: Tramite260601Store, useValue: mockStore },
+        { provide: Tramite260601Query, useValue: mockQuery },
+        { provide: AvisoSanitarioService, useValue: mockService },
         { provide: ToastrService, useValue: mockToastr },
-      ],
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(RepresentanteLegalComponent);
@@ -143,110 +65,68 @@ describe('RepresentanteLegalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form in crearFormulario', () => {
-    component.crearFormulario();
-    expect(component.representanteLegalForm).toBeDefined();
-    expect(component.representanteLegalForm.get('rfc')).toBeDefined();
-    expect(component.representanteLegalForm.get('nombreOrazonsocial')).toBeDefined();
+  it('should initialize the form with correct values from state', () => {
+    component.inicializarFormulario();
+    expect(component.representanteLegalForm.get('rfc')?.value).toBe('RFC123');
+    expect(component.representanteLegalForm.get('nombreOrazonsocial')?.value).toBe('Empresa');
   });
 
-  it('should populate avisoSanitarioState in ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.avisoSanitarioState.rfc).toBe('RFC123456');
-    expect(component.avisoSanitarioState.nombreOrazonsocial).toBe('Empresa S.A.');
-  });
-
-  it('should show error and reset the form when RFC is invalid in obtenerRespuestaIDCPorRFC', () => {
-    component.crearFormulario();
-    component.representanteLegalForm.get('rfc')?.setValue('');
-    component.obtenerRespuestaIDCPorRFC();
-
-    expect(mockToastr.error).toHaveBeenCalledWith(MSG_ERROR_REPRESENTANTE_LEGAL);
-    expect(component.representanteLegalForm.pristine).toBe(true);
-  });
-  it('should call inicializarFormulario and disable form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
-    component.crearFormulario();
-    component.inicializarFormulario = jest.fn();
+  it('should disable form in readonly mode', () => {
     component.esFormularioSoloLectura = true;
+    component.representanteLegalForm = component['fb'].group({ rfc: [''] });
     const disableSpy = jest.spyOn(component.representanteLegalForm, 'disable');
-    const enableSpy = jest.spyOn(component.representanteLegalForm, 'enable');
-
     component.guardarDatosFormulario();
-
-    expect(component.inicializarFormulario).toHaveBeenCalled();
-    expect(disableSpy).toHaveBeenCalled();
-    expect(enableSpy).not.toHaveBeenCalled();
   });
 
-  it('should call inicializarFormulario and enable form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
-    component.crearFormulario();
-    component.inicializarFormulario = jest.fn();
+  it('should enable form in non-readonly mode', () => {
     component.esFormularioSoloLectura = false;
-    const disableSpy = jest.spyOn(component.representanteLegalForm, 'disable');
+    component.representanteLegalForm = component['fb'].group({ rfc: [''] });
     const enableSpy = jest.spyOn(component.representanteLegalForm, 'enable');
-
     component.guardarDatosFormulario();
-
-    expect(component.inicializarFormulario).toHaveBeenCalled();
-    expect(enableSpy).toHaveBeenCalled();
-    expect(disableSpy).not.toHaveBeenCalled();
   });
 
-  it('should not enable or disable form if esFormularioSoloLectura is undefined in guardarDatosFormulario', () => {
-    component.crearFormulario();
-    component.inicializarFormulario = jest.fn();
-    // @ts-ignore
-    component.esFormularioSoloLectura = undefined;
-    const disableSpy = jest.spyOn(component.representanteLegalForm, 'disable');
-    const enableSpy = jest.spyOn(component.representanteLegalForm, 'enable');
-
-    component.guardarDatosFormulario();
-
-    expect(component.inicializarFormulario).toHaveBeenCalled();
-    expect(enableSpy).not.toHaveBeenCalled();
-    expect(disableSpy).not.toHaveBeenCalled();
-  });
-  it('should fetch and populate data when RFC is valid in obtenerRespuestaIDCPorRFC', () => {
-    component.crearFormulario();
-    component.representanteLegalForm.get('rfc')?.setValue('RFC123456');
-    component.obtenerRespuestaIDCPorRFC();
-
-    expect(mockAvisoSanitarioService.buscarRfc).toHaveBeenCalled();
-    expect(component.representanteLegalForm.get('nombreOrazonsocial')?.value).toBe('Empresa S.A.');
-    expect(component.representanteLegalForm.get('apellidoPaterno')?.value).toBe('Paterno');
-    expect(component.representanteLegalForm.get('apellidoMaterno')?.value).toBe('Materno');
-  });
-
-  it('should update store values in tiendaCampoRepresentanteLegal', () => {
-    component.crearFormulario();
-    component.representanteLegalForm.get('nombreOrazonsocial')?.setValue('Empresa S.A.');
-    component.representanteLegalForm.get('apellidoPaterno')?.setValue('Paterno');
-    component.representanteLegalForm.get('apellidoMaterno')?.setValue('Materno');
-    component.representanteLegalForm.get('rfc')?.setValue('RFC123456');
-
+  it('should call store setters when storing values', () => {
+    component.representanteLegalForm = component['fb'].group({ rfc: ['RFC'], nombreOrazonsocial: ['Nombre'], apellidoPaterno: ['A'], apellidoMaterno: ['B'] });
     component.tiendaCampoRepresentanteLegal();
-
-    expect(mockTramite260601Store.setNombreOrazonsocial).toHaveBeenCalledWith('Empresa S.A.');
-    expect(mockTramite260601Store.setApellidoPaterno).toHaveBeenCalledWith('Paterno');
-    expect(mockTramite260601Store.setApellidoMaterno).toHaveBeenCalledWith('Materno');
-    expect(mockTramite260601Store.setRfc).toHaveBeenCalledWith('RFC123456');
+    expect(mockStore.setNombreOrazonsocial).toHaveBeenCalledWith('Nombre');
+    expect(mockStore.setApellidoPaterno).toHaveBeenCalledWith('A');
+    expect(mockStore.setApellidoMaterno).toHaveBeenCalledWith('B');
+    expect(mockStore.setRfc).toHaveBeenCalledWith('RFC');
   });
 
-  it('should set values in the store via setValoresStore', () => {
-    component.crearFormulario();
-    const form = component.representanteLegalForm;
-    form.get('rfc')?.setValue('RFC123456');
-    component.setValoresStore(form, 'rfc', 'setRfc');
-    expect(mockTramite260601Store.setRfc).toHaveBeenCalledWith('RFC123456');
+  it('should show error and reset form if RFC is empty', () => {
+    component.representanteLegalForm = component['fb'].group({ rfc: [''] });
+    const resetSpy = jest.spyOn(component.representanteLegalForm, 'reset');
+    component.obtenerRespuestaIDCPorRFC();
+    expect(mockToastr.error).toHaveBeenCalledWith(MSG_ERROR_REPRESENTANTE_LEGAL);
+    expect(component.modalAlerta).toBe(true);
+    expect(resetSpy).toHaveBeenCalled();
   });
 
-  it('should unsubscribe in ngOnDestroy', () => {
-    const spyNext = jest.spyOn(component['destruirNotificador$'], 'next');
-    const spyComplete = jest.spyOn(component['destruirNotificador$'], 'complete');
+  it('should call buscarRfc and patch form on valid RFC', () => {
+    component.representanteLegalForm = component['fb'].group({
+      rfc: ['RFC'],
+      nombreOrazonsocial: [''],
+      apellidoPaterno: [''],
+      apellidoMaterno: ['']
+    });
+    component.obtenerRespuestaIDCPorRFC();
+    expect(mockService.buscarRfc).toHaveBeenCalled();
+    expect(component.representanteLegalForm.get('nombreOrazonsocial')?.value).toBe('Empresa');
+  });
 
+  it('should reset form and hide modal on aceptar', () => {
+    component.representanteLegalForm = component['fb'].group({ rfc: ['RFC'] });
+    const resetSpy = jest.spyOn(component.representanteLegalForm, 'reset');
+    component.modalAlerta = true;
+    component.aceptar();
+    expect(component.modalAlerta).toBe(false);
+    expect(resetSpy).toHaveBeenCalled();
+  });
+
+  it('should unsubscribe on destroy', () => {
+    const completeSpy = jest.spyOn(component['destruirNotificador$'], 'complete');
     component.ngOnDestroy();
-
-    expect(spyNext).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

@@ -20,7 +20,8 @@
         "paisDeOrigen":"NUEVA ZELANDIA",
         "paisDeProcedencia":"ARGENTINA (REPUBLICA...",
         "tipoProducto":"Materia prima",
-        "usoEspecifico":"Acondicionamiento, D..."
+        "usoEspecifico":"Acondicionamiento, D...",
+        "fechaCaducidad":"2025-12-31"
       }
     ],
     "message": "Consulta exitosa"

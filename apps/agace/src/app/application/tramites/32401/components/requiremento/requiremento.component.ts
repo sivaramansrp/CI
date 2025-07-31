@@ -1,19 +1,16 @@
+import { Component, OnDestroy } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import {
+  FolioTramite,
+  FormaRequerimiento,
+} from '../../models/datos-tramite.model';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AutoridadService } from '../../services/autoridad.service';
 import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { ConsultaioState } from '@libs/shared/data-access-user/src';
-import { FolioTramite } from '../../models/datos-tramite.model';
-import { FormaRequerimiento } from '../../models/datos-tramite.model';
-import { FormsModule } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SeleccionarDocumentosComponent } from '../seleccionar-documentos/seleccionar-documentos.component';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente que representa el requerimiento del trámite.
@@ -24,7 +21,7 @@ import { takeUntil } from 'rxjs';
   selector: 'app-requiremento',
   /** Define el componente como autónomo (standalone) */
   standalone: true,
-  /** 
+  /**
    * Importa los módulos y componentes necesarios para el funcionamiento.
    * Incluye formularios reactivos, componentes personalizados y módulos comunes.
    */
@@ -55,8 +52,17 @@ export class RequirementoComponent implements OnDestroy {
   public consultaState!: ConsultaioState;
 
   /**
-   * Constructor que inyecta el servicio de enrutamiento
-   * @param router Servicio para navegar entre rutas
+   * Indicador booleano que determina si el botón del contenedor debe mostrarse.
+   * `true` para mostrar el botón, `false` para ocultarlo.
+   */
+  containerbtn: boolean = true;
+
+  /**
+   * Constructor que inyecta los servicios necesarios para navegación y acceso a datos.
+   *
+   * @param {Router} router - Servicio de Angular para navegar entre rutas.
+   * @param {ConsultaioQuery} consultaQuery - Query para consultar datos globales de la solicitud o sesión del usuario.
+   * @param {AutoridadService} autoridadService - Servicio para obtener catálogos y datos de autoridad.
    */
   constructor(
     private router: Router,
@@ -69,6 +75,14 @@ export class RequirementoComponent implements OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
+          if (
+            this.consultaState?.tipoDeTramite ===
+            'Registro de solicitud de servicio'
+          ) {
+            this.containerbtn = false;
+          } else {
+            this.containerbtn = true;
+          }
         })
       )
       .subscribe();
@@ -99,8 +113,6 @@ export class RequirementoComponent implements OnDestroy {
         }
       });
   }
-
-
 
   /**
    * Cambia el índice de pestaña activa
