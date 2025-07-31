@@ -1,6 +1,7 @@
 .text-left {
   text-align: left;
 }
-.no-resize {
-  resize: none;
+
+textarea.no-resize {
+  overflow: hidden;
 }
