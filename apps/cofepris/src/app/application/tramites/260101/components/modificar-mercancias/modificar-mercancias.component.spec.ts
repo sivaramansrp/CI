@@ -1,133 +1,113 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { ModificarMercanciasComponent } from './modificar-mercancias.component';
-import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { ConsultaioQuery, CrosslistComponent } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { SolicitudDatosService } from '../../services/solicitud-datos.service';
-import { Solicitud260101Query } from '../../estados/tramites260101.query';
 import { Solicitud260101Store } from '../../estados/tramites260101.store';
-
-// Mocks
-const mockSolicitudDatosService = {
-  obtenerClavesDeLotesListo: jest.fn(() => of([{ lotes: 'L1', fabricacion: '2023-01-01', caducidad: '2024-01-01' }])),
-  obtenerMercanciaListo: jest.fn(() => of([{ descripcionFraccionArancelaria: 'desc', umt: 'UMT1' }])),
-  obtenerCrosslisto: jest.fn(() => of({
-    paisOrigenCrossList: { items: [] },
-    paisProcedencisCrossList: { items: [] },
-    usoEspecificoCrossList: { items: [] }
-  })),
-  obtenerMercanciaCatalogos: jest.fn(() => of({
-    productosCatalogo: {},
-    especificarCatalogo: {},
-    tipoProductoCatalogo: {},
-    umcCatalogo: {}
-  }))
-};
-
-const mockSolicitud260101Store = {
-  setClavesDeLotes: jest.fn(),
-  setDescripcionFraccionArancelaria: jest.fn(),
-  setUmt: jest.fn(),
-  setCadenaDeDependencia: jest.fn(),
-  setEspecificarProducto: jest.fn(),
-  setTipoProducto: jest.fn(),
-  setFechaFabricacion: jest.fn(),
-  setFechaCaducidad: jest.fn(),
-  setNombreProductoEspecifico: jest.fn(),
-  setMarca: jest.fn(),
-  setFraccionArancelaria: jest.fn(),
-  setCantidadUMT: jest.fn(),
-  setCantidadUMC: jest.fn(),
-  setUmc: jest.fn(),
-  setClaveDeLosLotes: jest.fn(),
-  addMercanciasDatos: jest.fn(),
-  addClaveDeLote: jest.fn(),
-  removeClaveDeLote: jest.fn()
-};
-
-const mockSolicitud260101Query = {
-  seleccionarSolicitud$: of({
-    clasificaionProductos: 'A',
-    especificarProducto: 'B',
-    nombreProductoEspecifico: 'C',
-    marca: 'D',
-    tipoProducto: 'E',
-    fraccionArancelaria: 'F',
-    descripcionFraccionArancelaria: 'G',
-    cantidadUMT: 1,
-    umt: 'UMT',
-    cantidadUMC: 2,
-    umc: 'UMC',
-    claveDeLosLotes: 'L1',
-    fechaFabricacion: '2023-01-01',
-    fechaCaducidad: '2024-01-01',
-    clavesDeLotes: [{ lotes: 'L1', fabricacion: '2023-01-01', caducidad: '2024-01-01' }]
-  })
-};
-
-const mockConsultaioQuery = {
-  selectConsultaioState$: of({ readonly: false })
-};
+import { Solicitud260101Query } from '../../estados/tramites260101.query';
+import { SolicitudDatosService } from '../../services/solicitud-datos.service';
+import { CatalogoSelectComponent, ConsultaioQuery, CrosslistComponent, InputFechaComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { ClavesDeLotes } from '../../models/claves-de-lotes.model';
+import {
+  MercanciaCatalogos,
+  MercanciaCrossList,
+  Mercancia,
+} from '../../models/mercancia.model';
+import { CommonModule } from '@angular/common';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('ModificarMercanciasComponent', () => {
   let component: ModificarMercanciasComponent;
-  let fixture: ComponentFixture<ModificarMercanciasComponent>;
+  let fixture: any;
+
+  let mockStore: jest.Mocked<Solicitud260101Store>;
+  let mockQuery: jest.Mocked<Solicitud260101Query>;
+  let mockDatosService: jest.Mocked<SolicitudDatosService>;
+  let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
 
   beforeEach(async () => {
-    jest.clearAllMocks();
+    mockStore = {
+      setClavesDeLotes: jest.fn(() => of()),
+      setDescripcionFraccionArancelaria: jest.fn(() => of()),
+      setUmt: jest.fn(() => of()),
+      setCadenaDeDependencia: jest.fn(() => of()),
+      setEspecificarProducto: jest.fn(() => of()),
+      setTipoProducto: jest.fn(() => of()),
+      setFechaFabricacion: jest.fn(() => of()),
+      setFechaCaducidad: jest.fn(() => of()),
+      setNombreProductoEspecifico: jest.fn(() => of()),
+      setMarca: jest.fn(() => of()),
+      setFraccionArancelaria: jest.fn(() => of()),
+      setCantidadUMT: jest.fn(() => of()),
+      setCantidadUMC: jest.fn(() => of()),
+      setUmc: jest.fn(() => of()),
+      setClaveDeLosLotes: jest.fn(() => of()),
+      addMercanciasDatos: jest.fn(() => of()),
+      addClaveDeLote: jest.fn(() => of()),
+      removeClaveDeLote: jest.fn(() => of()),
+    } as any;
+
+    mockQuery = {
+      seleccionarSolicitud$: of({ clavesDeLotes: [] }),
+    } as any;
+
+    mockDatosService = {
+      obtenerClavesDeLotesListo: jest.fn().mockReturnValue(of([])),
+      obtenerMercanciaListo: jest
+        .fn()
+        .mockReturnValue(
+          of([
+            { descripcionFraccionArancelaria: 'desc', umt: 'umt' } as Mercancia,
+          ])
+        ),
+      obtenerCrosslisto: jest.fn().mockReturnValue(
+        of({
+          paisOrigenCrossList: {},
+          paisProcedencisCrossList: {},
+          usoEspecificoCrossList: {},
+        } as MercanciaCrossList)
+      ),
+      obtenerMercanciaCatalogos: jest.fn().mockReturnValue(
+        of({
+          productosCatalogo: {},
+          especificarCatalogo: {},
+          tipoProductoCatalogo: {},
+          umcCatalogo: {},
+        } as MercanciaCatalogos)
+      ),
+    } as any;
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false }),
+    } as any;
+
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule,
+      imports: [
         ModificarMercanciasComponent,
-              CommonModule,
-              ReactiveFormsModule,
-              FormsModule,
-              CrosslistComponent,
-              TablaDinamicaComponent,
-              InputFechaComponent,
-              CatalogoSelectComponent,
-              TituloComponent,
-              HttpClientTestingModule
+        ReactiveFormsModule,
+        CommonModule,
+        FormsModule,
+        CrosslistComponent,
+        TablaDinamicaComponent,
+        InputFechaComponent,
+        CatalogoSelectComponent,
+        TituloComponent,
       ],
-      declarations: [],
       providers: [
+        provideHttpClientTesting(),
         FormBuilder,
-        { provide: SolicitudDatosService, useValue: mockSolicitudDatosService },
-        { provide: Solicitud260101Store, useValue: mockSolicitud260101Store },
-        { provide: Solicitud260101Query, useValue: mockSolicitud260101Query },
-        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
-      ]
-    })
-      .overrideComponent(ModificarMercanciasComponent, {
-        set: {
-          providers: [
-            { provide: FormBuilder, useValue: new FormBuilder() },
-            { provide: 'SolicitudDatosService', useValue: mockSolicitudDatosService },
-            { provide: 'Solicitud260101Store', useValue: mockSolicitud260101Store },
-            { provide: 'Solicitud260101Query', useValue: mockSolicitud260101Query },
-            { provide: 'ConsultaioQuery', useValue: mockConsultaioQuery }
-          ]
-        }
-      })
-      .compileComponents();
+        { provide: Solicitud260101Store, useValue: mockStore },
+        { provide: Solicitud260101Query, useValue: mockQuery },
+        { provide: SolicitudDatosService, useValue: mockDatosService },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ModificarMercanciasComponent);
     component = fixture.componentInstance;
-    // Patch DI tokens
-    (component as any).solicitudDatosService = mockSolicitudDatosService;
-    (component as any).solicitud260101Store = mockSolicitud260101Store;
-    (component as any).solicitud260101Query = mockSolicitud260101Query;
-    (component as any).consultaioQuery = mockConsultaioQuery;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
@@ -152,144 +132,195 @@ describe('ModificarMercanciasComponent', () => {
   it('should call setCadenaDeDependencia on seleccionaProductos', () => {
     const catalogo = { descripcion: 'desc' } as any;
     component.seleccionaProductos(catalogo);
-    expect(mockSolicitud260101Store.setCadenaDeDependencia).toHaveBeenCalledWith('desc');
+    expect(mockStore.setCadenaDeDependencia).toHaveBeenCalledWith('desc');
   });
 
   it('should call setEspecificarProducto on seleccionaEspecificar', () => {
     const catalogo = { id: 1 } as any;
     component.seleccionaEspecificar(catalogo);
-    expect(mockSolicitud260101Store.setEspecificarProducto).toHaveBeenCalledWith(1);
+    expect(mockStore.setEspecificarProducto).toHaveBeenCalledWith(1);
   });
 
   it('should call setTipoProducto on seleccionaTipoProducto', () => {
     const catalogo = { id: 2 } as any;
     component.seleccionaTipoProducto(catalogo);
-    expect(mockSolicitud260101Store.setTipoProducto).toHaveBeenCalledWith(2);
+    expect(mockStore.setTipoProducto).toHaveBeenCalledWith(2);
   });
 
   it('should call setFechaFabricacion on seleccionarFechaFabricacion', () => {
-    component.seleccionarFechaFabricacion('2023-01-01');
-    expect(mockSolicitud260101Store.setFechaFabricacion).toHaveBeenCalledWith('2023-01-01');
+    component.seleccionarFechaFabricacion('2024-01-01');
+    expect(mockStore.setFechaFabricacion).toHaveBeenCalledWith('2024-01-01');
   });
 
   it('should call setFechaCaducidad on seleccionarFechaCaducidad', () => {
-    component.seleccionarFechaCaducidad('2024-01-01');
-    expect(mockSolicitud260101Store.setFechaCaducidad).toHaveBeenCalledWith('2024-01-01');
+    component.seleccionarFechaCaducidad('2024-12-31');
+    expect(mockStore.setFechaCaducidad).toHaveBeenCalledWith('2024-12-31');
   });
 
   it('should call setNombreProductoEspecifico on setNombreProductoEspecifico', () => {
     const event = { target: { value: 'nombre' } } as any;
     component.setNombreProductoEspecifico(event);
-    expect(mockSolicitud260101Store.setNombreProductoEspecifico).toHaveBeenCalledWith('nombre');
+    expect(mockStore.setNombreProductoEspecifico).toHaveBeenCalledWith(
+      'nombre'
+    );
   });
 
   it('should call setMarca on setMarca', () => {
     const event = { target: { value: 'marca' } } as any;
     component.setMarca(event);
-    expect(mockSolicitud260101Store.setMarca).toHaveBeenCalledWith('marca');
+    expect(mockStore.setMarca).toHaveBeenCalledWith('marca');
   });
 
   it('should call setFraccionArancelaria on setFraccionArancelaria', () => {
     const event = { target: { value: 'fraccion' } } as any;
     component.setFraccionArancelaria(event);
-    expect(mockSolicitud260101Store.setFraccionArancelaria).toHaveBeenCalledWith('fraccion');
+    expect(mockStore.setFraccionArancelaria).toHaveBeenCalledWith('fraccion');
   });
 
   it('should call setCantidadUMT on setCantidadUMT', () => {
     const event = { target: { value: '10' } } as any;
     component.setCantidadUMT(event);
-    expect(mockSolicitud260101Store.setCantidadUMT).toHaveBeenCalledWith('10');
+    expect(mockStore.setCantidadUMT).toHaveBeenCalledWith('10');
   });
 
   it('should call setCantidadUMC on setCantidadUMC', () => {
     const event = { target: { value: '20' } } as any;
     component.setCantidadUMC(event);
-    expect(mockSolicitud260101Store.setCantidadUMC).toHaveBeenCalledWith('20');
+    expect(mockStore.setCantidadUMC).toHaveBeenCalledWith('20');
   });
 
   it('should call setUmc on setUMC', () => {
     const catalogo = { id: 3 } as any;
     component.setUMC(catalogo);
-    expect(mockSolicitud260101Store.setUmc).toHaveBeenCalledWith(3);
+    expect(mockStore.setUmc).toHaveBeenCalledWith(3);
   });
 
   it('should call setClaveDeLosLotes on setClaveDeDeLosLotes', () => {
     const event = { target: { value: 'clave' } } as any;
     component.setClaveDeDeLosLotes(event);
-    expect(mockSolicitud260101Store.setClaveDeLosLotes).toHaveBeenCalledWith('clave');
+    expect(mockStore.setClaveDeLosLotes).toHaveBeenCalledWith('clave');
   });
 
   it('should add mercancias on agregarMercanias', () => {
-    component.datosMercanciaForm = new FormBuilder().group({
-      clasificaionProductos: ['A'],
-      especificarProducto: ['B'],
-      nombreProductoEspecifico: ['C'],
-      marca: ['D'],
-      tipoProducto: ['E'],
-      fraccionArancelaria: ['F'],
-      descripcionFraccionArancelaria: ['G'],
-      cantidadUMT: [1],
-      umt: ['UMT'],
-      cantidadUMC: [2],
-      umc: ['UMC'],
-      claveDeLosLotes: ['L1'],
-      fechaFabricacion: ['2023-01-01'],
-      fechaCaducidad: ['2024-01-01']
+    component.datosMercanciaForm.patchValue({
+      clasificaionProductos: 'c1',
+      especificarProducto: 'e1',
+      nombreProductoEspecifico: 'n1',
+      marca: 'm1',
+      tipoProducto: 't1',
+      fraccionArancelaria: 'f1',
+      descripcionFraccionArancelaria: 'desc',
+      cantidadUMT: '10',
+      umt: 'umt',
+      cantidadUMC: '20',
+      umc: 'umc',
     });
     component.agregarMercanias();
-    expect(mockSolicitud260101Store.addMercanciasDatos).toHaveBeenCalled();
+    expect(mockStore.addMercanciasDatos).toHaveBeenCalled();
   });
 
-  it('should add clave de lote on agregarClavesDeLotes if not empty', () => {
-    component.datosMercanciaForm = new FormBuilder().group({
-      claveDeLosLotes: ['L1'],
-      fechaFabricacion: ['2023-01-01'],
-      fechaCaducidad: ['2024-01-01']
+  it('should add claves de lotes on agregarClavesDeLotes if not empty', () => {
+    component.datosMercanciaForm.patchValue({
+      claveDeLosLotes: 'lote1',
+      fechaFabricacion: '2024-01-01',
+      fechaCaducidad: '2024-12-31',
     });
     component.agregarClavesDeLotes();
-    expect(mockSolicitud260101Store.addClaveDeLote).toHaveBeenCalled();
+    expect(mockStore.addClaveDeLote).toHaveBeenCalledWith({
+      lotes: 'lote1',
+      fabricacion: '2024-01-01',
+      caducidad: '2024-12-31',
+    });
   });
 
-  it('should not add clave de lote on agregarClavesDeLotes if empty', () => {
-    component.datosMercanciaForm = new FormBuilder().group({
-      claveDeLosLotes: [''],
-      fechaFabricacion: [''],
-      fechaCaducidad: ['']
+  it('should not add claves de lotes if empty', () => {
+    component.datosMercanciaForm.patchValue({
+      claveDeLosLotes: '',
+      fechaFabricacion: '',
+      fechaCaducidad: '',
     });
     component.agregarClavesDeLotes();
-    expect(mockSolicitud260101Store.addClaveDeLote).not.toHaveBeenCalled();
+    expect(mockStore.addClaveDeLote).not.toHaveBeenCalled();
   });
 
   it('should update selectedClavesDeLotes on getListaClavesDeLotes', () => {
-    const lotes = [{ lotes: 'L1', fabricacion: '2023-01-01', caducidad: '2024-01-01' }];
+    const lotes: ClavesDeLotes[] = [
+      { lotes: 'l1', fabricacion: '', caducidad: '' },
+    ];
     component.getListaClavesDeLotes(lotes);
     expect(component.selectedClavesDeLotes).toEqual(lotes);
   });
 
-  it('should patch form on modificarClavesDeLotes if selected', () => {
-    component.datosMercanciaForm = new FormBuilder().group({
-      claveDeLosLotes: [''],
-      fechaFabricacion: [''],
-      fechaCaducidad: ['']
-    });
-    component.selectedClavesDeLotes = [{ lotes: 'L2', fabricacion: '2022-01-01', caducidad: '2023-01-01' }];
+  it('should patch form values on modificarClavesDeLotes', () => {
+    const lotes: ClavesDeLotes[] = [
+      { lotes: 'l1', fabricacion: 'f1', caducidad: 'c1' },
+    ];
+    component.selectedClavesDeLotes = lotes;
     component.modificarClavesDeLotes();
-    expect(component.datosMercanciaForm.value.claveDeLosLotes).toBe('L2');
-    expect(component.datosMercanciaForm.value.fechaFabricacion).toBe('2022-01-01');
-    expect(component.datosMercanciaForm.value.fechaCaducidad).toBe('2023-01-01');
+    expect(component.datosMercanciaForm.get('claveDeLosLotes')?.value).toBe(
+      'l1'
+    );
+    expect(component.datosMercanciaForm.get('fechaFabricacion')?.value).toBe(
+      'f1'
+    );
+    expect(component.datosMercanciaForm.get('fechaCaducidad')?.value).toBe(
+      'c1'
+    );
   });
 
-  it('should call removeClaveDeLote on eliminarClavesDeLotes if selected', () => {
-    component.selectedClavesDeLotes = [{ lotes: 'L1', fabricacion: '2023-01-01', caducidad: '2024-01-01' }];
+  it('should call removeClaveDeLote on eliminarClavesDeLotes', () => {
+    const lotes: ClavesDeLotes[] = [
+      { lotes: 'l1', fabricacion: 'f1', caducidad: 'c1' },
+    ];
+    component.selectedClavesDeLotes = lotes;
     component.eliminarClavesDeLotes();
-    expect(mockSolicitud260101Store.removeClaveDeLote).toHaveBeenCalledWith(component.selectedClavesDeLotes[0]);
+    expect(mockStore.removeClaveDeLote).toHaveBeenCalledWith(lotes[0]);
+  });
+
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(guardarSpy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario if esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
+    const initSpy = jest.spyOn(component, 'inicializarFormulario');
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(initSpy).toHaveBeenCalled();
+  });
+
+  it('should disable form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.inicializarFormulario = jest.fn(() => {
+      component.datosMercanciaForm = new FormBuilder().group({
+        test: ['']
+      });
+    }) as any;
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.datosMercanciaForm.disabled).toBe(true);
+  });
+
+  it('should enable form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.inicializarFormulario = jest.fn(() => {
+      component.datosMercanciaForm = new FormBuilder().group({
+        test: ['']
+      });
+    }) as any;
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.datosMercanciaForm.enabled).toBe(true);
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const spy = jest.spyOn((component as any).destroyNotifier$, 'next');
-    const spy2 = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(
+      (component as any).destroyNotifier$,
+      'complete'
+    );
     component.ngOnDestroy();
-    expect(spy).toHaveBeenCalled();
-    expect(spy2).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

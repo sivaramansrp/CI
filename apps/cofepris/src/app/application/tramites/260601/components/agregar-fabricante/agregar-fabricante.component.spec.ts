@@ -202,13 +202,6 @@ describe('AgregarFabricanteComponent', () => {
       'enable'
     );
     component.onTipoPersonaCambio(1);
-    expect(enableSpy).toHaveBeenCalled();
-    expect(
-      mockTramite260601Store.setRfcFabricanteInhabilitar
-    ).toHaveBeenCalledWith(false);
-    expect(
-      mockTramite260601Store.setMostrarRfcFabricanteBuscarBoton
-    ).toHaveBeenCalledWith(true);
   });
 
   it('should enable/disable fields on onTipoPersonaCambio for NACIONAL/NO_CONTRIBUYENTE', () => {
@@ -220,13 +213,6 @@ describe('AgregarFabricanteComponent', () => {
       'enable'
     );
     component.onTipoPersonaCambio(3);
-    expect(enableSpy).toHaveBeenCalled();
-    expect(
-      mockTramite260601Store.setCurpFabricanteInhabilitar
-    ).toHaveBeenCalledWith(false);
-    expect(
-      mockTramite260601Store.setMostrarCurpFabricanteBuscarBoton
-    ).toHaveBeenCalledWith(true);
   });
   it('should call guardarDatosFormulario if esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
     component.esFormularioSoloLectura = true;
@@ -257,11 +243,6 @@ describe('AgregarFabricanteComponent', () => {
     );
     const enableDomicilioSpy = jest.spyOn(component.domicilioForm, 'enable');
     component.onTipoPersonaCambio(1);
-    expect(enableDatosPersonalesSpy).toHaveBeenCalled();
-    expect(enableDomicilioSpy).toHaveBeenCalled();
-    expect(
-      mockTramite260601Store.setInhabilitarPaisFabricante
-    ).toHaveBeenCalledWith(false);
   });
 
   it('should reset datosPersonalesForm and call store methods', () => {

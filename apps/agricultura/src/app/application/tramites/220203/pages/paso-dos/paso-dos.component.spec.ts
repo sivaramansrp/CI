@@ -1,19 +1,14 @@
 // @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
 import { PasoDosComponent } from './paso-dos.component';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { HttpClientModule } from '@angular/common/http';
+import { of as observableOf } from 'rxjs';
 
 describe('PasoDosComponent', () => {
   let fixture;
-  let component;
+  let componente;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -21,42 +16,39 @@ describe('PasoDosComponent', () => {
       declarations: [
         PasoDosComponent,
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         CatalogosService
       ]
-    }).overrideComponent(PasoDosComponent, {
-
     }).compileComponents();
     fixture = TestBed.createComponent(PasoDosComponent);
-    component = fixture.debugElement.componentInstance;
+    componente = fixture.debugElement.componentInstance;
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
+    componente.ngOnDestroy = function() {};
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
-    expect(component).toBeTruthy();
+  it('debería ejecutar el constructor', async () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.getTiposDocumentos = jest.fn();
-    component.ngOnInit();
+  it('debería ejecutar ngOnInit', async () => {
+    componente.getTiposDocumentos = jest.fn();
+    componente.ngOnInit();
   });
 
-  it('should run #getTiposDocumentos()', async () => {
-    component.catalogosServices = component.catalogosServices || {};
-    component.catalogosServices.getCatalogo = jest.fn().mockReturnValue(observableOf({}));
-    component.getTiposDocumentos();
+  it('debería ejecutar getTiposDocumentos', async () => {
+    componente.catalogosServices = componente.catalogosServices || {};
+    componente.catalogosServices.getCatalogo = jest.fn().mockReturnValue(observableOf({}));
+    componente.getTiposDocumentos();
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
-    component.ngOnDestroy();
+  it('debería ejecutar ngOnDestroy', async () => {
+    componente.destroyNotifier$ = componente.destroyNotifier$ || {};
+    componente.destroyNotifier$.next = jest.fn();
+    componente.destroyNotifier$.complete = jest.fn();
+    componente.ngOnDestroy();
   });
 
 });

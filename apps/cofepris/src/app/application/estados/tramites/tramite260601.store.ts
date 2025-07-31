@@ -381,7 +381,7 @@ export function createInitialState(): AvisoSanitarioState {
         fraccionArancelariaDescripcion: '',
         modelo: '',
         productoDescripcion: '',
-        cvePaisDestino: '',
+        cvePaisDestino: '1',
         seleccionadaManifiesto: [false],
         informacionConfidencial: '',
         rfc: '',

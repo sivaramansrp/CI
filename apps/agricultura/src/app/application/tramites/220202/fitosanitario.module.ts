@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
@@ -63,7 +63,6 @@ import { TercerospageComponent } from './components/tercerospage/tercerospage.co
   ],
   providers: [
     ToastrService
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  ]
 })
 export class FitosanitarioModule { }

@@ -84,6 +84,7 @@ describe('CertificadosOrigenGridService', () => {
       formDatosCertificado: {},
       mercanciaForm: {},
       buscarMercancia: [],
+      mercanciaTabla: [],
       formaValida: {}
     };
 
@@ -113,6 +114,7 @@ describe('CertificadosOrigenGridService', () => {
       formDatosCertificado: {},
       mercanciaForm: {},
       buscarMercancia: [],
+      mercanciaTabla: [],
       formaValida: {}
     };
 

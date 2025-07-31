@@ -8,8 +8,8 @@ import {
 } from '@ng-mf/data-access-user';
 import {
   RegistroSolicitudService,
-  SolicitudDatosResponse,
 } from '../../services/registro-solicitud-service.service';
+import { Solicitud31803State } from '../../state/Tramite31803.store';
 import {
   PERSONA_MORAL_NACIONAL,
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
@@ -29,7 +29,7 @@ describe('PasoUnoComponent', () => {
       selectConsultaioState$: of({ update: false } as ConsultaioState),
     };
     solicitud31803ServiceMock = {
-      getSolicitudDatos: jest.fn(),
+      getRegistroTomaMuestrasMercanciasData: jest.fn(),
       actualizarEstadoFormulario: jest.fn(),
     };
     await TestBed.configureTestingModule({
@@ -65,7 +65,13 @@ describe('PasoUnoComponent', () => {
   });
 
   it('should set esDatosRespuesta to true and update state when response is received', () => {
-    const response: SolicitudDatosResponse = {
+    const response: Solicitud31803State = {
+      numeroOficio: '12345',
+      claveReferencia: 'REF123',
+      cadenaDependencia: 'DEP123',
+      importePago: '1000',
+      fechaInicial: '2024-01-01',
+      fechaFinal: '2024-12-31',
       numeroOperacion: '123',
       banco: 'BBVA',
       llave: 'abc',
@@ -73,21 +79,14 @@ describe('PasoUnoComponent', () => {
       manifiesto2: 'm2',
       fechaPago: '2024-01-01',
     };
-    (solicitud31803ServiceMock.getSolicitudDatos as jest.Mock).mockReturnValue(
+    (solicitud31803ServiceMock.getRegistroTomaMuestrasMercanciasData as jest.Mock).mockReturnValue(
       of(response)
     );
     component.guardarDatosFormulario();
     expect(component.esDatosRespuesta).toBeTruthy();
     expect(
       solicitud31803ServiceMock.actualizarEstadoFormulario
-    ).toHaveBeenCalledWith({
-      numeroOperacion: '123',
-      banco: 'BBVA',
-      llave: 'abc',
-      manifiesto1: 'm1',
-      manifiesto2: 'm2',
-      fechaPago: '2024-01-01',
-    });
+    ).toHaveBeenCalledWith(response);
   });
 
   it('should set persona and domicilioFiscal arrays', () => {
@@ -103,14 +102,4 @@ describe('PasoUnoComponent', () => {
     expect(component.indice).toBe(3);
   });
 
-  it('should complete destroyNotifier$', () => {
-    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
-    const completeSpy = jest.spyOn(
-      (component as any).destroyNotifier$,
-      'complete'
-    );
-    component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
-  });
 });

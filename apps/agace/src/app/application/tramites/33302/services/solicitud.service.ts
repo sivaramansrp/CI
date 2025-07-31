@@ -94,6 +94,18 @@ export class Solicitud32301Service {
     this.tramite33302Store.actualizarEstado({fechaDePago:DATOS.fechaDePago});
     this.tramite33302Store.actualizarEstado({importeDePago:DATOS.importeDePago});
     this.tramite33302Store.actualizarEstado({numeroDe:DATOS.numeroDe});
+    this.tramite33302Store.actualizarEstado({foreignClientsSuppliers:DATOS.foreignClientsSuppliers});
+    this.tramite33302Store.actualizarEstado({nationalSuppliers:DATOS.nationalSuppliers});
+    this.tramite33302Store.actualizarEstado({modificationsMembers:DATOS.modificationsMembers});
+    this.tramite33302Store.actualizarEstado({changesToLegalDocuments:DATOS.changesToLegalDocuments});
+    this.tramite33302Store.actualizarEstado({mergerOrSplitNotice:DATOS.mergerOrSplitNotice});
+    this.tramite33302Store.actualizarEstado({additionFractions:DATOS.additionFractions});
+    this.tramite33302Store.actualizarEstado({contratados:DATOS.contratados});
+    this.tramite33302Store.actualizarEstado({expirado:DATOS.expirado});
+    this.tramite33302Store.actualizarEstado({derechos:DATOS.derechos});
+    this.tramite33302Store.actualizarEstado({acepto253:DATOS.acepto253});
+    this.tramite33302Store.actualizarEstado({presenten:DATOS.presenten});
+
   }
 
   /**

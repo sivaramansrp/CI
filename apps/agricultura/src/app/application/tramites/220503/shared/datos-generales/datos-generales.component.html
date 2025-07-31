@@ -28,7 +28,7 @@
             [catalogo]="aduanaIngreso.catalogos"
             [label]="aduanaIngreso.labelNombre"
             [placeholder]="aduanaIngreso.primerOpcion"
-            [isDisabled]="true"
+            [isDisabled]="esFormularioSoloLectura"
             formControlName="aduanaIngreso"
             (selectionChange)="seleccionarAduanaIngreso($event)"
           ></app-catalogo-select>
@@ -38,7 +38,7 @@
             [catalogo]="oficianaInspeccion.catalogos"
             [label]="oficianaInspeccion.labelNombre"
             [placeholder]="oficianaInspeccion.primerOpcion"
-            [isDisabled]="true"
+            [isDisabled]="esFormularioSoloLectura"
             formControlName="oficinaInspeccion"
             (selectionChange)="seleccionarOficianaInspeccion($event)"
           ></app-catalogo-select>
@@ -82,7 +82,7 @@
             [catalogo]="establecimiento.catalogos"
             [label]="establecimiento.labelNombre"
             [placeholder]="establecimiento.primerOpcion"
-            [isDisabled]="true"
+            [isDisabled]="esFormularioSoloLectura"
             formControlName="establecimientoTIF"
           ></app-catalogo-select>
         </div>

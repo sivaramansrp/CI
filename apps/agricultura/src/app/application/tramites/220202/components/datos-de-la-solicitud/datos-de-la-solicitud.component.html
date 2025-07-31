@@ -147,10 +147,26 @@
 
     <div class="row mt-3">
       <div class="col-md-12 d-flex justify-content-end">
-        <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura || !tieneRegistrosSeleccionados"  (click)="modificarMercancia()">Modificar</button>
-        <button type="button" class="btn btn-danger ms-3"[disabled]="esFormularioSoloLectura || !tieneRegistrosSeleccionados" (click)="eliminarMercancia()">Eliminar</button>
+        <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura || !tieneRegistrosSeleccionados || cuerpoTabla.length === 0"  (click)="modificarMercancia()">Modificar</button>
+        <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura || !tieneRegistrosSeleccionados || cuerpoTabla.length === 0" (click)="eliminarMercancia()">Eliminar</button>
         <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura" (click)="agregarMercancia()">Agregar</button>
       </div>
     </div>`
 
+  <div>
+    ` @if(moduloEmergente){
+    <lib-notificaciones
+      [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="eliminarPedimento($event)"
+    ></lib-notificaciones>
+    } @if(eliminarDatosTabla){
+    <lib-notificaciones
+      [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="eliminarPedimentoDatos($event)"
+    ></lib-notificaciones>
+    }
+  </div>
+
 </div>
+
+<app-modal #modalRef></app-modal>

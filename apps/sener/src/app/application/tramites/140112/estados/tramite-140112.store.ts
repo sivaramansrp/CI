@@ -8,14 +8,13 @@ export interface Tramites140112State {
   /**
    * Object containing the desistimiento property.
    */
-  permisoCancelar: {
     /**
      * The desistimiento property.
      * @type {string}
      */
-    desistimiento: string;
-  };
-}
+    descripcionClobGenerica1: string;
+    declaracionBoolean:boolean;
+  }
 
 /**
  * Function to create the initial state for Tramites140112.
@@ -23,9 +22,8 @@ export interface Tramites140112State {
  */
 export function createInitialState(): Tramites140112State {
   return {
-    permisoCancelar: {
-      desistimiento: '',
-    }
+    descripcionClobGenerica1: '',
+    declaracionBoolean: false,
   };
 }
 
@@ -45,16 +43,13 @@ export class Tramite140112Store extends Store<Tramites140112State> {
   }
 
   /**
-   * Updates the desistimiento property in the state.
-   * @param {string} desistimiento - The new value for desistimiento.
+   * Method to set the data in the store.
+   * @param {Partial<Tramites140112State>} Datos - The data to set in the store.
    */
-  public setDesistimiento(desistimiento: string):void {
+  public establecerDatos(Datos:Partial<Tramites140112State>): void {
     this.update((state) => ({
       ...state,
-      permisoCancelar: {
-        ...state.permisoCancelar,
-        desistimiento,
-      }
+      ...Datos,
     }));
   }
 }

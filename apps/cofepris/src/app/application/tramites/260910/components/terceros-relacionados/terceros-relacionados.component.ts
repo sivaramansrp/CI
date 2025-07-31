@@ -5,7 +5,7 @@ import { Destinatario } from '../../models/destinatario.model';
 import { ElementRef } from '@angular/core';
 import { Fabricante } from '../../models/fabricante.model';
 import { Facturador } from '../../models/facturador.model';
-import { Notificacion } from '@libs/shared/data-access-user/src';
+import { Notificacion, TITULO_MODAL_AVISO } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../models/proveedor.model';
@@ -371,7 +371,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
-      titulo: 'Avisos',
+      titulo: TITULO_MODAL_AVISO,
       mensaje: '¿Confirma la eliminación los registros marcados?',
       cerrar: false,
       tiempoDeEspera: 2000,

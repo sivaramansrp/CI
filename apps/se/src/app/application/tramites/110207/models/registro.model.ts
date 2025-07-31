@@ -45,7 +45,7 @@ export interface SeleccionadasTabla {
  */
 export const FECHA_INICIAL = {
   /** Etiqueta para la fecha inicial. */
-  labelNombre: 'Fecha inicio',
+  labelNombre: 'Fecha inicio:',
   /** Indica si el campo es obligatorio. */
   required: false,
   /** Indica si el campo está habilitado. */
@@ -57,7 +57,7 @@ export const FECHA_INICIAL = {
  */
 export const FECHA_FINAL = {
   /** Etiqueta para la fecha final. */
-  labelNombre: 'Fecha fin',
+  labelNombre: 'Fecha fin:',
   /** Indica si el campo es obligatorio. */
   required: false,
   /** Indica si el campo está habilitado. */

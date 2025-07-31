@@ -2,17 +2,17 @@
 {
     "code": 200,
     "data": [
-      { "id": 1, "descripcion": "AGUASCALIENTES" },
-      { "id": 2, "descripcion": "BAJA CALIFORNIA" },
-      { "id": 3, "descripcion": "BAJA CALIFORNIA SUR" },
-      { "id": 4, "descripcion": "CAMPECHE" },
-      { "id": 5, "descripcion": "CHIAPAS" },
-      { "id": 6, "descripcion": "CHIHUAHUA" },
-      { "id": 7, "descripcion": "CIUDAD DE MÉXICO" },
-      { "id": 8, "descripcion": "COAHUILA DE ZARAGOZA" },
-      { "id": 9, "descripcion": "COLIMA" },
-      { "id": 10, "descripcion": "DURANGO" },
-      { "id": 11, "descripcion": "GUANAJUATO"}
+      { "id": "AGUASCALIENTES", "descripcion": "AGUASCALIENTES" },
+      { "id": "BAJA CALIFORNIA", "descripcion": "BAJA CALIFORNIA" },
+      { "id": "BAJA CALIFORNIA SUR", "descripcion": "BAJA CALIFORNIA SUR" },
+      { "id": "CAMPECHE", "descripcion": "CAMPECHE" },
+      { "id": "CHIAPAS", "descripcion": "CHIAPAS" },
+      { "id": "CHIHUAHUA", "descripcion": "CHIHUAHUA" },
+      { "id": "CIUDAD DE MÉXICO", "descripcion": "CIUDAD DE MÉXICO" },
+      { "id": "COAHUILA DE ZARAGOZA", "descripcion": "COAHUILA DE ZARAGOZA" },
+      { "id": "COLIMA", "descripcion": "COLIMA" },
+      { "id": "DURANGO", "descripcion": "DURANGO" },
+      { "id": "GUANAJUATO", "descripcion": "GUANAJUATO"}
   ],
     "message": "Consulta exitosa"
 }

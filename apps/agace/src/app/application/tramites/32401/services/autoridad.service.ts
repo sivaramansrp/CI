@@ -20,6 +20,7 @@ export class AutoridadService {
    * Constructor del servicio.
    * Inyecta el cliente HTTP para realizar solicitudes.
    * @param http Cliente HTTP para la comunicación con el servidor.
+   * @param {Tramite32401Store} tramite32401Store - Store encargado de gestionar el estado del trámite 32401.
    */
   constructor(
     private http: HttpClient,
@@ -100,5 +101,18 @@ export class AutoridadService {
   actualizarEstadoFormulario(valor: FormaRequerimiento): void {
     this.tramite32401Store.setMotivoCancelacion(valor.motivoCancelacion);
     this.tramite32401Store.setTipoDeRequerimiento(valor.tipoDeRequerimiento);
+    this.tramite32401Store.setTipoDeDocumento(valor.tipoDeDocumento);
+    this.tramite32401Store.setDocumentoAdicional(valor.documentoAdicional);
+  }
+
+  /**
+   * Obtiene los tipos de documentos desde un archivo JSON local.
+   *
+   * @returns {Observable<CatalogosSelect>} Un observable que emite los datos del catálogo de tipos de documentos.
+   */
+  getTiposDocumentos(): Observable<CatalogosSelect> {
+    return this.http.get<CatalogosSelect>(
+      'assets/json/32401/tipos-documentos.json'
+    );
   }
 }

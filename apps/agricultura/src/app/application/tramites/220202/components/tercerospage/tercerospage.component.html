@@ -3,5 +3,10 @@
   [cuerpoTablaDestino]="personas"
   [cuerpoTablaExportador]="datosForma"
   [catalogosDatos]="catalogosDatos"
-  (eliminarSeleccion)="handleEliminar()"
+  (eliminarSeleccion)="handleEliminarDestinatario()"
+  (eliminarSeleccionEstinoTable)="handleEliminarExportador()"
+  (abrirModalDestinatario)="abrirModalDestinatario($event)"
+  (abrirModalExportador)="abrirModalExportador($event)"
 ></app-tercerosrelacionados>
+
+<app-modal #modalRef></app-modal>

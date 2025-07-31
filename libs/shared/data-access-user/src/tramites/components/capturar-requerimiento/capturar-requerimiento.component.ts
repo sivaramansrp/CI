@@ -28,16 +28,23 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
    * Notificador para destruir las suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-  // tipoRequerimiento!: string;
   /**
     * Estado de la solicitud.
     */
   public solicitudRequerimientosState!: SolicitudRequerimientosState;
+  /**
+   * Límite máximo de caracteres para el campo de justificación
+   */
+  readonly MAX_CHARS = 10000;
+  
+  /**
+   * Flag para mostrar mensaje de límite de caracteres alcanzado
+   */
+  public showCharLimitMessage = false;
   constructor(
     private fb: FormBuilder,
     private requerimientosStates: RequerimientosStates,
     private solicitudRequerimientoQuery: SolicitudRequerimientoQuery,
-    // private estadoService: EvaluarSolicitudService,
   ) {
     // do nothing.
   }
@@ -69,7 +76,8 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
    */
   crearFormRequerimiento(): void {
     this.formRequerimiento = this.fb.group({
-      tipoRequerimiento: [this.solicitudRequerimientosState?.idTipoRequerimiento, [Validators.required]],
+      tipoRequerimiento: [this.solicitudRequerimientosState.idTipoRequerimiento, [Validators.required]],
+      areaSolicitante: [this.solicitudRequerimientosState?.areaSolicitante, [Validators.required, Validators.maxLength(10000)]],
       justificacionRequerimiento: [this.solicitudRequerimientosState?.justificacionRequerimiento, [Validators.required, Validators.maxLength(10000)]]
     });
   }
@@ -93,6 +101,84 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
     */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof RequerimientosStates): void {
     const VALOR = form.get(campo)?.value;
+    if (VALOR === '1' || VALOR === '2') {
+      this.requerimientosStates.setPestaniaSolicitudDocumento(true);
+    }
+    else {
+      this.requerimientosStates.setPestaniaSolicitudDocumento(false); // agrega esto si no lo tenías
+    }
     (this.requerimientosStates[metodoNombre] as (value: string) => void)(VALOR);
+  }
+
+  /**
+   * Método para manejar el evento keydown en el textarea de justificación
+   * Previene que el usuario pueda escribir más caracteres cuando se alcanza el límite
+   * @param {KeyboardEvent} event - El evento del teclado
+   */
+  onKeydown(event: KeyboardEvent): void {
+    const CURRENT_VALUE = this.formRequerimiento.get('justificacionRequerimiento')?.value || '';
+    const IS_AT_LIMIT = CURRENT_VALUE.length >= this.MAX_CHARS;
+    
+    // Permitir teclas de navegación y edición (backspace, delete, arrow keys, etc.)
+    const ALLOWED_KEYS = [
+      'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+      'Home', 'End', 'PageUp', 'PageDown', 'Tab', 'Escape'
+    ];
+    
+    // Permitir Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+Z
+    const IS_CTRL_KEY = event.ctrlKey && ['a', 'c', 'v', 'x', 'z'].includes(event.key.toLowerCase());
+    
+    // Si se alcanzó el límite y la tecla no está permitida, prevenir la entrada
+    if (IS_AT_LIMIT && !ALLOWED_KEYS.includes(event.key) && !IS_CTRL_KEY) {
+      event.preventDefault();
+      // Mostrar mensaje de límite de caracteres
+      this.showCharLimitMessage = true;
+      // Marcar el campo como tocado para mostrar el error si no está ya marcado
+      const CONTROL = this.formRequerimiento.get('justificacionRequerimiento');
+      if (CONTROL && !CONTROL.touched) {
+        CONTROL.markAsTouched();
+      }
+    } else if (ALLOWED_KEYS.includes(event.key) && CURRENT_VALUE.length < this.MAX_CHARS) {
+      // Ocultar mensaje cuando el usuario puede editar y está por debajo del límite
+      this.showCharLimitMessage = false;
+    }
+  }
+
+  /**
+   * Método para manejar el evento de pegado en el textarea
+   * Trunca el contenido pegado si excede el límite de caracteres
+   * @param {ClipboardEvent} event - El evento del portapapeles
+   */
+  onPaste(event: ClipboardEvent): void {
+    const CLIPBOARD_DATA = event.clipboardData?.getData('text') || '';
+    const CURRENT_VALUE = this.formRequerimiento.get('justificacionRequerimiento')?.value || '';
+    const REMAINING_CHARS = this.MAX_CHARS - CURRENT_VALUE.length;
+    
+    if (CLIPBOARD_DATA.length > REMAINING_CHARS) {
+      event.preventDefault();
+      const TRUNCATED_TEXT = CLIPBOARD_DATA.substring(0, REMAINING_CHARS);
+      const NEW_VALUE = CURRENT_VALUE + TRUNCATED_TEXT;
+      
+      this.formRequerimiento.get('justificacionRequerimiento')?.setValue(NEW_VALUE);
+      this.setValoresStore(this.formRequerimiento, 'justificacionRequerimiento', 'setjustificacionRequerimientoValue');
+      
+      // Mostrar mensaje si se truncó el contenido
+      if (REMAINING_CHARS <= 0 || CLIPBOARD_DATA.length > REMAINING_CHARS) {
+        this.showCharLimitMessage = true;
+      }
+      
+      // Marcar como tocado para mostrar validaciones
+      this.formRequerimiento.get('justificacionRequerimiento')?.markAsTouched();
+    }
+  }
+
+  /**
+   * Método para manejar el evento input del textarea
+   * Controla el mensaje de límite de caracteres
+   */
+  onInput(): void {
+    const CURRENT_VALUE = this.formRequerimiento.get('justificacionRequerimiento')?.value || '';
+    this.showCharLimitMessage = CURRENT_VALUE.length >= this.MAX_CHARS;
+    this.setValoresStore(this.formRequerimiento, 'justificacionRequerimiento', 'setjustificacionRequerimientoValue');
   }
 }

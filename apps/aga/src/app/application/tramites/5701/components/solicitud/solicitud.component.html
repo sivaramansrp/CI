@@ -110,7 +110,7 @@
             *ngIf="isErrorPattern(datosImportadorExportador, 'RFCImpExp')"
             class="mensaje-error"
           >
-            RFC no es válido.
+            {{ ERR_RFC_NO_VALIDO }}
           </div>
         </div>
       </div>
@@ -219,19 +219,32 @@
         </div>
 
         <div class="col-md-6">
-          <app-input-radio
-            [radioOptions]="radioOpciones"
-            (change)="
-              setValoresStore(
-                datosImportadorExportador,
-                'tipoEmpresaCertificada',
-                'setTipoEmpresaCertificada'
-              )
-            "
-            id="tipoEmpresaCertificada"
-            formControlName="tipoEmpresaCertificada"
-          >
-          </app-input-radio>
+          <lib-input-check
+            [id]="'tipoEmpresaCertificadaA'"
+            [label]="'I.V.A e I.E.P.S Certificación A'"
+            [required]="false"
+            [isDisabled]="tipoEmpresaCertificadaADisabled"
+            formControlName="tipoEmpresaCertificadaA"
+            (change)="onTipoEmpresaChange('a', 'tipoEmpresaCertificadaA')"
+          ></lib-input-check>
+          
+          <lib-input-check
+            [id]="'tipoEmpresaCertificadaAA'"
+            [label]="'I.V.A e I.E.P.S Certificación AA'"
+            [required]="false"
+            [isDisabled]="tipoEmpresaCertificadaAADisabled"
+            formControlName="tipoEmpresaCertificadaAA"
+            (change)="onTipoEmpresaChange('aa', 'tipoEmpresaCertificadaAA')"
+          ></lib-input-check>
+          
+          <lib-input-check
+            [id]="'tipoEmpresaCertificadaAAA'"
+            [label]="'I.V.A e I.E.P.S Certificación AAA'"
+            [required]="false"
+            [isDisabled]="tipoEmpresaCertificadaAAADisabled"
+            formControlName="tipoEmpresaCertificadaAAA"
+            (change)="onTipoEmpresaChange('aaa', 'tipoEmpresaCertificadaAAA')"
+          ></lib-input-check>
         </div>
 
         <div class="col-md-6">
@@ -378,7 +391,7 @@
         <input-hora
           #horaFinal
           formControlName="horaFinal"
-          [label]="'Hora Final'"
+          [label]="'Hora final'"
           [required]="true"
           [inputId]="'horaFinal'"
           (change)="changeHoraFinal()"
@@ -523,7 +536,7 @@
           formControlName="idAduanaDespacho"
           (change)="changeAduana()"
         >
-          <option value="-1">Selecciona una opción...</option>
+          <option value="-1">Seleccione una opción</option>
           <option
             *ngFor="let aduana of aduanas"
             [title]="aduana.title"
@@ -550,7 +563,7 @@
           <option value="-2" hidden>
             No cuenta con sección aduanera
           </option>
-          <option value="-1">Selecciona una opción...</option>
+          <option value="-1">Seleccione una opción</option>
           <option
             *ngFor="let seccion of seccionAduanera"
             [title]="seccion.title"
@@ -574,7 +587,7 @@
           <option value="-2" hidden>
             No cuenta con recinto fiscalizado
           </option>
-          <option value="-1">Selecciona una opción...</option>
+          <option value="-1">Seleccione una opción</option>
           <option
             *ngFor="let recinto of recintoCatalogo"
             [title]="recinto.title"
@@ -735,7 +748,7 @@
             "
           ></textarea>
           <div
-            *ngIf="isRequired(mercancia, 'descripcionGenerica')"
+            *ngIf="isErrorWhitespace(mercancia, 'descripcionGenerica')"
             class="mensaje-error"
           >
             Este campo es obligatorio.
@@ -758,7 +771,7 @@
             "
           ></textarea>
           <div
-            *ngIf="isRequired(mercancia, 'justificacion')"
+            *ngIf="isErrorWhitespace(mercancia, 'justificacion')"
             class="mensaje-error"
           >
             Este campo es obligatorio.
@@ -887,9 +900,13 @@
           [tipoSeleccionTabla]="tablaSeleccionPagos.CHECKBOX"
           [configuracionTabla]="encabezadoDeTablaPagos"
           [datos]="datosTablaPagos"
+          [itemsPerPage]="10"
+          [tableId]="'tablaPagos'"
           (listaDeFilaSeleccionada)="lineaCapturaSeleccionados = $event"
+          
         >
         </app-tabla-dinamica>
+        
       </div>
       <div class="col-md-2"></div>
     </div>
@@ -898,6 +915,7 @@
       <div class="col-md-12 d-flex justify-content-center">
         <app-paginador-tabla [totalPaginas]="1"></app-paginador-tabla>
       </div>
+      <div class="col-md-2"></div>
     </div>
   </div>
   }

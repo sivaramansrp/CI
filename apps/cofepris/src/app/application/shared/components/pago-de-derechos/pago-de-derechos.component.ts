@@ -24,6 +24,8 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+
+import { BANCO_CATALOGOS, ESTADO_CATALOGOS } from '../../constantes/pago-banco.enum';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputFecha } from '@ng-mf/data-access-user';
@@ -34,6 +36,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
+
 /**
  * @component PagoDeDerechosComponent
  * @description Componente responsable de capturar y gestionar la información relacionada
@@ -114,14 +117,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @property {Catalogo[]} estadosDatos
    * Lista de estados obtenida desde el servicio de catálogos.
    */
-  estadosDatos!: Catalogo[];
+  public estadosDatos: Catalogo[]=ESTADO_CATALOGOS;
 
   /**
    * Arreglo que contiene los datos del catálogo.
    * @type {Catalogo[]}
    */
-  public bancoDatos!: Catalogo[];
-
+  public bancoDatos: Catalogo[]=BANCO_CATALOGOS;
   /**
    * Indica si el campo "banco" es obligatorio.
    * @type {boolean}
@@ -154,10 +156,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private pagoDerechosStore: PagoDerechosStore,
     private pagoDerechosQuery: PagoDerechosQuery,
     private consultaioQuery: ConsultaioQuery
-  ) {
-    this.cargarDatos();
-    this.getBancoDatos();
-
+  ) {   
+    
     // Inicializa el formulario.
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -221,6 +221,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     if (this.formularioDeshabilitado) {
       this.pagoDerechosForm.disable();
     }
+  
     this.pagoDerechosForm.patchValue(this.pagoDerechoFormState);
   }
 
@@ -234,7 +235,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .obtenerListaEstados()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        this.estadosDatos = data;
+        this.estadosDatos = data;    
         this.pagoDerechosForm.patchValue({
           estado: this.pagoDerechoFormState?.estado || '',
         });
@@ -251,7 +252,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .getBancoDatos()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        this.bancoDatos = data;
+        this.bancoDatos = data;       
         this.pagoDerechosForm.patchValue({
           banco: this.solicitudState?.banco || '',
           estado: this.solicitudState?.estado || '',
