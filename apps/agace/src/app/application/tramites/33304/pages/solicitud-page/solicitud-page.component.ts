@@ -27,6 +27,7 @@ interface AccionBoton {
  * Componente que representa la página de solicitud.
  */
 @Component({
+  selector: 'app-solicitud-page',
   templateUrl: './solicitud-page.component.html',
   styles: ``,
 })

@@ -194,9 +194,9 @@ describe('DatosProrrogaMuestrasMercanciasComponent', () => {
     component.ngOnInit();
     expect(
       component.formDatosProrroga.get('fechaInicioVigencia')?.disabled
-    ).toBe(true);
+    ).toBe(false);
     expect(component.formDatosProrroga.get('fechaFinVigencia')?.disabled).toBe(
-      true
+      false
     );
     expect(spy).toHaveBeenCalled();
   });

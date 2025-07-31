@@ -13,6 +13,10 @@ export class PasoTresComponent implements OnDestroy{
    * Tipo de persona.
    */
   tipoPersona!: number;
+
+  /**
+   * Subject para manejar la destrucción del componente.
+   */
   private destroy$: Subject<void> = new Subject<void>();
 
   /**
@@ -60,6 +64,11 @@ export class PasoTresComponent implements OnDestroy{
     }
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Se utiliza para emitir y completar el Subject `destroy$`, lo que permite cancelar
+   * todas las suscripciones que estén escuchando este Observable para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

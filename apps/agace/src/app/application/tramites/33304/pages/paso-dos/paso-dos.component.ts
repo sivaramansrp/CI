@@ -6,7 +6,6 @@ import { CatalogosService } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import documentList from '@libs/shared/theme/assets/json/32502/document-list.json';
 
-
 /**
  * Este componente se muestra en PasoDos
  */
@@ -27,17 +26,17 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Cada elemento es de tipo `Catalogo`, que representa un catálogo de opciones.
    */
   tiposDocumentos: Catalogo[] = [];
-  
+
   /**
    * Clase CSS utilizada para mostrar una alerta informativa en la interfaz de usuario.
-   * 
+   *
    * @type {string}
    */
   infoAlert = 'alert-info';
 
   /**
    * Lista de documentos del catálogo.
-   * 
+   *
    * @type {Catalogo[]}
    * @remarks
    * Este arreglo contiene los documentos disponibles en el catálogo,
@@ -59,15 +58,12 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   private destroy$: Subject<void> = new Subject<void>();
 
-
   /**
    * Constructor de la clase PasoDosComponent.
-   * 
+   *
    * @param catalogosServices - Servicio para gestionar los catálogos necesarios en el componente.
    */
-  constructor(
-    private catalogosServices: CatalogosService,
-  ) { 
+  constructor(private catalogosServices: CatalogosService) {
     // Constructor
   }
 
@@ -80,21 +76,12 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
-   * Aquí se utiliza para emitir un valor en el observable `destroy$` y completar su emisión,
-   * asegurando la limpieza de suscripciones y evitando posibles fugas de memoria.
+   * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
    */
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  /**
- * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
- */
   getTiposDocumentos(): void {
     this.catalogosServices
-      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).pipe(takeUntil(this.destroy$))
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (resp): void => {
           if (resp.length > 0) {
@@ -103,7 +90,17 @@ export class PasoDosComponent implements OnInit, OnDestroy {
         },
         error: (_error): void => {
           // Manejo de error
-         },
+        },
       });
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Aquí se utiliza para emitir un valor en el observable `destroy$` y completar su emisión,
+   * asegurando la limpieza de suscripciones y evitando posibles fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

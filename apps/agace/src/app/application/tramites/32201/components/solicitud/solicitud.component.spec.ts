@@ -30,7 +30,7 @@ describe('SolicitudComponent', () => {
     };
 
     jest
-      .spyOn(component['tramite32201Query'], 'select') // Replace 'selectSolicitud$' with a valid method like 'select'
+      .spyOn(component['tramite32201Query'], 'select') 
       .mockReturnValue({
         pipe: jest.fn().mockReturnValue({
           subscribe: jest.fn((callback) => callback(mockState)),
@@ -95,24 +95,36 @@ describe('SolicitudComponent', () => {
       expect(component.errorNotificacion.mensaje).toContain('El número de columnas del archivo es incorrecto');
     });
 
-    it('should disable form if esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
-      component.solicitudForm = new FormGroup({
-        test: new FormControl('val')
-      });
+    it('should call guardarDatosFormulario when esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
       component.esFormularioSoloLectura = true;
-      const disableSpy = jest.spyOn(component.solicitudForm, 'disable');
+      
+      component.solicitudState = {
+        regimen_0: false,
+        regimen_1: false,
+        regimen_2: false,
+        regimen_3: false,
+        manifiesto: false
+      };
+      
+      const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario').mockImplementation();
       component.inicializarEstadoFormulario();
-      expect(disableSpy).toHaveBeenCalled();
+      expect(guardarSpy).toHaveBeenCalled();
     });
 
-    it('should enable form if esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
-      component.solicitudForm = new FormGroup({
-        test: new FormControl('val')
-      });
+    it('should call donanteDomicilio when esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
       component.esFormularioSoloLectura = false;
-      const enableSpy = jest.spyOn(component.solicitudForm, 'enable');
+      
+      component.solicitudState = {
+        regimen_0: false,
+        regimen_1: false,
+        regimen_2: false,
+        regimen_3: false,
+        manifiesto: false
+      };
+      
+      const donanteSpy = jest.spyOn(component, 'donanteDomicilio').mockImplementation();
       component.inicializarEstadoFormulario();
-      expect(enableSpy).toHaveBeenCalled();
+      expect(donanteSpy).toHaveBeenCalled();
     });
 
     it('should complete destroyNotifier$ on ngOnDestroy', () => {
@@ -121,6 +133,58 @@ describe('SolicitudComponent', () => {
       component.ngOnDestroy();
       expect(nextSpy).toHaveBeenCalled();
       expect(completeSpy).toHaveBeenCalled();
+    });
+
+    it('should create form with disabled controls when esFormularioSoloLectura is true in donanteDomicilio', () => {
+      component.esFormularioSoloLectura = true;
+      component.solicitudState = {
+        regimen_0: true,
+        regimen_1: false,
+        regimen_2: true,
+        regimen_3: false,
+        manifiesto: true
+      };
+      
+      component.donanteDomicilio();
+      
+      expect(component.solicitudForm).toBeDefined();
+      expect(component.solicitudForm.get('regimen_0')?.disabled).toBe(true);
+      expect(component.solicitudForm.get('regimen_1')?.disabled).toBe(true);
+      expect(component.solicitudForm.get('manifiesto')?.disabled).toBe(true);
+    });
+
+    it('should create form with enabled controls when esFormularioSoloLectura is false in donanteDomicilio', () => {
+      component.esFormularioSoloLectura = false;
+      component.solicitudState = {
+        regimen_0: true,
+        regimen_1: false,
+        regimen_2: true,
+        regimen_3: false,
+        manifiesto: true
+      };
+      
+      component.donanteDomicilio();
+      
+      expect(component.solicitudForm).toBeDefined();
+      expect(component.solicitudForm.get('regimen_0')?.disabled).toBe(false);
+      expect(component.solicitudForm.get('regimen_1')?.disabled).toBe(false);
+      expect(component.solicitudForm.get('manifiesto')?.disabled).toBe(false);
+    });
+
+    it('should disable form in guardarDatosFormulario when esFormularioSoloLectura is true', () => {
+      component.esFormularioSoloLectura = true;
+      component.solicitudState = {
+        regimen_0: false,
+        regimen_1: false,
+        regimen_2: false,
+        regimen_3: false,
+        manifiesto: false
+      };
+      
+      component.guardarDatosFormulario();
+      
+      expect(component.solicitudForm).toBeDefined();
+      expect(component.solicitudForm.disabled).toBe(true);
     });
 
     it('should not throw if cargarProveedores called without file', () => {

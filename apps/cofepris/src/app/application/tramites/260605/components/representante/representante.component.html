@@ -14,19 +14,22 @@
                 type="text"
                 (change)="setValoresStore(representante,'rfc', 'setRfc')"
               />
+              <div *ngIf="representante.get('rfc')?.touched && representante.get('rfc')?.hasError('required')" class="text-danger mt-1 small">
+              Este campo es obligatorio
+              </div>
             </div>
           </div>
 
           <div class="col-md-4 d-flex align-items-center">
             <div class="btn-group">
-              <button class="btn btn-default" type="button" (click)="obtenerAduanasDisponiblesDatos()" >Buscar</button>
+              <button class="btn btn-default" type="button" (click)="obtenerAduanasDisponiblesDatos()" [disabled]="esFormularioSoloLectura">Buscar</button>
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="nombre">Nombre o Razón Social</label>
+              <label class="form-label" for="nombre">Nombre o Razón Social*</label>
               <input
                 class="form-control"
                 id="nombre"
@@ -38,7 +41,7 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="apellidoPaterno">Apellido Paterno</label>
+              <label class="form-label" for="apellidoPaterno">Apellido Paterno*</label>
               <input
                 class="form-control"
                 id="apellidoPaterno"

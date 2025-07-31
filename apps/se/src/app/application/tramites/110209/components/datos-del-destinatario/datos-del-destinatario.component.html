@@ -3,9 +3,9 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label width-unset" for="nombre">Nombre(s) :</label>
+                    <label class="form-label width-unset" for="nombre">Nombre(s):</label>
                     <input type="text" (change)="setValoresStore(datosDelDestinatarioForm,'nombre')"
-                        class="form-control" id="nombre" formControlName="nombre" placeholder="Juan" />
+                        class="form-control" id="nombre" formControlName="nombre" />
                     <div
                         *ngIf="datosDelDestinatarioForm.get('nombre')?.touched && datosDelDestinatarioForm.get('nombre')?.invalid">
                         <small *ngIf="datosDelDestinatarioForm.get('nombre')?.errors?.['pattern']"
@@ -18,10 +18,10 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label width-unset" for="primerApellido">Primer apellido :</label>
+                    <label class="form-label width-unset" for="primerApellido">Primer apellido:</label>
                     <input type="text"
                         (change)="setValoresStore(datosDelDestinatarioForm,'primerApellido')"
-                        class="form-control" id="primerApellido" formControlName="primerApellido" placeholder="Perez" />
+                        class="form-control" id="primerApellido" formControlName="primerApellido"/>
                     <div *ngIf="datosDelDestinatarioForm.get('primerApellido')?.invalid">
                         <small *ngIf="datosDelDestinatarioForm.get('primerApellido')?.errors?.['pattern']"
                             class="text-danger"> Por favor, corrija el nombre de la persona.</small>
@@ -33,11 +33,11 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label width-unset" for="segundoApellido">Segundo apellido :</label>
+                    <label class="form-label width-unset" for="segundoApellido">Segundo apellido:</label>
                     <input type="text"
                         (change)="setValoresStore(datosDelDestinatarioForm,'segundoApellido')"
                         class="form-control" id="segundoApellido" formControlName="segundoApellido"
-                        placeholder="Perez" />
+                        />
                     <div *ngIf="datosDelDestinatarioForm.get('segundoApellido')?.invalid">
                         <small *ngIf="datosDelDestinatarioForm.get('segundoApellido')?.errors?.['pattern']"
                             class="text-danger">  Por favor, corrija el nombre de la persona.</small>
@@ -53,11 +53,11 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label width-unset" for="numeroDeRegistroFiscal">Número de registro
-                        fiscal *:</label>
+                        fiscal*:</label>
                     <input type="text"
                         (change)="setValoresStore(datosDelDestinatarioForm,'numeroDeRegistroFiscal')"
                         class="form-control" id="numeroDeRegistroFiscal" formControlName="numeroDeRegistroFiscal"
-                        placeholder="3243254532" />
+                        />
                     <div
                         *ngIf="datosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.touched && datosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.invalid">
                         <small *ngIf="datosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.errors?.['pattern']"
@@ -74,7 +74,7 @@
 
             <div class="col-md-8">
                 <div class="form-group">
-                    <label class="form-label width-unset" for="razonSocial">Razón social :</label>
+                    <label class="form-label width-unset" for="razonSocial">Razón social:</label>
                     <input type="text"
                         (change)="setValoresStore(datosDelDestinatarioForm,'razonSocial')"
                         class="form-control" id="razonSocial" formControlName="razonSocial"/>

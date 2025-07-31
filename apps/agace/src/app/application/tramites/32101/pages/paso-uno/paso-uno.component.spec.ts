@@ -109,8 +109,7 @@ it('should run #ngOnInit()', fakeAsync(() => {
   const spy = jest.spyOn(component, 'fetchGetDatosConsulta');
 
   component.ngOnInit();
-  tick(); // wait for observable to emit
-
+  tick();
   expect(spy).toHaveBeenCalled();
   expect(component.consultaAvisoAcreditacionService.getDatosConsulta).toHaveBeenCalled();
 }));
@@ -158,7 +157,7 @@ it('should run #fetchGetDatosConsulta()', fakeAsync(() => {
   };
 
   component.fetchGetDatosConsulta();
-  tick(); // flush observable
+  tick();
 
   expect(component.consultaAvisoAcreditacionService.getDatosConsulta).toHaveBeenCalled();
   expect(component.store.setTipoDeInversion).toHaveBeenCalledWith(['x']);

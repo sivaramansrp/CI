@@ -130,3 +130,14 @@ export interface DatosCertificacion {
   fechaInicio: string;
   fechaVigencia: string;
 }
+
+/**
+ * Representa los datos de una fracción sensible.
+ */
+export interface FraccionSensible {
+  id?: number;
+  fraccionArancelariaExportacion?: number;
+  cantidad?: number;
+  valor?: number;
+  unidadMedidaTarifaria?: string;
+}
