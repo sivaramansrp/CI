@@ -24,7 +24,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { EMPRESAS_TRANSPORTISTAS_TABLA_DATOS } from '../../constants/solicitud32101.enum';
+import { EMPRESAS_TRANSPORTISTAS_TABLA_DATOS } from '../../constants/solicitud33304.enum';
 import { Modal } from 'bootstrap';
 import { Solicitud33304Query } from '../../estados/solicitud33304Query';
 import { SolicitudService } from '../../services/solicitud.service';
@@ -53,7 +53,7 @@ export class AvisoDeAdicionComponent implements OnInit, OnDestroy {
   @ViewChild('transportistaElemento') transportistaElemento!: ElementRef;
 
   /**
-   * Formulario reactivo para el registro y edición de enlaces operativos.
+   * Formulario reactivo para el registro y edición de transportista.
    */
   transportistaForm!: FormGroup;
 
@@ -63,26 +63,26 @@ export class AvisoDeAdicionComponent implements OnInit, OnDestroy {
   public readonly TablaSeleccion = TablaSeleccion;
 
   /**
-   * Configuración de columnas para la tabla dinámica de enlaces operativos.
+   * Configuración de columnas para la tabla dinámica de transportista.
    */
   public readonly configuracionTabla: ConfiguracionColumna<TablaEmpresaTransportista>[] =
     EMPRESAS_TRANSPORTISTAS_TABLA_DATOS;
 
   /**
-   * Datos de la tabla de enlaces operativos.
+   * Datos de la tabla de transportista.
    */
   empresaTransportistaData: TablaEmpresaTransportista[] =
     [] as TablaEmpresaTransportista[];
 
   /**
-   * Lista de filas seleccionadas en la tabla de enlaces operativos.
+   * Lista de filas seleccionadas en la tabla de transportista.
    */
-  listaFilaSeleccionadaEnlace: TablaEmpresaTransportista[] = [];
+  listaFilaSeleccionadaTransportista: TablaEmpresaTransportista[] = [];
 
   /**
-   * Fila actualmente seleccionada en la tabla de enlaces operativos.
+   * Fila actualmente seleccionada en la tabla de transportista.
    */
-  filaSeleccionadaEnlaceOperativo!: TablaEmpresaTransportista;
+  filaSeleccionadaTransportista!: TablaEmpresaTransportista;
 
   /**
    * Indica si el botón de modificar está habilitado.
@@ -199,7 +199,7 @@ export class AvisoDeAdicionComponent implements OnInit, OnDestroy {
     });
   }
 
-    /**
+  /**
    * Inicializa los catálogos necesarios para el formulario.
    */
   private inicializaCatalogos(): void {
@@ -209,7 +209,7 @@ export class AvisoDeAdicionComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja la selección de filas en la tabla de enlaces operativos.
+   * Maneja la selección de filas en la tabla de transportista.
    *
    * @description
    * Actualiza el estado de las filas seleccionadas y controla la habilitación
@@ -218,22 +218,22 @@ export class AvisoDeAdicionComponent implements OnInit, OnDestroy {
    *
    */
   manejarFilaSeleccionada(fila: TablaEmpresaTransportista[]): void {
-    this.listaFilaSeleccionadaEnlace = fila;
+    this.listaFilaSeleccionadaTransportista = fila;
     if (fila.length === 0) {
-      this.filaSeleccionadaEnlaceOperativo = {} as TablaEmpresaTransportista;
+      this.filaSeleccionadaTransportista = {} as TablaEmpresaTransportista;
       this.enableModficarBoton = false;
       this.enableEliminarBoton = false;
       return;
     }
-    this.filaSeleccionadaEnlaceOperativo = fila[fila.length - 1];
+    this.filaSeleccionadaTransportista = fila[fila.length - 1];
   }
   
   /**
-   * Abre el cuadro de diálogo modal para el registro de enlaces operativos.
+   * Abre el cuadro de diálogo modal para el registro de transportista.
    *
    * @description
    * Inicializa y muestra el modal de Bootstrap para permitir al usuario
-   * ingresar o editar información de enlaces operativos. Requiere que
+   * ingresar o editar información de transportista. Requiere que
    * el ViewChild esté inicializado.
    */
   agregarDialogoDatos(): void {
@@ -254,30 +254,42 @@ export class AvisoDeAdicionComponent implements OnInit, OnDestroy {
     this.multipleSeleccionPopupAbierto = false;
   }
 
- modificarItemTransportista(): void {
-    this.cerrarModal();
-    if(this.empresaTransportistaData.length === 0) {
-      this.abrirMultipleSeleccionPopup('', 'No se encontró información');
-      this.esFilaSeleccionada = true;
-      return;
-    }
-    if (this.listaFilaSeleccionadaEnlace.length === 0) {
-     this.abrirMultipleSeleccionPopup('', 'Seleccione un registro');
-      this.esFilaSeleccionada = true;
-      return;
-    } if (
-      this.listaFilaSeleccionadaEnlace &&
-      this.listaFilaSeleccionadaEnlace.length === 1
-    ) {
-      this.filaSeleccionadaEnlaceOperativo = {
-        ...this.listaFilaSeleccionadaEnlace[0],
-      };
-      this.registroEditandoId = this.filaSeleccionadaEnlaceOperativo.id;
-      this.modoEdicion = true;
-      this.agregarDialogoDatos();
-      this.actualizarDatosModificados();
-    }
+/**
+ * Inicia el proceso de modificación de un registro de transportista.
+ *
+ * @description
+ * - Cierra el modal de selección.
+ * - Verifica si existen datos en la tabla de transportistas.
+ * - Si no hay datos, muestra una notificación de "No se encontró información".
+ * - Si no hay ninguna fila seleccionada, muestra una notificación de "Seleccione un registro".
+ * - Si hay una sola fila seleccionada, prepara el formulario para edición,
+ *   asigna el registro a editar y abre el modal con los datos cargados.
+ */
+modificarItemTransportista(): void {
+  this.cerrarModal();
+  if (this.empresaTransportistaData.length === 0) {
+    this.abrirMultipleSeleccionPopup('', 'No se encontró información');
+    this.esFilaSeleccionada = true;
+    return;
   }
+  if (this.listaFilaSeleccionadaTransportista.length === 0) {
+    this.abrirMultipleSeleccionPopup('', 'Seleccione un registro');
+    this.esFilaSeleccionada = true;
+    return;
+  }
+  if (
+    this.listaFilaSeleccionadaTransportista &&
+    this.listaFilaSeleccionadaTransportista.length === 1
+  ) {
+    this.filaSeleccionadaTransportista = {
+      ...this.listaFilaSeleccionadaTransportista[0],
+    };
+    this.registroEditandoId = this.filaSeleccionadaTransportista.id;
+    this.modoEdicion = true;
+    this.agregarDialogoDatos();
+    this.actualizarDatosModificados();
+  }
+}
 
    /**
    * Actualiza el formulario con los datos de la fila seleccionada para modificación.
@@ -288,16 +300,16 @@ export class AvisoDeAdicionComponent implements OnInit, OnDestroy {
    * campos especificados sin afectar el resto del formulario.
    */
   actualizarDatosModificados(): void {
-    if (!this.filaSeleccionadaEnlaceOperativo) {
+    if (!this.filaSeleccionadaTransportista) {
       return;
     }
     this.transportistaForm.patchValue({
-      rfc: this.filaSeleccionadaEnlaceOperativo.rfc,
-      denominacion: this.filaSeleccionadaEnlaceOperativo.denominacion,
-      domicilio: this.filaSeleccionadaEnlaceOperativo.domicilio,
-      registroCaat: this.filaSeleccionadaEnlaceOperativo.registroCaat,  
-      estatus: this.filaSeleccionadaEnlaceOperativo.estatus,
-      id: this.filaSeleccionadaEnlaceOperativo.id,
+      rfc: this.filaSeleccionadaTransportista.rfc,
+      denominacion: this.filaSeleccionadaTransportista.denominacion,
+      domicilio: this.filaSeleccionadaTransportista.domicilio,
+      registroCaat: this.filaSeleccionadaTransportista.registroCaat,  
+      estatus: this.filaSeleccionadaTransportista.estatus,
+      id: this.filaSeleccionadaTransportista.id,
     });
   }
 
@@ -329,7 +341,7 @@ export class AvisoDeAdicionComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Alterna la visibilidad del cuadro de diálogo modal para el registro de enlaces operativos.
+   * Alterna la visibilidad del cuadro de diálogo modal para el registro de transportista.
    */
   cambiarEstadoModal(): void {
     const MODAL_INSTANCIA = Modal.getInstance(
@@ -341,7 +353,7 @@ export class AvisoDeAdicionComponent implements OnInit, OnDestroy {
   }
 
  /**
-  * Cancela el cuadro de diálogo modal para el registro de enlaces operativos.
+  * Cancela el cuadro de diálogo modal para el registro de transportista.
   */
   modalCancelar(): void {
     this.cambiarEstadoModal();
@@ -349,14 +361,10 @@ export class AvisoDeAdicionComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Restablece el formulario de registro de enlaces operativos a su estado inicial.
+   * Restablece el formulario de registro de transportista a su estado inicial.
    */
   limpiarFormulario(): void {
     this.transportistaForm.reset();
-  }
-
-  estatusSeleccion(): void {
-    const ESTATUS = this.transportistaForm.get('estatus')?.value;
   }
 
     /**
@@ -409,7 +417,7 @@ export class AvisoDeAdicionComponent implements OnInit, OnDestroy {
       this.solicitud33304Store.actualizarEstado({
         transportistasLista: this.empresaTransportistaData,
       });
-      this.filaSeleccionadaEnlaceOperativo = {} as TablaEmpresaTransportista;
+      this.filaSeleccionadaTransportista = {} as TablaEmpresaTransportista;
     }
 
   /**

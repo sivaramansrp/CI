@@ -386,6 +386,12 @@ const ROUTES: Routes = [
     loadChildren: () => 
       import('./tramites/32617/oea-tercerizacion-logistica-registro.module').then(
         (m) => m.OeaTercerizacionLogisticaRegistroModule)
+  },
+  {
+      path: 'aviso-comercializadora-modification-importadora',
+    loadChildren: () => 
+      import('./tramites/33304/Aviso-De-Ampliacion.module').then(
+        (m) => m.AvisoDeAmpliacionModule)
   }
 ];
 

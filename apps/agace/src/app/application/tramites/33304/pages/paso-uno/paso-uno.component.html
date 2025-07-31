@@ -34,10 +34,12 @@
         } @case (3) {
         <app-aviso-de-modificacion></app-aviso-de-modificacion>
         } @case (4) {
+        @if(esDatosRespuesta){
         <app-aviso-por-fusion></app-aviso-por-fusion>
-        } @case (5) {
+        } } @case (5) {
+        @if(esDatosRespuesta){
         <app-aviso-de-adicion></app-aviso-de-adicion>
-        }
+        } }
         }
       </ng-container>
     </div>

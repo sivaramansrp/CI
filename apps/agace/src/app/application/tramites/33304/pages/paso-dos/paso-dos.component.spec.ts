@@ -1,66 +1,83 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientModule } from '@angular/common/http';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoDosComponent } from './paso-dos.component';
+import { of, throwError } from 'rxjs';
 import { CatalogosService } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('PasoDosComponent', () => {
-  let fixture;
-  let component;
+  let component: PasoDosComponent;
+  let fixture: ComponentFixture<PasoDosComponent>;
+  let mockCatalogosService: jest.Mocked<CatalogosService>;
+
+  const catalogoMock = [
+    { id: 1, descripcion: 'Documento A' },
+    { id: 2, descripcion: 'Documento B' },
+  ];
+
+  beforeEach(async () => {
+    mockCatalogosService = {
+      getCatalogo: jest.fn(),
+    } as unknown as jest.Mocked<CatalogosService>;
+
+    await TestBed.configureTestingModule({
+      declarations: [PasoDosComponent],
+      providers: [
+        { provide: CatalogosService, useValue: mockCatalogosService },
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
+  });
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, HttpClientModule ],
-      declarations: [
-        PasoDosComponent
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        CatalogosService
-      ]
-    }).overrideComponent(PasoDosComponent, {
-
-    }).compileComponents();
     fixture = TestBed.createComponent(PasoDosComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('debería crear el componente correctamente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.getTiposDocumentos = jest.fn();
+  it('debería llamar a getTiposDocumentos al inicializar', () => {
+    mockCatalogosService.getCatalogo.mockReturnValue(of([]));
+    const spy = jest.spyOn(component, 'getTiposDocumentos');
     component.ngOnInit();
-    // expect(component.getTiposDocumentos).toHaveBeenCalled();
+
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroy$ = component.destroy$ || {};
-    component.destroy$.next = jest.fn();
-    component.destroy$.complete = jest.fn();
-    component.ngOnDestroy();
-    // expect(component.destroy$.next).toHaveBeenCalled();
-    // expect(component.destroy$.complete).toHaveBeenCalled();
-  });
+  it('debería cargar correctamente los tipos de documentos', () => {
+    mockCatalogosService.getCatalogo.mockReturnValue(of(catalogoMock));
 
-  it('should run #getTiposDocumentos()', async () => {
-    component.catalogosServices = component.catalogosServices || {};
-    component.catalogosServices.getCatalogo = jest.fn().mockReturnValue(observableOf({}));
     component.getTiposDocumentos();
-    // expect(component.catalogosServices.getCatalogo).toHaveBeenCalled();
+
+    expect(mockCatalogosService.getCatalogo).toHaveBeenCalledWith(
+      CATALOGOS_ID.CAT_TIPO_DOCUMENTO
+    );
+    expect(component.catalogoDocumentos).toEqual(catalogoMock);
   });
 
+  it('no debería asignar documentos si el catálogo está vacío', () => {
+    mockCatalogosService.getCatalogo.mockReturnValue(of([]));
+    component.getTiposDocumentos();
+    expect(component.catalogoDocumentos).toEqual([]);
+  });
+
+  it('debería manejar errores correctamente al obtener tipos de documentos', () => {
+    mockCatalogosService.getCatalogo.mockReturnValue(
+      throwError(() => new Error('Error de red'))
+    );
+    component.getTiposDocumentos();
+    expect(mockCatalogosService.getCatalogo).toHaveBeenCalled();
+  });
+
+  it('debería completar destroy$ al destruir el componente', () => {
+    const destroySpy = jest.spyOn(component['destroy$'], 'next');
+    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+
+    component.ngOnDestroy();
+
+    expect(destroySpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
 });

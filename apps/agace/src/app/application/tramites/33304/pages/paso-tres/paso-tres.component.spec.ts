@@ -1,84 +1,50 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientModule } from '@angular/common/http';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component, TramiteStore } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoTresComponent } from './paso-tres.component';
+import { provideToastr, ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { TramiteFolioService } from '@ng-mf/data-access-user';
-
-@Injectable()
-class MockRouter {
-  navigate() {};
-}
-
-@Injectable()
-class MockTramiteStore {}
-
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('PasoTresComponent', () => {
-  let fixture;
-  let component;
+  let component: PasoTresComponent;
+  let fixture: ComponentFixture<PasoTresComponent>;
+  let router: Router;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, HttpClientModule ],
-      declarations: [
-        PasoTresComponent
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        FirmaElectronicaComponent,
+        CommonModule,
+        
+        HttpClientTestingModule,
+        ReactiveFormsModule,
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      declarations: [PasoTresComponent],
       providers: [
-        { provide: Router, useClass: MockRouter },
-        TramiteFolioService,
-        { provide: TramiteStore, useClass: MockTramiteStore }
-      ]
-    }).overrideComponent(PasoTresComponent, {
-
+        ToastrService,
+        provideToastr({
+          positionClass: 'toast-top-right',
+        }),
+      ],
     }).compileComponents();
+
     fixture = TestBed.createComponent(PasoTresComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('debería crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #obtenerTipoPersona()', async () => {
-
-    component.obtenerTipoPersona({});
-
-  });
-
-  it('should run #obtieneFirma()', async () => {
-    component.serviciosExtraordinariosServices = component.serviciosExtraordinariosServices || {};
-    component.serviciosExtraordinariosServices.obtenerTramite = jest.fn().mockReturnValue(observableOf({}));
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.establecerTramite = jest.fn();
-    component.router = component.router || {};
-    component.router.navigate = jest.fn();
-    component.obtieneFirma({});
-    // expect(component.serviciosExtraordinariosServices.obtenerTramite).toHaveBeenCalled();
-    // expect(component.tramiteStore.establecerTramite).toHaveBeenCalled();
-    // expect(component.router.navigate).toHaveBeenCalled();
-  });
-
-  it('should run #ngOnDestroy()', async () => {
-    component.destroy$ = component.destroy$ || {};
-    component.destroy$.next = jest.fn();
-    component.destroy$.complete = jest.fn();
-    component.ngOnDestroy();
-    // expect(component.destroy$.next).toHaveBeenCalled();
-    // expect(component.destroy$.complete).toHaveBeenCalled();
+  it('no debería navegar a la página de acuse con una firma inválida', () => {
+    const navigateSpy = jest.spyOn(router, 'navigate');
+    const firma = '';
+    component.obtieneFirma(firma);
+    expect(navigateSpy).not.toHaveBeenCalled();
   });
 
 });

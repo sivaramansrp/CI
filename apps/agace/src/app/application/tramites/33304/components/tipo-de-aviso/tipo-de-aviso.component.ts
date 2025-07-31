@@ -4,7 +4,7 @@ import { Solicitud33304State, Solicitud33304Store } from '../../estados/solicitu
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { Solicitud33304Enum } from '../../constants/solicitud32101.enum';
+import { Solicitud33304Enum } from '../../constants/solicitud33304.enum';
 import { Solicitud33304Query } from '../../estados/solicitud33304Query';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 

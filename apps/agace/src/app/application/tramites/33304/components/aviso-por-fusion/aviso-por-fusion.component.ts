@@ -1,23 +1,19 @@
 import {
-  Catalogo,
+  AVISO_DE_FUSION_RADIO_OPCIONES,
+  CUENTA_DE_BOTON_DE_RADIO_OPCIONES,
+  FUSIONE_FECHA_INPUT,
+  TIPO_DE_BOTON_DE_RADIO_OPCIONES,
+} from '../../constants/solicitud33304.enum';
+import {
   CatalogoSelectComponent,
-  CategoriaMensaje,
-  ConfiguracionColumna,
+  InputFecha,
+  InputFechaComponent,
   InputRadioComponent,
-  Notificacion,
   NotificacionesComponent,
   TablaDinamicaComponent,
-  TablaSeleccion,
-  TipoNotificacionEnum,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -31,6 +27,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DatosEmpresasFusionadasComponent } from '../datos-empresas-fusionadas/datos-empresas-fusionadas.component';
 import { Solicitud33304Query } from '../../estados/solicitud33304Query';
 import { SolicitudService } from '../../services/solicitud.service';
 
@@ -46,6 +43,8 @@ import { SolicitudService } from '../../services/solicitud.service';
     CatalogoSelectComponent,
     NotificacionesComponent,
     InputRadioComponent,
+    InputFechaComponent,
+    DatosEmpresasFusionadasComponent,
   ],
   templateUrl: './aviso-por-fusion.component.html',
   styleUrl: './aviso-por-fusion.component.scss',
@@ -61,6 +60,32 @@ export class AvisoPorFusionComponent implements OnInit, OnDestroy {
    * Estado de la solicitud.
    */
   public solicitudState!: Solicitud33304State;
+
+  /**
+   * Opciones de tipo de persona obtenidas desde el servicio.
+   */
+  tipoOpciones = TIPO_DE_BOTON_DE_RADIO_OPCIONES;
+
+  /**
+   * Opciones de tipo de aviso filtradas según la selección del aviso de operación.
+   * Inicialmente contiene todas las opciones disponibles.
+   */
+  tipoOpcionesFiltradas = [...TIPO_DE_BOTON_DE_RADIO_OPCIONES];
+
+  /**
+   * Opciones de aviso de fusión obtenidas desde la constante AVISO_DE_FUSION_RADIO_OPCIONES.
+   */
+  avisoDeOpciones = AVISO_DE_FUSION_RADIO_OPCIONES;
+
+  /**
+   * Opciones de tipo de cuenta obtenidas desde el servicio.
+   */
+  cuentaOptions = CUENTA_DE_BOTON_DE_RADIO_OPCIONES;
+
+  /**
+   * Valor de fecha de inicio seleccionado, inicializado con la constante `FUSIONE_FECHA_INPUT`.
+   */
+  fechaInputDatos: InputFecha = FUSIONE_FECHA_INPUT;
 
   /**
    * Sujeto utilizado como notificador para la destrucción del componente.
@@ -86,9 +111,11 @@ export class AvisoPorFusionComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
+    private solicitudService: SolicitudService,
     public solicitud33304Store: Solicitud33304Store,
     private solicitud33304Query: Solicitud33304Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private cdRef: ChangeDetectorRef
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -159,15 +186,70 @@ export class AvisoPorFusionComponent implements OnInit, OnDestroy {
           this.solicitudState = seccionState;
         })
       )
-      .subscribe();
-    this.formularioAvisoFusion = this.fb.group({
-      fusionOEscision: [this.solicitudState?.fusionOEscision || false],
-      fusionConEmpresasNoCertificadas: [
-        this.solicitudState?.fusionConEmpresasNoCertificadas || false,
-      ],
-      empresaSubsistente: [this.solicitudState?.empresaSubsistente || false],
-    });
+      .subscribe(() => {
+        this.formularioAvisoFusion = this.fb.group({
+          avisoDeOperacion: [this.solicitudState?.avisoDeOperacion || ''],
+          tipoOperacion: [this.solicitudState?.tipoOperacion || ''],
+          cuenta: [this.solicitudState?.cuenta || ''],
+          rfc: [this.solicitudState?.rfc || ''],
+          denominacion: [this.solicitudState?.denominacion || ''],
+          fechaFusioneEfecto: [this.solicitudState?.fechaFusioneEfecto || ''],
+          folioAcuse: [this.solicitudState?.folioAcuse || ''],
+        });
+        this.formularioAvisoFusion
+          .get('avisoDeOperacion')
+          ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
+          .subscribe(() => {
+            this.actualizarOpcionesTipoOperacionPorAviso();
+          });
+
+        this.actualizarOpcionesTipoOperacionPorAviso();
+      });
   }
+
+  /**
+   * Actualiza las opciones disponibles para el tipo de operación según el aviso de operación seleccionado.
+   * Si el aviso seleccionado es '2', filtra las opciones para mostrar solo la opción con valor '1'.
+   * Si no, muestra todas las opciones disponibles.
+   * Además, valida si el valor actual de tipo de operación sigue siendo válido con las opciones filtradas;
+   * si no es válido, lo reinicia a vacío.
+   * Finalmente, solicita la detección de cambios para actualizar la vista.
+   */
+  actualizarOpcionesTipoOperacionPorAviso(): void {
+    const AVISO_SELECCIONADO =
+      this.formularioAvisoFusion?.get('avisoDeOperacion')?.value;
+    if (AVISO_SELECCIONADO === '2') {
+      this.tipoOpcionesFiltradas = TIPO_DE_BOTON_DE_RADIO_OPCIONES.filter(
+        (op) => op.value === '1'
+      );
+    } else {
+      this.tipoOpcionesFiltradas = [...TIPO_DE_BOTON_DE_RADIO_OPCIONES];
+    }
+
+    const TIPO_OPERACION_ACTUAL =
+      this.formularioAvisoFusion?.get('tipoOperacion')?.value;
+    const ES_OPCION_VALIDA = this.tipoOpcionesFiltradas.some(
+      (op) => op.value === TIPO_OPERACION_ACTUAL
+    );
+
+    if (!ES_OPCION_VALIDA) {
+      this.formularioAvisoFusion.get('tipoOperacion')?.setValue('');
+    }
+
+    this.cdRef.detectChanges();
+  }
+
+  /**
+   * Actualiza el valor de la fecha de inicio de comercio en el formulario.
+   * Establece el valor y marca el campo como no tocado.
+   *
+   * param nuevo_valor - Nuevo valor de la fecha en formato string
+   */
+  actualizarFecha(nuevo_valor: string, compo: string): void {
+    this.formularioAvisoFusion.get(compo)?.setValue(nuevo_valor);
+    this.formularioAvisoFusion.get(compo)?.markAsUntouched();
+  }
+
   /**
    * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
    * @param form - El formulario reactivo.
