@@ -7,6 +7,8 @@ import {
   Catalogo,
   CatalogosService,
   InputFechaComponent,
+  NotificacionesComponent,
+  REGEX_RFC,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -46,6 +48,7 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CommonModule } from '@angular/common';
 import { ComplimentosService } from '../../services/complimentos.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Notificacion } from '@ng-mf/data-access-user';
 
 import { DatosCatalago, INPUT_FECHA_CONFIG } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
 import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
@@ -67,7 +70,8 @@ import { TramiteStore } from '../../../estados/tramite.store';
     TituloComponent,
     CatalogoSelectComponent,
     SelectPaisesComponent,
-    InputFechaComponent
+    InputFechaComponent,
+    NotificacionesComponent
   ],
   templateUrl: './complimentos.component.html',
   styleUrl: './complimentos.component.scss',
@@ -106,6 +110,19 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    * @description lista de catálogos.
    */
   estados!: Catalogo[];
+
+  /**
+   * @description
+   * Objeto que representa una nueva notificación para RFC.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaNotificacionRfc!: Notificacion;
+
+  /**
+   * Flag to track if we're currently processing RFC validation
+   * Prevents interference from other form events
+   */
+  private isProcessingRfcValidation: boolean = false;
 
   /**
    * @type {Subscription}
@@ -327,7 +344,12 @@ this.formaComplimentos.disable();
         estado: ['', Validators.required],
         nombreDeActa: ['',[ Validators.required, Validators.maxLength(10)]],
         fechaDeActa: ['', Validators.required],
-        rfc: ['', [Validators.required, Validators.maxLength(13)]],
+        rfc: ['', [
+          Validators.required, 
+          Validators.minLength(12),
+          Validators.maxLength(13),
+          Validators.pattern(REGEX_RFC)
+        ]],
         nombreDeRepresentante: [{ value: '', disabled: true }],
       }),
       formaCertificacion: this.fb.group({
@@ -575,7 +597,12 @@ this.formaComplimentos.disable();
         });
       case TIPO_FORMA.NATIONALIDAD_MEXICANA:
         return this.fb.group({
-          rfc: ['', [Validators.required, Validators.maxLength(13)]],
+          rfc: ['', [
+            Validators.required, 
+            Validators.minLength(12),
+            Validators.maxLength(13),
+            Validators.pattern(REGEX_RFC)
+          ]],
         });
 
       default:
@@ -792,6 +819,163 @@ this.formaComplimentos.disable();
    */
   private clearPreservedData(): void {
     this.PRESERVED_FORM_DATA = {};
+  }
+
+  /**
+   * Gets the appropriate error message for the main RFC field validation (formaModificaciones.rfc only)
+   * @returns {string} The error message to display
+   */
+  getRfcErrorMessage(): string {
+    if (!this.formaComplimentos) {
+      return 'Formulario no inicializado';
+    }
+    
+    // ONLY get errors from the main RFC field, not the dynamic form RFC
+    const RFC_CONTROL = this.formaComplimentos.get('formaModificaciones')?.get('rfc');
+    
+    if (!RFC_CONTROL?.errors) {
+      return '';
+    }
+
+    if (RFC_CONTROL.errors['required']) {
+      return 'El RFC es obligatorio';
+    }
+    
+    if (RFC_CONTROL.errors['minlength']) {
+      return 'El RFC debe tener al menos 12 caracteres';
+    }
+    
+    if (RFC_CONTROL.errors['maxlength']) {
+      return 'El RFC no puede exceder los 13 caracteres';
+    }
+    
+    if (RFC_CONTROL.errors['pattern']) {
+      return 'Formato inválido. Debe ser: 3-4 letras, 6 dígitos, 3 caracteres alfanuméricos';
+    }
+
+    return 'El RFC tiene errores de validación';
+  }
+
+  /**
+   * Handles MAIN RFC field blur event to show validation popup (formaModificaciones.rfc only)
+   */
+  onRfcBlur(): void {
+    // Set flag to indicate we're processing RFC validation
+    this.isProcessingRfcValidation = true;
+    
+    // Only target the main RFC field in formaModificaciones
+    const RFC_CONTROL = this.formaComplimentos.get('formaModificaciones')?.get('rfc');
+    if (RFC_CONTROL) {
+      RFC_CONTROL.markAsTouched();
+      // Only check validation for the main RFC field specifically on blur
+      this.checkRfcValidationOnly();
+    }
+    
+    // Reset flag after a delay
+    setTimeout(() => {
+      this.isProcessingRfcValidation = false;
+    }, 200);
+  }
+
+  /**
+   * Handles MAIN RFC field input change to show validation popup (formaModificaciones.rfc only)
+   * Only triggers when called directly from the main RFC input field
+   */
+  onRfcChange(): void {
+    // Set flag to indicate we're processing RFC validation
+    this.isProcessingRfcValidation = true;
+    
+    // Clear any existing notification first
+    this.clearRfcNotification();
+    
+    // Check validation after a slight delay to allow the value to be updated
+    setTimeout(() => {
+      // Only target the main RFC field in formaModificaciones
+      const RFC_CONTROL = this.formaComplimentos.get('formaModificaciones')?.get('rfc');
+      if (RFC_CONTROL && RFC_CONTROL.value) {
+        RFC_CONTROL.markAsTouched();
+        RFC_CONTROL.updateValueAndValidity();
+        // Only check validation for the main RFC field specifically and only if it has a value
+        this.checkRfcValidationOnly();
+      }
+      
+      // Reset flag
+      this.isProcessingRfcValidation = false;
+    }, 100);
+  }
+
+  /**
+   * Checks ONLY the main RFC validation (formaModificaciones.rfc) and shows notification if invalid
+   * This method is separate from other form validations to avoid interference
+   * Specifically ignores the dynamic form RFC field (formaDatos.rfc)
+   */
+  private checkRfcValidationOnly(): void {
+    if (!this.formaComplimentos) {
+      return;
+    }
+
+    // ONLY proceed if we're explicitly processing RFC validation
+    if (!this.isProcessingRfcValidation) {
+      return;
+    }
+
+    // ONLY check the main RFC field in formaModificaciones, NOT the dynamic form RFC
+    const RFC_CONTROL = this.formaComplimentos.get('formaModificaciones')?.get('rfc');
+    
+    // Additional check: ensure we're not processing other form events
+    const ACTIVE_ELEMENT = document.activeElement as HTMLInputElement;
+    const IS_RFC_FIELD = ACTIVE_ELEMENT?.id === 'rfc' || 
+                        (RFC_CONTROL?.touched && RFC_CONTROL?.value && RFC_CONTROL?.value.trim() !== '');
+    
+    // Ensure we're only checking the specific main RFC field and user is actually interacting with it
+    if (RFC_CONTROL?.invalid && RFC_CONTROL?.touched && RFC_CONTROL?.value && 
+        RFC_CONTROL?.value.trim() !== '' && IS_RFC_FIELD) {
+      const ERROR_MESSAGE = this.getRfcErrorMessage();
+      
+      // Only show notification if there's actually an error message and no notification is already shown
+      if (ERROR_MESSAGE && ERROR_MESSAGE.trim() !== '' && !this.nuevaNotificacionRfc) {
+        this.nuevaNotificacionRfc = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: 'RFC Inválido',
+          mensaje: ERROR_MESSAGE,
+          cerrar: false,
+          tiempoDeEspera: 3000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+      }
+    } else if (RFC_CONTROL?.valid && IS_RFC_FIELD) {
+      // Clear notification if main RFC field becomes valid and we're in RFC context
+      this.clearRfcNotification();
+    }
+  }
+
+  /**
+   * Clears the RFC notification
+   */
+  private clearRfcNotification(): void {
+    if (this.nuevaNotificacionRfc) {
+      this.nuevaNotificacionRfc = undefined as unknown as Notificacion;
+    }
+  }
+
+  /**
+   * Handles notification confirmation for RFC validation
+   * @param confirmar Indicates if the user confirmed the notification
+   */
+  confirmarNotificacionRfc(confirmar: boolean): void {
+    if (confirmar) {
+      // Clear the notification
+      this.clearRfcNotification();
+      
+      // Optionally focus back on the RFC field
+      const RFC_INPUT = document.getElementById('rfc');
+      if (RFC_INPUT) {
+        RFC_INPUT.focus();
+      }
+    }
   }
 
   /**

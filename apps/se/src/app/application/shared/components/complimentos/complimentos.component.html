@@ -174,25 +174,21 @@
         <div class="row mb-4">
           <div class="col-md-4">
             <label for="rfc"> RFC del Representante Legal*:</label>
-            <input
-              type="text"
-              id="rfc"
-              name="rfc"
-              class="form-control"
-              formControlName="rfc"
-              maxlength="13"
-              [class.is-invalid]="formaComplimentos.get('formaModificaciones')?.get('rfc')?.invalid && formaComplimentos.get('formaModificaciones')?.get('rfc')?.touched"
-            />
-            @if (formaComplimentos.get('formaModificaciones')?.get('rfc')?.invalid && formaComplimentos.get('formaModificaciones')?.get('rfc')?.touched) {
-              <div class="invalid-feedback">
-                @if (formaComplimentos.get('formaModificaciones')?.get('rfc')?.errors?.['required']) {
-                  <small>Este campo es obligatorio.</small>
-                }
-                @if (formaComplimentos.get('formaModificaciones')?.get('rfc')?.errors?.['maxlength']) {
-                  <small>El RFC no puede exceder los 13 caracteres.</small>
-                }
+            <div class="position-relative">
+              <input
+                type="text"
+                id="rfc"
+                name="rfc"
+                class="form-control"
+                formControlName="rfc"
+                maxlength="13"
+                onkeyup="this.value = this.value.toUpperCase();"
+                onkeypress="return /^[A-ZÑ&0-9]$/i.test(event.key) || event.key === 'Backspace' || event.key === 'Delete' || event.key === 'Tab'"
+                (blur)="onRfcBlur()"
+                (input)="onRfcChange()"
+               
+              />
               </div>
-            }
           </div>
         </div>
         <div class="row mb-4">
@@ -494,3 +490,13 @@
     </div>
   </div>
 </form>
+
+<!-- RFC Validation Notification -->
+@if (nuevaNotificacionRfc) {
+  <section>
+    <lib-notificaciones 
+      [notificacionInput]="nuevaNotificacionRfc" 
+      (confirmacionModal)="confirmarNotificacionRfc($event)">
+    </lib-notificaciones>
+  </section>
+}
