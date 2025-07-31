@@ -4,7 +4,7 @@ import { Solicitud260303State, Tramite260303Store } from '../../../estados/trami
 import { EstadoCatalogResponse } from '../models/certificados-licencias-permisos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { JSONResponse } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { Catalogo, JSONResponse } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 // Decorador Injectable que indica que este servicio puede ser inyectado en otros componentes o servicios.
 // providedIn: 'root' significa que el servicio estará disponible en toda la aplicación.
@@ -55,8 +55,8 @@ export class CertificadosLicenciasPermisosService {
     this.tramite260303Store.setNumeroPermiso(DATOS.numeroPermiso);
 
     // Datos adicionales
+    this.tramite260303Store.setManifiestos(DATOS.manifiestos);
     this.tramite260303Store.setLosDatosNo(DATOS.losDatosNo);
-    this.tramite260303Store.setLosDatosYes(DATOS.losDatosYes);
     this.tramite260303Store.setNombreORazon(DATOS.nombreORazon);
 
     // Información del producto
@@ -118,11 +118,8 @@ export class CertificadosLicenciasPermisosService {
     // Terceros relacionados
     this.tramite260303Store.SetTercerosRelacionadosDenominacionSocial(DATOS.tercerosRelacionadosDenominacionSocial);
     this.tramite260303Store.SetTercerosRelacionadosTerceroNombre(DATOS.tercerosRelacionadosTerceroNombre);
-    this.tramite260303Store.SetTercerosRelacionadosNacional(DATOS.tercerosRelacionadosNacional);
-    this.tramite260303Store.SetTercerosRelacionadosExtranjero(DATOS.tercerosRelacionadosExtranjero);
-    this.tramite260303Store.SetTercerosRelacionadosFisica(DATOS.tercerosRelacionadosFisica);
-    this.tramite260303Store.SetTercerosRelacionadosMoral(DATOS.tercerosRelacionadosMoral);
-    this.tramite260303Store.SetTercerosRelacionadosNoContribuyente(DATOS.tercerosRelacionadosNoContribuyente);
+    this.tramite260303Store.SetTercerosNacionalidad(DATOS.tercerosNacionalidad);
+    this.tramite260303Store.SetTipoPersona(DATOS.tipoPersona);
     this.tramite260303Store.SetTercerosRelacionadosRfc(DATOS.tercerosRelacionadosRfc);
     this.tramite260303Store.SetTercerosRelacionadosCurp(DATOS.tercerosRelacionadosCurp);
     this.tramite260303Store.SetTercerosRelacionadosRazonSocial(DATOS.tercerosRelacionadosRazonSocial);
@@ -330,4 +327,16 @@ export class CertificadosLicenciasPermisosService {
     getFormularioData(): Observable<Solicitud260303State> {
       return this.http.get<Solicitud260303State>('assets/json/260303/inicializar-formulario.json');
     }
+
+    /**
+   * @method getPaisDatos
+   * @description
+   * Obtiene el catálogo de pais desde un archivo JSON local.
+   * @returns {Observable<Catalogo>} Observable con los datos del catálogo de pais.
+   */
+    getPaisDatos(): Observable<Catalogo[]> {
+      return this.http.get<Catalogo[]>('assets/json/260303/pais.json');
+    }
+
+
 }

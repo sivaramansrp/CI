@@ -1,7 +1,7 @@
 <div class="container">
     <ng-titulo titulo="Datos del establecimiento"></ng-titulo>
     <div class="d-flex justify-content-end">
-        <button class="btn btn-primary" type="button" (click)="seleccionar(template)" tooltip="Selecciona para habilitar los campos del establecimiento" placement="left">Seleccionar establecimiento</button>
+        <button class="btn btn-primary" type="button" (click)="seleccionar(template)" tooltip="Selecciona para habilitar los campos del establecimiento" placement="left" [disabled]="consultaState?.readonly">Seleccionar establecimiento</button>
     </div>
     <div class="row mb-3">
         <div class="col-md-8">
@@ -39,6 +39,7 @@
                     [label]="'Estado'"
                     [required]="true"
                     formControlName="estado"
+                    [isDisabled]="consultaState.readonly"
                     name="estado"
                     (change)="setValoresStore(domicilioDeElstablecimientoForm,'estado', 'setEstado')">
                 </app-catalogo-select>
@@ -174,11 +175,13 @@
             <app-tabla-dinamica
                 [configuracionTabla]="configuracionTabla"
                 [datos]="scianTablaDatos"
-                [tipoSeleccionTabla]="checkbox">
+                [tipoSeleccionTabla]="checkbox"
+                [disableSeleccionTablaCheckBox]="consultaState.readonly"
+                >
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-3">
-                <button class="btn btn-danger me-3">Eliminar</button>
-                <button class="btn btn-primary" (click)="seleccionarAgregar(scian)">Agregar</button>
+                <button class="btn btn-danger me-3" [disabled]="consultaState?.readonly">Eliminar</button>
+                <button class="btn btn-primary" (click)="seleccionarAgregar(scian)" [disabled]="consultaState?.readonly">Agregar</button>
             </div>
         </div>
     </div>
@@ -196,10 +199,11 @@
         </div>
         <div class="col-md-4">
             <div class="form-group">
-                <label for="licenciaSanitaria" class="form-label">No. de licencia sanitaria: <i class="bi bi-question-circle-fill"></i></label>
+                <label for="licenciaSanitaria" class="form-label">No. de licencia sanitaria: <span class="p-2" tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente." placement="top"><i class="bi bi-question-circle-fill"></i></span></label>
                 <input type="text" id="licenciaSanitaria" 
                     formControlName="licenciaSanitaria" 
                     class="form-control"
+                    maxlength="20"
                     (change)="setValoresStore(domicilioDeElstablecimientoForm,'licenciaSanitaria', 'setLicenciaSanitaria')">
             </div>
         </div>
@@ -227,7 +231,7 @@
 >
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-3">
-                <button class="btn btn-primary" (click)="seleccionarAgregar(mercancias)">Agregar</button>
+                <button class="btn btn-primary" (click)="seleccionarAgregar(mercancias)" [disabled]="consultaState?.readonly">Agregar</button>
             </div>
         </div>
     </div>
@@ -245,35 +249,30 @@
     </div>
 </form>
     <ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
-    <ng-alert [CONTENIDO]="TEXTOS.Importante"></ng-alert>
     <form [formGroup]="representanteLegalForm">
+        <div class="alert alert-info">
+            <div class="row form-check d-flex justify-content-between">
+                <div class="col-md-1 mt-5">
+                    <input class="form-check-input" type="checkbox" id="manifiestos" formControlName="manifiestos" (change)="setValoresStore(representanteLegalForm,'manifiestos', 'setManifiestos')">*
+                </div>
+                <div class="col-md-11">
+                    <p class="form-check-label" for="manifiestos">
+                        Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.
+                    </p>
+                </div>
+            </div>
+        </div>
         <div class="row mb-3">
-            <p class="fw-bold">
-              Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:
-            </p>
-            <div class="col-md-12 d-flex">
-              <div class="form-check me-2">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="losDatosNo"
-                  formControlName="losDatosNo"
-                  id="losDatos-no"
-                  (change)="setValoresStore(representanteLegalForm,'losDatosNo', 'setLosDatosNo')"
-                />
-                <label class="form-check-label" for="importaciones1-si">No</label>
-              </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="losDatosYes"
-                  formControlName="losDatosYes"
-                  id="losDatos-si"
-                  (change)="setValoresStore(representanteLegalForm,'losDatosYes', 'setLosDatosYes')"
-                />
-                <label class="form-check-label" for="importaciones1-no">Sí</label>
-              </div>
+            <div class="form-group">
+                <label class="form-label " for="losDatosNo">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
+                <app-input-radio
+                    [radioOptions]="sinoOpciones"
+                    id="losDatosNo"
+                    formControlName="losDatosNo"
+                    [layout]="'horizontal'"
+                    [isRequired]="true"
+                    (valueChange)="eventoDeCambioDeValor($event, representanteLegalForm,'losDatosNo', 'setLosDatosNo')"
+                ></app-input-radio>
             </div>
           </div>
           <ng-titulo titulo="Representante legal"></ng-titulo>
@@ -282,7 +281,7 @@
                 <div class="form-group">
                     <label for="rfc" class="form-label">RFC*:</label>
                     <input type="text" id="rfc" formControlName="rfc" class="form-control"
-                    (change)="setValoresStore(representanteLegalForm,'rfc', 'setRfc')">
+                    (change)="setValoresStore(representanteLegalForm,'rfc', 'setRfc')" [ngClass]="esValido(representanteLegalForm, 'rfc') ? 'required' : ''">
                 </div>
                 @if(representanteLegalForm.controls['rfc'].invalid && representanteLegalForm.controls['rfc'].touched) {
                     <div class="d-block">
@@ -291,9 +290,14 @@
                         }
                     </div>
                 }
+                @if (representanteLegalForm.get('rfc')?.hasError('rfcInvalido') && representanteLegalForm.get('rfc')?.touched) {
+                <div class="mensaje-error">
+                    La nomenclatura del RFC es incorrecta
+                </div>
+                }
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-primary mt-5">Buscar</button>
+                <button type="button" class="btn btn-primary mt-5" (click)="buscarRepresentanteLegal()" [disabled]="consultaState?.readonly">Buscar</button>
             </div>
           </div>
           <div class="row mb-2">

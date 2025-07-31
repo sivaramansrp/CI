@@ -62,7 +62,7 @@
             </div>
         </div>
         <div class="d-flex justify-content-end mt-5">
-            <button type="button" class="btn btn-danger">Borrar datos del pago</button>
+            <button type="button" class="btn btn-danger" [disabled]="consultaState.readonly" (click)="borrarDatosDelPago()">Borrar datos del pago</button>
         </div>
     </form>
 </div>

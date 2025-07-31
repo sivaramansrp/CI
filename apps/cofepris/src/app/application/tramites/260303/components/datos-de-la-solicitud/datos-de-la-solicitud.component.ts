@@ -1,7 +1,8 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, MANIFIESTOS, MercanciasDatos, ScianDatos, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, InputRadioComponent, MercanciasDatos, REGEX_RFC, ScianDatos, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { CONFIGURACION_MERCANCIAS_DATOS, RADIO_OPCIONES } from '../../services/certificados-licencias-permisos.enum';
 import { Component, Input, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import CROSLISTA_DE_PAISES from '@libs/shared/theme/assets/json/260303/croslista_de_paises.json';
@@ -27,7 +28,8 @@ import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico
     CatalogoSelectComponent,
     CrosslistComponent,
     AlertComponent,
-    TooltipModule
+    TooltipModule,
+    InputRadioComponent
   ],
   providers:[BsModalService],
   templateUrl: './datos-de-la-solicitud.component.html',
@@ -168,33 +170,7 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
   ];
 
   /** Configuración de la tabla de sectores */
-  public configuracionMercancias: ConfiguracionColumna<MercanciasDatos>[] = [
-    { encabezado: 'Clasificación del producto', clave: (item: MercanciasDatos) => item.clasificacion, orden: 1 },
-    { encabezado: 'Especificar clasificación del producto', clave: (item: MercanciasDatos) => item.especificar, orden: 2 },
-    { encabezado: 'Denominación común internacional (DCI) o Denominación genérica o nombre científico', clave: (item: MercanciasDatos) => item.dci, orden: 3 },
-    { encabezado: 'Denominación distintiva', clave: (item: MercanciasDatos) => item.denominacion, orden: 4 },
-    { encabezado: 'Número CAS', clave: (item: MercanciasDatos) => item.numero, orden: 5 },
-    { encabezado: 'Fracción arancelaria', clave: (item: MercanciasDatos) => item.fraccion, orden: 6 },
-    { encabezado: 'Descripción de la fracción', clave: (item: MercanciasDatos) => item.descripcionDeLa, orden: 7 },
-    { encabezado: 'Tipo de producto', clave: (item: MercanciasDatos) => item.tipoDeProducto, orden: 8 },
-    { encabezado: 'Forma farmacéutica', clave: (item: MercanciasDatos) => item.formaFarmaceutica, orden: 9 },
-    { encabezado: 'Cantidad UMT', clave: (item: MercanciasDatos) => item.umt, orden: 10 },
-    { encabezado: 'UMC', clave: (item: MercanciasDatos) => item.umc, orden: 11 },
-    { encabezado: 'Número CAS', clave: (item: MercanciasDatos) => item.numeroCas, orden: 12 },
-    { encabezado: 'Cantidad de lotes', clave: (item: MercanciasDatos) => item.cantidad, orden: 13 },
-    { encabezado: 'Kg o g por lote', clave: (item: MercanciasDatos) => item.kg, orden: 14 },
-    { encabezado: 'País de destino', clave: (item: MercanciasDatos) => item.paisDeDestino, orden: 15 },
-    { encabezado: 'País de origen', clave: (item: MercanciasDatos) => item.paisDeOrigen, orden: 16 },
-    { encabezado: 'País de procedencia', clave: (item: MercanciasDatos) => item.paisDeProcedencia, orden: 17 },
-    { encabezado: 'Uso especiffico', clave: (item: MercanciasDatos) => item.uso, orden: 18 },
-    { encabezado: 'Detalle uso especiffico', clave: (item: MercanciasDatos) => item.detalle, orden: 19 },
-    { encabezado: 'Cantidad UMC', clave: (item: MercanciasDatos) => item.cantidadUmc, orden: 20 },
-    { encabezado: 'De piezas', clave: (item: MercanciasDatos) => item.dePiezas, orden: 21 },
-    { encabezado: 'Descripción de piezas', clave: (item: MercanciasDatos) => item.descripcionDePiezas, orden: 22 },
-    { encabezado: 'Número de registro', clave: (item: MercanciasDatos) => item.numeroDeReg, orden: 23 },
-    { encabezado: 'Presentación', clave: (item: MercanciasDatos) => item.presentacion, orden: 24 },
-  ];
-
+  public configuracionMercancias = CONFIGURACION_MERCANCIAS_DATOS;
     /**
    * Etiqueta para el crosslist de Forma farmacéutica.
    */
@@ -255,16 +231,14 @@ public colapsableObj = {
   paisDeOrigenColapsable: false,
   usoEspecificoColapsable: false,
 };
-/**
- * Una constante que contiene los textos de manifiestos utilizados en la aplicación.
- * Esto se llena a partir del objeto `MANIFIESTOS` y se utiliza para proporcionar
- * contenido textual predefinido para el componente.
- */
-public TEXTOS = MANIFIESTOS;
+
 /**
  * Notificador para destruir los observables al finalizar.
  */
 private destroyNotifier$: Subject<void> = new Subject();
+
+/** Modelo para la opción de tipo sí/no representado como radio button */
+  public sinoOpciones = RADIO_OPCIONES;
 /**
  * Constructor para el componente DatosDeLaSolicitudComponent.
  * 
@@ -280,6 +254,7 @@ constructor(
   private certificadosLicenciasSvc: CertificadosLicenciasPermisosService,
   private tramite260211Store: Tramite260303Store,
   private tramite260211Query: Tramite260303Query,
+  private validacionesService: ValidacionesFormularioService
 ) {
 }
 
@@ -340,7 +315,11 @@ ngOnInit(): void {
 public inicializarTablaYCatalogoDatos(): void {
   this.getDenominacionForm();
   this.getEstadoCatalogDatos();
-  // this.getscianTabla();
+  if (this.solicitudState['scianTabla'].length) {
+    this.scianTablaDatos = this.solicitudState['scianTabla'];
+  } else {
+    this.getscianTabla();
+  }
   this.getClaveCatalogDatos();
   this.getRegimenCatalogDatos();
   this.getMercanciasTabla();
@@ -439,13 +418,28 @@ public static deepCopy<T>(obj: T): T {
    */
   public crearRepresentanteLegalForm(): void {
     this.representanteLegalForm = this.fb.group({
+      manifiestos: [this.solicitudState.manifiestos],
       losDatosNo: [this.solicitudState.losDatosNo],
-      losDatosYes: [this.solicitudState.losDatosYes],
-      rfc: [this.solicitudState.rfc],
-      nombreORazon: [this.solicitudState.nombreORazon],
-      apellidoPaterno: [this.solicitudState.apellidoPaterno],
-      apellidoMaterno: [this.solicitudState.apellidoMaterno],
+      rfc: [this.solicitudState.rfc, [Validators.required, Validators.maxLength(13), DatosDeLaSolicitudComponent.validadorRFC]],
+      nombreORazon: [{value: this.solicitudState.nombreORazon, disabled: true}],
+      apellidoPaterno: [{value: this.solicitudState.apellidoPaterno, disabled: true}],
+      apellidoMaterno: [{value: this.solicitudState.apellidoMaterno, disabled: true}],
     });
+  }
+
+  /**
+   * Valida el RFC ingresado en el formulario.
+   * Utiliza expresiones regulares para verificar si es un RFC válido.
+   * 
+   * @returns Un objeto de error si el RFC es inválido, o null si es válido.
+   */
+  static validadorRFC(control: AbstractControl): ValidationErrors | null {
+    const VALUE = control.value;
+    if (!VALUE) {
+      return null;
+    }
+    const ES_VALIDO = REGEX_RFC.test(VALUE);
+    return ES_VALIDO ? null : { rfcInvalido: true };
   }
 
   /**
@@ -581,6 +575,7 @@ public static deepCopy<T>(obj: T): T {
     this.certificadosLicenciasSvc.getScianDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       const DATOS = DatosDeLaSolicitudComponent.deepCopy<ScianDatos[]>(response);
       this.scianTablaDatos = DATOS;
+      (this.tramite260211Store['setScianTabla'] as (value: unknown) => void)(this.scianTablaDatos);
     });
   }
 
@@ -637,6 +632,7 @@ public static deepCopy<T>(obj: T): T {
       };
 
       this.scianTablaDatos = [...this.scianTablaDatos, DATO];
+      (this.tramite260211Store['setScianTabla'] as (value: unknown) => void)(this.scianTablaDatos);
       this.modalRef?.hide();
     }
   }
@@ -756,17 +752,31 @@ public static deepCopy<T>(obj: T): T {
   }
 
   /**
+   * Establece el valor de un campo en el store de Tramite260303.
+   * @param form - El grupo de formularios que contiene el campo.
+   * @param campo - El nombre del campo cuyo valor se va a establecer.
+   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+   */
+  eventoDeCambioDeValor(event: string | number, form: FormGroup, campo: string, metodoNombre: keyof Tramite260303Store): void {
+    form.get(campo)?.setValue(event);
+    this.setValoresStore(form, campo, metodoNombre);
+  }
+
+  /**
    * Establece el valor de un campo en el store de Tramite31601.
    * @param form - El grupo de formularios que contiene el campo.
    * @param campo - El nombre del campo cuyo valor se va a establecer.
    * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260303Store): void {
-      if (campo === 'claveScian') {
-        form.get('descripcion')?.setValue('1');
-      }
-      const VALOR = form.get(campo)?.value;
-      (this.tramite260211Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    if (campo === 'claveScian') {
+      form.get('descripcion')?.setValue('1');
+    }
+    if (campo === 'licenciaSanitaria' && form.get('licenciaSanitaria')?.value) {
+      form.get('avisoCheckbox')?.disable();
+    }
+    const VALOR = form.get(campo)?.value;
+    (this.tramite260211Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
     /**
@@ -783,6 +793,31 @@ public static deepCopy<T>(obj: T): T {
         this.mercanciasForm.disable();
       }
     }
+
+    /** Busca y asigna los datos del representante legal en el formulario si es válido. */
+    buscarRepresentanteLegal(): void {
+      if (this.representanteLegalForm.valid) {
+        this.representanteLegalForm.patchValue({
+          nombreORazon: 'EUROFOODS DE MEXICO',
+          apellidoPaterno: 'GONZALEZ',
+          apellidoMaterno: 'PINAL'
+        })
+      } else {
+        this.representanteLegalForm.markAllAsTouched();
+      }
+    }
+
+    /**
+  * compo doc
+  * @method isValid
+  * @description 
+  * Verifica si un campo específico del formulario es válido.
+  * @param field El nombre del campo que se desea validar.
+  * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+  */
+  public esValido(form: FormGroup, campo: string): boolean | null {
+    return this.validacionesService.isValid(form, campo);
+  }
 
     /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.

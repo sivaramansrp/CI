@@ -8,7 +8,7 @@
             <div class="row mb-5">
                 <div class="col-md-8">
                     <div class="form-group">
-                        <label for="denominacion">Denominación/razón social*:</label>
+                        <label for="denominacion" class="form-label ">Denominación/razón social*:</label>
                         <input type="text" class="form-control" 
                             formControlName="denominacionSocial" 
                             (change)="setValoresStore(tercerosRelacionadosForm,'denominacionSocial', 'SetTercerosRelacionadosDenominacionSocial')"
@@ -20,88 +20,75 @@
                 <div class="row mb-5">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="nombreDescripcion">Tercero nombre descripcion*:</label>
+                            <label for="nombreDescripcion" class="form-label ">Tercero nombre descripcion*:</label>
                             <input type="text" class="form-control" 
                             formControlName="terceroNombre" 
                             (change)="setValoresStore(tercerosRelacionadosForm,'terceroNombre', 'SetTercerosRelacionadosTerceroNombre')"
-                            id="nombreDescripcion">
+                            id="nombreDescripcion" [ngClass]="esValido(tercerosRelacionadosForm, 'terceroNombre') ? 'required' : ''">
+                            @if(tercerosRelacionadosForm.controls['terceroNombre'].errors?.['required'] && tercerosRelacionadosForm.get('terceroNombre')?.touched) {
+                                    <span class="mensaje-error">Este campo es obligatorio</span>
+                                }
                         </div>
                     </div>
                 </div>
                 <h5>Datos generales</h5>
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <p class="fw-bold">Terceros nacionalidad*:</p>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" 
-                                formControlName="nacional" 
-                                (change)="setValoresStore(tercerosRelacionadosForm,'nacional', 'SetTercerosRelacionadosNacional')"
-                                name="nacional" id="flexRadioDefault3">
-                            <label class="form-check-label" for="flexRadioDefault3">
-                                Nacional
-                            </label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" 
-                                formControlName="extranjero" 
-                                name="extranjero" 
-                                (change)="setValoresStore(tercerosRelacionadosForm,'extranjero', 'SetTercerosRelacionadosExtranjero')"
-                                id="flexRadioDefault4">
-                            <label class="form-check-label" for="flexRadioDefault4">
-                                Extranjero
-                            </label>
-                          </div>
+                        <div class="form-group">
+                            <label class="form-label " for="tercerosNacionalidad">Terceros nacionalidad*:</label>
+                            <app-input-radio
+                                [radioOptions]="terecerosNacionalidadOpciones"
+                                id="tercerosNacionalidad"
+                                formControlName="tercerosNacionalidad"
+                                [layout]="'vertical'"
+                                [isRequired]="true"
+                                (valueChange)="eventoDeCambioDeValor($event, tercerosRelacionadosForm,'tercerosNacionalidad', 'SetTercerosNacionalidad')"
+                            ></app-input-radio>
+                        
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <p class="fw-bold">Tipo persona*:</p>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" 
-                                formControlName="fisica"
-                                (change)="setValoresStore(tercerosRelacionadosForm,'fisica', 'SetTercerosRelacionadosFisica')" 
-                                name="fisica" 
-                                id="flexRadioDefault1">
-                            <label class="form-check-label" for="flexRadioDefault1">
-                                Fisica <i class="bi bi-question-circle-fill"></i>
-                            </label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" 
-                                formControlName="moral" 
-                                (change)="setValoresStore(tercerosRelacionadosForm,'moral', 'SetTercerosRelacionadosMoral')"
-                                name="moral" 
-                                id="flexRadioDefault2">
-                            <label class="form-check-label" for="flexRadioDefault2">
-                                Moral <i class="bi bi-question-circle-fill"></i>
-                            </label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" 
-                                formControlName="noContribuyente"
-                                (change)="setValoresStore(tercerosRelacionadosForm,'noContribuyente', 'SetTercerosRelacionadosNoContribuyente')" 
-                                name="noContribuyente" 
-                                id="flexRadioDefault3">
-                            <label class="form-check-label" for="flexRadioDefault3">
-                                No contribuyente
-                            </label>
-                          </div>
+                        <label class="form-label " for="tipoPersona">Tipo persona*:</label>
+                        <app-input-radio
+                                [radioOptions]="tipoPersonaOpciones"
+                                id="tipoPersona"
+                                formControlName="tipoPersona"
+                                [layout]="'vertical'"
+                                [isRequired]="true"
+                                (valueChange)="eventoDeCambioDeValor($event, tercerosRelacionadosForm,'tipoPersona', 'SetTipoPersona')"
+                            ></app-input-radio>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="rfc" class="form-label">RFC*:</label>
+                            <label for="rfc" class="form-label ">RFC*:
+                                <span class="p-2" tooltip="Registro Federal de Contribuyente" placement="top">
+                                <i class="bi bi-question-circle-fill"></i>
+                              </span>
+                            </label>
                             <input type="text" id="rfc" 
                                 formControlName="rfc"
                                 (change)="setValoresStore(tercerosRelacionadosForm,'rfc', 'SetTercerosRelacionadosRfc')" 
-                                class="form-control">
+                                class="form-control" [ngClass]="esValido(tercerosRelacionadosForm, 'rfc') ? 'required' : ''">
+                                @if (tercerosRelacionadosForm.get('rfc')?.hasError('rfcInvalido') && tercerosRelacionadosForm.get('rfc')?.touched) {
+                                    <div class="mensaje-error">
+                                        Existen datos incorrectos que no cumplen con el formato esperado.
+                                    </div>
+                                }
+                                @if(tercerosRelacionadosForm.controls['rfc'].errors?.['required'] && tercerosRelacionadosForm.get('rfc')?.touched) {
+                                    <span class="mensaje-error">Este campo es obligatorio</span>
+                                }
                         </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary mt-5">Bucar</button>
-                        </div>
+                        @if (tercerosRelacionadosForm.get('tercerosNacionalidad')?.value && tercerosRelacionadosForm.get('tipoPersona')?.value) {
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-primary mt-5" (click)="buscar()">Buscar</button>
+                            </div>
+                        }
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="curp" class="form-label">C.U.R.P*:</label>
+                            <label for="curp" class="form-label ">C.U.R.P.*:</label>
                             <input type="text" id="curp" 
                                 formControlName="curp"
                                 (change)="setValoresStore(tercerosRelacionadosForm,'curp', 'SetTercerosRelacionadosCurp')" 
@@ -109,100 +96,177 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-md-8">
+                @if (tercerosRelacionadosForm.get('tercerosNacionalidad')?.value && tercerosRelacionadosForm.get('tipoPersona')?.value === 'moral') {
+                    <div class="row mt-5">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="denominacion" class="form-label ">Denominación/razón social*:</label>
+                                <input type="text" id="denominacion" 
+                                    formControlName="razonSocial" 
+                                    (change)="setValoresStore(tercerosRelacionadosForm,'razonSocial', 'SetTercerosRelacionadosRazonSocial')"
+                                    class="form-control">
+                            </div>
+                        </div>
+                    </div> 
+                }
+            }
+            @if (tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica') {
+                <div class="row mt-5">
+                    <h5>Datos personales</h5>
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label for="denominacion" class="form-label">Denominación/razón social*:</label>
-                            <input type="text" id="denominacion" 
-                                formControlName="razonSocial" 
-                                (change)="setValoresStore(tercerosRelacionadosForm,'razonSocial', 'SetTercerosRelacionadosRazonSocial')"
+                            <label for="datosPersonalesNombre" class="form-label ">Nombre(s)*:</label>
+                            <input type="text" id="datosPersonalesNombre" 
+                                formControlName="datosPersonalesNombre" 
+                                (change)="setValoresStore(tercerosRelacionadosForm,'datosPersonalesNombre', 'setDatosPersonalesNombre')"
+                                class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="datosPersonalesPrimerApellido" class="form-label ">Primer apellido*:</label>
+                            <input type="text" id="datosPersonalesPrimerApellido" 
+                                formControlName="datosPersonalesPrimerApellido" 
+                                (change)="setValoresStore(tercerosRelacionadosForm,'datosPersonalesPrimerApellido', 'setDatosPersonalesPrimerApellido')"
+                                class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="datosPersonalesSegundoApellido" class="form-label ">Segundo apellido:</label>
+                            <input type="text" id="datosPersonalesSegundoApellido" 
+                                formControlName="datosPersonalesSegundoApellido" 
+                                (change)="setValoresStore(tercerosRelacionadosForm,'datosPersonalesSegundoApellido', 'setDatosPersonalesSegundoApellido')"
                                 class="form-control">
                         </div>
                     </div>
                 </div>
             }
-            <h5>Domicilio</h5>
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="pais" class="form-label">País</label>
-                        <input type="text" id="pais" 
-                            formControlName="pais"
-                            (change)="setValoresStore(tercerosRelacionadosForm,'pais', 'SetTercerosRelacionadosPais')" 
-                            class="form-control">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="estado" class="form-label">Estado</label>
-                        <input type="text" id="estado" 
-                            formControlName="estado"
-                            (change)="setValoresStore(tercerosRelacionadosForm,'estado', 'SetTercerosRelacionadosEstado')" 
-                            class="form-control">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="estado" class="form-label">Código postal o equivalente</label>
-                        <input type="text" id="estado" 
-                            formControlName="codigoPostal" 
-                            (change)="setValoresStore(tercerosRelacionadosForm,'codigoPostal', 'SetTercerosRelacionadosCodigoPostal')"
-                            class="form-control">
-                    </div>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-8">
-                    <div class="form-group">
-                        <label for="calle" class="form-label">Calle*:</label>
-                        <input type="text" id="calle" 
-                            formControlName="calle" 
-                            (change)="setValoresStore(tercerosRelacionadosForm,'calle', 'SetTercerosRelacionadosCalle')"
-                            class="form-control">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="numeroExterior" class="form-label">Número exterior*:</label>
-                        <input type="text" id="numeroExterior" 
-                            formControlName="numeroExterior"
-                            (change)="setValoresStore(tercerosRelacionadosForm,'numeroExterior', 'SetTercerosRelacionadosNumeroExterior')" 
-                            class="form-control">
-                    </div>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="numeroInterior" class="form-label">Número interior:</label>
-                        <input type="text" id="numeroInterior" 
-                            formControlName="numeroInterior"
-                            (change)="setValoresStore(tercerosRelacionadosForm,'numeroInterior', 'SetTercerosRelacionadosNumeroInterior')" 
-                            class="form-control">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="d-flex">
+            <div class="mt-5">
+                <h5>Domicilio</h5>
+                <div class="row mb-3">
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label for="lada" class="form-label">Lada:</label>
-                            <input type="text" id="lada" 
-                                formControlName="lada"
-                                (change)="setValoresStore(tercerosRelacionadosForm,'lada', 'SetTercerosRelacionadosLada')" 
-                                class="form-control lada">
+                            <app-catalogo-select
+                                id="pais"
+                                [catalogo]="paisCatalogo || []" 
+                                formControlName="pais" 
+                                label="País" 
+                                [required]="true"
+                                name="pais"
+                                (change)="eventoDeCambioDeValor($event, tercerosRelacionadosForm,'pais', 'SetTercerosRelacionadosPais')"
+                                ></app-catalogo-select>
                         </div>
+                    </div>
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label for="telefono" class="form-label">Teléfono*:</label>
-                            <input type="text" id="telefono" 
-                                formControlName="telefono"
-                                (change)="setValoresStore(tercerosRelacionadosForm,'telefono', 'SetTercerosRelacionadosTelefono')" 
+                            <label for="estado" class="form-label ">{{titulo === 'Agregar otros' ? 'Estado/localidad*:' :  'Estado:'}} </label>
+                            <input type="text" id="estado" 
+                                formControlName="estado"
+                                (change)="setValoresStore(tercerosRelacionadosForm,'estado', 'SetTercerosRelacionadosEstado')" 
+                                class="form-control">
+                        </div>
+                    </div>
+                    @if (titulo === 'Agregar otros') {
+                        <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="municipio" class="form-label ">Municipio/alcaldía:</label>
+                            <input type="text" id="municipio" 
+                                formControlName="municipio"
+                                (change)="setValoresStore(tercerosRelacionadosForm,'municipio', 'SetTercerosRelacionadosMunicipio')" 
+                                class="form-control">
+                        </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="localidad" class="form-label ">Localidad*:</label>
+                                <input type="text" id="localidad" 
+                                    formControlName="localidad"
+                                    (change)="setValoresStore(tercerosRelacionadosForm,'localidad', 'SetTercerosRelacionadosLocalidad')" 
+                                    class="form-control">
+                            </div>
+                        </div>
+                    }
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="estado" class="form-label ">Código postal o equivalente*:</label>
+                            <input type="text" id="estado" 
+                                formControlName="codigoPostal" 
+                                (change)="setValoresStore(tercerosRelacionadosForm,'codigoPostal', 'SetTercerosRelacionadosCodigoPostal')"
+                                class="form-control">
+                        </div>
+                    </div>
+                    @if (titulo === 'Agregar otros') {
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="estado" class="form-label ">Colonia*:</label>
+                                <input type="text" id="estado" 
+                                    formControlName="colonia" 
+                                    (change)="setValoresStore(tercerosRelacionadosForm,'colonia', 'SetTercerosRelacionadosColonia')"
+                                    class="form-control">
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="calle" class="form-label ">Calle*:
+                                <span class="p-2" tooltip="Calle" placement="top">
+                                    <i class="bi bi-question-circle-fill"></i>
+                                </span>
+                            </label>
+                            <input type="text" id="calle" 
+                                formControlName="calle" 
+                                (change)="setValoresStore(tercerosRelacionadosForm,'calle', 'SetTercerosRelacionadosCalle')"
+                                class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="numeroExterior" class="form-label ">Número exterior*:</label>
+                            <input type="text" id="numeroExterior" 
+                                formControlName="numeroExterior"
+                                (change)="setValoresStore(tercerosRelacionadosForm,'numeroExterior', 'SetTercerosRelacionadosNumeroExterior')" 
                                 class="form-control">
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="d-flex">
+                <div class="row mb-3">
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label for="correoElectronico" class="form-label">Correo electrónico: </label>
+                            <label for="numeroInterior" class="form-label ">Número interior:</label>
+                            <input type="text" id="numeroInterior" 
+                                formControlName="numeroInterior"
+                                (change)="setValoresStore(tercerosRelacionadosForm,'numeroInterior', 'SetTercerosRelacionadosNumeroInterior')" 
+                                class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="d-flex">
+                            <div class="form-group">
+                                <label for="lada" class="form-label ">Lada:</label>
+                                <input type="text" id="lada" 
+                                    formControlName="lada"
+                                    (change)="setValoresStore(tercerosRelacionadosForm,'lada', 'SetTercerosRelacionadosLada')" 
+                                    class="form-control lada">
+                            </div>
+                            <div class="form-group">
+                                <label for="telefono" class="form-label ">Teléfono:</label>
+                                <input type="text" id="telefono" 
+                                    formControlName="telefono"
+                                    (change)="setValoresStore(tercerosRelacionadosForm,'telefono', 'SetTercerosRelacionadosTelefono')" 
+                                    class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="correoElectronico" class="form-label ">Correo electrónico:
+                                <span class="p-2" tooltip="Correo electrónico" placement="top">
+                                <i class="bi bi-question-circle-fill"></i>
+                            </span>
+                            </label>
                             <input type="text" id="correoElectronico" 
                                 formControlName="correoElectronico"
                                 (change)="setValoresStore(tercerosRelacionadosForm,'correoElectronico', 'SetTercerosRelacionadosCorreoElectronico')" 
@@ -212,11 +276,16 @@
                 </div>
             </div>
     </form>
+  </div> 
+  <div class="mt-5 mb-5 d-flex justify-content-between align-items-center col-md-12">
+  <div>
+    <p class="text-muted m-0">* Campos obligatorios</p>
   </div>
-  <div class="modal-footer">
-    <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-danger me-2">Cancelar</button>
-        <button type="button" class="btn btn-default me-2">Limpiar</button>
-        <button type="button" class="btn btn-primary" (click)="bsModalRef.hide()">Guardar</button>
-    </div>
+  <div class="d-flex">
+    <button type="button" class="btn btn-danger ms-3" (click)="bsModalRef.hide()">Cancelar</button>
+    <button type="button" class="btn btn-default ms-3" (click)="limpiar()">Limpiar</button>
+    <button type="button" class="btn btn-primary ms-3" (click)="guardar()">Guardar</button>
   </div>
+</div>
+
+    

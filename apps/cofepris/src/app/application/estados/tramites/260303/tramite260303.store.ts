@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { ScianDatos } from '@libs/shared/data-access-user/src';
 
 /**
  * Interfaz que representa el estado de Solicitud260303.
@@ -89,10 +90,6 @@ export interface Solicitud260303State {
      * El valor de losDatosNo.
     */
     losDatosNo: string;
-     /**
-     * El valor de losDatosYes.
-    */
-    losDatosYes: string;
      /**
      * El valor de nombreORazon.
     */
@@ -270,25 +267,13 @@ export interface Solicitud260303State {
      */
     tercerosRelacionadosTerceroNombre: string;
     /**
-     * El valor de tercerosRelacionadosNacional.
+     * El valor de tercerosNacionalidad.
      */
-    tercerosRelacionadosNacional: string;
-    /**
-     * El valor de tercerosRelacionadosExtranjero.
-     */
-    tercerosRelacionadosExtranjero: string;
+    tercerosNacionalidad: string;
     /**
      * El valor de tercerosRelacionadosFisica.
      */
-    tercerosRelacionadosFisica: string;
-    /**
-     * El valor de tercerosRelacionadosMoral.
-     */
-    tercerosRelacionadosMoral: string;
-    /**
-     * El valor de tercerosRelacionadosNoContribuyente.
-     */
-    tercerosRelacionadosNoContribuyente: string;
+    tipoPersona: string;
     /**
      * El valor de tercerosRelacionadosRfc.
      */
@@ -340,6 +325,35 @@ export interface Solicitud260303State {
     /**
      * El valor de tercerosRelacionadosTelefono.
      */
+    scianTabla: ScianDatos[];
+    /**
+     * El valor de datosPersonalesNombre.
+     */
+    datosPersonalesNombre: string;
+    /**
+     * El valor de datosPersonalesNombre.
+     */
+    datosPersonalesPrimerApellido: string;
+    /**
+     * El valor de datosPersonalesSegundoApellido.
+     */
+    datosPersonalesSegundoApellido: string;
+    /**
+     * El valor de tercerosRelacionadosMunicipio.
+     */
+    tercerosRelacionadosMunicipio: string;
+    /**
+     * El valor de tercerosRelacionadosLocalidad.
+     */
+    tercerosRelacionadosLocalidad: string;
+    /**
+     * El valor de tercerosRelacionadosLocalidad.
+     */
+    tercerosRelacionadosColonia: string;
+    /**
+     * El valor de manifiestos.
+     */
+    manifiestos: boolean;
 }
 /**
  * Función para crear el estado inicial de Solicitud260303State.
@@ -368,7 +382,6 @@ export function createInitialState(): Solicitud260303State {
         aduana: '',
         numeroPermiso: '',
         losDatosNo: '',
-        losDatosYes: '',
         nombreORazon: '',
         clasificacion: '',
         clave: '',
@@ -413,11 +426,8 @@ export function createInitialState(): Solicitud260303State {
         tipoDocumento: '',
         tercerosRelacionadosDenominacionSocial: '',
         tercerosRelacionadosTerceroNombre: '',
-        tercerosRelacionadosNacional: '',
-        tercerosRelacionadosExtranjero: '',
-        tercerosRelacionadosFisica: '',
-        tercerosRelacionadosMoral: '',
-        tercerosRelacionadosNoContribuyente: '',
+        tercerosNacionalidad: '',
+        tipoPersona: '',
         tercerosRelacionadosRfc: '',
         tercerosRelacionadosCurp: '',
         tercerosRelacionadosRazonSocial: '',
@@ -430,6 +440,14 @@ export function createInitialState(): Solicitud260303State {
         tercerosRelacionadosLada: '',
         tercerosRelacionadosTelefono: '',
         tercerosRelacionadosCorreoElectronico: '',
+        scianTabla: [],
+        datosPersonalesNombre: '',
+        datosPersonalesPrimerApellido: '',
+        datosPersonalesSegundoApellido: '',
+        tercerosRelacionadosMunicipio: '',
+        tercerosRelacionadosLocalidad: '',
+        tercerosRelacionadosColonia: '',
+        manifiestos: false
     };
 }
 
@@ -1003,16 +1021,6 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de claveDeReferencia.
      * @param claveDeReferencia - El valor de claveDeReferencia.
      */
-    public setLosDatosYes(losDatosYes: string): void {
-        this.update((state) => ({
-            ...state,
-            losDatosYes,
-        }));
-    }
-    /**
-     * Establece el estado de claveDeReferencia.
-     * @param claveDeReferencia - El valor de claveDeReferencia.
-     */
     public setAvisoDeFuncionamiento(avisoDeFuncionamiento: string): void {
         this.update((state) => ({
             ...state,
@@ -1182,57 +1190,24 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
     }
 
     /**
-     * Establece el estado de tercerosRelacionadosNacional.
-     * @param tercerosRelacionadosNacional - El valor de tercerosRelacionadosNacional.
+     * Establece el estado de tercerosNacionalidad.
+     * @param tercerosNacionalidad - El valor de tercerosNacionalidad.
      */
-    public SetTercerosRelacionadosNacional(tercerosRelacionadosNacional: string):void {
+    public SetTercerosNacionalidad(tercerosNacionalidad: string):void {
         this.update((state) => ({
             ...state,
-            tercerosRelacionadosNacional,
+            tercerosNacionalidad,
         }));
     }
 
     /**
-     * Establece el estado de tercerosRelacionadosExtranjero.
-     * @param tercerosRelacionadosExtranjero - El valor de tercerosRelacionadosExtranjero.
+     * Establece el estado de tipoPersona.
+     * @param tipoPersona - El valor de tipoPersona.
      */
-    public SetTercerosRelacionadosExtranjero(tercerosRelacionadosExtranjero: string):void {
+    public SetTipoPersona(tipoPersona: string):void {
         this.update((state) => ({
             ...state,
-            tercerosRelacionadosExtranjero,
-        }));
-    }
-
-    /**
-     * Establece el estado de tercerosRelacionadosFisica.
-     * @param tercerosRelacionadosFisica - El valor de tercerosRelacionadosFisica.
-     */
-    public SetTercerosRelacionadosFisica(tercerosRelacionadosFisica: string):void {
-        this.update((state) => ({
-            ...state,
-            tercerosRelacionadosFisica,
-        }));
-    }
-
-    /**
-     * Establece el estado de tercerosRelacionadosMoral.
-     * @param tercerosRelacionadosMoral - El valor de tercerosRelacionadosMoral.
-     */
-    public SetTercerosRelacionadosMoral(tercerosRelacionadosMoral: string):void {
-        this.update((state) => ({
-            ...state,
-            tercerosRelacionadosMoral,
-        }));
-    }
-
-    /**
-     * Establece el estado de tercerosRelacionadosNoContribuyente.
-     * @param tercerosRelacionadosNoContribuyente - El valor de tercerosRelacionadosNoContribuyente.
-     */
-    public SetTercerosRelacionadosNoContribuyente(tercerosRelacionadosNoContribuyente: string):void {
-        this.update((state) => ({
-            ...state,
-            tercerosRelacionadosNoContribuyente,
+            tipoPersona,
         }));
     }
 
@@ -1367,5 +1342,92 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
             tercerosRelacionadosCorreoElectronico,
         }));
     }
-} 
-  
+
+    /**
+     * Establece el estado de tablaDato.
+     * @param tablaDato - El valor de tablaDato.
+     */
+    public setScianTabla(tablaDato: ScianDatos[]):void {
+        this.update((state) => ({
+            ...state,
+            scianTabla: tablaDato,
+        }));
+    }
+
+    /**
+     * Establece el estado de datosPersonalesNombre.
+     * @param datosPersonalesNombre - El valor de datosPersonalesNombre.
+     */
+    public setDatosPersonalesNombre(datosPersonalesNombre: string):void {
+        this.update((state) => ({
+            ...state,
+            datosPersonalesNombre,
+        }));
+    }
+
+    /**
+     * Establece el estado de datosPersonalesPrimerApellido.
+     * @param datosPersonalesPrimerApellido - El valor de datosPersonalesPrimerApellido.
+     */
+    public setDatosPersonalesPrimerApellido(datosPersonalesPrimerApellido: string):void {
+        this.update((state) => ({
+            ...state,
+            datosPersonalesPrimerApellido,
+        }));
+    }
+
+    /**
+     * Establece el estado de datosPersonalesSegundoApellido.
+     * @param datosPersonalesSegundoApellido - El valor de datosPersonalesSegundoApellido.
+     */
+    public setDatosPersonalesSegundoApellido(datosPersonalesSegundoApellido: string):void {
+        this.update((state) => ({
+            ...state,
+            datosPersonalesSegundoApellido,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosMunicipio.
+     * @param tercerosRelacionadosMunicipio - El valor de tercerosRelacionadosMunicipio.
+     */
+    public SetTercerosRelacionadosMunicipio(tercerosRelacionadosMunicipio: string):void {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosMunicipio,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosLocalidad.
+     * @param tercerosRelacionadosLocalidad - El valor de tercerosRelacionadosLocalidad.
+     */
+    public SetTercerosRelacionadosLocalidad(tercerosRelacionadosLocalidad: string):void {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosLocalidad,
+        }));
+    }
+
+    /**
+     * Establece el estado de tercerosRelacionadosColonia.
+     * @param tercerosRelacionadosColonia - El valor de tercerosRelacionadosColonia.
+     */
+    public SetTercerosRelacionadosColonia(tercerosRelacionadosColonia: string):void {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosColonia,
+        }));
+    }
+
+    /**
+     * Establece el estado de manifiestos.
+     * @param manifiestos - El valor de manifiestos.
+     */
+    public setManifiestos(manifiestos: boolean):void {
+        this.update((state) => ({
+            ...state,
+            manifiestos,
+        }));
+    }
+}
