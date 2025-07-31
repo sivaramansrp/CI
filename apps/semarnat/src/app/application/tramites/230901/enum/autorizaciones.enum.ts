@@ -26,12 +26,12 @@ export const MOVIMIENTO_CROSSLIST_LABEL = {
   /**
    * Título para los movimientos disponibles.
    */
-  tituluDeLaIzquierda: 'Movimientos disponibles',
+  tituluDeLaIzquierda: 'Movimientos disponibles:',
 
   /**
    * Título para los movimientos seleccionados.
    */
-  derecha: 'Movimientos seleccionadas',
+  derecha: 'Movimientos seleccionados*:',
 };
 
 /**

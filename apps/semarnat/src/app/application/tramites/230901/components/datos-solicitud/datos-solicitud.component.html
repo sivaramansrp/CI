@@ -14,7 +14,6 @@
         ></app-catalogo-select>
       </div>
     </div>
-
     @if (tipoMovimientoSeleccionada) {
     <ng-titulo titulo="Régimen" />
     <div class="row">
@@ -44,6 +43,7 @@
         <h5>Aduanas de entradas (Máximo 3 aduanas)</h5>
         }
         <crosslist
+          #CrosslistComponent
           [fechas]="listaOriginalAduanas"
           [fechasSeleccionadas]="listaSeleccionadaAduanas"
           [botones]="botonesAduanas"
@@ -57,7 +57,7 @@
       <div class="col-md-6">
         <label for="mercancia">Mercancía*:</label>
       </div>
-      <div class="table-container">
+      <div class="col-md-12">
         <app-tabla-dinamica
           [configuracionTabla]="configuracionTablaMercancia"
           [datos]="datosTablaMercancia"
@@ -67,7 +67,7 @@
         ></app-tabla-dinamica>
       </div>
 
-      <nav aria-label="Page navigation example">
+      <nav aria-label="Page navigation example mt-3">
         <ul class="pagination justify-content-center">
           <li class="page-item"><a class="page-link" href="#">1</a></li>
         </ul>
@@ -100,6 +100,7 @@
     <div class="row mt-3">
       <div class="col-md-12 mt-3">
         <crosslist
+          #CrosslistComponent
           [fechas]="listaOriginalMovimientos"
           [fechasSeleccionadas]="listSeleccionadaMovimientos"
           [botones]="botonesMovimientos"
@@ -401,7 +402,7 @@
               class="btn btn-primary"
               (click)="enviarFormularioMercancia()"
             >
-              Guardar
+              Agregar
             </button>
           </div>
         </div>
