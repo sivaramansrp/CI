@@ -116,7 +116,7 @@ describe('TercerosRelacionadosComponent', () => {
   });
  
   it('should fetch fabricante data and assign it to fabricantedatosTabla', fakeAsync(() => {
-    // Clear previous calls from ngOnInit
+    // Limpiar llamadas previas de ngOnInit
     tercerosServiceSpy.obtenerInformaciónDeTablaDeFabricantes.mockClear();
     
     component.obtenerFabricanteTableIData();
@@ -126,7 +126,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.fabricantedatosTabla).toEqual(mockFabricanteData);
   })); 
   it('should fetch destinatario data and assign it to destinatarioDatosTabla', fakeAsync(() => {
-    // Clear previous calls from ngOnInit
+    // Limpiar llamadas previas de ngOnInit
     tercerosServiceSpy.obtenerInformacionDeTablaDeDestinatraios.mockClear();
     
     component.obtenerDestinatarioTableIData();
