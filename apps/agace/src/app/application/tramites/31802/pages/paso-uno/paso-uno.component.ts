@@ -112,6 +112,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       this.esDatosRespuesta = true;
     }
   }
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Cancela todas las suscripciones activas para evitar fugas de memoria.
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosDelFormulario();
@@ -120,14 +124,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
   }
   /**
- * Obtiene los datos del aviso de renovación desde el servicio y actualiza el estado global del formulario.
- * 
- * Este método realiza una petición al servicio para obtener los datos del aviso de renovación desde un archivo JSON local.
- * Al recibir la respuesta, marca que existen datos de respuesta y actualiza el estado del formulario en el store
- * utilizando el método `actualizarEstadoFormulario` del servicio.
- * La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
- */
-
+   * Método para guardar los datos del formulario.
+   * Se suscribe al servicio de registro de solicitud y actualiza el estado del formulario con los datos obtenidos.
+   */
   guardarDatosFormulario(): void {
     // Método para guardar los datos del formulario
     this.solicitud31802Service
