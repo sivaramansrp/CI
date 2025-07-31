@@ -18,11 +18,11 @@ describe('CertificadosLicenciasPermisosService', () => {
       'setDenominacionRazon',
       'setCodigoPostal',
       'setEstado',
-      'SetMunicipio',
+      'setMunicipio',
       'setLocalidad',
       'setColonia',
-      'SetCalleYNumero',
-      'SetCorreoElecronico',
+      'setCalleYNumero',
+      'setCorreoElecronico',
       'setLada',
       'setTelefono',
       'setClaveScianModal',
@@ -71,35 +71,35 @@ describe('CertificadosLicenciasPermisosService', () => {
       'setNumeroDePiezas',
       'setDescripcionDelNumeroDePiezas',
       'setNumeroDeRegistro',
-      'SetClaveDeReferencia',
-      'SetCadenaDaLaDependencia',
-      'SetBanco',
-      'SetLaveDePago',
-      'SetFechaDePago',
-      'SetImporteDePago',
-      'SetTipoDocumento',
-      'SetTercerosRelacionadosDenominacionSocial',
-      'SetTercerosRelacionadosTerceroNombre',
-      'SetTercerosRelacionadosNacional',
-      'SetTercerosRelacionadosExtranjero',
-      'SetTercerosRelacionadosFisica',
-      'SetTercerosRelacionadosMoral',
-      'SetTercerosRelacionadosNoContribuyente',
-      'SetTercerosRelacionadosRfc',
-      'SetTercerosRelacionadosCurp',
-      'SetTercerosRelacionadosRazonSocial',
-      'SetTercerosRelacionadosPais',
-      'SetTercerosRelacionadosEstado',
-      'SetTercerosRelacionadosCodigoPostal',
-      'SetTercerosRelacionadosCalle',
-      'SetTercerosRelacionadosNumeroExterior',
-      'SetTercerosRelacionadosNumeroInterior',
-      'SetTercerosRelacionadosLada',
-      'SetTercerosRelacionadosTelefono',
-      'SetTercerosRelacionadosCorreoElectronico',
+      'setClaveDeReferencia',
+      'setCadenaDaLaDependencia',
+      'setBanco',
+      'setLaveDePago',
+      'setFechaDePago',
+      'setImporteDePago',
+      'setTipoDocumento',
+      'setTercerosRelacionadosDenominacionSocial',
+      'setTercerosRelacionadosTerceroNombre',
+      'setTercerosRelacionadosNacional',
+      'setTercerosRelacionadosExtranjero',
+      'setTercerosRelacionadosFisica',
+      'setTercerosRelacionadosMoral',
+      'setTercerosRelacionadosNoContribuyente',
+      'setTercerosRelacionadosRfc',
+      'setTercerosRelacionadosCurp',
+      'setTercerosRelacionadosRazonSocial',
+      'setTercerosRelacionadosPais',
+      'setTercerosRelacionadosEstado',
+      'setTercerosRelacionadosCodigoPostal',
+      'setTercerosRelacionadosCalle',
+      'setTercerosRelacionadosNumeroExterior',
+      'setTercerosRelacionadosNumeroInterior',
+      'setTercerosRelacionadosLada',
+      'setTercerosRelacionadosTelefono',
+      'setTercerosRelacionadosCorreoElectronico',
       'setManifiestos',
-      'SetTercerosNacionalidad',
-      'SetTipoPersona',
+      'setTercerosNacionalidad',
+      'setTipoPersona',
     ].forEach((method) => {
       storeMock[method] = jest.fn();
     });
@@ -302,14 +302,14 @@ describe('CertificadosLicenciasPermisosService', () => {
 
     expect(storeMock.setDenominacionRazon).toHaveBeenCalledWith('Empresa XYZ');
     expect(storeMock.setCodigoPostal).toHaveBeenCalledWith('12345');
-    expect(storeMock.SetCorreoElecronico).toHaveBeenCalledWith(
+    expect(storeMock.setCorreoElecronico).toHaveBeenCalledWith(
       'email@test.com'
     );
     expect(storeMock.setFraccionArancelaria).toHaveBeenCalledWith('1234.56');
-    expect(storeMock.SetClaveDeReferencia).toHaveBeenCalledWith('ClaveRef123');
-    expect(storeMock.SetImporteDePago).toHaveBeenCalledWith('5000');
+    expect(storeMock.setClaveDeReferencia).toHaveBeenCalledWith('ClaveRef123');
+    expect(storeMock.setImporteDePago).toHaveBeenCalledWith('5000');
     expect(
-      storeMock.SetTercerosRelacionadosDenominacionSocial
+      storeMock.setTercerosRelacionadosDenominacionSocial
     ).toHaveBeenCalledWith('TerceroSocial');
   });
 

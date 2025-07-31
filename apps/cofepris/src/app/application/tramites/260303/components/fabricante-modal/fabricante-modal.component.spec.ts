@@ -18,8 +18,8 @@ describe('FabricanteModalComponent', () => {
 
   beforeEach(async () => {
     const tramiteStoreMock: Partial<jest.Mocked<Tramite260303Store>> = {
-      SetTercerosRelacionadosDenominacionSocial: jest.fn(),
-      SetTercerosRelacionadosTerceroNombre: jest.fn(),
+      setTercerosRelacionadosDenominacionSocial: jest.fn(),
+      setTercerosRelacionadosTerceroNombre: jest.fn(),
     };
 
     const tramiteQueryMock: Partial<jest.Mocked<Tramite260303Query>> = {
@@ -74,9 +74,9 @@ describe('FabricanteModalComponent', () => {
     componente.initializeTercerosRelacionadosForm();
 
     componente.tercerosRelacionadosForm.get('denominacionSocial')?.setValue('Nuevo Valor');
-    componente.setValoresStore(componente.tercerosRelacionadosForm, 'denominacionSocial', 'SetTercerosRelacionadosDenominacionSocial');
+    componente.setValoresStore(componente.tercerosRelacionadosForm, 'denominacionSocial', 'setTercerosRelacionadosDenominacionSocial');
 
-    expect(tramiteStore.SetTercerosRelacionadosDenominacionSocial).toHaveBeenCalledWith('Nuevo Valor');
+    expect(tramiteStore.setTercerosRelacionadosDenominacionSocial).toHaveBeenCalledWith('Nuevo Valor');
   });
 
   it('debería deshabilitar el formulario si es de solo lectura', () => {
@@ -179,9 +179,9 @@ describe('FabricanteModalComponent', () => {
     componente.tercerosRelacionadosForm.get('tercerosNacionalidad')?.setValue('MEXICO');
     componente.tercerosRelacionadosForm.get('tipoPersona')?.setValue('MORAL');
 
-    componente.eventoDeCambioDeValor('Nuevo Valor', componente.tercerosRelacionadosForm, 'terceroNombre', 'SetTercerosRelacionadosTerceroNombre');
+    componente.eventoDeCambioDeValor('Nuevo Valor', componente.tercerosRelacionadosForm, 'terceroNombre', 'setTercerosRelacionadosTerceroNombre');
 
-    expect(tramiteStore.SetTercerosRelacionadosTerceroNombre).toHaveBeenCalledWith('Nuevo Valor');
+    expect(tramiteStore.setTercerosRelacionadosTerceroNombre).toHaveBeenCalledWith('Nuevo Valor');
     expect(componente.tercerosRelacionadosForm.get('rfc')?.enabled).toBe(true);
   });
 

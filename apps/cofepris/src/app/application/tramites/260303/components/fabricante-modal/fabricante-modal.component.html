@@ -11,7 +11,7 @@
                         <label for="denominacion" class="form-label ">Denominación/razón social*:</label>
                         <input type="text" class="form-control" 
                             formControlName="denominacionSocial" 
-                            (change)="setValoresStore(tercerosRelacionadosForm,'denominacionSocial', 'SetTercerosRelacionadosDenominacionSocial')"
+                            (change)="setValoresStore(tercerosRelacionadosForm,'denominacionSocial', 'setTercerosRelacionadosDenominacionSocial')"
                             id="denominacion">
                     </div>
                 </div>
@@ -23,7 +23,7 @@
                             <label for="nombreDescripcion" class="form-label ">Tercero nombre descripcion*:</label>
                             <input type="text" class="form-control" 
                             formControlName="terceroNombre" 
-                            (change)="setValoresStore(tercerosRelacionadosForm,'terceroNombre', 'SetTercerosRelacionadosTerceroNombre')"
+                            (change)="setValoresStore(tercerosRelacionadosForm,'terceroNombre', 'setTercerosRelacionadosTerceroNombre')"
                             id="nombreDescripcion" [ngClass]="esValido(tercerosRelacionadosForm, 'terceroNombre') ? 'required' : ''">
                             @if(tercerosRelacionadosForm.controls['terceroNombre'].errors?.['required'] && tercerosRelacionadosForm.get('terceroNombre')?.touched) {
                                     <span class="mensaje-error">Este campo es obligatorio</span>
@@ -42,7 +42,7 @@
                                 formControlName="tercerosNacionalidad"
                                 [layout]="'vertical'"
                                 [isRequired]="true"
-                                (valueChange)="eventoDeCambioDeValor($event, tercerosRelacionadosForm,'tercerosNacionalidad', 'SetTercerosNacionalidad')"
+                                (valueChange)="eventoDeCambioDeValor($event, tercerosRelacionadosForm,'tercerosNacionalidad', 'setTercerosNacionalidad')"
                             ></app-input-radio>
                         
                         </div>
@@ -55,7 +55,7 @@
                                 formControlName="tipoPersona"
                                 [layout]="'vertical'"
                                 [isRequired]="true"
-                                (valueChange)="eventoDeCambioDeValor($event, tercerosRelacionadosForm,'tipoPersona', 'SetTipoPersona')"
+                                (valueChange)="eventoDeCambioDeValor($event, tercerosRelacionadosForm,'tipoPersona', 'setTipoPersona')"
                             ></app-input-radio>
                     </div>
                 </div>
@@ -69,7 +69,7 @@
                             </label>
                             <input type="text" id="rfc" 
                                 formControlName="rfc"
-                                (change)="setValoresStore(tercerosRelacionadosForm,'rfc', 'SetTercerosRelacionadosRfc')" 
+                                (change)="setValoresStore(tercerosRelacionadosForm,'rfc', 'setTercerosRelacionadosRfc')" 
                                 class="form-control" [ngClass]="esValido(tercerosRelacionadosForm, 'rfc') ? 'required' : ''">
                                 @if (tercerosRelacionadosForm.get('rfc')?.hasError('rfcInvalido') && tercerosRelacionadosForm.get('rfc')?.touched) {
                                     <div class="mensaje-error">
@@ -91,7 +91,7 @@
                             <label for="curp" class="form-label ">C.U.R.P.*:</label>
                             <input type="text" id="curp" 
                                 formControlName="curp"
-                                (change)="setValoresStore(tercerosRelacionadosForm,'curp', 'SetTercerosRelacionadosCurp')" 
+                                (change)="setValoresStore(tercerosRelacionadosForm,'curp', 'setTercerosRelacionadosCurp')" 
                                 class="form-control">
                         </div>
                     </div>
@@ -103,7 +103,7 @@
                                 <label for="denominacion" class="form-label ">Denominación/razón social*:</label>
                                 <input type="text" id="denominacion" 
                                     formControlName="razonSocial" 
-                                    (change)="setValoresStore(tercerosRelacionadosForm,'razonSocial', 'SetTercerosRelacionadosRazonSocial')"
+                                    (change)="setValoresStore(tercerosRelacionadosForm,'razonSocial', 'setTercerosRelacionadosRazonSocial')"
                                     class="form-control">
                             </div>
                         </div>
@@ -154,7 +154,7 @@
                                 label="País" 
                                 [required]="true"
                                 name="pais"
-                                (change)="eventoDeCambioDeValor($event, tercerosRelacionadosForm,'pais', 'SetTercerosRelacionadosPais')"
+                                (change)="eventoDeCambioDeValor($event, tercerosRelacionadosForm,'pais', 'setTercerosRelacionadosPais')"
                                 ></app-catalogo-select>
                         </div>
                     </div>
@@ -163,7 +163,7 @@
                             <label for="estado" class="form-label ">{{titulo === 'Agregar otros' ? 'Estado/localidad*:' :  'Estado:'}} </label>
                             <input type="text" id="estado" 
                                 formControlName="estado"
-                                (change)="setValoresStore(tercerosRelacionadosForm,'estado', 'SetTercerosRelacionadosEstado')" 
+                                (change)="setValoresStore(tercerosRelacionadosForm,'estado', 'setTercerosRelacionadosEstado')" 
                                 class="form-control">
                         </div>
                     </div>
@@ -173,7 +173,7 @@
                             <label for="municipio" class="form-label ">Municipio/alcaldía:</label>
                             <input type="text" id="municipio" 
                                 formControlName="municipio"
-                                (change)="setValoresStore(tercerosRelacionadosForm,'municipio', 'SetTercerosRelacionadosMunicipio')" 
+                                (change)="setValoresStore(tercerosRelacionadosForm,'municipio', 'setTercerosRelacionadosMunicipio')" 
                                 class="form-control">
                         </div>
                         </div>
@@ -182,7 +182,7 @@
                                 <label for="localidad" class="form-label ">Localidad*:</label>
                                 <input type="text" id="localidad" 
                                     formControlName="localidad"
-                                    (change)="setValoresStore(tercerosRelacionadosForm,'localidad', 'SetTercerosRelacionadosLocalidad')" 
+                                    (change)="setValoresStore(tercerosRelacionadosForm,'localidad', 'setTercerosRelacionadosLocalidad')" 
                                     class="form-control">
                             </div>
                         </div>
@@ -192,7 +192,7 @@
                             <label for="estado" class="form-label ">Código postal o equivalente*:</label>
                             <input type="text" id="estado" 
                                 formControlName="codigoPostal" 
-                                (change)="setValoresStore(tercerosRelacionadosForm,'codigoPostal', 'SetTercerosRelacionadosCodigoPostal')"
+                                (change)="setValoresStore(tercerosRelacionadosForm,'codigoPostal', 'setTercerosRelacionadosCodigoPostal')"
                                 class="form-control">
                         </div>
                     </div>
@@ -202,7 +202,7 @@
                                 <label for="estado" class="form-label ">Colonia*:</label>
                                 <input type="text" id="estado" 
                                     formControlName="colonia" 
-                                    (change)="setValoresStore(tercerosRelacionadosForm,'colonia', 'SetTercerosRelacionadosColonia')"
+                                    (change)="setValoresStore(tercerosRelacionadosForm,'colonia', 'setTercerosRelacionadosColonia')"
                                     class="form-control">
                             </div>
                         </div>
@@ -218,7 +218,7 @@
                             </label>
                             <input type="text" id="calle" 
                                 formControlName="calle" 
-                                (change)="setValoresStore(tercerosRelacionadosForm,'calle', 'SetTercerosRelacionadosCalle')"
+                                (change)="setValoresStore(tercerosRelacionadosForm,'calle', 'setTercerosRelacionadosCalle')"
                                 class="form-control">
                         </div>
                     </div>
@@ -227,7 +227,7 @@
                             <label for="numeroExterior" class="form-label ">Número exterior*:</label>
                             <input type="text" id="numeroExterior" 
                                 formControlName="numeroExterior"
-                                (change)="setValoresStore(tercerosRelacionadosForm,'numeroExterior', 'SetTercerosRelacionadosNumeroExterior')" 
+                                (change)="setValoresStore(tercerosRelacionadosForm,'numeroExterior', 'setTercerosRelacionadosNumeroExterior')" 
                                 class="form-control">
                         </div>
                     </div>
@@ -238,7 +238,7 @@
                             <label for="numeroInterior" class="form-label ">Número interior:</label>
                             <input type="text" id="numeroInterior" 
                                 formControlName="numeroInterior"
-                                (change)="setValoresStore(tercerosRelacionadosForm,'numeroInterior', 'SetTercerosRelacionadosNumeroInterior')" 
+                                (change)="setValoresStore(tercerosRelacionadosForm,'numeroInterior', 'setTercerosRelacionadosNumeroInterior')" 
                                 class="form-control">
                         </div>
                     </div>
@@ -248,14 +248,14 @@
                                 <label for="lada" class="form-label ">Lada:</label>
                                 <input type="text" id="lada" 
                                     formControlName="lada"
-                                    (change)="setValoresStore(tercerosRelacionadosForm,'lada', 'SetTercerosRelacionadosLada')" 
+                                    (change)="setValoresStore(tercerosRelacionadosForm,'lada', 'setTercerosRelacionadosLada')" 
                                     class="form-control lada">
                             </div>
                             <div class="form-group">
                                 <label for="telefono" class="form-label ">Teléfono:</label>
                                 <input type="text" id="telefono" 
                                     formControlName="telefono"
-                                    (change)="setValoresStore(tercerosRelacionadosForm,'telefono', 'SetTercerosRelacionadosTelefono')" 
+                                    (change)="setValoresStore(tercerosRelacionadosForm,'telefono', 'setTercerosRelacionadosTelefono')" 
                                     class="form-control">
                             </div>
                         </div>
@@ -269,7 +269,7 @@
                             </label>
                             <input type="text" id="correoElectronico" 
                                 formControlName="correoElectronico"
-                                (change)="setValoresStore(tercerosRelacionadosForm,'correoElectronico', 'SetTercerosRelacionadosCorreoElectronico')" 
+                                (change)="setValoresStore(tercerosRelacionadosForm,'correoElectronico', 'setTercerosRelacionadosCorreoElectronico')" 
                                 class="form-control">
                         </div>
                     </div>

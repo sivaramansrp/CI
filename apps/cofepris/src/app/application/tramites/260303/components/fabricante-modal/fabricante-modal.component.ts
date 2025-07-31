@@ -263,11 +263,10 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
    * @param campo - El nombre del campo cuyo valor se va a establecer.
    * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  eventoDeCambioDeValor(event: string | number | Event | any, form: FormGroup, campo: string, metodoNombre: keyof Tramite260303Store): void {
+  eventoDeCambioDeValor(event: string | number | Event , form: FormGroup, campo: string, metodoNombre: keyof Tramite260303Store): void {
     let VALOR;
-    if (event?.target) {
-      const INPUT = event.target as HTMLInputElement;
+    if (event instanceof Event && (event.target instanceof HTMLInputElement || event.target instanceof HTMLSelectElement || event.target instanceof HTMLTextAreaElement)) {
+      const INPUT = event.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
       VALOR = INPUT.value;
     } else {
       VALOR = event;

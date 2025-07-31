@@ -159,7 +159,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   public cambioFechaFinal(nuevoValor: string): void {
     this.pagoDerechosForm.get('fechaDePago')?.setValue(nuevoValor);
     this.pagoDerechosForm.get('fechaDePago')?.markAsUntouched();
-    this.tramite260303Store.SetFechaDePago(nuevoValor);
+    this.tramite260303Store.setFechaDePago(nuevoValor);
   }
 
   /**

@@ -8,7 +8,7 @@
                     <input type="text" id="claveDe" 
                         formControlName="claveDeReferencia" 
                         class="form-control"
-                        (change)="setValoresStore(pagoDerechosForm,'claveDeReferencia', 'SetClaveDeReferencia')">
+                        (change)="setValoresStore(pagoDerechosForm,'claveDeReferencia', 'setClaveDeReferencia')">
                 </div>
             </div>
             <div class="col-md-4">
@@ -17,7 +17,7 @@
                     <input type="text" id="cadena" 
                         formControlName="cadenaDaLaDependencia" 
                         class="form-control"
-                        (change)="setValoresStore(pagoDerechosForm,'cadenaDaLaDependencia', 'SetCadenaDaLaDependencia')">
+                        (change)="setValoresStore(pagoDerechosForm,'cadenaDaLaDependencia', 'setCadenaDaLaDependencia')">
                 </div>
             </div>
             <div class="col-md-4">
@@ -27,7 +27,7 @@
                     [required]="true"
                     formControlName="banco"
                     name="banco"
-                    (change)="setValoresStore(pagoDerechosForm,'banco', 'SetBanco')" [isDisabled]="consultaState.readonly">
+                    (change)="setValoresStore(pagoDerechosForm,'banco', 'setBanco')" [isDisabled]="consultaState.readonly">
                 </app-catalogo-select>
             </div>
         </div>
@@ -38,7 +38,7 @@
                     <input type="text" id="Llave" 
                         formControlName="laveDePago" 
                         class="form-control"
-                        (change)="setValoresStore(pagoDerechosForm,'laveDePago', 'SetLaveDePago')">
+                        (change)="setValoresStore(pagoDerechosForm,'laveDePago', 'setLaveDePago')">
                 </div>
             </div>
             <div class="col-md-4">
@@ -57,7 +57,7 @@
                     <input type="text" id="Importe" 
                         formControlName="importeDePago" 
                         class="form-control"
-                        (change)="setValoresStore(pagoDerechosForm,'importeDePago', 'SetImporteDePago')">
+                        (change)="setValoresStore(pagoDerechosForm,'importeDePago', 'setImporteDePago')">
                 </div>
             </div>
         </div>

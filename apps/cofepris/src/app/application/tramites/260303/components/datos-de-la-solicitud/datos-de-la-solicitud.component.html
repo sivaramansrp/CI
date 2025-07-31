@@ -49,7 +49,7 @@
                     <label for="municipioAlcaldia" class="form-label">Municipio o alcaldía*:</label>
                     <input type="text" id="municipioAlcaldia" 
                         formControlName="municipio"
-                        (change)="setValoresStore(domicilioDeElstablecimientoForm,'municipio', 'SetMunicipio')" 
+                        (change)="setValoresStore(domicilioDeElstablecimientoForm,'municipio', 'setMunicipio')" 
                         class="form-control">
                 </div>
                 @if(domicilioDeElstablecimientoForm.controls['municipio'].invalid && domicilioDeElstablecimientoForm.controls['municipio'].touched) {
@@ -100,7 +100,7 @@
                     <input type="text" id="calle" 
                         formControlName="calleYNumero" 
                         class="form-control"
-                        (change)="setValoresStore(domicilioDeElstablecimientoForm,'calleYNumero', 'SetCalleYNumero')">
+                        (change)="setValoresStore(domicilioDeElstablecimientoForm,'calleYNumero', 'setCalleYNumero')">
                 </div>
                 @if(domicilioDeElstablecimientoForm.controls['calleYNumero'].invalid && domicilioDeElstablecimientoForm.controls['calleYNumero'].touched) {
                     <div class="d-block">
@@ -118,7 +118,7 @@
                     <input type="text" id="correoElectronico" 
                         formControlName="correoElecronico" 
                         class="form-control"
-                        (change)="setValoresStore(domicilioDeElstablecimientoForm,'correoElecronico', 'SetCorreoElecronico')">
+                        (change)="setValoresStore(domicilioDeElstablecimientoForm,'correoElecronico', 'setCorreoElecronico')">
                 </div>
                 @if(domicilioDeElstablecimientoForm.controls['correoElecronico'].invalid && domicilioDeElstablecimientoForm.controls['correoElecronico'].touched) {
                     <div class="d-block">

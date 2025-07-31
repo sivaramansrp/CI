@@ -1061,7 +1061,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de descripcion.
      * @param descripcion - El valor de descripcion.
      */
-    public SetCalleYNumero(calleYNumero: string): void { 
+    public setCalleYNumero(calleYNumero: string): void { 
         this.update((state) => ({
             ...state,
             calleYNumero,
@@ -1072,7 +1072,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de correoElecronico.
      * @param correoElecronico - El valor de correoElecronico.
      */
-    public SetCorreoElecronico(correoElecronico: string): void {
+    public setCorreoElecronico(correoElecronico: string): void {
         this.update((state) => ({
             ...state,
             correoElecronico,
@@ -1083,7 +1083,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de municipio.
      * @param municipio - El valor de municipio.
      */
-    public SetMunicipio(municipio: string): void {
+    public setMunicipio(municipio: string): void {
         this.update((state) => ({
             ...state,
             municipio,
@@ -1094,7 +1094,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de claveDeReferencia.
      * @param claveDeReferencia - El valor de claveDeReferencia.
      */
-    public SetClaveDeReferencia(claveDeReferencia: string): void {
+    public setClaveDeReferencia(claveDeReferencia: string): void {
         this.update((state) => ({
             ...state,
             claveDeReferencia,
@@ -1105,7 +1105,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de cadenaDaLaDependencia.
      * @param cadenaDaLaDependencia - El valor de cadenaDaLaDependencia.
      */
-    public SetCadenaDaLaDependencia(cadenaDaLaDependencia: string): void {
+    public setCadenaDaLaDependencia(cadenaDaLaDependencia: string): void {
         this.update((state) => ({
             ...state,
             cadenaDaLaDependencia,
@@ -1116,7 +1116,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de banco.
      * @param banco - El valor de banco.
      */
-    public SetBanco(banco: string): void {
+    public setBanco(banco: string): void {
         this.update((state) => ({
             ...state,
             banco,
@@ -1127,7 +1127,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de laveDePago.
      * @param laveDePago - El valor de laveDePago.
      */
-    public SetLaveDePago(laveDePago: string): void {
+    public setLaveDePago(laveDePago: string): void {
         this.update((state) => ({
             ...state,
             laveDePago,
@@ -1138,7 +1138,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de fechaDePago.
      * @param fechaDePago - El valor de fechaDePago.
      */
-    public SetFechaDePago(fechaDePago: string): void {
+    public setFechaDePago(fechaDePago: string): void {
         this.update((state) => ({
             ...state,
             fechaDePago,
@@ -1149,7 +1149,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de importeDePago.
      * @param importeDePago - El valor de importeDePago.
      */
-    public SetImporteDePago(importeDePago: string): void {
+    public setImporteDePago(importeDePago: string): void {
         this.update((state) => ({
             ...state,
             importeDePago,
@@ -1160,7 +1160,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tipoDocumento.
      * @param tipoDocumento - El valor de tipoDocumento.
      */
-    public SetTipoDocumento(tipoDocumento: string): void {
+    public setTipoDocumento(tipoDocumento: string): void {
         this.update((state) => ({
             ...state,
             tipoDocumento,
@@ -1171,7 +1171,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tercerosRelacionadosDenominacionSocial.
      * @param tercerosRelacionadosDenominacionSocial - El valor de tercerosRelacionadosDenominacionSocial.
      */
-    public SetTercerosRelacionadosDenominacionSocial(tercerosRelacionadosDenominacionSocial: string):void {
+    public setTercerosRelacionadosDenominacionSocial(tercerosRelacionadosDenominacionSocial: string):void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosDenominacionSocial,
@@ -1182,7 +1182,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tercerosRelacionadosTerceroNombre.
      * @param tercerosRelacionadosTerceroNombre - El valor de tercerosRelacionadosTerceroNombre.
      */
-    public SetTercerosRelacionadosTerceroNombre(tercerosRelacionadosTerceroNombre: string):void {
+    public setTercerosRelacionadosTerceroNombre(tercerosRelacionadosTerceroNombre: string):void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosTerceroNombre,
@@ -1193,7 +1193,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tercerosNacionalidad.
      * @param tercerosNacionalidad - El valor de tercerosNacionalidad.
      */
-    public SetTercerosNacionalidad(tercerosNacionalidad: string):void {
+    public setTercerosNacionalidad(tercerosNacionalidad: string):void {
         this.update((state) => ({
             ...state,
             tercerosNacionalidad,
@@ -1204,7 +1204,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tipoPersona.
      * @param tipoPersona - El valor de tipoPersona.
      */
-    public SetTipoPersona(tipoPersona: string):void {
+    public setTipoPersona(tipoPersona: string):void {
         this.update((state) => ({
             ...state,
             tipoPersona,
@@ -1215,7 +1215,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tercerosRelacionadosRfc.
      * @param tercerosRelacionadosRfc - El valor de tercerosRelacionadosRfc.
      */
-    public SetTercerosRelacionadosRfc(tercerosRelacionadosRfc: string):void {
+    public setTercerosRelacionadosRfc(tercerosRelacionadosRfc: string):void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosRfc,
@@ -1226,7 +1226,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tercerosRelacionadosCurp.
      * @param tercerosRelacionadosCurp - El valor de tercerosRelacionadosCurp.
      */
-    public SetTercerosRelacionadosCurp(tercerosRelacionadosCurp: string):void {
+    public setTercerosRelacionadosCurp(tercerosRelacionadosCurp: string):void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosCurp,
@@ -1237,7 +1237,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tercerosRelacionadosRazonSocial.
      * @param tercerosRelacionadosRazonSocial - El valor de tercerosRelacionadosRazonSocial.
      */
-    public SetTercerosRelacionadosRazonSocial(tercerosRelacionadosRazonSocial: string):void {
+    public setTercerosRelacionadosRazonSocial(tercerosRelacionadosRazonSocial: string):void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosRazonSocial,
@@ -1248,7 +1248,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tercerosRelacionadosPais.
      * @param tercerosRelacionadosPais - El valor de tercerosRelacionadosPais.
      */
-    public SetTercerosRelacionadosPais(tercerosRelacionadosPais: string):void {
+    public setTercerosRelacionadosPais(tercerosRelacionadosPais: string):void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosPais,
@@ -1259,7 +1259,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tercerosRelacionadosEstado.
      * @param tercerosRelacionadosEstado - El valor de tercerosRelacionadosEstado.
      */
-    public SetTercerosRelacionadosEstado(tercerosRelacionadosEstado: string):void {
+    public setTercerosRelacionadosEstado(tercerosRelacionadosEstado: string):void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosEstado,
@@ -1270,7 +1270,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tercerosRelacionadosCodigoPostal.
      * @param tercerosRelacionadosCodigoPostal - El valor de tercerosRelacionadosCodigoPostal.
      */
-    public SetTercerosRelacionadosCodigoPostal(tercerosRelacionadosCodigoPostal: string):void {
+    public setTercerosRelacionadosCodigoPostal(tercerosRelacionadosCodigoPostal: string):void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosCodigoPostal,
@@ -1281,7 +1281,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tercerosRelacionadosCalle.
      * @param tercerosRelacionadosCalle - El valor de tercerosRelacionadosCalle.
      */
-    public SetTercerosRelacionadosCalle(tercerosRelacionadosCalle: string):void {
+    public setTercerosRelacionadosCalle(tercerosRelacionadosCalle: string):void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosCalle,
@@ -1292,7 +1292,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tercerosRelacionadosNumeroExterior.
      * @param tercerosRelacionadosNumeroExterior - El valor de tercerosRelacionadosNumeroExterior.
      */
-    public SetTercerosRelacionadosNumeroExterior(tercerosRelacionadosNumeroExterior: string):void {
+    public setTercerosRelacionadosNumeroExterior(tercerosRelacionadosNumeroExterior: string):void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosNumeroExterior,
@@ -1303,7 +1303,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tercerosRelacionadosNumeroInterior.
      * @param tercerosRelacionadosNumeroInterior - El valor de tercerosRelacionadosNumeroInterior.
      */
-    public SetTercerosRelacionadosNumeroInterior(tercerosRelacionadosNumeroInterior: string):void {
+    public setTercerosRelacionadosNumeroInterior(tercerosRelacionadosNumeroInterior: string):void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosNumeroInterior,
@@ -1314,7 +1314,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tercerosRelacionadosLada.
      * @param tercerosRelacionadosLada - El valor de tercerosRelacionadosLada.
      */
-    public SetTercerosRelacionadosLada(tercerosRelacionadosLada: string):void {
+    public setTercerosRelacionadosLada(tercerosRelacionadosLada: string):void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosLada,
@@ -1325,7 +1325,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tercerosRelacionadosTelefono.
      * @param tercerosRelacionadosTelefono - El valor de tercerosRelacionadosTelefono.
      */
-    public SetTercerosRelacionadosTelefono(tercerosRelacionadosTelefono: string):void {  
+    public setTercerosRelacionadosTelefono(tercerosRelacionadosTelefono: string):void {  
         this.update((state) => ({
             ...state,
             tercerosRelacionadosTelefono,
@@ -1336,7 +1336,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tercerosRelacionadosCorreoElectronico.
      * @param tercerosRelacionadosCorreoElectronico - El valor de tercerosRelacionadosCorreoElectronico.
      */
-    public SetTercerosRelacionadosCorreoElectronico(tercerosRelacionadosCorreoElectronico: string):void {
+    public setTercerosRelacionadosCorreoElectronico(tercerosRelacionadosCorreoElectronico: string):void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosCorreoElectronico,
@@ -1391,7 +1391,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tercerosRelacionadosMunicipio.
      * @param tercerosRelacionadosMunicipio - El valor de tercerosRelacionadosMunicipio.
      */
-    public SetTercerosRelacionadosMunicipio(tercerosRelacionadosMunicipio: string):void {
+    public setTercerosRelacionadosMunicipio(tercerosRelacionadosMunicipio: string):void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosMunicipio,
@@ -1402,7 +1402,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tercerosRelacionadosLocalidad.
      * @param tercerosRelacionadosLocalidad - El valor de tercerosRelacionadosLocalidad.
      */
-    public SetTercerosRelacionadosLocalidad(tercerosRelacionadosLocalidad: string):void {
+    public setTercerosRelacionadosLocalidad(tercerosRelacionadosLocalidad: string):void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosLocalidad,
@@ -1413,7 +1413,7 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
      * Establece el estado de tercerosRelacionadosColonia.
      * @param tercerosRelacionadosColonia - El valor de tercerosRelacionadosColonia.
      */
-    public SetTercerosRelacionadosColonia(tercerosRelacionadosColonia: string):void {
+    public setTercerosRelacionadosColonia(tercerosRelacionadosColonia: string):void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosColonia,
