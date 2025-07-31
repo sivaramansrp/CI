@@ -147,7 +147,6 @@ import {
   CONFIRMAR_ELIMINAR_SOLICITUD,
   MSG_ADUANA_PEDIMENTO,
   MSG_BORRAR_CAMPOS_RECINTOS,
-  MSG_ERROR_NO_INFORMACION,
   MSG_ERROR_RFC_NO_ENCONTRADO,
   MSG_ERROR_SELECCIONE_REGISTRO,
   MSG_MONTO_PAGADO_CUBIERTO,
@@ -3390,11 +3389,13 @@ export class SolicitudComponent
         .pipe(
           takeUntil(this.destroyNotifier$),
           tap((response) => {
-            if (response.datos.length > 0 || !response.datos) {
+            if (response.datos && response.datos.length > 0) {
+              // RFC is authorized - enable controls without showing error
               this.despacho.get('idAduanaDespacho')?.enable();
               this.despacho.get('tipoDespacho')?.enable();
               this.activarCatalogoDespacho = false;
             } else {
+              // RFC is not authorized - show error message
               this.nuevaNotificacion = {
                 tipoNotificacion: 'alert',
                 categoria: 'danger',
